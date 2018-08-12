@@ -313,7 +313,7 @@ namespace Win32xx
 
     inline CTab::CTab() : m_pActiveView(NULL), m_isShowingButtons(FALSE), m_isTracking(FALSE), 
                           m_isClosePressed(FALSE), m_isListPressed(FALSE), m_isListMenuActive(FALSE),
-		                  m_tabHeight(0)
+                          m_tabHeight(0)
     {
         m_blankPageColor = GetSysColor(COLOR_BTNFACE);
     }
@@ -406,61 +406,61 @@ namespace Win32xx
             {
             case 0:
                 {
-				dc.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
-				dc.MoveTo(rcClose.left, rcClose.bottom);
-				dc.LineTo(rcClose.right, rcClose.bottom);
-				dc.LineTo(rcClose.right, rcClose.top);
-				dc.LineTo(rcClose.left, rcClose.top);
-				dc.LineTo(rcClose.left, rcClose.bottom);
+                dc.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+                dc.MoveTo(rcClose.left, rcClose.bottom);
+                dc.LineTo(rcClose.right, rcClose.bottom);
+                dc.LineTo(rcClose.right, rcClose.top);
+                dc.LineTo(rcClose.left, rcClose.top);
+                dc.LineTo(rcClose.left, rcClose.bottom);
                 break;
                 }
 
             case 1:
                 {
                 // Draw outline, white at top, black on bottom
-				dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-				dc.MoveTo(rcClose.left, rcClose.bottom);
-				dc.LineTo(rcClose.right, rcClose.bottom);
-				dc.LineTo(rcClose.right, rcClose.top);
-				dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-				dc.LineTo(rcClose.left, rcClose.top);
-				dc.LineTo(rcClose.left, rcClose.bottom);
+                dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+                dc.MoveTo(rcClose.left, rcClose.bottom);
+                dc.LineTo(rcClose.right, rcClose.bottom);
+                dc.LineTo(rcClose.right, rcClose.top);
+                dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+                dc.LineTo(rcClose.left, rcClose.top);
+                dc.LineTo(rcClose.left, rcClose.bottom);
                 }
                 break;
             case 2:
                 {
                 // Draw outline, black on top, white on bottom
-				dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-				dc.MoveTo(rcClose.left, rcClose.bottom);
-				dc.LineTo(rcClose.right, rcClose.bottom);
-				dc.LineTo(rcClose.right, rcClose.top);
-				dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-				dc.LineTo(rcClose.left, rcClose.top);
-				dc.LineTo(rcClose.left, rcClose.bottom);
+                dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+                dc.MoveTo(rcClose.left, rcClose.bottom);
+                dc.LineTo(rcClose.right, rcClose.bottom);
+                dc.LineTo(rcClose.right, rcClose.top);
+                dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+                dc.LineTo(rcClose.left, rcClose.top);
+                dc.LineTo(rcClose.left, rcClose.bottom);
                 }
                 break;
             }
 
             // Manually draw close button
-			dc.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
+            dc.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
-			dc.MoveTo(rcClose.left + 3, rcClose.top +3);
-			dc.LineTo(rcClose.right - 2, rcClose.bottom -2);
+            dc.MoveTo(rcClose.left + 3, rcClose.top +3);
+            dc.LineTo(rcClose.right - 2, rcClose.bottom -2);
 
-			dc.MoveTo(rcClose.left + 4, rcClose.top +3);
-			dc.LineTo(rcClose.right - 2, rcClose.bottom -3);
+            dc.MoveTo(rcClose.left + 4, rcClose.top +3);
+            dc.LineTo(rcClose.right - 2, rcClose.bottom -3);
 
-			dc.MoveTo(rcClose.left + 3, rcClose.top +4);
-			dc.LineTo(rcClose.right - 3, rcClose.bottom -2);
+            dc.MoveTo(rcClose.left + 3, rcClose.top +4);
+            dc.LineTo(rcClose.right - 3, rcClose.bottom -2);
 
-			dc.MoveTo(rcClose.right -3, rcClose.top +3);
-			dc.LineTo(rcClose.left + 2, rcClose.bottom -2);
+            dc.MoveTo(rcClose.right -3, rcClose.top +3);
+            dc.LineTo(rcClose.left + 2, rcClose.bottom -2);
 
-			dc.MoveTo(rcClose.right -3, rcClose.top +4);
-			dc.LineTo(rcClose.left + 3, rcClose.bottom -2);
+            dc.MoveTo(rcClose.right -3, rcClose.top +4);
+            dc.LineTo(rcClose.left + 3, rcClose.bottom -2);
 
-			dc.MoveTo(rcClose.right -4, rcClose.top +3);
-			dc.LineTo(rcClose.left + 2, rcClose.bottom -3);
+            dc.MoveTo(rcClose.right -4, rcClose.top +3);
+            dc.LineTo(rcClose.left + 2, rcClose.bottom -3);
         }
     }
 
@@ -491,51 +491,51 @@ namespace Win32xx
             {
             case 0:
                 {
-				dc.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
-				dc.MoveTo(rcList.left, rcList.bottom);
-				dc.LineTo(rcList.right, rcList.bottom);
-				dc.LineTo(rcList.right, rcList.top);
-				dc.LineTo(rcList.left, rcList.top);
-				dc.LineTo(rcList.left, rcList.bottom);
+                dc.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+                dc.MoveTo(rcList.left, rcList.bottom);
+                dc.LineTo(rcList.right, rcList.bottom);
+                dc.LineTo(rcList.right, rcList.top);
+                dc.LineTo(rcList.left, rcList.top);
+                dc.LineTo(rcList.left, rcList.bottom);
                 }
-				break;
+                break;
 
             case 1:
                 {
                 // Draw outline, white at top, black on bottom
-				dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-				dc.MoveTo(rcList.left, rcList.bottom);
-				dc.LineTo(rcList.right, rcList.bottom);
-				dc.LineTo(rcList.right, rcList.top);
-				dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-				dc.LineTo(rcList.left, rcList.top);
-				dc.LineTo(rcList.left, rcList.bottom);
+                dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+                dc.MoveTo(rcList.left, rcList.bottom);
+                dc.LineTo(rcList.right, rcList.bottom);
+                dc.LineTo(rcList.right, rcList.top);
+                dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+                dc.LineTo(rcList.left, rcList.top);
+                dc.LineTo(rcList.left, rcList.bottom);
                 }
                 break;
 
             case 2:
                 {
                 // Draw outline, black on top, white on bottom
-				dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-				dc.MoveTo(rcList.left, rcList.bottom);
-				dc.LineTo(rcList.right, rcList.bottom);
-				dc.LineTo(rcList.right, rcList.top);
-				dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-				dc.LineTo(rcList.left, rcList.top);
-				dc.LineTo(rcList.left, rcList.bottom);
+                dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+                dc.MoveTo(rcList.left, rcList.bottom);
+                dc.LineTo(rcList.right, rcList.bottom);
+                dc.LineTo(rcList.right, rcList.top);
+                dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+                dc.LineTo(rcList.left, rcList.top);
+                dc.LineTo(rcList.left, rcList.bottom);
                 }
                 break;
             }
 
             // Manually draw list button
-			dc.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
+            dc.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
             int MaxLength = static_cast<int>(0.65 * rcList.Width());
             int topGap = 1 + rcList.Height()/3;
             for (int i = 0; i <= MaxLength/2; ++i)
             {
                 int Length = MaxLength - 2*i;
-				dc.MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
-				dc.LineTo(rcList.left +1 + (rcList.Width() - Length)/2 + Length, rcList.top +topGap +i);
+                dc.MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
+                dc.LineTo(rcList.left +1 + (rcList.Width() - Length)/2 + Length, rcList.top +topGap +i);
             }
         }
     }
@@ -553,17 +553,17 @@ namespace Win32xx
             {
                 if (i == GetCurSel())
                 {
-					dc.CreateSolidBrush(RGB(248,248,248));
-					dc.SetBkColor(RGB(248,248,248));
+                    dc.CreateSolidBrush(RGB(248,248,248));
+                    dc.SetBkColor(RGB(248,248,248));
                 }
                 else
                 {
-					dc.CreateSolidBrush(RGB(200,200,200));
-					dc.SetBkColor(RGB(200,200,200));
+                    dc.CreateSolidBrush(RGB(200,200,200));
+                    dc.SetBkColor(RGB(200,200,200));
                 }
 
-				dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-				dc.RoundRect(rcItem.left, rcItem.top, rcItem.right +1, rcItem.bottom, 6, 6);
+                dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+                dc.RoundRect(rcItem.left, rcItem.top, rcItem.right +1, rcItem.bottom, 6, 6);
 
                 if (rcItem.Width() >= 24)
                 {
@@ -576,7 +576,7 @@ namespace Win32xx
                     m_odImages.Draw(dc, iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
 
                     // Draw the text
-					dc.SelectObject(m_tabFont);
+                    dc.SelectObject(m_tabFont);
 
                     // Calculate the size of the text
                     CRect rcText = rcItem;
@@ -587,7 +587,7 @@ namespace Win32xx
                         rcText.left += iImageSize;
 
                     rcText.left += iPadding;
-					dc.DrawText(str, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+                    dc.DrawText(str, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
                 }
             }
         }
@@ -613,39 +613,39 @@ namespace Win32xx
             top = bottom -3;
         }
 
-		dc.CreateSolidBrush(RGB(248,248,248));
-		dc.CreatePen(PS_SOLID, 1, RGB(248,248,248));
+        dc.CreateSolidBrush(RGB(248,248,248));
+        dc.CreatePen(PS_SOLID, 1, RGB(248,248,248));
         if (!rcItem.IsRectEmpty())
         {
-			dc.Rectangle(left, top, right, bottom);
+            dc.Rectangle(left, top, right, bottom);
 
             // Draw a darker line below the rectangle
-			dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+            dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
             if (IsBottomTab)
             {
-				dc.MoveTo(left-1, bottom);
-				dc.LineTo(right, bottom);
+                dc.MoveTo(left-1, bottom);
+                dc.LineTo(right, bottom);
             }
             else
             {
-				dc.MoveTo(left-1, top-1);
-				dc.LineTo(right, top-1);
+                dc.MoveTo(left-1, top-1);
+                dc.LineTo(right, top-1);
             }
 
             // Draw a lighter line over the darker line for the selected tab
-			dc.CreatePen(PS_SOLID, 1, RGB(248,248,248));
+            dc.CreatePen(PS_SOLID, 1, RGB(248,248,248));
             GetItemRect(GetCurSel(), rcItem);
             OffsetRect(&rcItem, 1, 1);
 
             if (IsBottomTab)
             {
-				dc.MoveTo(rcItem.left, bottom);
-				dc.LineTo(rcItem.right, bottom);
+                dc.MoveTo(rcItem.left, bottom);
+                dc.LineTo(rcItem.right, bottom);
             }
             else
             {
-				dc.MoveTo(rcItem.left, top-1);
-				dc.LineTo(rcItem.right, top-1);
+                dc.MoveTo(rcItem.left, top-1);
+                dc.LineTo(rcItem.right, top-1);
             }
         }
     }
@@ -657,19 +657,19 @@ namespace Win32xx
         CRect rc;
         if (GetShowButtons())
         {
-			rc = GetClientRect();
+            rc = GetClientRect();
             int Gap = 2;
             int cx = GetSystemMetrics(SM_CXSMICON) -1;
             int cy = GetSystemMetrics(SM_CYSMICON) -1;
-			rc.right -= Gap;
-			rc.left = rc.right - cx;
+            rc.right -= Gap;
+            rc.left = rc.right - cx;
 
             if (GetTabsAtTop())
-				rc.top = Gap;
+                rc.top = Gap;
             else
-				rc.top = MAX(Gap, rc.bottom - m_tabHeight);
+                rc.top = MAX(Gap, rc.bottom - m_tabHeight);
 
-			rc.bottom = rc.top + cy;
+            rc.bottom = rc.top + cy;
         }
         return rc;
     }
@@ -990,8 +990,8 @@ namespace Win32xx
                 NotifyDragged();
         }
 
-		m_oldMousePos.x = pt.x;
-		m_oldMousePos.y = pt.y;
+        m_oldMousePos.x = pt.x;
+        m_oldMousePos.y = pt.y;
 
         CClientDC dc(*this);
         DrawCloseButton(dc);

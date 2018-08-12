@@ -185,7 +185,7 @@ namespace Win32xx
         assert (GetHwnd() == NULL);
 
         TaskButton tb(buttonID, pCaption);
-		m_buttons.push_back(tb);
+        m_buttons.push_back(tb);
     }
 
 
@@ -195,7 +195,7 @@ namespace Win32xx
         assert (GetHwnd() == NULL);
 
         TaskButton tb(radioButtonID, pCaption);
-		m_radioButtons.push_back(tb);
+        m_radioButtons.push_back(tb);
     }
 
 
@@ -210,7 +210,7 @@ namespace Win32xx
         for (int id = firstRadioButtonID; id <= lastRadioButtonID; ++id)
         {
             TaskButton tb(id, MAKEINTRESOURCEW(id));
-			m_radioButtons.push_back(tb);
+            m_radioButtons.push_back(tb);
         }
     }
 
@@ -486,8 +486,8 @@ namespace Win32xx
     {
         assert (GetHwnd() == NULL);
 
-		m_buttons.clear();
-		m_radioButtons.clear();
+        m_buttons.clear();
+        m_radioButtons.clear();
         ZeroMemory(&m_tc, sizeof(m_tc));
         m_tc.cbSize = sizeof(m_tc);
         m_tc.pfCallback = CTaskDialog::StaticTaskDialogProc;
@@ -822,7 +822,7 @@ namespace Win32xx
     inline void CTaskDialog::UpdateElementText(TASKDIALOG_ELEMENTS element, LPCTSTR pNewText) const
     {
         assert(GetHwnd());
-		SendMessage(TDM_UPDATE_ELEMENT_TEXT, element, reinterpret_cast<LPARAM>(pNewText));
+        SendMessage(TDM_UPDATE_ELEMENT_TEXT, element, reinterpret_cast<LPARAM>(pNewText));
     }
 
 }

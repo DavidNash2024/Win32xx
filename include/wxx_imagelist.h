@@ -94,7 +94,7 @@ namespace Win32xx
         int Add(HICON hIcon) const;
         void Attach(HIMAGELIST hImages);
         BOOL BeginDrag(int image, CPoint hotSpot) const;
-		BOOL Copy(int dst, int src, UINT flags /*= ILCF_MOVE*/) const;
+        BOOL Copy(int dst, int src, UINT flags /*= ILCF_MOVE*/) const;
         void DeleteImageList();
         HIMAGELIST Detach();
         BOOL DragEnter(HWND hLock, CPoint point) const;
@@ -104,24 +104,24 @@ namespace Win32xx
         BOOL Draw(HDC hdc, int image, POINT point, UINT style) const;
         BOOL DrawEx(HDC hdc, int image, POINT pt, SIZE sz, COLORREF bckgnd, COLORREF frgnd, UINT style) const;
         BOOL DrawIndirect(IMAGELISTDRAWPARAMS* pILDParams) const;
-		void EndDrag() const;
-		HICON ExtractIcon(int index) const;
-		void Read(LPSTREAM pStream);
+        void EndDrag() const;
+        HICON ExtractIcon(int index) const;
+        void Read(LPSTREAM pStream);
         BOOL Remove(int image) const;
         BOOL Replace(int image, HBITMAP hImage, HBITMAP hMask) const;
         int Replace(int image, HICON hIcon) const;
-		BOOL Write(LPSTREAM pStream) const;
+        BOOL Write(LPSTREAM pStream) const;
 
         //Attributes
-		COLORREF GetBkColor() const;
-		HIMAGELIST GetDragImage(POINT* pPoint, POINT* pHotspot) const;
-		HIMAGELIST GetHandle() const;
+        COLORREF GetBkColor() const;
+        HIMAGELIST GetDragImage(POINT* pPoint, POINT* pHotspot) const;
+        HIMAGELIST GetHandle() const;
         HICON GetIcon(int image, UINT flags) const;
         CSize GetIconSize() const;
         int GetImageCount() const;
         BOOL GetImageInfo(int image, IMAGEINFO* pImageInfo) const;
-		COLORREF SetBkColor(COLORREF bckgnd) const;
-		BOOL SetDragCursorImage(int drag, int dxHotspot, int dyHotspot) const;
+        COLORREF SetBkColor(COLORREF bckgnd) const;
+        BOOL SetDragCursorImage(int drag, int dxHotspot, int dyHotspot) const;
 
         //Operators
         operator HIMAGELIST () const;
@@ -295,14 +295,14 @@ namespace Win32xx
         return ImageList_BeginDrag(m_pData->hImageList, image, hotSpot.x, hotSpot.y);
     }
 
-	// Copies images within the image list.
-	// Possible flags: ILCF_MOVE, CLCF_SWAP 
-	inline BOOL CImageList::Copy(int Dest, int Src, UINT flags /*= ILCF_MOVE*/) const
-	{
-		assert(m_pData);
-		assert(m_pData->hImageList);
-		return ImageList_Copy(*this, Dest, *this, Src, flags);
-	}
+    // Copies images within the image list.
+    // Possible flags: ILCF_MOVE, CLCF_SWAP 
+    inline BOOL CImageList::Copy(int Dest, int Src, UINT flags /*= ILCF_MOVE*/) const
+    {
+        assert(m_pData);
+        assert(m_pData->hImageList);
+        return ImageList_Copy(*this, Dest, *this, Src, flags);
+    }
 
 
     // Creates a new image list.
@@ -489,46 +489,46 @@ namespace Win32xx
         return ImageList_DrawIndirect(pimldp);
     }
 
-	// Ends a drag operation.
-	inline void CImageList::EndDrag() const
-	{
-		assert(m_pData->hImageList);
-		ImageList_EndDrag();
-	}
+    // Ends a drag operation.
+    inline void CImageList::EndDrag() const
+    {
+        assert(m_pData->hImageList);
+        ImageList_EndDrag();
+    }
 
-	
-	// Calls the GetIcon function to create an icon or cursor based on an image and mask in an image list
-	inline HICON CImageList::ExtractIcon(int index) const
-	{
-		assert(m_pData->hImageList);
-		return ImageList_ExtractIcon(GetApp().GetResourceHandle(), *this, index);
-	}
-
-
-	// Retrieves the current background color for an image list.
-	inline COLORREF CImageList::GetBkColor() const
-	{
-		assert(m_pData->hImageList);
-		return ImageList_GetBkColor(*this);
-	}
+    
+    // Calls the GetIcon function to create an icon or cursor based on an image and mask in an image list
+    inline HICON CImageList::ExtractIcon(int index) const
+    {
+        assert(m_pData->hImageList);
+        return ImageList_ExtractIcon(GetApp().GetResourceHandle(), *this, index);
+    }
 
 
-	// Retrieves the temporary image list that is used for the drag image.
-	// pHotspot - Pointer to a POINT structure that receives the offset of the
-	// drag image relative to the drag position.Can be NULL.
-
-	inline HIMAGELIST CImageList::GetDragImage(POINT* pPoint, POINT* pHotspot) const
-	{
-		assert(m_pData->hImageList);
-		return ImageList_GetDragImage(pPoint, pHotspot);
-	}
+    // Retrieves the current background color for an image list.
+    inline COLORREF CImageList::GetBkColor() const
+    {
+        assert(m_pData->hImageList);
+        return ImageList_GetBkColor(*this);
+    }
 
 
-	// Returns the HIMAGELIST assigned to this CImageList.
-	inline HIMAGELIST CImageList::GetHandle() const
-	{
-		return m_pData->hImageList;
-	}
+    // Retrieves the temporary image list that is used for the drag image.
+    // pHotspot - Pointer to a POINT structure that receives the offset of the
+    // drag image relative to the drag position.Can be NULL.
+
+    inline HIMAGELIST CImageList::GetDragImage(POINT* pPoint, POINT* pHotspot) const
+    {
+        assert(m_pData->hImageList);
+        return ImageList_GetDragImage(pPoint, pHotspot);
+    }
+
+
+    // Returns the HIMAGELIST assigned to this CImageList.
+    inline HIMAGELIST CImageList::GetHandle() const
+    {
+        return m_pData->hImageList;
+    }
 
 
     // Creates an icon from an image and mask in an image list.
@@ -562,23 +562,23 @@ namespace Win32xx
     inline BOOL CImageList::GetImageInfo(int image, IMAGEINFO* pImageInfo) const
     {
         assert(m_pData->hImageList);
-		assert(pImageInfo);
+        assert(pImageInfo);
         return ImageList_GetImageInfo(m_pData->hImageList, image, pImageInfo);
     }
 
 
-	// Reads the image list from a stream.
-	inline void CImageList::Read(LPSTREAM pStream)
-	{
-		assert(m_pData->hImageList);
-		HIMAGELIST himl =  ImageList_Read(pStream);
+    // Reads the image list from a stream.
+    inline void CImageList::Read(LPSTREAM pStream)
+    {
+        assert(m_pData->hImageList);
+        HIMAGELIST himl =  ImageList_Read(pStream);
 
-		if (himl)
-		{
-			m_pData->isManagedHiml = TRUE;
-			Attach(himl);
-		}
-	}
+        if (himl)
+        {
+            m_pData->isManagedHiml = TRUE;
+            Attach(himl);
+        }
+    }
 
 
     // Removes an image from an image list.
@@ -605,31 +605,31 @@ namespace Win32xx
     }
 
 
-	// Writes the image list to a stream.
-	inline BOOL CImageList::Write(LPSTREAM pStream) const
-	{
-		assert(m_pData->hImageList);
-		return ImageList_Write(*this, pStream);
-	}
+    // Writes the image list to a stream.
+    inline BOOL CImageList::Write(LPSTREAM pStream) const
+    {
+        assert(m_pData->hImageList);
+        return ImageList_Write(*this, pStream);
+    }
 
 
-	// Sets the background color for an image list.This function only works if you add an icon
-	// or use ImageList_AddMasked with a black and white bitmap. Without a mask, the entire image
-	// is drawn; hence the background color is not visible.
-	inline COLORREF CImageList::SetBkColor(COLORREF bckgnd) const
-	{
-		assert(m_pData->hImageList);
-		return ImageList_SetBkColor(*this, bckgnd);
-	}
+    // Sets the background color for an image list.This function only works if you add an icon
+    // or use ImageList_AddMasked with a black and white bitmap. Without a mask, the entire image
+    // is drawn; hence the background color is not visible.
+    inline COLORREF CImageList::SetBkColor(COLORREF bckgnd) const
+    {
+        assert(m_pData->hImageList);
+        return ImageList_SetBkColor(*this, bckgnd);
+    }
 
-	
-	// Creates a new drag image by combining the specified image (typically a mouse cursor image)
-	// with the current drag image.
-	inline BOOL CImageList::SetDragCursorImage(int drag, int dxHotspot, int dyHotspot) const
-	{
-		assert(m_pData->hImageList);
-		return ImageList_SetDragCursorImage(*this, drag, dxHotspot, dyHotspot);
-	}
+    
+    // Creates a new drag image by combining the specified image (typically a mouse cursor image)
+    // with the current drag image.
+    inline BOOL CImageList::SetDragCursorImage(int drag, int dxHotspot, int dyHotspot) const
+    {
+        assert(m_pData->hImageList);
+        return ImageList_SetDragCursorImage(*this, drag, dxHotspot, dyHotspot);
+    }
 
 
     // Retrieves the image list's handle.
@@ -684,7 +684,7 @@ namespace Win32xx
             {
                 CClientDC DesktopDC(NULL);
                 CMemDC memDC(NULL);
-				memDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
+                memDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
                 CRect rc;
                 rc.SetRect(0, 0, cx, cx);
 
@@ -695,9 +695,9 @@ namespace Win32xx
                     HPALETTE hPal = reinterpret_cast<HPALETTE>(GetCurrentObject(DesktopDC, OBJ_PAL));
                     UINT index = GetNearestPaletteIndex(hPal, mask);
                     if (index != CLR_INVALID)
-						mask = PALETTEINDEX(index);
+                        mask = PALETTEINDEX(index);
                 }
-				memDC.SolidFill(mask, rc);
+                memDC.SolidFill(mask, rc);
 
                 // Draw the image on the memory DC
                 ImageList_Draw(hNormal, i, memDC, 0, 0, ILD_NORMAL);

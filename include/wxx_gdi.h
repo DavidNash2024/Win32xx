@@ -2902,7 +2902,7 @@ namespace Win32xx
         assert(m_pData->hDC);
 
         CBitmap newBitmap;
-		newBitmap.CreateBitmapIndirect(bitmap);
+        newBitmap.CreateBitmapIndirect(bitmap);
         SelectObject(newBitmap);
         m_pData->bitmap = newBitmap;
     }
@@ -2916,7 +2916,7 @@ namespace Win32xx
         assert(m_pData->hDC);
 
         CBitmap newBitmap;
-		newBitmap.CreateDIBitmap(hdc, &bmih, init, pInit, pBMI, flags);
+        newBitmap.CreateDIBitmap(hdc, &bmih, init, pInit, pBMI, flags);
         SelectObject(newBitmap);
         m_pData->bitmap = newBitmap;
     }
@@ -2931,7 +2931,7 @@ namespace Win32xx
         assert(m_pData->hDC);
 
         CBitmap newBitmap;
-		newBitmap.CreateDIBSection(hdc, pBMI, usage, pBits, hSection, offset);
+        newBitmap.CreateDIBSection(hdc, pBMI, usage, pBits, hSection, offset);
         SelectObject(newBitmap);
         m_pData->bitmap = newBitmap;
     }
@@ -3253,9 +3253,9 @@ namespace Win32xx
         CFont font;
         font.CreateFont(height, width, escapement, orientation, weight,
             italic, underline, strikeOut, charSet, outputPrecision,
-			clipPrecision, quality, pitchAndFamily, pFaceName);
+            clipPrecision, quality, pitchAndFamily, pFaceName);
         
-		SelectObject(font);
+        SelectObject(font);
         m_pData->font = font;
     }
 

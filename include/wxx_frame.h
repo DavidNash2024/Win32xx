@@ -366,7 +366,7 @@ namespace Win32xx
         CRect ExcludeChildRect(CRect& rcClient, HWND hChild) const;
         HACCEL GetFrameAccel() const                { return m_hAccel; }
         CMenu& GetFrameMenu() const                 { return m_menu; }
-		InitValues GetInitValues() const            { return m_initValues; }
+        InitValues GetInitValues() const            { return m_initValues; }
         MenuTheme& GetMenuBarTheme() const          { return m_mbTheme; }
         CMenuMetrics& GetMenuMetrics()              { return m_menuMetrics; }
         std::vector<CString> GetMRUEntries() const  { return m_mruEntries; }
@@ -1017,10 +1017,10 @@ namespace Win32xx
             if (index != CLR_INVALID) mask = PALETTEINDEX(index);
         }
 
-		memDC.SolidFill(mask, rc);
+        memDC.SolidFill(mask, rc);
 
         // Draw the icon on the memory DC
-		memDC.DrawIconEx(0, 0, hIcon, cx, cy, 0, 0, DI_NORMAL);
+        memDC.DrawIconEx(0, 0, hIcon, cx, cy, 0, 0, DI_NORMAL);
 
         // Detach the bitmap so we can use it.
         CBitmap bitmap = memDC.DetachBitmap();
@@ -1091,7 +1091,7 @@ namespace Win32xx
 
         BITMAP bmData = bitmap.GetBitmapData();
         int cxImage = bmData.bmHeight;
-		int cyImage = bmData.bmHeight;
+        int cyImage = bmData.bmHeight;
 
         // Create the ImageList if required.
         if (NULL == m_menuImages.GetHandle())
@@ -1180,7 +1180,7 @@ namespace Win32xx
     {
         // Create the ToolBar Window.
         DWORD style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE | CCS_NOPARENTALIGN;
-		tb.CreateEx(0, TOOLBARCLASSNAME, 0, style, CRect(0,0,0,0), GetReBar(), 0);
+        tb.CreateEx(0, TOOLBARCLASSNAME, 0, style, CRect(0,0,0,0), GetReBar(), 0);
 
         // Fill the REBARBAND structure.
         REBARBANDINFO rbbi;
@@ -1326,22 +1326,22 @@ namespace Win32xx
 
                         if ((state & CDIS_SELECTED) || (GetMenuBar().GetButtonState(item) & TBSTATE_PRESSED))
                         {
-							drawDC.GradientFill(GetMenuBarTheme().clrPressed1, GetMenuBarTheme().clrPressed2, rc, FALSE);
+                            drawDC.GradientFill(GetMenuBarTheme().clrPressed1, GetMenuBarTheme().clrPressed2, rc, FALSE);
                         }
                         else if (state & CDIS_HOT)
                         {
-							drawDC.GradientFill(GetMenuBarTheme().clrHot1, GetMenuBarTheme().clrHot2, rc, FALSE);
+                            drawDC.GradientFill(GetMenuBarTheme().clrHot1, GetMenuBarTheme().clrHot2, rc, FALSE);
                         }
 
                         // Draw border.
                         CPen Pen(PS_SOLID, 1, GetMenuBarTheme().clrOutline);
-						drawDC.SelectObject(Pen);
-						drawDC.MoveTo(rc.left, rc.bottom);
-						drawDC.LineTo(rc.left, rc.top);
-						drawDC.LineTo(rc.right-1, rc.top);
-						drawDC.LineTo(rc.right-1, rc.bottom);
-						drawDC.MoveTo(rc.right-1, rc.bottom);
-						drawDC.LineTo(rc.left, rc.bottom);
+                        drawDC.SelectObject(Pen);
+                        drawDC.MoveTo(rc.left, rc.bottom);
+                        drawDC.LineTo(rc.left, rc.top);
+                        drawDC.LineTo(rc.right-1, rc.top);
+                        drawDC.LineTo(rc.right-1, rc.bottom);
+                        drawDC.MoveTo(rc.right-1, rc.bottom);
+                        drawDC.LineTo(rc.left, rc.bottom);
                     }
 
                     CString str;
@@ -1356,9 +1356,9 @@ namespace Win32xx
                     CFont Font = GetMenuBar().GetFont();
                     drawDC.SelectObject(Font);
 
-					rc.bottom += 1;
-					drawDC.SetBkMode(TRANSPARENT);
-					drawDC.DrawText(str, str.GetLength(), rc, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+                    rc.bottom += 1;
+                    drawDC.SetBkMode(TRANSPARENT);
+                    drawDC.DrawText(str, str.GetLength(), rc, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
                     return CDRF_SKIPDEFAULT;  // No further drawing
                 }
@@ -1418,7 +1418,7 @@ namespace Win32xx
                         CSize textSize;
                         if (pTB->HasText()) // Does any button have text?
                         {
-							drawDC.SelectObject(pTB->GetFont());
+                            drawDC.SelectObject(pTB->GetFont());
                             LRESULT result = pTB->SendMessage(TB_GETBUTTONTEXT, item, reinterpret_cast<LPARAM>(str.GetBuffer(MAX_MENU_STRING)));
                             str.ReleaseBuffer();
                             if (result> 0)
@@ -1431,42 +1431,42 @@ namespace Win32xx
                         // Draw outline rectangle.
                         if (state & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
                         {
-							drawDC.CreatePen(PS_SOLID, 1, GetToolBarTheme().clrOutline);
-							drawDC.MoveTo(rc.left, rc.top);
-							drawDC.LineTo(rc.left, rc.bottom-1);
-							drawDC.LineTo(rc.right-1, rc.bottom-1);
-							drawDC.LineTo(rc.right-1, rc.top);
-							drawDC.LineTo(rc.left, rc.top);
+                            drawDC.CreatePen(PS_SOLID, 1, GetToolBarTheme().clrOutline);
+                            drawDC.MoveTo(rc.left, rc.top);
+                            drawDC.LineTo(rc.left, rc.bottom-1);
+                            drawDC.LineTo(rc.right-1, rc.bottom-1);
+                            drawDC.LineTo(rc.right-1, rc.top);
+                            drawDC.LineTo(rc.left, rc.top);
                         }
 
                         // Draw filled gradient background.
-						rc.InflateRect(-1, -1);
+                        rc.InflateRect(-1, -1);
                         if ((state & (CDIS_SELECTED|CDIS_CHECKED)) || (pTB->GetButtonState(item) & TBSTATE_PRESSED))
                         {
-							drawDC.GradientFill(GetToolBarTheme().clrPressed1, GetToolBarTheme().clrPressed2, rc, FALSE);
+                            drawDC.GradientFill(GetToolBarTheme().clrPressed1, GetToolBarTheme().clrPressed2, rc, FALSE);
                         }
                         else if (state & CDIS_HOT)
                         {
-							drawDC.GradientFill(GetToolBarTheme().clrHot1, GetToolBarTheme().clrHot2, rc, FALSE);
+                            drawDC.GradientFill(GetToolBarTheme().clrHot1, GetToolBarTheme().clrHot2, rc, FALSE);
                         }
 
                         // Get the appropriate image list depending on the button state.
                         CImageList toolBarImages;
                         if (state & CDIS_DISABLED)
                         {
-							toolBarImages = pTB->GetDisabledImageList();
+                            toolBarImages = pTB->GetDisabledImageList();
                             if (toolBarImages.GetHandle() == 0)
-								toolBarImages.CreateDisabledImageList(pTB->GetImageList());
+                                toolBarImages.CreateDisabledImageList(pTB->GetImageList());
                         }
                         else if (state & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
                         {
-							toolBarImages = pTB->GetHotImageList();
+                            toolBarImages = pTB->GetHotImageList();
                             if (toolBarImages.GetHandle() == 0)
-								toolBarImages = pTB->GetImageList();
+                                toolBarImages = pTB->GetImageList();
                         }
                         else
                         {
-							toolBarImages = pTB->GetImageList();
+                            toolBarImages = pTB->GetImageList();
                         }
 
                         BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
@@ -1500,33 +1500,33 @@ namespace Win32xx
                             if ((m_drawArrowBkgrnd) && (state & CDIS_HOT))
                             {
                                 CRect arrowRect = rc;
-								arrowRect.left = arrowRect.right - 13;
-								drawDC.GradientFill(GetToolBarTheme().clrPressed1, GetToolBarTheme().clrPressed2, arrowRect, FALSE);
+                                arrowRect.left = arrowRect.right - 13;
+                                drawDC.GradientFill(GetToolBarTheme().clrPressed1, GetToolBarTheme().clrPressed2, arrowRect, FALSE);
                             }
 
                             m_drawArrowBkgrnd = FALSE;
 
                             // Manually draw the dropdown arrow
-							drawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
+                            drawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
                             for (int i = 2; i >= 0; --i)
                             {
-								drawDC.MoveTo(xAPos -i-1, yAPos - i+1);
-								drawDC.LineTo(xAPos +i,   yAPos - i+1);
+                                drawDC.MoveTo(xAPos -i-1, yAPos - i+1);
+                                drawDC.LineTo(xAPos +i,   yAPos - i+1);
                             }
 
                             // Draw line between icon and dropdown arrow
                             if ((style & TBSTYLE_DROPDOWN) && ((state & CDIS_SELECTED) || state & CDIS_HOT))
                             {
-								drawDC.CreatePen(PS_SOLID, 1, GetToolBarTheme().clrOutline);
-								drawDC.MoveTo(rc.right - 13, rc.top);
-								drawDC.LineTo(rc.right - 13, rc.bottom);
+                                drawDC.CreatePen(PS_SOLID, 1, GetToolBarTheme().clrOutline);
+                                drawDC.MoveTo(rc.right - 13, rc.top);
+                                drawDC.LineTo(rc.right - 13, rc.bottom);
                             }
                         }
 
                         // Draw the button image.
                         if (xImage > 0)
                         {
-							toolBarImages.Draw(drawDC, image, CPoint(xImage, yImage), ILD_TRANSPARENT);
+                            toolBarImages.Draw(drawDC, image, CPoint(xImage, yImage), ILD_TRANSPARENT);
                         }
 
                         //Draw Text.
@@ -1542,30 +1542,30 @@ namespace Win32xx
                             {
                                 xOffset = rc.left + szImage.cx + ((state & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((state & CDIS_SELECTED)? 1:0);
                                 yOffset = (2+ rc.bottom - rc.top - textRect.bottom + textRect.top)/2 + ((state & CDIS_SELECTED)? 1:0);
-								textRect.right = MIN(textRect.right, rc.right - xOffset);
+                                textRect.right = MIN(textRect.right, rc.right - xOffset);
                             }
 
                             OffsetRect(&textRect, xOffset, yOffset);
 
                             int mode = drawDC.SetBkMode(TRANSPARENT);
-							drawDC.SelectObject(pTB->GetFont());
+                            drawDC.SelectObject(pTB->GetFont());
 
                             if (state & (CDIS_DISABLED))
                             {
                                 // Draw text twice for embossed look
-								textRect.OffsetRect(1, 1);
-								drawDC.SetTextColor(RGB(255,255,255));
-								drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT);
-								textRect.OffsetRect(-1, -1);
-								drawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-								drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT);
+                                textRect.OffsetRect(1, 1);
+                                drawDC.SetTextColor(RGB(255,255,255));
+                                drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT);
+                                textRect.OffsetRect(-1, -1);
+                                drawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
+                                drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT);
                             }
                             else
                             {
-								drawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
-								drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT | DT_END_ELLIPSIS);
+                                drawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
+                                drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT | DT_END_ELLIPSIS);
                             }
-							drawDC.SetBkMode(mode);
+                            drawDC.SetBkMode(mode);
 
                         }
                     }
@@ -1596,7 +1596,7 @@ namespace Win32xx
         if (IsUsingVistaMenu())
             GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPGUTTER, 0, &gutter, NULL);
         else
-			drawDC.GradientFill(mbt.clrPressed1, mbt.clrPressed2, gutter, TRUE);
+            drawDC.GradientFill(mbt.clrPressed1, mbt.clrPressed2, gutter, TRUE);
 
         if (pmid->mii.fType & MFT_SEPARATOR)
         {
@@ -1610,10 +1610,10 @@ namespace Win32xx
             {
                 CRect rc = pDIS->rcItem;
                 CRect sepRect = pDIS->rcItem;
-				sepRect.left = GetMenuMetrics().GetGutterRect(rc).Width();
-				drawDC.SolidFill(RGB(255,255,255), sepRect);
-				sepRect.top += (rc.bottom - rc.top)/2;
-				drawDC.DrawEdge(sepRect,  EDGE_ETCHED, BF_TOP);
+                sepRect.left = GetMenuMetrics().GetGutterRect(rc).Width();
+                drawDC.SolidFill(RGB(255,255,255), sepRect);
+                sepRect.top += (rc.bottom - rc.top)/2;
+                drawDC.DrawEdge(sepRect,  EDGE_ETCHED, BF_TOP);
             }
         }
         else
@@ -1638,25 +1638,25 @@ namespace Win32xx
             if (pmid->mii.hSubMenu)
             {
                 CRect subMenuRect = pDIS->rcItem;
-				subMenuRect.left = pDIS->rcItem.right - GetMenuMetrics().m_marItem.cxRightWidth - GetMenuMetrics().m_marText.cxRightWidth;
+                subMenuRect.left = pDIS->rcItem.right - GetMenuMetrics().m_marItem.cxRightWidth - GetMenuMetrics().m_marText.cxRightWidth;
 
                 // Copy the menu's arrow to a memory DC
                 CMemDC memDC(drawDC);
-				memDC.CreateBitmap(subMenuRect.Width(), subMenuRect.Height(), 1, 1, NULL);
+                memDC.CreateBitmap(subMenuRect.Width(), subMenuRect.Height(), 1, 1, NULL);
                 CRect rc(0, 0, subMenuRect.Width(), subMenuRect.Height());
-				memDC.DrawFrameControl(rc, DFC_MENU, DFCS_MENUARROW);
+                memDC.DrawFrameControl(rc, DFC_MENU, DFCS_MENUARROW);
 
                 // Mask the arrow image back to the menu's dc
                 CMemDC maskDC(drawDC);
                 maskDC.CreateCompatibleBitmap(pDIS->hDC, subMenuRect.Width(), subMenuRect.Height());
                 maskDC.BitBlt(0, 0, subMenuRect.Width(), subMenuRect.Height(), maskDC, 0, 0, WHITENESS);
                 maskDC.BitBlt(0, 0, subMenuRect.Width(), subMenuRect.Height(), memDC, 0, 0, SRCAND);
-				drawDC.BitBlt(subMenuRect.left, subMenuRect.top, subMenuRect.Width(), subMenuRect.Height(), maskDC, 0, 0, SRCAND);
+                drawDC.BitBlt(subMenuRect.left, subMenuRect.top, subMenuRect.Width(), subMenuRect.Height(), maskDC, 0, 0, SRCAND);
             }
 
             // Suppress further drawing to prevent an incorrect Submenu arrow being drawn.
             CRect rc = pDIS->rcItem;
-			drawDC.ExcludeClipRect(rc);
+            drawDC.ExcludeClipRect(rc);
         }
 
     }
@@ -1685,16 +1685,16 @@ namespace Win32xx
             {
                 // draw selected item background
                 CBrush brush(mbt.clrHot1);
-				drawDC.SelectObject(brush);
+                drawDC.SelectObject(brush);
                 CPen pen(PS_SOLID, 1, mbt.clrOutline);
-				drawDC.SelectObject(pen);
-				drawDC.Rectangle(drawRect.left, drawRect.top, drawRect.right, drawRect.bottom);
+                drawDC.SelectObject(pen);
+                drawDC.Rectangle(drawRect.left, drawRect.top, drawRect.right, drawRect.bottom);
             }
             else
             {
                 // draw non-selected item background
-				drawRect.left = GetMenuMetrics().GetGutterRect(pDIS->rcItem).Width();
-				drawDC.SolidFill(RGB(255,255,255), drawRect);
+                drawRect.left = GetMenuMetrics().GetGutterRect(pDIS->rcItem).Width();
+                drawDC.SolidFill(RGB(255,255,255), drawRect);
             }
         }
     }
@@ -1727,27 +1727,27 @@ namespace Win32xx
             int yIcon = GetMenuMetrics().m_sizeCheck.cy;
             int left = GetMenuMetrics().m_marCheck.cxLeftWidth;
             int top = rc.top + (rc.Height() - yIcon) / 2;
-			bkRect.SetRect(left, top, left + xIcon, top + yIcon);
+            bkRect.SetRect(left, top, left + xIcon, top + yIcon);
 
             CBrush brush(mbt.clrHot2);
-			drawDC.SelectObject(brush);
+            drawDC.SelectObject(brush);
             CPen pen(PS_SOLID, 1, mbt.clrOutline);
-			drawDC.SelectObject(pen);
+            drawDC.SelectObject(pen);
 
             // Draw the checkmark's background rectangle.
-			drawDC.Rectangle(bkRect.left, bkRect.top, bkRect.right, bkRect.bottom);
+            drawDC.Rectangle(bkRect.left, bkRect.top, bkRect.right, bkRect.bottom);
 
             CMemDC memDC(drawDC);
             int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
             int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
-			memDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
+            memDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
             CRect checkRect(0, 0, cxCheck, cyCheck);
 
             // Copy the check mark bitmap to hdcMem.
             if (MFT_RADIOCHECK == fType)
-				memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUBULLET);
+                memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUBULLET);
             else
-				memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUCHECK);
+                memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUCHECK);
 
             int xoffset = (bkRect.Width() - checkRect.Width()  +1) / 2;
             int yoffset = (bkRect.Height() - checkRect.Height() +1) / 2;
@@ -1762,15 +1762,15 @@ namespace Win32xx
             if ((pDIS->itemState & ODS_SELECTED))
             {
                 // Draw a white checkmark
-				memDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, DSTINVERT);
+                memDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, DSTINVERT);
                 maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
-				drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCPAINT);
+                drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCPAINT);
             }
             else
             {
                 // Draw a black checkmark
                 maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
-				drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
+                drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
             }
         }
     }
@@ -1784,9 +1784,9 @@ namespace Win32xx
             return;
 
         // Get icon size
-		CSize iconSize = m_menuImages.GetIconSize();
-		int xIcon = iconSize.cx;
-		int yIcon = iconSize.cy;
+        CSize iconSize = m_menuImages.GetIconSize();
+        int xIcon = iconSize.cx;
+        int yIcon = iconSize.cy;
 
         // get the drawing rectangle
         CRect rc = pDIS->rcItem;
@@ -1889,16 +1889,16 @@ namespace Win32xx
 
             // Create our memory DC
             CRect rebarRect = rebar.GetClientRect();
-			int rebarWidth = rebarRect.Width();
-			int rebarHeight = rebarRect.Height();
+            int rebarWidth = rebarRect.Width();
+            int rebarHeight = rebarRect.Height();
             CMemDC memDC(dc);
-			memDC.CreateCompatibleBitmap(dc, rebarWidth, rebarRect.Height());
+            memDC.CreateCompatibleBitmap(dc, rebarWidth, rebarRect.Height());
 
             // Draw to ReBar background to the memory DC
-			memDC.SolidFill(rbTheme.clrBkgnd2, rebarRect);
+            memDC.SolidFill(rbTheme.clrBkgnd2, rebarRect);
             CRect rcBkGnd = rebarRect;
             rcBkGnd.right = 600;
-			memDC.GradientFill(rbTheme.clrBkgnd1, rbTheme.clrBkgnd2, rebarRect, TRUE);
+            memDC.GradientFill(rbTheme.clrBkgnd1, rbTheme.clrBkgnd2, rebarRect, TRUE);
 
             if (rbTheme.clrBand1 || rbTheme.clrBand2)
             {
@@ -1915,15 +1915,15 @@ namespace Win32xx
                             if (isVertical)
                             {
                                 int right = bandRect.right;
-								bandRect.right = bandRect.bottom;
-								bandRect.bottom = right;
+                                bandRect.right = bandRect.bottom;
+                                bandRect.bottom = right;
                             }
 
                             // Determine the size of the child window
                             REBARBANDINFO rbbi;
                             ZeroMemory(&rbbi, sizeof(rbbi));
                             rbbi.fMask = RBBIM_CHILD ;
-							rebar.GetBandInfo(band, rbbi);
+                            rebar.GetBandInfo(band, rbbi);
                             CRect childRect;
                             ::GetWindowRect(rbbi.hwndChild, &childRect);
                             T::ScreenToClient(childRect);
@@ -1934,13 +1934,13 @@ namespace Win32xx
                             CRect borderRect = rebar.GetBandBorders(band);
                             if (isVertical)
                             {
-								drawRect.bottom = drawRect.top + childRect.Height() + borderRect.top;
-								drawRect.top -= startPad;
+                                drawRect.bottom = drawRect.top + childRect.Height() + borderRect.top;
+                                drawRect.top -= startPad;
                             }
                             else
                             {
-								drawRect.right = drawRect.left + childRect.Width() + borderRect.left;
-								drawRect.left -= startPad;
+                                drawRect.right = drawRect.left + childRect.Width() + borderRect.left;
+                                drawRect.left -= startPad;
                             }
 
                             if (!rbTheme.FlatStyle)
@@ -1979,9 +1979,9 @@ namespace Win32xx
                             }
 
                             // Copy Source DC to Memory DC using the RoundRect mask
-							memDC.BitBlt(left, top, cx, cy, sourceDC, left, top, SRCINVERT);
-							memDC.BitBlt(left, top, cx, cy, maskDC,   left, top, SRCAND);
-							memDC.BitBlt(left, top, cx, cy, sourceDC, left, top, SRCINVERT);
+                            memDC.BitBlt(left, top, cx, cy, sourceDC, left, top, SRCINVERT);
+                            memDC.BitBlt(left, top, cx, cy, maskDC,   left, top, SRCAND);
+                            memDC.BitBlt(left, top, cx, cy, sourceDC, left, top, SRCINVERT);
                         }
                     }
                 }
@@ -1995,15 +1995,15 @@ namespace Win32xx
                     CRect bandRect = rebar.GetBandRect(j);
                     if (isVertical)
                     {
-						bandRect.top = MAX(0, rebarRect.top - 4);
-						bandRect.right +=2;
+                        bandRect.top = MAX(0, rebarRect.top - 4);
+                        bandRect.right +=2;
                     }
                     else
                     {
-						bandRect.left = MAX(0, rebarRect.left - 4);
-						bandRect.bottom +=2;
+                        bandRect.left = MAX(0, rebarRect.left - 4);
+                        bandRect.bottom +=2;
                     }
-					memDC.DrawEdge(bandRect, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+                    memDC.DrawEdge(bandRect, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
                 }
             }
 
@@ -2052,16 +2052,16 @@ namespace Win32xx
         if (clientRect.Width() == childRect.Width())
         {
             if (clientRect.top == childRect.top)
-				clientRect.top += childRect.Height();
+                clientRect.top += childRect.Height();
             else
-				clientRect.bottom -= childRect.Height();
+                clientRect.bottom -= childRect.Height();
         }
         else
         {
             if (clientRect.left == childRect.left)
-				clientRect.left += childRect.Width();
+                clientRect.left += childRect.Width();
             else
-				clientRect.right -= childRect.Width();
+                clientRect.right -= childRect.Width();
         }
 
         T::ScreenToClient(clientRect);
@@ -2103,9 +2103,9 @@ namespace Win32xx
                     for (int i = 0; i < len; ++i)
                     {
                         if (pMenuString[i] != _T('&'))
-							pStrippedString[j++] = pMenuString[i];
+                            pStrippedString[j++] = pMenuString[i];
                     }
-					pStrippedString[j] = _T('\0');   // Append null tchar
+                    pStrippedString[j] = _T('\0');   // Append null tchar
 
                     // Compare the strings
                     if (lstrcmp(pStrippedString, pItem) == 0)
@@ -2155,13 +2155,13 @@ namespace Win32xx
         CRect clientRect = T::GetClientRect();
 
         if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
-			clientRect = ExcludeChildRect(clientRect, GetStatusBar());
+            clientRect = ExcludeChildRect(clientRect, GetStatusBar());
 
         if (GetReBar().IsWindow() && GetReBar().IsWindowVisible())
-			clientRect = ExcludeChildRect(clientRect, GetReBar());
+            clientRect = ExcludeChildRect(clientRect, GetReBar());
         else
             if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
-				clientRect = ExcludeChildRect(clientRect, GetToolBar());
+                clientRect = ExcludeChildRect(clientRect, GetToolBar());
 
         return clientRect;
     }
@@ -2307,8 +2307,8 @@ namespace Win32xx
         CSize size = GetMenuMetrics().GetItemSize(pMID);
 
         // Return the composite sizes.
-		pMIS->itemWidth = size.cx;
-		pMIS->itemHeight = size.cy;
+        pMIS->itemWidth = size.cx;
+        pMIS->itemHeight = size.cy;
     }
 
 
@@ -3281,7 +3281,7 @@ namespace Win32xx
             REBARBANDINFO rbbi;
             ZeroMemory(&rbbi, sizeof(rbbi));
             rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
-			rb.GetBandInfo(band, rbbi);
+            rb.GetBandInfo(band, rbbi);
 
             int width;
             if ((GetReBarTheme().UseThemes) && (GetReBarTheme().LockMenuBand))
@@ -3292,7 +3292,7 @@ namespace Win32xx
             rbbi.cxMinChild = width;
             rbbi.cx         = width;
 
-			rb.SetBandInfo(band, rbbi);
+            rb.SetBandInfo(band, rbbi);
         }
     }
 
@@ -3348,7 +3348,7 @@ namespace Win32xx
         {
             // Calculate the width of the text indicators
             CClientDC statusDC(GetStatusBar());
-			statusDC.SelectObject(GetStatusBar().GetFont());
+            statusDC.SelectObject(GetStatusBar().GetFont());
             CString cap = LoadString(IDW_INDICATOR_CAPS);
             CString num = LoadString(IDW_INDICATOR_NUM);
             CString scrl = LoadString(IDW_INDICATOR_SCRL);
@@ -3566,9 +3566,9 @@ namespace Win32xx
         CSize sz = GetTBImageSize(&bm);
 
         // Set the toolbar's image list
-		imageList.DeleteImageList();
-		imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-		imageList.Add(bm, mask);
+        imageList.DeleteImageList();
+        imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        imageList.Add(bm, mask);
         toolBar.SetImageList(imageList);
 
         // Inform the Rebar of the change to the Toolbar
@@ -3594,15 +3594,15 @@ namespace Win32xx
             CSize sz = GetTBImageSize(&bm);
 
             // Set the toolbar's image list
-			imageList.DeleteImageList();
-			imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-			imageList.Add(bm, mask);
+            imageList.DeleteImageList();
+            imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+            imageList.Add(bm, mask);
             toolBar.SetDisableImageList(imageList);
         }
         else
         {
-			imageList.DeleteImageList();
-			imageList.CreateDisabledImageList(m_toolBarImages);
+            imageList.DeleteImageList();
+            imageList.CreateDisabledImageList(m_toolBarImages);
             toolBar.SetDisableImageList(imageList);
         }
 
@@ -3629,14 +3629,14 @@ namespace Win32xx
             CSize sz = GetTBImageSize(&bm);
 
             // Set the toolbar's image list
-			imageList.DeleteImageList();
-			imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-			imageList.Add(bm, mask);
+            imageList.DeleteImageList();
+            imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+            imageList.Add(bm, mask);
             toolBar.SetHotImageList(imageList);
         }
         else
         {
-			imageList.DeleteImageList();
+            imageList.DeleteImageList();
             toolBar.SetHotImageList(0);
         }
 
@@ -3869,7 +3869,7 @@ namespace Win32xx
             REBARBANDINFO rbbi;
             ZeroMemory(&rbbi, sizeof(rbbi));
             CClientDC menuBarDC(GetMenuBar());
-			menuBarDC.SelectObject(GetMenuBar().GetFont());
+            menuBarDC.SelectObject(GetMenuBar().GetFont());
             CSize sizeMenuBar = menuBarDC.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
             int MenuBar_Height = sizeMenuBar.cy + 6;
             rbbi.fMask      = RBBIM_CHILDSIZE;

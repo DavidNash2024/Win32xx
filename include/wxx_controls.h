@@ -133,7 +133,7 @@ namespace Win32xx
 
 #if WINVER >= 0x0500
         HWND  GetEditCtrl() const;
-		HWND  GetLBCtrl() const;
+        HWND  GetLBCtrl() const;
 #endif
 
     protected:
@@ -722,16 +722,16 @@ namespace Win32xx
 
 
 #if WINVER >= 0x0500
-	// Returns the handle to the edit box.
-	inline HWND  CComboBox::GetEditCtrl() const
-	{
-		COMBOBOXINFO cbi;
-		ZeroMemory(&cbi, sizeof(cbi));
-		cbi.cbSize = sizeof(cbi);
-		VERIFY(::GetComboBoxInfo(*this, &cbi));
+    // Returns the handle to the edit box.
+    inline HWND  CComboBox::GetEditCtrl() const
+    {
+        COMBOBOXINFO cbi;
+        ZeroMemory(&cbi, sizeof(cbi));
+        cbi.cbSize = sizeof(cbi);
+        VERIFY(::GetComboBoxInfo(*this, &cbi));
 
-		return cbi.hwndItem;
-	}
+        return cbi.hwndItem;
+    }
 #endif
 
     // Gets the starting and ending character positions of the current selection
@@ -777,16 +777,16 @@ namespace Win32xx
 
 
 #if WINVER >= 0x0500
-	// returns the handle to the drop-down list.
-	inline HWND  CComboBox::GetLBCtrl() const
-	{
-		COMBOBOXINFO cbi;
-		ZeroMemory(&cbi, sizeof(cbi));
-		cbi.cbSize = sizeof(cbi);
-		VERIFY(::GetComboBoxInfo(*this, &cbi));
+    // returns the handle to the drop-down list.
+    inline HWND  CComboBox::GetLBCtrl() const
+    {
+        COMBOBOXINFO cbi;
+        ZeroMemory(&cbi, sizeof(cbi));
+        cbi.cbSize = sizeof(cbi);
+        VERIFY(::GetComboBoxInfo(*this, &cbi));
 
-		return cbi.hwndList;
-	}
+        return cbi.hwndList;
+    }
 #endif
 
     //  Retrieves a string from the list of the combo box.
@@ -1367,60 +1367,60 @@ namespace Win32xx
 #endif
 
 
-	////////////////////////////////////////
-	// Definitions for the CHotKey class
-	//
+    ////////////////////////////////////////
+    // Definitions for the CHotKey class
+    //
 
-	// Gets the virtual key code and modifier flags of a hot key
-	inline DWORD CHotKey::GetHotKey() const
-	{
-		assert(IsWindow());
-		return static_cast<DWORD>(SendMessage(HKM_GETHOTKEY, 0, 0));
-	}
-
-
-	// Retrieves a string that represents the name of a key.
-	inline CString CHotKey::GetKeyName(UINT keyCode, BOOL isExtended) const
-	{
-		// Translate the virtual-key code to a scan code
-		LONG lScan = MapVirtualKey(keyCode, 0);
-
-		// Construct an LPARAM with the scan code in Bits 16-23, and an extended flag in bit 24
-		LPARAM lparam = lScan << 16;
-		if (isExtended)
-			lparam |= 0x01000000L;
-
-		CString str;
-		int bufferLen = 64;
-		int strLen = bufferLen;
-
-		// Loop until we have retrieved the entire string
-		while (strLen == bufferLen)
-		{
-			bufferLen *= 4;
-			LPTSTR pStr = str.GetBuffer(bufferLen);
-			strLen = ::GetKeyNameText(static_cast<LONG>(lparam), pStr, bufferLen + 1);
-			str.ReleaseBuffer();
-		}
-
-		return str;
-	}
+    // Gets the virtual key code and modifier flags of a hot key
+    inline DWORD CHotKey::GetHotKey() const
+    {
+        assert(IsWindow());
+        return static_cast<DWORD>(SendMessage(HKM_GETHOTKEY, 0, 0));
+    }
 
 
-	// Sets the hot key combination for the control.
-	inline void CHotKey::SetHotKey(DWORD key) const
-	{
-		assert(IsWindow());
-		SendMessage(HKM_SETHOTKEY, static_cast<WPARAM>(key), 0);
-	}
+    // Retrieves a string that represents the name of a key.
+    inline CString CHotKey::GetKeyName(UINT keyCode, BOOL isExtended) const
+    {
+        // Translate the virtual-key code to a scan code
+        LONG lScan = MapVirtualKey(keyCode, 0);
+
+        // Construct an LPARAM with the scan code in Bits 16-23, and an extended flag in bit 24
+        LPARAM lparam = lScan << 16;
+        if (isExtended)
+            lparam |= 0x01000000L;
+
+        CString str;
+        int bufferLen = 64;
+        int strLen = bufferLen;
+
+        // Loop until we have retrieved the entire string
+        while (strLen == bufferLen)
+        {
+            bufferLen *= 4;
+            LPTSTR pStr = str.GetBuffer(bufferLen);
+            strLen = ::GetKeyNameText(static_cast<LONG>(lparam), pStr, bufferLen + 1);
+            str.ReleaseBuffer();
+        }
+
+        return str;
+    }
 
 
-	// Defines the invalid combinations and the default modifier combination for the control.
-	inline void CHotKey::SetRules(WORD invalidComb, WORD modifiers) const
-	{
-		assert(IsWindow());
-		SendMessage(HKM_SETRULES, invalidComb, modifiers);
-	}
+    // Sets the hot key combination for the control.
+    inline void CHotKey::SetHotKey(DWORD key) const
+    {
+        assert(IsWindow());
+        SendMessage(HKM_SETHOTKEY, static_cast<WPARAM>(key), 0);
+    }
+
+
+    // Defines the invalid combinations and the default modifier combination for the control.
+    inline void CHotKey::SetRules(WORD invalidComb, WORD modifiers) const
+    {
+        assert(IsWindow());
+        SendMessage(HKM_SETRULES, invalidComb, modifiers);
+    }
 
 
     ////////////////////////////////////////

@@ -171,7 +171,7 @@ namespace Win32xx
 
         // Default the name to all files in the current directory
         if (pFileSearch == NULL)
-			pFileSearch = _T("*.*");
+            pFileSearch = _T("*.*");
 
         // Search for the first file matching the name
         m_hFileFind = ::FindFirstFile(pFileSearch, &m_findData);

@@ -288,7 +288,7 @@ namespace Win32xx
 
 
     // Retrieves the handle to an image list used for drawing list-view items.
-	// imageType:  LVSIL_NORMAL; LVSIL_SMALL; or LVSIL_STATE
+    // imageType:  LVSIL_NORMAL; LVSIL_SMALL; or LVSIL_STATE
     inline CImageList CListView::GetImageList( int imageType ) const
     {
         assert(IsWindow());
@@ -336,7 +336,7 @@ namespace Win32xx
 
 
     // Retrieves the bounding rectangle for all or part of an item in the current view.
-	// code: LVIR_BOUNDS; LVIR_ICON; LVIR_LABEL; or LVIR_SELECTBOUNDS.
+    // code: LVIR_BOUNDS; LVIR_ICON; LVIR_LABEL; or LVIR_SELECTBOUNDS.
     inline BOOL CListView::GetItemRect( int item, RECT& rc, UINT code ) const
     {
         assert(IsWindow());
@@ -864,14 +864,14 @@ namespace Win32xx
 
 
     // Inserts a new column in the list-view control.
-	// format :
-	//  LVCFMT_BITMAP_ON_RIGHT    The bitmap appears to the right of text.
-	//  LVCFMT_CENTER             Text is centered.
-	//  LVCFMT_IMAGE              The item displays an image from an image list.
-	//  LVCFMT_JUSTIFYMASK        A bitmask used to select those bits of fmt that control field justification.
-	//  LVCFMT_LEFT               Text is left-aligned.
+    // format :
+    //  LVCFMT_BITMAP_ON_RIGHT    The bitmap appears to the right of text.
+    //  LVCFMT_CENTER             Text is centered.
+    //  LVCFMT_IMAGE              The item displays an image from an image list.
+    //  LVCFMT_JUSTIFYMASK        A bitmask used to select those bits of fmt that control field justification.
+    //  LVCFMT_LEFT               Text is left-aligned.
     //  LVCFMT_RIGHT              Text is right-aligned.
-	inline int CListView::InsertColumn( int col, LPCTSTR pColumnHeading, int format /*= LVCFMT_LEFT*/,
+    inline int CListView::InsertColumn( int col, LPCTSTR pColumnHeading, int format /*= LVCFMT_LEFT*/,
                         int width /*= -1*/, int subItem /*= -1*/ ) const
     {
         assert(IsWindow());

@@ -223,7 +223,7 @@ namespace Win32xx
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
         virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID);
+        virtual void SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID);
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
@@ -234,7 +234,7 @@ namespace Win32xx
         mutable CString m_caption;
         CImageList m_normalImages;
         CImageList m_hotImages;
-		CImageList m_disabledImages;
+        CImageList m_disabledImages;
         mutable CViewPage m_viewPage;
         int m_currentPage;
         CDocker* m_pDocker;
@@ -908,11 +908,11 @@ namespace Win32xx
                     {
                         // Normal button
                         drawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
-						drawDC.MoveTo(rcClose.left, rcClose.bottom);
-						drawDC.LineTo(rcClose.right, rcClose.bottom);
-						drawDC.LineTo(rcClose.right, rcClose.top);
-						drawDC.LineTo(rcClose.left, rcClose.top);
-						drawDC.LineTo(rcClose.left, rcClose.bottom);
+                        drawDC.MoveTo(rcClose.left, rcClose.bottom);
+                        drawDC.LineTo(rcClose.right, rcClose.bottom);
+                        drawDC.LineTo(rcClose.right, rcClose.top);
+                        drawDC.LineTo(rcClose.left, rcClose.top);
+                        drawDC.LineTo(rcClose.left, rcClose.bottom);
                         break;
                     }
 
@@ -920,13 +920,13 @@ namespace Win32xx
                     {
                         // Popped up button
                         // Draw outline, white at top, black on bottom
-						drawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-						drawDC.MoveTo(rcClose.left, rcClose.bottom);
-						drawDC.LineTo(rcClose.right, rcClose.bottom);
-						drawDC.LineTo(rcClose.right, rcClose.top);
-						drawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-						drawDC.LineTo(rcClose.left, rcClose.top);
-						drawDC.LineTo(rcClose.left, rcClose.bottom);
+                        drawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+                        drawDC.MoveTo(rcClose.left, rcClose.bottom);
+                        drawDC.LineTo(rcClose.right, rcClose.bottom);
+                        drawDC.LineTo(rcClose.right, rcClose.top);
+                        drawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+                        drawDC.LineTo(rcClose.left, rcClose.top);
+                        drawDC.LineTo(rcClose.left, rcClose.bottom);
                     }
 
                     break;
@@ -934,40 +934,40 @@ namespace Win32xx
                     {
                         // Pressed button
                         // Draw outline, black on top, white on bottom
-						drawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-						drawDC.MoveTo(rcClose.left, rcClose.bottom);
-						drawDC.LineTo(rcClose.right, rcClose.bottom);
-						drawDC.LineTo(rcClose.right, rcClose.top);
-						drawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-						drawDC.LineTo(rcClose.left, rcClose.top);
-						drawDC.LineTo(rcClose.left, rcClose.bottom);
+                        drawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+                        drawDC.MoveTo(rcClose.left, rcClose.bottom);
+                        drawDC.LineTo(rcClose.right, rcClose.bottom);
+                        drawDC.LineTo(rcClose.right, rcClose.top);
+                        drawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+                        drawDC.LineTo(rcClose.left, rcClose.top);
+                        drawDC.LineTo(rcClose.left, rcClose.bottom);
                     }
                     break;
                     }
 
                     // Manually Draw Close Button
                     if (focus)
-						drawDC.CreatePen(PS_SOLID, 1, m_foregnd1);
+                        drawDC.CreatePen(PS_SOLID, 1, m_foregnd1);
                     else
-						drawDC.CreatePen(PS_SOLID, 1, m_foregnd2);
+                        drawDC.CreatePen(PS_SOLID, 1, m_foregnd2);
 
-					drawDC.MoveTo(rcClose.left + 3, rcClose.top + 3);
-					drawDC.LineTo(rcClose.right - 2, rcClose.bottom - 2);
+                    drawDC.MoveTo(rcClose.left + 3, rcClose.top + 3);
+                    drawDC.LineTo(rcClose.right - 2, rcClose.bottom - 2);
 
-					drawDC.MoveTo(rcClose.left + 4, rcClose.top + 3);
-					drawDC.LineTo(rcClose.right - 2, rcClose.bottom - 3);
+                    drawDC.MoveTo(rcClose.left + 4, rcClose.top + 3);
+                    drawDC.LineTo(rcClose.right - 2, rcClose.bottom - 3);
 
-					drawDC.MoveTo(rcClose.left + 3, rcClose.top + 4);
-					drawDC.LineTo(rcClose.right - 3, rcClose.bottom - 2);
+                    drawDC.MoveTo(rcClose.left + 3, rcClose.top + 4);
+                    drawDC.LineTo(rcClose.right - 3, rcClose.bottom - 2);
 
-					drawDC.MoveTo(rcClose.right - 3, rcClose.top + 3);
-					drawDC.LineTo(rcClose.left + 2, rcClose.bottom - 2);
+                    drawDC.MoveTo(rcClose.right - 3, rcClose.top + 3);
+                    drawDC.LineTo(rcClose.left + 2, rcClose.bottom - 2);
 
-					drawDC.MoveTo(rcClose.right - 3, rcClose.top + 4);
-					drawDC.LineTo(rcClose.left + 3, rcClose.bottom - 2);
+                    drawDC.MoveTo(rcClose.right - 3, rcClose.top + 4);
+                    drawDC.LineTo(rcClose.left + 3, rcClose.bottom - 2);
 
-					drawDC.MoveTo(rcClose.right - 4, rcClose.top + 3);
-					drawDC.LineTo(rcClose.left + 2, rcClose.bottom - 3);
+                    drawDC.MoveTo(rcClose.right - 4, rcClose.top + 3);
+                    drawDC.LineTo(rcClose.left + 2, rcClose.bottom - 3);
                 }
             }
         }
@@ -1025,7 +1025,7 @@ namespace Win32xx
 
             m_isCaptionPressed = TRUE;
             m_oldPoint.x = GET_X_LPARAM(lparam);
-			m_oldPoint.y = GET_Y_LPARAM(lparam);
+            m_oldPoint.y = GET_Y_LPARAM(lparam);
             if (m_pDocker->IsUndockable())
             {
                 // Give the view window focus unless its child already has it
@@ -1057,7 +1057,7 @@ namespace Win32xx
 
             m_isCaptionPressed = TRUE;
             m_oldPoint.x = GET_X_LPARAM(lparam);
-			m_oldPoint.y = GET_Y_LPARAM(lparam);
+            m_oldPoint.y = GET_Y_LPARAM(lparam);
             if (m_pDocker->IsUndockable())
             {
                 // Give the view window focus unless its child already has it
@@ -2595,9 +2595,9 @@ namespace Win32xx
     {
         CRect parent;
         if (GetDockParent())
-			parent = GetDockParent()->GetWindowRect();
+            parent = GetDockParent()->GetWindowRect();
         else
-			parent = GetDockAncestor()->GetWindowRect();
+            parent = GetDockAncestor()->GetWindowRect();
 
         double dockSize = 0;
         if ((GetDockStyle() & DS_DOCKED_LEFT) || (GetDockStyle() & DS_DOCKED_RIGHT))
@@ -2877,11 +2877,11 @@ namespace Win32xx
                         DWORD tabID;
                         std::vector<UINT> tabOrder;
                         CString tabKeyName;
-						tabKeyName.Format(_T("Tab%u"), tabNumber);
+                        tabKeyName.Format(_T("Tab%u"), tabNumber);
                         while (ERROR_SUCCESS == containerKey.QueryDWORDValue(tabKeyName, tabID))
                         {
                             tabOrder.push_back(tabID);
-							tabKeyName.Format(_T("Tab%u"), ++tabNumber);
+                            tabKeyName.Format(_T("Tab%u"), ++tabNumber);
                         }
 
                         // Set tab order
@@ -3477,7 +3477,7 @@ namespace Win32xx
 
         BOOL rtl = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		rtl = (GetExStyle() & WS_EX_LAYOUTRTL);
+        rtl = (GetExStyle() & WS_EX_LAYOUTRTL);
 #endif
 
         if (IsDocked())
@@ -3595,7 +3595,7 @@ namespace Win32xx
         if (IsDocked())
         {
             CRect barRect;
-			barRect.IntersectRect(m_barRect, GetDockParent()->GetViewRect());
+            barRect.IntersectRect(m_barRect, GetDockParent()->GetViewRect());
 
             // The SWP_NOCOPYBITS forces a redraw of the dock bar.
             GetDockBar().SetWindowPos(NULL, barRect, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS);
@@ -3707,13 +3707,12 @@ namespace Win32xx
         RECT rcDock = pDocker->GetWindowRect();
         ScreenToClient(rcDock);
 
-        int iBarWidth = pDocker->GetDockBar().GetWidth();
-        double dBarWidth = iBarWidth;
+        int barWidth = pDocker->GetDockBar().GetWidth();
         int dockSize;
 
         BOOL rtl = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		rtl = (GetExStyle() & WS_EX_LAYOUTRTL);
+        rtl = (GetExStyle() & WS_EX_LAYOUTRTL);
 #endif
 
         CRect rcDockParent = pDocker->m_pDockParent->GetWindowRect();
@@ -3725,30 +3724,30 @@ namespace Win32xx
         switch (pDocker->GetDockStyle() & 0xF)
         {
         case DS_DOCKED_LEFT:
-            if (rtl) dockSize = rcDock.right - MAX(pt.x, iBarWidth / 2) - static_cast<int>(.5* dBarWidth);
-            else     dockSize = MAX(pt.x, iBarWidth / 2) - rcDock.left - static_cast<int>(.5* dBarWidth);
+            if (rtl) dockSize = rcDock.right - MAX(pt.x, barWidth / 2) - (barWidth / 2);
+            else     dockSize = MAX(pt.x, barWidth / 2) - rcDock.left - (barWidth / 2);
 
-            dockSize = MAX(-iBarWidth, dockSize);
+            dockSize = MAX(-barWidth, dockSize);
             pDocker->SetDockSize(dockSize);
             pDocker->m_dockSizeRatio = dockStartSize / parentWidth;
             break;
         case DS_DOCKED_RIGHT:
-            if (rtl)  dockSize = MAX(pt.x, iBarWidth / 2) - rcDock.left - static_cast<int>(.5* dBarWidth);
-            else      dockSize = rcDock.right - MAX(pt.x, iBarWidth / 2) - static_cast<int>(.5* dBarWidth);
+            if (rtl)  dockSize = MAX(pt.x, barWidth / 2) - rcDock.left - (barWidth / 2);
+            else      dockSize = rcDock.right - MAX(pt.x, barWidth / 2) - (barWidth / 2);
 
-            dockSize = MAX(-iBarWidth, dockSize);
+            dockSize = MAX(-barWidth, dockSize);
             pDocker->SetDockSize(dockSize);
             pDocker->m_dockSizeRatio = dockStartSize / parentWidth;
             break;
         case DS_DOCKED_TOP:
-            dockSize = MAX(pt.y, iBarWidth / 2) - rcDock.top - static_cast<int>(.5* dBarWidth);
-            dockSize = MAX(-iBarWidth, dockSize);
+            dockSize = MAX(pt.y, barWidth / 2) - rcDock.top - (barWidth / 2);
+            dockSize = MAX(-barWidth, dockSize);
             pDocker->SetDockSize(dockSize);
             pDocker->m_dockSizeRatio = dockStartSize / parentHeight;
             break;
         case DS_DOCKED_BOTTOM:
-            dockSize = rcDock.bottom - MAX(pt.y, iBarWidth / 2) - static_cast<int>(.5* dBarWidth);
-            dockSize = MAX(-iBarWidth, dockSize);
+            dockSize = rcDock.bottom - MAX(pt.y, barWidth / 2) - (barWidth / 2);
+            dockSize = MAX(-barWidth, dockSize);
             pDocker->SetDockSize(dockSize);
             pDocker->m_dockSizeRatio = dockStartSize / parentHeight;
             break;
@@ -3762,15 +3761,15 @@ namespace Win32xx
     // NOTE: This function assumes that each docker has a unique DockID
     inline BOOL CDocker::SaveDockRegistrySettings(LPCTSTR pRegistryKeyName)
     {
-        std::vector<CDocker*> vSorted = SortDockers();
+        std::vector<CDocker*> sortedDockers = SortDockers();
         std::vector<CDocker*>::const_iterator iter;
-        std::vector<DockInfo> vDockInfo;
+        std::vector<DockInfo> allDockInfo;
 
         if (pRegistryKeyName)
         {
-            CRegKey Key;
-            CRegKey KeyDock;
-            CString KeyName = _T("Software\\") + CString(pRegistryKeyName);
+            CRegKey key;
+            CRegKey keyDock;
+            CString keyName = _T("Software\\") + CString(pRegistryKeyName);
 
             try
             {
@@ -3778,17 +3777,17 @@ namespace Win32xx
                     throw (CUserException(_T("Dockers are in an inconsistant state")));
 
                 // Create the App's registry key
-                if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
+                if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
                     throw (CUserException(_T("Create Key failed")));
 
-                if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
+                if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
                     throw (CUserException(_T("Open Key failed")));
 
                 // Remove Old Docking info ...
-                Key.RecurseDeleteKey(_T("Dock Windows"));
+                key.RecurseDeleteKey(_T("Dock Windows"));
 
                 // Fill the DockInfo vector with the docking information
-                for (iter = vSorted.begin(); iter !=  vSorted.end(); ++iter)
+                for (iter = sortedDockers.begin(); iter != sortedDockers.end(); ++iter)
                 {
                     DockInfo di;
                     ZeroMemory(&di, sizeof(DockInfo));
@@ -3804,40 +3803,40 @@ namespace Win32xx
 
                     di.isInAncestor = ((*iter)->GetDockParent() == GetDockAncestor());
 
-                    vDockInfo.push_back(di);
+                    allDockInfo.push_back(di);
                 }
 
-                if (ERROR_SUCCESS != Key.Create(Key, _T("Dock Windows")))
+                if (ERROR_SUCCESS != key.Create(key, _T("Dock Windows")))
                     throw (CUserException(_T("Create KeyDock failed")));
 
-                if (ERROR_SUCCESS != KeyDock.Open(Key, _T("Dock Windows")))
+                if (ERROR_SUCCESS != keyDock.Open(key, _T("Dock Windows")))
                     throw (CUserException(_T("Open KeyDock failed")));
 
                 CString SubKeyName;
 
                 // Add the Dock windows information to the registry
-                for (UINT u = 0; u < vDockInfo.size(); ++u)
+                for (UINT u = 0; u < allDockInfo.size(); ++u)
                 {
-                    DockInfo di = vDockInfo[u];
+                    DockInfo di = allDockInfo[u];
                     SubKeyName.Format(_T("DockChild%u"), u);
-                    if(ERROR_SUCCESS != KeyDock.SetBinaryValue(SubKeyName, &di, sizeof(DockInfo)))
+                    if(ERROR_SUCCESS != keyDock.SetBinaryValue(SubKeyName, &di, sizeof(DockInfo)))
                         throw (CUserException(_T("KeyDock SetBinaryValue failed")));
                 }
 
                 // Add dock container info to the registry
-                UINT nContainer = 0;
+                UINT container = 0;
 
                 if (GetContainer())
-                    SaveContainerRegistrySettings(KeyDock, GetContainer(), nContainer);
+                    SaveContainerRegistrySettings(keyDock, GetContainer(), container);
 
 
-                for (iter = vSorted.begin(); iter != vSorted.end(); ++iter)
+                for (iter = sortedDockers.begin(); iter != sortedDockers.end(); ++iter)
                 {
                     CDockContainer* pContainer = (*iter)->GetContainer();
 
                     if (pContainer && ( !((*iter)->GetDockStyle() & DS_DOCKED_CONTAINER) ))
                     {
-                        SaveContainerRegistrySettings(KeyDock, pContainer, nContainer);
+                        SaveContainerRegistrySettings(keyDock, pContainer, container);
                     }
                 }
             }
@@ -3848,9 +3847,9 @@ namespace Win32xx
                 Trace(e.GetText()); Trace("\n");
 
                 // Roll back the registry changes by deleting the subkeys
-                if (Key.GetKey())
+                if (key.GetKey())
                 {
-                    Key.RecurseDeleteKey(_T("Dock Windows"));
+                    key.RecurseDeleteKey(_T("Dock Windows"));
                 }
 
                 return FALSE;
@@ -3864,13 +3863,13 @@ namespace Win32xx
     // Stores the docking container configuration in the registry.
     inline void CDocker::SaveContainerRegistrySettings(CRegKey& keyDock, CDockContainer* pContainer, UINT& container)
     {
-        CRegKey KeyContainer;
-        CString SubKeyName;
-        SubKeyName.Format(_T("DockContainer%u"), container++);
-        if (ERROR_SUCCESS != keyDock.Create(keyDock, SubKeyName))
+        CRegKey keyContainer;
+        CString subKeyName;
+        subKeyName.Format(_T("DockContainer%u"), container++);
+        if (ERROR_SUCCESS != keyDock.Create(keyDock, subKeyName))
             throw (CUserException(_T("Create KeyDockContainer failed")));
 
-        if (ERROR_SUCCESS != KeyContainer.Open(keyDock, SubKeyName))
+        if (ERROR_SUCCESS != keyContainer.Open(keyDock, subKeyName))
             throw (CUserException(_T("Open KeyContainer failed")));
 
         // Store the container group's parent
@@ -3878,32 +3877,32 @@ namespace Win32xx
         if (pDocker == 0)
             throw CUserException(_T("Failed to get docker from container view"));
         int id = pDocker->GetDockID();
-        if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Parent Container"), id))
+        if (ERROR_SUCCESS != keyContainer.SetDWORDValue(_T("Parent Container"), id))
             throw (CUserException(_T("KeyContainer SetDWORDValue failed")));
 
         // Store the active (selected) container
         pDocker = GetDockFromView(pContainer->GetActiveContainer());
         if (pDocker == 0)
-			id = 0;
+            id = 0;
         else
-			id = pDocker->GetDockID();
+            id = pDocker->GetDockID();
 
-        if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Active Container"), id))
+        if (ERROR_SUCCESS != keyContainer.SetDWORDValue(_T("Active Container"), id))
             throw (CUserException(_T("KeyContainer SetDWORDValue failed")));
 
         // Store the tab order
         for (UINT u2 = 0; u2 < pContainer->GetAllContainers().size(); ++u2)
         {
-            SubKeyName.Format(_T("Tab%u"), u2);
+            subKeyName.Format(_T("Tab%u"), u2);
             CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
             if (pTab == 0)
                 throw CUserException(_T("Failed to get container from index"));
             pDocker = GetDockFromView(pTab);
             if (pDocker == 0)
                 throw CUserException(_T("Failed to get docker from view"));
-            int nTabID = pDocker->GetDockID();
+            int tabID = pDocker->GetDockID();
 
-            if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(SubKeyName, nTabID))
+            if (ERROR_SUCCESS != keyContainer.SetDWORDValue(subKeyName, tabID))
                 throw (CUserException(_T("RegSetValueEx failed")));
         }
     }
@@ -3912,18 +3911,18 @@ namespace Win32xx
     // Sends a docking notification to the docker below the cursor
     inline void CDocker::SendNotify(UINT messageID)
     {
-        DRAGPOS DragPos;
-        DragPos.hdr.code = messageID;
-        DragPos.hdr.hwndFrom = GetHwnd();
-        DragPos.ptPos = GetCursorPos();
-        DragPos.DockZone = m_dockZone;
-        DragPos.pDocker = this;
+        DRAGPOS dragPos;
+        dragPos.hdr.code = messageID;
+        dragPos.hdr.hwndFrom = GetHwnd();
+        dragPos.ptPos = GetCursorPos();
+        dragPos.DockZone = m_dockZone;
+        dragPos.pDocker = this;
         m_dockZone = 0;
 
-        CDocker* pDocker = GetDockUnderDragPoint(DragPos.ptPos);
+        CDocker* pDocker = GetDockUnderDragPoint(dragPos.ptPos);
 
         if (pDocker)
-            pDocker->SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&DragPos));
+            pDocker->SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&dragPos));
         else
         {
             if (GetDockHint().IsWindow())
@@ -4058,7 +4057,7 @@ namespace Win32xx
                         (*iter) = m_dockChildren[0];
                     else
                         // remove ourself as a child of the parent
-						children.erase(iter);
+                        children.erase(iter);
 
                     // Done
                     break;
@@ -4163,9 +4162,9 @@ namespace Win32xx
         m_isUndocking = TRUE;
         CRect rc;
         rc = GetDockClient().GetWindowRect();
-        CRect rcTest = rc;
-        rcTest.bottom = MIN(rcTest.bottom, rcTest.top + m_ncHeight);
-        if ( !rcTest.PtInRect(pt))
+        CRect testRect = rc;
+        testRect.bottom = MIN(testRect.bottom, testRect.top + m_ncHeight);
+        if ( !testRect.PtInRect(pt))
             rc.SetRect(pt.x - rc.Width()/2, pt.y - m_ncHeight/2, pt.x + rc.Width()/2, pt.y - m_ncHeight/2 + rc.Height());
 
         ConvertToPopup(rc, showUndocked);
@@ -4383,7 +4382,7 @@ namespace Win32xx
             ::GetWindowRect(hTop, &rc);
             if ( rc.PtInRect(pt) )
             {
-				pThis->m_hDockUnderPoint = hTop;
+                pThis->m_hDockUnderPoint = hTop;
                 return FALSE;   // Stop enumerating
             }
         }
@@ -4422,12 +4421,12 @@ namespace Win32xx
         int newPage = 0;
         if (insert)
         {
-			m_allInfo.insert(m_allInfo.begin(), ci);
+            m_allInfo.insert(m_allInfo.begin(), ci);
         }
         else
         {
             newPage = static_cast<int>(m_allInfo.size());
-			m_allInfo.push_back(ci);
+            m_allInfo.push_back(ci);
         }
 
         if (IsWindow())
@@ -4521,7 +4520,7 @@ namespace Win32xx
         for (int i = 0; i < static_cast<int>(m_pContainerParent->m_allInfo.size()); ++i)
         {
             if (m_pContainerParent->m_allInfo[i].pContainer == pContainer)
-				result = i;
+                result = i;
         }
 
         return result;
@@ -4543,7 +4542,7 @@ namespace Win32xx
             dc.CreateFontIndirect(info.lfStatusFont);
             tempSize = dc.GetTextExtentPoint32(iter->title, lstrlen(iter->title));
             if (tempSize.cx > sz.cx)
-				sz = tempSize;
+                sz = tempSize;
         }
 
         return sz;
@@ -4602,7 +4601,7 @@ namespace Win32xx
             ci.pContainer = this;
             ci.title = GetTabText();
             ci.image = GetODImageList().Add(GetTabIcon());
-			m_allInfo.push_back(ci);
+            m_allInfo.push_back(ci);
 
             // Create the page window
             GetViewPage().Create(*this);
@@ -4688,7 +4687,7 @@ namespace Win32xx
             }
         }
 
-		m_pressedTab = -1;
+        m_pressedTab = -1;
         return CTab::OnMouseLeave(msg, wparam, lparam);
     }
 
@@ -4717,7 +4716,7 @@ namespace Win32xx
                 if (nTab != m_pressedTab)
                 {
                     SwapTabs(nTab, m_pressedTab);
-					m_pressedTab = nTab;
+                    m_pressedTab = nTab;
                     SelectPage(nTab);
                 }
             }
@@ -4834,7 +4833,7 @@ namespace Win32xx
                 if (iImage >= 0)
                     RemoveImage(iImage);
 
-				m_allInfo.erase(iter);
+                m_allInfo.erase(iter);
                 break;
             }
         }
@@ -4959,7 +4958,7 @@ namespace Win32xx
     // The colour mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
     // The colour mask is often grey RGB(192,192,192) or magenta (255,0,255)
     // The hot and disabled bitmap resources can be 0
-    // A disabled image list is created from the normal image list if one isn;t provided.
+    // A disabled image list is created from the normal image list if one isn't provided.
     inline void CDockContainer::SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID)
     {
         // ToolBar ImageLists require Comctl32.dll version 4.7 or later
@@ -4980,8 +4979,8 @@ namespace Win32xx
         int cx  = MAX(bm.bmHeight, 16);
 
         m_normalImages.DeleteImageList();
-		m_normalImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-		m_normalImages.Add(Bitmap, mask);
+        m_normalImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        m_normalImages.Add(Bitmap, mask);
         GetToolBar().SetImageList(m_normalImages);
 
         if (hotID)
@@ -4990,8 +4989,8 @@ namespace Win32xx
             assert(BitmapHot);
 
             m_hotImages.DeleteImageList();
-			m_hotImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-			m_hotImages.Add(BitmapHot, mask);
+            m_hotImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+            m_hotImages.Add(BitmapHot, mask);
             GetToolBar().SetHotImageList(m_hotImages);
         }
 
@@ -5000,15 +4999,15 @@ namespace Win32xx
             CBitmap BitmapDisabled(disabledID);
             assert(BitmapDisabled);
 
-			m_disabledImages.DeleteImageList();
-			m_disabledImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-			m_disabledImages.Add(BitmapDisabled, mask);
+            m_disabledImages.DeleteImageList();
+            m_disabledImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+            m_disabledImages.Add(BitmapDisabled, mask);
             GetToolBar().SetDisableImageList(m_disabledImages);
         }
         else
         {
-			m_disabledImages.DeleteImageList();
-			m_disabledImages.CreateDisabledImageList(m_normalImages);
+            m_disabledImages.DeleteImageList();
+            m_disabledImages.CreateDisabledImageList(m_normalImages);
             GetToolBar().SetDisableImageList(m_disabledImages);
         }
     }

@@ -183,14 +183,14 @@ namespace Win32xx
         ZeroMemory(&m_psp, sizeof(m_psp));
         SetTitle(pTitle);
 
-		m_psp.dwSize        = sizeof(m_psp);
-		m_psp.dwFlags       |= PSP_USECALLBACK;
-		m_psp.hInstance     = GetApp().GetResourceHandle();
-		m_psp.pszTemplate   = MAKEINTRESOURCE(templateID);
-		m_psp.pszTitle      = m_title;
-		m_psp.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
-		m_psp.lParam        = reinterpret_cast<LPARAM>(this);
-		m_psp.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
+        m_psp.dwSize        = sizeof(m_psp);
+        m_psp.dwFlags       |= PSP_USECALLBACK;
+        m_psp.hInstance     = GetApp().GetResourceHandle();
+        m_psp.pszTemplate   = MAKEINTRESOURCE(templateID);
+        m_psp.pszTitle      = m_title;
+        m_psp.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
+        m_psp.lParam        = reinterpret_cast<LPARAM>(this);
+        m_psp.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
     }
 
 
@@ -542,15 +542,15 @@ namespace Win32xx
         m_PSH.dwSize = sizeof(PROPSHEETHEADER);
 #else
         if (GetComCtlVersion() >= 471)
-			m_psh.dwSize = sizeof(PROPSHEETHEADER);
+            m_psh.dwSize = sizeof(PROPSHEETHEADER);
         else
-			m_psh.dwSize = PROPSHEETHEADER_V1_SIZE;
+            m_psh.dwSize = PROPSHEETHEADER_V1_SIZE;
 #endif
 
-		m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
-		m_psh.hwndParent       = hParent;
-		m_psh.hInstance        = GetApp().GetInstanceHandle();
-		m_psh.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
+        m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
+        m_psh.hwndParent       = hParent;
+        m_psh.hInstance        = GetApp().GetInstanceHandle();
+        m_psh.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
     }
 
 
@@ -563,15 +563,15 @@ namespace Win32xx
         m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
 #else
         if (GetComCtlVersion() >= 471)
-			m_psh.dwSize = sizeof(PROPSHEETHEADER);
+            m_psh.dwSize = sizeof(PROPSHEETHEADER);
         else
-			m_psh.dwSize = PROPSHEETHEADER_V1_SIZE;
+            m_psh.dwSize = PROPSHEETHEADER_V1_SIZE;
 #endif
 
-		m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
-		m_psh.hwndParent       = hParent;
-		m_psh.hInstance        = GetApp().GetInstanceHandle();
-		m_psh.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
+        m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
+        m_psh.hwndParent       = hParent;
+        m_psh.hInstance        = GetApp().GetInstanceHandle();
+        m_psh.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
     }
 
 
@@ -582,7 +582,7 @@ namespace Win32xx
     {
         assert(NULL != pPage);
 
-		m_allPages.push_back(PropertyPagePtr(pPage));
+        m_allPages.push_back(PropertyPagePtr(pPage));
 
         if (*this)
         {
@@ -592,7 +592,7 @@ namespace Win32xx
             PropSheet_AddPage(*this, hpsp);
         }
 
-		m_psh.nPages = static_cast<int>(m_allPages.size());
+        m_psh.nPages = static_cast<int>(m_allPages.size());
 
         return pPage;
     }
@@ -601,13 +601,13 @@ namespace Win32xx
     // Builds the array of PROPSHEETPAGE.
     inline void CPropertySheet::BuildPageArray()
     {
-		m_allSheetPages.clear();
+        m_allSheetPages.clear();
         std::vector<PropertyPagePtr>::const_iterator iter;
         for (iter = m_allPages.begin(); iter != m_allPages.end(); ++iter)
-			m_allSheetPages.push_back((*iter)->GetPSP());
+            m_allSheetPages.push_back((*iter)->GetPSP());
 
         PROPSHEETPAGE* pPSPArray = &m_allSheetPages.front(); // Array of PROPSHEETPAGE
-		m_psh.ppsp = pPSPArray;
+        m_psh.ppsp = pPSPArray;
     }
 
     // Override this function to filter mouse and keyboard messages prior to
@@ -655,16 +655,16 @@ namespace Win32xx
 
         if (hParent)
         {
-			m_psh.hwndParent = hParent;
+            m_psh.hwndParent = hParent;
         }
 
         BuildPageArray();
         PROPSHEETPAGE* pPSPArray = &m_allSheetPages.front();
-		m_psh.ppsp = pPSPArray;
+        m_psh.ppsp = pPSPArray;
 
         // Create a modeless Property Sheet
-		m_psh.dwFlags &= ~PSH_WIZARD;
-		m_psh.dwFlags |= PSH_MODELESS;
+        m_psh.dwFlags &= ~PSH_WIZARD;
+        m_psh.dwFlags |= PSH_MODELESS;
         HWND hWnd = reinterpret_cast<HWND>(CreatePropertySheet(&m_psh));
         if (hWnd == 0)
             throw CWinException(_T("CreatePropertySheet failed"));
@@ -723,7 +723,7 @@ namespace Win32xx
     inline void CPropertySheet::Destroy()
     {
         CWnd::Destroy();
-		m_allPages.clear();
+        m_allPages.clear();
     }
 
 
@@ -735,13 +735,13 @@ namespace Win32xx
 
         BuildPageArray();
         PROPSHEETPAGE* pPSPArray = &m_allSheetPages.front();
-		m_psh.ppsp = pPSPArray;
+        m_psh.ppsp = pPSPArray;
 
         // Create the Property Sheet
-		m_psh.dwFlags &= ~PSH_MODELESS;
+        m_psh.dwFlags &= ~PSH_MODELESS;
         int nResult = static_cast<int>(CreatePropertySheet(&m_psh));
 
-		m_allPages.clear();
+        m_allPages.clear();
 
         return nResult;
     }
@@ -816,8 +816,8 @@ namespace Win32xx
         if (GetHwnd() != 0)
             SendMessage(*this, PSM_REMOVEPAGE, nPage, 0);
 
-		m_allPages.erase(m_allPages.begin() + nPage, m_allPages.begin() + nPage+1);
-		m_psh.nPages = static_cast<int>(m_allPages.size());
+        m_allPages.erase(m_allPages.begin() + nPage, m_allPages.begin() + nPage+1);
+        m_psh.nPages = static_cast<int>(m_allPages.size());
     }
 
 
@@ -866,8 +866,8 @@ namespace Win32xx
     // Sets the property sheet's icon
     inline void CPropertySheet::SetIcon(UINT iconID)
     {
-		m_psh.pszIcon = MAKEINTRESOURCE(iconID);
-		m_psh.dwFlags |= PSH_USEICONID;
+        m_psh.pszIcon = MAKEINTRESOURCE(iconID);
+        m_psh.dwFlags |= PSH_USEICONID;
     }
 
 
@@ -875,11 +875,11 @@ namespace Win32xx
     inline void CPropertySheet::SetTitle(LPCTSTR pTitle)
     {
         if (pTitle)
-			m_title = pTitle;
+            m_title = pTitle;
         else
-			m_title.Empty();
+            m_title.Empty();
 
-		m_psh.pszCaption = m_title;
+        m_psh.pszCaption = m_title;
     }
 
 
@@ -888,9 +888,9 @@ namespace Win32xx
     inline void CPropertySheet::SetWizardMode(BOOL isWizard)
     {
         if (isWizard)
-			m_psh.dwFlags |= PSH_WIZARD;
+            m_psh.dwFlags |= PSH_WIZARD;
         else
-			m_psh.dwFlags &= ~PSH_WIZARD;
+            m_psh.dwFlags &= ~PSH_WIZARD;
     }
 
 }

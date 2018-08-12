@@ -2,11 +2,11 @@
 #define HELPABOUT_H
 
 
-class CHelpAbout : public CDialog
+class CAboutHelp : public CDialog
 {
 public:
-    CHelpAbout();
-    virtual ~CHelpAbout() {}
+    CAboutHelp();
+    virtual ~CAboutHelp() {}
 
     const CString& GetCredits() const   { return m_credits; }
     void SetCredits(LPCTSTR credits)  { m_credits = credits; }

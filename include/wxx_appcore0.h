@@ -460,7 +460,7 @@ namespace Win32xx
         HANDLE  GetThread() const;
         int     GetThreadID() const;
         int     GetThreadPriority() const;
-		BOOL    IsRunning() const { return (WaitForSingleObject(m_hThread, 0) == WAIT_TIMEOUT); }
+        BOOL    IsRunning() const { return (WaitForSingleObject(m_hThread, 0) == WAIT_TIMEOUT); }
         BOOL    PostThreadMessage(UINT message, WPARAM wparam, LPARAM lparam) const;
         DWORD   ResumeThread() const;
         void    SetAccelerators(HACCEL hAccel, HWND hWndAccel);

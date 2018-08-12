@@ -6,14 +6,14 @@
 #include "HelpAbout.h"
 
 
-// The CAppHelp class uses composition to combine the features of the
-//  CContextHelp and CHelpAbout classes.
+// The CHelp class combines the features of the CContextHelp and
+//  CAboutHelp classes.
 
-class CAppHelp
+class CHelp
 {
 public:
-    CAppHelp();
-    ~CAppHelp() {}
+    CHelp();
+    ~CHelp() {}
     
     void About(HWND hParent = 0);
     void AddHelpTopic(UINT id, LPCTSTR topic);
@@ -27,7 +27,7 @@ public:
 
 private:
     CContextHelp m_contextHelp;
-    CHelpAbout m_helpAbout;
+    CAboutHelp m_helpAbout;
 };
 
 

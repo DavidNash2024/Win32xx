@@ -243,7 +243,7 @@ namespace Win32xx
 
                 if (pfnGetMonitorInfo(hActiveMonitor, &mi))
                 {
-					desktopRect = mi.rcWork;
+                    desktopRect = mi.rcWork;
                     if (GetParent().GetHwnd() == NULL) desktopRect = mi.rcWork;
                 }
             }
@@ -253,7 +253,7 @@ namespace Win32xx
  #endif
 
         // Calculate point to center the dialog over the portion of parent window on this monitor
-		parentRect.IntersectRect(parentRect, desktopRect);
+        parentRect.IntersectRect(parentRect, desktopRect);
         int x = parentRect.left + (parentRect.Width() - rc.Width())/2;
         int y = parentRect.top + (parentRect.Height() - rc.Height())/2;
 
@@ -590,7 +590,7 @@ namespace Win32xx
 
         // Override this to handle WM_COMMAND messages, for example
 
-		//  UINT id = LOWORD(wparam);
+        //  UINT id = LOWORD(wparam);
         //  switch (id)
         //  {
         //  case IDM_FILE_NEW:
@@ -1122,11 +1122,11 @@ namespace Win32xx
                 // Reflect this message if it's from a control
                 CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lparam));
                 if (pWnd != NULL)
-					result = pWnd->OnCommand(wparam, lparam);
+                    result = pWnd->OnCommand(wparam, lparam);
 
                 // Handle user commands
                 if (0 == result)
-					result =  OnCommand(wparam, lparam);
+                    result =  OnCommand(wparam, lparam);
 
                 if (0 != result) return 0;
             }
@@ -1151,7 +1151,7 @@ namespace Win32xx
 
                 if (pWndFrom != NULL)
                     if (::GetParent(hwndFrom) == m_hWnd)
-						result = pWndFrom->OnNotifyReflect(wparam, lparam);
+                        result = pWndFrom->OnNotifyReflect(wparam, lparam);
 
                 // Handle user notifications
                 if (result == 0) result = OnNotify(wparam, lparam);
@@ -1194,7 +1194,7 @@ namespace Win32xx
         case WM_VSCROLL:
         case WM_PARENTNOTIFY:
             {
-			    result = MessageReflect(msg, wparam, lparam);
+                result = MessageReflect(msg, wparam, lparam);
                 if (result != 0) return result;    // Message processed so return
             }
             break;              // Do default processing when message not already processed
@@ -1304,7 +1304,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         return ::DeferWindowPos(hWinPosInfo, *this, hInsertAfter, rect.left, 
-			rect.top, rect.right - rect.left, rect.bottom - rect.top, flags);
+            rect.top, rect.right - rect.left, rect.bottom - rect.top, flags);
     }
 
 
@@ -1739,7 +1739,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         return ::MoveWindow(*this, rect.left, rect.top, rect.right - rect.left,
-			rect.bottom - rect.top, repaint);
+            rect.bottom - rect.top, repaint);
     }
 
 
@@ -2010,7 +2010,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         return ::SetWindowPos(*this, hInsertAfter, rect.left, rect.top, rect.right - rect.left,
-			rect.bottom - rect.top, flags);
+            rect.bottom - rect.top, flags);
     }
 
 
@@ -2053,7 +2053,7 @@ namespace Win32xx
             typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND hWnd, LPCWSTR pszSubAppName, LPCWSTR pszSubIdList);
             PFNSETWINDOWTHEME pfn = (PFNSETWINDOWTHEME)GetProcAddress(hMod, "SetWindowTheme");
 
-			result = pfn(*this, pSubAppName, pSubIdList);
+            result = pfn(*this, pSubAppName, pSubIdList);
 
             ::FreeLibrary(hMod);
         }

@@ -265,12 +265,12 @@ namespace Win32xx
         {
             while ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
             {
-				windowMenu.DeleteMenu(nItems, MF_BYPOSITION);
+                windowMenu.DeleteMenu(nItems, MF_BYPOSITION);
                 uLastID = windowMenu.GetMenuItemID(--nItems);
             }
 
             //delete the separator too
-			windowMenu.DeleteMenu(nItems, MF_BYPOSITION);
+            windowMenu.DeleteMenu(nItems, MF_BYPOSITION);
         }
 
         int nWindow = 0;
@@ -284,7 +284,7 @@ namespace Win32xx
             {
                 // Add Separator
                 if (nWindow == 0)
-					windowMenu.AppendMenu(MF_SEPARATOR, 0, reinterpret_cast<LPCTSTR>(NULL));
+                    windowMenu.AppendMenu(MF_SEPARATOR, 0, reinterpret_cast<LPCTSTR>(NULL));
 
                 // Add a menu entry for each MDI child (up to 9)
                 if (nWindow < 9)
@@ -301,17 +301,17 @@ namespace Win32xx
                     CString MenuString;
                     MenuString.Format(_T("&%d %s"), nWindow+1, strMenuItem.c_str());
 
-					windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString);
+                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString);
 
                     if (GetActiveMDIChild() == (*v).get())
-						windowMenu.CheckMenuItem(IDW_FIRSTCHILD+nWindow, MF_CHECKED);
+                        windowMenu.CheckMenuItem(IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
                     ++nWindow;
                 }
                 else if (9 == nWindow)
                 // For the 10th MDI child, add this menu item and return
                 {
-					windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
+                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
                     return;
                 }
             }

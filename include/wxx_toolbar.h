@@ -139,9 +139,9 @@ namespace Win32xx
         CToolBar(const CToolBar&);              // Disable copy construction
         CToolBar& operator = (const CToolBar&); // Disable assignment operator
 
-        std::map<CString, int> m_StringMap; // a map of strings used in SetButtonText
+        std::map<CString, int> m_stringMap; // a map of strings used in SetButtonText
 
-        UINT m_OldToolBarID;                // Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
+        UINT m_oldToolBarID;                // Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 
     };  // class CToolBar
 
@@ -158,7 +158,7 @@ namespace Win32xx
     // Definitions for the CToolBar class
     //
 
-    inline CToolBar::CToolBar() : m_OldToolBarID(0)
+    inline CToolBar::CToolBar() : m_oldToolBarID(0)
     {
     }
 
@@ -171,11 +171,11 @@ namespace Win32xx
     // Adds one or more images to the list of button images available for a ToolBar.
     // Note: AddBitmap supports a maximum colour depth of 8 bits (256 colours)
     //       For more colours, use an ImageList instead.
-    inline int CToolBar::AddBitmap(UINT ToolBarID)
+    inline int CToolBar::AddBitmap(UINT toolBarID)
     {
         assert(IsWindow());
 
-        CBitmap Bitmap(ToolBarID);
+        CBitmap Bitmap(toolBarID);
         assert (Bitmap.GetHandle());
         BITMAP bm = Bitmap.GetBitmapData();
         int iImageWidth  = MAX(bm.bmHeight, 16);
@@ -184,13 +184,13 @@ namespace Win32xx
         TBADDBITMAP tbab;
         ZeroMemory(&tbab, sizeof(tbab));
         tbab.hInst = GetApp().GetResourceHandle();
-        tbab.nID   = ToolBarID;
-        int iResult = static_cast<int>(SendMessage(TB_ADDBITMAP, iImages, reinterpret_cast<LPARAM>(&tbab)));
+        tbab.nID   = toolBarID;
+        int result = static_cast<int>(SendMessage(TB_ADDBITMAP, iImages, reinterpret_cast<LPARAM>(&tbab)));
 
-        if (-1 != iResult)
-            m_OldToolBarID = ToolBarID;
+        if (result != -1)
+            m_oldToolBarID = toolBarID;
 
-        return iResult;
+        return result;
     }
 
 
@@ -314,7 +314,7 @@ namespace Win32xx
     inline void CToolBar::Destroy()
     {
         CWnd::Destroy();
-        m_StringMap.clear();
+        m_stringMap.clear();
     }
 
 
@@ -748,20 +748,20 @@ namespace Win32xx
         CBitmap Bitmap(newToolBarID);
         assert (Bitmap.GetHandle());
         BITMAP bm = Bitmap.GetBitmapData();
-        int iImageWidth  = MAX(bm.bmHeight, 16);
-        int iImages = bm.bmWidth / iImageWidth;
+        int imageWidth  = MAX(bm.bmHeight, 16);
+        int images = bm.bmWidth / imageWidth;
 
         TBREPLACEBITMAP tbrb;
         ZeroMemory(&tbrb, sizeof(tbrb));
         tbrb.hInstNew = GetApp().GetResourceHandle();
         tbrb.hInstOld = tbrb.hInstNew;
         tbrb.nIDNew = newToolBarID;
-        tbrb.nIDOld = m_OldToolBarID;
-        tbrb.nButtons  = iImages;
+        tbrb.nIDOld = m_oldToolBarID;
+        tbrb.nButtons  = images;
 
-        BOOL Succeeded = (SendMessage(TB_REPLACEBITMAP, iImages, reinterpret_cast<LPARAM>(&tbrb)) != 0);
+        BOOL Succeeded = (SendMessage(TB_REPLACEBITMAP, images, reinterpret_cast<LPARAM>(&tbrb)) != 0);
         if (Succeeded)
-            m_OldToolBarID = newToolBarID;
+            m_oldToolBarID = newToolBarID;
 
         return Succeeded;
     }
@@ -795,7 +795,7 @@ namespace Win32xx
         SetBitmapSize(imageWidth, imageHeight);
 
         BOOL succeeded = FALSE;
-        if (m_OldToolBarID)
+        if (m_oldToolBarID)
             succeeded = ReplaceBitmap(id);
         else
             succeeded = AddBitmap(id);
@@ -829,10 +829,10 @@ namespace Win32xx
         // Retrieve existing state and style
         TBBUTTON tb;
         ZeroMemory(&tb, sizeof(tb));
-        BOOL Succeeded = GetButton(CommandToIndex(buttonID), tb);
-        assert(Succeeded);
+        BOOL result = GetButton(CommandToIndex(buttonID), tb);
+        assert(result);
 
-        if (Succeeded)
+        if (result)
         {
             TBBUTTONINFO tbbi;
             ZeroMemory(&tbbi, sizeof(tbbi));
@@ -894,20 +894,20 @@ namespace Win32xx
     inline BOOL CToolBar::SetButtonText(int buttonID, LPCTSTR pText)
     {
         assert(IsWindow());
-        int iIndex = CommandToIndex(buttonID);
-        assert(-1 != iIndex);
+        int index = CommandToIndex(buttonID);
+        assert(index != -1);
 
-        BOOL Succeeded = TRUE;
-        CString sString = pText;
+        BOOL succeeded = FALSE;
+        CString string = pText;
         std::map<CString, int>::iterator m;
-        int iString;
+        int stringIndex;
 
         // Check to see if the string is already added
-        m = m_StringMap.find(sString);
-        if (m_StringMap.end() == m)
+        m = m_stringMap.find(string);
+        if (m_stringMap.end() == m)
         {
             CString str;
-            if (m_StringMap.size() == 0)
+            if (m_stringMap.size() == 0)
             {
                 // Place a blank string first in the string table, in case some
                 // buttons don't have text
@@ -921,35 +921,38 @@ namespace Win32xx
             str = pText;
             str += _T('\0');        // Double-null terminate
 
-            iString = AddStrings(str);
-            if (-1 == iString )
-                Succeeded = FALSE;
+            stringIndex = AddStrings(str);
+            if (stringIndex != -1)
+            {
+                // Save the string its index in our map
+                m_stringMap.insert(std::make_pair(string, stringIndex));
 
-            // Save the string its index in our map
-            m_StringMap.insert(std::make_pair(sString, iString));
+                succeeded = TRUE;
+            }
         }
         else
         {
             // String found, use the index from our map
-            iString = m->second;
+            stringIndex = m->second;
+            succeeded = TRUE;
         }
 
-        if (Succeeded)
+        if (succeeded)
         {
             TBBUTTON tbb;
             ZeroMemory(&tbb, sizeof(tbb));
-            Succeeded = (SendMessage(TB_GETBUTTON, iIndex, reinterpret_cast<LPARAM>(&tbb)) != 0);
+            succeeded = (SendMessage(TB_GETBUTTON, index, reinterpret_cast<LPARAM>(&tbb)) != 0);
 
-            tbb.iString = iString;
+            tbb.iString = stringIndex;
 
             // Turn off ToolBar drawing
             SetRedraw(FALSE);
 
-            if (Succeeded)
-                Succeeded = (SendMessage(TB_DELETEBUTTON, iIndex, 0) != 0);
+            if (succeeded)
+                succeeded = (SendMessage(TB_DELETEBUTTON, index, 0) != 0);
 
-            if (Succeeded)
-                Succeeded = (SendMessage(TB_INSERTBUTTON, iIndex, reinterpret_cast<LPARAM>(&tbb)) != 0);
+            if (succeeded)
+                succeeded = (SendMessage(TB_INSERTBUTTON, index, reinterpret_cast<LPARAM>(&tbb)) != 0);
 
             // Ensure the button now includes some text rows
             if (SendMessage(TB_GETTEXTROWS, 0, 0) == 0)
@@ -959,10 +962,10 @@ namespace Win32xx
             SetRedraw(TRUE);
         }
         // Redraw button
-        CRect r = GetItemRect(iIndex);
+        CRect r = GetItemRect(index);
         InvalidateRect(r, TRUE);
 
-        return Succeeded;
+        return succeeded;
     }
 
 
