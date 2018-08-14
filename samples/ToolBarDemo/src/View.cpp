@@ -221,8 +221,8 @@ void CView::SetWrapState(BOOL isWrapped)
 {
     for (int i = 0; i < m_toolBar.GetButtonCount(); ++i)
     {
-        int nID = m_toolBar.GetCommandID(i);
-        m_toolBar.SetButtonState(nID, TBSTATE_ENABLED | (isWrapped ? TBSTATE_WRAP : 0));
+        int id = m_toolBar.GetCommandID(i);
+        m_toolBar.SetButtonState(id, TBSTATE_ENABLED | (isWrapped ? TBSTATE_WRAP : 0));
     }
 }
 

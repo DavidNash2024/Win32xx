@@ -35,7 +35,7 @@ protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT nID);
+    virtual void OnMenuUpdate(UINT id);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual BOOL SaveRegistrySettings();
     virtual void SetupToolBar();

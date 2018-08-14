@@ -144,8 +144,8 @@ UINT CMainFrame::GetIDFromCursorPos()
     {
         // Over the toolbar window, so identify the toolbar button
 
-        int nButton = GetToolBar().HitTest();
-		id = GetToolBar().GetCommandID(nButton);
+        int button = GetToolBar().HitTest();
+		id = GetToolBar().GetCommandID(button);
     }
     else if (hCtrl == GetHwnd())
     {
@@ -153,9 +153,9 @@ UINT CMainFrame::GetIDFromCursorPos()
 
         // The WM_NCHITTEST message returns a value indicating the position of the
         //  cursor hot spot within the non-client area.
-        LRESULT lr = SendMessage(WM_NCHITTEST, 0, MAKELPARAM(pt.x, pt.y));
+        LRESULT result = SendMessage(WM_NCHITTEST, 0, MAKELPARAM(pt.x, pt.y));
 
-		id = IDFR_NCFRAME + lr; // As defined in resource.h
+		id = IDFR_NCFRAME + result; // As defined in resource.h
     }
     else if (hCtrl != 0)
     {
@@ -250,14 +250,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
     // call the base class function
-    int Res = CFrame::OnCreate(cs);
+    int result = CFrame::OnCreate(cs);
 
     // Add control IDs for various windows
     GetView().SetWindowLongPtr(GWLP_ID, IDD_DIALOG1);
     GetMenuBar().SetWindowLongPtr(GWLP_ID, IDW_MENUBAR);
     GetStatusBar().SetWindowLongPtr(GWLP_ID, IDW_STATUSBAR);
 
-    return Res;
+    return result;
 }
 
 void CMainFrame::OnF1()
@@ -355,9 +355,9 @@ void CMainFrame::OnUpdateCheckC(UINT id)
 void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
     int fileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
-    CMenu RadioMenu = GetFrameMenu().GetSubMenu(fileItem);
+    CMenu radioMenu = GetFrameMenu().GetSubMenu(fileItem);
     if (GetDoc().GetRadio() == id)
-        RadioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
+        radioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)

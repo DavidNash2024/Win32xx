@@ -51,7 +51,7 @@ CContextHelp::~CContextHelp()
 }
 
 void CContextHelp::AddHelpTopic(UINT id, LPCTSTR topic)
-// Add the (control-nID, string topic) pair to the help topic table.
+// Add the (control-id, string topic) pair to the help topic table.
 // Assert if a duplicate id entered.
 {
     assert(id);
@@ -108,7 +108,7 @@ UINT CContextHelp::GetIDFromCursorPos() const
 
 void CContextHelp::ShowHelpTopic(UINT id)
 // Display the application guide topic corresponding to the numeric
-// identifier nID, if present in the help table, and if the topic exists
+// identifier id, if present in the help table, and if the topic exists
 // in the guide.
 {
     std::map<UINT, CString>::const_iterator m;

@@ -68,7 +68,7 @@ namespace Win32xx
     public:
         CMenuBar();
         virtual ~CMenuBar();
-        virtual void SetMenu(HMENU hMenu);
+        virtual void SetMenu(HMENU menu);
 
         void DrawAllMDIButtons(CDC& drawDC);
         CWnd* GetMDIClient() const;
@@ -1084,11 +1084,11 @@ namespace Win32xx
 
 
     // Builds the list of menubar (toolbar) buttons from the top level menu.
-    inline void CMenuBar::SetMenu(HMENU hMenu)
+    inline void CMenuBar::SetMenu(HMENU menu)
     {
         assert(IsWindow());
 
-        m_hTopMenu = hMenu;
+        m_hTopMenu = menu;
         int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
 
         // Remove any existing buttons
@@ -1114,7 +1114,7 @@ namespace Win32xx
             SetButtonText(0, _T("    "));
         }
 
-        for (int i = 0 ; i < ::GetMenuItemCount(hMenu); ++i)
+        for (int i = 0 ; i < ::GetMenuItemCount(menu); ++i)
         {
             // Assign the ToolBar Button struct
             TBBUTTON tbb;
@@ -1128,7 +1128,7 @@ namespace Win32xx
             // Add the menu title to the string table
             std::vector<TCHAR> vMenuName( MAX_MENU_STRING+1, _T('\0') );
             TCHAR* pMenuName = &vMenuName[0];
-            GetMenuString(hMenu, i, pMenuName, MAX_MENU_STRING, MF_BYPOSITION);
+            GetMenuString(menu, i, pMenuName, MAX_MENU_STRING, MF_BYPOSITION);
             SetButtonText(i  + nMaxedOffset, pMenuName);
         }
     }

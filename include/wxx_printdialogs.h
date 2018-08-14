@@ -957,10 +957,10 @@ namespace Win32xx
     // Override this function to customize drawing of the sample page in the Page Setup dialog box.
     // It is called in response to the following messages: WM_PSD_FULLPAGERECT; WM_PSD_MINMARGINRECT;
     // WM_PSD_MARGINRECT; WM_PSD_GREEKTEXTRECT; WM_PSD_ENVSTAMPRECT; and WM_PSD_YAFULLPAGERECT.
-    inline UINT CPageSetupDialog::OnDrawPage(HDC hDC, UINT nMessage, const RECT& /* rc*/)
+    inline UINT CPageSetupDialog::OnDrawPage(HDC dc, UINT message, const RECT& /* rc*/)
     {
-        UNREFERENCED_PARAMETER(hDC);
-        UNREFERENCED_PARAMETER(nMessage);
+        UNREFERENCED_PARAMETER(dc);
+        UNREFERENCED_PARAMETER(message);
 
         return 0; // do the default
     }

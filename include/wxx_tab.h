@@ -98,7 +98,7 @@ namespace Win32xx
     public:
         CTab();
         virtual ~CTab();
-        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR pTabText, HICON hIcon, UINT tabID);
+        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR pTabText, HICON icon, UINT tabID);
         virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR pTabText, int iconID, UINT tabID = 0);
         virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR pTabText);
         virtual CRect GetCloseRect() const;
@@ -114,10 +114,10 @@ namespace Win32xx
         virtual void RemoveTabPage(int page);
         virtual void SelectPage(int page);
         virtual void SetFixedWidth(BOOL IsEnabled);
-        virtual void SetFont(HFONT hFont, BOOL redraw = TRUE);
+        virtual void SetFont(HFONT font, BOOL redraw = TRUE);
         virtual void SetOwnerDraw(BOOL isEnabled);
         virtual void SetShowButtons(BOOL show);
-        virtual void SetTabIcon(int tab, HICON hIcon);
+        virtual void SetTabIcon(int tab, HICON icon);
         virtual void SetTabsAtTop(BOOL isAtTop);
         virtual void SetTabText(UINT tab, LPCTSTR pText);
         virtual void ShowListDialog();
@@ -156,7 +156,7 @@ namespace Win32xx
         void        SetCurFocus(int tab) const;
         int         SetCurSel(int tab) const;
         DWORD       SetExtendedStyle(DWORD exStyle) const;
-        CImageList  SetImageList(HIMAGELIST hImages) const;
+        CImageList  SetImageList(HIMAGELIST newImages) const;
         BOOL        SetItem(int tab, LPTCITEM pTabInfo) const;
         BOOL        SetItemExtra(int cb) const;
         DWORD       SetItemSize(int cx, int cy) const;
@@ -326,7 +326,7 @@ namespace Win32xx
 
     // Adds a tab page. The framework assumes ownership of the CWnd pointer provided,
     // and deletes the CWnd object when the window is destroyed.
-    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, HICON hIcon, UINT tabID)
+    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, HICON icon, UINT tabID)
     {
         assert(pView);
         assert(lstrlen(pTabText) < MAX_MENU_STRING);
@@ -337,8 +337,8 @@ namespace Win32xx
         tpi.pView = pView;
         tpi.idTab = tabID;
         tpi.TabText = pTabText;
-        if (hIcon != 0)
-            tpi.iImage = GetODImageList().Add(hIcon);
+        if (icon != 0)
+            tpi.iImage = GetODImageList().Add(icon);
         else
             tpi.iImage = -1;
 
@@ -367,9 +367,9 @@ namespace Win32xx
     // and deletes the CWnd object when the window is destroyed.
     inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, int iconID, UINT tabID /* = 0*/)
     {
-        HICON hIcon = reinterpret_cast<HICON>(LoadImage(GetApp().GetResourceHandle(),
+        HICON icon = reinterpret_cast<HICON>(LoadImage(GetApp().GetResourceHandle(),
                                           MAKEINTRESOURCE(iconID), IMAGE_ICON, 0, 0, LR_SHARED));
-        return AddTabPage(pView, pTabText, hIcon, tabID);
+        return AddTabPage(pView, pTabText, icon, tabID);
     }
 
 
@@ -1308,11 +1308,11 @@ namespace Win32xx
 
 
     // Sets the font and adjusts the tab height to match.
-    inline void CTab::SetFont(HFONT hFont, BOOL redraw /* = 1 */)
+    inline void CTab::SetFont(HFONT font, BOOL redraw /* = 1 */)
     {
         int HeightGap = 5;
         SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
-        CWnd::SetFont(hFont, redraw);
+        CWnd::SetFont(font, redraw);
     }
 
 
@@ -1349,7 +1349,7 @@ namespace Win32xx
 
 
     // Changes or sets the tab's icon.
-    inline void CTab::SetTabIcon(int tab, HICON hIcon)
+    inline void CTab::SetTabIcon(int tab, HICON icon)
     {
         assert (GetItemCount() > tab);
         TCITEM tci;
@@ -1358,11 +1358,11 @@ namespace Win32xx
         GetItem(tab, &tci);
         if (tci.iImage >= 0)
         {
-            GetODImageList().Replace(tab, hIcon);
+            GetODImageList().Replace(tab, icon);
         }
         else
         {
-            int iImage = GetODImageList().Add(hIcon);
+            int iImage = GetODImageList().Add(icon);
             tci.iImage = iImage;
             SetItem(tab, &tci);
             m_allTabPageInfo[tab].iImage = iImage;
@@ -1630,8 +1630,8 @@ namespace Win32xx
     inline CImageList CTab::GetImageList() const
     {
         assert(IsWindow());
-        HIMAGELIST himl = TabCtrl_GetImageList(*this);
-        return CImageList(himl);
+        HIMAGELIST images = TabCtrl_GetImageList(*this);
+        return CImageList(images);
     }
 
 
@@ -1733,11 +1733,11 @@ namespace Win32xx
 
 
     // Assigns an image list to a tab control.
-    inline CImageList CTab::SetImageList(HIMAGELIST himlNew) const
+    inline CImageList CTab::SetImageList(HIMAGELIST newImages) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = TabCtrl_SetImageList( *this, himlNew );
-        return CImageList(himl);
+        HIMAGELIST images = TabCtrl_SetImageList( *this, newImages);
+        return CImageList(images);
     }
 
 

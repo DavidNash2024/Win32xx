@@ -1537,14 +1537,14 @@ namespace Win32xx
     // Return the current font size, in 1/10th points (1 pt = 1/72 inch).
     inline int CFontDialog::GetSize() const
     {
-        HDC hdc = ::GetDC(NULL); // the device context for the entire screen
+        HDC dc = ::GetDC(NULL); // the device context for the entire screen
 
         // number of pixels per inch along the screen height.
-        int pxpi = GetDeviceCaps(hdc, LOGPIXELSY);
+        int pxpi = GetDeviceCaps(dc, LOGPIXELSY);
 
         // point size is (pixel height) * 72 / pxpi, so in 1/10ths size is
         int charsize = -MulDiv(m_logFont.lfHeight, 720, pxpi);
-        ::ReleaseDC(NULL, hdc);
+        ::ReleaseDC(NULL, dc);
         return charsize;
     }
 

@@ -125,8 +125,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
     UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wparam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_FILE_NEW:          OnFileNew();            return TRUE;
     case IDM_FILE_OPEN:         OnFileOpen();           return TRUE;

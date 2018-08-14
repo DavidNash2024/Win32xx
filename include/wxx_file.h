@@ -67,7 +67,7 @@ namespace Win32xx
         };
 
         CFile();
-        CFile(HANDLE hFile);
+        CFile(HANDLE file);
         CFile(LPCTSTR pFileName, UINT openFlags);
         virtual ~CFile();
         operator HANDLE() const;
@@ -104,7 +104,7 @@ namespace Win32xx
         CFile& operator = (const CFile&);   // Disable assignment operator
         CString m_fileName;
         CString m_filePath;
-        HANDLE m_hFile;
+        HANDLE m_file;
     };
 
 }
@@ -113,11 +113,11 @@ namespace Win32xx
 
 namespace Win32xx
 {
-    inline CFile::CFile() : m_hFile(0)
+    inline CFile::CFile() : m_file(0)
     {
     }
 
-    inline CFile::CFile(HANDLE hFile) : m_hFile(hFile)
+    inline CFile::CFile(HANDLE file) : m_file(file)
     {
     }
 
@@ -134,7 +134,7 @@ namespace Win32xx
     //  shareDenyWrite  Denies write access to all others.
     //  shareDenyRead   Denies read access to all others.
     //  shareDenyNone   No sharing restrictions.
-    inline CFile::CFile(LPCTSTR pFileName, UINT openFlags) : m_hFile(0)
+    inline CFile::CFile(LPCTSTR pFileName, UINT openFlags) : m_file(0)
 
     {
         assert(pFileName);
@@ -144,14 +144,14 @@ namespace Win32xx
 
     inline CFile::~CFile()
     {
-        if (m_hFile != 0)
-            VERIFY(::CloseHandle(m_hFile));
+        if (m_file != 0)
+            VERIFY(::CloseHandle(m_file));
     }
 
 
     inline CFile::operator HANDLE() const
     {
-        return m_hFile;
+        return m_file;
     }
 
 
@@ -159,24 +159,24 @@ namespace Win32xx
     inline void CFile::Close()
     {
 
-        if (m_hFile != 0)
+        if (m_file != 0)
         {
-            if (!::CloseHandle(m_hFile))
+            if (!::CloseHandle(m_file))
             {
-                m_hFile = 0;
+                m_file = 0;
                 throw CFileException(GetFilePath(), _T("Failed to close file"));
             }
         }
 
-        m_hFile = 0;
+        m_file = 0;
     }
 
 
     // Causes any remaining data in the file buffer to be written to the file.
     inline void CFile::Flush()
     {
-        assert(m_hFile);
-        if ( !::FlushFileBuffers(m_hFile))
+        assert(m_file != 0);
+        if ( !::FlushFileBuffers(m_file))
             throw CFileException(GetFilePath(), _T("Failed to flush file"));
     }
 
@@ -184,7 +184,7 @@ namespace Win32xx
     // Returns the file handle associated with this object.
     inline HANDLE CFile::GetHandle() const
     {
-        return m_hFile;
+        return m_file;
     }
 
 
@@ -261,14 +261,14 @@ namespace Win32xx
     // Returns the length of the file in bytes.
     inline ULONGLONG CFile::GetLength() const
     {
-        assert(m_hFile);
+        assert(m_file != 0);
 
         LONG highPosCur = 0;
         LONG highPosEnd = 0;
 
-        DWORD lowPosCur = SetFilePointer(m_hFile, 0, &highPosCur, FILE_CURRENT);
-        DWORD lowPosEnd = SetFilePointer(m_hFile, 0, &highPosEnd, FILE_END);
-        SetFilePointer(m_hFile, lowPosCur, &highPosCur, FILE_BEGIN);
+        DWORD lowPosCur = SetFilePointer(m_file, 0, &highPosCur, FILE_CURRENT);
+        DWORD lowPosEnd = SetFilePointer(m_file, 0, &highPosEnd, FILE_END);
+        SetFilePointer(m_file, lowPosCur, &highPosCur, FILE_BEGIN);
 
         ULONGLONG result = (static_cast<ULONGLONG>(highPosEnd) << 32) + lowPosEnd;
         return result;
@@ -278,9 +278,9 @@ namespace Win32xx
     // Returns the current value of the file pointer, which can be used in subsequent calls to Seek.
     inline ULONGLONG CFile::GetPosition() const
     {
-        assert(m_hFile);
+        assert(m_file != 0);
         LONG high = 0;
-        DWORD lowPos = SetFilePointer(m_hFile, 0, &high, FILE_CURRENT);
+        DWORD lowPos = SetFilePointer(m_file, 0, &high, FILE_CURRENT);
 
         ULONGLONG result = (static_cast<ULONGLONG>(high) << 32) + lowPos;
         return result;
@@ -291,14 +291,14 @@ namespace Win32xx
     // Locks a range of bytes in and open file.
     inline void CFile::LockRange(ULONGLONG pos, ULONGLONG count)
     {
-        assert(m_hFile);
+        assert(m_file != 0);
 
         DWORD posHigh = static_cast<DWORD>(pos >> 32);
         DWORD posLow = static_cast<DWORD>(pos & 0xFFFFFFFF);
         DWORD countHigh = static_cast<DWORD>(count >> 32);
         DWORD countLow = static_cast<DWORD>(count & 0xFFFFFFFF);
 
-        if (!::LockFile(m_hFile, posLow, posHigh, countLow, countHigh))
+        if (!::LockFile(m_file, posLow, posHigh, countLow, countHigh))
             throw CFileException(GetFilePath(), _T("Failed to lock the file"));
     }
 
@@ -319,7 +319,7 @@ namespace Win32xx
     //  shareDenyNone   No sharing restrictions.
     inline void CFile::Open(LPCTSTR pFileName, UINT openFlags)
     {
-        if (m_hFile != 0) Close();
+        if (m_file != 0) Close();
 
         DWORD access = 0;
         switch (openFlags & 0xF00)
@@ -348,16 +348,16 @@ namespace Win32xx
         if (create & OPEN_ALWAYS) openFlags = OPEN_ALWAYS;
         if (create == 0) create = OPEN_EXISTING;
 
-        m_hFile = ::CreateFile(pFileName, access, share, NULL, create, FILE_ATTRIBUTE_NORMAL, NULL);
+        m_file = ::CreateFile(pFileName, access, share, NULL, create, FILE_ATTRIBUTE_NORMAL, NULL);
 
-        if (INVALID_HANDLE_VALUE == m_hFile)
+        if (INVALID_HANDLE_VALUE == m_file)
         {
-            m_hFile = 0;
+            m_file = 0;
             throw CFileException(pFileName, _T("Failed to open file"));
         }
 
 #ifndef _WIN32_WCE
-        if (m_hFile != 0)
+        if (m_file != 0)
         {
             SetFilePath(pFileName);
         }
@@ -369,14 +369,14 @@ namespace Win32xx
     // Reads from the file, storing the contents in the specified buffer.
     inline UINT CFile::Read(void* pBuf, UINT count)
     {
-        assert(m_hFile);
+        assert(m_file != 0);
 
         if (count == 0) return 0;
 
         assert(pBuf);
         DWORD read = 0;
 
-        if (!::ReadFile(m_hFile, pBuf, count, &read, NULL))
+        if (!::ReadFile(m_file, pBuf, count, &read, NULL))
             throw CFileException(GetFilePath(), _T("Failed to read from file"));
 
         return read;
@@ -403,13 +403,13 @@ namespace Win32xx
     // Permitted values for method are: FILE_BEGIN, FILE_CURRENT, or FILE_END.
     inline ULONGLONG CFile::Seek(LONGLONG seekTo, UINT method)
     {
-        assert(m_hFile);
+        assert(m_file != 0);
         assert(method == FILE_BEGIN || method == FILE_CURRENT || method == FILE_END);
 
         LONG high = LONG(seekTo >> 32);
         LONG low = (LONG)(seekTo & 0xFFFFFFFF);
 
-        DWORD lowPos = SetFilePointer(m_hFile, low, &high, method);
+        DWORD lowPos = SetFilePointer(m_file, low, &high, method);
 
         ULONGLONG result = (static_cast<ULONGLONG>(high) << 32) + lowPos;
         return result;
@@ -419,7 +419,7 @@ namespace Win32xx
     // Sets the current file pointer to the beginning of the file.
     inline void CFile::SeekToBegin()
     {
-        assert(m_hFile);
+        assert(m_file != 0);
         Seek(0, FILE_BEGIN);
     }
 
@@ -427,7 +427,7 @@ namespace Win32xx
     // Sets the current file pointer to the end of the file.
     inline ULONGLONG CFile::SeekToEnd()
     {
-        assert(m_hFile);
+        assert(m_file != 0);
         return Seek(0, FILE_END);
     }
 
@@ -459,10 +459,10 @@ namespace Win32xx
     // Changes the length of the file to the specified value.
     inline void CFile::SetLength(ULONGLONG length)
     {
-        assert(m_hFile);
+        assert(m_file != 0);
 
         Seek(length, FILE_BEGIN);
-        if (!::SetEndOfFile(m_hFile))
+        if (!::SetEndOfFile(m_file))
             throw CFileException(GetFilePath(), _T("Failed to change the file length"));
     }
 
@@ -471,14 +471,14 @@ namespace Win32xx
     // Unlocks a range of bytes in an open file.
     inline void CFile::UnlockRange(ULONGLONG pos, ULONGLONG count)
     {
-        assert(m_hFile);
+        assert(m_file != 0);
 
         DWORD posHigh = static_cast<DWORD>(pos >> 32);
         DWORD posLow = static_cast<DWORD>(pos & 0xFFFFFFFF);
         DWORD countHigh = static_cast<DWORD>(count >> 32);
         DWORD countLow = static_cast<DWORD>(count & 0xFFFFFFFF);
 
-        if (!::UnlockFile(m_hFile, posLow, posHigh, countLow, countHigh))
+        if (!::UnlockFile(m_file, posLow, posHigh, countLow, countHigh))
             throw CFileException(GetFilePath(), _T("Failed to unlock the file"));
     }
 
@@ -488,13 +488,13 @@ namespace Win32xx
     // Writes the specified buffer to the file.
     inline void CFile::Write(const void* pBuf, UINT count)
     {
-        assert(m_hFile);
+        assert(m_file != 0);
 
         if (count == 0) return;
 
         assert(pBuf);
         DWORD written = 0;
-        if (!::WriteFile(m_hFile, pBuf, count, &written, NULL))
+        if (!::WriteFile(m_file, pBuf, count, &written, NULL))
             throw CFileException(GetFilePath(), _T("Failed to write to file"));
 
         if (written != count)

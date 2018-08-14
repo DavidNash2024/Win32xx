@@ -89,9 +89,9 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 
         // Send a user defined message to the frame window
         GetParent().SendMessage(UWM_DROPFILE, (WPARAM)fileName.c_str(), 0);
-
-        DragFinish(hDrop);
     }
+
+    DragFinish(hDrop);
     return 0;
 }
 

@@ -195,8 +195,8 @@ namespace Win32xx
     inline CImageList CTreeView::GetImageList(int imageType) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = TreeView_GetImageList( *this, imageType );
-        return CImageList(himl);
+        HIMAGELIST images = TreeView_GetImageList( *this, imageType );
+        return CImageList(images);
     }
 
 
@@ -424,8 +424,8 @@ namespace Win32xx
     inline CImageList CTreeView::SetImageList(HIMAGELIST hImages, int type /*= TVSIL_NORMAL*/) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = TreeView_SetImageList( *this, hImages, type );
-        return CImageList(himl);
+        HIMAGELIST images = TreeView_SetImageList( *this, hImages, type );
+        return CImageList(images);
     }
 
 
@@ -564,8 +564,8 @@ namespace Win32xx
     inline CImageList CTreeView::CreateDragImage(HTREEITEM item) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = TreeView_CreateDragImage(*this, item);
-        return CImageList(himl);
+        HIMAGELIST images = TreeView_CreateDragImage(*this, item);
+        return CImageList(images);
     }
 
 

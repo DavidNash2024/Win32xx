@@ -351,9 +351,9 @@ namespace Win32xx
         int cy = rc.bottom - rc.top;
 
         INT_PTR idMenu = id;
-        HMENU hMenu = hParent ? reinterpret_cast<HMENU>(idMenu) : ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(id));
+        HMENU menu = hParent ? reinterpret_cast<HMENU>(idMenu) : ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(id));
 
-        return CreateEx(exStyle, pClassName, pWindowName, style, x, y, cx, cy, hParent, hMenu, lparam);
+        return CreateEx(exStyle, pClassName, pWindowName, style, x, y, cx, cy, hParent, menu, lparam);
     }
 
 
@@ -862,7 +862,7 @@ namespace Win32xx
         // 2) No other defaults are set, so the following settings might prove useful
         //     wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
         //     wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
-        //     wc.hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
+        //     wc.icon = ::LoadIcon(NULL, IDI_APPLICATION);
         // 3) The styles that can be set here are WNDCLASS styles. These are a different
         //     set of styles to those set by CREATESTRUCT (used in PreCreate).
         // 4) RegisterClassEx is not used because its not supported on WinCE.
@@ -1461,8 +1461,8 @@ namespace Win32xx
     inline CFont CWnd::GetFont() const
     {
         assert(IsWindow());
-        HFONT hFont = reinterpret_cast<HFONT>(SendMessage(WM_GETFONT, 0, 0));
-        return CFont(hFont);
+        HFONT font = reinterpret_cast<HFONT>(SendMessage(WM_GETFONT, 0, 0));
+        return CFont(font);
     }
 
 
@@ -1530,10 +1530,10 @@ namespace Win32xx
 
 
     // The GetUpdateRgn function retrieves the update region of a window by copying it into the specified region.
-    inline int CWnd::GetUpdateRgn(HRGN hRgn, BOOL erase) const
+    inline int CWnd::GetUpdateRgn(HRGN rgn, BOOL erase) const
     {
         assert(IsWindow());
-        return ::GetUpdateRgn(*this, hRgn, erase);
+        return ::GetUpdateRgn(*this, rgn, erase);
     }
 
 
@@ -1621,19 +1621,19 @@ namespace Win32xx
     // by adding it to the current update region of a window. The invalidated region,
     // along with all other areas in the update region, is marked for painting when the
     // next WM_PAINT message occurs.
-    inline BOOL CWnd::InvalidateRgn(HRGN hRgn, BOOL erase /*= TRUE*/) const
+    inline BOOL CWnd::InvalidateRgn(HRGN rgn, BOOL erase /*= TRUE*/) const
     {
         assert(IsWindow());
-        return ::InvalidateRgn(*this, hRgn, erase);
+        return ::InvalidateRgn(*this, rgn, erase);
     }
 
 
     // The IsChild function tests whether a window is a child window or descendant window
     // of a parent window's CWnd.
-    inline BOOL CWnd::IsChild(HWND hChild) const
+    inline BOOL CWnd::IsChild(HWND child) const
     {
         assert(IsWindow());
-        return ::IsChild(*this, hChild);
+        return ::IsChild(*this, child);
     }
 
 
@@ -1773,10 +1773,10 @@ namespace Win32xx
 
 
     // The RedrawWindow function updates the specified region in a window's client area.
-    inline BOOL CWnd::RedrawWindow(HRGN hRgn, UINT flags) const
+    inline BOOL CWnd::RedrawWindow(HRGN rgn, UINT flags) const
     {
         assert(IsWindow());
-        return ::RedrawWindow(*this, 0, hRgn, flags);
+        return ::RedrawWindow(*this, 0, rgn, flags);
     }
 
 
@@ -1790,10 +1790,10 @@ namespace Win32xx
 
     // The ReleaseDC function releases a device context (DC), freeing it for use
     // by other applications.
-    inline int CWnd::ReleaseDC(HDC hDC) const
+    inline int CWnd::ReleaseDC(HDC dc) const
     {
         assert(IsWindow());
-        return ::ReleaseDC(*this, hDC);
+        return ::ReleaseDC(*this, dc);
     }
 
 
@@ -1925,18 +1925,18 @@ namespace Win32xx
 
 
     // Specifies the font that the window will use when drawing text.
-    inline void CWnd::SetFont(HFONT hFont, BOOL redraw /* = TRUE*/) const
+    inline void CWnd::SetFont(HFONT font, BOOL redraw /* = TRUE*/) const
     {
         assert(IsWindow());
-        SendMessage(WM_SETFONT, reinterpret_cast<WPARAM>(hFont), redraw);
+        SendMessage(WM_SETFONT, reinterpret_cast<WPARAM>(font), redraw);
     }
 
 
     // Associates a new large or small icon with a window.
-    inline HICON CWnd::SetIcon(HICON hIcon, BOOL isBigIcon) const
+    inline HICON CWnd::SetIcon(HICON icon, BOOL isBigIcon) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage(WM_SETICON, isBigIcon, reinterpret_cast<LPARAM>(hIcon)));
+        return reinterpret_cast<HICON>(SendMessage(WM_SETICON, isBigIcon, reinterpret_cast<LPARAM>(icon)));
     }
 
 
@@ -2017,13 +2017,13 @@ namespace Win32xx
     // The SetWindowRgn function sets the window region of the window.
     // The window region determines the area within the window where the system permits drawing.
     // The window now owns the region so it is detached from Rgn.
-    inline int CWnd::SetWindowRgn(CRgn& Rgn, BOOL redraw /*= TRUE*/) const
+    inline int CWnd::SetWindowRgn(CRgn& rgn, BOOL redraw /*= TRUE*/) const
     {
         assert(IsWindow());
-        HRGN hRgn = reinterpret_cast<HRGN>(Rgn.GetHandle());
-        int iResult = ::SetWindowRgn(*this, hRgn, redraw);
-        if (iResult && hRgn)
-            Rgn.Detach();   // The system owns the region now
+        HRGN rgnHandle = reinterpret_cast<HRGN>(rgn.GetHandle());
+        int iResult = ::SetWindowRgn(*this, rgnHandle, redraw);
+        if (iResult && rgnHandle)
+            rgn.Detach();   // The system owns the region now
 
         return iResult;
     }
@@ -2101,10 +2101,10 @@ namespace Win32xx
 
     // The ValidateRgn function validates the client area within a region by
     // removing the region from the current update region of the window.
-    inline BOOL CWnd::ValidateRgn(HRGN hRgn) const
+    inline BOOL CWnd::ValidateRgn(HRGN rgn) const
     {
         assert(IsWindow());
-        return ::ValidateRgn(*this, hRgn);
+        return ::ValidateRgn(*this, rgn);
     }
 
 
@@ -2185,10 +2185,10 @@ namespace Win32xx
 
 
     // The DrawCaption function draws a window caption.
-    inline BOOL CWnd::DrawCaption(HDC hDC, const RECT& rect, UINT flags) const
+    inline BOOL CWnd::DrawCaption(HDC dc, const RECT& rect, UINT flags) const
     {
         assert(IsWindow());
-        return ::DrawCaption(*this, hDC, &rect, flags);
+        return ::DrawCaption(*this, dc, &rect, flags);
     }
 
 
@@ -2262,10 +2262,10 @@ namespace Win32xx
 
 
     // The HiliteMenuItem function highlights or removes the highlighting from an item in a menu bar.
-    inline BOOL CWnd::HiliteMenuItem(HMENU hMenu, UINT itemHilite, UINT hilite) const
+    inline BOOL CWnd::HiliteMenuItem(HMENU menu, UINT itemHilite, UINT hilite) const
     {
         assert(IsWindow());
-        return ::HiliteMenuItem(*this, hMenu, itemHilite, hilite);
+        return ::HiliteMenuItem(*this, menu, itemHilite, hilite);
     }
 
 
@@ -2311,10 +2311,10 @@ namespace Win32xx
 
 
     // Requests that the window draw itself in the specified device context, most commonly in a printer device context.
-    inline void CWnd::Print(HDC hDC, DWORD flags) const
+    inline void CWnd::Print(HDC dc, DWORD flags) const
     {
         assert(IsWindow());
-        SendMessage(*this, WM_PRINT, reinterpret_cast<WPARAM>(hDC), flags);
+        SendMessage(*this, WM_PRINT, reinterpret_cast<WPARAM>(dc), flags);
     }
 
 
@@ -2362,11 +2362,11 @@ namespace Win32xx
 
 
     // The SetMenu function assigns a menu to the specified window.
-    // A hMenu of NULL removes the menu.
-    inline BOOL CWnd::SetMenu(HMENU hMenu) const
+    // A menu of NULL removes the menu.
+    inline BOOL CWnd::SetMenu(HMENU menu) const
     {
         assert(IsWindow());
-        return ::SetMenu(*this, hMenu);
+        return ::SetMenu(*this, menu);
     }
 
 
@@ -2440,9 +2440,9 @@ namespace Win32xx
 
 
     // The WindowFromDC function returns a handle to the window associated with the specified display device context (DC).
-    inline CWnd CWnd::WindowFromDC(HDC hDC) const
+    inline CWnd CWnd::WindowFromDC(HDC dc) const
     {
-        return CWnd( ::WindowFromDC(hDC) );
+        return CWnd( ::WindowFromDC(dc) );
     }
 
   #endif    // _WIN32_WCE

@@ -70,11 +70,11 @@ namespace Win32xx
         HCURSOR GetCursor() const;
         HICON GetIcon() const;
         UINT GetState() const;
-        HBITMAP SetBitmap(HBITMAP hBitmap) const;
+        HBITMAP SetBitmap(HBITMAP bitmap) const;
         void SetButtonStyle(DWORD style, BOOL redraw) const;
         void SetCheck(int checkState) const;
         HCURSOR SetCursor(HCURSOR hCursor) const;
-        HICON SetIcon(HICON hIcon) const;
+        HICON SetIcon(HICON icon) const;
         void SetState(UINT state) const;
 
     protected:
@@ -236,10 +236,10 @@ namespace Win32xx
         HCURSOR GetCursor() const;
         HENHMETAFILE GetEnhMetaFile() const;
         HICON  GetIcon() const;
-        HBITMAP SetBitmap(HBITMAP hBitmap) const;
+        HBITMAP SetBitmap(HBITMAP bitmap) const;
         HCURSOR SetCursor(HCURSOR hCursor) const;
         HENHMETAFILE SetEnhMetaFile(HENHMETAFILE hMetaFile) const;
-        HICON SetIcon(HICON hIcon) const;
+        HICON SetIcon(HICON icon) const;
 
     protected:
         // Overridables
@@ -323,10 +323,10 @@ namespace Win32xx
 
 
     // sets the bitmap associated with the button.
-    inline HBITMAP CButton::SetBitmap(HBITMAP hBitmap) const
+    inline HBITMAP CButton::SetBitmap(HBITMAP bitmap) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HBITMAP>(SendMessage(BM_SETIMAGE, IMAGE_BITMAP, reinterpret_cast<LPARAM>(hBitmap)));
+        return reinterpret_cast<HBITMAP>(SendMessage(BM_SETIMAGE, IMAGE_BITMAP, reinterpret_cast<LPARAM>(bitmap)));
     }
 
 
@@ -361,10 +361,10 @@ namespace Win32xx
 
 
     // Sets the icon associated with the button.
-    inline HICON CButton::SetIcon(HICON hIcon) const
+    inline HICON CButton::SetIcon(HICON icon) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage( BM_SETIMAGE, IMAGE_ICON, reinterpret_cast<LPARAM>(hIcon)));
+        return reinterpret_cast<HICON>(SendMessage( BM_SETIMAGE, IMAGE_ICON, reinterpret_cast<LPARAM>(icon)));
     }
 
 
@@ -1157,10 +1157,10 @@ namespace Win32xx
     // The bitmap will be drawn in the upper-left corner, and the static
     // control will be resized to the size of the bitmap.
     // This function requires the SS_BITMAP style.
-    inline HBITMAP CStatic::SetBitmap(HBITMAP hBitmap) const
+    inline HBITMAP CStatic::SetBitmap(HBITMAP bitmap) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HBITMAP>(SendMessage(STM_SETIMAGE, IMAGE_BITMAP, reinterpret_cast<LPARAM>(hBitmap)));
+        return reinterpret_cast<HBITMAP>(SendMessage(STM_SETIMAGE, IMAGE_BITMAP, reinterpret_cast<LPARAM>(bitmap)));
     }
 
 
@@ -1190,10 +1190,10 @@ namespace Win32xx
     // The icon will be drawn in the upper-left corner and the static
     // control will be resized to the size of the icon.
     // This function requires the SS_ICON style
-    inline HICON CStatic::SetIcon(HICON hIcon) const
+    inline HICON CStatic::SetIcon(HICON icon) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage(STM_SETIMAGE, IMAGE_ICON, reinterpret_cast<LPARAM>(hIcon)));
+        return reinterpret_cast<HICON>(SendMessage(STM_SETIMAGE, IMAGE_ICON, reinterpret_cast<LPARAM>(icon)));
     }
 
 

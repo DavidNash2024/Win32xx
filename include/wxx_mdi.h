@@ -97,11 +97,11 @@ namespace Win32xx
         virtual void RecalcLayout();
 
         // These functions aren't virtual, and shouldn't be overridden
-        HACCEL GetChildAccel() const { return m_hChildAccel; }
+        HACCEL GetChildAccel() const { return m_childAccel; }
         HMENU GetChildMenu() const { return m_childMenu; }
         CWnd& GetView() const           { assert(m_pView); return *m_pView; }
         void SetView(CWnd& wndView);
-        void SetHandles(HMENU hMenu, HACCEL hAccel);
+        void SetHandles(HMENU menu, HACCEL accel);
         void MDIActivate() const;
         void MDIDestroy() const;
         void MDIMaximize() const;
@@ -124,7 +124,7 @@ namespace Win32xx
 
         CWnd* m_pView;              // pointer to the View CWnd object
         CMenu m_childMenu;
-        HACCEL m_hChildAccel;
+        HACCEL m_childAccel;
     };
 
     /////////////////////////////////////
@@ -346,8 +346,8 @@ namespace Win32xx
     template <class T>
     inline CMDIChild* CMDIFrameT<T>::GetActiveMDIChild() const
     {
-        HWND hActiveChild = reinterpret_cast<HWND>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0));
-        return static_cast<CMDIChild*>(T::GetCWndPtr(hActiveChild));
+        HWND activeChild = reinterpret_cast<HWND>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0));
+        return static_cast<CMDIChild*>(T::GetCWndPtr(activeChild));
     }
 
     // Returns TRUE if a MDI child is maximized
@@ -492,12 +492,12 @@ namespace Win32xx
     template <class T>
     inline LRESULT CMDIFrameT<T>::OnMDIActivated(UINT, WPARAM wparam, LPARAM)
     {
-        HWND hActiveMDIChild = reinterpret_cast<HWND>(wparam);
+        HWND activeMDIChild = reinterpret_cast<HWND>(wparam);
 
-        if (hActiveMDIChild)
+        if (activeMDIChild)
         {
-            CMDIChild* pMDIChild = static_cast<CMDIChild*>(T::GetCWndPtr(hActiveMDIChild));
-            assert ( dynamic_cast<CMDIChild*>(T::GetCWndPtr(hActiveMDIChild)) );
+            CMDIChild* pMDIChild = static_cast<CMDIChild*>(T::GetCWndPtr(activeMDIChild));
+            assert ( dynamic_cast<CMDIChild*>(T::GetCWndPtr(activeMDIChild)) );
             if (pMDIChild->GetChildMenu())
                 UpdateFrameMenu(pMDIChild->GetChildMenu());
             else
@@ -807,7 +807,7 @@ namespace Win32xx
     //   HACCEL hChildAccel = LoadAccelerators(GetApp().GetResourceHandle(), _T("MDIAccelView"));
     //   SetHandles(hChildMenu, hChildAccel);
     //   SetView(m_View);
-    inline CMDIChild::CMDIChild() : m_pView(NULL), m_hChildAccel(0)
+    inline CMDIChild::CMDIChild() : m_pView(NULL), m_childAccel(0)
     {
 
     }
@@ -985,10 +985,10 @@ namespace Win32xx
 
 
     // Sets the MDI child's menu and accelerator handles.
-    inline void CMDIChild::SetHandles(HMENU hMenu, HACCEL hAccel)
+    inline void CMDIChild::SetHandles(HMENU menu, HACCEL accel)
     {
-        m_childMenu.Attach(hMenu);
-        m_hChildAccel = hAccel;
+        m_childMenu.Attach(menu);
+        m_childAccel = accel;
 
         // Note: It is valid to call SetHandles before the window is created
         if (IsWindow())

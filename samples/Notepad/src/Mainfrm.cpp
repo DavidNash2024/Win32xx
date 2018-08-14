@@ -61,8 +61,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wparam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_FILE_NEW:          return OnFileNew();
     case IDM_FILE_OPEN:         return OnFileOpen();
@@ -94,17 +94,23 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
 BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
-    TCHAR fileName[_MAX_PATH];
-    ::DragQueryFile(hDropInfo, 0, fileName, _MAX_PATH);
-
-    if (ReadFile(fileName))
+    UINT length = DragQueryFile(hDropInfo, 0, 0, 0);
+    if (length > 0)
     {
-        m_pathName = fileName;
-        ReadFile(fileName);
-        SetWindowTitle();
-        AddMRUEntry(fileName);
+        CString fileName;
+        DragQueryFile(hDropInfo, 0, fileName.GetBuffer(length), length + 1);
+        fileName.ReleaseBuffer();
+
+        if (ReadFile(fileName))
+        {
+            m_pathName = fileName;
+            ReadFile(fileName);
+            SetWindowTitle();
+            AddMRUEntry(fileName);
+        }
     }
 
+    DragFinish(hDropInfo);
     return TRUE;
 }
 
@@ -365,8 +371,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     {
     case EN_DROPFILES:
     {
-        ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lparam);
-        HDROP hDropInfo = reinterpret_cast<HDROP>(ENDrop->hDrop);
+        ENDROPFILES* enDrop = reinterpret_cast<ENDROPFILES*>(lparam);
+        HDROP hDropInfo = reinterpret_cast<HDROP>(enDrop->hDrop);
         OnDropFiles(hDropInfo);
     }
     return TRUE;

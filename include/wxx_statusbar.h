@@ -63,7 +63,7 @@ namespace Win32xx
         BOOL SetPartText(int part, LPCTSTR pText, UINT style = 0) const;
         BOOL SetPartWidth(int part, int width) const;
         HICON GetPartIcon(int part) const;
-        BOOL SetPartIcon(int part, HICON hIcon) const;
+        BOOL SetPartIcon(int part, HICON icon) const;
 
         // Operations
         CStatusBar(const CStatusBar&);              // Disable copy construction
@@ -160,10 +160,10 @@ namespace Win32xx
         CString PaneText;
 
         // Get size of Text array
-        int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, part, 0));
+        int chars = LOWORD (SendMessage(SB_GETTEXTLENGTH, part, 0));
         CString str;
 
-        SendMessage(SB_GETTEXT, part, reinterpret_cast<LPARAM>(str.GetBuffer(iChars)));
+        SendMessage(SB_GETTEXT, part, reinterpret_cast<LPARAM>(str.GetBuffer(chars)));
         str.ReleaseBuffer();
         return str;
     }
@@ -215,10 +215,10 @@ namespace Win32xx
 
 
     // Sets the icon for a part in the status bar.
-    inline BOOL CStatusBar::SetPartIcon(int part, HICON hIcon) const
+    inline BOOL CStatusBar::SetPartIcon(int part, HICON icon) const
     {
         assert(IsWindow());
-        return (SendMessage(SB_SETICON, part, reinterpret_cast<LPARAM>(hIcon)) != 0);
+        return (SendMessage(SB_SETICON, part, reinterpret_cast<LPARAM>(icon)) != 0);
     }
 
 
@@ -230,16 +230,16 @@ namespace Win32xx
         assert(part >= 0 && part <= 255);
 
         // Fill the PartWidths vector with the current width of the StatusBar parts
-        int PartsCount = static_cast<int>(SendMessage(SB_GETPARTS, 0, 0));
-        std::vector<int> PartWidths(PartsCount, 0);
-        int* pPartWidthArray = &PartWidths[0];
-        SendMessage(SB_GETPARTS, PartsCount, reinterpret_cast<LPARAM>(pPartWidthArray));
+        int partsCount = static_cast<int>(SendMessage(SB_GETPARTS, 0, 0));
+        std::vector<int> partWidths(partsCount, 0);
+        int* pPartWidthArray = &partWidths[0];
+        SendMessage(SB_GETPARTS, partsCount, reinterpret_cast<LPARAM>(pPartWidthArray));
 
         // Fill the NewPartWidths vector with the new width of the StatusBar parts
-        int NewPartsCount = MAX(part+1, PartsCount);
-        std::vector<int> NewPartWidths(NewPartsCount, 0);
-        NewPartWidths = PartWidths;
-        int* pNewPartWidthArray = &NewPartWidths[0];
+        int newPartsCount = MAX(part+1, partsCount);
+        std::vector<int> newPartWidths(newPartsCount, 0);
+        newPartWidths = partWidths;
+        int* pNewPartWidthArray = &newPartWidths[0];
 
         if (part == 0)
             pNewPartWidthArray[part] = width;
@@ -252,7 +252,7 @@ namespace Win32xx
         }
 
         // Set the StatusBar parts with our new parts count and part widths
-        BOOL Succeeded = (SendMessage(SB_SETPARTS, NewPartsCount, reinterpret_cast<LPARAM>(pNewPartWidthArray)) != 0);
+        BOOL Succeeded = (SendMessage(SB_SETPARTS, newPartsCount, reinterpret_cast<LPARAM>(pNewPartWidthArray)) != 0);
 
         return Succeeded;
     }

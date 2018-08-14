@@ -106,7 +106,7 @@ namespace Win32xx
         DWORD   SetHoverTime( DWORD hoverTime = static_cast<DWORD>(-1) ) const;
         CSize   SetIconSpacing( int cx, int cy ) const;
         CSize   SetIconSpacing( CSize sz ) const;
-        CImageList SetImageList( HIMAGELIST hImages, int imageListType ) const;
+        CImageList SetImageList( HIMAGELIST images, int imageListType ) const;
         BOOL    SetItem( LVITEM& itemInfo ) const;
         BOOL    SetItem( int item, int subItem, UINT mask, LPCTSTR pText, int image,
                         UINT state, UINT stateMask, LPARAM lparam, int indent ) const;
@@ -292,8 +292,8 @@ namespace Win32xx
     inline CImageList CListView::GetImageList( int imageType ) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = ListView_GetImageList( *this, imageType );
-        return CImageList(himl);
+        HIMAGELIST images = ListView_GetImageList( *this, imageType );
+        return CImageList(images);
     }
 
 
@@ -598,11 +598,11 @@ namespace Win32xx
 
     // Assigns an image list to the list-view control.
     // Valid imageListType values: LVSIL_NORMAL, LVSIL_SMALL, LVSIL_STATE.
-    inline CImageList CListView::SetImageList( HIMAGELIST hImages, int imageListType ) const
+    inline CImageList CListView::SetImageList( HIMAGELIST images, int imageListType ) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = ListView_SetImageList( *this, hImages, imageListType );
-        return CImageList(himl);
+        HIMAGELIST oldImages = ListView_SetImageList( *this, images, imageListType );
+        return CImageList(oldImages);
     }
 
 
@@ -614,7 +614,7 @@ namespace Win32xx
     //      int iSubItem;
     //      UINT state;
     //      UINT stateMask;
-    //      LPTSTR pszText;
+    //      LPTSTR pText;
     //      int cchTextMax;
     //      int iImage;
     //      LPARAM lparam;
@@ -780,8 +780,8 @@ namespace Win32xx
     inline CImageList CListView::CreateDragImage( int item, CPoint& pt ) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = ListView_CreateDragImage( *this, item, &pt );
-        return CImageList(himl);
+        HIMAGELIST images = ListView_CreateDragImage( *this, item, &pt );
+        return CImageList(images);
     }
 
 

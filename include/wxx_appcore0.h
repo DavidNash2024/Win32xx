@@ -276,9 +276,9 @@ namespace Win32xx
     struct CIml_Data
     {
         // Constructor
-        CIml_Data() : hImageList(0), isManagedHiml(false), count(1L) {}
+        CIml_Data() : images(0), isManagedHiml(false), count(1L) {}
 
-        HIMAGELIST  hImageList;
+        HIMAGELIST  images;
         bool        isManagedHiml;
         long        count;
     };
@@ -289,10 +289,10 @@ namespace Win32xx
     struct CMenu_Data
     {
         // Constructor
-        CMenu_Data() : hMenu(0), isManagedMenu(false), count(1L) {}
+        CMenu_Data() : menu(0), isManagedMenu(false), count(1L) {}
 
         std::vector<MenuPtr> vSubMenus; // A vector of smart pointers to CMenu
-        HMENU hMenu;
+        HMENU menu;
         bool isManagedMenu;
         long count;
     };
@@ -454,16 +454,16 @@ namespace Win32xx
 
         // Operations
         HANDLE  CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
-        HACCEL  GetAcceleratorTable() const { return m_hAccel; }
-        HWND    GetAcceleratorsWindow() const { return m_hWndForAccel; }
+        HACCEL  GetAcceleratorTable() const { return m_accel; }
+        HWND    GetAcceleratorsWindow() const { return m_wndForAccel; }
         HWND    GetMainWnd() const;
         HANDLE  GetThread() const;
         int     GetThreadID() const;
         int     GetThreadPriority() const;
-        BOOL    IsRunning() const { return (WaitForSingleObject(m_hThread, 0) == WAIT_TIMEOUT); }
+        BOOL    IsRunning() const { return (WaitForSingleObject(m_thread, 0) == WAIT_TIMEOUT); }
         BOOL    PostThreadMessage(UINT message, WPARAM wparam, LPARAM lparam) const;
         DWORD   ResumeThread() const;
-        void    SetAccelerators(HACCEL hAccel, HWND hWndAccel);
+        void    SetAccelerators(HACCEL accel, HWND hWndAccel);
         void    SetMainWnd(HWND hWnd);
         BOOL    SetThreadPriority(int priority) const;
         DWORD   SuspendThread() const;
@@ -477,11 +477,11 @@ namespace Win32xx
 
         PFNTHREADPROC m_pfnThreadProc;  // Callback function for worker threads
         LPVOID m_pThreadParams;         // Thread parameter for worker threads
-        HANDLE m_hThread;               // Handle of this thread
+        HANDLE m_thread;                // Handle of this thread
         UINT m_threadID;                // ID of this thread
         DWORD m_threadIDForWinCE;       // ID of this thread (for WinCE only)
-        HACCEL m_hAccel;                // handle to the accelerator table
-        HWND m_hWndForAccel;            // handle to the window for accelerator keys
+        HACCEL m_accel;                 // handle to the accelerator table
+        HWND m_wndForAccel;             // handle to the window for accelerator keys
 
     };
 
@@ -531,12 +531,12 @@ namespace Win32xx
         CWinApp(const CWinApp&);                // Disable copy construction
         CWinApp& operator = (const CWinApp&);   // Disable assignment operator
 
-        void AddCDCData(HDC hDC, CDC_Data* pData);
+        void AddCDCData(HDC dc, CDC_Data* pData);
         void AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData);
-        void AddCImlData(HIMAGELIST hIml, CIml_Data* pData);
-        CDC_Data* GetCDCData(HDC hDC);
-        CGDI_Data* GetCGDIData(HGDIOBJ hObject);
-        CIml_Data* GetCImlData(HIMAGELIST hImages);
+        void AddCImlData(HIMAGELIST images, CIml_Data* pData);
+        CDC_Data* GetCDCData(HDC dc);
+        CGDI_Data* GetCGDIData(HGDIOBJ object);
+        CIml_Data* GetCImlData(HIMAGELIST images);
         void GlobalFreeAll(HGLOBAL hGlobal);
         void SetCallback();
         static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
@@ -559,8 +559,8 @@ namespace Win32xx
         HGLOBAL m_hDevNames;            // Used by CPrintDialog and CPageSetupDialog
 
 #ifndef _WIN32_WCE
-        void AddCMenuData(HMENU hMenu, CMenu_Data* pData);
-        CMenu_Data* GetCMenuData(HMENU hMenu);
+        void AddCMenuData(HMENU menu, CMenu_Data* pData);
+        CMenu_Data* GetCMenuData(HMENU menu);
         std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
 #endif
 

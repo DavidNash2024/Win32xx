@@ -81,8 +81,8 @@ void CMainMDIFrame::OnInitialUpdate()
 
 BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UINT nID = LOWORD(wparam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_FILE_NEW:          return OnFileNew();
     case IDM_FILE_CLOSE:        return OnFileClose();

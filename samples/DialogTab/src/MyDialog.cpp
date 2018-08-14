@@ -91,13 +91,13 @@ INT_PTR CButtonDialog::OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam)
         return FinalWindowProc(msg, wparam, lparam);
 }
 
-BOOL CButtonDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
+BOOL CButtonDialog::OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID)
 {
-    CheckRadioButton(idFirst, idLast, idClicked);
+    CheckRadioButton(firstID, lastID, clickedID);
 
     CString str;
-    int nButton = idClicked - idFirst + 1;
-    str.Format(_T("Radio%d"), nButton);
+    int button = clickedID - firstID + 1;
+    str.Format(_T("Radio%d"), button);
     TRACE(str); TRACE("\n");
 
     return  TRUE;
