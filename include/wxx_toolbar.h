@@ -55,16 +55,16 @@ namespace Win32xx
         virtual ~CToolBar();
 
         // Operations
-        virtual int  AddBitmap(UINT toolBarID);
+        virtual int  AddBitmap(UINT bitmapID);
         virtual BOOL AddButton(UINT id, BOOL isEnabled = TRUE, int image = -1);
         virtual void Destroy();
-        virtual BOOL ReplaceBitmap(UINT newToolBarID);
+        virtual BOOL ReplaceBitmap(UINT newBitmapID);
         virtual BOOL SetBitmap(UINT id);
         virtual BOOL SetButtonText(int buttonID, LPCTSTR pText);
 
         // Wrappers for Win32 API functions
-        BOOL  AddButtons(UINT numButtons, LPTBBUTTON pButtons) const;
-        int   AddString(UINT resID) const;
+        BOOL  AddButtons(UINT buttonCount, LPTBBUTTON pButtonInfoArray) const;
+        int   AddString(UINT stringID) const;
         int   AddStrings(LPCTSTR pStrings) const;
         void  Autosize() const;
         void  CheckButton(int buttonID, BOOL isChecked) const;
@@ -73,7 +73,7 @@ namespace Win32xx
         BOOL  DeleteButton(int index) const;
         BOOL  DisableButton(int buttonID) const;
         BOOL  EnableButton(int buttonID) const;
-        BOOL  GetButton(int iButton, TBBUTTON& Button) const;
+        BOOL  GetButton(int index, TBBUTTON& buttonInfo) const;
         int   GetButtonCount() const;
         DWORD GetButtonSize() const;
         UINT  GetButtonState(int buttonID) const;
@@ -88,7 +88,7 @@ namespace Win32xx
         CRect GetItemRect(int index) const;
         CSize GetMaxSize() const;
         DWORD GetPadding() const;
-        CRect GetRect(int idButton) const;
+        CRect GetRect(int buttonID) const;
         int   GetRows() const;
         int   GetTextRows() const;
         HWND  GetToolTips() const;
@@ -96,7 +96,7 @@ namespace Win32xx
         BOOL  HideButton(int buttonID, BOOL show) const;
         int   HitTest() const;
         BOOL  Indeterminate(int buttonID, BOOL isIndeterminate) const;
-        BOOL  InsertButton(int index, TBBUTTON& button) const;
+        BOOL  InsertButton(int index, TBBUTTON& buttonInfo) const;
         BOOL  IsButtonHidden(int buttonID) const;
         BOOL  IsButtonHighlighted(int buttonID) const;
         BOOL  IsButtonIndeterminate(int buttonID) const;
@@ -105,7 +105,7 @@ namespace Win32xx
         BOOL  MarkButton(int buttonID, BOOL highlight = TRUE ) const;
         BOOL  MoveButton(UINT oldPos, UINT newPos) const;
         BOOL  PressButton(int buttonID, BOOL press) const;
-        void  SaveRestore(BOOL save, TBSAVEPARAMS* ptbsp) const;
+        void  SaveRestore(BOOL save, TBSAVEPARAMS* pSaveInfo) const;
         void  SetButtonInfo(int buttonID, int buttonNewID, int image, BYTE style = 0, BYTE state = 0) const;
         BOOL  SetBitmapSize(int cx, int cy) const;
         BOOL  SetButtonSize(int cx, int cy) const;
@@ -118,7 +118,7 @@ namespace Win32xx
         DWORD SetExtendedStyle(DWORD exStyle) const;
         CImageList SetHotImageList(HIMAGELIST hotImages);
         int   SetHotItem(int index) const;
-        CImageList SetImageList(HIMAGELIST NormalImages);
+        CImageList SetImageList(HIMAGELIST normalImages);
         BOOL  SetIndent(int indent) const;
         BOOL  SetMaxTextRows(int maxRows) const;
         BOOL  SetPadding(int cx, int cy) const;
@@ -141,7 +141,7 @@ namespace Win32xx
 
         std::map<CString, int> m_stringMap; // a map of strings used in SetButtonText
 
-        UINT m_oldToolBarID;                // Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
+        UINT m_oldBitmapID;                // Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 
     };  // class CToolBar
 
@@ -158,7 +158,7 @@ namespace Win32xx
     // Definitions for the CToolBar class
     //
 
-    inline CToolBar::CToolBar() : m_oldToolBarID(0)
+    inline CToolBar::CToolBar() : m_oldBitmapID(0)
     {
     }
 
@@ -171,11 +171,11 @@ namespace Win32xx
     // Adds one or more images to the list of button images available for a ToolBar.
     // Note: AddBitmap supports a maximum colour depth of 8 bits (256 colours)
     //       For more colours, use an ImageList instead.
-    inline int CToolBar::AddBitmap(UINT toolBarID)
+    inline int CToolBar::AddBitmap(UINT bitmapID)
     {
         assert(IsWindow());
 
-        CBitmap Bitmap(toolBarID);
+        CBitmap Bitmap(bitmapID);
         assert (Bitmap.GetHandle());
         BITMAP bm = Bitmap.GetBitmapData();
         int iImageWidth  = MAX(bm.bmHeight, 16);
@@ -184,11 +184,11 @@ namespace Win32xx
         TBADDBITMAP tbab;
         ZeroMemory(&tbab, sizeof(tbab));
         tbab.hInst = GetApp().GetResourceHandle();
-        tbab.nID   = toolBarID;
+        tbab.nID   = bitmapID;
         int result = static_cast<int>(SendMessage(TB_ADDBITMAP, iImages, reinterpret_cast<LPARAM>(&tbab)));
 
         if (result != -1)
-            m_oldToolBarID = toolBarID;
+			m_oldBitmapID = bitmapID;
 
         return result;
     }
@@ -240,18 +240,18 @@ namespace Win32xx
 
 
     // Adds one or more buttons to a ToolBar. lpButtons is a pointer to an array of TBBUTTON.
-    inline BOOL CToolBar::AddButtons(UINT uNumButtons, LPTBBUTTON lpButtons) const
+    inline BOOL CToolBar::AddButtons(UINT buttonCount, LPTBBUTTON pButtonInfoArray) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ADDBUTTONS, uNumButtons, reinterpret_cast<LPARAM>(lpButtons)) != 0);
+        return (SendMessage(TB_ADDBUTTONS, buttonCount, reinterpret_cast<LPARAM>(pButtonInfoArray)) != 0);
     }
 
 
     // Adds a new string, passed as a resource ID, to the ToolBar's internal list of strings.
-    inline int CToolBar::AddString(UINT resID) const
+    inline int CToolBar::AddString(UINT stringID) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(TB_ADDSTRING, reinterpret_cast<WPARAM>(GetApp().GetResourceHandle()), resID));
+        return static_cast<int>(SendMessage(TB_ADDSTRING, reinterpret_cast<WPARAM>(GetApp().GetResourceHandle()), stringID));
     }
 
 
@@ -336,10 +336,10 @@ namespace Win32xx
 
 
     // Receives the TBBUTTON structure information from the specified button.
-    inline BOOL CToolBar::GetButton(int index, TBBUTTON& Button) const
+    inline BOOL CToolBar::GetButton(int index, TBBUTTON& buttonInfo) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_GETBUTTON, index, reinterpret_cast<LPARAM>(&Button)) != 0);
+        return (SendMessage(TB_GETBUTTON, index, reinterpret_cast<LPARAM>(&buttonInfo)) != 0);
     }
 
 
@@ -433,8 +433,8 @@ namespace Win32xx
     inline CImageList CToolBar::GetDisabledImageList()
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETDISABLEDIMAGELIST, 0, 0));
-        return CImageList(himl);
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETDISABLEDIMAGELIST, 0, 0));
+        return CImageList(images);
     }
 
     // Retrieves the he extended styles currently in use for the toolbar control.
@@ -449,8 +449,8 @@ namespace Win32xx
     inline CImageList CToolBar::GetHotImageList()
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETHOTIMAGELIST, 0, 0));
-        return CImageList(himl);
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETHOTIMAGELIST, 0, 0));
+        return CImageList(images);
     }
 
 
@@ -466,8 +466,8 @@ namespace Win32xx
     inline CImageList CToolBar::GetImageList()
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETIMAGELIST, 0, 0));
-        return CImageList(himl);
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETIMAGELIST, 0, 0));
+        return CImageList(images);
     }
 
 
@@ -611,10 +611,10 @@ namespace Win32xx
 
 
     // Inserts a button to the left of iButton.
-    inline BOOL CToolBar::InsertButton(int index, TBBUTTON& button) const
+    inline BOOL CToolBar::InsertButton(int index, TBBUTTON& buttonInfo) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_INSERTBUTTON, index, reinterpret_cast<LPARAM>(&button)) != 0);
+        return (SendMessage(TB_INSERTBUTTON, index, reinterpret_cast<LPARAM>(&buttonInfo)) != 0);
     }
 
 
@@ -741,11 +741,11 @@ namespace Win32xx
     // Replaces an existing bitmap with a new bitmap.
     // Note: ReplaceBitmap supports a maximum colour depth of 8 bits (256 colours)
     //       For more colours, use an ImageList instead.
-    inline BOOL CToolBar::ReplaceBitmap(UINT newToolBarID)
+    inline BOOL CToolBar::ReplaceBitmap(UINT newBitmapID)
     {
         assert(IsWindow());
 
-        CBitmap Bitmap(newToolBarID);
+        CBitmap Bitmap(newBitmapID);
         assert (Bitmap.GetHandle());
         BITMAP bm = Bitmap.GetBitmapData();
         int imageWidth  = MAX(bm.bmHeight, 16);
@@ -755,13 +755,13 @@ namespace Win32xx
         ZeroMemory(&tbrb, sizeof(tbrb));
         tbrb.hInstNew = GetApp().GetResourceHandle();
         tbrb.hInstOld = tbrb.hInstNew;
-        tbrb.nIDNew = newToolBarID;
-        tbrb.nIDOld = m_oldToolBarID;
+        tbrb.nIDNew = newBitmapID;
+        tbrb.nIDOld = m_oldBitmapID;
         tbrb.nButtons  = images;
 
         BOOL Succeeded = (SendMessage(TB_REPLACEBITMAP, images, reinterpret_cast<LPARAM>(&tbrb)) != 0);
         if (Succeeded)
-            m_oldToolBarID = newToolBarID;
+			m_oldBitmapID = m_oldBitmapID;
 
         return Succeeded;
     }
@@ -769,13 +769,13 @@ namespace Win32xx
 
     // Saves or restores the toolbar state in the registry. Parameter values:
     //   Save   If this parameter is TRUE, the information is saved, otherwise it is restored.
-    //   ptbsp  Pointer to a TBSAVEPARAMS structure that specifies the registry key, subkey,
+    //   pSaveInfo  Pointer to a TBSAVEPARAMS structure that specifies the registry key, subkey,
     //          and value name for the toolbar state information.
-    inline void CToolBar::SaveRestore(BOOL save, TBSAVEPARAMS* ptbsp) const
+    inline void CToolBar::SaveRestore(BOOL save, TBSAVEPARAMS* pSaveInfo) const
     // Presses or releases the specified button in a ToolBar.
     {
         assert(IsWindow());
-        SendMessage(TB_SAVERESTORE, save, reinterpret_cast<LPARAM>(ptbsp));
+        SendMessage(TB_SAVERESTORE, save, reinterpret_cast<LPARAM>(pSaveInfo));
     }
 
 
@@ -795,7 +795,7 @@ namespace Win32xx
         SetBitmapSize(imageWidth, imageHeight);
 
         BOOL succeeded = FALSE;
-        if (m_oldToolBarID)
+        if (m_oldBitmapID)
             succeeded = ReplaceBitmap(id);
         else
             succeeded = AddBitmap(id);
@@ -1006,8 +1006,8 @@ namespace Win32xx
     inline CImageList CToolBar::SetDisableImageList(HIMAGELIST disabledImages)
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETDISABLEDIMAGELIST, 0, reinterpret_cast<LPARAM>(disabledImages)));
-        return CImageList(himl);
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETDISABLEDIMAGELIST, 0, reinterpret_cast<LPARAM>(disabledImages)));
+        return CImageList(images);
     }
 
 
@@ -1032,8 +1032,8 @@ namespace Win32xx
     inline CImageList CToolBar::SetHotImageList(HIMAGELIST hotImages)
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETHOTIMAGELIST, 0, reinterpret_cast<LPARAM>(hotImages)));
-        return CImageList(himl);
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETHOTIMAGELIST, 0, reinterpret_cast<LPARAM>(hotImages)));
+        return CImageList(images);
     }
 
 
@@ -1049,8 +1049,8 @@ namespace Win32xx
     inline CImageList CToolBar::SetImageList(HIMAGELIST normalImages)
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETIMAGELIST, 0, reinterpret_cast<LPARAM>(normalImages)));
-        return CImageList(himl);
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETIMAGELIST, 0, reinterpret_cast<LPARAM>(normalImages)));
+        return CImageList(images);
     }
 
 

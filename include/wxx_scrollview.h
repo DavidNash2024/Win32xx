@@ -79,17 +79,17 @@ namespace Win32xx
         CScrollView();
         virtual ~CScrollView();
 
-        CBrush GetScrollBkgnd() const    { return m_backgndBrush; }
+        CBrush GetScrollBkgnd() const    { return m_bkgndBrush; }
         CPoint GetScrollPosition() const { return m_currentPos; }
         CSize GetTotalScrollSize() const { return m_totalSize; }
         BOOL IsHScrollVisible() const    { return (GetStyle() &  WS_HSCROLL) != FALSE; }
         BOOL IsVScrollVisible() const    { return (GetStyle() &  WS_VSCROLL) != FALSE; }
         void SetScrollPosition(POINT pt);
         void SetScrollSizes(CSize totalSize = CSize(0,0), CSize pageSize = CSize(0,0), CSize lineSize = CSize(0,0));
-        void SetScrollBkgnd(CBrush backgndBrush) { m_backgndBrush = backgndBrush; }
+        void SetScrollBkgnd(CBrush bkgndBrush) { m_bkgndBrush = bkgndBrush; }
 
     protected:
-        virtual void    FillOutsideRect(CDC& dc, HBRUSH hBrush);
+        virtual void    FillOutsideRect(CDC& dc, HBRUSH brush);
         virtual BOOL    OnEraseBkgnd(CDC& dc);
         virtual LRESULT OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseWheel(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -107,7 +107,7 @@ namespace Win32xx
         CSize m_totalSize;
         CSize m_pageSize;
         CSize m_lineSize;
-        CBrush m_backgndBrush;
+        CBrush m_bkgndBrush;
     };
 
 }
@@ -125,7 +125,7 @@ namespace Win32xx
 
     inline CScrollView::CScrollView()
     {
-        m_backgndBrush.CreateSolidBrush(RGB(255, 255, 255));
+        m_bkgndBrush.CreateSolidBrush(RGB(255, 255, 255));
     }
 
 
@@ -136,7 +136,7 @@ namespace Win32xx
 
     // Fills the area of the view that appears outside of the scrolling area.
     // Can be used in OnEraseBkgnd to draw the background efficiently.
-    inline void CScrollView::FillOutsideRect(CDC& dc, HBRUSH hBrush)
+    inline void CScrollView::FillOutsideRect(CDC& dc, HBRUSH brush)
     {
         // Get the window size in client area co-ordinates
         CRect windowRect = GetWindowRect();
@@ -144,11 +144,11 @@ namespace Win32xx
 
         // Fill the right side with the specified brush
         CRect rcRight(m_totalSize.cx, 0, windowRect.right, windowRect.bottom);
-        dc.FillRect(rcRight, hBrush);
+        dc.FillRect(rcRight, brush);
 
         // Fill the bottom side with the specified brush
         CRect rcBottom(0, m_totalSize.cy, m_totalSize.cx, windowRect.bottom);
-        dc.FillRect(rcBottom, hBrush);
+        dc.FillRect(rcBottom, brush);
     }
 
 
@@ -228,7 +228,7 @@ namespace Win32xx
 
             // Set the background color
             CRect rcTotal(CPoint(0, 0), m_totalSize);
-            dcMem.FillRect(rcTotal, m_backgndBrush);
+            dcMem.FillRect(rcTotal, m_bkgndBrush);
 
             // Call the overridden OnDraw function
             OnDraw(dcMem);
@@ -237,7 +237,7 @@ namespace Win32xx
             dc.BitBlt(0, 0, m_totalSize.cx, m_totalSize.cy, dcMem, m_currentPos.x, m_currentPos.y, SRCCOPY);
 
             // Set the area outside the scrolling area
-            FillOutsideRect(dc, m_backgndBrush);
+            FillOutsideRect(dc, m_bkgndBrush);
 
             // No more drawing required
             return 0;

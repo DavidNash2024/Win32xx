@@ -161,7 +161,7 @@ namespace Win32xx
         BOOL    GetItem(COMBOBOXEXITEM& cbItem) const;
         BOOL    HasEditChanged () const;
         int     InsertItem(const COMBOBOXEXITEM& cbItem) const;
-        CImageList SetImageList(HIMAGELIST hImages) const;
+        CImageList SetImageList(HIMAGELIST images) const;
         BOOL    SetItem(const COMBOBOXEXITEM& cbItem) const;
         DWORD   GetExtendedStyle() const;
         DWORD   SetExtendedStyle(DWORD exMask, DWORD exStyles ) const;
@@ -190,7 +190,7 @@ namespace Win32xx
         CRect   GetItemRect(int index) const;
         BOOL    GetOrderArray(LPINT pArray, int count) const;
         int     OrderToIndex(int order) const;
-        CImageList SetImageList(HIMAGELIST hImages) const;
+        CImageList SetImageList(HIMAGELIST images) const;
         BOOL    SetItem(int pos, const HDITEM& headerItem) const;
         BOOL    SetOrderArray(int count, LPINT pArray) const;
         int     GetBitmapMargin() const;
@@ -325,7 +325,7 @@ namespace Win32xx
         SYSTEMTIME GetTime(DWORD* pReturnCode = NULL) const;
         COLORREF SetMonthCalColor(int color, COLORREF ref) const;
         BOOL SetFormat(LPCTSTR pFormat) const;
-        void SetMonthCalFont(HFONT hFont, BOOL redraw = TRUE) const;
+        void SetMonthCalFont(HFONT font, BOOL redraw = TRUE) const;
         BOOL SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const;
         BOOL SetTime(const SYSTEMTIME& time) const;
         BOOL SetTimeNone() const;
@@ -1010,8 +1010,8 @@ namespace Win32xx
     inline CImageList CComboBoxEx::GetImageList() const
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_GETIMAGELIST, 0, 0));
-        return CImageList(himl);
+        HIMAGELIST images = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_GETIMAGELIST, 0, 0));
+        return CImageList(images);
     }
 
 
@@ -1048,12 +1048,12 @@ namespace Win32xx
 
 
     // Sets an image list for the ComboBoxEx control.
-    inline CImageList CComboBoxEx::SetImageList(HIMAGELIST hImages) const
+    inline CImageList CComboBoxEx::SetImageList(HIMAGELIST images) const
     {
         assert(IsWindow());
-        HIMAGELIST hOldImages = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_SETIMAGELIST, 0,
-                                                       reinterpret_cast<LPARAM>(hImages)));
-        return CImageList(hOldImages);
+        HIMAGELIST oldImages = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_SETIMAGELIST, 0,
+                                                       reinterpret_cast<LPARAM>(images)));
+        return CImageList(oldImages);
     }
 
 
@@ -1109,16 +1109,16 @@ namespace Win32xx
     inline CFont CDateTime::GetMonthCalFont() const
     {
         assert(IsWindow());
-        HFONT hFont = reinterpret_cast<HFONT>(DateTime_GetMonthCalFont(*this));
-        return CFont(hFont);
+        HFONT font = reinterpret_cast<HFONT>(DateTime_GetMonthCalFont(*this));
+        return CFont(font);
     }
 
 
     // Sets the font to be used by the date and time picker (DTP) control's child month calendar control.
-    inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL redraw /*= TRUE*/) const
+    inline void CDateTime::SetMonthCalFont(HFONT font, BOOL redraw /*= TRUE*/) const
     {
         assert(IsWindow());
-        DateTime_SetMonthCalFont(*this, hFont, MAKELONG(redraw, 0));
+        DateTime_SetMonthCalFont(*this, font, MAKELONG(redraw, 0));
     }
 
 
@@ -1191,8 +1191,8 @@ namespace Win32xx
     inline CImageList CHeader::CreateDragImage(int index) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = Header_CreateDragImage(*this, index);
-        return CImageList(himl);
+        HIMAGELIST images = Header_CreateDragImage(*this, index);
+        return CImageList(images);
     }
 
 
@@ -1292,11 +1292,11 @@ namespace Win32xx
 #endif
 
     // Assigns an image list to the header control.
-    inline CImageList CHeader::SetImageList(HIMAGELIST hImages) const
+    inline CImageList CHeader::SetImageList(HIMAGELIST images) const
     {
         assert(IsWindow());
-        HIMAGELIST hOldImages = Header_SetImageList(*this, hImages);
-        return CImageList(hOldImages);
+        HIMAGELIST oldImages = Header_SetImageList(*this, images);
+        return CImageList(oldImages);
     }
 
 

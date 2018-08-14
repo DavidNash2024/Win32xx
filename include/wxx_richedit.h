@@ -146,7 +146,7 @@ namespace Win32xx
         void    SetSel(CHARRANGE& cr) const;
         BOOL    SetSelectionCharFormat(CHARFORMAT& cf) const;
         BOOL    SetSelectionCharFormat(CHARFORMAT2& cf) const;
-        BOOL    SetTargetDevice(HDC hdc, long lineWidth) const;
+        BOOL    SetTargetDevice(HDC dc, long lineWidth) const;
         BOOL    SetTargetDevice(CDC& dc, long lineWidth) const;
         BOOL    SetTextMode(UINT mode) const;
         UINT    SetUndoLimit(UINT limit) const;
@@ -846,10 +846,10 @@ namespace Win32xx
 
 
     // Sets the target output device and line width used for "what you see is what you get" (WYSIWYG) formatting.
-    inline BOOL CRichEdit::SetTargetDevice(HDC hDC, long lLineWidth) const
+    inline BOOL CRichEdit::SetTargetDevice(HDC dc, long lLineWidth) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETTARGETDEVICE, reinterpret_cast<WPARAM>(hDC), lLineWidth));
+        return (0 != SendMessage(EM_SETTARGETDEVICE, reinterpret_cast<WPARAM>(dc), lLineWidth));
     }
 
 

@@ -206,7 +206,7 @@ namespace Win32xx
         void SetHideSingleTab(BOOL hideSingle);
         void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
         void SetTabIcon(UINT iconID);
-        void SetTabIcon(int i, HICON hIcon) { CTab::SetTabIcon(i, hIcon); }
+        void SetTabIcon(int i, HICON icon) { CTab::SetTabIcon(i, icon); }
         void SetTabText(LPCTSTR pText) { m_tabText = pText; }
         void SetTabText(UINT tab, LPCTSTR pText);
         void SetView(CWnd& Wnd);
@@ -4921,8 +4921,8 @@ namespace Win32xx
 
     inline void CDockContainer::SetTabIcon(UINT iconID)
     {
-        HICON hIcon = reinterpret_cast<HICON>(GetApp().LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
-        SetTabIcon(hIcon);
+        HICON icon = reinterpret_cast<HICON>(GetApp().LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
+        SetTabIcon(icon);
     }
 
 

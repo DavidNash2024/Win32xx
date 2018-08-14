@@ -37,8 +37,8 @@ void CMainFrame::AddCombo()
     tb.SetButtonWidth(IDM_FILE_SAVE, comboWidth);
 
     // Determine the size and position of the ComboBox
-    int nIndex = tb.CommandToIndex(IDM_FILE_SAVE);
-    CRect rc = tb.GetItemRect(nIndex);
+    int index = tb.CommandToIndex(IDM_FILE_SAVE);
+    CRect rc = tb.GetItemRect(index);
 
     // Create and position the ComboboxEx window
     m_comboBoxEx.Create(tb);
@@ -284,8 +284,8 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
         {
             TCHAR szSubKey[16];
             wsprintf(szSubKey, _T("Band ID %d\0"), i+1);
-            UINT nID = GetRegDwordFromOpenKey(hKey, szSubKey);
-            m_bandIDs.push_back(nID);
+            UINT id = GetRegDwordFromOpenKey(hKey, szSubKey);
+            m_bandIDs.push_back(id);
 
             wsprintf(szSubKey, _T("Band Style %d\0"), i+1);
             UINT nStyle = GetRegDwordFromOpenKey(hKey, szSubKey);
@@ -655,7 +655,7 @@ BOOL CMainFrame::SaveRegistrySettings()
         CString strKeyName = GetRegistryKeyName();
         CString strKey = _T("Software\\");
         strKey += strKeyName + (_T("\\Theme Settings"));
-        int nBands = GetReBar().GetBandCount();
+        int bands = GetReBar().GetBandCount();
 
         RegCreateKeyEx(HKEY_CURRENT_USER, strKey, 0, NULL,
         REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
@@ -672,14 +672,14 @@ BOOL CMainFrame::SaveRegistrySettings()
         RegSetValueEx(hKey, _T("UseLines"), 0, REG_DWORD, (LPBYTE)&m_useLines, sizeof(DWORD));
         RegSetValueEx(hKey, _T("ShowArrows"), 0, REG_DWORD, (LPBYTE)&m_showArrows, sizeof(DWORD));
         RegSetValueEx(hKey, _T("ShowCards"), 0, REG_DWORD, (LPBYTE)&m_showCards, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("NumBands"), 0, REG_DWORD, (LPBYTE)&nBands, sizeof(DWORD));
+        RegSetValueEx(hKey, _T("NumBands"), 0, REG_DWORD, (LPBYTE)&bands, sizeof(DWORD));
 
         // Save the rebar band settings
         REBARBANDINFO rbbi;
         ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
         rbbi.fMask = RBBIM_ID|RBBIM_STYLE|RBBIM_SIZE;
 
-        for (int i = 0; i < nBands; i++)
+        for (int i = 0; i < bands; i++)
         {
             GetReBar().GetBandInfo(i, rbbi);
             UINT id = rbbi.wID;

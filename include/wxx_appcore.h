@@ -89,8 +89,8 @@ namespace Win32xx
     // CWinThread constructor.
     // Override CWinThread and use this constructor for GUI threads.
     // InitInstance will be called when the thread runs.
-    inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_hThread(0),
-                                       m_threadID(0), m_threadIDForWinCE(0), m_hAccel(0), m_hWndForAccel(0)
+    inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_thread(0),
+                                       m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_wndForAccel(0)
     {
     }
 
@@ -100,7 +100,7 @@ namespace Win32xx
     // Specify a pointer to the function to run when the thread starts.
     // Specifying pParam for a worker thread is optional.
     inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
-                        m_pThreadParams(0), m_hThread(0), m_threadID(0), m_threadIDForWinCE(0), m_hAccel(0), m_hWndForAccel(0)
+                        m_pThreadParams(0), m_thread(0), m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_wndForAccel(0)
     {
         m_pfnThreadProc = pfnThreadProc;
         m_pThreadParams = pParam;
@@ -108,7 +108,7 @@ namespace Win32xx
 
     inline CWinThread::~CWinThread()
     {
-        if (m_hThread)
+        if (m_thread)
         {
             // A thread's state is set to signalled when the thread terminates.
             // If your thread is still running at this point, you have a bug.
@@ -118,7 +118,7 @@ namespace Win32xx
             }
 
             // Close the thread's handle
-            VERIFY(::CloseHandle(m_hThread));
+            VERIFY(::CloseHandle(m_thread));
         }
     }
 
@@ -134,22 +134,22 @@ namespace Win32xx
         if (NULL == m_pThreadParams) m_pThreadParams = this;
 
         // Reusing the CWinThread
-        if (m_hThread)
+        if (m_thread)
         {
             assert(!IsRunning());
-            VERIFY(CloseHandle(m_hThread));
+            VERIFY(CloseHandle(m_thread));
         }
 
 #ifdef _WIN32_WCE
-        m_hThread = reinterpret_cast<HANDLE>(::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_threadIDForWinCE));
+        m_thread = reinterpret_cast<HANDLE>(::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_threadIDForWinCE));
 #else
-        m_hThread = reinterpret_cast<HANDLE>(::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc, m_pThreadParams, initflag, &m_threadID));
+        m_thread = reinterpret_cast<HANDLE>(::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc, m_pThreadParams, initflag, &m_threadID));
 #endif
 
-        if (m_hThread == 0)
+        if (m_thread == 0)
             throw CWinException(_T("Failed to create thread"));
 
-        return m_hThread;
+        return m_thread;
     }
 
 
@@ -170,14 +170,14 @@ namespace Win32xx
     // Retrieves the handle of this thread.
     inline HANDLE CWinThread::GetThread() const
     {
-        return m_hThread;
+        return m_thread;
     }
 
 
     // Retrieves the thread's ID.
     inline int CWinThread::GetThreadID() const
     {
-        assert(m_hThread);
+        assert(m_thread);
 
 #ifdef _WIN32_WCE
         return m_threadIDForWinCE;
@@ -190,8 +190,8 @@ namespace Win32xx
     // Retrieves this thread's priority
     inline int CWinThread::GetThreadPriority() const
     {
-        assert(m_hThread);
-        return ::GetThreadPriority(m_hThread);
+        assert(m_thread);
+        return ::GetThreadPriority(m_thread);
     }
 
 
@@ -290,7 +290,7 @@ namespace Win32xx
     // will not call a CWnd's WndProc.
     inline BOOL CWinThread::PostThreadMessage(UINT msg, WPARAM wparam, LPARAM lparam) const
     {
-        assert(m_hThread);
+        assert(m_thread);
         return ::PostThreadMessage(GetThreadID(), msg, wparam, lparam);
     }
 
@@ -298,17 +298,17 @@ namespace Win32xx
     // Resumes a thread that has been suspended, or created with the CREATE_SUSPENDED flag.
     inline DWORD CWinThread::ResumeThread() const
     {
-        assert(m_hThread);
-        return ::ResumeThread(m_hThread);
+        assert(m_thread);
+        return ::ResumeThread(m_thread);
     }
 
 
-    // hAccel is the handle of the accelerator table
+    // accel is the handle of the accelerator table
     // hWndAccel is the window handle for translated messages.
-    inline void CWinThread::SetAccelerators(HACCEL hAccel, HWND hWndAccel)
+    inline void CWinThread::SetAccelerators(HACCEL accel, HWND hWndAccel)
     {
-        m_hWndForAccel = hWndAccel;
-        m_hAccel = hAccel;
+        m_wndForAccel = hWndAccel;
+        m_accel = accel;
     }
 
 
@@ -326,16 +326,16 @@ namespace Win32xx
     // by the SetThreadPriority Windows API function.
     inline BOOL CWinThread::SetThreadPriority(int priority) const
     {
-        assert(m_hThread);
-        return ::SetThreadPriority(m_hThread, priority);
+        assert(m_thread);
+        return ::SetThreadPriority(m_thread, priority);
     }
 
 
     // Suspends this thread. Use ResumeThread to resume the thread.
     inline DWORD CWinThread::SuspendThread() const
     {
-        assert(m_hThread);
-        return ::SuspendThread(m_hThread);
+        assert(m_thread);
+        return ::SuspendThread(m_thread);
     }
 
 
@@ -428,10 +428,10 @@ namespace Win32xx
 
 
     // Adds a HDC and CDC_Data* pair to the map.
-    inline void CWinApp::AddCDCData(HDC hDC, CDC_Data* pData)
+    inline void CWinApp::AddCDCData(HDC dc, CDC_Data* pData)
     {
         CThreadLock mapLock(m_gdiLock);
-        m_mapCDCData.insert(std::make_pair(hDC, pData));
+        m_mapCDCData.insert(std::make_pair(dc, pData));
     }
 
 
@@ -444,19 +444,19 @@ namespace Win32xx
 
 
     // Adds a HIMAGELIST and Ciml_Data* pair to the map.
-    inline void CWinApp::AddCImlData(HIMAGELIST hIml, CIml_Data* pData)
+    inline void CWinApp::AddCImlData(HIMAGELIST images, CIml_Data* pData)
     {
         CThreadLock mapLock(m_wndLock);
-        m_mapCImlData.insert(std::make_pair(hIml, pData));
+        m_mapCImlData.insert(std::make_pair(images, pData));
     }
 
 #ifndef _WIN32_WCE
 
     // Adds a HMENU and CMenu_Data* to the map.
-    inline void CWinApp::AddCMenuData(HMENU hMenu, CMenu_Data* pData)
+    inline void CWinApp::AddCMenuData(HMENU menu, CMenu_Data* pData)
     {
         CThreadLock mapLock(m_wndLock);
-        m_mapCMenuData.insert(std::make_pair(hMenu, pData));
+        m_mapCMenuData.insert(std::make_pair(menu, pData));
     }
 
 #endif
@@ -486,14 +486,14 @@ namespace Win32xx
 
 
     // Retrieves a pointer to CDC_Data from the map
-    inline CDC_Data* CWinApp::GetCDCData(HDC hDC)
+    inline CDC_Data* CWinApp::GetCDCData(HDC dc)
     {
         std::map<HDC, CDC_Data*, CompareHDC>::const_iterator m;
 
         // Find the CDC data mapped to this HDC
         CDC_Data* pCDCData = 0;
         CThreadLock mapLock(m_gdiLock);
-        m = m_mapCDCData.find(hDC);
+        m = m_mapCDCData.find(dc);
 
         if (m != m_mapCDCData.end())
             pCDCData = m->second;
@@ -503,14 +503,14 @@ namespace Win32xx
 
 
     // Retrieves a pointer to CGDI_Data from the map
-    inline CGDI_Data* CWinApp::GetCGDIData(HGDIOBJ hObject)
+    inline CGDI_Data* CWinApp::GetCGDIData(HGDIOBJ object)
     {
         std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::const_iterator m;
 
         // Find the CGDIObject data mapped to this HGDIOBJ
         CGDI_Data* pCGDIData = 0;
         CThreadLock mapLock(m_gdiLock);
-        m = m_mapCGDIData.find(hObject);
+        m = m_mapCGDIData.find(object);
 
         if (m != m_mapCGDIData.end())
             pCGDIData = m->second;
@@ -520,14 +520,14 @@ namespace Win32xx
 
 
     // Retrieves a pointer to CIml_Data from the map
-    inline CIml_Data* CWinApp::GetCImlData(HIMAGELIST hImages)
+    inline CIml_Data* CWinApp::GetCImlData(HIMAGELIST images)
     {
         std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::const_iterator m;
 
         // Find the CImageList data mapped to this HIMAGELIST
         CIml_Data* pCImlData = 0;
         CThreadLock mapLock(m_wndLock);
-        m = m_mapCImlData.find(hImages);
+        m = m_mapCImlData.find(images);
 
         if (m != m_mapCImlData.end())
             pCImlData = m->second;
@@ -538,14 +538,14 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
     // Retrieves a pointer to CMenu_Data from the map
-    inline CMenu_Data* CWinApp::GetCMenuData(HMENU hMenu)
+    inline CMenu_Data* CWinApp::GetCMenuData(HMENU menu)
     {
         std::map<HMENU, CMenu_Data*, CompareHMENU>::const_iterator m;
 
         // Find the CMenu data mapped to this HMENU
         CMenu_Data* pCMenuData = 0;
         CThreadLock mapLock(m_wndLock);
-        m = m_mapCMenuData.find(hMenu);
+        m = m_mapCMenuData.find(menu);
 
         if (m != m_mapCMenuData.end())
             pCMenuData = m->second;

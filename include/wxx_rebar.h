@@ -57,10 +57,10 @@ namespace Win32xx
 
         // Operations
         BOOL DeleteBand(const int band) const;
-        int  HitTest(RBHITTESTINFO& rbht) const;
+        int  HitTest(RBHITTESTINFO& hitTestInfo) const;
         HWND HitTest(POINT pt) const;
         int  IDToIndex(UINT bandID) const;
-        BOOL InsertBand(const int band, REBARBANDINFO& rbbi) const;
+        BOOL InsertBand(const int band, REBARBANDINFO& bandInfo) const;
         BOOL IsBandVisible(int band) const;
         void MaximizeBand(UINT band, BOOL isIdeal = FALSE) const;
         void MinimizeBand(UINT band) const;
@@ -75,19 +75,19 @@ namespace Win32xx
         int  GetBand(const HWND hWnd) const;
         CRect GetBandBorders(int band) const;
         int  GetBandCount() const;
-        BOOL GetBandInfo(const int band, REBARBANDINFO& rbbi) const;
+        BOOL GetBandInfo(const int band, REBARBANDINFO& bandInfo) const;
         CRect GetBandRect(int band) const;
         UINT GetBarHeight() const;
-        BOOL GetBarInfo(REBARINFO& rbi) const;
+        BOOL GetBarInfo(REBARINFO& rebarInfo) const;
         HWND GetMenuBar() {return m_hMenuBar;}
         UINT GetRowCount() const;
         int  GetRowHeight(int row) const;
         UINT GetSizeofRBBI() const;
         HWND GetToolTips() const;
-        BOOL SetBandBitmap(const int band, HBITMAP hBackground) const;
+        BOOL SetBandBitmap(const int band, HBITMAP background) const;
         BOOL SetBandColor(const int band, const COLORREF foreground, const COLORREF background) const;
-        BOOL SetBandInfo(const int band, REBARBANDINFO& rbbi) const;
-        BOOL SetBarInfo(REBARINFO& rbi) const;
+        BOOL SetBandInfo(const int band, REBARBANDINFO& bandInfo) const;
+        BOOL SetBarInfo(REBARINFO& rebarInfo) const;
         void SetMenuBar(HWND hMenuBar) {m_hMenuBar = hMenuBar;}
         void SetToolTips(HWND hToolTip) const;
 
@@ -186,14 +186,14 @@ namespace Win32xx
 
 
     // Retrieves information about a specified band in a rebar control.
-    inline BOOL CReBar::GetBandInfo(int band, REBARBANDINFO& rbbi) const
+    inline BOOL CReBar::GetBandInfo(int band, REBARBANDINFO& bandInfo) const
     {
         assert(IsWindow());
         assert(band >=  0);
 
         // REBARBANDINFO describes individual BAND characteristics
-        rbbi.cbSize = GetSizeofRBBI();
-        return (SendMessage(RB_GETBANDINFO, band, reinterpret_cast<LPARAM>(&rbbi)) != 0);
+		bandInfo.cbSize = GetSizeofRBBI();
+        return (SendMessage(RB_GETBANDINFO, band, reinterpret_cast<LPARAM>(&bandInfo)) != 0);
     }
 
 
@@ -216,13 +216,13 @@ namespace Win32xx
 
 
     // Retrieves information about the rebar control and the image list it uses.
-    inline BOOL CReBar::GetBarInfo(REBARINFO& rbi) const
+    inline BOOL CReBar::GetBarInfo(REBARINFO& rebarInfo) const
     {
         assert(IsWindow());
 
         // REBARINFO describes overall rebar control characteristics
-        rbi.cbSize = sizeof(rbi);
-        return (SendMessage(RB_GETBARINFO, 0, reinterpret_cast<LPARAM>(&rbi)) != 0);
+		rebarInfo.cbSize = sizeof(rebarInfo);
+        return (SendMessage(RB_GETBARINFO, 0, reinterpret_cast<LPARAM>(&rebarInfo)) != 0);
     }
 
 
@@ -273,10 +273,10 @@ namespace Win32xx
 
     // Determines which portion of a rebar band is at a given point on the screen,
     //  if a rebar band exists at that point.
-    inline int CReBar::HitTest(RBHITTESTINFO& rbht) const
+    inline int CReBar::HitTest(RBHITTESTINFO& hitTestInfo) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(RB_HITTEST, 0, reinterpret_cast<LPARAM>(&rbht)));
+        return static_cast<int>(SendMessage(RB_HITTEST, 0, reinterpret_cast<LPARAM>(&hitTestInfo)));
     }
 
 
@@ -319,12 +319,12 @@ namespace Win32xx
 
 
     // Inserts a new band in a rebar control.
-    inline BOOL CReBar::InsertBand(int nBand, REBARBANDINFO& rbbi) const
+    inline BOOL CReBar::InsertBand(int nBand, REBARBANDINFO& bandInfo) const
     {
         assert(IsWindow());
 
-        rbbi.cbSize = GetSizeofRBBI();
-        return (SendMessage(RB_INSERTBAND, nBand, reinterpret_cast<LPARAM>(&rbbi)) != 0);
+		bandInfo.cbSize = GetSizeofRBBI();
+        return (SendMessage(RB_INSERTBAND, nBand, reinterpret_cast<LPARAM>(&bandInfo)) != 0);
     }
 
 
@@ -515,7 +515,7 @@ namespace Win32xx
 
 
     // Sets the band's bitmaps.
-    inline BOOL CReBar::SetBandBitmap(int band, HBITMAP hBackground) const
+    inline BOOL CReBar::SetBandBitmap(int band, HBITMAP background) const
     {
         assert(IsWindow());
 
@@ -525,7 +525,7 @@ namespace Win32xx
         rbbi.fMask  = RBBIM_STYLE;
         GetBandInfo(band, rbbi);
         rbbi.fMask  |= RBBIM_BACKGROUND;
-        rbbi.hbmBack = hBackground;
+        rbbi.hbmBack = background;
 
         return (SendMessage(RB_SETBANDINFO, band, reinterpret_cast<LPARAM>(&rbbi)) != 0);
     }
@@ -550,25 +550,25 @@ namespace Win32xx
 
 
     // Sets the characteristics of a rebar control.
-    inline BOOL CReBar::SetBandInfo(int band, REBARBANDINFO& rbbi) const
+    inline BOOL CReBar::SetBandInfo(int band, REBARBANDINFO& bandInfo) const
     {
         assert(IsWindow());
         assert(band >= 0);
 
         // REBARBANDINFO describes individual BAND characteristics
-        rbbi.cbSize = GetSizeofRBBI();
-        return (SendMessage(RB_SETBANDINFO, band, reinterpret_cast<LPARAM>(&rbbi)) != 0);
+		bandInfo.cbSize = GetSizeofRBBI();
+        return (SendMessage(RB_SETBANDINFO, band, reinterpret_cast<LPARAM>(&bandInfo)) != 0);
     }
 
 
     // REBARINFO associates an image list with the rebar.
     // A band will also need to set RBBIM_IMAGE.
-    inline BOOL CReBar::SetBarInfo(REBARINFO& rbi) const
+    inline BOOL CReBar::SetBarInfo(REBARINFO& rebarInfo) const
     {
         assert(IsWindow());
 
-        rbi.cbSize = sizeof(rbi);
-        return (SendMessage(RB_SETBARINFO, 0, reinterpret_cast<LPARAM>(&rbi)) != 0);
+		rebarInfo.cbSize = sizeof(rebarInfo);
+        return (SendMessage(RB_SETBARINFO, 0, reinterpret_cast<LPARAM>(&rebarInfo)) != 0);
     }
 
 

@@ -238,14 +238,15 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 
 /*============================================================================*/
     BOOL CView::
-OnDropFiles(HDROP hDroinfo)                                            /*
+OnDropFiles(HDROP hDropinfo)                                            /*
 
     Open the text document dragged and dropped in the rich edit window.
 *-----------------------------------------------------------------------------*/
 {
     TCHAR szFileName[_MAX_PATH];
-    ::DragQueryFile((HDROP)hDroinfo, 0, szFileName, _MAX_PATH);
+    ::DragQueryFile((HDROP)hDropinfo, 0, szFileName, _MAX_PATH);
     GetDoc().OpenDoc(szFileName);
+    ::DragFinish(hDropinfo);
     return TRUE;
 }
 

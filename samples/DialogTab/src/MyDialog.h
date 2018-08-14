@@ -16,14 +16,14 @@ public:
     virtual INT_PTR OnCtlColorDlg(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual INT_PTR OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam);
 
-    virtual void OnOK() {}      // supress closing dialog with the enter key
-    virtual void OnCancel() {}  // supress closing dialog with the esc key
+    virtual void OnOK() {}      // suppress closing dialog with the enter key
+    virtual void OnCancel() {}  // suppress closing dialog with the esc key
 
     BOOL OnButton();
     BOOL OnCheck1();
     BOOL OnCheck2();
     BOOL OnCheck3();
-    BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
+    BOOL OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID);
 
 private:
     CBrush m_brush;

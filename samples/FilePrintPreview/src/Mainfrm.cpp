@@ -159,6 +159,7 @@ OnDropFiles(HDROP hDropInfo)                                            /*
         AddMRUEntry(szFileName);
     }
 
+    ::DragFinish(hDropInfo);
     return TRUE;
 }
 

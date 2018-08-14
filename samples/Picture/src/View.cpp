@@ -152,10 +152,9 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 
         if ( !LoadPictureFile(FileName) )
             NewPictureFile();
-
-        DragFinish(hDrop);
     }
-    
+
+    DragFinish(hDrop); 
     return 0;
 }
 

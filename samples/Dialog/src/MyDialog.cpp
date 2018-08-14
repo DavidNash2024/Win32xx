@@ -113,8 +113,8 @@ BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
     CheckRadioButton(idFirst, idLast, idClicked);
 
     CString str;
-    int nButton = idClicked - idFirst + 1;
-    str.Format(_T("Radio%d"), nButton);
+    int button = idClicked - idFirst + 1;
+    str.Format(_T("Radio%d"), button);
     TRACE(str); TRACE("\n");
     
     return  TRUE;

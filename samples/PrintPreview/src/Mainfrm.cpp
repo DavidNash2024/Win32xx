@@ -108,8 +108,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wparam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_FILE_NEW:          return OnFileNew();
     case IDM_FILE_OPEN:         return OnFileOpen();
@@ -179,6 +179,7 @@ BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
         AddMRUEntry(fileName);
     }
 
+    ::DragFinish(hDropInfo);
     return TRUE;
 }
 

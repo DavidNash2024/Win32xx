@@ -84,8 +84,8 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
 
     UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wparam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_COLOR_BLACK:
         m_view.SetColor(RGB(0,0,0));

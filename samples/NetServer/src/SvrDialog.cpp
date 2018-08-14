@@ -182,8 +182,8 @@ BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     UNREFERENCED_PARAMETER(lparam);
 
     // Respond to the various dialog buttons
-    UINT nID = LOWORD(wparam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDC_BUTTON_START:      return OnStartServer();
     case IDC_BUTTON_SEND:       return OnSend();

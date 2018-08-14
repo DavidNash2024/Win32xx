@@ -58,8 +58,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UINT nID = LOWORD(wparam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDM_FILE_NEW:          return OnFileNew();

@@ -1,4 +1,4 @@
-REM: A batch program to rebuild the Win32++ samples using VS2015 Express.
+REM: A batch program to rebuild the Win32++ samples using VS2015 Community.
 REM: The contents of the log file is erased 
 
 REM: Set the paths and environment variables
@@ -325,7 +325,7 @@ copy Tutorial5\Release\Tutorial5.exe       "..\output\VS2015\Tutorials\Release" 
 copy Tutorial6\Release\Tutorial6.exe       "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
 copy Tutorial7\Release\Tutorial7.exe       "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
 copy Tutorial8\Release\Tutorial8.exe       "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
-copy Tutorial10\Release\Tutorial9.exe      "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
+copy Tutorial9\Release\Tutorial9.exe       "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
 copy Tutorial10\Release\Tutorial10.exe     "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
 
 REM: Pop the directory change off the stack

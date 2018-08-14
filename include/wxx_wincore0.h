@@ -179,7 +179,7 @@ namespace Win32xx
         BOOL  GetScrollInfo(int barType, SCROLLINFO& si) const;
         DWORD GetStyle() const;
         CRect GetUpdateRect(BOOL erase) const;
-        int GetUpdateRgn(HRGN hRgn, BOOL erase) const;
+        int GetUpdateRgn(HRGN rgn, BOOL erase) const;
         CWnd  GetWindow(UINT cmd) const;
         CDC   GetWindowDC() const;
         LONG_PTR GetWindowLongPtr(int index) const;
@@ -189,8 +189,8 @@ namespace Win32xx
         void  Invalidate(BOOL erase = TRUE) const;
         BOOL  InvalidateRect(const RECT& rect, BOOL erase = TRUE) const;
         BOOL  InvalidateRect(BOOL erase = TRUE) const;
-        BOOL  InvalidateRgn(HRGN hRgn, BOOL erase = TRUE) const;
-        BOOL  IsChild(HWND hChild) const;
+        BOOL  InvalidateRgn(HRGN rgn, BOOL erase = TRUE) const;
+        BOOL  IsChild(HWND child) const;
         BOOL  IsDialogMessage(MSG& msg) const;
         UINT  IsDlgButtonChecked(int buttonID) const;
         BOOL  IsWindow() const;
@@ -206,9 +206,9 @@ namespace Win32xx
         BOOL  PostMessage(UINT msg, WPARAM wparam = 0, LPARAM lparam = 0) const;
         BOOL  PostMessage(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) const;
         BOOL  RedrawWindow(const RECT& updateRect, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
-        BOOL  RedrawWindow(HRGN hRgn, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+        BOOL  RedrawWindow(HRGN rgn, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
         BOOL  RedrawWindow(UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
-        int   ReleaseDC(HDC hDC) const;
+        int   ReleaseDC(HDC dc) const;
         BOOL  ScreenToClient(POINT& point) const;
         BOOL  ScreenToClient(RECT& rect) const;
         LRESULT SendDlgItemMessage(int dlgItemID, UINT msg, WPARAM wparam, LPARAM lparam) const;
@@ -223,9 +223,9 @@ namespace Win32xx
         BOOL  SetDlgItemText(int dlgItemID, LPCTSTR pString) const;
         void  SetExStyle(DWORD exStyle) const;
         CWnd  SetFocus() const;
-        void  SetFont(HFONT hFont, BOOL redraw = TRUE) const;
+        void  SetFont(HFONT font, BOOL redraw = TRUE) const;
         BOOL  SetForegroundWindow() const;
-        HICON SetIcon(HICON hIcon, BOOL isBigIcon) const;
+        HICON SetIcon(HICON icon, BOOL isBigIcon) const;
         CWnd  SetParent(HWND hWndParent) const;
         BOOL  SetRedraw(BOOL tedraw = TRUE) const;
         int   SetScrollInfo(int barType, const SCROLLINFO& si, BOOL redraw) const;
@@ -241,7 +241,7 @@ namespace Win32xx
         BOOL  UpdateWindow() const;
         BOOL  ValidateRect(const RECT& rect) const;
         BOOL  ValidateRect() const;
-        BOOL  ValidateRgn(HRGN hRgn) const;
+        BOOL  ValidateRgn(HRGN rgn) const;
         static CWnd WindowFromPoint(POINT point);
 
   #ifndef _WIN32_WCE
@@ -251,7 +251,7 @@ namespace Win32xx
         BOOL  DlgDirSelectEx(LPTSTR pString, int count, int listBoxID) const;
         BOOL  DlgDirSelectComboBoxEx(LPTSTR pString, int count, int comboBoxID) const;
         BOOL  DrawAnimatedRects(int idAni, const RECT& from, const RECT& to) const;
-        BOOL  DrawCaption(HDC hDC, const RECT& rect, UINT flags) const;
+        BOOL  DrawCaption(HDC dc, const RECT& rect, UINT flags) const;
         BOOL  EnableScrollBar(UINT flags, UINT arrows) const;
         CWnd  GetLastActivePopup() const;
         CMenu GetMenu() const;
@@ -260,13 +260,13 @@ namespace Win32xx
         CMenu GetSystemMenu(BOOL revertToDefault) const;
         CWnd  GetTopWindow() const;
         BOOL  GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
-        BOOL  HiliteMenuItem(HMENU hMenu, UINT itemHilite, UINT hilite) const;
+        BOOL  HiliteMenuItem(HMENU menu, UINT itemHilite, UINT hilite) const;
         BOOL  IsIconic() const;
         BOOL  IsZoomed() const;
         BOOL  LockWindowUpdate() const;
         BOOL  OpenIcon() const;
-        void  Print(HDC hDC, DWORD flags) const;
-        BOOL  SetMenu(HMENU hMenu) const;
+        void  Print(HDC dc, DWORD flags) const;
+        BOOL  SetMenu(HMENU menu) const;
         BOOL  ScrollWindow(int xAmount, int yAmount, const RECT& scrollRect, LPCRECT pClipRect = 0) const;
         BOOL  ScrollWindow(int xAmount, int yAmount, LPCRECT pClipRect = 0) const;
         int   ScrollWindowEx(int dx, int dy, LPCRECT pScrollRect, LPCRECT pClipRect, HRGN hUpdateRgn, LPRECT pUpdateRect, UINT flags) const;
@@ -277,7 +277,7 @@ namespace Win32xx
         BOOL  ShowScrollBar(int bar, BOOL show) const;
         BOOL  ShowWindowAsync(int showCmd) const;
         BOOL  UnLockWindowUpdate() const;
-        CWnd  WindowFromDC(HDC hDC) const;
+        CWnd  WindowFromDC(HDC dc) const;
 
     #ifndef WIN32_LEAN_AND_MEAN
         void  DragAcceptFiles(BOOL accept) const;
