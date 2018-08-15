@@ -76,7 +76,7 @@ HRESULT CDXView::InitDevice()
     HRESULT hr = S_OK;
 
     RECT rc;
-    ::GetClientRect( m_hWnd, &rc );
+    ::GetClientRect( *this, &rc );
     UINT width = rc.right - rc.left;
     UINT height = rc.bottom - rc.top;
 
@@ -163,7 +163,7 @@ HRESULT CDXView::InitDevice()
         sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         sd.BufferCount = 1;
 
-        hr = dxgiFactory2->CreateSwapChainForHwnd(m_pd3dDevice, m_hWnd, &sd, nullptr, nullptr, &m_pSwapChain1);
+        hr = dxgiFactory2->CreateSwapChainForHwnd(m_pd3dDevice, *this, &sd, nullptr, nullptr, &m_pSwapChain1);
         if (SUCCEEDED(hr))
         {
             hr = m_pSwapChain1->QueryInterface(__uuidof(IDXGISwapChain), reinterpret_cast<void**>(&m_pSwapChain));
@@ -183,7 +183,7 @@ HRESULT CDXView::InitDevice()
         sd.BufferDesc.RefreshRate.Numerator = 60;
         sd.BufferDesc.RefreshRate.Denominator = 1;
         sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        sd.OutputWindow = m_hWnd;
+        sd.OutputWindow = *this;
         sd.SampleDesc.Count = 1;
         sd.SampleDesc.Quality = 0;
         sd.Windowed = TRUE;
@@ -192,7 +192,7 @@ HRESULT CDXView::InitDevice()
     }
 
     // Note this tutorial doesn't handle full-screen swapchains so we block the ALT+ENTER shortcut
-    dxgiFactory->MakeWindowAssociation(m_hWnd, DXGI_MWA_NO_ALT_ENTER);
+    dxgiFactory->MakeWindowAssociation(*this, DXGI_MWA_NO_ALT_ENTER);
 
     dxgiFactory->Release();
 

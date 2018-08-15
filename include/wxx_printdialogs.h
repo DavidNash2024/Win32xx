@@ -263,16 +263,16 @@ namespace Win32xx
         virtual INT_PTR DoModal(HWND owner = 0);
         CDevMode GetDevMode() const;
         CDevNames GetDevNames() const;
-        void    GetMargins(RECT& rcMargin, RECT& rcMinMargin) const;
+        void    GetMargins(RECT& margin, RECT& minMargin) const;
         CSize   GetPaperSize() const;
-        const   PAGESETUPDLG& GetParameters() const { return m_PSD; }
+        const   PAGESETUPDLG& GetParameters() const { return m_psd; }
         void    SetParameters(PAGESETUPDLG& psd);
 
     protected:
         // Override these functions as required
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
         virtual UINT    OnDrawPage(HDC, UINT, const RECT&);
-        virtual UINT    OnPreDrawPage(WORD wPaper, WORD wFlags, const PAGESETUPDLG& PSD);
+        virtual UINT    OnPreDrawPage(WORD paper, WORD flags, const PAGESETUPDLG& psd);
 
         // Not intended to be overridden
         INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
@@ -287,7 +287,7 @@ namespace Win32xx
             GetApp().m_devNames = 0;
         }
 
-        PAGESETUPDLG    m_PSD;          // page setup dlg structure
+        PAGESETUPDLG    m_psd;          // page setup dlg structure
     };
 
 }
@@ -422,7 +422,7 @@ namespace Win32xx
     // Returns the printer's device context.
     inline CDC CPrintDialog::GetPrinterDC() const
     {
-        CThreadLock Threadlock(GetApp().m_printLock);
+        CThreadLock lock(GetApp().m_printLock);
         CDC dc;
         GetApp().UpdateDefaultPrinter();
 
@@ -502,7 +502,7 @@ namespace Win32xx
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         // Ensure only one print dialog is running at a time.
-        CThreadLock Threadlock(GetApp().m_printLock);
+        CThreadLock lock(GetApp().m_printLock);
                                 
         // Update the default printer
         GetApp().UpdateDefaultPrinter();
@@ -572,7 +572,7 @@ namespace Win32xx
     // Returns TRUE if a default printer exists.
     inline BOOL CPrintDialog::GetDefaults()
     {
-        CThreadLock Threadlock(GetApp().m_printLock);
+        CThreadLock lock(GetApp().m_printLock);
 
         // Reset global memory
         GlobalFreeAll();
@@ -739,14 +739,14 @@ namespace Win32xx
     // PAGESETUPDLG struct in the Windows API documentation.
     inline CPageSetupDialog::CPageSetupDialog( DWORD flags /* = PSD_MARGINS */ )
     {
-        ZeroMemory(&m_PSD, sizeof(m_PSD));
-        m_PSD.Flags = flags;
+        ZeroMemory(&m_psd, sizeof(m_psd));
+		m_psd.Flags = flags;
 
         // Enable the hook proc for the help button
-        if (m_PSD.Flags & PSD_SHOWHELP)
-            m_PSD.Flags |= PSD_ENABLEPAGESETUPHOOK;
+        if (m_psd.Flags & PSD_SHOWHELP)
+			m_psd.Flags |= PSD_ENABLEPAGESETUPHOOK;
 
-        SetParameters(m_PSD);
+        SetParameters(m_psd);
     }
 
     // Dialog procedure for the PageSetup dialog. Override this function
@@ -775,11 +775,11 @@ namespace Win32xx
     //  The Default message handling for CPageSetupDialog. Don't override this
     //  function, override DialogProc instead.
     //  Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CPageSetupDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM lparam)
+    inline INT_PTR CPageSetupDialog::DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         UNREFERENCED_PARAMETER(lparam);
 
-        switch (message)
+        switch (msg)
         {
         case WM_INITDIALOG:
             {     // handle the initialization message
@@ -811,27 +811,27 @@ namespace Win32xx
         assert(!IsWindow());    // Only one window per CWnd instance allowed
         
         // Ensure only one page-setup dialog is running at a time.
-        CThreadLock Threadlock(GetApp().m_printLock);
+        CThreadLock lock(GetApp().m_printLock);
 
         // Update the default printer
         GetApp().UpdateDefaultPrinter();
 
         // Assign values to the PAGESETUPDLG structure
-        m_PSD.hDevMode = GetApp().m_devMode;
-        m_PSD.hDevNames = GetApp().m_devNames;
-        m_PSD.hwndOwner = owner;
+		m_psd.hDevMode = GetApp().m_devMode;
+		m_psd.hDevNames = GetApp().m_devNames;
+		m_psd.hwndOwner = owner;
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp().SetTlsData();
 
         // Create the modal dialog
         pTLSData->pWnd = this;
-        BOOL ok = ::PageSetupDlg(&m_PSD);
+        BOOL ok = ::PageSetupDlg(&m_psd);
 
         if (ok)
         {
-            GetApp().m_devMode = m_PSD.hDevMode;
-            GetApp().m_devNames = m_PSD.hDevNames;
+            GetApp().m_devMode = m_psd.hDevMode;
+            GetApp().m_devNames = m_psd.hDevNames;
             OnOK();
             ok = IDOK;
         }
@@ -852,8 +852,8 @@ namespace Win32xx
             ok = IDCANCEL;
         }
 
-        m_PSD.hDevMode = 0;
-        m_PSD.hDevNames = 0;
+		m_psd.hDevMode = 0;
+		m_psd.hDevNames = 0;
 
         return ok;
     }
@@ -881,16 +881,16 @@ namespace Win32xx
     }
 
     // Call this function after a call to DoModal to retrieve the margins of the printer.
-    inline void CPageSetupDialog::GetMargins(RECT& rcMargin, RECT& rcMinMargin) const
+    inline void CPageSetupDialog::GetMargins(RECT& margin, RECT& minMargin) const
     {
-        rcMargin    = m_PSD.rtMargin;
-        rcMinMargin = m_PSD.rtMinMargin;
+        margin    = m_psd.rtMargin;
+        minMargin = m_psd.rtMinMargin;
     }
 
     // Call this function to retrieve the size of the paper selected for printing.
     inline CSize CPageSetupDialog::GetPaperSize() const
     {
-        return CSize(m_PSD.ptPaperSize.x, m_PSD.ptPaperSize.y);
+        return CSize(m_psd.ptPaperSize.x, m_psd.ptPaperSize.y);
     }
 
     // This function receives messages that allow the drawing of the paint sample page
@@ -941,10 +941,10 @@ namespace Win32xx
     }
 
     // Called before drawing is preformed on the sample page.
-    inline UINT CPageSetupDialog::OnPreDrawPage(WORD wPaper, WORD wFlags, const PAGESETUPDLG& /*PSD*/)
+    inline UINT CPageSetupDialog::OnPreDrawPage(WORD paper, WORD flags, const PAGESETUPDLG& /*psd*/)
     {
-        UNREFERENCED_PARAMETER(wPaper);
-        UNREFERENCED_PARAMETER(wFlags);
+        UNREFERENCED_PARAMETER(paper);
+        UNREFERENCED_PARAMETER(flags);
 
         return 0;
     }
@@ -952,18 +952,18 @@ namespace Win32xx
     // Set the parameters of the PAGESETUPDLG structure to sensible values
     inline void CPageSetupDialog::SetParameters(PAGESETUPDLG& psd)
     {
-        m_PSD.lStructSize       = sizeof(m_PSD);
-        m_PSD.hwndOwner         = 0;            // Set this in DoModal
-        m_PSD.Flags             = psd.Flags;
-        m_PSD.ptPaperSize       = psd.ptPaperSize;
-        m_PSD.rtMinMargin       = psd.rtMinMargin;
-        m_PSD.rtMargin          = psd.rtMargin;
-        m_PSD.hInstance         = GetApp().GetResourceHandle();
-        m_PSD.lCustData         = psd.lCustData;
-        m_PSD.lpfnPageSetupHook = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
-        m_PSD.lpfnPagePaintHook = reinterpret_cast<LPCCHOOKPROC>(CPageSetupDialog::PaintHookProc);
-        m_PSD.lpPageSetupTemplateName = psd.lpPageSetupTemplateName;
-        m_PSD.hPageSetupTemplate = psd.hPageSetupTemplate;
+		m_psd.lStructSize       = sizeof(m_psd);
+		m_psd.hwndOwner         = 0;            // Set this in DoModal
+		m_psd.Flags             = psd.Flags;
+		m_psd.ptPaperSize       = psd.ptPaperSize;
+		m_psd.rtMinMargin       = psd.rtMinMargin;
+		m_psd.rtMargin          = psd.rtMargin;
+		m_psd.hInstance         = GetApp().GetResourceHandle();
+		m_psd.lCustData         = psd.lCustData;
+		m_psd.lpfnPageSetupHook = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+		m_psd.lpfnPagePaintHook = reinterpret_cast<LPCCHOOKPROC>(CPageSetupDialog::PaintHookProc);
+		m_psd.lpPageSetupTemplateName = psd.lpPageSetupTemplateName;
+		m_psd.hPageSetupTemplate = psd.hPageSetupTemplate;
     }
 
 }

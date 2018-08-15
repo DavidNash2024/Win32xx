@@ -73,7 +73,7 @@ namespace Win32xx
         HBITMAP SetBitmap(HBITMAP bitmap) const;
         void SetButtonStyle(DWORD style, BOOL redraw) const;
         void SetCheck(int checkState) const;
-        HCURSOR SetCursor(HCURSOR hCursor) const;
+        HCURSOR SetCursor(HCURSOR cursor) const;
         HICON SetIcon(HICON icon) const;
         void SetState(UINT state) const;
 
@@ -237,8 +237,8 @@ namespace Win32xx
         HENHMETAFILE GetEnhMetaFile() const;
         HICON  GetIcon() const;
         HBITMAP SetBitmap(HBITMAP bitmap) const;
-        HCURSOR SetCursor(HCURSOR hCursor) const;
-        HENHMETAFILE SetEnhMetaFile(HENHMETAFILE hMetaFile) const;
+        HCURSOR SetCursor(HCURSOR cursor) const;
+        HENHMETAFILE SetEnhMetaFile(HENHMETAFILE metaFile) const;
         HICON SetIcon(HICON icon) const;
 
     protected:
@@ -344,10 +344,10 @@ namespace Win32xx
     }
 
     // Sets the cursor associated with the button.
-    inline HCURSOR CButton::SetCursor(HCURSOR hCursor) const
+    inline HCURSOR CButton::SetCursor(HCURSOR cursor) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HCURSOR>(SendMessage(STM_SETIMAGE, IMAGE_CURSOR, reinterpret_cast<LPARAM>(hCursor)));
+        return reinterpret_cast<HCURSOR>(SendMessage(STM_SETIMAGE, IMAGE_CURSOR, reinterpret_cast<LPARAM>(cursor)));
     }
 
     // Sets the icon associated with the button.
@@ -1068,20 +1068,20 @@ namespace Win32xx
     // The cursor will be drawn in the upper-left corner and the static
     // control will be resized to the size of the cursor.
     // This function requires the SS_ICON style
-    inline HCURSOR CStatic::SetCursor(HCURSOR hCursor) const
+    inline HCURSOR CStatic::SetCursor(HCURSOR cursor) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HCURSOR>(SendMessage(STM_SETIMAGE, IMAGE_CURSOR, reinterpret_cast<LPARAM>(hCursor)));
+        return reinterpret_cast<HCURSOR>(SendMessage(STM_SETIMAGE, IMAGE_CURSOR, reinterpret_cast<LPARAM>(cursor)));
     }
 
     // Associates a new enhanced metafile image with the static control.
     // The enhanced metafile will be drawn in the upper-left corner and the static
     // control will be resized to the size of the enhanced metafile.
     // This function requires the SS_ENHMETAFILE style
-    inline HENHMETAFILE CStatic::SetEnhMetaFile(HENHMETAFILE hMetaFile) const
+    inline HENHMETAFILE CStatic::SetEnhMetaFile(HENHMETAFILE metaFile) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HENHMETAFILE>(SendMessage(STM_SETIMAGE, IMAGE_ENHMETAFILE, reinterpret_cast<LPARAM>(hMetaFile)));
+        return reinterpret_cast<HENHMETAFILE>(SendMessage(STM_SETIMAGE, IMAGE_ENHMETAFILE, reinterpret_cast<LPARAM>(metaFile)));
     }
 
     // Associates a new icon image with the static control.

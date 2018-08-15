@@ -127,7 +127,7 @@ namespace Win32xx
 #endif
 
         BOOL m_isModal;                  // a flag for modal dialogs
-        LPCTSTR m_pResName;         // the resource name for the dialog
+        LPCTSTR m_pResName;              // the resource name for the dialog
         LPCDLGTEMPLATE m_pDlgTemplate;   // the dialog template for indirect dialogs
     };
 
@@ -329,7 +329,7 @@ namespace Win32xx
                 CWnd* pFrom = GetApp().GetCWndFromMap(from);
 
                 if (pFrom != NULL)
-                    if (::GetParent(from) == m_hWnd)
+                    if (::GetParent(from) == m_wnd)
                         result = pFrom->OnNotifyReflect(wparam, lparam);
 
                 // Handle user notifications
@@ -390,7 +390,7 @@ namespace Win32xx
         case UWM_GETCDIALOG:    // Returns a pointer to this CDialog object
         case UWM_GETCWND:
         {
-            assert(this == GetCWndPtr(m_hWnd));
+            assert(this == GetCWndPtr(m_wnd));
 
             // Set the return code
             if (IsWindow())
@@ -415,7 +415,7 @@ namespace Win32xx
 
         INT_PTR result = 0;
         m_isModal=TRUE;
-        m_hWnd = 0;
+		m_wnd = 0;
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp().SetTlsData();
@@ -443,7 +443,7 @@ namespace Win32xx
 
         // Tidy up
         pTLSData->pWnd = NULL;
-        m_hWnd = 0;
+		m_wnd = 0;
 
     #ifndef _WIN32_WCE
         InterlockedDecrement(&pTLSData->dlgHooks);
@@ -472,7 +472,7 @@ namespace Win32xx
         assert(m_pDlgTemplate || m_pResName);  // Dialog layout must be defined.
 
         m_isModal=FALSE;
-        m_hWnd = 0;
+		m_wnd = 0;
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp().SetTlsData();
@@ -636,7 +636,7 @@ namespace Win32xx
             pTLSData->pWnd = NULL;
 
             // Store the Window pointer into the HWND map
-            pDialog->m_hWnd = wnd;
+            pDialog->m_wnd = wnd;
             pDialog->AddToMap();
         }
 

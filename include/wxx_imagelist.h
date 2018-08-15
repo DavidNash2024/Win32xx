@@ -242,12 +242,12 @@ namespace Win32xx
     }
 
     // Attaches an existing ImageList to this CImageList
-    // hImageList can be NULL
-    inline void CImageList::Attach(HIMAGELIST hImages)
+    // images can be NULL
+    inline void CImageList::Attach(HIMAGELIST images)
     {
         assert(m_pData);
 
-        if (hImages != m_pData->images)
+        if (images != m_pData->images)
         {
             // Release any existing ImageList
             if (m_pData->images)
@@ -256,10 +256,10 @@ namespace Win32xx
                 m_pData = new CIml_Data;
             }
 
-            if (hImages)
+            if (images)
             {
                 // Add the image list to this CImageList
-                CIml_Data* pCImlData = GetApp().GetCImlData(hImages);
+                CIml_Data* pCImlData = GetApp().GetCImlData(images);
                 if (pCImlData)
                 {
                     delete m_pData;
@@ -268,7 +268,7 @@ namespace Win32xx
                 }
                 else
                 {
-                    m_pData->images = hImages;
+                    m_pData->images = images;
                     AddToMap();
                 }
             }
@@ -382,7 +382,7 @@ namespace Win32xx
     inline HIMAGELIST CImageList::Detach()
     {
         assert(m_pData);
-        HIMAGELIST hImageList = m_pData->images;
+        HIMAGELIST images = m_pData->images;
         RemoveFromMap();
         m_pData->images = 0;
 
@@ -396,7 +396,7 @@ namespace Win32xx
 
         m_pData = new CIml_Data;
 
-        return hImageList;
+        return images;
     }
 
     // Displays the drag image at the specified position within the window.

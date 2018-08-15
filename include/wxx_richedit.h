@@ -488,8 +488,8 @@ namespace Win32xx
         assert(IsWindow());
 
         CString str;
-        int nBuff = static_cast<int>(SendMessage(EM_GETSELTEXT, 0, 0));
-        SendMessage(EM_GETSELTEXT, 0, reinterpret_cast<LPARAM>(str.GetBuffer(nBuff)));
+        int buff = static_cast<int>(SendMessage(EM_GETSELTEXT, 0, 0));
+        SendMessage(EM_GETSELTEXT, 0, reinterpret_cast<LPARAM>(str.GetBuffer(buff)));
         str.ReleaseBuffer();
         return str;
     }
@@ -527,14 +527,14 @@ namespace Win32xx
         range.cpMin = first;
         range.cpMax = last;
 
-        CString refString;
+        CString rangeString;
         TEXTRANGE tr;
         tr.chrg = range;
-        tr.lpstrText = refString.GetBuffer(last - first + 1);
+        tr.lpstrText = rangeString.GetBuffer(last - first + 1);
         SendMessage(EM_GETTEXTRANGE, 0, reinterpret_cast<LPARAM>(&tr));
-        refString.ReleaseBuffer();
+        rangeString.ReleaseBuffer();
 
-        return refString;
+        return rangeString;
     }
 
     // Retrieves the type of the next undo action, if any.

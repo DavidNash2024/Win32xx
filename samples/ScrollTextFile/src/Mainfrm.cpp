@@ -348,7 +348,7 @@ OnHelp()                                                /*
         // Store the window handle that currently has keyboard focus
         HWND hPrevFocus = ::GetFocus();
         if (hPrevFocus == GetMenuBar().GetHwnd())
-            hPrevFocus = m_hWnd;
+            hPrevFocus = *this;
 
           // make the AboutBox modeless
         m_AboutDialog.Create(*this);

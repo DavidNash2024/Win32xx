@@ -417,10 +417,10 @@ namespace Win32xx
     }
 
     // Adds a HGDIOBJ and CGDI_Data* pair to the map.
-    inline void CWinApp::AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData)
+    inline void CWinApp::AddCGDIData(HGDIOBJ gdi, CGDI_Data* pData)
     {
         CThreadLock mapLock(m_gdiLock);
-        m_mapCGDIData.insert(std::make_pair(hGDI, pData));
+        m_mapCGDIData.insert(std::make_pair(gdi, pData));
     }
 
     // Adds a HIMAGELIST and Ciml_Data* pair to the map.
@@ -443,25 +443,25 @@ namespace Win32xx
 
     // Free the specified global memory. It also provides a TRACE warning
     // if the global memory is currently locked.
-    inline void CWinApp::GlobalFreeAll(HGLOBAL hGlobal)
+    inline void CWinApp::GlobalFreeAll(HGLOBAL buffer)
     {
-        if (hGlobal == 0)
+        if (buffer == 0)
             return;
 
 #ifndef _WIN32_WCE
         // check validity of the handle
-        assert(::GlobalFlags(hGlobal) != GMEM_INVALID_HANDLE);
+        assert(::GlobalFlags(buffer) != GMEM_INVALID_HANDLE);
         // decrement the lock count associated with the handle
-        UINT count = ::GlobalFlags(hGlobal) & GMEM_LOCKCOUNT;
+        UINT count = ::GlobalFlags(buffer) & GMEM_LOCKCOUNT;
         while (count--)
         {
             TRACE("***WARNING Global memory still locked ***\n");
-            ::GlobalUnlock(hGlobal);
+            ::GlobalUnlock(buffer);
         }
 #endif
 
         // finally, really free the handle
-        ::GlobalFree(hGlobal);
+        ::GlobalFree(buffer);
     }
 
     // Retrieves a pointer to CDC_Data from the map
@@ -672,9 +672,9 @@ namespace Win32xx
     // Note:The cursor will be set to the window's class cursor (if one is set) each time the
     // mouse is moved over the window. You can specify different cursors for different
     // conditions while processing WM_SETCURSOR.
-    inline HCURSOR CWinApp::SetCursor(HCURSOR hCursor) const
+    inline HCURSOR CWinApp::SetCursor(HCURSOR cursor) const
     {
-        return ::SetCursor(hCursor);
+        return ::SetCursor(cursor);
     }
 
     // This function stores the 'this' pointer in a static variable.
@@ -699,11 +699,11 @@ namespace Win32xx
     // This function can be used to load a resource dll.
     // A resource dll can be used to define resources in different languages.
     // To use this function, place code like this in InitInstance
-    //   HINSTANCE hResource = LoadLibrary(_T("MyResourceDLL.dll"));
+    //   HINSTANCE resource = LoadLibrary(_T("MyResourceDLL.dll"));
     //   SetResourceHandle(hResource);
-    inline void CWinApp::SetResourceHandle(HINSTANCE hResource)
+    inline void CWinApp::SetResourceHandle(HINSTANCE resource)
     {
-        m_resource = hResource;
+        m_resource = resource;
     }
 
     // Creates the Thread Local Storage data for the current thread if none already exists.

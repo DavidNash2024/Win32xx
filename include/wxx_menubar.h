@@ -351,8 +351,8 @@ namespace Win32xx
         CWnd* pMDIChild = NULL;
         if (GetMDIClient())
         {
-            HWND hMDIChild = reinterpret_cast<HWND>(GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0, 0));
-            pMDIChild = GetCWndPtr(hMDIChild);
+            HWND mdiChild = reinterpret_cast<HWND>(GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0, 0));
+            pMDIChild = GetCWndPtr(mdiChild);
         }
 
         return pMDIChild;
@@ -374,8 +374,8 @@ namespace Win32xx
     inline void CMenuBar::GrabFocus()
     {
         if (::GetFocus() != *this)
-            m_prevFocus = ::SetFocus(m_hWnd);
-        ::SetCapture(m_hWnd);
+            m_prevFocus = ::SetFocus(*this);
+        ::SetCapture(*this);
         ::SetCursor(::LoadCursor(NULL, IDC_ARROW));
     }
 
@@ -688,9 +688,9 @@ namespace Win32xx
             {
                 CWnd* pMDIChild = GetActiveMDIChild();
                 assert(pMDIChild);
-                CMenu ChildMenu = pMDIChild->GetSystemMenu(FALSE);
+                CMenu childMenu = pMDIChild->GetSystemMenu(FALSE);
 
-                UINT id = ChildMenu.GetDefaultItem(FALSE, 0);
+                UINT id = childMenu.GetDefaultItem(FALSE, 0);
                 if (id)
                     pMDIChild->PostMessage(WM_SYSCOMMAND, id, 0);
             }
@@ -835,8 +835,8 @@ namespace Win32xx
             pMaxMDIChild = GetActiveMDIChild();
 
         // Load the submenu
-        int nMaxedOffset = IsMDIChildMaxed()? 1:0;
-        m_popupMenu = ::GetSubMenu(m_topMenu, m_hotItem - nMaxedOffset);
+        int maxedOffset = IsMDIChildMaxed()? 1:0;
+        m_popupMenu = ::GetSubMenu(m_topMenu, m_hotItem - maxedOffset);
         if (pMaxMDIChild && IsMDIChildMaxed() && (0 == m_hotItem) )
             m_popupMenu = pMaxMDIChild->GetSystemMenu(FALSE);
 
@@ -915,8 +915,8 @@ namespace Win32xx
                 // Alt/F10 key toggled
                 GrabFocus();
                 m_isKeyMode = TRUE;
-                int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
-                SetHotItem(nMaxedOffset);
+                int maxedOffset = (IsMDIChildMaxed()? 1:0);
+                SetHotItem(maxedOffset);
             }
             else
                 // Handle key pressed with Alt held down
@@ -969,17 +969,17 @@ namespace Win32xx
             DWORD flag = pNMHI->dwFlags;
             if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
             {
-                int nButton = HitTest();
-                if ((m_isMenuActive) && (nButton != m_hotItem))
+                int button = HitTest();
+                if ((m_isMenuActive) && (button != m_hotItem))
                 {
                     SendMessage(TB_PRESSBUTTON, m_hotItem, MAKELONG(FALSE, 0));
-                    m_hotItem = nButton;
+                    m_hotItem = button;
                     SendMessage(WM_CANCELMODE, 0, 0);
 
                     //Always use PostMessage for USER_POPUPMENU (not SendMessage)
                     PostMessage(UWM_POPUPMENU, 0, 0);
                 }
-                m_hotItem = nButton;
+                m_hotItem = button;
             }
 
             // Handle escape from popup menu
@@ -1052,7 +1052,7 @@ namespace Win32xx
         assert(IsWindow());
 
         m_topMenu = menu;
-        int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
+        int maxedOffset = (IsMDIChildMaxed()? 1:0);
 
         // Remove any existing buttons
         while (SendMessage(TB_BUTTONCOUNT,  0, 0) > 0)
@@ -1082,17 +1082,17 @@ namespace Win32xx
             // Assign the ToolBar Button struct
             TBBUTTON tbb;
             ZeroMemory(&tbb, sizeof(tbb));
-            tbb.idCommand = i  + nMaxedOffset;  // Each button needs a unique ID
+            tbb.idCommand = i  + maxedOffset;  // Each button needs a unique ID
             tbb.fsState = TBSTATE_ENABLED;
             tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
             tbb.iString = reinterpret_cast<INT_PTR>(_T(" "));
             SendMessage(TB_ADDBUTTONS, 1, reinterpret_cast<WPARAM>(&tbb));
 
             // Add the menu title to the string table
-            std::vector<TCHAR> vMenuName( MAX_MENU_STRING+1, _T('\0') );
-            TCHAR* pMenuName = &vMenuName[0];
+            std::vector<TCHAR> menuName( MAX_MENU_STRING+1, _T('\0') );
+            TCHAR* pMenuName = &menuName[0];
             GetMenuString(menu, i, pMenuName, MAX_MENU_STRING, MF_BYPOSITION);
-            SetButtonText(i  + nMaxedOffset, pMenuName);
+            SetButtonText(i  + maxedOffset, pMenuName);
         }
     }
 

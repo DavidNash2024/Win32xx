@@ -202,7 +202,7 @@ namespace Win32xx
         CFolderDialog* pThis = reinterpret_cast<CFolderDialog*>(param2);
         int result = 0;
 
-        if (pThis->m_hWnd == 0)
+        if (pThis->GetHwnd() == 0)
             pThis->Attach(wnd);
 
         switch (msg)

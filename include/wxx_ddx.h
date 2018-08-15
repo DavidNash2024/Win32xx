@@ -146,7 +146,7 @@ namespace Win32xx
         virtual void DDX_Text(int id, long& value);
         virtual void DDX_Text(int id, ULONG& value);
         virtual void DDX_Text(int id, CString& value);
-        virtual void DDX_Text(int id, LPTSTR value, int nMaxLen);
+        virtual void DDX_Text(int id, LPTSTR value, int maxLen);
         virtual void DDX_Text(int id, float& value, int precision = FLT_DIG);
         virtual void DDX_Text(int id, double& value, int precision = DBL_DIG);
 
@@ -1136,7 +1136,7 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type LPTSTR with the given maximum length.
-    inline void CDataExchange::DDX_Text(int id, LPTSTR value, int nMaxLen)
+    inline void CDataExchange::DDX_Text(int id, LPTSTR value, int maxLen)
     {
         assert(value);
 
@@ -1145,8 +1145,8 @@ namespace Win32xx
         {
             CString str;
             str.GetWindowText(control);
-            lstrcpyn(value, str, nMaxLen-1);
-            value[nMaxLen-1] = _T('\0');
+            lstrcpyn(value, str, maxLen-1);
+            value[maxLen-1] = _T('\0');
         }
         else
         {

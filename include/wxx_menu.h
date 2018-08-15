@@ -102,7 +102,7 @@ namespace Win32xx
         CMenu(HMENU menu);
         CMenu(const CMenu& rhs);
         CMenu& operator = (const CMenu& rhs);
-        void operator = (const HMENU hImageList);
+        void operator = (const HMENU menu);
         ~CMenu();
 
         //Initialization
@@ -129,7 +129,7 @@ namespace Win32xx
         BOOL DeleteMenu(UINT position, UINT flags) const;
         UINT EnableMenuItem(UINT enableItemID, UINT enable) const;
         int FindMenuItem(LPCTSTR pMenuString) const;
-        UINT GetDefaultItem(UINT gmdiFlags, BOOL byPosition = FALSE) const;
+        UINT GetDefaultItem(UINT flags, BOOL byPosition = FALSE) const;
         DWORD GetMenuContextHelpId() const;
 
 #if(WINVER >= 0x0500)   // Minimum OS required is Win2000
@@ -461,13 +461,13 @@ namespace Win32xx
     }
 
     // Determines the default menu item.
-    // The gmdiFlags parameter specifies how the function searches for menu items.
+    // The flags parameter specifies how the function searches for menu items.
     // This parameter can be zero or more of the following values: GMDI_GOINTOPOPUPS; GMDI_USEDISABLED.
-    inline UINT CMenu::GetDefaultItem(UINT gmdiFlags, BOOL byPosition /*= FALSE*/) const
+    inline UINT CMenu::GetDefaultItem(UINT flags, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
-        return ::GetMenuDefaultItem(m_pData->menu, byPosition, gmdiFlags);
+        return ::GetMenuDefaultItem(m_pData->menu, byPosition, flags);
     }
 
     // Retrieves the Help context identifier associated with the menu.

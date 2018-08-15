@@ -197,12 +197,12 @@ namespace Win32xx
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
 
-        BOOL IsFound = ::FindNextFile(m_fileFind, &m_findData);
+        BOOL isFound = ::FindNextFile(m_fileFind, &m_findData);
 
-        if (!IsFound)
+        if (!isFound)
             Close();
 
-        return IsFound;
+        return isFound;
     }
 
     // Return the found file's creation time
@@ -236,17 +236,17 @@ namespace Win32xx
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
 
-        CString SearchName = m_root + m_findData.cFileName;
-        CString FilePath;
+        CString searchName = m_root + m_findData.cFileName;
+        CString filePath;
 
-        int buffSize = ::GetFullPathName(SearchName, 0, 0, 0);
+        int buffSize = ::GetFullPathName(searchName, 0, 0, 0);
         if (buffSize > 0)
         {
-            ::GetFullPathName(SearchName, buffSize, FilePath.GetBuffer(buffSize), 0);
-            FilePath.ReleaseBuffer();
+            ::GetFullPathName(searchName, buffSize, filePath.GetBuffer(buffSize), 0);
+            filePath.ReleaseBuffer();
         }
 
-        return FilePath;
+        return filePath;
     }
 
     //  Return the file name, without the extension.

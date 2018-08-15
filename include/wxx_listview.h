@@ -101,7 +101,7 @@ namespace Win32xx
         BOOL    SetColumnOrderArray( int count, LPINT pArrayOfCol) const;
         BOOL    SetColumnWidth( int col, int cx ) const;
         DWORD   SetExtendedStyle( DWORD exStyle ) const;
-        HCURSOR SetHotCursor( HCURSOR hCursor ) const;
+        HCURSOR SetHotCursor( HCURSOR cursor ) const;
         int     SetHotItem( int index ) const;
         DWORD   SetHoverTime( DWORD hoverTime = static_cast<DWORD>(-1) ) const;
         CSize   SetIconSpacing( int cx, int cy ) const;
@@ -512,10 +512,10 @@ namespace Win32xx
 
     // Sets the HCURSOR that the list-view control uses when the pointer is
     // over an item while hot tracking is enabled.
-    inline HCURSOR CListView::SetHotCursor( HCURSOR hCursor ) const
+    inline HCURSOR CListView::SetHotCursor( HCURSOR cursor ) const
     {
         assert(IsWindow());
-        return ListView_SetHotCursor( *this, hCursor );
+        return ListView_SetHotCursor( *this, cursor );
     }
 
     // Sets the hot item in the list-view control.

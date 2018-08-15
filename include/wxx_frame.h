@@ -252,28 +252,28 @@ namespace Win32xx
         CMenuMetrics();
         ~CMenuMetrics();
 
-        CRect GetCheckBackgroundRect(const CRect& rcItem) const;
-        CRect GetCheckRect(const CRect& rcItem) const;
-        CRect GetGutterRect(const CRect& rcItem) const;
+        CRect GetCheckBackgroundRect(const CRect& item) const;
+        CRect GetCheckRect(const CRect& item) const;
+        CRect GetGutterRect(const CRect& item) const;
         CSize GetItemSize(MenuItemData* pmd) const;
-        CRect GetSelectionRect(const CRect& rcItem) const;
-        CRect GetSeperatorRect(const CRect& rcItem) const;
-        CRect GetTextRect(const CRect& rcItem) const;
+        CRect GetSelectionRect(const CRect& item) const;
+        CRect GetSeperatorRect(const CRect& item) const;
+        CRect GetTextRect(const CRect& item) const;
         CSize GetTextSize(MenuItemData* pmd) const;
         void  Initialize();
         BOOL  IsVistaMenu() const;
-        CRect ScaleRect(const CRect& rcItem) const;
-        CSize ScaleSize(const CSize& szItem) const;
-        int   ToItemStateId(UINT uItemState) const;
+        CRect ScaleRect(const CRect& item) const;
+        CSize ScaleSize(const CSize& item) const;
+        int   ToItemStateId(UINT itemState) const;
         int   ToCheckBackgroundStateId(int stateID) const;
-        int   ToCheckStateId(UINT fType, int stateID) const;
+        int   ToCheckStateId(UINT type, int stateID) const;
 
         // Wrappers for Windows API functions
         HRESULT CloseThemeData() const;
         HRESULT DrawThemeBackground(HDC dc, int partID, int stateID, const RECT* pRect, const RECT* pClipRect) const;
         HRESULT DrawThemeText(HDC dc, int partID, int stateID, LPCWSTR pText, int charCount, DWORD textFlags, DWORD textFlags2, LPCRECT pRect) const;
         HRESULT GetThemePartSize(HDC dc, int partID, int stateID, LPCRECT prc, THEMESIZE eSize, SIZE* psz) const;
-        HRESULT GetThemeInt(int partID, int stateID, int propID, int* piVal) const;
+        HRESULT GetThemeInt(int partID, int stateID, int propID, int* pVal) const;
         HRESULT GetThemeMargins(HDC dc, int partID, int stateID, int propID, LPRECT prc, MARGINS* pMargins) const;
         HRESULT GetThemeTextExtent(HDC dc, int partID, int stateID, LPCWSTR pText, int charCount, DWORD textFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const;
         BOOL    IsThemeBackgroundPartiallyTransparent(int partID, int stateID) const;
@@ -598,31 +598,31 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline CRect CMenuMetrics::GetCheckBackgroundRect(const CRect& rcItem) const
+    inline CRect CMenuMetrics::GetCheckBackgroundRect(const CRect& item) const
     {
         int cx = m_sizeCheck.cx + m_marCheck.Width();
         int cy = m_sizeCheck.cy + m_marCheck.Height();
 
-        int x = rcItem.left + m_marCheckBackground.cxLeftWidth;
-        int y = rcItem.top + (rcItem.Height() - cy) / 2;
+        int x = item.left + m_marCheckBackground.cxLeftWidth;
+        int y = item.top + (item.Height() - cy) / 2;
 
         return CRect(x, y, x + cx, y + cy);
     }
 
-    inline CRect CMenuMetrics::GetGutterRect(const CRect& rcItem) const
+    inline CRect CMenuMetrics::GetGutterRect(const CRect& item) const
     {
-        int x = rcItem.left;
-        int y = rcItem.top;
+        int x = item.left;
+        int y = item.top;
         int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() + m_marCheck.Width() + m_sizeCheck.cx;
-        int cy = rcItem.Height();
+        int cy = item.Height();
 
         return CRect(x, y, x + cx, y + cy);
     }
 
-    inline CRect CMenuMetrics::GetCheckRect(const CRect& rcItem) const
+    inline CRect CMenuMetrics::GetCheckRect(const CRect& item) const
     {
-        int x = rcItem.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth;
-        int y = rcItem.top + (rcItem.Height() - m_sizeCheck.cy) / 2;
+        int x = item.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth;
+        int y = item.top + (item.Height() - m_sizeCheck.cy) / 2;
 
         return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
     }
@@ -660,20 +660,20 @@ namespace Win32xx
         return (size);
     }
 
-    inline CRect CMenuMetrics::GetSelectionRect(const CRect& rcItem) const
+    inline CRect CMenuMetrics::GetSelectionRect(const CRect& item) const
     {
-        int x = rcItem.left + m_marItem.cxLeftWidth;
-        int y = rcItem.top;
+        int x = item.left + m_marItem.cxLeftWidth;
+        int y = item.top;
 
-        return CRect(x, y, rcItem.right - m_marItem.cxRightWidth, y + rcItem.Height());
+        return CRect(x, y, item.right - m_marItem.cxRightWidth, y + item.Height());
     }
 
-    inline CRect CMenuMetrics::GetSeperatorRect(const CRect& rcItem) const
+    inline CRect CMenuMetrics::GetSeperatorRect(const CRect& item) const
     {
-        int left = GetGutterRect(rcItem).right;
-        int top = rcItem.top;
-        int right = rcItem.right - m_marItem.cxRightWidth;
-        int bottom = rcItem.top + m_sizeSeparator.cy;
+        int left = GetGutterRect(item).right;
+        int top = item.top;
+        int right = item.right - m_marItem.cxRightWidth;
+        int bottom = item.top + m_sizeSeparator.cy;
 
         return CRect(left, top, right, bottom);
     }
@@ -715,12 +715,12 @@ namespace Win32xx
         return sizeText;
     }
 
-    inline CRect CMenuMetrics::GetTextRect(const CRect& rcItem) const
+    inline CRect CMenuMetrics::GetTextRect(const CRect& item) const
     {
-        int left = GetGutterRect(rcItem).Width() + m_marText.cxLeftWidth;
-        int top = rcItem.top + m_marText.cyTopHeight;
-        int right = rcItem.right - m_marItem.cxRightWidth - m_marText.cxRightWidth;
-        int bottom = rcItem.bottom - m_marText.cyBottomHeight;
+        int left = GetGutterRect(item).Width() + m_marText.cxLeftWidth;
+        int top = item.top + m_marText.cyTopHeight;
+        int right = item.right - m_marItem.cxRightWidth - m_marText.cxRightWidth;
+        int bottom = item.bottom - m_marText.cyBottomHeight;
 
         return CRect(left, top, right, bottom);
     }
@@ -736,11 +736,11 @@ namespace Win32xx
     }
 
     // Retrieves the value of an int property.
-    inline HRESULT CMenuMetrics::GetThemeInt(int partID, int stateID, int propID, int* piVal) const
+    inline HRESULT CMenuMetrics::GetThemeInt(int partID, int stateID, int propID, int* pVal) const
     {
         assert(m_theme);
         if (m_pfnGetThemeInt)
-            return m_pfnGetThemeInt(m_theme, partID, stateID, propID, piVal);
+            return m_pfnGetThemeInt(m_theme, partID, stateID, propID, pVal);
 
         return E_NOTIMPL;
     }
@@ -795,20 +795,20 @@ namespace Win32xx
 
         if (m_theme != 0)
         {
-            int iBorderSize = 0;    // Border space between item text and accelerator
-            int iBgBorderSize = 0;  // Border space between item text and gutter
+            int borderSize = 0;    // Border space between item text and accelerator
+            int bgBorderSize = 0;  // Border space between item text and gutter
             GetThemePartSize(NULL, MENU_POPUPCHECK, 0, NULL, TS_TRUE, &m_sizeCheck);
             GetThemePartSize(NULL, MENU_POPUPSEPARATOR, 0, NULL, TS_TRUE, &m_sizeSeparator);
-            GetThemeInt(MENU_POPUPITEM, 0, TMT_BORDERSIZE, &iBorderSize);
-            GetThemeInt(MENU_POPUPBACKGROUND, 0, TMT_BORDERSIZE, &iBgBorderSize);
+            GetThemeInt(MENU_POPUPITEM, 0, TMT_BORDERSIZE, &borderSize);
+            GetThemeInt(MENU_POPUPBACKGROUND, 0, TMT_BORDERSIZE, &bgBorderSize);
             GetThemeMargins(NULL, MENU_POPUPCHECK, 0, TMT_CONTENTMARGINS, NULL, &m_marCheck);
             GetThemeMargins(NULL, MENU_POPUPCHECKBACKGROUND, 0, TMT_CONTENTMARGINS, NULL, &m_marCheckBackground);
             GetThemeMargins(NULL, MENU_POPUPITEM, 0, TMT_CONTENTMARGINS, NULL, &m_marItem);
 
             // Popup text margins
             m_marText = m_marItem;
-            m_marText.cxRightWidth = iBorderSize;
-            m_marText.cxLeftWidth = iBgBorderSize;
+            m_marText.cxRightWidth = borderSize;
+            m_marText.cxLeftWidth = bgBorderSize;
         }
         else
         {
@@ -847,7 +847,7 @@ namespace Win32xx
     }
 
     // Re-scale the CRect to support the system's DPI
-    inline CRect CMenuMetrics::ScaleRect(const CRect& rcItem) const
+    inline CRect CMenuMetrics::ScaleRect(const CRect& item) const
     {
         // DC for the desktop
         CWindowDC dc(NULL);
@@ -855,7 +855,7 @@ namespace Win32xx
         int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
         int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
 
-        CRect rc  = rcItem;
+        CRect rc  = item;
         rc.left   = MulDiv(rc.left, dpiX, 96);
         rc.right  = MulDiv(rc.right, dpiX, 96);
         rc.top    = MulDiv(rc.top, dpiY, 96);
@@ -865,7 +865,7 @@ namespace Win32xx
     }
 
     // Re-scale the CSize to support the system's DPI
-    inline CSize CMenuMetrics::ScaleSize(const CSize& szItem) const
+    inline CSize CMenuMetrics::ScaleSize(const CSize& item) const
     {
         // DC for the desktop
         CWindowDC dc(NULL);
@@ -873,7 +873,7 @@ namespace Win32xx
         int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
         int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
 
-        CSize sz = szItem;
+        CSize sz = item;
         sz.cx = MulDiv(sz.cx, dpiX, 96);
         sz.cy = MulDiv(sz.cy, dpiY, 96);
 
@@ -881,57 +881,57 @@ namespace Win32xx
     }
 
     // Convert from item state to MENU_POPUPITEM state
-    inline int CMenuMetrics::ToItemStateId(UINT uItemState) const
+    inline int CMenuMetrics::ToItemStateId(UINT itemState) const
     {
-        const bool      IsDisabled   = ((uItemState & (ODS_INACTIVE | ODS_DISABLED)) != 0);
-        const bool      IsHot        = ((uItemState & (ODS_HOTLIGHT | ODS_SELECTED)) != 0);
-        POPUPITEMSTATES iState;
+        const bool      isDisabled   = ((itemState & (ODS_INACTIVE | ODS_DISABLED)) != 0);
+        const bool      isHot        = ((itemState & (ODS_HOTLIGHT | ODS_SELECTED)) != 0);
+        POPUPITEMSTATES state;
 
-        if (IsDisabled)
-            iState = (IsHot ? MPI_DISABLEDHOT : MPI_DISABLED);
-        else if (IsHot)
-            iState = MPI_HOT;
+        if (isDisabled)
+            state = (isHot ? MPI_DISABLEDHOT : MPI_DISABLED);
+        else if (isHot)
+            state = MPI_HOT;
         else
-            iState= MPI_NORMAL;
+            state= MPI_NORMAL;
 
-        return iState;
+        return state;
     }
 
     // Convert to MENU_POPUPCHECKBACKGROUND
     inline int CMenuMetrics::ToCheckBackgroundStateId(int stateID) const
     {
-        POPUPCHECKBACKGROUNDSTATES iStateIdCheckBackground;
+        POPUPCHECKBACKGROUNDSTATES stateIdCheckBackground;
 
         // Determine the check background state.
         if (stateID == MPI_DISABLED || stateID == MPI_DISABLEDHOT)
-            iStateIdCheckBackground = MCB_DISABLED;
+            stateIdCheckBackground = MCB_DISABLED;
         else
-            iStateIdCheckBackground = MCB_NORMAL;
+            stateIdCheckBackground = MCB_NORMAL;
 
-        return iStateIdCheckBackground;
+        return stateIdCheckBackground;
     }
 
     // Convert to MENU_POPUPCHECK state
-    inline int CMenuMetrics::ToCheckStateId(UINT fType, int stateID) const
+    inline int CMenuMetrics::ToCheckStateId(UINT type, int stateID) const
     {
-        POPUPCHECKSTATES iStateIdCheck;
+        POPUPCHECKSTATES stateIdCheck;
 
-        if (fType & MFT_RADIOCHECK)
+        if (type & MFT_RADIOCHECK)
         {
             if (stateID == MPI_DISABLED || stateID == MPI_DISABLEDHOT)
-                iStateIdCheck = MC_BULLETDISABLED;
+                stateIdCheck = MC_BULLETDISABLED;
             else
-                iStateIdCheck = MC_BULLETNORMAL;
+                stateIdCheck = MC_BULLETNORMAL;
         }
         else
         {
             if (stateID == MPI_DISABLED || stateID == MPI_DISABLEDHOT)
-                iStateIdCheck = MC_CHECKMARKDISABLED;
+                stateIdCheck = MC_CHECKMARKDISABLED;
             else
-                iStateIdCheck = MC_CHECKMARKNORMAL;
+                stateIdCheck = MC_CHECKMARKNORMAL;
         }
 
-        return iStateIdCheck;
+        return stateIdCheck;
     }
 
 

@@ -76,7 +76,7 @@ namespace Win32xx
         IUnknown* GetUnknown();
 
         // IUnknown Methods
-        STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
+        STDMETHODIMP QueryInterface(REFIID riid, void** ppObject);
         STDMETHODIMP_(ULONG) AddRef();
         STDMETHODIMP_(ULONG) Release();
 
@@ -96,13 +96,13 @@ namespace Win32xx
         STDMETHODIMP CanInPlaceActivate();
         STDMETHODIMP OnInPlaceActivate();
         STDMETHODIMP OnUIActivate();
-        STDMETHODIMP GetWindowContext(IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppDoc, LPRECT lposRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo);
+        STDMETHODIMP GetWindowContext(IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppDoc, LPRECT pRect, LPRECT pClipRect, LPOLEINPLACEFRAMEINFO pFrameInfo);
         STDMETHODIMP Scroll(SIZE scrollExtent);
         STDMETHODIMP OnUIDeactivate(BOOL undoable);
         STDMETHODIMP OnInPlaceDeactivate();
         STDMETHODIMP DiscardUndoState();
         STDMETHODIMP DeactivateAndUndo();
-        STDMETHODIMP OnPosRectChange(LPCRECT lposRect);
+        STDMETHODIMP OnPosRectChange(LPCRECT pRect);
 
         // IOleInPlaceUIWindow Methods
         STDMETHODIMP GetBorder(LPRECT pBorderRect);
@@ -122,16 +122,16 @@ namespace Win32xx
         STDMETHODIMP OnControlInfoChanged();
         STDMETHODIMP LockInPlaceActive(BOOL lock);
         STDMETHODIMP GetExtendedControl(IDispatch** ppDisp);
-        STDMETHODIMP TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD flags);
+        STDMETHODIMP TransformCoords(POINTL* pHimetric, POINTF* pContainer, DWORD flags);
         STDMETHODIMP TranslateAccelerator(LPMSG pMsg, DWORD modifiers);
         STDMETHODIMP OnFocus(BOOL gotFocus);
         STDMETHODIMP ShowPropertyFrame();
 
         // IDispatch Methods
-        STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** names, unsigned int namesCount, LCID lcid, DISPID* rgdispid);
+        STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** pNames, unsigned int namesCount, LCID lcid, DISPID* pID);
         STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
         STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
-        STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pdispparams, VARIANT* result, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
+        STDMETHODIMP Invoke(DISPID dispID, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pParams, VARIANT* result, EXCEPINFO* pExecInfo, unsigned int* pArgErr);
 
     private:
          ULONG       m_count;       // ref count
@@ -183,8 +183,8 @@ namespace Win32xx
 
         // Operations
         void AddWebBrowserControl();
-        void ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdExecEpt, VARIANT* in, VARIANT* out);
-        VARIANT GetProperty( LPCTSTR pszProperty);
+        void ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdExecOpt, VARIANT* in, VARIANT* out);
+        VARIANT GetProperty( LPCTSTR pProperty);
         void GoBack();
         void GoForward();
         void GoHome();
@@ -256,13 +256,13 @@ namespace Win32xx
 
         if (focus)
         {
-            IOleObject* pioo;
-            HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
+            IOleObject* pObject;
+            HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject));
             if (FAILED(result))
                 return;
 
-            pioo->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_ax, &m_controlRect);
-            pioo->Release();
+            pObject->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_ax, &m_controlRect);
+            pObject->Release();
         }
     }
 
@@ -273,13 +273,13 @@ namespace Win32xx
 
         assert(m_pUnk);
 
-        IOleObject* pioo;
-        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
+        IOleObject* pObject;
+        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject));
         if (FAILED(result))
             return;
 
-        pioo->SetClientSite(this);
-        pioo->Release();
+        pObject->SetClientSite(this);
+        pObject->Release();
 
         IPersistStreamInit* ppsi;
         result = m_pUnk->QueryInterface(IID_IPersistStreamInit, reinterpret_cast<void**>(&ppsi));
@@ -339,10 +339,10 @@ namespace Win32xx
         if (!m_pUnk)
             return NULL;
 
-        IDispatch*  pdisp;
+        IDispatch*  pDisp;
 
-        m_pUnk->QueryInterface(IID_IDispatch, reinterpret_cast<void**>(&pdisp));
-        return pdisp;
+        m_pUnk->QueryInterface(IID_IDispatch, reinterpret_cast<void**>(&pDisp));
+        return pDisp;
     }
 
     inline STDMETHODIMP CAXWindow::GetExtendedControl(IDispatch** ppDisp)
@@ -356,14 +356,14 @@ namespace Win32xx
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::GetIDsOfNames(REFIID riid, OLECHAR** names, unsigned int namesCount, LCID lcid, DISPID* rgdispid)
+    inline STDMETHODIMP CAXWindow::GetIDsOfNames(REFIID riid, OLECHAR** pNames, unsigned int namesCount, LCID lcid, DISPID* pID)
     {
         UNREFERENCED_PARAMETER((IID)riid);      // IID cast required for the MinGW compiler
-        UNREFERENCED_PARAMETER(names);
+        UNREFERENCED_PARAMETER(pNames);
         UNREFERENCED_PARAMETER(namesCount);
         UNREFERENCED_PARAMETER(lcid);
 
-        *rgdispid = DISPID_UNKNOWN;
+        *pID = DISPID_UNKNOWN;
         return DISP_E_UNKNOWNNAME;
     }
 
@@ -408,25 +408,25 @@ namespace Win32xx
     }
 
     inline STDMETHODIMP CAXWindow::GetWindowContext (IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppIIPUIWin,
-                                      LPRECT lposRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo)
+                                      LPRECT pRect, LPRECT pClipRect, LPOLEINPLACEFRAMEINFO pFrameInfo)
     {
         *ppFrame = (IOleInPlaceFrame*)this;
         *ppIIPUIWin = NULL;
 
         RECT rect;
         GetClientRect(m_ax, &rect);
-        lposRect->left       = 0;
-        lposRect->top        = 0;
-        lposRect->right      = rect.right;
-        lposRect->bottom     = rect.bottom;
+		pRect->left       = 0;
+		pRect->top        = 0;
+		pRect->right      = rect.right;
+		pRect->bottom     = rect.bottom;
 
-        CopyRect(lprcClipRect, lposRect);
+        CopyRect(pClipRect, pRect);
 
-        lpFrameInfo->cb             = sizeof(OLEINPLACEFRAMEINFO);
-        lpFrameInfo->fMDIApp        = FALSE;
-        lpFrameInfo->hwndFrame      = m_ax;
-        lpFrameInfo->haccel         = 0;
-        lpFrameInfo->cAccelEntries  = 0;
+        pFrameInfo->cb             = sizeof(OLEINPLACEFRAMEINFO);
+        pFrameInfo->fMDIApp        = FALSE;
+        pFrameInfo->hwndFrame      = m_ax;
+        pFrameInfo->haccel         = 0;
+        pFrameInfo->cAccelEntries  = 0;
 
         (*ppFrame)->AddRef();
         return S_OK;
@@ -439,16 +439,16 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pdispparams, VARIANT* result, EXCEPINFO* pexecinfo, unsigned int* puArgErr)
+    inline STDMETHODIMP CAXWindow::Invoke(DISPID dispID, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pParams, VARIANT* result, EXCEPINFO* pExecInfo, unsigned int* pArgErr)
     {
-        UNREFERENCED_PARAMETER(dispid);
+        UNREFERENCED_PARAMETER(dispID);
         UNREFERENCED_PARAMETER((IID)riid);      // IID cast required for the MinGW compiler
         UNREFERENCED_PARAMETER(lcid);
         UNREFERENCED_PARAMETER(flags);
-        UNREFERENCED_PARAMETER(pdispparams);
+        UNREFERENCED_PARAMETER(pParams);
         UNREFERENCED_PARAMETER(result);
-        UNREFERENCED_PARAMETER(pexecinfo);
-        UNREFERENCED_PARAMETER(puArgErr);
+        UNREFERENCED_PARAMETER(pExecInfo);
+        UNREFERENCED_PARAMETER(pArgErr);
         return DISP_E_MEMBERNOTFOUND;
     }
 
@@ -502,30 +502,30 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::QueryInterface(REFIID riid, void** ppvObject)
+    inline STDMETHODIMP CAXWindow::QueryInterface(REFIID riid, void** ppObject)
     {
-        if (!ppvObject)
+        if (!ppObject)
             return E_POINTER;
 
         if (IsEqualIID(riid, IID_IOleClientSite))
-            *ppvObject = static_cast<IOleClientSite*>(this);
+            *ppObject = static_cast<IOleClientSite*>(this);
         else if (IsEqualIID(riid, IID_IOleInPlaceSite))
-            *ppvObject = static_cast<IOleInPlaceSite*>(this);
+            *ppObject = static_cast<IOleInPlaceSite*>(this);
         else if (IsEqualIID(riid, IID_IOleInPlaceFrame))
-            *ppvObject = static_cast<IOleInPlaceFrame*>(this);
+            *ppObject = static_cast<IOleInPlaceFrame*>(this);
         else if (IsEqualIID(riid, IID_IOleInPlaceUIWindow))
-            *ppvObject = static_cast<IOleInPlaceUIWindow*>(this);
+            *ppObject = static_cast<IOleInPlaceUIWindow*>(this);
         else if (IsEqualIID(riid, IID_IOleControlSite))
-            *ppvObject = static_cast<IOleControlSite*>(this);
+            *ppObject = static_cast<IOleControlSite*>(this);
         else if (IsEqualIID(riid, IID_IOleWindow))
-            *ppvObject = this;
+            *ppObject = this;
         else if (IsEqualIID(riid, IID_IDispatch))
-            *ppvObject = static_cast<IDispatch*>(this);
+            *ppObject = static_cast<IDispatch*>(this);
         else if (IsEqualIID(riid, IID_IUnknown))
-            *ppvObject = this;
+            *ppObject = this;
         else
         {
-            *ppvObject = NULL;
+            *ppObject = NULL;
             return E_NOINTERFACE;
         }
 
@@ -543,13 +543,13 @@ namespace Win32xx
         if (!m_pUnk)
             return;
 
-        IOleObject* pioo;
-        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
+        IOleObject* pObject;
+        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject));
         if (SUCCEEDED(result))
         {
-            pioo->Close(OLECLOSE_NOSAVE);
-            pioo->SetClientSite(NULL);
-            pioo->Release();
+            pObject->Close(OLECLOSE_NOSAVE);
+            pObject->SetClientSite(NULL);
+            pObject->Release();
         }
 
         IOleInPlaceObject* pipo;
@@ -663,20 +663,20 @@ namespace Win32xx
         if (!m_pUnk)
             return;
 
-        IOleObject* pioo;
-        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
+        IOleObject* pObject;
+        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject));
         if (FAILED(result))
             return;
 
         if (isVisible)
         {
-            pioo->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, this, 0, m_ax, &m_controlRect);
-            pioo->DoVerb(OLEIVERB_SHOW, NULL, this, 0, m_ax, &m_controlRect);
+            pObject->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, this, 0, m_ax, &m_controlRect);
+            pObject->DoVerb(OLEIVERB_SHOW, NULL, this, 0, m_ax, &m_controlRect);
         }
         else
-            pioo->DoVerb(OLEIVERB_HIDE, NULL, this, 0, m_ax, NULL);
+            pObject->DoVerb(OLEIVERB_HIDE, NULL, this, 0, m_ax, NULL);
 
-        pioo->Release();
+        pObject->Release();
     }
 
     inline STDMETHODIMP CAXWindow::ShowObject()
@@ -689,10 +689,10 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD flags)
+    inline STDMETHODIMP CAXWindow::TransformCoords(POINTL* pHimetric, POINTF* pContainer, DWORD flags)
     {
-        UNREFERENCED_PARAMETER(pptlHimetric);
-        UNREFERENCED_PARAMETER(pptfContainer);
+        UNREFERENCED_PARAMETER(pHimetric);
+        UNREFERENCED_PARAMETER(pContainer);
         UNREFERENCED_PARAMETER(flags);
         return E_NOTIMPL;
     }

@@ -77,7 +77,7 @@ HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command,
 // dsData:   Specifies any data that may be required, based on the value of the uCommand parameter.
 {
     // Prepare this CWnd for possible re-use
-    if (m_hWnd != 0) Detach();
+    if (*this != 0) Detach();
 
     // Create the HtmlHelp window
     HWND hWnd = HtmlHelp(hwndCaller, string, command, data);

@@ -3,6 +3,15 @@ Version 8.5.1
 
 New Features and Enhancements
 -----------------------------
+* m_hWnd is no longer a protected member variable of CWnd. Use either *this or
+  GetHwnd() to access the window handle association associated with the CWnd.
+  Eliminating protected member variables keeps the code robust, and is
+  consistent with good software design.
+   
+* The programming style has been updated, and the Hungarian notation has 
+  been removed. The m_ prefix for member variables has been retained, as 
+  has a p prefix for pointers.
+
 * Added CEvent
 * Added CMutex
 * Added CSemaphore
@@ -29,18 +38,18 @@ Added CComboBox::GetLBCtrl                       member function
 Added CFrameT::AddDisabledMenuImage              member function
 Added CFrameT::IsUsingStatusBar                  member function
 Added CFrameT::UseStatusBar                      member function
-Added CImageList::Copy
-Added CImageList::GetBkColor
-Added CImageList::GetDragImage
-Added CImageList::EndDrag
-Added CImageList::ExtractIcon
-Added CImageList::Read
-Added CImageList::SetBkColor
-Added CImageList::SetDragCursorImage
-Added CImageLIst::Write
-Added CResizer::SetMinRect
-Added CResizer::SetMaxRect
-Added CWinThread::IsRunning
+Added CImageList::Copy                           member function
+Added CImageList::GetBkColor                     member function
+Added CImageList::GetDragImage                   member function
+Added CImageList::EndDrag                        member function
+Added CImageList::ExtractIcon                    member function
+Added CImageList::Read                           member function
+Added CImageList::SetBkColor                     member function
+Added CImageList::SetDragCursorImage             member function
+Added CImageLIst::Write                          member function
+Added CResizer::SetMinRect                       member function
+Added CResizer::SetMaxRect                       member function
+Added CWinThread::IsRunning                      member function
 
 Modified CFrameT::AddMenuIcon                    added optional iconWidth argument
 

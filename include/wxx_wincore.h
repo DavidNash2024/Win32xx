@@ -110,16 +110,16 @@ namespace Win32xx
     // Definitions for the CWnd class
     //
 
-    inline CWnd::CWnd() : m_hWnd(NULL), m_prevWindowProc(NULL)
+    inline CWnd::CWnd() : m_wnd(NULL), m_prevWindowProc(NULL)
     {
-        // Note: m_hWnd is set in CWnd::CreateEx(...)
+        // Note: m_wnd is set in CWnd::CreateEx(...)
     }
 
     inline CWnd::CWnd(HWND wnd) : m_prevWindowProc(NULL)
     {
         // A private constructor, used internally.
 
-        m_hWnd = wnd;
+		m_wnd = wnd;
     }
 
     inline CWnd::~CWnd()
@@ -266,7 +266,7 @@ namespace Win32xx
         if ( &GetApp() )
             RemoveFromMap();
 
-        m_hWnd = 0;
+		m_wnd = 0;
         m_prevWindowProc = 0;
     }
 
@@ -326,7 +326,7 @@ namespace Win32xx
 
 #else
         wnd = CreateEx(cs.dwExStyle, cs.lpszClass, cs.lpszName, cs.style,
-                cs.x, cs.y, cs.cx, cs.cy, hWndParent,
+                cs.x, cs.y, cs.cx, cs.cy, parent,
                 0, cs.lpCreateParams);
 #endif
 
@@ -378,7 +378,7 @@ namespace Win32xx
 
         // Store the CWnd pointer in thread local storage
         pTLSData->pWnd = this;
-        m_hWnd = 0;
+		m_wnd = 0;
 
         // Create window
         HWND wnd = ::CreateWindowEx(exStyle, className, pWindowName, style, x, y, width, height,
@@ -976,7 +976,7 @@ namespace Win32xx
             pTLSData->pWnd = NULL;
 
             // Store the CWnd pointer in the HWND map
-            w->m_hWnd = wnd;
+            w->m_wnd = wnd;
             w->AddToMap();
         }
 
@@ -989,7 +989,7 @@ namespace Win32xx
     {
         assert(::IsWindow(wnd));
 
-        m_hWnd = wnd;
+		m_wnd = wnd;
         AddToMap();         // Store the CWnd pointer in the HWND map
         LONG_PTR pWndProc = reinterpret_cast<LONG_PTR>(CWnd::StaticWindowProc);
         LONG_PTR pRes = ::SetWindowLongPtr(wnd, GWLP_WNDPROC, pWndProc);
@@ -1012,7 +1012,7 @@ namespace Win32xx
         assert(IsWindow());
 
         // A critical section ensures threads update the data seperately
-        CThreadLock TLSLock(GetApp().m_appLock);
+        CThreadLock lock(GetApp().m_appLock);
 
         dx.Init(*this, retrieveAndValidate);
 
@@ -1109,7 +1109,7 @@ namespace Win32xx
                 CWnd* pWndFrom = GetApp().GetCWndFromMap(from);
 
                 if (pWndFrom != NULL)
-                    if (::GetParent(from) == m_hWnd)
+                    if (::GetParent(from) == m_wnd)
                         result = pWndFrom->OnNotifyReflect(wparam, lparam);
 
                 // Handle user notifications
@@ -1164,7 +1164,7 @@ namespace Win32xx
 
         case UWM_GETCWND:
             {
-                assert(this == GetCWndPtr(m_hWnd));
+                assert(this == GetCWndPtr(m_wnd));
                 return reinterpret_cast<LRESULT>(this);
             }
 
@@ -2426,19 +2426,19 @@ namespace Win32xx
     inline void LoadCommonControls()
     {
         // Load the Common Controls DLL
-        HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
-        if (hComCtl == 0)
-            hComCtl = ::LoadLibrary(_T("COMMCTRL.DLL"));
+        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+        if (comCtl == 0)
+			comCtl = ::LoadLibrary(_T("COMMCTRL.DLL"));
 
-        if (hComCtl)
+        if (comCtl)
         {
             // Declare a typedef for the InItCommonControlsEx function
             typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
 #ifdef _WIN32_WCE
-            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(hComCtl, _T("InitCommonControlsEx")));
+            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(comCtl, _T("InitCommonControlsEx")));
 #else
-            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(hComCtl, "InitCommonControlsEx"));
+            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(comCtl, "InitCommonControlsEx"));
 #endif
 
             if (pfnInitEx)
@@ -2464,7 +2464,7 @@ namespace Win32xx
                 InitCommonControls();
             }
 
-            ::FreeLibrary(hComCtl);
+            ::FreeLibrary(comCtl);
         }
     }
 

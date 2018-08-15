@@ -181,7 +181,7 @@ namespace Win32xx
 
     protected:
         void    Release();
-        void SetManaged(bool IsManaged) const { m_pData->isManagedObject = IsManaged; }
+        void SetManaged(bool isManaged) const { m_pData->isManagedObject = isManaged; }
 
     private:
         void    AddToMap();
@@ -616,7 +616,7 @@ namespace Win32xx
                            int xSrc, int ySrc, int srcWidth, int srcHeight,
                            LPCVOID pBits, const LPBITMAPINFO pBMI, UINT usage, DWORD rop) const;
 
-        BOOL StretchBlt(int x, int y, int width, int height, HDC hSrc,
+        BOOL StretchBlt(int x, int y, int width, int height, HDC src,
                            int xSrc, int ySrc, int srcWidth, int srcHeight,
                            DWORD rop) const;
 
@@ -729,8 +729,8 @@ namespace Win32xx
 
         // MetaFile Functions
 #ifndef _WIN32_WCE
-        BOOL PlayMetaFile(HMETAFILE hMetaFile) const;
-        BOOL PlayMetaFile(HENHMETAFILE hEnhMetaFile, const RECT& bounds) const;
+        BOOL PlayMetaFile(HMETAFILE metaFile) const;
+        BOOL PlayMetaFile(HENHMETAFILE enhMetaFile, const RECT& bounds) const;
 #endif
 
         // Printer Functions
@@ -1004,9 +1004,9 @@ namespace Win32xx
         {
             assert(GetHDC());
 
-            HMETAFILE hMeta = ::CloseMetaFile(GetHDC());
+            HMETAFILE meta = ::CloseMetaFile(GetHDC());
             Detach();
-            return CMetaFile(hMeta);
+            return CMetaFile(meta);
         }
 
     };
@@ -1028,12 +1028,12 @@ namespace Win32xx
             }
         }
 
-        void CreateEnhanced(HDC hRef, LPCTSTR pFileName, const RECT* pBounds, LPCTSTR pDescription)
+        void CreateEnhanced(HDC ref, LPCTSTR pFileName, const RECT* pBounds, LPCTSTR pDescription)
         {
             try
             {
                 assert(GetHDC() == 0);
-                HDC dc = ::CreateEnhMetaFile(hRef, pFileName, pBounds, pDescription);
+                HDC dc = ::CreateEnhMetaFile(ref, pFileName, pBounds, pDescription);
                 if (dc == 0)
                     throw CResourceException(_T("Failed to create a DC for the EnhMetaFile"));
 
@@ -4064,10 +4064,10 @@ namespace Win32xx
     }
 
     // Paints the specified rectangle using the brush that is currently selected into the device context.
-    inline BOOL CDC::PatBlt(int x, int y, int nWidth, int nHeight, DWORD rop) const
+    inline BOOL CDC::PatBlt(int x, int y, int width, int height, DWORD rop) const
     {
         assert(m_pData->dc != 0);
-        return ::PatBlt(m_pData->dc, x, y, nWidth, nHeight, rop);
+        return ::PatBlt(m_pData->dc, x, y, width, height, rop);
     }
 
     // Performs a bit-block transfer of the color data corresponding to a rectangle of pixels
@@ -4108,10 +4108,10 @@ namespace Win32xx
     //  srcWidth     width of source rectangle
     //  srcHeight    height of source rectangle
     //  rop          raster operation code
-    inline BOOL CDC::StretchBlt(int x, int y, int nWidth, int height, HDC hSrc, int xSrc, int ySrc, int srcWidth, int srcHeight, DWORD rop) const
+    inline BOOL CDC::StretchBlt(int x, int y, int width, int height, HDC src, int xSrc, int ySrc, int srcWidth, int srcHeight, DWORD rop) const
     {
         assert(m_pData->dc != 0);
-        return ::StretchBlt(m_pData->dc, x, y, nWidth, height, hSrc, xSrc, ySrc, srcWidth, srcHeight, rop);
+        return ::StretchBlt(m_pData->dc, x, y, width, height, src, xSrc, ySrc, srcWidth, srcHeight, rop);
     }
 
 #ifndef _WIN32_WCE
@@ -4353,10 +4353,10 @@ namespace Win32xx
     }
 
     // Modifies the window origin for the device context using the specified horizontal and vertical offsets.
-    inline BOOL CDC::OffsetWindowOrgEx(int nWidth, int nHeight, LPPOINT pPoint ) const
+    inline BOOL CDC::OffsetWindowOrgEx(int width, int height, LPPOINT pPoint ) const
     {
         assert(m_pData->dc != 0);
-        return ::OffsetWindowOrgEx(m_pData->dc, nWidth, nHeight, pPoint);
+        return ::OffsetWindowOrgEx(m_pData->dc, width, height, pPoint);
     }
 
     // Retrieves the x-extent and y-extent of the window for the device context.
@@ -4393,17 +4393,17 @@ namespace Win32xx
 
 
     // Displays the picture stored in the specified metafile.
-    inline BOOL CDC::PlayMetaFile(HMETAFILE hMetaFile) const
+    inline BOOL CDC::PlayMetaFile(HMETAFILE metaFile) const
     {
         assert(m_pData->dc != 0);
-        return ::PlayMetaFile(m_pData->dc, hMetaFile);
+        return ::PlayMetaFile(m_pData->dc, metaFile);
     }
 
     // Displays the picture stored in the specified enhanced-format metafile.
-    inline BOOL CDC::PlayMetaFile(HENHMETAFILE hEnhMetaFile, const RECT& bounds) const
+    inline BOOL CDC::PlayMetaFile(HENHMETAFILE enhMetaFile, const RECT& bounds) const
     {
         assert(m_pData->dc != 0);
-        return ::PlayEnhMetaFile(m_pData->dc, hEnhMetaFile, &bounds);
+        return ::PlayEnhMetaFile(m_pData->dc, enhMetaFile, &bounds);
     }
 
 #endif // _WIN32_WCE

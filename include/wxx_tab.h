@@ -680,18 +680,18 @@ namespace Win32xx
         // Add the menu items
         for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
         {
-            CString MenuString;
-            CString TabText = GetAllTabs()[u].TabText;
-            MenuString.Format(_T("&%d %s"), u+1, TabText.c_str());
-            m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +u, MenuString);
+            CString menuString;
+            CString tabText = GetAllTabs()[u].TabText;
+            menuString.Format(_T("&%d %s"), u+1, tabText.c_str());
+            m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +u, menuString);
         }
         if (GetAllTabs().size() >= 10)
             m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +9, _T("More Windows"));
 
         // Add a checkmark to the menu
-        int iSelected = GetCurSel();
-        if (iSelected < 9)
-            m_listMenu.CheckMenuItem(iSelected, MF_BYPOSITION|MF_CHECKED);
+        int selected = GetCurSel();
+        if (selected < 9)
+            m_listMenu.CheckMenuItem(selected, MF_BYPOSITION|MF_CHECKED);
 
         return m_listMenu;
     }
@@ -1455,8 +1455,9 @@ namespace Win32xx
             SelectDialog.AddItem(GetAllTabs()[u].TabText);
         }
 
-        int iSelected = static_cast<int>(SelectDialog.DoModal(*this));
-        if (iSelected >= 0) SelectPage(iSelected);
+        int selected = static_cast<int>(SelectDialog.DoModal(*this));
+        if (selected >= 0)
+			SelectPage(selected);
     }
 
     // Swaps the two specified tabs.
@@ -1464,28 +1465,28 @@ namespace Win32xx
     {
         if ((tab1 < GetAllTabs().size()) && (tab2 < GetAllTabs().size()) && (tab1 != tab2))
         {
-            TabPageInfo T1 = GetTabPageInfo(tab1);
-            TabPageInfo T2 = GetTabPageInfo(tab2);
-            int nLength = 30;
+            TabPageInfo t1 = GetTabPageInfo(tab1);
+            TabPageInfo t2 = GetTabPageInfo(tab2);
+            int length = 30;
 
-            TCITEM Item1;
-            ZeroMemory(&Item1, sizeof(Item1));
-            Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
-            Item1.cchTextMax = nLength;
-            Item1.pszText = const_cast<LPTSTR>(T1.TabText.c_str());
-            GetItem(tab1, &Item1);
+            TCITEM item1;
+            ZeroMemory(&item1, sizeof(item1));
+            item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
+            item1.cchTextMax = length;
+            item1.pszText = const_cast<LPTSTR>(t1.TabText.c_str());
+            GetItem(tab1, &item1);
 
-            TCITEM Item2;
-            ZeroMemory(&Item2, sizeof(Item2));
-            Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
-            Item2.cchTextMax = nLength;
-            Item2.pszText = const_cast<LPTSTR>(T2.TabText.c_str());
-            GetItem(tab2, &Item2);
+            TCITEM item2;
+            ZeroMemory(&item2, sizeof(item2));
+            item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
+            item2.cchTextMax = length;
+            item2.pszText = const_cast<LPTSTR>(t2.TabText.c_str());
+            GetItem(tab2, &item2);
 
-            SetItem(tab1, &Item2);
-            SetItem(tab2, &Item1);
-            m_allTabPageInfo[tab1] = T2;
-            m_allTabPageInfo[tab2] = T1;
+            SetItem(tab1, &item2);
+            SetItem(tab2, &item1);
+            m_allTabPageInfo[tab1] = t2;
+            m_allTabPageInfo[tab2] = t1;
         }
     }
 

@@ -328,7 +328,7 @@ namespace Win32xx
     // Return TRUE to suppress default background drawing.
     inline BOOL CReBar::OnEraseBkgnd(CDC& dc)
     {
-        return (0 != SendMessage(::GetParent(m_hWnd), UWM_DRAWRBBKGND, 
+        return (0 != SendMessage(::GetParent(*this), UWM_DRAWRBBKGND, 
                      reinterpret_cast<WPARAM>(&dc), reinterpret_cast<LPARAM>(this)));
     }
 

@@ -34,7 +34,7 @@ HRESULT CD2DView::CreateDeviceResources()
         // Create a Direct2D render target.
         hr = GetD2DFactory()->CreateHwndRenderTarget(
             D2D1::RenderTargetProperties(),
-            D2D1::HwndRenderTargetProperties(m_hWnd, size),
+            D2D1::HwndRenderTargetProperties(*this, size),
             &m_pRenderTarget
         );
 
