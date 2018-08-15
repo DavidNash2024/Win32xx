@@ -114,7 +114,7 @@ namespace Win32xx
             void    Close();
 
             WIN32_FIND_DATA m_findData;
-            HANDLE      m_hFileFind;
+            HANDLE      m_fileFind;
             CString     m_root;
     };
 
@@ -135,29 +135,26 @@ namespace Win32xx
     //  Construct a CFileFind object for file searches.
     inline CFileFind::CFileFind()
     {
-        m_hFileFind = INVALID_HANDLE_VALUE;
+        m_fileFind = INVALID_HANDLE_VALUE;
         ZeroMemory(&m_findData, sizeof(m_findData));
     }
-
 
     inline CFileFind::~CFileFind()
     {
         Close();
     }
 
-
     //  Closes the FileFind handle and returns the CFileFind object to default.
     inline void CFileFind::Close()
     {
         ZeroMemory(&m_findData, sizeof(m_findData));
 
-        if (m_hFileFind != INVALID_HANDLE_VALUE)
-            ::FindClose(m_hFileFind);
+        if (m_fileFind != INVALID_HANDLE_VALUE)
+            ::FindClose(m_fileFind);
 
         m_root.Empty();
-        m_hFileFind = INVALID_HANDLE_VALUE;
+        m_fileFind = INVALID_HANDLE_VALUE;
     }
-
 
     //  Searches a directory for a file or subdirectory with a name that matches
     //  the pFileSearch. pFileSearch can contain a valid directory or path, and a
@@ -174,9 +171,9 @@ namespace Win32xx
             pFileSearch = _T("*.*");
 
         // Search for the first file matching the name
-        m_hFileFind = ::FindFirstFile(pFileSearch, &m_findData);
+        m_fileFind = ::FindFirstFile(pFileSearch, &m_findData);
 
-        if (m_hFileFind == INVALID_HANDLE_VALUE)
+        if (m_fileFind == INVALID_HANDLE_VALUE)
         {
             Close();
             return FALSE;
@@ -194,14 +191,13 @@ namespace Win32xx
         return TRUE;
     }
 
-
     //  Finds the next file or directory that matches the string specified in FindFirstFile.
     //  Return TRUE if the next file was found, FALSE on failure.
     inline BOOL CFileFind::FindNextFile()
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
 
-        BOOL IsFound = ::FindNextFile(m_hFileFind, &m_findData);
+        BOOL IsFound = ::FindNextFile(m_fileFind, &m_findData);
 
         if (!IsFound)
             Close();
@@ -209,14 +205,12 @@ namespace Win32xx
         return IsFound;
     }
 
-
     // Return the found file's creation time
     inline FILETIME CFileFind::GetCreationTime() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return m_findData.ftCreationTime;
     }
-
 
     //  Returns the found file's attributes. Possible attributes are:
     //  FILE_ATTRIBUTE_ARCHIVE; FILE_ATTRIBUTE_COMPRESSED; FILE_ATTRIBUTE_DIRECTORY;
@@ -225,24 +219,22 @@ namespace Win32xx
     //  FILE_ATTRIBUTE_SPARSE_FILE; FILE_ATTRIBUTE_SYSTEM; FILE_ATTRIBUTE_TEMPORARY.
     inline DWORD CFileFind::GetFileAttributes() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return m_findData.dwFileAttributes;
     }
-
 
     //  Return the found file's name, including the file's extension.
     inline CString CFileFind::GetFileName() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return m_findData.cFileName;
     }
-
 
     //  Returns the full path of the found file, including the directory,
     //  file title, and extension.
     inline CString CFileFind::GetFilePath() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
 
         CString SearchName = m_root + m_findData.cFileName;
         CString FilePath;
@@ -257,11 +249,10 @@ namespace Win32xx
         return FilePath;
     }
 
-
     //  Return the file name, without the extension.
     inline CString CFileFind::GetFileTitle() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
 
         CString name = m_findData.cFileName;
         if (!IsDots())
@@ -273,122 +264,108 @@ namespace Win32xx
         return name;
     }
 
-
     //  Return the URL form of the path name, viz., file://path
     inline CString CFileFind::GetFileURL() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
 
         CString str(_T("file://"));
         str += GetFilePath();
         return str;
     }
 
-
     //  Return the last access time of the found file
     inline FILETIME CFileFind::GetLastAccessTime() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return m_findData.ftLastAccessTime;
     }
-
 
     //  Return the last write time of the found file
     inline FILETIME CFileFind::GetLastWriteTime() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return m_findData.ftLastWriteTime;
     }
-
 
     //  Return the length of the found file, in bytes.
     inline ULONGLONG CFileFind::GetLength() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         ULONGLONG length = m_findData.nFileSizeHigh;
         length <<= 32;
         return length | m_findData.nFileSizeLow;
     }
 
-
     //  Return the directory part of the name search string.
     inline CString CFileFind::GetRoot() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return m_root;
     }
-
 
     //  Return TRUE if the archive attribute is set.
     inline BOOL CFileFind::IsArchived() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) != 0;
     }
-
 
     //  Return TRUE if the found file is compressed.
     inline BOOL CFileFind::IsCompressed() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_COMPRESSED) != 0;
     }
-
 
     //  Return TRUE if the found file is a directory.
     inline BOOL CFileFind::IsDirectory() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
     }
-
 
     //  Return TRUE if the found file is the current directory or parent directory.
     inline BOOL CFileFind::IsDots() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         LPCTSTR fn = m_findData.cFileName;
         return (IsDirectory() && (fn[0] == _T('.')) && ((fn[1] == _T('\0') ||
             (fn[1] == _T('.') && fn[2] == _T('\0')))));
     }
 
-
     //  Return TRUE if the found file is hidden.
     inline BOOL CFileFind::IsHidden() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) != 0;
     }
-
 
     //  Return TRUE if the found file has the FILE_ATTRIBUTE_NORMAL attribute.
     inline BOOL CFileFind::IsNormal() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL) != 0;
     }
-
 
     //  Return TRUE if the found file is read only.
     inline BOOL CFileFind::IsReadOnly() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) != 0;
     }
-
 
     //  Return TRUE if the found file is a system file.
     inline BOOL CFileFind::IsSystem() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) != 0;
     }
-
 
     //  Return TRUE if the found file is a temporary file.
     inline BOOL CFileFind::IsTemporary() const
     {
-        assert(m_hFileFind != INVALID_HANDLE_VALUE);
+        assert(m_fileFind != INVALID_HANDLE_VALUE);
         return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_TEMPORARY) != 0;
     }
 

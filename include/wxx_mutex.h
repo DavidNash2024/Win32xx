@@ -84,7 +84,7 @@ namespace Win32xx
         HANDLE m_hEvent;
     };
     
-    
+ 
     class CMutex
     {
     public:
@@ -132,21 +132,18 @@ namespace Win32xx
         if (m_hEvent == NULL)
             throw CWinException(_T("Unable to create event"));
     }
-    
-    
+     
     // Sets the specified event object to the non-signalled state.
     inline void CEvent::ResetEvent()
     {
         ::ResetEvent(m_hEvent);
     }
-    
-    
+     
     // Sets the specified event object to the signalled state.
     inline void CEvent::SetEvent()
     {
         ::SetEvent(m_hEvent);
-    }
-    
+    }  
     
     // Creates a named or unnamed mutex.
     // Parameters:
@@ -164,8 +161,7 @@ namespace Win32xx
         if (m_hMutex == NULL)
             throw CResourceException(_T("Unable to create mutex"));
     }
-    
-    
+       
     // Creates a named or unnamed semaphore.
     // Parameters:
     //  initialCount   - Initial count for the semaphore object. This value must be greater than or equal

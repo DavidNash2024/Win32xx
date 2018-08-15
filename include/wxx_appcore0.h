@@ -455,7 +455,7 @@ namespace Win32xx
         // Operations
         HANDLE  CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
         HACCEL  GetAcceleratorTable() const { return m_accel; }
-        HWND    GetAcceleratorsWindow() const { return m_wndForAccel; }
+        HWND    GetAcceleratorsWindow() const { return m_accelWnd; }
         HWND    GetMainWnd() const;
         HANDLE  GetThread() const;
         int     GetThreadID() const;
@@ -464,7 +464,7 @@ namespace Win32xx
         BOOL    PostThreadMessage(UINT message, WPARAM wparam, LPARAM lparam) const;
         DWORD   ResumeThread() const;
         void    SetAccelerators(HACCEL accel, HWND hWndAccel);
-        void    SetMainWnd(HWND hWnd);
+        void    SetMainWnd(HWND wnd);
         BOOL    SetThreadPriority(int priority) const;
         DWORD   SuspendThread() const;
         operator HANDLE () const { return GetThread(); }
@@ -481,7 +481,7 @@ namespace Win32xx
         UINT m_threadID;                // ID of this thread
         DWORD m_threadIDForWinCE;       // ID of this thread (for WinCE only)
         HACCEL m_accel;                 // handle to the accelerator table
-        HWND m_wndForAccel;             // handle to the window for accelerator keys
+        HWND m_accelWnd;                // handle to the window for accelerator keys
 
     };
 
@@ -511,9 +511,9 @@ namespace Win32xx
         virtual int Run();
 
         // Operations
-        CWnd* GetCWndFromMap(HWND hWnd);
-        HINSTANCE GetInstanceHandle() const { return m_hInstance; }
-        HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
+        CWnd* GetCWndFromMap(HWND wnd);
+        HINSTANCE GetInstanceHandle() const { return m_instance; }
+        HINSTANCE GetResourceHandle() const { return (m_resource ? m_resource : m_instance); }
         TLSData* GetTlsData() const;
         HCURSOR LoadCursor(LPCTSTR pResourceName) const;
         HCURSOR LoadCursor(int cursorID) const;
@@ -551,12 +551,12 @@ namespace Win32xx
         CCriticalSection m_gdiLock;   // thread synchronisation for m_mapCDCData and m_mapCGDIData.
         CCriticalSection m_wndLock;   // thread synchronisation for m_mapHWND etc.
         CCriticalSection m_printLock; // thread synchronisation for printing.
-        HINSTANCE m_hInstance;          // handle to the application's instance
-        HINSTANCE m_hResource;          // handle to the application's resources
+        HINSTANCE m_instance;          // handle to the application's instance
+        HINSTANCE m_resource;          // handle to the application's resources
         DWORD m_tlsData;                // Thread Local Storage data
         WNDPROC m_callback;             // callback address of CWnd::StaticWndowProc
-        HGLOBAL m_hDevMode;             // Used by CPrintDialog and CPageSetupDialog
-        HGLOBAL m_hDevNames;            // Used by CPrintDialog and CPageSetupDialog
+        HGLOBAL m_devMode;             // Used by CPrintDialog and CPageSetupDialog
+        HGLOBAL m_devNames;            // Used by CPrintDialog and CPageSetupDialog
 
 #ifndef _WIN32_WCE
         void AddCMenuData(HMENU menu, CMenu_Data* pData);
@@ -598,13 +598,13 @@ namespace Win32xx
         //       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602).
     inline int GetWinVersion()
     {
-        DWORD dwVersion = GetVersion();
-        int platform = (dwVersion < 0x80000000)? 2:1;
-        int majorVer = LOBYTE(LOWORD(dwVersion));
-        int minorVer = HIBYTE(LOWORD(dwVersion));
+        DWORD version = GetVersion();
+        int platform = (version < 0x80000000)? 2:1;
+        int majorVer = LOBYTE(LOWORD(version));
+        int minorVer = HIBYTE(LOWORD(version));
 
-        int nVersion =  1000*platform + 100*majorVer + minorVer;
-        return nVersion;
+        int result =  1000*platform + 100*majorVer + minorVer;
+        return result;
     }
 
 

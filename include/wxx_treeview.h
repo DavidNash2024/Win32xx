@@ -103,7 +103,7 @@ namespace Win32xx
         BOOL    SetItemText(HTREEITEM item, LPCTSTR pText) const;
         UINT    SetScrollTime(UINT scrollTime) const;
         COLORREF SetTextColor(COLORREF color) const;
-        HWND    SetToolTips(HWND hToolTip) const;
+        HWND    SetToolTips(HWND toolTip) const;
 
 // Operations
         CImageList CreateDragImage(HTREEITEM item) const;
@@ -150,14 +150,12 @@ namespace Win32xx
         return TreeView_GetBkColor( *this );
     }
 
-
     // Retrieves the first child item of the specified tree-view item.
     inline HTREEITEM CTreeView::GetChild(HTREEITEM item) const
     {
         assert(IsWindow());
         return TreeView_GetChild(*this, item);
     }
-
 
     // Retrieves a count of the items in a tree-view control.
     inline UINT CTreeView::GetCount() const
@@ -166,14 +164,12 @@ namespace Win32xx
         return TreeView_GetCount( *this );
     }
 
-
     // Retrieves the tree-view item that is the target of a drag-and-drop operation.
     inline HTREEITEM CTreeView::GetDropHiLightItem() const
     {
         assert(IsWindow());
         return TreeView_GetDropHilight(*this);
     }
-
 
     // Retrieves the handle to the edit control being used to edit a tree-view item's text.
     inline HWND CTreeView::GetEditControl() const
@@ -182,14 +178,12 @@ namespace Win32xx
         return TreeView_GetEditControl(*this);
     }
 
-
     // Retrieves the first visible item in a tree-view control window.
     inline HTREEITEM CTreeView::GetFirstVisible() const
     {
         assert(IsWindow());
         return TreeView_GetFirstVisible(*this);
     }
-
 
     // Retrieves the handle to the normal or state image list associated with a tree-view control.
     inline CImageList CTreeView::GetImageList(int imageType) const
@@ -199,14 +193,12 @@ namespace Win32xx
         return CImageList(images);
     }
 
-
     // Retrieves the amount, in pixels, that child items are indented relative to their parent items.
     inline UINT CTreeView::GetIndent() const
     {
         assert(IsWindow());
         return TreeView_GetIndent( *this );
     }
-
 
     // Retrieves the color used to draw the insertion mark for the tree view.
     inline COLORREF CTreeView::GetInsertMarkColor() const
@@ -215,14 +207,12 @@ namespace Win32xx
         return TreeView_GetInsertMarkColor( *this );
     }
 
-
     // Retrieves some or all of a tree-view item's attributes.
     inline BOOL CTreeView::GetItem(TVITEM& itemInfo) const
     {
         assert(IsWindow());
         return TreeView_GetItem( *this, &itemInfo );
     }
-
 
     // Retrieves a tree-view item's application data.
     inline DWORD_PTR CTreeView::GetItemData(HTREEITEM item) const
@@ -237,14 +227,12 @@ namespace Win32xx
         return tvi.lParam;
     }
 
-
     // Retrieves the current height of the tree-view item.
     inline int  CTreeView::GetItemHeight() const
     {
         assert(IsWindow());
         return TreeView_GetItemHeight( *this );
     }
-
 
     // Retrieves the index of the tree-view item's image and selected image.
     inline BOOL CTreeView::GetItemImage(HTREEITEM item, int& image, int& selectedImage ) const
@@ -261,14 +249,12 @@ namespace Win32xx
         return Succeeded;
     }
 
-
     // Retrieves the bounding rectangle for a tree-view item and indicates whether the item is visible.
     inline BOOL CTreeView::GetItemRect(HTREEITEM item, RECT& rc, BOOL isTextOnly) const
     {
         assert(IsWindow());
         return TreeView_GetItemRect( *this, item, &rc, isTextOnly );
     }
-
 
     // Retrieves the text for a tree-view item.
     // Note: Although the tree-view control allows any length string to be stored
@@ -292,7 +278,6 @@ namespace Win32xx
         return str;
     }
 
-
     // Retrieves the last expanded item in a tree-view control.
     // This does not retrieve the last item visible in the tree-view window.
     inline HTREEITEM CTreeView::GetLastVisible() const
@@ -301,14 +286,12 @@ namespace Win32xx
         return TreeView_GetLastVisible(*this);
     }
 
-
     // Retrieves the tree-view item that bears the specified relationship to a specified item.
     inline HTREEITEM CTreeView::GetNextItem(HTREEITEM item, UINT code) const
     {
         assert(IsWindow());
         return TreeView_GetNextItem( *this, item, code);
     }
-
 
     // Retrieves the next sibling item of a specified item in a tree-view control.
     inline HTREEITEM CTreeView::GetNextSibling(HTREEITEM item) const
@@ -317,14 +300,12 @@ namespace Win32xx
         return TreeView_GetNextSibling(*this, item);
     }
 
-
     // Retrieves the next visible item that follows a specified item in a tree-view control.
     inline HTREEITEM CTreeView::GetNextVisible(HTREEITEM item) const
     {
         assert(IsWindow());
         return TreeView_GetNextVisible(*this, item);
     }
-
 
     // Retrieves the parent item of the specified tree-view item.
     inline HTREEITEM CTreeView::GetParentItem(HTREEITEM item) const
@@ -333,14 +314,12 @@ namespace Win32xx
         return TreeView_GetParent(*this, item);
     }
 
-
     // Retrieves the previous sibling item of a specified item in a tree-view control.
     inline HTREEITEM CTreeView::GetPrevSibling(HTREEITEM item) const
     {
         assert(IsWindow());
         return TreeView_GetPrevSibling(*this, item);
     }
-
 
     // Retrieves the first visible item that precedes a specified item in a tree-view control.
     inline HTREEITEM CTreeView::GetPrevVisible(HTREEITEM item) const
@@ -349,14 +328,12 @@ namespace Win32xx
         return TreeView_GetPrevVisible(*this, item);
     }
 
-
     // Retrieves the topmost or very first item of the tree-view control.
     inline HTREEITEM CTreeView::GetRootItem() const
     {
         assert(IsWindow());
         return TreeView_GetRoot(*this);
     }
-
 
     // Retrieves the maximum scroll time for the tree-view control.
     inline int CTreeView::GetScrollTime() const
@@ -365,14 +342,12 @@ namespace Win32xx
         return TreeView_GetScrollTime( *this );
     }
 
-
     // Retrieves the currently selected item in a tree-view control.
     inline HTREEITEM CTreeView::GetSelection() const
     {
         assert(IsWindow());
         return TreeView_GetSelection(*this);
     }
-
 
     // Retrieves the current text color of the control.
     inline COLORREF CTreeView::GetTextColor() const
@@ -382,7 +357,6 @@ namespace Win32xx
         return TreeView_GetTextColor( *this );
     }
 
-
     // Retrieves the handle to the child ToolTip control used by a tree-view control.
     inline HWND CTreeView::GetToolTips() const
     {
@@ -390,14 +364,12 @@ namespace Win32xx
         return TreeView_GetToolTips(*this);
     }
 
-
     // Obtains the number of items that can be fully visible in the client window of a tree-view control.
     inline UINT CTreeView::GetVisibleCount() const
     {
         assert(IsWindow());
         return TreeView_GetVisibleCount( *this );
     }
-
 
     // Returns true of the tree-view item has one or more children.
     inline BOOL CTreeView::ItemHasChildren(HTREEITEM item) const
@@ -410,14 +382,12 @@ namespace Win32xx
         return FALSE;
     }
 
-
     // Sets the background color of the control.
     inline COLORREF CTreeView::SetBkColor(COLORREF color) const
     {
         assert(IsWindow());
         return TreeView_SetBkColor( *this, color);
     }
-
 
     // Sets the normal or state image list for a tree-view control
     // and redraws the control using the new images.
@@ -428,7 +398,6 @@ namespace Win32xx
         return CImageList(images);
     }
 
-
     // Sets the width of indentation for a tree-view control
     // and redraws the control to reflect the new width.
     inline void CTreeView::SetIndent(int indent) const
@@ -437,14 +406,12 @@ namespace Win32xx
         TreeView_SetIndent( *this, indent );
     }
 
-
     // Sets the insertion mark in a tree-view control.
     inline BOOL CTreeView::SetInsertMark(HTREEITEM item, BOOL after/* = TRUE*/) const
     {
         assert(IsWindow());
         return TreeView_SetInsertMark( *this, item, after );
     }
-
 
     // Sets the color used to draw the insertion mark for the tree view.
     inline COLORREF CTreeView::SetInsertMarkColor(COLORREF color) const
@@ -453,14 +420,12 @@ namespace Win32xx
         return TreeView_SetInsertMarkColor( *this, color );
     }
 
-
     // Sets some or all of a tree-view item's attributes.
     inline BOOL CTreeView::SetItem(TVITEM& item) const
     {
         assert(IsWindow());
         return TreeView_SetItem( *this, &item);
     }
-
 
     // Sets some or all of a tree-view item's attributes.
     inline BOOL CTreeView::SetItem(HTREEITEM item, UINT mask, LPCTSTR pText, int image, int selectedImage, UINT state, UINT stateMask, LPARAM lparam) const
@@ -480,7 +445,6 @@ namespace Win32xx
         return TreeView_SetItem( *this, &tvi );
     }
 
-
     // Sets the tree-view item's application data.
     inline BOOL CTreeView::SetItemData(HTREEITEM item, DWORD_PTR data) const
     {
@@ -494,14 +458,12 @@ namespace Win32xx
         return TreeView_SetItem( *this, &tvi );
     }
 
-
     // Sets the height of all the tree-view items.
     inline int  CTreeView::SetItemHeight(SHORT cy) const
     {
         assert(IsWindow());
         return TreeView_SetItemHeight( *this, cy );
     }
-
 
     // Sets the tree-view item's application image.
     inline BOOL CTreeView::SetItemImage(HTREEITEM item, int image, int selectedImage) const
@@ -517,7 +479,6 @@ namespace Win32xx
         return TreeView_SetItem(*this, &tvi );
     }
 
-
     // Sets the tree-view item's application text.
     inline BOOL CTreeView::SetItemText(HTREEITEM item, LPCTSTR pText) const
     {
@@ -531,14 +492,12 @@ namespace Win32xx
         return TreeView_SetItem(*this, &tvi );
     }
 
-
     // Sets the maximum scroll time for the tree-view control.
     inline UINT CTreeView::SetScrollTime(UINT scrollTime) const
     {
         assert(IsWindow());
         return TreeView_SetScrollTime( *this, scrollTime );
     }
-
 
     // Sets the text color of the control.
     inline COLORREF CTreeView::SetTextColor(COLORREF color) const
@@ -547,16 +506,14 @@ namespace Win32xx
         return TreeView_SetTextColor( *this, color );
     }
 
-
     // Sets a tree-view control's child ToolTip control.
-    inline HWND CTreeView::SetToolTips(HWND hToolTip) const
+    inline HWND CTreeView::SetToolTips(HWND toolTip) const
     {
         assert(IsWindow());
-        return TreeView_SetToolTips(*this, hToolTip);
+        return TreeView_SetToolTips(*this, toolTip);
     }
 
     // Operations
-
 
     // Creates a dragging bitmap for the specified item in a tree-view control.
     // It also creates an image list for the bitmap and adds the bitmap to the image list.
@@ -568,7 +525,6 @@ namespace Win32xx
         return CImageList(images);
     }
 
-
     // Deletes all items from a tree-view control.
     inline BOOL CTreeView::DeleteAllItems() const
     {
@@ -576,14 +532,12 @@ namespace Win32xx
         return TreeView_DeleteAllItems( *this );
     }
 
-
     // Removes an item and all its children from a tree-view control.
     inline BOOL CTreeView::DeleteItem(HTREEITEM item) const
     {
         assert(IsWindow());
         return TreeView_DeleteItem( *this, item);
     }
-
 
     // Begins in-place editing of the specified item's text, replacing the text of the item
     // with a single-line edit control containing the text.
@@ -594,14 +548,12 @@ namespace Win32xx
         return TreeView_EditLabel( *this, item);
     }
 
-
     // Ends the editing of a tree-view item's label.
     inline BOOL CTreeView::EndEditLabelNow(BOOL cancel) const
     {
         assert(IsWindow());
         return TreeView_EndEditLabelNow(*this, cancel);
     }
-
 
     // Ensures that a tree-view item is visible, expanding the parent item or
     // scrolling the tree-view control, if necessary.
@@ -611,7 +563,6 @@ namespace Win32xx
         return TreeView_EnsureVisible( *this, item);
     }
 
-
     // The TreeView_Expand macro expands or collapses the list of child items associated
     // with the specified parent item, if any.
     inline BOOL CTreeView::Expand(HTREEITEM item, UINT code) const
@@ -620,7 +571,6 @@ namespace Win32xx
         return TreeView_Expand( *this, item, code );
     }
 
-
     // Determines the location of the specified point relative to the client area of a tree-view control.
     inline HTREEITEM CTreeView::HitTest(TVHITTESTINFO& hitInfo) const
     {
@@ -628,14 +578,12 @@ namespace Win32xx
         return TreeView_HitTest( *this, &hitInfo );
     }
 
-
     // Inserts a new item in a tree-view control.
     inline HTREEITEM CTreeView::InsertItem(TVINSERTSTRUCT& insertInfo) const
     {
         assert(IsWindow());
         return TreeView_InsertItem( *this, &insertInfo );
     }
-
 
     // Selects the specified tree-view item, scrolls the item into view, or redraws
     // the item in the style used to indicate the target of a drag-and-drop operation.
@@ -645,7 +593,6 @@ namespace Win32xx
         return TreeView_Select(*this, item, flag );
     }
 
-
     // Redraws a specified tree-view control item in the style used to indicate the
     // target of a drag-and-drop operation.
     inline BOOL CTreeView::SelectDropTarget(HTREEITEM item) const
@@ -654,14 +601,12 @@ namespace Win32xx
         return TreeView_SelectDropTarget(*this, item);
     }
 
-
     // Selects the specified tree-view item.
     inline BOOL CTreeView::SelectItem(HTREEITEM item) const
     {
         assert(IsWindow());
         return TreeView_SelectItem(*this, item);
     }
-
 
     // Scrolls the tree-view control vertically to ensure that the specified item is visible.
     // If possible, the specified item becomes the first visible item at the top of the control's window.
@@ -671,14 +616,12 @@ namespace Win32xx
         return TreeView_SelectSetFirstVisible(*this, item);
     }
 
-
     // Sorts the child items of the specified parent item in a tree-view control.
     inline BOOL CTreeView::SortChildren(HTREEITEM item, BOOL recurse) const
     {
         assert(IsWindow());
         return TreeView_SortChildren( *this, item, recurse );
     }
-
 
     // Sorts tree-view items using an application-defined callback function that compares the items.
     inline BOOL CTreeView::SortChildrenCB(TVSORTCB* pSortFn, BOOL recurse) const

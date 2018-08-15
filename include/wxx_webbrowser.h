@@ -70,7 +70,7 @@ namespace Win32xx
         virtual void SetParent(HWND hWndParent);
         virtual void SetLocation(int x, int y, int width, int height);
         virtual void SetVisible(BOOL isVisible);
-        virtual void SetStatusWindow(HWND hWndStatus);
+        virtual void SetStatusWindow(HWND status);
         virtual void TranslateKey(MSG msg);
         IDispatch* GetDispatch();
         IUnknown* GetUnknown();
@@ -96,24 +96,24 @@ namespace Win32xx
         STDMETHODIMP CanInPlaceActivate();
         STDMETHODIMP OnInPlaceActivate();
         STDMETHODIMP OnUIActivate();
-        STDMETHODIMP GetWindowContext(IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppDoc, LPRECT lprcPosRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo);
+        STDMETHODIMP GetWindowContext(IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppDoc, LPRECT lposRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo);
         STDMETHODIMP Scroll(SIZE scrollExtent);
         STDMETHODIMP OnUIDeactivate(BOOL undoable);
         STDMETHODIMP OnInPlaceDeactivate();
         STDMETHODIMP DiscardUndoState();
         STDMETHODIMP DeactivateAndUndo();
-        STDMETHODIMP OnPosRectChange(LPCRECT lprcPosRect);
+        STDMETHODIMP OnPosRectChange(LPCRECT lposRect);
 
         // IOleInPlaceUIWindow Methods
         STDMETHODIMP GetBorder(LPRECT pBorderRect);
-        STDMETHODIMP RequestBorderSpace(LPCBORDERWIDTHS lpborderwidths);
-        STDMETHODIMP SetBorderSpace(LPCBORDERWIDTHS lpborderwidths);
-        STDMETHODIMP SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR lpszObjName);
+        STDMETHODIMP RequestBorderSpace(LPCBORDERWIDTHS pBorderWidths);
+        STDMETHODIMP SetBorderSpace(LPCBORDERWIDTHS pBorderWidths);
+        STDMETHODIMP SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR pObjName);
 
         // IOleInPlaceFrame Methods
-        STDMETHODIMP InsertMenus(HMENU hmenuShared, LPOLEMENUGROUPWIDTHS lpMenuWidths);
-        STDMETHODIMP SetMenu(HMENU hmenuShared, HOLEMENU holemenu, HWND hwndActiveObject);
-        STDMETHODIMP RemoveMenus(HMENU hmenuShared);
+        STDMETHODIMP InsertMenus(HMENU shared, LPOLEMENUGROUPWIDTHS pMenuWidths);
+        STDMETHODIMP SetMenu(HMENU shared, HOLEMENU holemenu, HWND activeObject);
+        STDMETHODIMP RemoveMenus(HMENU shared);
         STDMETHODIMP SetStatusText(LPCOLESTR pStatusText);
         STDMETHODIMP EnableModeless(BOOL enable);
         STDMETHODIMP TranslateAccelerator(LPMSG pMsg, WORD id);
@@ -123,22 +123,22 @@ namespace Win32xx
         STDMETHODIMP LockInPlaceActive(BOOL lock);
         STDMETHODIMP GetExtendedControl(IDispatch** ppDisp);
         STDMETHODIMP TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD flags);
-        STDMETHODIMP TranslateAccelerator(LPMSG pMsg, DWORD grfModifiers);
+        STDMETHODIMP TranslateAccelerator(LPMSG pMsg, DWORD modifiers);
         STDMETHODIMP OnFocus(BOOL gotFocus);
         STDMETHODIMP ShowPropertyFrame();
 
         // IDispatch Methods
-        STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid);
+        STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** names, unsigned int namesCount, LCID lcid, DISPID* rgdispid);
         STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
         STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
         STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pdispparams, VARIANT* result, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
 
     private:
-         ULONG       m_cRefs;       // ref count
-         HWND        m_hWndAX;      // window handle of the container
-         HWND        m_hWndStatus;  // status window handle
+         ULONG       m_count;       // ref count
+         HWND        m_ax;          // window handle of the container
+         HWND        m_status;      // status window handle
          IUnknown*   m_pUnk;        // IUnknown of contained object
-         CRect       m_rcControl;   // size of control
+         CRect       m_controlRect; // size of control
     };
 
 
@@ -230,10 +230,9 @@ namespace Win32xx
     // Definitions for the CAXWindow class
     //
 
-    inline CAXWindow::CAXWindow() : m_cRefs(1), m_hWndAX(NULL), m_hWndStatus(0), m_pUnk(NULL)
+    inline CAXWindow::CAXWindow() : m_count(1), m_ax(NULL), m_status(0), m_pUnk(NULL)
     {
     }
-
 
     inline CAXWindow::~CAXWindow()
     {
@@ -243,14 +242,12 @@ namespace Win32xx
         Release();
     }
 
-
     inline void CAXWindow::CreateControl(BSTR clsidName)
     {
         CLSID   clsid;
         if (NOERROR == CLSIDFromString(clsidName, &clsid))
             CreateControl(clsid);
     }
-
 
     inline void CAXWindow::Activate(BOOL focus)
     {
@@ -264,11 +261,10 @@ namespace Win32xx
             if (FAILED(result))
                 return;
 
-            pioo->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_hWndAX, &m_rcControl);
+            pioo->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_ax, &m_controlRect);
             pioo->Release();
         }
     }
-
 
     inline void CAXWindow::CreateControl(REFCLSID clsid)
     {
@@ -294,18 +290,15 @@ namespace Win32xx
         }
     }
 
-
     inline STDMETHODIMP_(ULONG) CAXWindow::AddRef()
     {
-        return ++m_cRefs;
+        return ++m_count;
     }
-
 
     inline STDMETHODIMP CAXWindow::CanInPlaceActivate()
     {
         return S_OK;
     }
-
 
     inline STDMETHODIMP CAXWindow::ContextSensitiveHelp(BOOL enterMode)
     {
@@ -313,18 +306,15 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::DeactivateAndUndo()
     {
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::DiscardUndoState()
     {
         return E_NOTIMPL;
     }
-
 
     inline STDMETHODIMP CAXWindow::EnableModeless(BOOL enable)
     {
@@ -332,20 +322,17 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::GetBorder(LPRECT pBorderRect)
     {
         UNREFERENCED_PARAMETER(pBorderRect);
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::GetContainer(LPOLECONTAINER* ppContainer)
     {
         UNREFERENCED_PARAMETER(ppContainer);
         return E_NOINTERFACE;
     }
-
 
     inline IDispatch* CAXWindow::GetDispatch()
     {
@@ -358,7 +345,6 @@ namespace Win32xx
         return pdisp;
     }
 
-
     inline STDMETHODIMP CAXWindow::GetExtendedControl(IDispatch** ppDisp)
     {
         if (ppDisp == NULL)
@@ -370,18 +356,16 @@ namespace Win32xx
         return S_OK;
     }
 
-
-    inline STDMETHODIMP CAXWindow::GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid)
+    inline STDMETHODIMP CAXWindow::GetIDsOfNames(REFIID riid, OLECHAR** names, unsigned int namesCount, LCID lcid, DISPID* rgdispid)
     {
         UNREFERENCED_PARAMETER((IID)riid);      // IID cast required for the MinGW compiler
-        UNREFERENCED_PARAMETER(rgszNames);
-        UNREFERENCED_PARAMETER(cNames);
+        UNREFERENCED_PARAMETER(names);
+        UNREFERENCED_PARAMETER(namesCount);
         UNREFERENCED_PARAMETER(lcid);
 
         *rgdispid = DISPID_UNKNOWN;
         return DISP_E_UNKNOWNNAME;
     }
-
 
     inline STDMETHODIMP CAXWindow::GetMoniker(DWORD assign, DWORD whichMoniker, LPMONIKER* ppMk)
     {
@@ -391,7 +375,6 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo)
     {
         UNREFERENCED_PARAMETER(itinfo);
@@ -400,13 +383,11 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::GetTypeInfoCount(unsigned int* pctinfo)
     {
         UNREFERENCED_PARAMETER(pctinfo);
         return E_NOTIMPL;
     }
-
 
     inline IUnknown* CAXWindow::GetUnknown()
     {
@@ -417,35 +398,33 @@ namespace Win32xx
         return m_pUnk;
     }
 
-
     inline STDMETHODIMP CAXWindow::GetWindow(HWND* pHwnd)
     {
-        if (!IsWindow(m_hWndAX))
+        if (!IsWindow(m_ax))
             return S_FALSE;
 
-        *pHwnd = m_hWndAX;
+        *pHwnd = m_ax;
         return S_OK;
     }
 
-
     inline STDMETHODIMP CAXWindow::GetWindowContext (IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppIIPUIWin,
-                                      LPRECT lprcPosRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo)
+                                      LPRECT lposRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo)
     {
         *ppFrame = (IOleInPlaceFrame*)this;
         *ppIIPUIWin = NULL;
 
         RECT rect;
-        GetClientRect(m_hWndAX, &rect);
-        lprcPosRect->left       = 0;
-        lprcPosRect->top        = 0;
-        lprcPosRect->right      = rect.right;
-        lprcPosRect->bottom     = rect.bottom;
+        GetClientRect(m_ax, &rect);
+        lposRect->left       = 0;
+        lposRect->top        = 0;
+        lposRect->right      = rect.right;
+        lposRect->bottom     = rect.bottom;
 
-        CopyRect(lprcClipRect, lprcPosRect);
+        CopyRect(lprcClipRect, lposRect);
 
         lpFrameInfo->cb             = sizeof(OLEINPLACEFRAMEINFO);
         lpFrameInfo->fMDIApp        = FALSE;
-        lpFrameInfo->hwndFrame      = m_hWndAX;
+        lpFrameInfo->hwndFrame      = m_ax;
         lpFrameInfo->haccel         = 0;
         lpFrameInfo->cAccelEntries  = 0;
 
@@ -453,14 +432,12 @@ namespace Win32xx
         return S_OK;
     }
 
-
-    inline STDMETHODIMP CAXWindow::InsertMenus(HMENU hmenuShared, LPOLEMENUGROUPWIDTHS pMenuWidths)
+    inline STDMETHODIMP CAXWindow::InsertMenus(HMENU shared, LPOLEMENUGROUPWIDTHS pMenuWidths)
     {
-        UNREFERENCED_PARAMETER(hmenuShared);
+        UNREFERENCED_PARAMETER(shared);
         UNREFERENCED_PARAMETER(pMenuWidths);
         return E_NOTIMPL;
     }
-
 
     inline STDMETHODIMP CAXWindow::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pdispparams, VARIANT* result, EXCEPINFO* pexecinfo, unsigned int* puArgErr)
     {
@@ -475,19 +452,16 @@ namespace Win32xx
         return DISP_E_MEMBERNOTFOUND;
     }
 
-
     inline STDMETHODIMP CAXWindow::LockInPlaceActive(BOOL lock)
     {
         UNREFERENCED_PARAMETER(lock);
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::OnControlInfoChanged()
     {
         return E_NOTIMPL;
     }
-
 
     inline STDMETHODIMP CAXWindow::OnFocus(BOOL gotFocus)
     {
@@ -495,18 +469,15 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::OnInPlaceActivate()
     {
         return S_OK;
     }
 
-
     inline STDMETHODIMP CAXWindow::OnInPlaceDeactivate()
     {
         return S_OK;
     }
-
 
     inline STDMETHODIMP CAXWindow::OnPosRectChange(LPCRECT pPosRect)
     {
@@ -514,26 +485,22 @@ namespace Win32xx
         return S_OK;
     }
 
-
     inline STDMETHODIMP CAXWindow::OnShowWindow(BOOL show)
     {
         UNREFERENCED_PARAMETER(show);
         return S_OK;
     }
 
-
     inline STDMETHODIMP CAXWindow::OnUIActivate()
     {
         return S_OK;
     }
-
 
     inline STDMETHODIMP CAXWindow::OnUIDeactivate(BOOL undoable)
     {
         UNREFERENCED_PARAMETER(undoable);
         return E_NOTIMPL;
     }
-
 
     inline STDMETHODIMP CAXWindow::QueryInterface(REFIID riid, void** ppvObject)
     {
@@ -566,12 +533,10 @@ namespace Win32xx
         return S_OK;
     }
 
-
     inline STDMETHODIMP_(ULONG) CAXWindow::Release()
     {
-        return --m_cRefs;
+        return --m_count;
     }
-
 
     inline void CAXWindow::Remove()
     {
@@ -598,32 +563,27 @@ namespace Win32xx
 
     }
 
-
-    inline STDMETHODIMP CAXWindow::RemoveMenus(HMENU hmenuShared)
+    inline STDMETHODIMP CAXWindow::RemoveMenus(HMENU shared)
     {
-        UNREFERENCED_PARAMETER(hmenuShared);
+        UNREFERENCED_PARAMETER(shared);
         return E_NOTIMPL;
     }
 
-
-    inline STDMETHODIMP CAXWindow::RequestBorderSpace(LPCBORDERWIDTHS lpborderwidths)
+    inline STDMETHODIMP CAXWindow::RequestBorderSpace(LPCBORDERWIDTHS pBorderWidths)
     {
-        UNREFERENCED_PARAMETER(lpborderwidths);
+        UNREFERENCED_PARAMETER(pBorderWidths);
         return E_NOTIMPL;
     }
-
 
     inline STDMETHODIMP CAXWindow::RequestNewObjectLayout()
     {
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::SaveObject()
     {
         return E_NOTIMPL;
     }
-
 
     inline STDMETHODIMP CAXWindow::Scroll(SIZE scrollExtent)
     {
@@ -631,25 +591,22 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
-    inline STDMETHODIMP CAXWindow::SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR lpszObjName)
+    inline STDMETHODIMP CAXWindow::SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR pObjName)
     {
         UNREFERENCED_PARAMETER(pActiveObject);
-        UNREFERENCED_PARAMETER(lpszObjName);
+        UNREFERENCED_PARAMETER(pObjName);
         return E_NOTIMPL;
     }
 
-
-    inline STDMETHODIMP CAXWindow::SetBorderSpace(LPCBORDERWIDTHS lpborderwidths)
+    inline STDMETHODIMP CAXWindow::SetBorderSpace(LPCBORDERWIDTHS pBorderWidths)
     {
-        UNREFERENCED_PARAMETER(lpborderwidths);
+        UNREFERENCED_PARAMETER(pBorderWidths);
         return E_NOTIMPL;
     }
-
 
     inline void CAXWindow::SetLocation(int x, int y, int width, int height)
     {
-        m_rcControl.SetRect(x, y, x + width, y + height);
+        m_controlRect.SetRect(x, y, x + width, y + height);
 
         if (!m_pUnk)
             return;
@@ -659,25 +616,22 @@ namespace Win32xx
         if (FAILED(result))
             return;
 
-        pipo->SetObjectRects(&m_rcControl, &m_rcControl);
+        pipo->SetObjectRects(&m_controlRect, &m_controlRect);
         pipo->Release();
     }
 
-
-    inline STDMETHODIMP CAXWindow::SetMenu(HMENU hmenuShared, HOLEMENU holemenu, HWND hwndActiveObject)
+    inline STDMETHODIMP CAXWindow::SetMenu(HMENU shared, HOLEMENU holemenu, HWND activeObject)
     {
-        UNREFERENCED_PARAMETER(hmenuShared);
+        UNREFERENCED_PARAMETER(shared);
         UNREFERENCED_PARAMETER(holemenu);
-        UNREFERENCED_PARAMETER(hwndActiveObject);
+        UNREFERENCED_PARAMETER(activeObject);
         return E_NOTIMPL;
     }
 
-
     inline void CAXWindow::SetParent(HWND hWndParent)
     {
-        m_hWndAX = hWndParent;
+        m_ax = hWndParent;
     }
-
 
     inline STDMETHODIMP CAXWindow::SetStatusText(LPCOLESTR pStatusText)
     {
@@ -689,22 +643,20 @@ namespace Win32xx
         // Convert the Wide string to char
         WideCharToMultiByte(CP_ACP, 0, pStatusText, -1, status, MAX_PATH, NULL, NULL);
 
-        if (IsWindow(m_hWndStatus))
-            SendMessage(m_hWndStatus, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(status));
+        if (IsWindow(m_status))
+            SendMessage(m_status, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(status));
     #else
-        if (IsWindow(m_hWndStatus))
-            SendMessage(m_hWndStatus, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(pStatusText));
+        if (IsWindow(m_status))
+            SendMessage(m_status, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(pStatusText));
     #endif
 
         return S_OK;
     }
 
-
-    inline void CAXWindow::SetStatusWindow(HWND hWndStatus)
+    inline void CAXWindow::SetStatusWindow(HWND status)
     {
-        m_hWndStatus = hWndStatus;
+        m_status = status;
     }
-
 
     inline void CAXWindow::SetVisible(BOOL isVisible)
     {
@@ -718,27 +670,24 @@ namespace Win32xx
 
         if (isVisible)
         {
-            pioo->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, this, 0, m_hWndAX, &m_rcControl);
-            pioo->DoVerb(OLEIVERB_SHOW, NULL, this, 0, m_hWndAX, &m_rcControl);
+            pioo->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, this, 0, m_ax, &m_controlRect);
+            pioo->DoVerb(OLEIVERB_SHOW, NULL, this, 0, m_ax, &m_controlRect);
         }
         else
-            pioo->DoVerb(OLEIVERB_HIDE, NULL, this, 0, m_hWndAX, NULL);
+            pioo->DoVerb(OLEIVERB_HIDE, NULL, this, 0, m_ax, NULL);
 
         pioo->Release();
     }
-
 
     inline STDMETHODIMP CAXWindow::ShowObject()
     {
         return S_OK;
     }
 
-
     inline STDMETHODIMP CAXWindow::ShowPropertyFrame()
     {
         return E_NOTIMPL;
     }
-
 
     inline STDMETHODIMP CAXWindow::TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD flags)
     {
@@ -748,7 +697,6 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG pMsg, WORD id)
     {
         UNREFERENCED_PARAMETER(pMsg);
@@ -756,14 +704,12 @@ namespace Win32xx
         return S_OK;
     }
 
-
-    inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG pMsg, DWORD grfModifiers)
+    inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG pMsg, DWORD modifiers)
     {
         UNREFERENCED_PARAMETER(pMsg);
-        UNREFERENCED_PARAMETER(grfModifiers);
+        UNREFERENCED_PARAMETER(modifiers);
         return S_FALSE;
     }
-
 
     inline void CAXWindow::TranslateKey(MSG msg)
     {
@@ -789,7 +735,6 @@ namespace Win32xx
         OleInitialize(NULL);
     }
 
-
     inline CWebBrowser::~CWebBrowser()
     {
         if (m_pIWebBrowser2)
@@ -800,7 +745,6 @@ namespace Win32xx
 
         OleUninitialize();
     }
-
 
     // Adds the IWebBrowser interface to the ActiveX container window.
     inline void CWebBrowser::AddWebBrowserControl()
@@ -825,14 +769,12 @@ namespace Win32xx
         }
     }
 
-
     // Called when the WebBrowser window is created and the HWND is attached this object.
     inline void CWebBrowser::OnAttach()
     {
         if (NULL == m_pIWebBrowser2)
             AddWebBrowserControl();
     }
-
 
     // Called when the web browser window is created.
     inline int CWebBrowser::OnCreate(CREATESTRUCT& cs)
@@ -842,13 +784,11 @@ namespace Win32xx
         return 0;
     }
 
-
     // Called when the window is destroyed.
     inline void CWebBrowser::OnDestroy()
     {
         GetAXWindow().Remove();
     }
-
 
     // Called when the window is resized.
     inline void CWebBrowser::OnSize(int width, int height)
@@ -856,7 +796,6 @@ namespace Win32xx
         // position the container
         GetAXWindow().SetLocation(0, 0, width, height);
     }
-
 
     // Provides default message processing for the web browser window.
     inline LRESULT CWebBrowser::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -871,7 +810,6 @@ namespace Win32xx
         return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
-
     // Retrieves the automation object for the application that is hosting the WebBrowser Control.
     inline LPDISPATCH CWebBrowser::GetApplication() const
     {
@@ -879,7 +817,6 @@ namespace Win32xx
         GetIWebBrowser2()->get_Application(&Value);
         return Value;
     }
-
 
     // Retrieves a value that indicates whether the object is engaged in a navigation or downloading operation.
     inline BOOL CWebBrowser::GetBusy() const
@@ -889,7 +826,6 @@ namespace Win32xx
         return (Value != 0);
     }
 
-
     // Retrieves an object reference to a container.
     inline LPDISPATCH CWebBrowser::GetContainer() const
     {
@@ -897,7 +833,6 @@ namespace Win32xx
         GetIWebBrowser2()->get_Container(&Value);
         return Value;
     }
-
 
     // Retrieves a value that indicates whether Internet Explorer is in full-screen mode or normal window mode.
     inline BOOL CWebBrowser::GetFullScreen() const
@@ -907,7 +842,6 @@ namespace Win32xx
         return (Value != 0);
     }
 
-
     // Retrieves the height of the object.
     inline long CWebBrowser::GetHeight() const
     {
@@ -916,7 +850,6 @@ namespace Win32xx
         return lValue;
     }
 
-
     // Retrieves the coordinate of the left edge of the object.
     inline long CWebBrowser::GetLeft() const
     {
@@ -924,7 +857,6 @@ namespace Win32xx
         GetIWebBrowser2()->get_Left(&lValue);
         return lValue;
     }
-
 
     // Retrieves the path or title of the resource that is currently displayed.
     inline CString CWebBrowser::GetLocationName() const
@@ -936,7 +868,6 @@ namespace Win32xx
         return str;
     }
 
-
     // Retrieves the URL of the resource that is currently displayed.
     inline CString CWebBrowser::GetLocationURL() const
     {
@@ -946,7 +877,6 @@ namespace Win32xx
         SysFreeString(bstr);
         return str;
     }
-
 
     // Retrieves the accumulated  length of the ITEMIDLIST.
     inline UINT CWebBrowser::GetPidlLength(LPITEMIDLIST pidl)
@@ -966,7 +896,6 @@ namespace Win32xx
         return cbPidl;
     }
 
-
     // Retrieves a value that indicates whether the object is operating in offline mode.
     inline BOOL CWebBrowser::GetOffline() const
     {
@@ -975,7 +904,6 @@ namespace Win32xx
         return (Value != 0);
     }
 
-
     // Retrieves the ready state of the object.
     inline READYSTATE CWebBrowser::GetReadyState() const
     {
@@ -983,7 +911,6 @@ namespace Win32xx
         GetIWebBrowser2()->get_ReadyState(&rsValue);
         return rsValue;
     }
-
 
     // Retrieves a value that indicates whether the object is registered as a top-level browser window.
     inline BOOL CWebBrowser::GetRegisterAsBrowser() const
@@ -995,7 +922,6 @@ namespace Win32xx
         return (Value != 0);
     }
 
-
     // Retrieves the theater mode state of the object.
     inline BOOL CWebBrowser::GetTheaterMode() const
     {
@@ -1003,7 +929,6 @@ namespace Win32xx
         GetIWebBrowser2()->get_TheaterMode(&Value);
         return (Value != 0);
     }
-
 
     // Retrieves the coordinate of the top edge of the object.
     inline long CWebBrowser::GetTop() const
@@ -1013,7 +938,6 @@ namespace Win32xx
         return lValue;
     }
 
-
     //Returns TRUE  if the object is a top-level container.
     inline BOOL CWebBrowser::GetTopLevelContainer() const
     {
@@ -1021,7 +945,6 @@ namespace Win32xx
         GetIWebBrowser2()->get_TopLevelContainer(&Value);
         return (Value != 0);
     }
-
 
     // Retrieves the user type name of the contained document object.
     inline CString CWebBrowser::GetType() const
@@ -1033,7 +956,6 @@ namespace Win32xx
         return str;
     }
 
-
     // Retrieves a value that indicates whether the object is visible or hidden.
     inline BOOL CWebBrowser::GetVisible() const
     {
@@ -1041,7 +963,6 @@ namespace Win32xx
         GetIWebBrowser2()->get_Visible(&Value);
         return (Value != 0);
     }
-
 
     // Retrieves the width of the object.
     inline long CWebBrowser::GetWidth() const
@@ -1051,7 +972,6 @@ namespace Win32xx
         return lValue;
     }
 
-
     // Sets a value that indicates whether Internet Explorer is in full-screen mode or normal window mode.
     inline void CWebBrowser::SetFullScreen(BOOL isFullScreen)
     {
@@ -1059,20 +979,17 @@ namespace Win32xx
         GetIWebBrowser2()->put_FullScreen(vBool);
     }
 
-
     // Sets the height of the object.
     inline void CWebBrowser::SetHeight(long height)
     {
         GetIWebBrowser2()->put_Height(height);
     }
 
-
     // Sets the coordinate of the left edge of the object.
     inline void CWebBrowser::SetLeft(long leftEdge)
     {
         GetIWebBrowser2()->put_Left(leftEdge);
     }
-
 
     // Sets a value that indicates whether the object is operating in offline mode.
     inline void CWebBrowser::SetOffline(BOOL isOffline)
@@ -1081,14 +998,12 @@ namespace Win32xx
         GetIWebBrowser2()->put_Offline(vBool);
     }
 
-
     // Sets a value that indicates whether the object is registered as a top-level browser window.
     inline void CWebBrowser::SetRegisterAsBrowser(BOOL isBrowser)
     {
         VARIANT_BOOL vBool = isBrowser ? VARIANT_TRUE : VARIANT_FALSE;
         GetIWebBrowser2()->put_RegisterAsBrowser(vBool);
     }
-
 
     // Sets the theatre mode state of the object.
     inline void CWebBrowser::SetTheaterMode(BOOL isTheaterMode)
@@ -1097,14 +1012,11 @@ namespace Win32xx
         GetIWebBrowser2()->put_TheaterMode(vBool);
     }
 
-
     // Sets the coordinate of the top edge of the object.
     inline void CWebBrowser::SetTop(long topEdge)
-
     {
         GetIWebBrowser2()->put_Top(topEdge);
     }
-
 
     // Sets a value that indicates whether the object is visible or hidden.
     inline void CWebBrowser::SetVisible(BOOL isVisible)
@@ -1113,21 +1025,17 @@ namespace Win32xx
         GetIWebBrowser2()->put_Visible(vBool);
     }
 
-
     // Sets the width of the object.
     inline void CWebBrowser::SetWidth(long width)
-
     {
         GetIWebBrowser2()->put_Width(width);
     }
-
 
     // Executes a command using the IOleCommandTarget interface.
     inline void CWebBrowser::ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdExecOpt, VARIANT* in, VARIANT* out)
     {
         GetIWebBrowser2()->ExecWB(cmdID, cmdExecOpt, in, out);
     }
-
 
     // Gets the value associated with the specified property name.
     inline VARIANT CWebBrowser::GetProperty( LPCTSTR pProperty )
@@ -1137,13 +1045,11 @@ namespace Win32xx
         return v;
     }
 
-
     // Navigates backward one item in the history list.
     inline void CWebBrowser::GoBack()
     {
         GetIWebBrowser2()->GoBack();
     }
-
 
     // Navigates forward one item in the history list.
     inline void CWebBrowser::GoForward()
@@ -1151,20 +1057,17 @@ namespace Win32xx
         GetIWebBrowser2()->GoForward();
     }
 
-
     // Navigates to the current home or start page.
     inline void CWebBrowser::GoHome()
     {
         GetIWebBrowser2()->GoHome();
     }
 
-
     // Navigates to the current search page.
     inline void CWebBrowser::GoSearch()
     {
         GetIWebBrowser2()->GoSearch();
     }
-
 
     // Navigates to a resource identified by a URL or to a file identified by a full path.
     inline void CWebBrowser::Navigate(LPCTSTR pURL,   DWORD flags /*= 0*/, LPCTSTR pTargetFrameName /*= NULL*/,
@@ -1198,7 +1101,6 @@ namespace Win32xx
         VariantClear(&Headers);
     }
 
-
     // Navigates the browser to a location specified by a pointer to an item identifier list (PIDL) for an entity in the Microsoft Windows Shell namespace.
     inline void CWebBrowser::Navigate2(LPITEMIDLIST pIDL, DWORD flags /*= 0*/, LPCTSTR pTargetFrameName /*= NULL*/)
     {
@@ -1223,7 +1125,6 @@ namespace Win32xx
         VariantClear(&Flags);
         VariantClear(&TargetFrameName);
     }
-
 
     // Navigates the browser to a location that is expressed as a URL.
     inline void CWebBrowser::Navigate2(LPCTSTR pURL, DWORD flags /*= 0*/, LPCTSTR pTargetFrameName /*= NULL*/,
@@ -1261,13 +1162,11 @@ namespace Win32xx
         VariantClear(&Headers);
     }
 
-
     // Sets the value of a property associated with the object.
     inline void CWebBrowser::PutProperty(LPCTSTR pProperty, const VARIANT& value)
     {
         GetIWebBrowser2()->PutProperty(TtoBSTR(pProperty), value);
     }
-
 
     // Sets the value of a property associated with the object.
     inline void CWebBrowser::PutProperty(LPCTSTR pPropertyName, double value)
@@ -1279,7 +1178,6 @@ namespace Win32xx
         VariantClear(&v);
     }
 
-
     // Sets the value of a property associated with the object.
     inline void CWebBrowser::PutProperty(LPCTSTR pPropertyName, long value)
     {
@@ -1289,7 +1187,6 @@ namespace Win32xx
         GetIWebBrowser2()->PutProperty(TtoBSTR(pPropertyName), v);
         VariantClear(&v);
     }
-
 
     // Sets the value of a property associated with the object.
     inline void CWebBrowser::PutProperty(LPCTSTR pPropertyName, LPCTSTR pValue)
@@ -1301,7 +1198,6 @@ namespace Win32xx
         VariantClear(&v);
     }
 
-
     // Sets the value of a property associated with the object.
     inline void CWebBrowser::PutProperty(LPCTSTR pPropertyName, short value)
     {
@@ -1312,13 +1208,11 @@ namespace Win32xx
         VariantClear(&v);
     }
 
-
     // Reloads the file that is currently displayed in the object.
     inline void CWebBrowser::Refresh()
     {
         GetIWebBrowser2()->Refresh();
     }
-
 
     // Reloads the file that is currently displayed with the specified refresh level.
     inline void CWebBrowser::Refresh2(int level)
@@ -1329,7 +1223,6 @@ namespace Win32xx
         GetIWebBrowser2()->Refresh2(&v);
         VariantClear(&v);
     }
-
 
     // Cancels a pending navigation or download, and stops dynamic page elements, such as background sounds and animations.
     inline void CWebBrowser::Stop()

@@ -121,7 +121,6 @@ namespace Win32xx
     {
     }
 
-
     // Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, OPEN_ALWAYS, TRUNCATE_EXISTING
     // Default value: OPEN_EXISTING | modeReadWrite
     // The following modes are also supported:
@@ -135,12 +134,10 @@ namespace Win32xx
     //  shareDenyRead   Denies read access to all others.
     //  shareDenyNone   No sharing restrictions.
     inline CFile::CFile(LPCTSTR pFileName, UINT openFlags) : m_file(0)
-
     {
         assert(pFileName);
         Open(pFileName, openFlags);  // throws CFileException on failure
     }
-
 
     inline CFile::~CFile()
     {
@@ -148,12 +145,10 @@ namespace Win32xx
             VERIFY(::CloseHandle(m_file));
     }
 
-
     inline CFile::operator HANDLE() const
     {
         return m_file;
     }
-
 
     // Closes the file associated with this object. Closed file can no longer be read or written to.
     inline void CFile::Close()
@@ -171,7 +166,6 @@ namespace Win32xx
         m_file = 0;
     }
 
-
     // Causes any remaining data in the file buffer to be written to the file.
     inline void CFile::Flush()
     {
@@ -180,13 +174,11 @@ namespace Win32xx
             throw CFileException(GetFilePath(), _T("Failed to flush file"));
     }
 
-
     // Returns the file handle associated with this object.
     inline HANDLE CFile::GetHandle() const
     {
         return m_file;
     }
-
 
     // Returns the directory of the file associated with this object.
     inline CString CFile::GetFileDirectory() const
@@ -200,13 +192,11 @@ namespace Win32xx
         return directory;
     }
 
-
     // Returns the filename of the file associated with this object, not including the directory.
     inline const CString& CFile::GetFileName() const
     {
         return m_fileName;
     }
-
 
     // Returns the extension part of the filename of the file associated with this object.
     inline CString CFile::GetFileNameExt() const
@@ -220,7 +210,6 @@ namespace Win32xx
         return extension;
     }
 
-
     // Returns the filename of the file associated with this object, not including the directory, without its extension.
     inline CString CFile::GetFileNameWOExt() const
     {
@@ -233,13 +222,11 @@ namespace Win32xx
         return fileNameWOExt;
     }
 
-
     // Returns the full filename including the directory of the file associated with this object.
     inline const CString& CFile::GetFilePath() const
     {
         return m_filePath;
     }
-
 
     // Returns the string that the system would use to display the file name to
     // the user. The string might or might not contain the filename's extension
@@ -257,7 +244,6 @@ namespace Win32xx
         return fileTitle;
     }
 
-
     // Returns the length of the file in bytes.
     inline ULONGLONG CFile::GetLength() const
     {
@@ -273,7 +259,6 @@ namespace Win32xx
         ULONGLONG result = (static_cast<ULONGLONG>(highPosEnd) << 32) + lowPosEnd;
         return result;
     }
-
 
     // Returns the current value of the file pointer, which can be used in subsequent calls to Seek.
     inline ULONGLONG CFile::GetPosition() const
@@ -365,7 +350,6 @@ namespace Win32xx
 
     }
 
-
     // Reads from the file, storing the contents in the specified buffer.
     inline UINT CFile::Read(void* pBuf, UINT count)
     {
@@ -382,7 +366,6 @@ namespace Win32xx
         return read;
     }
 
-
     // Renames the specified file.
     inline void CFile::Rename(LPCTSTR pOldName, LPCTSTR pNewName)
     {
@@ -390,14 +373,12 @@ namespace Win32xx
             throw CFileException(pOldName, _T("Failed to rename file"));
     }
 
-
     // Deletes the specified file.
     inline void CFile::Remove(LPCTSTR pFileName)
     {
         if (!::DeleteFile(pFileName))
             throw CFileException(pFileName, _T("Failed to delete file"));
     }
-
 
     // Positions the current file pointer.
     // Permitted values for method are: FILE_BEGIN, FILE_CURRENT, or FILE_END.
@@ -415,14 +396,12 @@ namespace Win32xx
         return result;
     }
 
-
     // Sets the current file pointer to the beginning of the file.
     inline void CFile::SeekToBegin()
     {
         assert(m_file != 0);
         Seek(0, FILE_BEGIN);
     }
-
 
     // Sets the current file pointer to the end of the file.
     inline ULONGLONG CFile::SeekToEnd()
