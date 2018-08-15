@@ -73,7 +73,7 @@ namespace Win32xx
         // IUnknown methods.
         STDMETHOD_(ULONG, AddRef());
         STDMETHOD_(ULONG, Release());
-        STDMETHOD(QueryInterface(REFIID iid, void** ppv));
+        STDMETHOD(QueryInterface(REFIID iid, void** ppObject));
 
         // IUIApplication methods
         STDMETHOD(OnCreateUICommand)(UINT nCmdID, __in UI_COMMANDTYPE typeID,
@@ -123,7 +123,7 @@ namespace Win32xx
             // IUnknown methods.
             STDMETHODIMP_(ULONG) AddRef();
             STDMETHODIMP_(ULONG) Release();
-            STDMETHODIMP QueryInterface(REFIID iid, void** ppv);
+            STDMETHODIMP QueryInterface(REFIID iid, void** ppObject);
 
             // IUISimplePropertySet methods
             STDMETHODIMP GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT* value);
@@ -229,23 +229,23 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CRibbon::QueryInterface(REFIID iid, void** ppv)
+    inline STDMETHODIMP CRibbon::QueryInterface(REFIID iid, void** ppObject)
     {
         if (iid == __uuidof(IUnknown))
         {
-            *ppv = static_cast<IUnknown*>(static_cast<IUIApplication*>(this));
+            *ppObject = static_cast<IUnknown*>(static_cast<IUIApplication*>(this));
         }
         else if (iid == __uuidof(IUICommandHandler))
         {
-            *ppv = static_cast<IUICommandHandler*>(this);
+            *ppObject = static_cast<IUICommandHandler*>(this);
         }
         else if (iid == __uuidof(IUIApplication))
         {
-            *ppv = static_cast<IUIApplication*>(this);
+            *ppObject = static_cast<IUIApplication*>(this);
         }
         else
         {
-            *ppv = NULL;
+            *ppObject = NULL;
             return E_NOINTERFACE;
         }
 
@@ -545,24 +545,24 @@ namespace Win32xx
     }
 
     template <class T>
-    inline STDMETHODIMP CRibbonFrameT<T>::CRecentFiles::QueryInterface(REFIID iid, void** ppv)
+    inline STDMETHODIMP CRibbonFrameT<T>::CRecentFiles::QueryInterface(REFIID iid, void** ppObject)
     {
-        if (!ppv)
+        if (!ppObject)
         {
             return E_POINTER;
         }
 
         if (iid == __uuidof(IUnknown))
         {
-            *ppv = static_cast<IUnknown*>(this);
+            *ppObject = static_cast<IUnknown*>(this);
         }
         else if (iid == __uuidof(IUISimplePropertySet))
         {
-            *ppv = static_cast<IUISimplePropertySet*>(this);
+            *ppObject = static_cast<IUISimplePropertySet*>(this);
         }
         else
         {
-            *ppv = NULL;
+            *ppObject = NULL;
             return E_NOINTERFACE;
         }
 

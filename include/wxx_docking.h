@@ -248,8 +248,8 @@ namespace Win32xx
     typedef struct DRAGPOS
     {
         NMHDR hdr;
-        POINT ptPos;
-        UINT DockZone;
+        POINT pos;
+        UINT dockZone;
         CDocker* pDocker;
     } *LPDRAGPOS;
 
@@ -279,7 +279,7 @@ namespace Win32xx
             CDocker& GetDocker() const      {assert (m_pDocker); return *m_pDocker;}
             int GetWidth() const            {return m_DockBarWidth;}
             void SetDocker(CDocker& Docker) {m_pDocker = &Docker;}
-            void SetWidth(int nWidth)       {m_DockBarWidth = nWidth;}
+            void SetWidth(int width)        {m_DockBarWidth = width;}
 
         protected:
             virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -715,8 +715,8 @@ namespace Win32xx
         // Send a splitter bar notification to the parent
         m_DragPos.hdr.code = messageID;
         m_DragPos.hdr.hwndFrom = GetHwnd();
-        m_DragPos.ptPos = GetCursorPos();
-        m_DragPos.ptPos.x += 1;
+        m_DragPos.pos = GetCursorPos();
+        m_DragPos.pos.x += 1;
         m_DragPos.pDocker = m_pDocker;
         GetParent().SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&m_DragPos));
     }
@@ -1290,7 +1290,7 @@ namespace Win32xx
         DRAGPOS DragPos;
         DragPos.hdr.code = messageID;
         DragPos.hdr.hwndFrom = GetHwnd();
-        DragPos.ptPos = GetCursorPos();
+        DragPos.pos = GetCursorPos();
         DragPos.pDocker = m_pDocker;
 
         // Send a DragPos notification to the docker
@@ -1662,7 +1662,7 @@ namespace Win32xx
         CDocker* pDockDrag = pDragPos->pDocker;
         assert( ::SendMessage(*pDockDrag, UWM_GETCDOCKER, 0, 0) );
 
-        CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pDragPos->ptPos);
+        CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pDragPos->pos);
         if (NULL == pDockTarget) return FALSE;
 
         if (!IsWindow())    Create();
@@ -1681,7 +1681,7 @@ namespace Win32xx
         SetWindowPos(HWND_TOPMOST, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 
         // Create the docking zone rectangles
-        CPoint pt = pDragPos->ptPos;
+        CPoint pt = pDragPos->pos;
         ScreenToClient(pt);
         CRect rcLeft(0, 29, 31, 58);
         CRect rcTop(29, 0, 58, 31);
@@ -1768,7 +1768,7 @@ namespace Win32xx
         CDocker* pDockDrag = pDragPos->pDocker;
         assert( pDockDrag );
 
-        CPoint pt = pDragPos->ptPos;
+        CPoint pt = pDragPos->pos;
         CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
         if (pDockTarget != pDockDrag->GetDockAncestor())
         {
@@ -1816,7 +1816,7 @@ namespace Win32xx
         CDocker* pDockDrag = pDragPos->pDocker;
         assert( pDockDrag );
 
-        CPoint pt = pDragPos->ptPos;
+        CPoint pt = pDragPos->pos;
         CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
         if (pDockTarget != pDockDrag->GetDockAncestor())
         {
@@ -1864,7 +1864,7 @@ namespace Win32xx
         CDocker* pDockDrag = pDragPos->pDocker;
         assert( pDockDrag );
 
-        CPoint pt = pDragPos->ptPos;
+        CPoint pt = pDragPos->pos;
         CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
         if (pDockTarget != pDockDrag->GetDockAncestor())
         {
@@ -1912,7 +1912,7 @@ namespace Win32xx
         CDocker* pDockDrag = pDragPos->pDocker;
         assert( pDockDrag );
 
-        CPoint pt = pDragPos->ptPos;
+        CPoint pt = pDragPos->pos;
         CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
         if (pDockTarget != pDockDrag->GetDockAncestor())
         {
@@ -3018,7 +3018,7 @@ namespace Win32xx
 
     inline LRESULT CDocker::OnBarStart(LPDRAGPOS pDragPos)
     {
-        CPoint pt = pDragPos->ptPos;
+        CPoint pt = pDragPos->pos;
         ScreenToClient(pt);
         if (!IsDragAutoResize())
             DrawHashBar(pDragPos->hdr.hwndFrom, pt);
@@ -3029,7 +3029,7 @@ namespace Win32xx
 
     inline LRESULT CDocker::OnBarMove(LPDRAGPOS pDragPos)
     {
-        CPoint pt = pDragPos->ptPos;
+        CPoint pt = pDragPos->pos;
         ScreenToClient(pt);
 
         if (pt != m_oldPoint)
@@ -3050,7 +3050,7 @@ namespace Win32xx
 
     inline LRESULT CDocker::OnBarEnd(LPDRAGPOS pDragPos)
     {
-        POINT pt = pDragPos->ptPos;
+        POINT pt = pDragPos->pos;
         ScreenToClient(pt);
 
         if (!IsDragAutoResize())
@@ -3207,7 +3207,7 @@ namespace Win32xx
         if (IsDocked())
         {
             Undock(GetCursorPos());
-            SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pDragPos->ptPos.x, pDragPos->ptPos.y));
+            SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pDragPos->pos.x, pDragPos->pos.y));
         }
 
         return 0;
@@ -3226,7 +3226,7 @@ namespace Win32xx
         CDocker* pDocker = pDragPos->pDocker;
         assert(pDocker);
 
-        UINT DockZone = pDragPos->DockZone;
+        UINT DockZone = pDragPos->dockZone;
         CRect rc = pDocker->GetWindowRect();
 
         switch(DockZone)
@@ -3698,7 +3698,7 @@ namespace Win32xx
     {
         assert(pDragPos);
 
-        POINT pt = pDragPos->ptPos;
+        POINT pt = pDragPos->pos;
         ScreenToClient(pt);
 
         CDocker* pDocker = pDragPos->pDocker;
@@ -3914,12 +3914,12 @@ namespace Win32xx
         DRAGPOS dragPos;
         dragPos.hdr.code = messageID;
         dragPos.hdr.hwndFrom = GetHwnd();
-        dragPos.ptPos = GetCursorPos();
-        dragPos.DockZone = m_dockZone;
+        dragPos.pos = GetCursorPos();
+        dragPos.dockZone = m_dockZone;
         dragPos.pDocker = this;
         m_dockZone = 0;
 
-        CDocker* pDocker = GetDockUnderDragPoint(dragPos.ptPos);
+        CDocker* pDocker = GetDockUnderDragPoint(dragPos.pos);
 
         if (pDocker)
             pDocker->SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&dragPos));
@@ -4933,14 +4933,14 @@ namespace Win32xx
         if (rc.Width() < 0)
             rc.SetRectEmpty();
 
-        int nItemWidth = 0;
-        int nItemHeight = 1;
+        int itemWidth = 0;
+        int itemHeight = 1;
         if ((m_allInfo.size() > 0) && ((GetItemCount() != 1) || !m_isHideSingleTab))
         {
-            nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width() - 2) / static_cast<int>(m_allInfo.size()));
-            nItemHeight = MAX(20, GetTextHeight() + 5);
+            itemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width() - 2) / static_cast<int>(m_allInfo.size()));
+            itemHeight = MAX(20, GetTextHeight() + 5);
         }
-        SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, nItemHeight));
+        SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, itemHeight));
     }
 
 

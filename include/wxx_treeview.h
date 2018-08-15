@@ -91,7 +91,7 @@ namespace Win32xx
         UINT    GetVisibleCount() const;
         BOOL    ItemHasChildren(HTREEITEM item) const;
         COLORREF SetBkColor(COLORREF color) const;
-        CImageList SetImageList(HIMAGELIST hImages, int type = TVSIL_NORMAL) const;
+        CImageList SetImageList(HIMAGELIST images, int type = TVSIL_NORMAL) const;
         void    SetIndent(int indent) const;
         BOOL    SetInsertMark(HTREEITEM item, BOOL after = TRUE) const;
         COLORREF SetInsertMarkColor(COLORREF color) const;
@@ -391,11 +391,11 @@ namespace Win32xx
 
     // Sets the normal or state image list for a tree-view control
     // and redraws the control using the new images.
-    inline CImageList CTreeView::SetImageList(HIMAGELIST hImages, int type /*= TVSIL_NORMAL*/) const
+    inline CImageList CTreeView::SetImageList(HIMAGELIST images, int type /*= TVSIL_NORMAL*/) const
     {
         assert(IsWindow());
-        HIMAGELIST images = TreeView_SetImageList( *this, hImages, type );
-        return CImageList(images);
+        HIMAGELIST oldImages = TreeView_SetImageList( *this, images, type );
+        return CImageList(oldImages);
     }
 
     // Sets the width of indentation for a tree-view control

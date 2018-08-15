@@ -74,14 +74,14 @@ namespace Win32xx
         CEvent(BOOL isInitiallySignaled = FALSE, BOOL isManualReset = FALSE, 
             LPCTSTR pName = NULL, LPSECURITY_ATTRIBUTES pAttributes = NULL);
 
-        HANDLE GetHandle() const { return m_hEvent; }
-        operator HANDLE() const  { return m_hEvent; }
+        HANDLE GetHandle() const { return m_event; }
+        operator HANDLE() const  { return m_event; }
         
         void ResetEvent();
         void SetEvent();
         
     private:
-        HANDLE m_hEvent;
+        HANDLE m_event;
     };
     
  
@@ -91,11 +91,11 @@ namespace Win32xx
         CMutex(BOOL isInitiallySignaled = FALSE, LPCTSTR pName = FALSE,
             LPSECURITY_ATTRIBUTES pAttributes = NULL);
 
-        HANDLE GetHandle() const { return m_hMutex; }
-        operator HANDLE() const  { return m_hMutex; }
+        HANDLE GetHandle() const { return m_mutex; }
+        operator HANDLE() const  { return m_mutex; }
         
     private:
-        HANDLE m_hMutex;    
+        HANDLE m_mutex;    
     };
     
     class CSemaphore
@@ -104,12 +104,12 @@ namespace Win32xx
         CSemaphore(LONG initialCount, LONG maxCount, LPCTSTR pName, 
             LPSECURITY_ATTRIBUTES pAttributes);
 
-        HANDLE GetHandle() const { return m_hSemaphore; }
-        operator HANDLE() const  { return m_hSemaphore; }
+        HANDLE GetHandle() const { return m_semaphore; }
+        operator HANDLE() const  { return m_semaphore; }
         BOOL ReleaseSemaphore(LONG releaseCount, LONG* pPreviousCount = NULL);
 
     private:
-        HANDLE m_hSemaphore;
+        HANDLE m_semaphore;
     };
     
     
@@ -126,23 +126,23 @@ namespace Win32xx
     //                   handle cannot be inherited.    
     inline CEvent::CEvent(BOOL isInitiallySignaled, BOOL isManualReset, LPCTSTR pstrName,
                     LPSECURITY_ATTRIBUTES pAttributes)
-    : m_hEvent(0)
+    : m_event(0)
     {
-        m_hEvent = ::CreateEvent(pAttributes, isManualReset, isInitiallySignaled, pstrName);
-        if (m_hEvent == NULL)
+        m_event = ::CreateEvent(pAttributes, isManualReset, isInitiallySignaled, pstrName);
+        if (m_event == NULL)
             throw CWinException(_T("Unable to create event"));
     }
      
     // Sets the specified event object to the non-signalled state.
     inline void CEvent::ResetEvent()
     {
-        ::ResetEvent(m_hEvent);
+        ::ResetEvent(m_event);
     }
      
     // Sets the specified event object to the signalled state.
     inline void CEvent::SetEvent()
     {
-        ::SetEvent(m_hEvent);
+        ::SetEvent(m_event);
     }  
     
     // Creates a named or unnamed mutex.
@@ -155,10 +155,10 @@ namespace Win32xx
     //                   handle cannot be inherited.
     inline CMutex::CMutex(BOOL isInitiallySignaled, LPCTSTR pName,
                             LPSECURITY_ATTRIBUTES pAttributes)
-    : m_hMutex(0) 
+    : m_mutex(0) 
     {
-        m_hMutex = ::CreateMutex(pAttributes, isInitiallySignaled, pName);
-        if (m_hMutex == NULL)
+        m_mutex = ::CreateMutex(pAttributes, isInitiallySignaled, pName);
+        if (m_mutex == NULL)
             throw CResourceException(_T("Unable to create mutex"));
     }
        
@@ -172,13 +172,13 @@ namespace Win32xx
     //                   handle cannot be inherited.    
     inline CSemaphore::CSemaphore(LONG initialCount, LONG maxCount, LPCTSTR pName,
                             LPSECURITY_ATTRIBUTES pAttributes)
-    : m_hSemaphore(0)
+    : m_semaphore(0)
     {
         assert(maxCount > 0);
         assert(initialCount <= maxCount);
 
-        m_hSemaphore = ::CreateSemaphore(pAttributes, initialCount, maxCount, pName);
-        if (m_hSemaphore == NULL)
+        m_semaphore = ::CreateSemaphore(pAttributes, initialCount, maxCount, pName);
+        if (m_semaphore == NULL)
             throw CResourceException(_T("Unable to create semaphore"));
     }
     
@@ -189,7 +189,7 @@ namespace Win32xx
     //  pPreviousCount - pointer to a variable to receive the previous count.
     inline BOOL CSemaphore::ReleaseSemaphore(LONG releaseCount, LONG* pPreviousCount)
     {   
-        BOOL result = ::ReleaseSemaphore(m_hSemaphore, releaseCount, pPreviousCount);
+        BOOL result = ::ReleaseSemaphore(m_semaphore, releaseCount, pPreviousCount);
         return result;
     }
             

@@ -348,7 +348,7 @@ namespace Win32xx
         virtual ~CProgressBar() {}
 
         int  GetPos() const;
-        int  GetRange(BOOL whichLimit, const PBRANGE& pbRange) const;
+        int  GetRange(BOOL whichLimit, const PBRANGE& range) const;
         int  GetRange(BOOL whichLimit) const;
         int  OffsetPos(int increment) const;
         int  SetPos(int pos) const;
@@ -376,7 +376,7 @@ namespace Win32xx
         BOOL EnableScrollBar( UINT arrowFlags = ESB_ENABLE_BOTH )  const;
         BOOL GetScrollInfo(SCROLLINFO& si)  const;
         int  GetScrollPos()  const;
-        BOOL GetScrollRange(int& minPos, int& mxPos)  const;
+        BOOL GetScrollRange(int& minPos, int& maxPos)  const;
         BOOL SetScrollInfo(const SCROLLINFO& si, BOOL redraw = TRUE )  const;
         int  SetScrollPos(int pos, BOOL redraw)  const;
         BOOL SetScrollRange( int minPos, int maxPos, BOOL redraw = TRUE )  const;
@@ -416,7 +416,7 @@ namespace Win32xx
         int  GetTic(int nTic ) const;
         int  GetTicPos(int nTic) const;
         HWND GetToolTips() const;
-        HWND SetBuddy(HWND hBuddy, BOOL location = TRUE ) const;
+        HWND SetBuddy(HWND buddy, BOOL location = TRUE ) const;
         int  SetLineSize(int size) const;
         int  SetPageSize(int size) const;
         void SetPos(int pos, BOOL redraw = FALSE) const;
@@ -424,7 +424,7 @@ namespace Win32xx
         void SetRangeMin(int min, BOOL redraw = FALSE) const;
         void SetSelection(int min, int max, BOOL redraw = FALSE) const;
         BOOL SetTic(int tic) const;
-        void SetTicFreq(int treq)  const;
+        void SetTicFreq(int freq)  const;
         int  SetTipSide(int location) const;
         void SetToolTips(HWND toolTip) const;
 
@@ -452,7 +452,7 @@ namespace Win32xx
         DWORD GetRange() const;
         BOOL SetAccel(int accels, LPUDACCEL pAccels) const;
         int  SetBase(int base) const;
-        HWND SetBuddy(HWND hBuddy) const;
+        HWND SetBuddy(HWND buddy) const;
         int  SetPos(int pos) const;
         void SetRange(int lower, int upper) const;
 
@@ -487,8 +487,8 @@ namespace Win32xx
         void     SetDelayTime(DWORD duration, int time) const;
         void     SetMargin(const RECT& rc) const;
         int      SetMaxTipWidth(int width) const;
-        void     SetTipBkColor(COLORREF clr) const;
-        void     SetTipTextColor(COLORREF clr) const;
+        void     SetTipBkColor(COLORREF color) const;
+        void     SetTipTextColor(COLORREF color) const;
         void     SetToolInfo(const TOOLINFO& toolInfo) const;
 #if (_WIN32_IE >=0x0500)
         CSize    GetBubbleSize(HWND control, UINT id = -1) const;
@@ -516,13 +516,13 @@ namespace Win32xx
   #endif
 #endif
 #if (WINVER >= 0x0501) && defined(TTM_SETWINDOWTHEME)
-        void SetTTWindowTheme(LPCWSTR lpstrTheme) const;
+        void SetTTWindowTheme(LPCWSTR pTheme) const;
 #endif
 
     protected:
         // Overridables
-        virtual void FillToolInfo(TOOLINFO& ti, HWND control) const;
-        virtual void FillToolInfo(TOOLINFO& ti, HWND control, const RECT& rc, UINT id) const;
+        virtual void FillToolInfo(TOOLINFO& info, HWND control) const;
+        virtual void FillToolInfo(TOOLINFO& info, HWND control, const RECT& rc, UINT id) const;
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
     private:
@@ -1146,8 +1146,8 @@ namespace Win32xx
     inline CImageList CHeader::GetImageList() const
     {
         assert(IsWindow());
-        HIMAGELIST hImages = Header_GetImageList(*this);
-        return CImageList(hImages);
+        HIMAGELIST images = Header_GetImageList(*this);
+        return CImageList(images);
     }
 
     // Retrieves information about an item in a header control.
@@ -1305,10 +1305,10 @@ namespace Win32xx
     inline CString CHotKey::GetKeyName(UINT keyCode, BOOL isExtended) const
     {
         // Translate the virtual-key code to a scan code
-        LONG lScan = MapVirtualKey(keyCode, 0);
+        LONG scan = MapVirtualKey(keyCode, 0);
 
         // Construct an LPARAM with the scan code in Bits 16-23, and an extended flag in bit 24
-        LPARAM lparam = lScan << 16;
+        LPARAM lparam = scan << 16;
         if (isExtended)
             lparam |= 0x01000000L;
 
@@ -1352,10 +1352,10 @@ namespace Win32xx
         if (GetComCtlVersion() > 470)
         {
             // Call InitCommonControlsEx
-            INITCOMMONCONTROLSEX InitStruct;
-            InitStruct.dwSize = sizeof(InitStruct);
-            InitStruct.dwICC = ICC_INTERNET_CLASSES;
-            InitCommonControlsEx(&InitStruct);
+            INITCOMMONCONTROLSEX initStruct;
+            initStruct.dwSize = sizeof(initStruct);
+            initStruct.dwICC = ICC_INTERNET_CLASSES;
+            InitCommonControlsEx(&initStruct);
         }
         else
             throw CNotSupportedException(_T("IP Address Control not supported!"));
@@ -1625,10 +1625,10 @@ namespace Win32xx
     }
 
     // Retrieves information about the current high and low limits of the progress bar control.
-    inline int CProgressBar::GetRange(BOOL whichLimit, const PBRANGE& pbRange) const
+    inline int CProgressBar::GetRange(BOOL whichLimit, const PBRANGE& range) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(PBM_GETRANGE, whichLimit, reinterpret_cast<LPARAM>(&pbRange)));
+        return static_cast<int>(SendMessage(PBM_GETRANGE, whichLimit, reinterpret_cast<LPARAM>(&range)));
     }
 
     // Retrieves information about the current high and low limits of the progress bar control.
@@ -1868,10 +1868,10 @@ namespace Win32xx
     }
 
     // Assigns a window as the buddy window for the trackbar control.
-    inline HWND CSlider::SetBuddy(HWND hBuddy, BOOL location /*= TRUE*/ ) const
+    inline HWND CSlider::SetBuddy(HWND buddy, BOOL location /*= TRUE*/ ) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HWND>(SendMessage(TBM_SETBUDDY, location, reinterpret_cast<LPARAM>(hBuddy)));
+        return reinterpret_cast<HWND>(SendMessage(TBM_SETBUDDY, location, reinterpret_cast<LPARAM>(buddy)));
     }
 
     // Sets the number of logical positions the trackbar's slider moves in response to
@@ -2012,10 +2012,10 @@ namespace Win32xx
     }
 
     // Sets the buddy window for the up-down control.
-    inline HWND CSpinButton::SetBuddy(HWND hBuddy) const
+    inline HWND CSpinButton::SetBuddy(HWND buddy) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HWND>(SendMessage(UDM_SETBUDDY, reinterpret_cast<WPARAM>(hBuddy), 0));
+        return reinterpret_cast<HWND>(SendMessage(UDM_SETBUDDY, reinterpret_cast<WPARAM>(buddy), 0));
     }
 
     // Sets the current position for the up-down control with 16-bit precision.
@@ -2059,11 +2059,11 @@ namespace Win32xx
     inline BOOL CToolTip::AddTool(HWND control, const RECT& toolRect, UINT id, UINT textID) const
     {
         assert(IsWindow());
-        TOOLINFO ti;
-        FillToolInfo(ti, control, toolRect, id);
-        ti.hinst = GetApp().GetResourceHandle();
-        ti.lpszText = MAKEINTRESOURCE(textID);
-        return (SendMessage(TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&ti)) != 0);
+        TOOLINFO info;
+        FillToolInfo(info, control, toolRect, id);
+		info.hinst = GetApp().GetResourceHandle();
+		info.lpszText = MAKEINTRESOURCE(textID);
+        return (SendMessage(TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&info)) != 0);
     }
 
     // Registers a tool with a ToolTip control.
@@ -2072,11 +2072,11 @@ namespace Win32xx
     inline BOOL CToolTip::AddTool(HWND control, UINT textID) const
     {
         assert(IsWindow());
-        TOOLINFO ti;
-        FillToolInfo(ti, control);
-        ti.hinst = GetApp().GetResourceHandle();
-        ti.lpszText = MAKEINTRESOURCE(textID);
-        return (SendMessage(TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&ti)) != 0);
+        TOOLINFO info;
+        FillToolInfo(info, control);
+		info.hinst = GetApp().GetResourceHandle();
+		info.lpszText = MAKEINTRESOURCE(textID);
+        return (SendMessage(TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&info)) != 0);
     }
 
     // Registers a tool with a ToolTip control.
@@ -2088,10 +2088,10 @@ namespace Win32xx
     inline BOOL CToolTip::AddTool(HWND control, const RECT& toolRect, UINT id, LPCTSTR pText /*= LPSTR_TEXTCALLBACK*/) const
     {
         assert(IsWindow());
-        TOOLINFO ti;
-        FillToolInfo(ti, control, toolRect, id);
-        ti.lpszText = const_cast<LPTSTR>(pText);
-        return (SendMessage(TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&ti)) != 0);
+        TOOLINFO info;
+        FillToolInfo(info, control, toolRect, id);
+		info.lpszText = const_cast<LPTSTR>(pText);
+        return (SendMessage(TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&info)) != 0);
     }
 
     // Registers a tool with a ToolTip control.
@@ -2101,18 +2101,18 @@ namespace Win32xx
     inline BOOL CToolTip::AddTool(HWND control, LPCTSTR pText /*= LPSTR_TEXTCALLBACK*/) const
     {
         assert(IsWindow());
-        TOOLINFO ti;
-        FillToolInfo(ti, control);
-        ti.lpszText = const_cast<LPTSTR>(pText);
-        return (SendMessage(TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&ti)) != 0);
+        TOOLINFO info;
+        FillToolInfo(info, control);
+		info.lpszText = const_cast<LPTSTR>(pText);
+        return (SendMessage(TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&info)) != 0);
     }
 
     // Removes a tool from a ToolTip control.
     inline void CToolTip::DelTool(HWND control, UINT id) const
     {
         assert(IsWindow());
-        TOOLINFO ti = GetToolInfo(control, id);
-        SendMessage(TTM_DELTOOL, 0, reinterpret_cast<LPARAM>(&ti));
+        TOOLINFO info = GetToolInfo(control, id);
+        SendMessage(TTM_DELTOOL, 0, reinterpret_cast<LPARAM>(&info));
     }
 
     // Retrieves the initial, pop-up, and reshow durations currently set for a ToolTip control.
@@ -2149,11 +2149,11 @@ namespace Win32xx
     {
         assert(IsWindow());
         CString str;
-        TOOLINFO ti = GetToolInfo(control, id);
+        TOOLINFO info = GetToolInfo(control, id);
 
         LPTSTR pText = str.GetBuffer(80); // Maximum allowed ToolTip is 80 characters for Windows XP and below
-        ti.lpszText = pText;
-        SendMessage(TTM_GETTEXT, 0, reinterpret_cast<LPARAM>(&ti));
+		info.lpszText = pText;
+        SendMessage(TTM_GETTEXT, 0, reinterpret_cast<LPARAM>(&info));
         str.ReleaseBuffer();
 
         return str;
@@ -2189,23 +2189,23 @@ namespace Win32xx
     inline TOOLINFO CToolTip::GetToolInfo(HWND control, UINT id) const
     {
         assert(IsWindow());
-        TOOLINFO ti;
-        ZeroMemory(&ti, sizeof(ti));
-        ti.cbSize = sizeof(ti);
+        TOOLINFO info;
+        ZeroMemory(&info, sizeof(info));
+		info.cbSize = sizeof(info);
         if (id == static_cast<UINT>(-1))
         {
-            ti.hwnd = GetParent();
-            ti.uId = (UINT_PTR)control;
+			info.hwnd = GetParent();
+			info.uId = (UINT_PTR)control;
         }
         else
         {
-            ti.hwnd = control;
-            ti.uId = id;
+			info.hwnd = control;
+			info.uId = id;
         }
 
-        VERIFY(SendMessage(TTM_GETTOOLINFO, 0, reinterpret_cast<LPARAM>(&ti)));
+        VERIFY(SendMessage(TTM_GETTOOLINFO, 0, reinterpret_cast<LPARAM>(&info)));
 
-        return ti;
+        return info;
     }
 
     // Tests a point to determine whether it is within the bounding rectangle of the
@@ -2227,14 +2227,14 @@ namespace Win32xx
     // 2) The control is always identified by its hwnd.
     // 3) The tooltip always manages its messages (uses TTF_SUBCLASS).
     // Override this function to specify different flags.
-    inline void CToolTip::FillToolInfo(TOOLINFO& ti, HWND control) const
+    inline void CToolTip::FillToolInfo(TOOLINFO& info, HWND control) const
     {
-        ZeroMemory(&ti, sizeof(ti));
-        ti.cbSize = sizeof(ti);
+        ZeroMemory(&info, sizeof(info));
+		info.cbSize = sizeof(info);
 
-        ti.hwnd = ::GetParent(m_hWnd);  // pass notifications to the parent window
-        ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
-        ti.uId = (UINT_PTR)control;
+		info.hwnd = ::GetParent(*this);  // pass notifications to the parent window
+		info.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
+		info.uId = (UINT_PTR)control;
     }
 
     // Fills the TOOLINFO structure. Used by AddTool.
@@ -2246,15 +2246,15 @@ namespace Win32xx
     // 5) The tooltip always manages its messages (uses TTF_SUBCLASS).
     // 6) The TTF_IDISHWND style is incompatible with using a RECT.
     // Override this function to specify different flags.
-    inline void CToolTip::FillToolInfo(TOOLINFO& ti, HWND control, const RECT& rc, UINT id) const
+    inline void CToolTip::FillToolInfo(TOOLINFO& info, HWND control, const RECT& rc, UINT id) const
     {
-        ZeroMemory(&ti, sizeof(ti));
-        ti.cbSize = sizeof(ti);
+        ZeroMemory(&info, sizeof(info));
+		info.cbSize = sizeof(info);
 
-        ti.hwnd = control;
-        ti.uFlags = TTF_SUBCLASS;
-        ti.rect = rc;
-        ti.uId = id;
+		info.hwnd = control;
+		info.uFlags = TTF_SUBCLASS;
+		info.rect = rc;
+		info.uId = id;
     }
 
     // Removes a displayed ToolTip window from view.
@@ -2314,18 +2314,18 @@ namespace Win32xx
 
     // Sets the background color in a ToolTip window.
     // Ignored when XP themes are active.
-    inline void CToolTip::SetTipBkColor(COLORREF clr) const
+    inline void CToolTip::SetTipBkColor(COLORREF color) const
     {
         assert(IsWindow());
-        SendMessage(TTM_SETTIPBKCOLOR, clr, 0);
+        SendMessage(TTM_SETTIPBKCOLOR, color, 0);
     }
 
     // Sets the text color in a ToolTip window.
     // Ignored when XP themes are active.
-    inline void CToolTip::SetTipTextColor(COLORREF clr) const
+    inline void CToolTip::SetTipTextColor(COLORREF color) const
     {
         assert(IsWindow());
-        SendMessage(TTM_SETTIPTEXTCOLOR, clr, 0);
+        SendMessage(TTM_SETTIPTEXTCOLOR, color, 0);
     }
 
     // Sets the information that a ToolTip control maintains for a tool.
@@ -2355,18 +2355,18 @@ namespace Win32xx
     inline void CToolTip::UpdateTipText(LPCTSTR pText, HWND control, UINT id) const
     {
         assert(IsWindow());
-        TOOLINFO ti = GetToolInfo(control, id);
-        ti.lpszText = const_cast<LPTSTR>(pText);
-        SendMessage(TTM_UPDATETIPTEXT, 0, reinterpret_cast<LPARAM>(&ti));
+        TOOLINFO info = GetToolInfo(control, id);
+		info.lpszText = const_cast<LPTSTR>(pText);
+        SendMessage(TTM_UPDATETIPTEXT, 0, reinterpret_cast<LPARAM>(&info));
     }
 
     // Sets the ToolTip text for a tool.
     inline void CToolTip::UpdateTipText(UINT textID, HWND control, UINT id) const
     {
         assert(IsWindow());
-        TOOLINFO ti = GetToolInfo(control, id);
-        ti.lpszText = MAKEINTRESOURCE(textID);
-        SendMessage(TTM_UPDATETIPTEXT, 0, reinterpret_cast<LPARAM>(&ti));
+        TOOLINFO info = GetToolInfo(control, id);
+		info.lpszText = MAKEINTRESOURCE(textID);
+        SendMessage(TTM_UPDATETIPTEXT, 0, reinterpret_cast<LPARAM>(&info));
     }
 
 #if (_WIN32_IE >=0x0500)
@@ -2383,8 +2383,8 @@ namespace Win32xx
     inline CSize CToolTip::GetBubbleSize(HWND control, UINT id) const
     {
         assert(IsWindow());
-        TOOLINFO ti = GetToolInfo(control, id);
-        LRESULT result = SendMessage(TTM_GETBUBBLESIZE, 0, reinterpret_cast<LPARAM>(&ti));
+        TOOLINFO info = GetToolInfo(control, id);
+        LRESULT result = SendMessage(TTM_GETBUBBLESIZE, 0, reinterpret_cast<LPARAM>(&info));
         CSize sz(LOWORD(result), HIWORD(result));
         return sz;
     }

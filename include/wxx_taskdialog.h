@@ -252,7 +252,7 @@ namespace Win32xx
             radioButtons.push_back(tb);
         }
 
-        m_hWnd = 0;
+		m_wnd = 0;
 
         // Fill the TASKDIALOGCONFIG struct.
         m_tc.cbSize = sizeof(m_tc);
@@ -269,17 +269,17 @@ namespace Win32xx
         pTLSData->pWnd = this;
 
         // Declare a pointer to the TaskDialogIndirect function
-        HMODULE hComCtl = LoadLibrary(_T("COMCTL32.DLL"));
-        assert(hComCtl);
+        HMODULE comCtl = LoadLibrary(_T("COMCTL32.DLL"));
+        assert(comCtl);
         typedef HRESULT WINAPI TASKDIALOGINDIRECT(const TASKDIALOGCONFIG*, int*, int*, BOOL*);
-        TASKDIALOGINDIRECT* pTaskDialogIndirect = reinterpret_cast<TASKDIALOGINDIRECT*>(::GetProcAddress(hComCtl, "TaskDialogIndirect"));
+        TASKDIALOGINDIRECT* pTaskDialogIndirect = reinterpret_cast<TASKDIALOGINDIRECT*>(::GetProcAddress(comCtl, "TaskDialogIndirect"));
 
         // Call TaskDialogIndirect through our function pointer
         LRESULT result = pTaskDialogIndirect(&m_tc, &m_selectedButtonID, &m_selectedRadioButtonID, &m_verificationCheckboxState);
 
-        ::FreeLibrary(hComCtl);
+        ::FreeLibrary(comCtl);
         pTLSData->pWnd = NULL;
-        m_hWnd = 0;
+		m_wnd = 0;
         Reset();
 
         if (result != S_OK)
@@ -691,7 +691,7 @@ namespace Win32xx
             pTLSData->pWnd = NULL;
 
             // Store the CTaskDialog pointer in the HWND map
-            t->m_hWnd = wnd;
+            t->m_wnd = wnd;
             t->AddToMap();
         }
 

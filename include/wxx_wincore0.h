@@ -101,10 +101,14 @@ namespace Win32xx
     // Other classes which provide the functionality of more specialized windows inherit from CWnd.
     class CWnd : public CObject
     {
+	friend class CColorDialog;
     friend class CCommonDialog;
+	friend class CDialog;
+	friend class CFileDialog;
+	friend class CFontDialog;
     friend class CMDIChild;
-    friend class CDialog;
     friend class CPropertyPage;
+	friend class CPropertySheet;
     friend class CTaskDialog;
     friend class CWinApp;
     friend class CWinThread;
@@ -136,7 +140,7 @@ namespace Win32xx
     #endif
 
         // Attributes
-        HWND GetHwnd() const                { return m_hWnd; }
+        HWND GetHwnd() const                { return m_wnd; }
         WNDPROC GetPrevWindowProc() const   { return m_prevWindowProc; }
 
         // Wrappers for Win32 API functions
@@ -310,7 +314,7 @@ namespace Win32xx
         // Not intended to be overridden
         virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
-        HWND m_hWnd;                    // handle to this object's window
+ //       HWND m_hWnd;                    // handle to this object's window
 
     private:
         CWnd(const CWnd&);              // Disable copy construction
@@ -326,6 +330,7 @@ namespace Win32xx
         BOOL RemoveFromMap();
         void Subclass(HWND wnd);
 
+		HWND m_wnd;                    // handle to this object's window
         WNDPROC m_prevWindowProc;
 
     }; // class CWnd

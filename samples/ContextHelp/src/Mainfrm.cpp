@@ -304,7 +304,7 @@ LRESULT CMainFrame::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 // Handle the left mouse button click.
 // Note: When the frame has mouse capture, clicks over child windows are processed here too.
 {
-    if (GetCapture() == m_hWnd)
+    if (GetCapture() == *this)
     {
         UINT id = GetIDFromCursorPos();
         ShowHelpTopic(id);

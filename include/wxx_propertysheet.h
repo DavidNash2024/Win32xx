@@ -497,7 +497,7 @@ namespace Win32xx
             pPage = static_cast<CPropertyPage*>(pTLSData->pWnd);
 
             // Set the wnd members and call DialogProc for this message
-            pPage->m_hWnd = hDlg;
+            pPage->m_wnd = hDlg;
             pPage->AddToMap();
         }
 
@@ -653,7 +653,7 @@ namespace Win32xx
         assert(!IsWindow());
 
         INT_PTR ipResult = 0;
-        m_hWnd = 0;
+		m_wnd = 0;
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp().SetTlsData();

@@ -523,8 +523,8 @@ namespace Win32xx
         HICON   LoadStandardIcon(LPCTSTR pIconName) const;
         HANDLE  LoadImage(LPCTSTR pResourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
         HANDLE  LoadImage(int imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
-        HCURSOR SetCursor(HCURSOR hCursor) const;
-        void    SetResourceHandle(HINSTANCE hResource);
+        HCURSOR SetCursor(HCURSOR cursor) const;
+        void    SetResourceHandle(HINSTANCE resource);
         TLSData* SetTlsData();
 
     private:
@@ -532,12 +532,12 @@ namespace Win32xx
         CWinApp& operator = (const CWinApp&);   // Disable assignment operator
 
         void AddCDCData(HDC dc, CDC_Data* pData);
-        void AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData);
+        void AddCGDIData(HGDIOBJ gdi, CGDI_Data* pData);
         void AddCImlData(HIMAGELIST images, CIml_Data* pData);
         CDC_Data* GetCDCData(HDC dc);
         CGDI_Data* GetCGDIData(HGDIOBJ object);
         CIml_Data* GetCImlData(HIMAGELIST images);
-        void GlobalFreeAll(HGLOBAL hGlobal);
+        void GlobalFreeAll(HGLOBAL buffer);
         void SetCallback();
         static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
         void UpdateDefaultPrinter();
@@ -623,23 +623,23 @@ namespace Win32xx
     inline int GetComCtlVersion()
     {
         // Load the Common Controls DLL
-        HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
-        if (hComCtl == 0)
+        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+        if (comCtl == 0)
             return 0;
 
         int comCtlVer = 400;
 
-        if (::GetProcAddress(hComCtl, "InitCommonControlsEx"))
+        if (::GetProcAddress(comCtl, "InitCommonControlsEx"))
         {
             // InitCommonControlsEx is unique to 4.7 and later
             comCtlVer = 470;
 
-            if (::GetProcAddress(hComCtl, "DllGetVersion"))
+            if (::GetProcAddress(comCtl, "DllGetVersion"))
             {
                 typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
                 DLLGETVERSION* pfnDLLGetVersion = NULL;
 
-                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSION*>(::GetProcAddress(hComCtl, "DllGetVersion"));
+                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSION*>(::GetProcAddress(comCtl, "DllGetVersion"));
                 if(pfnDLLGetVersion)
                 {
                     DLLVERSIONINFO dvi;
@@ -652,11 +652,11 @@ namespace Win32xx
                     }
                 }
             }
-            else if (::GetProcAddress(hComCtl, "InitializeFlatSB"))
+            else if (::GetProcAddress(comCtl, "InitializeFlatSB"))
                 comCtlVer = 471;    // InitializeFlatSB is unique to version 4.71
         }
 
-        ::FreeLibrary(hComCtl);
+        ::FreeLibrary(comCtl);
 
         return comCtlVer;
     }

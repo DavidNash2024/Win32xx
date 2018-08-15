@@ -418,7 +418,7 @@ namespace Win32xx
         // invoke the control and save the result on success
         BOOL IsValid = ::ChooseColor(&m_ofn);
 
-        m_hWnd = 0;
+        m_wnd = 0;
 
         if (!IsValid)
         {
@@ -612,7 +612,7 @@ namespace Win32xx
         int ok = (m_isOpenFileDialog ? ::GetOpenFileName(&m_ofn) : ::GetSaveFileName(&m_ofn));
         m_fileName.ReleaseBuffer(m_ofn.nMaxFile);
         m_ofn.lpstrFile = const_cast<LPTSTR>(m_fileName.c_str());
-        m_hWnd = 0;
+		m_wnd = 0;
 
         // the result of the file choice box is processed here:
         if (!ok)
@@ -1046,7 +1046,7 @@ namespace Win32xx
     inline HWND CFindReplaceDialog::Create(HWND parent /* = 0*/)
     {
         Create(m_isFindDialogOnly, m_fr.lpstrFindWhat, m_fr.lpstrReplaceWith, m_fr.Flags, parent);
-        return m_hWnd;
+        return *this;
     }
 
     // Create and display either a Find or FindReplace dialog box. pFindWhat
@@ -1418,7 +1418,7 @@ namespace Win32xx
 
         m_styleName.ReleaseBuffer();
         m_cf.lpszStyle = const_cast<LPTSTR>(m_styleName.c_str());
-        m_hWnd = 0;
+		m_wnd = 0;
 
         // process the result of the font choice box:
         if (!ok)
