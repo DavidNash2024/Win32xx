@@ -140,13 +140,11 @@ namespace Win32xx
     {
     }
 
-
     inline CCmdBar::~CCmdBar()
     {
         if (IsWindow())
             ::CommandBar_Destroy(*this);
     }
-
 
     // Adds a button, and optionally, Help and OK buttons, to the command bar.
     inline BOOL CCmdBar::AddAdornments(DWORD dwFlags) const
@@ -154,7 +152,6 @@ namespace Win32xx
         assert(IsWindow());
         return CommandBar_AddAdornments(*this, dwFlags, 0);
     }
-
 
     // Adds one or more images to the list of button images available in the command bar.
     inline int CCmdBar::AddBitmap(int idBitmap, int iNumImages, int iImageWidth, int iImageHeight) const
@@ -164,14 +161,12 @@ namespace Win32xx
         return  CommandBar_AddBitmap(*this, hInst, idBitmap, iNumImages, iImageWidth, iImageHeight);
     }
 
-
     // Adds one or more toolbar buttons to a command bar control.
     inline BOOL CCmdBar::AddButtons(int nButtons, TBBUTTON* pTBButton) const
     {
         assert(IsWindow());
         return CommandBar_AddButtons(*this, nButtons, pTBButton);
     }
-
 
     // Creates the command bar control.
     inline HWND CCmdBar::Create(HWND hParent)
@@ -202,14 +197,12 @@ namespace Win32xx
         return *this;
     }
 
-
     // Retrieves the height of the command bar in pixels.
     inline int CCmdBar::GetHeight() const
     {
         assert(IsWindow());
         return CommandBar_Height(*this);
     }
-
 
     // Inserts a combo box into the command bar.
     inline HWND CCmdBar::InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton) const
@@ -218,14 +211,12 @@ namespace Win32xx
         return CommandBar_InsertComboBox(*this, hInst, iWidth, dwStyle, idComboBox, iButton);
     }
 
-
     // Retrieves the visibility state of the command bar.
     inline BOOL CCmdBar::IsVisible() const
     {
         assert(IsWindow());
         return ::CommandBar_IsVisible(*this);
     }
-
 
     // Shows or hides the command bar.
     inline BOOL CCmdBar::Show(BOOL fShow) const
@@ -248,11 +239,9 @@ namespace Win32xx
 #endif
     }
 
-
     inline CWceFrame::~CWceFrame()
     {
     }
-
 
     // Adds Resource IDs to toolbar buttons.
     // A resource ID of 0 is a separator.
@@ -260,7 +249,6 @@ namespace Win32xx
     {
         m_ToolBarData.push_back(nID);
     }
-
 
     // Returns a RECT structure which contains the dimensions of the client area of the frame.
     inline CRect CWceFrame::GetViewRect() const
@@ -275,7 +263,6 @@ namespace Win32xx
 
         return r;
     }
-
 
     // Called during window creation. Override this function to perform tasks such as
     // creating child windows.
@@ -300,7 +287,6 @@ namespace Win32xx
         return 0;
     }
 
-
     // Called when the frame is activated.
     inline void CWceFrame::OnActivate(UINT, WPARAM wParam, LPARAM lParam)
     {
@@ -317,7 +303,6 @@ namespace Win32xx
 #endif
     }
 
-
     // Called before the window is created. Override this function to set the window creation parameters.
     inline void CWceFrame::PreCreate(CREATESTRUCT& cs)
     {
@@ -332,7 +317,6 @@ namespace Win32xx
 
         cs.lpszClass = m_strAppName;
     }
-
 
     // Repositions the client area of the frame.
     inline void CWceFrame::RecalcLayout()
@@ -353,7 +337,6 @@ namespace Win32xx
         ShowWindow(TRUE);
         UpdateWindow();
     }
-
 
     // Define the resource IDs for the toolbar like this in the Frame's constructor
     // m_ToolBarData.push_back ( 0 );               // Separator
@@ -397,7 +380,6 @@ namespace Win32xx
             GetMenuBar().AddButtons(iNumButtons, tbbArray);
         }
     }
-
 
     // Provides default processing of the wceframe's messages.
     inline LRESULT CWceFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -196,7 +196,7 @@ namespace Win32xx
         CDockContainer* GetContainerParent() const { return m_pContainerParent; }
         const CString& GetDockCaption() const { return m_caption; }
         CDocker* GetDocker() const      { return m_pDocker; }
-        HICON GetTabIcon() const        { return m_hTabIcon; }
+        HICON GetTabIcon() const        { return m_tabIcon; }
         LPCTSTR GetTabText() const      { return m_tabText; }
         virtual CToolBar& GetToolBar()  const { return GetViewPage().GetToolBar(); }
         std::vector<UINT>& GetToolBarData() { return m_toolBarData; }
@@ -204,7 +204,7 @@ namespace Win32xx
         void SetActiveContainer(CDockContainer* pContainer);
         void SetDockCaption(LPCTSTR pCaption) { m_caption = pCaption; }
         void SetHideSingleTab(BOOL hideSingle);
-        void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
+        void SetTabIcon(HICON tabIcon) { m_tabIcon = tabIcon; }
         void SetTabIcon(UINT iconID);
         void SetTabIcon(int i, HICON icon) { CTab::SetTabIcon(i, icon); }
         void SetTabText(LPCTSTR pText) { m_tabText = pText; }
@@ -239,7 +239,7 @@ namespace Win32xx
         int m_currentPage;
         CDocker* m_pDocker;
         CDockContainer* m_pContainerParent;
-        HICON m_hTabIcon;
+        HICON m_tabIcon;
         int m_pressedTab;
         BOOL m_isHideSingleTab;
         CPoint m_oldMousePos;
@@ -504,10 +504,10 @@ namespace Win32xx
         int GetDockID() const               {return m_dockID;}
         CDocker* GetDockParent() const      {return m_pDockParent;}
         DWORD GetDockStyle() const          {return m_dockStyle;}
-        BOOL IsChildOfDocker(HWND hWnd) const;
+        BOOL IsChildOfDocker(HWND wnd) const;
         BOOL IsDocked() const;
         BOOL IsDragAutoResize() const;
-        BOOL IsRelated(HWND hWnd) const;
+        BOOL IsRelated(HWND wnd) const;
         BOOL IsUndocked() const;
         BOOL IsUndockable() const;
         void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
@@ -559,7 +559,7 @@ namespace Win32xx
         void CloseAllTargets();
         void DockOuter(CDocker* pDocker, DWORD dockStyle);
         void DrawAllCaptions();
-        void DrawHashBar(HWND hBar, POINT pos);
+        void DrawHashBar(HWND bar, POINT pos);
         void ConvertToChild(HWND hWndParent);
         void ConvertToPopup(const RECT& rc, BOOL showUndocked);
         void MoveDockChildren(CDocker* pDockTarget);
@@ -603,7 +603,7 @@ namespace Win32xx
         DWORD m_dockZone;
         double m_dockSizeRatio;
         DWORD m_dockStyle;
-        HWND m_hDockUnderPoint;
+        HWND m_dockUnderPoint;
         CPoint m_dockPoint;
 
     }; // class CDocker
@@ -680,14 +680,14 @@ namespace Win32xx
     {
         if (!(m_pDocker->GetDockStyle() & DS_NO_RESIZE))
         {
-            HCURSOR hCursor;
-            DWORD dwSide = GetDocker().GetDockStyle() & 0xF;
-            if ((dwSide == DS_DOCKED_LEFT) || (dwSide == DS_DOCKED_RIGHT))
-                hCursor = GetApp().LoadCursor(IDW_SPLITH);
+            HCURSOR cursor;
+            DWORD side = GetDocker().GetDockStyle() & 0xF;
+            if ((side == DS_DOCKED_LEFT) || (side == DS_DOCKED_RIGHT))
+				cursor = GetApp().LoadCursor(IDW_SPLITH);
             else
-                hCursor = GetApp().LoadCursor(IDW_SPLITV);
+				cursor = GetApp().LoadCursor(IDW_SPLITV);
 
-            if (hCursor) SetCursor(hCursor);
+            if (cursor) SetCursor(cursor);
             else TRACE("**WARNING** Missing cursor resource for slider bar\n");
 
             return TRUE;
@@ -1360,13 +1360,13 @@ namespace Win32xx
         case WM_NOTIFY:
         {
             // Perform default handling for WM_NOTIFY
-            LRESULT lr = CWnd::WndProcDefault(msg, wparam, lparam);
+            LRESULT result = CWnd::WndProcDefault(msg, wparam, lparam);
 
             // Also forward WM_NOTIFY to the docker
-            if (lr == 0)
-                lr = m_pDocker->SendMessage(msg, wparam, lparam);
+            if (result == 0)
+				result = m_pDocker->SendMessage(msg, wparam, lparam);
 
-            return lr;
+            return result;
         }
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         }
@@ -1742,9 +1742,9 @@ namespace Win32xx
 
     inline void CDocker::CTarget::OnDraw(CDC& dc)
     {
-        BITMAP bm = m_bmImage.GetBitmapData();
-        int cxImage = bm.bmWidth;
-        int cyImage = bm.bmHeight;
+        BITMAP data = m_bmImage.GetBitmapData();
+        int cxImage = data.bmWidth;
+        int cyImage = data.bmHeight;
 
         if (m_bmImage != 0)
             dc.DrawBitmap(0, 0, cxImage, cyImage, m_bmImage, RGB(255,0,255));
@@ -1779,9 +1779,9 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT)
             return FALSE;
 
-        BITMAP bm = m_bmImage.GetBitmapData();
-        int cxImage = bm.bmWidth;
-        int cyImage = bm.bmHeight;
+        BITMAP data = m_bmImage.GetBitmapData();
+        int cxImage = data.bmWidth;
+        int cyImage = data.bmHeight;
 
         if (!IsWindow())
         {
@@ -1827,9 +1827,9 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP)
             return FALSE;
 
-        BITMAP bm = m_bmImage.GetBitmapData();
-        int cxImage = bm.bmWidth;
-        int cyImage = bm.bmHeight;
+        BITMAP data = m_bmImage.GetBitmapData();
+        int cxImage = data.bmWidth;
+        int cyImage = data.bmHeight;
 
         if (!IsWindow())
         {
@@ -1875,9 +1875,9 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT)
             return FALSE;
 
-        BITMAP bm = m_bmImage.GetBitmapData();
-        int cxImage = bm.bmWidth;
-        int cyImage = bm.bmHeight;
+        BITMAP data = m_bmImage.GetBitmapData();
+        int cxImage = data.bmWidth;
+        int cyImage = data.bmHeight;
 
         if (!IsWindow())
         {
@@ -1923,9 +1923,9 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM)
             return FALSE;
 
-        BITMAP bm = m_bmImage.GetBitmapData();
-        int cxImage = bm.bmWidth;
-        int cyImage = bm.bmHeight;
+        BITMAP data = m_bmImage.GetBitmapData();
+        int cxImage = data.bmWidth;
+        int cyImage = data.bmHeight;
 
         if (!IsWindow())
         {
@@ -1957,7 +1957,7 @@ namespace Win32xx
     inline CDocker::CDocker() : m_pDockParent(NULL), m_isBlockMove(FALSE), m_isUndocking(FALSE),
                     m_isClosing(FALSE), m_isDragging(FALSE), m_isDragAutoResize(TRUE), m_dockStartSize(0),
                     m_dockID(0), m_redrawCount(0), m_ncHeight(0), m_dockZone(0), m_dockSizeRatio(1.0),
-                    m_dockStyle(0), m_hDockUnderPoint(0)
+                    m_dockStyle(0), m_dockUnderPoint(0)
     {
         // Assume this docker is the DockAncestor for now.
         m_pDockAncestor = this;
@@ -1998,8 +1998,8 @@ namespace Win32xx
         pDocker->m_dockID = dockID;
         pDocker->m_pDockAncestor = GetDockAncestor();
         pDocker->m_pDockParent = this;
-        HWND hwndFrame = GetDockAncestor()->GetAncestor();
-        pDocker->Create(hwndFrame);
+        HWND frame = GetDockAncestor()->GetAncestor();
+        pDocker->Create(frame);
         pDocker->SetParent(*this);
 
         // Dock the docker window
@@ -2422,9 +2422,9 @@ namespace Win32xx
 
 
     // Draws a hashed bar while the splitter bar is being dragged.
-    inline void CDocker::DrawHashBar(HWND hBar, POINT pos)
+    inline void CDocker::DrawHashBar(HWND bar, POINT pos)
     {
-        CDockBar* pDockBar = static_cast<CDockBar*>(GetCWndPtr(hBar));
+        CDockBar* pDockBar = static_cast<CDockBar*>(GetCWndPtr(bar));
         if (NULL == pDockBar) return;
         CDocker& Docker = pDockBar->GetDocker();
 
@@ -2432,11 +2432,11 @@ namespace Win32xx
         CClientDC dcBar(*this);
 
         WORD hashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
-        CBitmap bmHash;
-        CBrush brDithered;
-        bmHash.CreateBitmap(8, 8, 1, 1, hashPattern);
-        brDithered.CreatePatternBrush(bmHash);
-        dcBar.SelectObject(brDithered);
+        CBitmap hash;
+        CBrush dithered;
+		hash.CreateBitmap(8, 8, 1, 1, hashPattern);
+        dithered.CreatePatternBrush(hash);
+        dcBar.SelectObject(dithered);
 
         CRect rc = pDockBar->GetWindowRect();
         ScreenToClient(rc);
@@ -2468,15 +2468,15 @@ namespace Win32xx
     inline CDocker* CDocker::GetActiveDocker() const
     {
         CDocker* pDockActive = NULL;
-        HWND hTest = ::GetFocus();
+        HWND test = ::GetFocus();
 
-        while (hTest != 0)
+        while (test != 0)
         {
-            HWND hParent = ::GetParent(hTest);
-            if (hParent == hTest) break;      // could be owned window, not parent
-            hTest = hParent;
+            HWND parent = ::GetParent(test);
+            if (parent == test) break;      // could be owned window, not parent
+			test = parent;
 
-            CDocker* pDock = reinterpret_cast<CDocker*>(::SendMessage(hTest, UWM_GETCDOCKER, 0, 0));
+            CDocker* pDock = reinterpret_cast<CDocker*>(::SendMessage(test, UWM_GETCDOCKER, 0, 0));
             if (pDock)
             {
                 pDockActive = pDock;
@@ -2519,29 +2519,29 @@ namespace Win32xx
     inline CDocker* CDocker::GetDockUnderDragPoint(POINT pt)
     {
         // Step 1: Find the top level Docker under the point
-        // EnumWindows assigns the Docker under the point to m_hDockUnderPoint
+        // EnumWindows assigns the Docker under the point to m_dockUnderPoint
 
-        m_hDockUnderPoint = 0;
+        m_dockUnderPoint = 0;
         m_dockPoint = pt;
         EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(this));
 
         // Step 2: Find the docker child whose view window has the point
         CDocker* pDockTarget = NULL;
-        if (m_hDockUnderPoint != 0)
+        if (m_dockUnderPoint != 0)
         {
-            HWND hDockTest = m_hDockUnderPoint;
-            HWND hDockParent = m_hDockUnderPoint;
+            HWND dockTest = m_dockUnderPoint;
+            HWND dockParent = m_dockUnderPoint;
 
-            while (IsRelated(hDockTest))
+            while (IsRelated(dockTest))
             {
-                hDockParent = hDockTest;
+                dockParent = dockTest;
                 CPoint ptLocal = pt;
-                ::ScreenToClient(hDockParent, &ptLocal);
-                hDockTest = ::ChildWindowFromPoint(hDockParent, ptLocal);
-                if (hDockTest == hDockParent) break;
+                ::ScreenToClient(dockParent, &ptLocal);
+                dockTest = ::ChildWindowFromPoint(dockParent, ptLocal);
+                if (dockTest == dockParent) break;
             }
 
-            CDocker* pDockParent = reinterpret_cast<CDocker*>(::SendMessage(hDockParent, UWM_GETCDOCKER, 0, 0));
+            CDocker* pDockParent = reinterpret_cast<CDocker*>(::SendMessage(dockParent, UWM_GETCDOCKER, 0, 0));
             assert(pDockParent);
 
             CRect rc = pDockParent->GetDockClient().GetWindowRect();
@@ -2677,13 +2677,13 @@ namespace Win32xx
 
 
     // Returns true if the specified window is a child of this docker.
-    inline BOOL CDocker::IsChildOfDocker(HWND hWnd) const
+    inline BOOL CDocker::IsChildOfDocker(HWND wnd) const
     {
-        while ((hWnd != NULL) && (hWnd != *GetDockAncestor()))
+        while ((wnd != NULL) && (wnd != *GetDockAncestor()))
         {
-            if ( hWnd == *this ) return TRUE;
-            if (IsRelated(hWnd)) break;
-            hWnd = ::GetParent(hWnd);
+            if ( wnd == *this ) return TRUE;
+            if (IsRelated(wnd)) break;
+            wnd = ::GetParent(wnd);
         }
 
         return FALSE;
@@ -2704,15 +2704,15 @@ namespace Win32xx
     }
 
 
-    // Returns TRUE if the hWnd is a docker within this dock family.
-    inline BOOL CDocker::IsRelated(HWND hWnd) const
+    // Returns TRUE if the wnd is a docker within this dock family.
+    inline BOOL CDocker::IsRelated(HWND wnd) const
     {
-        if (*GetDockAncestor() == hWnd) return TRUE;
+        if (*GetDockAncestor() == wnd) return TRUE;
 
         std::vector<DockPtr>::const_iterator iter;
         for (iter = GetAllChildren().begin(); iter != GetAllChildren().end(); ++iter)
         {
-            if ((*iter).get()->GetHwnd() == hWnd) return TRUE;
+            if ((*iter).get()->GetHwnd() == wnd) return TRUE;
         }
 
         return FALSE;
@@ -4096,12 +4096,12 @@ namespace Win32xx
     }
 
 
-    inline void CDocker::ConvertToChild(HWND hParent)
+    inline void CDocker::ConvertToChild(HWND parent)
     {
         DWORD style = WS_CHILD | WS_VISIBLE;
         SetStyle(style);
-        SetParent(hParent);
-        GetDockBar().SetParent(hParent);
+        SetParent(parent);
+        GetDockBar().SetParent(parent);
     }
 
 
@@ -4375,14 +4375,14 @@ namespace Win32xx
         if (::IsChild(hTop, pThis->GetDockAncestor()->GetHwnd()))
             hTop = pThis->GetDockAncestor()->GetHwnd();
 
-        // Assign this docker's m_hDockUnderPoint
+        // Assign this docker's m_dockUnderPoint
         if (pThis->IsRelated(hTop) && hTop != pThis->GetHwnd())
         {
             CRect rc;
             ::GetWindowRect(hTop, &rc);
             if ( rc.PtInRect(pt) )
             {
-                pThis->m_hDockUnderPoint = hTop;
+                pThis->m_dockUnderPoint = hTop;
                 return FALSE;   // Stop enumerating
             }
         }
@@ -4393,7 +4393,7 @@ namespace Win32xx
 
     //////////////////////////////////////
     // Declaration of the CDockContainer class
-    inline CDockContainer::CDockContainer() : m_currentPage(0), m_pDocker(0), m_hTabIcon(0),
+    inline CDockContainer::CDockContainer() : m_currentPage(0), m_pDocker(0), m_tabIcon(0),
                                         m_pressedTab(-1), m_isHideSingleTab(FALSE)
     {
         m_pContainerParent = this;
@@ -4403,8 +4403,8 @@ namespace Win32xx
 
     inline CDockContainer::~CDockContainer()
     {
-        if (m_hTabIcon != 0)
-            DestroyIcon(m_hTabIcon);
+        if (m_tabIcon != 0)
+            DestroyIcon(m_tabIcon);
     }
 
     // Adds a container to the group. Set Insert to TRUE to insert the container as the
@@ -4755,13 +4755,13 @@ namespace Win32xx
     inline LRESULT CDockContainer::OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Sets the focus to the active view (or its child)
-        HWND hwndPrevFocus = reinterpret_cast<HWND>(wparam);
+        HWND prevFocus = reinterpret_cast<HWND>(wparam);
         if (GetActiveView() && GetActiveView()->IsWindow())
         {
-            if (GetActiveView()->IsChild(hwndPrevFocus))
+            if (GetActiveView()->IsChild(prevFocus))
             {
                 // return focus back to the child of the active view that had it before
-                ::SetFocus(hwndPrevFocus);
+                ::SetFocus(prevFocus);
             }
             else
                 GetActiveView()->SetFocus();
@@ -4974,9 +4974,9 @@ namespace Win32xx
         CBitmap Bitmap(normalID);
         assert(Bitmap.GetHandle());
 
-        BITMAP bm = Bitmap.GetBitmapData();
-        int cy = bm.bmHeight;
-        int cx  = MAX(bm.bmHeight, 16);
+        BITMAP data = Bitmap.GetBitmapData();
+        int cy = data.bmHeight;
+        int cx  = MAX(data.bmHeight, 16);
 
         m_normalImages.DeleteImageList();
         m_normalImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);

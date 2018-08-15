@@ -207,7 +207,7 @@ namespace Win32xx
                                         PD_HIDEPRINTTOFILE | PD_NOSELECTION );
         virtual ~CPrintDialog();
 
-        virtual INT_PTR DoModal(HWND hWndOwner = 0);
+        virtual INT_PTR DoModal(HWND owner = 0);
         int     GetCopies() const;
         BOOL    GetDefaults();
         CDevMode GetDevMode() const;
@@ -235,10 +235,10 @@ namespace Win32xx
     private:
         void GlobalFreeAll()
         {
-            GetApp().GlobalFreeAll(GetApp().m_hDevMode);
-            GetApp().GlobalFreeAll(GetApp().m_hDevNames);
-            GetApp().m_hDevMode = 0;
-            GetApp().m_hDevNames = 0;
+            GetApp().GlobalFreeAll(GetApp().m_devMode);
+            GetApp().GlobalFreeAll(GetApp().m_devNames);
+            GetApp().m_devMode = 0;
+            GetApp().m_devNames = 0;
         }
 
         // printer resources
@@ -260,7 +260,7 @@ namespace Win32xx
         CPageSetupDialog( DWORD flags = PSD_MARGINS );
         virtual ~CPageSetupDialog() {}
 
-        virtual INT_PTR DoModal(HWND hWndOwner = 0);
+        virtual INT_PTR DoModal(HWND owner = 0);
         CDevMode GetDevMode() const;
         CDevNames GetDevNames() const;
         void    GetMargins(RECT& rcMargin, RECT& rcMinMargin) const;
@@ -281,10 +281,10 @@ namespace Win32xx
     private:
         void GlobalFreeAll()
         {
-            GetApp().GlobalFreeAll(GetApp().m_hDevMode);
-            GetApp().GlobalFreeAll(GetApp().m_hDevNames);
-            GetApp().m_hDevMode = 0;
-            GetApp().m_hDevNames = 0;
+            GetApp().GlobalFreeAll(GetApp().m_devMode);
+            GetApp().GlobalFreeAll(GetApp().m_devNames);
+            GetApp().m_devMode = 0;
+            GetApp().m_devNames = 0;
         }
 
         PAGESETUPDLG    m_PSD;          // page setup dlg structure
@@ -307,7 +307,7 @@ namespace Win32xx
     // default printer has changed.
     inline void CWinApp::UpdateDefaultPrinter()
     {
-        if (m_hDevNames == 0)
+        if (m_devNames == 0)
         {
             // Allocate global printer memory by specifying the default printer.
             CPrintDialog pd;
@@ -316,7 +316,7 @@ namespace Win32xx
         else
         {
             // Global memory has already been allocated
-            LPDEVNAMES pDevNames = (LPDEVNAMES)::GlobalLock(m_hDevNames);
+            LPDEVNAMES pDevNames = (LPDEVNAMES)::GlobalLock(m_devNames);
             assert (pDevNames);
 
             // If our gobal memory is referencing the default printer
@@ -332,12 +332,12 @@ namespace Win32xx
                 if (pd.hDevNames == 0)
                 {
                     // Printer was default, but now there are no printers.
-                    ::GlobalUnlock(m_hDevNames);
-                    ::GlobalUnlock(m_hDevMode);
-                    GlobalFreeAll(m_hDevMode);
-                    GlobalFreeAll(m_hDevNames);
-                    m_hDevMode = 0;
-                    m_hDevNames = 0;
+                    ::GlobalUnlock(m_devNames);
+                    ::GlobalUnlock(m_devMode);
+                    GlobalFreeAll(m_devMode);
+                    GlobalFreeAll(m_devNames);
+                    m_devMode = 0;
+                    m_devNames = 0;
                 }
                 else
                 {
@@ -353,19 +353,19 @@ namespace Win32xx
                                 reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wOutputOffset) != 0)
                         {
                             // Default printer has changed. Reset the global memory.
-                            ::GlobalUnlock(m_hDevNames);
+                            ::GlobalUnlock(m_devNames);
                             ::GlobalUnlock(pd.hDevNames);
-                            GlobalFreeAll(m_hDevMode);
-                            GlobalFreeAll(m_hDevNames);
+                            GlobalFreeAll(m_devMode);
+                            GlobalFreeAll(m_devNames);
 
-                            m_hDevMode = pd.hDevMode;
-                            m_hDevNames = pd.hDevNames;
+                            m_devMode = pd.hDevMode;
+                            m_devNames = pd.hDevNames;
                         }
                     }
                     else
                     {
                         // Printer was default, and unchanged. Keep the existing global memory.
-                        ::GlobalUnlock(m_hDevNames);
+                        ::GlobalUnlock(m_devNames);
                         ::GlobalUnlock(pd.hDevNames);
 
                         GlobalFreeAll(pd.hDevMode);
@@ -374,7 +374,7 @@ namespace Win32xx
                 }
             }
 
-            ::GlobalUnlock(m_hDevNames);
+            ::GlobalUnlock(m_devNames);
         }
     }
 
@@ -419,7 +419,6 @@ namespace Win32xx
             ::DeleteDC(m_pd.hDC);
     }
 
-
     // Returns the printer's device context.
     inline CDC CPrintDialog::GetPrinterDC() const
     {
@@ -427,10 +426,10 @@ namespace Win32xx
         CDC dc;
         GetApp().UpdateDefaultPrinter();
 
-        if ((GetApp().m_hDevNames != 0) && (GetApp().m_hDevMode != 0))
+        if ((GetApp().m_devNames != 0) && (GetApp().m_devMode != 0))
         {
-            CDevNames cdevNames(GetApp().m_hDevNames);
-            CDevMode cdevMode(GetApp().m_hDevMode);
+            CDevNames cdevNames(GetApp().m_devNames);
+            CDevMode cdevMode(GetApp().m_devMode);
             LPCTSTR devNames = cdevNames.c_str();
 
             dc.CreateDC(devNames + cdevNames->wDriverOffset,
@@ -441,7 +440,6 @@ namespace Win32xx
 
         return dc;
     }
-
 
     // Dialog procedure for the Font dialog. Override this function
     // to customise the message handling.
@@ -465,7 +463,6 @@ namespace Win32xx
         // Always pass unhandled messages on to DialogProcDefault
         return DialogProcDefault(msg, wparam, lparam);
     }
-
 
     //  The default message handling for CPrintDialog. Don't override this
     //  function, override DialogProc instead.
@@ -496,11 +493,10 @@ namespace Win32xx
         return 0;
     }
 
-
     // Display the print dialog, and allow the user to select various options.
     // An exception is thrown if the dialog isn't created.
     // An exception is thrown if there is no default printer.
-    inline INT_PTR CPrintDialog::DoModal( HWND hWndOwner /* = 0 */)
+    inline INT_PTR CPrintDialog::DoModal( HWND owner /* = 0 */)
     {
         assert( &GetApp() );    // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
@@ -512,9 +508,9 @@ namespace Win32xx
         GetApp().UpdateDefaultPrinter();
 
         // Assign values to the PRINTDLG structure
-        m_pd.hDevMode = GetApp().m_hDevMode;
-        m_pd.hDevNames = GetApp().m_hDevNames;
-        m_pd.hwndOwner = hWndOwner;
+        m_pd.hDevMode = GetApp().m_devMode;
+        m_pd.hDevNames = GetApp().m_devNames;
+        m_pd.hwndOwner = owner;
 
         if (m_pd.hDC != 0)
         {
@@ -532,15 +528,15 @@ namespace Win32xx
 
         if (ok)
         {
-            GetApp().m_hDevMode = m_pd.hDevMode;
-            GetApp().m_hDevNames = m_pd.hDevNames;
+            GetApp().m_devMode = m_pd.hDevMode;
+            GetApp().m_devNames = m_pd.hDevNames;
             OnOK();
             ok = IDOK;
         }
         else
         {
-            GlobalUnlock(GetApp().m_hDevMode);
-            GlobalUnlock(GetApp().m_hDevNames);
+            GlobalUnlock(GetApp().m_devMode);
+            GlobalUnlock(GetApp().m_devNames);
 
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
@@ -560,7 +556,6 @@ namespace Win32xx
 
         return ok;
     }
-
 
     // Retrieves the number of copies requested.
     inline int CPrintDialog::GetCopies() const
@@ -592,14 +587,14 @@ namespace Win32xx
         ::PrintDlg(&m_pd);
         m_pd.Flags &= ~PD_RETURNDEFAULT;
 
-        GetApp().m_hDevMode = m_pd.hDevMode;
-        GetApp().m_hDevNames = m_pd.hDevNames;
+        GetApp().m_devMode = m_pd.hDevMode;
+        GetApp().m_devNames = m_pd.hDevNames;
 
         m_pd.hDevMode = 0;
         m_pd.hDevNames = 0;
 
         // Return TRUE if default printer exists
-        return (GetApp().m_hDevNames != 0);
+        return (GetApp().m_devNames != 0);
     }
 
 
@@ -607,7 +602,7 @@ namespace Win32xx
     inline CString CPrintDialog::GetDeviceName() const
     {
         CString str;
-        if (GetApp().m_hDevNames != 0)
+        if (GetApp().m_devNames != 0)
         {
             CDevNames pDev = GetDevNames();
             LPCTSTR devNames = pDev.c_str();
@@ -618,7 +613,6 @@ namespace Win32xx
         return str;
     }
 
-
     // Returns a pointer to the locked hDevMode memory encapsulated in a CDevMode object.
     // There is no need to unlock this memory. The CDevMode object automatically
     // unlocks the memory when it goes out of scope.
@@ -627,9 +621,8 @@ namespace Win32xx
     //  Then use pDevMode as if it were a LPDEVMODE
     inline CDevMode CPrintDialog::GetDevMode() const
     {
-        return CDevMode(GetApp().m_hDevMode);
+        return CDevMode(GetApp().m_devMode);
     }
-
 
     // Returns a pointer to the locked hDevNames memory encapsulated in a CDevNames object.
     // There is no need to unlock this memory. The CDevNames object automatically
@@ -639,15 +632,14 @@ namespace Win32xx
     //  Then use pDevNames as if it were a LPDEVNAMES
     inline CDevNames CPrintDialog::GetDevNames() const
     {
-        return CDevNames(GetApp().m_hDevNames);
+        return CDevNames(GetApp().m_devNames);
     }
-
 
     // Retrieves the name of the currently selected printer driver.
     inline CString CPrintDialog::GetDriverName() const
     {
         CString str;
-        if (GetApp().m_hDevNames != 0)
+        if (GetApp().m_devNames != 0)
         {
             CDevNames pDev = GetDevNames();
             LPCTSTR devNames = pDev.c_str();
@@ -658,19 +650,17 @@ namespace Win32xx
         return str;
     }
 
-
     // Retrieves the starting page of the print range.
     inline int CPrintDialog::GetFromPage() const
     {
         return (PrintRange() ? m_pd.nFromPage : -1);
     }
 
-
     // Retrieves the name of the currently selected printer port.
     inline CString CPrintDialog::GetPortName() const
     {
         CString str;
-        if (GetApp().m_hDevNames != 0)
+        if (GetApp().m_devNames != 0)
         {
             CDevNames pDev = GetDevNames();
             LPCTSTR devNames = pDev.c_str();
@@ -680,13 +670,11 @@ namespace Win32xx
         return str;
     }
 
-
     // Retrieves the ending page of the print range.
     inline int CPrintDialog::GetToPage() const
     {
         return (PrintRange() ? m_pd.nToPage : -1);
     }
-
 
     // Call this function after calling DoModal to determine whether to print
     // all pages in the document.
@@ -694,7 +682,6 @@ namespace Win32xx
     {
         return !PrintRange() && !PrintSelection() ? TRUE : FALSE;
     }
-
 
     // Call this function after calling DoModal to determine whether the printer
     // should collate all printed copies of the document.
@@ -706,7 +693,6 @@ namespace Win32xx
             return (m_pd.Flags & PD_COLLATE ? TRUE : FALSE);
     }
 
-
     // Call this function after calling DoModal to determine whether to print
     // only a range of pages in the document.
     inline BOOL CPrintDialog::PrintRange() const
@@ -714,14 +700,12 @@ namespace Win32xx
         return m_pd.Flags & PD_PAGENUMS ? TRUE : FALSE;
     }
 
-
     // Call this function after calling DoModal to determine whether to print
     // only the currently selected items.
     inline BOOL CPrintDialog::PrintSelection() const
     {
         return m_pd.Flags & PD_SELECTION ? TRUE : FALSE;
     }
-
 
     // Set the parameters of the PRINTDLG structure to sensible values
     inline void CPrintDialog::SetParameters(PRINTDLG& pd)
@@ -765,7 +749,6 @@ namespace Win32xx
         SetParameters(m_PSD);
     }
 
-
     // Dialog procedure for the PageSetup dialog. Override this function
     // to customise the message handling.
     inline INT_PTR CPageSetupDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -788,7 +771,6 @@ namespace Win32xx
         // Always pass unhandled messages on to DialogProcDefault
         return DialogProcDefault(msg, wparam, lparam);
     }
-
 
     //  The Default message handling for CPageSetupDialog. Don't override this
     //  function, override DialogProc instead.
@@ -820,11 +802,10 @@ namespace Win32xx
         return 0;
     }
 
-
     // Display the Page Setup dialog, and allow the user to select various options.
     // An exception is thrown if the dialog isn't created.
     // An exception is thrown if there is no default printer.
-    inline INT_PTR CPageSetupDialog::DoModal(HWND hWndOwner /* = 0 */)
+    inline INT_PTR CPageSetupDialog::DoModal(HWND owner /* = 0 */)
     {
         assert(&GetApp());      // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
@@ -836,9 +817,9 @@ namespace Win32xx
         GetApp().UpdateDefaultPrinter();
 
         // Assign values to the PAGESETUPDLG structure
-        m_PSD.hDevMode = GetApp().m_hDevMode;
-        m_PSD.hDevNames = GetApp().m_hDevNames;
-        m_PSD.hwndOwner = hWndOwner;
+        m_PSD.hDevMode = GetApp().m_devMode;
+        m_PSD.hDevNames = GetApp().m_devNames;
+        m_PSD.hwndOwner = owner;
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp().SetTlsData();
@@ -849,15 +830,15 @@ namespace Win32xx
 
         if (ok)
         {
-            GetApp().m_hDevMode = m_PSD.hDevMode;
-            GetApp().m_hDevNames = m_PSD.hDevNames;
+            GetApp().m_devMode = m_PSD.hDevMode;
+            GetApp().m_devNames = m_PSD.hDevNames;
             OnOK();
             ok = IDOK;
         }
         else
         {
-            GlobalUnlock(GetApp().m_hDevMode);
-            GlobalUnlock(GetApp().m_hDevNames);
+            GlobalUnlock(GetApp().m_devMode);
+            GlobalUnlock(GetApp().m_devNames);
 
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE)) // ignore the exception caused by closing the dialog
@@ -877,7 +858,6 @@ namespace Win32xx
         return ok;
     }
 
-
     // Returns a pointer to the locked hDevMode memory encapsulated in a CDevMode object.
     // There is no need to unlock this memory. The CDevMode object automatically
     // unlocks the memory when it goes out of scope.
@@ -886,9 +866,8 @@ namespace Win32xx
     //  Then use pDevMode as if it were a LPDEVMODE
     inline CDevMode CPageSetupDialog::GetDevMode() const
     {
-        return CDevMode(GetApp().m_hDevMode);
+        return CDevMode(GetApp().m_devMode);
     }
-
 
     // Returns a pointer to the locked hDevNames memory encapsulated in a CDevNames object.
     // There is no need to unlock this memory. The CDevNames object automatically
@@ -898,9 +877,8 @@ namespace Win32xx
     //  Then use pDevNames as if it were a LPDEVNAMES
     inline CDevNames CPageSetupDialog::GetDevNames() const
     {
-        return CDevNames(GetApp().m_hDevNames);
+        return CDevNames(GetApp().m_devNames);
     }
-
 
     // Call this function after a call to DoModal to retrieve the margins of the printer.
     inline void CPageSetupDialog::GetMargins(RECT& rcMargin, RECT& rcMinMargin) const
@@ -909,23 +887,21 @@ namespace Win32xx
         rcMinMargin = m_PSD.rtMinMargin;
     }
 
-
     // Call this function to retrieve the size of the paper selected for printing.
     inline CSize CPageSetupDialog::GetPaperSize() const
     {
         return CSize(m_PSD.ptPaperSize.x, m_PSD.ptPaperSize.y);
     }
 
-
     // This function receives messages that allow the drawing of the paint sample page
     // in the Page Setup dialog box to be customized.
-    inline INT_PTR CALLBACK CPageSetupDialog::PaintHookProc(HWND hWnd, UINT message, WPARAM wparam, LPARAM lparam)
+    inline INT_PTR CALLBACK CPageSetupDialog::PaintHookProc(HWND wnd, UINT message, WPARAM wparam, LPARAM lparam)
     {
-        if (hWnd == 0)
+        if (wnd == 0)
             return 0;
 
         // The parent of paint sample window is the Page Setup dialog.
-        CPageSetupDialog* pDlg = static_cast<CPageSetupDialog*>(GetCWndPtr(::GetParent(hWnd)));
+        CPageSetupDialog* pDlg = static_cast<CPageSetupDialog*>(GetCWndPtr(::GetParent(wnd)));
         if (pDlg == NULL)
             return 0;
 
@@ -953,7 +929,6 @@ namespace Win32xx
         return 0;
     }
 
-
     // Override this function to customize drawing of the sample page in the Page Setup dialog box.
     // It is called in response to the following messages: WM_PSD_FULLPAGERECT; WM_PSD_MINMARGINRECT;
     // WM_PSD_MARGINRECT; WM_PSD_GREEKTEXTRECT; WM_PSD_ENVSTAMPRECT; and WM_PSD_YAFULLPAGERECT.
@@ -965,7 +940,6 @@ namespace Win32xx
         return 0; // do the default
     }
 
-
     // Called before drawing is preformed on the sample page.
     inline UINT CPageSetupDialog::OnPreDrawPage(WORD wPaper, WORD wFlags, const PAGESETUPDLG& /*PSD*/)
     {
@@ -974,7 +948,6 @@ namespace Win32xx
 
         return 0;
     }
-
 
     // Set the parameters of the PAGESETUPDLG structure to sensible values
     inline void CPageSetupDialog::SetParameters(PAGESETUPDLG& psd)

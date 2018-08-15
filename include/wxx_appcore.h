@@ -90,17 +90,16 @@ namespace Win32xx
     // Override CWinThread and use this constructor for GUI threads.
     // InitInstance will be called when the thread runs.
     inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_thread(0),
-                                       m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_wndForAccel(0)
+                                       m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_accelWnd(0)
     {
     }
-
 
     // CWinThread constructor.
     // Use CWinThread directly and call this constructor for worker threads.
     // Specify a pointer to the function to run when the thread starts.
     // Specifying pParam for a worker thread is optional.
     inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
-                        m_pThreadParams(0), m_thread(0), m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_wndForAccel(0)
+                        m_pThreadParams(0), m_thread(0), m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_accelWnd(0)
     {
         m_pfnThreadProc = pfnThreadProc;
         m_pThreadParams = pParam;
@@ -121,7 +120,6 @@ namespace Win32xx
             VERIFY(::CloseHandle(m_thread));
         }
     }
-
 
     // Creates a new thread
     // Valid argument values:
@@ -152,7 +150,6 @@ namespace Win32xx
         return m_thread;
     }
 
-
     // Retrieves a handle to the main window for this thread.
     // Note: CFrame set's itself as the main window of its thread
     inline HWND CWinThread::GetMainWnd() const
@@ -166,13 +163,11 @@ namespace Win32xx
         return pTLSData->hMainWnd;
     }
 
-
     // Retrieves the handle of this thread.
     inline HANDLE CWinThread::GetThread() const
     {
         return m_thread;
     }
-
 
     // Retrieves the thread's ID.
     inline int CWinThread::GetThreadID() const
@@ -186,14 +181,12 @@ namespace Win32xx
         return m_threadID;
     }
 
-
     // Retrieves this thread's priority
     inline int CWinThread::GetThreadPriority() const
     {
         assert(m_thread);
         return ::GetThreadPriority(m_thread);
     }
-
 
     // Override this function to perform tasks when the thread starts.
     // return TRUE to run a message loop, otherwise return FALSE.
@@ -202,7 +195,6 @@ namespace Win32xx
     {
         return FALSE;
     }
-
 
     // This function manages the way window message are dispatched
     // to a window procedure.
@@ -239,7 +231,6 @@ namespace Win32xx
         return LOWORD(Msg.wParam);
     }
 
-
     // This functions is called by the MessageLoop. It is called when the message queue
     // is empty. Return TRUE to continue idle processing or FALSE to end idle processing
     // until another message is queued. lCount is incremented each time OnIdle is called,
@@ -250,7 +241,6 @@ namespace Win32xx
 
         return FALSE;
     }
-
 
     // This functions is called by the MessageLoop. It processes the
     // keyboard accelerator keys and calls CWnd::PreTranslateMessage for
@@ -269,9 +259,9 @@ namespace Win32xx
             else
             {
                 // Search the chain of parents for pretranslated messages.
-                for (HWND hWnd = msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
+                for (HWND wnd = msg.hwnd; wnd != NULL; wnd = ::GetParent(wnd))
                 {
-                    CWnd* pWnd = GetApp().GetCWndFromMap(hWnd);
+                    CWnd* pWnd = GetApp().GetCWndFromMap(wnd);
                     if (pWnd)
                     {
                         isProcessed = pWnd->PreTranslateMessage(msg);
@@ -285,7 +275,6 @@ namespace Win32xx
         return isProcessed;
     }
 
-
     // Posts a message to the thread. The message will reach the MessageLoop, but
     // will not call a CWnd's WndProc.
     inline BOOL CWinThread::PostThreadMessage(UINT msg, WPARAM wparam, LPARAM lparam) const
@@ -294,7 +283,6 @@ namespace Win32xx
         return ::PostThreadMessage(GetThreadID(), msg, wparam, lparam);
     }
 
-
     // Resumes a thread that has been suspended, or created with the CREATE_SUSPENDED flag.
     inline DWORD CWinThread::ResumeThread() const
     {
@@ -302,24 +290,21 @@ namespace Win32xx
         return ::ResumeThread(m_thread);
     }
 
-
     // accel is the handle of the accelerator table
-    // hWndAccel is the window handle for translated messages.
-    inline void CWinThread::SetAccelerators(HACCEL accel, HWND hWndAccel)
+    // accelWnd is the window handle for translated messages.
+    inline void CWinThread::SetAccelerators(HACCEL accel, HWND accelWnd)
     {
-        m_wndForAccel = hWndAccel;
+		m_accelWnd = accelWnd;
         m_accel = accel;
     }
 
-
     // Sets the main window for this thread.
     // Note: CFrame set's itself as the main window of its thread
-    inline void CWinThread::SetMainWnd(HWND hWnd)
+    inline void CWinThread::SetMainWnd(HWND wnd)
     {
         TLSData* pTLSData = GetApp().SetTlsData();
-        pTLSData->hMainWnd = hWnd;
+        pTLSData->hMainWnd = wnd;
     }
-
 
     // Sets the priority of this thread. The nPriority parameter can
     // be -7, -6, -5, -4, -3, 3, 4, 5, or 6 or other values permitted
@@ -330,14 +315,12 @@ namespace Win32xx
         return ::SetThreadPriority(m_thread, priority);
     }
 
-
     // Suspends this thread. Use ResumeThread to resume the thread.
     inline DWORD CWinThread::SuspendThread() const
     {
         assert(m_thread);
         return ::SuspendThread(m_thread);
     }
-
 
     // When the thread starts, it runs this function.
     inline UINT WINAPI CWinThread::StaticThreadProc(LPVOID pCThread)
@@ -363,7 +346,7 @@ namespace Win32xx
     // To begin Win32++, inherit your application class from this one.
     // You must run only one instance of the class inherited from CWinApp.
 
-    inline CWinApp::CWinApp() : m_callback(NULL), m_hDevMode(0), m_hDevNames(0)
+    inline CWinApp::CWinApp() : m_callback(NULL), m_devMode(0), m_devNames(0)
     {
         if ( 0 != SetnGetThis() )
         {
@@ -383,35 +366,35 @@ namespace Win32xx
 
         // Set the instance handle
 #ifdef _WIN32_WCE
-        m_hInstance = (HINSTANCE)GetModuleHandle(0);
+        m_instance = (HINSTANCE)GetModuleHandle(0);
 #else
         MEMORY_BASIC_INFORMATION mbi;
         ZeroMemory(&mbi, sizeof(mbi));
         static int Address = 0;
         VirtualQuery( &Address, &mbi, sizeof(mbi) );
         assert(mbi.AllocationBase);
-        m_hInstance = (HINSTANCE)mbi.AllocationBase;
+        m_instance = (HINSTANCE)mbi.AllocationBase;
 #endif
 
-        m_hResource = m_hInstance;
+        m_resource = m_instance;
         SetCallback();
     }
 
     inline CWinApp::~CWinApp()
     {
         // Deallocate the global memory
-        GlobalFreeAll(m_hDevMode);
-        GlobalFreeAll(m_hDevNames);
+        GlobalFreeAll(m_devMode);
+        GlobalFreeAll(m_devNames);
 
         // Forcibly destroy any remaining windows now. Windows created from
         //  static CWnds or dangling pointers are destroyed here.
         std::map<HWND, CWnd*, CompareHWND>::const_iterator m;
         for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
         {
-            HWND hWnd = (*m).first;
-            if (::IsWindow(hWnd))
+            HWND wnd = (*m).first;
+            if (::IsWindow(wnd))
             {
-                ::DestroyWindow(hWnd);
+                ::DestroyWindow(wnd);
             }
         }
 
@@ -426,7 +409,6 @@ namespace Win32xx
         SetnGetThis(0, true);
     }
 
-
     // Adds a HDC and CDC_Data* pair to the map.
     inline void CWinApp::AddCDCData(HDC dc, CDC_Data* pData)
     {
@@ -434,14 +416,12 @@ namespace Win32xx
         m_mapCDCData.insert(std::make_pair(dc, pData));
     }
 
-
     // Adds a HGDIOBJ and CGDI_Data* pair to the map.
     inline void CWinApp::AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData)
     {
         CThreadLock mapLock(m_gdiLock);
         m_mapCGDIData.insert(std::make_pair(hGDI, pData));
     }
-
 
     // Adds a HIMAGELIST and Ciml_Data* pair to the map.
     inline void CWinApp::AddCImlData(HIMAGELIST images, CIml_Data* pData)
@@ -484,7 +464,6 @@ namespace Win32xx
         ::GlobalFree(hGlobal);
     }
 
-
     // Retrieves a pointer to CDC_Data from the map
     inline CDC_Data* CWinApp::GetCDCData(HDC dc)
     {
@@ -501,7 +480,6 @@ namespace Win32xx
         return pCDCData;
     }
 
-
     // Retrieves a pointer to CGDI_Data from the map
     inline CGDI_Data* CWinApp::GetCGDIData(HGDIOBJ object)
     {
@@ -517,7 +495,6 @@ namespace Win32xx
 
         return pCGDIData;
     }
-
 
     // Retrieves a pointer to CIml_Data from the map
     inline CIml_Data* CWinApp::GetCImlData(HIMAGELIST images)
@@ -555,8 +532,8 @@ namespace Win32xx
 
 #endif
 
-    // Retrieves the CWnd pointer associated with the specified hWnd.
-    inline CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
+    // Retrieves the CWnd pointer associated with the specified wnd.
+    inline CWnd* CWinApp::GetCWndFromMap(HWND wnd)
     {
         // Allocate an iterator for our HWND map
         std::map<HWND, CWnd*, CompareHWND>::const_iterator m;
@@ -564,7 +541,7 @@ namespace Win32xx
         // Find the CWnd pointer mapped to this HWND
         CWnd* pWnd = 0;
         CThreadLock mapLock(m_wndLock);
-        m = m_mapHWND.find(hWnd);
+        m = m_mapHWND.find(wnd);
 
         if (m != m_mapHWND.end())
             pWnd = m->second;
@@ -572,13 +549,11 @@ namespace Win32xx
         return pWnd;
     }
 
-
     // Retrieves the pointer to the Thread Local Storage data for the current thread.
     inline TLSData* CWinApp::GetTlsData() const
     {
         return static_cast<TLSData*>(TlsGetValue(m_tlsData));
     }
-
 
     // InitInstance contains the initialization code for your application
     // You should override this function with the code to run when the application starts.
@@ -588,20 +563,17 @@ namespace Win32xx
         return TRUE;
     }
 
-
     // Loads the cursor resource from the resource script (resource.rc)
     inline HCURSOR CWinApp::LoadCursor(LPCTSTR pResourceName) const
     {
         return ::LoadCursor(GetResourceHandle(), pResourceName);
     }
 
-
     // Loads the cursor resource from the resource script (resource.rc)
     inline HCURSOR CWinApp::LoadCursor(int cursorID) const
     {
         return ::LoadCursor(GetResourceHandle(), MAKEINTRESOURCE (cursorID));
     }
-
 
     // Returns the handle of a standard cursor. Standard cursors include:
     // IDC_APPSTARTING, IDC_ARROW, IDC_CROSS, IDC_HAND, IDC_HELP, IDC_IBEAM, IDC_NO, IDC_SIZEALL,
@@ -611,7 +583,6 @@ namespace Win32xx
         return ::LoadCursor(0, pCursorName);
     }
 
-
     // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values
     // For other icon sizes, use the LoadImage windows API function.
     inline HICON CWinApp::LoadIcon(LPCTSTR pResourceName) const
@@ -619,13 +590,11 @@ namespace Win32xx
         return ::LoadIcon(GetResourceHandle(), pResourceName);
     }
 
-
     // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values
     inline HICON CWinApp::LoadIcon(int iconID) const
     {
         return ::LoadIcon(GetResourceHandle(), MAKEINTRESOURCE (iconID));
     }
-
 
     // Returns the handle of a standard Icon. Standard Icons include:
     // IDI_APPLICATION, IDI_ASTERISK, IDI_ERROR, IDI_EXCLAMATION,
@@ -634,7 +603,6 @@ namespace Win32xx
     {
         return ::LoadIcon(0, pIconName);
     }
-
 
     // Loads an icon, cursor, animated cursor, or bitmap image.
     // uType is the image type. It can be IMAGE_BITMAP, IMAGE_CURSOR or IMAGE_ICON.
@@ -647,7 +615,6 @@ namespace Win32xx
         return ::LoadImage(GetResourceHandle(), pResourceName, type, cx, cy, flags);
     }
 
-
     // Loads an icon, cursor, animated cursor, or bitmap.
     // uType is the image type. It can be IMAGE_BITMAP, IMAGE_CURSOR or IMAGE_ICON.
     // cx and cy are the desired width and height in pixels.
@@ -658,7 +625,6 @@ namespace Win32xx
     {
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
     }
-
 
     // Runs the application and starts the message loop.
     inline int CWinApp::Run()
@@ -676,7 +642,6 @@ namespace Win32xx
             return -1;
         }
     }
-
 
     // Registers a temporary window class so we can get the callback
     // address of CWnd::StaticWindowProc.
@@ -703,7 +668,6 @@ namespace Win32xx
         VERIFY(::UnregisterClass(pClassName, GetInstanceHandle()) != 0);
     }
 
-
     // Sets the current cursor and returns the previous one.
     // Note:The cursor will be set to the window's class cursor (if one is set) each time the
     // mouse is moved over the window. You can specify different cursors for different
@@ -712,7 +676,6 @@ namespace Win32xx
     {
         return ::SetCursor(hCursor);
     }
-
 
     // This function stores the 'this' pointer in a static variable.
     // Once stored, it can be used later to return the 'this' pointer.
@@ -733,7 +696,6 @@ namespace Win32xx
         return pWinApp;
     }
 
-
     // This function can be used to load a resource dll.
     // A resource dll can be used to define resources in different languages.
     // To use this function, place code like this in InitInstance
@@ -741,9 +703,8 @@ namespace Win32xx
     //   SetResourceHandle(hResource);
     inline void CWinApp::SetResourceHandle(HINSTANCE hResource)
     {
-        m_hResource = hResource;
+        m_resource = hResource;
     }
-
 
     // Creates the Thread Local Storage data for the current thread if none already exists.
     inline TLSData* CWinApp::SetTlsData()

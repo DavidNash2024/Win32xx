@@ -134,7 +134,6 @@ namespace Win32xx
         return IsAeroThemed;
     }
 
-
     // Returns TRUE if XP themes are being used.
     inline BOOL IsXPThemed()
     {

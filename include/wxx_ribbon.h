@@ -92,7 +92,7 @@ namespace Win32xx
         STDMETHODIMP UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* currentValue,
                                                  __out PROPVARIANT* newValue);
 
-        bool virtual CreateRibbon(HWND hWnd);
+        bool virtual CreateRibbon(HWND wnd);
         void virtual DestroyRibbon();
         IUIFramework* GetRibbonFramework() const { return m_pRibbonFramework; }
         UINT GetRibbonHeight() const;
@@ -158,7 +158,6 @@ namespace Win32xx
         virtual ~CRibbonFrame() {}
     };
 
-
     // This class provide an SDI frame with a Ribbon Framework that supports docking.
     class CRibbonDockFrame : public CRibbonFrameT<CDockFrame>
     {
@@ -167,7 +166,6 @@ namespace Win32xx
         virtual ~CRibbonDockFrame() {}
     };
 
-
     // This class provides a MDI frame with a Ribbon Framework.
     class CRibbonMDIFrame : public CRibbonFrameT<CMDIFrame>
     {
@@ -175,7 +173,6 @@ namespace Win32xx
         CRibbonMDIFrame() {}
         virtual ~CRibbonMDIFrame() {}
     };
-
 
     // This class provides a MDI frame with a Ribbon Framework that supports docking.
     class CRibbonMDIDockFrame : public CRibbonFrameT<CMDIDockFrame>
@@ -232,7 +229,6 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
     inline STDMETHODIMP CRibbon::QueryInterface(REFIID iid, void** ppv)
     {
         if (iid == __uuidof(IUnknown))
@@ -271,7 +267,6 @@ namespace Win32xx
         return QueryInterface(IID_PPV_ARGS(ppCommandHandler));
     }
 
-
     // Called when the state of the Ribbon changes, for example, created, destroyed, or resized.
     inline STDMETHODIMP CRibbon::OnViewChanged(UINT viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView,
                                              UI_VIEWVERB verb, INT reasonCode)
@@ -285,7 +280,6 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
     // Called by the Ribbon framework for each command at the time of ribbon destruction.
     inline STDMETHODIMP CRibbon::OnDestroyUICommand(UINT32 cmdID, __in UI_COMMANDTYPE typeID,
                                                   __in_opt IUICommandHandler* commandHandler)
@@ -296,7 +290,6 @@ namespace Win32xx
 
         return E_NOTIMPL;
     }
-
 
     // Called by the Ribbon framework when a command property (PKEY) needs to be updated.
     inline STDMETHODIMP CRibbon::UpdateProperty(UINT cmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* currentValue,
@@ -310,9 +303,8 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-
     // Creates the ribbon.
-    inline bool CRibbon::CreateRibbon(HWND hWnd)
+    inline bool CRibbon::CreateRibbon(HWND wnd)
     {
         ::CoInitialize(NULL);
 
@@ -322,7 +314,7 @@ namespace Win32xx
         // Connect the host application to the Ribbon framework.
 
         assert(m_pRibbonFramework);
-        HRESULT result = m_pRibbonFramework->Initialize(hWnd, this);
+        HRESULT result = m_pRibbonFramework->Initialize(wnd, this);
         if (FAILED(result))
         {
             return false;
@@ -338,7 +330,6 @@ namespace Win32xx
         return true;
     }
 
-
     // Destroys the ribbon.
     inline void CRibbon::DestroyRibbon()
     {
@@ -351,7 +342,6 @@ namespace Win32xx
 
         ::CoUninitialize();
     }
-
 
     // Retrieves the height of the ribbon.
     inline UINT CRibbon::GetRibbonHeight() const
@@ -399,7 +389,6 @@ namespace Win32xx
         return clientRect;
     }
 
-
     // OnCreate is called automatically during window creation when a
     // WM_CREATE message received.
     // Tasks such as setting the icon, creating child windows, or anything
@@ -433,7 +422,6 @@ namespace Win32xx
         return 0;
     }
 
-
     // Called when the ribbon frame is destroyed.
     template <class T>
     inline void CRibbonFrameT<T>::OnDestroy()
@@ -441,7 +429,6 @@ namespace Win32xx
         DestroyRibbon();
         T::OnDestroy();
     }
-
 
     // Called when the ribbon's view has changed.
     template <class T>
@@ -472,7 +459,6 @@ namespace Win32xx
 
         return result;
     }
-
 
     // Populates the ribbon's recent items list.
     template <class T>
@@ -508,7 +494,6 @@ namespace Win32xx
 
         return result;
     }
-
 
     // Updates the frame's MRU when the Ribbon Framework isn't used.
     template <class T>

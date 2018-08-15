@@ -128,11 +128,9 @@ namespace Win32xx
         m_bkgndBrush.CreateSolidBrush(RGB(255, 255, 255));
     }
 
-
     inline CScrollView::~CScrollView()
     {
     }
-
 
     // Fills the area of the view that appears outside of the scrolling area.
     // Can be used in OnEraseBkgnd to draw the background efficiently.
@@ -151,7 +149,6 @@ namespace Win32xx
         dc.FillRect(rcBottom, brush);
     }
 
-
     // Called when the background for the window is erased.
     inline BOOL CScrollView::OnEraseBkgnd(CDC& dc)
     {
@@ -162,7 +159,6 @@ namespace Win32xx
         else
             return TRUE;    // Prevent background erasure to reduce flicker
     }
-
 
     // Called when an event occurs in the horizontal scroll bar.
     inline LRESULT CScrollView::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)

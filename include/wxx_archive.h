@@ -215,7 +215,6 @@ namespace Win32xx
         }
     }
 
-
     // Constructs a CArchive object.
     // A file with the specified name is created for storing (if required), and
     // also opened. A failure to open the file will throw an exception.
@@ -246,7 +245,6 @@ namespace Win32xx
         }
     }
 
-
     inline CArchive::~CArchive()
     {
         if (m_pFile)
@@ -268,14 +266,12 @@ namespace Win32xx
         }
     }
 
-
     // Returns the file associated with the archive.
     inline const CFile& CArchive::GetFile()
     {
         assert(m_pFile);
         return *m_pFile;
     }
-
 
     // Return the archived data schema. This acts as a version number on
     // the format of the archived data for special handling when there
@@ -286,7 +282,6 @@ namespace Win32xx
         return m_Schema;
     }
 
-
     // Return the current sense of serialization, true if the archive is
     // being loaded.
     inline bool CArchive::IsLoading() const
@@ -294,14 +289,12 @@ namespace Win32xx
          return !m_IsStoring;
     }
 
-
     // Return the current sense of serialization, true if the archive is
     // being stored.
     inline bool CArchive::IsStoring() const
     {
         return m_IsStoring;
     }
-
 
     // Read size bytes from the open archive file into the given lpBuf.
     // Throw an exception if not successful.
@@ -323,7 +316,6 @@ namespace Win32xx
         m_Schema = schema;
     }
 
-
     // Write size characters of from the lpBuf into the open archive file.
     // Throw an exception if unsuccessful.
     inline void CArchive::Write(const void* pBuf, UINT size)
@@ -332,7 +324,6 @@ namespace Win32xx
         assert(m_pFile);
         m_pFile->Write(pBuf, size);
     }
-
 
     // Write the BYTE b into the archive file. Throw an exception if an
     // error occurs.
@@ -343,7 +334,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the WORD w into the archive file. Throw an exception if an
     // error occurs.
     inline CArchive& CArchive::operator<<(WORD w)
@@ -353,7 +343,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the LONG l into the archive file. Throw an exception if an
     // error occurs.
     inline CArchive& CArchive::operator<<(LONG l)
@@ -362,7 +351,6 @@ namespace Win32xx
         *this << ob;
         return *this;
     }
-
 
     // Write the LONGLONG l into the archive file. Throw an exception if an
     // error occurs.
@@ -374,7 +362,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the ULONGLONG ull into the archive file. Throw an exception if an
     // error occurs.
     inline CArchive& CArchive::operator<<(ULONGLONG ull)
@@ -383,7 +370,6 @@ namespace Win32xx
         *this << ob;
         return *this;
     }
-
 
     // Write the DWORD dw into the archive file. Throw an exception if an
     // error occurs.
@@ -394,7 +380,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the float f into the archive file. Throw an exception if an
     // error occurs.
     inline CArchive& CArchive::operator<<(float f)
@@ -403,7 +388,6 @@ namespace Win32xx
         *this << ob;
         return *this;
     }
-
 
     // Write the double d into the archive file. Throw an exception if an
     // error occurs.
@@ -414,7 +398,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the int i into the archive file. Throw an exception if an
     // error occurs.
     inline CArchive& CArchive::operator<<(int i)
@@ -424,7 +407,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the short s into the archive file. Throw an exception if an
     // error occurs.
     inline CArchive& CArchive::operator<<(short s)
@@ -433,7 +415,6 @@ namespace Win32xx
         *this << ob;
         return *this;
     }
-
 
     // Write the char c into the archive file. Throw an exception if an
     // error occurs.
@@ -467,7 +448,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the bool b into the archive file. Throw an exception if an
     // error occurs.
     inline CArchive& CArchive::operator<<(bool b)
@@ -476,7 +456,6 @@ namespace Win32xx
         *this << ob;
         return *this;
     }
-
 
     // Write the CStringA string into the archive file.
     // The CStringA can contain any characters including embedded nulls.
@@ -494,7 +473,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the CStringW string into the archive file.
     // The CStringW can contain any characters including embedded nulls.
     // Throw an exception if an error occurs.
@@ -510,7 +488,6 @@ namespace Win32xx
         Write(string.c_str(), nChars*sizeof(WCHAR));
         return *this;
     }
-
 
     // Write the CString string into the archive file.
     // The CString can contain any characters including embedded nulls.
@@ -528,7 +505,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the POINT pt into the archive file. Throw an exception
     // if an error occurs.
     inline CArchive& CArchive::operator<<(const POINT& pt)
@@ -540,7 +516,6 @@ namespace Win32xx
         Write(&pt, size);
         return *this;
     }
-
 
     // Write the RECT rc into the archive file. Throw an exception
     // if an error occurs.
@@ -554,7 +529,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write the SIZE sz into the archive file. Throw an exception
     // if an error occurs.
     inline CArchive& CArchive::operator<<(const SIZE& sz)
@@ -566,7 +540,6 @@ namespace Win32xx
         Write(&sz, size);
         return *this;
     }
-
 
     // Write arbitrary CArchive object into this CArchive. Only ob.size  and
     // pointer ob.p to location are given. Throw an exception if unable
@@ -580,7 +553,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read a BYTE from the archive and  store it in b.  Throw an exception if
     // unable to do so correctly.
     inline CArchive& CArchive::operator>>(BYTE& b)
@@ -589,7 +561,6 @@ namespace Win32xx
         *this >> ob;
         return *this;
     }
-
 
     // Read a WORD from the archive and  store it in w.  Throw an exception if
     // unable to do so correctly.
@@ -600,7 +571,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read a LONG from the archive and store it in l.  Throw an exception if
     // unable to do so correctly.
     inline CArchive& CArchive::operator>>(LONG& l)
@@ -610,7 +580,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read a LONGLONG from the archive and store it in ll.  Throw an exception if
     // unable to do so correctly.
     inline CArchive& CArchive::operator>>(LONGLONG& ll)
@@ -619,7 +588,6 @@ namespace Win32xx
         *this >> ob;
         return *this;
     }
-
 
     // Read a ULONGLONG from the archive and store it in ull.  Throw an exception if
     // unable to do so correctly.
@@ -639,7 +607,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read a float from the archive and  store it in f.  Throw an exception if
     // unable to do so correctly.
     inline CArchive& CArchive::operator>>(float& f)
@@ -648,7 +615,6 @@ namespace Win32xx
         *this >> ob;
         return *this;
     }
-
 
     // Read a double from the archive and  store it in d.  Throw an exception if
     // unable to do so correctly.
@@ -659,7 +625,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read an int from the archive and  store it in i.  Throw an exception if
     // unable to do so correctly.
     inline CArchive& CArchive::operator>>(int& i)
@@ -669,7 +634,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read a short from the archive and  store it in i.  Throw an exception if
     // unable to do so correctly.
     inline CArchive& CArchive::operator>>(short& i)
@@ -678,7 +642,6 @@ namespace Win32xx
         *this >> ob;
         return *this;
     }
-
 
     // Read a char from the archive and  store it in c.  Throw an exception if
     // unable to do so correctly.
@@ -713,7 +676,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read an bool from the archive and  store it in b.  Throw an
     // exception if unable to do so correctly.
     inline CArchive& CArchive::operator>>(bool& b)
@@ -722,7 +684,6 @@ namespace Win32xx
         *this >> ob;
         return *this;
     }
-
 
     // Read a CString from the archive and  store it in string.  Throw an
     // exception if unable to do so correctly.
@@ -744,7 +705,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read a CStringW from the archive and  store it in string.  Throw an
     // exception if unable to do so correctly.
     inline CArchive& CArchive::operator>>(CStringW& string)
@@ -764,7 +724,6 @@ namespace Win32xx
 
         return *this;
     }
-
 
     // Read a CString from the archive and  store it in string.  Throw an
     // exception if unable to do so correctly. Note: exceptions are thrown
@@ -817,7 +776,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read a POINT from the archive and  store it in pt.  Throw an
     // exception if unable to do so correctly.
     inline CArchive& CArchive::operator>>(POINT& pt)
@@ -826,7 +784,6 @@ namespace Win32xx
         *this >> ob;
         return *this;
     }
-
 
     // Read a RECT from the archive and  store it in rc.  Throw an
     // exception if unable to do so correctly.
@@ -837,7 +794,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read a SIZE from the archive and  store it in sz.  Throw an
     // exception if unable to do so correctly.
     inline CArchive& CArchive::operator>>(SIZE& sz)
@@ -846,7 +802,6 @@ namespace Win32xx
         *this >> ob;
         return *this;
     }
-
 
     // Read a char string of size ob.size from the archive and  store it in
     // the location pointed to by ob.p.  Throw an exception if unable to
@@ -865,7 +820,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Write a CObject to the archive. Throw an exception if unable to
     // do so correctly.
     inline CArchive& CArchive::operator<<(const CObject& object)
@@ -874,7 +828,6 @@ namespace Win32xx
         return *this;
     }
 
-
     // Read a CObject from the archive. Throw an exception if unable to
     // do so correctly.
     inline CArchive& CArchive::operator>>(CObject& object)
@@ -882,7 +835,6 @@ namespace Win32xx
         object.Serialize(*this);
         return *this;
     }
-
 
     // The size (in characters) of szString array must be nMax or greater.
     // Reads at most nMax-1 TCHAR characters from the archive and store it
@@ -899,7 +851,6 @@ namespace Win32xx
         return pString;
     }
 
-
     // The size (in characters) of pString array must be nMax or greater.
     // Reads at most nMax-1 TCHAR characters from the archive and store it
     // in pString. Strings read from the archive are converted from ANSI
@@ -914,7 +865,6 @@ namespace Win32xx
         lstrcpynA(pString, str.c_str(), max);
         return pString;
     }
-
 
     // The size (in characters) of pString array must be nMax or greater.
     // Reads at most nMax-1 TCHAR characters from the archive and store it
@@ -931,7 +881,6 @@ namespace Win32xx
         return pString;
     }
 
-
     // Write the LPCTSTR string into the archive file.
     // The string must be null terminated.
     // Throw an exception if an error occurs.
@@ -947,7 +896,6 @@ namespace Win32xx
         Write(pString, nChars*sizeof(TCHAR));
     }
 
-
     // Write the LPCSTR string into the archive file.
     // The string must be null terminated.
     // Throw an exception if an error occurs.
@@ -962,7 +910,6 @@ namespace Win32xx
 
         Write(pString, nChars*sizeof(CHAR));
     }
-
 
     // Write the LPCWSTR string into the archive file.
     // The string must be null terminated.

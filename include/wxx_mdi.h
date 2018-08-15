@@ -139,7 +139,7 @@ namespace Win32xx
 
     protected:
         // Overridable virtual functions
-        virtual HWND Create(HWND hParent);
+        virtual HWND Create(HWND parent);
         virtual LRESULT OnMDIActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMDIDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMDIGetActive(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -163,7 +163,7 @@ namespace Win32xx
         virtual CWnd& GetMDIClient() const { return m_mdiClient; }
         virtual BOOL IsMDIChildMaxed() const;
         virtual BOOL IsMDIFrame() const { return TRUE; }
-        virtual void RemoveMDIChild(HWND hWnd);
+        virtual void RemoveMDIChild(HWND wnd);
         virtual BOOL RemoveAllMDIChildren();
 
         // These functions aren't virtual. Don't override these
@@ -235,7 +235,6 @@ namespace Win32xx
         T::SetView(GetMDIClient());
     }
 
-
     // Adds a MDI child to the MDI frame. The pointer to the MDI child will be
     // automatically deleted when the MDI Frame destroys the MDI child.
     template <class T>
@@ -248,7 +247,6 @@ namespace Win32xx
 
         return pMDIChild;
     }
-
 
     // Adds the additional menu items the the "Window" submenu when
     // MDI child windows are created.
@@ -318,7 +316,6 @@ namespace Win32xx
         }
     }
 
-
     // Returns the menu of the Active MDI Child if any,
     // otherwise returns the MDI Frame's menu.
     template <class T>
@@ -333,14 +330,12 @@ namespace Win32xx
         return Menu;
     }
 
-
     // Overrides CWnd::FinalWindowProc to call DefFrameProc instead of DefWindowProc.
     template <class T>
     inline LRESULT CMDIFrameT<T>::FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         return ::DefFrameProc(*this, GetMDIClient(), msg, wparam, lparam);
     }
-
 
     // Returns a pointer to the active MDI child, or NULL if there is no active MDI child.
     template <class T>
@@ -359,7 +354,6 @@ namespace Win32xx
         return isMaxed;
     }
 
-
     // Arranges the MDI children in a cascade formation.
     // Possible values for nType are:
     // MDITILE_SKIPDISABLED Prevents disabled MDI child windows from being cascaded.
@@ -370,7 +364,6 @@ namespace Win32xx
         GetMDIClient().SendMessage(WM_MDICASCADE, type, 0);
     }
 
-
     // Re-arranges the icons for minimized MDI children.
     template <class T>
     inline void CMDIFrameT<T>::MDIIconArrange() const
@@ -378,7 +371,6 @@ namespace Win32xx
         assert(T::IsWindow());
         GetMDIClient().SendMessage(WM_MDIICONARRANGE, 0, 0);
     }
-
 
     // Maximize the MDI child.
     template <class T>
@@ -389,7 +381,6 @@ namespace Win32xx
         GetMDIClient().SendMessage(WM_MDIMAXIMIZE, hMDIChild, 0);
     }
 
-
     // Activates the next MDI child.
     template <class T>
     inline void CMDIFrameT<T>::MDINext() const
@@ -398,7 +389,6 @@ namespace Win32xx
         WPARAM hMDIChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDINEXT, hMDIChild, FALSE);
     }
-
 
     // Activates the previous MDI child.
     template <class T>
@@ -409,7 +399,6 @@ namespace Win32xx
         GetMDIClient().SendMessage(WM_MDINEXT, hMDIChild, TRUE);
     }
 
-
     // Restores a mimimized MDI child.
     template <class T>
     inline void CMDIFrameT<T>::MDIRestore() const
@@ -418,7 +407,6 @@ namespace Win32xx
         WPARAM hMDIChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDIRESTORE, hMDIChild, 0);
     }
-
 
     // Arrange all of the MDI child windows in a tile format.
     // Possible values for nType are:
@@ -434,7 +422,6 @@ namespace Win32xx
         GetMDIClient().SendMessage(WM_MDITILE, type, 0);
     }
 
-
     // Called when the MDI frame is about to close.
     template <class T>
     inline void CMDIFrameT<T>::OnClose()
@@ -444,7 +431,6 @@ namespace Win32xx
             T::OnClose();
         }
     }
-
 
     // Called when the menu's modal loop begins (WM_INITMENUPOPUP received).
     template <class T>
@@ -462,7 +448,6 @@ namespace Win32xx
 
         return T::OnInitMenuPopup(msg, wparam, lparam);
     }
-
 
     // Updates the check buttons before displaying the menu.
     template <class T>
@@ -487,7 +472,6 @@ namespace Win32xx
         }
     }
 
-
     // Called when a MDI child is activated.
     template <class T>
     inline LRESULT CMDIFrameT<T>::OnMDIActivated(UINT, WPARAM wparam, LPARAM)
@@ -511,7 +495,6 @@ namespace Win32xx
         return 0;
     }
 
-
     // Called when a MDI child is destroyed.
     template <class T>
     inline LRESULT CMDIFrameT<T>::OnMDIDestroyed(UINT, WPARAM wparam, LPARAM)
@@ -519,7 +502,6 @@ namespace Win32xx
         RemoveMDIChild(reinterpret_cast<HWND>(wparam));
         return 0;
     }
-
 
     // Called when a MDI Child maximized state of the MDI child is checked.
     template <class T>
@@ -531,7 +513,6 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(isMax);
     }
 
-
     // Called when the StatusBar is shown.
     template <class T>
     inline BOOL CMDIFrameT<T>::OnViewStatusBar()
@@ -541,7 +522,6 @@ namespace Win32xx
         return TRUE;
     }
 
-
     // Called when the ToolBar window is shown.
     template <class T>
     inline BOOL CMDIFrameT<T>::OnViewToolBar()
@@ -550,7 +530,6 @@ namespace Win32xx
         T::GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
         return TRUE;
     }
-
 
     // Called when the MDI frame has been resized.
     template <class T>
@@ -564,7 +543,6 @@ namespace Win32xx
 
         return FinalWindowProc(msg, wparam, lparam);
     }
-
 
     // Used to translate window messages before they are dispatched to they are handled in
     // the message loop.
@@ -580,7 +558,6 @@ namespace Win32xx
         return T::PreTranslateMessage(msg);
     }
 
-
     // Repositions the child windows of the MDI frame, such as the toolbar, status bar and view window.
     template <class T>
     inline void CMDIFrameT<T>::RecalcLayout()
@@ -590,7 +567,6 @@ namespace Win32xx
         if (T::GetView().IsWindow())
             MDIIconArrange();
     }
-
 
     // Removes all MDI children.
     template <class T>
@@ -614,17 +590,16 @@ namespace Win32xx
         return Succeeded;
     }
 
-
     // Removes an individual MDI child.
     template <class T>
-    inline void CMDIFrameT<T>::RemoveMDIChild(HWND hWnd)
+    inline void CMDIFrameT<T>::RemoveMDIChild(HWND wnd)
     {
         // Allocate an iterator for our HWND map
         std::vector<MDIChildPtr>::iterator v;
 
         for (v = m_vMDIChild.begin(); v!= m_vMDIChild.end(); ++v)
         {
-            if ((*v)->GetHwnd() == hWnd)
+            if ((*v)->GetHwnd() == wnd)
             {
                 m_vMDIChild.erase(v);
                 break;
@@ -654,7 +629,6 @@ namespace Win32xx
         }
     }
 
-
     // Activates the specified MDI child.
     template <class T>
     inline void CMDIFrameT<T>::SetActiveMDIChild(CMDIChild* pChild)
@@ -663,7 +637,6 @@ namespace Win32xx
 
         GetMDIClient().SendMessage(WM_MDIACTIVATE, reinterpret_cast<WPARAM>(pChild->GetHwnd()), 0);
     }
-
 
     // Updates the frame menu. Also puts the list of CMDIChild windows in the "window" menu.
     // The "window" menu item is assumed to be the second from the right.
@@ -697,7 +670,6 @@ namespace Win32xx
         }
     }
 
-
     // Provides default processing for the MDI frame window's messages.
     template <class T>
     inline LRESULT CMDIFrameT<T>::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -729,9 +701,9 @@ namespace Win32xx
 
     // Creates the MDIClient window.
     template<class T>
-    inline HWND CMDIClient<T>::Create(HWND hParent)
+    inline HWND CMDIClient<T>::Create(HWND parent)
     {
-        assert(hParent != 0);
+        assert(parent != 0);
 
         CLIENTCREATESTRUCT clientcreate;
         clientcreate.hWindowMenu  = 0;
@@ -739,9 +711,8 @@ namespace Win32xx
         DWORD style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
         // Create the view window
-        return T::CreateEx(WS_EX_CLIENTEDGE, _T("MDIClient"), _T(""), style, 0, 0, 0, 0, hParent, NULL, (PSTR) &clientcreate);
+        return T::CreateEx(WS_EX_CLIENTEDGE, _T("MDIClient"), _T(""), style, 0, 0, 0, 0, parent, NULL, (PSTR) &clientcreate);
     }
-
 
     // Called when the MDI child window is activated.
     template <class T>
@@ -749,13 +720,12 @@ namespace Win32xx
     {
         // Suppress redraw to avoid flicker when activating maximised MDI children
         T::SetRedraw(FALSE);
-        LRESULT lr = T::CallWindowProc(T::GetPrevWindowProc(), WM_MDIACTIVATE, wparam, lparam);
+        LRESULT result = T::CallWindowProc(T::GetPrevWindowProc(), WM_MDIACTIVATE, wparam, lparam);
         T::SetRedraw(TRUE);
         T::RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
-        return lr;
+        return result;
     }
-
 
     // Called when a MDI child window is destroyed.
     template <class T>
@@ -770,18 +740,16 @@ namespace Win32xx
         return 0;
     }
 
-
     // Called when the active MDI child is requested.
     template <class T>
     inline LRESULT CMDIClient<T>::OnMDIGetActive(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Do default processing first
-        LRESULT lr = T::CallWindowProc(T::GetPrevWindowProc(), msg, wparam, lparam);
+        LRESULT result = T::CallWindowProc(T::GetPrevWindowProc(), msg, wparam, lparam);
 
-        SendMessage(T::GetParent(), UWM_MDIGETACTIVE, lr, lparam);
-        return lr;
+        SendMessage(T::GetParent(), UWM_MDIGETACTIVE, result, lparam);
+        return result;
     }
-
 
     // Provides default processing for the MDIClient window's messages.
     template <class T>
@@ -812,17 +780,15 @@ namespace Win32xx
 
     }
 
-
     inline CMDIChild::~CMDIChild()
     {
         if (IsWindow())
             GetParent().SendMessage(WM_MDIDESTROY, reinterpret_cast<WPARAM>(GetHwnd()), 0);
     }
 
-
     // Create the MDI child window and then maximize if required.
     // This technique avoids unnecessary flicker when creating maximized MDI children.
-    inline HWND CMDIChild::Create(HWND hParent /*= NULL*/)
+    inline HWND CMDIChild::Create(HWND parent /*= NULL*/)
     {
         CREATESTRUCT cs;
         WNDCLASS wc;
@@ -835,7 +801,7 @@ namespace Win32xx
 
         //Determine if the window should be created maximized
         BOOL Max = FALSE;
-        CWnd* pParent = GetCWndPtr(hParent);
+        CWnd* pParent = GetCWndPtr(parent);
         assert(pParent);
         pParent->SendMessage(WM_MDIGETACTIVE, 0, reinterpret_cast<LPARAM>(&Max));
         Max = Max | (cs.style & WS_MAXIMIZE);
@@ -886,13 +852,11 @@ namespace Win32xx
         return GetHwnd();
     }
 
-
     // Overrides CWnd::FinalWindowProc to call DefMDIChildProc instead of DefWindowProc.
     inline LRESULT CMDIChild::FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         return ::DefMDIChildProc(*this, msg, wparam, lparam);
     }
-
 
     // Activate a MDI child.
     inline void CMDIChild::MDIActivate() const
@@ -900,13 +864,11 @@ namespace Win32xx
         GetParent().SendMessage(WM_MDIACTIVATE, reinterpret_cast<WPARAM>(GetHwnd()), 0);
     }
 
-
     // Destroy a MDI child.
     inline void CMDIChild::MDIDestroy() const
     {
         GetParent().SendMessage(WM_MDIDESTROY, reinterpret_cast<WPARAM>(GetHwnd()), 0);
     }
-
 
     // Maximize a MDI child.
     inline void CMDIChild::MDIMaximize() const
@@ -914,20 +876,17 @@ namespace Win32xx
         GetParent().SendMessage(WM_MDIMAXIMIZE, reinterpret_cast<WPARAM>(GetHwnd()), 0);
     }
 
-
     // Restore a MDI child.
     inline void CMDIChild::MDIRestore() const
     {
         GetParent().SendMessage(WM_MDIRESTORE, reinterpret_cast<WPARAM>(GetHwnd()), 0);
     }
 
-
     // Override this to customise what happens when the window asks to be closed.
     inline void CMDIChild::OnClose()
     {
         MDIDestroy();
     }
-
 
     // Called when the MDI child is created.
     inline int CMDIChild::OnCreate(CREATESTRUCT& cs)
@@ -942,7 +901,6 @@ namespace Win32xx
 
         return 0;
     }
-
 
     // Called when the MDI child is activated.
     inline LRESULT CMDIChild::OnMDIActivate(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -966,14 +924,12 @@ namespace Win32xx
         return 0;
     }
 
-
     // Called when the MDI child is resized.
     inline LRESULT CMDIChild::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         RecalcLayout();
         return FinalWindowProc(msg, wparam, lparam);
     }
-
 
     // Repositions the MDI child's child windows.
     inline void CMDIChild::RecalcLayout()
@@ -982,7 +938,6 @@ namespace Win32xx
         CRect rc = GetClientRect();
         GetView().SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
     }
-
 
     // Sets the MDI child's menu and accelerator handles.
     inline void CMDIChild::SetHandles(HMENU menu, HACCEL accel)
@@ -997,7 +952,6 @@ namespace Win32xx
             GetAncestor().SendMessage(UWM_MDIACTIVATED, reinterpret_cast<WPARAM>(GetHwnd()), 0);
         }
     }
-
 
     // Sets or changes the MDI child's view window.
     inline void CMDIChild::SetView(CWnd& wndView)
@@ -1025,7 +979,6 @@ namespace Win32xx
             }
         }
     }
-
 
     // Provides the default processing for the MDI child's window messages.
     inline LRESULT CMDIChild::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)

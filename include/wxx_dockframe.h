@@ -131,7 +131,6 @@ namespace Win32xx
         return CFrameT<CDocker>::OnActivate(msg, wparam, lparam);
     }
 
-
     // Called when the frame window is created.
     inline int CDockFrame::OnCreate(CREATESTRUCT& cs)
     {
@@ -143,14 +142,12 @@ namespace Win32xx
         return CFrameT<CDocker>::OnCreate(cs);
     }
 
-
     // Called when the frame window is destroyed.
     inline void CDockFrame::OnDestroy()
     {
         CDocker::OnDestroy();
         CFrameT<CDocker>::OnDestroy();
     }
-
 
     // Called when a docker is activated.
     inline LRESULT CDockFrame::OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -172,13 +169,12 @@ namespace Win32xx
     inline LRESULT CDockFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     // Called when a notification from a child window (WM_NOTIFY) is received.
     {
-        LRESULT lr = CFrameT<CDocker>::OnNotify(wparam, lparam);
-        if (lr == 0)
-            lr = CDocker::OnNotify(wparam, lparam);
+        LRESULT result = CFrameT<CDocker>::OnNotify(wparam, lparam);
+        if (result == 0)
+			result = CDocker::OnNotify(wparam, lparam);
 
-        return lr;
+        return result;
     }
-
 
     // Called when the system colors are changed.
     inline LRESULT CDockFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -187,13 +183,11 @@ namespace Win32xx
         return CFrameT<CDocker>::OnSysColorChange(msg, wparam, lparam);
     }
 
-
     // Repositions the view window
     inline void CDockFrame::RecalcViewLayout()
     {
         RecalcDockLayout();
     }
-
 
     // Process the frame's window messages.
     inline LRESULT CDockFrame::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -225,7 +219,6 @@ namespace Win32xx
         SetView(GetMDIClient());
         GetDockClient().SetDocker(this);
     }
-
 
     // Called when the frame window is created
     inline int CMDIDockFrame::OnCreate(CREATESTRUCT& cs)
