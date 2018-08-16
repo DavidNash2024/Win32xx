@@ -35,6 +35,8 @@
     <ClInclude Include="..\..\..\include\wxx_docking.h" />
     <ClInclude Include="..\..\..\include\wxx_exception.h" />
     <ClInclude Include="..\..\..\include\wxx_file.h" />
+    <ClInclude Include="..\..\..\include\wxx_filefind.h" />
+    <ClInclude Include="..\..\..\include\wxx_folderdialog.h" />
     <ClInclude Include="..\..\..\include\wxx_frame.h" />
     <ClInclude Include="..\..\..\include\wxx_gdi.h" />
     <ClInclude Include="..\..\..\include\wxx_imagelist.h" />
@@ -43,6 +45,7 @@
     <ClInclude Include="..\..\..\include\wxx_menu.h" />
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
     <ClInclude Include="..\..\..\include\wxx_metafile.h" />
+    <ClInclude Include="..\..\..\include\wxx_mutex.h" />
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h" />
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
     <ClInclude Include="..\..\..\include\wxx_rebar.h" />
@@ -50,6 +53,7 @@
     <ClInclude Include="..\..\..\include\wxx_regkey.h" />
     <ClInclude Include="..\..\..\include\wxx_ribbon.h" />
     <ClInclude Include="..\..\..\include\wxx_richedit.h" />
+    <ClInclude Include="..\..\..\include\wxx_scrollview.h" />
     <ClInclude Include="..\..\..\include\wxx_shared_ptr.h" />
     <ClInclude Include="..\..\..\include\wxx_socket.h" />
     <ClInclude Include="..\..\..\include\wxx_statusbar.h" />
@@ -61,6 +65,7 @@
     <ClInclude Include="..\..\..\include\wxx_time.h" />
     <ClInclude Include="..\..\..\include\wxx_toolbar.h" />
     <ClInclude Include="..\..\..\include\wxx_treeview.h" />
+    <ClInclude Include="..\..\..\include\wxx_wceframe.h" />
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />

@@ -146,6 +146,8 @@
     <ClInclude Include="..\..\..\include\wxx_docking.h" />
     <ClInclude Include="..\..\..\include\wxx_exception.h" />
     <ClInclude Include="..\..\..\include\wxx_file.h" />
+    <ClInclude Include="..\..\..\include\wxx_filefind.h" />
+    <ClInclude Include="..\..\..\include\wxx_folderdialog.h" />
     <ClInclude Include="..\..\..\include\wxx_frame.h" />
     <ClInclude Include="..\..\..\include\wxx_gdi.h" />
     <ClInclude Include="..\..\..\include\wxx_imagelist.h" />
@@ -154,6 +156,7 @@
     <ClInclude Include="..\..\..\include\wxx_menu.h" />
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
     <ClInclude Include="..\..\..\include\wxx_metafile.h" />
+    <ClInclude Include="..\..\..\include\wxx_mutex.h" />
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h" />
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
     <ClInclude Include="..\..\..\include\wxx_rebar.h" />

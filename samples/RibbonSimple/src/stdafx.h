@@ -51,10 +51,14 @@
 #include <wxx_imagelist.h>      // Add CImageList
 #include <wxx_listview.h>       // Add CListView
 #include <wxx_mdi.h>            // Add CMDIChild, CMDIFrame, CDockMDIFrame
+#include <wxx_menu.h>           // Add CMenu
+#include <wxx_menubar.h>        // Add CMenuBar
 #include <wxx_metafile.h>       // Add CMetaFile, CEnhMetaFile
+#include <wxx_mutex.h>          // Add CEvent, CMutex, CSemaphore
 #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintSetupDialog
 #include <wxx_propertysheet.h>  // Add CPropertyPage, CPropertySheet
 #include <wxx_rebar.h>          // Add CRebar
+#include <wxx_rect.h>           // Add CPoint, CRect, CSize
 #include <wxx_regkey.h>         // Add CRegKey
 #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
 #include <wxx_richedit.h>       // Add CRichEdit
@@ -64,7 +68,9 @@
 #include <wxx_statusbar.h>      // Add CStatusBar
 #include <wxx_stdcontrols.h>    // Add CButton, CEdit, CListBox
 #include <wxx_tab.h>            // Add CTab, CTabbedMDI
-//#include <wxx_taskdialog.h>   // Add CTaskDialog
+#include <wxx_taskdialog.h>     // Add CTaskDialog
+#include <wxx_textconv.h>       // Add AtoT, AtoW, TtoA, TtoW, WtoA, WtoT etc.
+#include <wxx_themes.h>         // Add MenuTheme, ReBarTheme, StatusBarTheme, ToolBarTheme
 #include <wxx_time.h>           // Add CTime
 #include <wxx_toolbar.h>        // Add CToolBar
 #include <wxx_treeview.h>       // Add CTreeView
