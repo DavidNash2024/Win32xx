@@ -309,6 +309,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_filefind.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_folderdialog.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_frame.h"
 				>
 			</File>
@@ -338,6 +346,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_metafile.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_mutex.h"
 				>
 			</File>
 			<File

@@ -289,6 +289,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_commondlg.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_controls.h"
 				>
 			</File>
@@ -305,6 +309,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_dockframe.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_docking.h"
 				>
 			</File>
@@ -314,6 +322,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_file.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_filefind.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_folderdialog.h"
 				>
 			</File>
 			<File
@@ -345,6 +361,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_metafile.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_mutex.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_printdialogs.h"
 				>
 			</File>
@@ -370,6 +394,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_richedit.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_scrollview.h"
 				>
 			</File>
 			<File
