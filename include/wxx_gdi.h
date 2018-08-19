@@ -1275,26 +1275,26 @@ namespace Win32xx
 
     inline BOOL CGDIObject::RemoveFromMap()
     {
-        BOOL Success = FALSE;
+        BOOL success = FALSE;
 
         if( &GetApp() )
         {
             // Allocate an iterator for our HDC map
             std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
 
-            CWinApp& App = GetApp();
-            CThreadLock mapLock(App.m_gdiLock);
-            m = App.m_mapCGDIData.find(m_pData->hGDIObject);
-            if (m != App.m_mapCGDIData.end())
+            CWinApp& app = GetApp();
+            CThreadLock mapLock(app.m_gdiLock);
+            m = app.m_mapCGDIData.find(m_pData->hGDIObject);
+            if (m != app.m_mapCGDIData.end())
             {
                 // Erase the CGDIObject pointer entry from the map
-                App.m_mapCGDIData.erase(m);
-                Success = TRUE;
+                app.m_mapCGDIData.erase(m);
+                success = TRUE;
             }
 
         }
 
-        return Success;
+        return success;
     }
 
 
@@ -1412,29 +1412,29 @@ namespace Win32xx
         byte* bits = &vBits[0];
         dc.GetDIBits(*this, 0, data.bmHeight, bits, pbmi, DIB_RGB_COLORS);
 
-        UINT nWidthBytes = bmiHeader.biSizeImage / bmiHeader.biHeight;
+        UINT widthBytes = bmiHeader.biSizeImage / bmiHeader.biHeight;
         int yOffset = 0;
         int xOffset;
-        size_t Index;
+        size_t index;
 
-        for (int Row = 0; Row < bmiHeader.biHeight; ++Row)
+        for (int row = 0; row < bmiHeader.biHeight; ++row)
         {
             xOffset = 0;
 
-            for (int Column = 0; Column < bmiHeader.biWidth; ++Column)
+            for (int column = 0; column < bmiHeader.biWidth; ++column)
             {
                 // Calculate Index
-                Index = yOffset + xOffset;
+                index = yOffset + xOffset;
 
                 // skip for colors matching the mask
-                if ((bits[Index + 0] != GetRValue(mask)) &&
-                    (bits[Index + 1] != GetGValue(mask)) &&
-                    (bits[Index + 2] != GetBValue(mask)))
+                if ((bits[index + 0] != GetRValue(mask)) &&
+                    (bits[index + 1] != GetGValue(mask)) &&
+                    (bits[index + 2] != GetBValue(mask)))
                 {
-                    BYTE byGray = BYTE(95 + (bits[Index + 2] * 3 + bits[Index + 1] * 6 + bits[Index + 0]) / 20);
-                    bits[Index] = byGray;
-                    bits[Index + 1] = byGray;
-                    bits[Index + 2] = byGray;
+                    BYTE byGray = BYTE(95 + (bits[index + 2] * 3 + bits[index + 1] * 6 + bits[index + 0]) / 20);
+                    bits[index] = byGray;
+                    bits[index + 1] = byGray;
+                    bits[index + 2] = byGray;
                 }
 
                 // Increment the horizontal offset
@@ -1442,7 +1442,7 @@ namespace Win32xx
             }
 
             // Increment vertical offset
-            yOffset += nWidthBytes;
+            yOffset += widthBytes;
         }
 
         dc.SetDIBits(*this, 0, data.bmHeight, bits, pbmi, DIB_RGB_COLORS);
@@ -1567,32 +1567,32 @@ namespace Win32xx
         byte* pByteArray = &vBits[0];
 
         dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-        UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
+        UINT widthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
         int yOffset = 0;
         int xOffset;
-        size_t Index;
+        size_t index;
 
-        for (int Row=0; Row < bmiHeader.biHeight; ++Row)
+        for (int row=0; row < bmiHeader.biHeight; ++row)
         {
             xOffset = 0;
 
-            for (int Column=0; Column < bmiHeader.biWidth; ++Column)
+            for (int column=0; column < bmiHeader.biWidth; ++column)
             {
                 // Calculate Index
-                Index = yOffset + xOffset;
+				index = yOffset + xOffset;
 
-                BYTE byGray = (BYTE) ((pByteArray[Index] + pByteArray[Index+1]*6 + pByteArray[Index+2] *3)/10);
-                pByteArray[Index]   = byGray;
-                pByteArray[Index+1] = byGray;
-                pByteArray[Index+2] = byGray;
+                BYTE byGray = (BYTE) ((pByteArray[index] + pByteArray[index +1]*6 + pByteArray[index +2] *3)/10);
+                pByteArray[index]   = byGray;
+                pByteArray[index +1] = byGray;
+                pByteArray[index +2] = byGray;
 
                 // Increment the horizontal offset
                 xOffset += bmiHeader.biBitCount >> 3;
             }
 
             // Increment vertical offset
-            yOffset += nWidthBytes;
+            yOffset += widthBytes;
         }
 
         // Save the modified colour back into our source DDB
@@ -1619,7 +1619,7 @@ namespace Win32xx
         byte* pByteArray = &vBits[0];
 
         dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-        UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
+        UINT widthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
         // Ensure sane colour correction values
         cBlue  = MIN(cBlue, 255);
@@ -1672,7 +1672,7 @@ namespace Win32xx
             }
 
             // Increment vertical offset
-            yOffset += nWidthBytes;
+            yOffset += widthBytes;
         }
 
         // Save the modified colour back into our source DDB
@@ -2020,9 +2020,9 @@ namespace Win32xx
     inline int CPalette::GetEntryCount() const
     {
         assert(GetHandle() != NULL);
-        WORD nEntries = 0;
-        VERIFY(::GetObject(GetHandle(), sizeof(WORD), &nEntries) != 0);
-        return static_cast<int>(nEntries);
+        WORD entries = 0;
+        VERIFY(::GetObject(GetHandle(), sizeof(WORD), &entries) != 0);
+        return static_cast<int>(entries);
     }
 
     // Retrieves a specified range of palette entries from the palette.
@@ -2611,19 +2611,19 @@ namespace Win32xx
     inline void CDC::DrawBitmap(int x, int y, int cx, int cy, HBITMAP bitmap, COLORREF mask) const
     {
         // Create the Image memory DC
-        CMemDC dcImage(*this);
-        dcImage.SetBkColor(mask);
-        ::SelectObject(dcImage, bitmap);
+        CMemDC imageDC(*this);
+		imageDC.SetBkColor(mask);
+        ::SelectObject(imageDC, bitmap);
 
         // Create the Mask memory DC
         CMemDC dcMask(*this);
         dcMask.CreateBitmap(cx, cy, 1, 1, NULL);
-        dcMask.BitBlt(0, 0, cx, cy, dcImage, 0, 0, SRCCOPY);
+        dcMask.BitBlt(0, 0, cx, cy, imageDC, 0, 0, SRCCOPY);
 
         // Mask the image to 'this' DC
-        BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
-        BitBlt(x, y, cx, cy, dcMask, 0, 0, SRCAND);
-        BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
+        BitBlt(x, y, cx, cy, imageDC, 0, 0, SRCINVERT);
+        BitBlt(x, y, cx, cy, imageDC, 0, 0, SRCAND);
+        BitBlt(x, y, cx, cy, imageDC, 0, 0, SRCINVERT);
     }
 
     // An efficient color gradient filler compatible with all Windows operating systems
@@ -2685,26 +2685,26 @@ namespace Win32xx
 
     inline BOOL CDC::RemoveFromMap()
     {
-        BOOL Success = FALSE;
+        BOOL success = FALSE;
 
         if( &GetApp() )
         {
             // Allocate an iterator for our Data map
             std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
 
-            CWinApp& App = GetApp();
-            CThreadLock mapLock(App.m_gdiLock);
-            m = App.m_mapCDCData.find(m_pData->dc);
-            if (m != App.m_mapCDCData.end())
+            CWinApp& app = GetApp();
+            CThreadLock mapLock(app.m_gdiLock);
+            m = app.m_mapCDCData.find(m_pData->dc);
+            if (m != app.m_mapCDCData.end())
             {
                 // Erase the CDC data entry from the map
-                App.m_mapCDCData.erase(m);
-                Success = TRUE;
+                app.m_mapCDCData.erase(m);
+                success = TRUE;
             }
 
         }
 
-        return Success;
+        return success;
     }
 
     inline BOOL CDC::RestoreDC(int savedDC) const
@@ -3001,12 +3001,12 @@ namespace Win32xx
     }
 
     // Creates the brush with the specified color, and selects it into the device context.
-    inline void CDC::CreateSolidBrush(COLORREF rgb)
+    inline void CDC::CreateSolidBrush(COLORREF color)
     {
         assert(m_pData->dc != 0);
 
         CBrush brush;
-        brush.CreateSolidBrush(rgb);
+        brush.CreateSolidBrush(color);
         SelectObject(brush);
         m_pData->brush = brush;
     }
@@ -3044,12 +3044,12 @@ namespace Win32xx
     }
 
     // Creates a brush with the specified hatch pattern and color, and selects it into the device context.
-    inline void CDC::CreateHatchBrush(int style, COLORREF rgb)
+    inline void CDC::CreateHatchBrush(int style, COLORREF color)
     {
         assert(m_pData->dc != 0);
 
         CBrush brush;
-        brush.CreateHatchBrush(style, rgb);
+        brush.CreateHatchBrush(style, color);
         SelectObject(brush);
         m_pData->brush = brush;
     }

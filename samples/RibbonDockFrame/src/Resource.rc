@@ -103,13 +103,13 @@ IDW_SPLITV              CURSOR                  "../src/res/SplitV.cur"
 // Dialog
 //
 
-IDW_ABOUT DIALOGEX 0, 0, 230, 90
+IDW_ABOUT DIALOGEX 0, 0, 184, 90
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,91,44,50,14
-    CTEXT           "Ribbon Docking Frame Application",IDC_STATIC,53,19,126,11
+    DEFPUSHBUTTON   "OK",IDOK,67,44,50,14
+    CTEXT           "Docking Frame Application with Ribbon",IDC_STATIC,46,18,92,17
     ICON            IDW_MAIN,0,4,4,21,20
 END
 

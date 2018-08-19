@@ -142,12 +142,12 @@ namespace Win32xx
         // Test if Windows version is XP or greater
         if (GetWinVersion() >= 2501)
         {
-            HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
-            if(hMod != 0)
+            HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
+            if(theme != 0)
             {
                 // Declare pointers to functions
-                FARPROC pIsAppThemed   = ::GetProcAddress(hMod, "IsAppThemed");
-                FARPROC pIsThemeActive = ::GetProcAddress(hMod, "IsThemeActive");
+                FARPROC pIsAppThemed   = ::GetProcAddress(theme, "IsAppThemed");
+                FARPROC pIsThemeActive = ::GetProcAddress(theme, "IsThemeActive");
 
                 if(pIsAppThemed && pIsThemeActive)
                 {
@@ -157,7 +157,7 @@ namespace Win32xx
                         IsXPThemed = (GetComCtlVersion() >= 600);
                     }
                 }
-                ::FreeLibrary(hMod);
+                ::FreeLibrary(theme);
             }
         }
 

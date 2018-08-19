@@ -98,7 +98,7 @@ MakeAppDataPath(const CString& subpath)                 /*
 
         CString add = subpath.Mid(from, next - from);
         appdata += _T("\\") + add;
-        if (!SUCCEEDED(::CreateDirectory(appdata, 0)))
+		if ((::CreateDirectory(appdata, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
         {
             CString msg = appdata + _T("\nDirectory creation error.");
             throw CUserException(msg);

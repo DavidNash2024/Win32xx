@@ -196,11 +196,11 @@ namespace Win32xx
     {
         assert(IsWindow());
 
-        BOOL Succeeded = FALSE;
+        BOOL result = FALSE;
         if (static_cast<int>(SendMessage(SB_GETPARTS, 0, 0) >= part))
-            Succeeded = (SendMessage(SB_SETTEXT, (part | style), reinterpret_cast<LPARAM>(pText)) != 0);
+			result = (SendMessage(SB_SETTEXT, (part | style), reinterpret_cast<LPARAM>(pText)) != 0);
 
-        return Succeeded;
+        return result;
     }
 
     // Sets the icon for a part in the status bar.
@@ -240,9 +240,9 @@ namespace Win32xx
         }
 
         // Set the StatusBar parts with our new parts count and part widths
-        BOOL Succeeded = (SendMessage(SB_SETPARTS, newPartsCount, reinterpret_cast<LPARAM>(pNewPartWidthArray)) != 0);
+        BOOL result = (SendMessage(SB_SETPARTS, newPartsCount, reinterpret_cast<LPARAM>(pNewPartWidthArray)) != 0);
 
-        return Succeeded;
+        return result;
     }
 
     // Specifies whether a status window displays simple text or displays all window parts

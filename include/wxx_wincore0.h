@@ -314,8 +314,6 @@ namespace Win32xx
         // Not intended to be overridden
         virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
- //       HWND m_hWnd;                    // handle to this object's window
-
     private:
         CWnd(const CWnd&);              // Disable copy construction
         CWnd& operator = (const CWnd&); // Disable assignment operator

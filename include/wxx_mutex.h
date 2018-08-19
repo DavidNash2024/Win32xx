@@ -83,8 +83,8 @@ namespace Win32xx
     private:
         HANDLE m_event;
     };
-    
- 
+
+
     class CMutex
     {
     public:
@@ -97,7 +97,8 @@ namespace Win32xx
     private:
         HANDLE m_mutex;    
     };
-    
+
+
     class CSemaphore
     {
     public:
@@ -111,9 +112,11 @@ namespace Win32xx
     private:
         HANDLE m_semaphore;
     };
-    
-    
-    
+
+
+    /////////////////////////////////////////
+    // CEvent member function definitions
+
     // Creates a named or unnamed event.
     // Parameters:
     //  isInitiallySignaled - TRUE the initial state of the created event is signalled, FALSE otherwise
@@ -132,19 +135,23 @@ namespace Win32xx
         if (m_event == NULL)
             throw CWinException(_T("Unable to create event"));
     }
-     
+
     // Sets the specified event object to the non-signalled state.
     inline void CEvent::ResetEvent()
     {
         ::ResetEvent(m_event);
     }
-     
+
     // Sets the specified event object to the signalled state.
     inline void CEvent::SetEvent()
     {
         ::SetEvent(m_event);
-    }  
-    
+    }
+
+
+    /////////////////////////////////////////
+    // CMutex member function definitions	
+
     // Creates a named or unnamed mutex.
     // Parameters:
     //  isInitiallySignaled - TRUE the initial state of the created mutex is signalled, FALSE otherwise
@@ -161,7 +168,11 @@ namespace Win32xx
         if (m_mutex == NULL)
             throw CResourceException(_T("Unable to create mutex"));
     }
-       
+
+
+    /////////////////////////////////////////
+    // CMutex member function definitions	
+
     // Creates a named or unnamed semaphore.
     // Parameters:
     //  initialCount   - Initial count for the semaphore object. This value must be greater than or equal
@@ -181,7 +192,7 @@ namespace Win32xx
         if (m_semaphore == NULL)
             throw CResourceException(_T("Unable to create semaphore"));
     }
-    
+
     // Increases the count of the specified semaphore object by a specified amount.
     // Parameters:
     //  releaseCount   - Amount by which the semaphore object's current count is to be increased.
@@ -192,13 +203,11 @@ namespace Win32xx
         BOOL result = ::ReleaseSemaphore(m_semaphore, releaseCount, pPreviousCount);
         return result;
     }
-            
-    
+
 }
 
 
 #endif // _WIN32XX_MUTEX_H_
-
 
 
 

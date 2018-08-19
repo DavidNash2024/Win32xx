@@ -526,16 +526,16 @@ namespace Win32xx
     inline BOOL CToolBar::HasText() const
     {
         assert(IsWindow());
-        BOOL Succeeded = FALSE;
+        BOOL result = FALSE;
 
         for (int i = 0 ; i < GetButtonCount(); ++i)
         {
             if (SendMessage(TB_GETBUTTONTEXT, GetCommandID(i), 0) != -1)
-                Succeeded = TRUE;
+				result = TRUE;
         }
 
         // return TRUE if any button has text
-        return Succeeded;
+        return result;
     }
 
     //Hides or shows the specified button in a ToolBar.
@@ -710,11 +710,11 @@ namespace Win32xx
         tbrb.nIDOld = m_oldBitmapID;
         tbrb.nButtons  = images;
 
-        BOOL Succeeded = (SendMessage(TB_REPLACEBITMAP, images, reinterpret_cast<LPARAM>(&tbrb)) != 0);
-        if (Succeeded)
+        BOOL result = (SendMessage(TB_REPLACEBITMAP, images, reinterpret_cast<LPARAM>(&tbrb)) != 0);
+        if (result)
 			m_oldBitmapID = m_oldBitmapID;
 
-        return Succeeded;
+        return result;
     }
 
     // Saves or restores the toolbar state in the registry. Parameter values:
@@ -926,13 +926,13 @@ namespace Win32xx
         tbbi.cbSize = sizeof(tbbi);
         tbbi.dwMask = TBIF_SIZE;
         tbbi.cx = static_cast<WORD>(width);
-        BOOL Succeeded = (SendMessage(TB_SETBUTTONINFO, buttonID, reinterpret_cast<LPARAM>(&tbbi)) != 0);
+        BOOL result = (SendMessage(TB_SETBUTTONINFO, buttonID, reinterpret_cast<LPARAM>(&tbbi)) != 0);
 
         // Send a changed message to the parent (used by the ReBar)
         SIZE MaxSize = GetMaxSize();
         GetParent().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(GetHwnd()), reinterpret_cast<LPARAM>(&MaxSize));
 
-        return Succeeded;
+        return result;
     }
 
     // Sets the command identifier of a ToolBar button.

@@ -2121,17 +2121,17 @@ namespace Win32xx
     template <class T>
     inline CString CFrameT<T>::GetThemeName() const
     {
-        HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
         WCHAR themeName[31] = L"";
-        if(hMod != 0)
+        if(theme != 0)
         {
             typedef HRESULT (__stdcall *PFNGETCURRENTTHEMENAME)(LPWSTR pThemeFileName, int maxNameChars,
                 LPWSTR pColorBuff, int maxColorChars, LPWSTR pSizeBuff, int maxSizeChars);
 
-            PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(hMod, "GetCurrentThemeName");
+            PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(theme, "GetCurrentThemeName");
             pfn(0, 0, themeName, 30, 0, 0);
 
-            ::FreeLibrary(hMod);
+            ::FreeLibrary(theme);
         }
 
         return CString(themeName);
@@ -2307,7 +2307,7 @@ namespace Win32xx
 
         // Start the keyboard hook
         TLSData* pTLSData = GetApp().SetTlsData();
-        pTLSData->hMainWnd = T::GetHwnd();
+        pTLSData->mainWnd = T::GetHwnd();
         m_kbdHook = ::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
 
         // Set the icon
@@ -3727,7 +3727,7 @@ namespace Win32xx
     inline LRESULT CALLBACK CFrameT<T>::StaticKeyboardProc(int code, WPARAM wparam, LPARAM lparam)
     {
         TLSData* pTLSData = GetApp().GetTlsData();
-        HWND hFrame = pTLSData->hMainWnd;
+        HWND hFrame = pTLSData->mainWnd;
         CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(CWnd::GetCWndPtr(hFrame));
         assert(pFrame);
 
@@ -3839,15 +3839,15 @@ namespace Win32xx
                 mii.wID = IDW_FILE_MRU_FILE1 + index;
                 mii.dwTypeData = const_cast<LPTSTR>(mruStrings[index].c_str());
 
-                BOOL succeeded;
+                BOOL result;
                 if (index == maxMRUIndex)
                     // Replace the last MRU entry first
-                    succeeded = fileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, mii, FALSE);
+					result = fileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, mii, FALSE);
                 else
                     // Insert the other MRU entries next
-                    succeeded = fileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, mii, FALSE);
+					result = fileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, mii, FALSE);
 
-                if (!succeeded)
+                if (!result)
                 {
                     TRACE("Failed to set MRU menu item\n");
                     break;

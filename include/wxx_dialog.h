@@ -421,24 +421,24 @@ namespace Win32xx
         TLSData* pTLSData = GetApp().SetTlsData();
 
     #ifndef _WIN32_WCE
-        if (NULL == pTLSData->hMsgHook )
+        if (NULL == pTLSData->msgHook )
         {
-            pTLSData->hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+            pTLSData->msgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
         }
         InterlockedIncrement(&pTLSData->dlgHooks);
     #endif
 
-        HINSTANCE hInstance = GetApp().GetInstanceHandle();
+        HINSTANCE instance = GetApp().GetInstanceHandle();
         pTLSData->pWnd = this;
 
         // Create a modal dialog
         if (IsIndirect())
-            result = ::DialogBoxIndirect(hInstance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
+            result = ::DialogBoxIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
             if (::FindResource(GetApp().GetResourceHandle(), m_pResName, RT_DIALOG))
-                hInstance = GetApp().GetResourceHandle();
-            result = ::DialogBox(hInstance, m_pResName, parent, (DLGPROC)CDialog::StaticDialogProc);
+                instance = GetApp().GetResourceHandle();
+            result = ::DialogBox(instance, m_pResName, parent, (DLGPROC)CDialog::StaticDialogProc);
         }
 
         // Tidy up
@@ -449,8 +449,8 @@ namespace Win32xx
         InterlockedDecrement(&pTLSData->dlgHooks);
         if (pTLSData->dlgHooks == 0)
         {
-            ::UnhookWindowsHookEx(pTLSData->hMsgHook);
-            pTLSData->hMsgHook = NULL;
+            ::UnhookWindowsHookEx(pTLSData->msgHook);
+            pTLSData->msgHook = NULL;
         }
 
     #endif
@@ -480,18 +480,18 @@ namespace Win32xx
         // Store the CWnd pointer in Thread Local Storage
         pTLSData->pWnd = this;
 
-        HINSTANCE hInstance = GetApp().GetInstanceHandle();
+        HINSTANCE instance = GetApp().GetInstanceHandle();
         HWND wnd;
 
         // Create the modeless dialog
         if (IsIndirect())
-            wnd = ::CreateDialogIndirect(hInstance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
+            wnd = ::CreateDialogIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
             if (::FindResource(GetApp().GetResourceHandle(), m_pResName, RT_DIALOG))
-                hInstance = GetApp().GetResourceHandle();
+                instance = GetApp().GetResourceHandle();
 
-            wnd = ::CreateDialog(hInstance, m_pResName, parent, (DLGPROC)CDialog::StaticDialogProc);
+            wnd = ::CreateDialog(instance, m_pResName, parent, (DLGPROC)CDialog::StaticDialogProc);
         }
 
         // Tidy up
@@ -555,7 +555,7 @@ namespace Win32xx
             if (!IsModal())
             {
                 TLSData* pTLSData = GetApp().GetTlsData();
-                if (NULL == pTLSData->hMsgHook)
+                if (NULL == pTLSData->msgHook)
                 {
                     if (IsDialogMessage(msg))
                         return TRUE;
@@ -692,7 +692,7 @@ namespace Win32xx
             }
         }
 
-        return ::CallNextHookEx(pTLSData->hMsgHook, code, wparam, lparam);
+        return ::CallNextHookEx(pTLSData->msgHook, code, wparam, lparam);
     }
 #endif
 

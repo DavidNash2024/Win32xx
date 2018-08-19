@@ -412,7 +412,7 @@ namespace Win32xx
         SendMessage(TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
 
         TLSData* pTLSData = GetApp().GetTlsData();
-        m_frame = pTLSData->hMainWnd;
+        m_frame = pTLSData->mainWnd;
     }
 
     // Forwards owner drawing to the frame.
@@ -865,11 +865,11 @@ namespace Win32xx
         // Remove any remaining hook first
         TLSData* pTLSData = GetApp().GetTlsData();
         pTLSData->pMenuBar = this;
-        if (pTLSData->hMsgHook != NULL)
-            ::UnhookWindowsHookEx(pTLSData->hMsgHook);
+        if (pTLSData->msgHook != NULL)
+            ::UnhookWindowsHookEx(pTLSData->msgHook);
 
         // Hook messages about to be processed by the shortcut menu
-        pTLSData->hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+        pTLSData->msgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 
         // Display the shortcut menu
         BOOL IsRightToLeft = FALSE;
@@ -886,8 +886,8 @@ namespace Win32xx
         m_isMenuActive = FALSE;
 
         // Remove the message hook
-        ::UnhookWindowsHookEx(pTLSData->hMsgHook);
-        pTLSData->hMsgHook = NULL;
+        ::UnhookWindowsHookEx(pTLSData->msgHook);
+        pTLSData->msgHook = NULL;
 
         // Process MDI Child system menu
         if (IsMDIChildMaxed())
@@ -1114,7 +1114,7 @@ namespace Win32xx
             }
         }
 
-        return CallNextHookEx(pTLSData->hMsgHook, code, wparam, lparam);
+        return CallNextHookEx(pTLSData->msgHook, code, wparam, lparam);
     }
 
     // Provides default message processing for the menubar.
