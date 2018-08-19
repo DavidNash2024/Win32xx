@@ -92,7 +92,7 @@ namespace Win32xx
         void SetFooterIcon(HICON hFooterIcon);
         void SetFooterIcon(LPCTSTR pFooterIcon);
         void SetFooterText(LPCTSTR pFooter);
-        void SetMainIcon(HICON hMainIcon);
+        void SetMainIcon(HICON mainIcon);
         void SetMainIcon(LPCTSTR pMainIcon);
         void SetMainInstruction(LPCTSTR pMainInstruction);
         void SetOptions(TASKDIALOG_FLAGS flags);
@@ -366,13 +366,13 @@ namespace Win32xx
     // Returns true if TaskDialogs are supported on this system.
     inline BOOL CTaskDialog::IsSupported()
     {
-        HMODULE hModule = LoadLibrary(_T("COMCTL32.DLL"));
-        assert(hModule);
+        HMODULE comctl = LoadLibrary(_T("COMCTL32.DLL"));
+        assert(comctl);
 
-        BOOL Succeeded = (::GetProcAddress(hModule, "TaskDialogIndirect") != FALSE);
+        BOOL result = (::GetProcAddress(comctl, "TaskDialogIndirect") != FALSE);
 
-        ::FreeLibrary(hModule);
-        return Succeeded;
+        ::FreeLibrary(comctl);
+        return result;
     }
 
     // Replaces the information displayed by the task dialog.
@@ -574,12 +574,12 @@ namespace Win32xx
     }
 
     // Sets Task Dialog's main icon.
-    inline void CTaskDialog::SetMainIcon(HICON hMainIcon)
+    inline void CTaskDialog::SetMainIcon(HICON mainIcon)
     {
-        m_tc.hMainIcon = hMainIcon;
+        m_tc.hMainIcon = mainIcon;
 
         if (IsWindow())
-            SendMessage(TDM_UPDATE_ICON, TDIE_ICON_MAIN, reinterpret_cast<LPARAM>(hMainIcon));
+            SendMessage(TDM_UPDATE_ICON, TDIE_ICON_MAIN, reinterpret_cast<LPARAM>(mainIcon));
     }
 
     // Sets Task Dialog's main icon.

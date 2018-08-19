@@ -275,26 +275,26 @@ namespace Win32xx
 
     inline BOOL CMenu::RemoveFromMap() const
     {
-        BOOL Success = FALSE;
+        BOOL success = FALSE;
 
         if ( &GetApp() )
         {
             // Allocate an iterator for our HMENU map
             std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
 
-            CWinApp& App = GetApp();
-            CThreadLock mapLock(App.m_wndLock);
-            m = App.m_mapCMenuData.find(m_pData->menu);
-            if (m != App.m_mapCMenuData.end())
+            CWinApp& app = GetApp();
+            CThreadLock mapLock(app.m_wndLock);
+            m = app.m_mapCMenuData.find(m_pData->menu);
+            if (m != app.m_mapCMenuData.end())
             {
                 // Erase the Menu pointer entry from the map
-                App.m_mapCMenuData.erase(m);
-                Success = TRUE;
+                app.m_mapCMenuData.erase(m);
+                success = TRUE;
             }
 
         }
 
-        return Success;
+        return success;
     }
 
     // Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.

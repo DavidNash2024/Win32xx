@@ -160,7 +160,7 @@ namespace Win32xx
         // TLSData is assigned when the first window in the thread is created.
         assert (pTLSData);
 
-        return pTLSData->hMainWnd;
+        return pTLSData->mainWnd;
     }
 
     // Retrieves the handle of this thread.
@@ -303,7 +303,7 @@ namespace Win32xx
     inline void CWinThread::SetMainWnd(HWND wnd)
     {
         TLSData* pTLSData = GetApp().SetTlsData();
-        pTLSData->hMainWnd = wnd;
+        pTLSData->mainWnd = wnd;
     }
 
     // Sets the priority of this thread. The nPriority parameter can

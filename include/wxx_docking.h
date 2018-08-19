@@ -277,9 +277,9 @@ namespace Win32xx
 
             CBrush GetBrushBkgnd() const    {return m_brBackground;}
             CDocker& GetDocker() const      {assert (m_pDocker); return *m_pDocker;}
-            int GetWidth() const            {return m_DockBarWidth;}
+            int GetWidth() const            {return m_dockBarWidth;}
             void SetDocker(CDocker& Docker) {m_pDocker = &Docker;}
-            void SetWidth(int width)        {m_DockBarWidth = width;}
+            void SetWidth(int width)        {m_dockBarWidth = width;}
 
         protected:
             virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -292,9 +292,9 @@ namespace Win32xx
             CDockBar& operator = (const CDockBar&); // Disable assignment operator
 
             CDocker* m_pDocker;
-            DRAGPOS m_DragPos;
+            DRAGPOS m_dragPos;
             CBrush m_brBackground;
-            int m_DockBarWidth;
+            int m_dockBarWidth;
         };
 
         //  A nested class for the window inside a CDocker which includes all of this docked client.
@@ -628,9 +628,9 @@ namespace Win32xx
     /////////////////////////////////////////////////////////////
     // Definitions for the CDockBar class nested within CDocker
     //
-    inline CDocker::CDockBar::CDockBar() : m_pDocker(NULL), m_DockBarWidth(4)
+    inline CDocker::CDockBar::CDockBar() : m_pDocker(NULL), m_dockBarWidth(4)
     {
-        ZeroMemory(&m_DragPos, sizeof(m_DragPos));
+        ZeroMemory(&m_dragPos, sizeof(m_dragPos));
     }
 
     inline CDocker::CDockBar::~CDockBar()
@@ -713,12 +713,12 @@ namespace Win32xx
     inline void CDocker::CDockBar::SendNotify(UINT messageID)
     {
         // Send a splitter bar notification to the parent
-        m_DragPos.hdr.code = messageID;
-        m_DragPos.hdr.hwndFrom = GetHwnd();
-        m_DragPos.pos = GetCursorPos();
-        m_DragPos.pos.x += 1;
-        m_DragPos.pDocker = m_pDocker;
-        GetParent().SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&m_DragPos));
+        m_dragPos.hdr.code = messageID;
+        m_dragPos.hdr.hwndFrom = GetHwnd();
+        m_dragPos.pos = GetCursorPos();
+        m_dragPos.pos.x += 1;
+        m_dragPos.pDocker = m_pDocker;
+        GetParent().SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&m_dragPos));
     }
 
     inline void CDocker::CDockBar::SetColor(COLORREF color)

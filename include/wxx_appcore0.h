@@ -343,12 +343,12 @@ namespace Win32xx
     struct TLSData
     {
         CWnd* pWnd;         // pointer to CWnd object for Window creation
-        HWND  hMainWnd;     //  handle to the main window for the thread (usually CFrame)
+        HWND  mainWnd;      //  handle to the main window for the thread (usually CFrame)
         CMenuBar* pMenuBar; // pointer to CMenuBar object used for the WH_MSGFILTER hook
-        HHOOK hMsgHook;     // WH_MSGFILTER hook for CMenuBar and Modal Dialogs
+        HHOOK msgHook;      // WH_MSGFILTER hook for CMenuBar and Modal Dialogs
         long  dlgHooks;     // Number of Dialog MSG hooks
 
-        TLSData() : pWnd(0), hMainWnd(0), pMenuBar(0), hMsgHook(0), dlgHooks(0) {} // Constructor
+        TLSData() : pWnd(0), mainWnd(0), pMenuBar(0), msgHook(0), dlgHooks(0) {} // Constructor
     };
 
 

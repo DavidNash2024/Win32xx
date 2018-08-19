@@ -158,11 +158,11 @@ namespace Win32xx
         HWND    GetComboBoxCtrl() const;
         HWND    GetEditCtrl() const;
         CImageList GetImageList() const;
-        BOOL    GetItem(COMBOBOXEXITEM& cbItem) const;
+        BOOL    GetItem(COMBOBOXEXITEM& item) const;
         BOOL    HasEditChanged () const;
-        int     InsertItem(const COMBOBOXEXITEM& cbItem) const;
+        int     InsertItem(const COMBOBOXEXITEM& item) const;
         CImageList SetImageList(HIMAGELIST images) const;
-        BOOL    SetItem(const COMBOBOXEXITEM& cbItem) const;
+        BOOL    SetItem(const COMBOBOXEXITEM& item) const;
         DWORD   GetExtendedStyle() const;
         DWORD   SetExtendedStyle(DWORD exMask, DWORD exStyles ) const;
 
@@ -185,13 +185,13 @@ namespace Win32xx
 
         // Attributes
         CImageList GetImageList() const;
-        BOOL    GetItem(int pos, HDITEM& headerItem) const;
+        BOOL    GetItem(int pos, HDITEM& item) const;
         int     GetItemCount() const;
         CRect   GetItemRect(int index) const;
         BOOL    GetOrderArray(LPINT pArray, int count) const;
         int     OrderToIndex(int order) const;
         CImageList SetImageList(HIMAGELIST images) const;
-        BOOL    SetItem(int pos, const HDITEM& headerItem) const;
+        BOOL    SetItem(int pos, const HDITEM& item) const;
         BOOL    SetOrderArray(int count, LPINT pArray) const;
         int     GetBitmapMargin() const;
         int     SetBitmapMargin(int width) const;
@@ -199,7 +199,7 @@ namespace Win32xx
         // Operations
         CImageList CreateDragImage(int index) const;
         BOOL    DeleteItem(int pos) const;
-        int     InsertItem(int pos, const HDITEM& headerItem) const;
+        int     InsertItem(int pos, const HDITEM& item) const;
         BOOL    Layout(HDLAYOUT* pHeaderLayout) const;
 #ifdef Header_SetHotDivider
         int     SetHotDivider(CPoint pt) const;
@@ -282,7 +282,7 @@ namespace Win32xx
         int GetFirstDayOfWeek(BOOL* pLocal = NULL) const;
         CRect GetMinReqRect() const;
         int GetMonthDelta() const;
-        COLORREF SetColor(int region, COLORREF ref) const;
+        COLORREF SetColor(int region, COLORREF color) const;
         BOOL SetFirstDayOfWeek(int day, int* pOldDay = NULL) const;
         int SetMonthDelta(int delta) const;
 
@@ -318,12 +318,12 @@ namespace Win32xx
         CDateTime();
         virtual ~CDateTime() {}
 
-        COLORREF GetMonthCalColor(int color) const;
+        COLORREF GetMonthCalColor(int region) const;
         HWND GetMonthCalCtrl() const;
         CFont GetMonthCalFont() const;
         DWORD GetRange(SYSTEMTIME& minRange, SYSTEMTIME& maxRange) const;
         SYSTEMTIME GetTime(DWORD* pReturnCode = NULL) const;
-        COLORREF SetMonthCalColor(int color, COLORREF ref) const;
+        COLORREF SetMonthCalColor(int region, COLORREF color) const;
         BOOL SetFormat(LPCTSTR pFormat) const;
         void SetMonthCalFont(HFONT font, BOOL redraw = TRUE) const;
         BOOL SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const;
@@ -972,10 +972,10 @@ namespace Win32xx
     }
 
     // Retrieves item information for the given ComboBoxEx item.
-    inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM& cbItem) const
+    inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM& item) const
     {
         assert(IsWindow());
-        return (SendMessage(CBEM_GETITEM, 0, reinterpret_cast<LPARAM>(&cbItem)) != 0);
+        return (SendMessage(CBEM_GETITEM, 0, reinterpret_cast<LPARAM>(&item)) != 0);
     }
 
     // Determines whether or not the user has changed the text of the ComboBoxEx edit control.
@@ -986,10 +986,10 @@ namespace Win32xx
     }
 
     // Inserts a new item in the ComboBoxEx control.
-    inline int CComboBoxEx::InsertItem(const COMBOBOXEXITEM& cbItem) const
+    inline int CComboBoxEx::InsertItem(const COMBOBOXEXITEM& item) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(CBEM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&cbItem)));
+        return static_cast<int>(SendMessage(CBEM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&item)));
     }
 
     // Sets extended styles within the ComboBoxEx control.
@@ -1009,10 +1009,10 @@ namespace Win32xx
     }
 
     // Sets the attributes for an item in the ComboBoxEx control.
-    inline BOOL CComboBoxEx::SetItem(const COMBOBOXEXITEM& cbItem) const
+    inline BOOL CComboBoxEx::SetItem(const COMBOBOXEXITEM& item) const
     {
         assert(IsWindow());
-        return (SendMessage(CBEM_SETITEM, 0, reinterpret_cast<LPARAM>(&cbItem)) != 0);
+        return (SendMessage(CBEM_SETITEM, 0, reinterpret_cast<LPARAM>(&item)) != 0);
     }
 
     ////////////////////////////////////////
@@ -1024,17 +1024,17 @@ namespace Win32xx
     }
 
     // Retrieves the color for a given portion of the month calendar within the date and time picker (DTP) control.
-    inline COLORREF CDateTime::GetMonthCalColor(int color) const
+    inline COLORREF CDateTime::GetMonthCalColor(int region) const
     {
         assert(IsWindow());
-        return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, color));
+        return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, region));
     }
 
     // Sets the color for a given portion of the month calendar within the date and time picker (DTP) control.
-    inline COLORREF CDateTime::SetMonthCalColor(int color, COLORREF clr) const
+    inline COLORREF CDateTime::SetMonthCalColor(int region, COLORREF color) const
     {
         assert(IsWindow());
-        return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, color, clr));
+        return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, region, color));
     }
 
     // Sets the display of the date and time picker (DTP) control based on a given format string.
@@ -1151,10 +1151,10 @@ namespace Win32xx
     }
 
     // Retrieves information about an item in a header control.
-    inline BOOL CHeader::GetItem(int pos, HDITEM& headerItem) const
+    inline BOOL CHeader::GetItem(int pos, HDITEM& item) const
     {
         assert(IsWindow());
-        return Header_GetItem(*this, pos, &headerItem);
+        return Header_GetItem(*this, pos, &item);
     }
 
     // Retrieves the count of the items in a header control.
@@ -1181,10 +1181,10 @@ namespace Win32xx
     }
 
     // Inserts a new item into the header control.
-    inline int CHeader::InsertItem(int pos, const HDITEM& headerItem) const
+    inline int CHeader::InsertItem(int pos, const HDITEM& item) const
     {
         assert(IsWindow());
-        return Header_InsertItem(*this, pos, &headerItem);
+        return Header_InsertItem(*this, pos, &item);
     }
 
     // Retrieves the correct size and position of the header control within the parent window.
@@ -1230,10 +1230,10 @@ namespace Win32xx
     }
 
     // Sets the attributes of the specified item in a header control.
-    inline BOOL CHeader::SetItem(int pos, const HDITEM& headerItem) const
+    inline BOOL CHeader::SetItem(int pos, const HDITEM& item) const
     {
         assert(IsWindow());
-        return Header_SetItem(*this, pos, &headerItem);
+        return Header_SetItem(*this, pos, &item);
     }
 
     // Sets the left-to-right order of header items.

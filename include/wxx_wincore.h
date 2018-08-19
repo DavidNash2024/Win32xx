@@ -491,13 +491,13 @@ namespace Win32xx
         // Load the User32 DLL
         typedef HWND WINAPI GETANCESTOR(HWND, UINT);
         GETANCESTOR* pfnGetAncestor = NULL;
-        HMODULE hModule = ::LoadLibrary(_T("USER32.DLL"));
+        HMODULE user32 = ::LoadLibrary(_T("USER32.DLL"));
 
-        if (hModule != 0)
+        if (user32 != 0)
         {
             // Declare a pointer to the GetAncestor function
 #ifndef _WIN32_WCE
-            pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(hModule, "GetAncestor"));
+            pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(user32, "GetAncestor"));
 #else
             pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(hModule, L"GetAncestor"));
 #endif
@@ -505,7 +505,7 @@ namespace Win32xx
             if (pfnGetAncestor)
                 wnd = (*pfnGetAncestor)(*this, flags);
 
-            ::FreeLibrary(hModule);
+            ::FreeLibrary(user32);
         }
 
         if (!pfnGetAncestor)
@@ -883,7 +883,7 @@ namespace Win32xx
     // Removes this CWnd's pointer from the application's map.
     inline BOOL CWnd::RemoveFromMap()
     {
-        BOOL Success = FALSE;
+        BOOL success = FALSE;
 
         if ( &GetApp() )
         {
@@ -899,14 +899,14 @@ namespace Win32xx
                 if (this == m->second)
                 {
                     app.m_mapHWND.erase(m);
-                    Success = TRUE;
+                    success = TRUE;
                     break;
                 }
             }
 
         }
 
-        return Success;
+        return success;
     }
 
     // Sets the large icon associated with the window.
@@ -1917,15 +1917,15 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-        HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
-        if(hMod != 0)
+        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
+        if(theme != 0)
         {
             typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND wnd, LPCWSTR pSubAppName, LPCWSTR pSubIdList);
-            PFNSETWINDOWTHEME pfn = (PFNSETWINDOWTHEME)GetProcAddress(hMod, "SetWindowTheme");
+            PFNSETWINDOWTHEME pfn = (PFNSETWINDOWTHEME)GetProcAddress(theme, "SetWindowTheme");
 
             result = pfn(*this, pSubAppName, pSubIdList);
 
-            ::FreeLibrary(hMod);
+            ::FreeLibrary(theme);
         }
 
 #endif

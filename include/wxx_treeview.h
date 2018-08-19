@@ -243,10 +243,10 @@ namespace Win32xx
         ZeroMemory(&tvi, sizeof(tvi));
         tvi.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
         tvi.hItem = item;
-        BOOL Succeeded = TreeView_GetItem( *this, &tvi );
+        BOOL result = TreeView_GetItem( *this, &tvi );
         image = tvi.iImage;
         selectedImage = tvi.iSelectedImage;
-        return Succeeded;
+        return result;
     }
 
     // Retrieves the bounding rectangle for a tree-view item and indicates whether the item is visible.

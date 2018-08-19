@@ -192,26 +192,26 @@ namespace Win32xx
 
     inline BOOL CImageList::RemoveFromMap() const
     {
-        BOOL Success = FALSE;
+        BOOL success = FALSE;
 
         if ( &GetApp() )
         {
             // Allocate an iterator for our CImageList data
             std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
 
-            CWinApp& App = GetApp();
-            CThreadLock mapLock(App.m_wndLock);
-            m = App.m_mapCImlData.find(m_pData->images);
-            if (m != App.m_mapCImlData.end())
+            CWinApp& app = GetApp();
+            CThreadLock mapLock(app.m_wndLock);
+            m = app.m_mapCImlData.find(m_pData->images);
+            if (m != app.m_mapCImlData.end())
             {
                 // Erase the CImageList data entry from the map
-                App.m_mapCImlData.erase(m);
-                Success = TRUE;
+                app.m_mapCImlData.erase(m);
+                success = TRUE;
             }
 
         }
 
-        return Success;
+        return success;
     }
 
     // Adds an image or images to an image list, generating a mask from the specified bitmap.

@@ -79,7 +79,7 @@ namespace Win32xx
         CRect GetBandRect(int band) const;
         UINT GetBarHeight() const;
         BOOL GetBarInfo(REBARINFO& rebarInfo) const;
-        HWND GetMenuBar() {return m_hMenuBar;}
+        HWND GetMenuBar() {return m_menuBar;}
         UINT GetRowCount() const;
         int  GetRowHeight(int row) const;
         UINT GetSizeofRBBI() const;
@@ -88,7 +88,7 @@ namespace Win32xx
         BOOL SetBandColor(const int band, const COLORREF foreground, const COLORREF background) const;
         BOOL SetBandInfo(const int band, REBARBANDINFO& bandInfo) const;
         BOOL SetBarInfo(REBARINFO& rebarInfo) const;
-        void SetMenuBar(HWND hMenuBar) {m_hMenuBar = hMenuBar;}
+        void SetMenuBar(HWND menuBar) {m_menuBar = menuBar;}
         void SetToolTips(HWND toolTip) const;
 
     protected:
@@ -110,8 +110,8 @@ namespace Win32xx
         CReBar& operator = (const CReBar&); // Disable assignment operator
 
         BOOL m_isDragging;
-        HWND m_hMenuBar;
-        LPARAM m_Orig_lParam;
+        HWND m_menuBar;
+        LPARAM m_oldParam;
     };
 
 }
@@ -125,7 +125,7 @@ namespace Win32xx
     ///////////////////////////////////
     // Definitions for the CReBar class
     //
-    inline CReBar::CReBar() : m_isDragging(FALSE), m_hMenuBar(0), m_Orig_lParam(0)
+    inline CReBar::CReBar() : m_isDragging(FALSE), m_menuBar(0), m_oldParam(0)
     {
     }
 
@@ -391,7 +391,7 @@ namespace Win32xx
     // Called when the left mouse button is pressed.
     inline LRESULT CReBar::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        m_Orig_lParam = lparam; // Store the x,y position
+        m_oldParam = lparam; // Store the x,y position
         m_isDragging = TRUE;
 
         return FinalWindowProc(msg, wparam, lparam);
@@ -409,7 +409,7 @@ namespace Win32xx
             if (y <= GetRowHeight(0))
             {
                 // Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position
-                lparam = m_Orig_lParam;
+                lparam = m_oldParam;
             }
         }
         m_isDragging = FALSE;
