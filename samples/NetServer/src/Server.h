@@ -48,9 +48,10 @@
 class CServerSocket : public CSocket
 {
 public:
-	CServerSocket() { }
-	virtual ~CServerSocket() { }
-	virtual void OnAccept();
+    CServerSocket() { }
+    virtual ~CServerSocket() { }
+    virtual void OnAccept();
+    virtual void OnReceive();
 };
 
 

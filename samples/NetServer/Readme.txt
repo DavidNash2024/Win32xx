@@ -1,7 +1,14 @@
-Networking Examples
-===================
-This folder contains several projects demonstrating the networking features
-of Win32++. To test the network, run the server application and listen on
+NetServer Sample
+================
+This code implements a network server. It supports TCP and UDP connections,
+and support IPv4 and IPv6.
+
+This code behaves much like the NetServerAsync sample. The difference is the
+way it handles network events. This NetServerAsync sample passes the network
+events as messages to a window. This NetServer sample passes the network events
+to a separate thread instead. 
+
+To test the network, run the server application and listen on
 a specific port (TCP or UDP). Then run the client application and connect 
 to the server. If both the server and client are running on the same computer,
 the client can connect to the loopback address (127.0.0.1). If they are running
@@ -9,19 +16,18 @@ on different computers the client will need to specify the correct address of
 the server. Note that a firewall on either the client or server's computer 
 might block the network  connection.
 
-
 To compile programs with CSocket, link with ws3_32.lib for Win32,
 and ws2.lib for Windows CE. Windows 95 systems will need to install the
 "Windows Sockets 2.0 for Windows 95". It's available from:
 http:support.microsoft.com/kb/182108/EN-US/
 
 
-Features demonstrated in these examples
-=======================================
-* Implementing a TCP and UDP server
+Features demonstrated in this sample
+====================================
 * Implementing a TCP and UDP client
-* Responding to networking events
-* Multi-threaded programming
+* Supporting IPv4 and IPv6
+* Overriding CSocket to respond to network events
+* Multithread programming
 
 
 About the CSocket class

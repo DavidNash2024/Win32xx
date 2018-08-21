@@ -6,10 +6,10 @@
 #include "DialogApp.h"
 
 
-
 /////////////////////////////////////////
-// Definitions of the CWorkerSocket class
+// Definitions of the CServerSocket class
 //
+
 
 void CServerSocket::OnAccept()
 {
@@ -17,10 +17,24 @@ void CServerSocket::OnAccept()
     dialog.PostMessage(USER_ACCEPT, 0, 0);
 }
 
+
+// Used for UDP only
+void CServerSocket::OnReceive()
+{
+    CSvrDialog& dialog = GetDlgApp().GetDialog();
+    dialog.PostMessage(USER_RECEIVE, reinterpret_cast<WPARAM>(this), 0);
+}
+
+
+/////////////////////////////////////////
+// Definitions of the CWorkerSocket class
+//
+
+
 void CWorkerSocket::OnDisconnect()
 {
-	CSvrDialog& dialog = GetDlgApp().GetDialog();
-	dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(this), 0);
+    CSvrDialog& dialog = GetDlgApp().GetDialog();
+    dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(this), 0);
 }
 
 void CWorkerSocket::OnReceive()
@@ -28,11 +42,6 @@ void CWorkerSocket::OnReceive()
     CSvrDialog& dialog = GetDlgApp().GetDialog();
     dialog.PostMessage(USER_RECEIVE, reinterpret_cast<WPARAM>(this), 0);
 }
-
-
-
-
-
 
 
 

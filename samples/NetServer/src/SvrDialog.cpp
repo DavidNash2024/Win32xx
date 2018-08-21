@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "SvrDialog.h"
+#include "DialogApp.h"
 #include "resource.h"
 
 
@@ -50,6 +51,12 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM lparam)
     }
 
     return FALSE;
+}
+
+void CTCPClientDlg::OnDestroy()
+{
+	CSvrDialog& dialog = GetDlgApp().GetDialog();
+	dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(m_pSocket.get()), 0);
 }
 
 BOOL CTCPClientDlg::OnInitDialog()
@@ -395,8 +402,11 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wparam)
     case SOCK_DGRAM:
         {
             int addrlen = sizeof(m_saUDPClient);
+
+            // Receive data and update the UDP client socket address.
             m_mainSocket.ReceiveFrom(bufArray, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen);
             TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
+            
             m_buttonSend.EnableWindow(TRUE);
             m_editSend.EnableWindow(TRUE);
             GotoDlgCtrl(GetDlgItem(IDC_EDIT_SEND));
