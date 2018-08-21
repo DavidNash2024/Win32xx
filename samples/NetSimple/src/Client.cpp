@@ -17,8 +17,10 @@ public:
         // Has an extra character for null termination.
         char str[1025] = {0};
         int i = Receive(str, 1024, 0);
-
-        cout << i << " chars received: " << str << endl;
+        if (i >= 0)
+			cout << i << " chars received: " << str << endl;
+		else
+			cout << "Failed to send" << endl;
     }
 };
 
@@ -26,21 +28,15 @@ int main()
 {
     CClientSocket client;
 
-    // Create the socket to communicate with the Server
-    if (!client.Create(AF_INET, SOCK_STREAM))
+    // Create the socket to communicate with the UDP Server
+    if (!client.Create(AF_INET, SOCK_DGRAM))
     {
         cout << "Failed to create socket\n" ;
         return 0;
     }
 
-    // Connect to the server
-    if (SOCKET_ERROR == client.Connect("127.0.0.1", 3000))
-    {
-        cout << "Failed to connect to server. Was it running?\n";
-        return 0;
-    }
-    cout << "Connected to server.\n";
-    cout << "Type data to send, type quit to exit\n";
+    cout << "Type data to send to connect to the UDP server" << endl;
+	cout << "Type quit to exit\n";
 
     // Monitor the client socket for network events, such as data ready to receive
     client.StartEvents();
@@ -51,7 +47,7 @@ int main()
     {
         getline(cin, s);
         if (s == "quit") break;
-        int i = client.Send(s.c_str(), static_cast<int>(s.length()), 0);
+        int i = client.SendTo(s.c_str(), static_cast<int>(s.length()), 0, "127.0.0.1", 3000);
         cout << "Sending  " << i << " characters\n";
     }
 

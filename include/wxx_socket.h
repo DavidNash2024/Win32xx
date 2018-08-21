@@ -157,6 +157,7 @@ namespace Win32xx
         virtual int  SendTo(const char* send, int len, int flags, LPCTSTR addr, UINT port) const;
         virtual int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen) const;
 
+        virtual int  StartAsync(HWND wnd, UINT message, long events);
         virtual void StartEvents();
         virtual void StopEvents();
 
@@ -191,8 +192,8 @@ namespace Win32xx
         Shared_Ptr<CWinThread> m_threadPtr;  // Smart pointer to the worker thread for the events
         CEvent m_stopRequest;                // A manual reset event to signal the event thread should stop
 
-        GETADDRINFO* m_pfnGetAddrInfo;      // pointer for the GetAddrInfo function
-        FREEADDRINFO* m_pfnFreeAddrInfo;    // pointer for the FreeAddrInfo function
+        GETADDRINFO* m_pfnGetAddrInfo;      // pointer for the getaddrinfo function
+        FREEADDRINFO* m_pfnFreeAddrInfo;    // pointer for the freeaddrinfo function
     };
 }
 
@@ -237,6 +238,7 @@ namespace Win32xx
     }
 
     // The accept function permits an incoming connection attempt on the socket.
+    // Refer to accept in the Windows API documentation for additional information.
     inline void CSocket::Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen) const
     {
         rClientSock.m_socket = ::accept(m_socket, addr, addrlen);
@@ -245,6 +247,7 @@ namespace Win32xx
     }
 
     // The bind function associates a local address with the socket.
+    // Refer to bind in the Windows API documentation for additional information.
     inline int CSocket::Bind(LPCTSTR addr, UINT port) const
     {
         int result = 0;
@@ -298,6 +301,7 @@ namespace Win32xx
     }
 
     // The bind function associates a local address with the socket.
+    // Refer to bind in the Windows API documentation for additional information.
     inline int CSocket::Bind(const struct sockaddr* name, int namelen) const
     {
         int result = ::bind (m_socket, name, namelen);
@@ -307,6 +311,7 @@ namespace Win32xx
     }
 
     // The Connect function establishes a connection to the socket.
+    // Refer to connect in the Windows API documentation for additional information.
     inline int CSocket::Connect(LPCTSTR addr, UINT port) const
     {
         int result = 0;
@@ -360,6 +365,7 @@ namespace Win32xx
     }
 
     // The Connect function establishes a connection to the socket.
+    // Refer to connect in the Windows API documentation for additional information.
     inline int CSocket::Connect(const struct sockaddr* name, int namelen) const
     {
         int result = ::connect( m_socket, name, namelen );
@@ -374,6 +380,8 @@ namespace Win32xx
     //  family:     AF_INET or AF_INET6
     //  type:       SOCK_DGRAM, SOCK_SEQPACKET, SOCK_STREAM, SOCK_RAW
     //  protocol:   IPPROTO_IP, IPPROTO_TCP, IPPROTO_UDP, IPPROTO_RAW, IPPROTO_ICMP, IPPROTO_ICMPV6
+    //
+    // Refer to socket in the Windows API documentation for additional information.
     inline bool CSocket::Create( int family, int type, int protocol /*= IPPROTO_IP*/)
     {
         m_socket = socket(family, type, protocol);
@@ -432,8 +440,8 @@ namespace Win32xx
         // loop until the stop event is set
         for (;;) // infinite loop
         {
-            // Wait 100 ms for a network event
-            DWORD result = ::WSAWaitForMultipleEvents(2, allEvents, FALSE, THREAD_TIMEOUT, FALSE);
+            // Wait for a network event, or a request to stop
+            DWORD result = ::WSAWaitForMultipleEvents(2, allEvents, FALSE, WSA_INFINITE, FALSE);
 
             // Check event for stop thread
             if (result - WSA_WAIT_EVENT_0 == 1)
@@ -497,6 +505,7 @@ namespace Win32xx
     }
 
     // Provides protocol-independent translation from host name to address.
+    // Refer to getaddrinfo in the Windows API documentation for additional information.
     inline int CSocket::GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res) const
     {
 
@@ -518,6 +527,7 @@ namespace Win32xx
     }
 
     // Retrieves the most recent network error.
+    // Refer to WSAGetLastError in the Windows API documentation for additional information.
     inline CString CSocket::GetLastError() const
     {
         int errorCode = WSAGetLastError();
@@ -539,6 +549,7 @@ namespace Win32xx
     }
 
     // Retrieves the name of the peer to which the socket is connected.
+    // Refer to getpeername in the Windows API documentation for additional information.
     inline int  CSocket::GetPeerName(struct sockaddr* name, int* namelen) const
     {
         int result = ::getpeername(m_socket, name, namelen);
@@ -549,6 +560,7 @@ namespace Win32xx
     }
 
     // Retrieves the local name for the socket.
+    // Refer to getsockname in the Windows API documentation for additional information.
     inline int  CSocket::GetSockName(struct sockaddr* name, int* namelen) const
     {
         int result = ::getsockname(m_socket, name, namelen);
@@ -559,6 +571,7 @@ namespace Win32xx
     }
 
     // Retrieves the socket option.
+    // Refer to getsockopt in the Windows API documentation for additional information.
     inline int  CSocket::GetSockOpt(int level, int optname, char* optval, int* optlen) const
     {
         int result = ::getsockopt(m_socket, level, optname, optval, optlen);
@@ -586,6 +599,7 @@ namespace Win32xx
     }
 
     // Controls the I/O mode of the socket.
+    // Refer to ioctlsocket in the Windows API documentation for additional information.
     inline int CSocket::ioCtlSocket(long cmd, u_long* argp) const
     {
         int result = ::ioctlsocket(m_socket, cmd, argp);
@@ -611,6 +625,7 @@ namespace Win32xx
     }
 
     // Places the socket in a state in which it is listening for an incoming connection.
+    // Refer to listen in the Windows API documentation for additional information.
     inline int CSocket::Listen(int backlog /*= SOMAXCONN*/) const
     {
         int result = ::listen(m_socket, backlog);
@@ -621,6 +636,7 @@ namespace Win32xx
     }
 
     // Receives data from the connected or bound socket.
+    // Refer to recv in the Windows API documentation for additional information.
     inline int CSocket::Receive(char* buf, int len, int flags) const
     {
         int result = ::recv(m_socket, buf, len, flags);
@@ -630,6 +646,7 @@ namespace Win32xx
     }
 
     // Receives a datagram and stores the source address.
+    // Refer to recvfrom in the Windows API documentation for additional information.
     inline int CSocket::ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen) const
     {
         int result = ::recvfrom(m_socket, buf, len, flags, from, fromlen);
@@ -639,6 +656,7 @@ namespace Win32xx
     }
 
     // Sends data on the connected socket.
+    // Refer to send in the Windows API documentation for additional information.
     inline int CSocket::Send(const char* buf, int len, int flags) const
     {
         int result = ::send(m_socket, buf, len, flags);
@@ -648,6 +666,7 @@ namespace Win32xx
     }
 
     // Sends data to a specific destination.
+    // Refer to sendto in the Windows API documentation for additional information.
     inline int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen) const
     {
         int result =  ::sendto(m_socket, buf, len, flags, to, tolen);
@@ -657,6 +676,7 @@ namespace Win32xx
     }
 
     // Sends data to a specific destination.
+    // Refer to sendto in the Windows API documentation for additional information.
     inline int CSocket::SendTo(const char* send, int len, int flags, LPCTSTR addr, UINT port) const
     {
         int result = 0;
@@ -709,6 +729,7 @@ namespace Win32xx
     }
 
     // Sets the socket option.
+    // Refer to setsockopt in the Windows API documentation for additional information.
     inline int CSocket::SetSockOpt(int level, int optname, const char* optval, int optlen) const
     {
         int result = ::setsockopt(m_socket, level, optname, optval, optlen);
@@ -716,6 +737,30 @@ namespace Win32xx
             TRACE("SetSockOpt failed\n");
 
         return result;
+    }
+
+    // This function redirects socket events to a window in a message. It can
+    // be used as an alternative to StartEvents. Several sockets can redirect
+    // events to the same window.
+    // Parameters:
+    //  wnd      The window to receive the socket events.
+    //  message  The message to be received when a network event occurs.
+    //  events   A bitmask that has zero or more of the following:
+    //  FD_READ     Notification of readiness for reading.
+    //  FD_WRITE    Notification of readiness for writing.
+    //  FD_OOB      Notification of the arrival of Out Of Band data.
+    //  FD_ACCEPT   Notification of incoming connections.
+    //  FD_CONNECT  Notification of completed connection or multipoint join operation.
+    //  FD_CLOSE    Notification of socket closure.
+    //  FD_QOS      Notification of socket Quality Of Service changes.
+    //  FD_ROUTING_INTERFACE_CHANGE Notification of routing interface changes for the specified destination.
+    //  FD_ADDRESS_LIST_CHANGE      Notification of local address list changes for the address family of the socket.
+    // Refer to WSAAsyncSelect in the Windows API documentation for additional information.
+    inline int CSocket::StartAsync(HWND wnd, UINT message, long events)
+    {
+        StopEvents();   // Ensure the event thread isn't running
+
+        return ::WSAAsyncSelect(*this, wnd, message, events);
     }
 
     // This function starts the thread which monitors the socket for events.

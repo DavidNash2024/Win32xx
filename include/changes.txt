@@ -15,6 +15,10 @@ New Features and Enhancements
 * Added CEvent
 * Added CMutex
 * Added CSemaphore
+* Updated CSocket
+ - now also supports async sockets
+ - added NetClientAsync sample
+ - added NetClientServer sample
 * Updated frames
  - Additional toolbars have better support for disabled buttons.
  - Optimised the creation of the image list for disabled menu icons.
@@ -28,6 +32,8 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
+Added NetClientAsync                             sample
+Added NetServerAsync                             sample
 Added wxx_mutex.h                                header file
 Added CEvent                                     class
 Added CMutex                                     class
@@ -49,6 +55,7 @@ Added CImageList::SetDragCursorImage             member function
 Added CImageLIst::Write                          member function
 Added CResizer::SetMinRect                       member function
 Added CResizer::SetMaxRect                       member function
+Added CSocket::StartAsync                        member function
 Added CWinThread::IsRunning                      member function
 
 Modified CFrameT::AddMenuIcon                    added optional iconWidth argument

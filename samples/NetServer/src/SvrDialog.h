@@ -4,12 +4,11 @@
 #ifndef SVRDIALOG_H
 #define SVRDIALOG_H
 
-
 #include "Server.h"
-
 
 class CWorkerSocket;
 class CTCPClientDlg;
+
 
 typedef Shared_Ptr<CWorkerSocket> ServerSocketPtr;
 typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
@@ -22,6 +21,7 @@ public:
     virtual ~CTCPClientDlg() {}
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnClose();
+	virtual void OnDestroy();
     virtual BOOL OnInitDialog();
 
     void AppendText(int id, LPCTSTR buf);
