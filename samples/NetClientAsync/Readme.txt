@@ -49,9 +49,9 @@ For the listening socket, we do the following:
 The purpose of the data socket is to send data to, and receive data from the client.
 There will be one data socket for each client accepted by the server.
 To use it we do the following:
- * To receive data from the client, override OnReceive and use Receive.
+ * To receive data from the client, handle the FD_READ message and use Receive.
  * To send data to use Send.
- * OnDisconnect can be used to detect when the client is disconnected.
+ * Handle the FD_CLOSE message to detect when the client is disconnected.
 
 For a TCP client, inherit from CSocket and override OnReceive and OnDisconnect.
 Create an instance of this inherited class, and  perform the following steps:
@@ -61,5 +61,5 @@ Create an instance of this inherited class, and  perform the following steps:
 
 We are now ready to send and receive data from the server.
  * Use Send to send data to the server.
- * Handle the Receive message to receive data from the server
- * Handle the Disconnect message to detect when the client is disconnected from the server.
+ * Handle the FD_READ message to receive data from the server
+ * Handle the FD_CLOSE message to detect when the client is disconnected from the server.

@@ -39,30 +39,51 @@
 // wxx_socket.h
 //  Declaration of the CSocket class
 //
-// The CSocket class represents a network socket. After StartEvents is called,
-// CSocket monitors the socket and responds automatically to network events.
-// This event monitoring, for example, automatically calls OnReceive when
-// there is data on the socket to be read, and OnAccept when a server should
-// accept a connection from a client.
+// The CSocket class represents a network socket. It can be used to create 
+// two types of sockets namely:
+// 1) An asycn socket.
+// 2) An event socket.
+//
+// 1. Async Sockets.
+// These sockets use StartAsync to monitor network events. Network events are
+// passed to the specified window as a window message and processed in the
+// window procedure. The network events can be one of:
+// FD_READ; FD_WRITE; FD_OOB; FD_ACCEPT; FD_CONNECT; FD_CLOSE; FD_QOS;
+// FD_GROUP_QOS; FD_ROUTINGINTERFACE_CHANGE; FD_ADDRESS_LIST_CHANGE;
+// FD_ADDRESS_LIST_CHANGE.
+// Refer to GetAsyncSelect in the Windows API documentation for more
+// information on using async sockets.
+// Refer to the NetClientAsync and NetServerAsync samples for an example of
+// how to use this class to create async sockets for a TCP/UDP client & server.
+//
+// 2. Event Sockets
+// These sockets use StartEvents to monitor network events. A separate thread
+// is created for each event socket. After StartEvents is called, CSocket
+// monitors the socket and responds automatically to network events.
+// Inherit from CSocket and override the following functions to respond
+// to network events: OnAccept; OnAddresListChange; OnDisconnect; OnConnect;
+// OnOutOfBand; OnQualityOfService; OnReceive; OnRoutingChange; OnSend.
 
-// Users of this class should be aware that functions like OnReceive,
-// OnAccept, etc. are called on a different thread from the one CSocket is
-// instantiated on. The thread for these functions needs to respond quickly
-// to other network events, so it shouldn't be delayed. It also doesn't run
-// a message loop, so it can't be used to create windows. For these reasons
+// When using event sockets, users of this class should be aware that functions
+// like OnReceive, OnAccept, etc. are called on a different thread from the one
+// CSocket is instantiated on. The thread for these functions needs to respond
+// quickly to other network events, so it shouldn't be delayed. It also doesn't
+// run a message loop, so it can't be used to create windows. For these reasons
 // it might be best to use PostMessage in response to these functions in a
 // windows environment.
-
-// Refer to the network samples for an example of how to use this class to
-// create a TCP client & server, and a UDP client and server.
+// Refer to GetEventSelect in the Windows API documentation for more
+// information on using event sockets.
+// Refer to the NetClient and NetServer samples for an example of how to use
+// this class to create event sockets for a TCP/UDP client & server.
 
 // To compile programs with CSocket, link with ws3_32.lib for Win32,
 // and ws2.lib for Windows CE. This class uses Winsock version 2, and
 // supports Windows 98 and above.
 
-// For a TCP server, inherit a class from CSocket and override OnAccept, OnDisconnect
-// and OnRecieve. Create one instance of this class and use it as a listening socket.
-// The purpose of the listening socket is to detect connections from clients and accept them.
+// For a TCP server using event sockets, inherit a class from CSocket
+// and override OnAccept, OnDisconnect and OnRecieve. Create one instance
+// of this class and use it as a listening socket. The purpose of the
+// listening socket is to detect connections from clients and accept them.
 // For the listening socket, we do the following:
 // 1) Create the socket.
 // 2) Bind an IP address to the socket.
@@ -73,8 +94,8 @@
 // 7) The server socket uses the 'accept' function to accept an incoming connection
 //     from this new data socket.
 
-// The purpose of the data socket is to send data to, and receive data from the client.
-// There will be one data socket for each client accepted by the server.
+// The purpose of the data socket is to send data to, and receive data from the
+// client. There will be one data socket for each client accepted by the server.
 // To use it we do the following:
 // * To receive data from the client, override OnReceive and use Receive.
 // * To send data to use Send.
@@ -661,7 +682,8 @@ namespace Win32xx
     {
         int result = ::send(m_socket, buf, len, flags);
         if (SOCKET_ERROR == result)
-            TRACE(_T("Send failed\n"));
+			if (GetLastError() != WSAEWOULDBLOCK)
+				TRACE(_T("Send failed\n"));
         return result;
     }
 
@@ -670,8 +692,12 @@ namespace Win32xx
     inline int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen) const
     {
         int result =  ::sendto(m_socket, buf, len, flags, to, tolen);
-        if (SOCKET_ERROR == result)
-            TRACE(_T("SendTo failed\n"));
+		if (SOCKET_ERROR == result)
+		{
+			if (GetLastError() != WSAEWOULDBLOCK)
+				TRACE(_T("SendTo failed\n"));
+		}
+
         return result;
     }
 
@@ -703,8 +729,11 @@ namespace Win32xx
             result = ::sendto(m_socket, send, len, flags, addrInfo->ai_addr, static_cast<int>(addrInfo->ai_addrlen) );
             if (result == SOCKET_ERROR )
             {
-                TRACE("SendTo failed\n");
-                return result;
+				if (GetLastError() != WSAEWOULDBLOCK)
+				{
+					TRACE("SendTo failed\n");
+					return result;
+				}
             }
 
             // Free the address information allocated by GetAddrInfo
@@ -721,8 +750,12 @@ namespace Win32xx
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
             result = ::sendto( m_socket, send, len, flags, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
-            if ( SOCKET_ERROR != result)
-                TRACE("SendTo failed\n");
+			if (SOCKET_ERROR != result)
+			{
+				if (WSAGetLastError() != WSAEWOULDBLOCK)
+					TRACE("SendTo failed\n");
+			}
+
         }
 
         return result;
@@ -783,7 +816,7 @@ namespace Win32xx
             // Waiting for the event thread to signal the m_stopped event.
 
             // Note: An excessive delay in processing any of the notification functions
-            // can cause us to get here. (Yes one second is an excessive delay. Its a bug!)
+            // can cause us to get here.
             TRACE("*** Error: Event Thread won't die ***\n");
         }
 

@@ -6,6 +6,8 @@
 
 using namespace std;
 
+// UDP Client.
+// Initiate a connect to the UDP server by sending it some text.
 
 class CClientSocket : public CSocket
 {
@@ -18,9 +20,9 @@ public:
         char str[1025] = {0};
         int i = Receive(str, 1024, 0);
         if (i >= 0)
-			cout << i << " chars received: " << str << endl;
-		else
-			cout << "Failed to send" << endl;
+            cout << i << " chars received: " << str << endl;
+        else
+            cout << "Failed to send" << endl;
     }
 };
 
@@ -36,7 +38,7 @@ int main()
     }
 
     cout << "Type data to send to connect to the UDP server" << endl;
-	cout << "Type quit to exit\n";
+    cout << "Type quit to exit\n";
 
     // Monitor the client socket for network events, such as data ready to receive
     client.StartEvents();
