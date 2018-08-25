@@ -92,7 +92,7 @@ BOOL CClientDialog::OnSocketConnect()
     m_radioIP6.EnableWindow( FALSE );
     m_radioTCP.EnableWindow( FALSE );
     m_radioUDP.EnableWindow( FALSE );
-    m_editStatus.SetWindowText( _T("Connected to server") );
+    AppendText(IDC_EDIT_STATUS, _T("Connected to server"));
     m_buttonConnect.SetWindowText( _T("Disconnect") );
 
     return TRUE;
@@ -105,7 +105,7 @@ BOOL CClientDialog::OnSocketDisconnect()
     m_buttonConnect.EnableWindow( TRUE );
 
     // Update the dialog
-    m_editStatus.SetWindowText( _T("Disconnected from server") );
+    AppendText(IDC_EDIT_STATUS, _T("Disconnected from server"));
     m_buttonSend.EnableWindow( FALSE );
     m_editSend.EnableWindow( FALSE );
     m_editPort.EnableWindow( TRUE );
@@ -127,15 +127,17 @@ BOOL CClientDialog::OnSocketDisconnect()
 BOOL CClientDialog::OnSocketReceive()
 {
     std::vector<CHAR> bufVector( 1025, '\0' );
-    CHAR* buf = &bufVector.front(); // CHAR array with 1025 elements initialised to '\0'
-    int size = m_client.Receive( buf, 1024, 0 ); // receive at most 1024 chars
-    if (SOCKET_ERROR == size)
+    CHAR* bufArray = &bufVector.front(); // CHAR array with 1025 elements initialised to '\0'
+    if (m_client.Receive(bufArray, 1024, 0 ) == SOCKET_ERROR)
     {
-        AppendText( IDC_EDIT_STATUS, _T("Receive failed.") );
-        return size;
+        if (WSAGetLastError() != WSAEWOULDBLOCK)
+            AppendText(IDC_EDIT_STATUS, _T("Receive failed."));
+        
+        return FALSE;
     }
 
-    AppendText( IDC_EDIT_RECEIVE, AtoT(buf) );
+    AppendText( IDC_EDIT_RECEIVE, AtoT(bufArray) );
+    TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
     
     return TRUE;
 }
@@ -229,7 +231,7 @@ BOOL CClientDialog::OnInitDialog()
     // Set the initial state of the dialog
     m_editIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
     m_radioIP4.SetCheck(BST_CHECKED);
-    m_editStatus.SetWindowText( _T("Not Connected") );
+    AppendText(IDC_EDIT_STATUS, _T("Not Connected"));
     m_editPort.SetWindowText( _T("3000") );
     m_radioTCP.SetCheck(BST_CHECKED);
     m_ip4Address.SetAddress( MAKEIPADDRESS(127, 0, 0, 1));
@@ -327,7 +329,7 @@ void CClientDialog::OnStartClient()
                 m_radioTCP.EnableWindow( FALSE );
                 m_radioUDP.EnableWindow( FALSE );
                 m_buttonConnect.SetWindowText( _T("Disconnect") );
-                m_editStatus.SetWindowText( _T("Ready to Send") );
+                AppendText(IDC_EDIT_STATUS, _T("Connected, ready to send"));
                 GotoDlgCtrl(m_editSend);
                 m_isClientConnected = TRUE;
             }
@@ -348,7 +350,7 @@ void CClientDialog::OnStartClient()
         m_radioTCP.EnableWindow( TRUE );
         m_radioUDP.EnableWindow( TRUE );
         m_buttonConnect.SetWindowText( _T("Connect") );
-        m_editStatus.SetWindowText( _T("Not Connected") );
+        AppendText(IDC_EDIT_STATUS, _T("Not Connected"));
 
         if (m_client.IsIPV6Supported())
         {
@@ -367,7 +369,8 @@ void CClientDialog::OnSend()
         {
             CString sSend = GetDlgItemText(IDC_EDIT_SEND);
             if (SOCKET_ERROR == m_client.Send(TtoA(sSend), sSend.GetLength(), 0))
-                m_editStatus.SetWindowText( _T("Send Failed") );
+                if (WSAGetLastError() != WSAEWOULDBLOCK)
+                    AppendText(IDC_EDIT_STATUS, _T("Send Failed"));
         }
         break;
     case SOCK_DGRAM:    // for UDP client
@@ -395,7 +398,8 @@ void CClientDialog::OnSend()
             }
 
             if (SOCKET_ERROR == m_client.SendTo( TtoA(strSend), strSend.GetLength(), 0, strAddr, port ))
-                m_editStatus.SetWindowText( _T("SendTo Failed") );
+                if (WSAGetLastError() != WSAEWOULDBLOCK)
+                    AppendText(IDC_EDIT_STATUS, _T("SendTo Failed"));
         }
         break;
     }

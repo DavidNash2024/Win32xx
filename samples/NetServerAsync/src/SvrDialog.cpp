@@ -34,24 +34,33 @@ void CTCPClientDlg::AppendText(int id, LPCTSTR buf)
 // respond to the user defined message posted to the dialog
 INT_PTR CTCPClientDlg::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	switch (msg)
-	{
-	case UWM_SOCKETMSG:
-	{
-		switch (lparam)
-		{
-			//TCP Incoming data to receive
-			case FD_READ:   return OnSocketReceive();
+    switch (msg)
+    {
+    case UWM_SOCKETMSG:
+    {
+        if (WSAGETSELECTERROR(lparam))
+        {
+            // Display the error and close the socket
+            AppendText(IDC_EDIT_STATUS, _T("Socket error, closing socket."));
+            closesocket(static_cast<SOCKET>(wparam));
+        }
+        else
+        {
+            switch (WSAGETSELECTEVENT(lparam))
+            {
+            //TCP Incoming data to receive
+            case FD_READ:   return OnSocketReceive();
 
-			// TCP socket disconnected
-			case FD_CLOSE:  return OnSocketDisconnect();
-		}
-		break;
-	}
-	}
+            // TCP socket disconnected
+            case FD_CLOSE:  return OnSocketDisconnect();
+            }
+        }
+        break;
+    }
+    }
 
-	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(msg, wparam, lparam);
+    // Pass unhandled messages on to parent DialogProc
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 void CTCPClientDlg::OnClose()
@@ -78,8 +87,8 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM lparam)
 
 void CTCPClientDlg::OnDestroy()
 {
-	CSvrDialog& dialog = GetDlgApp().GetDialog();
-	dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(m_pSocket.get()), 0);
+    CSvrDialog& dialog = GetDlgApp().GetDialog();
+    dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(m_pSocket.get()), 0);
 }
 
 BOOL CTCPClientDlg::OnInitDialog()
@@ -95,31 +104,38 @@ BOOL CTCPClientDlg::OnInitDialog()
 
 BOOL CTCPClientDlg::OnSocketDisconnect()
 {
-	// close the chat window
-	PostMessage(WM_CLOSE);
+    // close the chat window
+    PostMessage(WM_CLOSE);
 
-	return TRUE;
+    return TRUE;
 }
 
 BOOL CTCPClientDlg::OnSocketReceive()
 {
-	Receive();
+    Receive();
 
-	return TRUE;
+    return TRUE;
 }
 
 void CTCPClientDlg::Receive()
 {
     std::vector<char> bufVector( 1025, '\0' );
-    char* buf = &bufVector.front(); // char array with 1025 elements initialised to '\0'
-    m_pSocket->Receive(buf, 1024, 0);
-    AppendText(IDC_EDIT_RECEIVE2, AtoT(buf));
+    char* bufArray = &bufVector.front(); // char array with 1025 elements initialised to '\0'
+    if (m_pSocket->Receive(bufArray, 1024, 0) != SOCKET_ERROR)
+    {
+        AppendText(IDC_EDIT_RECEIVE2, AtoT(bufArray));
+        TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
+    }
+    else
+        AppendText(IDC_EDIT_STATUS, _T("Receive Failed"));
 }
 
 void CTCPClientDlg::Send()
 {
     CString sSend = m_editSend.GetWindowText();
-    m_pSocket->Send(TtoA(sSend), lstrlen(sSend), 0);
+    if (m_pSocket->Send(TtoA(sSend), lstrlen(sSend), 0) == SOCKET_ERROR)
+        if (WSAGetLastError() != WSAEWOULDBLOCK)
+            AppendText(IDC_EDIT_STATUS, _T("Send failed"));
 }
 
 
@@ -164,20 +180,29 @@ INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-	case USER_DISCONNECT:  return OnSocketDisconnect(wparam);
-	case UWM_SOCKETMSG:
-	{
-		switch (lparam)
-		{
-		// UDP Incoming data to receive
-		case FD_READ: 		return OnSocketReceive();
+    case USER_DISCONNECT:  return OnSocketDisconnect(wparam);
+    case UWM_SOCKETMSG:
+    {
+        if (WSAGETSELECTERROR(lparam))
+        {
+            // Display the error and close the socket
+            AppendText(IDC_EDIT_STATUS, _T("Socket error, closing socket.\n"));
+            closesocket(static_cast<SOCKET>(wparam));
+        }
+        else
+        {
+            switch (WSAGETSELECTEVENT(lparam))
+            {
+            // UDP Incoming data to receive
+            case FD_READ:       return OnSocketReceive();
 
-		// TCP Connection request
-		case FD_ACCEPT: 	return OnSocketAccept();
+            // TCP Connection request
+            case FD_ACCEPT:     return OnSocketAccept();
 
-		}
-		break;
-	}
+            }
+        }
+        break;
+    }
     }
 
     // Pass unhandled messages on to parent DialogProc
@@ -276,7 +301,7 @@ BOOL CSvrDialog::OnInitDialog()
     m_editIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
     m_radioIP4.SetCheck(BST_CHECKED);
     m_ip4Address.SetAddress(MAKEIPADDRESS(127, 0, 0, 1));
-    m_editStatus.SetWindowText( _T("Server Stopped") );
+    AppendText(IDC_EDIT_STATUS, _T("Server Stopped"));
     m_editPort.SetWindowText( _T("3000") );
     m_radioTCP.SetCheck(BST_CHECKED);
     if (!m_mainSocket.IsIPV6Supported())
@@ -357,7 +382,9 @@ BOOL CSvrDialog::OnSend()
         case SOCK_DGRAM:
             {
                 CString sSend = m_editSend.GetWindowText();
-                m_mainSocket.SendTo(TtoA(sSend), strlen(TtoA(sSend)), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
+                if (m_mainSocket.SendTo(TtoA(sSend), strlen(TtoA(sSend)), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient)) == SOCKET_ERROR)
+                    if (WSAGetLastError() != WSAEWOULDBLOCK)
+                        AppendText(IDC_EDIT_STATUS, _T("SendTo failed"));
             }
             break;
     }
@@ -368,7 +395,7 @@ BOOL CSvrDialog::OnSend()
 // Accept the connection from the client
 BOOL CSvrDialog::OnSocketAccept()
 {
-	SocketPtr pClient = new CSocket;
+    SocketPtr pClient = new CSocket;
     m_mainSocket.Accept(*pClient, NULL, NULL);
     if (INVALID_SOCKET == m_mainSocket.GetSocket())
     {
@@ -380,9 +407,9 @@ BOOL CSvrDialog::OnSocketAccept()
     // Create the new chat dialog
     TCPClientDlgPtr pDialog = new CTCPClientDlg(IDD_CHAT);
     pDialog->m_pSocket = pClient;
-	pDialog->DoModeless(*this);
-	long events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;
-	pClient->StartAsync(*pDialog, UWM_SOCKETMSG, events);
+    pDialog->DoModeless(*this);
+    long events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;
+    pClient->StartAsync(*pDialog, UWM_SOCKETMSG, events);
 
     // Reposition the chat dialog
     CRect rc = pDialog->GetWindowRect();
@@ -401,13 +428,13 @@ BOOL CSvrDialog::OnSocketAccept()
 
 BOOL CSvrDialog::OnSocketDisconnect(WPARAM wparam)
 {
-	CSocket* pClient = reinterpret_cast<CSocket*>(wparam);
+    CSocket* pClient = reinterpret_cast<CSocket*>(wparam);
 
     // Respond to a socket disconnect notification
     AppendText(IDC_EDIT_STATUS, _T("Client disconnected"));
 
     // Allocate an iterator for our CSocket map
-	std::map<SocketPtr, TCPClientDlgPtr>::iterator iter;
+    std::map<SocketPtr, TCPClientDlgPtr>::iterator iter;
     for (iter = m_connectedClients.begin(); iter != m_connectedClients.end(); ++iter)
     {
         if (iter->first.get() == pClient)
@@ -425,19 +452,24 @@ BOOL CSvrDialog::OnSocketDisconnect(WPARAM wparam)
 
 BOOL CSvrDialog::OnSocketReceive()
 {
-	std::vector<char> vChar(1025, '\0');
-	char* bufArray = &vChar.front(); // char array with 1025 elements
+    std::vector<char> vChar(1025, '\0');
+    char* bufArray = &vChar.front(); // char array with 1025 elements
 
     int addrlen = sizeof(m_saUDPClient);
 
     // Receive data and update the UDP client socket address.
-    m_mainSocket.ReceiveFrom(bufArray, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen);
+    if (m_mainSocket.ReceiveFrom(bufArray, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen) == SOCKET_ERROR)
+    {
+        AppendText(IDC_EDIT_STATUS, _T("ReceiveFrom failed"));
+        return FALSE;
+    }
+
     TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
     
     m_buttonSend.EnableWindow(TRUE);
     m_editSend.EnableWindow(TRUE);
     GotoDlgCtrl(GetDlgItem(IDC_EDIT_SEND));
-	AppendText(IDC_EDIT_RECEIVE, AtoT(bufArray));
+    AppendText(IDC_EDIT_RECEIVE, AtoT(bufArray));
 
     return TRUE;
 }
@@ -502,8 +534,8 @@ BOOL CSvrDialog::StartServer()
         }
     }
 
-	long events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;
-	m_mainSocket.StartAsync(*this, UWM_SOCKETMSG, events);
+    long events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;
+    m_mainSocket.StartAsync(*this, UWM_SOCKETMSG, events);
 
     return TRUE;
 }

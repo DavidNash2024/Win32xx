@@ -21,7 +21,7 @@ public:
     virtual ~CTCPClientDlg() {}
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnClose();
-	virtual void OnDestroy();
+    virtual void OnDestroy();
     virtual BOOL OnInitDialog();
 
     void AppendText(int id, LPCTSTR buf);
@@ -49,7 +49,7 @@ class CSvrDialog : public CDialog
 public:
     CSvrDialog(UINT resID);
     virtual ~CSvrDialog();
-    void Append(int id, LPCTSTR buf);
+    void AppendText(int id, LPCTSTR buf);
     void LoadCommonControlsEx();
     BOOL OnSocketDisconnect(WPARAM wparam);
     BOOL OnSocketReceive(WPARAM wparam);
