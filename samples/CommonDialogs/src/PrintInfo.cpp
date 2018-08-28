@@ -91,8 +91,6 @@ CPrintInfo()                                                            /*
 *-----------------------------------------------------------------------------*/
 {
     m_pPD = NULL;
-    m_nCurPage   = 0;
-    m_lpUserData = NULL;        // Initialize to no user data
     m_bPreview   = FALSE;       // initialize to not preview
     m_bDirect    = FALSE;       // initialize to not direct
     m_bDocObject = FALSE;       // initialize to not IPrint
@@ -134,7 +132,7 @@ InitInfo(CPrintDialog* pPD, UINT fromPage, UINT toPage, UINT minPage,
     the object for other uses.
 *-----------------------------------------------------------------------------*/
 {
-    IsWindow(*pPD);
+    assert(pPD);
     m_pPD        = pPD;
     PRINTDLG pd  = m_pPD->GetParameters();
     pd.nCopies   = (WORD)nCopies;

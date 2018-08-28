@@ -142,6 +142,8 @@ CView(UINT nResID)                                                      /*
     m_sComboBox.Empty();
     m_iComboBox = 0;
     m_iSlider   = 0;
+    m_iProgress = 0;
+    m_iScrollBar = 0;
     CTime::GetCurrentTime().GetAsSystemTime(m_stDateTime);
     m_stMoCalendar = m_stDateTime;
 

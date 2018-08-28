@@ -569,14 +569,14 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -585,6 +585,7 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
       
       // call the base class OnCreate() method with these options
     int rtn = CFrame::OnCreate(rcs);
+
       // set theme colors, if supported
     if (IsReBarSupported())
     {
@@ -730,6 +731,18 @@ OnInitialUpdate()                                                       /*
         m_Doc.OpenDoc(docfile);
     }
     UpdateControlUIState();
+
+	  // Resize the text window
+	CRect rc = m_View.GetClientRect();
+	rc.DeflateRect(10, 10);
+	m_View.GetREView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+
+	  // Unselect the text
+	CHARRANGE r;
+	ZeroMemory(&r, sizeof(r));
+	m_View.GetREView().SetSel(r);
+	m_View.GetREView().SetFocus();
+
     TRACE("Frame created\n");
 }
 
@@ -832,7 +845,7 @@ PreCreate(CREATESTRUCT& cs)                                             /*
         | WS_EX_CONTROLPARENT       // TAB key navigation
 //      | WS_EX_CONTEXTHELP     // doesn't work if WS_MINIMIZEBOX
                     // or WS_MAXIMIZEBOX is specified
-        ;
+        ; 
 }
 
 /*============================================================================*/
@@ -1317,11 +1330,11 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
         case WM_CTLCOLORSTATIC:
         return OnCtlColor(reinterpret_cast<HDC>(wParam), reinterpret_cast<HWND>(lParam), uMsg);
 
-        case WM_SETCURSOR:
-        {
-        ::SetCursor(m_hCursor);
-        return TRUE;
-        }
+    //    case WM_SETCURSOR:
+    //    {
+    //    ::SetCursor(m_hCursor);
+    //    return TRUE;
+    //    }
 
         case IDM_UPDATECONTROLUISTATE:
             UpdateControlUIState();

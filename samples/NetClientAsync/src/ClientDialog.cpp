@@ -279,7 +279,7 @@ void CClientDialog::OnStartClient()
 
                 if (!m_client.Create(IPfamily, SOCK_STREAM))
                 {
-                    AppendText(IDC_EDIT_STATUS, m_client.GetLastError());
+                    AppendText(IDC_EDIT_STATUS, m_client.GetErrorString());
                     MessageBox( _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING );
                     return;
                 }
@@ -309,7 +309,7 @@ void CClientDialog::OnStartClient()
                 // Connect to the server
                 if (0 != m_client.Connect(strAddr, port) )
                 {
-                    AppendText(IDC_EDIT_STATUS, m_client.GetLastError());
+                    AppendText(IDC_EDIT_STATUS, m_client.GetErrorString());
                     MessageBox( _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING );
                     m_client.Disconnect();
                     m_buttonConnect.EnableWindow( TRUE );
@@ -328,7 +328,7 @@ void CClientDialog::OnStartClient()
                 // Create the socket
                 if (!m_client.Create(IPfamily, SOCK_DGRAM))
                 {
-                    AppendText(IDC_EDIT_STATUS, m_client.GetLastError());
+                    AppendText(IDC_EDIT_STATUS, m_client.GetErrorString());
                     MessageBox( _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING );
                     return;
                 }

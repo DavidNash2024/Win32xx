@@ -60,6 +60,8 @@ CPrintPreview(UINT nResID, DWORD dwFlags /* = HIDE_HELP */ )            /*
     m_ScreenInches   = DSize(20.25, 11.5);
     m_PreviewInches  = DSize(8.0, 10.0);
     m_PreviewPane.SetPaneZoomState(ZOOM_OUT);
+    m_nNumPreviewPages = 0;
+    m_shrink         = 0;
  }
 
 /*============================================================================*/
@@ -469,6 +471,16 @@ OnPreview(const CString &docPath)                                       /*
     Display the preview pages of the document. 
 *-----------------------------------------------------------------------------*/
 {
+	CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+	HDC hPrinter = printDlg.GetPrinterDC();
+	if (hPrinter == 0)
+	{
+		::MessageBox(NULL, _T("Print preview requires a printer to copy settings from"),
+			_T("No Printer found"), MB_ICONWARNING);
+
+		return FALSE;
+	}
+
       // save the doument path
     m_sDocPath = docPath;
       // set up device contexts, determine pagination, and number of pages

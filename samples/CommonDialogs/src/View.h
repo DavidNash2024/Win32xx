@@ -123,7 +123,7 @@ CView : public CDialog                          /*
 
     private:
           // private data members
-//      CResizer m_Resizer;
+   //     CResizer m_Resizer;
         HWND            m_hParent;      // handle of parent frame
         CToolTip        m_ToolTip;  // form tool tips
         CFont           m_EditFont;     // edit box font

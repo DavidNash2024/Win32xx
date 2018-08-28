@@ -84,7 +84,6 @@ CDoc()                                  /*
 
     Constructor.
 *-----------------------------------------------------------------------------*/
-    :   m_Doc_file(INVALID_HANDLE_VALUE)
 {
     m_Doc_is_open = FALSE;
     m_Doc_file_ext.Empty();
@@ -735,7 +734,7 @@ OpenDoc(const CString &file)                        /*
 
         m_UnicodeFile = (length > 2 && (buffer[0] == 0 ||
             buffer[1] == 0) ? TRUE : FALSE);
-        delete buffer;
+        delete[] buffer;
         m_Doc_file.SeekToBegin();
         GetREView().StreamInFile(m_Doc_file, m_UnicodeFile);
         m_open_doc_path = GetFilePath();

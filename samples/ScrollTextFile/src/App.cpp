@@ -130,7 +130,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 
 *=============================================================================*/
     CApp::
-CApp()                                  /*
+CApp() : m_nMaxMRUSlots(0)                            /*
 
     Default constructor.
 *-----------------------------------------------------------------------------*/
@@ -297,7 +297,7 @@ MakeAppDataPath(const CString& subpath)                 /*
 
         CString add = subpath.Mid(from, next - from);
         app_data_path += _T("\\") + add;
-		if ((::CreateDirectory(app_data_path, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
+        if ((::CreateDirectory(app_data_path, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
         {
             CString msg = app_data_path +
                 _T("\nDirectory creation error.");

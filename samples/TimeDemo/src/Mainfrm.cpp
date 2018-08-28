@@ -341,6 +341,7 @@ OnCommandHelp(WPARAM wParam, LPARAM lParam)             /*
 
             case IDM_EDIT_UNDO:
             OnHelp(_T("No help for UNDO."));
+            break;
 
             case IDM_FILE_EXIT:
             OnHelp(_T("No help for EXIT."));

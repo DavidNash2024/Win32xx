@@ -538,6 +538,16 @@ QuickPrint(CPrintDialog& PrintDlg)                                      /*
     PrintDlg object.
 *-----------------------------------------------------------------------------*/
 {
+	CPrintDialog dlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+	HDC hPrinter = dlg.GetPrinterDC();
+	if (hPrinter == 0)
+	{
+		::MessageBox(NULL, _T("Quick Print requires a printer"),
+			_T("No Printer found"), MB_ICONWARNING);
+
+		return;
+	}
+
     GetRichView().PrintPages(PrintDlg);
 }
 

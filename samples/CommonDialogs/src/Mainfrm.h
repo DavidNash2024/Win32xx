@@ -58,34 +58,6 @@
 #ifndef SDI_MAINFRM_H
 #define SDI_MAINFRM_H
 
-/*******************************************************************************
-
-    Declaration and Implementation of the NoResizeGripperStatusBar class
-
-*=============================================================================*/
-    class
-NoResizeGripperStatusBar : public CStatusBar                            /*
-
-    This class defines a status bar at the bottom of the frame having
-    no resizing gripper box. To use this class, declare a member variable
-    of the frame of this class, as, for example,
-    
-        NoResizeGripperStatusBar m_NoResizeGripperStatusBar;
-
-    and then override the frame's GetStatusBar() method with the following:
-    
-        virtual CStatusBar& GetStatusBar() const
-                { return const_cast<NoResizeGripperStatusBar&>
-                  (m_NoResizeGripperStatusBar); }
-
-    The frame window will still resize, but no gripper id displayed. Remove
-    the WS_THICKFRAME style option in the frame's PreCreate() member to
-    make the frame be of fixed size.
-*-----------------------------------------------------------------------------*/
-{
-    void PreCreate(CREATESTRUCT &cs)
-        { cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM; }
-};
 
 /*******************************************************************************
 
@@ -114,9 +86,6 @@ CMainFrame : public CFrame                      /*
         virtual void    EmptyMRUList();
             CDoc&   GetDoc() { return m_Doc; }
             UINT    GetMRUSize() { return GetMRUEntries().size();}
-        virtual CStatusBar& GetStatusBar() const
-                { return const_cast<NoResizeGripperStatusBar&>
-                  (m_NoResizeGripperStatusBar); }
         virtual void    RemoveMRUEntry(LPCTSTR szMRUEntry)
                     {CFrame::RemoveMRUEntry(szMRUEntry);}
             void    SetSBBkColor(COLORREF clr)
@@ -182,7 +151,6 @@ CMainFrame : public CFrame                      /*
         MyFontDialog m_FontChoice;    // edit control font
         WINDOWPLACEMENT m_Wndpl;      // window placement information
         MyFindReplaceDialog m_FindRepDialog;  // find-replace dialog
-        NoResizeGripperStatusBar m_NoResizeGripperStatusBar;
 };
 /*------------------------------------------------------------------------------*/
 #endif // SDI_MAINFRM_H

@@ -73,7 +73,7 @@ CApp : public CWinApp                           /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-        CApp(){}
+        CApp() : m_nCmdShow(0) {}
         ~CApp(){}
 
         BOOL        InitInstance(); // called from (CWinApp) Run()

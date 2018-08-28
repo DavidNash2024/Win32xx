@@ -72,7 +72,8 @@ CRichEditView()                                                         /*
     m_sPrintPath.Empty();
     m_sDataType.Empty();
     m_bAppBanding = FALSE;
-
+    m_nTextLength = 0;
+    ZeroMemory(&m_fr, sizeof(m_fr));
 }
 
 /*============================================================================*/
@@ -318,7 +319,7 @@ DoPreparePrinting(CPrintInfo& info)                 /*
 *-----------------------------------------------------------------------------*/
 {
       // set up a dialog to choose the printer and printing parameters
-    ::IsWindow(*info.m_pPD);
+    assert(info.m_pPD);
       // get the printing parameters
     if (info.m_pPD->DoModal(GetApp().GetMainWnd()) != IDOK)
         return FALSE;

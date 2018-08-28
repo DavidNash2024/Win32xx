@@ -2527,27 +2527,25 @@ namespace Win32xx
 
         // Step 2: Find the docker child whose view window has the point
         CDocker* pDockTarget = NULL;
-        if (m_dockUnderPoint != 0)
+
+        HWND dockTest = m_dockUnderPoint;
+        HWND dockParent = m_dockUnderPoint;
+
+        while (IsRelated(dockTest))
         {
-            HWND dockTest = m_dockUnderPoint;
-            HWND dockParent = m_dockUnderPoint;
-
-            while (IsRelated(dockTest))
-            {
-                dockParent = dockTest;
-                CPoint ptLocal = pt;
-                ::ScreenToClient(dockParent, &ptLocal);
-                dockTest = ::ChildWindowFromPoint(dockParent, ptLocal);
-                if (dockTest == dockParent) break;
-            }
-
-            CDocker* pDockParent = reinterpret_cast<CDocker*>(::SendMessage(dockParent, UWM_GETCDOCKER, 0, 0));
-            assert(pDockParent);
-
-            CRect rc = pDockParent->GetDockClient().GetWindowRect();
-            if (rc.PtInRect(pt))
-                pDockTarget = pDockParent;
+            dockParent = dockTest;
+            CPoint ptLocal = pt;
+            ::ScreenToClient(dockParent, &ptLocal);
+            dockTest = ::ChildWindowFromPoint(dockParent, ptLocal);
+            if (dockTest == dockParent) break;
         }
+
+        CDocker* pDockParent = reinterpret_cast<CDocker*>(::SendMessage(dockParent, UWM_GETCDOCKER, 0, 0));
+        assert(pDockParent);
+
+        CRect rc = pDockParent->GetDockClient().GetWindowRect();
+        if (rc.PtInRect(pt))
+            pDockTarget = pDockParent;
 
         return pDockTarget;
     }
