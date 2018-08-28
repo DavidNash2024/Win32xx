@@ -39,7 +39,7 @@
 // wxx_socket.h
 //  Declaration of the CSocket class
 //
-// The CSocket class represents a network socket. It can be used to create 
+// The CSocket class represents a network socket. It can be used to create
 // two types of sockets namely:
 // 1) An asycn socket.
 // 2) An event socket.
@@ -168,7 +168,7 @@ namespace Win32xx
         virtual void Disconnect();
         virtual void FreeAddrInfo( struct addrinfo* ai ) const;
         virtual int  GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res) const;
-        virtual CString GetLastError() const;
+        virtual CString GetErrorString() const;
         virtual int  ioCtlSocket(long cmd, u_long* argp) const;
         virtual bool IsIPV6Supported() const;
         virtual int  Listen(int backlog = SOMAXCONN) const;
@@ -420,7 +420,7 @@ namespace Win32xx
     {
         ::shutdown(m_socket, SD_BOTH);
         StopEvents();
-        
+
         ::closesocket(m_socket);
         m_socket = INVALID_SOCKET;
     }
@@ -549,7 +549,7 @@ namespace Win32xx
 
     // Retrieves the most recent network error.
     // Refer to WSAGetLastError in the Windows API documentation for additional information.
-    inline CString CSocket::GetLastError() const
+    inline CString CSocket::GetErrorString() const
     {
         int errorCode = WSAGetLastError();
         LPTSTR message = NULL;
@@ -682,7 +682,7 @@ namespace Win32xx
     {
         int result = ::send(m_socket, buf, len, flags);
         if (SOCKET_ERROR == result)
-			if (GetLastError() != WSAEWOULDBLOCK)
+			if (WSAGetLastError() != WSAEWOULDBLOCK)
 				TRACE(_T("Send failed\n"));
         return result;
     }
@@ -694,7 +694,7 @@ namespace Win32xx
         int result =  ::sendto(m_socket, buf, len, flags, to, tolen);
 		if (SOCKET_ERROR == result)
 		{
-			if (GetLastError() != WSAEWOULDBLOCK)
+			if (WSAGetLastError() != WSAEWOULDBLOCK)
 				TRACE(_T("SendTo failed\n"));
 		}
 
@@ -729,7 +729,7 @@ namespace Win32xx
             result = ::sendto(m_socket, send, len, flags, addrInfo->ai_addr, static_cast<int>(addrInfo->ai_addrlen) );
             if (result == SOCKET_ERROR )
             {
-				if (GetLastError() != WSAEWOULDBLOCK)
+				if (WSAGetLastError() != WSAEWOULDBLOCK)
 				{
 					TRACE("SendTo failed\n");
 					return result;
@@ -800,7 +800,7 @@ namespace Win32xx
     inline void CSocket::StartEvents()
     {
         StopEvents();   // Ensure the thread isn't already running
-        
+
         m_threadPtr->CreateThread();
     }
 

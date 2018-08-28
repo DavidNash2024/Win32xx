@@ -1263,6 +1263,7 @@ namespace Win32xx
                 {
                     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
                     CWnd* pActiveChild = GetMenuBar().GetActiveMDIChild();
+                    assert(pActiveChild);
                     HICON icon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0));
                     if (NULL == icon)
                         icon = GetApp().LoadStandardIcon(IDI_APPLICATION);

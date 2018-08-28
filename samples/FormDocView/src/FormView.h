@@ -32,8 +32,6 @@ protected:
     virtual void OnOK();
 
 private:
-
-
     CResizer m_resizer;
 
     // Nested classes for this dialog's child windows

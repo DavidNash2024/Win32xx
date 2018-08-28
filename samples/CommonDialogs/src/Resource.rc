@@ -139,18 +139,16 @@ IDW_MAIN                BITMAP DISCARDABLE      "../src/res/Toolbar.bmp"
 /*============================================================================*/
 
   // Main Window Form Dialog
-IDD_FORM_DIALOG DIALOGEX 0, 0, 490, 410
+IDD_FORM_DIALOG DIALOGEX 0, 0, 300, 200
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE
 EXSTYLE WS_EX_CLIENTEDGE
 FONT 10, "Courier New", 0, 0
 {
       // controls within the client area:
-    DEFPUSHBUTTON   "OK", IDOK, 315, 10, 50, 16, BS_DEFPUSHBUTTON |
-                WS_GROUP | WS_TABSTOP | BS_OWNERDRAW
     CONTROL         "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |
                 ES_AUTOHSCROLL | WS_BORDER  | WS_TABSTOP |
                 ES_WANTRETURN  | WS_VSCROLL | WS_HSCROLL,
-                10, 10, 290, 235, WS_EX_CLIENTEDGE |
+                10, 10, 310, 210, WS_EX_CLIENTEDGE |
                 WS_EX_ACCEPTFILES
 }
 

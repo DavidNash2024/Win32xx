@@ -794,7 +794,7 @@ namespace Win32xx
         }
 
         // allow the dialog to translate keyboard input
-        if ((msg.message >= WM_KEYFIRST) && (msg.message <= WM_KEYLAST))
+        if (GetActivePage() && (msg.message >= WM_KEYFIRST) && (msg.message <= WM_KEYLAST))
         {
             return GetActivePage()->PreTranslateMessage(msg);
         }

@@ -400,7 +400,7 @@ BOOL CSvrDialog::OnSocketAccept()
     if (INVALID_SOCKET == m_mainSocket.GetSocket())
     {
         TRACE("Failed to accept connection from client\n");
-        TRACE(m_mainSocket.GetLastError());
+        TRACE(m_mainSocket.GetErrorString());
         return TRUE;
     }
 
@@ -485,7 +485,7 @@ BOOL CSvrDialog::StartServer()
     if (!m_mainSocket.Create(IPfamily, m_socketType))
     {
         AppendText(IDC_EDIT_STATUS, _T("Create Socket Failed"));
-        AppendText(IDC_EDIT_STATUS, m_mainSocket.GetLastError());
+        AppendText(IDC_EDIT_STATUS, m_mainSocket.GetErrorString());
         return FALSE;
     }
 
@@ -518,7 +518,7 @@ BOOL CSvrDialog::StartServer()
     if ( RetVal != 0 )
     {
         AppendText(IDC_EDIT_STATUS, _T("Bind failed"));
-        AppendText(IDC_EDIT_STATUS, m_mainSocket.GetLastError());
+        AppendText(IDC_EDIT_STATUS, m_mainSocket.GetErrorString());
         return FALSE;
     }
 
@@ -529,7 +529,7 @@ BOOL CSvrDialog::StartServer()
         if  ( SOCKET_ERROR == RetVal )
         {
             AppendText(IDC_EDIT_STATUS, _T("Error listening on socket"));
-            AppendText(IDC_EDIT_STATUS, m_mainSocket.GetLastError());
+            AppendText(IDC_EDIT_STATUS, m_mainSocket.GetErrorString());
             return FALSE;
         }
     }

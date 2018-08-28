@@ -67,7 +67,7 @@ CView(UINT nResID)                                          /*
 
     Construct default window main view object.
 *-----------------------------------------------------------------------------*/
-    : CDialog(nResID)
+    : CDialog(nResID), m_hParent(0), m_pDoc(NULL)
 {
 }
 
@@ -163,7 +163,6 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
     are passed to the window default procedure for further action.
 **----------------------------------------------------------------------------*/
 {
-//  m_Resizer.HandleMessage(uMsg, wParam, lParam);
 
     switch (uMsg)
     {
@@ -268,12 +267,13 @@ OnInitDialog()                                                          /*
       // add tool tips to controls in client area
     AssignToolTips();
       // subclass the controls on the dialog
-    AttachControl(IDOK, m_OK);
     AttachControl(IDC_RICHEDITBOX, m_RichEdit);
       // set edit box to default font
     m_RichEdit.SetFont(m_EditFont, TRUE);
       // put some arbitrary text in the edit control just for this demo
     NoDocOpen();
+
+
     return TRUE;
 }
 

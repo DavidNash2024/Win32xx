@@ -712,7 +712,7 @@ namespace Win32xx
 
         BOOL result = (SendMessage(TB_REPLACEBITMAP, images, reinterpret_cast<LPARAM>(&tbrb)) != 0);
         if (result)
-			m_oldBitmapID = m_oldBitmapID;
+            m_oldBitmapID = newBitmapID;
 
         return result;
     }

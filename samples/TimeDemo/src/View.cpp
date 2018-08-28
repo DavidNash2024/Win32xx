@@ -78,6 +78,10 @@ CView()                                                 /*
     m_rgbBkHiColor = RGBHighlight(m_rgbBkColor);
     m_hCursor      = ::LoadCursor(0, IDC_ARROW);
     SetCursorShape(arrow);
+    for (int i = 0; i < 16; i++)
+    {
+        m_rgbCustomColors[i] = RGB(0, 0, 0);
+    }
 }
 
 /*============================================================================*/
