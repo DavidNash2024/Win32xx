@@ -72,19 +72,14 @@ Features demonstrated in this example
   of fonts, colors, files, text for find/replace purposes, and printer 
   parameters.
 
-* A reusable CustomButton class derived from CButton that illustrates how 
-  to give buttons custom colors.
-
 * Reusable classes CColorChoice and CListBoxDlg that, with CView, implement 
   the selection and display of the font foreground, font background, and 
-  control colors for all colored elements of the client area and status bar.
+  control colors for the RichEdit control, as well as the colors of the dialog
+  and status bar backgrounds.
 
 * Reusable derived classes MyFileDlg, MyFindReplaceDlg, MyFontDlg, MyPrinter,
   and MyPrintSetup that customize the appearance of their respective common
   dialog base classes and bring context help functions to these dialogs.
-
-* A fixed-size form for the display, with no resizing gripper tool at the
-  end of the status bar.
 
 * Programmer-selectable menu, tool bar, and status bar themes, as well as
   user-selectable foreground and background colors of the dialog controls,

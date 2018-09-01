@@ -66,9 +66,9 @@
 
 /*******************************************************************************
 
-    Macros and Local (static) default constants                 */
+    Macros and Local (static) default constants                             */
 
-  // the (fixed) window dimensions : {left, top, width, height}
+  // the (initial) window dimensions : {left, top, width, height}
 static const RECT rcWindowPlacement = {100, 100, 780, 620};
 
 /*******************************************************************************
@@ -77,7 +77,7 @@ static const RECT rcWindowPlacement = {100, 100, 780, 620};
 
 *=============================================================================*/
     CMainFrame::
-CMainFrame()                                /*
+CMainFrame()                                                                /*
 
     Construct and initiallize the CMainFrame object from the IDD_FORM_DIALOG
     resource defined in resource.rc.
@@ -100,7 +100,7 @@ CMainFrame()                                /*
 
 /*============================================================================*/
     void CMainFrame::
-EmptyMRUList()                                                          /*
+EmptyMRUList()                                                              /*
 
     Remove all entries from the MRU list and  display the empty list
     on the MRU menu.
@@ -116,156 +116,30 @@ EmptyMRUList()                                                          /*
 
 /*============================================================================*/
     void CMainFrame::
-GetCtlColors(UINT nCtlColor, UINT nID, UINT& fg, UINT& bk,  UINT& bg) /*
-
-    Return the text foreground fg, text background bk, and control
-    background bg indexes for the control class nCtlColor whose color values
-    are to be found in the color table at their respective color indexes.
-*-----------------------------------------------------------------------------*/
-{
-    switch (nCtlColor)
-    {
-        case WM_CTLCOLORDLG:
-        fg = DlgTxFg;
-        bk = DlgTxBg;
-            bg = DlgBg;
-        break;
-
-        case WM_CTLCOLORBTN:
-        {
-          // As illustrated here, we can handle each button separately
-          // according to its nID. For the OK button case
-            if (nID == IDOK)
-            {
-            fg = OKTxFg;
-                bk = OKTxBg;
-                bg = OKBg;
-        }
-        else
-        {
-            fg = BtnTxFg;
-            bk = BtnTxBg;
-                bg = BtnBg;
-        }
-        // ... ditto for other buttons
-        break;
-        }
-
-        case WM_CTLCOLOREDIT:
-        fg = EdtTxFg;
-        bk = EdtTxBg;
-            bg = EdtBg;
-        break;
-
-        case WM_CTLCOLORLISTBOX:
-        fg = LBxTxFg;
-        bk = LBxTxBg;
-            bg = LBxBg;
-        break;
-
-        case WM_CTLCOLORSCROLLBAR:
-        fg = SclTxFg;
-        bk = SclTxBg;
-            bg = SclBg;
-        break;
-
-        case WM_CTLCOLORSTATIC:
-        fg = StcTxFg;
-        bk = StcTxBg;
-            bg = StcBg;
-        break;
-
-      // if there are custom colors for some controls, change them here
-
-        default:
-        fg = bk = bg = DfltClr;
-        break;
-    }
-}
-
-/*============================================================================*/
-    void CMainFrame::
-InitCtlColors()                             /*
+InitCtlColors()                                                             /*
 
     Populate the color table with the initial ctl_color triplets used in the
     list box of the CColorDialog object. These values are displayed in the
     controls on first execution of this program, and are overwritten by
     deserialization in subsequent executions.
-
-    Note: Not all listed colors are actually displayed in this demo program.
-    Unused color entries have been commented out or eliminated; However, on
-    doing so, it is necessary to eliminate references elsewhere in this
-    program to the nIDs of removed entries.
 *-----------------------------------------------------------------------------*/
 {
-//  m_ColorChoice.AddColorChoice(DlgTxFg, _T("o  Dialog text FG"),
-//      COLOR_WHITE);
-//  m_ColorChoice.AddColorChoice(DlgTxBg, _T("o  Dialog text BG"),
-//      COLOR_BLUE);
-    m_ColorChoice.AddColorChoice(DlgBg, _T("o  Dialog BG"),
+    m_ColorChoice.AddColorChoice(DlgBg,      _T("o  Dialog BG"),
         COLOR_LT_BLUE);
-
-//  m_ColorChoice.AddColorChoice(BtnTxFg, _T("o  Button text FG"),
-//      COLOR_BLACK);
-//  m_ColorChoice.AddColorChoice(BtnTxBg, _T("o  Button text BG"),
-//      COLOR_CYAN);
-//  m_ColorChoice.AddColorChoice(BtnBg, _T("o  Button BG"),
-//      COLOR_LT_CYAN);
-
-    m_ColorChoice.AddColorChoice(OKTxFg, _T("o  OK text FG"),
-        COLOR_BLACK);
-    m_ColorChoice.AddColorChoice(OKTxBg, _T("o  OK text BG"),
-        COLOR_YELLOW);
-    m_ColorChoice.AddColorChoice(OKBg, _T("o  OK BG"),
-        COLOR_LT_YELLOW);
-
-//  m_ColorChoice.AddColorChoice(EdtTxFg, _T( "o  Edit text FG"),
-//      COLOR_WHITE);
-//  m_ColorChoice.AddColorChoice(EdtTxBg, _T("o  Edit text BG"),
-//      COLOR_RED);
-//  m_ColorChoice.AddColorChoice(EdtBg, _T("o  Edit control BG"),
-//      COLOR_LT_RED);
-
-//  m_ColorChoice.AddColorChoice(LBxTxFg, _T("o  List box text FG"),
-//      COLOR_BLACK);
-//  m_ColorChoice.AddColorChoice(LBxTxBg, _T("o  List box text BG"),
-//      COLOR_GREEN);
-//  m_ColorChoice.AddColorChoice(LBxBg, _T("o  List box BG"),
-//      COLOR_LT_GREEN);
-
-//  m_ColorChoice.AddColorChoice(SBTxFg, _T("o  Status bar text FG"),
-//      COLOR_WHITE);
-//  m_ColorChoice.AddColorChoice(SBTxBg, _T("o  Status bar text BG"),
-//      COLOR_MAGENTA);
-    m_ColorChoice.AddColorChoice(SBBg, _T("o  Status bar BG"),
+    m_ColorChoice.AddColorChoice(SBBg,      _T("o  Status bar BG"),
         GetStatusBarTheme().clrBkgnd1); // use current theme
-
-//  m_ColorChoice.AddColorChoice(SclTxFg, _T("o  Scroll bar text FG"),
-//      COLOR_WHITE);
-//  m_ColorChoice.AddColorChoice(SclTxBg, _T("o  Scroll bar text BG"),
-//      COLOR_MAGENTA);
-//  m_ColorChoice.AddColorChoice(SclBg, _T("o  Scroll bar BG"),
-//      COLOR_LT_MAGENTA);
-
-//  m_ColorChoice.AddColorChoice(StcTxFg, _T("o  Static box text FG"),
-//      COLOR_BLACK);
-//  m_ColorChoice.AddColorChoice(StcTxBg, _T("o  Static box text BG"),
-//      COLOR_YELLOW);
-//  m_ColorChoice.AddColorChoice(StcBg, _T("o  Static box BG"),
-//      COLOR_LT_YELLOW);
-
       // richedit controls (these are set differently than the others)
-    m_ColorChoice.AddColorChoice(REdTxFg, _T("o  RichEdit text FG"),
+    m_ColorChoice.AddColorChoice(REdTxFg,   _T("o  RichEdit text FG"),
         COLOR_WHITE);
-    m_ColorChoice.AddColorChoice(REdTxBg, _T("o  RichEdit text BG"),
-        COLOR_RED);
-    m_ColorChoice.AddColorChoice(REdBg, _T("o  RichEdit BG"),
+    m_ColorChoice.AddColorChoice(REdTxBg,   _T("o  RichEdit text BG"),
+        COLOR_RED); 
+    m_ColorChoice.AddColorChoice(REdBg,     _T("o  RichEdit BG"),
         COLOR_LT_RED);
 }
 
 /*============================================================================*/
     void    CMainFrame::
-LoadPersistentData()                                                    /*
+LoadPersistentData()                                                        /*
 
     Recover app, mainframe, MRU, and view serialized data from previous
     execution. MRU strings that are not valid file paths are discarded.
@@ -305,9 +179,9 @@ LoadPersistentData()                                                    /*
 
 /*============================================================================*/
     void CMainFrame::
-OnColorChoice()                                                     /*
+OnColorChoice()                                                             /*
 
-        Show the CListBoxDlg color dialog box to select the color of a control's
+    Show the CListBoxDlg color dialog box to select the color of a control's
     text foreground, text background, or control background. NOTE: colors
     selected for controls in the view are painted by the OnCtlColor()
     method invoked in the WndProc() loop each time the control is redrawn.
@@ -333,7 +207,7 @@ OnColorChoice()                                                     /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnCommand(WPARAM wParam, LPARAM lParam)                 /*
+OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
 
     The framework calls this member method when the user selects an
     item from a menu, when a child control sends a notification message,
@@ -361,16 +235,15 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
     UINT nID = LOWORD(wParam);
 
       // map all MRU file messages to one representative
-    if(IDW_FILE_MRU_FILE1 <= nID &&
-        nID < IDW_FILE_MRU_FILE1 + m_nMaxMRU)
+    if(IDW_FILE_MRU_FILE1 <= nID && nID < IDW_FILE_MRU_FILE1 + m_nMaxMRU)
         nID = IDW_FILE_MRU_FILE1;
 
     switch(nID)
     {
         case IDM_FILE_NEW:
             m_Doc.OnNewDoc();
-        UpdateControlUIState();
-        return TRUE;
+            UpdateControlUIState();
+            return TRUE;
 
         case IDM_FILE_OPEN:
             m_Doc.OnOpenDoc();
@@ -379,129 +252,129 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
 
         case IDM_FILE_SAVE:
             m_Doc.OnSaveDoc();
-        UpdateControlUIState();
-        return TRUE;
+            UpdateControlUIState();
+            return TRUE;
 
         case IDM_FILE_SAVEAS:
             m_Doc.OnSaveDocAs();
-        UpdateControlUIState();
-        return TRUE;
+            UpdateControlUIState();
+            return TRUE;
 
         case IDM_FILE_CLOSE:
-        m_Doc.OnCloseDoc();
-        UpdateControlUIState();
-        return TRUE;
+            m_Doc.OnCloseDoc();
+            UpdateControlUIState();
+            return TRUE;
 
         case IDM_FILE_PAGESETUP:
             m_Doc.OnPageSetup();
-        return TRUE;
+            return TRUE;
 
         case IDM_FILE_PREVIEW:
             m_View.OnPrintPreview();
-        return TRUE;
+            return TRUE;
 
         case IDM_FILE_PRINT:
             m_View.OnPrintDocument();
-        return TRUE;
+            return TRUE;
 
         case IDM_FILE_EXIT:
-          // Issue a close request to the frame
-        SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
-        return TRUE;
+              // Issue a close request to the frame
+            SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+            return TRUE;
 
         case IDM_EDIT_UNDO:
         {
             if (::GetFocus() != GetREView())
-            return ::SendMessage(::GetFocus(), EM_UNDO, 0, 0);
+                return ::SendMessage(::GetFocus(), EM_UNDO, 0, 0);
 
             m_Doc.OnUndo();
             UpdateControlUIState();
-        return TRUE;
+            return TRUE;
         }
 
         case IDM_EDIT_REDO:
         {
             if (::GetFocus() != GetREView())
-            return ::SendMessage(::GetFocus(), EM_REDO, 0, 0);
+                return ::SendMessage(::GetFocus(), EM_REDO, 0, 0);
 
             m_Doc.OnRedo();
             UpdateControlUIState();
-        return TRUE;
+            return TRUE;
         }
 
         case IDM_EDIT_CUT:
         {
             if (::GetFocus() != GetREView())
-            return ::SendMessage(::GetFocus(), WM_CUT, 0, 0);
+                return ::SendMessage(::GetFocus(), WM_CUT, 0, 0);
 
             m_Doc.OnCut();
             UpdateControlUIState();
-        return TRUE;
+            return TRUE;
         }
 
         case IDM_EDIT_COPY:
         {
             if (::GetFocus() != GetREView())
-            return ::SendMessage(::GetFocus(), WM_COPY, 0, 0);
+                return ::SendMessage(::GetFocus(), WM_COPY, 0, 0);
 
             m_Doc.OnCopy();
             UpdateControlUIState();
-        return TRUE;
+            return TRUE;
         }
 
         case IDM_EDIT_PASTE:
         {
             if (::GetFocus() != GetREView())
-            return ::SendMessage(::GetFocus(), WM_PASTE, 0, 0);
+                return ::SendMessage(::GetFocus(), WM_PASTE, 0, 0);
 
             m_Doc.OnPaste();
             UpdateControlUIState();
-        return TRUE;
+            return TRUE;
         }
 
         case IDM_EDIT_DELETE:
         {
             if (::GetFocus() != GetREView())
-            return ::SendMessage(::GetFocus(), WM_CLEAR, 0, 0);
+                return ::SendMessage(::GetFocus(), WM_CLEAR, 0, 0);
 
             m_Doc.OnDelete();
             UpdateControlUIState();
-        return TRUE;
+            return TRUE;
         }
 
         case IDM_EDIT_FIND:
             OnEditFind();
             UpdateControlUIState();
-        return TRUE;
+            return TRUE;
 
         case IDM_EDIT_REPLACE:
             OnEditReplace();
             UpdateControlUIState();
-        return TRUE;
+            return TRUE;
 
         case IDW_ABOUT:         // invoked by F1 and Help->About menu item
             OnHelp();
-        return TRUE;
+            return TRUE;
 
         case IDW_VIEW_TOOLBAR:
             OnViewToolBar(); // toggle tool bar
-        return TRUE;
+            return TRUE;
 
         case IDW_VIEW_STATUSBAR:
             OnViewStatusBar(); // toggle status bar
-        return TRUE;
+            return TRUE;
 
         case IDM_RICHEDWRAP:
             OnWrapText();
-        return TRUE;
+            return TRUE;
         
         case IDM_COLOR_CHOICE:
-        OnColorChoice();
-        return TRUE;
+            OnColorChoice();
+            return TRUE;
 
         case IDM_FONT_CHOICE:
-        OnFontChoice();
-        return TRUE;
+            OnFontChoice();
+            return TRUE;
 
         case IDW_FILE_MRU_FILE1:
             OnProcessMRU(wParam, lParam);
@@ -509,7 +382,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
 
 
         default:
-        break;
+            break;
     }
     
     return FALSE;
@@ -517,50 +390,32 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
 
 /*============================================================================*/
     INT_PTR  CMainFrame::
-OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)                  /*
+OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)                              /*
 
-    This member function is invoked when a child control is about to be
-    drawn. It can be used to prepare the display context hDC for drawing
-    the control using user-selected colors. Here, the SetTextColor() and
-    SetBkColor() methods may be used with desired RGB values to set the
-    text and background colors of almost all controls.  Here, hDC contains
-    the handle to the display context for the child window, which may be
-    temporary.  hWnd contains he handle to the control asking for the
-    color, which also may be temporary. Finally, nCtlColor contains one
-    of the messages specifying the type of control (see WndProc() for
-    values). On termination the method returns a handle to the brush that
-    is to be used for painting the control background.
-
-    Note: This method is not to be used for the list box of a drop-down
-    combo box because the drop-down list box is actually a child of the
-    combo box and not a child of the window. To change the color of the
-    drop-down list box, create a CComboBox with a similar OnCtlColor() that
-    checks for CTLCOLOR_LISTBOX in the nCtlColor parameter. In that handler,
-    the SetBkColor() member function must be used to set the background
-    color for the text.
-    
-    It is also not used to change the colors of a rich edit control. See
-    View::SetRichEditColors() for that process.
+    This member function is invoked when a child control is about to be drawn. 
+    Here it is used to prepare the display context hDC for drawing the dialog
+    background using the user-selected color. It is not used to change the 
+    colors of a rich edit control. See View::SetRichEditColors() for that process.
 *-----------------------------------------------------------------------------*/
 {
       // declare default control colors IDs
     UINT fg = DfltClr,
          bk = DfltClr,
          bg = DfltClr;
-      // get the CtlColors of each control class first
-    GetCtlColors(nCtlColor, ::GetDlgCtrlID(hWnd), fg, bk, bg);
-      // get the display context
+    if (nCtlColor == WM_CTLCOLORDLG)
+            bg = DlgBg;
+       // get the display context
     CDC dcCtl(hDC);
     dcCtl.SetTextColor(m_ColorChoice.GetTableColor(fg));
     dcCtl.SetBkColor(m_ColorChoice.GetTableColor(bk));
     m_br = m_ColorChoice.GetBrush(bg);
       // returned brush handle must persist
-        return (UINT_PTR)(HBRUSH)m_br;
+    return (UINT_PTR)(HBRUSH)m_br;
 }
 
 /*============================================================================*/
     int CMainFrame::
-OnCreate(CREATESTRUCT& rcs)                                            /*
+OnCreate(CREATESTRUCT& rcs)                                                 /*
 
     This member controls the way the frame is created. Overriding
     it is optional.
@@ -581,7 +436,7 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
 
-      // TODO: set CREATESTRUCT desired options here
+    // TODO: set CREATESTRUCT desired options here
       
       // call the base class OnCreate() method with these options
     int rtn = CFrame::OnCreate(rcs);
@@ -589,7 +444,7 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
       // set theme colors, if supported
     if (IsReBarSupported())
     {
-        //Set our theme colors
+          //Set our theme colors
         SetThemeColors();
     }
       // establish communications
@@ -610,7 +465,7 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
       // set the initial flags to use the font style,
     CHOOSEFONT cf = m_FontChoice.GetParameters();
     cf.Flags |= CF_USESTYLE;
-    cf.lpszStyle = const_cast<LPTSTR>(_T("Regular")); // initial font presumed regular
+    cf.lpszStyle = const_cast<LPTSTR>(_T("Regular")); // initial font
     m_FontChoice.SetParameters(cf);
       // set the default font
     CFont f;
@@ -629,7 +484,7 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 
 /*============================================================================*/
     void CMainFrame::
-OnEditFind()                                                            /*
+OnEditFind()                                                                /*
 
     Initiate the find non-modal dialog box and the messages sent to the
     CDoc::OnFindReplace() method by the CMainFrame::WndProc() message loop.
@@ -642,7 +497,7 @@ OnEditFind()                                                            /*
 
 /*============================================================================*/
     void CMainFrame::
-OnEditReplace()                                                            /*
+OnEditReplace()                                                             /*
 
     Invoke the find-replace dialog and initiate the find non-modal dialog
     box and the messages sent to the CDoc::OnFindReplace() method by the
@@ -658,7 +513,7 @@ OnEditReplace()                                                            /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileOpenMRU(UINT nIndex)                      /*
+OnFileOpenMRU(UINT nIndex)                                                  /*
 
     Open the MRU file at nIndex as the next document.
 *-----------------------------------------------------------------------------*/
@@ -671,22 +526,26 @@ OnFileOpenMRU(UINT nIndex)                      /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFontChoice()                                              /*
+OnFontChoice()                                                              /*
 
         Select the view font typeface, characteristics, and color.
 *-----------------------------------------------------------------------------*/
 {
     HWND hOwnerWnd = GetApp().GetMainWnd();
-          // open the dialog
+      // open the dialog
     m_FontChoice.SetBoxTitle(_T("Select font for rich edit box"));
+    LOGFONT lf;
+    m_FontChoice.GetChoiceFont().GetObject(sizeof(LOGFONT), &lf);
     CHOOSEFONT cf = m_FontChoice.GetParameters();
-    cf.Flags |= CF_SCREENFONTS;
-    m_FontChoice.SetParameters(cf);
+    cf.Flags |= CF_SCREENFONTS | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT; 
+    cf.lpLogFont = &lf;		
+    cf.rgbColors = m_ColorChoice.GetTableColor(REdTxFg);
+   m_FontChoice.SetParameters(cf);
     if(m_FontChoice.DoModal(hOwnerWnd))
     {
           // bring choice elements into this view
         m_View.SetEditFont(m_FontChoice.GetChoiceFont());
-            m_ColorChoice.SetTableColor(REdTxFg, m_FontChoice.GetColor());
+        m_ColorChoice.SetTableColor(REdTxFg, m_FontChoice.GetColor());
           // reset the rich edit control color
         OnRichEditColor();
     }
@@ -697,7 +556,7 @@ OnFontChoice()                                              /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnHelp()                                /*
+OnHelp()                                                                    /*
 
     Overrides CFrame OnHelp().
 *-----------------------------------------------------------------------------*/
@@ -708,7 +567,7 @@ OnHelp()                                /*
 
 /*============================================================================*/
     void CMainFrame::
-OnInitialUpdate()                                                       /*
+OnInitialUpdate()                                                           /*
 
     The frame has now been created. Provide any desired main frame
     formatting.
@@ -748,7 +607,7 @@ OnInitialUpdate()                                                       /*
 
 /*============================================================================*/
     void CMainFrame::
-OnMenuUpdate(UINT nID)                          /*
+OnMenuUpdate(UINT nID)                                                      /*
 
     This method is invoked for each item in a top-level menu item the mouse
     selects. Override the base class method to update the frame status
@@ -762,7 +621,7 @@ OnMenuUpdate(UINT nID)                          /*
 
 /*============================================================================*/
     LRESULT CMainFrame::
-OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
+OnNotify(WPARAM wParam, LPARAM lParam)                                      /*
 
     Process messages that controls send to the main frame, events such
     as mouse clicks, changes in content and  selection, and  control
@@ -782,7 +641,7 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnProcessMRU(WPARAM wParam, LPARAM lParam)                              /*
+OnProcessMRU(WPARAM wParam, LPARAM lParam)                                  /*
 
     One of the MRU entries has been selected.  Process accordingly.
 *-----------------------------------------------------------------------------*/
@@ -797,21 +656,21 @@ OnProcessMRU(WPARAM wParam, LPARAM lParam)                              /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnRichEditColor()                            /*
+OnRichEditColor()                                                           /*
 
     Set the rich edit control colors to those found in the color table.
 *-----------------------------------------------------------------------------*/
 {
     COLORREF txfg = m_ColorChoice.GetTableColor(REdTxFg),
-         txbg = m_ColorChoice.GetTableColor(REdTxBg),
-         bg   = m_ColorChoice.GetTableColor(REdBg);
+	         txbg = m_ColorChoice.GetTableColor(REdTxBg),
+             bg   = m_ColorChoice.GetTableColor(REdBg);
     m_View.SetRichEditColors(txfg, txbg, bg);
     return TRUE;
 }
 
 /*============================================================================*/
     void CMainFrame::
-OnWrapText()                                /*
+OnWrapText()                                                                /*
 
     Description
 *-----------------------------------------------------------------------------*/
@@ -822,7 +681,7 @@ OnWrapText()                                /*
 
 /*============================================================================*/
     void CMainFrame::
-PreCreate(CREATESTRUCT& cs)                                             /*
+PreCreate(CREATESTRUCT& cs)                                                 /*
 
     Set cs members to select window frame parameters desired. This gets
     executed before CView::PreCreate(). Use the serialized position
@@ -850,7 +709,7 @@ PreCreate(CREATESTRUCT& cs)                                             /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-SaveRegistrySettings()                                                  /*
+SaveRegistrySettings()                                                      /*
 
     This member is called in response to a WM_CLOSE message for the
     frame.  The base class saves settings into the registry. In this
@@ -887,23 +746,22 @@ SaveRegistrySettings()                                                  /*
 
 /*============================================================================*/
         void CMainFrame::
-Serialize(CArchive &ar)                                               /*
+Serialize(CArchive &ar)                                                     /*
 
         Called serialize or deserialize the frame to and from the archive ar,
         depending on the sense of IsStoring().  Leave the archive open for
         further serializations.
 *-----------------------------------------------------------------------------*/
 {
-      // perform loading or storing
-        if (ar.IsStoring())
-        {
-          // save the base class frame status and tool bar switches:
+        // perform loading or storing
+    if (ar.IsStoring())
+    {     // save the base class frame status and tool bar switches:
           // these control the display of the StatusBar and ToolBar
         BOOL showbar = GetStatusBar().IsWindowVisible();
         ar << showbar;
         showbar = GetToolBar().IsWindowVisible();
         ar << showbar;
-                  // save font parameters
+          // save font parameters
         ar << m_FontChoice;
           // save regular control class colors
         ar << m_ColorChoice;
@@ -917,20 +775,19 @@ Serialize(CArchive &ar)                                               /*
             ar << GetMRUEntries()[i];
         }
     }
-        else    // recovering
-        {
-          // recover frame status and  tool bar base class switches
+    else 
+    {     // recover frame status and  tool bar base class switches
         BOOL showbar;
         ar >> showbar;
         ShowStatusBar(showbar);
         ar >> showbar;
         ShowToolBar(showbar);
-                  // recover font parameters
+          // recover font parameters
         ar >> m_FontChoice;
         m_View.SetFont(m_FontChoice.GetChoiceFont(), TRUE);
-          // set font elements into view
+            // set font elements into view
         m_View.SetEditFont(m_FontChoice.GetChoiceFont());
-            m_ColorChoice.SetTableColor(EdtTxFg, m_FontChoice.GetColor());
+        m_ColorChoice.SetTableColor(REdTxFg, m_FontChoice.GetColor());
           // recover colors
         ar >> m_ColorChoice;
           // reset the status bar color
@@ -960,16 +817,15 @@ Serialize(CArchive &ar)                                               /*
             s = vMRUEntries[nMRU - 1 - i];
             AddMRUEntry(s);
         }
-        }
+    }
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-SetCheckStatus(UINT nID, BOOL bCheck, ControlBars where)        /*
+SetCheckStatus(UINT nID, BOOL bCheck, ControlBars where)                    /*
 
 *-----------------------------------------------------------------------------*/
 {
-
     BOOL ok = FALSE;
     if (where == mainmenu || where == both)
     {
@@ -986,8 +842,7 @@ SetCheckStatus(UINT nID, BOOL bCheck, ControlBars where)        /*
     if (where == mainmenu || where == both)
     {
         if (bCheck > 1)
-            ok = GetToolBar().SetButtonState(nID,
-                TBSTATE_INDETERMINATE);
+            ok = GetToolBar().SetButtonState(nID, TBSTATE_INDETERMINATE);
         else
         {
             GetToolBar().CheckButton(nID, bCheck);
@@ -999,7 +854,7 @@ SetCheckStatus(UINT nID, BOOL bCheck, ControlBars where)        /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-SetEnableStatus(UINT nID, BOOL status, ControlBars which)               /*
+SetEnableStatus(UINT nID, BOOL status, ControlBars which)                   /*
 
     Set the control having the given nID to the enable/disable
     status, on the toolbar, main menu, or both, as indicated by which.
@@ -1007,14 +862,12 @@ SetEnableStatus(UINT nID, BOOL status, ControlBars which)               /*
 {
     UINT action = MF_BYCOMMAND | (status ? MF_ENABLED : MF_GRAYED);
     if (which == mainmenu)
-        return (GetFrameMenu().EnableMenuItem(nID, action)
-            != 0xFFFFFFFF);
+        return (GetFrameMenu().EnableMenuItem(nID, action) != 0xFFFFFFFF);
     else if (which == toolbar)
         return (status ? GetToolBar().EnableButton(nID) :
             GetToolBar().DisableButton(nID));
       // else must be both
-    BOOL rtn = (GetFrameMenu().EnableMenuItem(nID, action)
-        != 0xFFFFFFFF);
+    BOOL rtn = (GetFrameMenu().EnableMenuItem(nID, action) != 0xFFFFFFFF);
     rtn |= (status ? GetToolBar().EnableButton(nID) :
         GetToolBar().DisableButton(nID));
     return rtn;
@@ -1023,7 +876,7 @@ SetEnableStatus(UINT nID, BOOL status, ControlBars which)               /*
 /*============================================================================*/
     void CMainFrame::
 SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
-    COLORREF clrBand2)                          /*
+    COLORREF clrBand2)                                                      /*
 
     Set the colors to be used in the rebar theme.
 *-----------------------------------------------------------------------------*/
@@ -1050,7 +903,7 @@ SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
 
 /*============================================================================*/
      void CMainFrame::
-SetStatusbarMsg(CString status)                             /*
+SetStatusbarMsg(CString status)                                             /*
 
     Write the status message on the status bar.
 *-----------------------------------------------------------------------------*/
@@ -1060,7 +913,7 @@ SetStatusbarMsg(CString status)                             /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-SetThemeColors()                                                        /*
+SetThemeColors()                                                            /*
 
     Set the colors of each rebar in the frame, i.e., the theme colors.
     These were taken from the Win32++ Themes sample program recommended
@@ -1086,7 +939,7 @@ SetThemeColors()                                                        /*
 
 /*============================================================================*/
     void CMainFrame::
-SetupToolBar()                                                          /*
+SetupToolBar()                                                              /*
 
     Called from the CFrame::CreateToolBar() method to load the toolbar
     bitmaps, to connect the tool bar buttons to resource IDs of the
@@ -1124,7 +977,7 @@ SetupToolBar()                                                          /*
 
 /*============================================================================*/
     void CMainFrame::
-SetWindowTitle(const CString& docfile)                  /*
+SetWindowTitle(const CString& docfile)                                      /*
 
     Put the app title and docfile name in the main window text. Limit the
     displayed text length to that of the frame.
@@ -1164,7 +1017,7 @@ SetWindowTitle(const CString& docfile)                  /*
 
 /*============================================================================*/
     void CMainFrame::
-UpdateControlUIState()                          /*
+UpdateControlUIState()                                                      /*
 
     Check the status of controls whose enabled/disabled or check/uncheck
     status needs to be changed and make changes as necessary. Caution:
@@ -1212,7 +1065,7 @@ UpdateControlUIState()                          /*
 
 /*============================================================================*/
     void CMainFrame::
-UpdateMRUMenu()                                         /*
+UpdateMRUMenu()                                                             /*
 
     Override the base class method to truncate long MRU list entries using
     a '...' splice at the midpoint, rather than at the beginning, as does
@@ -1282,7 +1135,7 @@ UpdateMRUMenu()                                         /*
 
 /*============================================================================*/
     void CMainFrame::
-ValidateMRU()                                                       /*
+ValidateMRU()                                                               /*
     Validate the that the MRU list entries, if there are any, correspond
     to actual file paths. Remove any that do not.
 *-----------------------------------------------------------------------------*/
@@ -1307,7 +1160,7 @@ ValidateMRU()                                                       /*
 
 /*============================================================================*/
     LRESULT CMainFrame::
-WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
+WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                            /*
 
     This is the main frame message loop. By default, it handles the
     normal housekeeping functions (see Win32++\include\frame.h).
@@ -1322,34 +1175,29 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 
     switch (uMsg)
     {
-        case WM_CTLCOLORBTN:
-        case WM_CTLCOLOREDIT:
         case WM_CTLCOLORDLG:
-        case WM_CTLCOLORLISTBOX:
-        case WM_CTLCOLORSCROLLBAR:
-        case WM_CTLCOLORSTATIC:
-        return OnCtlColor(reinterpret_cast<HDC>(wParam), reinterpret_cast<HWND>(lParam), uMsg);
-
-    //    case WM_SETCURSOR:
-    //    {
-    //    ::SetCursor(m_hCursor);
-    //    return TRUE;
-    //    }
+//      case WM_CTLCOLORBTN:        // (none of these used here)
+//      case WM_CTLCOLOREDIT:
+//      case WM_CTLCOLORLISTBOX:
+//      case WM_CTLCOLORSCROLLBAR:
+//      case WM_CTLCOLORSTATIC:
+            return OnCtlColor(reinterpret_cast<HDC>(wParam), 
+                reinterpret_cast<HWND>(lParam), uMsg);
 
         case IDM_UPDATECONTROLUISTATE:
             UpdateControlUIState();
-        return TRUE;
+            return TRUE;
         
         case WM_SYSCOMMAND:
         {
-          // else process requests for action
-        switch (LOWORD(wParam))
-        {
-            case SC_CLOSE:
-              // TODO: other cleanup here, as needed
-            m_Doc.OnCloseDoc();
-            break;  // let default process this further
-        }
+              // else process requests for action
+            switch (LOWORD(wParam))
+            {
+                case SC_CLOSE:
+                      // TODO: other cleanup here, as needed
+                    m_Doc.OnCloseDoc();
+                    break;  // let default process this further
+            }
         }
     }
       // pass unhandled messages on for default processing

@@ -69,40 +69,35 @@ MyFontDialog : public CFontDialog                                       /*
 
         ~MyFontDialog(){}
 
-            SIZE    GetAvgSize(void) const
-                    { return m_avgWdHt;}
-            CFont   GetChoiceFont(void) const
-                    { return m_Font;}
-            LOGFONT GetCurrentLogFont() const { return m_LogFont;}
+                SIZE    GetAvgSize(void) const { return m_avgWdHt;}
+                CFont   GetChoiceFont(void) const { return m_Font;}
+                LOGFONT GetCurrentLogFont() const { return m_LogFont;}
         virtual void    OnOK();
-            void    SetBoxTitle(const CString& title)
-                    { m_sBoxTitle = title;}
-            void    SetChoiceFont(const CFont& f)
-                    { LOGFONT lf = f.GetLogFont();
-                      SetChoiceLogFont(lf);}
+                void    SetBoxTitle(const CString& title){ m_sBoxTitle = title;}
+                void    SetChoiceFont(const CFont& f)
+                          { LOGFONT lf = f.GetLogFont();
+                            SetChoiceLogFont(lf);}
 
     protected:
-        TEXTMETRIC  GetTexMetric(void) const
-                    { return m_tm;}
-        TEXTMETRIC*     GetTextMetricPtr()
-                    { return &m_tm;}
+            TEXTMETRIC  GetTexMetric(void) const { return m_tm;}
+            TEXTMETRIC* GetTextMetricPtr() { return &m_tm;}
         virtual BOOL    OnInitDialog();
-            void    RecordFontMetrics();
+                void    RecordFontMetrics();
         virtual void    Serialize(CArchive &ar);
-            void    SetChoiceLogFont(LOGFONT& lf)
-                    { SetFontIndirect(lf); RecordFontMetrics();}
-            void    SetFontIndirect(const LOGFONT& lf);
-            void    SetTextMetric(const TEXTMETRIC& tm)
-                    { m_tm = tm;}
+                void    SetChoiceLogFont(LOGFONT& lf)
+                          { SetFontIndirect(lf); RecordFontMetrics();}
+                void    SetFontIndirect(const LOGFONT& lf);
+                void    SetTextMetric(const TEXTMETRIC& tm)
+                          { m_tm = tm;}
         virtual void    SetWindowTitle() const
-                    {SetWindowText(m_sBoxTitle);}
+                          {SetWindowText(m_sBoxTitle);}
 
     private:
         CString     m_sBoxTitle;
         TEXTMETRIC  m_tm;       // font text metrics
-            SIZE        m_avgWdHt;  // font average width & height
+        SIZE        m_avgWdHt;  // font average width & height
         CFont       m_Font;     // the current font
-        LOGFONT         m_LogFont;      // the current logfont
+        LOGFONT     m_LogFont;  // the current logfont
 };
 
 #endif

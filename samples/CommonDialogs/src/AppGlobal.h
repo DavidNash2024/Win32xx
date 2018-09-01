@@ -88,16 +88,16 @@ class CAppGlobal
           // private data
         UINT    m_nMaxMRUSlots; // maximum allowed MRU entries
         CString m_sAboutBoxInfo, // About box information
-            m_sAppTitle,    // name of app, no directory, with ext
-            m_sAppName, // name of app: no directory, no ext
+                m_sAppTitle,    // name of app, no directory, with ext
+                m_sAppName, // name of app: no directory, no ext
                 m_sAppDir,  // directory of this app
                 m_sAppPath, // path to this app
                 m_sArcvDir, // directory holding the archive file
-            m_sArcvPath,    // archive file name
-            m_sCompiler,    // compiler designation
-            m_sCompiled_on, // compilation date
-            m_sDocExt,  // document default extension
-            m_sFileFilter,  // do file dialog filter
+                m_sArcvPath,    // archive file name
+                m_sCompiler,    // compiler designation
+                m_sCompiled_on, // compilation date
+                m_sDocExt,  // document default extension
+                m_sFileFilter,  // do file dialog filter
                 m_sWin32Version; // version of Win32 framework used
 };
 /*----------------------------------------------------------------------------*/

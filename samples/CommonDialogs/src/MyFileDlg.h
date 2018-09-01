@@ -61,16 +61,16 @@ MyFileDialog : public CFileDialog
         MyFileDialog
         (
             BOOL bOpenFileDialog = TRUE,
-            LPCTSTR sDefExt   = NULL,   
-            LPCTSTR sFileName = NULL,                                   
-            DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-            LPCTSTR  sFilter  = NULL
+            LPCTSTR sDefExt      = NULL,   
+            LPCTSTR sFileName    = NULL,                                   
+            DWORD dwFlags        = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+            LPCTSTR  sFilter     = NULL
         )   : CFileDialog(bOpenFileDialog, sDefExt, sFileName,
                 dwFlags, sFilter)
         {
         }
 
-        void    SetBoxTitle(const CString& title)  
+    void SetBoxTitle(const CString& title)  
           // Set the title of the read/saveas dialog box to the title
           // string. This must be used after an object of this class is
           // constructed, but before DoModal() is invoked. It also must

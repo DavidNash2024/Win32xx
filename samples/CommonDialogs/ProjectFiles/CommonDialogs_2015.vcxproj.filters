@@ -13,9 +13,6 @@
     <ClCompile Include="..\src\Doc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CustomButton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\MyFontDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -184,9 +181,6 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ColorDefs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CustomButton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\MyFileDlg.h">

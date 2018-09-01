@@ -65,7 +65,6 @@
     <ClInclude Include="..\src\AppGlobalRC.h" />
     <ClInclude Include="..\src\ColorChoice.h" />
     <ClInclude Include="..\src\ColorDefs.h" />
-    <ClInclude Include="..\src\CustomButton.h" />
     <ClInclude Include="..\src\Doc.h" />
     <ClInclude Include="..\src\ListBoxDlg.h" />
     <ClInclude Include="..\src\ListBoxDlgRC.h" />
@@ -87,7 +86,6 @@
     <ClCompile Include="..\src\App.cpp" />
     <ClCompile Include="..\src\AppGlobal.cpp" />
     <ClCompile Include="..\src\ColorChoice.cpp" />
-    <ClCompile Include="..\src\CustomButton.cpp" />
     <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\ListBoxDlg.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />

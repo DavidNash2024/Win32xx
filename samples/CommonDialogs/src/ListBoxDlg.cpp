@@ -88,22 +88,15 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)         /*
 *-----------------------------------------------------------------------------*/
 {
     switch (uMsg)
-    {
-//      case WM_COMMAND:
-//      {
-//      switch (LOWORD(wParam))
-//      {
-//      }
-//      }
-        
+    {     
         case WM_SYSCOMMAND:
         {
-        switch (LOWORD(wParam))
-        {
-            case SC_CLOSE:
-            OnCancel();
-            return TRUE;
-        }
+            switch (LOWORD(wParam))
+            {
+                case SC_CLOSE:
+                OnCancel();
+                return TRUE;
+            }
         }
     }
 
@@ -153,7 +146,7 @@ OnOK()                                  /*
     button was activated.
 *-----------------------------------------------------------------------------*/
 {
-        int choice = m_ListBox.GetCurSel();
+    int choice = m_ListBox.GetCurSel();
       // return the choice: see the note above
     CDialog::EndDialog((INT_PTR) choice >= 0 ? choice : INT_MAX);
 }

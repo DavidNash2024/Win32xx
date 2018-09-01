@@ -747,6 +747,7 @@ namespace Win32xx
     }
 
     // Adds the IWebBrowser interface to the ActiveX container window.
+	// Refer to IID_IWebBrowser2 in the Windows API documentation for more information.
     inline void CWebBrowser::AddWebBrowserControl()
     {
         GetAXWindow().CreateControl(CLSID_WebBrowser);

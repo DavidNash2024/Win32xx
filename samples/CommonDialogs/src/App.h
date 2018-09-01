@@ -79,7 +79,7 @@ CApp : public CWinApp                           /*
         BOOL        InitInstance(); // called from (CWinApp) Run()
         CAppGlobal  GetAppGlobal() { return m_AppGlobal;};
         CString&    GetArcvFile() {return m_AppGlobal.GetArcvPath();}
-        int     GetCmdShow()  {return m_nCmdShow;}
+        int         GetCmdShow()  {return m_nCmdShow;}
         CMainFrame& GetFrame()    {return m_Frame;}
         void        SetCmdShow(int c) {m_nCmdShow = c;}
 
@@ -93,7 +93,7 @@ CApp : public CWinApp                           /*
                    m_sAppPath,   // path to this app
                    m_sExeName,   // name of exe file, without extension
                    m_sArcvDir,   // directory holding the archive file
-               m_sArcvFile;  // initialization archive file name
+		   m_sArcvFile;  // initialization archive file name
         int        m_nCmdShow;   // WinMain() entry nCmdShow argument
         CMainFrame m_Frame;      // the main frame object
         CAppGlobal m_AppGlobal;

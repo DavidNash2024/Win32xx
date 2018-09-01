@@ -76,9 +76,9 @@ CDoc    : public CObject                        /*
         virtual const CString&  GetFilter();
 
         const  CString& GetFilePath()
-                    { return (m_open_doc_path.IsEmpty() ?
-                         m_Doc_file.GetFilePath() :
-                     m_open_doc_path);}
+                        { return (m_open_doc_path.IsEmpty() ?
+                          m_Doc_file.GetFilePath() :
+                          m_open_doc_path);}
         virtual BOOL    IsDirty();
         virtual BOOL    IsOpen() {return m_Doc_is_open;}
         virtual BOOL    MakeNewDoc(const CString&);
@@ -100,12 +100,12 @@ CDoc    : public CObject                        /*
         virtual void    OnSaveDocAs();
         virtual void    OnPageSetup();
         virtual BOOL    OpenDoc(const CString &);
-            void    Register(CMainFrame*, CView*);
-            void    SetDirty(BOOL b);
+                void    Register(CMainFrame*, CView*);
+                void    SetDirty(BOOL b);
         virtual void    SetExt(const CString& ext)
-                    { m_Doc_file_ext = ext;}
+                          { m_Doc_file_ext = ext;}
         virtual void    SetFilter(const CString &s)
-                    { m_Doc_file_filter = s;}
+                          { m_Doc_file_filter = s;}
 
           // public data members
 
@@ -115,8 +115,7 @@ CDoc    : public CObject                        /*
                 CView&  GetView() { return *m_pView;}
         virtual void    Serialize(CArchive &ar);
         
-            BOOL    m_UnicodeMode,  // compiled in Unicode mode
-                m_UnicodeFile;  // probably Unicode if TRUE
+            BOOL    m_UnicodeFile;  // Unicode if TRUE
 
     private:
               CHARRANGE FindNext(const MyFindReplaceDialog&, CHARRANGE);
@@ -125,7 +124,7 @@ CDoc    : public CObject                        /*
           // private data
         CFile   m_Doc_file;        // holds the document name, path, etc.
         BOOL    m_Doc_is_open;     // the document status
-            CString m_Doc_file_ext,    // default file extension
+        CString m_Doc_file_ext,    // default file extension
                 m_Doc_file_filter, // file dialog filter
                 m_find_next,       // current string to find
                 m_replace_with,    // replacement string

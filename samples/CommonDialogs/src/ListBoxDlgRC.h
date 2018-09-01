@@ -96,7 +96,7 @@
 #include "default_resource.h"
 
 #define IDD_CLISTVIEWBOX_DIALOG       400   // CListBoxDialog box
-#define IDC_LIST_BOX              401   // list box within above
+#define IDC_LIST_BOX                  401   // list box within above
 
 /*-----------------------------------------------------------------------------*/
 #endif // CCOMDLG_RESOURCE_H_DEFINED

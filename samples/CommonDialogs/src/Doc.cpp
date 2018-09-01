@@ -91,11 +91,7 @@ CDoc()                                  /*
     m_open_doc_path.Empty();
     m_Doc_file.SetFilePath(m_open_doc_path);
 
-    m_UnicodeMode = FALSE;
     m_UnicodeFile = -1; // no file open
-#ifdef _UNICODE
-    m_UnicodeMode = TRUE;
-#endif
 }
 
 /*============================================================================*/
@@ -119,9 +115,9 @@ FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)            /*
       // get find string that does not go out of scope
     m_find_next   = FR.GetFindString();
       // set the search parmeters
-    BOOL    match = FR.MatchCase(),
-        whole = FR.MatchWholeWord(),
-        down  = FR.SearchDown();
+    BOOL match = FR.MatchCase(),
+         whole = FR.MatchWholeWord(),
+         down  = FR.SearchDown();
     DWORD dwFlags = (match ? FR_MATCHCASE : 0) |
             (whole ? FR_WHOLEWORD : 0) |
             (down  ? FR_DOWN : 0);
@@ -201,7 +197,7 @@ MakeNewDoc(const CString& filename)                                       /*
       // try to open
     try
     {
-        m_UnicodeFile = m_UnicodeMode;
+        m_UnicodeFile = (sizeof(TCHAR) > 1);
         m_Doc_file.Open(filename, CREATE_NEW);
         GetREView().Clean();
         m_open_doc_path = GetFilePath();
@@ -233,8 +229,8 @@ NotFound(const MyFindReplaceDialog& FR)                 /*
     string sought for.
 *-----------------------------------------------------------------------------*/
 {
-    BOOL    match = FR.MatchCase(),
-        whole = FR.MatchWholeWord();
+    BOOL match = FR.MatchCase(),
+         whole = FR.MatchWholeWord();
     CString msg;
     LPCTSTR wholeword = (whole ? _T("\nas a whole word") : _T("")),
         matchcase = (match ? _T("\nmatching case") : _T(""));
@@ -446,7 +442,8 @@ OnNewDoc()                                                            /*
     document.
 *-----------------------------------------------------------------------------*/
 {
-    MyFileDialog fd(TRUE,
+    MyFileDialog fd
+    (   TRUE,
         GetExt(),    // extension defined by app
         GetFilePath(), // current open file path
         OFN_HIDEREADONLY |
@@ -628,7 +625,8 @@ OnSaveDocAs()                                                            /*
         return;
 
       // declare the file dialog box
-    MyFileDialog fd(FALSE,
+    MyFileDialog fd
+    (   FALSE,
         GetExt(),    // extension defined by app
         GetFilePath(), // current open file path
         OFN_HIDEREADONLY |

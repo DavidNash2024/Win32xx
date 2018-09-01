@@ -1,7 +1,7 @@
 [Project]
 FileName=CommonDialogs_RELEASE.dev
 Name=CommonDialogs
-UnitCount=38
+UnitCount=36
 Type=0
 Ver=2
 ObjFiles=
@@ -61,9 +61,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit24]
-FileName=..\src\MyFontDlg.cpp
+FileName=..\src\MyPrinter.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -71,11 +71,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit28]
-FileName=..\src\PrintInfo.h
+FileName=..\src\Resource.rc
 CompileCpp=1
-Folder=Header
+Folder=Resource
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -111,9 +111,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit33]
-FileName=..\src\StdAfx.cpp
+FileName=..\src\StdApp.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -121,7 +121,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit34]
-FileName=..\src\stdafx.h
+FileName=..\src\targetver.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -131,17 +131,17 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=..\src\ListBoxDlg.cpp
+FileName=..\src\ListBoxDlg.rc
 CompileCpp=1
-Folder=Source
+Folder=Resource
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\src\ListBoxDlg.h
+FileName=..\src\ListBoxDlgRC.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -151,17 +151,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=..\src\Mainfrm.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit25]
-FileName=..\src\MyFontDlg.h
+FileName=..\src\MyFileDlg.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -170,7 +160,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit27]
+[Unit25]
 FileName=..\src\PrintInfo.cpp
 CompileCpp=1
 Folder=Source
@@ -180,18 +170,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit30]
-FileName=..\src\Resource.rc
+[Unit27]
+FileName=..\src\resource.h
 CompileCpp=1
-Folder=Resource
+Folder=Header
 Compile=1
-Link=0
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit30]
+FileName=..\src\RichEditView.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\src\Doc.cpp
+FileName=..\src\ListBoxDlg.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -251,9 +251,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit35]
-FileName=..\src\StdApp.h
+FileName=..\src\View.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -271,9 +271,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=..\src\resource.h
+FileName=..\src\RichEditView.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -291,7 +291,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit32]
-FileName=..\src\RichEditView.h
+FileName=..\src\stdafx.h
 Folder=Header
 Compile=1
 Link=1
@@ -301,7 +301,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit31]
-FileName=..\src\RichEditView.cpp
+FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -311,7 +311,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit36]
-FileName=..\src\targetver.h
+FileName=..\src\View.h
 Folder=Header
 Compile=1
 Link=1
@@ -420,7 +420,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\src\CustomButton.cpp
+FileName=..\src\Doc.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -430,16 +430,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\src\CustomButton.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit15]
 FileName=..\src\Doc.h
 CompileCpp=1
 Folder=Header
@@ -449,17 +439,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
-FileName=..\src\ListBoxDlg.rc
-Folder=Resource
-Compile=1
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit19]
-FileName=..\src\ListBoxDlgRC.h
+[Unit15]
+FileName=..\src\ListBoxDlg.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -468,7 +449,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit18]
+FileName=..\src\Mainfrm.cpp
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+CompileCpp=1
+
+[Unit19]
 FileName=..\src\Mainfrm.h
 CompileCpp=1
 Folder=Header
@@ -478,17 +469,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
-FileName=..\src\MyFileDlg.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit23]
+[Unit21]
 FileName=..\src\MyFindReplaceDlg.h
 CompileCpp=1
 Folder=Header
@@ -498,8 +479,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit22]
+FileName=..\src\MyFontDlg.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit23]
+FileName=..\src\MyFontDlg.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit26]
-FileName=..\src\MyPrinter.h
+FileName=..\src\PrintInfo.h
 CompileCpp=1
 Folder=Header
 Compile=1

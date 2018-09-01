@@ -152,7 +152,6 @@ MyPageSetup : public CPageSetupDialog                               /*
 
         virtual void OnOK()
         {
-
             // TODO: store the page parameters for actual use
         }
 

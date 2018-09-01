@@ -83,16 +83,16 @@ CPrintInfo                                                              /*
           // public data
         CPrintDialog* m_pPD;    // pointer to print dialog
         BOOL    m_bDocObject,   // TRUE if a DocObject (not supported)
-            m_bDirect,  // TRUE if bypassing Print Dialog
-            m_bPreview, // TRUE if in preview mode
-            m_bContinuePrinting;// set FALSE to end printing
+                m_bDirect,  // TRUE if bypassing Print Dialog
+                m_bPreview, // TRUE if in preview mode
+                m_bContinuePrinting;// set FALSE to end printing
         UINT    m_nCopies,      // number of copies (not supported)
-            m_nFromPage,    // first printed page, 1 based
-            m_nMaxPage,     // maximum page limit
-            m_nMinPage,     // minimum page limit
-            m_nToPage,      // last printed page
-            m_nCurPage, // current page
-            m_nNumPreviewPages; // (not supported)
+                m_nFromPage,    // first printed page, 1 based
+                m_nMaxPage,     // maximum page limit
+                m_nMinPage,     // minimum page limit
+                m_nToPage,      // last printed page
+                m_nCurPage, // current page
+                m_nNumPreviewPages; // (not supported)
         LPVOID  m_lpUserData;   // pointer to user created struct       
         CRect   m_rectDraw; // rect of current usable page area     
         CString m_strPageDesc;  // format string for page number display

@@ -44,12 +44,12 @@
             Entity ID   Object
         IDP_        Message-box prompt
         IDD_        Dialog-box ID
-        ID_             Standard MFC toolbar and menu command
+        ID_         Standard MFC toolbar and menu command
         IDT_        Toolbar command
         IDM_        Menu command
         IDR_        Frame-related resource
         IDC_        Control resource
-        IDW_            Win32++ default resources
+        IDW_        Win32++ default resources
     
     Notes about Resource IDs: In general, resource IDs can have values
     from 1 to 65535. Programs with resource IDs higher than 65535 may
@@ -110,7 +110,7 @@
 #define IDM_FILE_CLOSE                  105         
 #define IDM_FILE_PAGESETUP              106         
 #define IDM_FILE_PRINT                  107         
-#define IDM_FILE_PREVIEW            108         
+#define IDM_FILE_PREVIEW                108         
 #define IDM_FILE_EXIT                   109         
 #define IDM_EDIT_UNDO                   110         
 #define IDM_EDIT_REDO                   111         
@@ -130,7 +130,7 @@
 #define IDI_FONT_CHOICE                 141         
 
   // resource IDs for client area controls (IDOK has its own, so not given here)
-#define IDC_RICHEDITBOX         150
+#define IDC_RICHEDITBOX                 150
 #define IDM_RICHEDWRAP                  151
 
 

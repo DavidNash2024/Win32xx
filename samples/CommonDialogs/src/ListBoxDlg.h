@@ -71,19 +71,19 @@ CListBoxDlg : public CCommonDialog                      /*
         virtual ~CListBoxDlg(){}
 
         virtual  void   AddListItem(const CString &s)
-                    { m_sList.push_back(s);}
+                          { m_sList.push_back(s);}
         virtual INT_PTR DoModal(HWND hWndOwner = 0);
         virtual void    ClearList(){ m_sList.clear();}
         virtual void    OnCancel();
         virtual void    OnOK();
-            void    SetBoxTitle(const CString& title)
-                    { m_sBoxTitle = title;}
+                void    SetBoxTitle(const CString& title)
+                          { m_sBoxTitle = title;}
 
     protected:
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
         virtual BOOL    OnInitDialog();
         virtual void    SetWindowTitle() const
-                    { SetWindowText(m_sBoxTitle);}
+                          { SetWindowText(m_sBoxTitle);}
 
     private:
           // private data

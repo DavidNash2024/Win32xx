@@ -111,7 +111,7 @@ DeleteTableEntry(UINT index)                        /*
 *-----------------------------------------------------------------------------*/
 {
     return (m_ColorTable.erase(m_ColorTable.begin() + index) -
-         m_ColorTable.begin());
+        m_ColorTable.begin());
 }
 
 /*============================================================================*/
@@ -220,7 +220,8 @@ GetTableUsage(UINT nID)                                                 /*
 *-----------------------------------------------------------------------------*/
 {
     UINT idx = GetTableIndex(nID);
-    CString usage = (idx == static_cast<UINT>(-1) ? _T("") : m_ColorTable[idx].usage.c_str());
+    CString usage = (idx == static_cast<UINT>(-1) ? _T("") :
+        m_ColorTable[idx].usage.c_str());
     return  usage;
 }
 
@@ -283,7 +284,7 @@ Serialize(CArchive &ar)                                                 /*
     {
           // save the current color
         ar << GetParameters().rgbResult;
-              // save the custom colors
+          // save the custom colors
         ArchiveObject ao(GetCustomColors(), 16 * sizeof(COLORREF) );
         ar << ao;
           // save the color table entries
@@ -302,7 +303,7 @@ Serialize(CArchive &ar)                                                 /*
         COLORREF rgbResult;
         ar >> rgbResult;
         SetColor(rgbResult); // set base class current color
-              // read in the custom colors
+          // read in the custom colors
         COLORREF cr[16];
         ArchiveObject ao(cr, 16 * sizeof(COLORREF));
         ar >> ao;

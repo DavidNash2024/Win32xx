@@ -79,27 +79,25 @@ CMainFrame : public CFrame                      /*
 {
     public:
         CMainFrame(void);
-        virtual     ~CMainFrame(void){}
+        virtual ~CMainFrame(void){}
         
-            void    AddMRUEntry(LPCTSTR szMRUEntry)
-                    { CFrame::AddMRUEntry (szMRUEntry);}
+                void    AddMRUEntry(LPCTSTR szMRUEntry)
+                        { CFrame::AddMRUEntry (szMRUEntry);}
         virtual void    EmptyMRUList();
-            CDoc&   GetDoc() { return m_Doc; }
-            UINT    GetMRUSize() { return GetMRUEntries().size();}
+                CDoc&   GetDoc() { return m_Doc; }
+                UINT    GetMRUSize() { return GetMRUEntries().size();}
         virtual void    RemoveMRUEntry(LPCTSTR szMRUEntry)
-                    {CFrame::RemoveMRUEntry(szMRUEntry);}
-            void    SetSBBkColor(COLORREF clr)
-                    { GetStatusBar().SendMessage(SB_SETBKCOLOR,
-                      0, (LPARAM)clr);}
+                          {CFrame::RemoveMRUEntry(szMRUEntry);}
+                void    SetSBBkColor(COLORREF clr)
+                          { GetStatusBar().SendMessage(SB_SETBKCOLOR,
+                              0, (LPARAM)clr);}
         virtual void    SetWindowTitle(const CString& title);
         virtual void    UpdateControlUIState();
 
             COLORREF    GetSBBkColor()
-                    { return m_ColorChoice.GetTableColor(SBBg);}
+                            { return m_ColorChoice.GetTableColor(SBBg);}
 
     protected:
-        virtual void    GetCtlColors(UINT nCtlColor, UINT nID, UINT& fg,
-                    UINT& bk, UINT& bg);
          CRichEditView& GetREView() { return m_View.GetREView();}
 
         virtual void    InitCtlColors();
@@ -122,10 +120,10 @@ CMainFrame : public CFrame                      /*
         virtual void    PreCreate(CREATESTRUCT& cs);
         virtual BOOL    SaveRegistrySettings(void);
         virtual void    Serialize(CArchive &ar);
-            BOOL    SetCheckStatus(UINT, BOOL, ControlBars);
-            BOOL    SetEnableStatus(UINT, BOOL, ControlBars);
+                BOOL    SetCheckStatus(UINT, BOOL, ControlBars);
+                BOOL    SetEnableStatus(UINT, BOOL, ControlBars);
         virtual void    SetReBarColors(COLORREF, COLORREF, COLORREF,
-                    COLORREF);
+                           COLORREF);
         virtual void    SetStatusbarMsg(CString);
         virtual BOOL    SetThemeColors();
         virtual void    SetupToolBar(void);
@@ -138,10 +136,10 @@ CMainFrame : public CFrame                      /*
         CDoc       m_Doc;         // the document
         CView      m_View;        // the view
         AboutBox   m_AboutBox;        // the AboutBox dialog
-                UINT       m_win_x,           // serialized window x position
-                           m_win_y,           // serialized window y position
-                           m_width,           // serialized window width
-                           m_height;          // serialized window height
+        UINT       m_win_x,           // serialized window x position
+                   m_win_y,           // serialized window y position
+                   m_width,           // serialized window width
+                   m_height;          // serialized window height
         UINT       m_nMaxMRU;         // maximum MRU entries, this app
         HCURSOR    m_hCursor;         // current cursor shape
         CBitmap    m_colorbmp;        // for the color choice menuitem

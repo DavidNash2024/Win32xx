@@ -63,7 +63,7 @@
 
 /*============================================================================*/
     CView::
-CView(UINT nResID)                                          /*
+CView(UINT nResID)                                                          /*
 
     Construct default window main view object.
 *-----------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ CView(UINT nResID)                                          /*
 
 /*============================================================================*/
     BOOL CView::
-AddToolTip(HWND hParent, UINT nID)                  /*
+AddToolTip(HWND hParent, UINT nID)                                          /*
 
     Add the string with the resource nID to the control whose resource
     identrifer is also nID. Return TRUE on success, FALSE otherwise.
@@ -84,9 +84,9 @@ AddToolTip(HWND hParent, UINT nID)                  /*
 
 /*============================================================================*/
     BOOL CView::
-AddToolTip(HWND hParent, UINT nID, const CString & sToolTip)        /*
+AddToolTip(HWND hParent, UINT nID, const CString & sToolTip)                /*
 
-    Add the sToolTip string to the control whose resource identrifer is
+    Add the sToolTip string to the control whose resource identifer is
     nID. Return TRUE on success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
@@ -106,7 +106,7 @@ AddToolTip(HWND hParent, UINT nID, const CString & sToolTip)        /*
 
 /*============================================================================*/
     void CView::
-AssignToolTips()                            /*
+AssignToolTips()                                                            /*
 
     Assign tool tips to all controls in the client area.
 *-----------------------------------------------------------------------------*/
@@ -127,7 +127,7 @@ AssignToolTips()                            /*
 
 /*============================================================================*/
     void CView::
-AttachControl(UINT nIDC, CWnd& rCtl)                        /*
+AttachControl(UINT nIDC, CWnd& rCtl)                                        /*
 
     Attach (subclass) the control having the numeric identifier nID in the
     current  view object to the given CWnd rCtrl view object.  Enable the
@@ -144,7 +144,7 @@ AttachControl(UINT nIDC, CWnd& rCtl)                        /*
 
 /*============================================================================*/
     HWND CView::
-Create(HWND hParent = 0)                                               /*
+Create(HWND hParent = 0)                                                    /*
 
     Show the view window as a modeless dialog.
 **----------------------------------------------------------------------------*/
@@ -155,7 +155,7 @@ Create(HWND hParent = 0)                                               /*
 
 /*============================================================================*/
     INT_PTR CView::
-DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
+DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                         /*
 
     This method processes all messages sent to the form dialog. the uMsg
     parameter specifies the message and both wParam and lParam specify
@@ -170,24 +170,15 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
         Invalidate();
         break;  // Also do default processing
 
-        case WM_CTLCOLORBTN:
-        case WM_CTLCOLOREDIT:
         case WM_CTLCOLORDLG:
-        case WM_CTLCOLORLISTBOX:
-        case WM_CTLCOLORSCROLLBAR:
-        case WM_CTLCOLORSTATIC:
-          // let the mainframe WndProc() handle this, as well as other
-          // colors
+//      case WM_CTLCOLORBTN:        // (none of these apply here)
+//      case WM_CTLCOLOREDIT:
+//      case WM_CTLCOLORLISTBOX:
+//      case WM_CTLCOLORSCROLLBAR:
+//      case WM_CTLCOLORSTATIC:
+              // let the mainframe WndProc() handle this, as well as other
+              // colors
             return ::SendMessage(m_hParent, uMsg, wParam, lParam);
-
-        case WM_DRAWITEM:
-        {
-            LPDRAWITEMSTRUCT lpDrawItemStruct = reinterpret_cast<LPDRAWITEMSTRUCT>(lParam);
-            UINT nID = static_cast<UINT>(wParam);
-            if (nID == IDOK)
-                m_OK.DrawItem(lpDrawItemStruct);
-            return TRUE;
-        }
     }
 
       // pass unhandled messages on for default processing
@@ -196,7 +187,7 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
 
 /*============================================================================*/
     void CView::
-NoDocOpen()                             /*
+NoDocOpen()                                                                 /*
 
     Announce that no document is currently open
 *-----------------------------------------------------------------------------*/
@@ -208,7 +199,7 @@ NoDocOpen()                             /*
 
 /*============================================================================*/
     BOOL CView::
-OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
+OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
 
     Respond to the selection of any control on the form, except one having
     the IDOK identifier. The low-order word of wParam identifies the
@@ -237,7 +228,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 
 /*============================================================================*/
     BOOL CView::
-OnDropFiles(HDROP hDropinfo)                                            /*
+OnDropFiles(HDROP hDropinfo)                                                /*
 
     Open the text document dragged and dropped in the rich edit window.
 *-----------------------------------------------------------------------------*/
@@ -251,7 +242,7 @@ OnDropFiles(HDROP hDropinfo)                                            /*
 
 /*============================================================================*/
     BOOL CView::
-OnInitDialog()                                                          /*
+OnInitDialog()                                                              /*
 
     This method is invoked immediately before the dialog box is displayed.
     This override performs special processing to initialize the view and
@@ -279,7 +270,7 @@ OnInitDialog()                                                          /*
 
 /*============================================================================*/
     LRESULT CView::
-OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
+OnNotify(WPARAM wParam, LPARAM lParam)                                      /*
 
     Process messages that controls send to the view.
 **-----------------------------------------------------------------------------*/
@@ -289,14 +280,14 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
     switch (pNMH->code)
     {
         case EN_MSGFILTER: // keyboard or mouse event: update control states
-        ::SendMessage(m_hParent, IDM_UPDATECONTROLUISTATE, 0, 0);
-        break;
+            ::SendMessage(m_hParent, IDM_UPDATECONTROLUISTATE, 0, 0);
+            break;
 
         case EN_DROPFILES: // a file has been dropped in the rich edit box
-        ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
-        HDROP hDroinfo = (HDROP) ENDrop->hDrop;
-        OnDropFiles(hDroinfo);
-        return TRUE;
+            ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
+            HDROP hDroinfo = (HDROP) ENDrop->hDrop;
+            OnDropFiles(hDroinfo);
+            return TRUE;
     }
 
     return CDialog::OnNotify(wParam, lParam);
@@ -304,7 +295,7 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
 
 /*============================================================================*/
     void CView::
-OnOK()                                                                  /*
+OnOK()                                                                      /*
 
     Override CDialog member OnOK, which is called when the IDOK message
     is activated (here when the OK button is pressed).  The base class
@@ -319,7 +310,7 @@ OnOK()                                                                  /*
 
 /*============================================================================*/
     void CView::
-OnPrintDocument()                           /*
+OnPrintDocument()                                                           /*
 
     Invoke a MyPrinter dialog to get printing parameters and then print
     the contents of the rich view control.
@@ -330,7 +321,7 @@ OnPrintDocument()                           /*
 
 /*============================================================================*/
     void CView::
-OnPrintPreview()                            /*
+OnPrintPreview()                                                            /*
 
     Invoke the print preview dialog.
 *-----------------------------------------------------------------------------*/
@@ -340,7 +331,7 @@ OnPrintPreview()                            /*
 
 /*============================================================================*/
     void CView::
-Register(CDoc* pDoc)                            /*
+Register(CDoc* pDoc)                                                        /*
 
     Register the view's document.
 *-----------------------------------------------------------------------------*/
@@ -350,7 +341,7 @@ Register(CDoc* pDoc)                            /*
 
 /*============================================================================*/
     void CView::
-SetRichEditColors(COLORREF txfg, COLORREF txbg, COLORREF bg)            /*
+SetRichEditColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                /*
 
 
     Set the rich edit control text foreground and background colors and the
@@ -363,7 +354,7 @@ SetRichEditColors(COLORREF txfg, COLORREF txbg, COLORREF bg)            /*
 
 /*============================================================================*/
         void CView::
-Serialize(CArchive &ar)                                                 /*
+Serialize(CArchive &ar)                                                     /*
 
         Called to serialize or deserialize the view to and from the archive ar,
         depending on the sense of IsStoring().  
@@ -372,7 +363,7 @@ Serialize(CArchive &ar)                                                 /*
       // perform loading or storing
         if (ar.IsStoring())
         {
-    }
+        }
         else    // recovering
         {
         }
@@ -380,7 +371,7 @@ Serialize(CArchive &ar)                                                 /*
 
 /*============================================================================*/
     void CView::
-SetEditFont(const CFont& f)                     /*
+SetEditFont(const CFont& f)                                                 /*
 
     Set the font for the edit box in the client window.
 *-----------------------------------------------------------------------------*/
@@ -388,5 +379,3 @@ SetEditFont(const CFont& f)                     /*
     m_EditFont = f;
     m_RichEdit.SetFont(f, TRUE);
 }
-
-
