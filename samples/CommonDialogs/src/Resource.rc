@@ -55,67 +55,67 @@
 
 /*==============================================================================
 
-    English (United States) resources                               */
+    English (United States) resources                                         */
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 /*==============================================================================
 
-    RT_MANIFEST                                                     */
+    RT_MANIFEST                                                               */
 
 1    RT_MANIFEST "../src/res/Win32++.manifest"
 
 /*==============================================================================
 
-    Menu                                                            */
+    Menu                                                                      */
 
 IDW_MAIN MENU
 {
     POPUP "&File"
     {
-        MENUITEM "&New\tCtrl+N",      IDM_FILE_NEW
+        MENUITEM "&New\tCtrl+N",          IDM_FILE_NEW
         MENUITEM "&Open\tCtrl+O",         IDM_FILE_OPEN
         MENUITEM "&Save\tCtrl+S",         IDM_FILE_SAVE
         MENUITEM "Save &As\tCtrl+Shft+S", IDM_FILE_SAVEAS
-        MENUITEM "&Close",        IDM_FILE_CLOSE
+        MENUITEM "&Close",                IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "Print Pre&view\tShift+Ctrl+P", IDM_FILE_PREVIEW
         MENUITEM "&Print...\tCtrl+P",     IDM_FILE_PRINT
         MENUITEM "PageSetup...\tAlt+P",   IDM_FILE_PAGESETUP
         MENUITEM SEPARATOR
-        MENUITEM "Recent Files",      IDW_FILE_MRU_FILE1, GRAYED
+        MENUITEM "Recent Files",          IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
     }
     POPUP "&Edit"
     {
-        MENUITEM "Undo\tCtrl+Z",          IDM_EDIT_UNDO //, GRAYED
-        MENUITEM "Redo\tShift+Ctrl+Z",    IDM_EDIT_REDO //, GRAYED
+        MENUITEM "Undo\tCtrl+Z",          IDM_EDIT_UNDO    //, GRAYED
+        MENUITEM "Redo\tShift+Ctrl+Z",    IDM_EDIT_REDO    //, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "Cut\tCtrl+X",           IDM_EDIT_CUT //, GRAYED
-        MENUITEM "Copy\tCtrl+C",          IDM_EDIT_COPY //, GRAYED
-        MENUITEM "Paste\tCtrl+V",         IDM_EDIT_PASTE //, GRAYED
-        MENUITEM "Delete\tDel",           IDM_EDIT_DELETE //, GRAYED
+        MENUITEM "Cut\tCtrl+X",           IDM_EDIT_CUT     //, GRAYED
+        MENUITEM "Copy\tCtrl+C",          IDM_EDIT_COPY    //, GRAYED
+        MENUITEM "Paste\tCtrl+V",         IDM_EDIT_PASTE   //, GRAYED
+        MENUITEM "Delete\tDel",           IDM_EDIT_DELETE  //, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "Find\tCtrl+F",          IDM_EDIT_FIND //, GRAYED
+        MENUITEM "Find\tCtrl+F",          IDM_EDIT_FIND    //, GRAYED
         MENUITEM "Replace\tCtrl+R",       IDM_EDIT_REPLACE //, GRAYED
         MENUITEM SEPARATOR
     }
     POPUP "&View"
     {
-        MENUITEM "&Tool Bar",         IDW_VIEW_TOOLBAR,   CHECKED
+        MENUITEM "&Tool Bar",             IDW_VIEW_TOOLBAR,   CHECKED
         MENUITEM "&Status Bar",           IDW_VIEW_STATUSBAR, CHECKED
         MENUITEM SEPARATOR
-        MENUITEM "&Control Colors",   IDM_COLOR_CHOICE
+        MENUITEM "&Control Colors",       IDM_COLOR_CHOICE
         MENUITEM "&Font Face+Color",      IDM_FONT_CHOICE
         MENUITEM SEPARATOR
-        MENUITEM "&Wrap Text Lines",       IDM_RICHEDWRAP, CHECKED
+        MENUITEM "&Wrap Text Lines",      IDM_RICHEDWRAP, CHECKED
     }
 
     POPUP "&Help"
     {
-        MENUITEM "&About",             IDW_ABOUT
+        MENUITEM "&About",                IDW_ABOUT
     }
 }
 
@@ -124,15 +124,15 @@ IDW_MAIN MENU
     Icon
 
     The icon with the lowest ID value is placed first to ensure that
-    the application icon remains consistent on all systems.     */
+    the application icon remains consistent on all systems.                  */
 
-IDW_MAIN        ICON            "../src/res/smile.ico"
+IDW_MAIN        ICON                            "../src/res/smile.ico"
 IDI_COLOR_CHOICE        ICON                    "../src/res/crayonS.ico"
 IDI_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
 
 /*==============================================================================
 
-    Bitmaps                                                         */
+    Bitmaps                                                                   */
 
 IDW_MAIN                BITMAP DISCARDABLE      "../src/res/Toolbar.bmp"
 
@@ -145,11 +145,11 @@ EXSTYLE WS_EX_CLIENTEDGE
 FONT 10, "Courier New", 0, 0
 {
       // controls within the client area:
-    CONTROL         "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |
-                ES_AUTOHSCROLL | WS_BORDER  | WS_TABSTOP |
-                ES_WANTRETURN  | WS_VSCROLL | WS_HSCROLL,
-                10, 10, 310, 210, WS_EX_CLIENTEDGE |
-                WS_EX_ACCEPTFILES
+    CONTROL	   "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |
+                     ES_AUTOHSCROLL | WS_BORDER  | WS_TABSTOP |
+                     ES_WANTRETURN  | WS_VSCROLL | WS_HSCROLL,
+                     10, 10, 310, 210, WS_EX_CLIENTEDGE |
+                     WS_EX_ACCEPTFILES
 }
 
   // AboutBox Dialog
@@ -159,7 +159,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
-    DEFPUSHBUTTON   "OK", IDOK, 80, 80, 40, 15
+    DEFPUSHBUTTON  "OK", IDOK, 80, 80, 40, 15
     CTEXT           "Common Controls Demo", IDC_ABOUT_MSG, 30, 5, 160, 70
     ICON            IDW_MAIN, 0, 5, 5, 20, 20
 END
@@ -182,8 +182,8 @@ IDW_MAIN ACCELERATORS
     "V",            IDM_EDIT_PASTE,  VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,  VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PREVIEW, VIRTKEY, SHIFT, CONTROL, NOINVERT
-    "P",        IDM_FILE_PAGESETUP,VIRTKEY, ALT, NOINVERT
-    "H",        IDW_ABOUT,       VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PAGESETUP,VIRTKEY, ALT, NOINVERT
+    "H",            IDW_ABOUT,       VIRTKEY, CONTROL, NOINVERT
     "Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
     "R",            IDM_EDIT_REPLACE, VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_UNDO,   VIRTKEY, CONTROL, NOINVERT
@@ -257,7 +257,6 @@ STRINGTABLE     // window-related items
 
 STRINGTABLE     // client area items
 {
-    IDOK                    "Here, the OK button just prints a message."
     IDC_RICHEDITBOX         "This is a rich edit control."
 }
 

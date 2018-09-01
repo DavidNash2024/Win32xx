@@ -140,9 +140,9 @@ Serialize(CArchive &ar)                                                 /*
     archive open for for further operations.
 *-----------------------------------------------------------------------------*/
 {
-      // perform loading or storing
-        if (ar.IsStoring())
-        {
+    // perform loading or storing
+    if (ar.IsStoring())
+    {
           // save the font as a LOGFONT
         LOGFONT lf = GetLogFont();
         ArchiveObject f(&lf, sizeof(LOGFONT));              
@@ -155,9 +155,8 @@ Serialize(CArchive &ar)                                                 /*
           // save the font color
         ar << GetParameters().rgbColors;
     }
-        else    // recovering
-        {
-                  // recover the font as LOGFONT
+    else 
+    {     // recover the font as LOGFONT
         LOGFONT lf;
         ArchiveObject f(&lf, sizeof(LOGFONT));              
         ar >> f;                                            
@@ -191,7 +190,6 @@ SetFontIndirect(const LOGFONT& lf)                                      /*
       // convert lf to a CFont
     CFont hf;
     hf.CreateFontIndirect(lf);
-
       // if it worked, put it in this object
     if(hf)
     {

@@ -80,17 +80,17 @@ CColorChoice   : public CColorDialog                    /*
         virtual ~CColorChoice(){}
         
         virtual BOOL    AddColorChoice(UINT, const CString&, COLORREF);
-            void    ClearColorTable(){m_ColorTable.clear();}
-            UINT    DeleteTableEntry(UINT index);
+                void    ClearColorTable(){m_ColorTable.clear();}
+                UINT    DeleteTableEntry(UINT index);
         virtual INT_PTR DoModal(HWND hWndOwner = 0);
-            CBrush  GetBrush(UINT nID);
+                CBrush  GetBrush(UINT nID);
         virtual CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
-            UINT    GetSelectedColorID() {return m_nSelection;}
-            COLORREF GetTableColor(UINT nID);
-            UINT    GetTableIndex(UINT nID);
-            UINT    GetTableSize() { return m_ColorTable.size();}
-            CString GetTableUsage(UINT nID); 
-            void    SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
+                UINT    GetSelectedColorID() {return m_nSelection;}
+                COLORREF GetTableColor(UINT nID);
+                UINT    GetTableIndex(UINT nID);
+                UINT    GetTableSize() { return m_ColorTable.size();}
+                CString GetTableUsage(UINT nID); 
+                void    SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
         virtual void    SetTableColor(UINT nID, COLORREF rgb);
         virtual void    SetTableUsage(UINT nID, const CString& s);
 
@@ -98,7 +98,7 @@ CColorChoice   : public CColorDialog                    /*
 
         virtual BOOL    OnInitDialog(); 
         virtual void    SetWindowTitle() const
-                    {SetWindowText(m_sBoxTitle);}   
+                          {SetWindowText(m_sBoxTitle);}   
         virtual void    Serialize(CArchive &ar);
 
     private:
@@ -106,7 +106,7 @@ CColorChoice   : public CColorDialog                    /*
 
           // private data
         CListBoxDlg     m_LBDlg;    // the list box dialog
-        CString     m_sBoxTitle;    // the color dialog box title
+        CString         m_sBoxTitle;    // the color dialog box title
         UINT            m_nSelection;   // the selected color index
         std::vector<ctl_color> m_ColorTable;   // usage-color pairs
 };

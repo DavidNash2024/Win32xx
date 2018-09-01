@@ -199,10 +199,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\CustomButton.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Doc.cpp"
 				>
 			</File>
@@ -278,10 +274,6 @@
 			</File>
 			<File
 				RelativePath="..\src\ColorDefs.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\CustomButton.h"
 				>
 			</File>
 			<File

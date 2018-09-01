@@ -195,8 +195,6 @@
 		<Unit filename="../src/ColorChoice.cpp" />
 		<Unit filename="../src/ColorChoice.h" />
 		<Unit filename="../src/ColorDefs.h" />
-		<Unit filename="../src/CustomButton.cpp" />
-		<Unit filename="../src/CustomButton.h" />
 		<Unit filename="../src/Doc.cpp" />
 		<Unit filename="../src/Doc.h" />
 		<Unit filename="../src/ListBoxDlg.cpp" />

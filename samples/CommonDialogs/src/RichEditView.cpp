@@ -64,7 +64,7 @@
 
 /*============================================================================*/
     CRichEditView::
-CRichEditView()                                                         /*
+CRichEditView()                                                             /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -78,7 +78,7 @@ CRichEditView()                                                         /*
 
 /*============================================================================*/
     CRichEditView::
-~CRichEditView()                                                        /*
+~CRichEditView()                                                            /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -86,7 +86,7 @@ CRichEditView()                                                         /*
 
 /*============================================================================*/
     void CRichEditView::
-Clean()                                 /*
+Clean()                                                                     /*
 
     Clear the control of all text.
 *-----------------------------------------------------------------------------*/
@@ -96,7 +96,7 @@ Clean()                                 /*
 
 /*============================================================================*/
     BOOL CRichEditView::
-IsSelected()                                /*
+IsSelected()                                                                /*
 
     Return TRUE if text is currently selected.
 *-----------------------------------------------------------------------------*/
@@ -109,7 +109,7 @@ IsSelected()                                /*
 
 /*============================================================================*/
     void CRichEditView::
-OnAttach()                                              /*
+OnAttach()                                                                  /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -124,7 +124,7 @@ OnAttach()                                              /*
 
 /*============================================================================*/
     void CRichEditView::
-SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                  /*
+SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                        /*
 
     Set the rich edit control text foreground and background colors and the
     control background color.  This is needed only when the colors change
@@ -132,18 +132,18 @@ SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                  /*
 *-----------------------------------------------------------------------------*/
 {
     CHARFORMAT2 chf;
-        chf.cbSize = sizeof(chf);
-        chf.dwMask = CFM_COLOR | CFM_BACKCOLOR;
-        chf.dwEffects = 0;
+    chf.cbSize = sizeof(chf);
+    chf.dwMask = CFM_COLOR | CFM_BACKCOLOR;
+    chf.dwEffects = 0;
     chf.crTextColor = txfg;
-        chf.crBackColor = txbg;
+    chf.crBackColor = txbg;
     SetDefaultCharFormat(chf);
     SetBackgroundColor(FALSE, bg);
 }
 
 /*============================================================================*/
     void CRichEditView::
-SetFont(HFONT hFont, BOOL bRedraw) const                                /*
+SetFont(HFONT hFont, BOOL bRedraw) const                                    /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -165,7 +165,7 @@ SetFont(HFONT hFont, BOOL bRedraw) const                                /*
 
 /*============================================================================*/
     void CRichEditView::
-SetWrapping(int wrap)                                                  /*
+SetWrapping(int wrap)                                                       /*
 
     Set the rich edit view window to use word wrapping (wrap is TRUE) or
     not use word wrapping (wrap is FALSE), or to use word wrapping to a
@@ -182,7 +182,7 @@ SetWrapping(int wrap)                                                  /*
 
 /*============================================================================*/
     BOOL CRichEditView::
-StreamInFile(const CFile& file, BOOL mode)                  /*
+StreamInFile(const CFile& file, BOOL mode)                                  /*
 
     Read the text-only contents of the opened file into this rich edit
     control. Set the modified state FALSE and return TRUE on success. Return
@@ -215,7 +215,7 @@ StreamInFile(const CFile& file, BOOL mode)                  /*
 
 /*============================================================================*/
     BOOL CRichEditView::
-StreamOutFile(const CFile& file, BOOL mode)                             /*
+StreamOutFile(const CFile& file, BOOL mode)                                 /*
 
     Write the text-only contents of this rich edit control into the opened
     file. Set the modified state FALSE and return TRUE on success. Return
@@ -233,8 +233,6 @@ StreamOutFile(const CFile& file, BOOL mode)                             /*
         es.dwError = 0;
         es.pfnCallback = (EDITSTREAMCALLBACK) StreamOutCallback;
         StreamOut(format, es);
-
-        //Clear the modified text flag
     }
 
     catch (const CFileException&)
@@ -244,7 +242,7 @@ StreamOutFile(const CFile& file, BOOL mode)                             /*
         ::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
         return FALSE;
     }
-
+      //Clear the modified text flag
     SetModify(FALSE);
     return TRUE;
 }
@@ -255,7 +253,7 @@ StreamOutFile(const CFile& file, BOOL mode)                             /*
 
 *=============================================================================*/
     DWORD CALLBACK CRichEditView::
-StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)   /*
+StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)         /*
 
     Replace the contents of the rich edit view window with data from an
     input stream. The dwCookie is an app-defined value that directs the
@@ -266,13 +264,13 @@ StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)   /*
     handle of an open file.
 *-----------------------------------------------------------------------------*/
 {
-    // Required for StreamIn termination
+      // Required for StreamIn termination
     if (!cb)
         return (1);
 
     *pcb = 0;
     if (!::ReadFile((HANDLE)(DWORD_PTR) dwCookie, pbBuff, cb, (LPDWORD)pcb,
-        NULL))
+      NULL))
         ::MessageBox(NULL, _T("StreamInFile Failed"), _T(""), MB_OK);
 
     return 0;
@@ -280,7 +278,7 @@ StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)   /*
 
 /*============================================================================*/
     DWORD CALLBACK CRichEditView::
-StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)  /*
+StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)        /*
 
     Tansfer data out of the rich edit view window. The dwCookie is an
     app-defined value that directs the transfer of cb bytes of data from
@@ -290,20 +288,20 @@ StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)  /*
     contains the handle of an open file.
 *-----------------------------------------------------------------------------*/
 {
-    // Required for StreamOut termination
+      // Required for StreamOut termination
     if(!cb)
         return (1);
 
     *pcb = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb,
-        (LPDWORD)pcb, NULL))
+    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, 
+      NULL))
         ::MessageBox(NULL, _T("StreamOutFile Failed"), _T(""), MB_OK);
     return 0;
 }
 
 /*============================================================================*/
     BOOL    CRichEditView::
-DoPreparePrinting(CPrintInfo& info)                 /*
+DoPreparePrinting(CPrintInfo& info)                                         /*
 
     Call this function from your override of OnPreparePrinting to invoke
     the print dialog box to create a printer device context. This method
@@ -338,7 +336,7 @@ DoPreparePrinting(CPrintInfo& info)                 /*
 
 /*============================================================================*/
     void CRichEditView::
-DoPrintView()                               /*
+DoPrintView()                                                               /*
 
     Perform standard printing of a customized view of the current document,
     whose name appears in m_sDocPath, which should be set prior to entry to
@@ -459,7 +457,7 @@ DoPrintView()                               /*
 
 /*============================================================================*/
     void CRichEditView::
-DoPrintRichView(const CString& sDocPath)                /*
+DoPrintRichView(const CString& sDocPath)                                    /*
 
     Print the contents of the CRichEditView control in the CView client
     area accessed by pView. Label the spooler output using the sDocPath.
@@ -473,7 +471,7 @@ DoPrintRichView(const CString& sDocPath)                /*
 
 /*============================================================================*/
     void CRichEditView::
-GetPageBreaks(CPrintInfo& info)                     /*
+GetPageBreaks(CPrintInfo& info)                                             /*
 
     Calculate the vector of first characters on each page in this text rich
     edit view. Set the page count and page number limits into the info
@@ -521,7 +519,7 @@ GetPageBreaks(CPrintInfo& info)                     /*
 
 /*============================================================================*/
     void CRichEditView::
-OnBeginPrinting(CDC& DC, CPrintInfo& info)                             /*
+OnBeginPrinting(CDC& DC, CPrintInfo& info)                                  /*
 
     Initiate parameters used by the printing task. This includes setting
     the FORMATRANGE m_fr structure with the printer context, the printer
@@ -563,7 +561,7 @@ OnBeginPrinting(CDC& DC, CPrintInfo& info)                             /*
 
 /*============================================================================*/
     void CRichEditView::
-OnEndPrinting(CDC& DC, CPrintInfo& info)                               /*
+OnEndPrinting(CDC& DC, CPrintInfo& info)                                    /*
 
     Clean up any loose ends before ending the job.
 *-----------------------------------------------------------------------------*/
@@ -577,7 +575,7 @@ OnEndPrinting(CDC& DC, CPrintInfo& info)                               /*
 
 /*============================================================================*/
     void CRichEditView::
-OnPrepareDC(CDC& DC, CPrintInfo& info /* = NULL */)                    /*
+OnPrepareDC(CDC& DC, CPrintInfo& info /* = NULL */)                         /*
 
     Make preparations for printing the next page. Here, check for an
     end-of-printing condition.
@@ -591,7 +589,7 @@ OnPrepareDC(CDC& DC, CPrintInfo& info /* = NULL */)                    /*
 
 /*============================================================================*/
     BOOL CRichEditView::
-OnPreparePrinting(CPrintInfo& info)                                    /*
+OnPreparePrinting(CPrintInfo& info)                                         /*
 
     Declare a printer dialog box, set initial info settings, and get the
     printer parameters via the printer dialog. Return TRUE if a printer was
@@ -610,7 +608,7 @@ OnPreparePrinting(CPrintInfo& info)                                    /*
 
 /*============================================================================*/
     void CRichEditView::
-OnPrint(CDC& DC, CPrintInfo& info)                                     /*
+OnPrint(CDC& DC, CPrintInfo& info)                                          /*
 
     Print the current page indicated in info.
 *-----------------------------------------------------------------------------*/

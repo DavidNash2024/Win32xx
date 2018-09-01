@@ -114,8 +114,8 @@ DatInt(const CString &date)                                             /*
 *-----------------------------------------------------------------------------*/
 {
     int     yyyy = _ttoi(date.Mid(7, 4)),
-        dd   = _ttoi(date.Mid(4, 2)),
-        mo   = months.Find(date.Mid(0, 3)) / 4;
+            dd   = _ttoi(date.Mid(4, 2)),
+            mo   = months.Find(date.Mid(0, 3)) / 4;
     ULONG   ans  = ((yyyy * 100 + mo) * 100) + dd;
     return  ans;
 }
@@ -130,8 +130,8 @@ IntDat(ULONG hexdate)                                               /*
 *-----------------------------------------------------------------------------*/
 {
     UINT    dd   = hexdate % 100,
-        mo   = (hexdate / 100) % 100,
-        yyyy = (hexdate / 10000);
+            mo   = (hexdate / 100) % 100,
+            yyyy = (hexdate / 10000);
     CString ans;
     ans.Format(_T("%s %02d, %u"),  months.Mid(4 * mo, 3).c_str(), dd, yyyy);
     return ans;
@@ -168,8 +168,7 @@ Serialize(CArchive &ar)                                                 /*
 
 *=============================================================================*/
     int APIENTRY
-WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
-    int nCmdShow)                           /*
+WinMain(HINSTANCE , HINSTANCE , LPSTR , int nCmdShow)                         /*
 
     Application entry point: hInstance is the handle to the current
     instance of the application; hPrevInstance is always 0; lpCmdLine
@@ -179,10 +178,6 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
     parameter values).
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(hInstance);
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-
       // set default return value
     int rtn = -1;
       // Create and check the semaphore that limits the number of
@@ -192,14 +187,14 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
     static  const   int     nInstances = 1; // number of allowed instances
     static  HANDLE  m_hSem;
 
-        m_hSem = CreateSemaphore(NULL, nInstances, nInstances, semaphoreName);
-        if (WaitForSingleObject(m_hSem, 0) == WAIT_TIMEOUT)
-        {
-            ::MessageBox(NULL, _T("The allowed number of instances of this\n")
-            _T("application are already running."), _T("Stop"),
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-            CloseHandle(m_hSem);
-            return 0;  // before entering the message loop
+    m_hSem = CreateSemaphore(NULL, nInstances, nInstances, semaphoreName);
+    if (WaitForSingleObject(m_hSem, 0) == WAIT_TIMEOUT)
+    {
+        ::MessageBox(NULL, _T("The allowed number of instances of this\n")
+        _T("application are already running."), _T("Stop"), MB_OK | 
+	    MB_ICONSTOP | MB_TASKMODAL);
+        CloseHandle(m_hSem);
+        return 0;  // before entering the message loop
     }
       // declare the CApp object and run the application
     try
@@ -213,8 +208,8 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
     catch (CException &e)   // catch all CException events
     {
           // Process the exception and quit
-        CString msg = e.what() + (CString)_T("\n") +
-            e.GetText() + (CString)_T("\nWinMain Goodbye...");
+        CString msg = e.what() + (CString)_T("\n") + e.GetText() + 
+	    (CString)_T("\nWinMain Goodbye...");
         ::MessageBox(NULL, msg, _T("Standard Exception"), MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);
     }
@@ -239,8 +234,8 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
     }
 
       // release the semaphore
-        ReleaseSemaphore(m_hSem, 1, NULL);
-        CloseHandle(m_hSem);
+    ReleaseSemaphore(m_hSem, 1, NULL);
+    CloseHandle(m_hSem);
     return rtn;
 }
 

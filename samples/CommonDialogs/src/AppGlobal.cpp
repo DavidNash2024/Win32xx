@@ -94,8 +94,7 @@ CAppGlobal()                                                            /*
 *-----------------------------------------------------------------------------*/
 {
           // extract the app name, directory, and  path names
-    ::GetModuleFileName(NULL, m_sAppPath.GetBuffer(FILENAME_MAX),
-        FILENAME_MAX);
+    ::GetModuleFileName(NULL, m_sAppPath.GetBuffer(FILENAME_MAX), FILENAME_MAX);
     m_sAppPath.ReleaseBuffer();
     CFile f; // no file opened here, just using the name parsing parts
     f.SetFilePath(m_sAppPath);
@@ -104,8 +103,7 @@ CAppGlobal()                                                            /*
     m_sAppName  = f.GetFileNameWOExt();
 
       // locate the archive file
-    m_sArcvDir = MakeAppDataPath(LoadString(IDS_DATAPATH_SUBDIR) +
-        m_sAppName);
+    m_sArcvDir = MakeAppDataPath(LoadString(IDS_DATAPATH_SUBDIR) + m_sAppName);
 
       // form the archive file path name
     m_sArcvPath  = m_sArcvDir + _T("\\") + m_sAppName +
@@ -169,18 +167,18 @@ MakeAppDataPath(const CString& subpath)                 /*
     int from, to, next;
     for (from = 0, to = subpath.GetLength(); from < to; from = ++next)
     {
-        int     nextbk  = subpath.Find(_T("\\"), from),
+        int nextbk  = subpath.Find(_T("\\"), from),
             nextfwd = subpath.Find(_T("/"), from);
-        next    = MAX(nextbk, nextfwd);
+            next = MAX(nextbk, nextfwd);
         if (next < 0)
             next = to;
 
         CString add = subpath.Mid(from, next - from);
         app_data_path += _T("\\") + add;
-		if ((::CreateDirectory(app_data_path, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
+        if ((::CreateDirectory(app_data_path, 0) == 0) && 
+	    GetLastError() != ERROR_ALREADY_EXISTS)
         {
-            CString msg = app_data_path +
-                _T("\nDirectory creation error.");
+            CString msg = app_data_path + _T("\nDirectory creation error.");
             throw CUserException(msg);
         }
     }

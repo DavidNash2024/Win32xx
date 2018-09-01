@@ -78,7 +78,7 @@
 #include "AppGlobalRC.h"
 #include "AppGlobal.h"
 #include "ColorDefs.h"
-#include "CustomButton.h"
+// #include "CustomButton.h"
 #include "ColorChoice.h"
 #include "MyFileDlg.h"
 #include "MyFontDlg.h"

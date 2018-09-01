@@ -322,8 +322,10 @@ namespace Win32xx
     {
     }
 
-    // Adds a tab page. The framework assumes ownership of the CWnd pointer provided,
-    // and deletes the CWnd object when the window is destroyed.
+	// Adds a tab along with the specified view window. 
+	// The framework assumes ownership of the CWnd pointer provided,
+	// and deletes the CWnd object when the tab is removed or destroyed.
+	// Use RemoveTabPage to remove the tab and page added in this manner.
     inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, HICON icon, UINT tabID)
     {
         assert(pView);
@@ -360,8 +362,10 @@ namespace Win32xx
         return pView;
     }
 
-    // Adds a tab page. The framework assumes ownership of the CWnd pointer provided,
-    // and deletes the CWnd object when the window is destroyed.
+	// Adds a tab along with the specified view window. 
+	// The framework assumes ownership of the CWnd pointer provided,
+	// and deletes the CWnd object when the tab is removed or destroyed.
+	// Use RemoveTabPage to remove the tab and page added in this manner.
     inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, int iconID, UINT tabID /* = 0*/)
     {
         HICON icon = reinterpret_cast<HICON>(LoadImage(GetApp().GetResourceHandle(),
@@ -369,8 +373,10 @@ namespace Win32xx
         return AddTabPage(pView, pTabText, icon, tabID);
     }
 
-    // Adds a tab page. The framework assumes ownership of the CWnd pointer provided,
-    // and deletes the CWnd object when the window is destroyed.
+    // Adds a tab along with the specified view window. 
+	// The framework assumes ownership of the CWnd pointer provided,
+    // and deletes the CWnd object when the tab is removed or destroyed.
+	// Use RemoveTabPage to remove the tab and page added in this manner.
     inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText)
     {
         return AddTabPage(pView, pTabText, reinterpret_cast<HICON>(0), 0);
@@ -1517,13 +1523,15 @@ namespace Win32xx
 
     // Calculates a tab control's display area given a window rectangle, or calculates
     //  the window rectangle that would correspond to a specified display area.
+	// Refer to TabCtrl_AdjustRect in the Windows API documentation for more information.
     inline void CTab::AdjustRect(BOOL isLarger, RECT *prc) const
     {
         assert(IsWindow());
         TabCtrl_AdjustRect(*this, isLarger, prc);
     }
 
-    // Removes all items from a tab control.
+    // Removes all items from a tab control. Use this function to remove tabs added by InsertItem.
+	// Refer to TabCtrl_DeleteAllItems in the Windows API documentation for more information.	
     inline BOOL CTab::DeleteAllItems() const
     {
         assert(IsWindow());
@@ -1531,6 +1539,9 @@ namespace Win32xx
     }
 
     // Removes an tab from a tab control.
+	// Note: Use this function to remove a tab added by InsertItem.
+	//       Use RemoveTabPage to remove a tab and page added by AddTabPage.
+	// Refer to TabCtrl_DeleteItem in the Windows API documentation for more information.	
     inline BOOL CTab::DeleteItem(int tab) const
     {
         assert(IsWindow());
@@ -1538,6 +1549,7 @@ namespace Win32xx
     }
 
     // Resets items in a tab control, clearing any that were set to the TCIS_BUTTONPRESSED state.
+	// Refer to TabCtrl_DeselectAll in the Windows API documentation for more information.		
     inline void CTab::DeselectAll(UINT excludeFocus) const
     {
         assert(IsWindow());
@@ -1545,6 +1557,7 @@ namespace Win32xx
     }
 
     // Returns the index of the tab that has the focus in a tab control.
+	// Refer to TabCtrl_GetCurFocus in the Windows API documentation for more information.		
     inline int CTab::GetCurFocus() const
     {
         assert(IsWindow());
@@ -1552,6 +1565,7 @@ namespace Win32xx
     }
 
     // Determines the currently selected tab in a tab control.
+	// Refer to TabCtrl_GetCurSel in the Windows API documentation for more information.		
     inline int CTab::GetCurSel() const
     {
         assert(IsWindow());
@@ -1559,6 +1573,7 @@ namespace Win32xx
     }
 
     // Retrieves the extended styles that are currently in use for the tab control.
+	// Refer to TabCtrl_GetExtendedStyle in the Windows API documentation for more information.		
     inline DWORD CTab::GetExtendedStyle() const
     {
         assert(IsWindow());
@@ -1566,6 +1581,7 @@ namespace Win32xx
     }
 
     // Retrieves the image list associated with a tab control.
+	// Refer to TabCtrl_GetImageList in the Windows API documentation for more information.		
     inline CImageList CTab::GetImageList() const
     {
         assert(IsWindow());
@@ -1574,6 +1590,7 @@ namespace Win32xx
     }
 
     // Retrieves information about a tab in a tab control.
+	// Refer to TabCtrl_GetItem in the Windows API documentation for more information.			
     inline BOOL CTab::GetItem(int tab, LPTCITEM pItemInfo) const
     {
         assert(IsWindow());
@@ -1581,6 +1598,7 @@ namespace Win32xx
     }
 
     // Retrieves the number of tabs in the tab control.
+	// Refer to TabCtrl_GetItemCount in the Windows API documentation for more information.		
     inline int CTab::GetItemCount() const
     {
         assert(IsWindow());
@@ -1588,6 +1606,7 @@ namespace Win32xx
     }
 
     // Retrieves the bounding rectangle for a tab in a tab control.
+	// Refer to TabCtrl_GetItemRect in the Windows API documentation for more information.		
     inline BOOL CTab::GetItemRect(int tab, RECT& rc) const
     {
         assert(IsWindow());
@@ -1595,6 +1614,7 @@ namespace Win32xx
     }
 
     // Retrieves the current number of rows of tabs in a tab control.
+	// Refer to TabCtrl_GetRowCount in the Windows API documentation for more information.	
     inline int CTab::GetRowCount() const
     {
         assert(IsWindow());
@@ -1602,6 +1622,7 @@ namespace Win32xx
     }
 
     // Retrieves a handle to the ToolTip control associated with a tab control.
+	// Refer to TabCtrl_GetToolTips in the Windows API documentation for more information.		
     inline HWND CTab::GetToolTips() const
     {
         assert(IsWindow());
@@ -1609,6 +1630,7 @@ namespace Win32xx
     }
 
     // Sets the highlight state of a tab item.
+	// Refer to TabCtrl_HighlightItem in the Windows API documentation for more information.	
     inline BOOL CTab::HighlightItem(INT tabID, WORD highlight) const
     {
         assert(IsWindow());
@@ -1616,13 +1638,15 @@ namespace Win32xx
     }
 
     // Determines which tab, if any, is at a specified screen position.
+	// Refer to TabCtrl_HitTest in the Windows API documentation for more information.	
     inline int CTab::HitTest(TCHITTESTINFO& hitInfo) const
     {
         assert(IsWindow());
         return TabCtrl_HitTest(*this, &hitInfo);
     }
 
-    // Inserts a new tab in a tab control.
+    // Inserts a new tab in a tab control. Use this to add a tab without a tab page.
+	// Refer to TabCtrl_InsertItem in the Windows API documentation for more information.		
     inline int CTab::InsertItem(int tab, const LPTCITEM pItemInfo) const
     {
         assert(IsWindow());
@@ -1631,6 +1655,7 @@ namespace Win32xx
     }
 
     // Removes an image from a tab control's image list.
+	// Refer to TabCtrl_RemoveImage in the Windows API documentation for more information.	
     inline void CTab::RemoveImage(int image) const
     {
         assert(IsWindow());
@@ -1638,6 +1663,7 @@ namespace Win32xx
     }
 
     // Sets the focus to a specified tab in a tab control.
+	// Refer to TabCtrl_SetCurFocus in the Windows API documentation for more information.		
     inline void CTab::SetCurFocus(int tab) const
     {
         assert(IsWindow());
@@ -1645,6 +1671,7 @@ namespace Win32xx
     }
 
     // Selects a tab in a tab control.
+	// Refer to TabCtrl_SetCurSel in the Windows API documentation for more information.	
     inline int CTab::SetCurSel(int tab) const
     {
         assert(IsWindow());
@@ -1652,6 +1679,7 @@ namespace Win32xx
     }
 
     // Sets the extended styles that the tab control will use.
+	// Refer to TabCtrl_SetExtendedStyle in the Windows API documentation for more information.	
     inline DWORD CTab::SetExtendedStyle(DWORD dwExStyle) const
     {
         assert(IsWindow());
@@ -1659,6 +1687,7 @@ namespace Win32xx
     }
 
     // Assigns an image list to a tab control.
+	// Refer to TabCtrl_SetImageList in the Windows API documentation for more information.	
     inline CImageList CTab::SetImageList(HIMAGELIST newImages) const
     {
         assert(IsWindow());
@@ -1667,6 +1696,7 @@ namespace Win32xx
     }
 
     // Sets some or all of a tab's attributes.
+	// Refer to TabCtrl_SetItem in the Windows API documentation for more information.		
     inline BOOL CTab::SetItem(int tab, LPTCITEM pTabInfo) const
     {
         assert(IsWindow());
@@ -1675,6 +1705,7 @@ namespace Win32xx
     }
 
     // Sets the number of bytes per tab reserved for application-defined data in a tab control.
+	// Refer to TabCtrl_SetItemExtra in the Windows API documentation for more information.	
     inline BOOL CTab::SetItemExtra(int cb) const
     {
         assert(IsWindow());
@@ -1682,6 +1713,7 @@ namespace Win32xx
     }
 
     // Sets the width and height of tabs in a fixed-width or owner-drawn tab control.
+	// Refer to TabCtrl_SetItemSize in the Windows API documentation for more information.		
     inline DWORD CTab::SetItemSize(int cx, int cy) const
     {
         assert(IsWindow());
@@ -1689,6 +1721,7 @@ namespace Win32xx
     }
 
     // Sets the minimum width of items in a tab control.
+	// Refer to TabCtrl_SetMinTabWidth in the Windows API documentation for more information.	
     inline int CTab::SetMinTabWidth(int cx) const
     {
         assert(IsWindow());
@@ -1696,6 +1729,7 @@ namespace Win32xx
     }
 
     // Sets the amount of space (padding) around each tab's icon and label in a tab control.
+	// Refer to TabCtrl_SetPadding in the Windows API documentation for more information.	
     inline void CTab::SetPadding(int cx, int cy) const
     {
         assert(IsWindow());
@@ -1703,6 +1737,7 @@ namespace Win32xx
     }
 
     // Assigns a ToolTip control to a tab control.
+	// Refer to TabCtrl_SetToolTips in the Windows API documentation for more information.	
     inline void CTab::SetToolTips(HWND toolTip) const
     {
         assert(IsWindow());

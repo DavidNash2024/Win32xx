@@ -62,7 +62,7 @@ STRINGTABLE
 {     // app-specific program values
     IDS_APP_VERSION         "Version 1.0 (2016)"
     IDS_ARCHIVE_FILE_EXT    ".arc"
-    IDS_DATAPATH_SUBDIR "win32++\\"
+    IDS_DATAPATH_SUBDIR     "win32++\\"
     IDS_DOC_DEFAULT_EXT     ".txt"
     IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
     IDS_MAX_MRU_ENTRIES     "5"

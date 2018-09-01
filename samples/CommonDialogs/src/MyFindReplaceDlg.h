@@ -73,8 +73,7 @@ MyFindReplaceDialog : public CFindReplaceDialog
             return TRUE;
         }
     
-        virtual void SetWindowTitle() const
-                    { SetWindowText(m_sBoxTitle);}
+        virtual void SetWindowTitle() const { SetWindowText(m_sBoxTitle);}
     
     private:
         CString m_sBoxTitle;

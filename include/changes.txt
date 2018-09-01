@@ -18,7 +18,7 @@ New Features and Enhancements
 * Updated CSocket
  - now also supports async sockets
  - added NetClientAsync sample
- - added NetClientServer sample
+ - added NetServerAsync sample
 * Updated frames
  - Additional toolbars have better support for disabled buttons.
  - Optimised the creation of the image list for disabled menu icons.
@@ -70,7 +70,14 @@ Renamed CFrameT::SetUseMenuStatus         to     CFrameT::UseMenuStatus
 Renamed CFrameT::SetUseReBar              to     CFrameT::UseReBar
 Renamed CFrameT::SetUseThemes             to     CFrameT::UseThemes
 Renamed CFrameT::SetUseToolBar            to     CFrameT::UseToolBar
+Renamed CSocket::GetLastError             to     CSocket::GetErrorString
+Renamed CToolBar::SetBitmap               to     CToolBar::AddReplaceBitmap
 
+The CFrameT::InitValues struct has been updated and now has the following members:
+ CRect   position
+ int     showCmd
+ BOOL    showStatusBar
+ BOOL    showToolBar
 
 
 Version 8.5

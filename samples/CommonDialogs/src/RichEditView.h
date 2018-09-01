@@ -76,10 +76,10 @@ CRichEditView : public CRichEdit                                        /*
         BOOL    IsSelected();
         void    SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg);
         void    SetDocPath(const CString& s)
-                { m_sDocPath = s;}
+                  { m_sDocPath = s;}
         void    SetFont(HFONT hFont, BOOL bRedraw) const;
         void    SetPrintPath(const CString& s)
-                { m_sPrintPath = s;}
+                  { m_sPrintPath = s;}
         void    SetWrapping(int wrap);
         BOOL    StreamInFile(const CFile& file, BOOL mode);
         BOOL    StreamOutFile(const CFile& file, BOOL mode);

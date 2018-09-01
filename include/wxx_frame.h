@@ -3559,7 +3559,7 @@ namespace Win32xx
         {
             // We are using COMCTL32.DLL version 4.0, so we can't use an ImageList.
             // Instead we simply set the bitmap.
-            GetToolBar().SetBitmap(toolBarID);
+            GetToolBar().AddReplaceBitmap(toolBarID);
             return;
         }
 

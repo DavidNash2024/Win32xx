@@ -367,6 +367,9 @@ namespace Win32xx
 
 
     // The CScrollBar class provides the functionality of a ScrollBar control.
+	// Note:  Windows usually implement scroll bars internally with the WS_HSCROLL
+	//        and WS_VSCROLL styles without the use of a separate ScrollBar control.
+	//        Use CScrollBar if the bar needs to be displayed outside the scrolling window.
     class CScrollBar : public CWnd
     {
     public:
