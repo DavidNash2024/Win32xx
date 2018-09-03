@@ -126,6 +126,7 @@ namespace Win32xx
     // initflag                 Either CREATE_SUSPENDED or 0
     // stack_size               Either the stack size or 0
     // pSecurityAttributes      Either a pointer to SECURITY_ATTRIBUTES or 0
+    // Refer to CreateThread in the Windows API documentation for more information.
     inline HANDLE CWinThread::CreateThread(unsigned initflag /* = 0 */, unsigned stack_size/* = 0 */, LPSECURITY_ATTRIBUTES pSecurityAttributes /*= NULL*/)
     {
         if (NULL == m_pfnThreadProc) m_pfnThreadProc = CWinThread::StaticThreadProc;
@@ -182,6 +183,7 @@ namespace Win32xx
     }
 
     // Retrieves this thread's priority
+    // Refer to GetThreadPriority in the Windows API documentation for more information.
     inline int CWinThread::GetThreadPriority() const
     {
         assert(m_thread);
@@ -277,6 +279,7 @@ namespace Win32xx
 
     // Posts a message to the thread. The message will reach the MessageLoop, but
     // will not call a CWnd's WndProc.
+    // Refer to PostThreadMessage in the Windows API documentation for more information.
     inline BOOL CWinThread::PostThreadMessage(UINT msg, WPARAM wparam, LPARAM lparam) const
     {
         assert(m_thread);
@@ -284,6 +287,7 @@ namespace Win32xx
     }
 
     // Resumes a thread that has been suspended, or created with the CREATE_SUSPENDED flag.
+    // Refer to ResumeThread in the Windows API documentation for more information.
     inline DWORD CWinThread::ResumeThread() const
     {
         assert(m_thread);
@@ -294,7 +298,7 @@ namespace Win32xx
     // accelWnd is the window handle for translated messages.
     inline void CWinThread::SetAccelerators(HACCEL accel, HWND accelWnd)
     {
-		m_accelWnd = accelWnd;
+        m_accelWnd = accelWnd;
         m_accel = accel;
     }
 
@@ -309,6 +313,7 @@ namespace Win32xx
     // Sets the priority of this thread. The nPriority parameter can
     // be -7, -6, -5, -4, -3, 3, 4, 5, or 6 or other values permitted
     // by the SetThreadPriority Windows API function.
+    // Refer to SetThreadPriority in the Windows API documentation for more information.
     inline BOOL CWinThread::SetThreadPriority(int priority) const
     {
         assert(m_thread);
@@ -316,6 +321,7 @@ namespace Win32xx
     }
 
     // Suspends this thread. Use ResumeThread to resume the thread.
+    // Refer to SuspendThread in the Windows API documentation for more information.
     inline DWORD CWinThread::SuspendThread() const
     {
         assert(m_thread);
@@ -564,12 +570,14 @@ namespace Win32xx
     }
 
     // Loads the cursor resource from the resource script (resource.rc)
+    // Refer to LoadCursor in the Windows API documentation for more information.
     inline HCURSOR CWinApp::LoadCursor(LPCTSTR pResourceName) const
     {
         return ::LoadCursor(GetResourceHandle(), pResourceName);
     }
 
     // Loads the cursor resource from the resource script (resource.rc)
+    // Refer to LoadCursor in the Windows API documentation for more information.
     inline HCURSOR CWinApp::LoadCursor(int cursorID) const
     {
         return ::LoadCursor(GetResourceHandle(), MAKEINTRESOURCE (cursorID));
@@ -578,19 +586,22 @@ namespace Win32xx
     // Returns the handle of a standard cursor. Standard cursors include:
     // IDC_APPSTARTING, IDC_ARROW, IDC_CROSS, IDC_HAND, IDC_HELP, IDC_IBEAM, IDC_NO, IDC_SIZEALL,
     // IDC_SIZENESW, IDC_SIZENS, IDC_SIZENWSE, IDC_SIZEWE, IDC_UPARROW, IDC_WAIT
+    // Refer to LoadCursor in the Windows API documentation for more information.
     inline HCURSOR CWinApp::LoadStandardCursor(LPCTSTR pCursorName) const
     {
         return ::LoadCursor(0, pCursorName);
     }
 
-    // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values
+    // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values.
     // For other icon sizes, use the LoadImage windows API function.
+    // Refer to LoadIcon in the Windows API documentation for more information.
     inline HICON CWinApp::LoadIcon(LPCTSTR pResourceName) const
     {
         return ::LoadIcon(GetResourceHandle(), pResourceName);
     }
 
-    // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values
+    // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values.
+    // Refer to LoadIcon in the Windows API documentation for more information.
     inline HICON CWinApp::LoadIcon(int iconID) const
     {
         return ::LoadIcon(GetResourceHandle(), MAKEINTRESOURCE (iconID));
@@ -599,6 +610,7 @@ namespace Win32xx
     // Returns the handle of a standard Icon. Standard Icons include:
     // IDI_APPLICATION, IDI_ASTERISK, IDI_ERROR, IDI_EXCLAMATION,
     // IDI_HAND, IDI_INFORMATION, IDI_QUESTION, IDI_WARNING
+    // Refer to LoadIcon in the Windows API documentation for more information.
     inline HICON CWinApp::LoadStandardIcon(LPCTSTR pIconName) const
     {
         return ::LoadIcon(0, pIconName);
@@ -610,6 +622,7 @@ namespace Win32xx
     // fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE,
     // LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
     // Ideally the image should be destroyed unless it is loaded with LR_SHARED.
+    // Refer to LoadImage in the Windows API documentation for more information.
     inline HANDLE CWinApp::LoadImage(LPCTSTR pResourceName, UINT type, int cx, int cy, UINT flags) const
     {
         return ::LoadImage(GetResourceHandle(), pResourceName, type, cx, cy, flags);
@@ -621,6 +634,7 @@ namespace Win32xx
     // fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE,
     // LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
     // Ideally the image should be destroyed unless it is loaded with LR_SHARED.
+    // Refer to LoadImage in the Windows API documentation for more information.
     inline HANDLE CWinApp::LoadImage(int imageID, UINT type, int cx, int cy, UINT flags) const
     {
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
@@ -672,6 +686,7 @@ namespace Win32xx
     // Note:The cursor will be set to the window's class cursor (if one is set) each time the
     // mouse is moved over the window. You can specify different cursors for different
     // conditions while processing WM_SETCURSOR.
+    // Refer to SetCursor in the Windows API documentation for more information.
     inline HCURSOR CWinApp::SetCursor(HCURSOR cursor) const
     {
         return ::SetCursor(cursor);

@@ -151,10 +151,11 @@ namespace Win32xx
     }
 
     // Closes the file associated with this object. Closed file can no longer be read or written to.
+    // Refer to CloseHandle in the Windows API documentation for more information.
     inline void CFile::Close()
     {
-		m_fileName.Empty();
-		m_filePath.Empty();
+        m_fileName.Empty();
+        m_filePath.Empty();
 
         if (m_file != INVALID_HANDLE_VALUE)
         {
@@ -169,6 +170,7 @@ namespace Win32xx
     }
 
     // Causes any remaining data in the file buffer to be written to the file.
+    // Refer to FlushFileBuffers in the Windows API documentation for more information.
     inline void CFile::Flush()
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -233,6 +235,7 @@ namespace Win32xx
     // Returns the string that the system would use to display the file name to
     // the user. The string might or might not contain the filename's extension
     // depending on user settings.
+    // Refer to GetFileTitle in the Windows API documentation for more information.
     inline CString CFile::GetFileTitle() const
     {
         CString fileTitle;
@@ -247,6 +250,7 @@ namespace Win32xx
     }
 
     // Returns the length of the file in bytes.
+    // Refer to SetFilePointer in the Windows API documentation for more information.
     inline ULONGLONG CFile::GetLength() const
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -263,6 +267,7 @@ namespace Win32xx
     }
 
     // Returns the current value of the file pointer, which can be used in subsequent calls to Seek.
+    // Refer to SetFilePointer in the Windows API documentation for more information.
     inline ULONGLONG CFile::GetPosition() const
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -276,6 +281,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
     // Locks a range of bytes in and open file.
+    // Refer to LockFile in the Windows API documentation for more information.
     inline void CFile::LockRange(ULONGLONG pos, ULONGLONG count)
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -304,10 +310,11 @@ namespace Win32xx
     //  shareDenyWrite  Denies write access to all others.
     //  shareDenyRead   Denies read access to all others.
     //  shareDenyNone   No sharing restrictions.
+    // Refer to CreateFile in the Windows API documentation for more information.
     inline void CFile::Open(LPCTSTR pFileName, UINT openFlags)
     {
         if (m_file != INVALID_HANDLE_VALUE)
-			Close();
+            Close();
 
         DWORD access = 0;
         switch (openFlags & 0xF00)
@@ -353,6 +360,7 @@ namespace Win32xx
     }
 
     // Reads from the file, storing the contents in the specified buffer.
+    // Refer to ReadFile in the Windows API documentation for more information.
     inline UINT CFile::Read(void* pBuf, UINT count)
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -369,6 +377,7 @@ namespace Win32xx
     }
 
     // Renames the specified file.
+    // Refer to MoveFile in the Windows API documentation for more information.
     inline void CFile::Rename(LPCTSTR pOldName, LPCTSTR pNewName)
     {
         if (!::MoveFile(pOldName, pNewName))
@@ -376,6 +385,7 @@ namespace Win32xx
     }
 
     // Deletes the specified file.
+    // Refer to DeleteFile in the Windows API documentation for more information.
     inline void CFile::Remove(LPCTSTR pFileName)
     {
         if (!::DeleteFile(pFileName))
@@ -384,6 +394,7 @@ namespace Win32xx
 
     // Positions the current file pointer.
     // Permitted values for method are: FILE_BEGIN, FILE_CURRENT, or FILE_END.
+    // Refer to SetFilePointer in the Windows API documentation for more information.
     inline ULONGLONG CFile::Seek(LONGLONG seekTo, UINT method)
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -399,6 +410,7 @@ namespace Win32xx
     }
 
     // Sets the current file pointer to the beginning of the file.
+    // Refer to Seek in the Windows API documentation for more information.
     inline void CFile::SeekToBegin()
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -406,6 +418,7 @@ namespace Win32xx
     }
 
     // Sets the current file pointer to the end of the file.
+    // Refer to Seek in the Windows API documentation for more information.
     inline ULONGLONG CFile::SeekToEnd()
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -416,6 +429,7 @@ namespace Win32xx
 
     // Assigns the specified full file path to this object.
     // Call this function if the file path is not supplied when the CFile is constructed.
+    // Note: this function does not open or create the specified file.
     inline void CFile::SetFilePath(LPCTSTR pFileName)
     {
         LPTSTR pShortFileName = NULL;
@@ -438,6 +452,7 @@ namespace Win32xx
 
 
     // Changes the length of the file to the specified value.
+    // Refer to SetEndOfFile in the Windows API documentation for more information.
     inline void CFile::SetLength(ULONGLONG length)
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -450,6 +465,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
     // Unlocks a range of bytes in an open file.
+    // Refer to UnlockFile in the Windows API documentation for more information.
     inline void CFile::UnlockRange(ULONGLONG pos, ULONGLONG count)
     {
         assert(m_file != INVALID_HANDLE_VALUE);
@@ -467,6 +483,7 @@ namespace Win32xx
 
 
     // Writes the specified buffer to the file.
+    // Refer to WriteFile in the Windows API documentation for more information.
     inline void CFile::Write(const void* pBuf, UINT count)
     {
         assert(m_file != INVALID_HANDLE_VALUE);

@@ -331,7 +331,7 @@ namespace Win32xx
         return pCommonDlg->DialogProc(msg, wparam, lparam);
     }
 
-	
+    
     /////////////////////////////////////////
     // Definitions for the CColorDialog class
     //
@@ -612,7 +612,7 @@ namespace Win32xx
         int ok = (m_isOpenFileDialog ? ::GetOpenFileName(&m_ofn) : ::GetSaveFileName(&m_ofn));
         m_fileName.ReleaseBuffer(m_ofn.nMaxFile);
         m_ofn.lpstrFile = const_cast<LPTSTR>(m_fileName.c_str());
-		m_wnd = 0;
+        m_wnd = 0;
 
         // the result of the file choice box is processed here:
         if (!ok)
@@ -1418,7 +1418,7 @@ namespace Win32xx
 
         m_styleName.ReleaseBuffer();
         m_cf.lpszStyle = const_cast<LPTSTR>(m_styleName.c_str());
-		m_wnd = 0;
+        m_wnd = 0;
 
         // process the result of the font choice box:
         if (!ok)

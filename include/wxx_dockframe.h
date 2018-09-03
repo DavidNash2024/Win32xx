@@ -171,7 +171,7 @@ namespace Win32xx
     {
         LRESULT result = CFrameT<CDocker>::OnNotify(wparam, lparam);
         if (result == 0)
-			result = CDocker::OnNotify(wparam, lparam);
+            result = CDocker::OnNotify(wparam, lparam);
 
         return result;
     }

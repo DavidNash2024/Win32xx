@@ -212,7 +212,7 @@ namespace Win32xx
     }
 
     // Simulates the action of a button click in the Task Dialog.
-	// Refer to TDM_CLICK_BUTTON in the Windows API documentation for more information.
+    // Refer to TDM_CLICK_BUTTON in the Windows API documentation for more information.
     inline void CTaskDialog::ClickButton(int buttonID) const
     {
         assert(GetHwnd());
@@ -220,7 +220,7 @@ namespace Win32xx
     }
 
     // Simulates the action of a radio button click in the TaskDialog.
-	// Refer to TDM_CLICK_RADIO_BUTTON in the Windows API documentation for more information.
+    // Refer to TDM_CLICK_RADIO_BUTTON in the Windows API documentation for more information.
     inline void CTaskDialog::ClickRadioButton(int radioButtonID) const
     {
         assert(GetHwnd());
@@ -228,7 +228,7 @@ namespace Win32xx
     }
 
     // Creates and displays the Task Dialog.
-	// Refer to TaskDialogIndirect in the Windows API documentation for more information.
+    // Refer to TaskDialogIndirect in the Windows API documentation for more information.
     inline LRESULT CTaskDialog::DoModal(HWND parent /* = NULL */)
     {
         assert (GetHwnd() == NULL);
@@ -255,7 +255,7 @@ namespace Win32xx
             radioButtons.push_back(tb);
         }
 
-		m_wnd = 0;
+        m_wnd = 0;
 
         // Fill the TASKDIALOGCONFIG struct.
         m_tc.cbSize = sizeof(m_tc);
@@ -282,7 +282,7 @@ namespace Win32xx
 
         ::FreeLibrary(comCtl);
         pTLSData->pWnd = NULL;
-		m_wnd = 0;
+        m_wnd = 0;
         Reset();
 
         if (result != S_OK)
@@ -300,7 +300,7 @@ namespace Win32xx
     }
 
     // Adds a shield icon to indicate that the button's action requires elevated privileges.
-	// Refer to TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE in the Windows API documentation for more information.
+    // Refer to TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE in the Windows API documentation for more information.
     inline void CTaskDialog::ElevateButton(int buttonID, BOOL isElevated) const
     {
         assert(GetHwnd());
@@ -308,7 +308,7 @@ namespace Win32xx
     }
 
     // Enables or disables a push button in the TaskDialog.
-	// Refer to TDM_ENABLE_BUTTON in the Windows API documentation for more information.
+    // Refer to TDM_ENABLE_BUTTON in the Windows API documentation for more information.
     inline void CTaskDialog::EnableButton(int buttonID, BOOL isEnabled) const
     {
         assert(GetHwnd());
@@ -316,7 +316,7 @@ namespace Win32xx
     }
 
     // Enables or disables a radio button in the TaskDialog.
-	// Refer to TDM_ENABLE_RADIO_BUTTON in the Windows API documentation for more information.
+    // Refer to TDM_ENABLE_RADIO_BUTTON in the Windows API documentation for more information.
     inline void CTaskDialog::EnableRadioButton(int radioButtonID, BOOL isEnabled) const
     {
         assert(GetHwnd());
@@ -382,7 +382,7 @@ namespace Win32xx
     }
 
     // Replaces the information displayed by the task dialog.
-	// Refer to TDM_NAVIGATE_PAGE in the Windows API documentation for more information.
+    // Refer to TDM_NAVIGATE_PAGE in the Windows API documentation for more information.
     inline void CTaskDialog::NavigateTo(CTaskDialog& taskDialog) const
     {
         assert(GetHwnd());
@@ -498,7 +498,7 @@ namespace Win32xx
     }
 
     // Sets the task dialog's primary content.
-	// Refer to TDM_SET_ELEMENT_TEXT in the Windows API documentation for more information.
+    // Refer to TDM_SET_ELEMENT_TEXT in the Windows API documentation for more information.
     inline void CTaskDialog::SetContent(LPCTSTR pContent)
     {
         m_content = FillString(pContent);
@@ -532,7 +532,7 @@ namespace Win32xx
     }
 
     // Sets the text in the expandable area of the Task Dialog.
-	// Refer to TDM_SET_ELEMENT_TEXT in the Windows API documentation for more information.
+    // Refer to TDM_SET_ELEMENT_TEXT in the Windows API documentation for more information.
     inline void CTaskDialog::SetExpansionArea(LPCTSTR pExpandedInfo, LPCTSTR pExpandedLabel /* = _T("")*/, LPCTSTR pCollapsedLabel /* = _T("")*/)
     {
         m_expandedInformation = FillString(pExpandedInfo);
@@ -549,7 +549,7 @@ namespace Win32xx
     }
 
     // Sets the icon that will be displayed in the Task Dialog's footer.
-	// Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
+    // Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
     inline void CTaskDialog::SetFooterIcon(HICON hFooterIcon)
     {
         m_tc.hFooterIcon = hFooterIcon;
@@ -565,7 +565,7 @@ namespace Win32xx
     // TD_INFORMATION_ICON  An icon consisting of a lowercase letter i in a circle appears in the task dialog.
     // TD_SHIELD_ICON       A shield icon appears in the task dialog.
     //  or a value passed via MAKEINTRESOURCE
-	// Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
+    // Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
     inline void CTaskDialog::SetFooterIcon(LPCTSTR pFooterIcon)
     {
         m_tc.pszFooterIcon = const_cast<LPCWSTR>(pFooterIcon);
@@ -575,7 +575,7 @@ namespace Win32xx
     }
 
     // Sets the text that will be displayed in the Task Dialog's footer.
-	// Refer to TDM_SET_ELEMENT_TEXT in the Windows API documentation for more information.
+    // Refer to TDM_SET_ELEMENT_TEXT in the Windows API documentation for more information.
     inline void CTaskDialog::SetFooterText(LPCTSTR pFooter)
     {
         m_footer = FillString(pFooter);
@@ -586,7 +586,7 @@ namespace Win32xx
     }
 
     // Sets Task Dialog's main icon.
-	// Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
+    // Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
     inline void CTaskDialog::SetMainIcon(HICON mainIcon)
     {
         m_tc.hMainIcon = mainIcon;
@@ -601,7 +601,7 @@ namespace Win32xx
     // TD_WARNING_ICON      An exclamation-point icon appears in the task dialog.
     // TD_INFORMATION_ICON  An icon consisting of a lowercase letter i in a circle appears in the task dialog.
     // TD_SHIELD_ICON       A shield icon appears in the task dialog.
-	// Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
+    // Refer to TDM_UPDATE_ICON in the Windows API documentation for more information.
     inline void CTaskDialog::SetMainIcon(LPCTSTR pMainIcon)
     {
         m_tc.pszMainIcon = const_cast<LPCWSTR>(pMainIcon);
@@ -611,7 +611,7 @@ namespace Win32xx
     }
 
     // Sets the Task Dialog's main instruction text.
-	// Refer to TDM_SET_ELEMENT_TEXT in the Windows API documentation for more information.
+    // Refer to TDM_SET_ELEMENT_TEXT in the Windows API documentation for more information.
     inline void CTaskDialog::SetMainInstruction(LPCTSTR pMainInstruction)
     {
         m_mainInstruction = FillString(pMainInstruction);
@@ -633,7 +633,7 @@ namespace Win32xx
     }
 
     // Starts and stops the marquee display of the progress bar, and sets the speed of the marquee.
-	// Refer to TDM_SET_PROGRESS_BAR_MARQUEE in the Windows API documentation for more information.
+    // Refer to TDM_SET_PROGRESS_BAR_MARQUEE in the Windows API documentation for more information.
     inline void CTaskDialog::SetProgressBarMarquee(BOOL isEnabled /* = TRUE*/, int marqueeSpeed /* = 0*/) const
     {
         assert(GetHwnd());
@@ -641,7 +641,7 @@ namespace Win32xx
     }
 
     // Sets the current position for a progress bar.
-	// Refer to TDM_SET_PROGRESS_BAR_POS in the Windows API documentation for more information.
+    // Refer to TDM_SET_PROGRESS_BAR_POS in the Windows API documentation for more information.
     inline void CTaskDialog::SetProgressBarPosition(int progressPos) const
     {
         assert(GetHwnd());
@@ -649,7 +649,7 @@ namespace Win32xx
     }
 
     // Sets the minimum and maximum values for the hosted progress bar.
-	// Refer to TDM_SET_PROGRESS_BAR_RANGE in the Windows API documentation for more information.
+    // Refer to TDM_SET_PROGRESS_BAR_RANGE in the Windows API documentation for more information.
     inline void CTaskDialog::SetProgressBarRange(int minRange, int maxRange) const
     {
         assert(GetHwnd());
@@ -658,7 +658,7 @@ namespace Win32xx
 
     // Sets the current state of the progress bar. Possible states are:
     //  PBST_NORMAL, PBST_PAUSE, PBST_ERROR.
-	// Refer to TDM_SET_PROGRESS_BAR_STATE in the Windows API documentation for more information.
+    // Refer to TDM_SET_PROGRESS_BAR_STATE in the Windows API documentation for more information.
     inline void CTaskDialog::SetProgressBarState(int newState /* = PBST_NORMAL*/) const
     {
         assert(GetHwnd());
@@ -666,7 +666,7 @@ namespace Win32xx
     }
 
     // Simulates a click on the verification checkbox of the Task Dialog, if it exists.
-	// Refer to TDM_CLICK_VERIFICATION in the Windows API documentation for more information.
+    // Refer to TDM_CLICK_VERIFICATION in the Windows API documentation for more information.
     inline void CTaskDialog::SetVerificationCheckbox(BOOL isChecked) const
     {
         assert(GetHwnd());
@@ -787,7 +787,7 @@ namespace Win32xx
     // is not adjusted to accomodate the new text.
     // Possible eElement values are:
     // TDE_CONTENT, TDE_EXPANDED_INFORMATION, TDE_FOOTER, TDE_MAIN_INSTRUCTION.
-	// Refer to TDM_UPDATE_ELEMENT_TEXT in the Windows API documentation for more information.
+    // Refer to TDM_UPDATE_ELEMENT_TEXT in the Windows API documentation for more information.
     inline void CTaskDialog::UpdateElementText(TASKDIALOG_ELEMENTS element, LPCTSTR pNewText) const
     {
         assert(GetHwnd());
