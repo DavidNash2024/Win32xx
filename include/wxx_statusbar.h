@@ -115,6 +115,7 @@ namespace Win32xx
     // Sets the number of parts in a status window and the coordinate of the right edge of each part.
     // If an element of iPaneWidths is -1, the right edge of the corresponding part extends
     // to the border of the window.
+    // Refer to SB_SETPARTS in the Windows API documentation for more information.  
     inline BOOL CStatusBar::CreateParts(int parts, const int paneWidths[]) const
     {
         assert(IsWindow());
@@ -124,6 +125,7 @@ namespace Win32xx
     }
 
     // Retrieves a count of the parts in the status bar.
+    // Refer to SB_GETPARTS in the Windows API documentation for more information.      
     inline int CStatusBar::GetParts() const
     {
         assert(IsWindow());
@@ -131,6 +133,7 @@ namespace Win32xx
     }
 
     // Retrieves the icon for a part in the status bar.
+    // Refer to SB_GETICON in the Windows API documentation for more information.           
     inline HICON CStatusBar::GetPartIcon(int part) const
     {
         assert(IsWindow());
@@ -138,6 +141,7 @@ namespace Win32xx
     }
 
     // Retrieves the bounding rectangle of a part in the status bar.
+    // Refer to SB_GETRECT in the Windows API documentation for more information.               
     inline CRect CStatusBar::GetPartRect(int part) const
     {
         assert(IsWindow());
@@ -148,6 +152,7 @@ namespace Win32xx
     }
 
     // Retrieves the text from a part in the status bar.
+    // Refer to SB_GETTEXTLENGTH in the Windows API documentation for more information.                 
     inline CString CStatusBar::GetPartText(int part) const
     {
         assert(IsWindow());
@@ -163,6 +168,7 @@ namespace Win32xx
     }
 
     // Checks the status bar control to determine if it is in simple mode.
+    // Refer to SB_ISSIMPLE in the Windows API documentation for more information.                      
     inline BOOL CStatusBar::IsSimple() const
     {
         assert(IsWindow());
@@ -192,18 +198,20 @@ namespace Win32xx
     //SBT_OWNERDRAW     The text is drawn by the parent window.
     //SBT_POPOUT        The text is drawn with a border to appear higher than the plane of the window.
     //SBT_RTLREADING    The text will be displayed in the opposite direction to the text in the parent window.
+    // Refer to SB_SETTEXT in the Windows API documentation for more information.                           
     inline BOOL CStatusBar::SetPartText(int part, LPCTSTR pText, UINT style) const
     {
         assert(IsWindow());
 
         BOOL result = FALSE;
         if (static_cast<int>(SendMessage(SB_GETPARTS, 0, 0) >= part))
-			result = (SendMessage(SB_SETTEXT, (part | style), reinterpret_cast<LPARAM>(pText)) != 0);
+            result = (SendMessage(SB_SETTEXT, (part | style), reinterpret_cast<LPARAM>(pText)) != 0);
 
         return result;
     }
 
     // Sets the icon for a part in the status bar.
+    // Refer to SB_SETICON in the Windows API documentation for more information.                               
     inline BOOL CStatusBar::SetPartIcon(int part, HICON icon) const
     {
         assert(IsWindow());
@@ -247,6 +255,7 @@ namespace Win32xx
 
     // Specifies whether a status window displays simple text or displays all window parts
     // set by a previous SB_SETPARTS message.
+    // Refer to SB_SIMPLE in the Windows API documentation for more information.                                    
     inline void CStatusBar::SetSimple(BOOL isSimple /* = TRUE*/) const
     {
         assert(IsWindow());

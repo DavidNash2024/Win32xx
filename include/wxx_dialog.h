@@ -407,6 +407,7 @@ namespace Win32xx
 
     // Creates a modal dialog. A modal dialog box must be closed by the user
     // before the application continues.
+    // Refer to DialogBox and DialogBoxIndirect in the Windows API documentation for more information.
     inline INT_PTR CDialog::DoModal(HWND parent /* = 0 */)
     {
         assert( &GetApp() );        // Test if Win32++ has been started
@@ -415,7 +416,7 @@ namespace Win32xx
 
         INT_PTR result = 0;
         m_isModal=TRUE;
-		m_wnd = 0;
+        m_wnd = 0;
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp().SetTlsData();
@@ -443,7 +444,7 @@ namespace Win32xx
 
         // Tidy up
         pTLSData->pWnd = NULL;
-		m_wnd = 0;
+        m_wnd = 0;
 
     #ifndef _WIN32_WCE
         InterlockedDecrement(&pTLSData->dlgHooks);
@@ -465,6 +466,7 @@ namespace Win32xx
     }
 
     // Creates a modeless dialog.
+    // Refer to CreateDialog and CreateDialogIndirect in the Windows API documentation for more information.
     inline HWND CDialog::DoModeless(HWND parent /* = 0 */)
     {
         assert( &GetApp() );        // Test if Win32++ has been started
@@ -472,7 +474,7 @@ namespace Win32xx
         assert(m_pDlgTemplate || m_pResName);  // Dialog layout must be defined.
 
         m_isModal=FALSE;
-		m_wnd = 0;
+        m_wnd = 0;
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp().SetTlsData();
@@ -507,6 +509,7 @@ namespace Win32xx
     }
 
     // Ends a modal or modeless dialog.
+    // Refer to EndDialog in the Windows API documentation for more information.
     inline void CDialog::EndDialog(INT_PTR result)
     {
         assert(IsWindow());
@@ -572,6 +575,7 @@ namespace Win32xx
     }
 
     // Retrieves the identifier of the default push button control for the dialog.
+    // Refer to DM_GETDEFID in the Windows API documentation for more information.
     inline DWORD CDialog::GetDefID() const
     {
         assert(IsWindow());
@@ -584,6 +588,7 @@ namespace Win32xx
     }
 
     // Sets the keyboard focus to the specified control.
+    // Refer to WM_NEXTDLGCTL in the Windows API documentation for more information.
     inline void CDialog::GotoDlgCtrl(HWND control)
     {
         assert(IsWindow());
@@ -592,6 +597,7 @@ namespace Win32xx
     }
 
     // Converts the dialog box units to screen units (pixels).
+    // Refer to MapDialogRect in the Windows API documentation for more information.
     inline BOOL CDialog::MapDialogRect(RECT& rc) const
     {
         assert(IsWindow());
@@ -599,6 +605,7 @@ namespace Win32xx
     }
 
     // Sets the keyboard focus to the next dialog control.
+    // Refer to WM_NEXTDLGCTL in the Windows API documentation for more information.
     inline void CDialog::NextDlgCtrl() const
     {
         assert(IsWindow());
@@ -606,6 +613,7 @@ namespace Win32xx
     }
 
     // Sets the keyboard focus to the previous dialog control.
+    // Refer to WM_NEXTDLGCTL in the Windows API documentation for more information.
     inline void CDialog::PrevDlgCtrl() const
     {
         assert(IsWindow());
@@ -613,6 +621,7 @@ namespace Win32xx
     }
 
     // Changes the identifier of the default push button for a dialog box.
+    // Refer to DM_SETDEFID in the Windows API documentation for more information.
     inline void CDialog::SetDefID(UINT id)
     {
         assert(IsWindow());

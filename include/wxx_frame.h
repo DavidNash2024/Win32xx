@@ -3843,10 +3843,10 @@ namespace Win32xx
                 BOOL result;
                 if (index == maxMRUIndex)
                     // Replace the last MRU entry first
-					result = fileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, mii, FALSE);
+                    result = fileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, mii, FALSE);
                 else
                     // Insert the other MRU entries next
-					result = fileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, mii, FALSE);
+                    result = fileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, mii, FALSE);
 
                 if (!result)
                 {

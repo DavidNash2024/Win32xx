@@ -683,9 +683,9 @@ namespace Win32xx
             HCURSOR cursor;
             DWORD side = GetDocker().GetDockStyle() & 0xF;
             if ((side == DS_DOCKED_LEFT) || (side == DS_DOCKED_RIGHT))
-				cursor = GetApp().LoadCursor(IDW_SPLITH);
+                cursor = GetApp().LoadCursor(IDW_SPLITH);
             else
-				cursor = GetApp().LoadCursor(IDW_SPLITV);
+                cursor = GetApp().LoadCursor(IDW_SPLITV);
 
             if (cursor) SetCursor(cursor);
             else TRACE("**WARNING** Missing cursor resource for slider bar\n");
@@ -1364,7 +1364,7 @@ namespace Win32xx
 
             // Also forward WM_NOTIFY to the docker
             if (result == 0)
-				result = m_pDocker->SendMessage(msg, wparam, lparam);
+                result = m_pDocker->SendMessage(msg, wparam, lparam);
 
             return result;
         }
@@ -2011,33 +2011,33 @@ namespace Win32xx
         pDocker->SetDockSize(dockSize);
 
         // Issue TRACE warnings for any missing resources
-        HMODULE hMod= GetApp().GetResourceHandle();
+        HMODULE module= GetApp().GetResourceHandle();
 
         if (!(dockStyle & DS_NO_RESIZE))
         {
-            if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITH), RT_GROUP_CURSOR))
+            if (!FindResource(module, MAKEINTRESOURCE(IDW_SPLITH), RT_GROUP_CURSOR))
                 TRACE("**WARNING** Horizontal cursor resource missing\n");
-            if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITV), RT_GROUP_CURSOR))
+            if (!FindResource(module, MAKEINTRESOURCE(IDW_SPLITV), RT_GROUP_CURSOR))
                 TRACE("**WARNING** Vertical cursor resource missing\n");
         }
 
         if (!(dockStyle & DS_NO_UNDOCK))
         {
-            if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDCENTER), RT_BITMAP))
+            if (!FindResource(module, MAKEINTRESOURCE(IDW_SDCENTER), RT_BITMAP))
                 TRACE("**WARNING** Docking center bitmap resource missing\n");
-            if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDLEFT), RT_BITMAP))
+            if (!FindResource(module, MAKEINTRESOURCE(IDW_SDLEFT), RT_BITMAP))
                 TRACE("**WARNING** Docking left bitmap resource missing\n");
-            if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDRIGHT), RT_BITMAP))
+            if (!FindResource(module, MAKEINTRESOURCE(IDW_SDRIGHT), RT_BITMAP))
                 TRACE("**WARNING** Docking right bitmap resource missing\n");
-            if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDTOP), RT_BITMAP))
+            if (!FindResource(module, MAKEINTRESOURCE(IDW_SDTOP), RT_BITMAP))
                 TRACE("**WARNING** Docking top bitmap resource missing\n");
-            if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDBOTTOM), RT_BITMAP))
+            if (!FindResource(module, MAKEINTRESOURCE(IDW_SDBOTTOM), RT_BITMAP))
                 TRACE("**WARNING** Docking center bottom resource missing\n");
         }
 
         if (dockStyle & DS_DOCKED_CONTAINER)
         {
-            if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDMIDDLE), RT_BITMAP))
+            if (!FindResource(module, MAKEINTRESOURCE(IDW_SDMIDDLE), RT_BITMAP))
                 TRACE("**WARNING** Docking container bitmap resource missing\n");
         }
 
@@ -2434,7 +2434,7 @@ namespace Win32xx
         WORD hashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
         CBitmap hash;
         CBrush dithered;
-		hash.CreateBitmap(8, 8, 1, 1, hashPattern);
+        hash.CreateBitmap(8, 8, 1, 1, hashPattern);
         dithered.CreatePatternBrush(hash);
         dcBar.SelectObject(dithered);
 
@@ -2474,7 +2474,7 @@ namespace Win32xx
         {
             HWND parent = ::GetParent(test);
             if (parent == test) break;      // could be owned window, not parent
-			test = parent;
+            test = parent;
 
             CDocker* pDock = reinterpret_cast<CDocker*>(::SendMessage(test, UWM_GETCDOCKER, 0, 0));
             if (pDock)

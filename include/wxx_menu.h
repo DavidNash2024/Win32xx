@@ -298,6 +298,7 @@ namespace Win32xx
     }
 
     // Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.
+    // Refer to AppendMenu in the Windows API documentation for more information.
     inline BOOL CMenu::AppendMenu(UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR pNewItem /*= NULL*/)
     {
         assert(m_pData);
@@ -306,6 +307,7 @@ namespace Win32xx
     }
 
     // Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.
+    // Refer to AppendMenu in the Windows API documentation for more information.
     inline BOOL CMenu::AppendMenu(UINT flags, UINT_PTR newItemID, HBITMAP bitmap)
     {
         assert(m_pData);
@@ -347,6 +349,7 @@ namespace Win32xx
     }
 
     // Sets the state of the specified menu item's check-mark attribute to either selected or clear.
+    // Refer to CheckMenuItem in the Windows API documentation for more information.
     inline UINT CMenu::CheckMenuItem(UINT checkItemID, UINT check) const
     {
         assert(m_pData);
@@ -356,6 +359,7 @@ namespace Win32xx
 
     // Checks a specified menu item and makes it a radio item. At the same time, the function clears
     // all other menu items in the associated group and clears the radio-item type flag for those items.
+    // Refer to CheckMenuRadioItem in the Windows API documentation for more information.
     inline BOOL CMenu::CheckMenuRadioItem(UINT firstID, UINT lastID, UINT itemID, UINT flags) const
     {
         assert(m_pData);
@@ -364,6 +368,7 @@ namespace Win32xx
     }
 
     // Creates an empty menu.
+    // Refer to CreateMenu in the Windows API documentation for more information.
     inline void CMenu::CreateMenu() const
     {
         assert(m_pData);
@@ -374,6 +379,7 @@ namespace Win32xx
     }
 
     // Creates a drop-down menu, submenu, or shortcut menu. The menu is initially empty.
+    // Refer to CreatePopupMenu in the Windows API documentation for more information.
     inline void CMenu::CreatePopupMenu() const
     {
         assert(m_pData);
@@ -384,6 +390,7 @@ namespace Win32xx
     }
 
     // Deletes an item from the specified menu.
+    // Refer to DeleteMenu in the Windows API documentation for more information.
     inline BOOL CMenu::DeleteMenu(UINT pos, UINT flags) const
     {
         assert(m_pData);
@@ -392,6 +399,7 @@ namespace Win32xx
     }
 
     // Destroys the menu and frees any memory that the menu occupies.
+    // Refer to DestroyMenu in the Windows API documentation for more information.
     inline void CMenu::DestroyMenu()
     {
         assert(m_pData);
@@ -432,6 +440,7 @@ namespace Win32xx
     // The uEnable parameter must be a combination of either MF_BYCOMMAND or MF_BYPOSITION
     // and MF_ENABLED, MF_DISABLED, or MF_GRAYED.
     // MF_DISABLED and MF_GRAYED are different without XP themes, but the same with XP themes enabled.
+    // Refer to EnableMenuItem in the Windows API documentation for more information.
     inline UINT CMenu::EnableMenuItem(UINT enableItemID, UINT enable) const
     {
         assert(m_pData);
@@ -463,6 +472,7 @@ namespace Win32xx
     // Determines the default menu item.
     // The flags parameter specifies how the function searches for menu items.
     // This parameter can be zero or more of the following values: GMDI_GOINTOPOPUPS; GMDI_USEDISABLED.
+    // Refer to GetMenuDefaultItem in the Windows API documentation for more information.
     inline UINT CMenu::GetDefaultItem(UINT flags, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
@@ -471,6 +481,7 @@ namespace Win32xx
     }
 
     // Retrieves the Help context identifier associated with the menu.
+    // Refer to GetMenuContextHelpId in the Windows API documentation for more information.
     inline DWORD CMenu::GetMenuContextHelpId() const
     {
         assert(m_pData);
@@ -483,6 +494,7 @@ namespace Win32xx
 #if(WINVER >= 0x0500)
 
     // Retrieves the menu information.
+    // Refer to GetMenuInfo in the Windows API documentation for more information.
     inline BOOL CMenu::GetMenuInfo(MENUINFO& mi) const
     {
         assert(m_pData);
@@ -491,6 +503,7 @@ namespace Win32xx
     }
 
     // Sets the menu information from the specified MENUINFO structure.
+    // Refer to SetMenuInfo in the Windows API documentation for more information.
     inline BOOL CMenu::SetMenuInfo(const MENUINFO& mi) const
     {
         assert(m_pData);
@@ -502,6 +515,7 @@ namespace Win32xx
 
 
     // Retrieves the number of menu items.
+    // Refer to GetMenuItemCount in the Windows API documentation for more information.
     inline UINT CMenu::GetMenuItemCount() const
     {
         assert(m_pData);
@@ -509,7 +523,8 @@ namespace Win32xx
         return ::GetMenuItemCount(m_pData->menu);
     }
 
-    // Retrieves the menu item identifier of a menu item located at the specified position
+    // Retrieves the menu item identifier of a menu item located at the specified position.
+    // Refer to GetMenuItemID in the Windows API documentation for more information.
     inline UINT CMenu::GetMenuItemID(int pos) const
     {
         assert(m_pData);
@@ -518,6 +533,7 @@ namespace Win32xx
     }
 
     // retrieves information about the specified menu item.
+    // Refer to GetMenuItemInfo in the Windows API documentation for more information.
     inline BOOL CMenu::GetMenuItemInfo(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
@@ -528,6 +544,7 @@ namespace Win32xx
 
     // Retrieves the menu flags associated with the specified menu item.
     // Possible values for flags are: MF_BYCOMMAND (default) or MF_BYPOSITION.
+    // Refer to GetMenuState in the Windows API documentation for more information.
     inline UINT CMenu::GetMenuState(UINT id, UINT flags) const
     {
         assert(m_pData);
@@ -536,6 +553,7 @@ namespace Win32xx
     }
 
     // Copies the text string of the specified menu item into the specified buffer.
+    // Refer to GetMenuString in the Windows API documentation for more information.
     inline int CMenu::GetMenuString(UINT itemID, LPTSTR pString, int maxCount, UINT flags) const
     {
         assert(m_pData);
@@ -545,6 +563,7 @@ namespace Win32xx
     }
 
     // Copies the text string of the specified menu item into the specified buffer.
+    // Refer to GetMenuString in the Windows API documentation for more information.
     inline int CMenu::GetMenuString(UINT itemID, CString& stringRef, UINT flags) const
     {
         assert(m_pData);
@@ -555,6 +574,7 @@ namespace Win32xx
     }
 
     // Retrieves the CMenu object of a pop-up menu.
+    // Refer to GetSubMenu in the Windows API documentation for more information.
     inline CMenu CMenu::GetSubMenu(int pos) const
     {
         assert(m_pData);
@@ -567,6 +587,7 @@ namespace Win32xx
     }
 
     // Inserts a new menu item into a menu, moving other items down the menu.
+    // Refer to InsertMenu in the Windows API documentation for more information.
     inline BOOL CMenu::InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR pNewItem /*= NULL*/) const
     {
         assert(m_pData);
@@ -575,6 +596,7 @@ namespace Win32xx
     }
 
     // Inserts a new menu item into a menu, moving other items down the menu.
+    // Refer to InsertMenu in the Windows API documentation for more information.
     inline BOOL CMenu::InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP bitmap) const
     {
         assert(m_pData);
@@ -583,6 +605,7 @@ namespace Win32xx
     }
 
     // Inserts a new menu item at the specified position in the menu.
+    // Refer to InsertMenuItem in the Windows API documentation for more information.
     inline BOOL CMenu::InsertMenuItem(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
@@ -592,6 +615,7 @@ namespace Win32xx
     }
 
     // Inserts a popup menu item at the specified position in the menu.
+    // Refer to InsertMenu in the Windows API documentation for more information.
     inline BOOL CMenu::InsertPopupMenu(UINT pos, UINT flags, HMENU hPopupMenu, LPCTSTR pNewItem) const
     {
         assert(hPopupMenu);
@@ -606,6 +630,7 @@ namespace Win32xx
     }
 
     // Loads the menu from the specified windows resource.
+    // Refer to LoadMenu in the Windows API documentation for more information.
     inline BOOL CMenu::LoadMenu(LPCTSTR pResName) const
     {
         assert(m_pData);
@@ -617,6 +642,7 @@ namespace Win32xx
     }
 
     // Loads the menu from the specified windows resource.
+    // Refer to LoadMenu in the Windows API documentation for more information.
     inline BOOL CMenu::LoadMenu(UINT resID) const
     {
         assert(m_pData);
@@ -627,6 +653,7 @@ namespace Win32xx
     }
 
     // Loads the specified menu template and assigns it to this CMenu.
+    // Refer to LoadMenuIndirect in the Windows API documentation for more information.
     inline BOOL CMenu::LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate) const
     {
         assert(m_pData);
@@ -638,6 +665,7 @@ namespace Win32xx
     }
 
     // Changes an existing menu item. This function is used to specify the content, appearance, and behaviour of the menu item.
+    // Refer to ModifyMenu in the Windows API documentation for more information.
     inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR pNewItem /*= NULL*/) const
     {
         assert(m_pData);
@@ -646,6 +674,7 @@ namespace Win32xx
     }
 
     // Changes an existing menu item. This function is used to specify the content, appearance, and behaviour of the menu item.
+    // Refer to ModifyMenu in the Windows API documentation for more information.
     inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP bitmap) const
     {
         assert(m_pData);
@@ -654,6 +683,7 @@ namespace Win32xx
     }
 
     // Deletes a menu item or detaches a submenu from the menu.
+    // Refer to RemoveMenu in the Windows API documentation for more information.
     inline BOOL CMenu::RemoveMenu(UINT pos, UINT flags) const
     {
         assert(m_pData);
@@ -662,6 +692,7 @@ namespace Win32xx
     }
 
     //  sets the default menu item for the menu.
+    // Refer to SetMenuDefaultItem in the Windows API documentation for more information.
     inline BOOL CMenu::SetDefaultItem(UINT item, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
@@ -670,6 +701,7 @@ namespace Win32xx
     }
 
     // Associates a Help context identifier with the menu.
+    // Refer to SetMenuContextHelpId in the Windows API documentation for more information.
     inline BOOL CMenu::SetMenuContextHelpId(DWORD contextHelpID) const
     {
         assert(m_pData);
@@ -678,6 +710,7 @@ namespace Win32xx
     }
 
     // Associates the specified bitmap with a menu item.
+    // Refer to SetMenuItemBitmaps in the Windows API documentation for more information.
     inline BOOL CMenu::SetMenuItemBitmaps(UINT pos, UINT flags, HBITMAP unchecked, HBITMAP checked) const
     {
         assert(m_pData);
@@ -686,6 +719,7 @@ namespace Win32xx
     }
 
     // Changes information about a menu item.
+    // Refer to SetMenuItemInfo in the Windows API documentation for more information.
     inline BOOL CMenu::SetMenuItemInfo(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
@@ -695,6 +729,7 @@ namespace Win32xx
     }
 
     // Displays a shortcut menu at the specified location and tracks the selection of items on the menu.
+    // Refer to TrackPopupMenu in the Windows API documentation for more information.
     inline BOOL CMenu::TrackPopupMenu(UINT flags, int x, int y, HWND wnd, LPCRECT pRect /*= 0*/) const
     {
         assert(m_pData);
@@ -703,6 +738,7 @@ namespace Win32xx
     }
 
     // Displays a shortcut menu at the specified location and tracks the selection of items on the shortcut menu.
+    // Refer to TrackPopupMenuEx in the Windows API documentation for more information.
     inline BOOL CMenu::TrackPopupMenuEx(UINT flags, int x, int y, HWND wnd, LPTPMPARAMS pTPMP) const
     {
         assert(m_pData);

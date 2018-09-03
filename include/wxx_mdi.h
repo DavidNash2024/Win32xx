@@ -242,7 +242,7 @@ namespace Win32xx
     {
         assert(NULL != pMDIChild); // Cannot add Null MDI Child
 
-		m_mdiChildren.push_back(MDIChildPtr(pMDIChild));
+        m_mdiChildren.push_back(MDIChildPtr(pMDIChild));
         pMDIChild->Create(GetMDIClient());
 
         return pMDIChild;
@@ -346,6 +346,7 @@ namespace Win32xx
     }
 
     // Returns TRUE if a MDI child is maximized
+    // Refer to WM_MDIGETACTIVE in the Windows API documentation for more information.
     template <class T>
     inline BOOL CMDIFrameT<T>::IsMDIChildMaxed() const
     {
@@ -357,6 +358,7 @@ namespace Win32xx
     // Arranges the MDI children in a cascade formation.
     // Possible values for nType are:
     // MDITILE_SKIPDISABLED Prevents disabled MDI child windows from being cascaded.
+    // Refer to WM_MDICASCADE in the Windows API documentation for more information.
     template <class T>
     inline void CMDIFrameT<T>::MDICascade(int type /* = 0*/) const
     {
@@ -365,6 +367,7 @@ namespace Win32xx
     }
 
     // Re-arranges the icons for minimized MDI children.
+    // Refer to WM_MDIICONARRANGE in the Windows API documentation for more information.
     template <class T>
     inline void CMDIFrameT<T>::MDIIconArrange() const
     {
@@ -373,6 +376,7 @@ namespace Win32xx
     }
 
     // Maximize the MDI child.
+    // Refer to WM_MDIMAXIMIZE in the Windows API documentation for more information.
     template <class T>
     inline void CMDIFrameT<T>::MDIMaximize() const
     {
@@ -382,6 +386,7 @@ namespace Win32xx
     }
 
     // Activates the next MDI child.
+    // Refer to WM_MDINEXT in the Windows API documentation for more information.
     template <class T>
     inline void CMDIFrameT<T>::MDINext() const
     {
@@ -391,6 +396,7 @@ namespace Win32xx
     }
 
     // Activates the previous MDI child.
+    // Refer to WM_MDINEXT in the Windows API documentation for more information.
     template <class T>
     inline void CMDIFrameT<T>::MDIPrev() const
     {
@@ -400,6 +406,7 @@ namespace Win32xx
     }
 
     // Restores a mimimized MDI child.
+    // Refer to WM_MDIRESTORE in the Windows API documentation for more information.
     template <class T>
     inline void CMDIFrameT<T>::MDIRestore() const
     {
@@ -413,11 +420,10 @@ namespace Win32xx
     // MDITILE_HORIZONTAL   Tiles MDI child windows so that one window appears above another.
     // MDITILE_SKIPDISABLED Prevents disabled MDI child windows from being tiled.
     // MDITILE_VERTICAL     Tiles MDI child windows so that one window appears beside another.
+    // Refer to WM_MDITILE in the Windows API documentation for more information.
     template <class T>
     inline void CMDIFrameT<T>::MDITile(int type /* = 0*/) const
     {
-
-
         assert(T::IsWindow());
         GetMDIClient().SendMessage(WM_MDITILE, type, 0);
     }
@@ -601,7 +607,7 @@ namespace Win32xx
         {
             if ((*v)->GetHwnd() == wnd)
             {
-				m_mdiChildren.erase(v);
+                m_mdiChildren.erase(v);
                 break;
             }
         }
@@ -630,6 +636,7 @@ namespace Win32xx
     }
 
     // Activates the specified MDI child.
+    // Refer to WM_MDIACTIVATE in the Windows API documentation for more information.
     template <class T>
     inline void CMDIFrameT<T>::SetActiveMDIChild(CMDIChild* pChild)
     {
@@ -859,24 +866,28 @@ namespace Win32xx
     }
 
     // Activate a MDI child.
+    // Refer to WM_MDIACTIVATE in the Windows API documentation for more information.
     inline void CMDIChild::MDIActivate() const
     {
         GetParent().SendMessage(WM_MDIACTIVATE, reinterpret_cast<WPARAM>(GetHwnd()), 0);
     }
 
     // Destroy a MDI child.
+    // Refer to WM_MDIDESTROY in the Windows API documentation for more information.
     inline void CMDIChild::MDIDestroy() const
     {
         GetParent().SendMessage(WM_MDIDESTROY, reinterpret_cast<WPARAM>(GetHwnd()), 0);
     }
 
     // Maximize a MDI child.
+    // Refer to WM_MDIMAXIMIZE in the Windows API documentation for more information.
     inline void CMDIChild::MDIMaximize() const
     {
         GetParent().SendMessage(WM_MDIMAXIMIZE, reinterpret_cast<WPARAM>(GetHwnd()), 0);
     }
 
     // Restore a MDI child.
+    // Refer to WM_MDIRESTORE in the Windows API documentation for more information.
     inline void CMDIChild::MDIRestore() const
     {
         GetParent().SendMessage(WM_MDIRESTORE, reinterpret_cast<WPARAM>(GetHwnd()), 0);

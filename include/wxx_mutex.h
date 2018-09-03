@@ -150,7 +150,7 @@ namespace Win32xx
 
 
     /////////////////////////////////////////
-    // CMutex member function definitions	
+    // CMutex member function definitions   
 
     // Creates a named or unnamed mutex.
     // Parameters:
@@ -171,7 +171,7 @@ namespace Win32xx
 
 
     /////////////////////////////////////////
-    // CMutex member function definitions	
+    // CMutex member function definitions   
 
     // Creates a named or unnamed semaphore.
     // Parameters:

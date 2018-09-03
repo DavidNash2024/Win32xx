@@ -161,6 +161,7 @@ namespace Win32xx
     //  file name that can contain the '?' and '*' wildcard characters.
     //  A name of "*.*" is used if no name is specified.
     //  Returns TRUE if a matching file was found, FALSE otherwise.
+    //  Refer to FindFirstFile in the Windows API documentation for more information.
     inline BOOL CFileFind::FindFirstFile(LPCTSTR pFileSearch /* = NULL */)
     {
         // Reset the this to default
@@ -193,6 +194,7 @@ namespace Win32xx
 
     //  Finds the next file or directory that matches the string specified in FindFirstFile.
     //  Return TRUE if the next file was found, FALSE on failure.
+    //  Refer to FindNextFile in the Windows API documentation for more information.
     inline BOOL CFileFind::FindNextFile()
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
@@ -232,6 +234,7 @@ namespace Win32xx
 
     //  Returns the full path of the found file, including the directory,
     //  file title, and extension.
+    //  Refer to GetFullPathName in the Windows API documentation for more information.
     inline CString CFileFind::GetFilePath() const
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);

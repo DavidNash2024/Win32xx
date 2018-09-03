@@ -194,6 +194,7 @@ namespace Win32xx
     }
 
     // Disables the Cancel button and changes the text of the OK button to "Close."
+    // Refer to PSM_CANCELTOCLOSE in the Windows API documentation for more information.
     inline void CPropertyPage::CancelToClose() const
     {
         assert(IsWindow());
@@ -415,6 +416,7 @@ namespace Win32xx
     // Set wparam and lparam to values you want passed to the property pages.
     // Returns the non-zero value from a page in the property sheet, or zero if no page
     // returns a non-zero value.
+    // Refer to PSM_QUERYSIBLINGS in the Windows API documentation for more information.
     inline LRESULT CPropertyPage::QuerySiblings(WPARAM wparam, LPARAM lparam) const
     {
         assert(IsWindow());
@@ -422,6 +424,7 @@ namespace Win32xx
     }
 
     // The property sheet will enable the Apply button if IsChanged is TRUE.
+    // Refer to PSM_CHANGED and PSM_UNCHANGED in the Windows API documentation for more information.
     inline void CPropertyPage::SetModified(BOOL isChanged) const
     {
         assert(IsWindow());
@@ -620,6 +623,7 @@ namespace Win32xx
     }
 
     // Creates a modeless Property Sheet
+    // Refer to PropertySheet in the Windows API documentation for more information.
     inline HWND CPropertySheet::Create(HWND parent /*= 0*/)
     {
         assert( &GetApp() );
@@ -645,6 +649,7 @@ namespace Win32xx
     }
 
     // Display either a modal or modeless property sheet, depending on the PROPSHEETHEADER flags.
+    // Refer to PropertySheet in the Windows API documentation for more information.
     inline INT_PTR CPropertySheet::CreatePropertySheet(LPCPROPSHEETHEADER pPSH)
     {
         assert( &GetApp() );
@@ -653,7 +658,7 @@ namespace Win32xx
         assert(!IsWindow());
 
         INT_PTR ipResult = 0;
-		m_wnd = 0;
+        m_wnd = 0;
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp().SetTlsData();
@@ -696,6 +701,7 @@ namespace Win32xx
     }
 
     // Create a modal property sheet
+    // Refer to PropertySheet in the Windows API documentation for more information.
     inline int CPropertySheet::DoModal()
     {
         assert( &GetApp() );
@@ -715,6 +721,7 @@ namespace Win32xx
     }
 
     // Retrieves the property sheets active property page.
+    // Refer to PSM_GETCURRENTPAGEHWND in the Windows API documentation for more information.
     inline CPropertyPage* CPropertySheet::GetActivePage() const
     {
         assert(IsWindow());
@@ -750,6 +757,7 @@ namespace Win32xx
     }
 
     // Returns the handle to the Property Sheet's tab control
+    // Refer to PSM_GETTABCONTROL in the Windows API documentation for more information.
     inline HWND CPropertySheet::GetTabControl() const
     {
         assert(IsWindow());
@@ -803,6 +811,7 @@ namespace Win32xx
     }
 
     // Activates the specified property page.
+    // Refer to PSM_SETCURSEL in the Windows API documentation for more information.
     inline BOOL CPropertySheet::SetActivePage(int page)
     {
         assert(IsWindow());

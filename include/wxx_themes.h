@@ -113,12 +113,12 @@ namespace Win32xx
         // Test if Windows version is XP or greater
         if (GetWinVersion() >= 2501)
         {
-            HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+            HMODULE module = ::LoadLibrary(_T("uxtheme.dll"));
 
-            if(hMod != 0)
+            if(module != 0)
             {
                 // Declare pointers to IsCompositionActive function
-                FARPROC pIsCompositionActive = ::GetProcAddress(hMod, "IsCompositionActive");
+                FARPROC pIsCompositionActive = ::GetProcAddress(module, "IsCompositionActive");
 
                 if(pIsCompositionActive)
                 {
@@ -127,7 +127,7 @@ namespace Win32xx
                         IsAeroThemed = TRUE;
                     }
                 }
-                ::FreeLibrary(hMod);
+                ::FreeLibrary(module);
             }
         }
 

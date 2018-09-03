@@ -262,6 +262,7 @@ namespace Win32xx
     }
 
     // Returns the path of the selected folder.
+    // Refer to SHGetPathFromIDList in the Windows API documentation for more information.
     inline CString CFolderDialog::GetFolderPath() const
     {
         CString str;
@@ -312,18 +313,21 @@ namespace Win32xx
     }
 
     // Specifies the path of a folder to expand in the Browse dialog box.
+    // Refer to BFFM_SETEXPANDED in the Windows API documentation for more information.
     inline void CFolderDialog::SetExpanded(LPCWSTR pPath)
     {
         SendMessage(BFFM_SETEXPANDED, TRUE, reinterpret_cast<LPARAM>(pPath));
     }
 
     // Specifies the path of a folder to expand in the Browse dialog box.
+    // Refer to BFFM_SETEXPANDED in the Windows API documentation for more information.
     inline void CFolderDialog::SetExpanded(LPITEMIDLIST pItemIDList)
     {
         SendMessage(BFFM_SETEXPANDED, FALSE, reinterpret_cast<LPARAM>(pItemIDList));
     }
 
     // Sets the text of the OK button.
+    // Refer to BFFM_SETOKTEXT in the Windows API documentation for more information.
     inline void CFolderDialog::SetOKText(LPCWSTR pText)
     {
         SendMessage(BFFM_SETOKTEXT, 0, reinterpret_cast<LPARAM>(pText));
@@ -336,12 +340,14 @@ namespace Win32xx
     }
 
     // Specifies the path of a folder to select.
+    // Refer to BFFM_SETSELECTION in the Windows API documentation for more information.
     inline void CFolderDialog::SetSelection(LPITEMIDLIST pItemIDList)
     {
         SendMessage(BFFM_SETSELECTION, FALSE, reinterpret_cast<LPARAM>(pItemIDList));
     }
 
     // Specifies the path of a folder to select.
+    // Refer to BFFM_SETSELECTION in the Windows API documentation for more information.
     inline void CFolderDialog::SetSelection(LPCTSTR pPath)
     {
         SendMessage(BFFM_SETSELECTION, TRUE, reinterpret_cast<LPARAM>(pPath));
@@ -349,6 +355,7 @@ namespace Win32xx
 
     // Sets the status text.
     // This is incompatible with the BIF_USENEWUI or BIF_NEWDIALOGSTYLE flags.
+    // Refer to BFFM_SETSTATUSTEXT in the Windows API documentation for more information.
     inline void CFolderDialog::SetStatusText(LPCTSTR pText)
     {
         SendMessage(BFFM_SETSTATUSTEXT, 0, reinterpret_cast<LPARAM>(pText));

@@ -740,11 +740,11 @@ namespace Win32xx
     inline CPageSetupDialog::CPageSetupDialog( DWORD flags /* = PSD_MARGINS */ )
     {
         ZeroMemory(&m_psd, sizeof(m_psd));
-		m_psd.Flags = flags;
+        m_psd.Flags = flags;
 
         // Enable the hook proc for the help button
         if (m_psd.Flags & PSD_SHOWHELP)
-			m_psd.Flags |= PSD_ENABLEPAGESETUPHOOK;
+            m_psd.Flags |= PSD_ENABLEPAGESETUPHOOK;
 
         SetParameters(m_psd);
     }
@@ -817,9 +817,9 @@ namespace Win32xx
         GetApp().UpdateDefaultPrinter();
 
         // Assign values to the PAGESETUPDLG structure
-		m_psd.hDevMode = GetApp().m_devMode;
-		m_psd.hDevNames = GetApp().m_devNames;
-		m_psd.hwndOwner = owner;
+        m_psd.hDevMode = GetApp().m_devMode;
+        m_psd.hDevNames = GetApp().m_devNames;
+        m_psd.hwndOwner = owner;
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp().SetTlsData();
@@ -852,8 +852,8 @@ namespace Win32xx
             ok = IDCANCEL;
         }
 
-		m_psd.hDevMode = 0;
-		m_psd.hDevNames = 0;
+        m_psd.hDevMode = 0;
+        m_psd.hDevNames = 0;
 
         return ok;
     }
@@ -952,18 +952,18 @@ namespace Win32xx
     // Set the parameters of the PAGESETUPDLG structure to sensible values
     inline void CPageSetupDialog::SetParameters(PAGESETUPDLG& psd)
     {
-		m_psd.lStructSize       = sizeof(m_psd);
-		m_psd.hwndOwner         = 0;            // Set this in DoModal
-		m_psd.Flags             = psd.Flags;
-		m_psd.ptPaperSize       = psd.ptPaperSize;
-		m_psd.rtMinMargin       = psd.rtMinMargin;
-		m_psd.rtMargin          = psd.rtMargin;
-		m_psd.hInstance         = GetApp().GetResourceHandle();
-		m_psd.lCustData         = psd.lCustData;
-		m_psd.lpfnPageSetupHook = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
-		m_psd.lpfnPagePaintHook = reinterpret_cast<LPCCHOOKPROC>(CPageSetupDialog::PaintHookProc);
-		m_psd.lpPageSetupTemplateName = psd.lpPageSetupTemplateName;
-		m_psd.hPageSetupTemplate = psd.hPageSetupTemplate;
+        m_psd.lStructSize       = sizeof(m_psd);
+        m_psd.hwndOwner         = 0;            // Set this in DoModal
+        m_psd.Flags             = psd.Flags;
+        m_psd.ptPaperSize       = psd.ptPaperSize;
+        m_psd.rtMinMargin       = psd.rtMinMargin;
+        m_psd.rtMargin          = psd.rtMargin;
+        m_psd.hInstance         = GetApp().GetResourceHandle();
+        m_psd.lCustData         = psd.lCustData;
+        m_psd.lpfnPageSetupHook = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+        m_psd.lpfnPagePaintHook = reinterpret_cast<LPCCHOOKPROC>(CPageSetupDialog::PaintHookProc);
+        m_psd.lpPageSetupTemplateName = psd.lpPageSetupTemplateName;
+        m_psd.hPageSetupTemplate = psd.hPageSetupTemplate;
     }
 
 }

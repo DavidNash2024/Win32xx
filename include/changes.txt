@@ -27,7 +27,7 @@ New Features and Enhancements
  - Relaxed restrictions on size of images for menu icons. This provides better 
     support for larger screen scaling available on windows 10 for DPI aware apps.
 
-* Updated CImageList	
+* Updated CImageList    
 
 
 Changes in detail
@@ -41,6 +41,7 @@ Added CSemaphore                                 class
 Added CBitmap::ConvertToDisabled                 member function
 Added CComboBox::GetEditCtrl                     member function
 Added CComboBox::GetLBCtrl                       member function
+Added CEdit::AppendText                          member function
 Added CFrameT::AddDisabledMenuImage              member function
 Added CFrameT::IsUsingStatusBar                  member function
 Added CFrameT::UseStatusBar                      member function
@@ -55,6 +56,7 @@ Added CImageList::SetDragCursorImage             member function
 Added CImageLIst::Write                          member function
 Added CResizer::SetMinRect                       member function
 Added CResizer::SetMaxRect                       member function
+Added CRichEdit::AppendText                      member function
 Added CSocket::StartAsync                        member function
 Added CWinThread::IsRunning                      member function
 

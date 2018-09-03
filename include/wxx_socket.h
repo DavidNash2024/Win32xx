@@ -682,8 +682,8 @@ namespace Win32xx
     {
         int result = ::send(m_socket, buf, len, flags);
         if (SOCKET_ERROR == result)
-			if (WSAGetLastError() != WSAEWOULDBLOCK)
-				TRACE(_T("Send failed\n"));
+            if (WSAGetLastError() != WSAEWOULDBLOCK)
+                TRACE(_T("Send failed\n"));
         return result;
     }
 
@@ -692,11 +692,11 @@ namespace Win32xx
     inline int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen) const
     {
         int result =  ::sendto(m_socket, buf, len, flags, to, tolen);
-		if (SOCKET_ERROR == result)
-		{
-			if (WSAGetLastError() != WSAEWOULDBLOCK)
-				TRACE(_T("SendTo failed\n"));
-		}
+        if (SOCKET_ERROR == result)
+        {
+            if (WSAGetLastError() != WSAEWOULDBLOCK)
+                TRACE(_T("SendTo failed\n"));
+        }
 
         return result;
     }
@@ -729,11 +729,11 @@ namespace Win32xx
             result = ::sendto(m_socket, send, len, flags, addrInfo->ai_addr, static_cast<int>(addrInfo->ai_addrlen) );
             if (result == SOCKET_ERROR )
             {
-				if (WSAGetLastError() != WSAEWOULDBLOCK)
-				{
-					TRACE("SendTo failed\n");
-					return result;
-				}
+                if (WSAGetLastError() != WSAEWOULDBLOCK)
+                {
+                    TRACE("SendTo failed\n");
+                    return result;
+                }
             }
 
             // Free the address information allocated by GetAddrInfo
@@ -750,11 +750,11 @@ namespace Win32xx
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
             result = ::sendto( m_socket, send, len, flags, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
-			if (SOCKET_ERROR != result)
-			{
-				if (WSAGetLastError() != WSAEWOULDBLOCK)
-					TRACE("SendTo failed\n");
-			}
+            if (SOCKET_ERROR != result)
+            {
+                if (WSAGetLastError() != WSAEWOULDBLOCK)
+                    TRACE("SendTo failed\n");
+            }
 
         }
 
