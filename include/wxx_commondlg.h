@@ -331,7 +331,7 @@ namespace Win32xx
         return pCommonDlg->DialogProc(msg, wparam, lparam);
     }
 
-
+    
     /////////////////////////////////////////
     // Definitions for the CColorDialog class
     //
@@ -592,7 +592,7 @@ namespace Win32xx
 
     // Display either a FileOpen or FileSave dialog, and allow the user to
     // select various options. An exception is thrown if the dialog isn't created.
-    // If the OFN_ALLOWMULTISELECT flag is used, the size of the buffer required
+    // If the OFN_ALLOWMULTISELECT flag is used, the size of the buffer required 
     // to hold the file names can be quite large. An exception is thrown if the
     // buffer size specified by m_OFN.nMaxFile turns out to be too small.
     // Use SetParamaters to set a larger size if required.
@@ -689,12 +689,12 @@ namespace Win32xx
 
         int bufferSize = MIN(MAX_PATH, m_ofn.nMaxFile - pos);
         CString strFile(m_ofn.lpstrFile + pos, bufferSize); // strFile can contain NULLs
-        size_t index = 0;
+        int Index = 0;
         if (pos == 0)
         {
-            index = strFile.Find(chDelimiter);
+            Index = strFile.Find(chDelimiter);
 
-            if ( (index == CString::npos) || (strFile.GetAt(++index) == _T('\0')))
+            if ( (Index < 0) || (strFile.GetAt(++Index) == _T('\0')))
             {
                 // Only one file selected. m_OFN.lpstrFile contains a single string
                 // consisting of the path and file name.
@@ -710,25 +710,25 @@ namespace Win32xx
         CString strPath = m_ofn.lpstrFile; // strPath is terminated by first NULL
         if (!IsExplorer)
         {
-            size_t delimiter = strPath.Find(chDelimiter);
+            int delimiter = strPath.Find(chDelimiter);
             strPath = strPath.Left(delimiter);
         }
 
         // Fill strFileName with the file name
-        CString strFileName = m_ofn.lpstrFile + pos + index;
+        CString strFileName = m_ofn.lpstrFile + pos + Index;
         if (!IsExplorer)
         {
-            size_t delimiter = strFileName.Find(chDelimiter);
-            if (delimiter != CString::npos)
+            int delimiter = strFileName.Find(chDelimiter);
+            if (delimiter > 0)
                 strFileName = strFileName.Left(delimiter);
         }
 
         // Update pos to point to the next file
         int nFileLen = lstrlen(strFileName);
-        if (strFile.GetAt(index + nFileLen + 1) == _T('\0'))
+        if (strFile.GetAt(Index + nFileLen + 1) == _T('\0'))
             pos = -1;
         else
-            pos = pos + index + nFileLen +1;
+            pos = pos + Index + nFileLen +1;
 
         if (!strPath.IsEmpty())
         {
@@ -945,7 +945,7 @@ namespace Win32xx
         if (pFilter)
         {
             CString str = pFilter;
-            if (str.Find(_T('|')) != CString::npos)
+            if (str.Find(_T('|')) >= 0)
             {
                 str.Replace(_T('|'), _T('\0'));
                 m_filter = str;

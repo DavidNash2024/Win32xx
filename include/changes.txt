@@ -27,13 +27,7 @@ New Features and Enhancements
  - Relaxed restrictions on size of images for menu icons. This provides better 
     support for larger screen scaling available on windows 10 for DPI aware apps.
 
-* Updated CImageList
-
-* Updated CString
-  - CString now uses size_t parameters instead of int arguments to provide better
-    Win64 support.
-  - CString::npos is returned instead of -1 when a search for a string fails. 
-    
+* Updated CImageList    
 
 
 Changes in detail
