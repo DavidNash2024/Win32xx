@@ -152,8 +152,8 @@ namespace Win32xx
         virtual ~CStringT();
         CStringT(const CStringT& str);
         CStringT(const T * pText);
-        CStringT(T ch, int length = 1);
-        CStringT(const T * pText, int length);
+        CStringT(T ch, size_t length = 1);
+        CStringT(const T * pText, size_t length);
         CStringT(int val);
         CStringT(double val);
 
@@ -168,8 +168,8 @@ namespace Win32xx
         bool     operator != (const T* pText) const;
         bool     operator != (const CStringT& str) const;
                  operator const T*() const;
-        T&       operator [] (int index);
-        const T& operator [] (int index) const;
+        T&       operator [] (size_t index);
+        const T& operator [] (size_t index) const;
         CStringT& operator += (const CStringT& str);
         CStringT& operator += (const T* pText);
         CStringT& operator += (const T ch);
@@ -179,52 +179,52 @@ namespace Win32xx
         // Attributes
         const T* c_str() const          { return m_str.c_str(); }                   // alternative for casting to const T*
         virtual  std::basic_string<T> GetString() const { return m_str; }           // returns copy of the std::basic_string<T>
-        int      GetLength() const  { return static_cast<int>(m_str.length()); }    // returns the length in characters
+        size_t      GetLength() const  { return m_str.length(); }    // returns the length in characters
 
         // Operations
         BSTR     AllocSysString() const;
         void     AppendFormat(const T* pFormat,...);
         void     AppendFormat(UINT formatID, ...);
-        void     Assign(const T* pText, int count);
+        void     Assign(const T* pText, size_t count);
         int      Collate(const T* pText) const;
         int      CollateNoCase(const T* pText) const;
         int      Compare(const T* pText) const;
         int      CompareNoCase(const T* pText) const;
-        int      Delete(int index, int count = 1);
-        int      Find(T ch, int index = 0 ) const;
-        int      Find(const T* pText, int start = 0) const;
-        int      FindOneOf(const T* pText) const;
+        size_t   Delete(size_t index, size_t count = 1);
+        size_t   Find(T ch, size_t index = 0 ) const;
+        size_t   Find(const T* pText, size_t start = 0) const;
+        size_t   FindOneOf(const T* pText) const;
         void     Format(UINT id, ...);
         void     Format(const T* pFormat,...);
         void     FormatV(const T* pFormat, va_list args);
         void     FormatMessage(const T* pFormat,...);
         void     FormatMessageV(const T* pFormat, va_list args);
-        T        GetAt(int index) const;
-        T*       GetBuffer(int minBufLength);
+        T        GetAt(size_t index) const;
+        T*       GetBuffer(size_t minBufLength);
         void     GetErrorString(DWORD error);
         void     GetWindowText(HWND wnd);
         void     Empty();
-        int      Insert(int index, T ch);
-        int      Insert(int index, const CStringT& str);
+        int      Insert(size_t index, T ch);
+        int      Insert(size_t index, const CStringT& str);
         bool     IsEmpty() const;
-        CStringT Left(int count) const;
+        CStringT Left(size_t count) const;
         bool     LoadString(UINT id);      // defined in wincore.h
         void     MakeLower();
         void     MakeReverse();
         void     MakeUpper();
-        CStringT Mid(int first) const;
-        CStringT Mid(int first, int count) const;
-        void     ReleaseBuffer( int newLength = -1 );
-        int      Remove(const T* pText);
-        int      Replace(T oldChar, T newChar);
-        int      Replace(const T* pOld, const T* pNew);
-        int      ReverseFind(const T* pText, int start = -1) const;
-        CStringT Right(int count) const;
-        void     SetAt(int index, T ch);
+        CStringT Mid(size_t first) const;
+        CStringT Mid(size_t first, size_t count) const;
+        void     ReleaseBuffer(size_t newLength = npos );
+        size_t   Remove(const T* pText);
+        size_t   Replace(T oldChar, T newChar);
+        size_t   Replace(const T* pOld, const T* pNew);
+        size_t   ReverseFind(const T* pText, size_t start = npos) const;
+        CStringT Right(size_t count) const;
+        void     SetAt(size_t index, T ch);
         BSTR     SetSysString(BSTR* pBstr) const;
         CStringT SpanExcluding(const T* pText) const;
         CStringT SpanIncluding(const T* pText) const;
-        CStringT Tokenize(const T* pTokens, int& start) const;
+        CStringT Tokenize(const T* pTokens, size_t& start) const;
         void     Trim();
         void     TrimLeft();
         void     TrimLeft(T target);
@@ -232,11 +232,13 @@ namespace Win32xx
         void     TrimRight();
         void     TrimRight(T target);
         void     TrimRight(const T* pTargets);
-        void     Truncate(int newLength);
+        void     Truncate(size_t newLength);
 
 #ifndef _WIN32_WCE
         bool     GetEnvironmentVariable(const T* pVar);
 #endif
+
+        static const size_t npos = (size_t)-1;
 
     protected:
         std::basic_string<T> m_str;
@@ -273,12 +275,12 @@ namespace Win32xx
         CString(const CString& str)             : CStringT<TCHAR>(str) {}
         CString(LPCSTR pText)                   : CStringT<TCHAR>(AtoT(pText)) {}
         CString(LPCWSTR pText)                  : CStringT<TCHAR>(WtoT(pText))    {}
-        CString(LPCSTR pText, int length)       : CStringT<TCHAR>(AtoT(pText), length) {}
-        CString(LPCWSTR pText, int length)      : CStringT<TCHAR>(WtoT(pText), length) {}
+        CString(LPCSTR pText, size_t length)    : CStringT<TCHAR>(AtoT(pText), length) {}
+        CString(LPCWSTR pText, size_t length)   : CStringT<TCHAR>(WtoT(pText), length) {}
         CString(int val)                        : CStringT<TCHAR>(val) {}
         CString(double val)                     : CStringT<TCHAR>(val) {}
 
-        CString(char ch, int length = 1)
+        CString(char ch, size_t length = 1)
         {
             char str[2] = {0};
             str[0] = ch;
@@ -286,7 +288,7 @@ namespace Win32xx
             m_str.assign(length, static_cast<LPCTSTR>(tch)[0]);
         }
 
-        CString(WCHAR ch, int length = 1)
+        CString(WCHAR ch, size_t length = 1)
         {
             WCHAR str[2] = {0};
             str[0] = ch;
@@ -382,28 +384,28 @@ namespace Win32xx
             return *this;
         }
 
-        CString Left(int count) const
+        CString Left(size_t count) const
         {
             CString str;
             str = CStringT<TCHAR>::Left(count);
             return str;
         }
 
-        CString Mid(int first) const
+        CString Mid(size_t first) const
         {
             CString str;
             str = CStringT<TCHAR>::Mid(first);
             return str;
         }
 
-        CString Mid(int first, int count) const
+        CString Mid(size_t first, size_t count) const
         {
             CString str;
             str = CStringT<TCHAR>::Mid(first, count);
             return str;
         }
 
-        CString Right(int count) const
+        CString Right(size_t count) const
         {
             CString str;
             str = CStringT<TCHAR>::Right(count);
@@ -424,7 +426,7 @@ namespace Win32xx
             return str;
         }
 
-        CString Tokenize(const TCHAR* pTokens, int& start) const
+        CString Tokenize(const TCHAR* pTokens, size_t& start) const
         {
             CString str;
             str = CStringT<TCHAR>::Tokenize(pTokens, start);
@@ -474,7 +476,7 @@ namespace Win32xx
 
     // Constructor. Assigns from 1 or more T characters.
     template <class T>
-    inline CStringT<T>::CStringT(T ch, int length)
+    inline CStringT<T>::CStringT(T ch, size_t length)
     {
         T str[2] = {0};
         str[0] = ch;
@@ -484,7 +486,7 @@ namespace Win32xx
     // Constructor. Assigns from a const T* possibly containing null characters.
     // Ensure the size of the text buffer holds length or more characters
     template <class T>
-    inline CStringT<T>::CStringT(const T* pText, int length)
+    inline CStringT<T>::CStringT(const T* pText, size_t length)
     {
         memcpy(GetBuffer(length), pText, length*sizeof(T));
         ReleaseBuffer(length);
@@ -611,18 +613,16 @@ namespace Win32xx
 
     // Subscript operator. Returns the T character at the specified index.
     template <class T>
-    inline T& CStringT<T>::operator [] (int index)
+    inline T& CStringT<T>::operator [] (size_t index)
     {
-        assert(index >= 0);
         assert(index < GetLength());
         return m_str[index];
     }
 
     // Subscript operator. Returns the T character at the specified index.
     template <class T>
-    inline const T& CStringT<T>::operator [] (int index) const
+    inline const T& CStringT<T>::operator [] (size_t index) const
     {
-        assert(index >= 0);
         assert(index < GetLength());
         return m_str[index];
     }
@@ -698,6 +698,7 @@ namespace Win32xx
     template <>
     inline BSTR CStringT<CHAR>::AllocSysString() const
     {
+        assert (m_str.size() < (UINT)-1);
         BSTR bstr = ::SysAllocStringLen(AtoW(m_str.c_str()), static_cast<UINT>(m_str.size()));
         if (bstr == NULL)
             throw std::bad_alloc();
@@ -710,6 +711,7 @@ namespace Win32xx
     template <>
     inline BSTR CStringT<WCHAR>::AllocSysString() const
     {
+        assert (m_str.size() < (UINT)-1);
         BSTR bstr = ::SysAllocStringLen(m_str.c_str(), static_cast<UINT>(m_str.size()));
         if (bstr == NULL)
             throw std::bad_alloc();
@@ -733,7 +735,7 @@ namespace Win32xx
 
     // Assigns the specified number of charaters from pText to the CStringT.
     template <class T>
-    inline void CStringT<T>::Assign(const T* pText, int count)
+    inline void CStringT<T>::Assign(const T* pText, size_t count)
     {
         m_str.assign(pText, count);
     }
@@ -828,15 +830,12 @@ namespace Win32xx
 
     // Deletes a character or characters from the string.
     template <class T>
-    inline int CStringT<T>::Delete(int index, int count /* = 1 */)
+    inline size_t CStringT<T>::Delete(size_t index, size_t count /* = 1 */)
     {
-        assert(index >= 0);
-        assert(count >= 0);
-
         if (index < GetLength())
             m_str.erase(index, count);
 
-        return static_cast<int>(m_str.size());
+        return m_str.size();
     }
 
     // Erases the contents of the string.
@@ -848,36 +847,34 @@ namespace Win32xx
 
     // Finds a character in the string.
     template <class T>
-    inline int CStringT<T>::Find(T ch, int index /* = 0 */) const
+    inline size_t CStringT<T>::Find(T ch, size_t index /* = 0 */) const
     {
-        assert(index >= 0);
         size_t s = m_str.find(ch, index);
 
-        if (s == std::string::npos) return -1;
-        return static_cast<int>(s);
+     //   if (s == std::string::npos) return npos;
+        return s;
     }
 
     // Finds a substring within the string.
     template <class T>
-    inline int CStringT<T>::Find(const T* pText, int index /* = 0 */) const
+    inline size_t CStringT<T>::Find(const T* pText, size_t index /* = 0 */) const
     {
         assert(pText);
-        assert(index >= 0);
         size_t s = m_str.find(pText, index);
 
-        if (s == std::string::npos) return -1;
-        return static_cast<int>(s);
+     //   if (s == std::string::npos) return (size_t)-1;
+        return s;
     }
 
     // Finds the first matching character from a set.
     template <class T>
-    inline int CStringT<T>::FindOneOf(const T* pText) const
+    inline size_t CStringT<T>::FindOneOf(const T* pText) const
     {
         assert(pText);
         size_t s = m_str.find_first_of(pText);
 
         if (s == std::string::npos) return -1;
-        return static_cast<int>(s);
+        return s;
     }
 
     // Formats the string as sprintf does.
@@ -984,13 +981,12 @@ namespace Win32xx
 
     // Returns the character at the specified location within the string.
     template <class T>
-    inline T CStringT<T>::GetAt(int index) const
+    inline T CStringT<T>::GetAt(size_t index) const
     {
-        assert(index >= 0);
         assert(index < GetLength());
         T ch = 0;
 
-        if ((index >= 0) && (index < GetLength()))
+        if (index < GetLength())
             ch = m_str[index];
 
         return ch;
@@ -1003,15 +999,13 @@ namespace Win32xx
     // Note: The buffer uses a vector. Vectors are required to be contiguous in memory under
     //       the current standard, whereas std::strings do not have this requirement.
     template <class T>
-    inline T* CStringT<T>::GetBuffer(int minBufLength)
+    inline T* CStringT<T>::GetBuffer(size_t minBufLength)
     {
-        assert (minBufLength >= 0);
-
         T ch = 0;
         m_buf.assign(minBufLength + 1, ch);
         typename std::basic_string<T>::iterator it_end;
 
-        if (m_str.length() >= (size_t)minBufLength)
+        if (m_str.length() >= minBufLength)
         {
             it_end = m_str.begin();
             std::advance(it_end, minBufLength);
@@ -1119,9 +1113,8 @@ namespace Win32xx
 
     // Inserts a single character or a substring at the given index within the string.
     template <class T>
-    inline int CStringT<T>::Insert(int index, T ch)
+    inline int CStringT<T>::Insert(size_t index, T ch)
     {
-        assert(index >= 0);
         assert(ch);
 
         index = MIN(index, GetLength());
@@ -1132,10 +1125,8 @@ namespace Win32xx
 
     // Inserts a single character or a substring at the given index within the string.
     template <class T>
-    inline int CStringT<T>::Insert(int index, const CStringT& str)
+    inline int CStringT<T>::Insert(size_t index, const CStringT& str)
     {
-        assert(index >= 0);
-
         index = MIN(index, GetLength());
         m_str.insert(index, str);
 
@@ -1151,10 +1142,8 @@ namespace Win32xx
 
     // Extracts the left part of a string.
     template <class T>
-    inline CStringT<T> CStringT<T>::Left(int count) const
+    inline CStringT<T> CStringT<T>::Left(size_t count) const
     {
-        assert(count >= 0);
-
         CStringT str;
         str.m_str.assign(m_str, 0, count);
         return str;
@@ -1200,18 +1189,15 @@ namespace Win32xx
 
     // Extracts the middle part of a string.
     template <class T>
-    inline CStringT<T> CStringT<T>::Mid(int first) const
+    inline CStringT<T> CStringT<T>::Mid(size_t first) const
     {
         return Mid(first, GetLength());
     }
 
     // Extracts the middle part of a string.
     template <class T>
-    inline CStringT<T> CStringT<T>::Mid(int first, int count) const
+    inline CStringT<T> CStringT<T>::Mid(size_t first, size_t count) const
     {
-        assert(first >= 0);
-        assert(count >= 0);
-
         CStringT str;
         if (first <= GetLength())
             str.m_str.assign(m_str, first, count);
@@ -1221,20 +1207,19 @@ namespace Win32xx
 
     // Search for a substring within the string, starting from the end.
     template <class T>
-    inline int CStringT<T>::ReverseFind(const T* pText, int index /* = -1 */) const
+    inline size_t CStringT<T>::ReverseFind(const T* pText, size_t index /* = npos */) const
     {
         assert(pText);
-        return static_cast<int>(m_str.rfind(pText, index));
+        return m_str.rfind(pText, index);
     }
 
     // Sets the character at the specified position to the specified value.
     template <class T>
-    inline void CStringT<T>::SetAt(int index, T ch)
+    inline void CStringT<T>::SetAt(size_t index, T ch)
     {
-        assert(index >= 0);
         assert(index < GetLength());
 
-        if ((index >= 0) && (index < GetLength()))
+        if (index < GetLength())
             m_str[index] = ch;
     }
 
@@ -1242,11 +1227,11 @@ namespace Win32xx
     // The default length of -1 copies from the buffer until a null terminator is reached.
     // If the buffer doesn't contain a null terminator, you must specify the buffer's length.
     template <class T>
-    inline void CStringT<T>::ReleaseBuffer( int newLength /*= -1*/ )
+    inline void CStringT<T>::ReleaseBuffer(size_t newLength /*= -1*/ )
     {
-        assert (newLength <= static_cast<int>(m_buf.size()));
+        assert((npos == newLength) || (newLength <= m_buf.size()));
 
-        if (-1 == newLength)
+        if (npos == newLength)
         {
             newLength = lstrlenT(&m_buf[0]);
         }
@@ -1263,11 +1248,11 @@ namespace Win32xx
 
     // Removes each occurrence of the specified substring from the string.
     template <class T>
-    inline int CStringT<T>::Remove(const T* pText)
+    inline size_t CStringT<T>::Remove(const T* pText)
     {
         assert(pText);
 
-        int count = 0;
+        size_t count = 0;
         size_t pos = 0;
         size_t len = lstrlenT(pText);
         while ((pos = m_str.find(pText, pos)) != std::string::npos)
@@ -1280,9 +1265,9 @@ namespace Win32xx
 
     // Replaces each occurrence of the old character with the new character.
     template <class T>
-    inline int CStringT<T>::Replace(T oldChar, T newChar)
+    inline size_t CStringT<T>::Replace(T oldChar, T newChar)
     {
-        int count = 0;
+        size_t count = 0;
         typename std::basic_string<T>::iterator it;
         it = m_str.begin();
         while (it != m_str.end())
@@ -1299,12 +1284,12 @@ namespace Win32xx
 
     // Replaces each occurrence of the old substring with the new substring.
     template <class T>
-    inline int CStringT<T>::Replace(const T* pOld, const T* pNew)
+    inline size_t CStringT<T>::Replace(const T* pOld, const T* pNew)
     {
         assert(pOld);
         assert(pNew);
 
-        int count = 0;
+        size_t count = 0;
         size_t pos = 0;
         size_t lenOld = lstrlenT(pOld);
         size_t lenNew = lstrlenT(pNew);
@@ -1319,10 +1304,8 @@ namespace Win32xx
 
     // Extracts the right part of a string.
     template <class T>
-    inline CStringT<T> CStringT<T>::Right(int count) const
+    inline CStringT<T> CStringT<T>::Right(size_t count) const
     {
-        assert(count >= 0);
-
         CStringT str;
         count = MIN(count, GetLength());
         str.m_str.assign(m_str, m_str.size() - count, count);
@@ -1391,22 +1374,22 @@ namespace Win32xx
 
     // Extracts specified tokens in a target string.
     template <class T>
-    inline CStringT<T> CStringT<T>::Tokenize(const T* pTokens, int& start) const
+    inline CStringT<T> CStringT<T>::Tokenize(const T* pTokens, size_t& start) const
     {
         assert(pTokens);
 
         CStringT str;
-        if(start >= 0)
+        if(start != npos)
         {
-        size_t pos1 = m_str.find_first_not_of(pTokens, start);
-        size_t pos2 = m_str.find_first_of(pTokens, pos1);
+            size_t pos1 = m_str.find_first_not_of(pTokens, start);
+            size_t pos2 = m_str.find_first_of(pTokens, pos1);
 
-        start = static_cast<int>(pos2) + 1;
-        if (pos2 == m_str.npos)
-            start = -1;
+            start = pos2 + 1;
+            if (pos2 == m_str.npos)
+                start = npos;
 
-        if (pos1 != m_str.npos)
-            str.m_str = m_str.substr(pos1, pos2-pos1);
+            if (pos1 != m_str.npos)
+                str.m_str = m_str.substr(pos1, pos2-pos1);
         }
         return str;
     }
@@ -1516,7 +1499,7 @@ namespace Win32xx
 
     // Reduces the length of the string to the specified amount.
     template <class T>
-    inline void CStringT<T>::Truncate(int newLength)
+    inline void CStringT<T>::Truncate(size_t newLength)
     {
         if (newLength < GetLength())
         {
@@ -1855,8 +1838,8 @@ namespace Win32xx
     {
         std::vector<CString> CommandLineArgs;
         CString CommandLine = GetCommandLine();
-        int index = 0;
-        int endPos = 0;
+        size_t index = 0;
+        size_t endPos = 0;
 
         while (index < CommandLine.GetLength() )
         {
@@ -1867,7 +1850,7 @@ namespace Win32xx
             {
                 // Find the terminating token (quote followed by space)
                 endPos = CommandLine.Find( _T("\" ") , index);
-                if (endPos == -1) endPos = CommandLine.GetLength()-1;
+                if (endPos == CString::npos) endPos = CommandLine.GetLength()-1;
 
                 // Store the argument in the CStringT vector without the quotes.
                 CString s;
@@ -1883,7 +1866,7 @@ namespace Win32xx
             {
                 // Find the terminating token (space character)
                 endPos = CommandLine.Find( _T(' ') , index);
-                if (endPos == -1) endPos = CommandLine.GetLength();
+                if (endPos == CString::npos) endPos = CommandLine.GetLength();
 
                 // Store the argument in the CStringT vector.
                 CString s = CommandLine.Mid(index, endPos - index);

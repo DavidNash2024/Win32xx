@@ -133,7 +133,7 @@ namespace Win32xx
     //  shareDenyWrite  Denies write access to all others.
     //  shareDenyRead   Denies read access to all others.
     //  shareDenyNone   No sharing restrictions.
-    inline CFile::CFile(LPCTSTR pFileName, UINT openFlags) : m_file(0)
+    inline CFile::CFile(LPCTSTR pFileName, UINT openFlags) : m_file(INVALID_HANDLE_VALUE)
     {
         assert(pFileName);
         Open(pFileName, openFlags);  // throws CFileException on failure

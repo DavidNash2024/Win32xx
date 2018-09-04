@@ -985,22 +985,22 @@ namespace Win32xx
         CString fmt0 = pFormat;
         CString insert;
 
-        while (fmt0.Find(_T("%D")) != -1)  // number of days
+        while (fmt0.Find(_T("%D")) != CString::npos)  // number of days
         {
             insert.Format(_T("%ld"), GetDays());
             fmt0.Replace(_T("%D"), insert);
         }
-        while (fmt0.Find(_T("%H")) != -1)  // hours (00 – 23)
+        while (fmt0.Find(_T("%H")) != CString::npos)  // hours (00 – 23)
         {
             insert.Format(_T("%02d"), GetHours());
             fmt0.Replace(_T("%H"), insert);
         }
-        while (fmt0.Find(_T("%M")) != -1)  // minutes (00 – 59)
+        while (fmt0.Find(_T("%M")) != CString::npos)  // minutes (00 – 59)
         {
             insert.Format(_T("%02d"), GetMinutes());
             fmt0.Replace(_T("%M"), insert);
         }
-        while (fmt0.Find(_T("%S")) != -1)  // seconds (00 - 59)
+        while (fmt0.Find(_T("%S")) != CString::npos)  // seconds (00 - 59)
         {
             insert.Format(_T("%02d"), GetSeconds());
             fmt0.Replace(_T("%S"), insert);

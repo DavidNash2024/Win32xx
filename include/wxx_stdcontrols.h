@@ -393,7 +393,7 @@ namespace Win32xx
     //
 
     // Adds text to the end of the document
-    void CEdit::AppendText(LPCTSTR pText)
+    inline void CEdit::AppendText(LPCTSTR pText)
     {
         LRESULT position = SendMessage(WM_GETTEXTLENGTH, 0, 0);
         SendMessage(EM_SETSEL, position, position);
