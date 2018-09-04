@@ -209,7 +209,7 @@ namespace Win32xx
     }
 
     // Adds text to the end of the document
-    void CRichEdit::AppendText(LPCTSTR pText) const
+    inline void CRichEdit::AppendText(LPCTSTR pText) const
     {
         LRESULT position = SendMessage(WM_GETTEXTLENGTH, 0, 0);
         SendMessage(EM_SETSEL, position, position);

@@ -267,7 +267,7 @@ namespace Win32xx
     inline void CDataExchange::DDV_MaxChars(CString const& value, int count) const
     {
         assert(count >= 1);  // must allow at least one char
-        if (m_retrieveAndValidate && value.GetLength() > count)
+        if (m_retrieveAndValidate && value.GetLength() > (size_t)count)
         {
             CString message;
             message.Format(DDV_MSG_STRING_SIZE, value.c_str(), count);
