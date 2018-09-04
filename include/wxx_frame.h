@@ -3790,8 +3790,8 @@ namespace Win32xx
                 {
                     // Extract the first part of the string up until the first "\\"
                     CString prefix;
-                    size_t index = str.Find(_T("\\"));
-                    if (index != CString::npos)
+                    int index = str.Find(_T("\\"));
+                    if (index >= 0)
                         prefix = str.Left(index + 1);
 
                     // Reduce the string to fit within MAX_MENU_STRING
@@ -3800,7 +3800,7 @@ namespace Win32xx
 
                     // Remove the front of the string up to the next "\\" if any.
                     index = str.Find(_T("\\"));
-                    if (index != CString::npos)
+                    if (index >= 0)
                         str.Delete(0, index);
 
                     str = prefix + gap + str;
