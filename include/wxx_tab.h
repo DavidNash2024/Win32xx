@@ -286,7 +286,7 @@ namespace Win32xx
     {
         for (UINT u = 0; u < m_items.size(); ++u)
         {
-            SendDlgItemMessage(IDC_LIST, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(m_items[u].c_str()));
+            SendDlgItemMessage(IDC_LIST, LB_ADDSTRING, 0, (LPARAM)(m_items[u].c_str()));
         }
 
         return true;
@@ -808,7 +808,7 @@ namespace Win32xx
         nmhdr.code = UMN_TABCHANGED;
 
         if (GetParent().IsWindow())
-            GetParent().SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&nmhdr));
+            GetParent().SendMessage(WM_NOTIFY, 0, (LPARAM)&nmhdr);
     }
 
     // Sends a UWN_TABDRAGGED notification.
@@ -818,7 +818,7 @@ namespace Win32xx
         ZeroMemory(&nmhdr, sizeof(nmhdr));
         nmhdr.hwndFrom = *this;
         nmhdr.code = UWN_TABDRAGGED;
-        GetParent().SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&nmhdr));
+        GetParent().SendMessage(WM_NOTIFY, 0, (LPARAM)&nmhdr);
     }
 
     // Sends a UWN_TABCLOSE notification.
@@ -832,7 +832,7 @@ namespace Win32xx
         TabNMHDR.nPage = page;
 
         // The default return value is zero
-        return (GetParent().SendMessage(WM_NOTIFY, idCtrl, reinterpret_cast<LPARAM>(&TabNMHDR)) != 0);
+        return (GetParent().SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&TabNMHDR) != 0);
     }
 
     // Called when this object is attached to a tab control.
@@ -1768,7 +1768,7 @@ namespace Win32xx
 
         // Fake a WM_MOUSEACTIVATE to propagate focus change to dockers
         if (IsWindow())
-            GetParent().SendMessage(WM_MOUSEACTIVATE, reinterpret_cast<WPARAM>(GetAncestor().GetHwnd()), 
+            GetParent().SendMessage(WM_MOUSEACTIVATE, (WPARAM)(GetAncestor().GetHwnd()),
                                        MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
         return pView;

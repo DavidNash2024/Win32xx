@@ -430,7 +430,7 @@ namespace Win32xx
     inline int CListView::GetStringWidth( LPCTSTR pString ) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0, reinterpret_cast<LPARAM>(pString)));
+        return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0, (LPARAM)pString));
     }
 
     // Retrieves information about the rectangle that surrounds a subitem in the list-view control.
@@ -697,7 +697,7 @@ namespace Win32xx
     inline BOOL CListView::SetItemState( int item, LVITEM& itemInfo ) const
     {
         assert(IsWindow());
-        return (SendMessage(LVM_SETITEMSTATE, item, reinterpret_cast<LPARAM>(&itemInfo)) != 0);
+        return (SendMessage(LVM_SETITEMSTATE, (WPARAM)item, (LPARAM)&itemInfo) != 0);
     }
 
     // Changes the state of an item in the list-view control.
@@ -745,7 +745,7 @@ namespace Win32xx
     inline HWND CListView::SetToolTips( HWND toolTip ) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, reinterpret_cast<WPARAM>(toolTip), 0));
+        return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, (WPARAM)toolTip, 0));
     }
 
     // Sets the working area within the list-view control.

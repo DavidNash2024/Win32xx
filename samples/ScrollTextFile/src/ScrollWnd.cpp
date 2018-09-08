@@ -1,40 +1,22 @@
-/* (14-Nov-2016) [Tab/Indent: 8/8][Line/Box: 80/74]           (ScrollWnd.cpp) *
+/* (14-Nov-2016) [Tab/Indent: 4/4][Line/Box: 80/74]           (ScrollWnd.cpp) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2017, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
 |                         robert.c.tausworthe@ieee.org                         |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the CScrollWnd class for
+    Contents Description: Implementation of the CScrollWnd class for 
     applications using the Win32++ Windows interface classes, Copyright
     (c) 2005-2017 David Nash, under permissions granted therein. Usage of
     this class is discussed below.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
+ 	Caveats: These materials are available under the same provisions as found 
+	in the Win32++ copyright.txt notice.
 
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
+    Programming Notes:
+        The programming standards roughly follow those established by the 
+    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation 
+    Subsystem project for C++ programming.
 
 ================================================================================
 
@@ -121,13 +103,6 @@
     Others may be optionally overridden, identified by their virtual
     declaration in CScrollWnd.h
 
-================================================================================
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Network Planning
-        and Preparation Subsystem project for C++ programming.
-
 *******************************************************************************/
 
 #include "stdafx.h"
@@ -146,21 +121,21 @@ static const UINT current_ScrollWin_schema        = 1;
 
 *=============================================================================*/
     CScrollWnd::
-CScrollWnd()                                            /*
+CScrollWnd()                                                                /*
 
     Construct the scroll window object.
 *-----------------------------------------------------------------------------*/
 {
     m_nMapMode   = MM_TEXT;  // default coordinate mapping mode
     m_rgbBkColor = rgbDefaultBkColor;
-        m_brBkGnd    = CBrush(m_rgbBkColor);
+    m_brBkGnd    = CBrush(m_rgbBkColor);
     m_bIamBusy   = FALSE;
     SetScrollPosition(CPoint(0, 0));
 }
 
 /*============================================================================*/
     CPoint CScrollWnd::
-DevToScrl(CPoint pt) const                          /*
+DevToScrl(CPoint pt) const                                                  /*
 
     Return the device image of the logical position pt. The base class
     uses the current mapping mode, presumed to be one of the valid CDC
@@ -176,7 +151,7 @@ DevToScrl(CPoint pt) const                          /*
 
 /*============================================================================*/
     CPoint CScrollWnd::
-GetScrollPosition() const                       /*
+GetScrollPosition() const                                                   /*
 
     Return the current scroll bar position coordinates.
 *-----------------------------------------------------------------------------*/
@@ -189,7 +164,7 @@ GetScrollPosition() const                       /*
 
 /*============================================================================*/
     BOOL CScrollWnd::
-IsHVisible() const                              /*
+IsHVisible() const                                                          /*
 
     Return TRUE if the horizontal scroll bar is visible, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
@@ -199,7 +174,7 @@ IsHVisible() const                              /*
 
 /*============================================================================*/
     BOOL CScrollWnd::
-IsVVisible() const                              /*
+IsVVisible() const                                                          /*
 
     Return TRUE if the vertical scroll bar is visible, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
@@ -209,7 +184,7 @@ IsVVisible() const                              /*
 
 /*============================================================================*/
     void CScrollWnd::
-OnDraw(CDC& sDC)                                                        /*
+OnDraw(CDC& sDC)                                                            /*
 
     Draw and display the application scroll window's owner-supplied content.
     Called when part or all of the window needs to be redrawn. There is no
@@ -243,7 +218,7 @@ OnDraw(CDC& sDC)                                                        /*
 
 /*============================================================================*/
         LRESULT CScrollWnd::
-OnHScroll(WPARAM wParam, LPARAM lParam)                     /*
+OnHScroll(WPARAM wParam, LPARAM lParam)                                     /*
 
         Processes horizontal scrolling requests. The scroll code is given in
     LOWORD(wParam).  HIWORD(wParam) specifies the current position of
@@ -311,7 +286,7 @@ OnHScroll(WPARAM wParam, LPARAM lParam)                     /*
 
 /*============================================================================*/
     void CScrollWnd::
-OnInitialUpdate()                                                       /*
+OnInitialUpdate()                                                           /*
 
     Called immediately after the window is created. Override this method to
     prepare the initial application window.
@@ -327,7 +302,7 @@ OnInitialUpdate()                                                       /*
 
 /*============================================================================*/
         LRESULT CScrollWnd::
-OnKeyScroll(WPARAM wParam, LPARAM lParam)                   /*
+OnKeyScroll(WPARAM wParam, LPARAM lParam)                                   /*
 
     Processes nonsystem (i.e., non ALT+key) keystrokes: wParam contains
     the virtual key code. lParam combines repeat count, OEM scan code,
@@ -439,7 +414,7 @@ OnKeyScroll(WPARAM wParam, LPARAM lParam)                   /*
 
 /*============================================================================*/
         LRESULT CScrollWnd::
-OnMouseWheel(WPARAM wParam, LPARAM lParam)                  /*
+OnMouseWheel(WPARAM wParam, LPARAM lParam)                                  /*
 
         Processes mouse wheel rotation when made in the focus window having
     a vertical scrollbar.  Although LOWORD(wParam) contains the key flags,
@@ -469,7 +444,7 @@ OnMouseWheel(WPARAM wParam, LPARAM lParam)                  /*
 
 /*============================================================================*/
         LRESULT CScrollWnd::
-OnVScroll(WPARAM wParam, LPARAM lParam)                     /*
+OnVScroll(WPARAM wParam, LPARAM lParam)                                     /*
 
         This function processes vertical scrolling requests. The scroll code
     is given in LOWORD(wParam). HIWORD(wParam) specifies the current
@@ -535,7 +510,7 @@ OnVScroll(WPARAM wParam, LPARAM lParam)                     /*
 
 /*============================================================================*/
         void CScrollWnd::
-Paint(CDC& dcMem)                                               /*
+Paint(CDC& dcMem)                                                           /*
 
     Paint the window's compatible bitmap whose device context is dcMem
     bounded by the rectangle rc, in pixel units. The base class does
@@ -547,7 +522,7 @@ Paint(CDC& dcMem)                                               /*
 
 /*============================================================================*/
     void CScrollWnd::
-PreCreate(CREATESTRUCT &cs)                                             /*
+PreCreate(CREATESTRUCT &cs)                                                 /*
 
     Set the defaults to be used by the create function to identify this as
     a child scrolling window.  Override this method to add any specific
@@ -560,7 +535,7 @@ PreCreate(CREATESTRUCT &cs)                                             /*
 
 /*============================================================================*/
     void CScrollWnd::
-PreRegisterClass(WNDCLASS &wc)                                          /*
+PreRegisterClass(WNDCLASS &wc)                                              /*
 
     Identify the Window class as a scrolling window with the default color
     background.
@@ -575,7 +550,7 @@ PreRegisterClass(WNDCLASS &wc)                                          /*
 
 /*============================================================================*/
     BOOL CScrollWnd::
-PreTranslateMessage(MSG &msg)                                           /*
+PreTranslateMessage(MSG &msg)                                               /*
 
     Used by CWinApp to translate window messages before they are dispatched
     to theTranslateMessage and DispatchMessage Windows functions in the
@@ -599,7 +574,7 @@ PreTranslateMessage(MSG &msg)                                           /*
 
 /*============================================================================*/
     CPoint CScrollWnd::
-ScrlToDev(CPoint pt) const                      /*
+ScrlToDev(CPoint pt) const                                                  /*
 
     Return the logical position corresponding to the device postion pt.
     The mapping mode is assumed to be one of the valid CDC mappings.
@@ -614,7 +589,7 @@ ScrlToDev(CPoint pt) const                      /*
 
 /*============================================================================*/
         void CScrollWnd::
-Serialize(CArchive &ar)                                               /*
+Serialize(CArchive &ar)                                                     /*
 
         Serialize or deserialize the scroll window to and from the archive ar,
     depending on the sense of IsStoring(). This class has its own m_nSchema.
@@ -637,7 +612,7 @@ Serialize(CArchive &ar)                                               /*
 
 /*============================================================================*/
     void CScrollWnd::
-SetNewViewSize()                            /*
+SetNewViewSize()                                                            /*
 
     Compute the logical view size of the client window that may or may not
     have scroll bars present. Each scroll bar will be assumed to appear when
@@ -675,7 +650,7 @@ SetNewViewSize()                            /*
 
 /*============================================================================*/
     void CScrollWnd::
-SetScrollIncrements(int hLine, int hPage, int vLine, int vPage)     /*
+SetScrollIncrements(int hLine, int hPage, int vLine, int vPage)             /*
 
     Set the current scrolling increments to the argument values. The page
     increments are also entered into the SCROLLINFO data for each bar.
@@ -697,7 +672,7 @@ SetScrollIncrements(int hLine, int hPage, int vLine, int vPage)     /*
 
 /*============================================================================*/
     void    CScrollWnd::
-SetScrollParameters()                                           /*
+SetScrollParameters()                                                       /*
 
     Compute the scroll ranges and increments for the current app and view.
 *-----------------------------------------------------------------------------*/
@@ -731,7 +706,7 @@ SetScrollParameters()                                           /*
 
 /*============================================================================*/
     void CScrollWnd::
-SetScrollPosition(CPoint pos)                       /*
+SetScrollPosition(CPoint pos)                                               /*
 
     Set the horizontal and  vertical scroll positions, respectively, to
     pos.x and pos.y, respectively and redraw the scroll bars. Limit values
@@ -747,7 +722,7 @@ SetScrollPosition(CPoint pos)                       /*
 
 /*============================================================================*/
     void CScrollWnd::
-SetScrollRanges(int hMin, int hMax, int vMin, int vMax)         /*
+SetScrollRanges(int hMin, int hMax, int vMin, int vMax)                     /*
 
     Set the current scrolling limits to parameter values.
 *-----------------------------------------------------------------------------*/
@@ -768,7 +743,7 @@ SetScrollRanges(int hMin, int hMax, int vMin, int vMax)         /*
 
 /*============================================================================*/
         void CScrollWnd::
-ShowHScrollBar(BOOL show) const                                         /*
+ShowHScrollBar(BOOL show) const                                             /*
 
     Show or hide the horizontal scroll bar, as per the show parameter.
 *-----------------------------------------------------------------------------*/
@@ -781,7 +756,7 @@ ShowHScrollBar(BOOL show) const                                         /*
 
 /*============================================================================*/
         void CScrollWnd::
-ShowVScrollBar(BOOL show) const                                         /*
+ShowVScrollBar(BOOL show) const                                             /*
 
     Show or hide the vertical scroll bar, as per the show parameter.
 *-----------------------------------------------------------------------------*/
@@ -794,7 +769,7 @@ ShowVScrollBar(BOOL show) const                                         /*
 
 /*============================================================================*/
     LRESULT CScrollWnd::
-WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
+WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                            /*
 
     All messages for this window pass through this WndProc.  In particular,
     handling scrollbar messages are dispatched here.

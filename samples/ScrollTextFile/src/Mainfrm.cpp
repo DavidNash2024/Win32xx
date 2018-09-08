@@ -1,8 +1,6 @@
-/* (02-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
+/* (02-Aug-2016) [Tab/Indent: 4/4][Line/Box: 80/74]              (MainFrm.cpp) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2017, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
 |                         robert.c.tausworthe@ieee.org                         |
 |                                                                              |
 ===============================================================================*
@@ -11,37 +9,13 @@
     ScrollWin demo application using the Win32++ Windows interface classes,
     Copyright (c) 2005-2017 David Nash, under permissions granted therein.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-    citation of the author's work should be included in such usages.
-
-    Special Conventions:
+ 	Caveats: These materials are available under the same provisions as found 
+	in the Win32++ copyright.txt notice.
 
     Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Network Planning
-        and Preparation Subsystem project for C++ programming.
+        The programming standards roughly follow those established by the 
+    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation 
+    Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -53,7 +27,7 @@ CString CMainFrame::m_sCompiled_on = __DATE__;
 
 /*============================================================================*/
     CDoc&
-TheDoc()                                /*
+TheDoc()                                                                    /*
 
     Global function to access to the CDoc class.
 *-----------------------------------------------------------------------------*/
@@ -67,7 +41,7 @@ TheDoc()                                /*
     
 *=============================================================================*/
     CMainFrame::
-CMainFrame()                                /*
+CMainFrame()                                                                /*
 
     Constructor for CMainFrame, which is called after CFrame's constructor.
 *-----------------------------------------------------------------------------*/
@@ -83,7 +57,7 @@ CMainFrame()                                /*
 
 /*============================================================================*/
     CMainFrame::
-~CMainFrame()                                                           /*
+~CMainFrame()                                                               /*
 
      Destructor for CMainFrame.
 *-----------------------------------------------------------------------------*/
@@ -92,7 +66,7 @@ CMainFrame()                                /*
 
 /*============================================================================*/
     void CMainFrame::
-OnColorChoice()                                                     /*
+OnColorChoice()                                                             /*
 
         Select the view backbround color.
 *-----------------------------------------------------------------------------*/
@@ -104,7 +78,7 @@ OnColorChoice()                                                     /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnCommand(WPARAM wParam, LPARAM lParam)                 /*
+OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
 
     The framework calls this member function when the user selects an
     item from a menu, when a child control sends a notification message,
@@ -173,7 +147,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
 
 /*============================================================================*/
     int CMainFrame::
-OnCreate(CREATESTRUCT& cs)                                               /*
+OnCreate(CREATESTRUCT& cs)                                                  /*
 
     This member controls the way the frame is created. Overriding
     it is optional.  
@@ -245,7 +219,7 @@ OnCreate(CREATESTRUCT& cs)                                               /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileClose()                               /*
+OnFileClose()                                                               /*
 
     Respond to the close toolbar button and main menu item by closing the
     current document, if one was open.
@@ -261,7 +235,7 @@ OnFileClose()                               /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileExit()                                /*
+OnFileExit()                                                                /*
 
     Close the application and terminate execution.
 *-----------------------------------------------------------------------------*/
@@ -272,7 +246,7 @@ OnFileExit()                                /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileOpen()                                                            /*
+OnFileOpen()                                                                /*
 
     Respond to the open file toolbar button and menu item by prompting for
     and receiving a string file name, opening the file if valid, and 
@@ -282,20 +256,13 @@ OnFileOpen()                                                            /*
     // Bring up the dialog, and open the file
     CFileDialog fd(TRUE, 0, 0, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
         TheDoc().GetFilter());
-    if (!(fd.DoModal(*this) == IDOK))
-    {
-        ::MessageBox(NULL, _T("No file chosen, no action taken."),
-            _T("Information"), MB_OK | MB_ICONINFORMATION |
-            MB_TASKMODAL);
-        return;
-    }
+    if (fd.DoModal(*this) != IDOK)
+            return;
+
       // open the document and read its content
     if (!TheDoc().OpenDoc(fd.GetPathName()))
-    {
-        ::MessageBox(NULL, _T("File could not be opened and read."),
-            _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
         return;
-    }
+
     AddMRUEntry(fd.GetPathName());
     SetWindowText(fd.GetPathName());
     m_View.SetNewAppSize();
@@ -307,7 +274,7 @@ OnFileOpen()                                                            /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileOpenMRU(UINT nIndex)                      /*
+OnFileOpenMRU(UINT nIndex)                                                  /*
 
     Open the MRU file at nIndex as the next document.
 *-----------------------------------------------------------------------------*/
@@ -326,15 +293,13 @@ OnFileOpenMRU(UINT nIndex)                      /*
     else // problem: bad file in MRU
     {
         RemoveMRUEntry(mru_entry);
-        ::MessageBox(NULL, _T("File could not be opened and read."), 
-              _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
         OnFileClose();
     }
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnHelp()                                                /*
+OnHelp()                                                                    /*
 
     Display the application's help dialog box, which contains the program
     information developed in CApp.
@@ -360,7 +325,7 @@ OnHelp()                                                /*
 
 /*============================================================================*/
     void CMainFrame::
-OnInitialUpdate()                                                       /*
+OnInitialUpdate()                                                           /*
 
     The frame has now been created. Provide any desired main frame
     formatting.
@@ -375,7 +340,7 @@ OnInitialUpdate()                                                       /*
 
 /*============================================================================*/
     void CMainFrame::
-OnMenuUpdate(UINT nID)                          /*
+OnMenuUpdate(UINT nID)                                                      /*
 
     This method is called by the framework just before a menu is displayed. 
     It can be augmented to update objects within the main frame or to enable 
@@ -396,7 +361,7 @@ OnMenuUpdate(UINT nID)                          /*
 
 /*============================================================================*/
     LRESULT CMainFrame::
-OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
+OnNotify(WPARAM wParam, LPARAM lParam)                                      /*
 
     The framework calls this member method to inform the parent window of a 
     control that an event has occurred in the control or that the control 
@@ -415,7 +380,7 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnProcessMRU(WPARAM wParam, LPARAM lParam)                              /*
+OnProcessMRU(WPARAM wParam, LPARAM lParam)                                  /*
 
     One of the MRU entries has been selected.  Process accordingly.
 *-----------------------------------------------------------------------------*/
@@ -430,7 +395,7 @@ OnProcessMRU(WPARAM wParam, LPARAM lParam)                              /*
 
 /*============================================================================*/
     void CMainFrame::
-PreCreate(CREATESTRUCT& cs)                                             /*
+PreCreate(CREATESTRUCT& cs)                                                 /*
 
     Set cs members to select window frame parameters desired. This gets
     executed before CScrollWin::PreCreate(). Use the deserialized position
@@ -453,7 +418,7 @@ PreCreate(CREATESTRUCT& cs)                                             /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-PreTranslateMessage(MSG &Msg)                                           /*
+PreTranslateMessage(MSG &Msg)                                               /*
 
     Pretranslates the system message uMsg from the mainframe message loop
     before they are dispatched to theTranslateMessage and DispatchMessage
@@ -478,7 +443,7 @@ PreTranslateMessage(MSG &Msg)                                           /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-SaveRegistrySettings()                                                  /*
+SaveRegistrySettings()                                                      /*
 
     This member is called in response to a WM_CLOSE message for the
     frame.  The base class saves settings into the registry. In this
@@ -515,7 +480,7 @@ SaveRegistrySettings()                                                  /*
 
 /*============================================================================*/
         void CMainFrame::
-Serialize(CArchive& ar)                                               /*
+Serialize(CArchive& ar)                                                     /*
 
         Called serialize or deserialize the frame to and from the archive ar,
         depending on the sense of IsStoring().  Leave the archive open for
@@ -586,7 +551,7 @@ Serialize(CArchive& ar)                                               /*
 
 /*============================================================================*/
     void CMainFrame::
-SetupMenuIcons()                            /*
+SetupMenuIcons()                                                            /*
 
     Called by the framework to assigns bitmaps to dropdown menu items. By 
     default the toolbar button bitmaps are added to menu items by position, 
@@ -621,7 +586,7 @@ SetupMenuIcons()                            /*
 
 /*============================================================================*/
     void CMainFrame::
-SetupToolBar()                                                          /*
+SetupToolBar()                                                              /*
 
     Called from the CFrame::CreateToolBar() function to load the toolbar
     bitmaps, to connect the tool bar buttons to Resource IDs of the
@@ -644,7 +609,7 @@ SetupToolBar()                                                          /*
 
 /*============================================================================*/
     LRESULT CMainFrame::
-WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
+WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                            /*
 
     This is the main frame message loop. By default, it handles the
     normal housekeeping functions (see Win32++\include\frame.h).

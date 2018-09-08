@@ -641,7 +641,7 @@ namespace Win32xx
     inline CString CFileDialog::GetFileName() const
     {
         CString strResult = GetPathName();
-        int pos = strResult.ReverseFind(_T("\\"));
+        int pos = strResult.ReverseFind(_T('\\'));
         if (pos >= 0)
             return strResult.Mid(pos + 1);
 
@@ -655,7 +655,7 @@ namespace Win32xx
     inline CString CFileDialog::GetFileExt() const
     {
         CString strResult = GetFileName();
-        int pos = strResult.ReverseFind(_T("."));
+        int pos = strResult.ReverseFind(_T('.'));
         if (pos >= 0)
             return strResult.Mid(pos);
 
@@ -669,7 +669,7 @@ namespace Win32xx
     inline CString CFileDialog::GetFileTitle() const
     {
         CString strResult = GetFileName();
-        int pos = strResult.ReverseFind(_T("."));
+        int pos = strResult.ReverseFind(_T('.'));
         if (pos >= 0)
             return strResult.Left(pos);
 
@@ -753,7 +753,7 @@ namespace Win32xx
     inline CString CFileDialog::GetFolderPath() const
     {
         CString strResult = GetPathName();
-        int pos = strResult.ReverseFind(_T("\\"));
+        int pos = strResult.ReverseFind(_T('\\'));
         if (pos >= 0)
             return strResult.Left(pos + 1);
 

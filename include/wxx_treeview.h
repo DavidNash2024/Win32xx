@@ -287,7 +287,7 @@ namespace Win32xx
             tvi.mask = TVIF_TEXT;
             tvi.cchTextMax = textMax;
             tvi.pszText = str.GetBuffer(textMax);
-            SendMessage(TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvi));
+            SendMessage(TVM_GETITEM, 0, (LPARAM)&tvi);
             str.ReleaseBuffer();
         }
         return str;

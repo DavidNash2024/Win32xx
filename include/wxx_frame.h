@@ -1225,8 +1225,8 @@ namespace Win32xx
         if (GetReBar().IsWindow())
         {
             SIZE MaxSize = GetToolBar().GetMaxSize();
-            GetReBar().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(GetToolBar().GetHwnd()),
-                                    reinterpret_cast<LPARAM>(&MaxSize));
+            GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(GetToolBar().GetHwnd()),
+				(LPARAM)(&MaxSize));
 
             if (GetReBarTheme().UseThemes && GetReBarTheme().LockMenuBand)
             {
@@ -1313,7 +1313,7 @@ namespace Win32xx
                     int length = static_cast<int>(GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0));
                     if (length > 0)
                     {
-                        GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, reinterpret_cast<LPARAM>(str.GetBuffer(length)));
+                        GetMenuBar().SendMessage(TB_GETBUTTONTEXT, (WPARAM)lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(length));
                         str.ReleaseBuffer();
                     }
 
@@ -1371,10 +1371,10 @@ namespace Win32xx
                         DWORD tbStyle = static_cast<DWORD>(pTB->SendMessage(TB_GETSTYLE, 0, 0));
                         int style = pTB->GetButtonStyle(item);
 
-                        int button = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, item, 0));
+                        int button = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM)item, 0));
                         TBBUTTON tbb;
                         ZeroMemory(&tbb, sizeof(tbb));
-                        pTB->SendMessage(TB_GETBUTTON, button, reinterpret_cast<LPARAM>(&tbb));
+                        pTB->SendMessage(TB_GETBUTTON, (WPARAM)button, (LPARAM)(&tbb));
                         int image = static_cast<int>(tbb.iBitmap);
 
                         // Calculate text size.
@@ -1383,7 +1383,7 @@ namespace Win32xx
                         if (pTB->HasText()) // Does any button have text?
                         {
                             drawDC.SelectObject(pTB->GetFont());
-                            LRESULT result = pTB->SendMessage(TB_GETBUTTONTEXT, item, reinterpret_cast<LPARAM>(str.GetBuffer(MAX_MENU_STRING)));
+                            LRESULT result = pTB->SendMessage(TB_GETBUTTONTEXT, (WPARAM)item, (LPARAM)str.GetBuffer(MAX_MENU_STRING));
                             str.ReleaseBuffer();
                             if (result> 0)
                             {
@@ -3473,8 +3473,8 @@ namespace Win32xx
         if (GetReBar().IsWindow())
         {
             SIZE MaxSize = toolBar.GetMaxSize();
-            GetReBar().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(toolBar.GetHwnd()),
-                reinterpret_cast<LPARAM>(&MaxSize));
+            GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(toolBar.GetHwnd()),
+				(LPARAM)(&MaxSize));
         }
     }
 
@@ -3507,8 +3507,8 @@ namespace Win32xx
         if (GetReBar().IsWindow())
         {
             SIZE maxSize = toolBar.GetMaxSize();
-            GetReBar().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(toolBar.GetHwnd()),
-                reinterpret_cast<LPARAM>(&maxSize));
+            GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(toolBar.GetHwnd()),
+				(LPARAM)(&maxSize));
         }
     }
 
@@ -3540,8 +3540,8 @@ namespace Win32xx
         if (GetReBar().IsWindow())
         {
             SIZE MaxSize = toolBar.GetMaxSize();
-            GetReBar().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(toolBar.GetHwnd()),
-                reinterpret_cast<LPARAM>(&MaxSize));
+            GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(toolBar.GetHwnd()),
+				(LPARAM)(&MaxSize));
         }
     }
 

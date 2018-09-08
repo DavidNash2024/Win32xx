@@ -182,7 +182,7 @@ namespace Win32xx
 
         // extract the directory part of the name (if any)
         CString str = pFileSearch;
-        int delimiter = str.ReverseFind(_T("\\"));
+        int delimiter = str.ReverseFind(_T('\\'));
         if (delimiter >= 0)
         {
             m_root = str.Left(delimiter);
@@ -260,7 +260,7 @@ namespace Win32xx
         CString name = m_findData.cFileName;
         if (!IsDots())
         {
-            int dot = name.ReverseFind(_T("."));
+            int dot = name.ReverseFind(_T('.'));
             if (dot >= 0)
                 name = name.Left(dot);
         }

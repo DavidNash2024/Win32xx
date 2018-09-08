@@ -5,7 +5,7 @@ display the contents of a text file using the familiar CApp-CMainFrame-CDoc-CVie
 architecture.  The CView class that controls the displayed material is derived from
 the CScrollWnd class, introduced here, which performs the actual scrolling 
 functions. The CApp class starts Win32++ and runs the message loop. The CDoc class
-reads text document and the CView class displays the document's text on the screen.  
+reads a text document and the CView class displays the document's text on the screen.  
 
 
 Features demonstrated in this example
@@ -28,4 +28,6 @@ Features demonstrated in this example
 * Overriding PreCreate to set the initial window parameters.
 * Overriding the OnDraw method to draw the document text on the window's device
   context.
-* Using TRACE to output debug text.
+* The detection of the selected file's encoding and transforming file input into
+  Windows Unicode format. Files encoded in ANSI, UTF-8, and UTF-16 are supported,
+  the latter in both big endian and little endian formats.

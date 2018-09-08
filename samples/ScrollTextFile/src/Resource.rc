@@ -1,46 +1,21 @@
-/* (04-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
+/* (04-Aug-2016) [Tab/Indent: 4/4][Line/Box: 80/74]              (Resource.rc) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2017, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
 |                         robert.c.tausworthe@ieee.org                         |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Typical application resources file. Adapted
-    to use Win32++ Windows interface classes, Copyright c) 2005-2017
-    David Nash, under permissions granted therein.
+    Contents Description: Typical application resources file. Adapted to use the
+    Win32++ Windows interface classes, Copyright c) 2005-2017 David Nash, under 
+    permissions granted therein.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Special Conventions:
+	Caveats: These materials are available under the same provisions as found 
+	in the Win32++ copyright.txt notice.
 
     Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Network Planning
-        and Preparation Subsystem project for C++ programming.
+        The programming standards roughly follow those established by the 
+    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation 
+    Subsystem project for C++ programming.
 
     Originally a Microsoft Visual C++ generated resource script.
 
@@ -53,7 +28,7 @@
 /*==============================================================================
 
 
-    Generated from the TEXTINCLUDE 2 resource.                      */
+    Generated from the TEXTINCLUDE 2 resource.                              */
 
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
@@ -62,44 +37,44 @@
 
 /*==============================================================================
 
-    English (United States) resources                               */
+    English (United States) resources                                       */
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 /*==============================================================================
 
-    RT_MANIFEST                                                     */
+    RT_MANIFEST                                                             */
 
 1    RT_MANIFEST "../src/res/Win32++.manifest"
 
 /*==============================================================================
 
-    Menu                                                            */
+    Menu                                                                    */
 
 IDW_MAIN MENU
 {
     POPUP "&File"
     {
-        MENUITEM "&Open File\tCtrl+O",    IDM_FILE_OPEN
-        MENUITEM "Close File\tCtrl+W",    IDM_FILE_CLOSE
+        MENUITEM "&Open File\tCtrl+O",  IDM_FILE_OPEN
+        MENUITEM "Close File\tCtrl+W",  IDM_FILE_CLOSE
         MENUITEM SEPARATOR
-        MENUITEM "Recent Files",      IDW_FILE_MRU_FILE1, GRAYED
+        MENUITEM "Recent Files",        IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
+        MENUITEM "E&xit\tCtrl+Q",       IDM_FILE_EXIT
     }
     POPUP "&View"
     {
-        MENUITEM "&Tool Bar",         IDW_VIEW_TOOLBAR,   CHECKED
-        MENUITEM "&Status Bar",           IDW_VIEW_STATUSBAR, CHECKED
+        MENUITEM "&Tool Bar",           IDW_VIEW_TOOLBAR,   CHECKED
+        MENUITEM "&Status Bar",         IDW_VIEW_STATUSBAR, CHECKED
         MENUITEM SEPARATOR
-            MENUITEM "Font",          IDM_FONT_CHOICE
-            MENUITEM "Color",                 IDM_COLOR_CHOICE
+        MENUITEM "Font",                IDM_FONT_CHOICE
+        MENUITEM "Color",               IDM_COLOR_CHOICE
     }
 
     POPUP "&Help"
     {
-        MENUITEM "&About",             IDW_ABOUT
+        MENUITEM "&About",              IDW_ABOUT
     }
 }
 
@@ -109,20 +84,20 @@ IDW_MAIN MENU
     Icon
 
     The icon with the lowest ID value is placed first to ensure that
-    the application icon remains consistent on all systems.     */
+    the application icon remains consistent on all systems.                 */
 
 IDW_MAIN                  ICON                  "../src/res/Win32xx.ico"
 
 /*==============================================================================
 
-    Bitmaps                                                         */
+    Bitmaps                                                                 */
 
 IDW_MAIN                  BITMAP                "../src/res//toolbar16.bmp"
 IDB_TOOLBAR               BITMAP                "../src/res/toolbar24.bmp"
 
 /*==============================================================================
 
-    About Dialog: triggered by CFrame::OnHelp()             */
+    About Dialog: triggered by CFrame::OnHelp()                             */
 
 IDW_ABOUT DIALOGEX 200, 200, 200, 100
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
@@ -137,7 +112,7 @@ FONT 8, "MS Shell Dlg", 400, 0
 
 /*==============================================================================
 
-    Accelerators                                                    */
+    Accelerators                                                            */
 
 IDW_MAIN ACCELERATORS
 {
@@ -150,7 +125,7 @@ IDW_MAIN ACCELERATORS
 
 /*==============================================================================
 
-    String Tables--tool tips and status labels          */
+    String Tables--tool tips and status labels                              */
 STRINGTABLE  // for the mainframe
 {
     IDW_MAIN                "Scroll Text File Demo"
@@ -178,7 +153,7 @@ STRINGTABLE   // standard file menu or toolbar items
 
 STRINGTABLE     // about box and toolbar items
 {
-    IDW_ABOUT           "Display information about this program."
+    IDW_ABOUT               "Display information about this program."
 }
 
 STRINGTABLE     // window-related items
@@ -197,7 +172,7 @@ STRINGTABLE     // window-related items
 #ifdef APSTUDIO_INVOKED
 /*==============================================================================
 
-    TEXTINCLUDE                                                     */
+    TEXTINCLUDE                                                             */
 
 1 TEXTINCLUDE 
 {
@@ -226,7 +201,7 @@ STRINGTABLE
 {     // app-specific program values
     IDS_APP_VERSION         "Version 1.0 (2017)"
     IDS_ARCHIVE_FILE_EXT    ".arc"
-    IDS_DATAPATH_SUBDIR "win32++\\"
+    IDS_DATAPATH_SUBDIR     "win32++\\"
     IDS_DOC_DEFAULT_EXT     ".txt"
     IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
     IDS_MAX_MRU_ENTRIES     "5"

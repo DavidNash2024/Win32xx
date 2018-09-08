@@ -1,47 +1,22 @@
-/* (31-Dec-2017) [Tab/Indent: 8/8][Line/Box: 80/74]               (FontEx.cpp) *
+/* (31-Dec-2017) [Tab/Indent: 4/4][Line/Box: 80/74]               (FontEx.cpp) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2017, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
 |                         robert.c.tausworthe@ieee.org                         |
 |                                                                              |
 ===============================================================================*
 
     Contents Description: Implementation of an extention of the CFont class
-    using the Win32++ Windows interface classes, Copyright c) 2005-2017
-    David Nash, under permissions granted therein. Extensions include
-    font size, color, font dialog option flags, and coordinate mapping mode.
+    using the Win32++ Windows interface classes, Copyright (c) 2005-2017 David 
+    Nash, under permissions granted therein. Extensions include font size, 
+    color, font dialog option flags, and coordinate mapping mode.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Special Conventions:
+ 	Caveats: These materials are available under the same provisions as found 
+	in the Win32++ copyright.txt notice.
 
     Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Network Planning
-        and Preparation Subsystem project for C++ programming.
+        The programming standards roughly follow those established by the 
+    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation 
+    Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -50,7 +25,7 @@
 
 /*============================================================================*/
     CFontEx::
-CFontEx()                                                               /*
+CFontEx()                                                                   /*
 
     Create an extended font object.
 *-----------------------------------------------------------------------------*/
@@ -63,7 +38,7 @@ CFontEx()                                                               /*
 
 /*============================================================================*/
     CFontEx::
-~CFontEx()                                                              /*
+~CFontEx()                                                                  /*
 
     Destructor.
 *-----------------------------------------------------------------------------*/
@@ -72,7 +47,7 @@ CFontEx()                                                               /*
 
 /*============================================================================*/
     void CFontEx::
-Choose(CDC& dc, LPCTSTR wintitle /* =  NULL */)                     /*
+Choose(CDC& dc, LPCTSTR wintitle /* =  NULL */)                             /*
 
         Select the object font typeface, characteristics, color, and size in
     the device contex dc. The font background color is presumed to be
@@ -104,7 +79,7 @@ Choose(CDC& dc, LPCTSTR wintitle /* =  NULL */)                     /*
 
 /*============================================================================*/
     void CFontEx::
-GetSize(CDC& dc)                                                /*
+GetSize(CDC& dc)                                                            /*
 
     Record the width and height of the object font in the device context dc,
     in client device units.
@@ -123,7 +98,7 @@ GetSize(CDC& dc)                                                /*
 
 /*============================================================================*/
     void CFontEx::
-Serialize(CArchive &ar)                                                 /*
+Serialize(CArchive &ar)                                                     /*
 
     Save and restore the current CFontEx object in the archive ar,
     maintaining compatability between ANSI and UNICODE versions of archived
@@ -166,7 +141,7 @@ Serialize(CArchive &ar)                                                 /*
 
 /*============================================================================*/
         void CFontEx::
-SetDefault(CDC& dc)                                                     /*
+SetDefault(CDC& dc)                                                         /*
 
         Create the default app view font.
 *-----------------------------------------------------------------------------*/

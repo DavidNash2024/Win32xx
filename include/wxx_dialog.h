@@ -593,7 +593,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         assert(::IsWindow(control));
-        SendMessage(WM_NEXTDLGCTL, reinterpret_cast<WPARAM>(control), TRUE);
+        SendMessage(WM_NEXTDLGCTL, (WPARAM)control, (LPARAM)TRUE);
     }
 
     // Converts the dialog box units to screen units (pixels).
@@ -609,7 +609,7 @@ namespace Win32xx
     inline void CDialog::NextDlgCtrl() const
     {
         assert(IsWindow());
-        SendMessage(WM_NEXTDLGCTL, FALSE, FALSE);
+        SendMessage(WM_NEXTDLGCTL, (WPARAM)FALSE, (LPARAM)FALSE);
     }
 
     // Sets the keyboard focus to the previous dialog control.
@@ -617,7 +617,7 @@ namespace Win32xx
     inline void CDialog::PrevDlgCtrl() const
     {
         assert(IsWindow());
-        SendMessage(WM_NEXTDLGCTL, TRUE, FALSE);
+        SendMessage(WM_NEXTDLGCTL, (WPARAM)TRUE, (LPARAM)FALSE);
     }
 
     // Changes the identifier of the default push button for a dialog box.
@@ -806,7 +806,7 @@ namespace Win32xx
         ::SetClassLongPtr(parent, GCL_STYLE, style);
 
         // Calls AddChild for each child window with default settings.
-        ::EnumChildWindows(parent, EnumWindowsProc, reinterpret_cast<LPARAM>(this));
+        ::EnumChildWindows(parent, EnumWindowsProc, (LPARAM)this);
     }
 
     // Called to perform horizontal scrolling.
