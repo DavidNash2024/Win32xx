@@ -847,44 +847,84 @@ namespace Win32xx
     }
 
     // Finds a character in the string.
-    template <class T>
-    inline int CStringT<T>::Find(T ch, int index /* = 0 */) const
+    template <>
+    inline int CStringT<CHAR>::Find(CHAR ch, int index /* = 0 */) const
     {
         assert(index >= 0);
 		if (index > GetLength())
 			return -1;
 
-		LPCTSTR str = m_str.c_str();
-		LPCTSTR substr = _tcschr(str + index, ch);
+		LPCSTR str = m_str.c_str();
+		LPCSTR substr = strchr(str + index, ch);
 
 		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
     }
+
+	// Finds a character in the string.
+	template <>
+	inline int CStringT<WCHAR>::Find(WCHAR ch, int index /* = 0 */) const
+	{
+		assert(index >= 0);
+		if (index > GetLength())
+			return -1;
+
+		LPCWSTR str = m_str.c_str();
+		LPCWSTR substr = wcschr(str + index, ch);
+
+		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
+	}
 
     // Finds a substring within the string.
-    template <class T>
-    inline int CStringT<T>::Find(const T* pText, int index /* = 0 */) const
+    template <>
+    inline int CStringT<CHAR>::Find(const CHAR* pText, int index /* = 0 */) const
     {
         assert(pText);
         assert(index >= 0);
 		if (index > GetLength())
 			return -1;
 
-		LPCTSTR str = m_str.c_str();
-		LPCTSTR substr = _tcsstr(str + index, pText);
+		LPCSTR str = m_str.c_str();
+		LPCSTR substr = strstr(str + index, pText);
 
 		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
     }
 
+	// Finds a substring within the string.
+	template <>
+	inline int CStringT<WCHAR>::Find(const WCHAR* pText, int index /* = 0 */) const
+	{
+		assert(pText);
+		assert(index >= 0);
+		if (index > GetLength())
+			return -1;
+
+		LPCWSTR str = m_str.c_str();
+		LPCWSTR substr = wcsstr(str + index, pText);
+
+		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
+	}
+
     // Finds the first matching character from a set.
-    template <class T>
-    inline int CStringT<T>::FindOneOf(const T* pText) const
+    template <>
+    inline int CStringT<CHAR>::FindOneOf(const CHAR* pText) const
     {
         assert(pText);
-		LPCTSTR str = m_str.c_str();
-		LPCTSTR substr = _tcspbrk(str, pText);
+		LPCSTR str = m_str.c_str();
+		LPCSTR substr = strpbrk(str, pText);
 		
 		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
     }
+
+	// Finds the first matching character from a set.
+	template <>
+	inline int CStringT<WCHAR>::FindOneOf(const WCHAR* pText) const
+	{
+		assert(pText);
+		LPCWSTR str = m_str.c_str();
+		LPCWSTR substr = wcspbrk(str, pText);
+
+		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
+	}
 
     // Formats the string as sprintf does.
     template <class T>
@@ -1226,12 +1266,22 @@ namespace Win32xx
     }
 
 	// Search for a character within the string, starting from the end.
-	template <class T>
-	inline int CStringT<T>::ReverseFind(T ch) const
+	template <>
+	inline int CStringT<CHAR>::ReverseFind(CHAR ch) const
 	{
-		LPCTSTR str = m_str.c_str();
-		LPCTSTR substr = _tcsrchr(str, ch);
+		LPCSTR str = m_str.c_str();
+		LPCSTR substr = strrchr(str, ch);
 	
+		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
+	}
+
+	// Search for a character within the string, starting from the end.
+	template <>
+	inline int CStringT<WCHAR>::ReverseFind(WCHAR ch) const
+	{
+		LPCWSTR str = m_str.c_str();
+		LPCWSTR substr = wcsrchr(str, ch);
+
 		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
 	}
 
