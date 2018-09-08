@@ -1,48 +1,30 @@
-/* (14-Nov-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                 (View.cpp) *
+/* (14-Nov-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                 (View.cpp) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2017, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
 |                         robert.c.tausworthe@ieee.org                         |
 |                                                                              |
 ===============================================================================*
 
     Contents Description: Implementation of the CScrollWnd demo application
     view class for a typical Windows application using the Win32++ Windows
-    interface classes, Copyright (c) 2005-2017 David Nash, under
-    permissions granted therein. This class displays the contents
-    of a document in the form of a scrollable set of lines of text.
+    interface classes, Copyright (c) 2005-2017 David Nash, under permissions 
+    granted therein. This class displays the contents of a document in the form 
+    of a scrollable set of lines of text.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
+ 	Caveats: These materials are available under the same provisions as found 
+	in the Win32++ copyright.txt notice.
 
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
+    Programming Notes:
+        The programming standards roughly follow those established by the 
+    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation 
+    Subsystem project for C++ programming.
 
 ================================================================================
 
     Special Conventions: This class displays the client rectangle filled with
     lines of text obtained from the CDoc class. Horizontal tabs are not
     supported by this class; such padding is expected to be supplied by the
-    CDoc class. The size of the client are is set by the CMainFrame class,
+    CDoc class. The size of the client is is set by the CMainFrame class,
     and is resizable by dragging the frame sides or lower-right corner.
 
     Vertical scrolling selects the starting line of the document and
@@ -56,6 +38,9 @@
     and lines that will fit the client area. The translation between logical
     (character, line) coordinates and (hPixel, yPixel) device coordinates is 
     done via the ScrlToDev() and DevToScrl() members.
+
+    The display features wide characters, and is therefore able to show Unicode
+    code point glyphs.
     
     For particulars, see the methods
 
@@ -84,10 +69,6 @@
         SetNewAppSize
         Paint
 
-    The programming standards roughly follow those established by the 
-    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation 
-    Subsystem project for C++ programming.
-
 *******************************************************************************/
 
 #include "stdafx.h"
@@ -99,7 +80,7 @@
 
 /*============================================================================*/
     CView::
-CView()                                                         /*
+CView()                                                                     /*
 
     Construct a scrollable view with colored text and background.
 *-----------------------------------------------------------------------------*/
@@ -112,7 +93,7 @@ CView()                                                         /*
 
 /*============================================================================*/
     CView::
-~CView()                                                        /*
+~CView()                                                                    /*
 
     Destructor.
 *-----------------------------------------------------------------------------*/
@@ -121,7 +102,7 @@ CView()                                                         /*
 
 /*============================================================================*/
     CPoint  CView::
-DevToScrl(CPoint devpt) const                           /*
+DevToScrl(CPoint devpt) const                                               /*
 
     Transform the scrolling coordinate device point devpt (here, pixels) 
     to the corresponding scroll position(here, chars and lines). 
@@ -134,7 +115,7 @@ DevToScrl(CPoint devpt) const                           /*
 
 /*============================================================================*/
     void CView::
-ClientFontChoice()                          /*
+ClientFontChoice()                                                          /*
 
     Engage the font dialog to choose a font for the client window.
 *-----------------------------------------------------------------------------*/
@@ -151,7 +132,7 @@ ClientFontChoice()                          /*
 
 /*============================================================================*/
     void CView::
-InitCustomColors()                                                      /*
+InitCustomColors()                                                          /*
 
     Initialize the custom color table entries to default values. Override
     this member to provide an application-dependent array.
@@ -178,7 +159,7 @@ InitCustomColors()                                                      /*
 
 /*============================================================================*/
     void CView::
-OnColorChoice()                             /*
+OnColorChoice()                                                             /*
 
     Choose the client area background color.
 *-----------------------------------------------------------------------------*/
@@ -197,7 +178,7 @@ OnColorChoice()                             /*
 
 /*============================================================================*/
     void CView::
-OnInitialUpdate()                                                       /*
+OnInitialUpdate()                                                           /*
 
     Called immediately after the window is created to prepare the initial 
     view.
@@ -209,13 +190,14 @@ OnInitialUpdate()                                                       /*
 
 /*============================================================================*/
         void    CView::
-Paint(CDC& dcMem)                                               /*
+Paint(CDC& dcMem)                                                           /*
 
     Paint the window's compatible bitmap whose device context is dcMem
     bounded by the rectangle rc, in pixel units. The content of the window
-    consists of lines of text, where the top-left corner of the display is
-    given as the current scroll position in the number of average character
-    widths from the left and lines from the top of the document.
+    consists of lines of wide character text, where the top-left corner of 
+    the display is given as the current scroll position in the number of 
+    average character widths from the left and lines from the top of the 
+    document.
 *-----------------------------------------------------------------------------*/
 {
       // select the window font
@@ -224,7 +206,7 @@ Paint(CDC& dcMem)                                               /*
     dcMem.SetTextColor(m_VuFont.GetTxColor());
     dcMem.SetBkColor(GetWndBkColor());
       // display the view content
-    CString s;
+    CStringW s;
     if (TheDoc().GetLength() > 0)
     {
         int  doc_length = TheDoc().GetLength(),
@@ -240,12 +222,11 @@ Paint(CDC& dcMem)                                               /*
                 continue;
 
             else if (j == doc_length)
-                  // for the demo only:
-                s = _T("---- end of document ----");
+                s = L"---- end of document ----";
             else
                 s =  TheDoc().GetRecord(j, sp.x); 
 
-            TextLineOut(dcMem, 0, i, s.c_str());
+            TextLineOut(dcMem, 0, i, s);
         }
     }
     else
@@ -253,15 +234,15 @@ Paint(CDC& dcMem)                                               /*
           // There is no image, so display a hint to get one
         ShowHScrollBar(FALSE);
         ShowVScrollBar(FALSE);
-        s = _T("No document is open.");
+        s = L"No document is open.";
         CPoint sp(5, 5);
-        TextLineOut(dcMem, sp.x, sp.y, s.c_str());
+        TextLineOut(dcMem, sp.x, sp.y, s);
     }
 }
 
 /*============================================================================*/
     void CView::
-PreCreate(CREATESTRUCT &cs)                                             /*
+PreCreate(CREATESTRUCT &cs)                                                 /*
 
     Set defaults used by the create function for the view window for
     precise control over the window created.
@@ -280,7 +261,7 @@ PreCreate(CREATESTRUCT &cs)                                             /*
 
 /*============================================================================*/
     void CView::
-PreRegisterClass(WNDCLASS &wc)                                          /*
+PreRegisterClass(WNDCLASS &wc)                                              /*
 
     Set Window class parameters for precise control over the characteristics
     of the window class created.
@@ -294,7 +275,7 @@ PreRegisterClass(WNDCLASS &wc)                                          /*
 
 /*============================================================================*/
     BOOL CView::
-PreTranslateMessage(MSG &msg)                                           /*
+PreTranslateMessage(MSG &msg)                                               /*
 
     Used by CWinApp to translate window messages before they are dispatched
     to theTranslateMessage and DispatchMessage Windows functions in the
@@ -318,7 +299,7 @@ PreTranslateMessage(MSG &msg)                                           /*
 
 /*============================================================================*/
     CPoint  CView::
-ScrlToDev(CPoint viewpt) const                      /*
+ScrlToDev(CPoint viewpt) const                                              /*
 
     Transform the scrolling coordinate point viewpt (here, char and line) 
     to the corresponding device point (here, client view pixels). 
@@ -331,7 +312,7 @@ ScrlToDev(CPoint viewpt) const                      /*
 
 /*============================================================================*/
         void CView::
-Serialize(CArchive &ar)                                                 /*
+Serialize(CArchive &ar)                                                     /*
 
         Serialize or deserialize the view to and from the archive ar, depending
     on the sense of IsStoring().  Leave the archive open for for further
@@ -363,7 +344,7 @@ Serialize(CArchive &ar)                                                 /*
 
 /*============================================================================*/
         void    CView::
-SetScrollAppInfo()                          /*
+SetScrollAppInfo()                                                          /*
 
     Set the scroll ranges and increments for this document.
 *-----------------------------------------------------------------------------*/
@@ -377,7 +358,7 @@ SetScrollAppInfo()                          /*
 
 /*============================================================================*/
     void CView::
-SetNewAppSize()                                             /*
+SetNewAppSize()                                                             /*
 
     Calculate the nominal numbers of horizontal characters and vertical 
     lines that span the document in display. Set scrolling parameters.
@@ -403,11 +384,11 @@ SetNewAppSize()                                             /*
 
 /*============================================================================*/
         void    CView::
-TextLineOut(CDC& dc, UINT leftcol, UINT line, CString s)        /*
+TextLineOut(CDC& dc, UINT leftcol, UINT line, const CStringW &s)            /*
 
-    Output the string s beginning at leftcol on the given line of the client
-    area with device context dc, within the client rectangle rc using the
-    given font sizes.
+    Output the wide character string s beginning at leftcol on the given line 
+    of the client area with device context dc, within the client rectangle rc 
+    using the given font sizes.
 *-----------------------------------------------------------------------------*/
 {
       // set TextOut() below to use device coordinates
@@ -417,7 +398,7 @@ TextLineOut(CDC& dc, UINT leftcol, UINT line, CString s)        /*
       // convert left column and line number to device coordinates
     CPoint pt = ScrlToDev(CPoint(leftcol, line));
       // output the line to the view dc
-    TextOut(dc, pt.x, pt.y, s.c_str(), s.GetLength());
+    TextOutW(dc, pt.x, pt.y, s.c_str(), s.GetLength());
       // restore previous alignment flag status and mapping mode
     SetTextAlign(dc, textalign);
     dc.SetMapMode(oldmode);
@@ -425,7 +406,7 @@ TextLineOut(CDC& dc, UINT leftcol, UINT line, CString s)        /*
 
 /*============================================================================*/
     LRESULT CView::
-WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
+WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                            /*
 
     All messages for this window pass through this WndProc.  In particular,
     handling scrollbar messages are dispatched here.

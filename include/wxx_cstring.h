@@ -218,7 +218,7 @@ namespace Win32xx
         int      Remove(const T* pText);
         int      Replace(T oldChar, T newChar);
         int      Replace(const T* pOld, const T* pNew);
-        int      ReverseFind(const T* pText, int start = -1) const;
+		int      ReverseFind(T ch) const;
         CStringT Right(int count) const;
         void     SetAt(int index, T ch);
         BSTR     SetSysString(BSTR* pBstr) const;
@@ -851,10 +851,13 @@ namespace Win32xx
     inline int CStringT<T>::Find(T ch, int index /* = 0 */) const
     {
         assert(index >= 0);
-        size_t s = m_str.find(ch, index);
+		if (index > GetLength())
+			return -1;
 
-        if (s == std::string::npos) return -1;
-        return static_cast<int>(s);
+		LPCTSTR str = m_str.c_str();
+		LPCTSTR substr = _tcschr(str + index, ch);
+
+		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
     }
 
     // Finds a substring within the string.
@@ -863,10 +866,13 @@ namespace Win32xx
     {
         assert(pText);
         assert(index >= 0);
-        size_t s = m_str.find(pText, index);
+		if (index > GetLength())
+			return -1;
 
-        if (s == std::string::npos) return -1;
-        return static_cast<int>(s);
+		LPCTSTR str = m_str.c_str();
+		LPCTSTR substr = _tcsstr(str + index, pText);
+
+		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
     }
 
     // Finds the first matching character from a set.
@@ -874,10 +880,10 @@ namespace Win32xx
     inline int CStringT<T>::FindOneOf(const T* pText) const
     {
         assert(pText);
-        size_t s = m_str.find_first_of(pText);
-
-        if (s == std::string::npos) return -1;
-        return static_cast<int>(s);
+		LPCTSTR str = m_str.c_str();
+		LPCTSTR substr = _tcspbrk(str, pText);
+		
+		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
     }
 
     // Formats the string as sprintf does.
@@ -1219,13 +1225,15 @@ namespace Win32xx
         return str;
     }
 
-    // Search for a substring within the string, starting from the end.
-    template <class T>
-    inline int CStringT<T>::ReverseFind(const T* pText, int index /* = -1 */) const
-    {
-        assert(pText);
-        return static_cast<int>(m_str.rfind(pText, index));
-    }
+	// Search for a character within the string, starting from the end.
+	template <class T>
+	inline int CStringT<T>::ReverseFind(T ch) const
+	{
+		LPCTSTR str = m_str.c_str();
+		LPCTSTR substr = _tcsrchr(str, ch);
+	
+		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
+	}
 
     // Sets the character at the specified position to the specified value.
     template <class T>

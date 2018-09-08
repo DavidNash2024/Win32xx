@@ -189,7 +189,7 @@ namespace Win32xx
         m_psp.pszTemplate   = MAKEINTRESOURCE(templateID);
         m_psp.pszTitle      = m_title;
         m_psp.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
-        m_psp.lParam        = reinterpret_cast<LPARAM>(this);
+        m_psp.lParam        = (LPARAM)this;
         m_psp.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
     }
 
@@ -398,7 +398,7 @@ namespace Win32xx
         if (msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
             (msg.wParam == VK_TAB || msg.wParam == VK_PRIOR || msg.wParam == VK_NEXT))
         {
-            if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0, reinterpret_cast<LPARAM>(&msg)))
+            if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0, (LPARAM)&msg))
                 return TRUE;
         }
 
@@ -430,9 +430,9 @@ namespace Win32xx
         assert(IsWindow());
 
         if (isChanged)
-            GetParent().SendMessage(PSM_CHANGED, reinterpret_cast<WPARAM>(GetHwnd()), 0);
+            GetParent().SendMessage(PSM_CHANGED, (WPARAM)GetHwnd(), 0);
         else
-            GetParent().SendMessage(PSM_UNCHANGED, reinterpret_cast<WPARAM>(GetHwnd()), 0);
+            GetParent().SendMessage(PSM_UNCHANGED, (WPARAM)GetHwnd(), 0);
     }
 
     // Sets the title of the property page.
@@ -783,7 +783,7 @@ namespace Win32xx
 
         int nPage = GetPageIndex(pPage);
         if (GetHwnd() != 0)
-            SendMessage(*this, PSM_REMOVEPAGE, nPage, 0);
+            SendMessage(*this, PSM_REMOVEPAGE, (WPARAM)nPage, 0);
 
         m_allPages.erase(m_allPages.begin() + nPage, m_allPages.begin() + nPage+1);
         m_psh.nPages = static_cast<int>(m_allPages.size());
@@ -797,7 +797,7 @@ namespace Win32xx
         if (msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
             (msg.wParam == VK_TAB || msg.wParam == VK_PRIOR || msg.wParam == VK_NEXT))
         {
-            if (SendMessage(PSM_ISDIALOGMESSAGE, 0, reinterpret_cast<LPARAM>(&msg)))
+            if (SendMessage(PSM_ISDIALOGMESSAGE, 0, (LPARAM)&msg))
                 return TRUE;
         }
 
@@ -815,7 +815,7 @@ namespace Win32xx
     inline BOOL CPropertySheet::SetActivePage(int page)
     {
         assert(IsWindow());
-        return (SendMessage(*this, PSM_SETCURSEL, page, 0) != 0);
+        return (SendMessage(*this, PSM_SETCURSEL, (WPARAM)page, 0) != 0);
     }
 
     // Activates the specified property page.

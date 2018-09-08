@@ -630,10 +630,12 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const       /*
     p1 = MIN(timestr.Find(_T(":")), len);
     if (p1 >= 0)
     {     // the time of day is present
-        p2 = timestr.ReverseFind(_T(":"));
+        p2 = timestr.ReverseFind(_T(':'));
+		CString timestrLeft = timestr.Left(p1);
+
         if (p1 == p2) // H:M only
         {
-            p2 = MAX(timestr.ReverseFind(_T(" "), p1), 0);
+            p2 = MAX(timestrLeft.ReverseFind(_T(' ')), 0);
             p3 = MAX(timestr.Find(_T(" "), p1), static_cast<int>(len));
             H = _ttoi(timestr.Mid(p2 + 1, p1 - p2).c_str());
             M = _ttoi(timestr.Mid(p1 + 1, p3 - p1).c_str());
@@ -641,7 +643,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const       /*
         }
         else // H:M:S
         {
-            p3 = MAX(timestr.ReverseFind(_T(" "), p1), static_cast<int>(0));
+            p3 = MAX(timestrLeft.ReverseFind(_T(' ')), static_cast<int>(0));
             H = _ttoi(timestr.Mid(p3, p1 - p3).c_str());
             M = _ttoi(timestr.Mid(p1 + 1, p2 - p1).c_str());
             p3 = MAX(timestr.Find(_T(" "), p1), static_cast<int>(len));

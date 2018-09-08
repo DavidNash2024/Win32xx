@@ -1,47 +1,22 @@
-/* (02-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                  (App.cpp) *
+/* (02-Aug-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                  (App.cpp) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2017, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
 |                         robert.c.tausworthe@ieee.org                         |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of a basic Single Document
-    Interface (SDI) CApp class for the ScrollWin demo application using the
-    Win32++ Windows interface classes, Copyright c) 2005-2017 David Nash,
-    under permissions granted therein.
+    Contents Description: Implementation of a basic Single Document Interface 
+    (SDI) CApp class for the ScrollWin demo application using the Win32++ 
+    Windows interface classes, Copyright c) 2005-2017 David Nash, under 
+    permissions granted therein.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Special Conventions:
+ 	Caveats: These materials are available under the same provisions as found 
+	in the Win32++ copyright.txt notice.
 
     Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Network Planning
-        and Preparation Subsystem project for C++ programming.
+        The programming standards roughly follow those established by the 
+    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation 
+    Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -53,34 +28,28 @@
 
 /*============================================================================*/
     int APIENTRY 
-WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
-    int nCmdShow)                           /*
+WinMain(HINSTANCE, HINSTANCE, LPSTR, int )                                  /*
 
     Application entry point.
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(hInstance);
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
-    UNREFERENCED_PARAMETER(nCmdShow);
-
       // set default return value
     int rtn = -1;
       // Create and check the semaphore that limits the number of
       // simultaneously executing instances of this application
       // to m_nInstances.
-    static  const   LPCTSTR semaphoreName = _T("Win32++_CommonDialogsDemo");
-    static  const   int     nInstances = 1; // number of allowed instances
-    static  HANDLE  m_hSem;
+    LPCTSTR semaphoreName = _T("Win32++_CommonDialogsDemo");
+    LONG     nInstances = 1; // number of allowed instances
 
-        m_hSem = CreateSemaphore(NULL, nInstances, nInstances, semaphoreName);
-        if (WaitForSingleObject(m_hSem, 0) == WAIT_TIMEOUT)
-        {
-            ::MessageBox(NULL, _T("The allowed number of instances of this\n")
-            _T("application are already running."), _T("Stop"),
-            MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-            CloseHandle(m_hSem);
-            return 0;  // before entering the message loop
+    CSemaphore sf(nInstances, nInstances, semaphoreName, NULL);
+    HANDLE  m_hSem = (HANDLE)sf;
+    if (WaitForSingleObject(m_hSem, 0) == WAIT_TIMEOUT)
+    {
+        ::MessageBox(NULL, _T("The allowed number of instances of this\n")
+        _T("application are already running."), _T("Stop"),
+        MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+        sf.ReleaseSemaphore(1, NULL);
+        return 0;  // before entering the message loop
     }
       // declare the CApp object and run the application
     try
@@ -117,9 +86,8 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
             MB_ICONSTOP | MB_TASKMODAL);
     }
 
-      // release the semaphore
-        ReleaseSemaphore(m_hSem, 1, NULL);
-        CloseHandle(m_hSem);
+    // release the semaphore
+    sf.ReleaseSemaphore(1, NULL);
     return rtn;
 
 }
@@ -130,7 +98,7 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 
 *=============================================================================*/
     CApp::
-CApp() : m_nMaxMRUSlots(0)                            /*
+CApp() : m_nMaxMRUSlots(0)                                                  /*
 
     Default constructor.
 *-----------------------------------------------------------------------------*/
@@ -139,7 +107,7 @@ CApp() : m_nMaxMRUSlots(0)                            /*
 
 /*============================================================================*/
     CApp::
-~CApp()                                 /*
+~CApp()                                                                     /*
 
     Default destructor.
 *-----------------------------------------------------------------------------*/
@@ -148,7 +116,7 @@ CApp() : m_nMaxMRUSlots(0)                            /*
 
 /*============================================================================*/
     BOOL CApp::
-InitInstance()                              /*
+InitInstance()                                                              /*
 
     This method is immediately called from the base class (CWinApp) Run()
     method to create the frame, perform initialization of the app, and
@@ -207,7 +175,7 @@ InitInstance()                              /*
 
 /*=============================================================================*
 
-    Static Members                                                  */
+    Static Members                                                          */
 
 static const CString months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec";
 
@@ -230,7 +198,7 @@ DatInt(LPCTSTR pDate)                                             /*
 
 /*============================================================================*/
     CString CApp::
-IntDat(ULONG hexdate)                                               /*
+IntDat(ULONG hexdate)                                                       /*
 
     Convert the hex date, of form 0xyyyymodd, to a CString date of the form
     mmm dd yyyy,  where mmm is character based month, and mo is 0 (Jan) to
@@ -247,7 +215,7 @@ IntDat(ULONG hexdate)                                               /*
 
 /*============================================================================*/
         void CApp::
-Serialize(CArchive &ar)                                                 /*
+Serialize(CArchive &ar)                                                     /*
 
         Called to serialize the application to or from the archive ar, depending
     on the sense of IsStoring().  Leaves the archive open for for further
@@ -276,7 +244,7 @@ Serialize(CArchive &ar)                                                 /*
 
 *=============================================================================*/
     CString CApp::
-MakeAppDataPath(const CString& subpath)                 /*
+MakeAppDataPath(const CString& subpath)                                     /*
 
     Return a string consisting of the APPDATA environmental path with the
     given subpath appended.  Create this path if it does not exist. If

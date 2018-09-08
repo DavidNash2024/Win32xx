@@ -644,10 +644,10 @@ namespace Win32xx
         WideCharToMultiByte(CP_ACP, 0, pStatusText, -1, status, MAX_PATH, NULL, NULL);
 
         if (IsWindow(m_status))
-            SendMessage(m_status, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(status));
+            SendMessage(m_status, SB_SETTEXT, 0, (LPARAM)status);
     #else
         if (IsWindow(m_status))
-            SendMessage(m_status, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(pStatusText));
+            SendMessage(m_status, SB_SETTEXT, 0, (LPARAM)pStatusText);
     #endif
 
         return S_OK;

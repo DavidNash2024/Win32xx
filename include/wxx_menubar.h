@@ -176,7 +176,7 @@ namespace Win32xx
     inline void CMenuBar::DoAltKey(WORD keyCode)
     {
         UINT item;
-        if (SendMessage(TB_MAPACCELERATOR, keyCode, reinterpret_cast<LPARAM>(&item)))
+        if (SendMessage(TB_MAPACCELERATOR, (WPARAM)keyCode, (LPARAM)&item))
         {
             GrabFocus();
             m_isKeyMode = TRUE;
@@ -342,7 +342,7 @@ namespace Win32xx
         ScreenToClient(pt);
 
         // Update mouse mouse position for hot tracking
-        SendMessage(WM_MOUSEMOVE, 0, MAKELONG(pt.x, pt.y));
+        SendMessage(WM_MOUSEMOVE, 0, (LPARAM)MAKELONG(pt.x, pt.y));
     }
 
     // Retrieves a pointer to the active MDI child if any.
@@ -384,7 +384,7 @@ namespace Win32xx
     {
         BOOL isMaxed = FALSE;
         if (GetMDIClient())
-            GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0, reinterpret_cast<LPARAM>(&isMaxed));
+            GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0, (LPARAM)&isMaxed);
 
         return isMaxed;
     }
@@ -454,7 +454,7 @@ namespace Win32xx
         case VK_SPACE:
             ExitMenu();
             // Bring up the system menu
-            GetAncestor().PostMessage(WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
+            GetAncestor().PostMessage(WM_SYSCOMMAND, (WPARAM)SC_KEYMENU, (LPARAM)VK_SPACE);
             break;
 
         // Handle VK_DOWN,VK_UP and VK_RETURN together
@@ -480,7 +480,7 @@ namespace Win32xx
             if (m_isKeyMode)
             {
                 UINT item;
-                if (SendMessage(TB_MAPACCELERATOR, wparam, reinterpret_cast<LPARAM>(&item)))
+                if (SendMessage(TB_MAPACCELERATOR, wparam, (LPARAM)&item))
                 {
                     m_hotItem = item;
                     PostMessage(UWM_POPUPMENU, 0, 0);
@@ -578,13 +578,13 @@ namespace Win32xx
                 if (m_mdiRect[1].PtInRect(pt))
                 {
                     if (MDI_RESTORE == m_mdiButton)
-                        pMDIClient->PostMessage(WM_MDIRESTORE, reinterpret_cast<WPARAM>(pMDIChild->GetHwnd()), 0);
+                        pMDIClient->PostMessage(WM_MDIRESTORE, (WPARAM)(pMDIChild->GetHwnd()), 0);
                 }
 
                 if (m_mdiRect[2].PtInRect(pt))
                 {
                     if (MDI_CLOSE == m_mdiButton)
-                        pMDIChild->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+                        pMDIChild->PostMessage(WM_SYSCOMMAND, (WPARAM)SC_CLOSE, 0);
                 }
             }
         }
@@ -619,8 +619,8 @@ namespace Win32xx
                     m_isMenuActive = FALSE;
                     m_isKeyMode = TRUE;
                     SendMessage(WM_CANCELMODE, 0, 0);
-                    SendMessage(TB_PRESSBUTTON, m_hotItem, MAKELONG(FALSE, 0));
-                    SendMessage(TB_SETHOTITEM, m_hotItem, 0);
+                    SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(FALSE, 0));
+                    SendMessage(TB_SETHOTITEM, (WPARAM)m_hotItem, 0);
                     ExitMenu();
                     break;
 
@@ -629,7 +629,7 @@ namespace Win32xx
                     if ((m_selMenu) &&(m_selMenu != m_popupMenu))
                         return FALSE;
 
-                    SendMessage(TB_PRESSBUTTON, m_hotItem, MAKELONG(FALSE, 0));
+                    SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(FALSE, 0));
 
                     // Move left to next topmenu item
                     (m_hotItem > 0)? --m_hotItem : m_hotItem = GetButtonCount()-1;
@@ -637,7 +637,7 @@ namespace Win32xx
 
                     // Always use PostMessage for USER_POPUPMENU (not SendMessage)
                     PostMessage(UWM_POPUPMENU, 0, 0);
-                    PostMessage(WM_KEYDOWN, VK_DOWN, 0);
+                    PostMessage(WM_KEYDOWN, (WPARAM)VK_DOWN, 0);
                     break;
 
                 case VK_RIGHT:
@@ -645,7 +645,7 @@ namespace Win32xx
                     if (m_isSelPopup)
                         return FALSE;
 
-                    SendMessage(TB_PRESSBUTTON, m_hotItem, MAKELONG(FALSE, 0));
+                    SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(FALSE, 0));
 
                     // Move right to next topmenu item
                     (m_hotItem < GetButtonCount()-1)? ++m_hotItem : m_hotItem = 0;
@@ -653,7 +653,7 @@ namespace Win32xx
 
                     // Always use PostMessage for USER_POPUPMENU (not SendMessage)
                     PostMessage(UWM_POPUPMENU, 0, 0);
-                    PostMessage(WM_KEYDOWN, VK_DOWN, 0);
+                    PostMessage(WM_KEYDOWN, (WPARAM)VK_DOWN, 0);
                     break;
 
                 case VK_RETURN:
@@ -692,7 +692,7 @@ namespace Win32xx
 
                 UINT id = childMenu.GetDefaultItem(FALSE, 0);
                 if (id)
-                    pMDIChild->PostMessage(WM_SYSCOMMAND, id, 0);
+                    pMDIChild->PostMessage(WM_SYSCOMMAND, (WPARAM)id, 0);
             }
 
             m_isExitAfter = TRUE;
@@ -724,7 +724,7 @@ namespace Win32xx
                 ScreenToClient(pt);
 
                 // Reflect messages back to the MenuBar for hot tracking
-                SendMessage(WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));
+                SendMessage(WM_MOUSEMOVE, 0, (LPARAM)MAKELPARAM(pt.x, pt.y));
             }
             break;
 
@@ -824,7 +824,7 @@ namespace Win32xx
     {
         if (m_isKeyMode)
             // Simulate a down arrow key press
-            PostMessage(WM_KEYDOWN, VK_DOWN, 0);
+            PostMessage(WM_KEYDOWN, (WPARAM)VK_DOWN, 0);
 
         m_isKeyMode = FALSE;
         m_isExitAfter = FALSE;
@@ -852,8 +852,8 @@ namespace Win32xx
         tpm.rcExclude = rc;
 
         // Set the hot button
-        SendMessage(TB_SETHOTITEM, m_hotItem, 0);
-        SendMessage(TB_PRESSBUTTON, m_hotItem, MAKELONG(TRUE, 0));
+        SendMessage(TB_SETHOTITEM, (WPARAM)m_hotItem, 0);
+        SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(TRUE, 0));
 
         m_isSelPopup = FALSE;
         m_selMenu = NULL;
@@ -972,7 +972,7 @@ namespace Win32xx
                 int button = HitTest();
                 if ((m_isMenuActive) && (button != m_hotItem))
                 {
-                    SendMessage(TB_PRESSBUTTON, m_hotItem, MAKELONG(FALSE, 0));
+                    SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(FALSE, 0));
                     m_hotItem = button;
                     SendMessage(WM_CANCELMODE, 0, 0);
 
@@ -986,7 +986,7 @@ namespace Win32xx
             if ((flag & HICF_LEAVING) && m_isKeyMode)
             {
                 m_hotItem = pNMHI->idOld;
-                PostMessage(TB_SETHOTITEM, m_hotItem, 0);
+                PostMessage(TB_SETHOTITEM, (WPARAM)m_hotItem, 0);
             }
         }
 
@@ -1043,7 +1043,7 @@ namespace Win32xx
     inline void CMenuBar::SetHotItem(int hotItem)
     {
         m_hotItem = hotItem;
-        SendMessage(TB_SETHOTITEM, m_hotItem, 0);
+        SendMessage(TB_SETHOTITEM, (WPARAM)m_hotItem, 0);
     }
 
     // Builds the list of menubar (toolbar) buttons from the top level menu.
@@ -1062,7 +1062,7 @@ namespace Win32xx
         }
 
         // Set the Bitmap size to zero
-        SendMessage(TB_SETBITMAPSIZE, 0, MAKELPARAM(0, 0));
+        SendMessage(TB_SETBITMAPSIZE, 0, (LPARAM)MAKELPARAM(0, 0));
 
         if (IsMDIChildMaxed())
         {
@@ -1073,7 +1073,7 @@ namespace Win32xx
             tbb.fsState = TBSTATE_ENABLED;
             tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
             tbb.iString = reinterpret_cast<INT_PTR>(_T(" "));
-            SendMessage(TB_ADDBUTTONS, 1, reinterpret_cast<WPARAM>(&tbb));
+            SendMessage(TB_ADDBUTTONS, (WPARAM)1, (LPARAM)(&tbb));
             SetButtonText(0, _T("    "));
         }
 
@@ -1086,7 +1086,7 @@ namespace Win32xx
             tbb.fsState = TBSTATE_ENABLED;
             tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
             tbb.iString = reinterpret_cast<INT_PTR>(_T(" "));
-            SendMessage(TB_ADDBUTTONS, 1, reinterpret_cast<WPARAM>(&tbb));
+            SendMessage(TB_ADDBUTTONS, (WPARAM)1, (LPARAM)&tbb);
 
             // Add the menu title to the string table
             std::vector<TCHAR> menuName( MAX_MENU_STRING+1, _T('\0') );

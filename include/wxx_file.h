@@ -189,7 +189,7 @@ namespace Win32xx
     {
         CString directory;
 
-        int sep = m_filePath.ReverseFind(_T("\\"));
+        int sep = m_filePath.ReverseFind(_T('\\'));
         if (sep > 0)
             directory = m_filePath.Left(sep);
 
@@ -207,7 +207,7 @@ namespace Win32xx
     {
         CString extension;
 
-        int dot = m_fileName.ReverseFind(_T("."));
+        int dot = m_fileName.ReverseFind(_T('.'));
         if (dot > 0)
             extension = m_fileName.Mid(dot+1, lstrlen(m_fileName));
 
@@ -219,7 +219,7 @@ namespace Win32xx
     {
         CString fileNameWOExt = m_fileName;
 
-        int dot = m_fileName.ReverseFind(_T("."));
+        int dot = m_fileName.ReverseFind(_T('.'));
         if (dot > 0)
             fileNameWOExt = m_fileName.Left(dot);
 

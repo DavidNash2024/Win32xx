@@ -1424,7 +1424,7 @@ namespace Win32xx
     inline CFont CWnd::GetFont() const
     {
         assert(IsWindow());
-        HFONT font = reinterpret_cast<HFONT>(SendMessage(WM_GETFONT, 0, 0));
+        HFONT font = (HFONT)SendMessage(WM_GETFONT, 0, 0);
         return CFont(font);
     }
 
@@ -1433,7 +1433,7 @@ namespace Win32xx
     inline HICON CWnd::GetIcon(BOOL isBigIcon) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage(WM_GETICON, isBigIcon, 0));
+        return (HICON)SendMessage(WM_GETICON, (WPARAM)isBigIcon, 0);
     }
 
     // The GetNextDlgGroupItem function retrieves the first control in a group of controls that
@@ -1893,7 +1893,7 @@ namespace Win32xx
     inline void CWnd::SetFont(HFONT font, BOOL redraw /* = TRUE*/) const
     {
         assert(IsWindow());
-        SendMessage(WM_SETFONT, reinterpret_cast<WPARAM>(font), redraw);
+        SendMessage(WM_SETFONT, (WPARAM)font, (LPARAM)redraw);
     }
 
     // Associates a new large or small icon with a window.
@@ -1901,7 +1901,7 @@ namespace Win32xx
     inline HICON CWnd::SetIcon(HICON icon, BOOL isBigIcon) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage(WM_SETICON, isBigIcon, reinterpret_cast<LPARAM>(icon)));
+        return (HICON)SendMessage(WM_SETICON, (WPARAM)isBigIcon, (LPARAM)icon);
     }
 
     // The SetForegroundWindow function puts the thread that created the window into the
@@ -1927,7 +1927,7 @@ namespace Win32xx
     inline BOOL CWnd::SetRedraw(BOOL redraw /*= TRUE*/) const
     {
         assert(IsWindow());
-        return (::SendMessage(*this, WM_SETREDRAW, redraw, 0) != 0);
+        return (::SendMessage(*this, WM_SETREDRAW, (WPARAM)redraw, 0) != 0);
     }
 
     // Assigns a new windows style to the window.
@@ -2283,7 +2283,7 @@ namespace Win32xx
     inline void CWnd::Print(HDC dc, DWORD flags) const
     {
         assert(IsWindow());
-        SendMessage(*this, WM_PRINT, reinterpret_cast<WPARAM>(dc), flags);
+        SendMessage(*this, WM_PRINT, (WPARAM)dc, (LPARAM)flags);
     }
 
     // The ScrollWindow function scrolls the contents of the window's client area.

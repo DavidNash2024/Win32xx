@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "MyDialog.h"
+#include "MakeDLL.h"
 #include "resource.h"
 
 
