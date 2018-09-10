@@ -104,7 +104,7 @@ CMainFrame : public CFrame                      /*
         virtual void    LoadPersistentData();
         virtual void    OnColorChoice();
         virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
-        virtual INT_PTR OnCtlColor(HDC, HWND, UINT);
+        virtual INT_PTR OnCtlColor(HDC, UINT);
         virtual int     OnCreate(CREATESTRUCT& rcs);
         virtual void    OnEditFind();
         virtual void    OnEditReplace();

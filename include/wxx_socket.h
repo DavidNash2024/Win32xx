@@ -251,6 +251,9 @@ namespace Win32xx
     inline CSocket::~CSocket()
     {
         Disconnect();
+		
+		if (m_stopRequest.GetHandle())
+			CloseHandle(m_stopRequest);
 
         // Terminate the  Windows Socket services
         ::WSACleanup();
@@ -310,7 +313,10 @@ namespace Win32xx
         {
             sockaddr_in clientService;
             clientService.sin_family = AF_INET;
+#pragma warning( push )  
+#pragma warning( disable : 4996 ) 
             clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
+#pragma warning( pop )
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
             result = ::bind( m_socket, reinterpret_cast<SOCKADDR*>( &clientService), sizeof(clientService) );
@@ -374,7 +380,10 @@ namespace Win32xx
         {
             sockaddr_in clientService;
             clientService.sin_family = AF_INET;
+#pragma warning( push )  
+#pragma warning( disable : 4996 ) 
             clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
+#pragma warning( pop )
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
             result = ::connect( m_socket, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
@@ -746,7 +755,10 @@ namespace Win32xx
         {
             sockaddr_in clientService;
             clientService.sin_family = AF_INET;
+#pragma warning( push )  
+#pragma warning( disable : 4996 ) 
             clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
+#pragma warning( pop )
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
             result = ::sendto( m_socket, send, len, flags, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
@@ -792,8 +804,10 @@ namespace Win32xx
     inline int CSocket::StartAsync(HWND wnd, UINT message, long events)
     {
         StopEvents();   // Ensure the event thread isn't running
-
+#pragma warning( push )  
+#pragma warning( disable : 4996 ) 
         return ::WSAAsyncSelect(*this, wnd, message, events);
+#pragma warning( pop )
     }
 
     // This function starts the thread which monitors the socket for events.

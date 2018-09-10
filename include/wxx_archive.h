@@ -847,7 +847,7 @@ namespace Win32xx
 
         CString str;
         *this >> str;
-        lstrcpyn(pString, str.c_str(), max);
+        strcpyn(pString, str.c_str(), max);
         return pString;
     }
 
@@ -862,7 +862,7 @@ namespace Win32xx
 
         CStringA str;
         *this >> str;
-        lstrcpynA(pString, str.c_str(), max);
+        strcpynA(pString, str.c_str(), max);
         return pString;
     }
 
@@ -877,7 +877,7 @@ namespace Win32xx
 
         CStringW str;
         *this >> str;
-        lstrcpynW(pString, str.c_str(), max);
+        strcpynW(pString, str.c_str(), max);
         return pString;
     }
 

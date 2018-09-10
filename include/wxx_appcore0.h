@@ -80,11 +80,12 @@
 
 // Remove pointless warning messages
 #ifdef _MSC_VER
-  #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
-  #ifndef _CRT_SECURE_NO_WARNINGS
-    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005/VS2010
-  #endif
-  #if _MSC_VER < 1500
+//  #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
+//  #ifndef _CRT_SECURE_NO_WARNINGS
+//    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005/VS2010
+//  #endif
+//  #if _MSC_VER < 1500
+  #if _MSC_VER < 1310    // before VS2003
     #pragma warning (disable : 4511) // copy operator could not be generated
     #pragma warning (disable : 4512) // assignment operator could not be generated
     #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
@@ -114,6 +115,7 @@
 #include <windows.h>
 #include <commctrl.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <tchar.h>
 #ifndef _WIN32_WCE
   #include <shlwapi.h>
@@ -353,8 +355,8 @@ namespace Win32xx
 
 
     /////////////////////////////////////////
-    // This class is used for thread synchronisation. A critical section object 
-    // provides synchronization similar to that provided by a mutex object, 
+    // This class is used for thread synchronisation. A critical section object
+    // provides synchronization similar to that provided by a mutex object,
     // except that a critical section can be used only by the threads of a
     // single process. Critical sections are faster and more efficient than mutexes.
     // The CCriticalSection object should be created in the primary thread. Create
@@ -400,7 +402,7 @@ namespace Win32xx
         long m_count;
     };
 
-    
+
     /////////////////////////////////////////
     // Provides a convenient RAII-style mechanism for owning a CCriticalSection
     // for the duration of a scoped block. Automatically locks the specified
@@ -598,7 +600,10 @@ namespace Win32xx
         //       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602).
     inline int GetWinVersion()
     {
+#pragma warning( push )  
+#pragma warning( disable : 4996 )  
         DWORD version = GetVersion();
+#pragma warning( pop )
         int platform = (version < 0x80000000)? 2:1;
         int majorVer = LOBYTE(LOWORD(version));
         int minorVer = HIBYTE(LOWORD(version));
@@ -662,22 +667,43 @@ namespace Win32xx
     }
   #endif
 
-  // Required for WinCE
-  #ifndef lstrcpyn
+	// Safely copies a specified number of char characters.
+	// Use this function in place of the deprecated lstrcpynA function.
+	inline void strcpynA(char* dst, const char* src, size_t charCount)
+	{
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
+		strncpy(dst, src, charCount);
+#else
+		// asserts if truncation required.
+		VERIFY( strncpy_s(dst, charCount, src, _TRUNCATE) == 0);
+#endif
+		dst[charCount - 1] = 0;
+	}
 
-    // Copies a specified number of characters from a source string into a buffer.
-    inline LPTSTR lstrcpyn(LPTSTR pDest, LPCTSTR pSrc, int length)
-    {
-        if(NULL == pDest || NULL == pSrc || length <= 0)
-            return NULL;
-        int len = MIN(static_cast<int>(lstrlen(pSrc)), length - 1);
-        LPTSTR pRet = reinterpret_cast<LPTSTR>(memcpy(pDest, pSrc, len * sizeof(TCHAR)));
-        pDest[len] = _T('\0');
-        return pRet;
-    }
+	// Safely copies a specified number of wchar_t characters.
+	// Use this function in place of the deprecated lstrcpynW function.	
+	inline void strcpynW(wchar_t* dst, const wchar_t* src, size_t charCount)
+	{
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
+		wcsncpy(dst, src, charCount);
+#else
+		// asserts if truncation required.
+		VERIFY( wcsncpy_s(dst, charCount, src, _TRUNCATE) == 0);
+#endif
+		dst[charCount - 1] = 0;
+	}
 
+	// Safely copies a specified number of TCHAR characters.
+	// Use this function in place of the deprecated lstrcpyn function.
+	inline void strcpyn(TCHAR* dst, const TCHAR* src, size_t charCount)
+	{
+#ifdef UNICODE
+		strcpynW(dst, src, charCount);
+#else
+		strcpynA(dst, src, charCount);
+#endif
+	}
 
-  #endif // !lstrcpyn
 
 }
 

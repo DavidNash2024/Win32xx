@@ -540,7 +540,7 @@ GetDocumentValues()                             /*
     m_iSlider   = TheDoc().GetSlider();
     m_stDateTime   = TheDoc().GetDateTime();
     m_stMoCalendar = TheDoc().GetMoCalendar();
-    _tcscpy(m_LPTSTR, TheDoc().GetLPTSTR());
+	strcpyn(m_LPTSTR, TheDoc().GetLPTSTR(), 256);
 }
 
 /*============================================================================*/

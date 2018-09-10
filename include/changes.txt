@@ -11,7 +11,21 @@ New Features and Enhancements
 * The programming style has been updated, and the Hungarian notation has 
   been removed. The m_ prefix for member variables has been retained, as 
   has a p prefix for pointers.
-
+  
+* All Windows API functions that have been flagged as deprecated by Microsoft
+  because of security issues have been replaced by their more modern equivalents
+  for the compilers that support them. Warnings relating to deprecated code are
+  no longer disabled by the library. If your code issues warnings related to 
+  deprecated code, you are advised to update it accordingly.
+  
+* Three new functions have been supplied to provide safer copying of text strings.
+  The new functions are:
+  strcpynA    Copies a specified number of char characters.
+  strcpynW    Copies a specified number of wchar_t characters.
+  strcpyn     Copies a specified number of TCHAR characters.
+  These functions add the null termination. They also use the safer strncpy_s/wcsncpy_s
+  functions where available.
+  
 * Added CEvent
 * Added CMutex
 * Added CSemaphore
@@ -59,8 +73,13 @@ Added CResizer::SetMaxRect                       member function
 Added CRichEdit::AppendText                      member function
 Added CSocket::StartAsync                        member function
 Added CWinThread::IsRunning                      member function
+Added strcpyn                                    function
+Added strcpynA                                   function
+Added strcpynW                                   function
 
 Modified CFrameT::AddMenuIcon                    added optional iconWidth argument
+CTime::GetGmtTm                                  argument no longer optional
+CTime::GetLocalTm                                argument no longer optional
 
 Renamed CFrameT::GetUseIndicatorStatus    to     CFrameT::IsUsingIndicatorStatus
 Renamed CFrameT::GetUseMenuStatus         to     CFrameT::IsUsingMenuStatus
