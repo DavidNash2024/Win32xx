@@ -128,7 +128,7 @@ LoadDocRegistry(LPCTSTR szKeyName)                                      /*
         s           = RegQueryStringValue(key, _T("Double1"));
         m_dDouble   = _tcstod(s, &p);
         s           = RegQueryStringValue(key, _T("LPTSTR1"));
-        _tcscpy(m_LPTSTR, s.c_str());
+        strcpyn(m_LPTSTR, s.c_str(), 256);
         m_iCheckA   = RegQueryBOOLValue(key,   _T("CheckA"));
         m_iCheckB   = RegQueryBOOLValue(key,   _T("CheckB"));
         m_iCheckC   = RegQueryBOOLValue(key,   _T("CheckC"));

@@ -390,7 +390,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
 
 /*============================================================================*/
     INT_PTR  CMainFrame::
-OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)                              /*
+OnCtlColor(HDC hDC, UINT nCtlColor)                              /*
 
     This member function is invoked when a child control is about to be drawn. 
     Here it is used to prepare the display context hDC for drawing the dialog
@@ -1181,8 +1181,7 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                            /*
 //      case WM_CTLCOLORLISTBOX:
 //      case WM_CTLCOLORSCROLLBAR:
 //      case WM_CTLCOLORSTATIC:
-            return OnCtlColor(reinterpret_cast<HDC>(wParam), 
-                reinterpret_cast<HWND>(lParam), uMsg);
+            return OnCtlColor(reinterpret_cast<HDC>(wParam), uMsg);
 
         case IDM_UPDATECONTROLUISTATE:
             UpdateControlUIState();

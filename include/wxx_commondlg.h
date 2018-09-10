@@ -1073,11 +1073,11 @@ namespace Win32xx
 
         m_fr.lpstrFindWhat = m_findWhat.GetBuffer(m_fr.wFindWhatLen);
         if (pFindWhat)
-            lstrcpyn(m_fr.lpstrFindWhat, pFindWhat, m_fr.wFindWhatLen);
+            strcpyn(m_fr.lpstrFindWhat, pFindWhat, m_fr.wFindWhatLen);
 
         m_fr.lpstrReplaceWith = m_replaceWith.GetBuffer(m_fr.wReplaceWithLen);
         if (pReplaceWith)
-            lstrcpyn(m_fr.lpstrReplaceWith, pReplaceWith, m_fr.wReplaceWithLen);
+            strcpyn(m_fr.lpstrReplaceWith, pReplaceWith, m_fr.wReplaceWithLen);
 
         // Display the dialog box
         HWND wnd;
@@ -1462,7 +1462,7 @@ namespace Win32xx
         {
             chfmt.dwMask |= CFM_FACE;
             chfmt.bPitchAndFamily = m_cf.lpLogFont->lfPitchAndFamily;
-            lstrcpy(chfmt.szFaceName, GetFaceName().c_str());
+            strcpyn(chfmt.szFaceName, GetFaceName().c_str(), LF_FACESIZE);
         }
 
         if (m_cf.Flags & CF_EFFECTS)
@@ -1558,7 +1558,7 @@ namespace Win32xx
         if (cf.dwMask & CFM_FACE)
         {
             m_logFont.lfPitchAndFamily = cf.bPitchAndFamily;
-            lstrcpyn(m_logFont.lfFaceName, cf.szFaceName, LF_FACESIZE);
+            strcpyn(m_logFont.lfFaceName, cf.szFaceName, LF_FACESIZE);
         }
         else
         {

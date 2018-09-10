@@ -77,15 +77,12 @@
 
 #include "wxx_dialog.h"
 
-#ifdef _MSC_VER
-  #pragma warning (disable : 4091)  // temporarily disable warning: 'typedef': ignored
-#endif
+#pragma warning( push )  
+#pragma warning (disable : 4091)  // temporarily disable warning: 'typedef': ignored
 
 #include <shlobj.h>
 
-#ifdef _MSC_VER
-  #pragma warning (default : 4091)  // re-enable C4091 warning
-#endif
+#pragma warning( pop )
 
 
 // Support older compilers

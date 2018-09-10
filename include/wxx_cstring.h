@@ -952,7 +952,12 @@ namespace Win32xx
             while (-1 == result)
             {
                 buffer.assign( length+1, 0 );
+
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
                 result = _vsnprintf(&buffer[0], length, pFormat, args);
+#else
+				result = _vsnprintf_s(&buffer[0], length, length-1, pFormat, args);
+#endif
                 length *= 2;
             }
             m_str.assign(&buffer[0]);
@@ -975,7 +980,11 @@ namespace Win32xx
             while (-1 == result)
             {
                 buffer.assign( length+1, 0 );
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
                 result = _vsnwprintf(&buffer[0], length, pFormat, args);
+#else
+				result = _vsnwprintf_s(&buffer[0], length, length-1, pFormat, args);
+#endif
                 length *= 2;
             }
             m_str.assign(&buffer[0]);

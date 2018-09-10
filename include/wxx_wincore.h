@@ -499,7 +499,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
             pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(user32, "GetAncestor"));
 #else
-            pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(hModule, L"GetAncestor"));
+            pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(user32, L"GetAncestor"));
 #endif
 
             if (pfnGetAncestor)
