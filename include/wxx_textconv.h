@@ -118,16 +118,16 @@ namespace Win32xx
     class CAtoW
     {
     public:
-        CAtoW(LPCSTR pStr, UINT codePage = CP_ACP) : m_pStr(pStr)
+        CAtoW(LPCSTR pStr, UINT codePage = CP_ACP, int charCount = -1) : m_pStr(pStr)
         {
             if (pStr)
             {
                 // Resize the vector and assign null WCHAR to each element
-                int length = MultiByteToWideChar(codePage, 0, pStr, -1, NULL, 0) + 1;
+                int length = MultiByteToWideChar(codePage, 0, pStr, 2 * charCount, NULL, 0) + 1;
                 m_wideArray.assign(length, L'\0');
 
                 // Fill our vector with the converted WCHAR array
-                MultiByteToWideChar(codePage, 0, pStr, -1, &m_wideArray[0], length);
+                MultiByteToWideChar(codePage, 0, pStr, 2 * charCount, &m_wideArray[0], length);
             }
         }
         ~CAtoW()
@@ -148,7 +148,7 @@ namespace Win32xx
     class CWtoA
     {
     public:
-        CWtoA(LPCWSTR pWStr, UINT codePage = CP_ACP) : m_pWStr(pWStr)
+        CWtoA(LPCWSTR pWStr, UINT codePage = CP_ACP, int charCount = -1) : m_pWStr(pWStr)
         // Usage:
         //   CWtoA ansiString(L"Some Text");
         //   CWtoA utf8String(L"Some Text", CP_UTF8);
@@ -157,11 +157,11 @@ namespace Win32xx
         //   SetWindowTextA( WtoA(L"Some Text") ); The ANSI version of SetWindowText
         {
             // Resize the vector and assign null char to each element
-            int length = WideCharToMultiByte(codePage, 0, pWStr, -1, NULL, 0, NULL, NULL) + 1;
+            int length = WideCharToMultiByte(codePage, 0, pWStr, charCount, NULL, 0, NULL, NULL) + 1;
             m_ansiArray.assign(length, '\0');
 
             // Fill our vector with the converted char array
-            WideCharToMultiByte(codePage, 0, pWStr, -1, &m_ansiArray[0], length, NULL,NULL);
+            WideCharToMultiByte(codePage, 0, pWStr, charCount, &m_ansiArray[0], length, NULL,NULL);
         }
 
         ~CWtoA()
@@ -181,7 +181,11 @@ namespace Win32xx
     class CWtoW
     {
     public:
-        CWtoW(LPCWSTR pWStr) : m_pWStr(pWStr) {}
+        CWtoW(LPCWSTR pWStr, UINT codePage = CP_ACP, int charCount = -1) : m_pWStr(pWStr)
+        {
+            UNREFERENCED_PARAMETER(codePage);
+            UNREFERENCED_PARAMETER(charCount);
+        }
         operator LPCWSTR() { return const_cast<LPWSTR>(m_pWStr); }
         operator LPOLESTR() { return const_cast<LPOLESTR>(m_pWStr); }
 
@@ -195,7 +199,11 @@ namespace Win32xx
     class CAtoA
     {
     public:
-        CAtoA(LPCSTR pStr) : m_pStr(pStr) {}
+        CAtoA(LPCSTR pStr, UINT codePage = CP_ACP, int charCount = -1) : m_pStr(pStr)
+        {
+            UNREFERENCED_PARAMETER(codePage);
+            UNREFERENCED_PARAMETER(charCount);
+        }
         operator LPCSTR() { return static_cast<LPCSTR>(m_pStr); }
 
     private:

@@ -42,14 +42,15 @@
 #include <ocidl.h>
 
 #ifdef _MSC_VER
-  #pragma warning (disable : 4091)  // temporarily disable C4091 warning
-#endif
+  #pragma warning ( push )
+  #pragma warning ( disable : 4091 )  // temporarily disable C4091 warning
+#endif // _MSC_VER
 
 #include <shlobj.h>
 
 #ifdef _MSC_VER
-  #pragma warning (default : 4091)  // re-enable C4091 warning
-#endif
+  #pragma warning ( pop )
+#endif // _MSC_VER
 
 
 namespace Win32xx
@@ -638,17 +639,17 @@ namespace Win32xx
         if (NULL == pStatusText)
             return E_POINTER;
 
-    #ifndef UNICODE
+#ifndef UNICODE
         char status[MAX_PATH];
         // Convert the Wide string to char
         WideCharToMultiByte(CP_ACP, 0, pStatusText, -1, status, MAX_PATH, NULL, NULL);
 
         if (IsWindow(m_status))
             SendMessage(m_status, SB_SETTEXT, 0, (LPARAM)status);
-    #else
+#else
         if (IsWindow(m_status))
             SendMessage(m_status, SB_SETTEXT, 0, (LPARAM)pStatusText);
-    #endif
+#endif
 
         return S_OK;
     }

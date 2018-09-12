@@ -5,16 +5,21 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the basic CDoc class for the 
+    Contents Description: Implementation of the basic CDoc class for the
     ScrollWin demo application using the Win32++ Windows interface classes,
     Copyright (c) 2005-2017 David Nash, under permissions granted therein.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
+    The embodyment of a document in this class is in the form of a vector of
+    UTF-16 Little Endean Unicode strings, one for each line of the document,
+    whether compiled in ANSI or Unicode mode. It therefore requires a CView
+    class capable of displaying this encoding.
+
+    Caveats: These materials are available under the same provisions as found
+    in the Win32++ copyright.txt notice.
 
     Programming Notes:
-        The programming standards roughly follow those established by the 
-    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation 
+        The programming standards roughly follow those established by the
+    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation
     Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -22,10 +27,8 @@
 #include "stdafx.h"
 #include "StdApp.h"
 
-static  LPCTSTR file_dlg_filter = _T("Text Files (*.txt)\0*.txt\0")
-                  _T("All Files (*.*)\0*.*\0\0");
   // tab spacing
-const   int tabwidth    = 8;
+const   int tabwidth = 8;
 
   // latest file compilation date
 CString CDoc::m_sCompiled_on = __DATE__;
@@ -39,13 +42,10 @@ CDoc()                                                                      /*
 
     Constructor.
 *-----------------------------------------------------------------------------*/
+    :	m_bDoc_is_dirty(FALSE), m_bDoc_is_open(FALSE), m_stDoc_width(0),
+        m_stDoc_length(0)
 {
     m_doclines.clear();
-    m_stDoc_length = 0;
-    m_stDoc_width = 0;
-    m_lpszFile_dlg_filter = file_dlg_filter;
-    m_bDoc_is_open = FALSE;
-    m_open_doc_path.Empty();
 }
 
 /*============================================================================*/
@@ -97,21 +97,20 @@ CloseDoc()                                                                  /*
 
 /*============================================================================*/
     Encoding    CDoc::
-DetermineEncoding(const char *buffer, UINT testlen, UINT& offset)           /*
+DetermineEncoding(UINT testlen, UINT& offset)                               /*
 
-    Try to determine the file encoding using the testlen number of bytes read 
-    in from the document file into the given buffer. Return the presumed
-    encoding and the BOM offset, if any.
+    Try to determine the file encoding using the first testlen bytes in the
+    file image m_buffer. Return the presumed encoding and the BOM offset,
+    if any.
 *----------------------------------------------------------------------------*/
 {
       // if a short file, just report it as UTF8
     if (testlen < 3)
         return UTF8noBOM;
 
-       // read the test length of the file contents
-    m_fDoc_file.Read((void*)buffer, testlen);
-    Encoding encoding = unknown;
-      // look for Byte Order Mark (BOM)
+    Encoding encoding = ANSI;
+    char* buffer = &m_buffer[0];
+      // look for a Byte Order Mark (BOM)
     unsigned char b0 = buffer[0], b1 = buffer[1], b2 = buffer[2];
     if (b0 == 0xfe && b1 == 0xff)
         encoding = UTF16BE;
@@ -126,14 +125,13 @@ DetermineEncoding(const char *buffer, UINT testlen, UINT& offset)           /*
     {     // check for non ANSI characters
         for (UINT i = 0; i < testlen; i++)
         {
-            if (buffer[i] == 0 || buffer[i] > 0x7f)
+            unsigned char b = buffer[i];
+            if (b == 0 || b > 0x7f)
             {     // encoding is not ANSI, assume UTF8
                 encoding = UTF8noBOM;
                 break;
             }
         }
-        if (encoding == unknown)
-            encoding = ANSI;
     }
     offset = (encoding == UTF16BE || encoding == UTF16LE ? 2 :
         (encoding == UTF8wBOM ? 3 : 0));
@@ -141,13 +139,13 @@ DetermineEncoding(const char *buffer, UINT testlen, UINT& offset)           /*
 }
 
 /*============================================================================*/
-    LPCTSTR CDoc::
+    CString CDoc::
 GetFilter()                                                                 /*
 
     Return
 *----------------------------------------------------------------------------*/
 {
-    return m_lpszFile_dlg_filter;
+    return LoadString(IDS_FILE_FILTER);
 }
 
 /*============================================================================*/
@@ -176,8 +174,9 @@ GetMaxExtent(const CDC& dc)                                                 /*
         v_extent = 0;
     for (UINT i = 0; i < GetLength(); i++)
     {
-        CString s = m_doclines[i];
-        CSize ex = dc.GetTextExtentPoint32(s.c_str(), s.GetLength());
+        CStringW s = m_doclines[i];
+        CSize ex;
+	::GetTextExtentPoint32W(dc, s.c_str(), s.GetLength(), &ex);
         h_extent = MAX(ex.cx, h_extent);
         v_extent +=  ex.cy;
     }
@@ -200,10 +199,10 @@ GetRecord(UINT rcd, UINT left /* = 0 */, UINT length /* = MAX_STRING_SIZE */) /*
     long maxlen = (long)rtnlen - (long)left;
     if (maxlen <= 0 || left > rtnlen)
         return L"";
-        
+
     if ((long)length > maxlen)
             return rtn.Mid(left);
-            
+
     return rtn.Mid(left, length);
 }
 
@@ -235,8 +234,8 @@ IsOpen()                                                                    /*
     BOOL CDoc::
 OpenDoc(LPCTSTR filename)                                                   /*
 
-    Open the document from the given filename and populate the record array. 
-    State parameters that were serialized in the prior execution will have 
+    Open the document from the given filename and populate the record array.
+    State parameters that were serialized in the prior execution will have
     already been loaded.
 *-----------------------------------------------------------------------------*/
 {
@@ -249,7 +248,7 @@ OpenDoc(LPCTSTR filename)                                                   /*
         CString file = filename;
         if (file.IsEmpty())
            throw CUserException(_T("No file name was given."));
-               
+
           // if there is currently a document open, close it if different
         if (IsOpen())
         {
@@ -276,23 +275,27 @@ OpenDoc(LPCTSTR filename)                                                   /*
              doclen  = static_cast<UINT>(m_fDoc_file.GetLength());
         if (doclen < testlen)
             testlen = doclen;
-        std::vector<char> buffer(testlen);
+          // resize the file buffer to fit content
+        m_buffer.resize(doclen);
+          // read the entire file contents into the buffer
+        UINT n = m_fDoc_file.Read((void*)&m_buffer[0], doclen);
+        if (n != doclen)
+            throw CFileException(_T("Reading the file failed."));
+
         UINT offset = 0;
-        Encoding encoding = DetermineEncoding(&buffer.front(), testlen, offset);
-          // prepare to read in the file contents      
-        m_fDoc_file.Seek(offset, FILE_BEGIN);
+        Encoding encoding = DetermineEncoding(testlen, offset);
         m_doclines.clear();
         switch (encoding)
         {
             case ANSI:
             case UTF8wBOM:
             case UTF8noBOM:
-                ReadABytes(encoding, doclen - offset);
+                ReadABytes(encoding, doclen, offset);
                 break;
 
             case UTF16LE:
             case UTF16BE:
-                ReadWBytes(encoding, doclen - offset);
+                ReadWBytes(encoding, doclen, offset);
                 break;
 
             default:
@@ -303,9 +306,9 @@ OpenDoc(LPCTSTR filename)                                                   /*
     catch (CException &e)
     {
         CString msg;
-        msg.Format(_T("File could not be opened and read:\n\n%s"), 
+        msg.Format(_T("File could not be opened and read:\n\n%s"),
             e.GetText());
-        ::MessageBox(NULL, msg, _T("Error"), MB_OK | MB_ICONEXCLAMATION | 
+        ::MessageBox(NULL, msg, _T("Error"), MB_OK | MB_ICONEXCLAMATION |
             MB_TASKMODAL);
         ok = m_bDoc_is_open = FALSE;
         m_open_doc_path.Empty();
@@ -317,87 +320,91 @@ OpenDoc(LPCTSTR filename)                                                   /*
 
 /*============================================================================*/
     void CDoc::
-ReadABytes(Encoding encoding, UINT doclen)                                  /*
+ReadABytes(Encoding encoding, UINT docsize, UINT offset)                    /*
 
     Read the document file in single byte mode and deposit lines in the
     document line string vector. Throw an exception if a failure occurs.
 *-----------------------------------------------------------------------------*/
 {
+      // add a terminating 0 to the buffer
+    m_buffer.resize(docsize + 1, '\0');
+      // determine the text conversion code page to use
+    UINT CPage = ((encoding == UTF8wBOM || encoding == UTF8noBOM) ?
+        CP_UTF8 : CP_ACP);
+      // convert the file buffer to wide chars using this code page
+    CAtoW wb(&m_buffer[0] + offset, CPage);
+      // get access to the converted array and its length
+    LPCWSTR pWStr = wb;
+    UINT length   = wcslen(pWStr);
+      // declare the entry string that will be added to the document and scan
+      // the converted array for end-of-line characters
     CStringW entry;
-    CStringA line;
-    for (UINT fileloc = 0; fileloc < doclen; fileloc++)
+    for (UINT i = 0; i < length; i++)
     {
-        CStringA a;
-        UINT n = m_fDoc_file.Read(a.GetBuffer(1), 1);
-        a.ReleaseBuffer();
-        if (n != 1)
-            throw CFileException(_T("File read error."));
-
-        if (a == "\r")
-            continue;
-
-            // check for end of line or end of string           
-        if (a == "\n" || a.IsEmpty())
-        {
-                // enter the record, translate if UTF-8 encoded
-            if (encoding == UTF8wBOM || encoding == UTF8noBOM)
-                entry = CAtoW(line, CP_UTF8);
-            else
-                entry = AtoW(line);
-            AddRecord(entry);
-            line.Empty();
-            m_stDoc_width = MAX(m_stDoc_width, 
-                static_cast<UINT>(entry.GetLength()));
-        }
-        else
-            line += a;
-    }
+        wchar_t w = pWStr[i];
+        RecordEntry(w, entry) ;
+   }
       // if there is a partial line, add it to the document
-    if (line.GetLength() > 0)
-    {
-        entry = AtoW(line);
+    if (entry.GetLength() > 0)
         AddRecord(entry);
-    }
 }
 
 /*============================================================================*/
     void CDoc::
-ReadWBytes(Encoding encoding, UINT doclen)                                 /*
+ReadWBytes(Encoding encoding, UINT doclen, UINT offset)                     /*
 
-    Read the file in wide character mode and deposit lines in the document
-    line string vector. Throw an exception if a failure occurs.
+    Read the file buffer in wide character mode and deposit lines in the
+    document line string vector. Throw an exception if a failure occurs.
 *-----------------------------------------------------------------------------*/
 {
+    UINT length = doclen - offset,
+         size   = length / 2;
+      // copy the file character buffer into a wide-character array
+    std::vector<wchar_t> wideArray(size + 1, L'\0');
+    memcpy(&wideArray[0], &m_buffer[0] + offset, length);
+      // declare the entry string that will be added to the document and scan
+      // the wide array for end-of-line characters
     CStringW entry;
-    for (UINT fileloc = 0; fileloc < doclen; fileloc += 2)
+    for (UINT i = 0; i < size; i++)
     {
-        CStringW w;
-        UINT n = m_fDoc_file.Read(w.GetBuffer(2), 2);
-        w.ReleaseBuffer();
-        if (n != 2)
-            throw CFileException(_T("File read error."));
- 
+        wchar_t w = wideArray[i];
+          // if big-endian, reverse w's bytes
         if (encoding == UTF16BE)
-            w[0] = ByteReverse(w[0]);
-        if (w == L"\r")
-            continue;
+            w = ByteReverse(w);
 
-            // check for end of line or end of string           
-        if (w == L"\n" || w.IsEmpty())
-        {
-            AddRecord(entry);
-            m_stDoc_width = MAX(m_stDoc_width, 
-                static_cast<UINT>(entry.GetLength()));
-            entry.Empty();
-        }
-        else 
-            entry += w;
+        RecordEntry(w, entry) ;
     }
       // if there remains a partial entry, add it to the document
     if (entry.GetLength() > 0)
         AddRecord(entry);
 }
 
+/*============================================================================*/
+    void CDoc::
+RecordEntry(wchar_t w, CStringW& entry)                                     /*
+
+    If w is not an end-of-line or end_of_string character, append it to the
+    entry string. If it is an end-=of-line or end-of_string character, then
+    commit the entry into the document record array.
+*-----------------------------------------------------------------------------*/
+{
+      // skip return characters, if any
+    if (w == L'\r')
+        return;
+
+      // break on end-of-line or end-of-string
+    if (w == L'\n' || w == L'\0')
+    {
+          // enter the record
+        AddRecord(entry);
+          // record the longest length
+        m_stDoc_width = MAX(m_stDoc_width,
+            static_cast<UINT>(entry.GetLength()));
+        entry.Empty();
+    }
+    else
+        entry += w;
+}
 /*============================================================================*/
     void CDoc::
 Serialize(CArchive& ar)                                                     /*
@@ -410,21 +417,20 @@ Serialize(CArchive& ar)                                                     /*
       // perform loading or storing
         if (ar.IsStoring())
         {
-                  // each item serialized is written to the archive
-                  // file as a char stream of the proper length,
-                  // preceded by that length. In some cases, other forms os
-          // data are saved, from which the primary items are then
-                  // reconstructed.
+            // each item serialized is written to the archive
+            // file as a char stream of the proper length,
+            // preceded by that length. In some cases, other forms os
+            // data are saved, from which the primary items are then
+            // reconstructed.
 
     }
         else    // recovering
         {
-                  // each item deserialized from the archive is
-                  // retrieved by first reading its length and then
-                  // loading in that number of bytes into the data
-                  // item saved in the archive, as above. Some items require
-                  // additional converstion procedures.
-
+            // each item deserialized from the archive is
+            // retrieved by first reading its length and then
+            // loading in that number of bytes into the data
+            // item saved in the archive, as above. Some items require
+            // additional converstion procedures.
     }
 }
 

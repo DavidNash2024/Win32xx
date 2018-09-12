@@ -1654,31 +1654,31 @@ namespace Win32xx
         // Modify the colour
         int yOffset = 0;
         int xOffset;
-        int Index;
+        size_t index;
         for (int Row=0; Row < bmiHeader.biHeight; ++Row)
         {
             xOffset = 0;
 
             for (int Column=0; Column < bmiHeader.biWidth; ++Column)
             {
-                // Calculate Index
-                Index = yOffset + xOffset;
+                // Calculate index
+                index = yOffset + xOffset;
 
                 // Adjust the colour values
                 if (cBlue > 0)
-                    pByteArray[Index]   = (BYTE)(cBlue + (((pByteArray[Index] *b1)) >>8));
+                    pByteArray[index]   = (BYTE)(cBlue + (((pByteArray[index] *b1)) >>8));
                 else if (cBlue < 0)
-                    pByteArray[Index]   = (BYTE)((pByteArray[Index] *b2) >>8);
+                    pByteArray[index]   = (BYTE)((pByteArray[index] *b2) >>8);
 
                 if (cGreen > 0)
-                    pByteArray[Index+1] = (BYTE)(cGreen + (((pByteArray[Index+1] *g1)) >>8));
+                    pByteArray[index+1] = (BYTE)(cGreen + (((pByteArray[index+1] *g1)) >>8));
                 else if (cGreen < 0)
-                    pByteArray[Index+1] = (BYTE)((pByteArray[Index+1] *g2) >>8);
+                    pByteArray[index+1] = (BYTE)((pByteArray[index+1] *g2) >>8);
 
                 if (cRed > 0)
-                    pByteArray[Index+2] = (BYTE)(cRed + (((pByteArray[Index+2] *r1)) >>8));
+                    pByteArray[index+2] = (BYTE)(cRed + (((pByteArray[index+2] *r1)) >>8));
                 else if (cRed < 0)
-                    pByteArray[Index+2] = (BYTE)((pByteArray[Index+2] *r2) >>8);
+                    pByteArray[index+2] = (BYTE)((pByteArray[index+2] *r2) >>8);
 
                 // Increment the horizontal offset
                 xOffset += bmiHeader.biBitCount >> 3;

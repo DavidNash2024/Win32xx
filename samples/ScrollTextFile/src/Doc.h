@@ -45,7 +45,7 @@ CDoc                                                                        /*
         CDoc();
         virtual ~CDoc();
         virtual void    AddRecord(const CStringW& entry);
-        virtual LPCTSTR GetFilter();
+        virtual CString GetFilter();
         virtual UINT    GetLength();
         virtual CSize   GetMaxExtent(const CDC& dc);
         virtual CStringW GetRecord(UINT, UINT left = 0, 
@@ -60,19 +60,20 @@ CDoc                                                                        /*
         static CString  m_sCompiled_on;  // compilation date, mmm dd yyyy
 
     private:
-            Encoding    DetermineEncoding(const char *, UINT, UINT&);
-                void    ReadABytes(Encoding encoding, UINT doclen);
-                void    ReadWBytes(Encoding encoding, UINT doclen);
+            Encoding    DetermineEncoding(UINT testlen, UINT& offset);
+                void    ReadABytes(Encoding encoding, UINT doclen, UINT offset);
+                void    ReadWBytes(Encoding encoding, UINT doclen, UINT offset);
+                void    RecordEntry(wchar_t w, CStringW& entry);
 
           // private data members
         CFile   m_fDoc_file;     // holds the document name, path, etc.
         BOOL    m_bDoc_is_dirty; // document has been altered since open
         BOOL    m_bDoc_is_open;  // the document status
-        UINT    m_stDoc_length;  // length, in records
         UINT    m_stDoc_width;   // width, in characters
+        UINT    m_stDoc_length;  // length, in records
         CString m_open_doc_path; // empty if closed
-        LPCTSTR m_lpszFile_dlg_filter; // file dialog filter
-        std::vector<CStringW> m_doclines; // the lines in the document
+        std::vector<CStringW>   m_doclines; // the lines in the document
+        std::vector<char>       m_buffer;   // the file contents buffer
 };
 /*-----------------------------------------------------------------------------*/
 #endif //SDI_DOC_H

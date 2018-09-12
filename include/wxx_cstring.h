@@ -79,7 +79,7 @@
 // 4) This class provides a few additional functions:
 //       c_str          Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
 //       GetErrorString Assigns CString to the error string for the specified System Error Code
-//                      (from ::GetLastErrror() for example).
+//                      (from ::GetLastError() for example).
 //       GetString      Returns a reference to the underlying std::basic_string<TCHAR>. This
 //                      reference can be used to modify the string directly.
 
@@ -218,7 +218,8 @@ namespace Win32xx
         int      Remove(const T* pText);
         int      Replace(T oldChar, T newChar);
         int      Replace(const T* pOld, const T* pNew);
-		int      ReverseFind(T ch) const;
+        int      ReverseFind(T ch, int end = -1) const;
+        int      ReverseFind(const T* pszText, int end = -1) const;
         CStringT Right(int count) const;
         void     SetAt(int index, T ch);
         BSTR     SetSysString(BSTR* pBstr) const;
@@ -243,8 +244,8 @@ namespace Win32xx
         std::vector<T> m_buf;
 
     private:
-        int     lstrlenT(const CHAR* pText)   { return lstrlenA(pText); }
-        int     lstrlenT(const WCHAR* pText)  { return lstrlenW(pText); }
+        int     lstrlenT(const CHAR* pText) const  { return lstrlenA(pText); }
+        int     lstrlenT(const WCHAR* pText) const { return lstrlenW(pText); }
     };
 
     // CStringA is a char only version of CString
@@ -273,25 +274,25 @@ namespace Win32xx
         CString(const CString& str)             : CStringT<TCHAR>(str) {}
         CString(LPCSTR pText)                   : CStringT<TCHAR>(AtoT(pText)) {}
         CString(LPCWSTR pText)                  : CStringT<TCHAR>(WtoT(pText))    {}
-        CString(LPCSTR pText, int length)       : CStringT<TCHAR>(AtoT(pText), length) {}
-        CString(LPCWSTR pText, int length)      : CStringT<TCHAR>(WtoT(pText), length) {}
+        CString(LPCSTR pText, int length)       : CStringT<TCHAR>(AtoT(pText, CP_ACP, length), length) {}
+        CString(LPCWSTR pText, int length)      : CStringT<TCHAR>(WtoT(pText, CP_ACP, length), length) {}
         CString(int val)                        : CStringT<TCHAR>(val) {}
         CString(double val)                     : CStringT<TCHAR>(val) {}
 
         CString(char ch, int length = 1)
         {
-            char str[2] = {0};
-            str[0] = ch;
-            AtoT tch(str);
-            m_str.assign(length, static_cast<LPCTSTR>(tch)[0]);
+            for (int i = 0; i < length; ++i)
+            {
+                operator +=(ch);
+            }
         }
 
         CString(WCHAR ch, int length = 1)
         {
-            WCHAR str[2] = {0};
-            str[0] = ch;
-            WtoT tch(str);
-            m_str.assign(length, static_cast<LPCTSTR>(tch)[0]);
+            for (int i = 0; i < length; ++i)
+            {
+                operator +=(ch);
+            }
         }
 
         CString& operator = (const CString& str)
@@ -847,84 +848,53 @@ namespace Win32xx
     }
 
     // Finds a character in the string.
-    template <>
-    inline int CStringT<CHAR>::Find(CHAR ch, int index /* = 0 */) const
+    template <class T>
+    inline int CStringT<T>::Find(T ch, int index /* = 0 */) const
     {
         assert(index >= 0);
-		if (index > GetLength())
-			return -1;
 
-		LPCSTR str = m_str.c_str();
-		LPCSTR substr = strchr(str + index, ch);
-
-		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
+#ifdef _MBCS
+		LPCSTR pStr = m_str.c_str();
+		LPCSTR pSubstr = strchr(pStr + index, ch);
+		return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
+#else
+        size_t s = m_str.find(ch, index);
+        return static_cast<int>(s);
+#endif
     }
-
-	// Finds a character in the string.
-	template <>
-	inline int CStringT<WCHAR>::Find(WCHAR ch, int index /* = 0 */) const
-	{
-		assert(index >= 0);
-		if (index > GetLength())
-			return -1;
-
-		LPCWSTR str = m_str.c_str();
-		LPCWSTR substr = wcschr(str + index, ch);
-
-		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
-	}
 
     // Finds a substring within the string.
-    template <>
-    inline int CStringT<CHAR>::Find(const CHAR* pText, int index /* = 0 */) const
+    template <class T>
+    inline int CStringT<T>::Find(const T* pText, int index /* = 0 */) const
     {
         assert(pText);
         assert(index >= 0);
-		if (index > GetLength())
-			return -1;
 
-		LPCSTR str = m_str.c_str();
-		LPCSTR substr = strstr(str + index, pText);
-
-		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
+#ifdef _MBCS
+		LPCTSTR pStr = m_str.c_str();
+		LPCTSTR pSubstr = _tcsstr(pStr + index, pText);
+		return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
+#else
+        size_t s = m_str.find(pText, index);
+        return static_cast<int>(s);
+#endif
     }
-
-	// Finds a substring within the string.
-	template <>
-	inline int CStringT<WCHAR>::Find(const WCHAR* pText, int index /* = 0 */) const
-	{
-		assert(pText);
-		assert(index >= 0);
-		if (index > GetLength())
-			return -1;
-
-		LPCWSTR str = m_str.c_str();
-		LPCWSTR substr = wcsstr(str + index, pText);
-
-		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
-	}
 
     // Finds the first matching character from a set.
-    template <>
-    inline int CStringT<CHAR>::FindOneOf(const CHAR* pText) const
+    template <class T>
+    inline int CStringT<T>::FindOneOf(const T* pText) const
     {
         assert(pText);
-		LPCSTR str = m_str.c_str();
-		LPCSTR substr = strpbrk(str, pText);
-		
-		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
+
+#ifdef _MBCS
+		LPCTSTR pStr = m_str.c_str();
+		LPCTSTR pSubstr = _tcspbrk(pStr, pText);
+		return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
+#else
+        size_t s = m_str.find_first_of(pText);
+        return static_cast<int>(s);
+#endif
     }
-
-	// Finds the first matching character from a set.
-	template <>
-	inline int CStringT<WCHAR>::FindOneOf(const WCHAR* pText) const
-	{
-		assert(pText);
-		LPCWSTR str = m_str.c_str();
-		LPCWSTR substr = wcspbrk(str, pText);
-
-		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
-	}
 
     // Formats the string as sprintf does.
     template <class T>
@@ -956,7 +926,7 @@ namespace Win32xx
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
                 result = _vsnprintf(&buffer[0], length, pFormat, args);
 #else
-				result = _vsnprintf_s(&buffer[0], length, length-1, pFormat, args);
+                result = _vsnprintf_s(&buffer[0], length, length-1, pFormat, args);
 #endif
                 length *= 2;
             }
@@ -983,7 +953,7 @@ namespace Win32xx
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
                 result = _vsnwprintf(&buffer[0], length, pFormat, args);
 #else
-				result = _vsnwprintf_s(&buffer[0], length, length-1, pFormat, args);
+                result = _vsnwprintf_s(&buffer[0], length, length-1, pFormat, args);
 #endif
                 length *= 2;
             }
@@ -1148,7 +1118,7 @@ namespace Win32xx
         }
     }
 
-    // Returns the error string for the specified System Error Code (e.g from GetLastErrror).
+    // Returns the error string for the specified System Error Code (e.g from GetLastError).
     template <>
     inline void CStringT<CHAR>::GetErrorString(DWORD error)
     {
@@ -1160,7 +1130,7 @@ namespace Win32xx
         ::LocalFree(pTemp);
     }
 
-    // Returns the error string for the specified System Error Code (e.g from GetLastErrror).
+    // Returns the error string for the specified System Error Code (e.g from GetLastError).
     template <>
     inline void CStringT<WCHAR>::GetErrorString(DWORD error)
     {
@@ -1274,25 +1244,35 @@ namespace Win32xx
         return str;
     }
 
-	// Search for a character within the string, starting from the end.
-	template <>
-	inline int CStringT<CHAR>::ReverseFind(CHAR ch) const
-	{
-		LPCSTR str = m_str.c_str();
-		LPCSTR substr = strrchr(str, ch);
-	
-		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
-	}
+    // Search for a character within the string, starting from the end.
+    template <class T>
+    inline int CStringT<T>::ReverseFind(T ch, int end /* -1 */) const
+    {
+#ifdef _MBCS
+		std::basic_string<T> str = m_str;
+		if (end != -1 && end < lstrlenT(m_str.c_str()))
+			str[end] = static_cast<T>(0);
 
-	// Search for a character within the string, starting from the end.
-	template <>
-	inline int CStringT<WCHAR>::ReverseFind(WCHAR ch) const
-	{
-		LPCWSTR str = m_str.c_str();
-		LPCWSTR substr = wcsrchr(str, ch);
+		LPCTSTR pStr = str.c_str();
+		LPCTSTR pSubstr = _tcsrchr(pStr, ch);
+		return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
+#else
+		size_t found = m_str.rfind(ch, end);
+		return static_cast<int>(found);
+#endif
+        
+    }
 
-		return (substr == NULL) ? -1 : static_cast<int>(substr - str);
-	}
+    // Search for a substring within the string, starting from the end.
+    template <class T>
+    inline int CStringT<T>::ReverseFind(const T* pText, int end /* = -1 */) const
+    {
+        assert(pText);
+        if (lstrlenT(pText) == 1)
+            return ReverseFind(pText[0], end);
+        else
+            return static_cast<int>(m_str.rfind(pText, end));
+    }
 
     // Sets the character at the specified position to the specified value.
     template <class T>

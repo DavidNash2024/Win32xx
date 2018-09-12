@@ -12,7 +12,7 @@ New Features and Enhancements
   been removed. The m_ prefix for member variables has been retained, as 
   has a p prefix for pointers.
   
-* All Windows API functions that have been flagged as deprecated by Microsoft
+* Windows API functions that have been flagged as deprecated by Microsoft
   because of security issues have been replaced by their more modern equivalents
   for the compilers that support them. Warnings relating to deprecated code are
   no longer disabled by the library. If your code issues warnings related to 
@@ -78,8 +78,8 @@ Added strcpynA                                   function
 Added strcpynW                                   function
 
 Modified CFrameT::AddMenuIcon                    added optional iconWidth argument
-CTime::GetGmtTm                                  argument no longer optional
-CTime::GetLocalTm                                argument no longer optional
+CTime::GetGmtTm                                  argument no longer optional or NULL
+CTime::GetLocalTm                                argument no longer optional or NULL
 
 Renamed CFrameT::GetUseIndicatorStatus    to     CFrameT::IsUsingIndicatorStatus
 Renamed CFrameT::GetUseMenuStatus         to     CFrameT::IsUsingMenuStatus

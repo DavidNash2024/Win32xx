@@ -110,10 +110,7 @@
 #include "resource.h"
 
 
-static const COLORREF rgbDefaultBkColor       = RGB(255, 255, 255);
-static const UINT current_ScrollRanges_schema     = 1;
-static const UINT current_ScrollIncrements_schema = 1;
-static const UINT current_ScrollWin_schema        = 1;
+static const COLORREF rgbDefaultBkColor = RGB(255, 255, 255);
 
 /*******************************************************************************
 
@@ -220,7 +217,7 @@ OnDraw(CDC& sDC)                                                            /*
         LRESULT CScrollWnd::
 OnHScroll(WPARAM wParam, LPARAM lParam)                                     /*
 
-        Processes horizontal scrolling requests. The scroll code is given in
+    Processes horizontal scrolling requests. The scroll code is given in
     LOWORD(wParam).  HIWORD(wParam) specifies the current position of
     the scroll box if the scroll code is SB_THUMBPOSITION or SB_THUMBTRACK;
     but here it is not used. The lParam is the handle to the scroll bar
@@ -247,36 +244,36 @@ OnHScroll(WPARAM wParam, LPARAM lParam)                                     /*
     switch (LOWORD(wParam)) // scroll command
     {
         case SB_LEFT:       //   Scroll to far left.
-        pos.x = si.nMin;
-        break;
+            pos.x = si.nMin;
+            break;
 
         case SB_RIGHT:      //   Scroll to far right.
-        pos.x = si.nMax;
-        break;
+            pos.x = si.nMax;
+            break;
 
         case SB_LINELEFT:           // scroll left one column-unit
-        pos.x -= m_line_increment.cx;
-        break;
+            pos.x -= m_line_increment.cx;
+            break;
 
         case SB_LINERIGHT:           // scroll right one column-unit
-        pos.x += m_line_increment.cx;
-        break;
+            pos.x += m_line_increment.cx;
+            break;
 
         case SB_PAGELEFT:           // scroll left one column-page-unit
-        pos.x -= si.nPage;
-        break;
+            pos.x -= si.nPage;
+            break;
 
         case SB_PAGERIGHT:           // scroll right one column-page-unit
-        pos.x += si.nPage;
-        break;
+            pos.x += si.nPage;
+            break;
 
         case SB_THUMBTRACK:     // h-thumb is moving
         case SB_THUMBPOSITION:      // or has stopped
-        pos.x = si.nTrackPos;   // was HIWORD(wParam);
-        break;
+            pos.x = si.nTrackPos;   // was HIWORD(wParam);
+            break;
 
         default:    // the rest are immaterial
-        break;
+            break;
     }
       // Reset new horizontal scroll position
     SetScrollPosition(pos);
@@ -317,46 +314,46 @@ OnKeyScroll(WPARAM wParam, LPARAM lParam)                                   /*
     if (!IsWindow())
         return 0;
 
-    UINT    wScrollNotify = 0,
-        uMessage = 0;
+    UINT wScrollNotify = 0,
+         uMessage = 0;
 
       // get the state of the control key
     BOOL control = ((::GetKeyState(VK_CONTROL) & 0x8000) ? TRUE : FALSE);
       // respond to the scroll event:
     switch (wParam)
     {
-            case VK_HOME:       // HOME key
-        if (control)
-        {         // top limit of scroll
+        case VK_HOME:       // HOME key
+            if (control)
+            {     // top limit of scroll
                 wScrollNotify = SB_TOP;
                 uMessage = WM_VSCROLL;
                 SendMessage(uMessage,
                 MAKELONG(wScrollNotify, 0), 0L);
                 wScrollNotify = SB_LEFT;
                 uMessage = WM_HSCROLL;
-        }
-        else
-        {         // left limit of scroll
+            }
+            else
+            {     // left limit of scroll
                 wScrollNotify = SB_LEFT;
                 uMessage = WM_HSCROLL;
-        }
+            }
             break;
 
         case VK_END:        // END key
-        if (control)
-        {         // bottom limit of scroll
+            if (control)
+            {     // bottom limit of scroll
                 wScrollNotify = SB_BOTTOM;
                 uMessage = WM_VSCROLL;
                 SendMessage(uMessage,
                 MAKELONG(wScrollNotify, 0), 0L);
                 wScrollNotify = SB_LEFT;
                 uMessage = WM_HSCROLL;
-        }
-        else
-        {         // right limit of scroll
+            }
+            else
+            {     // right limit of scroll
                 wScrollNotify = SB_RIGHT;
                 uMessage = WM_HSCROLL;
-        }
+            }
             break;
 
         case VK_PRIOR:      //PAGEUP key
@@ -370,32 +367,32 @@ OnKeyScroll(WPARAM wParam, LPARAM lParam)                                   /*
             break;
 
         case VK_UP:         // UPARROW key
-        if (control)
-        {         // one vertical increment up
-            wScrollNotify = SB_LINEUP;
+            if (control)
+            {     // one vertical increment up
+                wScrollNotify = SB_LINEUP;
                 uMessage = WM_VSCROLL;
-            break;
-        }
+                break;
+            }
 
         case VK_LEFT:       // LEFTARROW key
-        if (control)
-        {         // one column increment left
+            if (control)
+            {     // one column increment left
                 wScrollNotify = SB_LINELEFT;
                 uMessage = WM_HSCROLL;
-            break;
-        }
+                break;
+            }
 
         case VK_RIGHT:      // RIGHTARROW key
-        if (control)
-        {         // one column increment right
+            if (control)
+            {     // one column increment right
                 wScrollNotify = SB_LINERIGHT;
                 uMessage = WM_HSCROLL;
-            break;
-        }
+                break;
+            }
 
         case VK_DOWN:       // DOWNARROW key
-        if (control)
-        {         // one vertical increment down
+            if (control)
+            {     // one vertical increment down
                 wScrollNotify = SB_LINEDOWN;
                 uMessage = WM_VSCROLL;
             }
@@ -416,7 +413,7 @@ OnKeyScroll(WPARAM wParam, LPARAM lParam)                                   /*
         LRESULT CScrollWnd::
 OnMouseWheel(WPARAM wParam, LPARAM lParam)                                  /*
 
-        Processes mouse wheel rotation when made in the focus window having
+    Processes mouse wheel rotation when made in the focus window having
     a vertical scrollbar.  Although LOWORD(wParam) contains the key flags,
     HIWORD(wParam) gives the (signed) wheel rotation, GET_X_LPARAM(lParam)
     is the horizontal position of the pointer, and  GET_Y_LPARAM(lParam)
@@ -432,7 +429,7 @@ OnMouseWheel(WPARAM wParam, LPARAM lParam)                                  /*
         return 0;
 
       // set the new position: first get (signed) rotation units
-    int wheelunits = HIWORD(wParam),
+    int wheelunits = (int)(short)HIWORD(wParam),
       // convert to line increments, maintaining sign
     rotation = ::MulDiv(-wheelunits, m_line_increment.cy, WHEEL_DELTA);
     CPoint pos = GetScrollPosition();
@@ -446,7 +443,7 @@ OnMouseWheel(WPARAM wParam, LPARAM lParam)                                  /*
         LRESULT CScrollWnd::
 OnVScroll(WPARAM wParam, LPARAM lParam)                                     /*
 
-        This function processes vertical scrolling requests. The scroll code
+    This function processes vertical scrolling requests. The scroll code
     is given in LOWORD(wParam). HIWORD(wParam) specifies the current
     scroll box if the scroll code is SB_THUMBPOSITION or SB_THUMBTRACK;
     but here it is not used. lParam is the handle to the scroll bar
@@ -470,34 +467,34 @@ OnVScroll(WPARAM wParam, LPARAM lParam)                                     /*
     switch (LOWORD(wParam))  // the scroll code
     {
         case SB_TOP:                // top of scroll
-        pos.y = si.nMin;
-        break;
+            pos.y = si.nMin;
+            break;
 
         case SB_BOTTOM:             // bottom of scroll
-        pos.y = si.nMax;
-        break;
+            pos.y = si.nMax;
+            break;
 
         case SB_LINEUP:             // up one line-unit
-        pos.y -= m_line_increment.cy;
-        break;
+            pos.y -= m_line_increment.cy;
+            break;
 
         case SB_LINEDOWN:           // down one line-unit
-        pos.y += m_line_increment.cy;
-        break;
+            pos.y += m_line_increment.cy;
+            break;
 
         case SB_PAGEUP:             // up one page-unit
-        pos.y -= si.nPage;
-        break;
+            pos.y -= si.nPage;
+            break;
 
         case SB_PAGEDOWN:           // down one page-unit
-        pos.y += si.nPage;
-        break;
+            pos.y += si.nPage;
+            break;
 
         case SB_THUMBTRACK:         // the thumb is moving
         case SB_THUMBPOSITION:      // or has stopped
-          // need THE thumb track position
-        pos.y = si.nTrackPos; // was HIWORD(wParam);
-        break;
+              // need THE thumb track position
+            pos.y = si.nTrackPos; // was HIWORD(wParam);
+            break;
 
         default:
         break;
@@ -591,23 +588,21 @@ ScrlToDev(CPoint pt) const                                                  /*
         void CScrollWnd::
 Serialize(CArchive &ar)                                                     /*
 
-        Serialize or deserialize the scroll window to and from the archive ar,
+    Serialize or deserialize the scroll window to and from the archive ar,
     depending on the sense of IsStoring(). This class has its own m_nSchema.
     (The saved values are not used in the present application.)
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-                  // save background color
+    if (ar.IsStoring())
+    {     // save background color
         ar << m_rgbBkColor;
     }
-        else
-        {
-          // recover background color
-                ar >> m_rgbBkColor;
+    else
+    {     // recover background color
+        ar >> m_rgbBkColor;
         m_brBkGnd = CBrush(m_rgbBkColor);
-        }
+    }
 }
 
 /*============================================================================*/
@@ -778,35 +773,35 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                            /*
     switch (uMsg)
     {
         case WM_SIZE:
-        SetScrollParameters();
-        break;  // Also do the default processing
+            SetScrollParameters();
+            break;  // Also do the default processing
 
         case WM_ERASEBKGND:
-        return 1;       // prevents flicker on resizing
+            return 1;       // prevents flicker on resizing
 
         case WM_VSCROLL:    // received when the v-scrollbar is clicked
-                if (OnVScroll(wParam, lParam) == 0)
-                        return 0;
+            if (OnVScroll(wParam, lParam) == 0)
+                return 0;
 
-                break;
+            break;
 
         case WM_HSCROLL:    // received when the v-scrollbar is clicked
-                if (OnHScroll(wParam, lParam) == 0)
-                        return 0;
+            if (OnHScroll(wParam, lParam) == 0)
+                return 0;
 
-                break;
+            break;
 
         case WM_KEYDOWN:  // received when a key is pressed
-                if (OnKeyScroll(wParam, lParam) == 0)
-                        return 0;
+            if (OnKeyScroll(wParam, lParam) == 0)
+                return 0;
 
-        break;
+            break;
 
         case WM_MOUSEWHEEL:  // rotation detected
-        if (OnMouseWheel(wParam, lParam) == 0)
-            return 0;
+            if (OnMouseWheel(wParam, lParam) == 0)
+                return 0;
 
-        break;
+            break;
     }
       // pass unhandled messages on for default processing
     return WndProcDefault(uMsg, wParam, lParam);
