@@ -77,12 +77,16 @@
 
 #include "wxx_dialog.h"
 
-#pragma warning( push )  
+#ifdef _MSC_VER
+#pragma warning ( push )
 #pragma warning (disable : 4091)  // temporarily disable warning: 'typedef': ignored
+#endif // _MSC_VER
 
 #include <shlobj.h>
 
-#pragma warning( pop )
+#ifdef _MSC_VER
+#pragma warning ( pop )
+#endif // _MSC_VER
 
 
 // Support older compilers
@@ -255,7 +259,7 @@ namespace Win32xx
     // Enables or disables the OK button
     inline void CFolderDialog::EnableOK(BOOL enable /*TRUE*/)
     {
-        SendMessage(BFFM_ENABLEOK, enable, 0);
+        SendMessage(BFFM_ENABLEOK, (WPARAM)enable, 0);
     }
 
     // Returns the path of the selected folder.

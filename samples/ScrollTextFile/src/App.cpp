@@ -159,7 +159,7 @@ InitInstance()                                                              /*
     sCompiler.Format(_T("MS C++ %d.%d"), _MSC_VER / 100,
         _MSC_VER % 100);
 #else
-    sCompiler      = _T("(unknown compiler name)");
+    sCompiler = _T("(unknown compiler name)");
 #endif
     CString date = __DATE__; // necesary on VCE2010
     m_sAboutBoxInfo.Format(_T("%s\n\n(%s.exe)\n%s\n%s\ncompiled with ")

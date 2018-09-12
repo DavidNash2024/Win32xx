@@ -203,8 +203,8 @@ STRINGTABLE
     IDS_ARCHIVE_FILE_EXT    ".arc"
     IDS_DATAPATH_SUBDIR     "win32++\\"
     IDS_DOC_DEFAULT_EXT     ".txt"
-    IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
     IDS_MAX_MRU_ENTRIES     "5"
+    IDS_FILE_FILTER "Text Files (*.txt; *.xml)|*.txt;*.xml| All Files (*.*)|*.*||"
 }
 /*-----------------------------------------------------------------------------*/
 #endif    // English (U.S.) resources

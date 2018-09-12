@@ -625,7 +625,7 @@ namespace Win32xx
     inline void CDialog::SetDefID(UINT id)
     {
         assert(IsWindow());
-        SendMessage(DM_SETDEFID, id, 0);
+        SendMessage(DM_SETDEFID, (WPARAM)id, 0);
     }
 
     // This callback function passes messages to DialogProc

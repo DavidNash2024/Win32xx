@@ -253,7 +253,7 @@ OnFileOpen()                                                                /*
     initiating its display and scrolling, as appropriate.
 *-----------------------------------------------------------------------------*/
 {
-    // Bring up the dialog, and open the file
+      // Bring up the dialog, and open the file
     CFileDialog fd(TRUE, 0, 0, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
         TheDoc().GetFilter());
     if (fd.DoModal(*this) != IDOK)

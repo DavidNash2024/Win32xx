@@ -609,7 +609,7 @@ namespace Win32xx
             SetOptions(ECOOP_SET, ECO_NOHIDESEL);
         }
 
-        SendMessage(EM_HIDESELECTION, hide, 0);
+        SendMessage(EM_HIDESELECTION, (WPARAM)hide, 0);
     }
 
     // Limits the amount of text a user can enter.
@@ -799,7 +799,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetPunctuation(UINT type, const PUNCTUATION& puncInfo) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETPUNCTUATION, type, (LPARAM)&puncInfo));
+        return (0 != SendMessage(EM_SETPUNCTUATION, (WPARAM)type, (LPARAM)&puncInfo));
     }
 
     // Sets or removes the read-only style.
