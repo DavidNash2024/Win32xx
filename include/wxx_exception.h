@@ -220,7 +220,7 @@ namespace Win32xx
         memset(m_errorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
         if (pText)
-            strcpyn(m_text, pText, MAX_STRING_SIZE-1);
+            StrCopy(m_text, pText, MAX_STRING_SIZE);
 
         // Store error information in m_errorString
         DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
@@ -273,7 +273,7 @@ namespace Win32xx
 
         if (pFilePath)
         {
-            strcpyn(m_filePath, pFilePath, MAX_STRING_SIZE-1);
+            StrCopy(m_filePath, pFilePath, MAX_STRING_SIZE);
             ::OutputDebugString(_T("File name: "));
             ::OutputDebugString(pFilePath);
             ::OutputDebugString(_T("\n"));
@@ -294,7 +294,7 @@ namespace Win32xx
 
         if (pFilePath)
         {
-            strcpyn(m_filePath, pFilePath, MAX_STRING_SIZE-1);
+            StrCopy(m_filePath, pFilePath, MAX_STRING_SIZE);
             ::OutputDebugString(_T("File name: "));
             ::OutputDebugString(pFilePath);
             ::OutputDebugString(_T("\n"));

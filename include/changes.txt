@@ -16,15 +16,15 @@ New Features and Enhancements
   because of security issues have been replaced by their more modern equivalents
   for the compilers that support them. Warnings relating to deprecated code are
   no longer disabled by the library. If your code issues warnings related to 
-  deprecated code, you are advised to update it accordingly.
+  deprecated code, you can disable them, but updating your code might be a
+  better option.
   
-* Three new functions have been supplied to provide safer copying of text strings.
-  The new functions are:
-  strcpynA    Copies a specified number of char characters.
-  strcpynW    Copies a specified number of wchar_t characters.
-  strcpyn     Copies a specified number of TCHAR characters.
-  These functions add the null termination. They also use the safer strncpy_s/wcsncpy_s
-  functions where available.
+* Three new functions have been supplied to guard against buffer overruns when
+  copying strings. They allow the size of the destination buffer to be specified, 
+  much like strcpy_s and wcscpy_s. The new functions are:
+  StrCopyA    Copies a char string to a buffer of specified size.
+  StrCopyW    Copies a wide string to a buffer of specified size.
+  StrCopy     Copies a TCHAR string to a buffer of specified size.
   
 * Added CEvent
 * Added CMutex
@@ -41,7 +41,8 @@ New Features and Enhancements
  - Relaxed restrictions on size of images for menu icons. This provides better 
     support for larger screen scaling available on windows 10 for DPI aware apps.
 
-* Updated CImageList    
+* Updated CImageList
+* The Notepad sample now supports UTF-8
 
 
 Changes in detail
@@ -73,9 +74,9 @@ Added CResizer::SetMaxRect                       member function
 Added CRichEdit::AppendText                      member function
 Added CSocket::StartAsync                        member function
 Added CWinThread::IsRunning                      member function
-Added strcpyn                                    function
-Added strcpynA                                   function
-Added strcpynW                                   function
+Added StrCopy                                    function
+Added StrCopyA                                   function
+Added StrCopyW                                   function
 
 Modified CFrameT::AddMenuIcon                    added optional iconWidth argument
 CTime::GetGmtTm                                  argument no longer optional or NULL

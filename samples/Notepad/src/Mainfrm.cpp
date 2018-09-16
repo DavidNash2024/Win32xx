@@ -393,7 +393,7 @@ BOOL CMainFrame::OnOptionsFont()
     // Fill the LOGFONT struct from CHARFORMAT2
     LOGFONT lf;
     ZeroMemory(&lf, sizeof(lf));
-    lstrcpy(lf.lfFaceName, cf2.szFaceName);
+    StrCopy(lf.lfFaceName, cf2.szFaceName, LF_FACESIZE);
     lf.lfHeight = cf2.yHeight / 15;
     lf.lfWeight = (cf2.dwEffects & CFE_BOLD) ? 700 : 400;
     lf.lfItalic = ( BYTE(cf2.dwEffects) & CFE_ITALIC );
@@ -527,7 +527,10 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.dwError = 0;
         es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamOutCallback);
-        m_richView.StreamOut(SF_TEXT, es);
+   //     m_richView.StreamOut(SF_TEXT, es);
+        
+        // Support saving UTF-8 text (without BOM)
+        m_richView.StreamOut((CP_UTF8 << 16) | SF_USECODEPAGE | SF_TEXT, es);
 
         //Clear the modified text flag
         m_richView.SetModify(FALSE);

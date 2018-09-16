@@ -314,11 +314,22 @@ namespace Win32xx
             sockaddr_in clientService;
             clientService.sin_family = AF_INET;
 
-#if !defined (InetPton)
+#if !defined (InetPton)     //  can require NTDDI_VERSION >= NTDDI_VISTA
+  #ifdef _MSC_VER
+    #pragma warning ( push )
+    #pragma warning ( disable : 4996 )
+  #endif // _MSC_VER
+
             clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
+
+  #ifdef _MSC_VER
+    #pragma warning ( pop )
+  #endif // _MSC_VER
 #else
+
             InetPton(AF_INET, addr, &clientService.sin_addr.s_addr);
-#endif
+
+#endif // InetPton
 
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
@@ -384,11 +395,22 @@ namespace Win32xx
             sockaddr_in clientService;
             clientService.sin_family = AF_INET;
 
-#if !defined (InetPton)
+#if !defined (InetPton)     //  can require NTDDI_VERSION >= NTDDI_VISTA
+  #ifdef _MSC_VER
+    #pragma warning ( push )
+    #pragma warning ( disable : 4996 )
+  #endif // _MSC_VER
+
             clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
+
+  #ifdef _MSC_VER
+    #pragma warning ( pop )
+  #endif // _MSC_VER
 #else
+
             InetPton(AF_INET, addr, &clientService.sin_addr.s_addr);
-#endif
+
+#endif // InetPton
 
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
@@ -762,11 +784,22 @@ namespace Win32xx
             sockaddr_in clientService;
             clientService.sin_family = AF_INET;
 
-#if !defined (InetPton)
+#if !defined (InetPton)     //  can require NTDDI_VERSION >= NTDDI_VISTA
+  #ifdef _MSC_VER
+    #pragma warning ( push )
+    #pragma warning ( disable : 4996 )
+  #endif // _MSC_VER
+
             clientService.sin_addr.s_addr = inet_addr(TtoA(addr));
+
+  #ifdef _MSC_VER
+    #pragma warning ( pop )
+  #endif // _MSC_VER
 #else
+
             InetPton(AF_INET, addr, &clientService.sin_addr.s_addr);
-#endif
+
+#endif  // InetPton
 
             clientService.sin_port = htons( static_cast<u_short>(port) );
 

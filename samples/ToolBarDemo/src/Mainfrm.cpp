@@ -247,7 +247,7 @@ LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
     if (pNMTB->iItem < buttons)
     {
         pNMTB->tbButton = buttonInfo[pNMTB->iItem];
-        lstrcpyn(pNMTB->pszText, buttonText[pNMTB->iItem], pNMTB->cchText);
+        StrCopy(pNMTB->pszText, buttonText[pNMTB->iItem], pNMTB->cchText);
         return TRUE;    // Load the next button.
     }
 

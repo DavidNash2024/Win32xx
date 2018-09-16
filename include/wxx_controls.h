@@ -1406,15 +1406,15 @@ namespace Win32xx
             lparam |= 0x01000000L;
 
         CString str;
-        int bufferLen = 64;
-        int strLen = bufferLen;
+        int incompleteLength = 64;
+        int length = incompleteLength;
 
         // Loop until we have retrieved the entire string
-        while (strLen == bufferLen)
+        while (length == incompleteLength)
         {
-            bufferLen *= 4;
-            LPTSTR pStr = str.GetBuffer(bufferLen);
-            strLen = ::GetKeyNameText(static_cast<LONG>(lparam), pStr, bufferLen + 1);
+            incompleteLength *= 4;
+            LPTSTR pStr = str.GetBuffer(incompleteLength);
+            length = ::GetKeyNameText(static_cast<LONG>(lparam), pStr, incompleteLength + 1);
             str.ReleaseBuffer();
         }
 

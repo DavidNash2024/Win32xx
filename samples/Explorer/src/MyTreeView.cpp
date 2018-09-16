@@ -25,7 +25,7 @@ int CALLBACK CMyTreeView::CompareProc(LPARAM param1, LPARAM param2, LPARAM param
     TreeItemData* pItem2 = reinterpret_cast<TreeItemData*>(param2);
     HRESULT result;
 
-	result = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelCpidl(), pItem2->GetRelCpidl());
+    result = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelCpidl(), pItem2->GetRelCpidl());
     if(FAILED(result))
         return 0;
 
@@ -40,9 +40,9 @@ void CMyTreeView::DeleteItems()
 void CMyTreeView::DoContextMenu(CPoint& point)
 {
     TVHITTESTINFO  htInfo;
-	htInfo.pt = point;
+    htInfo.pt = point;
     ScreenToClient(htInfo.pt);
-	htInfo.flags = LVHT_NOWHERE;
+    htInfo.flags = LVHT_NOWHERE;
     HitTest(htInfo);
 
     if(TVHT_ONITEM & htInfo.flags)
@@ -53,8 +53,8 @@ void CMyTreeView::DoItemMenu(HTREEITEM item, CPoint& point)
 {
     TVITEM itemInfo;
     ZeroMemory(&itemInfo, sizeof(itemInfo));
-	itemInfo.mask = TVIF_PARAM;
-	itemInfo.hItem = item;
+    itemInfo.mask = TVIF_PARAM;
+    itemInfo.hItem = item;
 
     if(GetItem(itemInfo))
     {
@@ -70,7 +70,7 @@ void CMyTreeView::DoItemMenu(HTREEITEM item, CPoint& point)
 
         if(sf.GetIShellFolder())
         {
-			result = sf.GetUIObjectOf(*this, 1, &(pInfo->GetRelCpidl()), IID_IContextMenu, 0, cm);
+            result = sf.GetUIObjectOf(*this, 1, &(pInfo->GetRelCpidl()), IID_IContextMenu, 0, cm);
 
             if(SUCCEEDED(result))
             {
@@ -78,7 +78,7 @@ void CMyTreeView::DoItemMenu(HTREEITEM item, CPoint& point)
                 popup.CreatePopupMenu();
                 if(popup.GetHandle())
                 {
-					result = cm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
+                    result = cm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
 
                     if(SUCCEEDED(result))
                     {
@@ -132,7 +132,7 @@ LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
 
         //get the display name of the item
         if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
-            ::lstrcpyn(pDI->item.pszText, sfi.szDisplayName, pDI->item.cchTextMax -1);
+            StrCopy(pDI->item.pszText, sfi.szDisplayName, pDI->item.cchTextMax -1);
     }
 
     //do we need to supply the unselected image?
@@ -218,36 +218,36 @@ void CMyTreeView::EnumObjects(HTREEITEM parentItem, CShellFolder& parentFolder, 
             ZeroMemory(&itemInfo, sizeof(itemInfo));
 
             //fill in the TV_ITEM structure for this item
-			itemInfo.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
+            itemInfo.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
 
             //Store a pointer to the TreeItemData in the lParam and m_pItems
             TreeItemData* pItem = new TreeItemData(cpidlParent, cpidlRel, parentFolder);
-			itemInfo.lParam = reinterpret_cast<LPARAM>(pItem);
+            itemInfo.lParam = reinterpret_cast<LPARAM>(pItem);
             m_pItems.push_back(pItem);
 
             //text and images are done on a callback basis
-			itemInfo.pszText = LPSTR_TEXTCALLBACK;
-			itemInfo.iImage = itemInfo.iSelectedImage = I_IMAGECALLBACK;
+            itemInfo.pszText = LPSTR_TEXTCALLBACK;
+            itemInfo.iImage = itemInfo.iSelectedImage = I_IMAGECALLBACK;
 
             //determine if the item has children or shared
             attribs = SFGAO_HASSUBFOLDER | SFGAO_FOLDER | SFGAO_SHARE;
             parentFolder.GetAttributesOf(1, cpidlRel, attribs);
-			itemInfo.cChildren = (attribs & SFGAO_HASSUBFOLDER);
+            itemInfo.cChildren = (attribs & SFGAO_HASSUBFOLDER);
 
             //determine if the item is shared
             if(attribs & SFGAO_SHARE)
             {
-				itemInfo.mask |= TVIF_STATE;
-				itemInfo.stateMask |= TVIS_OVERLAYMASK;
-				itemInfo.state |= INDEXTOOVERLAYMASK(1); //1 is the index for the shared overlay image
+                itemInfo.mask |= TVIF_STATE;
+                itemInfo.stateMask |= TVIS_OVERLAYMASK;
+                itemInfo.state |= INDEXTOOVERLAYMASK(1); //1 is the index for the shared overlay image
             }
 
             //fill in the TV_INSERTSTRUCT structure for this item
-			TVINSERTSTRUCT insertInfo;
-			ZeroMemory(&insertInfo, sizeof(insertInfo));
-			insertInfo.item = itemInfo;
-			insertInfo.hInsertAfter = TVI_LAST;
-			insertInfo.hParent = parentItem;
+            TVINSERTSTRUCT insertInfo;
+            ZeroMemory(&insertInfo, sizeof(insertInfo));
+            insertInfo.item = itemInfo;
+            insertInfo.hInsertAfter = TVI_LAST;
+            insertInfo.hParent = parentItem;
 
             InsertItem(insertInfo);
             fetched = 0;
@@ -259,8 +259,8 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM parentItem)
 {
     TVITEM itemInfo;
     ZeroMemory(&itemInfo, sizeof(itemInfo));
-	itemInfo.mask = TVIF_PARAM;
-	itemInfo.hItem = parentItem;
+    itemInfo.mask = TVIF_PARAM;
+    itemInfo.hItem = parentItem;
     if (!GetItem(itemInfo))
         return FALSE;
 
@@ -276,11 +276,11 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM parentItem)
 
     //if the parent folder is NULL, then we are at the root of the namespace, so the parent of this item is the desktop folder
     if(!pItem->GetParentFolder().GetIShellFolder())
-		result = parentFolder.SHGetDesktopFolder();
+        result = parentFolder.SHGetDesktopFolder();
 
     //otherwise we need to get the IShellFolder for this item
     else
-		result = pItem->GetParentFolder().BindToObject(pItem->GetRelCpidl(), NULL, IID_IShellFolder, parentFolder);
+        result = pItem->GetParentFolder().BindToObject(pItem->GetRelCpidl(), NULL, IID_IShellFolder, parentFolder);
 
     if(FAILED(result))
         return FALSE;
@@ -289,9 +289,9 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM parentItem)
 
     //sort the new items
     TV_SORTCB sortInfo;
-	sortInfo.hParent = parentItem;
-	sortInfo.lpfnCompare = CompareProc;
-	sortInfo.lParam = 0;
+    sortInfo.hParent = parentItem;
+    sortInfo.lpfnCompare = CompareProc;
+    sortInfo.lParam = 0;
     SortChildrenCB(&sortInfo, 0);
 
     //turn redawing back on in the TreeView
@@ -311,34 +311,34 @@ BOOL CMyTreeView::GetRootItems()
     cpidlDesk.SHGetSpecialFolderLocation(NULL, CSIDL_DESKTOP);
     if (cpidlDesk.GetPidl())
     {
-		//fill in the TVITEM structure for this item
+        //fill in the TVITEM structure for this item
         TV_ITEM           itemInfo;
         ZeroMemory(&itemInfo, sizeof(itemInfo));
-		itemInfo.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
+        itemInfo.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
 
         //Store a pointer to the TreeItemData in the lParam and m_pItems
         TreeItemData* pItem = new TreeItemData(cpidlDesk);
-		itemInfo.lParam = reinterpret_cast<LPARAM>(pItem);
+        itemInfo.lParam = reinterpret_cast<LPARAM>(pItem);
         m_pItems.push_back(pItem);
 
         //text and images are done on a callback basis
-		itemInfo.pszText = LPSTR_TEXTCALLBACK;
-		itemInfo.iImage = itemInfo.iSelectedImage = I_IMAGECALLBACK;
+        itemInfo.pszText = LPSTR_TEXTCALLBACK;
+        itemInfo.iImage = itemInfo.iSelectedImage = I_IMAGECALLBACK;
 
         //assume the desktop has children
-		itemInfo.cChildren = TRUE;
+        itemInfo.cChildren = TRUE;
 
         //fill in the TV_INSERTSTRUCT structure for this item
-		TV_INSERTSTRUCT   insertInfo;
-		ZeroMemory(&insertInfo, sizeof(insertInfo));
-		insertInfo.item = itemInfo;
-		insertInfo.hInsertAfter = TVI_LAST;
-		insertInfo.hParent = TVI_ROOT;
+        TV_INSERTSTRUCT   insertInfo;
+        ZeroMemory(&insertInfo, sizeof(insertInfo));
+        insertInfo.item = itemInfo;
+        insertInfo.hInsertAfter = TVI_LAST;
+        insertInfo.hParent = TVI_ROOT;
 
         SetFocus();
 
         //add the item
-		HTREEITEM parentItem;
+        HTREEITEM parentItem;
         parentItem = InsertItem(insertInfo);
 
         //go ahead and expand this item
@@ -392,9 +392,9 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
     //Set parent item's has Children flag
     TVITEM itemInfo;
     ZeroMemory(&itemInfo, sizeof(itemInfo));
-	itemInfo.mask = TVIF_CHILDREN;
-	itemInfo.cChildren = 1;
-	itemInfo.hItem = item;
+    itemInfo.mask = TVIF_CHILDREN;
+    itemInfo.cChildren = 1;
+    itemInfo.hItem = item;
     SetItem(itemInfo);
 
     //Expand the tree item
@@ -407,8 +407,8 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
     {
         //Get the TVITEM structure for this item
         ZeroMemory(&itemInfo, sizeof(itemInfo));
-		itemInfo.mask = TVIF_PARAM;
-		itemInfo.hItem = childItem;
+        itemInfo.mask = TVIF_PARAM;
+        itemInfo.hItem = childItem;
         if(!GetItem(itemInfo))
             return FALSE;
 
@@ -423,7 +423,7 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
         }
 
         //Next Sibling
-		childItem = GetNextSibling(childItem);
+        childItem = GetNextSibling(childItem);
     }
     TRACE("Item NOT found\n");
 

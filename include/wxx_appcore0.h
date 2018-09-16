@@ -669,42 +669,67 @@ namespace Win32xx
     }
   #endif
 
-    // Safely copies a specified number of char characters.
-    // Use this function in place of the deprecated lstrcpynA function.
-    inline void strcpynA(char* dst, const char* src, size_t charCount)
+
+    // The following functions perform string copies. The size of the dst buffer
+    // is specified, much like strcpy_s. The dst buffer is always null terminated.
+    // Null or zero arguments cause an assert.
+
+    // Copies an ANSI string from src to dst. 
+    inline void StrCopyA(char* dst, const char* src, size_t dst_size)
     {
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
-        strncpy(dst, src, charCount);
-        dst[charCount - 1] = 0;
-#else
-        strncpy_s(dst, charCount, src, charCount - 1);
-#endif
+        assert(dst != 0);
+        assert(src != 0);
+        assert(dst_size != 0);
+
+        size_t index;
+
+        // Copy each character.
+        for (index = 0; index < dst_size - 1; ++index)
+        {
+            dst[index] = src[index];
+            if (src[index] == '\0')
+                break;
+        }
+
+        // Add null termination if required.
+        if (dst[index] != '\0')
+            dst[dst_size - 1] = '\0';
     }
 
-    // Safely copies a specified number of wchar_t characters.
-    // Use this function in place of the deprecated lstrcpynW function.
-    inline void strcpynW(wchar_t* dst, const wchar_t* src, size_t charCount)
+    // Copies a wide string from src to dst.
+    inline void StrCopyW(wchar_t* dst, const wchar_t* src, size_t dst_size)
     {
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
-        wcsncpy(dst, src, charCount);
-        dst[charCount - 1] = 0;
-#else
-        wcsncpy_s(dst, charCount, src, charCount - 1);
-#endif
+        assert(dst != 0);
+        assert(src != 0);
+        assert(dst_size != 0);
+
+        size_t index;
+
+        // Copy each character.
+        for (index = 0; index < dst_size - 1; ++index)
+        {
+            dst[index] = src[index];
+            if (src[index] == '\0')
+                break;
+        }
+
+        // Add null termination if required.
+        if (dst[index] != '\0')
+            dst[dst_size - 1] = '\0';
+
     }
 
-    // Safely copies a specified number of TCHAR characters.
-    // Use this function in place of the deprecated lstrcpyn function.
-    inline void strcpyn(TCHAR* dst, const TCHAR* src, size_t charCount)
+    // Copies a TCHAR string from src to dst.
+    inline void StrCopy(TCHAR* dst, const TCHAR* src, size_t charCount)
     {
 #ifdef UNICODE
-        strcpynW(dst, src, charCount);
+        StrCopyW(dst, src, charCount);
 #else
-        strcpynA(dst, src, charCount);
+        StrCopyA(dst, src, charCount);
 #endif
     }
 
 
-}
+} // namespace Win32xx
 
 #endif // _WIN32XX_APPCORE0_H_

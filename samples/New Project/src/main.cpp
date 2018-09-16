@@ -9,7 +9,7 @@
 #include "wxx_wincore.h"
 
 // alternatively include all library features
-// #include stdafx.h
+// #include "stdafx.h"
 
 
 // A class that inherits from CWnd. It is used to create the window.

@@ -19,7 +19,7 @@ void CView::Minimize()
     nid.hIcon = (HICON) (::LoadImage (GetModuleHandle(NULL), MAKEINTRESOURCE (IDW_MAIN), IMAGE_ICON,
         ::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
 
-    lstrcpy(nid.szTip, _T("Tray Demo tooltip"));
+    StrCopy(nid.szTip, _T("Tray Demo tooltip"), 128);
 
     Shell_NotifyIcon(NIM_ADD, &nid);
     ShowWindow(SW_HIDE);

@@ -35,7 +35,7 @@ namespace ShellWrapper
             return FALSE;
         }
 
-        ::lstrcpyn(pszDisplayName, sfi.szDisplayName, MAX_PATH -1);
+        StrCopy(pszDisplayName, sfi.szDisplayName, MAX_PATH -1);
         return TRUE;
     }
 
@@ -76,7 +76,7 @@ namespace ShellWrapper
         if (IID_IContextMenu2 == iid)
         {
             IContextMenu2* pIContextMenu2 = NULL;
-			result = m_pIContextMenu->QueryInterface(iid, (VOID**)&pIContextMenu2);
+            result = m_pIContextMenu->QueryInterface(iid, (VOID**)&pIContextMenu2);
             if (S_OK == result)
                 ccm2.Attach(pIContextMenu2);
             else
@@ -229,7 +229,7 @@ namespace ShellWrapper
         HRESULT result = 0;
         if (m_IShellFolder)
         {
-			result = m_IShellFolder->EnumObjects(hwndOwner, grfFlags, &pEnum);
+            result = m_IShellFolder->EnumObjects(hwndOwner, grfFlags, &pEnum);
             if (S_OK == result)
                 cenumIDList.Attach(pEnum);
             else

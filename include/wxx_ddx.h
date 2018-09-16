@@ -1145,8 +1145,7 @@ namespace Win32xx
         {
             CString str;
             str.GetWindowText(control);
-            strcpyn(value, str, maxLen-1);
-            value[maxLen-1] = _T('\0');
+            StrCopy(value, str, maxLen);
         }
         else
         {

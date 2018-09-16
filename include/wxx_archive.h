@@ -847,7 +847,7 @@ namespace Win32xx
 
         CString str;
         *this >> str;
-        strcpyn(pString, str.c_str(), max);
+        StrCopy(pString, str.c_str(), max);
         return pString;
     }
 
@@ -862,7 +862,7 @@ namespace Win32xx
 
         CStringA str;
         *this >> str;
-        strcpynA(pString, str.c_str(), max);
+        StrCopyA(pString, str.c_str(), max);
         return pString;
     }
 
@@ -877,7 +877,7 @@ namespace Win32xx
 
         CStringW str;
         *this >> str;
-        strcpynW(pString, str.c_str(), max);
+        StrCopyW(pString, str.c_str(), max);
         return pString;
     }
 
