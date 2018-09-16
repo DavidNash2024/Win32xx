@@ -134,7 +134,7 @@ CDoc    : public CObject                        /*
         void     SetString(const CString& val) {m_sString = val;}
 
         LPCTSTR GetLPTSTR(void) {return m_LPTSTR;}
-		void SetLPTSTR(LPCTSTR val) {strcpyn(m_LPTSTR, val, 256); }
+        void SetLPTSTR(LPCTSTR val) {StrCopy(m_LPTSTR, val, 256); }
 
         int GetSlider(void) {return m_iSlider;}
         void    SetSlider(int val) {m_iSlider = val;}

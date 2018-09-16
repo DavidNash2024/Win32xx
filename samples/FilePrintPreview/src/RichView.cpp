@@ -72,7 +72,7 @@ GetNewFont()                                /*
       // Fill the LOGFONT struct from CHARFORMAT2
     LOGFONT lf;
     ZeroMemory(&lf, sizeof(lf));
-    lstrcpy(lf.lfFaceName, cf2.szFaceName);
+    StrCopy(lf.lfFaceName, cf2.szFaceName, LF_FACESIZE);
     lf.lfHeight = cf2.yHeight / 15;
     lf.lfWeight = (cf2.dwEffects & CFE_BOLD)? 700 : 400;
     lf.lfItalic = (BYTE)(cf2.dwEffects & CFE_ITALIC);

@@ -640,13 +640,13 @@ namespace Win32xx
     // file names.
     inline CString CFileDialog::GetFileName() const
     {
-        CString strResult = GetPathName();
-        int pos = strResult.ReverseFind(_T("\\"));
+        CString fileName = GetPathName();
+        int pos = fileName.ReverseFind(_T('\\'));
         if (pos >= 0)
-            return strResult.Mid(pos + 1);
+            return fileName.Mid(pos + 1);
 
-        strResult.Empty();
-        return strResult;
+        fileName.Empty();
+        return fileName;
     }
 
     // Return the file name's extension entered during the DoModal() operation.
@@ -654,13 +654,13 @@ namespace Win32xx
     // file path selected will be returned.
     inline CString CFileDialog::GetFileExt() const
     {
-        CString strResult = GetFileName();
-        int pos = strResult.ReverseFind(_T("."));
+        CString fileExt = GetFileName();
+        int pos = fileExt.ReverseFind(_T("."));
         if (pos >= 0)
-            return strResult.Mid(pos);
+            return fileExt.Mid(pos);
 
-        strResult.Empty();
-        return strResult;
+        fileExt.Empty();
+        return fileExt;
     }
 
     // Return the title of the file entered in the DoModal() operation. The
@@ -668,12 +668,12 @@ namespace Win32xx
     // removed.
     inline CString CFileDialog::GetFileTitle() const
     {
-        CString strResult = GetFileName();
-        int pos = strResult.ReverseFind(_T("."));
+        CString fileTitle = GetFileName();
+        int pos = fileTitle.ReverseFind(_T("."));
         if (pos >= 0)
-            return strResult.Left(pos);
+            return fileTitle.Left(pos);
 
-        return strResult;
+        return fileTitle;
     }
 
     // Return the next file path name from a group of files selected. The
@@ -684,17 +684,17 @@ namespace Win32xx
     {
         assert(pos >= 0);
 
-        BOOL IsExplorer = m_ofn.Flags & OFN_EXPLORER;
-        TCHAR chDelimiter = (IsExplorer ? _T('\0') : _T(' '));
+        BOOL isExplorer = m_ofn.Flags & OFN_EXPLORER;
+        TCHAR delimiter = (isExplorer ? _T('\0') : _T(' '));
 
         int bufferSize = MIN(MAX_PATH, m_ofn.nMaxFile - pos);
-        CString strFile(m_ofn.lpstrFile + pos, bufferSize); // strFile can contain NULLs
-        int Index = 0;
+        CString fileNames(m_ofn.lpstrFile + pos, bufferSize); // strFile can contain NULLs
+        int index = 0;
         if (pos == 0)
         {
-            Index = strFile.Find(chDelimiter);
+            index = fileNames.Find(delimiter);
 
-            if ( (Index < 0) || (strFile.GetAt(++Index) == _T('\0')))
+            if ( (index < 0) || (fileNames.GetAt(++index) == _T('\0')))
             {
                 // Only one file selected. m_OFN.lpstrFile contains a single string
                 // consisting of the path and file name.
@@ -706,45 +706,43 @@ namespace Win32xx
         // Multiple files selected. m_OFN.lpstrFile contains a set of substrings separated
         // by delimiters. The first substring is the path, the following ones are file names.
 
-        // Fill strPath with the path
-        CString strPath = m_ofn.lpstrFile; // strPath is terminated by first NULL
-        if (!IsExplorer)
+        CString pathName = m_ofn.lpstrFile; // strPath is terminated by first NULL
+        if (!isExplorer)
         {
-            int delimiter = strPath.Find(chDelimiter);
-            strPath = strPath.Left(delimiter);
+            int pathIndex = pathName.Find(delimiter);
+            pathName = pathName.Left(pathIndex);
         }
 
-        // Fill strFileName with the file name
-        CString strFileName = m_ofn.lpstrFile + pos + Index;
-        if (!IsExplorer)
+        CString fileName = m_ofn.lpstrFile + pos + index;
+        if (!isExplorer)
         {
-            int delimiter = strFileName.Find(chDelimiter);
-            if (delimiter > 0)
-                strFileName = strFileName.Left(delimiter);
+            int fileIndex = fileName.Find(delimiter);
+            if (fileIndex > 0)
+                fileName = fileName.Left(fileIndex);
         }
 
         // Update pos to point to the next file
-        int nFileLen = lstrlen(strFileName);
-        if (strFile.GetAt(Index + nFileLen + 1) == _T('\0'))
+        int fileLength = lstrlen(fileName);
+        if (fileNames.GetAt(index + fileLength + 1) == _T('\0'))
             pos = -1;
         else
-            pos = pos + Index + nFileLen +1;
+            pos = pos + index + fileLength +1;
 
-        if (!strPath.IsEmpty())
+        if (!pathName.IsEmpty())
         {
             // Get the last character from the path
-            int nPathLen = strPath.GetLength();
-            TCHAR ch = strPath.GetAt(nPathLen -1);
+            int nPathLen = pathName.GetLength();
+            TCHAR termination = pathName.GetAt(nPathLen -1);
 
-            if (ch == _T('\\'))
+            if (termination == _T('\\'))
             {
                 // Path already ends with _T('\\')
-                return strPath + strFileName;
+                return pathName + fileName;
             }
         }
 
         // Add _T('\\') to the end of the path
-        return strPath + _T("\\") + strFileName;
+        return pathName + _T('\\') + fileName;
     }
 
     // Return the path name of the folder or directory of files retrieved
@@ -752,13 +750,13 @@ namespace Win32xx
     // directory separation character.
     inline CString CFileDialog::GetFolderPath() const
     {
-        CString strResult = GetPathName();
-        int pos = strResult.ReverseFind(_T("\\"));
+        CString folderName = GetPathName();
+        int pos = folderName.ReverseFind(_T('\\'));
         if (pos >= 0)
-            return strResult.Left(pos + 1);
+            return folderName.Left(pos + 1);
 
-        strResult.Empty();
-        return strResult;
+        folderName.Empty();
+        return folderName;
     }
 
     // Returns the full path name of the file that was retrieved from the dialog.
@@ -1073,11 +1071,11 @@ namespace Win32xx
 
         m_fr.lpstrFindWhat = m_findWhat.GetBuffer(m_fr.wFindWhatLen);
         if (pFindWhat)
-            strcpyn(m_fr.lpstrFindWhat, pFindWhat, m_fr.wFindWhatLen);
+            StrCopy(m_fr.lpstrFindWhat, pFindWhat, m_fr.wFindWhatLen);
 
         m_fr.lpstrReplaceWith = m_replaceWith.GetBuffer(m_fr.wReplaceWithLen);
         if (pReplaceWith)
-            strcpyn(m_fr.lpstrReplaceWith, pReplaceWith, m_fr.wReplaceWithLen);
+            StrCopy(m_fr.lpstrReplaceWith, pReplaceWith, m_fr.wReplaceWithLen);
 
         // Display the dialog box
         HWND wnd;
@@ -1462,7 +1460,7 @@ namespace Win32xx
         {
             chfmt.dwMask |= CFM_FACE;
             chfmt.bPitchAndFamily = m_cf.lpLogFont->lfPitchAndFamily;
-            strcpyn(chfmt.szFaceName, GetFaceName().c_str(), LF_FACESIZE);
+            StrCopy(chfmt.szFaceName, GetFaceName().c_str(), LF_FACESIZE);
         }
 
         if (m_cf.Flags & CF_EFFECTS)
@@ -1558,7 +1556,7 @@ namespace Win32xx
         if (cf.dwMask & CFM_FACE)
         {
             m_logFont.lfPitchAndFamily = cf.bPitchAndFamily;
-            strcpyn(m_logFont.lfFaceName, cf.szFaceName, LF_FACESIZE);
+            StrCopy(m_logFont.lfFaceName, cf.szFaceName, LF_FACESIZE);
         }
         else
         {

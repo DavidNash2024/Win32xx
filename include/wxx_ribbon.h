@@ -477,7 +477,7 @@ namespace Win32xx
             for (iter = fileNames.begin(); iter != fileNames.end(); ++iter)
             {
                 WCHAR curFileName[MAX_PATH] = {0};
-                strcpynW(curFileName, TtoW(*iter), MAX_PATH);
+                StrCopyW(curFileName, TtoW(*iter), MAX_PATH);
 
                 CRecentFiles* pRecentFiles = new CRecentFiles(curFileName);
                 m_recentFiles.push_back(RecentFilesPtr(pRecentFiles));
@@ -517,15 +517,15 @@ namespace Win32xx
         m_fullPath[0] = L'\0';
         m_displayName[0] = L'\0';
 
-		strcpynW(m_fullPath, fullPath, MAX_PATH);
+		StrCopyW(m_fullPath, fullPath, MAX_PATH);
 		ptr = ::SHGetFileInfoW(fullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
 		if (ptr != NULL)
         {
-            strcpynW(m_displayName, sfi.szDisplayName, MAX_PATH);
+			StrCopyW(m_displayName, sfi.szDisplayName, MAX_PATH);
         }
         else // Provide a reasonable fall back.
         {
-            strcpynW(m_displayName, m_fullPath, MAX_PATH);
+			StrCopyW(m_displayName, m_fullPath, MAX_PATH);
         }
 
     }

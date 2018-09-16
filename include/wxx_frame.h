@@ -1226,7 +1226,7 @@ namespace Win32xx
         {
             SIZE MaxSize = GetToolBar().GetMaxSize();
             GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(GetToolBar().GetHwnd()),
-				(LPARAM)(&MaxSize));
+                (LPARAM)(&MaxSize));
 
             if (GetReBarTheme().UseThemes && GetReBarTheme().LockMenuBand)
             {
@@ -1433,7 +1433,7 @@ namespace Win32xx
                             toolBarImages = pTB->GetImageList();
                         }
 
-                        BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
+                        BOOL isWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
 
                         // Calculate image position.
                         CSize szImage = toolBarImages.GetIconSize();
@@ -1447,7 +1447,7 @@ namespace Win32xx
                         }
 
                         // Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles.
-                        if ((style & TBSTYLE_DROPDOWN) || ((style & 0x0080) && (!IsWin95)))
+                        if ((style & TBSTYLE_DROPDOWN) || ((style & 0x0080) && (!isWin95)))
                         {
                             // Calculate the dropdown arrow position
                             int xAPos = (style & TBSTYLE_DROPDOWN)? rc.right -6 : (rc.right + rc.left + szImage.cx + 4)/2;
@@ -3474,7 +3474,7 @@ namespace Win32xx
         {
             SIZE MaxSize = toolBar.GetMaxSize();
             GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(toolBar.GetHwnd()),
-				(LPARAM)(&MaxSize));
+                (LPARAM)(&MaxSize));
         }
     }
 
@@ -3508,7 +3508,7 @@ namespace Win32xx
         {
             SIZE maxSize = toolBar.GetMaxSize();
             GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(toolBar.GetHwnd()),
-				(LPARAM)(&maxSize));
+                (LPARAM)(&maxSize));
         }
     }
 
@@ -3541,7 +3541,7 @@ namespace Win32xx
         {
             SIZE MaxSize = toolBar.GetMaxSize();
             GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(toolBar.GetHwnd()),
-				(LPARAM)(&MaxSize));
+                (LPARAM)(&MaxSize));
         }
     }
 
@@ -3788,9 +3788,9 @@ namespace Win32xx
                 // Trim the string if its too long
                 if (str.GetLength() > MAX_MENU_STRING)
                 {
-                    // Extract the first part of the string up until the first "\\"
+                    // Extract the first part of the string up until the first '\\'
                     CString prefix;
-                    int index = str.Find(_T("\\"));
+                    int index = str.Find(_T('\\'));
                     if (index >= 0)
                         prefix = str.Left(index + 1);
 
@@ -3798,8 +3798,8 @@ namespace Win32xx
                     CString gap = _T("...");
                     str.Delete(0, str.GetLength() - MAX_MENU_STRING + prefix.GetLength() + gap.GetLength()+1);
 
-                    // Remove the front of the string up to the next "\\" if any.
-                    index = str.Find(_T("\\"));
+                    // Remove the front of the string up to the next '\\' if any.
+                    index = str.Find(_T('\\'));
                     if (index >= 0)
                         str.Delete(0, index);
 

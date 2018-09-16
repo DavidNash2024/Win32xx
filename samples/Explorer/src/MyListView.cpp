@@ -54,7 +54,7 @@ void CMyListView::DoBackgroundMenu(CPoint& point)
     if(m_csfCurFolder.GetIShellFolder())
     {
         CContextMenu ccm;
-		result = m_csfCurFolder.CreateViewObject(GetParent(), IID_IContextMenu, ccm);
+        result = m_csfCurFolder.CreateViewObject(GetParent(), IID_IContextMenu, ccm);
 
         if(SUCCEEDED(result))
         {
@@ -74,7 +74,7 @@ void CMyListView::DoBackgroundMenu(CPoint& point)
                     i++;
                 }
 
-				result = ccm.QueryContextMenu(popup, 0, ++idCmdFirst, static_cast<UINT>(-1), CMF_NORMAL | CMF_EXPLORE);
+                result = ccm.QueryContextMenu(popup, 0, ++idCmdFirst, static_cast<UINT>(-1), CMF_NORMAL | CMF_EXPLORE);
 
                 if(SUCCEEDED(result))
                 {
@@ -165,7 +165,7 @@ void CMyListView::DoDefault(int item)
         if(folder.GetIShellFolder())
         {
             Cpidl* pCpidl = &(pInfo->GetRelPidl());
-			result = folder.GetUIObjectOf(*this, 1, pCpidl, IID_IContextMenu, 0, ccm);
+            result = folder.GetUIObjectOf(*this, 1, pCpidl, IID_IContextMenu, 0, ccm);
 
             if(SUCCEEDED(result))
             {
@@ -173,7 +173,7 @@ void CMyListView::DoDefault(int item)
                 popup.CreatePopupMenu();
                 if(popup.GetHandle())
                 {
-					result = ccm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
+                    result = ccm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
 
                     if(SUCCEEDED(result))
                     {
@@ -254,7 +254,7 @@ void CMyListView::DoItemMenu(LPINT pItems, UINT cbItems, CPoint& point)
 
         if(m_csfCurFolder.GetIShellFolder())
         {
-			result = m_csfCurFolder.GetUIObjectOf(*this, cbItems, pidlArray, IID_IContextMenu, 0, ccm);
+            result = m_csfCurFolder.GetUIObjectOf(*this, cbItems, pidlArray, IID_IContextMenu, 0, ccm);
 
             if(SUCCEEDED(result))
             {
@@ -262,7 +262,7 @@ void CMyListView::DoItemMenu(LPINT pItems, UINT cbItems, CPoint& point)
                 Popup.CreatePopupMenu();
                 if(Popup.GetHandle())
                 {
-					result = ccm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
+                    result = ccm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
                     if(SUCCEEDED(result))
                     {
                         ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
@@ -338,7 +338,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 ZeroMemory(&sfi, sizeof(sfi));
                 //get the display name of the item
                 if (pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
-                    ::lstrcpyn(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax -1);
+                    StrCopy(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax -1);
             }
             break;
         case 1: //Size
@@ -349,10 +349,10 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 if ((hFile != INVALID_HANDLE_VALUE)&&(~attr & SFGAO_FOLDER))
                 {
                     GetFileSizeText(hFile, szSize);
-                    ::lstrcpyn(pdi->item.pszText, szSize, nMaxLength -1);
+                    StrCopy(pdi->item.pszText, szSize, nMaxLength -1);
                 }
                 else
-                    ::lstrcpy(pdi->item.pszText, _T(""));
+                    StrCopy(pdi->item.pszText, _T(""), 1);
             }
             break;
         case 2: //Type
@@ -360,7 +360,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 SHFILEINFO sfi;
                 ZeroMemory(&sfi, sizeof(SHFILEINFO));
                 if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
-                    ::lstrcpyn(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax -1);
+                    StrCopy(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax -1);
             }
             break;
         case 3: //Modified
@@ -368,10 +368,10 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 if (hFile != INVALID_HANDLE_VALUE)
                 {
                     GetLastWriteTime(hFile, text);
-                    ::lstrcpyn(pdi->item.pszText, text, nMaxLength -1);
+                    StrCopy(pdi->item.pszText, text, nMaxLength -1);
                 }
                 else
-                    ::lstrcpy(pdi->item.pszText, _T(""));
+                    StrCopy(pdi->item.pszText, _T(""), 1);
             }
             break;
         }
@@ -513,7 +513,7 @@ BOOL CMyListView::GetFileSizeText(HANDLE hFile, LPTSTR lpszSize)
         strPostFormat = strPostFormat.Left(nPos);
 
     strPostFormat += _T(" KB");
-    lstrcpyn(lpszSize, strPostFormat, nMaxSize);
+    StrCopy(lpszSize, strPostFormat, nMaxSize);
     return TRUE;
 }
 
@@ -537,7 +537,7 @@ BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR string)
     ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &stLocal, NULL, szDate, 31);
     ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &stLocal, NULL, szTime, 31);
 
-    ::lstrcpy(string, szDate);
+    StrCopy(string, szDate, 32);
     ::lstrcat(string, _T(" "));
     ::lstrcat(string, szTime);
 

@@ -76,7 +76,13 @@
 //          behave like a POD. Other compilers (such as the MinGW compiler) specifically
 //          prohibit the use of non POD types for functions with variable argument lists.
 //
-// 4) This class provides a few additional functions:
+// 4) This class provides only limited support for the Multi-Byte Character Set (MBCS).
+//    MBCS strings can be searched using Find, FindOneOf, and ReverseFind by character.
+//    Searches of MBCS strings stop at the first embedded null. Editing the contents of
+//    MBCS strings is not supported. The MBCS character set should be considered deprecated.
+//    Unicode (UTF-16) should be used instead where possible.
+//
+// 5) This class provides a few additional functions:
 //       c_str          Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
 //       GetErrorString Assigns CString to the error string for the specified System Error Code
 //                      (from ::GetLastError() for example).
@@ -337,6 +343,12 @@ namespace Win32xx
             return *this;
         }
 
+        CString& operator += (const CString& str)
+        {
+            m_str.append(str.m_str);
+            return *this;
+        }
+
         CString& operator += (LPCSTR pText)
         {
             m_str.append(AtoT(pText));
@@ -408,27 +420,6 @@ namespace Win32xx
         {
             CString str;
             str = CStringT<TCHAR>::Right(count);
-            return str;
-        }
-
-        CString SpanExcluding(const TCHAR* pText) const
-        {
-            CString str;
-            str = CStringT<TCHAR>::SpanExcluding(pText);
-            return str;
-        }
-
-        CString SpanIncluding(const TCHAR* pText) const
-        {
-            CString str;
-            str = CStringT<TCHAR>::SpanIncluding(pText);
-            return str;
-        }
-
-        CString Tokenize(const TCHAR* pTokens, int& start) const
-        {
-            CString str;
-            str = CStringT<TCHAR>::Tokenize(pTokens, start);
             return str;
         }
 
@@ -732,7 +723,7 @@ namespace Win32xx
         m_str.append(str);
     }
 
-    // Assigns the specified number of charaters from pText to the CStringT.
+    // Assigns the specified number of characters from pText to the CStringT.
     template <class T>
     inline void CStringT<T>::Assign(const T* pText, int count)
     {
@@ -848,15 +839,16 @@ namespace Win32xx
     }
 
     // Finds a character in the string.
+    // Note: MBCS strings are only searched up to the first embedded null.
     template <class T>
     inline int CStringT<T>::Find(T ch, int index /* = 0 */) const
     {
         assert(index >= 0);
 
 #ifdef _MBCS
-		LPCSTR pStr = m_str.c_str();
-		LPCSTR pSubstr = strchr(pStr + index, ch);
-		return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
+        LPCSTR pStr = m_str.c_str();
+        LPCSTR pSubstr = strchr(pStr + index, ch);
+        return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
 #else
         size_t s = m_str.find(ch, index);
         return static_cast<int>(s);
@@ -864,6 +856,7 @@ namespace Win32xx
     }
 
     // Finds a substring within the string.
+    // Note: MBCS strings are only searched up to the first embedded null.
     template <class T>
     inline int CStringT<T>::Find(const T* pText, int index /* = 0 */) const
     {
@@ -871,9 +864,9 @@ namespace Win32xx
         assert(index >= 0);
 
 #ifdef _MBCS
-		LPCTSTR pStr = m_str.c_str();
-		LPCTSTR pSubstr = _tcsstr(pStr + index, pText);
-		return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
+        LPCTSTR pStr = m_str.c_str();
+        LPCTSTR pSubstr = _tcsstr(pStr + index, pText);
+        return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
 #else
         size_t s = m_str.find(pText, index);
         return static_cast<int>(s);
@@ -881,15 +874,16 @@ namespace Win32xx
     }
 
     // Finds the first matching character from a set.
+    // Note: MBCS strings are only searched up to the first embedded null.
     template <class T>
     inline int CStringT<T>::FindOneOf(const T* pText) const
     {
         assert(pText);
 
 #ifdef _MBCS
-		LPCTSTR pStr = m_str.c_str();
-		LPCTSTR pSubstr = _tcspbrk(pStr, pText);
-		return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
+        LPCTSTR pStr = m_str.c_str();
+        LPCTSTR pSubstr = _tcspbrk(pStr, pText);
+        return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
 #else
         size_t s = m_str.find_first_of(pText);
         return static_cast<int>(s);
@@ -1142,7 +1136,7 @@ namespace Win32xx
         ::LocalFree(pTemp);
     }
 
-    // Inserts a single character or a substring at the given index within the string.
+    // Inserts a single character at the given index within the string.
     template <class T>
     inline int CStringT<T>::Insert(int index, T ch)
     {
@@ -1155,7 +1149,7 @@ namespace Win32xx
         return static_cast<int>(m_str.size());
     }
 
-    // Inserts a single character or a substring at the given index within the string.
+    // Inserts a substring at the given index within the string.
     template <class T>
     inline int CStringT<T>::Insert(int index, const CStringT& str)
     {
@@ -1244,47 +1238,6 @@ namespace Win32xx
         return str;
     }
 
-    // Search for a character within the string, starting from the end.
-    template <class T>
-    inline int CStringT<T>::ReverseFind(T ch, int end /* -1 */) const
-    {
-#ifdef _MBCS
-		std::basic_string<T> str = m_str;
-		if (end != -1 && end < lstrlenT(m_str.c_str()))
-			str[end] = static_cast<T>(0);
-
-		LPCTSTR pStr = str.c_str();
-		LPCTSTR pSubstr = _tcsrchr(pStr, ch);
-		return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
-#else
-		size_t found = m_str.rfind(ch, end);
-		return static_cast<int>(found);
-#endif
-        
-    }
-
-    // Search for a substring within the string, starting from the end.
-    template <class T>
-    inline int CStringT<T>::ReverseFind(const T* pText, int end /* = -1 */) const
-    {
-        assert(pText);
-        if (lstrlenT(pText) == 1)
-            return ReverseFind(pText[0], end);
-        else
-            return static_cast<int>(m_str.rfind(pText, end));
-    }
-
-    // Sets the character at the specified position to the specified value.
-    template <class T>
-    inline void CStringT<T>::SetAt(int index, T ch)
-    {
-        assert(index >= 0);
-        assert(index < GetLength());
-
-        if ((index >= 0) && (index < GetLength()))
-            m_str[index] = ch;
-    }
-
     // This copies the contents of the buffer (acquired by GetBuffer) to this CStringT.
     // The default length of -1 copies from the buffer until a null terminator is reached.
     // If the buffer doesn't contain a null terminator, you must specify the buffer's length.
@@ -1363,6 +1316,38 @@ namespace Win32xx
         }
         return count;
     }
+    
+    // Search for a character within the string, starting from the end.
+    // Note: MBCS strings are only searched up to the first embedded null.
+    template <class T>
+    inline int CStringT<T>::ReverseFind(T ch, int end /* -1 */) const
+    {
+#ifdef _MBCS
+        std::basic_string<T> str = m_str;
+        if (end != -1 && end < lstrlenT(m_str.c_str()))
+            str[end] = static_cast<T>(0);
+
+        LPCTSTR pStr = str.c_str();
+        LPCTSTR pSubstr = _tcsrchr(pStr, ch);
+        return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
+#else
+        size_t found = m_str.rfind(ch, end);
+        return static_cast<int>(found);
+#endif
+
+    }
+
+    // Search for a substring within the string, starting from the end.
+    // Note: MBCS strings should reverse find by character.
+    template <class T>
+    inline int CStringT<T>::ReverseFind(const T* pText, int end /* = -1 */) const
+    {
+        assert(pText);
+        if (lstrlenT(pText) == 1)
+            return ReverseFind(pText[0], end);
+        else
+            return static_cast<int>(m_str.rfind(pText, end));
+    }
 
     // Extracts the right part of a string.
     template <class T>
@@ -1375,6 +1360,17 @@ namespace Win32xx
         str.m_str.assign(m_str, m_str.size() - count, count);
         return str;
     }
+    
+    // Sets the character at the specified position to the specified value.
+    template <class T>
+    inline void CStringT<T>::SetAt(int index, T ch)
+    {
+        assert(index >= 0);
+        assert(index < GetLength());
+
+        if ((index >= 0) && (index < GetLength()))
+            m_str[index] = ch;
+    }   
 
     // Sets an existing BSTR object to the string.
     // Note: Ensure the returned BSTR is freed later with SysFreeString to avoid a memory leak.
