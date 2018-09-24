@@ -5,9 +5,13 @@
 #include "mainfrm.h"
 #include "resource.h"
 
+#ifndef SF_USECODEPAGE
+  #define SF_USECODEPAGE    0x0020
+#endif
+
 
 // definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_isWrapped(FALSE)
+CMainFrame::CMainFrame() : m_encoding(ANSI), m_isWrapped(FALSE)
 {
     SetView(m_richView);
 
@@ -21,6 +25,43 @@ CMainFrame::CMainFrame() : m_isWrapped(FALSE)
 
 CMainFrame::~CMainFrame()
 {
+}
+
+void CMainFrame::DetermineEncoding(CFile& file)
+{
+    Encoding encoding = ANSI;   // set ANSI as default
+    ULONGLONG fileLength = file.GetLength();
+
+    if (fileLength >= 3)
+    {
+        try
+        {
+            file.SeekToBegin();
+            int tests = IS_TEXT_UNICODE_UNICODE_MASK;
+            DWORD testlen = MIN(1024, (DWORD)fileLength);
+            std::vector<byte> buffer(testlen);
+            file.Read(&buffer.front(), testlen);
+
+            // look UTF Byte Order Mark (BOM)
+            if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
+                encoding = UTF8_BOM;
+            // look UTF-16 LE Byte Order Mark (BOM)
+            else if (buffer[0] == 0xff && buffer[1] == 0xfe)
+                encoding = UTF16LE_BOM;
+            // check for UTF-16 LE w/o BOM
+            else if (::IsTextUnicode(&buffer.front(), testlen, &tests) == 1)
+                encoding = UTF16LE;
+        }
+        catch (const CFileException& e)
+        {
+            CString str = CString("Failed to read from ") + e.GetFileName();
+            ::MessageBox(NULL, str, AtoT(e.what()), MB_ICONWARNING);
+        }
+    }
+
+    file.SeekToBegin();
+
+    SetEncoding(encoding);
 }
 
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
@@ -75,6 +116,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_EDIT_DELETE:       return OnEditDelete();
     case IDM_EDIT_REDO:         return OnEditRedo();
     case IDM_EDIT_UNDO:         return OnEditUndo();
+    case IDM_ENC_ANSI:          return OnEncodeANSI();
+    case IDM_ENC_UTF8:          return OnEncodeUTF8();
+    case IDM_ENC_UTF16:         return OnEncodeUTF16();
+    case IDM_ENC_UTF16_BOM:     return OnEncodeUTF16BOM();
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
@@ -104,7 +149,6 @@ BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
         if (ReadFile(fileName))
         {
             m_pathName = fileName;
-            ReadFile(fileName);
             SetWindowTitle();
             AddMRUEntry(fileName);
         }
@@ -147,6 +191,58 @@ BOOL CMainFrame::OnEditRedo()
 BOOL CMainFrame::OnEditUndo()
 {
     m_richView.Undo();
+    return TRUE;
+}
+
+BOOL CMainFrame::OnEncodeANSI()
+{
+    SetEncoding(ANSI);
+    int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
+    if (menuItem >= 0)
+    {
+        CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
+        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16_BOM, IDM_ENC_ANSI, 0);
+    }
+
+    return TRUE;
+}
+
+BOOL CMainFrame::OnEncodeUTF8()
+{
+    SetEncoding(UTF8_BOM);
+    int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
+    if (menuItem >= 0)
+    {
+        CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
+        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16_BOM, IDM_ENC_UTF8, 0);
+    }
+
+    return TRUE;
+}
+
+BOOL CMainFrame::OnEncodeUTF16BOM()
+{
+    SetEncoding(UTF16LE_BOM);
+    int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
+    if (menuItem >= 0)
+    {
+        CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
+        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16_BOM, IDM_ENC_UTF16_BOM, 0);
+    }
+
+    return TRUE;
+}
+
+BOOL CMainFrame::OnEncodeUTF16()
+{
+    SetEncoding(UTF16LE);
+    int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
+    if (menuItem >= 0)
+    {
+        CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
+        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16_BOM, IDM_ENC_UTF16, 0);
+    }
+
     return TRUE;
 }
 
@@ -351,6 +447,14 @@ void CMainFrame::OnInitialUpdate()
 {
     DragAcceptFiles(TRUE);
     SetWindowTitle();
+
+    // Select the ANSI radio button
+    int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
+    if (menuItem >= 0)
+    {
+        CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
+        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_ANSI, 0);
+    }
 }
 
 void CMainFrame::OnMenuUpdate(UINT id)
@@ -359,6 +463,9 @@ void CMainFrame::OnMenuUpdate(UINT id)
     {
         GetFrameMenu().CheckMenuItem(id, m_isWrapped ? MF_CHECKED : MF_UNCHECKED);
     }
+
+    if ((id >= IDM_ENC_ANSI) && (id <= IDM_ENC_UTF16_BOM))
+        OnUpdateRangeOfIDs(IDM_ENC_ANSI, IDM_ENC_UTF16_BOM, id);
 
     CFrame::OnMenuUpdate(id);
 }
@@ -423,6 +530,15 @@ BOOL CMainFrame::OnOptionsWrap()
     return TRUE;
 }
 
+void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
+{
+    int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
+    CMenu radioMenu = GetFrameMenu().GetSubMenu(menuItem);
+    UINT enc = m_encoding + IDM_ENC_ANSI;
+    if (enc == id)
+        radioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
+}
+
 BOOL CMainFrame::ReadFile(LPCTSTR fileName)
 {
     //Check for unsaved text
@@ -441,10 +557,22 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
             throw CFileException(fileName, _T("File is too large!"));
         }
 
+        // set the EDITSTREAM mode
+        int stream_mode = SF_TEXT;
+        // try to determine the file encoding: Note that ANSI and UTF-8 are 
+        // handled by default, and only UTF-16 LE is accommodated by RichEdit.
+        DetermineEncoding(file);
+        if (m_encoding == UTF16LE_BOM || m_encoding == UTF16LE)
+            stream_mode |= SF_UNICODE;
+
+        // Skip the BOM for UTF16LE encoding
+        if (m_encoding == UTF16LE_BOM)
+            file.Seek(2, FILE_BEGIN);
+
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamInCallback);
-        m_richView.StreamIn(SF_TEXT, es);
+        m_richView.StreamIn(stream_mode, es);
 
         //Clear the modified text flag
         m_richView.SetModify(FALSE);
@@ -471,9 +599,75 @@ void CMainFrame::SaveModifiedText()
             OnFileSave();
 }
 
+void CMainFrame::SetEncoding(Encoding encoding)
+{
+    m_encoding = encoding;
+
+    switch (m_encoding)
+    {
+    case ANSI:         SetStatusText(_T("Encoding: ANSI"));            break;
+    case UTF8_BOM:     SetStatusText(_T("Encoding: UTF-8"));           break;
+    case UTF16LE:      SetStatusText(_T("Encoding: UTF-16"));          break;
+    case UTF16LE_BOM:  SetStatusText(_T("Encoding: UTF-16 with BOM")); break;
+    }
+
+}
+
 void CMainFrame::SetPathName(LPCTSTR filePathName)
 {
     m_pathName = filePathName;
+}
+
+// Override CFrame<T>::SetStatusIndicators to indicate insert character status.
+inline void CMainFrame::SetStatusIndicators()
+{
+    if (GetStatusBar().IsWindow() && (IsUsingIndicatorStatus()))
+    {
+        // Calculate the width of the text indicators
+        CClientDC statusDC(GetStatusBar());
+        statusDC.SelectObject(GetStatusBar().GetFont());
+        CString cap = LoadString(IDW_INDICATOR_CAPS);
+        CString num = LoadString(IDW_INDICATOR_NUM);
+        CString ins = (::GetKeyState(VK_INSERT) & 0x0001) ? _T("OVR") : _T("INS");
+        CSize capSize = statusDC.GetTextExtentPoint32(cap, cap.GetLength());
+        CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
+        CSize insSize = statusDC.GetTextExtentPoint32(ins, ins.GetLength());
+
+        BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
+        int cxGripper = hasGripper ? 20 : 0;
+        int cxBorder = 8;
+
+        // Adjust for DPI aware
+        int defaultDPI = 96;
+        int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
+        cxGripper = MulDiv(cxGripper, xDPI, defaultDPI);
+        capSize.cx += cxBorder;
+        numSize.cx += cxBorder;
+        insSize.cx += cxBorder;
+
+        // Get the coordinates of the window's client area.
+        CRect clientRect = GetClientRect();
+        int width = MAX(300, clientRect.right);
+
+        // Create 4 panes
+        GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + insSize.cx + cxGripper));
+        GetStatusBar().SetPartWidth(1, capSize.cx);
+        GetStatusBar().SetPartWidth(2, numSize.cx);
+        GetStatusBar().SetPartWidth(3, insSize.cx);
+
+        CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
+        CString status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : CString("");
+        CString status3 = ins;
+
+        // Only update indicators if the text has changed
+        if (status1 != m_oldStatus[0])  GetStatusBar().SetPartText(1, status1);
+        if (status2 != m_oldStatus[1])  GetStatusBar().SetPartText(2, status2);
+        if (status3 != m_oldStatus[2])  GetStatusBar().SetPartText(3, status3);
+
+        m_oldStatus[0] = status1;
+        m_oldStatus[1] = status2;
+        m_oldStatus[2] = status3;
+    }
 }
 
 void CMainFrame::SetupToolBar()
@@ -523,14 +717,33 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
         CFile file;
         file.Open(szFileName, CREATE_ALWAYS);
 
+        int stream_mode = SF_TEXT;
+
+        if (m_encoding == UTF16LE_BOM || m_encoding == UTF16LE)
+            stream_mode |= SF_UNICODE;
+
+        if (m_encoding == UTF8_BOM)
+            stream_mode |= (CP_UTF8 << 16) | SF_USECODEPAGE;
+
+        // Write the BOM for UTF16LE_BOM encoding
+        if (m_encoding == UTF16LE_BOM)
+        {
+            byte buffer[2] = { 0xff, 0xfe };
+            file.Write(buffer, 2);
+        }
+
+        // Write the BOM for UTF encoding
+        if (m_encoding == UTF8_BOM)
+        {
+            byte buffer[3] = { 0xef, 0xbb, 0xbf };
+            file.Write(buffer, 3);
+        }
+
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.dwError = 0;
         es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamOutCallback);
-   //     m_richView.StreamOut(SF_TEXT, es);
-        
-        // Support saving UTF-8 text (without BOM)
-        m_richView.StreamOut((CP_UTF8 << 16) | SF_USECODEPAGE | SF_TEXT, es);
+        m_richView.StreamOut(stream_mode, es);
 
         //Clear the modified text flag
         m_richView.SetModify(FALSE);

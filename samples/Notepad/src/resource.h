@@ -27,7 +27,11 @@
 #define IDM_EDIT_DELETE                 135
 #define IDM_OPTIONS_FONT                140
 #define IDM_OPTIONS_WRAP                141
-#define IDM_HELP_ABOUT                  150
+#define IDM_ENC_ANSI                    150
+#define IDM_ENC_UTF8                    151
+#define IDM_ENC_UTF16                   152
+#define IDM_ENC_UTF16_BOM               153
+#define IDM_HELP_ABOUT                  160
 
 // Next default values for new objects
 // 
