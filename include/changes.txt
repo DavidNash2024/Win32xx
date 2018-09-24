@@ -40,9 +40,11 @@ New Features and Enhancements
  - Added UseStatusBar option for OnCreate.
  - Relaxed restrictions on size of images for menu icons. This provides better 
     support for larger screen scaling available on windows 10 for DPI aware apps.
+ - Added VK_INSERT to the set of keys checked by the keyboard hook.
 
 * Updated CImageList
-* The Notepad sample now supports UTF-8
+* CRichEdit now supports RichEdit version 4.1 if available (XP and above).
+* The Notepad sample now supports UTF-8.
 
 
 Changes in detail

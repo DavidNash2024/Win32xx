@@ -75,7 +75,7 @@ namespace Win32xx
         CRichEdit();
         virtual ~CRichEdit();
 
-        void    AppendText(LPCTSTR pText) const;        
+        void    AppendText(LPCTSTR pText) const;
         BOOL    CanPaste(UINT format = 0) const;
         BOOL    CanRedo() const;
         BOOL    CanUndo() const;
@@ -163,6 +163,7 @@ namespace Win32xx
     private:
         HMODULE m_rich1;
         HMODULE m_rich2;
+        HMODULE m_rich4_1;
     };
 
 }
@@ -180,6 +181,11 @@ namespace Win32xx
 
     inline CRichEdit::CRichEdit()
     {
+        // Windows 95   Includes only Rich Edit 1.0
+        // Windows 98   Includes Rich Edit 1.0 and 2.0.
+        // Windows 2000 Includes Rich Edit 3.0 with a Rich Edit 1.0 emulator.
+        // Windows XP   Includes Rich Edit 4.1, and Rich Edit 3.0 with a Rich Edit 1.0 emulator.
+
         // Load RichEdit version 1.0
         // Note: Many dialogs use RichEdit version 1.0
         m_rich1 = LoadLibrary(_T("riched32.dll"));
@@ -187,8 +193,11 @@ namespace Win32xx
         if (m_rich1 == 0)
             throw CNotSupportedException(_T("Failed to load RICHED32.DLL"));
 
-        // Load RichEdit version 2.0 or 3.0 (if we can)
+        // Load RichEdit version 2.0 or 3.0 (for Win98 and above)
         m_rich2 = LoadLibrary(_T("riched20.dll"));
+
+        // Load RichEdit version 4.1 (for WinXP and above)
+        m_rich4_1 = LoadLibrary(_T("Msftedit.dll"));
     }
 
     inline CRichEdit::~CRichEdit()
@@ -199,12 +208,25 @@ namespace Win32xx
         ::FreeLibrary(m_rich1);
         if (m_rich2)
             ::FreeLibrary(m_rich2);
+
+        if (m_rich4_1)
+            ::FreeLibrary(m_rich4_1);
     }
 
     // Set the window class
     inline void CRichEdit::PreRegisterClass(WNDCLASS& wc)
     {
-        wc.lpszClassName =  RICHEDIT_CLASS;
+        // Use the latest version of RichEdit available.
+
+        // For RichEdit version 1.0, 2.0 and 3.0
+        wc.lpszClassName = RICHEDIT_CLASS;
+
+        // For RichEdit version 4.1 (available on XP and above)
+#if defined MSFTEDIT_CLASS && defined UNICODE
+        if (m_rich4_1 != 0)
+            wc.lpszClassName = MSFTEDIT_CLASS;
+#endif
+
         wc.style = ES_MULTILINE | WS_VISIBLE | WS_CHILD | WS_BORDER | WS_TABSTOP;
     }
 
@@ -537,11 +559,9 @@ namespace Win32xx
     {
         assert(IsWindow());
 
-        CString str;
-        int buff = static_cast<int>(SendMessage(EM_GETSELTEXT, 0, 0));
-        SendMessage(EM_GETSELTEXT, 0, (LPARAM)str.GetBuffer(buff));
-        str.ReleaseBuffer();
-        return str;
+        CHARRANGE cr;
+        SendMessage(EM_EXGETSEL, 0, (LPARAM)&cr);
+        return GetTextRange(cr.cpMin, cr.cpMax);
     }
 
     // Retrieves the length of the text, in characters. Does not include the terminating null character.
@@ -580,11 +600,12 @@ namespace Win32xx
         CHARRANGE range;
         range.cpMin = first;
         range.cpMax = last;
+        int lastChar = (last == -1)? GetTextLength() : last;
 
         CString rangeString;
         TEXTRANGE tr;
         tr.chrg = range;
-        tr.lpstrText = rangeString.GetBuffer(last - first + 1);
+        tr.lpstrText = rangeString.GetBuffer(lastChar - first + 1);
         SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&tr);
         rangeString.ReleaseBuffer();
 
@@ -629,7 +650,7 @@ namespace Win32xx
     }
 
     // Retrieves the character index of a given line.
-    // index -   Specifies the zero-based line number. 
+    // index -   Specifies the zero-based line number.
     //           A value of –1 specifies the current line number.
     // Refer to EM_LINEINDEX in the Windows API documentation for more information.
     inline int CRichEdit::LineIndex(int lineIndex /* = -1 */) const

@@ -3734,7 +3734,8 @@ namespace Win32xx
 
         if (HC_ACTION == code)
         {
-            if ((wparam ==  VK_CAPITAL) || (wparam == VK_NUMLOCK) || (wparam == VK_SCROLL))
+            if ((wparam ==  VK_CAPITAL) || (wparam == VK_NUMLOCK) || 
+                (wparam == VK_SCROLL) || (wparam == VK_INSERT))
             {
                 pFrame->SetStatusIndicators();
             }

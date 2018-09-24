@@ -62,6 +62,15 @@ BEGIN
         MENUITEM "Font",                        IDM_OPTIONS_FONT
         MENUITEM "Word Wrap",                   IDM_OPTIONS_WRAP, CHECKED
     END
+    
+    POPUP "&Encoding"
+    BEGIN
+        MENUITEM "ANSI",                        IDM_ENC_ANSI
+        MENUITEM "UTF-8",                       IDM_ENC_UTF8
+        MENUITEM "UTF-16",                      IDM_ENC_UTF16
+        MENUITEM "UTF-16-BOM",                  IDM_ENC_UTF16_BOM
+    END
+    
     POPUP "&View"
     BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
@@ -176,6 +185,16 @@ BEGIN
     IDM_FILE_SAVEAS          "Save the Document with a new name"
     IDM_FILE_PRINT           "Print the Document"
     IDM_FILE_EXIT            "End the Program"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_OPTIONS_FONT          "Choose the font"
+    IDM_OPTIONS_WRAP          "Enable or disable word wrap"
+    IDM_ENC_ANSI              "Encode as ANSI when saving"
+    IDM_ENC_UTF8              "Encode as UTF-8 with BOM when saving"
+    IDM_ENC_UTF16             "Encode as UTF-16 when saving"
+    IDM_ENC_UTF16_BOM         "Encode as UTF-16 with BOM when saving"
 END
 
 STRINGTABLE
