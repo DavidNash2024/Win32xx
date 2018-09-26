@@ -113,7 +113,7 @@ namespace Win32xx
         const CHOOSECOLOR& GetParameters() const { return m_ofn; }
         void    SetColor(COLORREF clr)          { m_ofn.rgbResult = clr;}
         void    SetCustomColors(const COLORREF* rgbCstmColors = NULL);
-        void    SetParameters(CHOOSECOLOR cc);
+        void    SetParameters(const CHOOSECOLOR& cc);
 
     protected:
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
@@ -159,7 +159,7 @@ namespace Win32xx
         void    SetDefExt(LPCTSTR pExt);
         void    SetFileName(LPCTSTR pFileName);
         void    SetFilter(LPCTSTR pFilter);
-        void    SetParameters(OPENFILENAME ofn);
+        void    SetParameters(const OPENFILENAME& ofn);
         void    SetTitle(LPCTSTR pTitle);
 
         // Enumerating multiple file selections
@@ -219,7 +219,7 @@ namespace Win32xx
         BOOL    ReplaceAll() const;         // TRUE = all occurrences
         BOOL    ReplaceCurrent() const;     // TRUE = current string
         BOOL    SearchDown() const;         // TRUE = down, FALSE = up
-        void    SetParameters(FINDREPLACE fr);
+        void    SetParameters(const FINDREPLACE& fr);
 
         static CFindReplaceDialog* GetNotifier(LPARAM lparam);
 
@@ -261,7 +261,7 @@ namespace Win32xx
         BOOL    IsStrikeOut() const             { return m_logFont.lfStrikeOut;}
         BOOL    IsUnderline() const             { return m_logFont.lfUnderline;}
         void    SetColor(const COLORREF color)  { m_cf.rgbColors = color;}
-        void    SetParameters(CHOOSEFONT cf);
+        void    SetParameters(const CHOOSEFONT& cf);
 
     protected:
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
@@ -449,7 +449,7 @@ namespace Win32xx
 
     // Sets the various parameters of the CHOOSECOLOR struct.
     // The parameters are set to sensible values.
-    inline void CColorDialog::SetParameters(CHOOSECOLOR cc)
+    inline void CColorDialog::SetParameters(const CHOOSECOLOR& cc)
     {
         m_ofn.lStructSize    = sizeof(m_ofn);
         m_ofn.hwndOwner      = 0;            // Set this in DoModal
@@ -970,7 +970,7 @@ namespace Win32xx
 
     // Sets the various parameters of the OPENFILENAME struct.
     // The parameters are set to sensible values.
-    inline void CFileDialog::SetParameters(OPENFILENAME ofn)
+    inline void CFileDialog::SetParameters(const OPENFILENAME& ofn)
     {
         // Set the correct struct size for all Windows versions and compilers
         DWORD StructSize = sizeof(m_ofn);
@@ -1220,7 +1220,7 @@ namespace Win32xx
 
     // Sets the various parameters of the FINDREPLACE struct.
     // The parameters are set to sensible values.
-    inline void CFindReplaceDialog::SetParameters(FINDREPLACE fr)
+    inline void CFindReplaceDialog::SetParameters(const FINDREPLACE& fr)
     {
         int maxChars = 128;
 
@@ -1305,11 +1305,12 @@ namespace Win32xx
         // clear out logfont, style name, and choose font structure
         ZeroMemory(&m_logFont, sizeof(m_logFont));
         ZeroMemory(&m_cf, sizeof(m_cf));
+		m_cf.lStructSize = sizeof(m_cf);
 
         // set dialog parameters
-        m_cf.lStructSize = sizeof(m_cf);
-        m_cf.Flags  = flags;
-        m_cf.Flags  |= FillInLogFont(charformat);
+        FillInLogFont(charformat);
+        m_cf.lpLogFont = &m_logFont;
+        m_cf.Flags  = flags | CF_INITTOLOGFONTSTRUCT;
 
         if (charformat.dwMask & CFM_COLOR)
             m_cf.rgbColors = charformat.crTextColor;
@@ -1439,8 +1440,8 @@ namespace Win32xx
     inline CHARFORMAT CFontDialog::GetCharFormat() const
     {
         CHARFORMAT chfmt;
-        chfmt.dwEffects = 0;
-        chfmt.dwMask = 0;
+        ZeroMemory(&chfmt, sizeof(chfmt));
+        chfmt.cbSize = sizeof(chfmt);
 
         if ((m_cf.Flags & CF_NOSTYLESEL) == 0)
         {
@@ -1569,7 +1570,7 @@ namespace Win32xx
 
     // Sets the various parameters of the CHOOSEFONT struct.
     // The parameters are set to safe values.
-    inline void CFontDialog::SetParameters(CHOOSEFONT cf)
+    inline void CFontDialog::SetParameters(const CHOOSEFONT& cf)
     {
         if (cf.lpLogFont)
             m_logFont = *cf.lpLogFont;

@@ -223,7 +223,7 @@ namespace Win32xx
         BOOL    PrintCollate() const;
         BOOL    PrintRange() const;
         BOOL    PrintSelection() const;
-        void    SetParameters(PRINTDLG& pd);
+        void    SetParameters(const PRINTDLG& pd);
 
     protected:
         // Override these functions as required
@@ -266,7 +266,7 @@ namespace Win32xx
         void    GetMargins(RECT& margin, RECT& minMargin) const;
         CSize   GetPaperSize() const;
         const   PAGESETUPDLG& GetParameters() const { return m_psd; }
-        void    SetParameters(PAGESETUPDLG& psd);
+        void    SetParameters(const PAGESETUPDLG& psd);
 
     protected:
         // Override these functions as required
@@ -708,7 +708,7 @@ namespace Win32xx
     }
 
     // Set the parameters of the PRINTDLG structure to sensible values
-    inline void CPrintDialog::SetParameters(PRINTDLG& pd)
+    inline void CPrintDialog::SetParameters(const PRINTDLG& pd)
     {
         m_pd.lStructSize    = sizeof(m_pd);
         m_pd.hwndOwner      = 0;            // Set this in DoModal
@@ -950,7 +950,7 @@ namespace Win32xx
     }
 
     // Set the parameters of the PAGESETUPDLG structure to sensible values
-    inline void CPageSetupDialog::SetParameters(PAGESETUPDLG& psd)
+    inline void CPageSetupDialog::SetParameters(const PAGESETUPDLG& psd)
     {
         m_psd.lStructSize       = sizeof(m_psd);
         m_psd.hwndOwner         = 0;            // Set this in DoModal
