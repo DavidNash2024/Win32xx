@@ -64,7 +64,7 @@ private:
     CPreviewDialog  m_printPreview;
     CRichView m_richView;
     CString m_pathName;
-    BOOL m_isWrapped;
+    bool m_isWrapped;
 
 };
 

@@ -10,8 +10,8 @@
 
 enum Encoding
 {
-    ANSI          = 0,            // Default 
-    UTF8_BOM      = 1,
+    ANSI          = 0,            // Default for plain text
+    UTF8          = 1,            // Default for rich text
     UTF16LE       = 2,
     UTF16LE_BOM   = 3,
 };
@@ -27,6 +27,7 @@ public:
     static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
     static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
 
+	void ClearContents();
     void DetermineEncoding(CFile& file);
     BOOL OnDropFiles(HDROP hDropInfo);
     BOOL OnEditCut();
@@ -37,11 +38,11 @@ public:
     BOOL OnEditUndo();
     BOOL OnEncodeANSI();
     BOOL OnEncodeUTF8();
-    BOOL OnEncodeUTF16BOM();
     BOOL OnEncodeUTF16();
     BOOL OnFileMRU(WPARAM wparam);
     BOOL OnFileExit();
-    BOOL OnFileNew();
+    BOOL OnFileNewPlain();
+	BOOL OnFileNewRich();
     BOOL OnFileOpen();
     BOOL OnFilePrint();
     BOOL OnFileSaveAs();
@@ -64,15 +65,17 @@ protected:
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+	virtual void SetupMenuIcons();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
     CRichView m_richView;
-    CString m_oldStatus[3];             // Array of CString holding old status;
+    CString m_oldStatus[4];             // Array of CString holding old status;
     CString m_pathName;
     Encoding m_encoding;
-    BOOL m_isWrapped;
+    bool m_isWrapped;
+    bool m_isRTF;
 };
 
 #endif //MAINFRM_H

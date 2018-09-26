@@ -12,13 +12,14 @@
 #include "default_resource.h"
 
 //Resource IDs for menu items and ToolBar items
-#define IDM_FILE_NEW                    121
-#define IDM_FILE_OPEN                   122
-#define IDM_FILE_SAVE                   123
-#define IDM_FILE_SAVEAS                 124
-#define IDM_FILE_PRINT                  125
-#define IDM_FILE_CLOSE                  126
-#define IDM_FILE_EXIT                   127
+#define IDM_FILE_NEW_PLAIN              121
+#define IDM_FILE_NEW_RICH               122
+#define IDM_FILE_OPEN                   123
+#define IDM_FILE_SAVE                   124
+#define IDM_FILE_SAVEAS                 125
+#define IDM_FILE_PRINT                  126
+#define IDM_FILE_CLOSE                  127
+#define IDM_FILE_EXIT                   128
 #define IDM_EDIT_UNDO                   130
 #define IDM_EDIT_REDO                   131
 #define IDM_EDIT_CUT                    132
@@ -30,8 +31,13 @@
 #define IDM_ENC_ANSI                    150
 #define IDM_ENC_UTF8                    151
 #define IDM_ENC_UTF16                   152
-#define IDM_ENC_UTF16_BOM               153
+// #define IDM_ENC_UTF16_BOM               153
 #define IDM_HELP_ABOUT                  160
+#define IDW_INDICATOR_INS               170
+#define IDW_INDICATOR_OVR               171
+#define IDW_INDICATOR_PLAIN             172
+#define IDW_INDICATOR_RICH              173
+#define IDW_MENUICONS                   180
 
 // Next default values for new objects
 // 

@@ -36,7 +36,8 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New...",                      IDM_FILE_NEW
+        MENUITEM "New Plain Text",              IDM_FILE_NEW_PLAIN
+	    MENUITEM "New Rich Text",               IDM_FILE_NEW_RICH
         MENUITEM "&Open...",                    IDM_FILE_OPEN
         MENUITEM "&Save",                       IDM_FILE_SAVE
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
@@ -67,8 +68,7 @@ BEGIN
     BEGIN
         MENUITEM "ANSI",                        IDM_ENC_ANSI
         MENUITEM "UTF-8",                       IDM_ENC_UTF8
-        MENUITEM "UTF-16",                      IDM_ENC_UTF16
-        MENUITEM "UTF-16-BOM",                  IDM_ENC_UTF16_BOM
+        MENUITEM "UTF-16",                      IDM_ENC_UTF16		
     END
     
     POPUP "&View"
@@ -97,7 +97,8 @@ IDW_MAIN                 ICON                    "../src/res/Notepad.ico"
 // Bitmap
 //
 
-IDW_MAIN                 BITMAP                  "../src/res/toolbar.bmp"
+IDW_MAIN                 BITMAP                  "../src/res/toolbar24.bmp"
+IDW_MENUICONS            BITMAP                  "../src/res/toolbar16.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -123,7 +124,6 @@ END
 
 IDW_MAIN ACCELERATORS
 BEGIN
-    "N",            IDM_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
@@ -174,12 +174,17 @@ BEGIN
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
+	IDW_INDICATOR_INS       "INS"
+	IDW_INDICATOR_OVR       "OVR"
+	IDW_INDICATOR_PLAIN     "Plain text mode"
+	IDW_INDICATOR_RICH      "Rich text mode"
     IDW_READY               "Ready"
 END
 
 STRINGTABLE
 BEGIN
-    IDM_FILE_NEW             "Create a New Document"
+    IDM_FILE_NEW_PLAIN       "Create a New Plain Text Document"
+	IDM_FILE_NEW_RICH        "Create a New Rich Text Document"
     IDM_FILE_OPEN            "Open Existing Document"
     IDM_FILE_SAVE            "Save the Document"
     IDM_FILE_SAVEAS          "Save the Document with a new name"
@@ -194,7 +199,6 @@ BEGIN
     IDM_ENC_ANSI              "Encode as ANSI when saving"
     IDM_ENC_UTF8              "Encode as UTF-8 with BOM when saving"
     IDM_ENC_UTF16             "Encode as UTF-16 when saving"
-    IDM_ENC_UTF16_BOM         "Encode as UTF-16 with BOM when saving"
 END
 
 STRINGTABLE

@@ -865,7 +865,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetSelectionCharFormat(CHARFORMAT& format) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&format));
+        return (0 != SendMessage(EM_SETCHARFORMAT, (WPARAM)SCF_SELECTION, (LPARAM)&format));
     }
 
     // Sets the character formatting attributes in the current selection.
@@ -873,7 +873,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetSelectionCharFormat(CHARFORMAT2& cf) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&cf));
+        return (0 != SendMessage(EM_SETCHARFORMAT, (WPARAM)SCF_SELECTION, (LPARAM)&cf));
     }
 
     // Sets the target output device and line width used for "what you see is what you get" (WYSIWYG) formatting.
@@ -906,7 +906,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetWordCharFormat(CHARFORMAT& format) const
     {
         assert(IsWindow());
-        return (SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&format) != 0);
+        return (SendMessage(EM_SETCHARFORMAT, (WPARAM)(SCF_SELECTION | SCF_WORD), (LPARAM)&format) != 0);
     }
 
     // Sets the character formatting attributes in the current word.
@@ -914,7 +914,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetWordCharFormat(CHARFORMAT2& cf) const
     {
         assert(IsWindow());
-        return (SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&cf) != 0);
+        return (SendMessage(EM_SETCHARFORMAT, (WPARAM)(SCF_SELECTION | SCF_WORD), (LPARAM)&cf) != 0);
     }
 
     // Stops the control from collecting additional typing actions into the current undo action.

@@ -7,7 +7,7 @@
 
 
 // definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_printPreview(IDD_PRINTPREVIEW), m_isWrapped(FALSE)
+CMainFrame::CMainFrame() : m_printPreview(IDD_PRINTPREVIEW), m_isWrapped(false)
 {
     SetView(m_richView);
 
