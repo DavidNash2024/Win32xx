@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -56,26 +56,26 @@ namespace Win32xx
         virtual ~CReBar();
 
         // Operations
-        BOOL DeleteBand(const int band) const;
+        BOOL DeleteBand(int band) const;
         int  HitTest(RBHITTESTINFO& hitTestInfo) const;
         HWND HitTest(POINT pt) const;
         int  IDToIndex(UINT bandID) const;
-        BOOL InsertBand(const int band, REBARBANDINFO& bandInfo) const;
+        BOOL InsertBand(int band, REBARBANDINFO& bandInfo) const;
         BOOL IsBandVisible(int band) const;
         void MaximizeBand(UINT band, BOOL isIdeal = FALSE) const;
         void MinimizeBand(UINT band) const;
         BOOL MoveBand(UINT from, UINT to) const;
         void MoveBandsLeft() const;
-        BOOL ResizeBand(const int band, const CSize& sz) const;
+        BOOL ResizeBand(int band, const CSize& sz) const;
         BOOL ShowGripper(int band, BOOL show) const;
-        BOOL ShowBand(int nand, BOOL show) const;
+        BOOL ShowBand(int band, BOOL show) const;
         BOOL SizeToRect(RECT& rect) const;
 
         // Attributes
-        int  GetBand(const HWND wnd) const;
+        int  GetBand(HWND wnd) const;
         CRect GetBandBorders(int band) const;
         int  GetBandCount() const;
-        BOOL GetBandInfo(const int band, REBARBANDINFO& bandInfo) const;
+        BOOL GetBandInfo(int band, REBARBANDINFO& bandInfo) const;
         CRect GetBandRect(int band) const;
         UINT GetBarHeight() const;
         BOOL GetBarInfo(REBARINFO& rebarInfo) const;
@@ -84,9 +84,9 @@ namespace Win32xx
         int  GetRowHeight(int row) const;
         UINT GetSizeofRBBI() const;
         HWND GetToolTips() const;
-        BOOL SetBandBitmap(const int band, HBITMAP background) const;
-        BOOL SetBandColor(const int band, const COLORREF foreground, const COLORREF background) const;
-        BOOL SetBandInfo(const int band, REBARBANDINFO& bandInfo) const;
+        BOOL SetBandBitmap(int band, HBITMAP background) const;
+        BOOL SetBandColor(int band, COLORREF foreground, COLORREF background) const;
+        BOOL SetBandInfo(int band, REBARBANDINFO& bandInfo) const;
         BOOL SetBarInfo(REBARINFO& rebarInfo) const;
         void SetMenuBar(HWND menuBar) {m_menuBar = menuBar;}
         void SetToolTips(HWND toolTip) const;

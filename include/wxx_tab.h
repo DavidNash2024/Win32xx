@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -113,7 +113,7 @@ namespace Win32xx
         virtual void RecalcLayout();
         virtual void RemoveTabPage(int page);
         virtual void SelectPage(int page);
-        virtual void SetFixedWidth(BOOL IsEnabled);
+        virtual void SetFixedWidth(BOOL isEnabled);
         virtual void SetFont(HFONT font, BOOL redraw = TRUE);
         virtual void SetOwnerDraw(BOOL isEnabled);
         virtual void SetShowButtons(BOOL show);
@@ -132,8 +132,8 @@ namespace Win32xx
         int GetTabHeight() const            { return m_tabHeight; }
         SIZE GetMaxTabSize() const;
         CWnd* GetActiveView() const         { return m_pActiveView; }
-        void SetBlankPageColor(COLORREF clr) { m_blankPageColor = clr; }
-        void SetTabHeight(int nTabHeight)   { m_tabHeight = nTabHeight; NotifyChanged();}
+        void SetBlankPageColor(COLORREF color) { m_blankPageColor = color; }
+        void SetTabHeight(int height)       { m_tabHeight = height; NotifyChanged();}
 
         // Wrappers for Win32 Macros
         void        AdjustRect(BOOL isLarger, RECT* prc) const;

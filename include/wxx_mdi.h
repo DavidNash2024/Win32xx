@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -93,14 +93,14 @@ namespace Win32xx
         virtual ~CMDIChild();
 
         // These are the functions you might wish to override
-        virtual HWND Create(HWND hWndParent = NULL);
+        virtual HWND Create(HWND parent = NULL);
         virtual void RecalcLayout();
 
         // These functions aren't virtual, and shouldn't be overridden
         HACCEL GetChildAccel() const { return m_childAccel; }
         HMENU GetChildMenu() const { return m_childMenu; }
         CWnd& GetView() const           { assert(m_pView); return *m_pView; }
-        void SetView(CWnd& wndView);
+        void SetView(CWnd& view);
         void SetHandles(HMENU menu, HACCEL accel);
         void MDIActivate() const;
         void MDIDestroy() const;
@@ -965,16 +965,16 @@ namespace Win32xx
     }
 
     // Sets or changes the MDI child's view window.
-    inline void CMDIChild::SetView(CWnd& wndView)
+    inline void CMDIChild::SetView(CWnd& view)
     {
-        if (m_pView != &wndView)
+        if (m_pView != &view)
         {
             // Hide the existing view window (if any)
             if (m_pView && m_pView->IsWindow())
                 m_pView->ShowWindow(SW_HIDE);
 
             // Assign the view window
-            m_pView = &wndView;
+            m_pView = &view;
 
             if (GetHwnd() != 0)
             {

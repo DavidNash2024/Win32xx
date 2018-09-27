@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -164,7 +164,7 @@ namespace Win32xx
         CImageList SetImageList(HIMAGELIST images) const;
         BOOL    SetItem(const COMBOBOXEXITEM& item) const;
         DWORD   GetExtendedStyle() const;
-        DWORD   SetExtendedStyle(DWORD exMask, DWORD exStyles ) const;
+        DWORD   SetExtendedStyle(DWORD exMask, DWORD exStyles) const;
 
     protected:
         // Overridables
@@ -416,8 +416,8 @@ namespace Win32xx
         int  GetSelStart() const;
         int  GetThumbLength() const;
         CRect GetThumbRect() const;
-        int  GetTic(int nTic ) const;
-        int  GetTicPos(int nTic) const;
+        int  GetTic(int tic ) const;
+        int  GetTicPos(int tic) const;
         HWND GetToolTips() const;
         HWND SetBuddy(HWND buddy, BOOL location = TRUE ) const;
         int  SetLineSize(int size) const;
@@ -498,7 +498,7 @@ namespace Win32xx
 #endif
 
         //Operations
-        void Activate(BOOL Activate) const;
+        void Activate(BOOL activate) const;
         BOOL AddTool(HWND control, const RECT& toolRect, UINT id, UINT textID) const;
         BOOL AddTool(HWND control, UINT textID) const;
         BOOL AddTool(HWND control, const RECT& toolRect, UINT id, LPCTSTR pText = LPSTR_TEXTCALLBACK) const;
@@ -2001,10 +2001,10 @@ namespace Win32xx
 
     // Retrieves the logical position of a tick mark in the trackbar.
     // Refer to TBM_GETTIC in the Windows API documentation for more information.
-    inline int CSlider::GetTic(int nTic ) const
+    inline int CSlider::GetTic(int tic ) const
     {
         assert(IsWindow());
-        return (int)SendMessage(TBM_GETTIC, (WPARAM)nTic, 0);
+        return (int)SendMessage(TBM_GETTIC, (WPARAM)tic, 0);
     }
 
     // Retrieves the current physical position of a tick mark in the trackbar.

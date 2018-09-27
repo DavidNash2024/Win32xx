@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -132,12 +132,12 @@ namespace Win32xx
         LPITEMIDLIST GetFolderPidl() const   { return m_fullPidl.back(); }
         int  GetImageIndex() const           { return m_imageIndex; }
         int  GetFlags() const                { return m_flags; }
-        void EnableOK(BOOL bEnable = TRUE);
+        void EnableOK(BOOL enable = TRUE);
         void SetExpanded(LPCWSTR pPath);
         void SetExpanded(LPITEMIDLIST pItemIDList);
         void SetFlags(UINT flags) { m_flags = flags; }
         void SetOKText(LPCWSTR pText);
-        void SetRoot(LPITEMIDLIST pidl);
+        void SetRoot(LPITEMIDLIST pItemIDList);
         void SetSelection(LPITEMIDLIST pItemIDList);
         void SetSelection(LPCTSTR pPath);
         void SetStatusText(LPCTSTR pText);
@@ -146,10 +146,10 @@ namespace Win32xx
     protected:
         virtual void OnCancel();
         virtual void OnInitialized();
-        virtual void OnIUnknown(LPARAM lParam);
+        virtual void OnIUnknown(LPARAM lparam);
         virtual void OnOK();
         virtual void OnSelChanged();
-        virtual int  OnValidateFailed(LPARAM lParam);
+        virtual int  OnValidateFailed(LPARAM lparam);
 
     private:
         static int CALLBACK BrowseCallbackProc(HWND wnd, UINT uMsg, LPARAM param1, LPARAM lparam2);
@@ -335,9 +335,9 @@ namespace Win32xx
     }
 
     // Sets the location of the root folder from which to start browsing.
-    inline void CFolderDialog::SetRoot(LPITEMIDLIST pidl)
+    inline void CFolderDialog::SetRoot(LPITEMIDLIST pItemIDList)
     {
-        m_pidlRoot = pidl;
+        m_pidlRoot = pItemIDList;
     }
 
     // Specifies the path of a folder to select.

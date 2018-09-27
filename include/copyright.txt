@@ -6,7 +6,7 @@ Release Date: TBA
      url: https://sourceforge.net/projects/win32-framework
 
 
-Copyright (c) 2005-2017  David Nash
+Copyright (c) 2005-2018  David Nash
 
 Permission is hereby granted, free of charge, to
 any person obtaining a copy of this software and

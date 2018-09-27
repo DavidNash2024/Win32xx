@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -78,7 +78,7 @@ namespace Win32xx
         DWORD_PTR GetItemData( int item ) const;
         BOOL    GetItemPosition( int item, CPoint& pt ) const;
         BOOL    GetItemRect( int item, RECT& rc, UINT code ) const;
-        UINT    GetItemState( int item, UINT nMask ) const;
+        UINT    GetItemState( int item, UINT mask ) const;
         CString GetItemText( int item, int subItem, UINT textMax = 260 ) const;
         int     GetNextItem( int item, int flags ) const;
         UINT    GetNumberOfWorkAreas( ) const;

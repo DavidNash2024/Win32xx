@@ -29,7 +29,7 @@ CMainFrame::~CMainFrame()
 
 void CMainFrame::ClearContents()
 {
-	m_richView.SetWindowText(_T(""));
+	m_richView.SendMessage(WM_SETTEXT, 0, 0);
 	m_pathName.Empty();
 	SetWindowTitle();
 	m_richView.SetFontDefaults();

@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -104,7 +104,7 @@ namespace Win32xx
     class CColorDialog : public CCommonDialog
     {
     public:
-        CColorDialog(COLORREF initcolor = 0, DWORD flags = 0);
+        CColorDialog(COLORREF initColor = 0, DWORD flags = 0);
         virtual ~CColorDialog(){}
 
         virtual INT_PTR DoModal(HWND owner = 0);
@@ -112,7 +112,7 @@ namespace Win32xx
         COLORREF* GetCustomColors()             { return m_customColors;}
         const CHOOSECOLOR& GetParameters() const { return m_ofn; }
         void    SetColor(COLORREF clr)          { m_ofn.rgbResult = clr;}
-        void    SetCustomColors(const COLORREF* rgbCstmColors = NULL);
+        void    SetCustomColors(const COLORREF* pColors = NULL);
         void    SetParameters(const CHOOSECOLOR& cc);
 
     protected:
@@ -260,7 +260,7 @@ namespace Win32xx
         BOOL    IsItalic() const                { return m_logFont.lfItalic;}
         BOOL    IsStrikeOut() const             { return m_logFont.lfStrikeOut;}
         BOOL    IsUnderline() const             { return m_logFont.lfUnderline;}
-        void    SetColor(const COLORREF color)  { m_cf.rgbColors = color;}
+        void    SetColor(COLORREF color)        { m_cf.rgbColors = color;}
         void    SetParameters(const CHOOSEFONT& cf);
 
     protected:
@@ -435,14 +435,14 @@ namespace Win32xx
         return IDOK;
     }
 
-    // The pCustomColors parameter is a pointer to an array of 16 COLORREF.
+    // The pColors parameter is a pointer to an array of 16 COLORREF.
     // If the pCustomColors is NULL, all custom colors are set to white,
     // otherwise they are set to the colors specified in the pCustomColors array.
-    inline void CColorDialog::SetCustomColors(const COLORREF* pCustomColors /* = NULL */)
+    inline void CColorDialog::SetCustomColors(const COLORREF* pColors /* = NULL */)
     {
         for (UINT i = 0; i < 16; i++)
         {
-            COLORREF clr = pCustomColors? pCustomColors[i] : RGB(255,255,255);
+            COLORREF clr = pColors ? pColors[i] : RGB(255,255,255);
             m_customColors[i] = clr;
         }
     }

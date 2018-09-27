@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -70,14 +70,14 @@ namespace Win32xx
         CImageList GetImageList(int imageType) const;
         UINT    GetIndent() const;
         COLORREF GetInsertMarkColor() const;
-        BOOL    GetItem(TVITEM& Item) const;
+        BOOL    GetItem(TVITEM& itemInfo) const;
         DWORD_PTR GetItemData(HTREEITEM item) const;
         int     GetItemHeight() const;
         BOOL    GetItemImage(HTREEITEM item, int& image, int& selectedImage ) const;
         BOOL    GetItemRect(HTREEITEM item, RECT& rc, BOOL isTextOnly) const;
         CString GetItemText(HTREEITEM item, UINT textMax = 260) const;
         HTREEITEM GetLastVisible() const;
-        HTREEITEM GetNextItem(HTREEITEM item, UINT nCode) const;
+        HTREEITEM GetNextItem(HTREEITEM item, UINT code) const;
         HTREEITEM GetNextSibling(HTREEITEM item) const;
         HTREEITEM GetNextVisible(HTREEITEM item) const;
         HTREEITEM GetParentItem(HTREEITEM item) const;

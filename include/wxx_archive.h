@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -107,7 +107,7 @@ namespace Win32xx
 
         // construction and  destruction
         CArchive(CFile& file, Mode mode);
-        CArchive(LPCTSTR fileName, Mode mode);
+        CArchive(LPCTSTR pFileName, Mode mode);
         ~CArchive();
 
         // method members
@@ -141,7 +141,7 @@ namespace Win32xx
         CArchive& operator<<(bool b);
         CArchive& operator<<(const CStringA& string);
         CArchive& operator<<(const CStringW& string);
-        CArchive& operator<<(const CString& s);
+        CArchive& operator<<(const CString& string);
         CArchive& operator<<(const POINT& pt);
         CArchive& operator<<(const RECT& rc);
         CArchive& operator<<(const SIZE& sz);
@@ -166,9 +166,9 @@ namespace Win32xx
         CArchive& operator>>(char& ch);
         CArchive& operator>>(unsigned& u);
         CArchive& operator>>(bool& b);
-        CArchive& operator>>(CStringA& s);
-        CArchive& operator>>(CStringW& s);
-        CArchive& operator>>(CString& s);
+        CArchive& operator>>(CStringA& string);
+        CArchive& operator>>(CStringW& string);
+        CArchive& operator>>(CString& string);
         CArchive& operator>>(POINT& pt);
         CArchive& operator>>(RECT& rc);
         CArchive& operator>>(SIZE& sz);
@@ -218,7 +218,7 @@ namespace Win32xx
     // Constructs a CArchive object.
     // A file with the specified name is created for storing (if required), and
     // also opened. A failure to open the file will throw an exception.
-    inline CArchive::CArchive(LPCTSTR fileName, Mode mode) : m_pFile(0), m_schema(static_cast<UINT>(-1))
+    inline CArchive::CArchive(LPCTSTR pFileName, Mode mode) : m_pFile(0), m_schema(static_cast<UINT>(-1))
     {
         m_isFileManaged = true;
 
@@ -227,13 +227,13 @@ namespace Win32xx
             if (mode == load)
             {
                 // Open the archive for loading
-                m_pFile = new CFile(fileName, CFile::modeRead);
+                m_pFile = new CFile(pFileName, CFile::modeRead);
                 m_isStoring = false;
             }
             else
             {
                 // Open the archive for storing. Creates file if required
-                m_pFile = new CFile(fileName, CFile::modeCreate);
+                m_pFile = new CFile(pFileName, CFile::modeCreate);
                 m_isStoring = true;
             }
         }
