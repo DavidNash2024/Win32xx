@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -363,7 +363,7 @@ namespace Win32xx
 
         // Non-virtual Attributes
         // These functions aren't virtual, and shouldn't be overridden
-        CRect ExcludeChildRect(CRect& rcClient, HWND hChild) const;
+        CRect ExcludeChildRect(CRect& clientRect, HWND child) const;
         HACCEL GetFrameAccel() const                { return m_accel; }
         CMenu& GetFrameMenu() const                 { return m_menu; }
         InitValues GetInitValues() const            { return m_initValues; }
@@ -1998,12 +1998,12 @@ namespace Win32xx
     // Note: Assumes the child window touches 3 of the client rect's borders.
     //  e.g.   CRect rc = ExcludeChildRect(GetClientRect(), GetStatusBar());
     template <class T>
-    inline CRect CFrameT<T>::ExcludeChildRect(CRect& clientRect, HWND hChild) const
+    inline CRect CFrameT<T>::ExcludeChildRect(CRect& clientRect, HWND child) const
     {
         T::ClientToScreen(clientRect);
 
         CRect childRect;
-        ::GetWindowRect(hChild, &childRect);
+        ::GetWindowRect(child, &childRect);
 
         if (clientRect.Width() == childRect.Width())
         {

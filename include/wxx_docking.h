@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -175,7 +175,7 @@ namespace Win32xx
         virtual ~CDockContainer();
         virtual void AddContainer(CDockContainer* pContainer, BOOL insert = FALSE, BOOL selecPage = TRUE);
         virtual void AddToolBarButton(UINT id, BOOL isEnabled = TRUE);
-        virtual CDockContainer* GetContainerFromIndex(UINT nPage);
+        virtual CDockContainer* GetContainerFromIndex(UINT page);
         virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
         virtual int GetContainerIndex(CDockContainer* pContainer);
         virtual SIZE GetMaxTabTextSize();
@@ -209,7 +209,7 @@ namespace Win32xx
         void SetTabIcon(int i, HICON icon) { CTab::SetTabIcon(i, icon); }
         void SetTabText(LPCTSTR pText) { m_tabText = pText; }
         void SetTabText(UINT tab, LPCTSTR pText);
-        void SetView(CWnd& Wnd);
+        void SetView(CWnd& wnd);
 
 
     protected:

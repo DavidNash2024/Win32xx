@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -113,14 +113,14 @@ namespace Win32xx
         void   GetSel(int& startChar, int& endChar) const;
         DWORD  GetSel() const;
         CPoint PosFromChar(UINT index) const;
-        void   SetHandle(HLOCAL hBuffer) const;
+        void   SetHandle(HLOCAL buffer) const;
         void   SetLimitText(UINT max) const;
         void   SetMargins(UINT left, UINT right) const;
         void   SetModify(BOOL isModified = TRUE) const;
 
         // Operations
         void   EmptyUndoBuffer() const;
-        BOOL   FmtLines(BOOL AddEOL) const;
+        BOOL   FmtLines(BOOL addEOL) const;
         void   LimitText(int limit = 0) const;
         int    LineFromChar(int index = -1) const;
         int    LineIndex(int line = -1) const;

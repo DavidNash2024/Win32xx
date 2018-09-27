@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -89,10 +89,10 @@ namespace Win32xx
         void SetDefaultRadioButton(int radioButtonID);
         void SetDialogWidth(UINT width = 0);
         void SetExpansionArea(LPCTSTR pExpandedInfo, LPCTSTR pExpandedLabel = _T(""), LPCTSTR pCollapsedLabel = _T(""));
-        void SetFooterIcon(HICON hFooterIcon);
+        void SetFooterIcon(HICON icon);
         void SetFooterIcon(LPCTSTR pFooterIcon);
-        void SetFooterText(LPCTSTR pFooter);
-        void SetMainIcon(HICON mainIcon);
+        void SetFooterText(LPCTSTR pText);
+        void SetMainIcon(HICON icon);
         void SetMainIcon(LPCTSTR pMainIcon);
         void SetMainInstruction(LPCTSTR pMainInstruction);
         void SetOptions(TASKDIALOG_FLAGS flags);

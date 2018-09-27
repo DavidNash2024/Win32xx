@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -140,7 +140,7 @@ namespace Win32xx
         int       GetDayOfYear(bool local = true) const;
         time_tm*  GetGmtTm(time_tm* ptm) const;
         int       GetHour(bool local = true) const;
-        time_tm*  GetLocalTm(time_tm*) const;
+        time_tm*  GetLocalTm(time_tm* ptm) const;
         int       GetMinute(bool local = true) const;
         int       GetMonth(bool local = true) const;
         int       GetSecond(bool local = true) const;
@@ -193,7 +193,7 @@ namespace Win32xx
         // Constructors
         CTimeSpan();
         CTimeSpan(timespan_t t);
-        CTimeSpan(long lDays, int nHours, int nMins, int nSecs);
+        CTimeSpan(long days, int hours, int mins, int secs);
         CTimeSpan(const CTimeSpan& ts);
 
         // Methods to extract items
@@ -886,13 +886,13 @@ namespace Win32xx
     //   nHours 0–23
     //   nMins  0–59
     //   nSecs  0–59
-    inline CTimeSpan::CTimeSpan(long lDays, int nHours, int nMins, int nSecs)
+    inline CTimeSpan::CTimeSpan(long days, int hours, int mins, int secs)
     {
         int sec_per_day  = 86400;
         int sec_per_hour = 3600;
         int sec_per_min  = 60;
-        m_timespan = lDays * sec_per_day + nHours * sec_per_hour +
-            nMins * sec_per_min + nSecs;
+        m_timespan = days * sec_per_day + hours * sec_per_hour +
+            mins * sec_per_min + secs;
     }
 
     inline CTimeSpan::CTimeSpan(const CTimeSpan& ts)

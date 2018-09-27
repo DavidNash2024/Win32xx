@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -187,7 +187,6 @@ namespace Win32xx
         // Windows XP   Includes Rich Edit 4.1, and Rich Edit 3.0 with a Rich Edit 1.0 emulator.
 
         // Load RichEdit version 1.0
-        // Note: Many dialogs use RichEdit version 1.0
         m_rich1 = LoadLibrary(_T("riched32.dll"));
 
         if (m_rich1 == 0)

@@ -31,7 +31,6 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
                 WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
 
     cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
-    cs.lpszClass = RICHEDIT_CLASS; // RichEdit ver 2.0
 }
 
 void CRichView::SetFontDefaults()

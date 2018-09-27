@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -51,15 +51,15 @@ namespace Win32xx
     {
     public:
         CRegKey();
-        CRegKey(HKEY hKey);
+        CRegKey(HKEY key);
         CRegKey(const CRegKey&);
         ~CRegKey();
         operator HKEY() const { return m_key; }
         CRegKey& operator =(CRegKey& key);
 
-        void Attach(HKEY hKey);
+        void Attach(HKEY key);
         LONG Close();
-        LONG Create(HKEY hKeyParent, LPCTSTR pKeyName, LPTSTR pClass = REG_NONE,
+        LONG Create(HKEY keyParent, LPCTSTR pKeyName, LPTSTR pClass = REG_NONE,
                     DWORD options = REG_OPTION_NON_VOLATILE,
                     REGSAM samDesired = KEY_READ | KEY_WRITE,
                     LPSECURITY_ATTRIBUTES pSecAttr = NULL,
@@ -70,9 +70,9 @@ namespace Win32xx
         LONG EnumKey(DWORD index, LPTSTR pName, LPDWORD pNameLength, FILETIME* pLastWriteTime = NULL) const;
         LONG Flush() const;
         HKEY GetKey()  const { return m_key; }
-        LONG NotifyChangeKeyValue(BOOL watchSubtree, DWORD notifyFilter, HANDLE hEvent, BOOL isAsync = TRUE) const;
+        LONG NotifyChangeKeyValue(BOOL watchSubtree, DWORD notifyFilter, HANDLE event, BOOL isAsync = TRUE) const;
         LONG Open(HKEY hKeyParent, LPCTSTR pKeyName, REGSAM samDesired = KEY_READ | KEY_WRITE);
-        LONG QueryBinaryValue(LPCTSTR pValueName, void* pValue, ULONG* pnBytes) const;
+        LONG QueryBinaryValue(LPCTSTR pValueName, void* pValue, ULONG* pBytes) const;
         LONG QueryDWORDValue(LPCTSTR pValueName, DWORD& value) const;
         LONG QueryGUIDValue(LPCTSTR pValueName, GUID& value) const;
         LONG QueryMultiStringValue(LPCTSTR pValueName, LPTSTR pValue, ULONG* pChars) const;
@@ -110,9 +110,9 @@ namespace Win32xx
     {
     }
 
-    inline CRegKey::CRegKey(HKEY hKey) : m_key(0)
+    inline CRegKey::CRegKey(HKEY key) : m_key(0)
     {
-        Attach(hKey);
+        Attach(key);
     }
 
     inline CRegKey::CRegKey(const CRegKey& Key)
@@ -133,10 +133,10 @@ namespace Win32xx
     }
 
     // Attaches a KEY handle to this CRegKey object.
-    inline void CRegKey::Attach(HKEY hKey)
+    inline void CRegKey::Attach(HKEY key)
     {
         assert(m_key == NULL);
-        m_key = hKey;
+        m_key = key;
     }
 
     // Closes the registry key.
@@ -154,11 +154,11 @@ namespace Win32xx
     }
 
     // Creates the specified registry key.
-    inline LONG CRegKey::Create(HKEY hKeyParent, LPCTSTR pKeyName, LPTSTR pClass, DWORD options,
+    inline LONG CRegKey::Create(HKEY keyParent, LPCTSTR pKeyName, LPTSTR pClass, DWORD options,
                    REGSAM samDesired, LPSECURITY_ATTRIBUTES pSecAttr, LPDWORD pDisposition)
     {
         HKEY hKey = 0;
-        LONG result =  ::RegCreateKeyEx(hKeyParent, pKeyName, 0, pClass, options, samDesired, pSecAttr, &hKey, pDisposition);
+        LONG result =  ::RegCreateKeyEx(keyParent, pKeyName, 0, pClass, options, samDesired, pSecAttr, &hKey, pDisposition);
 
         // RegCreateKeyEx opens existing keys, so close it now.
         ::RegCloseKey(hKey);
@@ -204,18 +204,18 @@ namespace Win32xx
     }
 
     // Notifies the caller about changes to the attributes or contents of the registry key.
-    inline LONG CRegKey::NotifyChangeKeyValue(BOOL watchSubtree, DWORD notifyFilter, HANDLE hEvent, BOOL isAsync) const
+    inline LONG CRegKey::NotifyChangeKeyValue(BOOL watchSubtree, DWORD notifyFilter, HANDLE event, BOOL isAsync) const
     {
         assert(m_key);
-        return ::RegNotifyChangeKeyValue(m_key, watchSubtree, notifyFilter, hEvent, isAsync);
+        return ::RegNotifyChangeKeyValue(m_key, watchSubtree, notifyFilter, event, isAsync);
     }
 
     // Opens the specified registry key and assigns it to this CRegKey object.
-    inline LONG CRegKey::Open(HKEY hKeyParent, LPCTSTR pKeyName, REGSAM samDesired)
+    inline LONG CRegKey::Open(HKEY keyParent, LPCTSTR pKeyName, REGSAM samDesired)
     {
-        assert(hKeyParent);
+        assert(keyParent);
         Close();
-        return ::RegOpenKeyEx(hKeyParent, pKeyName, 0, samDesired, &m_key);
+        return ::RegOpenKeyEx(keyParent, pKeyName, 0, samDesired, &m_key);
     }
 
     // Retrieves the binary data for the specified value name.

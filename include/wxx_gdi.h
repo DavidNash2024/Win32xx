@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -181,7 +181,7 @@ namespace Win32xx
 
     protected:
         void    Release();
-        void SetManaged(bool isManaged) const { m_pData->isManagedObject = isManaged; }
+        void    SetManaged(bool isManaged) const { m_pData->isManagedObject = isManaged; }
 
     private:
         void    AddToMap();
@@ -212,7 +212,7 @@ namespace Win32xx
         BOOL LoadOEMBitmap(UINT bitmapID);
         HBITMAP CreateBitmap(int width, int height, UINT planes, UINT bitsPerPixel, LPCVOID pBits);
         HBITMAP CreateCompatibleBitmap(HDC dc, int width, int height);
-        HBITMAP CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* pBits, HANDLE hSection, DWORD offset);
+        HBITMAP CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* ppBits, HANDLE section, DWORD offset);
 
 #ifndef _WIN32_WCE
         void    ConvertToDisabled(COLORREF mask) const;
@@ -220,7 +220,7 @@ namespace Win32xx
         HBITMAP CreateMappedBitmap(UINT bitmapID, UINT flags = 0, LPCOLORMAP pColorMap = NULL, int mapSize = 0);
         HBITMAP CreateBitmapIndirect(const BITMAP& bitmap);
         void GrayScaleBitmap();
-        void TintBitmap (int cRed, int cGreen, int cBlue);
+        void TintBitmap (int red, int green, int blue);
         int GetDIBits(HDC dc, UINT startScan, UINT scanLines,  LPVOID pBits, LPBITMAPINFO pBMI, UINT colorUse) const;
         int SetDIBits(HDC dc, UINT startScan, UINT scanLines, LPCVOID pBits, const LPBITMAPINFO pBMI, UINT colorUse) const;
         CSize GetBitmapDimensionEx() const;
@@ -372,9 +372,9 @@ namespace Win32xx
         // Operations
         void SetRectRgn(int x1, int y1, int x2, int y2) const;
         void SetRectRgn(const RECT& rc) const;
-        int CombineRgn(HRGN hSrc1, HRGN Src2, int combineMode) const;
-        int CombineRgn(HRGN hSrc, int combineMode) const;
-        int CopyRgn(HRGN hSrc) const;
+        int CombineRgn(HRGN src1, HRGN src2, int combineMode) const;
+        int CombineRgn(HRGN src, int combineMode) const;
+        int CopyRgn(HRGN src) const;
         BOOL EqualRgn(HRGN rgn) const;
         int OffsetRgn(int x, int y) const;
         int OffsetRgn(POINT& pt) const;
@@ -440,7 +440,7 @@ namespace Win32xx
 #endif
 
         // Initialization
-        HDC CreateCompatibleDC(HDC hSource);
+        HDC CreateCompatibleDC(HDC source);
         HDC CreateDC(LPCTSTR pDriver, LPCTSTR pDevice, LPCTSTR pOutput, const DEVMODE* pInitData);
         int GetDeviceCaps(int index) const;
 #ifndef _WIN32_WCE
@@ -450,8 +450,8 @@ namespace Win32xx
         // Create Bitmaps
         void CreateBitmap(int cx, int cy, UINT planes, UINT bitsPerPixel, LPCVOID pColors);
         void CreateCompatibleBitmap(HDC dc, int cx, int cy);
-        void CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT usage, LPVOID* pBits,
-                                        HANDLE hSection, DWORD offset);
+        void CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT usage, LPVOID* ppBits,
+                                        HANDLE section, DWORD offset);
         CBitmap DetachBitmap();
         BITMAP  GetBitmapData() const;
         HBITMAP GetCurrentBitmap() const;
@@ -465,7 +465,7 @@ namespace Win32xx
         void CreateBitmapIndirect(const BITMAP& bitmap);
         void CreateDIBitmap(HDC dc, const BITMAPINFOHEADER& pBMIH, DWORD init, LPCVOID pInit,
                                         const LPBITMAPINFO pBMI, UINT usage);
-        void CreateMappedBitmap(UINT BitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/);
+        void CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/);
 #endif
 
         // Create Brushes
@@ -586,9 +586,9 @@ namespace Win32xx
         BOOL DrawFrameControl(const RECT& rc, UINT type, UINT state) const;
         BOOL FillRect(const RECT& rc, HBRUSH brush) const;
         BOOL FillRgn(HRGN rgn, HBRUSH brush) const;
-        void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL isVertical) const;
+        void GradientFill(COLORREF color1, COLORREF color2, const RECT& rc, BOOL isVertical) const;
         BOOL InvertRect(const RECT& rc) const;
-        void SolidFill(COLORREF Color, const RECT& rc) const;
+        void SolidFill(COLORREF color, const RECT& rc) const;
 
 #if (WINVER >= 0x0410)
         BOOL GradientFill(PTRIVERTEX pVertex, ULONG vertex, PVOID pMesh, ULONG mesh, ULONG mode) const;
@@ -606,7 +606,7 @@ namespace Win32xx
 
         // Bitmap Functions
         BOOL BitBlt(int x, int y, int width, int height, HDC hSrc, int xSrc, int ySrc, DWORD rop) const;
-        void DrawBitmap(int x, int y, int cx, int cy, HBITMAP hImage, COLORREF mask) const;
+        void DrawBitmap(int x, int y, int cx, int cy, HBITMAP image, COLORREF mask) const;
         BOOL MaskBlt(int xDest, int yDest, int width, int height, HDC hSrc,
                            int xSrc, int ySrc, HBITMAP mask, int xMask, int yMask,
                            DWORD rop) const;
@@ -773,8 +773,8 @@ namespace Win32xx
         BOOL  TextOut(int x, int y, LPCTSTR pString, int count = -1) const;
 
   #if (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
-        BOOL  GetCharABCWidthsI(UINT giFirst, UINT cgi, LPWORD pGI, LPABC pABC) const;
-        BOOL  GetCharWidthI(UINT giFirst, UINT cgi, LPWORD pGI, int* pBuffer) const;
+        BOOL  GetCharABCWidthsI(UINT first, UINT cgi, LPWORD pGI, LPABC pABC) const;
+        BOOL  GetCharWidthI(UINT first, UINT cgi, LPWORD pGI, int* pBuffer) const;
   #endif // (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
 #endif  // _WIN32_WCE
 

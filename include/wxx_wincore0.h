@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -273,12 +273,12 @@ namespace Win32xx
         BOOL  SetMenu(HMENU menu) const;
         BOOL  ScrollWindow(int xAmount, int yAmount, const RECT& scrollRect, LPCRECT pClipRect = 0) const;
         BOOL  ScrollWindow(int xAmount, int yAmount, LPCRECT pClipRect = 0) const;
-        int   ScrollWindowEx(int dx, int dy, LPCRECT pScrollRect, LPCRECT pClipRect, HRGN hUpdateRgn, LPRECT pUpdateRect, UINT flags) const;
+        int   ScrollWindowEx(int dx, int dy, LPCRECT pScrollRect, LPCRECT pClipRect, HRGN updateRgn, LPRECT updateRect, UINT flags) const;
         int   SetScrollPos(int barType, int pos, BOOL redraw) const;
         BOOL  SetScrollRange(int barType, int minPos, int maxPos, BOOL redraw) const;
         BOOL  SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
         BOOL  ShowOwnedPopups(BOOL show) const;
-        BOOL  ShowScrollBar(int bar, BOOL show) const;
+        BOOL  ShowScrollBar(int barType, BOOL show) const;
         BOOL  ShowWindowAsync(int showCmd) const;
         BOOL  UnLockWindowUpdate() const;
         CWnd  WindowFromDC(HDC dc) const;

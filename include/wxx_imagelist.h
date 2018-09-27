@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -97,8 +97,8 @@ namespace Win32xx
         BOOL Copy(int dst, int src, UINT flags /*= ILCF_MOVE*/) const;
         void DeleteImageList();
         HIMAGELIST Detach();
-        BOOL DragEnter(HWND hLock, CPoint point) const;
-        BOOL DragLeave(HWND hLock) const;
+        BOOL DragEnter(HWND lock, CPoint point) const;
+        BOOL DragLeave(HWND lock) const;
         BOOL DragMove(CPoint point) const;
         BOOL DragShowNolock(BOOL show) const;
         BOOL Draw(HDC dc, int image, POINT point, UINT style) const;
@@ -410,17 +410,17 @@ namespace Win32xx
 
     // Displays the drag image at the specified position within the window.
     // Refer to ImageList_DragEnter in the Windows API documentation for more information.
-    inline BOOL CImageList::DragEnter(HWND hLock, CPoint point) const
+    inline BOOL CImageList::DragEnter(HWND lock, CPoint point) const
     {
         assert(m_pData->images);
-        return ImageList_DragEnter(hLock, point.x, point.y);
+        return ImageList_DragEnter(lock, point.x, point.y);
     }
 
     // Unlocks the specified window and hides the drag image, allowing the window to be updated.
     // Refer to ImageList_DragLeave in the Windows API documentation for more information.
-    inline BOOL CImageList::DragLeave(HWND hLock) const
+    inline BOOL CImageList::DragLeave(HWND lock) const
     {
-        return ImageList_DragLeave(hLock);
+        return ImageList_DragLeave(lock);
     }
 
     // Moves the image that is being dragged during a drag-and-drop operation.

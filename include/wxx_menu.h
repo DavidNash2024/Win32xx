@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2017  David Nash
+// Copyright (c) 2005-2018  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -147,7 +147,7 @@ namespace Win32xx
         BOOL InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL) const;
         BOOL InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP bitmap) const;
         BOOL InsertMenuItem(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition = FALSE) const;
-        BOOL InsertPopupMenu(UINT pos, UINT flags, HMENU hPopupMenu, LPCTSTR pNewItem) const;
+        BOOL InsertPopupMenu(UINT pos, UINT flags, HMENU popupMenu, LPCTSTR pNewItem) const;
         BOOL ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL) const;
         BOOL ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP bitmap) const;
         BOOL RemoveMenu(UINT pos, UINT flags) const;
