@@ -72,7 +72,7 @@ namespace Win32xx
         void AddRadioButtonGroup(int firstRadioButtonID, int lastRadioButtonID);
         void ClickButton(int buttonID) const;
         void ClickRadioButton(int radioButtonID) const;
-        LRESULT DoModal(HWND parent = NULL);
+        HRESULT DoModal(HWND parent = NULL);
         void ElevateButton(int buttonID, BOOL isElevated) const;
         void EnableButton(int buttonID, BOOL isEnabled) const;
         void EnableRadioButton(int buttonID, BOOL isEnabled) const;
@@ -128,8 +128,8 @@ namespace Win32xx
         {
             TaskButton(UINT id, LPCTSTR pText) : buttonID(id)
             {
-                if (IS_INTRESOURCE(pText))        // support MAKEINTRESOURCE
-                    buttonText = LoadString(reinterpret_cast<UINT>(pText));
+				if (IS_INTRESOURCE(pText))        // support MAKEINTRESOURCE
+					buttonText = LoadString((UINT)(UINT_PTR)pText);
                 else
                     buttonText = pText;
             }
@@ -229,7 +229,7 @@ namespace Win32xx
 
     // Creates and displays the Task Dialog.
     // Refer to TaskDialogIndirect in the Windows API documentation for more information.
-    inline LRESULT CTaskDialog::DoModal(HWND parent /* = NULL */)
+    inline HRESULT CTaskDialog::DoModal(HWND parent /* = NULL */)
     {
         assert (GetHwnd() == NULL);
 
@@ -260,9 +260,9 @@ namespace Win32xx
         // Fill the TASKDIALOGCONFIG struct.
         m_tc.cbSize = sizeof(m_tc);
         m_tc.pButtons = buttons.empty()? NULL : &buttons.front();
-        m_tc.cButtons = buttons.size();
+        m_tc.cButtons = static_cast<UINT>(buttons.size());
         m_tc.pRadioButtons = radioButtons.empty()? NULL : &radioButtons.front();
-        m_tc.cRadioButtons = radioButtons.size();
+        m_tc.cRadioButtons = static_cast<UINT>(radioButtons.size());
         m_tc.hwndParent = parent;
 
         // Ensure this thread has the TLS index set
@@ -278,7 +278,7 @@ namespace Win32xx
         TASKDIALOGINDIRECT* pTaskDialogIndirect = reinterpret_cast<TASKDIALOGINDIRECT*>(::GetProcAddress(comCtl, "TaskDialogIndirect"));
 
         // Call TaskDialogIndirect through our function pointer
-        LRESULT result = pTaskDialogIndirect(&m_tc, &m_selectedButtonID, &m_selectedRadioButtonID, &m_verificationCheckboxState);
+        HRESULT result = pTaskDialogIndirect(&m_tc, &m_selectedButtonID, &m_selectedRadioButtonID, &m_verificationCheckboxState);
 
         ::FreeLibrary(comCtl);
         pTLSData->pWnd = NULL;
@@ -327,7 +327,7 @@ namespace Win32xx
     inline CString CTaskDialog::FillString(LPCTSTR pText)
     {
         if (IS_INTRESOURCE(pText))      // support MAKEINTRESOURCE
-            return LoadString(reinterpret_cast<UINT>(pText));
+            return LoadString((UINT)(UINT_PTR)pText);
         else
             return pText;
     }
@@ -715,7 +715,7 @@ namespace Win32xx
             t->AddToMap();
         }
 
-        return t->TaskDialogProc(notification, wparam, lparam);
+        return static_cast<HRESULT>(t->TaskDialogProc(notification, wparam, lparam));
 
     } // LRESULT CALLBACK StaticTaskDialogProc(...)
 
@@ -725,7 +725,7 @@ namespace Win32xx
         switch(msg)
         {
         case TDN_BUTTON_CLICKED:
-            return OnTDButtonClicked(wparam);
+            return OnTDButtonClicked((int)wparam);
 
         case TDN_CREATED:
             OnTDCreated();
@@ -737,7 +737,7 @@ namespace Win32xx
             OnTDConstructed();
             break;
         case TDN_EXPANDO_BUTTON_CLICKED:
-            OnTDExpandButtonClicked(wparam);
+            OnTDExpandButtonClicked((BOOL)wparam);
             break;
         case TDN_HELP:
             OnTDHelp();
@@ -749,13 +749,13 @@ namespace Win32xx
             OnTDNavigatePage();
             break;
         case TDN_RADIO_BUTTON_CLICKED:
-            OnTDRadioButtonClicked(wparam);
+            OnTDRadioButtonClicked((int)wparam);
             break;
         case TDN_TIMER:
-            return OnTDTimer(wparam);
+            return OnTDTimer((DWORD)wparam);
 
         case TDN_VERIFICATION_CLICKED:
-            OnTDVerificationCheckboxClicked(wparam);
+            OnTDVerificationCheckboxClicked((BOOL)wparam);
             break;
         }
 

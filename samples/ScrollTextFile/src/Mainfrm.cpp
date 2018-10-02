@@ -503,7 +503,7 @@ Serialize(CArchive& ar)                                                     /*
         showbar = GetToolBar().IsWindowVisible();
         ar << showbar;
           // save MRU entries
-        UINT i, nMRU = GetMRUEntries().size();
+        UINT i, nMRU = static_cast<UINT>(GetMRUEntries().size());
         ar << nMRU;
           // save this many entries (don't use a copied list)
         for (i = 0; i < nMRU; ++i)

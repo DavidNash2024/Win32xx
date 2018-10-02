@@ -467,9 +467,9 @@ namespace Win32xx
         LONG currentFile = 0;
         std::vector<CString> fileNames = GetMRUEntries();
         std::vector<CString>::const_iterator iter;
-        int fileCount = fileNames.size();
+        ULONG_PTR fileCount = fileNames.size();
         HRESULT result = E_FAIL;
-        SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, fileCount);
+        SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, (ULONG)fileCount);
         m_recentFiles.clear();
 
         if (psa != NULL)

@@ -133,6 +133,8 @@
 #define IDC_RICHEDITBOX                 150
 #define IDM_RICHEDWRAP                  151
 
+#define IDB_MENUICONS                   160
+
 
   // rich edit notification to CMainFrame
 #define IDM_UPDATECONTROLUISTATE        WM_APP + 101

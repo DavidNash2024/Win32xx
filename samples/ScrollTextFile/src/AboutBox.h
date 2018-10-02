@@ -34,7 +34,7 @@ AboutBox        : public CDialog                                            /*
 
       // protected declarations
     protected:
-        virtual BOOL DialogProc(UINT, WPARAM, LPARAM);
+        virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
 
       // private declarations
     private:

@@ -512,7 +512,7 @@ GetPageBreaks(CPrintInfo& info)                                             /*
       // entry than the actual number of pages
     info.SetMinPage(1);
     info.SetFromPage(1);
-    UINT maxpg = m_page_first_char.size() - 1;
+    UINT maxpg = static_cast<UINT>(m_page_first_char.size()) - 1;
     info.SetMaxPage(maxpg);
     info.SetToPage(maxpg);
 }

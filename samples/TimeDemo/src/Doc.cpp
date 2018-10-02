@@ -863,7 +863,7 @@ Serialize(CArchive &ar)                                                 /*
 {
         if (ar.IsStoring())
         {     // storing the document
-        UINT n = m_doc_content.size();
+        UINT n = static_cast<UINT>(m_doc_content.size());
           // record the number of records to save
         ar << n;
           // save the records

@@ -315,7 +315,7 @@ BOOL CSvrDialog::OnSend()
         case SOCK_DGRAM:
             {
                 CString sSend = m_editSend.GetWindowText();
-                if (m_mainSocket.SendTo(TtoA(sSend), strlen(TtoA(sSend)), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient)) == SOCKET_ERROR)
+                if (m_mainSocket.SendTo(TtoA(sSend), (int)strlen(TtoA(sSend)), 0, (LPSOCKADDR)&m_saUDPClient, (int)sizeof(m_saUDPClient)) == SOCKET_ERROR)
                 {
                     if (GetLastError() != WSAEWOULDBLOCK)
                     {

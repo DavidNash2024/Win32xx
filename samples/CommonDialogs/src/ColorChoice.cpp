@@ -94,7 +94,7 @@ AddColorChoice(UINT nID, const CString& usage, COLORREF color)      /*
     success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
-    UINT size = GetTableSize();
+    size_t size = GetTableSize();
     ctl_color triple;
     triple.nID = nID;
     triple.usage = usage;
@@ -104,7 +104,7 @@ AddColorChoice(UINT nID, const CString& usage, COLORREF color)      /*
 }
 
 /*============================================================================*/
-    UINT CColorChoice::
+    size_t CColorChoice::
 DeleteTableEntry(UINT index)                        /*
 
     Description and explanation of parameters
@@ -137,7 +137,7 @@ DoModal(HWND hWndOwner /* = 0 */)                   /*
       // Make the control be modal so the choice is returned at
       // termination.
     m_nSelection = static_cast<UINT>(-1);
-    int selection = m_LBDlg.DoModal(hWndOwner);
+	INT_PTR selection = m_LBDlg.DoModal(hWndOwner);
       // if invalid, go no further
     if (selection < 0)
         return IDCANCEL;

@@ -128,7 +128,7 @@ IDtoPart(UINT nIDSeek)                          /*
     status bar PartInfo vector if it exists there; otherwise, return -1.
 *-----------------------------------------------------------------------------*/
 {
-    int size = m_statusbar_part.size();
+    int size = static_cast<UINT>(m_statusbar_part.size());
     for (int i = 0; i < size; i++)
         if (m_statusbar_part[i].ID == nIDSeek)
             return i;
@@ -259,7 +259,7 @@ SetStatusIndicators()                           /*
     changed due to resizing.
 *-----------------------------------------------------------------------------*/
 {
-    UINT nIDCount = m_statusbar_part.size();
+    UINT nIDCount = static_cast<UINT>(m_statusbar_part.size());
     if (!IsWindow() || nIDCount == 0)
         return;
 

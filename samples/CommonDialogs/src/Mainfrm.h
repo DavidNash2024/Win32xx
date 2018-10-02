@@ -85,7 +85,7 @@ CMainFrame : public CFrame                      /*
                         { CFrame::AddMRUEntry (szMRUEntry);}
         virtual void    EmptyMRUList();
                 CDoc&   GetDoc() { return m_Doc; }
-                UINT    GetMRUSize() { return GetMRUEntries().size();}
+                size_t  GetMRUSize() { return GetMRUEntries().size();}
         virtual void    RemoveMRUEntry(LPCTSTR szMRUEntry)
                           {CFrame::RemoveMRUEntry(szMRUEntry);}
                 void    SetSBBkColor(COLORREF clr)
@@ -126,6 +126,7 @@ CMainFrame : public CFrame                      /*
                            COLORREF);
         virtual void    SetStatusbarMsg(CString);
         virtual BOOL    SetThemeColors();
+		virtual void    SetupMenuIcons();
         virtual void    SetupToolBar(void);
         virtual void    UpdateMRUMenu();
         virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
