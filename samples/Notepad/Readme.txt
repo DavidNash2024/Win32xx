@@ -20,8 +20,8 @@ Features demonstrated in this example
 
 
 Notes:
-* Plain text UTF-8 files need a Byte Order Mark (BOM), otherwise they are treated as ANSI 
-  by the rich edit control. Rich test UTF-8 files don't need a BOM.
+* UTF-8 files need a Byte Order Mark (BOM), otherwise they are treated as ANSI 
+  by the rich edit control.
 * UTF-8 is the most popular encoding for text files, for good reason.
 * UTF-8 is a super set of ASCII encoding. All ASCII text files are also UTF-8.
 * UTF-8 uses one or more bytes to encode a character.

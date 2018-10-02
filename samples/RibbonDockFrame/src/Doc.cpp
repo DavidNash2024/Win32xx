@@ -54,7 +54,7 @@ void CDoc::Serialize(CArchive &ar)
     if (ar.IsStoring())
     {
         // Store the number of points
-        UINT points = GetAllPoints().size();
+        UINT points = static_cast<UINT>(GetAllPoints().size());
         ar << points;
         
         // Store the PlotPoint data

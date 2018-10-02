@@ -29,22 +29,22 @@ CMainFrame::~CMainFrame()
 
 void CMainFrame::ClearContents()
 {
-	m_richView.SendMessage(WM_SETTEXT, 0, 0);
-	m_pathName.Empty();
-	SetWindowTitle();
-	m_richView.SetFontDefaults();
-	m_richView.SetModify(FALSE);
+    m_richView.SendMessage(WM_SETTEXT, 0, 0);
+    m_pathName.Empty();
+    SetWindowTitle();
+    m_richView.SetFontDefaults();
+    m_richView.SetModify(FALSE);
 
-	// Set Rich text or plain text mode.
-	UINT mode = m_isRTF ? TM_RICHTEXT : TM_PLAINTEXT;
-	VERIFY(m_richView.SetTextMode(mode) == 0);
+    // Set Rich text or plain text mode.
+    UINT mode = m_isRTF ? TM_RICHTEXT : TM_PLAINTEXT;
+    VERIFY(m_richView.SetTextMode(mode) == 0);
 
-	SetStatusIndicators();
+    SetStatusIndicators();
 }
 
 void CMainFrame::DetermineEncoding(CFile& file)
 {
-    Encoding encoding = m_isRTF ? UTF8 : ANSI;
+    Encoding encoding = ANSI;
     ULONGLONG fileLength = file.GetLength();
 
     if (fileLength >= 3)
@@ -52,24 +52,27 @@ void CMainFrame::DetermineEncoding(CFile& file)
         try
         {
             file.SeekToBegin();
-            int tests = IS_TEXT_UNICODE_UNICODE_MASK;
             DWORD testlen = MIN(1024, (DWORD)fileLength);
             std::vector<byte> buffer(testlen);
             file.Read(&buffer.front(), testlen);
 
             // look UTF Byte Order Mark (BOM)
-			if (!m_isRTF)
-			{
-				if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
-					encoding = UTF8;
-			}
+            if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
+                    encoding = UTF8;
 
-            // look UTF-16 LE Byte Order Mark (BOM)
-            if (buffer[0] == 0xff && buffer[1] == 0xfe)
+            // check for UTF-16 LE with Byte Order Mark (BOM)
+            int tests = IS_TEXT_UNICODE_SIGNATURE;
+            if (::IsTextUnicode(&buffer.front(), testlen, &tests) == 1)
                 encoding = UTF16LE_BOM;
-            // check for UTF-16 LE w/o BOM
-            else if (::IsTextUnicode(&buffer.front(), testlen, &tests) == 1)
-                encoding = UTF16LE;
+            else
+            {
+                // check for UTF-16 LE w/o BOM
+                tests = IS_TEXT_UNICODE_STATISTICS;
+                if (::IsTextUnicode(&buffer.front(), testlen, &tests) == 1)
+                {
+                    encoding = UTF16LE;
+                }
+            }
         }
         catch (const CFileException& e)
         {
@@ -125,7 +128,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     switch (id)
     {
     case IDM_FILE_NEW_PLAIN:    return OnFileNewPlain();
-	case IDM_FILE_NEW_RICH:     return OnFileNewRich();
+    case IDM_FILE_NEW_RICH:     return OnFileNewRich();
     case IDM_FILE_OPEN:         return OnFileOpen();
     case IDM_FILE_SAVE:         return OnFileSave();
     case IDM_FILE_SAVEAS:       return OnFileSaveAs();
@@ -191,14 +194,14 @@ BOOL CMainFrame::OnEditCopy()
 
 BOOL CMainFrame::OnEditPaste()
 {
-	if (m_isRTF)
-		// Paste rich text and plain text.
-		m_richView.Paste();
-	else
-		// Paste plain text only.
-		m_richView.PasteSpecial(CF_TEXT);
-    
-	return TRUE;
+    if (m_isRTF)
+        // Paste rich text and plain text.
+        m_richView.Paste();
+    else
+        // Paste plain text only.
+        m_richView.PasteSpecial(CF_TEXT);
+
+    return TRUE;
 }
 
 BOOL CMainFrame::OnEditDelete()
@@ -283,20 +286,20 @@ BOOL CMainFrame::OnFileNewPlain()
 {
     //Check for unsaved text
     SaveModifiedText();
-	m_isRTF = false;
-	SetEncoding(ANSI);
-	ClearContents();
+    m_isRTF = false;
+    SetEncoding(ANSI);
+    ClearContents();
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileNewRich()
 {
-	//Check for unsaved text
-	SaveModifiedText();
-	m_isRTF = true;
-	SetEncoding(UTF8);
-	ClearContents();
-	return TRUE;
+    //Check for unsaved text
+    SaveModifiedText();
+    m_isRTF = true;
+    SetEncoding(ANSI);
+    ClearContents();
+    return TRUE;
 }
 
 BOOL CMainFrame::OnFilePrint()
@@ -415,11 +418,11 @@ BOOL CMainFrame::OnFileOpen()
 {
     // szFilters is a text string that includes two file name filters:
     // "*.txt" for Plain Text files, "*.rtf" for Rich Text files and "*.*' for "All Files."
-	LPCTSTR filters;
-	if (m_isRTF)
-		filters = _T("Rich Text Files (*.rtf)\0*.rtf\0Plain Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
-	else
-		filters = _T("Plain Text Files (*.txt)\0*.txt\0Rich Text Files (*.rtf)\0*.rtf\0All Files (*.*)\0*.*\0");
+    LPCTSTR filters;
+    if (m_isRTF)
+        filters = _T("Rich Text Files (*.rtf)\0*.rtf\0Plain Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
+    else
+        filters = _T("Plain Text Files (*.txt)\0*.txt\0Rich Text Files (*.rtf)\0*.rtf\0All Files (*.*)\0*.*\0");
 
     CFileDialog fileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, filters);
 
@@ -452,11 +455,11 @@ BOOL CMainFrame::OnFileSaveAs()
 {
     // szFilter is a text string that includes two file name filters:
     // "*.txt" for Plain Text Files, "*.rtf" for Rich Text Files, and "*.*' for All Files.
-	LPCTSTR filters;
-	if (m_isRTF)
-		filters = _T("Rich Text Files (*.rtf)\0*.rtf\0Plain Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
-	else
-		filters = _T("Plain Text Files (*.txt)\0*.txt\0Rich Text Files (*.rtf)\0*.rtf\0All Files (*.*)\0*.*\0");
+    LPCTSTR filters;
+    if (m_isRTF)
+        filters = _T("Rich Text Files (*.rtf)\0*.rtf\0Plain Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
+    else
+        filters = _T("Plain Text Files (*.txt)\0*.txt\0Rich Text Files (*.rtf)\0*.rtf\0All Files (*.*)\0*.*\0");
     CFileDialog fileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT, filters);
 
     if (fileDlg.DoModal(*this) == IDOK)
@@ -484,8 +487,15 @@ void CMainFrame::OnInitialUpdate()
         ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_ANSI, 0);
     }
 
-	m_richView.SetFocus();
-	SetEncoding(ANSI);
+    m_richView.SetFocus();
+    SetEncoding(ANSI);
+
+    // Retrieve the command line arguments.
+    std::vector<CString> args = GetCommandLineArgs();
+    // The second argument (if any) contains our file name.
+    if (args.size() > 1)
+        ReadFile(args[1]);
+
 }
 
 void CMainFrame::OnMenuUpdate(UINT id)
@@ -495,16 +505,16 @@ void CMainFrame::OnMenuUpdate(UINT id)
         GetFrameMenu().CheckMenuItem(id, m_isWrapped ? MF_CHECKED : MF_UNCHECKED);
     }
 
-	if (id == IDM_ENC_ANSI)
-	{
-		// Disable ANSI for Rich text mode.
-		UINT state = m_isRTF ? MF_GRAYED : MF_ENABLED;
-		GetFrameMenu().EnableMenuItem(id, state);
-	}
+    if (id == IDM_ENC_UTF16)
+    {
+        // Disable ANSI for Rich text mode.
+        UINT state = m_isRTF ? MF_GRAYED : MF_ENABLED;
+        GetFrameMenu().EnableMenuItem(id, state);
+    }
 
     if ((id >= IDM_ENC_ANSI) && (id <= IDM_ENC_UTF16))
         OnUpdateRangeOfIDs(IDM_ENC_ANSI, IDM_ENC_UTF16, id);
-	
+
     CFrame::OnMenuUpdate(id);
 }
 
@@ -529,39 +539,40 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 BOOL CMainFrame::OnOptionsFont()
 {
     // Retrieve the current character format.
-    CHARFORMAT2 cf2;
-    ZeroMemory(&cf2, sizeof(cf2));
-    cf2.cbSize = sizeof(cf2);
-    cf2.dwMask = CFM_COLOR | CFM_FACE | CFM_EFFECTS;
+    CHARFORMAT cf;
+    ZeroMemory(&cf, sizeof(cf));
+    cf.cbSize = sizeof(cf);
+    cf.dwMask = CFM_COLOR | CFM_FACE | CFM_EFFECTS;
 
-	if (m_isRTF)
-		m_richView.GetSelectionCharFormat(cf2);
-	else
-		m_richView.GetDefaultCharFormat(cf2);
+    if (m_isRTF)
+        m_richView.GetSelectionCharFormat(cf);
+    else
+        m_richView.GetDefaultCharFormat(cf);
 
     // Display the Choose Font dialog
-	CFontDialog dlg(cf2, CF_SCREENFONTS | CF_EFFECTS);
+    CFontDialog dlg(cf, CF_SCREENFONTS | CF_EFFECTS);
 
     if (dlg.DoModal(*this) == IDOK)
     {
- 
-		// Assign the new font to the rich text document.
-		CHARFORMAT cf = dlg.GetCharFormat();
-		if (m_isRTF)
-		{
-			// Change the selected characters in a RTF document.
-			m_richView.SetSelectionCharFormat(cf);
-		}
-		else
-		{
-			// change the entire document for plain text.
-			m_richView.SetDefaultCharFormat(cf);
-		}
+
+        // Assign the new font to the rich text document.
+        cf = dlg.GetCharFormat();
+        if (m_isRTF)
+        {
+            // Change the selected characters in a RTF document.
+            m_richView.SetSelectionCharFormat(cf);
+        }
+        else
+        {
+            // Change the entire document for plain text.
+            m_richView.SetDefaultCharFormat(cf);
+        }
     }
 
     return TRUE;
 }
 
+// Turn word wrap on or off.
 BOOL CMainFrame::OnOptionsWrap()
 {
     m_richView.SetTargetDevice(NULL, m_isWrapped);
@@ -569,6 +580,7 @@ BOOL CMainFrame::OnOptionsWrap()
     return TRUE;
 }
 
+// Update the radio buttons in the menu.
 void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
     int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
@@ -578,10 +590,11 @@ void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
         radioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
 }
 
+// Streams the file into the rich edit control.
 BOOL CMainFrame::ReadFile(LPCTSTR fileName)
 {
     // Ask to save if file was modified
-	SaveModifiedText();
+    SaveModifiedText();
 
     try
     {
@@ -596,17 +609,17 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
             throw CFileException(fileName, _T("File is too large!"));
         }
 
-		// Use RFT mode if the file has an rtf extension
-		CString ext = file.GetFileNameExt();
-		ext.MakeLower();
-		m_isRTF = (ext == _T("rtf"));
+        // Use RFT mode if the file has an rtf extension
+        CString ext = file.GetFileNameExt();
+        ext.MakeLower();
+        m_isRTF = (ext == _T("rtf"));
 
-		// Erase the controls contents
-		ClearContents();
+        // Erase the controls contents
+        ClearContents();
 
         // set the EDITSTREAM mode
         int stream_mode = m_isRTF? SF_RTF : SF_TEXT;
-        // try to determine the file encoding: Note that ANSI and UTF-8 are 
+        // try to determine the file encoding: Note that ANSI and UTF-8 are
         // handled by default, and only UTF-16 LE is accommodated by RichEdit.
         DetermineEncoding(file);
         if (m_encoding == UTF16LE_BOM || m_encoding == UTF16LE)
@@ -616,6 +629,10 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
         if (m_encoding == UTF16LE_BOM)
             file.Seek(2, FILE_BEGIN);
 
+        // Skip the BOM for UTF8 encoding
+        if ((m_encoding == UTF8) && m_isRTF)
+            file.Seek(3, FILE_BEGIN);
+
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamInCallback);
@@ -624,7 +641,7 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
         //Clear the modified text flag
         m_richView.SetModify(FALSE);
 
-		SetStatusIndicators();
+        SetStatusIndicators();
     }
 
     catch (const CFileException& e)
@@ -678,11 +695,11 @@ inline void CMainFrame::SetStatusIndicators()
         CString cap = LoadString(IDW_INDICATOR_CAPS);
         CString num = LoadString(IDW_INDICATOR_NUM);
         CString ins = LoadString(IDW_INDICATOR_OVR);
-		CString mode = _T("Plain Text mode     ");
+        CString mode = _T("Plain Text mode     ");
         CSize capSize = statusDC.GetTextExtentPoint32(cap, cap.GetLength());
         CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
         CSize insSize = statusDC.GetTextExtentPoint32(_T("OVR"), ins.GetLength());
-		CSize modeSize = statusDC.GetTextExtentPoint32(mode, mode.GetLength());
+        CSize modeSize = statusDC.GetTextExtentPoint32(mode, mode.GetLength());
 
         BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
         int cxGripper = hasGripper ? 20 : 0;
@@ -698,43 +715,45 @@ inline void CMainFrame::SetStatusIndicators()
 
         // Get the coordinates of the window's client area.
         CRect clientRect = GetClientRect();
-		int width = clientRect.right;
+        int width = clientRect.right;
 
         // Create 4 panes
         GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + insSize.cx + modeSize.cx + cxGripper));
-		GetStatusBar().SetPartWidth(1, modeSize.cx);
+        GetStatusBar().SetPartWidth(1, modeSize.cx);
         GetStatusBar().SetPartWidth(2, capSize.cx);
         GetStatusBar().SetPartWidth(3, numSize.cx);
         GetStatusBar().SetPartWidth(4, insSize.cx);
 
         CString status0 = m_isRTF ? LoadString(IDW_INDICATOR_RICH) : LoadString(IDW_INDICATOR_PLAIN);
-		CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
+        CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
         CString status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : CString("");
         CString status3 = (::GetKeyState(VK_INSERT) & 0x0001) ? LoadString(IDW_INDICATOR_OVR) : LoadString(IDW_INDICATOR_INS);
 
         // Only update indicators if the text has changed
-		if (status0 != m_oldStatus[0])  GetStatusBar().SetPartText(1, status0);
+        if (status0 != m_oldStatus[0])  GetStatusBar().SetPartText(1, status0);
         if (status1 != m_oldStatus[1])  GetStatusBar().SetPartText(2, status1);
         if (status2 != m_oldStatus[2])  GetStatusBar().SetPartText(3, status2);
         if (status3 != m_oldStatus[3])  GetStatusBar().SetPartText(4, status3);
 
-		m_oldStatus[0] = status0;
-		m_oldStatus[1] = status1;
+        m_oldStatus[0] = status0;
+        m_oldStatus[1] = status1;
         m_oldStatus[2] = status2;
         m_oldStatus[3] = status3;
     }
 }
 
+// Adds images to the popup menu items.
 void CMainFrame::SetupMenuIcons()
 {
-	AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MENUICONS, 0);
+    AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MENUICONS, 0);
 }
 
+// Assigns images and command IDs to the toolbar buttons,
 void CMainFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
     AddToolBarButton( IDM_FILE_NEW_PLAIN );
-	AddToolBarButton( IDM_FILE_NEW_RICH );
+    AddToolBarButton( IDM_FILE_NEW_RICH );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
     AddToolBarButton( 0 );              // Separator
@@ -745,7 +764,6 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_PRINT );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-
 }
 
 void CMainFrame::SetWindowTitle()
@@ -770,6 +788,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
+// Streams from the rich edit control to the specified file.
 BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 {
     try
@@ -778,13 +797,13 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
         CFile file;
         file.Open(szFileName, CREATE_ALWAYS);
 
-		// Use Rich Text mode if the file has an rtf extension
-		CString ext = file.GetFileNameExt();
-		ext.MakeLower();
-		m_isRTF = (ext == _T("rtf"));
+        // Use Rich Text mode if the file has an rtf extension
+        CString ext = file.GetFileNameExt();
+        ext.MakeLower();
+        m_isRTF = (ext == _T("rtf"));
 
-		// set the EDITSTREAM mode
-		int stream_mode = m_isRTF ? SF_RTF : SF_TEXT;
+        // set the EDITSTREAM mode
+        int stream_mode = m_isRTF ? SF_RTF : SF_TEXT;
 
         if (m_encoding == UTF16LE_BOM || m_encoding == UTF16LE)
             stream_mode |= SF_UNICODE;
@@ -800,7 +819,7 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
         }
 
         // Write the BOM for UTF encoding
-        if ((m_encoding == UTF8) && (m_isRTF == false))
+        if (m_encoding == UTF8)
         {
             byte buffer[3] = { 0xef, 0xbb, 0xbf };
             file.Write(buffer, 3);

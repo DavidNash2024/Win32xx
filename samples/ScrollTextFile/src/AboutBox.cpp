@@ -42,7 +42,7 @@ AboutBox()                                                                  /*
 }
 
 /*============================================================================*/
-     BOOL AboutBox::
+	 INT_PTR AboutBox::
 DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                         /*
 
     This is the callback procedure for the "AboutBox" dialog.  It activates

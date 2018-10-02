@@ -63,33 +63,19 @@ GetNewFont()                                /*
     Bring up the font choice dialog and choose a new font.
 *-----------------------------------------------------------------------------*/
 {     // Retrieve the current character format
-    CHARFORMAT2 cf2;
-    ZeroMemory (&cf2, sizeof(cf2));
-    cf2.cbSize = sizeof(cf2);
-    cf2.dwMask = CFM_COLOR|CFM_FACE|CFM_EFFECTS;
-    GetDefaultCharFormat(cf2);
-
-      // Fill the LOGFONT struct from CHARFORMAT2
-    LOGFONT lf;
-    ZeroMemory(&lf, sizeof(lf));
-    StrCopy(lf.lfFaceName, cf2.szFaceName, LF_FACESIZE);
-    lf.lfHeight = cf2.yHeight / 15;
-    lf.lfWeight = (cf2.dwEffects & CFE_BOLD)? 700 : 400;
-    lf.lfItalic = (BYTE)(cf2.dwEffects & CFE_ITALIC);
+    CHARFORMAT cf;
+    ZeroMemory(&cf, sizeof(cf));
+    cf.cbSize = sizeof(cf);
+    cf.dwMask = CFM_COLOR | CFM_FACE | CFM_EFFECTS;
+    GetDefaultCharFormat(cf);
 
       // Display the Choose Font dialog
-    CFontDialog LogFont(lf, CF_SCREENFONTS | CF_EFFECTS);
-    if (LogFont.DoModal(*this) == IDOK)
+    CFontDialog dlg(cf, CF_SCREENFONTS | CF_EFFECTS);
+    if (dlg.DoModal(*this) == IDOK)
     {
           // Set the Font
-        CFont RichFont(LogFont.GetLogFont());
-        SetFont(RichFont, TRUE);
-
-          // Set the font color
-        cf2.crTextColor = LogFont.GetColor();
-        cf2.dwEffects = 0;
-        cf2.dwMask = CFM_COLOR;
-        SetDefaultCharFormat(cf2);
+		cf = dlg.GetCharFormat();
+		SetDefaultCharFormat(cf);
     }
 
     return TRUE;
@@ -137,7 +123,7 @@ GetPageBreaks(CDC& dcPrinter)                       /*
     FormatRange();
     m_PageBreaks.push_back(-1);
       // set the number of pages
-    return m_PageBreaks.size();
+    return static_cast<UINT>(m_PageBreaks.size());
 }
 
 /*============================================================================*/

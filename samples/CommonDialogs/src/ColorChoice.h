@@ -81,14 +81,14 @@ CColorChoice   : public CColorDialog                    /*
         
         virtual BOOL    AddColorChoice(UINT, const CString&, COLORREF);
                 void    ClearColorTable(){m_ColorTable.clear();}
-                UINT    DeleteTableEntry(UINT index);
+                size_t  DeleteTableEntry(UINT index);
         virtual INT_PTR DoModal(HWND hWndOwner = 0);
                 CBrush  GetBrush(UINT nID);
         virtual CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
                 UINT    GetSelectedColorID() {return m_nSelection;}
                 COLORREF GetTableColor(UINT nID);
                 UINT    GetTableIndex(UINT nID);
-                UINT    GetTableSize() { return m_ColorTable.size();}
+                size_t  GetTableSize() { return m_ColorTable.size();}
                 CString GetTableUsage(UINT nID); 
                 void    SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
         virtual void    SetTableColor(UINT nID, COLORREF rgb);

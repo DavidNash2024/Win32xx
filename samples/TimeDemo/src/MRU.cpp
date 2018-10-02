@@ -330,7 +330,7 @@ ValidateMRU()                               /*
 {
       // search the MRU list in reverse so as not to cause reshuffling
     std::vector<CString>::iterator it;
-    for (int i = m_vMRUEntries.size() - 1; i >= 0; --i)
+    for (int i = static_cast<int>(m_vMRUEntries.size()) - 1; i >= 0; --i)
     {
           // check whether the current entry exists, or is gone
         CString s = m_vMRUEntries[i];

@@ -61,7 +61,7 @@ void CHyperlink::OpenUrl()
 
     HINSTANCE result = ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
 
-    if (reinterpret_cast<int>(result) > 32)
+    if (reinterpret_cast<INT_PTR>(result) > 32)
     {
         m_isUrlVisited = TRUE;
 

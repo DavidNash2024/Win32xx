@@ -289,7 +289,7 @@ LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
     }
     
     // Restore buttons from info stored in m_vTBBReset
-    int nResetCount = m_resetButtons.size();
+    int nResetCount = static_cast<int>(m_resetButtons.size());
     for (int j = 0; j < nResetCount; j++)
     {
         TBBUTTON tbb = m_resetButtons[j];
@@ -353,7 +353,7 @@ BOOL CMainFrame::OnTBDefault()
     }
     
     // Restore buttons from info stored in m_vTBBDefault
-    int nDefaultCount = m_defaultButtons.size();
+    int nDefaultCount = static_cast<int>(m_defaultButtons.size());
     for (int j = 0; j < nDefaultCount; j++)
     {
         TBBUTTON tbb = m_defaultButtons[j];

@@ -145,7 +145,7 @@ namespace Win32xx
         GetApp().m_mapHWND.insert(std::make_pair(GetHwnd(), this));
     }
 
-    // Subclass an existing window and attach it to a CWnd
+    // Attaches a CWnd object to an existing window and calls the OnAttach virtual function.
     inline BOOL CWnd::Attach(HWND wnd)
     {
         assert( &GetApp() );
@@ -166,7 +166,7 @@ namespace Win32xx
         return TRUE;
     }
 
-    // Converts a dialog item to a CWnd object
+    // Attaches a CWnd object to a dialog item.
     inline BOOL CWnd::AttachDlgItem(UINT id, HWND parent)
     {
         assert(::IsWindow(parent));
@@ -175,7 +175,7 @@ namespace Win32xx
         return Attach(wnd);
     }
 
-    // Centers this window over its parent
+    // Positions the window over the center of its parent.
     inline void CWnd::CenterWindow() const
     {
 
@@ -270,7 +270,11 @@ namespace Win32xx
         m_prevWindowProc = 0;
     }
 
-    // Creates the window. This is the default method of window creation.
+    // Creates the window with default parameters. PreRegisterClass can be
+    //  used to register a new window class for the window, otherwise a 
+    //  default window class is used. PreCreate can be used to specify the
+    //  CREATESTRUCT parameters, otherwise default parameters are used. 
+    //  A failure to create a window throws an exception.
     inline HWND CWnd::Create(HWND parent /* = 0 */)
     {
         // Test if Win32++ has been started
@@ -333,7 +337,9 @@ namespace Win32xx
         return wnd;
     }
 
-    // Creates the window by specifying all the window creation parameters
+    // Creates the window by specifying each parameter. The lpszClassName must
+    //  be a predefined class name or registered with RegisterClass. A failure
+    //  to create a window throws an exception.
     inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD style, const RECT& rc, HWND parent, UINT id, LPVOID lparam /*= NULL*/)
     {
         int x = rc.left;
@@ -347,7 +353,9 @@ namespace Win32xx
         return CreateEx(exStyle, pClassName, pWindowName, style, x, y, cx, cy, parent, menu, lparam);
     }
 
-    // Creates the window by specifying all the window creation parameters
+    // Creates the window by specifying each parameter. The lpszClassName must
+    //  be a predefined class name or registered with RegisterClass. A failure
+    //  to create a window throws an exception.
     inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD style, int x, int y, int width, int height, HWND hWParent, HMENU idOrMenu, LPVOID lparam /*= NULL*/)
     {
         assert( &GetApp() );        // Test if Win32++ has been started
@@ -465,7 +473,7 @@ namespace Win32xx
 #endif
 
     // Pass messages on to the appropriate default window procedure
-    // CMDIChild and CMDIFrame override this function
+    // CMDIChild and CMDIFrame override this function.
     inline LRESULT CWnd::FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if (m_prevWindowProc)
@@ -475,6 +483,7 @@ namespace Win32xx
     }
 
     // Retrieves the pointer to the CWnd associated with the specified HWND.
+    // Returns NULL if a CWnd object doesn't already exist for this HWND. 
     inline CWnd* CWnd::GetCWndPtr(HWND wnd)
     {
         assert( &GetApp() );
@@ -522,7 +531,7 @@ namespace Win32xx
         return CWnd(wnd);
     }
 
-    // Retrieves the name of the class to which the specified window belongs.
+    // Retrieves the class name of this object's window.
     inline CString CWnd::GetClassName() const
     {
         assert(IsWindow());

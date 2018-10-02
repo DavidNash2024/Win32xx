@@ -135,6 +135,7 @@ IDI_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
     Bitmaps                                                                   */
 
 IDW_MAIN                BITMAP DISCARDABLE      "../src/res/Toolbar.bmp"
+IDB_MENUICONS           BITMAP DISCARDABLE      "../src/res/MenuIcons.bmp"
 
 /*============================================================================*/
 

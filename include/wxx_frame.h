@@ -2694,6 +2694,7 @@ namespace Win32xx
         // Set the tooltip's text from the ToolBar button's CommandID.
         if (pToolBar)
         {
+            assert(dynamic_cast<CToolBar*>(pToolBar));
             LPNMTTDISPINFO lpDispInfo = pNMTDI;
             int index =  pToolBar->HitTest();
             if (index >= 0)

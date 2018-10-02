@@ -117,7 +117,7 @@ BOOL CMyDialog::OnInitDialog()
 #ifdef  TTM_SETTITLE    // not supported by some GNU compilers
     // Add Title and Icon to the tooltip (a pretty icon for Vista and above)
     if (GetWinVersion() >= 2600)
-        m_toolTip.SetTitle(reinterpret_cast<UINT>(m_hInfo), _T("Displaying the contents of the control ..."));
+        m_toolTip.SetTitle((UINT)(UINT_PTR)(m_hInfo), _T("Displaying the contents of the control ..."));
     else
         m_toolTip.SetTitle(TTI_INFO, _T("Displaying the contents of the control ..."));
 #endif

@@ -158,7 +158,7 @@ GetLength()                                                                 /*
     if (!m_bDoc_is_open)
         m_stDoc_length = 0;
 
-    return m_stDoc_length = m_doclines.size();
+    return m_stDoc_length = static_cast<UINT>(m_doclines.size());
 }
 
 /*============================================================================*/
@@ -314,7 +314,7 @@ OpenDoc(LPCTSTR filename)                                                   /*
         m_open_doc_path.Empty();
     }
     m_fDoc_file.Close();
-    m_stDoc_length = m_doclines.size();
+    m_stDoc_length = static_cast<UINT>(m_doclines.size());
     return ok;
 }
 
@@ -335,7 +335,7 @@ ReadABytes(Encoding encoding, UINT docsize, UINT offset)                    /*
     CAtoW wb(&m_buffer[0] + offset, CPage);
       // get access to the converted array and its length
     LPCWSTR pWStr = wb;
-    UINT length   = wcslen(pWStr);
+    UINT length   = static_cast<UINT>(wcslen(pWStr));
       // declare the entry string that will be added to the document and scan
       // the converted array for end-of-line characters
     CStringW entry;

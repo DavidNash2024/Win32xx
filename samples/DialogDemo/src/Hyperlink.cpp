@@ -53,8 +53,8 @@ void CHyperlink::OpenUrl()
 {
     TCHAR szUrl[ MAX_PATH + 1 ] = _T("http://sourceforge.net/projects/win32-framework/");
 
-    HINSTANCE result = ::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
-    if (reinterpret_cast<int>(result) > 32)
+   HINSTANCE result = ::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
+    if (reinterpret_cast<INT_PTR>(result) > 32)
     {
         m_isUrlVisited = TRUE;
 

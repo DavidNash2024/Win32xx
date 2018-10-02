@@ -105,7 +105,7 @@ LRESULT CColourDialog::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
     HWND hWnd = reinterpret_cast<HWND>(lparam);
 
     // Update the text for the colour's edit control
-    int nPos = SendMessage(hWnd, TBM_GETPOS, 0, 0);
+    int nPos = static_cast<int>(SendMessage(hWnd, TBM_GETPOS, 0, 0));
     TCHAR Text[5];
     wsprintf(Text, _T("%d\0"), nPos);
 
@@ -117,9 +117,9 @@ LRESULT CColourDialog::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
         m_blueEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(&Text));
 
     // Store the colour values
-    m_cRed   = m_redSlider.SendMessage(TBM_GETPOS);
-    m_cGreen = m_greenSlider.SendMessage(TBM_GETPOS);
-    m_cBlue  = m_blueSlider.SendMessage(TBM_GETPOS);
+    m_cRed   = static_cast<int>(m_redSlider.SendMessage(TBM_GETPOS));
+    m_cGreen = static_cast<int>(m_greenSlider.SendMessage(TBM_GETPOS));
+    m_cBlue  = static_cast<int>(m_blueSlider.SendMessage(TBM_GETPOS));
 
     // Copy m_hbmPreviewOrig to m_hbmPreview
     CMemDC Mem1DC(NULL);
@@ -147,7 +147,7 @@ void CColourDialog::OnOK()
     // Get a pointer to our CMainFrame object
     CMainFrame& mainFrame = GetFrameApp().GetMainFrame();
 
-    BOOL isGray = SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0);
+    BOOL isGray = (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0) != 0);
     mainFrame.ModifyBitmap(m_cRed, m_cGreen, m_cBlue, isGray);
 
     CDialog::OnOK();

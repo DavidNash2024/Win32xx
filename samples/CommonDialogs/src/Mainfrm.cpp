@@ -63,6 +63,7 @@
 #include "stdafx.h"
 #include "StdApp.h"
 #include <io.h>
+#include "resource.h"
 
 /*******************************************************************************
 
@@ -285,7 +286,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
         case IDM_EDIT_UNDO:
         {
             if (::GetFocus() != GetREView())
-                return ::SendMessage(::GetFocus(), EM_UNDO, 0, 0);
+                return (::SendMessage(::GetFocus(), EM_UNDO, 0, 0) != 0);
 
             m_Doc.OnUndo();
             UpdateControlUIState();
@@ -295,7 +296,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
         case IDM_EDIT_REDO:
         {
             if (::GetFocus() != GetREView())
-                return ::SendMessage(::GetFocus(), EM_REDO, 0, 0);
+                return (::SendMessage(::GetFocus(), EM_REDO, 0, 0) != 0);
 
             m_Doc.OnRedo();
             UpdateControlUIState();
@@ -305,7 +306,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
         case IDM_EDIT_CUT:
         {
             if (::GetFocus() != GetREView())
-                return ::SendMessage(::GetFocus(), WM_CUT, 0, 0);
+                return (::SendMessage(::GetFocus(), WM_CUT, 0, 0) != 0);
 
             m_Doc.OnCut();
             UpdateControlUIState();
@@ -315,7 +316,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
         case IDM_EDIT_COPY:
         {
             if (::GetFocus() != GetREView())
-                return ::SendMessage(::GetFocus(), WM_COPY, 0, 0);
+                return (::SendMessage(::GetFocus(), WM_COPY, 0, 0) != 0);
 
             m_Doc.OnCopy();
             UpdateControlUIState();
@@ -325,7 +326,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
         case IDM_EDIT_PASTE:
         {
             if (::GetFocus() != GetREView())
-                return ::SendMessage(::GetFocus(), WM_PASTE, 0, 0);
+                return (::SendMessage(::GetFocus(), WM_PASTE, 0, 0) != 0);
 
             m_Doc.OnPaste();
             UpdateControlUIState();
@@ -335,7 +336,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
         case IDM_EDIT_DELETE:
         {
             if (::GetFocus() != GetREView())
-                return ::SendMessage(::GetFocus(), WM_CLEAR, 0, 0);
+                return (::SendMessage(::GetFocus(), WM_CLEAR, 0, 0) != 0);
 
             m_Doc.OnDelete();
             UpdateControlUIState();
@@ -939,6 +940,23 @@ SetThemeColors()                                                            /*
 
 /*============================================================================*/
     void CMainFrame::
+SetupMenuIcons()                                                             /*
+
+    Assigns icons to the dropdown menu items.  
+*-----------------------------------------------------------------------------*/
+{
+     // Add IDW_ABOUT to the data
+	std::vector<UINT> data = GetToolBarData();
+	data.push_back(IDW_ABOUT);
+
+	// Specify the bitmap and mask for the menu icons.
+	AddMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS, 0);
+}
+
+
+
+/*============================================================================*/
+    void CMainFrame::
 SetupToolBar()                                                              /*
 
     Called from the CFrame::CreateToolBar() method to load the toolbar
@@ -970,9 +988,6 @@ SetupToolBar()                                                              /*
     AddToolBarButton(IDM_FONT_CHOICE,   TRUE, 0, 10);
       // Set the toolbar image list: use defaults for hot and disabled
     SetToolBarImages(RGB(255, 0, 255), IDW_MAIN, 0, 0);
-      // Set icons for color and font choice menu items
-    AddMenuIcon(IDM_COLOR_CHOICE, theApp.LoadIcon(IDI_COLOR_CHOICE));
-    AddMenuIcon(IDM_FONT_CHOICE,  theApp.LoadIcon(IDI_FONT_CHOICE));
 }
 
 /*============================================================================*/

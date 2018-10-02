@@ -153,7 +153,7 @@ UINT CMainFrame::GetIDFromCursorPos()
 
         // The WM_NCHITTEST message returns a value indicating the position of the
         //  cursor hot spot within the non-client area.
-        LRESULT result = SendMessage(WM_NCHITTEST, 0, MAKELPARAM(pt.x, pt.y));
+        int result = static_cast<int>(SendMessage(WM_NCHITTEST, 0, MAKELPARAM(pt.x, pt.y)));
 
 		id = IDFR_NCFRAME + result; // As defined in resource.h
     }
