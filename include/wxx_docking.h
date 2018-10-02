@@ -2531,21 +2531,25 @@ namespace Win32xx
         HWND dockTest = m_dockUnderPoint;
         HWND dockParent = m_dockUnderPoint;
 
-        while (IsRelated(dockTest))
+        if (m_dockUnderPoint != 0)
         {
-            dockParent = dockTest;
-            CPoint ptLocal = pt;
-            ::ScreenToClient(dockParent, &ptLocal);
-            dockTest = ::ChildWindowFromPoint(dockParent, ptLocal);
-            if (dockTest == dockParent) break;
+            while (IsRelated(dockTest))
+            {
+                dockParent = dockTest;
+                CPoint ptLocal = pt;
+                ::ScreenToClient(dockParent, &ptLocal);
+                dockTest = ::ChildWindowFromPoint(dockParent, ptLocal);
+                if (dockTest == dockParent) break;
+            }
+
+            CDocker* pDockParent = reinterpret_cast<CDocker*>(::SendMessage(dockParent, UWM_GETCDOCKER, 0, 0));
+            assert(pDockParent);
+
+            CRect rc = pDockParent->GetDockClient().GetWindowRect();
+            if (rc.PtInRect(pt))
+                pDockTarget = pDockParent;
+
         }
-
-        CDocker* pDockParent = reinterpret_cast<CDocker*>(::SendMessage(dockParent, UWM_GETCDOCKER, 0, 0));
-        assert(pDockParent);
-
-        CRect rc = pDockParent->GetDockClient().GetWindowRect();
-        if (rc.PtInRect(pt))
-            pDockTarget = pDockParent;
 
         return pDockTarget;
     }
