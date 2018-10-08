@@ -267,11 +267,13 @@ namespace Win32xx
     {
         friend CString operator + (const CString& string1, const CString& string2);
         friend CString operator + (const CString& string1, const TCHAR* pText);
-        friend CString operator + (const CString& string1, TCHAR ch);
+		friend CString operator + (const CString& string1, CHAR ch);
+		friend CString operator + (const CString& string1, WCHAR ch);
         friend CString operator + (const CString& string1, int val);
         friend CString operator + (const CString& string1, double val);
         friend CString operator + (const TCHAR* pText, const CString& string1);
-        friend CString operator + (TCHAR ch, const CString& string1);
+        friend CString operator + (CHAR ch, const CString& string1);
+		friend CString operator + (WCHAR ch, const CString& string1);
         friend CString operator + (int val, const CString& string1);
         friend CString operator + (double val, const CString& string1);
 
@@ -1244,12 +1246,15 @@ namespace Win32xx
     template <class T>
     inline void CStringT<T>::ReleaseBuffer( int newLength /*= -1*/ )
     {
-        assert (newLength <= static_cast<int>(m_buf.size()));
 
         if (-1 == newLength)
         {
             newLength = lstrlenT(&m_buf[0]);
         }
+
+        assert(m_buf.size() > 0);
+        assert(newLength <= static_cast<int>(m_buf.size() -1));
+        newLength = MIN(newLength, static_cast<int>(m_buf.size() -1));
 
         T ch = 0;
         m_str.assign(newLength, ch);
@@ -1794,10 +1799,19 @@ namespace Win32xx
         return str;
     }
 
-    inline CString operator + (const CString& string1, TCHAR ch)
+    inline CString operator + (const CString& string1, CHAR ch)
     {
         CString str(string1);
-        str.m_str += ch;
+        CString str1(ch);
+        str += str1;
+        return str;
+    }
+
+    inline CString operator + (const CString& string1, WCHAR ch)
+    {
+        CString str(string1);
+        CString str1(ch);
+        str += str1;
         return str;
     }
 
@@ -1822,11 +1836,20 @@ namespace Win32xx
         return str;
     }
 
-    inline CString operator + (TCHAR ch, const CString& string1)
+    inline CString operator + (CHAR ch, const CString& string1)
     {
+        CString str1(string1);
         CString str(ch);
-        str.m_str.append(string1);
+        str += str1;
         return str;
+    }
+
+    inline CString operator + (WCHAR ch, const CString& string1)
+    {
+		CString str1(string1);
+		CString str(ch);
+		str += str1;
+		return str;
     }
 
     inline CString operator + (int val, const CString& string1)

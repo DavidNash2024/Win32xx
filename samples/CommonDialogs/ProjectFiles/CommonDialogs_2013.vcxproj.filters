@@ -204,17 +204,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\res\Win32++.manifest">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\src\res\Star.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\src\res\toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Win32++">
       <UniqueIdentifier>{4b33bf11-a789-44ab-84fc-25e42aeb3566}</UniqueIdentifier>
     </Filter>
@@ -230,9 +219,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-    <ResourceCompile Include="..\src\ListBoxDlg.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

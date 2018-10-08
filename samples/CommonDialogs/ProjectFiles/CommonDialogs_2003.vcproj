@@ -137,19 +137,7 @@
 				RelativePath="..\src\ListBoxDlg.cpp">
 			</File>
 			<File
-				RelativePath="..\src\ListBoxDlg.h">
-			</File>
-			<File
-				RelativePath="..\src\ListBoxDlg.rc">
-			</File>
-			<File
-				RelativePath="..\src\ListBoxDlgRC.h">
-			</File>
-			<File
 				RelativePath="..\src\Mainfrm.cpp">
-			</File>
-			<File
-				RelativePath="..\src\MRUFrame.h">
 			</File>
 			<File
 				RelativePath="..\src\MyFontDlg.cpp">
@@ -184,12 +172,6 @@
 				RelativePath="..\src\AppGlobalRC.h">
 			</File>
 			<File
-				RelativePath="..\src\AppProlog.h">
-			</File>
-			<File
-				RelativePath="..\src\AppPrologRC.h">
-			</File>
-			<File
 				RelativePath="..\src\ColorChoice.h">
 			</File>
 			<File
@@ -197,6 +179,12 @@
 			</File>
 			<File
 				RelativePath="..\src\Doc.h">
+			</File>
+			<File
+				RelativePath="..\src\ListBoxDlg.h">
+			</File>
+			<File
+				RelativePath="..\src\ListBoxDlgRC.h">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">
@@ -236,9 +224,6 @@
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
-			<File
-				RelativePath="..\src\AppGlobal.rc">
-			</File>
 			<File
 				RelativePath="..\src\Resource.rc">
 			</File>

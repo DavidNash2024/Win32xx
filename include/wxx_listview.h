@@ -313,7 +313,7 @@ namespace Win32xx
     }
 
     // Retrieves the value(lparam) specific to the item.
-    // Refer to ListView_GetItem in the Windows API documentation for more information.
+    // Refer to LVM_GETITEM in the Windows API documentation for more information.
     inline DWORD_PTR CListView::GetItemData( int item ) const
     {
         assert(IsWindow());
@@ -322,7 +322,7 @@ namespace Win32xx
         ZeroMemory(&lvi, sizeof(lvi));
         lvi.iItem = item;
         lvi.mask = LVIF_PARAM;
-        ListView_GetItem(*this, &lvi);
+        SendMessage(LVM_GETITEM, 0, (LPARAM)&lvi);
         return lvi.lParam;
     }
 
@@ -361,7 +361,7 @@ namespace Win32xx
     // Retrieves the text of the list-view item.
     // Note: Although the list-view control allows any length string to be stored
     //       as item text, only the first 260 characters are displayed.
-    // Refer to ListView_GetItem in the Windows API documentation for more information.
+    // Refer to LVM_GETITEM in the Windows API documentation for more information.
     inline CString CListView::GetItemText( int item, int subItem, UINT textMax /* = 260 */ ) const
     {
         assert(IsWindow());
@@ -376,7 +376,7 @@ namespace Win32xx
             lvi.mask = LVIF_TEXT;
             lvi.cchTextMax = textMax;
             lvi.pszText = str.GetBuffer(textMax);
-            ListView_GetItem( *this, &lvi );
+            SendMessage(LVM_GETITEM, 0 , (LPARAM)&lvi);
             str.ReleaseBuffer();
         }
         return str;
@@ -392,12 +392,12 @@ namespace Win32xx
     }
 
     // Retrieves the working areas from the list-view control.
-    // Refer to ListView_GetNumberOfWorkAreas in the Windows API documentation for more information.
+    // Refer to LVM_GETNUMBEROFWORKAREAS in the Windows API documentation for more information.
     inline UINT CListView::GetNumberOfWorkAreas( ) const
     {
         assert(IsWindow());
         UINT workAreas = 0;
-        ListView_GetNumberOfWorkAreas( *this, &workAreas );
+        SendMessage(LVM_GETNUMBEROFWORKAREAS, 0, (LPARAM)&workAreas);
         return workAreas;
     }
 
@@ -482,11 +482,11 @@ namespace Win32xx
     }
 
     // Retrieves the working areas from the list-view control.
-    // Refer to ListView_GetWorkAreas in the Windows API documentation for more information.
+    // Refer to LVM_GETWORKAREAS in the Windows API documentation for more information.
     inline void CListView::GetWorkAreas( int workAreas, LPRECT pRectArray ) const
     {
         assert(IsWindow());
-        ListView_GetWorkAreas( *this, workAreas, pRectArray );
+        SendMessage(LVM_GETWORKAREAS, (WPARAM)workAreas, (LPARAM)pRectArray);
     }
 
     // Sets the background color of the list-view control.
@@ -749,11 +749,11 @@ namespace Win32xx
     }
 
     // Sets the working area within the list-view control.
-    // Refer to ListView_SetWorkAreas in the Windows API documentation for more information.
+    // Refer to LVM_SETWORKAREAS in the Windows API documentation for more information.
     inline void CListView::SetWorkAreas( int workAreas, LPCRECT pRectArray ) const
     {
         assert(IsWindow());
-        ListView_SetWorkAreas( *this, workAreas, pRectArray );
+        SendMessage(LVM_SETWORKAREAS, (WPARAM)workAreas, (LPARAM)pRectArray);
     }
 
     // Determines which list-view item or subitem is located at a given position.
