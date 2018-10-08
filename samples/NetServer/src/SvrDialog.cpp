@@ -126,6 +126,8 @@ void CSvrDialog::AppendText(int id, LPCTSTR buf)
     ndx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
     SendDlgItemMessage(id, EM_SETSEL, ndx, ndx);
     SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(buf));
+
+	TRACE(buf); TRACE("\n");
 }
 
 // respond to the user defined message posted to the dialog

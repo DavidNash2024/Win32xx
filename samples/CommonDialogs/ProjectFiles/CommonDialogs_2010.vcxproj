@@ -170,8 +170,6 @@
     <ClCompile Include="..\src\View.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\src\AppGlobal.rc" />
-    <ResourceCompile Include="..\src\ListBoxDlg.rc" />
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

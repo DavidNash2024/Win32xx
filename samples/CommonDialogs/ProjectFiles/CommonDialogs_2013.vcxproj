@@ -80,13 +80,7 @@
     <ClInclude Include="..\src\View.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\src\ListBoxDlg.rc" />
     <ResourceCompile Include="..\src\Resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\src\res\Star.ico" />
-    <None Include="..\src\res\toolbar.bmp" />
-    <None Include="..\src\res\Win32++.manifest" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\AboutBox.cpp" />

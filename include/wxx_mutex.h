@@ -133,7 +133,7 @@ namespace Win32xx
     {
         m_event = ::CreateEvent(pAttributes, isManualReset, isInitiallySignaled, pstrName);
         if (m_event == NULL)
-            throw CWinException(_T("Unable to create event"));
+            throw CResourceException(_T("Unable to create event"));
     }
 
     // Sets the specified event object to the non-signalled state.

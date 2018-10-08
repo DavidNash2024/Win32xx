@@ -52,6 +52,8 @@
 #include "windows.h"
 #include "richedit.h"
 #include "Resource.h"
+#include "ListBoxDlgRC.h"
+#include "AppGlobalRC.h"
 
 /*==============================================================================
 
@@ -259,6 +261,34 @@ STRINGTABLE     // window-related items
 STRINGTABLE     // client area items
 {
     IDC_RICHEDITBOX         "This is a rich edit control."
+}
+
+STRINGTABLE
+{     // app-specific program values
+    IDS_APP_VERSION         "Version 1.0 (2016)"
+    IDS_ARCHIVE_FILE_EXT    ".arc"
+    IDS_DATAPATH_SUBDIR     "win32++\\"
+    IDS_DOC_DEFAULT_EXT     ".txt"
+    IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
+    IDS_MAX_MRU_ENTRIES     "5"
+}
+
+/*==============================================================================
+
+    CListBoxDlg Dialog                                                        */
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDD_CLISTVIEWBOX_DIALOG DIALOG 0, 0, 150, 160
+STYLE WS_POPUP | WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_VISIBLE | DS_SETFONT |
+    DS_MODALFRAME | DS_FIXEDSYS
+CAPTION "CListBoxDlg Dialog"
+FONT 10, "Microsoft Sans Serif"
+{
+    DEFPUSHBUTTON   "OK", IDOK, 5, 140, 30, 15
+    PUSHBUTTON      "Cancel", IDCANCEL, 115, 140, 30, 15
+    LISTBOX         IDC_LIST_BOX, 5, 5, 140, 130, WS_GROUP | WS_TABSTOP |
+                      WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
+                      LBS_NOTIFY
 }
 
 /*-----------------------------------------------------------------------------*/

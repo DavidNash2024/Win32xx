@@ -234,7 +234,7 @@ namespace Win32xx
         ZeroMemory(&tvi, sizeof(tvi));
         tvi.mask = TVIF_PARAM;
         tvi.hItem = item;
-        TreeView_GetItem( *this, &tvi );
+        SendMessage(TVM_GETITEM, 0, (LPARAM)&tvi);
         return tvi.lParam;
     }
 
@@ -434,7 +434,7 @@ namespace Win32xx
     inline void CTreeView::SetIndent(int indent) const
     {
         assert(IsWindow());
-        TreeView_SetIndent( *this, indent );
+        SendMessage(TVM_SETINDENT, (WPARAM)indent, 0);
     }
 
     // Sets the insertion mark in a tree-view control.

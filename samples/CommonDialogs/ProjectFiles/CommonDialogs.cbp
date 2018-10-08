@@ -188,9 +188,6 @@
 		<Unit filename="../src/App.h" />
 		<Unit filename="../src/AppGlobal.cpp" />
 		<Unit filename="../src/AppGlobal.h" />
-		<Unit filename="../src/AppGlobal.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Unit filename="../src/AppGlobalRC.h" />
 		<Unit filename="../src/ColorChoice.cpp" />
 		<Unit filename="../src/ColorChoice.h" />
@@ -199,9 +196,6 @@
 		<Unit filename="../src/Doc.h" />
 		<Unit filename="../src/ListBoxDlg.cpp" />
 		<Unit filename="../src/ListBoxDlg.h" />
-		<Unit filename="../src/ListBoxDlg.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
 		<Unit filename="../src/ListBoxDlgRC.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />

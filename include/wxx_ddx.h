@@ -324,7 +324,7 @@ namespace Win32xx
         sta[0] = minRange;
         sta[1] = maxRange;
 
-        DateTime_SetRange(m_lastControl, GDTR_MIN | GDTR_MAX, sta);
+        ::SendMessage(m_lastControl, DTM_SETRANGE, (WPARAM)GDTR_MIN | GDTR_MAX, (LPARAM)sta);
     }
 
 
@@ -428,7 +428,7 @@ namespace Win32xx
         memcpy(&MinMax[0], &minRange, sizeof(SYSTEMTIME));
         memcpy(&MinMax[1], &maxRange, sizeof(SYSTEMTIME));
 
-        MonthCal_SetRange(m_lastControl, limit, &MinMax);
+        ::SendMessage(m_lastControl, MCM_SETRANGE, (WPARAM)limit, (LPARAM)&MinMax);
     }
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
@@ -665,9 +665,9 @@ namespace Win32xx
         HWND control = PrepareCtrl(id);
 
         if (m_retrieveAndValidate)
-            DateTime_GetSystemtime(control, &value);
+            ::SendMessage(control, DTM_GETSYSTEMTIME, 0, (LPARAM)&value);
         else
-            DateTime_SetSystemtime(control, GDT_VALID, &value);
+            ::SendMessage(control, DTM_SETSYSTEMTIME, 0, (LPARAM)&value);
     }
 
     // This function manages the transfer of data between a list box
@@ -784,14 +784,14 @@ namespace Win32xx
 
         if (m_retrieveAndValidate)
         {
-            MonthCal_GetCurSel(control, &value);
+            ::SendMessage(control, MCM_GETCURSEL, 0, (LPARAM)&value);
             value.wHour = 0;
             value.wMinute = 0;
             value.wSecond = 0;
             value.wMilliseconds = 0;
         }
         else
-            MonthCal_SetCurSel(control, &value);
+            ::SendMessage(control, MCM_SETCURSEL, 0, (LPARAM)&value);
     }
 
     // This function manages the transfer of data between a progress control

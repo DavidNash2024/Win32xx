@@ -785,7 +785,7 @@ namespace Win32xx
 
 
 #if WINVER >= 0x0500
-    // returns the handle to the drop-down list.
+    // Returns the handle to the drop-down list.
     // Refer to GetComboBoxInfo in the Windows API documentation for more information.
     inline HWND  CComboBox::GetLBCtrl() const
     {
@@ -798,7 +798,7 @@ namespace Win32xx
     }
 #endif
 
-    //  Retrieves a string from the list of the combo box.
+    // Retrieves a string from the list of the combo box.
     // Refer to CB_GETLBTEXT in the Windows API documentation for more information.
     inline int  CComboBox::GetLBText(int index, LPTSTR pText) const
     {
@@ -848,6 +848,14 @@ namespace Win32xx
         return (int)SendMessage(CB_INSERTSTRING, (WPARAM)index, (LPARAM)pString);
     }
 
+    // Limits the length of the text the user may type into the edit control of the combo box.
+    // Refer to CB_LIMITTEXT in the Windows API documentation for more information.
+    inline void CComboBox::LimitText(int maxChars) const
+    {
+        assert(IsWindow());
+        SendMessage(CB_LIMITTEXT, (WPARAM)maxChars, 0);
+    }
+
     // Handle messages reflected back from the parent window.
     // Override this function in your derived class to handle these special messages:
     // WM_COMMAND, WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG, WM_CTLCOLORLISTBOX,
@@ -870,14 +878,6 @@ namespace Win32xx
     {
         assert(IsWindow());
         SendMessage(WM_PASTE, 0, 0);
-    }
-
-    // Limits the length of the text the user may type into the edit control of the combo box.
-    // Refer to CB_LIMITTEXT in the Windows API documentation for more information.
-    inline void CComboBox::LimitText(int maxChars) const
-    {
-        assert(IsWindow());
-        SendMessage(CB_LIMITTEXT, (WPARAM)maxChars, 0);
     }
 
     // Removes all items from the list box and edit control of the combo box.
@@ -1544,13 +1544,13 @@ namespace Win32xx
     }
 
     // Retrieves the currently selected date.
-    // Refer to MonthCal_GetCurSel in the Windows API documentation for more information.
+    // Refer to MCM_GETCURSEL in the Windows API documentation for more information.
     inline SYSTEMTIME CMonthCalendar::GetCurSel() const
     {
         assert(IsWindow());
         SYSTEMTIME st;
         ZeroMemory(&st, sizeof(st));
-        MonthCal_GetCurSel(*this, &st);
+        SendMessage(MCM_GETCURSEL, 0, (LPARAM)&st);
         return st;
     }
 
@@ -1643,7 +1643,7 @@ namespace Win32xx
         return DateTime;
     }
 
-    //  Determines which portion of the month calendar control is at a given point on the screen.
+    // Determines which portion of the month calendar control is at a given point on the screen.
     // Refer to MonthCal_HitTest in the Windows API documentation for more information.
     inline LRESULT CMonthCalendar::HitTest(MCHITTESTINFO& mcHitTest) const
     {
