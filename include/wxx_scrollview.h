@@ -170,19 +170,19 @@ namespace Win32xx
 
         switch (LOWORD(wparam))
         {
-        case SB_PAGEUP: // User clicked the scroll bar shaft left of the scroll box.
+        case SB_PAGELEFT: // User clicked the scroll bar shaft left of the scroll box.
             xNewPos = m_currentPos.x - m_pageSize.cx;
             break;
 
-        case SB_PAGEDOWN: // User clicked the scroll bar shaft right of the scroll box.
+        case SB_PAGERIGHT: // User clicked the scroll bar shaft right of the scroll box.
             xNewPos = m_currentPos.x + m_pageSize.cx;
             break;
 
-        case SB_LINEUP: // User clicked the left arrow.
+        case SB_LINELEFT: // User clicked the left arrow.
             xNewPos = m_currentPos.x - m_lineSize.cx;
             break;
 
-        case SB_LINEDOWN: // User clicked the right arrow.
+        case SB_LINERIGHT: // User clicked the right arrow.
             xNewPos = m_currentPos.x + m_lineSize.cx;
             break;
 

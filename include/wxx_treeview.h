@@ -271,6 +271,7 @@ namespace Win32xx
     }
 
     // Retrieves the text for a tree-view item.
+    // Retrieves the text for a tree-view item.
     // Note: Although the tree-view control allows any length string to be stored
     //       as item text, only the first 260 characters are displayed.
     // Refer to TVM_GETITEM in the Windows API documentation for more information.

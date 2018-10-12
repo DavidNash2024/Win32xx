@@ -356,7 +356,7 @@ namespace Win32xx
     }
 
     // Arranges the MDI children in a cascade formation.
-    // Possible values for nType are:
+    // Possible values for type are:
     // MDITILE_SKIPDISABLED Prevents disabled MDI child windows from being cascaded.
     // Refer to WM_MDICASCADE in the Windows API documentation for more information.
     template <class T>
@@ -416,7 +416,7 @@ namespace Win32xx
     }
 
     // Arrange all of the MDI child windows in a tile format.
-    // Possible values for nType are:
+    // Possible values for type are:
     // MDITILE_HORIZONTAL   Tiles MDI child windows so that one window appears above another.
     // MDITILE_SKIPDISABLED Prevents disabled MDI child windows from being tiled.
     // MDITILE_VERTICAL     Tiles MDI child windows so that one window appears beside another.

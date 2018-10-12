@@ -152,7 +152,7 @@ namespace Win32xx
     }
 
     // Retrieves the text from a part in the status bar.
-    // Refer to SB_GETTEXTLENGTH in the Windows API documentation for more information.                 
+    // Refer to SB_GETTEXT in the Windows API documentation for more information.                 
     inline CString CStatusBar::GetPartText(int part) const
     {
         assert(IsWindow());
@@ -220,6 +220,7 @@ namespace Win32xx
 
     // Changes the width of an existing pane, or creates a new pane with the specified width.
     // A width of -1 for the last part sets the width to the border of the window.
+	// Refer to SB_SETPARTS in the Windows API documentation for more information.
     inline BOOL CStatusBar::SetPartWidth(int part, int width) const
     {
         assert(IsWindow());

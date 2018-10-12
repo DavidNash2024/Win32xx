@@ -45,6 +45,16 @@ New Features and Enhancements
 * Updated CImageList
 * CRichEdit now supports RichEdit version 4.1 if available (XP and above).
 * The Notepad sample now supports UTF-8.
+* Added 5 new CResizer alignments for controls. They can be aligned as follows:
+  - topleft:      Positions top left
+  - topright:     Positions top right
+  - bottomleft:   Positions bottom left
+  - bottomright:  Positions bottom right
+  - center:	   Positions proportionally
+  - leftcenter:   Positions proportionally along the left side
+  - rightcenter:  Positions proportionally along the right side
+  - topcenter:    Positions proportionally along the top side
+  - bottomcenter: Positions proportionally along the bottom side
 
 
 Changes in detail

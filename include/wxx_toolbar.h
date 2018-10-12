@@ -238,7 +238,7 @@ namespace Win32xx
         return (SendMessage(TB_ADDBUTTONS, (WPARAM)1, (LPARAM)&tbb) != 0);
     }
 
-    // Adds one or more buttons to a ToolBar. lpButtons is a pointer to an array of TBBUTTON.
+    // Adds one or more buttons to a ToolBar. pButtonInfoArray is a pointer to an array of TBBUTTON.
     // Refer to TB_ADDBUTTONS in the Windows API documentation for more information.
     inline BOOL CToolBar::AddButtons(UINT buttonCount, LPTBBUTTON pButtonInfoArray) const
     {
@@ -793,7 +793,7 @@ namespace Win32xx
     }
 
     // Saves or restores the toolbar state in the registry. Parameter values:
-    //   Save   If this parameter is TRUE, the information is saved, otherwise it is restored.
+    //   save   If this parameter is TRUE, the information is saved, otherwise it is restored.
     //   pSaveInfo  Pointer to a TBSAVEPARAMS structure that specifies the registry key, subkey,
     //          and value name for the toolbar state information.
     // Refer to TB_SAVERESTORE in the Windows API documentation for more information.
