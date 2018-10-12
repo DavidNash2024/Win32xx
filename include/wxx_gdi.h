@@ -2398,7 +2398,7 @@ namespace Win32xx
         return ::CombineRgn(reinterpret_cast<HRGN>(GetHandle()), hSrc, NULL, RGN_COPY);
     }
 
-    // Checks the two specified regions to determine whether they are identical.
+    // Checks the two regions to determine whether they are identical.
     // Refer to EqualRgn in the Windows API documentation for more information.
     inline BOOL CRgn::EqualRgn(HRGN rgn) const
     {
@@ -3059,7 +3059,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-    // creates and selects a new bitmap using the bitmap data and colors specified by
+    // Creates and selects a new bitmap using the bitmap data and colors specified by
     // the bitmap resource and the color mapping information.
     // Refer to CreateMappedBitmap in the Windows API documentation for more information.
     inline void CDC::CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
@@ -3459,7 +3459,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-    // Creates the elliptical region from the bounding rectangle co-ordinates.
+    // Creates the elliptical region from the bounding rectangle co-ordinates,
     // and selects it into the device context.
     // The return value specifies the region's complexity: NULLREGION;SIMPLEREGION;COMPLEXREGION;ERROR.
     // Refer to CreateEllipticRgn in the Windows API documentation for more information.
@@ -4717,7 +4717,7 @@ namespace Win32xx
     }
 
     // Retrieves the text-alignment setting.
-    // Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP.
+    // Return values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP.
     // Refer to GetTextAlign in the Windows API documentation for more information.
     inline UINT CDC::GetTextAlign() const
     {
@@ -4726,7 +4726,7 @@ namespace Win32xx
     }
 
     // Sets the text-alignment setting.
-    // Values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP.
+    // Return values: TA_BASELINE, TA_BOTTOM, TA_TOP, TA_CENTER, TA_LEFT, TA_RIGHT, TA_RTLREADING, TA_NOUPDATECP, TA_UPDATECP.
     // Refer to SetTextAlign in the Windows API documentation for more information.
     inline UINT CDC::SetTextAlign(UINT flags) const
     {

@@ -686,7 +686,7 @@ namespace Win32xx
     }
 
     // Changes the state of an item in the list-view control.
-    // Possible values of nMask:
+    // Possible values of mask:
     // LVIS_CUT             The item is marked for a cut-and-paste operation.
     // LVIS_DROPHILITED     The item is highlighted as a drag-and-drop target.
     // LVIS_FOCUSED         The item has the focus, so it is surrounded by a standard focus rectangle.

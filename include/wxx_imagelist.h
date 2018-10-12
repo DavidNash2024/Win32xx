@@ -244,8 +244,7 @@ namespace Win32xx
         return ImageList_ReplaceIcon(m_pData->images, -1, icon);
     }
 
-    // Attaches an existing ImageList to this CImageList
-    // images can be NULL
+    // Attaches an existing ImageList to this CImageList.
     inline void CImageList::Attach(HIMAGELIST images)
     {
         assert(m_pData);
@@ -485,7 +484,7 @@ namespace Win32xx
         ImageList_EndDrag();
     }
     
-    // Calls the GetIcon function to create an icon or cursor based on an image and mask in an image list.
+    // Creates an icon or cursor based on an image and mask in an image list.
     // Refer to ImageList_ExtractIcon in the Windows API documentation for more information.
     inline HICON CImageList::ExtractIcon(int index) const
     {
@@ -503,7 +502,7 @@ namespace Win32xx
 
     // Retrieves the temporary image list that is used for the drag image.
     // pHotspot - Pointer to a POINT structure that receives the offset of the
-    // drag image relative to the drag position.Can be NULL.
+    // drag image relative to the drag position. Can be NULL.
     // Refer to ImageList_GetDragImage in the Windows API documentation for more information.
     inline HIMAGELIST CImageList::GetDragImage(POINT* pPoint, POINT* pHotspot) const
     {

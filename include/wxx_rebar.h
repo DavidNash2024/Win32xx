@@ -555,6 +555,7 @@ namespace Win32xx
     }
 
     // Show or hide a band.
+	// Refer to RB_SHOWBAND in the Windows API documentation for more information.
     inline BOOL CReBar::ShowBand(int band, BOOL show) const
     {
         assert(IsWindow());

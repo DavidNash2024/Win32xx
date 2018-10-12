@@ -484,7 +484,7 @@ namespace Win32xx
         m_windowTitle.Empty();
     }
 
-    // The dwCommonButtons parameter can be a combination of:
+    // The commonButtons parameter can be a combination of:
     //  TDCBF_OK_BUTTON         OK button
     //  TDCBF_YES_BUTTON        Yes button
     //  TDCBF_NO_BUTTON         No button
@@ -785,7 +785,7 @@ namespace Win32xx
 
     // Updates a text element on the TaskDialog after it is created. The size of the TaskDialog
     // is not adjusted to accomodate the new text.
-    // Possible eElement values are:
+    // Possible element values are:
     // TDE_CONTENT, TDE_EXPANDED_INFORMATION, TDE_FOOTER, TDE_MAIN_INSTRUCTION.
     // Refer to TDM_UPDATE_ELEMENT_TEXT in the Windows API documentation for more information.
     inline void CTaskDialog::UpdateElementText(TASKDIALOG_ELEMENTS element, LPCTSTR pNewText) const

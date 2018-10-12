@@ -658,7 +658,7 @@ namespace Win32xx
         return static_cast<int>(SendMessage(EM_LINEINDEX, (WPARAM)lineIndex, 0));
     }
 
-    // Retrieves the length of a given line.
+    // Retrieves the length of a given line containing the specified character.
     // charIndex - Specifies the character index of a character in the line whose length is to be retrieved.
     //             This parameter can be –1. In this case, the message returns the number of unselected
     //             characters on lines containing selected characters.
