@@ -48,7 +48,7 @@
 //            to reset the state of an event object to non-signalled. Threads can check
 //            the status of the event with one of the wait functions. When the state of
 //            an auto-reset event object is signalled, it remains signalled until a 
-//            single waiting thread is released; the system then automatically resets the
+//            single waiting thread is released. The system then automatically resets the
 //            state to non-signalled. If no threads are waiting, the event object's state
 //            remains signalled.
 //

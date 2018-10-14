@@ -263,8 +263,8 @@ namespace Win32xx
         BOOL  GetScrollRange(int barType, int& minPos, int& maxPos) const;
         CMenu GetSystemMenu(BOOL revertToDefault) const;
         CWnd  GetTopWindow() const;
-        BOOL  GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
-        BOOL  HiliteMenuItem(HMENU menu, UINT itemHilite, UINT hilite) const;
+        BOOL  GetWindowPlacement(WINDOWPLACEMENT& wp) const;
+        BOOL  HiliteMenuItem(HMENU menu, UINT itemID, UINT hilite) const;
         BOOL  IsIconic() const;
         BOOL  IsZoomed() const;
         BOOL  LockWindowUpdate() const;
