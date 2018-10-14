@@ -241,9 +241,9 @@ namespace Win32xx
     class CFontDialog : public CCommonDialog
     {
     public:
-        CFontDialog(const LOGFONT& initial, DWORD flags = 0, HDC hPrinter = 0);
-        CFontDialog(const CHARFORMAT& charformat, DWORD flags = 0, HDC hPrinter = 0);
-        CFontDialog(DWORD flags = 0, HDC hPrinter = 0);
+        CFontDialog(const LOGFONT& initial, DWORD flags = 0, HDC printer = 0);
+        CFontDialog(const CHARFORMAT& charformat, DWORD flags = 0, HDC printer = 0);
+        CFontDialog(DWORD flags = 0, HDC printer = 0);
 
         virtual ~CFontDialog(void)  {}
 

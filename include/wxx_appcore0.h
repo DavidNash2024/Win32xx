@@ -189,7 +189,7 @@ using namespace Win32xx;
 #define MIN(a,b)        (((a) < (b)) ? (a) : (b))
 
 // Version macro
-#define _WIN32XX_VER 0x0851     // Win32++ version 8.5.1
+#define _WIN32XX_VER 0x0860     // Win32++ version 8.6.0
 
 // Define the TRACE Macro
 // In debug mode, TRACE send text to the debug/output pane, or an external debugger
@@ -720,12 +720,12 @@ namespace Win32xx
     }
 
     // Copies a TCHAR string from src to dst.
-    inline void StrCopy(TCHAR* dst, const TCHAR* src, size_t charCount)
+    inline void StrCopy(TCHAR* dst, const TCHAR* src, size_t dst_size)
     {
 #ifdef UNICODE
-        StrCopyW(dst, src, charCount);
+        StrCopyW(dst, src, dst_size);
 #else
-        StrCopyA(dst, src, charCount);
+        StrCopyA(dst, src, dst_size);
 #endif
     }
 

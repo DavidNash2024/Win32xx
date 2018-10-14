@@ -584,7 +584,7 @@ namespace Win32xx
 
     }
 
-    // Retrieves the most recent network error.
+    // Returns a string containing the most recent network error.
     // Refer to WSAGetLastError in the Windows API documentation for additional information.
     inline CString CSocket::GetErrorString() const
     {

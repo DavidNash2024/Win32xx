@@ -97,7 +97,7 @@ namespace Win32xx
         virtual ~CEdit() {}
 
         // Attributes
-        void   AppendText(LPCTSTR pText);
+        void   AppendText(LPCTSTR pText) const;
         BOOL   CanUndo() const;
         int    CharFromPos(CPoint pt) const;
         int    GetFirstVisibleLine() const;
@@ -392,8 +392,8 @@ namespace Win32xx
     // Definitions for the CEdit class
     //
 
-    // Adds text to the end of the document
-    inline void CEdit::AppendText(LPCTSTR pText)
+    // Adds text to the end of the document.
+    inline void CEdit::AppendText(LPCTSTR pText) const
     {
         LRESULT position = SendMessage(WM_GETTEXTLENGTH, 0, 0);
         SendMessage(EM_SETSEL, (WPARAM)position, (LPARAM)position);

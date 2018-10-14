@@ -2232,18 +2232,18 @@ namespace Win32xx
     // The GetWindowPlacement function retrieves the show state and the restored,
     // minimized, and maximized positions of the window.
     // Refer to GetWindowPlacement in the Windows API documentation for more information.
-    inline BOOL CWnd::GetWindowPlacement(WINDOWPLACEMENT& wndpl) const
+    inline BOOL CWnd::GetWindowPlacement(WINDOWPLACEMENT& wp) const
     {
         assert(IsWindow());
-        return ::GetWindowPlacement(*this, &wndpl);
+        return ::GetWindowPlacement(*this, &wp);
     }
 
     // The HiliteMenuItem function highlights or removes the highlighting from an item in a menu bar.
     // Refer to HiliteMenuItem in the Windows API documentation for more information.
-    inline BOOL CWnd::HiliteMenuItem(HMENU menu, UINT itemHilite, UINT hilite) const
+    inline BOOL CWnd::HiliteMenuItem(HMENU menu, UINT itemID, UINT hilite) const
     {
         assert(IsWindow());
-        return ::HiliteMenuItem(*this, menu, itemHilite, hilite);
+        return ::HiliteMenuItem(*this, menu, itemID, hilite);
     }
 
     // The IsIconic function determines whether the window is minimized (iconic).
