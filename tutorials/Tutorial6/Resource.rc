@@ -64,14 +64,14 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "res/paintbrush.ico"
+IDW_MAIN                ICON                    "res/Paintbrush.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "res/toolbar.bmp"
+IDW_MAIN                BITMAP                  "res/Toolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

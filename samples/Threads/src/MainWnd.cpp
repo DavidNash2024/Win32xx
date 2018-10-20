@@ -105,8 +105,7 @@ void CMainWindow::OnClose()
     std::vector<MyThreadPtr>::iterator iter;
     for (iter = m_vMyThread.begin(); iter < m_vMyThread.end(); ++iter)
     {
-        if ((*iter)->GetTestWnd()->IsWindow())
-            (*iter)->GetTestWnd()->SendMessage(WM_CLOSE, 0, 0);
+		SendMessage( (*iter)->GetTestWnd()->GetHwnd(), WM_CLOSE, 0, 0 );
     }
 
     Destroy();
