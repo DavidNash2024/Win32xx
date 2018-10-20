@@ -107,6 +107,10 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_PEN_COLOR );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
+	
+    // Note: By default a single bitmap with a resource ID of IDW_MAIN and
+    //       a color mask of RGB(192,192,192) is used for the ToolBar. 
+    //       The color mask is a color used for transparency.	
 }
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

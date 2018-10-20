@@ -73,7 +73,7 @@ IDW_MAIN                 ICON                    "../src/res/Paintbrush.ico"
 // Bitmap
 //
 
-IDW_MAIN                 BITMAP                  "../src/res/toolbar.bmp"
+IDW_MAIN                 BITMAP                  "../src/res/Toolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
