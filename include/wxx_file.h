@@ -1,5 +1,5 @@
-// Win32++   Version 8.5.1
-// Release Date: TBA
+// Win32++   Version 8.6
+// Release Date: 2nd November 2018
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -206,10 +206,8 @@ namespace Win32xx
     inline CString CFile::GetFileNameExt() const
     {
         CString extension;
-
         int dot = m_fileName.ReverseFind(_T('.'));
-        if (dot > 0)
-            extension = m_fileName.Mid(dot+1, lstrlen(m_fileName));
+        extension = m_fileName.Mid(dot+1, lstrlen(m_fileName));
 
         return extension;
     }
@@ -217,11 +215,9 @@ namespace Win32xx
     // Returns the filename of the file associated with this object, not including the directory, without its extension.
     inline CString CFile::GetFileNameWOExt() const
     {
-        CString fileNameWOExt = m_fileName;
-
+        CString fileNameWOExt;
         int dot = m_fileName.ReverseFind(_T('.'));
-        if (dot > 0)
-            fileNameWOExt = m_fileName.Left(dot);
+        fileNameWOExt = m_fileName.Left(dot);
 
         return fileNameWOExt;
     }
