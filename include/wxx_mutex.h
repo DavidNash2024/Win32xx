@@ -1,4 +1,5 @@
-// Release Date: TBA
+// Win32++   Version 8.6
+// Release Date: 2nd November 2018
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
