@@ -840,7 +840,7 @@ namespace Win32xx
             {
                 if (m_retrieveAndValidate) // if asked to read the control
                 {
-                    if (::SendMessage(control, BM_GETCHECK, 0, 0) != 0) // is this button set?
+                    if (::SendMessage(control, BM_GETCHECK, 0, 0) == BST_CHECKED) // is this button set?
                     {
                         // Record the value the first time, but if it happens again, there
                         // is an error--only one button checked is allowed.

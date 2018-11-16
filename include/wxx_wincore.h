@@ -464,9 +464,39 @@ namespace Win32xx
     //  or other window that utilize the DDX/DDV functions.
     inline void CWnd::DoDataExchange(CDataExchange& dx)
     {
-          // Any dialog or window using DDX/DDV for its controls should
-          // override of this member, and put calls to the DDX and DDV functions
-          // there.
+        // Any dialog or window using DDX/DDV for its controls should
+        // override of this member, and put calls to the DDX and DDV functions
+        // there.  For example:
+		
+        // connect to edit box holding int and specify limits.
+        // dx.DDX_Text(IDC_EDIT_UINT,       m_iUINT);
+        // dx.DDV_MinMaxUInt(               m_iUINT, 10, 10000);		
+		  
+		// connect to edit box holding double and specify limits.
+		// dx.DDX_Text(IDC_EDIT_DOUBLE,     m_double);
+		// dx.DDV_MinMaxDouble(             m_double, -10.0, 100000.);
+        //
+		// connect to rich edit box holding a string and specify length.
+		// dx.DDX_Text(IDC_EDIT_RICHEDIT,   m_richEdit);
+		// dx.DDV_MaxChars(                 m_richEdit, 25); // limit length
+        //
+		// connect to slider control and specify limits.
+		// dx.DDX_Slider(IDC_SLIDER,        m_slider);
+		// dx.DDV_MinMaxSlider(             m_slider, 0, 1000);
+        //
+		// connect to progress bar.
+		// dx.DDX_Progress(IDC_PROGRESSBAR, m_progress);
+        //
+		// connect to bar to scroll bar.
+		// dx.DDX_Scroll(  IDC_SCROLLBAR,   m_scrollBar);
+        //
+		// connect to radio boxes.
+		// dx.DDX_Radio( IDC_RADIO_A,       m_radioA);
+        //
+		// connect to check boxes.
+		// dx.DDX_Check(IDC_CHECK_A,        m_checkA);
+		// dx.DDX_Check(IDC_CHECK_B,        m_checkB);
+		// dx.DDX_Check(IDC_CHECK_C,        m_checkC);
 
         UNREFERENCED_PARAMETER(dx);
     }
@@ -572,7 +602,7 @@ namespace Win32xx
         Destroy();
     }
 
-    // Called when the user interacts with the menu or toolar.
+    // Called when the user interacts with the menu or toolbar.
     inline BOOL CWnd::OnCommand(WPARAM wparam, LPARAM lparam)
     {
         UNREFERENCED_PARAMETER(wparam);
@@ -1008,19 +1038,19 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
     //  Dialog Data Exchange support. Call this function to retrieve values from
-    //  (retrieveAndValidate is TRUE) or assign values to (RetrieveAndValidate
+    //  (retrieveAndValidate is TRUE) or assign values to (retrieveAndValidate
     //  is FALSE) a set of controls appearing in DDX/DDV statements in an
     //  override of the DoDataExchange() member method.
     //
-    //  Return TRUE if the operation is successful, or FALSE otherwise. If
-    //  called when bRetrieveValidate is TRUE, success means the data has
+    //  Returns TRUE if the operation is successful, or FALSE otherwise. If
+    //  called when retrieveValidate is TRUE, success means the data has
     //  been validated.
     inline BOOL CWnd::UpdateData(CDataExchange& dx, BOOL retrieveAndValidate)
     {
         // must not update data before the window is created
         assert(IsWindow());
 
-        // A critical section ensures threads update the data seperately
+        // A critical section ensures threads update the data separately
         CThreadLock lock(GetApp().m_appLock);
 
         dx.Init(*this, retrieveAndValidate);
@@ -1035,7 +1065,7 @@ namespace Win32xx
                 ::SetFocus(dx.GetLastEditControl());
                 ::SendMessage(dx.GetLastEditControl(), EM_SETSEL, 0, -1);
             }
-            ok = TRUE; // DoDataExchage completed succesfully
+            ok = TRUE; // DoDataExchage completed successfully
         }
         catch(const CUserException& e)
         {

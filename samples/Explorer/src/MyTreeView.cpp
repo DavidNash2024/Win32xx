@@ -142,7 +142,7 @@ LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
         ZeroMemory(&sfi, sizeof(SHFILEINFO));
 
         //get the unselected image for this item
-        if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_LINKOVERLAY))
+        if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
             pDI->item.iImage = sfi.iIcon;
     }
 
@@ -242,7 +242,7 @@ void CMyTreeView::EnumObjects(HTREEITEM parentItem, CShellFolder& parentFolder, 
                 itemInfo.state |= INDEXTOOVERLAYMASK(1); //1 is the index for the shared overlay image
             }
 
-            //fill in the TV_INSERTSTRUCT structure for this item
+            //fill in the TVINSERTSTRUCT structure for this item
             TVINSERTSTRUCT insertInfo;
             ZeroMemory(&insertInfo, sizeof(insertInfo));
             insertInfo.item = itemInfo;
@@ -328,8 +328,8 @@ BOOL CMyTreeView::GetRootItems()
         //assume the desktop has children
         itemInfo.cChildren = TRUE;
 
-        //fill in the TV_INSERTSTRUCT structure for this item
-        TV_INSERTSTRUCT   insertInfo;
+        //fill in the TVINSERTSTRUCT structure for this item
+        TVINSERTSTRUCT   insertInfo;
         ZeroMemory(&insertInfo, sizeof(insertInfo));
         insertInfo.item = itemInfo;
         insertInfo.hInsertAfter = TVI_LAST;
