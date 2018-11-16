@@ -187,7 +187,7 @@ namespace Win32xx
     // Example usage:
     //   CDevMode  pDevMode(hDevMode);      // and use pDevMode as if it were a LPDEVMODE
     //   CDevNames pDevNames(hDevNames);    // and use pDevNames as if it were a LPDEVNAMES
-    //   assert(hDevNames.Get());           // Get can be used to access the underlying pointer
+    //   assert(pDevNames.Get());           // Get can be used to access the underlying pointer
     //
     /////////////////////////////////////////////////////////////////////
 

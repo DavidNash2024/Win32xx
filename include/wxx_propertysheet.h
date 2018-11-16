@@ -615,8 +615,9 @@ namespace Win32xx
 
                 CPropertySheet* w = static_cast<CPropertySheet*>(pTLSData->pWnd);
                 assert(w);
-
-                w->Attach(wnd);
+				
+				if (w != 0)
+					w->Attach(wnd);
             }
             break;
         }
