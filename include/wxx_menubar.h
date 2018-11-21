@@ -1052,7 +1052,8 @@ namespace Win32xx
         assert(IsWindow());
 
         m_topMenu = menu;
-        int maxedOffset = (IsMDIChildMaxed()? 1:0);
+        const int baseID = 16;
+        const int maxedOffset = (IsMDIChildMaxed()? baseID + 1 : baseID);
 
         // Remove any existing buttons
         while (SendMessage(TB_BUTTONCOUNT,  0, 0) > 0)
@@ -1070,11 +1071,12 @@ namespace Win32xx
             // Later we will custom draw the window icon over this button
             TBBUTTON tbb;
             ZeroMemory(&tbb, sizeof(tbb));
+            tbb.idCommand = baseID;
             tbb.fsState = TBSTATE_ENABLED;
             tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
             tbb.iString = reinterpret_cast<INT_PTR>(_T(" "));
             SendMessage(TB_ADDBUTTONS, (WPARAM)1, (LPARAM)(&tbb));
-            SetButtonText(0, _T("    "));
+            SetButtonText(baseID, _T("    "));
         }
 
         for (int i = 0 ; i < ::GetMenuItemCount(menu); ++i)
@@ -1092,7 +1094,7 @@ namespace Win32xx
             std::vector<TCHAR> menuName( MAX_MENU_STRING+1, _T('\0') );
             TCHAR* pMenuName = &menuName[0];
             GetMenuString(menu, i, pMenuName, MAX_MENU_STRING, MF_BYPOSITION);
-            SetButtonText(i  + maxedOffset, pMenuName);
+            SetButtonText(i + maxedOffset, pMenuName);
         }
     }
 

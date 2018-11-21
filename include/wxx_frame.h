@@ -1256,9 +1256,10 @@ namespace Win32xx
             {
                 CRect rc = lpNMCustomDraw->nmcd.rc;
                 int state = lpNMCustomDraw->nmcd.uItemState;
+                const int baseID = 16;
                 DWORD item = static_cast<DWORD>(lpNMCustomDraw->nmcd.dwItemSpec);
 
-                if (IsMDIChildMaxed() && (0 == item))
+                if (IsMDIChildMaxed() && (item == baseID))
                 // Draw over MDI Max button
                 {
                     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
