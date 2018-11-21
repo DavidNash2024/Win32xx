@@ -97,7 +97,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
-     UseReBar(FALSE);              // Don't use a ReBar
+    // UseReBar(FALSE);              // Don't use a ReBar
     // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
