@@ -714,17 +714,17 @@ namespace Win32xx
         BOOL SetViewportOrgEx(POINT point, LPPOINT pPointRet = NULL) const;
         BOOL OffsetViewportOrgEx(int width, int height, LPPOINT pPoint = NULL) const;
         BOOL GetViewportExtEx(LPSIZE pSize)  const;
-        BOOL SetViewportExtEx(int x, int y, LPSIZE pSize) const;
-        BOOL SetViewportExtEx(SIZE size, LPSIZE pSizeRet) const;
-        BOOL ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE pSize) const;
+        BOOL SetViewportExtEx(int x, int y, LPSIZE pSize = NULL) const;
+        BOOL SetViewportExtEx(SIZE size, LPSIZE pSizeRet = NULL) const;
+        BOOL ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE pSize = NULL) const;
         BOOL GetWindowExtEx(LPSIZE pSize)  const;
-        BOOL SetWindowExtEx(int x, int y, LPSIZE pSize) const;
-        BOOL SetWindowExtEx(SIZE size, LPSIZE pSizeRet) const;
-        BOOL ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE pSize) const;
+        BOOL SetWindowExtEx(int x, int y, LPSIZE pSize = NULL) const;
+        BOOL SetWindowExtEx(SIZE size, LPSIZE pSizeRet = NULL) const;
+        BOOL ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE pSize = NULL) const;
         BOOL GetWindowOrgEx(LPPOINT pPoint)  const;
-        BOOL SetWindowOrgEx(int x, int y, LPPOINT pPoint) const;
-        BOOL SetWindowOrgEx(POINT point, LPPOINT pPointRet) const;
-        BOOL OffsetWindowOrgEx(int width, int height, LPPOINT pPoint) const;
+        BOOL SetWindowOrgEx(int x, int y, LPPOINT pPoint = NULL) const;
+        BOOL SetWindowOrgEx(POINT point, LPPOINT pPointRet = NULL) const;
+        BOOL OffsetWindowOrgEx(int width, int height, LPPOINT pPoint = NULL) const;
 #endif
 
         // MetaFile Functions
