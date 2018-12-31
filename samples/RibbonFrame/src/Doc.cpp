@@ -6,7 +6,7 @@
 
 const CView& CDoc::GetView() const
 {
-    CMainFrame& frame = GetRibbonFrameApp().GetMainFrame();
+    CMainFrame& frame = GetRibbonFrameApp()->GetMainFrame();
     return static_cast<CView&>(frame.GetView());
 }
 

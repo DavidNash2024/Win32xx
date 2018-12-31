@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CMDIFrameSplitterApp object
-inline CMDIFrameSplitterApp& GetMDIApp() { return static_cast<CMDIFrameSplitterApp&>(GetApp()); }
+// returns a pointer to the CMDIFrameSplitterApp object
+inline CMDIFrameSplitterApp* GetMDIApp() { return static_cast<CMDIFrameSplitterApp*>(GetApp()); }
 
 
 #endif // MDIFRAMESPLITTERAPP_H

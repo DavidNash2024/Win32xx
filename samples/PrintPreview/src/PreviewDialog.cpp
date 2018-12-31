@@ -19,17 +19,17 @@ CPreviewPane::CPreviewPane()
     WNDCLASS wc;
     ZeroMemory(&wc, sizeof(WNDCLASS));
 
-    if (!::GetClassInfo(GetApp().GetInstanceHandle(), className, &wc))
+    if (!::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc))
     {
         wc.lpszClassName = className;
         wc.lpfnWndProc = ::DefWindowProc;
-        wc.hInstance = GetApp().GetInstanceHandle();
+        wc.hInstance = GetApp()->GetInstanceHandle();
         wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
         wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
         ::RegisterClass(&wc);
     }
 
-    assert(::GetClassInfo(GetApp().GetInstanceHandle(), className, &wc));
+    assert(::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc));
 }
 
 BOOL CPreviewPane::OnEraseBkgnd(CDC& )
@@ -132,7 +132,7 @@ CPreviewDialog::~CPreviewDialog()
 
 CRichEdit& CPreviewDialog::GetRichView()
 {
-    CMainFrame& MainFrame = GetTextApp().GetMainFrame();
+    CMainFrame& MainFrame = GetTextApp()->GetMainFrame();
     return MainFrame.GetRichView();
 }
 

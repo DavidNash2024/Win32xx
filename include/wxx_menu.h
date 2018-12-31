@@ -200,7 +200,7 @@ namespace Win32xx
     {
         m_pData = new CMenu_Data;
 
-        HMENU menu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(id));
+        HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(id));
         Attach(menu);
         m_pData->isManagedMenu = TRUE;
     }
@@ -245,11 +245,11 @@ namespace Win32xx
     // Store the HMENU and CMenu pointer in the HMENU map
     inline void CMenu::AddToMap() const
     {
-        assert( &GetApp() );
+        assert( GetApp() );
         assert(m_pData);
         assert(m_pData->menu);
 
-        GetApp().AddCMenuData(m_pData->menu, m_pData);
+        GetApp()->AddCMenuData(m_pData->menu, m_pData);
     }
 
     inline void CMenu::Release()
@@ -277,18 +277,18 @@ namespace Win32xx
     {
         BOOL success = FALSE;
 
-        if ( &GetApp() )
+        if ( GetApp() )
         {
             // Allocate an iterator for our HMENU map
             std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
 
-            CWinApp& app = GetApp();
-            CThreadLock mapLock(app.m_wndLock);
-            m = app.m_mapCMenuData.find(m_pData->menu);
-            if (m != app.m_mapCMenuData.end())
+            CWinApp* pApp = GetApp();
+            CThreadLock mapLock(pApp->m_wndLock);
+            m = pApp->m_mapCMenuData.find(m_pData->menu);
+            if (m != pApp->m_mapCMenuData.end())
             {
                 // Erase the Menu pointer entry from the map
-                app.m_mapCMenuData.erase(m);
+				pApp->m_mapCMenuData.erase(m);
                 success = TRUE;
             }
 
@@ -332,7 +332,7 @@ namespace Win32xx
             if (menu)
             {
                 // Add the menu to this CMenu
-                CMenu_Data* pCMenuData = GetApp().GetCMenuData(menu);
+                CMenu_Data* pCMenuData = GetApp()->GetCMenuData(menu);
                 if (pCMenuData)
                 {
                     delete m_pData;
@@ -636,7 +636,7 @@ namespace Win32xx
         assert(m_pData);
         assert(NULL == m_pData->menu);
         assert(pResName);
-        m_pData->menu = ::LoadMenu(GetApp().GetResourceHandle(), pResName);
+        m_pData->menu = ::LoadMenu(GetApp()->GetResourceHandle(), pResName);
         if (m_pData->menu != 0) AddToMap();
         return NULL != m_pData->menu;
     }
@@ -647,7 +647,7 @@ namespace Win32xx
     {
         assert(m_pData);
         assert(NULL == m_pData->menu);
-        m_pData->menu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(resID));
+        m_pData->menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(resID));
         if (m_pData->menu != 0) AddToMap();
         return NULL != m_pData->menu;
     }

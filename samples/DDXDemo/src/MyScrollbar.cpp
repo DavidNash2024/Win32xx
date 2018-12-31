@@ -106,7 +106,7 @@ OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)          /*
     }
 
       // get a view dialog reference
-    CView& theView = TheApp().TheFrame()->TheView();
+    CView& theView = TheApp()->TheFrame()->TheView();
       // get the scoll bar position, set slider and progress to same
     theView.m_iSlider = theView.m_iScrollBar =
         theView.m_iProgress = m_siScroll.nPos;

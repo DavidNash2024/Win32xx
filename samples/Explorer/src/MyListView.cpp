@@ -186,7 +186,7 @@ void CMyListView::DoDefault(int item)
 
                             if ((ulAttr & SFGAO_HASSUBFOLDER) || (ulAttr &SFGAO_FOLDER))
                             {
-                                CMainFrame& mainFrame = GetExplorerApp().GetMainFrame();
+                                CMainFrame& mainFrame = GetExplorerApp()->GetMainFrame();
                                 mainFrame.GetTreeView().SelectFromListView(pInfo->GetFullPidl());
                             }
                             else
@@ -425,7 +425,7 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
     CEnumIDList list;
 
     int flags = SHCONTF_FOLDERS | SHCONTF_NONFOLDERS;
-    if ( GetExplorerApp().GetMainFrame().GetShowHidden() )
+    if ( GetExplorerApp()->GetMainFrame().GetShowHidden() )
         flags |= SHCONTF_INCLUDEHIDDEN;
 
     if(SUCCEEDED(folder.EnumObjects(NULL, flags, list)))
@@ -566,7 +566,7 @@ void CMyListView::OnAttach()
         if (1 == i) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
         else lvc.fmt = LVCFMT_LEFT;     //left-aligned column
 
-        ::LoadString(GetApp().GetInstanceHandle(), IDS_COLUMN1 + i,
+        ::LoadString(GetApp()->GetInstanceHandle(), IDS_COLUMN1 + i,
             text, sizeof(text)/sizeof(text[0]));
 
         InsertColumn(i, lvc);

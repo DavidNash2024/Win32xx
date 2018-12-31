@@ -58,7 +58,7 @@ void CView::NewPictureFile()
         SetScrollSizes();
     }
 
-    CMainFrame& frame = GetPicApp().GetMainFrame();
+    CMainFrame& frame = GetPicApp()->GetMainFrame();
     frame.SetWindowText(LoadString(IDW_MAIN).c_str());
     Invalidate();
 }
@@ -76,7 +76,7 @@ BOOL CView::LoadPictureFile(LPCTSTR fileName)
     // Create IPicture from image file
     if (S_OK == ::OleLoadPicturePath(TtoOLE(fileName), NULL, 0, 0,    IID_IPicture, (LPVOID *)&m_pPicture))
     {
-        CMainFrame& frame = GetPicApp().GetMainFrame();
+        CMainFrame& frame = GetPicApp()->GetMainFrame();
         frame.SendMessage(UWM_FILELOADED, 0, (LPARAM)fileName);
         Invalidate();
         CSize size = CSize(GetImageRect().Width(), GetImageRect().Height());
@@ -93,7 +93,7 @@ BOOL CView::LoadPictureFile(LPCTSTR fileName)
         TRACE(str); TRACE("\n");
 
         // Set Frame title back to default
-        CMainFrame& frame = GetPicApp().GetMainFrame();
+        CMainFrame& frame = GetPicApp()->GetMainFrame();
         frame.SetWindowText(LoadString(IDW_MAIN).c_str());
         SetScrollSizes();
         IsPictureLoaded = FALSE;

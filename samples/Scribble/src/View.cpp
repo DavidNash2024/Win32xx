@@ -27,7 +27,7 @@ void CView::DrawLine(int x, int y)
 
 CDoc& CView::GetDoc()
 {
-    CMainFrame& frame = GetScribbleApp().GetMainFrame();
+    CMainFrame& frame = GetScribbleApp()->GetMainFrame();
     return frame.GetDoc();
 }
 
@@ -139,7 +139,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     // Set the background brush, class name and cursor
     wc.hbrBackground = m_brush;
     wc.lpszClassName = _T("Scribble Window");
-    wc.hCursor = GetApp().LoadCursor(IDC_CURSOR1);
+    wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

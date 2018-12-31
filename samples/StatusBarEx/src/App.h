@@ -59,7 +59,7 @@ TheApp()                                /*
     A useful function that returns a reference to the CApp object.
 *-----------------------------------------------------------------------------*/
 {
-    return static_cast<CApp&>(GetApp()); 
+    return static_cast<CApp&>(*GetApp()); 
 }
 
 /*-----------------------------------------------------------------------------*/

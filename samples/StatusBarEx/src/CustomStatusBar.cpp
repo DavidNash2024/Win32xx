@@ -276,7 +276,7 @@ SetStatusIndicators()                           /*
         UINT nID = part.ID;
           // set the pane size for icons and strings
         CString s = LoadString(nID);
-        HICON h = (HICON)GetApp().LoadImage(nID, IMAGE_ICON, 
+        HICON h = (HICON)GetApp()->LoadImage(nID, IMAGE_ICON,
             16, 16, LR_DEFAULTCOLOR | LR_SHARED);
         if (h != NULL && part.width == SB_AUTOSIZE)
         {     // icon widths are square, so use height
@@ -314,7 +314,7 @@ SetStatusIndicators()                           /*
           // if this nID has an icon, set in the part, but only if
           // different than the current icon.
         HICON hPart = GetPartIcon(j),
-              h     = (HICON)GetApp().LoadImage(nID, IMAGE_ICON, 
+              h     = (HICON)GetApp()->LoadImage(nID, IMAGE_ICON,
                     16, 16, LR_DEFAULTCOLOR | LR_SHARED);
         if (h != NULL && hPart != h)
             SetPartIcon(j, h);

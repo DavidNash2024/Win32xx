@@ -49,7 +49,7 @@ void CMyDialog::OnOK()
     int nTestMessages = GetDlgItemInt(IDC_MESSAGES, FALSE);
 
     // Get a pointer to the CMainWindow object
-    CMainWindow& MainWnd = GetPerfApp().GetMainWnd();
+    CMainWindow& MainWnd = GetPerfApp()->GetMainWnd();
     
     MainWnd.SetTestMessages(nTestMessages);
     MainWnd.CreateTestWindows(nWindows);

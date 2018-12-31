@@ -122,7 +122,7 @@ DoModal(HWND hWndOwner /* = 0 */)                       /*
     if (hWndOwner != 0)
         m_hWndOwner = hWndOwner;
     if (m_hWndOwner == 0)
-        m_hWndOwner = GetApp().GetMainWnd();
+        m_hWndOwner = GetApp()->GetMainWnd();
     int ok = static_cast<int>(CDialog::DoModal(m_hWndOwner));
       // NOTE: the CDialog class message loop handles the passage of
       // execution to OnOK() or OnCancel(), the ending of the dialog, and

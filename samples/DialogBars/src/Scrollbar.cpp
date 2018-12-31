@@ -25,7 +25,7 @@ LRESULT CMyScrollBar::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
     UNREFERENCED_PARAMETER(lparam);
 
     // Get a pointer to the MyDialog object
-    CMyDialog& myDialog = GetDialogApp().GetDialog();
+    CMyDialog& myDialog = GetDialogApp()->GetDialog();
 
     GetScrollInfo(m_si);
 

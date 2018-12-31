@@ -75,7 +75,7 @@ TheDoc()                                                            /*
     Return a global reference to the CDoc object. 
 *-----------------------------------------------------------------------------*/
 {
-    return TheApp().TheFrame()->TheDoc();
+    return TheApp()->TheFrame()->TheDoc();
 }
 
 /*============================================================================*/

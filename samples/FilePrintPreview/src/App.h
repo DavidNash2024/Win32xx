@@ -42,13 +42,13 @@ CApp : public CWinApp                                                   /*
 };
 
 /*============================================================================*/
-    inline CApp&
+    inline CApp*
 TheApp()                                                                /*
 
     Return a reference to the CApp object.
 *-----------------------------------------------------------------------------*/
 {
-    return static_cast<CApp&>(GetApp()); 
+    return static_cast<CApp*>(GetApp()); 
 }
 
 /*============================================================================*/
@@ -58,7 +58,7 @@ GetFrame()                                                      /*
     Return a reference to the CMainFrame object.
 *-----------------------------------------------------------------------------*/
 {
-    return TheApp().TheFrame();
+    return TheApp()->TheFrame();
 }
 
 /*============================================================================*/

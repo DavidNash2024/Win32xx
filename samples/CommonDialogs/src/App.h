@@ -63,7 +63,7 @@
 
   // shorthand app and global references
 #define theApp          TheApp()
-#define theAppGlobal    theApp.GetAppGlobal()
+#define theAppGlobal    theApp->GetAppGlobal()
 
 /*============================================================================*/
     class 
@@ -105,12 +105,12 @@ CApp : public CWinApp                           /*
 
 /*============================================================================*/
     inline
-CApp& TheApp()                                                      /*
+CApp* TheApp()                                                      /*
 
     Global access to this application object.
 *----------------------------------------------------------------------------*/
 {
-    return (CApp&)GetApp();
+    return (CApp*)GetApp();
 }
 /*-----------------------------------------------------------------------------*/
 #endif // define SDI_APP_H

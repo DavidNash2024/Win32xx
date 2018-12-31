@@ -495,7 +495,7 @@ namespace Win32xx
         friend class CWnd;
         friend class CPrintDialog;
         friend class CPageSetupDialog;
-        friend CWinApp& GetApp();
+        friend CWinApp* GetApp();
 
         typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -568,11 +568,10 @@ namespace Win32xx
     //
 
     // Returns a reference to the CWinApp derived class.
-    inline CWinApp& GetApp()
+    inline CWinApp* GetApp()
     {
         CWinApp* pApp = CWinApp::SetnGetThis();
-        assert(pApp);
-        return *pApp;
+        return pApp;
     }
 
 

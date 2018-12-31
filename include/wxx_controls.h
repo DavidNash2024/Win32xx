@@ -2240,7 +2240,7 @@ namespace Win32xx
         assert(IsWindow());
         TOOLINFO info;
         FillToolInfo(info, control, toolRect, id);
-        info.hinst = GetApp().GetResourceHandle();
+        info.hinst = GetApp()->GetResourceHandle();
         info.lpszText = MAKEINTRESOURCE(textID);
         return (SendMessage(TTM_ADDTOOL, 0, (LPARAM)&info) != 0);
     }
@@ -2254,7 +2254,7 @@ namespace Win32xx
         assert(IsWindow());
         TOOLINFO info;
         FillToolInfo(info, control);
-        info.hinst = GetApp().GetResourceHandle();
+        info.hinst = GetApp()->GetResourceHandle();
         info.lpszText = MAKEINTRESOURCE(textID);
         return (SendMessage(TTM_ADDTOOL, 0, (LPARAM)&info) != 0);
     }

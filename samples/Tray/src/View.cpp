@@ -169,7 +169,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.y = 50;                              // top y
     cs.cx = 400;                            // width
     cs.cy = 300;                            // height
-    cs.hMenu =  LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+    cs.hMenu =  LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
 }
 
 void CView::Restore()

@@ -146,7 +146,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     // Set the background brush, class name and cursor
     wc.hbrBackground = m_brush;
     wc.lpszClassName = _T("Scribble Window");
-    wc.hCursor = GetApp().LoadCursor(IDC_CURSOR1);
+    wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 
 void CView::SendPoint(int x, int y, bool PenDown)

@@ -23,7 +23,7 @@ HWND CTestWindow::Create(HWND hParent)
 
 void CTestWindow::OnClose()
 {
-    CMainWindow& MainWnd = GetThreadApp().GetMainWnd();
+    CMainWindow& MainWnd = GetThreadApp()->GetMainWnd();
     CString str;
     str.Format( _T("Closing test Window %d"), m_nWindow );
     MainWnd.AppendText(str);
@@ -34,7 +34,7 @@ void CTestWindow::OnDestroy()
 {
     // Terminate the thread.
 
-    CMainWindow& MainWnd = GetThreadApp().GetMainWnd();
+    CMainWindow& MainWnd = GetThreadApp()->GetMainWnd();
     CString str(_T("Terminating the thread"));
     MainWnd.AppendText(str);
 
@@ -44,7 +44,7 @@ void CTestWindow::OnDestroy()
 void CTestWindow::OnInitialUpdate()
 {
     // Get a pointer to the CMainWindow object
-    CMainWindow& MainWnd = GetThreadApp().GetMainWnd();
+    CMainWindow& MainWnd = GetThreadApp()->GetMainWnd();
 
     // Post a message to MainWnd when the window is created. The MainWnd window
     //  is in a different thread, so PostMessage is preferred over SendMessage.

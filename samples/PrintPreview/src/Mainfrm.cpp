@@ -585,10 +585,10 @@ void CMainFrame::SetPathName(LPCTSTR filePathName)
 void CMainFrame::SetupMenuIcons()
 {
     CFrame::SetupMenuIcons();
-    AddMenuIcon(IDM_FILE_PRINTSETUP,    GetApp().LoadIcon(IDI_PRINTSETUP));
-    AddMenuIcon(IDM_FILE_PREVIEW,       GetApp().LoadIcon(IDI_PRINTPREVIEW));
-    AddMenuIcon(IDM_FILE_QUICKPRINT,    GetApp().LoadIcon(IDI_QUICKPRINT));
-    AddMenuIcon(IDM_FILE_PRINT,         GetApp().LoadIcon(IDI_PRINT));
+    AddMenuIcon(IDM_FILE_PRINTSETUP,    GetApp()->LoadIcon(IDI_PRINTSETUP));
+    AddMenuIcon(IDM_FILE_PREVIEW,       GetApp()->LoadIcon(IDI_PRINTPREVIEW));
+    AddMenuIcon(IDM_FILE_QUICKPRINT,    GetApp()->LoadIcon(IDI_QUICKPRINT));
+    AddMenuIcon(IDM_FILE_PRINT,         GetApp()->LoadIcon(IDI_PRINT));
 }
 
 void CMainFrame::SetupToolBar()

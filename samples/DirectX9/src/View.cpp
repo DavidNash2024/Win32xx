@@ -19,7 +19,7 @@ BOOL CDXView::CDXThread::InitInstance()
 {
     // This function runs when the thread starts
 
-    CMainFrame& frame = GetDXApp().GetMainFrame();
+    CMainFrame& frame = GetDXApp()->GetMainFrame();
     CDXView& dxView = frame.GetDXView();
     CDX& DX = dxView.GetDX();
     

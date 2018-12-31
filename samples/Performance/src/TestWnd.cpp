@@ -23,7 +23,7 @@ void CTestWindow::CreateWin(int i)
 void CTestWindow::OnInitialUpdate()
 {
     // Get a pointer to the CMainWnd object
-    CMainWindow& mainWnd = GetPerfApp().GetMainWnd();
+    CMainWindow& mainWnd = GetPerfApp()->GetMainWnd();
 
     // Post a message to MainWnd when the window is created. 
     mainWnd.PostMessage(WM_WINDOWCREATED, 0, 0);

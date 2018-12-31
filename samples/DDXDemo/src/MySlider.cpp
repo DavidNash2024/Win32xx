@@ -76,7 +76,7 @@ OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)               /*
         case WM_HSCROLL:
         {
           // get a view dialog reference
-        CView& theView = TheApp().TheFrame()->TheView();
+        CView& theView = TheApp()->TheFrame()->TheView();
           // get the slider position, set progress and scroll bar
           // to same
         theView.m_iSlider = theView.m_iProgress =

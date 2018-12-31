@@ -22,8 +22,8 @@ private:
 };
 
 
-// returns a reference to the CPerformanceApp object
-inline CPerformanceApp& GetPerfApp() { return static_cast<CPerformanceApp&>(GetApp()); }
+// returns a pointer to the CPerformanceApp object
+inline CPerformanceApp* GetPerfApp() { return static_cast<CPerformanceApp*>(GetApp()); }
 
 
 #endif  //PERFAPP_H

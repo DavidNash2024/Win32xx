@@ -316,7 +316,7 @@ namespace Win32xx
         if (pCommonDlg == 0)
         {
             // The HWND wasn't in the map, so add it now
-            TLSData* pTLSData = GetApp().GetTlsData();
+            TLSData* pTLSData = GetApp()->GetTlsData();
             assert(pTLSData);
 
             // Retrieve pointer to CWnd object from Thread Local Storage TLS
@@ -404,11 +404,11 @@ namespace Win32xx
     // An exception is thrown if the dialog box isn't created.
     inline INT_PTR CColorDialog::DoModal(HWND owner /* = 0 */)
     {
-        assert( &GetApp() );    // Test if Win32++ has been started
+        assert( GetApp() );    // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp().SetTlsData();
+        TLSData* pTLSData = GetApp()->SetTlsData();
 
         // Create the modal dialog
         pTLSData->pWnd = this;
@@ -598,11 +598,11 @@ namespace Win32xx
     // Use SetParamaters to set a larger size if required.
     inline INT_PTR CFileDialog::DoModal(HWND owner /* = 0 */)
     {
-        assert( &GetApp() );    // Test if Win32++ has been started
+        assert( GetApp() );    // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp().SetTlsData();
+        TLSData* pTLSData = GetApp()->SetTlsData();
 
         // Create the modal dialog
         pTLSData->pWnd = this;
@@ -988,7 +988,7 @@ namespace Win32xx
 
         m_ofn.lStructSize       = StructSize;
         m_ofn.hwndOwner         = 0;            // Set this in DoModal
-        m_ofn.hInstance         = GetApp().GetInstanceHandle();
+        m_ofn.hInstance         = GetApp()->GetInstanceHandle();
         m_ofn.lpstrCustomFilter = ofn.lpstrCustomFilter;
         m_ofn.nMaxCustFilter    = MAX(MAX_PATH, ofn.nMaxCustFilter);
         m_ofn.nFilterIndex      = ofn.nFilterIndex;
@@ -1055,13 +1055,13 @@ namespace Win32xx
     inline BOOL CFindReplaceDialog::Create(BOOL isFindDialogOnly, LPCTSTR pFindWhat,
             LPCTSTR pReplaceWith, DWORD flags, HWND parent /* = 0*/)
     {
-        assert( &GetApp() );    // Test if Win32++ has been started
+        assert( GetApp() );    // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         m_isFindDialogOnly = isFindDialogOnly;
 
         // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp().SetTlsData();
+        TLSData* pTLSData = GetApp()->SetTlsData();
         pTLSData->pWnd = this;
 
         // Initialize the FINDREPLACE struct values
@@ -1242,7 +1242,7 @@ namespace Win32xx
 
         m_fr.lStructSize        = sizeof(m_fr);
         m_fr.hwndOwner          = 0;        // Set this in Create
-        m_fr.hInstance          = GetApp().GetInstanceHandle();
+        m_fr.hInstance          = GetApp()->GetInstanceHandle();
         m_fr.Flags              = fr.Flags;
         m_fr.lpstrFindWhat      = const_cast<LPTSTR>(m_findWhat.c_str());
         m_fr.lpstrReplaceWith   = const_cast<LPTSTR>(m_replaceWith.c_str());
@@ -1400,11 +1400,11 @@ namespace Win32xx
     // Display the FontDialog. hOwner specifies dialog's owner window.
     inline INT_PTR CFontDialog::DoModal(HWND owner /* = 0 */)
     {
-        assert( &GetApp() );    // Test if Win32++ has been started
+        assert( GetApp() );    // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp().SetTlsData();
+        TLSData* pTLSData = GetApp()->SetTlsData();
 
         // Create the modal dialog
         pTLSData->pWnd = this;
@@ -1592,7 +1592,7 @@ namespace Win32xx
         m_cf.lCustData      = cf.lCustData;
         m_cf.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
         m_cf.lpTemplateName = cf.lpTemplateName;
-        m_cf.hInstance      = GetApp().GetInstanceHandle();
+        m_cf.hInstance      = GetApp()->GetInstanceHandle();
         m_cf.lpszStyle      = const_cast<LPTSTR>(m_styleName.c_str());
         m_cf.nFontType      = cf.nFontType;
         m_cf.nSizeMin       = cf.nSizeMin;

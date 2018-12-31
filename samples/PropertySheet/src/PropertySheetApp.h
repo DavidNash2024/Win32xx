@@ -22,8 +22,8 @@ private:
 };
 
 
-// returns a reference to the CPropertySheetApp object
-inline CPropertySheetApp& GetPSApp() { return static_cast<CPropertySheetApp&>(GetApp()); }
+// returns a pointer to the CPropertySheetApp object
+inline CPropertySheetApp* GetPSApp() { return static_cast<CPropertySheetApp*>(GetApp()); }
 
 
 #endif // define PROPERTYSHEETAPP_H

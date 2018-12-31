@@ -25,7 +25,7 @@ private:
 
 inline ID2D1Factory* GetD2DFactory()
 {
-    return ((CD2DApp&)GetApp()).GetD2DFactory();
+    return ((CD2DApp*)GetApp())->GetD2DFactory();
 }
 
 

@@ -23,7 +23,7 @@ private:
 
 
 // Handy global functions
-inline CApp& TheApp() { return static_cast<CApp&>(GetApp()); }
+inline CApp* TheApp() { return static_cast<CApp*>(GetApp()); }
 
 
 #endif // define SDI_APP_H

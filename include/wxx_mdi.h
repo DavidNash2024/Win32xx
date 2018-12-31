@@ -493,9 +493,9 @@ namespace Win32xx
             else
                 UpdateFrameMenu(T::GetFrameMenu());
             if (pMDIChild->GetChildAccel())
-                GetApp().SetAccelerators(pMDIChild->GetChildAccel(), *this);
+                GetApp()->SetAccelerators(pMDIChild->GetChildAccel(), *this);
             else
-                GetApp().SetAccelerators(T::GetFrameAccel(), *this);
+                GetApp()->SetAccelerators(T::GetFrameAccel(), *this);
         }
 
         return 0;
@@ -620,9 +620,9 @@ namespace Win32xx
 
             // Update the accelerators
             if (GetActiveMDIChild()->GetChildAccel())
-                GetApp().SetAccelerators(GetActiveMDIChild()->GetChildAccel(), *this);
+                GetApp()->SetAccelerators(GetActiveMDIChild()->GetChildAccel(), *this);
             else
-                GetApp().SetAccelerators(T::GetFrameAccel(), *this);
+                GetApp()->SetAccelerators(T::GetFrameAccel(), *this);
         }
         else
         {
@@ -631,7 +631,7 @@ namespace Win32xx
             else
                 T::SetMenu( T::GetFrameMenu() );
 
-            GetApp().SetAccelerators(T::GetFrameAccel(), *this);
+            GetApp()->SetAccelerators(T::GetFrameAccel(), *this);
         }
     }
 
@@ -778,8 +778,8 @@ namespace Win32xx
     //
 
     // Sets the MDI Child's menu and accelerator in the constructor, like this ...
-    //   HMENU hChildMenu = LoadMenu(GetApp().GetResourceHandle(), _T("MdiMenuView"));
-    //   HACCEL hChildAccel = LoadAccelerators(GetApp().GetResourceHandle(), _T("MDIAccelView"));
+    //   HMENU hChildMenu = LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView"));
+    //   HACCEL hChildAccel = LoadAccelerators(GetApp()->GetResourceHandle(), _T("MDIAccelView"));
     //   SetHandles(hChildMenu, hChildAccel);
     //   SetView(m_View);
     inline CMDIChild::CMDIChild() : m_pView(NULL), m_childAccel(0)

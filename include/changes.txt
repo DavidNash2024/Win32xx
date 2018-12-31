@@ -1,3 +1,11 @@
+Version 8.6.1
+=============
+
+Modified ::GetApp      Now returns a pointer to CWinApp. 
+
+
+
+
 Version 8.6
 ===========
 

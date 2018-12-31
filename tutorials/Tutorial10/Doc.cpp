@@ -6,7 +6,7 @@
 
 const CView& CDoc::GetView() const
 {
-    CMainFrame& frame = GetScribbleApp().GetMainFrame();
+    CMainFrame& frame = GetScribbleApp()->GetMainFrame();
     return static_cast<CView&>(frame.GetView());
 }
 

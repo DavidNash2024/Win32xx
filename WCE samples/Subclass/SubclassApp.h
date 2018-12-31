@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CSubclassApp object
-inline CSubclassApp& GetSubApp() { return static_cast<CSubclassApp&>(GetApp()); }
+// returns a pointer to the CSubclassApp object
+inline CSubclassApp* GetSubApp() { return static_cast<CSubclassApp*>(GetApp()); }
 
 
 #endif // define SUBCLASSAPP_H

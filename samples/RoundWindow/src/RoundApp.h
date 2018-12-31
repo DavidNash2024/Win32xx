@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CRoundApp object
-inline CRoundApp& GetSimpleApp() { return static_cast<CRoundApp&>(GetApp()); }
+inline CRoundApp* GetSimpleApp() { return static_cast<CRoundApp*>(GetApp()); }
 
 
 #endif

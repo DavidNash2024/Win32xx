@@ -1164,10 +1164,10 @@ namespace Win32xx
     // Store the HDC and CDC pointer in the HDC map
     inline void CGDIObject::AddToMap()
     {
-        assert( &GetApp() );
+        assert( GetApp() );
         assert(m_pData->hGDIObject);
 
-        GetApp().AddCGDIData(m_pData->hGDIObject, m_pData);
+        GetApp()->AddCGDIData(m_pData->hGDIObject, m_pData);
     }
 
     // Attaches a GDI HANDLE to the CGDIObject.
@@ -1187,7 +1187,7 @@ namespace Win32xx
             if (object)
             {
                 // Add the GDI object to this CCGDIObject
-                CGDI_Data* pCGDIData = GetApp().GetCGDIData(object);
+                CGDI_Data* pCGDIData = GetApp()->GetCGDIData(object);
                 if (pCGDIData)
                 {
                     delete m_pData;
@@ -1277,18 +1277,18 @@ namespace Win32xx
     {
         BOOL success = FALSE;
 
-        if( &GetApp() )
+        if( GetApp() )
         {
             // Allocate an iterator for our HDC map
             std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
 
-            CWinApp& app = GetApp();
-            CThreadLock mapLock(app.m_gdiLock);
-            m = app.m_mapCGDIData.find(m_pData->hGDIObject);
-            if (m != app.m_mapCGDIData.end())
+            CWinApp* pApp = GetApp();
+            CThreadLock mapLock(pApp->m_gdiLock);
+            m = pApp->m_mapCGDIData.find(m_pData->hGDIObject);
+            if (m != pApp->m_mapCGDIData.end())
             {
                 // Erase the CGDIObject pointer entry from the map
-                app.m_mapCGDIData.erase(m);
+				pApp->m_mapCGDIData.erase(m);
                 success = TRUE;
             }
 
@@ -1341,9 +1341,9 @@ namespace Win32xx
     // Refer to LoadImage in the Windows API documentation for more information.
     inline BOOL CBitmap::LoadBitmap(LPCTSTR pResName)
     {
-        assert( &GetApp() );
+        assert( GetApp() );
 
-        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp().GetResourceHandle(), pResName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR));
+        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), pResName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR));
         if (bitmap != 0)
         {
             Attach(bitmap);
@@ -1363,9 +1363,9 @@ namespace Win32xx
     // Refer to LoadImage in the Windows API documentation for more information.
     inline BOOL CBitmap::LoadImage(LPCTSTR pResName, UINT flags)
     {
-        assert( &GetApp() );
+        assert( GetApp() );
 
-        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp().GetResourceHandle(), pResName, IMAGE_BITMAP, 0, 0, flags));
+        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), pResName, IMAGE_BITMAP, 0, 0, flags));
         if (bitmap != 0)
         {
             Attach(bitmap);
@@ -1457,8 +1457,8 @@ namespace Win32xx
     // Refer to CreateMappedBitmap in the Windows API documentation for more information.
     inline HBITMAP CBitmap::CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
     {
-        assert(&GetApp());
-        HBITMAP bitmap = ::CreateMappedBitmap(GetApp().GetResourceHandle(), bitmapID, static_cast<WORD>(flags), pColorMap, mapSize);
+        assert(GetApp());
+        HBITMAP bitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), bitmapID, static_cast<WORD>(flags), pColorMap, mapSize);
         if (bitmap == 0)
             throw CResourceException(_T("CreateMappedBitmap failed"));
 
@@ -2529,10 +2529,10 @@ namespace Win32xx
     // Store the HDC and CDC pointer in the HDC map
     inline void CDC::AddToMap()
     {
-        assert( &GetApp() );
+        assert( GetApp() );
         assert(m_pData->dc != 0);
 
-        GetApp().AddCDCData(m_pData->dc, m_pData);
+        GetApp()->AddCDCData(m_pData->dc, m_pData);
     }
 
     // Attaches a HDC to the CDC object.
@@ -2554,7 +2554,7 @@ namespace Win32xx
 
             if (dc)
             {
-                CDC_Data* pCDCData = GetApp().GetCDCData(dc);
+                CDC_Data* pCDCData = GetApp()->GetCDCData(dc);
                 if (pCDCData)
                 {
                     delete m_pData;
@@ -2753,18 +2753,18 @@ namespace Win32xx
     {
         BOOL success = FALSE;
 
-        if( &GetApp() )
+        if( GetApp() )
         {
             // Allocate an iterator for our Data map
             std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
 
-            CWinApp& app = GetApp();
-            CThreadLock mapLock(app.m_gdiLock);
-            m = app.m_mapCDCData.find(m_pData->dc);
-            if (m != app.m_mapCDCData.end())
+            CWinApp* pApp = GetApp();
+            CThreadLock mapLock(pApp->m_gdiLock);
+            m = pApp->m_mapCDCData.find(m_pData->dc);
+            if (m != pApp->m_mapCDCData.end())
             {
                 // Erase the CDC data entry from the map
-                app.m_mapCDCData.erase(m);
+				pApp->m_mapCDCData.erase(m);
                 success = TRUE;
             }
 

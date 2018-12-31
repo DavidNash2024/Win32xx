@@ -137,7 +137,7 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
         fileName.ReleaseBuffer();
         DragFinish(hDrop);
 
-        CMainFrame& Frame = GetFrameApp().GetMainFrame();
+        CMainFrame& Frame = GetFrameApp()->GetMainFrame();
 
         if ( !Frame.LoadFile(fileName) )    
         {

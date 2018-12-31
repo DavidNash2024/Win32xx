@@ -587,14 +587,14 @@ SetupMenuIcons()                                                        /*
 *-----------------------------------------------------------------------------*/
 {
       // print and preview menu bitmaps
-    AddMenuIcon(IDM_FILE_PRINTSETUP, GetApp().LoadIcon(IDI_PRINTSETUP));
-    AddMenuIcon(IDM_FILE_PREVIEW,    GetApp().LoadIcon(IDI_PRINTPREVIEW));
-    AddMenuIcon(IDM_FILE_QUICKPRINT, GetApp().LoadIcon(IDI_QUICKPRINT));
-    AddMenuIcon(IDM_FILE_PRINT,      GetApp().LoadIcon(IDI_PRINT));
+    AddMenuIcon(IDM_FILE_PRINTSETUP, GetApp()->LoadIcon(IDI_PRINTSETUP));
+    AddMenuIcon(IDM_FILE_PREVIEW,    GetApp()->LoadIcon(IDI_PRINTPREVIEW));
+    AddMenuIcon(IDM_FILE_QUICKPRINT, GetApp()->LoadIcon(IDI_QUICKPRINT));
+    AddMenuIcon(IDM_FILE_PRINT,      GetApp()->LoadIcon(IDI_PRINT));
       // options menu font dialog icon
-    AddMenuIcon(IDM_OPTIONS_FONT,    GetApp().LoadIcon(IDI_FONT_OPTION));
+    AddMenuIcon(IDM_OPTIONS_FONT,    GetApp()->LoadIcon(IDI_FONT_OPTION));
       // set options menu radio button unselected icon
-    HICON check_box_unselected =     GetApp().LoadIcon(IDI_CHECKBOX_OFF);
+    HICON check_box_unselected =     GetApp()->LoadIcon(IDI_CHECKBOX_OFF);
     AddMenuIcon(IDM_WRAP_NONE,       check_box_unselected);
     AddMenuIcon(IDM_WRAP_WINDOW,     check_box_unselected);
     AddMenuIcon(IDM_WRAP_PRINTER,    check_box_unselected);

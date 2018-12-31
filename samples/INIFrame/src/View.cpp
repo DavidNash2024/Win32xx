@@ -13,7 +13,7 @@ CView::CView()
 
 CDoc& CView::GetDoc()
 {
-    return GetFrameApp().GetMainFrame().GetDoc();
+    return GetFrameApp()->GetMainFrame().GetDoc();
 }
 
 void CView::OnDraw(CDC& dc)

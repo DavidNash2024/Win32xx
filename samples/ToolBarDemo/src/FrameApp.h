@@ -21,8 +21,8 @@ private:
 };
 
 
-// a useful function that returns a reference to the CToolBarDemoApp object
-inline CToolBarDemoApp& GetFrameApp() { return static_cast<CToolBarDemoApp&>(GetApp()); }
+// returns a pointer to the CToolBarDemoApp object
+inline CToolBarDemoApp* GetFrameApp() { return static_cast<CToolBarDemoApp*>(GetApp()); }
 
 
 #endif // define FRAMEAPP_H
