@@ -145,7 +145,7 @@ LRESULT CColourDialog::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
 void CColourDialog::OnOK()
 {
     // Get a pointer to our CMainFrame object
-    CMainFrame& mainFrame = GetFrameApp().GetMainFrame();
+    CMainFrame& mainFrame = GetFrameApp()->GetMainFrame();
 
     BOOL isGray = (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0) != 0);
     mainFrame.ModifyBitmap(m_cRed, m_cGreen, m_cBlue, isGray);

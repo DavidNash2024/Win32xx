@@ -23,7 +23,7 @@ private:
 
 
 // returns a pointer to the CTabDemoApp object
-inline CTabDemoApp& GetTabDemoApp() { return static_cast<CTabDemoApp&>(GetApp()); }
+inline CTabDemoApp* GetTabDemoApp() { return static_cast<CTabDemoApp*>(GetApp()); }
 
 
 #endif // CONTAINERAPP_H

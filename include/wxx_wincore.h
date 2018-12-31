@@ -132,29 +132,29 @@ namespace Win32xx
     inline void CWnd::AddToMap()
     {
         // The framework must be started
-        assert(&GetApp());
+        assert(GetApp());
 
         // This HWND is should not be in the map yet
-        assert (NULL == GetApp().GetCWndFromMap(*this));
+        assert (NULL == GetApp()->GetCWndFromMap(*this));
 
         // Remove any old map entry for this CWnd (required when the CWnd is reused)
         RemoveFromMap();
 
         // Add the (HWND, CWnd*) pair to the map
-        CThreadLock mapLock(GetApp().m_wndLock);
-        GetApp().m_mapHWND.insert(std::make_pair(GetHwnd(), this));
+        CThreadLock mapLock(GetApp()->m_wndLock);
+        GetApp()->m_mapHWND.insert(std::make_pair(GetHwnd(), this));
     }
 
     // Attaches a CWnd object to an existing window and calls the OnAttach virtual function.
     inline BOOL CWnd::Attach(HWND wnd)
     {
-        assert( &GetApp() );
+        assert( GetApp() );
         assert( ::IsWindow(wnd) );
         assert( !IsWindow() );
 
         // Ensure this thread has the TLS index set
         // Note: Perform the attach from the same thread as the window's message loop
-        GetApp().SetTlsData();
+        GetApp()->SetTlsData();
 
         Subclass(wnd);     // Set the window's callback to CWnd::StaticWindowProc
 
@@ -263,7 +263,7 @@ namespace Win32xx
     // Returns the CWnd to its default state
     inline void CWnd::Cleanup()
     {
-        if ( &GetApp() )
+        if ( GetApp() )
             RemoveFromMap();
 
         m_wnd = 0;
@@ -278,7 +278,7 @@ namespace Win32xx
     inline HWND CWnd::Create(HWND parent /* = 0 */)
     {
         // Test if Win32++ has been started
-        assert( &GetApp() );
+        assert( GetApp() );
 
         WNDCLASS wc;
         ZeroMemory(&wc, sizeof(wc));
@@ -348,7 +348,7 @@ namespace Win32xx
         int cy = rc.bottom - rc.top;
 
         INT_PTR idMenu = id;
-        HMENU menu = parent ? reinterpret_cast<HMENU>(idMenu) : ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(id));
+        HMENU menu = parent ? reinterpret_cast<HMENU>(idMenu) : ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(id));
 
         return CreateEx(exStyle, pClassName, pWindowName, style, x, y, cx, cy, parent, menu, lparam);
     }
@@ -358,7 +358,7 @@ namespace Win32xx
     //  to create a window throws an exception.
     inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD style, int x, int y, int width, int height, HWND hWParent, HMENU idOrMenu, LPVOID lparam /*= NULL*/)
     {
-        assert( &GetApp() );        // Test if Win32++ has been started
+        assert( GetApp() );        // Test if Win32++ has been started
         assert( !IsWindow() );      // Only one window per CWnd instance allowed
 
         // Ensure a window class is registered
@@ -382,7 +382,7 @@ namespace Win32xx
         }
 
         // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp().SetTlsData();
+        TLSData* pTLSData = GetApp()->SetTlsData();
 
         // Store the CWnd pointer in thread local storage
         pTLSData->pWnd = this;
@@ -390,7 +390,7 @@ namespace Win32xx
 
         // Create window
         HWND wnd = ::CreateWindowEx(exStyle, className, pWindowName, style, x, y, width, height,
-                                hWParent, idOrMenu, GetApp().GetInstanceHandle(), lparam);
+                                hWParent, idOrMenu, GetApp()->GetInstanceHandle(), lparam);
 
         // Tidy up
         pTLSData->pWnd = NULL;
@@ -404,8 +404,8 @@ namespace Win32xx
         // Automatically subclass predefined window class types
         if (pClassName)
         {
-            ::GetClassInfo(GetApp().GetInstanceHandle(), pClassName, &wc);
-            if (wc.lpfnWndProc != GetApp().m_callback)
+            ::GetClassInfo(GetApp()->GetInstanceHandle(), pClassName, &wc);
+            if (wc.lpfnWndProc != GetApp()->m_callback)
             {
                 Subclass(wnd);
 
@@ -426,7 +426,7 @@ namespace Win32xx
     // Destroys the window and returns the CWnd back to its default state, ready for reuse.
     inline void CWnd::Destroy()
     {
-        if (&GetApp())          // Is the CWinApp object still valid?
+        if (GetApp())          // Is the CWinApp object still valid?
         {
             if (GetCWndPtr(*this) == this)
             {
@@ -516,8 +516,8 @@ namespace Win32xx
     // Returns NULL if a CWnd object doesn't already exist for this HWND. 
     inline CWnd* CWnd::GetCWndPtr(HWND wnd)
     {
-        assert( &GetApp() );
-        return wnd? GetApp().GetCWndFromMap(wnd) : 0;
+        assert( GetApp() );
+        return wnd? GetApp()->GetCWndFromMap(wnd) : 0;
     }
 
     // The GetAncestor function retrieves the ancestor (root parent)
@@ -579,7 +579,7 @@ namespace Win32xx
 
         int nLength = ::GetWindowTextLength(::GetDlgItem(*this, dlgItemID));
         CString str;
-        ::GetDlgItemText(*this, dlgItemID, str.GetBuffer(nLength), nLength+1);
+		VERIFY(::GetDlgItemText(*this, dlgItemID, str.GetBuffer(nLength), nLength+1) != 0);
         str.ReleaseBuffer();
         return str;
     }
@@ -724,7 +724,7 @@ namespace Win32xx
             }
         }
 
-        CWnd* pWnd = GetApp().GetCWndFromMap(wnd);
+        CWnd* pWnd = GetApp()->GetCWndFromMap(wnd);
 
         if (pWnd != NULL)
             return pWnd->OnMessageReflect(msg, wparam, lparam);
@@ -890,7 +890,7 @@ namespace Win32xx
     // class prior to window creation.
     inline BOOL CWnd::RegisterClass(WNDCLASS& wc)
     {
-        assert( &GetApp() );
+        assert( GetApp() );
         assert( ('\0' != wc.lpszClassName[0] && ( lstrlen(wc.lpszClassName) <=  MAX_STRING_SIZE) ) );
 
         // Check to see if this classname is already registered
@@ -898,7 +898,7 @@ namespace Win32xx
         ZeroMemory(&wcTest, sizeof(wcTest));
         BOOL done = FALSE;
 
-        if (::GetClassInfo(GetApp().GetInstanceHandle(), wc.lpszClassName, &wcTest))
+        if (::GetClassInfo(GetApp()->GetInstanceHandle(), wc.lpszClassName, &wcTest))
         {
             wc = wcTest;
             done = TRUE;
@@ -907,7 +907,7 @@ namespace Win32xx
         if (!done)
         {
             // Set defaults
-            wc.hInstance    = GetApp().GetInstanceHandle();
+            wc.hInstance    = GetApp()->GetInstanceHandle();
             wc.lpfnWndProc  = CWnd::StaticWindowProc;
 
             // Register the WNDCLASS structure
@@ -924,20 +924,20 @@ namespace Win32xx
     {
         BOOL success = FALSE;
 
-        if ( &GetApp() )
+        if ( GetApp() )
         {
             // Allocate an iterator for our HWND map
             std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
-            CWinApp& app = GetApp();
+            CWinApp* pApp = GetApp();
 
             // Erase the CWnd pointer entry from the map
-            CThreadLock mapLock(app.m_wndLock);
-            for (m = app.m_mapHWND.begin(); m != app.m_mapHWND.end(); ++m)
+            CThreadLock mapLock(pApp->m_wndLock);
+            for (m = pApp->m_mapHWND.begin(); m != pApp->m_mapHWND.end(); ++m)
             {
                 if (this == m->second)
                 {
-                    app.m_mapHWND.erase(m);
+					pApp->m_mapHWND.erase(m);
                     success = TRUE;
                     break;
                 }
@@ -951,16 +951,16 @@ namespace Win32xx
     // Sets the large icon associated with the window.
     inline HICON CWnd::SetIconLarge(int iconID)
     {
-        assert( &GetApp() );
+        assert( GetApp() );
         assert(IsWindow());
 
         int cxIcon = ::GetSystemMetrics(SM_CXICON);
         int cyIcon = ::GetSystemMetrics(SM_CYICON);
 
 #ifndef _WIN32_WCE
-        HICON hIconLarge = reinterpret_cast<HICON>(GetApp().LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
+        HICON hIconLarge = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 #else
-        HICON hIconLarge = reinterpret_cast<HICON>(GetApp().LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, 0));
+        HICON hIconLarge = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, 0));
 #endif
 
         if (hIconLarge != 0)
@@ -974,16 +974,16 @@ namespace Win32xx
     // Sets the small icon associated with the window.
     inline HICON CWnd::SetIconSmall(int iconID)
     {
-        assert( &GetApp() );
+        assert( GetApp() );
         assert(IsWindow());
 
         int cxSmallIcon = ::GetSystemMetrics(SM_CXSMICON);
         int cySmallIcon = ::GetSystemMetrics(SM_CYSMICON);
 
 #ifndef _WIN32_WCE
-        HICON hIconSmall = reinterpret_cast<HICON>(GetApp().LoadImage(iconID, IMAGE_ICON, cxSmallIcon, cySmallIcon, LR_SHARED));
+        HICON hIconSmall = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxSmallIcon, cySmallIcon, LR_SHARED));
 #else
-        HICON hIconSmall = reinterpret_cast<HICON>(GetApp().LoadImage(iconID, IMAGE_ICON, cxSmallIcon, cySmallIcon, 0));
+        HICON hIconSmall = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxSmallIcon, cySmallIcon, 0));
 #endif
 
         if (hIconSmall != 0)
@@ -998,15 +998,15 @@ namespace Win32xx
     // to the CWnd's WndProc function.
     inline LRESULT CALLBACK CWnd::StaticWindowProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        assert( &GetApp() );
+        assert( GetApp() );
 
-        CWnd* w = GetApp().GetCWndFromMap(wnd);
+        CWnd* w = GetApp()->GetCWndFromMap(wnd);
         if (w == 0)
         {
             // The CWnd pointer wasn't found in the map, so add it now
 
             // Retrieve the pointer to the TLS Data
-            TLSData* pTLSData = GetApp().GetTlsData();
+            TLSData* pTLSData = GetApp()->GetTlsData();
             assert(pTLSData);
 
             // Retrieve pointer to CWnd object from Thread Local Storage TLS
@@ -1051,7 +1051,7 @@ namespace Win32xx
         assert(IsWindow());
 
         // A critical section ensures threads update the data separately
-        CThreadLock lock(GetApp().m_appLock);
+        CThreadLock lock(GetApp()->m_appLock);
 
         dx.Init(*this, retrieveAndValidate);
 
@@ -1145,7 +1145,7 @@ namespace Win32xx
                 // Do notification reflection if message came from a child window.
                 // Restricting OnNotifyReflect to child windows avoids double handling.
                 HWND from = ((LPNMHDR)lparam)->hwndFrom;
-                CWnd* pWndFrom = GetApp().GetCWndFromMap(from);
+                CWnd* pWndFrom = GetApp()->GetCWndFromMap(from);
 
                 if (pWndFrom != NULL)
                     if (::GetParent(from) == m_wnd)
@@ -2499,7 +2499,7 @@ namespace Win32xx
     template <>
     inline bool CStringT<CHAR>::LoadString(UINT id)
     {
-        assert (&GetApp());
+        assert (GetApp());
 
         int nSize = 64;
         CHAR* pTCharArray = 0;
@@ -2515,7 +2515,7 @@ namespace Win32xx
             nSize = nSize * 4;
             vString.assign(nSize+1, 0);
             pTCharArray = &vString[0];
-            nTChars = ::LoadStringA (GetApp().GetResourceHandle(), id, pTCharArray, nSize);
+            nTChars = ::LoadStringA (GetApp()->GetResourceHandle(), id, pTCharArray, nSize);
         }
 
         if (nTChars > 0)
@@ -2530,7 +2530,7 @@ namespace Win32xx
     template <>
     inline bool CStringT<WCHAR>::LoadString(UINT id)
     {
-        assert (&GetApp());
+        assert (GetApp());
 
         int nSize = 64;
         WCHAR* pTCharArray = 0;
@@ -2546,7 +2546,7 @@ namespace Win32xx
             nSize = nSize * 4;
             vString.assign(nSize+1, 0);
             pTCharArray = &vString[0];
-            nTChars = ::LoadStringW (GetApp().GetResourceHandle(), id, pTCharArray, nSize);
+            nTChars = ::LoadStringW (GetApp()->GetResourceHandle(), id, pTCharArray, nSize);
         }
 
         if (nTChars > 0)

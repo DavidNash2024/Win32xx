@@ -22,8 +22,8 @@ private:
 };
 
 
-// returns a reference to the CPictureApp object
-inline CPictureApp& GetPicApp() { return static_cast<CPictureApp&>(GetApp()); }
+// returns a pointer to the CPictureApp object
+inline CPictureApp* GetPicApp() { return static_cast<CPictureApp*>(GetApp()); }
 
 // User Defined message
 #define UWM_FILELOADED       (WM_APP + 1)   // Message - Sent by CView to parent to indicate file loaded.

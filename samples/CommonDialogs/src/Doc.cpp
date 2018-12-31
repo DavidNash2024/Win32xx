@@ -455,7 +455,7 @@ OnNewDoc()                                                            /*
     fd.SetDefExt(GetExt());
     CString msg;
       // do not leave without a valid unused file name, unless cancelled
-    while (fd.DoModal(GetApp().GetMainWnd()) == IDOK)
+    while (fd.DoModal(GetApp()->GetMainWnd()) == IDOK)
     {
         CString new_path = fd.GetPathName();
           // new_path should not exist
@@ -505,7 +505,7 @@ OnOpenDoc()                                                            /*
     fd.SetBoxTitle(_T("Open document file..."));
     fd.SetDefExt(GetExt());
     CString msg;
-    if (fd.DoModal(GetApp().GetMainWnd()) == IDOK)
+    if (fd.DoModal(GetApp()->GetMainWnd()) == IDOK)
     {
         CString the_path = fd.GetPathName();
         if (the_path.IsEmpty())
@@ -531,7 +531,7 @@ OnPageSetup()                               /*
 {
     MyPageSetup PSD(PSD_MARGINS);
     PSD.SetBoxTitle(_T("Page Parameter Setup"));
-    PSD.DoModal(theApp.GetMainWnd());
+    PSD.DoModal(theApp->GetMainWnd());
 
     // TODO: Add code here to set up the printer.  Note: control does not
     // return here until after OnOK() or OnCancel() have concluded.
@@ -639,7 +639,7 @@ OnSaveDocAs()                                                            /*
     CString current_path = GetFilePath(),
         msg;
       // query user for the save-as file path name
-    if (fd.DoModal(GetApp().GetMainWnd()) == IDOK)
+    if (fd.DoModal(GetApp()->GetMainWnd()) == IDOK)
     {     // At this point, a file path has been chosen that is
           // not empty and if it already exists has been approved by the
            // user to be overwritten. Fetch the path from the dialog.

@@ -1267,7 +1267,7 @@ namespace Win32xx
                     assert(pActiveChild);
                     HICON icon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0));
                     if (NULL == icon)
-                        icon = GetApp().LoadStandardIcon(IDI_APPLICATION);
+                        icon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
 
                     int cx = ::GetSystemMetrics (SM_CXSMICON);
                     int cy = ::GetSystemMetrics (SM_CYSMICON);
@@ -2308,7 +2308,7 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(cs);
 
         // Start the keyboard hook
-        TLSData* pTLSData = GetApp().SetTlsData();
+        TLSData* pTLSData = GetApp()->SetTlsData();
         pTLSData->mainWnd = T::GetHwnd();
         m_kbdHook = ::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
 
@@ -2340,7 +2340,7 @@ namespace Win32xx
         }
 
         // Setup the menu
-        HMENU menu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+        HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
         SetFrameMenu(menu); // 0 if IDW_MAIN menu resource is missing
         if (menu != 0)
         {
@@ -3109,9 +3109,9 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::SetAccelerators(UINT accelID)
     {
-        m_accel = LoadAccelerators(GetApp().GetResourceHandle(), MAKEINTRESOURCE(accelID));
+        m_accel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(accelID));
         if (m_accel)
-            GetApp().SetAccelerators(m_accel, *this);
+            GetApp()->SetAccelerators(m_accel, *this);
     }
 
     // Sets the frame's menu from a Resource ID.
@@ -3123,7 +3123,7 @@ namespace Win32xx
         if (menuID != 0)
         {
         // Sets the frame's menu from a resource ID.
-            menu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(menuID));
+            menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(menuID));
             assert (menu != 0);
         }
 
@@ -3729,7 +3729,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CALLBACK CFrameT<T>::StaticKeyboardProc(int code, WPARAM wparam, LPARAM lparam)
     {
-        TLSData* pTLSData = GetApp().GetTlsData();
+        TLSData* pTLSData = GetApp()->GetTlsData();
         HWND hFrame = pTLSData->mainWnd;
         CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(CWnd::GetCWndPtr(hFrame));
         assert(pFrame);

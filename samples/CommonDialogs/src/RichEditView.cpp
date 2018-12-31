@@ -319,7 +319,7 @@ DoPreparePrinting(CPrintInfo& info)                                         /*
       // set up a dialog to choose the printer and printing parameters
     assert(info.m_pPD);
       // get the printing parameters
-    if (info.m_pPD->DoModal(GetApp().GetMainWnd()) != IDOK)
+    if (info.m_pPD->DoModal(GetApp()->GetMainWnd()) != IDOK)
         return FALSE;
 
       // save the printer dialog parameters so they are available

@@ -411,7 +411,7 @@ namespace Win32xx
         // We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
         SendMessage(TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
 
-        TLSData* pTLSData = GetApp().GetTlsData();
+        TLSData* pTLSData = GetApp()->GetTlsData();
         m_frame = pTLSData->mainWnd;
     }
 
@@ -863,7 +863,7 @@ namespace Win32xx
         //  the popup menu. Messages are sent to StaticMsgHook.
 
         // Remove any remaining hook first
-        TLSData* pTLSData = GetApp().GetTlsData();
+        TLSData* pTLSData = GetApp()->GetTlsData();
         pTLSData->pMenuBar = this;
         if (pTLSData->msgHook != NULL)
             ::UnhookWindowsHookEx(pTLSData->msgHook);
@@ -1101,9 +1101,9 @@ namespace Win32xx
     // This callback used to capture keyboard input while a popup menu is active.
     inline LRESULT CALLBACK CMenuBar::StaticMsgHook(int code, WPARAM wparam, LPARAM lparam)
     {
-        assert( &GetApp() );
+        assert( GetApp() );
         MSG* pMsg = reinterpret_cast<MSG*>(lparam);
-        TLSData* pTLSData = GetApp().GetTlsData();
+        TLSData* pTLSData = GetApp()->GetTlsData();
         assert(pTLSData);
         CMenuBar* pMenuBar = pTLSData->pMenuBar;
 

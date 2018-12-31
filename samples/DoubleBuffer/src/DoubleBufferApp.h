@@ -21,8 +21,8 @@ private:
 };
 
 
-// a useful function that returns a reference to the CDoubleBufferApp object
-inline CDoubleBufferApp& GetFrameApp() { return static_cast<CDoubleBufferApp&>(GetApp()); }
+// a useful function that returns a pointer to the CDoubleBufferApp object
+inline CDoubleBufferApp* GetFrameApp() { return static_cast<CDoubleBufferApp*>(GetApp()); }
 
 
 #endif // define DOUBLEBUFFERAPP_H

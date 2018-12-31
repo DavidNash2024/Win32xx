@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CThemesApp object
-inline CThemesApp& GetThemeApp() { return static_cast<CThemesApp&>(GetApp()); }
+// returns a pointer to the CThemesApp object
+inline CThemesApp* GetThemeApp() { return static_cast<CThemesApp*>(GetApp()); }
 
 
 #endif // define THEMESAPP_H

@@ -18,8 +18,8 @@ private:
 };
 
 
-// returns a reference to the CWceFrameApp object
-inline CWceFrameApp& GetFrameApp() { return static_cast<CWceFrameApp&>(GetApp()); }
+// returns a pointer to the CWceFrameApp object
+inline CWceFrameApp* GetFrameApp() { return static_cast<CWceFrameApp*>(GetApp()); }
 
 
 #endif //SIMPLEAPP_H

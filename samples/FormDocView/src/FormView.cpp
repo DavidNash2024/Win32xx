@@ -37,7 +37,7 @@ INT_PTR CFormView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
 CFormDoc& CFormView::GetDoc()
 {
-    return GetSdiApp().GetMainFrame().GetDoc();
+    return GetSdiApp()->GetMainFrame().GetDoc();
 }
 
 BOOL CFormView::OnButton()

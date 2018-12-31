@@ -9,7 +9,7 @@
 // Definitions for the CMyDialog class
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
-    m_hInfo = (HICON)GetApp().LoadIcon(IDI_INFO);
+    m_hInfo = (HICON)GetApp()->LoadIcon(IDI_INFO);
 }
 
 CMyDialog::~CMyDialog()

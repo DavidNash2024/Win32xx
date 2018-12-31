@@ -23,8 +23,8 @@ private:
     CMainFrame m_frame;
 };
 
-// returns a reference to the CScribbleApp object
-inline CScribbleApp& GetScribbleApp() { return static_cast<CScribbleApp&>(GetApp()); }
+// returns a pointer to the CScribbleApp object
+inline CScribbleApp* GetScribbleApp() { return static_cast<CScribbleApp*>(GetApp()); }
 
 #endif //SCRIBBLEAPP_H
 

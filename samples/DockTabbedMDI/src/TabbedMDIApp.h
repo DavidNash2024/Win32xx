@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CTabbedMDIApp object
-inline CTabbedMDIApp& GetTabbedMDIApp() { return static_cast<CTabbedMDIApp&>(GetApp()); }
+// returns a pointer to the CTabbedMDIApp object
+inline CTabbedMDIApp* GetTabbedMDIApp() { return static_cast<CTabbedMDIApp*>(GetApp()); }
 
 
 #endif // TABBEDMDIAPP_H

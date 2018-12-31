@@ -129,7 +129,7 @@ DoModal(HWND hWndOwner /* = 0 */)                   /*
     if (hWndOwner == 0)
         hWndOwner = GetParameters().hwndOwner;
     if (hWndOwner == 0)
-        hWndOwner = GetApp().GetMainWnd();
+        hWndOwner = GetApp()->GetMainWnd();
       // prepare the list box dialog: load the color table choice items
     m_LBDlg.ClearList();
     for (UINT i = 0; i < GetTableSize(); i++)

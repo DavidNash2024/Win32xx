@@ -26,7 +26,7 @@ LRESULT CMySlider::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
             int pos = GetPos();
 
             // Get a pointer to the MyDialog object
-            CMyDialog& MyDialog = GetDialogApp().GetDialog();
+            CMyDialog& MyDialog = GetDialogApp()->GetDialog();
 
             MyDialog.SetProgress(pos);     // Set the progress bar position
             MyDialog.SetScroll(pos);       // Set the scroll bar position

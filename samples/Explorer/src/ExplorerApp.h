@@ -21,8 +21,8 @@ private:
     CMainFrame m_frame;
 };
 
-// returns a reference to the CExplorerApp object
-inline CExplorerApp& GetExplorerApp() { return static_cast<CExplorerApp&>(GetApp()); }
+// returns a pointer to the CExplorerApp object
+inline CExplorerApp* GetExplorerApp() { return static_cast<CExplorerApp*>(GetApp()); }
 
 
 #endif  //EXPLORERAPP_H

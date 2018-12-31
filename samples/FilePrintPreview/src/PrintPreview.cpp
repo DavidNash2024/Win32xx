@@ -737,16 +737,16 @@ CPreviewPane()                                                          /*
       // Register the window class for use as a custom control in the dialog
     WNDCLASS wc;
     ZeroMemory(&wc, sizeof(WNDCLASS));
-    if (!::GetClassInfo(TheApp().GetInstanceHandle(), ClassName, &wc))
+    if (!::GetClassInfo(TheApp()->GetInstanceHandle(), ClassName, &wc))
     {
         wc.lpszClassName = ClassName;
         wc.lpfnWndProc   = ::DefWindowProc;
-        wc.hInstance     = TheApp().GetInstanceHandle();
+        wc.hInstance     = TheApp()->GetInstanceHandle();
         wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
         wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
         ::RegisterClass(&wc);
     }
-    assert(::GetClassInfo(TheApp().GetInstanceHandle(), ClassName, &wc));
+    assert(::GetClassInfo(TheApp()->GetInstanceHandle(), ClassName, &wc));
     SetScrollSizes(m_ScrollSize = m_LastWindowSize = CSize(0, 0));
     m_ZoomState      = ZOOM_OUT;
     m_PrevZoomState  = -1;

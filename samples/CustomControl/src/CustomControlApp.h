@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CCustomControlApp object
-inline CCustomControlApp& GetDlgApp() { return static_cast<CCustomControlApp&>(GetApp()); }
+// returns a pointer to the CCustomControlApp object
+inline CCustomControlApp* GetDlgApp() { return static_cast<CCustomControlApp*>(GetApp()); }
 
 
 #endif // define CUSTOMCONTROLAPP_H

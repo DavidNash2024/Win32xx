@@ -683,9 +683,9 @@ namespace Win32xx
             HCURSOR cursor;
             DWORD side = GetDocker().GetDockStyle() & 0xF;
             if ((side == DS_DOCKED_LEFT) || (side == DS_DOCKED_RIGHT))
-                cursor = GetApp().LoadCursor(IDW_SPLITH);
+                cursor = GetApp()->LoadCursor(IDW_SPLITH);
             else
-                cursor = GetApp().LoadCursor(IDW_SPLITV);
+                cursor = GetApp()->LoadCursor(IDW_SPLITV);
 
             if (cursor) SetCursor(cursor);
             else TRACE("**WARNING** Missing cursor resource for slider bar\n");
@@ -2011,7 +2011,7 @@ namespace Win32xx
         pDocker->SetDockSize(dockSize);
 
         // Issue TRACE warnings for any missing resources
-        HMODULE module= GetApp().GetResourceHandle();
+        HMODULE module= GetApp()->GetResourceHandle();
 
         if (!(dockStyle & DS_NO_RESIZE))
         {
@@ -3006,12 +3006,12 @@ namespace Win32xx
     // Called when the this docker is activated.
     inline LRESULT CDocker::OnActivate(UINT, WPARAM wparam, LPARAM)
     {
-        if ((wparam != WA_INACTIVE) && (this != GetDockAncestor()) && IsUndocked())
+        if ((this != GetDockAncestor()) && IsUndocked())
         {
             GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
 
             // Give the view window focus unless its child already has it
-            if (!GetView().IsChild(GetFocus()))
+            if ((wparam != WA_INACTIVE) && !GetView().IsChild(GetFocus()))
                 GetView().SetFocus();
         }
 
@@ -4923,7 +4923,7 @@ namespace Win32xx
 
     inline void CDockContainer::SetTabIcon(UINT iconID)
     {
-        HICON icon = reinterpret_cast<HICON>(GetApp().LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
+        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
         SetTabIcon(icon);
     }
 

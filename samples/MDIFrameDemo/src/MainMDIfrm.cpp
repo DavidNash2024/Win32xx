@@ -207,12 +207,12 @@ void CMainMDIFrame::SetupMenuIcons()
     CFrame::SetupMenuIcons();
 
     // Add some extra icons for menu items
-    AddMenuIcon(IDM_FILE_NEWVIEW, GetApp().LoadIcon(IDI_VIEW));
-    AddMenuIcon(IDM_FILE_NEWRECT, GetApp().LoadIcon(IDI_RECT));
-    AddMenuIcon(IDM_FILE_NEWMAX, GetApp().LoadIcon(IDI_MAX));
-    AddMenuIcon(IDM_FILE_NEWTEXT, GetApp().LoadIcon(IDI_TEXT));
-    AddMenuIcon(IDM_FILE_NEWLIST, GetApp().LoadIcon(IDI_FILES));
-    AddMenuIcon(IDM_FILE_NEWTREE, GetApp().LoadIcon(IDI_CLASSES));
+    AddMenuIcon(IDM_FILE_NEWVIEW, GetApp()->LoadIcon(IDI_VIEW));
+    AddMenuIcon(IDM_FILE_NEWRECT, GetApp()->LoadIcon(IDI_RECT));
+    AddMenuIcon(IDM_FILE_NEWMAX, GetApp()->LoadIcon(IDI_MAX));
+    AddMenuIcon(IDM_FILE_NEWTEXT, GetApp()->LoadIcon(IDI_TEXT));
+    AddMenuIcon(IDM_FILE_NEWLIST, GetApp()->LoadIcon(IDI_FILES));
+    AddMenuIcon(IDM_FILE_NEWTREE, GetApp()->LoadIcon(IDI_CLASSES));
 }
 
 void CMainMDIFrame::SetupToolBar()

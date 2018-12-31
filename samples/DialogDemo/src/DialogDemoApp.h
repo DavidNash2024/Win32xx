@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CDialogDemoApp object
-inline CDialogDemoApp& GetDlgApp() { return static_cast<CDialogDemoApp&>(GetApp()); }
+// returns a pointer to the CDialogDemoApp object
+inline CDialogDemoApp* GetDlgApp() { return static_cast<CDialogDemoApp*>(GetApp()); }
 
 
 #endif // define DLGSUBCLASSAPP_H

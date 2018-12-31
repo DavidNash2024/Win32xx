@@ -147,7 +147,7 @@ LoadPersistentData()                                                        /*
 *-----------------------------------------------------------------------------*/
 {
       // determine the availability of the archive file
-    if (_taccess(theApp.GetArcvFile(), 0x04) != 0)
+    if (_taccess(theApp->GetArcvFile(), 0x04) != 0)
     {
         CString msg = _T("Default values are being used on this first\n")
             _T("startup. Your customized settings, colors, and font\n")
@@ -158,9 +158,9 @@ LoadPersistentData()                                                        /*
     }
     try
     {
-        CArchive ar(theApp.GetArcvFile(), CArchive::load);
+        CArchive ar(theApp->GetArcvFile(), CArchive::load);
               // deserialize in the same order as serialized
-        ar >> theApp;   // for the app
+        ar >> *theApp;   // for the app
         ar >> *this;    // for the mainframe and base classes
         ar >> m_View;   // for the view, including control colors
         Invalidate();   // repaint the client with recovered colors
@@ -189,7 +189,7 @@ OnColorChoice()                                                             /*
     The staus bar color has no message to redraw it, so it is set here.
 *-----------------------------------------------------------------------------*/
 {
-    m_ColorChoice.DoModal(GetApp().GetMainWnd()); 
+    m_ColorChoice.DoModal(GetApp()->GetMainWnd()); 
       // reset the status bar color
     UINT selection = m_ColorChoice.GetSelectedColorID();
     if (selection == SBBg)
@@ -532,7 +532,7 @@ OnFontChoice()                                                              /*
         Select the view font typeface, characteristics, and color.
 *-----------------------------------------------------------------------------*/
 {
-    HWND hOwnerWnd = GetApp().GetMainWnd();
+    HWND hOwnerWnd = GetApp()->GetMainWnd();
       // open the dialog
     m_FontChoice.SetBoxTitle(_T("Select font for rich edit box"));
     LOGFONT lf;
@@ -720,9 +720,9 @@ SaveRegistrySettings()                                                      /*
 {
     try
     {
-        CArchive ar(theApp.GetArcvFile(), CArchive::store);
+        CArchive ar(theApp->GetArcvFile(), CArchive::store);
              // serialize in the following order
-        ar << theApp;   // for the App
+        ar << *theApp;   // for the App
         ar << *this;    // for the mainframe and base classes
         ar << m_View;   // for the view, including control colors
     }

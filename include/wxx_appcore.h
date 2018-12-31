@@ -155,7 +155,7 @@ namespace Win32xx
     // Note: CFrame set's itself as the main window of its thread
     inline HWND CWinThread::GetMainWnd() const
     {
-        TLSData* pTLSData = GetApp().GetTlsData();
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         // Will assert if the thread doesn't have TLSData assigned.
         // TLSData is assigned when the first window in the thread is created.
@@ -263,7 +263,7 @@ namespace Win32xx
                 // Search the chain of parents for pretranslated messages.
                 for (HWND wnd = msg.hwnd; wnd != NULL; wnd = ::GetParent(wnd))
                 {
-                    CWnd* pWnd = GetApp().GetCWndFromMap(wnd);
+                    CWnd* pWnd = GetApp()->GetCWndFromMap(wnd);
                     if (pWnd)
                     {
                         isProcessed = pWnd->PreTranslateMessage(msg);
@@ -306,7 +306,7 @@ namespace Win32xx
     // Note: CFrame set's itself as the main window of its thread
     inline void CWinThread::SetMainWnd(HWND wnd)
     {
-        TLSData* pTLSData = GetApp().SetTlsData();
+        TLSData* pTLSData = GetApp()->SetTlsData();
         pTLSData->mainWnd = wnd;
     }
 
@@ -337,7 +337,7 @@ namespace Win32xx
 
         if (pThread->InitInstance())
         {
-            GetApp().SetTlsData();
+            GetApp()->SetTlsData();
             return pThread->MessageLoop();
         }
 

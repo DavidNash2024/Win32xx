@@ -18,8 +18,8 @@ private:
 };
 
 
-// returns a reference to the CSimpleApp object
-inline CSimpleApp& GetSimpleApp() { return static_cast<CSimpleApp&>(GetApp()); }
+// returns a pointer to the CSimpleApp object
+inline CSimpleApp* GetSimpleApp() { return static_cast<CSimpleApp*>(GetApp()); }
 
 
 #endif //SIMPLEAPP_H

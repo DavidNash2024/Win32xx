@@ -195,7 +195,7 @@ void CMainMDIFrame::SetupMenuIcons()
     CMDIDockFrame::SetupMenuIcons();
 
     // Add an extra icon for the New Docker menu item
-    AddMenuIcon(IDM_FILE_NEWDOCK, GetApp().LoadIcon(IDW_MAIN));
+    AddMenuIcon(IDM_FILE_NEWDOCK, GetApp()->LoadIcon(IDW_MAIN));
 }
 
 void CMainMDIFrame::SetupToolBar()

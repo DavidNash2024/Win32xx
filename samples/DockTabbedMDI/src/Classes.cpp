@@ -157,7 +157,7 @@ void CContainClasses::OnFileNew()
 void CContainClasses::OnHelpAbout()
 {
     // Send a message to the frame requesting the help dialog
-    GetTabbedMDIApp().GetMainFrame().SendMessage(WM_HELP);
+    GetTabbedMDIApp()->GetMainFrame().SendMessage(WM_HELP);
 }
 
 void CContainClasses::SetupToolBar()

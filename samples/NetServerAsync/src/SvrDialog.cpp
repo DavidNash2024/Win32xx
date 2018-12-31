@@ -87,7 +87,7 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM lparam)
 
 void CTCPClientDlg::OnDestroy()
 {
-    CSvrDialog& dialog = GetDlgApp().GetDialog();
+    CSvrDialog& dialog = GetDlgApp()->GetDialog();
     dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(m_pSocket.get()), 0);
 }
 

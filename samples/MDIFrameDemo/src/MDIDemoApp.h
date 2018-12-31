@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CMDIDemoApp object
-inline CMDIDemoApp& GetMDIApp() { return static_cast<CMDIDemoApp&>(GetApp()); }
+// returns a pointer to the CMDIDemoApp object
+inline CMDIDemoApp* GetMDIApp() { return static_cast<CMDIDemoApp*>(GetApp()); }
 
 
 #endif // MDIDEMOAPP_H
