@@ -392,7 +392,6 @@ namespace Win32xx
         // Constructor
         CDC_Data() : dc(0), count(1L), isManagedHDC(FALSE), wnd(0), savedDCState(0) {}
 
-        std::vector<GDIPtr> m_vGDIObjects;  // Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
         CBitmap bitmap;
         CBrush  brush;
         CFont   font;
@@ -1288,7 +1287,7 @@ namespace Win32xx
             if (m != pApp->m_mapCGDIData.end())
             {
                 // Erase the CGDIObject pointer entry from the map
-				pApp->m_mapCGDIData.erase(m);
+                pApp->m_mapCGDIData.erase(m);
                 success = TRUE;
             }
 
@@ -2764,7 +2763,7 @@ namespace Win32xx
             if (m != pApp->m_mapCDCData.end())
             {
                 // Erase the CDC data entry from the map
-				pApp->m_mapCDCData.erase(m);
+                pApp->m_mapCDCData.erase(m);
                 success = TRUE;
             }
 
@@ -2794,7 +2793,9 @@ namespace Win32xx
     inline HGDIOBJ CDC::SelectObject(HGDIOBJ object) const
     {
         assert(m_pData);
-        return ::SelectObject(m_pData->dc, object);
+        HGDIOBJ oldObject = ::SelectObject(m_pData->dc, object);
+        assert(oldObject != 0);     // SelectObject will fail if object is invalid.
+        return oldObject;
     }
 
     // Select a bitmap into the device context.
@@ -2802,7 +2803,9 @@ namespace Win32xx
     inline HBITMAP CDC::SelectObject(HBITMAP bitmap) const
     {
         assert(m_pData);
-        return (HBITMAP)::SelectObject(m_pData->dc, bitmap);
+        HBITMAP oldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
+        assert(oldBitmap != 0);     // SelectObject will fail if bitmap is invalid.
+        return oldBitmap;
     }
 
     // Select a brush into the device context.
@@ -2810,7 +2813,9 @@ namespace Win32xx
     inline HBRUSH CDC::SelectObject(HBRUSH brush) const
     {
         assert(m_pData);
-        return reinterpret_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
+        HBRUSH oldBrush = reinterpret_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
+        assert(oldBrush != 0);      // SelectObject will fail if brush is invalid.
+        return oldBrush;
     }
 
     // Select a font into the device context.
@@ -2818,7 +2823,9 @@ namespace Win32xx
     inline HFONT CDC::SelectObject(HFONT font) const
     {
         assert(m_pData);
-        return reinterpret_cast<HFONT>(::SelectObject(m_pData->dc, font));
+        HFONT oldFont = reinterpret_cast<HFONT>(::SelectObject(m_pData->dc, font));
+        assert(oldFont);
+        return oldFont;
     }
 
     // Select a pen into the device context.
@@ -2826,7 +2833,9 @@ namespace Win32xx
     inline HPEN CDC::SelectObject(HPEN pen) const
     {
         assert(m_pData);
-        return reinterpret_cast<HPEN>(::SelectObject(m_pData->dc, pen));
+        HPEN oldPen = reinterpret_cast<HPEN>(::SelectObject(m_pData->dc, pen));
+        assert(oldPen);
+        return oldPen;
     }
 
     // Select a region into the device context.
@@ -2834,8 +2843,9 @@ namespace Win32xx
     inline int CDC::SelectObject(HRGN rgn) const
     {
         assert(m_pData);
-        INT_PTR object = reinterpret_cast<INT_PTR>(::SelectObject(m_pData->dc, rgn));
-        return static_cast<int>(object);
+        HGDIOBJ object = ::SelectObject(m_pData->dc, rgn);
+        assert(object != HGDI_ERROR);
+        return reinterpret_cast<int>(object);
     }
 
     // Fills a rectangle with a solid color
