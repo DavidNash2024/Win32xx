@@ -24,12 +24,13 @@ CBitmap CView::CreateMaskBitmap()
     CMemDC dcMem2(0);
 
     SelectObject(dcMem, m_blue);
-    dcMem2.SelectObject(mask);
+    CBitmap oldBitmap = dcMem2.SelectObject(mask);
 
     COLORREF transparent = RGB(255, 255, 255);
     SetBkColor(dcMem, transparent);
     dcMem2.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, dcMem, 0, 0, SRCCOPY);
     dcMem.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, dcMem2, 0, 0, SRCINVERT);
+	dcMem2.SelectObject(oldBitmap);
 
     return mask;
 }

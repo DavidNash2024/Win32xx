@@ -2433,10 +2433,8 @@ namespace Win32xx
 
         WORD hashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
         CBitmap hash;
-        CBrush dithered;
         hash.CreateBitmap(8, 8, 1, 1, hashPattern);
-        dithered.CreatePatternBrush(hash);
-        dcBar.SelectObject(dithered);
+        dcBar.CreatePatternBrush(hash);
 
         CRect rc = pDockBar->GetWindowRect();
         ScreenToClient(rc);
