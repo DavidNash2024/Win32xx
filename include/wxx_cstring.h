@@ -267,13 +267,13 @@ namespace Win32xx
     {
         friend CString operator + (const CString& string1, const CString& string2);
         friend CString operator + (const CString& string1, const TCHAR* pText);
-		friend CString operator + (const CString& string1, CHAR ch);
-		friend CString operator + (const CString& string1, WCHAR ch);
+        friend CString operator + (const CString& string1, CHAR ch);
+        friend CString operator + (const CString& string1, WCHAR ch);
         friend CString operator + (const CString& string1, int val);
         friend CString operator + (const CString& string1, double val);
         friend CString operator + (const TCHAR* pText, const CString& string1);
         friend CString operator + (CHAR ch, const CString& string1);
-		friend CString operator + (WCHAR ch, const CString& string1);
+        friend CString operator + (WCHAR ch, const CString& string1);
         friend CString operator + (int val, const CString& string1);
         friend CString operator + (double val, const CString& string1);
 
@@ -1846,10 +1846,10 @@ namespace Win32xx
 
     inline CString operator + (WCHAR ch, const CString& string1)
     {
-		CString str1(string1);
-		CString str(ch);
-		str += str1;
-		return str;
+        CString str1(string1);
+        CString str(ch);
+        str += str1;
+        return str;
     }
 
     inline CString operator + (int val, const CString& string1)
@@ -1893,6 +1893,7 @@ namespace Win32xx
 
   #ifndef CSIDL_APPDATA
     #define CSIDL_APPDATA     0x001a
+    #define CSIDL_PERSONAL    0x0005 /* My Documents */
   #endif
 
   #ifndef CSIDL_FLAG_CREATE
@@ -1904,6 +1905,25 @@ namespace Win32xx
                 // Call the SHGetFolderPath function to retrieve the AppData folder
                 pSHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, AppData.GetBuffer(MAX_PATH));
                 AppData.ReleaseBuffer();
+            }
+
+            // If we can't get the AppData folder, get the MyDocuments folder instead
+            if (AppData.IsEmpty())
+            {
+                typedef HRESULT(WINAPI *GETSPECIALPATH)(HWND, LPTSTR, int, BOOL);
+
+#ifdef UNICODE
+                GETSPECIALPATH pGetSpecialPath = (GETSPECIALPATH)GetProcAddress(hShell, "SHGetSpecialFolderPathW");
+#else
+                GETSPECIALPATH pGetSpecialPath = (GETSPECIALPATH)GetProcAddress(hShell, "SHGetSpecialFolderPathA");
+#endif
+                
+                if (pGetSpecialPath)
+                {
+                    // Call the SHGetSpecialFolderPath function to retrieve the MyDocuments folder
+                    pGetSpecialPath(NULL, AppData.GetBuffer(MAX_PATH), CSIDL_PERSONAL, TRUE);
+                    AppData.ReleaseBuffer();
+                }
             }
 
             ::FreeLibrary(hShell);

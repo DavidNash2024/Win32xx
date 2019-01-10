@@ -1301,13 +1301,14 @@ namespace Win32xx
 
                         // Draw border.
                         CPen Pen(PS_SOLID, 1, GetMenuBarTheme().clrOutline);
-                        drawDC.SelectObject(Pen);
+                        CPen oldPen = drawDC.SelectObject(Pen);
                         drawDC.MoveTo(rc.left, rc.bottom);
                         drawDC.LineTo(rc.left, rc.top);
                         drawDC.LineTo(rc.right-1, rc.top);
                         drawDC.LineTo(rc.right-1, rc.bottom);
                         drawDC.MoveTo(rc.right-1, rc.bottom);
                         drawDC.LineTo(rc.left, rc.bottom);
+                        drawDC.SelectObject(oldPen);
                     }
 
                     CString str;
@@ -1320,11 +1321,12 @@ namespace Win32xx
 
                     // Draw highlight text.
                     CFont Font = GetMenuBar().GetFont();
-                    drawDC.SelectObject(Font);
+                    CFont oldFont = drawDC.SelectObject(Font);
 
                     rc.bottom += 1;
                     drawDC.SetBkMode(TRANSPARENT);
                     drawDC.DrawText(str, str.GetLength(), rc, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+                    drawDC.SelectObject(oldFont);
 
                     return CDRF_SKIPDEFAULT;  // No further drawing
                 }
@@ -1648,10 +1650,12 @@ namespace Win32xx
             {
                 // draw selected item background
                 CBrush brush(mbt.clrHot1);
-                drawDC.SelectObject(brush);
+                CBrush oldBrush = drawDC.SelectObject(brush);
                 CPen pen(PS_SOLID, 1, mbt.clrOutline);
-                drawDC.SelectObject(pen);
+                CPen oldPen = drawDC.SelectObject(pen);
                 drawDC.Rectangle(drawRect.left, drawRect.top, drawRect.right, drawRect.bottom);
+                drawDC.SelectObject(oldBrush);
+                drawDC.SelectObject(oldPen);
             }
             else
             {
@@ -1692,9 +1696,9 @@ namespace Win32xx
             bkRect.SetRect(left, top, left + xIcon, top + yIcon);
 
             CBrush brush(mbt.clrHot2);
-            drawDC.SelectObject(brush);
+            CBrush oldBrush = drawDC.SelectObject(brush);
             CPen pen(PS_SOLID, 1, mbt.clrOutline);
-            drawDC.SelectObject(pen);
+            CPen oldPen = drawDC.SelectObject(pen);
 
             // Draw the checkmark's background rectangle.
             drawDC.Rectangle(bkRect.left, bkRect.top, bkRect.right, bkRect.bottom);
@@ -1734,6 +1738,9 @@ namespace Win32xx
                 maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
                 drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
             }
+            
+            drawDC.SelectObject(oldBrush);
+            drawDC.SelectObject(oldPen);
         }
     }
 

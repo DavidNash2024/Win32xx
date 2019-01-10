@@ -64,11 +64,9 @@ void CDoc::Print()
     // Copy the bitmap from the View window
     CClientDC viewDC(GetView());
     CMemDC memDC(viewDC);
-    CBitmap bmView;
-    bmView.CreateCompatibleBitmap(viewDC, width, height);
-    memDC.SelectObject(bmView);
+    memDC.CreateCompatibleBitmap(viewDC, width, height);
     BitBlt(memDC, 0, 0, width, height, viewDC, 0, 0, SRCCOPY);
-
+    CBitmap bmView = memDC.DetachBitmap();
     CPrintDialog printDlg;
 
     try
