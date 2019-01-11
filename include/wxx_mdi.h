@@ -669,7 +669,7 @@ namespace Win32xx
                     else
                     {
                         GetMDIClient().SendMessage(WM_MDISETMENU, (WPARAM)(menu.GetHandle()),
-							(LPARAM)(menuWindow.GetHandle()));
+                            (LPARAM)(menuWindow.GetHandle()));
                         T::DrawMenuBar();
                     }
                 }

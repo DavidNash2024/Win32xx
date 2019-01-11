@@ -937,7 +937,6 @@ namespace Win32xx
     {
         // Clear any existing filter
         m_ofn.lpstrFilter = NULL;
-        m_filter.Empty();
 
         // convert any '|' characters in pFilter to NULL characters
         if (pFilter)
@@ -1305,7 +1304,7 @@ namespace Win32xx
         // clear out logfont, style name, and choose font structure
         ZeroMemory(&m_logFont, sizeof(m_logFont));
         ZeroMemory(&m_cf, sizeof(m_cf));
-		m_cf.lStructSize = sizeof(m_cf);
+        m_cf.lStructSize = sizeof(m_cf);
 
         // set dialog parameters
         FillInLogFont(charformat);

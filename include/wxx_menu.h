@@ -288,7 +288,7 @@ namespace Win32xx
             if (m != pApp->m_mapCMenuData.end())
             {
                 // Erase the Menu pointer entry from the map
-				pApp->m_mapCMenuData.erase(m);
+                pApp->m_mapCMenuData.erase(m);
                 success = TRUE;
             }
 

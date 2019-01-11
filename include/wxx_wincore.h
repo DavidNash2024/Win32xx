@@ -467,36 +467,36 @@ namespace Win32xx
         // Any dialog or window using DDX/DDV for its controls should
         // override of this member, and put calls to the DDX and DDV functions
         // there.  For example:
-		
+        
         // connect to edit box holding int and specify limits.
         // dx.DDX_Text(IDC_EDIT_UINT,       m_iUINT);
-        // dx.DDV_MinMaxUInt(               m_iUINT, 10, 10000);		
-		  
-		// connect to edit box holding double and specify limits.
-		// dx.DDX_Text(IDC_EDIT_DOUBLE,     m_double);
-		// dx.DDV_MinMaxDouble(             m_double, -10.0, 100000.);
+        // dx.DDV_MinMaxUInt(               m_iUINT, 10, 10000);        
+          
+        // connect to edit box holding double and specify limits.
+        // dx.DDX_Text(IDC_EDIT_DOUBLE,     m_double);
+        // dx.DDV_MinMaxDouble(             m_double, -10.0, 100000.);
         //
-		// connect to rich edit box holding a string and specify length.
-		// dx.DDX_Text(IDC_EDIT_RICHEDIT,   m_richEdit);
-		// dx.DDV_MaxChars(                 m_richEdit, 25); // limit length
+        // connect to rich edit box holding a string and specify length.
+        // dx.DDX_Text(IDC_EDIT_RICHEDIT,   m_richEdit);
+        // dx.DDV_MaxChars(                 m_richEdit, 25); // limit length
         //
-		// connect to slider control and specify limits.
-		// dx.DDX_Slider(IDC_SLIDER,        m_slider);
-		// dx.DDV_MinMaxSlider(             m_slider, 0, 1000);
+        // connect to slider control and specify limits.
+        // dx.DDX_Slider(IDC_SLIDER,        m_slider);
+        // dx.DDV_MinMaxSlider(             m_slider, 0, 1000);
         //
-		// connect to progress bar.
-		// dx.DDX_Progress(IDC_PROGRESSBAR, m_progress);
+        // connect to progress bar.
+        // dx.DDX_Progress(IDC_PROGRESSBAR, m_progress);
         //
-		// connect to bar to scroll bar.
-		// dx.DDX_Scroll(  IDC_SCROLLBAR,   m_scrollBar);
+        // connect to bar to scroll bar.
+        // dx.DDX_Scroll(  IDC_SCROLLBAR,   m_scrollBar);
         //
-		// connect to radio boxes.
-		// dx.DDX_Radio( IDC_RADIO_A,       m_radioA);
+        // connect to radio boxes.
+        // dx.DDX_Radio( IDC_RADIO_A,       m_radioA);
         //
-		// connect to check boxes.
-		// dx.DDX_Check(IDC_CHECK_A,        m_checkA);
-		// dx.DDX_Check(IDC_CHECK_B,        m_checkB);
-		// dx.DDX_Check(IDC_CHECK_C,        m_checkC);
+        // connect to check boxes.
+        // dx.DDX_Check(IDC_CHECK_A,        m_checkA);
+        // dx.DDX_Check(IDC_CHECK_B,        m_checkB);
+        // dx.DDX_Check(IDC_CHECK_C,        m_checkC);
 
         UNREFERENCED_PARAMETER(dx);
     }
@@ -579,7 +579,7 @@ namespace Win32xx
 
         int nLength = ::GetWindowTextLength(::GetDlgItem(*this, dlgItemID));
         CString str;
-		VERIFY(::GetDlgItemText(*this, dlgItemID, str.GetBuffer(nLength), nLength+1) != 0);
+        VERIFY(::GetDlgItemText(*this, dlgItemID, str.GetBuffer(nLength), nLength+1) != 0);
         str.ReleaseBuffer();
         return str;
     }
@@ -937,7 +937,7 @@ namespace Win32xx
             {
                 if (this == m->second)
                 {
-					pApp->m_mapHWND.erase(m);
+                    pApp->m_mapHWND.erase(m);
                     success = TRUE;
                     break;
                 }
