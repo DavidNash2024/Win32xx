@@ -205,7 +205,7 @@ namespace Win32xx
             if (m != pApp->m_mapCImlData.end())
             {
                 // Erase the CImageList data entry from the map
-				pApp->m_mapCImlData.erase(m);
+                pApp->m_mapCImlData.erase(m);
                 success = TRUE;
             }
 

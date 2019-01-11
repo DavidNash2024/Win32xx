@@ -325,7 +325,7 @@ namespace Win32xx
     // Adds a tab along with the specified view window.
     // The framework assumes ownership of the CWnd pointer provided,
     // and deletes the CWnd object when the tab is removed or destroyed.
-	// Returns a pointer to the view window which was supplied.
+    // Returns a pointer to the view window which was supplied.
     // Use RemoveTabPage to remove the tab and page added in this manner.
     inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, HICON icon, UINT tabID)
     {

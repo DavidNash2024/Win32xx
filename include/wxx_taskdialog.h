@@ -128,8 +128,8 @@ namespace Win32xx
         {
             TaskButton(UINT id, LPCTSTR pText) : buttonID(id)
             {
-				if (IS_INTRESOURCE(pText))        // support MAKEINTRESOURCE
-					buttonText = LoadString((UINT)(UINT_PTR)pText);
+                if (IS_INTRESOURCE(pText))        // support MAKEINTRESOURCE
+                    buttonText = LoadString((UINT)(UINT_PTR)pText);
                 else
                     buttonText = pText;
             }

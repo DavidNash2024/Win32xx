@@ -181,7 +181,7 @@ namespace Win32xx
         // Permit the parent window to handle the drawing of the StatusBar's background.
         // Return TRUE to suppress default background drawing.
         return (GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc,
-			(LPARAM)this) != 0);
+            (LPARAM)this) != 0);
     }
 
     // Called by CStatusBar::Create to set some window parameters
@@ -220,7 +220,7 @@ namespace Win32xx
 
     // Changes the width of an existing pane, or creates a new pane with the specified width.
     // A width of -1 for the last part sets the width to the border of the window.
-	// Refer to SB_SETPARTS in the Windows API documentation for more information.
+    // Refer to SB_SETPARTS in the Windows API documentation for more information.
     inline BOOL CStatusBar::SetPartWidth(int part, int width) const
     {
         assert(IsWindow());

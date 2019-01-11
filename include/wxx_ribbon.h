@@ -517,15 +517,15 @@ namespace Win32xx
         m_fullPath[0] = L'\0';
         m_displayName[0] = L'\0';
 
-		StrCopyW(m_fullPath, fullPath, MAX_PATH);
-		ptr = ::SHGetFileInfoW(fullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
-		if (ptr != NULL)
+        StrCopyW(m_fullPath, fullPath, MAX_PATH);
+        ptr = ::SHGetFileInfoW(fullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
+        if (ptr != NULL)
         {
-			StrCopyW(m_displayName, sfi.szDisplayName, MAX_PATH);
+            StrCopyW(m_displayName, sfi.szDisplayName, MAX_PATH);
         }
         else // Provide a reasonable fall back.
         {
-			StrCopyW(m_displayName, m_fullPath, MAX_PATH);
+            StrCopyW(m_displayName, m_fullPath, MAX_PATH);
         }
 
     }
