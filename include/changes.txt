@@ -188,7 +188,7 @@ Added CWnd::SetExStyle                               member function
 Added CWnd::SetStyle                                 member function
 
 Added ::GetNonClientMetrics                          global function
-Added UWM_GETCDIALIOG                                message
+Added UWM_GETCDIALOG                                 message
 
 Added Direct2D                                       sample
 Added FilePrintPreview                               sample
