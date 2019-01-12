@@ -50,7 +50,7 @@
 //  however we need to have the GDI object separated from the device context.
 //  Wrapper classes for GDI objects are provided for this purpose. The classes
 //  are CBitmap, CBrush, CFont, CPalette, CPen and CRgn. These classes
-//  automatically delete the GDI resource assigned to them when their destructor
+//  automatically delete any GDI resources they create when their destructor
 //  is called. These wrapper class objects can be attached to the CDC as
 //  shown below.
 //
@@ -61,18 +61,23 @@
 //    HDC memDC = ::CreateCompatibleDC(clientDC);
 //    HBITMAP bitmap = ::CreateCompatibleBitmap(clientDC, cx, cy);
 //    HBITMAP oldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(memDC, bitmap));
-//    HPEN pen = ::CreatePen(PS_SOLID, 1, RGB(255,0,0);
-//    HPEN oldPen = reinterpret_cast<HPEN>(::SelectObject(memDC, pen));
+//    HPEN pen1 = ::CreatePen(PS_SOLID, 1, RGB(255,0,0);
+//    HPEN oldPen = reinterpret_cast<HPEN>(::SelectObject(memDC, pen1));
 //    ::MoveToEx(memDC, 0, 0, NULL);
 //    ::LineTo(memDC, 50, 50);
+//
+//    // Select a new pen into memDC
 //    ::SelectObject(memDC, oldPen);
-//    ::DeleteObject(pen);
-//    pen = ::CreatePen(PS_SOLID, 1, RGB(0,255,0);
-//    oldPen = reinterpret_cast<HPEN>(::SelectObject(memDC, pen));
+//    ::DeleteObject(pen1);
+//    HPEN pen2 = ::CreatePen(PS_SOLID, 1, RGB(0,255,0);
+//    oldPen = reinterpret_cast<HPEN>(::SelectObject(memDC, pen2));
+//
 //    ::LineTo(memDC, 80, 80);
 //    ::BitBlt(clientDC, 0, 0, cx, cy, memDC, 0, 0);
+//
+//    // Cleanup
 //    ::SelectObject(memDC, oldPen);
-//    ::DeleteObject(pen);
+//    ::DeleteObject(pen2);
 //    ::SelectObject(memDC, oldBitmap);
 //    ::DeleteObject(bitmap);
 //    ::DeleteDC(memDC);
@@ -99,20 +104,20 @@
 //    CClientDC clientDC(*this)
 //    CMemDC memDC(clientDC);
 //    memDC.CreateCompatibleBitmap(clientDC, cx, cy);
-//    CPen myPen(PS_SOLID, 1, RGB(255,0,0));
-//    CPen oldPen = dcMem.SelectObject(myPen);
+//    CPen pen1(PS_SOLID, 1, RGB(255,0,0));
+//    CPen oldPen = dcMem.SelectObject(pen1);
 //    memDC.MoveTo(0, 0);
 //    memDC.LineTo(50, 50);
 //
-//    // Only need to select the OldPen if myPen is changed while its selected into memDC.
-//    memDC.SelectObject(oldPen);
-//
-//    // Change myPen and then re-select it into memDC
-//    myPen.CreatePen(PS_SOLID, 1, RGB(0,255,0));
-//    memDC.SelectObject(myPen);
+//    // Select a new pen into memDC
+//    CPen pen2(PS_SOLID, 1, RGB(0,255,0));
+//    memDC.SelectObject(pen2);
 //
 //    memDC.LineTo(80,80);
 //    clientDC.BitBlt(0, 0, cx, cy, memDC, 0, 0);
+//
+//    // Cleanup. Remove the pen from the DC before the pen is destroyed.
+//    memDC.SelectObject(oldPen);
 //  }
 
 // Notes:
@@ -125,12 +130,20 @@
 //  * Bitmaps can only be selected into one device context at a time.
 //  * Other GDI resources can be selected into more than one device context at a time.
 //  * Palettes use SelectPalatte to select them into device the context.
-//  * Regions use SelectClipRgn to select them into the device context.
+//  * Clipping regions use SelectClipRgn to select them into the device context.
+//  * Other regions use SelectObject to select them into the device context.
 //  * All the GDI classes are reference counted. This allows functions to safely
 //     pass these objects by value, as well as by pointer or by reference.
 //  * If SelectObject is used to select say a CPen into a device context, the
-//     CPen shouldn't be changed while device context is valid. Use SelectObject to
-//     select the old pen back into the device context before changing the pen.
+//     CPen shouldn't be changed or destroyed while device context is valid. Use 
+//     SelectObject to select the old pen back into the device context before
+//     changing the pen.
+//  * All GDI classes are reference counted and can be copied safely. This means they
+//     can be safely returned by value from functions. The associated GDI resource is
+//     only deleted (if appropriate) when the last copy of the object goes out of scope.
+//  * A copy of a GDI class is a clone of the original. Both class objects manipulate
+//     the one GDI resource.
+
 
 // The CBitmapInfoPtr class is a convenient wrapper for the BITMAPINFO structure.
 // The size of the BITMAPINFO structure is dependant on the type of HBITMAP, and its
@@ -2845,7 +2858,7 @@ namespace Win32xx
         assert(m_pData);
         HGDIOBJ object = ::SelectObject(m_pData->dc, rgn);
         assert(object != HGDI_ERROR);
-        return reinterpret_cast<int>(object);
+        return static_cast<int> (reinterpret_cast<INT_PTR>(object));
     }
 
     // Fills a rectangle with a solid color
