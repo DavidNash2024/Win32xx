@@ -88,7 +88,7 @@
 // 1) Create the socket.
 // 2) Bind an IP address to the socket.
 // 3) Listen on the socket for incoming connection requests.
-// 4) Use StartNotifyRevents to receive notification of network events.
+// 4) Use StartEvents to receive notification of network events.
 // 5) Override OnAccept to accept requests on a newly created data CSocket object.
 // 6) Create a new data socket for each client connection accepted.
 // 7) The server socket uses the 'accept' function to accept an incoming connection
@@ -105,7 +105,7 @@
 // Create an instance of this inherited class, and  perform the following steps:
 // 1) Create the socket.
 // 2) Connect to the server.
-// 3) Use StartNotifyRevents to receive notification of network events.
+// 3) Use StartEvents to receive notification of network events.
 //    We are now ready to send and receive data from the server.
 // * Use Send to send data to the server.
 // * Override OnReceive and use Receive to receive data from the server
