@@ -1257,8 +1257,9 @@ namespace Win32xx
         return m_pData->hGDIObject;
     }
 
-    inline int CGDIObject::GetObject(int count, LPVOID pObject) const
     // Retrieves information for the specified graphics object.
+    // Refer to GetObject in the Windows API documentation for more information.
+    inline int CGDIObject::GetObject(int count, LPVOID pObject) const
     {
         assert(m_pData);
         return ::GetObject(m_pData->hGDIObject, count, pObject);
@@ -2694,13 +2695,13 @@ namespace Win32xx
         ::SelectObject(imageDC, bitmap);
 
         // Create the Mask memory DC
-        CMemDC dcMask(*this);
-        dcMask.CreateBitmap(cx, cy, 1, 1, NULL);
-        dcMask.BitBlt(0, 0, cx, cy, imageDC, 0, 0, SRCCOPY);
+        CMemDC maskDC(*this);
+        maskDC.CreateBitmap(cx, cy, 1, 1, NULL);
+        maskDC.BitBlt(0, 0, cx, cy, imageDC, 0, 0, SRCCOPY);
 
         // Mask the image to 'this' DC
         BitBlt(x, y, cx, cy, imageDC, 0, 0, SRCINVERT);
-        BitBlt(x, y, cx, cy, imageDC, 0, 0, SRCAND);
+        BitBlt(x, y, cx, cy, maskDC, 0, 0, SRCAND);
         BitBlt(x, y, cx, cy, imageDC, 0, 0, SRCINVERT);
     }
 
@@ -2852,6 +2853,7 @@ namespace Win32xx
     }
 
     // Select a region into the device context.
+    // The return value indicates the region's complexity: NULLREGION; SIMPLEREGION; or COMPLEXREGION.
     // Refer to SelectObject in the Windows API documentation for more information.
     inline int CDC::SelectObject(HRGN rgn) const
     {
