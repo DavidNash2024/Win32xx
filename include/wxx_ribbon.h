@@ -1,12 +1,12 @@
-// Win32++   Version 8.6
-// Release Date: 2nd November 2018
+// Win32++   Version 8.6.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2018  David Nash
+// Copyright (c) 2005-2019  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -67,7 +67,7 @@ namespace Win32xx
     class CRibbon : public IUICommandHandler, public IUIApplication
     {
     public:
-        CRibbon() : m_count(0), m_pRibbonFramework(NULL) {}
+        CRibbon();
         ~CRibbon();
 
         // IUnknown methods.
@@ -194,10 +194,16 @@ namespace Win32xx
     // Definitions for the CRibbon class
     //
 
+    inline CRibbon::CRibbon() : m_count(0), m_pRibbonFramework(NULL)
+    {
+        ::CoInitialize(NULL);
+    }
+
     inline CRibbon::~CRibbon()
     {
         // Reference count must be 0 or we have a leak!
         assert(m_count == 0);
+        ::CoUninitialize();
     }
 
     //////////////////////////////////
@@ -306,13 +312,10 @@ namespace Win32xx
     // Creates the ribbon.
     inline bool CRibbon::CreateRibbon(HWND wnd)
     {
-        ::CoInitialize(NULL);
-
         // Instantiate the Ribbon framework object.
         ::CoCreateInstance(CLSID_UIRibbonFramework, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pRibbonFramework));
 
         // Connect the host application to the Ribbon framework.
-
         assert(m_pRibbonFramework);
         HRESULT result = m_pRibbonFramework->Initialize(wnd, this);
         if (FAILED(result))
@@ -340,7 +343,6 @@ namespace Win32xx
             m_pRibbonFramework = NULL;
         }
 
-        ::CoUninitialize();
     }
 
     // Retrieves the height of the ribbon.
