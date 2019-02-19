@@ -167,6 +167,9 @@
 #include "wxx_exception.h"
 #include "wxx_metafile.h"
 
+#ifndef HGDI_ERROR
+  #define HGDI_ERROR ((HANDLE)-1)
+#endif
 
 // Disable macros from Windowsx.h
 #undef CopyRgn
