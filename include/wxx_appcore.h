@@ -63,6 +63,37 @@ namespace Win32xx
 {
 
     ///////////////////////////////////////
+    // Definitions for the CHGlobal class
+    //
+
+    // Allocates a new global memory buffer for this object
+    inline void CHGlobal::Alloc(size_t size)
+    {
+        Free();
+        m_hGlobal = ::GlobalAlloc(GHND, size);
+        if (m_hGlobal == 0)
+            throw std::bad_alloc();
+    }
+
+	// Manually frees the global memory assigned to this object
+    inline void CHGlobal::Free()
+    {
+        if (m_hGlobal != 0)
+            ::GlobalFree(m_hGlobal);
+
+        m_hGlobal = 0;
+    }
+
+	// Reassign is used when global memory has been reassigned, as 
+	// can occur after a call to ::PrintDlg or ::PageSetupDlg.
+	// It assigns a new memory handle to be managed by this object
+	// and assumes any old memory has already been freed.
+	inline void  CHGlobal::Reassign(HGLOBAL hGlobal)
+	{ 
+		m_hGlobal = hGlobal;
+	}
+
+    ///////////////////////////////////////
     // Definitions for the CObject class
     //
     inline void CObject::Serialize(CArchive& /* ar */ )
@@ -352,7 +383,7 @@ namespace Win32xx
     // To begin Win32++, inherit your application class from this one.
     // You must run only one instance of the class inherited from CWinApp.
 
-    inline CWinApp::CWinApp() : m_callback(NULL), m_devMode(0), m_devNames(0)
+    inline CWinApp::CWinApp() : m_callback(NULL)
     {
         if ( 0 != SetnGetThis() )
         {
@@ -388,10 +419,6 @@ namespace Win32xx
 
     inline CWinApp::~CWinApp()
     {
-        // Deallocate the global memory
-        GlobalFreeAll(m_devMode);
-        GlobalFreeAll(m_devNames);
-
         // Forcibly destroy any remaining windows now. Windows created from
         //  static CWnds or dangling pointers are destroyed here.
         std::map<HWND, CWnd*, CompareHWND>::const_iterator m;
@@ -446,29 +473,6 @@ namespace Win32xx
     }
 
 #endif
-
-    // Free the specified global memory. It also provides a TRACE warning
-    // if the global memory is currently locked.
-    inline void CWinApp::GlobalFreeAll(HGLOBAL buffer)
-    {
-        if (buffer == 0)
-            return;
-
-#ifndef _WIN32_WCE
-        // check validity of the handle
-        assert(::GlobalFlags(buffer) != GMEM_INVALID_HANDLE);
-        // decrement the lock count associated with the handle
-        UINT count = ::GlobalFlags(buffer) & GMEM_LOCKCOUNT;
-        while (count--)
-        {
-            TRACE("***WARNING Global memory still locked ***\n");
-            ::GlobalUnlock(buffer);
-        }
-#endif
-
-        // finally, really free the handle
-        ::GlobalFree(buffer);
-    }
 
     // Retrieves a pointer to CDC_Data from the map
     inline CDC_Data* CWinApp::GetCDCData(HDC dc)

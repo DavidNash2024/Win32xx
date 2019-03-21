@@ -103,6 +103,11 @@ namespace Win32xx
     // CGlobaLock is a template class used to provide a self unlocking
     // object to global memory. It is used to provide convenient access
     // to the memory provided by hDevMode and hDevNames handles.
+	// The framework uses this class to eliminate the need to manually
+	// lock or unlock global memory.
+	// This class is typically used with a CHGlobal object but can also
+	// be used with a raw global memory handle.
+	// CDevMode and CDevNames are typedefs of this class.
     template <typename T>
     class CGlobalLock
     {
@@ -125,6 +130,10 @@ namespace Win32xx
 
         T* Get() const          { return m_p; }                 // Returns the pointer
         LPCTSTR c_str() const;                                  // Returns the LPCTSTR (for DEVNAMES only)
+        CString GetDeviceName() const;                          // Returns the printer name (for DEVNAMES only)
+        CString GetDriverName() const;                          // Returns the printer driver (for DEVNAMES only)
+        CString GetPortName() const;                            // Returns the printer port (for DEVNAMES only)
+        bool    IsDefaultPrinter() const;                       // Returns true if this is the default printer (for DEVNAMES only)
 
         // operator overloads
         operator T*() const     { return m_p; }                 // Conversion operator to pointer
@@ -179,15 +188,45 @@ namespace Win32xx
     }
 
 
+    template<>
+    inline CString CGlobalLock<DEVNAMES>::GetDeviceName() const
+    {
+        return (m_p != NULL)? c_str() + (*this)->wDeviceOffset : _T("");
+    }
+
+    template<>
+    inline CString CGlobalLock<DEVNAMES>::GetDriverName() const
+    {
+        return (m_p != NULL)? c_str() + (*this)->wDriverOffset : _T("");
+    }
+
+    template<>
+    inline CString CGlobalLock<DEVNAMES>::GetPortName() const
+    {
+        return (m_p != NULL)? c_str() + (*this)->wOutputOffset : _T("");
+    }
+
+    template<>
+    inline bool CGlobalLock<DEVNAMES>::IsDefaultPrinter() const
+    {
+        return (m_p != NULL)? ((*this)->wDefault & DN_DEFAULTPRN) : false;
+    }
+
+
+
     //////////////////////////////////////////////////////////////////////
     // A set of typedefs to simplify the use of CGlobalLock.
-    // These provide self unlocking objects which can be used for pointers
-    // to global memory. There is no need to unlock the pointer.
+    // These provide self unlocking objects which can be used for handles
+    // to global memory. Using these typedefs eliminate the need to mannualy
+	// lock or unlock the global memory handles.
+	// Note: In the examples below, hDevMode and hDevNames can be either a raw
+	//       global memory handle, or a CHGlobal object.
     //
     // Example usage:
     //   CDevMode  pDevMode(hDevMode);      // and use pDevMode as if it were a LPDEVMODE
     //   CDevNames pDevNames(hDevNames);    // and use pDevNames as if it were a LPDEVNAMES
     //   assert(pDevNames.Get());           // Get can be used to access the underlying pointer
+	//   CDevNames(hDevNames).GetDeviceName // Returns a CString containing the device name.
     //
     /////////////////////////////////////////////////////////////////////
 
@@ -233,15 +272,6 @@ namespace Win32xx
         INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
 
     private:
-        void GlobalFreeAll()
-        {
-            GetApp()->GlobalFreeAll(GetApp()->m_devMode);
-            GetApp()->GlobalFreeAll(GetApp()->m_devNames);
-            GetApp()->m_devMode = 0;
-            GetApp()->m_devNames = 0;
-        }
-
-        // printer resources
         PRINTDLG        m_pd;           // printer selection dlg structure
     };
 
@@ -279,14 +309,6 @@ namespace Win32xx
         static INT_PTR CALLBACK PaintHookProc(HWND, UINT, WPARAM, LPARAM);
 
     private:
-        void GlobalFreeAll()
-        {
-            GetApp()->GlobalFreeAll(GetApp()->m_devMode);
-            GetApp()->GlobalFreeAll(GetApp()->m_devNames);
-            GetApp()->m_devMode = 0;
-            GetApp()->m_devNames = 0;
-        }
-
         PAGESETUPDLG    m_psd;          // page setup dlg structure
     };
 
@@ -307,7 +329,7 @@ namespace Win32xx
     // default printer has changed.
     inline void CWinApp::UpdateDefaultPrinter()
     {
-        if (m_devNames == 0)
+        if (m_devNames.Get() == 0)
         {
             // Allocate global printer memory by specifying the default printer.
             CPrintDialog pd;
@@ -316,11 +338,7 @@ namespace Win32xx
         else
         {
             // Global memory has already been allocated
-            LPDEVNAMES pDevNames = (LPDEVNAMES)::GlobalLock(m_devNames);
-            assert (pDevNames);
-
-            // If our gobal memory is referencing the default printer
-            if (pDevNames && pDevNames->wDefault & DN_DEFAULTPRN)
+            if (CDevNames(m_devNames).IsDefaultPrinter())
             {
                 // Get current default printer
                 PRINTDLG pd;
@@ -329,52 +347,30 @@ namespace Win32xx
                 pd.Flags = PD_RETURNDEFAULT;
                 PrintDlg(&pd);
 
+				CHGlobal devMode(pd.hDevMode);			// frees global memory when it goes out of scope
+				CHGlobal devNames(pd.hDevNames);		// frees global memory when it goes out of scope
+
                 if (pd.hDevNames == 0)
                 {
                     // Printer was default, but now there are no printers.
-                    ::GlobalUnlock(m_devNames);
-                    ::GlobalUnlock(m_devMode);
-                    GlobalFreeAll(m_devMode);
-                    GlobalFreeAll(m_devNames);
-                    m_devMode = 0;
-                    m_devNames = 0;
+                    m_devMode.Free();
+                    m_devNames.Free();
                 }
                 else
                 {
                     // Compare current default printer to the one in global memory
-                    LPDEVNAMES pDefDevNames = reinterpret_cast<LPDEVNAMES>(::GlobalLock(pd.hDevNames));
-                    if (pDefDevNames)
+                    if (CDevNames(m_devNames).GetDeviceName() != CDevNames(devNames).GetDeviceName() ||
+                        CDevNames(m_devNames).GetDriverName() != CDevNames(devNames).GetDriverName() ||
+                        CDevNames(m_devNames).GetPortName()   != CDevNames(devNames).GetPortName())
                     {
-                        if (lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDriverOffset,
-                            reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wDriverOffset) != 0 ||
-                            lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDeviceOffset,
-                                reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wDeviceOffset) != 0 ||
-                            lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wOutputOffset,
-                                reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wOutputOffset) != 0)
-                        {
-                            // Default printer has changed. Reset the global memory.
-                            ::GlobalUnlock(m_devNames);
-                            ::GlobalUnlock(pd.hDevNames);
-                            GlobalFreeAll(m_devMode);
-                            GlobalFreeAll(m_devNames);
-
-                            m_devMode = pd.hDevMode;
-                            m_devNames = pd.hDevNames;
-                        }
-                    }
-                    else
-                    {
-                        // Printer was default, and unchanged. Keep the existing global memory.
-                        ::GlobalUnlock(m_devNames);
-                        ::GlobalUnlock(pd.hDevNames);
-
-                        GlobalFreeAll(pd.hDevMode);
-                        GlobalFreeAll(pd.hDevNames);
+                        // Default printer has changed. Reset the global memory.
+                        m_devMode.Free();
+                        m_devNames.Free();
+                        m_devMode.Reassign(devMode);
+                        m_devNames.Reassign(devNames);
                     }
                 }
             }
-
-            ::GlobalUnlock(m_devNames);
         }
     }
 
@@ -426,16 +422,10 @@ namespace Win32xx
         CDC dc;
         GetApp()->UpdateDefaultPrinter();
 
-        if ((GetApp()->m_devNames != 0) && (GetApp()->m_devMode != 0))
+        if ((GetApp()->m_devNames.Get() != 0) && (GetApp()->m_devMode.Get() != 0))
         {
-            CDevNames cdevNames(GetApp()->m_devNames);
-            CDevMode cdevMode(GetApp()->m_devMode);
-            LPCTSTR devNames = cdevNames.c_str();
-
-            dc.CreateDC(devNames + cdevNames->wDriverOffset,
-                devNames + cdevNames->wDeviceOffset,
-                devNames + cdevNames->wOutputOffset,
-                cdevMode);
+            dc.CreateDC(GetDriverName(), GetDeviceName(),
+                GetPortName(), CDevMode(GetApp()->m_devMode));
         }
 
         return dc;
@@ -528,22 +518,20 @@ namespace Win32xx
 
         if (ok)
         {
-            GetApp()->m_devMode = m_pd.hDevMode;
-            GetApp()->m_devNames = m_pd.hDevNames;
+            GetApp()->m_devMode.Reassign(m_pd.hDevMode);
+            GetApp()->m_devNames.Reassign(m_pd.hDevNames);
             OnOK();
             ok = IDOK;
         }
         else
         {
-            GlobalUnlock(GetApp()->m_devMode);
-            GlobalUnlock(GetApp()->m_devNames);
-
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
-            // ignore the exception caused by closing the dialog
+            // ignore the error caused by closing the dialog
             {
                 // Reset global memory
-                GlobalFreeAll();
+                GetApp()->m_devMode.Free();
+                GetApp()->m_devNames.Free();
                 throw CWinException(_T("CPrintDialog::DoModal Failed"), error);
             }
 
@@ -575,7 +563,8 @@ namespace Win32xx
         CThreadLock lock(GetApp()->m_printLock);
 
         // Reset global memory
-        GlobalFreeAll();
+        GetApp()->m_devMode.Free();
+        GetApp()->m_devNames.Free();
 
         if (m_pd.hDC)
         {
@@ -587,14 +576,14 @@ namespace Win32xx
         ::PrintDlg(&m_pd);
         m_pd.Flags &= ~PD_RETURNDEFAULT;
 
-        GetApp()->m_devMode = m_pd.hDevMode;
-        GetApp()->m_devNames = m_pd.hDevNames;
+        GetApp()->m_devMode.Reassign(m_pd.hDevMode);
+        GetApp()->m_devNames.Reassign(m_pd.hDevNames);
 
         m_pd.hDevMode = 0;
         m_pd.hDevNames = 0;
 
         // Return TRUE if default printer exists
-        return (GetApp()->m_devNames != 0);
+        return (GetApp()->m_devNames.Get() != 0);
     }
 
 
@@ -602,13 +591,8 @@ namespace Win32xx
     inline CString CPrintDialog::GetDeviceName() const
     {
         CString str;
-        if (GetApp()->m_devNames != 0)
-        {
-            CDevNames pDev = GetDevNames();
-            LPCTSTR devNames = pDev.c_str();
-            LPCTSTR name = devNames + pDev->wDeviceOffset;
-            str = name;
-        }
+        if (GetApp()->m_devNames.Get() != 0)
+            str = GetDevNames().GetDeviceName();
 
         return str;
     }
@@ -639,13 +623,8 @@ namespace Win32xx
     inline CString CPrintDialog::GetDriverName() const
     {
         CString str;
-        if (GetApp()->m_devNames != 0)
-        {
-            CDevNames pDev = GetDevNames();
-            LPCTSTR devNames = pDev.c_str();
-            LPCTSTR name = devNames + pDev->wDriverOffset;
-            str =  name;
-        }
+        if (GetApp()->m_devNames.Get() != 0)
+            str = GetDevNames().GetDriverName();
 
         return str;
     }
@@ -660,13 +639,9 @@ namespace Win32xx
     inline CString CPrintDialog::GetPortName() const
     {
         CString str;
-        if (GetApp()->m_devNames != 0)
-        {
-            CDevNames pDev = GetDevNames();
-            LPCTSTR devNames = pDev.c_str();
-            LPCTSTR name = devNames + pDev->wOutputOffset;
-            str = name;
-        }
+        if (GetApp()->m_devNames.Get() != 0)
+            str = GetDevNames().GetPortName();
+
         return str;
     }
 
@@ -830,21 +805,19 @@ namespace Win32xx
 
         if (ok)
         {
-            GetApp()->m_devMode = m_psd.hDevMode;
-            GetApp()->m_devNames = m_psd.hDevNames;
+            GetApp()->m_devMode.Reassign(m_psd.hDevMode);
+            GetApp()->m_devNames.Reassign(m_psd.hDevNames);
             OnOK();
             ok = IDOK;
         }
         else
         {
-            GlobalUnlock(GetApp()->m_devMode);
-            GlobalUnlock(GetApp()->m_devNames);
-
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE)) // ignore the exception caused by closing the dialog
             {
                 // Reset global memory
-                GlobalFreeAll();
+                GetApp()->m_devMode.Free();
+                GetApp()->m_devNames.Free();
                 throw CWinException(_T("CPageSetupDialog::DoModal Failed"), error);
             }
 

@@ -1,8 +1,30 @@
 Version 8.6.1
 =============
 
-Modified ::GetApp      Now returns a pointer to CWinApp. 
+New Features and Enhancements
+-----------------------------
+* Added CHGlobal class.
+  The CHGlobal class is a wrapper for a global memory handle. It automatically
+  frees the global memory when it goes out of scope.
+  
+* Extended the CGlobalLock class.
+  The CGlobalLock class is used to automatically lock and unlock global memory.
+  Global memory is used to hold memory for DEVNAMES and DEVMODE structures.
+  When the global memory is locked, we acquire a pointer we can use to access
+  its contents. CDevMode and CDevNames are useful typedefs for CGlobalLock.
+  The global memory is locked when CGlobalLock is constructed, and unlocked
+  when CGlobalLock is destructed.  
 
+
+Changes in detail
+-----------------
+Added CHGlobal                                   class
+Added CGlobalLock<DEVNAMES>::GetDeviceName       member function
+Added CGlobalLock<DEVNAMES>::GetDriverName       member function
+Added CGlobalLock<DEVNAMES>::GetPortName         member function
+Added CGlobalLock<DEVNAMES>::IsDefaultPrinter    member function
+
+Modified ::GetApp  global function               Now returns a pointer to CWinApp. 
 
 
 

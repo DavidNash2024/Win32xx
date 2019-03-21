@@ -53,10 +53,13 @@
 //
 // 3) CThreadLock: Provides a RAII-style wrapper for CCriticalSection.
 //
-// 4) CWinThread: This class is the parent class for CWinApp. It is also the
+// 4) CHGlobal:  A class which wraps a global memory handle. The memory is
+//               automatically freed when the CHGlobal object goes out of scope.
+//
+// 5) CWinThread: This class is the parent class for CWinApp. It is also the
 //            class used to create additional GUI and worker threads.
 //
-// 5) CWinApp: This class is used start Win32++ and run the message loop. You
+// 6) CWinApp: This class is used start Win32++ and run the message loop. You
 //            should inherit from this class to start Win32++ in your own
 //            application.
 
@@ -415,6 +418,32 @@ namespace Win32xx
         CCriticalSection& m_cs;
     };
 
+    //////////////////////////////////////
+    // CHGlobal is a class used to wrap a global memory handle.
+    // It automatically frees the global memory when the object goes out of scope.
+	// This class is used by CDevMode and CDevNames defined in wxx_printdialogs.h
+    class CHGlobal
+    {
+    public:
+        CHGlobal() : m_hGlobal(0) {}
+		CHGlobal(HGLOBAL handle) : m_hGlobal(handle) {}
+        CHGlobal(size_t size) : m_hGlobal(0) { Alloc(size); }
+        ~CHGlobal()						{ Free(); }
+
+        void Alloc(size_t size);
+		void Free();
+        HGLOBAL Get() const				{ return m_hGlobal; }
+		void Reassign(HGLOBAL hGlobal);
+
+        operator HGLOBAL() const		{ return m_hGlobal; }
+
+    private:
+        CHGlobal(const CHGlobal&);              // Disable copy 
+        CHGlobal& operator = (const CHGlobal&); // Disable assignment
+
+        HGLOBAL m_hGlobal;
+    };
+
 
     ///////////////////////////////////
     // The CObject class provides support for Serialization by CArchive.
@@ -534,7 +563,6 @@ namespace Win32xx
         CDC_Data* GetCDCData(HDC dc);
         CGDI_Data* GetCGDIData(HGDIOBJ object);
         CIml_Data* GetCImlData(HIMAGELIST images);
-        void GlobalFreeAll(HGLOBAL buffer);
         void SetCallback();
         static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
         void UpdateDefaultPrinter();
@@ -552,8 +580,8 @@ namespace Win32xx
         HINSTANCE m_resource;          // handle to the application's resources
         DWORD m_tlsData;                // Thread Local Storage data
         WNDPROC m_callback;             // callback address of CWnd::StaticWndowProc
-        HGLOBAL m_devMode;             // Used by CPrintDialog and CPageSetupDialog
-        HGLOBAL m_devNames;            // Used by CPrintDialog and CPageSetupDialog
+        CHGlobal m_devMode;             // Used by CPrintDialog and CPageSetupDialog
+        CHGlobal m_devNames;            // Used by CPrintDialog and CPageSetupDialog
 
 #ifndef _WIN32_WCE
         void AddCMenuData(HMENU menu, CMenu_Data* pData);
