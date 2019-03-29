@@ -102,6 +102,9 @@ namespace Win32xx
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        CScrollView(const CScrollView&);               // Disable copy construction
+        CScrollView& operator = (const CScrollView&);  // Disable assignment operator
+
         void UpdateBars();
         CPoint m_currentPos;
         CSize m_totalSize;

@@ -103,11 +103,11 @@ namespace Win32xx
     // CGlobaLock is a template class used to provide a self unlocking
     // object to global memory. It is used to provide convenient access
     // to the memory provided by hDevMode and hDevNames handles.
-	// The framework uses this class to eliminate the need to manually
-	// lock or unlock global memory.
-	// This class is typically used with a CHGlobal object but can also
-	// be used with a raw global memory handle.
-	// CDevMode and CDevNames are typedefs of this class.
+    // The framework uses this class to eliminate the need to manually
+    // lock or unlock global memory.
+    // This class is typically used with a CHGlobal object but can also
+    // be used with a raw global memory handle.
+    // CDevMode and CDevNames are typedefs of this class.
     template <typename T>
     class CGlobalLock
     {
@@ -218,15 +218,15 @@ namespace Win32xx
     // A set of typedefs to simplify the use of CGlobalLock.
     // These provide self unlocking objects which can be used for handles
     // to global memory. Using these typedefs eliminate the need to mannualy
-	// lock or unlock the global memory handles.
-	// Note: In the examples below, hDevMode and hDevNames can be either a raw
-	//       global memory handle, or a CHGlobal object.
+    // lock or unlock the global memory handles.
+    // Note: In the examples below, hDevMode and hDevNames can be either a raw
+    //       global memory handle, or a CHGlobal object.
     //
     // Example usage:
     //   CDevMode  pDevMode(hDevMode);      // and use pDevMode as if it were a LPDEVMODE
     //   CDevNames pDevNames(hDevNames);    // and use pDevNames as if it were a LPDEVNAMES
     //   assert(pDevNames.Get());           // Get can be used to access the underlying pointer
-	//   CDevNames(hDevNames).GetDeviceName // Returns a CString containing the device name.
+    //   CDevNames(hDevNames).GetDeviceName // Returns a CString containing the device name.
     //
     /////////////////////////////////////////////////////////////////////
 
@@ -272,6 +272,9 @@ namespace Win32xx
         INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
 
     private:
+        CPrintDialog(const CPrintDialog&);              // Disable copy construction
+        CPrintDialog& operator = (const CPrintDialog&); // Disable assignment operator
+
         PRINTDLG        m_pd;           // printer selection dlg structure
     };
 
@@ -309,6 +312,9 @@ namespace Win32xx
         static INT_PTR CALLBACK PaintHookProc(HWND, UINT, WPARAM, LPARAM);
 
     private:
+        CPageSetupDialog(const CPageSetupDialog&);              // Disable copy construction
+        CPageSetupDialog& operator = (const CPageSetupDialog&); // Disable assignment operator
+
         PAGESETUPDLG    m_psd;          // page setup dlg structure
     };
 
@@ -347,8 +353,8 @@ namespace Win32xx
                 pd.Flags = PD_RETURNDEFAULT;
                 PrintDlg(&pd);
 
-				CHGlobal devMode(pd.hDevMode);			// frees global memory when it goes out of scope
-				CHGlobal devNames(pd.hDevNames);		// frees global memory when it goes out of scope
+                CHGlobal devMode(pd.hDevMode);          // frees global memory when it goes out of scope
+                CHGlobal devNames(pd.hDevNames);        // frees global memory when it goes out of scope
 
                 if (pd.hDevNames == 0)
                 {

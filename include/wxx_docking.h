@@ -227,6 +227,9 @@ namespace Win32xx
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        CDockContainer(const CDockContainer&);              // Disable copy construction
+        CDockContainer& operator = (const CDockContainer&); // Disable assignment operator
+
         std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_allInfo;}
         std::vector<ContainerInfo> m_allInfo;          // vector of ContainerInfo structs
         std::vector<UINT> m_toolBarData;               // vector of resource IDs for ToolBar buttons

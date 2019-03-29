@@ -161,6 +161,9 @@ namespace Win32xx
         void    PreRegisterClass(WNDCLASS& wc);
 
     private:
+        CRichEdit(const CRichEdit&);              // Disable copy construction
+        CRichEdit& operator = (const CRichEdit&); // Disable assignment operator
+
         HMODULE m_rich1;
         HMODULE m_rich2;
         HMODULE m_rich4_1;

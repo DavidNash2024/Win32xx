@@ -421,21 +421,21 @@ namespace Win32xx
     //////////////////////////////////////
     // CHGlobal is a class used to wrap a global memory handle.
     // It automatically frees the global memory when the object goes out of scope.
-	// This class is used by CDevMode and CDevNames defined in wxx_printdialogs.h
+    // This class is used by CDevMode and CDevNames defined in wxx_printdialogs.h
     class CHGlobal
     {
     public:
         CHGlobal() : m_hGlobal(0) {}
-		CHGlobal(HGLOBAL handle) : m_hGlobal(handle) {}
+        CHGlobal(HGLOBAL handle) : m_hGlobal(handle) {}
         CHGlobal(size_t size) : m_hGlobal(0) { Alloc(size); }
-        ~CHGlobal()						{ Free(); }
+        ~CHGlobal()                     { Free(); }
 
         void Alloc(size_t size);
-		void Free();
-        HGLOBAL Get() const				{ return m_hGlobal; }
-		void Reassign(HGLOBAL hGlobal);
+        void Free();
+        HGLOBAL Get() const             { return m_hGlobal; }
+        void Reassign(HGLOBAL hGlobal);
 
-        operator HGLOBAL() const		{ return m_hGlobal; }
+        operator HGLOBAL() const        { return m_hGlobal; }
 
     private:
         CHGlobal(const CHGlobal&);              // Disable copy 
@@ -454,8 +454,6 @@ namespace Win32xx
         virtual ~CObject() {}
 
         virtual void Serialize(CArchive& ar);
-
-    private:
     };
 
 

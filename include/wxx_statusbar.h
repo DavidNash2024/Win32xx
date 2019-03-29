@@ -66,11 +66,12 @@ namespace Win32xx
         BOOL SetPartIcon(int part, HICON icon) const;
 
         // Operations
-        CStatusBar(const CStatusBar&);              // Disable copy construction
-        CStatusBar& operator = (const CStatusBar&); // Disable assignment operator
-
         BOOL CreateParts(int parts, const int paneWidths[]) const;
         void SetSimple(BOOL isSimple = TRUE) const;
+
+    private:
+        CStatusBar(const CStatusBar&);              // Disable copy construction
+        CStatusBar& operator = (const CStatusBar&); // Disable assignment operator
     };
 
 }

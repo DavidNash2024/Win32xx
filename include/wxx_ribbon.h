@@ -98,6 +98,9 @@ namespace Win32xx
         UINT GetRibbonHeight() const;
 
     private:
+        CRibbon(const CRibbon&);              // Disable copy construction
+        CRibbon& operator = (const CRibbon&); // Disable assignment operator
+
         IUIFramework* m_pRibbonFramework;
         LONG m_count;                            // Reference count.
 
@@ -146,6 +149,9 @@ namespace Win32xx
         virtual void UpdateMRUMenu();
 
     private:
+        CRibbonFrameT(const CRibbonFrameT&);              // Disable copy construction
+        CRibbonFrameT& operator = (const CRibbonFrameT&); // Disable assignment operator
+
         std::vector<RecentFilesPtr> m_recentFiles;
     };
 

@@ -184,6 +184,9 @@ namespace Win32xx
         };
 
     private:
+        CResizer(const CResizer&);              // Disable copy construction
+        CResizer& operator = (const CResizer&); // Disable assignment operator
+
         static BOOL CALLBACK EnumWindowsProc(HWND wnd, LPARAM lparam);
 
         HWND m_parent;

@@ -95,7 +95,10 @@ namespace Win32xx
 
         // static callback
         static INT_PTR CALLBACK CDHookProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
-
+        
+    private:
+        CCommonDialog(const CCommonDialog&);              // Disable copy construction
+        CCommonDialog& operator = (const CCommonDialog&); // Disable assignment operator        
     };
 
 
@@ -122,7 +125,9 @@ namespace Win32xx
         INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
-        // private data
+        CColorDialog(const CColorDialog&);              // Disable copy construction
+        CColorDialog& operator = (const CColorDialog&); // Disable assignment operator
+
         CHOOSECOLOR     m_ofn;                   // ChooseColor parameters
         COLORREF        m_customColors[16];      // Custom colors array
     };
@@ -180,6 +185,9 @@ namespace Win32xx
         INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        CFileDialog(const CFileDialog&);              // Disable copy construction
+        CFileDialog& operator = (const CFileDialog&); // Disable assignment operator
+
         BOOL            m_isOpenFileDialog;  // TRUE = open, FALSE = save
         CString         m_filter;          // File filter string
         CString         m_fileName;        // File name string
@@ -230,6 +238,9 @@ namespace Win32xx
         INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        CFindReplaceDialog(const CFindReplaceDialog&);              // Disable copy construction
+        CFindReplaceDialog& operator = (const CFindReplaceDialog&); // Disable assignment operator
+
         FINDREPLACE     m_fr;               // FindReplace parameters
         BOOL            m_isFindDialogOnly; // TRUE for a find only dialog
         CString         m_findWhat;         // The Find string
@@ -271,6 +282,8 @@ namespace Win32xx
         INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        CFontDialog(const CFontDialog&);              // Disable copy construction
+        CFontDialog& operator = (const CFontDialog&); // Disable assignment operator
         DWORD FillInLogFont(const CHARFORMAT& cf);
 
         // private data

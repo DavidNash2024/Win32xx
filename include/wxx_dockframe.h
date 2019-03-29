@@ -90,6 +90,9 @@ namespace Win32xx
         virtual void RecalcViewLayout();
         virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
+    private:
+        CDockFrame(const CDockFrame&);              // Disable copy construction
+        CDockFrame& operator = (const CDockFrame&); // Disable assignment operator
     };
 
 

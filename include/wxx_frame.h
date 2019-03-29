@@ -539,6 +539,10 @@ namespace Win32xx
     public:
         CFrame() {}
         virtual ~CFrame() {}
+
+    private:
+        CFrame(const CFrame&);              // Disable copy construction
+        CFrame& operator = (const CFrame&); // Disable assignment operator
     };
 
 }
