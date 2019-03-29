@@ -152,6 +152,9 @@ namespace Win32xx
         virtual int  OnValidateFailed(LPARAM lparam);
 
     private:
+        CFolderDialog(const CFolderDialog&);              // Disable copy construction
+        CFolderDialog& operator = (const CFolderDialog&); // Disable assignment operator    
+
         static int CALLBACK BrowseCallbackProc(HWND wnd, UINT uMsg, LPARAM param1, LPARAM lparam2);
 
         CString m_displayName;

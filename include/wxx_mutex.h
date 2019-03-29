@@ -82,6 +82,9 @@ namespace Win32xx
         void SetEvent();
         
     private:
+        CEvent(const CEvent&);              // Disable copy construction
+        CEvent& operator = (const CEvent&); // Disable assignment operator
+
         HANDLE m_event;
     };
 
@@ -96,6 +99,9 @@ namespace Win32xx
         operator HANDLE() const  { return m_mutex; }
         
     private:
+        CMutex(const CMutex&);              // Disable copy construction
+        CMutex& operator = (const CMutex&); // Disable assignment operator
+
         HANDLE m_mutex;    
     };
 
@@ -111,6 +117,9 @@ namespace Win32xx
         BOOL ReleaseSemaphore(LONG releaseCount, LONG* pPreviousCount = NULL);
 
     private:
+        CSemaphore(const CSemaphore&);              // Disable copy construction
+        CSemaphore& operator = (const CSemaphore&); // Disable assignment operator
+
         HANDLE m_semaphore;
     };
 
