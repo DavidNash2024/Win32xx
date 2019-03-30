@@ -297,7 +297,7 @@ void CClientDialog::OnStartClient()
                     in_addr addr;
                     ZeroMemory(&addr, sizeof(in_addr));
                     addr.S_un.S_addr = htonl(dwAddr);
-                    strAddr = AtoT( inet_ntoa(addr) );
+                    strAddr = inet_ntoa(addr);
                 }
 
                 // Retrieve the local port number
@@ -412,7 +412,7 @@ void CClientDialog::OnSend()
                 in_addr addr;
                 ZeroMemory(&addr, sizeof(in_addr));
                 addr.S_un.S_addr = htonl(dwAddr);
-                strAddr = AtoT( inet_ntoa(addr) );
+                strAddr = inet_ntoa(addr);
             }
 
             if (SOCKET_ERROR == m_client.SendTo( TtoA(strSend), strSend.GetLength(), 0, strAddr, port ))

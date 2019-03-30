@@ -18,13 +18,18 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
+Added Console                                    sample
 Added CHGlobal                                   class
 Added CGlobalLock<DEVNAMES>::GetDeviceName       member function
 Added CGlobalLock<DEVNAMES>::GetDriverName       member function
 Added CGlobalLock<DEVNAMES>::GetPortName         member function
 Added CGlobalLock<DEVNAMES>::IsDefaultPrinter    member function
 
-Modified ::GetApp  global function               Now returns a pointer to CWinApp. 
+Added VS2017 project files to all samples and tutorials
+
+Modified ::GetApp  global function               Now returns a pointer to CWinApp.
+
+Updated the tutorials 
 
 
 
