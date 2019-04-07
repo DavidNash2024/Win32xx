@@ -8,7 +8,7 @@ Features demonstrated in this tutorial
 ======================================
 * How to use a window as the view window in a frame.
 * How to use a resource script (Resource.rc) to define the frame's menu.
-* How to use a resource script to define the frame's icon.
+* How to use a resource script to define the application's icon.
 * How to use a resource script to define string resources.
 * How to use a resource script to define a help dialog.
 * How to use CMainFrame::OnCreate to specify the frame's options.
