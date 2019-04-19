@@ -1,6 +1,12 @@
 Version 8.6.1
 =============
 
+Bug Fix
+-------
+* Corrected a possible access violation in debug mode when an application with
+  a ribbon is closed.
+
+
 New Features and Enhancements
 -----------------------------
 * Added CHGlobal class.
@@ -24,6 +30,8 @@ Added CGlobalLock<DEVNAMES>::GetDeviceName       member function
 Added CGlobalLock<DEVNAMES>::GetDriverName       member function
 Added CGlobalLock<DEVNAMES>::GetPortName         member function
 Added CGlobalLock<DEVNAMES>::IsDefaultPrinter    member function
+Added CScrollView::GetLineScrollSize             member function
+Added CScrollView::GetPageScrollSize             member function
 
 Added VS2017 project files to all samples and tutorials
 
