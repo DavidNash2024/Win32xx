@@ -216,7 +216,7 @@ namespace Win32xx
 
     //////////////////////////////////////////////////////////////////////
     // A set of typedefs to simplify the use of CGlobalLock.
-    // These provide self unlocking objects which can be used for handles
+    // These provide self unlocking objects which can be used for pointers
     // to global memory. Using these typedefs eliminate the need to mannualy
     // lock or unlock the global memory handles.
     // Note: In the examples below, hDevMode and hDevNames can be either a raw
