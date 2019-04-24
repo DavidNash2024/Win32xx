@@ -81,8 +81,8 @@ namespace Win32xx
 
         CBrush GetScrollBkgnd() const    { return m_bkgndBrush; }
         CPoint GetScrollPosition() const { return m_currentPos; }
-		CSize GetLineScrollSize() const  { return m_lineSize;  }
-		CSize GetPageScrollSize() const  { return m_pageSize;  }
+        CSize GetLineScrollSize() const  { return m_lineSize;  }
+        CSize GetPageScrollSize() const  { return m_pageSize;  }
         CSize GetTotalScrollSize() const { return m_totalSize; }
         BOOL IsHScrollVisible() const    { return (GetStyle() &  WS_HSCROLL) != FALSE; }
         BOOL IsVScrollVisible() const    { return (GetStyle() &  WS_VSCROLL) != FALSE; }
@@ -94,7 +94,7 @@ namespace Win32xx
         virtual void    FillOutsideRect(CDC& dc, HBRUSH brush);
         virtual BOOL    OnEraseBkgnd(CDC& dc);
         virtual LRESULT OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
-		virtual LRESULT OnKeyScroll(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnKeyScroll(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseWheel(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnVScroll(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -106,7 +106,7 @@ namespace Win32xx
     private:
         CScrollView(const CScrollView&);               // Disable copy construction
         CScrollView& operator = (const CScrollView&);  // Disable assignment operator
-		void    UpdateBars();
+        void UpdateBars();
 
         CPoint m_currentPos;
         CSize m_totalSize;
@@ -171,110 +171,110 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(msg);
         UNREFERENCED_PARAMETER(lparam);
 
-		CPoint newPos = m_currentPos;
+        CPoint newPos = m_currentPos;
 
         switch (LOWORD(wparam))
         {
         case SB_PAGELEFT: // User clicked the scroll bar shaft left of the scroll box.
-			newPos.x -= m_pageSize.cx;
+            newPos.x -= m_pageSize.cx;
             break;
 
         case SB_PAGERIGHT: // User clicked the scroll bar shaft right of the scroll box.
-			newPos.x += m_pageSize.cx;
+            newPos.x += m_pageSize.cx;
             break;
 
         case SB_LINELEFT: // User clicked the left arrow.
-			newPos.x -= m_lineSize.cx;
+            newPos.x -= m_lineSize.cx;
             break;
 
         case SB_LINERIGHT: // User clicked the right arrow.
-			newPos.x += m_lineSize.cx;
+            newPos.x += m_lineSize.cx;
             break;
 
         case SB_THUMBTRACK: // User dragging the scroll box.
-			newPos.x = HIWORD(wparam);
+            newPos.x = HIWORD(wparam);
             break;
 
         default:
             break;
         }
 
-		int maxPosX = m_totalSize.cx - GetClientRect().Width();
-		newPos.x = MAX(0, MIN(newPos.x, maxPosX));
+        int maxPosX = m_totalSize.cx - GetClientRect().Width();
+        newPos.x = MAX(0, MIN(newPos.x, maxPosX));
 
-		// Scroll the window
+        // Scroll the window
         int deltaX = newPos.x - m_currentPos.x;
         ScrollWindowEx(-deltaX, 0, NULL, NULL, NULL, NULL, SW_INVALIDATE);
-		SetScrollPosition(newPos);
+        SetScrollPosition(newPos);
 
         return 0;
     }
 
-	inline LRESULT CScrollView::OnKeyScroll(UINT, WPARAM wParam, LPARAM)
-	{
-		CPoint newPos = m_currentPos;
-		bool control = ((::GetKeyState(VK_CONTROL) & 0x8000) != 0);
+    inline LRESULT CScrollView::OnKeyScroll(UINT, WPARAM wParam, LPARAM)
+    {
+        CPoint newPos = m_currentPos;
+        bool control = ((::GetKeyState(VK_CONTROL) & 0x8000) != 0);
 
-		switch (wParam)
-		{
-		case VK_HOME:       // HOME key
-			if (control)
-				newPos = CPoint(0, 0);		// scroll to the top
-			else
-				newPos.x = 0;				// scroll to the left side
-			break;
+        switch (wParam)
+        {
+        case VK_HOME:       // HOME key
+            if (control)
+                newPos = CPoint(0, 0);      // scroll to the top
+            else
+                newPos.x = 0;               // scroll to the left side
+            break;
 
-		case VK_END:        // END key
-			if (control)
-				newPos = m_totalSize;		// scroll to the bottom
-			else
-				newPos.x = m_totalSize.cx;	// scroll to the right side
-			break;
+        case VK_END:        // END key
+            if (control)
+                newPos = m_totalSize;       // scroll to the bottom
+            else
+                newPos.x = m_totalSize.cx;  // scroll to the right side
+            break;
 
-		case VK_PRIOR:      //PAGEUP key
-			newPos.y -= m_pageSize.cy;
-			break;
+        case VK_PRIOR:      //PAGEUP key
+            newPos.y -= m_pageSize.cy;
+            break;
 
-		case VK_NEXT:       // PAGEDOWN key
-			newPos.y += m_pageSize.cy;
-			break;
+        case VK_NEXT:       // PAGEDOWN key
+            newPos.y += m_pageSize.cy;
+            break;
 
-		case VK_UP:         // UPARROW key
-			newPos.y -= m_lineSize.cy;
-			break;
+        case VK_UP:         // UPARROW key
+            newPos.y -= m_lineSize.cy;
+            break;
 
-		case VK_LEFT:       // LEFTARROW key
-			newPos.x -= m_lineSize.cx;
-			break;
+        case VK_LEFT:       // LEFTARROW key
+            newPos.x -= m_lineSize.cx;
+            break;
 
-		case VK_RIGHT:      // RIGHTARROW key
-			newPos.x += m_lineSize.cx;
-			break;
+        case VK_RIGHT:      // RIGHTARROW key
+            newPos.x += m_lineSize.cx;
+            break;
 
-		case VK_DOWN:       // DOWNARROW key
-			newPos.y +=  m_lineSize.cy;
-			break;
+        case VK_DOWN:       // DOWNARROW key
+            newPos.y +=  m_lineSize.cy;
+            break;
 
-		default:
-			break;
-		}
+        default:
+            break;
+        }
 
-		if (newPos != m_currentPos)
-		{
-			int maxPosX = m_totalSize.cx - GetClientRect().Width();
-			int maxPosY = m_totalSize.cy - GetClientRect().Height();
-			newPos.x = MAX(0, MIN(newPos.x, maxPosX));
-			newPos.y = MAX(0, MIN(newPos.y, maxPosY));
+        if (newPos != m_currentPos)
+        {
+            int maxPosX = m_totalSize.cx - GetClientRect().Width();
+            int maxPosY = m_totalSize.cy - GetClientRect().Height();
+            newPos.x = MAX(0, MIN(newPos.x, maxPosX));
+            newPos.y = MAX(0, MIN(newPos.y, maxPosY));
 
-			// Scroll the window.
-			int deltaX = newPos.x - m_currentPos.x;
-			int deltaY = newPos.y - m_currentPos.y;
-			ScrollWindowEx(-deltaX, -deltaY, NULL, NULL, NULL, NULL, SW_INVALIDATE);
-			SetScrollPosition(newPos);
-		}
+            // Scroll the window.
+            int deltaX = newPos.x - m_currentPos.x;
+            int deltaY = newPos.y - m_currentPos.y;
+            ScrollWindowEx(-deltaX, -deltaY, NULL, NULL, NULL, NULL, SW_INVALIDATE);
+            SetScrollPosition(newPos);
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
     inline LRESULT CScrollView::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
     // Override OnPaint so we can wrap code around OnDraw
@@ -321,16 +321,16 @@ namespace Win32xx
 
         int WheelDelta = GET_WHEEL_DELTA_WPARAM(wparam);
         int cyPos = ::MulDiv(WheelDelta, m_lineSize.cy, WHEEL_DELTA);
-		CPoint newPos = GetScrollPosition();   
+        CPoint newPos = GetScrollPosition();   
         newPos.y -= cyPos;
 
-		int maxPosY = m_totalSize.cy - GetClientRect().Height();
-		newPos.y = MAX(0, MIN(newPos.y, maxPosY));
-		
-		// Scroll the window.
-		int deltaY = newPos.y - m_currentPos.y;
+        int maxPosY = m_totalSize.cy - GetClientRect().Height();
+        newPos.y = MAX(0, MIN(newPos.y, maxPosY));
+        
+        // Scroll the window.
+        int deltaY = newPos.y - m_currentPos.y;
         ScrollWindowEx(0, -deltaY, NULL, NULL, NULL, NULL, SW_INVALIDATE);
-		SetScrollPosition(newPos);
+        SetScrollPosition(newPos);
 
         return 0;
     }
@@ -341,41 +341,41 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(msg);
         UNREFERENCED_PARAMETER(lparam);
 
-		CPoint newPos = m_currentPos;
+        CPoint newPos = m_currentPos;
 
         switch (LOWORD(wparam))
         {
             case SB_PAGEUP: // User clicked the scroll bar shaft above the scroll box.
-				newPos.y -= m_pageSize.cy;
+                newPos.y -= m_pageSize.cy;
                 break;
 
             case SB_PAGEDOWN: // User clicked the scroll bar shaft below the scroll box.
-				newPos.y += m_pageSize.cy;
+                newPos.y += m_pageSize.cy;
                 break;
 
             case SB_LINEUP: // User clicked the top arrow.
-				newPos.y -= m_lineSize.cy;
+                newPos.y -= m_lineSize.cy;
                 break;
 
             case SB_LINEDOWN: // User clicked the bottom arrow.
-				newPos.y += m_lineSize.cy;
+                newPos.y += m_lineSize.cy;
                 break;
 
             case SB_THUMBTRACK: // User dragging the scroll box.
-				newPos.y = HIWORD(wparam);
+                newPos.y = HIWORD(wparam);
                 break;
 
             default:
                break;
         }
 
-		int maxPosY = m_totalSize.cy - GetClientRect().Height();
-		newPos.y = MAX(0, MIN(newPos.y, maxPosY));
+        int maxPosY = m_totalSize.cy - GetClientRect().Height();
+        newPos.y = MAX(0, MIN(newPos.y, maxPosY));
 
-		// Scroll the window.
-		int deltaY = newPos.y - m_currentPos.y;
+        // Scroll the window.
+        int deltaY = newPos.y - m_currentPos.y;
         ScrollWindowEx(0, -deltaY, NULL, NULL, NULL, NULL, SW_INVALIDATE);
-		SetScrollPosition(newPos);
+        SetScrollPosition(newPos);
 
         return 0;
     }
@@ -468,8 +468,12 @@ namespace Win32xx
 
     inline void CScrollView::UpdateBars()
     // Updates the display state of the scrollbars and the scrollbar positions.
-    // Also scrolls display view as required.
+    // Also scrolls display view as required by window resizing.
     // Note: This function can be called recursively.
+    
+    // Acknowledgement:
+    // A special thanks to Robert C. Tausworthe for his contribution to the
+    // scrollbar logic used here.   
     {
         if (IsWindow())
         {
@@ -496,14 +500,16 @@ namespace Win32xx
                 si.cbSize = sizeof(si);
                 si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
                 si.nMin = 0;
-                bool IsBarNotRequired = ((viewRect.Width() >= totalRect.Width()) && (viewRect.Height() >= totalRect.Height()));
 
-                if  ( (clientRect.Width() >= totalRect.Width()) || IsBarNotRequired )
-                {
-                    m_currentPos.x = 0;
-                    ShowScrollBar(SB_HORZ, FALSE);
-                }
-                else
+                // dn ... start of new code
+                
+                bool isHBAlwaysOn = (totalRect.Width() > viewRect.Width());         // Horizontal Bar always on
+                bool isVBAlwaysOn = (totalRect.Height() > viewRect.Height());       // Vertical Bar always on
+
+                // Horizontal Bars are always shown if the total width is greater than the window's width.
+                // They are also shown if the vertical bar is shown, and the total width is greater than 
+                // the client width. Client width = window width - scrollbar width.
+                if (isHBAlwaysOn || ((totalRect.Width() > clientRect.Width()) && isVBAlwaysOn))
                 {
                     si.nMax = totalRect.Width();
                     si.nPage = clientRect.Width();
@@ -511,13 +517,16 @@ namespace Win32xx
                     SetScrollInfo(SB_HORZ, si, TRUE);
                     ShowScrollBar(SB_HORZ, TRUE);
                 }
-
-                if ( (clientRect.Height() >= totalRect.Height()) || IsBarNotRequired )
-                {
-                    m_currentPos.y = 0;
-                    ShowScrollBar(SB_VERT, FALSE);
-                }
                 else
+                {
+                    m_currentPos.x = 0;
+                    ShowScrollBar(SB_HORZ, FALSE);
+                }
+
+                // Vertical Bars are always shown if the total height is greater than the window's height.
+                // They are also shown if the horizontal bar is shown, and the total height is greater than 
+                // the client height. Client height = window height - scrollbar width.
+                if (isVBAlwaysOn || ((totalRect.Height() > clientRect.Height()) && isHBAlwaysOn))
                 {
                     si.nMax = totalRect.Height();
                     si.nPage = clientRect.Height();
@@ -525,19 +534,23 @@ namespace Win32xx
                     SetScrollInfo(SB_VERT, si, TRUE);
                     ShowScrollBar(SB_VERT, TRUE);
                 }
+                else
+                {
+                    m_currentPos.y = 0;
+                    ShowScrollBar(SB_VERT, FALSE);
+                }
 
+                // Perform any additional scrolling required by window resizing
                 int cxScroll = IsVScrollVisible() ? GetSystemMetrics(SM_CXVSCROLL) : 0;
                 int cyScroll = IsHScrollVisible() ? GetSystemMetrics(SM_CYHSCROLL) : 0;
-
                 int xNewPos = MIN(m_currentPos.x, totalRect.Width() - viewRect.Width() + cxScroll);
                 xNewPos = MAX(xNewPos, 0);
                 int xDelta = xNewPos - m_currentPos.x;
-
                 int yNewPos = MIN(m_currentPos.y, totalRect.Height() - viewRect.Height() + cyScroll);
                 yNewPos = MAX(yNewPos, 0);
                 int yDelta = yNewPos - m_currentPos.y;
-
                 ScrollWindowEx(-xDelta, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE);
+
                 m_currentPos.x = xNewPos;
                 m_currentPos.y = yNewPos;
             }
@@ -550,7 +563,7 @@ namespace Win32xx
         switch (msg)
         {
         case WM_HSCROLL:            return OnHScroll(msg, wparam, lparam);
-		case WM_KEYDOWN:            return OnKeyScroll(msg, wparam, lparam);
+        case WM_KEYDOWN:            return OnKeyScroll(msg, wparam, lparam);
         case WM_MOUSEWHEEL:         return OnMouseWheel(msg, wparam, lparam);
         case WM_PAINT:              return OnPaint(msg, wparam, lparam);
         case WM_VSCROLL:            return OnVScroll(msg, wparam, lparam);
