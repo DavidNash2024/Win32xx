@@ -2695,7 +2695,7 @@ namespace Win32xx
         // Create the Image memory DC
         CMemDC imageDC(*this);
         imageDC.SetBkColor(mask);
-        ::SelectObject(imageDC, bitmap);
+        imageDC.SelectObject(bitmap);
 
         // Create the Mask memory DC
         CMemDC maskDC(*this);
