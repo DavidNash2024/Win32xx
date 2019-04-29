@@ -10,8 +10,8 @@
     Windows interface classes, Copyright c) 2005-2017 David Nash, under 
     permissions granted therein.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
+    Caveats: These materials are available under the same provisions as found 
+    in the Win32++ copyright.txt notice.
 
     Programming Notes:
         The programming standards roughly follow those established by the 
@@ -181,7 +181,7 @@ static const CString months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec";
 
 /*============================================================================*/
     ULONG CApp::
-DatInt(LPCTSTR pDate)                                             /*
+DatInt(LPCTSTR pDate) const                                            /*
 
     Convert the pDate, of form mmm dd yyyy, to a long integer of the form
     0xyyyymodd, where mmm is character based month, and mo is 0 (Jan) to
@@ -189,25 +189,25 @@ DatInt(LPCTSTR pDate)                                             /*
 *-----------------------------------------------------------------------------*/
 {
     CString date = pDate;
-    int     yyyy = _ttoi(date.Mid(7, 4).c_str()),
-        dd   = _ttoi(date.Mid(4, 2).c_str()),
-        mo   = months.Find(date.Mid(0, 3)) / 4;
+    int     yyyy = _ttoi(date.Mid(7, 4).c_str());
+    int     dd   = _ttoi(date.Mid(4, 2).c_str());
+    int     mo   = months.Find(date.Mid(0, 3)) / 4;
     ULONG   ans  = ((yyyy * 100 + mo) * 100) + dd;
     return  ans;
 }
 
 /*============================================================================*/
     CString CApp::
-IntDat(ULONG hexdate)                                                       /*
+IntDat(ULONG hexdate) const                                                      /*
 
     Convert the hex date, of form 0xyyyymodd, to a CString date of the form
     mmm dd yyyy,  where mmm is character based month, and mo is 0 (Jan) to
     11 (Dec).
 *-----------------------------------------------------------------------------*/
 {
-    UINT    dd   = hexdate MOD 100,
-        mo   = (hexdate / 100) MOD 100,
-        yyyy = (hexdate / 10000);
+    UINT    dd = hexdate MOD 100;
+    UINT    mo = (hexdate / 100) MOD 100;
+    UINT    yyyy = (hexdate / 10000);
     CString ans;
     ans.Format(_T("%s %02d, %u"),  months.Mid(4 * mo, 3).c_str(), dd, yyyy);
     return ans;
@@ -223,28 +223,24 @@ Serialize(CArchive &ar)                                                     /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-                  // each item is written to the archive as a char stream of
+    if (ar.IsStoring())
+    {
+          // each item is written to the archive as a char stream of
           // the proper length, preceded by that length. 
 
     }
-        else    // recovering
-        {
-                  // each item read from the archive is retrieved by first
+    else    // recovering
+    {
+          // each item read from the archive is retrieved by first
           // reading its byte length and then by loading in that number
           // of bytes into the location of that item.
 
     }
 }
 
-/*******************************************************************************
-
-    Static functions
-
-*=============================================================================*/
+/*=============================================================================*/
     CString CApp::
-MakeAppDataPath(const CString& subpath)                                     /*
+MakeAppDataPath(const CString& subpath) const                                    /*
 
     Return a string consisting of the APPDATA environmental path with the
     given subpath appended.  Create this path if it does not exist. If
@@ -257,9 +253,9 @@ MakeAppDataPath(const CString& subpath)                                     /*
     int from, to, next;
     for (from = 0, to = subpath.GetLength(); from < to; from = ++next)
     {
-        int     nextbk  = subpath.Find(_T("\\"), from),
-            nextfwd = subpath.Find(_T("/"), from);
-        next    = MAX(nextbk, nextfwd);
+        int nextbk  = subpath.Find(_T("\\"), from);
+        int nextfwd = subpath.Find(_T("/"), from);
+        next = MAX(nextbk, nextfwd);
         if (next < 0)
             next = to;
 

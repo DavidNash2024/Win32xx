@@ -67,15 +67,6 @@
 #include "MyMonthCalendar.h"
 #include "MyDateTime.h"
 
-class CMyDataExchange : public CDataExchange
-{
-public:
-    CMyDataExchange() : CDataExchange()     {}
-    
-    // ToDo:
-    // Add additional DDX or DDV functions here
-};
-
 
   // forward reference
 class CMainFrame;
@@ -94,8 +85,7 @@ CView   : public CDialog                        /*
         CView(UINT nResID);
         virtual ~CView();
         virtual HWND    Create(HWND hParent);
-            BOOL    UpdateDialog(BOOL bReadFromControl
-                    = SENDTOCONTROL);
+        BOOL            UpdateDialog(BOOL bReadFromControl = SENDTOCONTROL);
 
     protected:
         virtual BOOL    AddToolTip(HWND, UINT nID);
@@ -114,10 +104,10 @@ CView   : public CDialog                        /*
         virtual void    UpdateParameters();
 
           // DDX/DDV variables that need to be visible to friends
-        int     m_iSlider,
-                m_iProgress,
-                m_iScrollBar;
-        int         m_nIDFocus;  // the control with current focus
+        int     m_iSlider;
+        int     m_iProgress;
+        int     m_iScrollBar;
+        int     m_nIDFocus;  // the control with current focus
 
     private:
         void OnBitmap();
@@ -140,21 +130,21 @@ CView   : public CDialog                        /*
         DWORD           m_ULong;
         float           m_fFloat;
         double          m_dDouble;
-        int             m_iInt,
-                m_iCheckA,
-                m_iCheckB,
-                m_iCheckC,
-                m_iComboBox,
-                m_iListBox,
-                m_iRadioA;
-        CString         m_sComboBox,
-                m_sListBox,
-                m_sString,
-                m_sRichEdit,
-                m_sStatus;
+        int             m_iInt;
+        int             m_iCheckA;
+        int             m_iCheckB;
+        int             m_iCheckC;
+        int             m_iComboBox;
+        int             m_iListBox;
+        int             m_iRadioA;
+        CString         m_sComboBox;
+        CString         m_sListBox;
+        CString         m_sString;
+        CString         m_sRichEdit;
+        CString         m_sStatus;
         TCHAR           m_LPTSTR[256];
-        SYSTEMTIME      m_stDateTime,
-                m_stMoCalendar;
+        SYSTEMTIME      m_stDateTime;
+        SYSTEMTIME      m_stMoCalendar;
         
           // to enable scrolling if reduced
         CResizer    m_Resizer;
@@ -162,39 +152,39 @@ CView   : public CDialog                        /*
           // controls on the form that need to be attached
         CMyComboBox      m_ComboBox;
         CMyDateTime      m_DateTime;
-        CMyListBox   m_ListBox;
+        CMyListBox       m_ListBox;
         CMyMonthCalendar m_MoCalendar;
         CMyProgressBar   m_Progress;
         CMyRichEdit      m_RichEdit;
         CMyScrollBar     m_ScrollBar;
         CMySlider        m_Slider;
-        CMyButton        m_StatusButton,
-                 m_PushButton;
+        CMyButton        m_StatusButton;
+        CMyButton        m_PushButton;
 
           // form display colors
-        COLORREF        m_clrCtlBtnFg,
-                m_clrCtlBtnBg,
-                m_clrCtlEditFg,
-                m_clrCtlEditBg,
-                m_clrCtlRichEditFg,
-                m_clrCtlRichEditBg,
-                m_clrCtlRichEditBk,
-                m_clrCtlDlgFg,
-                m_clrCtlDlgBg,
-                m_clrCtlLBFg,
-                m_clrCtlLBBg,
-                m_clrCtlScrlFg,
-                m_clrCtlScrlBg,
-                m_clrCtlStatFg,
-                m_clrCtlStatBg;
+        COLORREF        m_clrCtlBtnFg;
+        COLORREF        m_clrCtlBtnBg;
+        COLORREF        m_clrCtlEditFg;
+        COLORREF        m_clrCtlEditBg;
+        COLORREF        m_clrCtlRichEditFg;
+        COLORREF        m_clrCtlRichEditBg;
+        COLORREF        m_clrCtlRichEditBk;
+        COLORREF        m_clrCtlDlgFg;
+        COLORREF        m_clrCtlDlgBg;
+        COLORREF        m_clrCtlLBFg;
+        COLORREF        m_clrCtlLBBg;
+        COLORREF        m_clrCtlScrlFg;
+        COLORREF        m_clrCtlScrlBg;
+        COLORREF        m_clrCtlStatFg;
+        COLORREF        m_clrCtlStatBg;
 
           // form display backgound brushes
-        CBrush          m_brCtlBtnBg,
-                m_brCtlEditBg,
-                m_brCtlDlgBg,
-                m_brCtlLBBg,
-                m_brCtlScrlBg,
-                m_brCtlStatBg;
+        CBrush          m_brCtlBtnBg;
+        CBrush          m_brCtlEditBg;
+        CBrush          m_brCtlDlgBg;
+        CBrush          m_brCtlLBBg;
+        CBrush          m_brCtlScrlBg;
+        CBrush          m_brCtlStatBg;
 
           // form tool tips
         CToolTip        m_ToolTip;

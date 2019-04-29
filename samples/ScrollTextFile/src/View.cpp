@@ -11,8 +11,8 @@
     granted therein. This class displays the contents of a document in the form 
     of a scrollable set of lines of text.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
+    Caveats: These materials are available under the same provisions as found 
+    in the Win32++ copyright.txt notice.
 
     Programming Notes:
         The programming standards roughly follow those established by the 
@@ -209,8 +209,8 @@ Paint(CDC& dcMem)                                                           /*
     CStringW s;
     if (TheDoc().GetLength() > 0)
     {
-        int  doc_length = TheDoc().GetLength(),
-             vu_length  = GetClientSize().cy;
+        int  doc_length = TheDoc().GetLength();
+        int  vu_length  = GetClientSize().cy;
           // get scroll bar current position: sp is the 
           // upper-left-most character in the display
         CPoint sp = GetScrollPosition();
@@ -320,26 +320,26 @@ Serialize(CArchive &ar)                                                     /*
 *-----------------------------------------------------------------------------*/
 {
       // recover base class data first
-        CScrollWnd::Serialize(ar);
+    CScrollWnd::Serialize(ar);
       // perform loading or storing
-        LOGFONT lf;
+    LOGFONT lf;
     ArchiveObject f(&lf, sizeof(LOGFONT));
     ArchiveObject ao(m_rgbCustomColors, 16 * sizeof(COLORREF));
-        if (ar.IsStoring())
-        {
-                  // save m_hfFont
+    if (ar.IsStoring())
+    {
+          // save m_hfFont
         ar << m_VuFont;
-              // save the custom colors
+          // save the custom colors
         ar << ao;   
     }
-        else    // recovering
-        {
-                  // recover m_hfFont
+    else    // recovering
+    {
+          // recover m_hfFont
         ar >> m_VuFont;
         SetScrollPosition(CPoint(0, 0));
-              // recover the custom colors
+          // recover the custom colors
         ar >> ao;   
-        }
+    }
 }
 
 /*============================================================================*/

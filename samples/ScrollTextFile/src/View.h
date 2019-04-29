@@ -10,8 +10,8 @@
     classes, Copyright (c) 2005-2017 David Nash, under permissions granted 
     therein.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
+    Caveats: These materials are available under the same provisions as found 
+    in the Win32++ copyright.txt notice.
 
     Programming Notes:
         The programming standards roughly follow those established by the 
@@ -88,9 +88,9 @@ CView : public CScrollWnd                                                   /*
 
     private:
           // private data members
-                CFontEx     m_VuFont;               // the view display font
-                COLORREF    m_rgbCustomColors[16];  // custom colors defined
-                CSize       m_doc_extent;           // the document extent
+        CFontEx     m_VuFont;               // the view display font
+        COLORREF    m_rgbCustomColors[16];  // custom colors defined
+        CSize       m_doc_extent;           // the document extent
 };
 /*----------------------------------------------------------------------------*/
 #endif  //CAPP_VIEW_H

@@ -89,21 +89,21 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                 /*
     switch (uMsg)
     {
         case WM_INITDIALOG: // this message is received immediately before
-        {           //  the dialog box is displayed
-          // send the credits box the latest compilation information
-        SetDlgItemText(IDC_CREDITS, CApp::m_sAboutStatement.c_str());
-        return TRUE;
+        {                   //  the dialog box is displayed
+              // send the credits box the latest compilation information
+            SetDlgItemText(IDC_CREDITS, CApp::m_sAboutStatement.c_str());
+            return TRUE;
         }
 
         case WM_COMMAND:    // this message is received when one of the
-                    // dialog's commands is activated.
+                            // dialog's commands is activated.
         switch (LOWORD(wParam)) // Specifies the identifier of the menu
-        {           // item, control, or accelerator.
+        {                       // item, control, or accelerator.
             case IDOK:
             case IDCANCEL:
             {
-            EndDialog((INT_PTR) LOWORD(wParam));
-            return TRUE;
+                EndDialog((INT_PTR) LOWORD(wParam));
+                return TRUE;
             }
         }
     }

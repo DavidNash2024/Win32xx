@@ -113,9 +113,9 @@ DatInt(const CString &date)                                             /*
     11 (Dec).
 *-----------------------------------------------------------------------------*/
 {
-    int     yyyy = _ttoi(date.Mid(7, 4)),
-            dd   = _ttoi(date.Mid(4, 2)),
-            mo   = months.Find(date.Mid(0, 3)) / 4;
+    int     yyyy = _ttoi(date.Mid(7, 4));
+    int     dd = _ttoi(date.Mid(4, 2));
+    int     mo   = months.Find(date.Mid(0, 3)) / 4;
     ULONG   ans  = ((yyyy * 100 + mo) * 100) + dd;
     return  ans;
 }
@@ -129,9 +129,9 @@ IntDat(ULONG hexdate)                                               /*
     11 (Dec).
 *-----------------------------------------------------------------------------*/
 {
-    UINT    dd   = hexdate % 100,
-            mo   = (hexdate / 100) % 100,
-            yyyy = (hexdate / 10000);
+    UINT dd = hexdate % 100;
+    UINT mo = (hexdate / 100) % 100;
+    UINT yyyy = (hexdate / 10000);
     CString ans;
     ans.Format(_T("%s %02d, %u"),  months.Mid(4 * mo, 3).c_str(), dd, yyyy);
     return ans;
@@ -147,15 +147,15 @@ Serialize(CArchive &ar)                                                 /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-                  // each item is written to the archive as a char stream of
+    if (ar.IsStoring())
+    {
+          // each item is written to the archive as a char stream of
           // the proper length, preceded by that length. 
 
     }
-        else    // recovering
-        {
-                  // each item read from the archive is retrieved by first
+    else    // recovering
+    {
+          // each item read from the archive is retrieved by first
           // reading its byte length and then by loading in that number
           // of bytes into the location of that item.
 
@@ -192,7 +192,7 @@ WinMain(HINSTANCE , HINSTANCE , LPSTR , int nCmdShow)                         /*
     {
         ::MessageBox(NULL, _T("The allowed number of instances of this\n")
         _T("application are already running."), _T("Stop"), MB_OK | 
-	    MB_ICONSTOP | MB_TASKMODAL);
+        MB_ICONSTOP | MB_TASKMODAL);
         CloseHandle(m_hSem);
         return 0;  // before entering the message loop
     }
@@ -209,7 +209,7 @@ WinMain(HINSTANCE , HINSTANCE , LPSTR , int nCmdShow)                         /*
     {
           // Process the exception and quit
         CString msg = e.what() + (CString)_T("\n") + e.GetText() + 
-	    (CString)_T("\nWinMain Goodbye...");
+        (CString)_T("\nWinMain Goodbye...");
         ::MessageBox(NULL, msg, _T("Standard Exception"), MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);
     }

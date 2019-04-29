@@ -79,23 +79,23 @@ CMainFrame : public CFrame                      /*
 {
     public:
         CMainFrame(void);
-        virtual ~CMainFrame(void){}
+        virtual ~CMainFrame(void) {}
         
-                void    AddMRUEntry(LPCTSTR szMRUEntry)
-                        { CFrame::AddMRUEntry (szMRUEntry);}
-        virtual void    EmptyMRUList();
-                CDoc&   GetDoc() { return m_Doc; }
-                size_t  GetMRUSize() { return GetMRUEntries().size();}
-        virtual void    RemoveMRUEntry(LPCTSTR szMRUEntry)
-                          {CFrame::RemoveMRUEntry(szMRUEntry);}
-                void    SetSBBkColor(COLORREF clr)
-                          { GetStatusBar().SendMessage(SB_SETBKCOLOR,
-                              0, (LPARAM)clr);}
-        virtual void    SetWindowTitle(const CString& title);
-        virtual void    UpdateControlUIState();
+        void    AddMRUEntry(LPCTSTR szMRUEntry)
+                    { CFrame::AddMRUEntry (szMRUEntry);}
+        void    EmptyMRUList();
+        CDoc&   GetDoc() { return m_Doc; }
+        size_t  GetMRUSize() { return GetMRUEntries().size();}
+        void    RemoveMRUEntry(LPCTSTR szMRUEntry)
+                    {CFrame::RemoveMRUEntry(szMRUEntry);}
+        void    SetSBBkColor(COLORREF clr)
+                    { GetStatusBar().SendMessage(SB_SETBKCOLOR,
+                        0, (LPARAM)clr);}
+        void    SetWindowTitle(const CString& title);
+        void    UpdateControlUIState();
 
-            COLORREF    GetSBBkColor()
-                            { return m_ColorChoice.GetTableColor(SBBg);}
+        COLORREF GetSBBkColor()
+                    { return m_ColorChoice.GetTableColor(SBBg);}
 
     protected:
          CRichEditView& GetREView() { return m_View.GetREView();}
@@ -126,7 +126,7 @@ CMainFrame : public CFrame                      /*
                            COLORREF);
         virtual void    SetStatusbarMsg(CString);
         virtual BOOL    SetThemeColors();
-		virtual void    SetupMenuIcons();
+        virtual void    SetupMenuIcons();
         virtual void    SetupToolBar(void);
         virtual void    UpdateMRUMenu();
         virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
@@ -134,21 +134,21 @@ CMainFrame : public CFrame                      /*
 
     private:
           // private data members
-        CDoc       m_Doc;         // the document
-        CView      m_View;        // the view
-        AboutBox   m_AboutBox;        // the AboutBox dialog
-        UINT       m_win_x,           // serialized window x position
-                   m_win_y,           // serialized window y position
-                   m_width,           // serialized window width
-                   m_height;          // serialized window height
-        UINT       m_nMaxMRU;         // maximum MRU entries, this app
-        HCURSOR    m_hCursor;         // current cursor shape
-        CBitmap    m_colorbmp;        // for the color choice menuitem
-        CBrush     m_br;              // backbround brush object
-        BOOL       m_bWrapText;       // wrap text in rich edit if true.
-        CColorChoice m_ColorChoice;   // the control color choice
-        MyFontDialog m_FontChoice;    // edit control font
-        WINDOWPLACEMENT m_Wndpl;      // window placement information
+        CDoc       m_Doc;           // the document
+        CView      m_View;          // the view
+        AboutBox   m_AboutBox;      // the AboutBox dialog
+        UINT       m_win_x;         // serialized window x position
+        UINT       m_win_y;         // serialized window y position
+        UINT       m_width;         // serialized window width
+        UINT       m_height;        // serialized window height
+        UINT       m_nMaxMRU;       // maximum MRU entries, this app
+        HCURSOR    m_hCursor;       // current cursor shape
+        CBitmap    m_colorbmp;      // for the color choice menu item
+        CBrush     m_br;            // backbround brush object
+        BOOL       m_bWrapText;     // wrap text in rich edit if true.
+        CColorChoice m_ColorChoice; // the control color choice
+        MyFontDialog m_FontChoice;  // edit control font
+        WINDOWPLACEMENT m_Wndpl;    // window placement information
         MyFindReplaceDialog m_FindRepDialog;  // find-replace dialog
 };
 /*------------------------------------------------------------------------------*/

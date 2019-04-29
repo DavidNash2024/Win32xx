@@ -42,7 +42,7 @@ CDoc()                                                                      /*
 
     Constructor.
 *-----------------------------------------------------------------------------*/
-    :	m_bDoc_is_dirty(FALSE), m_bDoc_is_open(FALSE), m_stDoc_width(0),
+    :   m_bDoc_is_dirty(FALSE), m_bDoc_is_open(FALSE), m_stDoc_width(0),
         m_stDoc_length(0)
 {
     m_doclines.clear();
@@ -67,8 +67,8 @@ AddRecord(const CStringW& entry)                                             /*
 {
     CStringW final = entry;
     int tab = 0;
-    CStringW tabbing,
-        spaces = L"                            "; // tabs <= 28
+    CStringW tabbing;
+    CStringW spaces = L"                            "; // tabs <= 28
     while ((tab = final.Find(L'\t')) != -1)
     {
         final.Delete(tab, 1);
@@ -140,7 +140,7 @@ DetermineEncoding(UINT testlen, UINT& offset)                               /*
 
 /*============================================================================*/
     CString CDoc::
-GetFilter()                                                                 /*
+GetFilter()   const                                                              /*
 
     Return
 *----------------------------------------------------------------------------*/
@@ -163,20 +163,20 @@ GetLength()                                                                 /*
 
 /*============================================================================*/
     CSize CDoc::
-GetMaxExtent(const CDC& dc)                                                 /*
+GetMaxExtent(const CDC& dc)                                              /*
 
     Return the maximum extent of all text lines in the document computed
     for the current font in the given dc and the line it occurred on, as
     a CPoint.
 *----------------------------------------------------------------------------*/
 {
-    int h_extent = 0,
-        v_extent = 0;
+    int h_extent = 0;
+    int v_extent = 0;
     for (UINT i = 0; i < GetLength(); i++)
     {
         CStringW s = m_doclines[i];
         CSize ex;
-	::GetTextExtentPoint32W(dc, s.c_str(), s.GetLength(), &ex);
+        ::GetTextExtentPoint32W(dc, s.c_str(), s.GetLength(), &ex);
         h_extent = MAX(ex.cx, h_extent);
         v_extent +=  ex.cy;
     }
@@ -221,7 +221,7 @@ GetWidth()                                                                  /*
 
 /*============================================================================*/
     BOOL CDoc::
-IsOpen()                                                                    /*
+IsOpen() const                                                                   /*
 
     Return TRUE if the document has been loaded successfully, BOOL
     otherwise.
@@ -271,8 +271,8 @@ OpenDoc(LPCTSTR filename)                                                   /*
         m_open_doc_path = m_fDoc_file.GetFilePath();
           // try to determine whether the file is Unicode
           // use a test length of characters from the file
-        UINT testlen = 100,
-             doclen  = static_cast<UINT>(m_fDoc_file.GetLength());
+        UINT testlen = 100;
+        UINT doclen  = static_cast<UINT>(m_fDoc_file.GetLength());
         if (doclen < testlen)
             testlen = doclen;
           // resize the file buffer to fit content
@@ -343,7 +343,7 @@ ReadABytes(Encoding encoding, UINT docsize, UINT offset)                    /*
     {
         wchar_t w = pWStr[i];
         RecordEntry(w, entry) ;
-   }
+    }
       // if there is a partial line, add it to the document
     if (entry.GetLength() > 0)
         AddRecord(entry);
@@ -357,8 +357,8 @@ ReadWBytes(Encoding encoding, UINT doclen, UINT offset)                     /*
     document line string vector. Throw an exception if a failure occurs.
 *-----------------------------------------------------------------------------*/
 {
-    UINT length = doclen - offset,
-         size   = length / 2;
+    UINT length = doclen - offset;
+    UINT size   = length / 2;
       // copy the file character buffer into a wide-character array
     std::vector<wchar_t> wideArray(size + 1, L'\0');
     memcpy(&wideArray[0], &m_buffer[0] + offset, length);
@@ -415,22 +415,22 @@ Serialize(CArchive& ar)                                                     /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-            // each item serialized is written to the archive
-            // file as a char stream of the proper length,
-            // preceded by that length. In some cases, other forms os
-            // data are saved, from which the primary items are then
-            // reconstructed.
+    if (ar.IsStoring())
+    {
+        // each item serialized is written to the archive
+        // file as a char stream of the proper length,
+        // preceded by that length. In some cases, other forms os
+        // data are saved, from which the primary items are then
+        // reconstructed.
 
     }
-        else    // recovering
-        {
-            // each item deserialized from the archive is
-            // retrieved by first reading its length and then
-            // loading in that number of bytes into the data
-            // item saved in the archive, as above. Some items require
-            // additional converstion procedures.
+    else    // recovering
+    {
+        // each item deserialized from the archive is
+        // retrieved by first reading its length and then
+        // loading in that number of bytes into the data
+        // item saved in the archive, as above. Some items require
+        // additional converstion procedures.
     }
 }
 

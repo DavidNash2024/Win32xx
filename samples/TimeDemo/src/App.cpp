@@ -90,15 +90,15 @@ MakeAppDataPath(const CString& subpath)                 /*
     int from, to, next;
     for (from = 0, to = subpath.GetLength(); from < to; from = ++next)
     {
-        int     nextbk  = subpath.Find(_T("\\"), from),
-            nextfwd = subpath.Find(_T("/"), from);
+        int nextbk  = subpath.Find(_T("\\"), from);
+        int nextfwd = subpath.Find(_T("/"), from);
         next    = MAX(nextbk, nextfwd);
         if (next < 0)
             next = to;
 
         CString add = subpath.Mid(from, next - from);
         appdata += _T("\\") + add;
-		if ((::CreateDirectory(appdata, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
+        if ((::CreateDirectory(appdata, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
         {
             CString msg = appdata + _T("\nDirectory creation error.");
             throw CUserException(msg);
@@ -130,11 +130,11 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)               /*
       // simultaneously executing instances of this application
       // to m_nInstances.
     static  HANDLE m_hSemaphore;
-        if ((m_hSemaphore = CreateSemaphore(NULL, nInstances, nInstances,
+    if ((m_hSemaphore = CreateSemaphore(NULL, nInstances, nInstances,
         szSemaphoreName)) != NULL)
     {
-            if (WaitForSingleObject(m_hSemaphore, 0) == WAIT_TIMEOUT)
-            {
+        if (WaitForSingleObject(m_hSemaphore, 0) == WAIT_TIMEOUT)
+        {
             ::MessageBox(NULL,
                 _T("The allowed number of instances of this\n")
                 _T("application are already running."),
@@ -151,8 +151,8 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)               /*
         
         catch(const CException& e)
         {
-            CString msg,
-                 what(e.what());
+            CString msg;
+            CString what(e.what());
             msg.Format(_T("%s\n%s\n%s"), e.GetText(), e.GetText(),
                 e.GetErrorString(), _T("\nWinMain Goodbye..."));
             ::MessageBox(NULL, msg.c_str(), what.c_str(),
@@ -250,9 +250,9 @@ DatInt(const CString &date)                                             /*
     11 (Dec).
 *-----------------------------------------------------------------------------*/
 {
-    int     yyyy = _ttoi(date.Mid(7, 4).c_str()),
-        dd   = _ttoi(date.Mid(4, 2).c_str()),
-        mo   = CApp::m_months.Find(date.Mid(0, 3)) / 4;
+    int yyyy = _ttoi(date.Mid(7, 4).c_str());
+    int dd   = _ttoi(date.Mid(4, 2).c_str());
+    int mo   = CApp::m_months.Find(date.Mid(0, 3)) / 4;
     ULONG   ans  = ((yyyy * 100 + mo) * 100) + dd;
     return  ans;
 }
@@ -266,9 +266,9 @@ IntDat(ULONG hexdate)                                               /*
     11 (Dec).
 *-----------------------------------------------------------------------------*/
 {
-    UINT    dd   = (hexdate % 100),
-        mo   = (hexdate / 100) % 100,
-        yyyy = (hexdate / 10000);
+    UINT dd = (hexdate % 100);
+    UINT mo = (hexdate / 100) % 100;
+    UINT yyyy = (hexdate / 10000);
     CString ans;
     ans.Format(_T("%s %02d, %u"), CApp::m_months.Mid(4 * mo, 3).c_str(), 
         dd, yyyy);

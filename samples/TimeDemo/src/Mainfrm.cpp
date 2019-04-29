@@ -179,101 +179,101 @@ OnCommandAction(WPARAM wParam, LPARAM lParam)               /*
 
     switch(lowParam)
     {
-        case IDM_FILE_NEW:
+    case IDM_FILE_NEW:
         OnFileNew();
         return TRUE;
 
-        case IDM_FILE_OPEN:
+    case IDM_FILE_OPEN:
         OnFileOpen();
         return TRUE;
 
-        case IDM_FILE_SAVE:
-            OnFileSave();
+    case IDM_FILE_SAVE:
+        OnFileSave();
         return TRUE;
 
-        case IDM_FILE_SAVEAS:
-            OnFileSaveAs();
+    case IDM_FILE_SAVEAS:
+        OnFileSaveAs();
         return TRUE;
 
-        case IDM_FILE_CLOSE:
-         OnFileClose();
+    case IDM_FILE_CLOSE:
+        OnFileClose();
         return TRUE;
 
-        case IDM_FILE_PRINT:
-             OnFilePrint();
+    case IDM_FILE_PRINT:
+        OnFilePrint();
         return TRUE;
 
-        case IDM_FILE_PRINT_PREVIEW:
-             OnFilePrintPreview();
+    case IDM_FILE_PRINT_PREVIEW:
+        OnFilePrintPreview();
         return TRUE;
 
-        case IDM_FILE_EXIT:
+    case IDM_FILE_EXIT:
         OnFileExit();
         return TRUE;
 
-        case IDM_EDIT_UNDO:
-            OnEditUndo();
+    case IDM_EDIT_UNDO:
+        OnEditUndo();
         return TRUE;
 
-        case IDM_EDIT_REDO:
-            OnEditRedo();
+    case IDM_EDIT_REDO:
+        OnEditRedo();
         return TRUE;
 
-        case IDM_EDIT_CUT:
-            OnEditCut();
+    case IDM_EDIT_CUT:
+        OnEditCut();
         return TRUE;
 
-        case IDM_EDIT_COPY:
-            OnEditCopy();
+    case IDM_EDIT_COPY:
+        OnEditCopy();
         return TRUE;
 
-        case IDM_EDIT_PASTE:
-            OnEditPaste();
+    case IDM_EDIT_PASTE:
+        OnEditPaste();
         return TRUE;
 
-        case IDM_EDIT_DELETE:
-            OnEditDelete();
+    case IDM_EDIT_DELETE:
+        OnEditDelete();
         return TRUE;
 
-        case IDM_EDIT_FIND:
-            OnEditFind();
+    case IDM_EDIT_FIND:
+        OnEditFind();
         return TRUE;
 
-        case IDM_EDIT_REPLACE:
-            OnEditReplace();
+    case IDM_EDIT_REPLACE:
+        OnEditReplace();
         return TRUE;
 
-        case IDM_HELP_CONTENT:
-            OnHelp();
+    case IDM_HELP_CONTENT:
+        OnHelp();
         return TRUE;
 
-        case IDM_HELP_ABOUT:
-            OnHelpAbout();
+    case IDM_HELP_ABOUT:
+        OnHelpAbout();
         return TRUE;
 
-        case IDM_HELP_CONTEXT:
-            OnHelpContext();
+    case IDM_HELP_CONTEXT:
+        OnHelpContext();
         return TRUE;
 
-        case IDW_VIEW_TOOLBAR:
-            OnViewToolBar(); // toggle tool bar
+    case IDW_VIEW_TOOLBAR:
+        OnViewToolBar(); // toggle tool bar
         return TRUE;
 
-        case IDW_VIEW_STATUSBAR:
-            OnViewStatusBar(); // toggle status bar
+    case IDW_VIEW_STATUSBAR:
+        OnViewStatusBar(); // toggle status bar
         return TRUE;
 
-        case IDM_COLOR_CHOICE:
+    case IDM_COLOR_CHOICE:
         OnColorChoice();
         return TRUE;
 
-        case IDM_FONT_CHOICE:
+    case IDM_FONT_CHOICE:
         OnFontChoice();
         return TRUE;
 
-        case IDW_FILE_MRU_FILE1:
-            OnProcessMRU(wParam, lParam);
-            return TRUE;
+    case IDW_FILE_MRU_FILE1:
+        OnProcessMRU(wParam, lParam);
+        return TRUE;
     }
     return FALSE;
 }
@@ -295,8 +295,8 @@ OnCommandHelp(WPARAM wParam, LPARAM lParam)             /*
     // TODO: replace InfoMessageBox() instances by OnHelp("topic")
     // invocations as the given topic becomes available in the .chm
     // help document.
-    UINT lowParam = LOWORD(wParam),
-         hiwParam = HIWORD(wParam);
+    UINT lowParam = LOWORD(wParam);
+    UINT hiwParam = HIWORD(wParam);
 
       // check the combo box for an item selection event
     if(hiwParam == CBN_SELCHANGE && lowParam == 0)
@@ -307,114 +307,114 @@ OnCommandHelp(WPARAM wParam, LPARAM lParam)             /*
     {
         switch(lowParam)
         {
-            case IDW_MAIN:
+        case IDW_MAIN:
             OnHelp(_T("No help for client area."));
             break;
 
-            case IDM_EDIT_COPY:
+        case IDM_EDIT_COPY:
             OnHelp(_T("No help for COPY."));
             break;
 
-            case IDM_EDIT_CUT:
+        case IDM_EDIT_CUT:
             OnHelp(_T("Remove the topmost MRU list item."));
             break;
 
-            case IDM_EDIT_DELETE:
+        case IDM_EDIT_DELETE:
             OnHelp(_T("No help for DELETE."));
             break;
 
-            case IDM_EDIT_FIND:
+        case IDM_EDIT_FIND:
             OnHelp(_T("No help for FIND."));
             break;
 
-            case IDM_EDIT_PASTE:
+        case IDM_EDIT_PASTE:
             OnHelp(_T("No help for PASTE."));
             break;
 
-            case IDM_EDIT_REDO:
+        case IDM_EDIT_REDO:
             OnHelp(_T("No help for REDO."));
             break;
 
-            case IDM_EDIT_REPLACE:
+        case IDM_EDIT_REPLACE:
             OnHelp(_T("No help for REPLACE."));
             break;
 
-            case IDM_EDIT_UNDO:
+        case IDM_EDIT_UNDO:
             OnHelp(_T("No help for UNDO."));
             break;
 
-            case IDM_FILE_EXIT:
+        case IDM_FILE_EXIT:
             OnHelp(_T("No help for EXIT."));
             break;
 
-            case IDM_FILE_NEW:
+        case IDM_FILE_NEW:
             OnHelp(_T("Recompute a new CFile Test array."));
             break;
 
-            case IDM_FILE_OPEN:
+        case IDM_FILE_OPEN:
             OnHelp(_T("No help for OPEN FILE."));
             break;
 
-            case IDM_FILE_PRINT:
+        case IDM_FILE_PRINT:
             OnHelp(_T("No help for PRINT."));
             break;
 
-            case IDM_FILE_PRINT_PREVIEW:
+        case IDM_FILE_PRINT_PREVIEW:
             OnHelp(_T("No help for PRINT PREVIEW."));
             break;
 
-            case IDM_FILE_SAVE:
+        case IDM_FILE_SAVE:
             OnHelp(_T("No help for FILE SAVE."));
             break;
 
-            case IDM_FILE_SAVEAS:
+        case IDM_FILE_SAVEAS:
             OnHelp(_T("No help for FILE SAVEAS..."));
             break;
 
-            case IDM_HELP_ABOUT:
+        case IDM_HELP_ABOUT:
             OnHelp(_T("No help for HELP ABOUT."));
             break;
 
-            case IDM_HELP_CONTENT:
+        case IDM_HELP_CONTENT:
             OnHelp(_T("No help for HELP CONTENT."));
             break;
 
-            case IDM_HELP_CONTEXT:
+        case IDM_HELP_CONTEXT:
             OnHelp(_T("No help for CONTEXT HELP."));
             break;
 
-            case IDW_VIEW_STATUSBAR:
+        case IDW_VIEW_STATUSBAR:
             OnHelp(_T("No help for VIEW STATUSBAR."));
             break;
 
-            case IDW_VIEW_TOOLBAR:
+        case IDW_VIEW_TOOLBAR:
             OnHelp(_T("No help for VIEW TOOLBAR."));
             break;
 
-            case SC_MINIMIZE:
+        case SC_MINIMIZE:
             OnHelp(_T("No help for MINIMIZE."));
             break;
 
-            case SC_MAXIMIZE:
+        case SC_MAXIMIZE:
             OnHelp(_T("No help for MAXIMIZE."));
             break;
 
-                case IDM_COLOR_CHOICE:
+        case IDM_COLOR_CHOICE:
             OnHelp(_T("No help for COLOR CHOICE."));
             break;
 
-            case IDM_FONT_CHOICE:
+        case IDM_FONT_CHOICE:
             OnHelp(_T("No help for FONT CHOICE."));
             break;
 
-                case IDW_FILE_MRU_FILE1:
-                break;
+        case IDW_FILE_MRU_FILE1:
+            break;
 
-            case SC_CLOSE:
+        case SC_CLOSE:
             OnHelp(_T("No help for CLOSE WINDOW."));
             break;
 
-            default:
+        default:
             OnHelp(_T("No help for frame boxes."));
         }
     }
@@ -460,8 +460,8 @@ OnCreate(CREATESTRUCT& cs)                      /*
     catch (const CException& e)
     {
           // Process the exception and  quit
-        CString msg,
-            what(e.what());
+        CString msg;
+        CString what(e.what());
         msg.Format(_T("Error restoring previous parameters.\n%s\n%s"),
             e.GetText(), e.GetErrorString());
         ::MessageBox(NULL, msg.c_str(), what.c_str(),
@@ -507,8 +507,8 @@ OnDestroy()                             /*
     catch (const CException& e)
     {
           // Process the exception and  quit
-        CString msg,
-            what(e.what());
+        CString msg;
+        CString what(e.what());
         msg.Format(_T("Error while saving program settings:\n%s\n%s"),
             e.GetText(), e.GetErrorString());
         ::MessageBox(NULL, msg.c_str(), what.c_str(),
@@ -773,17 +773,22 @@ OnFontChoice()                                              /*
     {
         lf = FontDlg.GetLogFont();
         CFont f;
-        if (f.CreateFontIndirect(lf))
+        try
+        {
+			f.CreateFontIndirect(lf);
             m_View.m_font = f;
-        else
+			m_View.m_rgbTxColor = FontDlg.GetColor();
+			m_View.SaveFontSize();
+        }
+        
+        catch (CResourceException&)
+        {
             ::MessageBox(NULL, _T("Font creation error."),
                 _T("Error"), MB_OK | MB_ICONEXCLAMATION |
                 MB_TASKMODAL);
-
-        m_View.m_rgbTxColor = FontDlg.GetColor();
+        }      
     }
 
-    m_View.SaveFontSize();
     UpdateFrame();
 }
 
@@ -985,8 +990,8 @@ OnUpdateStatus()                            /*
     // TODO: Add code here to determine status of the controls
 
       // document status
-    bool    doc_is_ready        = m_Doc.IsOpen(),
-        doc_is_dirty        = m_Doc.IsDirty();
+    bool    doc_is_ready = m_Doc.IsOpen();
+    bool    doc_is_dirty = m_Doc.IsDirty();
       // determine enabled status of controls
     bool    ok_to_save          = doc_is_dirty;
     bool    ok_to_saveas        = doc_is_ready;
@@ -1073,59 +1078,59 @@ Serialize(CArchive &ar)                                               /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-              // each item serialized is written to the archive
-              // file as a char stream of the proper length,
-              // preceded by that length. In some cases, other forms of
-              // data are saved, from with the primary items are then
-              // reconstructed.
+    if (ar.IsStoring())
+    {
+          // each item serialized is written to the archive
+          // file as a char stream of the proper length,
+          // preceded by that length. In some cases, other forms of
+          // data are saved, from with the primary items are then
+          // reconstructed.
 
-              // save current window placement information
-            ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
-            m_Wndpl.length = sizeof(WINDOWPLACEMENT);
-            GetWindowPlacement(m_Wndpl);
-            ArchiveObject w(&m_Wndpl, m_Wndpl.length);
-            ar << w;
-              // save the base class frame status and  tool bar switches:
-              // these control the display of the StatusBar and  ToolBar
+          // save current window placement information
+        ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
+        m_Wndpl.length = sizeof(WINDOWPLACEMENT);
+        GetWindowPlacement(m_Wndpl);
+        ArchiveObject w(&m_Wndpl, m_Wndpl.length);
+        ar << w;
+          // save the base class frame status and  tool bar switches:
+          // these control the display of the StatusBar and  ToolBar
 
-            BOOL showbar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
-            ar << showbar;
-            showbar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
-            ar << showbar;
-              // save MRU list and view (including scrollbars)
-            ar << m_MRU;
-            ar << m_View;
-        }
-        else    // recovering
-        {
-              // each item deserialized from the archive is
-              // retrieved by first reading its length and  then
-              // loading in that number of bytes into the data
-              // item saved in the archive, as above. Some items require
-              // additional converstion procedures, as shown below.
+        BOOL showbar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
+        ar << showbar;
+        showbar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
+        ar << showbar;
+          // save MRU list and view (including scrollbars)
+        ar << m_MRU;
+        ar << m_View;
+    }
+    else    // recovering
+    {
+          // each item deserialized from the archive is
+          // retrieved by first reading its length and  then
+          // loading in that number of bytes into the data
+          // item saved in the archive, as above. Some items require
+          // additional converstion procedures, as shown below.
 
-              // recover window frame placement, but do not invoke
-              // SetWindowPlacement(), as the window is not yet created.
-            ArchiveObject w(&m_Wndpl, sizeof(WINDOWPLACEMENT));
-            ar >> w;
-              // recover frame status and  tool bar base class switches
-            BOOL showbar;
-            ar >> showbar;
-            ShowStatusBar(showbar);
-            ar >> showbar;
-            ShowToolBar(showbar);
-              // no exception having been raised, set frame parameters
-            RECT rc = m_Wndpl.rcNormalPosition;
-            m_win_x = rc.left;
-            m_win_y = rc.top;
-            m_win_width  = rc.right  - rc.left;
-            m_win_height = rc.bottom - rc.top;
-              // load MRU and View parameters
-            ar >> m_MRU;
-            ar >> m_View;
-        }
+          // recover window frame placement, but do not invoke
+          // SetWindowPlacement(), as the window is not yet created.
+        ArchiveObject w(&m_Wndpl, sizeof(WINDOWPLACEMENT));
+        ar >> w;
+          // recover frame status and  tool bar base class switches
+        BOOL showbar;
+        ar >> showbar;
+        ShowStatusBar(showbar);
+        ar >> showbar;
+        ShowToolBar(showbar);
+          // no exception having been raised, set frame parameters
+        RECT rc = m_Wndpl.rcNormalPosition;
+        m_win_x = rc.left;
+        m_win_y = rc.top;
+        m_win_width  = rc.right  - rc.left;
+        m_win_height = rc.bottom - rc.top;
+          // load MRU and View parameters
+        ar >> m_MRU;
+        ar >> m_View;
+    }
 }
 
 /*============================================================================*/
@@ -1258,7 +1263,7 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
     {
         // Add case statements for each message to be handled here
 
-        case WM_SETCURSOR:
+    case WM_SETCURSOR:
         if (m_help_mode)
         {
             SetCursor(m_hCursor);
@@ -1266,12 +1271,12 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
         }
         break;
 
-        case WM_SYSCOMMAND:
+    case WM_SYSCOMMAND:
         {
         switch (LOWORD(wParam))
         {
-            case SC_MINIMIZE:
-                if (m_help_mode)
+        case SC_MINIMIZE:
+            if (m_help_mode)
                 return OnCommandHelp(LOWORD(wParam),
                     HIWORD(wParam));
 
@@ -1280,8 +1285,8 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
             GetWindowPlacement(m_Wndpl);
             break;
 
-            case SC_MAXIMIZE:
-                if (m_help_mode)
+        case SC_MAXIMIZE:
+            if (m_help_mode)
                 return OnCommandHelp(LOWORD(wParam),
                     HIWORD(wParam));
 
@@ -1290,7 +1295,7 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
             GetWindowPlacement(m_Wndpl);
             break;
 
-            case SC_RESTORE:
+        case SC_RESTORE:
               // restore window parameters before minimize/maximize
             m_Wndpl.length = sizeof(WINDOWPLACEMENT);
               // if restoring from maximized state, restore
@@ -1302,14 +1307,14 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
             }
             return SetWindowPlacement(m_Wndpl);
 
-            case SC_CLOSE:
+        case SC_CLOSE:
               // OnFileExit() or the [X] button brought us here,
               // but we don't close down if in context help mode
-                if (m_help_mode)
+            if (m_help_mode)
                 return OnCommandHelp(LOWORD(wParam),
                     HIWORD(wParam));
             break;  // let default process this further
-        }
+            }
         }
     }
       // pass unhandled messages on for default processing

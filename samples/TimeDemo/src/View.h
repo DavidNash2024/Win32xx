@@ -80,14 +80,14 @@ CView : public CWnd                         /*
         virtual void    SyncScrollBars();
         
           // public data members
-                CFont     m_font;         // the font used to display view
-                COLORREF  m_rgbBkColor,   // background color
-                      m_rgbBkHiColor, // background highlight color
-              m_rgbCustomColors[16], // custom colors defined
-                      m_rgbTxColor,   // text foreground color
-              m_rgbTxHiColor; // text foreground highlight color
+        CFont     m_font;         // the font used to display view
+        COLORREF  m_rgbBkColor,   // background color
+        m_rgbBkHiColor,           // background highlight color
+        m_rgbCustomColors[16],    // custom colors defined
+        m_rgbTxColor,             // text foreground color
+        m_rgbTxHiColor;           // text foreground highlight color
 
-            static const CString m_sCompiled_on;  // compilation date
+        static const CString m_sCompiled_on;  // compilation date
 
     protected:
         virtual CPoint  GetClientWdHt();
@@ -99,7 +99,7 @@ CView : public CWnd                         /*
         virtual void    PreRegisterClass(WNDCLASS& wc);
         virtual BOOL    PreTranslateMessage(MSG& Msg);  
         virtual void    SetDefaultFont();
-            virtual void    TextOutHi(CDC&, RECT, int, const CString &,
+        virtual void    TextOutHi(CDC&, RECT, int, const CString &,
                         int, int);
         virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 
@@ -107,9 +107,9 @@ CView : public CWnd                         /*
         static  COLORREF RGBHighlight(COLORREF);
 
           // protected data members
-            UINT        m_cWd,        // font average width
-                m_cHt;    // font average height
-        WScrollBars m_sb;         // scroll bars interface
+        UINT        m_cWd;         // font average width
+        UINT        m_cHt;         // font average height
+        WScrollBars m_sb;          // scroll bars interface
         CursorShape m_cursor_shape;// view arrow/help/wait
         HCURSOR     m_hCursor;     // view cursor
 

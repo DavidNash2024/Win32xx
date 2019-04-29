@@ -10,8 +10,8 @@
     Nash, under permissions granted therein. Extensions include font size, 
     color, font dialog option flags, and coordinate mapping mode.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
+    Caveats: These materials are available under the same provisions as found 
+    in the Win32++ copyright.txt notice.
 
     Programming Notes:
         The programming standards roughly follow those established by the 
@@ -30,10 +30,10 @@ CFontEx()                                                                   /*
     Create an extended font object.
 *-----------------------------------------------------------------------------*/
 {
-    txcolor = RGB(0, 0, 0);
-    flags = 0;
-    width = 0;
-    height = 0;
+    m_txcolor = RGB(0, 0, 0);
+    m_flags = 0;
+    m_width = 0;
+    m_height = 0;
 }
 
 /*============================================================================*/
@@ -56,23 +56,23 @@ Choose(CDC& dc, LPCTSTR wintitle /* =  NULL */)                             /*
 {
           // load the current font
     LOGFONT lf;
-    font.GetObject(sizeof(LOGFONT), &lf);
-          // open the dialog
+    m_font.GetObject(sizeof(LOGFONT), &lf);
+      // open the dialog
     CFontExDialog fd;
     if (wintitle != NULL)
         fd.SetBoxTitle(wintitle);
     CHOOSEFONT cf = fd.GetParameters();
       // display effects and color boxes, and use logfont provided, as
       // well as any other initializations in flags
-    cf.Flags |= CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | flags;
+    cf.Flags |= CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | m_flags;
     cf.lpLogFont = &lf;
-    cf.rgbColors = txcolor;
+    cf.rgbColors = m_txcolor;
     fd.SetParameters(cf);
     if(fd.DoModal())
     {
           // bring choice elements into this view
-        font.CreateFontIndirect(fd.GetLogFont());
-            txcolor = fd.GetColor();
+        m_font.CreateFontIndirect(fd.GetLogFont());
+        m_txcolor = fd.GetColor();
         GetSize(dc);
     }
 }
@@ -86,13 +86,13 @@ GetSize(CDC& dc)                                                            /*
 *-----------------------------------------------------------------------------*/
 {
       // select the current font into the device context: save the old
-    HFONT old_font = (HFONT)dc.SelectObject(font);
+    CFont old_font = dc.SelectObject(m_font);
       // measure the font width and height
     TEXTMETRIC tm;
     dc.GetTextMetrics(tm);
-    width  = tm.tmAveCharWidth;
-    height = tm.tmHeight + tm.tmExternalLeading;
-          // restore entry font
+    m_width  = tm.tmAveCharWidth;
+    m_height = tm.tmHeight + tm.tmExternalLeading;
+      // restore entry font
     dc.SelectObject(old_font);
 }
 
@@ -106,37 +106,37 @@ Serialize(CArchive &ar)                                                     /*
     in the lengths of the face name strings in the two modes.
 *-----------------------------------------------------------------------------*/
 {
-        LOGFONT lf;
+    LOGFONT lf;
       // get the size of the LOGFONT, sans face name
     UINT lfTopLength = sizeof(LOGFONTA) - LF_FACESIZE*sizeof(CHAR);
       // f will archive this top part
     ArchiveObject f(&lf, lfTopLength);
-        if (ar.IsStoring()) // storing
-        {
-            font.GetObject(sizeof(LOGFONT), &lf);
+    if (ar.IsStoring()) // storing
+    {
+        m_font.GetObject(sizeof(LOGFONT), &lf);
           // store the face name separately: ar recognizes the char mode
-            CString face = lf.lfFaceName;
-            ar << f;    // store the top part
-            ar<< face;  // store the face name part
-        ar << txcolor;  // store the rest
-            ar << flags;
-            ar << width;
-            ar << height;
+        CString face = lf.lfFaceName;
+        ar << f;    // store the top part
+        ar<< face;  // store the face name part
+        ar << m_txcolor;  // store the rest
+        ar << m_flags;
+        ar << m_width;
+        ar << m_height;
     }
-        else    // recovering
-        {
-            CString face;
-            ar >> f;    // recover the top part
-            ar >> face; // recover the face name and put it in the LOGFONT
-            memcpy(lf.lfFaceName, face.c_str(),
+    else    // recovering
+    {
+        CString face;
+        ar >> f;    // recover the top part
+        ar >> face; // recover the face name and put it in the LOGFONT
+        memcpy(lf.lfFaceName, face.c_str(),
             (face.GetLength() + 1) * sizeof(TCHAR));
-            font.CreateFontIndirect((const LOGFONT&)lf);
-                 // recover the rest
-                ar >> txcolor;
-                ar >> flags;
-            ar >> width;
-            ar >> height;
-        }
+        m_font.CreateFontIndirect((const LOGFONT&)lf);
+         // recover the rest
+        ar >> m_txcolor;
+        ar >> m_flags;
+        ar >> m_width;
+        ar >> m_height;
+    }
 }
 
 /*============================================================================*/
@@ -150,20 +150,20 @@ SetDefault(CDC& dc)                                                         /*
     long lfHeight = -MulDiv(nDefaultFontSize, dc.GetDeviceCaps(LOGPIXELSY),
         72);
 
-        int nHeight = lfHeight;     // logical height of font
-        int nWidth = 0;         // logical average character width
-        int nEscapement = 0;        // angle of escapement
-        int nOrientation = 0;           // base-line orientation angle
-        int fnWeight = FW_REGULAR;  // font weight
-        DWORD fdwItalic = 0;            // italic attribute flag
-        DWORD fdwUnderline = 0;         // underline attribute flag
-        DWORD fdwStrikeOut = 0;         // strikeout attribute flag
-        DWORD fdwCharSet = 0;           // character set identifier
-        DWORD fdwOutputPrecision = 0;   // output precision
-        DWORD fdwClipPrecision = 0;     // clipping precision
-        DWORD fdwQuality = 0;           // output quality
-        DWORD fdwPitchAndFamily = 0;    // pitch and family
-        LPCTSTR lpszFace = lpszFaceDefault; // pointer to typeface name string
+    int nHeight = lfHeight;     // logical height of font
+    int nWidth = 0;         // logical average character width
+    int nEscapement = 0;        // angle of escapement
+    int nOrientation = 0;           // base-line orientation angle
+    int fnWeight = FW_REGULAR;  // font weight
+    DWORD fdwItalic = 0;            // italic attribute flag
+    DWORD fdwUnderline = 0;         // underline attribute flag
+    DWORD fdwStrikeOut = 0;         // strikeout attribute flag
+    DWORD fdwCharSet = 0;           // character set identifier
+    DWORD fdwOutputPrecision = 0;   // output precision
+    DWORD fdwClipPrecision = 0;     // clipping precision
+    DWORD fdwQuality = 0;           // output quality
+    DWORD fdwPitchAndFamily = 0;    // pitch and family
+    LPCTSTR lpszFace = lpszFaceDefault; // pointer to typeface name string
 
     HFONT hf = CreateFont
             (
@@ -185,10 +185,10 @@ SetDefault(CDC& dc)                                                         /*
 
     if(hf)
     {
-        font.DeleteObject();
-        font = CFont(hf);
+        m_font.DeleteObject();
+        m_font = CFont(hf);
         GetSize(dc);
-        txcolor = rgbDefaultTxColor;
+        m_txcolor = rgbDefaultTxColor;
     }
     else
         throw  CUserException(_T("Font creation error."));

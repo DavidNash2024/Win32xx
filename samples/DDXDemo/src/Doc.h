@@ -148,10 +148,10 @@ CDoc    : public CObject                        /*
     private:
         BYTE    m_iByte;
         short   m_iShort;
-        int     m_iInt,
-            m_iComboBox,
-            m_iListBox,
-            m_iSlider;
+		int     m_iInt;
+		int     m_iComboBox;
+		int     m_iListBox;
+		int     m_iSlider;
         UINT    m_iUINT;
         long    m_iLong;
         DWORD   m_ULong;
@@ -161,13 +161,13 @@ CDoc    : public CObject                        /*
         BOOL    m_iCheckB;
         BOOL    m_iCheckC;
         UINT    m_iRadioA;
-        CString m_sListBox,
-            m_sComboBox,
-            m_sString,
-            m_sRichEdit;
+		CString m_sListBox;
+		CString m_sComboBox;
+		CString m_sString;
+		CString m_sRichEdit;
         TCHAR   m_LPTSTR[256];
-        SYSTEMTIME m_stDateTime,
-               m_stMoCalendar;
+		SYSTEMTIME m_stDateTime;
+		SYSTEMTIME m_stMoCalendar;
 };
 
 /*----------------------------------------------------------------------------*/

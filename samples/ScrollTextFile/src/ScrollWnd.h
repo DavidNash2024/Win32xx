@@ -88,10 +88,10 @@ CScrollWnd : public CWnd                                                    /*
     private:
           // private data members
         int         m_nMapMode;         // point mapping mode
-        CSize       m_line_increment,   // per line scroll, logical
-                    m_app_size,         // app size, logical
-                    m_client_size,      // client size, logical
-                    m_view_size;        // adjusted size, logical
+        CSize       m_line_increment;   // per line scroll, logical
+        CSize       m_app_size;         // app size, logical
+        CSize       m_client_size;      // client size, logical
+        CSize       m_view_size;        // adjusted size, logical
         COLORREF    m_rgbBkColor;       // window background color
         CBrush      m_brBkGnd;          // window background brush
         BOOL        m_bIamBusy;         // prevent recursive msgs

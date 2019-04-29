@@ -279,15 +279,17 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                      /*
     pNMH = (LPNMHDR) lParam;
     switch (pNMH->code)
     {
-        case EN_MSGFILTER: // keyboard or mouse event: update control states
-            ::SendMessage(m_hParent, IDM_UPDATECONTROLUISTATE, 0, 0);
-            break;
+    case EN_MSGFILTER: // keyboard or mouse event: update control states
+        ::SendMessage(m_hParent, IDM_UPDATECONTROLUISTATE, 0, 0);
+        break;
 
-        case EN_DROPFILES: // a file has been dropped in the rich edit box
+    case EN_DROPFILES: // a file has been dropped in the rich edit box
+        {
             ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
             HDROP hDroinfo = (HDROP) ENDrop->hDrop;
             OnDropFiles(hDroinfo);
-            return TRUE;
+        }
+        return TRUE;
     }
 
     return CDialog::OnNotify(wParam, lParam);
@@ -361,12 +363,12 @@ Serialize(CArchive &ar)                                                     /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-        }
-        else    // recovering
-        {
-        }
+    if (ar.IsStoring())
+    {
+    }
+    else    // recovering
+    {
+    }
 }
 
 /*============================================================================*/

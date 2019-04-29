@@ -241,149 +241,139 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
 
     switch(nID)
     {
-        case IDM_FILE_NEW:
-            m_Doc.OnNewDoc();
-            UpdateControlUIState();
-            return TRUE;
-
-        case IDM_FILE_OPEN:
-            m_Doc.OnOpenDoc();
+    case IDM_FILE_NEW:
+        m_Doc.OnNewDoc();
         UpdateControlUIState();
         return TRUE;
 
-        case IDM_FILE_SAVE:
-            m_Doc.OnSaveDoc();
-            UpdateControlUIState();
-            return TRUE;
+    case IDM_FILE_OPEN:
+        m_Doc.OnOpenDoc();
+        UpdateControlUIState();
+        return TRUE;
 
-        case IDM_FILE_SAVEAS:
-            m_Doc.OnSaveDocAs();
-            UpdateControlUIState();
-            return TRUE;
+    case IDM_FILE_SAVE:
+        m_Doc.OnSaveDoc();
+        UpdateControlUIState();
+        return TRUE;
 
-        case IDM_FILE_CLOSE:
-            m_Doc.OnCloseDoc();
-            UpdateControlUIState();
-            return TRUE;
+    case IDM_FILE_SAVEAS:
+        m_Doc.OnSaveDocAs();
+        UpdateControlUIState();
+        return TRUE;
 
-        case IDM_FILE_PAGESETUP:
-            m_Doc.OnPageSetup();
-            return TRUE;
+    case IDM_FILE_CLOSE:
+        m_Doc.OnCloseDoc();
+        UpdateControlUIState();
+        return TRUE;
 
-        case IDM_FILE_PREVIEW:
-            m_View.OnPrintPreview();
-            return TRUE;
+    case IDM_FILE_PAGESETUP:
+        m_Doc.OnPageSetup();
+        return TRUE;
 
-        case IDM_FILE_PRINT:
-            m_View.OnPrintDocument();
-            return TRUE;
+    case IDM_FILE_PREVIEW:
+        m_View.OnPrintPreview();
+        return TRUE;
 
-        case IDM_FILE_EXIT:
-              // Issue a close request to the frame
-            SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
-            return TRUE;
+    case IDM_FILE_PRINT:
+        m_View.OnPrintDocument();
+        return TRUE;
 
-        case IDM_EDIT_UNDO:
-        {
-            if (::GetFocus() != GetREView())
-                return (::SendMessage(::GetFocus(), EM_UNDO, 0, 0) != 0);
+    case IDM_FILE_EXIT:
+          // Issue a close request to the frame
+        SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+        return TRUE;
 
-            m_Doc.OnUndo();
-            UpdateControlUIState();
-            return TRUE;
-        }
+    case IDM_EDIT_UNDO:
+        if (::GetFocus() != GetREView())
+            return (::SendMessage(::GetFocus(), EM_UNDO, 0, 0) != 0);
 
-        case IDM_EDIT_REDO:
-        {
-            if (::GetFocus() != GetREView())
-                return (::SendMessage(::GetFocus(), EM_REDO, 0, 0) != 0);
-
-            m_Doc.OnRedo();
-            UpdateControlUIState();
-            return TRUE;
-        }
-
-        case IDM_EDIT_CUT:
-        {
-            if (::GetFocus() != GetREView())
-                return (::SendMessage(::GetFocus(), WM_CUT, 0, 0) != 0);
-
-            m_Doc.OnCut();
-            UpdateControlUIState();
-            return TRUE;
-        }
-
-        case IDM_EDIT_COPY:
-        {
-            if (::GetFocus() != GetREView())
-                return (::SendMessage(::GetFocus(), WM_COPY, 0, 0) != 0);
-
-            m_Doc.OnCopy();
-            UpdateControlUIState();
-            return TRUE;
-        }
-
-        case IDM_EDIT_PASTE:
-        {
-            if (::GetFocus() != GetREView())
-                return (::SendMessage(::GetFocus(), WM_PASTE, 0, 0) != 0);
-
-            m_Doc.OnPaste();
-            UpdateControlUIState();
-            return TRUE;
-        }
-
-        case IDM_EDIT_DELETE:
-        {
-            if (::GetFocus() != GetREView())
-                return (::SendMessage(::GetFocus(), WM_CLEAR, 0, 0) != 0);
-
-            m_Doc.OnDelete();
-            UpdateControlUIState();
-            return TRUE;
-        }
-
-        case IDM_EDIT_FIND:
-            OnEditFind();
-            UpdateControlUIState();
-            return TRUE;
-
-        case IDM_EDIT_REPLACE:
-            OnEditReplace();
-            UpdateControlUIState();
-            return TRUE;
-
-        case IDW_ABOUT:         // invoked by F1 and Help->About menu item
-            OnHelp();
-            return TRUE;
-
-        case IDW_VIEW_TOOLBAR:
-            OnViewToolBar(); // toggle tool bar
-            return TRUE;
-
-        case IDW_VIEW_STATUSBAR:
-            OnViewStatusBar(); // toggle status bar
-            return TRUE;
-
-        case IDM_RICHEDWRAP:
-            OnWrapText();
-            return TRUE;
-        
-        case IDM_COLOR_CHOICE:
-            OnColorChoice();
-            return TRUE;
-
-        case IDM_FONT_CHOICE:
-            OnFontChoice();
-            return TRUE;
-
-        case IDW_FILE_MRU_FILE1:
-            OnProcessMRU(wParam, lParam);
-            return TRUE;
+        m_Doc.OnUndo();
+        UpdateControlUIState();
+        return TRUE;
 
 
-        default:
-            break;
+    case IDM_EDIT_REDO:
+        if (::GetFocus() != GetREView())
+            return (::SendMessage(::GetFocus(), EM_REDO, 0, 0) != 0);
+
+        m_Doc.OnRedo();
+        UpdateControlUIState();
+        return TRUE;
+
+    case IDM_EDIT_CUT:
+        if (::GetFocus() != GetREView())
+            return (::SendMessage(::GetFocus(), WM_CUT, 0, 0) != 0);
+
+        m_Doc.OnCut();
+        UpdateControlUIState();
+        return TRUE;
+
+
+    case IDM_EDIT_COPY:
+        if (::GetFocus() != GetREView())
+            return (::SendMessage(::GetFocus(), WM_COPY, 0, 0) != 0);
+
+        m_Doc.OnCopy();
+        UpdateControlUIState();
+        return TRUE;
+
+    case IDM_EDIT_PASTE:
+        if (::GetFocus() != GetREView())
+            return (::SendMessage(::GetFocus(), WM_PASTE, 0, 0) != 0);
+
+        m_Doc.OnPaste();
+        UpdateControlUIState();
+        return TRUE;
+
+    case IDM_EDIT_DELETE:
+        if (::GetFocus() != GetREView())
+            return (::SendMessage(::GetFocus(), WM_CLEAR, 0, 0) != 0);
+
+        m_Doc.OnDelete();
+        UpdateControlUIState();
+        return TRUE;
+
+    case IDM_EDIT_FIND:
+        OnEditFind();
+        UpdateControlUIState();
+        return TRUE;
+
+    case IDM_EDIT_REPLACE:
+        OnEditReplace();
+        UpdateControlUIState();
+        return TRUE;
+
+    case IDW_ABOUT:         // invoked by F1 and Help->About menu item
+        OnHelp();
+        return TRUE;
+
+    case IDW_VIEW_TOOLBAR:
+        OnViewToolBar(); // toggle tool bar
+        return TRUE;
+
+    case IDW_VIEW_STATUSBAR:
+        OnViewStatusBar(); // toggle status bar
+        return TRUE;
+
+    case IDM_RICHEDWRAP:
+        OnWrapText();
+        return TRUE;
+    
+    case IDM_COLOR_CHOICE:
+        OnColorChoice();
+        return TRUE;
+
+    case IDM_FONT_CHOICE:
+        OnFontChoice();
+        return TRUE;
+
+    case IDW_FILE_MRU_FILE1:
+        OnProcessMRU(wParam, lParam);
+        return TRUE;
+
+
+    default:
+        break;
     }
     
     return FALSE;
@@ -400,9 +390,9 @@ OnCtlColor(HDC hDC, UINT nCtlColor)                              /*
 *-----------------------------------------------------------------------------*/
 {
       // declare default control colors IDs
-    UINT fg = DfltClr,
-         bk = DfltClr,
-         bg = DfltClr;
+    UINT fg = DfltClr;
+    UINT bk = DfltClr;
+    UINT bg = DfltClr;
     if (nCtlColor == WM_CTLCOLORDLG)
             bg = DlgBg;
        // get the display context
@@ -539,9 +529,9 @@ OnFontChoice()                                                              /*
     m_FontChoice.GetChoiceFont().GetObject(sizeof(LOGFONT), &lf);
     CHOOSEFONT cf = m_FontChoice.GetParameters();
     cf.Flags |= CF_SCREENFONTS | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT; 
-    cf.lpLogFont = &lf;		
+    cf.lpLogFont = &lf;     
     cf.rgbColors = m_ColorChoice.GetTableColor(REdTxFg);
-   m_FontChoice.SetParameters(cf);
+    m_FontChoice.SetParameters(cf);
     if(m_FontChoice.DoModal(hOwnerWnd))
     {
           // bring choice elements into this view
@@ -592,16 +582,16 @@ OnInitialUpdate()                                                           /*
     }
     UpdateControlUIState();
 
-	  // Resize the text window
-	CRect rc = m_View.GetClientRect();
-	rc.DeflateRect(10, 10);
-	m_View.GetREView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+      // Resize the text window
+    CRect rc = m_View.GetClientRect();
+    rc.DeflateRect(10, 10);
+    m_View.GetREView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 
-	  // Unselect the text
-	CHARRANGE r;
-	ZeroMemory(&r, sizeof(r));
-	m_View.GetREView().SetSel(r);
-	m_View.GetREView().SetFocus();
+      // Unselect the text
+    CHARRANGE r;
+    ZeroMemory(&r, sizeof(r));
+    m_View.GetREView().SetSel(r);
+    m_View.GetREView().SetFocus();
 
     TRACE("Frame created\n");
 }
@@ -662,9 +652,9 @@ OnRichEditColor()                                                           /*
     Set the rich edit control colors to those found in the color table.
 *-----------------------------------------------------------------------------*/
 {
-    COLORREF txfg = m_ColorChoice.GetTableColor(REdTxFg),
-	         txbg = m_ColorChoice.GetTableColor(REdTxBg),
-             bg   = m_ColorChoice.GetTableColor(REdBg);
+    COLORREF txfg = m_ColorChoice.GetTableColor(REdTxFg);
+    COLORREF txbg = m_ColorChoice.GetTableColor(REdTxBg);
+    COLORREF bg   = m_ColorChoice.GetTableColor(REdBg);
     m_View.SetRichEditColors(txfg, txbg, bg);
     return TRUE;
 }
@@ -946,11 +936,11 @@ SetupMenuIcons()                                                             /*
 *-----------------------------------------------------------------------------*/
 {
      // Add IDW_ABOUT to the data
-	std::vector<UINT> data = GetToolBarData();
-	data.push_back(IDW_ABOUT);
+    std::vector<UINT> data = GetToolBarData();
+    data.push_back(IDW_ABOUT);
 
-	// Specify the bitmap and mask for the menu icons.
-	AddMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS, 0);
+    // Specify the bitmap and mask for the menu icons.
+    AddMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS, 0);
 }
 
 
@@ -1001,8 +991,8 @@ SetWindowTitle(const CString& docfile)                                      /*
       // the app title is in resources.rc
     CString appTitle = LoadString(IDW_MAIN);
       // compute text lengths
-    int applen = appTitle.GetLength(),
-        doclen = docfile.GetLength();
+    int applen = appTitle.GetLength();
+    int doclen = docfile.GetLength();
       // only count "\\" as one character
     for (int i = 0; i < doclen; )
     {
@@ -1017,9 +1007,9 @@ SetWindowTitle(const CString& docfile)                                      /*
     if (!docfile.IsEmpty())
         appTitle  += _T(":    ") + docfile;;
       // compute maximum characters in the caption and mid point of docfile
-    int width = m_View.GetClientRect().Width(),
-        maxlen = (10 * width) / 68 - 3,  // empirical value minus "..."
-        mid    = applen + (maxlen - applen - 1) / 2;
+    int width = m_View.GetClientRect().Width();
+    int maxlen = (10 * width) / 68 - 3;  // empirical value minus "..."
+    int mid    = applen + (maxlen - applen - 1) / 2;
       // limit the caption line to that which will fit
     if (appTitle.GetLength() > maxlen)
     {
@@ -1114,8 +1104,8 @@ UpdateMRUMenu()                                                             /*
     {
           // create the MRU "show" list, which contains only strings
           // of limited length, chars removed at the midpoint, as needed
-        int     maxlen = MAX_MENU_STRING - 10,
-            mid    = maxlen / 2;
+        int maxlen = MAX_MENU_STRING - 10;
+        int mid    = maxlen / 2;
         CString strMRUShow[16];
         for (int i = 0; i <= iLast; i++)
         {

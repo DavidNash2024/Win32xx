@@ -154,7 +154,7 @@ CAppGlobal()                                                            /*
 
 *=============================================================================*/
     CString CAppGlobal::
-MakeAppDataPath(const CString& subpath)                 /*
+MakeAppDataPath(const CString& subpath) const                /*
 
     Return a string consisting of the APPDATA environmental path with the
     given subpath appended.  Create this path if it does not exist. If
@@ -167,16 +167,16 @@ MakeAppDataPath(const CString& subpath)                 /*
     int from, to, next;
     for (from = 0, to = subpath.GetLength(); from < to; from = ++next)
     {
-        int nextbk  = subpath.Find(_T("\\"), from),
-            nextfwd = subpath.Find(_T("/"), from);
-            next = MAX(nextbk, nextfwd);
+        int nextbk = subpath.Find(_T("\\"), from);
+        int nextfwd = subpath.Find(_T("/"), from);
+        next = MAX(nextbk, nextfwd);
         if (next < 0)
             next = to;
 
         CString add = subpath.Mid(from, next - from);
         app_data_path += _T("\\") + add;
         if ((::CreateDirectory(app_data_path, 0) == 0) && 
-	    GetLastError() != ERROR_ALREADY_EXISTS)
+        GetLastError() != ERROR_ALREADY_EXISTS)
         {
             CString msg = app_data_path + _T("\nDirectory creation error.");
             throw CUserException(msg);
