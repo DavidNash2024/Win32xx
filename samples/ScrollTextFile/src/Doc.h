@@ -9,8 +9,8 @@
     demo application using the Win32++ Windows interface classes, Copyright (c)
     2005-2017 David Nash, under permissions granted therein.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
+    Caveats: These materials are available under the same provisions as found 
+    in the Win32++ copyright.txt notice.
 
     Programming Notes:
         The programming standards roughly follow those established by the 
@@ -45,13 +45,13 @@ CDoc                                                                        /*
         CDoc();
         virtual ~CDoc();
         virtual void    AddRecord(const CStringW& entry);
-        virtual CString GetFilter();
+        virtual CString GetFilter() const;
         virtual UINT    GetLength();
         virtual CSize   GetMaxExtent(const CDC& dc);
         virtual CStringW GetRecord(UINT, UINT left = 0, 
                             UINT length = MAX_STRING_SIZE);
         virtual UINT    GetWidth();
-        virtual BOOL    IsOpen();
+        virtual BOOL    IsOpen() const;
         virtual BOOL    CloseDoc();
         virtual BOOL    OpenDoc(LPCTSTR);
         virtual void    Serialize(CArchive& ar);
@@ -60,10 +60,10 @@ CDoc                                                                        /*
         static CString  m_sCompiled_on;  // compilation date, mmm dd yyyy
 
     private:
-            Encoding    DetermineEncoding(UINT testlen, UINT& offset);
-                void    ReadABytes(Encoding encoding, UINT doclen, UINT offset);
-                void    ReadWBytes(Encoding encoding, UINT doclen, UINT offset);
-                void    RecordEntry(wchar_t w, CStringW& entry);
+        Encoding    DetermineEncoding(UINT testlen, UINT& offset);
+        void        ReadABytes(Encoding encoding, UINT doclen, UINT offset);
+        void        ReadWBytes(Encoding encoding, UINT doclen, UINT offset);
+        void        RecordEntry(wchar_t w, CStringW& entry);
 
           // private data members
         CFile   m_fDoc_file;     // holds the document name, path, etc.

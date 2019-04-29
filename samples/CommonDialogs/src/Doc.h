@@ -69,7 +69,6 @@ CDoc    : public CObject                        /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-
         CDoc();
         virtual ~CDoc();
         virtual const CString&  GetExt();
@@ -107,30 +106,27 @@ CDoc    : public CObject                        /*
         virtual void    SetFilter(const CString &s)
                           { m_Doc_file_filter = s;}
 
-          // public data members
-
     protected:
-            CMainFrame& GetFrame() { return *m_pParent;}
-         CRichEditView& GetREView();
-                CView&  GetView() { return *m_pView;}
-        virtual void    Serialize(CArchive &ar);
-        
-            BOOL    m_UnicodeFile;  // Unicode if TRUE
+        CMainFrame&    GetFrame() { return *m_pParent;}
+        CRichEditView& GetREView();
+        CView&         GetView() { return *m_pView;}
+        virtual void   Serialize(CArchive &ar);
 
     private:
-              CHARRANGE FindNext(const MyFindReplaceDialog&, CHARRANGE);
-            void    NotFound(const MyFindReplaceDialog&);
+        CHARRANGE FindNext(const MyFindReplaceDialog&, CHARRANGE);
+        void      NotFound(const MyFindReplaceDialog&);
             
           // private data
         CFile   m_Doc_file;        // holds the document name, path, etc.
         BOOL    m_Doc_is_open;     // the document status
-        CString m_Doc_file_ext,    // default file extension
-                m_Doc_file_filter, // file dialog filter
-                m_find_next,       // current string to find
-                m_replace_with,    // replacement string
-                m_open_doc_path;   // the path of the open document
+        CString m_Doc_file_ext;    // default file extension
+        CString m_Doc_file_filter; // file dialog filter
+        CString m_find_next;       // current string to find
+        CString m_replace_with;    // replacement string
+        CString m_open_doc_path;   // the path of the open document
         CView*  m_pView;           // the view for this document
         CMainFrame* m_pParent;     // the parent frame
+        BOOL    m_UnicodeFile;     // Unicode if TRUE
 };
 /*-----------------------------------------------------------------------------*/
 #endif //SDI_DOC_H

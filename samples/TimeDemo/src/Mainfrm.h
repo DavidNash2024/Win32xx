@@ -82,13 +82,13 @@ CMainFrame : public CFrame                      /*
         virtual void    SetCursorShape(CursorShape);
         virtual void    SetWindowTitle(const CString &title = _T(""));
         CView&          TheView(void){return m_View;}
-        CDoc&       ThisDoc(void){return m_Doc;}
-        CMRU&       TheMRU(void) {return m_MRU;};
+        CDoc&           ThisDoc(void){return m_Doc;}
+        CMRU&           TheMRU(void) {return m_MRU;};
 
           // public data members
-            bool    m_help_mode;
+        bool    m_help_mode;
             
-            static const CString m_sCompiled_on; // compilation date
+        static const CString m_sCompiled_on; // compilation date
 
     protected:
         virtual void    OnColorChoice();
@@ -139,10 +139,10 @@ CMainFrame : public CFrame                      /*
         CMRU       m_MRU;          // the MRU list object
         CView      m_View;     // the view object
 
-                UINT       m_win_x,        // deserialized window x position
-                           m_win_y,        // deserialized window y position
-                           m_win_width,    // deserialized window width
-                           m_win_height;   // deserialized window height
+        UINT       m_win_x;        // deserialized window x position
+        UINT       m_win_y;        // deserialized window y position
+        UINT       m_win_width;    // deserialized window width
+        UINT       m_win_height;   // deserialized window height
         HWND       m_hadFocus;     // focus window on context help
         HCURSOR    m_hCursor;      // mainframe cursor
         CursorShape m_cursor_shape;// mainframe cursor arrow/help/wait

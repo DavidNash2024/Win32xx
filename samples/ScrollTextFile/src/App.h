@@ -31,27 +31,27 @@ CApp : public CWinApp                                                       /*
         virtual ~CApp();
 
         virtual BOOL    InitInstance();
-        CString&        GetAboutBoxInfo()   { return m_sAboutBoxInfo;}
-        CString&        GetArcvPath()       { return m_sArcvPath;}
-        CMainFrame&     GetFrame()          { return m_Frame;}
-        UINT            GetMaxMRUSlots()    { return m_nMaxMRUSlots;}
-        CMainFrame&     TheFrame()          { return m_Frame;}
+        const CString&  GetAboutBoxInfo() const { return m_sAboutBoxInfo;}
+        const CString&  GetArcvPath()     const { return m_sArcvPath;}
+        CMainFrame&     GetFrame()              { return m_Frame;}
+        UINT            GetMaxMRUSlots() const  { return m_nMaxMRUSlots;}
+        CMainFrame&     TheFrame()              { return m_Frame;}
 
     protected:
-                void    Serialize(CArchive &ar);
+        void            Serialize(CArchive &ar);
 
     private:
-          // static methods
-        static  CString MakeAppDataPath(const CString& subpath);
+          // private functions
+        CString  MakeAppDataPath(const CString& subpath) const;
+        ULONG    DatInt(LPCTSTR) const;
+        CString  IntDat(ULONG) const;
 
           // private data
-        CString         m_sArcvPath,  // archive file name
-                        m_sAboutBoxInfo; // credits
-        CMainFrame      m_Frame;      // the main frame object
-        UINT            m_nMaxMRUSlots;
-          // static data
-        static ULONG    DatInt(LPCTSTR);
-        static CString  IntDat(ULONG);
+        CString     m_sArcvPath;  // archive file name
+        CString     m_sAboutBoxInfo; // credits
+        CMainFrame  m_Frame;      // the main frame object
+        UINT        m_nMaxMRUSlots;
+
 };
 
 /*============================================================================*/

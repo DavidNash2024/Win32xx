@@ -42,8 +42,8 @@ CFontExDialog : public CFontDialog                                          /*
 
         ~CFontExDialog(){}
 
-                void    SetBoxTitle(const CString& title)
-                            { m_sBoxTitle = title;}
+        void    SetBoxTitle(const CString& title)
+                        { m_sBoxTitle = title;}
 
     protected:
         virtual BOOL    OnInitDialog()
@@ -69,33 +69,34 @@ CFontEx : public CObject                                                    /*
     public:
         CFontEx();
         CFontEx(COLORREF txtcolor, DWORD options)
-            { txcolor = txtcolor; flags = options;}
+            { m_txcolor = txtcolor; m_flags = options;}
         ~CFontEx();
         
         virtual void    Choose(CDC& dc, LPCTSTR wintitle =  NULL);
         virtual void    SetDefault(CDC& dc);
 
-                DWORD   GetFlags() const    { return flags;}
-                CFont&  GetFont()           { return font;}
-                UINT    GetHeight() const   { return height;}
-               COLORREF GetTxColor() const  { return txcolor;}
-                UINT    GetWidth() const    { return width;}
-                void    SetFlags(DWORD f)   { flags = f;}
-                void    SetFont(CFont& f)   { font = f;}
-                void    SetHeight(UINT h)   { height = h;}
-                void    SetTxColor(COLORREF c) { txcolor = c;}
-                void    SetWidth(UINT w)    { width = w;}
+                DWORD   GetFlags() const    { return m_flags;}
+                CFont&  GetFont()           { return m_font;}
+                UINT    GetHeight() const   { return m_height;}
+               COLORREF GetTxColor() const  { return m_txcolor;}
+                UINT    GetWidth() const    { return m_width;}
+                void    SetFlags(DWORD f)   { m_flags = f;}
+                void    SetFont(CFont& f)   { m_font = f;}
+                void    SetHeight(UINT h)   { m_height = h;}
+                void    SetTxColor(COLORREF c) { m_txcolor = c;}
+                void    SetWidth(UINT w)    { m_width = w;}
             
     protected:
         virtual void    GetSize(CDC& dc);
         virtual void    Serialize(CArchive &ar);
 
-          // protected data
-        CFont    font;
-        COLORREF txcolor;
-        DWORD    flags;
-        UINT     width;
-        UINT     height;
+    private:
+          // private data
+        CFont    m_font;
+        COLORREF m_txcolor;
+        DWORD    m_flags;
+        UINT     m_width;
+        UINT     m_height;
 };
 /*----------------------------------------------------------------------------*/
 #endif // CFONTEX_H

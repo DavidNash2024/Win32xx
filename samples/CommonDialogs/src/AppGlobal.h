@@ -64,41 +64,39 @@ class CAppGlobal
         CAppGlobal();
         ~CAppGlobal();
 
-        CString& GetAboutBoxInfo() { return m_sAboutBoxInfo;}
-        CString& GetAppDir()       { return m_sAppDir;}
-        CString& GetAppName()      { return m_sAppName;}
-        CString& GetAppPath()      { return m_sAppPath;}
-        CString& GetAppTitle()     { return m_sAppTitle;}
-        CString& GetArcvDir()      { return m_sArcvDir;}
-        CString& GetArcvPath()     { return m_sArcvPath;}
-        CString& GetCompiler()     { return m_sCompiler;}
-        CString& GetCompileDate()  { return m_sCompiled_on;}
-        CString& GetDocExt()       { return m_sDocExt;}
-        CString& GetFileFilter()   { return m_sFileFilter;}
-        UINT     GetMaxMRU()       { return m_nMaxMRUSlots;}
-        CString& GetWin32Vers()    { return m_sWin32Version;}
-
-          // static methods
-        static  CString MakeAppDataPath(const CString& subpath);
+        const CString& GetAboutBoxInfo() const { return m_sAboutBoxInfo;}
+        const CString& GetAppDir() const       { return m_sAppDir;}
+        const CString& GetAppName() const      { return m_sAppName;}
+        const CString& GetAppPath() const      { return m_sAppPath;}
+        const CString& GetAppTitle() const     { return m_sAppTitle;}
+        const CString& GetArcvDir() const      { return m_sArcvDir;}
+        const CString& GetArcvPath() const     { return m_sArcvPath;}
+        const CString& GetCompiler() const     { return m_sCompiler;}
+        const CString& GetCompileDate() const  { return m_sCompiled_on;}
+        const CString& GetDocExt() const       { return m_sDocExt;}
+        const CString& GetFileFilter() const   { return m_sFileFilter;}
+        UINT           GetMaxMRU() const       { return m_nMaxMRUSlots;}
+        const CString& GetWin32Vers() const    { return m_sWin32Version;}
+        CString MakeAppDataPath(const CString& subpath) const;
 
         
     protected:
 
     private:
           // private data
-        UINT    m_nMaxMRUSlots; // maximum allowed MRU entries
-        CString m_sAboutBoxInfo, // About box information
-                m_sAppTitle,    // name of app, no directory, with ext
-                m_sAppName, // name of app: no directory, no ext
-                m_sAppDir,  // directory of this app
-                m_sAppPath, // path to this app
-                m_sArcvDir, // directory holding the archive file
-                m_sArcvPath,    // archive file name
-                m_sCompiler,    // compiler designation
-                m_sCompiled_on, // compilation date
-                m_sDocExt,  // document default extension
-                m_sFileFilter,  // do file dialog filter
-                m_sWin32Version; // version of Win32 framework used
+        UINT    m_nMaxMRUSlots;  // maximum allowed MRU entries
+        CString m_sAboutBoxInfo; // About box information
+        CString m_sAppTitle;     // name of app, no directory, with ext
+        CString m_sAppName;      // name of app: no directory, no ext
+        CString m_sAppDir;       // directory of this app
+        CString m_sAppPath;      // path to this app
+        CString m_sArcvDir;      // directory holding the archive file
+        CString m_sArcvPath;     // archive file name
+        CString m_sCompiler;     // compiler designation
+        CString m_sCompiled_on;  // compilation date
+        CString m_sDocExt;       // document default extension
+        CString m_sFileFilter;   // do file dialog filter
+        CString m_sWin32Version; // version of Win32 framework used
 };
 /*----------------------------------------------------------------------------*/
 #endif  // CAPP_PROLOG_H

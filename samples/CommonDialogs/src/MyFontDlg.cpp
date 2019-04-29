@@ -115,20 +115,19 @@ RecordFontMetrics()                                                     /*
     m_cf.hwndOwner, if non-NUL, or for the entire screen if NULL.
 *-----------------------------------------------------------------------------*/{
       // get the handle to the hWnd's device context
-    HDC hdc = ::GetDC(GetParameters().hwndOwner);
+    CWindowDC dc(GetParameters().hwndOwner);
 
       // select the current font into the device context:
       // save the old
-    CFont oldfont = (CFont)(HFONT)::SelectObject(hdc, m_Font);
+    CFont oldfont = dc.SelectObject(m_Font);
 
       // measure the font width and height
-    ::GetTextMetrics(hdc, &m_tm);
+    dc.GetTextMetrics(m_tm);
     m_avgWdHt.cx = m_tm.tmAveCharWidth;
     m_avgWdHt.cy = m_tm.tmHeight + m_tm.tmExternalLeading;
 
       // restore entry environment
-    ::SelectObject(hdc, oldfont);
-    ::ReleaseDC(GetParameters().hwndOwner, hdc);
+    dc.SelectObject(oldfont);
 }
 
 /*============================================================================*/
@@ -187,20 +186,19 @@ SetFontIndirect(const LOGFONT& lf)                                      /*
     style name.
 *-----------------------------------------------------------------------------*/
 {
-      // convert lf to a CFont
-    CFont hf;
-    hf.CreateFontIndirect(lf);
-      // if it worked, put it in this object
-    if(hf)
+  // convert lf to a CFont
+    try
     {
-        DeleteObject(m_Font);
-        m_Font        = hf;
-        m_LogFont     = lf;
+        m_Font.CreateFontIndirect(lf);
+
+        // if it worked, put it in this object
+        m_LogFont = lf;
         CHOOSEFONT cf = GetParameters();
-        cf.lpLogFont  = &m_LogFont;
+        cf.lpLogFont = &m_LogFont;
         SetParameters(cf);
     }
-    else
+    
+    catch (const CResourceException&) 
     {
         ::MessageBox(NULL, _T("Font creation error."),
             _T("Error"), MB_OK | MB_ICONEXCLAMATION |

@@ -33,12 +33,12 @@ CMainFrame : public CFrame                                                  /*
 {
     public:
         CMainFrame(void);
-            virtual     ~CMainFrame();
-            CDoc&       TheDoc() {return m_Doc;}
-        virtual void    Serialize(CArchive& ar);
+        virtual       ~CMainFrame();
+        CDoc&         TheDoc() {return m_Doc;}
+        virtual void  Serialize(CArchive& ar);
 
-      // public data members
-                static  CString m_sCompiled_on; // compilation date, mmm dd yyyy
+        // public data members
+        static   CString m_sCompiled_on; // compilation date, mmm dd yyyy
 
     protected:
         virtual void    OnColorChoice(void);
@@ -61,18 +61,17 @@ CMainFrame : public CFrame                                                  /*
         virtual void    SetupToolBar(void);
         virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 
-          // protected data members
-                CDoc       m_Doc;      // the document
-                CView      m_View;     // the view
-                UINT       m_win_x,        // deserialized window x position
-                           m_win_y,        // deserialized window y position
-                           m_win_width,    // deserialized window width
-                           m_win_height;   // deserialized window height
-                UINT       m_nMaxMRU;      // limit on MRU entries
-                AboutBox   m_AboutDialog;  // about dialog handled here
-           WINDOWPLACEMENT m_Wndpl;   // window placement information
-
     private:
+          // private data members
+         CDoc       m_Doc;          // the document
+         CView      m_View;         // the view
+         UINT       m_win_x;        // deserialized window x position
+         UINT       m_win_y;        // deserialized window y position
+         UINT       m_win_width;    // deserialized window width
+         UINT       m_win_height;   // deserialized window height
+         UINT       m_nMaxMRU;      // limit on MRU entries
+         AboutBox   m_AboutDialog;  // about dialog handled here
+         WINDOWPLACEMENT m_Wndpl;   // window placement information
 
 };
 

@@ -115,9 +115,9 @@ FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)            /*
       // get find string that does not go out of scope
     m_find_next   = FR.GetFindString();
       // set the search parmeters
-    BOOL match = FR.MatchCase(),
-         whole = FR.MatchWholeWord(),
-         down  = FR.SearchDown();
+    BOOL match = FR.MatchCase();
+    BOOL whole = FR.MatchWholeWord();
+    BOOL down  = FR.SearchDown();
     DWORD dwFlags = (match ? FR_MATCHCASE : 0) |
             (whole ? FR_WHOLEWORD : 0) |
             (down  ? FR_DOWN : 0);
@@ -229,11 +229,11 @@ NotFound(const MyFindReplaceDialog& FR)                 /*
     string sought for.
 *-----------------------------------------------------------------------------*/
 {
-    BOOL match = FR.MatchCase(),
-         whole = FR.MatchWholeWord();
+    BOOL match = FR.MatchCase();
+    BOOL whole = FR.MatchWholeWord();
     CString msg;
-    LPCTSTR wholeword = (whole ? _T("\nas a whole word") : _T("")),
-        matchcase = (match ? _T("\nmatching case") : _T(""));
+    LPCTSTR wholeword = (whole ? _T("\nas a whole word") : _T(""));
+    LPCTSTR matchcase = (match ? _T("\nmatching case") : _T(""));
     msg.Format(_T("'%s'was not found%s%s."), m_find_next.c_str(),
         wholeword, matchcase);
     ::MessageBox(NULL, msg, _T("Information"), MB_OK |
@@ -369,8 +369,8 @@ OnFRReplaceAll(MyFindReplaceDialog* pFR)                    /*
       // get replacement string that does not go out of scope
     m_replace_with = pFR->GetReplaceString();
       // search the entire range, start at character 0
-    CHARRANGE r  = {0, 0},
-          r0 = r;
+    CHARRANGE r = { 0, 0 };
+    CHARRANGE r0 = r;
     r = FindNext(*pFR, r);
       // if not found, say so
     if (r.cpMin < 0)
@@ -636,13 +636,13 @@ OnSaveDocAs()                                                            /*
         OFN_NONETWORKBUTTON,
         GetFilter());  // filter defined by app
     fd.SetBoxTitle(_T("Save document file as"));
-    CString current_path = GetFilePath(),
-        msg;
+    CString current_path = GetFilePath();
+    CString msg;
       // query user for the save-as file path name
     if (fd.DoModal(GetApp()->GetMainWnd()) == IDOK)
-    {     // At this point, a file path has been chosen that is
-          // not empty and if it already exists has been approved by the
-           // user to be overwritten. Fetch the path from the dialog.
+    {    // At this point, a file path has been chosen that is
+         // not empty and if it already exists has been approved by the
+         // user to be overwritten. Fetch the path from the dialog.
         CString new_path = fd.GetPathName();
           // check if the input path is the one already open
         if (new_path.CompareNoCase(current_path) == 0)
@@ -724,8 +724,8 @@ OpenDoc(const CString &file)                        /*
         m_Doc_file.Open(file, OPEN_EXISTING);
           // if there was no throw, the document opened: check for
           // ANSI or UNICODE mode
-        DWORD   length = static_cast<DWORD>(m_Doc_file.GetLength()),
-            nbytes = 0;
+        DWORD length = static_cast<DWORD>(m_Doc_file.GetLength());
+        DWORD nbytes = 0;
         char *buffer = new char[3];
         if (!::ReadFile(m_Doc_file.GetHandle(), buffer, 2, &nbytes, NULL))
             throw _T("StreamInFile Failed");
@@ -774,7 +774,7 @@ Register(CMainFrame* pFm, CView* pVu)                   /*
         void CDoc::
 Serialize(CArchive &ar)                                                 /*
 
-        Called to serialize the document to or deserialize it from the
+    Called to serialize the document to or deserialize it from the
     archive ar, depending on the sense of IsStoring().  Leaves the
     archive open for for further operations.
 *-----------------------------------------------------------------------------*/
@@ -782,23 +782,21 @@ Serialize(CArchive &ar)                                                 /*
     // TODO: save and restore document elements
 
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-                  // each item serialized is written to the archive
-                  // file as a char stream of the proper length,
-                  // preceded by that length. In some cases, other forms os
+    if (ar.IsStoring())
+    {
+          // each item serialized is written to the archive
+          // file as a char stream of the proper length,
+          // preceded by that length. In some cases, other forms os
           // data are saved, from which the primary items are then
-                  // reconstructed.
-
+          // reconstructed.
     }
-        else    // recovering
-        {
-                  // each item deserialized from the archive is
-                  // retrieved by first reading its length and then
-                  // loading in that number of bytes into the data
-                  // item saved in the archive, as above. Some items require
-                  // additional converstion procedures.
-
+    else    // recovering
+    {
+          // each item deserialized from the archive is
+          // retrieved by first reading its length and then
+          // loading in that number of bytes into the data
+          // item saved in the archive, as above. Some items require
+          // additional converstion procedures.
     }
 }
 

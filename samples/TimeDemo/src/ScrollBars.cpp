@@ -93,20 +93,20 @@ Serialize(CArchive &ar)                         /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
+    if (ar.IsStoring())
+    {
         ar << m_h_min;
         ar << m_h_max;
         ar << m_v_min;
         ar << m_v_max;
     }
-        else    // recovering
-        {
+    else    // recovering
+    {
         ar >> m_h_min;
         ar >> m_h_max;
         ar >> m_v_min;
         ar >> m_v_max;
-        }
+    }
 }
 
 /*******************************************************************************
@@ -122,20 +122,20 @@ Serialize(CArchive &ar)                         /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
+    if (ar.IsStoring())
+    {
         ar << m_h_line;
         ar << m_h_page;
         ar << m_v_line;
         ar << m_v_page;
     }
-        else    // recovering
-        {
+    else    // recovering
+    {
         ar >> m_h_line;
         ar >> m_h_page;
         ar >> m_v_line;
         ar >> m_v_page;
-        }
+    }
 }
 
 /*******************************************************************************
@@ -200,12 +200,12 @@ GetScrollPosition(void)                         /*
         LRESULT WScrollBars::
 OnHScroll(WPARAM wParam, LPARAM lParam)                     /*
 
-        Processes horizontal scrolling requests. The scroll code is given in
+    Processes horizontal scrolling requests. The scroll code is given in
     LOWORD(wParam).  HIWORD(wParam) specifies the current position of
     the scroll box if the scroll code is SB_THUMBPOSITION or SB_THUMBTRACK;
     but here it is not used. The lParam is the handle to the scroll bar
     control if the message was sent by the scroll bar; otherwise, it is
-    NULL. Thererfore, since we have messages coming from the keyboard
+    NULL. Therefore, since we have messages coming from the keyboard
     as well as the scrollbar, only the scroll code is used here. The
     function returns 0.
 *-----------------------------------------------------------------------------*/
@@ -226,36 +226,36 @@ OnHScroll(WPARAM wParam, LPARAM lParam)                     /*
     m_theView->GetScrollInfo(SB_HORZ, si);
     switch (LOWORD(wParam)) // scroll command
     {
-        case SB_LEFT:       //   Scroll to far left.
+    case SB_LEFT:       //   Scroll to far left.
         nPos = m_limits.m_h_min;
         break;
 
-        case SB_RIGHT:      //   Scroll to far right.
+    case SB_RIGHT:      //   Scroll to far right.
         nPos = m_limits.m_h_max;
         break;
 
-        case SB_LINELEFT:           // scroll left one column-unit
+    case SB_LINELEFT:           // scroll left one column-unit
         nPos -= m_increments.m_h_line;
         break;
 
-        case SB_LINERIGHT:           // scroll right one column-unit
+    case SB_LINERIGHT:           // scroll right one column-unit
         nPos += m_increments.m_h_line;
         break;
 
-        case SB_PAGELEFT:           // scroll left one column-page-unit
+    case SB_PAGELEFT:           // scroll left one column-page-unit
         nPos -= m_increments.m_h_page;
         break;
 
-        case SB_PAGERIGHT:           // scroll right one column-page-unit
+    case SB_PAGERIGHT:           // scroll right one column-page-unit
         nPos += m_increments.m_h_page;
         break;
 
-        case SB_THUMBTRACK:     // h-thumb is moving
-        case SB_THUMBPOSITION:      // or has stopped
+    case SB_THUMBTRACK:     // h-thumb is moving
+    case SB_THUMBPOSITION:      // or has stopped
         nPos = si.nTrackPos; // was HIWORD(wParam);
         break;
 
-        default:    // the rest are immaterial
+    default:    // the rest are immaterial
         break;
     }
       // Reset new horizontal scroll position (automatically puts
@@ -290,39 +290,39 @@ OnKeyScroll(WPARAM wParam, LPARAM lParam)                   /*
       // respond to the scroll event:
     switch (wParam)
     {
-            case VK_HOME:       // HOME key
+    case VK_HOME:       // HOME key
         if (control)
-        {         // top limit of scroll
-                wScrollNotify = SB_TOP;
-                uMessage = WM_VSCROLL;
-                m_theView->SendMessage(uMessage,
-                MAKELONG(wScrollNotify, 0), 0L);
-                wScrollNotify = SB_LEFT;
-                uMessage = WM_HSCROLL;
+        {     // top limit of scroll
+            wScrollNotify = SB_TOP;
+            uMessage = WM_VSCROLL;
+            m_theView->SendMessage(uMessage,
+            MAKELONG(wScrollNotify, 0), 0L);
+            wScrollNotify = SB_LEFT;
+            uMessage = WM_HSCROLL;
         }
         else
-        {         // left limit of scroll
-                wScrollNotify = SB_LEFT;
-                uMessage = WM_HSCROLL;
+        {     // left limit of scroll
+            wScrollNotify = SB_LEFT;
+            uMessage = WM_HSCROLL;
         }
-            break;
+        break;
 
-        case VK_END:        // END key
+    case VK_END:        // END key
         if (control)
-        {         // bottom limit of scroll
-                wScrollNotify = SB_BOTTOM;
-                uMessage = WM_VSCROLL;
-                m_theView->SendMessage(uMessage,
-                MAKELONG(wScrollNotify, 0), 0L);
-                wScrollNotify = SB_LEFT;
-                uMessage = WM_HSCROLL;
+        {     // bottom limit of scroll
+            wScrollNotify = SB_BOTTOM;
+            uMessage = WM_VSCROLL;
+            m_theView->SendMessage(uMessage,
+            MAKELONG(wScrollNotify, 0), 0L);
+            wScrollNotify = SB_LEFT;
+            uMessage = WM_HSCROLL;
         }
         else
-        {         // right limit of scroll
-                wScrollNotify = SB_RIGHT;
-                uMessage = WM_HSCROLL;
+        {     // right limit of scroll
+            wScrollNotify = SB_RIGHT;
+            uMessage = WM_HSCROLL;
         }
-            break;
+        break;
 
         case VK_PRIOR:      //PAGEUP key
             wScrollNotify = SB_PAGEUP;
@@ -335,32 +335,32 @@ OnKeyScroll(WPARAM wParam, LPARAM lParam)                   /*
             break;
 
         case VK_UP:         // UPARROW key
-        if (control)
-        {         // one vertical increment up
-            wScrollNotify = SB_LINEUP;
+            if (control)
+            {     // one vertical increment up
+                wScrollNotify = SB_LINEUP;
                 uMessage = WM_VSCROLL;
+            }
             break;
-        }
 
         case VK_LEFT:       // LEFTARROW key
-        if (control)
-        {         // one column increment left
+            if (control)
+            {     // one column increment left
                 wScrollNotify = SB_LINELEFT;
                 uMessage = WM_HSCROLL;
+            }
             break;
-        }
 
         case VK_RIGHT:      // RIGHTARROW key
-        if (control)
-        {         // one column increment right
+            if (control)
+            {     // one column increment right
                 wScrollNotify = SB_LINERIGHT;
                 uMessage = WM_HSCROLL;
+            }
             break;
-        }
 
         case VK_DOWN:       // DOWNARROW key
-        if (control)
-        {         // one vertical increment down
+            if (control)
+            {     // one vertical increment down
                 wScrollNotify = SB_LINEDOWN;
                 uMessage = WM_VSCROLL;
             }
@@ -406,36 +406,36 @@ OnVScroll(WPARAM wParam, LPARAM lParam)                     /*
     m_theView->GetScrollInfo(SB_VERT, si);
     switch (LOWORD(wParam))  // the scroll code
     {
-        case SB_TOP:                // top of scroll
+    case SB_TOP:                // top of scroll
         nPos = m_limits.m_v_min;
         break;
 
-        case SB_BOTTOM:             // bottom of scroll
+    case SB_BOTTOM:             // bottom of scroll
         nPos = m_limits.m_v_max;
         break;
 
-        case SB_LINEUP:             // up one line-unit
+    case SB_LINEUP:             // up one line-unit
         nPos -= m_increments.m_v_line;
         break;
 
-        case SB_LINEDOWN:           // down one line-unit
+    case SB_LINEDOWN:           // down one line-unit
         nPos += m_increments.m_v_line;
         break;
 
-        case SB_PAGEUP:             // up one page-unit
+    case SB_PAGEUP:             // up one page-unit
         nPos -= m_increments.m_v_page;
         break;
 
-        case SB_PAGEDOWN:           // down one page-unit
+    case SB_PAGEDOWN:           // down one page-unit
         nPos += m_increments.m_v_page;
         break;
 
-        case SB_THUMBTRACK:         // the thumb is moving
-        case SB_THUMBPOSITION:      // or has stopped
+    case SB_THUMBTRACK:         // the thumb is moving
+    case SB_THUMBPOSITION:      // or has stopped
         nPos = si.nTrackPos; // was HIWORD(wParam);
         break;
 
-        default:
+    default:
         break;
     }
       // Reset new vertical scroll position (automatically puts
@@ -491,8 +491,8 @@ Register(CWnd *theView)                         /*
     ScrollIncrements si(1, 1, 1, 1);
     SetScrollIncrements(si);
       // hide the scroll bars until needed
-        ShowHScrollBar(FALSE);
-        ShowVScrollBar(FALSE);
+    ShowHScrollBar(FALSE);
+    ShowVScrollBar(FALSE);
 }
 
 /*============================================================================*/
@@ -506,28 +506,24 @@ ScrollProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                 /*
 {
     switch (uMsg)
     {
-        case WM_VSCROLL:    // received when the v-scrollbar is clicked
-                if (OnVScroll(wParam, lParam) == 0)
-                        return 0;
-
-                break;
-
-        case WM_HSCROLL:    // received when the v-scrollbar is clicked
-                if (OnHScroll(wParam, lParam) == 0)
-                        return 0;
-
-                break;
-
-        case WM_KEYDOWN:  // received when a key is pressed
-                if (OnKeyScroll(wParam, lParam) == 0)
-                        return 0;
-
+    case WM_VSCROLL:    // received when the v-scrollbar is clicked
+        if (OnVScroll(wParam, lParam) == 0)
+            return 0;
         break;
 
-        case WM_MOUSEWHEEL:  // rotation detected
+    case WM_HSCROLL:    // received when the v-scrollbar is clicked
+        if (OnHScroll(wParam, lParam) == 0)
+            return 0;
+        break;
+
+    case WM_KEYDOWN:  // received when a key is pressed
+        if (OnKeyScroll(wParam, lParam) == 0)
+            return 0;
+        break;
+
+    case WM_MOUSEWHEEL:  // rotation detected
         if (OnMouseWheel(wParam, lParam) == 0)
             return 0;
-
         break;
     }
       // message was not one for scrolling: notify caller no processing
@@ -544,25 +540,25 @@ Serialize(CArchive &ar)                                               /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-                  // save scrollbars state
+    if (ar.IsStoring())
+    {
+          // save scrollbars state
         ar << m_hscroll_visible;
         ar << m_vscroll_visible;
         ar << m_increments;
         ar << m_limits;
         ar << m_scroll_position;
     }
-        else
-        {
-                  // recover toolbars parameters:
+    else
+    {
+          // recover toolbars parameters:
         ar >> m_hscroll_visible;
         ar >> m_vscroll_visible;
         ar >> m_increments;
         ar >> m_limits;
         ar >> m_scroll_position;
         SetScrollPosition(m_scroll_position);
-        }
+    }
 }
 
 /*============================================================================*/
@@ -647,7 +643,7 @@ ShowHScrollBar(BOOL show)                                           /*
     if (!m_theView)
         return;
 
-        m_hscroll_visible = show;
+    m_hscroll_visible = show;
     m_theView->ShowScrollBar(SB_HORZ, m_hscroll_visible);
 }
 
@@ -661,7 +657,7 @@ ShowVScrollBar(BOOL show)                                           /*
     if (!m_theView)
         return;
 
-        m_vscroll_visible = show;
+    m_vscroll_visible = show;
     m_theView->ShowScrollBar(SB_VERT, m_vscroll_visible);
 }
 

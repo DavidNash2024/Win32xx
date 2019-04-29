@@ -77,30 +77,30 @@ CApp : public CWinApp                           /*
         ~CApp(){}
 
         BOOL        InitInstance(); // called from (CWinApp) Run()
-        CAppGlobal  GetAppGlobal() { return m_AppGlobal;};
-        CString&    GetArcvFile() {return m_AppGlobal.GetArcvPath();}
-        int         GetCmdShow()  {return m_nCmdShow;}
-        CMainFrame& GetFrame()    {return m_Frame;}
-        void        SetCmdShow(int c) {m_nCmdShow = c;}
+        CAppGlobal  GetAppGlobal()      { return m_AppGlobal;};
+        const CString& GetArcvFile() const {return m_AppGlobal.GetArcvPath();}
+        int         GetCmdShow() const  {return m_nCmdShow;}
+        CMainFrame& GetFrame()          {return m_Frame;}
+        void        SetCmdShow(int c)   {m_nCmdShow = c;}
 
     protected:
-        void Serialize(CArchive &ar);
+        void        Serialize(CArchive &ar);
 
     private:
           // private data
-        CString    m_sAppName,   // name of app: path minus directory
-                   m_sAppDir,    // directory of this app
-                   m_sAppPath,   // path to this app
-                   m_sExeName,   // name of exe file, without extension
-                   m_sArcvDir,   // directory holding the archive file
-		   m_sArcvFile;  // initialization archive file name
+        CString    m_sAppName;   // name of app: path minus directory
+        CString    m_sAppDir;    // directory of this app
+        CString    m_sAppPath;   // path to this app
+        CString    m_sExeName;   // name of exe file, without extension
+        CString    m_sArcvDir;   // directory holding the archive file
+        CString    m_sArcvFile;  // initialization archive file name
         int        m_nCmdShow;   // WinMain() entry nCmdShow argument
         CMainFrame m_Frame;      // the main frame object
         CAppGlobal m_AppGlobal;
         
-          // static data
-        static ULONG   DatInt(const CString &);
-        static CString IntDat(ULONG);
+          // private functions
+        ULONG   DatInt(const CString &);
+        CString IntDat(ULONG);
 };
 
 /*============================================================================*/

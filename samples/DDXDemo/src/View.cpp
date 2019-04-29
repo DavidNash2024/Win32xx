@@ -607,17 +607,17 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
     WORD hCtl = HIWORD(wParam);
     switch (nID)
     {
-        case IDC_PUSH_ME_BUTTON:
+    case IDC_PUSH_ME_BUTTON:
         OnButton();
         m_nIDFocus = nID;
         return TRUE;
 
-        case IDC_ROSE_BITMAP:
+    case IDC_ROSE_BITMAP:
         OnBitmap();
         m_nIDFocus = nID;
         return TRUE;
 
-        case IDC_EDIT_STATUS:
+    case IDC_EDIT_STATUS:
         m_nIDFocus = nID;
         return TRUE;
     }
@@ -665,54 +665,54 @@ OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)                  /*
     CDC dcCtl(hDC);
       // to avoid compiler warnings, declare control colors and
       // assign them arbitrary (because unused) values
-    COLORREF fg = COLOR_BLACK,
-         bk = COLOR_BLACK;
+    COLORREF fg = COLOR_BLACK;
+    COLORREF bk = COLOR_BLACK;
     CBrush   br = CBrush(COLOR_BLACK);
       // handle each color message separtely
     switch (nCtlColor)
     {
-        case WM_CTLCOLORBTN:
+    case WM_CTLCOLORBTN:
           // handle each button separately (but here, they have the
           // same colors)
-            if (nID == IDOK)
-            {
+        if (nID == IDOK)
+        {
             fg = m_clrCtlBtnFg;
-                bk = m_clrCtlBtnBg;
-                br = m_brCtlBtnBg;
+            bk = m_clrCtlBtnBg;
+            br = m_brCtlBtnBg;
         }
-            if (nID == IDC_PUSH_ME_BUTTON)
-            {
+        if (nID == IDC_PUSH_ME_BUTTON)
+        {
             fg = m_clrCtlBtnFg;
-                bk = m_clrCtlBtnBg;
-                br = m_brCtlBtnBg;
+            bk = m_clrCtlBtnBg;
+            br = m_brCtlBtnBg;
         }
         break;
 
-        case WM_CTLCOLOREDIT:
-            fg = m_clrCtlEditFg;
-            bk = m_clrCtlEditBg;
-            br = m_brCtlEditBg;
+    case WM_CTLCOLOREDIT:
+        fg = m_clrCtlEditFg;
+        bk = m_clrCtlEditBg;
+        br = m_brCtlEditBg;
         break;
 
-        case WM_CTLCOLORDLG:
-            fg = m_clrCtlDlgFg;
-            bk = m_clrCtlDlgBg;
-            br = m_brCtlDlgBg;
+    case WM_CTLCOLORDLG:
+        fg = m_clrCtlDlgFg;
+        bk = m_clrCtlDlgBg;
+        br = m_brCtlDlgBg;
         break;
 
-        case WM_CTLCOLORLISTBOX:
-            fg = m_clrCtlLBFg;
-            bk = m_clrCtlLBBg;
-            br = m_brCtlLBBg;
+    case WM_CTLCOLORLISTBOX:
+        fg = m_clrCtlLBFg;
+        bk = m_clrCtlLBBg;
+        br = m_brCtlLBBg;
         break;
 
-        case WM_CTLCOLORSCROLLBAR:
-            fg = m_clrCtlScrlFg;
-            bk = m_clrCtlScrlBg;
-            br = m_brCtlScrlBg;
+    case WM_CTLCOLORSCROLLBAR:
+        fg = m_clrCtlScrlFg;
+        bk = m_clrCtlScrlBg;
+        br = m_brCtlScrlBg;
         break;
 
-        case WM_CTLCOLORSTATIC:
+    case WM_CTLCOLORSTATIC:
           // change caption color of group box
         if (nID == IDC_STATUS_GROUP)
         {
@@ -723,15 +723,15 @@ OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)                  /*
         else if (IDC_RADIO_A <= nID && nID <= IDC_CHECK_C)
         {
             fg = m_clrCtlBtnFg;
-                bk = m_clrCtlBtnBg;
-                br = m_brCtlBtnBg;
+            bk = m_clrCtlBtnBg;
+            br = m_brCtlBtnBg;
             break;
         }
         else
         {
-                fg = m_clrCtlStatFg;
-                bk = m_clrCtlStatBg;
-                br = m_brCtlStatBg;
+            fg = m_clrCtlStatFg;
+            bk = m_clrCtlStatBg;
+            br = m_brCtlStatBg;
             break;
         }
     }
@@ -739,7 +739,7 @@ OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)                  /*
     dcCtl.SetTextColor(fg);
     dcCtl.SetBkColor(bk);
       // returned brush handle must be to permanent brush
-        return (INT_PTR)(HBRUSH)br;
+    return (INT_PTR)(HBRUSH)br;
 }
 
 /*============================================================================*/
@@ -778,11 +778,11 @@ OnInitDialog()                              /*
       // and the control background color.  This is needed only once (not
       // like other controls set in OnCtlColor()).
     CHARFORMAT2 chf;
-        chf.cbSize = sizeof(chf);
-        chf.dwMask = CFM_COLOR | CFM_BACKCOLOR;
-        chf.dwEffects = 0;
+    chf.cbSize = sizeof(chf);
+    chf.dwMask = CFM_COLOR | CFM_BACKCOLOR;
+    chf.dwEffects = 0;
     chf.crTextColor = m_clrCtlRichEditFg;
-        chf.crBackColor = m_clrCtlRichEditBg;
+    chf.crBackColor = m_clrCtlRichEditBg;
     m_RichEdit.SetDefaultCharFormat(chf);
     m_RichEdit.SetBackgroundColor(FALSE, m_clrCtlRichEditBk);
 
@@ -808,9 +808,9 @@ OnInitDialog()                              /*
         m_ComboBox.AddString(s);
     }
       // set the slider, progress, and scroll bar ranges
-    int lo   = 0,
-        page = 20,
-        hi   = 50 * page;
+    int lo = 0;
+    int page = 20;
+    int hi   = 50 * page;
     m_ScrollBar.SetScrollInfo(lo, hi, 0, page);
       // set slider range and page size
     m_Slider.SetRangeMin(lo);
@@ -897,7 +897,7 @@ UpdateDialog(BOOL bReadFromControl /* = SENDTOCONTROL */)       /*
     affected controls is specified in the DoDataExchange() method.
 *-----------------------------------------------------------------------------*/
 {
-    CMyDataExchange DX;
+    CDataExchange DX;
     return UpdateData(DX, bReadFromControl);
 }
 

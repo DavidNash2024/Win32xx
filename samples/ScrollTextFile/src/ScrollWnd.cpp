@@ -10,8 +10,8 @@
     (c) 2005-2017 David Nash, under permissions granted therein. Usage of
     this class is discussed below.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
+    Caveats: These materials are available under the same provisions as found 
+    in the Win32++ copyright.txt notice.
 
     Programming Notes:
         The programming standards roughly follow those established by the 
@@ -622,18 +622,18 @@ SetNewViewSize()                                                            /*
 {
       // the overall client size, without scroll bars
     CRect rc = GetClientRect();
-    CSize client(rc.Width(), rc.Height()),
-          view = client;
+    CSize client(rc.Width(), rc.Height());
+    CSize view = client;
     if (m_app_size.cx != 0 && m_app_size.cy != 0)
     {
         CSize app = ScrlToDev(m_app_size);
           // get the scroll bar sizes
-        int scrollbar_x = ::GetSystemMetrics(SM_CXVSCROLL),
-            scrollbar_y = ::GetSystemMetrics(SM_CYHSCROLL);
-        BOOL A = (app.cx > client.cx - scrollbar_x),
-             B = app.cx > client.cx,
-             C = (app.cy > client.cy - scrollbar_y),
-             D = app.cy > client.cy;
+        int scrollbar_x = ::GetSystemMetrics(SM_CXVSCROLL);
+        int scrollbar_y = ::GetSystemMetrics(SM_CYHSCROLL);
+        BOOL A = (app.cx > client.cx - scrollbar_x);
+        BOOL B = app.cx > client.cx;
+        BOOL C = (app.cy > client.cy - scrollbar_y);
+        BOOL D = app.cy > client.cy;
         if (B || (A && D))
             view.cx -= scrollbar_x;
         if (D || (B && C))

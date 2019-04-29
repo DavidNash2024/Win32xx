@@ -71,16 +71,16 @@ CApp : public CWinApp                           /*
         virtual ~CApp();
 
         virtual BOOL        InitInstance();
-            CMainFrame* TheFrame() {return &m_Frame;}
+        CMainFrame* TheFrame() {return &m_Frame;}
 
           // public data members
-        CString   m_sAppName,   // name of app: minus directory and .exe
-                  m_sAppDir,    // directory of this app
-                  m_sAppPath,   // path to this app
-                  m_sArcvDir,   // name of archive directory
-              m_sArcvFile;  // serialization file name
+        CString   m_sAppName;   // name of app: minus directory and .exe
+        CString   m_sAppDir;    // directory of this app
+        CString   m_sAppPath;   // path to this app
+        CString   m_sArcvDir;   // name of archive directory
+        CString   m_sArcvFile;  // serialization file name
 
-            static const CString m_sCompiled_on;   // compile date
+        static const CString m_sCompiled_on;   // compile date
         static const CString m_sCompiled_with; // compiler + system info
         static const CString m_sVersion;       // app version info
         static const CString m_sCredits;       // About box notices
@@ -90,11 +90,11 @@ CApp : public CWinApp                           /*
     protected:
 
     private:
-        CMainFrame m_Frame; // the mainframe
+          // private functions
+        ULONG   DatInt(const CString &);
+        CString IntDat(ULONG);
 
-          // static methods
-        static ULONG   DatInt(const CString &);
-        static CString IntDat(ULONG);
+        CMainFrame m_Frame; // the mainframe
 
           // static constants
         static const CString m_months;
@@ -104,7 +104,7 @@ CApp : public CWinApp                           /*
     inline
 CApp& TheApp()                                                      /*
 
-    Global function for accesss to this application.
+    Global function for access to this application.
 *----------------------------------------------------------------------------*/
 {
     return (CApp&)*GetApp();

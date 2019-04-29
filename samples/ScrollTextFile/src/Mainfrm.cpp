@@ -9,8 +9,8 @@
     ScrollWin demo application using the Win32++ Windows interface classes,
     Copyright (c) 2005-2017 David Nash, under permissions granted therein.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
+    Caveats: These materials are available under the same provisions as found 
+    in the Win32++ copyright.txt notice.
 
     Programming Notes:
         The programming standards roughly follow those established by the 
@@ -105,40 +105,40 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
 
     switch(nID)
     {
-        case IDM_COLOR_CHOICE:
+    case IDM_COLOR_CHOICE:
         OnColorChoice();
         return TRUE;
 
-        case IDM_FILE_CLOSE:
-            OnFileClose();
+    case IDM_FILE_CLOSE:
+        OnFileClose();
         return TRUE;
 
-        case IDM_FILE_EXIT:
-            OnFileExit();
+    case IDM_FILE_EXIT:
+        OnFileExit();
         return TRUE;
 
-        case IDM_FILE_OPEN:
-         OnFileOpen();
+    case IDM_FILE_OPEN:
+        OnFileOpen();
         return TRUE;
 
-        case IDM_FONT_CHOICE:
+    case IDM_FONT_CHOICE:
         OnFontChoice();
         return TRUE;
 
-        case IDW_VIEW_STATUSBAR:
-            CFrame::OnViewStatusBar();
+    case IDW_VIEW_STATUSBAR:
+        CFrame::OnViewStatusBar();
         return TRUE;
 
-        case IDW_VIEW_TOOLBAR:
-            CFrame::OnViewToolBar();
+    case IDW_VIEW_TOOLBAR:
+        CFrame::OnViewToolBar();
         return TRUE;
 
-        case IDW_ABOUT:
-            return OnHelp();
+    case IDW_ABOUT:
+        return OnHelp();
             
-        case IDW_FILE_MRU_FILE1:
-            OnProcessMRU(wParam, lParam);
-            return TRUE;
+    case IDW_FILE_MRU_FILE1:
+        OnProcessMRU(wParam, lParam);
+        return TRUE;
     }
 
     return FALSE;
@@ -257,7 +257,7 @@ OnFileOpen()                                                                /*
     CFileDialog fd(TRUE, 0, 0, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
         TheDoc().GetFilter());
     if (fd.DoModal(*this) != IDOK)
-            return;
+        return;
 
       // open the document and read its content
     if (!TheDoc().OpenDoc(fd.GetPathName()))
@@ -455,7 +455,7 @@ SaveRegistrySettings()                                                      /*
     {
           // get archived values
         CArchive ar(TheApp().GetArcvPath(), CArchive::store);
-              // deserialize in the same order as serialized
+          // deserialize in the same order as serialized
         ar << TheApp(); // for the app
         ar << *this;    // for the frame
         ar << m_View;   // for the view
@@ -489,9 +489,9 @@ Serialize(CArchive& ar)                                                     /*
 {
       // perform loading or storing
     ArchiveObject w(&m_Wndpl, sizeof(WINDOWPLACEMENT));
-        if (ar.IsStoring())
-        {
-                   // save current window placement information
+    if (ar.IsStoring())
+    {
+          // save current window placement information
         ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
         m_Wndpl.length = sizeof(WINDOWPLACEMENT);
         GetWindowPlacement(m_Wndpl);
@@ -511,9 +511,9 @@ Serialize(CArchive& ar)                                                     /*
             ar << GetMRUEntries()[i];
         }
     }
-        else    // recovering
-        {
-                  // recover window frame placement, but do not invoke
+    else    // recovering
+    {
+          // recover window frame placement, but do not invoke
           // SetWindowPlacement(), as the window is not yet created.
         ar >> w;
           // recover frame status and  tool bar base class switches
@@ -546,7 +546,7 @@ Serialize(CArchive& ar)                                                     /*
             CString s = vMRUEntries[nMRU - 1 - i];
             AddMRUEntry(s);
         }
-        }
+    }
 }
 
 /*============================================================================*/
@@ -621,32 +621,32 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                            /*
 
         case WM_SYSCOMMAND:
         {
-        switch (LOWORD(wParam))
-        {
+            switch (LOWORD(wParam))
+            {
             case SC_MINIMIZE:
-              // save current window placement data before minimize
-            m_Wndpl.length = sizeof(WINDOWPLACEMENT);
-            GetWindowPlacement(m_Wndpl);
-            break;
+                  // save current window placement data before minimize
+                m_Wndpl.length = sizeof(WINDOWPLACEMENT);
+                GetWindowPlacement(m_Wndpl);
+                break;
 
             case SC_MAXIMIZE:
-              // save current window placement data before maximize
-            m_Wndpl.length = sizeof(WINDOWPLACEMENT);
-            GetWindowPlacement(m_Wndpl);
-            break;
+                  // save current window placement data before maximize
+                m_Wndpl.length = sizeof(WINDOWPLACEMENT);
+                GetWindowPlacement(m_Wndpl);
+                break;
 
             case SC_RESTORE:
-              // restore window parameters before minimize/maximize
-            m_Wndpl.length = sizeof(WINDOWPLACEMENT);
-              // if restoring from maximized state, restore
-              // normal placement indicators
-            if (IsZoomed())
-            {
-                m_Wndpl.flags  = WPF_SETMINPOSITION;
-                m_Wndpl.showCmd = SW_SHOWNORMAL;
+                  // restore window parameters before minimize/maximize
+                m_Wndpl.length = sizeof(WINDOWPLACEMENT);
+                  // if restoring from maximized state, restore
+                  // normal placement indicators
+                if (IsZoomed())
+                {
+                    m_Wndpl.flags  = WPF_SETMINPOSITION;
+                    m_Wndpl.showCmd = SW_SHOWNORMAL;
+                }
+                return SetWindowPlacement(m_Wndpl);
             }
-            return SetWindowPlacement(m_Wndpl);
-        }
         }
     }
 

@@ -82,21 +82,21 @@ CPrintInfo                                                              /*
 
           // public data
         CPrintDialog* m_pPD;    // pointer to print dialog
-        BOOL    m_bDocObject,   // TRUE if a DocObject (not supported)
-                m_bDirect,  // TRUE if bypassing Print Dialog
-                m_bPreview, // TRUE if in preview mode
-                m_bContinuePrinting;// set FALSE to end printing
-        UINT    m_nCopies,      // number of copies (not supported)
-                m_nFromPage,    // first printed page, 1 based
-                m_nMaxPage,     // maximum page limit
-                m_nMinPage,     // minimum page limit
-                m_nToPage,      // last printed page
-                m_nCurPage, // current page
-                m_nNumPreviewPages; // (not supported)
+        BOOL    m_bDocObject;   // TRUE if a DocObject (not supported)
+        BOOL    m_bDirect;      // TRUE if bypassing Print Dialog
+        BOOL    m_bPreview;     // TRUE if in preview mode
+        BOOL    m_bContinuePrinting;// set FALSE to end printing
+        UINT    m_nCopies;      // number of copies (not supported)
+        UINT    m_nFromPage;    // first printed page, 1 based
+        UINT    m_nMaxPage;     // maximum page limit
+        UINT    m_nMinPage;     // minimum page limit
+        UINT    m_nToPage;      // last printed page
+        UINT    m_nCurPage;     // current page
+        UINT    m_nNumPreviewPages; // (not supported)
         LPVOID  m_lpUserData;   // pointer to user created struct       
-        CRect   m_rectDraw; // rect of current usable page area     
+        CRect   m_rectDraw;     // rect of current usable page area     
         CString m_strPageDesc;  // format string for page number display
-        UINT    m_nMargin;  // page margin, in twips
+        UINT    m_nMargin;      // page margin, in twips
 
           // these only valid if m_bDocObject: currently not supported
         DWORD   m_dwFlags;  // flags for DocObject print operations

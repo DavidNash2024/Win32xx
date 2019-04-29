@@ -67,7 +67,7 @@ CMRU : public CObject                           /*
 **----------------------------------------------------------------------------*/
 {
       // Public Declarations
-        public:
+    public:
           // construction/destruction
         CMRU();
            ~CMRU();
@@ -93,7 +93,6 @@ CMRU : public CObject                           /*
         size_t      m_nMaxMRU;  // maximum MRU entries, this app
         CFrame         *m_theFrame;     // frame containing main menu
 
-//        enum {nMaximumMRUSlots = 16};
     static const size_t m_nMaximumMRUSlots; // maximum possible slots
     static const CString m_emptyMRUListLabel; // File MRU locator label
 };

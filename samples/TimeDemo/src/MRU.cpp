@@ -205,13 +205,13 @@ Serialize(CArchive &ar)                                                 /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-                  // each item serialized is written to the archive
-                  // file as a char stream of the proper length,
-                  // preceded by that length. In some cases, other forms os
+    if (ar.IsStoring())
+    {
+          // each item serialized is written to the archive
+          // file as a char stream of the proper length,
+          // preceded by that length. In some cases, other forms os
           // data are saved, from which the primary items are then
-                  // reconstructed.
+          // reconstructed.
 
           // record the number of entries to write
         size_t i, nMRU = m_vMRUEntries.size();
@@ -223,13 +223,13 @@ Serialize(CArchive &ar)                                                 /*
         }
 
     }
-        else    // recovering
-        {
-                  // each item deserialized from the archive is
-                  // retrieved by first reading its length and  then
-                  // loading in that number of bytes into the data
-                  // item saved in the archive, as above. Some items require
-                  // additional converstion procedures.
+    else    // recovering
+    {
+          // each item deserialized from the archive is
+          // retrieved by first reading its length and  then
+          // loading in that number of bytes into the data
+          // item saved in the archive, as above. Some items require
+          // additional converstion procedures.
         m_vMRUEntries.clear();
         std::vector<CString> vMRUEntries;
           // load all archived MRU entries, used or not,

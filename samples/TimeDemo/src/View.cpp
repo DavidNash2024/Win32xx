@@ -73,8 +73,8 @@ CView()                                                 /*
 {
     m_cWd = m_cHt  = 0;
     m_rgbTxColor   = RGB(0,0,0);
-        m_rgbBkColor   = RGB(255,255,128);
-        m_rgbTxHiColor = RGBHighlight(m_rgbTxColor);
+    m_rgbBkColor   = RGB(255,255,128);
+    m_rgbTxHiColor = RGBHighlight(m_rgbTxColor);
     m_rgbBkHiColor = RGBHighlight(m_rgbBkColor);
     m_hCursor      = ::LoadCursor(0, IDC_ARROW);
     SetCursorShape(arrow);
@@ -219,8 +219,8 @@ Paint(CDC &dcMem, RECT rc)                                          /*
         return;
     }
       // get the document size and  max width
-    int doc_length = TheDoc().GetDocLength(),
-        doc_width  = TheDoc().GetDocWidth();
+    int doc_length = TheDoc().GetDocLength();
+    int doc_width  = TheDoc().GetDocWidth();
       // express screen width columns and  height lines in point form
     CPoint  wh = GetClientWdHt();
       // display the view content
@@ -228,8 +228,8 @@ Paint(CDC &dcMem, RECT rc)                                          /*
     if (doc_length > 0 && doc_width > 0)
     {
           // compute how many lines & cols will appear on the screen
-        int lines = MIN(doc_length, wh.y),
-            cols  = MIN(doc_width,  wh.x);
+        int lines = MIN(doc_length, wh.y);
+        int cols = MIN(doc_width, wh.x);
 
           // show/hide the scrollbars
         m_sb.ShowHScrollBar(doc_width  > wh.x);
@@ -241,8 +241,8 @@ Paint(CDC &dcMem, RECT rc)                                          /*
         m_sb.SetScrollIncrements(si);
           // topleft is the upper-left-most character in the display
         CPoint topleft = m_sb.GetScrollPosition();
-        int topline = MAX(topleft.y, 0),
-            leftcol = MAX(topleft.x, 0);
+        int topline = MAX(topleft.y, 0);
+        int leftcol = MAX(topleft.x, 0);
         for (int i = 0; i < lines; i++)
         {
             int j = i + topline;
@@ -330,7 +330,7 @@ RGBHighlight(COLORREF rgb)                                              /*
     "inverting" the given color rgb.
 *-----------------------------------------------------------------------------*/
 {
-        return RGB(255 - GetRValue(rgb), 255 - GetGValue(rgb),
+    return RGB(255 - GetRValue(rgb), 255 - GetGValue(rgb),
         255 - GetBValue(rgb));
 }
 
@@ -345,13 +345,13 @@ SaveFontSize()                                                           /*
       // get the handle to the view's device context
     CClientDC dc(*this);
       // select the current font into the device context: save the old
-    CFont fold = (HFONT)dc.SelectObject(m_font);
+    CFont fold = dc.SelectObject(m_font);
       // measure the font width and  height
     TEXTMETRIC tm;
     dc.GetTextMetrics(tm);
     m_cWd = tm.tmAveCharWidth;
     m_cHt = tm.tmHeight + tm.tmExternalLeading;
-          // restore entry environment
+      // restore entry environment
     dc.SelectObject(fold);
 }
 
@@ -377,67 +377,67 @@ Serialize(CArchive &ar)                                                 /*
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
-        if (ar.IsStoring())
-        {
-            // each item serialized is written to the archive
-            // file as a TCHAR stream of the proper length,
-            // preceded by that length. In some cases, such
-            // as for fonts and  window extents, secondary data
-            // are saved from which the primary items are then
-            // reconstructed.
+    if (ar.IsStoring())
+    {
+        // each item serialized is written to the archive
+        // file as a TCHAR stream of the proper length,
+        // preceded by that length. In some cases, such
+        // as for fonts and  window extents, secondary data
+        // are saved from which the primary items are then
+        // reconstructed.
 
-              // save m_hfFont
-            LOGFONT lf;
-            m_font.GetObject(sizeof(LOGFONT), &lf);
-            ArchiveObject f(&lf, sizeof(LOGFONT));
-            ar << f;
+          // save m_hfFont
+        LOGFONT lf;
+        m_font.GetObject(sizeof(LOGFONT), &lf);
+        ArchiveObject f(&lf, sizeof(LOGFONT));
+        ar << f;
 
-              // save font height and  width
-            ar << m_cHt;
-            ar << m_cWd;
+          // save font height and  width
+        ar << m_cHt;
+        ar << m_cWd;
 
-              // save m_rgbTxColor
-            ar << m_rgbTxColor;
+          // save m_rgbTxColor
+        ar << m_rgbTxColor;
 
-              // save m_rgbBkColor
-            ar << m_rgbBkColor;
+          // save m_rgbBkColor
+        ar << m_rgbBkColor;
             
-              // save the scrollbar parameters
-            ar << m_sb;
-        }
-        else    // recovering
-        {
-            // each item deserialized from the archive is
-            // retrieved by first reading its length and  then
-            // loading in that number of bytes into the data
-            // item saved in the archive, as above. Some items,
-            // such as fonts and  screen extents, require
-            // additional converstion procedures, as shown below.
+          // save the scrollbar parameters
+        ar << m_sb;
+    }
+    else    // recovering
+    {
+        // each item deserialized from the archive is
+        // retrieved by first reading its length and  then
+        // loading in that number of bytes into the data
+        // item saved in the archive, as above. Some items,
+        // such as fonts and  screen extents, require
+        // additional converstion procedures, as shown below.
 
-              // recover m_hfFont
-            LOGFONT lf;
-            ArchiveObject f(&lf, sizeof(LOGFONT));
-            ar >> f;
-            
-              // recover font height and  width
-            UINT cHt, cWd;
-            ar >> cHt;
-            ar >> cWd;
-            
-              // recover view colors
-            COLORREF rgbTxColor, rgbBkColor;
-            ar >> rgbTxColor;
-            ar >> rgbBkColor;
+          // recover m_hfFont
+        LOGFONT lf;
+        ArchiveObject f(&lf, sizeof(LOGFONT));
+        ar >> f;
+        
+          // recover font height and  width
+        UINT cHt, cWd;
+        ar >> cHt;
+        ar >> cWd;
+        
+          // recover view colors
+        COLORREF rgbTxColor, rgbBkColor;
+        ar >> rgbTxColor;
+        ar >> rgbBkColor;
 
           // no exception having been raised, set the view parameters
-            m_font.CreateFontIndirect(lf);
-            m_rgbTxColor = rgbTxColor;
-            m_rgbBkColor = rgbBkColor;
-            m_cHt = cHt;
-            m_cWd = cWd;
-              // recover scroll bar parameters
-            ar >> m_sb;
-        }
+        m_font.CreateFontIndirect(lf);
+        m_rgbTxColor = rgbTxColor;
+        m_rgbBkColor = rgbBkColor;
+        m_cHt = cHt;
+        m_cWd = cWd;
+          // recover scroll bar parameters
+        ar >> m_sb;
+    }
 }
 
 /*============================================================================*/
@@ -473,20 +473,20 @@ SetDefaultFont()                                                        /*
     long lfHeight = -MulDiv(nDefaultFontSize,
         dc.GetDeviceCaps(LOGPIXELSY), 72);
       // set default font characteristics
-        int nHeight = lfHeight;     // logical height of font
-        int nWidth = 0;         // logical average character width
-        int nEscapement = 0;        // angle of escapement
-        int nOrientation = 0;           // base-line orientation angle
-        int fnWeight = FW_REGULAR;  // font weight
-        DWORD fdwItalic = 0;            // italic attribute flag
-        DWORD fdwUnderline = 0;         // underline attribute flag
-        DWORD fdwStrikeOut = 0;         // strikeout attribute flag
-        DWORD fdwCharSet = 0;           // character set identifier
-        DWORD fdwOutputPrecision = 0;   // output precision
-        DWORD fdwClipPrecision = 0;     // clipping precision
-        DWORD fdwQuality = 0;           // output quality
-        DWORD fdwPitchAndFamily = 0;    // pitch and  family
-        LPCTSTR lpszFace = lpszFaceDefault; // pointer to typeface name string
+    int nHeight = lfHeight;     // logical height of font
+    int nWidth = 0;         // logical average character width
+    int nEscapement = 0;        // angle of escapement
+    int nOrientation = 0;           // base-line orientation angle
+    int fnWeight = FW_REGULAR;  // font weight
+    DWORD fdwItalic = 0;            // italic attribute flag
+    DWORD fdwUnderline = 0;         // underline attribute flag
+    DWORD fdwStrikeOut = 0;         // strikeout attribute flag
+    DWORD fdwCharSet = 0;           // character set identifier
+    DWORD fdwOutputPrecision = 0;   // output precision
+    DWORD fdwClipPrecision = 0;     // clipping precision
+    DWORD fdwQuality = 0;           // output quality
+    DWORD fdwPitchAndFamily = 0;    // pitch and  family
+    LPCTSTR lpszFace = lpszFaceDefault; // pointer to typeface name string
 
       // delete the existing font, if it exists
     if ((HFONT)m_font)
@@ -528,26 +528,26 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 {
     switch (uMsg)
     {
-        case WM_SIZE:
+    case WM_SIZE:
         Invalidate();
         break;  // Also do default processing
 
-        case WM_ERASEBKGND:
+    case WM_ERASEBKGND:
         return 1;       // prevents flicker on resizing
 
-        case WM_LBUTTONDOWN:  // user clicks in the client area
+    case WM_LBUTTONDOWN:  // user clicks in the client area
         {
           // let the main frame OnCommand() handle this as a
           // notification from the main window
             return TheApp().TheFrame()->SendMessage(WM_COMMAND,
-            (WPARAM)IDW_MAIN, (LPARAM)0);
+                (WPARAM)IDW_MAIN, (LPARAM)0);
         }
 
-        case WM_SETCURSOR:
+    case WM_SETCURSOR:
         {
             if (!TheApp().TheFrame()->m_help_mode)
-            SetCursor(m_hCursor);
-        return 1;
+                SetCursor(m_hCursor);
+            return 1;
         }
     }
 

@@ -57,8 +57,8 @@ DSize                                                                   /*
                 { return DSize(-cx, -cy); }
         
           // class data
-        double  cx, 
-            cy;
+        double  cx;
+        double  cy;
 };
 
 /*============================================================================*/
@@ -100,8 +100,8 @@ PreviewSetup    : public CDialog                                        /*
         CDataExchange   m_DX;
         CButton         m_PageSetup;
         CToolTip        m_TT;
-        DSize           m_InScreenInches,
-                        m_InPreviewInches;
+        DSize           m_InScreenInches;
+        DSize           m_InPreviewInches;
 };
     
 /*=============================================================================*/
@@ -137,12 +137,12 @@ CPreviewPane : public CScrollView                                       /*
     private:
         DSize   GetZoom();
 
-        BOOL            m_ShowScrollBars;
-        CBitmap         m_Bitmap;
-        int             m_ZoomState,
-                        m_PrevZoomState;
-        CSize           m_ScrollSize,
-                        m_LastWindowSize;
+        BOOL    m_ShowScrollBars;
+        CBitmap m_Bitmap;
+        int     m_ZoomState;
+        int     m_PrevZoomState;
+        CSize   m_ScrollSize;
+        CSize   m_LastWindowSize;
 };
 
 /*******************************************************************************
@@ -195,8 +195,8 @@ CPrintPreview : public CDialog                                         /*
         CDC         m_dcPrinter;            // printer context
         CMemDC      m_dcMem;                // memory context
         CPreviewPane m_PreviewPane;         // preview window
-        UINT        m_nCurrentPage,         // page number, zero based
-                    m_nNumPreviewPages;     // total pages
+        UINT        m_nCurrentPage;         // page number, zero based
+        UINT        m_nNumPreviewPages;     // total pages
         double      m_shrink;               // printer/screen ratio
 
     private:
@@ -240,17 +240,17 @@ CPrintPreview : public CDialog                                         /*
         CToolTip    m_TT;
         DWORD       m_dwFlags;              // dialog invocation flags
           // button bitmaps
-        CBitmap     m_FirstPage,
-                    m_PrevPage,
-                    m_NextPage,
-                    m_LastPage;
+        CBitmap     m_FirstPage;
+        CBitmap     m_PrevPage;
+        CBitmap     m_NextPage;
+        CBitmap     m_LastPage;
           // screen, initial preview size, and print page setup
         PreviewSetup m_SetupDlg;            // setup dialog
-        DSize       m_ScreenInches,         // screen size, in inches
-                    m_PreviewInches,        // preview size, inches
-                    m_PrinterScreenResRatio; // PrinterPPI/ScreenPPI
-        CSize       m_PrinterDots,          // printer size, in dots
-                    m_ScreenPixels;         // screen size, in pixels
+        DSize       m_ScreenInches;         // screen size, in inches
+        DSize       m_PreviewInches;        // preview size, inches
+        DSize       m_PrinterScreenResRatio; // PrinterPPI/ScreenPPI
+        CSize       m_PrinterDots;          // printer size, in dots
+        CSize       m_ScreenPixels;         // screen size, in pixels
 };
 /*----------------------------------------------------------------------------*/
 #endif // PRINT_PREVIEW_H

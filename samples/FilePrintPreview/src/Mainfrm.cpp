@@ -660,12 +660,12 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
     {
         case WM_SYSCOMMAND:
         {
-        switch (LOWORD(wParam))
-        {
-            case SC_CLOSE:
-            m_PrintPreview.Destroy();
-            break;  // let default process this further
-        }
+			switch (LOWORD(wParam))
+			{
+				case SC_CLOSE:
+				m_PrintPreview.Destroy();
+				break;  // let default process this further
+			}
         }
     }
 
