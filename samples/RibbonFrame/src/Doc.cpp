@@ -79,9 +79,6 @@ void CDoc::Print()
             memset(&di, 0, sizeof(DOCINFO));
             di.cbSize = sizeof(DOCINFO);
             di.lpszDocName = _T("Scribble Printout");
-            di.lpszOutput = static_cast<LPTSTR>(NULL);
-            di.lpszDatatype = static_cast<LPTSTR>(NULL);
-            di.fwType = 0;
 
             // Begin a print job by calling the StartDoc function.
             CDC printDC = printDlg.GetPrinterDC();
@@ -92,42 +89,42 @@ void CDoc::Print()
             if (0 > StartPage(printDC))
                 throw CUserException(_T("StartPage failed"));
 
-            BITMAPINFOHEADER bi;
-            ZeroMemory(&bi, sizeof(bi));
-            bi.biSize = sizeof(bi);
-            bi.biHeight = height;
-            bi.biWidth = width;
-            bi.biPlanes = 1;
-            bi.biBitCount = 24;
-            bi.biCompression = BI_RGB;
+            BITMAPINFOHEADER bih;
+            ZeroMemory(&bih, sizeof(bih));
+            bih.biSize = sizeof(bih);
+            bih.biHeight = height;
+            bih.biWidth = width;
+            bih.biPlanes = 1;
+            bih.biBitCount = 24;
+            bih.biCompression = BI_RGB;
 
             // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
             // Get the size of the image data
-            memDC.GetDIBits(bmView, 0, height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
+            BITMAPINFO* pBI = reinterpret_cast<BITMAPINFO*>(&bih);
+            memDC.GetDIBits(bmView, 0, height, NULL, pBI, DIB_RGB_COLORS);
 
             // Retrieve the image data
-            std::vector<byte> vBits(bi.biSizeImage, 0); // a vector to hold the byte array
+            std::vector<byte> vBits(bih.biSizeImage, 0); // a vector to hold the byte array
             byte* pByteArray = &vBits.front();
-            memDC.GetDIBits(bmView, 0, height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
+            memDC.GetDIBits(bmView, 0, height, pByteArray, pBI, DIB_RGB_COLORS);
 
             // Determine the scaling factors required to print the bitmap and retain its original proportions.
-            float logPelsX1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSX));
-            float logPelsY1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSY));
-            float logPelsX2 = static_cast<float>(GetDeviceCaps(printDC, LOGPIXELSX));
-            float logPelsY2 = static_cast<float>(GetDeviceCaps(printDC, LOGPIXELSY));
-            float scaleX = logPelsX2 / logPelsX1;
-            float scaleY = logPelsY2 / logPelsY1;
+            double viewPixelsX = double(viewDC.GetDeviceCaps(LOGPIXELSX));
+            double viewPixelsY = double(viewDC.GetDeviceCaps(LOGPIXELSY));
+            double printPixelsX = double(GetDeviceCaps(printDC, LOGPIXELSX));
+            double printPixelsY = double(GetDeviceCaps(printDC, LOGPIXELSY));
+            double scaleX = printPixelsX / viewPixelsX;
+            double scaleY = printPixelsY / viewPixelsY;
 
-            int scaledWidth = static_cast<int>(static_cast<float>(width) * scaleX);
-            int scaledHeight = static_cast<int>(static_cast<float>(height) * scaleY);
+            int scaledWidth = int(width * scaleX);
+            int scaledHeight = int(height * scaleY);
 
             // Use StretchDIBits to scale the bitmap and maintain its original proportions
-            UINT result = StretchDIBits(printDC, 0, 0, scaledWidth, scaledHeight, 0, 0, width, height,
-                pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY);
+            UINT result = StretchDIBits(printDC, 0, 0, scaledWidth, scaledHeight, 0, 0,
+                          width, height, pByteArray, pBI, DIB_RGB_COLORS, SRCCOPY);
+
             if (GDI_ERROR == result)
-            {
                 throw CUserException(_T("Failed to resize image for printing"));
-            }
 
             // Inform the driver that the page is finished.
             if (0 > EndPage(printDC))
@@ -155,7 +152,7 @@ void CDoc::Serialize(CArchive &ar)
     if (ar.IsStoring())
     {
         // Store the number of points
-        UINT points = static_cast<UINT>(GetAllPoints().size());
+        UINT points = UINT(GetAllPoints().size());
         ar << points;
         
         // Store the PlotPoint data
