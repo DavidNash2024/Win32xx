@@ -43,7 +43,6 @@ CMainFrame()                                                                /*
     ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
       // Set m_View as the view window of the frame
     SetView(m_View);
-    m_nMaxMRU = TheApp().GetMaxMRUSlots();
 }
 
 /*============================================================================*/
@@ -177,6 +176,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
       // get archved values
     try
     {
+		m_nMaxMRU = TheApp().GetMaxMRUSlots();
         SetMRULimit(m_nMaxMRU);
           // get archived values
         CArchive ar(TheApp().GetArcvPath(), CArchive::load);
