@@ -84,11 +84,7 @@ CDoc()                                                                  /*
     m_iCheckB   = FALSE;
     m_iCheckC   = FALSE;
     m_iRadioA   = 0;
-    m_sString.Empty();
-    m_sRichEdit.Empty();
-    m_sListBox.Empty();
     m_iListBox  = 0;
-    m_sComboBox.Empty();
     m_iComboBox = 0;
     m_iSlider   = 0;
     CTime::GetCurrentTime().GetAsSystemTime(m_stDateTime);

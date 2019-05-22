@@ -5,23 +5,13 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+#include "Doc.h"
+
 
 // Message - sent to the parent (Frame) window when a file is dropped on the View window
 //   WPARAM: A pointer to the filename (LPCTSTR)
 //   LPARAM: unused
-#define UWM_DROPFILE (WM_APP + 0x0001)  
-
-
-class CDoc;
-
-
-struct PlotPoint
-{
-    int x;
-    int y;
-    bool isPenDown;
-    COLORREF color;
-};
+#define UWM_DROPFILE (WM_APP + 0x0001)
 
 
 class CView : public CWnd
@@ -33,22 +23,24 @@ public:
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();
     COLORREF GetPenColor() { return m_penColor; }
-    void SetPenColor(COLORREF Color) { m_penColor = Color; }
+    void Print();
+    void SetPenColor(COLORREF color) { m_penColor = color; }
 
 protected:
     virtual int OnCreate(CREATESTRUCT&);
     virtual void OnDraw(CDC& dc);
-    virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     void DrawLine(int x, int y);
 
+    CDoc m_doc;
     CBrush m_brush;
     COLORREF m_penColor;
 

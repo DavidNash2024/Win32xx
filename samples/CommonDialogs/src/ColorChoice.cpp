@@ -76,7 +76,7 @@
 
 /*============================================================================*/
     CColorChoice::
-CColorChoice()                              /*
+CColorChoice() : m_nSelection(0)                             /*
 
     Construct a color choice object with or without initial values.
 *-----------------------------------------------------------------------------*/
@@ -137,7 +137,7 @@ DoModal(HWND hWndOwner /* = 0 */)                   /*
       // Make the control be modal so the choice is returned at
       // termination.
     m_nSelection = static_cast<UINT>(-1);
-	INT_PTR selection = m_LBDlg.DoModal(hWndOwner);
+    INT_PTR selection = m_LBDlg.DoModal(hWndOwner);
       // if invalid, go no further
     if (selection < 0)
         return IDCANCEL;
@@ -157,7 +157,7 @@ DoModal(HWND hWndOwner /* = 0 */)                   /*
 
 /*============================================================================*/
     COLORREF CColorChoice::
-GetTableColor(UINT nID)                         /*
+GetTableColor(UINT nID) const                        /*
 
     Return the color found in the color table having the given nID
     identifier.
@@ -172,7 +172,7 @@ GetTableColor(UINT nID)                         /*
 
 /*============================================================================*/
     CBrush CColorChoice::
-GetBrush(UINT nID)                          /*
+GetBrush(UINT nID) const                         /*
 
     Return a solid brush with the color found in the color table at the
     given nID identifier. If the table has not yet been populated, return
@@ -189,7 +189,7 @@ GetBrush(UINT nID)                          /*
 
 /*============================================================================*/
     UINT CColorChoice::
-GetTableIndex(UINT nID)                                                 /*
+GetTableIndex(UINT nID) const                                                /*
 
     Return the color table index of the entry having the given nID. Return
     static_cast<UINT>(-1) if nID is zero or the table is empty.  Throw an
@@ -201,7 +201,7 @@ GetTableIndex(UINT nID)                                                 /*
         return static_cast<UINT>(-1); // default value
 
     UINT idx = 0;
-    std::vector<ctl_color>::iterator it;
+    std::vector<ctl_color>::const_iterator it;
     for (it = m_ColorTable.begin(); it != m_ColorTable.end() &&
         (*it).nID != nID; ++it, ++idx)
         ;
@@ -213,7 +213,7 @@ GetTableIndex(UINT nID)                                                 /*
 
 /*============================================================================*/
     CString CColorChoice::
-GetTableUsage(UINT nID)                                                 /*
+GetTableUsage(UINT nID) const                                                /*
 
     Return the usage field of the ctl_color triplet corresponding having
     the given nID.

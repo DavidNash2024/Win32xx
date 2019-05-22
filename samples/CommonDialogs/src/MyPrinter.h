@@ -61,7 +61,6 @@
     
 #include "ListBoxDlgRC.h"
 
-#define TF(b) (b ? _T("true") : _T("false"))
 
 /*============================================================================*/
     class
@@ -80,8 +79,6 @@ MyPrinter : public CPrintDialog                                 /*
         void SetBoxTitle (const CString& title) {m_sPDTitle  = title;}
 
     protected:
-        friend class MyPageSetup;
-        
         virtual BOOL OnInitDialog()
         //  Override this member method to perform special processing
         //  when the printer box is initialized. Return TRUE.
@@ -131,8 +128,6 @@ MyPageSetup : public CPageSetupDialog                               /*
         void SetBoxTitle(const CString& title) {m_sPSDTitle = title;}
 
     protected:
-        friend class MyPrinter;
-        
         virtual BOOL OnInitDialog()
         //  Override this member method to perform special processing
         //  when the printer box is initialized. Return TRUE.

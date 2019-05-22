@@ -86,12 +86,20 @@ void CMainFrame::OnFileMRU(WPARAM wparam)
     UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
     CString mruText = GetMRUEntry(mruIndex);
 
-    if (GetDoc().FileOpen(mruText))
+    try
+    {
+        GetDoc().FileOpen(mruText);
         m_pathName = mruText;
-    else
+        GetView().Invalidate();
+    }
+    
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
         RemoveMRUEntry(mruText);
-
-    GetView().Invalidate();
+        m_view.GetAllPoints().clear();
+    }   
 }
 
 void CMainFrame::OnFileNew()
@@ -104,28 +112,48 @@ void CMainFrame::OnFileNew()
 void CMainFrame::LoadFile(LPCTSTR fileName)
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
-    // Retrieve the PlotPoint data
-    if (GetDoc().FileOpen(fileName))
+    try
     {
-        // Save the filename
+        // Retrieve the PlotPoint data
+        GetDoc().FileOpen(fileName);
         m_pathName = fileName;
         AddMRUEntry(fileName);
-    }
-    else
-        m_pathName=_T("");
 
-    GetView().Invalidate();
+        GetView().Invalidate();
+    }
+    
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        
+        m_pathName = _T("");
+        m_view.GetAllPoints().clear();
+    }   
+    
 }
 
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 // Called in response to the UWM_DROPFILE user defined message
 {
-    // wParam is a pointer (LPCTSTR) to the filename
-    LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
-    assert(fileName);
+    try
+    {
+        // wParam is a pointer (LPCTSTR) to the filename
+        LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+        assert(fileName);
 
-    // Load the file
-    LoadFile(fileName);
+        // Load the file
+        LoadFile(fileName);
+    }
+    
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_view.GetAllPoints().clear();
+    }
+
     return 0;
 }
 
@@ -134,20 +162,42 @@ void CMainFrame::OnFileOpen()
     CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
     fileDlg.SetTitle(_T("Open File"));
 
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
+    try
     {
-        // Load the file
-        LoadFile(fileDlg.GetPathName());
+        // Bring up the file open dialog retrieve the selected filename
+        if (fileDlg.DoModal(*this) == IDOK)
+        {
+            // Load the file
+            LoadFile(fileDlg.GetPathName());
+        }
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_view.GetAllPoints().clear();
     }
 }
 
 void CMainFrame::OnFileSave()
 {
-    if (m_pathName == _T(""))
-        OnFileSaveAs();
-    else
-        GetDoc().FileSave(m_pathName);
+    try
+    {
+        if (m_pathName == _T(""))
+            OnFileSaveAs();
+        else
+            GetDoc().FileSave(m_pathName);
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_view.GetAllPoints().clear();
+    }
 }
 
 void CMainFrame::OnFileSaveAs()
@@ -155,18 +205,26 @@ void CMainFrame::OnFileSaveAs()
     CFileDialog fileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
     fileDlg.SetTitle(_T("Save File"));
 
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
+    try
     {
-        CString fileName = fileDlg.GetPathName();
-
-        // Save the file
-        if (GetDoc().FileSave(fileName))
+        // Bring up the file open dialog retrieve the selected filename
+        if (fileDlg.DoModal(*this) == IDOK)
         {
-            // Save the file name
+            CString fileName = fileDlg.GetPathName();
+
+            // Save the file
+            GetDoc().FileSave(fileName);
             m_pathName = fileName;
             AddMRUEntry(m_pathName);
         }
+    }
+    
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_view.GetAllPoints().clear();
     }
 
 }
@@ -175,8 +233,19 @@ void CMainFrame::OnFileSaveAs()
 // This function provides a useful reference for printing bitmaps in general
 void CMainFrame::OnFilePrint()
 {
-    // Pass the print job to CDoc
-    GetDoc().Print();
+    try
+    {
+        // print the view window
+        m_view.Print();
+    }
+    
+    catch (const CException& e)
+    {
+        // Display a message box indicating why printing failed.
+        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
+        CString type = CString(e.what());
+        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+    }
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -230,10 +299,10 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_PEN_COLOR );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-	
+    
     // Note: By default a single bitmap with a resource ID of IDW_MAIN and
     //       a color mask of RGB(192,192,192) is used for the ToolBar. 
-    //       The color mask is a color used for transparency.	
+    //       The color mask is a color used for transparency.   
 }
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

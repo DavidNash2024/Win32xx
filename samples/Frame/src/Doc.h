@@ -13,8 +13,8 @@ public:
     CDoc() {}
     ~CDoc() {}
 
-    BOOL FileLoad(LPCTSTR filename);
-    BOOL FileStore(LPCTSTR filename);
+    void FileLoad(LPCTSTR filename);
+    void FileStore(LPCTSTR filename);
     void Serialize(CArchive& ar);
 
 private:

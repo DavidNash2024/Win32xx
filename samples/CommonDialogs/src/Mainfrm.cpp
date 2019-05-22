@@ -428,6 +428,9 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
 
 
     // TODO: set CREATESTRUCT desired options here
+
+      // set the maximum MRU entries value
+    m_nMaxMRU = theAppGlobal.GetMaxMRU();
       
       // call the base class OnCreate() method with these options
     int rtn = CFrame::OnCreate(rcs);
@@ -566,8 +569,6 @@ OnInitialUpdate()                                                           /*
 {
     // TODO: Place any additional startup code here.
 
-      // set the maximum MRU entries value
-    m_nMaxMRU = theAppGlobal.GetMaxMRU();
       // enable drag-and-drop file entry mode
     DragAcceptFiles(TRUE);
       // if there is a MRU item at the top of the list, use it
@@ -803,10 +804,10 @@ Serialize(CArchive &ar)                                                     /*
         }
           // all successfully read in, so store them LIFO order into
           // the MRU list for proper display
-        for (i = 0; i < nMRU; ++i)
+        std::vector<CString>::reverse_iterator it;
+        for (it = vMRUEntries.rbegin(); it != vMRUEntries.rend(); ++it)
         {
-            s = vMRUEntries[nMRU - 1 - i];
-            AddMRUEntry(s);
+            AddMRUEntry(*it);
         }
     }
 }

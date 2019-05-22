@@ -79,20 +79,20 @@ CColorChoice   : public CColorDialog                    /*
         CColorChoice();
         virtual ~CColorChoice(){}
         
-        virtual BOOL    AddColorChoice(UINT, const CString&, COLORREF);
+                BOOL    AddColorChoice(UINT, const CString&, COLORREF);
                 void    ClearColorTable(){m_ColorTable.clear();}
                 size_t  DeleteTableEntry(UINT index);
         virtual INT_PTR DoModal(HWND hWndOwner = 0);
-                CBrush  GetBrush(UINT nID);
-        virtual CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
-                UINT    GetSelectedColorID() {return m_nSelection;}
-                COLORREF GetTableColor(UINT nID);
-                UINT    GetTableIndex(UINT nID);
-                size_t  GetTableSize() { return m_ColorTable.size();}
-                CString GetTableUsage(UINT nID); 
+                CBrush  GetBrush(UINT nID) const;
+                CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
+                UINT    GetSelectedColorID() const {return m_nSelection;}
+                COLORREF GetTableColor(UINT nID) const;
+                UINT    GetTableIndex(UINT nID) const;
+                size_t  GetTableSize() const { return m_ColorTable.size();}
+                CString GetTableUsage(UINT nID) const; 
                 void    SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
-        virtual void    SetTableColor(UINT nID, COLORREF rgb);
-        virtual void    SetTableUsage(UINT nID, const CString& s);
+                void    SetTableColor(UINT nID, COLORREF rgb);
+                void    SetTableUsage(UINT nID, const CString& s);
 
     protected:
 

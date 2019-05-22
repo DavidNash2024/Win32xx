@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "View.h"
-#include "FrameApp.h"
 
 
 CView::CView()
@@ -13,7 +12,7 @@ CView::CView()
 
 CDoc& CView::GetDoc()
 {
-    return GetFrameApp()->GetMainFrame().GetDoc();
+    return m_doc;
 }
 
 void CView::OnDraw(CDC& dc)

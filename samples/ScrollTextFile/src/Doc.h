@@ -44,20 +44,16 @@ CDoc                                                                        /*
 
         CDoc();
         virtual ~CDoc();
-        virtual void    AddRecord(const CStringW& entry);
-        virtual CString GetFilter() const;
-        virtual UINT    GetLength();
-        virtual CSize   GetMaxExtent(const CDC& dc);
-        virtual CStringW GetRecord(UINT, UINT left = 0, 
-                            UINT length = MAX_STRING_SIZE);
-        virtual UINT    GetWidth();
-        virtual BOOL    IsOpen() const;
-        virtual BOOL    CloseDoc();
-        virtual BOOL    OpenDoc(LPCTSTR);
-        virtual void    Serialize(CArchive& ar);
-
-          // public data members
-        static CString  m_sCompiled_on;  // compilation date, mmm dd yyyy
+        void    AddRecord(const CStringW& entry);
+        CString GetFilter() const;
+        UINT    GetLength();
+        CSize   GetMaxExtent(const CDC& dc);
+        CStringW GetRecord(UINT, UINT left = 0, 
+                    UINT length = MAX_STRING_SIZE);
+        UINT    GetWidth();
+        BOOL    IsOpen() const;
+        BOOL    CloseDoc();
+        BOOL    OpenDoc(LPCTSTR);
 
     private:
         Encoding    DetermineEncoding(UINT testlen, UINT& offset);
@@ -66,6 +62,7 @@ CDoc                                                                        /*
         void        RecordEntry(wchar_t w, CStringW& entry);
 
           // private data members
+        static CString  m_sCompiled_on;  // compilation date, mmm dd yyyy
         CFile   m_fDoc_file;     // holds the document name, path, etc.
         BOOL    m_bDoc_is_dirty; // document has been altered since open
         BOOL    m_bDoc_is_open;  // the document status

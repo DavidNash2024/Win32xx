@@ -5,7 +5,7 @@
 
 ********************************************************************************
 
-    Acknowledgment. This class was adapted from that in the PrintPreview 
+    Acknowledgement. This class was adapted from that in the PrintPreview 
     sample program appearing in the Win32++ framework sample folder, created 
     by David Nash and published under the permissions granted in that work.
     The adaptation here implements the CRichView class as self-contained
@@ -42,23 +42,20 @@ CRichView : public CRichEdit                                            /*
         CRichView();
         virtual ~CRichView();
 
-        virtual UINT    GetPageBreaks(CDC& dcPrinter);
-        virtual BOOL    GetNewFont();
-        virtual void    PrintDC(UINT, CDC&, CDC&);
-        virtual BOOL    ReadFile(LPCTSTR szFileName);
-        virtual void    SetFontDefaults();
-                void    SetDocName(LPCTSTR &szFileName)
+        UINT    GetPageBreaks(CDC& dcPrinter);
+        BOOL    GetNewFont() const;
+        void    PrintDC(UINT, CDC&, CDC&);
+        BOOL    ReadFile(LPCTSTR szFileName);
+        void    SetFontDefaults();
+        void    SetDocName(LPCTSTR &szFileName)
                             { m_sDocPath = szFileName;}
-        virtual void    PrintPages(CPrintDialog& PrintDlg);
-                void    WordWrap(WordWrapType setting);
-        virtual BOOL    WriteFile(LPCTSTR szFileName);
+        void    PrintPages(CPrintDialog& PrintDlg);
+        void    WordWrap(WordWrapType setting);
+        BOOL    WriteFile(LPCTSTR szFileName);
     
     protected:
         virtual void    OnAttach();
         virtual void    PreCreate(CREATESTRUCT& cs);
-
-          // RichView data
-        std::vector<int> m_PageBreaks;  // page starting position list
 
     private:
           // static callback functions
@@ -69,6 +66,9 @@ CRichView : public CRichEdit                                            /*
         
         CFont   m_Font;
         CString m_sDocPath;
+
+        // RichView data
+        std::vector<int> m_PageBreaks;  // page starting position list
 };
 /*----------------------------------------------------------------------------*/
 #endif // RICHVIEW_H

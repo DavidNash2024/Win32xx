@@ -73,8 +73,9 @@ MyFontDialog(DWORD dwFlags, HDC hdcPrinter /* = 0 */)           /*
     : CFontDialog(dwFlags | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS |
     CF_ENABLEHOOK, hdcPrinter)
 {
+    ZeroMemory(&m_tm, sizeof(m_tm));
     SetBoxTitle(_T("Font"));
-          // default font, 10pt Courier New
+      // default font, 10pt Courier New
     m_Font.CreatePointFont(10, _T("Courier New"));
     SetChoiceFont(m_Font);
 }

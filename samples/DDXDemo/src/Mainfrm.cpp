@@ -69,16 +69,6 @@
 static const LPCTSTR registryKeyName = _T("Win32++\\DDX-DDVDemo");
 
 /*============================================================================*/
-    CDoc&
-TheDoc()                                                            /*
-
-    Return a global reference to the CDoc object. 
-*-----------------------------------------------------------------------------*/
-{
-    return TheApp()->TheFrame()->TheDoc();
-}
-
-/*============================================================================*/
     CMainFrame::
 CMainFrame()                                                            /*
 
@@ -205,22 +195,22 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
         case IDC_RADIO_A:
         case IDC_RADIO_B:
         case IDC_RADIO_C:
-        TheView().m_iRadioA = nID - IDC_RADIO_A;
+        TheView().SetRadioA(nID - IDC_RADIO_A);
         UpdateDialog(SENDTOCONTROL);
             return TRUE;
 
         case IDC_CHECK_A:
-        TheView().m_iCheckA = !TheView().m_iCheckA;
+        TheView().SetCheckA( !TheView().GetCheckA() );
         UpdateDialog(SENDTOCONTROL);
         return TRUE;
 
         case IDC_CHECK_B:
-        TheView().m_iCheckB = !TheView().m_iCheckB;
+        TheView().SetCheckB( !TheView().GetCheckB() );
         UpdateDialog(SENDTOCONTROL);
         return TRUE;
 
         case IDC_CHECK_C:
-        TheView().m_iCheckC = !TheView().m_iCheckC;
+        TheView().SetCheckC( !TheView().GetCheckC() );
         UpdateDialog(SENDTOCONTROL);
         return TRUE;
 

@@ -137,31 +137,6 @@ IntDat(ULONG hexdate)                                               /*
     return ans;
 }
 
-/*============================================================================*/
-        void CApp::
-Serialize(CArchive &ar)                                                 /*
-
-        Called to serialize the application to or from the archive ar, depending
-    on the sense of IsStoring().  Leaves the archive open for for further
-    operations.
-*-----------------------------------------------------------------------------*/
-{
-      // perform loading or storing
-    if (ar.IsStoring())
-    {
-          // each item is written to the archive as a char stream of
-          // the proper length, preceded by that length. 
-
-    }
-    else    // recovering
-    {
-          // each item read from the archive is retrieved by first
-          // reading its byte length and then by loading in that number
-          // of bytes into the location of that item.
-
-    }
-}
-
 /*******************************************************************************
 
     The WinMain() function invoked by the system to launch the application.

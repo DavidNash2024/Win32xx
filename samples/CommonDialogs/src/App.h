@@ -83,9 +83,6 @@ CApp : public CWinApp                           /*
         CMainFrame& GetFrame()          {return m_Frame;}
         void        SetCmdShow(int c)   {m_nCmdShow = c;}
 
-    protected:
-        void        Serialize(CArchive &ar);
-
     private:
           // private data
         CString    m_sAppName;   // name of app: path minus directory

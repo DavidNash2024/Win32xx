@@ -69,9 +69,6 @@ AboutBox : public CDialog                                       /*
         virtual ~AboutBox(){}
 
         void    OnHelpAbout();
-
-    private:
-        CString m_sCredits;  // AboutBox contents
 };
 /*----------------------------------------------------------------------------*/
 #endif  // ABOUTBOX_H

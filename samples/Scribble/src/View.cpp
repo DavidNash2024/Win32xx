@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "View.h"
-#include "ScribbleApp.h"
 #include "resource.h"
 
 
@@ -27,8 +26,7 @@ void CView::DrawLine(int x, int y)
 
 CDoc& CView::GetDoc()
 {
-    CMainFrame& frame = GetScribbleApp()->GetMainFrame();
-    return frame.GetDoc();
+    return m_doc;
 }
 
 std::vector<PlotPoint>& CView::GetAllPoints()
@@ -140,6 +138,89 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.hbrBackground = m_brush;
     wc.lpszClassName = _T("Scribble Window");
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
+}
+
+// Sends the bitmap extracted from the View window to a printer of your choice.
+// This function provides a useful reference for printing bitmaps in general.
+// This function throws an exception if unable to print.
+void CView::Print()
+{
+    // Get the dimensions of the View window
+    CRect viewRect = GetClientRect();
+    int width = viewRect.Width();
+    int height = viewRect.Height();
+
+    // Copy the bitmap from the View window
+    CClientDC viewDC(*this);
+    CMemDC memDC(viewDC);
+    memDC.CreateCompatibleBitmap(viewDC, width, height);
+    BitBlt(memDC, 0, 0, width, height, viewDC, 0, 0, SRCCOPY);
+    CBitmap bmView = memDC.DetachBitmap();
+    CPrintDialog printDlg;
+
+    // Bring up a dialog to choose the printer
+    if (printDlg.DoModal(*this) == IDOK)    // throws exception if there is no default printer
+    {
+        // Zero and then initialize the members of a DOCINFO structure.
+        DOCINFO di;
+        memset(&di, 0, sizeof(DOCINFO));
+        di.cbSize = sizeof(DOCINFO);
+        di.lpszDocName = _T("Scribble Printout");
+
+        // Begin a print job by calling the StartDoc function.
+        CDC printDC = printDlg.GetPrinterDC();
+        if (SP_ERROR == StartDoc(printDC, &di))
+            throw CUserException(_T("Failed to start print job"));
+
+        // Inform the driver that the application is about to begin sending data.
+        if (0 > StartPage(printDC))
+            throw CUserException(_T("StartPage failed"));
+
+        BITMAPINFOHEADER bih;
+        ZeroMemory(&bih, sizeof(bih));
+        bih.biSize = sizeof(bih);
+        bih.biHeight = height;
+        bih.biWidth = width;
+        bih.biPlanes = 1;
+        bih.biBitCount = 24;
+        bih.biCompression = BI_RGB;
+
+        // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
+        // Get the size of the image data
+        BITMAPINFO* pBI = reinterpret_cast<BITMAPINFO*>(&bih);
+        memDC.GetDIBits(bmView, 0, height, NULL, pBI, DIB_RGB_COLORS);
+
+        // Retrieve the image data
+        std::vector<byte> vBits(bih.biSizeImage, 0); // a vector to hold the byte array
+        byte* pByteArray = &vBits.front();
+        memDC.GetDIBits(bmView, 0, height, pByteArray, pBI, DIB_RGB_COLORS);
+
+        // Determine the scaling factors required to print the bitmap and retain its original proportions.
+        double viewPixelsX  = double(viewDC.GetDeviceCaps(LOGPIXELSX));
+        double viewPixelsY  = double(viewDC.GetDeviceCaps(LOGPIXELSY));
+        double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
+        double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
+        double scaleX = printPixelsX / viewPixelsX;
+        double scaleY = printPixelsY / viewPixelsY;
+
+        int scaledWidth = int(width * scaleX);
+        int scaledHeight = int(height * scaleY);
+
+        // Use StretchDIBits to scale the bitmap and maintain its original proportions
+        UINT result = StretchDIBits(printDC, 0, 0, scaledWidth, scaledHeight, 0, 0,
+            width, height, pByteArray, pBI, DIB_RGB_COLORS, SRCCOPY);
+
+        if (GDI_ERROR == result)
+            throw CUserException(_T("Failed to resize image for printing"));
+
+        // Inform the driver that the page is finished.
+        if (0 > EndPage(printDC))
+            throw CUserException(_T("EndPage failed"));
+
+        // Inform the driver that document has ended.
+        if (0 > EndDoc(printDC))
+            throw CUserException(_T("EndDoc failed"));
+    }
 }
 
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

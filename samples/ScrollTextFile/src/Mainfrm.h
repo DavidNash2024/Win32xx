@@ -34,11 +34,8 @@ CMainFrame : public CFrame                                                  /*
     public:
         CMainFrame(void);
         virtual       ~CMainFrame();
-        CDoc&         TheDoc() {return m_Doc;}
+        CDoc&         TheDoc() {return m_View.TheDoc();}
         virtual void  Serialize(CArchive& ar);
-
-        // public data members
-        static   CString m_sCompiled_on; // compilation date, mmm dd yyyy
 
     protected:
         virtual void    OnColorChoice(void);
@@ -63,7 +60,7 @@ CMainFrame : public CFrame                                                  /*
 
     private:
           // private data members
-         CDoc       m_Doc;          // the document
+         static CString m_sCompiled_on; // compilation date, mmm dd yyyy
          CView      m_View;         // the view
          UINT       m_win_x;        // deserialized window x position
          UINT       m_win_y;        // deserialized window y position
@@ -75,12 +72,6 @@ CMainFrame : public CFrame                                                  /*
 
 };
 
-/*==============================================================================
-
-    Declare the global function that provides access to the
-    CDoc class                          */
-    
-CDoc& TheDoc();
 
 /*------------------------------------------------------------------------------*/
 #endif // SDI_MAINFRM_H

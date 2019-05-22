@@ -3,8 +3,6 @@
 
 #include "stdafx.h"
 #include "FormView.h"
-#include "FormDoc.h"
-#include "FormApp.h"
 #include "resource.h"
 
 
@@ -37,7 +35,7 @@ INT_PTR CFormView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
 CFormDoc& CFormView::GetDoc()
 {
-    return GetSdiApp()->GetMainFrame().GetDoc();
+    return m_doc;
 }
 
 BOOL CFormView::OnButton()
@@ -197,6 +195,4 @@ BOOL CFormView::OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked)
     TRACE("Radio changed\n");
     return TRUE;
 }
-
-
 

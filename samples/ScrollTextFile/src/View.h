@@ -24,6 +24,7 @@
 #define CAPP_VIEW_H
 
 #include "FontEx.h"
+#include "Doc.h"
 
 /*============================================================================*/
     class
@@ -74,6 +75,7 @@ CView : public CScrollWnd                                                   /*
         virtual CPoint  ScrlToDev(CPoint) const;
         virtual void    Serialize(CArchive &ar);
         virtual void    SetNewAppSize();
+        CDoc&           TheDoc() { return m_Doc; }
 
     protected:
         virtual void    InitCustomColors();     
@@ -88,6 +90,7 @@ CView : public CScrollWnd                                                   /*
 
     private:
           // private data members
+        CDoc        m_Doc;                  // the document
         CFontEx     m_VuFont;               // the view display font
         COLORREF    m_rgbCustomColors[16];  // custom colors defined
         CSize       m_doc_extent;           // the document extent

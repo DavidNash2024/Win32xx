@@ -5,7 +5,7 @@
 
 ********************************************************************************
 
-    Acknowledgment. This class was adapted from that in the PrintPreview 
+    Acknowledgement. This class was adapted from that in the PrintPreview 
     sample program appearing in the Win32++ framework sample folder, created 
     by David Nash and published under the permissions granted in that work.
     The adaptation here implements the CRichView class as self-contained
@@ -58,7 +58,7 @@ OnAttach()                              /*
 
 /*============================================================================*/
     BOOL CRichView::
-GetNewFont()                                /*
+GetNewFont() const                               /*
 
     Bring up the font choice dialog and choose a new font.
 *-----------------------------------------------------------------------------*/
@@ -74,8 +74,8 @@ GetNewFont()                                /*
     if (dlg.DoModal(*this) == IDOK)
     {
           // Set the Font
-		cf = dlg.GetCharFormat();
-		SetDefaultCharFormat(cf);
+        cf = dlg.GetCharFormat();
+        SetDefaultCharFormat(cf);
     }
 
     return TRUE;

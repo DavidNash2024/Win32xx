@@ -35,14 +35,14 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     UINT id = LOWORD(wparam);
     switch(id)
     {
-    case IDM_FILE_OPEN:         return OnFileOpen();
-    case IDM_FILE_SAVE:         return OnFileSave();
-    case IDM_FILE_SAVEAS:       return OnFileSave();
-    case IDM_FILE_PRINT:        return OnFilePrint();
-    case IDM_FILE_EXIT:         return OnFileExit();
-    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-    case IDM_HELP_ABOUT:        return OnHelp();
+    case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
+    case IDM_FILE_SAVE:         OnFileSave();       return TRUE;
+    case IDM_FILE_SAVEAS:       OnFileSave();       return TRUE;
+    case IDM_FILE_PRINT:        OnFilePrint();      return TRUE;
+    case IDM_FILE_EXIT:         OnFileExit();       return TRUE;
+    case IDW_VIEW_STATUSBAR:    OnViewStatusBar();  return TRUE;
+    case IDW_VIEW_TOOLBAR:      OnViewToolBar();    return TRUE;
+    case IDM_HELP_ABOUT:        OnHelp();           return TRUE;
     }
 
     return FALSE;
@@ -74,11 +74,10 @@ void CMainFrame::OnClose()
     CFrame::OnClose();
 }
 
-BOOL CMainFrame::OnFileExit()
+void CMainFrame::OnFileExit()
 {
     // Issue a close request to the frame
     PostMessage(WM_CLOSE);
-    return TRUE;
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -89,7 +88,7 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
-BOOL CMainFrame::OnFileOpen()
+void CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE);
 
@@ -100,10 +99,9 @@ BOOL CMainFrame::OnFileOpen()
         // Add your own code here. Refer to the tutorial for additional information
     }
 
-    return TRUE;
 }
 
-BOOL CMainFrame::OnFileSave()
+void CMainFrame::OnFileSave()
 {
     CFileDialog fileDlg(FALSE);
 
@@ -114,17 +112,16 @@ BOOL CMainFrame::OnFileSave()
         // Add your own code here. Refer to the tutorial for additional information
     }
 
-    return TRUE;
 }
 
-BOOL CMainFrame::OnFilePrint()
+void CMainFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
     CPrintDialog printdlg;
 
     try
     {
-        INT_PTR result = printdlg.DoModal(*this);
+        printdlg.DoModal(*this);
 
         // Retrieve the printer DC
         // CDC dcPrinter = Printdlg.GetPrinterDC();
@@ -132,14 +129,12 @@ BOOL CMainFrame::OnFilePrint()
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
 
-        return (result == IDOK);   // boolean expression
     }
 
     catch (const CWinException& /* e */)
     {
         // No default printer
         MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-        return FALSE;
     }
 }
 
@@ -269,6 +264,12 @@ void CMainFrame::SerializeINI(BOOL isStoring)
 
         SetInitValues(values);
     }
+}
+
+void CMainFrame::SetupMenuIcons()
+{
+    // Set the bitmap used for menu icons
+    AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
 }
 
 void CMainFrame::SetupToolBar()

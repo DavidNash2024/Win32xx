@@ -4,7 +4,7 @@
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H
 
-class CDoc;
+#include "Doc.h"
 
 // Declaration of the CView class
 class CView : public CDialog
@@ -30,10 +30,8 @@ protected:
     virtual BOOL OnInitDialog();
     virtual void OnOK();
 
-//private:
-public:
-
-
+private:
+    CDoc     m_doc;
     CResizer m_resizer;
 
     // Nested classes for this dialog's child windows

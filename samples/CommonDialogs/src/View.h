@@ -61,7 +61,6 @@
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H
 
-class CPrintRichView;
 
 /*******************************************************************************
 
@@ -89,22 +88,21 @@ CView : public CDialog                          /*
         CView(UINT nResID);
         virtual ~CView(){}
         
-        virtual void    AttachControl(UINT nIDC, CWnd& rCtl);
+                void    AttachControl(UINT nIDC, CWnd& rCtl);
         virtual HWND    Create(HWND hParent);
                 CFont&  GetEditFont() { return m_EditFont;}
          CRichEditView& GetREView() { return m_RichEdit;}
                 void    NoDocOpen();
                 BOOL    OnDropFiles(HDROP hDroinfo);
-        virtual void    OnPrintDocument();
-        virtual void    OnPrintPreview();
+                void    OnPrintDocument();
+                void    OnPrintPreview();
                 void    Register(CDoc*);
                 void    SetEditFont(const CFont& f);
                 void    SetRichEditColors(COLORREF, COLORREF, COLORREF);
 
-          // public data members
 
     protected:
-        virtual BOOL    AddToolTip(HWND, UINT nID);
+                BOOL    AddToolTip(HWND, UINT nID);
         virtual BOOL    AddToolTip(HWND, UINT nID, const CString & s);
         virtual void    AssignToolTips();
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);

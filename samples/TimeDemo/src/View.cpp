@@ -545,7 +545,7 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 
     case WM_SETCURSOR:
         {
-            if (!TheApp().TheFrame()->m_help_mode)
+            if (!TheApp().TheFrame()->GetHelpMode())
                 SetCursor(m_hCursor);
             return 1;
         }

@@ -72,32 +72,64 @@ void CMainFrame::MRUFileOpen(UINT mruIndex)
 {
     CString mruText = GetMRUEntry(mruIndex);
 
-    if (GetDoc().FileOpen(mruText))
+    try
+    {
+        GetDoc().FileOpen(mruText);
         m_pathName = mruText;
-    else
-        RemoveMRUEntry(mruText);
+        GetView().Invalidate();
+    }
 
-    GetView().Invalidate();
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        RemoveMRUEntry(mruText);
+        m_view.GetAllPoints().clear();
+    }
 }
 
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 // Called in response to the UWM_DROPFILE user defined message
 {
-    // wParam is a pointer (LPCTSTR) to the filename
-    LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
-    assert(fileName);
+    try
+    {
+        // wParam is a pointer (LPCTSTR) to the filename
+        LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+        assert(fileName);
 
-    // Load the file
-    LoadFile(fileName);
+        // Load the file
+        LoadFile(fileName);
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_view.GetAllPoints().clear();
+    }
+
     return 0;
 }
 
 void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
 {
-    if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
+    try
     {
-        UINT mruItem = ppropvarValue->ulVal;
-        MRUFileOpen(mruItem);
+        if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
+        {
+            UINT mruItem = ppropvarValue->ulVal;
+            MRUFileOpen(mruItem);
+        }
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_view.GetAllPoints().clear();
     }
 }
 
@@ -180,29 +212,47 @@ void CMainFrame::OnFileExit()
 void CMainFrame::LoadFile(LPCTSTR fileName)
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
-    // Retrieve the PlotPoint data
-    if (GetDoc().FileOpen(fileName))
+    try
     {
-        // Save the filename
+        // Retrieve the PlotPoint data
+        GetDoc().FileOpen(fileName);
         m_pathName = fileName;
         AddMRUEntry(fileName);
-    }
-    else
-        m_pathName=_T("");
 
-    GetView().Invalidate();
+        GetView().Invalidate();
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_pathName = _T("");
+        m_view.GetAllPoints().clear();
+    }
 }
 
 void CMainFrame::OnFileOpen()
 {
-    CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    fileDlg.SetTitle(_T("Open File"));
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
+    try
     {
-        // Load the file
-        LoadFile(fileDlg.GetPathName());
+        CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+        fileDlg.SetTitle(_T("Open File"));
+
+        // Bring up the file open dialog retrieve the selected filename
+        if (fileDlg.DoModal(*this) == IDOK)
+        {
+            // Load the file
+            LoadFile(fileDlg.GetPathName());
+        }
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_view.GetAllPoints().clear();
     }
 }
 
@@ -215,38 +265,68 @@ void CMainFrame::OnFileNew()
 
 void CMainFrame::OnFileSave()
 {
-    if (m_pathName == _T(""))
-        OnFileSaveAs();
-    else
-        GetDoc().FileSave(m_pathName);
+    try
+    {
+        if (m_pathName == _T(""))
+            OnFileSaveAs();
+        else
+            GetDoc().FileSave(m_pathName);
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+
+        m_view.GetAllPoints().clear();
+    }
 }
 
 void CMainFrame::OnFileSaveAs()
 {
-    CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    FileDlg.SetTitle(_T("Save File"));
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    try
     {
-        CString str = FileDlg.GetPathName();
+        CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+        FileDlg.SetTitle(_T("Save File"));
 
-        // Save the file
-        if (GetDoc().FileSave(str))
+        // Bring up the file open dialog retrieve the selected filename
+        if (FileDlg.DoModal(*this) == IDOK)
         {
-            // Save the file name
+            CString str = FileDlg.GetPathName();
+
+            // Save the file
+            GetDoc().FileSave(str);
             m_pathName = str;
             AddMRUEntry(m_pathName);
         }
     }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+
+        m_view.GetAllPoints().clear();
+    }
 }
 
-// Sends the bitmap extracted from the View window to a printer of your choice
-// This function provides a useful reference for printing bitmaps in general
+// Sends the bitmap extracted from the View window to a printer of your choice.
+// This function provides a useful reference for printing bitmaps in general.
 void CMainFrame::OnFilePrint()
 {
-    // Pass the print job to CDoc
-    GetDoc().Print();
+    try
+    {
+        // print the view window
+        m_view.Print();
+    }
+
+    catch (const CException& e)
+    {
+        // Display a message box indicating why printing failed.
+        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
+        CString type = CString(e.what());
+        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+    }
 }
 
 

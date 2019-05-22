@@ -5,9 +5,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-
 #include "View.h"
-#include "Doc.h"
 
 
 class CMainFrame : public CFrame
@@ -16,7 +14,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CDoc& GetDoc() { return m_doc; }
+    CDoc& GetDoc() { return m_view.GetDoc(); }
     void LoadFile(LPCTSTR fileName);
 
     LRESULT OnDropFile(WPARAM wparam);
@@ -39,7 +37,6 @@ protected:
 
 private:
     CView m_view;
-    CDoc m_doc;
     CString m_pathName;
 
 };

@@ -4,10 +4,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-
 #include "FormView.h"
-#include "FormDoc.h"
-
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
@@ -15,7 +12,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-    CFormDoc& GetDoc()      { return m_doc; }
+    CFormDoc& GetDoc()      { return m_sdiView.GetDoc(); }
 
 protected:
     virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
@@ -26,6 +23,7 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void OnMenuUpdate(UINT nID);
     virtual BOOL SaveRegistrySettings();
+    virtual void SetupMenuIcons();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -36,9 +34,7 @@ private:
     void OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
 
     CFormView m_sdiView;
-    CFormDoc m_doc;
 };
 
 
 #endif //MAINFRM_H
-

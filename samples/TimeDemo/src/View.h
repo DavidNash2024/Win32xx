@@ -58,6 +58,7 @@
 /******************************************************************************/
 
 #include "ScrollBars.h"
+#include "Doc.h"
 
   // cursor shape alternatives
 enum CursorShape {arrow, cur_wait, help};
@@ -73,6 +74,7 @@ CView : public CWnd                         /*
         CView();
         virtual ~CView();
 
+        CDoc&           ThisDoc() { return m_Doc; }
         virtual void    SaveFontSize();
         virtual LRESULT ScrollMessages(UINT, WPARAM, LPARAM);
         virtual void    Serialize(CArchive &ar);
@@ -114,7 +116,7 @@ CView : public CWnd                         /*
         HCURSOR     m_hCursor;     // view cursor
 
     private:
-          // private methods
+        CDoc        m_Doc;         // the document object
 };
 /*----------------------------------------------------------------------------*/
 #endif // SDI_VIEW_H

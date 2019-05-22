@@ -453,7 +453,7 @@ OnCreate(CREATESTRUCT& cs)                      /*
     try
     {
           // open the application's saved parameter archive
-        CArchive ar(TheApp().m_sArcvFile, CArchive::load);
+        CArchive ar(TheApp().GetArcFileName(), CArchive::load);
           // recover the frame saved parameters
         ar >> *this;
     }
@@ -467,7 +467,7 @@ OnCreate(CREATESTRUCT& cs)                      /*
         ::MessageBox(NULL, msg.c_str(), what.c_str(),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
           // remove the corrupted application archive file
-        ::DeleteFile(TheApp().m_sArcvFile);
+        ::DeleteFile(TheApp().GetArcFileName());
     }
     catch(...)
     {
@@ -500,7 +500,7 @@ OnDestroy()                             /*
     OnFileClose();
     try
     {
-        CArchive ar(TheApp().m_sArcvFile, CArchive::store);
+        CArchive ar(TheApp().GetArcFileName(), CArchive::store);
           // no serialization on Open() error
         ar << *this;  // for the frame
     }
@@ -615,7 +615,7 @@ OnFileClose()                               /*
 
 *-----------------------------------------------------------------------------*/
 {
-    m_Doc.CloseDoc();
+    ThisDoc().CloseDoc();
     UpdateFrame();
 
 }
@@ -640,11 +640,11 @@ OnFileNew()                             /*
 *-----------------------------------------------------------------------------*/
 {
       // close the current document
-    m_Doc.CloseDoc();
+    ThisDoc().CloseDoc();
       // TODO: Add code here to implement this member. For this demo,
       // refill the document with the initial document and empty the
       // document file name
-    m_Doc.NewDocument();
+    ThisDoc().NewDocument();
     UpdateFrame();
 }
 
@@ -657,13 +657,13 @@ OnFileOpen()                                                            /*
 {
     // Bring up the dialog, and  open the file
     CString str =
-        m_Doc.GetDocOpenFileName(_T("Name the file to open..."));
+        ThisDoc().GetDocOpenFileName(_T("Name the file to open..."));
     if (str.IsEmpty())
         return;
 
-    m_Doc.OpenDoc(str);
+    ThisDoc().OpenDoc(str);
 
-    if (m_Doc.IsOpen())
+    if (ThisDoc().IsOpen())
         m_MRU.AddMRUEntry(str);
 }
 
@@ -679,7 +679,7 @@ OnFileOpenMRU(UINT nIndex)                      /*
     if (str.IsEmpty())
         return false;
         
-    if (m_Doc.OpenDoc(str))
+    if (ThisDoc().OpenDoc(str))
     {         // now it's ok to add it to the top of the MRU list
         m_MRU.AddMRUEntry(str);
         return true;
@@ -738,7 +738,7 @@ OnFileSave()                                                            /*
     Save the current document.
 *-----------------------------------------------------------------------------*/
 {
-    m_Doc.SaveDoc();
+    ThisDoc().SaveDoc();
     UpdateFrame();
 }
 
@@ -751,7 +751,7 @@ OnFileSaveAs()                                                          /*
     current one.
 *-----------------------------------------------------------------------------*/
 {
-    m_Doc.SaveDocAs();
+    ThisDoc().SaveDocAs();
 }
 
 /*============================================================================*/
@@ -775,10 +775,10 @@ OnFontChoice()                                              /*
         CFont f;
         try
         {
-			f.CreateFontIndirect(lf);
+            f.CreateFontIndirect(lf);
             m_View.m_font = f;
-			m_View.m_rgbTxColor = FontDlg.GetColor();
-			m_View.SaveFontSize();
+            m_View.m_rgbTxColor = FontDlg.GetColor();
+            m_View.SaveFontSize();
         }
         
         catch (CResourceException&)
@@ -990,8 +990,8 @@ OnUpdateStatus()                            /*
     // TODO: Add code here to determine status of the controls
 
       // document status
-    bool    doc_is_ready = m_Doc.IsOpen();
-    bool    doc_is_dirty = m_Doc.IsDirty();
+    bool    doc_is_ready = ThisDoc().IsOpen();
+    bool    doc_is_dirty = ThisDoc().IsDirty();
       // determine enabled status of controls
     bool    ok_to_save          = doc_is_dirty;
     bool    ok_to_saveas        = doc_is_ready;
@@ -1233,7 +1233,7 @@ SetWindowTitle(const CString &docpath /* = _T("") */)           /*
     file name.
 *-----------------------------------------------------------------------------*/
 {
-    CString s = TheApp().m_sAppName + _T(":   ") + docpath;
+    CString s = TheApp().GetAppName() + _T(":   ") + docpath;
     SetTitle(s);
     OnUpdateStatus();
     UpdateFrame();

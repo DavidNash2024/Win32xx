@@ -37,9 +37,6 @@ CApp : public CWinApp                                                       /*
         UINT            GetMaxMRUSlots() const  { return m_nMaxMRUSlots;}
         CMainFrame&     TheFrame()              { return m_Frame;}
 
-    protected:
-        void            Serialize(CArchive &ar);
-
     private:
           // private functions
         CString  MakeAppDataPath(const CString& subpath) const;

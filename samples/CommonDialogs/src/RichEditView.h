@@ -68,7 +68,7 @@ CRichEditView : public CRichEdit                                        /*
 {
     public:
         CRichEditView();
-        ~CRichEditView();
+        virtual ~CRichEditView();
 
         void    Clean();
         void    DoPrintRichView(const CString& sDocPath);

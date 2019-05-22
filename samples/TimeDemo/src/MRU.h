@@ -81,7 +81,7 @@ CMRU : public CObject                           /*
         virtual void    RemoveMRUEntry(LPCTSTR szMRUEntry);
         virtual void    Serialize(CArchive &ar);
         virtual void    UpdateMRUMenu();
-        virtual void    ValidateMRU(void);
+        virtual void    ValidateMRU();
 
       // Protected Declarations
     protected:
@@ -90,8 +90,8 @@ CMRU : public CObject                           /*
       // Private Declarations
     private:
         std::vector<CString> m_vMRUEntries; // MRU array entries
-        size_t      m_nMaxMRU;  // maximum MRU entries, this app
-        CFrame         *m_theFrame;     // frame containing main menu
+        size_t      m_nMaxMRU;       // maximum MRU entries, this app
+        CFrame*     m_theFrame;     // frame containing main menu
 
     static const size_t m_nMaximumMRUSlots; // maximum possible slots
     static const CString m_emptyMRUListLabel; // File MRU locator label

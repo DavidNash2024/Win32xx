@@ -68,7 +68,7 @@ CMyScrollBar : public CScrollBar                                         /*
 
         virtual LRESULT OnHScroll(UINT, WPARAM, LPARAM);
         virtual LRESULT OnMessageReflect(UINT, WPARAM, LPARAM);
-        virtual void    SetScrollInfo(int lo, int hi, int pos, int page);
+        void    SetScrollInfo(int lo, int hi, int pos, int page);
 
     private:
         SCROLLINFO m_siScroll;

@@ -98,11 +98,56 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int )                                  /*
 
 *=============================================================================*/
     CApp::
-CApp() : m_nMaxMRUSlots(0)                                                  /*
+CApp()                                                       /*
 
     Default constructor.
+
+    Here, the About box information, app path, app directory, app name,
+    app exe name, archive file name, and other constants are generated and
+    saved as public data members of this object via the mere declaration of
+    the CAppGlobal m_AppGlobal object in App.h.
 *-----------------------------------------------------------------------------*/
 {
+      // extract the app name, directory, and  path names
+
+
+    CString sAppPath, sAppName, sArcvDir;
+    ::GetModuleFileName(NULL, sAppPath.GetBuffer(FILENAME_MAX),
+        FILENAME_MAX);
+    sAppPath.ReleaseBuffer();
+    CFile f; // no file opened here, just using the name parsing parts
+    f.SetFilePath(sAppPath);
+    sAppName = f.GetFileNameWOExt();
+      // make or locate the archive directory
+    sArcvDir = MakeAppDataPath(LoadString(IDS_DATAPATH_SUBDIR) +
+        sAppName);
+      // form the archive file path name
+    m_sArcvPath = sArcvDir + _T("\\") + sAppName +
+        LoadString(IDS_ARCHIVE_FILE_EXT);
+      // the maximum allowed number of MRU entries (limited to be under 16
+      // by Win32++)
+    m_nMaxMRUSlots = MIN(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16);
+      // make Win32++ version string
+    CString sWin32Version;
+    UINT ver = _WIN32XX_VER;
+    sWin32Version.Format(_T("Win32++ Version %d.%d.%d"), ver / 0x100,
+        (ver % 0x100) / 0x10, (ver % 0x10));
+      // generate compiler information for the About box
+    CString sCompiler;
+#ifdef __GNUC__
+        sCompiler.Format(_T("Gnu C++ %d.%d.%d"), __GNUC__, __GNUC_MINOR__,
+            __GNUC_PATCHLEVEL__);
+#elif defined(_MSC_VER)
+        sCompiler.Format(_T("MS C++ %d.%d"), _MSC_VER / 100,
+            _MSC_VER % 100);
+#else
+        sCompiler = _T("(unknown compiler name)");
+#endif
+    CString date = __DATE__; // necesary on VCE2010
+    m_sAboutBoxInfo.Format(_T("%s\n\n(%s.exe)\n%s\n%s\ncompiled with ")
+        _T("%s on %s"), LoadString(IDW_MAIN).c_str(), sAppName.c_str(),
+        LoadString(IDS_APP_VERSION).c_str(), sWin32Version.c_str(),
+        sCompiler.c_str(), date.c_str());
 }
 
 /*============================================================================*/
@@ -121,52 +166,8 @@ InitInstance()                                                              /*
     This method is immediately called from the base class (CWinApp) Run()
     method to create the frame, perform initialization of the app, and
     return TRUE on success. Returning FALSE terminates the program.
-    
-    Here, the About box information, app path, app directory, app name,
-    app exe name, archive file name, and other constants are generated and
-    saved as public data members of this object via the mere declaration of
-    the CAppGlobal m_AppGlobal object in App.h.
 *-----------------------------------------------------------------------------*/
 {
-          // extract the app name, directory, and  path names
-    CString sAppPath, sAppName, sArcvDir;
-    ::GetModuleFileName(NULL, sAppPath.GetBuffer(FILENAME_MAX),
-        FILENAME_MAX);
-    sAppPath.ReleaseBuffer();
-    CFile f; // no file opened here, just using the name parsing parts
-    f.SetFilePath(sAppPath);
-    sAppName  = f.GetFileNameWOExt();
-      // make or locate the archive directory
-    sArcvDir = MakeAppDataPath(LoadString(IDS_DATAPATH_SUBDIR) +
-        sAppName);
-      // form the archive file path name
-    m_sArcvPath  = sArcvDir + _T("\\") + sAppName +
-         LoadString(IDS_ARCHIVE_FILE_EXT);
-      // the maximum allowed number of MRU entries (limited to be under 16
-      // by Win32++)
-    m_nMaxMRUSlots = MIN(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16);
-      // make Win32++ version string
-    CString sWin32Version;
-    UINT ver = _WIN32XX_VER;
-    sWin32Version.Format(_T("Win32++ Version %d.%d.%d"), ver / 0x100,
-        (ver % 0x100) / 0x10, (ver % 0x10));
-      // generate compiler information for the About box
-    CString sCompiler;
-#ifdef __GNUC__
-    sCompiler.Format(_T("Gnu C++ %d.%d.%d"), __GNUC__, __GNUC_MINOR__,
-        __GNUC_PATCHLEVEL__);
-#elif defined(_MSC_VER)
-    sCompiler.Format(_T("MS C++ %d.%d"), _MSC_VER / 100,
-        _MSC_VER % 100);
-#else
-    sCompiler = _T("(unknown compiler name)");
-#endif
-    CString date = __DATE__; // necesary on VCE2010
-    m_sAboutBoxInfo.Format(_T("%s\n\n(%s.exe)\n%s\n%s\ncompiled with ")
-        _T("%s on %s"), LoadString(IDW_MAIN).c_str(), sAppName.c_str(),
-        LoadString(IDS_APP_VERSION).c_str(), sWin32Version.c_str(),
-        sCompiler.c_str(), date.c_str());
-
       // Create the Frame Window after the archive file name is known
     m_Frame.Create();   // throws a CWinException on failure  
     
@@ -211,31 +212,6 @@ IntDat(ULONG hexdate) const                                                     
     CString ans;
     ans.Format(_T("%s %02d, %u"),  months.Mid(4 * mo, 3).c_str(), dd, yyyy);
     return ans;
-}
-
-/*============================================================================*/
-        void CApp::
-Serialize(CArchive &ar)                                                     /*
-
-        Called to serialize the application to or from the archive ar, depending
-    on the sense of IsStoring().  Leaves the archive open for for further
-    operations.
-*-----------------------------------------------------------------------------*/
-{
-      // perform loading or storing
-    if (ar.IsStoring())
-    {
-          // each item is written to the archive as a char stream of
-          // the proper length, preceded by that length. 
-
-    }
-    else    // recovering
-    {
-          // each item read from the archive is retrieved by first
-          // reading its byte length and then by loading in that number
-          // of bytes into the location of that item.
-
-    }
 }
 
 /*=============================================================================*/

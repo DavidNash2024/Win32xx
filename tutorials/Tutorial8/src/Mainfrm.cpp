@@ -44,14 +44,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -62,12 +62,24 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 // Called in response to the UWM_DROPFILE user defined message
 {
-    // wparam is a pointer (LPCTSTR) to the filename
-    LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
-    assert(fileName);
+    try
+    {
+        // wparam is a pointer (LPCTSTR) to the filename
+        LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+        assert(fileName);
 
-    // Load the file
-    LoadFile(fileName);
+        // Load the file
+        LoadFile(fileName);
+    }
+
+    catch (const CFileException &e)
+    {
+        m_pathName = _T("");
+
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+    }
+
     return 0;
 }
 
@@ -87,28 +99,44 @@ void CMainFrame::OnFileNew()
 void CMainFrame::LoadFile(LPCTSTR fileName)
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
-    // Retrieve the PlotPoint data
-    if (GetDoc().FileOpen(fileName))
+    try
     {
-        // Save the filename
+        // Retrieve the PlotPoint data
+        GetDoc().FileOpen(fileName);
         m_pathName = fileName;
+        GetView().Invalidate();
     }
-    else
-        m_pathName=_T("");
 
-    GetView().Invalidate();
+    catch (const CFileException &e)
+    {
+        m_pathName = _T("");
+
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+    }
 }
 
 void CMainFrame::OnFileOpen()
 {
-    CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    fileDlg.SetTitle(_T("Open File"));
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
+    try
     {
-        // Load the file
-        LoadFile(fileDlg.GetPathName());
+        CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+        fileDlg.SetTitle(_T("Open File"));
+
+        // Bring up the file open dialog retrieve the selected filename
+        if (fileDlg.DoModal(*this) == IDOK)
+        {
+            // Load the file
+            LoadFile(fileDlg.GetPathName());
+        }
+    }
+
+    catch (const CFileException &e)
+    {
+        m_pathName = _T("");
+
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
     }
 }
 
@@ -119,29 +147,44 @@ void CMainFrame::OnFilePrint()
 
 void CMainFrame::OnFileSave()
 {
-    if (m_pathName == _T(""))
-        OnFileSaveAs();
-    else
-        GetDoc().FileSave(m_pathName);
+    try
+    {
+        if (m_pathName == _T(""))
+            OnFileSaveAs();
+        else
+            GetDoc().FileSave(m_pathName);
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+    }
 }
 
 void CMainFrame::OnFileSaveAs()
 {
-    CFileDialog fileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    fileDlg.SetTitle(_T("Save File"));
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
+    try
     {
-        CString fileName = fileDlg.GetPathName();
+        CFileDialog fileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+        fileDlg.SetTitle(_T("Save File"));
 
-        // Save the file
-        if (GetDoc().FileSave(fileName))
+        // Bring up the file open dialog retrieve the selected filename
+        if (fileDlg.DoModal(*this) == IDOK)
         {
-            // Save the file name
+            CString fileName = fileDlg.GetPathName();
+
+            // Save the file
+            GetDoc().FileSave(fileName);
             m_pathName = fileName;
             AddMRUEntry(m_pathName);
         }
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
     }
 }
 
@@ -183,10 +226,10 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_PEN_COLOR );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-	
+    
     // Note: By default a single bitmap with a resource ID of IDW_MAIN and
     //       a color mask of RGB(192,192,192) is used for the ToolBar. 
-    //       The color mask is a color used for transparency.	
+    //       The color mask is a color used for transparency.   
 }
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

@@ -1,46 +1,21 @@
 
 #include "Doc.h"
 
-BOOL CDoc::FileOpen(LPCTSTR filename)
+void CDoc::FileOpen(LPCTSTR filename)
+// Loads the plotpoint data from the archive.
+// Throws an exception if unable to read the file.
 {
     GetAllPoints().clear();
-    BOOL isFileOpened = FALSE;
-
-    try
-    {
-        CArchive ar(filename, CArchive::load);
-        ar >> *this;
-        isFileOpened = TRUE;
-    }
-
-    catch (const CFileException &e)
-    {
-        // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-
-        GetAllPoints().clear();
-    }
-
-    return isFileOpened;
+    CArchive ar(filename, CArchive::load);
+    ar >> *this;
 }
 
-BOOL CDoc::FileSave(LPCTSTR filename)
+void CDoc::FileSave(LPCTSTR filename)
+// Stores the plotpoint data in the archive.
+// Throws an exception if unable to save the file.
 {
-    BOOL isFileSaved = FALSE;
-
-    try
-    {
-        CArchive ar(filename, CArchive::store);
-        ar << *this;
-        isFileSaved = TRUE;
-    }
-    catch (const CFileException &e)
-    {
-        // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
-    }
-
-    return isFileSaved;
+    CArchive ar(filename, CArchive::store);
+    ar << *this;
 }
 
 void CDoc::Serialize(CArchive &ar)

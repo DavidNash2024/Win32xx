@@ -47,6 +47,7 @@
 #define IDC_STATUS                      332
 #define IDC_HOTKEY1                     340
 #define IDB_BITMAP1                     350
+#define IDB_MENUICONS                   351
 
 // Next default values for new objects
 // 

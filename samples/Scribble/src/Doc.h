@@ -1,9 +1,15 @@
 
-
 #ifndef WIN32XX_DOC_H
 #define WIN32XX_DOC_H
 
-#include "View.h"
+
+struct PlotPoint
+{
+    int x;
+    int y;
+    bool isPenDown;
+    COLORREF color;
+};
 
 // CDoc holds the application's data. It inherits from CObject
 // to perform data serialization to and from the archive.
@@ -15,10 +21,8 @@ public:
     ~CDoc() {}
 
     std::vector<PlotPoint>& GetAllPoints() {return m_points;}   // returns a vector of PlotPoint data
-    const CView& GetView() const;   
-    BOOL FileOpen(LPCTSTR filename);
-    BOOL FileSave(LPCTSTR filename);
-    void Print();
+    void FileOpen(LPCTSTR filename);
+    void FileSave(LPCTSTR filename);
     void Serialize(CArchive &ar);
     void StorePoint(int x, int y, bool isPenDown, COLORREF penColor);
 

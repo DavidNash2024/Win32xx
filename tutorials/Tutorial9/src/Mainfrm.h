@@ -19,7 +19,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CDoc& GetDoc() { return m_doc; }
+    CDoc& GetDoc() { return m_view.GetDoc(); }
     void LoadFile(LPCTSTR fileName);
 
     LRESULT OnDropFile(WPARAM wparam);
@@ -34,13 +34,12 @@ public:
 
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-	virtual int  OnCreate(CREATESTRUCT& cs);	
+    virtual int  OnCreate(CREATESTRUCT& cs);    
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CView m_view;
-    CDoc m_doc;
     CString m_pathName;
 
 };
