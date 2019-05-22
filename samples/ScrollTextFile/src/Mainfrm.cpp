@@ -25,16 +25,6 @@
   // latest file compilation date
 CString CMainFrame::m_sCompiled_on = __DATE__;
 
-/*============================================================================*/
-    CDoc&
-TheDoc()                                                                    /*
-
-    Global function to access to the CDoc class.
-*-----------------------------------------------------------------------------*/
-{
-    return TheApp().TheFrame().TheDoc();
-}
-
 /*******************************************************************************
 
     Implementation of the Main Frame class
@@ -53,6 +43,7 @@ CMainFrame()                                                                /*
     ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
       // Set m_View as the view window of the frame
     SetView(m_View);
+    m_nMaxMRU = TheApp().GetMaxMRUSlots();
 }
 
 /*============================================================================*/
@@ -281,7 +272,7 @@ OnFileOpenMRU(UINT nIndex)                                                  /*
 {
       // get the MRU entry
     CString mru_entry = GetMRUEntry(nIndex);
-    if (m_Doc.OpenDoc(mru_entry))
+    if (TheDoc().OpenDoc(mru_entry))
     {
         SetWindowText(mru_entry);
         m_View.SetNewAppSize();
@@ -331,7 +322,6 @@ OnInitialUpdate()                                                           /*
     formatting.
 *-----------------------------------------------------------------------------*/
 {
-    m_nMaxMRU = TheApp().GetMaxMRUSlots();
       // Give keyboard focus to the view window:
     m_View.SetFocus();
     // show initial button status
@@ -525,14 +515,11 @@ Serialize(CArchive& ar)                                                     /*
           // Read MRU values from archive: use a separate dummy list to
           // work with the entries. First, clear the MRU array (it
           // should already be empty).
-        UINT i, nMRU;
-        std::vector<CString> vMRUEntries = GetMRUEntries();
-        std::vector<CString>::const_iterator it;
-        for (it = vMRUEntries.begin(); it != vMRUEntries.end(); ++it)
-            RemoveMRUEntry(*it);
+        UINT nMRU;
+        std::vector<CString> vMRUEntries;
           // now read from the archive
         ar >> nMRU; // the number of entries to read in
-        for (i = 0; i < nMRU; ++i)
+        for (UINT i = 0; i < nMRU; ++i)
         {
             CString s;
             ar >> s;
@@ -541,10 +528,10 @@ Serialize(CArchive& ar)                                                     /*
         }
           // all successfully read in, so store them LIFO order into
           // the MRU list for proper display
-        for (i = 0; i < nMRU; ++i)
+        std::vector<CString>::reverse_iterator it;
+        for (it = vMRUEntries.rbegin(); it != vMRUEntries.rend(); ++it)
         {
-            CString s = vMRUEntries[nMRU - 1 - i];
-            AddMRUEntry(s);
+            AddMRUEntry(*it);
         }
     }
 }

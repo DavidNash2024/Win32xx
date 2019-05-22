@@ -4,7 +4,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-class CDoc;
+#include "Doc.h"
 
 // Declaration of the CView class
 class CView : public CWnd
@@ -20,6 +20,9 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    CDoc m_doc;
 };
 
 

@@ -71,8 +71,8 @@ CMyMonthCalendar : public CMonthCalendar                                 /*
         CMyMonthCalendar() {}
         virtual ~CMyMonthCalendar() {}
         
-        virtual SYSTEMTIME GetCurSel() const;
-        virtual CString GetCurSelStr(const CString&) const;
+        SYSTEMTIME GetCurSel() const;
+        CString GetCurSelStr(const CString&) const;
         
     protected:
 };

@@ -61,7 +61,7 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
-    CPreviewDialog  m_printPreview;
+    CPrintPreview  m_printPreview;
     CRichView m_richView;
     CString m_pathName;
     bool m_isWrapped;

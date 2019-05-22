@@ -92,8 +92,9 @@ IDW_MAIN                ICON                    "../src/res/Form.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDW_MAIN                BITMAP                  "../src/res/Toolbar.bmp"
 IDB_BITMAP1             BITMAP                  "../src/res/Zapotec.bmp"
+IDB_MENUICONS           BITMAP                  "../src/res/MenuIcons.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

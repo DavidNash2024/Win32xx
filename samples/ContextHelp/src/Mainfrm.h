@@ -6,7 +6,6 @@
 
 
 #include "View.h"
-#include "Doc.h"
 #include "AppHelp.h"
 
 
@@ -19,7 +18,7 @@ public:
 
     void    ChooseHelpTopic();
     CString CreateAppDataFolder(const CString& subfolder);
-    CDoc&   GetDoc()    { return m_doc; }
+    CDoc&   GetDoc()    { return m_view.GetDoc(); }
     UINT    GetIDFromCursorPos();
     void    OnF1();
     void    OnFileExit();
@@ -48,8 +47,7 @@ private:
     void    NotImplemented() const;
 
     CView       m_view;
-    CDoc        m_doc;
-    CHelp    m_appHelp;  // Help object for context help and help about dialog
+    CHelp       m_appHelp;  // Help object for context help and help about dialog
     BOOL        m_isChoosing;
 };
 

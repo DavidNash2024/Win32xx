@@ -79,10 +79,12 @@ OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)               /*
         CView& theView = TheApp()->TheFrame()->TheView();
           // get the slider position, set progress and scroll bar
           // to same
-        theView.m_iSlider = theView.m_iProgress =
-            theView.m_iScrollBar = GetPos();
+        int pos = GetPos();
+        theView.SetSlider(pos);
+        theView.SetProgress(pos);
+        theView.SetScrollBar(pos);
         theView.UpdateDialog(SENDTOCONTROL);
-        theView.m_nIDFocus = IDC_SLIDER;
+        theView.SetFocusID(IDC_SLIDER);
         theView.AdjustParameters();
         break;
         }

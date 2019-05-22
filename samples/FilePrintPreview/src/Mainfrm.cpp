@@ -38,7 +38,6 @@ CMainFrame()                                                            /*
 *-----------------------------------------------------------------------------*/
     :    m_PrintPreview(IDD_PRINTPREVIEW, 0), m_WrapOption(WRAP_NONE) 
 {
-    SetPathName(_T(""));
     SetView(m_RichView);
 
       // Set the registry key name, and load the initial window position
@@ -538,15 +537,15 @@ QuickPrint(CPrintDialog& PrintDlg)                                      /*
     PrintDlg object.
 *-----------------------------------------------------------------------------*/
 {
-	CPrintDialog dlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-	HDC hPrinter = dlg.GetPrinterDC();
-	if (hPrinter == 0)
-	{
-		::MessageBox(NULL, _T("Quick Print requires a printer"),
-			_T("No Printer found"), MB_ICONWARNING);
+    CPrintDialog dlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    HDC hPrinter = dlg.GetPrinterDC();
+    if (hPrinter == 0)
+    {
+        ::MessageBox(NULL, _T("Quick Print requires a printer"),
+            _T("No Printer found"), MB_ICONWARNING);
 
-		return;
-	}
+        return;
+    }
 
     GetRichView().PrintPages(PrintDlg);
 }
@@ -660,12 +659,12 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
     {
         case WM_SYSCOMMAND:
         {
-			switch (LOWORD(wParam))
-			{
-				case SC_CLOSE:
-				m_PrintPreview.Destroy();
-				break;  // let default process this further
-			}
+            switch (LOWORD(wParam))
+            {
+                case SC_CLOSE:
+                m_PrintPreview.Destroy();
+                break;  // let default process this further
+            }
         }
     }
 

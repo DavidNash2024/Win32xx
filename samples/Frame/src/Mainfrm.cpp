@@ -161,6 +161,12 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
 
+void CMainFrame::SetupMenuIcons()
+{
+    // Set the bitmap used for menu icons
+    AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
+}
+
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the toolbar buttons

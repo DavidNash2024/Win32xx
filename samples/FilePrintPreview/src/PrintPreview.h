@@ -6,7 +6,7 @@
 
 ********************************************************************************
 
-    Acknowledgment. These classes were adapted from the PrintPreview sample 
+    Acknowledgement. These classes were adapted from the PrintPreview sample 
     program appearing in the Win32++ framework sample folder, created by  
     David Nash and published under the permissions granted in that work.
     The adaptation here reimplements the PrintView window as a separate 
@@ -116,7 +116,7 @@ CPreviewPane : public CScrollView                                       /*
         CPreviewPane();
         virtual ~CPreviewPane() {}
 
-            void    SetBitmap(CBitmap& Bitmap)
+            void    SetBitmap(CBitmap Bitmap)
                         { m_Bitmap = Bitmap; }
             void    SetPaneZoomState(int val)
                         { m_PrevZoomState = m_ZoomState;
@@ -163,18 +163,19 @@ CPrintPreview : public CDialog                                         /*
             BOOL        ClosePreview();
             CPreviewPane& GetPreviewPane() 
                             { return m_PreviewPane;}
-            DSize       GetPreviewSize() 
+            DSize       GetPreviewSize() const 
                             {return m_PreviewInches;}
-            DSize       GetPrinterScreenRatio() 
+            DSize&      GetSetPreviewSize() { return m_PreviewInches; }
+            DSize       GetPrinterScreenRatio() const
                             { return m_PrinterScreenResRatio;}
-            DSize       GetScreenSize() 
+            DSize       GetScreenSize() const
                             {return m_ScreenInches;}
+            DSize&      GetSetScreenSize() { return m_ScreenInches; }
             void        InitializeContexts();
             BOOL        OnPreview(const CString&); 
             void        SetSizes(DSize scrn, DSize prevw)
                             { m_ScreenInches = scrn; m_PreviewInches = prevw;}
-
-        friend class PreviewSetup;
+            void    SetWindowSizes();
 
     protected:
         virtual void    DoDataExchange(CDataExchange& DX);
@@ -189,15 +190,6 @@ CPrintPreview : public CDialog                                         /*
         virtual void    OnPreparePrintPreview();
         virtual void    OnPreviewPage(UINT);
         virtual void    SaveSizesRegistry();
-
-          // preview particulars
-        CString     m_sDocPath;             // previewed document path
-        CDC         m_dcPrinter;            // printer context
-        CMemDC      m_dcMem;                // memory context
-        CPreviewPane m_PreviewPane;         // preview window
-        UINT        m_nCurrentPage;         // page number, zero based
-        UINT        m_nNumPreviewPages;     // total pages
-        double      m_shrink;               // printer/screen ratio
 
     private:
         BOOL    AddToolTip(UINT nID)
@@ -221,7 +213,6 @@ CPrintPreview : public CDialog                                         /*
         BOOL    PreviewAndPageSetup();
         void    PreviewPage(UINT nPage);
         CString RegQueryStringValue(CRegKey &key, LPCTSTR pName);
-        void    SetWindowSizes();
         void    UpdateButtons();
 
         CDataExchange   m_DX;
@@ -251,6 +242,15 @@ CPrintPreview : public CDialog                                         /*
         DSize       m_PrinterScreenResRatio; // PrinterPPI/ScreenPPI
         CSize       m_PrinterDots;          // printer size, in dots
         CSize       m_ScreenPixels;         // screen size, in pixels
+
+          // preview particulars
+        CString     m_sDocPath;             // previewed document path
+        CDC         m_dcPrinter;            // printer context
+        CMemDC      m_dcMem;                // memory context
+        CPreviewPane m_PreviewPane;         // preview window
+        UINT        m_nCurrentPage;         // page number, zero based
+        UINT        m_nNumPreviewPages;     // total pages
+        double      m_shrink;               // printer/screen ratio
 };
 /*----------------------------------------------------------------------------*/
 #endif // PRINT_PREVIEW_H

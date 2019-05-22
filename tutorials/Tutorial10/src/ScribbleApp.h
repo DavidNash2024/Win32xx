@@ -4,9 +4,7 @@
 #ifndef SCRIBBLEAPP_H
 #define SCRIBBLEAPP_H
 
-
 #include "Mainfrm.h"
-
 
 
 class CScribbleApp : public CWinApp

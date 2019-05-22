@@ -120,9 +120,9 @@ WScrollBars : public CObject                        /*
     ~WScrollBars();
 
       // public method members
-    ScrollIncrements GetScrollIncrements(void);
-    ScrollLimits     GetScrollLimits(void);
-    CPoint       GetScrollPosition(void);
+    ScrollIncrements GetScrollIncrements();
+    ScrollLimits     GetScrollLimits();
+    CPoint       GetScrollPosition();
     LRESULT      OnHScroll(WPARAM, LPARAM);
     LRESULT      OnKeyScroll(WPARAM, LPARAM);
     LRESULT      OnMouseWheel(WPARAM, LPARAM);
@@ -142,11 +142,11 @@ WScrollBars : public CObject                        /*
 
       // private data members
     CPoint           m_scroll_position;     // (h, v) position
-    BOOL         m_hscroll_visible;     // h scroll is visible
+    BOOL             m_hscroll_visible;     // h scroll is visible
     ScrollIncrements m_increments;          // scroll increments
     ScrollLimits     m_limits;              // scroll limits
-    CWnd            *m_theView;         // the view window
-    BOOL         m_vscroll_visible;     // v scroll is visible
+    CWnd*            m_theView;             // the view window
+    BOOL             m_vscroll_visible;     // v scroll is visible
 };
 
 /*----------------------------------------------------------------------------*/

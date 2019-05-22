@@ -28,4 +28,3 @@ inline CFormApp* GetSdiApp() { return static_cast<CFormApp*>(GetApp()); }
 
 
 #endif // define SDI_APP_H
-

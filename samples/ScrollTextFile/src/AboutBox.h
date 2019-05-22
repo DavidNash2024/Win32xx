@@ -28,7 +28,7 @@ AboutBox        : public CDialog                                            /*
       // public declarations
     public:
         AboutBox();
-        ~AboutBox();
+        virtual ~AboutBox();
         
             void    SetAboutBoxInfo(LPCTSTR info) { m_sAboutBoxInfo = info;}
 

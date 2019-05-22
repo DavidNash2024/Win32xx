@@ -5,22 +5,13 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+#include "Doc.h"
+
 
 // Message - sent to the parent (Frame) window when a file is dropped on the View window
 //   WPARAM: A pointer to the filename (LPCTSTR)
 //   LPARAM: unused
 #define UWM_DROPFILE (WM_APP + 0x0001)
-
-class CDoc;
-
-
-struct PlotPoint
-{
-    int x;
-    int y;
-    bool isPenDown;
-    COLORREF color;
-};
 
 
 class CView : public CWnd
@@ -32,6 +23,7 @@ public:
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();
     COLORREF GetPenColor() { return m_penColor; }
+    void Print();
     void SetPenColor(COLORREF color) { m_penColor = color; }
 
 protected:
@@ -48,6 +40,7 @@ protected:
 private:
     void DrawLine(int x, int y);
 
+    CDoc m_doc;
     CBrush m_brush;
     COLORREF m_penColor;
 

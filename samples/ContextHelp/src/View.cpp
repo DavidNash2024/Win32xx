@@ -3,8 +3,6 @@
 
 #include "stdafx.h"
 #include "View.h"
-#include "Doc.h"
-#include "App.h"
 #include "resource.h"
 
 
@@ -38,7 +36,7 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
 CDoc& CView::GetDoc()
 {
-    return TheApp()->GetMainFrame().GetDoc();
+    return m_doc;
 }
 
 BOOL CView::OnButton()
@@ -152,8 +150,6 @@ void CView::OnOK()
     TRACE("OK Button Pressed.\n");
 }
 
-
-
 BOOL CView::OnCheckA()
 {
     TRACE("Check Box A\n");
@@ -200,5 +196,3 @@ BOOL CView::OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID)
     
     return TRUE;
 }
-
-

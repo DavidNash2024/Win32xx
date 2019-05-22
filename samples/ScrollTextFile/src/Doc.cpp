@@ -45,7 +45,6 @@ CDoc()                                                                      /*
     :   m_bDoc_is_dirty(FALSE), m_bDoc_is_open(FALSE), m_stDoc_width(0),
         m_stDoc_length(0)
 {
-    m_doclines.clear();
 }
 
 /*============================================================================*/
@@ -405,32 +404,3 @@ RecordEntry(wchar_t w, CStringW& entry)                                     /*
     else
         entry += w;
 }
-/*============================================================================*/
-    void CDoc::
-Serialize(CArchive& ar)                                                     /*
-
-        Called to serialize the document to or deserialize it from the
-    archive ar, depending on the sense of IsStoring().  Leaves the
-    archive open for for further operations.
-*-----------------------------------------------------------------------------*/
-{
-      // perform loading or storing
-    if (ar.IsStoring())
-    {
-        // each item serialized is written to the archive
-        // file as a char stream of the proper length,
-        // preceded by that length. In some cases, other forms os
-        // data are saved, from which the primary items are then
-        // reconstructed.
-
-    }
-    else    // recovering
-    {
-        // each item deserialized from the archive is
-        // retrieved by first reading its length and then
-        // loading in that number of bytes into the data
-        // item saved in the archive, as above. Some items require
-        // additional converstion procedures.
-    }
-}
-

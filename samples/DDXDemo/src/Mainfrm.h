@@ -59,7 +59,6 @@
 #define MAINFRM_H
 
 #include "View.h"
-#include "Doc.h"
 
 
 /*******************************************************************************
@@ -75,7 +74,7 @@ CMainFrame : public CFrame
     public:
         CMainFrame(void);
         virtual ~CMainFrame();
-        CDoc& TheDoc()   { return m_Doc; }
+        CDoc& TheDoc()   { return m_View.TheDoc(); }
         CView& TheView() { return m_View; };
 
         BOOL UpdateDialog(BOOL bReadFromControl = SENDTOCONTROL);
@@ -97,16 +96,11 @@ CMainFrame : public CFrame
 
     private:
         CView   m_View;
-        CDoc    m_Doc;
         std::vector<UINT> m_vBandIDs;
         std::vector<UINT> m_vBandStyles;
         std::vector<UINT> m_vBandSizes;
 };
 
-/*============================================================================*/
-
-  // declare access to the CDoc class to be global in scope
-CDoc& TheDoc();
 
 /*----------------------------------------------------------------------------*/
 #endif //MAINFRM_H

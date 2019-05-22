@@ -120,23 +120,23 @@ void CPreviewPane::Render(CDC& dc)
 }
 
 ///////////////////////////////////////////
-// Definitions for the CPreviewDialog class
+// Definitions for the CPrintPreview class
 //
-CPreviewDialog::CPreviewDialog(UINT resID) : CDialog(resID), m_currentPage(0)
+CPrintPreview::CPrintPreview(UINT resID) : CDialog(resID), m_currentPage(0)
 {
 }
 
-CPreviewDialog::~CPreviewDialog()
+CPrintPreview::~CPrintPreview()
 {
 }
 
-CRichEdit& CPreviewDialog::GetRichView()
+CRichEdit& CPrintPreview::GetRichView()
 {
     CMainFrame& MainFrame = GetTextApp()->GetMainFrame();
     return MainFrame.GetRichView();
 }
 
-INT_PTR CPreviewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
+INT_PTR CPrintPreview::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Pass resizing messages on to the resizer
     m_resizer.HandleMessage(msg, wparam, lparam);
@@ -150,13 +150,13 @@ INT_PTR CPreviewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
-BOOL CPreviewDialog::OnCloseButton()
+BOOL CPrintPreview::OnCloseButton()
 {
     GetAncestor().SendMessage(UWM_CHANGEVIEW);
     return TRUE;
 }
 
-BOOL CPreviewDialog::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CPrintPreview::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
 
@@ -172,7 +172,7 @@ BOOL CPreviewDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-BOOL CPreviewDialog::OnInitDialog()
+BOOL CPrintPreview::OnInitDialog()
 {
     // Attach the dialog controls to CWnd objects
     AttachItem(IDC_BUTTONPRINT, m_buttonPrint);
@@ -193,7 +193,7 @@ BOOL CPreviewDialog::OnInitDialog()
     return TRUE;
 }
 
-BOOL CPreviewDialog::OnNextButton()
+BOOL CPrintPreview::OnNextButton()
 {
     PreviewPage(++m_currentPage);
     UpdateButtons();
@@ -201,7 +201,7 @@ BOOL CPreviewDialog::OnNextButton()
     return TRUE;
 }
 
-BOOL CPreviewDialog::OnPrevButton()
+BOOL CPrintPreview::OnPrevButton()
 {
     PreviewPage(--m_currentPage);
     UpdateButtons();
@@ -209,13 +209,13 @@ BOOL CPreviewDialog::OnPrevButton()
     return TRUE;
 }
 
-BOOL CPreviewDialog::OnPrintButton()
+BOOL CPrintPreview::OnPrintButton()
 {
     GetAncestor().SendMessage(UWM_PRINTNOW);
     return TRUE; 
 }
 
-BOOL CPreviewDialog::DoPrintPreview(RECT page, RECT printArea)
+BOOL CPrintPreview::DoPrintPreview(RECT page, RECT printArea)
 {
     m_pageRect = page;
     m_printArea = printArea;
@@ -264,7 +264,7 @@ BOOL CPreviewDialog::DoPrintPreview(RECT page, RECT printArea)
     return TRUE;
 }
 
-void CPreviewDialog::PreviewPage(UINT page)
+void CPrintPreview::PreviewPage(UINT page)
 {
     assert(m_pageBreaks.size() > 0);
     assert(page < m_pageBreaks.size());
@@ -321,7 +321,7 @@ void CPreviewDialog::PreviewPage(UINT page)
     GetPreviewPane().Render(previewDC);
 }
 
-void CPreviewDialog::UpdateButtons()
+void CPrintPreview::UpdateButtons()
 {
     m_buttonNext.EnableWindow(m_currentPage < m_pageBreaks.size() - 1);
     m_buttonPrev.EnableWindow(m_currentPage > 0);

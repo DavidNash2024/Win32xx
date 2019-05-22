@@ -162,6 +162,16 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Create the PrintPreview dialog. It is initially hidden.  
     m_printPreview.Create(*this);
 
+    // Get the name of the default or currently chosen printer
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    if (printDlg.GetDefaults())
+    {
+        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        SetStatusText(status);
+    }
+    else
+        SetStatusText(_T("No printer found"));
+
     // call the base class function
     return  CFrame::OnCreate(cs);
 }
@@ -320,6 +330,8 @@ BOOL CMainFrame::OnFilePrint()
         // Display the print dialog
         if (printDlg.DoModal(*this) == IDOK)
         {
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
             QuickPrint(printDlg);
         }
         else
@@ -354,6 +366,8 @@ BOOL CMainFrame::OnFilePrintSetup()
         if (printDlg.DoModal(*this) == IDOK)
         {
             CDC dcPrinter = printDlg.GetPrinterDC();
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
         }
     }
 
@@ -453,8 +467,8 @@ BOOL CMainFrame::OnOptionsFont()
     if (dlg.DoModal(*this) == IDOK)
     {
         // Set the Font
-		cf = dlg.GetCharFormat();
-		m_richView.SetDefaultCharFormat(cf);
+        cf = dlg.GetCharFormat();
+        m_richView.SetDefaultCharFormat(cf);
     }
 
     return TRUE;

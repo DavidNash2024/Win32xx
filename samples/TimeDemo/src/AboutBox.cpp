@@ -91,7 +91,7 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                 /*
         case WM_INITDIALOG: // this message is received immediately before
         {                   //  the dialog box is displayed
               // send the credits box the latest compilation information
-            SetDlgItemText(IDC_CREDITS, CApp::m_sAboutStatement.c_str());
+            SetDlgItemText(IDC_CREDITS, TheApp().GetAboutStatement().c_str());
             return TRUE;
         }
 

@@ -4,8 +4,7 @@
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H
 
-
-class CFormDoc;
+#include "FormDoc.h"
 
 // Declaration of the CFormView class
 class CFormView : public CDialog
@@ -32,6 +31,7 @@ protected:
     virtual void OnOK();
 
 private:
+    CFormDoc m_doc;
     CResizer m_resizer;
 
     // Nested classes for this dialog's child windows

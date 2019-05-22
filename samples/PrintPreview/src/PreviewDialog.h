@@ -30,13 +30,13 @@ private:
 
 
 //////////////////////////////////////////
-// Declaration of the CPreviewDialog class
+// Declaration of the CPrintPreview class
 //
-class CPreviewDialog : public CDialog
+class CPrintPreview : public CDialog
 {
 public:
-    CPreviewDialog(UINT resID);
-    virtual ~CPreviewDialog();
+    CPrintPreview(UINT resID);
+    virtual ~CPrintPreview();
 
     CPreviewPane& GetPreviewPane()  { return m_previewPane; }
     CRichEdit& GetRichView();

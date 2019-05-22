@@ -8,7 +8,6 @@
 #include "Mainfrm.h"
 
 
-
 class CScribbleApp : public CWinApp
 {
 public:
@@ -26,4 +25,3 @@ inline CScribbleApp* GetScribbleApp() { return static_cast<CScribbleApp*>(GetApp
 
 
 #endif //SCRIBBLEAPP_H
-

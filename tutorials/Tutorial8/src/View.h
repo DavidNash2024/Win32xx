@@ -8,21 +8,12 @@
 #include "targetver.h"
 #include "wxx_wincore.h"
 #include <vector>
+#include "Doc.h"
+
 // Message - sent to the parent (Frame) window when a file is dropped on the View window
 //   WPARAM: A pointer to the filename (LPCTSTR)
 //   LPARAM: unused
 #define UWM_DROPFILE (WM_APP + 0x0001)
-
-class CDoc;
-
-
-struct PlotPoint
-{
-    int x;
-    int y;
-    bool isPenDown;
-    COLORREF penColor;
-};
 
 
 class CView : public CWnd
@@ -50,6 +41,7 @@ protected:
 private:
     void DrawLine(int x, int y);
 
+    CDoc m_doc;
     CBrush m_brush;
     COLORREF m_penColor;
 

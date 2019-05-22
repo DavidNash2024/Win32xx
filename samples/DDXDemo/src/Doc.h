@@ -76,82 +76,82 @@ CDoc    : public CObject                        /*
         DWORD   RegQueryDWORDValue(CRegKey& key, LPCTSTR pName);
         CString RegQueryStringValue(CRegKey& key, LPCTSTR pName);
         SYSTEMTIME RegQuerySYSTEMTIMEValue(CRegKey &key, LPCTSTR pName);
-        BOOL    GetCheckA(void) {return m_iCheckA;}
+        BOOL    GetCheckA() const {return m_iCheckA;}
         void    SetCheckA(BOOL IsChecked) { m_iCheckA = IsChecked;}
 
-        BOOL    GetCheckB(void) {return m_iCheckB;}
+        BOOL    GetCheckB() const {return m_iCheckB;}
         void    SetCheckB(BOOL IsChecked) { m_iCheckB = IsChecked;}
 
-        BOOL    GetCheckC(void) {return m_iCheckC;}
+        BOOL    GetCheckC() const {return m_iCheckC;}
         void    SetCheckC(BOOL IsChecked) { m_iCheckC = IsChecked;}
 
-        UINT    GetRadio(void) {return m_iRadioA;}
+        UINT    GetRadio() const {return m_iRadioA;}
         void    SetRadio(UINT radio) { m_iRadioA = radio;}
 
-        CString &GetListBoxS(void) {return m_sListBox;}
+        const CString& GetListBoxS() const {return m_sListBox;}
         void    SetListBoxS(const CString &s){ m_sListBox = s;}
 
-        int GetListBoxX(void) {return m_iListBox;}
+        int GetListBoxX() const {return m_iListBox;}
         void    SetListBoxX(int index){m_iListBox = index;}
 
-        CString &GetComboBoxS(void) {return m_sComboBox;}
+        const CString& GetComboBoxS() const {return m_sComboBox;}
         void    SetComboBoxS(const CString &s){ m_sComboBox = s;}
 
-        int GetComboBoxX(void) {return m_iComboBox;}
+        int GetComboBoxX() const {return m_iComboBox;}
         void    SetComboBoxX(int index){m_iComboBox = index;}
 
-        CString &GetEditBox(void) {return m_sString;}
+        const CString& GetEditBox() const {return m_sString;}
         void    SetEditBox(const CString &s){m_sString = s;}
 
-        CString &GetRichEditBox(void) {return m_sRichEdit;}
+        const CString& GetRichEditBox() const {return m_sRichEdit;}
         void    SetRichEditBox(const CString &s){ m_sRichEdit = s;}
 
-        BYTE    GetByte(void) {return m_iByte;}
+        BYTE    GetByte() const {return m_iByte;}
         void    SetByte(BYTE val) {m_iByte = val;}
 
-        short   GetShort(void) {return m_iShort;}
+        short   GetShort() const {return m_iShort;}
         void    SetShort(short val) {m_iShort = val;}
 
-        int     GetInt(void) {return m_iInt;}
+        int     GetInt() const {return m_iInt;}
         void    SetInt(int val) {m_iInt = val;}
 
-        UINT    GetUINT(void) {return m_iUINT;}
+        UINT    GetUINT() const {return m_iUINT;}
         void    SetUINT(UINT val) {m_iUINT = val;}
 
-        long    GetLong(void) {return m_iLong;}
+        long    GetLong() {return m_iLong;}
         void    SetLong(long val) {m_iLong = val;}
 
-        DWORD   GetULong(void) {return m_ULong;}
+        DWORD   GetULong() const {return m_ULong;}
         void    SetULong(DWORD val) {m_ULong = val;}
 
-        float   GetFloat(void) {return m_fFloat;}
+        float   GetFloat() const {return m_fFloat;}
         void    SetFloat(float val) {m_fFloat = val;}
 
-        double  GetDouble(void) {return m_dDouble;}
+        double  GetDouble() const {return m_dDouble;}
         void    SetDouble(double val) {m_dDouble = val;}
 
-        CString& GetString(void) {return m_sString;}
+        const CString& GetString() const {return m_sString;}
         void     SetString(const CString& val) {m_sString = val;}
 
-        LPCTSTR GetLPTSTR(void) {return m_LPTSTR;}
+        LPCTSTR GetLPTSTR() const {return m_LPTSTR;}
         void SetLPTSTR(LPCTSTR val) {StrCopy(m_LPTSTR, val, 256); }
 
-        int GetSlider(void) {return m_iSlider;}
+        int GetSlider() const {return m_iSlider;}
         void    SetSlider(int val) {m_iSlider = val;}
 
-        SYSTEMTIME GetDateTime(void) {return m_stDateTime;}
+        SYSTEMTIME GetDateTime() const {return m_stDateTime;}
         void    SetDateTime(const SYSTEMTIME &st){m_stDateTime = st;}
 
-        SYSTEMTIME GetMoCalendar(void){return m_stMoCalendar;}
+        SYSTEMTIME GetMoCalendar() const {return m_stMoCalendar;}
         void    SetMoCalendar(const SYSTEMTIME &st){m_stMoCalendar = st;}
 
     private:
         BYTE    m_iByte;
         short   m_iShort;
-		int     m_iInt;
-		int     m_iComboBox;
-		int     m_iListBox;
-		int     m_iSlider;
+        int     m_iInt;
+        int     m_iComboBox;
+        int     m_iListBox;
+        int     m_iSlider;
         UINT    m_iUINT;
         long    m_iLong;
         DWORD   m_ULong;
@@ -161,13 +161,13 @@ CDoc    : public CObject                        /*
         BOOL    m_iCheckB;
         BOOL    m_iCheckC;
         UINT    m_iRadioA;
-		CString m_sListBox;
-		CString m_sComboBox;
-		CString m_sString;
-		CString m_sRichEdit;
+        CString m_sListBox;
+        CString m_sComboBox;
+        CString m_sString;
+        CString m_sRichEdit;
         TCHAR   m_LPTSTR[256];
-		SYSTEMTIME m_stDateTime;
-		SYSTEMTIME m_stMoCalendar;
+        SYSTEMTIME m_stDateTime;
+        SYSTEMTIME m_stMoCalendar;
 };
 
 /*----------------------------------------------------------------------------*/

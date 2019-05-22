@@ -72,32 +72,29 @@ CApp : public CWinApp                           /*
 
         virtual BOOL        InitInstance();
         CMainFrame* TheFrame() {return &m_Frame;}
-
-          // public data members
-        CString   m_sAppName;   // name of app: minus directory and .exe
-        CString   m_sAppDir;    // directory of this app
-        CString   m_sAppPath;   // path to this app
-        CString   m_sArcvDir;   // name of archive directory
-        CString   m_sArcvFile;  // serialization file name
-
-        static const CString m_sCompiled_on;   // compile date
-        static const CString m_sCompiled_with; // compiler + system info
-        static const CString m_sVersion;       // app version info
-        static const CString m_sCredits;       // About box notices
-
-        static CString m_sAboutStatement; // latest compile date
+        const CString& GetAppName() const { return m_sAppName; }
+        const CString& GetArcFileName() const { return m_sArcvFile; }
+        const CString& GetAboutStatement() const { return m_sAboutStatement; }
         
-    protected:
-
     private:
           // private functions
         ULONG   DatInt(const CString &);
         CString IntDat(ULONG);
 
-        CMainFrame m_Frame; // the mainframe
+        CMainFrame m_Frame;      // the mainframe
+        CString    m_sAppName;   // name of app: minus directory and .exe
+        CString    m_sAppDir;    // directory of this app
+        CString    m_sAppPath;   // path to this app
+        CString    m_sArcvDir;   // name of archive directory
+        CString    m_sArcvFile;  // serialization file name
 
           // static constants
+        static CString m_sAboutStatement;      // latest compile date
         static const CString m_months;
+        static const CString m_sCompiled_on;   // compile date
+        static const CString m_sCompiled_with; // compiler + system info
+        static const CString m_sVersion;       // app version info
+        static const CString m_sCredits;       // About box notices
 };
 
 /*============================================================================*/

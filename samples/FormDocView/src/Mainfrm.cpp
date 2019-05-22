@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "FormApp.h"
 #include "mainfrm.h"
 
 
@@ -120,7 +119,6 @@ void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
     // Place any additional startup code here.
-
 }
 
 void CMainFrame::OnUpdateCheckA(UINT id)
@@ -162,6 +160,12 @@ BOOL CMainFrame::SaveRegistrySettings()
     GetDoc().SaveDocRegistry(GetRegistryKeyName().c_str());
 
     return TRUE;
+}
+
+void CMainFrame::SetupMenuIcons()
+{
+    // Set the bitmap used for menu icons
+    AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
 }
 
 void CMainFrame::SetupToolBar()

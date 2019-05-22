@@ -68,9 +68,6 @@ CRichEditView()                                                             /*
 
 *-----------------------------------------------------------------------------*/
 {
-    m_sDocPath.Empty();
-    m_sPrintPath.Empty();
-    m_sDataType.Empty();
     m_bAppBanding = FALSE;
     m_nTextLength = 0;
     ZeroMemory(&m_fr, sizeof(m_fr));
@@ -190,24 +187,13 @@ StreamInFile(const CFile& file, BOOL mode)                                  /*
     OPEN_EXISTING mode.
 *-----------------------------------------------------------------------------*/
 {
-    try
-    {
-        UINT format = SF_TEXT;
-        if (mode == TRUE)
-            format |= SF_UNICODE;
-        EDITSTREAM es;
-        es.dwCookie =  (DWORD_PTR) file.GetHandle();
-        es.pfnCallback = (EDITSTREAMCALLBACK) StreamInCallback;
-        StreamIn(format, es);
-    }
-
-    catch (const CFileException& e)
-    {
-        CString str = _T("Failed to load:  ");
-        str += e.GetFilePath();
-        ::MessageBox(NULL, str, AtoT(e.what()), MB_ICONWARNING);
-        return FALSE;
-    }
+    UINT format = SF_TEXT;
+    if (mode == TRUE)
+        format |= SF_UNICODE;
+    EDITSTREAM es;
+    es.dwCookie =  (DWORD_PTR) file.GetHandle();
+    es.pfnCallback = (EDITSTREAMCALLBACK) StreamInCallback;
+    StreamIn(format, es);
 
     SetModify(FALSE);
     return TRUE;
@@ -223,25 +209,15 @@ StreamOutFile(const CFile& file, BOOL mode)                                 /*
     CREATE_ALWAYS mode.
 *-----------------------------------------------------------------------------*/
 {
-    try
-    {
-        UINT format = SF_TEXT;
-        if (mode == TRUE)
-            format |= SF_UNICODE;
-        EDITSTREAM es;
-        es.dwCookie =  (DWORD_PTR) file.GetHandle();
-        es.dwError = 0;
-        es.pfnCallback = (EDITSTREAMCALLBACK) StreamOutCallback;
-        StreamOut(format, es);
-    }
+    UINT format = SF_TEXT;
+    if (mode == TRUE)
+        format |= SF_UNICODE;
+    EDITSTREAM es;
+    es.dwCookie =  (DWORD_PTR) file.GetHandle();
+    es.dwError = 0;
+    es.pfnCallback = (EDITSTREAMCALLBACK) StreamOutCallback;
+    StreamOut(format, es);
 
-    catch (const CFileException&)
-    {
-        CString str = _T("Failed to write:\n    ");
-        str += file.GetFilePath();
-        ::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
-        return FALSE;
-    }
       //Clear the modified text flag
     SetModify(FALSE);
     return TRUE;

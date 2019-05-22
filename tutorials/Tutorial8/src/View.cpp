@@ -26,8 +26,7 @@ void CView::DrawLine(int x, int y)
 
 CDoc& CView::GetDoc()
 {
-    CMainFrame& frame = GetScribbleApp()->GetMainFrame();
-    return frame.GetDoc();
+    return m_doc;
 }
 
 std::vector<PlotPoint>& CView::GetAllPoints()
@@ -57,7 +56,7 @@ void CView::OnDraw(CDC& dc)
             else
                 dc.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
             
-			isPenDown = GetAllPoints()[i].isPenDown;
+            isPenDown = GetAllPoints()[i].isPenDown;
         }
     }
 }

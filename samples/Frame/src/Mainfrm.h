@@ -5,7 +5,6 @@
 #define MAINFRM_H
 
 #include "View.h"
-#include "Doc.h"
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
@@ -14,7 +13,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CDoc& GetDoc()      { return m_doc; }
+    CDoc& GetDoc()      { return m_view.GetDoc(); }
 
     BOOL    OnFileExit();
     BOOL    OnFileOpen();
@@ -27,12 +26,12 @@ protected:
     virtual void    OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
+    virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CView m_view;
-    CDoc m_doc;
 };
 
 #endif //MAINFRM_H

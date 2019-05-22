@@ -59,7 +59,6 @@
 
 
 #include "View.h"
-#include "Doc.h"
 #include "AboutBox.h"
 #include "MRU.h"
 
@@ -75,18 +74,15 @@ CMainFrame : public CFrame                      /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-                CMainFrame(void);
-        virtual     ~CMainFrame(void);
-        
-        virtual void    OnUpdateStatus(void);
+                    CMainFrame();
+        virtual     ~CMainFrame();
+        bool            GetHelpMode() const { return m_help_mode; }
+        virtual void    OnUpdateStatus();
         virtual void    SetCursorShape(CursorShape);
         virtual void    SetWindowTitle(const CString &title = _T(""));
-        CView&          TheView(void){return m_View;}
-        CDoc&           ThisDoc(void){return m_Doc;}
-        CMRU&           TheMRU(void) {return m_MRU;};
-
-          // public data members
-        bool    m_help_mode;
+        CView&          TheView(){return m_View;}
+        CDoc&           ThisDoc(){return m_View.ThisDoc();}
+        CMRU&           TheMRU() {return m_MRU;};
             
         static const CString m_sCompiled_on; // compilation date
 
@@ -97,29 +93,29 @@ CMainFrame : public CFrame                      /*
         virtual BOOL    OnCommandHelp(WPARAM wParam, LPARAM lParam);
         virtual int     OnCreate(CREATESTRUCT& cs);  
         virtual void    OnDestroy();
-        virtual void    OnEditCopy(void);
-        virtual void    OnEditCut(void);
-        virtual void    OnEditDelete(void);
-        virtual void    OnEditFind(void);
-        virtual void    OnEditPaste(void);
-        virtual void    OnEditRedo(void);
-        virtual void    OnEditReplace(void);
-        virtual void    OnEditUndo(void);
-        virtual void    OnFileClose(void);
-        virtual void    OnFileExit(void);
-        virtual void    OnFileNew(void);
-        virtual void    OnFileOpen(void);
+        virtual void    OnEditCopy();
+        virtual void    OnEditCut();
+        virtual void    OnEditDelete();
+        virtual void    OnEditFind();
+        virtual void    OnEditPaste();
+        virtual void    OnEditRedo();
+        virtual void    OnEditReplace();
+        virtual void    OnEditUndo();
+        virtual void    OnFileClose();
+        virtual void    OnFileExit();
+        virtual void    OnFileNew();
+        virtual void    OnFileOpen();
         virtual bool    OnFileOpenMRU(UINT);
-        virtual void    OnFilePrint(void);
-        virtual void    OnFilePrintPreview(void);
-        virtual void    OnFileSave(void);
-        virtual void    OnFileSaveAs(void);
-        virtual void    OnFontChoice(void);
-        virtual BOOL    OnHelp(void);
+        virtual void    OnFilePrint();
+        virtual void    OnFilePrintPreview();
+        virtual void    OnFileSave();
+        virtual void    OnFileSaveAs();
+        virtual void    OnFontChoice();
+        virtual BOOL    OnHelp();
         virtual BOOL    OnHelp(const CString&);
-        virtual BOOL    OnHelpAbout(void);
-        virtual BOOL    OnHelpContext(void);
-        virtual void    OnInitialUpdate(void);
+        virtual BOOL    OnHelpAbout();
+        virtual BOOL    OnHelpContext();
+        virtual void    OnInitialUpdate();
         virtual void    OnMenuUpdate(UINT);
         virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
         virtual BOOL    OnProcessMRU(WPARAM wParam, LPARAM lParam);
@@ -129,16 +125,17 @@ CMainFrame : public CFrame                      /*
         virtual BOOL    SetControlStatus(UINT, bool, ControlBars);
         virtual void    SetStatusbarMsg(CString);
         virtual void    SetupMenuIcons();
-        virtual void    SetupToolBar(void);
-        virtual void    UpdateFrame(void);
+        virtual void    SetupToolBar();
+        virtual void    UpdateFrame();
         virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 
-          // protected data members
+    private:
+          // private data members
         AboutBox   m_AboutDialog;  // about dialog object
-        CDoc       m_Doc;      // the document object
         CMRU       m_MRU;          // the MRU list object
-        CView      m_View;     // the view object
+        CView      m_View;         // the view object
 
+        bool       m_help_mode;
         UINT       m_win_x;        // deserialized window x position
         UINT       m_win_y;        // deserialized window y position
         UINT       m_win_width;    // deserialized window width
@@ -147,11 +144,8 @@ CMainFrame : public CFrame                      /*
         HCURSOR    m_hCursor;      // mainframe cursor
         CursorShape m_cursor_shape;// mainframe cursor arrow/help/wait
         WINDOWPLACEMENT m_Wndpl;   // window placement information
-
-        static const size_t m_nMaxMRUEntries; // maximum frame MRU's 
         
-    private:
-
+        static const size_t m_nMaxMRUEntries; // maximum frame MRU's
 };
 
 /*==============================================================================

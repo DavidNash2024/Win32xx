@@ -5,7 +5,7 @@
 
 ********************************************************************************
 
-    Acknowledgment. This demo program was adapted from the PrintPreview 
+    Acknowledgement. This demo program was adapted from the PrintPreview 
     sample program appearing in the Win32++ framework sample folder, created 
     by  David Nash and published under the permissions granted in that work.
     The adaptation here reimplements the PrintView window as a separate 
@@ -37,7 +37,7 @@ CMainFrame : public CFrame                                              /*
         CMainFrame();
         virtual ~CMainFrame();
 
-        CString& GetPathName()   { return m_PathName;}
+        const CString& GetPathName() const  { return m_PathName;}
         CRichView& GetRichView() { return m_RichView; }
         
         BOOL    OnDropFiles(HDROP hDropInfo);

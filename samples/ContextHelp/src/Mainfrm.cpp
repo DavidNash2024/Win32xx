@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "mainfrm.h"
-#include "App.h"
 #include "resource.h"
 
 
@@ -23,10 +22,7 @@ CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
     // Use a registry key name like "CompanyName\\Application"
     LoadRegistrySettings(groupFolder + appName);
 
-
-    ////////////////////////////////////////////////////////
     // Set the path to the chm help file for m_AppHelp
-
     // generate the help file directory and path strings
     CString helpFilename = LoadString(IDS_HELP_FILE);
     CString helpDir = CreateAppDataFolder(groupFolder + appName);
@@ -54,9 +50,6 @@ CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
     {
         ::MessageBox(NULL, _T("Failed to find ") + LoadString(IDS_HELP_FILE), _T("File not found"), MB_ICONWARNING);
     }
-
-    /////////////////////////////////////////////////
-    // generate about box credits (PUT YOUR OWN HERE)
 
     // generate the Win32++ version string
     UINT ver = _WIN32XX_VER;
@@ -119,7 +112,7 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 
         CString add = subfolder.Mid(from, next - from);
         app_data_path += _T("\\") + add;
-		::CreateDirectory(app_data_path, 0);
+        ::CreateDirectory(app_data_path, 0);
 
         if ((::CreateDirectory(app_data_path, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
         { 
@@ -145,7 +138,7 @@ UINT CMainFrame::GetIDFromCursorPos()
         // Over the toolbar window, so identify the toolbar button
 
         int button = GetToolBar().HitTest();
-		id = GetToolBar().GetCommandID(button);
+        id = GetToolBar().GetCommandID(button);
     }
     else if (hCtrl == GetHwnd())
     {
@@ -155,12 +148,12 @@ UINT CMainFrame::GetIDFromCursorPos()
         //  cursor hot spot within the non-client area.
         int result = static_cast<int>(SendMessage(WM_NCHITTEST, 0, MAKELPARAM(pt.x, pt.y)));
 
-		id = IDFR_NCFRAME + result; // As defined in resource.h
+        id = IDFR_NCFRAME + result; // As defined in resource.h
     }
     else if (hCtrl != 0)
     {
         // The view window (dialog), dialog controls, menubar and statusbar all have control IDs.
-		id = ::GetDlgCtrlID(hCtrl);
+        id = ::GetDlgCtrlID(hCtrl);
     }
 
     return id;
@@ -223,7 +216,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case ID_RADIO_C:        m_view.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);   return TRUE;
 
     case IDM_HELP_ABOUT:    m_appHelp.About(*this); return TRUE;    // Menu item
-    case IDM_HELP_CONTENT:  ShowHelpTopic(id);     return TRUE;    // Menu item
+    case IDM_HELP_CONTENT:  ShowHelpTopic(id);      return TRUE;    // Menu item
     case IDM_HELP_CONTEXT:  ChooseHelpTopic();      return TRUE;    // Toolbar Button
     case IDM_SHIFT_F1:      OnShiftF1();            return TRUE;    // Accelerator
     case IDM_F1:            OnF1();                 return TRUE;    // Accelerator
@@ -238,14 +231,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -447,5 +440,4 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }
-
 

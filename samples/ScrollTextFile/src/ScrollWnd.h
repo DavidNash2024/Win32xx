@@ -53,11 +53,11 @@ CScrollWnd : public CWnd                                                    /*
                 void    SetScrollPosition(CPoint pt);
 
     protected:
-            CSize       GetAppSize() const          { return m_app_size;};
-            CSize       GetClientSize() const       { return m_client_size;};
-            int         GetMappingMode()const       { return m_nMapMode;}
-            CSize       GetViewSize()               {return m_view_size;};
-            COLORREF    GetWndBkColor()             { return m_rgbBkColor;}
+            CSize       GetAppSize() const          { return m_app_size; }
+            CSize       GetClientSize() const       { return m_client_size; }
+            int         GetMappingMode() const      { return m_nMapMode; }
+            CSize       GetViewSize() const         { return m_view_size; }
+            COLORREF    GetWndBkColor() const       { return m_rgbBkColor; }
             BOOL        IsHVisible() const;
             BOOL        IsVVisible() const;
         virtual void    OnDraw(CDC& sDC);

@@ -5,7 +5,7 @@
 
 ********************************************************************************
 
-    Acknowledgment. These static functions were adapted from the 
+    Acknowledgement. These static functions were adapted from the 
     PrintPreview sample program appearing in the Win32++ framework sample 
     folder, created by David Nash and published under the permissions 
     granted in that work. The adaptation here collects a number of printing

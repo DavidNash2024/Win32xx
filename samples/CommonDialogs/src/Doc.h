@@ -71,39 +71,39 @@ CDoc    : public CObject                        /*
     public:
         CDoc();
         virtual ~CDoc();
-        virtual const CString&  GetExt();
-        virtual const CString&  GetFilter();
+        const CString&  GetExt();
+        const CString&  GetFilter();
 
-        const  CString& GetFilePath()
+        const  CString& GetFilePath() const
                         { return (m_open_doc_path.IsEmpty() ?
                           m_Doc_file.GetFilePath() :
                           m_open_doc_path);}
-        virtual BOOL    IsDirty();
-        virtual BOOL    IsOpen() {return m_Doc_is_open;}
-        virtual BOOL    MakeNewDoc(const CString&);
-        virtual void    OnCloseDoc();
-        virtual void    OnCopy();
-        virtual void    OnCut();
-        virtual void    OnDelete();
-        virtual void    OnPaste();
-        virtual void    OnFindReplace(UINT, WPARAM, LPARAM);
-        virtual void    OnFRFindNext(MyFindReplaceDialog*);
-        virtual void    OnFRReplaceAll(MyFindReplaceDialog*);
-        virtual void    OnFRReplaceCurrent(MyFindReplaceDialog*);
-        virtual void    OnFRTerminating(MyFindReplaceDialog*);
-        virtual void    OnNewDoc();
-        virtual void    OnOpenDoc();
-        virtual void    OnRedo();
-        virtual void    OnUndo();
-        virtual BOOL    OnSaveDoc();
-        virtual void    OnSaveDocAs();
-        virtual void    OnPageSetup();
-        virtual BOOL    OpenDoc(const CString &);
-                void    Register(CMainFrame*, CView*);
-                void    SetDirty(BOOL b);
-        virtual void    SetExt(const CString& ext)
+        BOOL    IsDirty();
+        BOOL    IsOpen() const {return m_Doc_is_open;}
+        BOOL    MakeNewDoc(const CString&);
+        void    OnCloseDoc();
+        void    OnCopy();
+        void    OnCut();
+        void    OnDelete();
+        void    OnPaste();
+        void    OnFindReplace(UINT, WPARAM, LPARAM);
+        void    OnFRFindNext(MyFindReplaceDialog*);
+        void    OnFRReplaceAll(MyFindReplaceDialog*);
+        void    OnFRReplaceCurrent(MyFindReplaceDialog*);
+        void    OnFRTerminating(MyFindReplaceDialog*);
+        void    OnNewDoc();
+        void    OnOpenDoc();
+        void    OnRedo();
+        void    OnUndo();
+        BOOL    OnSaveDoc();
+        void    OnSaveDocAs();
+        void    OnPageSetup();
+        BOOL    OpenDoc(const CString &);
+        void    Register(CMainFrame*, CView*);
+        void    SetDirty(BOOL b);
+        void    SetExt(const CString& ext)
                           { m_Doc_file_ext = ext;}
-        virtual void    SetFilter(const CString &s)
+        void    SetFilter(const CString &s)
                           { m_Doc_file_filter = s;}
 
     protected:

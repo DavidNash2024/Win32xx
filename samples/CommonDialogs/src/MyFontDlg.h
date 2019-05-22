@@ -69,8 +69,8 @@ MyFontDialog : public CFontDialog                                       /*
 
         ~MyFontDialog(){}
 
-                SIZE    GetAvgSize(void) const { return m_avgWdHt;}
-                CFont   GetChoiceFont(void) const { return m_Font;}
+                SIZE    GetAvgSize() const { return m_avgWdHt;}
+                CFont   GetChoiceFont() const { return m_Font;}
                 LOGFONT GetCurrentLogFont() const { return m_LogFont;}
         virtual void    OnOK();
                 void    SetBoxTitle(const CString& title){ m_sBoxTitle = title;}
@@ -79,7 +79,7 @@ MyFontDialog : public CFontDialog                                       /*
                             SetChoiceLogFont(lf);}
 
     protected:
-            TEXTMETRIC  GetTexMetric(void) const { return m_tm;}
+            TEXTMETRIC  GetTexMetric() const { return m_tm;}
             TEXTMETRIC* GetTextMetricPtr() { return &m_tm;}
         virtual BOOL    OnInitDialog();
                 void    RecordFontMetrics();
@@ -95,7 +95,7 @@ MyFontDialog : public CFontDialog                                       /*
     private:
         CString     m_sBoxTitle;
         TEXTMETRIC  m_tm;       // font text metrics
-        SIZE        m_avgWdHt;  // font average width & height
+        CSize       m_avgWdHt;  // font average width & height
         CFont       m_Font;     // the current font
         LOGFONT     m_LogFont;  // the current logfont
 };

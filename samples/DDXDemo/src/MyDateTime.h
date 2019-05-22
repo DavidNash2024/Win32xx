@@ -70,7 +70,7 @@ CMyDateTime : public CDateTime                                           /*
         CMyDateTime() {}
         virtual ~CMyDateTime() {}
         
-        virtual CString GetTimeStr(const CString&) const;
+        CString GetTimeStr(const CString&) const;
         
     protected:
 };
