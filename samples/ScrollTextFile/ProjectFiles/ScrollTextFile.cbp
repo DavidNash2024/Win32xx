@@ -183,14 +183,11 @@
 		<Unit filename="../src/Doc.h" />
 		<Unit filename="../src/FontEx.cpp" />
 		<Unit filename="../src/FontEx.h" />
-		<Unit filename="../src/GlobalUtils.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/ScrollWnd.cpp" />
-		<Unit filename="../src/ScrollWnd.h" />
 		<Unit filename="../src/StdAfx.cpp" />
 		<Unit filename="../src/StdApp.h" />
 		<Unit filename="../src/View.cpp" />

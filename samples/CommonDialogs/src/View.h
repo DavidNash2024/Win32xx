@@ -90,23 +90,21 @@ CView : public CDialog                          /*
         
                 void    AttachControl(UINT nIDC, CWnd& rCtl);
         virtual HWND    Create(HWND hParent);
+                CDoc&   GetDoc() { return m_Doc; }
                 CFont&  GetEditFont() { return m_EditFont;}
          CRichEditView& GetREView() { return m_RichEdit;}
                 void    NoDocOpen();
                 BOOL    OnDropFiles(HDROP hDroinfo);
                 void    OnPrintDocument();
                 void    OnPrintPreview();
-                void    Register(CDoc*);
                 void    SetEditFont(const CFont& f);
                 void    SetRichEditColors(COLORREF, COLORREF, COLORREF);
-
 
     protected:
                 BOOL    AddToolTip(HWND, UINT nID);
         virtual BOOL    AddToolTip(HWND, UINT nID, const CString & s);
         virtual void    AssignToolTips();
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-                CDoc&   GetDoc() {return *m_pDoc;}
         virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
         virtual BOOL    OnInitDialog();
         virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -120,7 +118,7 @@ CView : public CDialog                          /*
         CFont           m_EditFont;     // edit box font
           // controls on the view
         CRichEditView   m_RichEdit;     // the view of the document
-        CDoc*           m_pDoc;         // the view's document
+        CDoc            m_Doc;          // the view's document
 };
 /*----------------------------------------------------------------------------*/
 #endif // SDI_VIEW_H

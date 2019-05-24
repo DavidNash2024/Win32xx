@@ -47,7 +47,6 @@ CDoc                                                                        /*
         void    AddRecord(const CStringW& entry);
         CString GetFilter() const;
         UINT    GetLength();
-        CSize   GetMaxExtent(const CDC& dc);
         CStringW GetRecord(UINT, UINT left = 0, 
                     UINT length = MAX_STRING_SIZE);
         UINT    GetWidth();

@@ -86,15 +86,15 @@ PreviewSetup    : public CDialog                                        /*
         virtual void    OnOK();
 
     private:
-            BOOL    AddToolTip(UINT nID)
-                    { HWND h = GetDlgItem(nID);
-                      return m_TT.AddTool(h, nID); }
-            HWND    CreateToolTip(HWND hDlg)
-                        {   HWND rtn = m_TT.Create(hDlg);
-                              // Turn XP themes off
-                            m_TT.SetWindowTheme(L" ", L" ");
-                            return rtn;}
-            void    InitializeToolTips();
+        BOOL    AddToolTip(UINT nID)
+                { HWND h = GetDlgItem(nID);
+                  return m_TT.AddTool(h, nID); }
+        HWND    CreateToolTip(HWND hDlg)
+                    {   HWND rtn = m_TT.Create(hDlg);
+                          // Turn XP themes off
+                        m_TT.SetWindowTheme(L" ", L" ");
+                        return rtn;}
+        void    InitializeToolTips();
 
           // private data
         CDataExchange   m_DX;
@@ -116,12 +116,11 @@ CPreviewPane : public CScrollView                                       /*
         CPreviewPane();
         virtual ~CPreviewPane() {}
 
-            void    SetBitmap(CBitmap Bitmap)
-                        { m_Bitmap = Bitmap; }
-            void    SetPaneZoomState(int val)
-                        { m_PrevZoomState = m_ZoomState;
-                          m_ZoomState = val;}
-            void    ShowScrollBars(BOOL b) {m_ShowScrollBars = b;}
+        void    SetBitmap(CBitmap Bitmap) { m_Bitmap = Bitmap; }
+        void    SetPaneZoomState(int val)
+                    { m_PrevZoomState = m_ZoomState;
+                      m_ZoomState = val;}
+        void    ShowScrollBars(BOOL b)    {m_ShowScrollBars = b;}
 
     protected:
         CPrintPreview&  GetPreviewWnd()
@@ -156,26 +155,24 @@ CPrintPreview : public CDialog                                         /*
     The print preview dialog window class.
 *-----------------------------------------------------------------------------*/
 {
+	friend class PreviewSetup;
+
     public:
         CPrintPreview(UINT nResID, DWORD dwFlags = HIDE_HELP);
         virtual ~CPrintPreview();
 
-            BOOL        ClosePreview();
-            CPreviewPane& GetPreviewPane() 
-                            { return m_PreviewPane;}
-            DSize       GetPreviewSize() const 
-                            {return m_PreviewInches;}
-            DSize&      GetSetPreviewSize() { return m_PreviewInches; }
-            DSize       GetPrinterScreenRatio() const
-                            { return m_PrinterScreenResRatio;}
-            DSize       GetScreenSize() const
-                            {return m_ScreenInches;}
-            DSize&      GetSetScreenSize() { return m_ScreenInches; }
-            void        InitializeContexts();
-            BOOL        OnPreview(const CString&); 
-            void        SetSizes(DSize scrn, DSize prevw)
-                            { m_ScreenInches = scrn; m_PreviewInches = prevw;}
-            void    SetWindowSizes();
+        BOOL    ClosePreview();
+        CPreviewPane& GetPreviewPane()        {return m_PreviewPane;}
+        DSize   GetPreviewSize() const        {return m_PreviewInches;}
+		void    SetPreviewSize(DSize size)    {m_PreviewInches = size;}
+        DSize   GetPrinterScreenRatio() const {return m_PrinterScreenResRatio;}
+        DSize   GetScreenSize() const         {return m_ScreenInches;}
+		void    SetScreenSize(DSize size)     {m_ScreenInches = size;}
+        void    InitializeContexts();
+        BOOL    OnPreview(const CString&); 
+        void    SetSizes(DSize scrn, DSize prevw) 
+		            {m_ScreenInches = scrn; m_PreviewInches = prevw;}
+        void    SetWindowSizes();
 
     protected:
         virtual void    DoDataExchange(CDataExchange& DX);

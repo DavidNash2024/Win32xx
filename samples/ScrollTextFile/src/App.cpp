@@ -206,8 +206,8 @@ IntDat(ULONG hexdate) const                                                     
     11 (Dec).
 *-----------------------------------------------------------------------------*/
 {
-    UINT    dd = hexdate MOD 100;
-    UINT    mo = (hexdate / 100) MOD 100;
+    UINT    dd = hexdate % 100;
+    UINT    mo = (hexdate / 100) % 100;
     UINT    yyyy = (hexdate / 10000);
     CString ans;
     ans.Format(_T("%s %02d, %u"),  months.Mid(4 * mo, 3).c_str(), dd, yyyy);

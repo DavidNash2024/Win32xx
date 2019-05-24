@@ -84,7 +84,7 @@ CMainFrame : public CFrame                      /*
         void    AddMRUEntry(LPCTSTR szMRUEntry)
                     { CFrame::AddMRUEntry (szMRUEntry);}
         void    EmptyMRUList();
-        CDoc&   GetDoc() { return m_Doc; }
+        CDoc&   GetDoc() { return m_View.GetDoc(); }
         size_t  GetMRUSize() { return GetMRUEntries().size();}
         void    RemoveMRUEntry(LPCTSTR szMRUEntry)
                     {CFrame::RemoveMRUEntry(szMRUEntry);}

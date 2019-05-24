@@ -111,10 +111,6 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\ScrollWnd.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
@@ -143,19 +139,11 @@ SOURCE=..\src\FontEx.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\GlobalUtils.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\Mainfrm.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\resource.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\ScrollWnd.h
 # End Source File
 # Begin Source File
 

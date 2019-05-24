@@ -5,22 +5,21 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of an extention of the CFont class
-    using the Win32++ Windows interface classes, Copyright (c) 2005-2017 David 
-    Nash, under permissions granted therein. Extensions include font size, 
-    color, font dialog option flags, and coordinate mapping mode.
+    Contents Description: Implementation of an extension of the CFont class
+    using the Win32++ Windows interface classes, Copyright (c) 2005-2019 
+    David Nash, under permissions granted therein. Extensions include font 
+    size, color, font dialog option flags, and coordinate mapping mode.
 
-    Caveats: These materials are available under the same provisions as found 
-    in the Win32++ copyright.txt notice.
+    Caveats: These materials are available under the same provisions as 
+    found in the Win32++ copyright.txt notice.
 
-    Programming Notes:
-        The programming standards roughly follow those established by the 
-    1997-1999 Jet Propulsion Laboratory Network Planning and Preparation 
-    Subsystem project for C++ programming.
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "FontEx.h"
 
 /*============================================================================*/
@@ -31,30 +30,19 @@ CFontEx()                                                                   /*
 *-----------------------------------------------------------------------------*/
 {
     m_txcolor = RGB(0, 0, 0);
-    m_flags = 0;
-    m_width = 0;
-    m_height = 0;
-}
-
-/*============================================================================*/
-    CFontEx::
-~CFontEx()                                                                  /*
-
-    Destructor.
-*-----------------------------------------------------------------------------*/
-{
+    m_flags   = 0;
 }
 
 /*============================================================================*/
     void CFontEx::
-Choose(CDC& dc, LPCTSTR wintitle /* =  NULL */)                             /*
+Choose(LPCTSTR wintitle /* =  NULL */)                                      /*
 
-        Select the object font typeface, characteristics, color, and size in
-    the device contex dc. The font background color is presumed to be
-    supplied by the application. Label the choice box using wintitle.
+    Select the object font typeface, characteristics, color, and size in the 
+    device context dc. The font background color is presumed to be supplied by 
+    the application. Label the choice box using wintitle.
 *-----------------------------------------------------------------------------*/
 {
-          // load the current font
+      // load the current font
     LOGFONT lf;
     m_font.GetObject(sizeof(LOGFONT), &lf);
       // open the dialog
@@ -64,7 +52,8 @@ Choose(CDC& dc, LPCTSTR wintitle /* =  NULL */)                             /*
     CHOOSEFONT cf = fd.GetParameters();
       // display effects and color boxes, and use logfont provided, as
       // well as any other initializations in flags
-    cf.Flags |= CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | m_flags;
+    cf.Flags |= CF_SCREENFONTS |CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | 
+        m_flags;
     cf.lpLogFont = &lf;
     cf.rgbColors = m_txcolor;
     fd.SetParameters(cf);
@@ -73,27 +62,25 @@ Choose(CDC& dc, LPCTSTR wintitle /* =  NULL */)                             /*
           // bring choice elements into this view
         m_font.CreateFontIndirect(fd.GetLogFont());
         m_txcolor = fd.GetColor();
-        GetSize(dc);
+        SaveFontSize();
     }
 }
 
 /*============================================================================*/
     void CFontEx::
-GetSize(CDC& dc)                                                            /*
+SaveFontSize()                                                              /*
 
-    Record the width and height of the object font in the device context dc,
-    in client device units.
+    Record the width and height of the object font in client device units.
 *-----------------------------------------------------------------------------*/
 {
-      // select the current font into the device context: save the old
-    CFont old_font = dc.SelectObject(m_font);
+      // select the current font into a temporary device context
+    CClientDC dc(NULL);
+    dc.SelectObject(m_font);
       // measure the font width and height
     TEXTMETRIC tm;
     dc.GetTextMetrics(tm);
-    m_width  = tm.tmAveCharWidth;
-    m_height = tm.tmHeight + tm.tmExternalLeading;
-      // restore entry font
-    dc.SelectObject(old_font);
+    m_fontSize.cx = tm.tmAveCharWidth;
+    m_fontSize.cy = tm.tmHeight + tm.tmExternalLeading;
 }
 
 /*============================================================================*/
@@ -101,7 +88,7 @@ GetSize(CDC& dc)                                                            /*
 Serialize(CArchive &ar)                                                     /*
 
     Save and restore the current CFontEx object in the archive ar,
-    maintaining compatability between ANSI and UNICODE versions of archived
+    maintaining compatibility between ANSI and UNICODE versions of archived
     objects. The difference between the two character representations lies
     in the lengths of the face name strings in the two modes.
 *-----------------------------------------------------------------------------*/
@@ -120,8 +107,6 @@ Serialize(CArchive &ar)                                                     /*
         ar<< face;  // store the face name part
         ar << m_txcolor;  // store the rest
         ar << m_flags;
-        ar << m_width;
-        ar << m_height;
     }
     else    // recovering
     {
@@ -131,65 +116,23 @@ Serialize(CArchive &ar)                                                     /*
         memcpy(lf.lfFaceName, face.c_str(),
             (face.GetLength() + 1) * sizeof(TCHAR));
         m_font.CreateFontIndirect((const LOGFONT&)lf);
+        SaveFontSize();
          // recover the rest
         ar >> m_txcolor;
         ar >> m_flags;
-        ar >> m_width;
-        ar >> m_height;
     }
 }
+
 
 /*============================================================================*/
         void CFontEx::
-SetDefault(CDC& dc)                                                         /*
+SetDefault()                                                                /*
 
-        Create the default app view font.
+    Create the default view font. Throw an exception if it cannot be created.
 *-----------------------------------------------------------------------------*/
 {
-      // compute the logical font height for the nDefaultFontSize
-    long lfHeight = -MulDiv(nDefaultFontSize, dc.GetDeviceCaps(LOGPIXELSY),
-        72);
-
-    int nHeight = lfHeight;     // logical height of font
-    int nWidth = 0;         // logical average character width
-    int nEscapement = 0;        // angle of escapement
-    int nOrientation = 0;           // base-line orientation angle
-    int fnWeight = FW_REGULAR;  // font weight
-    DWORD fdwItalic = 0;            // italic attribute flag
-    DWORD fdwUnderline = 0;         // underline attribute flag
-    DWORD fdwStrikeOut = 0;         // strikeout attribute flag
-    DWORD fdwCharSet = 0;           // character set identifier
-    DWORD fdwOutputPrecision = 0;   // output precision
-    DWORD fdwClipPrecision = 0;     // clipping precision
-    DWORD fdwQuality = 0;           // output quality
-    DWORD fdwPitchAndFamily = 0;    // pitch and family
-    LPCTSTR lpszFace = lpszFaceDefault; // pointer to typeface name string
-
-    HFONT hf = CreateFont
-            (
-                nHeight,                // logical height of font
-                nWidth,                 // logical average character width
-                nEscapement,            // angle of escapement
-                nOrientation,           // base-line orientation angle
-                fnWeight,               // font weight
-                fdwItalic,              // italic attribute flag
-                fdwUnderline,           // underline attribute flag
-                fdwStrikeOut,           // strikeout attribute flag
-                fdwCharSet,             // character set identifier
-                fdwOutputPrecision,     // output precision
-                fdwClipPrecision,       // clipping precision
-                fdwQuality,             // output quality
-                fdwPitchAndFamily,      // pitch and family
-                lpszFace                // pointer to typeface name string
-            );
-
-    if(hf)
-    {
-        m_font.DeleteObject();
-        m_font = CFont(hf);
-        GetSize(dc);
-        m_txcolor = rgbDefaultTxColor;
-    }
-    else
-        throw  CUserException(_T("Font creation error."));
+    m_font.CreatePointFont(10 * nDefaultFontSize, lpszFaceDefault);
+    SaveFontSize();
+    m_txcolor = rgbDefaultTxColor;
 }
+/*----------------------------------------------------------------------------*/

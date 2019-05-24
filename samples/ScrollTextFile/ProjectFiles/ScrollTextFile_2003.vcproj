@@ -134,9 +134,6 @@
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath="..\src\ScrollWnd.cpp">
-			</File>
-			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
 			<File
@@ -160,16 +157,10 @@
 				RelativePath="..\src\FontEx.h">
 			</File>
 			<File
-				RelativePath="..\src\GlobalUtils.h">
-			</File>
-			<File
 				RelativePath="..\src\Mainfrm.h">
 			</File>
 			<File
 				RelativePath="..\src\resource.h">
-			</File>
-			<File
-				RelativePath="..\src\ScrollWnd.h">
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">

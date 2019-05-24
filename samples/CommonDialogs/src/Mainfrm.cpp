@@ -442,7 +442,6 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
         SetThemeColors();
     }
       // establish communications
-    m_View.Register(&m_Doc);
     m_Doc.Register(this, &m_View);
       // populate the initial control colors (will be overwritten by
       // deserialized values)

@@ -1111,13 +1111,13 @@ DoDataExchange(CDataExchange& DX)                                       /*
 {
     CPrintPreview& pvw = GetPreviewWnd();
     DX.DDX_Control(IDC_PAGE_SETUP,  m_PageSetup);
-    DX.DDX_Text(IDC_SCREEN_WIDTH,pvw.GetSetScreenSize().cx);
+    DX.DDX_Text(IDC_SCREEN_WIDTH,   pvw.m_ScreenInches.cx);
     DX.DDV_MinMaxDouble(pvw.GetScreenSize().cx, SCREEN_MIN, SCREEN_MAX);
-    DX.DDX_Text(IDC_SCREEN_HEIGHT,  pvw.GetSetScreenSize().cy);
+    DX.DDX_Text(IDC_SCREEN_HEIGHT,  pvw.m_ScreenInches.cy);
     DX.DDV_MinMaxDouble(pvw.GetScreenSize().cy, SCREEN_MIN, SCREEN_MAX);
-    DX.DDX_Text(IDC_PREVIEW_WIDTH,  pvw.GetSetPreviewSize().cx);
+    DX.DDX_Text(IDC_PREVIEW_WIDTH,  pvw.m_PreviewInches.cx);
     DX.DDV_MinMaxDouble(pvw.GetPreviewSize().cx, PREVIEW_MIN, SCREEN_MAX);
-    DX.DDX_Text(IDC_PREVIEW_HEIGHT, pvw.GetSetPreviewSize().cy);
+    DX.DDX_Text(IDC_PREVIEW_HEIGHT, pvw.m_PreviewInches.cy);
     DX.DDV_MinMaxDouble(pvw.GetPreviewSize().cy, PREVIEW_MIN, SCREEN_MAX);
 }
 
@@ -1226,8 +1226,8 @@ OnCancel()                                                              /*
     Handle the cancel message from the preview setup dialog.
 *-----------------------------------------------------------------------------*/
 {
-    GetPreviewWnd().GetSetScreenSize() = m_InScreenInches;
-    GetPreviewWnd().GetSetPreviewSize() = m_InPreviewInches;
+    GetPreviewWnd().SetScreenSize(m_InScreenInches);
+    GetPreviewWnd().SetPreviewSize(m_InPreviewInches);
 
     CDialog::OnCancel();
 }

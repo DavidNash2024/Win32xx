@@ -848,7 +848,7 @@ namespace Win32xx
         assert(index >= 0);
 
 #ifdef _MBCS
-        LPCSTR pStr = m_str.c_str();
+        LPCSTR pStr = (LPCSTR)m_str.c_str();
         LPCSTR pSubstr = strchr(pStr + index, ch);
         return (pSubstr == NULL) ? -1 : static_cast<int>(pSubstr - pStr);
 #else

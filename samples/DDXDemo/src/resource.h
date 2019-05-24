@@ -56,6 +56,11 @@
 #ifndef RESOURCE_H
 #define RESOURCE_H
 
+// Support XP themes on older compilers
+#ifndef RT_MANIFEST
+  #define RT_MANIFEST 24
+#endif
+
   // Include the Resource IDs defined by Win32++
 #include "default_resource.h"
 

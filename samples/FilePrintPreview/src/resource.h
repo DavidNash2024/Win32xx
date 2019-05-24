@@ -5,20 +5,24 @@
 
 ********************************************************************************
 
-    Acknowledgement. This demo program was adapted from the PrintPreview 
-    sample program appearing in the Win32++ framework sample folder, created 
+    Acknowledgement. This demo program was adapted from the PrintPreview
+    sample program appearing in the Win32++ framework sample folder, created
     by  David Nash and published under the permissions granted in that work.
     The adaptation here implements the PrintView window as a separate popup
     window that appears on screen along with the regular program window.
-    This work has been developed under the co-authorship of Robert C. 
-    Tausworthe and David Nash, and released under the copyright provisions 
+    This work has been developed under the co-authorship of Robert C.
+    Tausworthe and David Nash, and released under the copyright provisions
     of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his 
-    patient direction and inspiration in the development of the classes of 
+    2005-2018. The former author acknowledges and thanks the latter for his
+    patient direction and inspiration in the development of the classes of
     these classes.
 
 *******************************************************************************/
 
+  // Support XP themes on older compilers
+#ifndef RT_MANIFEST
+  #define RT_MANIFEST 24
+#endif
 
   // Include the Resource IDs defined by Win32++, numbered 51 - 99.
   // These are prefixed by IDW_.

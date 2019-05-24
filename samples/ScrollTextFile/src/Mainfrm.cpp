@@ -21,6 +21,7 @@
 
 #include "stdafx.h"
 #include "StdApp.h"
+#include "io.h"
 
   // latest file compilation date
 CString CMainFrame::m_sCompiled_on = __DATE__;
@@ -176,7 +177,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
       // get archved values
     try
     {
-		m_nMaxMRU = TheApp().GetMaxMRUSlots();
+        m_nMaxMRU = TheApp().GetMaxMRUSlots();
         SetMRULimit(m_nMaxMRU);
           // get archived values
         CArchive ar(TheApp().GetArcvPath(), CArchive::load);
@@ -190,7 +191,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
     {
           // Process the exception and quit
         CString msg = (CString)"Error reading in frame parameters.\n"
-            + e.GetErrorString() + EOLN + e.what();
+            + e.GetErrorString() + _T("\n") + e.what();
         ::MessageBox(NULL, msg.c_str(), _T("Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
@@ -200,7 +201,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
         ::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
-    if (m_Wndpl.length isnt 0)
+    if (m_Wndpl.length != 0)
     {
         m_Wndpl.length = sizeof(WINDOWPLACEMENT);
         SetWindowPlacement(m_Wndpl);
@@ -219,7 +220,7 @@ OnFileClose()                                                               /*
     TheDoc().CloseDoc();
     CString s = LoadString(IDW_MAIN);
     SetWindowText(s);
-    m_View.SetNewAppSize();
+    m_View.SetAppSize();
     Invalidate();
     UpdateWindow();
 }
@@ -256,7 +257,7 @@ OnFileOpen()                                                                /*
 
     AddMRUEntry(fd.GetPathName());
     SetWindowText(fd.GetPathName());
-    m_View.SetNewAppSize();
+    m_View.SetAppSize();
     m_View.SetScrollPosition(CPoint(0, 0));
       // show the document
     Invalidate();
@@ -275,7 +276,7 @@ OnFileOpenMRU(UINT nIndex)                                                  /*
     if (TheDoc().OpenDoc(mru_entry))
     {
         SetWindowText(mru_entry);
-        m_View.SetNewAppSize();
+        m_View.SetAppSize();
         m_View.SetScrollPosition(CPoint(0, 0));
           // show the document
         Invalidate();
@@ -449,13 +450,13 @@ SaveRegistrySettings()                                                      /*
         ar << TheApp(); // for the app
         ar << *this;    // for the frame
         ar << m_View;   // for the view
-          // deserialization complete, ar closes on destruction
+          // deserialization complete
     }
     catch (const CWinException &e)  // catch all std::exception events
     {
           // Process the exception and quit
         CString msg = (CString)"Error writing in program parameters.\n"
-            + e.GetErrorString() + EOLN + e.what();
+            + e.GetErrorString() + _T("\n") + e.what();
         ::MessageBox(NULL, msg.c_str(), _T("Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
