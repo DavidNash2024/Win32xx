@@ -17,6 +17,10 @@
 
 *******************************************************************************/
 
+  // Support XP themes on older compilers
+#ifndef RT_MANIFEST
+  #define RT_MANIFEST 24
+#endif
 
   // include the Resource IDs defined by Win32++, numbered 51 - 99 and
   // prefixed with IDW_

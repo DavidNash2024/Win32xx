@@ -16,7 +16,6 @@
     <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\FontEx.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
-    <ClCompile Include="..\src\ScrollWnd.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp" />
     <ClCompile Include="..\src\View.cpp" />
   </ItemGroup>
@@ -73,7 +72,6 @@
     <ClInclude Include="..\src\FontEx.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\resource.h" />
-    <ClInclude Include="..\src\ScrollWnd.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\StdApp.h" />
     <ClInclude Include="..\src\targetver.h" />

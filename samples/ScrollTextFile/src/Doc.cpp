@@ -161,28 +161,6 @@ GetLength()                                                                 /*
 }
 
 /*============================================================================*/
-    CSize CDoc::
-GetMaxExtent(const CDC& dc)                                              /*
-
-    Return the maximum extent of all text lines in the document computed
-    for the current font in the given dc and the line it occurred on, as
-    a CPoint.
-*----------------------------------------------------------------------------*/
-{
-    int h_extent = 0;
-    int v_extent = 0;
-    for (UINT i = 0; i < GetLength(); i++)
-    {
-        CStringW s = m_doclines[i];
-        CSize ex;
-        ::GetTextExtentPoint32W(dc, s.c_str(), s.GetLength(), &ex);
-        h_extent = MAX(ex.cx, h_extent);
-        v_extent +=  ex.cy;
-    }
-    return CSize(h_extent, v_extent);
-}
-
-/*============================================================================*/
     CStringW CDoc::
 GetRecord(UINT rcd, UINT left /* = 0 */, UINT length /* = MAX_STRING_SIZE */) /*
 

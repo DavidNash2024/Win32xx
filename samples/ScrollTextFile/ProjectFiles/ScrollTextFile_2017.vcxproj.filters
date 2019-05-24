@@ -30,9 +30,6 @@
     <ClCompile Include="..\src\Mainfrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ScrollWnd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -53,16 +50,10 @@
     <ClInclude Include="..\src\FontEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\GlobalUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Mainfrm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ScrollWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\stdafx.h">

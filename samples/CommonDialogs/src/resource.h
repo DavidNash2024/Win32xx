@@ -94,6 +94,11 @@
 #ifndef RESOURCE_H_DEFINED
 #define RESOURCE_H_DEFINED
 
+// Support XP themes on older compilers
+#ifndef RT_MANIFEST
+  #define RT_MANIFEST 24
+#endif
+
 
   // Include the resource IDs defined by Win32++, numbered 51 - 99.
   // These are prefixed by IDW_.

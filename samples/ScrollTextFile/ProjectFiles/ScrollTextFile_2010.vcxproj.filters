@@ -38,9 +38,6 @@
     <ClCompile Include="..\src\View.cpp">
       <Filter>SourceFiles</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ScrollWnd.cpp">
-      <Filter>SourceFiles</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\FontEx.cpp">
       <Filter>SourceFiles</Filter>
     </ClCompile>
@@ -71,9 +68,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\View.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ScrollWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\FontEx.h">

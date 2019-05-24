@@ -57,43 +57,61 @@ CColorExDialog : public CColorDialog                                      /*
         CString     m_sBoxTitle;
 };
 
-
 /*============================================================================*/
     class
-CView : public CScrollWnd                                                   /*
+CView : public CScrollView                                                  /*
 
-    The application scrolling window class.
+    The application scrolling window serializable class.
 *-----------------------------------------------------------------------------*/
 {
-    public:
-        CView();
-        virtual ~CView();
+public:
+    CView();
+    virtual ~CView();
 
-        virtual CPoint  DevToScrl(CPoint) const;
-        virtual void    ClientFontChoice();
-        virtual void    OnColorChoice();
-        virtual CPoint  ScrlToDev(CPoint) const;
-        virtual void    Serialize(CArchive &ar);
-        virtual void    SetNewAppSize();
-        CDoc&           TheDoc() { return m_Doc; }
+    COLORREF GetWndBkColor() const
+    {
+        return GetScrollBkgnd().GetLogBrush().lbColor;
+    }
+    void    SetWndBkColor(COLORREF rgb)
+    {
+        SetScrollBkgnd(CBrush(rgb));
+    }
+    CSize   GetFontSize() const
+    {
+        return m_VuFont.GetSize();
+    }
+    CDoc&   TheDoc() { return m_Doc; }
+    void    ClientFontChoice();
+    void    OnColorChoice();
+    void    SetDefaults();
+    void    SetAppSize(BOOL keepPos = FALSE);
+    void    SetScrollParameters();
+    BOOL    ShowLineNumbers() { return m_ShowLineNumbers; }
+    void    ToggleLineNumbers()
+    {
+        m_ShowLineNumbers = !m_ShowLineNumbers;
+        SetAppSize(TRUE);
+    }
 
-    protected:
-        virtual void    InitCustomColors();     
-        virtual void    OnInitialUpdate();
-        virtual void    Paint(CDC& dcMem);
-        virtual void    PreCreate(CREATESTRUCT &cs);
-        virtual void    PreRegisterClass(WNDCLASS &wc);
-        virtual BOOL    PreTranslateMessage(MSG &Msg);
-        virtual void    SetScrollAppInfo();
-        virtual void    TextLineOut(CDC&, UINT, UINT, const CStringW&);
-        virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
+protected:
+    void    OnInitialUpdate();
+    void    OnDraw(CDC& dcMem);
+    LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+    void    PreCreate(CREATESTRUCT &cs);
+    void    PreRegisterClass(WNDCLASS &wc);
+    virtual void Serialize(CArchive &ar);
+    LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 
-    private:
-          // private data members
-        CDoc        m_Doc;                  // the document
-        CFontEx     m_VuFont;               // the view display font
-        COLORREF    m_rgbCustomColors[16];  // custom colors defined
-        CSize       m_doc_extent;           // the document extent
+private:
+    void    InitViewColors();
+    void    TextLineOut(CDC&, UINT, UINT, LPCWSTR) const;
+
+    // data members
+    CDoc     m_Doc;                 // the document
+    CFontEx  m_VuFont;              // the view display font
+    COLORREF m_CustomColors[16];    // custom colors defined
+    BOOL     m_ShowLineNumbers;     // display line nos if TRUE
 };
+
 /*----------------------------------------------------------------------------*/
 #endif  //CAPP_VIEW_H

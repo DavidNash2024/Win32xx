@@ -10,8 +10,8 @@
     application using the Win32++ framework, Copyright (c) 2005-2017 David Nash, 
     under permissions granted therein.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
+    Caveats: These materials are available under the same provisions as found 
+    in the Win32++ copyright.txt notice.
 
     Programming Notes:
         The programming standards roughly follow those established by the 
@@ -26,9 +26,7 @@
 *******************************************************************************/
 
 #include "resource.h"
-#include "GlobalUtils.h"
 #include "AboutBox.h"
-#include "ScrollWnd.h"
 #include "View.h"
 #include "Doc.h"
 #include "mainfrm.h"
