@@ -29,7 +29,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>DirectX11</ProjectName>
     <ProjectGuid>{B8FF81B5-9B26-4931-8353-07795FDC4043}</ProjectGuid>
-    <RootNamespace>Tutorial04</RootNamespace>
+    <RootNamespace>DirectX11</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
