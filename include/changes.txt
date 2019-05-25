@@ -9,6 +9,12 @@ Bug Fix
 
 New Features and Enhancements
 -----------------------------
+* The samples now demonstrate an improved implementation of the Doc/View
+  architecture. Previously CDoc and CView were both member variables of
+  CMainFrame. Now CView is a member variable of CMainFrame, and CDoc is 
+  a member variable of CView. This allows both CMainFrame and CView to
+  easily access CDoc, which is what we need.
+  
 * Added CHGlobal class.
   The CHGlobal class is a wrapper for a global memory handle. It automatically
   frees the global memory when it goes out of scope.

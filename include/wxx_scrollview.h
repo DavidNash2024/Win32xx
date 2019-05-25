@@ -172,6 +172,10 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(lparam);
 
         CPoint newPos = m_currentPos;
+        SCROLLINFO si;
+        ZeroMemory(&si, sizeof(si));
+        si.cbSize = sizeof(si);
+        si.fMask = SIF_TRACKPOS;
 
         switch (LOWORD(wparam))
         {
@@ -192,7 +196,9 @@ namespace Win32xx
             break;
 
         case SB_THUMBTRACK: // User dragging the scroll box.
-            newPos.x = HIWORD(wparam);
+         //   newPos.x = HIWORD(wparam);
+            GetScrollInfo(SB_HORZ, si);
+            newPos.y = si.nTrackPos;
             break;
 
         default:
@@ -342,6 +348,10 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(lparam);
 
         CPoint newPos = m_currentPos;
+        SCROLLINFO si;
+        ZeroMemory(&si, sizeof(si));
+        si.cbSize = sizeof(si);
+        si.fMask = SIF_TRACKPOS;
 
         switch (LOWORD(wparam))
         {
@@ -362,7 +372,9 @@ namespace Win32xx
                 break;
 
             case SB_THUMBTRACK: // User dragging the scroll box.
-                newPos.y = HIWORD(wparam);
+            //    newPos.y = HIWORD(wparam);
+                GetScrollInfo(SB_VERT, si);
+                newPos.y = si.nTrackPos;
                 break;
 
             default:
