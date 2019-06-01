@@ -351,6 +351,10 @@
 			Name="Win32++"
 			>
 			<File
+				RelativePath="..\..\..\include\default_resource.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_appcore.h"
 				>
 			</File>
@@ -440,6 +444,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_mutex.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_preview.h"
 				>
 			</File>
 			<File

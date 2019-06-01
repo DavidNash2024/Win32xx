@@ -189,10 +189,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\PreviewDialog.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\RichView.cpp"
 				>
 			</File>
@@ -228,10 +224,6 @@
 			>
 			<File
 				RelativePath="..\src\Mainfrm.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\PreviewDialog.h"
 				>
 			</File>
 			<File
@@ -358,6 +350,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_mutex.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_preview.h"
 				>
 			</File>
 			<File

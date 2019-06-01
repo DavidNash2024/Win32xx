@@ -21,9 +21,6 @@
     <ClCompile Include="..\src\Mainfrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\PreviewDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\RichView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,9 +33,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Mainfrm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\PreviewDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\resource.h">
@@ -55,6 +49,9 @@
     </ClInclude>
     <ClInclude Include="..\src\TextApp.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\default_resource.h">
+      <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_appcore.h">
       <Filter>Win32++</Filter>
@@ -123,6 +120,9 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_mutex.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_preview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h">

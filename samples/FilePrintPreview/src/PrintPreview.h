@@ -2,7 +2,7 @@
 ********************************************************************************
 
     Declaration and implementation of the DSize class and declaration of 
-    the CPreviewPane, CPrintPreview, and PreviewSetup classes.
+    the CPreviewPaneEx, CPrintPreviewEx, and PreviewSetup classes.
 
 ********************************************************************************
 
@@ -26,8 +26,8 @@
 #include "resource.h"
 #include "PrintUtil.h"
 
-class CPrintPreview;
-class CPreviewPane;
+class CPrintPreviewEx;
+class CPreviewPaneEx;
 
 /*=============================================================================*/
     class
@@ -75,9 +75,9 @@ PreviewSetup    : public CDialog                                        /*
         
     protected:
         virtual void    DoDataExchange(CDataExchange& DX);
-        CPrintPreview&  GetPreviewWnd()
+        CPrintPreviewEx&  GetPreviewWnd()
                             { HWND h = ::GetParent(*this);
-                              return *(CPrintPreview*)GetCWndPtr(h);}
+                              return *(CPrintPreviewEx*)GetCWndPtr(h);}
         virtual BOOL    OnInitDialog();
         virtual INT_PTR DialogProc(UINT uMsg, WPARAM, LPARAM);
         virtual BOOL    OnCommand(WPARAM, LPARAM);
@@ -106,15 +106,15 @@ PreviewSetup    : public CDialog                                        /*
     
 /*=============================================================================*/
     class
-CPreviewPane : public CScrollView                                       /*
+CPreviewPaneEx : public CScrollView                                       /*
 
     A custom class that renders a scrollable bitmap in the client area of
-    the CPrintPreview dialog window.
+    the CPrintPreviewEx dialog window.
 *------------------------------------------------------------------------------*/
 {
     public:
-        CPreviewPane();
-        virtual ~CPreviewPane() {}
+        CPreviewPaneEx();
+        virtual ~CPreviewPaneEx() {}
 
         void    SetBitmap(CBitmap Bitmap) { m_Bitmap = Bitmap; }
         void    SetPaneZoomState(int val)
@@ -123,9 +123,9 @@ CPreviewPane : public CScrollView                                       /*
         void    ShowScrollBars(BOOL b)    {m_ShowScrollBars = b;}
 
     protected:
-        CPrintPreview&  GetPreviewWnd()
+        CPrintPreviewEx&  GetPreviewWnd()
                             { HWND h = ::GetParent(*this);
-                              return *(CPrintPreview*)GetCWndPtr(h);}
+                              return *(CPrintPreviewEx*)GetCWndPtr(h);}
         virtual void    OnDraw(CDC& dc);
         virtual BOOL    OnEraseBkgnd(CDC&);
         virtual LRESULT OnHScroll(UINT , WPARAM , LPARAM );
@@ -146,11 +146,11 @@ CPreviewPane : public CScrollView                                       /*
 
 /*******************************************************************************
 
-    Declaration of the CPrintPreview class.
+    Declaration of the CPrintPreviewEx class.
 
 *=============================================================================*/
     class
-CPrintPreview : public CDialog                                         /*
+CPrintPreviewEx : public CDialog                                         /*
 
     The print preview dialog window class.
 *-----------------------------------------------------------------------------*/
@@ -158,11 +158,11 @@ CPrintPreview : public CDialog                                         /*
 	friend class PreviewSetup;
 
     public:
-        CPrintPreview(UINT nResID, DWORD dwFlags = HIDE_HELP);
-        virtual ~CPrintPreview();
+		CPrintPreviewEx(UINT nResID, DWORD dwFlags = HIDE_HELP);
+        virtual ~CPrintPreviewEx();
 
         BOOL    ClosePreview();
-        CPreviewPane& GetPreviewPane()        {return m_PreviewPane;}
+        CPreviewPaneEx& GetPreviewPane()        {return m_PreviewPane;}
         DSize   GetPreviewSize() const        {return m_PreviewInches;}
 		void    SetPreviewSize(DSize size)    {m_PreviewInches = size;}
         DSize   GetPrinterScreenRatio() const {return m_PrinterScreenResRatio;}
@@ -244,7 +244,7 @@ CPrintPreview : public CDialog                                         /*
         CString     m_sDocPath;             // previewed document path
         CDC         m_dcPrinter;            // printer context
         CMemDC      m_dcMem;                // memory context
-        CPreviewPane m_PreviewPane;         // preview window
+        CPreviewPaneEx m_PreviewPane;         // preview window
         UINT        m_nCurrentPage;         // page number, zero based
         UINT        m_nNumPreviewPages;     // total pages
         double      m_shrink;               // printer/screen ratio

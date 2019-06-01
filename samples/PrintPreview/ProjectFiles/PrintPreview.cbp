@@ -180,8 +180,6 @@
 		</VirtualTargets>
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
-		<Unit filename="../src/PreviewDialog.cpp" />
-		<Unit filename="../src/PreviewDialog.h" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

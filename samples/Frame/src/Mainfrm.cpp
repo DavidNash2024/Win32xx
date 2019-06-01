@@ -36,6 +36,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_FILE_OPEN:         return OnFileOpen();
     case IDM_FILE_SAVE:         return OnFileSave();
     case IDM_FILE_SAVEAS:       return OnFileSave();
+	case IDM_FILE_PREVIEW:      return OnFilePreview();
     case IDM_FILE_PRINT:        return OnFilePrint();
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
@@ -78,6 +79,9 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
+	// Show the menu and toolbar
+	ShowMenu(TRUE);
+	ShowToolBar(TRUE);
 
     TRACE("Frame created\n");
 }
@@ -108,6 +112,50 @@ BOOL CMainFrame::OnFileSave()
     return TRUE;
 }
 
+BOOL CMainFrame::OnFilePreview()
+// Previews a print job before sending it to the printer
+{
+	try
+	{
+		// Get the device contect of the default or currently chosen printer
+		CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+		CDC printerDC = printDlg.GetPrinterDC();
+		if (printerDC.GetHDC() != 0)        // Verify a print preview is possible
+		{
+			// Create the preview window if required
+			if (!m_preview.IsWindow())
+				m_preview.Create(*this);
+
+			// Specify the source of the PrintPage function
+			m_preview.SetSource(*this);
+
+			// Set the preview's owner (for messages)
+			m_preview.DoPrintPreview(*this);
+
+			// Hide the menu and toolbar
+			ShowMenu(FALSE);
+			ShowToolBar(FALSE);
+
+			// Swap views
+			SetView(m_preview);
+		}
+		else
+		{
+			MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
+		}
+	}
+
+	catch (const CException& e)
+	{
+		// Display a message box indicating why print preview failed.
+		CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
+		CString type("Print Preview Failed");
+		::MessageBox(NULL, message, type, MB_ICONWARNING);
+	}
+
+	return TRUE;
+}
+
 BOOL CMainFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
@@ -122,6 +170,7 @@ BOOL CMainFrame::OnFilePrint()
 
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
+		// Initialize the print job and call PrintPage;
 
         return (result == IDOK);   // boolean expression
     }
@@ -146,6 +195,16 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
+void CMainFrame::OnPreviewClose()
+{
+	// Swap the view
+	SetView(m_view);
+
+	// Show the menu and toolbar
+	ShowMenu(TRUE);
+	ShowToolBar(TRUE);
+}
+
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
     // This function is called before the frame is created.
@@ -159,6 +218,12 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     CFrame::PreCreate(cs);
 
     // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
+}
+
+void CMainFrame::PrintPage(CDC&, UINT)
+{
+	// This function is called by m_preview.
+	// Code to render the printed page goes here.
 }
 
 void CMainFrame::SetupMenuIcons()
@@ -188,10 +253,16 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//      Add case statements for each messages to be handled here
-//  }
+    switch (msg)
+    {
+    case UWM_PREVIEWCLOSE:    // Preview Close button pressed.
+	    OnPreviewClose();
+	    break;
+
+    case UWM_PRINTNOW:        // Preview Print button pressed.
+	    //  QuickPrint();
+	    break;
+    }
 
     // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);

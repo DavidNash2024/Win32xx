@@ -206,6 +206,12 @@
     <ClInclude Include="..\..\..\include\wxx_wincore0.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\default_resource.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_preview.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc">

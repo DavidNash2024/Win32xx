@@ -196,7 +196,7 @@ namespace Win32xx
             break;
 
         case SB_THUMBTRACK: // User dragging the scroll box.
-         //   newPos.x = HIWORD(wparam);
+            // Retrieve 32 bit track position
             GetScrollInfo(SB_HORZ, si);
             newPos.y = si.nTrackPos;
             break;
@@ -372,7 +372,7 @@ namespace Win32xx
                 break;
 
             case SB_THUMBTRACK: // User dragging the scroll box.
-            //    newPos.y = HIWORD(wparam);
+                // Retrieve 32 bit track position
                 GetScrollInfo(SB_VERT, si);
                 newPos.y = si.nTrackPos;
                 break;

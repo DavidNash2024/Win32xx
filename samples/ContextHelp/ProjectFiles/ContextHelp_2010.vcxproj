@@ -109,22 +109,6 @@
     <ClCompile Include="..\src\View.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\wxx_dockframe.h" />
-    <ClInclude Include="..\..\..\include\wxx_filefind.h" />
-    <ClInclude Include="..\..\..\include\wxx_folderdialog.h" />
-    <ClInclude Include="..\..\..\include\wxx_metafile.h" />
-    <ClInclude Include="..\..\..\include\wxx_mutex.h" />
-    <ClInclude Include="..\..\..\include\wxx_scrollview.h" />
-    <ClInclude Include="..\src\App.h" />
-    <ClInclude Include="..\src\AppHelp.h" />
-    <ClInclude Include="..\src\ContextHelp.h" />
-    <ClInclude Include="..\src\Doc.h" />
-    <ClInclude Include="..\src\HelpAbout.h" />
-    <ClInclude Include="..\src\Mainfrm.h" />
-    <ClInclude Include="..\src\resource.h" />
-    <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\targetver.h" />
-    <ClInclude Include="..\src\View.h" />
     <ClInclude Include="..\..\..\include\default_resource.h" />
     <ClInclude Include="..\..\..\include\wxx_appcore.h" />
     <ClInclude Include="..\..\..\include\wxx_appcore0.h" />
@@ -134,9 +118,12 @@
     <ClInclude Include="..\..\..\include\wxx_cstring.h" />
     <ClInclude Include="..\..\..\include\wxx_ddx.h" />
     <ClInclude Include="..\..\..\include\wxx_dialog.h" />
+    <ClInclude Include="..\..\..\include\wxx_dockframe.h" />
     <ClInclude Include="..\..\..\include\wxx_docking.h" />
     <ClInclude Include="..\..\..\include\wxx_exception.h" />
     <ClInclude Include="..\..\..\include\wxx_file.h" />
+    <ClInclude Include="..\..\..\include\wxx_filefind.h" />
+    <ClInclude Include="..\..\..\include\wxx_folderdialog.h" />
     <ClInclude Include="..\..\..\include\wxx_frame.h" />
     <ClInclude Include="..\..\..\include\wxx_gdi.h" />
     <ClInclude Include="..\..\..\include\wxx_imagelist.h" />
@@ -144,6 +131,9 @@
     <ClInclude Include="..\..\..\include\wxx_mdi.h" />
     <ClInclude Include="..\..\..\include\wxx_menu.h" />
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
+    <ClInclude Include="..\..\..\include\wxx_metafile.h" />
+    <ClInclude Include="..\..\..\include\wxx_mutex.h" />
+    <ClInclude Include="..\..\..\include\wxx_preview.h" />
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h" />
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
     <ClInclude Include="..\..\..\include\wxx_rebar.h" />
@@ -151,6 +141,7 @@
     <ClInclude Include="..\..\..\include\wxx_regkey.h" />
     <ClInclude Include="..\..\..\include\wxx_ribbon.h" />
     <ClInclude Include="..\..\..\include\wxx_richedit.h" />
+    <ClInclude Include="..\..\..\include\wxx_scrollview.h" />
     <ClInclude Include="..\..\..\include\wxx_shared_ptr.h" />
     <ClInclude Include="..\..\..\include\wxx_socket.h" />
     <ClInclude Include="..\..\..\include\wxx_statusbar.h" />
@@ -165,6 +156,16 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
+    <ClInclude Include="..\src\App.h" />
+    <ClInclude Include="..\src\AppHelp.h" />
+    <ClInclude Include="..\src\ContextHelp.h" />
+    <ClInclude Include="..\src\Doc.h" />
+    <ClInclude Include="..\src\HelpAbout.h" />
+    <ClInclude Include="..\src\Mainfrm.h" />
+    <ClInclude Include="..\src\resource.h" />
+    <ClInclude Include="..\src\stdafx.h" />
+    <ClInclude Include="..\src\targetver.h" />
+    <ClInclude Include="..\src\View.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />

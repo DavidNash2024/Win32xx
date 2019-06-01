@@ -361,6 +361,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_preview.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_printdialogs.h"
 				>
 			</File>
@@ -434,14 +438,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_treeview.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\wxx_wceframe.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\wxx_wcestddef.h"
 				>
 			</File>
 			<File

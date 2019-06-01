@@ -15,6 +15,26 @@ New Features and Enhancements
   a member variable of CView. This allows both CMainFrame and CView to
   easily access CDoc, which is what we need.
   
+* Added CPrintPreview.
+  The CPrintPreview displays a preview of the print job before it is sent to the
+  printer.
+  
+  To use CPrintPreview, do the following:
+  1) Declare CPrintPreview as CMainFrame's member, specifying the source's
+     class as the template type. The source is where the PrintPage function
+     resides.
+  2) Use SetSource to specify to where to call the PrintPage function.
+  3) Declare a PrintPage function in the source for printing and previewing:
+      void  PrintPage(CDC& dc, UINT page);
+  4) Call CPrintPreview's DoPrintPreview(HWND ownerWindow, UINT maxPage = 1)
+     to initiate the print preview.
+  5) Create the preview window, and swap it into the frame's view.
+  6) Handle UWM_PREVIEWCLOSE to swap back to the default view when the preview
+     closes.
+	 
+  Refer to the scribble and notepad samples for a demonstration of how to use
+  CPrintPreview.
+  
 * Added CHGlobal class.
   The CHGlobal class is a wrapper for a global memory handle. It automatically
   frees the global memory when it goes out of scope.
@@ -52,7 +72,6 @@ Added VS2017 project files to all samples and tutorials
 Modified ::GetApp  global function               Now returns a pointer to CWinApp.
 
 Updated the tutorials 
-
 
 
 Version 8.6
@@ -107,7 +126,7 @@ New Features and Enhancements
   - topright:     Positions top right
   - bottomleft:   Positions bottom left
   - bottomright:  Positions bottom right
-  - center:	   Positions proportionally
+  - center:       Positions proportionally
   - leftcenter:   Positions proportionally along the left side
   - rightcenter:  Positions proportionally along the right side
   - topcenter:    Positions proportionally along the top side

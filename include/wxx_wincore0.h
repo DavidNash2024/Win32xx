@@ -88,6 +88,10 @@
 #define UWN_TABCLOSE          (WM_APP + 0x3F28) // Notification - sent by CTab when a tab is about to be closed
 #define UWN_UNDOCKED          (WM_APP + 0x3F29) // Notification - sent by docker when undocked
 
+// docking messages
+#define UWM_PREVIEWCLOSE      (WM_APP + 0x3F2A) // Preview window Close button pressed.
+#define UWM_PRINTNOW          (WM_APP + 0x3F2B) // Print the previewed document.  
+
 
 namespace Win32xx
 {
