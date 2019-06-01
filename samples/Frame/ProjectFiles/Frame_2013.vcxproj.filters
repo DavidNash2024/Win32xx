@@ -81,6 +81,12 @@
     <ClInclude Include="..\..\..\include\wxx_menubar.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_preview.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>	
+    <ClInclude Include="..\..\..\include\wxx_printdialogs.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>	
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h">
       <Filter>Win32++</Filter>
     </ClInclude>

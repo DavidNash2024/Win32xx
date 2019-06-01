@@ -125,9 +125,6 @@
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath="..\src\PreviewDialog.cpp">
-			</File>
-			<File
 				RelativePath="..\src\RichView.cpp">
 			</File>
 			<File
@@ -143,9 +140,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\src\Mainfrm.h">
-			</File>
-			<File
-				RelativePath="..\src\PreviewDialog.h">
 			</File>
 			<File
 				RelativePath="..\src\resource.h">

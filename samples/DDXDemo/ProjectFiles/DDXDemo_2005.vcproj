@@ -307,35 +307,7 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\..\include\dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\frame.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\gdi.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\menubar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\rebar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\statusbar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\toolbar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\wincore.h"
+				RelativePath="..\..\..\include\default_resource.h"
 				>
 			</File>
 			<File
@@ -431,6 +403,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_preview.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_printdialogs.h"
 				>
 			</File>
@@ -504,6 +480,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wceframe.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wcestddef.h"
 				>
 			</File>
 			<File

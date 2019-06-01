@@ -84,6 +84,7 @@
 #include <wxx_menubar.h>        // Add CMenuBar
 #include <wxx_metafile.h>       // Add CMetaFile, CEnhMetaFile
 #include <wxx_mutex.h>          // Add CEvent, CMutex, CSemaphore
+#include <wxx_preview.h>        // Add CPrintPreview
 #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintSetupDialog
 #include <wxx_propertysheet.h>  // Add CPropertyPage, CPropertySheet
 #include <wxx_rebar.h>          // Add CRebar

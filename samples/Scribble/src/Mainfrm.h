@@ -18,14 +18,15 @@ public:
     CDoc& GetDoc() { return m_view.GetDoc(); }
     void LoadFile(LPCTSTR fileName);
 
+    void OnPreviewClose();
     LRESULT OnDropFile(WPARAM wparam);
-
     void OnFileExit();
     void OnFileMRU(WPARAM wparam);
     void OnFileNew();
     void OnFileOpen();
     void OnFileSave();
     void OnFileSaveAs();
+    void OnFilePreview();
     void OnFilePrint();
     void OnPenColor();
 
@@ -38,6 +39,7 @@ protected:
 
 private:
     CView m_view;
+    CPrintPreview<CView> m_preview;
     CString m_pathName;
 
 };

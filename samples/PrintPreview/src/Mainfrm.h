@@ -5,7 +5,6 @@
 #define MAINFRM_H
 
 #include "RichView.h"
-#include "PreviewDialog.h"
 
 
 // Declaration of the CMainFrame class
@@ -15,9 +14,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CRect GetPrintRect();
-    CRect GetPageRect();
-    CRichEdit& GetRichView() { return m_richView; }
+    CRichView& GetRichView() { return m_richView; }
 
     static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
     static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
@@ -42,7 +39,6 @@ public:
     BOOL OnOptionsFont();
     BOOL OnOptionsWrap();
 
-    void QuickPrint(CPrintDialog& printDlg);
     BOOL ReadFile(LPCTSTR fileName);
     void SaveModifiedText();
     void SetPathName(LPCTSTR fullFileName);
@@ -61,7 +57,7 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
-    CPrintPreview  m_printPreview;
+    CPrintPreview<CRichView>  m_printPreview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
     CString m_pathName;
     bool m_isWrapped;

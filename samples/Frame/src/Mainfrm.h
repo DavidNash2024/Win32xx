@@ -19,6 +19,9 @@ public:
     BOOL    OnFileOpen();
     BOOL    OnFilePrint();
     BOOL    OnFileSave();
+	BOOL    OnFilePreview();
+	void    OnPreviewClose();
+	void    PrintPage(CDC&, UINT);
 
 protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
@@ -32,6 +35,7 @@ protected:
 
 private:
     CView m_view;
+	CPrintPreview<CMainFrame> m_preview;
 };
 
 #endif //MAINFRM_H

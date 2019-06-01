@@ -35,6 +35,7 @@
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
     <ClInclude Include="..\..\..\include\wxx_metafile.h" />
     <ClInclude Include="..\..\..\include\wxx_mutex.h" />
+    <ClInclude Include="..\..\..\include\wxx_preview.h" />
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h" />
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
     <ClInclude Include="..\..\..\include\wxx_rebar.h" />
@@ -55,6 +56,7 @@
     <ClInclude Include="..\..\..\include\wxx_toolbar.h" />
     <ClInclude Include="..\..\..\include\wxx_treeview.h" />
     <ClInclude Include="..\..\..\include\wxx_wceframe.h" />
+    <ClInclude Include="..\..\..\include\wxx_wcestddef.h" />
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />

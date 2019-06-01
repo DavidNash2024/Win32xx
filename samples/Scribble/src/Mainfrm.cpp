@@ -23,6 +23,16 @@ CMainFrame::~CMainFrame()
 {
 }
 
+void CMainFrame::OnPreviewClose()
+{
+	// Swap the view
+	SetView(m_view);
+
+	// Show the menu and toolbar
+	ShowMenu(TRUE);
+	ShowToolBar(TRUE);
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Process the messages from the Menu and Tool Bar
@@ -36,6 +46,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
     case IDM_FILE_SAVE:         OnFileSave();       return TRUE;
     case IDM_FILE_SAVEAS:       OnFileSaveAs();     return TRUE;
+    case IDM_FILE_PREVIEW:      OnFilePreview();    return TRUE;
     case IDM_FILE_PRINT:        OnFilePrint();      return TRUE;
     case IDM_PEN_COLOR:         OnPenColor();       return TRUE;
     case IDM_FILE_EXIT:         OnFileExit();       return TRUE;
@@ -229,6 +240,47 @@ void CMainFrame::OnFileSaveAs()
 
 }
 
+void CMainFrame::OnFilePreview()
+{
+    try
+    {   
+        // Get the device contect of the default or currently chosen printer
+        CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+        CDC printerDC = printDlg.GetPrinterDC();
+        if (printerDC.GetHDC() != 0)        // Verify a print preview is possible
+        {
+			// Create the preview window if required
+            if (!m_preview.IsWindow())
+                m_preview.Create(*this);
+            
+			// Specify the source of the PrintPage function
+			m_preview.SetSource(m_view);
+			
+			// Set the preview's owner (for notification messages)
+			m_preview.DoPrintPreview(*this);
+
+            // Hide the menu and toolbar
+            ShowMenu(FALSE);
+            ShowToolBar(FALSE);
+
+            // Swap views
+            SetView(m_preview);
+        }
+        else
+        {
+            MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
+        }
+    }
+
+    catch (const CException& e)
+    {
+        // Display a message box indicating why print preview failed.
+        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
+        CString type("Print Preview Failed");
+        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+    }
+}
+
 // Sends the bitmap extracted from the View window to a printer of your choice
 // This function provides a useful reference for printing bitmaps in general
 void CMainFrame::OnFilePrint()
@@ -236,14 +288,14 @@ void CMainFrame::OnFilePrint()
     try
     {
         // print the view window
-        m_view.Print();
+        m_view.Print(_T("Scribble Output"));
     }
     
     catch (const CException& e)
     {
         // Display a message box indicating why printing failed.
         CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
-        CString type = CString(e.what());
+        CString type("Print Failed");
         ::MessageBox(NULL, message, type, MB_ICONWARNING);
     }
 }
@@ -259,6 +311,9 @@ void CMainFrame::OnInitialUpdate()
     {
         GetDoc().FileOpen(args[1]);
     }
+
+    ShowMenu(TRUE);
+    ShowToolBar(TRUE);
 }
 
 void CMainFrame::OnPenColor()
@@ -311,6 +366,14 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch (msg)
     {
     case UWM_DROPFILE:      return OnDropFile(wparam);
+
+    case UWM_PREVIEWCLOSE:    // Preview Close button pressed.
+        OnPreviewClose();
+        break;
+
+    case UWM_PRINTNOW:        // Preview Print button pressed.
+        m_view.QuickPrint(_T("Scribble Output"));
+        break;
     }
 
     //Use the default message handling for remaining messages

@@ -44,7 +44,9 @@ public:
     BOOL OnFileNewPlain();
 	BOOL OnFileNewRich();
     BOOL OnFileOpen();
+	BOOL OnFilePreview();
     BOOL OnFilePrint();
+	BOOL OnFileQuickPrint();
     BOOL OnFileSaveAs();
     BOOL OnFileSave();
     BOOL OnOptionsFont();
@@ -62,6 +64,7 @@ public:
 protected:
     virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+	virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
@@ -70,6 +73,7 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
+	CPrintPreview<CRichView>  m_printPreview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
     CString m_oldStatus[4];             // Array of CString holding old status;
     CString m_pathName;

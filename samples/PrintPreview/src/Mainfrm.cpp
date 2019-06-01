@@ -5,9 +5,13 @@
 #include "mainfrm.h"
 #include "resource.h"
 
+#ifndef SF_USECODEPAGE
+  #define SF_USECODEPAGE	0x0020
+#endif
+
 
 // definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_printPreview(IDD_PRINTPREVIEW), m_isWrapped(false)
+CMainFrame::CMainFrame() : m_isWrapped(false)
 {
     SetView(m_richView);
 
@@ -21,51 +25,6 @@ CMainFrame::CMainFrame() : m_printPreview(IDD_PRINTPREVIEW), m_isWrapped(false)
 
 CMainFrame::~CMainFrame()
 {
-}
-
-CRect CMainFrame::GetPageRect()
-// Returns a CRect of the entire printable area. Units are measured in twips.
-{
-    CRect rcPage;
-
-    // Get the device contect of the default or currently chosen printer
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    CDC dcPrinter = printDlg.GetPrinterDC();
-
-    // Get the printer page specifications
-    int horizRes = dcPrinter.GetDeviceCaps(HORZRES);
-    int vertRes = dcPrinter.GetDeviceCaps(VERTRES);
-    int logPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);
-    int logPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);
-
-    int margin = 200;   // 1440 TWIPS = 1 inch.
-    int tpi = 1440;     // twips per inch 
-
-    rcPage.left = margin;
-    rcPage.top = margin;
-    rcPage.right = (horizRes / logPixelsX) * tpi - margin;
-    rcPage.bottom = (vertRes / logPixelsY) * tpi - margin;
-
-    return rcPage;
-}
-
-CRect CMainFrame::GetPrintRect()
-// Returns the print area within the page. Units are measured in twips.
-{
-    int margin = 200;
-
-    CRect rcPage = GetPageRect();
-    CRect rcPrintArea;
-
-    if (!rcPage.IsRectEmpty())
-    {
-        rcPrintArea.left = rcPage.left + margin;
-        rcPrintArea.top = rcPage.top + margin;
-        rcPrintArea.right = rcPage.right - margin;
-        rcPrintArea.bottom = rcPage.bottom - margin;
-    }
-
-    return rcPrintArea;
 }
 
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
@@ -158,11 +117,10 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
-
-    // Create the PrintPreview dialog. It is initially hidden.  
-    m_printPreview.Create(*this);
-
-    // Get the name of the default or currently chosen printer
+	// Create the PrintPreview dialog. It is initially hidden.  
+	m_printPreview.Create(*this);
+	
+	// Get the name of the default or currently chosen printer
     CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
     if (printDlg.GetDefaults())
     {
@@ -274,20 +232,21 @@ BOOL CMainFrame::OnFilePreview()
         return FALSE;
     }
 
-    m_printPreview.DoPrintPreview(GetPageRect(), GetPrintRect());
-    SetView(m_printPreview);
+	// Setup the print preview.
+	m_printPreview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
+	m_printPreview.UseHalfTone(TRUE);       // Trun of Half tone for text previewing
 
-    // Supress Frame drawing
-    SetRedraw(FALSE);
+    // Set the preview's owner (for messages), and number of pages.
+    UINT maxPage = m_richView.CollatePages();
+    m_printPreview.DoPrintPreview(*this, maxPage);
     
     // Hide the menu and toolbar
     ShowMenu(FALSE);
     ShowToolBar(FALSE);
     
-    // Re-enable Frame drawing
-    SetRedraw(TRUE);
+    // Swap views
+    SetView(m_printPreview);
 
-    RedrawWindow();
     return TRUE;
 }
 
@@ -315,34 +274,15 @@ BOOL CMainFrame::OnFileOpen()
 
 BOOL CMainFrame::OnFilePrint()
 {
-    // Prepare the print dialog
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    PRINTDLG pd = printDlg.GetParameters();
-    pd.nCopies = 1;
-    pd.nFromPage = 0xFFFF;
-    pd.nToPage = 0xFFFF;
-    pd.nMinPage = 1;
-    pd.nMaxPage = 0xFFFF;
-    printDlg.SetParameters(pd);
-
     try
     {
-        // Display the print dialog
-        if (printDlg.DoModal(*this) == IDOK)
-        {
-            CString status = _T("Printer: ") + printDlg.GetDeviceName();
-            SetStatusText(status);
-            QuickPrint(printDlg);
-        }
-        else
-            return FALSE;
+        m_richView.DoPrint(m_pathName);
     }
 
-    catch (const CWinException& /* e */)
+    catch (const CWinException&  /*e*/ )
     {
         // No default printer
         MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-        return FALSE;
     }
 
     return TRUE;
@@ -383,10 +323,7 @@ BOOL CMainFrame::OnFilePrintSetup()
 
 BOOL CMainFrame::OnFileQuickPrint()
 {
-    // Acquire the currently selected printer and page settings
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-
-    QuickPrint(PrintDlg);
+    m_richView.QuickPrint(m_pathName);
     return TRUE;
 }
 
@@ -423,6 +360,10 @@ void CMainFrame::OnInitialUpdate()
 {
     DragAcceptFiles(TRUE);
     SetWindowTitle();
+
+	// Show the menu and toolbar
+	ShowMenu(TRUE);
+	ShowToolBar(TRUE);
 }
 
 void CMainFrame::OnMenuUpdate(UINT id)
@@ -479,68 +420,6 @@ BOOL CMainFrame::OnOptionsWrap()
     m_richView.SetTargetDevice(NULL, m_isWrapped);
     m_isWrapped = !m_isWrapped;
     return TRUE;
-}
-
-void CMainFrame::QuickPrint(CPrintDialog& printDlg)
-// Print the document without bringing up a print dialog
-{
-    CDC printerDC = printDlg.GetPrinterDC();
-
-    // Assign values to the FORMATRANGE struct
-    FORMATRANGE fr;
-    ZeroMemory(&fr, sizeof(fr));
-    fr.hdc = printerDC;
-    fr.hdcTarget = printerDC;
-
-    fr.rcPage = GetPageRect();
-    fr.rc = GetPrintRect();
-
-    // Default the range of text to print as the entire document.
-    fr.chrg.cpMin = 0;
-    fr.chrg.cpMax = -1;
-
-    // Start print job.
-    DOCINFO di;
-    ZeroMemory(&di, sizeof(di));
-    di.cbSize = sizeof(DOCINFO);
-    di.lpszDocName = m_pathName;
-    di.lpszOutput = NULL;   // Do not print to file.
-    printerDC.StartDoc(&di);
-
-    LONG lTextLength;   // Length of document.
-    LONG lTextPrinted;  // Amount of document printed.
-
-    // Find out real size of document in characters.
-    lTextLength = m_richView.GetTextLengthEx(GTL_NUMCHARS);
-
-    do
-    {
-        // Start the page.
-        printerDC.StartPage();
-
-        // Print as much text as can fit on a page. The return value is
-        // the index of the first character on the next page. Using TRUE
-        // for the wParam parameter causes the text to be printed.
-        lTextPrinted = m_richView.FormatRange(fr, TRUE);
-        m_richView.DisplayBand(fr.rc);
-
-        // Print last page.
-        printerDC.EndPage();
-
-        // If there is more text to print, adjust the range of characters
-        // to start printing at the first character of the next page.
-        if (lTextPrinted < lTextLength)
-        {
-            fr.chrg.cpMin = lTextPrinted;
-            fr.chrg.cpMax = -1;
-        }
-    } while (lTextPrinted < lTextLength);
-
-    // Tell the control to release cached information.
-    m_richView.FormatRange();
-
-    // End the print job
-    printerDC.EndDoc();
 }
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
@@ -637,27 +516,19 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_CHANGEVIEW:
+    case UWM_PREVIEWCLOSE:
+        // Swap the view
         SetView(m_richView);
-
-        // Supress Frame drawing
-        SetRedraw(FALSE);
 
         // Show the menu and toolbar
         ShowMenu(TRUE);
         ShowToolBar(TRUE);
 
-        // Re-enable frame drawing
-        SetRedraw(TRUE);
-
-        RedrawWindow();
         break;
 
     case UWM_PRINTNOW:
-        {
-            CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-            QuickPrint(PrintDlg);
-        }
+        m_richView.QuickPrint(m_pathName);
+        break;
     }
 
     return WndProcDefault(msg, wparam, lparam);
@@ -675,10 +546,9 @@ BOOL CMainFrame::WriteFile(LPCTSTR fileName)
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.dwError = 0;
         es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamOutCallback);
-    //    m_richView.StreamOut(SF_TEXT, es);
 
         // Support saving UTF-8 text (without BOM)
-    m_richView.StreamOut((CP_UTF8 << 16) | SF_USECODEPAGE | SF_TEXT, es);
+        m_richView.StreamOut((CP_UTF8 << 16) | SF_USECODEPAGE | SF_TEXT, es);
 
         //Clear the modified text flag
         m_richView.SetModify(FALSE);

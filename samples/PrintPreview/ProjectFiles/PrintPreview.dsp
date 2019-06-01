@@ -99,10 +99,6 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\PreviewDialog.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\RichView.cpp
 # End Source File
 # Begin Source File
@@ -120,10 +116,6 @@ SOURCE=..\src\TextApp.cpp
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\PreviewDialog.h
 # End Source File
 # Begin Source File
 

@@ -71,6 +71,13 @@
 #define IDW_SDRIGHT                      89
 #define IDW_SDTOP                        90
 
+// Print Preview Resources
+#define IDW_PRINTPREVIEW                 91
+#define IDW_PREVIEWPRINT                 92
+#define IDW_PREVIEWPREV                  93
+#define IDW_PREVIEWNEXT                  94
+#define IDW_PREVIEWCLOSE                 95
+#define IDW_PREVIEWPANE                  96
 
 // A generic ID for any static control
 #ifndef IDC_STATIC

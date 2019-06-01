@@ -32,21 +32,12 @@
 #define IDM_OPTIONS_WRAP                151
 #define IDM_HELP_ABOUT                  155
 
-#define IDD_PRINTPREVIEW                160
-#define IDC_BUTTONPRINT                 161
-#define IDC_BUTTONPREV                  162
-#define IDC_BUTTONNEXT                  163
-#define IDC_BUTTONCLOSE                 164
-#define IDC_CUSTOM1                     165
+#define IDI_PRINTPREVIEW                160
+#define IDI_PRINTSETUP                  161
+#define IDI_QUICKPRINT                  162
+#define IDI_PRINT                       163
 
-#define IDI_PRINTPREVIEW                170
-#define IDI_PRINTSETUP                  171
-#define IDI_QUICKPRINT                  172
-#define IDI_PRINT                       173
-
-// user defined window messages
-#define UWM_CHANGEVIEW     (WM_APP + 0x0001)    // wParam and lParam are ignored
-#define UWM_PRINTNOW       (WM_APP + 0x0002)    // wParam and lParam are ignored    
+  
 
 // Next default values for new objects
 // 

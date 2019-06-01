@@ -81,7 +81,7 @@ CMainFrame : public CFrame                                              /*
         virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     private:
-        CPrintPreview   m_PrintPreview;
+        CPrintPreviewEx   m_PrintPreview;
         CRichView       m_RichView;
         CString         m_PathName;
         WordWrapType    m_WrapOption;

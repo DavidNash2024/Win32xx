@@ -330,8 +330,8 @@ SetAppSize(BOOL keepPos)                                                    /*
         if (oldTSize.cx != 0 && oldTSize.cy != 0)
         {
             CSize newTSize = GetTotalScrollSize();
-            sp.x = (ULONGLONG(newTSize.cx) * ULONGLONG(sp.x)) / oldTSize.cx;
-            sp.y = (ULONGLONG(newTSize.cy) * ULONGLONG(sp.y)) / oldTSize.cy;
+            sp.x = int((ULONGLONG(newTSize.cx) * ULONGLONG(sp.x)) / oldTSize.cx);
+            sp.y = int((ULONGLONG(newTSize.cy) * ULONGLONG(sp.y)) / oldTSize.cy);
         }
         SetScrollPosition(sp);
     }

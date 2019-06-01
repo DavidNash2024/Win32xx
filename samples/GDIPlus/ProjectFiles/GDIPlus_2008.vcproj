@@ -353,6 +353,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_preview.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_printdialogs.h"
 				>
 			</File>

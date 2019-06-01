@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\default_resource.h" />
-    <ClInclude Include="..\..\..\include\wxx_appcore.h" />
     <ClInclude Include="..\..\..\include\wxx_appcore0.h" />
     <ClInclude Include="..\..\..\include\wxx_archive.h" />
     <ClInclude Include="..\..\..\include\wxx_commondlg.h" />
@@ -35,6 +34,7 @@
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
     <ClInclude Include="..\..\..\include\wxx_metafile.h" />
     <ClInclude Include="..\..\..\include\wxx_mutex.h" />
+    <ClInclude Include="..\..\..\include\wxx_preview.h" />
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h" />
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
     <ClInclude Include="..\..\..\include\wxx_rebar.h" />
@@ -58,7 +58,6 @@
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
-    <ClInclude Include="..\src\PreviewDialog.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\RichView.h" />
     <ClInclude Include="..\src\stdafx.h" />
@@ -67,7 +66,6 @@
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
-    <ClCompile Include="..\src\PreviewDialog.cpp" />
     <ClCompile Include="..\src\RichView.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

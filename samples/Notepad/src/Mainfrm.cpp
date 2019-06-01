@@ -132,6 +132,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_FILE_OPEN:         return OnFileOpen();
     case IDM_FILE_SAVE:         return OnFileSave();
     case IDM_FILE_SAVEAS:       return OnFileSaveAs();
+	case IDM_FILE_PREVIEW:      return OnFilePreview();
     case IDM_FILE_PRINT:        return OnFilePrint();
     case IDM_EDIT_COPY:         return OnEditCopy();
     case IDM_EDIT_PASTE:        return OnEditPaste();
@@ -157,6 +158,40 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     }
 
     return FALSE;
+}
+
+int CMainFrame::OnCreate(CREATESTRUCT& cs)
+{
+	// OnCreate controls the way the frame is created.
+	// Overriding CFrame::OnCreate is optional.
+
+	// A menu is added if the IDW_MAIN menu resource is defined.
+	// Frames have all options enabled by default. 
+	// Use the following functions to disable options.
+
+	// UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
+	// UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
+	// UseReBar(FALSE);              // Don't use a ReBar
+	// UseStatusBar(FALSE);          // Don't use a StatusBar
+	// UseThemes(FALSE);             // Don't use themes
+	// UseToolBar(FALSE);            // Don't use a ToolBar
+
+
+	// Create the PrintPreview dialog. It is initially hidden.  
+	m_printPreview.Create(*this);
+
+	// Get the name of the default or currently chosen printer
+	CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+	if (printDlg.GetDefaults())
+	{
+		CString status = _T("Printer: ") + printDlg.GetDeviceName();
+		SetStatusText(status);
+	}
+	else
+		SetStatusText(_T("No printer found"));
+
+	// call the base class function
+	return  CFrame::OnCreate(cs);
 }
 
 BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
@@ -302,116 +337,55 @@ BOOL CMainFrame::OnFileNewRich()
     return TRUE;
 }
 
+BOOL CMainFrame::OnFilePreview()
+{
+	// Verify a print preview is possible
+	CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+	CDC printerDC = printDlg.GetPrinterDC();
+	if (printerDC.GetHDC() == 0)
+	{
+		MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
+		return FALSE;
+	}
+
+	// Setup the print preview.
+	m_printPreview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
+	m_printPreview.UseHalfTone(TRUE);       // Trun of Half tone for text previewing
+
+	// Set the preview's owner (for messages), and number of pages.
+	UINT maxPage = m_richView.CollatePages();
+	m_printPreview.DoPrintPreview(*this, maxPage);
+
+	// Hide the menu and toolbar
+	ShowMenu(FALSE);
+	ShowToolBar(FALSE);
+
+	// Swap views
+	SetView(m_printPreview);
+
+	return TRUE;
+}
+
 BOOL CMainFrame::OnFilePrint()
 {
-    // Bring up a dialog to choose the printer
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+	try
+	{
+		m_richView.DoPrint(m_pathName);
+	}
 
-    PRINTDLG pd = printDlg.GetParameters();
-    pd.nCopies = 1;
-    pd.nFromPage = 0xFFFF;
-    pd.nToPage = 0xFFFF;
-    pd.nMinPage = 1;
-    pd.nMaxPage = 0xFFFF;
-    printDlg.SetParameters(pd);
+	catch (const CWinException&  /*e*/)
+	{
+		// No default printer
+		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
+	}
 
-    try
-    {
-        if (printDlg.DoModal(*this) == IDOK)
-        {
-            CDC printerDC = printDlg.GetPrinterDC();
+	return TRUE;
+}
 
-            // This code is based on Microsoft's KB article Q129860
-
-            int horizRes   = printerDC.GetDeviceCaps(HORZRES);
-            int vertRes    = printerDC.GetDeviceCaps(VERTRES);
-            int logPixelsX = printerDC.GetDeviceCaps(LOGPIXELSX);
-            int logPixelsY = printerDC.GetDeviceCaps(LOGPIXELSY);
-            LONG textLength;   // Length of document.
-            LONG textPrinted;  // Amount of document printed.
-
-            // Ensure the printer DC is in MM_TEXT mode.
-            printerDC.SetMapMode(MM_TEXT);
-
-            // Rendering to the same DC we are measuring.
-            FORMATRANGE fr;
-            ZeroMemory(&fr, sizeof(fr));
-            fr.hdc = printerDC.GetHDC();
-            fr.hdcTarget = printerDC.GetHDC();
-
-            // Set up the page.
-            int margin = 200; // 1440 TWIPS = 1 inch.
-            fr.rcPage.left = fr.rcPage.top = margin;
-            fr.rcPage.right = (horizRes / logPixelsX) * 1440 - margin;
-            fr.rcPage.bottom = (vertRes / logPixelsY) * 1440 - margin;
-
-            // Set up margins all around.
-            fr.rc.left = fr.rcPage.left;//+ 1440;
-            fr.rc.top = fr.rcPage.top;//+ 1440;
-            fr.rc.right = fr.rcPage.right;//- 1440;
-            fr.rc.bottom = fr.rcPage.bottom;//- 1440;
-
-            // Default the range of text to print as the entire document.
-            fr.chrg.cpMin = 0;
-            fr.chrg.cpMax = -1;
-            m_richView.FormatRange(fr, TRUE);
-
-            // Set up the print job (standard printing stuff here).
-            DOCINFO di;
-            ZeroMemory(&di, sizeof(di));
-            di.cbSize = sizeof(DOCINFO);
-            di.lpszDocName = m_pathName;
-
-            // Do not print to file.
-            di.lpszOutput = NULL;
-
-            // Start the document.
-            printerDC.StartDoc(&di);
-
-            // Find out real size of document in characters.
-            textLength = m_richView.GetTextLengthEx(GTL_NUMCHARS);
-
-            do
-            {
-                // Start the page.
-                printerDC.StartPage();
-
-                // Print as much text as can fit on a page. The return value is
-                // the index of the first character on the next page. Using TRUE
-                // for the wParam parameter causes the text to be printed.
-                textPrinted = m_richView.FormatRange(fr, TRUE);
-                m_richView.DisplayBand(fr.rc);
-
-                // Print last page.
-                printerDC.EndPage();
-
-                // If there is more text to print, adjust the range of characters
-                // to start printing at the first character of the next page.
-                if (textPrinted < textLength)
-                {
-                    fr.chrg.cpMin = textPrinted;
-                    fr.chrg.cpMax = -1;
-                }
-            } while (textPrinted < textLength);
-
-            // Tell the control to release cached information.
-            m_richView.FormatRange();
-
-            // End the print job
-            printerDC.EndDoc();
-        }
-        else
-            return FALSE;
-    }
-
-    catch (const CWinException& /* e */)
-    {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-        return FALSE;
-    }
-
-    return TRUE;
+BOOL CMainFrame::OnFileQuickPrint()
+{
+	m_richView.QuickPrint(m_pathName);
+	return TRUE;
 }
 
 BOOL CMainFrame::OnFileOpen()
@@ -496,6 +470,9 @@ void CMainFrame::OnInitialUpdate()
     if (args.size() > 1)
         ReadFile(args[1]);
 
+	// Show the menu and toolbar
+	ShowMenu(TRUE);
+	ShowToolBar(TRUE);
 }
 
 void CMainFrame::OnMenuUpdate(UINT id)
@@ -613,9 +590,6 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
         CString ext = file.GetFileNameExt();
         ext.MakeLower();
         m_isRTF = (ext == _T("rtf"));
-
-        // Erase the controls contents
-        ClearContents();
 
         // set the EDITSTREAM mode
         int stream_mode = m_isRTF? SF_RTF : SF_TEXT;
@@ -780,12 +754,24 @@ void CMainFrame::SetWindowTitle()
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//
-//  }
+	switch (msg)
+	{
+	case UWM_PREVIEWCLOSE:
+		// Swap the view
+		SetView(m_richView);
 
-    return WndProcDefault(msg, wparam, lparam);
+		// Show the menu and toolbar
+		ShowMenu(TRUE);
+		ShowToolBar(TRUE);
+
+		break;
+
+	case UWM_PRINTNOW:
+		m_richView.QuickPrint(m_pathName);
+		break;
+	}
+
+	return WndProcDefault(msg, wparam, lparam);
 }
 
 // Streams from the rich edit control to the specified file.
