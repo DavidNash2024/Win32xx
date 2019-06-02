@@ -42,7 +42,8 @@ BEGIN
         MENUITEM "&Save",                       IDM_FILE_SAVE, GRAYED
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "&Print",                      IDM_FILE_PRINT, GRAYED
+		MENUITEM "Print Preview",               IDM_FILE_PREVIEW,
+        MENUITEM "&Print",                      IDM_FILE_PRINT,
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END

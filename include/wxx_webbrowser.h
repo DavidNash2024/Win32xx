@@ -157,6 +157,7 @@ namespace Win32xx
         CAXWindow& GetAXWindow() const { return m_axContainer; }
         BOOL GetBusy() const;
         LPDISPATCH GetContainer() const;
+        LPDISPATCH GetDocument() const;
         BOOL GetFullScreen() const;
         long GetHeight() const;
         IWebBrowser2* GetIWebBrowser2() const { return m_pIWebBrowser2; }
@@ -164,6 +165,7 @@ namespace Win32xx
         CString GetLocationName() const;
         CString GetLocationURL() const;
         BOOL GetOffline() const;
+        LPDISPATCH GetParent() const;
         READYSTATE GetReadyState() const;
         BOOL GetRegisterAsBrowser() const;
         BOOL GetTheaterMode() const;
@@ -836,6 +838,14 @@ namespace Win32xx
         return Value;
     }
 
+    // Retrieves an object reference to a document.
+    inline LPDISPATCH CWebBrowser::GetDocument() const
+    {
+        LPDISPATCH Value;
+        GetIWebBrowser2()->get_Document(&Value);
+        return Value;
+    }
+
     // Retrieves a value that indicates whether Internet Explorer is in full-screen mode or normal window mode.
     inline BOOL CWebBrowser::GetFullScreen() const
     {
@@ -946,6 +956,13 @@ namespace Win32xx
         VARIANT_BOOL Value = VARIANT_FALSE;
         GetIWebBrowser2()->get_TopLevelContainer(&Value);
         return (Value != 0);
+    }
+
+    inline LPDISPATCH CWebBrowser::GetParent() const
+    {
+        LPDISPATCH pDispatch = NULL;
+        GetIWebBrowser2()->get_Parent(&pDispatch);
+        return pDispatch;
     }
 
     // Retrieves the user type name of the contained document object.

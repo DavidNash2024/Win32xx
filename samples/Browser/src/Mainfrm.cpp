@@ -213,6 +213,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     switch(id)
     {
     case IDM_FILE_EXIT:      return OnFileExit();
+	case IDM_FILE_PREVIEW:   OnPrintPreview();     return TRUE;
+	case IDM_FILE_PRINT:     OnPrint();            return TRUE;
     case IDM_HELP_ABOUT:     return OnHelpAbout();
     case IDM_BACK:           return OnBack();
     case IDM_FORWARD:        return OnForward();
@@ -432,6 +434,66 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 
     SetWindowText(str);
 }
+
+void CMainFrame::OnPrintPreview()
+{
+	GetBrowser().ExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
+}
+
+//The Open() and Navigate() Functions are here
+void CMainFrame::OnPrint()
+{
+	SAFEARRAYBOUND psabBounds[1];
+	SAFEARRAY *psaHeadFoot;
+	HRESULT hr = S_OK;
+	long rgIndices;
+
+	VARIANT vHeadStr;
+	VARIANT vFootStr;
+	VARIANT vArg;
+
+
+	try {
+		// Initialize header and footer parameters to send to ExecWB().
+		psabBounds[0].lLbound = 0;
+		psabBounds[0].cElements = 3;
+		psaHeadFoot = SafeArrayCreate(VT_VARIANT, 1, psabBounds);
+		if (NULL == psaHeadFoot) 
+			throw std::bad_alloc();
+
+		VariantInit(&vHeadStr);
+		VariantInit(&vFootStr);
+
+		// Argument 1: Header
+		vHeadStr.vt = VT_BSTR;
+		vHeadStr.bstrVal = SysAllocString(L"This is my header string.");
+		if (vHeadStr.bstrVal == NULL) throw 1001;
+
+		// Argument 2: Footer
+		vFootStr.vt = VT_BSTR;
+		vFootStr.bstrVal = SysAllocString(L"This is my footer string.");
+		if (vFootStr.bstrVal == NULL) throw 1002;
+
+		rgIndices = 0;
+		SafeArrayPutElement(psaHeadFoot, &rgIndices, static_cast<void *>(&vHeadStr));
+		rgIndices = 1;
+		SafeArrayPutElement(psaHeadFoot, &rgIndices, static_cast<void *>(&vFootStr));
+
+		// Issue the print command
+		VariantInit(&vArg);
+		vArg.vt = VT_ARRAY | VT_BYREF;
+		vArg.parray = psaHeadFoot;
+		GetBrowser().ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, &vArg, NULL);
+		if (hr != S_OK)
+			throw CUserException(_T("Print Preview Failed"));
+	}
+	catch (...) {
+		VariantClear(&vHeadStr);
+		VariantClear(&vFootStr);
+		if (psaHeadFoot)      SafeArrayDestroy(psaHeadFoot);
+	}
+}
+
 
 void CMainFrame::SetupMenuIcons()
 {

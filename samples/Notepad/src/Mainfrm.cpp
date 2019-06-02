@@ -132,8 +132,9 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_FILE_OPEN:         return OnFileOpen();
     case IDM_FILE_SAVE:         return OnFileSave();
     case IDM_FILE_SAVEAS:       return OnFileSaveAs();
-	case IDM_FILE_PREVIEW:      return OnFilePreview();
+    case IDM_FILE_PREVIEW:      return OnFilePreview();
     case IDM_FILE_PRINT:        return OnFilePrint();
+    case IDM_FILE_PRINTSETUP:   return OnFilePrintSetup();
     case IDM_EDIT_COPY:         return OnEditCopy();
     case IDM_EDIT_PASTE:        return OnEditPaste();
     case IDM_EDIT_CUT:          return OnEditCut();
@@ -162,36 +163,36 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-	// OnCreate controls the way the frame is created.
-	// Overriding CFrame::OnCreate is optional.
+    // OnCreate controls the way the frame is created.
+    // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
-	// UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
-	// UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
-	// UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
-	// UseThemes(FALSE);             // Don't use themes
-	// UseToolBar(FALSE);            // Don't use a ToolBar
+    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
+    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
+    // UseReBar(FALSE);              // Don't use a ReBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseThemes(FALSE);             // Don't use themes
+    // UseToolBar(FALSE);            // Don't use a ToolBar
 
 
-	// Create the PrintPreview dialog. It is initially hidden.  
-	m_printPreview.Create(*this);
+    // Create the PrintPreview dialog. It is initially hidden.  
+    m_printPreview.Create(*this);
 
-	// Get the name of the default or currently chosen printer
-	CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-	if (printDlg.GetDefaults())
-	{
-		CString status = _T("Printer: ") + printDlg.GetDeviceName();
-		SetStatusText(status);
-	}
-	else
-		SetStatusText(_T("No printer found"));
+    // Get the name of the default or currently chosen printer
+    CPrintDialog printDlg;
+    if (printDlg.GetDefaults())
+    {
+        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        SetStatusText(status);
+    }
+    else
+        SetStatusText(_T("No printer found"));
 
-	// call the base class function
-	return  CFrame::OnCreate(cs);
+    // call the base class function
+    return  CFrame::OnCreate(cs);
 }
 
 BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
@@ -339,53 +340,87 @@ BOOL CMainFrame::OnFileNewRich()
 
 BOOL CMainFrame::OnFilePreview()
 {
-	// Verify a print preview is possible
-	CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-	CDC printerDC = printDlg.GetPrinterDC();
-	if (printerDC.GetHDC() == 0)
-	{
-		MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
-		return FALSE;
-	}
+    // Verify a print preview is possible
+    CPrintDialog printDlg;
+    CDC printerDC = printDlg.GetPrinterDC();
+    if (printerDC.GetHDC() == 0)
+    {
+        MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
+        return FALSE;
+    }
 
-	// Setup the print preview.
-	m_printPreview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
-	m_printPreview.UseHalfTone(TRUE);       // Trun of Half tone for text previewing
+    // Setup the print preview.
+    m_printPreview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
+    m_printPreview.UseHalfTone(TRUE);       // Turn of Half tone for text previewing
 
-	// Set the preview's owner (for messages), and number of pages.
-	UINT maxPage = m_richView.CollatePages();
-	m_printPreview.DoPrintPreview(*this, maxPage);
+    // Set the preview's owner (for messages), and number of pages.
+    UINT maxPage = m_richView.CollatePages();
+    m_printPreview.DoPrintPreview(*this, maxPage);
 
-	// Hide the menu and toolbar
-	ShowMenu(FALSE);
-	ShowToolBar(FALSE);
+    // Hide the menu and toolbar
+    ShowMenu(FALSE);
+    ShowToolBar(FALSE);
 
-	// Swap views
-	SetView(m_printPreview);
+    // Swap views
+    SetView(m_printPreview);
 
-	return TRUE;
+    return TRUE;
 }
 
 BOOL CMainFrame::OnFilePrint()
 {
-	try
-	{
-		m_richView.DoPrint(m_pathName);
-	}
+    try
+    {
+        m_richView.DoPrint(m_pathName);
+    }
 
-	catch (const CWinException&  /*e*/)
-	{
-		// No default printer
-		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-	}
+    catch (const CWinException&  /*e*/)
+    {
+        // No default printer
+        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
+    }
 
-	return TRUE;
+    return TRUE;
+}
+
+BOOL CMainFrame::OnFilePrintSetup()
+// Select the printer for use by the application
+{
+    // Prepare the print dialog
+    CPrintDialog printDlg(PD_PRINTSETUP);
+    PRINTDLG pd = printDlg.GetParameters();
+    pd.nCopies = 1;
+    pd.nFromPage = 0xFFFF;
+    pd.nToPage = 0xFFFF;
+    pd.nMinPage = 1;
+    pd.nMaxPage = 0xFFFF;
+    printDlg.SetParameters(pd);
+
+    try
+    {
+        // Display the print dialog
+        if (printDlg.DoModal(*this) == IDOK)
+        {
+            CDC dcPrinter = printDlg.GetPrinterDC();
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
+        }
+    }
+
+    catch (const CWinException& /* e */)
+    {
+        // No default printer
+        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
+        return FALSE;
+    }
+
+    return TRUE;
 }
 
 BOOL CMainFrame::OnFileQuickPrint()
 {
-	m_richView.QuickPrint(m_pathName);
-	return TRUE;
+    m_richView.QuickPrint(m_pathName);
+    return TRUE;
 }
 
 BOOL CMainFrame::OnFileOpen()
@@ -470,9 +505,9 @@ void CMainFrame::OnInitialUpdate()
     if (args.size() > 1)
         ReadFile(args[1]);
 
-	// Show the menu and toolbar
-	ShowMenu(TRUE);
-	ShowToolBar(TRUE);
+    // Show the menu and toolbar
+    ShowMenu(TRUE);
+    ShowToolBar(TRUE);
 }
 
 void CMainFrame::OnMenuUpdate(UINT id)
@@ -754,24 +789,24 @@ void CMainFrame::SetWindowTitle()
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	switch (msg)
-	{
-	case UWM_PREVIEWCLOSE:
-		// Swap the view
-		SetView(m_richView);
+    switch (msg)
+    {
+    case UWM_PREVIEWCLOSE:
+        // Swap the view
+        SetView(m_richView);
 
-		// Show the menu and toolbar
-		ShowMenu(TRUE);
-		ShowToolBar(TRUE);
+        // Show the menu and toolbar
+        ShowMenu(TRUE);
+        ShowToolBar(TRUE);
 
-		break;
+        break;
 
-	case UWM_PRINTNOW:
-		m_richView.QuickPrint(m_pathName);
-		break;
-	}
+    case UWM_PRINTNOW:
+        m_richView.QuickPrint(m_pathName);
+        break;
+    }
 
-	return WndProcDefault(msg, wparam, lparam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 // Streams from the rich edit control to the specified file.

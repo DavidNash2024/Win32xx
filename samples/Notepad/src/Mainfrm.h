@@ -27,7 +27,7 @@ public:
     static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
     static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
 
-	void ClearContents();
+    void ClearContents();
     void DetermineEncoding(CFile& file);
     BOOL OnDropFiles(HDROP hDropInfo);
     BOOL OnEditCut();
@@ -42,11 +42,12 @@ public:
     BOOL OnFileMRU(WPARAM wparam);
     BOOL OnFileExit();
     BOOL OnFileNewPlain();
-	BOOL OnFileNewRich();
+    BOOL OnFileNewRich();
     BOOL OnFileOpen();
-	BOOL OnFilePreview();
+    BOOL OnFilePreview();
     BOOL OnFilePrint();
-	BOOL OnFileQuickPrint();
+    BOOL OnFilePrintSetup();
+    BOOL OnFileQuickPrint();
     BOOL OnFileSaveAs();
     BOOL OnFileSave();
     BOOL OnOptionsFont();
@@ -64,18 +65,18 @@ public:
 protected:
     virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-	virtual int OnCreate(CREATESTRUCT& cs);
+    virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-	virtual void SetupMenuIcons();
+    virtual void SetupMenuIcons();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
-	CPrintPreview<CRichView>  m_printPreview;   // CRichView is the source of for CPrintPreview
+    CPrintPreview<CRichView>  m_printPreview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
-    CString m_oldStatus[4];             // Array of CString holding old status;
+    CString m_oldStatus[4];                     // Array of CString holding old status;
     CString m_pathName;
     Encoding m_encoding;
     bool m_isWrapped;

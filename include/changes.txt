@@ -64,14 +64,18 @@ Added CGlobalLock<DEVNAMES>::GetDeviceName       member function
 Added CGlobalLock<DEVNAMES>::GetDriverName       member function
 Added CGlobalLock<DEVNAMES>::GetPortName         member function
 Added CGlobalLock<DEVNAMES>::IsDefaultPrinter    member function
+Added CPrintDialog::SetDefaults                  member function
 Added CScrollView::GetLineScrollSize             member function
 Added CScrollView::GetPageScrollSize             member function
+Added CWebBrowser::GetDocument                   member function
 
 Added VS2017 project files to all samples and tutorials
 
 Modified ::GetApp  global function               Now returns a pointer to CWinApp.
 
-Updated the tutorials 
+Updated the tutorials
+ - The tutorials now demonstrate how to implement a print preview.
+ - The project files have been moved to a separate folder.
 
 
 Version 8.6

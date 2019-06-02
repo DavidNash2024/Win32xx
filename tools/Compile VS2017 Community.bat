@@ -310,6 +310,8 @@ MSBuild Tutorial9\ProjectFiles\Tutorial9_2017.sln /p:Configuration=Debug       >
 MSBuild Tutorial9\ProjectFiles\Tutorial9_2017.sln /p:Configuration=Release     >>"..\output\VS2017.log"
 MSBuild Tutorial10\ProjectFiles\Tutorial10_2017.sln /p:Configuration=Debug     >>"..\output\VS2017.log"
 MSBuild Tutorial10\ProjectFiles\Tutorial10_2017.sln /p:Configuration=Release   >>"..\output\VS2017.log"
+MSBuild Tutorial11\ProjectFiles\Tutorial11_2017.sln /p:Configuration=Debug     >>"..\output\VS2017.log"
+MSBuild Tutorial11\ProjectFiles\Tutorial11_2017.sln /p:Configuration=Release   >>"..\output\VS2017.log"
 
 mkdir "..\output\VS2017\Tutorials"
 mkdir "..\output\VS2017\Tutorials\Debug"
@@ -325,6 +327,7 @@ copy Tutorial7\ProjectFiles\Debug\Tutorial7.exe         "..\output\VS2017\Tutori
 copy Tutorial8\ProjectFiles\Debug\Tutorial8.exe         "..\output\VS2017\Tutorials\Debug"    >>"..\output\VS2017.log"
 copy Tutorial9\ProjectFiles\Debug\Tutorial9.exe         "..\output\VS2017\Tutorials\Debug"    >>"..\output\VS2017.log"
 copy Tutorial10\ProjectFiles\Debug\Tutorial10.exe       "..\output\VS2017\Tutorials\Debug"    >>"..\output\VS2017.log"
+copy Tutorial11\ProjectFiles\Debug\Tutorial11.exe       "..\output\VS2017\Tutorials\Debug"    >>"..\output\VS2017.log"
 
 mkdir "..\output\VS2017\Tutorials\Release"
 
@@ -339,6 +342,7 @@ copy Tutorial7\ProjectFiles\Release\Tutorial7.exe       "..\output\VS2017\Tutori
 copy Tutorial8\ProjectFiles\Release\Tutorial8.exe       "..\output\VS2017\Tutorials\Release"    >>"..\output\VS2017.log"
 copy Tutorial9\ProjectFiles\Release\Tutorial9.exe       "..\output\VS2017\Tutorials\Release"    >>"..\output\VS2017.log"
 copy Tutorial10\ProjectFiles\Release\Tutorial10.exe     "..\output\VS2017\Tutorials\Release"    >>"..\output\VS2017.log"
+copy Tutorial11\ProjectFiles\Release\Tutorial11.exe     "..\output\VS2017\Tutorials\Release"    >>"..\output\VS2017.log"
 
 REM: Pop the directory change off the stack
 popd

@@ -5,7 +5,10 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+#include "targetver.h"
+#include "wxx_wincore.h"
 #include "Doc.h"
+
 
 // Message - sent to the parent (Frame) window when a file is dropped on the View window
 //   WPARAM: A pointer to the filename (LPCTSTR)
@@ -22,8 +25,10 @@ public:
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();
     COLORREF GetPenColor() { return m_penColor; }
-    void Print();
-    void SetPenColor(COLORREF color) { m_penColor = color; }
+    void Print(LPCTSTR docName);
+    void PrintPage(CDC& dc, UINT page = 1);
+    void QuickPrint(LPCTSTR docName);
+    void SetPenColor(COLORREF Color) { m_penColor = Color; }
 
 protected:
     virtual int OnCreate(CREATESTRUCT&);
@@ -42,7 +47,6 @@ private:
     CDoc   m_doc;
     CBrush m_brush;
     COLORREF m_penColor;
-
 };
 
 

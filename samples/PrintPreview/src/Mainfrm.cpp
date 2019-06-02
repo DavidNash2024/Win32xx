@@ -6,7 +6,7 @@
 #include "resource.h"
 
 #ifndef SF_USECODEPAGE
-  #define SF_USECODEPAGE	0x0020
+  #define SF_USECODEPAGE    0x0020
 #endif
 
 
@@ -117,11 +117,11 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
-	// Create the PrintPreview dialog. It is initially hidden.  
-	m_printPreview.Create(*this);
-	
-	// Get the name of the default or currently chosen printer
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    // Create the PrintPreview dialog. It is initially hidden.  
+    m_printPreview.Create(*this);
+
+    // Get the name of the default or currently chosen printer
+    CPrintDialog printDlg;
     if (printDlg.GetDefaults())
     {
         CString status = _T("Printer: ") + printDlg.GetDeviceName();
@@ -224,7 +224,7 @@ BOOL CMainFrame::OnFileNew()
 BOOL CMainFrame::OnFilePreview()
 {
     // Verify a print preview is possible
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
     if (printerDC.GetHDC() == 0)
     {
@@ -232,9 +232,9 @@ BOOL CMainFrame::OnFilePreview()
         return FALSE;
     }
 
-	// Setup the print preview.
-	m_printPreview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
-	m_printPreview.UseHalfTone(TRUE);       // Trun of Half tone for text previewing
+    // Setup the print preview.
+    m_printPreview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
+    m_printPreview.UseHalfTone(TRUE);       // Turn of Half tone for text previewing
 
     // Set the preview's owner (for messages), and number of pages.
     UINT maxPage = m_richView.CollatePages();
@@ -291,7 +291,7 @@ BOOL CMainFrame::OnFilePrint()
 BOOL CMainFrame::OnFilePrintSetup()
 {
     // Prepare the print dialog
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC | PD_PRINTSETUP);
+    CPrintDialog printDlg(PD_PRINTSETUP);
     PRINTDLG pd = printDlg.GetParameters();
     pd.nCopies = 1;
     pd.nFromPage = 0xFFFF;
@@ -361,9 +361,9 @@ void CMainFrame::OnInitialUpdate()
     DragAcceptFiles(TRUE);
     SetWindowTitle();
 
-	// Show the menu and toolbar
-	ShowMenu(TRUE);
-	ShowToolBar(TRUE);
+    // Show the menu and toolbar
+    ShowMenu(TRUE);
+    ShowToolBar(TRUE);
 }
 
 void CMainFrame::OnMenuUpdate(UINT id)

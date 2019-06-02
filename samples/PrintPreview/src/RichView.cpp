@@ -17,7 +17,7 @@ UINT CRichView::CollatePages()
 // Calculates the character position of the page breaks, and returns
 // the number of pages.
 {
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
     printerDC.SetMapMode(MM_TEXT);
 
@@ -58,7 +58,7 @@ UINT CRichView::CollatePages()
 void CRichView::DoPrint(LPCTSTR docName)
 {
     // Prepare the print dialog
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CPrintDialog printDlg;
     PRINTDLG pd = printDlg.GetParameters();
     pd.nCopies = 1;
     pd.nFromPage = 0xFFFF;
@@ -77,8 +77,8 @@ CRect CRichView::GetPageRect()
 {
     CRect rcPage;
 
-    // Get the device contect of the default or currently chosen printer
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    // Get the device context of the default or currently chosen printer
+    CPrintDialog printDlg;
     CDC dcPrinter = printDlg.GetPrinterDC();
 
     // Get the printer page specifications
@@ -138,7 +138,7 @@ void CRichView::PrintPage(CDC& dc, UINT page)
 // Prints the specified page to specified dc.
 // Called by CPrintPreview, and also used for printing.
 {
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
 
     // Assign values to the FORMATRANGE struct
@@ -164,7 +164,7 @@ void CRichView::QuickPrint(LPCTSTR docName)
 // docName - specifies the document name for the print job.
 {
     // Acquire the currently selected printer and page settings
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
 
     // Assign values to the FORMATRANGE struct

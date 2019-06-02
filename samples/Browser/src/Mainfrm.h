@@ -43,6 +43,8 @@ public:
     BOOL OnRefresh();
     BOOL OnHome();
     BOOL OnStop();
+	void OnPrint();
+	void OnPrintPreview();
 
 
 protected:

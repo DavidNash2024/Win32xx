@@ -25,7 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -41,9 +41,8 @@ BEGIN
         MENUITEM "&Save",                       IDM_FILE_SAVE
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
+        MENUITEM "Print Preview",               IDM_FILE_PREVIEW
         MENUITEM "&Print",                      IDM_FILE_PRINT
-        MENUITEM SEPARATOR
-        MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -66,14 +65,14 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                 ICON                    "res/Paintbrush.ico"
+IDW_MAIN                 ICON                    "../src/res/Paintbrush.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                 BITMAP                  "res/Toolbar.bmp"
+IDW_MAIN                 BITMAP                  "../src/res/Toolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -101,10 +100,13 @@ END
 IDW_MAIN ACCELERATORS
 BEGIN
     "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      IDM_EDIT_CUT,           VIRTKEY, SHIFT, NOINVERT
     "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    VK_INSERT,      IDM_EDIT_PASTE,         VIRTKEY, SHIFT, NOINVERT
+    VK_BACK,        IDM_EDIT_UNDO,          VIRTKEY, ALT, NOINVERT
     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
-    "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT  
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
@@ -116,8 +118,7 @@ END
 // Cursor
 //
 
-IDC_CURSOR1             CURSOR                  "res/Cursor.cur"
-
+IDC_CURSOR1             CURSOR                  "../src/res/Cursor.cur"
 
 
 #ifdef APSTUDIO_INVOKED
@@ -159,7 +160,7 @@ BEGIN
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
-    IDW_READY               "Ready" 
+    IDW_READY               "Ready"
 END
 
 STRINGTABLE
@@ -204,15 +205,6 @@ BEGIN
     SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
-END
-
-STRINGTABLE
-BEGIN
-    IDW_FILE_MRU_FILE1       "Open this document"
-    IDW_FILE_MRU_FILE2       "Open this document"
-    IDW_FILE_MRU_FILE3       "Open this document"
-    IDW_FILE_MRU_FILE4       "Open this document"
-    IDW_FILE_MRU_FILE5       "Open this document"
 END
 
 #endif    // English (U.S.) resources

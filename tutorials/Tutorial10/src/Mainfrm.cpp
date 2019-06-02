@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////
 // Mainfrm.cpp  - definitions for the CMainFrame class
 
-#include "stdafx.h"
+
 #include "mainfrm.h"
 #include "resource.h"
 
@@ -10,17 +10,31 @@ CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
     SetView(m_view);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\Scribble Sample"));
-
-    // Load the settings from the registry with 4 MRU entries
-    LoadRegistryMRUSettings(4);
 }
 
 CMainFrame::~CMainFrame()
 {
+}
+
+void CMainFrame::LoadFile(LPCTSTR fileName)
+// Called by OnFileOpen and in response to a UWM_DROPFILE message
+{
+    try
+    {
+        // Retrieve the PlotPoint data
+        GetDoc().FileOpen(fileName);
+        m_pathName = fileName;
+        GetView().Invalidate();
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_pathName = _T("");
+        GetDoc().GetAllPoints().clear();
+    }
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
@@ -36,15 +50,9 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_FILE_SAVE:         OnFileSave();       return TRUE;
     case IDM_FILE_SAVEAS:       OnFileSaveAs();     return TRUE;
     case IDM_FILE_PRINT:        OnFilePrint();      return TRUE;
+    case IDM_FILE_PREVIEW:      OnFilePreview();    return TRUE;
     case IDM_PEN_COLOR:         OnPenColor();       return TRUE;
     case IDM_FILE_EXIT:         OnFileExit();       return TRUE;
-
-    case IDW_FILE_MRU_FILE1:
-    case IDW_FILE_MRU_FILE2:
-    case IDW_FILE_MRU_FILE3:
-    case IDW_FILE_MRU_FILE4:
-    case IDW_FILE_MRU_FILE5:    OnFileMRU(wparam);  return TRUE;
-
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
@@ -73,67 +81,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-void CMainFrame::OnFileExit()
-{
-    // Issue a close request to the frame
-    PostMessage(WM_CLOSE);
-}
-
-void CMainFrame::OnFileMRU(WPARAM wparam)
-// Called when a MRU file is selected from the menu
-{
-    UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
-    CString mruText = GetMRUEntry(mruIndex);
-
-    try
-    {
-        GetDoc().FileOpen(mruText);
-        m_pathName = mruText;
-        GetView().Invalidate();
-    }
-
-    catch (const CFileException &e)
-    {
-        // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-        
-        RemoveMRUEntry(mruText);
-        GetDoc().GetAllPoints().clear();
-    }
-}
-
-void CMainFrame::OnFileNew()
-{
-    GetDoc().GetAllPoints().clear();
-    m_pathName = _T("");
-    GetView().Invalidate();
-}
-
-void CMainFrame::LoadFile(LPCTSTR fileName)
-// Called by OnFileOpen and in response to a UWM_DROPFILE message
-{
-    try
-    {
-        // Retrieve the PlotPoint data
-        GetDoc().FileOpen(fileName);
-        
-        // Save the filename
-        m_pathName = fileName;
-        AddMRUEntry(fileName);
-
-        GetView().Invalidate();
-    }
-
-    catch (const CFileException &e)
-    {
-        // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-
-        m_pathName = _T("");
-        GetDoc().GetAllPoints().clear();
-    }
-}
-
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 // Called in response to the UWM_DROPFILE user defined message
 {
@@ -156,6 +103,19 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     }
 
     return 0;
+}
+
+void CMainFrame::OnFileExit()
+{
+    // Issue a close request to the frame
+    PostMessage(WM_CLOSE);
+}
+
+void CMainFrame::OnFileNew()
+{
+    GetDoc().GetAllPoints().clear();
+    m_pathName = _T("");
+    GetView().Invalidate();
 }
 
 void CMainFrame::OnFileOpen()
@@ -223,16 +183,49 @@ void CMainFrame::OnFileSaveAs()
         // An exception occurred. Display the relevant information.
         ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
     }
+
 }
 
-// Sends the bitmap extracted from the View window to a printer of your choice
-// This function provides a useful reference for printing bitmaps in general
+// Preview the page before it is printed.
+void CMainFrame::OnFilePreview()
+{
+    // Get the device contect of the default or currently chosen printer
+    CPrintDialog printDlg;
+    CDC printerDC = printDlg.GetPrinterDC();
+    if (printerDC.GetHDC() != 0)        // Verify a print preview is possible
+    {
+        // Create the preview window if required
+        if (!m_preview.IsWindow())
+            m_preview.Create(*this);
+
+        // Specify the source of the PrintPage function
+        m_preview.SetSource(m_view);
+
+        // Set the preview's owner (for notification messages)
+        m_preview.DoPrintPreview(*this);
+
+        // Hide the menu and toolbar
+        ShowMenu(FALSE);
+        ShowToolBar(FALSE);
+
+        // Swap views
+        SetView(m_preview);
+    }
+    else
+    {
+        MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
+    }
+
+}
+
+// Sends the bitmap extracted from the View window to a printer of your choice.
+// This function provides a useful reference for printing bitmaps in general.
 void CMainFrame::OnFilePrint()
 {
     try
     {
-        // Print the view window
-        m_view.Print();
+        // print the view window
+        m_view.Print(_T("Scribble Output"));
     }
 
     catch (const CException& e)
@@ -241,19 +234,6 @@ void CMainFrame::OnFilePrint()
         CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
         CString type = CString(e.what());
         ::MessageBox(NULL, message, type, MB_ICONWARNING);
-    }
-}
-
-void CMainFrame::OnInitialUpdate()
-{
-    // Here we process the command line arguments, and automatically load a file if one is specified.
-    // GetCommandLineArgs retrieves our command line arguments and stores them in a vector of CString.
-
-    std::vector<CString> args = GetCommandLineArgs();
-    // The second argument (if any) contains our file name.
-    if (args.size() > 1)
-    {
-        GetDoc().FileOpen(args[1]);
     }
 }
 
@@ -277,6 +257,16 @@ void CMainFrame::OnPenColor()
         // Retrieve the chosen color
         m_view.SetPenColor(colorDlg.GetColor());
     }
+}
+
+void CMainFrame::OnPreviewClose()
+{
+    // Swap the view
+    SetView(m_view);
+
+    // Show the menu and toolbar
+    ShowMenu(TRUE);
+    ShowToolBar(TRUE);
 }
 
 void CMainFrame::SetupToolBar()
@@ -307,8 +297,17 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch (msg)
     {
     case UWM_DROPFILE:      return OnDropFile(wparam);
+
+    case UWM_PREVIEWCLOSE:    // Preview Close button pressed.
+        OnPreviewClose();
+        break;
+
+    case UWM_PRINTNOW:        // Preview Print button pressed.
+        m_view.QuickPrint(_T("Scribble Output"));
+        break;
     }
 
+    //Use the default message handling for remaining messages
     return WndProcDefault(msg, wparam, lparam);
 }
 

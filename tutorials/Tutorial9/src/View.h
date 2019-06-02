@@ -25,7 +25,9 @@ public:
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();
     COLORREF GetPenColor() { return m_penColor; }
-    void Print();
+    void Print(LPCTSTR docName);
+    void PrintPage(CDC& dc, UINT page = 1);
+    void QuickPrint(LPCTSTR docName);
     void SetPenColor(COLORREF Color) { m_penColor = Color; }
 
 protected:

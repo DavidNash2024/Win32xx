@@ -1,16 +1,19 @@
 Notepad Example
 ===============
 This project demonstrates how to use a Rich Edit control as a simple text 
-editor. 
+editor. It extends the PrintPreview sample to add support for Rich Text
+Format, as well as ANSI, UTF-8 and UTF-16 encodings. 
 
 Features demonstrated in this example
 =====================================
-* Use of CFrame to display the window frame
-* Using a Rich edit control in the view window (ver 2.0 for unicode support)
-* File open and file save using stream callbacks
-* Copy and paste
-* File drag and drop
-* Text file printing
+* Use of CFrame to display the window frame.
+* Using a Rich edit control in the view window (ver 2.0 for unicode support).
+* File open and file save using stream callbacks.
+* Copy and paste.
+* File drag and drop.
+* Text file printing.
+* Text file print previewing.
+* Choosing this application's printer.
 * Choosing the font.
 * Enabling and disabling word wrap
 * Loading and saving of UTF-8 encoded files.

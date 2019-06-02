@@ -19,20 +19,21 @@
 #define IDM_FILE_SAVEAS                 125
 #define IDM_FILE_PREVIEW                126
 #define IDM_FILE_PRINT                  127
-#define IDM_FILE_CLOSE                  128
-#define IDM_FILE_EXIT                   129
-#define IDM_EDIT_UNDO                   130
-#define IDM_EDIT_REDO                   131
-#define IDM_EDIT_CUT                    132
-#define IDM_EDIT_COPY                   133
-#define IDM_EDIT_PASTE                  134
-#define IDM_EDIT_DELETE                 135
+#define IDM_FILE_PRINTSETUP             128
+#define IDM_FILE_CLOSE                  129
+#define IDM_FILE_EXIT                   130
+#define IDM_EDIT_UNDO                   131
+#define IDM_EDIT_REDO                   132
+#define IDM_EDIT_CUT                    133
+#define IDM_EDIT_COPY                   134
+#define IDM_EDIT_PASTE                  135
+#define IDM_EDIT_DELETE                 136
 #define IDM_OPTIONS_FONT                140
 #define IDM_OPTIONS_WRAP                141
 #define IDM_ENC_ANSI                    150
 #define IDM_ENC_UTF8                    151
 #define IDM_ENC_UTF16                   152
-// #define IDM_ENC_UTF16_BOM               153
+
 #define IDM_HELP_ABOUT                  160
 #define IDW_INDICATOR_INS               170
 #define IDW_INDICATOR_OVR               171

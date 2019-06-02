@@ -66,9 +66,9 @@
 // CDevMode and CDevNames are typedefs for the CGlobalLock class. They
 // provide self unlocking pointers to the hDevMode and hDevNames memory.
 // They are used as follows:
-//   CPrintDialog PrintDialog;
-//   CDevNames pDevNames = PrintDialog.GetDevNames();
-//   CDevMode  pDevMode  = PrintDialog.GetDevMode();
+//   CPrintDialog printDialog;
+//   CDevNames pDevNames = printDialog.GetDevNames();
+//   CDevMode  pDevMode  = printDialog.GetDevMode();
 //
 // NOTE: CPrintDialog and CPageSetupDialog throw a CWinException
 // if they are unable to display the dialog.
@@ -79,6 +79,11 @@
 // a default printer.
 //
 // A system always has a default printer if it has a printer.
+//
+// NOTE: Use the following to retrieve the printer's device context
+// for the default or currently selected printer:
+//     CPrintDialog printDialog;
+//     CDC printerDC = printDialog.GetDefaults(); 
 //
 
 #ifndef _WIN32XX_PRINTDIALOGS_H_
@@ -262,6 +267,7 @@ namespace Win32xx
         BOOL    PrintCollate() const;
         BOOL    PrintRange() const;
         BOOL    PrintSelection() const;
+        void    SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames);
         void    SetParameters(const PRINTDLG& pd);
 
     protected:
@@ -686,6 +692,14 @@ namespace Win32xx
     inline BOOL CPrintDialog::PrintSelection() const
     {
         return m_pd.Flags & PD_SELECTION ? TRUE : FALSE;
+    }
+
+    // Assigns the application's default printer to the setiings specified
+    // by hDevMode and hDevNames.
+    inline void CPrintDialog::SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames)
+    {
+        GetApp()->m_devMode.Reassign(hDevMode);
+        GetApp()->m_devNames.Reassign(hDevNames);
     }
 
     // Set the parameters of the PRINTDLG structure to sensible values

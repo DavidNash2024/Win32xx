@@ -64,28 +64,28 @@ namespace Win32xx
     0x00,0x00,0x00,0x00,0x00,0x00,0x00
 };
 
-	//////////////////////////////////////////
-	// Declaration of the CPreviewPane class
-	// CPreviewPane provides a preview pane to CPrintPreview
-	class CPreviewPane : public CWnd
-	{
-	public:
-		CPreviewPane();
-		virtual ~CPreviewPane() {}
+    //////////////////////////////////////////
+    // Declaration of the CPreviewPane class
+    // CPreviewPane provides a preview pane to CPrintPreview
+    class CPreviewPane : public CWnd
+    {
+    public:
+        CPreviewPane();
+        virtual ~CPreviewPane() {}
 
-		void Render(CDC& dc);
-		void SetBitmap(CBitmap bitmap) { m_bitmap = bitmap; }
-		void UseHalfTone(BOOL useHalfTone) { m_useHalfTone = useHalfTone; }
+        void Render(CDC& dc);
+        void SetBitmap(CBitmap bitmap) { m_bitmap = bitmap; }
+        void UseHalfTone(BOOL useHalfTone) { m_useHalfTone = useHalfTone; }
 
-	protected:
-		virtual void OnDraw(CDC& dc);
-		virtual BOOL OnEraseBkgnd(CDC&);
-		virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+    protected:
+        virtual void OnDraw(CDC& dc);
+        virtual BOOL OnEraseBkgnd(CDC&);
+        virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
 
-	private:
-		CBitmap m_bitmap;
-		BOOL m_useHalfTone;
-	};
+    private:
+        CBitmap m_bitmap;
+        BOOL m_useHalfTone;
+    };
 
 
     //////////////////////////////////////////
@@ -162,7 +162,7 @@ namespace Win32xx
         assert(::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc));
     }
 
-	inline BOOL CPreviewPane::OnEraseBkgnd(CDC&)
+    inline BOOL CPreviewPane::OnEraseBkgnd(CDC&)
     {
         // prevent default erasure of the background
         return TRUE;
@@ -256,7 +256,7 @@ namespace Win32xx
     //
     template <typename T>
     inline CPrintPreview<T>::CPrintPreview() : CDialog((LPCDLGTEMPLATE)previewTemplate),
-		m_pSource(0), m_currentPage(0), m_maxPage(1), m_ownerWindow(0)
+        m_pSource(0), m_currentPage(0), m_maxPage(1), m_ownerWindow(0)
     {
     }
 
@@ -378,7 +378,7 @@ namespace Win32xx
     // information that would be printed on a page.
     {
         // Get the device contect of the default or currently chosen printer
-        CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+        CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
         // Create a memory DC for the printer.
@@ -405,7 +405,7 @@ namespace Win32xx
         memDC.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
 
         // Call PrintPage from the source.
-		assert(m_pSource);
+        assert(m_pSource);
         m_pSource->PrintPage(memDC, page);
 
         // Detach the bitmap from the memory DC and save it

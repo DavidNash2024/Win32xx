@@ -1,27 +1,17 @@
 ////////////////////////////////
 // Main.cpp
 
-#include "stdafx.h"
+// Also add the Win32++\include  directory to project's additional include directories
+// Also add the Win32++\include  directory to project's additional resource directories
+
 #include "ScribbleApp.h"
 
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    try
-    {
-        // Start Win32++
-        CScribbleApp theApp;
+    // Start Win32++
+    CScribbleApp theApp;
 
-        // Run the application
-        return theApp.Run();
-    }
-    
-    // catch all unhandled CException types
-    catch (const CException &e)
-    {
-        // Display the exception and quit
-        MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return -1;
-    }
+    // Run the application
+    return theApp.Run();
 }

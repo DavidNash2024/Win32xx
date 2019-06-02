@@ -1,9 +1,7 @@
 //////////////////////////////////
 // ScribbleApp.cpp
 
-#include "stdafx.h"
 #include "ScribbleApp.h"
-
 
 CScribbleApp::CScribbleApp()
 {
