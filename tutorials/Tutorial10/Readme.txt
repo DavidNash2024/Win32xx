@@ -6,10 +6,8 @@ help documentation.
 
 Features demonstrated in this tutorial
 ======================================
-* How to use the registry to save the window position.
-* How to use the registry to save the Most Recently Used (MRU) list.
-* How to use command line arguments.
-* How to use TRACE to debug code.
+* How add a print preview to the application.
+
 
 
 

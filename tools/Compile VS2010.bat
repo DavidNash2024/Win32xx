@@ -301,6 +301,8 @@ devenv /build Debug Tutorial9\ProjectFiles\Tutorial9_2010.sln      >>"..\output\
 devenv /build Release Tutorial9\ProjectFiles\Tutorial9_2010.sln    >>"..\output\VS2010.log"
 devenv /build Debug Tutorial10\ProjectFiles\Tutorial10_2010.sln    >>"..\output\VS2010.log"
 devenv /build Release Tutorial10\ProjectFiles\Tutorial10_2010.sln  >>"..\output\VS2010.log"
+devenv /build Debug Tutorial11\ProjectFiles\Tutorial11_2010.sln    >>"..\output\VS2010.log"
+devenv /build Release Tutorial11\ProjectFiles\Tutorial11_2010.sln  >>"..\output\VS2010.log"
 
 mkdir "..\output\VS2010\Tutorials"
 mkdir "..\output\VS2010\Tutorials\Debug"
@@ -316,6 +318,7 @@ copy Tutorial7\ProjectFiles\Debug\Tutorial7.exe         "..\output\VS2010\Tutori
 copy Tutorial8\ProjectFiles\Debug\Tutorial8.exe         "..\output\VS2010\Tutorials\Debug"    >>"..\output\VS2010.log"
 copy Tutorial9\ProjectFiles\Debug\Tutorial9.exe         "..\output\VS2010\Tutorials\Debug"    >>"..\output\VS2010.log"
 copy Tutorial10\ProjectFiles\Debug\Tutorial10.exe       "..\output\VS2010\Tutorials\Debug"    >>"..\output\VS2010.log"
+copy Tutorial11\ProjectFiles\Debug\Tutorial11.exe       "..\output\VS2010\Tutorials\Debug"    >>"..\output\VS2010.log"
 
 mkdir "..\output\VS2010\Tutorials\Release"
 
@@ -330,6 +333,7 @@ copy Tutorial7\ProjectFiles\Release\Tutorial7.exe       "..\output\VS2010\Tutori
 copy Tutorial8\ProjectFiles\Release\Tutorial8.exe       "..\output\VS2010\Tutorials\Release"    >>"..\output\VS2010.log"
 copy Tutorial9\ProjectFiles\Release\Tutorial9.exe       "..\output\VS2010\Tutorials\Release"    >>"..\output\VS2010.log"
 copy Tutorial10\ProjectFiles\Release\Tutorial10.exe     "..\output\VS2010\Tutorials\Release"    >>"..\output\VS2010.log"
+copy Tutorial11\ProjectFiles\Release\Tutorial11.exe     "..\output\VS2010\Tutorials\Release"    >>"..\output\VS2010.log"
 
 REM: Pop the directory change off the stack
 popd

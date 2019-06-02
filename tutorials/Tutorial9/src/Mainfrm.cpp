@@ -16,6 +16,27 @@ CMainFrame::~CMainFrame()
 {
 }
 
+void CMainFrame::LoadFile(LPCTSTR fileName)
+// Called by OnFileOpen and in response to a UWM_DROPFILE message
+{
+    try
+    {
+        // Retrieve the PlotPoint data
+        GetDoc().FileOpen(fileName);
+        m_pathName = fileName;
+        GetView().Invalidate();
+    }
+
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+
+        m_pathName = _T("");
+        GetDoc().GetAllPoints().clear();
+    }
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Process the messages from the Menu and Tool Bar
@@ -96,27 +117,6 @@ void CMainFrame::OnFileNew()
     GetView().Invalidate();
 }
 
-void CMainFrame::LoadFile(LPCTSTR fileName)
-// Called by OnFileOpen and in response to a UWM_DROPFILE message
-{
-    try
-    {
-        // Retrieve the PlotPoint data
-        GetDoc().FileOpen(fileName);
-        m_pathName = fileName;
-        GetView().Invalidate();
-    }
-
-    catch (const CFileException &e)
-    {
-        // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-
-        m_pathName = _T("");
-        GetDoc().GetAllPoints().clear();
-    }
-}
-
 void CMainFrame::OnFileOpen()
 {
     try
@@ -192,7 +192,7 @@ void CMainFrame::OnFilePrint()
     try
     {
         // print the view window
-        m_view.Print();
+        m_view.Print(_T("Scribble Output"));
     }
 
     catch (const CException& e)

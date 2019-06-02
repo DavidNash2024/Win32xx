@@ -1,5 +1,5 @@
 
-#include "stdafx.h"
+
 #include "Doc.h"
 #include "ScribbleApp.h"
 

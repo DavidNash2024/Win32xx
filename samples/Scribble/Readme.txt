@@ -29,6 +29,7 @@ Features demonstrated in this example
 * Use of a vector to store data.
 * Loading and saving data to a file.
 * Printing the content of a window.
+* Print previewing the content of a window.
 * Responding to frame window messages in CFrame::WndProc
 * Responding to view window messages in CView::WndProc
 * Using the TRACE command to output debug text.

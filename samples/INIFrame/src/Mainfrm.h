@@ -20,8 +20,8 @@ public:
     void    OnFilePreview();
     void    OnFilePrint();
     void    OnFileSave();
-	void    OnPreviewClose();
-	void    PrintPage(CDC&, UINT);
+    void    OnPreviewClose();
+    void    PrintPage(CDC&, UINT);
     
     CString ItoT(int i);
     int     TtoI(LPCTSTR string);
@@ -41,7 +41,7 @@ protected:
 
 private:
     CView m_view;
-	CPrintPreview<CMainFrame> m_preview;
+    CPrintPreview<CMainFrame> m_preview;
 };
 
 #endif //MAINFRM_H

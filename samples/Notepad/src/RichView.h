@@ -10,10 +10,10 @@ class CRichView : public CRichEdit
 public:
     CRichView();
     virtual ~CRichView();
-	UINT  CollatePages();
-	void  DoPrint(LPCTSTR docName);
-	void  PrintPage(CDC& dc, UINT page);
-	void  QuickPrint(LPCTSTR docName);
+    UINT  CollatePages();
+    void  DoPrint(LPCTSTR docName);
+    void  PrintPage(CDC& dc, UINT page);
+    void  QuickPrint(LPCTSTR docName);
     virtual void SetFontDefaults();
 
 protected:
@@ -21,11 +21,11 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-	CRect GetPageRect();
-	CRect GetPrintRect();
+    CRect GetPageRect();
+    CRect GetPrintRect();
 
     CFont   m_font;
-	std::vector<int> m_pageBreaks;
+    std::vector<int> m_pageBreaks;
 };
 
 #endif // RICHVIEW_H

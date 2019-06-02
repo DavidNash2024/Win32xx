@@ -281,6 +281,8 @@ vcbuild /rebuild Tutorial9\ProjectFiles\Tutorial9_2005.vcproj debug			>>"..\outp
 vcbuild /rebuild Tutorial9\ProjectFiles\Tutorial9_2005.vcproj release		>>"..\output\VS2005.log"
 vcbuild /rebuild Tutorial10\ProjectFiles\Tutorial10_2005.vcproj debug		>>"..\output\VS2005.log"
 vcbuild /rebuild Tutorial10\ProjectFiles\Tutorial10_2005.vcproj release		>>"..\output\VS2005.log"
+vcbuild /rebuild Tutorial11\ProjectFiles\Tutorial11_2005.vcproj debug		>>"..\output\VS2005.log"
+vcbuild /rebuild Tutorial11\ProjectFiles\Tutorial11_2005.vcproj release		>>"..\output\VS2005.log"
 
 mkdir "..\output\VS2005\Tutorials"
 mkdir "..\output\VS2005\Tutorials\Debug"
@@ -296,6 +298,7 @@ copy Tutorial7\ProjectFiles\Debug\Tutorial7.exe         "..\output\VS2005\Tutori
 copy Tutorial8\ProjectFiles\Debug\Tutorial8.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
 copy Tutorial9\ProjectFiles\Debug\Tutorial9.exe         "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
 copy Tutorial10\ProjectFiles\Debug\Tutorial10.exe       "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
+copy Tutorial11\ProjectFiles\Debug\Tutorial11.exe       "..\output\VS2005\Tutorials\Debug"    >>"..\output\VS2005.log"
 
 mkdir "..\output\VS2005\Tutorials\Release"
 
@@ -309,6 +312,7 @@ copy Tutorial6\ProjectFiles\Release\Tutorial6.exe       "..\output\VS2005\Tutori
 copy Tutorial7\ProjectFiles\Release\Tutorial7.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
 copy Tutorial8\ProjectFiles\Release\Tutorial8.exe       "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
 copy Tutorial10\ProjectFiles\Release\Tutorial10.exe     "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
+copy Tutorial11\ProjectFiles\Release\Tutorial11.exe     "..\output\VS2005\Tutorials\Release"    >>"..\output\VS2005.log"
 
 REM: Pop the directory change off the stack
 popd

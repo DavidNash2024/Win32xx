@@ -3,7 +3,6 @@
 // Used by Resource.rc
 //
 
-
 // include the Resource IDs defined by Win32++
 #include "default_resource.h"
 
@@ -12,9 +11,10 @@
 #define IDM_FILE_OPEN                   122
 #define IDM_FILE_SAVE                   123
 #define IDM_FILE_SAVEAS                 124
-#define IDM_FILE_PRINT                  125
-#define IDM_FILE_CLOSE                  126
-#define IDM_FILE_EXIT                   127
+#define IDM_FILE_PREVIEW                125
+#define IDM_FILE_PRINT                  126
+#define IDM_FILE_CLOSE                  127
+#define IDM_FILE_EXIT                   128
 #define IDM_EDIT_UNDO                   130
 #define IDM_EDIT_REDO                   131
 #define IDM_EDIT_CUT                    132
@@ -39,3 +39,4 @@
 #define _APS_NEXT_SYMED_VALUE           150
 #endif
 #endif
+

@@ -132,10 +132,23 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 
-// Sends the bitmap extracted from the View window to a printer of your choice.
+void CView::Print(LPCTSTR docName)
+// Select the printer, and call QuickPrint
+{
+    CPrintDialog printDlg;
+
+    // Bring up a dialog to choose the printer
+    if (printDlg.DoModal(*this) == IDOK)    // throws exception if there is no default printer
+    {
+        QuickPrint(docName);
+    }
+
+}
+
+void CView::PrintPage(CDC& dc, UINT)
+// Prints the view window's bitmap to the specified dc.
+// Called by CPrintPreview, and by QuickPrint.
 // This function provides a useful reference for printing bitmaps in general.
-// This function throws an exception if unable to print.
-void CView::Print()
 {
     // Get the dimensions of the View window
     CRect viewRect = GetClientRect();
@@ -148,71 +161,79 @@ void CView::Print()
     memDC.CreateCompatibleBitmap(viewDC, width, height);
     BitBlt(memDC, 0, 0, width, height, viewDC, 0, 0, SRCCOPY);
     CBitmap bmView = memDC.DetachBitmap();
+
+    BITMAPINFOHEADER bih;
+    ZeroMemory(&bih, sizeof(bih));
+    bih.biSize = sizeof(bih);
+    bih.biHeight = height;
+    bih.biWidth = width;
+    bih.biPlanes = 1;
+    bih.biBitCount = 24;
+    bih.biCompression = BI_RGB;
+
+    // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
+    // Get the size of the image data
+    BITMAPINFO* pBI = reinterpret_cast<BITMAPINFO*>(&bih);
+    memDC.GetDIBits(bmView, 0, height, NULL, pBI, DIB_RGB_COLORS);
+
+    // Retrieve the image data
+    std::vector<byte> vBits(bih.biSizeImage, 0); // a vector to hold the byte array
+    byte* pByteArray = &vBits.front();
+    memDC.GetDIBits(bmView, 0, height, pByteArray, pBI, DIB_RGB_COLORS);
+
+    // Get the device contect of the default or currently chosen printer
     CPrintDialog printDlg;
+    CDC printDC = printDlg.GetPrinterDC();
 
-    // Bring up a dialog to choose the printer
-    if (printDlg.DoModal(*this) == IDOK)    // throws exception if there is no default printer
-    {
-        // Zero and then initialize the members of a DOCINFO structure.
-        DOCINFO di;
-        memset(&di, 0, sizeof(DOCINFO));
-        di.cbSize = sizeof(DOCINFO);
-        di.lpszDocName = _T("Scribble Printout");
+    // Determine the scaling factors required to print the bitmap and retain its original proportions.
+    double viewPixelsX = double(viewDC.GetDeviceCaps(LOGPIXELSX));
+    double viewPixelsY = double(viewDC.GetDeviceCaps(LOGPIXELSY));
+    double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
+    double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
+    double scaleX = printPixelsX / viewPixelsX;
+    double scaleY = printPixelsY / viewPixelsY;
 
-        // Begin a print job by calling the StartDoc function.
-        CDC printDC = printDlg.GetPrinterDC();
-        if (SP_ERROR == StartDoc(printDC, &di))
-            throw CUserException(_T("Failed to start print job"));
+    int scaledWidth = int(width * scaleX);
+    int scaledHeight = int(height * scaleY);
 
-        // Inform the driver that the application is about to begin sending data.
-        if (0 > StartPage(printDC))
-            throw CUserException(_T("StartPage failed"));
+    // Use StretchDIBits to scale the bitmap and maintain its original proportions
+    UINT result = StretchDIBits(dc, 0, 0, scaledWidth, scaledHeight, 0, 0,
+        width, height, pByteArray, pBI, DIB_RGB_COLORS, SRCCOPY);
 
-        BITMAPINFOHEADER bih;
-        ZeroMemory(&bih, sizeof(bih));
-        bih.biSize = sizeof(bih);
-        bih.biHeight = height;
-        bih.biWidth = width;
-        bih.biPlanes = 1;
-        bih.biBitCount = 24;
-        bih.biCompression = BI_RGB;
+    if (GDI_ERROR == result)
+        throw CUserException(_T("Failed to resize image for printing"));
+}
 
-        // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
-        // Get the size of the image data
-        BITMAPINFO* pBI = reinterpret_cast<BITMAPINFO*>(&bih);
-        memDC.GetDIBits(bmView, 0, height, NULL, pBI, DIB_RGB_COLORS);
+void CView::QuickPrint(LPCTSTR docName)
+{
+    // Zero and then initialize the members of a DOCINFO structure.
+    DOCINFO di;
+    memset(&di, 0, sizeof(DOCINFO));
+    di.cbSize = sizeof(DOCINFO);
+    di.lpszDocName = docName;
 
-        // Retrieve the image data
-        std::vector<byte> vBits(bih.biSizeImage, 0); // a vector to hold the byte array
-        byte* pByteArray = &vBits.front();
-        memDC.GetDIBits(bmView, 0, height, pByteArray, pBI, DIB_RGB_COLORS);
+    // Get the device contect of the default or currently chosen printer
+    CPrintDialog printDlg;
+    CDC printDC = printDlg.GetPrinterDC();
 
-        // Determine the scaling factors required to print the bitmap and retain its original proportions.
-        double viewPixelsX  = double(viewDC.GetDeviceCaps(LOGPIXELSX));
-        double viewPixelsY  = double(viewDC.GetDeviceCaps(LOGPIXELSY));
-        double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
-        double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
-        double scaleX = printPixelsX / viewPixelsX;
-        double scaleY = printPixelsY / viewPixelsY;
+    // Begin a print job by calling the StartDoc function.
+    if (SP_ERROR == StartDoc(printDC, &di))
+        throw CUserException(_T("Failed to start print job"));
 
-        int scaledWidth = int(width * scaleX);
-        int scaledHeight = int(height * scaleY);
+    // Inform the driver that the application is about to begin sending data.
+    if (0 > StartPage(printDC))
+        throw CUserException(_T("StartPage failed"));
 
-        // Use StretchDIBits to scale the bitmap and maintain its original proportions
-        UINT result = StretchDIBits(printDC, 0, 0, scaledWidth, scaledHeight, 0, 0,
-            width, height, pByteArray, pBI, DIB_RGB_COLORS, SRCCOPY);
+    // Print the page on the printer DC
+    PrintPage(printDC);
 
-        if (GDI_ERROR == result)
-            throw CUserException(_T("Failed to resize image for printing"));
+    // Inform the driver that the page is finished.
+    if (0 > EndPage(printDC))
+        throw CUserException(_T("EndPage failed"));
 
-        // Inform the driver that the page is finished.
-        if (0 > EndPage(printDC))
-            throw CUserException(_T("EndPage failed"));
-
-        // Inform the driver that document has ended.
-        if (0 > EndDoc(printDC))
-            throw CUserException(_T("EndDoc failed"));
-    }
+    // Inform the driver that document has ended.
+    if (0 > EndDoc(printDC))
+        throw CUserException(_T("EndDoc failed"));
 }
 
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
