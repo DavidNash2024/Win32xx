@@ -11,7 +11,7 @@
 
 
 // definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_encoding(ANSI), m_isWrapped(false), m_isRTF(false)
+CMainFrame::CMainFrame() : m_encoding(ANSI), m_isWrapped(false), m_isRTF(false), m_oldFocus(0)
 {
     SetView(m_richView);
 
@@ -361,8 +361,12 @@ BOOL CMainFrame::OnFilePreview()
     ShowMenu(FALSE);
     ShowToolBar(FALSE);
 
+    // Save the current Focus.
+    SaveFocus();
+
     // Swap views
     SetView(m_printPreview);
+    m_printPreview.SetFocus();
 
     return TRUE;
 }
@@ -386,22 +390,13 @@ BOOL CMainFrame::OnFilePrint()
 BOOL CMainFrame::OnFilePrintSetup()
 // Select the printer for use by the application
 {
-    // Prepare the print dialog
-    CPrintDialog printDlg(PD_PRINTSETUP);
-    PRINTDLG pd = printDlg.GetParameters();
-    pd.nCopies = 1;
-    pd.nFromPage = 0xFFFF;
-    pd.nToPage = 0xFFFF;
-    pd.nMinPage = 1;
-    pd.nMaxPage = 0xFFFF;
-    printDlg.SetParameters(pd);
-
+    // Display the print dialog.
+    CPrintDialog printDlg;
     try
     {
         // Display the print dialog
         if (printDlg.DoModal(*this) == IDOK)
         {
-            CDC dcPrinter = printDlg.GetPrinterDC();
             CString status = _T("Printer: ") + printDlg.GetDeviceName();
             SetStatusText(status);
         }
@@ -590,6 +585,39 @@ BOOL CMainFrame::OnOptionsWrap()
     m_richView.SetTargetDevice(NULL, m_isWrapped);
     m_isWrapped = !m_isWrapped;
     return TRUE;
+}
+
+void CMainFrame::OnPreviewClose()
+// Called when the Print Preview's "Close" button is pressed.
+{
+    // Swap the view
+    SetView(m_richView);
+
+    // Show the menu and toolbar
+    ShowMenu(TRUE);
+    ShowToolBar(TRUE);
+
+    // Restore focus to the window focussed before DoPrintPreview was called.
+    RestoreFocus();
+}
+
+void CMainFrame::OnPreviewPrint()
+// Called when the Print Preview's "Print Now" button is pressed
+{
+    m_richView.QuickPrint(m_pathName);
+}
+
+void CMainFrame::OnPreviewSetup()
+// Called when the Print Preview's "Print Setup" button is pressed
+{
+    // Call the print setup dialog.
+    OnFilePrintSetup();
+
+    // Recalculate the number of pages.
+    UINT maxPage = m_richView.CollatePages();
+
+    // Initiate the print preview.
+    m_printPreview.DoPrintPreview(*this, maxPage);
 }
 
 // Update the radio buttons in the menu.
@@ -791,19 +819,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_PREVIEWCLOSE:
-        // Swap the view
-        SetView(m_richView);
-
-        // Show the menu and toolbar
-        ShowMenu(TRUE);
-        ShowToolBar(TRUE);
-
-        break;
-
-    case UWM_PRINTNOW:
-        m_richView.QuickPrint(m_pathName);
-        break;
+    case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
+    case UWM_PRINTNOW:          OnPreviewPrint();   break;
+    case UWM_PRINTSETUP:        OnPreviewSetup();   break;
     }
 
     return WndProcDefault(msg, wparam, lparam);

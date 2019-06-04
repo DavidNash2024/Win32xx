@@ -237,7 +237,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_DROPFILE:          return OnDropFile(wparam);
+    case UWM_DROPFILE:          OnDropFile(wparam); break;
     }
 
     //Use the default message handling for remaining messages

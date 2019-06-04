@@ -21,6 +21,8 @@ public:
     void    OnFilePrint();
     void    OnFileSave();
     void    OnPreviewClose();
+    void    OnPreviewPrint();
+    void    OnPreviewSetup();
     void    PrintPage(CDC&, UINT);
     
     CString ItoT(int i);

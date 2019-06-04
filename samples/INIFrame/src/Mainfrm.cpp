@@ -198,6 +198,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 }
 
 void CMainFrame::OnPreviewClose()
+// Called when the Print Preview's "Close" button is pressed.
 {
     // Swap the view
     SetView(m_view);
@@ -205,6 +206,38 @@ void CMainFrame::OnPreviewClose()
     // Show the menu and toolbar
     ShowMenu(TRUE);
     ShowToolBar(TRUE);
+}
+
+void CMainFrame::OnPreviewPrint()
+// Called when the Print Preview's "Print Now" button is pressed.
+{
+    // TODO:
+    // Add your own code here. Refer to the tutorial for additional information.
+}
+
+void CMainFrame::OnPreviewSetup()
+// Called when the Print Preview's "Print Setup" button is pressed.
+{
+    // Call the print setup dialog.
+    CPrintDialog printDlg;
+    try
+    {
+        // Display the print dialog.
+        if (printDlg.DoModal(*this) == IDOK)
+        {
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
+        }
+    }
+
+    catch (const CWinException& /* e */)
+    {
+        // No default printer
+        MessageBox(_T("Unable to display print dialog"), _T("Printer Selection Failed"), MB_OK);
+    }
+
+    // Initiate the print preview.
+    m_preview.DoPrintPreview(*this);
 }
 
 void CMainFrame::PrintPage(CDC&, UINT)
@@ -354,20 +387,17 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+
+
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_PREVIEWCLOSE:    // Preview Close button pressed.
-        OnPreviewClose();
-        break;
-
-    case UWM_PRINTNOW:        // Preview Print button pressed.
-      //  QuickPrint();
-        break;
+    case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
+    case UWM_PRINTNOW:          OnPreviewPrint();   break;
+    case UWM_PRINTSETUP:        OnPreviewSetup();   break;
     }
 
-    // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }
 
