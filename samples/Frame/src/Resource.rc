@@ -166,6 +166,15 @@ END
 
 STRINGTABLE
 BEGIN
+    IDW_PREVIEWPRINT         "Print Now"
+    IDW_PREVIEWSETUP         "Print Setup"
+    IDW_PREVIEWPREV          "Prev Page"
+    IDW_PREVIEWNEXT          "Next Page"
+    IDW_PREVIEWCLOSE         "Close"
+END
+
+STRINGTABLE
+BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
     IDM_FILE_SAVE           "Save the Document"

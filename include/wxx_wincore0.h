@@ -90,7 +90,8 @@
 
 // docking messages
 #define UWM_PREVIEWCLOSE      (WM_APP + 0x3F2A) // Preview window Close button pressed.
-#define UWM_PRINTNOW          (WM_APP + 0x3F2B) // Print the previewed document.  
+#define UWM_PRINTNOW          (WM_APP + 0x3F2B) // Print the previewed document.
+#define UWM_PRINTSETUP        (WM_APP + 0x3F2C) // Print Setup issued from print preview
 
 
 namespace Win32xx

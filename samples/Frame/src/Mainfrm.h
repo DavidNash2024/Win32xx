@@ -21,6 +21,8 @@ public:
     BOOL    OnFileSave();
     BOOL    OnFilePreview();
     void    OnPreviewClose();
+    void    OnPreviewPrint();
+    void    OnPreviewSetup();
     void    PrintPage(CDC&, UINT);
 
 protected:

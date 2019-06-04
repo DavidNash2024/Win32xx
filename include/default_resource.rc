@@ -73,14 +73,6 @@ BEGIN
         MENUITEM "Tool Bar",                    IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "Status Bar",                  IDW_VIEW_STATUSBAR, CHECKED
     END
-    POPUP "&Color"
-    BEGIN
-        MENUITEM "&Black",                      IDM_COLOR_BLACK
-        MENUITEM "&Red",                        IDM_COLOR_RED
-        MENUITEM "&Green",                      IDM_COLOR_GREEN
-        MENUITEM "B&lue",                       IDM_COLOR_BLUE
-        MENUITEM "&White",                      IDM_COLOR_WHITE
-    END
     POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_WINDOW_CASCADE
@@ -155,11 +147,19 @@ END
 
 STRINGTABLE
 BEGIN
-    IDW_MAIN                "MDI Frame"
-    IDW_INDICATOR_CAPS      "CAPS"
+    IDW_MAIN                "Scribble Application"
+    IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
-    IDW_READY               "Ready"
+    IDW_READY               "Ready" 
+END
+
+BEGIN
+    IDW_PREVIEWPRINT         "Print Now"
+    IDW_PREVIEWSETUP         "Print Setup"
+    IDW_PREVIEWPREV          "Prev Page"
+    IDW_PREVIEWNEXT          "Next Page"
+    IDW_PREVIEWCLOSE         "Close"
 END
 
 STRINGTABLE
@@ -207,11 +207,6 @@ STRINGTABLE
 BEGIN
     IDM_FILE_NEWVIEW        "Create View MDI Child"
     IDM_FILE_CLOSE          "Close MDI Window"
-    IDM_COLOR_BLACK         "Use Black Printing"
-    IDM_COLOR_RED           "Use Red Printing"
-    IDM_COLOR_GREEN         "Use Green Printing"
-    IDM_COLOR_BLUE          "Use Blue Printing"
-    IDM_COLOR_WHITE         "Use White Printing"
     IDW_WINDOW_CASCADE      "Cascade MDI Windows"
     IDW_WINDOW_TILE         "Tile MDI Windows"
     IDW_WINDOW_ARRANGE      "Arrange Icons"

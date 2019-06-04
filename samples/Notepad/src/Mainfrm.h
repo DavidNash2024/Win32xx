@@ -53,8 +53,13 @@ public:
     BOOL OnOptionsFont();
     BOOL OnOptionsWrap();
     void OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
+    void    OnPreviewClose();
+    void    OnPreviewPrint();
+    void    OnPreviewSetup();
 
     BOOL ReadFile(LPCTSTR fileName);
+    void RestoreFocus() { ::SetFocus(m_oldFocus); }
+    void SaveFocus() { m_oldFocus = ::GetFocus(); }
     void SaveModifiedText();
     void SetEncoding(Encoding encoding);
     void SetPathName(LPCTSTR fullFileName);
@@ -81,6 +86,7 @@ private:
     Encoding m_encoding;
     bool m_isWrapped;
     bool m_isRTF;
+    HWND m_oldFocus;
 };
 
 #endif //MAINFRM_H

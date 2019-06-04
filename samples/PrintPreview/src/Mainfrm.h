@@ -38,8 +38,13 @@ public:
     BOOL OnFileSave();
     BOOL OnOptionsFont();
     BOOL OnOptionsWrap();
+    void OnPreviewClose();
+    void OnPreviewPrint();
+    void OnPreviewSetup();
 
     BOOL ReadFile(LPCTSTR fileName);
+    void RestoreFocus()         {::SetFocus(m_oldFocus);}
+    void SaveFocus() { m_oldFocus = ::GetFocus(); }
     void SaveModifiedText();
     void SetPathName(LPCTSTR fullFileName);
     void SetWindowTitle();
@@ -61,6 +66,7 @@ private:
     CRichView m_richView;
     CString m_pathName;
     bool m_isWrapped;
+    HWND m_oldFocus;
 
 };
 

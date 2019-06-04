@@ -602,6 +602,9 @@ namespace Win32xx
     // Retrieves the name of the currently selected printer device.
     inline CString CPrintDialog::GetDeviceName() const
     {
+        CThreadLock lock(GetApp()->m_printLock);
+        GetApp()->UpdateDefaultPrinter();
+
         CString str;
         if (GetApp()->m_devNames.Get() != 0)
             str = GetDevNames().GetDeviceName();
@@ -617,6 +620,8 @@ namespace Win32xx
     //  Then use pDevMode as if it were a LPDEVMODE
     inline CDevMode CPrintDialog::GetDevMode() const
     {
+        CThreadLock lock(GetApp()->m_printLock);
+        GetApp()->UpdateDefaultPrinter();
         return CDevMode(GetApp()->m_devMode);
     }
 
@@ -628,12 +633,16 @@ namespace Win32xx
     //  Then use pDevNames as if it were a LPDEVNAMES
     inline CDevNames CPrintDialog::GetDevNames() const
     {
+        CThreadLock lock(GetApp()->m_printLock);
+        GetApp()->UpdateDefaultPrinter();
         return CDevNames(GetApp()->m_devNames);
     }
 
     // Retrieves the name of the currently selected printer driver.
     inline CString CPrintDialog::GetDriverName() const
     {
+        CThreadLock lock(GetApp()->m_printLock);
+        GetApp()->UpdateDefaultPrinter();
         CString str;
         if (GetApp()->m_devNames.Get() != 0)
             str = GetDevNames().GetDriverName();
@@ -650,6 +659,8 @@ namespace Win32xx
     // Retrieves the name of the currently selected printer port.
     inline CString CPrintDialog::GetPortName() const
     {
+        CThreadLock lock(GetApp()->m_printLock);
+        GetApp()->UpdateDefaultPrinter();
         CString str;
         if (GetApp()->m_devNames.Get() != 0)
             str = GetDevNames().GetPortName();

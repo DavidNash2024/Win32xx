@@ -19,7 +19,6 @@ UINT CRichView::CollatePages()
 {
     CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
-    printerDC.SetMapMode(MM_TEXT);
 
     FORMATRANGE fr;
     fr.hdcTarget = printerDC;

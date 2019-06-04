@@ -29,6 +29,8 @@ public:
     void OnFilePrint();
     void OnPenColor();
     void OnPreviewClose();
+    void OnPreviewPrint();
+    void OnPreviewSetup();
 
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
