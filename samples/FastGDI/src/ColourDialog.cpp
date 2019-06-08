@@ -53,7 +53,7 @@ void CColourDialog::OnGrayScale()
         m_previewImage.TintBitmap(m_cRed, m_cGreen, m_cBlue);
     }
 
-    PaintPreview();
+    Paint();
 }
 
 BOOL CColourDialog::OnInitDialog()
@@ -137,7 +137,7 @@ LRESULT CColourDialog::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
     if (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0))
         m_previewImage.GrayScaleBitmap();
 
-    PaintPreview();
+    Paint();
 
     return 0;
 }
@@ -159,11 +159,11 @@ LRESULT CColourDialog::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
     UNREFERENCED_PARAMETER(wparam);
     UNREFERENCED_PARAMETER(lparam);
 
-    PaintPreview();
+    Paint();
     return 0;
 }
 
-void CColourDialog::PaintPreview()
+void CColourDialog::Paint()
 // Displays the bitmap in the display area of our dialog
 {
     BITMAP bm;

@@ -31,7 +31,7 @@ New Features and Enhancements
   5) Create the preview window, and swap it into the frame's view.
   6) Handle UWM_PREVIEWCLOSE to swap back to the default view when the preview
      closes.
-	 
+     
   Refer to the scribble and notepad samples for a demonstration of how to use
   CPrintPreview.
   
@@ -60,6 +60,8 @@ Changes in detail
 -----------------
 Added Console                                    sample
 Added CHGlobal                                   class
+Added CDC::GetBrushOrgEx                         member function
+Added CDC::SetBrushOrgEx                         member function
 Added CGlobalLock<DEVNAMES>::GetDeviceName       member function
 Added CGlobalLock<DEVNAMES>::GetDriverName       member function
 Added CGlobalLock<DEVNAMES>::GetPortName         member function
@@ -72,6 +74,13 @@ Added CWebBrowser::GetDocument                   member function
 Added VS2017 project files to all samples and tutorials
 
 Modified ::GetApp  global function               Now returns a pointer to CWinApp.
+
+Updated the samples
+ - Browser sample now demonstrates print and print preview.
+ - FastGDI sample now utilises the CPrintPreview class.
+ - PrintPreview sample now utilises the CPrintPreview class.
+ - NotePad sample now utilises the CPrintPreview class.
+ - Scribble sample now utilises the CPrintPreview class.
 
 Updated the tutorials
  - The tutorials now demonstrate how to implement a print preview.

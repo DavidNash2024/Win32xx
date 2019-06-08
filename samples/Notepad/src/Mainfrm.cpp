@@ -27,6 +27,8 @@ CMainFrame::~CMainFrame()
 {
 }
 
+
+// Clears the contents of the richedit view.
 void CMainFrame::ClearContents()
 {
     m_richView.SendMessage(WM_SETTEXT, 0, 0);
@@ -42,6 +44,8 @@ void CMainFrame::ClearContents()
     SetStatusIndicators();
 }
 
+
+// Determines the encoding of the specified file.
 void CMainFrame::DetermineEncoding(CFile& file)
 {
     Encoding encoding = ANSI;
@@ -86,6 +90,8 @@ void CMainFrame::DetermineEncoding(CFile& file)
     SetEncoding(encoding);
 }
 
+
+// The stream in callback function.
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamIn
@@ -99,6 +105,8 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
     return 0;
 }
 
+
+// The stream out callback function.
 DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamOut
@@ -111,6 +119,8 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
     return 0;
 }
 
+
+// Called when the window is closed.
 void CMainFrame::OnClose()
 {
     //Check for unsaved text
@@ -120,6 +130,8 @@ void CMainFrame::OnClose()
     CFrame::OnClose();
 }
 
+
+// Handle commands from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -161,6 +173,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -178,8 +192,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
 
-    // Create the PrintPreview dialog. It is initially hidden.  
-    m_printPreview.Create(*this);
+    // Create the PrintPreview dialog. It is initially hidden.
+    m_preview.Create(*this);
 
     // Get the name of the default or currently chosen printer
     CPrintDialog printDlg;
@@ -195,6 +209,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return  CFrame::OnCreate(cs);
 }
 
+
+// Called in response to the EN_DROPFILES notification.
 BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
     UINT length = DragQueryFile(hDropInfo, 0, 0, 0);
@@ -216,12 +232,16 @@ BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
     return TRUE;
 }
 
+
+// Delete (cut) the current selection, if any.
 BOOL CMainFrame::OnEditCut()
 {
     m_richView.Cut();
     return TRUE;
 }
 
+
+// Copy the current selection to the clipboard.
 BOOL CMainFrame::OnEditCopy()
 {
     m_richView.Copy();
@@ -350,12 +370,11 @@ BOOL CMainFrame::OnFilePreview()
     }
 
     // Setup the print preview.
-    m_printPreview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
-    m_printPreview.UseHalfTone(TRUE);       // Turn of Half tone for text previewing
+    m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
 
     // Set the preview's owner (for messages), and number of pages.
     UINT maxPage = m_richView.CollatePages();
-    m_printPreview.DoPrintPreview(*this, maxPage);
+    m_preview.DoPrintPreview(*this, maxPage);
 
     // Hide the menu and toolbar
     ShowMenu(FALSE);
@@ -365,8 +384,8 @@ BOOL CMainFrame::OnFilePreview()
     SaveFocus();
 
     // Swap views
-    SetView(m_printPreview);
-    m_printPreview.SetFocus();
+    SetView(m_preview);
+    m_preview.SetFocus();
 
     return TRUE;
 }
@@ -378,17 +397,18 @@ BOOL CMainFrame::OnFilePrint()
         m_richView.DoPrint(m_pathName);
     }
 
-    catch (const CWinException&  /*e*/)
+    catch (const CException& e)
     {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
     return TRUE;
 }
 
+
+// Select the printer for use by the application.
 BOOL CMainFrame::OnFilePrintSetup()
-// Select the printer for use by the application
 {
     // Display the print dialog.
     CPrintDialog printDlg;
@@ -607,17 +627,31 @@ void CMainFrame::OnPreviewPrint()
     m_richView.QuickPrint(m_pathName);
 }
 
+
+// Called when the Print Preview's "Print Setup" button is pressed.
 void CMainFrame::OnPreviewSetup()
-// Called when the Print Preview's "Print Setup" button is pressed
 {
     // Call the print setup dialog.
-    OnFilePrintSetup();
+    CPrintDialog printDlg(PD_PRINTSETUP);
+    try
+    {
+        // Display the print dialog
+        if (printDlg.DoModal(*this) == IDOK)
+        {
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
+        }
+    }
 
-    // Recalculate the number of pages.
-    UINT maxPage = m_richView.CollatePages();
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+    }
 
     // Initiate the print preview.
-    m_printPreview.DoPrintPreview(*this, maxPage);
+    UINT maxPage = m_richView.CollatePages();
+    m_preview.DoPrintPreview(*this, maxPage);
 }
 
 // Update the radio buttons in the menu.

@@ -10,7 +10,10 @@
 #endif
 
 
+///////////////////////////////////////
 // definitions for the CMainFrame class
+
+// CMainFrame constructor.
 CMainFrame::CMainFrame() : m_isWrapped(false), m_oldFocus(0)
 {
     SetView(m_richView);
@@ -27,6 +30,8 @@ CMainFrame::~CMainFrame()
 {
 }
 
+
+// Stream in callback function.
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamIn
@@ -40,6 +45,8 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
     return 0;
 }
 
+
+// Stream out callback function.
 DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamOut
@@ -52,6 +59,8 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
     return 0;
 }
 
+
+// Called when the window is closed.
 void CMainFrame::OnClose()
 {
     ShowToolBar(TRUE);
@@ -63,6 +72,8 @@ void CMainFrame::OnClose()
     CFrame::OnClose();
 }
 
+
+// Handle input from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -101,6 +112,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -117,8 +130,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
-    // Create the PrintPreview dialog. It is initially hidden.  
-    m_printPreview.Create(*this);
+    // Create the PrintPreview dialog. It is initially hidden.
+    m_preview.Create(*this);
 
     // Get the name of the default or currently chosen printer
     CPrintDialog printDlg;
@@ -134,6 +147,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return  CFrame::OnCreate(cs);
 }
 
+
+// Called in response to a EN_DROPFILES notification.
 BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
     TCHAR fileName[_MAX_PATH];
@@ -151,11 +166,13 @@ BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
     return TRUE;
 }
 
+
 BOOL CMainFrame::OnEditCut()
 {
     m_richView.Cut();
     return TRUE;
 }
+
 
 BOOL CMainFrame::OnEditCopy()
 {
@@ -163,11 +180,13 @@ BOOL CMainFrame::OnEditCopy()
     return TRUE;
 }
 
+
 BOOL CMainFrame::OnEditPaste()
 {
     m_richView.PasteSpecial(CF_TEXT);
     return TRUE;
 }
+
 
 BOOL CMainFrame::OnEditDelete()
 {
@@ -175,11 +194,13 @@ BOOL CMainFrame::OnEditDelete()
     return TRUE;
 }
 
+
 BOOL CMainFrame::OnEditRedo()
 {
     m_richView.Redo();
     return TRUE;
 }
+
 
 BOOL CMainFrame::OnEditUndo()
 {
@@ -187,13 +208,17 @@ BOOL CMainFrame::OnEditUndo()
     return TRUE;
 }
 
+
+// Issue a close request to the frame.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
+    
     PostMessage(WM_CLOSE);
     return TRUE;
 }
 
+
+// Load a Most Recently Used file from the menu.
 BOOL CMainFrame::OnFileMRU(WPARAM wparam)
 {
     UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
@@ -208,6 +233,8 @@ BOOL CMainFrame::OnFileMRU(WPARAM wparam)
     return TRUE;
 }
 
+
+// Clear the contents of the rich view.
 BOOL CMainFrame::OnFileNew()
 {
     //Check for unsaved text
@@ -221,6 +248,8 @@ BOOL CMainFrame::OnFileNew()
     return TRUE;
 }
 
+
+// Initiate the print preview.
 BOOL CMainFrame::OnFilePreview()
 {
     // Verify a print preview is possible
@@ -233,12 +262,11 @@ BOOL CMainFrame::OnFilePreview()
     }
 
     // Setup the print preview.
-    m_printPreview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
-    m_printPreview.UseHalfTone(TRUE);       // Turn of Half tone for text previewing
+    m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
 
     // Set the preview's owner (for messages), and number of pages.
     UINT maxPage = m_richView.CollatePages();
-    m_printPreview.DoPrintPreview(*this, maxPage);
+    m_preview.DoPrintPreview(*this, maxPage);
     
     // Hide the menu and toolbar
     ShowMenu(FALSE);
@@ -248,12 +276,14 @@ BOOL CMainFrame::OnFilePreview()
     SaveFocus();
     
     // Swap views
-    SetView(m_printPreview);
-    m_printPreview.SetFocus();
+    SetView(m_preview);
+    m_preview.SetFocus();
 
     return TRUE;
 }
 
+
+// Create the File Open dialog and select a file to load.
 BOOL CMainFrame::OnFileOpen()
 {
     // szFilters is a text string that includes two file name filters:
@@ -276,6 +306,8 @@ BOOL CMainFrame::OnFileOpen()
     return TRUE;
 }
 
+
+// Initiate the print job.
 BOOL CMainFrame::OnFilePrint()
 {
     try
@@ -283,14 +315,15 @@ BOOL CMainFrame::OnFilePrint()
         m_richView.DoPrint(m_pathName);
     }
 
-    catch (const CWinException&  /*e*/ )
+    catch (const CException& e)
     {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
     return TRUE;
 }
+
 
 BOOL CMainFrame::OnFilePrintSetup()
 {
@@ -316,11 +349,17 @@ BOOL CMainFrame::OnFilePrintSetup()
     return TRUE;
 }
 
+
+
+
+
+// Start a print job without choosing the printer.
 BOOL CMainFrame::OnFileQuickPrint()
 {
     m_richView.QuickPrint(m_pathName);
     return TRUE;
 }
+
 
 BOOL CMainFrame::OnFileSave()
 {
@@ -331,6 +370,7 @@ BOOL CMainFrame::OnFileSave()
 
     return TRUE;
 }
+
 
 BOOL CMainFrame::OnFileSaveAs()
 {
@@ -351,6 +391,7 @@ BOOL CMainFrame::OnFileSaveAs()
     return TRUE;
 }
 
+
 void CMainFrame::OnInitialUpdate()
 {
     DragAcceptFiles(TRUE);
@@ -361,6 +402,7 @@ void CMainFrame::OnInitialUpdate()
     ShowToolBar(TRUE);
 }
 
+
 void CMainFrame::OnMenuUpdate(UINT id)
 {
     if (id == IDM_OPTIONS_WRAP)
@@ -370,6 +412,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
 
     CFrame::OnMenuUpdate(id);
 }
+
 
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
@@ -388,6 +431,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 
     return CFrame::OnNotify(wparam, lparam);
 }
+
 
 BOOL CMainFrame::OnOptionsFont()
 {
@@ -410,12 +454,14 @@ BOOL CMainFrame::OnOptionsFont()
     return TRUE;
 }
 
+
 BOOL CMainFrame::OnOptionsWrap()
 {
     m_richView.SetTargetDevice(NULL, m_isWrapped);
     m_isWrapped = !m_isWrapped;
     return TRUE;
 }
+
 
 void CMainFrame::OnPreviewClose()
 // Called when the Print Preview's "Close" button is pressed
@@ -431,24 +477,40 @@ void CMainFrame::OnPreviewClose()
     RestoreFocus();
 }
 
+
 void CMainFrame::OnPreviewPrint()
 // Called when the Print Preview's "Print Now" button is pressed
 {
     m_richView.QuickPrint(m_pathName);
 }
 
+
+// Called when the Print Preview's "Print Setup" button is pressed.
 void CMainFrame::OnPreviewSetup()
-// Called when the Print Preview's "Print Setup" button is pressed
 {
     // Call the print setup dialog.
-    OnFilePrintSetup();
+    CPrintDialog printDlg(PD_PRINTSETUP);
+    try
+    {
+        // Display the print dialog
+        if (printDlg.DoModal(*this) == IDOK)
+        {
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
+        }
+    }
 
-    // Recalculate the number of pages.
-    UINT maxPage = m_richView.CollatePages();
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+    }
 
     // Initiate the print preview.
-    m_printPreview.DoPrintPreview(*this, maxPage);
+    UINT maxPage = m_richView.CollatePages();
+    m_preview.DoPrintPreview(*this, maxPage);
 }
+
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 {
@@ -490,6 +552,7 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
     return TRUE;
 }
 
+
 void CMainFrame::SaveModifiedText()
 {
     //Check for unsaved text
@@ -498,10 +561,12 @@ void CMainFrame::SaveModifiedText()
             OnFileSave();
 }
 
+
 void CMainFrame::SetPathName(LPCTSTR filePathName)
 {
     m_pathName = filePathName;
 }
+
 
 void CMainFrame::SetupMenuIcons()
 {
@@ -511,6 +576,7 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_FILE_QUICKPRINT,    GetApp()->LoadIcon(IDI_QUICKPRINT));
     AddMenuIcon(IDM_FILE_PRINT,         GetApp()->LoadIcon(IDI_PRINT));
 }
+
 
 void CMainFrame::SetupToolBar()
 {
@@ -528,6 +594,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+
 void CMainFrame::SetWindowTitle()
 {
     CString Title;
@@ -540,6 +607,7 @@ void CMainFrame::SetWindowTitle()
     SetWindowText(Title);
 }
 
+
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -551,6 +619,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
     return WndProcDefault(msg, wparam, lparam);
 }
+
 
 BOOL CMainFrame::WriteFile(LPCTSTR fileName)
 {

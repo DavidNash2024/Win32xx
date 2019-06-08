@@ -10,13 +10,16 @@ CView::CView()
 {
 }
 
+
+// Returns a reference to CDoc.
 CDoc& CView::GetDoc()
 {
     return m_doc;
 }
 
+
+// OnDraw is called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
-// OnDraw is called when part or all of the window needs to be redrawn
 {
     CRect rc = GetClientRect();
 
@@ -24,12 +27,15 @@ void CView::OnDraw(CDC& dc)
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
+
+// OnInitialUpdate is called immediately after the window is created.
 void CView::OnInitialUpdate()
-// OnInitialUpdate is called immediately after the window is created
 {
     TRACE("View window created\n");
 }
 
+
+// Called before window creation to update the window's CREATESTRUCT.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Here we set the defaults used by the create function for the view window
@@ -40,6 +46,8 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+
+// Called before the window is registered to update the window's WNDCLASS.
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Here we set the Window class parameters.
@@ -59,8 +67,9 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
 
+
+// All window messages for this window pass through WndProc.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-// All window messages for this window pass through WndProc
 {
     switch (msg)
     {

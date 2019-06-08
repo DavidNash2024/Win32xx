@@ -9,13 +9,15 @@ CRichView::CRichView()
 {
 }
 
+
 CRichView::~CRichView()
 {
 }
 
-UINT CRichView::CollatePages()
+
 // Calculates the character position of the page breaks, and returns
 // the number of pages.
+UINT CRichView::CollatePages()
 {
     CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
@@ -54,6 +56,8 @@ UINT CRichView::CollatePages()
     return m_pageBreaks.size();
 }
 
+
+// Choose the printer and start the print job.
 void CRichView::DoPrint(LPCTSTR docName)
 {
     // Prepare the print dialog
@@ -71,8 +75,9 @@ void CRichView::DoPrint(LPCTSTR docName)
         QuickPrint(docName);
 }
 
-CRect CRichView::GetPageRect()
+
 // Returns a CRect of the entire printable area. Units are measured in twips.
+CRect CRichView::GetPageRect()
 {
     CRect rcPage;
 
@@ -94,8 +99,9 @@ CRect CRichView::GetPageRect()
     return rcPage;
 }
 
-CRect CRichView::GetPrintRect()
+
 // Returns the print area within the page. Units are measured in twips.
+CRect CRichView::GetPrintRect()
 {
     int margin = 200;
 
@@ -113,12 +119,14 @@ CRect CRichView::GetPrintRect()
     return rcPrintArea;
 }
 
+
+
 void CRichView::OnAttach()
 {
-    //increase the text limit of the rich edit window
+    // Increase the text limit of the rich edit window.
     LimitText(-1);
 
-    //Determine which messages will be passed to the parent
+    // Determine which messages will be passed to the parent.
     DWORD mask = ENM_KEYEVENTS | ENM_DROPFILES;
     SetEventMask(mask);
 
@@ -133,9 +141,10 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
 }
 
-void CRichView::PrintPage(CDC& dc, UINT page)
+
 // Prints the specified page to specified dc.
 // Called by CPrintPreview, and also used for printing.
+void CRichView::PrintPage(CDC& dc, UINT page)
 {
     CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
@@ -158,9 +167,10 @@ void CRichView::PrintPage(CDC& dc, UINT page)
     FormatRange();
 }
 
-void CRichView::QuickPrint(LPCTSTR docName)
+
 // Print the document without bringing up a print dialog.
 // docName - specifies the document name for the print job.
+void CRichView::QuickPrint(LPCTSTR docName)
 {
     // Acquire the currently selected printer and page settings
     CPrintDialog printDlg;
@@ -207,6 +217,8 @@ void CRichView::QuickPrint(LPCTSTR docName)
     printerDC.EndDoc();
 }
 
+
+// Set a default font.
 void CRichView::SetFontDefaults()
 {
     //Set font

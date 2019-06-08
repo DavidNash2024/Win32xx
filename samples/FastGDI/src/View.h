@@ -11,10 +11,13 @@ class CView : public CScrollView
 public:
     CView();
     virtual ~CView();
-    virtual BOOL LoadFileImage(LPCTSTR filename);
-    virtual BOOL SaveFileImage(LPCTSTR filename);
+    BOOL     LoadFileImage(LPCTSTR filename);
+    BOOL     SaveFileImage(LPCTSTR filename);
     CBitmap& GetImage() {return m_image;}
-    virtual CRect GetImageRect();
+    CRect    GetImageRect();
+    void     QuickPrint(LPCTSTR docName);
+    void     Print(LPCTSTR docName);
+    void     PrintPage(CDC& dc, UINT page = 1);
 
 protected:
     virtual void    OnDraw(CDC& dc);

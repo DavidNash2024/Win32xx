@@ -7,6 +7,8 @@
 
 
 // Definitions for the CMainFrame class
+
+// Constructor
 CMainFrame::CMainFrame()
 {
     // Constructor for CMainFrame. Its called after CFrame's constructor
@@ -21,15 +23,16 @@ CMainFrame::CMainFrame()
     SerializeINI(FALSE);
 }
 
+
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+
+// OnCommand responds to menu and and toolbar input
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -49,6 +52,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -69,18 +74,23 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+
+// Called when the window is closed.
 void CMainFrame::OnClose()
 {
     SerializeINI(true);
     CFrame::OnClose();
 }
 
+
+// Issue a close request to the frame
 void CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     PostMessage(WM_CLOSE);
 }
 
+
+// Called after the frame is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
@@ -93,6 +103,8 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
+
+// Bring up the file open dialog to choose a file.
 void CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE);
@@ -106,6 +118,8 @@ void CMainFrame::OnFileOpen()
 
 }
 
+
+// Save the file.
 void CMainFrame::OnFileSave()
 {
     CFileDialog fileDlg(FALSE);
@@ -119,8 +133,9 @@ void CMainFrame::OnFileSave()
 
 }
 
+
+// Previews a print job before sending it to the printer.
 void CMainFrame::OnFilePreview()
-// Previews a print job before sending it to the printer
 {
     try
     {
@@ -145,6 +160,10 @@ void CMainFrame::OnFilePreview()
 
             // Swap views
             SetView(m_preview);
+
+            // Update status
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
         }
         else
         {
@@ -154,16 +173,15 @@ void CMainFrame::OnFilePreview()
 
     catch (const CException& e)
     {
-        // Display a message box indicating why print preview failed.
-        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
-        CString type("Print Preview Failed");
-        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
+
+// Bring up a dialog to choose the printer.
 void CMainFrame::OnFilePrint()
 {
-    // Bring up a dialog to choose the printer
     CPrintDialog printdlg;
 
     try
@@ -178,16 +196,17 @@ void CMainFrame::OnFilePrint()
 
     }
 
-    catch (const CWinException& /* e */)
+    catch (const CWinException& e)
     {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
+
+// Process notification messages sent by child windows
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    // Process notification messages sent by child windows
 //  switch(((LPNMHDR)lparam)->code)
 //  {
 //      Add case statements for each notification message here
@@ -197,8 +216,9 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
-void CMainFrame::OnPreviewClose()
+
 // Called when the Print Preview's "Close" button is pressed.
+void CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_view);
@@ -206,23 +226,27 @@ void CMainFrame::OnPreviewClose()
     // Show the menu and toolbar
     ShowMenu(TRUE);
     ShowToolBar(TRUE);
+
+    SetStatusText(LoadString(IDW_READY));
 }
 
-void CMainFrame::OnPreviewPrint()
+
 // Called when the Print Preview's "Print Now" button is pressed.
+void CMainFrame::OnPreviewPrint()
 {
     // TODO:
     // Add your own code here. Refer to the tutorial for additional information.
 }
 
-void CMainFrame::OnPreviewSetup()
+
 // Called when the Print Preview's "Print Setup" button is pressed.
+void CMainFrame::OnPreviewSetup()
 {
     // Call the print setup dialog.
-    CPrintDialog printDlg;
+    CPrintDialog printDlg(PD_PRINTSETUP);
     try
     {
-        // Display the print dialog.
+        // Display the print dialog
         if (printDlg.DoModal(*this) == IDOK)
         {
             CString status = _T("Printer: ") + printDlg.GetDeviceName();
@@ -230,24 +254,27 @@ void CMainFrame::OnPreviewSetup()
         }
     }
 
-    catch (const CWinException& /* e */)
+    catch (const CException& e)
     {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Printer Selection Failed"), MB_OK);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
     // Initiate the print preview.
     m_preview.DoPrintPreview(*this);
 }
 
+
+// Print the page to the specified device context.
 void CMainFrame::PrintPage(CDC&, UINT)
 {
     // This function is called by m_preview.
     // Code to render the printed page goes here.
 }
 
+
+// Integer to TCHAR. Returns a CString.
 CString CMainFrame::ItoT(int i)
-// Integer to TCHAR. Returns a CString
 {
     // tStringStream is a TCHAR std::stringstream
     tStringStream tss;
@@ -255,8 +282,9 @@ CString CMainFrame::ItoT(int i)
     return CString(tss.str().c_str());
 }
 
-int CMainFrame::TtoI(LPCTSTR string)
+
 // TCHAR to Integer.
+int CMainFrame::TtoI(LPCTSTR string)
 {
     // tStringStream is a TCHAR std::stringstream
     tStringStream tss(string);
@@ -265,8 +293,9 @@ int CMainFrame::TtoI(LPCTSTR string)
     return res;
 }
 
-CString CMainFrame::GetINIPath()
+
 // Returns the path used for the INI file.
+CString CMainFrame::GetINIPath()
 {
     CString filePath = GetAppDataPath();
 
@@ -288,8 +317,9 @@ CString CMainFrame::GetINIPath()
     return filePath;
 }
 
+
+// Load values to, or restore values from the ini file.
 void CMainFrame::SerializeINI(BOOL isStoring) 
-// Load values to, or restore values from the ini file
 {
     CString fileName = GetINIPath() + _T("\\Frame.ini");
     CString key("Frame Settings");
@@ -362,15 +392,18 @@ void CMainFrame::SerializeINI(BOOL isStoring)
     }
 }
 
+
+// Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
 {
     // Set the bitmap used for menu icons
     AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
 }
 
+
+// Set the Resource IDs for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
@@ -388,7 +421,7 @@ void CMainFrame::SetupToolBar()
 }
 
 
-
+// Handle the frame's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

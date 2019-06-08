@@ -19,15 +19,16 @@ CMainFrame::CMainFrame()
     LoadRegistrySettings(_T("Win32++\\Frame"));
 }
 
+
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -47,6 +48,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -67,13 +70,16 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+
+// Issue a close request to the frame.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     PostMessage(WM_CLOSE);
     return TRUE;
 }
 
+
+// Called after the window is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
@@ -86,6 +92,8 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
+
+// Create the File Open dialog to choose the file to load.
 BOOL CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE);
@@ -99,6 +107,8 @@ BOOL CMainFrame::OnFileOpen()
     return TRUE;
 }
 
+
+// Create the File Save dialog to choose the file to save.
 BOOL CMainFrame::OnFileSave()
 {
     CFileDialog fileDlg(FALSE);
@@ -112,8 +122,9 @@ BOOL CMainFrame::OnFileSave()
     return TRUE;
 }
 
+
+// Previews a print job before sending it to the printer.
 BOOL CMainFrame::OnFilePreview()
-// Previews a print job before sending it to the printer
 {
     try
     {
@@ -138,6 +149,10 @@ BOOL CMainFrame::OnFilePreview()
 
             // Swap views
             SetView(m_preview);
+
+            // Update status
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
         }
         else
         {
@@ -147,18 +162,17 @@ BOOL CMainFrame::OnFilePreview()
 
     catch (const CException& e)
     {
-        // Display a message box indicating why print preview failed.
-        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
-        CString type("Print Preview Failed");
-        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
     return TRUE;
 }
 
+
+// Bring up a dialog to choose the printer.
 BOOL CMainFrame::OnFilePrint()
 {
-    // Bring up a dialog to choose the printer
     CPrintDialog printdlg;
 
     try
@@ -175,17 +189,18 @@ BOOL CMainFrame::OnFilePrint()
         return (result == IDOK);   // boolean expression
     }
 
-    catch (const CException& /* e */)
+    catch (const CException& e)
     {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
         return FALSE;
     }
 }
 
+
+// Process notification messages sent by child windows
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    // Process notification messages sent by child windows
 //  switch(((LPNMHDR)lparam)->code)
 //  {
 //      Add case statements for each notification message here
@@ -195,8 +210,9 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
-void CMainFrame::OnPreviewClose()
+
 // Called when the Print Preview's "Close" button is pressed.
+void CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_view);
@@ -204,20 +220,24 @@ void CMainFrame::OnPreviewClose()
     // Show the menu and toolbar
     ShowMenu(TRUE);
     ShowToolBar(TRUE);
+
+    SetStatusText(LoadString(IDW_READY));
 }
 
-void CMainFrame::OnPreviewPrint()
+
 // Called when the Print Preview's "Print Now" button is pressed.
+void CMainFrame::OnPreviewPrint()
 {
     // TODO:
     // Add your own code here. Refer to the tutorial for additional information.
 }
 
-void CMainFrame::OnPreviewSetup()
+
 // Called when the Print Preview's "Print Setup" button is pressed.
+void CMainFrame::OnPreviewSetup()
 {
     // Call the print setup dialog.
-    CPrintDialog printDlg;
+    CPrintDialog printDlg(PD_PRINTSETUP);
     try
     {
         // Display the print dialog
@@ -228,16 +248,18 @@ void CMainFrame::OnPreviewSetup()
         }
     }
 
-    catch (const CWinException& /* e */)
+    catch (const CException& e)
     {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Printer Selection Failed"), MB_OK);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
     // Initiate the print preview.
     m_preview.DoPrintPreview(*this);
 }
 
+
+// Called before window creation to update the window's CREATESTRUCT
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
     // This function is called before the frame is created.
@@ -253,21 +275,26 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
 
+
+// Prints the specified page to the specified device context.
 void CMainFrame::PrintPage(CDC&, UINT)
 {
     // This function is called by m_preview.
     // Code to render the printed page goes here.
 }
 
+
+// Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
 {
     // Set the bitmap used for menu icons
     AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
 }
 
+
+// Set the Resource IDs for the toolbar buttons
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
@@ -284,6 +311,8 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+
+// Handle the frame's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

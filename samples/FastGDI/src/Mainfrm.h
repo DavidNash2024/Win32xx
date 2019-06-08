@@ -15,7 +15,6 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CView& GetMyView() {return m_myView;}
     void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray);
     BOOL OnAdjustImage();
     BOOL OnFileExit();
@@ -24,6 +23,12 @@ public:
     BOOL OnFileNew();
     BOOL OnFileOpen();
     BOOL OnFileOpenMRU(WPARAM wparam, LPARAM lparam);
+    BOOL OnFilePreview();
+    BOOL OnFilePrint();
+
+    void OnPreviewClose();
+    void OnPreviewPrint();
+    void OnPreviewSetup();
     BOOL LoadFile(CString& fileName);
     void SaveFile(CString& fileName);
 
@@ -36,7 +41,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_myView;
+    CView m_view;
+    CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
 
 };

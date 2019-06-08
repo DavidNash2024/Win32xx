@@ -8,7 +8,7 @@ struct PlotPoint
     int x;
     int y;
     bool isPenDown;
-    COLORREF color;
+    COLORREF penColor;
 };
 
 // CDoc holds the application's data. It inherits from CObject

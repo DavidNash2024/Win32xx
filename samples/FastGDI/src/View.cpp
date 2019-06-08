@@ -51,6 +51,72 @@ BOOL CView::LoadFileImage(LPCTSTR filename)
     return (m_image.GetHandle()!= 0);
 }
 
+// Select the printer, and call QuickPrint.
+void CView::Print(LPCTSTR docName)
+{
+    CPrintDialog printDlg;
+
+    // Bring up a dialog to choose the printer
+    if (printDlg.DoModal(*this) == IDOK)    // throws exception if there is no default printer
+    {
+        QuickPrint(docName);
+    }
+
+}
+
+void CView::PrintPage(CDC& dc, UINT)
+{
+    if (m_image.GetHandle() != 0)
+    {
+        BITMAP bitmap = m_image.GetBitmapData();
+        GetObject(&m_image, sizeof(BITMAP), &bitmap);
+        int bxWidth = bitmap.bmWidth;
+        int bxHeight = bitmap.bmHeight;
+
+        // Get the device context of the default or currently chosen printer
+        CPrintDialog printDlg;
+        CDC printDC = printDlg.GetPrinterDC();
+        CClientDC viewDC(*this);
+        double viewPixelsX = double(viewDC.GetDeviceCaps(LOGPIXELSX));
+        double viewPixelsY = double(viewDC.GetDeviceCaps(LOGPIXELSY));
+        double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
+        double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
+        double scaleX = printPixelsX / viewPixelsX;
+        double scaleY = printPixelsY / viewPixelsY;
+        int scaledWidth = int(bxWidth * scaleX);
+        int scaledHeight = int(bxHeight * scaleY);
+
+        // Load the DI bitmap into a memory DC.
+        CMemDC memDC(dc);
+    //  memDC.CreateCompatibleBitmap(dc, bxWidth, bxHeight);
+        CBitmap bmOld = memDC.SelectObject(m_image);
+
+        // Copy the bitmap to the specified dc.
+        dc.StretchBlt(0, 0, scaledWidth, scaledHeight, memDC, 0, 0, bxWidth, bxHeight, SRCCOPY);
+        SelectObject(memDC, bmOld);
+    }
+}
+
+void CView::QuickPrint(LPCTSTR docName)
+{
+    // Create a DOCINFO structure.
+    DOCINFO di;
+    memset(&di, 0, sizeof(DOCINFO));
+    di.cbSize = sizeof(DOCINFO);
+    di.lpszDocName = docName;
+
+    CPrintDialog printDlg;
+    CDC printDC = printDlg.GetPrinterDC();
+
+    printDC.StartDoc(&di);
+    printDC.StartPage();
+
+    PrintPage(printDC);
+
+    printDC.EndPage();
+    printDC.EndDoc();
+}
+
 BOOL CView::SaveFileImage(LPCTSTR fileName)
  {
      CFile file;
@@ -67,10 +133,10 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
 
         // Use GetDIBits to create a DIB from our DDB, and extract the colour data
         memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-        std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
-        byte* lpvBits = &vBits.front();
+        std::vector<byte> byteArray(pbmi->bmiHeader.biSizeImage, 0);
+        byte* pByteArray = &byteArray.front();
 
-        memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+        memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 
         LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
         BITMAPFILEHEADER hdr;
@@ -81,7 +147,7 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
 
         file.Write(&hdr, sizeof(BITMAPFILEHEADER));
         file.Write(pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
-        file.Write(lpvBits, pbmih->biSizeImage);
+        file.Write(pByteArray, pbmih->biSizeImage);
 
         if (file.GetLength() == sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD) + pbmih->biSizeImage)
             bResult = TRUE;

@@ -85,8 +85,8 @@ namespace Win32xx
         virtual ULONGLONG GetPosition() const;
         virtual void Open(LPCTSTR pFileName, UINT openFlags);
         virtual UINT Read(void* pBuf, UINT count);
-        static void Remove(LPCTSTR pFileName);
-        static void Rename(LPCTSTR pOldName, LPCTSTR pNewName);
+        virtual void Remove(LPCTSTR pFileName);
+        virtual void Rename(LPCTSTR pOldName, LPCTSTR pNewName);
         virtual ULONGLONG Seek(LONGLONG seekTo, UINT method);
         virtual void SeekToBegin();
         virtual ULONGLONG SeekToEnd();
@@ -102,9 +102,23 @@ namespace Win32xx
     private:
         CFile(const CFile&);                // Disable copy construction
         CFile& operator = (const CFile&);   // Disable assignment operator
+        void InitMsgValues();
+
         CString m_fileName;
         CString m_filePath;
         HANDLE m_file;
+
+        // Exception messages
+        LPCTSTR m_msgCloseFailed;
+        LPCTSTR m_msgFlushFailed;
+        LPCTSTR m_msgLockFailed;
+        LPCTSTR m_msgOpenFailed;
+        LPCTSTR m_msgReadFailed;
+        LPCTSTR m_msgRenameFailed;
+        LPCTSTR m_msgRemoveFailed;
+        LPCTSTR m_msgLengthFailed;
+        LPCTSTR m_msgUnlockFailed;
+        LPCTSTR m_msgWriteFailed;
     };
 
 }
@@ -115,10 +129,12 @@ namespace Win32xx
 {
     inline CFile::CFile() : m_file(INVALID_HANDLE_VALUE)
     {
+        InitMsgValues();
     }
 
     inline CFile::CFile(HANDLE file) : m_file(file)
     {
+        InitMsgValues();
     }
 
     // Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, OPEN_ALWAYS, TRUNCATE_EXISTING
@@ -135,6 +151,7 @@ namespace Win32xx
     //  shareDenyNone   No sharing restrictions.
     inline CFile::CFile(LPCTSTR pFileName, UINT openFlags) : m_file(INVALID_HANDLE_VALUE)
     {
+        InitMsgValues();
         assert(pFileName);
         Open(pFileName, openFlags);  // throws CFileException on failure
     }
@@ -150,6 +167,20 @@ namespace Win32xx
         return m_file;
     }
 
+    inline void CFile::InitMsgValues()
+    {
+        m_msgCloseFailed  = _T("Failed to close file");
+        m_msgFlushFailed  = _T("Failed to flush file");
+        m_msgLockFailed   = _T("Failed to lock the file");
+        m_msgOpenFailed   = _T("Failed to open file");
+        m_msgReadFailed   = _T("Failed to read from file");
+        m_msgRenameFailed = _T("Failed to rename file");
+        m_msgRemoveFailed = _T("Failed to delete file");
+        m_msgLengthFailed = _T("Failed to change the file length");
+        m_msgUnlockFailed = _T("Failed to unlock the file");
+        m_msgWriteFailed  = _T("Failed to write to file");
+    }
+
     // Closes the file associated with this object. Closed file can no longer be read or written to.
     // Refer to CloseHandle in the Windows API documentation for more information.
     inline void CFile::Close()
@@ -162,7 +193,7 @@ namespace Win32xx
             if (!::CloseHandle(m_file))
             {
                 m_file = INVALID_HANDLE_VALUE;
-                throw CFileException(GetFilePath(), _T("Failed to close file"));
+                throw CFileException(GetFilePath(), m_msgCloseFailed);
             }
         }
 
@@ -175,7 +206,7 @@ namespace Win32xx
     {
         assert(m_file != INVALID_HANDLE_VALUE);
         if ( !::FlushFileBuffers(m_file))
-            throw CFileException(GetFilePath(), _T("Failed to flush file"));
+            throw CFileException(GetFilePath(), m_msgFlushFailed);
     }
 
     // Returns the file handle associated with this object.
@@ -288,7 +319,7 @@ namespace Win32xx
         DWORD countLow = static_cast<DWORD>(count & 0xFFFFFFFF);
 
         if (!::LockFile(m_file, posLow, posHigh, countLow, countHigh))
-            throw CFileException(GetFilePath(), _T("Failed to lock the file"));
+            throw CFileException(GetFilePath(), m_msgLockFailed);
     }
 
 #endif
@@ -343,7 +374,7 @@ namespace Win32xx
 
         if (INVALID_HANDLE_VALUE == m_file)
         {
-            throw CFileException(pFileName, _T("Failed to open file"));
+            throw CFileException(pFileName, m_msgOpenFailed);
         }
 
 #ifndef _WIN32_WCE
@@ -367,7 +398,7 @@ namespace Win32xx
         DWORD read = 0;
 
         if (!::ReadFile(m_file, pBuf, count, &read, NULL))
-            throw CFileException(GetFilePath(), _T("Failed to read from file"));
+            throw CFileException(GetFilePath(), m_msgReadFailed);
 
         return read;
     }
@@ -377,7 +408,7 @@ namespace Win32xx
     inline void CFile::Rename(LPCTSTR pOldName, LPCTSTR pNewName)
     {
         if (!::MoveFile(pOldName, pNewName))
-            throw CFileException(pOldName, _T("Failed to rename file"));
+            throw CFileException(pOldName, m_msgRenameFailed);
     }
 
     // Deletes the specified file.
@@ -385,7 +416,7 @@ namespace Win32xx
     inline void CFile::Remove(LPCTSTR pFileName)
     {
         if (!::DeleteFile(pFileName))
-            throw CFileException(pFileName, _T("Failed to delete file"));
+            throw CFileException(pFileName, m_msgRemoveFailed);
     }
 
     // Positions the current file pointer.
@@ -455,7 +486,7 @@ namespace Win32xx
 
         Seek(length, FILE_BEGIN);
         if (!::SetEndOfFile(m_file))
-            throw CFileException(GetFilePath(), _T("Failed to change the file length"));
+            throw CFileException(GetFilePath(), m_msgLengthFailed);
     }
 
 #ifndef _WIN32_WCE
@@ -472,7 +503,7 @@ namespace Win32xx
         DWORD countLow = static_cast<DWORD>(count & 0xFFFFFFFF);
 
         if (!::UnlockFile(m_file, posLow, posHigh, countLow, countHigh))
-            throw CFileException(GetFilePath(), _T("Failed to unlock the file"));
+            throw CFileException(GetFilePath(), m_msgUnlockFailed);
     }
 
 #endif
@@ -489,10 +520,10 @@ namespace Win32xx
         assert(pBuf);
         DWORD written = 0;
         if (!::WriteFile(m_file, pBuf, count, &written, NULL))
-            throw CFileException(GetFilePath(), _T("Failed to write to file"));
+            throw CFileException(GetFilePath(), m_msgWriteFailed);
 
         if (written != count)
-            throw CFileException(GetFilePath(), _T("Failed to write to file"));
+            throw CFileException(GetFilePath(), m_msgWriteFailed);
     }
 
 

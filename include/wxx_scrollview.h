@@ -198,7 +198,7 @@ namespace Win32xx
         case SB_THUMBTRACK: // User dragging the scroll box.
             // Retrieve 32 bit track position
             GetScrollInfo(SB_HORZ, si);
-            newPos.y = si.nTrackPos;
+            newPos.x = si.nTrackPos;
             break;
 
         default:
