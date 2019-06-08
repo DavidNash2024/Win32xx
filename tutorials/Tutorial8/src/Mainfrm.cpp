@@ -16,10 +16,10 @@ CMainFrame::~CMainFrame()
 {
 }
 
+
+// Process the messages from the Menu and Tool Bar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Process the messages from the Menu and Tool Bar
-
     UNREFERENCED_PARAMETER(lparam);
 
     switch (LOWORD(wparam))
@@ -39,9 +39,11 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
+    
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
@@ -59,8 +61,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+
+// Called in response to the UWM_DROPFILE user defined message.
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
-// Called in response to the UWM_DROPFILE user defined message
 {
     try
     {
@@ -77,18 +80,21 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
         m_pathName = _T("");
 
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
     return 0;
 }
 
+
+// Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     PostMessage(WM_CLOSE);
 }
 
+
+// Create a new scribble screen.
 void CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
@@ -96,8 +102,9 @@ void CMainFrame::OnFileNew()
     GetView().Invalidate();
 }
 
-void CMainFrame::LoadFile(LPCTSTR fileName)
+
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
+void CMainFrame::LoadFile(LPCTSTR fileName)
 {
     try
     {
@@ -112,10 +119,12 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
         m_pathName = _T("");
 
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
+
+// Display the file dialog to choose a file to open. 
 void CMainFrame::OnFileOpen()
 {
     try
@@ -136,15 +145,17 @@ void CMainFrame::OnFileOpen()
         m_pathName = _T("");
 
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
 void CMainFrame::OnFilePrint()
 {
-    ::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+    MessageBox(_T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
+
+// Save the Plotoint data to a file.
 void CMainFrame::OnFileSave()
 {
     try
@@ -158,10 +169,12 @@ void CMainFrame::OnFileSave()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
+
+// Save the Plotoint data to a specified file.
 void CMainFrame::OnFileSaveAs()
 {
     try
@@ -184,10 +197,12 @@ void CMainFrame::OnFileSaveAs()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
+
+// Display a choose color dialog to choose a color.
 void CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
@@ -210,8 +225,9 @@ void CMainFrame::OnPenColor()
     }
 }
 
+
+// Configures the ToolBar.
 void CMainFrame::SetupToolBar()
-// Configures the ToolBar
 {
     // Define our toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
@@ -232,8 +248,9 @@ void CMainFrame::SetupToolBar()
     //       The color mask is a color used for transparency.   
 }
 
+
+// Called to handle the window's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-// Called to handle the window's messages
 {
     switch (msg)
     {

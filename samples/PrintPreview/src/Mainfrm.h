@@ -62,7 +62,7 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
-    CPrintPreview<CRichView>  m_printPreview;   // CRichView is the source of for CPrintPreview
+    CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
     CString m_pathName;
     bool m_isWrapped;

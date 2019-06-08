@@ -9,7 +9,7 @@ Features demonstrated in this tutorial
 * How to extract the bitmap from the view window.
 * How to use a dialog to choose the printer. 
 * How to start the print job.
-* How to extract the bitmap image data from the bitmap. 
+* How to extract the device independent image data from the bitmap. 
 * How to copy the resized image data to the printer's device context.
 * How to end the print job.
 

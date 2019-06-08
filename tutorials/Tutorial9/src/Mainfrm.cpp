@@ -12,12 +12,14 @@ CMainFrame::CMainFrame()
     SetView(m_view);
 }
 
+
 CMainFrame::~CMainFrame()
 {
 }
 
+
+// Called by OnFileOpen and in response to a UWM_DROPFILE message.
 void CMainFrame::LoadFile(LPCTSTR fileName)
-// Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
     try
     {
@@ -30,17 +32,17 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
 
         m_pathName = _T("");
         GetDoc().GetAllPoints().clear();
     }
 }
 
+
+// Process the messages from the Menu and Tool Bar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Process the messages from the Menu and Tool Bar
-
     UNREFERENCED_PARAMETER(lparam);
 
     switch (LOWORD(wparam))
@@ -60,6 +62,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -80,8 +84,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-LRESULT CMainFrame::OnDropFile(WPARAM wparam)
+
 // Called in response to the UWM_DROPFILE user defined message
+LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
     try
     {
@@ -96,7 +101,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
 
         GetDoc().GetAllPoints().clear();
     }
@@ -104,12 +109,15 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     return 0;
 }
 
+
+// Issue a close request to the frame
 void CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     PostMessage(WM_CLOSE);
 }
 
+
+// Creates a blank scribble view.
 void CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
@@ -117,6 +125,8 @@ void CMainFrame::OnFileNew()
     GetView().Invalidate();
 }
 
+
+// Loads the PlotPoint data from a file.
 void CMainFrame::OnFileOpen()
 {
     try
@@ -135,12 +145,14 @@ void CMainFrame::OnFileOpen()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
 
         GetDoc().GetAllPoints().clear();
     }
 }
 
+
+// Saves the PlotPoint data to a file.
 void CMainFrame::OnFileSave()
 {
     try
@@ -154,10 +166,12 @@ void CMainFrame::OnFileSave()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
+
+// Saves the PlotPoint data to a specified file.
 void CMainFrame::OnFileSaveAs()
 {
     try
@@ -180,7 +194,7 @@ void CMainFrame::OnFileSaveAs()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
 }
@@ -198,12 +212,12 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // Display a message box indicating why printing failed.
-        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
-        CString type = CString(e.what());
-        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
+
+// Initiate the Choose Color dialog to select a color.
 void CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
@@ -226,8 +240,9 @@ void CMainFrame::OnPenColor()
     }
 }
 
+
+// Configures the ToolBar.
 void CMainFrame::SetupToolBar()
-// Configures the ToolBar
 {
     // Define our toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
@@ -248,8 +263,9 @@ void CMainFrame::SetupToolBar()
     //       The color mask is a color used for transparency.   
 }
 
+
+// Called to handle the window's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-// Called to handle the window's messages
 {
     switch (msg)
     {

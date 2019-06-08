@@ -468,8 +468,7 @@ namespace Win32xx
         void CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT usage, LPVOID* ppBits,
                                         HANDLE section, DWORD offset);
         CBitmap DetachBitmap();
-        BITMAP  GetBitmapData() const;
-        HBITMAP GetCurrentBitmap() const;
+
         BOOL LoadBitmap(UINT id);
         BOOL LoadBitmap(LPCTSTR pResName);
         BOOL LoadImage(UINT id, UINT flags);
@@ -486,8 +485,6 @@ namespace Win32xx
         // Create Brushes
         void CreatePatternBrush(HBITMAP bitmap);
         void CreateSolidBrush(COLORREF color);
-        HBRUSH GetCurrentBrush() const;
-        LOGBRUSH GetLogBrush() const;
 
 #ifndef _WIN32_WCE
         void CreateBrushIndirect(const LOGBRUSH& logBrush);
@@ -498,8 +495,6 @@ namespace Win32xx
 
         // Create Fonts
         void CreateFontIndirect(const LOGFONT& lf);
-        HFONT GetCurrentFont() const;
-        LOGFONT GetLogFont() const;
 
 #ifndef _WIN32_WCE
         void CreateFont(int height, int width, int escapement, int orientation, int weight,
@@ -519,8 +514,6 @@ namespace Win32xx
         // Create Pens
         void CreatePen(int style, int width, COLORREF color);
         void CreatePenIndirect(const LOGPEN& logPen);
-        HPEN GetCurrentPen() const;
-        LOGPEN GetLogPen() const;
 
         // Retrieve and Select Stock Objects
         HGDIOBJ GetStockObject(int index) const;
@@ -622,6 +615,8 @@ namespace Win32xx
         // Bitmap Functions
         BOOL BitBlt(int x, int y, int width, int height, HDC hSrc, int xSrc, int ySrc, DWORD rop) const;
         void DrawBitmap(int x, int y, int cx, int cy, HBITMAP image, COLORREF mask) const;
+        BITMAP  GetBitmapData() const;
+        HBITMAP GetCurrentBitmap() const;
         BOOL MaskBlt(int xDest, int yDest, int width, int height, HDC hSrc,
                            int xSrc, int ySrc, HBITMAP mask, int xMask, int yMask,
                            DWORD rop) const;
@@ -654,12 +649,20 @@ namespace Win32xx
 #endif
 
         // Brush Functions
+        HBRUSH GetCurrentBrush() const;
+        LOGBRUSH GetLogBrush() const;
+
 #if (_WIN32_WINNT >= 0x0500)
+        CPoint   GetBrushOrgEx() const;
         COLORREF GetDCBrushColor() const;
+        CPoint   SetBrushOrgEx(int x, int y);
         COLORREF SetDCBrushColor(COLORREF color) const;
 #endif
 
         // Font Functions
+        HFONT GetCurrentFont() const;
+        LOGFONT GetLogFont() const;
+
 #ifndef _WIN32_WCE
         DWORD GetFontData(DWORD table, DWORD offset, LPVOID pBuffer,  DWORD data) const;
         DWORD GetFontLanguageInfo() const;
@@ -681,8 +684,11 @@ namespace Win32xx
         BOOL UpdateColors() const;
 #endif
 
-#ifndef _WIN32_WCE
         // Pen Functions
+        HPEN GetCurrentPen() const;
+        LOGPEN GetLogPen() const;
+
+#ifndef _WIN32_WCE
         BOOL GetMiterLimit(PFLOAT limit) const;
         BOOL SetMiterLimit(FLOAT newLimit, PFLOAT oldLimit) const;
 #endif
@@ -3198,6 +3204,26 @@ namespace Win32xx
         brush.CreateDIBPatternBrushPt(pPackedDIB, usage);
         SelectObject(brush);
         m_pData->brush = brush;
+    }
+
+    //Retrieves the current brush origin for the specified device context.
+    inline CPoint CDC::GetBrushOrgEx() const
+    {
+        assert(m_pData->dc != 0);
+        CPoint pt;
+        ::GetBrushOrgEx(m_pData->dc, &pt);
+        return pt;
+    }
+
+
+    // Sets the brush origin that GDI assigns to the next brush an application
+    // selects into the specified device context. Returns the old brush origin.
+    inline CPoint CDC::SetBrushOrgEx(int x, int y)
+    {
+        assert(m_pData->dc != 0);
+        CPoint oldPt;
+        ::SetBrushOrgEx(m_pData->dc, x, y, &oldPt);
+        return oldPt;
     }
 
 #endif

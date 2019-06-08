@@ -9,26 +9,31 @@ CView::CView()
 {
 }
 
+
 CView::~CView()
 {
 }
 
+
+// Draws a line in the window's client area.
 void CView::DrawLine(int x, int y)
-// Draws a line in the window's client area
 {
     CClientDC clientDC(*this);
     clientDC.MoveTo(m_points.back().x, m_points.back().y);
     clientDC.LineTo(x, y);
 }
 
+
+// Called when the window is destroyed.
 void CView::OnDestroy()
 {
     //End the program when window is destroyed
     ::PostQuitMessage(0);
 }
 
-void CView::OnDraw(CDC& dc)
+
 // Called when drawing to the window
+void CView::OnDraw(CDC& dc)
 {
     if (m_points.size() > 0)
     {
@@ -41,13 +46,14 @@ void CView::OnDraw(CDC& dc)
             else
                 dc.MoveTo(m_points[i].x, m_points[i].y);
             
-			isPenDown = m_points[i].isPenDown;
+            isPenDown = m_points[i].isPenDown;
         }
     }
 }
 
-void CView::StorePoint(int x, int y, bool isPenDown)
+
 // Adds a point to the vector of PlotPoints
+void CView::StorePoint(int x, int y, bool isPenDown)
 {
     PlotPoint pp;
     pp.x = x;
@@ -57,8 +63,9 @@ void CView::StorePoint(int x, int y, bool isPenDown)
     m_points.push_back(pp); //Add the point to the vector
 }
 
-LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
+
 // Called when the left mouse button is pressed while the cursor is over the window.
+LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
     SetCapture();
@@ -67,8 +74,9 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+
+// Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
-// Called when the left mouse button is released
 {
     //Release the capture on the mouse
     ReleaseCapture();
@@ -77,8 +85,9 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+
+// Called when the mouse is moved while captured.
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
-// Called when the mouse is moved while captured
 {
     // hold down the left mouse button and move mouse to draw lines.
     if ( (wparam & MK_LBUTTON) && (GetCapture() == *this) )
@@ -90,8 +99,9 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+
+// Called to handle the window's messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-// Called to handle the window's messages
 {
     switch (msg)
     {

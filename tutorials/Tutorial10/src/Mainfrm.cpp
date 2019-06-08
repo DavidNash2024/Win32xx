@@ -16,8 +16,9 @@ CMainFrame::~CMainFrame()
 {
 }
 
+
+// Called by OnFileOpen and in response to a UWM_DROPFILE message.
 void CMainFrame::LoadFile(LPCTSTR fileName)
-// Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
     try
     {
@@ -30,17 +31,17 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
 
         m_pathName = _T("");
         GetDoc().GetAllPoints().clear();
     }
 }
 
+
+// Process the messages from the Menu and Tool Bar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Process the messages from the Menu and Tool Bar
-
     UNREFERENCED_PARAMETER(lparam);
 
     switch (LOWORD(wparam))
@@ -61,6 +62,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -81,8 +84,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-LRESULT CMainFrame::OnDropFile(WPARAM wparam)
+
 // Called in response to the UWM_DROPFILE user defined message
+LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
     try
     {
@@ -97,7 +101,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
 
         GetDoc().GetAllPoints().clear();
     }
@@ -105,12 +109,15 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     return 0;
 }
 
+
+// Issue a close request to the frame
 void CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     PostMessage(WM_CLOSE);
 }
 
+
+// Create a new scribble screen
 void CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
@@ -118,6 +125,8 @@ void CMainFrame::OnFileNew()
     GetView().Invalidate();
 }
 
+
+// Load the PlotPoint data from the file.
 void CMainFrame::OnFileOpen()
 {
     try
@@ -136,12 +145,14 @@ void CMainFrame::OnFileOpen()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
 
         GetDoc().GetAllPoints().clear();
     }
 }
 
+
+// Save the PlotPoint data to the current file.
 void CMainFrame::OnFileSave()
 {
     try
@@ -155,10 +166,12 @@ void CMainFrame::OnFileSave()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
+
+// Save the PlotPoint data to a specified file.
 void CMainFrame::OnFileSaveAs()
 {
     try
@@ -181,7 +194,7 @@ void CMainFrame::OnFileSaveAs()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
 }
@@ -210,6 +223,10 @@ void CMainFrame::OnFilePreview()
 
         // Swap views
         SetView(m_preview);
+
+        // Update status
+        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        SetStatusText(status);
     }
     else
     {
@@ -231,12 +248,12 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // Display a message box indicating why printing failed.
-        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
-        CString type = CString(e.what());
-        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
 
+
+// Initiates the Choose Color dialog.
 void CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
@@ -259,8 +276,9 @@ void CMainFrame::OnPenColor()
     }
 }
 
-void CMainFrame::OnPreviewClose()
+
 // Called when the Print Preview's "Close" button is pressed.
+void CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_view);
@@ -268,19 +286,31 @@ void CMainFrame::OnPreviewClose()
     // Show the menu and toolbar
     ShowMenu(TRUE);
     ShowToolBar(TRUE);
+
+    SetStatusText(LoadString(IDW_READY));
 }
 
-void CMainFrame::OnPreviewPrint()
+
 // Called when the Print Preview's "Print Now" button is pressed.
+void CMainFrame::OnPreviewPrint()
 {
-    m_view.QuickPrint(m_pathName);
+    try
+    {
+        m_view.QuickPrint(_T("Scribble Output"));
+    }
+
+    catch (const CException& e)
+    {
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+    }
 }
 
-void CMainFrame::OnPreviewSetup()
+
 // Called when the Print Preview's "Print Setup" button is pressed.
+void CMainFrame::OnPreviewSetup()
 {
     // Call the print setup dialog.
-    CPrintDialog printDlg;
+    CPrintDialog printDlg(PD_PRINTSETUP);
     try
     {
         // Display the print dialog
@@ -291,18 +321,19 @@ void CMainFrame::OnPreviewSetup()
         }
     }
 
-    catch (const CWinException& /* e */)
+    catch (const CException& e)
     {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Printer Selection Failed"), MB_OK);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
     // Initiate the print preview.
     m_preview.DoPrintPreview(*this);
 }
 
-void CMainFrame::SetupToolBar()
+
 // Configures the ToolBar
+void CMainFrame::SetupToolBar()
 {
     // Define our toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
@@ -323,8 +354,9 @@ void CMainFrame::SetupToolBar()
     //       The color mask is a color used for transparency.   
 }
 
-LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+
 // Called to handle the window's messages
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {

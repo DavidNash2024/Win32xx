@@ -199,6 +199,7 @@ BEGIN
     IDM_FILE_OPEN            "Open Existing Document"
     IDM_FILE_SAVE            "Save the Document"
     IDM_FILE_SAVEAS          "Save the Document with a new name"
+    IDM_FILE_PREVIEW         "Preview the print job before printing"    
     IDM_FILE_PRINT           "Print the Document"
     IDM_FILE_EXIT            "End the Program"
 END

@@ -427,7 +427,7 @@ namespace Win32xx
             ::DeleteDC(m_pd.hDC);
     }
 
-    // Returns the printer's device context.
+    // Returns the device context of the default or currently chosen printer.
     inline CDC CPrintDialog::GetPrinterDC() const
     {
         CThreadLock lock(GetApp()->m_printLock);
@@ -599,7 +599,7 @@ namespace Win32xx
     }
 
 
-    // Retrieves the name of the currently selected printer device.
+    // Retrieves the name of the default or currently selected printer device.
     inline CString CPrintDialog::GetDeviceName() const
     {
         CThreadLock lock(GetApp()->m_printLock);
@@ -638,7 +638,7 @@ namespace Win32xx
         return CDevNames(GetApp()->m_devNames);
     }
 
-    // Retrieves the name of the currently selected printer driver.
+    // Retrieves the name of the default or currently selected printer driver.
     inline CString CPrintDialog::GetDriverName() const
     {
         CThreadLock lock(GetApp()->m_printLock);
@@ -656,7 +656,7 @@ namespace Win32xx
         return (PrintRange() ? m_pd.nFromPage : -1);
     }
 
-    // Retrieves the name of the currently selected printer port.
+    // Retrieves the name of the default or currently selected printer port.
     inline CString CPrintDialog::GetPortName() const
     {
         CThreadLock lock(GetApp()->m_printLock);

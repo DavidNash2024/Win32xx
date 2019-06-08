@@ -12,12 +12,14 @@ CView::CView() : m_penColor(RGB(0,0,0))
     m_brush.CreateSolidBrush(RGB(255,255,230));
 }
 
+
 CView::~CView()
 {
 }
 
+
+// Draws a line in the window's client area.
 void CView::DrawLine(int x, int y)
-// Draws a line in the window's client area
 {
     CClientDC clientDC(*this);
     clientDC.CreatePen(PS_SOLID, 1, m_points.back().penColor);
@@ -25,8 +27,9 @@ void CView::DrawLine(int x, int y)
     clientDC.LineTo(x, y);
 }
 
-void CView::OnDraw(CDC& dc)
+
 // Called when drawing to the window
+void CView::OnDraw(CDC& dc)
 {
     if (m_points.size() > 0)
     {
@@ -39,11 +42,13 @@ void CView::OnDraw(CDC& dc)
             else
                 dc.MoveTo(m_points[i].x, m_points[i].y);
             
-			isPenDown = m_points[i].isPenDown;
+            isPenDown = m_points[i].isPenDown;
         }
     }
 }
 
+
+// Stores the specified point information.
 void CView::StorePoint(int x, int y, bool isPenDown)
 {
     PlotPoint pp;
@@ -55,8 +60,9 @@ void CView::StorePoint(int x, int y, bool isPenDown)
     m_points.push_back(pp); //Add the point to the vector
 }
 
-LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
+
 // Called when the left mouse button is pressed while the cursor is over the window.
+LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
     SetCapture();
@@ -65,8 +71,9 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+
+// Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
-// Called when the left mouse button is released
 {
     //Release the capture on the mouse
     ReleaseCapture();
@@ -75,8 +82,9 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
+
 // Called when the mouse is moved while captured
+LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // hold down the left mouse button and move mouse to draw lines.
     if ( (wparam & MK_LBUTTON) && (GetCapture() == *this) )
@@ -88,15 +96,17 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-void CView::PreCreate(CREATESTRUCT& cs)
+
 // Called before window creation to update the window's CREATESTRUCT
+void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set the extra style to provide a sunken effect
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-void CView::PreRegisterClass(WNDCLASS& wc)
+
 // Called before the window is registered to update the window's WNDCLASS
+void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Set the background brush, class name and cursor
     wc.hbrBackground = m_brush;
@@ -104,8 +114,9 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 
-LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+
 // Called to handle the window's messages
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {

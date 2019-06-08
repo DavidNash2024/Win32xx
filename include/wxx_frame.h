@@ -2702,6 +2702,7 @@ namespace Win32xx
         CPoint pt(GetMessagePos());
         HWND wnd = ::WindowFromPoint(pt);
         CToolBar* pToolBar = reinterpret_cast<CToolBar*>(::SendMessage(wnd, UWM_GETCTOOLBAR, 0, 0));
+        assert(dynamic_cast<CToolBar*>(pToolBar));
 
         // Set the tooltip's text from the ToolBar button's CommandID.
         if (pToolBar)

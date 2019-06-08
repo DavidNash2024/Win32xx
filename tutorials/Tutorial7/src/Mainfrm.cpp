@@ -12,14 +12,15 @@ CMainFrame::CMainFrame()
     SetView(m_view);
 }
 
+
 CMainFrame::~CMainFrame()
 {
 }
 
+
+// Process the messages from the Menu and Tool Bar
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Process the messages from the Menu and Tool Bar
-
     UNREFERENCED_PARAMETER(lparam);
 
     switch (LOWORD(wparam))
@@ -39,19 +40,21 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -59,9 +62,10 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+
+// Issue a close request to the frame
 void CMainFrame::OnFileExit()
-{
-    // Issue a close request to the frame
+{  
     PostMessage(WM_CLOSE);
 }
 
@@ -90,6 +94,8 @@ void CMainFrame::OnFileSaveAs()
     ::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
+
+// Initiates the Choose Color dialog.
 void CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
@@ -112,9 +118,10 @@ void CMainFrame::OnPenColor()
     }
 }
 
+
+// Configures the ToolBar.
 void CMainFrame::SetupToolBar()
 {
-    // Define our toolbar
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
@@ -127,12 +134,14 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_PEN_COLOR );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-	
+    
     // Note: By default a single bitmap with a resource ID of IDW_MAIN and
     //       a color mask of RGB(192,192,192) is used for the ToolBar. 
-    //       The color mask is a color used for transparency.	
+    //       The color mask is a color used for transparency.   
 }
 
+
+// Handle the frame's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

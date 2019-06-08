@@ -75,7 +75,7 @@ namespace Win32xx
             throw std::bad_alloc();
     }
 
-	// Manually frees the global memory assigned to this object
+    // Manually frees the global memory assigned to this object
     inline void CHGlobal::Free()
     {
         if (m_hGlobal != 0)
@@ -84,14 +84,14 @@ namespace Win32xx
         m_hGlobal = 0;
     }
 
-	// Reassign is used when global memory has been reassigned, as 
-	// can occur after a call to ::PrintDlg or ::PageSetupDlg.
-	// It assigns a new memory handle to be managed by this object
-	// and assumes any old memory has already been freed.
-	inline void  CHGlobal::Reassign(HGLOBAL hGlobal)
-	{ 
-		m_hGlobal = hGlobal;
-	}
+    // Reassign is used when global memory has been reassigned, as 
+    // can occur after a call to ::PrintDlg or ::PageSetupDlg.
+    // It assigns a new memory handle to be managed by this object
+    // and assumes any old memory has already been freed.
+    inline void  CHGlobal::Reassign(HGLOBAL hGlobal)
+    { 
+        m_hGlobal = hGlobal;
+    }
 
     ///////////////////////////////////////
     // Definitions for the CObject class
@@ -123,6 +123,7 @@ namespace Win32xx
     inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_thread(0),
                                        m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_accelWnd(0)
     {
+        m_msgThreadFailed = _T("Failed to create thread");
     }
 
     // CWinThread constructor.
@@ -132,6 +133,7 @@ namespace Win32xx
     inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
                         m_pThreadParams(0), m_thread(0), m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_accelWnd(0)
     {
+        m_msgThreadFailed = _T("Failed to create thread");
         m_pfnThreadProc = pfnThreadProc;
         m_pThreadParams = pParam;
     }
@@ -177,7 +179,7 @@ namespace Win32xx
 #endif
 
         if (m_thread == 0)
-            throw CWinException(_T("Failed to create thread"));
+            throw CWinException(m_msgThreadFailed);
 
         return m_thread;
     }
@@ -385,10 +387,13 @@ namespace Win32xx
 
     inline CWinApp::CWinApp() : m_callback(NULL)
     {
+        m_msgInstanceFailed = _T("Only one instance of CWinApp is permitted");
+        m_msgTLSFailed      = _T("CWinApp::CWinApp  Failed to allocate Thread Local Storage");
+
         if ( 0 != SetnGetThis() )
         {
             // Test if this is the only instance of CWinApp
-            throw CNotSupportedException(_T("Only one instance of CWinApp is permitted"));
+            throw CNotSupportedException(m_msgInstanceFailed);
         }
 
         m_tlsData = ::TlsAlloc();
@@ -396,7 +401,7 @@ namespace Win32xx
         {
             // We only get here in the unlikely event that all TLS indexes are already allocated by this app
             // At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
-            throw CNotSupportedException(_T("CWinApp::CWinApp  Failed to allocate Thread Local Storage"));
+            throw CNotSupportedException(m_msgTLSFailed);
         }
 
         SetnGetThis(this);

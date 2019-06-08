@@ -13,7 +13,7 @@ CMainFrame::CMainFrame()
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
     //Set m_MyView as the view window of the frame
-    SetView(m_myView);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -23,17 +23,20 @@ CMainFrame::CMainFrame()
     LoadRegistryMRUSettings(4);
 }
 
+
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+
+// Displays the Color Adjust dialog to choose the red, blue and green adjustments.
 BOOL CMainFrame::OnAdjustImage()
 {
-    if (GetMyView().GetImage())
+    if (m_view.GetImage())
     {
-        // Initiate the Colour Adjust Dialog
-        CColourDialog Dialog(IDD_DIALOG1, GetMyView().GetImage());
+        // Initiate the Choose Colour Dialog
+        CColourDialog Dialog(IDD_DIALOG1, m_view.GetImage());
         Dialog.DoModal();
     }
     else
@@ -42,22 +45,24 @@ BOOL CMainFrame::OnAdjustImage()
     return TRUE;
 }
 
+
+// Modify the color of the bitmap.
 void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray)
 {
-    GetMyView().GetImage().TintBitmap(cRed, cGreen, cBlue);
+    m_view.GetImage().TintBitmap(cRed, cGreen, cBlue);
     
     if (isGray)
     {
-        GetMyView().GetImage().GrayScaleBitmap();
+        m_view.GetImage().GrayScaleBitmap();
     }
 
-    GetMyView().RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+    m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
 
+
+// OnCommand responds to menu and and toolbar input
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UINT id = LOWORD(wparam);
     switch(id)
     {
@@ -66,6 +71,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_FILE_OPEN:         return OnFileOpen();
     case IDM_FILE_SAVE:         return OnFileSave();
     case IDM_FILE_SAVEAS:       return OnFileSaveAs();
+    case IDM_FILE_PREVIEW:      return OnFilePreview();
+    case IDM_FILE_PRINT:        return OnFilePrint();
     case IDM_HELP_ABOUT:        return OnHelp();
     case IDM_IMAGE_ADJUST:      return OnAdjustImage();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
@@ -79,6 +86,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -99,19 +108,22 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+
+// Issue a close request to the frame
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     PostMessage(WM_CLOSE);
     return TRUE;
 }
 
+
+// Removes any selected image.
 BOOL CMainFrame::OnFileNew()
 {
     CToolBar& TB = GetToolBar();
     TB.DisableButton(IDM_FILE_SAVEAS);
     TB.DisableButton(IDM_IMAGE_ADJUST);
-    GetMyView().LoadFileImage(NULL);
+    m_view.LoadFileImage(NULL);
 
     // Set the caption
     SetWindowText(_T("FastGDI"));
@@ -119,10 +131,11 @@ BOOL CMainFrame::OnFileNew()
     return TRUE;
 }
 
+
+// Load the bitmap from the specified file.
 BOOL CMainFrame::LoadFile(CString& fileName)
 {
-    // Load the bitmap
-    BOOL IsFileLoaded = m_myView.LoadFileImage(fileName);
+    BOOL IsFileLoaded = m_view.LoadFileImage(fileName);
 
     if (IsFileLoaded)
     {
@@ -137,13 +150,13 @@ BOOL CMainFrame::LoadFile(CString& fileName)
         GetFrameMenu().EnableMenuItem(IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
         // Resize the frame to match the bitmap
-        if (GetMyView().GetImage())
+        if (m_view.GetImage())
         {
-            CRect rcImage = GetMyView().GetImageRect();
+            CRect rcImage = m_view.GetImageRect();
             AdjustFrameRect(rcImage);
         }
 
-        GetMyView().RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+        m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
         // Set the caption
         CString str = _T("FastGDI - ") + m_pathName;
@@ -153,6 +166,8 @@ BOOL CMainFrame::LoadFile(CString& fileName)
     return IsFileLoaded;
 }
 
+
+// Displays the File Open dialog, to choose a file to load.
 BOOL CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE, _T("bmp"), NULL, OFN_FILEMUSTEXIST, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
@@ -166,6 +181,8 @@ BOOL CMainFrame::OnFileOpen()
     return TRUE;
 }
 
+
+// Called when a MRU file is selected from the menu.
 BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -174,14 +191,14 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
     CString mruText = GetMRUEntry(mruIndex);
     CToolBar& tb = GetToolBar();
 
-    if (m_myView.LoadFileImage(mruText))
+    if (m_view.LoadFileImage(mruText))
     {
         m_pathName = mruText;
         tb.EnableButton(IDM_FILE_SAVEAS);
         tb.EnableButton(IDM_IMAGE_ADJUST);
 
         // Adjust the window size
-        CRect rcImage = GetMyView().GetImageRect();
+        CRect rcImage = m_view.GetImageRect();
         AdjustFrameRect(rcImage);
     }
     else
@@ -192,13 +209,13 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
     }
 
     // Resize the frame to match the bitmap
-    if (GetMyView().GetImage())
+    if (m_view.GetImage())
     {
-        CRect rcImage = GetMyView().GetImageRect();
+        CRect rcImage = m_view.GetImageRect();
         AdjustFrameRect(rcImage);
     }
 
-    GetMyView().RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+    m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
     // Set the caption
     CString str = _T("FastGDI - ") + m_pathName;
@@ -206,12 +223,62 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
     return TRUE;
 }
 
+
+// Preview the page before it is printed.
+BOOL CMainFrame::OnFilePreview()
+{
+    // Get the device contect of the default or currently chosen printer
+    CPrintDialog printDlg;
+    CDC printerDC = printDlg.GetPrinterDC();
+    if (printerDC.GetHDC() != 0)        // Verify a print preview is possible
+    {
+        // Create the preview window if required
+        if (!m_preview.IsWindow())
+            m_preview.Create(*this);
+
+        // Specify the source of the PrintPage function
+        m_preview.SetSource(m_view);
+
+        // Set the preview's owner (for notification messages)
+        m_preview.DoPrintPreview(*this);
+
+        // Hide the menu and toolbar
+        ShowMenu(FALSE);
+        ShowToolBar(FALSE);
+
+        // Swap views
+        SetView(m_preview);
+
+        // Update status
+        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        SetStatusText(status);
+    }
+    else
+    {
+        MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
+    }
+
+    return TRUE;
+}
+
+
+// Print the bitmap.
+BOOL CMainFrame::OnFilePrint()
+{
+    m_view.Print(m_pathName);
+    return TRUE;
+}
+
+
+// Save the bitmap to the file.
 BOOL CMainFrame::OnFileSave()
 {
     SaveFile(m_pathName);
     return TRUE;
 }
 
+
+// Save the bitmap to the specified file.
 BOOL CMainFrame::OnFileSaveAs()
 {
     CFileDialog FileDlg(FALSE, _T("bmp"), NULL, 0, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
@@ -230,13 +297,18 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
+    // Show the menu and toolbar
+    ShowMenu(TRUE);
+    ShowToolBar(TRUE);
+
     TRACE("Frame created\n");
 }
 
-inline void CMainFrame::OnMenuUpdate(UINT id)
+
 // Called when menu items are about to be displayed
+inline void CMainFrame::OnMenuUpdate(UINT id)
 {
-    bool IsImageLoaded = (GetMyView().GetImage() != 0);
+    bool IsImageLoaded = (m_view.GetImage() != 0);
 
     switch(id)
     {
@@ -251,6 +323,63 @@ inline void CMainFrame::OnMenuUpdate(UINT id)
         break;
     }
 }
+
+
+// Called when the Print Preview's "Close" button is pressed.
+void CMainFrame::OnPreviewClose()
+{
+    // Swap the view
+    SetView(m_view);
+
+    // Show the menu and toolbar
+    ShowMenu(TRUE);
+    ShowToolBar(TRUE);
+
+    SetStatusText(LoadString(IDW_READY));
+}
+
+
+// Called when the Print Preview's "Print Now" button is pressed.
+void CMainFrame::OnPreviewPrint()
+{
+    try
+    {
+        m_view.QuickPrint(_T("Scribble Output"));
+    }
+
+    catch (const CUserException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+    }
+}
+
+
+// Called when the Print Preview's "Print Setup" button is pressed.
+void CMainFrame::OnPreviewSetup()
+{
+    // Call the print setup dialog.
+    CPrintDialog printDlg(PD_PRINTSETUP);
+    try
+    {
+        // Display the print dialog
+        if (printDlg.DoModal(*this) == IDOK)
+        {
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
+        }
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+    }
+
+    // Initiate the print preview.
+    m_preview.DoPrintPreview(*this);
+}
+
 
 void CMainFrame::SaveFile(CString& fileName)
 {
@@ -279,7 +408,7 @@ void CMainFrame::SaveFile(CString& fileName)
         SetWindowText(Title);       
         
         // Save the file
-        m_myView.SaveFileImage(fileName);
+        m_view.SaveFileImage(fileName);
         AddMRUEntry(fileName);
         TRACE("File Saved\n");
     }
@@ -302,14 +431,17 @@ void CMainFrame::SetupToolBar()
     SetToolBarImages(RGB(192, 192, 192), IDB_TOOLBAR_BIG, 0, 0);
 }
 
+
+// Handle the frame's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//
-//  }
+    switch (msg)
+    {
+    case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
+    case UWM_PRINTNOW:          OnPreviewPrint();   break;
+    case UWM_PRINTSETUP:        OnPreviewSetup();   break;
+    }
 
-    // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }
 

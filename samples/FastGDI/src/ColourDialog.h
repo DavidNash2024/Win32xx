@@ -22,7 +22,7 @@ protected:
 private:
     void OnGrayScale();
     LRESULT OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
-    void    PaintPreview();
+    void    Paint();
 
     // CWnd object for the dialog controls to attach to
     CWnd m_redSlider;

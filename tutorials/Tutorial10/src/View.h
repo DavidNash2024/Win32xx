@@ -5,15 +5,13 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "targetver.h"
-#include "wxx_wincore.h"
 #include "Doc.h"
 
 
 // Message - sent to the parent (Frame) window when a file is dropped on the View window
 //   WPARAM: A pointer to the filename (LPCTSTR)
 //   LPARAM: unused
-#define UWM_DROPFILE (WM_APP + 0x0001)  
+#define UWM_DROPFILE (WM_APP + 0x0001)
 
 
 class CView : public CWnd
@@ -28,7 +26,7 @@ public:
     void Print(LPCTSTR docName);
     void PrintPage(CDC& dc, UINT page = 1);
     void QuickPrint(LPCTSTR docName);
-    void SetPenColor(COLORREF Color) { m_penColor = Color; }
+    void SetPenColor(COLORREF color) { m_penColor = color; }
 
 protected:
     virtual int OnCreate(CREATESTRUCT&);
@@ -42,11 +40,13 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CDC Draw();
     void DrawLine(int x, int y);
 
-    CDoc   m_doc;
+    CDoc m_doc;
     CBrush m_brush;
     COLORREF m_penColor;
+
 };
 
 

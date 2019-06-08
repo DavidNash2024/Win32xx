@@ -43,6 +43,9 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1
         MENUITEM SEPARATOR
+        MENUITEM "Print Preview",               IDM_FILE_PREVIEW
+        MENUITEM "&Print",                      IDM_FILE_PRINT      
+        MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
     POPUP "&Image"
@@ -182,12 +185,22 @@ BEGIN
     IDW_READY               "Ready"
 END
 
+STRINGTABLE
+BEGIN
+    IDW_PREVIEWPRINT         "Print Now"
+    IDW_PREVIEWSETUP         "Print Setup"
+    IDW_PREVIEWPREV          "Prev Page"
+    IDW_PREVIEWNEXT          "Next Page"
+    IDW_PREVIEWCLOSE         "Close"
+END
+
 STRINGTABLE 
 BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
     IDM_FILE_SAVE           "Save the Document"
     IDM_FILE_SAVEAS         "Save the Document with a new name"
+    IDM_FILE_PREVIEW         "Preview the print job before printing"    
     IDM_FILE_PRINT          "Print the Document"
     IDM_FILE_EXIT           "End the Program"
 END

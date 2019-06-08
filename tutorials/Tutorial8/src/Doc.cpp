@@ -1,25 +1,28 @@
 
 #include "Doc.h"
 
-void CDoc::FileOpen(LPCTSTR filename)
+
 // Loads the plotpoint data from the archive.
 // Throws an exception if unable to read the file.
+void CDoc::FileOpen(LPCTSTR filename)
 {
     GetAllPoints().clear();
     CArchive ar(filename, CArchive::load);
     ar >> *this;
 }
 
-void CDoc::FileSave(LPCTSTR filename)
+
 // Stores the plotpoint data in the archive.
 // Throws an exception if unable to save the file.
+void CDoc::FileSave(LPCTSTR filename)
 {
     CArchive ar(filename, CArchive::store);
     ar << *this;
 }
 
+
+// Uses CArchive to stream data to or from a file.
 void CDoc::Serialize(CArchive &ar)
-// Uses CArchive to stream data to or from a file
 {
 
     if (ar.IsStoring())
@@ -56,6 +59,8 @@ void CDoc::Serialize(CArchive &ar)
 
 }
 
+
+// Stores the specified point information.
 void CDoc::StorePoint(int x, int y, bool isPenDown, COLORREF penColor)
 {
     PlotPoint pp;

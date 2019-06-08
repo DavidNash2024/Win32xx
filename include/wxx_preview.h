@@ -19,13 +19,15 @@
 // 1) Declare CPrintPreview as CMainFrame's member, specifying the source's
 //    class as the template type. The source is where the PrintPage function
 //    resides.
-// 2) Use SetSource to specify to where to call the PrintPage function.
-// 3) Declare a PrintPage function in the source for printing and previewing:
+// 2) Specify values for the string resources used by CPrintPreview in
+//    resource.rc.
+// 3) Use SetSource to specify to where to call the PrintPage function.
+// 4) Declare a PrintPage function in the source for printing and previewing:
 //     void  PrintPage(CDC& dc, UINT page);
-// 4) Call DoPrintPreview(HWND ownerWindow, UINT maxPage = 1) to initiate the
+// 5) Call DoPrintPreview(HWND ownerWindow, UINT maxPage = 1) to initiate the
 //    print preview.
-// 5) Create the preview window, and swap it into the frame's view.
-// 6) Handle UWM_PREVIEWCLOSE to swap back to the default view when the preview
+// 6) Create the preview window, and swap it into the frame's view.
+// 7) Handle UWM_PREVIEWCLOSE to swap back to the default view when the preview
 //    closes.
 
 // CPrintPreview calls the view's PrintPage function. This is the same
@@ -62,6 +64,7 @@ namespace Win32xx
         0x00,0x00,0x00
     };
 
+
     //////////////////////////////////////////
     // Declaration of the CPreviewPane class
     // CPreviewPane provides a preview pane to CPrintPreview
@@ -73,7 +76,6 @@ namespace Win32xx
 
         void Render(CDC& dc);
         void SetBitmap(CBitmap bitmap) { m_bitmap = bitmap; }
-        void UseHalfTone(BOOL useHalfTone) { m_useHalfTone = useHalfTone; }
 
     protected:
         virtual void OnDraw(CDC& dc);
@@ -84,7 +86,6 @@ namespace Win32xx
         CPreviewPane(const CPreviewPane&);               // Disable copy construction
         CPreviewPane& operator = (const CPreviewPane&);  // Disable assignment operator
         CBitmap m_bitmap;
-        BOOL m_useHalfTone;
     };
 
 
@@ -108,7 +109,6 @@ namespace Win32xx
         void OnOK() { OnCloseButton(); }
         void OnCancel() { OnCloseButton(); }
         void PreviewPage(UINT page);
-        void UseHalfTone(BOOL useHalfTone) { m_previewPane.UseHalfTone(useHalfTone); }
         void SetSource(T& source) { m_pSource = &source; }
         void UpdateButtons();
 
@@ -145,7 +145,7 @@ namespace Win32xx
     // Definitions for the CPreviewPane class
     // CPreviewPane provides a preview pane for CPrintPreview
     //
-    inline CPreviewPane::CPreviewPane() : m_useHalfTone(FALSE)
+    inline CPreviewPane::CPreviewPane()
     {
         // The entry for the dialog's control in resource.rc must match this name.
         CString className = _T("PreviewPane");
@@ -232,12 +232,11 @@ namespace Win32xx
                 xBorder = (rcClient.Width() - previewWidth) / 2;
             }
 
+            // Use half tone stretch mode for smoother rendering
+            dc.SetStretchBltMode(HALFTONE);        
+            dc.SetBrushOrgEx(xBorder, yBorder);
+
             // Copy from the memory dc to the PreviewPane's DC with stretching.
-            if (m_useHalfTone != FALSE)
-            {
-                dc.SetStretchBltMode(HALFTONE);         // provides smoother bitmap rendering
-                ::SetBrushOrgEx(dc, xBorder, yBorder, NULL);
-            }
             dc.StretchBlt(xBorder, yBorder, previewWidth, previewHeight, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
 
             // Draw a grey border around the preview
@@ -345,9 +344,10 @@ namespace Win32xx
         return TRUE;
     }
 
+
+    // Called when the Next Page button is pressed.
     template <typename T>
     inline BOOL CPrintPreview<T>::OnNextButton()
-    // Called when the Next Page button is pressed.
     {
         PreviewPage(++m_currentPage);
         UpdateButtons();
@@ -355,9 +355,10 @@ namespace Win32xx
         return TRUE;
     }
 
+
+    // Called when the Prev Page button is pressed.
     template <typename T>
     inline BOOL CPrintPreview<T>::OnPrevButton()
-    // Called when the Prev Page button is pressed.
     {
         PreviewPage(--m_currentPage);
         UpdateButtons();
@@ -365,15 +366,19 @@ namespace Win32xx
         return TRUE;
     }
 
-    template <typename T>
-    inline BOOL CPrintPreview<T>::OnPrintButton()
+
     // Called when the Print button is pressed.
     // Sends the UWM_PRINTNOW message to the owner window.
+    template <typename T>
+    inline BOOL CPrintPreview<T>::OnPrintButton()
     {
         ::SendMessage(m_ownerWindow, UWM_PRINTNOW, 0, 0);
         return TRUE;
     }
 
+    
+    // Called in response to the Print Setup buttom.
+    // Sends a UWM_PRINTSETUP message to the owner.
     template <typename T>
     inline BOOL CPrintPreview<T>::OnPrintSetup()
     {
@@ -381,10 +386,11 @@ namespace Win32xx
         return TRUE;
     }
 
-    template <typename T>
-    inline void CPrintPreview<T>::DoPrintPreview(HWND ownerWindow, UINT maxPage)
+
     // Initiate the print preview.
     // ownerWindow: Print Preview's notifications are sent to this window.
+    template <typename T>
+    inline void CPrintPreview<T>::DoPrintPreview(HWND ownerWindow, UINT maxPage)
     {
         m_ownerWindow = ownerWindow;
         assert(maxPage >= 1);
@@ -395,11 +401,12 @@ namespace Win32xx
         PreviewPage(0);
     }
 
-    template <typename T>
-    inline void CPrintPreview<T>::PreviewPage(UINT page)
+
     // Preview's the specified page.
     // This function calls the view's PrintPage function to render the same
     // information that would be printed on a page.
+    template <typename T>
+    inline void CPrintPreview<T>::PreviewPage(UINT page)
     {
         // Get the device contect of the default or currently chosen printer
         CPrintDialog printDlg;
@@ -415,10 +422,10 @@ namespace Win32xx
 
         // A bitmap to hold all the pixels of the printed page would be too large.
         // Shrinking its dimensions by 4 reduces it to 1/16th its original size.
-        int shrink = width > 10000 ? 8 : 4;
+        int shrink = width > 8000 ? 8 : 4;
 
         CDC previewDC = GetPreviewPane().GetDC();
-        memDC.CreateCompatibleBitmap(printerDC, width / shrink, height / shrink);
+        memDC.CreateCompatibleBitmap(previewDC, width / shrink, height / shrink);
 
         memDC.SetMapMode(MM_ANISOTROPIC);
         memDC.SetWindowExtEx(width, height, NULL);
@@ -441,9 +448,10 @@ namespace Win32xx
         GetPreviewPane().Render(previewDC);
     }
 
+
+    // Enables or disables the page selection buttons.
     template <typename T>
     inline void CPrintPreview<T>::UpdateButtons()
-    // Enables or disables the page selection buttons.
     {
         m_buttonNext.EnableWindow(m_currentPage < m_maxPage - 1);
         m_buttonPrev.EnableWindow(m_currentPage > 0);

@@ -40,6 +40,7 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CDC Draw();
     void DrawLine(int x, int y);
 
     CDoc m_doc;

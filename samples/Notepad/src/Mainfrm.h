@@ -79,9 +79,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
-    CPrintPreview<CRichView>  m_printPreview;   // CRichView is the source of for CPrintPreview
+    CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
-    CString m_oldStatus[4];                     // Array of CString holding old status;
+    CString m_oldStatus[4];                // Array of CString holding old status;
     CString m_pathName;
     Encoding m_encoding;
     bool m_isWrapped;

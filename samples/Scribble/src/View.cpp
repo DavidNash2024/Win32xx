@@ -12,28 +12,37 @@ CView::CView() : m_penColor(RGB(0,0,0))
     m_brush.CreateSolidBrush(RGB(255,255,230));
 }
 
+
 CView::~CView()
 {
 }
 
+
+// Draws a line in the window's client area.
 void CView::DrawLine(int x, int y)
 {
     CClientDC clientDC(*this);
-    clientDC.CreatePen(PS_SOLID, 1, GetAllPoints().back().color);
+    clientDC.CreatePen(PS_SOLID, 1, GetAllPoints().back().penColor);
     clientDC.MoveTo(GetAllPoints().back().x, GetAllPoints().back().y);
     clientDC.LineTo(x, y);
 }
 
+
+// Retrieve a reference to CDoc
 CDoc& CView::GetDoc()
 {
     return m_doc;
 }
 
+
+// Retrieve the PlotPoint data
 std::vector<PlotPoint>& CView::GetAllPoints()
 { 
     return GetDoc().GetAllPoints(); 
 }
 
+
+// Called when the window is created.
 int CView::OnCreate(CREATESTRUCT&)
 {
     // Support Drag and Drop on this window
@@ -41,23 +50,25 @@ int CView::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
-void CView::OnDraw(CDC& dc)
+
+// Draws the points to a memory DC. A memory DC provides double buffering for smoother rendering.
+CDC CView::Draw()
 {
-    // Here we use double buffering (drawing to a memory DC) for smoother rendering
     // Set up our Memory DC and bitmap
+    CClientDC dc(*this);
     CMemDC memDC(dc);
     int width = GetClientRect().Width();
     int height = GetClientRect().Height();
     memDC.CreateCompatibleBitmap(dc, width, height);
     memDC.FillRect(GetClientRect(), m_brush);
 
-
+    // Draw the lines on the memory DC
     if (GetAllPoints().size() > 0)
     {
         bool isDrawing = false;  //Start with the pen up
         for (size_t i = 0 ; i < GetAllPoints().size(); ++i)
         {
-            memDC.CreatePen(PS_SOLID, 1, GetAllPoints()[i].color);
+            memDC.CreatePen(PS_SOLID, 1, GetAllPoints()[i].penColor);
 
             if (isDrawing)
                 memDC.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
@@ -68,10 +79,23 @@ void CView::OnDraw(CDC& dc)
         }
     }
 
-    // Copy from the memory DC to our painting dc
-    dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
+    return memDC;
 }
 
+
+// Called when part of the view window needs to be redawn.
+// Calls the Draw function to perform the drawing to a memory DC.
+void CView::OnDraw(CDC& dc)
+{
+    int width = GetClientRect().Width();
+    int height = GetClientRect().Height();
+
+    // Copy from the memory DC to our painting dc
+    dc.BitBlt(0, 0, width, height, Draw(), 0, 0, SRCCOPY);
+}
+
+
+// Called when a file is dropped on the view window.
 LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -94,6 +118,8 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+
+// Called when the left mouse buton is pressed.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
@@ -102,6 +128,8 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+
+// Called when the left mouse buton is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     //Release the capture on the mouse
@@ -110,6 +138,8 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+
+// Called when the mouse is moved while it is captured.
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // hold down the left mouse button and move mouse to draw lines.
@@ -126,12 +156,16 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+
+// Called before window creation to update the window's CREATESTRUCT
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set the extra style to provide a sunken effect
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+
+// Called before window creation to update the window's CREATESTRUCT
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Set the background brush, class name and cursor
@@ -140,8 +174,9 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 
+
+// Select the printer, and call QuickPrint.
 void CView::Print(LPCTSTR docName)
-// Select the printer, and call QuickPrint
 {
     CPrintDialog printDlg;
 
@@ -153,74 +188,72 @@ void CView::Print(LPCTSTR docName)
 
 }
 
-void CView::PrintPage(CDC& dc, UINT)
+
 // Prints the view window's bitmap to the specified dc.
 // Called by CPrintPreview, and by QuickPrint.
 // This function provides a useful reference for printing bitmaps in general.
+void CView::PrintPage(CDC& dc, UINT)
 {
     // Get the dimensions of the View window
     CRect viewRect = GetClientRect();
     int width = viewRect.Width();
     int height = viewRect.Height();
 
-    // Copy the bitmap from the View window
-    CClientDC viewDC(*this);
-    CMemDC memDC(viewDC);
-    memDC.CreateCompatibleBitmap(viewDC, width, height);
-    BitBlt(memDC, 0, 0, width, height, viewDC, 0, 0, SRCCOPY);
-    CBitmap bmView = memDC.DetachBitmap();
+    // Acquire the view's bitmap.
+    CMemDC memDC = Draw();
+    CBitmap bmView = Draw().DetachBitmap();
 
-    BITMAPINFOHEADER bih;
-    ZeroMemory(&bih, sizeof(bih));
-    bih.biSize = sizeof(bih);
-    bih.biHeight = height;
-    bih.biWidth = width;
-    bih.biPlanes = 1;
-    bih.biBitCount = 24;
-    bih.biCompression = BI_RGB;
-
+    // Now we convert the Device Dependent Bitmap(DDB) to a Device
+    // Independent Bitmap(DIB) for printing or previewing.
+    
+    // Create the LPBITMAPINFO from the bitmap.
+    CBitmapInfoPtr pbmi(bmView);
     // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
-    // Get the size of the image data
-    BITMAPINFO* pBI = reinterpret_cast<BITMAPINFO*>(&bih);
-    memDC.GetDIBits(bmView, 0, height, NULL, pBI, DIB_RGB_COLORS);
+    BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
 
-    // Retrieve the image data
-    std::vector<byte> vBits(bih.biSizeImage, 0); // a vector to hold the byte array
-    byte* pByteArray = &vBits.front();
-    memDC.GetDIBits(bmView, 0, height, pByteArray, pBI, DIB_RGB_COLORS);
+    // Extract the device independent image data.
+    memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS);
+    std::vector<byte> byteArray(pBIH->biSizeImage, 0);
+    byte* pByteArray = &byteArray.front();
+    memDC.GetDIBits(bmView, 0, height, pByteArray, pbmi, DIB_RGB_COLORS);
 
-    // Get the device contect of the default or currently chosen printer
+    // Get the device context of the default or currently chosen printer
     CPrintDialog printDlg;
     CDC printDC = printDlg.GetPrinterDC();
-
-    // Determine the scaling factors required to print the bitmap and retain its original proportions.
+    
+    // Determine the scaling factors required to print the bitmap and retain
+    // its original aspect ratio.
+    CClientDC viewDC(*this);
     double viewPixelsX = double(viewDC.GetDeviceCaps(LOGPIXELSX));
     double viewPixelsY = double(viewDC.GetDeviceCaps(LOGPIXELSY));
     double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
     double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
     double scaleX = printPixelsX / viewPixelsX;
     double scaleY = printPixelsY / viewPixelsY;
-
     int scaledWidth = int(width * scaleX);
     int scaledHeight = int(height * scaleY);
 
-    // Use StretchDIBits to scale the bitmap and maintain its original proportions
-    UINT result = StretchDIBits(dc, 0, 0, scaledWidth, scaledHeight, 0, 0,
-        width, height, pByteArray, pBI, DIB_RGB_COLORS, SRCCOPY);
+    // Stretch the DIB to the specified dc, maintaining its original aspect ratio.
+    UINT result = dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
+        width, height, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
 
     if (GDI_ERROR == result)
         throw CUserException(_T("Failed to resize image for printing"));
+
+    // The specified dc now holds the Device Independent Bitmap printout.
 }
 
+
+// Print to the default or previously chosen printer.
 void CView::QuickPrint(LPCTSTR docName)
 {
-    // Zero and then initialize the members of a DOCINFO structure.
+    // Create a DOCINFO structure.
     DOCINFO di;
     memset(&di, 0, sizeof(DOCINFO));
     di.cbSize = sizeof(DOCINFO);
     di.lpszDocName = docName;
 
-    // Get the device contect of the default or currently chosen printer
+    // Get the device context of the default or currently chosen printer.
     CPrintDialog printDlg;
     CDC printDC = printDlg.GetPrinterDC();
 
@@ -244,6 +277,8 @@ void CView::QuickPrint(LPCTSTR docName)
         throw CUserException(_T("EndDoc failed"));
 }
 
+
+// Handle the view's messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
