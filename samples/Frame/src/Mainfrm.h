@@ -15,15 +15,14 @@ public:
 
     CDoc& GetDoc()      { return m_view.GetDoc(); }
 
-    BOOL    OnFileExit();
-    BOOL    OnFileOpen();
-    BOOL    OnFilePrint();
-    BOOL    OnFileSave();
-    BOOL    OnFilePreview();
+    void    OnFileExit();
+    void    OnFileOpen();
+    void    OnFilePrint();
+    void    OnFileSave();
+    void    OnFilePreview();
     void    OnPreviewClose();
     void    OnPreviewPrint();
     void    OnPreviewSetup();
-    void    PrintPage(CDC&, UINT);
 
 protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
@@ -37,7 +36,7 @@ protected:
 
 private:
     CView m_view;
-    CPrintPreview<CMainFrame> m_preview;
+    CPrintPreview<CView> m_preview;
 };
 
 #endif //MAINFRM_H

@@ -123,7 +123,6 @@ namespace Win32xx
     inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_thread(0),
                                        m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_accelWnd(0)
     {
-        m_msgThreadFailed = _T("Failed to create thread");
     }
 
     // CWinThread constructor.
@@ -133,7 +132,6 @@ namespace Win32xx
     inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
                         m_pThreadParams(0), m_thread(0), m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_accelWnd(0)
     {
-        m_msgThreadFailed = _T("Failed to create thread");
         m_pfnThreadProc = pfnThreadProc;
         m_pThreadParams = pParam;
     }
@@ -179,7 +177,7 @@ namespace Win32xx
 #endif
 
         if (m_thread == 0)
-            throw CWinException(m_msgThreadFailed);
+            throw CWinException(g_msgAppThreadFailed);
 
         return m_thread;
     }
@@ -387,13 +385,10 @@ namespace Win32xx
 
     inline CWinApp::CWinApp() : m_callback(NULL)
     {
-        m_msgInstanceFailed = _T("Only one instance of CWinApp is permitted");
-        m_msgTLSFailed      = _T("CWinApp::CWinApp  Failed to allocate Thread Local Storage");
-
         if ( 0 != SetnGetThis() )
         {
             // Test if this is the only instance of CWinApp
-            throw CNotSupportedException(m_msgInstanceFailed);
+            throw CNotSupportedException(g_msgAppInstanceFailed);
         }
 
         m_tlsData = ::TlsAlloc();
@@ -401,7 +396,7 @@ namespace Win32xx
         {
             // We only get here in the unlikely event that all TLS indexes are already allocated by this app
             // At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
-            throw CNotSupportedException(m_msgTLSFailed);
+            throw CNotSupportedException(g_msgAppTLSFailed);
         }
 
         SetnGetThis(this);

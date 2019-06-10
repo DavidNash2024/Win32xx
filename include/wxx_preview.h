@@ -221,20 +221,18 @@ namespace Win32xx
             {
                 previewWidth = rcClient.Width() - (2 * border);
                 previewHeight = static_cast<int>(previewWidth * ratio);
-
                 yBorder = (rcClient.Height() - previewHeight) / 2;
             }
             else
             {
                 previewHeight = rcClient.Height() - (2 * border);
                 previewWidth = static_cast<int>(previewHeight / ratio);
-
                 xBorder = (rcClient.Width() - previewWidth) / 2;
             }
 
             // Use half tone stretch mode for smoother rendering
-            dc.SetStretchBltMode(HALFTONE);        
-            dc.SetBrushOrgEx(xBorder, yBorder);
+            dc.SetStretchBltMode(HALFTONE);
+            dc.SetBrushOrgEx(0, 0);
 
             // Copy from the memory dc to the PreviewPane's DC with stretching.
             dc.StretchBlt(xBorder, yBorder, previewWidth, previewHeight, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
@@ -261,8 +259,6 @@ namespace Win32xx
     template <typename T>
     inline CPrintPreview<T>::CPrintPreview() : CDialog((LPCDLGTEMPLATE)previewTemplate),
         m_pSource(0), m_currentPage(0), m_maxPage(1), m_ownerWindow(0)
-//    inline CPrintPreview<T>::CPrintPreview() : CDialog(IDW_PRINTPREVIEW),
-//        m_pSource(0), m_currentPage(0), m_maxPage(1), m_ownerWindow(0)
     {
     }
 

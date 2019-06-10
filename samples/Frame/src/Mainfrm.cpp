@@ -34,15 +34,15 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     UINT id = LOWORD(wparam);
     switch(id)
     {
-    case IDM_FILE_OPEN:         return OnFileOpen();
-    case IDM_FILE_SAVE:         return OnFileSave();
-    case IDM_FILE_SAVEAS:       return OnFileSave();
-    case IDM_FILE_PREVIEW:      return OnFilePreview();
-    case IDM_FILE_PRINT:        return OnFilePrint();
-    case IDM_FILE_EXIT:         return OnFileExit();
-    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-    case IDM_HELP_ABOUT:        return OnHelp();
+    case IDM_FILE_OPEN:         OnFileOpen();      return TRUE;
+    case IDM_FILE_SAVE:         OnFileSave();      return TRUE;
+    case IDM_FILE_SAVEAS:       OnFileSave();      return TRUE;
+    case IDM_FILE_PREVIEW:      OnFilePreview();   return TRUE;
+    case IDM_FILE_PRINT:        OnFilePrint();     return TRUE;
+    case IDM_FILE_EXIT:         OnFileExit();      return TRUE;
+    case IDW_VIEW_STATUSBAR:    OnViewStatusBar(); return TRUE;
+    case IDW_VIEW_TOOLBAR:      OnViewToolBar();   return TRUE;
+    case IDM_HELP_ABOUT:        OnHelp();          return TRUE;
     }
 
     return FALSE;
@@ -72,10 +72,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 
 // Issue a close request to the frame.
-BOOL CMainFrame::OnFileExit()
+void CMainFrame::OnFileExit()
 {
     PostMessage(WM_CLOSE);
-    return TRUE;
 }
 
 
@@ -94,7 +93,7 @@ void CMainFrame::OnInitialUpdate()
 
 
 // Create the File Open dialog to choose the file to load.
-BOOL CMainFrame::OnFileOpen()
+void CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE);
 
@@ -103,13 +102,11 @@ BOOL CMainFrame::OnFileOpen()
     {
         GetDoc().FileLoad(fileDlg.GetPathName());
     }
-
-    return TRUE;
 }
 
 
 // Create the File Save dialog to choose the file to save.
-BOOL CMainFrame::OnFileSave()
+void CMainFrame::OnFileSave()
 {
     CFileDialog fileDlg(FALSE);
     
@@ -118,16 +115,17 @@ BOOL CMainFrame::OnFileSave()
     {
         GetDoc().FileStore(fileDlg.GetPathName());
     }
-
-    return TRUE;
 }
 
 
 // Previews a print job before sending it to the printer.
-BOOL CMainFrame::OnFilePreview()
+void CMainFrame::OnFilePreview()
 {
     try
     {
+        // Save the view's image for printing.
+        m_view.SaveViewImage();
+
         // Get the device contect of the default or currently chosen printer
         CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
         CDC printerDC = printDlg.GetPrinterDC();
@@ -138,17 +136,17 @@ BOOL CMainFrame::OnFilePreview()
                 m_preview.Create(*this);
 
             // Specify the source of the PrintPage function
-            m_preview.SetSource(*this);
+            m_preview.SetSource(m_view);
 
             // Set the preview's owner (for messages)
             m_preview.DoPrintPreview(*this);
 
+            // Swap views
+            SetView(m_preview);
+
             // Hide the menu and toolbar
             ShowMenu(FALSE);
             ShowToolBar(FALSE);
-
-            // Swap views
-            SetView(m_preview);
 
             // Update status
             CString status = _T("Printer: ") + printDlg.GetDeviceName();
@@ -166,34 +164,27 @@ BOOL CMainFrame::OnFilePreview()
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
-    return TRUE;
 }
 
 
 // Bring up a dialog to choose the printer.
-BOOL CMainFrame::OnFilePrint()
+void CMainFrame::OnFilePrint()
 {
     CPrintDialog printdlg;
 
     try
     {
-        INT_PTR result = printdlg.DoModal(*this);
+        if (IDOK == printdlg.DoModal(*this))
+        {
+            m_view.Print(_T("Frame Sample"));
+        }
 
-        // Retrieve the printer DC
-        // CDC dcPrinter = printdlg.GetPrinterDC();
-
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-        // Initialize the print job and call PrintPage;
-
-        return (result == IDOK);   // boolean expression
     }
 
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
-        return FALSE;
     }
 }
 
@@ -228,8 +219,7 @@ void CMainFrame::OnPreviewClose()
 // Called when the Print Preview's "Print Now" button is pressed.
 void CMainFrame::OnPreviewPrint()
 {
-    // TODO:
-    // Add your own code here. Refer to the tutorial for additional information.
+    m_view.QuickPrint(_T("Frame Sample"));
 }
 
 
@@ -273,14 +263,6 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     CFrame::PreCreate(cs);
 
     // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
-}
-
-
-// Prints the specified page to the specified device context.
-void CMainFrame::PrintPage(CDC&, UINT)
-{
-    // This function is called by m_preview.
-    // Code to render the printed page goes here.
 }
 
 

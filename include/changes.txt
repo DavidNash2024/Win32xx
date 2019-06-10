@@ -9,12 +9,6 @@ Bug Fix
 
 New Features and Enhancements
 -----------------------------
-* The samples now demonstrate an improved implementation of the Doc/View
-  architecture. Previously CDoc and CView were both member variables of
-  CMainFrame. Now CView is a member variable of CMainFrame, and CDoc is 
-  a member variable of CView. This allows both CMainFrame and CView to
-  easily access CDoc, which is what we need.
-  
 * Added CPrintPreview.
   The CPrintPreview displays a preview of the print job before it is sent to the
   printer.
@@ -32,8 +26,8 @@ New Features and Enhancements
   6) Handle UWM_PREVIEWCLOSE to swap back to the default view when the preview
      closes.
      
-  Refer to the scribble and notepad samples for a demonstration of how to use
-  CPrintPreview.
+  Refer to the following samples for a demonstration of how to use CPrintPreview:
+   Frame; INIFrame; FastGDI; Notepad; PrintPreview; and Scribble.
   
 * Added CHGlobal class.
   The CHGlobal class is a wrapper for a global memory handle. It automatically
@@ -54,12 +48,19 @@ New Features and Enhancements
   - Home and End.
   - Page Up and Page Down.
   - Left, right, up, and down arrow keys.
+  
+* The samples now demonstrate an improved implementation of the Doc/View
+  architecture. Previously CDoc and CView were both member variables of
+  CMainFrame. Now CView is a member variable of CMainFrame, and CDoc is 
+  a member variable of CView. This allows both CMainFrame and CView to
+  easily access CDoc, which is what we need.  
 
 
 Changes in detail
 -----------------
 Added Console                                    sample
 Added CHGlobal                                   class
+Added CPrintPreview                              class
 Added CDC::GetBrushOrgEx                         member function
 Added CDC::SetBrushOrgEx                         member function
 Added CGlobalLock<DEVNAMES>::GetDeviceName       member function
@@ -71,7 +72,7 @@ Added CScrollView::GetLineScrollSize             member function
 Added CScrollView::GetPageScrollSize             member function
 Added CWebBrowser::GetDocument                   member function
 
-Added VS2017 project files to all samples and tutorials
+Added VS2019 project files to all samples and tutorials
 
 Modified ::GetApp  global function               Now returns a pointer to CWinApp.
 
@@ -81,6 +82,8 @@ Updated the samples
  - PrintPreview sample now utilises the CPrintPreview class.
  - NotePad sample now utilises the CPrintPreview class.
  - Scribble sample now utilises the CPrintPreview class.
+ - Frame sample now demonstrates print and print preview.
+ - INIFrame sample now demonstrates print and print preview. 
 
 Updated the tutorials
  - The tutorials now demonstrate how to implement a print preview.
@@ -989,7 +992,7 @@ New Features and Enhancements
     - CFile::shareDenyWrite     Denies write access to all others.
     - CFile::shareDenyRead      Denies read access to all others.
     - CFile::shareDenyNone      No sharing restrictions.
-  - CFile now throws an exception under the following circumstances
+    - CFile now throws an exception under the following circumstances
     - Failure to read from a file.
     - Failure to write to a file.
     - Failure to open the file in CFile's constructor.

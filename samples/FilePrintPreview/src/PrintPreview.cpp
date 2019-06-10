@@ -890,7 +890,7 @@ OnDraw(CDC& dc)                                                         /*
           // Copy from the memory DC to the PreviewPane's DC with
           // scaling, using HALFTONE anti-aliasing for better quality
         dc.SetStretchBltMode(HALFTONE);
-        ::SetBrushOrgEx(dc, Border.cx, Border.cy, NULL);
+        dc.SetBrushOrgEx(0, 0);
         dc.StretchBlt(Border.cx, Border.cy, Preview.cx, Preview.cy,
             dcMem, p.x, p.y,  int(Preview.cx / zoom.cx),
             int(Preview.cy / zoom.cy), SRCCOPY);

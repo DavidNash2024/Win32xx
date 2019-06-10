@@ -6,5 +6,5 @@ cmd /c call "Compile VS2008 Express"
 cmd /c call "Compile VS2010 Express"
 cmd /c call "Compile VS2013 Community"
 cmd /c call "Compile VS2015 Community"
-cmd /c call "Compile VS2017 Community"
+cmd /c call "Compile VS2019 Community"
 

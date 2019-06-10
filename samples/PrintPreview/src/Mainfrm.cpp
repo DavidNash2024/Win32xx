@@ -267,10 +267,6 @@ BOOL CMainFrame::OnFilePreview()
     // Set the preview's owner (for messages), and number of pages.
     UINT maxPage = m_richView.CollatePages();
     m_preview.DoPrintPreview(*this, maxPage);
-    
-    // Hide the menu and toolbar
-    ShowMenu(FALSE);
-    ShowToolBar(FALSE);
 
     // Save the current Focus.
     SaveFocus();
@@ -278,6 +274,10 @@ BOOL CMainFrame::OnFilePreview()
     // Swap views
     SetView(m_preview);
     m_preview.SetFocus();
+
+    // Hide the menu and toolbar
+    ShowMenu(FALSE);
+    ShowToolBar(FALSE);
 
     return TRUE;
 }

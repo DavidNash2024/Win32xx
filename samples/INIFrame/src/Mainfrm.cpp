@@ -139,6 +139,9 @@ void CMainFrame::OnFilePreview()
 {
     try
     {
+        // Save the view's image for printing.
+        m_view.SaveViewImage();
+
         // Get the device contect of the default or currently chosen printer
         CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
         CDC printerDC = printDlg.GetPrinterDC();
@@ -149,17 +152,17 @@ void CMainFrame::OnFilePreview()
                 m_preview.Create(*this);
 
             // Specify the source of the PrintPage function
-            m_preview.SetSource(*this);
+            m_preview.SetSource(m_view);
 
             // Set the preview's owner (for messages)
             m_preview.DoPrintPreview(*this);
 
+            // Swap views
+            SetView(m_preview);
+
             // Hide the menu and toolbar
             ShowMenu(FALSE);
             ShowToolBar(FALSE);
-
-            // Swap views
-            SetView(m_preview);
 
             // Update status
             CString status = _T("Printer: ") + printDlg.GetDeviceName();
@@ -176,8 +179,8 @@ void CMainFrame::OnFilePreview()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
-}
 
+}
 
 // Bring up a dialog to choose the printer.
 void CMainFrame::OnFilePrint()
@@ -186,17 +189,14 @@ void CMainFrame::OnFilePrint()
 
     try
     {
-        printdlg.DoModal(*this);
-
-        // Retrieve the printer DC
-        // CDC dcPrinter = Printdlg.GetPrinterDC();
-
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
+        if (IDOK == printdlg.DoModal(*this))
+        {
+            m_view.Print(_T("Frame Sample"));
+        }
 
     }
 
-    catch (const CWinException& e)
+    catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
@@ -234,8 +234,7 @@ void CMainFrame::OnPreviewClose()
 // Called when the Print Preview's "Print Now" button is pressed.
 void CMainFrame::OnPreviewPrint()
 {
-    // TODO:
-    // Add your own code here. Refer to the tutorial for additional information.
+    m_view.QuickPrint(_T("Frame Sample"));
 }
 
 
@@ -262,14 +261,6 @@ void CMainFrame::OnPreviewSetup()
 
     // Initiate the print preview.
     m_preview.DoPrintPreview(*this);
-}
-
-
-// Print the page to the specified device context.
-void CMainFrame::PrintPage(CDC&, UINT)
-{
-    // This function is called by m_preview.
-    // Code to render the printed page goes here.
 }
 
 
