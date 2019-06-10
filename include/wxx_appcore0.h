@@ -219,6 +219,11 @@ using namespace Win32xx;
 
 namespace Win32xx
 {
+    
+    // Messages used for exceptions.
+    const LPCTSTR g_msgAppThreadFailed = _T("Failed to create thread");
+    const LPCTSTR g_msgAppInstanceFailed = _T("Only one instance of CWinApp is permitted");
+    const LPCTSTR g_msgAppTLSFailed = _T("CWinApp::CWinApp  Failed to allocate Thread Local Storage");
 
     ////////////////////////////////////////////////
     // Forward declarations.
@@ -506,7 +511,6 @@ namespace Win32xx
         DWORD m_threadIDForWinCE;       // ID of this thread (for WinCE only)
         HACCEL m_accel;                 // handle to the accelerator table
         HWND m_accelWnd;                // handle to the window for accelerator keys
-        LPCTSTR m_msgThreadFailed;
     };
 
     ///////////////////////////////////
@@ -580,8 +584,6 @@ namespace Win32xx
         WNDPROC m_callback;             // callback address of CWnd::StaticWndowProc
         CHGlobal m_devMode;             // Used by CPrintDialog and CPageSetupDialog
         CHGlobal m_devNames;            // Used by CPrintDialog and CPageSetupDialog
-        LPCTSTR m_msgInstanceFailed;
-        LPCTSTR m_msgTLSFailed;
 
 #ifndef _WIN32_WCE
         void AddCMenuData(HMENU menu, CMenu_Data* pData);

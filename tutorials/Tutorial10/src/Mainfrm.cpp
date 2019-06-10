@@ -217,12 +217,12 @@ void CMainFrame::OnFilePreview()
         // Set the preview's owner (for notification messages)
         m_preview.DoPrintPreview(*this);
 
+        // Swap views
+        SetView(m_preview);
+
         // Hide the menu and toolbar
         ShowMenu(FALSE);
         ShowToolBar(FALSE);
-
-        // Swap views
-        SetView(m_preview);
 
         // Update status
         CString status = _T("Printer: ") + printDlg.GetDeviceName();

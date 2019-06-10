@@ -36,5 +36,6 @@ Features demonstrated in this example
 * Using a string stream to convert between an int and a TCHAR array or CString
    - CMainFrame::ItoT
    - CMainFrame::TtoI
+* Support for print preview.
    
 

@@ -50,9 +50,10 @@ Features demonstrated in this example
 * Responding to ToolBar and menu commands in OnCommand
 * Responding to notifications in OnNotify.
 * Use of OpenFile and print dialogs.
-* Responding to frame window messages in CFrame::WndProc
-* Responding to view window messages in CView::WndProc
-* Using the TRACE command to output debug text
-* Saving the frame settings in the registry
+* Responding to frame window messages in CFrame::WndProc.
+* Responding to view window messages in CView::WndProc.
+* Using the TRACE command to output debug text.
+* Saving the frame settings in the registry.
+* Support for print preview.
 
 

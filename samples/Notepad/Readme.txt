@@ -20,6 +20,8 @@ Features demonstrated in this example
 * Loading and saving of UTF-16 Little Ended encoded files.
 * Loading and saving of ANSI files (plain text only).
 * Loading and saving of both rich text format (RTF) and plain text files.
+* Printing the document.
+* Using CPrintPreview to preview the print job before printing.
 
 
 Notes:

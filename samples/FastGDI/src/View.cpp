@@ -25,8 +25,7 @@ BOOL CView::LoadFileImage(LPCTSTR filename)
 
     if (filename)
     {
-        m_image.LoadImage(filename, LR_LOADFROMFILE);
-        if (!m_image.GetHandle())
+        if (!m_image.LoadImage(filename, LR_LOADFROMFILE))
         {
             CString str("Failed to load file:  ");
             str += filename;
@@ -88,12 +87,10 @@ void CView::PrintPage(CDC& dc, UINT)
 
         // Load the DI bitmap into a memory DC.
         CMemDC memDC(dc);
-    //  memDC.CreateCompatibleBitmap(dc, bxWidth, bxHeight);
-        CBitmap bmOld = memDC.SelectObject(m_image);
+        memDC.SelectObject(m_image);
 
         // Copy the bitmap to the specified dc.
         dc.StretchBlt(0, 0, scaledWidth, scaledHeight, memDC, 0, 0, bxWidth, bxHeight, SRCCOPY);
-        SelectObject(memDC, bmOld);
     }
 }
 
@@ -216,9 +213,10 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+
+// OnInitialUpdate is called after the window is created.
 void CView::OnInitialUpdate()
 {
-    // OnInitialUpdate is called after the window is created
     TRACE("View window created\n");
 
     // Support Drag and Drop on this window

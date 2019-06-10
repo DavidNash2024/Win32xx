@@ -23,7 +23,6 @@ public:
     void    OnPreviewClose();
     void    OnPreviewPrint();
     void    OnPreviewSetup();
-    void    PrintPage(CDC&, UINT);
     
     CString ItoT(int i);
     int     TtoI(LPCTSTR string);
@@ -43,7 +42,7 @@ protected:
 
 private:
     CView m_view;
-    CPrintPreview<CMainFrame> m_preview;
+    CPrintPreview<CView> m_preview;
 };
 
 #endif //MAINFRM_H

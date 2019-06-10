@@ -9,6 +9,9 @@ The CRichView::PrintPage is used for both printing and print previewing. CPrintP
 
 Features demonstrated in this example
 =====================================
+* Loading the text document from a file.
+* Saving the text document to a file.
+* Printing the document.
 * Use of CPrintPreview with a RichEdit control.
 * Use of PrintPage in CRichView to support both printing and print previewing.
 * Calculations of the Page Size and the Print Area used by the rich edit control.

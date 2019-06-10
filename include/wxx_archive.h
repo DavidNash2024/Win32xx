@@ -78,6 +78,11 @@
 
 namespace Win32xx
 {
+    
+    // Messages used for exceptions.
+    const LPCTSTR g_msgArReadFail = _T("Failed to read from archive.");
+    const LPCTSTR g_msgArNotCStringA = _T("ANSI characters stored. Not a CStringW");
+    const LPCTSTR g_msgArNotCStringW = _T("Unicode characters stored. Not a CStringA");
 
     // An object used for serialization that can hold any type of data.
     // Specify a pointer to the data, and the size of the data in bytes.
@@ -183,16 +188,12 @@ namespace Win32xx
     private:
         CArchive(const CArchive&);              // Disable copy construction
         CArchive& operator = (const CArchive&); // Disable assignment operator
-        void InitMsgValues();
 
         // private data members
         CFile*  m_pFile;            // archive file FILE
         UINT    m_schema;           // archive version schema
         bool    m_isStoring;        // archive direction switch
         bool    m_isFileManaged;    // delete the CFile pointer in destructor;
-        LPCTSTR m_msgNotCStringA;
-        LPCTSTR m_msgNotCStringW;
-        LPCTSTR m_msgReadFail;
     };
 
 
@@ -206,7 +207,6 @@ namespace Win32xx
     // The specified file must already be open for loading or storing.
     inline CArchive::CArchive(CFile& file, Mode mode) : m_schema(static_cast<UINT>(-1)), m_isFileManaged(false)
     {
-        InitMsgValues();
         m_pFile = &file;
 
         if (mode == load)
@@ -224,7 +224,6 @@ namespace Win32xx
     // also opened. A failure to open the file will throw an exception.
     inline CArchive::CArchive(LPCTSTR pFileName, Mode mode) : m_pFile(0), m_schema(static_cast<UINT>(-1))
     {
-        InitMsgValues();
         m_isFileManaged = true;
 
         try
@@ -271,13 +270,6 @@ namespace Win32xx
         }
     }
 
-    inline void CArchive::InitMsgValues()
-    {
-        m_msgReadFail    = _T("Failed to read from archive.");
-        m_msgNotCStringA = _T("ANSI characters stored. Not a CStringW");
-        m_msgNotCStringW = _T("Unicode characters stored. Not a CStringA");
-    }
-
     // Returns the file associated with the archive.
     inline const CFile& CArchive::GetFile()
     {
@@ -316,7 +308,7 @@ namespace Win32xx
         assert(m_pFile);
         UINT nBytes = m_pFile->Read(pBuf, size);
         if (nBytes != size)
-            throw CFileException(m_pFile->GetFilePath(), m_msgReadFail);
+            throw CFileException(m_pFile->GetFilePath(), g_msgArReadFail);
     }
 
     // Records the archived data schema number.  This acts as a version number
@@ -708,7 +700,7 @@ namespace Win32xx
         *this >> chars;
 
         if (isUnicode)
-            throw CFileException(m_pFile->GetFilePath(), m_msgNotCStringA);
+            throw CFileException(m_pFile->GetFilePath(), g_msgArNotCStringA);
 
         Read(string.GetBuffer(chars), chars);
         string.ReleaseBuffer(chars);
@@ -728,7 +720,7 @@ namespace Win32xx
         *this >> chars;
 
         if (!isUnicode)
-            throw CFileException(m_pFile->GetFilePath(), m_msgNotCStringW);
+            throw CFileException(m_pFile->GetFilePath(), g_msgArNotCStringW);
 
         Read(string.GetBuffer(chars), chars * 2);
         string.ReleaseBuffer(chars);
@@ -821,7 +813,7 @@ namespace Win32xx
         Read(&size, sizeof(size));
         if (size != ao.m_size)
         {
-            throw CFileException(m_pFile->GetFilePath(), m_msgReadFail);
+            throw CFileException(m_pFile->GetFilePath(), g_msgArReadFail);
         }
 
         Read(ao.m_pData, ao.m_size);

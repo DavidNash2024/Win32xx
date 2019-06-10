@@ -27,6 +27,7 @@ Features demonstrated in this example
 * Responding to notifications in OnNotify.
 * Capturing mouse input.
 * Use of a vector to store data.
+* Drawing to a window.
 * Loading and saving data to a file.
 * Printing the content of a window.
 * Print previewing the content of a window.

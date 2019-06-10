@@ -6,8 +6,10 @@
 #include "ColourDialog.h"
 #include "resource.h"
 
-
+///////////////////////////////////////
 // Definitions for the CMainFrame class
+
+// Constructor for CMainFrame.
 CMainFrame::CMainFrame()
 {
     // Constructor for CMainFrame. Its called after CFrame's constructor
@@ -36,8 +38,9 @@ BOOL CMainFrame::OnAdjustImage()
     if (m_view.GetImage())
     {
         // Initiate the Choose Colour Dialog
-        CColourDialog Dialog(IDD_DIALOG1, m_view.GetImage());
-        Dialog.DoModal();
+        CColourDialog dlg(IDD_DIALOG1, m_view.GetImage());
+        if (IDOK == dlg.DoModal())
+            ModifyBitmap(dlg.GetRed(), dlg.GetGreen(), dlg.GetBlue(), dlg.IsGray());
     }
     else
         MessageBox(_T("Open a Bitmap file first!"), _T("Error"), MB_OK);
@@ -49,12 +52,10 @@ BOOL CMainFrame::OnAdjustImage()
 // Modify the color of the bitmap.
 void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray)
 {
-    m_view.GetImage().TintBitmap(cRed, cGreen, cBlue);
-    
     if (isGray)
-    {
         m_view.GetImage().GrayScaleBitmap();
-    }
+    else
+        m_view.GetImage().TintBitmap(cRed, cGreen, cBlue);
 
     m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
@@ -117,7 +118,7 @@ BOOL CMainFrame::OnFileExit()
 }
 
 
-// Removes any selected image.
+// Clears any selected image.
 BOOL CMainFrame::OnFileNew()
 {
     CToolBar& TB = GetToolBar();
@@ -242,12 +243,12 @@ BOOL CMainFrame::OnFilePreview()
         // Set the preview's owner (for notification messages)
         m_preview.DoPrintPreview(*this);
 
+        // Swap views
+        SetView(m_preview);
+
         // Hide the menu and toolbar
         ShowMenu(FALSE);
         ShowToolBar(FALSE);
-
-        // Swap views
-        SetView(m_preview);
 
         // Update status
         CString status = _T("Printer: ") + printDlg.GetDeviceName();
@@ -292,6 +293,8 @@ BOOL CMainFrame::OnFileSaveAs()
     return TRUE;
 }
 
+
+// Called after the window is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
@@ -305,7 +308,7 @@ void CMainFrame::OnInitialUpdate()
 }
 
 
-// Called when menu items are about to be displayed
+// Called when menu items are about to be displayed.
 inline void CMainFrame::OnMenuUpdate(UINT id)
 {
     bool IsImageLoaded = (m_view.GetImage() != 0);

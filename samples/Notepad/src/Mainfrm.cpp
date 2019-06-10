@@ -376,16 +376,16 @@ BOOL CMainFrame::OnFilePreview()
     UINT maxPage = m_richView.CollatePages();
     m_preview.DoPrintPreview(*this, maxPage);
 
-    // Hide the menu and toolbar
-    ShowMenu(FALSE);
-    ShowToolBar(FALSE);
-
     // Save the current Focus.
     SaveFocus();
 
     // Swap views
     SetView(m_preview);
     m_preview.SetFocus();
+
+    // Hide the menu and toolbar
+    ShowMenu(FALSE);
+    ShowToolBar(FALSE);
 
     return TRUE;
 }

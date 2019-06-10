@@ -53,9 +53,9 @@ public:
     BOOL OnOptionsFont();
     BOOL OnOptionsWrap();
     void OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
-    void    OnPreviewClose();
-    void    OnPreviewPrint();
-    void    OnPreviewSetup();
+    void OnPreviewClose();
+    void OnPreviewPrint();
+    void OnPreviewSetup();
 
     BOOL ReadFile(LPCTSTR fileName);
     void RestoreFocus() { ::SetFocus(m_oldFocus); }

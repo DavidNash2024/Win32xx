@@ -7,6 +7,8 @@ to provide notifications of web browsing events.
 The Rebar control includes a ComboBoxEx control which allows URLs to be
 entered for web browsing.
 
+This program support print and print preview.
+
 Features demonstrated in this example
 =====================================
 * Use of CFrame to display the window frame

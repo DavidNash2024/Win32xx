@@ -8,6 +8,8 @@ using GetPixel and SetPixel are much slower.
 This program can load, modify and save bitmap files. It does not load other
 image types.
 
+This program supports print and print preview.
+
 Features demonstrated in this example
 =====================================
 * Use of large toolbar buttons.
@@ -18,4 +20,7 @@ Features demonstrated in this example
 * Use of double buffering to render GDI quickly.
 * Automatically resize the frame to match the image size when its loaded.
 * Inheriting the view from CScrollView to display scroll bars.
-* Use of drag and drop
+* Printing a bitmap.
+* Using CPrintPreview to preview the print job before printing.
+* Use of drag and drop.
+* Using a dialog to input color tint values from slider controls.

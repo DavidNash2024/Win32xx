@@ -652,10 +652,13 @@ namespace Win32xx
         HBRUSH GetCurrentBrush() const;
         LOGBRUSH GetLogBrush() const;
 
-#if (_WIN32_WINNT >= 0x0500)
+#ifndef _WIN32_WCE
         CPoint   GetBrushOrgEx() const;
-        COLORREF GetDCBrushColor() const;
         CPoint   SetBrushOrgEx(int x, int y);
+#endif
+
+#if (_WIN32_WINNT >= 0x0500)
+        COLORREF GetDCBrushColor() const;
         COLORREF SetDCBrushColor(COLORREF color) const;
 #endif
 
