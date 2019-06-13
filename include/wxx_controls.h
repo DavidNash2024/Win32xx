@@ -161,7 +161,7 @@ namespace Win32xx
         BOOL    GetItem(COMBOBOXEXITEM& item) const;
         BOOL    HasEditChanged () const;
         int     InsertItem(const COMBOBOXEXITEM& item) const;
-        CImageList SetImageList(HIMAGELIST images) const;
+        HIMAGELIST SetImageList(HIMAGELIST images) const;
         BOOL    SetItem(const COMBOBOXEXITEM& item) const;
         DWORD   GetExtendedStyle() const;
         DWORD   SetExtendedStyle(DWORD exMask, DWORD exStyles) const;
@@ -190,7 +190,7 @@ namespace Win32xx
         CRect   GetItemRect(int index) const;
         BOOL    GetOrderArray(LPINT pArray, int count) const;
         int     OrderToIndex(int order) const;
-        CImageList SetImageList(HIMAGELIST images) const;
+        HIMAGELIST SetImageList(HIMAGELIST images) const;
         BOOL    SetItem(int pos, const HDITEM& item) const;
         BOOL    SetOrderArray(int count, LPINT pArray) const;
         int     GetBitmapMargin() const;
@@ -254,6 +254,7 @@ namespace Win32xx
         void ClearAddress() const;
         int GetAddress(BYTE& field0, BYTE& field1, BYTE& field2, BYTE& field3) const;
         int GetAddress(DWORD& address) const;
+        CString GetAddress() const;
         BOOL IsBlank() const;
         void SetAddress(BYTE field0, BYTE field1, BYTE field2, BYTE field3) const;
         void SetAddress(DWORD address) const;
@@ -1059,11 +1060,11 @@ namespace Win32xx
 
     // Sets an image list for the ComboBoxEx control.
     // Refer to CBEM_SETIMAGELIST in the Windows API documentation for more information.
-    inline CImageList CComboBoxEx::SetImageList(HIMAGELIST images) const
+    inline HIMAGELIST CComboBoxEx::SetImageList(HIMAGELIST images) const
     {
         assert(IsWindow());
         HIMAGELIST oldImages = (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0, (LPARAM)images);
-        return CImageList(oldImages);
+        return oldImages;
     }
 
     // Sets the attributes for an item in the ComboBoxEx control.
@@ -1305,11 +1306,11 @@ namespace Win32xx
 
     // Assigns an image list to the header control.
     // Refer to Header_SetImageList in the Windows API documentation for more information.
-    inline CImageList CHeader::SetImageList(HIMAGELIST images) const
+    inline HIMAGELIST CHeader::SetImageList(HIMAGELIST images) const
     {
         assert(IsWindow());
         HIMAGELIST oldImages = Header_SetImageList(*this, images);
-        return CImageList(oldImages);
+        return oldImages;
     }
 
     // Sets the attributes of the specified item in a header control.
@@ -1401,7 +1402,7 @@ namespace Win32xx
         LONG scan = MapVirtualKey(keyCode, 0);
 
         // Construct an LPARAM with the scan code in Bits 16-23, and an extended flag in bit 24
-        LPARAM lparam = scan << 16;
+        LPARAM lparam = LPARAM(scan) << 16;
         if (isExtended)
             lparam |= 0x01000000L;
 
@@ -1453,7 +1454,7 @@ namespace Win32xx
             InitCommonControlsEx(&initStruct);
         }
         else
-            throw CNotSupportedException(_T("IP Address Control not supported!"));
+            throw CNotSupportedException(g_msgIPControl);
     }
 
     // Clears the contents of the IP address control.
@@ -1475,6 +1476,19 @@ namespace Win32xx
         field2 = (BYTE)THIRD_IPADDRESS(addr);
         field3 = (BYTE)FOURTH_IPADDRESS(addr);
         return result;
+    }
+
+    inline CString CIPAddress::GetAddress() const
+    {
+        DWORD addr = 0;
+        GetAddress(addr);
+        BYTE field0 = (BYTE)FIRST_IPADDRESS(addr);
+        BYTE field1 = (BYTE)SECOND_IPADDRESS(addr);
+        BYTE field2 = (BYTE)THIRD_IPADDRESS(addr);
+        BYTE field3 = (BYTE)FOURTH_IPADDRESS(addr);
+        CString str;
+        str.Format(_T("%d.%d.%d.%d"), field0, field1, field2, field3);
+        return str;
     }
 
     // Gets the address values for all four fields in the IP address control.
@@ -1523,7 +1537,7 @@ namespace Win32xx
     inline void CIPAddress::SetFieldRange(int field, BYTE lower, BYTE upper) const
     {
         assert(IsWindow());
-        SendMessage(IPM_SETRANGE, (WPARAM)field, MAKEIPRANGE(lower, upper));
+        SendMessage(IPM_SETRANGE, (WPARAM)field, MAKEIPRANGE(int(lower), int(upper)));
     }
 
 

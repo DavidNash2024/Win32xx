@@ -128,7 +128,7 @@ namespace Win32xx
 
         BOOL m_isModal;                  // a flag for modal dialogs
         LPCTSTR m_pResName;              // the resource name for the dialog
-        LPCDLGTEMPLATE m_pDlgTemplate;   // the dialog template for indirect dialogs
+		LPCDLGTEMPLATE m_pDlgTemplate;   // the dialog template for indirect dialogs
     };
 
 
@@ -175,6 +175,7 @@ namespace Win32xx
 
         struct ResizeData
         {
+            ResizeData() : corner(topleft), isFixedWidth(FALSE), isFixedHeight(FALSE), wnd(0) {}
             CRect initRect;
             CRect oldRect;
             Alignment corner;
@@ -436,7 +437,7 @@ namespace Win32xx
         pTLSData->pWnd = this;
 
         // Create a modal dialog
-        if (IsIndirect())
+        if (IsIndirect() && m_pDlgTemplate != NULL)
             result = ::DialogBoxIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
@@ -462,7 +463,7 @@ namespace Win32xx
         // Throw an exception if the dialog creation fails
         if (result == -1)
         {
-            throw CWinException(_T("Dialog creation failed"));
+            throw CWinException(g_msgWndDoModal);
         }
 
         return result;
@@ -489,7 +490,7 @@ namespace Win32xx
         HWND wnd;
 
         // Create the modeless dialog
-        if (IsIndirect())
+        if (IsIndirect() && m_pDlgTemplate != NULL)
             wnd = ::CreateDialogIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
@@ -505,7 +506,7 @@ namespace Win32xx
         // Display information on dialog creation failure
         if (wnd == 0)
         {
-            throw CWinException(_T("Dialog creation failed"));
+            throw CWinException(g_msgWndDoModal);
         }
 
         return wnd;

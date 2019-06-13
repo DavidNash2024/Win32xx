@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_eventCookie(0)
 {
     //Set m_View as the view window of the frame
     SetView(m_view);
@@ -451,6 +451,9 @@ void CMainFrame::OnPrint()
 	VARIANT vHeadStr;
 	VARIANT vFootStr;
 	VARIANT vArg;
+	ZeroMemory(&vHeadStr, sizeof(vHeadStr));
+	ZeroMemory(&vFootStr, sizeof(vFootStr));
+	ZeroMemory(&vArg, sizeof(vArg));
 
 
 	try {
@@ -475,16 +478,18 @@ void CMainFrame::OnPrint()
 		if (vFootStr.bstrVal == NULL) throw 1002;
 
 		rgIndices = 0;
-		SafeArrayPutElement(psaHeadFoot, &rgIndices, static_cast<void *>(&vHeadStr));
+		if (FAILED(SafeArrayPutElement(psaHeadFoot, &rgIndices, static_cast<void*>(&vHeadStr))))
+			throw CUserException(_T("Failed ot store Header string"));
 		rgIndices = 1;
-		SafeArrayPutElement(psaHeadFoot, &rgIndices, static_cast<void *>(&vFootStr));
+		if (FAILED(SafeArrayPutElement(psaHeadFoot, &rgIndices, static_cast<void*>(&vFootStr))))
+			throw CUserException(_T("Failed ot store Footer string"));
 
 		// Issue the print command
 		VariantInit(&vArg);
 		vArg.vt = VT_ARRAY | VT_BYREF;
 		vArg.parray = psaHeadFoot;
 		GetBrowser().ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, &vArg, NULL);
-		if (hr != S_OK)
+		if (FAILED(hr))
 			throw CUserException(_T("Print Preview Failed"));
 	}
 	catch (...) {

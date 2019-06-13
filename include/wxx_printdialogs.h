@@ -164,7 +164,7 @@ namespace Win32xx
                 if (m_p == 0)
                 {
                     // The handle is probably invalid
-                    throw CWinException(_T("CGlobalLock::Lock failed to lock handle"));
+                    throw CWinException(g_msgWndGlobalLock);
                 }
             }
             else
@@ -544,7 +544,7 @@ namespace Win32xx
                 // Reset global memory
                 GetApp()->m_devMode.Free();
                 GetApp()->m_devNames.Free();
-                throw CWinException(_T("CPrintDialog::DoModal Failed"), error);
+                throw CWinException(g_msgWndDoModal, error);
             }
 
             OnCancel();
@@ -849,7 +849,7 @@ namespace Win32xx
                 // Reset global memory
                 GetApp()->m_devMode.Free();
                 GetApp()->m_devNames.Free();
-                throw CWinException(_T("CPageSetupDialog::DoModal Failed"), error);
+                throw CWinException(g_msgWndDoModal, error);
             }
 
             OnCancel();

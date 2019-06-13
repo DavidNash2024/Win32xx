@@ -35,7 +35,8 @@ struct ConstantBuffer
 class CDXView : public CWnd
 {
 public:
-    ~CDXView();
+	CDXView();
+    virtual ~CDXView();
     void CleanupDevice();
     HRESULT InitDevice();
     void Render();

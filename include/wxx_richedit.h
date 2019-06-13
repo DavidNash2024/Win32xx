@@ -193,7 +193,7 @@ namespace Win32xx
         m_rich1 = LoadLibrary(_T("riched32.dll"));
 
         if (m_rich1 == 0)
-            throw CNotSupportedException(_T("Failed to load RICHED32.DLL"));
+            throw CNotSupportedException(g_msgRichEditDll);
 
         // Load RichEdit version 2.0 or 3.0 (for Win98 and above)
         m_rich2 = LoadLibrary(_T("riched20.dll"));

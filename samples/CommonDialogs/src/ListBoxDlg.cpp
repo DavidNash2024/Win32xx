@@ -113,8 +113,8 @@ DoModal(HWND hWndOwner /* = 0 */)                       /*
     until the dialog box is closed, which happens on selection of the OK,
     Cancel, or [X] button on the dialog. If OK is selected, return the index
     of the item highlighted in the list box. Otherwise, return the value
-    -1. Attach the box to the given hWndOwner if non-zero, or to the
-    m_hWndOwner otherwise.  If the latter is also 0, attach the box to
+    INT_MAX. Attach the box to the given hWndOwner if non-zero, or to
+    the m_hWndOwner otherwise.  If the latter is also 0, attach the box to
     the main window.
 *-----------------------------------------------------------------------------*/
 {
@@ -123,19 +123,13 @@ DoModal(HWND hWndOwner /* = 0 */)                       /*
         m_hWndOwner = hWndOwner;
     if (m_hWndOwner == 0)
         m_hWndOwner = GetApp()->GetMainWnd();
-    int ok = static_cast<int>(CDialog::DoModal(m_hWndOwner));
+    INT_PTR ok = CDialog::DoModal(m_hWndOwner);
       // NOTE: the CDialog class message loop handles the passage of
       // execution to OnOK() or OnCancel(), the ending of the dialog, and
-      // the determination of the return value. Since the CDialog::()
-      // method returns the parameter sent in the CDialog::EndDialog()
-      // statement, the OnOK() member sets the return value to the index of
-      // the selected item in the list box, if one was selected. However, if
-      // no item is highlighted in the list box, the native value returned
-      // is -1, which, if sent to EndDialog(), produces an unwanted
-      // assert(0). In this case, INT_MAX is returned instead. See OnOK()
-      // and OnCancel() for the mechanism that implements this behavior.
-    ::UpdateWindow(hWndOwner);
-    return (ok < INT_MAX ? ok : -1);
+      // the determination of the return value. INT_MAX is returned
+      // if no selection was made.
+
+    return ok;
 }
 
 /*============================================================================*/
@@ -148,7 +142,7 @@ OnOK()                                  /*
 {
     int choice = m_ListBox.GetCurSel();
       // return the choice: see the note above
-    CDialog::EndDialog((INT_PTR) choice >= 0 ? choice : INT_MAX);
+    CDialog::EndDialog(choice >= 0 ? choice : INT_MAX);
 }
 
 /*============================================================================*/
@@ -162,7 +156,7 @@ OnCancel()                              /*
     assert(0) occurs.
 *-----------------------------------------------------------------------------*/
 {
-    CDialog::EndDialog((UINT_PTR)INT_MAX);
+    CDialog::EndDialog(INT_MAX);
 }
 
 /*============================================================================*/
@@ -178,13 +172,10 @@ OnInitDialog()                              /*
     CDialog::OnInitDialog();
     SetWindowTitle();
       // subclass the dialog controls
-    HWND hWndCtrl = ::GetDlgItem(*this, IDC_LIST_BOX);
-    m_ListBox.Attach(hWndCtrl);
+    m_ListBox.AttachDlgItem(IDC_LIST_BOX, *this);
     m_ListBox.ResetContent();
     for (UINT i = 0; i < m_sList.size(); i++)
         m_ListBox.AddString(m_sList[i]);
-      // put the popup in a good location
-    CenterWindow();
 
     return TRUE;
 }

@@ -735,7 +735,9 @@ namespace Win32xx
 
     inline CWebBrowser::CWebBrowser() : m_pIWebBrowser2(0)
     {
-        OleInitialize(NULL);
+        HRESULT hr = OleInitialize(NULL);
+        if (FAILED(hr))
+            throw CWinException(g_msgOleInitialize);
     }
 
     inline CWebBrowser::~CWebBrowser()

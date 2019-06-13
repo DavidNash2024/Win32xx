@@ -115,7 +115,7 @@ CView(UINT nResID)                                                      /*
     control type, and set the view background color. The frame colors
     are set separately, in CMainFrame::SetThemeColors().
 *-----------------------------------------------------------------------------*/
-    : CDialog(nResID)
+    : CDialog(nResID), m_nIDFocus(0)
 {
       // These initial values for the dialog controls that use DDX/DDV
       // validation will be overwritten in OnInitDialog() by the
@@ -866,26 +866,15 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
     NMHDR *pNMHdr = reinterpret_cast<LPNMHDR>(lParam);
 
       // deal with setting the focus for date-time controls
-    if (pNMHdr->code == static_cast<UINT>(NM_SETFOCUS))
+    switch (pNMHdr->code)
     {
-        m_nIDFocus = static_cast<int>(wParam);
-        return TRUE;
+    case NM_SETFOCUS:
+        {
+            m_nIDFocus = static_cast<int>(wParam);
+            return TRUE;
+        }
     }
     return FALSE;
-}
-
-/*============================================================================*/
-    BOOL CView::
-PreTranslateMessage(MSG& Msg)                       /*
-
-    Filter mouse and keyboard messages prior to being passed to the
-    message loop.
-*-----------------------------------------------------------------------------*/
-{
-    if (m_ToolTip.IsWindow())
-        m_ToolTip.RelayEvent(Msg);
-
-    return CWnd::PreTranslateMessage(Msg);
 }
 
 /*============================================================================*/

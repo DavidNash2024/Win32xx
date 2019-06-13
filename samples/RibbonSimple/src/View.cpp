@@ -128,6 +128,7 @@ STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYK
         break;
     case IDC_CMD_EXIT:
         TRACE("Exit button\n");
+        PostMessage(WM_CLOSE);
         break;
     default:
         TRACE("Unknown button\n");

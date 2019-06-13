@@ -293,8 +293,7 @@ namespace Win32xx
         assert(::gmtime(&t));
 #else
         time_tm tm;
-        UNREFERENCED_PARAMETER(tm);
-        assert(0 == ::gmtime_s(&tm, &t));
+        VERIFY(0 == ::gmtime_s(&tm, &t));
 #endif
         m_time = t;
     }
@@ -344,10 +343,10 @@ namespace Win32xx
 #endif
 
         // Compute number of days until the nthwk occurrence of wkday
-        int nthwkday = (7 + wkday - ptm1->tm_wday) % 7 + (nthwk - 1) * 7;
+        time_t nthwkday = (7 + time_t(wkday) - ptm1->tm_wday) % 7 + time_t(nthwk - 1) * 7;
 
         // add this to the first of the month
-        int sec_per_day = 86400;
+        time_t sec_per_day = 86400;
         time_t tnthwkdy = t1st + nthwkday * sec_per_day;
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
         ptm1 = ::gmtime(&tnthwkdy);
@@ -399,7 +398,7 @@ namespace Win32xx
 
         // get the local time of the UTC time corresponding to this
         time_t Jan1 = UTCtime(&atm1st);
-        int sec_per_day = 86400;
+        time_t sec_per_day = 86400;
         time_t tDoy = Jan1 + (doy - 1) * sec_per_day;
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
         time_tm* ptm = ::gmtime(&tDoy);
@@ -502,8 +501,10 @@ namespace Win32xx
     // is also copied into ptm.
     inline time_tm* CTime::GetGmtTm(time_tm* ptm) const
     {
-        if (ptm == NULL)
-            throw CNotSupportedException(_T("CTime::GetGmtTm. Null argument not supported"));
+        // Null argument not supported
+        assert (ptm != NULL);
+        if (ptm)
+        {
 
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
         time_tm* ptmTemp = ::gmtime(&m_time);
@@ -520,6 +521,7 @@ namespace Win32xx
         *ptm = tmTemp;
 #endif
 
+        }
         return ptm;
     }
 
@@ -528,23 +530,26 @@ namespace Win32xx
     // decomposition is also copied into ptm.
     inline time_tm* CTime::GetLocalTm(time_tm* ptm) const
     {
-        if (ptm == NULL)
-            throw CNotSupportedException(_T("CTime::GetLocalTm. Null argument not supported"));
+        // Null argument not supported.
+        assert(ptm != NULL);
+        if (ptm)
+        {
 
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
-        time_tm* ptmTemp = ::localtime(&m_time);
-        if (ptmTemp == NULL)
-            return NULL;    // the m_time was not initialized!
+            time_tm* ptmTemp = ::localtime(&m_time);
+            if (ptmTemp == NULL)
+                return NULL;    // the m_time was not initialized!
 
-        *ptm = *ptmTemp;
+            *ptm = *ptmTemp;
 #else
-        time_tm tmTemp;
-        errno_t result = ::localtime_s(&tmTemp, &m_time);
-        if (result != 0)
-            return NULL;    // the m_time was not initialized!
+            time_tm tmTemp;
+            errno_t result = ::localtime_s(&tmTemp, &m_time);
+            if (result != 0)
+                return NULL;    // the m_time was not initialized!
 
-        *ptm = tmTemp;
+            *ptm = tmTemp;
 #endif
+        }
 
         return ptm;
     }
@@ -838,7 +843,7 @@ namespace Win32xx
         if (size != sizeof(ULONGLONG))
         {
             CString str = ar.GetFile().GetFilePath();
-            throw CFileException(str, _T("Failed to read CTime from archive."));
+            throw CFileException(str, g_msgArReadFail);
         }
 
         // load CTime as x64
@@ -888,9 +893,9 @@ namespace Win32xx
     //   nSecs  0–59
     inline CTimeSpan::CTimeSpan(long days, int hours, int mins, int secs)
     {
-        int sec_per_day  = 86400;
-        int sec_per_hour = 3600;
-        int sec_per_min  = 60;
+        time_t sec_per_day  = 86400;
+        time_t sec_per_hour = 3600;
+        time_t sec_per_min  = 60;
         m_timespan = days * sec_per_day + hours * sec_per_hour +
             mins * sec_per_min + secs;
     }
@@ -1106,7 +1111,7 @@ namespace Win32xx
         if (size != sizeof(ULONGLONG))
         {
             CString str = ar.GetFile().GetFilePath();
-            throw CFileException(str, _T("Failed to read CTimeSpan from archive"));
+            throw CFileException(str, g_msgArReadFail);
         }
 
         // load CTimeSpan as x64

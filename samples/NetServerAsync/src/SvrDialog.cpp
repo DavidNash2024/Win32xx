@@ -174,7 +174,7 @@ void CSvrDialog::AppendText(int id, LPCTSTR buf)
     SendDlgItemMessage(id, EM_SETSEL, ndx, ndx);
     SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(buf));
 
-	TRACE(buf); TRACE("\n");
+    TRACE(buf); TRACE("\n");
 }
 
 // respond to the user defined message posted to the dialog
@@ -499,12 +499,7 @@ BOOL CSvrDialog::StartServer()
     }
     else
     {
-        DWORD dwAddr = 0;
-        m_ip4Address.GetAddress(dwAddr);
-        in_addr addr;
-        ZeroMemory(&addr, sizeof(in_addr));
-        addr.S_un.S_addr = htonl(dwAddr);
-        strAddr = inet_ntoa(addr);
+        strAddr = m_ip4Address.GetAddress();
     }
 
     // Retrieve the local port number

@@ -139,7 +139,7 @@ DoModal(HWND hWndOwner /* = 0 */)                   /*
     m_nSelection = static_cast<UINT>(-1);
     INT_PTR selection = m_LBDlg.DoModal(hWndOwner);
       // if invalid, go no further
-    if (selection < 0)
+    if (selection == INT_MAX)
         return IDCANCEL;
 
       // register the current control color in the color choice struct

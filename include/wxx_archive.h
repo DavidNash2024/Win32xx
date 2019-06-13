@@ -78,11 +78,6 @@
 
 namespace Win32xx
 {
-    
-    // Messages used for exceptions.
-    const LPCTSTR g_msgArReadFail = _T("Failed to read from archive.");
-    const LPCTSTR g_msgArNotCStringA = _T("ANSI characters stored. Not a CStringW");
-    const LPCTSTR g_msgArNotCStringW = _T("Unicode characters stored. Not a CStringA");
 
     // An object used for serialization that can hold any type of data.
     // Specify a pointer to the data, and the size of the data in bytes.
@@ -693,7 +688,7 @@ namespace Win32xx
     inline CArchive& CArchive::operator>>(CStringA& string)
     {
         bool isUnicode;
-        UINT chars;
+        int chars;
 
         // Retrieve the Unicode state and number of characters from the archive
         *this >> isUnicode;
@@ -713,7 +708,7 @@ namespace Win32xx
     inline CArchive& CArchive::operator>>(CStringW& string)
     {
         bool isUnicode;
-        UINT chars;
+        int chars;
 
         // Retrieve the Unicode state and number of characters from the archive
         *this >> isUnicode;
@@ -733,7 +728,7 @@ namespace Win32xx
     inline CArchive& CArchive::operator>>(CString& string)
     {
         bool isUnicode;
-        UINT chars;
+        int chars;
 
         // Retrieve the Unicode state and number of characters from the archive
         *this >> isUnicode;
@@ -742,13 +737,13 @@ namespace Win32xx
         if (isUnicode)
         {
             // use a vector to create our WCHAR array
-            std::vector<WCHAR> vWChar(chars + 1, L'\0');
+            std::vector<WCHAR> vWChar(size_t(chars) + 1, L'\0');
             WCHAR* buf = &vWChar.front();
 
             Read(buf, chars*2);
 
 #ifdef UNICODE
-            memcpy(string.GetBuffer(chars), buf, chars*2);
+            memcpy(string.GetBuffer(chars), buf, size_t(chars)*2);
 #else
             // Convert the archive string from Wide to Ansi
             WideCharToMultiByte(CP_ACP, 0, buf, chars, string.GetBuffer(chars), chars, NULL,NULL);
@@ -759,19 +754,19 @@ namespace Win32xx
         else
         {
             // use a vector to create our char array
-            std::vector<char> vChar(chars + 1, '\0');
+            std::vector<char> vChar(size_t(chars) + 1, '\0');
             char* buf = &vChar.front();
 
-            Read(buf, chars);
+            Read(buf, int(chars));
 
 #ifdef UNICODE
             // Convert the archive string from Ansi to Wide
-            MultiByteToWideChar(CP_ACP, 0, buf, chars, string.GetBuffer(chars), chars);
+            MultiByteToWideChar(CP_ACP, 0, buf, chars, string.GetBuffer(chars), int(chars));
 #else
             memcpy(string.GetBuffer(chars), buf, chars);
 #endif
 
-            string.ReleaseBuffer(chars);
+            string.ReleaseBuffer(int(chars));
         }
 
         return *this;
@@ -886,7 +881,7 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline void CArchive::WriteString(LPCTSTR pString)
     {
-        UINT chars = lstrlen(pString);
+        int chars = lstrlen(pString);
         bool isUnicode = (sizeof(TCHAR) == sizeof(WCHAR));
 
         // Store the Unicode state and number of characters in the archive
@@ -901,7 +896,7 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline void CArchive::WriteStringA(LPCSTR pString)
     {
-        UINT chars = lstrlenA(pString);
+        int chars = lstrlenA(pString);
         bool isUnicode = false;
 
         // Store the Unicode state and number of characters in the archive
@@ -916,7 +911,7 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline void CArchive::WriteStringW(LPCWSTR pString)
     {
-        UINT chars = lstrlenW(pString);
+        int chars = lstrlenW(pString);
         bool isUnicode = true;
 
         // Store the Unicode state and number of characters in the archive

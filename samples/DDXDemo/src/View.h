@@ -108,7 +108,6 @@ protected:
     virtual BOOL    OnInitDialog();
     virtual void    OnOK();
     virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-    virtual BOOL    PreTranslateMessage(MSG& Msg);
 
 private:
     void OnBitmap();

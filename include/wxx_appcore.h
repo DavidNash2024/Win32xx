@@ -61,6 +61,43 @@
 
 namespace Win32xx
 {
+    /////////////////////////////////////////////
+    // Definitions for the CCriticalSection class
+    //
+    inline CCriticalSection::CCriticalSection() : m_count(0)
+    {
+        ::InitializeCriticalSection(&m_cs);
+    }
+
+    inline CCriticalSection::~CCriticalSection()
+    {
+        while (m_count > 0)
+        {
+            Release();
+        }
+
+        ::DeleteCriticalSection(&m_cs);
+    }
+
+
+    // Enter the critical section and increment the lock count.
+    inline void CCriticalSection::Lock()
+    {
+        ::EnterCriticalSection(&m_cs);
+        InterlockedIncrement(&m_count);
+    }
+
+    // Leave the critical section and decrement the lock count.
+    inline void CCriticalSection::Release()
+    {
+        assert(m_count > 0);
+        if (m_count > 0)
+        {
+            ::LeaveCriticalSection(&m_cs);
+            ::InterlockedDecrement(&m_count);
+        }
+    }
+
 
     ///////////////////////////////////////
     // Definitions for the CHGlobal class
@@ -84,12 +121,12 @@ namespace Win32xx
         m_hGlobal = 0;
     }
 
-    // Reassign is used when global memory has been reassigned, as 
+    // Reassign is used when global memory has been reassigned, as
     // can occur after a call to ::PrintDlg or ::PageSetupDlg.
     // It assigns a new memory handle to be managed by this object
     // and assumes any old memory has already been freed.
     inline void  CHGlobal::Reassign(HGLOBAL hGlobal)
-    { 
+    {
         m_hGlobal = hGlobal;
     }
 

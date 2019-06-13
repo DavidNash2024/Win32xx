@@ -10,6 +10,7 @@
 class CViewRect : public CWnd
 {
 public:
+    CViewRect() : m_cxClientMax(0), m_cyClientMax(0) {}
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
     virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);

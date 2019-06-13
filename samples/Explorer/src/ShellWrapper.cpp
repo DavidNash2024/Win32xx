@@ -27,6 +27,7 @@ namespace ShellWrapper
     BOOL GetDisplayName(LPCITEMIDLIST pidlFull, LPTSTR pszDisplayName)
     {
         SHFILEINFO     sfi;
+        ZeroMemory(&sfi, sizeof(sfi));
 
         // Get the display name of the item
         if(!::SHGetFileInfo((LPCTSTR)pidlFull, 0, &sfi, sizeof(sfi), SHGFI_PIDL | SHGFI_DISPLAYNAME))
@@ -267,8 +268,7 @@ namespace ShellWrapper
     HRESULT CShellFolder::GetUIObjectOf(HWND hwndOwner, UINT nItems, Cpidl* cpidlArray, REFIID riid, UINT rgfReserved, CContextMenu& cm)
     //cpidlArray is either an array of Cpidl or a pointer to a single Cpidl
     {
-        LPCITEMIDLIST* pPidlArray;
-        pPidlArray = (LPCITEMIDLIST*)::CoTaskMemAlloc(sizeof(LPITEMIDLIST) * nItems);
+        LPCITEMIDLIST* pPidlArray = new LPCITEMIDLIST[nItems];
         if(!pPidlArray)
             throw CWinException(_T("Failed to allocate memory for pidl array"));
 
@@ -285,7 +285,7 @@ namespace ShellWrapper
             TRACE("CShellFolder::GetUIObjectOf failed\n");
         }
 
-        CoTaskMemFree(pPidlArray);
+        delete[] pPidlArray;
         return result;
     }
 

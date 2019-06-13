@@ -39,6 +39,16 @@ HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szS
 }
 
 //--------------------------------------------------------------------------------------
+// CDXView Contructor
+//--------------------------------------------------------------------------------------
+CDXView::CDXView()
+{
+	ZeroMemory(&m_world, sizeof(m_world));
+	ZeroMemory(&m_view, sizeof(m_view));
+	ZeroMemory(&m_projection, sizeof(m_projection));
+}
+
+//--------------------------------------------------------------------------------------
 // CDXView Destructor
 //--------------------------------------------------------------------------------------
 CDXView::~CDXView()

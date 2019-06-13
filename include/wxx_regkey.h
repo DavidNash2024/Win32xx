@@ -324,9 +324,10 @@ namespace Win32xx
     {
         assert(m_key);
         OLECHAR szGUID[64];
-        ::StringFromGUID2(value, szGUID, 64);
-
-        return SetStringValue(pValueName, OLEtoT(szGUID));
+        if (::StringFromGUID2(value, szGUID, 64) == 0)
+            return ERROR_INSUFFICIENT_BUFFER;
+        else
+            return SetStringValue(pValueName, OLEtoT(szGUID));
     }
 
 #if (WINVER >= 0x0600)
