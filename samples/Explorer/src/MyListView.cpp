@@ -592,6 +592,7 @@ void CMyListView::PreCreate(CREATESTRUCT& cs)
 void CMyListView::SetImageLists()
 {
     SHFILEINFO  sfi;
+    ZeroMemory(&sfi, sizeof(sfi));
 
     // Get the system image list
     HIMAGELIST hLargeImages = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0, &sfi,

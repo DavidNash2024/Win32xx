@@ -398,7 +398,7 @@ namespace Win32xx
         if (wnd == 0)
         {
             // Throw an exception when window creation fails
-            throw CWinException(_T("CreateWindowEx failed"));
+            throw CWinException(g_msgWndCreateEx);
         }
 
         // Automatically subclass predefined window class types
@@ -1859,10 +1859,10 @@ namespace Win32xx
     // The SetActiveWindow function activates the window, but
     // not if the application is in the background.
     // Refer to SetActiveWindow in the Windows API documentation for more information.
-    inline CWnd CWnd::SetActiveWindow() const
+    inline HWND CWnd::SetActiveWindow() const
     {
         assert(IsWindow());
-        return CWnd( ::SetActiveWindow(*this) );
+        return ::SetActiveWindow(*this);
     }
 
     // The SetCapture function sets the mouse capture to the window.
@@ -1870,10 +1870,10 @@ namespace Win32xx
     // window, or when the mouse button was pressed while the mouse was over the
     // capturing window and the button is still down.
     // Refer to SetCapture in the Windows API documentation for more information.
-    inline CWnd CWnd::SetCapture() const
+    inline HWND CWnd::SetCapture() const
     {
         assert(IsWindow());
-        return CWnd( ::SetCapture(*this) );
+        return ::SetCapture(*this);
     }
 
     // The SetClassLongPtr function replaces the specified value at the specified offset in the
@@ -1921,10 +1921,10 @@ namespace Win32xx
 
     // The SetFocus function sets the keyboard focus to the window.
     // Refer to SetFocus in the Windows API documentation for more information.
-    inline CWnd CWnd::SetFocus() const
+    inline HWND CWnd::SetFocus() const
     {
         assert(IsWindow());
-        return CWnd( ::SetFocus(*this) );
+        return ::SetFocus(*this);
     }
 
     // Specifies the font that the window will use when drawing text.
@@ -1954,10 +1954,10 @@ namespace Win32xx
 
     // The SetParent function changes the parent window of the child window.
     // Refer to SetParent in the Windows API documentation for more information.
-    inline CWnd CWnd::SetParent(HWND parent) const
+    inline HWND CWnd::SetParent(HWND parent) const
     {
         assert(IsWindow());
-        return CWnd(::SetParent(*this, parent));
+        return ::SetParent(*this, parent);
     }
 
     // This function allows changes in that window to be redrawn or prevents changes
@@ -2513,7 +2513,7 @@ namespace Win32xx
         while ( nSize-1 <= nTChars )
         {
             nSize = nSize * 4;
-            vString.assign(nSize+1, 0);
+            vString.assign(size_t(nSize)+1, 0);
             pTCharArray = &vString[0];
             nTChars = ::LoadStringA (GetApp()->GetResourceHandle(), id, pTCharArray, nSize);
         }
@@ -2544,7 +2544,7 @@ namespace Win32xx
         while ( nSize-1 <= nTChars )
         {
             nSize = nSize * 4;
-            vString.assign(nSize+1, 0);
+            vString.assign(size_t(nSize)+1, 0);
             pTCharArray = &vString[0];
             nTChars = ::LoadStringW (GetApp()->GetResourceHandle(), id, pTCharArray, nSize);
         }
@@ -2570,7 +2570,7 @@ namespace Win32xx
         ZeroMemory(&ncm, sizeof(ncm));
         ncm.cbSize = sizeof(ncm);
 
-#if (WINVER >= 0x0600)
+#if (WINVER >= 0x2600)
         // Is OS version less than Vista, adjust size to correct value
         if (GetWinVersion() < 2600)
             ncm.cbSize = CCSIZEOF_STRUCT(NONCLIENTMETRICS, lfMessageFont);

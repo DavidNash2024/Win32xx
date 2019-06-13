@@ -1548,7 +1548,7 @@ namespace Win32xx
             m_bmBlueTint.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
             dcMem.SelectObject(m_bmBlueTint);
             dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
-            dcMem.DetachBitmap();
+            m_bmBlueTint = dcMem.DetachBitmap();
             m_bmBlueTint.TintBitmap(-64, -24, +128);
 
             // Create the Hint window
@@ -1957,10 +1957,10 @@ namespace Win32xx
     /////////////////////////////////////////
     // Definitions for the CDocker class
     //
-    inline CDocker::CDocker() : m_pDockParent(NULL), m_isBlockMove(FALSE), m_isUndocking(FALSE),
-                    m_isClosing(FALSE), m_isDragging(FALSE), m_isDragAutoResize(TRUE), m_dockStartSize(0),
-                    m_dockID(0), m_redrawCount(0), m_ncHeight(0), m_dockZone(0), m_dockSizeRatio(1.0),
-                    m_dockStyle(0), m_dockUnderPoint(0)
+    inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockAncestor(NULL), m_isBlockMove(FALSE),
+                    m_isUndocking(FALSE), m_isClosing(FALSE), m_isDragging(FALSE), 
+                    m_isDragAutoResize(TRUE), m_dockStartSize(0), m_dockID(0), m_redrawCount(0),
+                    m_ncHeight(0), m_dockZone(0), m_dockSizeRatio(1.0), m_dockStyle(0), m_dockUnderPoint(0)
     {
         // Assume this docker is the DockAncestor for now.
         m_pDockAncestor = this;
@@ -4396,8 +4396,9 @@ namespace Win32xx
 
     //////////////////////////////////////
     // Declaration of the CDockContainer class
-    inline CDockContainer::CDockContainer() : m_currentPage(0), m_pDocker(0), m_tabIcon(0),
-                                        m_pressedTab(-1), m_isHideSingleTab(FALSE)
+    inline CDockContainer::CDockContainer() : m_pContainerParent(0), m_currentPage(0),
+                                         m_pDocker(0), m_tabIcon(0), m_pressedTab(-1), 
+                                         m_isHideSingleTab(FALSE)
     {
         m_pContainerParent = this;
         m_viewPage.SetContainer(this);

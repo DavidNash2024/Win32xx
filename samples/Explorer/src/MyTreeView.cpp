@@ -366,6 +366,7 @@ void CMyTreeView::OnAttach()
 {
     // Get a copy of the system image lists
     SHFILEINFO  sfi;
+    ZeroMemory(&sfi, sizeof(sfi));
 
     HIMAGELIST hSmall = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0,
         &sfi, sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));

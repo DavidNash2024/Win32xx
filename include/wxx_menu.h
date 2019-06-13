@@ -107,15 +107,15 @@ namespace Win32xx
 
         //Initialization
         void Attach(HMENU menu);
-        void CreateMenu() const;
-        void CreatePopupMenu() const;
+        void CreateMenu();
+        void CreatePopupMenu();
         void DestroyMenu();
         HMENU Detach();
 
         HMENU GetHandle() const;
-        BOOL LoadMenu(LPCTSTR pResName) const;
-        BOOL LoadMenu(UINT resourceID) const;
-        BOOL LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate) const;
+        BOOL LoadMenu(LPCTSTR pResName);
+        BOOL LoadMenu(UINT resourceID);
+        BOOL LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate);
 
         //Menu Operations
         BOOL TrackPopupMenu(UINT flags, int x, int y, HWND wnd, LPCRECT pRect = 0) const;
@@ -369,24 +369,28 @@ namespace Win32xx
 
     // Creates an empty menu.
     // Refer to CreateMenu in the Windows API documentation for more information.
-    inline void CMenu::CreateMenu() const
+    inline void CMenu::CreateMenu()
     {
         assert(m_pData);
-        assert(NULL == m_pData->menu);
-        m_pData->menu = ::CreateMenu();
-        AddToMap();
-        m_pData->isManagedMenu = TRUE;
+        HMENU menu = ::CreateMenu();
+        if (menu != 0)
+        {
+            Attach(menu);
+            m_pData->isManagedMenu = TRUE;
+        }
     }
 
     // Creates a drop-down menu, submenu, or shortcut menu. The menu is initially empty.
     // Refer to CreatePopupMenu in the Windows API documentation for more information.
-    inline void CMenu::CreatePopupMenu() const
+    inline void CMenu::CreatePopupMenu()
     {
         assert(m_pData);
-        assert(NULL == m_pData->menu);
-        m_pData->menu = ::CreatePopupMenu();
-        AddToMap();
-        m_pData->isManagedMenu = TRUE;
+        HMENU menu = ::CreatePopupMenu();
+        if (menu != 0)
+        {
+            Attach(menu);
+            m_pData->isManagedMenu = TRUE;
+        }
     }
 
     // Deletes an item from the specified menu.
@@ -631,36 +635,50 @@ namespace Win32xx
 
     // Loads the menu from the specified windows resource.
     // Refer to LoadMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::LoadMenu(LPCTSTR pResName) const
+    inline BOOL CMenu::LoadMenu(LPCTSTR pResName)
     {
         assert(m_pData);
         assert(NULL == m_pData->menu);
         assert(pResName);
-        m_pData->menu = ::LoadMenu(GetApp()->GetResourceHandle(), pResName);
-        if (m_pData->menu != 0) AddToMap();
+        HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), pResName);
+        if (menu != 0)
+        {
+            Attach(menu);
+            m_pData->isManagedMenu = TRUE;
+        }
+
         return NULL != m_pData->menu;
     }
 
     // Loads the menu from the specified windows resource.
     // Refer to LoadMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::LoadMenu(UINT resID) const
+    inline BOOL CMenu::LoadMenu(UINT resID)
     {
         assert(m_pData);
         assert(NULL == m_pData->menu);
-        m_pData->menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(resID));
-        if (m_pData->menu != 0) AddToMap();
-        return NULL != m_pData->menu;
+        HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(resID));
+        if (menu != 0)
+        {
+            Attach(menu);
+            m_pData->isManagedMenu = TRUE;
+        }
+        
+        return 0 != m_pData->menu;
     }
 
     // Loads the specified menu template and assigns it to this CMenu.
     // Refer to LoadMenuIndirect in the Windows API documentation for more information.
-    inline BOOL CMenu::LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate) const
+    inline BOOL CMenu::LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate)
     {
         assert(m_pData);
-        assert(NULL == m_pData->menu);
         assert(pMenuTemplate);
-        m_pData->menu = ::LoadMenuIndirect(pMenuTemplate);
-        if (m_pData->menu) AddToMap();
+        HMENU menu = ::LoadMenuIndirect(pMenuTemplate);
+        if (menu != 0)
+        {
+            Attach(menu);
+            m_pData->isManagedMenu = TRUE;
+        }
+
         return NULL != m_pData->menu;
     }
 

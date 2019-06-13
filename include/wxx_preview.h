@@ -216,8 +216,10 @@ namespace Win32xx
             // These borders center the preview with the PreviewPane.
             int xBorder = border;
             int yBorder = border;
+            double cxClient = rcClient.Width();
+            double cyClient = rcClient.Height();
 
-            if ((rcClient.Width() - 2 * border)*ratio < (rcClient.Height() - 2 * border))
+            if ((cxClient - 2.0 * border)*ratio < (cyClient - 2.0 * border))
             {
                 previewWidth = rcClient.Width() - (2 * border);
                 previewHeight = static_cast<int>(previewWidth * ratio);

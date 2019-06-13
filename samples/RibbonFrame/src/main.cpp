@@ -3,7 +3,7 @@
 #include "RibbonApp.h"
 
 
-int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int APIENTRY WinMain(__in HINSTANCE, __in_opt HINSTANCE, __in LPSTR, __in int)
 {
     try
     {

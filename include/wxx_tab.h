@@ -156,7 +156,7 @@ namespace Win32xx
         void        SetCurFocus(int tab) const;
         int         SetCurSel(int tab) const;
         DWORD       SetExtendedStyle(DWORD exStyle) const;
-        CImageList  SetImageList(HIMAGELIST newImages) const;
+        HIMAGELIST  SetImageList(HIMAGELIST newImages) const;
         BOOL        SetItem(int tab, LPTCITEM pTabInfo) const;
         BOOL        SetItemExtra(int cb) const;
         DWORD       SetItemSize(int cx, int cy) const;
@@ -690,7 +690,7 @@ namespace Win32xx
             CString menuString;
             CString tabText = GetAllTabs()[u].TabText;
             menuString.Format(_T("&%d %s"), u+1, tabText.c_str());
-            m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +u, menuString);
+            m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(u), menuString);
         }
         if (GetAllTabs().size() >= 10)
             m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +9, _T("More Windows"));
@@ -1689,11 +1689,11 @@ namespace Win32xx
 
     // Assigns an image list to a tab control.
     // Refer to TabCtrl_SetImageList in the Windows API documentation for more information.
-    inline CImageList CTab::SetImageList(HIMAGELIST newImages) const
+    inline HIMAGELIST CTab::SetImageList(HIMAGELIST newImages) const
     {
         assert(IsWindow());
         HIMAGELIST images = TabCtrl_SetImageList( *this, newImages);
-        return CImageList(images);
+        return images;
     }
 
     // Sets some or all of a tab's attributes.
@@ -1814,7 +1814,7 @@ namespace Win32xx
         // Create the MDICLIENT view window
         if (!CreateEx(0, _T("MDICLIENT"), _T(""),
             style, 0, 0, 0, 0, parent, NULL, (PSTR) &clientcreate))
-                throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
+                throw CWinException(g_msgWndCreateEx);
 
         return *this;
     }

@@ -917,7 +917,7 @@ namespace Win32xx
 
             while (-1 == result)
             {
-                buffer.assign( length+1, 0 );
+                buffer.assign( size_t(length)+1, 0 );
 
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
                 result = _vsnprintf(&buffer[0], length, pFormat, args);
@@ -945,7 +945,7 @@ namespace Win32xx
 
             while (-1 == result)
             {
-                buffer.assign( length+1, 0 );
+                buffer.assign( size_t(length)+1, 0 );
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
                 result = _vsnwprintf(&buffer[0], length, pFormat, args);
 #else
@@ -1029,7 +1029,7 @@ namespace Win32xx
         assert (minBufLength >= 0);
 
         T ch = 0;
-        m_buf.assign(minBufLength + 1, ch);
+        m_buf.assign(size_t(minBufLength) + 1, ch);
         typename std::basic_string<T>::iterator it_end;
 
         if (m_str.length() >= (size_t)minBufLength)
@@ -1057,8 +1057,8 @@ namespace Win32xx
         int length = ::GetEnvironmentVariableA(pVar, NULL, 0);
         if (length > 0)
         {
-            std::vector<CHAR> buffer(length +1, 0 );
-            ::GetEnvironmentVariableA(pVar, &buffer[0], length);
+            std::vector<CHAR> buffer(size_t(length) +1, 0 );
+            ::GetEnvironmentVariableA(pVar, &buffer[0], DWORD(length));
             m_str = &buffer[0];
         }
 
@@ -1075,8 +1075,8 @@ namespace Win32xx
         int length = ::GetEnvironmentVariableW(pVar, NULL, 0);
         if (length > 0)
         {
-            std::vector<WCHAR> buffer(length +1, 0 );
-            ::GetEnvironmentVariableW(pVar, &buffer[0], length);
+            std::vector<WCHAR> buffer(size_t(length) +1, 0 );
+            ::GetEnvironmentVariableW(pVar, &buffer[0], DWORD(length));
             m_str = &buffer[0];
         }
 
@@ -1094,7 +1094,7 @@ namespace Win32xx
         int length = ::GetWindowTextLengthA(wnd);
         if (length > 0)
         {
-            std::vector<CHAR> buffer(length +1, 0 );
+            std::vector<CHAR> buffer(size_t(length) +1, 0 );
             ::GetWindowTextA(wnd, &buffer[0], length +1);
             m_str = &buffer[0];
         }
@@ -1108,7 +1108,7 @@ namespace Win32xx
         int length = ::GetWindowTextLengthW(wnd);
         if (length > 0)
         {
-            std::vector<WCHAR> buffer(length +1, 0 );
+            std::vector<WCHAR> buffer(size_t(length) +1, 0 );
             ::GetWindowTextW(wnd, &buffer[0], length +1);
             m_str = &buffer[0];
         }

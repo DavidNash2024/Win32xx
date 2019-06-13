@@ -186,7 +186,9 @@ namespace Win32xx
         //  BIF_NEWDIALOGSTYLE    - Provides a resizable dialog without an edit box.
         //  BIF_NONEWFOLDERBUTTON - Do not include the New Folder button in the browse dialog box.
         m_flags = BIF_RETURNONLYFSDIRS |BIF_NEWDIALOGSTYLE | BIF_NONEWFOLDERBUTTON;
-        ::CoInitialize(NULL);
+        HRESULT hr = ::CoInitialize(NULL);
+        if (FAILED(hr))
+            throw CWinException(g_msgCoInitialize);
     }
 
     inline CFolderDialog::~CFolderDialog()

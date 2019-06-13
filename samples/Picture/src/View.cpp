@@ -13,7 +13,8 @@
 CView::CView() : m_pPicture(NULL)
 {
     // Initializes the COM library on the current thread
-    ::CoInitialize(NULL);
+    if FAILED(::CoInitialize(NULL))
+        throw CWinException(_T("Failed to initialize COM"));
 }
 
 CView::~CView()

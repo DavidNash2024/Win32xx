@@ -299,7 +299,7 @@ namespace Win32xx
                     CString menuString;
                     menuString.Format(_T("&%d %s"), window+1, strMenuItem.c_str());
 
-                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + window, menuString);
+                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(window), menuString);
 
                     if (GetActiveMDIChild() == (*v).get())
                         windowMenu.CheckMenuItem(IDW_FIRSTCHILD + window, MF_CHECKED);
@@ -309,7 +309,7 @@ namespace Win32xx
                 else if (9 == window)
                 // For the 10th MDI child, add this menu item and return
                 {
-                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + window, _T("&Windows..."));
+                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(window), _T("&Windows..."));
                     return;
                 }
             }

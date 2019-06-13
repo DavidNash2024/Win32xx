@@ -113,12 +113,12 @@ namespace Win32xx
         BOOL  SetButtonStyle(int buttonID, BYTE style) const;
         BOOL  SetButtonWidth(int buttonID, int width) const;
         BOOL  SetCommandID(int index, int buttonID) const;
-        CImageList SetDisableImageList(HIMAGELIST disabledImages);
+        HIMAGELIST SetDisableImageList(HIMAGELIST disabledImages);
         DWORD SetDrawTextFlags(DWORD mask, DWORD flags) const;
         DWORD SetExtendedStyle(DWORD exStyle) const;
-        CImageList SetHotImageList(HIMAGELIST hotImages);
+        HIMAGELIST SetHotImageList(HIMAGELIST hotImages);
         int   SetHotItem(int index) const;
-        CImageList SetImageList(HIMAGELIST normalImages);
+        HIMAGELIST SetImageList(HIMAGELIST normalImages);
         BOOL  SetIndent(int indent) const;
         BOOL  SetMaxTextRows(int maxRows) const;
         BOOL  SetPadding(int cx, int cy) const;
@@ -1003,11 +1003,11 @@ namespace Win32xx
 
     // Sets the ImageList that the ToolBar control will use to display disabled buttons.
     // Refer to TB_SETDISABLEDIMAGELIST in the Windows API documentation for more information.
-    inline CImageList CToolBar::SetDisableImageList(HIMAGELIST disabledImages)
+    inline HIMAGELIST CToolBar::SetDisableImageList(HIMAGELIST disabledImages)
     {
         assert(IsWindow());
         HIMAGELIST images = (HIMAGELIST)SendMessage(TB_SETDISABLEDIMAGELIST, 0, (LPARAM)disabledImages);
-        return CImageList(images);
+        return images;
     }
 
     // Sets the text drawing flags for the ToolBar.
@@ -1029,11 +1029,11 @@ namespace Win32xx
 
     // Sets the image list that the ToolBar control will use to display hot buttons.
     // Refer to TB_SETHOTIMAGELIST in the Windows API documentation for more information.
-    inline CImageList CToolBar::SetHotImageList(HIMAGELIST hotImages)
+    inline HIMAGELIST CToolBar::SetHotImageList(HIMAGELIST hotImages)
     {
         assert(IsWindow());
         HIMAGELIST images = (HIMAGELIST)SendMessage(TB_SETHOTIMAGELIST, 0, (LPARAM)hotImages);
-        return CImageList(images);
+        return images;
     }
 
     // Sets the hot item in a ToolBar.
@@ -1046,11 +1046,11 @@ namespace Win32xx
 
     // Sets the image list that the ToolBar will use to display buttons that are in their default state.
     // Refer to TB_SETIMAGELIST in the Windows API documentation for more information.
-    inline CImageList CToolBar::SetImageList(HIMAGELIST normalImages)
+    inline HIMAGELIST CToolBar::SetImageList(HIMAGELIST normalImages)
     {
         assert(IsWindow());
         HIMAGELIST images = (HIMAGELIST)SendMessage(TB_SETIMAGELIST, 0, (LPARAM)normalImages);
-        return CImageList(images);
+        return images;
     }
 
     // Sets the indentation for the first button in a ToolBar control.

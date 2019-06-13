@@ -229,11 +229,11 @@ namespace Win32xx
         WSADATA wsaData;
 
         if (::WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
-            throw CNotSupportedException(_T("WSAStartup failed"));
+            throw CNotSupportedException(g_msgSocWSAStartup);
 
         m_ws2_32 = LoadLibrary(_T("WS2_32.dll"));
         if (m_ws2_32 == 0)
-            throw CNotSupportedException(_T("Failed to load WS2_2.dll"));
+            throw CNotSupportedException(g_msgSocWS2Dll);
 
 #ifdef _WIN32_WCE
         m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_ws2_32, L"getaddrinfo") );

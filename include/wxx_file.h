@@ -45,18 +45,6 @@
 
 namespace Win32xx
 {
-    
-    // Messages used for exceptions.
-    LPCTSTR const g_msgFileClose  = _T("Failed to close file");
-    LPCTSTR const g_msgFileFlush  = _T("Failed to flush file");
-    LPCTSTR const g_msgFileLock   = _T("Failed to lock the file");
-    LPCTSTR const g_msgFileOpen   = _T("Failed to open file");
-    LPCTSTR const g_msgFileRead   = _T("Failed to read from file");
-    LPCTSTR const g_msgFileRename = _T("Failed to rename file");
-    LPCTSTR const g_msgFileRemove = _T("Failed to delete file");
-    LPCTSTR const g_msgFileLength = _T("Failed to change the file length");
-    LPCTSTR const g_msgFileUnlock = _T("Failed to unlock the file");
-    LPCTSTR const g_msgFileWrite  = _T("Failed to write to file");
 
     /////////////////////////////////////
     // The CFile class manages files. It can be used to: create; read from;

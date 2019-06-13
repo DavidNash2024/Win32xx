@@ -32,8 +32,10 @@ CMainMDIFrame::~CMainMDIFrame()
 COLORREF CMainMDIFrame::GetColorFromPicker() const
 {
     PROPVARIANT var;
-    GetRibbonFramework()->GetUICommandProperty(IDC_PEN_COLOR, UI_PKEY_Color, &var);
-    COLORREF color = PropVariantToUInt32WithDefault(var, 0);
+    COLORREF color = RGB(0, 0, 0);
+    HRESULT result = GetRibbonFramework()->GetUICommandProperty(IDC_PEN_COLOR, UI_PKEY_Color, &var);
+    if (SUCCEEDED(result))
+        color = PropVariantToUInt32WithDefault(var, 0);
 
     return color;
 }
@@ -94,23 +96,32 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
         PROPVARIANT var;
 
         InitPropVariantFromBoolean(showStatusBar, &var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SHOWSTATUS, UI_PKEY_BooleanValue, var);
+        HRESULT hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SHOWSTATUS, UI_PKEY_BooleanValue, var);
 
         // Disable some Ribbon buttons
         InitPropVariantFromBoolean(FALSE, &var);
-
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_OPEN, UI_PKEY_Enabled, var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SAVE, UI_PKEY_Enabled, var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SAVEAS, UI_PKEY_Enabled, var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_PRINT, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_OPEN, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SAVE, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SAVEAS, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_PRINT, UI_PKEY_Enabled, var);
         
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_COPY, UI_PKEY_Enabled, var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_CUT, UI_PKEY_Enabled, var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_PASTE, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_COPY, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_CUT, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_PASTE, UI_PKEY_Enabled, var);
 
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDICLOSE, UI_PKEY_Enabled, var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDICLOSE, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
     }
 
     return result;
@@ -183,9 +194,12 @@ void CMainMDIFrame::OnMDIMaximized(BOOL isMax)
         // Enable MDI Ribbon when the MDI child is maximized
         PROPVARIANT var;
         InitPropVariantFromBoolean(isMax, &var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDICLOSE, UI_PKEY_Enabled, var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
-        GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
+        
+        HRESULT hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDICLOSE, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
+        if (SUCCEEDED(hr))
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
     }
 }
 

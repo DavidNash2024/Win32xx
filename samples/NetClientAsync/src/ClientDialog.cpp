@@ -292,12 +292,7 @@ void CClientDialog::OnStartClient()
                 }
                 else
                 {
-                    DWORD dwAddr = 0;
-                    m_ip4Address.GetAddress(dwAddr);
-                    in_addr addr;
-                    ZeroMemory(&addr, sizeof(in_addr));
-                    addr.S_un.S_addr = htonl(dwAddr);
-                    strAddr = inet_ntoa(addr);
+                    strAddr = m_ip4Address.GetAddress();
                 }
 
                 // Retrieve the local port number
@@ -407,12 +402,7 @@ void CClientDialog::OnSend()
             }
             else
             {
-                DWORD dwAddr = 0;
-                m_ip4Address.GetAddress(dwAddr);
-                in_addr addr;
-                ZeroMemory(&addr, sizeof(in_addr));
-                addr.S_un.S_addr = htonl(dwAddr);
-                strAddr = inet_ntoa(addr);
+                strAddr = m_ip4Address.GetAddress();
             }
 
             if (SOCKET_ERROR == m_client.SendTo( TtoA(strSend), strSend.GetLength(), 0, strAddr, port ))

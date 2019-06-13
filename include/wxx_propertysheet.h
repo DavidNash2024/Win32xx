@@ -644,7 +644,7 @@ namespace Win32xx
         m_psh.dwFlags |= PSH_MODELESS;
         HWND wnd = reinterpret_cast<HWND>(CreatePropertySheet(&m_psh));
         if (wnd == 0)
-            throw CWinException(_T("CreatePropertySheet failed"));
+            throw CWinException(g_msgWndPropertSheet);
 
         return wnd;
     }
@@ -674,7 +674,7 @@ namespace Win32xx
         pTLSData->pWnd = NULL;
 
         if (ipResult == -1)
-            throw CWinException(_T("PropertySheet failed"));
+            throw CWinException(g_msgWndPropertSheet);
 
         return ipResult;
     }

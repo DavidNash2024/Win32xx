@@ -234,7 +234,7 @@ void CColourDialog::UpdatePreview()
     int cx = m_preview.GetWindowRect().Width();
     int cy = m_preview.GetWindowRect().Height();
     Mem2DC.BitBlt(0, 0, cx, cy, Mem1DC, 0, 0, SRCCOPY);
-    Mem2DC.DetachBitmap();  // Detach bitmap before modifying it
+    m_previewImage = Mem2DC.DetachBitmap();  // Detach bitmap before modifying it
 
     m_cBlue  = m_blueSlider.GetPos();
     m_cGreen = m_greenSlider.GetPos();

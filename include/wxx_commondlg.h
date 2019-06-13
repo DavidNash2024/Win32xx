@@ -438,7 +438,7 @@ namespace Win32xx
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
-                throw CWinException(_T("CColorDialog::DoModal Failed"), error);
+                throw CWinException(g_msgWndDoModal, error);
 
             OnCancel();
             return IDCANCEL;
@@ -635,7 +635,7 @@ namespace Win32xx
             {
                 // ignore the exception caused by closing the dialog
                 if (error != CDERR_DIALOGFAILURE || (m_ofn.Flags & OFN_EXPLORER))
-                    throw CWinException(_T("CFileDialog::DoModal Failed"), error);
+                    throw CWinException(g_msgWndDoModal, error);
             }
 
             OnCancel();
@@ -1099,7 +1099,7 @@ namespace Win32xx
         if (wnd == 0)
         {
             // Throw an exception when window creation fails
-            throw CWinException(_T("CFindReplaceDialog::Create"));
+            throw CWinException(g_msgWndDoModal);
         }
 
         m_findWhat.ReleaseBuffer();
@@ -1437,7 +1437,7 @@ namespace Win32xx
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
-                throw CWinException(_T("CFontDialog::DoModal Failed"), error);
+                throw CWinException(g_msgWndDoModal, error);
 
             OnCancel();
             return IDCANCEL;

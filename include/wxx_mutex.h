@@ -69,6 +69,7 @@
 
 namespace Win32xx
 {
+
     class CEvent
     {
     public:
@@ -143,7 +144,7 @@ namespace Win32xx
     {
         m_event = ::CreateEvent(pAttributes, isManualReset, isInitiallySignaled, pstrName);
         if (m_event == NULL)
-            throw CResourceException(_T("Unable to create event"));
+            throw CResourceException(g_msgMtxEvent);
     }
 
     // Sets the specified event object to the non-signalled state.
@@ -176,7 +177,7 @@ namespace Win32xx
     {
         m_mutex = ::CreateMutex(pAttributes, isInitiallySignaled, pName);
         if (m_mutex == NULL)
-            throw CResourceException(_T("Unable to create mutex"));
+            throw CResourceException(g_msgMtxMutex);
     }
 
 
@@ -200,7 +201,7 @@ namespace Win32xx
 
         m_semaphore = ::CreateSemaphore(pAttributes, initialCount, maxCount, pName);
         if (m_semaphore == NULL)
-            throw CResourceException(_T("Unable to create semaphore"));
+            throw CResourceException(g_msgMtxSemaphore);
     }
 
     // Increases the count of the specified semaphore object by a specified amount.
@@ -218,7 +219,4 @@ namespace Win32xx
 
 
 #endif // _WIN32XX_MUTEX_H_
-
-
-
 

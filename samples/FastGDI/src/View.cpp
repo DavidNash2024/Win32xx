@@ -115,46 +115,46 @@ void CView::QuickPrint(LPCTSTR docName)
 }
 
 BOOL CView::SaveFileImage(LPCTSTR fileName)
- {
-     CFile file;
-     BOOL bResult = FALSE;
-     try
-     {
-         file.Open(fileName, OPEN_ALWAYS);
-     
-        // Create our LPBITMAPINFO object
-        CBitmapInfoPtr pbmi(m_image);
+{
+    CFile file;
+    BOOL bResult = FALSE;
+    try
+    {
+        file.Open(fileName, OPEN_ALWAYS);
+    
+       // Create our LPBITMAPINFO object
+       CBitmapInfoPtr pbmi(m_image);
 
-        // Create the reference DC for GetDIBits to use
-        CMemDC memDC(NULL);
+       // Create the reference DC for GetDIBits to use
+       CMemDC memDC(NULL);
 
-        // Use GetDIBits to create a DIB from our DDB, and extract the colour data
-        memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-        std::vector<byte> byteArray(pbmi->bmiHeader.biSizeImage, 0);
-        byte* pByteArray = &byteArray.front();
+       // Use GetDIBits to create a DIB from our DDB, and extract the colour data
+       memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+       std::vector<byte> byteArray(pbmi->bmiHeader.biSizeImage, 0);
+       byte* pByteArray = &byteArray.front();
 
-        memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+       memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 
-        LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
-        BITMAPFILEHEADER hdr;
-        ZeroMemory(&hdr, sizeof(BITMAPFILEHEADER));
-        hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M"
-        hdr.bfSize = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
-        hdr.bfOffBits = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD));
+       LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
+       BITMAPFILEHEADER hdr;
+       ZeroMemory(&hdr, sizeof(BITMAPFILEHEADER));
+       hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M"
+       hdr.bfSize = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
+       hdr.bfOffBits = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD));
 
-        file.Write(&hdr, sizeof(BITMAPFILEHEADER));
-        file.Write(pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
-        file.Write(pByteArray, pbmih->biSizeImage);
+       file.Write(&hdr, sizeof(BITMAPFILEHEADER));
+       file.Write(pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
+       file.Write(pByteArray, pbmih->biSizeImage);
 
-        if (file.GetLength() == sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD) + pbmih->biSizeImage)
-            bResult = TRUE;
-     }
+       bResult = TRUE;
+    }
 
-     catch (const CFileException& e)
-     {
-         CString str = CString("Failed to save file: ") + e.GetFilePath();
-         MessageBox(str, AtoT(e.what()), MB_OK);
-     }
+    catch (const CFileException& e)
+    {
+        CString str = CString("Failed to save file: ") + e.GetFilePath();
+        MessageBox(str, AtoT(e.what()), MB_OK);
+		bResult = FALSE;
+    }
 
     return bResult;
 }

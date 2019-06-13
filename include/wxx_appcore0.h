@@ -221,9 +221,53 @@ namespace Win32xx
 {
     
     // Messages used for exceptions.
-    const LPCTSTR g_msgAppThreadFailed = _T("Failed to create thread");
-    const LPCTSTR g_msgAppInstanceFailed = _T("Only one instance of CWinApp is permitted");
-    const LPCTSTR g_msgAppTLSFailed = _T("CWinApp::CWinApp  Failed to allocate Thread Local Storage");
+    LPCTSTR const g_msgAppThreadFailed = _T("Failed to create thread");
+    LPCTSTR const g_msgAppInstanceFailed = _T("Only one instance of CWinApp is permitted");
+    LPCTSTR const g_msgAppTLSFailed = _T("CWinApp::CWinApp  Failed to allocate Thread Local Storage");
+    LPCTSTR const g_msgArReadFail = _T("Failed to read from archive.");
+    LPCTSTR const g_msgArNotCStringA = _T("ANSI characters stored. Not a CStringW");
+    LPCTSTR const g_msgArNotCStringW = _T("Unicode characters stored. Not a CStringA");
+    LPCTSTR const g_msgCriticalSection = _T("Failed to create critical section");
+    LPCTSTR const g_msgMtxEvent = _T("Unable to create event");
+    LPCTSTR const g_msgMtxMutex = _T("Unable to create mutex");
+    LPCTSTR const g_msgMtxSemaphore = _T("Unable to create semaphore");
+
+    LPCTSTR const g_msgWndCreateEx = _T("Failed to create window");
+    LPCTSTR const g_msgWndDoModal = _T("Failed to create dialog");
+    LPCTSTR const g_msgWndGlobalLock = _T("CGlobalLock failed to lock handle");
+    LPCTSTR const g_msgWndPropertSheet = _T("Failed to create PropertySheet");
+    LPCTSTR const g_msgSocWSAStartup = _T("WSAStartup failed");
+    LPCTSTR const g_msgSocWS2Dll  = _T("Failed to load WS2_2.dll");
+    LPCTSTR const g_msgIPControl  = _T("IP Address Control not supported!");
+    LPCTSTR const g_msgRichEditDll = _T("Failed to load RICHED32.DLL");
+    LPCTSTR const g_msgTaskDialog = _T("Failed to create Task Dialog");
+    LPCTSTR const g_msgCoInitialize = _T("Failed to initialize COM");
+    LPCTSTR const g_msgOleInitialize = _T("Failed to initialize OLE");
+
+    LPCTSTR const g_msgFileClose  = _T("Failed to close file");
+    LPCTSTR const g_msgFileFlush  = _T("Failed to flush file");
+    LPCTSTR const g_msgFileLock   = _T("Failed to lock the file");
+    LPCTSTR const g_msgFileOpen   = _T("Failed to open file");
+    LPCTSTR const g_msgFileRead   = _T("Failed to read from file");
+    LPCTSTR const g_msgFileRename = _T("Failed to rename file");
+    LPCTSTR const g_msgFileRemove = _T("Failed to delete file");
+    LPCTSTR const g_msgFileLength = _T("Failed to change the file length");
+    LPCTSTR const g_msgFileUnlock = _T("Failed to unlock the file");
+    LPCTSTR const g_msgFileWrite  = _T("Failed to write to file");
+
+    LPCTSTR const g_msgGdiDC      = _T("Failed to create device context");
+    LPCTSTR const g_msgGdiIC      = _T("Failed to create information context");
+    LPCTSTR const g_msgGdiBitmap  = _T("Failed to create bitmap");
+    LPCTSTR const g_msgGdiBrush   = _T("Failed to create brush");
+    LPCTSTR const g_msgGdiFont    = _T("Failed to create font");
+    LPCTSTR const g_msgGdiPalette = _T("Failed to create palette");
+    LPCTSTR const g_msgGdiPen     = _T("Failed to create pen");
+    LPCTSTR const g_msgGdiRegion  = _T("Failed to region");
+    LPCTSTR const g_msgGdiGetDC   = _T("GetDC failed");
+    LPCTSTR const g_msgGdiGetDCEx = _T("GetDCEx failed");
+    LPCTSTR const g_msgGdiGetWinDC = _T("GetWindowDC failed");
+    LPCTSTR const g_msgGdiBeginPaint = _T("BeginPaint failed");
+
 
     ////////////////////////////////////////////////
     // Forward declarations.
@@ -367,35 +411,11 @@ namespace Win32xx
     class CCriticalSection
     {
     public:
-        CCriticalSection() : m_count(0) { ::InitializeCriticalSection(&m_cs); }
-        ~CCriticalSection()
-        {
-            while (m_count > 0)
-            {
-                Release();
-            }
+        CCriticalSection(); 
+        ~CCriticalSection();
 
-            ::DeleteCriticalSection(&m_cs);
-        }
-
-
-        // Enter the critical section and increment the lock count.
-        void Lock()
-        {
-            ::EnterCriticalSection(&m_cs);
-            InterlockedIncrement(&m_count);
-        }
-
-        // Leave the critical section and decrement the lock count.
-        void Release()
-        {
-            assert (m_count > 0);
-            if (m_count > 0)
-            {
-                ::LeaveCriticalSection(&m_cs);
-                ::InterlockedDecrement(&m_count);
-            }
-        }
+        void Lock();
+        void Release();
 
     private:
         CCriticalSection ( const CCriticalSection& );
