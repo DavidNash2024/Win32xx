@@ -1,7 +1,8 @@
 Version 8.6.1
 =============
 
-This version adds print preview support to the framwork. 
+This version adds print preview support to the framework, and support for
+Microsoft Visual Studio Community 2019. 
 
 Bug Fix
 -------
@@ -12,9 +13,9 @@ Bug Fix
 New Features and Enhancements
 -----------------------------
 * Added CPrintPreview.
-  The CPrintPreview displays a preview of the print job before it is sent to the
-  printer.
-  
+  The CPrintPreview displays a preview of the print job before it is sent to
+  the printer.
+
   To use CPrintPreview, do the following:
   1) Declare CPrintPreview as CMainFrame's member, specifying the source's
      class as the template type. The source is where the PrintPage function
@@ -25,16 +26,17 @@ New Features and Enhancements
   4) Call CPrintPreview's DoPrintPreview(HWND ownerWindow, UINT maxPage = 1)
      to initiate the print preview.
   5) Create the preview window, and swap it into the frame's view.
-  6) Handle UWM_PREVIEWCLOSE to swap back to the default view when the preview
-     closes.
-     
-  Refer to the following samples for a demonstration of how to use CPrintPreview:
+  6) Handle the UWM_PREVIEWCLOSE message to swap back to the default view when
+     the preview closes.
+
+  CPrintPreview supports all print jobs. Any printing using the PrintPage 
+  function can be previewed. Refer to the following samples:
    Frame; INIFrame; FastGDI; Notepad; PrintPreview; and Scribble.
-  
+
 * Added CHGlobal class.
   The CHGlobal class is a wrapper for a global memory handle. It automatically
   frees the global memory when it goes out of scope.
-  
+
 * Extended the CGlobalLock class.
   The CGlobalLock class is used to automatically lock and unlock global memory.
   This can be useful when working with printers. Global memory is used to hold
@@ -44,13 +46,13 @@ New Features and Enhancements
   its contents. CDevMode and CDevNames are useful typedefs for CGlobalLock.
   The global memory is locked when CGlobalLock is constructed, and unlocked
   when CGlobalLock is destructed.
-  
+
 * Extended CScrollView
   CScrollView now processes the following keys:
   - Home and End.
   - Page Up and Page Down.
   - Left, right, up, and down arrow keys.
-  
+
 * The samples now demonstrate an improved implementation of the Doc/View
   architecture. Previously CDoc and CView were both member variables of
   CMainFrame. Now CView is a member variable of CMainFrame, and CDoc is 

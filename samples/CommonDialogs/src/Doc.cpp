@@ -726,13 +726,12 @@ OpenDoc(const CString &file)                        /*
           // ANSI or UNICODE mode
         DWORD length = static_cast<DWORD>(m_Doc_file.GetLength());
         DWORD nbytes = 0;
-        char *buffer = new char[3];
+        char buffer[3] = { 0 };
         if (!::ReadFile(m_Doc_file.GetHandle(), buffer, 2, &nbytes, NULL))
             throw _T("StreamInFile Failed");
 
         m_UnicodeFile = (length > 2 && (buffer[0] == 0 ||
             buffer[1] == 0) ? TRUE : FALSE);
-        delete[] buffer;
         m_Doc_file.SeekToBegin();
         GetREView().StreamInFile(m_Doc_file, m_UnicodeFile);
         m_open_doc_path = GetFilePath();

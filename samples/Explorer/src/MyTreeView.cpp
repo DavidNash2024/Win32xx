@@ -70,7 +70,8 @@ void CMyTreeView::DoItemMenu(HTREEITEM item, CPoint& point)
 
         if(sf.GetIShellFolder())
         {
-            result = sf.GetUIObjectOf(*this, 1, &(pInfo->GetRelCpidl()), IID_IContextMenu, 0, cm);
+            LPCITEMIDLIST pidl = pInfo->GetRelCpidl();
+            result = sf.GetUIObjectOf(*this, 1, &pidl, IID_IContextMenu, cm);
 
             if(SUCCEEDED(result))
             {

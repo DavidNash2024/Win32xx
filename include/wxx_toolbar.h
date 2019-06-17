@@ -505,9 +505,9 @@ namespace Win32xx
     {
         assert(IsWindow());
         CRect rc;
-        int iCount = (int)SendMessage(TB_BUTTONCOUNT, 0, 0);
+        int count = (int)SendMessage(TB_BUTTONCOUNT, 0, 0);
 
-        if (iCount >= index)
+        if (count >= index)
             SendMessage(TB_GETITEMRECT, (WPARAM)index, (LPARAM)&rc);
 
         return rc;

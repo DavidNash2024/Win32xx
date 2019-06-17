@@ -922,7 +922,7 @@ namespace Win32xx
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
                 result = _vsnprintf(&buffer[0], length, pFormat, args);
 #else
-                result = _vsnprintf_s(&buffer[0], length, length-1, pFormat, args);
+                result = _vsnprintf_s(&buffer[0], length, size_t(length)-1, pFormat, args);
 #endif
                 length *= 2;
             }
@@ -949,7 +949,7 @@ namespace Win32xx
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
                 result = _vsnwprintf(&buffer[0], length, pFormat, args);
 #else
-                result = _vsnwprintf_s(&buffer[0], length, length-1, pFormat, args);
+                result = _vsnwprintf_s(&buffer[0], length, size_t(length)-1, pFormat, args);
 #endif
                 length *= 2;
             }

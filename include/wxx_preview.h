@@ -99,18 +99,18 @@ namespace Win32xx
         CPrintPreview();
         virtual ~CPrintPreview();
 
-        CPreviewPane& GetPreviewPane()  { return m_previewPane; }
-        void DoPrintPreview(HWND ownerWindow, UINT maxPage = 1);
-        BOOL OnPrintButton();
-        BOOL OnNextButton();
-        BOOL OnPrevButton();
-        BOOL OnCloseButton();
-        BOOL OnPrintSetup();
-        void OnOK() { OnCloseButton(); }
-        void OnCancel() { OnCloseButton(); }
-        void PreviewPage(UINT page);
-        void SetSource(T& source) { m_pSource = &source; }
-        void UpdateButtons();
+        virtual CPreviewPane& GetPreviewPane()  { return m_previewPane; }
+        virtual void DoPrintPreview(HWND ownerWindow, UINT maxPage = 1);
+        virtual BOOL OnPrintButton();
+        virtual BOOL OnNextButton();
+        virtual BOOL OnPrevButton();
+        virtual BOOL OnCloseButton();
+        virtual BOOL OnPrintSetup();
+        virtual void OnOK() { OnCloseButton(); }
+        virtual void OnCancel() { OnCloseButton(); }
+        virtual void PreviewPage(UINT page);
+        virtual void SetSource(T& source) { m_pSource = &source; }
+        virtual void UpdateButtons();
 
     protected:
         virtual BOOL OnInitDialog();

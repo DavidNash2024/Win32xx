@@ -644,16 +644,17 @@ namespace Win32xx
         //       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602).
     inline int GetWinVersion()
     {
-#ifdef _MSC_VER
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
   #pragma warning ( push )
-  #pragma warning ( disable : 4996 )
-#endif // _MSC_VER
+  #pragma warning ( disable : 4996 )        // GetVersion declared deprecated.
+  #pragma warning ( disable : 28159 )       // Deprecated function. Consider using IsWindows instead. 
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
         DWORD version = GetVersion();
 
-#ifdef _MSC_VER
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
   #pragma warning ( pop )
-#endif // _MSC_VER
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
         int platform = (version < 0x80000000)? 2:1;
         int majorVer = LOBYTE(LOWORD(version));
@@ -675,7 +676,7 @@ namespace Win32xx
     // 582  dll ver 5.82    Windows XP, Vista, Windows 7 etc. without XP themes
     // 600  dll ver 6.00    Windows XP with XP themes
     // 610  dll ver 6.10    Windows Vista with XP themes
-    // 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes
+    // 616  dll ver 6.16    Windows Vista SP1 or above with XP themes
     inline int GetComCtlVersion()
     {
         // Load the Common Controls DLL

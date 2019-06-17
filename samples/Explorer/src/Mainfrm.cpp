@@ -219,10 +219,10 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_PRINT, FALSE, _T("Print") );
     
     AddToolBarButton( 0 );  // Separator
-    AddToolBarButton( IDM_VIEWMENU,   TRUE,  _T("View Menu"));
+    AddToolBarButton( IDM_VIEWMENU,   TRUE,  _T("View"));
     
     AddToolBarButton( 0 );  // Separator
-    AddToolBarButton( IDM_HELP_ABOUT, TRUE,  _T("About") );
+    AddToolBarButton( IDM_HELP_ABOUT, TRUE,  _T(" About ") );
 
     // Use larger buttons
     SetToolBarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);

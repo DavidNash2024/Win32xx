@@ -1453,7 +1453,7 @@ namespace Win32xx
 
             for (int column = 0; column < bmiHeader.biWidth; ++column)
             {
-                // Calculate Index
+                // Calculate index
                 index = size_t(yOffset) + size_t(xOffset);
 
                 // skip for colors matching the mask
@@ -1617,7 +1617,7 @@ namespace Win32xx
 
             for (int column=0; column < bmiHeader.biWidth; ++column)
             {
-                // Calculate Index
+                // Calculate index
                 index = size_t(yOffset) + size_t(xOffset);
 
                 BYTE byGray = (BYTE) ((pByteArray[index] + pByteArray[index +1]*6 + pByteArray[index +2] *3)/10);

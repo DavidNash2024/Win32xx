@@ -1512,7 +1512,16 @@ namespace Win32xx
     inline void CIPAddress::SetAddress(BYTE field0, BYTE field1, BYTE field2, BYTE field3) const
     {
         assert(IsWindow());
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 26451 )     // Arithemetic overflow.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
         SendMessage(IPM_SETADDRESS, 0, MAKEIPADDRESS(field0, field1, field2, field3));
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning (pop)
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
     }
 
     // Sets the address values for all four fields in the IP address control.
@@ -1537,7 +1546,17 @@ namespace Win32xx
     inline void CIPAddress::SetFieldRange(int field, BYTE lower, BYTE upper) const
     {
         assert(IsWindow());
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 26451 )     // Arithemetic overflow.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
         SendMessage(IPM_SETRANGE, (WPARAM)field, MAKEIPRANGE(int(lower), int(upper)));
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning (pop)
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
     }
 
 
