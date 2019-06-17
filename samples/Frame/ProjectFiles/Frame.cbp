@@ -187,7 +187,7 @@
 					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add option="-Wl,--enable-auto-import" />
+					<Add option="-Wl,--enable-auto-import -static-libgcc -static-libstdc++" />
 					<Add library="comctl32" />
 					<Add library="Ole32" />
 					<Add library="Oleaut32" />

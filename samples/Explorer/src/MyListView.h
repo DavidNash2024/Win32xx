@@ -40,8 +40,8 @@ private:
         ~ListItemData();
 
         CShellFolder& GetParentFolder() {return m_parentFolder;}
-        Cpidl& GetFullPidl() {return m_cpidlFull;}
-        Cpidl& GetRelPidl()  {return m_cpidlRel;}
+        Cpidl& GetFullCpidl() {return m_cpidlFull;}
+        Cpidl& GetRelCpidl()  {return m_cpidlRel;}
 
     private:
         Cpidl        m_cpidlFull;     //Fully Qualified PIDL

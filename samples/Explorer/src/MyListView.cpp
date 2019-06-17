@@ -15,7 +15,7 @@ int CALLBACK CMyListView::CompareProc(LPARAM param1, LPARAM param2, LPARAM param
     ListItemData*  pItem1 = reinterpret_cast<ListItemData*>(param1);
     ListItemData*  pItem2 = reinterpret_cast<ListItemData*>(param2);
 
-    HRESULT result = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelPidl(), pItem2->GetRelPidl());
+    HRESULT result = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelCpidl(), pItem2->GetRelCpidl());
 
     if(FAILED(result))
         return 0;
@@ -164,8 +164,8 @@ void CMyListView::DoDefault(int item)
 
         if(folder.GetIShellFolder())
         {
-            Cpidl* pCpidl = &(pInfo->GetRelPidl());
-            result = folder.GetUIObjectOf(*this, 1, pCpidl, IID_IContextMenu, 0, ccm);
+            LPCITEMIDLIST pidl = pInfo->GetRelCpidl();
+            result = folder.GetUIObjectOf(*this, 1, &pidl, IID_IContextMenu, ccm);
 
             if(SUCCEEDED(result))
             {
@@ -182,12 +182,12 @@ void CMyListView::DoDefault(int item)
                         {
                             //determine if the item is a folder
                             ULONG ulAttr = SFGAO_HASSUBFOLDER | SFGAO_FOLDER;
-                            folder.GetAttributesOf(1, pInfo->GetRelPidl(), ulAttr);
+                            folder.GetAttributesOf(1, pInfo->GetRelCpidl(), ulAttr);
 
                             if ((ulAttr & SFGAO_HASSUBFOLDER) || (ulAttr &SFGAO_FOLDER))
                             {
                                 CMainFrame& mainFrame = GetExplorerApp()->GetMainFrame();
-                                mainFrame.GetTreeView().SelectFromListView(pInfo->GetFullPidl());
+                                mainFrame.GetTreeView().SelectFromListView(pInfo->GetFullCpidl());
                             }
                             else
                             {
@@ -231,8 +231,8 @@ void CMyListView::DoDisplay()
 
 void CMyListView::DoItemMenu(LPINT pItems, UINT cbItems, CPoint& point)
 {
-    std::vector<Cpidl> vpidl(cbItems);
-    Cpidl* pidlArray = &vpidl.front();
+    std::vector<LPCITEMIDLIST> vpidl(cbItems);
+    LPCITEMIDLIST* pidlArray = &vpidl.front();
 
     for(UINT i = 0; i < cbItems; ++i)
     {
@@ -243,18 +243,18 @@ void CMyListView::DoItemMenu(LPINT pItems, UINT cbItems, CPoint& point)
         if(GetItem(lvItem))
         {
             ListItemData*  pInfo = reinterpret_cast<ListItemData*>(lvItem.lParam);
-            pidlArray[i] = pInfo->GetRelPidl();
+            pidlArray[i] = pInfo->GetRelCpidl().GetPidl();
         }
     }
 
-    if(pidlArray[0].GetPidl())
+    if(pidlArray[0])
     {
         HRESULT        result;
         CContextMenu ccm;
 
         if(m_csfCurFolder.GetIShellFolder())
         {
-            result = m_csfCurFolder.GetUIObjectOf(*this, cbItems, pidlArray, IID_IContextMenu, 0, ccm);
+            result = m_csfCurFolder.GetUIObjectOf(*this, cbItems, pidlArray, IID_IContextMenu, ccm);
 
             if(SUCCEEDED(result))
             {
@@ -312,10 +312,10 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
     if(pdi->item.mask & LVIF_TEXT)
     {
         TCHAR szFileName[MAX_PATH];
-        GetFullFileName(pItem->GetFullPidl().GetPidl(), szFileName);
+        GetFullFileName(pItem->GetFullCpidl().GetPidl(), szFileName);
 
         ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
-        pItem->GetParentFolder().GetAttributesOf(1, pItem->GetRelPidl(), attr);
+        pItem->GetParentFolder().GetAttributesOf(1, pItem->GetRelCpidl(), attr);
 
         HANDLE hFile;
 
@@ -337,7 +337,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 SHFILEINFO sfi;
                 ZeroMemory(&sfi, sizeof(sfi));
                 //get the display name of the item
-                if (pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
+                if (pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
                     StrCopy(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax -1);
             }
             break;
@@ -359,7 +359,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
             {
                 SHFILEINFO sfi;
                 ZeroMemory(&sfi, sizeof(SHFILEINFO));
-                if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
+                if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
                     StrCopy(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax -1);
             }
             break;
@@ -386,7 +386,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         ZeroMemory(&sfi, sizeof(SHFILEINFO));
 
         //get the unselected image for this item
-        if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
+        if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
             pdi->item.iImage = sfi.iIcon;
     }
 

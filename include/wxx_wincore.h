@@ -2501,27 +2501,27 @@ namespace Win32xx
     {
         assert (GetApp());
 
-        int nSize = 64;
+        int startSize = 64;
         CHAR* pTCharArray = 0;
         std::vector<CHAR> vString;
-        int nTChars = nSize;
+        int chars = startSize;
 
         Empty();
 
         // Increase the size of our array in a loop until we load the entire string
         // The ANSI and _UNICODE versions of LoadString behave differently. This technique works for both.
-        while ( nSize-1 <= nTChars )
+        while (startSize -1 <= chars )
         {
-            nSize = nSize * 4;
-            vString.assign(size_t(nSize)+1, 0);
+            startSize = startSize * 4;
+            vString.assign(size_t(startSize)+1, 0);
             pTCharArray = &vString[0];
-            nTChars = ::LoadStringA (GetApp()->GetResourceHandle(), id, pTCharArray, nSize);
+            chars = ::LoadStringA (GetApp()->GetResourceHandle(), id, pTCharArray, startSize);
         }
 
-        if (nTChars > 0)
+        if (chars > 0)
             m_str.assign(pTCharArray);
 
-        return (nTChars != 0);
+        return (chars != 0);
     }
 
 
@@ -2532,27 +2532,27 @@ namespace Win32xx
     {
         assert (GetApp());
 
-        int nSize = 64;
+        int startSize = 64;
         WCHAR* pTCharArray = 0;
         std::vector<WCHAR> vString;
-        int nTChars = nSize;
+        int chars = startSize;
 
         Empty();
 
         // Increase the size of our array in a loop until we load the entire string
         // The ANSI and _UNICODE versions of LoadString behave differently. This technique works for both.
-        while ( nSize-1 <= nTChars )
+        while (startSize -1 <= chars )
         {
-            nSize = nSize * 4;
-            vString.assign(size_t(nSize)+1, 0);
+            startSize = startSize * 4;
+            vString.assign(size_t(startSize)+1, 0);
             pTCharArray = &vString[0];
-            nTChars = ::LoadStringW (GetApp()->GetResourceHandle(), id, pTCharArray, nSize);
+            chars = ::LoadStringW (GetApp()->GetResourceHandle(), id, pTCharArray, startSize);
         }
 
-        if (nTChars > 0)
+        if (chars > 0)
             m_str.assign(pTCharArray);
 
-        return (nTChars != 0);
+        return (chars != 0);
     }
 
     ////////////////////////////////////////

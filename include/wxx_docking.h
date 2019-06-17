@@ -1958,7 +1958,7 @@ namespace Win32xx
     // Definitions for the CDocker class
     //
     inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockAncestor(NULL), m_isBlockMove(FALSE),
-                    m_isUndocking(FALSE), m_isClosing(FALSE), m_isDragging(FALSE), 
+                    m_isUndocking(FALSE), m_isClosing(FALSE), m_isDragging(FALSE),
                     m_isDragAutoResize(TRUE), m_dockStartSize(0), m_dockID(0), m_redrawCount(0),
                     m_ncHeight(0), m_dockZone(0), m_dockSizeRatio(1.0), m_dockStyle(0), m_dockUnderPoint(0)
     {
@@ -3251,7 +3251,7 @@ namespace Win32xx
                 CDockContainer* pActive = 0;
                 if (pDocker->GetContainer())
                     pActive = pDocker->GetContainer()->GetActiveContainer();
-                
+
         //      pDocker->MoveDockChildren(this);
                 DockInContainer(pDocker, pDocker->GetDockStyle() | DockZone, FALSE);
                 if (pActive)
@@ -4396,9 +4396,9 @@ namespace Win32xx
 
     //////////////////////////////////////
     // Declaration of the CDockContainer class
-    inline CDockContainer::CDockContainer() : m_pContainerParent(0), m_currentPage(0),
-                                         m_pDocker(0), m_tabIcon(0), m_pressedTab(-1), 
-                                         m_isHideSingleTab(FALSE)
+    inline CDockContainer::CDockContainer() : m_currentPage(0), m_pDocker(0),
+                                         m_pContainerParent(0), m_tabIcon(0),
+                                         m_pressedTab(-1), m_isHideSingleTab(FALSE)
     {
         m_pContainerParent = this;
         m_viewPage.SetContainer(this);
@@ -5113,11 +5113,11 @@ namespace Win32xx
         // Display tooltips for the toolbar
         case TTN_GETDISPINFO:
             {
-                int iIndex =  GetToolBar().HitTest();
+                int index =  GetToolBar().HitTest();
                 LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lparam;
-                if (iIndex >= 0)
+                if (index >= 0)
                 {
-                    int id = GetToolBar().GetCommandID(iIndex);
+                    int id = GetToolBar().GetCommandID(index);
                     if (id > 0)
                     {
                         m_tooltip = LoadString(id);

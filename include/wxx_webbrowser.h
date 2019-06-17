@@ -337,6 +337,8 @@ namespace Win32xx
         return E_NOINTERFACE;
     }
 
+    // Returns the IDispatch COM interface.
+    // The caller should release the IDispatch pointer.
     inline IDispatch* CAXWindow::GetDispatch()
     {
         if (!m_pUnk)

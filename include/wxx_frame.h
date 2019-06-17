@@ -2093,7 +2093,7 @@ namespace Win32xx
         {
             pathName = m_mruEntries[index];
 
-            // Now put the selected entry at Index 0
+            // Now put the selected entry at index 0
             AddMRUEntry(pathName);
         }
         return pathName;

@@ -205,10 +205,13 @@ namespace ShellWrapper
     void CShellFolder::Copy(const CShellFolder& Source)
     //Assigns the value to the CShellFolder object.
     {
-        Delete(); //Release the current m_IShellFolder
-        m_IShellFolder = Source.m_IShellFolder;
-        if (Source.m_IShellFolder)
-            AddRef();
+        if (&Source != this)
+        {
+            Delete(); //Release the current m_IShellFolder
+            m_IShellFolder = Source.m_IShellFolder;
+            if (Source.m_IShellFolder)
+                AddRef();
+        }
     }
 
     HRESULT CShellFolder::CreateViewObject(HWND hwnd, REFIID riid, CContextMenu& ccm)
@@ -265,18 +268,11 @@ namespace ShellWrapper
         return result;
     }
 
-    HRESULT CShellFolder::GetUIObjectOf(HWND hwndOwner, UINT nItems, Cpidl* cpidlArray, REFIID riid, UINT rgfReserved, CContextMenu& cm)
-    //cpidlArray is either an array of Cpidl or a pointer to a single Cpidl
+    HRESULT CShellFolder::GetUIObjectOf(HWND hwndOwner, UINT nItems, LPCITEMIDLIST* pidlArray, REFIID riid, CContextMenu& cm)
+    //pidlArray is either an array of LPCITEMIDLIST or a pointer to a single LPCITEMIDLIST
     {
-        LPCITEMIDLIST* pPidlArray = new LPCITEMIDLIST[nItems];
-        if(!pPidlArray)
-            throw CWinException(_T("Failed to allocate memory for pidl array"));
-
-        for(UINT i = 0; i < nItems; i++)
-            pPidlArray[i] = cpidlArray[i].GetPidl();
-
         IContextMenu* ppv;
-        HRESULT result = m_IShellFolder->GetUIObjectOf(hwndOwner, nItems, pPidlArray, riid, &rgfReserved, (VOID**)&ppv);
+        HRESULT result = m_IShellFolder->GetUIObjectOf(hwndOwner, nItems, pidlArray, riid, 0, (VOID**)&ppv);
 
         if (S_OK == result)
             cm.Attach(ppv);
@@ -285,7 +281,6 @@ namespace ShellWrapper
             TRACE("CShellFolder::GetUIObjectOf failed\n");
         }
 
-        delete[] pPidlArray;
         return result;
     }
 
@@ -348,7 +343,8 @@ namespace ShellWrapper
 
     void Cpidl::operator= (const Cpidl& cpidlSource)
     {
-        Copy(cpidlSource);
+        if (&cpidlSource != this)
+            Copy(cpidlSource);
     }
 
     BOOL Cpidl::operator== (const Cpidl& cpidl)
@@ -410,7 +406,8 @@ namespace ShellWrapper
     void Cpidl::Copy(const Cpidl& cpidlSource)
     //The Cpidl object stores a copy of the pidlSource's m_pidl.
     {
-        Copy(cpidlSource.GetPidl());
+        if (&cpidlSource != this)
+            Copy(cpidlSource.GetPidl());
     }
 
     void Cpidl::Copy(LPCITEMIDLIST pidlSource)
@@ -434,7 +431,7 @@ namespace ShellWrapper
     LPITEMIDLIST Cpidl::GetParent()
     {
     // Delete m_pidlParent
-        UINT nSize = GetSize(m_pidl);
+        UINT size = GetSize(m_pidl);
         if (m_pidlParent)
             ::CoTaskMemFree(m_pidlParent);
         m_pidlParent = NULL;
@@ -444,11 +441,11 @@ namespace ShellWrapper
             return(NULL);
 
     // Copy m_pidl to m_pidlParent
-        m_pidlParent = (LPITEMIDLIST)::CoTaskMemAlloc(nSize);
+        m_pidlParent = (LPITEMIDLIST)::CoTaskMemAlloc(size);
         if (!m_pidlParent)
             throw CWinException(_T("Failed to allocate pidlParent memory"));
 
-        ::CopyMemory(m_pidlParent, m_pidl, nSize);
+        ::CopyMemory(m_pidlParent, m_pidl, size);
 
     // Identify the last item's position
         if (m_pidlParent->mkid.cb)
