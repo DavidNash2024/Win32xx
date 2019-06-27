@@ -19,8 +19,7 @@ void CColourDialog::CreateImagePreviews()
 // Creates the two Preview bitmaps: m_Preview and m_PreviewOrig
 {
     // Get the size of the bitmap
-    BITMAP bm;
-    m_image.GetObject(sizeof(BITMAP), &bm);
+    BITMAP bm = m_image.GetBitmapData();
 
     // Get the size of the destination display area
     CRect rcView = m_preview.GetClientRect();
@@ -196,8 +195,7 @@ void CColourDialog::OnTextChange(HWND editCtrl)
 // Displays the bitmap in the display area of our dialog
 void CColourDialog::Paint()
 {
-    BITMAP bm;
-    m_previewImage.GetObject( sizeof(BITMAP), &bm );
+    BITMAP bm = m_previewImage.GetBitmapData();
 
     // Get the size of the destination display area
     CRect rcView = m_preview.GetClientRect();

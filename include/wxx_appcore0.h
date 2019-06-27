@@ -265,8 +265,12 @@ namespace Win32xx
     LPCTSTR const g_msgGdiRegion  = _T("Failed to region");
     LPCTSTR const g_msgGdiGetDC   = _T("GetDC failed");
     LPCTSTR const g_msgGdiGetDCEx = _T("GetDCEx failed");
+    LPCTSTR const g_msgGdiSelObject = _T("Failed to select object into device context");
+
     LPCTSTR const g_msgGdiGetWinDC = _T("GetWindowDC failed");
     LPCTSTR const g_msgGdiBeginPaint = _T("BeginPaint failed");
+
+    LPCTSTR const g_msgPrintFound = _T("No printer available");
 
 
     ////////////////////////////////////////////////

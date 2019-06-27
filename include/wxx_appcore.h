@@ -66,7 +66,16 @@ namespace Win32xx
     //
     inline CCriticalSection::CCriticalSection() : m_count(0)
     {
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 28125 )       // call within __try __catch block. 
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
         ::InitializeCriticalSection(&m_cs);
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( pop )
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
     }
 
     inline CCriticalSection::~CCriticalSection()

@@ -13,10 +13,8 @@ public:
     CView();
     virtual ~CView(){}
     CDoc& GetDoc();
-    void Print(LPCTSTR docName);
     void PrintPage(CDC& dc, UINT page = 1);
     void QuickPrint(LPCTSTR docName);
-    void SaveViewImage();
 
 protected:
     virtual void OnDraw(CDC& dc);
@@ -27,7 +25,6 @@ protected:
 
 private:
     CDoc m_doc;
-    CBitmap m_viewImage;
 };
 
 

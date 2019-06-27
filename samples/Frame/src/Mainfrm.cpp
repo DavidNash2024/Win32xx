@@ -123,45 +123,39 @@ void CMainFrame::OnFilePreview()
 {
     try
     {
-        // Save the view's image for printing.
-        m_view.SaveViewImage();
-
         // Get the device contect of the default or currently chosen printer
         CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
         CDC printerDC = printDlg.GetPrinterDC();
-        if (printerDC.GetHDC() != 0)        // Verify a print preview is possible
-        {
-            // Create the preview window if required
-            if (!m_preview.IsWindow())
-                m_preview.Create(*this);
 
-            // Specify the source of the PrintPage function
-            m_preview.SetSource(m_view);
+        // Create the preview window if required
+        if (!m_preview.IsWindow())
+            m_preview.Create(*this);
 
-            // Set the preview's owner (for messages)
-            m_preview.DoPrintPreview(*this);
+        // Specify the source of the PrintPage function
+        m_preview.SetSource(m_view);
 
-            // Swap views
-            SetView(m_preview);
+        // Set the preview's owner (for messages)
+        m_preview.DoPrintPreview(*this);
 
-            // Hide the menu and toolbar
-            ShowMenu(FALSE);
-            ShowToolBar(FALSE);
+        // Swap views
+        SetView(m_preview);
 
-            // Update status
-            CString status = _T("Printer: ") + printDlg.GetDeviceName();
-            SetStatusText(status);
-        }
-        else
-        {
-            MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
-        }
+        // Hide the menu and toolbar
+        ShowMenu(FALSE);
+        ShowToolBar(FALSE);
+
+        // Update status
+        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        SetStatusText(status);
     }
 
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+        MessageBox(_T("Print Preview Failed"), e.GetErrorString(), MB_ICONWARNING);
+        SetView(m_view);
+        ShowMenu(TRUE);
+        ShowToolBar(TRUE);      
     }
 
 }
@@ -176,7 +170,7 @@ void CMainFrame::OnFilePrint()
     {
         if (IDOK == printdlg.DoModal(*this))
         {
-            m_view.Print(_T("Frame Sample"));
+            m_view.QuickPrint(_T("Frame Sample"));
         }
 
     }

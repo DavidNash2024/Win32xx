@@ -43,8 +43,7 @@ Choose(LPCTSTR wintitle /* =  NULL */)                                      /*
 *-----------------------------------------------------------------------------*/
 {
       // load the current font
-    LOGFONT lf;
-    m_font.GetObject(sizeof(LOGFONT), &lf);
+    LOGFONT lf = m_font.GetLogFont();
       // open the dialog
     CFontExDialog fd;
     if (wintitle != NULL)
@@ -100,7 +99,7 @@ Serialize(CArchive &ar)                                                     /*
     ArchiveObject f(&lf, lfTopLength);
     if (ar.IsStoring()) // storing
     {
-        m_font.GetObject(sizeof(LOGFONT), &lf);
+		lf = m_font.GetLogFont();
           // store the face name separately: ar recognizes the char mode
         CString face = lf.lfFaceName;
         ar << f;    // store the top part

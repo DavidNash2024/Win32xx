@@ -3,7 +3,8 @@
 
 #include "stdafx.h"
 
-
+// For VS2019
+// int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Displays a dialog contained in MyDLL.dll

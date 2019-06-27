@@ -76,9 +76,10 @@ Added CScrollView::GetLineScrollSize             member function
 Added CScrollView::GetPageScrollSize             member function
 Added CWebBrowser::GetDocument                   member function
 
-Added VS2019 project files to all samples and tutorials
+Modified CDC::SelectObject.     Now throws a CResourceException on failure.
+Modified ::GetApp               Now returns a pointer to CWinApp.
 
-Modified ::GetApp  global function               Now returns a pointer to CWinApp.
+Added VS2019 project files to all samples and tutorials
 
 Updated the samples
  - Browser sample now demonstrates print and print preview.

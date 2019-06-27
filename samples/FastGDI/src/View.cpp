@@ -68,9 +68,8 @@ void CView::PrintPage(CDC& dc, UINT)
     if (m_image.GetHandle() != 0)
     {
         BITMAP bitmap = m_image.GetBitmapData();
-        GetObject(&m_image, sizeof(BITMAP), &bitmap);
-        int bxWidth = bitmap.bmWidth;
-        int bxHeight = bitmap.bmHeight;
+        int bmWidth = bitmap.bmWidth;
+        int bmHeight = bitmap.bmHeight;
 
         // Get the device context of the default or currently chosen printer
         CPrintDialog printDlg;
@@ -82,15 +81,15 @@ void CView::PrintPage(CDC& dc, UINT)
         double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
         double scaleX = printPixelsX / viewPixelsX;
         double scaleY = printPixelsY / viewPixelsY;
-        int scaledWidth = int(bxWidth * scaleX);
-        int scaledHeight = int(bxHeight * scaleY);
+        int scaledWidth = int(bmWidth * scaleX);
+        int scaledHeight = int(bmHeight * scaleY);
 
         // Load the DI bitmap into a memory DC.
         CMemDC memDC(dc);
         memDC.SelectObject(m_image);
 
         // Copy the bitmap to the specified dc.
-        dc.StretchBlt(0, 0, scaledWidth, scaledHeight, memDC, 0, 0, bxWidth, bxHeight, SRCCOPY);
+        dc.StretchBlt(0, 0, scaledWidth, scaledHeight, memDC, 0, 0, bmWidth, bmHeight, SRCCOPY);
     }
 }
 
@@ -153,7 +152,7 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
     {
         CString str = CString("Failed to save file: ") + e.GetFilePath();
         MessageBox(str, AtoT(e.what()), MB_OK);
-		bResult = FALSE;
+        bResult = FALSE;
     }
 
     return bResult;
@@ -161,8 +160,7 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
 
 CRect CView::GetImageRect()
 {
-    BITMAP bm;
-    m_image.GetObject(sizeof(BITMAP), &bm);
+    BITMAP bm = m_image.GetBitmapData();
 
     CRect rc;
     rc.right = bm.bmWidth;

@@ -10,9 +10,10 @@
 #include "default_resource.h"
 
 /////////////////////////////////////////////////////////////////////////////
-// CPrintPreview creates a memory device context from the printer's device
-// context. Instead of printing directly to the printer, we print to the
-// memory DC instead.
+// CPrintPreview provides a preview of printed page before sending the print
+// job to the printer. CPrintPreview creates a memory device context from the
+// printer's device context. Instead of printing directly to the printer, we
+// print to the memory DC instead.
 
 
 // To use CPrintPreview, do the following:
@@ -101,19 +102,19 @@ namespace Win32xx
 
         virtual CPreviewPane& GetPreviewPane()  { return m_previewPane; }
         virtual void DoPrintPreview(HWND ownerWindow, UINT maxPage = 1);
-        virtual BOOL OnPrintButton();
+        virtual BOOL OnCloseButton();
         virtual BOOL OnNextButton();
         virtual BOOL OnPrevButton();
-        virtual BOOL OnCloseButton();
+        virtual BOOL OnPrintButton();
         virtual BOOL OnPrintSetup();
-        virtual void OnOK() { OnCloseButton(); }
-        virtual void OnCancel() { OnCloseButton(); }
         virtual void PreviewPage(UINT page);
         virtual void SetSource(T& source) { m_pSource = &source; }
         virtual void UpdateButtons();
 
     protected:
+        virtual void OnCancel() { OnCloseButton(); }
         virtual BOOL OnInitDialog();
+        virtual void OnOK() { OnCloseButton(); }
         virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
 
@@ -375,7 +376,7 @@ namespace Win32xx
     }
 
     
-    // Called in response to the Print Setup buttom.
+    // Called in response to the Print Setup button.
     // Sends a UWM_PRINTSETUP message to the owner.
     template <typename T>
     inline BOOL CPrintPreview<T>::OnPrintSetup()
@@ -403,12 +404,15 @@ namespace Win32xx
     // Preview's the specified page.
     // This function calls the view's PrintPage function to render the same
     // information that would be printed on a page.
+    // A CResourceException is thrown if there is no default printer.
     template <typename T>
     inline void CPrintPreview<T>::PreviewPage(UINT page)
     {
         // Get the device contect of the default or currently chosen printer
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
+        if (printerDC.GetHDC() == 0)
+            throw CResourceException(g_msgPrintFound);
 
         // Create a memory DC for the printer.
         // Note: we use the printer's DC here to render text accurately
@@ -423,7 +427,7 @@ namespace Win32xx
         int shrink = width > 8000 ? 8 : 4;
 
         CDC previewDC = GetPreviewPane().GetDC();
-        memDC.CreateCompatibleBitmap(previewDC, width / shrink, height / shrink);
+        memDC.CreateCompatibleBitmap(printerDC, width / shrink, height / shrink);
 
         memDC.SetMapMode(MM_ANISOTROPIC);
         memDC.SetWindowExtEx(width, height, NULL);
