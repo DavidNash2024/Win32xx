@@ -387,8 +387,7 @@ Serialize(CArchive &ar)                                                 /*
         // reconstructed.
 
           // save m_hfFont
-        LOGFONT lf;
-        m_font.GetObject(sizeof(LOGFONT), &lf);
+        LOGFONT lf = m_font.GetLogFont();
         ArchiveObject f(&lf, sizeof(LOGFONT));
         ar << f;
 

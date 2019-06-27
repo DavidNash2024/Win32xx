@@ -2331,16 +2331,6 @@ namespace Win32xx
         }
 
         // Redraw the docked windows
-        if (GetAncestor().IsWindowVisible())
-        {
-            // Give the view window focus unless its child already has it
-    //      if (!pDocker->GetView().IsChild(GetFocus()))
-    //          pDocker->GetView().SetFocus();
-
-            // Update the Dock captions
-    //      GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
-        }
-
         pDocker->RecalcDockLayout();
     }
 
@@ -2723,7 +2713,7 @@ namespace Win32xx
 
     inline BOOL CDocker::IsUndockable() const
     {
-        // Returns TRUE if the docker is docked, or a dockancestor that has a DockContainer with tabs.
+        // Returns TRUE if the docker is docked, or a dock ancestor that has a CDockContainer with tabs.
         BOOL isUndockable = IsDocked();
 
         CDockContainer* pContainer = GetContainer();

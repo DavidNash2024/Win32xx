@@ -2820,7 +2820,9 @@ namespace Win32xx
     {
         assert(m_pData);
         HGDIOBJ oldObject = ::SelectObject(m_pData->dc, object);
-        assert(oldObject != 0);     // SelectObject will fail if object is invalid.
+        if (oldObject == 0)
+            throw CResourceException(g_msgGdiSelObject);
+
         return oldObject;
     }
 
@@ -2830,7 +2832,9 @@ namespace Win32xx
     {
         assert(m_pData);
         HBITMAP oldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
-        assert(oldBitmap != 0);     // SelectObject will fail if bitmap is invalid.
+        if (oldBitmap == 0)     // SelectObject will fail if bitmap is invalid.
+            throw CResourceException(g_msgGdiSelObject);
+
         return oldBitmap;
     }
 
@@ -2840,7 +2844,9 @@ namespace Win32xx
     {
         assert(m_pData);
         HBRUSH oldBrush = reinterpret_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
-        assert(oldBrush != 0);      // SelectObject will fail if brush is invalid.
+        if (oldBrush == 0)      // SelectObject will fail if brush is invalid.
+            throw CResourceException(g_msgGdiSelObject);
+
         return oldBrush;
     }
 
@@ -2850,7 +2856,9 @@ namespace Win32xx
     {
         assert(m_pData);
         HFONT oldFont = reinterpret_cast<HFONT>(::SelectObject(m_pData->dc, font));
-        assert(oldFont);
+        if (oldFont == 0)
+            throw CResourceException(g_msgGdiSelObject);
+
         return oldFont;
     }
 
@@ -2860,7 +2868,9 @@ namespace Win32xx
     {
         assert(m_pData);
         HPEN oldPen = reinterpret_cast<HPEN>(::SelectObject(m_pData->dc, pen));
-        assert(oldPen);
+        if (oldPen == 0)
+            throw CResourceException(g_msgGdiSelObject);
+
         return oldPen;
     }
 
@@ -3209,7 +3219,8 @@ namespace Win32xx
         m_pData->brush = brush;
     }
 
-    //Retrieves the current brush origin for the specified device context.
+    // Retrieves the current brush origin for the specified device context.
+    // Refer to GetBrushOrgEx in the Windows API documentation for more information.
     inline CPoint CDC::GetBrushOrgEx() const
     {
         assert(m_pData->dc != 0);
@@ -3221,6 +3232,7 @@ namespace Win32xx
 
     // Sets the brush origin that GDI assigns to the next brush an application
     // selects into the specified device context. Returns the old brush origin.
+    // Refer to SetBrushOrgEx in the Windows API documentation for more information.
     inline CPoint CDC::SetBrushOrgEx(int x, int y)
     {
         assert(m_pData->dc != 0);

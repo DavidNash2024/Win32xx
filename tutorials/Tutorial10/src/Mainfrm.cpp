@@ -202,11 +202,12 @@ void CMainFrame::OnFileSaveAs()
 // Preview the page before it is printed.
 void CMainFrame::OnFilePreview()
 {
-    // Get the device contect of the default or currently chosen printer
-    CPrintDialog printDlg;
-    CDC printerDC = printDlg.GetPrinterDC();
-    if (printerDC.GetHDC() != 0)        // Verify a print preview is possible
+    try
     {
+        // Get the device contect of the default or currently chosen printer
+        CPrintDialog printDlg;
+        CDC printerDC = printDlg.GetPrinterDC();
+
         // Create the preview window if required
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
@@ -228,9 +229,14 @@ void CMainFrame::OnFilePreview()
         CString status = _T("Printer: ") + printDlg.GetDeviceName();
         SetStatusText(status);
     }
-    else
+
+    catch (const CException& e)
     {
-        MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+        SetView(m_view);
+        ShowMenu(TRUE);
+        ShowToolBar(TRUE);
     }
 
 }

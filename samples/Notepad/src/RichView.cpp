@@ -200,9 +200,6 @@ void CRichView::QuickPrint(LPCTSTR docName)
         printerDC.EndPage();
     }
 
-    // Tell the control to release cached information.
-    FormatRange();
-
     // End the print job
     printerDC.EndDoc();
 }

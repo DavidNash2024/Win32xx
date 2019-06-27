@@ -22,6 +22,7 @@ CDoc& CView::GetDoc()
 void CView::OnDraw(CDC& dc)
 {
     CRect rc = GetClientRect();
+    dc.SolidFill(RGB(255, 255, 255), rc);
 
     // Centre some text in our view window
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
@@ -68,12 +69,6 @@ void CView::PreRegisterClass(WNDCLASS& wc)
 }
 
 
-void CView::Print(LPCTSTR docName)
-{
-    SaveViewImage();
-    QuickPrint(docName);
-}
-
 // Prints the specified page to the specified device context.
 // Used when printing and previewing.
 void CView::PrintPage(CDC& dc, UINT)
@@ -81,22 +76,23 @@ void CView::PrintPage(CDC& dc, UINT)
     // Here we copy (stretch) a bitmap image of the view window
     // to the printed page.
 
-    // Copy the view image to a memory DC.
-    CClientDC viewDC(*this);
-    CMemDC memDC(dc);
-    int cxImage = m_viewImage.GetBitmapData().bmWidth;
-    int cyImage = m_viewImage.GetBitmapData().bmHeight;
-    memDC.CreateCompatibleBitmap(dc, cxImage, cyImage);
-    memDC.SelectObject(m_viewImage);
-
     // Get the device context of the default or currently chosen printer
     CPrintDialog printDlg;
     CDC printDC = printDlg.GetPrinterDC();
 
-    int cxPage = printDC.GetDeviceCaps(HORZRES);
-    int cyPage = printDC.GetDeviceCaps(VERTRES);
+    int cxPage = printDC.GetDeviceCaps(HORZRES);        // Width  in pixels.
+    int cyPage = printDC.GetDeviceCaps(VERTRES);        // Height in pixels.
 
-    dc.StretchBlt(0, 0, cxPage, cyPage, memDC, 0, 0, cxImage, cyImage, SRCCOPY);
+    int cxView = GetClientRect().Width();
+    int cyView = GetClientRect().Height();
+
+    // Draw the view image to a memory DC.
+    CClientDC viewDC(*this);
+    CMemDC memDC(viewDC);
+    memDC.CreateCompatibleBitmap(viewDC, cxView, cyView);
+    OnDraw(memDC);
+
+    dc.StretchBlt(0, 0, cxPage, cyPage, memDC, 0, 0, cxView, cyView, SRCCOPY);
 }
 
 // Print to the default or previously chosen printer.
@@ -139,19 +135,6 @@ void CView::QuickPrint(LPCTSTR docName)
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
-}
-
-
-// Save a bitmap image of the view window for printing.
-void CView::SaveViewImage()
-{
-    CClientDC viewDC(*this);
-    CMemDC memDC(viewDC);
-    int cxView = GetClientRect().Width();
-    int cyView = GetClientRect().Height();
-    memDC.CreateCompatibleBitmap(viewDC, cxView, cyView);
-    memDC.BitBlt(0, 0, cxView, cyView, viewDC, 0, 0, SRCCOPY);
-    m_viewImage = memDC.DetachBitmap();
 }
 
 

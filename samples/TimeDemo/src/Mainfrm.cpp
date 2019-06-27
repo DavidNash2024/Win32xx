@@ -762,8 +762,7 @@ OnFontChoice()                                              /*
         background color is always the same as the client area background.
 *-----------------------------------------------------------------------------*/
 {
-    LOGFONT lf;
-    m_View.m_font.GetObject(sizeof(LOGFONT), &lf);
+    LOGFONT lf = m_View.m_font.GetLogFont();
     DWORD dwFlags = CF_EFFECTS | CF_SCREENFONTS;
     
     CFontDialog FontDlg(lf, dwFlags);

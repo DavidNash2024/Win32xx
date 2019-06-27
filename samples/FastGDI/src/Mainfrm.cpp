@@ -33,7 +33,7 @@ CMainFrame::~CMainFrame()
 
 
 // Displays the Color Adjust dialog to choose the red, blue and green adjustments.
-BOOL CMainFrame::OnAdjustImage()
+void CMainFrame::OnAdjustImage()
 {
     if (m_view.GetImage())
     {
@@ -45,7 +45,6 @@ BOOL CMainFrame::OnAdjustImage()
     else
         MessageBox(_T("Open a Bitmap file first!"), _T("Error"), MB_OK);
 
-    return TRUE;
 }
 
 
@@ -67,21 +66,21 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     UINT id = LOWORD(wparam);
     switch(id)
     {
-    case IDM_FILE_EXIT:         return OnFileExit();
-    case IDM_FILE_NEW:          return OnFileNew();
-    case IDM_FILE_OPEN:         return OnFileOpen();
-    case IDM_FILE_SAVE:         return OnFileSave();
-    case IDM_FILE_SAVEAS:       return OnFileSaveAs();
-    case IDM_FILE_PREVIEW:      return OnFilePreview();
-    case IDM_FILE_PRINT:        return OnFilePrint();
-    case IDM_HELP_ABOUT:        return OnHelp();
-    case IDM_IMAGE_ADJUST:      return OnAdjustImage();
-    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
+	case IDM_FILE_EXIT:         OnFileExit();        return TRUE;
+    case IDM_FILE_NEW:          OnFileNew();         return TRUE;
+    case IDM_FILE_OPEN:         OnFileOpen();        return TRUE;
+    case IDM_FILE_SAVE:         OnFileSave();        return TRUE;
+    case IDM_FILE_SAVEAS:       OnFileSaveAs();      return TRUE;
+    case IDM_FILE_PREVIEW:      OnFilePreview();     return TRUE;
+    case IDM_FILE_PRINT:        OnFilePrint();       return TRUE;
+    case IDM_HELP_ABOUT:        OnHelp();            return TRUE;
+    case IDM_IMAGE_ADJUST:      OnAdjustImage();     return TRUE;
+    case IDW_VIEW_STATUSBAR:    OnViewStatusBar();   return TRUE;
+    case IDW_VIEW_TOOLBAR:      OnViewToolBar();     return TRUE;
     case IDW_FILE_MRU_FILE1:
     case IDW_FILE_MRU_FILE2:    // Intentionally blank
     case IDW_FILE_MRU_FILE3:
-    case IDW_FILE_MRU_FILE4:    return OnFileOpenMRU(wparam, lparam);
+    case IDW_FILE_MRU_FILE4:    OnFileOpenMRU(wparam, lparam); return TRUE;
     }
 
     return FALSE;
@@ -111,15 +110,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 
 // Issue a close request to the frame
-BOOL CMainFrame::OnFileExit()
+void CMainFrame::OnFileExit()
 {
     PostMessage(WM_CLOSE);
-    return TRUE;
 }
 
 
 // Clears any selected image.
-BOOL CMainFrame::OnFileNew()
+void CMainFrame::OnFileNew()
 {
     CToolBar& TB = GetToolBar();
     TB.DisableButton(IDM_FILE_SAVEAS);
@@ -128,8 +126,6 @@ BOOL CMainFrame::OnFileNew()
 
     // Set the caption
     SetWindowText(_T("FastGDI"));
-
-    return TRUE;
 }
 
 
@@ -169,7 +165,7 @@ BOOL CMainFrame::LoadFile(CString& fileName)
 
 
 // Displays the File Open dialog, to choose a file to load.
-BOOL CMainFrame::OnFileOpen()
+void CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE, _T("bmp"), NULL, OFN_FILEMUSTEXIST, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
     
@@ -178,13 +174,11 @@ BOOL CMainFrame::OnFileOpen()
         CString str = fileDlg.GetPathName();
         LoadFile(str);
     }
-
-    return TRUE;
 }
 
 
 // Called when a MRU file is selected from the menu.
-BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
+void CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
 
@@ -221,18 +215,18 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
     // Set the caption
     CString str = _T("FastGDI - ") + m_pathName;
     SetWindowText(str);
-    return TRUE;
 }
 
 
 // Preview the page before it is printed.
-BOOL CMainFrame::OnFilePreview()
+void CMainFrame::OnFilePreview()
 {
-    // Get the device contect of the default or currently chosen printer
-    CPrintDialog printDlg;
-    CDC printerDC = printDlg.GetPrinterDC();
-    if (printerDC.GetHDC() != 0)        // Verify a print preview is possible
+    try
     {
+        // Get the device contect of the default or currently chosen printer
+        CPrintDialog printDlg;
+        CDC printerDC = printDlg.GetPrinterDC();
+
         // Create the preview window if required
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
@@ -254,33 +248,45 @@ BOOL CMainFrame::OnFilePreview()
         CString status = _T("Printer: ") + printDlg.GetDeviceName();
         SetStatusText(status);
     }
-    else
+
+    catch (const CException& e)
     {
-        MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
+        // An exception occurred. Display the relevant information.
+        MessageBox(_T("Print Preview Failed"), e.GetErrorString(), MB_ICONWARNING);
+        SetView(m_view);
+        ShowMenu(TRUE);
+        ShowToolBar(TRUE);
     }
 
-    return TRUE;
 }
 
 
 // Print the bitmap.
-BOOL CMainFrame::OnFilePrint()
+void CMainFrame::OnFilePrint()
 {
-    m_view.Print(m_pathName);
-    return TRUE;
+    try
+    {
+        m_view.Print(m_pathName);
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+    }
+
 }
 
 
 // Save the bitmap to the file.
-BOOL CMainFrame::OnFileSave()
+void CMainFrame::OnFileSave()
 {
     SaveFile(m_pathName);
-    return TRUE;
 }
 
 
 // Save the bitmap to the specified file.
-BOOL CMainFrame::OnFileSaveAs()
+void CMainFrame::OnFileSaveAs()
 {
     CFileDialog FileDlg(FALSE, _T("bmp"), NULL, 0, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
 
@@ -290,7 +296,6 @@ BOOL CMainFrame::OnFileSaveAs()
         SaveFile(strName);
     }
     
-    return TRUE;
 }
 
 
