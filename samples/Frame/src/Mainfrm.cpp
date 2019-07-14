@@ -84,9 +84,9 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
-    // Show the menu and toolbar
-    ShowMenu(TRUE);
-    ShowToolBar(TRUE);
+    // Show the menu and toolbar (if we use them).
+    ShowMenu(GetFrameMenu() != 0);
+    ShowToolBar(GetToolBar().GetButtonCount() > 0);
 
     TRACE("Frame created\n");
 }
@@ -124,7 +124,7 @@ void CMainFrame::OnFilePreview()
     try
     {
         // Get the device contect of the default or currently chosen printer
-        CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+        CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
         // Create the preview window if required
@@ -152,10 +152,10 @@ void CMainFrame::OnFilePreview()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(_T("Print Preview Failed"), e.GetErrorString(), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(TRUE);
-        ShowToolBar(TRUE);      
+        ShowMenu(GetFrameMenu() != 0);
+        ShowToolBar(GetToolBar().GetButtonCount() > 0);
     }
 
 }
@@ -178,7 +178,7 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
     }
 }
 
@@ -203,8 +203,8 @@ void CMainFrame::OnPreviewClose()
     SetView(m_view);
 
     // Show the menu and toolbar
-    ShowMenu(TRUE);
-    ShowToolBar(TRUE);
+    ShowMenu(GetFrameMenu() != 0);
+    ShowToolBar(GetToolBar().GetButtonCount() > 0);
 
     SetStatusText(LoadString(IDW_READY));
 }

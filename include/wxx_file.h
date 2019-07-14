@@ -39,8 +39,7 @@
 #define _WIN32XX_FILE_H_
 
 
-#include "wxx_cstring.h"
-#include "wxx_exception.h"
+#include "wxx_wincore.h"
 
 
 namespace Win32xx

@@ -774,7 +774,7 @@ namespace Win32xx
         assert(m_frame);
 
         if (m_uxTheme == 0)
-            m_uxTheme = ::LoadLibrary(_T("UXTHEME.DLL"));
+            m_uxTheme = ::LoadLibrary(GetSystemDirectory() + _T("UXTHEME.DLL"));
 
         if (m_uxTheme != 0)
         {
@@ -2134,7 +2134,7 @@ namespace Win32xx
     template <class T>
     inline CString CFrameT<T>::GetThemeName() const
     {
-        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
+        HMODULE theme = ::LoadLibrary(GetSystemDirectory() + _T("uxtheme.dll"));
         WCHAR themeName[31] = L"";
         if(theme != 0)
         {
@@ -2705,7 +2705,7 @@ namespace Win32xx
         assert(dynamic_cast<CToolBar*>(pToolBar));
 
         // Set the tooltip's text from the ToolBar button's CommandID.
-        if (pToolBar)
+        if (pToolBar && (pToolBar != &m_menuBar))
         {
             assert(dynamic_cast<CToolBar*>(pToolBar));
             LPNMTTDISPINFO lpDispInfo = pNMTDI;

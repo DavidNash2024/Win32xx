@@ -72,8 +72,7 @@ if (ff.FindFirstFile(_T("C:\\SomeFolder\\*.*")))
 #ifndef _WIN32XX_FILEFIND_H_
 #define _WIN32XX_FILEFIND_H_
 
-#include "wxx_appcore0.h"
-#include "wxx_cstring.h"
+#include "wxx_wincore.h"
 
 
 namespace Win32xx

@@ -280,10 +280,10 @@ void CMainFrame::OnFilePreview()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(TRUE);
-        ShowToolBar(TRUE);      
+        ShowMenu(GetFrameMenu() != 0);
+        ShowToolBar(GetToolBar().GetButtonCount() > 0);
     }
-    
+
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice
@@ -317,8 +317,8 @@ void CMainFrame::OnInitialUpdate()
         GetDoc().FileOpen(args[1]);
     }
 
-    ShowMenu(TRUE);
-    ShowToolBar(TRUE);
+    ShowMenu(GetFrameMenu() != 0);
+    ShowToolBar(GetToolBar().GetButtonCount() > 0);
 }
 
 
@@ -353,8 +353,8 @@ void CMainFrame::OnPreviewClose()
     SetView(m_view);
 
     // Show the menu and toolbar
-    ShowMenu(TRUE);
-    ShowToolBar(TRUE);
+    ShowMenu(GetFrameMenu() != 0);
+    ShowToolBar(GetToolBar().GetButtonCount() > 0);
 
     SetStatusText(LoadString(IDW_READY));
 }

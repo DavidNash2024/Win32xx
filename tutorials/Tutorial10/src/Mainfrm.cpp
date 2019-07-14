@@ -233,10 +233,10 @@ void CMainFrame::OnFilePreview()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(TRUE);
-        ShowToolBar(TRUE);
+        ShowMenu(GetFrameMenu() != 0);
+        ShowToolBar(GetToolBar().GetButtonCount() > 0);
     }
 
 }
@@ -290,8 +290,8 @@ void CMainFrame::OnPreviewClose()
     SetView(m_view);
 
     // Show the menu and toolbar
-    ShowMenu(TRUE);
-    ShowToolBar(TRUE);
+    ShowMenu(GetFrameMenu() != 0);
+    ShowToolBar(GetToolBar().GetButtonCount() > 0);
 
     SetStatusText(LoadString(IDW_READY));
 }

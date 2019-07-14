@@ -71,8 +71,7 @@
 #ifndef _WIN32XX_ARCHIVE_H_
 #define _WIN32XX_ARCHIVE_H_
 
-#include "wxx_appcore0.h"
-#include "wxx_cstring.h"
+#include "wxx_wincore.h"
 #include "wxx_file.h"
 
 

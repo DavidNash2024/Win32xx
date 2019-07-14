@@ -129,7 +129,6 @@
 // include exception handling, TRACE etc.
 #include "wxx_wincore.h"
 #include "wxx_mutex.h"
-#include "wxx_cstring.h"
 
 // Work around a bugs in older versions of Visual Studio
 #ifdef _MSC_VER
@@ -231,7 +230,7 @@ namespace Win32xx
         if (::WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
             throw CNotSupportedException(g_msgSocWSAStartup);
 
-        m_ws2_32 = LoadLibrary(_T("WS2_32.dll"));
+        m_ws2_32 = LoadLibrary(GetSystemDirectory() + _T("WS2_32.dll"));
         if (m_ws2_32 == 0)
             throw CNotSupportedException(g_msgSocWS2Dll);
 

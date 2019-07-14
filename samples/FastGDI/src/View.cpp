@@ -84,12 +84,17 @@ void CView::PrintPage(CDC& dc, UINT)
         int scaledWidth = int(bmWidth * scaleX);
         int scaledHeight = int(bmHeight * scaleY);
 
-        // Load the DI bitmap into a memory DC.
-        CMemDC memDC(dc);
-        memDC.SelectObject(m_image);
+        // Now we extract the Device Independent data from the Device Dependent Bitmap(DDB)
+        CBitmapInfoPtr pbmi(m_image);
+        CMemDC memDC(viewDC);
+        int imageBytes = (((bmWidth * 32 + 31) & ~31) >> 3) * bmHeight;
+        std::vector<byte> byteArray(imageBytes, 0);
+        byte* pByteArray = &byteArray.front();
+        memDC.GetDIBits(m_image, 0, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 
-        // Copy the bitmap to the specified dc.
-        dc.StretchBlt(0, 0, scaledWidth, scaledHeight, memDC, 0, 0, bmWidth, bmHeight, SRCCOPY);
+        // Copy (stretch) the DI bits to the specified dc.
+        dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
+            bmWidth, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
     }
 }
 

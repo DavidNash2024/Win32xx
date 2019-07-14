@@ -190,16 +190,16 @@ namespace Win32xx
         // Windows XP   Includes Rich Edit 4.1, and Rich Edit 3.0 with a Rich Edit 1.0 emulator.
 
         // Load RichEdit version 1.0
-        m_rich1 = LoadLibrary(_T("riched32.dll"));
+        m_rich1 = LoadLibrary(GetSystemDirectory() + _T("riched32.dll"));
 
         if (m_rich1 == 0)
             throw CNotSupportedException(g_msgRichEditDll);
 
         // Load RichEdit version 2.0 or 3.0 (for Win98 and above)
-        m_rich2 = LoadLibrary(_T("riched20.dll"));
+        m_rich2 = LoadLibrary(GetSystemDirectory() + _T("riched20.dll"));
 
         // Load RichEdit version 4.1 (for WinXP and above)
-        m_rich4_1 = LoadLibrary(_T("Msftedit.dll"));
+        m_rich4_1 = LoadLibrary(GetSystemDirectory() + _T("Msftedit.dll"));
     }
 
     inline CRichEdit::~CRichEdit()
