@@ -48,7 +48,7 @@
 #ifndef _WIN32XX_COMMONDLG_H_
 #define _WIN32XX_COMMONDLG_H_
 
-#include <wxx_dialog.h>
+#include "wxx_dialog.h"
 #include "wxx_richedit.h"
 
 

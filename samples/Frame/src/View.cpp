@@ -92,7 +92,19 @@ void CView::PrintPage(CDC& dc, UINT)
     memDC.CreateCompatibleBitmap(viewDC, cxView, cyView);
     OnDraw(memDC);
 
-    dc.StretchBlt(0, 0, cxPage, cyPage, memDC, 0, 0, cxView, cyView, SRCCOPY);
+    // Now we convert the bitmap from DDB to DIB
+    CBitmap bmView = memDC.DetachBitmap();
+    CBitmapInfoPtr pbmi(bmView);
+
+    // Extract the device independent image data.
+    int imageBytes = (((cxView * 32 + 31) & ~31) >> 3) * cyView;
+    std::vector<byte> byteArray(imageBytes, 0);
+    byte* pByteArray = &byteArray.front();
+    memDC.GetDIBits(bmView, 0, cyView, pByteArray, pbmi, DIB_RGB_COLORS);
+
+    // Copy the DI bits to the specified dc
+    dc.StretchDIBits(0, 0, cxPage, cyPage, 0, 0,
+        cxView, cyView, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
 }
 
 // Print to the default or previously chosen printer.

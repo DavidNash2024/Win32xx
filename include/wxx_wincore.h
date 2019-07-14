@@ -215,7 +215,7 @@ namespace Win32xx
         typedef BOOL(WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
         typedef HMONITOR(WINAPI* LPMFW)(HWND hwnd, DWORD flags);
         LPMFW pfnMonitorFromWindow = 0;
-        HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
+        HMODULE hUser32 = LoadLibrary(GetSystemDirectory() + _T("USER32.DLL"));
         LPGMI pfnGetMonitorInfo = 0;
         if (hUser32)
         {
@@ -530,7 +530,7 @@ namespace Win32xx
         // Load the User32 DLL
         typedef HWND WINAPI GETANCESTOR(HWND, UINT);
         GETANCESTOR* pfnGetAncestor = NULL;
-        HMODULE user32 = ::LoadLibrary(_T("USER32.DLL"));
+        HMODULE user32 = ::LoadLibrary(GetSystemDirectory() + _T("USER32.DLL"));
 
         if (user32 != 0)
         {
@@ -2051,7 +2051,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
+        HMODULE theme = ::LoadLibrary(GetSystemDirectory() + _T("uxtheme.dll"));
         if(theme != 0)
         {
             typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND wnd, LPCWSTR pSubAppName, LPCWSTR pSubIdList);
@@ -2559,7 +2559,214 @@ namespace Win32xx
     // Global Functions
     //
 
-#ifndef _WIN32_WCE      // for Win32/64 operating systems, not WinCE
+
+    // Returns the path to the AppData folder. Returns an empty CString if
+    // the Operating System doesn't support the use of an AppData folder.
+    // The AppData folder is available in Windows 2000 and above.
+    inline CString GetAppDataPath()
+    {
+        CString AppData;
+
+#ifndef _WIN32_WCE
+
+        HMODULE hShell = ::LoadLibrary(GetSystemDirectory() + _T("Shell32.dll"));
+        if (hShell)
+        {
+            typedef HRESULT(WINAPI * MYPROC)(HWND, int, HANDLE, DWORD, LPTSTR);
+
+            // Get the function pointer of the SHGetFolderPath function
+#ifdef UNICODE
+            MYPROC pSHGetFolderPath = (MYPROC)GetProcAddress(hShell, "SHGetFolderPathW");
+#else
+            MYPROC pSHGetFolderPath = (MYPROC)GetProcAddress(hShell, "SHGetFolderPathA");
+#endif
+
+#ifndef CSIDL_APPDATA
+  #define CSIDL_APPDATA     0x001a
+  #define CSIDL_PERSONAL    0x0005 /* My Documents */
+#endif
+
+#ifndef CSIDL_FLAG_CREATE
+  #define CSIDL_FLAG_CREATE 0x8000
+#endif
+
+            if (pSHGetFolderPath)
+            {
+                // Call the SHGetFolderPath function to retrieve the AppData folder
+                pSHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, AppData.GetBuffer(MAX_PATH));
+                AppData.ReleaseBuffer();
+            }
+
+            // If we can't get the AppData folder, get the MyDocuments folder instead
+            if (AppData.IsEmpty())
+            {
+                typedef HRESULT(WINAPI * GETSPECIALPATH)(HWND, LPTSTR, int, BOOL);
+
+#ifdef UNICODE
+                GETSPECIALPATH pGetSpecialPath = (GETSPECIALPATH)GetProcAddress(hShell, "SHGetSpecialFolderPathW");
+#else
+                GETSPECIALPATH pGetSpecialPath = (GETSPECIALPATH)GetProcAddress(hShell, "SHGetSpecialFolderPathA");
+#endif
+
+                if (pGetSpecialPath)
+                {
+                    // Call the SHGetSpecialFolderPath function to retrieve the MyDocuments folder
+                    pGetSpecialPath(NULL, AppData.GetBuffer(MAX_PATH), CSIDL_PERSONAL, TRUE);
+                    AppData.ReleaseBuffer();
+                }
+            }
+
+            ::FreeLibrary(hShell);
+        }
+
+#endif // _WIN32_WCE
+
+        return AppData;
+    }
+
+    // Retrieves the command line arguments and stores them in a vector of CString.
+    // Similar to CommandLineToArgvW, but supports all versions of Windows,
+    // supports ANSI and Unicode, and doesn't require the user to use LocalFree.
+    inline std::vector<CString> GetCommandLineArgs()
+    {
+        std::vector<CString> CommandLineArgs;
+        CString CommandLine = GetCommandLine();
+        int index = 0;
+        int endPos = 0;
+
+        while (index < CommandLine.GetLength())
+        {
+            // Is the argument quoted?
+            bool IsQuoted = (CommandLine[index] == _T('\"'));
+
+            if (IsQuoted)
+            {
+                // Find the terminating token (quote followed by space)
+                endPos = CommandLine.Find(_T("\" "), index);
+                if (endPos == -1) endPos = CommandLine.GetLength() - 1;
+
+                // Store the argument in the CStringT vector without the quotes.
+                CString s;
+                if (endPos - index < 2)
+                    s = _T("\"\"");     // "" for a single quote or double quote argument
+                else
+                    s = CommandLine.Mid(index + 1, endPos - index - 1);
+
+                CommandLineArgs.push_back(s);
+                index = endPos + 2;
+            }
+            else
+            {
+                // Find the terminating token (space character)
+                endPos = CommandLine.Find(_T(' '), index);
+                if (endPos == -1) endPos = CommandLine.GetLength();
+
+                // Store the argument in the CStringT vector.
+                CString s = CommandLine.Mid(index, endPos - index);
+                CommandLineArgs.push_back(s);
+                index = endPos + 1;
+            }
+
+            // skip excess space characters
+            while (index < CommandLine.GetLength() && CommandLine[index] == _T(' '))
+                index++;
+        }
+
+        // CommandLineArgs is a vector of CStringT
+        return CommandLineArgs;
+    }
+
+#ifndef _WIN32_WCE
+
+    // Retrieves the version of common control dll used.
+    // return values and DLL versions
+    // 400  dll ver 4.00    Windows 95/Windows NT 4.0
+    // 470  dll ver 4.70    Internet Explorer 3.x
+    // 471  dll ver 4.71    Internet Explorer 4.0
+    // 472  dll ver 4.72    Internet Explorer 4.01 and Windows 98
+    // 580  dll ver 5.80    Internet Explorer 5
+    // 581  dll ver 5.81    Windows 2000 and Windows ME
+    // 582  dll ver 5.82    Windows XP, Vista, Windows 7 etc. without XP themes
+    // 600  dll ver 6.00    Windows XP with XP themes
+    // 610  dll ver 6.10    Windows Vista with XP themes
+    // 616  dll ver 6.16    Windows Vista SP1 or above with XP themes
+    inline int GetComCtlVersion()
+    {
+        // Load the Common Controls DLL
+        HMODULE comCtl = ::LoadLibrary(/*GetSystemDirectory() +*/ _T("COMCTL32.DLL"));
+        if (comCtl == 0)
+            return 0;
+
+        int comCtlVer = 400;
+
+        if (::GetProcAddress(comCtl, "InitCommonControlsEx"))
+        {
+            // InitCommonControlsEx is unique to 4.7 and later
+            comCtlVer = 470;
+
+            if (::GetProcAddress(comCtl, "DllGetVersion"))
+            {
+                typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
+                DLLGETVERSION* pfnDLLGetVersion = NULL;
+
+                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSION*>(::GetProcAddress(comCtl, "DllGetVersion"));
+                if (pfnDLLGetVersion)
+                {
+                    DLLVERSIONINFO dvi;
+                    dvi.cbSize = sizeof dvi;
+                    if (NOERROR == pfnDLLGetVersion(&dvi))
+                    {
+                        DWORD verMajor = dvi.dwMajorVersion;
+                        DWORD verMinor = dvi.dwMinorVersion;
+                        comCtlVer = 100 * verMajor + verMinor;
+                    }
+                }
+            }
+            else if (::GetProcAddress(comCtl, "InitializeFlatSB"))
+                comCtlVer = 471;    // InitializeFlatSB is unique to version 4.71
+        }
+
+        ::FreeLibrary(comCtl);
+
+        return comCtlVer;
+    }
+
+    // Retrieves the window version
+    // Return values and window versions:
+    //  1400     Windows 95
+    //  1410     Windows 98
+    //  1490     Windows ME
+    //  2400     Windows NT
+    //  2500     Windows 2000
+    //  2501     Windows XP
+    //  2502     Windows Server 2003
+    //  2600     Windows Vista and Windows Server 2008
+    //  2601     Windows 7 and Windows Server 2008 r2
+    //  2602     Windows 8 and Windows Server 2012
+    //  2603     Windows 8.1 and Windows Server 2012 r2
+    // Note: For windows 8.1 and above, the value returned is also affected by the embedded manifest
+    //       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602).
+    inline int GetWinVersion()
+    {
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+  #pragma warning ( push )
+  #pragma warning ( disable : 4996 )        // GetVersion declared deprecated.
+  #pragma warning ( disable : 28159 )       // Deprecated function. Consider using IsWindows instead. 
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
+        DWORD version = GetVersion();
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+  #pragma warning ( pop )
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
+        int platform = (version < 0x80000000) ? 2 : 1;
+        int majorVer = LOBYTE(LOWORD(version));
+        int minorVer = HIBYTE(LOWORD(version));
+
+        int result = 1000 * platform + 100 * majorVer + minorVer;
+        return result;
+    }
 
 
     // Returns a NONCLIENTMETRICS struct filled from the system parameters.
@@ -2598,8 +2805,23 @@ namespace Win32xx
         return (state & 0x8000);
     }
 
+#endif
 
-#endif // #ifndef _WIN32_WCE
+
+    // Retrieves the path of the system directory. The path ends with
+    // a backslash. An empty string is returned on WinCE.
+    inline CString GetSystemDirectory()
+    {
+        CString str;
+
+#ifndef _WIN32_WCE
+        ::GetSystemDirectory(str.GetBuffer(MAX_PATH), MAX_PATH);
+        str.ReleaseBuffer();
+        str += _T('\\');
+#endif
+        
+        return str;
+    }
 
     // Loads the common controls using InitCommonControlsEx or InitCommonControls.
     // Returns TRUE if InitCommonControlsEx is used.
@@ -2607,9 +2829,9 @@ namespace Win32xx
     inline void LoadCommonControls()
     {
         // Load the Common Controls DLL
-        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+        HMODULE comCtl = ::LoadLibrary(GetSystemDirectory() + _T("COMCTL32.DLL"));
         if (comCtl == 0)
-            comCtl = ::LoadLibrary(_T("COMMCTRL.DLL"));
+            comCtl = ::LoadLibrary(GetSystemDirectory() + _T("COMMCTRL.DLL"));
 
         if (comCtl)
         {
@@ -2658,7 +2880,6 @@ namespace Win32xx
         str.LoadString(id);
         return str;
     }
-
 
 }
 

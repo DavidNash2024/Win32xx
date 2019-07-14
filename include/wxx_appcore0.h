@@ -266,8 +266,7 @@ namespace Win32xx
     LPCTSTR const g_msgGdiGetDC   = _T("GetDC failed");
     LPCTSTR const g_msgGdiGetDCEx = _T("GetDCEx failed");
     LPCTSTR const g_msgGdiSelObject = _T("Failed to select object into device context");
-
-    LPCTSTR const g_msgGdiGetWinDC = _T("GetWindowDC failed");
+    LPCTSTR const g_msgGdiGetWinDC  = _T("GetWindowDC failed");
     LPCTSTR const g_msgGdiBeginPaint = _T("BeginPaint failed");
 
     LPCTSTR const g_msgPrintFound = _T("No printer available");
@@ -617,171 +616,12 @@ namespace Win32xx
 
     };
 
-    ////////////////////////////////////////
-    // Global Functions
-    //
 
-    // Returns a reference to the CWinApp derived class.
-    inline CWinApp* GetApp()
-    {
-        CWinApp* pApp = CWinApp::SetnGetThis();
-        return pApp;
-    }
-
-
-  #ifndef _WIN32_WCE
-
-    // Retrieves the window version
-        // Return values and window versions:
-        //  1400     Windows 95
-        //  1410     Windows 98
-        //  1490     Windows ME
-        //  2400     Windows NT
-        //  2500     Windows 2000
-        //  2501     Windows XP
-        //  2502     Windows Server 2003
-        //  2600     Windows Vista and Windows Server 2008
-        //  2601     Windows 7 and Windows Server 2008 r2
-        //  2602     Windows 8 and Windows Server 2012
-        //  2603     Windows 8.1 and Windows Server 2012 r2
-        // Note: For windows 8.1 and above, the value returned is also affected by the embedded manifest
-        //       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602).
-    inline int GetWinVersion()
-    {
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-  #pragma warning ( push )
-  #pragma warning ( disable : 4996 )        // GetVersion declared deprecated.
-  #pragma warning ( disable : 28159 )       // Deprecated function. Consider using IsWindows instead. 
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
-
-        DWORD version = GetVersion();
-
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-  #pragma warning ( pop )
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
-
-        int platform = (version < 0x80000000)? 2:1;
-        int majorVer = LOBYTE(LOWORD(version));
-        int minorVer = HIBYTE(LOWORD(version));
-
-        int result =  1000*platform + 100*majorVer + minorVer;
-        return result;
-    }
-
-
-    // Retrieves the version of common control dll used.
-    // return values and DLL versions
-    // 400  dll ver 4.00    Windows 95/Windows NT 4.0
-    // 470  dll ver 4.70    Internet Explorer 3.x
-    // 471  dll ver 4.71    Internet Explorer 4.0
-    // 472  dll ver 4.72    Internet Explorer 4.01 and Windows 98
-    // 580  dll ver 5.80    Internet Explorer 5
-    // 581  dll ver 5.81    Windows 2000 and Windows ME
-    // 582  dll ver 5.82    Windows XP, Vista, Windows 7 etc. without XP themes
-    // 600  dll ver 6.00    Windows XP with XP themes
-    // 610  dll ver 6.10    Windows Vista with XP themes
-    // 616  dll ver 6.16    Windows Vista SP1 or above with XP themes
-    inline int GetComCtlVersion()
-    {
-        // Load the Common Controls DLL
-        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
-        if (comCtl == 0)
-            return 0;
-
-        int comCtlVer = 400;
-
-        if (::GetProcAddress(comCtl, "InitCommonControlsEx"))
-        {
-            // InitCommonControlsEx is unique to 4.7 and later
-            comCtlVer = 470;
-
-            if (::GetProcAddress(comCtl, "DllGetVersion"))
-            {
-                typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
-                DLLGETVERSION* pfnDLLGetVersion = NULL;
-
-                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSION*>(::GetProcAddress(comCtl, "DllGetVersion"));
-                if(pfnDLLGetVersion)
-                {
-                    DLLVERSIONINFO dvi;
-                    dvi.cbSize = sizeof dvi;
-                    if(NOERROR == pfnDLLGetVersion(&dvi))
-                    {
-                        DWORD verMajor = dvi.dwMajorVersion;
-                        DWORD verMinor = dvi.dwMinorVersion;
-                        comCtlVer = 100 * verMajor + verMinor;
-                    }
-                }
-            }
-            else if (::GetProcAddress(comCtl, "InitializeFlatSB"))
-                comCtlVer = 471;    // InitializeFlatSB is unique to version 4.71
-        }
-
-        ::FreeLibrary(comCtl);
-
-        return comCtlVer;
-    }
-  #endif
-
-
-    // The following functions perform string copies. The size of the dst buffer
-    // is specified, much like strcpy_s. The dst buffer is always null terminated.
-    // Null or zero arguments cause an assert.
-
-    // Copies an ANSI string from src to dst. 
-    inline void StrCopyA(char* dst, const char* src, size_t dst_size)
-    {
-        assert(dst != 0);
-        assert(src != 0);
-        assert(dst_size != 0);
-
-        size_t index;
-
-        // Copy each character.
-        for (index = 0; index < dst_size - 1; ++index)
-        {
-            dst[index] = src[index];
-            if (src[index] == '\0')
-                break;
-        }
-
-        // Add null termination if required.
-        if (dst[index] != '\0')
-            dst[dst_size - 1] = '\0';
-    }
-
-    // Copies a wide string from src to dst.
-    inline void StrCopyW(wchar_t* dst, const wchar_t* src, size_t dst_size)
-    {
-        assert(dst != 0);
-        assert(src != 0);
-        assert(dst_size != 0);
-
-        size_t index;
-
-        // Copy each character.
-        for (index = 0; index < dst_size - 1; ++index)
-        {
-            dst[index] = src[index];
-            if (src[index] == '\0')
-                break;
-        }
-
-        // Add null termination if required.
-        if (dst[index] != '\0')
-            dst[dst_size - 1] = '\0';
-
-    }
-
-    // Copies a TCHAR string from src to dst.
-    inline void StrCopy(TCHAR* dst, const TCHAR* src, size_t dst_size)
-    {
-#ifdef UNICODE
-        StrCopyW(dst, src, dst_size);
-#else
-        StrCopyA(dst, src, dst_size);
-#endif
-    }
+    // Global function declarations
+    inline CWinApp* GetApp();
+    inline void StrCopyA(char* dst, const char* src, size_t dst_size);
+    inline void StrCopyW(wchar_t* dst, const wchar_t* src, size_t dst_size);
+    inline void StrCopy(TCHAR* dst, const TCHAR* src, size_t dst_size);
 
 
 } // namespace Win32xx

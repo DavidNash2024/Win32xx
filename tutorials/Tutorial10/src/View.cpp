@@ -50,7 +50,7 @@ int CView::OnCreate(CREATESTRUCT&)
 
 
 // Draws the points to a memory DC. A memory DC provides double buffering for smoother rendering.
-CDC CView::Draw()
+CMemDC CView::Draw()
 {
     // Set up our Memory DC and bitmap
     CClientDC dc(*this);

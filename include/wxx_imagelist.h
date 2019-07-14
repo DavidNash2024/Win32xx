@@ -332,7 +332,6 @@ namespace Win32xx
     inline BOOL CImageList::Create(UINT bitmapID, int cx, int grow, COLORREF mask)
     {
         assert(m_pData);
-        assert(NULL == m_pData->images);
 
         LPCTSTR pBitmapName = MAKEINTRESOURCE (bitmapID);
         return Create(pBitmapName, cx, grow, mask);
@@ -348,7 +347,7 @@ namespace Win32xx
     inline BOOL CImageList::Create(LPCTSTR pResourceName, int cx, int grow, COLORREF mask)
     {
         assert(m_pData);
-        assert(NULL == m_pData->images);
+
         HIMAGELIST images = ImageList_LoadBitmap(GetApp()->GetInstanceHandle(), pResourceName, cx, grow, mask);
 
         if (images)

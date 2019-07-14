@@ -42,8 +42,8 @@ BEGIN
         MENUITEM "&Save",                       IDM_FILE_SAVE, GRAYED
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS, GRAYED
         MENUITEM SEPARATOR
-		MENUITEM "Print Preview",               IDM_FILE_PREVIEW,
-        MENUITEM "&Print",                      IDM_FILE_PRINT,
+        MENUITEM "Print Preview",               IDM_FILE_PREVIEW
+        MENUITEM "&Print",                      IDM_FILE_PRINT
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -171,7 +171,7 @@ BEGIN
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
-    IDW_READY               "Ready" 
+    IDW_READY               "Ready"
 END
 
 STRINGTABLE

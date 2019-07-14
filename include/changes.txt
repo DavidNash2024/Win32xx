@@ -65,6 +65,7 @@ Changes in detail
 Added Console                                    sample
 Added CHGlobal                                   class
 Added CPrintPreview                              class
+Added ::GetSystemDirectory                       global function
 Added CDC::GetBrushOrgEx                         member function
 Added CDC::SetBrushOrgEx                         member function
 Added CGlobalLock<DEVNAMES>::GetDeviceName       member function

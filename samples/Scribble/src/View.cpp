@@ -52,7 +52,7 @@ int CView::OnCreate(CREATESTRUCT&)
 
 
 // Draws the points to a memory DC. A memory DC provides double buffering for smoother rendering.
-CDC CView::Draw()
+CMemDC CView::Draw()
 {
     // Set up our Memory DC and bitmap
     CClientDC dc(*this);
@@ -208,12 +208,10 @@ void CView::PrintPage(CDC& dc, UINT)
     
     // Create the LPBITMAPINFO from the bitmap.
     CBitmapInfoPtr pbmi(bmView);
-    // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
-    BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
 
     // Extract the device independent image data.
-    memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS);
-    std::vector<byte> byteArray(pBIH->biSizeImage, 0);
+    int imageBytes = (((width * 32 + 31) & ~31) >> 3) * height;
+    std::vector<byte> byteArray(imageBytes, 0);
     byte* pByteArray = &byteArray.front();
     memDC.GetDIBits(bmView, 0, height, pByteArray, pbmi, DIB_RGB_COLORS);
 
@@ -239,8 +237,6 @@ void CView::PrintPage(CDC& dc, UINT)
 
     if (GDI_ERROR == result)
         throw CUserException(_T("Failed to resize image for printing"));
-
-    // The specified dc now holds the Device Independent Bitmap printout.
 }
 
 

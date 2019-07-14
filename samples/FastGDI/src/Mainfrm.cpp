@@ -66,7 +66,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     UINT id = LOWORD(wparam);
     switch(id)
     {
-	case IDM_FILE_EXIT:         OnFileExit();        return TRUE;
+    case IDM_FILE_EXIT:         OnFileExit();        return TRUE;
     case IDM_FILE_NEW:          OnFileNew();         return TRUE;
     case IDM_FILE_OPEN:         OnFileOpen();        return TRUE;
     case IDM_FILE_SAVE:         OnFileSave();        return TRUE;
@@ -121,6 +121,7 @@ void CMainFrame::OnFileNew()
 {
     CToolBar& TB = GetToolBar();
     TB.DisableButton(IDM_FILE_SAVEAS);
+    TB.DisableButton(IDM_FILE_PRINT);
     TB.DisableButton(IDM_IMAGE_ADJUST);
     m_view.LoadFileImage(NULL);
 
@@ -143,8 +144,8 @@ BOOL CMainFrame::LoadFile(CString& fileName)
         // Turn on the ToolBar adjust button
         CToolBar& tb = GetToolBar();
         tb.EnableButton(IDM_FILE_SAVEAS);
+        tb.EnableButton(IDM_FILE_PRINT);
         tb.EnableButton(IDM_IMAGE_ADJUST);
-        GetFrameMenu().EnableMenuItem(IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
         // Resize the frame to match the bitmap
         if (m_view.GetImage())
@@ -190,6 +191,7 @@ void CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
     {
         m_pathName = mruText;
         tb.EnableButton(IDM_FILE_SAVEAS);
+        tb.EnableButton(IDM_FILE_PRINT);
         tb.EnableButton(IDM_IMAGE_ADJUST);
 
         // Adjust the window size
@@ -252,10 +254,10 @@ void CMainFrame::OnFilePreview()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(_T("Print Preview Failed"), e.GetErrorString(), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(TRUE);
-        ShowToolBar(TRUE);
+        ShowMenu(GetFrameMenu() != 0);
+        ShowToolBar(GetToolBar().GetButtonCount() > 0);
     }
 
 }
@@ -272,7 +274,7 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
     }
 
 }
@@ -306,8 +308,8 @@ void CMainFrame::OnInitialUpdate()
     // Place any additional startup code here.
 
     // Show the menu and toolbar
-    ShowMenu(TRUE);
-    ShowToolBar(TRUE);
+    ShowMenu(GetFrameMenu() != 0);
+    ShowToolBar(GetToolBar().GetButtonCount() > 0);
 
     TRACE("Frame created\n");
 }
@@ -327,7 +329,13 @@ inline void CMainFrame::OnMenuUpdate(UINT id)
         GetFrameMenu().EnableMenuItem(IDM_FILE_SAVEAS, IsImageLoaded? MF_ENABLED : MF_GRAYED);
         break;
     case IDM_IMAGE_ADJUST:
-        GetFrameMenu().EnableMenuItem(IDM_IMAGE_ADJUST, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+        GetFrameMenu().EnableMenuItem(IDM_IMAGE_ADJUST, IsImageLoaded ? MF_ENABLED : MF_GRAYED);
+        break;
+    case IDM_FILE_PREVIEW:
+        GetFrameMenu().EnableMenuItem(IDM_FILE_PREVIEW, IsImageLoaded ? MF_ENABLED : MF_GRAYED);
+        break;
+    case IDM_FILE_PRINT:
+        GetFrameMenu().EnableMenuItem(IDM_FILE_PRINT, IsImageLoaded ? MF_ENABLED : MF_GRAYED);
         break;
     }
 }
@@ -340,8 +348,8 @@ void CMainFrame::OnPreviewClose()
     SetView(m_view);
 
     // Show the menu and toolbar
-    ShowMenu(TRUE);
-    ShowToolBar(TRUE);
+    ShowMenu(GetFrameMenu() != 0);
+    ShowToolBar(GetToolBar().GetButtonCount() > 0);
 
     SetStatusText(LoadString(IDW_READY));
 }
@@ -352,7 +360,7 @@ void CMainFrame::OnPreviewPrint()
 {
     try
     {
-        m_view.QuickPrint(_T("Scribble Output"));
+        m_view.QuickPrint(m_pathName);
     }
 
     catch (const CUserException& e)
@@ -428,6 +436,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_NEW  );
     AddToolBarButton( IDM_FILE_OPEN );
     AddToolBarButton( IDM_FILE_SAVEAS, FALSE );
+    AddToolBarButton( IDM_FILE_PRINT, FALSE );
 
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_IMAGE_ADJUST, FALSE );
