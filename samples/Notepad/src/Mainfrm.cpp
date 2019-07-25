@@ -372,7 +372,7 @@ void CMainFrame::OnFilePreview()
         MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_richView);
         ShowMenu(GetFrameMenu() != 0);
-        ShowToolBar(GetToolBar().GetButtonCount() > 0);
+        ShowToolBar(GetToolBar().IsWindow());
     }
 
 }
@@ -501,7 +501,7 @@ void CMainFrame::OnInitialUpdate()
 
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
-    ShowToolBar(GetToolBar().GetButtonCount() > 0);
+    ShowToolBar(GetToolBar().IsWindow());
 }
 
 void CMainFrame::OnMenuUpdate(UINT id)
@@ -592,7 +592,7 @@ void CMainFrame::OnPreviewClose()
 
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
-    ShowToolBar(GetToolBar().GetButtonCount() > 0);
+    ShowToolBar(GetToolBar().IsWindow());
 
     // Restore focus to the window focussed before DoPrintPreview was called.
     RestoreFocus();

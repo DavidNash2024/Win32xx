@@ -38,6 +38,7 @@
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-tWM" />
+					<Add option="-vi-" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
 					<Add directory="../../../include" />
