@@ -155,23 +155,23 @@ CPrintPreviewEx : public CDialog                                         /*
     The print preview dialog window class.
 *-----------------------------------------------------------------------------*/
 {
-	friend class PreviewSetup;
+    friend class PreviewSetup;
 
     public:
-		CPrintPreviewEx(UINT nResID, DWORD dwFlags = HIDE_HELP);
+        CPrintPreviewEx(UINT nResID, DWORD dwFlags = HIDE_HELP);
         virtual ~CPrintPreviewEx();
 
         BOOL    ClosePreview();
-        CPreviewPaneEx& GetPreviewPane()        {return m_PreviewPane;}
+        CPreviewPaneEx& GetPreviewPane()      {return m_PreviewPane;}
         DSize   GetPreviewSize() const        {return m_PreviewInches;}
-		void    SetPreviewSize(DSize size)    {m_PreviewInches = size;}
+        void    SetPreviewSize(DSize size)    {m_PreviewInches = size;}
         DSize   GetPrinterScreenRatio() const {return m_PrinterScreenResRatio;}
         DSize   GetScreenSize() const         {return m_ScreenInches;}
-		void    SetScreenSize(DSize size)     {m_ScreenInches = size;}
+        void    SetScreenSize(DSize size)     {m_ScreenInches = size;}
         void    InitializeContexts();
         BOOL    OnPreview(const CString&); 
         void    SetSizes(DSize scrn, DSize prevw) 
-		            {m_ScreenInches = scrn; m_PreviewInches = prevw;}
+                    {m_ScreenInches = scrn; m_PreviewInches = prevw;}
         void    SetWindowSizes();
 
     protected:

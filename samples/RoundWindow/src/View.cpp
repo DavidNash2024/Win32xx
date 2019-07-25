@@ -91,7 +91,6 @@ void CView::OnDraw(CDC& dc)
 
     // Centre some text in our view window
     CRect rc = m_rect;
-    rc.OffsetRect(0, -GetSystemMetrics(SM_CYCAPTION) );
     CString cs = LoadString(IDW_MAIN);
     dc.SetBkMode(TRANSPARENT);
     dc.DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
@@ -126,7 +125,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.y = 50;                      // top y
     cs.cx = 400;                    // width
     cs.cy = 350;                    // height
-    cs.style = WS_VISIBLE;          // Window is initially visible
+    cs.style = WS_VISIBLE | WS_POPUP;          // Window is initially visible
 }
 
 void CView::PreRegisterClass(WNDCLASS& wc)
@@ -147,10 +146,6 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     // Save the relative mouse position
     m_point = GetCursorPos();
     ScreenToClient(m_point);
-
-    // Adjust client co-ords to window co-ords.
-    m_point.x += GetSystemMetrics(SM_CXFIXEDFRAME);
-    m_point.y += GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFIXEDFRAME);
 
     // Pass this message on for default processing
     return FinalWindowProc(msg, wparam, lparam);

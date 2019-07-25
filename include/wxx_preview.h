@@ -17,9 +17,9 @@
 
 
 // To use CPrintPreview, do the following:
-// 1) Declare CPrintPreview as CMainFrame's member, specifying the source's
-//    class as the template type. The source is where the PrintPage function
-//    resides.
+// 1) Declare CPrintPreview as CMainFrame's member variable, specifying the
+//    source's class as the template type. The source is where the PrintPage
+//    function resides.
 // 2) Specify values for the string resources used by CPrintPreview in
 //    resource.rc.
 // 3) Use SetSource to specify to where to call the PrintPage function.

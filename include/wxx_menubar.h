@@ -1052,8 +1052,7 @@ namespace Win32xx
         assert(IsWindow());
 
         m_topMenu = menu;
-        const int baseID = 16;
-        const int maxedOffset = (IsMDIChildMaxed()? baseID + 1 : baseID);
+        int maxedOffset = (IsMDIChildMaxed()? 1:0);
 
         // Remove any existing buttons
         while (SendMessage(TB_BUTTONCOUNT,  0, 0) > 0)
@@ -1071,12 +1070,11 @@ namespace Win32xx
             // Later we will custom draw the window icon over this button
             TBBUTTON tbb;
             ZeroMemory(&tbb, sizeof(tbb));
-            tbb.idCommand = baseID;
             tbb.fsState = TBSTATE_ENABLED;
             tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
             tbb.iString = reinterpret_cast<INT_PTR>(_T(" "));
             SendMessage(TB_ADDBUTTONS, (WPARAM)1, (LPARAM)(&tbb));
-            SetButtonText(baseID, _T("    "));
+            SetButtonText(0, _T("    "));
         }
 
         for (int i = 0 ; i < ::GetMenuItemCount(menu); ++i)

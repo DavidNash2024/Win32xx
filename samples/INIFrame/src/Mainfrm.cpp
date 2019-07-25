@@ -98,7 +98,7 @@ void CMainFrame::OnInitialUpdate()
 
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
-    ShowToolBar(GetToolBar().GetButtonCount() > 0);
+    ShowToolBar(GetToolBar().IsWindow());
     
     TRACE("Frame created\n");
 }
@@ -171,7 +171,7 @@ void CMainFrame::OnFilePreview()
         MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_view);
         ShowMenu(GetFrameMenu() != 0);
-        ShowToolBar(GetToolBar().GetButtonCount() > 0);
+        ShowToolBar(GetToolBar().IsWindow());
     }
 
 }
@@ -219,7 +219,7 @@ void CMainFrame::OnPreviewClose()
 
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
-    ShowToolBar(GetToolBar().GetButtonCount() > 0);
+    ShowToolBar(GetToolBar().IsWindow());
 
     SetStatusText(LoadString(IDW_READY));
 }
