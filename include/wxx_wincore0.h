@@ -100,7 +100,6 @@ namespace Win32xx
     // Global function declarations
     inline CString GetAppDataPath();
     inline std::vector<CString> GetCommandLineArgs();
-    inline CString GetSystemDirectory();
     inline void LoadCommonControls();
     inline CString LoadString(UINT id);
 

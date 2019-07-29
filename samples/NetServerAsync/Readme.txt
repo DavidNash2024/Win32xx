@@ -21,12 +21,15 @@ and ws2.lib for Windows CE. Windows 95 systems will need to install the
 "Windows Sockets 2.0 for Windows 95". It's available from:
 http:support.microsoft.com/kb/182108/EN-US/
 
+IPv6 is supported on Windows operating systems Vista and above. Limited support 
+for IPv6 is available on Windows XP, but it is turned off by default.
+
 
 Features demonstrated in this sample
 ====================================
-* Implementing a TCP and UDP client
-* Supporting IPv4 and IPv6
-* Responding to networking events in a window procedure
+* Implementing a TCP and UDP server.
+* Supporting IPv4 and IPv6.
+* Responding to networking events in a window procedure.
 
 
 About the CSocket class

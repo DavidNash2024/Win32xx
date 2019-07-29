@@ -1,5 +1,6 @@
 Direct2D Demo
 =============
+This sample demonstratues the use of Direct2D in an application.
 
 About Direct2D
 --------------

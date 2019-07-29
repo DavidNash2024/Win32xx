@@ -32,8 +32,6 @@ Features demonstrated in this example
 * Tool tips that appear when the mouse hovers over tool bar, dialog controls,
   and the dialog client area
 * Use of a rich edit control on the form derived from the CRichEdit class.
-  Other samples in this distribution having richedit controls do not use
-  this class. The need to load the rich edit DLL, as done in these examples,
-  is not needed, as it is done in the CRichEdit constructor.
+
 
 

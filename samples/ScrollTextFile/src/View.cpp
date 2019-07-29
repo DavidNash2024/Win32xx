@@ -237,7 +237,7 @@ PreRegisterClass(WNDCLASS &wc)                                              /*
 *-----------------------------------------------------------------------------*/
 {
     // Set the Window Class name
-    wc.lpszClassName = _T("CScrollWnd");
+    wc.lpszClassName = _T("CScrollView");
     // Set the background color to the default
     wc.hbrBackground = GetScrollBkgnd();
     wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);

@@ -272,7 +272,7 @@ namespace Win32xx
         pTLSData->pWnd = this;
 
         // Declare a pointer to the TaskDialogIndirect function
-        HMODULE comCtl = LoadLibrary(GetSystemDirectory() + _T("COMCTL32.DLL"));
+        HMODULE comCtl = LoadLibrary(_T("COMCTL32.DLL"));
         assert(comCtl);
         typedef HRESULT WINAPI TASKDIALOGINDIRECT(const TASKDIALOGCONFIG*, int*, int*, BOOL*);
         TASKDIALOGINDIRECT* pTaskDialogIndirect = reinterpret_cast<TASKDIALOGINDIRECT*>(::GetProcAddress(comCtl, "TaskDialogIndirect"));
@@ -367,7 +367,7 @@ namespace Win32xx
     // Returns true if TaskDialogs are supported on this system.
     inline BOOL CTaskDialog::IsSupported()
     {
-        HMODULE comctl = LoadLibrary(GetSystemDirectory() + _T("COMCTL32.DLL"));
+        HMODULE comctl = LoadLibrary(_T("COMCTL32.DLL"));
         assert(comctl);
 
         BOOL result = (::GetProcAddress(comctl, "TaskDialogIndirect") != FALSE);

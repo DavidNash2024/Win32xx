@@ -288,10 +288,7 @@ namespace Win32xx
         {
             // While idle, perform idle processing until OnIdle returns FALSE
             while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) != FALSE  )
-            {
                 ++lCount;
-            }
-
 
             lCount = 0;
 

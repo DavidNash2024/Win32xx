@@ -5,7 +5,7 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CScrollWnd demo application view 
+    Contents Description: Declaration of the CScrollView demo application view 
     class for a typical Windows application using the Win32++ Windows interface 
     classes, Copyright (c) 2005-2017 David Nash, under permissions granted 
     therein.

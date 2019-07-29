@@ -78,15 +78,15 @@ BOOL CButtonPage::OnSetActive()
 BOOL CButtonPage::Validate()
 {
     // This is where we validate (and save) the contents of this page before it is closed
-    // Here we would extract and test the values from th ButtonPage dialog:
+    // Here we would extract and test the values from the ButtonPage dialog:
 
     BOOL isValid = TRUE;
 
 // Tell the user what went wrong
 //  if (IsValid)
-//      MessageBox(_T("Button Page Validation Failed"), _T("PageSheet Check"), MB_OK);
-//  else
 //      TRACE("Button Page Validation passed\n");
+//  else
+//      MessageBox(_T("Button Page Validation Failed"), _T("PageSheet Check"), MB_OK);
     
     return isValid;
 }

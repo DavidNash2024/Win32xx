@@ -1,6 +1,6 @@
 DirectX9 Example
 ==================
-This project displays a moving DirectX picture in a simple window. The code
+This project displays a moving DirectX picture in a frame window. The code
 in this example is based on DirectX version 9. 
 
 Additional software is required to run this example.
@@ -22,14 +22,17 @@ This example displays a rotating triangle using DirectX within the DXView window
 In this sample, CDX and CDXThread classes are nested classes of CDXView. Taken
 as a group, these class can be used as the view window for any class that uses
 view windows. The could be used in a CTab, CMDIChild, CDocker, CDockContainer, 
-CTabbedMDI or CFrame.  
+CTabbedMDI or CFrame.
 
 Features demonstrated in this example
 =====================================
 * Displaying a moving DirectX picture in a window.  
 * Putting the child window of a view window in a separate thread.
+* Using a message loop in a separate thread to support DirectX.
 * Customizing a thread's message loop.
 * Using PostQuitMessage to end a GUI thread.
 * Posting messages to windows in a different thread.
 * The use of WaitForSingleObject detect when a thread has ended.
+* Using a window that utilizes DirectX as the view window for a frame.
+
 

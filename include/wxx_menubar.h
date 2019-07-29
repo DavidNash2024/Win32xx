@@ -137,7 +137,6 @@ namespace Win32xx
         int   m_hotItem;        // hot item
         int   m_mdiButton;      // the MDI button (MDIButtonType) pressed
         CPoint m_oldMousePos;   // old Mouse position
-        HWND  m_frame;         // Handle to the frame
 
     };  // class CMenuBar
 
@@ -165,7 +164,6 @@ namespace Win32xx
         m_prevFocus    = NULL;
         m_mdiButton     = 0;
         m_popupMenu    = 0;
-        m_frame        = 0;
     }
 
     inline CMenuBar::~CMenuBar()
@@ -358,13 +356,18 @@ namespace Win32xx
         return pMDIChild;
     }
 
-    // Retrieves a pointer to the MDIClient.
+    // Retrieves a pointer to the MDIClient. Returns NULL if there 
+	// is no MDIClient.
     inline CWnd* CMenuBar::GetMDIClient() const
     {
         CWnd* pMDIClient = NULL;
-        HWND wnd = reinterpret_cast<HWND>(::SendMessage(m_frame, UWM_GETFRAMEVIEW, 0, 0));
+
+		// We use GetAncestor to send our message to the frame.
+        HWND wnd = reinterpret_cast<HWND>(GetAncestor().SendMessage(UWM_GETFRAMEVIEW, 0, 0));
         CWnd* pWnd = GetCWndPtr(wnd);
-        if (pWnd && pWnd->GetClassName() == _T("MDIClient"))
+        
+		// Only MDI frames have a MDIClient
+		if (pWnd && pWnd->GetClassName() == _T("MDIClient"))
             pMDIClient = pWnd;
 
         return pMDIClient;
@@ -410,15 +413,12 @@ namespace Win32xx
     {
         // We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
         SendMessage(TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
-
-        TLSData* pTLSData = GetApp()->GetTlsData();
-        m_frame = pTLSData->mainWnd;
     }
 
     // Forwards owner drawing to the frame.
     inline LRESULT CMenuBar::OnDrawItem(UINT, WPARAM wparam, LPARAM lparam)
     {
-        ::SendMessage(m_frame, WM_DRAWITEM, wparam, lparam);
+		GetAncestor().SendMessage(WM_DRAWITEM, wparam, lparam);
         return TRUE; // handled
     }
 
@@ -427,7 +427,7 @@ namespace Win32xx
     {
         if (m_isExitAfter)
             ExitMenu();
-        ::SendMessage(m_frame, WM_EXITMENULOOP, wparam, lparam);
+		GetAncestor().SendMessage(WM_EXITMENULOOP, wparam, lparam);
 
         return 0;
     }
@@ -435,7 +435,7 @@ namespace Win32xx
     // Called when a popup menu is created.
     inline LRESULT CMenuBar::OnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam)
     {
-        ::SendMessage(m_frame, WM_INITMENUPOPUP, wparam, lparam);
+		GetAncestor().SendMessage(WM_INITMENUPOPUP, wparam, lparam);
         return 0;
     }
 
@@ -597,7 +597,7 @@ namespace Win32xx
     // Forwards the owner draw processing to the frame.
     inline LRESULT CMenuBar::OnMeasureItem(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        ::SendMessage(m_frame, msg, wparam, lparam);
+		GetAncestor().SendMessage(msg, wparam, lparam);
         return TRUE; // handled
     }
 
@@ -1138,8 +1138,8 @@ namespace Win32xx
         case WM_SYSKEYUP:           return OnSysKeyUp(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
-        case WM_UNINITMENUPOPUP:    return ::SendMessage(m_frame, msg, wparam, lparam);
-        case WM_MENURBUTTONUP:      return ::SendMessage(m_frame, msg, wparam, lparam);
+        case WM_UNINITMENUPOPUP:    return GetAncestor().SendMessage(msg, wparam, lparam);
+        case WM_MENURBUTTONUP:      return GetAncestor().SendMessage(msg, wparam, lparam);
 
         // Messages defined by Win32++
         case UWM_POPUPMENU:         return OnPopupMenu();

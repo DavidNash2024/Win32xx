@@ -11,11 +11,12 @@ This program support print and print preview.
 
 Features demonstrated in this example
 =====================================
-* Use of CFrame to display the window frame
-* Use of CWebBrowser as a view window for the frame
-* Use of an event sink to get notification of browser events
-* Use of 32bit bitmaps for the toolbar
-* Use of Hot and Disabled image lists for the toolbar
-* Adding icons for popup menu items  
-* Use of a ComboBoxEx control in the rebar
-* Use of T2W and W2T text conversion functions
+* Use of CFrame to display the window frame.
+* Use of CWebBrowser as a view window for the frame.
+* Use of an event sink to get notification of browser events.
+* Use of 32bit bitmaps for the toolbar.
+* Use of Hot and Disabled image lists for the toolbar.
+* Adding icons for popup menu items.
+* Use of a ComboBoxEx control in the rebar.
+* Printing the contents of a WebBrowser.
+* Print preview the contents of a WebBrowser.

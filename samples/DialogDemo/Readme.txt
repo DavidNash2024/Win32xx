@@ -11,8 +11,8 @@ such as saving the dialog's state in the registry.
 Features demonstrated in this example
 =====================================
 * Using a dialog as an application.
-* Use of AttachDlgItem to attach a dialog control to a CWnd.
+* The use of AttachItem to attach a dialog control to a CWnd.
+* The handling of messages in a button control.
+* Using a static control as a hyperlink.
 * Use of OnMessageReflect to handle notifications in the object that 
    generated them.
-* Using a static control as a hyperlink
-    

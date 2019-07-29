@@ -65,7 +65,6 @@ Changes in detail
 Added Console                                    sample
 Added CHGlobal                                   class
 Added CPrintPreview                              class
-Added ::GetSystemDirectory                       global function
 Added CDC::GetBrushOrgEx                         member function
 Added CDC::SetBrushOrgEx                         member function
 Added CGlobalLock<DEVNAMES>::GetDeviceName       member function
@@ -84,16 +83,23 @@ Added VS2019 project files to all samples and tutorials
 
 Updated the samples
  - Browser sample now demonstrates print and print preview.
- - FastGDI sample now utilises the CPrintPreview class.
- - PrintPreview sample now utilises the CPrintPreview class.
- - NotePad sample now utilises the CPrintPreview class.
- - Scribble sample now utilises the CPrintPreview class.
+ - FastGDI sample now demonstrates print and print preview.
+ - PrintPreview sample now demonstrates print and print preview.
+ - NotePad sample now demonstrates print and print preview.
+ - Scribble sample now demonstrates print and print preview.
  - Frame sample now demonstrates print and print preview.
- - INIFrame sample now demonstrates print and print preview. 
+ - INIFrame sample now demonstrates print and print preview.
+ - PrintPreview sample now utilises CPrintPreview.
+ - Notepad sample now utilises CPrintPreview.
 
 Updated the tutorials
  - The tutorials now demonstrate how to implement a print preview.
  - The project files have been moved to a separate folder.
+
+Updated the documentation
+ - Added 'Networking' to 'Using Win32++
+ - Added 'Printing' to 'Using Win32++
+ - Added 'Print Preview' to 'Using Win32++
 
 
 Version 8.6

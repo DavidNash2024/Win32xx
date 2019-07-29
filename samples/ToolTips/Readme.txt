@@ -1,6 +1,6 @@
 Tooltips Example
 ==============
-This program simply displays tooltips for controls in a modal dialog. 
+This program displays tooltips for controls in a modal dialog. 
 
 
 Features demonstrated in this example

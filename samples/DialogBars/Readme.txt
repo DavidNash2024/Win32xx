@@ -8,6 +8,6 @@ Features demonstrated in this example
 =====================================
 * Using a dialog as an application.
 * Using a slider, scrollbar and progressbar control in a dialog. 
-* Use of AttachDlgItem to attach a dialog control to a CWnd.
+* Use of AttachItem to attach a dialog control to a CWnd.
 * Use of OnMessageReflect to handle notifications in the object that 
    generated them. 

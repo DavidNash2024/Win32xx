@@ -215,7 +215,7 @@ namespace Win32xx
         typedef BOOL(WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
         typedef HMONITOR(WINAPI* LPMFW)(HWND hwnd, DWORD flags);
         LPMFW pfnMonitorFromWindow = 0;
-        HMODULE hUser32 = LoadLibrary(GetSystemDirectory() + _T("USER32.DLL"));
+        HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
         LPGMI pfnGetMonitorInfo = 0;
         if (hUser32)
         {
@@ -530,7 +530,7 @@ namespace Win32xx
         // Load the User32 DLL
         typedef HWND WINAPI GETANCESTOR(HWND, UINT);
         GETANCESTOR* pfnGetAncestor = NULL;
-        HMODULE user32 = ::LoadLibrary(GetSystemDirectory() + _T("USER32.DLL"));
+        HMODULE user32 = ::LoadLibrary(_T("USER32.DLL"));
 
         if (user32 != 0)
         {
@@ -2051,7 +2051,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-        HMODULE theme = ::LoadLibrary(GetSystemDirectory() + _T("uxtheme.dll"));
+        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
         if(theme != 0)
         {
             typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND wnd, LPCWSTR pSubAppName, LPCWSTR pSubIdList);
@@ -2569,7 +2569,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-        HMODULE hShell = ::LoadLibrary(GetSystemDirectory() + _T("Shell32.dll"));
+        HMODULE hShell = ::LoadLibrary(_T("Shell32.dll"));
         if (hShell)
         {
             typedef HRESULT(WINAPI * MYPROC)(HWND, int, HANDLE, DWORD, LPTSTR);
@@ -2693,7 +2693,7 @@ namespace Win32xx
     inline int GetComCtlVersion()
     {
         // Load the Common Controls DLL
-        HMODULE comCtl = ::LoadLibrary(/*GetSystemDirectory() +*/ _T("COMCTL32.DLL"));
+        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
         if (comCtl == 0)
             return 0;
 
@@ -2807,31 +2807,15 @@ namespace Win32xx
 
 #endif
 
-
-    // Retrieves the path of the system directory. The path ends with
-    // a backslash. An empty string is returned on WinCE.
-    inline CString GetSystemDirectory()
-    {
-        CString str;
-
-#ifndef _WIN32_WCE
-        ::GetSystemDirectory(str.GetBuffer(MAX_PATH), MAX_PATH);
-        str.ReleaseBuffer();
-        str += _T('\\');
-#endif
-        
-        return str;
-    }
-
     // Loads the common controls using InitCommonControlsEx or InitCommonControls.
     // Returns TRUE if InitCommonControlsEx is used.
     // Refer to InitCommonControlsEx in the Windows API documentation for more information.
     inline void LoadCommonControls()
     {
         // Load the Common Controls DLL
-        HMODULE comCtl = ::LoadLibrary(GetSystemDirectory() + _T("COMCTL32.DLL"));
+        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
         if (comCtl == 0)
-            comCtl = ::LoadLibrary(GetSystemDirectory() + _T("COMMCTRL.DLL"));
+            comCtl = ::LoadLibrary(_T("COMMCTRL.DLL"));
 
         if (comCtl)
         {

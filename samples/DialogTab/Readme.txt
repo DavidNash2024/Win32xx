@@ -10,8 +10,6 @@ Refer to the PropertySheet example for a demonstration of property sheets.
 Features demonstrated in this example
 =====================================
 * Using a dialog as an application.
-* Use of AttachDlgItem to attach a dialog control to a CWnd.
-* Use of OnMessageReflect to handle notifications in the object that 
-   generated them.
+* Use of AttachItem to attach a dialog control to a CWnd.
 * Using a Tab control within a dialog
 * Using dialogs within a tab control
