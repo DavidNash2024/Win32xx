@@ -774,7 +774,7 @@ namespace Win32xx
         assert(m_frame);
 
         if (m_uxTheme == 0)
-            m_uxTheme = ::LoadLibrary(GetSystemDirectory() + _T("UXTHEME.DLL"));
+            m_uxTheme = ::LoadLibrary(_T("UXTHEME.DLL"));
 
         if (m_uxTheme != 0)
         {
@@ -1260,10 +1260,9 @@ namespace Win32xx
             {
                 CRect rc = lpNMCustomDraw->nmcd.rc;
                 int state = lpNMCustomDraw->nmcd.uItemState;
-                const int baseID = 16;
                 DWORD item = static_cast<DWORD>(lpNMCustomDraw->nmcd.dwItemSpec);
 
-                if (IsMDIChildMaxed() && (item == baseID))
+                if (IsMDIChildMaxed() && (item == 0))
                 // Draw over MDI Max button
                 {
                     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
@@ -2134,7 +2133,7 @@ namespace Win32xx
     template <class T>
     inline CString CFrameT<T>::GetThemeName() const
     {
-        HMODULE theme = ::LoadLibrary(GetSystemDirectory() + _T("uxtheme.dll"));
+        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
         WCHAR themeName[31] = L"";
         if(theme != 0)
         {

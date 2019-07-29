@@ -19,5 +19,5 @@ Features demonstrated in this example
 About iPicture.
 iPicture is a COM interface, so COM should be initialized before it is used.
 iPicture manages a picture object and its properties. It can work with bitmaps,
-icons, and metafiles. The program can also load gif and jpeg files, Gif, but
+icons, and metafiles. The program can also load gif and jpeg files, but
 these will be converted to bitmaps.

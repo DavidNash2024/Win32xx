@@ -4,8 +4,8 @@ This project demonstrates the use of the CFrame class to display a frame
 window. A frame uses a separate view window which is displayed over its 
 client area.
 
-Instead of storing Frame settings in the Registry, this demo stores
-the frame settings in a Frame.INI file.
+This program doesn't store frame settings in the Registry, it stores
+the frame settings in a Frame.INI file instead.
 
 This demo is the same as the Frame demo in all other respects.
 

@@ -3,7 +3,7 @@ DirectX11 Example
 This project displays a moving DirectX picture in a simple window. The code
 in this example is based on DirectX version 11.
 
-The Visual Studio Community 2013 and 2015 development envirenments include
+The Visual Studio Community development environments include
 the DirectX11 SDK, so no additional software is required to compiler this
 code if VS Community 2013/2015 is used.
 

@@ -705,12 +705,22 @@ namespace Win32xx
         return m_pd.Flags & PD_SELECTION ? TRUE : FALSE;
     }
 
-    // Assigns the application's default printer to the setiings specified
-    // by hDevMode and hDevNames.
+    // Assigns the application's default printer settings to the values
+    // specified by hDevMode and hDevNames. CWinApp now owns the global
+    // memory and is responsible for freeing it.
     inline void CPrintDialog::SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames)
     {
-        GetApp()->m_devMode.Reassign(hDevMode);
-        GetApp()->m_devNames.Reassign(hDevNames);
+        // Reset global memory
+        if (hDevMode != GetApp()->m_devMode)
+        {
+            GetApp()->m_devMode.Free();
+            GetApp()->m_devMode.Reassign(hDevMode);
+        }
+        if (hDevNames != GetApp()->m_devNames)
+        {
+            GetApp()->m_devNames.Free();
+            GetApp()->m_devNames.Reassign(hDevNames);
+        }
     }
 
     // Set the parameters of the PRINTDLG structure to sensible values

@@ -12,9 +12,9 @@ the left and the right.
 
 Features demonstrated in this example
 =====================================
-* Use of CMDIFrame and CMDIChild classes to implement a MDI frame
+* Use of CMDIFrame and CMDIChild classes to implement a MDI frame.
 * Setting a separate menu and icon for the CMDIChild.
-* Responding to the MDI specific commands in CMDIFrame::OnCommand
+* Responding to the MDI specific commands in CMDIFrame::OnCommand.
 * Using a splitter(docker) window as a MDI child.
 * Adding dock containers to the splitter window.
 * Use of dock styles to prevent undocking.

@@ -1,12 +1,12 @@
 NetClient Sample
 ================
 This code implements a network client. It supports TCP and UDP connections,
-and support IPv4 and IPv6.
+and supports IPv4 and IPv6.
 
 This code behaves much like the NetClientAsync sample. The difference is the
-way it handles network events. This NetClientAsync sample passes the network
-events as messages to a window. This NetClient sample passes the network events
-to a separate thread instead. 
+way it handles network events. This NetClient sample passes the network events
+to a separate thread. The NetClientAsync sample passes the network
+events as messages to a window instead.
 
 To test the network, run the server application and listen on
 a specific port (TCP or UDP). Then run the client application and connect 
@@ -21,13 +21,16 @@ and ws2.lib for Windows CE. Windows 95 systems will need to install the
 "Windows Sockets 2.0 for Windows 95". It's available from:
 http:support.microsoft.com/kb/182108/EN-US/
 
+IPv6 is supported on Windows operating systems Vista and above. Limited support 
+for IPv6 is available on Windows XP, but it is turned off by default.
+
 
 Features demonstrated in this sample
 ====================================
-* Implementing a TCP and UDP client
-* Supporting IPv4 and IPv6
-* Overriding CSocket to respond to network events
-* Multithread programming
+* Implementing a TCP and UDP client.
+* Support for IPv4 and IPv6.
+* Overriding CSocket to respond to network events.
+* Multi-thread programming.
 
 
 About the CSocket class

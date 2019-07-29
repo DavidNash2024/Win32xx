@@ -11,8 +11,6 @@ Features demonstrated in this example
 * File open and file save using stream callbacks.
 * Copy and paste.
 * File drag and drop.
-* Text file printing.
-* Text file print previewing.
 * Choosing this application's printer.
 * Choosing the font.
 * Enabling and disabling word wrap

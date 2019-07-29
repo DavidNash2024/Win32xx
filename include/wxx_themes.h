@@ -113,7 +113,7 @@ namespace Win32xx
         // Test if Windows version is XP or greater
         if (GetWinVersion() >= 2501)
         {
-            HMODULE module = ::LoadLibrary(GetSystemDirectory() + _T("uxtheme.dll"));
+            HMODULE module = ::LoadLibrary(_T("uxtheme.dll"));
 
             if(module != 0)
             {
@@ -142,7 +142,7 @@ namespace Win32xx
         // Test if Windows version is XP or greater
         if (GetWinVersion() >= 2501)
         {
-            HMODULE theme = ::LoadLibrary(GetSystemDirectory() + _T("uxtheme.dll"));
+            HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
             if(theme != 0)
             {
                 // Declare pointers to functions

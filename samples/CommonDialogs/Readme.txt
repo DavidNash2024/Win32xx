@@ -44,29 +44,6 @@ Features demonstrated in this example
   where <the app_data_path> is found using the Win32++ GetAppDataPath() 
   function.  
 
-* Implementation of the AppHelp class that provides the AboutBox above and 
-  also context sensitive help in the form of automated access to a compiled 
-  HTML (.chm) file whose topics appear when the user selects the (?) help 
-  button on the toolbar and then selects a feature of interest. This guide
-  also contains a topic giving instructions on how to create or edit this 
-  .chm file using freeware tools. The guide and supporting files are found
-  in the relative path (from this readme.txt file)
-
-       .\src\help\CommonDialogs.chm. 
- 
-  The CommonDialogs.hnd file appearing in this help subdirectory is the source 
-  from which the .chm form was created using the HelpNDoc tool. The decompiled
-  .htm, .hhp, .hhc, and .hhk are also located here.
-
-  NOTE: In order for this sample program to locate the help file, a copy of
-  the CommonDialogs.chm file must be placed in the help file directory 
-  computed by the AppGlobal object, as above, which is nominally in the same 
-  directory as the serialized data archive. To assist this process, the .\Setup
-  directory contains an Install.bat file to copy the help and arcived 
-  persistent data to the appropriate destination. If, on running the program, 
-  access to topics in the guide to not appear, it may be necessary to unblock
-  the file locks on CommonDialogs.chm in the file's property sheet.
-
 * Use of the entire Win32++ common dialog classes (CFontDialog, CColorDialog,
   CFileDialog, CFindReplace, CPrintDialog, and CPageSetupDialog) for selection 
   of fonts, colors, files, text for find/replace purposes, and printer 

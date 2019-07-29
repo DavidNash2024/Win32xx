@@ -34,10 +34,9 @@ Features demonstrated in this example
 * Use of the container's optional toolbar.
 * Use of a ComboBoxEx control within a toolbar.
 * Use of CWebBrowser as a view window for a TabbedMDI.
-* Use of CWebBrowser as a view window for a DockContainer.
 * Displaying tabs at the top or bottom of the container.
 * Displaying tabs at the top or bottom of the TabbedMDI.
 * Hiding tabs for dock containers with a single tab.
 * The use of several docking styles.
 * Saving the dock layout and TabbedMDI layout in the registry.
-* Adding "Window" menu items to the frame menu, updated in runtime.
+* Adding a "Window" menu item to the frame menu, updated in runtime.

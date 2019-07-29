@@ -3,7 +3,7 @@ Dock Example
 This example demonstrates simple docking (docking without containers). A 
 collection of different "view windows" are used by the CDocker class.
 
-Dockers are capable of allowing other Dockers to dock to and undock from them.  
+Dockers are capable of allowing other Dockers to dock to and undock from them. 
 When docking, the undocked Docker is dragged over another Docker.  Various 
 visual clues such has the dock targeting (small arrow-like images), and the 
 dock hinting (where a portion of the destination window turns blue) provide a 
@@ -30,7 +30,6 @@ Features demonstrated in this example
 * Use of CDockFrame to provide a frame window.
 * Use of CDockFrame to provide docking support.
 * Use of RichEdit, ListView and TreeView windows as view windows for CDocker.
-* The use of several docking styles.
 * Saving the dock layout in the registry.
 * Use of OnMenuUpdate to manage menu item check boxes
 * Demonstrates the effects of the various dock styles

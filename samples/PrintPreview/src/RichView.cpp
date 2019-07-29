@@ -31,8 +31,8 @@ UINT CRichView::CollatePages()
     fr.chrg.cpMax = -1;
 
     // Find out real size of document in characters.
-    LONG lTextLength;   // Length of document.
-    lTextLength = GetTextLengthEx(GTL_NUMCHARS);
+    LONG textLength;   // Length of document.
+    textLength = GetTextLengthEx(GTL_NUMCHARS);
 
     // Calculate the page breaks
     LONG lastChar;  // The index of the last char which fits on the page.
@@ -41,13 +41,13 @@ UINT CRichView::CollatePages()
     {
         lastChar = FormatRange(fr, FALSE);
 
-        if (lastChar < lTextLength)
+        if (lastChar < textLength)
         {
             fr.chrg.cpMin = lastChar;
             fr.chrg.cpMax = -1;
             m_pageBreaks.push_back(lastChar);   // store the page break index in the vector
         }
-    } while (lastChar < lTextLength);
+    } while (lastChar < textLength);
 
     // Add the final bage break.
     m_pageBreaks.push_back(-1);
