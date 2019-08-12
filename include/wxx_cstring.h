@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1444,7 +1444,7 @@ namespace Win32xx
         assert(pTokens);
 
         CStringT str;
-        if(start >= 0)
+        if (start >= 0)
         {
         size_t pos1 = m_str.find_first_not_of(pTokens, start);
         size_t pos2 = m_str.find_first_of(pTokens, pos1);

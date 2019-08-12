@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -685,7 +685,7 @@ namespace Win32xx
         }
 
         // Add the menu items
-        for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
+        for (UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
         {
             CString menuString;
             CString tabText = GetAllTabs()[u].TabText;
@@ -1457,7 +1457,7 @@ namespace Win32xx
         // Display the modal dialog. The dialog is defined in the dialog template rather
         // than in the resource script (rc) file.
         CSelectDialog SelectDialog((LPCDLGTEMPLATE) dlgTemplate);
-        for(UINT u = 0; u < GetAllTabs().size(); ++u)
+        for (UINT u = 0; u < GetAllTabs().size(); ++u)
         {
             SelectDialog.AddItem(GetAllTabs()[u].TabText);
         }
@@ -2090,7 +2090,7 @@ namespace Win32xx
                 // Add Active Tab to the registry
                 CString SubKeyName = _T("Active MDI Tab");
                 int nTab = GetActiveMDITab();
-                if(ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, reinterpret_cast<LPBYTE>(&nTab), sizeof(int)))
+                if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, reinterpret_cast<LPBYTE>(&nTab), sizeof(int)))
                     throw (CUserException(_T("RegSetValueEx failed")));
 
                 RegCloseKey(hKeyMDIChild);

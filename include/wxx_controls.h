@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1715,7 +1715,7 @@ namespace Win32xx
         assert(IsWindow());
         DWORD result = static_cast<DWORD>(MonthCal_SetFirstDayOfWeek(*this, day));
 
-        if(pOldDay)
+        if (pOldDay)
             *pOldDay = LOWORD(result);
 
         return (HIWORD(result) != 0);

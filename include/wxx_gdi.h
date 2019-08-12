@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1302,7 +1302,7 @@ namespace Win32xx
     {
         BOOL success = FALSE;
 
-        if( GetApp() )
+        if ( GetApp() )
         {
             // Allocate an iterator for our HDC map
             std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
@@ -2735,7 +2735,7 @@ namespace Win32xx
 
         if (isVertical)
         {
-            for(int i=0; i < Width; ++i)
+            for (int i=0; i < Width; ++i)
             {
                 int r = r1 + (i * (r2-r1) / Width);
                 int g = g1 + (i * (g2-g1) / Width);
@@ -2747,7 +2747,7 @@ namespace Win32xx
         }
         else
         {
-            for(int i=0; i < Height; ++i)
+            for (int i=0; i < Height; ++i)
             {
                 int r = r1 + (i * (r2-r1) / Height);
                 int g = g1 + (i * (g2-g1) / Height);
@@ -2778,7 +2778,7 @@ namespace Win32xx
     {
         BOOL success = FALSE;
 
-        if( GetApp() )
+        if ( GetApp() )
         {
             // Allocate an iterator for our Data map
             std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
@@ -2832,8 +2832,7 @@ namespace Win32xx
     {
         assert(m_pData);
         HBITMAP oldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
-        if (oldBitmap == 0)     // SelectObject will fail if bitmap is invalid.
-            throw CResourceException(g_msgGdiSelObject);
+        assert(oldBitmap != 0);     // SelectObject will fail if bitmap is invalid.
 
         return oldBitmap;
     }
@@ -2844,8 +2843,7 @@ namespace Win32xx
     {
         assert(m_pData);
         HBRUSH oldBrush = reinterpret_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
-        if (oldBrush == 0)      // SelectObject will fail if brush is invalid.
-            throw CResourceException(g_msgGdiSelObject);
+        assert(oldBrush != 0);
 
         return oldBrush;
     }
@@ -2856,8 +2854,7 @@ namespace Win32xx
     {
         assert(m_pData);
         HFONT oldFont = reinterpret_cast<HFONT>(::SelectObject(m_pData->dc, font));
-        if (oldFont == 0)
-            throw CResourceException(g_msgGdiSelObject);
+        assert(oldFont != 0);
 
         return oldFont;
     }
@@ -2868,8 +2865,7 @@ namespace Win32xx
     {
         assert(m_pData);
         HPEN oldPen = reinterpret_cast<HPEN>(::SelectObject(m_pData->dc, pen));
-        if (oldPen == 0)
-            throw CResourceException(g_msgGdiSelObject);
+        assert(oldPen != 0);
 
         return oldPen;
     }

@@ -128,17 +128,13 @@
 #define IDM_FONT_CHOICE                 120         
 #define IDM_COLOR_CHOICE                121
 
-#define IDC_ABOUT_MSG                   130
-
-  // resource IDs of menu or toolbar icons, bitmaps, or other images
-#define IDI_COLOR_CHOICE                140         
-#define IDI_FONT_CHOICE                 141         
+#define IDC_ABOUT_MSG                   130     
 
   // resource IDs for client area controls (IDOK has its own, so not given here)
-#define IDC_RICHEDITBOX                 150
-#define IDM_RICHEDWRAP                  151
+#define IDC_RICHEDITBOX                 140
+#define IDM_RICHEDWRAP                  141
 
-#define IDB_MENUICONS                   160
+#define IDB_MENUICONS                   150
 
 
   // rich edit notification to CMainFrame

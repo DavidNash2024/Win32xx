@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -442,7 +442,7 @@ namespace Win32xx
     inline bool CSocket::Create( int family, int type, int protocol /*= IPPROTO_IP*/)
     {
         m_socket = socket(family, type, protocol);
-        if(m_socket == INVALID_SOCKET)
+        if (m_socket == INVALID_SOCKET)
         {
             TRACE("Failed to create socket\n");
             return FALSE;
@@ -487,7 +487,7 @@ namespace Win32xx
             events |= FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 
         // Associate the network events with the client socket.
-        if( SOCKET_ERROR == WSAEventSelect(clientSocket, allEvents[0], events))
+        if ( SOCKET_ERROR == WSAEventSelect(clientSocket, allEvents[0], events))
         {
             TRACE("Error in Event Select\n");
             ::WSACloseEvent(allEvents[0]);

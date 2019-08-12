@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -763,7 +763,7 @@ namespace Win32xx
         GetAXWindow().Activate(TRUE);
 
         IUnknown* pUnk = GetAXWindow().GetUnknown();
-        if(pUnk)
+        if (pUnk)
         {
             // Store the pointer to the WebBrowser control
             HRESULT result = pUnk->QueryInterface(IID_IWebBrowser2, reinterpret_cast<void**>(&m_pIWebBrowser2));
@@ -899,7 +899,7 @@ namespace Win32xx
     {
         assert(pidl);
         UINT cbPidl = sizeof(pidl->mkid.cb);
-        while(pidl && pidl->mkid.cb)
+        while (pidl && pidl->mkid.cb)
         {
             cbPidl += pidl->mkid.cb;
 

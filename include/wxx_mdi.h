@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -323,7 +323,7 @@ namespace Win32xx
     {
         CMenu menu = T::GetFrameMenu();
 
-        if(GetActiveMDIChild())
+        if (GetActiveMDIChild())
             if (GetActiveMDIChild()->GetChildMenu())
                 menu = GetActiveMDIChild()->GetChildMenu();
 
@@ -828,7 +828,7 @@ namespace Win32xx
         int y = CW_USEDEFAULT;
         int cx = CW_USEDEFAULT;
         int cy = CW_USEDEFAULT;
-        if(cs.cx && cs.cy)
+        if (cs.cx && cs.cy)
         {
             x = cs.x;
             y = cs.y;

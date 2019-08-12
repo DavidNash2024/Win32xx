@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -132,7 +132,7 @@ namespace Win32xx
         UINT GetDefaultItem(UINT flags, BOOL byPosition = FALSE) const;
         DWORD GetMenuContextHelpId() const;
 
-#if(WINVER >= 0x0500)   // Minimum OS required is Win2000
+#if (WINVER >= 0x0500)   // Minimum OS required is Win2000
         BOOL GetMenuInfo(MENUINFO& mi) const;
         BOOL SetMenuInfo(const MENUINFO& mi) const;
 #endif
@@ -495,7 +495,7 @@ namespace Win32xx
 
 
 // minimum OS required : Win2000
-#if(WINVER >= 0x0500)
+#if (WINVER >= 0x0500)
 
     // Retrieves the menu information.
     // Refer to GetMenuInfo in the Windows API documentation for more information.

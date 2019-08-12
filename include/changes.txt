@@ -1,4 +1,4 @@
-Version 8.6.1
+Version 8.7.0
 =============
 
 This version adds print preview support to the framework, and support for
@@ -76,7 +76,6 @@ Added CScrollView::GetLineScrollSize             member function
 Added CScrollView::GetPageScrollSize             member function
 Added CWebBrowser::GetDocument                   member function
 
-Modified CDC::SelectObject.     Now throws a CResourceException on failure.
 Modified ::GetApp               Now returns a pointer to CWinApp.
 
 Added VS2019 project files to all samples and tutorials

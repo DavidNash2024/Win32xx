@@ -620,7 +620,7 @@ SetupToolBar()                                                          /*
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_FILE_PRINT );
     AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_HELP_ABOUT, TRUE, NULL, 8);
+    AddToolBarButton( IDM_HELP_ABOUT );
 }
 
 /*============================================================================*/
