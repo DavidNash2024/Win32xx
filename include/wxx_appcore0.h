@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -192,7 +192,7 @@ using namespace Win32xx;
 #define MIN(a,b)        (((a) < (b)) ? (a) : (b))
 
 // Version macro
-#define _WIN32XX_VER 0x0860     // Win32++ version 8.6.0
+#define _WIN32XX_VER 0x0870     // Win32++ version 8.7.0
 
 // Define the TRACE Macro
 // In debug mode, TRACE send text to the debug/output pane, or an external debugger
@@ -270,6 +270,22 @@ namespace Win32xx
     LPCTSTR const g_msgGdiBeginPaint = _T("BeginPaint failed");
 
     LPCTSTR const g_msgPrintFound = _T("No printer available");
+
+    // DDX anomaly prompting messages
+    LPCTSTR const g_msgDDX_Byte = _T("Please enter an integer between 0 and 255.");
+    LPCTSTR const g_msgDDX_Int = _T("Please enter an integer.");
+    LPCTSTR const g_msgDDX_Long = _T("Please enter a long integer.");
+    LPCTSTR const g_msgDDX_Short = _T("Please enter a short integer.");
+    LPCTSTR const g_msgDDX_Real = _T("Please enter a number.");
+    LPCTSTR const g_msgDDX_UINT = _T("Please enter a positive integer.");
+    LPCTSTR const g_msgDDX_ULONG = _T("Please enter a positive long integer.");
+
+    // DDV formats and prompts
+    LPCTSTR const g_msgDDV_IntRange = _T("Please enter an integer in (%ld, %ld).");
+    LPCTSTR const g_msgDDV_UINTRange = _T("Please enter an integer in (%lu, %lu).");
+    LPCTSTR const g_msgDDV_RealRange = _T("Please enter a number in (%.*g, %.*g).");
+    LPCTSTR const g_msgDDV_StringSize = _T("%s\n is too long.\nPlease enter no ")\
+        _T("more than %ld characters.");
 
 
     ////////////////////////////////////////////////

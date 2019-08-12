@@ -5,6 +5,7 @@
 #include "mainfrm.h"
 #include "resource.h"
 
+const CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");   // rct
 
 // Definitions for the CMainFrame class
 CMainFrame::CMainFrame()
@@ -95,7 +96,10 @@ void CMainFrame::OnInitialUpdate()
 // Create the File Open dialog to choose the file to load.
 void CMainFrame::OnFileOpen()
 {
-    CFileDialog fileDlg(TRUE);
+    CString ext =  ".cpp";                                             // rct
+    CFileDialog fileDlg(TRUE, ext, 0,  OFN_LONGNAMES |                  // rct
+	    OFN_PATHMUSTEXIST  | OFN_HIDEREADONLY | OFN_SHOWHELP |      // rct
+            OFN_EXPLORER | OFN_ENABLESIZING, filter);                   // rct
 
     // Bring up the file open dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)

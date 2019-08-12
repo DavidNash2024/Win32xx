@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -432,7 +432,8 @@ namespace Win32xx
     {
         CThreadLock lock(GetApp()->m_printLock);
         CDC dc;
-        GetApp()->UpdateDefaultPrinter();
+        if (GetApp()->m_devNames.Get() == 0)
+            GetApp()->UpdateDefaultPrinter();
 
         if ((GetApp()->m_devNames.Get() != 0) && (GetApp()->m_devMode.Get() != 0))
         {
@@ -603,7 +604,8 @@ namespace Win32xx
     inline CString CPrintDialog::GetDeviceName() const
     {
         CThreadLock lock(GetApp()->m_printLock);
-        GetApp()->UpdateDefaultPrinter();
+        if (GetApp()->m_devNames.Get() == 0)
+            GetApp()->UpdateDefaultPrinter();
 
         CString str;
         if (GetApp()->m_devNames.Get() != 0)
@@ -621,7 +623,8 @@ namespace Win32xx
     inline CDevMode CPrintDialog::GetDevMode() const
     {
         CThreadLock lock(GetApp()->m_printLock);
-        GetApp()->UpdateDefaultPrinter();
+        if (GetApp()->m_devNames.Get() == 0)
+            GetApp()->UpdateDefaultPrinter();
         return CDevMode(GetApp()->m_devMode);
     }
 
@@ -634,7 +637,8 @@ namespace Win32xx
     inline CDevNames CPrintDialog::GetDevNames() const
     {
         CThreadLock lock(GetApp()->m_printLock);
-        GetApp()->UpdateDefaultPrinter();
+        if (GetApp()->m_devNames.Get() == 0)
+            GetApp()->UpdateDefaultPrinter();
         return CDevNames(GetApp()->m_devNames);
     }
 
@@ -642,7 +646,8 @@ namespace Win32xx
     inline CString CPrintDialog::GetDriverName() const
     {
         CThreadLock lock(GetApp()->m_printLock);
-        GetApp()->UpdateDefaultPrinter();
+        if (GetApp()->m_devNames.Get() == 0)
+            GetApp()->UpdateDefaultPrinter();
         CString str;
         if (GetApp()->m_devNames.Get() != 0)
             str = GetDevNames().GetDriverName();
@@ -660,7 +665,8 @@ namespace Win32xx
     inline CString CPrintDialog::GetPortName() const
     {
         CThreadLock lock(GetApp()->m_printLock);
-        GetApp()->UpdateDefaultPrinter();
+        if (GetApp()->m_devNames.Get() == 0)
+            GetApp()->UpdateDefaultPrinter();
         CString str;
         if (GetApp()->m_devNames.Get() != 0)
             str = GetDevNames().GetPortName();

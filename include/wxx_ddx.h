@@ -1,5 +1,5 @@
-// Win32++   Version 8.6.1
-// Release Date: TBA
+// Win32++   Version 8.7.0
+// Release Date: 12th August 2019
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -166,19 +166,6 @@ namespace Win32xx
         BOOL  m_isEditLastControl;      // most recent control is an edit box
         BOOL  m_retrieveAndValidate;    // TRUE means retrieve and validate data
         HWND  m_parent;                 // parent window
-
-        // Message strings. They are assigned in the constructor.
-        LPCTSTR m_msgDDX_Byte;
-        LPCTSTR m_msgDDX_Int;
-        LPCTSTR m_msgDDX_Long;
-        LPCTSTR m_msgDDX_Short;
-        LPCTSTR m_msgDDX_Real;
-        LPCTSTR m_msgDDX_UINT;
-        LPCTSTR m_msgDDX_ULONG;
-        LPCTSTR m_msgDDV_IntRange;
-        LPCTSTR m_msgDDV_UINTRange;
-        LPCTSTR m_msgDDV_RealRange;
-        LPCTSTR m_msgDDV_StringSize;
     };
 
 
@@ -230,22 +217,6 @@ namespace Win32xx
         m_isEditLastControl = FALSE;
         m_retrieveAndValidate = FALSE;
         m_parent = 0;
-
-        // DDX anomaly prompting messages
-        m_msgDDX_Byte = _T("Please enter an integer between 0 and 255.");
-        m_msgDDX_Int = _T("Please enter an integer.");
-        m_msgDDX_Long = _T("Please enter a long integer.");
-        m_msgDDX_Short = _T("Please enter a short integer.");
-        m_msgDDX_Real = _T("Please enter a number.");
-        m_msgDDX_UINT = _T("Please enter a positive integer.");
-        m_msgDDX_ULONG = _T("Please enter a positive long integer.");
-
-        // DDV formats and prompts
-        m_msgDDV_IntRange = _T("Please enter an integer in (%ld, %ld).");
-        m_msgDDV_UINTRange = _T("Please enter an integer in (%lu, %lu).");
-        m_msgDDV_RealRange = _T("Please enter a number in (%.*g, %.*g).");
-        m_msgDDV_StringSize = _T("%s\n is too long.\nPlease enter no ")\
-                                _T("more than %ld characters.");
     }
 
 
@@ -270,7 +241,7 @@ namespace Win32xx
         if (m_retrieveAndValidate && value.GetLength() > count)
         {
             CString message;
-            message.Format(m_msgDDV_StringSize, value.c_str(), count);
+            message.Format(g_msgDDV_StringSize, value.c_str(), count);
 
             throw CUserException(message);
         }
@@ -347,7 +318,7 @@ namespace Win32xx
         // when reading a number outside the range, put out an error
         // message with the range tuple
         CString message;
-        message.Format(m_msgDDV_RealRange, precision, minVal, precision, maxVal);
+        message.Format(g_msgDDV_RealRange, precision, minVal, precision, maxVal);
 
         throw CUserException(message);
     }
@@ -389,7 +360,7 @@ namespace Win32xx
         // when reading a number outside the range, put out an error
         // message with the range tuple
         CString message;
-        message.Format(m_msgDDV_IntRange, minVal, maxVal);
+        message.Format(g_msgDDV_IntRange, minVal, maxVal);
 
         throw CUserException(message);
     }
@@ -496,7 +467,7 @@ namespace Win32xx
         // when reading a number outside the range, put out an error
         // message with the range tuple
         CString message;
-        message.Format(m_msgDDV_UINTRange, minVal, maxVal);
+        message.Format(g_msgDDV_UINTRange, minVal, maxVal);
 
         throw CUserException(message);
     }
@@ -926,7 +897,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(m_msgDDX_Byte);
+                throw CUserException(g_msgDDX_Byte);
             }
         }
         else
@@ -952,7 +923,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(m_msgDDX_Short);
+                throw CUserException(g_msgDDX_Short);
             }
         }
         else
@@ -978,7 +949,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(m_msgDDX_Int);
+                throw CUserException(g_msgDDX_Int);
             }
         }
         else
@@ -1004,7 +975,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(m_msgDDX_UINT);
+                throw CUserException(g_msgDDX_UINT);
             }
         }
         else
@@ -1030,7 +1001,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(m_msgDDX_Long);
+                throw CUserException(g_msgDDX_Long);
             }
         }
         else
@@ -1056,7 +1027,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(m_msgDDX_ULONG);
+                throw CUserException(g_msgDDX_ULONG);
             }
         }
         else
@@ -1082,7 +1053,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(m_msgDDX_Real);
+                throw CUserException(g_msgDDX_Real);
             }
         }
         else
@@ -1108,7 +1079,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(m_msgDDX_Real);
+                throw CUserException(g_msgDDX_Real);
             }
         }
         else

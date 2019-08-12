@@ -129,8 +129,6 @@ IDW_MAIN MENU
     the application icon remains consistent on all systems.                  */
 
 IDW_MAIN        ICON                            "../src/res/smile.ico"
-IDI_COLOR_CHOICE        ICON                    "../src/res/crayonS.ico"
-IDI_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
 
 /*==============================================================================
 
