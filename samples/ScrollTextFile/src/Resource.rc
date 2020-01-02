@@ -24,110 +24,142 @@
 #include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
-
-/*==============================================================================
-
-
-    Generated from the TEXTINCLUDE 2 resource.                              */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
 
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 #undef APSTUDIO_READONLY_SYMBOLS
 
-/*==============================================================================
-
-    English (United States) resources                                       */
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
-/*==============================================================================
-
-    RT_MANIFEST                                                             */
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
 
 1    RT_MANIFEST "../src/res/Win32++.manifest"
 
-/*==============================================================================
-
-    Menu                                                                    */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
 
 IDW_MAIN MENU
-{
+BEGIN
     POPUP "&File"
-    {
+    BEGIN
         MENUITEM "&Open File\tCtrl+O",  IDM_FILE_OPEN
         MENUITEM "Close File\tCtrl+W",  IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "Recent Files",        IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tCtrl+Q",       IDM_FILE_EXIT
-    }
+    END
     POPUP "&View"
-    {
+    BEGIN
         MENUITEM "&Tool Bar",           IDW_VIEW_TOOLBAR,   CHECKED
         MENUITEM "&Status Bar",         IDW_VIEW_STATUSBAR, CHECKED
         MENUITEM SEPARATOR
         MENUITEM "Font",                IDM_FONT_CHOICE
         MENUITEM "Color",               IDM_COLOR_CHOICE
-    }
-
+    END
     POPUP "&Help"
-    {
+    BEGIN
         MENUITEM "&About",              IDW_ABOUT
-    }
-}
+    END
+END
 
 
-/*==============================================================================
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
 
-    Icon
-
-    The icon with the lowest ID value is placed first to ensure that
-    the application icon remains consistent on all systems.                 */
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
 
 IDW_MAIN                  ICON                  "../src/res/Win32xx.ico"
 
-/*==============================================================================
-
-    Bitmaps                                                                 */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
 
 IDW_MAIN                  BITMAP                "../src/res//toolbar16.bmp"
 IDB_TOOLBAR               BITMAP                "../src/res/toolbar24.bmp"
 
-/*==============================================================================
-
-    About Dialog: triggered by CFrame::OnHelp()                             */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
 
 IDW_ABOUT DIALOGEX 200, 200, 200, 100
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
-{
+BEGIN
     CTEXT   "ScrollWin Demo\nCompiled with MingW 4.8.1",
             IDM_CREDITS, 25, 4, 150, 95
     ICON    IDW_MAIN, 0, 4, 4, 20, 20
-}
+END
 
-/*==============================================================================
-
-    Accelerators                                                            */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
 
 IDW_MAIN ACCELERATORS
-{
+BEGIN
     "O",            IDM_FILE_OPEN,   VIRTKEY, CONTROL, NOINVERT
     "Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
     "W",            IDM_COLOR_CHOICE, VIRTKEY, CONTROL, NOINVERT
     "F",            IDM_FONT_CHOICE, VIRTKEY, CONTROL, NOINVERT
     VK_F1,          IDW_ABOUT,       VIRTKEY, SHIFT, NOINVERT
-}
+END
 
-/*==============================================================================
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
 
-    String Tables--tool tips and status labels                              */
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
 STRINGTABLE  // for the mainframe
-{
+BEGIN
     IDW_MAIN                "Scroll Text File Demo"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
@@ -136,10 +168,10 @@ STRINGTABLE  // for the mainframe
     IDW_VIEW_STATUSBAR      "Show or hide the status bar."
     IDM_COLOR_CHOICE        "Change the background color."
     IDM_FONT_CHOICE         "Change the display font."
-}
+END
 
 STRINGTABLE   // standard file menu or toolbar items
-{
+BEGIN
     IDM_FILE_OPEN           "Open Existing Document."
     IDM_FILE_CLOSE          "Close the current document."
     IDW_FILE_MRU_FILE1      "Open this document"
@@ -149,15 +181,15 @@ STRINGTABLE   // standard file menu or toolbar items
     IDW_FILE_MRU_FILE5      "Open this document"
       // add more mru IDs if needed
     IDM_FILE_EXIT           "End the Program."
-}
+END
 
 STRINGTABLE     // about box and toolbar items
-{
+BEGIN
     IDW_ABOUT               "Display information about this program."
-}
+END
 
 STRINGTABLE     // window-related items
-{
+BEGIN
     SC_CLOSE                "Close the Window."
     SC_MAXIMIZE             "Maximize the Window."
     SC_MINIMIZE             "Minimize the WIndow."
@@ -166,47 +198,19 @@ STRINGTABLE     // window-related items
     SC_PREVWINDOW           "Select Previous Window."
     SC_RESTORE              "Restore the Window."
     SC_SIZE                 "Resize the Window."
-}
-
-
-#ifdef APSTUDIO_INVOKED
-/*==============================================================================
-
-    TEXTINCLUDE                                                             */
-
-1 TEXTINCLUDE 
-{
-    "resource.h\0"
-}
-
-2 TEXTINCLUDE 
-{
-    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""windows.h""\r\n"
-    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "\0"
-}
-
-3 TEXTINCLUDE 
-{
-    "\r\n"
-    "\0"
-}
-
-/*-----------------------------------------------------------------------------*/
-#endif    // APSTUDIO_INVOKED
-
+END
 
 STRINGTABLE
-{     // app-specific program values
+BEGIN     // app-specific program values
     IDS_APP_VERSION         "Version 1.0 (2017)"
     IDS_ARCHIVE_FILE_EXT    ".arc"
     IDS_DATAPATH_SUBDIR     "win32++\\"
     IDS_DOC_DEFAULT_EXT     ".txt"
     IDS_MAX_MRU_ENTRIES     "5"
     IDS_FILE_FILTER "Text Files (*.txt; *.xml)|*.txt;*.xml| All Files (*.*)|*.*||"
-}
-/*-----------------------------------------------------------------------------*/
+END
+
 #endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
 
 

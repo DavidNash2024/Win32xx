@@ -107,6 +107,10 @@ SOURCE=..\src\MyThread.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\StdAfx.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\TestWnd.cpp
 # End Source File
 # Begin Source File
@@ -147,7 +151,7 @@ SOURCE=..\src\ThreadApp.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=..\src\StdAfx.cpp
+SOURCE=..\src\Resource.rc
 # End Source File
 # End Group
 # End Target

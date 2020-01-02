@@ -181,11 +181,15 @@
 		<Unit filename="../src/MyEdit.h" />
 		<Unit filename="../src/MyThread.cpp" />
 		<Unit filename="../src/MyThread.h" />
+		<Unit filename="../src/Resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Unit filename="../src/TestWnd.cpp" />
 		<Unit filename="../src/TestWnd.h" />
 		<Unit filename="../src/ThreadApp.cpp" />
 		<Unit filename="../src/ThreadApp.h" />
 		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.h">
 			<Option compile="1" />
 			<Option weight="0" />

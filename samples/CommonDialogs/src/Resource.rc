@@ -49,33 +49,47 @@
 
 /******************************************************************************/
 
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #include "richedit.h"
-#include "Resource.h"
 #include "ListBoxDlgRC.h"
 #include "AppGlobalRC.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
 
-/*==============================================================================
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
 
-    English (United States) resources                                         */
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
-/*==============================================================================
-
-    RT_MANIFEST                                                               */
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
 
 1    RT_MANIFEST "../src/res/Win32++.manifest"
 
-/*==============================================================================
-
-    Menu                                                                      */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
 
 IDW_MAIN MENU
-{
+BEGIN
     POPUP "&File"
-    {
+    BEGIN
         MENUITEM "&New\tCtrl+N",          IDM_FILE_NEW
         MENUITEM "&Open\tCtrl+O",         IDM_FILE_OPEN
         MENUITEM "&Save\tCtrl+S",         IDM_FILE_SAVE
@@ -89,9 +103,9 @@ IDW_MAIN MENU
         MENUITEM "Recent Files",          IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
-    }
+    END
     POPUP "&Edit"
-    {
+    BEGIN
         MENUITEM "Undo\tCtrl+Z",          IDM_EDIT_UNDO    //, GRAYED
         MENUITEM "Redo\tShift+Ctrl+Z",    IDM_EDIT_REDO    //, GRAYED
         MENUITEM SEPARATOR
@@ -103,9 +117,9 @@ IDW_MAIN MENU
         MENUITEM "Find\tCtrl+F",          IDM_EDIT_FIND    //, GRAYED
         MENUITEM "Replace\tCtrl+R",       IDM_EDIT_REPLACE //, GRAYED
         MENUITEM SEPARATOR
-    }
+    END
     POPUP "&View"
-    {
+    BEGIN
         MENUITEM "&Tool Bar",             IDW_VIEW_TOOLBAR,   CHECKED
         MENUITEM "&Status Bar",           IDW_VIEW_STATUSBAR, CHECKED
         MENUITEM SEPARATOR
@@ -113,47 +127,51 @@ IDW_MAIN MENU
         MENUITEM "&Font Face+Color",      IDM_FONT_CHOICE
         MENUITEM SEPARATOR
         MENUITEM "&Wrap Text Lines",      IDM_RICHEDWRAP, CHECKED
-    }
-
+    END
     POPUP "&Help"
-    {
+    BEGIN
         MENUITEM "&About",                IDW_ABOUT
-    }
-}
+    END
+END
 
-/*==============================================================================
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
 
-    Icon
-
-    The icon with the lowest ID value is placed first to ensure that
-    the application icon remains consistent on all systems.                  */
+// The icon with the lowest ID value is placed first to ensure that
+// the application icon remains consistent on all systems.
 
 IDW_MAIN        ICON                            "../src/res/smile.ico"
 
-/*==============================================================================
-
-    Bitmaps                                                                   */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
 
 IDW_MAIN                BITMAP DISCARDABLE      "../src/res/Toolbar.bmp"
 IDB_MENUICONS           BITMAP DISCARDABLE      "../src/res/MenuIcons.bmp"
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
 
-  // Main Window Form Dialog
+// Main Window Form Dialog
 IDD_FORM_DIALOG DIALOGEX 0, 0, 300, 200
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE
 EXSTYLE WS_EX_CLIENTEDGE
 FONT 10, "Courier New", 0, 0
-{
+BEGIN
       // controls within the client area:
     CONTROL	   "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |
                      ES_AUTOHSCROLL | WS_BORDER  | WS_TABSTOP |
                      ES_WANTRETURN  | WS_VSCROLL | WS_HSCROLL,
                      10, 10, 310, 210, WS_EX_CLIENTEDGE |
                      WS_EX_ACCEPTFILES
-}
+END
 
-  // AboutBox Dialog
+// AboutBox Dialog
 IDW_ABOUT DIALOGEX 0, 0, 200, 100
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
@@ -165,14 +183,28 @@ BEGIN
     ICON            IDW_MAIN, 0, 5, 5, 20, 20
 END
 
+// CListBoxDlg Dialog
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDD_CLISTVIEWBOX_DIALOG DIALOG 0, 0, 150, 160
+STYLE WS_POPUP | WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_VISIBLE | DS_SETFONT |
+    DS_MODALFRAME | DS_FIXEDSYS
+CAPTION "CListBoxDlg Dialog"
+FONT 10, "Microsoft Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 5, 140, 30, 15
+    PUSHBUTTON      "Cancel", IDCANCEL, 115, 140, 30, 15
+    LISTBOX         IDC_LIST_BOX, 5, 5, 140, 130, WS_GROUP | WS_TABSTOP |
+                      WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
+                      LBS_NOTIFY
+END
 
-
-/*==============================================================================
-
-    Accelerators                                                    */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
 
 IDW_MAIN ACCELERATORS
-{
+BEGIN
     "N",            IDM_FILE_NEW,    VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,   VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,   VIRTKEY, CONTROL, NOINVERT
@@ -190,13 +222,15 @@ IDW_MAIN ACCELERATORS
     "Z",            IDM_EDIT_UNDO,   VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_REDO,   VIRTKEY, SHIFT, CONTROL, NOINVERT
     VK_DELETE,      IDM_EDIT_DELETE, VIRTKEY, SHIFT, NOINVERT
-}
+END
 
-/*==============================================================================
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
 
-    String Tables--tool tips and status labels          */
 STRINGTABLE  // for the mainframe
-{
+BEGIN
     IDW_MAIN                "Common Dialogs Demo"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
@@ -207,10 +241,10 @@ STRINGTABLE  // for the mainframe
       // for menu items
     IDM_COLOR_CHOICE        "Change the background color."
     IDM_FONT_CHOICE         "Change the display font."
-}
+END
 
 STRINGTABLE   // standard file menu or toolbar items
-{
+BEGIN
     IDM_FILE_NEW            "Create a New Document."
     IDM_FILE_OPEN           "Open Existing Document."
     IDM_FILE_SAVE           "Save the Document."
@@ -225,10 +259,10 @@ STRINGTABLE   // standard file menu or toolbar items
     IDW_FILE_MRU_FILE5      "Open this document"
       // add more mru IDs if needed
     IDM_FILE_EXIT           "End the Program."
-}
+END
 
 STRINGTABLE   // standard edit menu or toolbar items
-{
+BEGIN
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard."
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard."
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document."
@@ -237,15 +271,15 @@ STRINGTABLE   // standard edit menu or toolbar items
     IDM_EDIT_FIND           "Find something..."
     IDM_EDIT_REPLACE        "Replace something..."
     IDM_EDIT_DELETE         "Erase the selected Contents."
-}
+END
 
 STRINGTABLE     // about box and toolbar items
-{
-    IDW_ABOUT           "Display information about this program."
-}
+BEGIN
+    IDW_ABOUT               "Display information about this program."
+END
 
 STRINGTABLE     // window-related items
-{
+BEGIN
     SC_CLOSE                "Close the Window."
     SC_MAXIMIZE             "Maximize the Window."
     SC_MINIMIZE             "Minimize the WIndow."
@@ -254,41 +288,23 @@ STRINGTABLE     // window-related items
     SC_PREVWINDOW           "Select Previous Window."
     SC_RESTORE              "Restore the Window."
     SC_SIZE                 "Resize the Window."
-}
+END
 
 STRINGTABLE     // client area items
-{
+BEGIN
     IDC_RICHEDITBOX         "This is a rich edit control."
-}
+END
 
-STRINGTABLE
-{     // app-specific program values
+STRINGTABLE     // app-specific program values
+BEGIN
     IDS_APP_VERSION         "Version 1.0 (2016)"
     IDS_ARCHIVE_FILE_EXT    ".arc"
     IDS_DATAPATH_SUBDIR     "win32++\\"
     IDS_DOC_DEFAULT_EXT     ".txt"
     IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
     IDS_MAX_MRU_ENTRIES     "5"
-}
+END
 
-/*==============================================================================
-
-    CListBoxDlg Dialog                                                        */
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-IDD_CLISTVIEWBOX_DIALOG DIALOG 0, 0, 150, 160
-STYLE WS_POPUP | WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_VISIBLE | DS_SETFONT |
-    DS_MODALFRAME | DS_FIXEDSYS
-CAPTION "CListBoxDlg Dialog"
-FONT 10, "Microsoft Sans Serif"
-{
-    DEFPUSHBUTTON   "OK", IDOK, 5, 140, 30, 15
-    PUSHBUTTON      "Cancel", IDCANCEL, 115, 140, 30, 15
-    LISTBOX         IDC_LIST_BOX, 5, 5, 140, 130, WS_GROUP | WS_TABSTOP |
-                      WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
-                      LBS_NOTIFY
-}
-
-/*-----------------------------------------------------------------------------*/
-#endif    // !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
 

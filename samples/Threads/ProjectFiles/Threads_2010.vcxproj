@@ -61,6 +61,7 @@
     <ClInclude Include="..\src\MainWnd.h" />
     <ClInclude Include="..\src\MyEdit.h" />
     <ClInclude Include="..\src\MyThread.h" />
+    <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\TestWnd.h" />
     <ClInclude Include="..\src\ThreadApp.h" />
@@ -76,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="..\src\TestWnd.cpp" />
     <ClCompile Include="..\src\ThreadApp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>
