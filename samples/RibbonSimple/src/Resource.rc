@@ -24,6 +24,12 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Add the automatically generated resources for the ribbon
    #include "RibbonUI.rc"
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -52,37 +52,37 @@
 #include "Resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
-
-/*==============================================================================
-
-    Generated from the TEXTINCLUDE 2 resource.                      */
-
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 #undef APSTUDIO_READONLY_SYMBOLS
 
-/*==============================================================================
-
-    English (United States) resources                               */
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
-/*==============================================================================
-
-    RT_MANIFEST                                                     */
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
 
 1           RT_MANIFEST                  "../src/res/Win32++.manifest"
 
-/*==============================================================================
-
-    Menu                                                            */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
 
 IDW_MAIN MENU
-{
+BEGIN
     POPUP "&File"
-    {
+    BEGIN
         MENUITEM "&New\tCtrl+N",          IDM_FILE_NEW
         MENUITEM "&Open\tCtrl+O",         IDM_FILE_OPEN
         MENUITEM "&Save\tCtrl+S",         IDM_FILE_SAVE
@@ -95,9 +95,9 @@ IDW_MAIN MENU
         MENUITEM "Recent Files",          IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
-    }
+    END
     POPUP "&Edit"
-    {
+    BEGIN
         MENUITEM "Undo\tCtrl+Z",          IDM_EDIT_UNDO, GRAYED
         MENUITEM "Redo\tShift+Ctrl+Z",    IDM_EDIT_REDO, GRAYED
         MENUITEM SEPARATOR
@@ -108,58 +108,61 @@ IDW_MAIN MENU
         MENUITEM SEPARATOR
         MENUITEM "Find\tCtrl+F",          IDM_EDIT_FIND, GRAYED
         MENUITEM "Replace\tCtrl+R",       IDM_EDIT_REPLACE, GRAYED
-    }
+    END
     POPUP "&View"
-    {
+    BEGIN
         MENUITEM "&Font Choice",          IDM_FONT_CHOICE
         MENUITEM "Screen &Color",         IDM_COLOR_CHOICE
         MENUITEM "&Tool Bar",             IDW_VIEW_TOOLBAR,   CHECKED
         MENUITEM "&Status Bar",           IDW_VIEW_STATUSBAR, CHECKED
         MENUITEM SEPARATOR
-    }
-
+    END
     POPUP "&Help"
-    {
+    BEGIN
         MENUITEM "Contents",              IDM_HELP_CONTENT
         MENUITEM "&About",                IDM_HELP_ABOUT
-    }
-}
+    END
+END
 
-/*==============================================================================
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
 
-    Icon
-
-    The icon with the lowest ID value is placed first to ensure that
-    the application icon remains consistent on all systems.     */
-
+// The icon with the lowest ID value is placed first to ensure that
+// the application icon remains consistent on all systems.
 IDW_MAIN                ICON                    "../src/res/Time.ico"
 IDM_COLOR_CHOICE        ICON                    "../src/res/crayonS.ico"
 IDM_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
 
-/*==============================================================================
-
-    Bitmaps                                                         */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//                                                       */
 
 IDW_MAIN                BITMAP                  "../src/res/Toolbar.bmp"
 
-/*==============================================================================
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
 
-    About Dialog: triggered by CFrame::OnHelp()             */
-
+// About Dialog: triggered by CFrame::OnHelp()
 IDW_ABOUT DIALOGEX 200, 200, 200, 100
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
-{
+BEGIN
     CTEXT   "Blank Application\nCompiled with MingW 4.8.1", IDC_CREDITS,
             25, 25, 150, 95
     ICON    IDW_MAIN, 0, 4, 4, 20, 20
-}
+END
 
-/*==============================================================================
-
-    Accelerators                                                    */
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
 
 IDW_MAIN ACCELERATORS
 {
@@ -180,11 +183,13 @@ IDW_MAIN ACCELERATORS
     "Y",            IDM_EDIT_REDO,   VIRTKEY, SHIFT, CONTROL, NOINVERT
 }
 
-/*==============================================================================
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
 
-    String Tables--tool tips and  status labels         */
 STRINGTABLE
-{
+BEGIN
     IDW_MAIN                "CTime, CArchive, and MRU Demo"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
@@ -193,10 +198,10 @@ STRINGTABLE
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
     IDM_FONT_CHOICE         "Choose the display font"
     IDM_COLOR_CHOICE        "Choose the background color"
-}
+END
 
 STRINGTABLE
-{
+BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
     IDM_FILE_SAVE           "Save the Document"
@@ -205,11 +210,10 @@ STRINGTABLE
     IDM_FILE_PRINT_PREVIEW  "Preview Print the Document"
     IDM_FILE_EXIT           "End the Program"
     IDM_FILE_CLOSE          "Close the current document."
-}
+END
 
 STRINGTABLE
-{
-//  IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
+BEGIN
     IDM_EDIT_CUT            "Remove the topmost MRU list item, if any"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
@@ -221,10 +225,10 @@ STRINGTABLE
     IDM_HELP_ABOUT          "Display information about this program"
     IDM_HELP_CONTENT        "Show help document for this program"
     IDM_HELP_CONTEXT        "Show help on topic selected"
-}
+END
 
 STRINGTABLE
-{
+BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
@@ -233,8 +237,8 @@ STRINGTABLE
     SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
-}
+END
 
-/*-----------------------------------------------------------------------------*/
 #endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
 

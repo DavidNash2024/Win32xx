@@ -1,13 +1,13 @@
 [Project]
 FileName=Threads.dev
 Name=Threads
-UnitCount=14
+UnitCount=16
 Type=0
 Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
-PrivateResource=
+PrivateResource=Threads_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
@@ -161,9 +161,9 @@ BuildCmd=
 CompileCpp=1
 
 [Unit16]
-FileName=MyDialog.cpp
+FileName=..\src\resource.h
 CompileCpp=1
-Folder=Threads
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -206,6 +206,15 @@ CompileCpp=1
 Folder=Header
 Compile=1
 Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=..\src\Resource.rc
+Folder=Resource
+Compile=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
