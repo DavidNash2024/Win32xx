@@ -19,6 +19,7 @@
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -26,6 +27,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 1                       RT_MANIFEST             "../src/res/Win32++.manifest"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -114,8 +116,11 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDW_MAIN                ICON                    "../src/res/mdi.ico"
+
 IDI_VIEW                ICON                    "../src/res/view.ico"
+
 IDI_FILEVIEW            ICON                    "../src/res/fileview.ico"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -123,14 +128,23 @@ IDI_FILEVIEW            ICON                    "../src/res/fileview.ico"
 //
 
 IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+
 IDW_SDBOTTOM            BITMAP                  "../src/res/SDbottom.bmp"
+
 IDW_SDCENTER            BITMAP                  "../src/res/SDcenter.bmp"
+
 IDW_SDLEFT              BITMAP                  "../src/res/SDleft.bmp"
+
 IDW_SDMIDDLE            BITMAP                  "../src/res/SDmiddle.bmp"
+
 IDW_SDRIGHT             BITMAP                  "../src/res/SDright.bmp"
+
 IDW_SDTOP               BITMAP                  "../src/res/SDtop.bmp"
+
 IDB_CLASSVIEW           BITMAP                  "../src/res/classview.bmp"
+
 IDB_FILEVIEW            BITMAP                  "../src/res/fileview.bmp"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -138,7 +152,9 @@ IDB_FILEVIEW            BITMAP                  "../src/res/fileview.bmp"
 //
 
 IDW_SPLITH              CURSOR                  "../src/res/SplitH.cur"
+
 IDW_SPLITV              CURSOR                  "../src/res/SplitV.cur"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -146,13 +162,12 @@ IDW_SPLITV              CURSOR                  "../src/res/SplitV.cur"
 //
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
-    WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0//, 0x1
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "MDI Frame",IDC_STATIC,60,22,64,11
+    CTEXT           "MDI Frame\nWith Docking",IDC_STATIC,60,22,64,20
     ICON            IDW_MAIN,0,4,4,20,20
 END
 
@@ -164,10 +179,10 @@ END
 
 IDW_MAIN ACCELERATORS
 BEGIN
-    "D",            IDM_FILE_NEWDOCK,        VIRTKEY, CONTROL, NOINVERT
-    "M",            IDM_FILE_NEWMDI,         VIRTKEY, CONTROL, NOINVERT
-    VK_F4,          IDW_MDI_TILE,            VIRTKEY, SHIFT, NOINVERT
-    VK_F5,          IDW_MDI_CASCADE,         VIRTKEY, SHIFT, NOINVERT
+    "D",            IDM_FILE_NEWDOCK,       VIRTKEY, CONTROL, NOINVERT
+    "M",            IDM_FILE_NEWMDI,        VIRTKEY, CONTROL, NOINVERT
+    VK_F4,          IDW_MDI_TILE,           VIRTKEY, SHIFT, NOINVERT
+    VK_F5,          IDW_MDI_CASCADE,        VIRTKEY, SHIFT, NOINVERT
 END
 
 
@@ -201,6 +216,21 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDW_ABOUT, DIALOG
+    BEGIN
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 // String Table
 //
 
@@ -209,18 +239,18 @@ BEGIN
     IDW_MAIN                "MDI Frame with docking"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_READY               "Ready"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
-    IDW_READY               "Ready"
 END
 
-STRINGTABLE 
-BEGIN   
-    IDW_MDI_CASCADE      "Cascade MDI Windows"
-    IDW_MDI_TILE         "Tile MDI Windows"
-    IDW_MDI_ARRANGE      "Arrange Icons"
-    IDW_MDI_CLOSEALL     "Close All MDI Windows"
+STRINGTABLE
+BEGIN
+    IDW_MDI_CASCADE         "Cascade MDI Windows"
+    IDW_MDI_TILE            "Tile MDI Windows"
+    IDW_MDI_ARRANGE         "Arrange Icons"
+    IDW_MDI_CLOSEALL        "Close All MDI Windows"
     IDW_FIRSTCHILD          "Activate this window"
     IDW_CHILD2              "Activate this window"
     IDW_CHILD3              "Activate this window"
@@ -243,20 +273,16 @@ BEGIN
     IDM_FILE_PRINT          "Print the Document"
     IDM_FILE_CLOSE          "Close MDI Window"
     IDM_FILE_EXIT           "End the Program"
-    IDM_EDIT_UNDO           "Undo the last action"
-    IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
 STRINGTABLE
 BEGIN
+    IDM_EDIT_UNDO           "Undo the last action"
+    IDM_EDIT_REDO           "Redo the previously undone action"
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
-END
-
-STRINGTABLE
-BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
@@ -275,11 +301,24 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-      SC_NEXTWINDOW           "Select Next Window"
-      SC_PREVWINDOW           "Select Previous Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
