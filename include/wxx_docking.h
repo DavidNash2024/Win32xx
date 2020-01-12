@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1102,16 +1102,24 @@ namespace Win32xx
                         {
                             CDockContainer* pParentC = pContainer->GetContainerParent();
                             CDocker* pDocker = m_pDocker->GetDockFromView(pContainer);
+                            int tab = pParentC->GetContainerIndex(pContainer);
 
                             assert(pDocker);
                             pDocker->Close();
 
                             if (pContainer != pParentC)
+                            {
                                 if (pParentC->GetItemCount() == 0)
                                     pParentC->GetDocker()->RecalcDockLayout();
+                                else
+                                {
+                                    pParentC->SelectPage(MAX(tab - 1, 0));
+                                    pParentC->RecalcLayout();
+                                }
+                            }
 
-                                if (m_pDocker->IsWindow())
-                                    m_pDocker->RecalcDockLayout();
+                            if (m_pDocker->IsWindow())
+                                m_pDocker->RecalcDockLayout();
                         }
                     }
                     else
@@ -2182,6 +2190,8 @@ namespace Win32xx
     // Called when the close button is pressed.
     inline void CDocker::Close()
     {
+        m_isClosing = TRUE;
+
         if (IsDocked())
         {
             // Undock the docker and hide it
@@ -2220,7 +2230,6 @@ namespace Win32xx
                     GetContainer()->RemoveContainer((*iter).pContainer);
             }
         }
-
 
         RecalcDockLayout();
     }
@@ -4160,7 +4169,8 @@ namespace Win32xx
         if ( !testRect.PtInRect(pt))
             rc.SetRect(pt.x - rc.Width()/2, pt.y - m_ncHeight/2, pt.x + rc.Width()/2, pt.y - m_ncHeight/2 + rc.Height());
 
-        ConvertToPopup(rc, showUndocked);
+        if (!m_isClosing)
+            ConvertToPopup(rc, showUndocked);
 
         m_isUndocking = FALSE;
 
