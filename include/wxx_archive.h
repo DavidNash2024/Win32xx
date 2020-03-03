@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -74,6 +74,10 @@
 #include "wxx_wincore.h"
 #include "wxx_file.h"
 
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 26812 )       // enum type is unscoped. 
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 namespace Win32xx
 {
@@ -93,7 +97,6 @@ namespace Win32xx
     //
     //  ArchiveObject ao(&Data, sizeof(Data));
     //  ar << ao; or ar >> ao;
-
 
     // The CArchive serializes data to and from a file archive.
     // CArchive uses the >> and << operator overloads to serialize
@@ -190,7 +193,6 @@ namespace Win32xx
         bool    m_isFileManaged;    // delete the CFile pointer in destructor;
     };
 
-
 } // namespace Win32xx
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -199,7 +201,7 @@ namespace Win32xx
 {
     // Constructs a CArchive object.
     // The specified file must already be open for loading or storing.
-    inline CArchive::CArchive(CFile& file, Mode mode) : m_schema(static_cast<UINT>(-1)), m_isFileManaged(false)
+    inline CArchive::CArchive(CFile& file, CArchive::Mode mode) : m_schema(static_cast<UINT>(-1)), m_isFileManaged(false)
     {
         m_pFile = &file;
 
@@ -921,5 +923,9 @@ namespace Win32xx
     }
 
 } // namespace Win32xx
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 #endif // _WIN32XX_ARCHIVE_H_

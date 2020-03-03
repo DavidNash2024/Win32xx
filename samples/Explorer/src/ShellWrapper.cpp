@@ -36,7 +36,7 @@ namespace ShellWrapper
             return FALSE;
         }
 
-        StrCopy(pszDisplayName, sfi.szDisplayName, MAX_PATH -1);
+        StrCopy(pszDisplayName, sfi.szDisplayName, MAX_PATH);
         return TRUE;
     }
 
@@ -430,24 +430,24 @@ namespace ShellWrapper
 
     LPITEMIDLIST Cpidl::GetParent()
     {
-    // Delete m_pidlParent
-        UINT size = GetSize(m_pidl);
+        // Make sure it's a valid PIDL.
+        if (NULL == m_pidl)
+            return(NULL);
+
+        // Delete m_pidlParent
         if (m_pidlParent)
             ::CoTaskMemFree(m_pidlParent);
         m_pidlParent = NULL;
 
-    // Make sure it's a valid PIDL.
-        if (NULL == m_pidl)
-            return(NULL);
-
-    // Copy m_pidl to m_pidlParent
+        // Copy m_pidl to m_pidlParent
+        UINT size = GetSize(m_pidl);
         m_pidlParent = (LPITEMIDLIST)::CoTaskMemAlloc(size);
         if (!m_pidlParent)
             throw CWinException(_T("Failed to allocate pidlParent memory"));
 
         ::CopyMemory(m_pidlParent, m_pidl, size);
 
-    // Identify the last item's position
+        // Identify the last item's position
         if (m_pidlParent->mkid.cb)
         {
             LPITEMIDLIST pidlNext = m_pidlParent;

@@ -317,18 +317,15 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
         pItem->GetParentFolder().GetAttributesOf(1, pItem->GetRelCpidl(), attr);
 
-        HANDLE hFile;
+        HANDLE hFile = INVALID_HANDLE_VALUE;
 
-        //A trick to help get a quick response from CreateFile
+        //Retrieve the file handle for an existing file
         if (attr & SFGAO_CANDELETE)
             hFile = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
                 OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
-        else
-            hFile = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
-                0, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
 
-        TCHAR text[32];
-        int nMaxLength = sizeof(text)/sizeof(text[0])-1;
+        const int maxLength = 32;
+        TCHAR text[maxLength];
 
         switch(pdi->item.iSubItem)
         {
@@ -338,18 +335,18 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 ZeroMemory(&sfi, sizeof(sfi));
                 //get the display name of the item
                 if (pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
-                    StrCopy(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax -1);
+                    StrCopy(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax);
             }
             break;
         case 1: //Size
             {
-                TCHAR szSize[32];
+                TCHAR szSize[maxLength];
 
                 //report the size files and not folders
                 if ((hFile != INVALID_HANDLE_VALUE)&&(~attr & SFGAO_FOLDER))
                 {
                     GetFileSizeText(hFile, szSize);
-                    StrCopy(pdi->item.pszText, szSize, nMaxLength -1);
+                    StrCopy(pdi->item.pszText, szSize, maxLength);
                 }
                 else
                     StrCopy(pdi->item.pszText, _T(""), 1);
@@ -360,7 +357,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 SHFILEINFO sfi;
                 ZeroMemory(&sfi, sizeof(SHFILEINFO));
                 if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
-                    StrCopy(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax -1);
+                    StrCopy(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax);
             }
             break;
         case 3: //Modified
@@ -368,7 +365,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 if (hFile != INVALID_HANDLE_VALUE)
                 {
                     GetLastWriteTime(hFile, text);
-                    StrCopy(pdi->item.pszText, text, nMaxLength -1);
+                    StrCopy(pdi->item.pszText, text, maxLength);
                 }
                 else
                     StrCopy(pdi->item.pszText, _T(""), 1);
@@ -522,8 +519,9 @@ BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR string)
     FILETIME create, access, write;
     SYSTEMTIME stLocal;
     FILETIME ftLocal;
-    TCHAR szTime[32];
-    TCHAR szDate[32];
+    const int maxChars = 32;
+    TCHAR szTime[maxChars];
+    TCHAR szDate[maxChars];
 
     // Retrieve the file times for the file.
     if (!::GetFileTime(hFile, &create, &access, &write))
@@ -534,10 +532,10 @@ BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR string)
     ::FileTimeToSystemTime(&ftLocal, &stLocal);
 
     // Build a string showing the date and time with regional settings.
-    ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &stLocal, NULL, szDate, 31);
-    ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &stLocal, NULL, szTime, 31);
+    ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &stLocal, NULL, szDate, maxChars-1);
+    ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &stLocal, NULL, szTime, maxChars-1);
 
-    StrCopy(string, szDate, 32);
+    StrCopy(string, szDate, maxChars);
     ::lstrcat(string, _T(" "));
     ::lstrcat(string, szTime);
 

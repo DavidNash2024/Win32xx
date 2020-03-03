@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -500,7 +500,17 @@ namespace Win32xx
     inline UNDONAMEID CRichEdit::GetRedoName() const
     {
         assert(IsWindow());
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
         return static_cast<UNDONAMEID>(SendMessage(EM_GETREDONAME, 0, 0));
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( pop )
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
     }
 
     // Retrieves the starting and ending character positions of the selection.

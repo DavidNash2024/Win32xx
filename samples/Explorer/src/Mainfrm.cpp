@@ -74,7 +74,7 @@ void CMainFrame::OnInitialUpdate()
     viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 
     // Uncomment the following to use a hash bar and disable of auto resizing 
-    // m_RightPane.SetDragAutoResize(FALSE);
+    // m_rightPane.SetDragAutoResize(FALSE);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
