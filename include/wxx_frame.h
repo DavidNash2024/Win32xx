@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -122,6 +122,11 @@
 #ifndef WM_MENURBUTTONUP
   #define WM_MENURBUTTONUP      0x0122
 #endif
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 
 namespace Win32xx
@@ -316,8 +321,8 @@ namespace Win32xx
 
 
     //////////////////////////////////
-    // CFrameT is the base class for all frame in Win32++
-    // The template parameter T is typically either CWnd or CDocker
+    // CFrameT is the base class for all frames in Win32++
+    // The template parameter T is either CWnd or CDocker
     template <class T>
     class CFrameT : public T
     {
@@ -3912,5 +3917,9 @@ namespace Win32xx
 
 
 } // namespace Win32xx
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( pop )
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 #endif // _WIN32XX_FRAME_H_

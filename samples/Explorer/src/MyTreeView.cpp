@@ -133,7 +133,7 @@ LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
 
         //get the display name of the item
         if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
-            StrCopy(pDI->item.pszText, sfi.szDisplayName, pDI->item.cchTextMax -1);
+            StrCopy(pDI->item.pszText, sfi.szDisplayName, pDI->item.cchTextMax);
     }
 
     //do we need to supply the unselected image?
