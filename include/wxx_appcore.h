@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -307,7 +307,7 @@ namespace Win32xx
         return LOWORD(Msg.wParam);
     }
 
-    // This functions is called by the MessageLoop. It is called when the message queue
+    // This function is called by the MessageLoop. It is called when the message queue
     // is empty. Return TRUE to continue idle processing or FALSE to end idle processing
     // until another message is queued. lCount is incremented each time OnIdle is called,
     // and reset to 0 each time a new messages is processed.
@@ -318,7 +318,7 @@ namespace Win32xx
         return FALSE;
     }
 
-    // This functions is called by the MessageLoop. It processes the
+    // This function is called by the MessageLoop. It processes the
     // keyboard accelerator keys and calls CWnd::PreTranslateMessage for
     // keyboard and mouse events.
     inline BOOL CWinThread::PreTranslateMessage(MSG& msg)
