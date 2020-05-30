@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1348,6 +1348,8 @@ namespace Win32xx
     inline int CStringT<T>::ReverseFind(const T* pText, int end /* = -1 */) const
     {
         assert(pText);
+        if (!pText) return -1;
+
         if (lstrlenT(pText) == 1)
             return ReverseFind(pText[0], end);
         else
@@ -1387,7 +1389,7 @@ namespace Win32xx
         if ( !::SysReAllocStringLen(pBstr, AtoW(m_str.c_str()), static_cast<UINT>(m_str.length())) )
             throw std::bad_alloc();
 
-        return *pBstr;
+        return pBstr? *pBstr : 0;
     }
 
     // Sets an existing BSTR object to the string.
@@ -1399,7 +1401,7 @@ namespace Win32xx
         if ( !::SysReAllocStringLen(pBstr, m_str.c_str(), static_cast<UINT>(m_str.length())) )
             throw std::bad_alloc();
 
-        return *pBstr;
+        return pBstr ? *pBstr : 0;
     }
 
     // Extracts characters from the string, starting with the first character,

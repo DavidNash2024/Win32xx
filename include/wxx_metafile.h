@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -186,7 +186,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (metaFile != m_pData->metaFile)
+        if (m_pData && metaFile != m_pData->metaFile)
         {
             // Release any existing enhanced metafile
             if (m_pData->metaFile != 0)
@@ -203,7 +203,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (InterlockedDecrement(&m_pData->count) == 0)
+        if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
             if (m_pData->metaFile != NULL)
             {
@@ -264,7 +264,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (enhMetaFile != m_pData->enhMetaFile)
+        if (m_pData && enhMetaFile != m_pData->enhMetaFile)
         {
             // Release any existing enhanced metafile
             if (m_pData->enhMetaFile != 0)
@@ -281,7 +281,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (InterlockedDecrement(&m_pData->count) == 0)
+        if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
             if (m_pData->enhMetaFile != NULL)
             {

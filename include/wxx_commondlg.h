@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -331,6 +331,7 @@ namespace Win32xx
             // The HWND wasn't in the map, so add it now
             TLSData* pTLSData = GetApp()->GetTlsData();
             assert(pTLSData);
+            if (!pTLSData) return 0;
 
             // Retrieve pointer to CWnd object from Thread Local Storage TLS
             pCommonDlg = static_cast<CCommonDialog*>(pTLSData->pWnd);
@@ -845,6 +846,8 @@ namespace Win32xx
 
         OFNOTIFY* pNotify = reinterpret_cast<OFNOTIFY*>(lparam);
         assert(pNotify);
+        if (!pNotify) return 0;
+
         switch(pNotify->hdr.code)
         {
             case CDN_INITDONE:
@@ -1178,6 +1181,8 @@ namespace Win32xx
     {
         assert(lparam != 0);
         LPFINDREPLACE pFR = reinterpret_cast<LPFINDREPLACE>(lparam);
+        if (!pFR) return NULL;
+
         CFindReplaceDialog* pDlg = reinterpret_cast<CFindReplaceDialog*>(pFR->lCustData);
         return pDlg;
     }

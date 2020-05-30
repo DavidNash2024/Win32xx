@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -321,6 +321,7 @@ namespace Win32xx
 
         LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lparam;
         assert(pNotify);
+        if (!pNotify) return 0;
 
         switch(pNotify->hdr.code)
         {
@@ -477,6 +478,7 @@ namespace Win32xx
             {
                 TLSData* pTLSData = GetApp()->GetTlsData();
                 assert(pTLSData);
+                if (!pTLSData) return 0;
 
                 // Store the CPropertyPage pointer in Thread Local Storage
                 pTLSData->pWnd = reinterpret_cast<CWnd*>(ppsp->lParam);
@@ -558,6 +560,7 @@ namespace Win32xx
     inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
     {
         assert(NULL != pPage);
+        if (!pPage) return NULL;
 
         m_allPages.push_back(PropertyPagePtr(pPage));
 
@@ -612,6 +615,7 @@ namespace Win32xx
                 // Retrieve pointer to CWnd object from Thread Local Storage
                 TLSData* pTLSData = GetApp()->GetTlsData();
                 assert(pTLSData);
+                if (!pTLSData) return;
 
                 CPropertySheet* w = static_cast<CPropertySheet*>(pTLSData->pWnd);
                 assert(w);

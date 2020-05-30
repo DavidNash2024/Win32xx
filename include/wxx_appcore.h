@@ -238,7 +238,7 @@ namespace Win32xx
         // TLSData is assigned when the first window in the thread is created.
         assert (pTLSData);
 
-        return pTLSData->mainWnd;
+        return pTLSData ? pTLSData->mainWnd : 0;
     }
 
     // Retrieves the handle of this thread.
@@ -809,19 +809,22 @@ namespace Win32xx
         assert(src != 0);
         assert(dst_size != 0);
 
-        size_t index;
-
-        // Copy each character.
-        for (index = 0; index < dst_size - 1; ++index)
+        if (dst && src && dst_size != 0)
         {
-            dst[index] = src[index];
-            if (src[index] == '\0')
-                break;
-        }
+            size_t index;
 
-        // Add null termination if required.
-        if (dst[index] != '\0')
-            dst[dst_size - 1] = '\0';
+            // Copy each character.
+            for (index = 0; index < dst_size - 1; ++index)
+            {
+                dst[index] = src[index];
+                if (src[index] == '\0')
+                    break;
+            }
+
+            // Add null termination if required.
+            if (dst[index] != '\0')
+                dst[dst_size - 1] = '\0';
+        }
     }
 
     // Copies a wide string from src to dst.
@@ -831,20 +834,22 @@ namespace Win32xx
         assert(src != 0);
         assert(dst_size != 0);
 
-        size_t index;
-
-        // Copy each character.
-        for (index = 0; index < dst_size - 1; ++index)
+        if (dst && src && dst_size != 0)
         {
-            dst[index] = src[index];
-            if (src[index] == '\0')
-                break;
+            size_t index;
+
+            // Copy each character.
+            for (index = 0; index < dst_size - 1; ++index)
+            {
+                dst[index] = src[index];
+                if (src[index] == '\0')
+                    break;
+            }
+
+            // Add null termination if required.
+            if (dst[index] != '\0')
+                dst[dst_size - 1] = '\0';
         }
-
-        // Add null termination if required.
-        if (dst[index] != '\0')
-            dst[dst_size - 1] = '\0';
-
     }
 
     // Copies a TCHAR string from src to dst.

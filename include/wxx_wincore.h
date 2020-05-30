@@ -90,11 +90,6 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( push )
-#pragma warning ( disable : 6011 )       // Deferencing NULL pointer 
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
-
 //////////////////////////////////////
 //  Include the Win32++ header files
 
@@ -1014,14 +1009,20 @@ namespace Win32xx
             TLSData* pTLSData = GetApp()->GetTlsData();
             assert(pTLSData);
 
-            // Retrieve pointer to CWnd object from Thread Local Storage TLS
-            w = pTLSData->pWnd;
-            assert(w);              // pTLSData->pCWnd is assigned in CreateEx
-            pTLSData->pWnd = NULL;
+            if (pTLSData)
+            {
+                // Retrieve pointer to CWnd object from Thread Local Storage TLS
+                w = pTLSData->pWnd;
+                assert(w);              // pTLSData->pCWnd is assigned in CreateEx
+                if (w)
+                {
+                    pTLSData->pWnd = NULL;
 
-            // Store the CWnd pointer in the HWND map
-            w->m_wnd = wnd;
-            w->AddToMap();
+                    // Store the CWnd pointer in the HWND map
+                    w->m_wnd = wnd;
+                    w->AddToMap();
+                }
+            }
         }
 
         return w->WndProc(msg, wparam, lparam);
@@ -2872,9 +2873,6 @@ namespace Win32xx
 
 }
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( pop )  // ( disable : 6011 )    Deferencing NULL pointer.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 #endif // _WIN32XX_WINCORE_H_
 

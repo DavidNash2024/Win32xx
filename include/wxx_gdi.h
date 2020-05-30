@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1199,7 +1199,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (object != m_pData->hGDIObject)
+        if (m_pData && object != m_pData->hGDIObject)
         {
             // Release any existing GDI object
             if (m_pData->hGDIObject != 0)
@@ -1231,7 +1231,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (m_pData->hGDIObject != 0)
+        if (m_pData && m_pData->hGDIObject != 0)
         {
             RemoveFromMap();
 
@@ -1244,6 +1244,8 @@ namespace Win32xx
     inline HGDIOBJ CGDIObject::Detach()
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         assert(m_pData->hGDIObject);
 
         HGDIOBJ object = m_pData->hGDIObject;
@@ -1266,7 +1268,7 @@ namespace Win32xx
     inline HGDIOBJ CGDIObject::GetHandle() const
     {
         assert(m_pData);
-        return m_pData->hGDIObject;
+        return m_pData ? m_pData->hGDIObject : 0;
     }
 
     // Retrieves information for the specified graphics object.
@@ -1274,14 +1276,14 @@ namespace Win32xx
     inline int CGDIObject::GetObject(int count, LPVOID pObject) const
     {
         assert(m_pData);
-        return ::GetObject(m_pData->hGDIObject, count, pObject);
+        return m_pData ? ::GetObject(m_pData->hGDIObject, count, pObject) : 0;
     }
 
     inline void CGDIObject::Release()
     {
         assert(m_pData);
 
-        if (InterlockedDecrement(&m_pData->count) == 0)
+        if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
             if (m_pData->hGDIObject != NULL)
             {
@@ -2567,7 +2569,7 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(wnd);
         assert(m_pData);
 
-        if (dc != m_pData->dc)
+        if (m_pData && dc != m_pData->dc)
         {
             if (m_pData->dc)
             {
@@ -2607,6 +2609,8 @@ namespace Win32xx
     inline HDC CDC::Detach()
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         assert(m_pData->dc != 0);
 
         HDC hDC = m_pData->dc;
@@ -2802,6 +2806,9 @@ namespace Win32xx
     // Refer to RestoreDC in the Windows API documentation for more information.
     inline BOOL CDC::RestoreDC(int savedDC) const
     {
+        assert(m_pData);
+        if (!m_pData) return 0;
+
         assert(m_pData->dc != 0);
         return ::RestoreDC(m_pData->dc, savedDC);
     }
@@ -2810,6 +2817,9 @@ namespace Win32xx
     // Refer to SaveDC in the Windows API documentation for more information.
     inline int CDC::SaveDC() const
     {
+        assert(m_pData);
+        if (!m_pData) return 0;
+
         assert(m_pData->dc != 0);
         return ::SaveDC(m_pData->dc);
     }
@@ -2819,6 +2829,8 @@ namespace Win32xx
     inline HGDIOBJ CDC::SelectObject(HGDIOBJ object) const
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         HGDIOBJ oldObject = ::SelectObject(m_pData->dc, object);
         if (oldObject == 0)
             throw CResourceException(g_msgGdiSelObject);
@@ -2831,6 +2843,8 @@ namespace Win32xx
     inline HBITMAP CDC::SelectObject(HBITMAP bitmap) const
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         HBITMAP oldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
         assert(oldBitmap != 0);     // SelectObject will fail if bitmap is invalid.
 
@@ -2842,6 +2856,8 @@ namespace Win32xx
     inline HBRUSH CDC::SelectObject(HBRUSH brush) const
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         HBRUSH oldBrush = reinterpret_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
         assert(oldBrush != 0);
 
@@ -2853,6 +2869,8 @@ namespace Win32xx
     inline HFONT CDC::SelectObject(HFONT font) const
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         HFONT oldFont = reinterpret_cast<HFONT>(::SelectObject(m_pData->dc, font));
         assert(oldFont != 0);
 
@@ -2864,6 +2882,8 @@ namespace Win32xx
     inline HPEN CDC::SelectObject(HPEN pen) const
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         HPEN oldPen = reinterpret_cast<HPEN>(::SelectObject(m_pData->dc, pen));
         assert(oldPen != 0);
 
@@ -2876,6 +2896,8 @@ namespace Win32xx
     inline int CDC::SelectObject(HRGN rgn) const
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         HGDIOBJ object = ::SelectObject(m_pData->dc, rgn);
         assert(object != HGDI_ERROR);
         return static_cast<int> (reinterpret_cast<INT_PTR>(object));
@@ -2908,6 +2930,9 @@ namespace Win32xx
     // Refer to CreateBitmap in the Windows API documentation for more information.
     inline void CDC::CreateBitmap(int cx, int cy, UINT planes, UINT bitsPerPixel, LPCVOID pColors)
     {
+        assert(m_pData);
+        if (!m_pData) return;
+
         assert(m_pData->dc != 0);
 
         CBitmap bitmap;
@@ -2922,6 +2947,9 @@ namespace Win32xx
     // Refer to CreateBitmapIndirect in the Windows API documentation for more information.
     inline void CDC::CreateBitmapIndirect (const BITMAP& bitmap)
     {
+        assert(m_pData);
+        if (!m_pData) return;
+
         assert(m_pData->dc != 0);
 
         CBitmap newBitmap;
@@ -2936,6 +2964,9 @@ namespace Win32xx
     inline void CDC::CreateDIBitmap(HDC dc, const BITMAPINFOHEADER& bmih, DWORD init, LPCVOID pInit,
                                         const LPBITMAPINFO pBMI,  UINT flags)
     {
+        assert(m_pData);
+        if (!m_pData) return;
+
         assert(m_pData->dc != 0);
 
         CBitmap newBitmap;
@@ -2952,6 +2983,9 @@ namespace Win32xx
     inline void CDC::CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT usage, LPVOID* pBits,
                                         HANDLE hSection, DWORD offset)
     {
+        assert(m_pData);
+        if (!m_pData) return;
+
         assert(m_pData->dc != 0);
 
         CBitmap newBitmap;
@@ -2979,6 +3013,9 @@ namespace Win32xx
     // default state, ready for reuse.
     inline void CDC::Destroy()
     {
+        assert(m_pData);
+        if (!m_pData) return;
+
         if (m_pData->dc != 0)
         {
             RemoveFromMap();

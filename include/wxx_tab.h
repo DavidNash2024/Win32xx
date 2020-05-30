@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1972,6 +1972,7 @@ namespace Win32xx
     {
         LPNMHDR pnmhdr = (LPNMHDR)lparam;
         assert(pnmhdr);
+        if (!pnmhdr) return 0;
 
         switch(pnmhdr->code)
         {
@@ -2003,7 +2004,7 @@ namespace Win32xx
 
         case UWN_TABCLOSE:
             {
-                TABNMHDR* pTabNMHDR = reinterpret_cast<TABNMHDR*>(lparam);
+                TABNMHDR* pTabNMHDR = reinterpret_cast<TABNMHDR*>(pnmhdr);
                 return !OnTabClose(pTabNMHDR->nPage);
             }
 

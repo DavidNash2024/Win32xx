@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -220,6 +220,8 @@ namespace Win32xx
     inline int CImageList::Add(HBITMAP bitmap, HBITMAP mask) const
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         assert (m_pData->images);
         return ImageList_Add(m_pData->images, bitmap, mask );
     }
@@ -229,6 +231,8 @@ namespace Win32xx
     inline int CImageList::Add(HBITMAP bitmap, COLORREF mask) const
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         assert (m_pData->images);
         return ImageList_AddMasked(m_pData->images, bitmap, mask);
     }
@@ -238,6 +242,8 @@ namespace Win32xx
     inline int CImageList::Add(HICON icon) const
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         assert (m_pData->images);
 
         // Append the icon to the image list
@@ -248,6 +254,7 @@ namespace Win32xx
     inline void CImageList::Attach(HIMAGELIST images)
     {
         assert(m_pData);
+        if (!m_pData) return;
 
         if (images != m_pData->images)
         {
@@ -282,6 +289,8 @@ namespace Win32xx
     inline BOOL CImageList::BeginDrag(int image, CPoint hotSpot) const
     {
         assert(m_pData);
+        if (!m_pData) return FALSE;
+
         assert(m_pData->images);
         return ImageList_BeginDrag(m_pData->images, image, hotSpot.x, hotSpot.y);
     }
@@ -292,6 +301,8 @@ namespace Win32xx
     inline BOOL CImageList::Copy(int Dest, int Src, UINT flags /*= ILCF_MOVE*/) const
     {
         assert(m_pData);
+        if (!m_pData) return FALSE;
+
         assert(m_pData->images);
         return ImageList_Copy(*this, Dest, *this, Src, flags);
     }
@@ -364,6 +375,8 @@ namespace Win32xx
     inline BOOL CImageList::Create(HIMAGELIST images)
     {
         assert(m_pData);
+        if (!m_pData) return FALSE;
+
         HIMAGELIST copyImages = ImageList_Duplicate(images);
 
         if (copyImages)
@@ -379,6 +392,8 @@ namespace Win32xx
     inline void CImageList::DeleteImageList()
     {
         assert(m_pData);
+        if (!m_pData) return;
+
         if (m_pData->images != 0)
         {
             ImageList_Destroy(Detach());
@@ -389,6 +404,8 @@ namespace Win32xx
     inline HIMAGELIST CImageList::Detach()
     {
         assert(m_pData);
+        if (!m_pData) return 0;
+
         HIMAGELIST images = m_pData->images;
         RemoveFromMap();
         m_pData->images = 0;
@@ -613,6 +630,8 @@ namespace Win32xx
     inline BOOL CImageList::SetDragCursorImage(int drag, int dxHotspot, int dyHotspot) const
     {
         assert(m_pData->images);
+        if (!m_pData) return FALSE;
+
         return ImageList_SetDragCursorImage(*this, drag, dxHotspot, dyHotspot);
     }
 
@@ -625,6 +644,7 @@ namespace Win32xx
     inline void CImageList::Release()
     {
         assert(m_pData);
+        if (!m_pData) return;
 
         if (InterlockedDecrement(&m_pData->count) == 0)
         {

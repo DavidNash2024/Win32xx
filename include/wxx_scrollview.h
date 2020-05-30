@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -415,6 +415,8 @@ namespace Win32xx
         // Retrieve the future size of the window
         LPWINDOWPOS pWinPos = (LPWINDOWPOS)lparam;
         assert(pWinPos);
+        if (!pWinPos) return 0;
+
         CRect rc(0, 0, pWinPos->cx, pWinPos->cy);
 
         // Possibly hide the horizontal scroll bar

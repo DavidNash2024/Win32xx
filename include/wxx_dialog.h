@@ -333,20 +333,22 @@ namespace Win32xx
                 // Restricting OnNotifyReflect to child windows avoids double handling.
                 LPNMHDR pNmhdr = reinterpret_cast<LPNMHDR>(lparam);
                 assert(pNmhdr);
-                HWND from = pNmhdr->hwndFrom;
-                CWnd* pFrom = GetApp()->GetCWndFromMap(from);
+                if (pNmhdr)
+                {
+                    HWND from = pNmhdr->hwndFrom;
+                    CWnd* pFrom = GetApp()->GetCWndFromMap(from);
 
-                if (pFrom != NULL)
-                    if (::GetParent(from) == m_wnd)
-                        result = pFrom->OnNotifyReflect(wparam, lparam);
+                    if (pFrom != NULL)
+                        if (::GetParent(from) == m_wnd)
+                            result = pFrom->OnNotifyReflect(wparam, lparam);
 
-                // Handle user notifications
-                if (!result) result = OnNotify(wparam, lparam);
+                    // Handle user notifications
+                    if (!result) result = OnNotify(wparam, lparam);
 
-                // Set the return code for notifications
-                if (IsWindow())
-                    SetWindowLongPtr(DWLP_MSGRESULT, static_cast<LONG_PTR>(result));
-
+                    // Set the return code for notifications
+                    if (IsWindow())
+                        SetWindowLongPtr(DWLP_MSGRESULT, static_cast<LONG_PTR>(result));
+                }
                 return result;
             }
 
@@ -647,14 +649,21 @@ namespace Win32xx
             TLSData* pTLSData = GetApp()->GetTlsData();
             assert(pTLSData);
 
-            // Retrieve pointer to CWnd object from Thread Local Storage TLS
-            pDialog = static_cast<CDialog*>(pTLSData->pWnd);
-            assert(pDialog);
-            pTLSData->pWnd = NULL;
+            if (pTLSData)
+            {
 
-            // Store the Window pointer into the HWND map
-            pDialog->m_wnd = wnd;
-            pDialog->AddToMap();
+                // Retrieve pointer to CWnd object from Thread Local Storage TLS
+                pDialog = static_cast<CDialog*>(pTLSData->pWnd);
+                assert(pDialog);
+                if (pDialog)
+                {
+                    pTLSData->pWnd = NULL;
+
+                    // Store the Window pointer into the HWND map
+                    pDialog->m_wnd = wnd;
+                    pDialog->AddToMap();
+                }
+            }
         }
 
         return pDialog->DialogProc(msg, wparam, lparam);
@@ -690,8 +699,8 @@ namespace Win32xx
             assert(pMsg);
 
             // only pre-translate keyboard and mouse events
-            if ((pMsg->message >= WM_KEYFIRST && pMsg->message <= WM_KEYLAST) ||
-                (pMsg->message >= WM_MOUSEFIRST && pMsg->message <= WM_MOUSELAST))
+            if (pMsg && ((pMsg->message >= WM_KEYFIRST && pMsg->message <= WM_KEYLAST) ||
+                (pMsg->message >= WM_MOUSEFIRST && pMsg->message <= WM_MOUSELAST)))
             {
                 for (HWND wnd = pMsg->hwnd; wnd != NULL; wnd = ::GetParent(wnd))
                 {
