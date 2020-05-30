@@ -290,7 +290,7 @@ void CMainFrame::RecalcLayout()
         GetReBar().Invalidate();
     }
     else if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
-        GetToolBar().SendMessage(TB_AUTOSIZE, 0, 0);
+        GetToolBar().Autosize();
 
     // Position the additional rebar at the top, left, right or bottom of the view.
     if (m_reBar.IsWindow())

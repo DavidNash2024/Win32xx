@@ -1273,16 +1273,18 @@ namespace Win32xx
                     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
                     CWnd* pActiveChild = GetMenuBar().GetActiveMDIChild();
                     assert(pActiveChild);
-                    HICON icon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0));
-                    if (NULL == icon)
-                        icon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
+                    if (pActiveChild)
+                    {
+                        HICON icon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0));
+                        if (NULL == icon)
+                            icon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
 
-                    int cx = ::GetSystemMetrics (SM_CXSMICON);
-                    int cy = ::GetSystemMetrics (SM_CYSMICON);
-                    int y = 1 + (GetMenuBar().GetWindowRect().Height() - cy)/2;
-                    int x = (rc.Width() - cx)/2;
-                    drawDC.DrawIconEx(x, y, icon, cx, cy, 0, NULL, DI_NORMAL);
-
+                        int cx = ::GetSystemMetrics(SM_CXSMICON);
+                        int cy = ::GetSystemMetrics(SM_CYSMICON);
+                        int y = 1 + (GetMenuBar().GetWindowRect().Height() - cy) / 2;
+                        int x = (rc.Width() - cx) / 2;
+                        drawDC.DrawIconEx(x, y, icon, cx, cy, 0, NULL, DI_NORMAL);
+                    }
                     return CDRF_SKIPDEFAULT;  // No further drawing
                 }
 
@@ -1319,13 +1321,7 @@ namespace Win32xx
                         drawDC.SelectObject(oldPen);
                     }
 
-                    CString str;
-                    int length = static_cast<int>(GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0));
-                    if (length > 0)
-                    {
-                        GetMenuBar().SendMessage(TB_GETBUTTONTEXT, (WPARAM)lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(length));
-                        str.ReleaseBuffer();
-                    }
+                    CString str = GetMenuBar().GetButtonText(lpNMCustomDraw->nmcd.dwItemSpec);
 
                     // Draw highlight text.
                     CFont Font = GetMenuBar().GetFont();
@@ -1381,8 +1377,7 @@ namespace Win32xx
                         DWORD item = static_cast<DWORD>(pCustomDraw->nmcd.dwItemSpec);
                         DWORD tbStyle = static_cast<DWORD>(pTB->SendMessage(TB_GETSTYLE, 0, 0));
                         int style = pTB->GetButtonStyle(item);
-
-                        int button = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM)item, 0));
+                        int button = pTB->CommandToIndex(item);
                         TBBUTTON tbb;
                         ZeroMemory(&tbb, sizeof(tbb));
                         pTB->SendMessage(TB_GETBUTTON, (WPARAM)button, (LPARAM)(&tbb));
@@ -1394,12 +1389,8 @@ namespace Win32xx
                         if (pTB->HasText()) // Does any button have text?
                         {
                             drawDC.SelectObject(pTB->GetFont());
-                            LRESULT result = pTB->SendMessage(TB_GETBUTTONTEXT, (WPARAM)item, (LPARAM)str.GetBuffer(MAX_MENU_STRING));
-                            str.ReleaseBuffer();
-                            if (result> 0)
-                            {
-                                textSize = drawDC.GetTextExtentPoint32(str, str.GetLength());
-                            }
+                            str = pTB->GetButtonText(item);
+                            textSize = drawDC.GetTextExtentPoint32(str, str.GetLength());
                         }
 
 
@@ -2108,6 +2099,8 @@ namespace Win32xx
     inline CSize CFrameT<T>::GetTBImageSize(CBitmap* pBitmap)
     {
         assert(pBitmap);
+        if (!pBitmap) return CSize(0, 0);
+
         assert(pBitmap->GetHandle());
         BITMAP data = pBitmap->GetBitmapData();
         int cy = data.bmHeight;
@@ -2448,7 +2441,7 @@ namespace Win32xx
         LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT)lparam;
         assert(pdis);
 
-        if (IsMenu(reinterpret_cast<HMENU>(pdis->hwndItem)) && (!IsRectEmpty(&pdis->rcItem)))
+        if (pdis && IsMenu(reinterpret_cast<HMENU>(pdis->hwndItem)) && (!IsRectEmpty(&pdis->rcItem)))
         {
             DrawMenuItem(pdis);
             return TRUE;
@@ -2467,6 +2460,9 @@ namespace Win32xx
         CReBar* pRebar = reinterpret_cast<CReBar*>(lparam);
         assert(dynamic_cast<CReBar*>(pRebar));
 
+        if (!pDC || !pRebar) 
+            return 0;
+
         return DrawReBarBkgnd(*pDC, *pRebar);
     }
 
@@ -2479,6 +2475,9 @@ namespace Win32xx
 
         CStatusBar* pStatusBar = reinterpret_cast<CStatusBar*>(lparam);
         assert(dynamic_cast<CStatusBar*>(pStatusBar));
+
+        if (!pDC || !pStatusBar)
+            return 0;
 
         return DrawStatusBarBkgnd(*pDC, *pStatusBar);
     }
@@ -2941,7 +2940,7 @@ namespace Win32xx
             GetReBar().Invalidate();
         }
         else if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
-            GetToolBar().SendMessage(TB_AUTOSIZE, 0, 0);
+            GetToolBar().Autosize();
 
         // Position the view window
         if (GetView().IsWindow())
@@ -3664,14 +3663,14 @@ namespace Win32xx
         if (show)
         {
             if (GetReBar().IsWindow())
-                GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), TRUE);
+                GetReBar().ShowBand(GetReBar().GetBand(GetMenuBar()), TRUE);
             else
                 T::SetMenu(m_menu);
         }
         else
         {
             if (GetReBar().IsWindow())
-                GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), FALSE);
+                GetReBar().ShowBand(GetReBar().GetBand(GetMenuBar()), FALSE);
             else
                 T::SetMenu(NULL);
         }
@@ -3716,14 +3715,14 @@ namespace Win32xx
             if (show)
             {
                 if (GetReBar().IsWindow())
-                    GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), TRUE);
+                    GetReBar().ShowBand(GetReBar().GetBand(GetToolBar()), TRUE);
                 else
                     GetToolBar().ShowWindow(SW_SHOW);
             }
             else
             {
                 if (GetReBar().IsWindow())
-                    GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), FALSE);
+                    GetReBar().ShowBand(GetReBar().GetBand(GetToolBar()), FALSE);
                 else
                     GetToolBar().ShowWindow(SW_HIDE);
             }
@@ -3749,7 +3748,7 @@ namespace Win32xx
         CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(CWnd::GetCWndPtr(hFrame));
         assert(pFrame);
 
-        if (HC_ACTION == code)
+        if (pFrame && HC_ACTION == code)
         {
             if ((wparam ==  VK_CAPITAL) || (wparam == VK_NUMLOCK) || 
                 (wparam == VK_SCROLL) || (wparam == VK_INSERT))
@@ -3760,7 +3759,7 @@ namespace Win32xx
 
         // The HHOOK parameter in CallNextHookEx should be supplied for Win95, Win98 and WinME.
         // The HHOOK parameter is ignored for Windows NT and above.
-        return ::CallNextHookEx(pFrame->m_kbdHook, code, wparam, lparam);
+        return pFrame? ::CallNextHookEx(pFrame->m_kbdHook, code, wparam, lparam) : 0;
     }
 
     // Update the MenuBar band size.

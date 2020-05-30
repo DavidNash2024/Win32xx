@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -446,6 +446,7 @@ namespace Win32xx
         {
             CWnd* pMaxMDIChild = GetActiveMDIChild();
             assert(pMaxMDIChild);
+            if (!pMaxMDIChild)  return 0;
 
             // Suppress owner drawing of the MDI child's system menu
             if (::GetSystemMenu(*pMaxMDIChild, FALSE) == reinterpret_cast<HMENU>(wparam))
@@ -810,7 +811,10 @@ namespace Win32xx
         BOOL Max = FALSE;
         CWnd* pParent = GetCWndPtr(parent);
         assert(pParent);
+        if (!pParent)  return 0;
+
         pParent->SendMessage(WM_MDIGETACTIVE, 0, (LPARAM)&Max);
+        
         Max = Max | (cs.style & WS_MAXIMIZE);
 
         // Set the Window Class Name

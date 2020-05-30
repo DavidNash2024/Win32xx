@@ -789,7 +789,7 @@ void CMainFrame::ShowArrows(BOOL isShown)
 {
     if (IsReBarSupported())
     {
-        GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(m_arrows), isShown);
+        GetReBar().ShowBand(GetReBar().GetBand(m_arrows), isShown);
 
         if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
             GetReBar().MoveBandsLeft();
@@ -800,7 +800,7 @@ void CMainFrame::ShowCards(BOOL isShown)
 {
     if (IsReBarSupported())
     {
-        GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(m_cards), isShown);
+        GetReBar().ShowBand(GetReBar().GetBand(m_cards), isShown);
 
         if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
             GetReBar().MoveBandsLeft();

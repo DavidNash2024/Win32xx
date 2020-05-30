@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -930,6 +930,7 @@ namespace Win32xx
         case WM_PSD_PAGESETUPDLG:
             {
                 assert(lparam);
+                if (lparam == 0) return 0;
                 PAGESETUPDLG psd = *((LPPAGESETUPDLG)lparam);
                 return pDlg->OnPreDrawPage(LOWORD(wparam), HIWORD(wparam), psd);
             }
@@ -942,6 +943,7 @@ namespace Win32xx
         case WM_PSD_YAFULLPAGERECT:
             {
                 assert(lparam);
+                if (lparam == 0) return 0;
                 RECT rc = *((LPRECT)lparam);
                 return pDlg->OnDrawPage(reinterpret_cast<HDC>(wparam), message, rc);
             }

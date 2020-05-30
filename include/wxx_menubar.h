@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -563,7 +563,7 @@ namespace Win32xx
             CWnd* pMDIChild = GetActiveMDIChild();
             assert(pMDIClient);
 
-            if (pMDIChild && IsMDIChildMaxed())
+            if (pMDIChild && pMDIClient && IsMDIChildMaxed())
             {
                 CPoint pt = GetCursorPos();
                 ScreenToClient(pt);
@@ -688,11 +688,14 @@ namespace Win32xx
             {
                 CWnd* pMDIChild = GetActiveMDIChild();
                 assert(pMDIChild);
-                CMenu childMenu = pMDIChild->GetSystemMenu(FALSE);
+                if (pMDIChild)
+                {
+                    CMenu childMenu = pMDIChild->GetSystemMenu(FALSE);
 
-                UINT id = childMenu.GetDefaultItem(FALSE, 0);
-                if (id)
-                    pMDIChild->PostMessage(WM_SYSCOMMAND, (WPARAM)id, 0);
+                    UINT id = childMenu.GetDefaultItem(FALSE, 0);
+                    if (id)
+                        pMDIChild->PostMessage(WM_SYSCOMMAND, (WPARAM)id, 0);
+                }
             }
 
             m_isExitAfter = TRUE;
@@ -1103,6 +1106,8 @@ namespace Win32xx
         MSG* pMsg = reinterpret_cast<MSG*>(lparam);
         TLSData* pTLSData = GetApp()->GetTlsData();
         assert(pTLSData);
+        if (!pTLSData) return 0;
+
         CMenuBar* pMenuBar = pTLSData->pMenuBar;
 
         if (pMenuBar && (MSGF_MENU == code))

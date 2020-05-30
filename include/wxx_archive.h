@@ -74,14 +74,9 @@
 #include "wxx_wincore.h"
 #include "wxx_file.h"
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped. 
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 namespace Win32xx
 {
-
     // An object used for serialization that can hold any type of data.
     // Specify a pointer to the data, and the size of the data in bytes.
     struct ArchiveObject
@@ -199,6 +194,12 @@ namespace Win32xx
 
 namespace Win32xx
 {
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 26812 )       // enum type is unscoped. 
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
     // Constructs a CArchive object.
     // The specified file must already be open for loading or storing.
     inline CArchive::CArchive(CFile& file, CArchive::Mode mode) : m_schema(static_cast<UINT>(-1)), m_isFileManaged(false)
@@ -302,9 +303,13 @@ namespace Win32xx
     {
         // read, simply and  in binary mode, the size into the lpBuf
         assert(m_pFile);
-        UINT nBytes = m_pFile->Read(pBuf, size);
-        if (nBytes != size)
-            throw CFileException(m_pFile->GetFilePath(), g_msgArReadFail);
+
+        if (m_pFile)
+        {
+            UINT nBytes = m_pFile->Read(pBuf, size);
+            if (nBytes != size)
+                throw CFileException(m_pFile->GetFilePath(), g_msgArReadFail);
+        }
     }
 
     // Records the archived data schema number.  This acts as a version number
@@ -922,10 +927,11 @@ namespace Win32xx
         Write(pString, chars*sizeof(WCHAR));
     }
 
-} // namespace Win32xx
-
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
+} // namespace Win32xx
+
 
 #endif // _WIN32XX_ARCHIVE_H_
