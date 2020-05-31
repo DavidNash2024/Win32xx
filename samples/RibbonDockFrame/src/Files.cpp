@@ -33,22 +33,22 @@ void CViewFiles::InsertItems()
 {
     // Add 4th item
     int item = AddItem(_T("ListViewApp.h"), 2);
-    SetSubItem(item, 1, _T("1 KB"));
-    SetSubItem(item, 2, _T("C Header file"));
+    SetItemText(item, 1, _T("1 KB"));
+    SetItemText(item, 2, _T("C Header file"));
 
     // add 3rd item
     item = AddItem(_T("ListViewApp.cpp"), 1);
-    SetSubItem(item, 1, _T("3 KB"));
-    SetSubItem(item, 2, _T("C++ Source file"));
+    SetItemText(item, 1, _T("3 KB"));
+    SetItemText(item, 2, _T("C++ Source file"));
 
     // add 2nd item
     item = AddItem(_T("main.cpp"), 1);
-    SetSubItem(item, 1, _T("1 KB"));
-    SetSubItem(item, 2, _T("C++ Source file"));
+    SetItemText(item, 1, _T("1 KB"));
+    SetItemText(item, 2, _T("C++ Source file"));
 
     // add 1st item
     item = AddItem(_T("ListView"), 0);
-    SetSubItem(item, 2, _T("Folder"));
+    SetItemText(item, 2, _T("Folder"));
 }
 
 void CViewFiles::OnAttach()
@@ -97,17 +97,6 @@ void CViewFiles::SetColumns()
         column.pszText = string[i];
         InsertColumn(i, column);
     }
-}
-
-BOOL CViewFiles::SetSubItem(int item, int subItem, LPCTSTR text)
-{
-    LVITEM lvi1;
-    ZeroMemory(&lvi1, sizeof(lvi1));
-    lvi1.mask = LVIF_TEXT;
-    lvi1.iItem = item;
-    lvi1.iSubItem = subItem;
-    lvi1.pszText = const_cast<LPTSTR>(text);
-    return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, (LPARAM)&lvi1));
 }
 
 LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

@@ -1321,7 +1321,8 @@ namespace Win32xx
                         drawDC.SelectObject(oldPen);
                     }
 
-                    CString str = GetMenuBar().GetButtonText(lpNMCustomDraw->nmcd.dwItemSpec);
+                    int itemID = static_cast<int>(lpNMCustomDraw->nmcd.dwItemSpec);
+                    CString str = GetMenuBar().GetButtonText(itemID);
 
                     // Draw highlight text.
                     CFont Font = GetMenuBar().GetFont();

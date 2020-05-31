@@ -17,7 +17,6 @@ public:
     virtual void OnAttach();
     virtual void OnDestroy();
     virtual void SetColumns();
-    virtual BOOL SetSubItem(int item, int subItem, LPCTSTR text);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

@@ -112,11 +112,11 @@ LRESULT CColourDialog::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
     wsprintf(Text, _T("%d\0"), nPos);
 
     if (hWnd == m_redSlider)
-        m_redEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(&Text));
+        m_redEdit.SetWindowText(Text);
     else if (hWnd == m_greenSlider)
-        m_greenEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(&Text));
+        m_greenEdit.SetWindowText(Text);
     else if (hWnd == m_blueSlider)
-        m_blueEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(&Text));
+        m_blueEdit.SetWindowText(Text);
 
     UpdatePreview();
 
@@ -140,9 +140,9 @@ BOOL CColourDialog::OnInitDialog()
     m_greenEdit.AttachDlgItem(IDC_EDIT_GREEN, *this);
     m_blueEdit.AttachDlgItem(IDC_EDIT_BLUE, *this);
 
-    m_redEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(_T("0")));
-    m_greenEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(_T("0")));
-    m_blueEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(_T("0")));
+    m_redEdit.SetWindowText(_T("0"));
+    m_greenEdit.SetWindowText(_T("0"));
+    m_blueEdit.SetWindowText(_T("0"));
 
     // Create the two image previews
     m_preview.AttachDlgItem(IDC_PREVIEW, *this);
@@ -179,13 +179,13 @@ void CColourDialog::OnTextChange(HWND editCtrl)
 
     // Update the slider to the value entered in its edit control.
     if (editCtrl == m_redEdit)
-        m_redSlider.SendMessage(TBM_SETPOS, TRUE, LPARAM(value));
+        m_redSlider.SetPos(value, TRUE);
 
     if (editCtrl == m_greenEdit)
-        m_greenSlider.SendMessage(TBM_SETPOS, TRUE, LPARAM(value));
+        m_greenSlider.SetPos(value, TRUE);
 
     if (editCtrl == m_blueEdit)
-        m_blueSlider.SendMessage(TBM_SETPOS, TRUE, LPARAM(value));
+        m_blueSlider.SetPos(value, TRUE);
 
     if (m_previewImage.GetHandle() != 0)
         UpdatePreview();

@@ -218,13 +218,13 @@ void CMyListView::DoDisplay()
         hCur = ::SetCursor(hCur);
 
         //turn redawing off in the ListView. This will speed things up as we add items
-        SendMessage(WM_SETREDRAW, FALSE, 0);
+        SetRedraw(FALSE);
 
         EnumObjects(m_csfCurFolder, m_cpidlCurFull);
         SortItems(CompareProc, 0);
 
         //turn redawing back on
-        SendMessage(WM_SETREDRAW, TRUE, 0);
+        SetRedraw(TRUE);
         ::SetCursor(hCur);
     }
 }
@@ -395,7 +395,7 @@ LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
     UNREFERENCED_PARAMETER(pNMHDR);
 
     //get the item that has the focus
-    int item = static_cast<int>(SendMessage(LVM_GETNEXTITEM, static_cast<WPARAM>(-1), MAKELPARAM (LVNI_FOCUSED, 0)));
+    int item = GetNextItem(-1, LVNI_FOCUSED);
 
     if(item != -1)
         DoDefault(item);

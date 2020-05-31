@@ -24,7 +24,7 @@ void CViewText::OnAttach()
             CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
     }
 
-    SendMessage(WM_SETFONT, (WPARAM)m_font.GetHandle(), 0);
+    SetFont(m_font);
 }
 
 CMDIChildText::CMDIChildText()
