@@ -31,7 +31,7 @@ CMainFrame::~CMainFrame()
 // Clears the contents of the richedit view.
 void CMainFrame::ClearContents()
 {
-    m_richView.SendMessage(WM_SETTEXT, 0, 0);
+    m_richView.SetWindowText(NULL);
     m_pathName.Empty();
     SetWindowTitle();
     m_richView.SetFontDefaults();

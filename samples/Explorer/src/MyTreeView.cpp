@@ -269,7 +269,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM parentItem)
     HCURSOR hCursor = ::SetCursor(LoadCursor(NULL, IDC_WAIT));
 
     //turn redawing off in the TreeView. This will speed things up as we add items
-    SendMessage(WM_SETREDRAW, FALSE, 0);
+    SetRedraw(FALSE);
 
     TreeItemData* pItem = reinterpret_cast<TreeItemData*>(itemInfo.lParam);
     CShellFolder parentFolder;
@@ -296,7 +296,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM parentItem)
     SortChildrenCB(&sortInfo, 0);
 
     //turn redawing back on in the TreeView
-    SendMessage(WM_SETREDRAW, TRUE, 0);
+    SetRedraw(TRUE);
 
     UpdateWindow();
     ::SetCursor(hCursor);

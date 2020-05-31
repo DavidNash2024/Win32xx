@@ -53,10 +53,9 @@ BOOL CMyCombo::AddItems()
         cbei.iImage         = IInf[i].image;
         cbei.iSelectedImage = IInf[i].selectedImage;
         cbei.iIndent        = IInf[i].indent;
-        LPARAM lparam = reinterpret_cast<LPARAM>(&cbei);
 
         // Add the items to the ComboBox's dropdown list
-        if(-1 == SendMessage(CBEM_INSERTITEM, 0, lparam))
+        if(InsertItem(cbei) == -1)
             return FALSE;
     }
 

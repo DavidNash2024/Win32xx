@@ -55,7 +55,7 @@ BOOL CMyCombo::AddItems()
         cbei.iIndent        = IInf[i].iIndent;
 
         // Add the items to the ComboBox's dropdown list
-        if(-1 == SendMessage(CBEM_INSERTITEM, 0, (LPARAM)&cbei))
+        if(InsertItem(cbei) == -1)
             return FALSE;
     }
 

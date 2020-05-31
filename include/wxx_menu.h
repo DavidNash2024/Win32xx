@@ -528,6 +528,8 @@ namespace Win32xx
     inline BOOL CMenu::GetMenuInfo(MENUINFO& mi) const
     {
         assert(m_pData);
+        if (!m_pData) return FALSE;
+
         assert(IsMenu(m_pData->menu));
         return ::GetMenuInfo(m_pData->menu, &mi);
     }

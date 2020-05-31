@@ -54,7 +54,6 @@ public:
     virtual void InsertItems();
     virtual void OnAttach();
     virtual void SetColumns();
-    virtual BOOL SetSubItem(int item, int subItem, LPCTSTR text);
 
 private:
     CImageList m_smallImages;

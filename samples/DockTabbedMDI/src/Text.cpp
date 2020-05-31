@@ -22,8 +22,7 @@ void CViewText::OnAttach()
     m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 
-    SendMessage(WM_SETFONT, reinterpret_cast<WPARAM>(m_font.GetHandle()), 0);
-
+    SetFont(m_font, FALSE);
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
@@ -48,32 +47,32 @@ BOOL CViewText::OnCommand(WPARAM wparam, LPARAM lparam)
 
 void CViewText::OnEditCopy()
 {
-    SendMessage(WM_COPY, 0, 0);
+    Copy();
 }
 
 void CViewText::OnEditPaste()
 {
-    SendMessage(EM_PASTESPECIAL, CF_TEXT, 0);
+    PasteSpecial(CF_TEXT);
 }
 
 void CViewText::OnEditCut()
 {
-    SendMessage(WM_CUT, 0, 0);
+    Cut();
 }
 
 void CViewText::OnEditDelete()
 {
-    SendMessage(WM_CLEAR, 0, 0);
+    Clear();
 }
 
 void CViewText::OnEditRedo()
 {
-    SendMessage(EM_REDO, 0, 0);
+    Redo();
 }
 
 void CViewText::OnEditUndo()
 {
-    SendMessage(EM_UNDO, 0, 0);
+    Undo();
 }
 
 void CViewText::PreCreate(CREATESTRUCT& cs)
