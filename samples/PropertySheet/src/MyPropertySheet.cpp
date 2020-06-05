@@ -32,7 +32,7 @@ BOOL CButtonPage::OnApply()
 { 
     TRACE ("Appy button pressed\n"); 
 
-    GetParent().SendMessage(PSM_CHANGED, (WPARAM)GetHwnd(), 0);
+    SetModified(FALSE);
     return Validate();
 }
 

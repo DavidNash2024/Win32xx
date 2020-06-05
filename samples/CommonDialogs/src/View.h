@@ -105,6 +105,8 @@ CView : public CDialog                          /*
         virtual BOOL    AddToolTip(HWND, UINT nID, const CString & s);
         virtual void    AssignToolTips();
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
+        virtual void    OnCancel() {}  // Suppress esc key closing the dialog
+        virtual void    OnClose() {}   // Suppress esc key closing the dialog
         virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
         virtual BOOL    OnInitDialog();
         virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);

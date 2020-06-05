@@ -26,9 +26,8 @@ protected:
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
 
-//private:
-public:
-    void AppendText(int id, LPCTSTR buf);
+private:
+    void AppendText(const CEdit& edit, LPCTSTR text);
     void LoadCommonControlsEx();
     void OnStartClient();
     void OnSend();

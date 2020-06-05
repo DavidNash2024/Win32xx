@@ -14,21 +14,20 @@ CTCPClientDlg::CTCPClientDlg(UINT resID) : CDialog(resID), m_pSocket(0)
 }
 
 // This function appends some text to an edit control
-void CTCPClientDlg::AppendText(int id, LPCTSTR buf)
+void CTCPClientDlg::AppendText(int id, LPCTSTR text)
 {
+    // This function appends text to an edit control
+    CWnd* pWnd = GetCWndPtr(::GetDlgItem(*this, id));
+    assert(dynamic_cast<CEdit*>(pWnd));
+    const CEdit& edit = static_cast<const CEdit&>(*pWnd);
+
     // Append Line Feed
-    LRESULT ndx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
-    if (ndx)
-    {
+    int length = edit.GetWindowTextLength();
+    if (length > 0)
+        edit.AppendText(_T("\r\n"));
 
-        SendDlgItemMessage(id, EM_SETSEL, ndx, ndx);
-        SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(_T( "\r\n")));
-    }
-
-    // Append text
-    ndx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
-    SendDlgItemMessage(id, EM_SETSEL, ndx, ndx);
-    SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(buf));
+    edit.AppendText(text);
+    TRACE(text); TRACE("\n");
 }
 
 // respond to the user defined message posted to the dialog
@@ -158,23 +157,17 @@ CSvrDialog::~CSvrDialog()
 }
 
 // This function appends some text to an edit control
-void CSvrDialog::AppendText(int id, LPCTSTR buf)
+void CSvrDialog::AppendText(const CEdit& edit, LPCTSTR text)
 {
+    // This function appends text to an edit control
+
     // Append Line Feed
-    LRESULT ndx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
-    if (ndx)
-    {
+    int length = edit.GetWindowTextLength();
+    if (length > 0)
+        edit.AppendText(_T("\r\n"));
 
-        SendDlgItemMessage(id, EM_SETSEL, ndx, ndx);
-        SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(_T("\r\n")));
-    }
-
-    // Append text
-    ndx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
-    SendDlgItemMessage(id, EM_SETSEL, ndx, ndx);
-    SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(buf));
-
-    TRACE(buf); TRACE("\n");
+    edit.AppendText(text);
+    TRACE(text); TRACE("\n");
 }
 
 // respond to the user defined message posted to the dialog
@@ -188,7 +181,7 @@ INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         if (WSAGETSELECTERROR(lparam))
         {
             // Display the error and close the socket
-            AppendText(IDC_EDIT_STATUS, _T("Socket error, closing socket.\n"));
+            AppendText(m_editStatus, _T("Socket error, closing socket.\n"));
             closesocket(static_cast<SOCKET>(wparam));
         }
         else
@@ -303,7 +296,7 @@ BOOL CSvrDialog::OnInitDialog()
     m_editIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
     m_radioIP4.SetCheck(BST_CHECKED);
     m_ip4Address.SetAddress(MAKEIPADDRESS(127, 0, 0, 1));
-    AppendText(IDC_EDIT_STATUS, _T("Server Stopped"));
+    AppendText(m_editStatus, _T("Server Stopped"));
     m_editPort.SetWindowText( _T("3000") );
     m_radioTCP.SetCheck(BST_CHECKED);
     if (!m_mainSocket.IsIPV6Supported())
@@ -339,13 +332,13 @@ BOOL CSvrDialog::OnStartServer()
 
         if (m_socketType == SOCK_STREAM)
         {
-            AppendText(IDC_EDIT_STATUS, _T("TCP Server Started"));
-            AppendText(IDC_EDIT_STATUS, _T("Waiting for client ..."));
+            AppendText(m_editStatus, _T("TCP Server Started"));
+            AppendText(m_editStatus, _T("Waiting for client ..."));
         }
         else
         {
-            AppendText(IDC_EDIT_STATUS, _T("UDP Server Started"));
-            AppendText(IDC_EDIT_STATUS, _T("Waiting for client data"));
+            AppendText(m_editStatus, _T("UDP Server Started"));
+            AppendText(m_editStatus, _T("Waiting for client data"));
         }
     }
     else
@@ -353,7 +346,7 @@ BOOL CSvrDialog::OnStartServer()
         StopServer();
 
         // Update the dialog
-        AppendText(IDC_EDIT_STATUS, _T("Server Stopped"));
+        AppendText(m_editStatus, _T("Server Stopped"));
         m_buttonStart.SetWindowText( _T("Start Server") );
         m_ip4Address.EnableWindow(TRUE);
         m_editPort.EnableWindow(TRUE);
@@ -386,7 +379,7 @@ BOOL CSvrDialog::OnSend()
                 CString sSend = m_editSend.GetWindowText();
                 if (m_mainSocket.SendTo(TtoA(sSend), (int)strlen(TtoA(sSend)), 0, (LPSOCKADDR)&m_saUDPClient, (int)sizeof(m_saUDPClient)) == SOCKET_ERROR)
                     if (WSAGetLastError() != WSAEWOULDBLOCK)
-                        AppendText(IDC_EDIT_STATUS, _T("SendTo failed"));
+                        AppendText(m_editStatus, _T("SendTo failed"));
             }
             break;
     }
@@ -423,7 +416,7 @@ BOOL CSvrDialog::OnSocketAccept()
     m_connectedClients.insert(std::make_pair(pClient, pDialog));
 
     // Update the dialog
-    AppendText(IDC_EDIT_STATUS, _T("Client Connected"));
+    AppendText(m_editStatus, _T("Client Connected"));
 
     return TRUE;
 }
@@ -433,7 +426,7 @@ BOOL CSvrDialog::OnSocketDisconnect(WPARAM wparam)
     CSocket* pClient = reinterpret_cast<CSocket*>(wparam);
 
     // Respond to a socket disconnect notification
-    AppendText(IDC_EDIT_STATUS, _T("Client disconnected"));
+    AppendText(m_editStatus, _T("Client disconnected"));
 
     // Allocate an iterator for our CSocket map
     std::map<SocketPtr, TCPClientDlgPtr>::iterator iter;
@@ -462,7 +455,7 @@ BOOL CSvrDialog::OnSocketReceive()
     // Receive data and update the UDP client socket address.
     if (m_mainSocket.ReceiveFrom(bufArray, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen) == SOCKET_ERROR)
     {
-        AppendText(IDC_EDIT_STATUS, _T("ReceiveFrom failed"));
+        AppendText(m_editStatus, _T("ReceiveFrom failed"));
         return FALSE;
     }
 
@@ -471,7 +464,7 @@ BOOL CSvrDialog::OnSocketReceive()
     m_buttonSend.EnableWindow(TRUE);
     m_editSend.EnableWindow(TRUE);
     GotoDlgCtrl(GetDlgItem(IDC_EDIT_SEND));
-    AppendText(IDC_EDIT_RECEIVE, AtoT(bufArray));
+    AppendText(m_editReceive, AtoT(bufArray));
 
     return TRUE;
 }
@@ -486,8 +479,8 @@ BOOL CSvrDialog::StartServer()
     int IPfamily = (check == BST_CHECKED)? PF_INET : PF_INET6 ;
     if (!m_mainSocket.Create(IPfamily, m_socketType))
     {
-        AppendText(IDC_EDIT_STATUS, _T("Create Socket Failed"));
-        AppendText(IDC_EDIT_STATUS, m_mainSocket.GetErrorString());
+        AppendText(m_editStatus, _T("Create Socket Failed"));
+        AppendText(m_editStatus, m_mainSocket.GetErrorString());
         return FALSE;
     }
 
@@ -506,16 +499,16 @@ BOOL CSvrDialog::StartServer()
     UINT port = GetDlgItemInt(m_editPort.GetDlgCtrlID(), FALSE);
 
     // Bind to the socket
-    AppendText(IDC_EDIT_STATUS, _T("Binding to socket"));
+    AppendText(m_editStatus, _T("Binding to socket"));
     CString str;
     str.Format( _T("Addr %s, Port %u, type %s"), strAddr.c_str(), port, (m_socketType == SOCK_STREAM)?_T("TCP"):_T("UDP") );
-    AppendText(IDC_EDIT_STATUS, str);
+    AppendText(m_editStatus, str);
 
     int RetVal = m_mainSocket.Bind( strAddr, port );
     if ( RetVal != 0 )
     {
-        AppendText(IDC_EDIT_STATUS, _T("Bind failed"));
-        AppendText(IDC_EDIT_STATUS, m_mainSocket.GetErrorString());
+        AppendText(m_editStatus, _T("Bind failed"));
+        AppendText(m_editStatus, m_mainSocket.GetErrorString());
         return FALSE;
     }
 
@@ -525,8 +518,8 @@ BOOL CSvrDialog::StartServer()
         RetVal = m_mainSocket.Listen();
         if  ( SOCKET_ERROR == RetVal )
         {
-            AppendText(IDC_EDIT_STATUS, _T("Error listening on socket"));
-            AppendText(IDC_EDIT_STATUS, m_mainSocket.GetErrorString());
+            AppendText(m_editStatus, _T("Error listening on socket"));
+            AppendText(m_editStatus, m_mainSocket.GetErrorString());
             return FALSE;
         }
     }

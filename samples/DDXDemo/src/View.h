@@ -103,6 +103,7 @@ protected:
     virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
     virtual void    DoDataExchange(CDataExchange& DX);
     virtual void    GetDocumentValues();
+    virtual void    OnCancel() {}   // Suppress esc key closing the dialog
     virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
     virtual INT_PTR OnCtlColor(HDC, HWND, UINT);
     virtual BOOL    OnInitDialog();

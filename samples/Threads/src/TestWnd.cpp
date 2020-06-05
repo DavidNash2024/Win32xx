@@ -28,16 +28,15 @@ void CTestWindow::OnClose()
     str.Format( _T("Closing test Window %d"), m_nWindow );
     MainWnd.AppendText(str);
 
-    Destroy();
+    CWnd::OnClose();
 }
 void CTestWindow::OnDestroy()
 {
-    // Terminate the thread.
-
     CMainWindow& MainWnd = GetThreadApp()->GetMainWnd();
     CString str(_T("Terminating the thread"));
     MainWnd.AppendText(str);
 
+    // Terminate the thread.
     ::PostQuitMessage(0);
 }
 

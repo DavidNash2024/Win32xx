@@ -47,7 +47,7 @@ BOOL CFormView::OnButton()
 
 void CFormView::OnCancel()
 {
-    // Discard these messages
+    // Suppress closing the dialog when the esc key is pressed.
     SetDlgItemText(IDC_STATUS, _T("Cancel Pressed."));
     TRACE("Cancel Pressed.\n");
 }
@@ -55,7 +55,7 @@ void CFormView::OnCancel()
 void CFormView::OnClose()
 {
     // Suppress handling of WM_CLOSE for the dialog.
-    // An edit control will send WM_CLOSE to the dialog if the Esc button is pressed.
+    // A rich edit control will send WM_CLOSE to the dialog if the Esc button is pressed.
 }
 
 BOOL CFormView::OnCommand(WPARAM wparam, LPARAM lparam)
@@ -146,6 +146,7 @@ BOOL CFormView::OnInitDialog()
 
 void CFormView::OnOK()
 {
+	// Suppress closing the dialog when the return key is pressed.
     SetDlgItemText(IDC_STATUS, _T("OK Button Pressed."));
     TRACE("OK Button Pressed.\n");
 }

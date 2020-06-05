@@ -25,18 +25,12 @@ void CMainWindow::AppendText(LPCTSTR text)
     // This function appends text to an edit control
 
     // Append Line Feed
-    LRESULT ndx = m_editWnd.SendMessage(WM_GETTEXTLENGTH, 0, 0);
-    if (ndx)
-    {
-        m_editWnd.SendMessage(EM_SETSEL, ndx, ndx);
-        m_editWnd.SendMessage(EM_REPLACESEL, 0, (LPARAM) (_T("\r\n")));
-    }
-
+    int length = m_editWnd.GetWindowTextLength();
+    if (length > 0)
+        m_editWnd.AppendText(_T("\r\n"));
 
     // Append text
-    ndx = m_editWnd.SendMessage(WM_GETTEXTLENGTH, 0, 0);
-    m_editWnd.SendMessage(EM_SETSEL, ndx, ndx);
-    m_editWnd.SendMessage(EM_REPLACESEL, 0, (LPARAM)text);
+    m_editWnd.AppendText(text);
 
     // Also send output to the debugger for display
     TRACE(text);
@@ -105,7 +99,7 @@ void CMainWindow::OnClose()
     std::vector<MyThreadPtr>::iterator iter;
     for (iter = m_vMyThread.begin(); iter < m_vMyThread.end(); ++iter)
     {
-		SendMessage( (*iter)->GetTestWnd()->GetHwnd(), WM_CLOSE, 0, 0 );
+		SendMessage( (*iter)->GetTestWnd()->GetHwnd(), WM_SYSCOMMAND, SC_CLOSE, 0 );
     }
 
     Destroy();

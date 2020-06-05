@@ -135,6 +135,7 @@
 					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-static" />
 					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
@@ -157,6 +158,7 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static" />
 					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ws2_32" />
@@ -176,10 +178,6 @@
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Extensions>
-			<code_completion />
-			<debugger />
-			<envvars />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
