@@ -82,8 +82,8 @@ namespace Win32xx
         int   GetCommandID(int index) const;
         CImageList GetDisabledImageList();
         DWORD GetExtendedStyle() const;
-        int   GetHotItem() const;
         CImageList GetHotImageList();
+        int   GetHotItem() const;		
         CImageList GetImageList();
         CRect GetItemRect(int index) const;
         CSize GetMaxSize() const;
@@ -106,8 +106,8 @@ namespace Win32xx
         BOOL  MoveButton(UINT oldPos, UINT newPos) const;
         BOOL  PressButton(int buttonID, BOOL press) const;
         void  SaveRestore(BOOL save, TBSAVEPARAMS* pSaveInfo) const;
+        BOOL  SetBitmapSize(int cx, int cy) const;		
         void  SetButtonInfo(int buttonID, int buttonNewID, int image, BYTE style = 0, BYTE state = 0) const;
-        BOOL  SetBitmapSize(int cx, int cy) const;
         BOOL  SetButtonSize(int cx, int cy) const;
         BOOL  SetButtonState(int buttonID, UINT state) const;
         BOOL  SetButtonStyle(int buttonID, BYTE style) const;
@@ -729,7 +729,6 @@ namespace Win32xx
     // Called when the toolbar is resized.
     inline LRESULT CToolBar::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-
         //  Used by ReBar controls to adjust ToolBar window size
         if ( GetParent().SendMessage(UWM_TBWINPOSCHANGING, (WPARAM)GetHwnd(), lparam) )
         {
@@ -744,7 +743,6 @@ namespace Win32xx
     // Sets the CREATESTRUCT parameters prior to window creation
     inline void CToolBar::PreCreate(CREATESTRUCT& cs)
     {
-
         cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
     }
 
@@ -793,9 +791,9 @@ namespace Win32xx
     }
 
     // Saves or restores the toolbar state in the registry. Parameter values:
-    //   save   If this parameter is TRUE, the information is saved, otherwise it is restored.
-    //   pSaveInfo  Pointer to a TBSAVEPARAMS structure that specifies the registry key, subkey,
-    //          and value name for the toolbar state information.
+    //  save       If this parameter is TRUE, the information is saved, otherwise it is restored.
+    //  pSaveInfo  Pointer to a TBSAVEPARAMS structure that specifies the registry key, subkey,
+    //             and value name for the toolbar state information.
     // Refer to TB_SAVERESTORE in the Windows API documentation for more information.
     inline void CToolBar::SaveRestore(BOOL save, TBSAVEPARAMS* pSaveInfo) const
     {
@@ -814,7 +812,7 @@ namespace Win32xx
     }
 
     // Sets the size of the buttons to be added to a ToolBar.
-    // The size can be set only before adding any buttons to the ToolBar.
+    // This function should generally be called after adding buttons.
     // Refer to TB_SETBUTTONSIZE in the Windows API documentation for more information.
     inline BOOL CToolBar::SetButtonSize(int cx, int cy) const
     {
@@ -969,7 +967,7 @@ namespace Win32xx
     }
 
     // Sets the button width.
-    // The set button width can adjust the width of the button after it is created.
+    // Adjust the width of a toolbar button after it is created.
     // This is useful when replacing a button with a ComboBox or other control.
     // Refer to TB_SETBUTTONINFO in the Windows API documentation for more information.
     inline BOOL CToolBar::SetButtonWidth(int buttonID, int width) const
@@ -987,8 +985,8 @@ namespace Win32xx
         BOOL result = (SendMessage(TB_SETBUTTONINFO, (WPARAM)buttonID, (LPARAM)&tbbi) != 0);
 
         // Send a changed message to the parent (used by the ReBar)
-        SIZE MaxSize = GetMaxSize();
-        GetParent().SendMessage(UWM_TBRESIZE, (WPARAM)GetHwnd(), (LPARAM)&MaxSize);
+        SIZE maxSize = GetMaxSize();
+        GetParent().SendMessage(UWM_TBRESIZE, (WPARAM)GetHwnd(), (LPARAM)&maxSize);
 
         return result;
     }

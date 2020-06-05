@@ -137,6 +137,7 @@
 					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-static" />
 					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ole32" />
@@ -161,6 +162,7 @@
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-static" />
 					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ole32" />
@@ -188,10 +190,6 @@
 			<Option weight="0" />
 		</Unit>
 		<Unit filename="../src/targetver.h" />
-		<Extensions>
-			<code_completion />
-			<debugger />
-			<envvars />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

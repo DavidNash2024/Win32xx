@@ -27,7 +27,7 @@ public:
 	virtual void OnDestroy();
     virtual BOOL OnInitDialog();
 
-    void AppendText(int id, LPCTSTR buf);
+    void AppendText(int id, LPCTSTR text);
     void Receive();
     void Send();
 
@@ -55,7 +55,7 @@ class CSvrDialog : public CDialog
 public:
     CSvrDialog(UINT resID);
     virtual ~CSvrDialog();
-    void AppendText(int id, LPCTSTR buf);
+    void AppendText(const CEdit& edit, LPCTSTR text);
     void LoadCommonControlsEx();
     BOOL OnSocketDisconnect(WPARAM wparam);
     BOOL OnSocketReceive();

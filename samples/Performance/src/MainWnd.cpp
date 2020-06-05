@@ -112,9 +112,8 @@ void CMainWindow::PerformanceTest()
     LRESULT result = 0;
     int messages = 0;
 
-    SendText(_T(""));
     CString str;
-    str.Format(str, _T("Sending %d  Messages"), m_testMessages);
+    str.Format(str, _T("Sending %d  Messages\n"), m_testMessages);
     SendText(str);
 
     // Choose a Window handle(HWND) to send the messages to
@@ -144,9 +143,8 @@ void CMainWindow::PerformanceTest()
 void CMainWindow::SendText(LPCTSTR str)
 {
     // Send text to the Edit window
-    m_edit.SendMessage(EM_REPLACESEL, FALSE, reinterpret_cast<LPARAM>(str));
-	m_edit.SendMessage(EM_REPLACESEL, FALSE, reinterpret_cast<LPARAM>(_T("\r\n")));
-	m_edit.SendMessage(EM_SCROLLCARET, 0, 0);
+    m_edit.AppendText(str);
+    m_edit.AppendText(_T("\r\n"));
 
     TRACE(str);
     TRACE("\n");
