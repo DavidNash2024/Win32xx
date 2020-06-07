@@ -162,7 +162,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 void CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
-	PostMessage(WM_CLOSE);
+    Close();
 }
 
 void CMainFrame::LoadFile(LPCTSTR fileName)

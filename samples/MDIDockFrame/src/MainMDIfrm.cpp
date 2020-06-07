@@ -141,14 +141,14 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 
 BOOL CMainMDIFrame::OnFileClose()
 {
-    GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+    GetActiveMDIChild()->Close();
     return TRUE;
 }
 
 BOOL CMainMDIFrame::OnFileExit()
 {
     // Issue a close request to the frame
-    CMDIDockFrame::PostMessage(WM_CLOSE);
+    Close();
     return TRUE;
 }
 

@@ -270,11 +270,12 @@ namespace Win32xx
         m_prevWindowProc = 0;
     }
 
-    // Creates the window with default parameters. PreRegisterClass can be
-    //  used to register a new window class for the window, otherwise a 
-    //  default window class is used. PreCreate can be used to specify the
-    //  CREATESTRUCT parameters, otherwise default parameters are used. 
-    //  A failure to create a window throws an exception.
+    // Creates the window with default parameters. The PreRegisterClass and PreCreate
+    // functions are called when the Create function is used. Override PreRegisterClass
+    // to register a new window class for the window, otherwise a default window class is used.
+    // Override PreCreate to specify the CREATESTRUCT parameters, otherwise default parameters
+    // are used. A failure to create a window throws an exception. 
+    // A failure to create a window throws an exception.
     inline HWND CWnd::Create(HWND parent /* = 0 */)
     {
         // Test if Win32++ has been started
@@ -596,7 +597,8 @@ namespace Win32xx
 
     // Called in response to WM_CLOSE. Override to suppress destroying the window
     // WM_CLOSE is sent by SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0) or by clicking X
-    //  in the top right corner. Usually, only top level windows receive WM_CLOSE.
+    //  in the top right corner. Usually, only top level windows receive WM_CLOSE,
+	//  unless the Close function is called.
     inline void CWnd::OnClose()
     {
         Destroy();
@@ -1292,6 +1294,16 @@ namespace Win32xx
     {
         assert(IsWindow());
         return (::MapWindowPoints(*this, NULL, (LPPOINT)&rect, 2) != 0);
+    }
+	
+    // The Close function issues a close requests to the window. The OnClose function is called
+    // in response to this function. The default implementation of OnClose destroys the window.
+    // Override OnClose to perform tasks in addition to or instead of destroying the window.
+    // Refer to the WM_CLOSE message in the Windows API documentation for more information.
+    inline void CWnd::Close() const
+    {
+        assert(IsWindow());
+        SendMessage(WM_CLOSE);
     }
 
     // The DeferWindowPos function updates the specified multiple window position structure for the window.

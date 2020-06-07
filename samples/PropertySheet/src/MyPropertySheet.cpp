@@ -41,7 +41,7 @@ void CButtonPage::OnCancel()
     TRACE ("Cancel button pressed\n");
 
     // Close the modeless propertysheet
-    GetParent().PostMessage(WM_CLOSE);  
+    GetParent().Close();;  
 }
 
 BOOL CButtonPage::OnInitDialog()

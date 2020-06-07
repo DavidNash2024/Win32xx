@@ -243,7 +243,7 @@ LRESULT CMainFrame::OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam)
 BOOL CMainFrame::OnFileExit()
 {
     // Issue a close request to the frame
-    PostMessage(WM_CLOSE);
+    Close();
     return TRUE;
 }
 

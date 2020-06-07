@@ -104,7 +104,7 @@ BOOL CTCPClientDlg::OnInitDialog()
 BOOL CTCPClientDlg::OnSocketDisconnect()
 {
     // close the chat window
-    PostMessage(WM_CLOSE);
+    Close();
 
     return TRUE;
 }

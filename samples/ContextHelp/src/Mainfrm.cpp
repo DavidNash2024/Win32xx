@@ -267,7 +267,7 @@ void CMainFrame::OnF1()
 void CMainFrame::OnFileExit()
 {
     // Issue a close request to the frame
-    PostMessage(WM_CLOSE);
+    Close();
 }
 
 void CMainFrame::OnInitialUpdate()

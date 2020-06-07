@@ -75,7 +75,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
-    PostMessage(WM_CLOSE);
+    Close();
 }
 
 

@@ -160,7 +160,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 void CMainMDIFrame::OnFileExit()
 {
     // Issue a close request to the frame
-    PostMessage(WM_CLOSE);
+    Close();
 }
 
 void CMainMDIFrame::OnFileNew()
@@ -172,7 +172,7 @@ void CMainMDIFrame::OnMDIClose()
 {
     CMDIChild* pChild = GetActiveMDIChild();
     if (pChild)
-        pChild->PostMessage(WM_CLOSE);
+        pChild->Close();
 }
 
 void CMainMDIFrame::OnMDIMaximize()
