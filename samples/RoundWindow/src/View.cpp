@@ -98,9 +98,8 @@ void CView::OnDraw(CDC& dc)
 
 BOOL CView::OnExit()
 {
-    // Post a WM_CLOSE message to end the application
-    PostMessage(WM_CLOSE);
-
+    // Issue a close request to the window.
+    Close();
     return TRUE;
 }
 

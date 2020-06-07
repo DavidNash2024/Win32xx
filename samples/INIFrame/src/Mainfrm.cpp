@@ -86,7 +86,7 @@ void CMainFrame::OnClose()
 // Issue a close request to the frame
 void CMainFrame::OnFileExit()
 {
-    PostMessage(WM_CLOSE);
+    Close();
 }
 
 

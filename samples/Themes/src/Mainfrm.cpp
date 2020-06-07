@@ -424,7 +424,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 BOOL CMainFrame::OnFileExit()
 {
     // Issue a close request to the frame
-    PostMessage(WM_CLOSE);
+    Close();
     return TRUE;
 }
 

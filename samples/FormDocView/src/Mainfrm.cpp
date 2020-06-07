@@ -35,7 +35,7 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 void CMainFrame::OnFileExit()
 {
     // Issue a close request to the frame
-    PostMessage(WM_CLOSE);
+    Close();
 }
 
 void CMainFrame::OnMenuUpdate(UINT id)

@@ -83,7 +83,7 @@ ClosePreview()                                                          /*
 {
     SaveSizesRegistry();
     m_PreviewPane.SetPaneZoomState(ZOOM_OUT);
-    PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+    Close();
     return TRUE;
 }
 

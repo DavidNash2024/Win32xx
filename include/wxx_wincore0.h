@@ -171,6 +171,7 @@ namespace Win32xx
         CWnd  ChildWindowFromPoint(POINT point) const;
         BOOL  ClientToScreen(POINT& point) const;
         BOOL  ClientToScreen(RECT& rect) const;
+        void  Close() const;
         LRESULT DefWindowProc(UINT msg, WPARAM wparam, LPARAM lparam) const;
         HDWP  DeferWindowPos(HDWP winPosInfo, HWND insertAfter, int x, int y, int cx, int cy, UINT flags) const;
         HDWP  DeferWindowPos(HDWP winPosInfo, HWND insertAfter, const RECT& rect, UINT flags) const;

@@ -132,14 +132,14 @@ void CMainMDIFrame::OnInitialUpdate()
 BOOL CMainMDIFrame::OnFileClose()
 {
     // Close the active MDI window
-    GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+    GetActiveMDIChild()->Close();
     return TRUE;
 }
 
 BOOL CMainMDIFrame::OnFileExit()
 {
     // Issue a close request to the frame
-    PostMessage(WM_CLOSE);
+    Close();
     return TRUE;
 }
 

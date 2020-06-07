@@ -109,7 +109,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 BOOL CMainMDIFrame::OnFileClose()
 {
     // Ask the active MDI window to close
-    GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+    GetActiveMDIChild()->Close();
 
     return TRUE;
 }
@@ -117,7 +117,7 @@ BOOL CMainMDIFrame::OnFileClose()
 BOOL CMainMDIFrame::OnFileExit()
 {
     // Issue a close request to the frame
-    PostMessage(WM_CLOSE);
+    Close();
 
     return TRUE;
 }
