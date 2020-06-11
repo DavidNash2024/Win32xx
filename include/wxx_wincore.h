@@ -595,10 +595,11 @@ namespace Win32xx
         return str;
     }
 
-    // Called in response to WM_CLOSE. Override to suppress destroying the window
+    // Called in response to WM_CLOSE, before the window is destroyed.
+    // Override this function to suppress destroying the window.
     // WM_CLOSE is sent by SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0) or by clicking X
-    //  in the top right corner. Usually, only top level windows receive WM_CLOSE,
-	//  unless the Close function is called.
+    //  in the top right corner.
+    // Child windows don't receive WM_CLOSE unless they are closed using the Close function.
     inline void CWnd::OnClose()
     {
         Destroy();
@@ -1295,7 +1296,7 @@ namespace Win32xx
         assert(IsWindow());
         return (::MapWindowPoints(*this, NULL, (LPPOINT)&rect, 2) != 0);
     }
-	
+
     // The Close function issues a close requests to the window. The OnClose function is called
     // in response to this function. The default implementation of OnClose destroys the window.
     // Override OnClose to perform tasks in addition to or instead of destroying the window.

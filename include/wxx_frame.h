@@ -1738,7 +1738,7 @@ namespace Win32xx
                 maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
                 drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
             }
-            
+
             drawDC.SelectObject(oldBrush);
             drawDC.SelectObject(oldPen);
         }
@@ -2238,7 +2238,7 @@ namespace Win32xx
             catch (const CUserException& e)
             {
                 Trace("*** Failed to load values from registry, using defaults. ***\n");
-                Trace(e.GetText()); TRACE(strKey); Trace("\n");
+                Trace(e.GetText()); Trace(strKey); Trace("\n");
 
                 // Delete the bad key from the registry
                 CString strParentKey = _T("Software\\") + m_keyName;
@@ -2461,7 +2461,7 @@ namespace Win32xx
         CReBar* pRebar = reinterpret_cast<CReBar*>(lparam);
         assert(dynamic_cast<CReBar*>(pRebar));
 
-        if (!pDC || !pRebar) 
+        if (!pDC || !pRebar)
             return 0;
 
         return DrawReBarBkgnd(*pDC, *pRebar);
@@ -3751,7 +3751,7 @@ namespace Win32xx
 
         if (pFrame && HC_ACTION == code)
         {
-            if ((wparam ==  VK_CAPITAL) || (wparam == VK_NUMLOCK) || 
+            if ((wparam ==  VK_CAPITAL) || (wparam == VK_NUMLOCK) ||
                 (wparam == VK_SCROLL) || (wparam == VK_INSERT))
             {
                 pFrame->SetStatusIndicators();

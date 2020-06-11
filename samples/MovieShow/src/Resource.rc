@@ -1,0 +1,390 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDM_VIDEO_MENU MENU
+BEGIN
+    POPUP "Video"
+    BEGIN
+        MENUITEM "&Play",                       IDM_PLAY
+        MENUITEM "Favourite",                   IDM_FAVOURITE
+        POPUP "Video Type"
+        BEGIN
+            MENUITEM "Movie",                       IDM_VIDEOTYPE_MOVIE
+            MENUITEM "Live Performance",            IDM_VIDEOTYPE_LIVEPERFORMANCE
+        END
+        POPUP "Put in BoxSet"
+        BEGIN
+            MENUITEM "None",                        IDM_BOXSET_0
+        END
+        MENUITEM "&Remove File From Library",   IDM_REMOVE_FILE
+    END
+END
+
+IDM_BOXSET_MENU MENU
+BEGIN
+    POPUP "BoxSet"
+    BEGIN
+        MENUITEM "Add BoxSet",                  IDM_ADD_BOXSET
+    END
+END
+
+IDM_BOXSETCHILD_MENU MENU
+BEGIN
+    POPUP "BoxSet"
+    BEGIN
+        MENUITEM "Move BoxSet Up",              IDM_MOVE_UP
+        MENUITEM "Move BoxSet Down",            IDM_MOVE_DOWN
+        MENUITEM "Rename BoxSet",               IDM_RENAME_BOXSET
+        MENUITEM "Remove BoxSet",               IDM_REMOVE_BOXSET
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "../src/res/Curtains.ico"
+IDI_ADDBOXSET           ICON                    "../src/res/Add BoxSet.ico"
+IDI_ADDFOLDER           ICON                    "../src/res/Add Folder.ico"
+IDI_BOXSET              ICON                    "../src/res/BoxSet.ico"
+IDI_CALENDAR            ICON                    "../src/res/Calendar.ico"
+IDI_EDITBOXSET          ICON                    "../src/res/Edit BoxSet.ico"
+IDI_FAVOURITES          ICON                    "../src/res/Star.ico"
+IDI_HELPABOUT           ICON                    "../src/res/Help.ico"
+IDI_LIBRARY             ICON                    "../src/res/Library.ico"
+IDI_MASK                ICON                    "../src/res/Mask.ico"
+IDI_MOVEDOWN            ICON                    "../src/res/MoveDown.ico"
+IDI_MOVEUP              ICON                    "../src/res/MoveUp.ico"
+IDI_MOVIES              ICON                    "../src/res/Movies.ico"
+IDI_PLAY                ICON                    "../src/res/Play.ico"
+IDI_REMOVE              ICON                    "../src/res/Remove.ico"
+IDI_SEARCH              ICON                    "../src/res/Search.ico"
+IDI_VIOLIN              ICON                    "../src/res/Violin.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDW_SPLITH              CURSOR                  "../src/res/SplitH.cur"
+IDW_SPLITV              CURSOR                  "../src/res/SplitV.cur"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDW_ABOUT DIALOGEX 0, 0, 186, 109
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,60,50,14
+    CTEXT           "Movie Show",IDC_STATIC,61,22,64,11
+    ICON            IDW_MAIN,0,4,4,20,20
+    CTEXT           "by David Nash",IDC_STATIC,67,37,52,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDW_MAIN ACCELERATORS
+BEGIN
+    "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+    "Y",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, NOINVERT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// BINARY
+//
+
+IDF_MYFONT              BINARY                  "../src/res/FRSCRIPT.TTF"
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDW_ABOUT, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 90
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                "MovieShow"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_READY               "Ready"
+    IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_NUM       "NUM"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_INDICATOR_SCRL      "SCRL"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_NEW            "Create a New Document"
+    IDM_FILE_OPEN           "Open Existing Document"
+    IDM_FILE_SAVE           "Save the Document"
+    IDM_FILE_SAVEAS         "Save the Document with a new name"
+    IDM_FILE_PRINT          "Print the Document"
+    IDM_FILE_EXIT           "End the Program"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_EDIT_UNDO           "Undo the last action"
+    IDM_EDIT_REDO           "Redo the previously undone action"
+    IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
+    IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
+    IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
+    IDM_EDIT_DELETE         "Erase the selected Contents"
+    IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE
+BEGIN
+    61536                   "Close the Window"
+    61488                   "Maximize the Window"
+    61472                   "Minimize the Window"
+    61456                   "Move the Window"
+    61504                   "Select Next Window"
+    61520                   "Select Previous Window"
+    61728                   "Restore the Window"
+    61440                   "Resize the Window"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_ADD_FOLDER          "Add folder to, or update folder in the video library"
+    IDM_PLAY                "Play this video"
+    IDM_FAVOURITE           "Add this video to favourites"
+    IDM_VIDEOTYPE_MOVIE     "Move this video to Movies"
+    IDM_VIDEOTYPE_LIVEPERFORMANCE "Move this video to Live Performances"
+    IDM_SEARCH              "Search for a video"
+    IDM_REMOVE_FILE         "Remove this file from the library"
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (Australia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MYDIALOG DIALOGEX 0, 0, 324, 185
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN
+FONT 9, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_PICTURE,"CoverImage",0x0,238,19,84,122
+    CONTROL         "",IDC_DESCRIPTION,"RichEdit20W",ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | WS_BORDER | WS_VSCROLL,2,155,320,28
+    CONTROL         "",IDC_TITLE,"RichEdit20W",ES_AUTOHSCROLL,2,4,320,11
+    CONTROL         "",IDC_YEAR,"RichEdit20W",ES_AUTOHSCROLL,47,19,45,10
+    CONTROL         "",IDC_ACTORS,"RichEdit20W",ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | WS_BORDER | WS_VSCROLL,2,40,234,100
+    LTEXT           "Release Date",IDC_STATIC1,3,19,43,8
+    LTEXT           "Cast",IDC_STATIC2,3,32,22,8
+    LTEXT           "Description",IDC_STATIC3,3,147,36,8
+END
+
+IDD_SEARCHDLG DIALOGEX 0, 0, 189, 179
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,29,156,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,112,156,50,14
+    CONTROL         "",IDC_CHECKTITLE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,56,16,10
+    EDITTEXT        IDC_EDITTITLE,36,54,121,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_CHECKACTORS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,89,16,10
+    EDITTEXT        IDC_EDITACTORS,36,87,121,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_CHECKINFO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,122,16,10
+    EDITTEXT        IDC_EDITINFO,36,120,121,14,ES_AUTOHSCROLL
+    LTEXT           "Search for Video",IDC_STATIC,65,17,53,8
+    ICON            IDI_SEARCH,0,4,4,20,20
+    LTEXT           "Search Title",IDC_STATIC,36,46,50,8
+    LTEXT           "Search Actors",IDC_STATIC,36,79,54,8
+    LTEXT           "Search Description",IDC_STATIC,36,112,64,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_MYDIALOG, DIALOG
+    BEGIN
+        VERTGUIDE, 2
+        VERTGUIDE, 322
+        HORZGUIDE, 19
+    END
+
+    IDD_SEARCHDLG, DIALOG
+    BEGIN
+        VERTGUIDE, 69
+        BOTTOMMARGIN, 178
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,0,0,0
+ PRODUCTVERSION 2,0,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x0L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "0c0904b0"
+        BEGIN
+            VALUE "CompanyName", "David Nash"
+            VALUE "FileDescription", "Manages a library of m4v videos"
+            VALUE "FileVersion", "2, 0, 0, 0"
+            VALUE "InternalName", "MovieShow.exe"
+            VALUE "LegalCopyright", "Copyright (C) 2020"
+            VALUE "OriginalFilename", "MovieShow.exe"
+            VALUE "ProductName", "MovieShow"
+            VALUE "ProductVersion", "10th June 2020"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0xc09, 1200
+    END
+END
+
+#endif    // English (Australia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
