@@ -131,6 +131,8 @@ devenv /build Debug ToolTips\ProjectFiles\ToolTips_2005.sln                     
 devenv /build Release ToolTips\ProjectFiles\ToolTips_2005.sln                   >>"..\output\VS2005.log"
 devenv /build Debug Tray\ProjectFiles\Tray_2005.sln                             >>"..\output\VS2005.log"
 devenv /build Release Tray\ProjectFiles\Tray_2005.sln                           >>"..\output\VS2005.log"
+devenv /build Debug WinPlot\ProjectFiles\WinPlot_2005.sln                       >>"..\output\VS2005.log"
+devenv /build Release WinPlot\ProjectFiles\WinPlot_2005.sln                     >>"..\output\VS2005.log"
 
 mkdir "..\output\VS2005"
 mkdir "..\output\VS2005\Debug"
@@ -191,6 +193,7 @@ copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2005\
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy ToolTips\ProjectFiles\Debug\ToolTips.exe                 "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
+copy WinPlot\ProjectFiles\Debug\WinPlot.exe                   "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 
 mkdir "..\output\VS2005\Release"
 
@@ -250,6 +253,7 @@ copy TimeDemo\ProjectFiles\Release\TimeDemo.exe                 "..\output\VS200
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe           "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy ToolTips\ProjectFiles\Release\ToolTips.exe                 "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2005\Release"    >>"..\output\VS2005.log"
+copy WinPlot\ProjectFiles\Release\WinPlot.exe                         "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 
 
 REM: Change the directory to the Tutorials parent

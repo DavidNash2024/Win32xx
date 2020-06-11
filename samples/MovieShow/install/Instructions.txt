@@ -1,0 +1,2 @@
+Assuming NSIS (Nullsoft Scriptable Install System) is installed, right click 
+on the MovieShow.nsi file and choose "Compile NSIS Script". 

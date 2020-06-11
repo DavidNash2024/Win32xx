@@ -84,6 +84,8 @@ MSBuild MDIFrameSplitter\ProjectFiles\MDIFrameSplitter_2010.sln /p:Configuration
 MSBuild MDIFrameSplitter\ProjectFiles\MDIFrameSplitter_2010.sln /p:Configuration=Release >>"..\output\VS2010.log"
 MSBuild MetaFile\ProjectFiles\MetaFile_2010.sln /p:Configuration=Debug                   >>"..\output\VS2010.log"
 MSBuild MetaFile\ProjectFiles\MetaFile_2010.sln /p:Configuration=Release                 >>"..\output\VS2010.log"
+MSBuild MovieShow\ProjectFiles\MovieShow_2010.sln /p:Configuration=Debug                 >>"..\output\VS2010.log"
+MSBuild MovieShow\ProjectFiles\MovieShow_2010.sln /p:Configuration=Release               >>"..\output\VS2010.log"
 MSBuild NetClient\ProjectFiles\NetClient_2010.sln /p:Configuration=Debug                 >>"..\output\VS2010.log"
 MSBuild NetClient\ProjectFiles\NetClient_2010.sln /p:Configuration=Release               >>"..\output\VS2010.log"
 MSBuild NetClientAsync\ProjectFiles\NetClientAsync_2010.sln /p:Configuration=Debug       >>"..\output\VS2010.log"
@@ -142,6 +144,8 @@ MSBuild ToolTips\ProjectFiles\ToolTips_2010.sln /p:Configuration=Debug          
 MSBuild ToolTips\ProjectFiles\ToolTips_2010.sln /p:Configuration=Release                 >>"..\output\VS2010.log"
 MSBuild Tray\ProjectFiles\Tray_2010.sln /p:Configuration=Debug                           >>"..\output\VS2010.log"
 MSBuild Tray\ProjectFiles\Tray_2010.sln /p:Configuration=Release                         >>"..\output\VS2010.log"
+MSBuild WinPlot\ProjectFiles\WinPlot_2010.sln /p:Configuration=Debug                     >>"..\output\VS2010.log"
+MSBuild WinPlot\ProjectFiles\WinPlot_2010.sln /p:Configuration=Release                   >>"..\output\VS2010.log"
 
 mkdir "..\output\VS2010"
 mkdir "..\output\VS2010\Debug"
@@ -180,6 +184,7 @@ copy MDIFrame\ProjectFiles\Debug\MDIFrame.exe                 "..\output\VS2010\
 copy MDIFrameDemo\ProjectFiles\Debug\MDIDemo.exe              "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy MDIFrameSplitter\ProjectFiles\Debug\MDIFrameSplitter.exe "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy MetaFile\ProjectFiles\Debug\MetaFile.exe                 "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
+copy MovieShow\ProjectFiles\Debug\MovieShow.exe               "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy NetClient\ProjectFiles\Debug\NetClient.exe               "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy NetClientAsync\ProjectFiles\Debug\NetClientAsync.exe     "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy NetServer\ProjectFiles\Debug\NetServer.exe               "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
@@ -209,6 +214,7 @@ copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2010\
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy ToolTips\ProjectFiles\Debug\ToolTips.exe                 "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
+copy WinPlot\ProjectFiles\Debug\WinPlot.exe                   "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 
 mkdir "..\output\VS2010\Release"
 
@@ -246,6 +252,7 @@ copy MDIFrame\ProjectFiles\Release\MDIFrame.exe               "..\output\VS2010\
 copy MDIFrameDemo\ProjectFiles\Release\MDIDemo.exe            "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy MDIFrameSplitter\ProjectFiles\Release\MDIFrameSplitter.exe "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy MetaFile\ProjectFiles\Release\MetaFile.exe               "..\output\VS2010\Release"    >>"..\output\VS2010.log"
+copy MovieShow\ProjectFiles\Release\MovieShow.exe             "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy NetClient\ProjectFiles\Release\NetClient.exe             "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy NetClientAsync\ProjectFiles\Release\NetClientAsync.exe   "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy NetServer\ProjectFiles\Release\NetServer.exe             "..\output\VS2010\Release"    >>"..\output\VS2010.log"
@@ -275,6 +282,7 @@ copy TimeDemo\ProjectFiles\Release\TimeDemo.exe               "..\output\VS2010\
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe         "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy ToolTips\ProjectFiles\Release\ToolTips.exe               "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Tray\ProjectFiles\Release\Tray.exe                       "..\output\VS2010\Release"    >>"..\output\VS2010.log"
+copy WinPlot\ProjectFiles\Release\WinPlot.exe                 "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 
 
 REM: Change the directory to the Tutorials parent

@@ -83,6 +83,8 @@ devenv /build Debug MDIFrameSplitter\ProjectFiles\MDIFrameSplitter_2008.sln   >>
 devenv /build Release MDIFrameSplitter\ProjectFiles\MDIFrameSplitter_2008.sln >>"..\output\VS2008.log"
 devenv /build Debug MetaFile\ProjectFiles\MetaFile_2008.sln                   >>"..\output\VS2008.log"
 devenv /build Release MetaFile\ProjectFiles\MetaFile_2008.sln                 >>"..\output\VS2008.log"
+devenv /build Debug MovieShow\ProjectFiles\MovieShow_2008.sln                 >>"..\output\VS2008.log"
+devenv /build Release MovieShow\ProjectFiles\MovieShow_2008.sln               >>"..\output\VS2008.log"
 devenv /build Debug NetClient\ProjectFiles\NetClient_2008.sln                 >>"..\output\VS2008.log"
 devenv /build Release NetClient\ProjectFiles\NetClient_2008.sln               >>"..\output\VS2008.log"
 devenv /build Debug NetClientAsync\ProjectFiles\NetClientAsync_2008.sln       >>"..\output\VS2008.log"
@@ -141,6 +143,8 @@ devenv /build Debug ToolTips\ProjectFiles\ToolTips_2008.sln                   >>
 devenv /build Release ToolTips\ProjectFiles\ToolTips_2008.sln                 >>"..\output\VS2008.log"
 devenv /build Debug Tray\ProjectFiles\Tray_2008.sln                           >>"..\output\VS2008.log"
 devenv /build Release Tray\ProjectFiles\Tray_2008.sln                         >>"..\output\VS2008.log"
+devenv /build Debug WinPlot\ProjectFiles\WinPlot_2008.sln                     >>"..\output\VS2008.log"
+devenv /build Release WinPlot\ProjectFiles\WinPlot_2008.sln                   >>"..\output\VS2008.log"
 
 mkdir "..\output\VS2008"
 mkdir "..\output\VS2008\Debug"
@@ -179,6 +183,7 @@ copy MDIFrame\ProjectFiles\Debug\MDIFrame.exe                 "..\output\VS2008\
 copy MDIFrameDemo\ProjectFiles\Debug\MDIDemo.exe              "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy MDIFrameSplitter\ProjectFiles\Debug\MDIFrameSplitter.exe "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy MetaFile\ProjectFiles\Debug\MetaFile.exe                 "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
+copy MovieShow\ProjectFiles\Debug\MovieShow.exe               "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy NetClient\ProjectFiles\Debug\NetClient.exe               "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy NetClientAsync\ProjectFiles\Debug\NetClientAsync.exe     "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy NetServer\ProjectFiles\Debug\NetServer.exe               "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
@@ -208,6 +213,7 @@ copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2008\
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy ToolTips\ProjectFiles\Debug\ToolTips.exe                 "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
+copy WinPlot\ProjectFiles\Debug\WinPlot.exe                   "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 
 mkdir "..\output\VS2008\Release"
 
@@ -245,6 +251,7 @@ copy MDIFrame\ProjectFiles\Release\MDIFrame.exe                 "..\output\VS200
 copy MDIFrameDemo\ProjectFiles\Release\MDIDemo.exe              "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy MDIFrameSplitter\ProjectFiles\Release\MDIFrameSplitter.exe "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy MetaFile\ProjectFiles\Release\MetaFile.exe                 "..\output\VS2008\Release"    >>"..\output\VS2008.log"
+copy MovieShow\ProjectFiles\Release\MovieShow.exe               "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy NetClient\ProjectFiles\Release\NetClient.exe               "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy NetClientAsync\ProjectFiles\Release\NetClientAsync.exe     "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy NetServer\ProjectFiles\Release\NetServer.exe               "..\output\VS2008\Release"    >>"..\output\VS2008.log"
@@ -274,6 +281,7 @@ copy TimeDemo\ProjectFiles\Release\TimeDemo.exe                 "..\output\VS200
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe           "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy ToolTips\ProjectFiles\Release\ToolTips.exe                 "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2008\Release"    >>"..\output\VS2008.log"
+copy WinPlot\ProjectFiles\Release\WinPlot.exe                   "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 
 REM: Change the directory to the Tutorials parent
 popd
