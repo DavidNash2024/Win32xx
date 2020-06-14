@@ -1,3 +1,26 @@
+Version 8.7.1
+=============
+
+New Features and Enhancements
+-----------------------------
+* Added CWnd::Close
+   This function can be used to close an application in the recommended way, by
+   sending a WM_CLOSE message to the main window. The OnClose virtual function
+   is then called. The default behaviour of OnClose destroys the window.
+   OnClose can be overridden to perform other tasks in addition to, or instead
+   of destroying the window.   
+
+* Added MovieShow sample
+   This sample implements a video library manager for m4v video files. The code
+   assumes the video files have an m4v extension displays the file's meta data.
+   The meta data includes the movie name, actors, genre, plot description, 
+   cover image, etc.
+
+* Added WinPlot sample
+   This sample plots a user specified function in the window.
+   The plot is resized when the window is resized.   
+
+
 Version 8.7.0
 =============
 

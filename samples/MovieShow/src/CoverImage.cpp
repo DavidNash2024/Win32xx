@@ -13,6 +13,7 @@
 
 using namespace Gdiplus;
 
+// Construtor. 
 CCoverImage::CCoverImage()
 {
     // Initialize GDI+.
@@ -22,7 +23,7 @@ CCoverImage::CCoverImage()
     // The entry for the dialog's control in resource.rc must match this name.
     CString className = L"CoverImage";
 
-    // Register the window class
+    // Register the window class for the dialog's picture control
     WNDCLASS wc;
     ZeroMemory(&wc, sizeof(WNDCLASS));
 
@@ -38,10 +39,12 @@ CCoverImage::CCoverImage()
     assert(::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc));
 }
 
+// Destructor.
 CCoverImage::~CCoverImage()
 {
 }
 
+// Draws the cover image to the specified device context.
 void CCoverImage::DrawImage(CDC& dc)
 {
     // Convert the image string to binary
@@ -83,6 +86,7 @@ void CCoverImage::DrawImage(CDC& dc)
     }
 }
 
+// Called when the CCoverImage window needs to be redrawn.
 void CCoverImage::OnDraw(CDC& dc)
 {
     DrawImage(dc);
@@ -107,6 +111,7 @@ LRESULT CCoverImage::OnPaint(UINT, WPARAM, LPARAM)
     return 0;
 }
 
+// Process the window messages for the CCoverImage window.
 LRESULT CCoverImage::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

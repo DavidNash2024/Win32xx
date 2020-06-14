@@ -56,15 +56,10 @@ public:
     void SortColumn(int column, bool isSortDown);
     void UpdateItemImage(int item);
 
-    void OnInitialUpdate()
-    {
-        // Attach's ListView's header window to the CLVHeader object
-        m_header.Attach(GetHeader());
-    }
-
 protected:
     virtual void OnAttach();
     virtual void OnDestroy();
+    virtual void OnInitialUpdate();
     virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lParam);
     virtual void PreCreate(CREATESTRUCT& cs);
 

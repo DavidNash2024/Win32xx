@@ -113,11 +113,7 @@ int CALLBACK CViewList::CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortView
     return compare;
 }
 
-void CViewList::OnDestroy()
-{
-    SetImageList(NULL, LVSIL_SMALL);
-}
-
+// Called when the listview window is attached to CViewList during Create.
 void CViewList::OnAttach()
 {
     // Set the image lists
@@ -138,6 +134,21 @@ void CViewList::OnAttach()
     SetColumn();
 }
 
+// Called when the listview window is destroyed.
+void CViewList::OnDestroy()
+{
+    SetImageList(NULL, LVSIL_SMALL);
+}
+
+// Called after the listview window is created.
+void CViewList::OnInitialUpdate()
+{
+    // Attach's ListView's header window to the CLVHeader object
+    m_header.Attach(GetHeader());
+}
+
+// Called when the framework reflects the WM_NOTIFY message
+// back to CViewList.
 LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
     LPNMITEMACTIVATE pnmitem = (LPNMITEMACTIVATE)lparam;
@@ -196,6 +207,7 @@ LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
     return 0;
 }
 
+// Called when the user clicks on a column in the listview's header.
 void CViewList::SortColumn(int column, bool isSortDown)
 {
     // Perform the sort.
@@ -228,12 +240,14 @@ void CViewList::SortColumn(int column, bool isSortDown)
         SetItemState(0, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
 }
 
+// Sets the CREATESTRUCT parameters prior to the window's creation.
 void CViewList::PreCreate(CREATESTRUCT& cs)
 {
     cs.dwExStyle = WS_EX_CLIENTEDGE;
     cs.style = LVS_SHOWSELALWAYS | /*LVS_SINGLESEL | TVS_NOTOOLTIPS |*/ WS_CHILD;
 }
 
+// Configures the columns in the list view's header.
 void CViewList::SetColumn()
 {
     //initialise the columns
@@ -259,6 +273,7 @@ void CViewList::SetColumn()
     InsertColumn(3, lvColumn);
 }
 
+// Sets the up and down sort arrows in the listview's header.
 BOOL CViewList::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
 {
     HWND    hHeader = NULL;
@@ -305,6 +320,7 @@ void CViewList::SetLastColumnWidth()
     SetColumnWidth(lastCol, MAX(remainingWidth, 200));
 }
 
+// Sets the image associated with the listview item.
 void CViewList::UpdateItemImage(int item)
 {
     MovieInfo* mi = (MovieInfo*)GetItemData(item);

@@ -47,6 +47,8 @@ public:
     CDockTree(); 
     virtual ~CDockTree() {}
 
+    CViewTree& GetViewTree() { return m_treeView; }
+
 private:
     CViewTree m_treeView;
 };

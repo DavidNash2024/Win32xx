@@ -30,12 +30,12 @@
 #include <sstream>              // Add support for stringstream
 #include <cassert>              // Add support for the assert macro
 #include <stdio.h>              // Add support for C style printf, sprintf, etc.
-#include <stdlib.h>             // Add support for C style character conversions atoi etc. 
+#include <stdlib.h>             // Add support for C style character conversions atoi etc.
 #include <tchar.h>              // Add support for C style TCHARs.
 
 #include <wxx_appcore.h>        // Add CCriticalSection, CObject, CWinThread, CWinApp
 #include <wxx_archive.h>        // Add CArchive
-#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog 
+#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip
 #include <wxx_cstring.h>        // Add CString, CStringA, CStringW
 #include <wxx_ddx.h>            // Add CDataExchange
@@ -61,7 +61,7 @@
 #include <wxx_rebar.h>          // Add CRebar
 #include <wxx_rect.h>           // Add CPoint, CRect, CSize
 #include <wxx_regkey.h>         // Add CRegKey
-#include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
+//#include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
 #include <wxx_richedit.h>       // Add CRichEdit
 #include <wxx_scrollview.h>     // Add CScrollView
 #include <wxx_shared_ptr.h>     // Add Shared_Ptr

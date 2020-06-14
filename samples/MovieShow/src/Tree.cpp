@@ -46,6 +46,7 @@ HTREEITEM CViewTree::AddItem(HTREEITEM parent, LPCTSTR text, int imageIndex)
     return item;
 }
 
+// Called when the treeview window is destroyed.
 void CViewTree::OnDestroy()
 {
     SetImageList(NULL, LVSIL_SMALL);
@@ -75,34 +76,29 @@ void CViewTree::OnInitialUpdate()
     SetStyle(dwStyle);
 }
 
+// Returns true if the text for the box set is unique.
 bool CViewTree::IsBoxSetUnique(LPCTSTR text, HTREEITEM item)
 {
     HTREEITEM parentItem = GetParentItem(item);
-    std::vector<CString> boxSets;
     HTREEITEM childItem = GetChild(parentItem);
-    
+    bool isUnique = true;
+
     while (childItem != 0)
     {
-        if (childItem != item)
-            boxSets.push_back(GetItemText(childItem));
-        
-        childItem = GetNextSibling(childItem);
-    };
-
-    std::vector<CString>::iterator it;
-    bool isUnique = true;
-    for (it = boxSets.begin(); it != boxSets.end(); ++it)
-    {
-        if (0 == lstrcmp(text, *it))
+        if (0 == lstrcmp(GetItemText(childItem), text))
         {
             isUnique = false;
             break;
         }
-    }
+        
+        childItem = GetNextSibling(childItem);
+    };
 
     return isUnique;
 }
 
+// Called when the WM_NOTIFY message is reflected back to CViewTree 
+// by the framework.
 LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lParam)
 {
     LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
@@ -161,41 +157,45 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
     HTREEITEM item = pTVDispInfo->item.hItem;
     CString* pString = GetItemString(item);
     assert(pString);
-    CString oldText = *pString;
 
-    // Use the new text unless the user cancelled the edit
-    if (pTVDispInfo->item.pszText != 0)
-        pString->GetWindowText(GetEditControl());
-
-    // Ensure the boxset name is unique. Append (2) etc. if required.
-    if (!IsBoxSetUnique(pString->c_str(), item))
+    if (pString)
     {
-        int start = 1;
-        CString append;
-        CString str2 = *pString;
-        do
+        CString oldText = *pString;
+
+        // Use the new text unless the user cancelled the edit
+        if (pTVDispInfo->item.pszText != 0)
+            pString->GetWindowText(GetEditControl());
+
+        // Ensure the boxset name is unique. Append (2) etc. if required.
+        if (!IsBoxSetUnique(pString->c_str(), item))
         {
-            append.Format(L" (%d)", ++start);
-            str2 = *pString + append;
+            int start = 1;
+            CString append;
+            CString str2 = *pString;
+            do
+            {
+                append.Format(L" (%d)", ++start);
+                str2 = *pString + append;
 
-        } while (!IsBoxSetUnique(str2, item));
+            } while (!IsBoxSetUnique(str2, item));
 
-        *pString += append;
-    }
+            *pString += append;
+        }
 
-    // Confirm the edit, and update the item text.
-    pTVDispInfo->item.pszText = (LPTSTR)pString->c_str();       // required for user initiated editing
-    SetItemText(item, *pString);                                // required for software initiated editing
+        // Confirm the edit, and update the item text.
+        pTVDispInfo->item.pszText = (LPTSTR)pString->c_str();       // required for user initiated editing
+        SetItemText(item, *pString);                                // required for software initiated editing
 
-    if (oldText != *pString)
-    {
-        CMainFrame& frame = GetMovieShowApp()->GetMainFrame();
-        std::list<MovieInfo>::iterator it;
-        std::list<MovieInfo>& data = frame.GetMoviesData();
-        for (it = data.begin(); it != data.end(); ++it)
+        if (oldText != *pString)
         {
-            if ((*it).boxset == oldText)
-                (*it).boxset = *pString;
+            CMainFrame& frame = GetMovieShowApp()->GetMainFrame();
+            std::list<MovieInfo>::iterator it;
+            std::list<MovieInfo>& data = frame.GetMoviesData();
+            for (it = data.begin(); it != data.end(); ++it)
+            {
+                if ((*it).boxset == oldText)
+                    (*it).boxset = *pString;
+            }
         }
     }
     
@@ -209,6 +209,7 @@ void CViewTree::PreCreate(CREATESTRUCT& cs)
     cs.style = TVS_NOTOOLTIPS | TVS_SHOWSELALWAYS | TVS_EDITLABELS | TVS_FULLROWSELECT | WS_CHILD;
 }
 
+// Removes the specified treeview item.
 void CViewTree::RemoveItem(HTREEITEM item)
 {
     const std::map<HTREEITEM, CString*>::iterator it = m_itemMap.find(item);
@@ -219,6 +220,7 @@ void CViewTree::RemoveItem(HTREEITEM item)
     DeleteItem(item);
 }
 
+// Swaps the two specified treeview items.
 void CViewTree::Swap(HTREEITEM item1, HTREEITEM item2)
 {
     TVITEM tv1;
@@ -228,33 +230,42 @@ void CViewTree::Swap(HTREEITEM item1, HTREEITEM item2)
     GetItem(tv1);
     CString* pString1 = GetItemString(item1);
     assert(pString1);
-    tv1.cchTextMax = pString1->GetLength();
-    tv1.pszText = const_cast<LPTSTR>(pString1->c_str());
 
-    TVITEM tv2;
-    ZeroMemory(&tv2, sizeof(tv2));
-    tv2.mask = TVIF_HANDLE | TVIF_IMAGE | TVIF_TEXT;
-    tv2.hItem = item2;
-    GetItem(tv2);
-    CString* pString2 = GetItemString(item2);
-    assert(pString2);
-    tv2.cchTextMax = pString2->GetLength();
-    tv2.pszText = const_cast<LPTSTR>(pString2->c_str());
+    if (pString1)
+    {
+        tv1.cchTextMax = pString1->GetLength();
+        tv1.pszText = const_cast<LPTSTR>(pString1->c_str());
 
-    tv1.hItem = item2;
-    tv2.hItem = item1;
+        TVITEM tv2;
+        ZeroMemory(&tv2, sizeof(tv2));
+        tv2.mask = TVIF_HANDLE | TVIF_IMAGE | TVIF_TEXT;
+        tv2.hItem = item2;
+        GetItem(tv2);
+        CString* pString2 = GetItemString(item2);
+        assert(pString2);
 
-    // swap the items in the treeview
-    SetItem(tv1);
-    SetItem(tv2);
+        if (pString2)
+        {
+            tv2.cchTextMax = pString2->GetLength();
+            tv2.pszText = const_cast<LPTSTR>(pString2->c_str());
 
-    // Swap the values in the map
-    const std::map<HTREEITEM, CString*>::iterator it1 = m_itemMap.find(item1);
-    const std::map<HTREEITEM, CString*>::iterator it2 = m_itemMap.find(item2);
-    if ((it1 != m_itemMap.end()) && (it2 != m_itemMap.end()))
-        std::swap(it1->second, it2->second);
+            tv1.hItem = item2;
+            tv2.hItem = item1;
+
+            // swap the items in the treeview
+            SetItem(tv1);
+            SetItem(tv2);
+
+            // Swap the values in the map
+            const std::map<HTREEITEM, CString*>::iterator it1 = m_itemMap.find(item1);
+            const std::map<HTREEITEM, CString*>::iterator it2 = m_itemMap.find(item2);
+            if ((it1 != m_itemMap.end()) && (it2 != m_itemMap.end()))
+                std::swap(it1->second, it2->second);
+        }
+    }
 }
 
+// Process the messages for the treeview window.
 LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
