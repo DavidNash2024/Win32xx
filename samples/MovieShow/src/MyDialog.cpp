@@ -15,11 +15,10 @@ CViewDialog::~CViewDialog()
 {
 }
 
+// This function appends text to an edit control.
 void CViewDialog::AppendText(int nID, LPCTSTR text)
 {
-    // This function appends text to an edit control
-
-    // Append Line Feed
+    // Append Line Feed.
     LRESULT ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
     if (ndx)
     {
@@ -33,9 +32,10 @@ void CViewDialog::AppendText(int nID, LPCTSTR text)
     SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM)text);
 }
 
+// Process the dialog's window messages.
 INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Pass resizing messages on to the resizer
+    // Pass resizing messages on to the resizer.
     m_Resizer.HandleMessage(msg, wparam, lparam);
 
     switch (msg)
@@ -47,17 +47,7 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
-BOOL CViewDialog::OnCommand(WPARAM /*wparam*/, LPARAM /*lparam*/)
-{
-
-//  UINT nID = LOWORD(wParam);
-//  switch (nID)
-//  {
-//  }
-
-    return FALSE;
-}
-
+// Called when the dialog is created, but before it is displayed.
 BOOL CViewDialog::OnInitDialog()
 {
     // Attach CWnd objects to the dialog items
@@ -68,7 +58,7 @@ BOOL CViewDialog::OnInitDialog()
     AttachItem(IDC_TITLE, m_title);
     AttachItem(IDC_YEAR, m_year);
     AttachItem(IDC_ACTORS, m_actors);
-    AttachItem(IDC_DESCRIPTION, m_description);
+    AttachItem(IDC_DESCRIPTION, m_info);
 
     // Correct the cover image aspect ratio (custom scaling affects dialog co-ords).
     CRect rc = m_picture.GetClientRect();
@@ -87,12 +77,13 @@ BOOL CViewDialog::OnInitDialog()
     m_Resizer.AddChild(m_title, topleft, RD_STRETCH_WIDTH);
     m_Resizer.AddChild(m_year, topleft, 0);
     m_Resizer.AddChild(m_actors, topleft, RD_STRETCH_WIDTH);
-    m_Resizer.AddChild(m_description, bottomright, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+    m_Resizer.AddChild(m_info, bottomright, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 
+    // Set the rich edit controls to read only.
     m_title.SetReadOnly(TRUE);
     m_year.SetReadOnly(TRUE);
     m_actors.SetReadOnly(TRUE);
-    m_description.SetReadOnly(TRUE);
+    m_info.SetReadOnly(TRUE);
 
     // Set the fonts.
     NONCLIENTMETRICS info = GetNonClientMetrics();
@@ -102,7 +93,7 @@ BOOL CViewDialog::OnInitDialog()
 
     m_year.SetFont(m_textFont, FALSE);
     m_actors.SetFont(m_textFont, FALSE);
-    m_description.SetFont(m_textFont, FALSE);
+    m_info.SetFont(m_textFont, FALSE);
     SetFont(m_textFont, FALSE);
 
     StrCopy(lf.lfFaceName, L"Tahoma", 32);  // A good font for titles
@@ -113,8 +104,10 @@ BOOL CViewDialog::OnInitDialog()
     return TRUE;
 }
 
+// Called when the mouse is clicked on the dialog.
 LRESULT CViewDialog::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
+    // Change focus to the dialog, unless a child already has focus.
     if (!IsChild(::GetFocus()))
         SetFocus();
 

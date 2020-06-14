@@ -5,7 +5,7 @@
 
 // For VS2019
 // int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
-int APIENTRY WinMain(__in HINSTANCE, __in_opt HINSTANCE, __in LPSTR, __in int)
+int APIENTRY WinMain( HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {
@@ -15,7 +15,7 @@ int APIENTRY WinMain(__in HINSTANCE, __in_opt HINSTANCE, __in LPSTR, __in int)
         // Run the application
         return theApp.Run();
     }
-    
+
     // catch all unhandled CException types
     catch (const CException &e)
     {

@@ -85,21 +85,21 @@ public:
     void FillTreeItems();
 
     std::vector<CString> GetBoxSets();
-    CString GetDataPath();
+    CString GetDataPath() const;
     std::list<MovieInfo>& GetMoviesData() { return m_moviesData; }
-    CViewDialog& GetViewDialog() { return (CViewDialog&)m_pDockDialog->GetView(); }
-    CViewList& GetViewList() { return (CViewList&)m_viewList; }
-    CViewTree& GetViewTree() { return (CViewTree&)m_pDockTree->GetView(); }  
-    std::vector<CString> GetWords(const CString& str);
-    bool IsWordInString(const CString& sentence, const CString& word);
+    CViewDialog& GetViewDialog() { return m_pDockDialog->GetViewDialog(); }
+    CViewList& GetViewList()  { return m_viewList; }
+    CViewTree& GetViewTree() { return m_pDockTree->GetViewTree(); }  
+    std::vector<CString> GetWords(const CString& str) const;
+    bool IsWordInString(const CString& sentence, const CString& word) const;
     void LoadMovieInfoFromFile(FoundFileInfo ffi);
     void LoadMovies();
 
     BOOL OnAddBoxSet();
     BOOL OnAddFolder();
     BOOL OnBoxSet(UINT nID);
-    void OnClose();
     BOOL OnFavourite();
+    void OnFilesLoaded();
     BOOL OnPlay();
     BOOL OnMoveDown();
     BOOL OnMoveUp();
@@ -111,6 +111,7 @@ public:
     BOOL OnSearch();
     void OnSelectListItem(const MovieInfo* pmi);
     void OnSelectTreeItem();
+    BOOL OnVideoType(LPCTSTR videoType);
 
     void PlayMovie(LPCTSTR path);
 
@@ -118,13 +119,11 @@ public:
 
 protected:
     virtual BOOL    LoadRegistrySettings(LPCTSTR szKeyName);
+    virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
-    virtual void    OnFilesLoaded();
     virtual void    OnMenuUpdate(UINT nID);
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual BOOL    OnVideoType(LPCTSTR videoType);
     virtual void    PreCreate(CREATESTRUCT& cs);
     virtual BOOL    SaveRegistrySettings();
     virtual void    SetupMenuIcons();
@@ -137,7 +136,7 @@ private:
     CWinThread       m_thread;
     std::vector<FoundFileInfo> m_foundFiles;
     
-    // Pointers to members of a list are always valid.
+    // Use lists because pointers to members of a list are always valid.
     std::list<CString> m_boxSets;    
     std::list<CString> m_decades;
     std::list<CString> m_genres;

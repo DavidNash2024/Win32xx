@@ -15,16 +15,6 @@ CSearchDialog::~CSearchDialog()
 {
 }
 
-INT_PTR CSearchDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-//  switch (msg)
-//  {
-//  }
-
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
-}
-
 BOOL CSearchDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
     UINT nID = LOWORD(wParam);

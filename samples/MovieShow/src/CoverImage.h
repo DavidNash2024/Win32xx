@@ -9,12 +9,12 @@ public:
     virtual ~CCoverImage();
 
     void DrawImage(CDC& dc);
-    std::vector<BYTE>& GetImageData() {return m_imageData;}
+    std::vector<BYTE>& SetImageData() { return m_imageData; }
 
 protected:
-    void OnDraw(CDC& dc);
-    LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnDraw(CDC& dc);
+    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     std::vector<BYTE> m_imageData;

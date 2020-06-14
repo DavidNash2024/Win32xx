@@ -6,21 +6,22 @@
 CSplash::CSplash()
 {
     LoadFont();
-    Create();
-    UpdateWindow();
+    Create();          // Creates the splash window
+    UpdateWindow();    // Calls OnDraw
 }
 
 CSplash::CSplash(LPCTSTR text) : m_text(text)
 { 
     LoadFont();
-    Create();
-    UpdateWindow();
+    Create();          // Creates the splash window
+    UpdateWindow();    // Calls OnDraw
 }
 
 CSplash::~CSplash()
 {
 }
 
+// Called during window creation.
 int CSplash::OnCreate(CREATESTRUCT&)
 {
     m_hIcon = (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, 256, 256, LR_DEFAULTCOLOR | LR_SHARED | LR_DEFAULTSIZE);
@@ -28,7 +29,7 @@ int CSplash::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
-// Creates the progress bar.
+// Creates the progress bar child window.
 void CSplash::CreateBar()
 {
     m_progress.Create(*this);
@@ -92,6 +93,7 @@ void CSplash::OnDraw(CDC& dc)
     dc.BitBlt(0, 0, 256, 256, dcMem, 0, 0, SRCCOPY);
 }
 
+// Sets the CREATESTRUCT struct prior to window creation.
 void CSplash::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = WS_CLIPCHILDREN | WS_POPUP | WS_VISIBLE;
@@ -100,7 +102,7 @@ void CSplash::PreCreate(CREATESTRUCT& cs)
     cs.cy = 256;
 }
 
-
+// Sets the WNDCLASS struct prior to window creation.
 void CSplash::PreRegisterClass(WNDCLASS& wc)
 {
     wc.lpszClassName = L"Splash Screen";

@@ -140,7 +140,7 @@ namespace Win32xx
 
         CTaskDialog(const CTaskDialog&);                // Disable copy construction
         CTaskDialog& operator = (const CTaskDialog&);   // Disable assignment operator
-        CString CTaskDialog::FillString(LPCTSTR pText);
+        CString FillString(LPCTSTR pText);
         void Reset();
         static HRESULT CALLBACK StaticTaskDialogProc(HWND wnd, UINT uNotification, WPARAM wparam, LPARAM lparam, LONG_PTR dwRefData);
 

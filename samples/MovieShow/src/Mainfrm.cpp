@@ -97,7 +97,6 @@ CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_pDockTree(0), m_pDockDi
         str.Format(L"%d - %d", year, year + 9);
         m_decades.push_back(str);
     }
-
 }
 
 CMainFrame::~CMainFrame()
@@ -366,7 +365,7 @@ std::vector<CString> CMainFrame::GetBoxSets()
 }
 
 // Returns the path used for the data files.
-CString CMainFrame::GetDataPath()
+CString CMainFrame::GetDataPath() const
 {
     CString filePath = GetAppDataPath();
 
@@ -378,7 +377,7 @@ CString CMainFrame::GetDataPath()
 }
 
 // Converts a text string to a vector of words.
-std::vector<CString> CMainFrame::GetWords(const CString& str)
+std::vector<CString> CMainFrame::GetWords(const CString& str) const
 {
     int position = 0;
     CString token = str.Tokenize(L" ", position);
@@ -395,7 +394,7 @@ std::vector<CString> CMainFrame::GetWords(const CString& str)
 
 // Performs a case-insensitive search for a word in sentence.
 // Returns true if a matching word is found.
-bool CMainFrame::IsWordInString(const CString& sentence, const CString& word)
+bool CMainFrame::IsWordInString(const CString& sentence, const CString& word) const
 {
     int pos = 0;
     CString sentenceLow = sentence;
@@ -804,12 +803,12 @@ void CMainFrame::ClearList()
 {
     GetViewList().DeleteAllItems();
 
-    GetViewDialog().m_title.SetWindowText(0);
-    GetViewDialog().m_year.SetWindowText(0);
-    GetViewDialog().m_actors.SetWindowText(0);
-    GetViewDialog().m_description.SetWindowText(0);
-    GetViewDialog().m_picture.GetImageData().clear();
-    GetViewDialog().m_picture.Invalidate();
+    GetViewDialog().GetTitle().SetWindowText(0);
+    GetViewDialog().GetYear().SetWindowText(0);
+    GetViewDialog().GetActors().SetWindowText(0);
+    GetViewDialog().GetInfo().SetWindowText(0);
+    GetViewDialog().SetPicture().SetImageData().clear();
+    GetViewDialog().SetPicture().Invalidate();
 }
 
 // Loads the movie data information from the archive
@@ -971,18 +970,6 @@ void CMainFrame::OnMenuUpdate(UINT nID)
     }
 
     }
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-    // Process notification messages sent by child windows
-//  switch (((LPNMHDR)lParam)->code)
-//  {
-//
-//  }
-
-    // Some notifications should return a value when handled
-    return CDockFrame::OnNotify(wparam, lparam);
 }
 
 // Called in response to a right mouse click on the list view. 
@@ -1173,17 +1160,16 @@ void CMainFrame::OnSelectListItem(const MovieInfo* pmi)
     CViewDialog& dialog = (CViewDialog&)m_pDockDialog->GetView();
     assert(pmi);
 
-    dialog.m_title.SetWindowText(pmi->movieName);
-    dialog.m_year.SetWindowText(pmi->releaseDate);
+    dialog.GetTitle().SetWindowText(pmi->movieName);
+    dialog.GetYear().SetWindowText(pmi->releaseDate);
 
     // Replace " / " with cariage return, line feed to put each actor on a new line
     CString actors = pmi->actors;
     actors.Replace(L" / ", L"\r\n");
-    dialog.m_actors.SetWindowText(actors);
-
-    dialog.m_description.SetWindowText(pmi->description);
-    dialog.m_picture.GetImageData() = pmi->imageData;
-    dialog.m_picture.Invalidate();
+    dialog.GetActors().SetWindowText(actors);
+    dialog.GetInfo().SetWindowText(pmi->description);
+    dialog.SetPicture().SetImageData() = pmi->imageData;
+    dialog.SetPicture().Invalidate();
 
     BOOL isFavourite = pmi->flags & 0x0001;
 
@@ -1266,6 +1252,7 @@ void CMainFrame::PlayMovie(LPCTSTR path)
     }
 }
 
+// Sets the CREATESTRUCT struct prior to window creation.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
     // This function is called before the frame is created.
@@ -1282,10 +1269,9 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 }
 
 
-// Saves some settings in the registry
+// Saves some settings in the registry.
 BOOL CMainFrame::SaveRegistrySettings()
 {
-
     if (!GetRegistryKeyName().IsEmpty())
     {
         try
@@ -1330,12 +1316,9 @@ BOOL CMainFrame::SaveRegistrySettings()
     return FALSE;
 }
 
+// Adds icons for popup menus.
 void CMainFrame::SetupMenuIcons()
 {
-    //  // Add the default set of menu icons from the toolbar.
-    //  CFrame::SetupMenuIcons();
-
-    // Add extra icons for menu items
     AddMenuIcon(IDM_ADD_FOLDER, GetApp()->LoadIcon(IDI_ADDFOLDER));
     AddMenuIcon(IDM_PLAY, GetApp()->LoadIcon(IDI_PLAY));
     AddMenuIcon(IDM_FAVOURITE, GetApp()->LoadIcon(IDI_FAVOURITES));
@@ -1356,9 +1339,10 @@ void CMainFrame::SetupMenuIcons()
         AddMenuIcon(i, GetApp()->LoadIcon(IDI_BOXSET));
 }
 
+// Configure the toolbar.
 void CMainFrame::SetupToolBar()
 {
-    // Create the normal ImageList
+    // Create the normal ImageList for the toolbar
     m_toolbarImages.Create(32, 32, ILC_COLOR32, 0, 0);
     m_toolbarImages.Add(GetApp()->LoadIcon(IDI_ADDFOLDER));
     m_toolbarImages.Add(GetApp()->LoadIcon(IDI_PLAY));
@@ -1367,7 +1351,7 @@ void CMainFrame::SetupToolBar()
     m_toolbarImages.Add(GetApp()->LoadIcon(IDI_HELPABOUT));
     GetToolBar().SetImageList(m_toolbarImages);
 
-    // Set the Resource IDs for the toolbar buttons
+    // Add toolbar buttons and set their Resource IDs
     AddToolBarButton(IDM_ADD_FOLDER);
     AddToolBarButton(0);                        // Separator
     AddToolBarButton(IDM_PLAY);
@@ -1377,6 +1361,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(IDM_HELP_ABOUT);
 }
 
+// Called after the video library is updated.
 void CMainFrame::OnFilesLoaded()
 {
     m_foundFiles.clear();
@@ -1412,16 +1397,11 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
             }
 
             barPos++;
-            // Force the correct position without delay
-            if (barPos == pFrame->m_foundFiles.size())
-                splash.GetBar().SetRange(0, barPos + 1);
-            splash.GetBar().SetPos(barPos + 1);
+            
+            // Update the splash screen's progress bar
             splash.GetBar().SetPos(barPos);
-            if (barPos == pFrame->m_foundFiles.size())
-                splash.GetBar().SetRange(0, barPos);
 
             CString fullName = pFrame->m_foundFiles[i].fileName;
-
             bool isFileInLibrary = false;
             std::list<MovieInfo>::iterator it = pFrame->m_moviesData.begin();
             while (it != pFrame->m_moviesData.end())
@@ -1457,7 +1437,6 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
 
                 TRACE(pFrame->m_mi.fileName); TRACE(" added to library\n");
             }
-
         }
     }
     else
@@ -1466,23 +1445,28 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
         ::MessageBox(NULL, MI.Inform().c_str(), L"Error", MB_OK);
     }
 
-    // The frame will close the splash window when it gets a UWM_FILESLOADED message.
+    // The UWM_FILESLOADED updates the list view with the new data.
     // Post the message becase the frame is in a different thread.
     pFrame->PostMessage(UWM_FILESLOADED);
-    return 0;
 
+    return 0;
 }
 
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
+    case WM_EXITSIZEMOVE:
+        GetViewList().SetLastColumnWidth();
+        break;
+
     case UWM_FILESLOADED:
         OnFilesLoaded();
         break;
     }
 
-        // pass unhandled messages on for default processing
+    // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }
 

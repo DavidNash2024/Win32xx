@@ -14,14 +14,13 @@ public:
     ~CSplash();
 
     void CreateBar();
-    CProgressBar& GetBar() { return m_progress; }
+    const CProgressBar& GetBar() { return m_progress; }
     void LoadFont();
     void SetText(LPCTSTR text) { m_text = text; }
 
 protected:
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnDraw(CDC& dc);
-
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
 
