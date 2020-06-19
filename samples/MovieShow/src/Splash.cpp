@@ -3,18 +3,9 @@
 #include "resource.h"
 
 
-CSplash::CSplash()
+CSplash::CSplash() : m_hIcon(0), m_fontHandle(0)
 {
     LoadFont();
-    Create();          // Creates the splash window
-    UpdateWindow();    // Calls OnDraw
-}
-
-CSplash::CSplash(LPCTSTR text) : m_text(text)
-{ 
-    LoadFont();
-    Create();          // Creates the splash window
-    UpdateWindow();    // Calls OnDraw
 }
 
 CSplash::~CSplash()
@@ -29,12 +20,18 @@ int CSplash::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
-// Creates the progress bar child window.
-void CSplash::CreateBar()
+// Adds a progress bar child window.
+void CSplash::AddBar()
 {
     m_progress.Create(*this);
-    m_progress.SetWindowPos(NULL, CRect(50, 200, 204, 210), SWP_SHOWWINDOW);
+    m_progress.SetWindowPos(NULL, 50, 200, 156, 10, SWP_SHOWWINDOW);
     m_progress.SetStep(1);
+}
+
+// Hides the splash screen
+void CSplash::Hide() 
+{ 
+    ShowWindow(SW_HIDE);
 }
 
 // Loads the font from the FRSCRIPT.TTF resource.
@@ -57,7 +54,7 @@ void CSplash::LoadFont()
 
                 m_fontHandle = AddFontMemResourceEx(
                     data,           // font resource
-                    len,        // number of bytes in font resource 
+                    len,            // number of bytes in font resource 
                     NULL,           // Reserved. Must be 0.
                     &fonts          // number of fonts installed
                 );
@@ -96,7 +93,8 @@ void CSplash::OnDraw(CDC& dc)
 // Sets the CREATESTRUCT struct prior to window creation.
 void CSplash::PreCreate(CREATESTRUCT& cs)
 {
-    cs.style = WS_CLIPCHILDREN | WS_POPUP | WS_VISIBLE;
+    cs.style = WS_CLIPCHILDREN | WS_POPUP;  // Initially hidden
+    cs.dwExStyle = WS_EX_TOPMOST;
 
     cs.cx = 256;
     cs.cy = 256;
@@ -109,3 +107,20 @@ void CSplash::PreRegisterClass(WNDCLASS& wc)
     wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
 }
 
+// Removes the progress bar.
+void CSplash::RemoveBar()
+{
+    m_progress.Destroy();
+}
+
+void CSplash::ShowText(LPCTSTR text)
+{ 
+    m_text = text;
+
+    // Show the window on top without activating it.
+    DWORD flags = SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_SHOWWINDOW;
+    SetWindowPos(HWND_TOPMOST, 0, 0, 0, 0, flags);
+    
+    UpdateWindow();
+    Invalidate(); 
+}

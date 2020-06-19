@@ -12,7 +12,7 @@ public:
     std::vector<BYTE>& SetImageData() { return m_imageData; }
 
 protected:
-    virtual void OnDraw(CDC& dc);
+    virtual void    OnDraw(CDC& dc);
     virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

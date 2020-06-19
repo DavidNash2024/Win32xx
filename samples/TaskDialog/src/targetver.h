@@ -36,16 +36,16 @@
 //#define NTDDI_VERSION   0x05010000
 
 // For Windows Vista
-//#define WINVER          0x0600
-//#define _WIN32_WINNT    0x0600
-//#define _WIN32_IE       0x0600
-//#define NTDDI_VERSION   0x06000000
+#define WINVER          0x0600
+#define _WIN32_WINNT    0x0600
+#define _WIN32_IE       0x0600
+#define NTDDI_VERSION   0x06000000
 
 // For Windows 7
-#define WINVER          0x0601
-#define _WIN32_WINNT    0x0601
-#define _WIN32_IE       0x0700
-#define NTDDI_VERSION   0x06010000
+//#define WINVER          0x0601
+//#define _WIN32_WINNT    0x0601
+//#define _WIN32_IE       0x0700
+//#define NTDDI_VERSION   0x06010000
 
 // For Windows 8
 //#define WINVER          0x0602

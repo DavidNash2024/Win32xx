@@ -21,23 +21,6 @@ struct MovieInfo
         flags = 0;
     }
 
-    void Clear()
-    {
-        fileName.Empty();
-        ZeroMemory(&lastModifiedTime, sizeof(lastModifiedTime));
-        movieName.Empty();
-        duration.Empty();
-        releaseDate.Empty();
-        coverImage.Empty();
-        description.Empty();
-        genre.Empty();
-        actors.Empty();
-        videoType.Empty();
-        boxset.Empty();
-        imageData.clear();
-        flags = 0;
-    }
-
     std::vector<BYTE> imageData;
     FILETIME lastModifiedTime;
     CString fileName;
@@ -72,8 +55,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
+    void ClearDisplay();
     void ClearList();
-    void static FillImageData(const CString& source, std::vector<BYTE>& dest);
+    void FillImageData(const CString& source, std::vector<BYTE>& dest);
     void FillList();
     void FillListFromAllBoxSets();
     void FillListFromBoxSet(LPCTSTR boxset);
@@ -84,17 +68,18 @@ public:
     void FillListFromType(LPCTSTR videoType);
     void FillTreeItems();
 
+    bool IsVideoFile(const CString& filename) const;
+
     std::vector<CString> GetBoxSets();
     CString GetDataPath() const;
-    std::list<MovieInfo>& GetMoviesData() { return m_moviesData; }
+
     CViewDialog& GetViewDialog() { return m_pDockDialog->GetViewDialog(); }
     CViewList& GetViewList()  { return m_viewList; }
     CViewTree& GetViewTree() { return m_pDockTree->GetViewTree(); }  
     std::vector<CString> GetWords(const CString& str) const;
     bool IsWordInString(const CString& sentence, const CString& word) const;
-    void LoadMovieInfoFromFile(FoundFileInfo ffi);
+    void LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movie);
     void LoadMovies();
-
     BOOL OnAddBoxSet();
     BOOL OnAddFolder();
     BOOL OnBoxSet(UINT nID);
@@ -114,6 +99,7 @@ public:
     BOOL OnVideoType(LPCTSTR videoType);
 
     void PlayMovie(LPCTSTR path);
+    std::list<MovieInfo>& SetMoviesData() { return m_moviesData; }
 
     static UINT WINAPI ThreadProc(void* pVoid);
 
@@ -134,6 +120,7 @@ private:
     CCriticalSection m_cs;
     CViewList        m_viewList;
     CWinThread       m_thread;
+    CSplash          m_splash;
     std::vector<FoundFileInfo> m_foundFiles;
     
     // Use lists because pointers to members of a list are always valid.
@@ -141,7 +128,6 @@ private:
     std::list<CString> m_decades;
     std::list<CString> m_genres;
 
-    MovieInfo    m_mi;
     MoviesData   m_moviesData;
     CImageList   m_toolbarImages;
     CMenu        m_boxSetMenu;

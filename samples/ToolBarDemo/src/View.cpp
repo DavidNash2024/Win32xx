@@ -10,6 +10,7 @@ CView::CView()
 {
 }
 
+// Process menu or toolbar input
 BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Process the messages from the child ToolBar
@@ -64,6 +65,7 @@ void CView::OnTop()
     RecalcLayout();
 }
 
+// Called during frame creation.
 int CView::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
@@ -97,8 +99,8 @@ int CView::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// OnDraw is called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
-// OnDraw is called when part or all of the window needs to be redrawn
 {
     CRect clientRect = GetClientRect();
     CRect tbRect = m_toolBar.GetWindowRect();
@@ -128,12 +130,13 @@ void CView::OnDraw(CDC& dc)
     dc.DrawText(text, -1, clientRect, DT_CENTER | DT_WORDBREAK);
 }
 
+// OnInitialUpdate is called immediately after the window is created.
 void CView::OnInitialUpdate()
-// OnInitialUpdate is called immediately after the window is created
 {
     TRACE("View window created\n");
 }
 
+// Called when a notification is received from a child window.
 inline LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(wparam);
@@ -148,22 +151,20 @@ inline LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Here we set the defaults used by the create function for the view window
+// Preforming this is optional, but doing so allows us to
+// take more precise control over the window we create.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
-    // Here we set the defaults used by the create function for the view window
-    // Preforming this is optional, but doing so allows us to
-    // take more precise control over the window we create.
-
     // Set the extended style
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+// Here we set the Window class parameters.
+// Preforming this is optional, but doing so allows us to
+// take more precise control over the type of window we create.
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
-    // Here we set the Window class parameters.
-    // Preforming this is optional, but doing so allows us to
-    // take more precise control over the type of window we create.
-
     // Set the Window Class name
     wc.lpszClassName = _T("Win32++ View");
 
@@ -177,6 +178,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
 
+// Reposition the child windows of the frame.
 void CView::RecalcLayout()
 {
     // Position the toolbar at the top, left, right or bottom of the view.
@@ -226,8 +228,8 @@ void CView::SetWrapState(BOOL isWrapped)
     }
 }
 
-LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // All window messages for this window pass through WndProc
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
@@ -240,6 +242,3 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }
-
-
-
