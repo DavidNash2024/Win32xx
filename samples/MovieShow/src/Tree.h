@@ -14,20 +14,21 @@ class CViewTree : public CTreeView
 public:
     CViewTree();
     virtual ~CViewTree();
+    
     HTREEITEM AddItem(HTREEITEM parent, LPCTSTR text, int imageIndex);
-    CString* GetItemString(HTREEITEM item);
-    bool IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
-    BOOL OnBeginLabelEdit(LPARAM lparam);
-    BOOL OnEndLabelEdit(LPARAM lparam);
-    BOOL OnSelChanged();
-    void RemoveItem(HTREEITEM item);
-    void Swap(HTREEITEM item1, HTREEITEM item2);
+    CString*  GetItemString(HTREEITEM item);
+    bool      IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
+    BOOL      OnBeginLabelEdit(LPARAM lparam);
+    BOOL      OnEndLabelEdit(LPARAM lparam);
+    BOOL      OnSelChanged();
+    void      RemoveItem(HTREEITEM item);
+    void      Swap(HTREEITEM item1, HTREEITEM item2);
     
 protected:
-    virtual void OnDestroy();
-    virtual void OnInitialUpdate();
+    virtual void    OnDestroy();
+    virtual void    OnInitialUpdate();
     virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
-    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void    PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

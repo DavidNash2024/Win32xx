@@ -12,13 +12,22 @@ New Features and Enhancements
 
 * Added MovieShow sample
    This sample implements a video library manager for m4v video files. The code
-   assumes the video files have an m4v extension displays the file's meta data.
-   The meta data includes the movie name, actors, genre, plot description, 
-   cover image, etc.
+   assumes the video files have alread have the meta data for the movie. The 
+   meta data includes the movie name, actors, genre, plot description, cover
+   image, etc.
 
 * Added WinPlot sample
    This sample plots a user specified function in the window.
-   The plot is resized when the window is resized.   
+   The plot is resized when the window is resized.
+   
+* Extended the Toolbar sample.
+   The toobar sample now demonstrates how to add additional toolbars to the
+   frame. It continues to demonstrate how to customise a toolbar in runtime,
+   and how to add a horizontal or vertical toolbar to the frame's view.
+
+* Minor updates to the samples
+
+* Minor updates to the documentation   
 
 
 Version 8.7.0

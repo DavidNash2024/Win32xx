@@ -2,33 +2,33 @@
 #define SPLASH_H
 
 // This class creates a splash screen with optional text and progress bar.
-// Add a CSplash object to any time consuming function.
-// The constructor automatically creates the splash screen window.
-// The splash screen window will be automatically destroyed when the
-//  CSplash object goes out of scope.
+// The splash screen is shown to indicate time consuming tasks, and 
+// hidden when they're complete.
 class CSplash : public CWnd
 {
 public:
     CSplash();
-    CSplash(LPCTSTR text);
     ~CSplash();
 
-    void CreateBar();
-    const CProgressBar& GetBar() { return m_progress; }
+    const CProgressBar& GetBar() const { return m_progress; }
+
+    void AddBar();
+    void Hide(); 
     void LoadFont();
-    void SetText(LPCTSTR text) { m_text = text; }
+    void RemoveBar();
+    void ShowText(LPCTSTR text);
 
 protected:
-    virtual int OnCreate(CREATESTRUCT& cs);
+    virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDraw(CDC& dc);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
 
 private:
     CProgressBar m_progress;
-    CString m_text;
-    HICON m_hIcon;
-    HANDLE m_fontHandle;
+    CString      m_text;
+    HICON        m_hIcon;
+    HANDLE       m_fontHandle;
 };
 
 

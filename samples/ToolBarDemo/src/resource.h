@@ -35,10 +35,21 @@
 #define IDB_NORMAL                      150
 #define IDB_DISABLED                    151
 #define IDB_HOT                         152
+#define IDB_ARROWS                      154
+#define IDB_CARDS                       155
+#define IDC_ARROWS                      157
+#define IDC_CARDS                       158
 #define IDI_TOP                         160
 #define IDI_LEFT                        161
 #define IDI_RIGHT                       162
 #define IDI_BOTTOM                      163
+#define IDM_ARROW_LEFT                  160
+#define IDM_ARROW_RIGHT                 161
+
+#define IDM_CARD_CLUB                   170
+#define IDM_CARD_DIAMOND                171
+#define IDM_CARD_HEART                  172
+#define IDM_CARD_SPADE                  173
 
 
 // Next default values for new objects

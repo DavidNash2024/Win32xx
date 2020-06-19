@@ -190,7 +190,7 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
         {
             CMainFrame& frame = GetMovieShowApp()->GetMainFrame();
             std::list<MovieInfo>::iterator it;
-            std::list<MovieInfo>& data = frame.GetMoviesData();
+            std::list<MovieInfo>& data = frame.SetMoviesData();
             for (it = data.begin(); it != data.end(); ++it)
             {
                 if ((*it).boxset == oldText)

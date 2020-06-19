@@ -35,11 +35,16 @@ protected:
     virtual LRESULT OnQueryInsert(LPNMTOOLBAR pNMTB);
     virtual LRESULT OnReset(LPNMTOOLBAR pNMTB);
     virtual LRESULT OnToolBarChange(LPNMTOOLBAR pNMTB);
+    virtual BOOL    OnViewToolBar();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CView m_view;
+    CToolBar m_arrows;
+    CToolBar m_cards;
+    CImageList m_arrowImages;
+    CImageList m_cardImages;    
     std::vector<TBBUTTON>   m_defaultButtons;
     std::vector<TBBUTTON>   m_resetButtons;
     BOOL    m_useBigIcons;

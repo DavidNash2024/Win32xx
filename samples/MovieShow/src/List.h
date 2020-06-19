@@ -57,11 +57,11 @@ public:
     void UpdateItemImage(int item);
 
 protected:
-    virtual void OnAttach();
-    virtual void OnDestroy();
-    virtual void OnInitialUpdate();
+    virtual void    OnAttach();
+    virtual void    OnDestroy();
+    virtual void    OnInitialUpdate();
     virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lParam);
-    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void    PreCreate(CREATESTRUCT& cs);
 
 private:
     static int CALLBACK CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortViewItems);

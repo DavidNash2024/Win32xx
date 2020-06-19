@@ -14,8 +14,11 @@ class CMovieShowApp : public CWinApp
 public:
     CMovieShowApp();
     virtual ~CMovieShowApp();
-    virtual BOOL InitInstance();
+
     CMainFrame& GetMainFrame() { return m_frame; }
+
+protected:
+    virtual BOOL InitInstance();
 
 private:
     CMainFrame m_frame;

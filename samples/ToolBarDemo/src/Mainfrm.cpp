@@ -7,10 +7,10 @@
 
 
 // Definitions for the CMainFrame class
+
+// Constructor for CMainFrame. Its called after CFrame's constructor
 CMainFrame::CMainFrame() : m_useBigIcons(FALSE)
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     //Set m_View as the view window of the frame
     SetView(m_view);
 
@@ -24,31 +24,33 @@ CMainFrame::~CMainFrame()
     // Destructor for CMainFrame.
 }
 
-LRESULT CMainFrame::OnBeginAdjust(LPNMTOOLBAR pNMTB)
 // Called when the user has begun customizing a toolbar. Here we save
 // a copy of the ToolBar layout so it can be restored when the user
 // selects the reset button.
+LRESULT CMainFrame::OnBeginAdjust(LPNMTOOLBAR pNMTB)
 {
     CToolBar* pToolBar = static_cast<CToolBar*>(GetCWndPtr(pNMTB->hdr.hwndFrom));
     assert (dynamic_cast<CToolBar*> (pToolBar));
     
-    int nResetCount = pToolBar->GetButtonCount();
-    m_resetButtons.clear();
-
-    for (int i = 0; i < nResetCount; i++)
+    if (pToolBar)
     {
-        TBBUTTON tbb;
-        pToolBar->GetButton(i, tbb);
-        m_resetButtons.push_back(tbb);
+        int nResetCount = pToolBar->GetButtonCount();
+        m_resetButtons.clear();
+
+        for (int i = 0; i < nResetCount; i++)
+        {
+            TBBUTTON tbb;
+            pToolBar->GetButton(i, tbb);
+            m_resetButtons.push_back(tbb);
+        }
     }
 
     return TRUE;
 }
 
+// OnCommand responds to menu and and toolbar input
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -70,11 +72,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default. 
     // Use the following functions to disable options.
@@ -99,8 +100,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Called when the help button on the customize dialog is pressed.
 LRESULT CMainFrame::OnCustHelp(LPNMHDR pNMHDR)
-// Called when the help button on the customize dialog is pressed
 {
     UNREFERENCED_PARAMETER(pNMHDR);
     MessageBox(_T("Help Button Pressed"), _T("Help"), MB_ICONINFORMATION | MB_OK);
@@ -108,17 +109,17 @@ LRESULT CMainFrame::OnCustHelp(LPNMHDR pNMHDR)
     return 0;
 }
 
-LRESULT CMainFrame::OnEndAdjust(LPNMHDR pNMHDR)
 // Called when the user has stopped customizing a toolbar.
+LRESULT CMainFrame::OnEndAdjust(LPNMHDR pNMHDR)
 {
     UNREFERENCED_PARAMETER(pNMHDR);
 
     return TRUE;
 }
 
+// Issue a close request to the frame
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
@@ -177,6 +178,7 @@ BOOL CMainFrame::OnFilePrint()
     }
 }
 
+// Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
@@ -188,8 +190,8 @@ void CMainFrame::OnInitialUpdate()
     SaveTBDefault();
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 // Process notification messages sent by child windows
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     LPNMTOOLBAR pNMTB = (LPNMTOOLBAR)lparam;
     
@@ -209,9 +211,9 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
-LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
 // Called once for each button during toolbar customization to populate the list
 // of available buttons. Return FALSE when all buttons have been added.
+LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
 {
     // An array of TBBUTTON that contains all possible buttons
     TBBUTTON buttonInfo[] =
@@ -254,9 +256,9 @@ LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
     return FALSE;   // No more buttons.
 }
 
-LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR pNMTB)
 // Called when a button may be deleted from a toolbar while the user is customizing the toolbar.
 // Return TRUE to permit button deletion, and FALSE to prevent it.
+LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR pNMTB)
 {
     UNREFERENCED_PARAMETER(pNMTB);
 
@@ -264,9 +266,9 @@ LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR pNMTB)
     return TRUE;
 }
 
-LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR pNMTB)
 // Called when a button may be inserted to the left of the specified button while the user 
 //  is customizing a toolbar. Return TRUE to permit button deletion, and FALSE to prevent it.
+LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR pNMTB)
 {
     UNREFERENCED_PARAMETER(pNMTB);
 
@@ -274,26 +276,30 @@ LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR pNMTB)
     return TRUE;
 }
 
-LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
 // Called when the user presses the Reset button on teh ToolBar customize dialog.
 // Here we restore the Toolbar to the settings saved in OnBeginAdjust.
+LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
+
 {
     CToolBar* pToolBar = static_cast<CToolBar*>(GetCWndPtr(pNMTB->hdr.hwndFrom));
     assert (dynamic_cast<CToolBar*> (pToolBar));
 
-    // Remove all current buttons
-    int nCount = pToolBar->GetButtonCount();
-    for (int i = nCount - 1; i >= 0; i--)
+    if (pToolBar)
     {
-        pToolBar->DeleteButton(i);
-    }
-    
-    // Restore buttons from info stored in m_vTBBReset
-    int nResetCount = static_cast<int>(m_resetButtons.size());
-    for (int j = 0; j < nResetCount; j++)
-    {
-        TBBUTTON tbb = m_resetButtons[j];
-        pToolBar->InsertButton(j, tbb);
+        // Remove all current buttons
+        int nCount = pToolBar->GetButtonCount();
+        for (int i = nCount - 1; i >= 0; i--)
+        {
+            pToolBar->DeleteButton(i);
+        }
+
+        // Restore buttons from info stored in m_vTBBReset
+        int nResetCount = static_cast<int>(m_resetButtons.size());
+        for (int j = 0; j < nResetCount; j++)
+        {
+            TBBUTTON tbb = m_resetButtons[j];
+            pToolBar->InsertButton(j, tbb);
+        }
     }
 
     RecalcLayout();
@@ -301,14 +307,25 @@ LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
     return TRUE;
 }
 
-LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR pNMTB)
 // Called when the toolbar has been changed during customization.
+LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR pNMTB)
 {
     UNREFERENCED_PARAMETER(pNMTB);
 
     // Reposition the toolbar
     RecalcLayout();
 
+    return TRUE;
+}
+
+inline BOOL CMainFrame::OnViewToolBar()
+{
+    BOOL show = GetToolBar().IsWindow() && !GetToolBar().IsWindowVisible();
+
+    // Show or hide the toolbars
+    GetReBar().ShowBand(GetReBar().GetBand(GetToolBar()), show);
+    GetReBar().ShowBand(GetReBar().GetBand(m_cards), show);
+    GetReBar().ShowBand(GetReBar().GetBand(m_arrows), show);
     return TRUE;
 }
 
@@ -394,6 +411,27 @@ void CMainFrame::SetupToolBar()
     
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
+    
+    // Add the two other toolbars if we can use rebars (Need Win95 and IE 4 or better)
+    if (IsReBarSupported())
+    {
+        // Add the Arrows toolbar
+        AddToolBarBand(m_arrows, 0, IDC_ARROWS);
+        m_arrows.AddButton(IDM_ARROW_LEFT);
+        m_arrows.AddButton(IDM_ARROW_RIGHT);
+
+        // Add the Cards toolbar
+        AddToolBarBand(m_cards, 0, IDB_CARDS);
+        m_cards.AddButton(IDM_CARD_CLUB);
+        m_cards.AddButton(IDM_CARD_DIAMOND);
+        m_cards.AddButton(IDM_CARD_HEART);
+        m_cards.AddButton(IDM_CARD_SPADE);
+        
+        // Set the button images
+        SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));
+        SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
+    }
+    
 }
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

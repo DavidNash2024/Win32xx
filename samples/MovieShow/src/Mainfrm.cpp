@@ -71,8 +71,6 @@ CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_pDockTree(0), m_pDockDi
                            m_isDirty(false), m_boxSetsItem(0), m_dialogWidth(0),
                            m_treeHeight(0)
 {
-    ZeroMemory(&m_mi, sizeof(m_mi));
-
     //Set m_View as the view window of the frame
     SetView(m_viewList);
 
@@ -168,6 +166,8 @@ void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
 // Fills the list view with all movies.
 void CMainFrame::FillList()
 {
+    GetViewList().SetRedraw(FALSE);
+    m_splash.ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -179,12 +179,18 @@ void CMainFrame::FillList()
         GetViewList().AddItem(*iter);
     }
 
+    m_splash.Hide();
+    GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
+    if (GetViewList().GetItemCount() == 0)
+        ClearDisplay();
 }
 
 // Fills the list view with movies belonging to the specified boxset.
 void CMainFrame::FillListFromBoxSet(LPCTSTR boxset)
 {
+    GetViewList().SetRedraw(FALSE);
+    m_splash.ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -197,12 +203,18 @@ void CMainFrame::FillListFromBoxSet(LPCTSTR boxset)
             GetViewList().AddItem(*iter);
     }
 
+    m_splash.Hide();
+    GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
+    if (GetViewList().GetItemCount() == 0)
+        ClearDisplay();
 }
 
 // Fills the list view with movies belonging to all boxsets.
 void CMainFrame::FillListFromAllBoxSets()
 {
+    GetViewList().SetRedraw(FALSE);
+    m_splash.ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -215,12 +227,18 @@ void CMainFrame::FillListFromAllBoxSets()
             GetViewList().AddItem(*iter);
     }
 
+    m_splash.Hide();
+    GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
+    if (GetViewList().GetItemCount() == 0)
+        ClearDisplay();
 }
 
 // Fills the list view with movies within the specified date range.
 void CMainFrame::FillListFromDateRange(LPCTSTR dateRange)
 {
+    GetViewList().SetRedraw(FALSE);
+    m_splash.ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -238,12 +256,18 @@ void CMainFrame::FillListFromDateRange(LPCTSTR dateRange)
             GetViewList().AddItem(*iter);
     }
 
+    m_splash.Hide();
+    GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
+    if (GetViewList().GetItemCount() == 0)
+        ClearDisplay();
 }
 
 // Fills the list view with movies matching the specified mask.
 void CMainFrame::FillListFromFlags(DWORD mask)
 {
+    GetViewList().SetRedraw(FALSE);
+    m_splash.ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -256,12 +280,18 @@ void CMainFrame::FillListFromFlags(DWORD mask)
             GetViewList().AddItem(*iter);
     }
 
+    m_splash.Hide();
+    GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
+    if (GetViewList().GetItemCount() == 0)
+        ClearDisplay();
 }
 
 // Fills the list view with movies from all genres.
 void CMainFrame::FillListFromGenres(LPCTSTR genreList)
 {
+    GetViewList().SetRedraw(FALSE);
+    m_splash.ShowText(L"Updating List");
     ClearList();
 
     CString str = genreList;
@@ -276,7 +306,11 @@ void CMainFrame::FillListFromGenres(LPCTSTR genreList)
         resToken = str.Tokenize(L",", curPos);
     }
 
+    m_splash.Hide();
+    GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
+    if (GetViewList().GetItemCount() == 0)
+        ClearDisplay();
 }
 
 // Fills the list view with movies matching the specified genre.
@@ -298,6 +332,8 @@ void CMainFrame::FillListFromGenre(LPCTSTR genre)
 // Fills the list view with movies matching the specified type.
 void CMainFrame::FillListFromType(LPCTSTR videoType)
 {
+    GetViewList().SetRedraw(FALSE);
+    m_splash.ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -310,7 +346,11 @@ void CMainFrame::FillListFromType(LPCTSTR videoType)
             GetViewList().AddItem(*iter);
     }
 
+    m_splash.Hide();
+    GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
+    if (GetViewList().GetItemCount() == 0)
+        ClearDisplay();
 }
 
 // Fills the tree view.
@@ -392,6 +432,15 @@ std::vector<CString> CMainFrame::GetWords(const CString& str) const
     return words;
 }
 
+// Returns true if the file's extension is m4v, mp4 or mp3.
+bool CMainFrame::IsVideoFile(const CString& filename) const
+{
+    int dot = filename.ReverseFind(_T('.'));
+    CString ext = filename.Mid(dot + 1, lstrlen(filename));
+
+    return (ext == L"m4v" || ext == L"mp4" || ext == L"mov");
+}
+
 // Performs a case-insensitive search for a word in sentence.
 // Returns true if a matching word is found.
 bool CMainFrame::IsWordInString(const CString& sentence, const CString& word) const
@@ -421,37 +470,35 @@ bool CMainFrame::IsWordInString(const CString& sentence, const CString& word) co
     return false;
 }
 
-// Loads the meta data info from the movie file.
-// Stores the information in a MovieInfo struct.
-void CMainFrame::LoadMovieInfoFromFile(FoundFileInfo ffi)
+// Loads the meta data info from the specified movie file.
+// Stores the information in the specified MovieInfo struct.
+void CMainFrame::LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movie)
 {
-    m_mi.Clear();
-    m_mi.fileName = ffi.fileName;
-    m_mi.lastModifiedTime = ffi.lastModifiedTime;
+    movie.fileName = ffi.fileName;
+    movie.lastModifiedTime = ffi.lastModifiedTime;
 
     MediaInfo MI;
     MI.Option(L"Cover_Data", L"base64");    // Required for v18.03.1 and higher
 
     MI.Open(ffi.fileName.c_str());
-    m_mi.movieName   = CString(MI.Get(Stream_General, 0, L"Movie", Info_Text, Info_Name).c_str());
-    m_mi.genre       = CString(MI.Get(Stream_General, 0, L"Genre", Info_Text, Info_Name).c_str());
-    m_mi.actors      = CString(MI.Get(Stream_General, 0, L"Actor", Info_Text, Info_Name).c_str());
-    m_mi.description = CString(MI.Get(Stream_General, 0, L"LongDescription",  Info_Text, Info_Name).c_str());
-    m_mi.releaseDate = CString(MI.Get(Stream_General, 0, L"Recorded_Date",    Info_Text, Info_Name).c_str());
-    m_mi.duration    = CString(MI.Get(Stream_General, 0, L"Duration/String3", Info_Text, Info_Name).c_str());
+    movie.movieName   = MI.Get(Stream_General, 0, L"Movie", Info_Text, Info_Name).c_str();
+    movie.genre       = MI.Get(Stream_General, 0, L"Genre", Info_Text, Info_Name).c_str();
+    movie.actors      = MI.Get(Stream_General, 0, L"Actor", Info_Text, Info_Name).c_str();
+    movie.description = MI.Get(Stream_General, 0, L"LongDescription",  Info_Text, Info_Name).c_str();
+    movie.releaseDate = MI.Get(Stream_General, 0, L"Recorded_Date",    Info_Text, Info_Name).c_str();
+    movie.duration    = MI.Get(Stream_General, 0, L"Duration/String3", Info_Text, Info_Name).c_str();
 
-    CString CoverImage = CString(MI.Get(Stream_General, 0, L"Cover_Data", Info_Text, Info_Name).c_str());
-    FillImageData(CoverImage, m_mi.imageData);
-    m_mi.genre.Remove(L" / 57");
-    m_mi.videoType = L"Movies";
-    m_mi.flags = 0;
+    CString CoverImage = MI.Get(Stream_General, 0, L"Cover_Data", Info_Text, Info_Name).c_str();
+    FillImageData(CoverImage, movie.imageData);
+    movie.genre.Remove(L" / 57");
+    movie.videoType = L"Movies";
+    movie.flags = 0;
 
     MI.Close();
 }
 
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 {
-
     assert(NULL != szKeyName);
 
     if (CDockFrame::LoadRegistrySettings(szKeyName))
@@ -501,11 +548,9 @@ BOOL CMainFrame::OnAddFolder()
         fd.SetTitle(L"Choose a folder to add to the video library.");
         if (fd.DoModal(*this) == IDOK)
         {
-            CSplash splash(L"Updating Library");
-
             CString DataPath = GetDataPath();
             CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-            SHCreateDirectoryEx(NULL, DataPath.c_str(), NULL);
+            ::SHCreateDirectoryEx(NULL, DataPath.c_str(), NULL);
 
             // Remove entries from the library if the file has been removed
             {
@@ -515,7 +560,7 @@ BOOL CMainFrame::OnAddFolder()
                 std::list<MovieInfo>::iterator it = m_moviesData.begin();
                 while (it != m_moviesData.end())
                 {
-                    if (!PathFileExists((*it).fileName))
+                    if (!::PathFileExists((*it).fileName))
                     {
                         TRACE((*it).fileName); TRACE("  removed from library\n");
                         it = m_moviesData.erase(it);
@@ -525,7 +570,7 @@ BOOL CMainFrame::OnAddFolder()
                 }
             }
 
-            CString searchString = fd.GetFolderPath() + L"\\*.m4v";
+            CString searchString = fd.GetFolderPath() + L"\\*.m??";
             CFileFind fileFound;
 
             m_foundFiles.clear();
@@ -536,8 +581,12 @@ BOOL CMainFrame::OnAddFolder()
                     {
                         FoundFileInfo ffi;
                         ffi.fileName = fileFound.GetFilePath();
-                        ffi.lastModifiedTime = fileFound.GetLastWriteTime();
-                        m_foundFiles.push_back(ffi);
+
+                        if (IsVideoFile(ffi.fileName))
+                        {
+                            ffi.lastModifiedTime = fileFound.GetLastWriteTime();
+                            m_foundFiles.push_back(ffi);
+                        }
                     }
                 while (fileFound.FindNextFile());
             }
@@ -606,7 +655,7 @@ void CMainFrame::OnClose()
 
         // Display the splash screen.
         // The splash window is destroyed when splash goes out of scope.
-        CSplash splash(L"Saving Library");
+        m_splash.ShowText(L"Saving Library");
 
         CString DataPath = GetDataPath();
         CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
@@ -646,6 +695,7 @@ void CMainFrame::OnClose()
                     ar.Write(&(*it).imageData[0], ImageDataSize);
             }
             TRACE("\nSave Movies data complete \n ");
+            m_splash.Hide();
         }
 
         catch (const CFileException& e)
@@ -794,21 +844,30 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
+       // Create the splash screen
+       m_splash.Create();
+    
     // call the base class function
     return CDockFrame::OnCreate(cs);
 }
 
-// Clears the contents of the movie info dialog.
-void CMainFrame::ClearList()
-{
-    GetViewList().DeleteAllItems();
 
+
+// Clears the contents of the movie info dialog.
+void CMainFrame::ClearDisplay()
+{
     GetViewDialog().GetTitle().SetWindowText(0);
     GetViewDialog().GetYear().SetWindowText(0);
     GetViewDialog().GetActors().SetWindowText(0);
     GetViewDialog().GetInfo().SetWindowText(0);
     GetViewDialog().SetPicture().SetImageData().clear();
-    GetViewDialog().SetPicture().Invalidate();
+    GetViewDialog().RedrawWindow();
+}
+
+// Clears the contents of the ListView
+void CMainFrame::ClearList()
+{
+    GetViewList().DeleteAllItems();
 }
 
 // Loads the movie data information from the archive
@@ -825,6 +884,9 @@ void CMainFrame::LoadMovies()
     {
         try
         {
+            // Display the splash screen.
+            m_splash.ShowText(L"Loading Library");
+
             CArchive ar(DataFile, CArchive::load);
             std::vector<MovieInfo>::iterator it;
 
@@ -923,10 +985,6 @@ void CMainFrame::OnInitialUpdate()
     // Add the tree view.
     int height = m_treeHeight? m_treeHeight : GetViewRect().Height() / 3;
     m_pDockTree = static_cast<CDockTree*>(m_pDockDialog->AddDockedChild(new CDockTree, dockStyle | DS_DOCKED_TOP, height));
-
-    // Display the splash screen.
-    // The splash window is destroyed when splash goes out of scope.
-    CSplash splash(L"Loading Library");
 
     // Fill the tree view and list view.
     LoadMovies();
@@ -1141,7 +1199,7 @@ BOOL CMainFrame::OnRemoveFile()
         {
             if ((*it).fileName == filenames[i])
             {
-                TRACE(m_mi.fileName); TRACE(" removed from library\n");
+                TRACE(filenames[i]); TRACE(" removed from library\n");
                 m_moviesData.erase(it);
                 m_isDirty = true;
                 break;
@@ -1364,6 +1422,7 @@ void CMainFrame::SetupToolBar()
 // Called after the video library is updated.
 void CMainFrame::OnFilesLoaded()
 {
+    m_splash.ShowText(L"Updating List");
     m_foundFiles.clear();
     OnSelectTreeItem();
 }
@@ -1382,9 +1441,9 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
         // Lock this code for thread safety
         CThreadLock lock(pFrame->m_cs);
 
-        CSplash splash(L"Updating Library");
-        splash.CreateBar();
-        splash.GetBar().SetRange(0, (short)pFrame->m_foundFiles.size());
+        pFrame->m_splash.ShowText(L"Updating Library");
+        pFrame->m_splash.AddBar();
+        pFrame->m_splash.GetBar().SetRange(0, (short)pFrame->m_foundFiles.size());
 
         unsigned short barPos = 0;
         for (size_t i = 0; i < pFrame->m_foundFiles.size(); i++)
@@ -1397,9 +1456,9 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
             }
 
             barPos++;
-            
+
             // Update the splash screen's progress bar
-            splash.GetBar().SetPos(barPos);
+            pFrame->m_splash.GetBar().SetPos(barPos);
 
             CString fullName = pFrame->m_foundFiles[i].fileName;
             bool isFileInLibrary = false;
@@ -1415,7 +1474,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
                     if (t1 != t2)
                     {
                         // remove the modified file from the library
-                        TRACE(pFrame->m_mi.fileName); TRACE(" removed modified file from library\n");
+                        TRACE(fullName); TRACE(" removed modified file from library\n");
                         pFrame->m_moviesData.erase(it);
                     }
                     else
@@ -1432,12 +1491,15 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
             if (!isFileInLibrary)
             {
                 pFrame->m_isDirty = true;
-                pFrame->LoadMovieInfoFromFile(pFrame->m_foundFiles[i]);
-                pFrame->m_moviesData.push_back(pFrame->m_mi);
+                MovieInfo mi;
+                pFrame->LoadMovieInfoFromFile(pFrame->m_foundFiles[i], mi);
+                pFrame->m_moviesData.push_back(mi);
 
-                TRACE(pFrame->m_mi.fileName); TRACE(" added to library\n");
+                TRACE(fullName); TRACE(" added to library\n");
             }
         }
+
+        pFrame->m_splash.RemoveBar();
     }
     else
     {

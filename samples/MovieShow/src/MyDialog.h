@@ -25,12 +25,12 @@ public:
     CCoverImage& SetPicture() { return m_picture; }
 
 protected:
-    virtual BOOL OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnCancel() {} // Suppress closing the dialog with esc key.
-    virtual void OnClose() {}  // Suppress closing the dialog with return key on rich edit.
+    virtual void    OnCancel() {} // Suppress closing the dialog with esc key.
+    virtual void    OnClose() {}  // Suppress closing the dialog with return key on rich edit.
+    virtual BOOL    OnInitDialog();
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnOK() {}     // Suppress closing the dialog with return key.
+    virtual void    OnOK() {}     // Suppress closing the dialog with return key.
 
 private:
     void AppendText(int nID, LPCTSTR text);

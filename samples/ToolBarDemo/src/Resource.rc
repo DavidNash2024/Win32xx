@@ -95,6 +95,8 @@ IDW_MAIN                BITMAP                  "../src/res/Toolbar.bmp"
 IDB_NORMAL              BITMAP                  "../src/res/Toolbar24.bmp"
 IDB_DISABLED            BITMAP                  "../src/res/Toolbar24_d.bmp"
 IDB_HOT                 BITMAP                  "../src/res/Toolbar24_h.bmp"
+IDB_ARROWS              BITMAP                  "../src/res/Arrows.bmp"
+IDB_CARDS               BITMAP                  "../src/res/Cards.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

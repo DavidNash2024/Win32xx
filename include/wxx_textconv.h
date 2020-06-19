@@ -1,5 +1,5 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -186,8 +186,8 @@ namespace Win32xx
             UNREFERENCED_PARAMETER(codePage);
             UNREFERENCED_PARAMETER(charCount);
         }
-        operator LPCWSTR() { return const_cast<LPWSTR>(m_pWStr); }
-        operator LPOLESTR() { return const_cast<LPOLESTR>(m_pWStr); }
+        operator LPCWSTR() { return m_pWStr; }
+        operator LPOLESTR() { return (LPOLESTR)m_pWStr; }
 
     private:
         CWtoW(const CWtoW&);
@@ -204,7 +204,7 @@ namespace Win32xx
             UNREFERENCED_PARAMETER(codePage);
             UNREFERENCED_PARAMETER(charCount);
         }
-        operator LPCSTR() { return static_cast<LPCSTR>(m_pStr); }
+        operator LPCSTR() { return m_pStr; }
 
     private:
         CAtoA(const CAtoA&);
