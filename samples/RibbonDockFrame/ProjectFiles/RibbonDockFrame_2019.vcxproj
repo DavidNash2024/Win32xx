@@ -88,6 +88,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Ribbon.bml;RibbonUI.rc;RibbonUI.h</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Ribbon.bml;RibbonUI.rc;RibbonUI.h</Outputs>
+      <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</VerifyInputsAndOutputsExist>
+      <VerifyInputsAndOutputsExist Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</VerifyInputsAndOutputsExist>
     </CustomBuild>
   </ItemGroup>
   <PropertyGroup Label="Globals">

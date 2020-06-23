@@ -27,7 +27,7 @@ New Features and Enhancements
 
 * Minor updates to the samples
 
-* Minor updates to the documentation   
+* Minor updates to the help documentation   
 
 
 Version 8.7.0

@@ -762,7 +762,7 @@ namespace Win32xx
     // A resource dll can be used to define resources in different languages.
     // To use this function, place code like this in InitInstance
     //   HINSTANCE resource = LoadLibrary(_T("MyResourceDLL.dll"));
-    //   SetResourceHandle(hResource);
+    //   SetResourceHandle(resource);
     inline void CWinApp::SetResourceHandle(HINSTANCE resource)
     {
         m_resource = resource;

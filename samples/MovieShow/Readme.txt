@@ -60,6 +60,15 @@ Features demonstrated in this example
 * Ability to retrieve video files based on title, release date, genre, 
    box set, and file name. 
 * How to use Nullsoft Scriptable Install System to install the program as
-   a windows application.   
+   a windows application.
+
+
+Contents of folders
+===================
+* DLLs         Contains 32 bit and 64 bit versions of the MediaInfo DLLs.
+* install      Contains the files needed to build a Setup executable to 
+                install MovieShow as a windows application.
+* ProjectFiles Contains the Visual Studio project files.
+* src          Contains the source code.  
  
 

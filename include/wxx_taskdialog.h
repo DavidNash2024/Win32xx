@@ -138,8 +138,10 @@ namespace Win32xx
             CString buttonText;
         };
 
+        using CWnd::WndProc;                            // Make WndProc private
         CTaskDialog(const CTaskDialog&);                // Disable copy construction
         CTaskDialog& operator = (const CTaskDialog&);   // Disable assignment operator
+
         CString FillString(LPCTSTR pText);
         void Reset();
         static HRESULT CALLBACK StaticTaskDialogProc(HWND wnd, UINT uNotification, WPARAM wparam, LPARAM lparam, LONG_PTR dwRefData);
