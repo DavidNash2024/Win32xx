@@ -61,9 +61,9 @@
     <ClInclude Include="..\src\Doc.h" />
     <ClInclude Include="..\src\enums.h" />
     <ClInclude Include="..\src\FrameApp.h" />
+    <ClInclude Include="..\src\InputDlg.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\Node.h" />
-    <ClInclude Include="..\src\Plot.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\Table.h" />
@@ -74,10 +74,10 @@
     <ClCompile Include="..\src\Calc.cpp" />
     <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\FrameApp.cpp" />
+    <ClCompile Include="..\src\InputDlg.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\Node.cpp" />
-    <ClCompile Include="..\src\Plot.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

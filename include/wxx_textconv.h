@@ -123,11 +123,12 @@ namespace Win32xx
             if (pStr)
             {
                 // Resize the vector and assign null WCHAR to each element
-                int length = MultiByteToWideChar(codePage, 0, pStr, 2 * charCount, NULL, 0) + 1;
+                int charBytes = (charCount == -1) ? -1 : 2 * charCount;
+                int length = MultiByteToWideChar(codePage, 0, pStr, charBytes, NULL, 0) + 1;
                 m_wideArray.assign(length, L'\0');
 
                 // Fill our vector with the converted WCHAR array
-                MultiByteToWideChar(codePage, 0, pStr, 2 * charCount, &m_wideArray[0], length);
+                MultiByteToWideChar(codePage, 0, pStr, charBytes, &m_wideArray[0], length);
             }
         }
         ~CAtoW()

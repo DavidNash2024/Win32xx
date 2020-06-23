@@ -68,7 +68,7 @@ namespace Win32xx
         virtual ~CAnimation() {}
 
         BOOL Close() const;
-        BOOL Open(LPTSTR pPathName) const;
+        BOOL Open(LPCTSTR pPathName) const;
         BOOL Play(int from, int to, int repeat) const;
         BOOL Seek(int frame) const;
         BOOL Stop() const;
@@ -557,10 +557,10 @@ namespace Win32xx
 
     // Opens an AVI clip and displays its first frame in an animation control.
     // Refer to Animate_Open in the Windows API documentation for more information.
-    inline BOOL CAnimation::Open(LPTSTR pPathName) const
+    inline BOOL CAnimation::Open(LPCTSTR pPathName) const
     {
         assert(IsWindow());
-        return Animate_Open(*this, pPathName);
+        return Animate_Open(*this, const_cast<LPTSTR>(pPathName));
     }
 
     // Plays an AVI clip in an animation control. The control plays the clip

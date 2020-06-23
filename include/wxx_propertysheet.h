@@ -105,7 +105,6 @@ namespace Win32xx
         void SetTitle(LPCTSTR pTitle);
         void SetWizardButtons(DWORD flags) const;
 
-
     private:
         CPropertyPage(const CPropertyPage&);                // Disable copy construction
         CPropertyPage& operator = (const CPropertyPage&);   // Disable assignment operator

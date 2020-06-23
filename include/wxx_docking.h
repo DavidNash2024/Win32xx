@@ -135,32 +135,36 @@ namespace Win32xx
     //  within the container parent's view page.
     class CDockContainer : public CTab
     {
+
     public:
 
         // Nested class. This is the Wnd for the window displayed over the client area
         // of the tab control.  The toolbar and view window are child windows of the
-        // viewpage window. Only the ViewPage of the parent CDockContainer is displayed. It's
-        // contents are updated with the view window of the relevant container whenever
-        // a different tab is selected.
+        // viewpage window. Only the ViewPage of the parent CDockContainer is displayed.
+        // Its contents are updated with the view window of the active container 
+        // whenever a different tab is selected.
         class CViewPage : public CWnd
         {
 
         public:
             CViewPage() : m_pContainer(NULL), m_pView(NULL), m_pTab(NULL) {}
             virtual ~CViewPage() {}
+
             virtual CToolBar& GetToolBar() const    {return m_toolBar;}
+            
+            CDockContainer* GetContainer() const;
+            CWnd* GetTabCtrl() const { return m_pTab; }
+            CWnd* GetView() const { return m_pView; }
+            void SetContainer(CDockContainer* pContainer) { m_pContainer = pContainer; }
+            void SetView(CWnd& wndView);
+
+        protected:
             virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
             virtual int OnCreate(CREATESTRUCT& cs);
             virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
             virtual void PreRegisterClass(WNDCLASS& wc);
             virtual void RecalcLayout();
             LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
-
-            CWnd* GetTabCtrl() const                        { return m_pTab;}
-            CWnd* GetView() const { return m_pView; }
-            CDockContainer* GetContainer() const;
-            void SetContainer(CDockContainer* pContainer)   { m_pContainer = pContainer; }
-            void SetView(CWnd& wndView);
 
         private:
             mutable CToolBar m_toolBar;
@@ -173,44 +177,45 @@ namespace Win32xx
     public:
         CDockContainer();
         virtual ~CDockContainer();
-        virtual void AddContainer(CDockContainer* pContainer, BOOL insert = FALSE, BOOL selecPage = TRUE);
-        virtual void AddToolBarButton(UINT id, BOOL isEnabled = TRUE);
-        virtual CDockContainer* GetContainerFromIndex(UINT page);
-        virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
-        virtual int GetContainerIndex(CDockContainer* pContainer);
-        virtual SIZE GetMaxTabTextSize();
-        virtual CViewPage& GetViewPage() const  { return m_viewPage; }
-        virtual int GetTabImageID(UINT tab) const;
-        virtual CString GetTabText(UINT tab) const;
-        virtual void RecalcLayout();
-        virtual void RemoveContainer(CDockContainer* pWnd, BOOL updateParent = TRUE);
-        virtual void SelectPage(int page);
-        virtual void SetTabSize();
-        virtual void SetupToolBar();
-        virtual void SwapTabs(UINT tab1, UINT tab2);
+        
+        void AddContainer(CDockContainer* pContainer, BOOL insert = FALSE, BOOL selecPage = TRUE);
+        void AddToolBarButton(UINT id, BOOL isEnabled = TRUE);
+        void RecalcLayout();
+        void RemoveContainer(CDockContainer* pWnd, BOOL updateParent = TRUE);
+        void SelectPage(int page);
+        void SwapTabs(UINT tab1, UINT tab2);
 
         // Attributes
         CDockContainer* GetActiveContainer() const;
         CWnd* GetActiveView() const;
         const std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_allInfo;}
         CDockContainer* GetContainerParent() const { return m_pContainerParent; }
+        CDockContainer* GetContainerFromIndex(UINT page) const;
+        CDockContainer* GetContainerFromView(CWnd* pView) const;
+        int GetContainerIndex(CDockContainer* pContainer) const;
         const CString& GetDockCaption() const { return m_caption; }
-        CDocker* GetDocker() const      { return m_pDocker; }
-        HICON GetTabIcon() const        { return m_tabIcon; }
-        LPCTSTR GetTabText() const      { return m_tabText; }
+        CDocker* GetDocker() const            { return m_pDocker; }
+        SIZE GetMaxTabTextSize() const;
+        CViewPage& GetViewPage() const        { return m_viewPage; }
+        int GetTabImageID(UINT tab) const;
+        CString GetTabText(UINT tab) const;
+        HICON GetTabIcon() const              { return m_tabIcon; }
+        LPCTSTR GetTabText() const            { return m_tabText; }
         virtual CToolBar& GetToolBar()  const { return GetViewPage().GetToolBar(); }
-        std::vector<UINT>& GetToolBarData() { return m_toolBarData; }
-        CWnd* GetView() const           { return GetViewPage().GetView(); }
+        std::vector<UINT>& GetToolBarData()   { return m_toolBarData; }
+        CWnd* GetView() const                 { return GetViewPage().GetView(); }
         void SetActiveContainer(CDockContainer* pContainer);
+        void SetDocker(CDocker* pDocker)      { m_pDocker = pDocker; }
         void SetDockCaption(LPCTSTR pCaption) { m_caption = pCaption; }
         void SetHideSingleTab(BOOL hideSingle);
-        void SetTabIcon(HICON tabIcon) { m_tabIcon = tabIcon; }
+        void SetTabIcon(HICON tabIcon)        { m_tabIcon = tabIcon; }
         void SetTabIcon(UINT iconID);
-        void SetTabIcon(int i, HICON icon) { CTab::SetTabIcon(i, icon); }
-        void SetTabText(LPCTSTR pText) { m_tabText = pText; }
+        void SetTabIcon(int i, HICON icon)    { CTab::SetTabIcon(i, icon); }
+        void SetTabSize();
+        void SetTabText(LPCTSTR pText)        { m_tabText = pText; }
         void SetTabText(UINT tab, LPCTSTR pText);
+        void SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID);
         void SetView(CWnd& wnd);
-
 
     protected:
         virtual void OnAttach();
@@ -223,7 +228,8 @@ namespace Win32xx
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
         virtual void PreCreate(CREATESTRUCT& cs);
-        virtual void SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID);
+        virtual void SetupToolBar();
+
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
@@ -271,28 +277,29 @@ namespace Win32xx
         public:
             CDockBar();
             virtual ~CDockBar();
-            virtual void OnDraw(CDC& dc);
-            virtual void PreCreate(CREATESTRUCT& cs);
-            virtual void PreRegisterClass(WNDCLASS& wc);
-            virtual void SendNotify(UINT messageID);
-            virtual void SetColor(COLORREF color);
-            LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
             CBrush GetBrushBkgnd() const    {return m_brBackground;}
             CDocker& GetDocker() const      {assert (m_pDocker); return *m_pDocker;}
             int GetWidth() const            {return m_dockBarWidth;}
+            void SetColor(COLORREF color);
             void SetDocker(CDocker& Docker) {m_pDocker = &Docker;}
             void SetWidth(int width)        {m_dockBarWidth = width;}
 
         protected:
+            virtual void OnDraw(CDC& dc);
             virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
             virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
             virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
             virtual LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
+            virtual void PreCreate(CREATESTRUCT& cs);
+            virtual void PreRegisterClass(WNDCLASS& wc);
+            virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
         private:
             CDockBar(const CDockBar&);              // Disable copy construction
             CDockBar& operator = (const CDockBar&); // Disable assignment operator
+
+            void SendNotify(UINT messageID);
 
             CDocker* m_pDocker;
             DRAGPOS m_dragPos;
@@ -308,12 +315,11 @@ namespace Win32xx
         public:
             CDockClient();
             virtual ~CDockClient() {}
-            virtual void Draw3DBorder(const RECT& rect);
-            virtual void DrawCaption();
-            virtual void DrawCloseButton(CDC& drawDC, BOOL focus);
-            virtual CRect GetCloseRect() const;
-            virtual void SendNotify(UINT messageID);
 
+            void Draw3DBorder(const RECT& rect);
+            void DrawCaption();
+            void DrawCloseButton(CDC& drawDC, BOOL focus);
+            CRect GetCloseRect() const;
             const CString& GetCaption() const     { return m_caption; }
             CWnd& GetView() const                 { assert (m_pView); return *m_pView; }
             void SetDocker(CDocker* pDocker)      { m_pDocker = pDocker;}
@@ -338,9 +344,11 @@ namespace Win32xx
             LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
         private:
-            LRESULT MouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
             CDockClient(const CDockClient&);                // Disable copy construction
             CDockClient& operator = (const CDockClient&);   // Disable assignment operator
+
+            LRESULT MouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+            void SendNotify(UINT messageID);
 
             mutable CString m_caption;
             CPoint m_oldPoint;
@@ -364,10 +372,13 @@ namespace Win32xx
         public:
             CDockHint();
             virtual ~CDockHint();
-            virtual RECT CalcHintRectContainer(CDocker* pDockTarget);
-            virtual RECT CalcHintRectInner(CDocker* pDockTarget, CDocker* pDockDrag, UINT dockSide);
-            virtual RECT CalcHintRectOuter(CDocker* pDockDrag, UINT dockSide);
-            virtual void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT dockSide);
+
+            RECT CalcHintRectContainer(CDocker* pDockTarget);
+            RECT CalcHintRectInner(CDocker* pDockTarget, CDocker* pDockDrag, UINT dockSide);
+            RECT CalcHintRectOuter(CDocker* pDockDrag, UINT dockSide);
+            void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT dockSide);
+
+        protected:
             virtual void OnDraw(CDC& dc);
             virtual void PreCreate(CREATESTRUCT& cs);
 
@@ -384,15 +395,17 @@ namespace Win32xx
         public:
             CTarget() {}
             virtual ~CTarget();
+
+        protected:
             virtual void OnDraw(CDC& dc);
             virtual void PreCreate(CREATESTRUCT& cs);
 
-        protected:
             CBitmap m_bmImage;
 
         private:
             CTarget(const CTarget&);                // Disable copy construction
             CTarget& operator = (const CTarget&); // Disable assignment operator
+
         };
 
         class CTargetCentre : public CTarget
@@ -400,10 +413,13 @@ namespace Win32xx
         public:
             CTargetCentre();
             virtual ~CTargetCentre();
+
+            BOOL CheckTarget(LPDRAGPOS pDragPos);
+            BOOL IsOverContainer() { return m_IsOverContainer; }
+
+        protected:
             virtual void OnDraw(CDC& dc);
             virtual int  OnCreate(CREATESTRUCT& cs);
-            virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
-            BOOL IsOverContainer() { return m_IsOverContainer; }
 
         private:
             CTargetCentre(const CTargetCentre&);                // Disable copy construction
@@ -417,7 +433,7 @@ namespace Win32xx
         {
         public:
             CTargetLeft() {m_bmImage.LoadBitmap(IDW_SDLEFT);}
-            virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
+            BOOL CheckTarget(LPDRAGPOS pDragPos);
 
         private:
             CTargetLeft(const CTargetLeft&);                // Disable copy construction
@@ -428,7 +444,8 @@ namespace Win32xx
         {
         public:
             CTargetTop() {m_bmImage.LoadBitmap(IDW_SDTOP);}
-            virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
+            BOOL CheckTarget(LPDRAGPOS pDragPos);
+
         private:
             CTargetTop(const CTargetTop&);              // Disable copy construction
             CTargetTop& operator = (const CTargetTop&); // Disable assignment operator
@@ -438,7 +455,7 @@ namespace Win32xx
         {
         public:
             CTargetRight() {m_bmImage.LoadBitmap(IDW_SDRIGHT);}
-            virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
+            BOOL CheckTarget(LPDRAGPOS pDragPos);
 
         private:
             CTargetRight(const CTargetRight&);              // Disable copy construction
@@ -449,7 +466,7 @@ namespace Win32xx
         {
         public:
             CTargetBottom() {m_bmImage.LoadBitmap(IDW_SDBOTTOM);}
-            virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
+            BOOL CheckTarget(LPDRAGPOS pDragPos);
         };
 
         friend class CTargetCentre;
@@ -464,40 +481,35 @@ namespace Win32xx
         // Operations
         CDocker();
         virtual ~CDocker();
-        virtual CDocker* AddDockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, int dockID = 0);
-        virtual CDocker* AddUndockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, const RECT& rc, int dockID = 0);
-        virtual void Close();
-        virtual void CloseAllDockers();
-        virtual void Dock(CDocker* pDocker, UINT dockSide);
-        virtual void DockInContainer(CDocker* pDocker, DWORD dockStyle, BOOL selectPage = TRUE);
-        virtual CDockContainer* GetContainer() const;
-        virtual CDocker* GetActiveDocker() const;
-        virtual CWnd*    GetActiveView() const;
-        virtual CDocker* GetDockAncestor() const;
-        virtual CDocker* GetDockFromID(int dockID) const;
-        virtual CDocker* GetDockFromView(CWnd* pView) const;
-        virtual CDocker* GetTopmostDocker() const;
-        virtual int GetDockSize() const;
-        virtual CTabbedMDI* GetTabbedMDI() const;
-        virtual int GetTextHeight();
-        virtual void Hide();
-        virtual BOOL LoadContainerRegistrySettings(LPCTSTR pRegistryKeyName);
-        virtual BOOL LoadDockRegistrySettings(LPCTSTR pRegistryKeyName);
-        virtual void RecalcDockLayout();
-        virtual BOOL SaveDockRegistrySettings(LPCTSTR pRegistryKeyName);
-        virtual void SaveContainerRegistrySettings(CRegKey& keyDock, CDockContainer* pContainer, UINT& container);
-        virtual void Undock(CPoint pt, BOOL showUndocked = TRUE);
-        virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL showUndocked);
-        virtual BOOL VerifyDockers();
+        CDocker* AddDockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, int dockID = 0);
+        CDocker* AddUndockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, const RECT& rc, int dockID = 0);
+        void CloseAllDockers();
+        void Dock(CDocker* pDocker, UINT dockSide);
+        void DockInContainer(CDocker* pDocker, DWORD dockStyle, BOOL selectPage = TRUE);
+        CDockContainer* GetContainer() const;
+        CDocker* GetActiveDocker() const;
+        CWnd*    GetActiveView() const;
+        CDocker* GetDockAncestor() const;
+        CDocker* GetDockFromID(int dockID) const;
+        CDocker* GetDockFromView(CWnd* pView) const;
+        CDocker* GetTopmostDocker() const;
+        int GetDockSize() const;
+        CTabbedMDI* GetTabbedMDI() const;
+        int GetTextHeight();
+        void Hide();
+
+        void RecalcDockLayout();
+        void Undock(CPoint pt, BOOL showUndocked = TRUE);
+        void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL showUndocked);
 
         // Attributes
         virtual CDockBar& GetDockBar() const        { return m_dockBar; }
         virtual CDockClient& GetDockClient() const  { return m_dockClient; }
         virtual CDockHint& GetDockHint() const      { return m_pDockAncestor->m_dockHint; }
-        virtual CRect GetViewRect() const           { return GetClientRect(); }
+        CRect GetViewRect() const                   { return GetClientRect(); }
 
-        virtual CWnd& GetView() const                       { return GetDockClient().GetView(); }
-        virtual void SetView(CWnd& wndView);
+        CWnd& GetView() const                       { return GetDockClient().GetView(); }
+        void SetView(CWnd& wndView);
 
         const std::vector <DockPtr> & GetAllDockChildren() const    {return GetDockAncestor()->m_allDockChildren;}
         const std::vector <CDocker*> & GetDockChildren() const      {return m_dockChildren;}
@@ -523,8 +535,15 @@ namespace Win32xx
         void SetDragAutoResize(BOOL autoResize);
         BOOL SetRedraw(BOOL redraw = TRUE);
 
+        virtual BOOL LoadContainerRegistrySettings(LPCTSTR pRegistryKeyName);
+        virtual BOOL LoadDockRegistrySettings(LPCTSTR pRegistryKeyName);
+        virtual BOOL SaveDockRegistrySettings(LPCTSTR pRegistryKeyName);
+        virtual void SaveContainerRegistrySettings(CRegKey& keyDock, CDockContainer* pContainer, UINT& container);
+        virtual BOOL VerifyDockers();
+
     protected:
         virtual CDocker* NewDockerFromID(int dockID);
+        virtual void OnClose();
         virtual int  OnCreate(CREATESTRUCT& cs);
         virtual void OnDestroy();
         virtual LRESULT OnBarEnd(LPDRAGPOS pDragPos);
@@ -2200,7 +2219,7 @@ namespace Win32xx
 
 
     // Called when the close button is pressed.
-    inline void CDocker::Close()
+    inline void CDocker::OnClose()
     {
         m_isClosing = TRUE;
 
@@ -2470,6 +2489,7 @@ namespace Win32xx
 
     // Returns a pointer to the view if it is a CDockContainer.
     // Returns NULL if the view is not a CDockContainer.
+    // Returns NULL if the docker or it's view are not created.
     inline CDockContainer* CDocker::GetContainer() const
     {
         // returns NULL if not a CDockContainer*
@@ -4055,7 +4075,10 @@ namespace Win32xx
     }
 
 
-    // Assigns the view window to the docker
+    // Assigns the view window to the docker.
+    // The Docker's view can be changed during runtime.
+    // The Docker's view can be a DockContainer or another child window.
+    // Note: DockContainers have their own view which is not set here.
     inline void CDocker::SetView(CWnd& wndView)
     {
         GetDockClient().SetView(wndView);
@@ -4063,6 +4086,7 @@ namespace Win32xx
         if (pContainer)
         {
             SetCaption(pContainer->GetDockCaption().c_str());
+            pContainer->SetDocker(this);
         }
     }
 
@@ -4504,7 +4528,8 @@ namespace Win32xx
     }
 
 
-    inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT page)
+    //Returns a pointer to the container at the specified tab number.
+    inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT page) const
     {
         CDockContainer* pContainer = NULL;
         if (page < m_allInfo.size())
@@ -4514,6 +4539,7 @@ namespace Win32xx
     }
 
 
+    // Returns a pointer to the currently active container.
     inline CDockContainer* CDockContainer::GetActiveContainer() const
     {
         assert(m_pContainerParent);
@@ -4536,6 +4562,7 @@ namespace Win32xx
     }
 
 
+    // Returns a pointer to the container with the specified view.
     inline CDockContainer* CDockContainer::GetContainerFromView(CWnd* pView) const
     {
         assert(pView);
@@ -4553,7 +4580,8 @@ namespace Win32xx
     }
 
 
-    inline int CDockContainer::GetContainerIndex(CDockContainer* pContainer)
+    // Returns a pointer to the container at the specified tab number.
+    inline int CDockContainer::GetContainerIndex(CDockContainer* pContainer) const
     {
         assert(pContainer);
         int result = -1;
@@ -4568,7 +4596,8 @@ namespace Win32xx
     }
 
 
-    inline SIZE CDockContainer::GetMaxTabTextSize()
+    // Returns the size (width and height) of the caption text.
+    inline SIZE CDockContainer::GetMaxTabTextSize() const
     {
         CSize sz;
 
@@ -4625,10 +4654,11 @@ namespace Win32xx
     }
 
 
-    // Called when a HWND is attached to this CWnd
+    // Called when a HWND is attached to this CWnd.
     inline void CDockContainer::OnAttach()
     {
         m_pDocker = reinterpret_cast<CDocker*>((GetParent().GetParent().SendMessage(UWM_GETCDOCKER)));
+        assert(dynamic_cast<CDocker*>(m_pDocker));
 
         // Create and assign the tab's image list
         GetODImageList().Create(16, 16, ILC_MASK | ILC_COLOR32, 0, 0);
@@ -4715,6 +4745,7 @@ namespace Win32xx
     }
 
 
+    // Called when the mouse cursor is moved over the window.
     inline LRESULT CDockContainer::OnMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Overrides CTab::OnMouseLeave
@@ -4733,6 +4764,7 @@ namespace Win32xx
     }
 
 
+    // Called when the mouse cursor is moved over the window.
     inline LRESULT CDockContainer::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         CPoint pt;
@@ -4767,6 +4799,7 @@ namespace Win32xx
     }
 
 
+    // Process notifications (WM_NOTIFY) reflected back from the parent.
     inline LRESULT CDockContainer::OnNotifyReflect(WPARAM wparam, LPARAM lparam)
     {
         UNREFERENCED_PARAMETER(wparam);
@@ -4781,6 +4814,7 @@ namespace Win32xx
     }
 
 
+    // Called when the currently selected tab has changed.
     inline LRESULT CDockContainer::OnTCNSelChange(LPNMHDR pNMHDR)
     {
         UNREFERENCED_PARAMETER(pNMHDR);
@@ -4793,6 +4827,8 @@ namespace Win32xx
     }
 
 
+    // Called when the window gets keyboard focus. We set the keyboard focus 
+    // to the active view window.
     inline LRESULT CDockContainer::OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Sets the focus to the active view (or its child)
@@ -4812,6 +4848,7 @@ namespace Win32xx
     }
 
 
+    // Called when the window is resized.
     inline LRESULT CDockContainer::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         UNREFERENCED_PARAMETER(msg);
@@ -4823,6 +4860,7 @@ namespace Win32xx
     }
 
 
+    // Called prior to window creation to set the CREATESTRUCT parameters.
     inline void CDockContainer::PreCreate(CREATESTRUCT& cs)
     {
         // For Tabs on the bottom, add the TCS_BOTTOM style
@@ -4831,6 +4869,7 @@ namespace Win32xx
     }
 
 
+    // Repositions the child windows when the window is resized.
     inline void CDockContainer::RecalcLayout()
     {
         if (GetContainerParent() == this)
@@ -4855,6 +4894,7 @@ namespace Win32xx
     }
 
 
+    // Removes the specified child container from this container group.
     inline void CDockContainer::RemoveContainer(CDockContainer* pWnd, BOOL updateParent)
     {
         assert(pWnd);
@@ -4898,6 +4938,7 @@ namespace Win32xx
     }
 
 
+    // Activates the specified page number.
     inline void CDockContainer::SelectPage(int page)
     {
         if (this != m_pContainerParent)
@@ -4945,6 +4986,7 @@ namespace Win32xx
     }
 
 
+    // Sets the active container.
     inline void CDockContainer::SetActiveContainer(CDockContainer* pContainer)
     {
         int nPage = GetContainerIndex(pContainer);
@@ -4953,6 +4995,7 @@ namespace Win32xx
     }
 
 
+    // Shows or hides the tab if it has only one page.
     inline void CDockContainer::SetHideSingleTab(BOOL hideSingle)
     // Only display tabs if there are two or more.
     {
@@ -4961,6 +5004,7 @@ namespace Win32xx
     }
 
 
+    // Sets the icon for this container's tab.
     inline void CDockContainer::SetTabIcon(UINT iconID)
     {
         HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
@@ -4968,6 +5012,7 @@ namespace Win32xx
     }
 
 
+    // Sets the size of the tabs to accomodate the tab's text.
     inline void CDockContainer::SetTabSize()
     {
         CRect rc = GetClientRect();
@@ -4986,6 +5031,7 @@ namespace Win32xx
     }
 
 
+    // Shows or hides the tab if it has only one page.
     inline void CDockContainer::SetTabText(UINT tab, LPCTSTR pText)
     {
         CDockContainer* pContainer = GetContainerParent()->GetContainerFromIndex(tab);
@@ -5055,12 +5101,15 @@ namespace Win32xx
     }
 
 
+    // Sets or changes the container's view window.
+    // The view window can be any resizable child window.
     inline void CDockContainer::SetView(CWnd& Wnd)
     {
         GetViewPage().SetView(Wnd);
     }
 
 
+    // Swaps the positions of the specified tabs.
     inline void CDockContainer::SwapTabs(UINT tab1, UINT tab2)
     {
         assert (tab1 < GetContainerParent()->m_allInfo.size());
@@ -5093,6 +5142,7 @@ namespace Win32xx
     }
 
 
+    // Process the window's messages.
     inline LRESULT CDockContainer::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
@@ -5113,7 +5163,14 @@ namespace Win32xx
 
     ///////////////////////////////////////////
     // Declaration of the nested CViewPage class
+    // This is the Wnd for the window displayed over the client area
+    // of the tab control.  The toolbar and view window are child windows of the
+    // viewpage window. Only the ViewPage of the parent CDockContainer is displayed.
+    // Its contents are updated with the view window of the active container 
+    // whenever a different tab is selected.
 
+
+    // Returns a pointer to the parent dock container.
     inline CDockContainer* CDockContainer::CViewPage::GetContainer() const
     {
         assert(m_pContainer);
@@ -5121,6 +5178,7 @@ namespace Win32xx
     }
 
 
+    // Forwards command messages (WM_COMMAND) to the active container.
     inline BOOL CDockContainer::CViewPage::OnCommand(WPARAM wparam, LPARAM lparam)
     {
         BOOL IsHandled = FALSE;
@@ -5131,6 +5189,7 @@ namespace Win32xx
     }
 
 
+    // Called during window creation. Creates the child view window.
     inline int CDockContainer::CViewPage::OnCreate(CREATESTRUCT& cs)
     {
         UNREFERENCED_PARAMETER(cs);
@@ -5141,6 +5200,7 @@ namespace Win32xx
     }
 
 
+    // Process WM_NOTIFY notifications from the child view window.
     inline LRESULT CDockContainer::CViewPage::OnNotify(WPARAM wparam, LPARAM lparam)
     {
         UNREFERENCED_PARAMETER(wparam);
@@ -5181,6 +5241,7 @@ namespace Win32xx
     }
 
 
+    // Called before window creation. Sets the WNDCLASS parameters.
     inline void CDockContainer::CViewPage::PreRegisterClass(WNDCLASS& wc)
     {
         wc.lpszClassName = _T("Win32++ TabPage");
@@ -5188,6 +5249,7 @@ namespace Win32xx
     }
 
 
+    // Called when the window is resized. Repositions the toolbar and view window.
     inline void CDockContainer::CViewPage::RecalcLayout()
     {
         CRect rc = GetClientRect();
@@ -5203,8 +5265,8 @@ namespace Win32xx
     }
 
 
-    inline void CDockContainer::CViewPage::SetView(CWnd& wndView)
     // Sets or changes the View window displayed within the container
+    inline void CDockContainer::CViewPage::SetView(CWnd& wndView)
     {
         if (m_pView != &wndView)
         {
@@ -5234,6 +5296,7 @@ namespace Win32xx
     }
 
 
+    // Process the window's messages.
     inline LRESULT CDockContainer::CViewPage::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)

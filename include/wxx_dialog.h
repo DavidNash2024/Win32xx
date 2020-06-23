@@ -121,6 +121,7 @@ namespace Win32xx
         void SetDefID(UINT id);
 
     private:
+        using CWnd::WndProc;                  // Make WndProc private
         CDialog(const CDialog&);              // Disable copy construction
         CDialog& operator = (const CDialog&); // Disable assignment operator
 
