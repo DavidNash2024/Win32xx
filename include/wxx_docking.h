@@ -506,10 +506,10 @@ namespace Win32xx
         virtual CDockBar& GetDockBar() const        { return m_dockBar; }
         virtual CDockClient& GetDockClient() const  { return m_dockClient; }
         virtual CDockHint& GetDockHint() const      { return m_pDockAncestor->m_dockHint; }
-        CRect GetViewRect() const                   { return GetClientRect(); }
+        virtual CRect GetViewRect() const           { return GetClientRect(); }
 
-        CWnd& GetView() const                       { return GetDockClient().GetView(); }
-        void SetView(CWnd& wndView);
+        virtual CWnd& GetView() const               { return GetDockClient().GetView(); }
+        virtual void SetView(CWnd& wndView);
 
         const std::vector <DockPtr> & GetAllDockChildren() const    {return GetDockAncestor()->m_allDockChildren;}
         const std::vector <CDocker*> & GetDockChildren() const      {return m_dockChildren;}
@@ -540,7 +540,6 @@ namespace Win32xx
         virtual BOOL SaveDockRegistrySettings(LPCTSTR pRegistryKeyName);
         virtual void SaveContainerRegistrySettings(CRegKey& keyDock, CDockContainer* pContainer, UINT& container);
         virtual BOOL VerifyDockers();
-
     protected:
         virtual CDocker* NewDockerFromID(int dockID);
         virtual void OnClose();
