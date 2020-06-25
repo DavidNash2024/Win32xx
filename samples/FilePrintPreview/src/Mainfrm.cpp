@@ -466,8 +466,7 @@ OnMenuUpdate(UINT nID)                                                  /*
     if (IDM_WRAP_NONE <= nID && nID <= IDM_WRAP_PRINTER)
     {
         UINT active = m_WrapOption + IDM_WRAP_NONE;
-        CMenu &cm = GetFrameMenu();
-        cm.CheckMenuRadioItem(IDM_WRAP_NONE, IDM_WRAP_PRINTER, 
+        GetFrameMenu().CheckMenuRadioItem(IDM_WRAP_NONE, IDM_WRAP_PRINTER, 
             active, MF_BYCOMMAND);
     }
 

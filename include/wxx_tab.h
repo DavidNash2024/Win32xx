@@ -114,10 +114,10 @@ namespace Win32xx
         virtual void RemoveTabPage(int page);
         virtual void SelectPage(int page);
         virtual void SetFixedWidth(BOOL isEnabled);
-        virtual void SetFont(HFONT font, BOOL redraw = TRUE);
         virtual void SetOwnerDraw(BOOL isEnabled);
         virtual void SetShowButtons(BOOL show);
         virtual void SetTabIcon(int tab, HICON icon);
+        virtual void SetTabFont(HFONT font, BOOL redraw = TRUE);
         virtual void SetTabsAtTop(BOOL isAtTop);
         virtual void SetTabText(UINT tab, LPCTSTR pText);
         virtual void ShowListDialog();
@@ -127,7 +127,7 @@ namespace Win32xx
         // Attributes
         const std::vector<TabPageInfo>& GetAllTabs() const { return m_allTabPageInfo; }
         CImageList GetODImageList() const   { return m_odImages; }
-        CFont& GetTabFont() const           { return m_tabFont; }
+        CFont GetTabFont() const            { return m_tabFont; }
         BOOL GetShowButtons() const         { return m_isShowingButtons; }
         int GetTabHeight() const            { return m_tabHeight; }
         SIZE GetMaxTabSize() const;
@@ -204,8 +204,8 @@ namespace Win32xx
 
         std::vector<TabPageInfo> m_allTabPageInfo;
         std::vector<WndPtr> m_tabViews;
-        mutable CFont m_tabFont;
-        mutable CImageList m_odImages;  // Image List for Owner Draw Tabs
+        CFont m_tabFont;            // Font used for tab text
+        CImageList m_odImages;      // Image List for Owner Draw Tabs
         CMenu m_listMenu;
         CWnd* m_pActiveView;
         CPoint m_oldMousePos;
@@ -843,12 +843,11 @@ namespace Win32xx
         m_odImages.DeleteImageList();
         m_odImages.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
-        // Set the tab control's font
-        m_tabFont.DeleteObject();
+        // Set the font used in the tabs
+        CFont font;
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        m_tabFont.CreateFontIndirect(info.lfStatusFont);
-
-        SetFont(m_tabFont, TRUE);
+        font.CreateFontIndirect(info.lfStatusFont);
+        SetTabFont(font, TRUE);
 
         // Assign ImageList unless we are owner drawn
         if (!(GetStyle() & TCS_OWNERDRAWFIXED))
@@ -1270,9 +1269,10 @@ namespace Win32xx
         RecalcLayout();
     }
 
-    // Sets the font and adjusts the tab height to match.
-    inline void CTab::SetFont(HFONT font, BOOL redraw /* = 1 */)
+    // Sets the font used by the tabs and adjusts the tab height to match.
+    inline void CTab::SetTabFont(HFONT font, BOOL redraw /* = 1 */)
     {
+        m_tabFont = font;
         int HeightGap = 5;
         SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
         CWnd::SetFont(font, redraw);
