@@ -167,6 +167,9 @@ namespace Win32xx
             LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
         private:
+            CViewPage(const CViewPage&);              // Disable copy construction
+            CViewPage& operator = (const CViewPage&); // Disable assignment operator
+
             mutable CToolBar m_toolBar;
             CDockContainer* m_pContainer;
             CString m_tooltip;
@@ -236,15 +239,17 @@ namespace Win32xx
         CDockContainer(const CDockContainer&);              // Disable copy construction
         CDockContainer& operator = (const CDockContainer&); // Disable assignment operator
 
+        mutable CViewPage m_viewPage;
+
         std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_allInfo;}
         std::vector<ContainerInfo> m_allInfo;          // vector of ContainerInfo structs
         std::vector<UINT> m_toolBarData;               // vector of resource IDs for ToolBar buttons
         CString m_tabText;
-        mutable CString m_caption;
+        CString m_caption;
         CImageList m_normalImages;
         CImageList m_hotImages;
         CImageList m_disabledImages;
-        mutable CViewPage m_viewPage;
+
         int m_currentPage;
         CDocker* m_pDocker;
         CDockContainer* m_pContainerParent;
@@ -350,7 +355,7 @@ namespace Win32xx
             LRESULT MouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
             void SendNotify(UINT messageID);
 
-            mutable CString m_caption;
+            CString m_caption;
             CPoint m_oldPoint;
             CDocker* m_pDocker;
             CWnd* m_pView;
@@ -384,12 +389,13 @@ namespace Win32xx
 
         private:
             CDockHint(const CDockHint&);                // Disable copy construction
-            CDockHint& operator = (const CDockHint&); // Disable assignment operator
+            CDockHint& operator = (const CDockHint&);   // Disable assignment operator
 
             CBitmap m_bmBlueTint;
             UINT m_uDockSideOld;
         };
 
+        // This nested class is the base class for drawing dock targets.
         class CTarget : public CWnd
         {
         public:
@@ -404,10 +410,13 @@ namespace Win32xx
 
         private:
             CTarget(const CTarget&);                // Disable copy construction
-            CTarget& operator = (const CTarget&); // Disable assignment operator
+            CTarget& operator = (const CTarget&);   // Disable assignment operator
 
         };
 
+        // This nested class is draws the a set of dock targets at the centre of 
+        // the docker. The dock within docker target is only enabled for a
+        // dock container.
         class CTargetCentre : public CTarget
         {
         public:
@@ -423,12 +432,13 @@ namespace Win32xx
 
         private:
             CTargetCentre(const CTargetCentre&);                // Disable copy construction
-            CTargetCentre& operator = (const CTargetCentre&); // Disable assignment operator
+            CTargetCentre& operator = (const CTargetCentre&);   // Disable assignment operator
 
             BOOL m_IsOverContainer;
             CDocker* m_pOldDockTarget;
         };
 
+        // This nested class is draws the left dock target.
         class CTargetLeft : public CTarget
         {
         public:
@@ -437,9 +447,10 @@ namespace Win32xx
 
         private:
             CTargetLeft(const CTargetLeft&);                // Disable copy construction
-            CTargetLeft& operator = (const CTargetLeft&); // Disable assignment operator
+            CTargetLeft& operator = (const CTargetLeft&);   // Disable assignment operator
         };
 
+        // This nested class is draws the top dock target.
         class CTargetTop : public CTarget
         {
         public:
@@ -451,6 +462,7 @@ namespace Win32xx
             CTargetTop& operator = (const CTargetTop&); // Disable assignment operator
         };
 
+        // This nested class is draws the right dock target.
         class CTargetRight : public CTarget
         {
         public:
@@ -462,6 +474,7 @@ namespace Win32xx
             CTargetRight& operator = (const CTargetRight&); // Disable assignment operator
         };
 
+        // This nested class is draws the bottom dock target.
         class CTargetBottom : public CTarget
         {
         public:
@@ -469,6 +482,7 @@ namespace Win32xx
             BOOL CheckTarget(LPDRAGPOS pDragPos);
         };
 
+        // These classes can access private members of CDocker.
         friend class CTargetCentre;
         friend class CTargetLeft;
         friend class CTargetTop;
@@ -478,47 +492,53 @@ namespace Win32xx
         friend class CDockContainer;
 
     public:
-        // Operations
         CDocker();
         virtual ~CDocker();
-        CDocker* AddDockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, int dockID = 0);
-        CDocker* AddUndockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, const RECT& rc, int dockID = 0);
-        void CloseAllDockers();
-        void Dock(CDocker* pDocker, UINT dockSide);
-        void DockInContainer(CDocker* pDocker, DWORD dockStyle, BOOL selectPage = TRUE);
-        CDockContainer* GetContainer() const;
-        CDocker* GetActiveDocker() const;
-        CWnd*    GetActiveView() const;
-        CDocker* GetDockAncestor() const;
-        CDocker* GetDockFromID(int dockID) const;
-        CDocker* GetDockFromView(CWnd* pView) const;
-        CDocker* GetTopmostDocker() const;
-        int GetDockSize() const;
-        CTabbedMDI* GetTabbedMDI() const;
-        int GetTextHeight();
-        void Hide();
 
-        void RecalcDockLayout();
-        void Undock(CPoint pt, BOOL showUndocked = TRUE);
-        void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL showUndocked);
+        // Operations
+        virtual CDocker* AddDockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, int dockID = 0);
+        virtual CDocker* AddUndockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, const RECT& rc, int dockID = 0);
+        virtual void CloseAllDockers();
+        virtual void Dock(CDocker* pDocker, UINT dockSide);
+        virtual void DockInContainer(CDocker* pDocker, DWORD dockStyle, BOOL selectPage = TRUE);
+        virtual void Hide();
+        virtual BOOL LoadContainerRegistrySettings(LPCTSTR pRegistryKeyName);
+        virtual BOOL LoadDockRegistrySettings(LPCTSTR pRegistryKeyName);
+        virtual void RecalcDockLayout();
+        virtual BOOL SaveDockRegistrySettings(LPCTSTR pRegistryKeyName);
+        virtual void SaveContainerRegistrySettings(CRegKey& keyDock, CDockContainer* pContainer, UINT& container);
+        virtual void Undock(CPoint pt, BOOL showUndocked = TRUE);
+        virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL showUndocked);
+        virtual BOOL VerifyDockers();
 
-        // Attributes
+        // Virtual attributes
         virtual CDockBar& GetDockBar() const        { return m_dockBar; }
         virtual CDockClient& GetDockClient() const  { return m_dockClient; }
         virtual CDockHint& GetDockHint() const      { return m_pDockAncestor->m_dockHint; }
-        virtual CRect GetViewRect() const           { return GetClientRect(); }
-
         virtual CWnd& GetView() const               { return GetDockClient().GetView(); }
+        virtual CRect GetViewRect() const           { return GetClientRect(); }
         virtual void SetView(CWnd& wndView);
 
+        // Attributes
         const std::vector <DockPtr> & GetAllDockChildren() const    {return GetDockAncestor()->m_allDockChildren;}
         const std::vector <CDocker*> & GetDockChildren() const      {return m_dockChildren;}
         const std::vector <CDocker*> & GetAllDockers()  const       {return m_allDockers;}
-        int GetBarWidth() const             {return GetDockBar().GetWidth();}
-        const CString& GetCaption() const         {return GetDockClient().GetCaption();}
-        int GetDockID() const               {return m_dockID;}
-        CDocker* GetDockParent() const      {return m_pDockParent;}
-        DWORD GetDockStyle() const          {return m_dockStyle;}
+
+        CDocker* GetActiveDocker() const;
+        CWnd*    GetActiveView() const;
+        int GetBarWidth() const                     {return GetDockBar().GetWidth();}
+        const CString& GetCaption() const           {return GetDockClient().GetCaption();}
+        CDockContainer* GetContainer() const;
+        CDocker* GetDockAncestor() const;
+        int GetDockID() const                       {return m_dockID;}
+        CDocker* GetDockParent() const              {return m_pDockParent;}
+        CDocker* GetDockFromID(int dockID) const;
+        CDocker* GetDockFromView(CWnd* pView) const;
+        int GetDockSize() const;
+        DWORD GetDockStyle() const                  {return m_dockStyle;}
+        CTabbedMDI* GetTabbedMDI() const;
+        int GetTextHeight();
+        CDocker* GetTopmostDocker() const;
         BOOL IsChildOfDocker(HWND wnd) const;
         BOOL IsDocked() const;
         BOOL IsDragAutoResize() const;
@@ -535,11 +555,6 @@ namespace Win32xx
         void SetDragAutoResize(BOOL autoResize);
         BOOL SetRedraw(BOOL redraw = TRUE);
 
-        virtual BOOL LoadContainerRegistrySettings(LPCTSTR pRegistryKeyName);
-        virtual BOOL LoadDockRegistrySettings(LPCTSTR pRegistryKeyName);
-        virtual BOOL SaveDockRegistrySettings(LPCTSTR pRegistryKeyName);
-        virtual void SaveContainerRegistrySettings(CRegKey& keyDock, CDockContainer* pContainer, UINT& container);
-        virtual BOOL VerifyDockers();
     protected:
         virtual CDocker* NewDockerFromID(int dockID);
         virtual void OnClose();
@@ -558,7 +573,7 @@ namespace Win32xx
         // Not intended to be overwritten
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
-        // Current declarations of message handlers
+        // Message handlers
         virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDockDestroyed(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -4695,10 +4710,11 @@ namespace Win32xx
                 GetToolBar().Destroy();
         }
 
-        // Set the tab control's font
+        // Set the font used in the tabs
+        CFont font;
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        GetTabFont().CreateFontIndirect(info.lfStatusFont);
-        SetFont(GetTabFont());
+        font.CreateFontIndirect(info.lfStatusFont);
+        SetTabFont(font, TRUE);
 
         SetFixedWidth(TRUE);
         SetOwnerDraw(TRUE);
