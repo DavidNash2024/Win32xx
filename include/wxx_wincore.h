@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -2656,9 +2656,9 @@ namespace Win32xx
         while (index < CommandLine.GetLength())
         {
             // Is the argument quoted?
-            bool IsQuoted = (CommandLine[index] == _T('\"'));
+            bool isQuoted = (CommandLine[index] == _T('\"'));
 
-            if (IsQuoted)
+            if (isQuoted)
             {
                 // Find the terminating token (quote followed by space)
                 endPos = CommandLine.Find(_T("\" "), index);

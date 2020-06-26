@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -430,11 +430,11 @@ namespace Win32xx
         m_ofn.hwndOwner = owner;
 
         // invoke the control and save the result on success
-        BOOL IsValid = ::ChooseColor(&m_ofn);
+        BOOL isValid = ::ChooseColor(&m_ofn);
 
         m_wnd = 0;
 
-        if (!IsValid)
+        if (!isValid)
         {
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
@@ -481,7 +481,7 @@ namespace Win32xx
     // Definitions for the CFileDialog class
     //
 
-    // Construct a CFileDialog object. IsOpenFileDialog specifies the type of
+    // Construct a CFileDialog object. isOpenFileDialog specifies the type of
     // dialog box, OpenFile or SaveFile. The file's default extent and name can
     // be specified, along with the flags for the OPENFILENAME struct.
     // The pFilter contains a series of string pairs that specify file filters,

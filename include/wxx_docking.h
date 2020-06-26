@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -424,7 +424,7 @@ namespace Win32xx
             virtual ~CTargetCentre();
 
             BOOL CheckTarget(LPDRAGPOS pDragPos);
-            BOOL IsOverContainer() { return m_IsOverContainer; }
+            BOOL IsOverContainer() { return m_isOverContainer; }
 
         protected:
             virtual void OnDraw(CDC& dc);
@@ -434,7 +434,7 @@ namespace Win32xx
             CTargetCentre(const CTargetCentre&);                // Disable copy construction
             CTargetCentre& operator = (const CTargetCentre&);   // Disable assignment operator
 
-            BOOL m_IsOverContainer;
+            BOOL m_isOverContainer;
             CDocker* m_pOldDockTarget;
         };
 
@@ -1644,7 +1644,7 @@ namespace Win32xx
     ////////////////////////////////////////////////////////////////
     // Definitions for the CTargetCentre class nested within CDocker
     //
-    inline CDocker::CTargetCentre::CTargetCentre() : m_IsOverContainer(FALSE), m_pOldDockTarget(0)
+    inline CDocker::CTargetCentre::CTargetCentre() : m_isOverContainer(FALSE), m_pOldDockTarget(0)
     {
     }
 
@@ -1716,7 +1716,7 @@ namespace Win32xx
         if (NULL == pDockTarget) return FALSE;
 
         if (!IsWindow())    Create();
-        m_IsOverContainer = (pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER) != 0);
+        m_isOverContainer = (pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER) != 0);
 
         // Redraw the target if the dock target changes
         if (m_pOldDockTarget != pDockTarget)    Invalidate();
@@ -4714,7 +4714,7 @@ namespace Win32xx
         CFont font;
         NONCLIENTMETRICS info = GetNonClientMetrics();
         font.CreateFontIndirect(info.lfStatusFont);
-        SetTabFont(font, TRUE);
+        SetTabFont(font);
 
         SetFixedWidth(TRUE);
         SetOwnerDraw(TRUE);
@@ -4921,14 +4921,14 @@ namespace Win32xx
 
         // Remove the ContainerInfo entry
         std::vector<ContainerInfo>::iterator iter;
-        int iImage = -1;
+        int image = -1;
         for (iter = m_allInfo.begin(); iter != m_allInfo.end(); ++iter)
         {
             if (iter->pContainer == pWnd)
             {
-                iImage = (*iter).image;
-                if (iImage >= 0)
-                    RemoveImage(iImage);
+                image = (*iter).image;
+                if (image >= 0)
+                    RemoveImage(image);
 
                 m_allInfo.erase(iter);
                 break;
@@ -5196,11 +5196,11 @@ namespace Win32xx
     // Forwards command messages (WM_COMMAND) to the active container.
     inline BOOL CDockContainer::CViewPage::OnCommand(WPARAM wparam, LPARAM lparam)
     {
-        BOOL IsHandled = FALSE;
+        BOOL isHandled = FALSE;
         if (GetContainer()->GetActiveContainer() && GetContainer()->GetActiveContainer()->IsWindow())
-            IsHandled = (GetContainer()->GetActiveContainer()->SendMessage(WM_COMMAND, wparam, lparam) != 0);
+            isHandled = (GetContainer()->GetActiveContainer()->SendMessage(WM_COMMAND, wparam, lparam) != 0);
 
-        return IsHandled;
+        return isHandled;
     }
 
 

@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -55,10 +55,10 @@ namespace Win32xx
     struct TabPageInfo
     {
         CString TabText;    // The tab's text
-        int iImage;         // index of this tab's image
+        int image;          // index of this tab's image
         int idTab;          // identifier for this tab (used by TabbedMDI)
         CWnd* pView;        // pointer to the view window
-        TabPageInfo() : iImage(0), idTab(0), pView(0) {}    // constructor
+        TabPageInfo() : image(0), idTab(0), pView(0) {}    // constructor
     };
 
     struct TABNMHDR
@@ -117,7 +117,7 @@ namespace Win32xx
         virtual void SetOwnerDraw(BOOL isEnabled);
         virtual void SetShowButtons(BOOL show);
         virtual void SetTabIcon(int tab, HICON icon);
-        virtual void SetTabFont(HFONT font, BOOL redraw = TRUE);
+        virtual void SetTabFont(HFONT font);
         virtual void SetTabsAtTop(BOOL isAtTop);
         virtual void SetTabText(UINT tab, LPCTSTR pText);
         virtual void ShowListDialog();
@@ -133,7 +133,7 @@ namespace Win32xx
         SIZE GetMaxTabSize() const;
         CWnd* GetActiveView() const         { return m_pActiveView; }
         void SetBlankPageColor(COLORREF color) { m_blankPageColor = color; }
-        void SetTabHeight(int height)       { m_tabHeight = height; NotifyChanged();}
+        void SetTabHeight(int height);
 
         // Wrappers for Win32 Macros
         void        AdjustRect(BOOL isLarger, RECT* prc) const;
@@ -204,7 +204,7 @@ namespace Win32xx
 
         std::vector<TabPageInfo> m_allTabPageInfo;
         std::vector<WndPtr> m_tabViews;
-        CFont m_tabFont;            // Font used for tab text
+        CFont m_tabFont;            // Font used for tab text with owner draw
         CImageList m_odImages;      // Image List for Owner Draw Tabs
         CMenu m_listMenu;
         CWnd* m_pActiveView;
@@ -339,9 +339,9 @@ namespace Win32xx
         tpi.idTab = tabID;
         tpi.TabText = pTabText;
         if (icon != 0)
-            tpi.iImage = GetODImageList().Add(icon);
+            tpi.image = GetODImageList().Add(icon);
         else
-            tpi.iImage = -1;
+            tpi.image = -1;
 
         int iNewPage = static_cast<int>(m_allTabPageInfo.size());
         m_allTabPageInfo.push_back(tpi);
@@ -351,13 +351,12 @@ namespace Win32xx
             TCITEM tie;
             ZeroMemory(&tie, sizeof(tie));
             tie.mask = TCIF_TEXT | TCIF_IMAGE;
-            tie.iImage = tpi.iImage;
+            tie.iImage = tpi.image;
             tie.pszText = const_cast<LPTSTR>(tpi.TabText.c_str());
             InsertItem(iNewPage, &tie);
 
             SetTabSize();
             SelectPage(iNewPage);
-            NotifyChanged();
         }
 
         return pView;
@@ -369,8 +368,7 @@ namespace Win32xx
     // Use RemoveTabPage to remove the tab and page added in this manner.
     inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, int iconID, UINT tabID /* = 0*/)
     {
-        HICON icon = reinterpret_cast<HICON>(LoadImage(GetApp()->GetResourceHandle(),
-                                          MAKEINTRESOURCE(iconID), IMAGE_ICON, 0, 0, LR_SHARED));
+        HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
         return AddTabPage(pView, pTabText, icon, tabID);
     }
 
@@ -568,12 +566,12 @@ namespace Win32xx
                 if (rcItem.Width() >= 24)
                 {
                     CString str = GetTabText(i);
-                    int iImage = GetTabImageID(i);
+                    int image = GetTabImageID(i);
                     CSize szImage = m_odImages.GetIconSize();
                     int yOffset = (rcItem.Height() - szImage.cy)/2;
 
                     // Draw the icon
-                    m_odImages.Draw(dc, iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
+                    m_odImages.Draw(dc, image,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
 
                     // Draw the text
                     dc.SelectObject(m_tabFont);
@@ -583,7 +581,7 @@ namespace Win32xx
 
                     int iImageSize = 20;
                     int iPadding = 4;
-                    if (iImage >= 0)
+                    if (image >= 0)
                         rcText.left += iImageSize;
 
                     rcText.left += iPadding;
@@ -596,7 +594,7 @@ namespace Win32xx
     // Draw the tab borders.
     inline void CTab::DrawTabBorders(CDC& dc, RECT& rc)
     {
-        BOOL IsBottomTab = GetStyle() & TCS_BOTTOM;
+        BOOL isBottomTab = GetStyle() & TCS_BOTTOM;
 
         // Draw a lighter rectangle touching the tab buttons
         CRect rcItem;
@@ -606,7 +604,7 @@ namespace Win32xx
         int top = rc.bottom;
         int bottom = top + 3;
 
-        if (!IsBottomTab)
+        if (!isBottomTab)
         {
             bottom = MAX(rc.top, m_tabHeight +4);
             top = bottom -3;
@@ -620,7 +618,7 @@ namespace Win32xx
 
             // Draw a darker line below the rectangle
             dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-            if (IsBottomTab)
+            if (isBottomTab)
             {
                 dc.MoveTo(left-1, bottom);
                 dc.LineTo(right, bottom);
@@ -636,7 +634,7 @@ namespace Win32xx
             GetItemRect(GetCurSel(), rcItem);
             OffsetRect(&rcItem, 1, 1);
 
-            if (IsBottomTab)
+            if (isBottomTab)
             {
                 dc.MoveTo(rcItem.left, bottom);
                 dc.LineTo(rcItem.right, bottom);
@@ -790,7 +788,7 @@ namespace Win32xx
     inline int CTab::GetTabImageID(UINT tab) const
     {
         assert (tab < m_allTabPageInfo.size());
-        return m_allTabPageInfo[tab].iImage;
+        return m_allTabPageInfo[tab].image;
     }
 
     // Returns the text for the specified tab.
@@ -847,7 +845,7 @@ namespace Win32xx
         CFont font;
         NONCLIENTMETRICS info = GetNonClientMetrics();
         font.CreateFontIndirect(info.lfStatusFont);
-        SetTabFont(font, TRUE);
+        SetTabFont(font);
 
         // Assign ImageList unless we are owner drawn
         if (!(GetStyle() & TCS_OWNERDRAWFIXED))
@@ -859,7 +857,7 @@ namespace Win32xx
             TCITEM tie;
             ZeroMemory(&tie, sizeof(tie));
             tie.mask = TCIF_TEXT | TCIF_IMAGE;
-            tie.iImage = m_allTabPageInfo[i].iImage;
+            tie.iImage = m_allTabPageInfo[i].image;
             tie.pszText = const_cast<LPTSTR>(m_allTabPageInfo[i].TabText.c_str());
             InsertItem(i, &tie);
         }
@@ -1199,9 +1197,9 @@ namespace Win32xx
         // Remove the TapPageInfo entry
         std::vector<TabPageInfo>::iterator itTPI = m_allTabPageInfo.begin() + page;
         CWnd* pView = (*itTPI).pView;
-        int iImage = (*itTPI).iImage;
-        if (iImage >= 0)
-            RemoveImage(iImage);
+        int image = (*itTPI).image;
+        if (image >= 0)
+            RemoveImage(image);
 
         if (pView == m_pActiveView)
             m_pActiveView = 0;
@@ -1269,15 +1267,6 @@ namespace Win32xx
         RecalcLayout();
     }
 
-    // Sets the font used by the tabs and adjusts the tab height to match.
-    inline void CTab::SetTabFont(HFONT font, BOOL redraw /* = 1 */)
-    {
-        m_tabFont = font;
-        int HeightGap = 5;
-        SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
-        CWnd::SetFont(font, redraw);
-    }
-
     // Enable or disable owner draw.
     inline void CTab::SetOwnerDraw(BOOL isEnabled)
     {
@@ -1308,6 +1297,25 @@ namespace Win32xx
         RecalcLayout();
     }
 
+    // Sets the font used by the tabs and adjusts the tab height to match.
+    inline void CTab::SetTabFont(HFONT font)
+    {
+        m_tabFont = font;
+        int heightGap = 5;
+        SetTabHeight( MAX(20, GetTextHeight() + heightGap) );
+        
+        // Set the font used without owner draw.
+        SetFont(font);
+    }
+
+    // Sets the height of the tabs.
+    inline void CTab::SetTabHeight(int height)
+    { 
+        m_tabHeight = height; 
+        NotifyChanged();
+        RecalcLayout();
+    }
+
     // Changes or sets the tab's icon.
     inline void CTab::SetTabIcon(int tab, HICON icon)
     {
@@ -1322,10 +1330,10 @@ namespace Win32xx
         }
         else
         {
-            int iImage = GetODImageList().Add(icon);
-            tci.iImage = iImage;
+            int image = GetODImageList().Add(icon);
+            tci.iImage = image;
             SetItem(tab, &tci);
-            m_allTabPageInfo[tab].iImage = iImage;
+            m_allTabPageInfo[tab].image = image;
         }
     }
 
@@ -1872,7 +1880,7 @@ namespace Win32xx
     // Load the MDI children layout from the registry.
     inline BOOL CTabbedMDI::LoadRegistrySettings(LPCTSTR pKeyName)
     {
-        BOOL IsLoaded = FALSE;
+        BOOL isLoaded = FALSE;
 
         if (pKeyName)
         {
@@ -1903,17 +1911,17 @@ namespace Win32xx
                         AddMDIChild(pWnd, TabText, dwIDTab);
                         i++;
                         SubKeyName.Format(_T("ID%d"), i);
-                        IsLoaded = TRUE;
+                        isLoaded = TRUE;
                     }
                     else
                     {
                         TRACE("Failed to get TabbedMDI info from registry");
-                        IsLoaded = FALSE;
+                        isLoaded = FALSE;
                         break;
                     }
                 }
 
-                if (IsLoaded)
+                if (isLoaded)
                 {
                     // Load Active MDI Tab from the registry
                     SubKeyName = _T("Active MDI Tab");
@@ -1926,10 +1934,10 @@ namespace Win32xx
             }
         }
 
-        if (!IsLoaded)
+        if (!isLoaded)
             CloseAllMDIChildren();
 
-        return IsLoaded;
+        return isLoaded;
     }
 
     // Override this function to create new MDI children from IDs

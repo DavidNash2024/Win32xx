@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -3076,15 +3076,15 @@ namespace Win32xx
         assert(m_pData->dc != 0);
 
         CBitmap bitmap;
-        BOOL IsLoaded = bitmap.LoadBitmap(pResName);
+        BOOL isLoaded = bitmap.LoadBitmap(pResName);
 
-        if (IsLoaded)
+        if (isLoaded)
         {
             SelectObject(bitmap);
             m_pData->bitmap = bitmap;
         }
 
-        return IsLoaded;
+        return isLoaded;
     }
 
     // Loads a bitmap from the resource and selects it into the device context.
@@ -3126,15 +3126,15 @@ namespace Win32xx
         assert(m_pData->dc != 0);
 
         CBitmap bitmap;
-        BOOL IsLoaded = bitmap.LoadOEMBitmap(bitmapID);
+        BOOL isLoaded = bitmap.LoadOEMBitmap(bitmapID);
 
-        if (IsLoaded)
+        if (isLoaded)
         {
             SelectObject(bitmap);
             m_pData->bitmap = bitmap;
         }
 
-        return IsLoaded;
+        return isLoaded;
     }
 
 #ifndef _WIN32_WCE
