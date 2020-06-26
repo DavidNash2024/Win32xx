@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -875,13 +875,13 @@ namespace Win32xx
         pTLSData->msgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 
         // Display the shortcut menu
-        BOOL IsRightToLeft = FALSE;
+        BOOL isRightToLeft = FALSE;
 
 #if (WINVER >= 0x0500)
-        IsRightToLeft = ((GetAncestor().GetExStyle()) & WS_EX_LAYOUTRTL);
+        isRightToLeft = ((GetAncestor().GetExStyle()) & WS_EX_LAYOUTRTL);
 #endif
 
-        int xPos = IsRightToLeft? rc.right : rc.left;
+        int xPos = isRightToLeft? rc.right : rc.left;
         UINT id = ::TrackPopupMenuEx(m_popupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
             xPos, rc.bottom, *this, &tpm);
 

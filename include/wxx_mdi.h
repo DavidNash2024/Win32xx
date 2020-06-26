@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -569,7 +569,7 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::RecalcLayout()
     {
-        RecalcLayout();
+        T::RecalcLayout();
 
         if (GetView().IsWindow())
             MDIIconArrange();

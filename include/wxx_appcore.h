@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -790,7 +790,7 @@ namespace Win32xx
     // Global Functions
     //
 
-    // Returns a reference to the CWinApp derived class.
+    // Returns a pointer to the CWinApp derived class.
     inline CWinApp* GetApp()
     {
         CWinApp* pApp = CWinApp::SetnGetThis();

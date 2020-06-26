@@ -1,12 +1,12 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -140,7 +140,7 @@ namespace Win32xx
                             int width = -1, int subItem = -1 ) const;
         int     InsertItem( const LVITEM& itemInfo ) const;
         int     InsertItem( int item, LPCTSTR pText ) const;
-        int     InsertItem( int item, LPCTSTR pText, int iImage ) const;
+        int     InsertItem( int item, LPCTSTR pText, int image ) const;
         BOOL    RedrawItems( int first, int last ) const;
         BOOL    Scroll( CSize sz ) const;
         BOOL    SortItems( PFNLVCOMPARE pCompareFn, DWORD_PTR data ) const;

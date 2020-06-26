@@ -1,12 +1,12 @@
-// Win32++   Version 8.7.0
-// Release Date: 12th August 2019
+// Win32++   Version 8.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2019  David Nash
+// Copyright (c) 2005-2020  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -194,17 +194,17 @@ namespace Win32xx
     }
 
     // Adds a single button to the Toolbar. It provides a convenient alternative to AddButtons.
-    // A resource ID of 0 is a separator.  iImage is the index of the image in the ImageList.
+    // A resource ID of 0 is a separator. image is the index of the image in the ImageList.
     // The default is -1 in which case the image based on the button's position is chosen.
     // Refer to TB_ADDBUTTONS in the Windows API documentation for more information.        
-    inline BOOL CToolBar::AddButton(UINT id, BOOL IsEnabled /* = TRUE */, int iImage /* = -1 */)
+    inline BOOL CToolBar::AddButton(UINT id, BOOL isEnabled /* = TRUE */, int image /* = -1 */)
     {
         assert(IsWindow());
 
         // Count toolbar buttons with Command IDs
         int nImages = 0;
 
-        if (iImage == -1)
+        if (image == -1)
         {
             // choose the image based on the number of buttons already used
             for (int i = 0; i < GetButtonCount(); ++i)
@@ -215,7 +215,7 @@ namespace Win32xx
         }
         else
         {
-            nImages = iImage;
+            nImages = image;
         }
 
         // TBBUTTON structure for each button in the toolbar
@@ -230,7 +230,7 @@ namespace Win32xx
         {
             tbb.iBitmap = nImages;
             tbb.idCommand = id;
-            tbb.fsState = IsEnabled? TBSTATE_ENABLED : 0;
+            tbb.fsState = isEnabled? TBSTATE_ENABLED : 0;
             tbb.fsStyle = TBSTYLE_BUTTON;
         }
 
