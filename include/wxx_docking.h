@@ -1138,7 +1138,8 @@ namespace Win32xx
                             int tab = pParentC->GetContainerIndex(pContainer);
 
                             assert(pDocker);
-                            pDocker->Close();
+                            if (pDocker)
+                                pDocker->Close();
 
                             if (pContainer != pParentC)
                             {

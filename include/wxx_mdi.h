@@ -232,7 +232,7 @@ namespace Win32xx
     inline CMDIFrameT<T>::CMDIFrameT()
     {
         // The view for a CMDIFrame is the MDIClient
-        SetView(GetMDIClient());
+        T::SetView(GetMDIClient());
     }
 
     // Adds a MDI child to the MDI frame. The pointer to the MDI child will be
@@ -321,7 +321,7 @@ namespace Win32xx
     template <class T>
     inline CMenu CMDIFrameT<T>::GetActiveMenu() const
     {
-        CMenu menu = GetFrameMenu();
+        CMenu menu = T::GetFrameMenu();
 
         if (GetActiveMDIChild())
             if (GetActiveMDIChild()->GetChildMenu())
@@ -342,7 +342,7 @@ namespace Win32xx
     inline CMDIChild* CMDIFrameT<T>::GetActiveMDIChild() const
     {
         HWND activeChild = reinterpret_cast<HWND>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0));
-        return static_cast<CMDIChild*>(GetCWndPtr(activeChild));
+        return static_cast<CMDIChild*>(T::GetCWndPtr(activeChild));
     }
 
     // Returns TRUE if a MDI child is maximized
@@ -362,7 +362,7 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::MDICascade(int type /* = 0*/) const
     {
-        assert(IsWindow());
+        assert(T::IsWindow());
         GetMDIClient().SendMessage(WM_MDICASCADE, type, 0);
     }
 
@@ -371,7 +371,7 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::MDIIconArrange() const
     {
-        assert(IsWindow());
+        assert(T::IsWindow());
         GetMDIClient().SendMessage(WM_MDIICONARRANGE, 0, 0);
     }
 
@@ -380,7 +380,7 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::MDIMaximize() const
     {
-        assert(IsWindow());
+        assert(T::IsWindow());
         WPARAM mdiChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDIMAXIMIZE, mdiChild, 0);
     }
@@ -390,7 +390,7 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::MDINext() const
     {
-        assert(IsWindow());
+        assert(T::IsWindow());
         WPARAM mdiChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDINEXT, mdiChild, FALSE);
     }
@@ -400,7 +400,7 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::MDIPrev() const
     {
-        assert(IsWindow());
+        assert(T::IsWindow());
         WPARAM mdiChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDINEXT, mdiChild, TRUE);
     }
@@ -410,7 +410,7 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::MDIRestore() const
     {
-        assert(IsWindow());
+        assert(T::IsWindow());
         WPARAM mdiChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDIRESTORE, mdiChild, 0);
     }
@@ -424,7 +424,7 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::MDITile(int type /* = 0*/) const
     {
-        assert(IsWindow());
+        assert(T::IsWindow());
         GetMDIClient().SendMessage(WM_MDITILE, (WPARAM)type, 0);
     }
 
@@ -464,15 +464,15 @@ namespace Win32xx
         {
         case IDW_VIEW_STATUSBAR:
             {
-                BOOL isVisible = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
+                BOOL isVisible = T::GetStatusBar().IsWindow() && T::GetStatusBar().IsWindowVisible();
                 GetActiveMenu().CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
 
         case IDW_VIEW_TOOLBAR:
             {
-                BOOL isVisible = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
-                GetActiveMenu().EnableMenuItem(id, IsUsingToolBar() ? MF_ENABLED : MF_DISABLED);
+                BOOL isVisible = T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible();
+                GetActiveMenu().EnableMenuItem(id, T::IsUsingToolBar() ? MF_ENABLED : MF_DISABLED);
                 GetActiveMenu().CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
@@ -487,16 +487,16 @@ namespace Win32xx
 
         if (activeMDIChild)
         {
-            CMDIChild* pMDIChild = static_cast<CMDIChild*>(GetCWndPtr(activeMDIChild));
-            assert ( dynamic_cast<CMDIChild*>(GetCWndPtr(activeMDIChild)) );
+            CMDIChild* pMDIChild = static_cast<CMDIChild*>(T::GetCWndPtr(activeMDIChild));
+            assert ( dynamic_cast<CMDIChild*>(T::GetCWndPtr(activeMDIChild)) );
             if (pMDIChild->GetChildMenu())
                 UpdateFrameMenu(pMDIChild->GetChildMenu());
             else
-                UpdateFrameMenu(GetFrameMenu());
+                UpdateFrameMenu(T::GetFrameMenu());
             if (pMDIChild->GetChildAccel())
                 GetApp()->SetAccelerators(pMDIChild->GetChildAccel(), *this);
             else
-                GetApp()->SetAccelerators(GetFrameAccel(), *this);
+                GetApp()->SetAccelerators(T::GetFrameAccel(), *this);
         }
 
         return 0;
@@ -525,7 +525,7 @@ namespace Win32xx
     inline BOOL CMDIFrameT<T>::OnViewStatusBar()
     {
         OnViewStatusBar();
-        GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+        T::GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
         return TRUE;
     }
 
@@ -534,7 +534,7 @@ namespace Win32xx
     inline BOOL CMDIFrameT<T>::OnViewToolBar()
     {
         OnViewToolBar();
-        GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+        T::GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
         return TRUE;
     }
 
@@ -542,10 +542,10 @@ namespace Win32xx
     template <class T>
     inline LRESULT CMDIFrameT<T>::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if (GetMenuBar().IsWindow())
+        if (T::GetMenuBar().IsWindow())
         {
             // Refresh MenuBar Window
-            GetMenuBar().SetMenu(GetMenuBar().GetMenu());
+            T::GetMenuBar().SetMenu(T::GetMenuBar().GetMenu());
         }
 
         return FinalWindowProc(msg, wparam, lparam);
@@ -558,7 +558,7 @@ namespace Win32xx
     {
         if (WM_KEYFIRST <= msg.message && msg.message <= WM_KEYLAST)
         {
-            if (TranslateMDISysAccel(GetView().GetHwnd(), &msg))
+            if (TranslateMDISysAccel(T::GetView().GetHwnd(), &msg))
                 return TRUE;
         }
 
@@ -571,7 +571,7 @@ namespace Win32xx
     {
         T::RecalcLayout();
 
-        if (GetView().IsWindow())
+        if (T::GetView().IsWindow())
             MDIIconArrange();
     }
 
@@ -623,16 +623,16 @@ namespace Win32xx
             if (GetActiveMDIChild()->GetChildAccel())
                 GetApp()->SetAccelerators(GetActiveMDIChild()->GetChildAccel(), *this);
             else
-                GetApp()->SetAccelerators(GetFrameAccel(), *this);
+                GetApp()->SetAccelerators(T::GetFrameAccel(), *this);
         }
         else
         {
-            if (GetMenuBar().IsWindow())
-                GetMenuBar().SetMenu( GetFrameMenu() );
+            if (T::GetMenuBar().IsWindow())
+                T::GetMenuBar().SetMenu( T::GetFrameMenu() );
             else
-                SetMenu( GetFrameMenu() );
+                T::SetMenu( T::GetFrameMenu() );
 
-            GetApp()->SetAccelerators(GetFrameAccel(), *this);
+            GetApp()->SetAccelerators(T::GetFrameAccel(), *this);
         }
     }
 
@@ -662,16 +662,16 @@ namespace Win32xx
 
                 if (menuWindow.GetHandle())
                 {
-                    if (GetMenuBar().IsWindow())
+                    if (T::GetMenuBar().IsWindow())
                     {
                         AppendMDIMenu(menuWindow);
-                        GetMenuBar().SetMenu(menu);
+                        T::GetMenuBar().SetMenu(menu);
                     }
                     else
                     {
                         GetMDIClient().SendMessage(WM_MDISETMENU, (WPARAM)(menu.GetHandle()),
                             (LPARAM)(menuWindow.GetHandle()));
-                        DrawMenuBar();
+                        T::DrawMenuBar();
                     }
                 }
             }
@@ -719,7 +719,7 @@ namespace Win32xx
         DWORD style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
         // Create the view window
-        return CreateEx(WS_EX_CLIENTEDGE, _T("MDIClient"), _T(""), style, 0, 0, 0, 0, parent, NULL, (PSTR) &clientcreate);
+        return T::CreateEx(WS_EX_CLIENTEDGE, _T("MDIClient"), _T(""), style, 0, 0, 0, 0, parent, NULL, (PSTR) &clientcreate);
     }
 
     // Called when the MDI child window is activated.
@@ -727,10 +727,10 @@ namespace Win32xx
     inline LRESULT CMDIClient<T>::OnMDIActivate(UINT, WPARAM wparam, LPARAM lparam)
     {
         // Suppress redraw to avoid flicker when activating maximised MDI children
-        SetRedraw(FALSE);
-        LRESULT result = CallWindowProc(GetPrevWindowProc(), WM_MDIACTIVATE, wparam, lparam);
-        SetRedraw(TRUE);
-        RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+        T::SetRedraw(FALSE);
+        LRESULT result = T::CallWindowProc(T::GetPrevWindowProc(), WM_MDIACTIVATE, wparam, lparam);
+        T::SetRedraw(TRUE);
+        T::RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
         return result;
     }
@@ -740,10 +740,10 @@ namespace Win32xx
     inline LRESULT CMDIClient<T>::OnMDIDestroy(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Do default processing first
-        CallWindowProc(GetPrevWindowProc(), msg, wparam, lparam);
+        T::CallWindowProc(T::GetPrevWindowProc(), msg, wparam, lparam);
 
         // Now remove MDI child
-        GetParent().SendMessage(UWM_MDIDESTROYED, wparam, 0);
+        T::GetParent().SendMessage(UWM_MDIDESTROYED, wparam, 0);
 
         return 0;
     }
@@ -753,9 +753,9 @@ namespace Win32xx
     inline LRESULT CMDIClient<T>::OnMDIGetActive(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Do default processing first
-        LRESULT result = CallWindowProc(GetPrevWindowProc(), msg, wparam, lparam);
+        LRESULT result = T::CallWindowProc(T::GetPrevWindowProc(), msg, wparam, lparam);
 
-        SendMessage(GetParent(), UWM_MDIGETACTIVE, (WPARAM)result, lparam);
+        SendMessage(T::GetParent(), UWM_MDIGETACTIVE, (WPARAM)result, lparam);
         return result;
     }
 
@@ -782,7 +782,7 @@ namespace Win32xx
     //   HMENU hChildMenu = LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView"));
     //   HACCEL hChildAccel = LoadAccelerators(GetApp()->GetResourceHandle(), _T("MDIAccelView"));
     //   SetHandles(hChildMenu, hChildAccel);
-    //   SetView(m_View);
+    //   SetView(m_view);
     inline CMDIChild::CMDIChild() : m_pView(NULL), m_childAccel(0)
     {
 
@@ -814,7 +814,7 @@ namespace Win32xx
         if (!pParent)  return 0;
 
         pParent->SendMessage(WM_MDIGETACTIVE, 0, (LPARAM)&Max);
-        
+
         Max = Max | (cs.style & WS_MAXIMIZE);
 
         // Set the Window Class Name

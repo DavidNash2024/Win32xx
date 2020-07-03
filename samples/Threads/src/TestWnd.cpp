@@ -48,7 +48,7 @@ void CTestWindow::OnInitialUpdate()
     // Post a message to MainWnd when the window is created. The MainWnd window
     //  is in a different thread, so PostMessage is preferred over SendMessage.
     //  SendMessage would wait for the MainWnd thread to respond.
-    ::PostMessage(MainWnd.GetHwnd(), WM_WINDOWCREATED, 0, 0);
+    MainWnd.PostMessage(WM_WINDOWCREATED, 0, 0);
 }
 
 

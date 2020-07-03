@@ -1,4 +1,4 @@
-/////////////////////////////////////////
+//////////////////////////////////////////////////
 // BrowserApp.h
 
 #ifndef BROWSERAPP_H
@@ -7,17 +7,17 @@
 #include "Mainfrm.h"
 
 
-// Declaration of the CWinApp class
+// Declaration of the CFrameApp class
 class CBrowserApp : public CWinApp
 {
 public:
     CBrowserApp();
-    virtual ~CBrowserApp() {}
-    virtual BOOL InitInstance();
-    CMainFrame* GetMainFrame() { return &m_frame; }
+    virtual ~CBrowserApp();
+    BOOL InitInstance();
+    const CMainFrame* GetMainFrame() const { return &m_Frame; }
 
 private:
-    CMainFrame m_frame;
+    CMainFrame m_Frame;
 };
 
 
@@ -25,5 +25,5 @@ private:
 inline CBrowserApp* GetBrowserApp() { return static_cast<CBrowserApp*>(GetApp()); }
 
 
-#endif // BROWSERAPP_H
+#endif // define BROWSERAPP_H
 

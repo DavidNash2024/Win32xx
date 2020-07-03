@@ -149,12 +149,12 @@ namespace Win32xx
     //  if (ar.IsStoring())
     //  {
     //      // Store a member variable in the archive
-    //      ar << m_SomeValue;
+    //      ar << m_someValue;
     //  }
     //  else
     //  {
     //      // Load a member variable from the archive
-    //      ar >> m_SomeValue;
+    //      ar >> m_someValue;
     //  }
 
     }

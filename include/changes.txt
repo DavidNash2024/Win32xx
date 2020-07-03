@@ -1,6 +1,10 @@
 Version 8.7.1
 =============
 
+Bug Fixes:
+- Corrected the definition of CEventSink in the Browser sample.
+
+
 New Features and Enhancements
 -----------------------------
 * Added CWnd::Close
@@ -12,7 +16,7 @@ New Features and Enhancements
 
 * Added MovieShow sample
    This sample implements a video library manager for m4v video files. The code
-   assumes the video files have alread have the meta data for the movie. The 
+   assumes the video files have already have the meta data for the movie. The 
    meta data includes the movie name, actors, genre, plot description, cover
    image, etc.
 
@@ -20,12 +24,17 @@ New Features and Enhancements
    This sample plots a user specified function in the window.
    The plot is resized when the window is resized.
    
+* Added BrowserATL sample
+   This sample demonstrates the interoperability between Win32++ and ATL.
+   It does the same thing as the Browser sample, except that it uses ATL.
+   
 * Extended the Toolbar sample.
    The toobar sample now demonstrates how to add additional toolbars to the
    frame. It continues to demonstrate how to customise a toolbar in runtime,
    and how to add a horizontal or vertical toolbar to the frame's view.
 
 * Minor updates to the samples
+  - Samples which use CWebBrowser now suppress the display od java script errors.
 
 * Minor updates to the help documentation   
 
