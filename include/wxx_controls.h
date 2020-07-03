@@ -1646,10 +1646,10 @@ namespace Win32xx
         assert(IsWindow());
         SYSTEMTIME minMax[2];
         ZeroMemory(minMax, 2*sizeof(SYSTEMTIME));
-        LRESULT Value = SendMessage(MCM_GETRANGE, 0, (LPARAM)&minMax);
+        LRESULT value = SendMessage(MCM_GETRANGE, 0, (LPARAM)&minMax);
         minRange = minMax[0];
         maxRange = minMax[1];
-        return Value;
+        return value;
     }
 
     // Retrieves date information that represents the upper and lower limits of the date range currently selected by the user.
@@ -1659,10 +1659,10 @@ namespace Win32xx
         assert(IsWindow());
         SYSTEMTIME minMax[2];
         ZeroMemory(minMax, 2*sizeof(SYSTEMTIME));
-        LRESULT Value = MonthCal_GetSelRange(*this, &minMax);
+        LRESULT value = MonthCal_GetSelRange(*this, &minMax);
         minRange = minMax[0];
         maxRange = minMax[1];
-        return Value;
+        return value;
     }
 
     // Retrieves the date information for the date specified as "today" for the month calendar control.

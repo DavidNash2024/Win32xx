@@ -23,8 +23,11 @@ CWebControl::CWebControl()
 
 void CWebControl::OnInitialUpdate()
 {
-    // Go to the browser's home page
-    GoHome();
+    // Suppress Java script errors.
+    GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
+    
+    // Load web page.
+    Navigate(_T("www.google.com"));
 }
 
 

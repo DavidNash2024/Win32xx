@@ -2,108 +2,61 @@
 // Mainfrm.cpp
 
 #include "stdafx.h"
-#include "mainfrm.h"
 #include "resource.h"
+#include "mainfrm.h"
 
 
-// Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_eventCookie(0)
+// Constructor for CMainFrame.
+CMainFrame::CMainFrame()
 {
     //Set m_View as the view window of the frame
     SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\Browser Sample"));
+    LoadRegistrySettings(_T("Win32++\\Browser ATL Sample"));
 }
 
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
 // Adds a ComboBoxEx control to the rebar.
-void CMainFrame::AddComboBoxBand(int height)
+void CMainFrame::AddComboBoxBand(int Listbox_Height)
 {
+    // Get the reference to the rebar object
+    CReBar& RB = GetReBar();
+    ReBarTheme RBTheme = GetReBarTheme();
+
     // Create the ComboboxEx window
-    m_combo.Create(GetReBar());
+    CREATESTRUCT cs = {0};
+    cs.lpszClass = _T("COMBOBOXEX32");
+    cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;
+    cs.cy = 100;    // required to display list
+    cs.hMenu = (HMENU)IDC_COMBOBOXEX;
+    m_combo.Create(GetReBar().GetHwnd());
 
     // Put the window in a new rebar band
-    REBARBANDINFO rbbi;
-    ZeroMemory(&rbbi, sizeof(rbbi));
-    rbbi.cbSize     = sizeof(rbbi);
+    REBARBANDINFO rbbi = {0};
+    rbbi.cbSize     = sizeof(REBARBANDINFO);
     rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_TEXT;
-    rbbi.cyMinChild = height;
-    rbbi.cyMaxChild = height;
+    rbbi.cyMinChild = Listbox_Height;
+    rbbi.cyMaxChild = Listbox_Height;
     rbbi.cxMinChild = 200;
     rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
     rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
-    rbbi.clrBack    = GetReBarTheme().clrBand1;
+    rbbi.clrBack    = RBTheme.clrBand1;
     rbbi.hwndChild  = m_combo.GetHwnd();
-    rbbi.lpText     = const_cast<LPTSTR>(_T("Address"));
+    rbbi.lpText     = _T("Address");
 
-    GetReBar().InsertBand(-1, rbbi);
-}
-
-// Connect to the event sink.
-void CMainFrame::ConnectEvents()
-{
-    IUnknown* pUnk = GetBrowser()->GetAXWindow().GetUnknown();
-    if (pUnk)
-    {
-        IConnectionPoint* pcp;
-        pcp = GetConnectionPoint(DIID_DWebBrowserEvents2);
-        if (pcp)
-        {
-            pcp->Advise(&m_eventSink, &m_eventCookie);
-            pcp->Release();
-        }
-        pUnk->Release();
-    }
-}
-
-// Disconnect from the event sink.
-void CMainFrame::DisconnectEvents()
-{
-    IUnknown* pUnk = GetBrowser()->GetAXWindow().GetUnknown();
-    if (pUnk)
-    {
-        IConnectionPoint* pcp;
-        pcp = GetConnectionPoint(DIID_DWebBrowserEvents2);
-        if (pcp)
-        {
-            pcp->Unadvise(m_eventCookie);
-            pcp->Release();
-        }
-        pUnk->Release();
-    }
-}
-
-// Retrieve pointer to IConnectionPoint.
-IConnectionPoint* CMainFrame::GetConnectionPoint(REFIID riid)
-{
-    IConnectionPoint* pcp = NULL;
-    IUnknown* pUnk = GetBrowser()->GetAXWindow().GetUnknown();
-    if (pUnk)
-    {
-        IConnectionPointContainer* pcpc;
-        HRESULT hr = pUnk->QueryInterface(IID_IConnectionPointContainer, (void**)&pcpc);
-        if (SUCCEEDED(hr))
-        {
-            pcpc->FindConnectionPoint(riid, &pcp);
-            pcpc->Release();
-        }
-
-        pUnk->Release();
-    }
-
-    return pcp;
+    RB.InsertBand(-1, rbbi);
 }
 
 // Go to the previous web page
 BOOL CMainFrame::OnBack()
 {
-    m_view.GoBack();
+    GetBrowser()->GoBack();
     return TRUE;
 }
 
@@ -122,7 +75,6 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
         BOOL isEnabled = pDispParams->rgvarg[0].boolVal;
         LONG command = pDispParams->rgvarg[1].lVal;
         {
-            // Update the Forward and Back buttons.
             switch (command)
             {
             case CSC_NAVIGATEFORWARD:
@@ -136,21 +88,11 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
     }
 }
 
-// Called before the frame is destoryed.
-void CMainFrame::OnClose()
-{
-    GetBrowser()->Stop();
-    DisconnectEvents();
-    
-    // Call the base class function.
-    CFrame::OnClose();
-}
-
 // Respond to menu, toolbar or accelerator key input.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-    UINT id = LOWORD(wparam);
-    switch (id)
+    // Respond to menu and and toolbar input
+    switch(LOWORD(wParam))
     {
     case IDM_BACK:           return OnBack();
     case IDM_EDIT_CUT:       return OnEditCut();
@@ -170,19 +112,24 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     }
 
     // Handle notification WM_COMMAND from ComboboxEx
-    if (reinterpret_cast<HWND>(lparam) == m_combo.GetHwnd())
+    if((HWND)lParam == m_combo.GetHwnd())
     {
-        switch (HIWORD(wparam))
+        switch(HIWORD(wParam))
         {
-        case CBN_SELCHANGE:   // User made selection from list
-        {
-            // Get text from edit box
-            CString str = m_combo.GetWindowText();
+        case CBN_SELCHANGE:  // User made selection from list
+            {
+                // Get text from the combo edit box
+                CString str = m_combo.GetWindowText();
 
-            // Navigate to web page
-            m_view.Navigate(str);
-        }
-        return TRUE;
+                // Navigate to web page
+                m_view.Navigate(str);
+
+                // Set focus to web page
+                LONG_PTR hWeb;
+                GetBrowser()->get_HWND(&hWeb);
+                ::SetFocus((HWND)hWeb);
+            }
+            return TRUE;
         }
     }
 
@@ -196,7 +143,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default.
+    // Frames have all options enabled by default. 
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -205,13 +152,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
-
+   
     // Call the base function
-    CFrame::OnCreate(cs);
-
-    ConnectEvents();
-
-    return 0;
+    return CFrame::OnCreate(cs);
 }
 
 void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
@@ -241,7 +184,7 @@ BOOL CMainFrame::OnEditCut()
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Cut();
     else
-        m_view.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+        GetBrowser()->ExecWB(OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
 
     return TRUE;
 }
@@ -251,7 +194,7 @@ BOOL CMainFrame::OnEditCopy()
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Copy();
     else
-        m_view.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+        GetBrowser()->ExecWB(OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
 
     return TRUE;
 }
@@ -261,21 +204,17 @@ BOOL CMainFrame::OnEditPaste()
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Paste();
     else
-        m_view.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+        GetBrowser()->ExecWB(OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
 
     return TRUE;
 }
 
 BOOL CMainFrame::OnEditDelete()
 {
-#if defined(__GNUC__)
-    OLECMDID OLECMDID_DELETE = (OLECMDID)33;
-#endif
-
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Clear();
     else
-        m_view.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+        GetBrowser()->ExecWB(OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
 
     return TRUE;
 }
@@ -283,21 +222,14 @@ BOOL CMainFrame::OnEditDelete()
 // Issue a close request to the frame
 BOOL CMainFrame::OnFileExit()
 {
-    Close();
+    PostMessage(WM_CLOSE);
     return TRUE;
 }
 
 // Go to the next web page
 BOOL CMainFrame::OnForward()
 {
-    m_view.GoForward();
-    return TRUE;
-}
-
-// Load the browser's home page.
-BOOL CMainFrame::OnHome()
-{
-    m_view.GoHome();
+    GetBrowser()->GoForward();
     return TRUE;
 }
 
@@ -308,38 +240,47 @@ BOOL CMainFrame::OnHelpAbout()
     return TRUE;
 }
 
+// Load the browser's home page.
+BOOL CMainFrame::OnHome()
+{
+    GetBrowser()->GoHome();
+    return TRUE;
+}
+
 // Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
     // Place any additional startup code here.
-
+    
     // Suppress Java script errors.
-    m_view.GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
+    GetBrowser()->put_Silent(VARIANT_TRUE);
 
-    // Load the home page
-    m_view.GoHome();
+    // Load the home page.
+    GetBrowser()->GoHome();
 }
 
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 {
-    CString str = _T("Navigate Complete");
+    CString str = _T("NavigateComplete2: ");
 
-    if (pDispParams->rgvarg[0].vt == (VT_BYREF | VT_VARIANT))
+    if (pDispParams->rgvarg[0].vt == (VT_BYREF|VT_VARIANT))
     {
-        VARIANT url = *pDispParams->rgvarg[0].pvarVal;
-        url.vt = VT_BSTR;
+        CComVariant vtURL(*pDispParams->rgvarg[0].pvarVal);
+        vtURL.ChangeType(VT_BSTR);
 
-        str += url.bstrVal;
+        str += vtURL.bstrVal;
         str += _T("\n");
         TRACE(str);
-        VariantClear(&url);
     }
 
-    str  = GetBrowser()->GetLocationURL();
-
-    // Update the URL in the ComboboxEx edit box.
-    m_combo.SetWindowText(CString(str));
+    BSTR url;
+    if (SUCCEEDED(GetBrowser()->get_LocationURL(&url)))
+    {
+        // Update the URL in the ComboboxEx edit box.
+        m_combo.SetWindowText(CString(url));
+    }
+    SysFreeString(url);
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
@@ -349,32 +290,32 @@ void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 }
 
 // Called when the frame recieves a notification (WM_NOTIFY).
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
-    LPNMHDR pNMHDR = (LPNMHDR)lparam;
-
+    LPNMHDR pNMHDR = (LPNMHDR)lParam;
     if (pNMHDR && pNMHDR->hwndFrom == m_combo)
     {
-        switch (pNMHDR->code)
+        switch ((pNMHDR)->code)
         {
-        case CBEN_ENDEDIT:
+        case CBEN_ENDEDIT:    // operation concluded in the combo edit box
         {
-            switch (((PNMCBEENDEDIT)pNMHDR)->iWhy)
+            switch (((PNMCBEENDEDIT)lParam)->iWhy)
             {
-            case CBENF_RETURN:   // User hit return in edit box
+            case CBENF_RETURN:    // return hit in the combo edit box
             {
-                // Get text from edit box
+                // Get text from combo edit box
                 CString str = m_combo.GetWindowText();
 
-                // Insert text into the list box.
+                // Insert text into the combo list box.
                 COMBOBOXEXITEM item;
                 ZeroMemory(&item, sizeof(item));
                 item.mask = CBEIF_TEXT;
-                item.pszText = const_cast<LPTSTR>(str.c_str());
+                item.pszText = (LPTSTR)str.c_str();
                 m_combo.InsertItem(item);
 
                 // Navigate to the web page
                 m_view.Navigate(str);
+
                 return FALSE;
             }
             }
@@ -382,13 +323,14 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
         }
     }
 
-    return CFrame::OnNotify(wparam, lparam);
+    return CFrame::OnNotify(wParam, lParam);
 }
 
 // Displays the web page as it would look when printed.
 BOOL CMainFrame::OnPrintPreview()
 {
     GetBrowser()->ExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
+
     return TRUE;
 }
 
@@ -406,7 +348,7 @@ BOOL CMainFrame::OnPrint()
     ZeroMemory(&vFootStr, sizeof(vFootStr));
     ZeroMemory(&vArg, sizeof(vArg));
 
-    try
+    try 
     {
         // Initialize header and footer parameters to send to ExecWB().
         psabBounds[0].lLbound = 0;
@@ -423,14 +365,14 @@ BOOL CMainFrame::OnPrint()
         vHeadStr.bstrVal = SysAllocString(L"This is my header string.");
         if (vHeadStr.bstrVal == NULL)
             throw std::bad_alloc();
-
+        
         rgIndices = 0;
         if (SUCCEEDED(SafeArrayPutElement(psaHeadFoot, &rgIndices, static_cast<void*>(&vHeadStr))))
         {
             // Argument 2: Footer
             vFootStr.vt = VT_BSTR;
             vFootStr.bstrVal = SysAllocString(L"This is my footer string.");
-            if (vFootStr.bstrVal == NULL)
+            if (vFootStr.bstrVal == NULL) 
                 throw std::bad_alloc();
 
             rgIndices = 1;
@@ -450,7 +392,7 @@ BOOL CMainFrame::OnPrint()
     }
     catch (...)
     {
-        if (psaHeadFoot)
+        if (psaHeadFoot) 
             SafeArrayDestroy(psaHeadFoot);
     }
 
@@ -477,7 +419,7 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 
         str += _T("\n");
         TRACE(str);
-    }
+   }
 }
 
 void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
@@ -495,7 +437,7 @@ void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 
 BOOL CMainFrame::OnRefresh()
 {
-    m_view.Refresh();
+    GetBrowser()->Refresh();
     return TRUE;
 }
 
@@ -511,7 +453,7 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 BOOL CMainFrame::OnStop()
 {
-    m_view.Stop();
+    GetBrowser()->Stop();
     return TRUE;
 }
 
@@ -523,7 +465,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
     if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
     {
         str = pDispParams->rgvarg[0].bstrVal;
-        str += _T(" - Win32++ Browser");
+        str += _T(" - Win32++ ATL Browser");
         TRACE(str);
     }
     else
@@ -574,7 +516,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_BEFORENAVIGATE:      OnBeforeNavigate2((DISPPARAMS*)wparam);    break;
+    case UWM_BEFORENAVIGATE2:     OnBeforeNavigate2((DISPPARAMS*)wparam);    break;
     case UWM_COMMANDSTATECHANGE:  OnCommandStateChange((DISPPARAMS*)wparam); break;
     case UWM_DOCUMENTBEGIN:       OnDocumentBegin((DISPPARAMS*)wparam);      break;
     case UWM_DOCUMENTCOMPLETE:    OnDocumentComplete((DISPPARAMS*)wparam);   break;

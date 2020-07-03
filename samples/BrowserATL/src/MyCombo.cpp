@@ -7,8 +7,8 @@
 
 
 void CMyCombo::OnAttach()
-{
-    m_edit.Attach(GetEditCtrl());
+{ 
+    m_edit.Attach(GetEditCtrl()); 
 }
 
 void CMyCombo::PreCreate(CREATESTRUCT& cs)

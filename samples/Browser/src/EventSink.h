@@ -1,6 +1,9 @@
 #ifndef EVENTSINK_H
 #define EVENTSINK_H
 
+#include "exdispid.h"
+
+// Some possible IDispatch events
 // The following can also be found in exdispid.h (except MinGW)
 #define DISPID_STATUSTEXTCHANGE   102
 #define DISPID_DOWNLOADCOMPLETE   104
@@ -15,19 +18,14 @@
 #define DISPID_DOCUMENTCOMPLETE   259
 
 
-class CMainFrame;   // Forward declaration
-
 ///////////////////////////////////////////////
 // About the CEventSink class.
 //  The CEventSink implements the event sink for our browser. An Event Sink
 //  provides a mechanism to respond to events triggered by an ActiveX control.
-//  The ActiveX browser is the event source, and CMainFrame is the event sink.
+//  The ActiveX browser is the event source, and CEventSink is the event sink.
 class CEventSink : public IDispatch
 {
 public:
-    CEventSink();
-    void SetSink(CMainFrame* pSink) {m_pSink = pSink;}
-
     // IUnknown Methods
     STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
     STDMETHODIMP_(ULONG) AddRef();
@@ -38,10 +36,6 @@ public:
     STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
     STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
     STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
-
-private:
-    ULONG       m_refcount;    // ref count
-    CMainFrame* m_pSink;    // Send the notifications here
 };
 
 #endif // EVENTSINK_H
