@@ -106,7 +106,7 @@ typedef  unsigned char  byte;
 #include <wxx_time.h>           // Add CTime
 #include <wxx_toolbar.h>        // Add CToolBar
 #include <wxx_treeview.h>       // Add CTreeView
-#include <wxx_webbrowser.h>     // Add CAXWindow, CWebBrowser
+#include <wxx_webbrowser.h>     // Add CWebBrowser, CAXHost
 #include <wxx_wincore.h>        // Add CWnd
 
 /*-----------------------------------------------------------------------------*/

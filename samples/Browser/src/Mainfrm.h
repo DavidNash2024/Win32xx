@@ -32,7 +32,7 @@ public:
     void AddComboBoxBand(int height);
     void ConnectEvents();
     void DisconnectEvents();
-    CWebBrowser* GetBrowser() const { return (CWebBrowser*)&m_view; }
+    IWebBrowser2* GetIWebBrowser2() const { return m_browser.GetIWebBrowser2(); }
     const CEdit* GetCBEdit() const  { return m_combo.GetCBEdit(); }
     IConnectionPoint* GetConnectionPoint(REFIID riid);
 
@@ -74,7 +74,7 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CWebBrowser m_view;             // Win32++'s web browser defined in wxx_webbrowser.h
+    CWebBrowser m_browser;          // Win32++'s web browser defined in wxx_webbrowser.h
     CMyCombo    m_combo;            // ComboBoxEx control used in the toolbar.
     CEventSink  m_eventSink;        // Routes event notifications from IWebBrowser.
     DWORD       m_eventCookie;      // Token that uniquely identifies this connection.

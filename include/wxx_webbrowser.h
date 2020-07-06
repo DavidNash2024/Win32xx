@@ -61,25 +61,27 @@
 namespace Win32xx
 {
     ///////////////////////////////////////////////////
-    // Declaration of the CAXWindow class
-    // This class implements an ActiveX control container.
-    class CAXWindow : public IOleClientSite, public IOleInPlaceSite, public IOleInPlaceFrame,
-                            public IOleControlSite, public IDispatch
+    // Declaration of the CAXHost class
+    // This class implements a COM object which hosts an ActiveX control,
+    // such as internet explorer.
+    class CAXHost : public IOleInPlaceFrame, public IOleClientSite, 
+                    public IOleInPlaceSite, public IOleControlSite, 
+                    public IDispatch
     {
     public:
-        CAXWindow();
-        virtual ~CAXWindow();
-        virtual void Activate(BOOL focus);
-        virtual void CreateControl(BSTR clsidName);
-        virtual void CreateControl(REFCLSID clsid);
-        virtual void Remove();
-        virtual void SetParent(HWND hWndParent);
-        virtual void SetLocation(int x, int y, int width, int height);
-        virtual void SetVisible(BOOL isVisible);
-        virtual void SetStatusWindow(HWND status);
-        virtual void TranslateKey(MSG msg);
-        IDispatch* GetDispatch();
-        IUnknown* GetUnknown();
+        CAXHost();
+        ~CAXHost();
+
+        // CAXHost methods
+        STDMETHODIMP Activate();
+        STDMETHODIMP CreateControl(BSTR clsidName, void** ppUnk);
+        STDMETHODIMP CreateControl(REFCLSID clsid, void** ppUnk);
+        STDMETHODIMP Remove();
+        STDMETHODIMP SetParent(HWND hWndParent);
+        STDMETHODIMP SetLocation(int x, int y, int width, int height);
+        STDMETHODIMP SetVisible(BOOL isVisible);
+        STDMETHODIMP SetStatusWindow(HWND status);
+        STDMETHODIMP TranslateKey(MSG msg);
 
         // IUnknown Methods
         STDMETHODIMP QueryInterface(REFIID riid, void** ppObject);
@@ -140,7 +142,6 @@ namespace Win32xx
         STDMETHODIMP Invoke(DISPID dispID, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pParams, VARIANT* result, EXCEPINFO* pExecInfo, unsigned int* pArgErr);
 
     private:
-         ULONG       m_count;       // ref count
          HWND        m_ax;          // window handle of the container
          HWND        m_status;      // status window handle
          IUnknown*   m_pUnk;        // IUnknown of contained object
@@ -149,8 +150,9 @@ namespace Win32xx
 
 
     ///////////////////////////////////////////////
-    // Declaration of the CWebBrowser class
-    // This class provides the functionality of a WebBrower, using the IWebBrower2 interface.
+    // Declaration of the CWebBrowser class.
+    // This class provides the functionality of a WebBrower, using the
+    // IWebBrower2 interface.
     class CWebBrowser : public CWnd
     {
     public:
@@ -159,26 +161,26 @@ namespace Win32xx
 
         //Attributes
         LPDISPATCH GetApplication() const;
-        CAXWindow& GetAXWindow() const { return m_axContainer; }
-        BOOL GetBusy() const;
+        BOOL    GetBusy() const;
         LPDISPATCH GetContainer() const;
         LPDISPATCH GetDocument() const;
-        BOOL GetFullScreen() const;
-        long GetHeight() const;
-        IWebBrowser2* GetIWebBrowser2() const { return m_pIWebBrowser2; }
-        long GetLeft() const;
+        BOOL    GetFullScreen() const;
+        long    GetHeight() const;
+        IWebBrowser2* const GetIWebBrowser2() const { return m_pIWebBrowser2; }
+        long    GetLeft() const;
         CString GetLocationName() const;
         CString GetLocationURL() const;
-        BOOL GetOffline() const;
+        BOOL    GetOffline() const;
         LPDISPATCH GetParent() const;
+        VARIANT GetProperty(LPCTSTR pProperty) const;
         READYSTATE GetReadyState() const;
-        BOOL GetRegisterAsBrowser() const;
-        BOOL GetTheaterMode() const;
-        long GetTop() const;
-        BOOL GetTopLevelContainer() const;
+        BOOL    GetRegisterAsBrowser() const;
+        BOOL    GetTheaterMode() const;
+        long    GetTop() const;
+        BOOL    GetTopLevelContainer() const;
         CString GetType() const;
-        BOOL GetVisible() const;
-        long GetWidth() const;
+        BOOL    GetVisible() const;
+        long    GetWidth() const;
         HRESULT SetFullScreen(BOOL isFullScreen);
         HRESULT SetHeight(long height);
         HRESULT SetLeft(long leftEdge);
@@ -192,7 +194,6 @@ namespace Win32xx
         // Operations
         HRESULT AddWebBrowserControl();
         HRESULT ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdExecOpt, VARIANT* pIn, VARIANT* pOut);
-        VARIANT GetProperty( LPCTSTR pProperty);
         HRESULT GoBack();
         HRESULT GoForward();
         HRESULT GoHome();
@@ -223,7 +224,7 @@ namespace Win32xx
 
     private:
         UINT    GetPidlLength(LPITEMIDLIST pidl);
-        mutable CAXWindow  m_axContainer;    // The ActiveX Container
+        CAXHost  m_axHost;              // The ActiveX host
         IWebBrowser2* m_pIWebBrowser2;  // Interface to the ActiveX web browser control
     };
 
@@ -235,127 +236,124 @@ namespace Win32xx
 {
 
     /////////////////////////////////////////
-    // Definitions for the CAXWindow class
+    // Definitions for the CAXHost class
     //
 
-    inline CAXWindow::CAXWindow() : m_count(1), m_ax(NULL), m_status(0), m_pUnk(NULL)
+    inline CAXHost::CAXHost() : m_ax(NULL), m_status(0), m_pUnk(NULL)
     {
+        HRESULT hr;
+        VERIFY(SUCCEEDED(hr = OleInitialize(NULL)));
     }
 
-    inline CAXWindow::~CAXWindow()
+    inline CAXHost::~CAXHost()
     {
         if (m_pUnk)
             m_pUnk->Release();
 
-        Release();
+        OleUninitialize();
     }
 
-    inline void CAXWindow::CreateControl(BSTR clsidName)
+    inline STDMETHODIMP CAXHost::Activate()
     {
-        CLSID   clsid;
-        if (NOERROR == CLSIDFromString(clsidName, &clsid))
-            CreateControl(clsid);
-    }
-
-    inline void CAXWindow::Activate(BOOL focus)
-    {
-        if (!m_pUnk)
-            return;
-
-        if (focus)
+        HRESULT hr = E_FAIL;
+        if (m_pUnk)
         {
             IOleObject* pObject;
-            HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject));
-            if (FAILED(result))
-                return;
+            VERIFY(SUCCEEDED(hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject))));
+            if (pObject)
+                VERIFY(SUCCEEDED(hr = pObject->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_ax, &m_controlRect)));
 
-            pObject->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_ax, &m_controlRect);
             pObject->Release();
         }
+
+        return hr;
     }
 
-    inline void CAXWindow::CreateControl(REFCLSID clsid)
+    inline STDMETHODIMP CAXHost::CreateControl(BSTR clsidName, void** ppUnk)
     {
-        if (S_OK != CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, reinterpret_cast<void**>(&m_pUnk)))
-            return;
+        CLSID   clsid;
+        HRESULT hr;
+        VERIFY(SUCCEEDED(hr = CLSIDFromString(clsidName, &clsid)));
+        VERIFY(SUCCEEDED(hr = CreateControl(clsid, ppUnk)));
 
-        assert(m_pUnk);
+        return hr;
+    }
 
-        IOleObject* pObject;
-        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject));
-        if (FAILED(result))
-            return;
+    inline STDMETHODIMP CAXHost::CreateControl(REFCLSID clsid, void** ppUnk)
+    {
+        HRESULT hr = E_FAIL;
 
-        pObject->SetClientSite(this);
-        pObject->Release();
-
-        IPersistStreamInit* ppsi;
-        result = m_pUnk->QueryInterface(IID_IPersistStreamInit, reinterpret_cast<void**>(&ppsi));
-        if (SUCCEEDED(result))
+        VERIFY(SUCCEEDED(hr = CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, ppUnk)));
+        m_pUnk = reinterpret_cast<IUnknown*>(*ppUnk);
+        if (m_pUnk)
         {
-            ppsi->InitNew();
-            ppsi->Release();
+            IOleObject* pObject;
+            VERIFY(SUCCEEDED(hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject))));
+            if (pObject)
+            {
+                VERIFY(SUCCEEDED(hr = pObject->SetClientSite(this)));
+                pObject->Release();
+
+                IPersistStreamInit* ppsi;
+                VERIFY(SUCCEEDED(hr = m_pUnk->QueryInterface(IID_IPersistStreamInit, reinterpret_cast<void**>(&ppsi))));
+                if (ppsi)
+                {
+                    VERIFY(SUCCEEDED(hr = ppsi->InitNew()));
+                    ppsi->Release();
+                }
+            }
         }
+
+        return hr;
     }
 
-    inline STDMETHODIMP_(ULONG) CAXWindow::AddRef()
+    inline STDMETHODIMP_(ULONG) CAXHost::AddRef()
     {
-        return ++m_count;
+        // Automatic deletion is not required.
+        return 1;
     }
 
-    inline STDMETHODIMP CAXWindow::CanInPlaceActivate()
+    inline STDMETHODIMP CAXHost::CanInPlaceActivate()
     {
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::ContextSensitiveHelp(BOOL enterMode)
+    inline STDMETHODIMP CAXHost::ContextSensitiveHelp(BOOL enterMode)
     {
         UNREFERENCED_PARAMETER(enterMode);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::DeactivateAndUndo()
+    inline STDMETHODIMP CAXHost::DeactivateAndUndo()
     {
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::DiscardUndoState()
+    inline STDMETHODIMP CAXHost::DiscardUndoState()
     {
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::EnableModeless(BOOL enable)
+    inline STDMETHODIMP CAXHost::EnableModeless(BOOL enable)
     {
         UNREFERENCED_PARAMETER(enable);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::GetBorder(LPRECT pBorderRect)
+    inline STDMETHODIMP CAXHost::GetBorder(LPRECT pBorderRect)
     {
         UNREFERENCED_PARAMETER(pBorderRect);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::GetContainer(LPOLECONTAINER* ppContainer)
+    inline STDMETHODIMP CAXHost::GetContainer(LPOLECONTAINER* ppContainer)
     {
         UNREFERENCED_PARAMETER(ppContainer);
         return E_NOINTERFACE;
     }
 
-    // Returns the IDispatch COM interface.
-    // The caller should release the IDispatch pointer.
-    inline IDispatch* CAXWindow::GetDispatch()
-    {
-        if (!m_pUnk)
-            return NULL;
-
-        IDispatch*  pDisp;
-
-        m_pUnk->QueryInterface(IID_IDispatch, reinterpret_cast<void**>(&pDisp));
-        return pDisp;
-    }
-
-    inline STDMETHODIMP CAXWindow::GetExtendedControl(IDispatch** ppDisp)
+    // Call Release on this pointer when it is no longer required.
+    inline STDMETHODIMP CAXHost::GetExtendedControl(IDispatch** ppDisp)
     {
         if (ppDisp == NULL)
             return E_INVALIDARG;
@@ -366,7 +364,7 @@ namespace Win32xx
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::GetIDsOfNames(REFIID riid, OLECHAR** pNames, unsigned int namesCount, LCID lcid, DISPID* pID)
+    inline STDMETHODIMP CAXHost::GetIDsOfNames(REFIID riid, OLECHAR** pNames, unsigned int namesCount, LCID lcid, DISPID* pID)
     {
         UNREFERENCED_PARAMETER((IID)riid);      // IID cast required for the MinGW compiler
         UNREFERENCED_PARAMETER(pNames);
@@ -377,7 +375,7 @@ namespace Win32xx
         return DISP_E_UNKNOWNNAME;
     }
 
-    inline STDMETHODIMP CAXWindow::GetMoniker(DWORD assign, DWORD whichMoniker, LPMONIKER* ppMk)
+    inline STDMETHODIMP CAXHost::GetMoniker(DWORD assign, DWORD whichMoniker, LPMONIKER* ppMk)
     {
         UNREFERENCED_PARAMETER(assign);
         UNREFERENCED_PARAMETER(whichMoniker);
@@ -385,7 +383,7 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo)
+    inline STDMETHODIMP CAXHost::GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo)
     {
         UNREFERENCED_PARAMETER(itinfo);
         UNREFERENCED_PARAMETER(lcid);
@@ -393,22 +391,13 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::GetTypeInfoCount(unsigned int* pctinfo)
+    inline STDMETHODIMP CAXHost::GetTypeInfoCount(unsigned int* pctinfo)
     {
         UNREFERENCED_PARAMETER(pctinfo);
         return E_NOTIMPL;
     }
 
-    inline IUnknown* CAXWindow::GetUnknown()
-    {
-        if (!m_pUnk)
-            return NULL;
-
-        m_pUnk->AddRef();
-        return m_pUnk;
-    }
-
-    inline STDMETHODIMP CAXWindow::GetWindow(HWND* pHwnd)
+    inline STDMETHODIMP CAXHost::GetWindow(HWND* pHwnd)
     {
         if (!IsWindow(m_ax))
             return S_FALSE;
@@ -417,7 +406,8 @@ namespace Win32xx
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::GetWindowContext (IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppIIPUIWin,
+    // Call Release on this pointer when it is no longer required.
+    inline STDMETHODIMP CAXHost::GetWindowContext (IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppIIPUIWin,
                                       LPRECT pRect, LPRECT pClipRect, LPOLEINPLACEFRAMEINFO pFrameInfo)
     {
         *ppFrame = (IOleInPlaceFrame*)this;
@@ -442,14 +432,14 @@ namespace Win32xx
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::InsertMenus(HMENU shared, LPOLEMENUGROUPWIDTHS pMenuWidths)
+    inline STDMETHODIMP CAXHost::InsertMenus(HMENU shared, LPOLEMENUGROUPWIDTHS pMenuWidths)
     {
         UNREFERENCED_PARAMETER(shared);
         UNREFERENCED_PARAMETER(pMenuWidths);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::Invoke(DISPID dispID, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pParams, VARIANT* result, EXCEPINFO* pExecInfo, unsigned int* pArgErr)
+    inline STDMETHODIMP CAXHost::Invoke(DISPID dispID, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pParams, VARIANT* result, EXCEPINFO* pExecInfo, unsigned int* pArgErr)
     {
         UNREFERENCED_PARAMETER(dispID);
         UNREFERENCED_PARAMETER((IID)riid);      // IID cast required for the MinGW compiler
@@ -462,57 +452,58 @@ namespace Win32xx
         return DISP_E_MEMBERNOTFOUND;
     }
 
-    inline STDMETHODIMP CAXWindow::LockInPlaceActive(BOOL lock)
+    inline STDMETHODIMP CAXHost::LockInPlaceActive(BOOL lock)
     {
         UNREFERENCED_PARAMETER(lock);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::OnControlInfoChanged()
+    inline STDMETHODIMP CAXHost::OnControlInfoChanged()
     {
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::OnFocus(BOOL gotFocus)
+    inline STDMETHODIMP CAXHost::OnFocus(BOOL gotFocus)
     {
         UNREFERENCED_PARAMETER(gotFocus);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::OnInPlaceActivate()
+    inline STDMETHODIMP CAXHost::OnInPlaceActivate()
     {
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::OnInPlaceDeactivate()
+    inline STDMETHODIMP CAXHost::OnInPlaceDeactivate()
     {
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::OnPosRectChange(LPCRECT pPosRect)
+    inline STDMETHODIMP CAXHost::OnPosRectChange(LPCRECT pPosRect)
     {
         UNREFERENCED_PARAMETER(pPosRect);
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::OnShowWindow(BOOL show)
+    inline STDMETHODIMP CAXHost::OnShowWindow(BOOL show)
     {
         UNREFERENCED_PARAMETER(show);
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::OnUIActivate()
+    inline STDMETHODIMP CAXHost::OnUIActivate()
     {
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::OnUIDeactivate(BOOL undoable)
+    inline STDMETHODIMP CAXHost::OnUIDeactivate(BOOL undoable)
     {
         UNREFERENCED_PARAMETER(undoable);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::QueryInterface(REFIID riid, void** ppObject)
+    // Call Release on this pointer when it is no longer required.
+    inline STDMETHODIMP CAXHost::QueryInterface(REFIID riid, void** ppObject)
     {
         if (!ppObject)
             return E_POINTER;
@@ -523,16 +514,12 @@ namespace Win32xx
             *ppObject = static_cast<IOleInPlaceSite*>(this);
         else if (IsEqualIID(riid, IID_IOleInPlaceFrame))
             *ppObject = static_cast<IOleInPlaceFrame*>(this);
-        else if (IsEqualIID(riid, IID_IOleInPlaceUIWindow))
-            *ppObject = static_cast<IOleInPlaceUIWindow*>(this);
         else if (IsEqualIID(riid, IID_IOleControlSite))
             *ppObject = static_cast<IOleControlSite*>(this);
-        else if (IsEqualIID(riid, IID_IOleWindow))
-            *ppObject = this;
         else if (IsEqualIID(riid, IID_IDispatch))
             *ppObject = static_cast<IDispatch*>(this);
         else if (IsEqualIID(riid, IID_IUnknown))
-            *ppObject = this;
+            *ppObject = static_cast<IUnknown*>(static_cast<IOleInPlaceFrame*>(this));
         else
         {
             *ppObject = NULL;
@@ -543,94 +530,101 @@ namespace Win32xx
         return S_OK;
     }
 
-    inline STDMETHODIMP_(ULONG) CAXWindow::Release()
+    inline STDMETHODIMP_(ULONG) CAXHost::Release()
     {
-        return --m_count;
+        // Automatic deletion is not required.
+        return 1;
     }
 
-    inline void CAXWindow::Remove()
+    inline STDMETHODIMP CAXHost::Remove()
     {
-        if (!m_pUnk)
-            return;
+        HRESULT hr = E_FAIL;
 
-        IOleObject* pObject;
-        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject));
-        if (SUCCEEDED(result))
+        if (m_pUnk)
         {
-            pObject->Close(OLECLOSE_NOSAVE);
-            pObject->SetClientSite(NULL);
-            pObject->Release();
-        }
+            IOleInPlaceObject* pipo;
+            VERIFY(SUCCEEDED(hr = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo))));
+            if (pipo)
+            {
+                VERIFY(SUCCEEDED(hr = pipo->UIDeactivate()));
+                VERIFY(SUCCEEDED(hr = pipo->InPlaceDeactivate()));
+                pipo->Release();
+            }
 
-        IOleInPlaceObject* pipo;
-        result = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
-        if (SUCCEEDED(result))
-        {
-            pipo->UIDeactivate();
-            pipo->InPlaceDeactivate();
-            pipo->Release();
+            IOleObject* pObject;
+            VERIFY(SUCCEEDED(hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject))));
+            if (pObject)
+            {
+                VERIFY(SUCCEEDED(hr = pObject->Close(OLECLOSE_NOSAVE)));
+                VERIFY(SUCCEEDED(hr = pObject->SetClientSite(NULL)));
+                pObject->Release();
+            }
         }
-
+        
+        return hr;
     }
 
-    inline STDMETHODIMP CAXWindow::RemoveMenus(HMENU shared)
+    inline STDMETHODIMP CAXHost::RemoveMenus(HMENU shared)
     {
         UNREFERENCED_PARAMETER(shared);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::RequestBorderSpace(LPCBORDERWIDTHS pBorderWidths)
+    inline STDMETHODIMP CAXHost::RequestBorderSpace(LPCBORDERWIDTHS pBorderWidths)
     {
         UNREFERENCED_PARAMETER(pBorderWidths);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::RequestNewObjectLayout()
+    inline STDMETHODIMP CAXHost::RequestNewObjectLayout()
     {
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::SaveObject()
+    inline STDMETHODIMP CAXHost::SaveObject()
     {
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::Scroll(SIZE scrollExtent)
+    inline STDMETHODIMP CAXHost::Scroll(SIZE scrollExtent)
     {
         UNREFERENCED_PARAMETER(scrollExtent);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR pObjName)
+    inline STDMETHODIMP CAXHost::SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR pObjName)
     {
         UNREFERENCED_PARAMETER(pActiveObject);
         UNREFERENCED_PARAMETER(pObjName);
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::SetBorderSpace(LPCBORDERWIDTHS pBorderWidths)
+    inline STDMETHODIMP CAXHost::SetBorderSpace(LPCBORDERWIDTHS pBorderWidths)
     {
         UNREFERENCED_PARAMETER(pBorderWidths);
         return E_NOTIMPL;
     }
 
-    inline void CAXWindow::SetLocation(int x, int y, int width, int height)
+    inline STDMETHODIMP CAXHost::SetLocation(int x, int y, int width, int height)
     {
         m_controlRect.SetRect(x, y, x + width, y + height);
 
-        if (!m_pUnk)
-            return;
+        HRESULT hr = E_FAIL;
+        if (m_pUnk)
+        {
+            IOleInPlaceObject* pipo;
+            VERIFY(SUCCEEDED(hr = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo))));
+            if (pipo)
+            {
+                VERIFY(SUCCEEDED(hr = pipo->SetObjectRects(&m_controlRect, &m_controlRect)));
+                pipo->Release();
+            }
+        }
 
-        IOleInPlaceObject* pipo;
-        HRESULT result = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
-        if (FAILED(result))
-            return;
-
-        pipo->SetObjectRects(&m_controlRect, &m_controlRect);
-        pipo->Release();
+        return hr;
     }
 
-    inline STDMETHODIMP CAXWindow::SetMenu(HMENU shared, HOLEMENU holemenu, HWND activeObject)
+    inline STDMETHODIMP CAXHost::SetMenu(HMENU shared, HOLEMENU holemenu, HWND activeObject)
     {
         UNREFERENCED_PARAMETER(shared);
         UNREFERENCED_PARAMETER(holemenu);
@@ -638,68 +632,65 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline void CAXWindow::SetParent(HWND hWndParent)
+    inline STDMETHODIMP CAXHost::SetParent(HWND hWndParent)
     {
         m_ax = hWndParent;
+        return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::SetStatusText(LPCOLESTR pStatusText)
+    inline STDMETHODIMP CAXHost::SetStatusText(LPCOLESTR pStatusText)
     {
         if (NULL == pStatusText)
             return E_POINTER;
 
-#ifndef UNICODE
-        char status[MAX_PATH];
-        // Convert the Wide string to char
-        WideCharToMultiByte(CP_ACP, 0, pStatusText, -1, status, MAX_PATH, NULL, NULL);
-
+        CString status(pStatusText);
         if (IsWindow(m_status))
-            SendMessage(m_status, SB_SETTEXT, 0, (LPARAM)status);
-#else
-        if (IsWindow(m_status))
-            SendMessage(m_status, SB_SETTEXT, 0, (LPARAM)pStatusText);
-#endif
+            SendMessage(m_status, SB_SETTEXT, 0, (LPARAM)status.c_str());
 
         return S_OK;
     }
 
-    inline void CAXWindow::SetStatusWindow(HWND status)
+    inline STDMETHODIMP CAXHost::SetStatusWindow(HWND status)
     {
         m_status = status;
+        return S_OK;
     }
 
-    inline void CAXWindow::SetVisible(BOOL isVisible)
+    inline STDMETHODIMP CAXHost::SetVisible(BOOL isVisible)
     {
-        if (!m_pUnk)
-            return;
-
-        IOleObject* pObject;
-        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject));
-        if (FAILED(result))
-            return;
-
-        if (isVisible)
+        HRESULT hr = E_FAIL;
+        if (m_pUnk)
         {
-            pObject->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, this, 0, m_ax, &m_controlRect);
-            pObject->DoVerb(OLEIVERB_SHOW, NULL, this, 0, m_ax, &m_controlRect);
-        }
-        else
-            pObject->DoVerb(OLEIVERB_HIDE, NULL, this, 0, m_ax, NULL);
+            IOleObject* pObject;
+            VERIFY(SUCCEEDED(hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject))));
+            if (pObject)
+            {
+                if (isVisible)
+                {
+                    VERIFY(SUCCEEDED(hr = pObject->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, this, 0, m_ax, &m_controlRect)));
+                    VERIFY(SUCCEEDED(hr = pObject->DoVerb(OLEIVERB_SHOW, NULL, this, 0, m_ax, &m_controlRect)));
+                }
+                else
+                    VERIFY(SUCCEEDED(hr = pObject->DoVerb(OLEIVERB_HIDE, NULL, this, 0, m_ax, NULL)));
 
-        pObject->Release();
+                pObject->Release();
+            }
+        }
+
+        return hr;
     }
 
-    inline STDMETHODIMP CAXWindow::ShowObject()
+    inline STDMETHODIMP CAXHost::ShowObject()
     {
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::ShowPropertyFrame()
+    inline STDMETHODIMP CAXHost::ShowPropertyFrame()
     {
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::TransformCoords(POINTL* pHimetric, POINTF* pContainer, DWORD flags)
+    inline STDMETHODIMP CAXHost::TransformCoords(POINTL* pHimetric, POINTF* pContainer, DWORD flags)
     {
         UNREFERENCED_PARAMETER(pHimetric);
         UNREFERENCED_PARAMETER(pContainer);
@@ -707,32 +698,35 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG pMsg, WORD id)
+    inline STDMETHODIMP CAXHost::TranslateAccelerator(LPMSG pMsg, WORD id)
     {
         UNREFERENCED_PARAMETER(pMsg);
         UNREFERENCED_PARAMETER(id);
         return S_OK;
     }
 
-    inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG pMsg, DWORD modifiers)
+    inline STDMETHODIMP CAXHost::TranslateAccelerator(LPMSG pMsg, DWORD modifiers)
     {
         UNREFERENCED_PARAMETER(pMsg);
         UNREFERENCED_PARAMETER(modifiers);
         return S_FALSE;
     }
 
-    inline void CAXWindow::TranslateKey(MSG msg)
+    inline STDMETHODIMP CAXHost::TranslateKey(MSG msg)
     {
-        if (!m_pUnk)
-            return;
+        HRESULT hr = E_FAIL;
+        if (m_pUnk)
+        {
+            IOleInPlaceActiveObject* pao;
+            VERIFY(SUCCEEDED(hr = m_pUnk->QueryInterface(IID_IOleInPlaceActiveObject, reinterpret_cast<void**>(&pao))));
+            if (pao)
+            {
+                VERIFY(SUCCEEDED(hr = pao->TranslateAccelerator(&msg)));
+                pao->Release();
+            }
+        }
 
-        IOleInPlaceActiveObject* pao;
-        HRESULT result = m_pUnk->QueryInterface(IID_IOleInPlaceActiveObject, reinterpret_cast<void**>(&pao));
-        if (FAILED(result))
-            return;
-
-        pao->TranslateAccelerator(&msg);
-        pao->Release();
+        return hr;
     }
 
 
@@ -742,45 +736,32 @@ namespace Win32xx
 
     inline CWebBrowser::CWebBrowser() : m_pIWebBrowser2(0)
     {
-        HRESULT hr = OleInitialize(NULL);
-        if (FAILED(hr))
-            throw CWinException(g_msgOleInitialize);
     }
 
     inline CWebBrowser::~CWebBrowser()
     {
         if (m_pIWebBrowser2)
-        {
-            m_pIWebBrowser2->Stop();
             m_pIWebBrowser2->Release();
-        }
-
-        OleUninitialize();
     }
 
-    // Adds the IWebBrowser interface to the ActiveX container window.
+    // Adds the IWebBrowser interface to the ActiveX host.
     // Refer to IID_IWebBrowser2 in the Windows API documentation for more information.
     inline HRESULT CWebBrowser::AddWebBrowserControl()
     {
-        GetAXWindow().CreateControl(CLSID_WebBrowser);
-        GetAXWindow().SetParent(*this);
-        GetAXWindow().SetVisible(TRUE);
-        GetAXWindow().Activate(TRUE);
+        IUnknown* pUnk = NULL;
+        VERIFY(SUCCEEDED(m_axHost.CreateControl(CLSID_WebBrowser, (void**)&pUnk)));
+        VERIFY(SUCCEEDED(m_axHost.SetParent(*this)));
+        VERIFY(SUCCEEDED(m_axHost.SetVisible(TRUE)));
+        VERIFY(SUCCEEDED(m_axHost.Activate()));
 
         HRESULT hr = E_FAIL;
-
-        IUnknown* pUnk = GetAXWindow().GetUnknown();
         if (pUnk)
         {
             // Store the pointer to the WebBrowser control
-            hr = pUnk->QueryInterface(IID_IWebBrowser2, reinterpret_cast<void**>(&m_pIWebBrowser2));
-            pUnk->Release();
+            VERIFY(SUCCEEDED(hr = pUnk->QueryInterface(IID_IWebBrowser2, reinterpret_cast<void**>(&m_pIWebBrowser2))));
 
             // Navigate to an empty page
-            if (SUCCEEDED(hr))
-            {
-                hr = Navigate(_T("about:blank"));
-            }
+            VERIFY(SUCCEEDED(hr = Navigate(_T("about:blank"))));
         }
 
         return hr;
@@ -789,29 +770,30 @@ namespace Win32xx
     // Called when the WebBrowser window's HWND is attached this object.
     inline void CWebBrowser::OnAttach()
     {
-        if (NULL == m_pIWebBrowser2)
-            AddWebBrowserControl();
+        if (m_pIWebBrowser2 == NULL)
+            VERIFY(SUCCEEDED(AddWebBrowserControl()));
     }
 
     // Called when the web browser window is created.
     inline int CWebBrowser::OnCreate(CREATESTRUCT& cs)
     {
         UNREFERENCED_PARAMETER(cs);
-        AddWebBrowserControl();
+        VERIFY(SUCCEEDED(AddWebBrowserControl()));
         return 0;
     }
 
     // Called when the window is destroyed.
     inline void CWebBrowser::OnDestroy()
     {
-        GetAXWindow().Remove();
+        VERIFY(SUCCEEDED(m_pIWebBrowser2->Stop()));
+        VERIFY(SUCCEEDED(m_axHost.Remove()));
     }
 
     // Called when the window is resized.
     inline void CWebBrowser::OnSize(int width, int height)
     {
         // position the container
-        GetAXWindow().SetLocation(0, 0, width, height);
+        VERIFY(SUCCEEDED(m_axHost.SetLocation(0, 0, width, height)));
     }
 
     // Provides default message processing for the web browser window.
@@ -847,7 +829,7 @@ namespace Win32xx
     }
 
     // Retrieves a pointer to the IDispatch interface to a container. This property returns the same pointer
-	// as GetParent.
+    // as GetParent.
     inline LPDISPATCH CWebBrowser::GetContainer() const
     {
         LPDISPATCH pDispatch = NULL;
@@ -909,6 +891,25 @@ namespace Win32xx
         return str;
     }
 
+    // Retrieves a value that indicates whether the object is operating in offline mode.
+    inline BOOL CWebBrowser::GetOffline() const
+    {
+        VARIANT_BOOL isOffLine = VARIANT_FALSE;
+        GetIWebBrowser2()->get_Offline(&isOffLine);
+        return (isOffLine != 0);
+    }
+
+    // Retrieves a pointer to the IDispatch interface of the object that is the 
+    // container of the WebBrowser control. If the WebBrowser control is in a frame, 
+    // this method returns the automation interface of the document object in the
+    // containing window. Otherwise, it delegates to the top-level control, if there is one.
+    inline LPDISPATCH CWebBrowser::GetParent() const
+    {
+        LPDISPATCH pDispatch = NULL;
+        GetIWebBrowser2()->get_Parent(&pDispatch);
+        return pDispatch;
+    }
+
     // Retrieves the accumulated  length of the ITEMIDLIST.
     inline UINT CWebBrowser::GetPidlLength(LPITEMIDLIST pidl)
     {
@@ -926,26 +927,6 @@ namespace Win32xx
 
         return cbPidl;
     }
-
-    // Retrieves a value that indicates whether the object is operating in offline mode.
-    inline BOOL CWebBrowser::GetOffline() const
-    {
-        VARIANT_BOOL isOffLine = VARIANT_FALSE;
-        GetIWebBrowser2()->get_Offline(&isOffLine);
-        return (isOffLine != 0);
-    }
-	
-    // Retrieves a pointer to the IDispatch interface of the object that is the 
-    // container of the WebBrowser control. If the WebBrowser control is in a frame, 
-	// this method returns the automation interface of the document object in the
-    // containing window. Otherwise, it delegates to the top-level control, if there is one.
-    inline LPDISPATCH CWebBrowser::GetParent() const
-    {
-        LPDISPATCH pDispatch = NULL;
-        GetIWebBrowser2()->get_Parent(&pDispatch);
-        return pDispatch;
-    }
-	
 
     // Retrieves the ready state of the object.
     inline READYSTATE CWebBrowser::GetReadyState() const
@@ -1081,7 +1062,7 @@ namespace Win32xx
     }
 
     // Gets the value associated with the specified property name.
-    inline VARIANT CWebBrowser::GetProperty( LPCTSTR pProperty )
+    inline VARIANT CWebBrowser::GetProperty( LPCTSTR pProperty ) const
     {
         VARIANT v;
         GetIWebBrowser2()->GetProperty( TtoBSTR(pProperty), &v );

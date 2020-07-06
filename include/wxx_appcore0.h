@@ -241,8 +241,6 @@ namespace Win32xx
     LPCTSTR const g_msgIPControl  = _T("IP Address Control not supported!");
     LPCTSTR const g_msgRichEditDll = _T("Failed to load RICHED32.DLL");
     LPCTSTR const g_msgTaskDialog = _T("Failed to create Task Dialog");
-    LPCTSTR const g_msgCoInitialize = _T("Failed to initialize COM");
-    LPCTSTR const g_msgOleInitialize = _T("Failed to initialize OLE");
 
     LPCTSTR const g_msgFileClose  = _T("Failed to close file");
     LPCTSTR const g_msgFileFlush  = _T("Failed to flush file");
