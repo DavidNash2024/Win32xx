@@ -9,10 +9,13 @@ developed by Microsoft. It simplifies the programming of Component Object Model
 (COM) objects.
 
 ATL is provided for free with the later Microsoft compilers. It is an optional
-compoment of the Visual Studio Community compiler which can be added using its
+component of the Visual Studio Community compiler which can be added using its
 installer. The code in this sample requires ATL version 10 (VS2010) or later.
 
-ATL is not supported on MinGW compilers.
+ATL greatly simplifies the use of COM in our code. I strongly recommend using
+it if you are developing your code with a Microsoft compiler. ATL is only
+supported on Microsoft compilers though. It is not supported on MinGW
+compilers. 
 
 
 Features demonstrated in this sample

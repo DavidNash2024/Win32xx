@@ -10,7 +10,7 @@
 CMainFrame::CMainFrame() : m_eventCookie(0)
 {
     //Set m_View as the view window of the frame
-    SetView(m_view);
+    SetView(m_browser);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -25,10 +25,10 @@ CMainFrame::~CMainFrame()
 // Adds a ComboBoxEx control to the rebar.
 void CMainFrame::AddComboBoxBand(int height)
 {
-    // Create the ComboboxEx window
+    // Create the ComboboxEx window.
     m_combo.Create(GetReBar());
 
-    // Put the window in a new rebar band
+    // Put the window in a new rebar band.
     REBARBANDINFO rbbi;
     ZeroMemory(&rbbi, sizeof(rbbi));
     rbbi.cbSize     = sizeof(rbbi);
@@ -48,49 +48,41 @@ void CMainFrame::AddComboBoxBand(int height)
 // Connect to the event sink.
 void CMainFrame::ConnectEvents()
 {
-    IUnknown* pUnk = GetBrowser()->GetAXWindow().GetUnknown();
-    if (pUnk)
+    IConnectionPoint* pcp = NULL;
+    pcp = GetConnectionPoint(DIID_DWebBrowserEvents2);
+    if (pcp)
     {
-        IConnectionPoint* pcp;
-        pcp = GetConnectionPoint(DIID_DWebBrowserEvents2);
-        if (pcp)
-        {
-            pcp->Advise(&m_eventSink, &m_eventCookie);
-            pcp->Release();
-        }
-        pUnk->Release();
+        VERIFY(SUCCEEDED(pcp->Advise(&m_eventSink, &m_eventCookie)));
+        pcp->Release();
     }
 }
 
 // Disconnect from the event sink.
 void CMainFrame::DisconnectEvents()
 {
-    IUnknown* pUnk = GetBrowser()->GetAXWindow().GetUnknown();
-    if (pUnk)
+    IConnectionPoint* pcp = NULL;
+    pcp = GetConnectionPoint(DIID_DWebBrowserEvents2);
+    if (pcp)
     {
-        IConnectionPoint* pcp;
-        pcp = GetConnectionPoint(DIID_DWebBrowserEvents2);
-        if (pcp)
-        {
-            pcp->Unadvise(m_eventCookie);
-            pcp->Release();
-        }
-        pUnk->Release();
+        VERIFY(SUCCEEDED(pcp->Unadvise(m_eventCookie)));
+        pcp->Release();
     }
 }
 
 // Retrieve pointer to IConnectionPoint.
+// Call Release on this pointer when it is no longer required.
 IConnectionPoint* CMainFrame::GetConnectionPoint(REFIID riid)
 {
     IConnectionPoint* pcp = NULL;
-    IUnknown* pUnk = GetBrowser()->GetAXWindow().GetUnknown();
+    IUnknown* pUnk = NULL;
+    GetIWebBrowser2()->QueryInterface(IID_IUnknown, (void**)&pUnk);
     if (pUnk)
     {
-        IConnectionPointContainer* pcpc;
-        HRESULT hr = pUnk->QueryInterface(IID_IConnectionPointContainer, (void**)&pcpc);
-        if (SUCCEEDED(hr))
+        IConnectionPointContainer* pcpc = NULL;
+        VERIFY(SUCCEEDED(pUnk->QueryInterface(IID_IConnectionPointContainer, (void**)&pcpc)));
+        if (pcpc)
         {
-            pcpc->FindConnectionPoint(riid, &pcp);
+            VERIFY(SUCCEEDED(pcpc->FindConnectionPoint(riid, &pcp)));
             pcpc->Release();
         }
 
@@ -100,19 +92,20 @@ IConnectionPoint* CMainFrame::GetConnectionPoint(REFIID riid)
     return pcp;
 }
 
-// Go to the previous web page
+// Go to the previous web page.
 BOOL CMainFrame::OnBack()
 {
-    m_view.GoBack();
+    m_browser.GoBack();
     return TRUE;
 }
 
+// Called before navigation occurs on either a window or frameset element.
 void CMainFrame::OnBeforeNavigate2(DISPPARAMS* pDispParams)
 {
     UNREFERENCED_PARAMETER(pDispParams);
 }
 
-// Called in response to the browser state change.
+// Called when the enabled state of a command changes.
 void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 {
     CToolBar& TB = GetToolBar();
@@ -136,10 +129,10 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
     }
 }
 
-// Called before the frame is destoryed.
+// Called before the frame is destroyed.
 void CMainFrame::OnClose()
 {
-    GetBrowser()->Stop();
+    m_browser.Stop();
     DisconnectEvents();
     
     // Call the base class function.
@@ -169,18 +162,23 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
     }
 
-    // Handle notification WM_COMMAND from ComboboxEx
+    // Handle notification WM_COMMAND from ComboboxEx.
     if (reinterpret_cast<HWND>(lparam) == m_combo.GetHwnd())
     {
         switch (HIWORD(wparam))
         {
-        case CBN_SELCHANGE:   // User made selection from list
+        case CBN_SELCHANGE:   // User made selection from list.
         {
             // Get text from edit box
             CString str = m_combo.GetWindowText();
 
             // Navigate to web page
-            m_view.Navigate(str);
+            m_browser.Navigate(str);
+
+            // Set focus to web page
+            LONG_PTR hWeb;
+            GetIWebBrowser2()->get_HWND(&hWeb);
+            ::SetFocus((HWND)hWeb);
         }
         return TRUE;
         }
@@ -220,52 +218,63 @@ void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
     TRACE(_T("OnDocumentBegin\n"));
 }
 
+// Called when a document has been completely loaded and initialized.
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
     UNREFERENCED_PARAMETER(pDispParams);
     GetStatusBar().SetPartText(0, _T("Done"));
 }
 
+// Called when a navigation operation is beginning.
 void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
 {
     UNREFERENCED_PARAMETER(pDispParams);
 }
 
+// Called when a navigation operation finishes, is halted, or fails.
 void CMainFrame::OnDownloadComplete(DISPPARAMS* pDispParams)
 {
     UNREFERENCED_PARAMETER(pDispParams);
 }
 
+// Deletes the selected text.
+// Called in response to the menu or accelerator key.
 BOOL CMainFrame::OnEditCut()
 {
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Cut();
     else
-        m_view.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+        m_browser.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 
     return TRUE;
 }
 
+// Copies the selected text to the clip board.
+// Called in response to the menu or accelerator key.
 BOOL CMainFrame::OnEditCopy()
 {
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Copy();
     else
-        m_view.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+        m_browser.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 
     return TRUE;
 }
 
+// Pastes text from the clip board.
+// Called in response to the menu or accelerator key.
 BOOL CMainFrame::OnEditPaste()
 {
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Paste();
     else
-        m_view.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+        m_browser.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 
     return TRUE;
 }
 
+// Deletes the selected text or the next character.
+// Called in response to the menu or accelerator key.
 BOOL CMainFrame::OnEditDelete()
 {
 #if defined(__GNUC__)
@@ -275,7 +284,7 @@ BOOL CMainFrame::OnEditDelete()
     if (GetFocus() == GetCBEdit()->GetHwnd())
         GetCBEdit()->Clear();
     else
-        m_view.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+        m_browser.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 
     return TRUE;
 }
@@ -287,17 +296,10 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
-// Go to the next web page
+// Go to the next web page.
 BOOL CMainFrame::OnForward()
 {
-    m_view.GoForward();
-    return TRUE;
-}
-
-// Load the browser's home page.
-BOOL CMainFrame::OnHome()
-{
-    m_view.GoHome();
+    m_browser.GoForward();
     return TRUE;
 }
 
@@ -308,6 +310,13 @@ BOOL CMainFrame::OnHelpAbout()
     return TRUE;
 }
 
+// Load the browser's home page.
+BOOL CMainFrame::OnHome()
+{
+    m_browser.GoHome();
+    return TRUE;
+}
+
 // Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
@@ -315,12 +324,13 @@ void CMainFrame::OnInitialUpdate()
     // Place any additional startup code here.
 
     // Suppress Java script errors.
-    m_view.GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
+    GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
 
     // Load the home page
-    m_view.GoHome();
+    m_browser.GoHome();
 }
 
+// Called when navigation completes on either a window or frameset element.
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 {
     CString str = _T("Navigate Complete");
@@ -336,12 +346,13 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
         VariantClear(&url);
     }
 
-    str  = GetBrowser()->GetLocationURL();
+    str  = m_browser.GetLocationURL();
 
     // Update the URL in the ComboboxEx edit box.
     m_combo.SetWindowText(CString(str));
 }
 
+// Called when a new window is to be created.
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 {
     UNREFERENCED_PARAMETER(pDispParams);
@@ -374,7 +385,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
                 m_combo.InsertItem(item);
 
                 // Navigate to the web page
-                m_view.Navigate(str);
+                m_browser.Navigate(str);
                 return FALSE;
             }
             }
@@ -388,7 +399,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 // Displays the web page as it would look when printed.
 BOOL CMainFrame::OnPrintPreview()
 {
-    GetBrowser()->ExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
+    m_browser.ExecWB(OLECMDID_PRINTPREVIEW, OLECMDEXECOPT_DODEFAULT, NULL, NULL);
     return TRUE;
 }
 
@@ -440,7 +451,7 @@ BOOL CMainFrame::OnPrint()
                 VariantInit(&vArg);
                 vArg.vt = VT_ARRAY | VT_BYREF;
                 vArg.parray = psaHeadFoot;
-                if (FAILED(GetBrowser()->ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, &vArg, NULL)))
+                if (FAILED(m_browser.ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, &vArg, NULL)))
                     throw CUserException(_T("Print Failed"));
             }
         }
@@ -457,6 +468,7 @@ BOOL CMainFrame::OnPrint()
     return TRUE;
 }
 
+// Called when the progress of a download operation is updated on the object.
 void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
 {
     CString str;
@@ -480,6 +492,8 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
     }
 }
 
+// Called when the IWebBrowser2::PutProperty method of the object changes the
+// value of a property.
 void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 {
     CString str;
@@ -493,12 +507,14 @@ void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
     TRACE(str);
 }
 
+// Reload the current web page.
 BOOL CMainFrame::OnRefresh()
 {
-    m_view.Refresh();
+    m_browser.Refresh();
     return TRUE;
 }
 
+// Called when the status bar text of the object has changed.
 void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 {
     CString statusText = pDispParams->rgvarg->bstrVal;
@@ -509,22 +525,25 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
         GetStatusBar().SetPartText(0, _T("Done"));
 }
 
+// Stop loading the current web page.
 BOOL CMainFrame::OnStop()
 {
-    m_view.Stop();
+    m_browser.Stop();
     return TRUE;
 }
 
+// Called when the title of a document in the object becomes available
+// or changes.
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
     TRACE(_T("TitleChange: \n"));
     CString str;
 
-    if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
+    if ((pDispParams->cArgs > 0) && (pDispParams->rgvarg[0].vt == VT_BSTR))
     {
         str = pDispParams->rgvarg[0].bstrVal;
         str += _T(" - Win32++ Browser");
-        TRACE(str);
+        TRACE(str + _T("\n"));
     }
     else
         str = LoadString(IDW_MAIN);
@@ -532,12 +551,12 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
     SetWindowText(str);
 }
 
-// Add menu icons from the IDW_MAIN bitmap resource
+// Add menu icons from the IDW_MAIN bitmap resource.
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> iconData;     // a vector of Resource IDs
 
-    // Load the Resource IDs for popup menu items
+    // Load the Resource IDs for popup menu items.
     iconData.push_back(IDM_FILE_NEW);
     iconData.push_back(IDM_FILE_OPEN);
     iconData.push_back(IDM_FILE_SAVE);
@@ -550,7 +569,7 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcons(iconData, RGB(192, 192, 192), IDW_MAIN, 0);
 }
 
-// Set the Resource IDs for the toolbar buttons
+// Set the Resource IDs for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
     AddToolBarButton(IDM_BACK);
@@ -561,8 +580,22 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(0);                // Separator
     AddToolBarButton(IDM_HOME);
 
-    // Set the image lists for normal, hot and disabled buttons
-    SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
+    // Set the image lists for normal, hot and disabled buttons.
+    int bitsPerPixel = GetDesktopWindow().GetDC().GetDeviceCaps(BITSPIXEL);
+    if (GetWinVersion() >= 2501 && bitsPerPixel == 32)
+    {
+        // Load the 32bit bitmaps if we can, otherwise load 24bit ones.
+        CBitmap bm(IDB_TOOLBAR32_NORM);
+        if (bm.GetHandle())
+            SetToolBarImages(RGB(0, 0, 0), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
+        else
+            SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24_NORM, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
+    }
+    else
+    {
+        // Use 24bit bitmaps for Win2000 and below.
+        SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24_NORM, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
+    }
 
     // Add the ComboBoxEx control.
     int Height = 26;

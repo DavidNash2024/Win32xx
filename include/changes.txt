@@ -1,6 +1,9 @@
 Version 8.7.1
 =============
 
+This version adds the BrowserATL, MovieShow and WinPlot samples. It also adds support
+for Code::Blocks version 20.03. 
+
 Bug Fixes:
 - Corrected the definition of CEventSink in the Browser sample.
 
@@ -36,7 +39,18 @@ New Features and Enhancements
 * Minor updates to the samples
   - Samples which use CWebBrowser now suppress the display od java script errors.
 
-* Minor updates to the help documentation   
+* Minor updates to the help documentation
+
+
+Changes in detail
+-----------------
+Added BrowserATL sample
+Added WinPlot sample
+Added CWnd::Close
+Added CFrameT::SetKbdHook    
+Modified CRibbon::CreateRibbon             now returns HRESULT
+Modified CRIbbon::DestroyRibbon            now returns HRESULT
+Renamed CTab::SetFont to CTab::SetTabFont
 
 
 Version 8.7.0
@@ -1119,7 +1133,7 @@ New Features and Enhancements
    approach to adding a browser window to any application.  It can be compiled
    by any of the supported compilers including Dev-C++, MinGW and the Borland 
    compilers as well as the compilers from Microsoft.  
-* Added an ActiveX host class called CAXWindow.  
+* Added an ActiveX host class called CAXHost.  
 * Modified the Browser sample to use the new CWebBrowser class. It also 
    demonstrates how to use an event sink to get notification of browser events.
 * Added a Tray sample which demonstrates how to create an application 
