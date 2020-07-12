@@ -10,31 +10,31 @@
 namespace Calc
 {
 
-	typedef double(*PFun) (double);
+    typedef double(*PFun) (double);
 
-	enum eToken
-	{
-		tNumber,
-		tPlus,
-		tMinus,
-		tMultiply,
-		tDivide,
-		tPower,
-		tVariable,
-		tFunction,
-		tEqual,
-		tLeftParenth,
-		tRightParenth,
-		tUnknown,
-		tEnd
-	};
+    enum eToken
+    {
+        tNumber,
+        tPlus,
+        tMinus,
+        tMultiply,
+        tDivide,
+        tPower,
+        tVariable,
+        tFunction,
+        tEqual,
+        tLeftParenth,
+        tRightParenth,
+        tUnknown,
+        tEnd
+    };
 
-	enum eStatus
-	{
-		st_ERROR,
-		st_OK,					// Invalid sequence of numbers and operators
-		st_OVERFLOW				// Infinity, or invalid function arguement
-	};
+    enum eStatus
+    {
+        st_ERROR,
+        st_OK,                  // Invalid sequence of numbers and operators
+        st_OVERFLOW             // Infinity, or invalid function arguement
+    };
 
 } // namespace Calc
 

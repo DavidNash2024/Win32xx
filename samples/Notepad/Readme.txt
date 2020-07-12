@@ -11,6 +11,8 @@ Features demonstrated in this example
 * File open and file save using stream callbacks.
 * Copy and paste.
 * File drag and drop.
+* Use of OnIdle to dynamically update the toolbar buttons.
+* Use of OnMenuUpdate to dynamically update the menu items.
 * Choosing this application's printer.
 * Choosing the font.
 * Enabling and disabling word wrap

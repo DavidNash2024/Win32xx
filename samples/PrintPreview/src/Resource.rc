@@ -99,7 +99,7 @@ IDI_PRINT               ICON                    "../src/res/Print.ico"
 //
 
 IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
-
+IDW_MENUICONS           BITMAP                  "../src/res/MenuIcons.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

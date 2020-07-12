@@ -4,16 +4,15 @@
 #include "stdafx.h"
 #include "richview.h"
 
-
+// Constructor.
 CRichView::CRichView()
 {
 }
 
-
+// Destructor.
 CRichView::~CRichView()
 {
 }
-
 
 // Calculates the character position of the page breaks, and returns
 // the number of pages.
@@ -56,7 +55,6 @@ UINT CRichView::CollatePages()
     return m_pageBreaks.size();
 }
 
-
 // Choose the printer and start the print job.
 void CRichView::DoPrint(LPCTSTR docName)
 {
@@ -74,7 +72,6 @@ void CRichView::DoPrint(LPCTSTR docName)
     if (printDlg.DoModal(*this) == IDOK)
         QuickPrint(docName);
 }
-
 
 // Returns a CRect of the entire printable area. Units are measured in twips.
 CRect CRichView::GetPageRect()
@@ -99,7 +96,6 @@ CRect CRichView::GetPageRect()
     return rcPage;
 }
 
-
 // Returns the print area within the page. Units are measured in twips.
 CRect CRichView::GetPrintRect()
 {
@@ -119,8 +115,7 @@ CRect CRichView::GetPrintRect()
     return rcPrintArea;
 }
 
-
-
+// Called when RichView control is created.
 void CRichView::OnAttach()
 {
     // Increase the text limit of the rich edit window.
@@ -133,6 +128,7 @@ void CRichView::OnAttach()
     SetFontDefaults();
 }
 
+// Set the CREATESTRUCT parameters before the window is created.
 void CRichView::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
@@ -140,7 +136,6 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
 
     cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
 }
-
 
 // Prints the specified page to specified dc.
 // Called by CPrintPreview, and also used for printing.
@@ -166,7 +161,6 @@ void CRichView::PrintPage(CDC& dc, UINT page)
     // Tell the control to release the cached information.
     FormatRange();
 }
-
 
 // Print the document without bringing up a print dialog.
 // docName - specifies the document name for the print job.
@@ -213,7 +207,6 @@ void CRichView::QuickPrint(LPCTSTR docName)
     // End the print job
     printerDC.EndDoc();
 }
-
 
 // Set a default font.
 void CRichView::SetFontDefaults()

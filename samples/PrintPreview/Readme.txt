@@ -18,3 +18,5 @@ Features demonstrated in this example
 * Use of CRichEdit's FormatRange to render the page for printing and print previewing.
 * Dynamically hiding and displaying the frame's menu and toolbar.
 * The use of CFrame's SetView function to dynamically swap the frame's view.
+* Use of OnIdle to dynamically update the toolbar buttons.
+* Use of OnMenuUpdate to dynamically update the menu items.

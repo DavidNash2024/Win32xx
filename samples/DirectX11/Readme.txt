@@ -5,9 +5,9 @@ in this example is based on DirectX version 11.
 
 The Visual Studio Community development environments include
 the DirectX11 SDK, so no additional software is required to compiler this
-code if VS Community 2013/2015 is used.
+code if VS Community is used.
 
-DirectX11 is support on Windows Vista Service Pack 2, and later operating
+DirectX11 is supported on Windows Vista Service Pack 2 and later operating
 systems. The DirectX runtime is normally delivered via Windows Update.
 
 This example displays a rotating square using DirectX within the DXView window.

@@ -16,8 +16,8 @@ public:
 
     CDoc& GetDoc()      { return m_view.GetDoc(); }
 
-	BOOL    OnEditFunction();
-	BOOL    OnFileExit();
+    BOOL    OnEditFunction();
+    BOOL    OnFileExit();
     BOOL    OnFileOpen();
     BOOL    OnFilePrint();
     BOOL    OnFileSave();

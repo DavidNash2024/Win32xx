@@ -11,7 +11,7 @@
 
 
 ///////////////////////////////////////
-// definitions for the CMainFrame class
+// Definitions for the CMainFrame class
 
 // CMainFrame constructor.
 CMainFrame::CMainFrame() : m_isWrapped(false), m_oldFocus(0)
@@ -30,7 +30,6 @@ CMainFrame::~CMainFrame()
 {
 }
 
-
 // Stream in callback function.
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
@@ -45,7 +44,6 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
     return 0;
 }
 
-
 // Stream out callback function.
 DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
@@ -59,7 +57,6 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
     return 0;
 }
 
-
 // Called when the window is closed.
 void CMainFrame::OnClose()
 {
@@ -72,8 +69,7 @@ void CMainFrame::OnClose()
     CFrame::OnClose();
 }
 
-
-// Handle input from the menu and toolbar.
+// Handle input from the menu, toolbar or accelerator keys.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -166,48 +162,47 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
 }
 
 
+// Cuts the selected text to the clipboard.
 void CMainFrame::OnEditCut()
 {
     m_richView.Cut();
 }
 
-
+// Copies the selected text to the clipboard.
 void CMainFrame::OnEditCopy()
 {
     m_richView.Copy();
 }
 
-
+// Pastes text from the clipboard.
 void CMainFrame::OnEditPaste()
 {
     m_richView.PasteSpecial(CF_TEXT);
 }
 
-
+// Deletes the selected text.
 void CMainFrame::OnEditDelete()
 {
     m_richView.Clear();
 }
 
-
+// Redoes the next action in the redo queue.
 void CMainFrame::OnEditRedo()
 {
     m_richView.Redo();
 }
 
-
+// Reverses the last editing operation
 void CMainFrame::OnEditUndo()
 {
     m_richView.Undo();
 }
-
 
 // Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
     Close();
 }
-
 
 // Load a Most Recently Used file from the menu.
 void CMainFrame::OnFileMRU(WPARAM wparam)
@@ -223,7 +218,6 @@ void CMainFrame::OnFileMRU(WPARAM wparam)
     SetWindowTitle();
 }
 
-
 // Clear the contents of the rich view.
 void CMainFrame::OnFileNew()
 {
@@ -236,7 +230,6 @@ void CMainFrame::OnFileNew()
     m_richView.SetFontDefaults();
     m_richView.SetModify(FALSE);
 }
-
 
 // Initiate the print preview.
 void CMainFrame::OnFilePreview()
@@ -277,12 +270,11 @@ void CMainFrame::OnFilePreview()
 
 }
 
-
 // Create the File Open dialog and select a file to load.
 void CMainFrame::OnFileOpen()
 {
     // szFilters is a text string that includes two file name filters:
-    // "*.my" for "MyType Files" and "*.*' for "All Files."
+    // "*.txt" for Text Files" and "*.*' for "All Files."
     LPCTSTR filters = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
     CFileDialog fileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, filters);
 
@@ -298,7 +290,6 @@ void CMainFrame::OnFileOpen()
         }
     }
 }
-
 
 // Initiate the print job.
 void CMainFrame::OnFilePrint()
@@ -316,7 +307,7 @@ void CMainFrame::OnFilePrint()
 
 }
 
-
+// Initiates the print setup dialog to choose print options.
 void CMainFrame::OnFilePrintSetup()
 {
     // Display the print dialog.
@@ -339,14 +330,13 @@ void CMainFrame::OnFilePrintSetup()
 
 }
 
-
 // Start a print job without choosing the printer.
 void CMainFrame::OnFileQuickPrint()
 {
     m_richView.QuickPrint(m_pathName);
 }
 
-
+// Saves the text to the file, overwriting its contents.
 void CMainFrame::OnFileSave()
 {
     if (m_pathName.IsEmpty())
@@ -356,11 +346,11 @@ void CMainFrame::OnFileSave()
 
 }
 
-
+// Save the text to a new file.
 void CMainFrame::OnFileSaveAs()
 {
     // szFilter is a text string that includes two file name filters:
-    // "*.my" for "MyType Files" and "*.*' for "All Files."
+    // "*.txt" for "Text Files" and "*.*' for "All Files."
     LPCTSTR filters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0"));
     CFileDialog fileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT, filters);
 
@@ -376,6 +366,7 @@ void CMainFrame::OnFileSaveAs()
 }
 
 
+// Called after the frame is created.
 void CMainFrame::OnInitialUpdate()
 {
     DragAcceptFiles(TRUE);
@@ -387,17 +378,50 @@ void CMainFrame::OnInitialUpdate()
 }
 
 
+// Update the menu before it is displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
-    if (id == IDM_OPTIONS_WRAP)
+    switch (id)
     {
+    case IDM_OPTIONS_WRAP:
         GetFrameMenu().CheckMenuItem(id, m_isWrapped ? MF_CHECKED : MF_UNCHECKED);
+        break;
+    case IDM_EDIT_COPY:
+    case IDM_EDIT_CUT:
+    case IDM_EDIT_DELETE:
+    {
+        CHARRANGE range;
+        m_richView.GetSel(range);
+        UINT flag = (range.cpMin != range.cpMax) ? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_COPY, flag);
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_CUT, flag);
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_DELETE, flag);
+        break;
+    }
+    case IDM_EDIT_PASTE:
+    {
+        UINT flag = m_richView.CanPaste(CF_TEXT) ? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_PASTE, flag);
+        break;
+    }
+    case IDM_EDIT_REDO:
+    {
+        UINT flag = m_richView.CanRedo() ? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_REDO, flag);
+        break;
+    }
+    case IDM_EDIT_UNDO:
+    {
+        UINT flag = m_richView.CanUndo() ? MF_ENABLED : MF_GRAYED;;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_UNDO, flag);
+        break;
+    }
     }
 
     CFrame::OnMenuUpdate(id);
 }
 
-
+// Called when a notification (WM_NOTIFY) is recieved from a child window.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     NMHDR* pNMH;
@@ -416,7 +440,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
-
+// Opens a dialog to choose the font.
 void CMainFrame::OnOptionsFont()
 {
     // Retrieve the current character format
@@ -436,16 +460,15 @@ void CMainFrame::OnOptionsFont()
     }
 }
 
-
+// Toggles the word wrap.
 void CMainFrame::OnOptionsWrap()
 {
     m_richView.SetTargetDevice(NULL, m_isWrapped);
     m_isWrapped = !m_isWrapped;
 }
 
-
+// Called when the Print Preview's "Close" button is pressed.
 void CMainFrame::OnPreviewClose()
-// Called when the Print Preview's "Close" button is pressed
 {
     // Swap the view
     SetView(m_richView);
@@ -458,9 +481,8 @@ void CMainFrame::OnPreviewClose()
     RestoreFocus();
 }
 
-
-void CMainFrame::OnPreviewPrint()
 // Called when the Print Preview's "Print Now" button is pressed
+void CMainFrame::OnPreviewPrint()
 {
     m_richView.QuickPrint(m_pathName);
 }
@@ -493,6 +515,22 @@ void CMainFrame::OnPreviewSetup()
 }
 
 
+// Called by CTextApp::OnIdle to update toolbar buttons
+void CMainFrame::OnToolbarUpdate()
+{
+    CHARRANGE range;
+    m_richView.GetSel(range);
+    BOOL isSelected = (range.cpMin != range.cpMax);
+    BOOL canPaste = m_richView.CanPaste(CF_TEXT);
+    BOOL isDirty = m_richView.GetModify();
+
+    GetToolBar().EnableButton(IDM_EDIT_COPY, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_CUT, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_PASTE, canPaste);
+    GetToolBar().EnableButton(IDM_FILE_SAVE, isDirty);
+}
+
+// Loads text from the specified file.
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 {
     //Check for unsaved text
@@ -533,7 +571,7 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
     return TRUE;
 }
 
-
+// Asks to save the file if the text has been modified.
 void CMainFrame::SaveModifiedText()
 {
     //Check for unsaved text
@@ -542,23 +580,26 @@ void CMainFrame::SaveModifiedText()
             OnFileSave();
 }
 
-
+// Set the name of the text file.
 void CMainFrame::SetPathName(LPCTSTR filePathName)
 {
     m_pathName = filePathName;
 }
 
-
+// Specifies the images used on menu items.
 void CMainFrame::SetupMenuIcons()
 {
-    CFrame::SetupMenuIcons();
+    // Use the MenuIcons bitmap for images in menu items.
+    AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MENUICONS, 0);
+
+    // Add more images for menu items.
     AddMenuIcon(IDM_FILE_PRINTSETUP,    GetApp()->LoadIcon(IDI_PRINTSETUP));
     AddMenuIcon(IDM_FILE_PREVIEW,       GetApp()->LoadIcon(IDI_PRINTPREVIEW));
     AddMenuIcon(IDM_FILE_QUICKPRINT,    GetApp()->LoadIcon(IDI_QUICKPRINT));
     AddMenuIcon(IDM_FILE_PRINT,         GetApp()->LoadIcon(IDI_PRINT));
 }
 
-
+// Specifies the Toolbar buttons
 void CMainFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
@@ -575,7 +616,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-
+// Sets the caption of the frame.
 void CMainFrame::SetWindowTitle()
 {
     CString Title;
@@ -588,7 +629,7 @@ void CMainFrame::SetWindowTitle()
     SetWindowText(Title);
 }
 
-
+// Process the window's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -601,7 +642,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-
+// Write the text to the specified file.
 BOOL CMainFrame::WriteFile(LPCTSTR fileName)
 {
     try

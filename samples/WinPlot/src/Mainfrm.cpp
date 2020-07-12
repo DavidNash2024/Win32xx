@@ -33,7 +33,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     UINT id = LOWORD(wparam);
     switch(id)
     {
-	case IDM_EDIT_FUNCTION:     return OnEditFunction();
+    case IDM_EDIT_FUNCTION:     return OnEditFunction();
     case IDM_FILE_OPEN:         return OnFileOpen();
     case IDM_FILE_SAVE:         return OnFileSave();
     case IDM_FILE_SAVEAS:       return OnFileSave();
@@ -69,13 +69,19 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 BOOL CMainFrame::OnEditFunction()
 {
-	if (m_view.m_inputDlg.DoModal(*this) == IDOK)
-	{
-		m_view.GetCalc().Input(std::string(TtoA(m_view.m_inputDlg.GetFunction().c_str())));
-		m_view.RedrawWindow();
-	}
+    if (m_view.m_inputDlg.DoModal(*this) == IDOK)
+    {
+        CString str = m_view.m_inputDlg.GetFunction();
+        m_view.GetCalc().Input(str);
+        m_view.RedrawWindow();
 
-	return TRUE;
+        if (m_view.GetCalc().Get_Status() != Calc::st_OK)
+        {
+            MessageBox(_T("Invalid Function Input"), _T("Error"), MB_ICONEXCLAMATION);
+        }
+    }
+
+    return TRUE;
 }
 
 BOOL CMainFrame::OnFileExit()
@@ -90,7 +96,7 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
-	OnEditFunction();
+    OnEditFunction();
     TRACE("Frame created\n");
 }
 

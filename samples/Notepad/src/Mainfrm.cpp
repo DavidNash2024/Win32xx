@@ -245,7 +245,7 @@ void CMainFrame::OnEditCopy()
 
 void CMainFrame::OnEditPaste()
 {
-    if (m_isRTF)
+   if (m_isRTF)
         // Paste rich text and plain text.
         m_richView.Paste();
     else
@@ -506,16 +506,48 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::OnMenuUpdate(UINT id)
 {
-    if (id == IDM_OPTIONS_WRAP)
+    switch (id)
     {
+    case IDM_OPTIONS_WRAP:
         GetFrameMenu().CheckMenuItem(id, m_isWrapped ? MF_CHECKED : MF_UNCHECKED);
-    }
-
-    if (id == IDM_ENC_UTF16)
+        break;
+    case IDM_ENC_UTF16:
     {
         // Disable ANSI for Rich text mode.
         UINT state = m_isRTF ? MF_GRAYED : MF_ENABLED;
         GetFrameMenu().EnableMenuItem(id, state);
+        break;
+    }
+    case IDM_EDIT_COPY:
+    case IDM_EDIT_CUT:
+    case IDM_EDIT_DELETE:
+    {
+        CHARRANGE range;
+        m_richView.GetSel(range);
+        UINT flag = (range.cpMin != range.cpMax)? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_COPY, flag);
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_CUT, flag);
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_DELETE, flag);
+        break;
+    }
+    case IDM_EDIT_PASTE:
+    {
+        UINT flag = m_richView.CanPaste(CF_TEXT)? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_PASTE, flag);
+        break;
+    }
+    case IDM_EDIT_REDO:
+    {
+        UINT flag = m_richView.CanRedo() ? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_REDO, flag);
+        break;
+    }
+    case IDM_EDIT_UNDO:
+    {
+        UINT flag = m_richView.CanUndo() ? MF_ENABLED : MF_GRAYED;;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_UNDO, flag);
+        break;
+    }
     }
 
     if ((id >= IDM_ENC_ANSI) && (id <= IDM_ENC_UTF16))
@@ -629,6 +661,21 @@ void CMainFrame::OnPreviewSetup()
     // Initiate the print preview.
     UINT maxPage = m_richView.CollatePages();
     m_preview.DoPrintPreview(*this, maxPage);
+}
+
+// Called by CTextApp::OnIdle to update toolbar buttons
+void CMainFrame::OnToolbarUpdate()
+{
+    CHARRANGE range;
+    m_richView.GetSel(range);
+    BOOL isSelected = (range.cpMin != range.cpMax);
+    BOOL canPaste = m_richView.CanPaste(CF_TEXT);
+    BOOL isDirty = m_richView.GetModify();
+
+    GetToolBar().EnableButton(IDM_EDIT_COPY, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_CUT, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_PASTE, canPaste);
+    GetToolBar().EnableButton(IDM_FILE_SAVE, isDirty);
 }
 
 // Update the radio buttons in the menu.
