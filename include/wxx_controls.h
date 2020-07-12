@@ -296,7 +296,7 @@ namespace Win32xx
         SYSTEMTIME GetToday() const;
         LRESULT HitTest(MCHITTESTINFO& mcHitTest) const;
         BOOL SetCurSel(const SYSTEMTIME& dateTime) const;
-        BOOL SetDayState(int months, const MONTHDAYSTATE& states) const;
+        BOOL SetDayState(int months, LPMONTHDAYSTATE pStateArray) const;
         BOOL SetMaxSelCount(int max) const;
         BOOL SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const;
         BOOL SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& maxRange) const;
@@ -1702,10 +1702,10 @@ namespace Win32xx
 
     // Sets the day states for all months that are currently visible within the month calendar control.
     // Refer to MonthCal_SetDayState in the Windows API documentation for more information.
-    inline BOOL CMonthCalendar::SetDayState(int months, const MONTHDAYSTATE& state) const
+    inline BOOL CMonthCalendar::SetDayState(int months, LPMONTHDAYSTATE pStateArray) const
     {
         assert(IsWindow());
-        return (MonthCal_SetDayState(*this, months, &state) != 0);
+        return (MonthCal_SetDayState(*this, months, pStateArray) != 0);
     }
 
     // Sets the first day of the week for the month calendar control.

@@ -14,6 +14,7 @@ public:
     CTextApp(); 
     virtual ~CTextApp()  {}
     virtual BOOL InitInstance();
+    virtual BOOL OnIdle(LONG count);
     CMainFrame& GetMainFrame() { return m_frame; }
 
 private:

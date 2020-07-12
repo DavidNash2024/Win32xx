@@ -242,10 +242,10 @@ namespace Win32xx
 
     // Determines whether a rich edit control can paste a specified clipboard format.
     // Refer to EM_CANPASTE in the Windows API documentation for more information.
-    inline BOOL CRichEdit::CanPaste(UINT /* nFormat = 0 */) const
+    inline BOOL CRichEdit::CanPaste(UINT nFormat) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_CANPASTE, 0, 0));
+        return (0 != SendMessage(EM_CANPASTE, (WPARAM)nFormat, 0));
     }
 
     // Determines whether there are any actions in the control redo queue.

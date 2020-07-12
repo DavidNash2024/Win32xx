@@ -33,8 +33,8 @@
 #define IDM_ENC_ANSI                    150
 #define IDM_ENC_UTF8                    151
 #define IDM_ENC_UTF16                   152
-
 #define IDM_HELP_ABOUT                  160
+
 #define IDW_INDICATOR_INS               170
 #define IDW_INDICATOR_OVR               171
 #define IDW_INDICATOR_PLAIN             172

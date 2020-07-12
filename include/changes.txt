@@ -30,26 +30,45 @@ New Features and Enhancements
 * Added BrowserATL sample
    This sample demonstrates the interoperability between Win32++ and ATL.
    It does the same thing as the Browser sample, except that it uses ATL.
-   
+
 * Extended the Toolbar sample.
    The toobar sample now demonstrates how to add additional toolbars to the
    frame. It continues to demonstrate how to customise a toolbar in runtime,
    and how to add a horizontal or vertical toolbar to the frame's view.
 
+* Updated the Code::Blocks project files support version 20.03.
+   Note: The MinGW compiler that ships with version 20.03 of Code::Blocks
+   compiles 64 bit code only. To support code 32bit code, download the
+   latest MinGW compiler from https://sourceforge.net/projects/tdm-gcc/
+   or elsewhere.
+   
+* Added the CAXHost class.
+   This class implements a COM container which hosts an ActiveX control,
+   such as internet explorer. The CWebBrowser class uses CAXHost as a 
+   COM container for the IWebBrowser2 interface.
+
 * Minor updates to the samples
-  - Samples which use CWebBrowser now suppress the display od java script errors.
+  - The Notepad and PrintPreview samples use OnIdle to update the toolbar.
+  - Samples which use CWebBrowser now suppress the display of java script
+    errors.
 
 * Minor updates to the help documentation
 
 
 Changes in detail
 -----------------
+Added CAXHost    class
+
 Added BrowserATL sample
-Added WinPlot sample
+Added MovieShow  sample
+Added WinPlot    sample
+
 Added CWnd::Close
-Added CFrameT::SetKbdHook    
-Modified CRibbon::CreateRibbon             now returns HRESULT
-Modified CRIbbon::DestroyRibbon            now returns HRESULT
+Added CFrameT::SetKbdHook
+Modified CMonthCalendar::SetDayState
+Modified CRibbon::CreateRibbon
+Modified CRibbon::DestroyRibbon
+Modified CToolbar::EnableButton
 Renamed CTab::SetFont to CTab::SetTabFont
 
 

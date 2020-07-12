@@ -11,7 +11,7 @@ In this project we have the following different types of MDI children available:
  - A window displaying rectangles drawn on the device context
  - A RichText view window
  - A ListView view window
- - A Treeview view window
+ - A TreeView view window
  
 Classes titled CMDIChildXXXX are inherited from CMDIChild. Classes titled 
 CViewXXXX are the various view windows inherited from CWnd.

@@ -14,7 +14,6 @@
 #ifndef _CALCULATOR_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
 #define _CALCULATOR_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
 
-#include <string>
 #include <vector>
 #include <map>
 #include <math.h>
@@ -50,53 +49,53 @@
 namespace Calc
 {
 
-	class Node;
+    class Node;
 
-	class Calculator
-	{
-	public:
-		Calculator(const std::string& buffer = "0");
-		~Calculator();
+    class Calculator
+    {
+    public:
+        Calculator(const CString& buffer = "0");
+        ~Calculator();
 
-		void		Input(const std::string& buffer);
-		double		Eval();
-		int const	Get_Status() const;
-		void		SetVar(const std::string& szVar, double Val);
+        void        Input(const CString& buffer);
+        double      Eval();
+        int const   Get_Status() const;
+        void        SetVar(const CString& szVar, double Val);
 
-	private:
-		bool IsOverflow(double value);
-		
-		////////////////////////////////////////////////////////////////////////
-		// A class used by the Calculator.  It loads m_buffer with the expression.
-		// It identifies the parts of the expression as tokens.		
-		class Parser
-		{
-		public:
-			Parser(const std::string& buffer = "0");
-			virtual ~Parser();
-			eToken	GetToken();
-			bool	AcceptToken();
-			void	Input(const std::string& buffer);
-			const std::string& GetAlphaName() const { return m_alphaName; };
-			const double GetNumber() const { return m_number; };
+    private:
+        bool IsOverflow(double value);
+        
+        ////////////////////////////////////////////////////////////////////////
+        // A class used by the Calculator.  It loads m_buffer with the expression.
+        // It identifies the parts of the expression as tokens.     
+        class Parser
+        {
+        public:
+            Parser(const CString& buffer = "0");
+            virtual ~Parser();
+            eToken  GetToken();
+            bool    AcceptToken();
+            void    Input(const CString& buffer);
+            const CString& GetAlphaName() const { return m_alphaName; };
+            const double GetNumber() const { return m_number; };
 
-		private:
-			std::string		m_buffer;
-			int				m_index;
-			double			m_number;
-			std::string		m_alphaName;
-		};
+        private:
+            CString         m_buffer;
+            int             m_index;
+            double          m_number;
+            CString         m_alphaName;
+        };
 
-		Node*		Expression();
-		Node*		Product();
-		Node*		Power();
-		Node*		Unit();
+        Node*       Expression();
+        Node*       Product();
+        Node*       Power();
+        Node*       Unit();
 
-		Node*		m_pTree;
-		eStatus		m_status;
-		SymbolTable	m_symTab;
-		Parser		m_parse;
-	};
+        Node*       m_pTree;
+        eStatus     m_status;
+        SymbolTable m_symTab;
+        Parser      m_parse;
+    };
 
 } // namespace Calc
 

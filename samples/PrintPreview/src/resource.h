@@ -37,8 +37,8 @@
 #define IDI_QUICKPRINT                  162
 #define IDI_PRINT                       163
 
-  
-
+#define IDW_MENUICONS                   180
+ 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

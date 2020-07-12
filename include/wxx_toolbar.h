@@ -72,7 +72,7 @@ namespace Win32xx
         void  Customize() const;
         BOOL  DeleteButton(int index) const;
         BOOL  DisableButton(int buttonID) const;
-        BOOL  EnableButton(int buttonID) const;
+        BOOL  EnableButton(int buttonID, BOOL isEnabled = TRUE) const;
         BOOL  GetButton(int index, TBBUTTON& buttonInfo) const;
         int   GetButtonCount() const;
         DWORD GetButtonSize() const;
@@ -355,10 +355,10 @@ namespace Win32xx
 
     // Enables the specified button in a ToolBar.
     // Refer to TB_ENABLEBUTTON in the Windows API documentation for more information.
-    inline BOOL CToolBar::EnableButton(int buttonID) const
+    inline BOOL CToolBar::EnableButton(int buttonID, BOOL isEnabled) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ENABLEBUTTON, (WPARAM)buttonID, (LPARAM)MAKELONG(TRUE,0 )) != 0);
+        return (SendMessage(TB_ENABLEBUTTON, (WPARAM)buttonID, (LPARAM)MAKELONG(isEnabled, 0 )) != 0);
     }
 
     // Receives the TBBUTTON structure information from the specified button.

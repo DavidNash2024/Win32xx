@@ -41,6 +41,7 @@ public:
     void OnPreviewClose();
     void OnPreviewPrint();
     void OnPreviewSetup();
+    void OnToolbarUpdate();
 
     BOOL ReadFile(LPCTSTR fileName);
     void RestoreFocus()         {::SetFocus(m_oldFocus);}

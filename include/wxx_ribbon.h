@@ -205,8 +205,6 @@ namespace Win32xx
 
     inline CRibbon::~CRibbon()
     {
-        // Reference count should be 0
-        assert(m_count == 0);
         ::CoUninitialize();
     }
 
