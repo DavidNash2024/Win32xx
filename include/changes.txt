@@ -42,7 +42,7 @@ New Features and Enhancements
    latest MinGW compiler from https://sourceforge.net/projects/tdm-gcc/
    or elsewhere.
    
-* Added the CAXHost class.
+* Updated the CAXHost class.
    This class implements a COM container which hosts an ActiveX control,
    such as internet explorer. The CWebBrowser class uses CAXHost as a 
    COM container for the IWebBrowser2 interface.
@@ -57,14 +57,16 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-Added CAXHost    class
+Updated CAXHost  class
 
 Added BrowserATL sample
 Added MovieShow  sample
 Added WinPlot    sample
 
 Added CWnd::Close
+Added CFrameT::AddMenuIcon (additional overload)
 Added CFrameT::SetKbdHook
+Added CImageList::AddIcon
 Modified CMonthCalendar::SetDayState
 Modified CRibbon::CreateRibbon
 Modified CRibbon::DestroyRibbon
@@ -162,8 +164,7 @@ Updated the samples
  - Scribble sample now demonstrates print and print preview.
  - Frame sample now demonstrates print and print preview.
  - INIFrame sample now demonstrates print and print preview.
- - PrintPreview sample now utilises CPrintPreview.
- - Notepad sample now utilises CPrintPreview.
+ - Added PrintPreview sample to demonstrate CPrintPreview.
 
 Updated the tutorials
  - The tutorials now demonstrate how to implement a print preview.
@@ -1390,7 +1391,7 @@ Version 5.3
 ===========
 * Owner drawn drop down menu items with icons.  By default, the
    framework uses the ToolBar's bitmap and resource IDs for displaying 
-   icons. Override CFrame::SetButtons to change this behavior.
+   icons. Override CFrame::SetupToolBar to change this behaviour.
 * CreateEx automatically subclasses windows controls such as List-View, 
    ToolBar, Richedit etc.
 
@@ -1420,7 +1421,6 @@ Version 5.0
 * Added rebars to the frame window
 * Added a menubar to the frame window
 * Added MDI frame support
-* Added splitter window support
 
 
 Version 4.0

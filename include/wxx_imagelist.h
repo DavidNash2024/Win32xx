@@ -92,6 +92,7 @@ namespace Win32xx
         int Add(HBITMAP bitmap, HBITMAP mask) const;
         int Add(HBITMAP bitmap, COLORREF mask) const;
         int Add(HICON icon) const;
+        int AddIcon(int iconID) const;
         void Attach(HIMAGELIST images);
         BOOL BeginDrag(int image, CPoint hotSpot) const;
         BOOL Copy(int dst, int src, UINT flags /*= ILCF_MOVE*/) const;
@@ -237,7 +238,7 @@ namespace Win32xx
         return ImageList_AddMasked(m_pData->images, bitmap, mask);
     }
 
-    // Adds an Icon to the image list
+    // Adds an icon specified by its handle to the image list.
     // Refer to ImageList_ReplaceIcon in the Windows API documentation for more information.
     inline int CImageList::Add(HICON icon) const
     {
@@ -248,6 +249,14 @@ namespace Win32xx
 
         // Append the icon to the image list
         return ImageList_ReplaceIcon(m_pData->images, -1, icon);
+    }
+
+    // Adds an icon specified by its resource ID to the image list.
+    // Refer to ImageList_ReplaceIcon in the Windows API documentation for more information.
+    inline int CImageList::AddIcon(int iconID) const
+    {
+        HICON icon = GetApp()->LoadIcon(iconID);
+        return Add(icon);
     }
 
     // Attaches an existing ImageList to this CImageList.

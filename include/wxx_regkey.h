@@ -92,7 +92,7 @@ namespace Win32xx
         LONG SetQWORDValue(LPCTSTR pValueName, ULONGLONG value) const;
 #endif
 
-#if (WINVER >= 0x0600)
+#if (WINVER >= 0x0600) && defined(RegSetKeyValue)
         LONG SetKeyValue(LPCTSTR pKeyName, LPCTSTR pValue, LPCTSTR pValueName = NULL) const;
 #endif
 
@@ -330,7 +330,7 @@ namespace Win32xx
             return SetStringValue(pValueName, OLEtoT(szGUID));
     }
 
-#if (WINVER >= 0x0600)
+#if (WINVER >= 0x0600) && defined(RegSetKeyValue)
 
     // Stores data in a specified value field of a specified key.
     inline LONG CRegKey::SetKeyValue(LPCTSTR pKeyName, LPCTSTR pValue, LPCTSTR pValueName) const

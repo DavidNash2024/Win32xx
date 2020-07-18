@@ -515,7 +515,7 @@ namespace Win32xx
         // Overridables
         virtual BOOL InitInstance();
         virtual int MessageLoop();
-        virtual BOOL OnIdle(LONG lCount);
+        virtual BOOL OnIdle(LONG count);
         virtual BOOL PreTranslateMessage(MSG& msg);
 
         // Operations

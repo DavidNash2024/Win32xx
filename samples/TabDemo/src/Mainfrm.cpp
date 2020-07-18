@@ -239,9 +239,9 @@ void CMainFrame::SetupMenuIcons()
     CFrame::SetupMenuIcons();
 
     // Add some extra icons for menu items
-    AddMenuIcon(IDM_NEW_FILES, GetApp()->LoadIcon(IDI_FILEVIEW));
-    AddMenuIcon(IDM_NEW_CLASSES, GetApp()->LoadIcon(IDI_CLASSVIEW));
-    AddMenuIcon(IDM_NEW_DIALOG, GetApp()->LoadIcon(IDI_DIALOGVIEW));
+    AddMenuIcon(IDM_NEW_FILES,   IDI_FILEVIEW);
+    AddMenuIcon(IDM_NEW_CLASSES, IDI_CLASSVIEW);
+    AddMenuIcon(IDM_NEW_DIALOG,  IDI_DIALOGVIEW);
 }
 
 void CMainFrame::SetupToolBar()

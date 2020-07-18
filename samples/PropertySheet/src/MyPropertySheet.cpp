@@ -40,12 +40,15 @@ void CButtonPage::OnCancel()
 { 
     TRACE ("Cancel button pressed\n");
 
-    // Close the modeless propertysheet
-    GetParent().Close();;  
+    // Close the propertysheet.
+    CPropertyPage::OnCancel();
 }
 
 BOOL CButtonPage::OnInitDialog()
 { 
+    // Center the PropertySheet (parent) over the frame before it is displayed.
+    GetParent().CenterWindow();
+
     TRACE ("Button page created\n"); 
     return TRUE; 
 }
@@ -54,7 +57,7 @@ void CButtonPage::OnOK()
 { 
     TRACE ("OK button pressed\n");
 
-    // Close the modeless propertysheet
+    // Close the propertysheet
     CPropertyPage::OnOK();
 }
 
@@ -154,7 +157,6 @@ void CMyPropertySheet::OnInitialUpdate()
         SetStyle(style);
     }
 
-    CenterWindow();
 }
 
 LRESULT CMyPropertySheet::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

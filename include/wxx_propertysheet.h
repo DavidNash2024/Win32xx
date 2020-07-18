@@ -253,6 +253,8 @@ namespace Win32xx
     // Override this function in your derived class when if the cancel button is pressed.
     inline void CPropertyPage::OnCancel()
     {
+        // Close the propertysheet.
+        GetParent().PostMessage(WM_CLOSE);
     }
 
     // This function is called in response to the PSN_HELP notification.
@@ -308,7 +310,7 @@ namespace Win32xx
     // Override this function to perform tasks when the property sheet is closed.
     inline void CPropertyPage::OnOK()
     {
-        // Close the modeless propertysheet
+        // Close the propertysheet.
         GetParent().PostMessage(WM_CLOSE);
     }
 
@@ -338,6 +340,7 @@ namespace Win32xx
             return PSNRET_INVALID_NOCHANGEPAGE;
         case PSN_RESET:
             OnReset();
+            break;
         case PSN_QUERYCANCEL:
             return OnQueryCancel();
         case PSN_WIZNEXT:

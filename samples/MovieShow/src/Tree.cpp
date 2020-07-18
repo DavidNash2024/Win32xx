@@ -59,14 +59,14 @@ void CViewTree::OnInitialUpdate()
     //set the image lists
     m_imlNormal.Create(24, 24, ILC_COLOR32, 1, 0);
 
-    m_imlNormal.Add(GetApp()->LoadIcon(IDI_LIBRARY));
-    m_imlNormal.Add(GetApp()->LoadIcon(IDI_MOVIES));
-    m_imlNormal.Add(GetApp()->LoadIcon(IDI_BOXSET));
-    m_imlNormal.Add(GetApp()->LoadIcon(IDI_CALENDAR));
-    m_imlNormal.Add(GetApp()->LoadIcon(IDI_FAVOURITES));
-    m_imlNormal.Add(GetApp()->LoadIcon(IDI_MASK));
-    m_imlNormal.Add(GetApp()->LoadIcon(IDI_VIOLIN));
-    m_imlNormal.Add(GetApp()->LoadIcon(IDI_SEARCH));
+    m_imlNormal.AddIcon(IDI_LIBRARY);
+    m_imlNormal.AddIcon(IDI_MOVIES);
+    m_imlNormal.AddIcon(IDI_BOXSET);
+    m_imlNormal.AddIcon(IDI_CALENDAR);
+    m_imlNormal.AddIcon(IDI_FAVOURITES);
+    m_imlNormal.AddIcon(IDI_MASK);
+    m_imlNormal.AddIcon(IDI_VIOLIN);
+    m_imlNormal.AddIcon(IDI_SEARCH);
 
     SetImageList(m_imlNormal, LVSIL_NORMAL);
 

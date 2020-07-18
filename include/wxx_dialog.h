@@ -91,16 +91,26 @@ namespace Win32xx
         CDialog(LPCDLGTEMPLATE pDlgTemplate);
         virtual ~CDialog();
 
-        // You probably won't need to override these functions
+        // Virtual functions
         virtual void AttachItem(int id, CWnd& wnd);
         virtual HWND Create(HWND parent = 0) { return DoModeless(parent); }
         virtual INT_PTR DoModal(HWND parent = 0);
         virtual HWND DoModeless(HWND parent = 0);
-        virtual BOOL IsModal() const { return m_isModal; }
+
+        // State functions
+        BOOL IsModal() const { return m_isModal; }
         BOOL IsIndirect() const { return (NULL != m_pDlgTemplate); }
 
+        // Wrappers for Windows API functions
+        DWORD GetDefID() const;
+        void GotoDlgCtrl(HWND control);
+        BOOL MapDialogRect(RECT& rc) const;
+        void NextDlgCtrl() const;
+        void PrevDlgCtrl() const;
+        void SetDefID(UINT id); 
+
     protected:
-        // These are the functions you might wish to override
+        // Virtual functions you might wish to override
         virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void EndDialog(INT_PTR result);
         virtual void OnCancel();
@@ -111,14 +121,6 @@ namespace Win32xx
 
         // Not intended to be overridden
         virtual INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
-
-        // Can't override these functions
-        DWORD GetDefID() const;
-        void GotoDlgCtrl(HWND control);
-        BOOL MapDialogRect(RECT& rc) const;
-        void NextDlgCtrl() const;
-        void PrevDlgCtrl() const;
-        void SetDefID(UINT id);
 
     private:
         using CWnd::WndProc;                  // Make WndProc private
@@ -133,7 +135,7 @@ namespace Win32xx
 
         BOOL m_isModal;                  // a flag for modal dialogs
         LPCTSTR m_pResName;              // the resource name for the dialog
-		LPCDLGTEMPLATE m_pDlgTemplate;   // the dialog template for indirect dialogs
+        LPCDLGTEMPLATE m_pDlgTemplate;   // the dialog template for indirect dialogs
     };
 
 

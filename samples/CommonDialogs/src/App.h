@@ -59,15 +59,17 @@
 
 /*******************************************************************************
 
-    Class reference definitions                                 */
+    Class reference definitions                                         */
 
   // shorthand app and global references
 #define theApp          TheApp()
+#define theDoc          TheDoc()
+#define theFrame        TheFrame()
 #define theAppGlobal    theApp->GetAppGlobal()
 
 /*============================================================================*/
     class 
-CApp : public CWinApp                           /*
+CApp : public CWinApp                                                   /*
 
     This application's app class, a pattern for developing new apps.
 *-----------------------------------------------------------------------------*/
@@ -102,12 +104,31 @@ CApp : public CWinApp                           /*
 
 /*============================================================================*/
     inline
-CApp* TheApp()                                                      /*
+CApp* TheApp()                                                            /*
 
     Global access to this application object.
 *----------------------------------------------------------------------------*/
 {
     return (CApp*)GetApp();
+}
+
+/*============================================================================*/
+    inline
+CMainFrame& TheFrame()                                                  /*
+
+    Global access to the application document.
+*----------------------------------------------------------------------------*/
+{
+    return (CMainFrame&)TheApp()->GetFrame();
+}
+/*============================================================================*/
+    inline
+CDoc& TheDoc()                                                          /*
+
+    Global access to the application document.
+*----------------------------------------------------------------------------*/
+{
+    return (CDoc&)TheFrame().GetDoc();
 }
 /*-----------------------------------------------------------------------------*/
 #endif // define SDI_APP_H
