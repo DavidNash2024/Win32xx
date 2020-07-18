@@ -514,8 +514,6 @@ namespace Win32xx
                 si.cbSize = sizeof(si);
                 si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
                 si.nMin = 0;
-
-                // dn ... start of new code
                 
                 bool isHBAlwaysOn = (totalRect.Width() > viewRect.Width());         // Horizontal Bar always on
                 bool isVBAlwaysOn = (totalRect.Height() > viewRect.Height());       // Vertical Bar always on

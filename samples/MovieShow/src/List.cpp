@@ -118,10 +118,10 @@ void CViewList::OnAttach()
 {
     // Set the image lists
     m_small.Create(16, 16, ILC_COLOR32, 1, 0);
-    m_small.Add(GetApp()->LoadIcon(IDI_MOVIES));
-    m_small.Add(GetApp()->LoadIcon(IDI_VIOLIN));
-    m_small.Add(GetApp()->LoadIcon(IDI_BOXSET));
-    m_small.Add(GetApp()->LoadIcon(IDI_FAVOURITES));
+    m_small.AddIcon(IDI_MOVIES);
+    m_small.AddIcon(IDI_VIOLIN);
+    m_small.AddIcon(IDI_BOXSET);
+    m_small.AddIcon(IDI_FAVOURITES);
     SetImageList(m_small, LVSIL_SMALL);
 
     // Set the report style

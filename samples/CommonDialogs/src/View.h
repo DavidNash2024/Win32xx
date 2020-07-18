@@ -79,7 +79,7 @@ enum CtlColors
 
 /*============================================================================*/
     class 
-CView : public CDialog                          /*
+CView : public CDialog                                                  /*
 
     This application's View class, a pattern for developing new apps.
 *-----------------------------------------------------------------------------*/
@@ -90,7 +90,6 @@ CView : public CDialog                          /*
         
                 void    AttachControl(UINT nIDC, CWnd& rCtl);
         virtual HWND    Create(HWND hParent);
-                CDoc&   GetDoc() { return m_Doc; }
                 CFont&  GetEditFont() { return m_EditFont;}
          CRichEditView& GetREView() { return m_RichEdit;}
                 void    NoDocOpen();
@@ -120,7 +119,6 @@ CView : public CDialog                          /*
         CFont           m_EditFont;     // edit box font
           // controls on the view
         CRichEditView   m_RichEdit;     // the view of the document
-        CDoc            m_Doc;          // the view's document
 };
 /*----------------------------------------------------------------------------*/
 #endif // SDI_VIEW_H

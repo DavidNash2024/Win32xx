@@ -593,10 +593,10 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MENUICONS, 0);
 
     // Add more images for menu items.
-    AddMenuIcon(IDM_FILE_PRINTSETUP,    GetApp()->LoadIcon(IDI_PRINTSETUP));
-    AddMenuIcon(IDM_FILE_PREVIEW,       GetApp()->LoadIcon(IDI_PRINTPREVIEW));
-    AddMenuIcon(IDM_FILE_QUICKPRINT,    GetApp()->LoadIcon(IDI_QUICKPRINT));
-    AddMenuIcon(IDM_FILE_PRINT,         GetApp()->LoadIcon(IDI_PRINT));
+    AddMenuIcon(IDM_FILE_PRINTSETUP, IDI_PRINTSETUP);
+    AddMenuIcon(IDM_FILE_PREVIEW,    IDI_PRINTPREVIEW);
+    AddMenuIcon(IDM_FILE_QUICKPRINT, IDI_QUICKPRINT);
+    AddMenuIcon(IDM_FILE_PRINT,      IDI_PRINT);
 }
 
 // Specifies the Toolbar buttons

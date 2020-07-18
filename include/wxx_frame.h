@@ -400,6 +400,7 @@ namespace Win32xx
     protected:
         // Override these functions as required.
         virtual void AddDisabledMenuImage(HICON icon, COLORREF mask, int iconWidth = 16);
+        virtual BOOL AddMenuIcon(int menuItemID, int iconID, int iconWidth = 16);
         virtual BOOL AddMenuIcon(int menuItemID, HICON icon, int iconWidth = 16);
         virtual UINT AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID);
         virtual void AddMenuBarBand();
@@ -1014,6 +1015,16 @@ namespace Win32xx
             m_menuDisabledImages.Create(cx, cy, ILC_COLOR24 | ILC_MASK, 1, 0);
 
         m_menuDisabledImages.Add(bitmap, mask);
+    }
+
+    // Adds an icon to an internal ImageList for use with popup menu items.
+    template <class T>
+    inline BOOL CFrameT<T>::AddMenuIcon(int menuItemID, int iconID, int iconWidth /* = 16*/)
+    {
+        int cx = iconWidth;
+        int cy = iconWidth;
+        HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cx, cy, LR_SHARED));
+        return AddMenuIcon(menuItemID, icon, iconWidth);
     }
 
     // Adds an icon to an internal ImageList for use with popup menu items.

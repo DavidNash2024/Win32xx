@@ -235,7 +235,7 @@ OnDropFiles(HDROP hDropinfo)                                                /*
 {
     TCHAR szFileName[_MAX_PATH];
     ::DragQueryFile((HDROP)hDropinfo, 0, szFileName, _MAX_PATH);
-    GetDoc().OpenDoc(szFileName);
+    theDoc.OpenDoc(szFileName);
     ::DragFinish(hDropinfo);
     return TRUE;
 }
@@ -318,7 +318,7 @@ OnPrintDocument()                                                           /*
     the contents of the rich view control.
 *-----------------------------------------------------------------------------*/
 {
-    m_RichEdit.DoPrintRichView(GetDoc().GetFilePath());
+    m_RichEdit.DoPrintRichView(theDoc.GetFilePath());
 }
 
 /*============================================================================*/

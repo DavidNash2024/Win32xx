@@ -160,7 +160,7 @@ LoadPersistentData()                                                        /*
     {
         CArchive ar(theApp->GetArcvFile(), CArchive::load);
               // deserialize in the same order as serialized
-        ar >> *theApp;   // for the app
+        ar >> *theApp;  // for the app
         ar >> *this;    // for the mainframe and base classes
         ar >> m_View;   // for the view, including control colors
         Invalidate();   // repaint the client with recovered colors
@@ -712,7 +712,7 @@ SaveRegistrySettings()                                                      /*
     {
         CArchive ar(theApp->GetArcvFile(), CArchive::store);
              // serialize in the following order
-        ar << *theApp;   // for the App
+        ar << theApp;   // for the App
         ar << *this;    // for the mainframe and base classes
         ar << m_View;   // for the view, including control colors
     }

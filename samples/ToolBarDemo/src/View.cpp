@@ -72,10 +72,10 @@ int CView::OnCreate(CREATESTRUCT& cs)
 
     // Create the ToolBar's image list from 4 icons
     m_toolBarImages.Create(48, 48, ILC_COLOR32 | ILC_MASK, 0, 0);
-    m_toolBarImages.Add(GetApp()->LoadIcon(IDI_TOP));
-    m_toolBarImages.Add(GetApp()->LoadIcon(IDI_LEFT));
-    m_toolBarImages.Add(GetApp()->LoadIcon(IDI_RIGHT));
-    m_toolBarImages.Add(GetApp()->LoadIcon(IDI_BOTTOM));
+    m_toolBarImages.AddIcon(IDI_TOP);
+    m_toolBarImages.AddIcon(IDI_LEFT);
+    m_toolBarImages.AddIcon(IDI_RIGHT);
+    m_toolBarImages.AddIcon(IDI_BOTTOM);
 
     // Create the ToolBar
     m_toolBar.Create(*this);

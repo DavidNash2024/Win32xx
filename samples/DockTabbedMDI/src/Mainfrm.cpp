@@ -436,11 +436,11 @@ void CMainFrame::SetupMenuIcons()
     CDockFrame::SetupMenuIcons();
 
     // Add some extra icons for menu items
-    AddMenuIcon(IDM_FILE_NEWBROWSER, GetApp()->LoadIcon(IDI_GLOBE));
-    AddMenuIcon(IDM_FILE_NEWRECT, GetApp()->LoadIcon(IDI_RECT));
-    AddMenuIcon(IDM_FILE_NEWTEXT, GetApp()->LoadIcon(IDI_TEXT));
-    AddMenuIcon(IDM_FILE_NEWLIST, GetApp()->LoadIcon(IDI_FILEVIEW));
-    AddMenuIcon(IDM_FILE_NEWTREE, GetApp()->LoadIcon(IDI_CLASSVIEW));
+    AddMenuIcon(IDM_FILE_NEWBROWSER, IDI_GLOBE);
+    AddMenuIcon(IDM_FILE_NEWRECT, IDI_RECT);
+    AddMenuIcon(IDM_FILE_NEWTEXT, IDI_TEXT);
+    AddMenuIcon(IDM_FILE_NEWLIST, IDI_FILEVIEW);
+    AddMenuIcon(IDM_FILE_NEWTREE, IDI_CLASSVIEW);
 }
 
 void CMainFrame::SetupToolBar()

@@ -1377,24 +1377,24 @@ BOOL CMainFrame::SaveRegistrySettings()
 // Adds icons for popup menus.
 void CMainFrame::SetupMenuIcons()
 {
-    AddMenuIcon(IDM_ADD_FOLDER, GetApp()->LoadIcon(IDI_ADDFOLDER));
-    AddMenuIcon(IDM_PLAY, GetApp()->LoadIcon(IDI_PLAY));
-    AddMenuIcon(IDM_FAVOURITE, GetApp()->LoadIcon(IDI_FAVOURITES));
-    AddMenuIcon(IDM_REMOVE_FILE, GetApp()->LoadIcon(IDI_REMOVE));
-    AddMenuIcon(IDM_HELP_ABOUT, GetApp()->LoadIcon(IDI_HELPABOUT));
+    AddMenuIcon(IDM_ADD_FOLDER,  IDI_ADDFOLDER);
+    AddMenuIcon(IDM_PLAY,        IDI_PLAY);
+    AddMenuIcon(IDM_FAVOURITE,   IDI_FAVOURITES);
+    AddMenuIcon(IDM_REMOVE_FILE, IDI_REMOVE);
+    AddMenuIcon(IDM_HELP_ABOUT,  IDI_HELPABOUT);
 
-    AddMenuIcon(IDM_VIDEOTYPE_MOVIE, GetApp()->LoadIcon(IDI_MOVIES));
-    AddMenuIcon(IDM_VIDEOTYPE_LIVEPERFORMANCE, GetApp()->LoadIcon(IDI_VIOLIN));
+    AddMenuIcon(IDM_VIDEOTYPE_MOVIE, IDI_MOVIES);
+    AddMenuIcon(IDM_VIDEOTYPE_LIVEPERFORMANCE, IDI_VIOLIN);
 
-    AddMenuIcon(IDM_ADD_BOXSET, GetApp()->LoadIcon(IDI_ADDBOXSET));
-    AddMenuIcon(IDM_MOVE_UP, GetApp()->LoadIcon(IDI_MOVEUP));
-    AddMenuIcon(IDM_MOVE_DOWN, GetApp()->LoadIcon(IDI_MOVEDOWN));
-    AddMenuIcon(IDM_REMOVE_BOXSET, GetApp()->LoadIcon(IDI_REMOVE));
-    AddMenuIcon(IDM_RENAME_BOXSET, GetApp()->LoadIcon(IDI_EDITBOXSET));
+    AddMenuIcon(IDM_ADD_BOXSET,  IDI_ADDBOXSET);
+    AddMenuIcon(IDM_MOVE_UP,     IDI_MOVEUP);
+    AddMenuIcon(IDM_MOVE_DOWN,   IDI_MOVEDOWN);
+    AddMenuIcon(IDM_REMOVE_BOXSET, IDI_REMOVE);
+    AddMenuIcon(IDM_RENAME_BOXSET, IDI_EDITBOXSET);
 
     // Accomodate up to 64 boxsets
     for (int i = IDM_BOXSET_1; i < IDM_BOXSET_1 + 64; i++)
-        AddMenuIcon(i, GetApp()->LoadIcon(IDI_BOXSET));
+        AddMenuIcon(i, IDI_BOXSET);
 }
 
 // Configure the toolbar.
@@ -1402,11 +1402,11 @@ void CMainFrame::SetupToolBar()
 {
     // Create the normal ImageList for the toolbar
     m_toolbarImages.Create(32, 32, ILC_COLOR32, 0, 0);
-    m_toolbarImages.Add(GetApp()->LoadIcon(IDI_ADDFOLDER));
-    m_toolbarImages.Add(GetApp()->LoadIcon(IDI_PLAY));
-    m_toolbarImages.Add(GetApp()->LoadIcon(IDI_FAVOURITES));
-    m_toolbarImages.Add(GetApp()->LoadIcon(IDI_SEARCH));
-    m_toolbarImages.Add(GetApp()->LoadIcon(IDI_HELPABOUT));
+    m_toolbarImages.AddIcon(IDI_ADDFOLDER);
+    m_toolbarImages.AddIcon(IDI_PLAY);
+    m_toolbarImages.AddIcon(IDI_FAVOURITES);
+    m_toolbarImages.AddIcon(IDI_SEARCH);
+    m_toolbarImages.AddIcon(IDI_HELPABOUT);
     GetToolBar().SetImageList(m_toolbarImages);
 
     // Add toolbar buttons and set their Resource IDs

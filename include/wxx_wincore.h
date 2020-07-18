@@ -2559,7 +2559,8 @@ namespace Win32xx
         Empty();
 
         // Increase the size of our array in a loop until we load the entire string
-        // The ANSI and _UNICODE versions of LoadString behave differently. This technique works for both.
+        // The ANSI and _UNICODE versions of LoadString behave differently.
+        // This technique works for both.
         while (startSize -1 <= chars )
         {
             startSize = startSize * 4;
