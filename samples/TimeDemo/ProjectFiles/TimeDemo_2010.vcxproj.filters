@@ -22,9 +22,6 @@
     <ClCompile Include="..\src\MRU.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ScrollBars.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Doc.h">
@@ -127,9 +124,6 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\src\App.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ScrollBars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\MRU.h">

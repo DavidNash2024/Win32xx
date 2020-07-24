@@ -1,30 +1,19 @@
 /* (04-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2015, Robert C. Tausworthe                   |
+|             Copyright (c) 2020, Robert C. Tausworthe, David Nash             |
 |                             All Rights Reserved.                             |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Application resources file for a skeleton 
-    application. Adapted to use Win32++ Windows interface classes,
-    Copyright (c) 2005-2015 David Nash, under permissions granted therein.
+    Contents Description: Application resources file for this application. 
+    Adapted to use Win32++ framework, Copyright (c) 2005-2020 David Nash, under 
+    permissions granted therein.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and  to the alterations,
-    additions, deletions, and  other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and  any associated documentation composed by
-    the author, to utilize this material, free of charge and  without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
+    The above copyright notice, as well as that of David Nash and Win32++, 
+    together with the respective permissionconditions shall be included in all 
+    copies or substantial portions of this material so copied, modified, merged,
+    published, distributed, or otherwise held by others.
 
     These materials are provided "as is", without warranty of any kind,
     express or implied, including but not limited to: warranties of
@@ -36,19 +25,13 @@
 
     Special Conventions:
 
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
         
-    Acknowledgement:
-    The author would like to thank and acknowledge the advice, critical
-    review, insight, and assistance provided by David Nash in the development
-    of this work.       
-
 /******************************************************************************/
 // Microsoft Visual C++ generated resource script (originally).
-//
+
 #include "Resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
@@ -89,37 +72,21 @@ BEGIN
         MENUITEM "Save &As\tCtrl+Shft+S", IDM_FILE_SAVEAS
         MENUITEM "&Close",                IDM_FILE_CLOSE
         MENUITEM SEPARATOR
-        MENUITEM "Print Pre&view\tShift+Ctrl+P", IDM_FILE_PRINT_PREVIEW
-        MENUITEM "&Print\tCtrl+P",        IDM_FILE_PRINT
-        MENUITEM SEPARATOR
         MENUITEM "Recent Files",          IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
-    END
-    POPUP "&Edit"
-    BEGIN
-        MENUITEM "Undo\tCtrl+Z",          IDM_EDIT_UNDO, GRAYED
-        MENUITEM "Redo\tShift+Ctrl+Z",    IDM_EDIT_REDO, GRAYED
-        MENUITEM SEPARATOR
-        MENUITEM "Cut\tCtrl+X",           IDM_EDIT_CUT //, GRAYED
-        MENUITEM "Copy\tCtrl+C",          IDM_EDIT_COPY, GRAYED
-        MENUITEM "Paste\tCtrl+V",         IDM_EDIT_PASTE, GRAYED
-        MENUITEM "Delete\tDel",           IDM_EDIT_DELETE, GRAYED
-        MENUITEM SEPARATOR
-        MENUITEM "Find\tCtrl+F",          IDM_EDIT_FIND, GRAYED
-        MENUITEM "Replace\tCtrl+R",       IDM_EDIT_REPLACE, GRAYED
     END
     POPUP "&View"
     BEGIN
         MENUITEM "&Font Choice",          IDM_FONT_CHOICE
         MENUITEM "Screen &Color",         IDM_COLOR_CHOICE
+        MENUITEM SEPARATOR
         MENUITEM "&Tool Bar",             IDW_VIEW_TOOLBAR,   CHECKED
         MENUITEM "&Status Bar",           IDW_VIEW_STATUSBAR, CHECKED
         MENUITEM SEPARATOR
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "Contents",              IDM_HELP_CONTENT
         MENUITEM "&About",                IDM_HELP_ABOUT
     END
 END
@@ -132,15 +99,14 @@ END
 // The icon with the lowest ID value is placed first to ensure that
 // the application icon remains consistent on all systems.
 IDW_MAIN                ICON                    "../src/res/Time.ico"
-IDM_COLOR_CHOICE        ICON                    "../src/res/crayonS.ico"
-IDM_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //                                                       */
 
-IDW_MAIN                BITMAP                  "../src/res/Toolbar.bmp"
+IDW_MAIN                 BITMAP                   "../src/res/Toolbar24.bmp"
+IDB_MENUICONS            BITMAP                   "../src/res/Toolbar16.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -170,17 +136,9 @@ IDW_MAIN ACCELERATORS
     "O",            IDM_FILE_OPEN,   VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,   VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVEAS, VIRTKEY, SHIFT, CONTROL, NOINVERT
-    "C",            IDM_EDIT_COPY,   VIRTKEY, CONTROL, NOINVERT
-    "X",            IDM_EDIT_CUT,    VIRTKEY, CONTROL, NOINVERT
-    "V",            IDM_EDIT_PASTE,  VIRTKEY, CONTROL, NOINVERT
-    "P",            IDM_FILE_PRINT,  VIRTKEY, CONTROL, NOINVERT
-    "P",            IDM_FILE_PRINT_PREVIEW,  VIRTKEY, SHIFT, CONTROL, NOINVERT
-    "H",        IDM_HELP_ABOUT,  VIRTKEY, CONTROL, NOINVERT
-    VK_F1,          IDM_HELP_CONTEXT, VIRTKEY, SHIFT,  NOINVERT
+    "H",            IDM_HELP_ABOUT,  VIRTKEY, CONTROL, NOINVERT
+    VK_F1,          IDM_HELP_ABOUT, VIRTKEY, SHIFT,  NOINVERT
     "Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
-    "R",            IDM_EDIT_REPLACE, VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_UNDO,   VIRTKEY, CONTROL, NOINVERT
-    "Y",            IDM_EDIT_REDO,   VIRTKEY, SHIFT, CONTROL, NOINVERT
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -206,25 +164,13 @@ BEGIN
     IDM_FILE_OPEN           "Open Existing Document"
     IDM_FILE_SAVE           "Save the Document"
     IDM_FILE_SAVEAS         "Save the Document with a new name"
-    IDM_FILE_PRINT          "Print the Document"
-    IDM_FILE_PRINT_PREVIEW  "Preview Print the Document"
     IDM_FILE_EXIT           "End the Program"
     IDM_FILE_CLOSE          "Close the current document."
 END
 
 STRINGTABLE
 BEGIN
-    IDM_EDIT_CUT            "Remove the topmost MRU list item, if any"
-    IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
-    IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
-    IDM_EDIT_UNDO           "Undo the last action"
-    IDM_EDIT_REDO           "Redo the previously undone action"
-    IDM_EDIT_FIND           "Find something..."
-    IDM_EDIT_REPLACE        "Replace something..."
-    IDM_EDIT_DELETE         "Erase the selected Contents"
     IDM_HELP_ABOUT          "Display information about this program"
-    IDM_HELP_CONTENT        "Show help document for this program"
-    IDM_HELP_CONTEXT        "Show help on topic selected"
 END
 
 STRINGTABLE
@@ -240,5 +186,5 @@ BEGIN
 END
 
 #endif    // English (U.S.) resources
-/////////////////////////////////////////////////////////////////////////////
+/*----------------------------------------------------------------------------*/
 

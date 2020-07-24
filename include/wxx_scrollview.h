@@ -216,12 +216,12 @@ namespace Win32xx
         return 0;
     }
 
-    inline LRESULT CScrollView::OnKeyScroll(UINT, WPARAM wParam, LPARAM)
+    inline LRESULT CScrollView::OnKeyScroll(UINT, WPARAM wparam, LPARAM)
     {
         CPoint newPos = m_currentPos;
         bool control = ((::GetKeyState(VK_CONTROL) & 0x8000) != 0);
 
-        switch (wParam)
+        switch (wparam)
         {
         case VK_HOME:       // HOME key
             if (control)

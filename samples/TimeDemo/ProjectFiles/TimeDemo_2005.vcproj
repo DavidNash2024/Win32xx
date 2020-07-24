@@ -203,10 +203,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\ScrollBars.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\stdafx.cpp"
 				>
 			</File>
@@ -242,10 +238,6 @@
 			</File>
 			<File
 				RelativePath="..\src\resource.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ScrollBars.h"
 				>
 			</File>
 			<File

@@ -1406,7 +1406,7 @@ namespace Win32xx
     // for the client area of the window. Use like this:
     // CDC dc = GetDC;
     // Refer to GetDC in the Windows API documentation for more information.
-    inline CDC CWnd::GetDC() const
+    inline CClientDC CWnd::GetDC() const
     {
         assert(IsWindow());
         return CClientDC(*this);
@@ -1416,7 +1416,7 @@ namespace Win32xx
     // client area or entire area of a window. Use like this:
     // CDC dc = GetDCEx(clip, flags);
     // Refer to GetDCEx in the Windows API documentation for more information.
-    inline CDC CWnd::GetDCEx(HRGN clip, DWORD flags) const
+    inline CClientDCEx CWnd::GetDCEx(HRGN clip, DWORD flags) const
     {
         assert(IsWindow());
         return CClientDCEx(*this, clip, flags);
@@ -1572,7 +1572,7 @@ namespace Win32xx
     // including title bar, menus, and scroll bars. Use like this:
     // CDC dc = GetWindowDC();
     // Refer to GetWindowDC in the Windows API documentation for more information.
-    inline CDC CWnd::GetWindowDC() const
+    inline CWindowDC CWnd::GetWindowDC() const
     {
         assert(IsWindow());
         return CWindowDC(*this);

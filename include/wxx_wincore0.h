@@ -184,8 +184,8 @@ namespace Win32xx
         ULONG_PTR GetClassLongPtr(int index) const;
         CString GetClassName() const;
         CRect GetClientRect() const;
-        CDC   GetDC() const;
-        CDC   GetDCEx(HRGN clip, DWORD flags) const;
+        CClientDC GetDC() const;
+        CClientDCEx GetDCEx(HRGN clip, DWORD flags) const;
         CWnd  GetDesktopWindow() const;
         int   GetDlgCtrlID() const;
         CWnd  GetDlgItem(int dlgItemID) const;
@@ -204,7 +204,7 @@ namespace Win32xx
         CRect GetUpdateRect(BOOL erase) const;
         int GetUpdateRgn(HRGN rgn, BOOL erase) const;
         CWnd  GetWindow(UINT cmd) const;
-        CDC   GetWindowDC() const;
+        CWindowDC GetWindowDC() const;
         LONG_PTR GetWindowLongPtr(int index) const;
         CRect GetWindowRect() const;
         CString GetWindowText() const;

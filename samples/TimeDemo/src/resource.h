@@ -1,31 +1,20 @@
 /* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]               (resource.h) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2015, Robert C. Tausworthe                   |
+|             Copyright (c) 2020, Robert C. Tausworthe, David Nash             |
 |                             All Rights Reserved.                             |
 |                                                                              |
 ===============================================================================*
 
     Contents Description:  Resource definitions used by a minimal SDI 
     application's resource.rc file.  Adapted to the Win32++ Windows
-    interface classes, Copyright (c) 2005-2015 David Nash, under
+    interface classes, Copyright (c) 2005-2020 David Nash, under
     permissions granted therein.
     
-    Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and  to the alterations,
-    additions, deletions, and  other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and  any associated documentation composed by
-    the author, to utilize this material, free of charge and  without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
+    The above copyright notice, as well as that of David Nash and Win32++, 
+    together with the respective permissionconditions shall be included in all 
+    copies or substantial portions of this material so copied, modified, merged,
+    published, distributed, or otherwise held by others.
 
     These materials are provided "as is", without warranty of any kind,
     express or implied, including but not limited to: warranties of
@@ -108,22 +97,13 @@
 #define IDM_FILE_SAVE                   153
 #define IDM_FILE_SAVEAS                 154
 #define IDM_FILE_CLOSE                  155
-#define IDM_FILE_PRINT                  156
-#define IDM_FILE_PRINT_PREVIEW          157
 #define IDM_FILE_EXIT                   158
-#define IDM_EDIT_UNDO                   159
-#define IDM_EDIT_REDO                   160
-#define IDM_EDIT_CUT                    161
-#define IDM_EDIT_COPY                   162
-#define IDM_EDIT_PASTE                  163
-#define IDM_EDIT_FIND                   164
-#define IDM_EDIT_REPLACE                165
-#define IDM_EDIT_DELETE                 166
+
 #define IDM_HELP_ABOUT                  167
-#define IDM_HELP_CONTENT                168
-#define IDM_HELP_CONTEXT                169
 #define IDM_COLOR_CHOICE                170
 #define IDM_FONT_CHOICE                 171
+
+#define IDB_MENUICONS                   175
 
   // resource IDs for controls
 #define IDC_CREDITS                     180

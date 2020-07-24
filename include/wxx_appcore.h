@@ -721,7 +721,7 @@ namespace Win32xx
 
         // Retrieve the class information
         ZeroMemory(&defaultWC, sizeof(defaultWC));
-        ::GetClassInfo(GetInstanceHandle(), pClassName, &defaultWC);
+        VERIFY(::GetClassInfo(GetInstanceHandle(), pClassName, &defaultWC));
 
         // Save the callback address of CWnd::StaticWindowProc
         assert(defaultWC.lpfnWndProc);  // Assert fails when running UNICODE build on ANSI OS.

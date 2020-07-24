@@ -290,20 +290,25 @@ namespace Win32xx
     // Forward declarations.
     //  These classes are defined later or elsewhere
     class CArchive;
-    class CDC;
-    class CGDIObject;
-    class CMenu;
-    class CMenuBar;
-    class CWinApp;
-    class CWnd;
     class CBitmap;
     class CBrush;
+    class CClientDC;
+    class CClientDCEx;
+    class CDataExchange;
+    class CDC;
     class CFont;
+    class CGDIObject;
     class CImageList;
+    class CMemDC;
+    class CMenu;
+    class CMenuBar;
+    class CPaintDC;
     class CPalette;
     class CPen;
     class CRgn;
-    class CDataExchange;
+    class CWinApp;
+    class CWindowDC;
+    class CWnd;
     struct CDC_Data;
 
     // tString is a TCHAR std::string
@@ -584,7 +589,7 @@ namespace Win32xx
         HCURSOR LoadCursor(int cursorID) const;
         HCURSOR LoadStandardCursor(LPCTSTR pCursorName) const;
         HICON   LoadIcon(LPCTSTR pResourceName) const;
-        HICON   LoadIcon(int nIDIcon) const;
+        HICON   LoadIcon(int iconID) const;
         HICON   LoadStandardIcon(LPCTSTR pIconName) const;
         HANDLE  LoadImage(LPCTSTR pResourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
         HANDLE  LoadImage(int imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
@@ -615,12 +620,12 @@ namespace Win32xx
         CCriticalSection m_gdiLock;   // thread synchronisation for m_mapCDCData and m_mapCGDIData.
         CCriticalSection m_wndLock;   // thread synchronisation for m_mapHWND etc.
         CCriticalSection m_printLock; // thread synchronisation for printing.
-        HINSTANCE m_instance;          // handle to the application's instance
-        HINSTANCE m_resource;          // handle to the application's resources
-        DWORD m_tlsData;                // Thread Local Storage data
-        WNDPROC m_callback;             // callback address of CWnd::StaticWndowProc
-        CHGlobal m_devMode;             // Used by CPrintDialog and CPageSetupDialog
-        CHGlobal m_devNames;            // Used by CPrintDialog and CPageSetupDialog
+        HINSTANCE m_instance;         // handle to the application's instance
+        HINSTANCE m_resource;         // handle to the application's resources
+        DWORD m_tlsData;              // Thread Local Storage data
+        WNDPROC m_callback;           // callback address of CWnd::StaticWndowProc
+        CHGlobal m_devMode;           // Used by CPrintDialog and CPageSetupDialog
+        CHGlobal m_devNames;          // Used by CPrintDialog and CPageSetupDialog
 
 #ifndef _WIN32_WCE
         void AddCMenuData(HMENU menu, CMenu_Data* pData);

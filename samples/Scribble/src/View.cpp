@@ -200,25 +200,27 @@ void CView::PrintPage(CDC& dc, UINT)
     int height = viewRect.Height();
 
     // Acquire the view's bitmap.
-    CMemDC memDC = Draw();
     CBitmap bmView = Draw().DetachBitmap();
 
     // Now we convert the Device Dependent Bitmap(DDB) to a Device
     // Independent Bitmap(DIB) for printing or previewing.
-    
+
     // Create the LPBITMAPINFO from the bitmap.
     CBitmapInfoPtr pbmi(bmView);
+    // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
+    BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
 
     // Extract the device independent image data.
-    int imageBytes = (((width * 32 + 31) & ~31) >> 3) * height;
-    std::vector<byte> byteArray(imageBytes, 0);
+    CMemDC memDC(dc);
+    memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS);
+    std::vector<byte> byteArray(pBIH->biSizeImage, 0);
     byte* pByteArray = &byteArray.front();
     memDC.GetDIBits(bmView, 0, height, pByteArray, pbmi, DIB_RGB_COLORS);
 
     // Get the device context of the default or currently chosen printer
     CPrintDialog printDlg;
     CDC printDC = printDlg.GetPrinterDC();
-    
+
     // Determine the scaling factors required to print the bitmap and retain
     // its original aspect ratio.
     CClientDC viewDC(*this);
@@ -237,6 +239,8 @@ void CView::PrintPage(CDC& dc, UINT)
 
     if (GDI_ERROR == result)
         throw CUserException(_T("Failed to resize image for printing"));
+
+    // The specified dc now holds the Device Independent Bitmap printout.
 }
 
 

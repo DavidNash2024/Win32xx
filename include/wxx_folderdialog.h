@@ -155,7 +155,7 @@ namespace Win32xx
         CFolderDialog(const CFolderDialog&);              // Disable copy construction
         CFolderDialog& operator = (const CFolderDialog&); // Disable assignment operator    
 
-        static int CALLBACK BrowseCallbackProc(HWND wnd, UINT uMsg, LPARAM param1, LPARAM lparam2);
+        static int CALLBACK BrowseCallbackProc(HWND wnd, UINT msg, LPARAM param1, LPARAM lparam2);
 
         CString m_displayName;
         CString m_title;
