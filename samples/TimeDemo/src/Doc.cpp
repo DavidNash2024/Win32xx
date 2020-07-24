@@ -1,30 +1,19 @@
 /* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]                  (Doc.cpp) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2015, Robert C. Tausworthe                   |
+|             Copyright (c) 2020, Robert C. Tausworthe, David Nash             |
 |                             All Rights Reserved.                             |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description:  Implementation of the CDoc class for a
-    skeleton SDI application using the Win32++ Windows interface classes,
-    Copyright (c) 2005-2015 David Nash, under permissions granted therein.
+    Contents Description:  Implementation of the CDoc class for this application 
+    using the Win32++ framework, Copyright (c) 2005-2020 David Nash, under 
+    permissions granted therein.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and  to the alterations,
-    additions, deletions, and  other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and  any associated documentation composed by
-    the author, to utilize this material, free of charge and  without
-    restriction  or  limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies  or  substantial
-        portions of this material so copied, modified, merged,
-        published, distributed,  or  otherwise held by others.
+    The above copyright notice, as well as that of David Nash and Win32++, 
+    together with the respective permissionconditions shall be included in all 
+    copies or substantial portions of this material so copied, modified, merged,
+    published, distributed, or otherwise held by others.
 
     These materials are provided "as is", without warranty of any kind,
     express  or  implied, including but not limited to: warranties of
@@ -34,15 +23,9 @@
     tort  or  otherwise, arising from, out of,  or in connection with, these
     materials, the use thereof, or  any other other dealings therewith.
 
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-
-    Acknowledgement:
-    The author would like to thank and acknowledge the advice, critical
-    review, insight, and assistance provided by David Nash in the development
-    of this work.
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
@@ -58,37 +41,21 @@
 
 *******************************************************************************/
 
-
 #include "stdafx.h"
 #include "App.h"
+#include <VersionHelpers.h>
 
-
-  // local function for display of boolean value in demo
-static CString Truth(bool b){return b ? _T("true") : _T("false");}
   // local formats for displaying CTime values as strings
 static const CString longDateFmt = TEXT("%d-%b-%Y [%j] (%a) %H:%M:%S %z");
 static const CString shortDateFmt = TEXT("%d-%b-%Y");
 static const CString simpleHMSFmt = TEXT("%I:%M:%S %p");
 
-/*******************************************************************************
-
-    Static constant initialization                  */
-
-  // this file dialog extensions filter is used by the main frame when getting
-  // the name of a document to open
-LPCTSTR CDoc::m_file_dlg_filter =
-    _T("Time Demo Files (*.arc)\0")
-    _T("*.arc\0")
-    _T("All Files (*.*)\0")
-    _T("*.*\0")
-    _T("\0");
-
   // static constant initiallization: latest CDoc.cpp file compilation date
-const CString CDoc::m_sCompiled_on = __DATE__;
+const CString CDoc::m_compiledOn = __DATE__;
 
 /*============================================================================*/
     CDoc::
-CDoc()                                  /*
+CDoc()                                                                  /*
 
     Construct the document object and load the document to be initially
     displayed at the start of operations.
@@ -96,55 +63,34 @@ CDoc()                                  /*
 {
       // create the document object, set default values, and set the
       // initial document state
-    m_Doc_path.Empty();
-    m_bDoc_is_open  = false;
-    m_bDoc_is_dirty = false;
-    m_stDoc_width   = 0;
-    m_doc_content.clear();
+
+    m_fileDlgFilter =
+        _T("Time Demo Files (*.arc)\0")
+        _T("*.arc\0")
+        _T("All Files (*.*)\0")
+        _T("*.*\0")
+        _T("\0");
+
+    m_docPath.Empty();
+    m_docWidth   = 0;
+    m_docContent.clear();
       // show initial document content for display
-    InitialDocument();
-}
-
-/*============================================================================*/
-    CDoc::
-~CDoc()                                 /*
-
-    Destructor
-*-----------------------------------------------------------------------------*/
-{
-}
-
-/*============================================================================*/
-    bool CDoc::
-CloseDoc()                              /*
-
-    Perform any cleanup necessary to close the document.
-*-----------------------------------------------------------------------------*/
-{
-    bool rtn = true;
-    if (m_bDoc_is_open && m_bDoc_is_dirty)
-        rtn = SaveDoc();
-
-    m_bDoc_is_open = m_bDoc_is_dirty = false;
-    m_Doc_path.Empty();
-    m_doc_content.clear();
-    TheApp().TheFrame()->SetWindowTitle();
-    return rtn;
+    NewDocument();
 }
 
 /*============================================================================*/
     int CDoc::
-GetDocLength() const                            /*
+GetDocLength() const                                                    /*
 
     Return the document length, in records.
 *----------------------------------------------------------------------------*/
 {
-    return static_cast<int>(m_doc_content.size());
+    return static_cast<int>(m_docContent.size());
 }
 
 /*============================================================================*/
     CString CDoc::
-GetDocOpenFileName(const CString &title) const              /*
+GetDocOpenFileName(const CString &title) const                          /*
 
     Bring up the open file dialog and get the path of the file to open.
     If none is given, return an empty path. Use the title as the dialog
@@ -154,7 +100,7 @@ GetDocOpenFileName(const CString &title) const              /*
     // Bring up the dialog, and  open the file
     CString str;
     DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-    CFileDialog FileDlg(TRUE, 0, 0, dwFlags, m_file_dlg_filter);
+    CFileDialog FileDlg(TRUE, 0, 0, dwFlags, m_fileDlgFilter);
     FileDlg.SetTitle(title);
     if (FileDlg.DoModal() == IDOK)
         str = FileDlg.GetPathName();
@@ -176,24 +122,22 @@ GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const  /*
 *----------------------------------------------------------------------------*/
 {
     int size = GetDocLength();
-    if (size == 0 || rcd >= size || rcd == -1)
-        return _T("");
-      // CString Mid doesn't like lengths longer than that of the CString's
-      //  or  zero-length CStrings
-    CString s  = m_doc_content[rcd];
-      // if left is beyond the length of s, return blank value
-    if (s.GetLength() <= left)
+    if (size == 0 || rcd >= size || rcd < 0)
         return _T("");
 
+    CString s  = m_docContent[rcd];
+
       // compute length of text to extract
-    length = MIN(length, s.GetLength() - left);
+    if (length < 0)
+        length = s.GetLength(); 
+    length = MAX(0, length - left);
       // extract length chars after left position using base class
     return s.Mid(left, length);
 }
 
 /*============================================================================*/
     CString CDoc::
-GetDocSaveFileName(const CString &title) const              /*
+GetDocSaveFileName(const CString &title) const                          /*
 
     Bring up the file save dialog and get the path of file to save the
     document in. If nont is selected, return an empty path.  Use the title
@@ -203,7 +147,7 @@ GetDocSaveFileName(const CString &title) const              /*
     CString str;
     TCHAR extbuff[10];
     DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-    CFileDialog FileDlg(FALSE, extbuff, NULL, dwFlags, m_file_dlg_filter);
+    CFileDialog FileDlg(FALSE, extbuff, NULL, dwFlags, m_fileDlgFilter);
     FileDlg.SetTitle(title);
 
     if (FileDlg.DoModal() == IDOK)
@@ -219,39 +163,17 @@ GetDocSaveFileName(const CString &title) const              /*
 
 /*============================================================================*/
     int CDoc::
-GetDocWidth() const                         /*
+GetDocWidth() const                                                     /*
 
     Return the document width, in characters.
 *----------------------------------------------------------------------------*/
 {
-    return m_stDoc_width;
+    return m_docWidth;
 }
 
 /*============================================================================*/
-    bool CDoc::
-IsDirty() const                             /*
-
-    Return true if the document has not been saved in its present
-    condition, or false otherwise.
-*----------------------------------------------------------------------------*/
-{
-    return m_bDoc_is_dirty;
-}
-
-/*============================================================================*/
-    bool CDoc::
-IsOpen() const                              /*
-
-    Return true if the document has been loaded successfully, or false
-    otherwise.
-*----------------------------------------------------------------------------*/
-{
-    return m_bDoc_is_open;
-}
-
-/*============================================================================*/
-    bool CDoc::
-OpenDoc(const CString &doc_file_name)                   /*
+    bool CDoc:: 
+OpenDoc(const CString &docFileName)                                   /*
 
     Open the document having the given doc_file_name and load its contents
     into the internal CString array.  Return true if the document was
@@ -260,28 +182,24 @@ OpenDoc(const CString &doc_file_name)                   /*
 {
       // if there is a document already open with this file name,
       // say so, and return
-    if (m_bDoc_is_open && !m_Doc_path.IsEmpty() &&
-        m_Doc_path.CompareNoCase(doc_file_name) == 0)
+    if (!m_docPath.IsEmpty() && m_docPath.CompareNoCase(docFileName) == 0)
     {
         CString s;
         s.Format(_T("This file is already open:\n    %s"),
-            doc_file_name.c_str());
+            docFileName.c_str());
         ::MessageBox(NULL, s, _T("Error"), MB_OK |
             MB_ICONEXCLAMATION | MB_TASKMODAL);
         return true;
     }
 
       // if the name does not exist, return
-    if (doc_file_name.IsEmpty())
+    if (docFileName.IsEmpty())
         return false;
 
-      // if there is another document open, close it before proceeding
-    if (m_bDoc_is_open)
-        CloseDoc();
     try
     {
-        m_doc_content.clear();
-        CArchive ar(doc_file_name, CArchive::load);
+        m_docContent.clear();
+        CArchive ar(docFileName, CArchive::load);
         ar >> *this;
     }
     catch (const CException &e)  // catch CException events
@@ -301,28 +219,52 @@ OpenDoc(const CString &doc_file_name)                   /*
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         return false;
     }
-
       // register the open document
-    m_Doc_path = doc_file_name;
-    m_bDoc_is_dirty = false;
-    m_bDoc_is_open = true;
-      // show the file name in the window title
-    TheApp().TheFrame()->SetWindowTitle(m_Doc_path);
-      // record the path in the MRU list
-    TheApp().TheFrame()->TheMRU().AddMRUEntry(m_Doc_path);
-    TheApp().TheFrame()->TheView().SyncScrollBars();
+    m_docPath = docFileName;
     return true;
 }
 
 /*============================================================================*/
+    CString CApp::
+MakeAppDataPath(const CString & subpath)                                /*
+
+        Return a string giving the path APPDATA environmental path, with the
+        given subpath appended.  Create this path if it does not exist. If
+        an error is encountered, throw a user exception.
+*-----------------------------------------------------------------------------*/
+{
+    CString appdata = GetAppDataPath();
+
+    int from, to, next;
+    for (from = 0, to = subpath.GetLength(); from < to; from = ++next)
+    {
+        int nextbk = subpath.Find(_T("\\"), from);
+        int nextfwd = subpath.Find(_T("/"), from);
+        next = MAX(nextbk, nextfwd);
+        if (next < 0)
+            next = to;
+
+        CString add = subpath.Mid(from, next - from);
+        appdata += _T("\\") + add;
+        if ((::CreateDirectory(appdata, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
+        {
+            CString msg = appdata + _T("\nDirectory creation error.");
+            throw CUserException(msg);
+        }
+    }
+    return appdata;
+}
+
+/*============================================================================*/
     void CDoc::
-NewDocument()                               /*
+NewDocument()                                                           /*
 
     For this TimeDemo, develop the ad hoc array of strings that contain the
     results of various tests of the CTime class and Win32++ functions.
 *-----------------------------------------------------------------------------*/
 {
-    m_doc_content.clear();
+    m_docContent.clear();
+    m_docWidth = 0;
     CString s;
     s = _T("  -------------------------------------------------------");
     PushContent(s);
@@ -515,11 +457,11 @@ NewDocument()                               /*
         s.Format(_T("  argv(%d) = %s"), i, args[i].c_str());
         PushContent(s);
     }
-
+    
     PushContent(_T(""));
     s.Format(_T("  -------------------------------------------------------"));
     PushContent(s);
-    s.Format(_T("    C++ Integer data types on this %d-bit machine"),
+    s.Format(_T("    C++ data type sizes for this %d-bit Windows program."),
         8 * sizeof(size_t));
     PushContent(s);
     s.Format(_T("  -------------------------------------------------------"));
@@ -548,17 +490,15 @@ NewDocument()                               /*
     PushContent(s);
     s.Format(_T("  LPTSTR                   %lu bytes"), sizeof(LPTSTR));
     PushContent(s);
+    s.Format(_T("  double                   %lu bytes"), sizeof(double));
+    PushContent(s);
     PushContent(_T(""));
-      // indicate that the initial document has been opened as a new
-      // document, which has been written into, but as yet has no document
-      // file name
-    m_bDoc_is_open = m_bDoc_is_dirty = true;
-    m_Doc_path.Empty();
+    m_docPath.Empty();
 }
 
 /*============================================================================*/
     CTime CDoc::
-GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const       /*
+GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const               /*
 
     Construct a CTime as directed by the formatting CString timestr, whose
     specifications appear below. Any nonconformity between timestr  and
@@ -696,61 +636,25 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const       /*
         CTime t(yyyy, doy, H, M, S, nDST);
         return t;
     }
-
     return CTime(0);
-}
-
-
-/*============================================================================*/
-    void CDoc::
-InitialDocument()                           /*
-
-    Build an array of strings that will display on the screen when the
-    application is opened that introduce the program.
-*-----------------------------------------------------------------------------*/
-{
-    CString bar = _T("  -------------------------------------------------"),
-        blank = _T("");
-    PushContent(bar);
-    PushContent(blank);
-    PushContent(_T("    CTime, CArchive, MRU List, and Flicker-Free Scrolling"));
-    PushContent(_T("        Demonstration Program"));
-    PushContent(blank);
-    PushContent(bar);
-    PushContent(blank);
-    PushContent(_T("  No document is currently loaded. "));
-    PushContent(blank);
-    PushContent(_T("  Generate one by selecting New on the File Menu, or by"));
-    PushContent(_T("     clicking the New Document button on the toolbar."));
-    PushContent(blank);
-    PushContent(_T("  Open a previously saved file by selecting one on the "));
-    PushContent(_T("      Most Recently Used list on the File Menu, or"));
-    PushContent(_T("      by selecting one using Open on the FileMenu, or"));
-    PushContent(_T("      by using the Open Existing File button on the toolbar."));
-    PushContent(blank);
-    PushContent(_T("  Most recently used file is loaded at entry, by default, "));
-    PushContent(_T("      when one exists. "));
-      // indicate that no document is currently open
-    m_bDoc_is_open = m_bDoc_is_dirty = false;
-    m_Doc_path.Empty();
 }
 
 /*============================================================================*/
     void  CDoc::
-PushContent(const CString &s)                               /*
+PushContent(const CString &s)                                            /*
 
     Insert the CString s at the bottom of the document content list  and
     adjust the document maximum width indicator to accommodate s, if
     necessary.
 *-----------------------------------------------------------------------------*/
 {
-    m_doc_content.push_back(s);
-    m_stDoc_width = MAX(m_stDoc_width, s.GetLength());
+    m_docContent.push_back(s);
+    m_docWidth = MAX(m_docWidth, s.GetLength());
 }
 
 /*============================================================================*/
     bool CDoc::
-SaveDoc()                               /*
+SaveDoc()                                                               /*
 
     Save current CString array of the document into the currently named
     source file path. Return true if able to do so, or false otherwise.
@@ -758,27 +662,17 @@ SaveDoc()                               /*
 {
       // if the current document was created as a new document that has
       // not yet been saved, give it a name and then save it.
-    if (m_bDoc_is_open && m_bDoc_is_dirty && m_Doc_path.IsEmpty())
+    if (m_docPath.IsEmpty())
     {
-        if (::MessageBox(NULL, _T("Save this unnamed document?\n"),
-            _T("Question"), MB_YESNO | MB_ICONQUESTION | MB_TASKMODAL |
-            MB_DEFBUTTON1) == IDNO)
-        {
-            m_bDoc_is_dirty = false;
-            return true; // succeeded per user's choice
-        }
-
-        m_Doc_path =
+        m_docPath =
             GetDocSaveFileName(_T("Save the current document as..."));
-          // show the new file name in the window title
-        TheApp().TheFrame()->SetWindowTitle(m_Doc_path);
     }
-    if (m_Doc_path.IsEmpty())
+    if (m_docPath.IsEmpty())
         return false;
 
     try
     {
-        CArchive ar(m_Doc_path, CArchive::store);
+        CArchive ar(m_docPath, CArchive::store);
         ar << *this;
     }
 
@@ -799,18 +693,12 @@ SaveDoc()                               /*
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         return false;
     }
-
-
-      // record the path in the MRU list
-    TheApp().TheFrame()->TheMRU().AddMRUEntry(m_Doc_path);
-      // mark the document in memory as having no unsaved changes
-    m_bDoc_is_dirty = false;
     return true;
 }
 
 /*============================================================================*/
     bool CDoc::
-SaveDocAs(void)                         /*
+SaveDocAs()                                                             /* 
 
     Get a new name for the document file and replace the old one with
     this.  Save the newly named document and retain it as the current
@@ -823,8 +711,7 @@ SaveDocAs(void)                         /*
         return false;
 
       // register the new name and save the document under its new name
-    m_Doc_path = str;
-    m_bDoc_is_dirty = true;
+    m_docPath = str;
     return SaveDoc();
 }
 
@@ -840,12 +727,12 @@ Serialize(CArchive &ar)                                                 /*
 {
         if (ar.IsStoring())
         {     // storing the document
-        UINT n = static_cast<UINT>(m_doc_content.size());
+        UINT n = static_cast<UINT>(m_docContent.size());
           // record the number of records to save
         ar << n;
           // save the records
         for (UINT i = 0; i < n; i++)
-            ar << m_doc_content[i];
+            ar << m_docContent[i];
     }
         else // recovering
         {
@@ -861,4 +748,4 @@ Serialize(CArchive &ar)                                                 /*
         }
     }
 }
-
+/*----------------------------------------------------------------------------*/

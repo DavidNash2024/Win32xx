@@ -41,7 +41,7 @@ void CView::OnDraw(CDC& dc)
                 dc.LineTo(m_points[i].x, m_points[i].y);
             else
                 dc.MoveTo(m_points[i].x, m_points[i].y);
-            
+
             isPenDown = m_points[i].isPenDown;
         }
     }
@@ -92,7 +92,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
         StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), true);
     }
-    
+
     return FinalWindowProc(msg, wparam, lparam);
 }
 

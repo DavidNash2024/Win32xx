@@ -1,30 +1,19 @@
-/* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]                   (View.h) *
+/* (14-Nov-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                   (View.h) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2015, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
+|                         robert.c.tausworthe@ieee.org                         |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CView class for a skeleton
-    SDI application using the Win32++ Windows interface classes,
-    Copyright (c) 2005-2015 David Nash, under permissions granted therein.
+    Contents Description: Declaration of the CView class derived from the 
+    CScrollView base class for this application using the Win32++ Windows 
+    framework, Copyright (c) 2005-2017 David Nash, under permissions granted
+    therein.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and  to the alterations,
-    additions, deletions, and  other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and  any associated documentation composed by
-    the author, to utilize this material, free of charge and  without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
+    The above copyright notice, as well as that of David Nash and Win32++, 
+    together with the respective permissionconditions shall be included in all 
+    copies or substantial portions of this material so copied, modified, merged,
+    published, distributed, or otherwise held by others.
 
     These materials are provided "as is", without warranty of any kind,
     express or implied, including but not limited to: warranties of
@@ -34,89 +23,62 @@
     tort or otherwise, arising from, out of, or in connection with, these
     materials, the use thereof, or any other other dealings therewith.
 
-    Special Conventions:
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-        
-    Acknowledgement:
-    The author would like to thank and acknowledge the advice, critical
-    review, insight, and assistance provided by David Nash in the development
-    of this work.       
-
-********************************************************************************
-
-    Declaration of the CView class
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
-#ifndef SDI_VIEW_H
-#define SDI_VIEW_H
+#ifndef CAPP_VIEW_H
+#define CAPP_VIEW_H
 
-/******************************************************************************/
-
-#include "ScrollBars.h"
 #include "Doc.h"
-
-  // cursor shape alternatives
-enum CursorShape {arrow, cur_wait, help};
 
 /*============================================================================*/
     class
-CView : public CWnd                         /*
+CView   : public CScrollView                                            /*
 
-    The application's view of its currently open document.
+    The application scrolling window serializable class.
 *-----------------------------------------------------------------------------*/
 {
-    public:
-        CView();
-        virtual ~CView();
+public:
+    CView();
+    virtual ~CView(){}
 
-        CDoc&           ThisDoc() { return m_Doc; }
-        virtual void    SaveFontSize();
-        virtual LRESULT ScrollMessages(UINT, WPARAM, LPARAM);
-        virtual void    Serialize(CArchive &ar);
-        virtual CursorShape SetCursorShape(CursorShape);
-        virtual void    SyncScrollBars();
-        
-          // public data members
-        CFont     m_font;         // the font used to display view
-        COLORREF  m_rgbBkColor,   // background color
-        m_rgbBkHiColor,           // background highlight color
-        m_rgbCustomColors[16],    // custom colors defined
-        m_rgbTxColor,             // text foreground color
-        m_rgbTxHiColor;           // text foreground highlight color
+    // Attributes
+    COLORREF  GetBkgndColor() const      { return m_bkgndColor; }
+    COLORREF* GetColorsArray()           { return m_colors; }
+    COLORREF  GetTextColor()  const      { return m_textColor; }
+    CFont     GetTextFont()   const      { return m_font; }
+    void      SetBkgndColor(COLORREF bk) { m_bkgndColor = bk; }
+    void      SetTextFont(CFont font)    { m_font = font; }
+    void      SetTextColor(COLORREF col) { m_textColor = col; }
+    CDoc&     TheDoc()                   { return m_doc; }
 
-        static const CString m_sCompiled_on;  // compilation date
+    // Operations
+    CSize   GetFontSize() const;
+    void    SetAppSize(BOOL keepPos = FALSE);
+    void    SetDefaultFont();
+    void    SetDefaults();
+    void    TextLineOut(CDC&, UINT, UINT, LPCTSTR) const;
 
-    protected:
-        virtual CPoint  GetClientWdHt();
-        virtual int OnCreate(CREATESTRUCT& cs);  
-        virtual void    OnDraw(CDC& pDC);
-        virtual void    OnInitialUpdate();
-        virtual void    Paint(CDC &, RECT);
-        virtual void    PreCreate(CREATESTRUCT& cs);
-        virtual void    PreRegisterClass(WNDCLASS& wc);
-        virtual BOOL    PreTranslateMessage(MSG& Msg);  
-        virtual void    SetDefaultFont();
-        virtual void    TextOutHi(CDC&, RECT, int, const CString &,
-                        int, int);
-        virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
+    // public data members
+    static const CString m_compiledOn;  // compilation date 
 
-          // protected static method
-        static  COLORREF RGBHighlight(COLORREF);
+protected:
+    virtual void    OnDraw(CDC& dc);
+    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    PreCreate(CREATESTRUCT &cs);
+    virtual void    Serialize(CArchive &ar);
+    virtual LRESULT WndProc(UINT msg, WPARAM, LPARAM);
 
-          // protected data members
-        UINT        m_cWd;         // font average width
-        UINT        m_cHt;         // font average height
-        WScrollBars m_sb;          // scroll bars interface
-        CursorShape m_cursor_shape;// view arrow/help/wait
-        HCURSOR     m_hCursor;     // view cursor
-
-    private:
-        CDoc        m_Doc;         // the document object
+private:            
+    // data members
+    COLORREF    m_bkgndColor;   // background color
+    CDoc        m_doc;          // the document       
+    CFont       m_font;         // the font used to display view 
+    COLORREF    m_colors[16];   // custom colors defined
+    COLORREF    m_textColor;    // text foreground color
 };
 /*----------------------------------------------------------------------------*/
-#endif // SDI_VIEW_H
+#endif  //CAPP_VIEW_H

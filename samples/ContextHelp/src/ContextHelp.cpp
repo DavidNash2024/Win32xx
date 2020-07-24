@@ -70,11 +70,11 @@ HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command,
 // Creates the HtmlHelp window, and binds this object to its HWND.
 // hwndCaller: The handle (HWND) of the window calling HtmlHelp, typically ::GetDesktopWindow().
 //              The help window is owned by this window.
-// szString: Depending on the uCommand value, specifies the file path to either a compiled help (.chm) file,
+// string: Depending on the uCommand value, specifies the file path to either a compiled help (.chm) file,
 //            or a topic file within a specified help file.
-// uCommand: Specifies the command to complete, typically HH_DISPLAY_TOPIC.
+// command: Specifies the command to complete, typically HH_DISPLAY_TOPIC.
 //            Refer to the MSDN documentation for possible uCommand values.
-// dsData:   Specifies any data that may be required, based on the value of the uCommand parameter.
+// data:   Specifies any data that may be required, based on the value of the uCommand parameter.
 {
     // Prepare this CWnd for possible re-use
     if (*this != 0) Detach();

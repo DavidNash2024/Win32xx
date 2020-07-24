@@ -149,7 +149,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
         GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), true, m_penColor);
     }
-    
+
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -197,18 +197,18 @@ void CView::PrintPage(CDC& dc, UINT)
     int height = viewRect.Height();
 
     // Acquire the view's bitmap.
-    CMemDC memDC = Draw();
     CBitmap bmView = Draw().DetachBitmap();
 
     // Now we convert the Device Dependent Bitmap(DDB) to a Device
     // Independent Bitmap(DIB) for printing or previewing.
-    
+
     // Create the LPBITMAPINFO from the bitmap.
     CBitmapInfoPtr pbmi(bmView);
     // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
     BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
 
     // Extract the device independent image data.
+    CMemDC memDC(dc);
     memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS);
     std::vector<byte> byteArray(pBIH->biSizeImage, 0);
     byte* pByteArray = &byteArray.front();
@@ -217,7 +217,7 @@ void CView::PrintPage(CDC& dc, UINT)
     // Get the device context of the default or currently chosen printer
     CPrintDialog printDlg;
     CDC printDC = printDlg.GetPrinterDC();
-    
+
     // Determine the scaling factors required to print the bitmap and retain
     // its original aspect ratio.
     CClientDC viewDC(*this);

@@ -548,7 +548,6 @@ void CMyListView::OnAttach()
     SetImageLists();
 
     //Set up the colmns for report mode
-    TCHAR text[256];
     LVCOLUMN lvc;
     ZeroMemory(&lvc, sizeof(LVCOLUMN));
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
@@ -557,15 +556,13 @@ void CMyListView::OnAttach()
 
     for (int i = 0; i < columns; i++)
     {
+        CString str = LoadString(IDS_COLUMN1 + i);
         lvc.iSubItem = i;
-        lvc.pszText = text;
+        lvc.pszText = const_cast<LPTSTR>(str.c_str());
         lvc.cx = colSizes[i];
 
-        if (1 == i) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
+        if (i == 1) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
         else lvc.fmt = LVCFMT_LEFT;     //left-aligned column
-
-        ::LoadString(GetApp()->GetInstanceHandle(), IDS_COLUMN1 + i,
-            text, sizeof(text)/sizeof(text[0]));
 
         InsertColumn(i, lvc);
     }

@@ -122,7 +122,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
         GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), true, m_penColor);
     }
-    
+
     return FinalWindowProc(msg, wparam, lparam);
 }
 

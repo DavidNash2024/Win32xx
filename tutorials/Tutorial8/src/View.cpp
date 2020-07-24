@@ -63,7 +63,7 @@ void CView::OnDraw(CDC& dc)
                 dc.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
             else
                 dc.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
-            
+
             isPenDown = GetAllPoints()[i].isPenDown;
         }
     }
@@ -90,7 +90,7 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 
         DragFinish(hDrop);
     }
-    
+
     return 0;
 }
 
@@ -124,7 +124,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
         GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), true, m_penColor);
     }
-    
+
     return FinalWindowProc(msg, wparam, lparam);
 }
 

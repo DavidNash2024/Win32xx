@@ -190,7 +190,6 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/ScrollBars.cpp" />
 		<Unit filename="../src/ScrollBars.h" />
 		<Unit filename="../src/View.cpp" />
 		<Unit filename="../src/View.h" />

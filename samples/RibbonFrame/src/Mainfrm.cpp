@@ -136,12 +136,12 @@ void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
 void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
      // DropdownColorPicker button pressed
-            
+
     if (ppropvarValue != NULL)
     {
         // Retrieve color type. 
         UINT type = ppropvarValue->uintVal; 
-    
+
         // The Ribbon framework passes color as additional property if the color type is RGB.
         if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != NULL)
         {
@@ -153,7 +153,7 @@ void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
                 m_view.SetPenColor(color);
             }
         }
-    }       
+    }
 }
 
 void CMainFrame::SetPenColor(COLORREF clr)

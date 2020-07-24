@@ -431,7 +431,7 @@ namespace Win32xx
 
     public:
         CDC();                                  // Constructs a new CDC without assigning a HDC
-        CDC(HDC dc, HWND wnd = 0);              // Constructs a new CDC and assigns a HDC
+        explicit CDC(HDC dc, HWND wnd = 0);     // Constructs a new CDC and assigns a HDC
         CDC(const CDC& rhs);                    // Constructs a new copy of the CDC
         virtual ~CDC();
         operator HDC() const { return m_pData->dc; }   // Converts a CDC to a HDC
@@ -819,7 +819,7 @@ namespace Win32xx
     class CClientDC : public CDC
     {
     public:
-        CClientDC(HWND wnd)
+        explicit CClientDC(HWND wnd)
         {
             if (0 == wnd) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
@@ -850,7 +850,7 @@ namespace Win32xx
     class CClientDCEx : public CDC
     {
     public:
-        CClientDCEx(HWND wnd, HRGN hrgnClip, DWORD flags)
+        explicit CClientDCEx(HWND wnd, HRGN hrgnClip, DWORD flags)
         {
             if (0 == wnd) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
@@ -881,7 +881,7 @@ namespace Win32xx
     class CMemDC : public CDC
     {
     public:
-        CMemDC(HDC dc)
+        explicit CMemDC(HDC dc)
         {
             try
             {
@@ -903,7 +903,7 @@ namespace Win32xx
     class CPaintDC : public CDC
     {
     public:
-        CPaintDC(HWND wnd) : m_paint(wnd)
+        explicit CPaintDC(HWND wnd) : m_paint(wnd)
         {
             assert(::IsWindow(wnd));
 
@@ -958,7 +958,7 @@ namespace Win32xx
     class CWindowDC : public CDC
     {
     public:
-        CWindowDC(HWND wnd)
+        explicit CWindowDC(HWND wnd)
         {
             if (0 == wnd) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
@@ -990,7 +990,7 @@ namespace Win32xx
     class CMetaFileDC : public CDC
     {
     public:
-        CMetaFileDC() {}
+        explicit CMetaFileDC() {}
         virtual ~CMetaFileDC()
         {
             if (GetHDC())
@@ -1040,7 +1040,7 @@ namespace Win32xx
     class CEnhMetaFileDC : public CDC
     {
     public:
-        CEnhMetaFileDC() {}
+        explicit CEnhMetaFileDC() {}
         virtual ~CEnhMetaFileDC()
         {
             if (GetHDC())
