@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////
-// Text.h - Declaration of the CViewText, CContainText, 
+// Text.h - Declaration of the CViewText, CContainText,
 //          and CDockText classes
 
 #ifndef TEXT_H

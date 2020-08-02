@@ -107,7 +107,7 @@ STDMETHODIMP CEventSink::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFla
 
 STDMETHODIMP_(ULONG) CEventSink::Release()
 {
-	// Always 1. Automatic deletion isn't required.
+    // Always 1. Automatic deletion isn't required.
     return 1;
 }
 

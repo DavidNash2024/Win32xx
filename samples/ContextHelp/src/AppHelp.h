@@ -14,7 +14,7 @@ class CHelp
 public:
     CHelp();
     ~CHelp() {}
-    
+
     void About(HWND hParent = 0);
     void AddHelpTopic(UINT id, LPCTSTR topic);
     void SetCommandHelpTopics();

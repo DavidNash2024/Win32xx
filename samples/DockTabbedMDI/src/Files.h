@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////
-// Files.h - Declaration of the CViewFiles, CContainFiles 
+// Files.h - Declaration of the CViewFiles, CContainFiles
 //           and CDockFiles classes
 
 #ifndef FILES_H
@@ -27,7 +27,7 @@ private:
 class CContainFiles : public CDockContainer
 {
 public:
-    CContainFiles(); 
+    CContainFiles();
     ~CContainFiles() {}
 
 private:
@@ -38,7 +38,7 @@ private:
 class CDockFiles : public CDocker
 {
 public:
-    CDockFiles(); 
+    CDockFiles();
     virtual ~CDockFiles() {}
 
 private:

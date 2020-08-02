@@ -77,7 +77,7 @@ BOOL CMyDialog::OnInitDialog()
     m_richEdit2.SetWindowText(_T("Rich Edit Window"));
 
     // Initialize dialog resizing
-    m_resizer.Initialize( *this, CRect(0, 0, 300, 200) ); 
+    m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
     m_resizer.AddChild(m_radioA,   topleft, 0);
     m_resizer.AddChild(m_radioB,   topleft, 0);
     m_resizer.AddChild(m_radioC,   topleft, 0);
@@ -87,7 +87,7 @@ BOOL CMyDialog::OnInitDialog()
     m_resizer.AddChild(m_checkC,   bottomright, 0);
     m_resizer.AddChild(m_richEdit1, topright, RD_STRETCH_WIDTH);
     m_resizer.AddChild(m_richEdit2, bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
-    
+
     return TRUE;
 }
 
@@ -134,7 +134,7 @@ BOOL CMyDialog::OnEraseBkgnd(CDC& dc)
 
     // Draw the dialog's background manually
     CRect rc = GetClientRect();
-    CClientDC dcClient(*this);  
+    CClientDC dcClient(*this);
     dcClient.SolidFill(GetSysColor(COLOR_3DFACE), rc);
 
     // draw size grip
@@ -145,7 +145,7 @@ BOOL CMyDialog::OnEraseBkgnd(CDC& dc)
         rc.top = rc.bottom - size;
         dcClient.DrawFrameControl(rc, DFC_SCROLL, DFCS_SCROLLSIZEGRIP);
     }
-    
+
     // Suppress default background drawing
     return TRUE;
 }

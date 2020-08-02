@@ -73,7 +73,7 @@ void CMainFrame::OnInitialUpdate()
     CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
     viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 
-    // Uncomment the following to use a hash bar and disable of auto resizing 
+    // Uncomment the following to use a hash bar and disable of auto resizing
     // m_rightPane.SetDragAutoResize(FALSE);
 }
 
@@ -106,7 +106,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -135,7 +135,7 @@ BOOL CMainFrame::OnViewLargeIcon()
     GetListView().ViewLargeIcons();
     ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
     return TRUE;
-} 
+}
 
 BOOL CMainFrame::OnViewList()
 {
@@ -211,16 +211,16 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_NEW  , FALSE, _T("New") );
     AddToolBarButton( IDM_FILE_OPEN , FALSE, _T("Open") );
     AddToolBarButton( IDM_FILE_SAVE , FALSE, _T("Save") );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_EDIT_CUT  , FALSE, _T("Cut") );
     AddToolBarButton( IDM_EDIT_COPY , FALSE, _T("Copy") );
     AddToolBarButton( IDM_EDIT_PASTE, FALSE, _T("Paste") );
     AddToolBarButton( IDM_FILE_PRINT, FALSE, _T("Print") );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_VIEWMENU,   TRUE,  _T("View"));
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT, TRUE,  _T(" About ") );
 

@@ -16,8 +16,7 @@ void CView::Minimize()
     nid.uID = IDW_MAIN;
     nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     nid.uCallbackMessage = MSG_TRAYICON;
-    nid.hIcon = (HICON) (::LoadImage (GetModuleHandle(NULL), MAKEINTRESOURCE (IDW_MAIN), IMAGE_ICON,
-        ::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
+    nid.hIcon = GetApp()->LoadIcon(IDW_MAIN);
 
     StrCopy(nid.szTip, _T("Tray Demo tooltip"), 128);
 
@@ -46,7 +45,7 @@ int CView::OnCreate(CREATESTRUCT& cs)
     SetIconSmall(IDW_MAIN);
     SetIconLarge(IDW_MAIN);
 
-    SetWindowText(LoadString(IDW_MAIN).c_str());        // Window title
+    SetWindowText(LoadString(IDW_MAIN));        // Window title
 
     TRACE("OnCreate\n");
 
@@ -90,7 +89,7 @@ void CView::OnDraw(CDC& dc)
 void CView::OnFileExit()
 {
     // End the application
-    ::PostQuitMessage(0);
+    Close();
 }
 
 void CView::OnInitialUpdate()
@@ -169,7 +168,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.y = 50;                              // top y
     cs.cx = 400;                            // width
     cs.cy = 300;                            // height
-    cs.hMenu =  LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+    cs.hMenu = m_menu;
 }
 
 void CView::Restore()

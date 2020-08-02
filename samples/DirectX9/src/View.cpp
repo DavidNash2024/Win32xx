@@ -22,7 +22,7 @@ BOOL CDXView::CDXThread::InitInstance()
     CMainFrame& frame = GetDXApp()->GetMainFrame();
     CDXView& dxView = frame.GetDXView();
     CDX& DX = dxView.GetDX();
-    
+
     // assign the m_pDX member variable
     m_pDX = &DX;
 
@@ -53,7 +53,7 @@ int CDXView::CDXThread::MessageLoop()
     }
 
     return LOWORD(msg.wParam);
-} 
+}
 
 /////////////////////////////////////////////////
 // Definitions for the CDXView class
@@ -85,7 +85,7 @@ HRESULT CDXView::CDX::InitD3D( HWND hWnd )
 
     CRect rc = GetClientRect();
 
-    // Set up the structure used to create the D3DDevice    
+    // Set up the structure used to create the D3DDevice
     ZeroMemory( &m_d3dpp, sizeof(m_d3dpp) );
     m_d3dpp.Windowed = TRUE;
     m_d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
@@ -154,7 +154,7 @@ int CDXView::CDX::OnCreate(CREATESTRUCT& cs)
     }
     else
         TRACE("Failed to initialize DirectX\n");
-    
+
     return 0;
 }
 
@@ -168,7 +168,7 @@ LRESULT CDXView::CDX::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     int cx = GET_X_LPARAM(lparam);
     int cy = GET_Y_LPARAM(lparam);
-    
+
     SetWindowPos(NULL, 0, 0, cx, cy, SWP_SHOWWINDOW);
     return FinalWindowProc(msg, wparam, lparam);
 }
@@ -316,7 +316,7 @@ int CDXView::OnCreate(CREATESTRUCT& cs)
 {
     // Create our thread. The thread creates the DX child window when starts
     m_dxThread.CreateThread();
-    
+
     return CWnd::OnCreate(cs);
 }
 

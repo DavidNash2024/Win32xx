@@ -9,12 +9,12 @@
 /////////////////////////////////////////////
 // Definitions for the CButtonDialog class
 //
-CButtonDialog::CButtonDialog(UINT resID) : CDialog(resID) 
+CButtonDialog::CButtonDialog(UINT resID) : CDialog(resID)
 {
     m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
-CButtonDialog::~CButtonDialog() 
+CButtonDialog::~CButtonDialog()
 {
 }
 
@@ -76,7 +76,7 @@ BOOL CButtonDialog::OnCheck3()
 INT_PTR CButtonDialog::OnCtlColorDlg(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set the background color of the dialog
-    if (IsXPThemed()) 
+    if (IsXPThemed())
         return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
     else
         return FinalWindowProc(msg, wparam, lparam);
@@ -85,7 +85,7 @@ INT_PTR CButtonDialog::OnCtlColorDlg(UINT msg, WPARAM wparam, LPARAM lparam)
 INT_PTR CButtonDialog::OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set the background color of static controls
-    if (IsXPThemed()) 
+    if (IsXPThemed())
         return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
     else
         return FinalWindowProc(msg, wparam, lparam);
@@ -107,12 +107,12 @@ BOOL CButtonDialog::OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID)
 /////////////////////////////////////////////
 // Definitions for the CComboBoxDialog class
 //
-CComboBoxDialog::CComboBoxDialog(UINT resID) : CDialog(resID) 
+CComboBoxDialog::CComboBoxDialog(UINT resID) : CDialog(resID)
 {
     m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
-CComboBoxDialog::~CComboBoxDialog() 
+CComboBoxDialog::~CComboBoxDialog()
 {
 }
 
@@ -124,12 +124,12 @@ INT_PTR CComboBoxDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_CTLCOLORDLG:
         if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
         break;
-    
+
     // Set the background color of static controls
     case WM_CTLCOLORSTATIC:
         if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
         break;
-    
+
     }
     // Pass unhandled messages on to parent DialogProc
     return DialogProcDefault(msg, wparam, lparam);
@@ -183,7 +183,7 @@ BOOL CMyDialog::OnInitDialog()
     // Set the Icon
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
-    
+
     AttachItem(IDC_TAB1, m_tab);
 
     m_pButtonDlg = static_cast<CButtonDialog*>(m_tab.AddTabPage(new CButtonDialog(IDD_BUTTONS), _T("Button Dialog")));

@@ -1,7 +1,7 @@
 FastGDI Example
 ===============
 This example demonstrates how to change the colour of a bitmap by manipulating
-the bitmap data directly. This provides a rapid technique for changing the 
+the bitmap data directly. This provides a rapid technique for changing the
 colour in a device context associated with a window. Traditional GDI techniques
 using GetPixel and SetPixel are much slower.
 

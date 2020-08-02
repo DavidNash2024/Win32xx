@@ -210,7 +210,7 @@ void CViewTree::OnAttach()
 
     // Expand some tree-view items
     Expand(htiRoot, TVE_EXPAND);
-    Expand(htiCTreeViewApp, TVE_EXPAND); 
+    Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
 void CViewTree::OnDestroy()

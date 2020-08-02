@@ -1,10 +1,10 @@
 DialogTab Example
 ==================
 This dialog features a Tab control in the main dialog. The tab control
-then displays other simple dialogs. 
-  
+then displays other simple dialogs.
+
 Note that property sheets provide an alternative to dialogs with a tab control.
-Refer to the PropertySheet example for a demonstration of property sheets. 
+Refer to the PropertySheet example for a demonstration of property sheets.
 
 
 Features demonstrated in this example

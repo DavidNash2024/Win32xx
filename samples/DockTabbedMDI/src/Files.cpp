@@ -106,7 +106,7 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
 ///////////////////////////////////////////////
 // CContainFiles functions
-CContainFiles::CContainFiles() 
+CContainFiles::CContainFiles()
 {
     SetTabText(_T("FileView"));
     SetTabIcon(IDI_FILEVIEW);
@@ -116,8 +116,8 @@ CContainFiles::CContainFiles()
 
 /////////////////////////////////////////////////
 //  Definitions for the CDockFiles class
-CDockFiles::CDockFiles() 
-{ 
+CDockFiles::CDockFiles()
+{
     SetView(m_files);
 
     // Set the width of the splitter bar

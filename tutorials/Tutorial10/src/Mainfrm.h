@@ -39,7 +39,7 @@ public:
 
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);    
+    virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

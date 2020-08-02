@@ -18,7 +18,7 @@ public:
     CMainWindow();
     virtual ~CMainWindow() {}
     virtual void AppendText(LPCTSTR text);
-    virtual HWND Create(HWND hParent = 0);
+    virtual HWND Create(HWND parent = 0);
     virtual void OnAllWindowsCreated();
     virtual void OnWindowCreated();
 
@@ -35,10 +35,10 @@ private:
         WM_TESTMESSAGE   = WM_USER+2    // the test message
     };
 
-    std::vector<MyThreadPtr> m_vMyThread;// A vectore of CMyThread smart pointers
+    std::vector<MyThreadPtr> m_threads;// A vectore of CMyThread smart pointers
     int m_maxWindows;                // Number of additional test windows to be created
     int m_windowsCount;              // Count of windows actually created
-    CMyEdit m_editWnd;
+    CMyEdit m_edit;
 };
 
 

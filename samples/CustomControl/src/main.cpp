@@ -17,7 +17,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         // Run the application
         return theApp.Run();
     }
-    
+
     // catch all CException types
     catch (const CException &e)
     {

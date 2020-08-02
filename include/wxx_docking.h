@@ -141,7 +141,7 @@ namespace Win32xx
         // Nested class. This is the Wnd for the window displayed over the client area
         // of the tab control.  The toolbar and view window are child windows of the
         // viewpage window. Only the ViewPage of the parent CDockContainer is displayed.
-        // Its contents are updated with the view window of the active container 
+        // Its contents are updated with the view window of the active container
         // whenever a different tab is selected.
         class CViewPage : public CWnd
         {
@@ -151,7 +151,7 @@ namespace Win32xx
             virtual ~CViewPage() {}
 
             virtual CToolBar& GetToolBar() const    {return m_toolBar;}
-            
+
             CDockContainer* GetContainer() const;
             CWnd* GetTabCtrl() const { return m_pTab; }
             CWnd* GetView() const { return m_pView; }
@@ -180,7 +180,7 @@ namespace Win32xx
     public:
         CDockContainer();
         virtual ~CDockContainer();
-        
+
         void AddContainer(CDockContainer* pContainer, BOOL insert = FALSE, BOOL selecPage = TRUE);
         void AddToolBarButton(UINT id, BOOL isEnabled = TRUE);
         void RecalcLayout();
@@ -414,7 +414,7 @@ namespace Win32xx
 
         };
 
-        // This nested class is draws the a set of dock targets at the centre of 
+        // This nested class is draws the a set of dock targets at the centre of
         // the docker. The dock within docker target is only enabled for a
         // dock container.
         class CTargetCentre : public CTarget
@@ -862,51 +862,51 @@ namespace Win32xx
 
                 // Create and set up our memory DC
                 CRect rc = GetWindowRect();
-                CMemDC dcMem(dc);
+                CMemDC memDC(dc);
                 int rcAdjust = (GetExStyle() & WS_EX_CLIENTEDGE) ? 2 : 0;
                 int Width = MAX(rc.Width() - rcAdjust, 0);
 
                 int Height = m_pDocker->m_ncHeight + rcAdjust;
-                dcMem.CreateCompatibleBitmap(dc, Width, Height);
+                memDC.CreateCompatibleBitmap(dc, Width, Height);
                 m_isOldFocusStored = Focus;
 
                 // Set the font for the title
                 NONCLIENTMETRICS info = GetNonClientMetrics();
-                dcMem.CreateFontIndirect(info.lfStatusFont);
+                memDC.CreateFontIndirect(info.lfStatusFont);
 
                 // Set the Colours
                 if (m_pDocker->GetActiveDocker() == m_pDocker)
                 {
-                    dcMem.SetTextColor(m_foregnd1);
-                    dcMem.CreateSolidBrush(m_backgnd1);
-                    dcMem.SetBkColor(m_backgnd1);
+                    memDC.SetTextColor(m_foregnd1);
+                    memDC.CreateSolidBrush(m_backgnd1);
+                    memDC.SetBkColor(m_backgnd1);
                 }
                 else
                 {
-                    dcMem.SetTextColor(m_foregnd2);
-                    dcMem.CreateSolidBrush(m_backgnd2);
-                    dcMem.SetBkColor(m_backgnd2);
+                    memDC.SetTextColor(m_foregnd2);
+                    memDC.CreateSolidBrush(m_backgnd2);
+                    memDC.SetBkColor(m_backgnd2);
                 }
 
                 // Draw the rectangle
-                dcMem.CreatePen(PS_SOLID, 1, m_penColor);
-                dcMem.Rectangle(rcAdjust, rcAdjust, rc.Width() - rcAdjust, m_pDocker->m_ncHeight + rcAdjust);
+                memDC.CreatePen(PS_SOLID, 1, m_penColor);
+                memDC.Rectangle(rcAdjust, rcAdjust, rc.Width() - rcAdjust, m_pDocker->m_ncHeight + rcAdjust);
 
                 // Display the caption
                 int cx = (m_pDocker->GetDockStyle() & DS_NO_CLOSE) ? 0 : GetSystemMetrics(SM_CXSMICON);
                 CRect rcText(4 + rcAdjust, rcAdjust, rc.Width() - 4 - cx - rcAdjust, m_pDocker->m_ncHeight + rcAdjust);
-                dcMem.DrawText(m_caption, m_caption.GetLength(), rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
+                memDC.DrawText(m_caption, m_caption.GetLength(), rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
 
                 // Draw the close button
                 if (!(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
-                    DrawCloseButton(dcMem, Focus);
+                    DrawCloseButton(memDC, Focus);
 
                 // Draw the 3D border
                 if (GetExStyle() & WS_EX_CLIENTEDGE)
                     Draw3DBorder(rc);
 
                 // Copy the Memory DC to the window's DC
-                dc.BitBlt(rcAdjust, rcAdjust, Width, Height, dcMem, rcAdjust, rcAdjust, SRCCOPY);
+                dc.BitBlt(rcAdjust, rcAdjust, Width, Height, memDC, rcAdjust, rcAdjust, SRCCOPY);
             }
         }
     }
@@ -1587,16 +1587,16 @@ namespace Win32xx
 
             // Save the Dock window's blue tinted bitmap
             CClientDC dcDesktop(NULL);
-            CMemDC dcMem(dcDesktop);
+            CMemDC memDC(dcDesktop);
             CRect rcBitmap = rcHint;
             CRect rcTarget = rcHint;
             pDockTarget->ClientToScreen(rcTarget);
 
             m_bmBlueTint.DeleteObject();
             m_bmBlueTint.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
-            dcMem.SelectObject(m_bmBlueTint);
-            dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
-            m_bmBlueTint = dcMem.DetachBitmap();
+            memDC.SelectObject(m_bmBlueTint);
+            memDC.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
+            m_bmBlueTint = memDC.DetachBitmap();
             m_bmBlueTint.TintBitmap(-64, -24, +128);
 
             // Create the Hint window
@@ -1626,9 +1626,9 @@ namespace Win32xx
     {
         // Display the blue tinted bitmap
         CRect rc = GetClientRect();
-        CMemDC dcMem(dc);
-        dcMem.SelectObject(m_bmBlueTint);
-        dc.BitBlt(0, 0, rc.Width(), rc.Height(), dcMem, 0, 0, SRCCOPY);
+        CMemDC memDC(dc);
+        memDC.SelectObject(m_bmBlueTint);
+        dc.BitBlt(0, 0, rc.Width(), rc.Height(), memDC, 0, 0, SRCCOPY);
     }
 
     inline void CDocker::CDockHint::PreCreate(CREATESTRUCT& cs)
@@ -4843,7 +4843,7 @@ namespace Win32xx
     }
 
 
-    // Called when the window gets keyboard focus. We set the keyboard focus 
+    // Called when the window gets keyboard focus. We set the keyboard focus
     // to the active view window.
     inline LRESULT CDockContainer::OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam)
     {
@@ -5182,7 +5182,7 @@ namespace Win32xx
     // This is the Wnd for the window displayed over the client area
     // of the tab control.  The toolbar and view window are child windows of the
     // viewpage window. Only the ViewPage of the parent CDockContainer is displayed.
-    // Its contents are updated with the view window of the active container 
+    // Its contents are updated with the view window of the active container
     // whenever a different tab is selected.
 
 

@@ -6,7 +6,7 @@
 #include "MyThread.h"
 
 
-CMyThread::CMyThread(int nThread) :  m_TestWnd(nThread), m_nThread(nThread)
+CMyThread::CMyThread(int thread) :  m_testWnd(thread), m_thread(thread)
 {
 }
 
@@ -15,7 +15,7 @@ BOOL CMyThread::InitInstance()
     // This function runs when the thread starts
 
     // Create a test window for this thread
-    m_TestWnd.Create();
+    m_testWnd.Create();
 
     return TRUE;    // return TRUE to run the message loop
 }

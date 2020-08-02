@@ -164,11 +164,11 @@ EXSTYLE WS_EX_CLIENTEDGE
 FONT 10, "Courier New", 0, 0
 BEGIN
       // controls within the client area:
-    CONTROL	   "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |
-                     ES_AUTOHSCROLL | WS_BORDER  | WS_TABSTOP |
-                     ES_WANTRETURN  | WS_VSCROLL | WS_HSCROLL,
-                     10, 10, 310, 210, WS_EX_CLIENTEDGE |
-                     WS_EX_ACCEPTFILES
+    CONTROL         "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |
+                    ES_AUTOHSCROLL | WS_BORDER  | WS_TABSTOP |
+                    ES_WANTRETURN  | WS_VSCROLL | WS_HSCROLL,
+                    10, 10, 310, 210, WS_EX_CLIENTEDGE |
+                    WS_EX_ACCEPTFILES
 END
 
 // AboutBox Dialog
@@ -178,7 +178,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
-    DEFPUSHBUTTON  "OK", IDOK, 80, 80, 40, 15
+    DEFPUSHBUTTON   "OK", IDOK, 80, 80, 40, 15
     CTEXT           "Common Controls Demo", IDC_ABOUT_MSG, 30, 5, 160, 70
     ICON            IDW_MAIN, 0, 5, 5, 20, 20
 END
@@ -282,7 +282,7 @@ STRINGTABLE     // window-related items
 BEGIN
     SC_CLOSE                "Close the Window."
     SC_MAXIMIZE             "Maximize the Window."
-    SC_MINIMIZE             "Minimize the WIndow."
+    SC_MINIMIZE             "Minimize the Window."
     SC_MOVE                 "Move the Window."
     SC_NEXTWINDOW           "Select Next Window."
     SC_PREVWINDOW           "Select Previous Window."

@@ -96,10 +96,10 @@ void CMainWindow::OnAllWindowsCreated()
     PerformanceTest();
 
     // Loop the performance test
-	result = IDYES;
+    result = IDYES;
     while(result == IDYES)
     {
-		result = MessageBox(_T("Run Test Again?"), _T("Ready"), MB_YESNO | MB_ICONEXCLAMATION);
+        result = MessageBox(_T("Run Test Again?"), _T("Ready"), MB_YESNO | MB_ICONEXCLAMATION);
         if (result != IDYES) break;
 
         PerformanceTest();
@@ -124,7 +124,7 @@ void CMainWindow::PerformanceTest()
 
     // Send the messages
     while(messages++ < m_testMessages)
-		result = ::SendMessage(hWnd, WM_TESTMESSAGE, 0, 0);
+        result = ::SendMessage(hWnd, WM_TESTMESSAGE, 0, 0);
 
     // Calculate the time the messages took to send
     DWORD tEnd = ::GetTickCount();

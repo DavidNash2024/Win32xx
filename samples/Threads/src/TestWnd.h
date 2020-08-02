@@ -9,10 +9,10 @@
 class CTestWindow : public CWnd
 {
 public:
-    CTestWindow(int nWindow);
+    CTestWindow(int window);
     virtual ~CTestWindow() {}
 
-    virtual HWND Create(HWND hWndParent = 0);
+    virtual HWND Create(HWND parent = 0);
 
 protected:
     virtual void OnClose();
@@ -26,7 +26,7 @@ private:
         WM_TESTMESSAGE       = WM_USER+2
     };
 
-    int m_nWindow;
+    int m_window;
 };
 
 

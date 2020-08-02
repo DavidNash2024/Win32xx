@@ -1,7 +1,7 @@
 Double Buffer Demo
 ==================
-This sample demonstrates double buffering. Two moving balls are drawn to 
-a memory DC. The second ball drawn is drawn with a mask so it neatly 
+This sample demonstrates double buffering. Two moving balls are drawn to
+a memory DC. The second ball drawn is drawn with a mask so it neatly
 overlaps first ball.
 
 

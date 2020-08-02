@@ -19,13 +19,13 @@ CView::~CView()
 BOOL CView::LoadFileImage(LPCTSTR filename)
 {
     // Only bitmap images (bmp files) can be loaded
-    
+
     m_image.DeleteObject();
     CSize totalSize;
 
     if (filename)
     {
-        if (!m_image.LoadImage(filename, LR_LOADFROMFILE))
+        if (!m_image.LoadImage(filename, LR_LOADFROMFILE | LR_CREATEDIBSECTION))
         {
             CString str("Failed to load file:  ");
             str += filename;
@@ -84,11 +84,14 @@ void CView::PrintPage(CDC& dc, UINT)
         int scaledWidth = int(bmWidth * scaleX);
         int scaledHeight = int(bmHeight * scaleY);
 
-        // Now we extract the Device Independent data from the Device Dependent Bitmap(DDB)
+        // Create the LPBITMAPINFO from the bitmap.
         CBitmapInfoPtr pbmi(m_image);
+        BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
+
+        // Extract the device independent image data.
         CMemDC memDC(viewDC);
-        int imageBytes = (((bmWidth * 32 + 31) & ~31) >> 3) * bmHeight;
-        std::vector<byte> byteArray(imageBytes, 0);
+        memDC.GetDIBits(m_image, 0, bmHeight, NULL, pbmi, DIB_RGB_COLORS);
+        std::vector<byte> byteArray(pBIH->biSizeImage, 0);
         byte* pByteArray = &byteArray.front();
         memDC.GetDIBits(m_image, 0, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 
@@ -125,7 +128,7 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
     try
     {
         file.Open(fileName, OPEN_ALWAYS);
-    
+
        // Create our LPBITMAPINFO object
        CBitmapInfoPtr pbmi(m_image);
 
@@ -205,14 +208,14 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 
         CMainFrame& Frame = GetFrameApp()->GetMainFrame();
 
-        if ( !Frame.LoadFile(fileName) )    
+        if ( !Frame.LoadFile(fileName) )
         {
             TRACE ("Failed to load "); TRACE(fileName); TRACE("\n");
             SetScrollSizes(CSize(0,0));
             Invalidate();
         }
     }
-    
+
     return 0;
 }
 

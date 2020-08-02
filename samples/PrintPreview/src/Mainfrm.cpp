@@ -372,8 +372,7 @@ void CMainFrame::OnInitialUpdate()
     DragAcceptFiles(TRUE);
     SetWindowTitle();
 
-    // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != 0);
+    // Show the toolbar
     ShowToolBar(GetToolBar().IsWindow());
 }
 

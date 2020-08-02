@@ -49,12 +49,11 @@ void CView::PreCreate(CREATESTRUCT& cs)
 
 
 // Called before the window is registered to update the window's WNDCLASS.
+// Here we set the Window class parameters.
+// Preforming this is optional, but doing so allows us to
+// take more precise control over the type of window we create.
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
-    // Here we set the Window class parameters.
-    // Preforming this is optional, but doing so allows us to
-    // take more precise control over the type of window we create.
-
     // Set the Window Class name
     wc.lpszClassName = _T("Win32++ View");
 
@@ -70,12 +69,10 @@ void CView::PreRegisterClass(WNDCLASS& wc)
 
 
 // Prints the specified page to the specified device context.
-// Used when printing and previewing.
+// Here we copy (stretch) a bitmap image of the view window
+// to the printed page.
 void CView::PrintPage(CDC& dc, UINT)
 {
-    // Here we copy (stretch) a bitmap image of the view window
-    // to the printed page.
-
     // Get the device context of the default or currently chosen printer
     CPrintDialog printDlg;
     CDC printDC = printDlg.GetPrinterDC();
@@ -97,8 +94,9 @@ void CView::PrintPage(CDC& dc, UINT)
     CBitmapInfoPtr pbmi(bmView);
 
     // Extract the device independent image data.
-    int imageBytes = (((cxView * 32 + 31) & ~31) >> 3) * cyView;
-    std::vector<byte> byteArray(imageBytes, 0);
+    BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
+    memDC.GetDIBits(bmView, 0, cyView, NULL, pbmi, DIB_RGB_COLORS);
+    std::vector<byte> byteArray(pBIH->biSizeImage, 0);
     byte* pByteArray = &byteArray.front();
     memDC.GetDIBits(bmView, 0, cyView, pByteArray, pbmi, DIB_RGB_COLORS);
 

@@ -31,12 +31,12 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    BOOL    m_isUrlVisited;
-    BOOL    m_isClicked;
+    BOOL     m_isUrlVisited;
+    BOOL     m_isClicked;
     COLORREF m_visitedColor;
     COLORREF m_notVisitedColor;
-    HCURSOR m_hCursor;
-    CFont   m_urlFont;
+    HCURSOR  m_hCursor;
+    CFont    m_urlFont;
 };
 
 #endif // HYPERLINK_H

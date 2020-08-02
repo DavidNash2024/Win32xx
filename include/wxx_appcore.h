@@ -68,7 +68,7 @@ namespace Win32xx
     {
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning ( push )
-#pragma warning ( disable : 28125 )       // call within __try __catch block. 
+#pragma warning ( disable : 28125 )       // call within __try __catch block.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
         ::InitializeCriticalSection(&m_cs);
@@ -287,7 +287,7 @@ namespace Win32xx
         while (status != 0)
         {
             // While idle, perform idle processing until OnIdle returns FALSE
-            while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) != FALSE  )
+            while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) != FALSE)
                 ++lCount;
 
             lCount = 0;
@@ -405,7 +405,7 @@ namespace Win32xx
     // When the thread starts, it runs this function.
     inline UINT WINAPI CWinThread::StaticThreadProc(LPVOID pCThread)
     {
-        // Get the pointer for this CMyThread object
+        // Get the pointer for this CWinThread object
         CWinThread* pThread = static_cast<CWinThread*>(pCThread);
         assert(pThread);
 
@@ -802,7 +802,7 @@ namespace Win32xx
     // is specified, much like strcpy_s. The dst buffer is always null terminated.
     // Null or zero arguments cause an assert.
 
-    // Copies an ANSI string from src to dst. 
+    // Copies an ANSI string from src to dst.
     inline void StrCopyA(char* dst, const char* src, size_t dst_size)
     {
         assert(dst != 0);

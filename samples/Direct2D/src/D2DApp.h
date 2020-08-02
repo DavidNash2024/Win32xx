@@ -20,7 +20,7 @@ private:
     HRESULT CreateDeviceIndependentResources();
 
     CD2DView m_view;
-    ID2D1Factory* m_pDirect2dFactory;       
+    ID2D1Factory* m_pDirect2dFactory;
 };
 
 inline ID2D1Factory* GetD2DFactory()
@@ -31,5 +31,3 @@ inline ID2D1Factory* GetD2DFactory()
 
 #endif //  _D2DAPP_H_
 
-
-    

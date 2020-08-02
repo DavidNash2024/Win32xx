@@ -6,7 +6,7 @@ within the dialog are attached to CWnd objects using AttachDlgItem.
 
 Also, refer to the FormDemo example for demonstration of additional features
 such as saving the dialog's state in the registry.
-  
+
 
 Features demonstrated in this example
 =====================================
@@ -14,5 +14,5 @@ Features demonstrated in this example
 * The use of AttachItem to attach a dialog control to a CWnd.
 * The handling of messages in a button control.
 * Using a static control as a hyperlink.
-* Use of OnMessageReflect to handle notifications in the object that 
+* Use of OnMessageReflect to handle notifications in the object that
    generated them.

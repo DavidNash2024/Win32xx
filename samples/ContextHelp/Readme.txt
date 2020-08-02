@@ -1,6 +1,6 @@
 ContextHelpDemo Example
 =======================
-This program has a frame window which includes a Tool Bar and 
+This program has a frame window which includes a Tool Bar and
 Status Bar. A modeless dialog is used as the view window of our frame.
 
 Context help topics are initiated using the F1 key, the Shift-F1 key, the
@@ -14,13 +14,13 @@ opened in a window and displays the chosen topic.
 
 Instructions
 ============
-When the program is first run, it copies the ContextHelp.chm file from the 
+When the program is first run, it copies the ContextHelp.chm file from the
 help folder to the %AppData%\Win32++\ContextHelp folder. Alternatively, run
 the Install.bat file located in the Setup folder to copy the ContextHelp.chm
 file there.
 
 The program will also find and use the ContextHelp.chm file if it is located
-in the same folder as the program's executable. 
+in the same folder as the program's executable.
 
 
 Features demonstrated in this example
@@ -40,10 +40,10 @@ Features demonstrated in this example
 
 About Dialogs
 =============
-Dialogs are easy to create, provided we have access to a resource 
+Dialogs are easy to create, provided we have access to a resource
 editor to build the resource script file for us (often called
 resource.rc). Commercial compilers usually include a resource editor
-for this purpose, but free compilers generally don't. For a free 
+for this purpose, but free compilers generally don't. For a free
 resource editor, try resedit from here: http://www.resedit.net/.
 
 

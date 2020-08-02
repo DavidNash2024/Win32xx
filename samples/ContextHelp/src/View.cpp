@@ -25,10 +25,10 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     m_resizer.HandleMessage(msg, wparam, lparam);
 
-//  switch (msg)                                                           
-//  {                                                                       
+//  switch (msg)
+//  {
 //      Add case statements for each message to be handled here
-//  }               
+//  }
 
     // Pass unhandled messages on to parent DialogProc
     return DialogProcDefault(msg, wparam, lparam);
@@ -74,8 +74,8 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
     case ID_RADIO_A:
     case ID_RADIO_B:    // intentionally blank
     case ID_RADIO_C:    return OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
-    } 
-  
+    }
+
     return FALSE;
 }
 
@@ -100,13 +100,13 @@ BOOL CView::OnInitDialog()
     AttachItem(IDC_GROUP1,  m_group);
     AttachItem(IDC_STATUS,  m_status);
     AttachItem(IDC_BITMAP1, m_picture);
-    
+
     // Put some text in the edit boxes
     SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
     SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
 
     // Put some text in the list box
-    for (int i = 0 ; i < 8 ; i++) 
+    for (int i = 0 ; i < 8 ; i++)
     {
         m_listBox.AddString(_T("List Box"));
     }
@@ -123,7 +123,7 @@ BOOL CView::OnInitDialog()
 
     UINT curRadio = GetDoc().GetRadio();
     OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, curRadio);
-    
+
     // Initialize dialog resizing
     m_resizer.Initialize( *this, CRect(0, 0, 300, 270) );
     m_resizer.AddChild(m_radioA,   topleft, 0);
@@ -193,6 +193,6 @@ BOOL CView::OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID)
     GetDoc().SetRadio(clickedID);
     SetDlgItemText(IDC_STATUS, _T("Radio changed"));
     TRACE("Radio changed\n");
-    
+
     return TRUE;
 }

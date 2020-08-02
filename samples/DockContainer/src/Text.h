@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////
-// Text.h - Declaration of the CViewText, CContainText, 
+// Text.h - Declaration of the CViewText, CContainText,
 //          and CDockText classes
 
 #ifndef TEXT_H
@@ -14,8 +14,8 @@ public:
     virtual ~CViewText();
 
 protected:
-    virtual void PreCreate(CREATESTRUCT& cs); 
-    virtual void OnAttach(); 
+    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void OnAttach();
 
 };
 

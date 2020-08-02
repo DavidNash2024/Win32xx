@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////
-// Text.cpp -  Definitions for the CViewText, 
+// Text.cpp -  Definitions for the CViewText,
 //              and CDockText classes
 
 #include "stdafx.h"
@@ -24,20 +24,20 @@ void CViewText::OnAttach()
 
 void CViewText::PreCreate(CREATESTRUCT& cs)
 {
-    cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
+    cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
                 WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
 }
 
 
 //////////////////////////////////////////////
 //  Definitions for the CContainText class
-CContainText::CContainText() 
+CContainText::CContainText()
 {
     SetDockCaption(_T("Text View - Docking container"));
     SetTabText(_T("Text"));
     SetTabIcon(IDI_TEXT);
     SetView(m_viewText);
-} 
+}
 
 
 //////////////////////////////////////////////

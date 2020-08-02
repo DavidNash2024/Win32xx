@@ -56,7 +56,7 @@ void CHelp::SetClientHelpTopics()
 {
     // define the help topic for the dialog's client area
     AddHelpTopic(IDD_DIALOG1,       _T("clientwindowcontrols"));
-    
+
     // define the help topics for the client area controls
     AddHelpTopic(IDC_RICHEDIT1,     _T("RichEditBoxUsage"));
     AddHelpTopic(IDC_EDIT1,         _T("EditBoxUsage"));

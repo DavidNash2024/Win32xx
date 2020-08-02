@@ -39,7 +39,7 @@ Features demonstrated in this example
   placement), as well as perhaps some document status data. The frame's 
   persistent data is  stored in the path named 
 
-	<app_data_path>\win32++\CommonDialogs.arc
+    <app_data_path>\win32++\CommonDialogs.arc
 
   where <the app_data_path> is found using the Win32++ GetAppDataPath() 
   function.  

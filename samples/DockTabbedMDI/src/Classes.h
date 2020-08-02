@@ -17,7 +17,7 @@ public:
     CViewClasses();
     virtual ~CViewClasses();
     virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR text, int image);
-    
+
 protected:
     virtual void OnAttach();
     virtual void OnDestroy();
@@ -26,7 +26,7 @@ protected:
 
 private:
     CImageList m_normalImages;
-    
+
 };
 
 // Declaration of the CContainClasses class
@@ -50,7 +50,7 @@ private:
 class CDockClasses : public CDocker
 {
 public:
-    CDockClasses(); 
+    CDockClasses();
     virtual ~CDockClasses() {}
 
 private:

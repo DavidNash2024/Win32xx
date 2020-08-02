@@ -49,7 +49,7 @@ public:
     void SetMDITabsAtTop(BOOL atTop);
 
 
-    
+
 protected:
     virtual CDocker* NewDockerFromID(int dockID);
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);

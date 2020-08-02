@@ -18,5 +18,3 @@ void CMyCombo::PreCreate(CREATESTRUCT& cs)
     cs.hMenu = (HMENU)IDC_COMBOBOXEX;
 }
 
-
-

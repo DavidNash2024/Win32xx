@@ -32,19 +32,19 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Menu
 //
 
-IDW_MAIN MENU 
+IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
         MENUITEM "New...",                      IDM_FILE_NEW
         MENUITEM "&Open...",                    IDM_FILE_OPEN
         MENUITEM "&Save",                       IDM_FILE_SAVE
-        MENUITEM "Save &As...",                  IDM_FILE_SAVEAS  
+        MENUITEM "Save &As...",                  IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
         MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1
         MENUITEM SEPARATOR
         MENUITEM "Print Preview",               IDM_FILE_PREVIEW
-        MENUITEM "&Print",                      IDM_FILE_PRINT      
+        MENUITEM "&Print",                      IDM_FILE_PRINT
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
@@ -87,7 +87,7 @@ IDB_TOOLBAR_BIG          BITMAP                  "../src/res/Toolbar24.bmp"
 //
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
@@ -98,16 +98,16 @@ BEGIN
 END
 
 IDD_DIALOG1 DIALOGEX 0, 0, 291, 134
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | 
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION |
     WS_SYSMENU
 CAPTION "Colour Adjustment Dialog"
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
-    CONTROL         "",IDC_SLIDER_RED,"msctls_trackbar32",TBS_TOP | 
+    CONTROL         "",IDC_SLIDER_RED,"msctls_trackbar32",TBS_TOP |
                     TBS_NOTICKS | WS_TABSTOP,180,35,80,15
-    CONTROL         "",IDC_SLIDER_GREEN,"msctls_trackbar32",TBS_TOP | 
+    CONTROL         "",IDC_SLIDER_GREEN,"msctls_trackbar32",TBS_TOP |
                     TBS_NOTICKS | WS_TABSTOP,180,53,80,15
-    CONTROL         "",IDC_SLIDER_BLUE,"msctls_trackbar32",TBS_TOP | 
+    CONTROL         "",IDC_SLIDER_BLUE,"msctls_trackbar32",TBS_TOP |
                     TBS_NOTICKS | WS_TABSTOP,180,71,80,15
     CONTROL         "",IDC_PREVIEW,"Static",SS_BLACKFRAME,7,7,155,120,
                     WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE
@@ -118,7 +118,7 @@ BEGIN
     EDITTEXT        IDC_EDIT_RED,264,36,22,12,ES_AUTOHSCROLL
     LTEXT           "G:",IDC_STATIC,171,56,8,11
     LTEXT           "B:",IDC_STATIC,171,74,8,11
-    CONTROL         "GreyScale",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "GreyScale",IDC_CHECK1,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,198,93,48,10
     EDITTEXT        IDC_EDIT_GREEN,264,54,22,12,ES_AUTOHSCROLL
     EDITTEXT        IDC_EDIT_BLUE,264,72,22,12,ES_AUTOHSCROLL
@@ -130,7 +130,7 @@ END
 // Accelerator
 //
 
-IDW_MAIN ACCELERATORS 
+IDW_MAIN ACCELERATORS
 BEGIN
     "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
     "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
@@ -148,12 +148,12 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""windows.h""\r\n"
@@ -161,7 +161,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"
@@ -174,7 +174,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDW_MAIN                "Fast GDI Demo"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
@@ -194,28 +194,28 @@ BEGIN
     IDW_PREVIEWCLOSE         "Close"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
     IDM_FILE_SAVE           "Save the Document"
     IDM_FILE_SAVEAS         "Save the Document with a new name"
-    IDM_FILE_PREVIEW         "Preview the print job before printing"    
+    IDM_FILE_PREVIEW         "Preview the print job before printing"
     IDM_FILE_PRINT          "Print the Document"
     IDM_FILE_EXIT           "End the Program"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_IMAGE_ADJUST        "Adjust the colour of the image"
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
-    SC_MINIMIZE             "Minimize the WIndow"
+    SC_MINIMIZE             "Minimize the Window"
     SC_MOVE                 "Move the Window"
     SC_NEXTWINDOW           "Select Next Window"
     SC_PREVWINDOW           "Select Previous Window"
@@ -223,7 +223,7 @@ BEGIN
     SC_SIZE                 "Resize the Window"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDW_FILE_MRU_FILE1      "Open this document"
     IDW_FILE_MRU_FILE2      "Open this document"

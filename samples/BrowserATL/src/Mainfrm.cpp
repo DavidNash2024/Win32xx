@@ -140,7 +140,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -149,7 +149,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
-   
+
     // Call the base function
     return CFrame::OnCreate(cs);
 }
@@ -260,7 +260,7 @@ void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
     // Place any additional startup code here.
-    
+
     // Suppress Java script errors.
     GetBrowser()->put_Silent(VARIANT_TRUE);
 
@@ -359,7 +359,7 @@ BOOL CMainFrame::OnPrint()
     ZeroMemory(&vFootStr, sizeof(vFootStr));
     ZeroMemory(&vArg, sizeof(vArg));
 
-    try 
+    try
     {
         // Initialize header and footer parameters to send to ExecWB().
         psabBounds[0].lLbound = 0;
@@ -376,14 +376,14 @@ BOOL CMainFrame::OnPrint()
         vHeadStr.bstrVal = SysAllocString(L"This is my header string.");
         if (vHeadStr.bstrVal == NULL)
             throw std::bad_alloc();
-        
+
         rgIndices = 0;
         if (SUCCEEDED(SafeArrayPutElement(psaHeadFoot, &rgIndices, static_cast<void*>(&vHeadStr))))
         {
             // Argument 2: Footer
             vFootStr.vt = VT_BSTR;
             vFootStr.bstrVal = SysAllocString(L"This is my footer string.");
-            if (vFootStr.bstrVal == NULL) 
+            if (vFootStr.bstrVal == NULL)
                 throw std::bad_alloc();
 
             rgIndices = 1;
@@ -403,7 +403,7 @@ BOOL CMainFrame::OnPrint()
     }
     catch (...)
     {
-        if (psaHeadFoot) 
+        if (psaHeadFoot)
             SafeArrayDestroy(psaHeadFoot);
     }
 

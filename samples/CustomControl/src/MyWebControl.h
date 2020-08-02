@@ -4,7 +4,7 @@
 
 class CWebControl : public CWebBrowser
 {
-public: 
+public:
     CWebControl();
 
 protected:

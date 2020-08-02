@@ -9,6 +9,6 @@ Features demonstrated in this tutorial
 * How to fully implement the handling of menu and toolbar input.
 * How to load and save files.
 * How to support drag and drop.
-* How to manage the application's data in a CDoc class. 
+* How to manage the application's data in a CDoc class.
 
 

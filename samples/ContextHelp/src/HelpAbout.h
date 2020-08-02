@@ -11,7 +11,7 @@ public:
     const CString& GetCredits() const   { return m_credits; }
     void SetCredits(LPCTSTR credits)  { m_credits = credits; }
 
-protected:  
+protected:
     virtual BOOL    OnInitDialog();
 
 private:

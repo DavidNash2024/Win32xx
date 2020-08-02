@@ -32,7 +32,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Menu
 //
 
-IDW_MAIN MENU 
+IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -102,7 +102,7 @@ IDW_SPLITV              CURSOR                  "../src/res/SplitV.cur"
 //
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
@@ -118,7 +118,7 @@ END
 // Accelerator
 //
 
-IDW_MAIN ACCELERATORS 
+IDW_MAIN ACCELERATORS
 BEGIN
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
@@ -138,12 +138,12 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""windows.h""\r\n"
@@ -151,7 +151,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"
@@ -165,7 +165,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDW_MAIN                "Dock Container Demo"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
@@ -176,7 +176,7 @@ BEGIN
     IDW_READY               "Ready"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
@@ -188,7 +188,7 @@ BEGIN
     IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
@@ -197,17 +197,17 @@ BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_DOCK_DEFAULT        "Restore default dock layout"
     IDM_DOCK_CLOSEALL       "Close all docked and undocked windows"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
-    SC_MINIMIZE             "Minimize the WIndow"
+    SC_MINIMIZE             "Minimize the Window"
     SC_MOVE                 "Move the Window"
     SC_NEXTWINDOW           "Select Next Window"
     SC_PREVWINDOW           "Select Previous Window"

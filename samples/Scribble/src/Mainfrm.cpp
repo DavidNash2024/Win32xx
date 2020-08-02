@@ -317,7 +317,6 @@ void CMainFrame::OnInitialUpdate()
         GetDoc().FileOpen(args[1]);
     }
 
-    ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(GetToolBar().IsWindow());
 }
 

@@ -1,6 +1,6 @@
 DLL Example
 ===========
-This project demonstrates how to run Win32++ from inside a DLL. 
+This project demonstrates how to run Win32++ from inside a DLL.
 The MakeDLL project creates the DLL which exports one function called ShowDialog.
 The TestDLL project creates a program which uses the DLL to display the dialog.
 

@@ -59,8 +59,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM /*lparam*/)
     // Respond to the accelerator key
     case IDW_QUIT:
         SendMessage(WM_CLOSE, 0L, 0L);
-        return TRUE; 
-    } 
+        return TRUE;
+    }
 
     return FALSE;
 }
@@ -78,7 +78,7 @@ void CMainFrame::OnDraw(CDC& dc)
                 dc.LineTo(m_points[i].x, m_points[i].y);
             else
                 dc.MoveTo(m_points[i].x, m_points[i].y);
-            
+
             isPenDown = m_points[i].isPenDown;
         }
     }
@@ -111,7 +111,7 @@ LRESULT CMainFrame::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     ReleaseCapture();
 
     StorePoint(LOWORD(lparam), HIWORD(lparam), false);
-    
+
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -121,7 +121,7 @@ LRESULT CMainFrame::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 
     // hold down the left mouse button and move mouse to draw lines.
     if (wparam & MK_LBUTTON)
-    {   
+    {
         TCHAR str[80];
         ::wsprintf(str, TEXT("Draw Point:  %hd, %hd\n"), LOWORD(lparam), HIWORD(lparam));
         TRACE(str);

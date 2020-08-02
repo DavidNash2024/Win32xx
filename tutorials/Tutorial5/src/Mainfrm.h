@@ -26,7 +26,7 @@ public:
 
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-	virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual int  OnCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

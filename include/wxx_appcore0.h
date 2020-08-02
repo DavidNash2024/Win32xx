@@ -219,7 +219,7 @@ using namespace Win32xx;
 
 namespace Win32xx
 {
-    
+
     // Messages used for exceptions.
     LPCTSTR const g_msgAppThreadFailed = _T("Failed to create thread");
     LPCTSTR const g_msgAppInstanceFailed = _T("Only one instance of CWinApp is permitted");
@@ -433,7 +433,7 @@ namespace Win32xx
     class CCriticalSection
     {
     public:
-        CCriticalSection(); 
+        CCriticalSection();
         ~CCriticalSection();
 
         void Lock();
@@ -485,7 +485,7 @@ namespace Win32xx
         operator HGLOBAL() const        { return m_hGlobal; }
 
     private:
-        CHGlobal(const CHGlobal&);              // Disable copy 
+        CHGlobal(const CHGlobal&);              // Disable copy
         CHGlobal& operator = (const CHGlobal&); // Disable assignment
 
         HGLOBAL m_hGlobal;

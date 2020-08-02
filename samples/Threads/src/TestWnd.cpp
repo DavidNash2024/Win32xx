@@ -7,25 +7,25 @@
 #include "ThreadApp.h"
 
 
-CTestWindow::CTestWindow(int nWindow) : m_nWindow(nWindow)
+CTestWindow::CTestWindow(int window) : m_window(window)
 {
 }
 
-HWND CTestWindow::Create(HWND hParent)
+HWND CTestWindow::Create(HWND parent)
 {
-    UNREFERENCED_PARAMETER(hParent);
+    UNREFERENCED_PARAMETER(parent);
 
     CString Title;
-    Title.Format( _T("Test Window %d"), m_nWindow );
+    Title.Format( _T("Test Window %d"), m_window );
     return CreateEx(0, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-        380 + 20*m_nWindow, 40 + 20*m_nWindow, 300, 200, NULL, NULL);
+        380 + 20*m_window, 40 + 20*m_window, 300, 200, NULL, NULL);
 }
 
 void CTestWindow::OnClose()
 {
     CMainWindow& MainWnd = GetThreadApp()->GetMainWnd();
     CString str;
-    str.Format( _T("Closing test Window %d"), m_nWindow );
+    str.Format( _T("Closing test Window %d"), m_window );
     MainWnd.AppendText(str);
 
     CWnd::OnClose();

@@ -13,9 +13,9 @@
 
 // Add tcout (a TCHAR version of cout)
 #ifdef UNICODE
-	std::wostream& tcout = std::wcout;
+    std::wostream& tcout = std::wcout;
 #else
-	std::ostream&  tcout = std::cout;
+    std::ostream&  tcout = std::cout;
 #endif
 
 

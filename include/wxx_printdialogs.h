@@ -83,7 +83,7 @@
 // NOTE: Use the following to retrieve the printer's device context
 // for the default or currently selected printer:
 //     CPrintDialog printDialog;
-//     CDC printerDC = printDialog.GetDefaults(); 
+//     CDC printerDC = printDialog.GetDefaults();
 //
 
 #ifndef _WIN32XX_PRINTDIALOGS_H_
@@ -506,7 +506,7 @@ namespace Win32xx
 
         // Ensure only one print dialog is running at a time.
         CThreadLock lock(GetApp()->m_printLock);
-                                
+
         // Update the default printer
         GetApp()->UpdateDefaultPrinter();
 
@@ -831,7 +831,7 @@ namespace Win32xx
     {
         assert(GetApp());      // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
-        
+
         // Ensure only one page-setup dialog is running at a time.
         CThreadLock lock(GetApp()->m_printLock);
 

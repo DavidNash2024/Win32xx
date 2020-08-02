@@ -13,7 +13,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnDraw(CDC& dc);   
+    virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };

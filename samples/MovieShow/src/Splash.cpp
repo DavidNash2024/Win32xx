@@ -15,7 +15,7 @@ CSplash::~CSplash()
 // Called during window creation.
 int CSplash::OnCreate(CREATESTRUCT&)
 {
-    m_hIcon = (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, 256, 256, LR_DEFAULTCOLOR | LR_SHARED | LR_DEFAULTSIZE);
+    m_hIcon = (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, 256, 256, LR_SHARED);
     CenterWindow();
     return 0;
 }

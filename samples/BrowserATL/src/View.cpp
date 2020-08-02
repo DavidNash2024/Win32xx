@@ -9,7 +9,7 @@
 #include "DispatchSink.h"
 
 
-CView::CView() : m_pInetExplorer(NULL), m_pSourceUnk(0), m_pSinkUnk(0), 
+CView::CView() : m_pInetExplorer(NULL), m_pSourceUnk(0), m_pSinkUnk(0),
                  m_adviseCookie(0)
 {
     // Initialise OLE
@@ -56,7 +56,7 @@ int CView::OnCreate(CREATESTRUCT& cs)
         // Set the IWebBrowser2 pointer.
         m_pSourceUnk->QueryInterface (IID_IWebBrowser2, (LPVOID *) &m_pInetExplorer);
 
-        // Create sink object using CDispatchSink. 
+        // Create sink object using CDispatchSink.
         CComObject<CDispatchSink> *pSinkClass = NULL;
         hr = CComObject<CDispatchSink>::CreateInstance (&pSinkClass);
         if (SUCCEEDED(hr))

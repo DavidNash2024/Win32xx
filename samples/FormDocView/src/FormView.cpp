@@ -146,7 +146,7 @@ BOOL CFormView::OnInitDialog()
 
 void CFormView::OnOK()
 {
-	// Suppress closing the dialog when the return key is pressed.
+    // Suppress closing the dialog when the return key is pressed.
     SetDlgItemText(IDC_STATUS, _T("OK Button Pressed."));
     TRACE("OK Button Pressed.\n");
 }

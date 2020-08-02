@@ -15,13 +15,13 @@ public:
     virtual HWND Create(HWND hParent);
 
     CDoc& GetDoc();
-    
+
     BOOL OnButton();
     BOOL OnCheckA();
     BOOL OnCheckB();
     BOOL OnCheckC();
     BOOL OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID);
-    
+
 protected:
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnCancel();
@@ -52,8 +52,8 @@ private:
     class CMyStatus : public CStatic {};
     class COK : public CButton {};
     class CGroup : public CWnd {};
-    
-    CRadioA     m_radioA; 
+
+    CRadioA     m_radioA;
     CRadioB     m_radioB;
     CRadioC     m_radioC;
     CCheckA     m_checkA;

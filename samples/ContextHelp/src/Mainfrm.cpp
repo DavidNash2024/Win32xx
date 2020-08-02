@@ -115,7 +115,7 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
         ::CreateDirectory(app_data_path, 0);
 
         if ((::CreateDirectory(app_data_path, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
-        { 
+        {
             CString msg = app_data_path + _T("\nDirectory creation error.");
             throw CUserException(msg);
         }
@@ -232,7 +232,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar

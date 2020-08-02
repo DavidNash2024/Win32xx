@@ -14,7 +14,7 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_isHideSingleTab(TRUE), 
+CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_isHideSingleTab(TRUE),
                             m_isMDITabsAtTop(TRUE), m_pActiveDocker(NULL)
 {
     // Constructor for CMainFrame. Its called after CFrame's constructor
@@ -198,7 +198,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -230,7 +230,7 @@ BOOL CMainFrame::OnDefaultLayout()
 
 LRESULT CMainFrame::OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called when a docker is activated.
-// Store the active docker in preparation for menu input. Excludes active 
+// Store the active docker in preparation for menu input. Excludes active
 // docker change for undocked dockers when using the menu.
 {
     CPoint pt = GetCursorPos();
@@ -358,7 +358,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     {
         // Get the pointer to the active view
         CWnd* pView = m_pActiveDocker->GetActiveView();
-    
+
         // Enable the Edit menu items for CViewText views, disable them otherwise
         CMenu editMenu = GetFrameMenu().GetSubMenu(1);
         UINT flags = (dynamic_cast<CViewText*>(pView))? MF_ENABLED : MF_GRAYED;
@@ -466,7 +466,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)
 //  {
-//  
+//
 //  }
 
     // Always pass unhandled messages on to WndProcDefault

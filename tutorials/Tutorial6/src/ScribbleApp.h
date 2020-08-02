@@ -10,7 +10,7 @@
 #include "Mainfrm.h"
 
 
-// A class that inherits from CWinApp. 
+// A class that inherits from CWinApp.
 // It is used to run the application's message loop.
 class CScribbleApp : public CWinApp
 {

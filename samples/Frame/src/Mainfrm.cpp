@@ -5,13 +5,11 @@
 #include "mainfrm.h"
 #include "resource.h"
 
-const CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");   // rct
-
 // Definitions for the CMainFrame class
+
+// Constructor for CMainFrame. Its called after CFrame's constructor
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     //Set m_View as the view window of the frame
     SetView(m_view);
 
@@ -51,11 +49,9 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
 
 // OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default. 
     // Use the following functions to disable options.
@@ -85,8 +81,7 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
-    // Show the menu and toolbar (if we use them).
-    ShowMenu(GetFrameMenu() != 0);
+    // Show the toolbar.
     ShowToolBar(GetToolBar().IsWindow());
 
     TRACE("Frame created\n");
@@ -96,10 +91,10 @@ void CMainFrame::OnInitialUpdate()
 // Create the File Open dialog to choose the file to load.
 void CMainFrame::OnFileOpen()
 {
-    CString ext =  ".cpp";                                             // rct
-    CFileDialog fileDlg(TRUE, ext, 0,  OFN_LONGNAMES |                  // rct
-	    OFN_PATHMUSTEXIST  | OFN_HIDEREADONLY | OFN_SHOWHELP |      // rct
-            OFN_EXPLORER | OFN_ENABLESIZING, filter);                   // rct
+    CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");
+    CFileDialog fileDlg(TRUE);    // TRUE for file open
+    fileDlg.SetFilter(filter);
+    fileDlg.SetDefExt(_T(".cpp"));
 
     // Bring up the file open dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)
@@ -112,8 +107,11 @@ void CMainFrame::OnFileOpen()
 // Create the File Save dialog to choose the file to save.
 void CMainFrame::OnFileSave()
 {
-    CFileDialog fileDlg(FALSE);
-    
+    CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");
+    CFileDialog fileDlg(FALSE);    // FALSE for file save
+    fileDlg.SetFilter(filter);
+    fileDlg.SetDefExt(_T(".cpp"));
+
     // Bring up the file save dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)
     {
@@ -161,7 +159,6 @@ void CMainFrame::OnFilePreview()
         ShowMenu(GetFrameMenu() != 0);
         ShowToolBar(GetToolBar().IsWindow());
     }
-
 }
 
 
@@ -247,13 +244,11 @@ void CMainFrame::OnPreviewSetup()
 }
 
 
-// Called before window creation to update the window's CREATESTRUCT
+// This function is called before the frame is created.
+// It provides an opportunity to modify the various CREATESTRUCT
+// parameters used in the frame window's creation.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // This function is called before the frame is created.
-    // It provides an opportunity to modify the various CREATESTRUCT
-    // parameters used in the frame window's creation.
-
     // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
     // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
 

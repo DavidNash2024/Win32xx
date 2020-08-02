@@ -18,7 +18,7 @@ CCustomControlApp::~CCustomControlApp()
 BOOL CCustomControlApp::InitInstance()
 {
     //Display the Modal Dialog
-    m_myDialog.DoModal();   // throws a CWinException on failure  
+    m_myDialog.DoModal();   // throws a CWinException on failure
 
     return TRUE;
 }

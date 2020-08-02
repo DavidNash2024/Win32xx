@@ -21,7 +21,7 @@ public:
     CMyListView& GetListView() const {return static_cast<CMyListView&>(m_rightPane.GetView());}
     CMyTreeView& GetTreeView() const {return static_cast<CMyTreeView&>(m_pLeftPane->GetView());}
     BOOL GetShowHidden() {return m_showHidden;}
-    BOOL OnFileExit();  
+    BOOL OnFileExit();
     BOOL OnViewLargeIcon();
     BOOL OnViewList();
     BOOL OnViewReport();

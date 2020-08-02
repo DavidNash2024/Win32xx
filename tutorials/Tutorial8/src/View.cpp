@@ -36,8 +36,8 @@ CDoc& CView::GetDoc()
 
 // Retrieve the PlotPoint data.
 std::vector<PlotPoint>& CView::GetAllPoints()
-{ 
-    return GetDoc().GetAllPoints(); 
+{
+    return GetDoc().GetAllPoints();
 }
 
 

@@ -43,7 +43,7 @@ void CHyperlink::OnLButtonUp(LPARAM lparam)
         pt.x = LOWORD(lparam);
         pt.y = HIWORD(lparam);
         ClientToScreen(pt);
-        CRect rc = GetWindowRect(); 
+        CRect rc = GetWindowRect();
 
         if (rc.PtInRect(pt)) OpenUrl();
     }
@@ -81,9 +81,9 @@ LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 
 LRESULT CHyperlink::OnSetCursor()
 {
-    // Must use ::SetCursor here. CStatic::SetCursor does not do the same thing. 
+    // Must use ::SetCursor here. CStatic::SetCursor does not do the same thing.
     ::SetCursor(m_hCursor);
-    
+
     return 1;  // Non-zero return prevents default processing
 }
 
@@ -93,7 +93,7 @@ LRESULT CHyperlink::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case WM_LBUTTONDOWN:  OnLButtonDown();      break;
     case WM_LBUTTONUP:    OnLButtonUp(lparam);  break;
-    case WM_SETCURSOR:    return OnSetCursor(); 
+    case WM_SETCURSOR:    return OnSetCursor();
     case WM_NCHITTEST:    return HTCLIENT;      // Claim that the mouse is in a client area
     }
 

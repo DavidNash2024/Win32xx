@@ -29,7 +29,7 @@ public:
     BOOL OnDockDefault();
     BOOL OnFileExit();
     BOOL OnHideSingleTab();
-    
+
 protected:
     virtual CDocker* NewDockerFromID(int id);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);

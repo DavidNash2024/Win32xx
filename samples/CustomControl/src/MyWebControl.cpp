@@ -10,22 +10,23 @@ CWebControl::CWebControl()
     WNDCLASS wc;
     ZeroMemory(&wc, sizeof(wc));
 
-    if (!::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc))
+    HINSTANCE instance = GetApp()->GetInstanceHandle();
+    if (!::GetClassInfo(instance, className, &wc))
     {
         wc.lpszClassName = className;
         wc.lpfnWndProc = ::DefWindowProc;
-        wc.hInstance = GetApp()->GetInstanceHandle();
+        wc.hInstance = instance;
         ::RegisterClass(&wc);
     }
 
-    assert (::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc));
+    assert (::GetClassInfo(instance, className, &wc));
 }
 
 void CWebControl::OnInitialUpdate()
 {
     // Suppress Java script errors.
     GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
-    
+
     // Load web page.
     Navigate(_T("www.google.com"));
 }

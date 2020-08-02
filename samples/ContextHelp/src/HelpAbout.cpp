@@ -4,7 +4,7 @@
 #include "resource.h"
 
 
-CAboutHelp::CAboutHelp() : CDialog(IDW_ABOUT) 
+CAboutHelp::CAboutHelp() : CDialog(IDW_ABOUT)
 {
     m_credits = _T("Use the SetCredits function to specify this dialog's text");
 }

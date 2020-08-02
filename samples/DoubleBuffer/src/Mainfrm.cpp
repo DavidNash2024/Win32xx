@@ -52,7 +52,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // SetUseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -121,7 +121,7 @@ BOOL CMainFrame::OnFilePrint()
 
     // Retrieve the printer DC
     PrintDlg( &pd );
-    
+
     // TODO:
     // Add your own code here. Refer to the tutorial for additional information
 
@@ -145,13 +145,13 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     // This function is called before the frame is created.
     // It provides an opportunity to modify the various CREATESTRUCT
     // parameters used in the frame window's creation.
-    
+
     // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
     // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
-    
+
     // Call base clase to set defaults
     CFrame::PreCreate(cs);
-    
+
     // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
 
@@ -161,15 +161,15 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
-    
+
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
-    
+
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_FILE_PRINT );
-    
+
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 }

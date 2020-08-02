@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////
-// Output.h - Declaration of the CViewOutput, CContainOutput, 
+// Output.h - Declaration of the CViewOutput, CContainOutput,
 //          and CDockOutput classes
 
 #ifndef OUTPUT_H
@@ -16,7 +16,7 @@ public:
     virtual ~CViewOutput();
 
 protected:
-    virtual void OnAttach(); 
+    virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
 
 };
@@ -25,13 +25,13 @@ protected:
 class CContainOutput : public CDockContainer
 {
 public:
-    CContainOutput() 
+    CContainOutput()
     {
-        SetView(m_viewOutput); 
+        SetView(m_viewOutput);
         SetDockCaption (_T("Output View - Docking container"));
         SetTabText(_T("Output"));
         SetTabIcon(IDI_TEXT);
-    } 
+    }
     ~CContainOutput() {}
 
 private:

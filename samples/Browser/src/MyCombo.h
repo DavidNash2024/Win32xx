@@ -10,7 +10,7 @@ class CMyCombo : public CComboBoxEx
 public:
     CMyCombo() {}
     virtual ~CMyCombo() {}
-    const CEdit* GetCBEdit() const { return &m_edit; } 
+    const CEdit* GetCBEdit() const { return &m_edit; }
 
 protected:
     virtual void OnAttach();

@@ -289,24 +289,24 @@ namespace Win32xx
         if (m_totalSize != CSize(0, 0))
         {
             CPaintDC dc(*this);
-            CMemDC dcMem(dc);
+            CMemDC memDC(dc);
 
             // negative sizes are not allowed.
             assert(m_totalSize.cx > 0);
             assert(m_totalSize.cy > 0);
 
             // Create the compatible bitmap for the memory DC
-            dcMem.CreateCompatibleBitmap(GetDC(), m_totalSize.cx, m_totalSize.cy);
+            memDC.CreateCompatibleBitmap(GetDC(), m_totalSize.cx, m_totalSize.cy);
 
             // Set the background color
             CRect rcTotal(CPoint(0, 0), m_totalSize);
-            dcMem.FillRect(rcTotal, m_bkgndBrush);
+            memDC.FillRect(rcTotal, m_bkgndBrush);
 
             // Call the overridden OnDraw function
-            OnDraw(dcMem);
+            OnDraw(memDC);
 
             // Copy the modified memory DC to the window's DC with scrolling offsets
-            dc.BitBlt(0, 0, m_totalSize.cx, m_totalSize.cy, dcMem, m_currentPos.x, m_currentPos.y, SRCCOPY);
+            dc.BitBlt(0, 0, m_totalSize.cx, m_totalSize.cy, memDC, m_currentPos.x, m_currentPos.y, SRCCOPY);
 
             // Set the area outside the scrolling area
             FillOutsideRect(dc, m_bkgndBrush);
@@ -327,12 +327,12 @@ namespace Win32xx
 
         int WheelDelta = GET_WHEEL_DELTA_WPARAM(wparam);
         int cyPos = ::MulDiv(WheelDelta, m_lineSize.cy, WHEEL_DELTA);
-        CPoint newPos = GetScrollPosition();   
+        CPoint newPos = GetScrollPosition();
         newPos.y -= cyPos;
 
         int maxPosY = m_totalSize.cy - GetClientRect().Height();
         newPos.y = MAX(0, MIN(newPos.y, maxPosY));
-        
+
         // Scroll the window.
         int deltaY = newPos.y - m_currentPos.y;
         ScrollWindowEx(0, -deltaY, NULL, NULL, NULL, NULL, SW_INVALIDATE);
@@ -484,10 +484,10 @@ namespace Win32xx
     // Updates the display state of the scrollbars and the scrollbar positions.
     // Also scrolls display view as required by window resizing.
     // Note: This function can be called recursively.
-    
+
     // Acknowledgement:
     // A special thanks to Robert C. Tausworthe for his contribution to the
-    // scrollbar logic used here.   
+    // scrollbar logic used here.
     {
         if (IsWindow())
         {
@@ -514,12 +514,12 @@ namespace Win32xx
                 si.cbSize = sizeof(si);
                 si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
                 si.nMin = 0;
-                
+
                 bool isHBAlwaysOn = (totalRect.Width() > viewRect.Width());         // Horizontal Bar always on
                 bool isVBAlwaysOn = (totalRect.Height() > viewRect.Height());       // Vertical Bar always on
 
                 // Horizontal Bars are always shown if the total width is greater than the window's width.
-                // They are also shown if the vertical bar is shown, and the total width is greater than 
+                // They are also shown if the vertical bar is shown, and the total width is greater than
                 // the client width. Client width = window width - scrollbar width.
                 if (isHBAlwaysOn || ((totalRect.Width() > clientRect.Width()) && isVBAlwaysOn))
                 {
@@ -536,7 +536,7 @@ namespace Win32xx
                 }
 
                 // Vertical Bars are always shown if the total height is greater than the window's height.
-                // They are also shown if the horizontal bar is shown, and the total height is greater than 
+                // They are also shown if the horizontal bar is shown, and the total height is greater than
                 // the client height. Client height = window height - scrollbar width.
                 if (isVBAlwaysOn || ((totalRect.Height() > clientRect.Height()) && isHBAlwaysOn))
                 {

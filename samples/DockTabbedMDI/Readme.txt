@@ -2,22 +2,22 @@ DockTabbedMDI Example
 =====================
 This example demonstrates tabbed MDIs in addition to "container" docking.
 
-Dock containers are a specialised view window for dockers.  They are a tab 
-control which provide support for tab undocking, and "container within container 
-docking" where docking the container adds a tab to the container. 
+Dock containers are a specialised view window for dockers.  They are a tab
+control which provide support for tab undocking, and "container within container
+docking" where docking the container adds a tab to the container.
 Dock containers have their own "view window". They also provide an optional
 toolbar.
 
-The dock containers are the view window for dockers, allowing them to be 
+The dock containers are the view window for dockers, allowing them to be
 undocked and docked as required.
 
-A TabbedMDI is a specialised view window which provides support for a tabbed 
-MDI (Multiple Document Interface). It uses a tab control to display the MDI 
+A TabbedMDI is a specialised view window which provides support for a tabbed
+MDI (Multiple Document Interface). It uses a tab control to display the MDI
 children, and also provides optional close and list buttons. The tabs can be
-display either at the top or bottom of the window. 
+display either at the top or bottom of the window.
 
-Classes titled CDockXXXX are inherited from CDocker. 
-Classes titled CContainerXXXX are inherited from CDockContainer. 
+Classes titled CDockXXXX are inherited from CDocker.
+Classes titled CContainerXXXX are inherited from CDockContainer.
 Classes titled CViewXXXX are the various view windows inherited from CWnd.
 The CMyTabbedMDI class is inherited from CTabbedMDI.
 

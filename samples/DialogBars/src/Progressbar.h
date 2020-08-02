@@ -11,7 +11,7 @@ class CMyProgressBar : public CProgressBar
 public:
     CMyProgressBar() {}
     virtual ~CMyProgressBar() {}
-    
+
     void SetProgress(int nPos);
 };
 
