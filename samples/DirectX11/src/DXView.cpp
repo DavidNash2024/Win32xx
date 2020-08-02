@@ -12,8 +12,8 @@ HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szS
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 
@@ -22,7 +22,7 @@ HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szS
 #endif
 
     ID3DBlob* pErrorBlob = nullptr;
-    hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel, 
+    hr = D3DCompileFromFile(szFileName, nullptr, nullptr, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, ppBlobOut, &pErrorBlob);
     if (FAILED(hr))
     {
@@ -43,9 +43,9 @@ HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szS
 //--------------------------------------------------------------------------------------
 CDXView::CDXView()
 {
-	ZeroMemory(&m_world, sizeof(m_world));
-	ZeroMemory(&m_view, sizeof(m_view));
-	ZeroMemory(&m_projection, sizeof(m_projection));
+    ZeroMemory(&m_world, sizeof(m_world));
+    ZeroMemory(&m_view, sizeof(m_view));
+    ZeroMemory(&m_projection, sizeof(m_projection));
 }
 
 //--------------------------------------------------------------------------------------
@@ -245,7 +245,7 @@ HRESULT CDXView::InitDevice()
     // Create the vertex shader
     hr = m_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_pVertexShader);
     if (FAILED(hr))
-    {   
+    {
         pVSBlob->Release();
         return hr;
     }
@@ -394,7 +394,7 @@ int CDXView::OnCreate(CREATESTRUCT& cs)
     if (FAILED(InitDevice()))
     {
         MessageBox(_T("DirectX Failed to Initialize"), _T("Error"), MB_OK);
-        
+
         // Window creation failed
         return -1;
     }

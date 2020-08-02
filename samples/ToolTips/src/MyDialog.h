@@ -41,14 +41,14 @@ private:
     BOOL OnCheck1();
     BOOL OnCheck2();
     BOOL OnCheck3();
-    BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
+    BOOL OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID);
 
     CRichEdit m_richEdit;
     CEdit m_edit;
     CBalloonToolTip m_bubbleTT;
     CToolTip m_toolTip;
     CString m_str;
-    HICON m_hInfo;      // Icon used by tooltips for the RichEdit and Edit controls
+    HICON m_info;      // Icon used by tooltips for the RichEdit and Edit controls
 };
 
 #endif //MYDIALOG_H

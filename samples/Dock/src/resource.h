@@ -50,7 +50,7 @@
 #define IDM_DOCK_CLOSEALL               168
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1

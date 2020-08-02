@@ -57,7 +57,7 @@ class CDXView : public CWnd
         LPDIRECT3DVERTEXBUFFER9 m_pVB;      // Buffer to hold vertices
         D3DPRESENT_PARAMETERS m_d3dpp;
     };
-    
+
     // CDXThread nested class within CDXView
     class CDXThread : public CWinThread
     {

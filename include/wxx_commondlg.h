@@ -95,10 +95,10 @@ namespace Win32xx
 
         // static callback
         static INT_PTR CALLBACK CDHookProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
-        
+
     private:
         CCommonDialog(const CCommonDialog&);              // Disable copy construction
-        CCommonDialog& operator = (const CCommonDialog&); // Disable assignment operator        
+        CCommonDialog& operator = (const CCommonDialog&); // Disable assignment operator
     };
 
 
@@ -345,7 +345,7 @@ namespace Win32xx
         return pCommonDlg->DialogProc(msg, wparam, lparam);
     }
 
-    
+
     /////////////////////////////////////////
     // Definitions for the CColorDialog class
     //
@@ -606,7 +606,7 @@ namespace Win32xx
 
     // Display either a FileOpen or FileSave dialog, and allow the user to
     // select various options. An exception is thrown if the dialog isn't created.
-    // If the OFN_ALLOWMULTISELECT flag is used, the size of the buffer required 
+    // If the OFN_ALLOWMULTISELECT flag is used, the size of the buffer required
     // to hold the file names can be quite large. An exception is thrown if the
     // buffer size specified by m_OFN.nMaxFile turns out to be too small.
     // Use SetParamaters to set a larger size if required.

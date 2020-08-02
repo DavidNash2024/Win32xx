@@ -28,7 +28,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-    
+
     void AddComboBoxBand(int height);
     void ConnectEvents();
     void DisconnectEvents();

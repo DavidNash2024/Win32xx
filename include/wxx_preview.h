@@ -414,7 +414,7 @@ namespace Win32xx
         return TRUE;
     }
 
-    
+
     // Called in response to the Print Setup button.
     // Sends a UWM_PRINTSETUP message to the owner.
     template <typename T>

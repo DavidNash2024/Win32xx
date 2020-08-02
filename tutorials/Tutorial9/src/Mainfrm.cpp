@@ -70,7 +70,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -225,16 +225,16 @@ void CMainFrame::OnPenColor()
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
-    
+
     CColorDialog colorDlg;
     colorDlg.SetCustomColors(custColors);
-    
+
     // Initialize the Choose Color dialog
     if (colorDlg.DoModal(*this) == IDOK)
     {
         // Store the custom colors in the static array
         memcpy(custColors, colorDlg.GetCustomColors(), 16*sizeof(COLORREF));
-        
+
         // Retrieve the chosen color
         m_view.SetPenColor(colorDlg.GetColor());
     }
@@ -257,10 +257,10 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_PEN_COLOR );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-    
+
     // Note: By default a single bitmap with a resource ID of IDW_MAIN and
-    //       a color mask of RGB(192,192,192) is used for the ToolBar. 
-    //       The color mask is a color used for transparency.   
+    //       a color mask of RGB(192,192,192) is used for the ToolBar.
+    //       The color mask is a color used for transparency.
 }
 
 

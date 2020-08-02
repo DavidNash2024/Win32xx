@@ -27,7 +27,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 //  }
 
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam); 
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
@@ -42,7 +42,7 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDC_CHECK2:    return OnCheck2();
     case IDC_CHECK3:    return OnCheck3();
 
-    case IDC_RADIO1:    
+    case IDC_RADIO1:
     case IDC_RADIO2:    // intentionally blank
     case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
     }
@@ -76,7 +76,7 @@ BOOL CMyDialog::OnInitDialog()
 
     // Turn our static control into a hyperlink
     AttachItem(IDC_STATIC4, m_hyperlink);
-    
+
     // Attach the rich edit control to m_RichEdit
     AttachItem(IDC_RICHEDIT1, m_richEdit);
 

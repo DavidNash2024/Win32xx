@@ -274,7 +274,7 @@ namespace Win32xx
     // functions are called when the Create function is used. Override PreRegisterClass
     // to register a new window class for the window, otherwise a default window class is used.
     // Override PreCreate to specify the CREATESTRUCT parameters, otherwise default parameters
-    // are used. A failure to create a window throws an exception. 
+    // are used. A failure to create a window throws an exception.
     // A failure to create a window throws an exception.
     inline HWND CWnd::Create(HWND parent /* = 0 */)
     {
@@ -468,11 +468,11 @@ namespace Win32xx
         // Any dialog or window using DDX/DDV for its controls should
         // override of this member, and put calls to the DDX and DDV functions
         // there.  For example:
-        
+
         // connect to edit box holding int and specify limits.
         // dx.DDX_Text(IDC_EDIT_UINT,       m_iUINT);
-        // dx.DDV_MinMaxUInt(               m_iUINT, 10, 10000);        
-          
+        // dx.DDV_MinMaxUInt(               m_iUINT, 10, 10000);
+
         // connect to edit box holding double and specify limits.
         // dx.DDX_Text(IDC_EDIT_DOUBLE,     m_double);
         // dx.DDV_MinMaxDouble(             m_double, -10.0, 100000.);
@@ -514,7 +514,7 @@ namespace Win32xx
     }
 
     // Retrieves the pointer to the CWnd associated with the specified HWND.
-    // Returns NULL if a CWnd object doesn't already exist for this HWND. 
+    // Returns NULL if a CWnd object doesn't already exist for this HWND.
     inline CWnd* CWnd::GetCWndPtr(HWND wnd)
     {
         assert( GetApp() );
@@ -957,21 +957,22 @@ namespace Win32xx
         assert( GetApp() );
         assert(IsWindow());
 
+        // Large icon sizes
         int cxIcon = ::GetSystemMetrics(SM_CXICON);
         int cyIcon = ::GetSystemMetrics(SM_CYICON);
 
 #ifndef _WIN32_WCE
-        HICON hIconLarge = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
+        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 #else
-        HICON hIconLarge = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, 0));
+        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, 0));
 #endif
 
-        if (hIconLarge != 0)
-            SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (hIconLarge));
+        if (icon != 0)
+            SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (icon));
         else
             TRACE("**WARNING** SetIconLarge Failed\n");
 
-        return hIconLarge;
+        return icon;
     }
 
     // Sets the small icon associated with the window.
@@ -980,21 +981,22 @@ namespace Win32xx
         assert( GetApp() );
         assert(IsWindow());
 
-        int cxSmallIcon = ::GetSystemMetrics(SM_CXSMICON);
-        int cySmallIcon = ::GetSystemMetrics(SM_CYSMICON);
+        // Small icon sizes
+        int cxIcon = ::GetSystemMetrics(SM_CXSMICON);
+        int cyIcon = ::GetSystemMetrics(SM_CYSMICON);
 
 #ifndef _WIN32_WCE
-        HICON hIconSmall = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxSmallIcon, cySmallIcon, LR_SHARED));
+        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 #else
-        HICON hIconSmall = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxSmallIcon, cySmallIcon, 0));
+        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, 0));
 #endif
 
-        if (hIconSmall != 0)
-            SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (hIconSmall));
+        if (icon != 0)
+            SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (icon));
         else
             TRACE("**WARNING** SetIconSmall Failed\n");
 
-        return hIconSmall;
+        return icon;
     }
 
     // All CWnd windows direct their messages here. This function redirects the message
@@ -1322,7 +1324,7 @@ namespace Win32xx
     inline HDWP CWnd::DeferWindowPos(HDWP winPosInfo, HWND insertAfter, const RECT& rect, UINT flags) const
     {
         assert(IsWindow());
-        return ::DeferWindowPos(winPosInfo, *this, insertAfter, rect.left, 
+        return ::DeferWindowPos(winPosInfo, *this, insertAfter, rect.left,
             rect.top, rect.right - rect.left, rect.bottom - rect.top, flags);
     }
 
@@ -1354,7 +1356,7 @@ namespace Win32xx
     }
 
     // The EndPaint function marks the end of painting in the specified window.
-    // This function is required for each call to the BeginPaint function, 
+    // This function is required for each call to the BeginPaint function,
     // but only after painting is complete.
     // Refer to EndPaint in the Windows API documentation for more information.
     inline BOOL CWnd::EndPaint(PAINTSTRUCT& ps) const
@@ -1669,9 +1671,9 @@ namespace Win32xx
     // The IsDlgButtonChecked function determines whether a button control has a check mark next to it
     // or whether a three-state button control is grayed, checked, or neither.
     //
-    // The return value from a button created with the BS_AUTOCHECKBOX, BS_AUTORADIOBUTTON, BS_AUTO3STATE, 
+    // The return value from a button created with the BS_AUTOCHECKBOX, BS_AUTORADIOBUTTON, BS_AUTO3STATE,
     // BS_CHECKBOX, BS_RADIOBUTTON, or BS_3STATE style can be one of the following:
-    // BST_CHECKED Button is checked. 
+    // BST_CHECKED Button is checked.
     // BST_INDETERMINATE Button is grayed, indicating an indeterminate state (applies only if the button
     //      has the BS_3STATE or BS_AUTO3STATE style).
     // BST_UNCHECKED Button is cleared.
@@ -2771,7 +2773,7 @@ namespace Win32xx
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)
   #pragma warning ( push )
   #pragma warning ( disable : 4996 )        // GetVersion declared deprecated.
-  #pragma warning ( disable : 28159 )       // Deprecated function. Consider using IsWindows instead. 
+  #pragma warning ( disable : 28159 )       // Deprecated function. Consider using IsWindows instead.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
         DWORD version = GetVersion();

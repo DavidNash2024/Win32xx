@@ -8,11 +8,9 @@
 
 // Definitions for the CMainFrame class
 
-// Constructor
+// Constructor for CMainFrame. Its called after CFrame's constructor
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     // Set m_View as the view window of the frame
     SetView(m_view);
 
@@ -54,11 +52,9 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
 
 // OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default. 
     // Use the following functions to disable options.
@@ -91,11 +87,9 @@ void CMainFrame::OnFileExit()
 
 
 // Called after the frame is created.
+// Place any additional startup code here.
 void CMainFrame::OnInitialUpdate()
 {
-    // The frame is now created.
-    // Place any additional startup code here.
-
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(GetToolBar().IsWindow());
@@ -104,33 +98,35 @@ void CMainFrame::OnInitialUpdate()
 }
 
 
-// Bring up the file open dialog to choose a file.
+// Create the File Open dialog to choose the file to load.
 void CMainFrame::OnFileOpen()
 {
-    CFileDialog fileDlg(TRUE);
+    CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");
+    CFileDialog fileDlg(TRUE);    // TRUE for file open
+    fileDlg.SetFilter(filter);
+    fileDlg.SetDefExt(_T(".cpp"));
 
     // Bring up the file open dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)
     {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
+        GetDoc().FileLoad(fileDlg.GetPathName());
     }
-
 }
 
 
-// Save the file.
+// Create the File Save dialog to choose the file to save.
 void CMainFrame::OnFileSave()
 {
-    CFileDialog fileDlg(FALSE);
+    CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");
+    CFileDialog fileDlg(FALSE);    // FALSE for file save
+    fileDlg.SetFilter(filter);
+    fileDlg.SetDefExt(_T(".cpp"));
 
     // Bring up the file save dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)
     {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
+        GetDoc().FileStore(fileDlg.GetPathName());
     }
-
 }
 
 

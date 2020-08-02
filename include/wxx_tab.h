@@ -1098,9 +1098,9 @@ namespace Win32xx
 
         // Create the memory DC and bitmap
         CClientDC dcView(*this);
-        CMemDC dcMem(dcView);
+        CMemDC memDC(dcView);
         CRect rcClient = GetClientRect();
-        dcMem.CreateCompatibleBitmap(dcView, rcClient.Width(), rcClient.Height());
+        memDC.CreateCompatibleBitmap(dcView, rcClient.Width(), rcClient.Height());
 
         if (GetItemCount() == 0)
         {
@@ -1128,17 +1128,17 @@ namespace Win32xx
         rgnClip.CombineRgn(rgnSrc1, rgnSrc2, RGN_DIFF);
 
         // Use the region in the memory DC to paint the grey background
-        dcMem.SelectClipRgn(rgnClip);
-        dcMem.CreateSolidBrush( GetSysColor(COLOR_BTNFACE) );
-        dcMem.PaintRgn(rgnClip);
+        memDC.SelectClipRgn(rgnClip);
+        memDC.CreateSolidBrush( GetSysColor(COLOR_BTNFACE) );
+        memDC.PaintRgn(rgnClip);
 
         // Draw the tab buttons on the memory DC:
-        DrawTabs(dcMem);
+        DrawTabs(memDC);
 
         // Draw buttons and tab borders
-        DrawCloseButton(dcMem);
-        DrawListButton(dcMem);
-        DrawTabBorders(dcMem, rcTab);
+        DrawCloseButton(memDC);
+        DrawListButton(memDC);
+        DrawTabBorders(memDC, rcTab);
 
         // Now copy our from our memory DC to the window DC
         dcView.SelectClipRgn(rgnClip);
@@ -1146,11 +1146,11 @@ namespace Win32xx
         if (RTL)
         {
             // BitBlt offset bitmap copies by one for Right-To-Left layout
-            dcView.BitBlt(0, 0, 1, rcClient.Height(), dcMem, 1, 0, SRCCOPY);
-            dcView.BitBlt(1, 0, rcClient.Width(), rcClient.Height(), dcMem, 1, 0, SRCCOPY);
+            dcView.BitBlt(0, 0, 1, rcClient.Height(), memDC, 1, 0, SRCCOPY);
+            dcView.BitBlt(1, 0, rcClient.Width(), rcClient.Height(), memDC, 1, 0, SRCCOPY);
         }
         else
-            dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
+            dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), memDC, 0, 0, SRCCOPY);
     }
 
     // Set the window style before it is created.
@@ -1303,15 +1303,15 @@ namespace Win32xx
         m_tabFont = font;
         int heightGap = 5;
         SetTabHeight( MAX(20, GetTextHeight() + heightGap) );
-        
+
         // Set the font used without owner draw.
         SetFont(font);
     }
 
     // Sets the height of the tabs.
     inline void CTab::SetTabHeight(int height)
-    { 
-        m_tabHeight = height; 
+    {
+        m_tabHeight = height;
         NotifyChanged();
         RecalcLayout();
     }

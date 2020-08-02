@@ -27,7 +27,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case WM_TIMER:  
+    case WM_TIMER:
         if (wparam == ID_TIMER)
         {
             // Update the time displayed every second
@@ -52,13 +52,13 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     {
     case IDC_BUTTONSET:
         {
-            SYSTEMTIME month = m_monthCal.GetCurSel();      
+            SYSTEMTIME month = m_monthCal.GetCurSel();
             SYSTEMTIME all   = m_dateTime.GetTime();
-            
+
             all.wDay = month.wDay;
             all.wMonth = month.wMonth;
             all.wYear = month.wYear;
-        
+
             if (!SetLocalTime(&all))
             {
                 MessageBox(_T("Failed to set the time\nRun app as Administrator"), _T("Set Time Failed"), MB_OK);
@@ -100,7 +100,7 @@ LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
     switch (((LPNMHDR)lparam)->code)
     {
     case DTN_DATETIMECHANGE:
-        // Stop the timer when the DataeTime's time is changed  
+        // Stop the timer when the DataeTime's time is changed
         KillTimer(ID_TIMER);
         break;
     case NM_KILLFOCUS:

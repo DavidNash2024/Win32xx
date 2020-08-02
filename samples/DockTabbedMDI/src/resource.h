@@ -51,7 +51,7 @@
 #define IDM_CONTAINER_TOP               146
 #define IDM_TABBEDMDI_TOP               147
 #define IDM_HIDE_SINGLE_TAB             148
-#define IDM_DEFAULT_LAYOUT              149      
+#define IDM_DEFAULT_LAYOUT              149
 #define IDM_CLOSE_DOCKERS               150
 #define IDM_CLOSE_MDIS                  151
 
@@ -75,7 +75,7 @@
 #define IDB_BITMAP1                     184
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1

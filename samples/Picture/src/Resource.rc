@@ -41,8 +41,6 @@ BEGIN
         MENUITEM "&Save",                       IDM_FILE_SAVE
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
-        MENUITEM "&Print",                      IDM_FILE_PRINT
-        MENUITEM SEPARATOR
         MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -183,7 +181,7 @@ STRINGTABLE
 BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
-    SC_MINIMIZE             "Minimize the WIndow"
+    SC_MINIMIZE             "Minimize the Window"
     SC_MOVE                 "Move the Window"
     SC_NEXTWINDOW           "Select Next Window"
     SC_PREVWINDOW           "Select Previous Window"

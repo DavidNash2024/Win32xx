@@ -44,7 +44,7 @@ namespace ShellWrapper
         void operator= (const Cpidl& cpidlSource);
         BOOL operator== (const Cpidl& cpidl);
         operator LPITEMIDLIST () { return m_pidl; }
-        
+
         //a global function declared as friend
         friend const Cpidl operator+ (const Cpidl& cpidlFull, const Cpidl& cpidlRel);
 

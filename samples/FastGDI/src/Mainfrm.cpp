@@ -94,7 +94,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -169,7 +169,7 @@ BOOL CMainFrame::LoadFile(CString& fileName)
 void CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE, _T("bmp"), NULL, OFN_FILEMUSTEXIST, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
-    
+
     if (fileDlg.DoModal(*this) == IDOK)
     {
         CString str = fileDlg.GetPathName();
@@ -294,10 +294,10 @@ void CMainFrame::OnFileSaveAs()
 
     if (FileDlg.DoModal(*this) == IDOK)
     {
-        CString strName = FileDlg.GetPathName();        
+        CString strName = FileDlg.GetPathName();
         SaveFile(strName);
     }
-    
+
 }
 
 
@@ -307,8 +307,7 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
-    // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != 0);
+    // Show the toolbar
     ShowToolBar(GetToolBar().IsWindow());
 
     TRACE("Frame created\n");
@@ -405,7 +404,7 @@ void CMainFrame::SaveFile(CString& fileName)
     {
         CFile File;
         File.Open(fileName, OPEN_EXISTING);
-    
+
         if (IDYES != MessageBox(_T("File already exists. Do you wish to overwrite it?"), _T("Saving file ") + fileName, MB_YESNO | MB_ICONWARNING))
             DoSave = FALSE;
     }
@@ -418,11 +417,11 @@ void CMainFrame::SaveFile(CString& fileName)
     if (DoSave)
     {
         m_pathName = fileName;
-        
+
         // Set the caption
         CString Title = _T("FastGDI - ") + m_pathName;
-        SetWindowText(Title);       
-        
+        SetWindowText(Title);
+
         // Save the file
         m_view.SaveFileImage(fileName);
         AddMRUEntry(fileName);

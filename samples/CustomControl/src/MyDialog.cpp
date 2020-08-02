@@ -31,7 +31,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 //  }
 
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam); 
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 void CMyDialog::OnCancel()
@@ -64,12 +64,12 @@ void CMyDialog::OnOK()
     ip.ki.wVk = 'M';
     ip.ki.dwFlags = 0;
     SendInput(1, &ip, sizeof(ip));
-    
+
     // Release the "M" key
     ip.ki.wVk = 'M';
     ip.ki.dwFlags = KEYEVENTF_KEYUP;
-    SendInput(1, &ip, sizeof(ip)); 
-    
+    SendInput(1, &ip, sizeof(ip));
+
     // Release the "Ctrl" key
     ip.ki.wVk = VK_CONTROL;
     ip.ki.dwFlags = KEYEVENTF_KEYUP;
@@ -90,7 +90,7 @@ BOOL CMyDialog::OnInitDialog()
     // Support automatic resizing
     m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
     m_resizer.AddChild(m_webControl, topleft, RD_STRETCH_WIDTH|RD_STRETCH_HEIGHT);
-    
+
     return TRUE;
 }
 

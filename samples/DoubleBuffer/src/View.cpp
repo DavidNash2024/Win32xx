@@ -29,7 +29,7 @@ CBitmap CView::CreateMaskBitmap()
     SetBkColor(dcMem, transparent);
     dcMem2.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, dcMem, 0, 0, SRCCOPY);
     dcMem.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, dcMem2, 0, 0, SRCINVERT);
-	dcMem2.SelectObject(oldBitmap);
+    dcMem2.SelectObject(oldBitmap);
 
     return mask;
 }
@@ -82,7 +82,7 @@ LRESULT CView::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
         x = 0;
         cx = 1;
     }
-    
+
     y = y + cy;
     if (y > rc.Height() - m_ballSize.cy)
     {
@@ -97,7 +97,7 @@ LRESULT CView::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
 
     CMemDC dcMemMask(dc);
     dcMemMask.SelectObject(m_mask);
-    
+
     CMemDC dcMemOrange(dc);
     dcMemOrange.SelectObject(m_orange);
 
@@ -118,7 +118,7 @@ LRESULT CView::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
 
     // Copy the memory DC to the client DC
     dc.BitBlt(0,0, rc.Width(), rc.Height(), dcMem3, 0, 0, SRCCOPY);
-    
+
     return FinalWindowProc(msg, wparam, lparam);
 }
 

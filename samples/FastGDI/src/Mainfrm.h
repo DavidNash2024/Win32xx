@@ -15,15 +15,15 @@ public:
     virtual ~CMainFrame();
 
     void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray);
-	void OnAdjustImage();
-	void OnFileExit();
-	void OnFileSave();
-	void OnFileSaveAs();
-	void OnFileNew();
-	void OnFileOpen();
-	void OnFileOpenMRU(WPARAM wparam, LPARAM lparam);
-	void OnFilePreview();
-	void OnFilePrint();
+    void OnAdjustImage();
+    void OnFileExit();
+    void OnFileSave();
+    void OnFileSaveAs();
+    void OnFileNew();
+    void OnFileOpen();
+    void OnFileOpenMRU(WPARAM wparam, LPARAM lparam);
+    void OnFilePreview();
+    void OnFilePrint();
 
     void OnPreviewClose();
     void OnPreviewPrint();

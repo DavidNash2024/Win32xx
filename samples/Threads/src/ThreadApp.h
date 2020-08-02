@@ -13,10 +13,10 @@ public:
     CThreadApp();
     virtual ~CThreadApp();
     virtual BOOL InitInstance();
-    CMainWindow& GetMainWnd() {return m_MainWnd;}
+    CMainWindow& GetMainWnd() {return m_mainWnd;}
 
 private:
-    CMainWindow m_MainWnd;  
+    CMainWindow m_mainWnd;  
 };
 
 

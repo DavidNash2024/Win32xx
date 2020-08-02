@@ -460,7 +460,7 @@ namespace Win32xx
         HWND hToolBar = reinterpret_cast<HWND>(wparam);
         LPSIZE pToolBarSize = reinterpret_cast<LPSIZE>(lparam);
         int nBand = GetBand(hToolBar);
-        if (nBand != -1) 
+        if (nBand != -1)
             ResizeBand(nBand, *pToolBarSize);
 
         return FinalWindowProc(msg, wparam, lparam);

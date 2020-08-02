@@ -7,7 +7,7 @@
 
 
 CLeftPane::CLeftPane()
-{ 
+{
     SetView(m_view);
 }
 

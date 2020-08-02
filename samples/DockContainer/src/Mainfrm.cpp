@@ -73,7 +73,7 @@ CDocker* CMainFrame::NewDockerFromID(int id)
         pDock = new CDockClasses;
         break;
     case ID_DOCK_CLASSES2:
-        pDock = new CDockClasses;                   
+        pDock = new CDockClasses;
         break;
     case ID_DOCK_FILES1:
         pDock = new CDockFiles;
@@ -135,7 +135,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -219,7 +219,7 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
     // Call the base class function first
     CDockFrame::PreCreate(cs);
-    
+
     // Hide the window initially by removing the WS_VISIBLE style
     cs.style &= ~WS_VISIBLE;
 }
@@ -254,15 +254,15 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_NEW,   FALSE );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_FILE_PRINT, FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 }

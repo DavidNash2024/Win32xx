@@ -42,7 +42,7 @@
     materials, the use thereof, or any other other dealings therewith.
     Citation of the author's work should be included in such usages.
 
-    Special Conventions: 
+    Special Conventions:
 
     Acknowledgement:
         The author would like to thank and acknowledge the advice,
@@ -133,7 +133,7 @@ InitCtlColors()                                                             /*
     m_ColorChoice.AddColorChoice(REdTxFg,   _T("o  RichEdit text FG"),
         COLOR_WHITE);
     m_ColorChoice.AddColorChoice(REdTxBg,   _T("o  RichEdit text BG"),
-        COLOR_RED); 
+        COLOR_RED);
     m_ColorChoice.AddColorChoice(REdBg,     _T("o  RichEdit BG"),
         COLOR_LT_RED);
 }
@@ -189,7 +189,7 @@ OnColorChoice()                                                             /*
     The staus bar color has no message to redraw it, so it is set here.
 *-----------------------------------------------------------------------------*/
 {
-    m_ColorChoice.DoModal(GetApp()->GetMainWnd()); 
+    m_ColorChoice.DoModal(GetApp()->GetMainWnd());
       // reset the status bar color
     UINT selection = m_ColorChoice.GetSelectedColorID();
     if (selection == SBBg)
@@ -200,7 +200,7 @@ OnColorChoice()                                                             /*
       // reset the rich edit control color
     if (selection == REdTxFg || selection == REdTxBg || selection == REdBg)
         OnRichEditColor();
-        
+
     UpdateControlUIState();
     Invalidate();
     UpdateWindow();
@@ -358,7 +358,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
     case IDM_RICHEDWRAP:
         OnWrapText();
         return TRUE;
-    
+
     case IDM_COLOR_CHOICE:
         OnColorChoice();
         return TRUE;
@@ -375,7 +375,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
     default:
         break;
     }
-    
+
     return FALSE;
 }
 
@@ -383,9 +383,9 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                     /*
     INT_PTR  CMainFrame::
 OnCtlColor(HDC hDC, UINT nCtlColor)                              /*
 
-    This member function is invoked when a child control is about to be drawn. 
+    This member function is invoked when a child control is about to be drawn.
     Here it is used to prepare the display context hDC for drawing the dialog
-    background using the user-selected color. It is not used to change the 
+    background using the user-selected color. It is not used to change the
     colors of a rich edit control. See View::SetRichEditColors() for that process.
 *-----------------------------------------------------------------------------*/
 {
@@ -416,7 +416,7 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -431,7 +431,7 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
 
       // set the maximum MRU entries value
     m_nMaxMRU = theAppGlobal.GetMaxMRU();
-      
+
       // call the base class OnCreate() method with these options
     int rtn = CFrame::OnCreate(rcs);
 
@@ -530,8 +530,8 @@ OnFontChoice()                                                              /*
     LOGFONT lf;
     m_FontChoice.GetChoiceFont().GetObject(sizeof(LOGFONT), &lf);
     CHOOSEFONT cf = m_FontChoice.GetParameters();
-    cf.Flags |= CF_SCREENFONTS | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT; 
-    cf.lpLogFont = &lf;     
+    cf.Flags |= CF_SCREENFONTS | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT;
+    cf.lpLogFont = &lf;
     cf.rgbColors = m_ColorChoice.GetTableColor(REdTxFg);
     m_FontChoice.SetParameters(cf);
     if(m_FontChoice.DoModal(hOwnerWnd))
@@ -695,7 +695,7 @@ PreCreate(CREATESTRUCT& cs)                                                 /*
         | WS_EX_CONTROLPARENT       // TAB key navigation
 //      | WS_EX_CONTEXTHELP     // doesn't work if WS_MINIMIZEBOX
                     // or WS_MAXIMIZEBOX is specified
-        ; 
+        ;
 }
 
 /*============================================================================*/
@@ -712,7 +712,7 @@ SaveRegistrySettings()                                                      /*
     {
         CArchive ar(theApp->GetArcvFile(), CArchive::store);
              // serialize in the following order
-        ar << theApp;   // for the App
+        ar << *theApp;   // for the App
         ar << *this;    // for the mainframe and base classes
         ar << m_View;   // for the view, including control colors
     }
@@ -766,7 +766,7 @@ Serialize(CArchive &ar)                                                     /*
             ar << GetMRUEntries()[i];
         }
     }
-    else 
+    else
     {     // recover frame status and  tool bar base class switches
         BOOL showbar;
         ar >> showbar;
@@ -827,7 +827,7 @@ SetCheckStatus(UINT nID, BOOL bCheck, ControlBars where)                    /*
             ok = (GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND |
                 (bCheck ? MF_CHECKED : MF_UNCHECKED)) != 0xFFFFFFFF);
     }
-    
+
     if (!ok)
         ok = TRUE;
     if (where == mainmenu || where == both)
@@ -932,7 +932,7 @@ SetThemeColors()                                                            /*
     void CMainFrame::
 SetupMenuIcons()                                                             /*
 
-    Assigns icons to the dropdown menu items.  
+    Assigns icons to the dropdown menu items.
 *-----------------------------------------------------------------------------*/
 {
      // Add IDW_ABOUT to the data
@@ -1049,7 +1049,7 @@ UpdateControlUIState()                                                      /*
     BOOL    ok_to_saveas      = doc_is_ready;
     BOOL    ok_to_undo        = GetREView().CanUndo();
     BOOL    ok_to_close       = doc_is_ready;
-    
+
       // set the control button status
     SetEnableStatus(IDM_EDIT_CUT,       ok_to_cut,     both);
     SetEnableStatus(IDM_EDIT_COPY,      ok_to_copy,        both);
@@ -1191,7 +1191,7 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                            /*
         case IDM_UPDATECONTROLUISTATE:
             UpdateControlUIState();
             return TRUE;
-        
+
         case WM_SYSCOMMAND:
         {
               // else process requests for action

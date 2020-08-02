@@ -25,26 +25,26 @@ void CMainWindow::AppendText(LPCTSTR text)
     // This function appends text to an edit control
 
     // Append Line Feed
-    int length = m_editWnd.GetWindowTextLength();
+    int length = m_edit.GetWindowTextLength();
     if (length > 0)
-        m_editWnd.AppendText(_T("\r\n"));
+        m_edit.AppendText(_T("\r\n"));
 
     // Append text
-    m_editWnd.AppendText(text);
+    m_edit.AppendText(text);
 
     // Also send output to the debugger for display
     TRACE(text);
     TRACE(_T("\n"));
 }
 
-HWND CMainWindow::Create(HWND hParent)
+HWND CMainWindow::Create(HWND parent)
 {
     CString str = _T("Main Thread Window");
 
     // Create the main window
     CRect rc(20 , 50, 400, 500);
     return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-        rc, hParent, 0);
+        rc, parent, 0);
 }
 
 int CMainWindow::OnCreate(CREATESTRUCT& cs)
@@ -52,20 +52,20 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
     UNREFERENCED_PARAMETER(cs);
 
     // Create the Edit child window to display text
-    m_editWnd.Create(*this);
+    m_edit.Create(*this);
 
 
     // Create each CMyThread object
     for (int i = 1 ; i <= m_maxWindows ; i++)
     {
         CMyThread* pMyThread = new CMyThread(i);
-        m_vMyThread.push_back(pMyThread);
+        m_threads.push_back(pMyThread);
     }
 
     // Create the threads belonging to the MyThread objects
     // Each thread creates a TestWindow when it runs 
     std::vector<MyThreadPtr>::iterator iter;
-    for (iter = m_vMyThread.begin(); iter < m_vMyThread.end(); ++iter)
+    for (iter = m_threads.begin(); iter < m_threads.end(); ++iter)
     {
         try
         {
@@ -97,9 +97,9 @@ void CMainWindow::OnClose()
     // The thread is then terminated with PostWuitMessage when its window is destroyed.
 
     std::vector<MyThreadPtr>::iterator iter;
-    for (iter = m_vMyThread.begin(); iter < m_vMyThread.end(); ++iter)
+    for (iter = m_threads.begin(); iter < m_threads.end(); ++iter)
     {
-		if ((*iter)->GetTestWnd()->IsWindow())
+        if ((*iter)->GetTestWnd()->IsWindow())
             (*iter)->GetTestWnd()->Close();
     }
 
@@ -139,7 +139,7 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         OnWindowCreated();
         break;
     case WM_SIZE:
-        m_editWnd.SetWindowPos(0, GetClientRect(), 0);
+        m_edit.SetWindowPos(0, GetClientRect(), 0);
         break;
     }
 

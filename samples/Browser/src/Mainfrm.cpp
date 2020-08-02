@@ -134,7 +134,7 @@ void CMainFrame::OnClose()
 {
     m_browser.Stop();
     DisconnectEvents();
-    
+
     // Call the base class function.
     CFrame::OnClose();
 }

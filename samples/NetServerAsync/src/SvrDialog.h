@@ -21,20 +21,20 @@ class CTCPClientDlg : public CDialog
 public:
     CTCPClientDlg(UINT resID);
     virtual ~CTCPClientDlg() {}
-	virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnClose();
-	virtual void OnDestroy();
+    virtual void OnDestroy();
     virtual BOOL OnInitDialog();
 
     void AppendText(int id, LPCTSTR text);
     void Receive();
     void Send();
 
-	BOOL OnSocketReceive();
-	BOOL OnSocketDisconnect();
+    BOOL OnSocketReceive();
+    BOOL OnSocketDisconnect();
 
-	SocketPtr m_pSocket;
+    SocketPtr m_pSocket;
 
 private:
     // Nested classes for this dialog's child windows
@@ -72,7 +72,7 @@ protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
 
 private:
-	CSocket m_mainSocket;
+    CSocket m_mainSocket;
     std::map<SocketPtr, TCPClientDlgPtr> m_connectedClients; // Stores TCP client sockets and TCP client dialogs
     BOOL m_isServerStarted;
     int  m_socketType;              // either SOCK_STREAM or SOCK_DGRAM

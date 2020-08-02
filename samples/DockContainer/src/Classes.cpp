@@ -106,7 +106,7 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
 ///////////////////////////////////////////////
 // CContainClasses functions
-CContainClasses::CContainClasses() 
+CContainClasses::CContainClasses()
 {
     SetTabText(_T("ClassView"));
     SetTabIcon(IDI_CLASSVIEW);
@@ -116,26 +116,26 @@ CContainClasses::CContainClasses()
 
 void CContainClasses::AddCombo()
 {
-    int comboWidth = 120; 
+    int comboWidth = 120;
     CToolBar& tb = GetToolBar();
     if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
-     
-    // Adjust button width and convert to separator   
+
+    // Adjust button width and convert to separator
     tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
     tb.SetButtonWidth(IDM_FILE_SAVE, comboWidth);
-     
-    // Determine the size and position of the ComboBox 
+
+    // Determine the size and position of the ComboBox
     int index = tb.CommandToIndex(IDM_FILE_SAVE);
     CRect rect = tb.GetItemRect(index);
-     
-    // Create the ComboboxEx window 
+
+    // Create the ComboboxEx window
     m_comboBoxEx.Create(tb);
     m_comboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
 
     // Adjust the toolbar height to accommodate the ComboBoxEx control
     CRect rc = m_comboBoxEx.GetWindowRect();
     tb.SetButtonSize( rc.Height(), rc.Height() );
-    
+
     // Add the ComboBox's items
     m_comboBoxEx.AddItems();
 }
@@ -173,22 +173,22 @@ void CContainClasses::SetupToolBar()
 {
     // Set the Bitmap resource for the toolbar
     SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-    
+
     // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW         );
     AddToolBarButton( IDM_FILE_OPEN, FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_FILE_SAVE, FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_EDIT_CUT         );
     AddToolBarButton( IDM_EDIT_COPY        );
     AddToolBarButton( IDM_EDIT_PASTE       );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_FILE_PRINT, FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT       );
 
@@ -199,9 +199,9 @@ void CContainClasses::SetupToolBar()
 
 /////////////////////////////////////////////////
 //  Definitions for the CDockClasses class
-CDockClasses::CDockClasses() 
-{ 
-    SetView(m_classes); 
+CDockClasses::CDockClasses()
+{
+    SetView(m_classes);
 
     // Set the width of the splitter bar
     SetBarWidth(8);

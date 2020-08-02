@@ -21,7 +21,7 @@ Features demonstrated in this tutorial
 * How to handle UWM_PREVIEWCLOSE to swap back to the default view when the preview
    closes.
 * How to handle UWM_PRINTNOW to send the print job to the default or selected
-   printer.  
+   printer.
 * How to handle UWM_PRINTSETUP to initiate a PrintDlg to select the printer and
-   page settings.  
+   page settings.
 

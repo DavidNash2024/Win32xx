@@ -213,7 +213,7 @@ STRINGTABLE
 BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
-    SC_MINIMIZE             "Minimize the WIndow"
+    SC_MINIMIZE             "Minimize the Window"
     SC_MOVE                 "Move the Window"
     SC_NEXTWINDOW           "Select Next Window"
     SC_PREVWINDOW           "Select Previous Window"

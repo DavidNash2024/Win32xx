@@ -1083,7 +1083,7 @@ namespace Win32xx
             return static_cast<UINT>(m_menuIcons.size());  // No valid images, so nothing to do!
 
         BITMAP data = bitmap.GetBitmapData();
-        int cxImage = data.bmHeight;
+        int cxImage = MAX(data.bmHeight, 16);
         int cyImage = data.bmHeight;
 
         // Create the ImageList if required.
@@ -2342,7 +2342,7 @@ namespace Win32xx
 
         // Set the icon.
         // Note: The MinGW compiler requires the T:: scope specifier here.
-        //       It would not be required in a class that inherits from CFrameT. 
+        //       It would not be required in a class that inherits from CFrameT.
         T::SetIconLarge(IDW_MAIN);
         T::SetIconSmall(IDW_MAIN);
 

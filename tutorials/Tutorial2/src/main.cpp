@@ -1,7 +1,7 @@
 ///////////////////////////////////
 // main.cpp
 
-// Note:  
+// Note:
 //  * Add the Win32++\include  directory to project's additional include directories
 
 #include "wxx_wincore.h"
@@ -17,7 +17,7 @@ public:
 };
 
 
-// A class that inherits from CWinApp. 
+// A class that inherits from CWinApp.
 // It is used to run the application's message loop.
 class CSimpleApp : public CWinApp
 {

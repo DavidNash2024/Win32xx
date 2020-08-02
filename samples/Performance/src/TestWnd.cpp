@@ -13,7 +13,7 @@ CTestWindow::CTestWindow() : m_windowCount(0)
 
 void CTestWindow::CreateWin(int i)
 {
-	m_windowCount = i + 1;
+    m_windowCount = i + 1;
     TCHAR str[80];
     wsprintf(str, _T("Test Window %d"), m_windowCount);
     CreateEx(0, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,

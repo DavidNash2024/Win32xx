@@ -265,7 +265,7 @@ namespace Win32xx
     //
 
     // Returns the handle to the bitmap associated with the button.
-    // Refer to BM_GETIMAGE in the Windows API documentation for more information.  
+    // Refer to BM_GETIMAGE in the Windows API documentation for more information.
     inline HBITMAP CButton::GetBitmap() const
     {
         assert(IsWindow());
@@ -399,7 +399,7 @@ namespace Win32xx
         SendMessage(EM_SETSEL, (WPARAM)position, (LPARAM)position);
         SendMessage(EM_REPLACESEL, 0, (LPARAM)(pText));
     }
-    
+
     // Returns TRUE if the edit control operation can be undone.
     // Refer to EM_CANUNDO in the Windows API documentation for more information.
     inline BOOL CEdit::CanUndo() const
@@ -455,7 +455,7 @@ namespace Win32xx
     inline int CEdit::GetLine(int index, LPTSTR pBuffer, int maxLength) const
     {
         assert(IsWindow());
-        
+
         // set the first word of this buffer to the size, in TCHARs, of the buffer.
         *pBuffer = static_cast<TCHAR>(maxLength);
         return (int)SendMessage(EM_GETLINE, (WPARAM)index, (LPARAM)pBuffer);
@@ -1115,7 +1115,7 @@ namespace Win32xx
             }
         }
 
-        return 0;   // Allow other messages to be handled elsewhere. 
+        return 0;   // Allow other messages to be handled elsewhere.
     }
 
     // Set the window class.

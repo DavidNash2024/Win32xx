@@ -153,7 +153,7 @@ namespace Win32xx
 
     private:
         CFolderDialog(const CFolderDialog&);              // Disable copy construction
-        CFolderDialog& operator = (const CFolderDialog&); // Disable assignment operator    
+        CFolderDialog& operator = (const CFolderDialog&); // Disable assignment operator
 
         static int CALLBACK BrowseCallbackProc(HWND wnd, UINT msg, LPARAM param1, LPARAM lparam2);
 

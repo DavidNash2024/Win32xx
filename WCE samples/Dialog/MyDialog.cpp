@@ -41,9 +41,9 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 //  {
 //
 //  } // switch(msg)
-    
+
     return DialogProcDefault(msg, wparam, lparam);
-    
+
 } // INT_PTR CALLBACK DialogProc(...)
 
 

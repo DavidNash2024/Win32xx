@@ -508,7 +508,7 @@ namespace Win32xx
         assert(m_pData->images);
         ImageList_EndDrag();
     }
-    
+
     // Creates an icon or cursor based on an image and mask in an image list.
     // Refer to ImageList_ExtractIcon in the Windows API documentation for more information.
     inline HICON CImageList::ExtractIcon(int index) const

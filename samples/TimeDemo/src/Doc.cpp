@@ -43,7 +43,7 @@
 
 #include "stdafx.h"
 #include "App.h"
-#include <VersionHelpers.h>
+
 
   // local formats for displaying CTime values as strings
 static const CString longDateFmt = TEXT("%d-%b-%Y [%j] (%a) %H:%M:%S %z");

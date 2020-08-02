@@ -2,7 +2,7 @@ Custom Control Example
 ==================
 This is sample demonstrates how to build a custom control and display it
 in a dialog. The custom control is created from CWebBrowser.
-  
+
 
 Features demonstrated in this example
 =====================================

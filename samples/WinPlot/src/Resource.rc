@@ -221,7 +221,7 @@ STRINGTABLE
 BEGIN
     61536                   "Close the Window"
     61488                   "Maximize the Window"
-    61472                   "Minimize the WIndow"
+    61472                   "Minimize the Window"
     61456                   "Move the Window"
     61504                   "Select Next Window"
     61520                   "Select Previous Window"

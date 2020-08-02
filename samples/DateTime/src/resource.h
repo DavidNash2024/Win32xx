@@ -17,12 +17,12 @@
 //Resource IDs for the dialog
 #define IDD_DIALOG1                     121
 #define IDC_BUTTONSET                   141
-#define IDC_BUTTONCANCEL                142 
+#define IDC_BUTTONCANCEL                142
 #define IDC_MONTHCALENDAR1              143
 #define IDC_DATETIMEPICKER1             144
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1

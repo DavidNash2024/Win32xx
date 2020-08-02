@@ -105,7 +105,7 @@
 //    CMemDC memDC(clientDC);
 //    memDC.CreateCompatibleBitmap(clientDC, cx, cy);
 //    CPen pen1(PS_SOLID, 1, RGB(255,0,0));
-//    CPen oldPen = dcMem.SelectObject(pen1);
+//    CPen oldPen = memDC.SelectObject(pen1);
 //    memDC.MoveTo(0, 0);
 //    memDC.LineTo(50, 50);
 //
@@ -135,7 +135,7 @@
 //  * All the GDI classes are reference counted. This allows functions to safely
 //     pass these objects by value, as well as by pointer or by reference.
 //  * If SelectObject is used to select say a CPen into a device context, the
-//     CPen shouldn't be changed or destroyed while device context is valid. Use 
+//     CPen shouldn't be changed or destroyed while device context is valid. Use
 //     SelectObject to select the old pen back into the device context before
 //     changing the pen.
 //  * All GDI classes are reference counted and can be copied safely. This means they
@@ -155,7 +155,7 @@
 // Coding example ...
 //  CDC memDC = CreateCompatibleDC(NULL);
 //  CBitmapInfoPtr pbmi(bitmap);
-//  dcMem.GetDIBits(bitmap, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+//  memDC.GetDIBits(bitmap, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 
 
 #ifndef _WIN32XX_GDI_H_
@@ -431,7 +431,7 @@ namespace Win32xx
 
     public:
         CDC();                                  // Constructs a new CDC without assigning a HDC
-        explicit CDC(HDC dc, HWND wnd = 0);     // Constructs a new CDC and assigns a HDC
+        CDC(HDC dc, HWND wnd = 0);              // Constructs a new CDC and assigns a HDC
         CDC(const CDC& rhs);                    // Constructs a new copy of the CDC
         virtual ~CDC();
         operator HDC() const { return m_pData->dc; }   // Converts a CDC to a HDC
@@ -819,7 +819,7 @@ namespace Win32xx
     class CClientDC : public CDC
     {
     public:
-        explicit CClientDC(HWND wnd)
+        CClientDC(HWND wnd)
         {
             if (0 == wnd) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
@@ -850,7 +850,7 @@ namespace Win32xx
     class CClientDCEx : public CDC
     {
     public:
-        explicit CClientDCEx(HWND wnd, HRGN hrgnClip, DWORD flags)
+        CClientDCEx(HWND wnd, HRGN hrgnClip, DWORD flags)
         {
             if (0 == wnd) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
@@ -903,7 +903,7 @@ namespace Win32xx
     class CPaintDC : public CDC
     {
     public:
-        explicit CPaintDC(HWND wnd) : m_paint(wnd)
+        CPaintDC(HWND wnd) : m_paint(wnd)
         {
             assert(::IsWindow(wnd));
 
@@ -958,7 +958,7 @@ namespace Win32xx
     class CWindowDC : public CDC
     {
     public:
-        explicit CWindowDC(HWND wnd)
+        CWindowDC(HWND wnd)
         {
             if (0 == wnd) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
@@ -990,7 +990,7 @@ namespace Win32xx
     class CMetaFileDC : public CDC
     {
     public:
-        explicit CMetaFileDC() {}
+        CMetaFileDC() {}
         virtual ~CMetaFileDC()
         {
             if (GetHDC())
@@ -1040,7 +1040,7 @@ namespace Win32xx
     class CEnhMetaFileDC : public CDC
     {
     public:
-        explicit CEnhMetaFileDC() {}
+        CEnhMetaFileDC() {}
         virtual ~CEnhMetaFileDC()
         {
             if (GetHDC())
@@ -1090,7 +1090,12 @@ namespace Win32xx
 
 
     ///////////////////////////////////////////////
-    // The CBitmapInfoPtr class is a convenient wrapper for the BITMAPINFO structure.
+    // The CBitmapInfoPtr class is a convenient wrapper for the BITMAPINFO
+    // structure. The BITMAPINFO structure is used in the GetDIBits and
+    // SetDIBits Window API functions.
+    //
+    // This class creates the colors array of the correct size based on the
+    // color format (bit count) of the bitmap, and fills the BITMAPINFOHEADER.
     class CBitmapInfoPtr
     {
     public:
@@ -1109,9 +1114,9 @@ namespace Win32xx
             else                     cClrBits = 32;
 
             // Allocate memory for the BITMAPINFO structure.
-            UINT uQuadSize = (cClrBits == 24)? 0 : UINT(sizeof(RGBQUAD)) * (1 << cClrBits);
+            UINT uQuadSize = (cClrBits >= 24)? 0 : UINT(sizeof(RGBQUAD)) * (1 << cClrBits);
             m_bmi.assign(sizeof(BITMAPINFOHEADER) + uQuadSize, 0);
-            m_pbmiArray = (LPBITMAPINFO) &m_bmi[0];
+            m_pbmiArray = (LPBITMAPINFO) &m_bmi.front();
 
             m_pbmiArray->bmiHeader.biSize       = sizeof(BITMAPINFOHEADER);
             m_pbmiArray->bmiHeader.biHeight     = data.bmHeight;
@@ -1120,7 +1125,7 @@ namespace Win32xx
             m_pbmiArray->bmiHeader.biBitCount   = data.bmBitsPixel;
             m_pbmiArray->bmiHeader.biCompression = BI_RGB;
             if (cClrBits < 24)
-                m_pbmiArray->bmiHeader.biClrUsed = (1<<cClrBits);
+                m_pbmiArray->bmiHeader.biClrUsed = (1 << cClrBits);
         }
         LPBITMAPINFO get() const { return m_pbmiArray; }
         operator LPBITMAPINFO() const { return m_pbmiArray; }
@@ -1479,7 +1484,7 @@ namespace Win32xx
 
         dc.SetDIBits(*this, 0, data.bmHeight, bits, pbmi, DIB_RGB_COLORS);
     }
-    
+
     // Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
     // Refer to CreateMappedBitmap in the Windows API documentation for more information.
     inline HBITMAP CBitmap::CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
@@ -1599,14 +1604,14 @@ namespace Win32xx
         bmiHeader.biBitCount = 24;
 
         // Create the reference DC for GetDIBits to use
-        CMemDC dcMem(NULL);
+        CMemDC memDC(NULL);
 
         // Use GetDIBits to create a DIB from our DDB, and extract the colour data
-        GetDIBits(dcMem, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+        GetDIBits(memDC, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
         std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
         byte* pByteArray = &vBits[0];
 
-        dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+        memDC.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
         UINT widthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
         int yOffset = 0;
@@ -1636,7 +1641,7 @@ namespace Win32xx
         }
 
         // Save the modified colour back into our source DDB
-        SetDIBits(dcMem, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+        SetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
     }
 
     // Modifies the colour of the Device Dependant Bitmap, by the colour.
@@ -1651,14 +1656,14 @@ namespace Win32xx
         bmiHeader.biBitCount = 24;
 
         // Create the reference DC for GetDIBits to use
-        CMemDC dcMem(NULL);
+        CMemDC memDC(NULL);
 
         // Use GetDIBits to create a DIB from our DDB, and extract the colour data
-        GetDIBits(dcMem, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+        GetDIBits(memDC, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
         std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
         byte* pByteArray = &vBits[0];
 
-        dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+        memDC.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
         UINT widthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
         // Ensure sane colour correction values
@@ -1716,7 +1721,7 @@ namespace Win32xx
         }
 
         // Save the modified colour back into our source DDB
-        SetDIBits(dcMem, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+        SetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
     }
 
 #endif // !_WIN32_WCE
@@ -3340,7 +3345,7 @@ namespace Win32xx
         font.CreateFont(height, width, escapement, orientation, weight,
             italic, underline, strikeOut, charSet, outputPrecision,
             clipPrecision, quality, pitchAndFamily, pFaceName);
-        
+
         SelectObject(font);
         m_pData->font = font;
     }

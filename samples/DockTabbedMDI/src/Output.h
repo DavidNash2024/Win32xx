@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////
-// Output.h - Declaration of the CViewOutput, CContainOutput, 
+// Output.h - Declaration of the CViewOutput, CContainOutput,
 //          and CDockOutput classes
 
 #ifndef OUTPUT_H
@@ -18,7 +18,7 @@ public:
 
 protected:
     virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs); 
+    virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
     CFont m_font;

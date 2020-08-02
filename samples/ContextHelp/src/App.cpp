@@ -17,7 +17,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         // Run the application
         return theApp.Run();
     }
-    
+
     // catch all unhandled CException types
     catch (const CException &e)
     {
@@ -41,7 +41,7 @@ CApp::~CApp()
 BOOL CApp::InitInstance()
 {
     //Create the Frame Window
-    m_frame.Create();   // throws a CWinException on failure  
+    m_frame.Create();   // throws a CWinException on failure
 
     return TRUE;
 }

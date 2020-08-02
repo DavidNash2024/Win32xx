@@ -1,6 +1,6 @@
 Browser Example
 ===============
-This example demonstrates how to incorporate the use of ATL into a  
+This example demonstrates how to incorporate the use of ATL into a
 Win32++ application. Here we use ATL to to create a web browser. We also
 use ATL to create an event sink using IDispatch to respond to browser events.
 
@@ -15,7 +15,7 @@ installer. The code in this sample requires ATL version 10 (VS2010) or later.
 ATL greatly simplifies the use of COM in our code. I strongly recommend using
 it if you are developing your code with a Microsoft compiler. ATL is only
 supported on Microsoft compilers though. It is not supported on MinGW
-compilers. 
+compilers.
 
 
 Features demonstrated in this sample
@@ -23,6 +23,6 @@ Features demonstrated in this sample
 * Use of a ComboBoxEx control within the frame's rebar.
 * Use of Active Template Library (ATL) to incorporate ActiveX components.
 * Use of the IWebBrowser2 interface to render a web page.
-* Use of IDispatch to create an event sink for IWebBrowser2 events.  
+* Use of IDispatch to create an event sink for IWebBrowser2 events.
 
 

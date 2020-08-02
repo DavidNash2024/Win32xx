@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 //  Declaration of CContextHelp class. This class creates a window to display
 //  a .chm help file.
-//  
+//
 //  CContextHelp implements the following functions:
 //  AddHelpTopic.       Adds a <UINT, CString> pair to a map of known topics.
 //  CreateHtmlHelp.     Creates a HtmlHelp window.
@@ -10,7 +10,7 @@
 //  SetHelpFilePath     Set the pathname of the chm help file
 //
 //  The .chm help file is typically placed in a subdirectory of the user's
-//  APPDATA environmental path. 
+//  APPDATA environmental path.
 //
 //  Be sure to load the htmlhelp.h and htmlhelp.lib precisely as
 //  described in Adding Compiled HTML Help to MinGW Win32 Apps.html.
@@ -44,8 +44,8 @@ class CContextHelp : public CWnd
 {
     public:
         CContextHelp();
-        virtual ~CContextHelp(); 
-        
+        virtual ~CContextHelp();
+
         virtual void    AddHelpTopic(UINT id, LPCTSTR topic);
         virtual HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
         virtual UINT    GetIDFromCursorPos() const;

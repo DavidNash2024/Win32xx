@@ -499,7 +499,7 @@ BOOL CMyListView::GetFileSizeText(HANDLE hFile, LPTSTR lpszSize)
 
     //Get our decimal point character from Locale information
     int nBuffLen = ::GetLocaleInfo( LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, NULL, 0 );
-    assert(nBuffLen > 0);    
+    assert(nBuffLen > 0);
     CString Decimal;
     ::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, Decimal.GetBuffer(nBuffLen), nBuffLen);
     Decimal.ReleaseBuffer();

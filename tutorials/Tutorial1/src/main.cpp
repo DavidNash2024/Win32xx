@@ -3,7 +3,7 @@
 
 #include "wxx_wincore.h"
 
-// Note:  
+// Note:
 //  * Add the Win32++\include  directory to project's additional include directories
 
 

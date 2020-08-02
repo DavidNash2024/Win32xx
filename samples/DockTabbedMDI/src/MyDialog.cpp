@@ -97,7 +97,7 @@ BOOL CViewDialog::OnInitDialog()
     m_richEdit2.SetWindowText(_T("Rich Edit Window"));
 
     // Initialize dialog resizing
-    m_resizer.Initialize( *this, CRect(0, 0, 300, 200) ); 
+    m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
     m_resizer.AddChild(m_radioA,   topleft, 0);
     m_resizer.AddChild(m_radioB,   topleft, 0);
     m_resizer.AddChild(m_radioC,   topleft, 0);
@@ -107,7 +107,7 @@ BOOL CViewDialog::OnInitDialog()
     m_resizer.AddChild(m_checkC,   bottomright, 0);
     m_resizer.AddChild(m_richEdit1, topright, RD_STRETCH_WIDTH);
     m_resizer.AddChild(m_richEdit2, bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
-    
+
     return TRUE;
 }
 
@@ -171,11 +171,11 @@ BOOL CViewDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 //  Definitions for the CContainDialog class
 CContainDialog::CContainDialog() : m_viewDialog(IDD_MYDIALOG)
 {
-    SetView(m_viewDialog); 
+    SetView(m_viewDialog);
     SetDockCaption (_T("Dialog View - Docking container"));
     SetTabText(_T("Dialog"));
     SetTabIcon(IDI_DIALOGVIEW);
-} 
+}
 
 
 //////////////////////////////////////////////

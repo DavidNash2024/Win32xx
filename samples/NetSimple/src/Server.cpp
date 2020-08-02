@@ -24,10 +24,10 @@ public:
         // This function is called automatically when there is data to receive.
         // Has an extra character for null termination.
         char str[1025] = {0};
-		int addrlen = sizeof(g_saUDPClient);
+        int addrlen = sizeof(g_saUDPClient);
         
-		// Receives data and updates the UPD client socket address.
-		int i = ReceiveFrom(str, 1024, 0, &g_saUDPClient, &addrlen);
+        // Receives data and updates the UPD client socket address.
+        int i = ReceiveFrom(str, 1024, 0, &g_saUDPClient, &addrlen);
         if (i >= 0)
             cout << i <<" chars received: " << str << endl;
         else
@@ -41,7 +41,7 @@ int main()
     // Create the main server socket.
     // It is used to listen for clients
     CServerSocket server;
-	ZeroMemory(&g_saUDPClient, sizeof(g_saUDPClient));
+    ZeroMemory(&g_saUDPClient, sizeof(g_saUDPClient));
 
     if (!server.Create(AF_INET, SOCK_DGRAM))
     {
@@ -71,10 +71,10 @@ int main()
 
         // Note: the server will send to the last client we received from.
         int i = server.SendTo(s.c_str(), static_cast<int>(s.length()), 0, &g_saUDPClient, sizeof(g_saUDPClient));
-		if (i >= 0)
-			cout << "Sending  " << i << " characters\n";
-		else
-			cout << "Failed to send" << endl;
+        if (i >= 0)
+            cout << "Sending  " << i << " characters\n";
+        else
+            cout << "Failed to send" << endl;
     }
 
     return 0;

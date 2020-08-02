@@ -29,20 +29,20 @@ void CViewOutput::OnAttach()
 
 void CViewOutput::PreCreate(CREATESTRUCT& cs)
 {
-    cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
+    cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
                 WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL | ES_READONLY;
 }
 
 
 //////////////////////////////////////////////
 //  Definitions for the CContainOutput class
-CContainOutput::CContainOutput() 
+CContainOutput::CContainOutput()
 {
-    SetView(m_viewOutput); 
+    SetView(m_viewOutput);
     SetDockCaption (_T("Output View - Docking container"));
     SetTabText(_T("Output"));
     SetTabIcon(IDI_TEXT);
-} 
+}
 
 
 //////////////////////////////////////////////

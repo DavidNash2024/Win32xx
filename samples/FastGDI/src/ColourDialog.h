@@ -14,7 +14,7 @@ public:
     int  GetGreen() const  { return m_cGreen; }
     int  GetRed() const    { return m_cRed; }
     BOOL IsGray() const    { return m_isGray; }
-    
+
 protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnInitDialog();

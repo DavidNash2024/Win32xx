@@ -722,7 +722,7 @@ namespace Win32xx
             Attach(menu);
             m_pData->isManagedMenu = TRUE;
         }
-        
+
         return 0 != m_pData->menu;
     }
 

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////
-// Text.cpp -  Definitions for the CViewText, 
+// Text.cpp -  Definitions for the CViewText,
 //              and CDockText classes
 
 #include "stdafx.h"
@@ -29,7 +29,7 @@ void CViewText::OnAttach()
 BOOL CViewText::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
-    
+
     UINT id = LOWORD(wparam);
     switch (id)
     {
@@ -77,7 +77,7 @@ void CViewText::OnEditUndo()
 
 void CViewText::PreCreate(CREATESTRUCT& cs)
 {
-    cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
+    cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
                 WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
 }
 
@@ -85,12 +85,12 @@ void CViewText::PreCreate(CREATESTRUCT& cs)
 ///////////////////////////////////////////////
 // CContainText functions
 CContainText::CContainText()
-{    
+{
     SetDockCaption (_T("Text View - Docking container"));
     SetTabText(_T("Text"));
     SetTabIcon(IDI_TEXT);
     SetView(m_viewText);
-} 
+}
 
 
 //////////////////////////////////////////////

@@ -27,16 +27,17 @@ CCoverImage::CCoverImage()
     WNDCLASS wc;
     ZeroMemory(&wc, sizeof(WNDCLASS));
 
-    if (!::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc))
+    HINSTANCE instance = GetApp()->GetInstanceHandle();
+    if (!::GetClassInfo(instance, className, &wc))
     {
         wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
         wc.lpszClassName = className;
         wc.lpfnWndProc = ::DefWindowProc;
-        wc.hInstance = GetApp()->GetInstanceHandle();
+        wc.hInstance = instance;
         ::RegisterClass(&wc);
     }
 
-    assert(::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc));
+    assert(::GetClassInfo(instance, className, &wc));
 }
 
 // Destructor.

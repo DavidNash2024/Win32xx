@@ -9,12 +9,12 @@
 // Definitions for the CMyDialog class
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
-    m_hInfo = (HICON)GetApp()->LoadIcon(IDI_INFO);
+    m_info = (HICON)GetApp()->LoadIcon(IDI_INFO);
 }
 
 CMyDialog::~CMyDialog()
 {
-    DestroyIcon(m_hInfo);
+    DestroyIcon(m_info);
 }
 
 void CMyDialog::OnDestroy()
@@ -117,7 +117,7 @@ BOOL CMyDialog::OnInitDialog()
 #ifdef  TTM_SETTITLE    // not supported by some GNU compilers
     // Add Title and Icon to the tooltip (a pretty icon for Vista and above)
     if (GetWinVersion() >= 2600)
-        m_toolTip.SetTitle((UINT)(UINT_PTR)(m_hInfo), _T("Displaying the contents of the control ..."));
+        m_toolTip.SetTitle((UINT)(UINT_PTR)(m_info), _T("Displaying the contents of the control ..."));
     else
         m_toolTip.SetTitle(TTI_INFO, _T("Displaying the contents of the control ..."));
 #endif
@@ -196,12 +196,12 @@ BOOL CMyDialog::OnCheck3()
     return TRUE;
 }
 
-BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
+BOOL CMyDialog::OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID)
 {
-    CheckRadioButton(idFirst, idLast, idClicked);
+    CheckRadioButton(firstID, lastID, clickedID);
 
     CString str;
-    int button = idClicked - idFirst + 1;
+    int button = clickedID - firstID + 1;
     str.Format(_T("Radio%d"), button);
     SetDlgItemText(IDC_STATIC3, str);
     TRACE(str); TRACE("\n");

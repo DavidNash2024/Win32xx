@@ -5,7 +5,6 @@
 #define MYDIALOG_H
 
 
-
 // Declaration of the CMyDialog class
 class CMyDialog : public CDialog
 {
@@ -41,8 +40,8 @@ private:
     class CButton1 : public CButton {};
     class CRichEdit1 : public CRichEdit {};
     class CRichEdit2 : public CRichEdit {};
-    
-    CRadioA     m_radioA; 
+
+    CRadioA     m_radioA;
     CRadioB     m_radioB;
     CRadioC     m_radioC;
     CCheckA     m_checkA;

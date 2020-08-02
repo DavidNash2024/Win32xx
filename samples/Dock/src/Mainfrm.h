@@ -25,7 +25,7 @@ class CMainFrame : public CDockFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-    
+
     void LoadDefaultDockers();
     BOOL On3DBorder();
     BOOL OnDockCloseAll();

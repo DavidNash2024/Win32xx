@@ -46,10 +46,10 @@ void CMyTaskDialog::OnTDHelp()
     TRACE("F1 Pressed\n");
 }
 
-void CMyTaskDialog::OnTDHyperlinkClicked(LPCTSTR pHyperlink)
+void CMyTaskDialog::OnTDHyperlinkClicked(LPCTSTR hyperlink)
 // Called when the user clicks on a hyperlink.
 {
-    UNREFERENCED_PARAMETER(pHyperlink);
+    UNREFERENCED_PARAMETER(hyperlink);
     TRACE("Hyperlink clicked\n");
 }
 

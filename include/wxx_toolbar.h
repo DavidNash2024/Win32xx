@@ -83,7 +83,7 @@ namespace Win32xx
         CImageList GetDisabledImageList();
         DWORD GetExtendedStyle() const;
         CImageList GetHotImageList();
-        int   GetHotItem() const;		
+        int   GetHotItem() const;
         CImageList GetImageList();
         CRect GetItemRect(int index) const;
         CSize GetMaxSize() const;
@@ -106,7 +106,7 @@ namespace Win32xx
         BOOL  MoveButton(UINT oldPos, UINT newPos) const;
         BOOL  PressButton(int buttonID, BOOL press) const;
         void  SaveRestore(BOOL save, TBSAVEPARAMS* pSaveInfo) const;
-        BOOL  SetBitmapSize(int cx, int cy) const;		
+        BOOL  SetBitmapSize(int cx, int cy) const;
         void  SetButtonInfo(int buttonID, int buttonNewID, int image, BYTE style = 0, BYTE state = 0) const;
         BOOL  SetButtonSize(int cx, int cy) const;
         BOOL  SetButtonState(int buttonID, UINT state) const;
@@ -170,7 +170,7 @@ namespace Win32xx
     // Note: AddBitmap supports a maximum colour depth of 8 bits (256 colours)
     //       This is an obsolete functioned retained for Win95 support.
     //       Unless Win95 support is required, use SetImageList instead.
-    // Refer to TB_ADDBITMAP in the Windows API documentation for more information. 
+    // Refer to TB_ADDBITMAP in the Windows API documentation for more information.
     inline int CToolBar::AddBitmap(UINT bitmapID)
     {
         assert(IsWindow());
@@ -196,7 +196,7 @@ namespace Win32xx
     // Adds a single button to the Toolbar. It provides a convenient alternative to AddButtons.
     // A resource ID of 0 is a separator. image is the index of the image in the ImageList.
     // The default is -1 in which case the image based on the button's position is chosen.
-    // Refer to TB_ADDBUTTONS in the Windows API documentation for more information.        
+    // Refer to TB_ADDBUTTONS in the Windows API documentation for more information.
     inline BOOL CToolBar::AddButton(UINT id, BOOL isEnabled /* = TRUE */, int image /* = -1 */)
     {
         assert(IsWindow());

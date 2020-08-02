@@ -20,7 +20,7 @@ public:
     BOOL    OnFileSave();
 
 protected:
-    virtual CStatusBar& GetStatusBar() const    { return const_cast<CMyStatusBar&>(m_myStatusBar); }
+    virtual CStatusBar& GetStatusBar() const    { return m_myStatusBar; }
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -32,7 +32,7 @@ protected:
 
 private:
     CView m_view;
-    CMyStatusBar m_myStatusBar;
+    mutable CMyStatusBar m_myStatusBar;
 };
 
 #endif //MAINFRM_H

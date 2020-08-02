@@ -1321,7 +1321,7 @@ namespace Win32xx
         }
         return count;
     }
-    
+
     // Search for a character within the string, starting from the end.
     // Note: MBCS strings are only searched up to the first embedded null.
     template <class T>
@@ -1367,7 +1367,7 @@ namespace Win32xx
         str.m_str.assign(m_str, m_str.size() - count, count);
         return str;
     }
-    
+
     // Sets the character at the specified position to the specified value.
     template <class T>
     inline void CStringT<T>::SetAt(int index, T ch)
@@ -1377,7 +1377,7 @@ namespace Win32xx
 
         if ((index >= 0) && (index < GetLength()))
             m_str[index] = ch;
-    }   
+    }
 
     // Sets an existing BSTR object to the string.
     // Note: Ensure the returned BSTR is freed later with SysFreeString to avoid a memory leak.

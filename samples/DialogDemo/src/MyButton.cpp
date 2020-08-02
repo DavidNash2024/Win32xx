@@ -71,6 +71,6 @@ LRESULT CMyButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     //  TRACE("CButton::WndProc - Unspecified Message\n");
         break;
     }
-    
+
     return WndProcDefault(msg, wparam, lparam);
 }

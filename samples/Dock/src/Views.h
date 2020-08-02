@@ -31,7 +31,7 @@ public:
 
 protected:
     virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs); 
+    virtual void PreCreate(CREATESTRUCT& cs);
 
 };
 

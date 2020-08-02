@@ -198,7 +198,7 @@ namespace ShellWrapper
     {
         Delete(); //Release the current m_IShellFolder
         m_IShellFolder = Source;
-        if (Source) 
+        if (Source)
             AddRef();
     }
 

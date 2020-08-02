@@ -185,7 +185,6 @@ void CView::Print(LPCTSTR docName)
     {
         QuickPrint(docName);
     } 
-
 }
 
 
@@ -200,18 +199,17 @@ void CView::PrintPage(CDC& dc, UINT)
     int height = viewRect.Height();
 
     // Acquire the view's bitmap.
-    CBitmap bmView = Draw().DetachBitmap();
+    CMemDC memDC = Draw();
+    CBitmap bmView = memDC.DetachBitmap();
 
-    // Now we convert the Device Dependent Bitmap(DDB) to a Device
-    // Independent Bitmap(DIB) for printing or previewing.
+    // Now we convert the Device Dependent Bitmap(DDB) to a
+    // Device Independent Bitmap(DIB) for printing.
 
     // Create the LPBITMAPINFO from the bitmap.
     CBitmapInfoPtr pbmi(bmView);
-    // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
     BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
 
     // Extract the device independent image data.
-    CMemDC memDC(dc);
     memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS);
     std::vector<byte> byteArray(pBIH->biSizeImage, 0);
     byte* pByteArray = &byteArray.front();
@@ -233,7 +231,8 @@ void CView::PrintPage(CDC& dc, UINT)
     int scaledWidth = int(width * scaleX);
     int scaledHeight = int(height * scaleY);
 
-    // Stretch the DIB to the specified dc, maintaining its original aspect ratio.
+    // Copy and stretch the DIB to the specified dc, maintaining its
+    //  original aspect ratio.
     UINT result = dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
         width, height, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
 

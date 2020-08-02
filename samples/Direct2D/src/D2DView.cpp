@@ -198,7 +198,7 @@ LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
     Invalidate();
     return 0;
 }
-        
+
 LRESULT CD2DView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 

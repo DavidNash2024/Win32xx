@@ -16,7 +16,7 @@ Note: The DirectX11.fx shader file is required for the compiled program to run.
 
 Features demonstrated in this example
 =====================================
-* Displaying a moving DirectX picture in a window.  
+* Displaying a moving DirectX picture in a window.
 * Customizing the application's message loop.
 
 

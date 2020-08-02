@@ -65,7 +65,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         m_OldPt.x = GET_X_LPARAM(lparam);
         m_OldPt.y = GET_Y_LPARAM(lparam);
     }
-    
+
     return FinalWindowProc(msg, wparam, lparam);
 }
 

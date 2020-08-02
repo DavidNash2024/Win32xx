@@ -499,8 +499,7 @@ void CMainFrame::OnInitialUpdate()
     if (args.size() > 1)
         ReadFile(args[1]);
 
-    // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != 0);
+    // Show the toolbar
     ShowToolBar(GetToolBar().IsWindow());
 }
 

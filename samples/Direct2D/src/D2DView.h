@@ -23,7 +23,7 @@ class CD2DView : public CWnd
 public:
     CD2DView();
     virtual ~CD2DView();
-    
+
     HRESULT CreateDeviceResources();
     void    DiscardDeviceResources();
     LRESULT OnDisplayChange(UINT, WPARAM, LPARAM);

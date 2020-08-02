@@ -8,14 +8,14 @@
 
 void CClientSocket::OnConnect()
 {
-	TRACE("The socket is connected\n");
+    TRACE("The socket is connected\n");
     CClientDialog& dialog = GetDlgApp()->GetDialog();
     dialog.PostMessage(USER_CONNECT, 0, 0);
 }
 
 void CClientSocket::OnDisconnect()
 {
-	TRACE("The socket is disconnected\n");
+    TRACE("The socket is disconnected\n");
     CClientDialog& dialog = GetDlgApp()->GetDialog();
     dialog.PostMessage(USER_DISCONNECT, 0, 0);
 }

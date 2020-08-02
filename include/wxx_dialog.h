@@ -107,7 +107,7 @@ namespace Win32xx
         BOOL MapDialogRect(RECT& rc) const;
         void NextDlgCtrl() const;
         void PrevDlgCtrl() const;
-        void SetDefID(UINT id); 
+        void SetDefID(UINT id);
 
     protected:
         // Virtual functions you might wish to override

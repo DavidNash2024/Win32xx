@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-// DialogApp.h 
+// DialogApp.h
 
 #ifndef DIALOGAPP_H
 #define DIALOGAPP_H
@@ -11,7 +11,7 @@
 class CDialogApp : public CWinApp
 {
 public:
-    CDialogApp(); 
+    CDialogApp();
     virtual ~CDialogApp();
     virtual BOOL InitInstance();
     CMyDialog& GetDialog() {return m_myDialog;}

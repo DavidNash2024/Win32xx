@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MakeDLL_2010", "MakeDLL_2010.vcxproj", "{3E4DA6EC-12FF-3AA8-9B3B-A23594FAF578}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MakeDLL", "MakeDLL_2010.vcxproj", "{3E4DA6EC-12FF-3AA8-9B3B-A23594FAF578}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

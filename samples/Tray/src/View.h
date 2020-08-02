@@ -8,7 +8,7 @@
 class CView : public CWnd
 {
 public:
-    CView() : m_isMinimized(FALSE) {}
+    CView() : m_menu(IDW_MAIN), m_isMinimized(FALSE) {}
     virtual ~CView() {}
     void Minimize();
     void Restore();
@@ -28,6 +28,7 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMenu m_menu;
     BOOL m_isMinimized;
 };
 

@@ -54,7 +54,7 @@
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped. 
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 
@@ -64,8 +64,8 @@ namespace Win32xx
     // Declaration of the CAXHost class
     // This class implements a COM container which hosts an ActiveX control,
     // such as internet explorer.
-    class CAXHost : public IOleInPlaceFrame, public IOleClientSite, 
-                    public IOleInPlaceSite, public IOleControlSite, 
+    class CAXHost : public IOleInPlaceFrame, public IOleClientSite,
+                    public IOleInPlaceSite, public IOleControlSite,
                     public IDispatch
     {
     public:
@@ -80,15 +80,15 @@ namespace Win32xx
         virtual STDMETHODIMP SetParent(HWND hWndParent);
         virtual STDMETHODIMP SetLocation(int x, int y, int width, int height);
         virtual STDMETHODIMP SetVisible(BOOL isVisible);
-        
+
         // IDispatch Methods
-        virtual STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** pNames, 
+        virtual STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** pNames,
                                 unsigned int namesCount, LCID lcid, DISPID* pID);
         virtual STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
         virtual STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
-        virtual STDMETHODIMP Invoke(DISPID dispID, REFIID riid, LCID lcid, WORD flags, 
-                                    DISPPARAMS* pParams, VARIANT* result, EXCEPINFO* pExecInfo, 
-                                    unsigned int* pArgErr);     
+        virtual STDMETHODIMP Invoke(DISPID dispID, REFIID riid, LCID lcid, WORD flags,
+                                    DISPPARAMS* pParams, VARIANT* result, EXCEPINFO* pExecInfo,
+                                    unsigned int* pArgErr);
 
         // IOleClientSite Methods
         virtual STDMETHODIMP GetContainer(LPOLECONTAINER* ppContainer);
@@ -99,51 +99,51 @@ namespace Win32xx
         virtual STDMETHODIMP ShowObject();
 
         // IOleControlSite Methods
-        virtual STDMETHODIMP GetExtendedControl(IDispatch** ppDisp);        
+        virtual STDMETHODIMP GetExtendedControl(IDispatch** ppDisp);
         virtual STDMETHODIMP LockInPlaceActive(BOOL lock);
         virtual STDMETHODIMP OnControlInfoChanged();
         virtual STDMETHODIMP OnFocus(BOOL gotFocus);
         virtual STDMETHODIMP ShowPropertyFrame();
-        virtual STDMETHODIMP TransformCoords(POINTL* pHimetric, POINTF* pContainer, DWORD flags);       
-        virtual STDMETHODIMP TranslateAccelerator(LPMSG pMsg, DWORD modifiers);     
+        virtual STDMETHODIMP TransformCoords(POINTL* pHimetric, POINTF* pContainer, DWORD flags);
+        virtual STDMETHODIMP TranslateAccelerator(LPMSG pMsg, DWORD modifiers);
 
         // IOleInPlaceFrame Methods
-        virtual STDMETHODIMP EnableModeless(BOOL enable);       
+        virtual STDMETHODIMP EnableModeless(BOOL enable);
         virtual STDMETHODIMP InsertMenus(HMENU shared, LPOLEMENUGROUPWIDTHS pMenuWidths);
         virtual STDMETHODIMP RemoveMenus(HMENU shared);
-        virtual STDMETHODIMP SetMenu(HMENU shared, HOLEMENU holemenu, HWND activeObject);       
+        virtual STDMETHODIMP SetMenu(HMENU shared, HOLEMENU holemenu, HWND activeObject);
         virtual STDMETHODIMP SetStatusText(LPCOLESTR pStatusText);
         virtual STDMETHODIMP TranslateAccelerator(LPMSG pMsg, WORD id);
 
         // IOleInPlaceSite Methods
         virtual STDMETHODIMP CanInPlaceActivate();
-        virtual STDMETHODIMP DeactivateAndUndo();       
-        virtual STDMETHODIMP DiscardUndoState();        
-        virtual STDMETHODIMP GetWindowContext(IOleInPlaceFrame** ppFrame, 
-                                  IOleInPlaceUIWindow** ppDoc, LPRECT pRect, 
+        virtual STDMETHODIMP DeactivateAndUndo();
+        virtual STDMETHODIMP DiscardUndoState();
+        virtual STDMETHODIMP GetWindowContext(IOleInPlaceFrame** ppFrame,
+                                  IOleInPlaceUIWindow** ppDoc, LPRECT pRect,
                                   LPRECT pClipRect, LPOLEINPLACEFRAMEINFO pFrameInfo);
         virtual STDMETHODIMP OnInPlaceActivate();
-        virtual STDMETHODIMP OnInPlaceDeactivate();     
+        virtual STDMETHODIMP OnInPlaceDeactivate();
         virtual STDMETHODIMP OnPosRectChange(LPCRECT pRect);
-        virtual STDMETHODIMP OnUIActivate();        
+        virtual STDMETHODIMP OnUIActivate();
         virtual STDMETHODIMP OnUIDeactivate(BOOL undoable);
-        virtual STDMETHODIMP Scroll(SIZE scrollExtent);     
+        virtual STDMETHODIMP Scroll(SIZE scrollExtent);
 
         // IOleInPlaceUIWindow Methods
         virtual STDMETHODIMP GetBorder(LPRECT pBorderRect);
         virtual STDMETHODIMP RequestBorderSpace(LPCBORDERWIDTHS pBorderWidths);
         virtual STDMETHODIMP SetBorderSpace(LPCBORDERWIDTHS pBorderWidths);
-        virtual STDMETHODIMP SetActiveObject(IOleInPlaceActiveObject* pActiveObject, 
+        virtual STDMETHODIMP SetActiveObject(IOleInPlaceActiveObject* pActiveObject,
                                              LPCOLESTR pObjName);
 
         // IOleWindow Methods
-        virtual STDMETHODIMP ContextSensitiveHelp(BOOL enterMode);      
+        virtual STDMETHODIMP ContextSensitiveHelp(BOOL enterMode);
         virtual STDMETHODIMP GetWindow(HWND* pHwnd);
-        
+
         // IUnknown Methods
-        virtual STDMETHODIMP_(ULONG) AddRef();      
+        virtual STDMETHODIMP_(ULONG) AddRef();
         virtual STDMETHODIMP QueryInterface(REFIID riid, void** ppObject);
-        virtual STDMETHODIMP_(ULONG) Release();     
+        virtual STDMETHODIMP_(ULONG) Release();
 
     private:
          HWND        m_hwnd;        // window handle of the container
@@ -338,7 +338,7 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    // Causes the container to end the in-place session, deactivate the object, 
+    // Causes the container to end the in-place session, deactivate the object,
     // and revert to its own saved undo state.
     inline STDMETHODIMP CAXHost::DeactivateAndUndo()
     {
@@ -374,7 +374,7 @@ namespace Win32xx
         return E_NOINTERFACE;
     }
 
-    // Requests an IDispatch pointer to the extended control that 
+    // Requests an IDispatch pointer to the extended control that
     // the container uses to wrap the real control.
     // Call Release on this pointer when it is no longer required.
     inline STDMETHODIMP CAXHost::GetExtendedControl(IDispatch** ppDisp)
@@ -621,7 +621,7 @@ namespace Win32xx
                 pObject->Release();
             }
         }
-        
+
         return hr;
     }
 
@@ -766,7 +766,7 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    // Converts between a POINTL structure expressed in HIMETRIC units 
+    // Converts between a POINTL structure expressed in HIMETRIC units
     // (as is standard in OLE) and a POINTF structure expressed in units
     // specified by the container.
     inline STDMETHODIMP CAXHost::TransformCoords(POINTL* pHimetric, POINTF* pContainer, DWORD flags)
@@ -904,7 +904,7 @@ namespace Win32xx
     }
 
     // Retrieves a pointer to the IDispatch interface of the active document object. Call QueryInterface on the
-    // IDispatch received from this property get the Component Object Model (COM) interfaces IHTMLDocument, 
+    // IDispatch received from this property get the Component Object Model (COM) interfaces IHTMLDocument,
     // IHTMLDocument2, and IHTMLDocument3.
     inline LPDISPATCH CWebBrowser::GetDocument() const
     {
@@ -965,8 +965,8 @@ namespace Win32xx
         return (isOffLine != 0);
     }
 
-    // Retrieves a pointer to the IDispatch interface of the object that is the 
-    // container of the WebBrowser control. If the WebBrowser control is in a frame, 
+    // Retrieves a pointer to the IDispatch interface of the object that is the
+    // container of the WebBrowser control. If the WebBrowser control is in a frame,
     // this method returns the automation interface of the document object in the
     // containing window. Otherwise, it delegates to the top-level control, if there is one.
     inline LPDISPATCH CWebBrowser::GetParent() const
