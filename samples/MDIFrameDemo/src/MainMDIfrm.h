@@ -1,6 +1,6 @@
-///////////////////////////////////////////////////////
+/////////////////////////////
 // MainMDIfrm.h
-//  Declaration of the CMainFrame class
+//
 
 #ifndef MAINMDIFRM_H
 #define MAINMDIFRM_H
@@ -11,7 +11,9 @@
   #define BTNS_WHOLEDROPDOWN 0x0080
 #endif
 
-
+/////////////////////////////////////////
+// Declaration of the CMainMDIFrame class
+//
 class CMainMDIFrame : public CMDIFrame
 {
 public:

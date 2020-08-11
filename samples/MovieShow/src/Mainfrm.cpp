@@ -1,5 +1,6 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "resource.h"
@@ -18,7 +19,7 @@
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped. 
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 #include "MediaInfoDLL.h"
@@ -29,6 +30,10 @@
 
 using namespace MediaInfoDLL;
 using namespace Gdiplus;
+
+///////////////////////////////
+// Global function declarations
+//
 
 // Retrieves the class identifier for the given MIME type of an encoder.
 int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
@@ -66,7 +71,11 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
     return -1;  // Failure
 }
 
-// Constructor for the CMainFrame class
+//////////////////////////////////
+// CMainFrame function definitions
+//
+
+// Constructor.
 CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_pDockTree(0), m_pDockDialog(0),
                            m_isDirty(false), m_boxSetsItem(0), m_dialogWidth(0),
                            m_treeHeight(0)
@@ -97,9 +106,26 @@ CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_pDockTree(0), m_pDockDi
     }
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
+}
+
+// Clears the contents of the movie info dialog.
+void CMainFrame::ClearDisplay()
+{
+    GetViewDialog().GetTitle().SetWindowText(0);
+    GetViewDialog().GetYear().SetWindowText(0);
+    GetViewDialog().GetActors().SetWindowText(0);
+    GetViewDialog().GetInfo().SetWindowText(0);
+    GetViewDialog().SetPicture().SetImageData().clear();
+    GetViewDialog().RedrawWindow();
+}
+
+// Clears the contents of the ListView
+void CMainFrame::ClearList()
+{
+    GetViewList().DeleteAllItems();
 }
 
 // Converts a text string to a byte stream.
@@ -391,6 +417,7 @@ void CMainFrame::FillTreeItems()
     GetViewTree().SelectItem(libraryItem);
 }
 
+// Returns a vector of CString holding the box set names.
 std::vector<CString> CMainFrame::GetBoxSets()
 {
     std::vector<CString> boxSets;
@@ -497,6 +524,84 @@ void CMainFrame::LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movi
     MI.Close();
 }
 
+// Loads the movie data information from the archive
+void CMainFrame::LoadMovies()
+{
+    //Information about MediaInfo
+    MediaInfo MI;
+
+    CString DataPath = GetDataPath();
+    CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
+    SHCreateDirectoryEx(NULL, DataPath.c_str(), NULL);
+
+    if (PathFileExists(DataFile))
+    {
+        try
+        {
+            // Display the splash screen.
+            m_splash.ShowText(L"Loading Library");
+
+            CArchive ar(DataFile, CArchive::load);
+            std::vector<MovieInfo>::iterator it;
+
+            // Lock this code for thread safety
+            CThreadLock lock(m_cs);
+
+            m_moviesData.clear();
+            TRACE("Loading Movies Data\n");
+
+            UINT nBoxSets;
+            ar >> nBoxSets;
+            for (UINT i = 0; i < nBoxSets; ++i)
+            {
+                CString str;
+                ar >> str;
+                m_boxSets.push_back(str);
+            }
+
+            UINT size;
+            ar >> size;
+            for (UINT i = 0; i < size; ++i)
+            {
+                MovieInfo mi;
+
+                ar >> mi.fileName;
+                ArchiveObject ao(&mi.lastModifiedTime, sizeof(FILETIME));
+                ar >> ao;
+                ar >> mi.movieName;
+                ar >> mi.duration;
+                ar >> mi.releaseDate;
+                ar >> mi.description;
+                ar >> mi.genre;
+                ar >> mi.actors;
+                ar >> mi.videoType;
+                ar >> mi.boxset;
+                ar >> mi.flags;
+
+                UINT ImageDataSize = 0;
+                ar >> ImageDataSize;
+                if (ImageDataSize > 0)
+                {
+                    mi.imageData.resize(ImageDataSize);
+                    ar.Read(&mi.imageData[0], ImageDataSize);
+                }
+
+                m_moviesData.push_back(mi);
+            }
+        }
+        catch (const CFileException& e)
+        {
+            Trace(e.GetErrorString()); Trace("\n");
+            ::MessageBox(NULL, L"Failed to load Movie Library", L"Error", MB_OK);
+            m_moviesData.clear();
+            m_boxSets.clear();
+        }
+    }
+
+    TRACE("Load Movies data complete \n ");
+}
+
+// Loads settings from the registry.
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 {
     assert(NULL != szKeyName);
@@ -537,6 +642,19 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
     }
 
     return FALSE;
+}
+
+// Called in response to the add box set from the context menu on the list view.
+BOOL CMainFrame::OnAddBoxSet()
+{
+    GetViewTree().SetFocus();
+    HTREEITEM newItem = GetViewTree().AddItem(m_boxSetsItem, L"New Box Set", 2);
+
+    GetViewTree().Expand(m_boxSetsItem, TVE_EXPAND);
+    GetViewTree().EditLabel(newItem);
+    m_isDirty = TRUE;
+
+    return TRUE;
 }
 
 // Called when the Add Folder toolbar button is pressed.
@@ -711,8 +829,6 @@ void CMainFrame::OnClose()
 // Respond to toolbar or context menu input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT nID = LOWORD(wparam);
@@ -747,83 +863,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-// Called in response to the add box set from the context menu on the list view.
-BOOL CMainFrame::OnAddBoxSet()
-{
-    GetViewTree().SetFocus();
-    HTREEITEM newItem = GetViewTree().AddItem(m_boxSetsItem, L"New Box Set", 2);
-
-    GetViewTree().Expand(m_boxSetsItem, TVE_EXPAND);
-    GetViewTree().EditLabel(newItem);
-    m_isDirty = TRUE;
-
-    return TRUE;
-}
-
-// Called in response to the popup menu when the user right clicks
-// on a box set in the tree view. 
-BOOL CMainFrame::OnMoveUp()
-{
-    HTREEITEM item = GetViewTree().GetSelection();
-    HTREEITEM prevItem = GetViewTree().GetPrevSibling(item);
-
-    if (item != 0 && prevItem != 0)
-    {
-        GetViewTree().Swap(item, prevItem);
-        GetViewTree().SelectItem(prevItem);
-    }
-    return TRUE;
-}
-
-// Called in response to the popup menu when the user right clicks
-// on a box set in the tree view. 
-BOOL CMainFrame::OnMoveDown()
-{
-    HTREEITEM item = GetViewTree().GetSelection();
-    HTREEITEM nextItem = GetViewTree().GetNextSibling(item);
-
-    if (item != 0 && nextItem != 0)
-    {
-        GetViewTree().Swap(item, nextItem);
-        GetViewTree().SelectItem(nextItem);
-    }
-
-    return TRUE;
-}
-
-// Called in response to the popup menu when the user right clicks
-// on a box set in the tree view. 
-BOOL CMainFrame::OnRenameBoxSet()
-{
-    HTREEITEM item = GetViewTree().GetSelection();
-    GetViewTree().EditLabel(item);
-
-    return TRUE;
-}
-
-// Called in response to the popup menu when the user right clicks
-// on a box set in the tree view. 
-BOOL CMainFrame::OnRemoveBoxSet()
-{
-    HTREEITEM item = GetViewTree().GetSelection();
-    CString* pString = GetViewTree().GetItemString(item);
-
-    // Lock this function for thread safety
-    CThreadLock lock(m_cs);
-
-    std::list<MovieInfo>::iterator it;
-    for (it = m_moviesData.begin(); it != m_moviesData.end(); ++it)
-    {
-        if ((*it).boxset == *pString)
-            (*it).boxset = L"";
-    }
-
-    GetViewTree().RemoveItem(item);
-    m_isDirty = TRUE;
-
-    return TRUE;
-}
-
 // Called during window creation. Override this functions to perform tasks
 // such as creating child windows.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
@@ -846,105 +885,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
        // Create the splash screen
        m_splash.Create();
-    
+
     // call the base class function
     return CDockFrame::OnCreate(cs);
-}
-
-
-
-// Clears the contents of the movie info dialog.
-void CMainFrame::ClearDisplay()
-{
-    GetViewDialog().GetTitle().SetWindowText(0);
-    GetViewDialog().GetYear().SetWindowText(0);
-    GetViewDialog().GetActors().SetWindowText(0);
-    GetViewDialog().GetInfo().SetWindowText(0);
-    GetViewDialog().SetPicture().SetImageData().clear();
-    GetViewDialog().RedrawWindow();
-}
-
-// Clears the contents of the ListView
-void CMainFrame::ClearList()
-{
-    GetViewList().DeleteAllItems();
-}
-
-// Loads the movie data information from the archive
-void CMainFrame::LoadMovies()
-{
-    //Information about MediaInfo
-    MediaInfo MI;
-
-    CString DataPath = GetDataPath();
-    CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-    SHCreateDirectoryEx(NULL, DataPath.c_str(), NULL);
-
-    if (PathFileExists(DataFile))
-    {
-        try
-        {
-            // Display the splash screen.
-            m_splash.ShowText(L"Loading Library");
-
-            CArchive ar(DataFile, CArchive::load);
-            std::vector<MovieInfo>::iterator it;
-
-            // Lock this code for thread safety
-            CThreadLock lock(m_cs);
-
-            m_moviesData.clear();
-            TRACE("Loading Movies Data\n");
-
-            UINT nBoxSets;
-            ar >> nBoxSets;
-            for (UINT i = 0; i < nBoxSets; ++i)
-            {
-                CString str;
-                ar >> str;
-                m_boxSets.push_back(str);
-            }
-
-            UINT size;
-            ar >> size;
-            for (UINT i = 0; i < size; ++i)
-            {
-                MovieInfo mi;
-
-                ar >> mi.fileName;
-                ArchiveObject ao(&mi.lastModifiedTime, sizeof(FILETIME));
-                ar >> ao;
-                ar >> mi.movieName;
-                ar >> mi.duration;
-                ar >> mi.releaseDate;
-                ar >> mi.description;
-                ar >> mi.genre;
-                ar >> mi.actors;
-                ar >> mi.videoType;
-                ar >> mi.boxset;
-                ar >> mi.flags;
-
-                UINT ImageDataSize = 0;
-                ar >> ImageDataSize;
-                if (ImageDataSize > 0)
-                {
-                    mi.imageData.resize(ImageDataSize);
-                    ar.Read(&mi.imageData[0], ImageDataSize);
-                }
-
-                m_moviesData.push_back(mi);
-            }
-        }
-        catch (const CFileException& e)
-        {
-            Trace(e.GetErrorString()); Trace("\n");
-            ::MessageBox(NULL, L"Failed to load Movie Library", L"Error", MB_OK);
-            m_moviesData.clear();
-            m_boxSets.clear();
-        }
-    }
-
-    TRACE("Load Movies data complete \n ");
 }
 
 // Called in response to favourites on the toolbar or the
@@ -974,6 +917,14 @@ BOOL CMainFrame::OnFavourite()
     return TRUE;
 }
 
+// Called after the video library is updated.
+void CMainFrame::OnFilesLoaded()
+{
+    m_splash.ShowText(L"Updating List");
+    m_foundFiles.clear();
+    OnSelectTreeItem();
+}
+
 // Called after the frame is created, but before it is displayed.
 void CMainFrame::OnInitialUpdate()
 {
@@ -991,18 +942,6 @@ void CMainFrame::OnInitialUpdate()
     FillTreeItems();
 
     ShowWindow(SW_SHOW);
-}
-
-// Called in response to toolbar input or a context menu on
-// the list view. Plays the chosen movie.  
-BOOL CMainFrame::OnPlay()
-{
-    int item = GetViewList().GetNextItem(-1, LVNI_SELECTED);
-    MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(item);
-    if (pmi)
-        PlayMovie(pmi->fileName);
-
-    return TRUE;
 }
 
 // Called when a menu is about to be displayed.
@@ -1030,7 +969,50 @@ void CMainFrame::OnMenuUpdate(UINT nID)
     }
 }
 
-// Called in response to a right mouse click on the list view. 
+// Called in response to the popup menu when the user right clicks
+// on a box set in the tree view.
+BOOL CMainFrame::OnMoveDown()
+{
+    HTREEITEM item = GetViewTree().GetSelection();
+    HTREEITEM nextItem = GetViewTree().GetNextSibling(item);
+
+    if (item != 0 && nextItem != 0)
+    {
+        GetViewTree().Swap(item, nextItem);
+        GetViewTree().SelectItem(nextItem);
+    }
+
+    return TRUE;
+}
+
+// Called in response to the popup menu when the user right clicks
+// on a box set in the tree view.
+BOOL CMainFrame::OnMoveUp()
+{
+    HTREEITEM item = GetViewTree().GetSelection();
+    HTREEITEM prevItem = GetViewTree().GetPrevSibling(item);
+
+    if (item != 0 && prevItem != 0)
+    {
+        GetViewTree().Swap(item, prevItem);
+        GetViewTree().SelectItem(prevItem);
+    }
+    return TRUE;
+}
+
+// Called in response to toolbar input or a context menu on
+// the list view. Plays the chosen movie.
+BOOL CMainFrame::OnPlay()
+{
+    int item = GetViewList().GetNextItem(-1, LVNI_SELECTED);
+    MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(item);
+    if (pmi)
+        PlayMovie(pmi->fileName);
+
+    return TRUE;
+}
+
+// Called in response to a right mouse click on the list view.
 void CMainFrame::OnRClickListItem()
 {
     // Load the popup menu
@@ -1085,6 +1067,74 @@ void CMainFrame::OnRClickTreeItem()
         // Start the popup menu
         m_boxSetMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, NULL/*&tpm*/);
     }
+}
+
+// Called in response to the popup menu when the user right clicks
+// on a box set in the tree view.
+BOOL CMainFrame::OnRemoveBoxSet()
+{
+    HTREEITEM item = GetViewTree().GetSelection();
+    CString* pString = GetViewTree().GetItemString(item);
+
+    // Lock this function for thread safety
+    CThreadLock lock(m_cs);
+
+    std::list<MovieInfo>::iterator it;
+    for (it = m_moviesData.begin(); it != m_moviesData.end(); ++it)
+    {
+        if ((*it).boxset == *pString)
+            (*it).boxset = L"";
+    }
+
+    GetViewTree().RemoveItem(item);
+    m_isDirty = TRUE;
+
+    return TRUE;
+}
+
+// Called in response to a popup menu on the list view.
+// Removes the chosen file from the movie libaray.
+BOOL CMainFrame::OnRemoveFile()
+{
+    // Lock this function for thread safety
+    CThreadLock lock(m_cs);
+
+    std::vector<CString> filenames;
+    int itemIndex = -1;
+    while ((itemIndex = GetViewList().GetNextItem(itemIndex, LVIS_SELECTED)) != -1)
+    {
+        MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(itemIndex);
+        filenames.push_back(pmi->fileName);
+    }
+
+    for (UINT i = 0; i < filenames.size(); ++i)
+    {
+        MoviesData::iterator it;
+        for (it = m_moviesData.begin(); it != m_moviesData.end(); ++it)
+        {
+            if ((*it).fileName == filenames[i])
+            {
+                TRACE(filenames[i]); TRACE(" removed from library\n");
+                m_moviesData.erase(it);
+                m_isDirty = true;
+                break;
+            }
+        }
+    }
+
+    OnSelectTreeItem();
+
+    return TRUE;
+}
+
+// Called in response to the popup menu when the user right clicks
+// on a box set in the tree view.
+BOOL CMainFrame::OnRenameBoxSet()
+{
+    HTREEITEM item = GetViewTree().GetSelection();
+    GetViewTree().EditLabel(item);
+
+    return TRUE;
 }
 
 // Called in response to a click on the toolbar search button.
@@ -1173,41 +1223,6 @@ BOOL CMainFrame::OnSearch()
         str = L"Search" + str;
         SetStatusText(str);
     }
-
-    return TRUE;
-}
-
-// Called in response to a popup menu on the list view.
-// Removes the chosen file from the movie libaray.
-BOOL CMainFrame::OnRemoveFile()
-{
-    // Lock this function for thread safety
-    CThreadLock lock(m_cs);
-
-    std::vector<CString> filenames;
-    int itemIndex = -1;
-    while ((itemIndex = GetViewList().GetNextItem(itemIndex, LVIS_SELECTED)) != -1)
-    {
-        MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(itemIndex);
-        filenames.push_back(pmi->fileName);
-    }
-
-    for (UINT i = 0; i < filenames.size(); ++i)
-    {
-        MoviesData::iterator it;
-        for (it = m_moviesData.begin(); it != m_moviesData.end(); ++it)
-        {
-            if ((*it).fileName == filenames[i])
-            {
-                TRACE(filenames[i]); TRACE(" removed from library\n");
-                m_moviesData.erase(it);
-                m_isDirty = true;
-                break;
-            }
-        }
-    }
-
-    OnSelectTreeItem();
 
     return TRUE;
 }
@@ -1326,7 +1341,6 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     cs.style &= ~WS_VISIBLE;    // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
 
-
 // Saves some settings in the registry.
 BOOL CMainFrame::SaveRegistrySettings()
 {
@@ -1417,14 +1431,6 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(IDM_SEARCH);
     AddToolBarButton(0);                        // Separator
     AddToolBarButton(IDM_HELP_ABOUT);
-}
-
-// Called after the video library is updated.
-void CMainFrame::OnFilesLoaded()
-{
-    m_splash.ShowText(L"Updating List");
-    m_foundFiles.clear();
-    OnSelectTreeItem();
 }
 
 // This function runs in a separate thread because

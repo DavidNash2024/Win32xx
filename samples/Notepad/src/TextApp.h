@@ -11,7 +11,7 @@
 class CTextApp : public CWinApp
 {
 public:
-    CTextApp(); 
+    CTextApp();
     virtual ~CTextApp()  {}
     virtual BOOL InitInstance();
     virtual BOOL OnIdle(LONG count);

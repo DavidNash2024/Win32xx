@@ -30,8 +30,8 @@ CDoc& CView::GetDoc()
 }
 
 std::vector<PlotPoint>& CView::GetAllPoints()
-{ 
-    return GetDoc().GetAllPoints(); 
+{
+    return GetDoc().GetAllPoints();
 }
 
 int CView::OnCreate(CREATESTRUCT&)

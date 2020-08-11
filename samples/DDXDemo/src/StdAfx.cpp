@@ -8,7 +8,7 @@
 
     Contents Description: Standard declarations implementation File. This
     file is used for precompiled headers. See the details in stdafx.h.
-    
+
         Caveats: The copyright displayed above extends only to the author's
     original contributions to the subject class, and  to the alterations,
     additions, deletions, and  other treatments of materials that may have
@@ -51,11 +51,11 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
         Planning and Preparation Subsystem project for C++ programming.
-        
+
     Acknowledgement:
     The author would like to thank and acknowledge the advice, critical
     review, insight, and assistance provided by David Nash in the development
-    of this work.       
+    of this work.
 
 ********************************************************************************
 

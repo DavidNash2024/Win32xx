@@ -1,10 +1,12 @@
+/////////////////////////////
+// DXView.cpp
+//
 
 #include "DXView.h"
 
-
-//--------------------------------------------------------------------------------------
+/////////////////////////////
 // Global helper function for compiling shaders with D3DCompile
-//--------------------------------------------------------------------------------------
+//
 HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
 {
     HRESULT hr = S_OK;
@@ -38,9 +40,11 @@ HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szS
     return S_OK;
 }
 
-//--------------------------------------------------------------------------------------
-// CDXView Contructor
-//--------------------------------------------------------------------------------------
+///////////////////////////////
+// CDXView function definitions
+//
+
+// CDXView Constructor.
 CDXView::CDXView()
 {
     ZeroMemory(&m_world, sizeof(m_world));
@@ -48,17 +52,13 @@ CDXView::CDXView()
     ZeroMemory(&m_projection, sizeof(m_projection));
 }
 
-//--------------------------------------------------------------------------------------
-// CDXView Destructor
-//--------------------------------------------------------------------------------------
+// CDXView Destructor.
 CDXView::~CDXView()
 {
     CleanupDevice();
 }
 
-//--------------------------------------------------------------------------------------
-// Clean up the objects we've created
-//--------------------------------------------------------------------------------------
+// Clean up the objects we've created.
 void CDXView::CleanupDevice()
 {
     if (m_pImmediateContext) m_pImmediateContext->ClearState();
@@ -78,9 +78,7 @@ void CDXView::CleanupDevice()
     if (m_pd3dDevice) m_pd3dDevice->Release();
 }
 
-//--------------------------------------------------------------------------------------
-// Create Direct3D device and swap chain
-//--------------------------------------------------------------------------------------
+// Create Direct3D device and swap chain.
 HRESULT CDXView::InitDevice()
 {
     HRESULT hr = S_OK;
@@ -374,14 +372,12 @@ HRESULT CDXView::InitDevice()
     return S_OK;
 }
 
+// OnCreate is called automatically during window creation when a
+// WM_CREATE message received.
+// Tasks such as setting the icon, creating child windows, or anything
+// associated with creating windows are normally performed here.
 int CDXView::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate is called automatically during window creation when a
-    // WM_CREATE message received.
-
-    // Tasks such as setting the icon, creating child windows, or anything
-    // associated with creating windows are normally performed here.
-
     UNREFERENCED_PARAMETER(cs);
 
     // Set the window's icon
@@ -403,18 +399,14 @@ int CDXView::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
-//--------------------------------------------------------------------------------------
-// Set the window creation parameters
-//--------------------------------------------------------------------------------------
+// Set the window creation parameters.
 void CDXView::PreCreate(CREATESTRUCT& cs)
 {
     cs.cx = 800;
     cs.cy = 600;
 }
 
-//--------------------------------------------------------------------------------------
-// Render a frame
-//--------------------------------------------------------------------------------------
+// Render a frame.
 void CDXView::Render()
 {
     // Update our time
@@ -432,42 +424,30 @@ void CDXView::Render()
         t = (timeCur - timeStart) / 1000.0f;
     }
 
-    //
     // Animate the cube
-    //
     m_world = XMMatrixRotationY( t );
 
-    //
     // Clear the back buffer
-    //
     m_pImmediateContext->ClearRenderTargetView(m_pRenderTargetView, Colors::MidnightBlue);
 
-    //
     // Update variables
-    //
     ConstantBuffer cb;
     cb.mWorld = XMMatrixTranspose(m_world);
     cb.mView = XMMatrixTranspose(m_view);
     cb.mProjection = XMMatrixTranspose(m_projection);
     m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
-    //
     // Renders a triangle
-    //
     m_pImmediateContext->VSSetShader(m_pVertexShader, nullptr, 0);
     m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
     m_pImmediateContext->PSSetShader(m_pPixelShader, nullptr, 0);
     m_pImmediateContext->DrawIndexed(36, 0, 0);        // 36 vertices needed for 12 triangles in a triangle list
 
-    //
     // Present our back buffer to our front buffer
-    //
     m_pSwapChain->Present(0, 0);
 }
 
-//--------------------------------------------------------------------------------------
 // Window Procedure. Handles window messages.
-//--------------------------------------------------------------------------------------
 LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     PAINTSTRUCT ps;

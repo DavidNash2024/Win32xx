@@ -1,3 +1,6 @@
+/////////////////////////////
+// CoverImage.cpp
+//
 
 #include "stdafx.h"
 
@@ -13,7 +16,11 @@
 
 using namespace Gdiplus;
 
-// Construtor. 
+///////////////////////////////////
+// CCoverImage function definitions
+//
+
+// Constructor.
 CCoverImage::CCoverImage()
 {
     // Initialize GDI+.

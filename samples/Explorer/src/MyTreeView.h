@@ -1,16 +1,17 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // MyTreeView.h
-//  Declaration of the CMyTreeView class
+//
 
 #ifndef MYTREEVIEW_H
 #define MYTREEVIEW_H
-
 
 #include "ShellWrapper.h"
 
 using namespace ShellWrapper;
 
-
+/////////////////////////////////////
+// Declaration of the CTreeView class
+//
 class CMyTreeView : public CTreeView
 {
 public:
@@ -31,7 +32,9 @@ public:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    class TreeItemData //A nested class inside CMyTreeView
+    // TreeItemData is a nested class inside CMyTreeView.
+    // Each tree view item has a pointer to TreeItemData.
+    class TreeItemData
     {
     public:
         TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& parentFolder);
@@ -60,7 +63,6 @@ private:
 
     CContextMenu2 m_ccm2;
     std::vector <TreeItemDataPtr> m_pItems;
-
 };
 
 #endif  // MYTREEVIEW_H

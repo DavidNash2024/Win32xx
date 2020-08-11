@@ -1,23 +1,29 @@
 //////////////////////////////////////////////
 // Files.cpp - Definitions for CViewFiles, CContainFiles
 //             and DockFiles classes
+//
 
 #include "stdafx.h"
 #include "Files.h"
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewFiles functions
+//////////////////////////////////
+// CViewFiles function definitions
+//
+
+// Constructor.
 CViewFiles::CViewFiles()
 {
 }
 
+// Destructor.
 CViewFiles::~CViewFiles()
 {
     if (IsWindow()) DeleteAllItems();
 }
 
+// Called when a window handle (HWND) is attached to CViewFiles.
 void CViewFiles::OnAttach()
 {
     // Set the image lists
@@ -34,6 +40,7 @@ void CViewFiles::OnAttach()
     InsertItems();
 }
 
+// Adds an item to the list-view control.
 int CViewFiles::AddItem(LPCTSTR text, int image)
 {
     LVITEM lvi;
@@ -45,6 +52,7 @@ int CViewFiles::AddItem(LPCTSTR text, int image)
     return InsertItem(lvi);
 }
 
+// Configures the columns (header control) of the list view.
 void CViewFiles::SetColumns()
 {
     //empty the list
@@ -64,6 +72,7 @@ void CViewFiles::SetColumns()
     }
 }
 
+// Inserts 4 items into the list-view control.
 void CViewFiles::InsertItems()
 {
     // Add 4th item
@@ -86,11 +95,13 @@ void CViewFiles::InsertItems()
     SetItemText(item, 2, _T("Folder"));
 }
 
+// Called when the window is destroyed.
 void CViewFiles::OnDestroy()
 {
     SetImageList(NULL, LVSIL_SMALL);
 }
 
+// Process the list-view's window messages.
 LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -104,8 +115,11 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 
-///////////////////////////////////////////////
-// CContainFiles functions
+/////////////////////////////////////
+// CContainFiles function definitions
+//
+
+// Constructor.
 CContainFiles::CContainFiles()
 {
     SetTabText(_T("FileView"));
@@ -114,13 +128,16 @@ CContainFiles::CContainFiles()
     SetView(m_viewFiles);
 }
 
-/////////////////////////////////////////////////
-//  Definitions for the CDockFiles class
+//////////////////////////////////
+// CDockFiles function definitions
+//
+
+// Constructor.
 CDockFiles::CDockFiles()
 {
     SetView(m_files);
 
-    // Set the width of the splitter bar
+    // Set the width of the splitter bar.
     SetBarWidth(8);
 }
 

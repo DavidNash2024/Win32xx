@@ -23,14 +23,14 @@ BOOL CTaskDialogApp::InitInstance()
     if (!CTaskDialog::IsSupported())
     {
         // Task Dialogs are only supported on Vista and above
-        MessageBox(NULL, _T("Vista or better is required for Task Dialogs"), _T("Not Supported!"), MB_ICONERROR);   
+        MessageBox(NULL, _T("Vista or better is required for Task Dialogs"), _T("Not Supported!"), MB_ICONERROR);
         return FALSE;
     }
 
     CMyTaskDialog td;
-    
+
     td.SetOptions( TDF_ALLOW_DIALOG_CANCELLATION | TDF_USE_COMMAND_LINKS | TDF_EXPANDED_BY_DEFAULT | TDF_SHOW_PROGRESS_BAR | TDF_CALLBACK_TIMER);
-    
+
     // Add the buttons
     td.AddCommandControl( CB_FIRST, MAKEINTRESOURCE(IDS_CB_FIRST) );
     td.AddCommandControl( CB_SECOND, MAKEINTRESOURCE(IDS_CB_SECOND) );
@@ -54,7 +54,7 @@ BOOL CTaskDialogApp::InitInstance()
     td.SetFooterIcon(TD_INFORMATION_ICON);
 
     // Run the task dialog
-    HRESULT hr = td.DoModal();  // throws a CWinException on failure  
+    HRESULT hr = td.DoModal();  // throws a CWinException on failure
 
     // Respond to the result
     if (SUCCEEDED(hr))

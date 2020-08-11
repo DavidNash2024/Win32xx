@@ -13,9 +13,9 @@ CRichView::~CRichView()
 {
 }
 
-UINT CRichView::CollatePages()
 // Calculates the character position of the page breaks, and returns
 // the number of pages.
+UINT CRichView::CollatePages()
 {
     CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
@@ -71,8 +71,8 @@ void CRichView::DoPrint(LPCTSTR docName)
         QuickPrint(docName);
 }
 
-CRect CRichView::GetPageRect()
 // Returns a CRect of the entire printable area. Units are measured in twips.
+CRect CRichView::GetPageRect()
 {
     CRect rcPage;
 
@@ -86,7 +86,7 @@ CRect CRichView::GetPageRect()
     int logPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);   // in pixels per logical inch
     int logPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);   // in pixels per logical inch
 
-    int tpi = 1440;     // twips per inch 
+    int tpi = 1440;     // twips per inch
 
     rcPage.right = (horizRes / logPixelsX) * tpi;
     rcPage.bottom = (vertRes / logPixelsY) * tpi;
@@ -94,8 +94,8 @@ CRect CRichView::GetPageRect()
     return rcPage;
 }
 
-CRect CRichView::GetPrintRect()
 // Returns the print area within the page. Units are measured in twips.
+CRect CRichView::GetPrintRect()
 {
     int margin = 200;
 
@@ -133,9 +133,9 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
 }
 
-void CRichView::PrintPage(CDC& dc, UINT page)
 // Prints the specified page to specified dc.
 // Called by CPrintPreview, and also used for printing.
+void CRichView::PrintPage(CDC& dc, UINT page)
 {
     CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
@@ -158,9 +158,9 @@ void CRichView::PrintPage(CDC& dc, UINT page)
     FormatRange();
 }
 
-void CRichView::QuickPrint(LPCTSTR docName)
 // Print the document without bringing up a print dialog.
 // docName - specifies the document name for the print job.
+void CRichView::QuickPrint(LPCTSTR docName)
 {
     // Acquire the currently selected printer and page settings
     CPrintDialog printDlg;

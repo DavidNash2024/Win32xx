@@ -7,10 +7,10 @@
 
 BOOL CMyTaskDialog::OnTDButtonClicked(int buttonID)
 // Called when the user selects a button or command link.
-{ 
+{
     UNREFERENCED_PARAMETER(buttonID);
     TRACE("Button or command link pressed\n");
-    
+
     // we could return TRUE to prevent the task dialog from closing
     return FALSE;
 }
@@ -64,11 +64,11 @@ BOOL CMyTaskDialog::OnTDRadioButtonClicked(int radioButtonID)
 {
     UNREFERENCED_PARAMETER(radioButtonID);
     TRACE("Radio Button Clicked\n");
-    return TRUE; 
+    return TRUE;
 }
 
-BOOL CMyTaskDialog::OnTDTimer(DWORD tickCount)  
-// Called every 200 milliseconds (aproximately) when the TDF_CALLBACK_TIMER flag is set. 
+BOOL CMyTaskDialog::OnTDTimer(DWORD tickCount)
+// Called every 200 milliseconds (aproximately) when the TDF_CALLBACK_TIMER flag is set.
 {
     UNREFERENCED_PARAMETER(tickCount);
     static int i = 0;

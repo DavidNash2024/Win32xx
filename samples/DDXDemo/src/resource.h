@@ -45,11 +45,11 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
         Planning and Preparation Subsystem project for C++ programming.
-        
+
     Acknowledgement:
     The author would like to thank and acknowledge the advice, critical
     review, insight, and assistance provided by David Nash in the development
-    of this work.       
+    of this work.
 
 *******************************************************************************/
 
@@ -67,7 +67,7 @@
   // Resource ID for the dialog
 #define IDD_MAIN_DIALOG                 100
 
-  // Resource IDs for standard menu items 
+  // Resource IDs for standard menu items
 #define IDM_FILE_NEW                    200
 #define IDM_FILE_OPEN                   201
 #define IDM_FILE_SAVE                   202

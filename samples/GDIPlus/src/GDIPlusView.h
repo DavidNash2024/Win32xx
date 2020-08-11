@@ -1,5 +1,6 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // GDIPlusView.h
+//
 
 #ifndef GDIPLUSVIEW_H
 #define GDIPLUSVIEW_H
@@ -15,7 +16,9 @@
 #endif
 
 
+////////////////////////////////////////
 // Declaration of the CGDIPlusView class
+//
 class CGDIPlusView : public CWnd
 {
 public:

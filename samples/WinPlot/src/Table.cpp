@@ -95,7 +95,7 @@ namespace Calc
         assert(it != m_symbolMap.end());
         return value;
     }
-    
+
     // Adds or modifies a symbol table entry
     void SymbolTable::SetValue(const CString& symbol, double value)
     {

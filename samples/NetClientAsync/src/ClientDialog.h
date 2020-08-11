@@ -47,7 +47,7 @@ private:
     class CButtonConnect : public CButton {};
     class CButtonSend : public CButton {};
     class CRadioIP4 : public CButton {};
-    class CRadioIP6 : public CButton {};    
+    class CRadioIP6 : public CButton {};
     class CRadioTCP : public CButton {};
     class CRadioUDP : public CButton {};
 

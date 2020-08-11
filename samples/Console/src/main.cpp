@@ -1,6 +1,6 @@
-//////////////////////////////////
+/////////////////////////////
 // main.cpp
-
+//
 
 #include "stdafx.h"             // Includes the Win32++ header files
 #include "tchar_console.h"      // Adds tcout (a TCHAR version of std::cout)

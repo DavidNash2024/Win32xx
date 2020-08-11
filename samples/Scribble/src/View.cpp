@@ -37,7 +37,7 @@ CDoc& CView::GetDoc()
 
 // Retrieve the PlotPoint data
 std::vector<PlotPoint>& CView::GetAllPoints()
-{ 
+{
     return GetDoc().GetAllPoints();
 }
 
@@ -152,7 +152,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
         GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), true, m_penColor);
     }
-    
+
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -184,7 +184,7 @@ void CView::Print(LPCTSTR docName)
     if (printDlg.DoModal(*this) == IDOK)    // throws exception if there is no default printer
     {
         QuickPrint(docName);
-    } 
+    }
 }
 
 

@@ -37,10 +37,11 @@ struct MovieInfo
 };
 
 typedef std::list<MovieInfo> MoviesData;
-
+//////////////////////////////////////////////////////////////////
 // Declaration of the CMainFrame class
 // The frame has a toolbar and statusbar.
-// A resizable treeview, listview and dialog occupy the view area. 
+// A resizable treeview, listview and dialog occupy the view area.
+//
 class CMainFrame : public CDockFrame
 {
 public:
@@ -75,7 +76,7 @@ public:
 
     CViewDialog& GetViewDialog() { return m_pDockDialog->GetViewDialog(); }
     CViewList& GetViewList()  { return m_viewList; }
-    CViewTree& GetViewTree() { return m_pDockTree->GetViewTree(); }  
+    CViewTree& GetViewTree() { return m_pDockTree->GetViewTree(); }
     std::vector<CString> GetWords(const CString& str) const;
     bool IsWordInString(const CString& sentence, const CString& word) const;
     void LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movie);
@@ -122,9 +123,9 @@ private:
     CWinThread       m_thread;
     CSplash          m_splash;
     std::vector<FoundFileInfo> m_foundFiles;
-    
+
     // Use lists because pointers to members of a list are always valid.
-    std::list<CString> m_boxSets;    
+    std::list<CString> m_boxSets;
     std::list<CString> m_decades;
     std::list<CString> m_genres;
 

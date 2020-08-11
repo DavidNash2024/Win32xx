@@ -5,8 +5,9 @@
 #ifndef MDICHILDRECT_H
 #define MDICHILDRECT_H
 
-
-// Declaration of CViewRect
+/////////////////////////////////////
+// Declaration of the CViewRect class
+//
 class CViewRect : public CWnd
 {
 public:
@@ -22,8 +23,9 @@ private:
     int m_cyClientMax;
 };
 
-
-// Declaration of CMDIChildRect
+/////////////////////////////////////////
+// Declaration of the CMDIChildRect class
+//
 class CMDIChildRect : public CMDIChild
 {
 public:
@@ -36,7 +38,6 @@ protected:
 private:
     CViewRect m_rectView;
     CMenu m_menu;
-
 };
 
 

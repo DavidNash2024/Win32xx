@@ -8,28 +8,33 @@
 #include "Output.h"
 #include "resource.h"
 
+///////////////////////////////////
+// CSimpleView function definitions
+//
 
-// CSimpleView definitions
+// Constructor.
 CSimpleView::CSimpleView() : m_color(RGB(0,0,255))
 {
 }
 
+// Called when part of the window needs to be redrawn.
 void CSimpleView::OnDraw(CDC& dc)
 {
-    //Centre some text in our view window
+    // Centre some text in our view window.
     CRect rc = GetClientRect();
     dc.SetTextColor(m_color);
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-LRESULT CSimpleView::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse click on the window
+LRESULT CSimpleView::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the window is resized.
 LRESULT CSimpleView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -39,6 +44,8 @@ LRESULT CSimpleView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     Invalidate();   // Force the window to be repainted
     return 0;
 }
+
+// Process the simple view's window messages.
 LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -51,43 +58,52 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-// CSplitterMDIChild definitions
+/////////////////////////////////////////
+// CSplitterMDIChild function definitions
+//
+
+// Constructor.
 CSplitterMDIChild::CSplitterMDIChild()
 {
     // Set m_View as the view window of the MDI child
     SetView(m_view);
-    
+
     // Set the menu for this MDI child
     SetHandles(LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView")), NULL);
 }
 
+// Destructor.
 CSplitterMDIChild::~CSplitterMDIChild()
 {
 }
 
+// Called when the window is created.
 int CSplitterMDIChild::OnCreate(CREATESTRUCT& cs)
 {
-    // Set the window caption
+    // Set the window caption.
     SetWindowText( _T("Splitter Window") );
-    
-    // Set the window icons
+
+    // Set the window icons.
     SetIconLarge(IDI_VIEW);
     SetIconSmall(IDI_VIEW);
 
     return CMDIChild::OnCreate(cs);
 }
 
+// Called after the window is created.
+// Called after OnCreate.
 void CSplitterMDIChild::OnInitialUpdate()
 {
-    // Add Child dockers
+    // Add Child dockers.
     DWORD style = DS_CLIENTEDGE | DS_NO_UNDOCK;
     m_view.SetDockStyle(style);
     CDocker* pDockLeft  = m_view.AddDockedChild(new CDockOutput, DS_DOCKED_LEFT  | style, 200, 0);
     CDocker* pDockRight = m_view.AddDockedChild(new CDockOutput, DS_DOCKED_RIGHT | style, 200, 0);
     pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, 0, 0);
-    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, 0, 0);    
+    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, 0, 0);
 }
 
+// Respond to menu and toolbar input.
 BOOL CSplitterMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Respond to menu and toolbar input
@@ -102,17 +118,19 @@ BOOL CSplitterMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_COLOR_GREEN:   OnColor(RGB(0,255,0));      return TRUE;
     case IDM_COLOR_BLUE:    OnColor(RGB(0,0,255));      return TRUE;
     case IDM_COLOR_WHITE:   OnColor(RGB(255,255,255));  return TRUE;
-    } 
+    }
 
     return FALSE;
 }
 
+// Sets the text color in the simple view. 
 void CSplitterMDIChild::OnColor(COLORREF rgb)
 {
     m_view.GetSimpleView().SetColor(rgb);
     m_view.GetSimpleView().Invalidate();
 }
 
+// Called when the window is resized.
 LRESULT CSplitterMDIChild::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     m_view.RecalcDockLayout();
@@ -121,6 +139,7 @@ LRESULT CSplitterMDIChild::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Process the MDI child's window messages.
 LRESULT CSplitterMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

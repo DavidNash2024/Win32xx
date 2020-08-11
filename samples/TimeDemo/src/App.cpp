@@ -6,12 +6,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description:  The WinMain() function and  CApp Class implementation 
-    for this application using the Win32++ framework, Copyright (c) 2005-2020 
+    Contents Description:  The WinMain() function and  CApp Class implementation
+    for this application using the Win32++ framework, Copyright (c) 2005-2020
     David Nash, under permissions granted therein.
 
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -23,7 +23,7 @@
     tort or otherwise, arising from, out of, or in connection with, these
     materials, the use thereof, or any other other dealings therewith.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
 
@@ -170,7 +170,7 @@ InitInstance()                                                          /*
         m_version.c_str(), m_compiledWith.c_str(),
         IntDat(compiled_on).c_str());
 
-      // Set the AboutBoxStatus 
+      // Set the AboutBoxStatus
     m_frame.GetAboutBox().SetStatus(m_aboutStatement);
       //Create the Frame Window
     m_frame.SetAppName(m_appName);

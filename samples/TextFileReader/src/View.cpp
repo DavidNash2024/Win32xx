@@ -5,12 +5,8 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CView class for this sample progam 
-    using the Win32++ Windows interface classes, Copyright (c) 2005-2020 David 
-    Nash, under permissions granted therein.
-
-    Caveats: These materials are available under the same provisions as
-    found in the Win32++ copyright.txt notice.
+    Contents Description: Declaration of the CView class for this sample
+    program using the Win32++ Windows interface classes.
 
     Special Conventions: This class displays the client rectangle filled
     with lines of text obtained from the CDoc class. Variable horizontal tabs
@@ -50,7 +46,7 @@ CView()                                                                   /*
     SetDefaults();
 
       // This is an optional text message displayed at the end of the file view.
-      // Set this to null if a message isn't required;    
+      // Set this to null if a message isn't required;
     m_endOfView = L"---- end of document ----";
 }
 
@@ -156,7 +152,7 @@ OnDraw(CDC& memDC)                                                          /*
                 line_no.Format(fmt, i + 1);
             if (i == doc_length)
             {
-                if (m_endOfView != NULL) 
+                if (m_endOfView != NULL)
                     TextLineOut(memDC, 0, i, m_endOfView);
             }
             else
@@ -350,10 +346,10 @@ ToggleLineNumbers()                                                     /*
 
     Toggle the display of line numbering in the listing of file contents.
 *-----------------------------------------------------------------------------*/
-{ 
+{
     m_showNumbers = !m_showNumbers;
     SetAppSize(TRUE);
-    return m_showNumbers; 
+    return m_showNumbers;
 }
 /*----------------------------------------------------------------------------*/
 

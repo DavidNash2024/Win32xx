@@ -79,7 +79,7 @@ LRESULT CMainWindow::OnWindowCreated()
     // Message recieved when a test window is created
     if (++m_windowsCreated == m_testWindows)
         OnAllWindowsCreated();
-    
+
     return 0;
 }
 

@@ -5,12 +5,11 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the AboutBox dialog for this 
-    sample prpgram using the Win32++ Windows interface classes, Copyright 
-    (c) 2005-2020 David Nash, under permissions granted therein.
+    Contents Description: Declaration of the AboutBox dialog for this
+    sample program using the Win32++ Windows interface classes.
 
-     Programming Notes: The programming standards roughly follow those 
-     established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+     Programming Notes: The programming standards roughly follow those
+     established by the 1997-1999 Jet Propulsion Laboratory Network Planning
      and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -27,11 +26,11 @@ AboutBox    : public CDialog                                            /*
     public:
         AboutBox();
         virtual ~AboutBox(){}
-        
+
         void    SetAboutBoxInfo(LPCTSTR info) { m_aboutBoxInfo = info;}
 
     protected:
-        BOOL    OnInitDialog(); 
+        BOOL    OnInitDialog();
 
     private:
         CString m_aboutBoxInfo; // about the program, credits, etc.

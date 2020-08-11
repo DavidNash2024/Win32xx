@@ -62,7 +62,7 @@ class CMainFrame;
 class CView;
 
 /*============================================================================*/
-    class 
+    class
 CDoc    : public CObject                        /*
 
     This application's document class, a pattern for developing new apps.
@@ -115,7 +115,7 @@ CDoc    : public CObject                        /*
     private:
         CHARRANGE FindNext(const MyFindReplaceDialog&, CHARRANGE);
         void      NotFound(const MyFindReplaceDialog&);
-            
+
           // private data
         CFile   m_Doc_file;        // holds the document name, path, etc.
         BOOL    m_Doc_is_open;     // the document status

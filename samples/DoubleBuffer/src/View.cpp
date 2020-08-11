@@ -1,16 +1,21 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // View.cpp
-//  Definitions for the CView class
+//
 
 #include "stdafx.h"
 #include "view.h"
 #include "resource.h"
 
+/////////////////////////////
+// CView function definitions
+//
 
+// Constructor.
 CView::CView()
 {
 }
 
+// Creates the mask bitmap for the ball.
 CBitmap CView::CreateMaskBitmap()
 {
     BITMAP bm = m_blue.GetBitmapData();
@@ -34,13 +39,7 @@ CBitmap CView::CreateMaskBitmap()
     return mask;
 }
 
-void CView::OnDraw(CDC& dc)
-// OnDraw is called when part or all of the window needs to be redrawn
-{
-    UNREFERENCED_PARAMETER(dc);
-}
-
-
+// Called when the window is created.
 int CView::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER (cs);
@@ -52,24 +51,25 @@ int CView::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// OnInitialUpdate is called immediately after the window is created.
 void CView::OnInitialUpdate()
-// OnInitialUpdate is called immediately after the window is created
 {
     TRACE("View window created\n");
 
+    // Start the timer
     SetTimer(ID_TIMER, 10, 0);
 }
 
+// Redraws the balls in new positions when a timer event occurs.
 LRESULT CView::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     CClientDC dc(*this);
     CRect rc = GetClientRect();
 
-
-    static int x = 0;
-    static int y = 0;
-    static int cx = 1;
-    static int cy = 1;
+    static int x = 0;     // x position
+    static int y = 0;     // y position
+    static int cx = 1;    // x increment or decrement
+    static int cy = 1;    // y increment or decrement
 
     x = x + cx;
     if (x > rc.Width() - m_ballSize.cx)
@@ -122,16 +122,7 @@ LRESULT CView::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-void CView::PreCreate(CREATESTRUCT& cs)
-{
-    // Here we set the defaults used by the create function for the view window
-    // Preforming this is optional, but doing so allows us to
-    // take more precise control over the window we create.
-
-    // Set the extended style
-    cs.dwExStyle = WS_EX_CLIENTEDGE;
-}
-
+// Set the WNDCLASS parameters before the window is created.
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Here we set the Window class parameters.
@@ -151,8 +142,8 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
 
-LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // All window messages for this window pass through WndProc
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {

@@ -1,28 +1,35 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
 
-
+//////////////////////////////////////
 // Definitions for the CMyDialog class
+//
+
+// Constructor.
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
     if (GetComCtlVersion() < 471)
         ::MessageBox(NULL,  _T("Date Time control not supported"), _T(""), MB_OK );
 }
 
+// Destructor.
 CMyDialog::~CMyDialog()
 {
 }
 
+// Called when the dialog window is destroyed.
 void CMyDialog::OnDestroy()
 {
     // End the application
     ::PostQuitMessage(0);
 }
 
+// Processes the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -43,6 +50,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Called when a control sends a command notification (WM_COMMAND).
 BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -68,8 +76,8 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 
     case IDC_BUTTONCANCEL:
         {
-            // Set timer for 1000 miliseconds
-            SetTimer(ID_TIMER, 1000, 0);
+            TRACE(_T("Cancel Button Pressed\n"));
+            OnCancel();
             return TRUE;
         }
     }
@@ -77,6 +85,7 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called before the dialog is displayed.
 BOOL CMyDialog::OnInitDialog()
 {
     // Set the Icon
@@ -93,6 +102,7 @@ BOOL CMyDialog::OnInitDialog()
     return TRUE;
 }
 
+// Called when a notification (WM_NOTIFY) is recieved.
 LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(wparam);
@@ -112,6 +122,7 @@ LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Called when the enter key is pressed.
 void CMyDialog::OnOK()
 {
     // This function suppresses the default OnOK

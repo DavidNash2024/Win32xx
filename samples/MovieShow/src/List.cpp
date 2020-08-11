@@ -8,17 +8,22 @@
 #include "MovieShowApp.h"
 
 
-///////////////////////////////////////////////
-// CViewList functions
+/////////////////////////////////
+// CViewList function definitions
+//
+
+// Constructor
 CViewList::CViewList()
 {
 }
 
+// Destructor.
 CViewList::~CViewList()
 {
     if (IsWindow()) DeleteAllItems();
 }
 
+// Adds an item to the list view.
 void CViewList::AddItem(const MovieInfo& mi)
 {
     bool isFound = false;
@@ -51,6 +56,7 @@ void CViewList::AddItem(const MovieInfo& mi)
     }
 }
 
+// Compares lp1 and lp2. Used for sorting.
 int CALLBACK CViewList::CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortViewItems)
 {
     //  The comparison function must return a negative value if the first
@@ -160,7 +166,7 @@ LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
         CMainFrame& Frame = GetMovieShowApp()->GetMainFrame();
         if (GetNextItem(-1, LVNI_SELECTED) >= 0)
             Frame.OnRClickListItem();
-        
+
         return 0;
     }
 
@@ -169,7 +175,7 @@ LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
         CMainFrame& frame = GetMovieShowApp()->GetMainFrame();
         int item = pnmitem->iItem;
 
-        MovieInfo* pmi = (MovieInfo*)GetItemData(item); 
+        MovieInfo* pmi = (MovieInfo*)GetItemData(item);
         assert(pmi);
         if (pmi)
             frame.PlayMovie(pmi->fileName);
@@ -181,7 +187,7 @@ LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
     {
         CMainFrame& frame = GetMovieShowApp()->GetMainFrame();
         int item = pnmitem->iItem;
-        
+
         MovieInfo* pmi = reinterpret_cast<MovieInfo*>(GetItemData(item));
         frame.OnSelectListItem(pmi);
 
@@ -224,7 +230,7 @@ void CViewList::SortColumn(int column, bool isSortDown)
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped. 
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
     SetHeaderSortImage(column, isSortDown ? SHOW_DOWN_ARROW : SHOW_UP_ARROW);
@@ -250,7 +256,7 @@ void CViewList::PreCreate(CREATESTRUCT& cs)
 // Configures the columns in the list view's header.
 void CViewList::SetColumn()
 {
-    //initialise the columns
+    // Initialise the columns
     LV_COLUMN lvColumn;
     ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
     lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
@@ -307,7 +313,7 @@ BOOL CViewList::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
 
 }
 
-// Sets the width of the last column to match the window width
+// Sets the width of the last column to match the window width.
 void CViewList::SetLastColumnWidth()
 {
     int remainingWidth = GetClientRect().Width();

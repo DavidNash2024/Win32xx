@@ -46,7 +46,7 @@
     controls, and client area, font selection for controls, standard file
     open and save-as dialogs, and most-recently used list (MRU), with
     persistent data stored in and retrieved from archive files.
-    
+
     Acknowledgement:
         The author would like to thank and acknowledge the advice,
         critical review, insight, and assistance provided by David Nash
@@ -85,7 +85,7 @@ InitInstance()                              /*
     This method is immediately called from the base class (CWinApp) Run()
     method to create the frame, perform initialization of the app, and
     return TRUE on success. Returning FALSE terminates the program.
-    
+
     Here, the About box information, app path, app directory, app name,
     app exe name, archive file name, and other constants are generated and
     saved as public data members of this object via the mere declaration of
@@ -93,7 +93,7 @@ InitInstance()                              /*
 *-----------------------------------------------------------------------------*/
 {
       //Create the Frame Window
-    m_Frame.Create();   // throws a CWinException on failure  
+    m_Frame.Create();   // throws a CWinException on failure
 
     return TRUE;
 }
@@ -166,7 +166,7 @@ WinMain(HINSTANCE , HINSTANCE , LPSTR , int nCmdShow)                         /*
     if (WaitForSingleObject(m_hSem, 0) == WAIT_TIMEOUT)
     {
         ::MessageBox(NULL, _T("The allowed number of instances of this\n")
-        _T("application are already running."), _T("Stop"), MB_OK | 
+        _T("application are already running."), _T("Stop"), MB_OK |
         MB_ICONSTOP | MB_TASKMODAL);
         CloseHandle(m_hSem);
         return 0;  // before entering the message loop
@@ -183,7 +183,7 @@ WinMain(HINSTANCE , HINSTANCE , LPSTR , int nCmdShow)                         /*
     catch (CException &e)   // catch all CException events
     {
           // Process the exception and quit
-        CString msg = e.what() + (CString)_T("\n") + e.GetText() + 
+        CString msg = e.what() + (CString)_T("\n") + e.GetText() +
         (CString)_T("\nWinMain Goodbye...");
         ::MessageBox(NULL, msg, _T("Standard Exception"), MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);

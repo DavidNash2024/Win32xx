@@ -29,15 +29,15 @@ INT_PTR CButtonPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 BOOL CButtonPage::OnApply()
-{ 
-    TRACE ("Appy button pressed\n"); 
+{
+    TRACE ("Appy button pressed\n");
 
     SetModified(FALSE);
     return Validate();
 }
 
 void CButtonPage::OnCancel()
-{ 
+{
     TRACE ("Cancel button pressed\n");
 
     // Close the propertysheet.
@@ -45,16 +45,16 @@ void CButtonPage::OnCancel()
 }
 
 BOOL CButtonPage::OnInitDialog()
-{ 
+{
     // Center the PropertySheet (parent) over the frame before it is displayed.
     GetParent().CenterWindow();
 
-    TRACE ("Button page created\n"); 
-    return TRUE; 
+    TRACE ("Button page created\n");
+    return TRUE;
 }
 
 void CButtonPage::OnOK()
-{ 
+{
     TRACE ("OK button pressed\n");
 
     // Close the propertysheet
@@ -62,9 +62,9 @@ void CButtonPage::OnOK()
 }
 
 BOOL CButtonPage::OnQueryCancel()
-{ 
-    TRACE ("Ok to Cancel?\n"); 
-    
+{
+    TRACE ("Ok to Cancel?\n");
+
     return FALSE;    // Allow cancel to proceed
 }
 
@@ -90,7 +90,7 @@ BOOL CButtonPage::Validate()
 //      TRACE("Button Page Validation passed\n");
 //  else
 //      MessageBox(_T("Button Page Validation Failed"), _T("PageSheet Check"), MB_OK);
-    
+
     return isValid;
 }
 
@@ -167,6 +167,6 @@ LRESULT CMyPropertySheet::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);    
+    return WndProcDefault(msg, wparam, lparam);
 }
 

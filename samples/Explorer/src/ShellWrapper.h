@@ -17,36 +17,37 @@
 
 namespace ShellWrapper
 {
-
-    //Global functions
+    ///////////////////
+    // Global functions
+    //
     BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName);
     BOOL GetDisplayName(LPCITEMIDLIST pidlFull, LPTSTR pszDisplayName);
 
-    //Wrapper class for a LPITEMIDLIST commonly called a pidl.
+    //////////////////////////////////////////////////////////
+    // Wrapper class for a LPITEMIDLIST commonly called a pidl
+    //
     class Cpidl
     {
         friend class CEnumIDList;
+        friend const Cpidl operator+ (const Cpidl& cpidlFull, const Cpidl& cpidlRel);
     public:
         Cpidl();
         Cpidl(const Cpidl& pidlSource);
         ~Cpidl();
 
-        HRESULT SHGetSpecialFolderLocation(HWND hwnd, int csidl);
-        DWORD_PTR SHGetFileInfo(DWORD dwFileAttributes, SHFILEINFO& sfi, UINT uFlags);
-        void Copy(const Cpidl& cpidlSource);
-        void Copy(LPCITEMIDLIST pidlSource);
         void Concatenate(const Cpidl& cpidlParent, const Cpidl& cpidlRel);
         void Concatenate(LPCITEMIDLIST pidlParent, LPCITEMIDLIST pidlRel);
+        void Copy(const Cpidl& cpidlSource);
+        void Copy(LPCITEMIDLIST pidlSource);
+        DWORD_PTR GetFileInfo(DWORD dwFileAttributes, SHFILEINFO& sfi, UINT uFlags);
         LPITEMIDLIST GetParent();
         LPITEMIDLIST GetPidl() const { return m_pidl; }
         LPITEMIDLIST GetRelative();
+        HRESULT GetSpecialFolderLocation(HWND hwnd, int csidl);
         BOOL IsEqual(const Cpidl& cpidl);
         void operator= (const Cpidl& cpidlSource);
         BOOL operator== (const Cpidl& cpidl);
         operator LPITEMIDLIST () { return m_pidl; }
-
-        //a global function declared as friend
-        friend const Cpidl operator+ (const Cpidl& cpidlFull, const Cpidl& cpidlRel);
 
     private:
         void Attach(LPCITEMIDLIST pidl);
@@ -58,8 +59,9 @@ namespace ShellWrapper
         LPITEMIDLIST m_pidlParent;
     };
 
-
-    //Wrapper class for an IContextMenu2 pointer
+    /////////////////////////////////////////////
+    // Wrapper class for an IContextMenu2 pointer
+    //
     class CContextMenu2
     {
     friend class CContextMenu;
@@ -74,10 +76,11 @@ namespace ShellWrapper
 
     private:
         IContextMenu2* m_pIContextMenu2;
-
     };
 
-    //Wrapper class for an IContextMenu pointer
+    ////////////////////////////////////////////
+    // Wrapper class for an IContextMenu pointer
+    //
     class CContextMenu
     {
     friend class CShellFolder;
@@ -85,8 +88,8 @@ namespace ShellWrapper
         CContextMenu();
         ~CContextMenu();
 
-        HRESULT InvokeCommand(CMINVOKECOMMANDINFO& Ici);
-        HRESULT QueryInterface(REFIID iid, CContextMenu2& cm2);
+        HRESULT Invoke(CMINVOKECOMMANDINFO& Ici);
+        HRESULT GetContextMenu2(CContextMenu2& cm2);
         HRESULT QueryContextMenu(HMENU hmenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, UINT uFlags);
 
     private:
@@ -94,7 +97,9 @@ namespace ShellWrapper
         IContextMenu* m_pIContextMenu;
     };
 
-    //Wrapper class for a LPENUMIDLIST
+    ///////////////////////////////////
+    // Wrapper class for a LPENUMIDLIST
+    //
     class CEnumIDList
     {
     friend class CShellFolder;
@@ -108,8 +113,9 @@ namespace ShellWrapper
         LPENUMIDLIST m_pEnumIDList;
     };
 
-
-    //Wrapper class for a LPSHELLFOLDER
+    ////////////////////////////////////
+    // Wrapper class for a LPSHELLFOLDER
+    //
     class CShellFolder
     {
     public:
@@ -117,24 +123,25 @@ namespace ShellWrapper
         CShellFolder(const CShellFolder& csfSource);
         void operator=(const CShellFolder& csfSource);
         ~CShellFolder();
-        void Delete();
-        HRESULT BindToObject(const Cpidl& pidl, LPBC pbc, REFIID riid, CShellFolder& NewFolder);
+
         HRESULT CompareIDs(LPARAM lparam, const Cpidl& cpidl1, const Cpidl& cpidl2);
-        void Copy(const CShellFolder& Source);
-        void Copy(LPSHELLFOLDER Source);
-        HRESULT CreateViewObject(HWND hwnd, REFIID riid, CContextMenu& ccm);
-        HRESULT EnumObjects(HWND hwndOwner, int grfFlags, CEnumIDList& cenumIDList);
-        HRESULT GetAttributesOf(UINT cidl, const Cpidl& cpidl, ULONG& rgfInOut);
-        HRESULT SHGetDesktopFolder();
-        HRESULT GetUIObjectOf(HWND hwndOwner, UINT nItems, LPCITEMIDLIST* pidlArray, REFIID riid, CContextMenu& cm);
-        LPSHELLFOLDER GetIShellFolder() {return m_IShellFolder;}
+        HRESULT DesktopFolder();
+        HRESULT GetAttributes(UINT cidl, const Cpidl& cpidl, ULONG& rgfInOut);
+        HRESULT GetContextMenu(HWND owner, CContextMenu& ccm);
+        HRESULT GetContextMenu(HWND owner, UINT items, LPCITEMIDLIST* pidlArray, CContextMenu& cm);
+        HRESULT GetEnumIDList(HWND owner, int grfFlags, CEnumIDList& cenumIDList);
+        LPSHELLFOLDER GetIShellFolder() {return m_pIShellFolder;}
+        HRESULT GetSubFolder(const Cpidl& pidl, CShellFolder& subFolder);
 
     private:
-        HRESULT AddRef() {return m_IShellFolder->AddRef();}
+        HRESULT AddRef() {return m_pIShellFolder->AddRef();}
         void Attach(LPSHELLFOLDER ShellFolder);
+        void Copy(const CShellFolder& Source);
+        void Copy(LPSHELLFOLDER Source);
+        void Release();
 
-        LPSHELLFOLDER m_IShellFolder;
-    }; //class CShellFolder
+        LPSHELLFOLDER m_pIShellFolder;
+    };
 
 } //namespace ShellWrapper
 

@@ -7,9 +7,11 @@
 #include "resource.h"
 
 
-////////////////////////
-// CViewRect definitions
+/////////////////////////////////
+// CViewRect function definitions
+//
 
+// Called when the window is created
 int CViewRect::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
@@ -17,14 +19,13 @@ int CViewRect::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
-
-// Note: The MDIChild gets an OnClose, but its view window doesn't
-//       so we use OnDestroy here
+// Called when the window is destroyed.
 void CViewRect::OnDestroy()
-{   
+{
     KillTimer(1);
 }
 
+// Called when the window is resized.
 LRESULT CViewRect::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -32,17 +33,18 @@ LRESULT CViewRect::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     if (wparam != SIZE_MINIMIZED)
     {
         m_cxClientMax = LOWORD (lparam) ;
-        if (m_cxClientMax < 1) 
+        if (m_cxClientMax < 1)
             m_cxClientMax = 1;
-        
+
         m_cyClientMax = HIWORD (lparam) ;
-        if (m_cyClientMax < 1) 
+        if (m_cyClientMax < 1)
             m_cyClientMax = 1;
     }
 
     return 0;
 }
 
+// Called when a timer event occurs.
 LRESULT CViewRect::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -71,7 +73,7 @@ LRESULT CViewRect::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
-
+// Process the view rect's window messages.
 LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -83,8 +85,11 @@ LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-////////////////////////////
-// CMDIChildRect definitions
+/////////////////////////////////////
+// CMDIChildRect function definitions
+//
+
+// Constructor.
 CMDIChildRect::CMDIChildRect()
 {
     m_menu.LoadMenu(_T("MdiMenuRect"));
@@ -92,10 +97,12 @@ CMDIChildRect::CMDIChildRect()
     SetView(m_rectView);
 }
 
+// Destructor.
 CMDIChildRect::~CMDIChildRect()
 {
 }
 
+// Called when the window is created.
 int CMDIChildRect::OnCreate(CREATESTRUCT& cs)
 {
     SetWindowText(_T("Rectangle Window"));

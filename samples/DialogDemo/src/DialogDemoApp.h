@@ -1,13 +1,15 @@
 ///////////////////////////////////////
-// DlgSubclassApp.h
+// DialogDemoApp.h
+//
 
 #ifndef DLGSUBCLASSAPP_H
 #define DLGSUBCLASSAPP_H
 
 #include "MyDialog.h"
 
-
-// Declaration of the CDialogApp class
+//////////////////////////////////////////
+// Declaration of the CDialogDemoApp class
+//
 class CDialogDemoApp : public CWinApp
 {
 public:

@@ -13,7 +13,7 @@ class CMyThread : public CWinThread
 public:
     CMyThread(int thread);
     virtual ~CMyThread() {}
-    
+
     virtual BOOL InitInstance();
     CTestWindow* GetTestWnd()   { return &m_testWnd; }
     int GetThreadCount()        { return m_thread; }

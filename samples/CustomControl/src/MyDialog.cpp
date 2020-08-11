@@ -1,25 +1,33 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
 
-
+//////////////////////////////////////
 // Definitions for the CMyDialog class
+//
+
+// Constructor.
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
+// Destructor.
 CMyDialog::~CMyDialog()
 {
 }
 
+// Called when the dialog window is destroyed
 void CMyDialog::OnDestroy()
 {
+    // Ends the application.
     ::PostQuitMessage(0);
 }
 
+// Processes the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Pass resizing messages on to the resizer
@@ -34,12 +42,13 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Called when the esc button is pressed.
 void CMyDialog::OnCancel()
 {
     // Suppress default handling of OnCancel.
-    // Called when the esc button is pressed.
 }
 
+// Called when the Enter key is pressed.
 void CMyDialog::OnOK()
 {
     TRACE("Enter key pressed\n");
@@ -78,6 +87,7 @@ void CMyDialog::OnOK()
 #endif
 }
 
+// Called before the dialog is displayed.
 BOOL CMyDialog::OnInitDialog()
 {
     // Set the Icon
@@ -93,6 +103,4 @@ BOOL CMyDialog::OnInitDialog()
 
     return TRUE;
 }
-
-
 

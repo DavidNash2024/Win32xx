@@ -5,12 +5,13 @@
 #include "resource.h"
 #include "mainfrm.h"
 
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
-// Definitions for the CMainFrame class
+// Constructor for CMainFrame.
 CMainFrame::CMainFrame() : m_sdiView(IDD_DIALOG1)
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     //Set m_SdiView as the view window of the frame
     SetView(m_sdiView);
 
@@ -19,28 +20,29 @@ CMainFrame::CMainFrame() : m_sdiView(IDD_DIALOG1)
     LoadRegistrySettings(_T("Win32++\\SdiDocViewForm"));
 }
 
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+// Loads the settings from the registry
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 {
     CFrame::LoadRegistrySettings(keyName);
-    GetDoc().LoadDocRegistry(GetRegistryKeyName().c_str());
+    GetDoc().LoadSettings(GetRegistryKeyName().c_str());
 
     return TRUE;
 }
 
+// Close the frame window to end the application.
 void CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
 }
 
+// Update the check state of the various menu items
 void CMainFrame::OnMenuUpdate(UINT id)
 {
-    // Update the check state of the various menu items
     switch (id)
     {
     case ID_CHECK_A:
@@ -60,6 +62,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CFrame::OnMenuUpdate(id);
 }
 
+// Respond to the toolbar and menu.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -95,13 +98,12 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
   return FALSE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -115,30 +117,35 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+// Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
     // Place any additional startup code here.
 }
 
+// Updates the Check A menu item.
 void CMainFrame::OnUpdateCheckA(UINT id)
 {
     BOOL isCheckA = GetDoc().GetCheckA();
     GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (isCheckA ? MF_CHECKED : MF_UNCHECKED));
 }
 
+// Updates the Check B menu item.
 void CMainFrame::OnUpdateCheckB(UINT id)
 {
     BOOL isCheckB = GetDoc().GetCheckB();
     GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (isCheckB ? MF_CHECKED : MF_UNCHECKED));
 }
 
+// Updates the Check C menu item.
 void CMainFrame::OnUpdateCheckC(UINT id)
 {
     BOOL isCheckC = GetDoc().GetCheckC();
     GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (isCheckC ? MF_CHECKED : MF_UNCHECKED));
 }
 
+// Updates the radio button menu selection.
 void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
     int fileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
@@ -147,27 +154,23 @@ void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
         radioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
 }
 
-void CMainFrame::PreCreate(CREATESTRUCT& cs)
-{
-    CFrame::PreCreate(cs);
-//  cs.cx = 500;
-//  cs.cy = 420;
-}
-
+// Save the settings in the registry.
 BOOL CMainFrame::SaveRegistrySettings()
 {
     CFrame::SaveRegistrySettings();
-    GetDoc().SaveDocRegistry(GetRegistryKeyName().c_str());
+    GetDoc().SaveSettings(GetRegistryKeyName().c_str());
 
     return TRUE;
 }
 
+// Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
 {
     // Set the bitmap used for menu icons
     AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
 }
 
+// Configure the toolbar.
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the toolbar buttons
@@ -184,6 +187,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (uMsg)

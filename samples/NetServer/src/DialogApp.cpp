@@ -14,7 +14,7 @@ CDialogApp::CDialogApp() : m_svrDialog(IDD_SERVER)
 BOOL CDialogApp::InitInstance()
 {
     //Display the Modal Dialog
-    m_svrDialog.DoModeless();   // throws a CWinException on failure   
+    m_svrDialog.DoModeless();   // throws a CWinException on failure
 
     return TRUE;
 }

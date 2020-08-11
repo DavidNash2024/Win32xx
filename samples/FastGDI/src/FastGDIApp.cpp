@@ -4,16 +4,21 @@
 #include "stdafx.h"
 #include "FastGDIApp.h"
 
+///////////////////////////////////
+// CFastGDIApp function definitions
+//
 
-// Definitions for the CFastGDIApp class
+// Constructor.
 CFastGDIApp::CFastGDIApp()
 {
 }
 
+// Destructor.
 CFastGDIApp::~CFastGDIApp()
 {
 }
 
+// Called when the application starts.
 BOOL CFastGDIApp::InitInstance()
 {
     //Create the Frame Window
@@ -21,5 +26,4 @@ BOOL CFastGDIApp::InitInstance()
 
     return TRUE;
 }
-
 

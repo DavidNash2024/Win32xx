@@ -1,4 +1,4 @@
-// Node.h: interface for the Node class, 
+// Node.h: interface for the Node class,
 //         and classes inherited from it.
 //
 //////////////////////////////////////////////////////////////////////
@@ -12,7 +12,7 @@ namespace Calc
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped. 
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
     //"Node" is the parent class of all nodes
@@ -32,7 +32,7 @@ namespace Calc
 
 
     class Node_Number : public Node
-        // a node type which holds a simple number, but not a 
+        // a node type which holds a simple number, but not a
         //  variable or constant from the SymbolTable
     {
     public:

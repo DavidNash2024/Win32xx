@@ -1,12 +1,17 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // GDIPlusView.cpp
-//  Definitions for the CGDIPlusView class
+//
 
 #include "stdafx.h"
 #include "GDIPlusView.h"
 
 using namespace Gdiplus;
 
+////////////////////////////////////
+// CGDIPlusView function definitions
+//
+
+// Constructor.
 CGDIPlusView::CGDIPlusView()
 {
     // Initialize GDI+.
@@ -14,12 +19,14 @@ CGDIPlusView::CGDIPlusView()
     GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
 }
 
+// Destructor.
 CGDIPlusView::~CGDIPlusView()
 {
     // Shutdown GDI+
     GdiplusShutdown(m_gdiplusToken);
 }
 
+// Draws a capped line.
 void CGDIPlusView::DrawCappedLine(CDC& dc)
 {
     Graphics graphics(dc);
@@ -30,11 +37,11 @@ void CGDIPlusView::DrawCappedLine(CDC& dc)
     graphics.DrawLine(&penCapped, 10, 175, 300, 175);
 }
 
+// Draws some polygons with gama corrections.
 void CGDIPlusView::DrawGamaShapes(CDC& dc)
 {
     Graphics graphics(dc);
 
-    // Draw Plygons with Gama Corrections
     // Put the points of a polygon in an array.
     GraphicsPath pathGama;
     int yOffset = 200;
@@ -70,6 +77,7 @@ void CGDIPlusView::DrawGamaShapes(CDC& dc)
     graphics.FillPath(&pthGrBrushGama, &pathGama);
 }
 
+// Draw an elipse with a gradient brush.
 void CGDIPlusView::DrawGradientElipse(CDC& dc)
 {
     Graphics graphics(dc);
@@ -79,19 +87,20 @@ void CGDIPlusView::DrawGradientElipse(CDC& dc)
     path.AddEllipse(0, 80, 140, 70);
 
     // Use the path to construct a brush.
-    PathGradientBrush pthGrBrush(&path);
+    PathGradientBrush pathBrush(&path);
 
     // Set the color at the center of the path to blue.
-    pthGrBrush.SetCenterColor(Color(255, 0, 0, 255));
+    pathBrush.SetCenterColor(Color(255, 0, 0, 255));
 
     // Set the color along the entire boundary of the path to aqua.
     Color colors[] = {Color(255, 0, 255, 255)};
     int count = 1;
-    pthGrBrush.SetSurroundColors(colors, &count);
+    pathBrush.SetSurroundColors(colors, &count);
 
-    graphics.FillEllipse(&pthGrBrush, 0, 80, 140, 70);
+    graphics.FillEllipse(&pathBrush, 0, 80, 140, 70);
 }
 
+// Draw a solid elipse.
 void CGDIPlusView::DrawSolidElipse(CDC& dc)
 {
     Graphics graphics(dc);
@@ -100,15 +109,17 @@ void CGDIPlusView::DrawSolidElipse(CDC& dc)
     graphics.FillEllipse(&solidBrush, 160, 84, 100, 60);
 }
 
+// Draw a solid line.
 void CGDIPlusView::DrawSolidLine(CDC& dc)
 {
     Graphics graphics(dc);
 
     // Draw solid line
-    Pen      penLine(Color(255, 0, 0, 255));
+    Pen penLine(Color(255, 0, 0, 255));
     graphics.DrawLine(&penLine, 10, 70, 200, 70);
 }
 
+// Draw some text.
 void CGDIPlusView::DrawText(CDC& dc)
 {
     Graphics graphics(dc);
@@ -122,6 +133,7 @@ void CGDIPlusView::DrawText(CDC& dc)
     graphics.DrawString(L"GDI+  Example", -1, &font, pointF, &brush);
 }
 
+// Called when part of the window needs to be redrawn.
 void CGDIPlusView::OnDraw(CDC& dc)
 {
     DrawSolidLine(dc);
@@ -132,28 +144,23 @@ void CGDIPlusView::OnDraw(CDC& dc)
     DrawGamaShapes(dc);
 }
 
+// Called after the window is created.
 void CGDIPlusView::OnInitialUpdate()
 {
     // OnInitialUpdate is called immediately after the window is created
     TRACE("View window created\n");
 }
 
+// Set the CREATESTRUCT parameters before the window is created.
 void CGDIPlusView::PreCreate(CREATESTRUCT& cs)
 {
-    // Here we set the defaults used by the create function for the view window
-    // Preforming this is optional, but doing so allows us to
-    // take more precise control over the window we create.
-
     // Set the extended style
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+// Set the WNDCLASS parameters before the window is created.
 void CGDIPlusView::RegisterClass(WNDCLASS& wc)
 {
-    // Here we set the Window class parameters.
-    // Preforming this is optional, but doing so allows us to
-    // take more precise control over the type of window we create.
-
     // Set the Window Class name
     wc.lpszClassName = _T("View");
 
@@ -161,6 +168,7 @@ void CGDIPlusView::RegisterClass(WNDCLASS& wc)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
 
+// Process the window messages for the view window.
 LRESULT CGDIPlusView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

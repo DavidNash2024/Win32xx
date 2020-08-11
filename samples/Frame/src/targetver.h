@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////
-// targetver.h is used to define the Windows API macros that target the 
+// targetver.h is used to define the Windows API macros that target the
 // version of the Windows operating system you wish to support.
-
+//
 
 // For Windows 95
 //#define WINVER          0x0400

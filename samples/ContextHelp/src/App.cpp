@@ -1,5 +1,6 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // App.cpp
+//
 
 #include "stdafx.h"
 #include "App.h"
@@ -29,15 +30,21 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 }
 
 
-// Definitions for the CApp class
+////////////////////////////
+// CApp function definitions
+//
+
+// Constructor.
 CApp::CApp()
 {
 }
 
+// Destructor.
 CApp::~CApp()
 {
 }
 
+// Called when the application starts.
 BOOL CApp::InitInstance()
 {
     //Create the Frame Window

@@ -21,7 +21,7 @@ BOOL CDoc::FileOpen(LPCTSTR filename)
     {
         // An exception occurred. Display the relevant information.
         ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-        
+
         GetAllPoints().clear();
     }
 
@@ -56,7 +56,7 @@ void CDoc::Serialize(CArchive &ar)
         // Store the number of points
         UINT points = static_cast<UINT>(GetAllPoints().size());
         ar << points;
-        
+
         // Store the PlotPoint data
         std::vector<PlotPoint>::iterator iter;
         for (iter = GetAllPoints().begin(); iter < GetAllPoints().end(); ++iter)

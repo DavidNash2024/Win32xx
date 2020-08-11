@@ -17,7 +17,7 @@ public:
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
-    virtual void OnDraw(CDC& dc);   
+    virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
     virtual void OnSize();
     virtual void PreCreate(CREATESTRUCT& cs);

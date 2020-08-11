@@ -34,8 +34,8 @@ CMainFrame::~CMainFrame()
 
 STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    // This function is called when a ribbon button is pressed. 
-    // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation 
+    // This function is called when a ribbon button is pressed.
+    // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation
 
     if (UI_EXECUTIONVERB_EXECUTE == verb)
     {
@@ -93,24 +93,24 @@ void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
 void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
      // DropdownColorPicker button pressed
-            
+
     if (ppropvarValue != NULL)
     {
-        // Retrieve color type. 
-        UINT type = ppropvarValue->uintVal; 
-    
+        // Retrieve color type.
+        UINT type = ppropvarValue->uintVal;
+
         // The Ribbon framework passes color as additional property if the color type is RGB.
         if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != NULL)
         {
             // Retrieve color.
             PROPVARIANT var;
             if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
-            {   
+            {
                 UINT color = var.uintVal;
                 m_view.SetPenColor((COLORREF)color);
             }
         }
-    }       
+    }
 }
 
 void CMainFrame::SetPenColor(COLORREF clr)
@@ -361,9 +361,9 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
-{   
-    // This function is called when a ribbon button is updated. 
+STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue)
+{
+    // This function is called when a ribbon button is updated.
     // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
     UNREFERENCED_PARAMETER(currentValue);
 
@@ -392,7 +392,7 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  
         // Set the initial pen color
         result = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
         break;
-    } 
+    }
 
     return result;
 }
@@ -403,7 +403,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     // wParam is a pointer (LPCTSTR) to the filename
     LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
     assert(fileName);
-    
+
     // Load the file
     LoadFile(fileName);
     return 0;

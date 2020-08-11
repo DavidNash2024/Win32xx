@@ -1,12 +1,14 @@
-//////////////////////////////////////////////////
-// Browser.h - Declaration of the CViewWeb class
+/////////////////////////////
+// Browser.h
+//
 
 #ifndef BROWSER_H
 #define BROWSER_H
 
 
-
+////////////////////////////////////
 // Declaration of the CViewWeb class
+//
 class CViewWeb : public CWebBrowser
 {
 public:

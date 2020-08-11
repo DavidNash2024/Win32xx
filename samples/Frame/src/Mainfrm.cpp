@@ -1,13 +1,16 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
-// Definitions for the CMainFrame class
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
-// Constructor for CMainFrame. Its called after CFrame's constructor
+// Constructor.
 CMainFrame::CMainFrame()
 {
     //Set m_View as the view window of the frame
@@ -18,12 +21,10 @@ CMainFrame::CMainFrame()
     LoadRegistrySettings(_T("Win32++\\Frame"));
 }
 
-
-// Destructor for CMainFrame.
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
-
 
 // OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
@@ -47,13 +48,12 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
 // OnCreate controls the way the frame is created.
 // Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -67,13 +67,11 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-
-// Issue a close request to the frame.
+// Issue a close request to the frame to end the program.
 void CMainFrame::OnFileExit()
 {
     Close();
 }
-
 
 // Called after the window is created.
 void CMainFrame::OnInitialUpdate()
@@ -86,7 +84,6 @@ void CMainFrame::OnInitialUpdate()
 
     TRACE("Frame created\n");
 }
-
 
 // Create the File Open dialog to choose the file to load.
 void CMainFrame::OnFileOpen()
@@ -103,7 +100,6 @@ void CMainFrame::OnFileOpen()
     }
 }
 
-
 // Create the File Save dialog to choose the file to save.
 void CMainFrame::OnFileSave()
 {
@@ -118,7 +114,6 @@ void CMainFrame::OnFileSave()
         GetDoc().FileStore(fileDlg.GetPathName());
     }
 }
-
 
 // Previews a print job before sending it to the printer.
 void CMainFrame::OnFilePreview()
@@ -161,7 +156,6 @@ void CMainFrame::OnFilePreview()
     }
 }
 
-
 // Bring up a dialog to choose the printer.
 void CMainFrame::OnFilePrint()
 {
@@ -179,12 +173,11 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
 }
 
-
-// Process notification messages sent by child windows
+// Process notification messages (WM_NOTIFY) sent by child windows
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
 //  switch(((LPNMHDR)lparam)->code)
@@ -195,7 +188,6 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     // Some notifications should return a value when handled
     return CFrame::OnNotify(wparam, lparam);
 }
-
 
 // Called when the Print Preview's "Close" button is pressed.
 void CMainFrame::OnPreviewClose()
@@ -210,13 +202,11 @@ void CMainFrame::OnPreviewClose()
     SetStatusText(LoadString(IDW_READY));
 }
 
-
 // Called when the Print Preview's "Print Now" button is pressed.
 void CMainFrame::OnPreviewPrint()
 {
     m_view.QuickPrint(_T("Frame Sample"));
 }
-
 
 // Called when the Print Preview's "Print Setup" button is pressed.
 void CMainFrame::OnPreviewSetup()
@@ -243,21 +233,15 @@ void CMainFrame::OnPreviewSetup()
     m_preview.DoPrintPreview(*this);
 }
 
-
 // This function is called before the frame is created.
 // It provides an opportunity to modify the various CREATESTRUCT
-// parameters used in the frame window's creation.
+// parameters used before the frame window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
     // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
     // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
-
-    // Call base clase to set defaults
-    CFrame::PreCreate(cs);
-
     // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
-
 
 // Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
@@ -266,8 +250,7 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
 }
 
-
-// Set the Resource IDs for the toolbar buttons
+// Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
     AddToolBarButton( IDM_FILE_NEW   );
@@ -286,8 +269,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-
-// Handle the frame's messages.
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

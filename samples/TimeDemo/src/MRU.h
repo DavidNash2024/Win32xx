@@ -6,20 +6,20 @@
 |                                                                              |
 ===============================================================================*
 
-     Contents Description:  Implementation of the CMRU class for this 
-    application using the Win32++ framework, Copyright (c) 2005-2020 David Nash, 
+     Contents Description:  Implementation of the CMRU class for this
+    application using the Win32++ framework, Copyright (c) 2005-2020 David Nash,
     under permissions granted therein.
-    
-    This class is used to load, display, edit, and save the Most Recently Used 
+
+    This class is used to load, display, edit, and save the Most Recently Used
     (MRU) list, commonly used to contain the files used by an application.
-    This class has been adapted from the Win32++ framework, Copyright (c) 
-    2005-2020 David Nash, under permissions granted therein.  It offers an 
-    alternate to the MRU operations found in the CFrame class of Win32++ for 
-    those not wishing to use the system's registry, but prefer a separate 
+    This class has been adapted from the Win32++ framework, Copyright (c)
+    2005-2020 David Nash, under permissions granted therein.  It offers an
+    alternate to the MRU operations found in the CFrame class of Win32++ for
+    those not wishing to use the system's registry, but prefer a separate
     application parameter file.
 
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -31,7 +31,7 @@
     tort or otherwise, arising from, out of, or in connection with, these
     materials, the use thereof, or any other other dealings therewith.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
 
@@ -53,11 +53,11 @@ CMRU : public CObject                                                   /*
         CMRU();
         virtual ~CMRU(){}
 
-        void    AddEntry(LPCTSTR entryName);  
-        void    AssignMenu(CMenu frameMenu, size_t maxMRU = 0); 
+        void    AddEntry(LPCTSTR entryName);
+        void    AssignMenu(CMenu frameMenu, size_t maxMRU = 0);
         void    EmptyList();
-        CString GetEntry(size_t index);           
-        void    RemoveEntry(LPCTSTR entryName); 
+        CString GetEntry(size_t index);
+        void    RemoveEntry(LPCTSTR entryName);
         void    UpdateMenu();
         void    ValidateMRU();
 
@@ -68,11 +68,11 @@ CMRU : public CObject                                                   /*
         CMRU(const CMRU&);              // Disable copy construction
         CMRU& operator=(const CMRU&);  // Disable assignment operator
 
-        std::vector<CString> m_MRUEntries; // MRU array entries           
-        size_t      m_maxMRU;           // maximum MRU entries, this app  
+        std::vector<CString> m_MRUEntries; // MRU array entries
+        size_t      m_maxMRU;           // maximum MRU entries, this app
         CMenu       m_frameMenu;        // the frame's main menu
 
-        const CString m_emptyMRUListLabel; // File MRU locator label 
+        const CString m_emptyMRUListLabel; // File MRU locator label
 };
 /*----------------------------------------------------------------------------*/
 #endif // GPP_MRU_H_FILE

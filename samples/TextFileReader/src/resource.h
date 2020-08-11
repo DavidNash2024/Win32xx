@@ -5,13 +5,8 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description:  Resources Definitions used by this sample program and 
-    its resource.rc file.  Adapted to the Win32++ Windows interface classes, 
-    Copyright (c) 2005-2020 David Nash, under permissions granted therein.
-    
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
-    and Preparation Subsystem project for C++ programming.
+    Contents Description:  Resources Definitions used by this sample program and
+    its resource.rc file.
 
 *******************************************************************************/
 

@@ -79,7 +79,7 @@ class CAppGlobal
         const CString& GetWin32Vers() const    { return m_sWin32Version;}
         CString MakeAppDataPath(const CString& subpath) const;
 
-        
+
     protected:
 
     private:

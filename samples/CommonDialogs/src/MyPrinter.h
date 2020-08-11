@@ -10,7 +10,7 @@
     Contents Description: The declaration and implementation of the
     MyPrinter and MyPageSetup classes, which are derived from the
     CPrintDialog and CPageSetupDialog classs.
-    
+
         Caveats: The copyright displayed above extends only to the author's
     original contributions to the subject class, and to the alterations,
     additions, deletions, and other treatments of materials that may have
@@ -58,7 +58,7 @@
 #define MYPRINTER_H
 
 /******************************************************************************/
-    
+
 #include "ListBoxDlgRC.h"
 
 

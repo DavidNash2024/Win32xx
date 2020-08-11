@@ -1,8 +1,15 @@
-// stdafx.cpp : source file that includes just the standard includes
-//  MakeTempFilenameDLL.pch will be the pre-compiled header
-//  stdafx.obj will contain the pre-compiled type information
+/////////////////////////////
+// StdAfx.cpp
+//
+
+// This file is used for precompiled hearders. Precompiled headers allow
+//  programs to be recompiled more quickly
+
+// To use precompiled headers, do the following:
+// 1) Add the set of rarely changed headers to stdafx.h
+// 2) Include stdafx.h in each cpp file. It must be included first.
+// 3) Add stdafx.cpp to your project.
+// 4) Turn on precompiled hearders in the project
+
 
 #include "stdafx.h"
-
-// TODO: reference any additional headers you need in STDAFX.H
-// and not in this file

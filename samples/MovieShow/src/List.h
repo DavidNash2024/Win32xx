@@ -25,7 +25,7 @@ enum SHOW_ARROW
     SHOW_DOWN_ARROW
 };
 
-
+//////////////////////////////////////////////////////////
 // Declaration of the CViewList class
 // The listview window displays the videos in the library.
 class CViewList : public CListView

@@ -6,19 +6,26 @@
 #include "resource.h"
 
 
-// Definitions for the CMyDialog class
+/////////////////////////////////
+// CMyDialog function definitions
+//
+
+// Constructor.
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
+// Constructor.
 CMyDialog::CMyDialog(LPCTSTR resName) : CDialog(resName)
 {
 }
 
+// Destructor.
 CMyDialog::~CMyDialog()
 {
 }
 
+// Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)
@@ -30,6 +37,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Process the command messages (WM_COMMAND) from the controls.
 BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -50,13 +58,14 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the dialog window is destroyed.
 void CMyDialog::OnDestroy()
 {
     // End the application
     ::PostQuitMessage(0);
 }
 
-
+// Called before the dialog is displayed.
 BOOL CMyDialog::OnInitDialog()
 {
     // Set the Icon
@@ -83,12 +92,14 @@ BOOL CMyDialog::OnInitDialog()
     return TRUE;
 }
 
+// Called when the OK button or Enter key is pressed.
 void CMyDialog::OnOK()
 {
     MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
     CDialog::OnOK();
 }
 
+// Called when the button is pressed.
 BOOL CMyDialog::OnButton()
 {
     SetStatic(_T("Button Pressed"));
@@ -96,6 +107,7 @@ BOOL CMyDialog::OnButton()
     return TRUE;
 }
 
+// Called when check box 1 is clicked. 
 BOOL CMyDialog::OnCheck1()
 {
     SetStatic(_T("Check Box 1"));
@@ -103,6 +115,7 @@ BOOL CMyDialog::OnCheck1()
     return TRUE;
 }
 
+// Called when check box 2 is clicked.
 BOOL CMyDialog::OnCheck2()
 {
     SetStatic(_T("Check Box 2"));
@@ -110,6 +123,7 @@ BOOL CMyDialog::OnCheck2()
     return TRUE;
 }
 
+// Called when check box 3 is clicked.
 BOOL CMyDialog::OnCheck3()
 {
     SetStatic(_T("Check Box 3"));
@@ -117,6 +131,7 @@ BOOL CMyDialog::OnCheck3()
     return TRUE;
 }
 
+// Called when a radio button is selected.
 BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 {
     CheckRadioButton(idFirst, idLast, idClicked);
@@ -129,6 +144,7 @@ BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
     return TRUE;
 }
 
+// Sets the text in the static control.
 void CMyDialog::SetStatic(LPCTSTR text)
 {
     SetDlgItemText(IDC_STATIC3, text);

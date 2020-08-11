@@ -1,5 +1,6 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
@@ -13,12 +14,14 @@
 #include "resource.h"
 
 
-// Definitions for the CMainFrame class
+//////////////////////////////////
+// CMainFrame function definitions
+//
+
+// Constructor for CMainFrame.
 CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_isHideSingleTab(TRUE),
                             m_isMDITabsAtTop(TRUE), m_pActiveDocker(NULL)
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     //Set m_MyTabbedMDI as the view window of the frame
     SetView(m_myTabbedMDI);
 
@@ -27,11 +30,12 @@ CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_isHideSingleTab(TRUE
     LoadRegistrySettings(_T("Win32++\\TabbedMDI Docking"));
 }
 
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+// Hides or shows tabs for containers with a single tab.
 void CMainFrame::HideSingleContainerTab(BOOL hideSingle)
 {
     m_isHideSingleTab = hideSingle;
@@ -49,6 +53,7 @@ void CMainFrame::HideSingleContainerTab(BOOL hideSingle)
 
 }
 
+// Loads the default arrangement of dockers.
 void CMainFrame::LoadDefaultDockers()
 {
     // Note: The  DockIDs are used for saving/restoring the dockers state in the registry
@@ -68,6 +73,7 @@ void CMainFrame::LoadDefaultDockers()
     pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_OUTPUT2);
 }
 
+// Loads the default arrangement of MDIs.
 void CMainFrame::LoadDefaultMDIs()
 {
     // Add some MDI tabs
@@ -81,6 +87,7 @@ void CMainFrame::LoadDefaultMDIs()
         m_myTabbedMDI.SetActiveMDITab(0);
 }
 
+// Adds a new docker. The dockID parameter specifies the docker type.
 CDocker* CMainFrame::NewDockerFromID(int dockID)
 {
     CDocker* pDocker = NULL;
@@ -121,21 +128,23 @@ CDocker* CMainFrame::NewDockerFromID(int dockID)
     return pDocker;
 }
 
+// Close all the dockers.
 BOOL CMainFrame::OnCloseDockers()
 {
     CloseAllDockers();
     return TRUE;
 }
 
+// Close all the MDIs.
 BOOL CMainFrame::OnCloseMDIs()
 {
     m_myTabbedMDI.CloseAllMDIChildren();
     return TRUE;
 }
 
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
     UINT id = LOWORD(wparam);
     switch (id)
     {
@@ -144,7 +153,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_CONTAINER_TOP:     return OnContainerTabsAtTop();
     case IDM_DEFAULT_LAYOUT:    return OnDefaultLayout();
     case IDM_FILE_NEW:          return OnFileNew();
-    case IDM_FILE_NEWBROWSER:   return OnFileNewSimple();
+    case IDM_FILE_NEWBROWSER:   return OnFileNewBrowser();
     case IDM_FILE_NEWRECT:      return OnFileNewRect();
     case IDM_FILE_NEWTEXT:      return OnFileNewText();
     case IDM_FILE_NEWTREE:      return OnFileNewTree();
@@ -185,18 +194,17 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Reposition the tabs in the containers.
 BOOL CMainFrame::OnContainerTabsAtTop()
-// Reposition the tabs in the containers
 {
     SetContainerTabsAtTop(!m_isContainerTabsAtTop);
     return TRUE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
@@ -212,6 +220,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CDockFrame::OnCreate(cs);
 }
 
+// Replaces the current docking arrangement with the default one.
 BOOL CMainFrame::OnDefaultLayout()
 {
     SetRedraw(FALSE);
@@ -228,10 +237,9 @@ BOOL CMainFrame::OnDefaultLayout()
     return TRUE;
 }
 
+// Called when a docker is activated. Stores the active docker in preparation for menu input.
+// Excludes active docker change for undocked dockers when using the menu.
 LRESULT CMainFrame::OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam)
-// Called when a docker is activated.
-// Store the active docker in preparation for menu input. Excludes active
-// docker change for undocked dockers when using the menu.
 {
     CPoint pt = GetCursorPos();
     if (WindowFromPoint(pt) != GetMenuBar())
@@ -240,15 +248,15 @@ LRESULT CMainFrame::OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam)
     return CDockFrame::OnDockActivated(msg, wparam, lparam);
 }
 
+// Issue a close request to the frame to end the program.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Creates the popup menu when the "New" toolbar button is pressed.
 BOOL CMainFrame::OnFileNew()
-// Creates the popup menu when the "New" toolbar button is pressed
 {
     // Position the popup menu
     CToolBar& tb = GetToolBar();
@@ -268,42 +276,49 @@ BOOL CMainFrame::OnFileNew()
     return TRUE;
 }
 
+// Adds a MDI with a list-view.
 BOOL CMainFrame::OnFileNewList()
 {
     m_myTabbedMDI.AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
     return TRUE;
 }
 
+// Adds a MDI with a Rectangles view.
 BOOL CMainFrame::OnFileNewRect()
 {
     m_myTabbedMDI.AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
     return TRUE;
 }
 
-BOOL CMainFrame::OnFileNewSimple()
+// Adds a MDI with a Browser view.
+BOOL CMainFrame::OnFileNewBrowser()
 {
     m_myTabbedMDI.AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
     return TRUE;
 }
 
+// Adds a MDI with a Text view.
 BOOL CMainFrame::OnFileNewText()
 {
     m_myTabbedMDI.AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
     return TRUE;
 }
 
+// Adds a MDI with a tree-view.
 BOOL CMainFrame::OnFileNewTree()
 {
     m_myTabbedMDI.AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);
     return TRUE;
 }
 
+// Toggle hiding of tabs for containers with a single tab.
 BOOL CMainFrame::OnHideSingleTab()
 {
     HideSingleContainerTab(!m_isHideSingleTab);
     return TRUE;
 }
 
+// Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
     SetDockStyle(DS_CLIENTEDGE);
@@ -335,6 +350,7 @@ void CMainFrame::OnInitialUpdate()
     RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
 }
 
+// Updates menu items before they are displayed.
 LRESULT CMainFrame::OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Update the "Window" menu
@@ -343,15 +359,15 @@ LRESULT CMainFrame::OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam)
     return CDockFrame::OnInitMenuPopup(msg, wparam, lparam);
 }
 
+// Reposition TabbedMDI's tabs.
 BOOL CMainFrame::OnMDITabsAtTop()
-// Reposition TabbedMDI's tabs
 {
     SetMDITabsAtTop(!m_isMDITabsAtTop);
     return TRUE;
 }
 
+// Called when menu items are about to be displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
-// Called when menu items are about to be displayed
 {
     // Only for the Menu IDs we wish to modify
     if (id >= IDM_EDIT_UNDO && id <= IDM_EDIT_DELETE)
@@ -386,15 +402,14 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CDockFrame::OnMenuUpdate(id);
 }
 
+// Sets the CREATESTRUCT paramaters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // Call the base class function first
-    CDockFrame::PreCreate(cs);
-
     // Hide the window initially by removing the WS_VISIBLE style
     cs.style &= ~WS_VISIBLE;
 }
 
+// Saves the docking arrangement and other settings in the registry.
 BOOL CMainFrame::SaveRegistrySettings()
 {
     CDockFrame::SaveRegistrySettings();
@@ -408,6 +423,7 @@ BOOL CMainFrame::SaveRegistrySettings()
     return TRUE;
 }
 
+// Positions the tabs at the top or bottom of the container.
 void CMainFrame::SetContainerTabsAtTop(BOOL atTop)
 {
     m_isContainerTabsAtTop = atTop;
@@ -424,15 +440,17 @@ void CMainFrame::SetContainerTabsAtTop(BOOL atTop)
     }
 }
 
+// Positions the MDI tabs at the top or bottom of the container.
 void CMainFrame::SetMDITabsAtTop(BOOL atTop)
 {
     m_isMDITabsAtTop = atTop;
     m_myTabbedMDI.GetTab().SetTabsAtTop(atTop);
 }
 
+// Specifies the images for some of the menu items.
 void CMainFrame::SetupMenuIcons()
 {
-    // Load the defualt set of icons from the toolbar
+    // Load the default set of icons from the toolbar
     CDockFrame::SetupMenuIcons();
 
     // Add some extra icons for menu items
@@ -443,9 +461,9 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_FILE_NEWTREE, IDI_CLASSVIEW);
 }
 
+// Set the Resource IDs for the toolbar buttons
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );
@@ -462,6 +480,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

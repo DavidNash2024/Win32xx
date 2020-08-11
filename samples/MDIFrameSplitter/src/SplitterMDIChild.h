@@ -5,8 +5,9 @@
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
 
-
-// Declaration of CSimpleView
+///////////////////////////////////
+// Declaration of CSimpleView class
+//
 class CSimpleView : public CWnd
 {
 public:
@@ -19,12 +20,14 @@ protected:
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    
+
 private:
     COLORREF m_color;
 };
 
+///////////////////////////////////////
 // Declaration of the CDockSimple class
+//
 class CDockSimple : public CDocker
 {
 public:
@@ -35,10 +38,11 @@ public:
 
 private:
     CSimpleView m_view;
-
 };
 
-// Declaration of CSplitterMDIChild
+/////////////////////////////////////////////
+// Declaration of the CSplitterMDIChild class
+//
 class CSplitterMDIChild : public CMDIChild
 {
 public:

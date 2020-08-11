@@ -51,7 +51,7 @@
 ********************************************************************************
 
     Declaration of the CApp class
-    
+
 *******************************************************************************/
 
 #ifndef SDI_APP_H
@@ -68,7 +68,7 @@
 #define theAppGlobal    theApp->GetAppGlobal()
 
 /*============================================================================*/
-    class 
+    class
 CApp : public CWinApp                                                   /*
 
     This application's app class, a pattern for developing new apps.
@@ -96,7 +96,7 @@ CApp : public CWinApp                                                   /*
         int        m_nCmdShow;   // WinMain() entry nCmdShow argument
         CMainFrame m_Frame;      // the main frame object
         CAppGlobal m_AppGlobal;
-        
+
           // private functions
         ULONG   DatInt(const CString &);
         CString IntDat(ULONG);

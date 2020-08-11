@@ -1,15 +1,17 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // MyListView.h
-//  Declaration of the CMyListView class
+//
 
 #ifndef MYLISTVIEW_H
 #define MYLISTVIEW_H
-
 
 #include "ShellWrapper.h"
 
 using namespace ShellWrapper;
 
+/////////////////////////////////////
+// Declaration of the CListView class
+//
 class CMyListView : public CListView
 {
 public:
@@ -33,7 +35,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    class ListItemData  //A nested class inside CMyListView
+    // ListItemData is a nested class inside CMyListView.
+    // Each list view item has a pointer to ListItemData.
+    class ListItemData
     {
     public:
         ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& parentFolder);
@@ -44,11 +48,11 @@ private:
         Cpidl& GetRelCpidl()  {return m_cpidlRel;}
 
     private:
-        Cpidl        m_cpidlFull;     //Fully Qualified PIDL
-        Cpidl        m_cpidlRel;      //Relative PIDL
-        CShellFolder m_parentFolder; //Parent IShellFolder
+        Cpidl        m_cpidlFull;     // Fully Qualified PIDL
+        Cpidl        m_cpidlRel;      // Relative PIDL
+        CShellFolder m_parentFolder;  // Parent IShellFolder
 
-    };  //class ListItemData (nested class)
+    };  // class ListItemData (nested class)
 
     typedef Shared_Ptr<ListItemData> ListItemDataPtr;
 
@@ -57,17 +61,16 @@ private:
     void DoBackgroundMenu(CPoint& ptScreen);
     void DoContextMenu(CPoint& ptScreen);
     void DoDefault(int item);
-    void DoItemMenu(LPINT pItems, UINT cbItems, CPoint& ptScreen);
+    void DoItemMenu(LPINT pItems, UINT items, CPoint& ptScreen);
     void EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlFull);
-    BOOL GetFileSizeText(HANDLE hFile, LPTSTR szSize);
-    BOOL GetLastWriteTime(HANDLE hFile, LPTSTR lpszString);
+    BOOL GetFileSizeText(HANDLE file, LPTSTR string);
+    BOOL GetLastWriteTime(HANDLE file, LPTSTR string);
     void SetImageLists();
 
-    Cpidl         m_cpidlCurFull;  //Fully Qualified pidl
-    CShellFolder  m_csfCurFolder;  //Current Folder
+    Cpidl         m_cpidlCurFull;    // Fully Qualified pidl
+    CShellFolder  m_csfCurFolder;    // Current Folder
     CContextMenu2 m_ccm2;
     std::vector <ListItemDataPtr> m_pItems;
-
 };
 
 #endif  // MYLISTVIEW_H

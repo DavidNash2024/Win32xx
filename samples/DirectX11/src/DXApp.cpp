@@ -1,19 +1,24 @@
+/////////////////////////////
+// DXApp.cpp
+//
 
 #include "DXApp.h"
 
-//--------------------------------------------------------------------------------------
-// Create's the DirectX view window
-//--------------------------------------------------------------------------------------
+//////////////////////////////
+// CDXApp function definitions
+//
+
+// Called when the application starts.
 BOOL CDXApp::InitInstance()
 {
+    // Creates the DirectX view window
     m_dxView.Create();
 
     return TRUE;
 }
 
-//--------------------------------------------------------------------------------------
-// The App's messages loop. Calls Render during idle processing
-//--------------------------------------------------------------------------------------
+// Overrides the application's default message loop.
+// Calls Render during idle processing
 int CDXApp::MessageLoop()
 {
     // Main message loop

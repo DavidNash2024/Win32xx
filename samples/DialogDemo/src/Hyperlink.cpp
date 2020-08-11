@@ -1,9 +1,15 @@
 /////////////////////////////
 // Hyperlink.cpp
+//
 
 #include "stdafx.h"
 #include "Hyperlink.h"
 
+//////////////////////////////////
+// CHyperlink function definitions
+//
+
+// Constructor.
 CHyperlink::CHyperlink() : m_isUrlVisited(FALSE), m_isClicked(FALSE), m_crVisited(RGB(128, 0, 128)),
                             m_crNotVisited(RGB(0,0,255))
 {
@@ -15,10 +21,12 @@ CHyperlink::CHyperlink() : m_isUrlVisited(FALSE), m_isClicked(FALSE), m_crVisite
         m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
 }
 
+// Destructor.
 CHyperlink::~CHyperlink()
 {
 }
 
+// Called when the window handle (HWND) is attached to CHyperlink.
 void CHyperlink::OnAttach()
 {
     CFont Font = GetFont();
@@ -27,12 +35,14 @@ void CHyperlink::OnAttach()
     m_urlFont.CreateFontIndirect(lf);
 }
 
+// Called when the left mouse button is clicked.
 void CHyperlink::OnLButtonDown()
 {
     SetCapture();
     m_isClicked = TRUE;
 }
 
+// Called when the left mouse button is released.
 void CHyperlink::OnLButtonUp(LPARAM lparam)
 {
     ReleaseCapture();
@@ -49,6 +59,7 @@ void CHyperlink::OnLButtonUp(LPARAM lparam)
     }
 }
 
+// Opens the default browser and displays the web page.
 void CHyperlink::OpenUrl()
 {
     TCHAR szUrl[ MAX_PATH + 1 ] = _T("http://sourceforge.net/projects/win32-framework/");
@@ -63,6 +74,7 @@ void CHyperlink::OpenUrl()
     }
 }
 
+// Handles messages reflected back freom the dialog.
 LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -79,6 +91,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Modifies the cursor when its over the hyperlink control.
 LRESULT CHyperlink::OnSetCursor()
 {
     // Must use ::SetCursor here. CStatic::SetCursor does not do the same thing.
@@ -87,6 +100,7 @@ LRESULT CHyperlink::OnSetCursor()
     return 1;  // Non-zero return prevents default processing
 }
 
+// Process the hyperlink control's window messages.
 LRESULT CHyperlink::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

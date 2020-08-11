@@ -6,7 +6,9 @@
 
 #include "FormView.h"
 
+//////////////////////////////////////
 // Declaration of the CMainFrame class
+//
 class CMainFrame : public CFrame
 {
 public:
@@ -20,7 +22,6 @@ protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnFileExit();
     virtual void OnInitialUpdate();
-    virtual void PreCreate(CREATESTRUCT& cs);
     virtual void OnMenuUpdate(UINT nID);
     virtual BOOL SaveRegistrySettings();
     virtual void SetupMenuIcons();

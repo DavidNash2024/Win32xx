@@ -349,7 +349,7 @@ SetRichEditColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                /*
 Serialize(CArchive &ar)                                                     /*
 
         Called to serialize or deserialize the view to and from the archive ar,
-        depending on the sense of IsStoring().  
+        depending on the sense of IsStoring().
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing

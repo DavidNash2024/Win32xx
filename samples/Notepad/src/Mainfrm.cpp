@@ -181,7 +181,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -387,7 +387,7 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
 
 }
@@ -615,8 +615,8 @@ void CMainFrame::OnOptionsWrap()
     m_isWrapped = !m_isWrapped;
 }
 
-void CMainFrame::OnPreviewClose()
 // Called when the Print Preview's "Close" button is pressed.
+void CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_richView);
@@ -629,8 +629,8 @@ void CMainFrame::OnPreviewClose()
     RestoreFocus();
 }
 
-void CMainFrame::OnPreviewPrint()
 // Called when the Print Preview's "Print Now" button is pressed
+void CMainFrame::OnPreviewPrint()
 {
     m_richView.QuickPrint(m_pathName);
 }

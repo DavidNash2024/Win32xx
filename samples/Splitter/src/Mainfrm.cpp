@@ -54,7 +54,7 @@ void CMainFrame::OnInitialUpdate()
     // Add the bottom pane first. It is a child of the main pane.
     m_pDockTree = static_cast<CDockTree*>(AddDockedChild(new CDockTree, style|DS_DOCKED_BOTTOM, viewRect.Height()/2));
 
-    // Add the bottom right pane. It is a child of the bottom pane 
+    // Add the bottom right pane. It is a child of the bottom pane
     m_pDockList = static_cast<CDockList*>(m_pDockTree->AddDockedChild(new CDockList, style|DS_DOCKED_RIGHT, viewRect.Width()/2));
 
     // Add the top right pane. It is a child of the main pane.
@@ -98,7 +98,7 @@ BOOL CMainFrame::OnViewText()
 }
 
 void CMainFrame::SetupToolBar()
-{   
+{
     // Define the resource IDs for the toolbar
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );

@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMyDialog class
-CClientDialog::CClientDialog(UINT resID) : CDialog(resID), 
+CClientDialog::CClientDialog(UINT resID) : CDialog(resID),
                    m_isClientConnected(FALSE), m_socketType(SOCK_STREAM)
 {
     // Add support for the IP Address control
@@ -126,13 +126,13 @@ BOOL CClientDialog::OnSocketReceive()
     {
         if (WSAGetLastError() != WSAEWOULDBLOCK)
             AppendText(m_editStatus, _T("Receive failed."));
-        
+
         return FALSE;
     }
 
     AppendText( m_editReceive, AtoT(bufArray) );
     TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
-    
+
     return TRUE;
 }
 

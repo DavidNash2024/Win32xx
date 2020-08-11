@@ -1,22 +1,24 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // View.cpp
-//  Definitions for the CView class
+//
 
 #include "stdafx.h"
 #include "view.h"
 
+/////////////////////////////
+// CView function definitions
+//
 
+// Constructor.
 CView::CView()
 {
 }
-
 
 // Returns a reference to CDoc.
 CDoc& CView::GetDoc()
 {
     return m_doc;
 }
-
 
 // OnDraw is called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
@@ -28,15 +30,13 @@ void CView::OnDraw(CDC& dc)
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
-
 // OnInitialUpdate is called immediately after the window is created.
 void CView::OnInitialUpdate()
 {
     TRACE("View window created\n");
 }
 
-
-// Called before window creation to update the window's CREATESTRUCT.
+// Sets the CREATESTRUCT parameters before the window is created.
 // Preforming this is optional, but doing so allows us to
 // take more precise control over the window we create.
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -46,7 +46,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 }
 
 
-// Called before the window is registered to update the window's WNDCLASS.
+// Sets the WNDCLASS parameters before the window is created.
 // This is where we set the Window class parameters.
 // Preforming this is optional, but doing so allows us to
 // take more precise control over the type of window we create.
@@ -159,6 +159,4 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }
-
-
 

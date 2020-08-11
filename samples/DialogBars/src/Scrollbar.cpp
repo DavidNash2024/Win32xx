@@ -1,24 +1,29 @@
-//////////////////////////////////////////////
-// CMyScrollBar.cpp
+/////////////////////////////
+// ScrollBar.cpp
+//
 
 #include "stdafx.h"
 #include "ScrollBar.h"
 #include "DialogApp.h"
 
+////////////////////////////////////
+// CMyScrollBar function definitions
+//
 
+// Constructor.
 CMyScrollBar::CMyScrollBar()
 {
     ZeroMemory(&m_si, sizeof(SCROLLINFO));
 }
 
+// Called after the Scrollbar is attached. 
 void CMyScrollBar::OnInitialUpdate()
 {
-    // Called automatically via AttachItem
-
     // Set the Scroll bar position
     SetScroll(0);
 }
 
+// Called when the scrollbar is repositioned.
 LRESULT CMyScrollBar::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -68,6 +73,7 @@ LRESULT CMyScrollBar::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Process messages reflected back from the dialog.
 LRESULT CMyScrollBar::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -80,6 +86,7 @@ LRESULT CMyScrollBar::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Sets the scroll bar's position.
 void CMyScrollBar::SetScroll(int pos)
 {
     m_si.cbSize = sizeof(SCROLLINFO);

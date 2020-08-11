@@ -5,15 +5,11 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the AboutBox dialog for this 
-    sample prpgram using the Win32++ Windows interface classes, Copyright 
-    (c) 2005-2020 David Nash, under permissions granted therein.
+    Contents Description: Implementation of the AboutBox dialog for this
+    sample program using the Win32++ Windows interface classes.
 
- 	Caveats: These materials are available under the same provisions as found 
-	in the Win32++ copyright.txt notice.
-
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -32,7 +28,7 @@ AboutBox()                                                                  /*
 }
 
 /*============================================================================*/
-	 BOOL AboutBox:: 
+     BOOL AboutBox::
 OnInitDialog()                                                              /*
 /*
     Called when the AboutBox dialog is created.

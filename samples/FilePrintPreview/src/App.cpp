@@ -6,16 +6,16 @@
 
 ********************************************************************************
 
-    Acknowledgement. This demo program was adapted from the PrintPreview 
-    sample program appearing in the Win32++ framework sample folder, created 
+    Acknowledgement. This demo program was adapted from the PrintPreview
+    sample program appearing in the Win32++ framework sample folder, created
     by  David Nash and published under the permissions granted in that work.
     The adaptation here implements the PrintView window as a separate popup
     window that appears on screen along with the regular program window.
-    This work has been developed under the co-authorship of Robert C. 
-    Tausworthe and David Nash, and released under the copyright provisions 
+    This work has been developed under the co-authorship of Robert C.
+    Tausworthe and David Nash, and released under the copyright provisions
     of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his 
-    patient direction and inspiration in the development of the classes of 
+    2005-2018. The former author acknowledges and thanks the latter for his
+    patient direction and inspiration in the development of the classes of
     these classes.
 
 *******************************************************************************/
@@ -31,7 +31,7 @@ InitInstance()                                                          /*
 *-----------------------------------------------------------------------------*/
 {
       //Create the Frame Window
-    m_Frame.Create();   // throws a CWinException on failure  
+    m_Frame.Create();   // throws a CWinException on failure
     return TRUE;
 }
 
@@ -40,7 +40,7 @@ InitInstance()                                                          /*
     Windows API top-level program
 
 *=============================================================================*/
-    int APIENTRY 
+    int APIENTRY
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int)               /*
 
     Launch the application.
@@ -55,7 +55,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)               /*
           // start the thread's message loop
         return theApp.Run();
     }
-    
+
       // catch all unhandled CException types
     catch (const CException &e)
     {

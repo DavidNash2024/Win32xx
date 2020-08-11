@@ -5,13 +5,13 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the CView class derived from the 
-    CScrollView base class for this application using the Win32++ Windows 
+    Contents Description: Implementation of the CView class derived from the
+    CScrollView base class for this application using the Win32++ Windows
     framework, Copyright (c) 2005-2017 David Nash, under permissions granted
     therein.
 
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -110,11 +110,11 @@ OnDraw(CDC& dcMem)                                                      /*
     LRESULT  CView::
 OnPaint(UINT, WPARAM, LPARAM)                                           /*
 
-    Called when part or all of the window needs to be redrawn. Here we override 
-    CScrollView::OnPaint and provide our own bitmap. This avoids the scrolling 
-    issues which would be caused if we were to draw on specific locations while 
-    the window is being scrolled. This function sets the background color. It 
-    then calls OnDraw where the text is drawn on to the bitmap we created. 
+    Called when part or all of the window needs to be redrawn. Here we override
+    CScrollView::OnPaint and provide our own bitmap. This avoids the scrolling
+    issues which would be caused if we were to draw on specific locations while
+    the window is being scrolled. This function sets the background color. It
+    then calls OnDraw where the text is drawn on to the bitmap we created.
     The completed bitmap is then copied to the window's painting device context.
 *-----------------------------------------------------------------------------*/
 {
@@ -301,7 +301,7 @@ TextLineOut(CDC& dc, UINT leftcol, UINT line, LPCTSTR s) const          /*
 }
 
 /*============================================================================*/
-    LRESULT CView::  
+    LRESULT CView::
 WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
 
     All messages for this window pass through this WndProc.  In particular,

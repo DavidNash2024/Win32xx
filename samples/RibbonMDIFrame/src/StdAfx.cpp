@@ -8,7 +8,7 @@
 // 1) Add the set of rarely changed headers to stdafx.h
 // 2) Include stdafx.h in each cpp file. It must be included first.
 // 3) Add stdafx.cpp to your project.
-// 4) Turn on precompiled hearders in the project 
+// 4) Turn on precompiled hearders in the project
 
 
 #include "stdafx.h"

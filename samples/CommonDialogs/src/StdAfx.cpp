@@ -9,7 +9,7 @@
 
     Contents Description: Standard declarations implementation File. This
     file is used for precompiled headers. See the details in stdafx.h.
-    
+
         Caveats: The copyright displayed above extends only to the author's
     original contributions to the subject class, and  to the alterations,
     additions, deletions, and  other treatments of materials that may have

@@ -1,9 +1,15 @@
-///////////////////////////////////////
+/////////////////////////////
 // MetaView.cpp
+//
 
 #include "MetaView.h"
 #include "resource.h"
 
+/////////////////////////////////
+// CMetaView function definitions
+//
+
+// Called when the window is created.
 int CMetaView::OnCreate(CREATESTRUCT&)
 {
     // Set the window's icon
@@ -13,11 +19,10 @@ int CMetaView::OnCreate(CREATESTRUCT&)
     // Set the window title
     SetWindowText(LoadString(IDW_MAIN));
 
-
     CEnhMetaFileDC metaDC;
     // Creates an enhanced MetaFile called "Pattern.emf", and also the EnhMetaFile device context
     metaDC.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
-    
+
     // Draw to the Metafile device context
     metaDC.Rectangle(0, 0, 100, 100);
     metaDC.MoveTo(0, 0);
@@ -33,6 +38,7 @@ int CMetaView::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
+// Called when part of the window needs to be redrawn.
 void CMetaView::OnDraw(CDC& dc)
 {
     CRect rcClient = GetClientRect();
@@ -49,17 +55,19 @@ void CMetaView::OnDraw(CDC& dc)
     {
         for (int y = 0; y < 10; y++)
         {
-            dc.SetWindowOrgEx(-100 * x, -100 * y, NULL);        
+            dc.SetWindowOrgEx(-100 * x, -100 * y, NULL);
             dc.PlayMetaFile(m_enhMetaFile, rc);
         }
     }
 }
 
-void CMetaView::OnDestroy() 
+// Called when the window is destroyed.
+void CMetaView::OnDestroy()
 {
     PostQuitMessage(0);
 }
 
+// Process the meta view's window messages.
 LRESULT CMetaView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -68,7 +76,7 @@ LRESULT CMetaView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         RedrawWindow();
         return 0;
     }
-        
+
     return WndProcDefault(msg, wparam, lparam);
 }
 

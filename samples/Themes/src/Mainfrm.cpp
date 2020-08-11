@@ -230,7 +230,7 @@ LRESULT CMainFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
 // Set the text color for the menubar
 {
     LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
-    
+
     COLORREF clr;
     if (m_color == IDM_BLACK)
         clr = RGB(255,255,255);
@@ -336,7 +336,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_PINK:           return ChooseColor(IDM_PINK);
     case IDM_GOLD:           return ChooseColor(IDM_GOLD);
     case IDM_BLACK:          return ChooseColor(IDM_BLACK);
-    case IDM_WIN10:          return ChooseColor(IDM_WIN10); 
+    case IDM_WIN10:          return ChooseColor(IDM_WIN10);
     case IDM_USE_THEMES:     return OnUseThemes();
     case IDM_BAND_COLORS:    return OnBandColors();
     case IDM_FLAT_STYLE:     return OnFlatStyle();
@@ -361,7 +361,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -376,7 +376,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     {
         //Set our theme colors
         ChooseColor(m_color);
-        
+
         // Set the band styles and positions
         for (int i = 0; i < GetReBar().GetBandCount(); ++i)
         {
@@ -567,10 +567,10 @@ void CMainFrame::OnMenuUpdate(UINT id)
         break;
     case IDM_ROUND_BORDERS:
         GetFrameMenu().CheckMenuItem(id, m_useRoundBorders? MF_CHECKED : MF_UNCHECKED);
-        break;  
+        break;
     case IDM_SHORT_BANDS:
         GetFrameMenu().CheckMenuItem(id, m_useShortBands? MF_CHECKED : MF_UNCHECKED);
-        break;  
+        break;
     case IDM_USE_LINES:
         GetFrameMenu().CheckMenuItem(id, m_useLines? MF_CHECKED : MF_UNCHECKED);
         break;
@@ -582,7 +582,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
         break;
     }
 
-    // Check the color menu item and make it a radio item 
+    // Check the color menu item and make it a radio item
     GetFrameMenu().CheckMenuRadioItem(IDM_WIN10, IDM_BLACK, m_color, 0);
 
     // Call the base class member function
@@ -776,7 +776,7 @@ void CMainFrame::SetupToolBar()
         m_cards.AddButton(IDM_CARD_DIAMOND);
         m_cards.AddButton(IDM_CARD_HEART);
         m_cards.AddButton(IDM_CARD_SPADE);
-        
+
         // Set the button images
         SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));
         SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));

@@ -1,11 +1,16 @@
 /////////////////////////////
-// Button.cpp
+// MyButton.cpp
+//
 
 #include "stdafx.h"
 #include "MyButton.h"
 #include "DialogDemoApp.h"
 
+/////////////////////////////////
+// CMyButton function definitions
+//
 
+// Called when the mouse is moved over the button control.
 LRESULT CMyButton::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_MOUSEMOVE Message\n");
@@ -14,6 +19,7 @@ LRESULT CMyButton::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the mouse is detected over the button control.
 LRESULT CMyButton::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_NCHITTEST Message\n");
@@ -22,6 +28,7 @@ LRESULT CMyButton::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when a WM_SETCURSOR message is received.
 LRESULT CMyButton::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_SETCURSOR Message\n");
@@ -30,6 +37,7 @@ LRESULT CMyButton::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the left mouse button is pressed over the button.
 LRESULT CMyButton::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_LBUTTONDOWN Message\n");
@@ -39,6 +47,7 @@ LRESULT CMyButton::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the left mouse button is released over the button.
 LRESULT CMyButton::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_LBUTTONUP Message\n");
@@ -48,6 +57,7 @@ LRESULT CMyButton::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the right mouse button is pressed over the button.
 LRESULT CMyButton::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_RBUTTONDOWN Message\n");
@@ -57,6 +67,7 @@ LRESULT CMyButton::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Process the window messages for the button contol.
 LRESULT CMyButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -68,7 +79,6 @@ LRESULT CMyButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
     case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
     default:
-    //  TRACE("CButton::WndProc - Unspecified Message\n");
         break;
     }
 

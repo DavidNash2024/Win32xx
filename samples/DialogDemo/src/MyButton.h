@@ -1,10 +1,13 @@
 /////////////////////////////
-// Button.h
+// MyButton.h
+//
 
 #ifndef MYBUTTON_H
 #define MYBUTTON_H
 
-
+/////////////////////////////////////
+// Declaration of the CMyButton class
+//
 class CMyButton : public CButton
 {
 public:

@@ -1,20 +1,26 @@
-///////////////////////////////////////
+/////////////////////////////
 // SearchDialog.cpp
+//
 
 #include "stdafx.h"
 #include "SearchDialog.h"
 #include "resource.h"
 
+/////////////////////////////////////
+// CSearchDialog function definitions
+//
 
-// Definitions for the CSearchDialog class
+// Constructor.
 CSearchDialog::CSearchDialog(UINT resID) : CDialog(resID)
 {
 }
 
+// Destructor.
 CSearchDialog::~CSearchDialog()
 {
 }
 
+// Respond to command messages (WM_COMMAND) from the dialog's controls.
 BOOL CSearchDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
     UINT nID = LOWORD(wParam);
@@ -47,6 +53,7 @@ BOOL CSearchDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
     return FALSE;
 }
 
+// Called before the dialog is displayed.
 BOOL CSearchDialog::OnInitDialog()
 {
     // Attach CWnd objects to the dialog items
@@ -65,6 +72,7 @@ BOOL CSearchDialog::OnInitDialog()
     return TRUE;
 }
 
+// Called when the Enter key or OK button is pressed
 void CSearchDialog::OnOK()
 {
     if (m_titleButton.GetState() & BST_CHECKED)

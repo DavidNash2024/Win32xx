@@ -32,7 +32,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Menu
 //
 
-IDW_MAIN MENU 
+IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -121,7 +121,7 @@ IDB_STATUS              BITMAP                  "../src/res/Status.bmp"
 //
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
@@ -137,7 +137,7 @@ END
 // Accelerator
 //
 
-IDW_MAIN ACCELERATORS 
+IDW_MAIN ACCELERATORS
 BEGIN
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
@@ -157,12 +157,12 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""windows.h""\r\n"
@@ -170,7 +170,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"
@@ -184,7 +184,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDW_MAIN                "Themes Sample"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
@@ -195,7 +195,7 @@ BEGIN
     IDW_READY               "Ready"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
@@ -207,7 +207,7 @@ BEGIN
     IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
@@ -216,13 +216,13 @@ BEGIN
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_ARROW_LEFT          "Left Arrow"
     IDM_ARROW_RIGHT         "Right Arrow"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_CARD_CLUB           "Clubs Playing Card"
     IDM_CARD_DIAMOND        "Diamond Playing Cards"
@@ -232,7 +232,7 @@ BEGIN
     IDM_VIEW_CARDS          "Show or Hide the Cards Toolbar"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
@@ -244,7 +244,7 @@ BEGIN
     SC_SIZE                 "Resize the Window"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_WIN10                "Windows 8 and Windows 10 theme"
     IDM_WIN7                "Vista & Windows 7 theme"
@@ -264,7 +264,7 @@ BEGIN
     IDM_ROUND_BORDERS       "Use Round Borders for Bands"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_SHORT_BANDS         "Use Short Bands"
     IDM_USE_LINES           "Display Lines between band rows"

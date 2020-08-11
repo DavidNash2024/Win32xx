@@ -1,5 +1,6 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // ContainerApp.h
+//
 
 #ifndef CONTAINERAPP_H
 #define CONTAINERAPP_H
@@ -7,7 +8,9 @@
 #include "Mainfrm.h"
 
 
+/////////////////////////////////////////////
 // Declaration of the CDockContainerApp class
+//
 class CDockContainerApp : public CWinApp
 {
 public:
@@ -24,6 +27,4 @@ private:
 // returns a pointer to the CDockContainerApp object
 inline CDockContainerApp* GetContainerApp() { return static_cast<CDockContainerApp*>(GetApp()); }
 
-
 #endif // CONTAINERAPP_H
-

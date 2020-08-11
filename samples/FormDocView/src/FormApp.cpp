@@ -17,7 +17,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         // Run the application
         return theApp.Run();
     }
-    
+
     // catch all unhandled CException types
     catch (const CException &e)
     {
@@ -28,20 +28,25 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     }
 }
 
+////////////////////////////////
+// CFormApp function definitions
+//
 
-// Definitions for the CFormApp class
+// Constructor.
 CFormApp::CFormApp()
 {
 }
 
+// Destructor.
 CFormApp::~CFormApp()
 {
 }
 
+// Called when the application starts.
 BOOL CFormApp::InitInstance()
 {
     //Create the Frame Window
-    m_frame.Create();   // throws a CWinException on failure  
+    m_frame.Create();   // throws a CWinException on failure
 
     return TRUE;
 }

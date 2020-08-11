@@ -1,12 +1,15 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.h
+//
 
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
 #define ID_TIMER 101
 
+/////////////////////////////////////
 // Declaration of the CMyDialog class
+//
 class CMyDialog : public CDialog
 {
 public:

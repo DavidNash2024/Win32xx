@@ -5,15 +5,11 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CDoc class for this sample progam 
-    using the Win32++ Windows interface classes, Copyright (c) 2005-2020 David 
-    Nash, under permissions granted therein.
+    Contents Description: Declaration of the CDoc class for this sample program
+    using the Win32++ Windows interface classes.
 
-    Caveats: These materials are available under the same provisions as found 
-    in the Win32++ copyright.txt notice.
-
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -34,7 +30,7 @@ enum Encoding
 };
 
 /*============================================================================*/
-    class 
+    class
 CDoc                                                                        /*
 
     This class is the interface between the file to be displayed and the CView
@@ -64,7 +60,7 @@ CDoc                                                                        /*
         void        ReadWBytes(Encoding encoding, UINT doclen, UINT offset);
         void        RecordEntry(wchar_t w, CStringW& entry);
 
-        CString     m_compiledOn;           // compilation date, mmm dd yyyy 
+        CString     m_compiledOn;           // compilation date, mmm dd yyyy
         CFile       m_file;                 // the document file object
         BOOL        m_isOpen;               // the document status
         UINT        m_width;                // width, in characters

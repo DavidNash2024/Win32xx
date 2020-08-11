@@ -50,7 +50,7 @@ void CMainFrame::OnBottom()
     dwStyle |= CCS_BOTTOM;
     SetWrapState(&m_toolBar, FALSE);
     m_toolBar.SetStyle(dwStyle);
-    
+
     dwStyle = m_reBar.GetStyle();
     dwStyle &= ~(CCS_VERT);
     dwStyle |= CCS_BOTTOM;
@@ -65,11 +65,11 @@ void CMainFrame::OnLeft()
     dwStyle |= CCS_LEFT;
     SetWrapState(&m_toolBar, TRUE);
     m_toolBar.SetStyle(dwStyle);
-    
+
     dwStyle = m_reBar.GetStyle();
     dwStyle &= ~(CCS_BOTTOM);
     dwStyle |= CCS_LEFT;
-    m_reBar.SetStyle(dwStyle);  
+    m_reBar.SetStyle(dwStyle);
     RecalcLayout();
 }
 
@@ -79,10 +79,10 @@ void CMainFrame::OnRight()
     dwStyle |= CCS_RIGHT;
     SetWrapState(&m_toolBar, TRUE);
     m_toolBar.SetStyle(dwStyle);
-    
+
     dwStyle = m_reBar.GetStyle();
     dwStyle |= CCS_RIGHT;
-    m_reBar.SetStyle(dwStyle);  
+    m_reBar.SetStyle(dwStyle);
     RecalcLayout();
 }
 
@@ -117,7 +117,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
-    
+
     // Commands from the ToolBar in the additional rebar
     case IDM_TOP:       OnTop();        return TRUE;
     case IDM_LEFT:      OnLeft();       return TRUE;
@@ -134,7 +134,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -147,7 +147,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // call the base class function
     CFrame::OnCreate(cs);
 
-    DWORD style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS 
+    DWORD style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS
                      | CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NODIVIDER | RBS_VARHEIGHT ;
     m_reBar.CreateEx(0, REBARCLASSNAME, 0, style, CRect(0,0,0,0), *this, 0);
 
@@ -173,7 +173,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
         { 2, IDM_RIGHT,     TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 },
         { 3, IDM_BOTTOM,    TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 },
         { 0, 0,             TBSTATE_ENABLED, TBSTYLE_SEP,                                {0}, 0, 0 }
-    };   // Last button is a separator 
+    };   // Last button is a separator
     m_toolBar.AddButtons(5, buttonInfo);
 
     // Fill the REBARBAND structure
@@ -337,13 +337,13 @@ void CMainFrame::SetReBarPos()
         m_toolBar.PressButton(IDM_BOTTOM, TRUE);
         break;
     default:
-        m_reBar.SetWindowPos(NULL, 0, rc.top, rc.Width(), cyRB, SWP_SHOWWINDOW);    
+        m_reBar.SetWindowPos(NULL, 0, rc.top, rc.Width(), cyRB, SWP_SHOWWINDOW);
         m_toolBar.PressButton(IDM_TOP, TRUE);
         break;
     }
 
     Invalidate();
-    m_reBar.RedrawWindow();     
+    m_reBar.RedrawWindow();
 }
 
 void CMainFrame::SetupToolBar()
@@ -352,15 +352,15 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
-    
+
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
-    
+
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_FILE_PRINT );
-    
+
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 }

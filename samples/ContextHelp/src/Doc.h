@@ -1,22 +1,20 @@
-///////////////////////////////////////
+/////////////////////////////
 // Doc.h
-
-// Based on code provided by Lynn Allan
-
+//
 
 #ifndef SDI_DOC_H
 #define SDI_DOC_H
 
-
+////////////////////////////////
 // Declaration of the CDoc class
+//
 class CDoc
 {
 public:
     CDoc();
     virtual ~CDoc();
-    void  LoadDocRegistry(LPCTSTR keyName);
-    void  SaveDocRegistry(LPCTSTR keyName);
-    DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
+    void  LoadSettings(LPCTSTR keyName);
+    void  SaveSettings(LPCTSTR keyName);
 
     BOOL  GetCheckA() { return m_checkA; }
     void  SetCheckA(BOOL isChecked) { m_checkA = isChecked; }
@@ -31,10 +29,10 @@ public:
     void  SetRadio(UINT radio) { m_radio = radio; }
 
 private:
-    BOOL  m_checkA;
-    BOOL  m_checkB;
-    BOOL  m_checkC;
-    UINT  m_radio;
+    DWORD  m_checkA;
+    DWORD  m_checkB;
+    DWORD  m_checkC;
+    DWORD  m_radio;
 };
 
 #endif //SDI_DOC_H

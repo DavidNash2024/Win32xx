@@ -21,7 +21,7 @@ protected:
     virtual void OnTDNavigatePage();
     virtual BOOL OnTDRadioButtonClicked(int radioButtonID);
     virtual BOOL OnTDTimer(DWORD tickCount);
-    virtual void OnTDVerificationCheckboxClicked(BOOL isChecked);    
+    virtual void OnTDVerificationCheckboxClicked(BOOL isChecked);
     virtual LRESULT TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 

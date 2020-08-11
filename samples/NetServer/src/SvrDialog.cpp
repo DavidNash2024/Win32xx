@@ -75,7 +75,7 @@ void CTCPClientDlg::Receive()
     char* bufArray = &bufVector.front(); // char array with 1025 elements initialised to '\0'
     if (m_pSocket->Receive(bufArray, 1024, 0) == SOCKET_ERROR)
         TRACE(_T("Network error.  Failed to receive"));
-    
+
     AppendText(IDC_EDIT_RECEIVE2, AtoT(bufArray));
     TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
 }
@@ -94,7 +94,7 @@ void CTCPClientDlg::Send()
 
 /////////////////////////////////////////////
 // Definitions for the CSvrDialog class
-CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE), 
+CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE),
                                       m_socketType(SOCK_STREAM)
 {
     ZeroMemory(&m_saUDPClient, sizeof(m_saUDPClient));
@@ -420,7 +420,7 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wparam)
             }
             else
                 TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
-            
+
             m_buttonSend.EnableWindow(TRUE);
             m_editSend.EnableWindow(TRUE);
             GotoDlgCtrl(GetDlgItem(IDC_EDIT_SEND));

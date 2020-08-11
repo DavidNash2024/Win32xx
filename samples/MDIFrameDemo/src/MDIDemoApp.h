@@ -1,12 +1,15 @@
-//////////////////////////////////////
+/////////////////////////////
 // MDIDemoApp.h
+//
 
 #ifndef MDIDEMOAPP_H
 #define MDIDEMOAPP_H
 
 #include "MainMDIFrm.h"
 
-
+///////////////////////////////////////
+// Declaration of the CMDIDemoApp class
+//
 class CMDIDemoApp : public CWinApp
 {
 public:
@@ -17,7 +20,6 @@ public:
 
 private:
     CMainMDIFrame m_mainMDIFrame;
-
 };
 
 

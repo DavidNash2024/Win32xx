@@ -88,7 +88,7 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)         /*
 *-----------------------------------------------------------------------------*/
 {
     switch (uMsg)
-    {     
+    {
         case WM_SYSCOMMAND:
         {
             switch (LOWORD(wParam))

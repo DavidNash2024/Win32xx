@@ -63,7 +63,7 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
     }
 
     // Create the threads belonging to the MyThread objects
-    // Each thread creates a TestWindow when it runs 
+    // Each thread creates a TestWindow when it runs
     std::vector<MyThreadPtr>::iterator iter;
     for (iter = m_threads.begin(); iter < m_threads.end(); ++iter)
     {
@@ -76,7 +76,7 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
             str.Format( _T("Thread %d started "), (*iter)->GetThreadCount() );
             AppendText(str);
         }
-            
+
         catch (CWinException &e)
         {
             // Display the exception and allow the program to continue

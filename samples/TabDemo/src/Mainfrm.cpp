@@ -58,7 +58,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -70,7 +70,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // call the base class function
     CFrame::OnCreate(cs);
-    
+
     // Turn on the tab's owner draw and fixed width tabs
     m_view.SetFixedWidth(TRUE);
     m_view.SetOwnerDraw(TRUE);
@@ -88,7 +88,7 @@ BOOL CMainFrame::OnFileExit()
 }
 
 void CMainFrame::OnInitialUpdate()
-{   
+{
     // Add some tabs to the tab control
     m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
     m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
@@ -105,11 +105,11 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnMenuUpdate(UINT id)
 {
     // Update the check state of the various menu items
-    
+
     BOOL isOwnerDraw  = m_view.GetStyle() & TCS_OWNERDRAWFIXED;
     BOOL isFixed = m_view.GetStyle() & TCS_FIXEDWIDTH;
 
-    switch (id) 
+    switch (id)
     {
 
     case IDM_TAB_TOP:
@@ -228,7 +228,7 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
     // Call the base class function first
     CFrame::PreCreate(cs);
-    
+
     // Hide the window initially by removing the WS_VISIBLE style
     cs.style &= ~WS_VISIBLE;
 }
@@ -250,15 +250,15 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_NEW_TAB           );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_FILE_PRINT, FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT        );
 

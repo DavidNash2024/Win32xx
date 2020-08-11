@@ -7,11 +7,11 @@
 ===============================================================================*
 
     Contents Description: Implementation of the AboutBox dialog for this
-    application using the Win32++ framework, Copyright (c) 2005-2020 David Nash, 
+    application using the Win32++ framework, Copyright (c) 2005-2020 David Nash,
     under permissions granted therein.
 
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -23,11 +23,11 @@
     tort or otherwise, arising from, out of, or in connection with, these
     materials, the use thereof, or any other other dealings therewith.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
-        
- 
+
+
 *******************************************************************************/
 
 #include "stdafx.h"
@@ -46,7 +46,7 @@ AboutBox()                                                              /*
 }
 
 /*============================================================================*/
-     BOOL AboutBox::         
+     BOOL AboutBox::
 OnInitDialog()                                                          /*
 
      When the AboutBox is instantiated, enter the box contents.

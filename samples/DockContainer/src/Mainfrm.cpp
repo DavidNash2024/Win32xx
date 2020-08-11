@@ -1,5 +1,6 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
@@ -10,11 +11,13 @@
 #include "resource.h"
 
 
-// Definitions for the CMainFrame class
+//////////////////////////////////
+// CMainFrame function definitions
+//
+
+// Constructor for CMainFrame.
 CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_hideSingleTab(TRUE)
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     //Set m_View as the view window of the frame
     SetView(m_view);
 
@@ -23,11 +26,13 @@ CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_hideSingleTab(TRUE)
     LoadRegistrySettings(_T("Win32++\\DockContainer"));
 }
 
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
+
 }
 
+// Hides or shows the tab for a container with a single tab. 
 void CMainFrame::HideSingleContainerTab(BOOL hideSingle)
 {
     m_hideSingleTab = hideSingle;
@@ -44,6 +49,7 @@ void CMainFrame::HideSingleContainerTab(BOOL hideSingle)
     }
 }
 
+// Loads the default arrangement of dockers.
 void CMainFrame::LoadDefaultDockers()
 {
     // Note: The  DockIDs are used for saving/restoring the dockers state in the registry
@@ -64,6 +70,7 @@ void CMainFrame::LoadDefaultDockers()
     pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_OUTPUT2);
 }
 
+// Adds a new docker. The id specifies its type.
 CDocker* CMainFrame::NewDockerFromID(int id)
 {
     CDocker* pDock = NULL;
@@ -101,11 +108,11 @@ CDocker* CMainFrame::NewDockerFromID(int id)
     return pDock;
 }
 
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
 
-    // OnCommand responds to menu and and toolbar input
     UINT id = LOWORD(wparam);
     switch(id)
     {
@@ -122,18 +129,17 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Reposition the tabs in the containers.
 BOOL CMainFrame::OnContainerTabsAtTop()
-// Reposition the tabs in the containers
 {
     SetContainerTabsAtTop(!m_isContainerTabsAtTop);
     return TRUE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
@@ -149,6 +155,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CDockFrame::OnCreate(cs);
 }
 
+// Replaces the current docking arrangement with the default. 
 BOOL CMainFrame::OnDockDefault()
 {
     SetRedraw(FALSE);
@@ -161,25 +168,28 @@ BOOL CMainFrame::OnDockDefault()
     return TRUE;
 }
 
+// Close all the frame's dockers.
 BOOL CMainFrame::OnDockCloseAll()
 {
     CloseAllDockers();
     return TRUE;
 }
 
+// Issue a close request to the frame to end the program.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Toggle the hiding of tabs for containers with a single tab.
 BOOL CMainFrame::OnHideSingleTab()
 {
     HideSingleContainerTab(!m_hideSingleTab);
     return TRUE;
 }
 
+// Called after the frame's window is created.
 void CMainFrame::OnInitialUpdate()
 {
     SetDockStyle(DS_CLIENTEDGE);
@@ -195,8 +205,8 @@ void CMainFrame::OnInitialUpdate()
     ShowWindow( GetInitValues().showCmd );
 }
 
+// Called when menu items are about to be displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
-// Called when menu items are about to be displayed
 {
     UINT check;
     switch (id)
@@ -215,15 +225,14 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CDockFrame::OnMenuUpdate(id);
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // Call the base class function first
-    CDockFrame::PreCreate(cs);
-
     // Hide the window initially by removing the WS_VISIBLE style
     cs.style &= ~WS_VISIBLE;
 }
 
+// Saves the docking arrangement and other settings in the registry.
 BOOL CMainFrame::SaveRegistrySettings()
 {
     if (CDockFrame::SaveRegistrySettings())
@@ -232,6 +241,7 @@ BOOL CMainFrame::SaveRegistrySettings()
         return FALSE;
 }
 
+// Positions the tabs at the top or bottom of all containers.
 void CMainFrame::SetContainerTabsAtTop(BOOL isAtTop)
 {
     m_isContainerTabsAtTop = isAtTop;
@@ -248,9 +258,9 @@ void CMainFrame::SetContainerTabsAtTop(BOOL isAtTop)
     }
 }
 
+// Set the Resource IDs for the toolbar buttons
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW,   FALSE );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );

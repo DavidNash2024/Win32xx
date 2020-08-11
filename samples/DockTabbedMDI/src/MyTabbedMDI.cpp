@@ -1,5 +1,6 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // MyTabbedMDI.cpp
+//
 
 #include "stdafx.h"
 #include "MyTabbedMDI.h"
@@ -10,10 +11,17 @@
 #include "Rect.h"
 #include "Text.h"
 
+
+////////////////////////////////////
+// CMyTabbedMDI function definitions
+//
+
+// Constructor.
 CMyTabbedMDI::CMyTabbedMDI()
 {
 }
 
+// Adds a new MDI. The mdiChild parameter specifies the MDI type.
 CWnd* CMyTabbedMDI::NewMDIChildFromID(int mdiChild)
 {
     CWnd* pView = NULL;

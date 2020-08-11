@@ -6,13 +6,13 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description:  Resource definitions used by a minimal SDI 
+    Contents Description:  Resource definitions used by a minimal SDI
     application's resource.rc file.  Adapted to the Win32++ Windows
     interface classes, Copyright (c) 2005-2020 David Nash, under
     permissions granted therein.
-    
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -28,7 +28,7 @@
     generally adhere to prefixes as shown in the following table. Note
     that different kinds of resource objects have different prefixes to
     distinguish the types of entities they belong to:
-    
+
         Entity ID   Object
         IDP_        Message-box prompt
         IDD_        Dialog-box ID
@@ -38,7 +38,7 @@
         IDR_        Frame-related resource
         IDC_        Control resource
         IDW_            Win32++ default resources
-    
+
     Notes about Resource IDs: In general, resource IDs can have values
     from 1 to 65535. Programs with resource IDs higher than 65535 may
     not be supported by some Windows versions.
@@ -67,11 +67,11 @@
     The programming standards roughly follow those established
     by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
-    
+
     Acknowledgement:
     The author would like to thank and acknowledge the advice, critical
     review, insight, and assistance provided by David Nash in the development
-    of this work.   
+    of this work.
 
 ********************************************************************************
 
@@ -88,7 +88,7 @@
   // These are prefixed by IDW_.
 #include "default_resource.h"
 
-  // the base of this app's IDs: 
+  // the base of this app's IDs:
 #define THIS_APP                        150
 
   // resource IDs for Menu and  ToolBar commands

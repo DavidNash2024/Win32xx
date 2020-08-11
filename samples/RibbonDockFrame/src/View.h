@@ -11,11 +11,11 @@
 //   LPARAM: unused
 #define UWM_DROPFILE (WM_APP + 0x0001)
 
-// Message - sent to the parent (Frame) window to retrieve the PlotPoint data. 
+// Message - sent to the parent (Frame) window to retrieve the PlotPoint data.
 //   Returns a pointer to a vector of PlotPoint
 #define UWN_GETALLPOINTS (WM_APP + 0x0002)
 
-// Message - sent to the parent (Frame) window containing the PlotPoint information. 
+// Message - sent to the parent (Frame) window containing the PlotPoint information.
 //   WPARAM: A pointer to PlotPoint.
 //   LPARAM: unused
 #define UWM_SENDPOINT (WM_APP + 0x0003)

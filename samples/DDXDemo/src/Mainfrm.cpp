@@ -47,11 +47,11 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
         Planning and Preparation Subsystem project for C++ programming.
-        
+
     Acknowledgement:
     The author would like to thank and acknowledge the advice, critical
     review, insight, and assistance provided by David Nash in the development
-    of this work.       
+    of this work.
 
 ********************************************************************************
 
@@ -129,24 +129,24 @@ OnClose()                               /*
     and save it if all is well. If an error arises, return with the cursor
     in the offending control so the user can correct it.
 *-----------------------------------------------------------------------------*/
-{                                   
-    if (UpdateDialog(TRUE))                     
+{
+    if (UpdateDialog(TRUE))
     {   // all is well
-        TRACE("Verification passed\n");             
-        TheView().UpdateParameters();               
+        TRACE("Verification passed\n");
+        TheView().UpdateParameters();
     }
     else
-    {     // oops! there is a problem with some of the control data                             
-        TRACE("*** Verification failed ***\n");         
+    {     // oops! there is a problem with some of the control data
+        TRACE("*** Verification failed ***\n");
             return;  // return control to user to fix this problem
     }
 
-      // save the document contents into the registry       
-    TheDoc().SaveDocRegistry(GetRegistryKeyName().c_str());     
-    TRACE("Data saved to registry\n");              
+      // save the document contents into the registry
+    TheDoc().SaveDocRegistry(GetRegistryKeyName().c_str());
+    TRACE("Data saved to registry\n");
       // the base class calls SaveRegistrySettings() and DestroyWindow()
-    CFrame::OnClose();                      
-}                                   
+    CFrame::OnClose();
+}
 
 /*============================================================================*/
     BOOL CMainFrame::
@@ -179,15 +179,15 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
         case IDM_FILE_EXIT:
             OnFileExit();
         return TRUE;
-        
+
         case IDW_VIEW_STATUSBAR:
             OnViewStatusBar();
         return TRUE;
-        
+
         case IDW_VIEW_TOOLBAR:
         OnViewToolBar();
         return TRUE;
-        
+
         case IDM_HELP_ABOUT:
         OnHelp();
         return TRUE;
@@ -219,7 +219,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
     }
 
     return FALSE;
-} 
+}
 
 /*============================================================================*/
     int CMainFrame::
@@ -239,8 +239,8 @@ OnCreate(CREATESTRUCT& cs)                          /*
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
     // call the base class function
-    int rtn = CFrame::OnCreate(cs);  
-    
+    int rtn = CFrame::OnCreate(cs);
+
     if (IsReBarSupported())
     {
         //Set our theme colors
@@ -386,7 +386,7 @@ SetupToolBar()                                                  /*
 /*============================================================================*/
     BOOL CMainFrame::
 UpdateDialog(BOOL bReadFromControl /* = SENDTOCONTROL */)       /*
-    
+
     Update data items in memory (bReadFromControl is READFROMCONTROL) or in
     the dialog controls (bReadFromControl is SENDTOCONTROL). The list of
     affected controls is specified in the CView::DoDataExchange() method.

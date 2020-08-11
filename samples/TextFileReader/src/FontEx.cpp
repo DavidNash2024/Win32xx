@@ -6,15 +6,11 @@
 ===============================================================================*
 
     Contents Description: Implementation of an extension of the CFont class
-    using the Win32++ Windows interface classes, Copyright (c) 2005-2020 
-    David Nash, under permissions granted therein. Extensions include font 
+    using the Win32++ Windows interface classes. Extensions include font
     size, color, font dialog option flags, and coordinate mapping mode.
 
-    Caveats: These materials are available under the same provisions as 
-    found in the Win32++ copyright.txt notice.
-
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -37,8 +33,8 @@ CFontEx()                                                                   /*
     void CFontEx::
 Choose(LPCTSTR wintitle /* =  NULL */)                                      /*
 
-    Select the object font typeface, characteristics, color, and size in the 
-    device context dc. The font background color is presumed to be supplied by 
+    Select the object font typeface, characteristics, color, and size in the
+    device context dc. The font background color is presumed to be supplied by
     the application. Label the choice box using wintitle.
 *-----------------------------------------------------------------------------*/
 {
@@ -51,7 +47,7 @@ Choose(LPCTSTR wintitle /* =  NULL */)                                      /*
     CHOOSEFONT cf = fd.GetParameters();
       // display effects and color boxes, and use logfont provided, as
       // well as any other initializations in flags
-    cf.Flags |= CF_SCREENFONTS |CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | 
+    cf.Flags |= CF_SCREENFONTS |CF_EFFECTS | CF_INITTOLOGFONTSTRUCT |
         m_flags;
     cf.lpLogFont = &lf;
     cf.rgbColors = m_txcolor;
@@ -99,7 +95,7 @@ Serialize(CArchive &ar)                                                     /*
     ArchiveObject f(&lf, lfTopLength);
     if (ar.IsStoring()) // storing
     {
-		lf = m_font.GetLogFont();
+        lf = m_font.GetLogFont();
           // store the face name separately: ar recognizes the char mode
         CString face = lf.lfFaceName;
         ar << f;    // store the top part
@@ -129,7 +125,7 @@ SetDefault()                                                                /*
     Create the default view font. Throw an exception if it cannot be created.
 *-----------------------------------------------------------------------------*/
 {
-    const int fontSize = 10;  
+    const int fontSize = 10;
     LPCTSTR fontName   = _T("Courier New");
     m_txcolor          = RGB(0, 0, 0);
     m_font.CreatePointFont(10 * fontSize, fontName);

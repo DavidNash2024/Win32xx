@@ -1,16 +1,21 @@
-///////////////////////////////////////
+/////////////////////////////
 // CViewDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
 
+///////////////////////////////////
+// CViewDialog function definitions
+//
 
-// Definitions for the CViewDialog class
+// Constructor.
 CViewDialog::CViewDialog(UINT resID) : CDialog(resID)
 {
 }
 
+// Destructor.
 CViewDialog::~CViewDialog()
 {
 }
@@ -115,8 +120,11 @@ LRESULT CViewDialog::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 
-//////////////////////////////////////////////
-//  Definitions for the CDockDialog class
+///////////////////////////////////
+// CDockDialog function definitions
+//
+
+// Constructor.
 CDockDialog::CDockDialog() : m_view(IDD_MYDIALOG)
 {
     // Set the view window to our edit control
@@ -125,5 +133,4 @@ CDockDialog::CDockDialog() : m_view(IDD_MYDIALOG)
     // Set the width of the splitter bar
     SetBarWidth(8);
 }
-
 

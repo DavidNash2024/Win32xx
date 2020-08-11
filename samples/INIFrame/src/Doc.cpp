@@ -1,13 +1,18 @@
+/////////////////////////////
+// Doc.cpp
+//
 
 #include "stdafx.h"
 #include "Doc.h"
 
+////////////////////////////
+// CDoc function definitions
+//
 
+// An example of how to load document data.
 BOOL CDoc::FileLoad(LPCTSTR filename)
 {
     BOOL bResult = FALSE;
-
-    // Return CDoc data to default
 
     try
     {
@@ -20,17 +25,17 @@ BOOL CDoc::FileLoad(LPCTSTR filename)
     {
         // An exception occurred. Display the relevant information.
         ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-        
+
         // Return CDoc data to default
     }
 
     return bResult;
 }
 
+// An example of how to save document data.
 BOOL CDoc::FileStore(LPCTSTR /* filename */)
 {
     BOOL result = FALSE;
-
 //  try
 //  {
 //      CArchive ar(filename, CArchive::store);
@@ -46,8 +51,8 @@ BOOL CDoc::FileStore(LPCTSTR /* filename */)
     return result;
 }
 
-void CDoc::Serialize(CArchive& /* ar */)
 // Uses CArchive to stream data to or from a file
+void CDoc::Serialize(CArchive& /* ar */)
 {
 
 //  if (ar.IsStoring())

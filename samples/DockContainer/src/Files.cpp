@@ -7,17 +7,22 @@
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewFiles functions
+//////////////////////////////////
+// CViewFiles function definitions
+//
+
+// Constructor.
 CViewFiles::CViewFiles()
 {
 }
 
+// Destructor.
 CViewFiles::~CViewFiles()
 {
     if (IsWindow()) DeleteAllItems();
 }
 
+// Adds an item to the list-view control.
 int CViewFiles::AddItem(LPCTSTR text, int image)
 {
     LVITEM lvi;
@@ -29,6 +34,7 @@ int CViewFiles::AddItem(LPCTSTR text, int image)
     return InsertItem(lvi);
 }
 
+// Inserts 4 items into the list-view control.
 void CViewFiles::InsertItems()
 {
     // Add 4th item
@@ -51,15 +57,16 @@ void CViewFiles::InsertItems()
     SetItemText(item, 2, _T("Folder"));
 }
 
+// Called when a window handle (HWND) is attached to CViewFiles.
 void CViewFiles::OnAttach()
 {
-    // Set the image lists
+    // Set the image lists.
     m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bm(IDB_FILEVIEW);
     m_smallImages.Add(bm, RGB(255, 0, 255) );
     SetImageList(m_smallImages, LVSIL_SMALL);
 
-    // Set the report style
+    // Set the report style.
     DWORD style = GetStyle();
     SetStyle((style & ~LVS_TYPEMASK) | LVS_REPORT);
 
@@ -67,25 +74,27 @@ void CViewFiles::OnAttach()
     InsertItems();
 }
 
+// Called when the window is destroyed.
 void CViewFiles::OnDestroy()
 {
     SetImageList(NULL, LVSIL_SMALL);
 }
 
-LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse click on the window
+LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Configures the list-view's columns (its header control).
 void CViewFiles::SetColumns()
 {
-    //empty the list
+    // empty the list
     DeleteAllItems();
 
-    //initialise the columns
+    // initialise the columns
     LV_COLUMN lvColumn;
     ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
     lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
@@ -99,6 +108,7 @@ void CViewFiles::SetColumns()
     }
 }
 
+// Process the list-view's window messages.
 LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -110,8 +120,11 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 
-///////////////////////////////////////////////
-// CContainFiles functions
+/////////////////////////////////////
+// CContainFiles function definitions
+//
+
+// Constructor.
 CContainFiles::CContainFiles()
 {
     SetTabText(_T("FileView"));
@@ -120,13 +133,16 @@ CContainFiles::CContainFiles()
     SetView(m_viewFiles);
 }
 
-/////////////////////////////////////////////////
-//  Definitions for the CDockFiles class
+///////////////////////////////////
+//  CDockFiles function definitions
+//
+
+// Constructor.
 CDockFiles::CDockFiles()
 {
     SetView(m_files);
 
-    // Set the width of the splitter bar
+    // Set the width of the splitter bar.
     SetBarWidth(8);
 }
 

@@ -1,20 +1,26 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // ContainerApp.cpp
-
+//
 
 #include "stdafx.h"
 #include "ContainerApp.h"
 
 
-// Definitions for the CDockContainerApp class
+//////////////////////////////////////////////
+// CDockContainerApp function definitions
+//
+
+// Constructor.
 CDockContainerApp::CDockContainerApp()
 {
 }
 
+// Destructor.
 CDockContainerApp::~CDockContainerApp()
 {
 }
 
+// Called when the application starts.
 BOOL CDockContainerApp::InitInstance()
 {
     //Create the Frame Window

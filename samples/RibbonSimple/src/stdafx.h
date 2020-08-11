@@ -1,10 +1,10 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // StdAfx.h
+//
 
-// This file is used for precompiled headers
+// This file is used for precompiled headers.
 // Rarely modified header files should be included.
-
-// Based on code provided by Lynn Allan
+// Based on code provided by Lynn Allan.
 
 
 #ifndef STDAFX_H
@@ -30,12 +30,12 @@
 #include <sstream>              // Add support for stringstream
 #include <cassert>              // Add support for the assert macro
 #include <stdio.h>              // Add support for C style printf, sprintf, etc.
-#include <stdlib.h>             // Add support for C style character conversions atoi etc. 
+#include <stdlib.h>             // Add support for C style character conversions atoi etc.
 #include <tchar.h>              // Add support for C style TCHARs.
 
 #include <wxx_appcore.h>        // Add CCriticalSection, CObject, CWinThread, CWinApp
 #include <wxx_archive.h>        // Add CArchive
-#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog 
+#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip
 #include <wxx_cstring.h>        // Add CString, CStringA, CStringW
 #include <wxx_ddx.h>            // Add CDataExchange

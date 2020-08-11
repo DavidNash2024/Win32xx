@@ -1,6 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-//  Definitions for CContextHelp class. This class creates a window to display
-//  a .chm help file.
+/////////////////////////////
+// ContextHelp.cpp
+//
+
+//  This class creates a window to display a .chm help file.
 //
 //  CContextHelp implements the following functions:
 //  AddHelpTopic.       Adds a <UINT, CString> pair to a map of known topics.
@@ -36,23 +38,23 @@
 #include "resource.h"
 
 
-//////////////////////////////////////////////////
-// CContextHelp Class Implementation
+////////////////////////////////////
+// CContextHelp function definitions
 //
 
+// Constructor.
 CContextHelp::CContextHelp()
-// Constructor
 {
 }
 
-CContextHelp::~CContextHelp()
 // Destructor
+CContextHelp::~CContextHelp()
 {
 }
 
-void CContextHelp::AddHelpTopic(UINT id, LPCTSTR topic)
 // Add the (control-id, string topic) pair to the help topic table.
 // Assert if a duplicate id entered.
+void CContextHelp::AddHelpTopic(UINT id, LPCTSTR topic)
 {
     assert(id);
     assert(topic);
@@ -66,7 +68,6 @@ void CContextHelp::AddHelpTopic(UINT id, LPCTSTR topic)
     m_helpTopics.insert(std::make_pair(id, topic));
 }
 
-HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data)
 // Creates the HtmlHelp window, and binds this object to its HWND.
 // hwndCaller: The handle (HWND) of the window calling HtmlHelp, typically ::GetDesktopWindow().
 //              The help window is owned by this window.
@@ -75,6 +76,7 @@ HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command,
 // command: Specifies the command to complete, typically HH_DISPLAY_TOPIC.
 //            Refer to the MSDN documentation for possible uCommand values.
 // data:   Specifies any data that may be required, based on the value of the uCommand parameter.
+HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data)
 {
     // Prepare this CWnd for possible re-use
     if (*this != 0) Detach();
@@ -91,8 +93,8 @@ HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command,
     return hWnd;
 }
 
+// Identifies the window from the cursor position and returns its ID.
 UINT CContextHelp::GetIDFromCursorPos() const
-// Identifies the window from the cursor position and returns its ID
 {
     UINT id = 0;
     CPoint pt = GetCursorPos();
@@ -106,10 +108,10 @@ UINT CContextHelp::GetIDFromCursorPos() const
     return id;
 }
 
-void CContextHelp::ShowHelpTopic(UINT id)
 // Display the application guide topic corresponding to the numeric
 // identifier id, if present in the help table, and if the topic exists
 // in the guide.
+void CContextHelp::ShowHelpTopic(UINT id)
 {
     std::map<UINT, CString>::const_iterator m;
 
@@ -120,9 +122,9 @@ void CContextHelp::ShowHelpTopic(UINT id)
     ShowHelpTopic(topic);
 }
 
-void CContextHelp::ShowHelpTopic(LPCTSTR topic)
 // Display the application guide topic, if present, or show the topic
 // in a message box if there is no such topic in the guide.
+void CContextHelp::ShowHelpTopic(LPCTSTR topic)
 {
     CString topic_url = (topic[0] == 0) ? CString(_T("")) : _T("::/") + CString(topic) + _T(".htm");
     CString seek_url = m_helpFilePath + topic_url;

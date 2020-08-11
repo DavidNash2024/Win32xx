@@ -6,12 +6,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description:  Implementation of the CDoc class for this application 
-    using the Win32++ framework, Copyright (c) 2005-2020 David Nash, under 
+    Contents Description:  Implementation of the CDoc class for this application
+    using the Win32++ framework, Copyright (c) 2005-2020 David Nash, under
     permissions granted therein.
 
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -23,7 +23,7 @@
     tort  or  otherwise, arising from, out of,  or in connection with, these
     materials, the use thereof, or  any other other dealings therewith.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
 
@@ -129,7 +129,7 @@ GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const  /*
 
       // compute length of text to extract
     if (length < 0)
-        length = s.GetLength(); 
+        length = s.GetLength();
     length = MAX(0, length - left);
       // extract length chars after left position using base class
     return s.Mid(left, length);
@@ -172,7 +172,7 @@ GetDocWidth() const                                                     /*
 }
 
 /*============================================================================*/
-    bool CDoc:: 
+    bool CDoc::
 OpenDoc(const CString &docFileName)                                   /*
 
     Open the document having the given doc_file_name and load its contents
@@ -457,7 +457,7 @@ NewDocument()                                                           /*
         s.Format(_T("  argv(%d) = %s"), i, args[i].c_str());
         PushContent(s);
     }
-    
+
     PushContent(_T(""));
     s.Format(_T("  -------------------------------------------------------"));
     PushContent(s);
@@ -698,7 +698,7 @@ SaveDoc()                                                               /*
 
 /*============================================================================*/
     bool CDoc::
-SaveDocAs()                                                             /* 
+SaveDocAs()                                                             /*
 
     Get a new name for the document file and replace the old one with
     this.  Save the newly named document and retain it as the current

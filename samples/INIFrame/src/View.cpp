@@ -1,22 +1,24 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // View.cpp
-//  Definitions for the CView class
+//
 
 #include "stdafx.h"
 #include "view.h"
 
+/////////////////////////////
+// CView function definitions
+//
 
+// Constructor.
 CView::CView()
 {
 }
-
 
 // Returns a reference to CDoc.
 CDoc& CView::GetDoc()
 {
     return m_doc;
 }
-
 
 // OnDraw is called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
@@ -28,13 +30,11 @@ void CView::OnDraw(CDC& dc)
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
-
 // OnInitialUpdate is called immediately after the window is created.
 void CView::OnInitialUpdate()
 {
     TRACE("View window created\n");
 }
-
 
 // Called before window creation to update the window's CREATESTRUCT.
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -47,11 +47,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-
-// Called before the window is registered to update the window's WNDCLASS.
-// Here we set the Window class parameters.
-// Preforming this is optional, but doing so allows us to
-// take more precise control over the type of window we create.
+// Called before window creation to update the window's WNDCLASS.
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Set the Window Class name
@@ -66,7 +62,6 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     // Set the class style (not to be confused with the window styles set in PreCreate)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
-
 
 // Prints the specified page to the specified device context.
 // Here we copy (stretch) a bitmap image of the view window
@@ -147,7 +142,6 @@ void CView::QuickPrint(LPCTSTR docName)
     }
 }
 
-
 // All window messages for this window pass through WndProc.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -161,6 +155,4 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }
-
-
 

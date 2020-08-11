@@ -1,12 +1,17 @@
-////////////////////////////////////////////////////
-// MainMDIfrm.cpp  - definitions for the CMainMDIFrame class
+/////////////////////////////
+// MainMDIfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainMDIfrm.h"
 #include "SplitterMDIChild.h"
 #include "resource.h"
 
+/////////////////////////////////////
+// CMainMDIFrame function definitions
+//
 
+// Constructor.
 CMainMDIFrame::CMainMDIFrame()
 {
     // Set the registry key name, and load the initial window position
@@ -14,13 +19,14 @@ CMainMDIFrame::CMainMDIFrame()
     LoadRegistrySettings(_T("Win32++\\MDIFrameSplitter"));
 }
 
+// Destructor.
 CMainMDIFrame::~CMainMDIFrame()
 {
 }
 
+// Respond to menu and toolbar input.
 BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    
     UINT id = LOWORD(wparam);
     switch (id)
     {
@@ -48,13 +54,14 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the window is created.
 int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -68,6 +75,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
     return CMDIFrame::OnCreate(cs);
 }
 
+// Sample code to load data from a file.
 BOOL CMainMDIFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE);
@@ -82,6 +90,7 @@ BOOL CMainMDIFrame::OnFileOpen()
     return TRUE;
 }
 
+// Sample code to save data to a file.
 BOOL CMainMDIFrame::OnFileSave()
 {
     CFileDialog fileDlg(FALSE);
@@ -96,6 +105,7 @@ BOOL CMainMDIFrame::OnFileSave()
     return TRUE;
 }
 
+// Sample code to send output to a printer.
 BOOL CMainMDIFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
@@ -122,6 +132,8 @@ BOOL CMainMDIFrame::OnFilePrint()
     }
 }
 
+// Called after the window is created.
+// Called after OnCreate.
 void CMainMDIFrame::OnInitialUpdate()
 {
     TRACE("MDI Frame started \n");
@@ -129,50 +141,56 @@ void CMainMDIFrame::OnInitialUpdate()
     //Place any additional startup code here.
 }
 
+// Close the active MDI child window.
 BOOL CMainMDIFrame::OnFileClose()
 {
-    // Close the active MDI window
     GetActiveMDIChild()->Close();
     return TRUE;
 }
 
+// Issue a close request to the frame. Ends the application.
 BOOL CMainMDIFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Adds a new splitter MDI child.
 BOOL CMainMDIFrame::OnFileNew()
 {
     AddMDIChild(new CSplitterMDIChild);
     return TRUE;
 }
 
-BOOL CMainMDIFrame::OnMDICascade() 
-{ 
+// Arrange the MDI child windows in cascade mode.
+BOOL CMainMDIFrame::OnMDICascade()
+{
     MDICascade();
     return TRUE;
 }
 
+// Ask all the MDI child windows to close.
 BOOL CMainMDIFrame::OnMDICloseAll()
 {
     RemoveAllMDIChildren();
     return TRUE;
 }
 
+// Arrange the minimised MDI child windows.
 BOOL CMainMDIFrame::OnMDIIconArrange()
 {
     MDIIconArrange();
     return TRUE;
 }
 
+// Arrange the MDI child windows in tile mode.
 BOOL CMainMDIFrame::OnMDITile()
-{ 
-    MDITile(); 
-    return TRUE; 
+{
+    MDITile();
+    return TRUE;
 }
 
+// Define the resource IDs and images for toolbar buttons.
 void CMainMDIFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
@@ -189,6 +207,7 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Process the MDI frame's window messages.
 LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

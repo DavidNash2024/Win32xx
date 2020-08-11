@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////
 // Classes.h - Declaration of CViewClasses, CContainClasses,
 //              and CDockClasses classes
+//
 
 
 #ifndef CLASSES_H
@@ -9,8 +10,9 @@
 
 #include "MyCombo.h"
 
-
+////////////////////////////////////////
 // Declaration of the CViewClasses class
+//
 class CViewClasses : public CTreeView
 {
 public:
@@ -30,7 +32,9 @@ private:
 
 };
 
+///////////////////////////////////////////
 // Declaration of the CContainClasses class
+//
 class CContainClasses : public CDockContainer
 {
 public:
@@ -47,7 +51,9 @@ private:
     CMyCombo m_comboBoxEx;
 };
 
+////////////////////////////////////////
 // Declaration of the CDockClasses class
+//
 class CDockClasses : public CDocker
 {
 public:
@@ -58,7 +64,6 @@ private:
     CContainClasses m_classes;
 
 };
-
 
 
 #endif  //CLASSES_H

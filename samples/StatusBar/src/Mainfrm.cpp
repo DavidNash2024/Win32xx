@@ -53,7 +53,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
        UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -77,19 +77,19 @@ LRESULT CMainFrame::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
 
     // Perform the owner draw for Part 3 in the status bar
     LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT)lparam;
-    
+
     if (pDrawItem->CtlID == STATUS_ID) // Message comes from the status bar
     {
         CRect partRect = pDrawItem->rcItem;
         CDC dc;
         dc.Attach(pDrawItem->hDC);
-    
+
         // Set the font to italic
         CFont Font = GetStatusBar().GetFont();
         LOGFONT lf = Font.GetLogFont();
         lf.lfItalic = TRUE;
         dc.CreateFontIndirect(lf);
-        
+
         // Display the gradient background and text
         dc.GradientFill(RGB(230, 180, 0), RGB(240, 210, 90), partRect, TRUE);
         dc.SetTextColor(RGB(10,20,250));
@@ -190,10 +190,10 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     // This function is called before the frame is created.
     // It provides an opportunity to modify the various CREATESTRUCT
     // parameters used in the frame window's creation.
-    
+
     // Call base clase to set defaults
     CFrame::PreCreate(cs);
-    
+
     // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
 
@@ -203,15 +203,15 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
-    
+
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
-    
+
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_FILE_PRINT );
-    
+
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 }

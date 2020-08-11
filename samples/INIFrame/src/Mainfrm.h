@@ -1,12 +1,15 @@
-/////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.h
+//
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
 #include "View.h"
 
+////////////////////////////////////////
 // Declaration of the CMainFrame class
+//
 class CMainFrame : public CFrame
 {
 public:
@@ -23,10 +26,10 @@ public:
     void    OnPreviewClose();
     void    OnPreviewPrint();
     void    OnPreviewSetup();
-    
+
     CString ItoT(int i);
     int     TtoI(LPCTSTR string);
-    
+
     CString GetINIPath();
     void SerializeINI(BOOL isStoring);
 

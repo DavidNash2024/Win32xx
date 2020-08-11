@@ -1,63 +1,74 @@
-/////////////////////////////////////////////
+/////////////////////////////
 // Dockers.cpp
+//
 
 #include "stdafx.h"
 #include "Dockers.h"
 
 
-//////////////////////////////////////////////
-//  Definitions for the CDockSimple class
+////////////////////////////////////
+//  CDockSimple function definitions
+//
+
+// Constructor.
 CDockSimple::CDockSimple()
 {
-    // Set the view window for the simple docker
+    // Set the view window for the simple docker.
     SetView(m_view);
 
-    // Set the width of the splitter bar
+    // Set the width of the splitter bar.
     SetBarWidth(8);
 
     SetCaption (_T("Simple View - Docking"));
 }
 
+/////////////////////////////////
+// CDockText function definitions
+//
 
-//////////////////////////////////////////////
-//  Definitions for the CDockText class
+// Constructor.
 CDockText::CDockText()
 {
-    // Set the view window to our edit control
+    // Set the view window to our edit control.
     SetView(m_view);
 
-    // Set the width of the splitter bar
+    // Set the width of the splitter bar.
     SetBarWidth(8);
 
     SetCaption (_T("Text View - Docking"));
 }
 
 
-//////////////////////////////////////////////
-//  Definitions for the CDockClasses class
+////////////////////////////////////
+// CDockClasses function definitions
+//
+
+// Constructor.
 CDockClasses::CDockClasses()
 {
-    // Set the view window to our TreeView control
+    // Set the view window to our TreeView control.
     SetView(m_view);
 
-    // Set the width of the splitter bar
+    // Set the width of the splitter bar.
     SetBarWidth(8);
 
     SetCaption (_T("Class View - Docking"));
 }
 
 
-//////////////////////////////////////////////
-//  Definitions for the CDockFiles class
+///////////////////////////////////
+//  CDockFiles function definitions
+//
+
+// Constructor.
 CDockFiles::CDockFiles()
 {
-    // Set the view window to our ListView control
+    // Set the view window to our ListView control.
     SetView(m_view);
 
-    // Set the width of the splitter bar
+    // Set the width of the splitter bar.
     SetBarWidth(8);
 
     SetCaption (_T("Files View - Docking"));
 }
-
 

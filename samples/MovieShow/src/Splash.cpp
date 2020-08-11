@@ -1,13 +1,22 @@
+/////////////////////////////
+// Splash.cpp
+//
+
 #include "stdafx.h"
 #include "Splash.h"
 #include "resource.h"
 
+///////////////////////////////
+// CSplash function definitions
+//
 
+// Constructor.
 CSplash::CSplash() : m_hIcon(0), m_fontHandle(0)
 {
     LoadFont();
 }
 
+// Destructor.
 CSplash::~CSplash()
 {
 }
@@ -29,8 +38,8 @@ void CSplash::AddBar()
 }
 
 // Hides the splash screen
-void CSplash::Hide() 
-{ 
+void CSplash::Hide()
+{
     ShowWindow(SW_HIDE);
 }
 
@@ -54,7 +63,7 @@ void CSplash::LoadFont()
 
                 m_fontHandle = AddFontMemResourceEx(
                     data,           // font resource
-                    len,            // number of bytes in font resource 
+                    len,            // number of bytes in font resource
                     NULL,           // Reserved. Must be 0.
                     &fonts          // number of fonts installed
                 );
@@ -114,13 +123,13 @@ void CSplash::RemoveBar()
 }
 
 void CSplash::ShowText(LPCTSTR text)
-{ 
+{
     m_text = text;
 
     // Show the window on top without activating it.
     DWORD flags = SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_SHOWWINDOW;
     SetWindowPos(HWND_TOPMOST, 0, 0, 0, 0, flags);
-    
+
     UpdateWindow();
-    Invalidate(); 
+    Invalidate();
 }

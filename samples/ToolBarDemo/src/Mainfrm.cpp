@@ -31,7 +31,7 @@ LRESULT CMainFrame::OnBeginAdjust(LPNMTOOLBAR pNMTB)
 {
     CToolBar* pToolBar = static_cast<CToolBar*>(GetCWndPtr(pNMTB->hdr.hwndFrom));
     assert (dynamic_cast<CToolBar*> (pToolBar));
-    
+
     if (pToolBar)
     {
         int nResetCount = pToolBar->GetButtonCount();
@@ -77,7 +77,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -194,7 +194,7 @@ void CMainFrame::OnInitialUpdate()
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     LPNMTOOLBAR pNMTB = (LPNMTOOLBAR)lparam;
-    
+
     switch(pNMTB->hdr.code)
     {
     case TBN_QUERYDELETE:   return OnQueryDelete(pNMTB);
@@ -204,7 +204,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     case TBN_BEGINADJUST:   return OnBeginAdjust(pNMTB);
     case TBN_ENDADJUST:     return OnEndAdjust((LPNMHDR)lparam);
     case TBN_TOOLBARCHANGE: return OnToolBarChange(pNMTB);
-    case TBN_RESET:         return OnReset(pNMTB); 
+    case TBN_RESET:         return OnReset(pNMTB);
     }
 
     // Some notifications should return a value when handled
@@ -230,22 +230,22 @@ LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
 
     // An array of Button text strings (LPCTSTRs).
     // These are displayed in the customize dialog.
-    LPCTSTR buttonText[] = 
-    { 
-        _T("New Document"), 
-        _T("Open File"), 
-        _T("Save File"), 
+    LPCTSTR buttonText[] =
+    {
+        _T("New Document"),
+        _T("Open File"),
+        _T("Save File"),
         _T("Cut"),
         _T("Copy"),
         _T("Paste"),
         _T("Print"),
-        _T("Help About") 
+        _T("Help About")
     };
 
     // Pass the next button from the array. There is no need to filter out buttons
     // that are already used. They will be ignored.
     int buttons = sizeof(buttonInfo) / sizeof(TBBUTTON);
-    
+
     if (pNMTB->iItem < buttons)
     {
         pNMTB->tbButton = buttonInfo[pNMTB->iItem];
@@ -266,7 +266,7 @@ LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR pNMTB)
     return TRUE;
 }
 
-// Called when a button may be inserted to the left of the specified button while the user 
+// Called when a button may be inserted to the left of the specified button while the user
 //  is customizing a toolbar. Return TRUE to permit button deletion, and FALSE to prevent it.
 LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR pNMTB)
 {
@@ -368,7 +368,7 @@ BOOL CMainFrame::OnTBDefault()
     {
         GetToolBar().DeleteButton(i);
     }
-    
+
     // Restore buttons from info stored in m_vTBBDefault
     int nDefaultCount = static_cast<int>(m_defaultButtons.size());
     for (int j = 0; j < nDefaultCount; j++)
@@ -400,18 +400,18 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
-    
+
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
-    
+
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_FILE_PRINT );
-    
+
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-    
+
     // Add the two other toolbars if we can use rebars (Need Win95 and IE 4 or better)
     if (IsReBarSupported())
     {
@@ -426,12 +426,12 @@ void CMainFrame::SetupToolBar()
         m_cards.AddButton(IDM_CARD_DIAMOND);
         m_cards.AddButton(IDM_CARD_HEART);
         m_cards.AddButton(IDM_CARD_SPADE);
-        
+
         // Set the button images
         SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));
         SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
     }
-    
+
 }
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

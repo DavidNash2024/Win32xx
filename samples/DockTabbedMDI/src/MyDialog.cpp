@@ -1,25 +1,29 @@
-///////////////////////////////////////
+/////////////////////////////
 // CViewDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
 
 
+///////////////////////////////////
+// CViewDialog function definitions
+//
 
-// Definitions for the CViewDialog class
+// Constructor.
 CViewDialog::CViewDialog(UINT resID) : CDialog(resID)
 {
 }
 
+// Destructor.
 CViewDialog::~CViewDialog()
 {
 }
 
+// This function appends text to an edit control.
 void CViewDialog::AppendText(int id, LPCTSTR text)
 {
-    // This function appends text to an edit control
-
     // Append Line Feed
     LRESULT dx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
     if (dx)
@@ -34,6 +38,7 @@ void CViewDialog::AppendText(int id, LPCTSTR text)
     SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(text));
 }
 
+// Process the dialog's window messages.
 INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Pass resizing messages on to the resizer
@@ -48,17 +53,19 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Suppress closing the dialog when the Esc key is pressed.
 void CViewDialog::OnCancel()
 {
     AppendText(IDC_RICHEDIT2, _T("Cancel Pressed"));
     TRACE("Cancel Pressed\n");
 }
 
+// Suppress closing the dialog when an Esc key is pressed in the RichEdit controls.
 void CViewDialog::OnClose()
 {
-    // Suppress the WM_CLOSE message that is sent by pressing an Esc key in the RichEdit controls.
 }
 
+// Process the command messages (WM_COMMAND) sent by the dialog's controls.
 BOOL CViewDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -79,6 +86,7 @@ BOOL CViewDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called before the dialog is displayed.
 BOOL CViewDialog::OnInitDialog()
 {
     // Attach CWnd objects to the dialog items
@@ -111,6 +119,7 @@ BOOL CViewDialog::OnInitDialog()
     return TRUE;
 }
 
+// Respond to a mouse click on the dialog window.
 LRESULT CViewDialog::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (!IsChild(::GetFocus()))
@@ -119,12 +128,14 @@ LRESULT CViewDialog::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Suppress closing the dialog when the enter key is pressed.
 void CViewDialog::OnOK()
 {
     AppendText(IDC_RICHEDIT2, _T("OK Button Pressed"));
     TRACE("OK Button Pressed\n");
 }
 
+// Called when the button is pressed.
 BOOL CViewDialog::OnButton()
 {
     AppendText(IDC_RICHEDIT2, _T("Button Pressed"));
@@ -132,6 +143,7 @@ BOOL CViewDialog::OnButton()
     return TRUE;
 }
 
+// Called when check box 1 is clicked.
 BOOL CViewDialog::OnCheck1()
 {
     AppendText(IDC_RICHEDIT2, _T("Check Box 1"));
@@ -139,6 +151,7 @@ BOOL CViewDialog::OnCheck1()
     return TRUE;
 }
 
+// Called when check box 2 is clicked.
 BOOL CViewDialog::OnCheck2()
 {
     AppendText(IDC_RICHEDIT2, _T("Check Box 2"));
@@ -146,6 +159,7 @@ BOOL CViewDialog::OnCheck2()
     return TRUE;
 }
 
+// Called when check box 3 is clicked.
 BOOL CViewDialog::OnCheck3()
 {
     AppendText(IDC_RICHEDIT2, _T("Check Box 3"));
@@ -153,6 +167,7 @@ BOOL CViewDialog::OnCheck3()
     return TRUE;
 }
 
+// Called when a radio button is selected.
 BOOL CViewDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 {
     CheckRadioButton(idFirst, idLast, idClicked);
@@ -167,8 +182,11 @@ BOOL CViewDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 }
 
 
-//////////////////////////////////////////////
-//  Definitions for the CContainDialog class
+//////////////////////////////////////
+// CContainDialog function definitions
+//
+
+// Constructor.
 CContainDialog::CContainDialog() : m_viewDialog(IDD_MYDIALOG)
 {
     SetView(m_viewDialog);
@@ -178,8 +196,11 @@ CContainDialog::CContainDialog() : m_viewDialog(IDD_MYDIALOG)
 }
 
 
-//////////////////////////////////////////////
-//  Definitions for the CDockDialog class
+///////////////////////////////////
+// CDockDialog function definitions
+//
+
+// Constructor.
 CDockDialog::CDockDialog()
 {
     // Set the view window to our edit control
@@ -188,5 +209,4 @@ CDockDialog::CDockDialog()
     // Set the width of the splitter bar
     SetBarWidth(8);
 }
-
 

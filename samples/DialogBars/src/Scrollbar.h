@@ -1,10 +1,13 @@
-//////////////////////////////////////////////
-// CMyScrollBar.h
+/////////////////////////////
+// ScrollBar.h
+//
 
 #ifndef MYSCROLLBAR_H
 #define MYSCROLLBAR_H
 
-
+////////////////////////////////////////
+// Declaration of the CMyScrollBar class
+//
 class CMyScrollBar : public CScrollBar
 {
 public:

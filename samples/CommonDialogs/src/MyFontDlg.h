@@ -11,7 +11,7 @@
     applications using the Win32++ Windows interface classes, Copyright
     (c) 2005-2016 David Nash, under permissions granted therein. This class
     derives from the CFontDalog class found in the Win32++ Windows interface
-    framework. 
+    framework.
 
         Caveats: The copyright displayed above extends only to the author's
     original contributions to the subject class, and to the alterations,

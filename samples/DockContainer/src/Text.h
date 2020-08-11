@@ -1,12 +1,14 @@
 ///////////////////////////////////////////////////////
 // Text.h - Declaration of the CViewText, CContainText,
 //          and CDockText classes
+//
 
 #ifndef TEXT_H
 #define TEXT_H
 
-
+/////////////////////////////////////
 // Declaration of the CViewText class
+//
 class CViewText : public CRichEdit
 {
 public:
@@ -19,7 +21,9 @@ protected:
 
 };
 
+////////////////////////////////////////
 // Declaration of the CContainText class
+//
 class CContainText : public CDockContainer
 {
 public:
@@ -30,7 +34,9 @@ private:
     CViewText m_viewText;
 };
 
+/////////////////////////////////////
 // Declaration of the CDockText class
+//
 class CDockText : public CDocker
 {
 public:

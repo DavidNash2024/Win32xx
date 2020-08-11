@@ -1,6 +1,15 @@
+/////////////////////////////
+// MyWebControl.cpp
+//
+
 #include "stdafx.h"
 #include "MyWebControl.h"
 
+////////////////////////////////////////
+// Definitions for the CWebControl class
+//
+
+// Constructor
 CWebControl::CWebControl()
 {
     // The entry for the dialog's control in resource.rc must match this name.
@@ -22,6 +31,7 @@ CWebControl::CWebControl()
     assert (::GetClassInfo(instance, className, &wc));
 }
 
+// Called after the web control is created.
 void CWebControl::OnInitialUpdate()
 {
     // Suppress Java script errors.

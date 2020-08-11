@@ -1,12 +1,16 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
-
+///////////////////////////////////////
 // Definitions for the CMainFrame class
+//
+
+// Constructor
 CMainFrame::CMainFrame() : m_eventCookie(0)
 {
     //Set m_View as the view window of the frame
@@ -17,9 +21,9 @@ CMainFrame::CMainFrame() : m_eventCookie(0)
     LoadRegistrySettings(_T("Win32++\\Browser Sample"));
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
 // Adds a ComboBoxEx control to the rebar.
@@ -210,12 +214,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     ConnectEvents();
 
     return 0;
-}
-
-void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
-{
-    UNREFERENCED_PARAMETER(pDispParams);
-    TRACE(_T("OnDocumentBegin\n"));
 }
 
 // Called when a document has been completely loaded and initialized.
@@ -609,7 +607,6 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case UWM_BEFORENAVIGATE:      OnBeforeNavigate2((DISPPARAMS*)wparam);    break;
     case UWM_COMMANDSTATECHANGE:  OnCommandStateChange((DISPPARAMS*)wparam); break;
-    case UWM_DOCUMENTBEGIN:       OnDocumentBegin((DISPPARAMS*)wparam);      break;
     case UWM_DOCUMENTCOMPLETE:    OnDocumentComplete((DISPPARAMS*)wparam);   break;
     case UWM_DOWNLOADBEGIN:       OnDownloadBegin((DISPPARAMS*)wparam);      break;
     case UWM_NAVIGATECOMPLETE2:   OnNavigateComplete2((DISPPARAMS*)wparam);  break;

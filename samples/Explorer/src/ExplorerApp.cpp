@@ -1,20 +1,27 @@
-///////////////////////////////////////////////
-//ExplorerApp.cpp -  Definitions for the CExplorerApp class
+/////////////////////////////
+// ExplorerApp.cpp
+//
 
 #include "stdafx.h"
 #include "ExplorerApp.h"
 #include "resource.h"
 
+////////////////////////////////////
+// CExplorerApp function definitions
+//
 
+// Constructor.
 CExplorerApp::CExplorerApp()
 {
 }
 
+// Destructor.
 CExplorerApp::~CExplorerApp()
 {
     ::CoUninitialize(); // Shut down COM
 }
 
+// Called when the application starts.
 BOOL CExplorerApp::InitInstance()
 {
     // Initialise COM

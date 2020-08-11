@@ -6,12 +6,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description:  Declaration of the CMainFrm class for this 
-    application using the Win32++ framework, Copyright (c) 2005-2020 David Nash, 
+    Contents Description:  Declaration of the CMainFrm class for this
+    application using the Win32++ framework, Copyright (c) 2005-2020 David Nash,
     under permissions granted therein.
-    
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -23,7 +23,7 @@
     tort or otherwise, arising from, out of, or in connection with, these
     materials, the use thereof, or any other other dealings therewith.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
 
@@ -42,7 +42,7 @@
 enum ControlBars {toolbar, mainmenu, both};
 
 /*============================================================================*/
-    class 
+    class
 CMainFrame : public CFrame                      /*
 
     The application mainframe class that creates the main menu, toolbar,
@@ -53,22 +53,22 @@ CMainFrame : public CFrame                      /*
                     CMainFrame();
         virtual     ~CMainFrame(){}
 
-        void            SetAppName(const CString& appName) 
+        void            SetAppName(const CString& appName)
                                         { m_appName = appName; }
-        void            SetArcFileName(const CString& arcName) 
+        void            SetArcFileName(const CString& arcName)
                                         { m_arcName = arcName; }
         void            SetWindowTitle(const CString &title = _T(""));
         CView&          TheView()       {return m_view;}
         CDoc&           ThisDoc()       {return m_view.TheDoc();}
         CMRU&           TheMRU()        {return m_MRU;};
-        AboutBox&       GetAboutBox()   { return m_aboutDialog; } 
+        AboutBox&       GetAboutBox()   { return m_aboutDialog; }
 
-        static const CString m_compiledOn; // compilation date 
+        static const CString m_compiledOn; // compilation date
 
     protected:
         virtual void    OnColorChoice();
         virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-        virtual int     OnCreate(CREATESTRUCT& cs);  
+        virtual int     OnCreate(CREATESTRUCT& cs);
         virtual void    OnDestroy();
         virtual void    OnFileExit();
         virtual void    OnFileNew();
@@ -88,20 +88,20 @@ CMainFrame : public CFrame                      /*
 
     private:
           // private data members
-        AboutBox   m_aboutDialog;  // about dialog object 
+        AboutBox   m_aboutDialog;  // about dialog object
         CMRU       m_MRU;          // the MRU list object
-        CView      m_view;         // the view object     
+        CView      m_view;         // the view object
 
         CString    m_appName;      // application name
-        CString    m_arcName;      // archive file name 
+        CString    m_arcName;      // archive file name
 
         UINT       m_xWin;        // deserialized window x position
         UINT       m_yWin;        // deserialized window y position
-        UINT       m_cxWin;       // deserialized window width     
-        UINT       m_cyWin;       // deserialized window height    
-        WINDOWPLACEMENT m_plWnd;  // window placement information  
-        
-        const size_t m_maxMRUEntries;                              
+        UINT       m_cxWin;       // deserialized window width
+        UINT       m_cyWin;       // deserialized window height
+        WINDOWPLACEMENT m_plWnd;  // window placement information
+
+        const size_t m_maxMRUEntries;
 };
 /*----------------------------------------------------------------------------*/
 #endif // SDI_MAINFRM_H

@@ -1,5 +1,6 @@
-////////////////////////////////////////////////////
-// MainMDIfrm.cpp  - definitions for the CMainMDIFrame class
+/////////////////////////////
+// MainMDIfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainMDIfrm.h"
@@ -7,7 +8,11 @@
 #include "Files.h"
 #include "resource.h"
 
+/////////////////////////////////////
+// CMainMDIFrame function definitions
+//
 
+// Constructor.
 CMainMDIFrame::CMainMDIFrame()
 {
     // Set the registry key name, and load the initial window position
@@ -15,10 +20,12 @@ CMainMDIFrame::CMainMDIFrame()
     LoadRegistrySettings(_T("Win32++\\DockMDI Frame"));
 }
 
+// Destructor.
 CMainMDIFrame::~CMainMDIFrame()
 {
 }
 
+// Sample code to load data from a file.
 BOOL CMainMDIFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE);
@@ -33,6 +40,7 @@ BOOL CMainMDIFrame::OnFileOpen()
     return TRUE;
 }
 
+// Sample code to save data in a file.
 BOOL CMainMDIFrame::OnFileSave()
 {
     CFileDialog fileDlg(FALSE);
@@ -47,6 +55,7 @@ BOOL CMainMDIFrame::OnFileSave()
     return TRUE;
 }
 
+// Sample code for printing.
 BOOL CMainMDIFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
@@ -65,6 +74,8 @@ BOOL CMainMDIFrame::OnFilePrint()
     return TRUE;
 }
 
+// Called after the frame window is created.
+// Called after OnCreate.
 void CMainMDIFrame::OnInitialUpdate()
 {
     TRACE("MDI Frame started \n");
@@ -87,6 +98,7 @@ void CMainMDIFrame::OnInitialUpdate()
     AddMDIChild(new CSimpleMDIChild);
 }
 
+// Process input from the menu and toolbar.
 BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UINT id = LOWORD(wparam);
@@ -118,13 +130,14 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the window is created.
 int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -139,56 +152,63 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
     return CMDIDockFrame::OnCreate(cs);
 }
 
+// Closes the active MDI child.
 BOOL CMainMDIFrame::OnFileClose()
 {
     GetActiveMDIChild()->Close();
     return TRUE;
 }
 
+// Issue a close request to the frame to end the application.
 BOOL CMainMDIFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Create a new MDI child
 BOOL CMainMDIFrame::OnFileNewMDI()
 {
-    // Create a new MDI child
     AddMDIChild(new CSimpleMDIChild);
     return TRUE;
 }
 
+// Create a new docker.
 BOOL CMainMDIFrame::OnFileNewDocker()
 {
     AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | DS_CLIENTEDGE, 150);
     return TRUE;
 }
 
+// Arrange the MDI child windows in cascade mode.
 BOOL CMainMDIFrame::OnMDICascade()
 {
     MDICascade();
     return TRUE;
 }
 
+// Close all MDI child windows.
 BOOL CMainMDIFrame::OnMDICloseAll()
 {
     RemoveAllMDIChildren();
     return TRUE;
 }
 
+// Arrange minimised MDI child windows.
 BOOL CMainMDIFrame::OnMDIIconArrange()
 {
     MDIIconArrange();
     return TRUE;
 }
 
+// Arrange the MDI child windows in tile mode.
 BOOL CMainMDIFrame::OnMDITile()
 {
     MDITile();
     return TRUE;
 }
 
+// Configures the images for menu items.
 void CMainMDIFrame::SetupMenuIcons()
 {
     // Add the default set of menu icons from the toolbar.
@@ -198,6 +218,7 @@ void CMainMDIFrame::SetupMenuIcons()
     AddMenuIcon(IDM_FILE_NEWDOCK, IDW_MAIN);
 }
 
+// Assign resource IDs and images to the toolbar buttons.
 void CMainMDIFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
@@ -214,6 +235,7 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Process the frame's window messages.
 LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

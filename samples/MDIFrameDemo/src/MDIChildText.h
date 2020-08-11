@@ -5,7 +5,9 @@
 #ifndef MDICHILDTEXT_H
 #define MDICHILDTEXT_H
 
-
+//////////////////////////////////////
+// Declaration oif the CViewText class
+//
 class CViewText : public CRichEdit
 {
 public:
@@ -17,7 +19,9 @@ private:
     CFont   m_font;
 };
 
-
+/////////////////////////////////////////
+// Declaration of the CMDIChildText class
+//
 class CMDIChildText : public CMDIChild
 {
 public:

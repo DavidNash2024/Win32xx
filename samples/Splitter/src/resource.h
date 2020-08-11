@@ -28,11 +28,11 @@
 #define IDM_VIEW_TEXT                   136
 #define IDM_VIEW_LIST                   137
 #define IDM_HELP_ABOUT                  140
-#define IDB_CLASSVIEW                   150 
+#define IDB_CLASSVIEW                   150
 #define IDB_FILEVIEW                    151
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1

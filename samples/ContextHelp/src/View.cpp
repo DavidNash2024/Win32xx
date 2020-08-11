@@ -1,28 +1,36 @@
-///////////////////////////////////////
+/////////////////////////////
 // View.cpp
+//
 
 #include "stdafx.h"
 #include "View.h"
 #include "resource.h"
 
-
+//////////////////////////////////
 // Definitions for the CView class
+//
+
+// Constructor.
 CView::CView(UINT resID) : CDialog(resID), m_hParent(0)
 {
 }
 
+// Destructor.
 CView::~CView()
 {
 }
 
+// Creates the view window. Its a modeless dialog.
 HWND CView::Create(HWND hParent = 0)
 {
     m_hParent = hParent;
     return DoModeless(hParent);
 }
 
+// Process the dialog's window messages.
 INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
+    // Pass messages on to the resizer.
     m_resizer.HandleMessage(msg, wparam, lparam);
 
 //  switch (msg)
@@ -34,11 +42,13 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Retrieves a reference to CDoc.
 CDoc& CView::GetDoc()
 {
     return m_doc;
 }
 
+// Called when the button is pressed.
 BOOL CView::OnButton()
 {
     SetDlgItemText(IDC_STATUS, _T("Button Pressed"));
@@ -46,6 +56,7 @@ BOOL CView::OnButton()
     return TRUE;
 }
 
+// Called when the esc key is pressed.
 void CView::OnCancel()
 {
     // Discard these messages
@@ -53,12 +64,14 @@ void CView::OnCancel()
     TRACE("Cancel Pressed.\n");
 }
 
+// Called when a request is made to close the dialog.
 void CView::OnClose()
 {
     // Suppress handling of WM_CLOSE for the dialog.
     // An edit control will send WM_CLOSE to the dialog if the Esc button is pressed.
 }
 
+// Process command notifications from the dialog's controls.
 BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -79,6 +92,7 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called before the dialog (view window) is displayed.
 BOOL CView::OnInitDialog()
 {
     // Set the Icon
@@ -144,12 +158,14 @@ BOOL CView::OnInitDialog()
     return TRUE;
 }
 
+// Called when the OK button is pressed.
 void CView::OnOK()
 {
     SetDlgItemText(IDC_STATUS, _T("OK Button Pressed."));
     TRACE("OK Button Pressed.\n");
 }
 
+// Called when Check Box A is toggled.
 BOOL CView::OnCheckA()
 {
     TRACE("Check Box A\n");
@@ -162,6 +178,7 @@ BOOL CView::OnCheckA()
     return TRUE;
 }
 
+// Called when Check Box B is toggled.
 BOOL CView::OnCheckB()
 {
     TRACE("Check Box B\n");
@@ -174,6 +191,7 @@ BOOL CView::OnCheckB()
     return TRUE;
 }
 
+// Called when Check Box C is toggled.
 BOOL CView::OnCheckC()
 {
     TRACE("Check Box C\n");
@@ -186,6 +204,7 @@ BOOL CView::OnCheckC()
     return TRUE;
 }
 
+// Called when the radio button is selected.
 BOOL CView::OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID)
 {
     CheckRadioButton(firstID, lastID, clickedID);

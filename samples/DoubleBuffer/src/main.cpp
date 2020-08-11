@@ -1,6 +1,6 @@
-///////////////////////////////////////
+/////////////////////////////
 // main.cpp
-
+//
 
 #include "stdafx.h"
 #include "DoubleBufferApp.h"
@@ -28,4 +28,3 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         return -1;
     }
 }
-

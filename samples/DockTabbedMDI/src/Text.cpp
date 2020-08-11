@@ -1,22 +1,27 @@
 ///////////////////////////////////////////////////
 // Text.cpp -  Definitions for the CViewText,
 //              and CDockText classes
+//
 
 #include "stdafx.h"
 #include "Text.h"
 #include "resource.h"
 
+/////////////////////////////////
+// CViewText function definitions
+//
 
-///////////////////////////////////////////////
-// CViewText functions
+// Constructor.
 CViewText::CViewText()
 {
 }
 
+// Destructor.
 CViewText::~CViewText()
 {
 }
 
+// Called when a window handle (HWND) is attached to CViewText.
 void CViewText::OnAttach()
 {
     m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
@@ -26,6 +31,7 @@ void CViewText::OnAttach()
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
+// Respond to keyboard accelerator keys. 
 BOOL CViewText::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -45,45 +51,53 @@ BOOL CViewText::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Copies the selected text to the windows clipboard.
 void CViewText::OnEditCopy()
 {
     Copy();
 }
 
+// Copies text from the windows clipboard.
 void CViewText::OnEditPaste()
 {
     PasteSpecial(CF_TEXT);
 }
 
+// Deletes the selected text and copies it to the windows clipboard. 
 void CViewText::OnEditCut()
 {
     Cut();
 }
 
+// Deletes the selected text.
 void CViewText::OnEditDelete()
 {
     Clear();
 }
 
+// Redoes the next action in the control's redo queue.
 void CViewText::OnEditRedo()
 {
     Redo();
 }
 
+// Undoes the last edit control operation in the control's undo queue.
 void CViewText::OnEditUndo()
 {
     Undo();
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CViewText::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
                 WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
 }
 
+////////////////////////////////////
+// CContainText function definitions
 
-///////////////////////////////////////////////
-// CContainText functions
+// Constructor.
 CContainText::CContainText()
 {
     SetDockCaption (_T("Text View - Docking container"));
@@ -92,9 +106,11 @@ CContainText::CContainText()
     SetView(m_viewText);
 }
 
+/////////////////////////////////
+// CDockText function definitions
+//
 
-//////////////////////////////////////////////
-//  Definitions for the CDockText class
+// Constructor.
 CDockText::CDockText()
 {
     // Set the view window to our edit control

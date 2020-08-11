@@ -1,3 +1,7 @@
+/////////////////////////////
+// MakeDLL.h
+//
+
 #ifndef MAKEDLL_H
 #define MAKEDLL_H
 

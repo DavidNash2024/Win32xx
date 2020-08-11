@@ -1,10 +1,13 @@
-//////////////////////////////////////////////
-// MySlider.h
+/////////////////////////////
+// Slider.h
+//
 
 #ifndef MYSLIDER_H
 #define MYSLIDER_H
 
-
+/////////////////////////////////////
+// Declaration of the CMySlider class
+//
 class CMySlider : public CSlider
 {
 public:

@@ -1,5 +1,6 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.h
+//
 
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
@@ -8,8 +9,9 @@
 #include "MyButton.h"
 #include "Hyperlink.h"
 
-
+/////////////////////////////////////
 // Declaration of the CMyDialog class
+//
 class CMyDialog : public CDialog
 {
 public:

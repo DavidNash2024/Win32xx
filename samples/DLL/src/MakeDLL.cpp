@@ -1,5 +1,8 @@
-// MakeDLL.cpp : Defines the entry point for the DLL application.
+/////////////////////////////
+// MakeDLL.cpp
 //
+
+// Defines the entry point for the DLL application.
 
 #include "stdafx.h"
 #include "MyDialog.h"
@@ -13,6 +16,7 @@ CWinApp App;
 // MyDialog is global for the DLL
 CMyDialog MyDialog(IDD_DIALOG1);
 
+// The entry point for the dll.
 BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved )
 {
     UNREFERENCED_PARAMETER(hModule);

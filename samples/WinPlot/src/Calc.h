@@ -6,7 +6,7 @@
 // This code is adapted from:
 //
 // C++ In Action, Industrial-Strength Programming Techniques
-// 
+//
 //  by Bartosz Milewski
 //  www.relisoft.com\book\index.htm
 //////////////////////////////////////////////////////////////////////
@@ -21,25 +21,25 @@
 #include "enums.h"
 #include "table.h"
 
-// An Expression: 
+// An Expression:
 //   - is any valid self-contained function
 //   - can contain zero or more products
 //   - can contain zero or more powers
 //   - can contain one or more units (separated by operators)
-//   - can contain any operator   
+//   - can contain any operator
 //
-// A product: 
+// A product:
 //   - can contain zero or more products
 //   - can contain zero or more powers
 //   - can contain one or more units (separated by operators)
-//   - can contain any operator except "+" or "-"  operators   
+//   - can contain any operator except "+" or "-"  operators
 //
 // A Power:
 //   - can contain zero or more powers
 //   - can contain one or more units (separated by operators)
-//   - can contain only operator "^"   
+//   - can contain only operator "^"
 //
-// A unit: 
+// A unit:
 //   - is a self contained number or value
 //   - can be a number   eg. -3.14
 //   - can be a variable eg. x
@@ -64,10 +64,10 @@ namespace Calc
 
     private:
         bool IsOverflow(double value);
-        
+
         ////////////////////////////////////////////////////////////////////////
         // A class used by the Calculator.  It loads m_buffer with the expression.
-        // It identifies the parts of the expression as tokens.     
+        // It identifies the parts of the expression as tokens.
         class Parser
         {
         public:

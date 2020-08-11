@@ -5,13 +5,13 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CView class derived from the 
-    CScrollView base class for this application using the Win32++ Windows 
+    Contents Description: Declaration of the CView class derived from the
+    CScrollView base class for this application using the Win32++ Windows
     framework, Copyright (c) 2005-2017 David Nash, under permissions granted
     therein.
 
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -23,7 +23,7 @@
     tort or otherwise, arising from, out of, or in connection with, these
     materials, the use thereof, or any other other dealings therewith.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
 
@@ -63,7 +63,7 @@ public:
     void    TextLineOut(CDC&, UINT, UINT, LPCTSTR) const;
 
     // public data members
-    static const CString m_compiledOn;  // compilation date 
+    static const CString m_compiledOn;  // compilation date
 
 protected:
     virtual void    OnDraw(CDC& dc);
@@ -72,11 +72,11 @@ protected:
     virtual void    Serialize(CArchive &ar);
     virtual LRESULT WndProc(UINT msg, WPARAM, LPARAM);
 
-private:            
+private:
     // data members
     COLORREF    m_bkgndColor;   // background color
-    CDoc        m_doc;          // the document       
-    CFont       m_font;         // the font used to display view 
+    CDoc        m_doc;          // the document
+    CFont       m_font;         // the font used to display view
     COLORREF    m_colors[16];   // custom colors defined
     COLORREF    m_textColor;    // text foreground color
 };

@@ -1,14 +1,16 @@
-/////////////////////////////////////////////////
+/////////////////////////////
 // Views.h
 //  Declaration of the CPaneTopLeft, CPaneBottomLeft
 //   and CView classes
-
+//
 
 #ifndef VIEWS_H
 #define VIEWS_H
 
 
-
+///////////////////////////////////////
+// Declaration of the CViewSimple class
+//
 class CViewSimple : public CWnd
 {
 public:
@@ -22,7 +24,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
-
+/////////////////////////////////////
+// Declaration of the CViewText class
+//
 class CViewText : public CWnd
 {
 public:
@@ -35,6 +39,9 @@ protected:
 
 };
 
+/////////////////////////////////////
+// Declaration of the CViewTree class
+//
 class CViewTree : public CTreeView
 {
 public:
@@ -52,6 +59,9 @@ private:
     CImageList m_normalImages;
 };
 
+/////////////////////////////////////
+// Declaration of the CViewList class
+//
 class CViewList : public CListView
 {
 public:

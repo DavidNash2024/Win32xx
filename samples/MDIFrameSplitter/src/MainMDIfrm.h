@@ -1,12 +1,13 @@
-///////////////////////////////////////////////////////
+/////////////////////////////
 // MainMDIfrm.h
-//  Declaration of the CMainFrame class
+//
 
 #ifndef MAINMDIFRM_H
 #define MAINMDIFRM_H
 
-
-// MDI frames are inherited from CMDIFrame
+/////////////////////////////////////
+// Declaration of CMainMDIFrame class
+//
 class CMainMDIFrame : public CMDIFrame
 {
 public:

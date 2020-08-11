@@ -1,14 +1,16 @@
-///////////////////////////////////////
+/////////////////////////////
 // SearchDialog.h
+//
 
 #ifndef SEARCHDIALOG_H
 #define SEARCHDIALOG_H
 
 
-
+///////////////////////////////////////////////
 // Declaration of the CSearchDialog class.
-// Allows the user to perform a word search for 
+// Allows the user to perform a word search for
 //  the movie's title, actors or description.
+//
 class CSearchDialog : public CDialog
 {
 public:

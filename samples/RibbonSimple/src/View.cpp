@@ -19,7 +19,7 @@ int CView::OnCreate(CREATESTRUCT& cs)
     UNREFERENCED_PARAMETER(cs);
 
     TRACE("OnCreate\n");
-    
+
     // Set the window's icon
     SetIconSmall(IDI_SMALL);
     SetIconLarge(IDI_SIMPLERIBBON);
@@ -150,18 +150,18 @@ STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* p
     if (UI_VIEWTYPE_RIBBON == typeId)
     {
         switch (verb)
-        {                           
+        {
         case UI_VIEWVERB_CREATE:    // The view was newly created.
             result = S_OK;
             break;
-        case UI_VIEWVERB_SIZE:      //  The ribbon's size has changed           
+        case UI_VIEWVERB_SIZE:      //  The ribbon's size has changed
             result = S_OK;
-            break;          
+            break;
         case UI_VIEWVERB_DESTROY:   // The view was destroyed.
             result = S_OK;
             break;
         }
-    }  
+    }
 
     return result;
 }

@@ -118,7 +118,7 @@ LRESULT CView::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     }
 
     return FinalWindowProc(msg, wparam, lparam);
-}   
+}
 
 LRESULT CView::OnTrayIcon(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -126,7 +126,7 @@ LRESULT CView::OnTrayIcon(UINT msg, WPARAM wparam, LPARAM lparam)
     // The wparam parameter contains the identifier of the taskbar icon in which the event occurred.
     // The lparam parameter holds the mouse or keyboard message associated with the event.
     UNREFERENCED_PARAMETER(msg);
-    
+
     if (wparam != IDW_MAIN)
         return 0;
 

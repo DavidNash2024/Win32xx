@@ -141,7 +141,7 @@ void CTCPClientDlg::Send()
 
 /////////////////////////////////////////////
 // Definitions for the CSvrDialog class
-CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE), 
+CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE),
                                       m_socketType(SOCK_STREAM)
 {
     ZeroMemory(&m_saUDPClient, sizeof(m_saUDPClient));
@@ -460,7 +460,7 @@ BOOL CSvrDialog::OnSocketReceive()
     }
 
     TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
-    
+
     m_buttonSend.EnableWindow(TRUE);
     m_editSend.EnableWindow(TRUE);
     GotoDlgCtrl(GetDlgItem(IDC_EDIT_SEND));

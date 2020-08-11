@@ -5,16 +5,16 @@
 
 ********************************************************************************
 
-    Acknowledgement. This class was adapted from that in the PrintPreview 
-    sample program appearing in the Win32++ framework sample folder, created 
+    Acknowledgement. This class was adapted from that in the PrintPreview
+    sample program appearing in the Win32++ framework sample folder, created
     by David Nash and published under the permissions granted in that work.
     The adaptation here implements the CRichView class as self-contained
     package that implements reading, writing, print, and print preview
-    functions. This work has been developed under the co-authorship of 
-    Robert C. Tausworthe and David Nash, and released under the copyright 
+    functions. This work has been developed under the co-authorship of
+    Robert C. Tausworthe and David Nash, and released under the copyright
     provisions of the Win32++ framework software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his 
-    patient direction and inspiration in the development of the classes of 
+    2005-2018. The former author acknowledges and thanks the latter for his
+    patient direction and inspiration in the development of the classes of
     these classes.
 
 *******************************************************************************/
@@ -31,7 +31,7 @@ enum WordWrapType
 };
 
 /*============================================================================*/
-    class 
+    class
 CRichView : public CRichEdit                                            /*
 
     This class is the customized class derived from the CRichEdit class
@@ -52,7 +52,7 @@ CRichView : public CRichEdit                                            /*
         void    PrintPages(CPrintDialog& PrintDlg);
         void    WordWrap(WordWrapType setting);
         BOOL    WriteFile(LPCTSTR szFileName);
-    
+
     protected:
         virtual void    OnAttach();
         virtual void    PreCreate(CREATESTRUCT& cs);
@@ -63,7 +63,7 @@ CRichView : public CRichEdit                                            /*
                     LPBYTE pbBuff, LONG cb, LONG *pcb);
         static  DWORD CALLBACK RVStreamOutCallback(DWORD dwCookie,
                     LPBYTE pbBuff, LONG cb, LONG *pcb);
-        
+
         CFont   m_Font;
         CString m_sDocPath;
 

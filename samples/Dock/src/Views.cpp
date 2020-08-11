@@ -1,6 +1,6 @@
-//////////////////////////////////////////////////////////////
-// Views.cpp -  Definitions for the CViewSimple, CViewList,
-//              CViewTree and CViewText classes
+/////////////////////////////
+// Views.cpp
+//
 
 
 #include "stdafx.h"
@@ -8,8 +8,11 @@
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewSimple functions
+///////////////////////////////////
+// CViewSimple function definitions
+//
+
+// Called when part of the window needs to be redrawn.
 void CViewSimple::OnDraw(CDC& dc)
 {
     //Centre some text in the window
@@ -17,14 +20,15 @@ void CViewSimple::OnDraw(CDC& dc)
     dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-LRESULT CViewSimple::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse click on the window
+LRESULT CViewSimple::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the window is resised.
 LRESULT CViewSimple::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -35,6 +39,7 @@ LRESULT CViewSimple::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Process the window's messages.
 LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch(msg)
@@ -46,18 +51,22 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
+/////////////////////////////////
+// CViewList function definitions
+//
 
-///////////////////////////////////////////////
-// CViewList functions
+// Constructor.
 CViewList::CViewList()
 {
 }
 
+// Destructor.
 CViewList::~CViewList()
 {
     if (IsWindow()) DeleteAllItems();
 }
 
+// Adds an item to the list-view with text and an image.
 int CViewList::AddItem(LPCTSTR szText, int nImage)
 {
     LVITEM lvi;
@@ -69,6 +78,7 @@ int CViewList::AddItem(LPCTSTR szText, int nImage)
     return InsertItem(lvi);
 }
 
+// Inserts 4 items into the List-view.
 void CViewList::InsertItems()
 {
     // Add 4th item
@@ -91,6 +101,7 @@ void CViewList::InsertItems()
     SetItemText(item, 2, _T("Folder"));
 }
 
+// Called when a window handle (HWND) is attached to the List-View. 
 void CViewList::OnAttach()
 {
     // Set the image lists
@@ -107,11 +118,13 @@ void CViewList::OnAttach()
     InsertItems();
 }
 
+// Called when the window is destroyed.
 void CViewList::OnDestroy()
 {
     SetImageList(NULL, LVSIL_SMALL);
 }
 
+// Called when the mouse is clicked on the window.
 LRESULT CViewList::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
@@ -119,6 +132,7 @@ LRESULT CViewList::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Configure the List-view's columns.
 void CViewList::SetColumns()
 {
     //empty the list
@@ -138,6 +152,7 @@ void CViewList::SetColumns()
     }
 }
 
+// Process the list-view's window messages.
 LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch(msg)
@@ -148,18 +163,23 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-///////////////////////////////////////////////
-// CViewTree functions
+/////////////////////////////////
+// CViewTree function definitions
+//
+
+// Constructor.
 CViewTree::CViewTree()
 {
 }
 
+// Destructor.
 CViewTree::~CViewTree()
 {
     if (IsWindow())
         DeleteAllItems();
 }
 
+// Adds an item the the tree-view control.
 HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
 {
     TVITEM tvi;
@@ -177,6 +197,7 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
     return InsertItem(tvis);
 }
 
+// Called when a window handle (HWND) is attached to this object.
 void CViewTree::OnAttach()
 {
     //set the image lists
@@ -213,11 +234,13 @@ void CViewTree::OnAttach()
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
+// Called when the window is destroyed.
 void CViewTree::OnDestroy()
 {
     SetImageList(NULL, LVSIL_SMALL);
 }
 
+// Called when the mouse is clicked on the window.
 LRESULT CViewTree::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
@@ -225,7 +248,7 @@ LRESULT CViewTree::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
+// Process window messages for the tree-view control.
 LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch(msg)
@@ -236,13 +259,17 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-///////////////////////////////////////////////
-// CViewText functions
+/////////////////////////////////
+// CViewText function definitions
+//
+
+// Called when a window handle (HWND) is attached to this object.
 void CViewText::OnAttach()
 {
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
+// Specifiy the CREATESTRUCT parameters before the window is created.
 void CViewText::PreCreate(CREATESTRUCT& cs)
 {
     cs.lpszClass = _T("EDIT");

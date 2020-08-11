@@ -45,11 +45,11 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
         Planning and Preparation Subsystem project for C++ programming.
-        
+
     Acknowledgement:
     The author would like to thank and acknowledge the advice, critical
     review, insight, and assistance provided by David Nash in the development
-    of this work.       
+    of this work.
 
 ********************************************************************************
 
@@ -80,19 +80,19 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                               /*
     }
 
     // catch all unhandled CException types
-    catch (const CException& e)  
+    catch (const CException& e)
     {
         // Display the exception and quit
         MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return -1;
     }
-    
+
     // catch all unhandled exceptions inherited from std::exception
     catch (const std::exception &e)
     {
           // Process the exception and quit
-        MessageBox(NULL, _T("An unhandled std::exception was thrown"), AtoT(e.what()), MB_ICONERROR);  
+        MessageBox(NULL, _T("An unhandled std::exception was thrown"), AtoT(e.what()), MB_ICONERROR);
     //  e.what();
         return -1;
     }
@@ -123,7 +123,7 @@ InitInstance()                                                          /*
 *-----------------------------------------------------------------------------*/
 {
       // Create the Frame Window
-    m_Frame.Create();   // throws a CWinException on failure  
+    m_Frame.Create();   // throws a CWinException on failure
 
     return TRUE;
 }

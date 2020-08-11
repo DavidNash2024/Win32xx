@@ -1,14 +1,16 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
-// Definitions for the CMainFrame class
-
-// Constructor for CMainFrame. Its called after CFrame's constructor
+// Constructor for CMainFrame.
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
@@ -21,12 +23,10 @@ CMainFrame::CMainFrame()
     SerializeINI(FALSE);
 }
 
-
 // Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
 }
-
 
 // OnCommand responds to menu and and toolbar input
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
@@ -50,13 +50,12 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
 // OnCreate controls the way the frame is created.
 // Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -70,21 +69,21 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-
 // Called when the window is closed.
 void CMainFrame::OnClose()
 {
     SerializeINI(true);
+
+    // Ends the application.
     CFrame::OnClose();
 }
 
-
-// Issue a close request to the frame
+// Issue a close request to the frame. 
+// OnClose is called when the window is closed.
 void CMainFrame::OnFileExit()
 {
     Close();
 }
-
 
 // Called after the frame is created.
 // Place any additional startup code here.
@@ -93,10 +92,9 @@ void CMainFrame::OnInitialUpdate()
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(GetToolBar().IsWindow());
-    
+
     TRACE("Frame created\n");
 }
-
 
 // Create the File Open dialog to choose the file to load.
 void CMainFrame::OnFileOpen()
@@ -113,7 +111,6 @@ void CMainFrame::OnFileOpen()
     }
 }
 
-
 // Create the File Save dialog to choose the file to save.
 void CMainFrame::OnFileSave()
 {
@@ -128,7 +125,6 @@ void CMainFrame::OnFileSave()
         GetDoc().FileStore(fileDlg.GetPathName());
     }
 }
-
 
 // Previews a print job before sending it to the printer.
 void CMainFrame::OnFilePreview()
@@ -189,12 +185,11 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
 }
 
-
-// Process notification messages sent by child windows
+// Process notification messages (WM_NOTIFY) sent by child windows
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
 //  switch(((LPNMHDR)lparam)->code)
@@ -205,7 +200,6 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     // Some notifications should return a value when handled
     return CFrame::OnNotify(wparam, lparam);
 }
-
 
 // Called when the Print Preview's "Close" button is pressed.
 void CMainFrame::OnPreviewClose()
@@ -220,13 +214,11 @@ void CMainFrame::OnPreviewClose()
     SetStatusText(LoadString(IDW_READY));
 }
 
-
 // Called when the Print Preview's "Print Now" button is pressed.
 void CMainFrame::OnPreviewPrint()
 {
     m_view.QuickPrint(_T("Frame Sample"));
 }
-
 
 // Called when the Print Preview's "Print Setup" button is pressed.
 void CMainFrame::OnPreviewSetup()
@@ -253,7 +245,6 @@ void CMainFrame::OnPreviewSetup()
     m_preview.DoPrintPreview(*this);
 }
 
-
 // Integer to TCHAR. Returns a CString.
 CString CMainFrame::ItoT(int i)
 {
@@ -262,7 +253,6 @@ CString CMainFrame::ItoT(int i)
     tss << i;
     return CString(tss.str().c_str());
 }
-
 
 // TCHAR to Integer.
 int CMainFrame::TtoI(LPCTSTR string)
@@ -273,7 +263,6 @@ int CMainFrame::TtoI(LPCTSTR string)
     tss >> res;
     return res;
 }
-
 
 // Returns the path used for the INI file.
 CString CMainFrame::GetINIPath()
@@ -298,9 +287,8 @@ CString CMainFrame::GetINIPath()
     return filePath;
 }
 
-
 // Load values to, or restore values from the ini file.
-void CMainFrame::SerializeINI(BOOL isStoring) 
+void CMainFrame::SerializeINI(BOOL isStoring)
 {
     CString fileName = GetINIPath() + _T("\\Frame.ini");
     CString key("Frame Settings");
@@ -308,9 +296,9 @@ void CMainFrame::SerializeINI(BOOL isStoring)
     WINDOWPLACEMENT wndpl;
     ZeroMemory(&wndpl, sizeof(wndpl));
     wndpl.length = sizeof(wndpl);
-    
+
     if (isStoring)
-    {   
+    {
         GetWindowPlacement(wndpl);
 
         CRect rc = wndpl.rcNormalPosition;
@@ -322,7 +310,7 @@ void CMainFrame::SerializeINI(BOOL isStoring)
 
         ::WritePrivateProfileString(NULL, NULL, NULL, fileName);
 
-        // Write the Frame window's position and show state 
+        // Write the Frame window's position and show state
         ::WritePrivateProfileString (key, _T("Left"),       ItoT(left), fileName);
         ::WritePrivateProfileString (key, _T("Top"),        ItoT(top), fileName);
         ::WritePrivateProfileString (key, _T("Width"),      ItoT(width), fileName);
@@ -335,20 +323,20 @@ void CMainFrame::SerializeINI(BOOL isStoring)
         ::WritePrivateProfileString (key, _T("StatusBar"),  ItoT(showStatusBar), fileName);
         ::WritePrivateProfileString (key, _T("ToolBar"),    ItoT(showToolBar), fileName);
     }
-    else 
+    else
     {
         InitValues values;
 
         UINT failed = 999999;
         CString error("Error: GPPS failed");
-        
+
         UINT left = ::GetPrivateProfileInt(key, _T("Left"), failed, fileName);
         UINT top = ::GetPrivateProfileInt (key, _T("Top"), failed, fileName);
         UINT width = ::GetPrivateProfileInt (key, _T("Width"), failed, fileName);
         UINT height = ::GetPrivateProfileInt (key, _T("Height"), failed, fileName);
         UINT showCmd = ::GetPrivateProfileInt (key, _T("ShowCmd"), failed, fileName);
 
-        if (left != failed && top != failed && width != failed && height != failed && showCmd != failed) 
+        if (left != failed && top != failed && width != failed && height != failed && showCmd != failed)
         {
             values.position = CRect(left, top, left + width, top + height);
             values.showCmd = showCmd;
@@ -373,7 +361,6 @@ void CMainFrame::SerializeINI(BOOL isStoring)
     }
 }
 
-
 // Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
 {
@@ -381,28 +368,26 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
 }
 
-
-// Set the Resource IDs for the toolbar buttons.
+// Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
-    
+
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
-    
+
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_FILE_PRINT );
-    
+
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-
-// Handle the frame's messages.
+// Handle the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

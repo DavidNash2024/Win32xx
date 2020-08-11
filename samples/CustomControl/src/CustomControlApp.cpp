@@ -1,12 +1,15 @@
-///////////////////////////////////////
+/////////////////////////////
 // CustomControlApp.cpp
+//
 
 #include "stdafx.h"
 #include "CustomControlApp.h"
 #include "resource.h"
 
-
+///////////////////////////////////////
 // Definitions for the CDialogApp class
+//
+
 CCustomControlApp::CCustomControlApp() : m_myDialog(IDD_DIALOG1)
 {
 }
