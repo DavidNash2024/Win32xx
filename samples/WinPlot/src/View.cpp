@@ -40,12 +40,12 @@ bool CView::CalcPoints(double xmin, double xmax)
             x = xmax;
         else
             x = xmin + i * d_incr;
-        
+
         m_calc.SetVar("x", x);
         double y = m_calc.Eval();
         m_points.push_back(PointData(x, y, m_calc.Get_Status()));
     }
-    
+
     // find the first valid value
     std::vector<PointData>::iterator index = m_points.begin();
     while (index != m_points.end() && (*index).status != st_OK)
@@ -231,7 +231,7 @@ void CView::PlotAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double
     double ylinepos;
     if ((ymin * ymax <= 0) /*|| (ymin < (ymax - ymin)/10)*/)
         ylinepos = 0;
-    else   
+    else
         ylinepos = ymin - .05 * (ymax - ymin);
 
     // Major axis

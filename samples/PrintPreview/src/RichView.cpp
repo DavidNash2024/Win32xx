@@ -88,7 +88,7 @@ CRect CRichView::GetPageRect()
     int logPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);   // in pixels per logical inch
     int logPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);   // in pixels per logical inch
 
-    int tpi = 1440;     // twips per inch 
+    int tpi = 1440;     // twips per inch
 
     rcPage.right = (horizRes / logPixelsX) * tpi;
     rcPage.bottom = (vertRes / logPixelsY) * tpi;

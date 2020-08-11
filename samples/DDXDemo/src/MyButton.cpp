@@ -42,11 +42,11 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
         Planning and Preparation Subsystem project for C++ programming.
-        
+
     Acknowledgement:
     The author would like to thank and acknowledge the advice, critical
     review, insight, and assistance provided by David Nash in the development
-    of this work.       
+    of this work.
 
 ********************************************************************************
 
@@ -83,7 +83,7 @@ DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)                     /*
     Invoked by the view for the owner-drawn button in response to the
     WM_DRAWITEM system message. An owner-drawn button has the BS_OWNERDRAW
     style set. Also see the BS_ style values.
-    
+
     Note: this procedure can show the focus rectangle of the button when the
     button has focus. Howeever, the focus does not appear to be cancelled
     when another control recieves the focus, and the non-owner-draw form
@@ -92,7 +92,7 @@ DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)                     /*
 {
       // get the device context and attach the button handle to it
     CDC dc;
-    dc.Attach(lpDrawItemStruct->hDC); 
+    dc.Attach(lpDrawItemStruct->hDC);
       // determine the button rectangle
     CRect rect = lpDrawItemStruct->rcItem;
       // draw in the button text

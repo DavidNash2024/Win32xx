@@ -39,18 +39,18 @@ BOOL CMyDialog::OnInitDialog()
 void CMyDialog::OnOK()
 // This function is called when the OK button is hit
 {
-    // Get the number of test windows to create 
+    // Get the number of test windows to create
     // Note 1: A Windows limit of 10000 handles per process imposes a practical limit of aprox 1000 test windows.
     //         Refer to: http://support.microsoft.com/kb/327699
     // Note 2: Creating (or destroying) more than say 200 windows may temporarily stress the Explorer process.
     int nWindows = MIN(1000, GetDlgItemInt(IDC_WINDOWS, FALSE));
-    
+
     // Get the number of test messages to send
     int nTestMessages = GetDlgItemInt(IDC_MESSAGES, FALSE);
 
     // Get a pointer to the CMainWindow object
     CMainWindow& MainWnd = GetPerfApp()->GetMainWnd();
-    
+
     MainWnd.SetTestMessages(nTestMessages);
     MainWnd.CreateTestWindows(nWindows);
 

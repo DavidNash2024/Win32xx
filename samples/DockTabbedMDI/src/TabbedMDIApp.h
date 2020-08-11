@@ -1,13 +1,15 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // TabbedMDIApp.h
+//
 
 #ifndef TABBEDMDIAPP_H
 #define TABBEDMDIAPP_H
 
 #include "Mainfrm.h"
 
-
+/////////////////////////////////////////////
 // Declaration of the CDockContainerApp class
+//
 class CTabbedMDIApp : public CWinApp
 {
 public:

@@ -47,7 +47,7 @@ CSimpleMDIChild::CSimpleMDIChild()
 {
     // Set m_View as the view window of the MDI child
     SetView(m_view);
-    
+
     // Set the menu for this MDI child
     m_menu.LoadMenu(_T("MdiMenuView"));
     SetHandles(m_menu, NULL);
@@ -61,7 +61,7 @@ int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 {
     // Set the window caption
     SetWindowText( _T("Simple Window") );
-    
+
     // Set the window icons
     SetIconLarge(IDI_VIEW);
     SetIconSmall(IDI_VIEW);

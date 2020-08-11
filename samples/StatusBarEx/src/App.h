@@ -1,18 +1,18 @@
 /* [Tab/Indent: 8/8][Line/Box: 80/74]                                  (App.h) *
 ********************************************************************************
 
-    Contents Description: Declaration of the CApp class for a sample program 
-    demonstrating the use of the status bar using the Win32++ Windows 
+    Contents Description: Declaration of the CApp class for a sample program
+    demonstrating the use of the status bar using the Win32++ Windows
     framework, Copyright (c) 2005-2017 David Nash.
 
     This particular program was adapted from the StatusBar sample progam
-    in the Win32++ distribution by Robert C. Tausworthe to illustrate the 
+    in the Win32++ distribution by Robert C. Tausworthe to illustrate the
     definition of the status bar makeup by way of a data structure, in a
-    similar fashion as that appearing in the Microsoft Foundation Classes 
-    (MFC), and to override the Win32++ normal statusbar definition of four 
+    similar fashion as that appearing in the Microsoft Foundation Classes
+    (MFC), and to override the Win32++ normal statusbar definition of four
     parts to any number suitable for an application.
 
-    The code changes to the StatusBar sample program only occur in the 
+    The code changes to the StatusBar sample program only occur in the
     CMainFrame and MyStatusBar classes. However, the entire program has
     been reformatted for better readability, per the Programming Notes,
     below.
@@ -22,9 +22,9 @@
     merchantability, fitness for a particular purpose, and non-infringement.
 
     Programming Notes:
-                The programming conventions used here roughly follow those 
-        established by the 1997-1999 Jet Propulsion Laboratory Deep 
-        Space Network Planning and Preparation Subsystem project for 
+                The programming conventions used here roughly follow those
+        established by the 1997-1999 Jet Propulsion Laboratory Deep
+        Space Network Planning and Preparation Subsystem project for
         C++ programming.
 
 *******************************************************************************/
@@ -35,7 +35,7 @@
 #include "Mainfrm.h"
 
 /*============================================================================*/
-    class 
+    class
 CApp : public CWinApp                       /*
 
     Declaration of the CApp class
@@ -53,13 +53,13 @@ CApp : public CWinApp                       /*
 
 
 /*============================================================================*/
-    inline CApp& 
+    inline CApp&
 TheApp()                                /*
 
     A useful function that returns a reference to the CApp object.
 *-----------------------------------------------------------------------------*/
 {
-    return static_cast<CApp&>(*GetApp()); 
+    return static_cast<CApp&>(*GetApp());
 }
 
 /*-----------------------------------------------------------------------------*/

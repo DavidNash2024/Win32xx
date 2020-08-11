@@ -1,14 +1,17 @@
-//////////////////////////////////////////////////////
-// Browser.cpp -  Definitions for the CViewWeb class
+/////////////////////////////
+// Browser.cpp
+//
 
 #include "stdafx.h"
 #include "Browser.h"
 #include "resource.h"
 
 
+////////////////////////////////
+// CViewWeb function definitions
+//
 
-///////////////////////////////////////////////
-// CViewWeb functions
+// Called when the window is created.
 int CViewWeb::OnCreate(CREATESTRUCT& cs)
 {
     CWebBrowser::OnCreate(cs);

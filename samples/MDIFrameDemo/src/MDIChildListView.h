@@ -5,7 +5,9 @@
 #ifndef MDICHILDLISTVIEW_H
 #define MDICHILDLISTVIEW_H
 
-
+////////////////////////////////////
+// Definition of the CViewList class
+//
 class CViewList : public CListView
 {
 public:
@@ -22,12 +24,14 @@ private:
 
 };
 
-
-class CMDIChildListView : public CMDIChild
+////////////////////////////////////////
+// Definition of the CMDIChildList class
+//
+class CMDIChildList : public CMDIChild
 {
 public:
-    CMDIChildListView();
-    virtual ~CMDIChildListView();
+    CMDIChildList();
+    virtual ~CMDIChildList();
 
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs);

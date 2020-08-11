@@ -14,7 +14,7 @@ class CMainFrame : public CDockFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-    
+
     BOOL OnFileExit();
     BOOL OnViewList();
     BOOL OnViewText();

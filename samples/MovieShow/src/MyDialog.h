@@ -1,5 +1,6 @@
-///////////////////////////////////////
+/////////////////////////////
 // CViewDialog.h
+//
 
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
@@ -19,7 +20,7 @@ public:
 
     const CRichEdit& GetActors() const { return m_actors; }
     const CRichEdit& GetInfo()   const { return m_info; }
-    const CRichEdit& GetTitle()  const { return m_title; } 
+    const CRichEdit& GetTitle()  const { return m_title; }
     const CRichEdit& GetYear()   const { return m_year; }
 
     CCoverImage& SetPicture() { return m_picture; }
@@ -51,7 +52,7 @@ private:
 
 ////////////////////////////////////////////////////////////
 // Declaration of the CDockDialog class
-// Manages the resizing of the dialog window when the 
+// Manages the resizing of the dialog window when the
 //  splitter bar is dragged.
 class CDockDialog : public CDocker
 {

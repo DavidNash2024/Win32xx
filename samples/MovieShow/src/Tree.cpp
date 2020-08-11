@@ -8,12 +8,16 @@
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewTree functions
+/////////////////////////////////
+// CViewTree function definitions
+//
+
+// Constructor.
 CViewTree::CViewTree()
 {
 }
 
+// Destructor.
 CViewTree::~CViewTree()
 {
     if (IsWindow()) DeleteAllItems();
@@ -39,7 +43,7 @@ HTREEITEM CViewTree::AddItem(HTREEITEM parent, LPCTSTR text, int imageIndex)
     tvis.item = tvi;
 
     HTREEITEM item = InsertItem(tvis);
-    
+
     // Add the item and CString pointer to the map
     m_itemMap.insert(std::make_pair(item, pString));
 
@@ -90,14 +94,14 @@ bool CViewTree::IsBoxSetUnique(LPCTSTR text, HTREEITEM item)
             isUnique = false;
             break;
         }
-        
+
         childItem = GetNextSibling(childItem);
     };
 
     return isUnique;
 }
 
-// Called when the WM_NOTIFY message is reflected back to CViewTree 
+// Called when the WM_NOTIFY message is reflected back to CViewTree
 // by the framework.
 LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lParam)
 {
@@ -134,7 +138,7 @@ BOOL CViewTree::OnBeginLabelEdit(LPARAM lparam)
         return FALSE;
     }
 
-    // Suppress label editing 
+    // Suppress label editing
     return TRUE;
 }
 
@@ -198,7 +202,7 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
             }
         }
     }
-    
+
     return TRUE;
 }
 
@@ -216,7 +220,7 @@ void CViewTree::RemoveItem(HTREEITEM item)
     assert(it != m_itemMap.end());
     if (it != m_itemMap.end())
         m_itemMap.erase(it);
-    
+
     DeleteItem(item);
 }
 
@@ -280,14 +284,15 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             return DefWindowProc(msg, wparam, lparam);
         }
     }
-    
+
     return WndProcDefault(msg, wparam, lparam);
 }
 
+/////////////////////////////////
+// CDockTree function definitions
+//
 
-
-/////////////////////////////////////////////////
-//  Definitions for the CDockTree class
+// Constructor.
 CDockTree::CDockTree()
 {
     SetView(m_treeView);

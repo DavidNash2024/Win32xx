@@ -5,18 +5,23 @@
 #include "ColourDialog.h"
 #include "resource.h"
 
+/////////////////////////////////////
+// CColourDialog function definitions
+//
 
+// Constructor.
 CColourDialog::CColourDialog(UINT resID, CBitmap& image) : CDialog(resID), m_image(image),
                               m_cBlue(0), m_cGreen(0), m_cRed(0), m_isGray(FALSE)
 {
 }
 
+// Destructor.
 CColourDialog::~CColourDialog()
 {
 }
 
-void CColourDialog::CreateImagePreviews()
 // Creates the two Preview bitmaps: m_Preview and m_PreviewOrig
+void CColourDialog::CreateImagePreviews()
 {
     // Get the size of the bitmap
     BITMAP bm = m_image.GetBitmapData();
@@ -62,6 +67,7 @@ void CColourDialog::CreateImagePreviews()
     dest2DC.BitBlt(0, 0, widthDest, heightDest, dest1DC, 0, 0, SRCCOPY);
 }
 
+// Process the dialog's window messages.
 INT_PTR CColourDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -73,15 +79,16 @@ INT_PTR CColourDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Process the command messages (WM_COMMAND) from the dialog's controls.
 BOOL CColourDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Menu and Toolbar input.
+    // Notification from the GreyScale check box.
     switch (LOWORD(wparam))
     {
     case IDC_CHECK1:   OnGrayScale();              return TRUE;
     }
 
-    // Notifications sent via WM_COMMAND.
+    // Notifications of text change for the edit controls.
     switch (HIWORD(wparam))
     {
     case EN_CHANGE:    OnTextChange(HWND(lparam)); return TRUE;
@@ -91,16 +98,16 @@ BOOL CColourDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the GreyScale check button is clicked
 void CColourDialog::OnGrayScale()
 {
     // Update the colour of the preview image
     UpdatePreview();
 }
 
+// Processes messages from the slider controls.
 LRESULT CColourDialog::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Processes messages from the slider controls
-
     UNREFERENCED_PARAMETER(msg);
     UNREFERENCED_PARAMETER(wparam);
 
@@ -123,6 +130,7 @@ LRESULT CColourDialog::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Called before the dialog is displayed.
 BOOL CColourDialog::OnInitDialog()
 {
     // Attach the Trackbar controls to CWnd objects
@@ -151,11 +159,6 @@ BOOL CColourDialog::OnInitDialog()
     return TRUE;
 }
 
-void CColourDialog::OnOK()
-{
-    CDialog::OnOK();
-}
-
 LRESULT CColourDialog::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -165,7 +168,6 @@ LRESULT CColourDialog::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
     Paint();
     return 0;
 }
-
 
 // A value in an edit control has been changed.
 void CColourDialog::OnTextChange(HWND editCtrl)
@@ -191,8 +193,7 @@ void CColourDialog::OnTextChange(HWND editCtrl)
         UpdatePreview();
 }
 
-
-// Displays the bitmap in the display area of our dialog
+// Displays the bitmap in the preview area of our dialog.
 void CColourDialog::Paint()
 {
     BITMAP bm = m_previewImage.GetBitmapData();
@@ -219,7 +220,6 @@ void CColourDialog::Paint()
     memDC.SelectObject(m_previewImage);
     previewDC.BitBlt(leftDest, topDest, bm.bmWidth, bm.bmHeight, memDC, 0, 0, SRCCOPY);
 }
-
 
 // Updates the preview image according to the dialog input.
 void CColourDialog::UpdatePreview()

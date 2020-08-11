@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////
-// Output.h - Declaration of the CViewOutput, CContainOutput, 
+// Output.h - Declaration of the CViewOutput, CContainOutput,
 //          and CDockOutput classes
 
 #ifndef OUTPUT_H
@@ -9,7 +9,9 @@
 #include <richedit.h>
 #include "resource.h"
 
+/////////////////////////////////////
 // Declaration of the CViewText class
+//
 class CViewOutput : public CRichEdit
 {
 public:
@@ -18,28 +20,31 @@ public:
 
 protected:
     virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs); 
-
+    virtual void PreCreate(CREATESTRUCT& cs);
 };
 
+////////////////////////////////////////
 // Declaration of the CContainText class
+//
 class CContainOutput : public CDockContainer
 {
 public:
-    CContainOutput() 
+    CContainOutput()
     {
-        SetView(m_viewOutput); 
+        SetView(m_viewOutput);
         SetDockCaption (_T("Output View - Docking container"));
         SetTabText(_T("Output"));
         SetTabIcon(IDI_TEXT);
-    } 
+    }
     ~CContainOutput() {}
 
 private:
     CViewOutput m_viewOutput;
 };
 
+/////////////////////////////////////
 // Declaration of the CDockText class
+//
 class CDockOutput : public CDocker
 {
 public:
@@ -49,9 +54,6 @@ public:
 
 private:
     CContainOutput m_view;
-
 };
 
-
 #endif // OUTPUT_H
-

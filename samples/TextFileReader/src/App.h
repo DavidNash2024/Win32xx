@@ -5,12 +5,11 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CApp class for this sample program 
-    using the Win32++ Windows interface classes, Copyright (c) 2005-2020 David 
-    Nash, under permissions granted therein.
+    Contents Description: Declaration of the CApp class for this sample program
+    using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -19,7 +18,7 @@
 #define SDI_APP_H
 
 /*============================================================================*/
-    class 
+    class
 CApp : public CWinApp                                                       /*
 
     This class defines the top-level architecture of the program.
@@ -37,7 +36,7 @@ CApp : public CWinApp                                                       /*
         ULONG       DatInt(LPCTSTR) const;
         CString     IntDat(ULONG) const;
 
-        CMainFrame  m_frame; 
+        CMainFrame  m_frame;
         CString     m_months;
 };
 
@@ -48,7 +47,7 @@ CApp* TheApp()                                                              /*
     Handy global method for communicating with the application.
 *----------------------------------------------------------------------------*/
 {
-    return (CApp*)GetApp(); 
+    return (CApp*)GetApp();
 }
 /*-----------------------------------------------------------------------------*/
 #endif // define SDI_APP_H

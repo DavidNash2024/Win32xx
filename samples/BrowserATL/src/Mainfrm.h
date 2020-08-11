@@ -1,5 +1,6 @@
-/////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.h
+//
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
@@ -10,19 +11,19 @@
 
 #define UWM_BEFORENAVIGATE2       (WM_APP + 0x0001)
 #define UWM_COMMANDSTATECHANGE    (WM_APP + 0x0002)
-#define UWM_DOCUMENTBEGIN         (WM_APP + 0x0003)
-#define UWM_DOCUMENTCOMPLETE      (WM_APP + 0x0004)
-#define UWM_DOWNLOADBEGIN         (WM_APP + 0x0005)
-#define UWM_DOWNLOADCOMPLETE      (WM_APP + 0x0006)
-#define UWM_NAVIGATECOMPLETE2     (WM_APP + 0x0007)
-#define UWM_NEWWINDOW2            (WM_APP + 0x0008)
-#define UWM_PROGRESSCHANGE        (WM_APP + 0x0009)
-#define UWM_PROPERTYCHANGE        (WM_APP + 0x000A)
-#define UWM_STATUSTEXTCHANGE      (WM_APP + 0x000B)
-#define UWM_TITLECHANGE           (WM_APP + 0x000C)
+#define UWM_DOCUMENTCOMPLETE      (WM_APP + 0x0003)
+#define UWM_DOWNLOADBEGIN         (WM_APP + 0x0004)
+#define UWM_DOWNLOADCOMPLETE      (WM_APP + 0x0005)
+#define UWM_NAVIGATECOMPLETE2     (WM_APP + 0x0006)
+#define UWM_NEWWINDOW2            (WM_APP + 0x0007)
+#define UWM_PROGRESSCHANGE        (WM_APP + 0x0008)
+#define UWM_PROPERTYCHANGE        (WM_APP + 0x0009)
+#define UWM_STATUSTEXTCHANGE      (WM_APP + 0x000A)
+#define UWM_TITLECHANGE           (WM_APP + 0x000B)
 
-
+//////////////////////////////////////
 // Declaration of the CMainFrame class
+//
 class CMainFrame : public CFrame
 {
 public:
@@ -34,7 +35,6 @@ public:
 
     void OnBeforeNavigate2(DISPPARAMS* pDispParams);
     void OnCommandStateChange(DISPPARAMS* pDispParams);
-    void OnDocumentBegin(DISPPARAMS* pDispParams);
     void OnDocumentComplete(DISPPARAMS* pDispParams);
     void OnDownloadBegin(DISPPARAMS* pDispParams);
     void OnDownloadComplete(DISPPARAMS* pDispParams);

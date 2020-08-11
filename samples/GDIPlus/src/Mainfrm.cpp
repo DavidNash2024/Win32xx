@@ -1,16 +1,19 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
 
-// Definitions for the CMainFrame class
+//////////////////////////////////
+// CMainFrame function definitions
+//
+
+// Constructor for CMainFrame.
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     //Set m_View as the view window of the frame
     SetView(m_view);
 
@@ -19,15 +22,14 @@ CMainFrame::CMainFrame()
     LoadRegistrySettings(_T("Win32++\\GDIPlus"));
 }
 
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -46,13 +48,12 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -66,6 +67,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+// Called after the window is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
@@ -74,13 +76,14 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
+// Issue a close request to the frame to end the program.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Sample code to load from a file.
 BOOL CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE);
@@ -95,6 +98,7 @@ BOOL CMainFrame::OnFileOpen()
     return TRUE;
 }
 
+// Sample code to save to a file.
 BOOL CMainFrame::OnFileSave()
 {
     CFileDialog fileDlg(FALSE);
@@ -109,6 +113,7 @@ BOOL CMainFrame::OnFileSave()
     return TRUE;
 }
 
+// Sample code to print information.
 BOOL CMainFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
@@ -135,9 +140,9 @@ BOOL CMainFrame::OnFilePrint()
     }
 }
 
+// Process notification messages (WM_NOTIFY) sent by child windows.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    // Process notification messages sent by child windows
 //  switch(((LPNMHDR)lparam)->code)
 //  {
         //Add case statments for each notification message here
@@ -147,25 +152,26 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
+// Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
-    
+
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
-    
+
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_FILE_PRINT );
-    
+
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

@@ -78,7 +78,7 @@ enum CtlColors
 };
 
 /*============================================================================*/
-    class 
+    class
 CView : public CDialog                                                  /*
 
     This application's View class, a pattern for developing new apps.
@@ -87,7 +87,7 @@ CView : public CDialog                                                  /*
     public:
         CView(UINT nResID);
         virtual ~CView(){}
-        
+
                 void    AttachControl(UINT nIDC, CWnd& rCtl);
         virtual HWND    Create(HWND hParent);
                 CFont&  GetEditFont() { return m_EditFont;}

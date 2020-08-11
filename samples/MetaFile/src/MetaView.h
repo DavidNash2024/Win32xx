@@ -1,5 +1,6 @@
-///////////////////////////////////////
+/////////////////////////////
 // MetaView.h
+//
 
 
 #ifndef METAVIEW_H
@@ -8,8 +9,9 @@
 
 #include "wxx_wincore.h"
 
-
-// A class that inherits from CWnd. It is used to create the window.
+/////////////////////////////////////
+// Declaration of the CMetaView class
+//
 class CMetaView : public CWnd
 {
 public:

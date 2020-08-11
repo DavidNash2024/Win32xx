@@ -6,18 +6,24 @@
 #include "MDIChildText.h"
 #include "resource.h"
 
+/////////////////////////////////
+// CViewText function definitions
+//
 
+// Constructor.
 CViewText::CViewText()
 {
 }
 
+// Destructor.
 CViewText::~CViewText()
 {
 }
 
+// Called when a window handle (HWND) is attached to CViewText.
 void CViewText::OnAttach()
 {
-    //Set font
+    // Set the font.
     if (!m_font)
     {
         m_font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
@@ -27,6 +33,11 @@ void CViewText::OnAttach()
     SetFont(m_font);
 }
 
+/////////////////////////////////////
+// CMDIChildText function definitions
+//
+
+// Constructor.
 CMDIChildText::CMDIChildText()
 {
     m_menu.LoadMenu(_T("MdiMenuText"));
@@ -34,10 +45,12 @@ CMDIChildText::CMDIChildText()
     SetView(m_textView);
 }
 
+// Destructor.
 CMDIChildText::~CMDIChildText()
-{   
+{
 }
 
+// Process menu and toolbar input forwarded from the MDI frame.
 BOOL CMDIChildText::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -56,13 +69,13 @@ BOOL CMDIChildText::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the window is created.
 int CMDIChildText::OnCreate(CREATESTRUCT& cs)
 {
     SetWindowText(_T("Text Window"));
     SetIconLarge(IDI_TEXT);
     SetIconSmall(IDI_TEXT);
-    
+
     return CMDIChild::OnCreate(cs);
 }
-
 

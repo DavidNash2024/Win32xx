@@ -73,7 +73,7 @@ void CMyCombo::SetImage(int image, UINT ImageID)
     CBitmap bm(ImageID);
     BITMAP bmData = bm.GetBitmapData();
     int iImageWidth  = bmData.bmWidth / image;
-    int iImageHeight = bmData.bmHeight; 
+    int iImageHeight = bmData.bmHeight;
 
     COLORREF crMask = RGB(255,0,255);
     m_images.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, image, 0);

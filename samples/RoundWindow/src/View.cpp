@@ -22,9 +22,9 @@ BOOL CView::OnColor()
     cc.rgbResult = m_brush.GetLogBrush().lbColor;
     cc.lpCustColors = custColors;
     cc.hwndOwner = *this;
-    
+
     // Initiate the Choose Color dialog
-    if (ChooseColor(&cc)==TRUE) 
+    if (ChooseColor(&cc)==TRUE)
     {
         m_brush = CreateSolidBrush(cc.rgbResult);
         SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_brush.GetHandle());
@@ -141,7 +141,7 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a left mouse button press
 {
     SetCapture();
-    
+
     // Save the relative mouse position
     m_point = GetCursorPos();
     ScreenToClient(m_point);
@@ -185,7 +185,7 @@ LRESULT CView::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     popup.CreatePopupMenu();
     popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_COLOR, _T("Color"));
     popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_EXIT, _T("Exit"));
-    
+
     // Initiate the popup menu
     CPoint pt = GetCursorPos();
     popup.TrackPopupMenu(TPM_TOPALIGN | TPM_LEFTALIGN, pt.x, pt.y, GetHwnd());

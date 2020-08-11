@@ -6,16 +6,16 @@
 
 ********************************************************************************
 
-    Acknowledgment. This demo program was adapted from the PrintPreview 
-    sample program appearing in the Win32++ framework sample folder, created 
+    Acknowledgment. This demo program was adapted from the PrintPreview
+    sample program appearing in the Win32++ framework sample folder, created
     by  David Nash and published under the permissions granted in that work.
     The adaptation here implements the PrintView window as a separate popup
     window that appears on screen along with the regular program window.
-    This work has been developed under the co-authorship of Robert C. 
-    Tausworthe and David Nash, and released under the copyright provisions 
+    This work has been developed under the co-authorship of Robert C.
+    Tausworthe and David Nash, and released under the copyright provisions
     of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his 
-    patient direction and inspiration in the development of the classes of 
+    2005-2018. The former author acknowledges and thanks the latter for his
+    patient direction and inspiration in the development of the classes of
     these classes.
 
 *******************************************************************************/
@@ -36,7 +36,7 @@ CMainFrame()                                                            /*
 
     Construct the main frame object for the PrintPreviewClass demo.
 *-----------------------------------------------------------------------------*/
-    :    m_PrintPreview(IDD_PRINTPREVIEW, 0), m_WrapOption(WRAP_NONE) 
+    :    m_PrintPreview(IDD_PRINTPREVIEW, 0), m_WrapOption(WRAP_NONE)
 {
     SetView(m_RichView);
 
@@ -98,7 +98,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
         case IDM_FILE_EXIT:         return OnFileExit();
         case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
         case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-        case IDM_WRAP_NONE: 
+        case IDM_WRAP_NONE:
         case IDM_WRAP_WINDOW:
         case IDM_WRAP_PRINTER:
             return OnOptionsWrap((WordWrapType)(msg - IDM_WRAP_NONE));
@@ -125,7 +125,7 @@ OnCreate(CREATESTRUCT& cs)                                              /*
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -143,7 +143,7 @@ OnCreate(CREATESTRUCT& cs)                                              /*
     BOOL CMainFrame::
 OnDropFiles(HDROP hDropInfo)                                            /*
 
-    Enable files dropped in the client area to be opened. Any file 
+    Enable files dropped in the client area to be opened. Any file
     currently open is closed.
 *-----------------------------------------------------------------------------*/
 {
@@ -317,7 +317,7 @@ OnFilePreview()                                                         /*
     caption window and the document in separate the display window.
 *-----------------------------------------------------------------------------*/
 {
-    return m_PrintPreview.OnPreview(GetPathName()); 
+    return m_PrintPreview.OnPreview(GetPathName());
 }
 
 /*============================================================================*/
@@ -349,7 +349,7 @@ OnFilePrint(HWND parent)                                                /*
     catch (const CWinException& /* e */)
     {
           // no default printer chosen
-        MessageBox(_T("Unable to display print dialog"), 
+        MessageBox(_T("Unable to display print dialog"),
             _T("Print Failed"), MB_OK);
         return FALSE;
     }
@@ -365,7 +365,7 @@ OnFilePrintSetup(HWND parent)                                           /*
 *-----------------------------------------------------------------------------*/
 {
       // Prepare the print dialog
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC | 
+    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC |
         PD_PRINTSETUP);
     PRINTDLG pd = PrintDlg.GetParameters();
     pd.nCopies   = 1;
@@ -466,7 +466,7 @@ OnMenuUpdate(UINT nID)                                                  /*
     if (IDM_WRAP_NONE <= nID && nID <= IDM_WRAP_PRINTER)
     {
         UINT active = m_WrapOption + IDM_WRAP_NONE;
-        GetFrameMenu().CheckMenuRadioItem(IDM_WRAP_NONE, IDM_WRAP_PRINTER, 
+        GetFrameMenu().CheckMenuRadioItem(IDM_WRAP_NONE, IDM_WRAP_PRINTER,
             active, MF_BYCOMMAND);
     }
 
@@ -572,7 +572,7 @@ SaveModifiedText()                                                      /*
 {
       //Check for unsaved text
     if (m_RichView.GetModify())
-        if (::MessageBox(NULL, _T("Save changes to this document?"), 
+        if (::MessageBox(NULL, _T("Save changes to this document?"),
             _T("Question..."), MB_YESNO | MB_ICONQUESTION) == IDYES)
             OnFileSave();
 }

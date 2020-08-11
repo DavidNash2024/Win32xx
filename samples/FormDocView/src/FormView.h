@@ -6,13 +6,14 @@
 
 #include "FormDoc.h"
 
+/////////////////////////////////////
 // Declaration of the CFormView class
+//
 class CFormView : public CDialog
 {
 public:
     CFormView(UINT resID);
     virtual ~CFormView();
-    virtual HWND Create(HWND hParent);
 
     CFormDoc& GetDoc();
 
@@ -52,8 +53,8 @@ private:
     class CMyStatus : public CStatic {};
     class COK : public CButton {};
     class CGroup : public CWnd {};
-    
-    CRadioA     m_radioA; 
+
+    CRadioA     m_radioA;
     CRadioB     m_radioB;
     CRadioC     m_radioC;
     CCheckA     m_checkA;

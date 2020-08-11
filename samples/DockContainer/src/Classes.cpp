@@ -1,6 +1,7 @@
 ///////////////////////////////////////////////////
 // Classes.cpp - Definitions for the CViewClasses, CContainClasses
 //               and CDockClasses classes
+//
 
 
 #include "stdafx.h"
@@ -9,17 +10,22 @@
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewClasses functions
+////////////////////////////////////
+// CViewClasses function definitions
+//
+
+// Constructor.
 CViewClasses::CViewClasses()
 {
 }
 
+// Destructor.
 CViewClasses::~CViewClasses()
 {
     if (IsWindow()) DeleteAllItems();
 }
 
+// Adds an item to the tree-view control.
 HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
 {
     TVITEM tvi;
@@ -37,6 +43,7 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
     return InsertItem(tvis);
 }
 
+// Called when a window handle (HWND) is attached to CViewClasses.
 void CViewClasses::OnAttach()
 {
     //set the image lists
@@ -73,25 +80,28 @@ void CViewClasses::OnAttach()
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
+// Called when the window is destroyed.
 void CViewClasses::OnDestroy()
 {
     SetImageList(NULL, LVSIL_SMALL);
 }
 
-LRESULT CViewClasses::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse click on the window
+LRESULT CViewClasses::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Set the CREATESTURCT parameters befoe the window is created.
 void CViewClasses::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = TVS_NOTOOLTIPS|WS_CHILD;
     cs.lpszClass = WC_TREEVIEW;
 }
 
+// Process the tree-view's window messages.
 LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -103,9 +113,11 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 
+///////////////////////////////////////
+// CContainClasses function definitions
+//
 
-///////////////////////////////////////////////
-// CContainClasses functions
+// Constructor.
 CContainClasses::CContainClasses()
 {
     SetTabText(_T("ClassView"));
@@ -114,6 +126,7 @@ CContainClasses::CContainClasses()
     SetView(m_viewClasses);
 }
 
+// Adds a ComboBoxEx control to the toolbar. 
 void CContainClasses::AddCombo()
 {
     int comboWidth = 120;
@@ -140,6 +153,7 @@ void CContainClasses::AddCombo()
     m_comboBoxEx.AddItems();
 }
 
+// Process the command messages (WM_COMMAND).
 BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -155,6 +169,7 @@ BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Demonstrates responding to the container's toolbar.
 BOOL CContainClasses::OnFileNew()
 {
     TRACE("File New\n");
@@ -162,6 +177,8 @@ BOOL CContainClasses::OnFileNew()
     return TRUE;
 }
 
+// Demonstrates responding to the container's toolbar.
+// Inbokes the program's Help About dialog.
 BOOL CContainClasses::OnHelpAbout()
 {
     // Send a message to the frame requesting the help dialog
@@ -169,9 +186,9 @@ BOOL CContainClasses::OnHelpAbout()
     return TRUE;
 }
 
+// Set the Bitmap resource for the toolbar
 void CContainClasses::SetupToolBar()
 {
-    // Set the Bitmap resource for the toolbar
     SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
     // Set the Resource IDs for the toolbar buttons
@@ -197,8 +214,11 @@ void CContainClasses::SetupToolBar()
 }
 
 
-/////////////////////////////////////////////////
-//  Definitions for the CDockClasses class
+////////////////////////////////////
+// CDockClasses function definitions
+//
+
+// Constructor.
 CDockClasses::CDockClasses()
 {
     SetView(m_classes);

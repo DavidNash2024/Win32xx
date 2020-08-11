@@ -5,16 +5,16 @@
 
 ********************************************************************************
 
-    Acknowledgement. This class was adapted from that in the PrintPreview 
-    sample program appearing in the Win32++ framework sample folder, created 
+    Acknowledgement. This class was adapted from that in the PrintPreview
+    sample program appearing in the Win32++ framework sample folder, created
     by David Nash and published under the permissions granted in that work.
     The adaptation here implements the CRichView class as self-contained
     package that implements reading, writing, print, and print preview
-    functions. This work has been developed under the co-authorship of 
-    Robert C. Tausworthe and David Nash, and released under the copyright 
+    functions. This work has been developed under the co-authorship of
+    Robert C. Tausworthe and David Nash, and released under the copyright
     provisions of the Win32++ framework software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his 
-    patient direction and inspiration in the development of the classes of 
+    2005-2018. The former author acknowledges and thanks the latter for his
+    patient direction and inspiration in the development of the classes of
     these classes.
 
 *******************************************************************************/
@@ -92,7 +92,7 @@ GetPageBreaks(CDC& dcPrinter)                       /*
       // Get the device context of the default or currently chosen printer
     dcPrinter.SetMapMode(MM_TEXT);
 
-      // set up printer to receive pages: specific accommodation of the 
+      // set up printer to receive pages: specific accommodation of the
       // Rich Edit document
     FORMATRANGE fr;
     fr.hdcTarget  = dcPrinter;  // format for this
@@ -189,22 +189,22 @@ PrintPages(CPrintDialog& PrintDlg)                  /*
     di.lpszOutput  = NULL;      // NULL here means output to fr.hdc
     dcPrinter.StartDoc(&di);    // start the printing
       // get the length of document to print
-    LONG lTextLength = GetTextLengthEx(GTL_NUMCHARS); 
+    LONG lTextLength = GetTextLengthEx(GTL_NUMCHARS);
     LONG lTextPrinted;  // amount of document printed so far
     do
     {
           // start at the first page
         dcPrinter.StartPage();
-          // Print as much text as will fit on a page. The return 
+          // Print as much text as will fit on a page. The return
           // value is the index of the first character on the next
-          // page.  Using TRUE for the wParam parameter causes the 
+          // page.  Using TRUE for the wParam parameter causes the
           // text to be  printed.
         lTextPrinted = FormatRange(fr, TRUE);
         DisplayBand(fr.rc);
           // indicate printing this page is complete
         dcPrinter.EndPage();
-          // If there is more text to print, adjust the range of 
-          // characters for StartPage() to begin printing at the first 
+          // If there is more text to print, adjust the range of
+          // characters for StartPage() to begin printing at the first
           // character of the next page, for the length default of
           // characters.
         if (lTextPrinted < lTextLength)
@@ -249,7 +249,7 @@ ReadFile(LPCTSTR szFileName)                        /*
     }
     return TRUE;
 }
-    
+
 /*============================================================================*/
     void CRichView::
 SetFontDefaults()                           /*
@@ -259,7 +259,7 @@ SetFontDefaults()                           /*
       //Set font
     if (m_Font.GetHandle() == 0)
         m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET,
-            OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, 
+            OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
             FF_MODERN, _T("Courier New"));
     SetFont(m_Font, FALSE);
 
@@ -281,11 +281,11 @@ WordWrap(WordWrapType setting)                      /*
     Set the rich view word wrapping to the new setting.
 *-----------------------------------------------------------------------------*/
 {
-      // Note:  Although the CRichEdit::SetTargetDevice() function itself  
-      // is documented, the first two forms of it used below are not 
+      // Note:  Although the CRichEdit::SetTargetDevice() function itself
+      // is documented, the first two forms of it used below are not
       // described in any Microsoft documentation. In fact, the only
-      // occurrences found in the Microsoft Windows Software Development 
-      // Kit are found in the CRichEditView::WrapChanged() method source 
+      // occurrences found in the Microsoft Windows Software Development
+      // Kit are found in the CRichEditView::WrapChanged() method source
       // code. The CRichView::WordWrap() method derives from that source.
     switch (setting)
     {
@@ -305,7 +305,7 @@ WordWrap(WordWrapType setting)                      /*
             SetTargetDevice(dcPrinter, rc.Width());
             break;
         }
-        
+
         default:
             break;
     }

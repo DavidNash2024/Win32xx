@@ -1,3 +1,6 @@
+/////////////////////////////
+// DXView.h
+//
 
 #ifndef DXVIEW_H
 #define DXVIEW_H
@@ -13,9 +16,9 @@
 
 using namespace DirectX;
 
-//--------------------------------------------------------------------------------------
+////////////
 // Structures
-//--------------------------------------------------------------------------------------
+//
 struct SimpleVertex
 {
     XMFLOAT3 Pos;
@@ -31,7 +34,9 @@ struct ConstantBuffer
 };
 
 
-
+///////////////////////////////////
+// Declaration of the CDXView class
+//
 class CDXView : public CWnd
 {
 public:

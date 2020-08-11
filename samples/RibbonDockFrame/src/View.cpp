@@ -131,7 +131,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
         SendPoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), true);
     }
-    
+
     return FinalWindowProc(msg, wparam, lparam);
 }
 

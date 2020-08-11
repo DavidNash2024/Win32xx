@@ -1,11 +1,10 @@
 /* (28-Aug-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                 (StdAfx.h) *
 ********************************************************************************
 
-    Contents Description: Standard Declarations File used for precompiled 
-    headers. Rarely modified header files should beincluded. It is based on code 
-    provided by Lynn Allan to Win32++ sample projects, Copyright (c) 2005-2020 
-    David Nash, under permissions granted therein.
-    
+    Contents Description: Standard Declarations File used for precompiled
+    headers. Rarely modified header files should be included. It is based on
+    code provided by Lynn Allan to Win32++ sample projects.
+
     Adapted for use in this application.
 
     To use precompiled headers, do the following:
@@ -53,12 +52,12 @@ typedef  unsigned char  byte;
 #include <sstream>              // Add support for stringstream
 #include <cassert>              // Add support for the assert macro
 #include <stdio.h>              // Add support for C style printf, sprintf, etc.
-#include <stdlib.h>             // Add support for C style character conversions atoi etc. 
+#include <stdlib.h>             // Add support for C style character conversions atoi etc.
 #include <tchar.h>              // Add support for C style TCHARs.
 
 #include <wxx_appcore.h>        // Add CCriticalSection, CObject, CWinThread, CWinApp
 #include <wxx_archive.h>        // Add CArchive
-#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog 
+#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip
 #include <wxx_cstring.h>        // Add CString, CStringA, CStringW
 #include <wxx_ddx.h>            // Add CDataExchange

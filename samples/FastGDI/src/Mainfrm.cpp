@@ -6,14 +6,13 @@
 #include "ColourDialog.h"
 #include "resource.h"
 
-///////////////////////////////////////
-// Definitions for the CMainFrame class
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     //Set m_MyView as the view window of the frame
     SetView(m_view);
 
@@ -25,12 +24,10 @@ CMainFrame::CMainFrame()
     LoadRegistryMRUSettings(4);
 }
 
-
 // Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
 }
-
 
 // Displays the Color Adjust dialog to choose the red, blue and green adjustments.
 void CMainFrame::OnAdjustImage()
@@ -47,7 +44,6 @@ void CMainFrame::OnAdjustImage()
 
 }
 
-
 // Modify the color of the bitmap.
 void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray)
 {
@@ -58,7 +54,6 @@ void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray)
 
     m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
-
 
 // OnCommand responds to menu and and toolbar input
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
@@ -86,7 +81,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
 // OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
@@ -108,13 +102,11 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-
-// Issue a close request to the frame
+// Issue a close request to the frame to end the application.
 void CMainFrame::OnFileExit()
 {
     Close();
 }
-
 
 // Clears any selected image.
 void CMainFrame::OnFileNew()
@@ -128,7 +120,6 @@ void CMainFrame::OnFileNew()
     // Set the caption
     SetWindowText(_T("FastGDI"));
 }
-
 
 // Load the bitmap from the specified file.
 BOOL CMainFrame::LoadFile(CString& fileName)
@@ -164,7 +155,6 @@ BOOL CMainFrame::LoadFile(CString& fileName)
     return IsFileLoaded;
 }
 
-
 // Displays the File Open dialog, to choose a file to load.
 void CMainFrame::OnFileOpen()
 {
@@ -176,7 +166,6 @@ void CMainFrame::OnFileOpen()
         LoadFile(str);
     }
 }
-
 
 // Called when a MRU file is selected from the menu.
 void CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
@@ -218,7 +207,6 @@ void CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
     CString str = _T("FastGDI - ") + m_pathName;
     SetWindowText(str);
 }
-
 
 // Preview the page before it is printed.
 void CMainFrame::OnFilePreview()
@@ -262,7 +250,6 @@ void CMainFrame::OnFilePreview()
 
 }
 
-
 // Print the bitmap.
 void CMainFrame::OnFilePrint()
 {
@@ -274,18 +261,16 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
 
 }
-
 
 // Save the bitmap to the file.
 void CMainFrame::OnFileSave()
 {
     SaveFile(m_pathName);
 }
-
 
 // Save the bitmap to the specified file.
 void CMainFrame::OnFileSaveAs()
@@ -300,7 +285,6 @@ void CMainFrame::OnFileSaveAs()
 
 }
 
-
 // Called after the window is created.
 void CMainFrame::OnInitialUpdate()
 {
@@ -312,7 +296,6 @@ void CMainFrame::OnInitialUpdate()
 
     TRACE("Frame created\n");
 }
-
 
 // Called when menu items are about to be displayed.
 inline void CMainFrame::OnMenuUpdate(UINT id)
@@ -339,7 +322,6 @@ inline void CMainFrame::OnMenuUpdate(UINT id)
     }
 }
 
-
 // Called when the Print Preview's "Close" button is pressed.
 void CMainFrame::OnPreviewClose()
 {
@@ -352,7 +334,6 @@ void CMainFrame::OnPreviewClose()
 
     SetStatusText(LoadString(IDW_READY));
 }
-
 
 // Called when the Print Preview's "Print Now" button is pressed.
 void CMainFrame::OnPreviewPrint()
@@ -368,7 +349,6 @@ void CMainFrame::OnPreviewPrint()
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
-
 
 // Called when the Print Preview's "Print Setup" button is pressed.
 void CMainFrame::OnPreviewSetup()
@@ -395,7 +375,7 @@ void CMainFrame::OnPreviewSetup()
     m_preview.DoPrintPreview(*this);
 }
 
-
+// Saves the current bitmap to the specified file.
 void CMainFrame::SaveFile(CString& fileName)
 {
     bool DoSave = TRUE;
@@ -429,9 +409,9 @@ void CMainFrame::SaveFile(CString& fileName)
     }
 }
 
+// Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW  );
     AddToolBarButton( IDM_FILE_OPEN );
     AddToolBarButton( IDM_FILE_SAVEAS, FALSE );
@@ -447,8 +427,7 @@ void CMainFrame::SetupToolBar()
     SetToolBarImages(RGB(192, 192, 192), IDB_TOOLBAR_BIG, 0, 0);
 }
 
-
-// Handle the frame's messages.
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

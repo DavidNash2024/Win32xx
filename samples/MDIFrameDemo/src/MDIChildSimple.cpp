@@ -6,26 +6,31 @@
 #include "MDIChildSimple.h"
 #include "resource.h"
 
+///////////////////////////////////
+// CViewSimple function definitions
+//
 
-// CViewSimple definitions
+// Constructor
 CViewSimple::CViewSimple() : m_color(RGB(0,0,255))
 {
 }
 
+// Called when part of the window needs to be redrawn.
 void CViewSimple::OnDraw(CDC& dc)
 {
-    //Centre some text in our view window
+    // Centre some text in our view window.
     CRect rc = GetClientRect();
     dc.SetTextColor(m_color);
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
+// Process the simple view's window messages.
 LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
     case WM_SIZE:
-        // Force the window to be repainted
+        // Force the window to be repainted.
         Invalidate();
         break;      // Also do default processing
     }
@@ -34,7 +39,11 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-// CMDIChildSimple definitions
+///////////////////////////////////////
+// CMDIChildSimple function definitions
+//
+
+// Constructor.
 CMDIChildSimple::CMDIChildSimple()
 {
     m_menu.LoadMenu(_T("MdiMenuView"));
@@ -42,10 +51,12 @@ CMDIChildSimple::CMDIChildSimple()
     SetView(m_view);
 }
 
+// Destructor.
 CMDIChildSimple::~CMDIChildSimple()
 {
 }
 
+// Called when the window is created.
 int CMDIChildSimple::OnCreate(CREATESTRUCT& cs)
 {
     SetWindowText(_T("Simple Window"));
@@ -55,6 +66,7 @@ int CMDIChildSimple::OnCreate(CREATESTRUCT& cs)
     return CMDIChild::OnCreate(cs);
 }
 
+// Called when the window is asked to close.
 void CMDIChildSimple::OnClose()
 {
     int nResult = MessageBox(_T("OK to close Window?"), _T("File Close"), MB_YESNO);
@@ -63,6 +75,7 @@ void CMDIChildSimple::OnClose()
         MDIDestroy();
 }
 
+// Respond to menu and toolbar input forwarded from the MDI frame.
 BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -95,6 +108,7 @@ BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Process the simple MDI child's window messages.
 LRESULT CMDIChildSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

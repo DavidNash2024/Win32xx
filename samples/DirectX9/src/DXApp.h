@@ -1,13 +1,15 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // DXApp.h
-//  Declaration of the CDXApp class
+//
 
 #ifndef DXAPP_H
 #define DXAPP_H
 
 #include "MainFrm.h"
 
-
+//////////////////////////////////
+// Declaration of the CDXApp class
+//
 class CDXApp : public CWinApp
 {
 public:
@@ -23,6 +25,5 @@ private:
 
 // returns a pointer to the CDXApp object
 inline CDXApp* GetDXApp() { return static_cast<CDXApp*>(GetApp()); }
-
 
 #endif

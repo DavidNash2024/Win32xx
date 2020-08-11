@@ -1,13 +1,13 @@
-//////////////////////////////////
+/////////////////////////////
 // main.cpp
-
+//
 
 #include "wxx_wincore.h"
 #include "MetaView.h"
 
-
-// For VS2019
-// int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
+////////////////////////////////
+// Declaration of the CApp class
+//
 class CApp : public CWinApp
 {
 public:
@@ -15,7 +15,7 @@ public:
     virtual ~CApp() {}
     virtual BOOL InitInstance()
     {
-        m_metaView.Create();    // throws a CWinException on failure  
+        m_metaView.Create();    // throws a CWinException on failure
         return TRUE;
     }
 
@@ -23,8 +23,8 @@ private:
     CMetaView m_metaView;
 };
 
-
-
+// For VS2019
+// int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
@@ -33,7 +33,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
         return theApp.Run();
     }
-    
+
     // catch all unhandled CException types
     catch (const CException &e)
     {
@@ -43,3 +43,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         return -1;
     }
 }
+
+
+
+

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////
 // Classes.h
-//  Declaration of CViewClasses 
+//  Declaration of CViewClasses
 
 #ifndef CLASSES_H
 #define CLASSES_H
@@ -16,7 +16,7 @@ public:
 
 private:
     CImageList m_normalImages;
-    
+
 };
 
 

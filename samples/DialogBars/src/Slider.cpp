@@ -1,18 +1,23 @@
-//////////////////////////////////////////////
-// MySlider.cpp
+/////////////////////////////
+// Slider.cpp
+//
 
 #include "stdafx.h"
 #include "Slider.h"
 #include "DialogApp.h"
 
+/////////////////////////////////
+// CMySlider function definitions
+//
+
+// Called after the slider control is attached.
 void CMySlider::OnInitialUpdate()
 {
-    // Called automatically via AttachItem
-
     // Set a tic mark every ten units for the slider control
     SetTicFreq(10);
 }
 
+// Handles messages reflected back from the dialog.
 LRESULT CMySlider::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(wparam);
@@ -38,6 +43,7 @@ LRESULT CMySlider::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Sets the slider control's position.
 void CMySlider::SetSlider(int pos)
 {
     // Set the slider position

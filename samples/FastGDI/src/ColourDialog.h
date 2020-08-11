@@ -4,7 +4,9 @@
 #ifndef COLOURDIALOG_H
 #define COLOURDIALOG_H
 
-
+/////////////////////////////////////////
+// Declaration of the CColourDialog class
+//
 class CColourDialog : public CDialog
 {
 public:
@@ -18,7 +20,6 @@ public:
 protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnInitDialog();
-    virtual void    OnOK();
     virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

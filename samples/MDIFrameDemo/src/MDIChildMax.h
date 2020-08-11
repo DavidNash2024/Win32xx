@@ -5,8 +5,9 @@
 #ifndef MDICHILDMAX_H
 #define MDICHILDMAX_H
 
-
-// Declaration of CViewMax
+////////////////////////////////////
+// Declaration of the CViewMax class
+//
 class CViewMax : public CWnd
 {
 public:
@@ -18,7 +19,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
-// Declaration of CMDIChildMax
+////////////////////////////////////////
+// Declaration of the CMDIChildMax class
+//
 class CMDIChildMax : public CMDIChild
 {
 public:

@@ -1,3 +1,6 @@
+/////////////////////////////
+// D2DView.h
+//
 
 #ifndef _D2DVIEW_H_
 #define _D2DVIEW_H_
@@ -17,7 +20,9 @@ inline void SafeRelease( Interface **ppInterfaceToRelease )
     }
 }
 
-
+////////////////////////////////////
+// Declaration of the CD2DView class
+//
 class CD2DView : public CWnd
 {
 public:

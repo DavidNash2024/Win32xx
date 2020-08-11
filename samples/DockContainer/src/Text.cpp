@@ -1,27 +1,34 @@
 ///////////////////////////////////////////////////
 // Text.cpp -  Definitions for the CViewText,
 //              and CDockText classes
+//
 
 #include "stdafx.h"
 #include "Text.h"
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewText functions
+/////////////////////////////////
+// CViewText function definitions
+//
+
+// Constructor.
 CViewText::CViewText()
 {
 }
 
+// Destructor.
 CViewText::~CViewText()
 {
 }
 
+// Called when a window handle (HWND) is attached to CViewText.
 void CViewText::OnAttach()
 {
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CViewText::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
@@ -29,8 +36,11 @@ void CViewText::PreCreate(CREATESTRUCT& cs)
 }
 
 
-//////////////////////////////////////////////
-//  Definitions for the CContainText class
+////////////////////////////////////
+// CContainText function definitions
+//
+
+// Constructor.
 CContainText::CContainText()
 {
     SetDockCaption(_T("Text View - Docking container"));
@@ -40,8 +50,11 @@ CContainText::CContainText()
 }
 
 
-//////////////////////////////////////////////
-//  Definitions for the CDockText class
+/////////////////////////////////
+// CDockText function definitions
+//
+
+// Constructor.
 CDockText::CDockText()
 {
     // Set the view window to our edit control

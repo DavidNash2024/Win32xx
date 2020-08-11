@@ -16,7 +16,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         // Run the application
         return MyApp.Run();
     }
-    
+
     // catch all unhandled CException types
     catch (const CException &e)
     {
@@ -24,7 +24,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return -1;
-    }   
+    }
 }
 
 

@@ -1,7 +1,13 @@
+/////////////////////////////
+// HelpAbout.h
+//
+
 #ifndef HELPABOUT_H
 #define HELPABOUT_H
 
-
+//////////////////////////////////////
+// Declaration of the CAboutHelp class
+//
 class CAboutHelp : public CDialog
 {
 public:

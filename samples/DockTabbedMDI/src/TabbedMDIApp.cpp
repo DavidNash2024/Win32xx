@@ -1,19 +1,25 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // TabbedMDIApp.cpp
+//
 
 #include "stdafx.h"
 #include "TabbedMDIApp.h"
 
+/////////////////////////////////////////
+// CDockContainerApp function definitions
+//
 
-// Definitions for the CDockContainerApp class
+// Constructor.
 CTabbedMDIApp::CTabbedMDIApp()
 {
 }
 
+// Destructor.
 CTabbedMDIApp::~CTabbedMDIApp()
 {
 }
 
+// Called when the application starts.
 BOOL CTabbedMDIApp::InitInstance()
 {
     //Create the Frame Window
@@ -21,5 +27,4 @@ BOOL CTabbedMDIApp::InitInstance()
 
     return TRUE;
 }
-
 

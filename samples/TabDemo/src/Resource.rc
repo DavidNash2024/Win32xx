@@ -32,7 +32,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Menu
 //
 
-IDW_MAIN MENU 
+IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -72,7 +72,7 @@ BEGIN
     END
 END
 
-IDM_NEWMENU MENU 
+IDM_NEWMENU MENU
 BEGIN
     POPUP "New"
     BEGIN
@@ -127,7 +127,7 @@ BEGIN
 END
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
@@ -143,7 +143,7 @@ END
 // Accelerator
 //
 
-IDW_MAIN ACCELERATORS 
+IDW_MAIN ACCELERATORS
 BEGIN
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
@@ -163,12 +163,12 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""windows.h""\r\n"
@@ -176,7 +176,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"
@@ -190,7 +190,7 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDW_MAIN                "Tab Demo"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
@@ -201,7 +201,7 @@ BEGIN
     IDW_READY               "Ready"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
@@ -214,7 +214,7 @@ BEGIN
     IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
@@ -231,7 +231,7 @@ BEGIN
     IDM_NEW_CLASSES         "Add a new Classes tab"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDW_FIRSTCHILD          "Activate this window"
     IDW_CHILD2              "Activate this window"
@@ -245,7 +245,7 @@ BEGIN
     IDW_CHILD10             "Select a window"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"

@@ -1,11 +1,14 @@
-///////////////////////////////////////
+/////////////////////////////
 // CViewDialog.h
+//
 
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
 
+///////////////////////////////////////
 // Declaration of the CViewDialog class
+//
 class CViewDialog : public CDialog
 {
 public:
@@ -54,7 +57,9 @@ private:
     CRichEdit2  m_richEdit2;
 };
 
+//////////////////////////////////////////
 // Declaration of the CContainDialog class
+//
 class CContainDialog : public CDockContainer
 {
 public:
@@ -65,7 +70,9 @@ private:
     CViewDialog m_viewDialog;
 };
 
+///////////////////////////////////////
 // Declaration of the CDockDialog class
+//
 class CDockDialog : public CDocker
 {
 public:
@@ -74,7 +81,6 @@ public:
 
 private:
     CContainDialog m_view;
-
 };
 
 #endif //MYDIALOG_H

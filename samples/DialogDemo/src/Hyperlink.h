@@ -1,5 +1,6 @@
 /////////////////////////////
 // Hyperlink.h
+//
 
 #ifndef HYPERLINK_H
 #define HYPERLINK_H
@@ -9,6 +10,9 @@
 #define IDC_HAND  MAKEINTRESOURCE(32649)
 #endif
 
+/////////////////////////////////////
+// Declaration of the CHyperlink class
+//
 class CHyperlink :  public CStatic
 {
 public:

@@ -116,7 +116,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -239,26 +239,26 @@ void CMainFrame::OnFilePreview()
         // Verify a print preview is possible
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
-        
+
         // Setup the print preview.
         m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
-        
+
         // Set the preview's owner (for messages), and number of pages.
         UINT maxPage = m_richView.CollatePages();
         m_preview.DoPrintPreview(*this, maxPage);
-        
+
         // Save the current Focus.
         SaveFocus();
-        
+
         // Swap views
         SetView(m_preview);
         m_preview.SetFocus();
-        
+
         // Hide the menu and toolbar
         ShowMenu(FALSE);
         ShowToolBar(FALSE);
     }
-    
+
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
@@ -302,7 +302,7 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
 
 }

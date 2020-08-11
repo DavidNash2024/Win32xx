@@ -5,15 +5,11 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the CApp class for this sample 
-    program using the Win32++ Windows interface classes, Copyright (c) 2005-2020 
-    David Nash, under permissions granted therein.
+    Contents Description: Implementation of the CApp class for this sample
+    program using the Win32++ Windows interface classes.
 
-    Caveats: These materials are available under the same provisions as found 
-    in the Win32++ copyright.txt notice.
-
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -25,7 +21,7 @@
 #include "StdApp.h"
 
 /*============================================================================*/
-    int APIENTRY 
+    int APIENTRY
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int )                                  /*
 
     Application entry point.
@@ -106,7 +102,7 @@ CApp()                                                                      /*
         LoadString(IDS_ARCHIVE_FILE_EXT);
       // the maximum allowed number of MRU entries (limited to be under 16
       // by Win32++)
-    UINT maxMRUSlots = MIN(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16); 
+    UINT maxMRUSlots = MIN(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16);
       // make Win32++ version string
     CString win32Version;
     UINT ver = _WIN32XX_VER;
@@ -129,7 +125,7 @@ CApp()                                                                      /*
         _T("%s on %s"), LoadString(IDW_MAIN).c_str(), appName.c_str(),
         LoadString(IDS_APP_VERSION).c_str(), win32Version.c_str(),
         sCompiler.c_str(), date.c_str());
-    m_frame.SetArchivePath(arcvPath);  
+    m_frame.SetArchivePath(arcvPath);
     m_frame.SetMaxMRUSlots(maxMRUSlots);
     m_frame.GetAboutBox().SetAboutBoxInfo(aboutBoxInfo);
 }
@@ -144,8 +140,8 @@ InitInstance()                                                              /*
 *-----------------------------------------------------------------------------*/
 {
       // Create the Frame Window after the archive file name is known
-    m_frame.Create();   // throws a CWinException on failure  
-    
+    m_frame.Create();   // throws a CWinException on failure
+
     return TRUE;
 }
 
@@ -206,7 +202,7 @@ MakeAppDataPath(const CString& subpath) const                               /*
 
         CString add = subpath.Mid(from, next - from);
         app_data_path += _T("\\") + add;
-        if ((::CreateDirectory(app_data_path, 0) == 0) && 
+        if ((::CreateDirectory(app_data_path, 0) == 0) &&
             GetLastError() != ERROR_ALREADY_EXISTS)
         {
             CString msg = app_data_path +

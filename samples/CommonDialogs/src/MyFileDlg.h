@@ -10,7 +10,7 @@
 
     Contents Description: This file contains the declaration and
     implementation of the MyFileDlg class, which is derived from the
-    CFileDalog class found in the Win32++ Windows interface framework. 
+    CFileDalog class found in the Win32++ Windows interface framework.
 
         Caveats: The copyright displayed above extends only to the author's
     original contributions to the subject class, and to the alterations,
@@ -61,8 +61,8 @@ MyFileDialog : public CFileDialog
         MyFileDialog
         (
             BOOL bOpenFileDialog = TRUE,
-            LPCTSTR sDefExt      = NULL,   
-            LPCTSTR sFileName    = NULL,                                   
+            LPCTSTR sDefExt      = NULL,
+            LPCTSTR sFileName    = NULL,
             DWORD dwFlags        = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
             LPCTSTR  sFilter     = NULL
         )   : CFileDialog(bOpenFileDialog, sDefExt, sFileName,
@@ -70,7 +70,7 @@ MyFileDialog : public CFileDialog
         {
         }
 
-    void SetBoxTitle(const CString& title)  
+    void SetBoxTitle(const CString& title)
           // Set the title of the read/saveas dialog box to the title
           // string. This must be used after an object of this class is
           // constructed, but before DoModal() is invoked. It also must
@@ -80,7 +80,7 @@ MyFileDialog : public CFileDialog
             m_sTitle = title;
             SetTitle(m_sTitle.c_str());
         }
-              
+
     protected:
         virtual BOOL OnInitDialog()
         // This method is activated within  immediately before

@@ -1,16 +1,18 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
 
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
-///////////////////////////////////////
-// Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
 // Constructor
+CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
 {
     // Set the modeless dialog as the view window of the frame
     SetView(m_view);
@@ -79,23 +81,23 @@ CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
     m_appHelp.SetCredits(aboutBoxInfo);
 }
 
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
-void CMainFrame::ChooseHelpTopic()
 // Enables choose topic mode
+void CMainFrame::ChooseHelpTopic()
 {
     ::SetCursor(::LoadCursor(NULL, IDC_HELP));
     SetCapture();
     m_isChoosing = TRUE;
 }
 
-CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 // Return a string consisting of the APPDATA folder with the specified
 // folder appended. Create this folder if it does not exist. Throws a
 // CUserException if the folder creation fails.
+CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 {
     ::SetLastError(0);
     CString app_data_path = GetAppDataPath();
@@ -126,8 +128,8 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
     return app_data_path;
 }
 
+// Identifies the window from the cursor position and returns its ID.
 UINT CMainFrame::GetIDFromCursorPos()
-// Identifies the window from the cursor position and returns its ID
 {
     UINT id = 0;
     CPoint pt = GetCursorPos();
@@ -162,21 +164,21 @@ UINT CMainFrame::GetIDFromCursorPos()
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 {
     CFrame::LoadRegistrySettings(keyName);
-    GetDoc().LoadDocRegistry(GetRegistryKeyName().c_str());
+    GetDoc().LoadSettings(GetRegistryKeyName().c_str());
 
     return TRUE;
 }
 
-void CMainFrame::NotImplemented() const
 // Used for some toolbar buttons
+void CMainFrame::NotImplemented() const
 {
     ::MessageBox(NULL, _T("Feature not implemented."),
         _T("Information"), MB_OK | MB_ICONINFORMATION |
         MB_TASKMODAL);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 // Processes accelerators, toolbar buttons and menu input
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
     UINT id = LOWORD(wparam);
@@ -226,11 +228,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
@@ -253,8 +254,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return result;
 }
 
+// Called when the F1 key is pressed.
 void CMainFrame::OnF1()
-// Called when the F1 key is pressed
 {
     UINT id = GetIDFromCursorPos();
 
@@ -264,9 +265,9 @@ void CMainFrame::OnF1()
         m_appHelp.ShowHelpTopic(_T("Introduction"));
 }
 
+// Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
 }
 
@@ -277,9 +278,10 @@ void CMainFrame::OnInitialUpdate()
 
 }
 
+// Updates the check state of the various menu items
 void CMainFrame::OnMenuUpdate(UINT id)
 {
-    // Update the check state of the various menu items
+
     switch (id)
     {
     case ID_CHECK_A:    OnUpdateCheckA(id);    break;
@@ -293,9 +295,9 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CFrame::OnMenuUpdate(id);
 }
 
-LRESULT CMainFrame::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 // Handle the left mouse button click.
 // Note: When the frame has mouse capture, clicks over child windows are processed here too.
+LRESULT CMainFrame::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (GetCapture() == *this)
     {
@@ -309,8 +311,8 @@ LRESULT CMainFrame::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
+// Modifies the cursor when appropriate.
 LRESULT CMainFrame::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
-// Modify the cursor when appropriate
 {
     if (m_isChoosing)
     {
@@ -321,30 +323,34 @@ LRESULT CMainFrame::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
+// Called when the F1 key is pressed while SHIFT is held down.
 void CMainFrame::OnShiftF1()
-// Called when the F1 key is pressed while SHIFT is held down
 {
     ChooseHelpTopic();
 }
 
+// Updates the menu when check box A is clicked.
 void CMainFrame::OnUpdateCheckA(UINT id)
 {
     BOOL checkA = GetDoc().GetCheckA();
     GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (checkA ? MF_CHECKED : MF_UNCHECKED));
 }
 
+// Updates the menu when check box B is clicked.
 void CMainFrame::OnUpdateCheckB(UINT id)
 {
     BOOL checkB = GetDoc().GetCheckB();
     GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (checkB ? MF_CHECKED : MF_UNCHECKED));
 }
 
+// Updates the menu when check box C is clicked.
 void CMainFrame::OnUpdateCheckC(UINT id)
 {
     BOOL checkC = GetDoc().GetCheckC();
     GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (checkC ? MF_CHECKED : MF_UNCHECKED));
 }
 
+// Updates the menu when a radio button is selected.
 void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
     int fileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
@@ -353,66 +359,63 @@ void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
         radioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // Call base class function first
-    CFrame::PreCreate(cs);
-
     cs.style &= ~WS_MAXIMIZEBOX;
     cs.style &= ~WS_MINIMIZEBOX;
     cs.dwExStyle |= WS_EX_CONTEXTHELP;
 }
 
+// Stores settings in the registry.
 BOOL CMainFrame::SaveRegistrySettings()
 {
     CFrame::SaveRegistrySettings();
-    GetDoc().SaveDocRegistry(GetRegistryKeyName().c_str());
+    GetDoc().SaveSettings(GetRegistryKeyName().c_str());
 
     return TRUE;
 }
 
+// Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons: start out with a
-    // separator just to give some space at the left of the toolbar
+    // Start with a separator to give some space at the left of the toolbar.
     AddToolBarButton(0);  // Separator
 
-    // Connect button IDs to button icons, show enabled status, and
-    // give the explicit image index iImage of each button in the bitmap.
-    // Add the toolbar buttons in the order they are to appear at runtime.
-    AddToolBarButton(IDM_FILE_NEW,      TRUE, 0, 0);
-    AddToolBarButton(IDM_FILE_OPEN,     TRUE, 0, 1);
-    AddToolBarButton(IDM_FILE_SAVE,     TRUE, 0, 2);
-    AddToolBarButton(IDM_FILE_SAVEAS,   TRUE, 0, 3);
-    AddToolBarButton(IDM_FILE_CLOSE,    TRUE, 0, 4);
+    // Connect button IDs to button icons.
+    AddToolBarButton(IDM_FILE_NEW);
+    AddToolBarButton(IDM_FILE_OPEN);
+    AddToolBarButton(IDM_FILE_SAVE);
+    AddToolBarButton(IDM_FILE_SAVEAS);
+    AddToolBarButton(IDM_FILE_CLOSE);
     AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_EDIT_CUT,      TRUE, 0, 5);
-    AddToolBarButton(IDM_EDIT_COPY,     TRUE, 0, 6);
-    AddToolBarButton(IDM_EDIT_PASTE,    TRUE, 0, 7);
-    AddToolBarButton(IDM_EDIT_DELETE,   TRUE, 0, 8);
+    AddToolBarButton(IDM_EDIT_CUT);
+    AddToolBarButton(IDM_EDIT_COPY);
+    AddToolBarButton(IDM_EDIT_PASTE);
+    AddToolBarButton(IDM_EDIT_DELETE);
     AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_FILE_PRINT_PREVIEW, TRUE, 0, 9);
-    AddToolBarButton(IDM_FILE_PRINT,    TRUE, 0, 10);
+    AddToolBarButton(IDM_FILE_PRINT_PREVIEW);
+    AddToolBarButton(IDM_FILE_PRINT);
     AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_EDIT_UNDO,     TRUE, 0, 11);
-    AddToolBarButton(IDM_EDIT_REDO,     TRUE, 0, 12);
+    AddToolBarButton(IDM_EDIT_UNDO);
+    AddToolBarButton(IDM_EDIT_REDO);
     AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_FONT_CHOICE,   TRUE, 0, 13);
-    AddToolBarButton(IDM_COLOR_CHOICE,  TRUE, 0, 14);
+    AddToolBarButton(IDM_FONT_CHOICE);
+    AddToolBarButton(IDM_COLOR_CHOICE);
     AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_EDIT_FIND,     TRUE, 0, 15);
-    AddToolBarButton(IDM_EDIT_REPLACE,  TRUE, 0, 16);
+    AddToolBarButton(IDM_EDIT_FIND);
+    AddToolBarButton(IDM_EDIT_REPLACE);
     AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_HELP_CONTENT,  TRUE, 0, 17);
-    AddToolBarButton(IDM_HELP_CONTEXT,  TRUE, 0, 18);
+    AddToolBarButton(IDM_HELP_CONTENT);
+    AddToolBarButton(IDM_HELP_CONTEXT);
     AddToolBarButton(0);  // Separator
 
     // Set the toolbar image list: use defaults for hot and disabled
     SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR_NORM, 0, 0);
 }
 
-LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called for a System Command such as SC_CLOSE, SC_CONTEXTHELP etc.
+LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (wparam == SC_CONTEXTHELP)
         ChooseHelpTopic();
@@ -421,12 +424,13 @@ LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     return CFrame::OnSysCommand(msg, wparam, lparam);
 }
 
+// Display the context help for the specified topic.
 void CMainFrame::ShowHelpTopic(UINT id)
-// Display the context help for the specified topic
 {
     m_appHelp.ShowHelpTopic(id);
 }
 
+// Handle the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

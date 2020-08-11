@@ -20,7 +20,7 @@ BOOL CDoc::FileLoad(LPCTSTR filename)
     {
         // An exception occurred. Display the relevant information.
         ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-        
+
         // Return CDoc data to default
     }
 

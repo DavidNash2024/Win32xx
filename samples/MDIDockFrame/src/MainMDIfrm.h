@@ -1,11 +1,13 @@
-///////////////////////////////////////////////////////
+/////////////////////////////
 // MainMDIfrm.h
-//  Declaration of the CMainFrame class
+//
 
 #ifndef MAINMDIFRM_H
 #define MAINMDIFRM_H
 
-
+/////////////////////////////////////////
+// Declaration of the CMainMDIFrame class
+//
 class CMainMDIFrame : public CMDIDockFrame
 {
 public:

@@ -1,11 +1,13 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.h
+//
 
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-
+/////////////////////////////////////////
 // Declaration of the CButtonDialog class
+//
 class CButtonDialog : public CDialog
 {
 public:

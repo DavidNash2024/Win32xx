@@ -18,7 +18,7 @@ public:
     CMainWindow& GetMainWnd() {return m_mainWnd;}
 
 private:
-    CMainWindow m_mainWnd;  
+    CMainWindow m_mainWnd;
 };
 
 

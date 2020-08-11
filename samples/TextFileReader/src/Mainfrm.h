@@ -5,12 +5,11 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CMainFrame class for this sample 
-    program using the Win32++ Windows interface classes, Copyright (c) 2005-2020 
-    David Nash, under permissions granted therein.
-    
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Contents Description: Declaration of the CMainFrame class for this sample
+    program using the Win32++ Windows interface classes.
+
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -24,7 +23,7 @@
 enum ControlBars {toolbar, mainmenu, both};
 
 /*============================================================================*/
-    class 
+    class
 CMainFrame : public CFrame                                                  /*
 
     This class administers the user interaction with the file to be displayed
@@ -38,9 +37,9 @@ CMainFrame : public CFrame                                                  /*
 
         CDoc&       TheDoc()      {return m_view.TheDoc();}
 
-        AboutBox&   GetAboutBox()   { return m_aboutDialog; } 
-        void        SaveSettings();   
-        void        SetArchivePath(const CString& archivePath) 
+        AboutBox&   GetAboutBox()   { return m_aboutDialog; }
+        void        SaveSettings();
+        void        SetArchivePath(const CString& archivePath)
                         { m_arcvPath = archivePath; }
         void        SetMaxMRUSlots(UINT maxMRU) { m_maxMRU = maxMRU; }
 
@@ -55,19 +54,19 @@ CMainFrame : public CFrame                                                  /*
         void        OnFileOpen();
         void        OnFontChoice() { m_view.ClientFontChoice();}
         BOOL        OnHelp();
-        void        OnInitialUpdate() 
+        void        OnInitialUpdate()
                         { GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING,
                            MF_UNCHECKED); }
         BOOL        OnProcessMRU(WPARAM wparam, LPARAM lparam);
         void        PreCreate(CREATESTRUCT& cs);
-        void        Serialize(CArchive& ar); 
+        void        Serialize(CArchive& ar);
         void        SetupMenuIcons();
         void        SetupToolBar();
 
     private:
           // private data members
          CString    m_arcvPath;       // archived data path
-         CString    m_compiledOn;     // compilation date, mmm dd yyyy 
+         CString    m_compiledOn;     // compilation date, mmm dd yyyy
          CView      m_view;           // the view
          UINT       m_xWin;           // deserialized window x position
          UINT       m_yWin;           // deserialized window y position

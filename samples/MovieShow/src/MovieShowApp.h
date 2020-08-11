@@ -1,14 +1,16 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // MovieShowApp.h
+//
 
 #ifndef MOVIESHOWAPP_H
 #define MOVIESHOWAPP_H
 
 #include "Mainfrm.h"
 
-
+////////////////////////////////////////////////
 // Declaration of the CMovieShowApp class
 // Starts the application and creates the frame.
+//
 class CMovieShowApp : public CWinApp
 {
 public:

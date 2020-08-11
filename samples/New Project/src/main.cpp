@@ -1,5 +1,6 @@
-//////////////////////////////////
+/////////////////////////////
 // main.cpp
+//
 
 // To configure your project:
 // 1) Add Win32++'s include directory to the project's additional include directories for C/C++

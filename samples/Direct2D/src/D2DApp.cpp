@@ -1,3 +1,6 @@
+/////////////////////////////
+// D2DApp.cpp
+//
 
 #include "stdafx.h"
 #include "D2DApp.h"
@@ -13,24 +16,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     return 0;
 }
 
+///////////////////////////////
+// CD2DApp function definitions
+//
+
+// Constructor.
 CD2DApp::CD2DApp() : m_pDirect2dFactory(NULL)
 {
 }
 
+// Destructor.
 CD2DApp::~CD2DApp()
 {
     SafeRelease(&m_pDirect2dFactory);
     CoUninitialize();
 }
 
+// Create a Direct2D factory.
 HRESULT CD2DApp::CreateDeviceIndependentResources()
 {
-    // Create a Direct2D factory.
-    HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pDirect2dFactory);
-
-    return hr;
+    return D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m_pDirect2dFactory);
 }
 
+// Called when the application starts.
 BOOL CD2DApp::InitInstance()
 {
     HRESULT hr = CoInitialize(NULL);

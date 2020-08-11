@@ -1,6 +1,7 @@
 ///////////////////////////////////////////////////////
 // Output.h - Declaration of the CViewOutput, CContainOutput,
 //          and CDockOutput classes
+//
 
 #ifndef OUTPUT_H
 #define OUTPUT_H
@@ -8,7 +9,9 @@
 
 #include "resource.h"
 
-// Declaration of the CViewText class
+///////////////////////////////////////
+// Declaration of the CViewOutput class
+//
 class CViewOutput : public CRichEdit
 {
 public:
@@ -21,24 +24,22 @@ protected:
 
 };
 
-// Declaration of the CContainText class
+//////////////////////////////////////////
+// Declaration of the CContainOutput class
+//
 class CContainOutput : public CDockContainer
 {
 public:
-    CContainOutput()
-    {
-        SetView(m_viewOutput);
-        SetDockCaption (_T("Output View - Docking container"));
-        SetTabText(_T("Output"));
-        SetTabIcon(IDI_TEXT);
-    }
+    CContainOutput();
     ~CContainOutput() {}
 
 private:
     CViewOutput m_viewOutput;
 };
 
-// Declaration of the CDockText class
+///////////////////////////////////////
+// Declaration of the CDockOutput class
+//
 class CDockOutput : public CDocker
 {
 public:
@@ -47,7 +48,6 @@ public:
 
 private:
     CContainOutput m_view;
-
 };
 
 

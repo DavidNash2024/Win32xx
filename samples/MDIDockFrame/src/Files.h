@@ -1,12 +1,13 @@
 /////////////////////////////////////////////////
-// Files.h - Declaration of the CViewFiles, CContainFiles 
+// Files.h - Declaration of the CViewFiles, CContainFiles
 //           and CDockFiles classes
 
 #ifndef FILES_H
 #define FILES_H
 
-
+//////////////////////////////////////
 // Declaration of the CViewFiles class
+//
 class CViewFiles : public CListView
 {
 public:
@@ -24,22 +25,26 @@ private:
     CImageList m_imlSmall;
 };
 
+/////////////////////////////////////////
 // Declaration of the CContainFiles class
+//
 class CContainFiles : public CDockContainer
 {
 public:
-    CContainFiles(); 
+    CContainFiles();
     ~CContainFiles() {}
 
 private:
     CViewFiles m_viewFiles;
 };
 
+//////////////////////////////////////
 // Declaration of the CDockFiles class
+//
 class CDockFiles : public CDocker
 {
 public:
-    CDockFiles(); 
+    CDockFiles();
     virtual ~CDockFiles() {}
 
 private:

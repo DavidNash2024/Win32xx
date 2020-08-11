@@ -1,6 +1,7 @@
-///////////////////////////////////////////////////
-// A useful header file for console any app.
+/////////////////////////////
+// tchar_console.h
 //
+
 // Defines the following:
 //  tcout           - a TCHAR version of std::cout
 //

@@ -42,7 +42,7 @@ COLORREF CMainMDIFrame::GetColorFromPicker() const
 
 STDMETHODIMP CMainMDIFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    // This function is called when a ribbon button is pressed. 
+    // This function is called when a ribbon button is pressed.
     // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation
 
     UNREFERENCED_PARAMETER(key);
@@ -58,7 +58,7 @@ STDMETHODIMP CMainMDIFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const P
         // View Group
         case IDC_PEN_COLOR:         OnPenColor(ppropvarValue, pCmdExProp);  break;
         case IDC_CMD_SHOWSTATUS:    ShowStatusBar(ppropvarValue->boolVal);  break;
-    
+
         // Multiple Document Interface Group
         case IDC_CMD_MDICASCADE:    MDICascade();       break;
         case IDC_CMD_MDITILE:       MDITile();          break;
@@ -108,7 +108,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
             hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SAVEAS, UI_PKEY_Enabled, var);
         if (SUCCEEDED(hr))
             hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_PRINT, UI_PKEY_Enabled, var);
-        
+
         if (SUCCEEDED(hr))
             hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_COPY, UI_PKEY_Enabled, var);
         if (SUCCEEDED(hr))
@@ -194,7 +194,7 @@ void CMainMDIFrame::OnMDIMaximized(BOOL isMax)
         // Enable MDI Ribbon when the MDI child is maximized
         PROPVARIANT var;
         InitPropVariantFromBoolean(isMax, &var);
-        
+
         HRESULT hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDICLOSE, UI_PKEY_Enabled, var);
         if (SUCCEEDED(hr))
             hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
@@ -214,7 +214,7 @@ void CMainMDIFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimpleProper
 
     if (ppropvarValue != NULL)
     {
-        // Retrieve color type. 
+        // Retrieve color type.
         UINT type = ppropvarValue->uintVal;
 
         // The Ribbon framework passes color as additional property if the color type is RGB.
@@ -268,9 +268,9 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
-{   
-    // This function is called when a ribbon button is updated. 
+STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue)
+{
+    // This function is called when a ribbon button is updated.
     // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
     UNREFERENCED_PARAMETER(currentValue);
 
@@ -299,7 +299,7 @@ STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key
         // Set the initial pen color
         result = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
         break;
-    } 
+    }
 
     return result;
 }

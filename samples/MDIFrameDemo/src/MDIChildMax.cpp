@@ -7,9 +7,11 @@
 #include "resource.h"
 
 
-////////////////////////////
-// CMDIChildMax definitions
+////////////////////////////////////
+// CMDIChildMax function definitions
+//
 
+// Constructor.
 CMDIChildMax::CMDIChildMax()
 {
     m_menu.LoadMenu(_T("MdiMenuMax"));
@@ -17,10 +19,12 @@ CMDIChildMax::CMDIChildMax()
     SetView(m_maxView);
 }
 
+// Destructor.
 CMDIChildMax::~CMDIChildMax()
 {
 }
 
+// Called when the window is created.
 int CMDIChildMax::OnCreate(CREATESTRUCT& cs)
 {
     SetWindowText(_T("Maximised Window"));
@@ -30,22 +34,26 @@ int CMDIChildMax::OnCreate(CREATESTRUCT& cs)
     return CMDIChild::OnCreate(cs);
 }
 
+// Set the CREATESTRUCT parameters before the window is created.
 void CMDIChildMax::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = WS_MAXIMIZE;
 }
 
 
-////////////////////////
-// CViewMax definitions
+////////////////////////////////
+// CViewMax function definitions
+//
 
+// Constructor.
 void CViewMax::OnDraw(CDC& dc)
 {
-    //Centre some text in our view window
+    // Centre some text in our view window.
     CRect rc = GetClientRect();
     dc.DrawText(_T("Maxed Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
+// Process the max view's window messages.
 LRESULT CViewMax::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

@@ -46,9 +46,9 @@ LRESULT CHyperlink::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
         pt.x = LOWORD(lparam);
         pt.y = HIWORD(lparam);
         ClientToScreen(pt);
-        CRect rc = GetWindowRect(); 
+        CRect rc = GetWindowRect();
 
-        if (rc.PtInRect(pt)) 
+        if (rc.PtInRect(pt))
             OpenUrl();
     }
 
@@ -90,9 +90,9 @@ LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 
 LRESULT CHyperlink::OnSetCursor(UINT, WPARAM, LPARAM)
 {
-    // Must use ::SetCursor here. CStatic::SetCursor does not do the same thing. 
+    // Must use ::SetCursor here. CStatic::SetCursor does not do the same thing.
     ::SetCursor(m_hCursor);
-    
+
     return 1;  // Non-zero return prevents default processing
 }
 

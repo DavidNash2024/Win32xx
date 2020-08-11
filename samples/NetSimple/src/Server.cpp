@@ -1,5 +1,6 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // Server.cpp
+//
 
 #include <iostream>
 #include "wxx_socket.h"
@@ -25,7 +26,7 @@ public:
         // Has an extra character for null termination.
         char str[1025] = {0};
         int addrlen = sizeof(g_saUDPClient);
-        
+
         // Receives data and updates the UPD client socket address.
         int i = ReceiveFrom(str, 1024, 0, &g_saUDPClient, &addrlen);
         if (i >= 0)

@@ -1,5 +1,6 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // MyTabbedMDI.h
+//
 
 #ifndef MYTABBEDMDI_H
 #define MYTABBEDMDI_H
@@ -15,7 +16,9 @@ enum MDIChildIDs
     ID_MDI_RECT = 6
 };
 
-
+////////////////////////////////////////
+// Declaration of the CMyTabbedMDI class
+//
 class CMyTabbedMDI : public CTabbedMDI
 {
 public:

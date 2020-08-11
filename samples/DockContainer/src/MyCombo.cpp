@@ -1,20 +1,27 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // MyCombo.cpp
-//  Definitions for the CMyCombo class
+//
 
 #include "stdafx.h"
 #include "MyCombo.h"
 #include "resource.h"
 
+////////////////////////////////
+// CMyCombo function definitions
+//
+
+// Constructor.
 CMyCombo::CMyCombo()
 {
     SetImages(3, IDB_STATUS);
 }
 
+// Destructor.
 CMyCombo::~CMyCombo()
 {
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CMyCombo::PreCreate(CREATESTRUCT& cs)
 {
     cs.lpszClass = WC_COMBOBOXEX;
@@ -24,6 +31,7 @@ void CMyCombo::PreCreate(CREATESTRUCT& cs)
     cs.cy = 100;
 }
 
+// Adds items to the ComboBoxEx.
 BOOL CMyCombo::AddItems()
 {
     struct ITEMINFO
@@ -65,6 +73,7 @@ BOOL CMyCombo::AddItems()
     return TRUE;
 }
 
+// Assigns images to the ComboBoxEx control from a bitmap.
 void CMyCombo::SetImages(int nImages, UINT ImageID)
 {
     m_imlImages.DeleteImageList();
@@ -77,9 +86,5 @@ void CMyCombo::SetImages(int nImages, UINT ImageID)
 
     m_imlImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, nImages, 0);
     m_imlImages.Add(bm, RGB(255, 0, 255));
-}
-
-void CMyCombo::OnDestroy()
-{
 }
 

@@ -8,15 +8,16 @@
 #define SDI_DOC_H
 
 
+////////////////////////////////////
 // Declaration of the CFormDoc class
+//
 class CFormDoc
 {
 public:
     CFormDoc();
     virtual ~CFormDoc();
-    void  LoadDocRegistry(LPCTSTR keyName);
-    void  SaveDocRegistry(LPCTSTR keyName);
-    DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
+    void  LoadSettings(LPCTSTR keyName);
+    void  SaveSettings(LPCTSTR keyName);
 
     BOOL  GetCheckA() { return m_isCheckA; }
     void  SetCheckA(BOOL IsChecked) { m_isCheckA = IsChecked; }
@@ -31,10 +32,10 @@ public:
     void  SetRadio(UINT radio) { m_radio = radio; }
 
 private:
-    BOOL  m_isCheckA;
-    BOOL  m_isCheckB;
-    BOOL  m_isCheckC;
-    UINT  m_radio;
+    DWORD  m_isCheckA;
+    DWORD  m_isCheckB;
+    DWORD  m_isCheckC;
+    DWORD  m_radio;
 };
 
 #endif //SDI_DOC_H

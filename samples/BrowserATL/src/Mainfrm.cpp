@@ -1,10 +1,14 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "resource.h"
 #include "mainfrm.h"
 
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame()
@@ -152,12 +156,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // Call the base function
     return CFrame::OnCreate(cs);
-}
-
-void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
-{
-    UNREFERENCED_PARAMETER(pDispParams);
-    TRACE(_T("OnDocumentBegin\n"));
 }
 
 // Called when a document has been completely loaded and initialized.
@@ -530,14 +528,13 @@ void CMainFrame::SetupToolBar()
     AddComboBoxBand(Height);
 }
 
-// Process frame's window messages.
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
     case UWM_BEFORENAVIGATE2:     OnBeforeNavigate2((DISPPARAMS*)wparam);    break;
     case UWM_COMMANDSTATECHANGE:  OnCommandStateChange((DISPPARAMS*)wparam); break;
-    case UWM_DOCUMENTBEGIN:       OnDocumentBegin((DISPPARAMS*)wparam);      break;
     case UWM_DOCUMENTCOMPLETE:    OnDocumentComplete((DISPPARAMS*)wparam);   break;
     case UWM_DOWNLOADBEGIN:       OnDownloadBegin((DISPPARAMS*)wparam);      break;
     case UWM_NAVIGATECOMPLETE2:   OnNavigateComplete2((DISPPARAMS*)wparam);  break;

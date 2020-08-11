@@ -1,7 +1,14 @@
+/////////////////////////////
+// CoverImage.h
+//
+
 #ifndef _COVERIMAGE_H_
 #define _COVERIMAGE_H_
 
-// A class used by the dialog to draw the cover image.
+////////////////////////////////////////////////////////////
+// Declaration of the CoverImage class.
+// This class is used by the dialog to draw the cover image.
+//
 class CCoverImage : public CWnd
 {
 public:

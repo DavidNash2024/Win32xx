@@ -78,7 +78,7 @@ CColorChoice   : public CColorDialog                    /*
     public:
         CColorChoice();
         virtual ~CColorChoice(){}
-        
+
                 BOOL    AddColorChoice(UINT, const CString&, COLORREF);
                 void    ClearColorTable(){m_ColorTable.clear();}
                 size_t  DeleteTableEntry(UINT index);
@@ -89,20 +89,20 @@ CColorChoice   : public CColorDialog                    /*
                 COLORREF GetTableColor(UINT nID) const;
                 UINT    GetTableIndex(UINT nID) const;
                 size_t  GetTableSize() const { return m_ColorTable.size();}
-                CString GetTableUsage(UINT nID) const; 
+                CString GetTableUsage(UINT nID) const;
                 void    SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
                 void    SetTableColor(UINT nID, COLORREF rgb);
                 void    SetTableUsage(UINT nID, const CString& s);
 
     protected:
 
-        virtual BOOL    OnInitDialog(); 
+        virtual BOOL    OnInitDialog();
         virtual void    SetWindowTitle() const
-                          {SetWindowText(m_sBoxTitle);}   
+                          {SetWindowText(m_sBoxTitle);}
         virtual void    Serialize(CArchive &ar);
 
     private:
-        void InitCustomColors();        
+        void InitCustomColors();
 
           // private data
         CListBoxDlg     m_LBDlg;    // the list box dialog

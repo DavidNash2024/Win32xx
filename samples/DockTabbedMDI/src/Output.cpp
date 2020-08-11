@@ -1,6 +1,7 @@
 ///////////////////////////////////////////////////
 // Output.cpp -  Definitions for the CViewOutput, CContainOutput
 //              and CDockOutput classes
+//
 
 
 #include "stdafx.h"
@@ -8,16 +9,21 @@
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewOutput functions
+///////////////////////////////////
+// CViewOutput function definitions
+//
+
+// Constructor.
 CViewOutput::CViewOutput()
 {
 }
 
+// Destructor.
 CViewOutput::~CViewOutput()
 {
 }
 
+// Called when a window handle (HWND) is attached to CViewOutput.
 void CViewOutput::OnAttach()
 {
     m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
@@ -27,6 +33,7 @@ void CViewOutput::OnAttach()
     SetWindowText(_T("Read Only Output Window"));
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CViewOutput::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
@@ -34,8 +41,11 @@ void CViewOutput::PreCreate(CREATESTRUCT& cs)
 }
 
 
-//////////////////////////////////////////////
-//  Definitions for the CContainOutput class
+//////////////////////////////////////
+// CContainOutput function definitions
+//
+
+// Constructor.
 CContainOutput::CContainOutput()
 {
     SetView(m_viewOutput);
@@ -45,8 +55,11 @@ CContainOutput::CContainOutput()
 }
 
 
-//////////////////////////////////////////////
-//  Definitions for the CDockOutput class
+///////////////////////////////////
+// CDockOutput function definitions
+//
+
+// Constructor.
 CDockOutput::CDockOutput()
 {
     // Set the view window to our edit control

@@ -1,14 +1,23 @@
+/////////////////////////////
+// EventSink.cpp
+//
+
 #include "stdafx.h"
 #include "EventSink.h"
 #include "MainFrm.h"
 
+//////////////////////////////////
+// CEventSink function definitions
+//
 
+// Not implemented. Increments a reference count.
 STDMETHODIMP_(ULONG) CEventSink::AddRef()
 {
     // Always 1. Automatic deletion isn't required.
     return 1;
 }
 
+// Assigns a pointer to ppvObject for the specified interface.
 STDMETHODIMP CEventSink::QueryInterface(REFIID riid, void** ppvObject)
 {
     if (!ppvObject)
@@ -27,6 +36,7 @@ STDMETHODIMP CEventSink::QueryInterface(REFIID riid, void** ppvObject)
     return S_OK;
 }
 
+// Not implemented. Retrieves an array of DISPID.
 STDMETHODIMP CEventSink::GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid)
 {
     UNREFERENCED_PARAMETER((IID)riid);          // IID cast required for the MinGW compiler
@@ -37,6 +47,7 @@ STDMETHODIMP CEventSink::GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigne
     return DISP_E_UNKNOWNNAME;
 }
 
+// Not implemented. Retrieves the type information for an object.
 STDMETHODIMP CEventSink::GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo)
 {
     UNREFERENCED_PARAMETER(itinfo);
@@ -45,12 +56,14 @@ STDMETHODIMP CEventSink::GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo**
     return E_NOTIMPL;
 }
 
+// Not implemented. Retrieves the number of type information interfaces that an object provides.
 STDMETHODIMP CEventSink::GetTypeInfoCount(unsigned int* pctinfo)
 {
     UNREFERENCED_PARAMETER(pctinfo);
     return E_NOTIMPL;
 }
 
+// Sends a window message to the frame when a browser event occurs.
 STDMETHODIMP CEventSink::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pDispParams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr)
 {
     UNREFERENCED_PARAMETER((IID)riid);          // IID cast required for the MinGW compiler
@@ -105,6 +118,7 @@ STDMETHODIMP CEventSink::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFla
     return S_OK;
 }
 
+// Not implemented. Decrements a reference count.
 STDMETHODIMP_(ULONG) CEventSink::Release()
 {
     // Always 1. Automatic deletion isn't required.

@@ -9,7 +9,7 @@
     Contents Description: The custom MySlider class declaration for this
     DDX-DDV Test program. This class is derived from the MySlider class
     found in the Win32++ Windows sample programs, Copyright (c)2005-2015
-    David Nash, under permissions granted therein. 
+    David Nash, under permissions granted therein.
 
         Caveats: The copyright displayed above extends only to the author's
     original contributions to the subject class, and  to the alterations,
@@ -41,11 +41,11 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
         Planning and Preparation Subsystem project for C++ programming.
-        
+
     Acknowledgement:
     The author would like to thank and acknowledge the advice, critical
     review, insight, and assistance provided by David Nash in the development
-    of this work.       
+    of this work.
 
 ********************************************************************************
 

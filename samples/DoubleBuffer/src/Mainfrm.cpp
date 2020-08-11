@@ -1,17 +1,19 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
-// Definitions for the CMainFrame class
+// Constructor.
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
-    //Set m_View as the view window of the frame
+    //Set m_View as the view window of the frame.
     SetView(m_view);
 
     // Set the registry key name, and load the initial window position
@@ -19,15 +21,14 @@ CMainFrame::CMainFrame()
     LoadRegistrySettings(_T("Win32++\\Double Buffer"));
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -46,11 +47,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
@@ -66,22 +66,23 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+// Issue a close request to the frame to end the program.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
     // Place any additional startup code here.
 
-
     TRACE("Frame created\n");
 }
 
+// Sample code for loading data from a file.
 BOOL CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE);
@@ -96,6 +97,7 @@ BOOL CMainFrame::OnFileOpen()
     return TRUE;
 }
 
+// Sample code for saving data to a file.
 BOOL CMainFrame::OnFileSave()
 {
     CFileDialog fileDlg(FALSE);
@@ -110,6 +112,7 @@ BOOL CMainFrame::OnFileSave()
     return TRUE;
 }
 
+// Sample code for sending output to a printer.
 BOOL CMainFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
@@ -128,36 +131,9 @@ BOOL CMainFrame::OnFilePrint()
     return TRUE;
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-    // Process notification messages sent by child windows
-//  switch(((LPNMHDR)lparam)->code)
-//  {
-//      Add case statements for each notification message here
-//  }
-
-    // Some notifications should return a value when handled
-    return CFrame::OnNotify(wparam, lparam);
-}
-
-void CMainFrame::PreCreate(CREATESTRUCT& cs)
-{
-    // This function is called before the frame is created.
-    // It provides an opportunity to modify the various CREATESTRUCT
-    // parameters used in the frame window's creation.
-
-    // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
-    // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
-
-    // Call base clase to set defaults
-    CFrame::PreCreate(cs);
-
-    // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
-}
-
+// Set the Resource IDs for the toolbar buttons
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
@@ -174,6 +150,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

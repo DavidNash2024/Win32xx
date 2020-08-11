@@ -5,13 +5,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of an extension of the CFont class 
-    using the Win32++ Windows interface classes, Copyright (c) 2005-2019 
-    David Nash, under permissions granted therein. Extensions include font 
-    size, color, font dialog option flags, and coordinate mapping mode.
+    Contents Description: Declaration of an extension of the CFont class
+    using the Win32++ Windows interface classes. Extensions include font size,
+    color, font dialog option flags, and coordinate mapping mode.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -52,8 +51,8 @@ CFontExDialog : public CFontDialog                                          /*
     class
 CFontEx : public CObject                                                       /*
 
-    A class to extend font information to include its characteristics, 
-    color, initialization flags for the font dialog box, and size within 
+    A class to extend font information to include its characteristics,
+    color, initialization flags for the font dialog box, and size within
     a given device context, with serialization.
 *-----------------------------------------------------------------------------*/
 {
@@ -62,7 +61,7 @@ CFontEx : public CObject                                                       /
         CFontEx(COLORREF txtcolor, DWORD options)
                     { m_txcolor = txtcolor; m_flags = options; }
         virtual ~CFontEx(){}
-        
+
         void    Choose(LPCTSTR wintitle = NULL);
         void    SetDefault();
 
@@ -72,17 +71,17 @@ CFontEx : public CObject                                                       /
         COLORREF GetTxColor() const     { return m_txcolor; }
         void    SetFlags(DWORD f)       { m_flags = f; }
         void    SetFont(CFont f)        { m_font = f; SaveFontSize(); }
-        void    SetTxColor(COLORREF c)  { m_txcolor = c; }      
+        void    SetTxColor(COLORREF c)  { m_txcolor = c; }
 
     protected:
         void    Serialize(CArchive &ar);
-            
+
     private:
         void    SaveFontSize();
 
           // protected data
         CFont    m_font;
-        COLORREF m_txcolor; 
+        COLORREF m_txcolor;
         DWORD    m_flags;
         CSize    m_fontSize;
 };

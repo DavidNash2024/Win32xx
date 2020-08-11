@@ -1,12 +1,15 @@
-//////////////////////////////////////
+/////////////////////////////
 // MDIFrameSplitterApp.h
+//
 
 #ifndef MDIFRAMESPLITTERAPP_H
 #define MDIFRAMESPLITTERAPP_H
 
 #include "MainMDIFrm.h"
 
-
+////////////////////////////////////////////////
+// Declaration of the CMDIFrameSplitterApp class
+//
 class CMDIFrameSplitterApp : public CWinApp
 {
 public:
@@ -17,7 +20,6 @@ public:
 
 private:
     CMainMDIFrame m_mainMDIFrame;
-
 };
 
 

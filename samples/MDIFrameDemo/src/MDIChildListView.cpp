@@ -7,17 +7,22 @@
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewList functions
+/////////////////////////////////
+// CViewList function definitions
+//
+
+// Constructor.
 CViewList::CViewList()
 {
 }
 
+// Destructor.
 CViewList::~CViewList()
 {
     if (IsWindow()) DeleteAllItems();
 }
 
+// Called when a window handle (HWND) is attached to CViewList.
 void CViewList::OnAttach()
 {
     // Set the image lists
@@ -34,11 +39,13 @@ void CViewList::OnAttach()
     InsertItems();
 }
 
+// Called when the window is destroyed.
 void CViewList::OnDestroy()
 {
     SetImageList(NULL, LVSIL_SMALL);
 }
 
+// Adds an item to the list view.
 int CViewList::AddItem(LPCTSTR text, int image)
 {
     LVITEM lvi;
@@ -50,6 +57,7 @@ int CViewList::AddItem(LPCTSTR text, int image)
     return InsertItem(lvi);
 }
 
+// Configures the columns for the list view.
 void CViewList::SetColumns()
 {
     //empty the list
@@ -69,6 +77,7 @@ void CViewList::SetColumns()
     }
 }
 
+// Adds 4 items to the list view.
 void CViewList::InsertItems()
 {
     // Add 4th item
@@ -92,26 +101,30 @@ void CViewList::InsertItems()
 }
 
 
-///////////////////////////////////////////////
-// CMDIChildListView functions
-CMDIChildListView::CMDIChildListView()
+/////////////////////////////////////////
+// CMDIChildListView function definitions
+//
+
+// Constructor.
+CMDIChildList::CMDIChildList()
 {
     m_menu.LoadMenu(_T("MdiMenuList"));
     SetHandles(m_menu, NULL);
     SetView(m_listView);
 }
 
-CMDIChildListView::~CMDIChildListView()
+// Destructor.
+CMDIChildList::~CMDIChildList()
 {
 }
 
-int CMDIChildListView::OnCreate(CREATESTRUCT& cs)
+// Called when the window is created.
+int CMDIChildList::OnCreate(CREATESTRUCT& cs)
 {
     SetWindowText( _T("List-View Window") );
     SetIconLarge(IDI_FILES);
     SetIconSmall(IDI_FILES);
-    
+
     return CMDIChild::OnCreate(cs);
 }
-
 

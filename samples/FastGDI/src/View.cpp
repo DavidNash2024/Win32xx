@@ -7,19 +7,24 @@
 #include "FastGDIApp.h"
 #include "resource.h"
 
+/////////////////////////////
+// CView function definitions
+//
 
+// Constructor.
 CView::CView()
 {
 }
 
+// Destructor.
 CView::~CView()
 {
 }
 
+// Loads a bitmap image from a file.
+// Only bitmap images (bmp files) can be loaded.
 BOOL CView::LoadFileImage(LPCTSTR filename)
 {
-    // Only bitmap images (bmp files) can be loaded
-
     m_image.DeleteObject();
     CSize totalSize;
 
@@ -63,6 +68,7 @@ void CView::Print(LPCTSTR docName)
 
 }
 
+// Prints the image on either the preview pane or the printer.
 void CView::PrintPage(CDC& dc, UINT)
 {
     if (m_image.GetHandle() != 0)
@@ -101,6 +107,7 @@ void CView::PrintPage(CDC& dc, UINT)
     }
 }
 
+// Prints the image on the current default printer.
 void CView::QuickPrint(LPCTSTR docName)
 {
     // Create a DOCINFO structure.
@@ -121,6 +128,7 @@ void CView::QuickPrint(LPCTSTR docName)
     printDC.EndDoc();
 }
 
+// Saves the bitmap to a file.
 BOOL CView::SaveFileImage(LPCTSTR fileName)
 {
     CFile file;
@@ -166,6 +174,7 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
     return bResult;
 }
 
+// Retrieves the image size as a rectangle.
 CRect CView::GetImageRect()
 {
     BITMAP bm = m_image.GetBitmapData();
@@ -177,6 +186,7 @@ CRect CView::GetImageRect()
     return rc;
 }
 
+// Called when part of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {
     if (m_image.GetHandle())
@@ -191,6 +201,8 @@ void CView::OnDraw(CDC& dc)
     }
 }
 
+// Called when a file is dropped on the window.
+// Loads the dropped file.
 LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -219,7 +231,6 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
-
 // OnInitialUpdate is called after the window is created.
 void CView::OnInitialUpdate()
 {
@@ -229,6 +240,7 @@ void CView::OnInitialUpdate()
     DragAcceptFiles(TRUE);
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set the Window Class name
@@ -240,6 +252,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+// Process the view's window messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

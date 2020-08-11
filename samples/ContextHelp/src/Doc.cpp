@@ -1,66 +1,56 @@
-///////////////////////////////////////
+/////////////////////////////
 // Doc.cpp
-
-// Based on code provided by Lynn Allan
-
+//
 
 #include "stdafx.h"
 #include "Doc.h"
 
+////////////////////////////
+// CDoc function definitions
+//
 
-// Definitions for the CDoc class
-CDoc::CDoc() : m_checkA(FALSE), m_checkB(FALSE), m_checkC(FALSE), m_radio(0)
+// Constructor.
+CDoc::CDoc() : m_checkA(0), m_checkB(0), m_checkC(0), m_radio(0)
 {
 }
 
+// Destructor.
 CDoc::~CDoc()
 {
 }
 
-DWORD CDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
+// Load values from the registry.
+void CDoc::LoadSettings(LPCTSTR keyName)
 {
-  DWORD   type;
-  DWORD   count = sizeof(DWORD);
-  DWORD   value = 0;
-  if (ERROR_SUCCESS == RegQueryValueEx(hKey, pName, NULL, &type, (LPBYTE)&value, &count))
-      return value;
-  else
-      return 0;
-}
-
-void CDoc::LoadDocRegistry(LPCTSTR keyName)
-{
-    HKEY hKey;
     CString fullKeyName = _T("Software\\");
     fullKeyName += keyName;
     fullKeyName += _T("\\Document Settings");
-    if (ERROR_SUCCESS ==RegOpenKeyEx(HKEY_CURRENT_USER, fullKeyName, 0,
-        KEY_READ, &hKey))
+    CRegKey key;
+    if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, fullKeyName, KEY_READ))
     {
-        m_checkA = GetRegDwordFromOpenKey(hKey, _T("CheckA")) & 1;
-        m_checkB = GetRegDwordFromOpenKey(hKey, _T("CheckB")) & 1;
-        m_checkC = GetRegDwordFromOpenKey(hKey, _T("CheckC")) & 1;
-        m_radio = GetRegDwordFromOpenKey(hKey, _T("Radio"));
-
-        RegCloseKey(hKey);
+        key.QueryDWORDValue(_T("CheckA"), m_checkA);
+        key.QueryDWORDValue(_T("CheckB"), m_checkB);
+        key.QueryDWORDValue(_T("CheckC"), m_checkC);
+        key.QueryDWORDValue(_T("Radio"), m_radio);
     }
 }
 
-void CDoc::SaveDocRegistry(LPCTSTR keyName)
+// Store values in the registry.
+void CDoc::SaveSettings(LPCTSTR keyName)
 {
-    HKEY hKey;
     CString fullKeyName = _T("Software\\");
     fullKeyName += keyName;
     fullKeyName += _T("\\Document Settings");
 
-    RegCreateKeyEx(HKEY_CURRENT_USER, fullKeyName, 0, NULL,
-    REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
-
-    RegSetValueEx(hKey, _T("CheckA"), 0, REG_DWORD, (LPBYTE)&m_checkA, sizeof(BOOL));
-    RegSetValueEx(hKey, _T("CheckB"), 0, REG_DWORD, (LPBYTE)&m_checkB, sizeof(BOOL));
-    RegSetValueEx(hKey, _T("CheckC"), 0, REG_DWORD, (LPBYTE)&m_checkC, sizeof(BOOL));
-    RegSetValueEx(hKey, _T("Radio"), 0, REG_DWORD, (LPBYTE)&m_radio, sizeof(BOOL));
-
-    RegCloseKey(hKey);
+    CRegKey key;
+    if (ERROR_SUCCESS == key.Create(HKEY_CURRENT_USER, fullKeyName))
+    {
+        if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, fullKeyName))
+        {
+            key.SetDWORDValue(_T("CheckA"), m_checkA);
+            key.SetDWORDValue(_T("CheckB"), m_checkB);
+            key.SetDWORDValue(_T("CheckC"), m_checkC);
+            key.SetDWORDValue(_T("Radio"), m_radio);
+        }
+    }
 }
-

@@ -1,3 +1,6 @@
+/////////////////////////////
+// D2DApp.h
+//
 
 #ifndef _D2DAPP_H_
 #define _D2DAPP_H_
@@ -6,7 +9,9 @@
 #include <d2d1helper.h>
 #include "D2DView.h"
 
-
+///////////////////////////////////
+// Declaration of the CD2DApp class
+//
 class CD2DApp : public CWinApp
 {
 public:

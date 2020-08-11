@@ -5,20 +5,16 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the CDoc class for this sample progam 
-    using the Win32++ Windows interface classes, Copyright (c) 2005-2020 David 
-    Nash, under permissions granted therein.
+    Contents Description: Implementation of the CDoc class for this sample
+    program using the Win32++ Windows interface classes.
 
-    The embodyment of a document in this class is in the form of a vector of
+    The embodiment of a document in this class is in the form of a vector of
     UTF-16 Little Endean Unicode strings, one for each line of the document,
     whether compiled in ANSI or Unicode mode. It therefore requires a CView
     class capable of displaying this encoding.
 
-    Caveats: These materials are available under the same provisions as found
-    in the Win32++ copyright.txt notice.
-
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/

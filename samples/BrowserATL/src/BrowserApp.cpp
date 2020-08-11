@@ -1,11 +1,14 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // BrowserApp.cpp
+//
 
 #include "stdafx.h"
 #include "BrowserApp.h"
 
+///////////////////////////////////
+// CBrowserApp function definitions
+//
 
-// Definitions for the CBrowserApp class
 CBrowserApp::CBrowserApp()
 {
 }
@@ -14,16 +17,11 @@ CBrowserApp::~CBrowserApp()
 {
 }
 
+// This function is called when the application starts.
 BOOL CBrowserApp::InitInstance()
 {
-    //Create the Frame Window
-    if (!m_Frame.Create())
-    {
-        // We get here if the Frame creation fails
-
-        ::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
-        return FALSE; // returning FALSE ends the application
-    }
+    // Create the Frame
+    m_frame.Create();   // throws a CWinException on failure
 
     return TRUE;
 }

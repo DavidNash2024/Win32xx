@@ -269,7 +269,7 @@ StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)        /*
         return (1);
 
     *pcb = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, 
+    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb,
       NULL))
         ::MessageBox(NULL, _T("StreamOutFile Failed"), _T(""), MB_OK);
     return 0;

@@ -1,17 +1,19 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
-
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
 
-// Definitions for the CMainFrame class
+//////////////////////////////////
+// CMainFrame function definitions
+//
+
+// Constructor.
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     m_useProportionalResize = FALSE;
     m_use3DBorder = TRUE;
     m_disableUndocking = FALSE;
@@ -28,11 +30,12 @@ CMainFrame::CMainFrame()
     LoadRegistrySettings(_T("Win32++\\Dock"));
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+// Loads a default configuration of dockers.
 void CMainFrame::LoadDefaultDockers()
 {
     // Note: The  DockIDs are used for saving/restoring the dockers state in the registry
@@ -51,6 +54,7 @@ void CMainFrame::LoadDefaultDockers()
     SetDockStyles();
 }
 
+// Adds a new docker. The id specifies the dock type. 
 CDocker* CMainFrame::NewDockerFromID(int id)
 {
     CDocker* pDock = NULL;
@@ -88,6 +92,7 @@ CDocker* CMainFrame::NewDockerFromID(int id)
     return pDock;
 }
 
+// Toggles the display of the 3D border.
 BOOL CMainFrame::On3DBorder()
 {
     m_use3DBorder = !m_use3DBorder;
@@ -95,11 +100,10 @@ BOOL CMainFrame::On3DBorder()
     return TRUE;
 }
 
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
-
-    // OnCommand responds to menu and and toolbar input
 
     UINT id = LOWORD(wparam);
     switch(id)
@@ -122,11 +126,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
@@ -142,16 +145,17 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CDockFrame::OnCreate(cs);
 }
 
+// Closes all of the dockers.
 BOOL CMainFrame::OnDockCloseAll()
 {
     CloseAllDockers();
     return TRUE;
 }
 
+// Dragging the docker's splitter bar will either dynamicly resize the dockers
+// during the dragging, or simply display a hashed splitter bar.
 BOOL CMainFrame::OnDynamicResize()
 {
-    // Dragging the docker's splitter bar will either dynamicly resize the dockers
-    // during the dragging, or simply display a hashed splitter bar.
     std::vector<CDocker*>::const_iterator iter;
     m_useDynamicResize = !m_useDynamicResize;
 
@@ -162,6 +166,7 @@ BOOL CMainFrame::OnDynamicResize()
     return TRUE;
 }
 
+// Loads a default arrangement of dockers.
 BOOL CMainFrame::OnDockDefault()
 {
     SetRedraw(FALSE);   // Suppress drawing to the frame window
@@ -172,13 +177,14 @@ BOOL CMainFrame::OnDockDefault()
     return TRUE;
 }
 
+// Issues a close request to the frame to end the program.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Called after the window is created.
 void CMainFrame::OnInitialUpdate()
 {
     SetDockStyle(DS_CLIENTEDGE);
@@ -194,6 +200,7 @@ void CMainFrame::OnInitialUpdate()
     ShowWindow(GetInitValues().showCmd);
 }
 
+// Updates the menu items before they are displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
     switch(id)
@@ -224,6 +231,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CDockFrame::OnMenuUpdate(id);
 }
 
+// Toggles the ability to close of dockers.
 BOOL CMainFrame::OnNoDockClose()
 {
     m_disableDockClose = !m_disableDockClose;
@@ -232,6 +240,7 @@ BOOL CMainFrame::OnNoDockClose()
     return TRUE;
 }
 
+// Toggles the ability to dock left or right.
 BOOL CMainFrame::OnNoDockLR()
 {
     m_disableDockLR = !m_disableDockLR;
@@ -239,6 +248,7 @@ BOOL CMainFrame::OnNoDockLR()
     return TRUE;
 }
 
+// Togggles the ability to resize dockers using the splitter bar.
 BOOL CMainFrame::OnNoResize()
 {
     m_disableResize = !m_disableResize;
@@ -246,6 +256,7 @@ BOOL CMainFrame::OnNoResize()
     return TRUE;
 }
 
+// Toggles the ability to undock a docker.
 BOOL CMainFrame::OnNoUndocking()
 {
     m_disableUndocking = !m_disableUndocking;
@@ -253,6 +264,7 @@ BOOL CMainFrame::OnNoUndocking()
     return TRUE;
 }
 
+// Togggles proprotional resizing.
 BOOL CMainFrame::OnPropResize()
 {
     m_useProportionalResize = !m_useProportionalResize;
@@ -260,15 +272,14 @@ BOOL CMainFrame::OnPropResize()
     return TRUE;
 }
 
+// Specify the CREATESTRUCT parameters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // Call the base class function first
-    CDockFrame::PreCreate(cs);
-
     // Hide the window initially by removing the WS_VISIBLE style
     cs.style &= ~WS_VISIBLE;
 }
 
+// Save the docking configuration in the registry.
 BOOL CMainFrame::SaveRegistrySettings()
 {
     if (CDockFrame::SaveRegistrySettings())
@@ -277,6 +288,7 @@ BOOL CMainFrame::SaveRegistrySettings()
         return FALSE;
 }
 
+// Sets the style for all the dockers.
 void CMainFrame::SetDockStyles()
 {
     std::vector<CDocker*>::const_iterator iter;
@@ -300,9 +312,9 @@ void CMainFrame::SetDockStyles()
     }
 }
 
+// Sets the Resource IDs for the toolbar buttons
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW,   FALSE );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );

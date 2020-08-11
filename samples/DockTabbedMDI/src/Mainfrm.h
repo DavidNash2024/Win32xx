@@ -1,5 +1,6 @@
-/////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.h
+//
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
@@ -22,7 +23,9 @@ enum DockIDs
     ID_DOCK_DIALOG = 11
 };
 
+//////////////////////////////////////
 // Declaration of the CMainFrame class
+//
 class CMainFrame : public CDockFrame
 {
 public:
@@ -36,7 +39,7 @@ public:
     BOOL OnDefaultLayout();
     BOOL OnFileNew();
     BOOL OnFileExit();
-    BOOL OnFileNewSimple();
+    BOOL OnFileNewBrowser();
     BOOL OnFileNewRect();
     BOOL OnFileNewList();
     BOOL OnFileNewText();
@@ -47,8 +50,6 @@ public:
     void LoadDefaultMDIs();
     void SetContainerTabsAtTop(BOOL atTop);
     void SetMDITabsAtTop(BOOL atTop);
-
-
 
 protected:
     virtual CDocker* NewDockerFromID(int dockID);

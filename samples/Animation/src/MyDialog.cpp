@@ -1,26 +1,33 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
 
+/////////////////////////////////
+// CMyDialog finction definitions
+//
 
-// Definitions for the CMyDialog class
+// Constructor
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
+// Destructor
 CMyDialog::~CMyDialog()
 {
 }
 
+// Called when the dialog window is destroyed.
 void CMyDialog::OnDestroy()
 {
     // End the application
     ::PostQuitMessage(0);
 }
 
+// Handles the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)
@@ -32,14 +39,17 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Called before the dialog is displayed.
 BOOL CMyDialog::OnInitDialog()
 {
     // Set the Icon
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
 
+    // Attach the animation control to our CAnimation member variable.
     AttachItem(IDC_ANIMATE1, m_animation);
 
+    // Play the animation.
     m_animation.Open(MAKEINTRESOURCE(IDA_UPLOAD_AVI));
     m_animation.Play(0, -1, -1);
 

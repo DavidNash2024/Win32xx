@@ -6,14 +6,10 @@
 ===============================================================================*
 
     Contents Description: Declaration of the CColorExDialog and CView classes
-    for this sample progam using the Win32++ Windows interface classes, Copyright 
-    (c) 2005-2020 David Nash, under permissions granted therein.
+    for this sample program using the Win32++ Windows interface classes.
 
-    Caveats: These materials are available under the same provisions as found 
-    in the Win32++ copyright.txt notice.
-
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -32,7 +28,7 @@ CColorExDialog : public CColorDialog                                      /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-        CColorExDialog(COLORREF init = 0, DWORD flags = 0) 
+        CColorExDialog(COLORREF init = 0, DWORD flags = 0)
             : CColorDialog(init, flags | CC_ENABLEHOOK | CC_RGBINIT | CC_ANYCOLOR)
                 { SetBoxTitle(_T("Color..."));}
         ~CColorExDialog(){}
@@ -45,14 +41,14 @@ CColorExDialog : public CColorDialog                                      /*
                       return TRUE; }
 
     private:
-        CString m_boxTitle;  
+        CString m_boxTitle;
 };
 
 /*============================================================================*/
     class
 CView : public CScrollView                                                  /*
 
-    This class enables displaying the text lines of a document in a scrolling 
+    This class enables displaying the text lines of a document in a scrolling
     window whose parameters may be serialized.
 *-----------------------------------------------------------------------------*/
 {
@@ -60,7 +56,7 @@ CView : public CScrollView                                                  /*
         CView();
         virtual ~CView(){}
 
-        COLORREF GetWndBkColor() const 
+        COLORREF GetWndBkColor() const
                     { return GetScrollBkgnd().GetLogBrush().lbColor; }
         void    SetWndBkColor(COLORREF rgb)
                     { m_bkColor = rgb; SetScrollBkgnd(CBrush(rgb)); }
@@ -77,7 +73,7 @@ CView : public CScrollView                                                  /*
 
     protected:
         void    OnInitialUpdate();
-        void    OnDraw(CDC& memDC); 
+        void    OnDraw(CDC& memDC);
         LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
         void    PreCreate(CREATESTRUCT& cs);
         void    Serialize(CArchive& ar);
@@ -90,8 +86,8 @@ CView : public CScrollView                                                  /*
         CFontEx  m_fontEx;        // the view display font
         COLORREF m_bkColor,       // the view display background color
                  m_colors[16];    // custom colors defined
-        BOOL     m_showNumbers;   // display line numbers if TRUE 
-        LPCWSTR  m_endOfView;     // end of document string 
+        BOOL     m_showNumbers;   // display line numbers if TRUE
+        LPCWSTR  m_endOfView;     // end of document string
 };
 /*----------------------------------------------------------------------------*/
 #endif  //CAPP_VIEW_H

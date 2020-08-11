@@ -1,18 +1,18 @@
 /* [Tab/Indent: 8/8][Line/Box: 80/74]                             (Resource.h) *
 ********************************************************************************
 
-    Contents Description: Declaration of the resource identifiers for a 
+    Contents Description: Declaration of the resource identifiers for a
     sample program demonstrating an expanded use of the status bar within
     the Win32++ Windows framework, Copyright (c) 2005-2017 David Nash.
 
     This particular program was adapted from the StatusBar sample progam
-    in the Win32++ distribution by Robert C. Tausworthe to illustrate the 
+    in the Win32++ distribution by Robert C. Tausworthe to illustrate the
     definition of the status bar makeup by way of a data structure, in a
-    similar fashion as that appearing in the Microsoft Foundation Classes 
-    (MFC), and to override the Win32++ normal statusbar definition of four 
+    similar fashion as that appearing in the Microsoft Foundation Classes
+    (MFC), and to override the Win32++ normal statusbar definition of four
     parts to any number suitable for an application.
 
-    The code changes to the StatusBar sample program only occur in the 
+    The code changes to the StatusBar sample program only occur in the
     CMainFrame and MyStatusBar classes. However, the entire program has
     been reformatted for better readability, per the Programming Notes,
     below.
@@ -22,9 +22,9 @@
     merchantability, fitness for a particular purpose, and non-infringement.
 
     Programming Notes:
-                The programming conventions used here roughly follow those 
-        established by the 1997-1999 Jet Propulsion Laboratory Deep 
-        Space Network Planning and Preparation Subsystem project for 
+                The programming conventions used here roughly follow those
+        established by the 1997-1999 Jet Propulsion Laboratory Deep
+        Space Network Planning and Preparation Subsystem project for
         C++ programming.
 
 *******************************************************************************/
@@ -64,7 +64,7 @@
 #define IDM_BLANK           155
 
 // Next default values for new objects
-// 
+//
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1

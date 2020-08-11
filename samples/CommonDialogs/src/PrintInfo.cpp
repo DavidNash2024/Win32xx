@@ -126,7 +126,7 @@ CPrintInfo()                                                            /*
     void CPrintInfo::
 InitInfo(CPrintDialog* pPD, UINT fromPage, UINT toPage, UINT minPage,
     UINT maxPage, UINT nCopies)                     /*
-    
+
         Set initial values for the CPrintInfo object. This member must be
     invoked with a valid CPrintDialog pPD before a DoModal operation using
     the object for other uses.

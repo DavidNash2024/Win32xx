@@ -8,7 +8,9 @@
 #include "Mainfrm.h"
 
 
+/////////////////////////////////////
 // Declaration of the CFrameApp class
+//
 class CFormApp : public CWinApp
 {
 public:

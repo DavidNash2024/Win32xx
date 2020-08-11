@@ -5,15 +5,15 @@
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
 
-
-// Declaration of CViewSimple
+///////////////////////////////////////
+// Declaration of the CViewSimple class
 class CViewSimple : public CWnd
 {
 public:
     CViewSimple();
     virtual void OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    
+
     COLORREF GetColor() {return m_color;}
     void SetColor(COLORREF color) { m_color = color; }
 
@@ -21,8 +21,9 @@ private:
     COLORREF m_color;
 };
 
-
-// Declaration of CMDIChildSimple
+///////////////////////////////////////////
+// Declaration of the CMDIChildSimple class
+//
 class CMDIChildSimple : public CMDIChild
 {
 public:

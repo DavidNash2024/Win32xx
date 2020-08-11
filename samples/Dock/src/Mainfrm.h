@@ -1,5 +1,6 @@
-/////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.h
+//
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
@@ -19,7 +20,9 @@ enum DockIDs
     ID_DOCK_TEXT2 = 8
 };
 
+//////////////////////////////////////
 // Declaration of the CMainFrame class
+//
 class CMainFrame : public CDockFrame
 {
 public:

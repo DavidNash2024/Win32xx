@@ -1,19 +1,25 @@
-//////////////////////////////////////////////
-//FrameApp.cpp
+/////////////////////////////
+// DoubleBufferApp.cpp
+//
 
 #include "stdafx.h"
 #include "DoubleBufferApp.h"
 
+////////////////////////////////////////
+// CDoubleBufferApp function definitions
+//
 
-// Definitions for the CDoubleBufferApp class
+// Constructor.
 CDoubleBufferApp::CDoubleBufferApp()
 {
 }
 
+// Destructor.
 CDoubleBufferApp::~CDoubleBufferApp()
 {
 }
 
+// Called after the window is created.
 BOOL CDoubleBufferApp::InitInstance()
 {
     //Create the Frame Window
@@ -21,5 +27,4 @@ BOOL CDoubleBufferApp::InitInstance()
 
     return TRUE;
 }
-
 

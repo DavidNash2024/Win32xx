@@ -5,7 +5,7 @@
 #include "SplitterPanes.h"
 
 
-CDockText::CDockText() 
+CDockText::CDockText()
 {
     SetView(m_view);
 
@@ -14,7 +14,7 @@ CDockText::CDockText()
 }
 
 
-CDockTree::CDockTree() 
+CDockTree::CDockTree()
 {
     SetView(m_view);
 
@@ -23,7 +23,7 @@ CDockTree::CDockTree()
 }
 
 
-CDockList::CDockList() 
+CDockList::CDockList()
 {
     SetView(m_view);
 

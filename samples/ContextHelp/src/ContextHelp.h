@@ -1,6 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////
-//  Declaration of CContextHelp class. This class creates a window to display
-//  a .chm help file.
+/////////////////////////////
+// ContextHelp.h
+//
+
+//  This class creates a window to display a .chm help file.
 //
 //  CContextHelp implements the following functions:
 //  AddHelpTopic.       Adds a <UINT, CString> pair to a map of known topics.

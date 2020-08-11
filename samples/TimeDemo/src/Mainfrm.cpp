@@ -6,12 +6,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description:  Implementation of the CMainFrm class for this 
-    application using the Win32++ framework, Copyright (c) 2005-2020 David Nash, 
+    Contents Description:  Implementation of the CMainFrm class for this
+    application using the Win32++ framework, Copyright (c) 2005-2020 David Nash,
     under permissions granted therein.
 
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -24,10 +24,10 @@
     materials, the use thereof, or any other other dealings therewith.
     Citation of the author's work should be included in such usages.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
-        
+
 ********************************************************************************
 
     Implementation of the CMainFrame class
@@ -49,11 +49,11 @@ const CString CMainFrame::m_compiledOn = __DATE__;
 
 /*============================================================================*/
     CMainFrame::
-CMainFrame()                                                            /* 
+CMainFrame()                                                            /*
 
     Construct and initiallize the CMainFrame object.
 *-----------------------------------------------------------------------------*/
-    :   m_maxMRUEntries(5) 
+    :   m_maxMRUEntries(5)
 {
       // set screen default position and  size
     m_xWin = 100;
@@ -83,7 +83,7 @@ OnColorChoice()                                                         /*
 }
 
 /*============================================================================*/
-    BOOL CMainFrame::  
+    BOOL CMainFrame::
 OnCommand(WPARAM wparam, LPARAM lparam)                                 /*
 
     The framework calls this member function when the user selects an
@@ -132,7 +132,7 @@ OnCreate(CREATESTRUCT& cs)                                              /*
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -164,7 +164,7 @@ OnCreate(CREATESTRUCT& cs)                                              /*
         ::MessageBox(NULL, msg.c_str(), what.c_str(),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
           // remove the corrupted application archive file
-        ::DeleteFile(m_arcName); 
+        ::DeleteFile(m_arcName);
         m_view.SetDefaults();
     }
     catch(...)
@@ -177,7 +177,7 @@ OnCreate(CREATESTRUCT& cs)                                              /*
       // recover the window placement, if read in ok
     if (m_plWnd.length != 0)
     {
-        m_plWnd.length = sizeof(WINDOWPLACEMENT); 
+        m_plWnd.length = sizeof(WINDOWPLACEMENT);
         m_plWnd.showCmd = SW_RESTORE;
         SetWindowPlacement(m_plWnd);
     }
@@ -197,7 +197,7 @@ OnDestroy()                                                  /*
 {
     try
     {
-        CArchive ar(m_arcName, CArchive::store);  
+        CArchive ar(m_arcName, CArchive::store);
           // no serialization on Open() error
         ar << *this;  // for the frame
     }
@@ -261,16 +261,16 @@ OnFileOpen()                                                            /*
     if (str.IsEmpty())
         return;
 
-    if (ThisDoc().OpenDoc(str)) 
+    if (ThisDoc().OpenDoc(str))
     {
-        m_MRU.AddEntry(str); 
-        SetWindowTitle(str);    
-    } 
-    m_view.Invalidate();  
+        m_MRU.AddEntry(str);
+        SetWindowTitle(str);
+    }
+    m_view.Invalidate();
 }
 
 /*============================================================================*/
-    bool CMainFrame:: 
+    bool CMainFrame::
 OnFileOpenMRU(UINT index)                                               /*
 
     Open the MRU file at nIndex as the next document.
@@ -284,8 +284,8 @@ OnFileOpenMRU(UINT index)                                               /*
     if (ThisDoc().OpenDoc(str))
     {         // now it's ok to add it to the top of the MRU list
         m_MRU.AddEntry(str);
-        SetWindowTitle(str);  
-        m_view.Invalidate(); 
+        SetWindowTitle(str);
+        m_view.Invalidate();
         return true;
     }
     else // if it could not be opened, remove the entry from the MRU list
@@ -301,11 +301,11 @@ OnFileSave()                                                            /*
     Save the current document.
 *-----------------------------------------------------------------------------*/
 {
-    if (ThisDoc().SaveDoc())                       
-    {                                              
-        CString docPath = ThisDoc().GetDocPath();  
-        SetWindowTitle(docPath);                   
-        TheMRU().AddEntry(docPath);             
+    if (ThisDoc().SaveDoc())
+    {
+        CString docPath = ThisDoc().GetDocPath();
+        SetWindowTitle(docPath);
+        TheMRU().AddEntry(docPath);
     }
 }
 
@@ -318,9 +318,9 @@ OnFileSaveAs()                                                          /*
     current one.
 *-----------------------------------------------------------------------------*/
 {
-    if (ThisDoc().SaveDocAs()) 
-    { 
-        CString docPath = ThisDoc().GetDocPath(); 
+    if (ThisDoc().SaveDocAs())
+    {
+        CString docPath = ThisDoc().GetDocPath();
         SetWindowTitle(docPath);
         TheMRU().AddEntry(docPath);
     }
@@ -336,10 +336,10 @@ OnFontChoice()                                                          /*
 {
     LOGFONT lf = m_view.GetTextFont().GetLogFont();
     DWORD dwFlags = CF_EFFECTS | CF_SCREENFONTS;
-    
+
     CFontDialog FontDlg(lf, dwFlags);
     FontDlg.SetColor(m_view.GetTextColor());
-    
+
     if (FontDlg.DoModal(m_view) == IDOK)
     {
         lf = FontDlg.GetLogFont();
@@ -350,13 +350,13 @@ OnFontChoice()                                                          /*
             m_view.SetTextFont(f);
             m_view.SetTextColor(FontDlg.GetColor());
         }
-        
+
         catch (CResourceException&)
         {
             ::MessageBox(NULL, _T("Font creation error."),
                 _T("Error"), MB_OK | MB_ICONEXCLAMATION |
                 MB_TASKMODAL);
-        }      
+        }
     }
 
     m_view.SetAppSize(TRUE);  // document extents will change
@@ -374,7 +374,7 @@ OnHelpAbout()                                                           /*
       // activation commands
     if (!m_aboutDialog.IsWindow())
     {
-        m_aboutDialog.DoModal(*this);  
+        m_aboutDialog.DoModal(*this);
     }
     return TRUE;
 }
@@ -438,7 +438,7 @@ PreCreate(CREATESTRUCT& cs)                                             /*
 Serialize(CArchive &ar)                                                 /*
 
         Called serialize or deserialize the frame to and  from the archive ar,
-        depending on the sense of IsStoring(). 
+        depending on the sense of IsStoring().
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing
@@ -544,7 +544,7 @@ SetupToolBar()                                                           /*
 }
 
 /*============================================================================*/
-    void CMainFrame:: 
+    void CMainFrame::
 SetWindowTitle(const CString &docPath /* = _T("") */)                   /*
 
     Set the window title to the application base title plus the document
@@ -556,7 +556,7 @@ SetWindowTitle(const CString &docPath /* = _T("") */)                   /*
 }
 
 /*============================================================================*/
-    LRESULT CMainFrame:: 
+    LRESULT CMainFrame::
 WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                        /*
 
     This is the main frame message loop. By default, it handles the

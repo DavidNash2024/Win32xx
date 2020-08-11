@@ -79,7 +79,7 @@ namespace Calc
         : m_symTab(symTab), m_symbol(symbol)
     {
     }
-    
+
     double Node_Variable::Calc() const
     {
         return m_symTab.GetValue(m_symbol);

@@ -45,11 +45,11 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
         Planning and Preparation Subsystem project for C++ programming.
-        
+
     Acknowledgement:
     The author would like to thank and acknowledge the advice, critical
     review, insight, and assistance provided by David Nash in the development
-    of this work.       
+    of this work.
 
 ********************************************************************************
 
@@ -71,12 +71,12 @@ CDoc()                                                                  /*
       // overwritten by saved values from the registry after initial
       // startup, but it is important to have valid values for the
       // initil startup.
-    m_iByte     = 10;  
+    m_iByte     = 10;
     m_iShort    = 0;
     m_iInt      = 0;
-    m_iUINT     = 10;  
+    m_iUINT     = 10;
     m_iLong     = 0L;
-    m_ULong     = 10;  
+    m_ULong     = 10;
     m_fFloat    = 0.0;
     m_dDouble   = 0.0;
     m_LPTSTR[0] = _T('\0');

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////
 // Files.cpp
-//  Definitions for CViewFiles 
+//  Definitions for CViewFiles
 
 #include "stdafx.h"
 #include "Files.h"

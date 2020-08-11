@@ -1,5 +1,6 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.h
+//
 
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
@@ -7,8 +8,9 @@
 
 #include "MyWebControl.h"
 
-
+/////////////////////////////////////
 // Declaration of the CMyDialog class
+//
 class CMyDialog : public CDialog
 {
 public:

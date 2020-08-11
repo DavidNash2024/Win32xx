@@ -5,7 +5,9 @@
 #ifndef MDICHILDTREEVIEW_H
 #define MDICHILDTREEVIEW_H
 
-
+/////////////////////////////////////
+// Declaration of the CViewTree class
+//
 class CViewTree : public CTreeView
 {
 public:
@@ -19,12 +21,14 @@ private:
     CImageList m_normalImages;
 };
 
-
-class CMDIChildTreeView : public CMDIChild
+/////////////////////////////////////////////
+// Declaration of the CMDIChildTree class
+//
+class CMDIChildTree : public CMDIChild
 {
 public:
-    CMDIChildTreeView();
-    virtual ~CMDIChildTreeView();
+    CMDIChildTree();
+    virtual ~CMDIChildTree();
 
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs);

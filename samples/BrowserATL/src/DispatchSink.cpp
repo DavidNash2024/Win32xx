@@ -1,9 +1,16 @@
+/////////////////////////////
+// DispatchSink.cpp
+//
 
 #include "stdafx.h"
 #include "DispatchSink.h"
 #include "BrowserApp.h"
 
+/////////////////////////////////////
+// CDispatchSink function definitions
+//
 
+// Sends a window message to the frame when a browser event occurs.
 STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, WORD wFlags,
                                DISPPARAMS* pDispParams, VARIANT* pvarResult,
                                EXCEPINFO*  pExcepInfo,  UINT* puArgErr)

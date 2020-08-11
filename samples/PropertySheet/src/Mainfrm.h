@@ -16,7 +16,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    BOOL OnFileExit();  
+    BOOL OnFileExit();
     BOOL OnModal();
     BOOL OnModeless();
     BOOL OnWizard();

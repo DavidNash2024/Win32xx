@@ -5,15 +5,11 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the CMainFrame class for this sample 
-    program using the Win32++ Windows interface classes, Copyright (c) 2005-2020 
-    David Nash, under permissions granted therein.
+    Contents Description: Implementation of the CMainFrame class for this sample
+    program using the Win32++ Windows interface classes.
 
-    Caveats: These materials are available under the same provisions as found 
-    in the Win32++ copyright.txt notice.
-
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -37,7 +33,7 @@ CMainFrame()                                                                /*
     m_wndPl.length = sizeof(WINDOWPLACEMENT);
       // Set m_View as the view window of the frame
     SetView(m_view);
-    m_compiledOn = __DATE__;    
+    m_compiledOn = __DATE__;
 }
 
 /*============================================================================*/
@@ -72,12 +68,12 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
     item from a menu, when a child control sends a notification message,
     or when an accelerator keystroke is translated. Here, we respond to
     menu selections, toolbar events, scrollbar actions, and accelerator
-    keys. 
+    keys.
 
     The low-order word of wParam identifies the command ID of the menu
     or accelerator message. The high-order word is 1 if the message is
     from an accelerator, or 0 if the message is from the menu.
-    
+
     The method returns nonzero if it processes the message; otherwise it
     returns zero.
 *-----------------------------------------------------------------------------*/
@@ -122,13 +118,13 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
         return TRUE;
 
     case IDM_LINE_NUMBERING:
-        GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING, MF_BYCOMMAND | 
+        GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING, MF_BYCOMMAND |
             (m_view.ToggleLineNumbers() ? MF_CHECKED : MF_UNCHECKED));
         break;
 
     case IDW_ABOUT:
         return OnHelp();
-            
+
     case IDW_FILE_MRU_FILE1:
         OnProcessMRU(wparam, lparam);
         return TRUE;
@@ -141,14 +137,14 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
 OnCreate(CREATESTRUCT& cs)                                                  /*
 
     This member controls the way the frame is created. Overriding
-    it is optional.  
+    it is optional.
 *-----------------------------------------------------------------------------*/
 {
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -158,10 +154,10 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
-      // call the base class function 
+      // call the base class function
     CFrame::OnCreate(cs);
       // determine the availability of the archive file
-    if (::_taccess(m_arcvPath, 4) != 0) 
+    if (::_taccess(m_arcvPath, 4) != 0)
     {
         CString msg = _T("Default values are being used on this first\n")
             _T("startup. Your customized settings, colors, and font\n")
@@ -176,16 +172,16 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
         SetMRULimit(m_maxMRU);
           // get archived values
         CArchive ar(m_arcvPath, CArchive::load);
-        ar >> *TheApp();    // for the app 
+        ar >> *TheApp();    // for the app
         ar >> *this;        // for the frame
         ar >> m_view;       // for the view
     }
-    catch (const CFileException &e) 
+    catch (const CFileException &e)
     {
         CString text = e.GetText();
         if (!text.IsEmpty())
             text += _T("\n");
-        CString msg = (CString)"Error restoring program's previous state.\n" + 
+        CString msg = (CString)"Error restoring program's previous state.\n" +
             text + e.GetErrorString() + _T("\n") + e.what();
         ::MessageBox(NULL, msg.c_str(), _T("Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
@@ -196,9 +192,9 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
         ::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
-    m_wndPl.showCmd = SW_RESTORE;  
+    m_wndPl.showCmd = SW_RESTORE;
     SetWindowPlacement(m_wndPl);
-    return 0; 
+    return 0;
 }
 
 /*============================================================================*/
@@ -233,7 +229,7 @@ OnFileExit()                                                                /*
 OnFileOpen()                                                                /*
 
     Respond to the open file toolbar button and menu item by prompting for
-    and receiving a string file name, opening the file if valid, and 
+    and receiving a string file name, opening the file if valid, and
     initiating its display and scrolling, as appropriate.
 *-----------------------------------------------------------------------------*/
 {
@@ -257,7 +253,7 @@ OnFileOpen()                                                                /*
 }
 
 /*============================================================================*/
-    void CMainFrame::  
+    void CMainFrame::
 OnFileOpenMRU(UINT index)                                                  /*
 
     Open the MRU file at nIndex as the next document.
@@ -332,7 +328,7 @@ PreCreate(CREATESTRUCT& cs)                                                 /*
 }
 
 /*============================================================================*/
-    void CMainFrame::  
+    void CMainFrame::
 SaveSettings()                                                              /*
 
     Save the progam's persistent data in preparation for termination.
@@ -340,8 +336,8 @@ SaveSettings()                                                              /*
 {
     try
     {
-        CArchive ar(m_arcvPath, CArchive::store); 
-        ar << *TheApp();    // for the app   
+        CArchive ar(m_arcvPath, CArchive::store);
+        ar << *TheApp();    // for the app
         ar << *this;        // for the frame
         ar << m_view;       // for the view
     }
@@ -410,7 +406,7 @@ Serialize(CArchive& ar)                                                     /*
           // Read MRU values from archive: use a separate dummy list to
           // work with the entries. First, clear the MRU array (it
           // should already be empty).
-        UINT MRU; 
+        UINT MRU;
         std::vector<CString> MRUEntries;
           // now read from the archive
         ar >> MRU; // the number of entries to read in
@@ -435,11 +431,11 @@ Serialize(CArchive& ar)                                                     /*
     void CMainFrame::
 SetupMenuIcons()                                                            /*
 
-    Called by the framework to assigns bitmaps to dropdown menu items. By 
-    default the toolbar button bitmaps are added to menu items by position, 
-    rather than by command ID. The  base class is overridden here to allow 
-    images on drop down menu items to be assigned by command ID.  This step 
-    is necessary when the toolbar buttons are not in the same  order as the 
+    Called by the framework to assigns bitmaps to dropdown menu items. By
+    default the toolbar button bitmaps are added to menu items by position,
+    rather than by command ID. The  base class is overridden here to allow
+    images on drop down menu items to be assigned by command ID.  This step
+    is necessary when the toolbar buttons are not in the same  order as the
     command IDs.
 *-----------------------------------------------------------------------------*/
 {
@@ -448,13 +444,13 @@ SetupMenuIcons()                                                            /*
     assert (Bitmap.GetHandle());
     BITMAP bm = Bitmap.GetBitmapData();
     int images = bm.bmWidth / bm.bmHeight;
-      // make a vector spanning the number of buttons on the toolbar and 
+      // make a vector spanning the number of buttons on the toolbar and
       // fill it initially with empty IDs
     std::vector<UINT> menuIDs;
     const int noID = 1;
     menuIDs.assign(images, noID);
 
-      // now fill in just those that are used in the menu using the 
+      // now fill in just those that are used in the menu using the
       // indexes of the buttons on IDW_MAIN and the command ID in the form:
       // MenuIDs[index] = nCommandID;
     menuIDs[ 1] = IDM_FILE_OPEN;

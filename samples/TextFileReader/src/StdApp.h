@@ -5,17 +5,13 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Standard declarations file for this sample program. 
+    Contents Description: Standard declarations file for this sample program.
     It declares all the pertinent header files belonging to the program for
     consistent inclusion of declarations needed to compile the program
-    using the Win32++ framework, Copyright (c) 2005-2020 David Nash, under 
-    permissions granted therein.
+    using the Win32++ framework.
 
-    Caveats: These materials are available under the same provisions as found 
-    in the Win32++ copyright.txt notice.
-
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning 
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
     and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************

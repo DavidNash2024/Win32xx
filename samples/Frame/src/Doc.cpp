@@ -1,12 +1,17 @@
+/////////////////////////////
+// Doc.cpp
+//
 
 #include "stdafx.h"
 #include "Doc.h"
 
+////////////////////////////
+// CDoc function definitions
+//
 
+// An example of how to load document data.
 void CDoc::FileLoad(LPCTSTR filename)
 {
-    // Return CDoc data to default
-
     try
     {
         CArchive ar(filename, CArchive::load);
@@ -20,9 +25,9 @@ void CDoc::FileLoad(LPCTSTR filename)
     }
 }
 
+// An example of how to save document data.
 void CDoc::FileStore(LPCTSTR /* filename */)
 {
-
 //  try
 //  {
 //      CArchive ar(filename, CArchive::store);
@@ -37,8 +42,8 @@ void CDoc::FileStore(LPCTSTR /* filename */)
 
 }
 
+// Uses CArchive to stream data to or from a file.
 void CDoc::Serialize(CArchive& /* ar */)
-// Uses CArchive to stream data to or from a file
 {
 
 //  if (ar.IsStoring())

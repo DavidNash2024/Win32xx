@@ -1,21 +1,21 @@
 /* (11-Nov-2016) [Tab/Indent: 8/8][Line/Box: 80/74]           (PrintPreview.h) *
 ********************************************************************************
 
-    Declaration and implementation of the DSize class and declaration of 
+    Declaration and implementation of the DSize class and declaration of
     the CPreviewPaneEx, CPrintPreviewEx, and PreviewSetup classes.
 
 ********************************************************************************
 
-    Acknowledgement. These classes were adapted from the PrintPreview sample 
-    program appearing in the Win32++ framework sample folder, created by  
+    Acknowledgement. These classes were adapted from the PrintPreview sample
+    program appearing in the Win32++ framework sample folder, created by
     David Nash and published under the permissions granted in that work.
-    The adaptation here reimplements the PrintView window as a separate 
-    popup window that appears on screen along with the regular program 
+    The adaptation here reimplements the PrintView window as a separate
+    popup window that appears on screen along with the regular program
     window. This work has been developed under the co-authorship of Robert
-    Tausworthe and David Nash, and released under the copyright provisions 
+    Tausworthe and David Nash, and released under the copyright provisions
     of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his 
-    patient direction and inspiration in the development of the classes of 
+    2005-2018. The former author acknowledges and thanks the latter for his
+    patient direction and inspiration in the development of the classes of
     these classes.
 
 *******************************************************************************/
@@ -55,7 +55,7 @@ DSize                                                                   /*
                 { return DSize(cx - size.cx, cy - size.cy); }
         DSize   operator-() const
                 { return DSize(-cx, -cy); }
-        
+
           // class data
         double  cx;
         double  cy;
@@ -72,7 +72,7 @@ PreviewSetup    : public CDialog                                        /*
 {
     public:
         PreviewSetup(UINT nResID);
-        
+
     protected:
         virtual void    DoDataExchange(CDataExchange& DX);
         CPrintPreviewEx&  GetPreviewWnd()
@@ -103,7 +103,7 @@ PreviewSetup    : public CDialog                                        /*
         DSize           m_InScreenInches;
         DSize           m_InPreviewInches;
 };
-    
+
 /*=============================================================================*/
     class
 CPreviewPaneEx : public CScrollView                                       /*
@@ -169,8 +169,8 @@ CPrintPreviewEx : public CDialog                                         /*
         DSize   GetScreenSize() const         {return m_ScreenInches;}
         void    SetScreenSize(DSize size)     {m_ScreenInches = size;}
         void    InitializeContexts();
-        BOOL    OnPreview(const CString&); 
-        void    SetSizes(DSize scrn, DSize prevw) 
+        BOOL    OnPreview(const CString&);
+        void    SetSizes(DSize scrn, DSize prevw)
                     {m_ScreenInches = scrn; m_PreviewInches = prevw;}
         void    SetWindowSizes();
 

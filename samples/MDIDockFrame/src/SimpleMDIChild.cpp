@@ -6,12 +6,16 @@
 #include "SimpleMDIChild.h"
 #include "resource.h"
 
+///////////////////////////////////
+// CSimpleView function definitions
+//
 
-// CSimpleView definitions
+// Constructor.
 CSimpleView::CSimpleView() : m_color(RGB(0,0,255))
 {
 }
 
+// Called when part of the window needs to be redrawn.
 void CSimpleView::OnDraw(CDC& dc)
 {
     //Centre some text in our view window
@@ -20,14 +24,15 @@ void CSimpleView::OnDraw(CDC& dc)
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
+// Respond to a mouse click on the window.
 LRESULT CSimpleView::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
-// Respond to a mouse click on the window
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the window is resized.
 LRESULT CSimpleView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -39,6 +44,7 @@ LRESULT CSimpleView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Process the simple view's window messages.
 LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -51,26 +57,32 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-// CSimpleMDIChild definitions
+///////////////////////////////////////
+// CSimpleMDIChild function definitions
+//
+
+// Constructor.
 CSimpleMDIChild::CSimpleMDIChild()
 {
     // Set m_View as the view window of the MDI child
     SetView(m_view);
-    
+
     // Set the menu for this MDI child
     m_menu.LoadMenu(_T("MdiMenuView"));
     SetHandles(m_menu, NULL);
 }
 
+// Destructor.
 CSimpleMDIChild::~CSimpleMDIChild()
 {
 }
 
+// Called when the window is created.
 int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 {
     // Set the window caption
     SetWindowText( _T("Simple Window") );
-    
+
     // Set the window icons
     SetIconLarge(IDI_VIEW);
     SetIconSmall(IDI_VIEW);
@@ -78,10 +90,9 @@ int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
     return CMDIChild::OnCreate(cs);
 }
 
+// Respond to menu and toolbar input forwarded from the MDI Frame.
 BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Respond to menu and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -112,6 +123,7 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Process the MDI child's window messages.
 LRESULT CSimpleMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

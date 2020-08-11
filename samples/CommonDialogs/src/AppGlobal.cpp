@@ -41,7 +41,7 @@
     CApp class automatically creates a number of program resources of
     possible use in an application. These are retrieved at any time using
     the functions
-    
+
         CString& GetAboutBoxInfo()
         CString& GetAppDir()
         CString& GetAppName()
@@ -49,11 +49,11 @@
         CString& GetAppTitle()
         CString& GetArcvDir()
         CString& GetArcvPath()
-        CString& GetCompiler()  
+        CString& GetCompiler()
         CString& GetCompileDate()
         CString& GetDocExt()
         CString& GetFileFilter()
-        UINT     GetMaxMRU() 
+        UINT     GetMaxMRU()
 
     Special Conventions:
 
@@ -112,7 +112,7 @@ CAppGlobal()                                                            /*
       // the document default extension
     m_sDocExt     = LoadString(IDS_DOC_DEFAULT_EXT);
     m_sFileFilter = LoadString(IDS_FILE_FILTER);
-    
+
       // the maximum allowed number of MRU entries (limited to be under 16
       // by Win32++)
     m_nMaxMRUSlots = MIN(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16);
@@ -175,7 +175,7 @@ MakeAppDataPath(const CString& subpath) const                /*
 
         CString add = subpath.Mid(from, next - from);
         app_data_path += _T("\\") + add;
-        if ((::CreateDirectory(app_data_path, 0) == 0) && 
+        if ((::CreateDirectory(app_data_path, 0) == 0) &&
         GetLastError() != ERROR_ALREADY_EXISTS)
         {
             CString msg = app_data_path + _T("\nDirectory creation error.");

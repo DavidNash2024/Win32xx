@@ -6,12 +6,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description:  Declaration of the CApp class for this application 
-    using the Win32++ framework, Copyright (c) 2005-2020 David Nash, under 
+    Contents Description:  Declaration of the CApp class for this application
+    using the Win32++ framework, Copyright (c) 2005-2020 David Nash, under
     permissions granted therein.
 
-    The above copyright notice, as well as that of David Nash and Win32++, 
-    together with the respective permissionconditions shall be included in all 
+    The above copyright notice, as well as that of David Nash and Win32++,
+    together with the respective permissionconditions shall be included in all
     copies or substantial portions of this material so copied, modified, merged,
     published, distributed, or otherwise held by others.
 
@@ -23,7 +23,7 @@
     tort or otherwise, arising from, out of, or in connection with, these
     materials, the use thereof, or any other other dealings therewith.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
 
@@ -37,7 +37,7 @@
 #include "MainFrm.h"
 
 /*============================================================================*/
-    class 
+    class
 CApp : public CWinApp                                                   /*
 
 *-----------------------------------------------------------------------------*/
@@ -52,7 +52,7 @@ CApp : public CWinApp                                                   /*
         const CString&  GetArcFileName() const { return m_arcvFile; }
         const CString&  GetAboutStatement() const { return m_aboutStatement; }
         CString         MakeAppDataPath(const CString& subpath);
-        
+
     private:
           // private functions
         ULONG       DatInt(const CString &);
@@ -67,11 +67,11 @@ CApp : public CWinApp                                                   /*
         CString     m_aboutStatement;   // latest compile date
         CString     m_months;           // month enumeration
         CString     m_compiledWith;     // compiler + system info
-        CString     m_version;          // app version info   
-        CString     m_credits;          // About box notices  
-        CString     m_archiveFileType;  // Archive type     
+        CString     m_version;          // app version info
+        CString     m_credits;          // About box notices
+        CString     m_archiveFileType;  // Archive type
 
-        static const CString m_compiledOn;   // latest compile date  
+        static const CString m_compiledOn;   // latest compile date
 
 };
 

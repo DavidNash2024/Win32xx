@@ -1,12 +1,15 @@
-///////////////////////////////////////
+/////////////////////////////
 // View.h
+//
 
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H
 
 #include "Doc.h"
 
+/////////////////////////////////
 // Declaration of the CView class
+//
 class CView : public CDialog
 {
 public:

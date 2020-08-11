@@ -19,7 +19,7 @@ void CMyEdit::OnAttach()
 {
     // Permit the Edit window to display up to 128000 characters
     SendMessage(EM_SETLIMITTEXT, 128000, 0);
-    
+
     // Set the font for the Edit window
     SetFont(m_font, FALSE);
 }

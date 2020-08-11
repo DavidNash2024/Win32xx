@@ -1,11 +1,16 @@
-////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainFrame class
+/////////////////////////////
+// Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
+// Constructor.
 CMainFrame::CMainFrame()  : m_pLeftPane(0), m_showHidden(FALSE)
 {
     // Set m_MainView as the view window of the frame
@@ -16,14 +21,14 @@ CMainFrame::CMainFrame()  : m_pLeftPane(0), m_showHidden(FALSE)
     LoadRegistrySettings(_T("Win32++\\Explorer Sample"));
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
 
+// Creates the popup menu for the "View Menu" toolbar button
 void CMainFrame::DoPopupMenu()
 {
-    // Creates the popup menu for the "View Menu" toolbar button
-
     // Position the popup menu
     CToolBar& tb = GetToolBar();
     CRect rc = tb.GetItemRect(tb.CommandToIndex(IDM_VIEWMENU));
@@ -56,6 +61,7 @@ void CMainFrame::DoPopupMenu()
     popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
+// Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
     // Add the right window pane
@@ -77,6 +83,7 @@ void CMainFrame::OnInitialUpdate()
     // m_rightPane.SetDragAutoResize(FALSE);
 }
 
+// Process input from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -98,13 +105,12 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
     return FALSE;
 
-} // CMainFrame::OnCommand(...)
+}
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
@@ -120,13 +126,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+// Issue a close request to the frame to end the program.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Change the view mode to large icon.
 BOOL CMainFrame::OnViewLargeIcon()
 {
     // Handle the the View submenu
@@ -137,6 +144,7 @@ BOOL CMainFrame::OnViewLargeIcon()
     return TRUE;
 }
 
+// Change the view mode to list files.
 BOOL CMainFrame::OnViewList()
 {
     // Handle the the View submenu
@@ -147,6 +155,7 @@ BOOL CMainFrame::OnViewList()
     return TRUE;
 }
 
+// Initiate a popup menu to select the view mode.
 BOOL CMainFrame::OnViewMenu()
 {
     // This Command is recieved if Comctl32.dll version is below 4.7
@@ -154,6 +163,7 @@ BOOL CMainFrame::OnViewMenu()
     return TRUE;
 }
 
+// Change the view mode to report.
 BOOL CMainFrame::OnViewReport()
 {
     // Handle the the View submenu
@@ -164,6 +174,7 @@ BOOL CMainFrame::OnViewReport()
     return TRUE;
 }
 
+// Change the view mode to small icon.
 BOOL CMainFrame::OnViewSmallIcon()
 {
     // Handle the the View submenu
@@ -174,6 +185,7 @@ BOOL CMainFrame::OnViewSmallIcon()
     return TRUE;
 }
 
+// Toggle the show state of hidden items.
 BOOL CMainFrame::OnShowHidden()
 {
     // Handle the the View submenu
@@ -187,6 +199,7 @@ BOOL CMainFrame::OnShowHidden()
     return TRUE;
 }
 
+// Process notification messages (WM_NOTIFY) from child windows.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     // Notification from our dropdown button is recieved if Comctl32.dll version
@@ -205,9 +218,9 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
+// Define our toolbar.
 void CMainFrame::SetupToolBar()
 {
-    // Define our toolbar data
     AddToolBarButton( IDM_FILE_NEW  , FALSE, _T("New") );
     AddToolBarButton( IDM_FILE_OPEN , FALSE, _T("Open") );
     AddToolBarButton( IDM_FILE_SAVE , FALSE, _T("Save") );
@@ -236,6 +249,7 @@ void CMainFrame::SetupToolBar()
     }
 }
 
+// Process the window messages for the frame.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

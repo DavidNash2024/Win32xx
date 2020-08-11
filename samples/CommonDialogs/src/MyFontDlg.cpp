@@ -11,8 +11,8 @@
     applications using the Win32++ Windows interface classes, Copyright
     (c) 2005-2016 David Nash, under permissions granted therein. This class
     derives from the CFontDalog class found in the Win32++ Windows interface
-    framework. 
-    
+    framework.
+
         Caveats: The copyright displayed above extends only to the author's
     original contributions to the subject class, and to the alterations,
     additions, deletions, and other treatments of materials that may have
@@ -40,7 +40,7 @@
     Usage Information: This class may be used in place of the CFontDialog
     class in instances where serialization of the font characteristics
     are meant to be persisitent across executions of the application.
-    
+
     Acknowledgement:
     The author would like to thank and acknowledge the advice, critical
     review, insight, and assistance provided by David Nash in the
@@ -145,7 +145,7 @@ Serialize(CArchive &ar)                                                 /*
     {
           // save the font as a LOGFONT
         LOGFONT lf = GetLogFont();
-        ArchiveObject f(&lf, sizeof(LOGFONT));              
+        ArchiveObject f(&lf, sizeof(LOGFONT));
             ar << f;
           // save m_tm
         ArchiveObject g(GetTextMetricPtr(), sizeof(TEXTMETRIC));
@@ -155,15 +155,15 @@ Serialize(CArchive &ar)                                                 /*
           // save the font color
         ar << GetParameters().rgbColors;
     }
-    else 
+    else
     {     // recover the font as LOGFONT
         LOGFONT lf;
-        ArchiveObject f(&lf, sizeof(LOGFONT));              
-        ar >> f;                                            
-        CHOOSEFONT cf = GetParameters();                    
-        cf.lpLogFont = &lf;                                 
-        SetParameters(cf);                                  
-        SetChoiceLogFont(lf);                               
+        ArchiveObject f(&lf, sizeof(LOGFONT));
+        ar >> f;
+        CHOOSEFONT cf = GetParameters();
+        cf.lpLogFont = &lf;
+        SetParameters(cf);
+        SetChoiceLogFont(lf);
           // recover the text metrics
         ArchiveObject g(GetTextMetricPtr(), sizeof(TEXTMETRIC));
         ar >> g;
@@ -174,7 +174,7 @@ Serialize(CArchive &ar)                                                 /*
           // retrieve the font color
         COLORREF rgb;
         ar >> rgb;
-        SetColor(rgb);          
+        SetColor(rgb);
     }
 }
 
@@ -198,8 +198,8 @@ SetFontIndirect(const LOGFONT& lf)                                      /*
         cf.lpLogFont = &m_LogFont;
         SetParameters(cf);
     }
-    
-    catch (const CResourceException&) 
+
+    catch (const CResourceException&)
     {
         ::MessageBox(NULL, _T("Font creation error."),
             _T("Error"), MB_OK | MB_ICONEXCLAMATION |

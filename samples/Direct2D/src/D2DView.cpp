@@ -1,15 +1,21 @@
+/////////////////////////////
+// D2DView.cpp
+//
 
 #include "stdafx.h"
 #include "D2DApp.h"
 #include "D2DView.h"
 
+////////////////////////////////
+// CD2DView function definitions
+//
 
-// constructor
+// Constructor
 CD2DView::CD2DView() : m_pRenderTarget(NULL), m_pLightSlateGrayBrush(NULL), m_pCornflowerBlueBrush(NULL)
 {
 }
 
-// destructor
+// Destructor
  CD2DView::~CD2DView()
 {
     SafeRelease(&m_pRenderTarget);
@@ -59,6 +65,7 @@ HRESULT CD2DView::CreateDeviceResources()
     return hr;
 }
 
+// Release memory allocated to resources.
 void CD2DView::DiscardDeviceResources()
 {
     SafeRelease(&m_pRenderTarget);
@@ -66,6 +73,7 @@ void CD2DView::DiscardDeviceResources()
     SafeRelease(&m_pCornflowerBlueBrush);
 }
 
+// Perform the drawing.
 HRESULT CD2DView::OnRender()
 {
     HRESULT hr = S_OK;
@@ -135,7 +143,7 @@ HRESULT CD2DView::OnRender()
     return hr;
 }
 
-
+// Resize the render target when the window is resized.
 void CD2DView::OnResize(UINT width, UINT height)
 {
     if (m_pRenderTarget)
@@ -147,12 +155,14 @@ void CD2DView::OnResize(UINT width, UINT height)
     }
 }
 
+// Specify the initial window size.
 void CD2DView::PreCreate(CREATESTRUCT&cs)
 {
     cs.cx = 640;
     cs.cy = 480;
 }
 
+// Set the WNDCLASS parameters before the window is created.
 void CD2DView::PreRegisterClass(WNDCLASS& wc)
 {
     wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -160,6 +170,7 @@ void CD2DView::PreRegisterClass(WNDCLASS& wc)
     wc.lpszClassName = _T("Direct2D");
 }
 
+// Called when the window is created.
 int CD2DView::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
@@ -171,11 +182,14 @@ int CD2DView::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Called when the window is destroyed.
 void CD2DView::OnDestroy()
 {
+    // End the application.
     PostQuitMessage(0);
 }
 
+// Called when part of the window needs to be redrawn.
 LRESULT CD2DView::OnPaint(UINT, WPARAM, LPARAM)
 {
     OnRender();
@@ -184,6 +198,7 @@ LRESULT CD2DView::OnPaint(UINT, WPARAM, LPARAM)
     return 0;
 }
 
+// Called when the window is resized.
 LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lparam)
 {
     UINT width = LOWORD(lparam);
@@ -193,21 +208,21 @@ LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lparam)
     return 0;
 }
 
+// Called when the display resolution has changed.
 LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
 {
     Invalidate();
     return 0;
 }
 
+// Process the window messages.
 LRESULT CD2DView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-
     switch (msg)
     {
     case WM_DISPLAYCHANGE:  return OnDisplayChange(msg, wparam, lparam);
     case WM_SIZE:           return OnSize(msg, wparam, lparam);
     }
-
 
     return WndProcDefault(msg, wparam, lparam);
 }

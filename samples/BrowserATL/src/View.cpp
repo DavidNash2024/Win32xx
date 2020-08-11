@@ -1,5 +1,6 @@
-///////////////////////////////
+/////////////////////////////
 // View.cpp
+//
 
 #include "stdafx.h"
 #include "resource.h"
@@ -8,7 +9,11 @@
 #include "View.h"
 #include "DispatchSink.h"
 
+/////////////////////////////
+// CView function definitions
+//
 
+// Constructor.
 CView::CView() : m_pInetExplorer(NULL), m_pSourceUnk(0), m_pSinkUnk(0),
                  m_adviseCookie(0)
 {
@@ -16,6 +21,7 @@ CView::CView() : m_pInetExplorer(NULL), m_pSourceUnk(0), m_pSinkUnk(0),
     OleInitialize(NULL);
 }
 
+// Destructor.
 CView::~CView()
 {
     if (m_pSourceUnk)
@@ -31,9 +37,9 @@ CView::~CView()
 
 }
 
+// Navigate to the web page.
 void CView::Navigate(LPCTSTR str)
 {
-    // Navigate to the web page.
     VARIANT vars[4];
     memset(vars, 0, sizeof(vars));
     CComBSTR BStrURL(str);
@@ -41,6 +47,7 @@ void CView::Navigate(LPCTSTR str)
     SysFreeString(BStrURL);
 }
 
+// Called when the window is created.
 int CView::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
@@ -76,23 +83,23 @@ int CView::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Called when the window is destroyed.
 void CView::OnDestroy()
 {
     GetIWebBrowser2()->Stop();
     AtlUnadvise(m_pSourceUnk, DIID_DWebBrowserEvents2, m_adviseCookie);
 }
 
+// Called after the window is created.
 void CView::OnInitialUpdate()
 {
-    // OnInitial is called after the window is created.
-    // Tasks which are to done after the window is created go here.
-
     // Suppress Java script errors.
     GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
 
     TRACE(_T("CView::OnInitialUpdate\n"));
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set some optional parameters for the window

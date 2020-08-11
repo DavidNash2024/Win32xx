@@ -1,8 +1,16 @@
+/////////////////////////////
+// AppHelp.cpp
+//
 
 #include "stdafx.h"
 #include "AppHelp.h"
 #include "resource.h"
 
+/////////////////////////////
+// CHelp function definitions
+//
+
+// Constructor.
 CHelp::CHelp()
 {
     SetCommandHelpTopics();
@@ -10,18 +18,20 @@ CHelp::CHelp()
     SetFrameHelpTopics();
 }
 
+// Opens the help about dialog.
 void CHelp::About(HWND hParent)
 {
     m_helpAbout.DoModal(hParent);
 }
 
+// Adds a topic to the context help map.
 void CHelp::AddHelpTopic(UINT id, LPCTSTR topic)
 {
     m_contextHelp.AddHelpTopic(id, topic);
 }
 
-void CHelp::SetCommandHelpTopics()
 // Define the context help topics to be displayed for the menu items and the toolbar.
+void CHelp::SetCommandHelpTopics()
 {
     // define the help topics for the menu and status bar
     AddHelpTopic(IDW_MENUBAR,       _T("ToolbarandMenuItems"));
@@ -52,6 +62,7 @@ void CHelp::SetCommandHelpTopics()
     AddHelpTopic(IDW_ABOUT,         _T("AboutThisProgram"));
 }
 
+// Define the help topic for the dialog.
 void CHelp::SetClientHelpTopics()
 {
     // define the help topic for the dialog's client area
@@ -72,9 +83,9 @@ void CHelp::SetClientHelpTopics()
     AddHelpTopic(IDOK,              _T("OKButtonUsage"));
 }
 
+// Define the context help topics for the frame.
 void CHelp::SetFrameHelpTopics()
 {
-    // define the context help topics for the frame
     AddHelpTopic(IDFR_CLOSE,        _T("ExitTerminateProgram"));
     AddHelpTopic(IDFR_SYSTEMMENU,   _T("SystemMenu"));
     AddHelpTopic(IDFR_CAPTION,      _T("AppTitleBar"));
@@ -82,23 +93,25 @@ void CHelp::SetFrameHelpTopics()
     AddHelpTopic(IDFR_HELP,         _T("TitleBarQuestionBox"));
 }
 
+// Assigns the context help file's path name.
 void CHelp::SetHelpFilePath(LPCTSTR chmName)
 {
     m_contextHelp.SetHelpFilePath(chmName);
 }
 
+// Display the context help for the specified topic.
 void CHelp::ShowHelpTopic(UINT id)
-// Display the context help for the specified topic
 {
     m_contextHelp.ShowHelpTopic(id);
 }
 
+// Display the context help for the specified topic.
 void CHelp::ShowHelpTopic(LPCTSTR topic)
-// Display the context help for the specified topic
 {
     m_contextHelp.ShowHelpTopic(topic);
 }
 
+// Assigns the credits text for the help about dialog.
 void CHelp::SetCredits(LPCTSTR credits)
 {
     m_helpAbout.SetCredits(credits);

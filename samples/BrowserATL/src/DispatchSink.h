@@ -1,4 +1,6 @@
-
+/////////////////////////////
+//  DispatchSink.h
+//
 
 #ifndef __DISPATCHSINK_H__
 #define __DISPATCHSINK_H__
@@ -10,7 +12,8 @@
 #include <exdispid.h>           // ATL IDispatchID helper
 #include <exdisp.h>             // ATL WebBrowser2 helper
 
-
+////////////////////////////////////////////////////
+// Declaration of the CDispatchSink class
 // Creates an ATL class for IDispatch.
 // Used to sink events from IWebbrowser2 via invoke.
 class ATL_NO_VTABLE CDispatchSink: public IDispatch,

@@ -1,18 +1,18 @@
 /* [Tab/Indent: 8/8][Line/Box: 80/74]                          (Hyperlink.cpp) *
 ********************************************************************************
 
-    Contents Description: Implementation of the CHyperlink class for a 
-    sample program demonstrating the extended use of the status bar using the 
+    Contents Description: Implementation of the CHyperlink class for a
+    sample program demonstrating the extended use of the status bar using the
     Win32++ Windows framework, Copyright (c) 2005-2017 David Nash.
 
     This particular program was adapted from the StatusBar sample progam
-    in the Win32++ distribution by Robert C. Tausworthe to illustrate the 
+    in the Win32++ distribution by Robert C. Tausworthe to illustrate the
     definition of the status bar makeup by way of a data structure, in a
-    similar fashion as that appearing in the Microsoft Foundation Classes 
-    (MFC), and to override the Win32++ normal statusbar definition of four 
+    similar fashion as that appearing in the Microsoft Foundation Classes
+    (MFC), and to override the Win32++ normal statusbar definition of four
     parts to any number suitable for an application.
 
-    The code changes to the StatusBar sample program only occur in the 
+    The code changes to the StatusBar sample program only occur in the
     CMainFrame and MyStatusBar classes. However, the entire program has
     been reformatted for better readability, per the Programming Notes,
     below.
@@ -22,9 +22,9 @@
     merchantability, fitness for a particular purpose, and non-infringement.
 
     Programming Notes:
-                The programming conventions used here roughly follow those 
-        established by the 1997-1999 Jet Propulsion Laboratory Deep 
-        Space Network Planning and Preparation Subsystem project for 
+                The programming conventions used here roughly follow those
+        established by the 1997-1999 Jet Propulsion Laboratory Deep
+        Space Network Planning and Preparation Subsystem project for
         C++ programming.
 
 *******************************************************************************/
@@ -38,13 +38,13 @@ CHyperlink()                                /*
 
     Create the custom hyperlink for this sample program.
 *-----------------------------------------------------------------------------*/
-    :   m_IsUrlVisited(FALSE), m_IsClicked(FALSE), 
+    :   m_IsUrlVisited(FALSE), m_IsClicked(FALSE),
         m_crVisited(HYTextColor[0]), m_crNotVisited(HYTextColor[1])
 {
       // Create the cursor
     m_hCursor = ::LoadCursor(NULL, IDC_HAND);
 
-      // IDC_HAND is not available on Win95, so load a reasonable 
+      // IDC_HAND is not available on Win95, so load a reasonable
       // alternative
     if( !m_hCursor )
         m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
@@ -52,7 +52,7 @@ CHyperlink()                                /*
 
 /*============================================================================*/
     CHyperlink::
-~CHyperlink()                               /* 
+~CHyperlink()                               /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -100,8 +100,8 @@ OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)            /*
         pt.x = (short)LOWORD(lParam);
         pt.y = (short)HIWORD(lParam);
         ClientToScreen(pt);
-        CRect rc = GetWindowRect(); 
-        if (rc.PtInRect(pt)) 
+        CRect rc = GetWindowRect();
+        if (rc.PtInRect(pt))
             OpenUrl();
     }
     return FinalWindowProc(uMsg, wParam, lParam);
@@ -115,9 +115,9 @@ OpenUrl()                               /*
     Win32++ SourceForge page in the browser.
 *-----------------------------------------------------------------------------*/
 {
-    TCHAR szUrl[ MAX_PATH + 1 ] = 
+    TCHAR szUrl[ MAX_PATH + 1 ] =
         _T("http://sourceforge.net/projects/win32-framework/");
-    
+
     HINSTANCE result = ::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL,
         SW_SHOWNORMAL);
 
@@ -133,7 +133,7 @@ OpenUrl()                               /*
     LRESULT CHyperlink::
 OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)       /*
 
-    Reflect WM_CTLCOLORSTATIC messages back to the CWnd object that 
+    Reflect WM_CTLCOLORSTATIC messages back to the CWnd object that
     created them for processing.
 *-----------------------------------------------------------------------------*/
 {
@@ -158,8 +158,8 @@ OnSetCursor(UINT, WPARAM, LPARAM)                   /*
 
 *-----------------------------------------------------------------------------*/
 {
-        // Must use ::SetCursor here. CStatic::SetCursor does not do the 
-        // same thing. 
+        // Must use ::SetCursor here. CStatic::SetCursor does not do the
+        // same thing.
     ::SetCursor(m_hCursor);
     return 1L;  // Non-zero return prevents default processing
 }
@@ -172,16 +172,16 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)            /*
 {
     switch (uMsg)
     {
-        case WM_LBUTTONDOWN: 
+        case WM_LBUTTONDOWN:
         return OnLButtonDown(uMsg, wParam, lParam);
 
-        case WM_LBUTTONUP:    
+        case WM_LBUTTONUP:
         return OnLButtonUp(uMsg, wParam, lParam);
 
-        case WM_SETCURSOR:    
-        return OnSetCursor(uMsg, wParam, lParam);   
+        case WM_SETCURSOR:
+        return OnSetCursor(uMsg, wParam, lParam);
 
-        case WM_NCHITTEST:    
+        case WM_NCHITTEST:
         return HTCLIENT;// Claim that the mouse is in a client area
     }
     return WndProcDefault(uMsg, wParam, lParam);

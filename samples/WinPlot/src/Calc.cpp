@@ -17,7 +17,7 @@
 // This code is adapted from:
 //
 // C++ In Action, Industrial-Strength Programming Techniques
-// 
+//
 //  by Bartosz Milewski
 //  www.relisoft.com\book\index.htm
 //////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ namespace Calc
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped. 
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
     //////////////////////////////////////////////////////////////////////
@@ -210,7 +210,7 @@ namespace Calc
             //Expression began with '(' so must end with ')'
             if (m_parse.GetToken() == tRightParenth)
                 m_parse.AcceptToken();
-            else 
+            else
                 m_status = st_ERROR;
             break;
         case tVariable:
@@ -221,7 +221,7 @@ namespace Calc
                 //Add new variable to symbol table
                 m_symTab.SetValue(m_parse.GetAlphaName(), 0);
             }
-            
+
             if (m_parse.GetToken() == tEqual)
             {
                 m_parse.AcceptToken();
@@ -382,7 +382,7 @@ namespace Calc
     {
         bool bRet = true;
         eToken Token = GetToken();
-        
+
         //Move past white space
         while (isspace(m_buffer[m_index]))
             m_index++;

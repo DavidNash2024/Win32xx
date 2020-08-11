@@ -65,7 +65,7 @@ CPrintInfo                                                              /*
     public:
             CPrintInfo();
             ~CPrintInfo();
-            
+
         UINT    GetFromPage() const { return m_nFromPage;}
         UINT    GetMaxPage() const  { return m_nMaxPage; }
         UINT    GetMinPage() const  { return m_nMinPage; }
@@ -93,8 +93,8 @@ CPrintInfo                                                              /*
         UINT    m_nToPage;      // last printed page
         UINT    m_nCurPage;     // current page
         UINT    m_nNumPreviewPages; // (not supported)
-        LPVOID  m_lpUserData;   // pointer to user created struct       
-        CRect   m_rectDraw;     // rect of current usable page area     
+        LPVOID  m_lpUserData;   // pointer to user created struct
+        CRect   m_rectDraw;     // rect of current usable page area
         CString m_strPageDesc;  // format string for page number display
         UINT    m_nMargin;      // page margin, in twips
 

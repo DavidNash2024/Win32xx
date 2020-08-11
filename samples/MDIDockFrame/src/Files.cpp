@@ -7,17 +7,22 @@
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewFiles functions
+//////////////////////////////////
+// CViewFiles function definitions
+//
+
+// Constructor.
 CViewFiles::CViewFiles()
 {
 }
 
+// Destructor.
 CViewFiles::~CViewFiles()
 {
     if (IsWindow()) DeleteAllItems();
 }
 
+// Inserts 4 items into the list view.
 void CViewFiles::InsertItems()
 {
     // Add 4th item
@@ -40,11 +45,13 @@ void CViewFiles::InsertItems()
     SetItemText(item, 2, _T("Folder"));
 }
 
+// Called when the window is destroyed.
 void CViewFiles::OnDestroy()
 {
     SetImageList(NULL, LVSIL_SMALL);
 }
 
+// Called when a window handle (HWND) is attached to CViewFiles.
 void CViewFiles::OnAttach()
 {
     // Set the image lists
@@ -61,6 +68,7 @@ void CViewFiles::OnAttach()
     InsertItems();
 }
 
+// Adds an item to the list view.
 int CViewFiles::AddItem(LPCTSTR text, int image)
 {
     LVITEM lvi;
@@ -72,14 +80,15 @@ int CViewFiles::AddItem(LPCTSTR text, int image)
     return InsertItem(lvi);
 }
 
-LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse click on the window
+LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Configures the list view's columns (header control).
 void CViewFiles::SetColumns()
 {
     //empty the list
@@ -99,6 +108,7 @@ void CViewFiles::SetColumns()
     }
 }
 
+// Process the list view's window messages.
 LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -108,12 +118,15 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
     return WndProcDefault(msg, wparam, lparam);
 }
-        
 
 
-///////////////////////////////////////////////
-// CContainFiles functions
-CContainFiles::CContainFiles() 
+
+/////////////////////////////////////
+// CContainFiles function definitions
+//
+
+// Constructor.
+CContainFiles::CContainFiles()
 {
     SetTabText(_T("FileView"));
     SetTabIcon(IDI_FILEVIEW);
@@ -121,10 +134,13 @@ CContainFiles::CContainFiles()
     SetView(m_viewFiles);
 }
 
-/////////////////////////////////////////////////
-//  Definitions for the CDockFiles class
-CDockFiles::CDockFiles() 
-{ 
+///////////////////////////////////
+//  CDockFiles function definitions
+//
+
+// Constructor.
+CDockFiles::CDockFiles()
+{
     SetView(m_files);
     SetBarWidth(8);
 }

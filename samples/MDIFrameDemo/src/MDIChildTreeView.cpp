@@ -7,39 +7,44 @@
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewTree functions
+/////////////////////////////////
+// CViewTree function definitions
+//
+
+// Constructor.
 CViewTree::CViewTree()
 {
 }
 
+// Destructor.
 CViewTree::~CViewTree()
 {
     if (IsWindow()) DeleteAllItems();
 }
 
+// Called when the window is destroyed.
 void CViewTree::OnDestroy()
 {
     SetImageList(NULL, LVSIL_SMALL);
 }
 
-
+// Called when a window handle (HWND) is attached to CViewTree.
 void CViewTree::OnAttach()
 {
-    //set the image lists
+    // Set the image lists.
     m_normalImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_CLASSVIEW);
     m_normalImages.Add( image, RGB(255, 0, 0) );
     SetImageList(m_normalImages, LVSIL_NORMAL);
 
-    // Adjust style to show lines and [+] button
+    // Adjust style to show lines and [+] button.
     DWORD style = GetStyle();
     style |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
     SetStyle(style);
 
     DeleteAllItems();
 
-    // Add some tree-view items
+    // Add some tree-view items.
     HTREEITEM htiRoot = AddItem(NULL, _T("TreeView"), 0);
     HTREEITEM htiCTreeViewApp = AddItem(htiRoot, _T("CTreeViewApp"), 1);
     AddItem(htiCTreeViewApp, _T("CTreeViewApp()"), 3);
@@ -55,11 +60,12 @@ void CViewTree::OnAttach()
     AddItem(htiView, _T("OnInitialUpdate()"), 4);
     AddItem(htiView, _T("WndProc()"), 4);
 
-    // Expand some tree-view items
+    // Expand some tree-view items.
     Expand(htiRoot, TVE_EXPAND);
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
+// Add a tree view item.
 HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
 {
     TVITEM tvi;
@@ -77,22 +83,25 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
     return InsertItem(tvis);
 }
 
+/////////////////////////////////////////
+// CMDIChildTreeView function definitions
+//
 
-
-///////////////////////////////////////////////
-// CMDIChildTreeView functions
-CMDIChildTreeView::CMDIChildTreeView()
+// Constructor.
+CMDIChildTree::CMDIChildTree()
 {
     m_Menu.LoadMenu(_T("MdiMenuTree"));
     SetHandles(m_Menu, NULL);
     SetView(m_TreeView);
 }
 
-CMDIChildTreeView::~CMDIChildTreeView()
+// Destructor.
+CMDIChildTree::~CMDIChildTree()
 {
 }
 
-int CMDIChildTreeView::OnCreate(CREATESTRUCT& cs)
+// Called when the window is created.
+int CMDIChildTree::OnCreate(CREATESTRUCT& cs)
 {
     SetWindowText(_T("Tree-View Window"));
     SetIconLarge(IDI_CLASSES);

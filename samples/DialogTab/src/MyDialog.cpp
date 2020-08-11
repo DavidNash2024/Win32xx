@@ -1,23 +1,28 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
 
 
-/////////////////////////////////////////////
-// Definitions for the CButtonDialog class
+/////////////////////////////////////
+// CButtonDialog function definitions
 //
+
+// Constructor.
 CButtonDialog::CButtonDialog(UINT resID) : CDialog(resID)
 {
     m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
+// Destructor.
 CButtonDialog::~CButtonDialog()
 {
 }
 
+// Process the dialog's window messages.
 INT_PTR CButtonDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -29,6 +34,7 @@ INT_PTR CButtonDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Process the dialog's command messages (WM_COMMAND).
 BOOL CButtonDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -49,48 +55,53 @@ BOOL CButtonDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the button is pressed.
 BOOL CButtonDialog::OnButton()
 {
     TRACE("Push Button Pressed\n");
     return TRUE;
 }
 
+// Called when the check box 1 is clicked. 
 BOOL CButtonDialog::OnCheck1()
 {
     TRACE("Check Box 1\n");
     return TRUE;
 }
 
+// Called when the check box 2 is clicked. 
 BOOL CButtonDialog::OnCheck2()
 {
     TRACE("Check Box 2\n");
     return TRUE;
 }
 
+// Called when the check box 3 is clicked. 
 BOOL CButtonDialog::OnCheck3()
 {
     TRACE("Check Box 3\n");
     return TRUE;
 }
 
+// Set the background color of the dialog
 INT_PTR CButtonDialog::OnCtlColorDlg(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Set the background color of the dialog
     if (IsXPThemed())
         return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
     else
         return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Set the background color of static controls
 INT_PTR CButtonDialog::OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Set the background color of static controls
     if (IsXPThemed())
         return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
     else
         return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when a radio button is selected.
 BOOL CButtonDialog::OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID)
 {
     CheckRadioButton(firstID, lastID, clickedID);
@@ -104,18 +115,22 @@ BOOL CButtonDialog::OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID)
 }
 
 
-/////////////////////////////////////////////
-// Definitions for the CComboBoxDialog class
+///////////////////////////////////////
+// CComboBoxDialog function definitions
 //
+
+// Constructor.
 CComboBoxDialog::CComboBoxDialog(UINT resID) : CDialog(resID)
 {
     m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
+// Destructor.
 CComboBoxDialog::~CComboBoxDialog()
 {
 }
 
+// Process the dialog's window messages.
 INT_PTR CComboBoxDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -135,6 +150,7 @@ INT_PTR CComboBoxDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Called before the dialog is displayed.
 BOOL CComboBoxDialog::OnInitDialog()
 {
     // Put some text in the Combo Boxes
@@ -148,19 +164,23 @@ BOOL CComboBoxDialog::OnInitDialog()
     return TRUE;
 }
 
-/////////////////////////////////////////
-// Definitions for the CMyDialog class
+/////////////////////////////////
+// CMyDialog function definitions
 //
+
+// Constructor.
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
     m_pButtonDlg = NULL;
     m_pComboDlg = NULL;
 }
 
+// Destructor.
 CMyDialog::~CMyDialog()
 {
 }
 
+// Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)
@@ -172,12 +192,14 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Called when the dialog window is destroyed.
 void CMyDialog::OnDestroy()
 {
     // End the application
     ::PostQuitMessage(0);
 }
 
+// Called before the dialog is displayed.
 BOOL CMyDialog::OnInitDialog()
 {
     // Set the Icon
@@ -197,10 +219,9 @@ BOOL CMyDialog::OnInitDialog()
     return TRUE;
 }
 
+// This is called when the Enter key is pressed
 void CMyDialog::OnOK()
 {
-    // This is called when the Enter key is pressed
-
     // Do default action (i.e. close the dialog)
     CDialog::OnOK();
 }

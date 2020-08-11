@@ -1,5 +1,6 @@
-////////////////////////////////////////////////////
-// MainMDIfrm.cpp  - definitions for the CMainMDIFrame class
+/////////////////////////////
+// MainMDIfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainMDIfrm.h"
@@ -11,7 +12,11 @@
 #include "MDIChildListView.h"
 #include "resource.h"
 
+/////////////////////////////////////
+// CMainMDIFrame function definitions
+//
 
+// Constructor.
 CMainMDIFrame::CMainMDIFrame()
 {
     // Set the registry key name, and load the initial window position
@@ -19,42 +24,14 @@ CMainMDIFrame::CMainMDIFrame()
     LoadRegistrySettings(_T("Win32++\\MDIFrameDemo"));
 }
 
+// Destructor.
 CMainMDIFrame::~CMainMDIFrame()
 {
 }
 
-void CMainMDIFrame::OnInitialUpdate()
-{
-    //The frame is now created.
-    //Place any additional startup code here.
-}
-
-BOOL CMainMDIFrame::OnFileNew()
-{
-    // Creates the popup menu when the "New" toolbar button is pressed
-
-    // Position the popup menu
-    CToolBar& tb = GetToolBar();
-    RECT rc = tb.GetItemRect(tb.CommandToIndex(IDM_FILE_NEW));
-    tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
-
-    TPMPARAMS tpm;
-    tpm.cbSize = sizeof(tpm);
-    tpm.rcExclude = rc;
-
-    // Load the popup menu
-    CMenu topMenu(IDM_NEWMENU);
-    CMenu popupMenu = topMenu.GetSubMenu(0);
-
-    // Start the popup menu
-    popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
-
-    return TRUE;
-}
-
+// Respond to input from the menu and toolbar.
 BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    
     UINT id = LOWORD(wparam);
     switch (id)
     {
@@ -86,13 +63,14 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the MDI frame window is created.
 int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -106,89 +84,129 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
     return CMDIFrame::OnCreate(cs);
 }
 
+// Called after the window is created.
+// Called after OnCreate.
+void CMainMDIFrame::OnInitialUpdate()
+{
+    //The frame is now created.
+    //Place any additional startup code here.
+}
+
+// Creates the popup menu when the "New" toolbar button is pressed
+BOOL CMainMDIFrame::OnFileNew()
+{
+    // Position the popup menu
+    CToolBar& tb = GetToolBar();
+    RECT rc = tb.GetItemRect(tb.CommandToIndex(IDM_FILE_NEW));
+    tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+
+    TPMPARAMS tpm;
+    tpm.cbSize = sizeof(tpm);
+    tpm.rcExclude = rc;
+
+    // Load the popup menu
+    CMenu topMenu(IDM_NEWMENU);
+    CMenu popupMenu = topMenu.GetSubMenu(0);
+
+    // Start the popup menu
+    popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+
+    return TRUE;
+}
+
+// Ask the active MDI window to close.
 BOOL CMainMDIFrame::OnFileClose()
 {
-    // Ask the active MDI window to close
     GetActiveMDIChild()->Close();
 
     return TRUE;
 }
 
+// Issue a close request to the frame. This ends the application.
 BOOL CMainMDIFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
-
     return TRUE;
 }
 
+// Adds a MDI child with a list view.
 BOOL CMainMDIFrame::OnFileNewList()
 {
-    AddMDIChild(new CMDIChildListView); // This pointer is stored in a Shared_Ptr
+    AddMDIChild(new CMDIChildList); // This pointer is stored in a Shared_Ptr
     return TRUE;
 }
 
+// Adds a maximised MDI child.
 BOOL CMainMDIFrame::OnFileNewMax()
 {
     AddMDIChild(new CMDIChildMax);  // This pointer is stored in a Shared_Ptr
     return TRUE;
 }
 
+// Adds a MDI child displaying random rectangles.
 BOOL CMainMDIFrame::OnFileNewRect()
 {
     AddMDIChild(new CMDIChildRect); // This pointer is stored in a Shared_Ptr
     return TRUE;
 }
 
+// Adds a MDI child with a text view.
 BOOL CMainMDIFrame::OnFileNewText()
 {
     AddMDIChild(new CMDIChildText); // This pointer is stored in a Shared_Ptr
     return TRUE;
 }
 
+// Adds a MDI child with a tree view.
 BOOL CMainMDIFrame::OnFileNewTree()
 {
-    AddMDIChild(new CMDIChildTreeView); // This pointer is stored in a Shared_Ptr
+    AddMDIChild(new CMDIChildTree); // This pointer is stored in a Shared_Ptr
     return TRUE;
 }
 
+// Adds a MDI child with a simple view.
 BOOL CMainMDIFrame::OnFileNewView()
 {
     AddMDIChild(new CMDIChildSimple);   // This pointer is stored in a Shared_Ptr
     return TRUE;
 }
 
+// Arrange the MDI children in cascade mode.
 BOOL CMainMDIFrame::OnMDICascade()
-{ 
-    MDICascade(); 
-    return TRUE; 
-}
-
-BOOL CMainMDIFrame::OnMDICloseAll()
-{ 
-    RemoveAllMDIChildren(); 
+{
+    MDICascade();
     return TRUE;
 }
 
-BOOL CMainMDIFrame::OnMDIIconArrange() 
+// Ask all the MDI children to close.
+BOOL CMainMDIFrame::OnMDICloseAll()
+{
+    RemoveAllMDIChildren();
+    return TRUE;
+}
+
+// Arrange all minimised MDI children.
+BOOL CMainMDIFrame::OnMDIIconArrange()
 {
     MDIIconArrange();
-    return TRUE; 
+    return TRUE;
 }
 
+// Arrange the MDI children in tile mode.
 BOOL CMainMDIFrame::OnMDITile()
-{ 
-    MDITile(); 
-    return TRUE; 
+{
+    MDITile();
+    return TRUE;
 }
 
+// Process notification messages (WM_NOTIFY) from child windows.
 LRESULT CMainMDIFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     // Notification from our dropdown button is recieved if Comctl32.dll version
     // is 4.70 or later (IE v3 required).
     switch(((LPNMHDR)lparam)->code)
     {
-        //Menu for dropdown toolbar button
+        // Menu for dropdown toolbar button
         case TBN_DROPDOWN:
         {
             if (((LPNMHDR)lparam)->hwndFrom == GetToolBar())
@@ -201,6 +219,7 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CMDIFrame::OnNotify(wparam, lparam);
 }
 
+// Configure the images for menu items.
 void CMainMDIFrame::SetupMenuIcons()
 {
     // Load the default set of menu icons from the toolbar
@@ -215,28 +234,27 @@ void CMainMDIFrame::SetupMenuIcons()
     AddMenuIcon(IDM_FILE_NEWTREE, IDI_CLASSES);
 }
 
+// Define the resource IDs and images for toolbar buttons.
 void CMainMDIFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_FILE_PRINT, FALSE );
-    
+
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 
     // Use larger buttons with seperate imagelists for normal, hot and disabled buttons.
     SetToolBarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-
-
 
     // Configure the "New" toolbar button to bring up a menu
     // Setting this style requires comctl32.dll version 4.72 or later
@@ -246,6 +264,7 @@ void CMainMDIFrame::SetupToolBar()
     }
 }
 
+// Process the MDI frame's window messages.
 LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

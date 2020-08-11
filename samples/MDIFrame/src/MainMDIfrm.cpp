@@ -1,12 +1,17 @@
-////////////////////////////////////////////////////
-// MainMDIfrm.cpp  - definitions for the CMainMDIFrame class
+/////////////////////////////
+// MainMDIfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainMDIfrm.h"
 #include "SimpleMDIChild.h"
 #include "resource.h"
 
+/////////////////////////////////////
+// CMainMDIFrame function definitions
+//
 
+// Constructor.
 CMainMDIFrame::CMainMDIFrame()
 {
     // Set the registry key name, and load the initial window position
@@ -14,71 +19,12 @@ CMainMDIFrame::CMainMDIFrame()
     LoadRegistrySettings(_T("Win32++\\MDI Frame"));
 }
 
+// Destructor.
 CMainMDIFrame::~CMainMDIFrame()
 {
 }
 
-BOOL CMainMDIFrame::OnFileOpen()
-{
-    CFileDialog fileDlg(TRUE);
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-BOOL CMainMDIFrame::OnFileSave()
-{
-    CFileDialog fileDlg(FALSE);
-
-    // Bring up the file save dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-BOOL CMainMDIFrame::OnFilePrint()
-{
-    // Bring up a dialog to choose the printer
-    CPrintDialog printdlg;
-
-    try
-    {
-        INT_PTR Res = printdlg.DoModal(*this);
-
-        // Retrieve the printer DC
-        // CDC dcPrinter = Printdlg.GetPrinterDC();
-
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-
-        return (Res == IDOK);   // boolean expression
-    }
-
-    catch (const CWinException& /* e */)
-    {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-        return FALSE;
-    }
-}
-
-void CMainMDIFrame::OnInitialUpdate()
-{
-    TRACE("MDI Frame started \n");
-    //The frame is now created.
-    //Place any additional startup code here.
-}
-
+// Respond to input from the menu and toolbar.
 BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UINT id = LOWORD(wparam);
@@ -109,13 +55,14 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the window is created.
 int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -129,49 +76,122 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
     return CMDIFrame::OnCreate(cs);
 }
 
+// Close the active MDI child.
 BOOL CMainMDIFrame::OnFileClose()
 {
     GetActiveMDIChild()->Close();
     return TRUE;
 }
 
+// Issue a close request to the frame to end the application.
 BOOL CMainMDIFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Create a new MDI child.
 BOOL CMainMDIFrame::OnFileNew()
 {
     AddMDIChild(new CSimpleMDIChild);
     return TRUE;
 }
 
+// Sample code to load data from a file.
+BOOL CMainMDIFrame::OnFileOpen()
+{
+    CFileDialog fileDlg(TRUE);
+
+    // Bring up the file open dialog retrieve the selected filename
+    if (fileDlg.DoModal(*this) == IDOK)
+    {
+        // TODO:
+        // Add your own code here. Refer to the tutorial for additional information
+    }
+
+    return TRUE;
+}
+
+// Sample code to save data to a file.
+BOOL CMainMDIFrame::OnFileSave()
+{
+    CFileDialog fileDlg(FALSE);
+
+    // Bring up the file save dialog retrieve the selected filename
+    if (fileDlg.DoModal(*this) == IDOK)
+    {
+        // TODO:
+        // Add your own code here. Refer to the tutorial for additional information
+    }
+
+    return TRUE;
+}
+
+// Sample code to send output to a printer.
+BOOL CMainMDIFrame::OnFilePrint()
+{
+    // Bring up a dialog to choose the printer
+    CPrintDialog printdlg;
+
+    try
+    {
+        INT_PTR Res = printdlg.DoModal(*this);
+
+        // Retrieve the printer DC
+        // CDC dcPrinter = Printdlg.GetPrinterDC();
+
+        // TODO:
+        // Add your own code here. Refer to the tutorial for additional information
+
+        return (Res == IDOK);   // boolean expression
+    }
+
+    catch (const CWinException& /* e */)
+    {
+        // No default printer
+        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
+        return FALSE;
+    }
+}
+
+// Called after the MDI frame window is created.
+// Called after OnCreate.
+void CMainMDIFrame::OnInitialUpdate()
+{
+    TRACE("MDI Frame started \n");
+    //The frame is now created.
+    //Place any additional startup code here.
+}
+
+// Arrange the MDI children in cascade mode.
 BOOL CMainMDIFrame::OnMDICascade()
 {
-    MDICascade(); 
-    return TRUE; 
+    MDICascade();
+    return TRUE;
 }
 
-BOOL CMainMDIFrame::OnMDICloseAll() 
+// Close all MDI children.
+BOOL CMainMDIFrame::OnMDICloseAll()
 {
-    RemoveAllMDIChildren(); 
-    return TRUE; 
+    RemoveAllMDIChildren();
+    return TRUE;
 }
 
-BOOL CMainMDIFrame::OnMDIIconArrange() 
-{ 
-    MDIIconArrange(); 
-    return TRUE; 
-}
-
-BOOL CMainMDIFrame::OnMDITile() 
+// Arrange minimised MDI children.
+BOOL CMainMDIFrame::OnMDIIconArrange()
 {
-    MDITile(); 
-    return TRUE; 
+    MDIIconArrange();
+    return TRUE;
 }
 
+// Arrange MDI children in tile mode.
+BOOL CMainMDIFrame::OnMDITile()
+{
+    MDITile();
+    return TRUE;
+}
+
+// Assign resource IDs and images to toolbar buttons.
 void CMainMDIFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
@@ -188,6 +208,7 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Process the MDi frame's window messages.
 LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

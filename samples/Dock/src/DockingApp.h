@@ -1,5 +1,6 @@
-//////////////////////////////////////
+/////////////////////////////
 // DockingApp.h
+//
 
 
 #ifndef DOCKINGAPP_H
@@ -8,7 +9,9 @@
 
 #include "Mainfrm.h"
 
-
+///////////////////////////////////////
+// Declaration of the CDockingApp class
+//
 class CDockingApp : public CWinApp
 {
 public:

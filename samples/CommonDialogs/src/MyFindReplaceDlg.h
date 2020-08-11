@@ -10,7 +10,7 @@
 
     Contents Description: The MyFindREplaceDlg class declaration and
     implementation. This class is derived from the CFindREplaceDalog class
-    found in the Win32++ Windows interface framework. 
+    found in the Win32++ Windows interface framework.
 
         Caveats: The copyright displayed above extends only to the author's
     original contributions to the subject class, and to the alterations,
@@ -61,7 +61,7 @@ MyFindReplaceDialog : public CFindReplaceDialog
         MyFindReplaceDialog() {}
 
         void SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
-    
+
     protected:
         virtual BOOL OnInitDialog()
           // Override this member method to perform special processing
@@ -72,9 +72,9 @@ MyFindReplaceDialog : public CFindReplaceDialog
             SetWindowTitle();
             return TRUE;
         }
-    
+
         virtual void SetWindowTitle() const { SetWindowText(m_sBoxTitle);}
-    
+
     private:
         CString m_sBoxTitle;
 };

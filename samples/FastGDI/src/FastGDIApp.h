@@ -6,8 +6,9 @@
 
 #include "Mainfrm.h"
 
-
+///////////////////////////////////////
 // Declaration of the CFastGDIApp class
+//
 class CFastGDIApp : public CWinApp
 {
 public:

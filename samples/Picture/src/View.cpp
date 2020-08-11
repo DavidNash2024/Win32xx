@@ -54,7 +54,7 @@ void CView::NewPictureFile()
     {
         m_pPicture->Release();
         m_pPicture = NULL;
-        
+
         // Turn scrolling off
         SetScrollSizes();
     }
@@ -109,7 +109,7 @@ int CView::OnCreate(CREATESTRUCT& cs)
     m_brush.CreateSolidBrush(RGB(0,0,0));
     SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_brush.GetHandle());
 
-    // Set a black background brush for scrolling. 
+    // Set a black background brush for scrolling.
     SetScrollBkgnd(m_brush);
 
     // Support Drag and Drop on this window
@@ -155,7 +155,7 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
             NewPictureFile();
     }
 
-    DragFinish(hDrop); 
+    DragFinish(hDrop);
     return 0;
 }
 

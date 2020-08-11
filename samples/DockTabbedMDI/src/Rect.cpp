@@ -1,13 +1,17 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // Rect.cpp
-//  Definitions for the CViewRect class
+//
 
 #include "stdafx.h"
 #include "Rect.h"
 #include "resource.h"
 
-// CViewRect definitions
 
+/////////////////////////////////
+// CViewRect function definitions
+//
+
+// Called when the window is created.
 int CViewRect::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
@@ -16,23 +20,25 @@ int CViewRect::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Called when the window is destroyed.
 void CViewRect::OnDestroy()
 {
     KillTimer(1);
 }
 
+// Respond to a mouse click on the window.
 LRESULT CViewRect::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
-// Respond to a mouse click on the window
 {
     SetFocus();
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the window is resized.
 LRESULT CViewRect::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
 
-    // If not minimized, save the window size
+    // If not minimized, save the window size.
     if (wparam != SIZE_MINIMIZED)
     {
         m_cxClientMax = LOWORD (lparam) ;
@@ -47,8 +53,8 @@ LRESULT CViewRect::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Responds to the timer event. Displays a random rectangle.
 LRESULT CViewRect::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
-// Display a random rectangle
 {
     UNREFERENCED_PARAMETER(msg);
     UNREFERENCED_PARAMETER(wparam);
@@ -76,6 +82,7 @@ LRESULT CViewRect::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Processes the window's window messages.
 LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -87,6 +94,4 @@ LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
     return WndProcDefault(msg, wparam, lparam);
 }
-
-
 

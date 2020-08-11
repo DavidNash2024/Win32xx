@@ -2,17 +2,17 @@
 ********************************************************************************
 
     Contents Description: Declaration of the Win32++ classes for a sample
-    program demonstrating the use of the status bar using the Win32++ 
+    program demonstrating the use of the status bar using the Win32++
     Windows framework, Copyright (c) 2005-2017 David Nash.
 
     This particular program was adapted from the StatusBar sample progam
-    in the Win32++ distribution by Robert C. Tausworthe to illustrate the 
+    in the Win32++ distribution by Robert C. Tausworthe to illustrate the
     definition of the status bar makeup by way of a data structure, in a
-    similar fashion as that appearing in the Microsoft Foundation Classes 
-    (MFC), and to override the Win32++ normal statusbar definition of four 
+    similar fashion as that appearing in the Microsoft Foundation Classes
+    (MFC), and to override the Win32++ normal statusbar definition of four
     parts to any number suitable for an application.
 
-    The code changes to the StatusBar sample program only occur in the 
+    The code changes to the StatusBar sample program only occur in the
     CMainFrame and MyStatusBar classes. However, the entire program has
     been reformatted for better readability, per the Programming Notes,
     below.
@@ -22,14 +22,14 @@
     merchantability, fitness for a particular purpose, and non-infringement.
 
     Programming Notes:
-                The programming conventions used here roughly follow those 
-        established by the 1997-1999 Jet Propulsion Laboratory Deep 
-        Space Network Planning and Preparation Subsystem project for 
+                The programming conventions used here roughly follow those
+        established by the 1997-1999 Jet Propulsion Laboratory Deep
+        Space Network Planning and Preparation Subsystem project for
         C++ programming.
 
 ********************************************************************************
 
-    This file is used for precompiled headers. Rarely modified header 
+    This file is used for precompiled headers. Rarely modified header
     files should be included.
 
     Based on code provided by Lynn Allan
@@ -59,12 +59,12 @@
 #include <sstream>              // Add support for stringstream
 #include <cassert>              // Add support for the assert macro
 #include <stdio.h>              // Add support for C style printf, sprintf, etc.
-#include <stdlib.h>             // Add support for C style character conversions atoi etc. 
+#include <stdlib.h>             // Add support for C style character conversions atoi etc.
 #include <tchar.h>              // Add support for C style TCHARs.
 
 #include <wxx_appcore.h>        // Add CCriticalSection, CObject, CWinThread, CWinApp
 #include <wxx_archive.h>        // Add CArchive
-#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog 
+#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip
 #include <wxx_cstring.h>        // Add CString, CStringA, CStringW
 #include <wxx_ddx.h>            // Add CDataExchange

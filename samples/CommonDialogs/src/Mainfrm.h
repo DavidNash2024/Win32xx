@@ -11,7 +11,7 @@
     CommonDialogs SDI sample application using the Win32++ Windows interface
     classes, Copyright (c) 2005-2016 David Nash, under permissions granted
     therein.
-    
+
     This particular frame class contains features a fixed-size form for the
     display, with no resizing gripper tool at the end of the status bar,
     and provisions for selection of client background color, selection of
@@ -62,7 +62,7 @@
 /*******************************************************************************
 
     Declaration of the CMainFrame class
-    
+
 ********************************************************************************
 
     Local constants and types                                   */
@@ -71,7 +71,7 @@
 enum ControlBars {toolbar, mainmenu, both};
 
 /*============================================================================*/
-    class 
+    class
 CMainFrame : public CFrame                      /*
 
     This application's mainframe class, a pattern for developing new apps.
@@ -80,7 +80,7 @@ CMainFrame : public CFrame                      /*
     public:
         CMainFrame(void);
         virtual ~CMainFrame(void) {}
-        
+
         void    AddMRUEntry(LPCTSTR szMRUEntry)
                     { CFrame::AddMRUEntry (szMRUEntry);}
         void    EmptyMRUList();
