@@ -1,8 +1,15 @@
+/////////////////////////////
+// MyStatusBar.h
+//
+
 #ifndef MYSTATUSBAR_H
 #define MYSTATUSBAR_H
 
 #include "Hyperlink.h"
 
+/////////////////////////////////////////
+// Declaration of the CMyStatusBar class.
+//
 class CMyStatusBar : public CStatusBar
 {
 public:

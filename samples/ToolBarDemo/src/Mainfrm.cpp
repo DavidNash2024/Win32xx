@@ -1,12 +1,14 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
-
-// Definitions for the CMainFrame class
+///////////////////////////////////
+// CMainFrame function definitions.
+//
 
 // Constructor for CMainFrame. Its called after CFrame's constructor
 CMainFrame::CMainFrame() : m_useBigIcons(FALSE)

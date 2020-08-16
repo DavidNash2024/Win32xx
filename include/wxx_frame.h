@@ -824,7 +824,7 @@ namespace Win32xx
         }
         else
         {
-            m_sizeCheck.SetSize(GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON));
+            m_sizeCheck.SetSize(::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
             m_sizeSeparator.SetSize(1, 7);
             m_marCheck.SetMargins(4, 4, 2, 2);
             m_marCheckBackground.SetMargins(0, 0, 0, 0);

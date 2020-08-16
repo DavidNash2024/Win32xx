@@ -22,9 +22,6 @@
     <ClCompile Include="..\src\ListBoxDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\AppGlobal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\RichEditView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,22 +66,10 @@
     <ClInclude Include="..\src\MyFontDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\MyPrinter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\App.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ListBoxDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ListBoxDlgRC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\AppGlobalRC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\AppGlobal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\RichEditView.h">

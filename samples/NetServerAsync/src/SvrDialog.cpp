@@ -1,5 +1,6 @@
-///////////////////////////////////////
+/////////////////////////////
 // SvrDialog.cpp
+//
 
 #include "stdafx.h"
 #include "SvrDialog.h"
@@ -7,13 +8,16 @@
 #include "resource.h"
 
 
-/////////////////////////////////////////////
-// Definitions for the CTCPClientDlg class
+/////////////////////////////////////
+// CTCPClientDlg function definitions
+//
+
+// Constructor.
 CTCPClientDlg::CTCPClientDlg(UINT resID) : CDialog(resID), m_pSocket(0)
 {
 }
 
-// This function appends some text to an edit control
+// Appends text to the specified edit control.
 void CTCPClientDlg::AppendText(int id, LPCTSTR text)
 {
     // This function appends text to an edit control
@@ -30,7 +34,7 @@ void CTCPClientDlg::AppendText(int id, LPCTSTR text)
     TRACE(text); TRACE("\n");
 }
 
-// respond to the user defined message posted to the dialog
+// Respond to the user defined message posted to the dialog.
 INT_PTR CTCPClientDlg::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -62,17 +66,17 @@ INT_PTR CTCPClientDlg::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Called when the dialog is closed.
 void CTCPClientDlg::OnClose()
 {
     // Disconnect the socket when the user closes this chat dialog
     m_pSocket->Disconnect();
 }
 
+// Respond to the various dialog buttons.
 BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Respond to the various dialog buttons
-
-    UNREFERENCED_PARAMETER(lparam);
+     UNREFERENCED_PARAMETER(lparam);
 
     switch (LOWORD(wparam))
     {
@@ -84,12 +88,14 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the dialog window is destroyed
 void CTCPClientDlg::OnDestroy()
 {
     CSvrDialog& dialog = GetDlgApp()->GetDialog();
     dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(m_pSocket.get()), 0);
 }
 
+// Called before the dialog is displayed.
 BOOL CTCPClientDlg::OnInitDialog()
 {
     SetForegroundWindow();
@@ -101,6 +107,7 @@ BOOL CTCPClientDlg::OnInitDialog()
     return TRUE;
 }
 
+// Called when the socket is disconnected.
 BOOL CTCPClientDlg::OnSocketDisconnect()
 {
     // close the chat window
@@ -109,16 +116,10 @@ BOOL CTCPClientDlg::OnSocketDisconnect()
     return TRUE;
 }
 
+// Called when the TCP socket receives data.
 BOOL CTCPClientDlg::OnSocketReceive()
 {
-    Receive();
-
-    return TRUE;
-}
-
-void CTCPClientDlg::Receive()
-{
-    std::vector<char> bufVector( 1025, '\0' );
+    std::vector<char> bufVector(1025, '\0');
     char* bufArray = &bufVector.front(); // char array with 1025 elements initialised to '\0'
     if (m_pSocket->Receive(bufArray, 1024, 0) != SOCKET_ERROR)
     {
@@ -127,8 +128,11 @@ void CTCPClientDlg::Receive()
     }
     else
         AppendText(IDC_EDIT_STATUS, _T("Receive Failed"));
+
+    return TRUE;
 }
 
+// Called whe the socket sends data.
 void CTCPClientDlg::Send()
 {
     CString sSend = m_editSend.GetWindowText();
@@ -138,9 +142,11 @@ void CTCPClientDlg::Send()
 }
 
 
+//////////////////////////////////
+// CSvrDialog function definitions
+//
 
-/////////////////////////////////////////////
-// Definitions for the CSvrDialog class
+// Constructor.
 CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE),
                                       m_socketType(SOCK_STREAM)
 {
@@ -151,16 +157,15 @@ CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE),
     LoadCommonControlsEx();
 }
 
+// Destructor.
 CSvrDialog::~CSvrDialog()
 {
     StopServer();
 }
 
-// This function appends some text to an edit control
+// Appends text to the specified edit control.
 void CSvrDialog::AppendText(const CEdit& edit, LPCTSTR text)
 {
-    // This function appends text to an edit control
-
     // Append Line Feed
     int length = edit.GetWindowTextLength();
     if (length > 0)
@@ -170,7 +175,7 @@ void CSvrDialog::AppendText(const CEdit& edit, LPCTSTR text)
     TRACE(text); TRACE("\n");
 }
 
-// respond to the user defined message posted to the dialog
+// Respond to the user defined message posted to the dialog.
 INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -204,7 +209,7 @@ INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
-// This function adds support for the IP address control in the dialog.
+// Add support for the IP address control in the dialog.
 void CSvrDialog::LoadCommonControlsEx()
 {
     HMODULE hComCtl = 0;
@@ -245,7 +250,7 @@ void CSvrDialog::LoadCommonControlsEx()
     }
 }
 
-// Called when the dialog window is about to be closed
+// Called when the dialog window is about to be closed.
 void CSvrDialog::OnClose()
 {
     // Disconnect before shutting down the dialog.
@@ -253,11 +258,11 @@ void CSvrDialog::OnClose()
     PostQuitMessage(0);
 }
 
+// Respond to the various dialog buttons.
 BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
 
-    // Respond to the various dialog buttons
     UINT id = LOWORD(wparam);
     switch (id)
     {
@@ -268,17 +273,18 @@ BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called before the dialog is displayed.
 BOOL CSvrDialog::OnInitDialog()
 {
     // Set the Icon
     SetIconLarge( IDW_MAIN );
     SetIconSmall( IDW_MAIN );
 
-    // reposition dialog
+    // Reposition the dialog.
     CRect rc = GetWindowRect();
     MoveWindow( rc.left-14, rc.top-14, rc.Width(), rc.Height(), TRUE );
 
-    // Attach CWnd objects to the dialog's children
+    // Attach CWnd objects to the dialog's children.
     m_ip4Address.AttachDlgItem( IDC_IPADDRESS, *this );
     m_editIP6Address.AttachDlgItem( IDC_EDIT_IPV6ADDRESS, *this );
     m_editStatus.AttachDlgItem( IDC_EDIT_STATUS, *this );
@@ -292,7 +298,7 @@ BOOL CSvrDialog::OnInitDialog()
     m_radioTCP.AttachDlgItem( IDC_RADIO_TCP, *this );
     m_radioUDP.AttachDlgItem( IDC_RADIO_UDP, *this );
 
-    // Set the initial state of the dialog
+    // Set the initial state of the dialog.
     m_editIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
     m_radioIP4.SetCheck(BST_CHECKED);
     m_ip4Address.SetAddress(MAKEIPADDRESS(127, 0, 0, 1));
@@ -421,11 +427,11 @@ BOOL CSvrDialog::OnSocketAccept()
     return TRUE;
 }
 
+// Respond to a socket disconnect notification/
 BOOL CSvrDialog::OnSocketDisconnect(WPARAM wparam)
 {
     CSocket* pClient = reinterpret_cast<CSocket*>(wparam);
 
-    // Respond to a socket disconnect notification
     AppendText(m_editStatus, _T("Client disconnected"));
 
     // Allocate an iterator for our CSocket map
@@ -445,6 +451,7 @@ BOOL CSvrDialog::OnSocketDisconnect(WPARAM wparam)
     return TRUE;
 }
 
+// Called when the socket receives data.
 BOOL CSvrDialog::OnSocketReceive()
 {
     std::vector<char> vChar(1025, '\0');
@@ -469,6 +476,7 @@ BOOL CSvrDialog::OnSocketReceive()
     return TRUE;
 }
 
+// Start the server.
 BOOL CSvrDialog::StartServer()
 {
     LRESULT check = m_radioTCP.GetCheck();
@@ -530,6 +538,7 @@ BOOL CSvrDialog::StartServer()
     return TRUE;
 }
 
+// Stop the server.
 void CSvrDialog::StopServer()
 {
     m_mainSocket.Disconnect();

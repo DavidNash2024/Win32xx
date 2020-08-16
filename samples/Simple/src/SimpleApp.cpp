@@ -1,10 +1,12 @@
-////////////////////////////////////////
+/////////////////////////////
 // SimpleApp.cpp
+//
 
 #include "SimpleApp.h"
 
-
-// Definitions for the CSimpleApp class
+///////////////////////////////////
+// CSimpleApp function definitions.
+//
 CSimpleApp::CSimpleApp()
 {
     // Constructor for CSimpleApp

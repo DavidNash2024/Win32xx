@@ -1,5 +1,6 @@
-///////////////////////////////////////
+/////////////////////////////
 // SvrDialog.h
+//
 
 #ifndef SVRDIALOG_H
 #define SVRDIALOG_H
@@ -8,14 +9,15 @@
 #define UWM_SOCKETMSG    WM_APP+1
 #define USER_DISCONNECT  WM_APP+2
 
-
-//class CWorkerSocket;
+// Forward declaration.
 class CTCPClientDlg;
 
 typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
 typedef Shared_Ptr<CSocket> SocketPtr;
 
+/////////////////////////////////////////
 // Declaration of the CTCPClientDlg class
+//
 class CTCPClientDlg : public CDialog
 {
 public:
@@ -28,7 +30,6 @@ public:
     virtual BOOL OnInitDialog();
 
     void AppendText(int id, LPCTSTR text);
-    void Receive();
     void Send();
 
     BOOL OnSocketReceive();
@@ -48,8 +49,9 @@ private:
     CButtonSend m_buttonSend;
 };
 
-
+//////////////////////////////////////
 // Declaration of the CSvrDialog class
+//
 class CSvrDialog : public CDialog
 {
 public:

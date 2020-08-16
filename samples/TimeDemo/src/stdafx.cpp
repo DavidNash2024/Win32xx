@@ -3,8 +3,7 @@
 
     Contents Description:  Implementation of the standard declaration
     header for a skeleton application using the Win32++ Windows interface
-    classes, Copyright (c) 2005-2020 David Nash, under permission granted
-    therein.
+    classes.
 
 *******************************************************************************/
 

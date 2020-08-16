@@ -1,5 +1,6 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // View.h
+//
 
 #ifndef VIEW_H
 #define VIEW_H
@@ -10,8 +11,9 @@
 
 class CDoc;
 
-
-// Declaration of the CView class
+//////////////////////////////////
+// Declaration of the CView class.
+//
 class CView : public CWnd
 {
 public:
@@ -56,6 +58,5 @@ private:
     double m_ymin;
     double m_ymax;
 };
-
 
 #endif // VIEW_H

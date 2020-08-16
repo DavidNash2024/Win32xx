@@ -1,15 +1,15 @@
-///////////////////////////////////////////////////////
+/////////////////////////////
 // MainMDIfrm.h
-//  Declaration of the CMainMDIFrame class
+//
 
 #ifndef MAINMDIFRM_H
 #define MAINMDIFRM_H
 
-
 #include "Doc.h"
 
-
-// Declaration of the CMainMDIFrame class
+//////////////////////////////////////////
+// Declaration of the CMainMDIFrame class.
+//
 class CMainMDIFrame : public CRibbonMDIFrame
 {
 public:

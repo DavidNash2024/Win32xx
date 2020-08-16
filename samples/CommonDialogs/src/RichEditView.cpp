@@ -1,57 +1,17 @@
 /* (06-Sep-2016) [Tab/Indent: 8/8][Line/Box: 80/74]          (CRichEditView.h) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2016, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
-|                          robert.c.tausworthe@ieee.org                        |
+|                    Authors: Robert Tausworthe, David Nash                    |
 |                                                                              |
 ===============================================================================*
 
     Contents Description: Implementation of the CRichEditView class for the
     CommonDialogs sample application using the Win32++ Windows interface
-    classes, Copyright (c) 2005-2016 David Nash, under permissions granted
-    therein.
+    class. This class serves both as the document view and content manager.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-
-    Special Conventions:
-
-    Acknowledgement:
-        The author would like to thank and acknowledge the advice,
-        critical review, insight, and assistance provided by David Nash
-        in the development of this work.
-
-    Programming Notes:
-               The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-
-********************************************************************************
-
-    Implementation of the CRichEditView class
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -68,17 +28,9 @@ CRichEditView()                                                             /*
 
 *-----------------------------------------------------------------------------*/
 {
-    m_bAppBanding = FALSE;
-    m_nTextLength = 0;
+    m_isAppBanded = FALSE;
+    m_textLength = 0;
     ZeroMemory(&m_fr, sizeof(m_fr));
-}
-
-/*============================================================================*/
-    CRichEditView::
-~CRichEditView()                                                            /*
-
-*-----------------------------------------------------------------------------*/
-{
 }
 
 /*============================================================================*/
@@ -102,7 +54,6 @@ IsSelected()                                                                /*
     GetSel(r);
     return (r.cpMin != r.cpMax);
 }
-
 
 /*============================================================================*/
     void CRichEditView::
@@ -140,22 +91,23 @@ SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                        /*
 
 /*============================================================================*/
     void CRichEditView::
-SetFont(HFONT hFont, BOOL bRedraw) const                                    /*
+SetFont(HFONT font, BOOL redraw) const                                    /*
 
+    Set the display font; if NULL, the system font is used. Immediately
+    redraw the view if TRUE.  Prevent the control from automatically changing
+    fonts if there is a change in the keyboard layout. 
 *-----------------------------------------------------------------------------*/
 {
-    CRichEdit::SetFont(hFont, bRedraw);
+    CRichEdit::SetFont(font, redraw);
 
   // Required for Dev-C++
 #ifndef IMF_AUTOFONT
 #define IMF_AUTOFONT            0x0002
 #endif
 
-      // Prevent Unicode characters from changing the font: first, get the
-      // rich edit option settings
-    LRESULT lres = SendMessage(EM_GETLANGOPTIONS, 0, 0);
       // do not automatically change fonts when the user explicitly changes
       // to a different keyboard layout.
+    LRESULT lres = SendMessage(EM_GETLANGOPTIONS, 0, 0);
     lres &= ~IMF_AUTOFONT;
     SendMessage(EM_SETLANGOPTIONS, 0, lres);
 }
@@ -179,7 +131,7 @@ SetWrapping(int wrap)                                                       /*
 
 /*============================================================================*/
     BOOL CRichEditView::
-StreamInFile(const CFile& file, BOOL mode)                                  /*
+StreamInFile(const CFile& file)                                             /*
 
     Read the text-only contents of the opened file into this rich edit
     control. Set the modified state FALSE and return TRUE on success. Return
@@ -188,20 +140,18 @@ StreamInFile(const CFile& file, BOOL mode)                                  /*
 *-----------------------------------------------------------------------------*/
 {
     UINT format = SF_TEXT;
-    if (mode == TRUE)
-        format |= SF_UNICODE;
     EDITSTREAM es;
     es.dwCookie =  (DWORD_PTR) file.GetHandle();
     es.pfnCallback = (EDITSTREAMCALLBACK) StreamInCallback;
     StreamIn(format, es);
-
+      // Clear the modified text flag
     SetModify(FALSE);
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CRichEditView::
-StreamOutFile(const CFile& file, BOOL mode)                                 /*
+StreamOutFile(const CFile& file)                                            /*
 
     Write the text-only contents of this rich edit control into the opened
     file. Set the modified state FALSE and return TRUE on success. Return
@@ -210,15 +160,12 @@ StreamOutFile(const CFile& file, BOOL mode)                                 /*
 *-----------------------------------------------------------------------------*/
 {
     UINT format = SF_TEXT;
-    if (mode == TRUE)
-        format |= SF_UNICODE;
     EDITSTREAM es;
     es.dwCookie =  (DWORD_PTR) file.GetHandle();
     es.dwError = 0;
     es.pfnCallback = (EDITSTREAMCALLBACK) StreamOutCallback;
     StreamOut(format, es);
-
-      //Clear the modified text flag
+      // Clear the modified text flag
     SetModify(FALSE);
     return TRUE;
 }
@@ -269,11 +216,15 @@ StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)        /*
         return (1);
 
     *pcb = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb,
+    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, 
       NULL))
         ::MessageBox(NULL, _T("StreamOutFile Failed"), _T(""), MB_OK);
     return 0;
 }
+
+/*******************************************************************************
+
+    Printing Methods (much like the MFC print loop)
 
 /*============================================================================*/
     BOOL    CRichEditView::
@@ -315,11 +266,11 @@ DoPreparePrinting(CPrintInfo& info)                                         /*
 DoPrintView()                                                               /*
 
     Perform standard printing of a customized view of the current document,
-    whose name appears in m_sDocPath, which should be set prior to entry to
-    label the spooling object. If banding is supported, this should also be
-    set. If the printer uses a data type to record the print job, this may
-    also be set. The printing device is placed in MM_TEXT mode, so units
-    are measured in twips.
+    whose name appears should have been set prior to entry by DoPrintRichView()
+    to label the spooling object. If banding is supported, this should also 
+    have been set. If the printer uses a data type to record the print job, 
+    this should also have been set. The printing device is placed in MM_TEXT 
+    mode, so units are measured in twips.
 *-----------------------------------------------------------------------------*/
 {
     try
@@ -349,12 +300,12 @@ DoPrintView()                                                               /*
         DOCINFO di;
         ZeroMemory(&di, sizeof(di));
         di.cbSize       = sizeof(DOCINFO);
-        di.lpszDocName  = m_sDocPath; // the spooler label
-        di.lpszOutput   = (m_sPrintPath.IsEmpty() ?
-            NULL : m_sPrintPath.c_str());
-        di.lpszDatatype = (m_sDataType.IsEmpty() ?
-            NULL : m_sDataType.c_str());
-        di.fwType       = (m_bAppBanding ?  DI_APPBANDING : 0);
+        di.lpszDocName  = m_docPath; // the spooler label
+        di.lpszOutput   = (m_printPath.IsEmpty() ?
+            NULL : m_printPath.c_str());
+        di.lpszDatatype = (m_dataType.IsEmpty() ?
+            NULL : m_dataType.c_str());
+        di.fwType       = (m_isAppBanded ?  DI_APPBANDING : 0);
           // Start the document.
         DC.StartDoc(&di);
 
@@ -433,14 +384,14 @@ DoPrintView()                                                               /*
 
 /*============================================================================*/
     void CRichEditView::
-DoPrintRichView(const CString& sDocPath)                                    /*
+DoPrintRichView(LPCTSTR sDocPath)                                           /*
 
     Print the contents of the CRichEditView control in the CView client
     area accessed by pView. Label the spooler output using the sDocPath.
 *-----------------------------------------------------------------------------*/
 {
       // record the document interfaces
-    m_sDocPath = sDocPath;
+    m_docPath = sDocPath;
       // let the base class administer the printing
     DoPrintView();
 }
@@ -462,33 +413,33 @@ GetPageBreaks(CPrintInfo& info)                                             /*
     fr.chrg.cpMax = -1;
     long nTextScanned = 0;  // amount of document scanned so far
       // find the beginning characters of each page
-    m_page_first_char.clear();
+    m_firstPageChar.clear();
       // first page begins at 0
-    m_page_first_char.push_back(0);
+    m_firstPageChar.push_back(0);
     do
     {     // Format as much text as can fit on a page. The return value
           // is the index of the first character on the next page. Using
-          // FALSE for the wParam parameter causes the text to be
+          // FALSE for the wparam parameter causes the text to be
           // measured.
         nTextScanned = FormatRange(fr, FALSE);
           // record the beginning character of the next page
-        m_page_first_char.push_back(nTextScanned);
+        m_firstPageChar.push_back(nTextScanned);
           // If there is more text to format, adjust the range of
           // characters to start formatting at the first character of
           // the next page.
-        if (nTextScanned < m_nTextLength)
+        if (nTextScanned < m_textLength)
         {
             fr.chrg.cpMin = nTextScanned;
             fr.chrg.cpMax = -1;
         }
-    } while (nTextScanned < m_nTextLength);
+    } while (nTextScanned < m_textLength);
       // tell the control to release cached information.
     FormatRange(fr, FALSE);
-      // on exit, the m_page_first_char vector should contain one more
+      // on exit, the m_firstPageChar vector should contain one more
       // entry than the actual number of pages
     info.SetMinPage(1);
     info.SetFromPage(1);
-    UINT maxpg = static_cast<UINT>(m_page_first_char.size()) - 1;
+    UINT maxpg = static_cast<UINT>(m_firstPageChar.size()) - 1;
     info.SetMaxPage(maxpg);
     info.SetToPage(maxpg);
 }
@@ -527,7 +478,7 @@ OnBeginPrinting(CDC& DC, CPrintInfo& info)                                  /*
     m_fr.chrg.cpMax = -1;
 
       // Find out real size of document in characters.
-    m_nTextLength = GetTextLengthEx(GTL_NUMCHARS);
+    m_textLength = GetTextLengthEx(GTL_NUMCHARS);
     GetPageBreaks(info);
     info.m_bContinuePrinting = TRUE;
       // Default the range of text to print as the entire document.
@@ -559,7 +510,7 @@ OnPrepareDC(CDC& DC, CPrintInfo& info /* = NULL */)                         /*
 {
     UNREFERENCED_PARAMETER(DC);
     UNREFERENCED_PARAMETER(info);
-    if (m_fr.chrg.cpMin  >=  m_nTextLength)
+    if (m_fr.chrg.cpMin  >=  m_textLength)
         info.m_bContinuePrinting = FALSE;
 }
 
@@ -573,7 +524,7 @@ OnPreparePrinting(CPrintInfo& info)                                         /*
 *-----------------------------------------------------------------------------*/
 {
       // set up the dialog to choose the printer and printing parameters
-    MyPrinter PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    MyPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
     PrintDlg.SetBoxTitle(_T("Print contents of rich edit box."));
     info.InitInfo(&PrintDlg, 1, 0xffff, 1, 0xffff, 1);
     if (!DoPreparePrinting(info))
@@ -592,14 +543,14 @@ OnPrint(CDC& DC, CPrintInfo& info)                                          /*
     UNREFERENCED_PARAMETER(DC);
 
     UINT page_no = info.m_nCurPage;
-    long first = m_page_first_char[page_no - 1];
+    long first = m_firstPageChar[page_no - 1];
     m_fr.chrg.cpMin = first;
     m_fr.chrg.cpMax = -1;
 
       // Print the a page. The return value should be the index of the first
-      // character on the next page. Using TRUE for the wParam parameter
+      // character on the next page. Using TRUE for the wparam parameter
       // causes the text to be printed.
     FormatRange(m_fr, TRUE);
     DisplayBand(m_fr.rc);
 }
-
+/*----------------------------------------------------------------------------*/

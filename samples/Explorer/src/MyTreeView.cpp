@@ -43,7 +43,7 @@ void CMyTreeView::DeleteItems()
     m_pItems.clear();
 }
 
-// Identifies the tree view item for the point, and calls DoItemMenu. 
+// Identifies the tree view item for the point, and calls DoItemMenu.
 void CMyTreeView::DoContextMenu(CPoint& point)
 {
     TVHITTESTINFO  htInfo;
@@ -56,7 +56,7 @@ void CMyTreeView::DoContextMenu(CPoint& point)
         DoItemMenu(htInfo.hItem , point);
 }
 
-// Displays the appropriate context menu, positioned at the specified point. 
+// Displays the appropriate context menu, positioned at the specified point.
 void CMyTreeView::DoItemMenu(HTREEITEM item, CPoint& point)
 {
     TVITEM itemInfo;

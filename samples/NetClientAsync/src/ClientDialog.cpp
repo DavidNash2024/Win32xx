@@ -1,12 +1,16 @@
-///////////////////////////////////////
+/////////////////////////////
 // ClientDialog.cpp
+//
 
 #include "stdafx.h"
 #include "ClientDialog.h"
 #include "resource.h"
 
+/////////////////////////////////////
+// CClientDialog function definitions
+//
 
-// Definitions for the CMyDialog class
+// Constructor.
 CClientDialog::CClientDialog(UINT resID) : CDialog(resID),
                    m_isClientConnected(FALSE), m_socketType(SOCK_STREAM)
 {
@@ -15,14 +19,14 @@ CClientDialog::CClientDialog(UINT resID) : CDialog(resID),
     LoadCommonControlsEx();
 }
 
+// Destructor.
 CClientDialog::~CClientDialog()
 {
 }
 
+// Appends text to the specified edit control.
 void CClientDialog::AppendText(const CEdit& edit, LPCTSTR text)
 {
-    // This function appends text to an edit control
-
     // Append Line Feed
     int length = edit.GetWindowTextLength();
     if (length > 0)
@@ -31,6 +35,7 @@ void CClientDialog::AppendText(const CEdit& edit, LPCTSTR text)
     edit.AppendText(text);
 }
 
+// Processes the dialog's window messages.
 INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -57,25 +62,25 @@ INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         }
     }
 
-    // Pass unhandled messages on to parent DialogProc
+    // Pass unhandled messages on to parent DialogProc.
     return DialogProcDefault(msg, wparam, lparam);
 }
 
-// This function adds support for the IP address control in the dialog.
+// Add support for the IP address control in the dialog.
 void CClientDialog::LoadCommonControlsEx()
 {
     HMODULE module = 0;
 
     try
     {
-        // Load the Common Controls DLL
+        // Load the Common Controls DLL.
         module = ::LoadLibrary(_T("COMCTL32.DLL"));
         if (!module)
             throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
         if (GetComCtlVersion() > 470)
         {
-            // Declare a pointer to the InItCommonControlsEx function
+            // Declare a pointer to the InItCommonControlsEx function.
             typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
             INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(module, "InitCommonControlsEx");
 
@@ -102,28 +107,29 @@ void CClientDialog::LoadCommonControlsEx()
     }
 }
 
+// Called when the dialog window is activated.
 LRESULT CClientDialog::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
     UNREFERENCED_PARAMETER(wparam);
     UNREFERENCED_PARAMETER(lparam);
 
-    // Give focus to the Send Edit box
+    // Give focus to the Send Edit box.
     if (m_editSend.IsWindow())
         GotoDlgCtrl(m_editSend);
 
     return TRUE;
 }
 
-// Called when the dialog window is about to be closed
+// Called when the dialog window is about to be closed.
 void CClientDialog::OnClose()
 {
-    // Disconnect before shutting down the dialog
+    // Disconnect before shutting down the dialog.
     m_client.Disconnect();
     PostQuitMessage(0);
 }
 
-// Respond to the dialog buttons
+// Respond to the dialog buttons.
 BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -136,7 +142,7 @@ BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM lparam)
         return TRUE;
     case IDC_BUTTON_SEND:
         OnSend();
-        // Give keyboard focus to the Send edit box
+        // Give keyboard focus to the Send edit box.
         GotoDlgCtrl(m_editSend);
         return TRUE;
     }
@@ -144,6 +150,7 @@ BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called before the dialog is displayed.
 BOOL CClientDialog::OnInitDialog()
 {
     // Set the Icon
@@ -154,7 +161,7 @@ BOOL CClientDialog::OnInitDialog()
     CRect rc = GetWindowRect();
     MoveWindow(rc.left + 14, rc.top + 14, rc.Width(), rc.Height(), TRUE);
 
-    // Attach CWnd objects to the dialog's children
+    // Attach CWnd objects to the dialog's children.
     m_ip4Address.AttachDlgItem(IDC_IPADDRESS, *this);
     m_editIP6Address.AttachDlgItem(IDC_EDIT_IPV6ADDRESS, *this);
     m_editStatus.AttachDlgItem(IDC_EDIT_STATUS, *this);
@@ -168,7 +175,7 @@ BOOL CClientDialog::OnInitDialog()
     m_radioTCP.AttachDlgItem(IDC_RADIO_TCP, *this);
     m_radioUDP.AttachDlgItem(IDC_RADIO_UDP, *this);
 
-    // Set the initial state of the dialog
+    // Set the initial state of the dialog.
     m_editIP6Address.SetWindowText(_T("0000:0000:0000:0000:0000:0000:0000:0001"));
     m_radioIP4.SetCheck(BST_CHECKED);
     AppendText(m_editStatus, _T("Not Connected"));
@@ -185,17 +192,17 @@ BOOL CClientDialog::OnInitDialog()
     return TRUE;
 }
 
-// Called when the connection to the server is established
+// Called when the connection to the server is established.
 BOOL CClientDialog::OnSocketConnect()
 {
     m_isClientConnected = TRUE;
     m_buttonConnect.EnableWindow( TRUE );
 
-    // Move focus to the Send Edit box
+    // Move focus to the Send Edit box.
     GotoDlgCtrl(m_editSend);
     SetForegroundWindow();
 
-    // Update the dialog
+    // Update the dialog.
     m_ip4Address.EnableWindow( FALSE );
     m_editIP6Address.EnableWindow( FALSE );
     m_buttonSend.EnableWindow( TRUE );
@@ -211,7 +218,7 @@ BOOL CClientDialog::OnSocketConnect()
     return TRUE;
 }
 
-// Called when the socket is disconnected from the server
+// Called when the socket is disconnected from the server.
 BOOL CClientDialog::OnSocketDisconnect()
 {
     m_isClientConnected = FALSE;
@@ -236,7 +243,7 @@ BOOL CClientDialog::OnSocketDisconnect()
     return TRUE;
 }
 
-// Called when the socket has data to receive
+// Called when the socket has data to receive.
 BOOL CClientDialog::OnSocketReceive()
 {
     std::vector<CHAR> bufVector( 1025, '\0' );
@@ -289,13 +296,13 @@ void CClientDialog::OnStartClient()
                     strAddr = m_ip4Address.GetAddress();
                 }
 
-                // Retrieve the local port number
+                // Retrieve the local port number.
                 UINT port = GetDlgItemInt(m_editPort.GetDlgCtrlID(), FALSE);
 
-                // Temporarily disable the Connect/Disconnect button
+                // Temporarily disable the Connect/Disconnect button.
                 m_buttonConnect.EnableWindow(FALSE);
 
-                // Connect to the server
+                // Connect to the server.
                 if (0 != m_client.Connect(strAddr, port) )
                 {
                     AppendText(m_editStatus, m_client.GetErrorString());
@@ -314,7 +321,7 @@ void CClientDialog::OnStartClient()
 
         case SOCK_DGRAM:
             {
-                // Create the socket
+                // Create the socket.
                 if (!m_client.Create(IPfamily, SOCK_DGRAM))
                 {
                     AppendText(m_editStatus, m_client.GetErrorString());
@@ -325,7 +332,7 @@ void CClientDialog::OnStartClient()
                 long events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;
                 m_client.StartAsync(*this, UWM_SOCKETMSG, events);
 
-                //Update the dialog
+                // Update the dialog.
                 m_ip4Address.EnableWindow( FALSE );
                 m_editIP6Address.EnableWindow( FALSE );
                 m_buttonSend.EnableWindow( TRUE );
@@ -345,10 +352,10 @@ void CClientDialog::OnStartClient()
     }
     else
     {
-        // Shutdown and close the client socket
+        // Shutdown and close the client socket.
         m_client.Disconnect();
 
-        // Update the dialog
+        // Update the dialog.
         m_ip4Address.EnableWindow( TRUE );
         m_buttonSend.EnableWindow( FALSE );
         m_editSend.EnableWindow( FALSE );
@@ -368,6 +375,7 @@ void CClientDialog::OnStartClient()
     }
 }
 
+// Called when the socket has data to send.
 void CClientDialog::OnSend()
 {
     switch (m_socketType)

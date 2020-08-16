@@ -1,11 +1,14 @@
-////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainFrame class
+/////////////////////////////
+// Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
-
+///////////////////////////////////
+// CMainFrame function definitions.
+//
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame

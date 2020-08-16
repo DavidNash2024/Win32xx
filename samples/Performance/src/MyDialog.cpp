@@ -1,21 +1,27 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "PerfApp.h"
 #include "resource.h"
 
+/////////////////////////////////
+// CMyDialog function definitions
+//
 
-// Definitions for the CMyDialog class
+// Constructor.
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
+// Destructor.
 CMyDialog::~CMyDialog()
 {
 }
 
+// Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)
@@ -26,7 +32,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
-
+// Called before the dialog is displayed.
 BOOL CMyDialog::OnInitDialog()
 {
     // Put the initial values in the edit boxes
@@ -36,8 +42,8 @@ BOOL CMyDialog::OnInitDialog()
     return TRUE;
 }
 
+// Called when the OK button or Enter key is pressed.
 void CMyDialog::OnOK()
-// This function is called when the OK button is hit
 {
     // Get the number of test windows to create
     // Note 1: A Windows limit of 10000 handles per process imposes a practical limit of aprox 1000 test windows.

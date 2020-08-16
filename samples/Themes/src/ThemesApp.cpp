@@ -1,11 +1,13 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // ThemesApp.cpp
+//
 
 #include "stdafx.h"
 #include "ThemesApp.h"
 
-
-// Definitions for the CFrameApp class
+//////////////////////////////////
+// CFrameApp function definitions.
+//
 CThemesApp::CThemesApp()
 {
 }

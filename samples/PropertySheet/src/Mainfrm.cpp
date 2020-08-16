@@ -1,12 +1,16 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
-// Definitions for the CMainFrame class
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Constructor for CMainFrame. Its called after CFrame's constructor
@@ -19,15 +23,15 @@ CMainFrame::CMainFrame()
     LoadRegistrySettings(_T("Win32++\\PropertySheet Sample"));
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
     // Destructor for CMainFrame.
 }
 
+// Respond to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -45,6 +49,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the window is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -65,13 +70,15 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+// Issue a close request to the frame to end the application
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Called after the window is created.
+// Called after OnCreate.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
@@ -80,6 +87,7 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
+// Create a modeless property sheet.
 BOOL CMainFrame::OnModeless()
 {
     // Permit only one Modeless property sheet
@@ -96,6 +104,7 @@ BOOL CMainFrame::OnModeless()
     return TRUE;
 }
 
+// Create a modal property sheet.
 BOOL CMainFrame::OnModal()
 {
     if (m_modelessPS.IsWindow())
@@ -109,6 +118,7 @@ BOOL CMainFrame::OnModal()
     return TRUE;
 }
 
+// Create a wizard. A wizard displays a series of property sheets.
 BOOL CMainFrame::OnWizard()
 {
     CMyPropertySheet mps(NULL, *this);
@@ -119,6 +129,7 @@ BOOL CMainFrame::OnWizard()
     return TRUE;
 }
 
+// Sets the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the toolbar buttons
@@ -135,6 +146,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

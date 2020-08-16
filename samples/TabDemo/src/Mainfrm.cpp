@@ -1,5 +1,6 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
@@ -8,8 +9,9 @@
 #include "MyDialog.h"
 #include "resource.h"
 
-
-// Definitions for the CMainFrame class
+///////////////////////////////////
+// CMainFrame function definitions.
+//
 CMainFrame::CMainFrame()
 {
     //Set the tab control as the fram's view window

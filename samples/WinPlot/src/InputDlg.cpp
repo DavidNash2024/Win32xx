@@ -1,8 +1,13 @@
+/////////////////////////////
+// InputDlg.cpp
+//
 
 #include "stdafx.h"
 #include "InputDlg.h"
 
-
+//////////////////////////////////
+// CInputDlg function definitions.
+//
 void  CInputDlg::DoDataExchange(CDataExchange& DX)
 {
     // connect xMin edit box.

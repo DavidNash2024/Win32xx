@@ -1,11 +1,13 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyThread.cpp
-//  Definitions for the CMyThread class
+//
 
 #include "stdafx.h"
 #include "MyThread.h"
 
-
+//////////////////////////////////
+// CMyThread function definitions.
+//
 CMyThread::CMyThread(int thread) :  m_testWnd(thread), m_thread(thread)
 {
 }

@@ -1,7 +1,7 @@
+/////////////////////////////
 // Node.cpp
 //
-// implemetation of the Node and related classes
-//////////////////////////////////////////////
+
 
 #include "stdafx.h"
 #include <cmath>
@@ -14,9 +14,9 @@
 namespace Calc
 {
 
-    ////////////////////////
-    // Node_Number functions
-    ////////////////////////
+    ////////////////////////////////////
+    // Node_Number function definitions.
+    //
     Node_Number::Node_Number(double Number) : m_number(Number)
     {
     }
@@ -26,18 +26,16 @@ namespace Calc
         return m_number;
     }
 
-    ////////////////////////
-    // Node_Branch Functions
-    ////////////////////////
+    ////////////////////////////////////
+    // Node_Branch function definitions.
+    //
     Node_Branch::~Node_Branch()
     {
         // Delete each leaf node.
         for (unsigned u = 0; u < m_leaves.size(); ++u)
             delete m_leaves[u];
     }
-    //////////////////////
-    // Node_Branch Functions
-    //////////////////////
+
     double Node_Branch::Calc() const
     {
         double Value = 0.0;
@@ -72,9 +70,9 @@ namespace Calc
         return Value;
     }
 
-    //////////////////////////
-    // Node_Variable functions
-    //////////////////////////
+    //////////////////////////////////////
+    // Node_Variable function definitions.
+    //
     Node_Variable::Node_Variable(SymbolTable& symTab, const CString& symbol)
         : m_symTab(symTab), m_symbol(symbol)
     {
@@ -85,9 +83,9 @@ namespace Calc
         return m_symTab.GetValue(m_symbol);
     }
 
-    //////////////////////////
-    // Node_Assign functions
-    //////////////////////////
+    ////////////////////////////////////
+    // Node_Assign function definitions.
+    //
     Node_Assign::Node_Assign(Node* pNode, SymbolTable& symTab, const CString& symbol)
         : m_node(pNode), m_symTab(symTab), m_symbol(symbol)
     {
@@ -105,10 +103,9 @@ namespace Calc
         return var;
     }
 
-    ///////////////////////////
-    // Node_Function functions
-    ///////////////////////////
-
+    //////////////////////////////////////
+    // Node_Function function definitions.
+    //
     Node_Function::Node_Function(CString funName, Node* pnode)
         : m_funcName(funName), m_pNode(pnode)
     {

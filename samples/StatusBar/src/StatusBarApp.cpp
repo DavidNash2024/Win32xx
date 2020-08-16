@@ -1,11 +1,13 @@
-//////////////////////////////////////////////
+/////////////////////////////
 //FrameApp.cpp
+//
 
 #include "stdafx.h"
 #include "StatusBarApp.h"
 
-
-// Definitions for the CStatusBarApp class
+//////////////////////////////////////
+// CStatusBarApp function definitions.
+//
 CStatusBarApp::CStatusBarApp()
 {
 }
@@ -21,5 +23,4 @@ BOOL CStatusBarApp::InitInstance()
 
     return TRUE;
 }
-
 

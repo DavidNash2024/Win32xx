@@ -54,7 +54,7 @@ void CMainFrame::LoadDefaultDockers()
     SetDockStyles();
 }
 
-// Adds a new docker. The id specifies the dock type. 
+// Adds a new docker. The id specifies the dock type.
 CDocker* CMainFrame::NewDockerFromID(int id)
 {
     CDocker* pDock = NULL;

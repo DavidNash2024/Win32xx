@@ -1,11 +1,13 @@
-///////////////////////////////
+/////////////////////////////
 // View.cpp
+//
 
 #include "View.h"
 #include "resource.h"
 
-
-// Definitions for the CView class
+//////////////////////////////
+// CView function definitions.
+//
 CView::CView()
 {
     m_brush.CreateSolidBrush( RGB(250, 230, 100) );

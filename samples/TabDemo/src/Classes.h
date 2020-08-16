@@ -1,11 +1,13 @@
-//////////////////////////////////////////////////////////
+/////////////////////////////
 // Classes.h
-//  Declaration of CViewClasses
+//
 
 #ifndef CLASSES_H
 #define CLASSES_H
 
-
+/////////////////////////////////////////
+// Declaration of the CViewClasses class.
+//
 class CViewClasses : public CTreeView
 {
 public:
@@ -16,9 +18,6 @@ public:
 
 private:
     CImageList m_normalImages;
-
 };
-
-
 
 #endif  //CLASSES_H

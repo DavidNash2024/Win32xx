@@ -1,5 +1,6 @@
-/////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
@@ -9,11 +10,11 @@
   #define SF_USECODEPAGE    0x0020
 #endif
 
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
-///////////////////////////////////////
-// Definitions for the CMainFrame class
-
-// CMainFrame constructor.
+// Constructor.
 CMainFrame::CMainFrame() : m_isWrapped(false), m_oldFocus(0)
 {
     SetView(m_richView);
@@ -26,11 +27,12 @@ CMainFrame::CMainFrame() : m_isWrapped(false), m_oldFocus(0)
     LoadRegistryMRUSettings(5);
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
 
-// Stream in callback function.
+// Stream in callback function. Reads from file.
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamIn
@@ -44,7 +46,7 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
     return 0;
 }
 
-// Stream out callback function.
+// Stream out callback function. Writes to the file.
 DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamOut
@@ -108,7 +110,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
 // OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
@@ -143,7 +144,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return  CFrame::OnCreate(cs);
 }
 
-
 // Called in response to a EN_DROPFILES notification.
 void CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
@@ -160,7 +160,6 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
 
     ::DragFinish(hDropInfo);
 }
-
 
 // Cuts the selected text to the clipboard.
 void CMainFrame::OnEditCut()
@@ -365,7 +364,6 @@ void CMainFrame::OnFileSaveAs()
 
 }
 
-
 // Called after the frame is created.
 void CMainFrame::OnInitialUpdate()
 {
@@ -375,7 +373,6 @@ void CMainFrame::OnInitialUpdate()
     // Show the toolbar
     ShowToolBar(GetToolBar().IsWindow());
 }
-
 
 // Update the menu before it is displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
@@ -486,7 +483,6 @@ void CMainFrame::OnPreviewPrint()
     m_richView.QuickPrint(m_pathName);
 }
 
-
 // Called when the Print Preview's "Print Setup" button is pressed.
 void CMainFrame::OnPreviewSetup()
 {
@@ -512,7 +508,6 @@ void CMainFrame::OnPreviewSetup()
     UINT maxPage = m_richView.CollatePages();
     m_preview.DoPrintPreview(*this, maxPage);
 }
-
 
 // Called by CTextApp::OnIdle to update toolbar buttons
 void CMainFrame::OnToolbarUpdate()

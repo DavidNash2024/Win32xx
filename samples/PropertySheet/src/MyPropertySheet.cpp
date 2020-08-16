@@ -1,15 +1,21 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // MyPropertySheet.cpp
+//
 
 #include "stdafx.h"
 #include "MyPropertySheet.h"
 #include "resource.h"
 
+///////////////////////////////////
+// CButtonPage function definitions
+//
 
+// Constructor.
 CButtonPage::CButtonPage(UINT templateID, LPCTSTR title /* = NULL*/) : CPropertyPage(templateID, title)
 {
 }
 
+// Proces the property sheet's window messages.
 INT_PTR CButtonPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -28,6 +34,7 @@ INT_PTR CButtonPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Respond to the apply button.
 BOOL CButtonPage::OnApply()
 {
     TRACE ("Appy button pressed\n");
@@ -36,6 +43,7 @@ BOOL CButtonPage::OnApply()
     return Validate();
 }
 
+// Respond to the cancel button.
 void CButtonPage::OnCancel()
 {
     TRACE ("Cancel button pressed\n");
@@ -44,6 +52,7 @@ void CButtonPage::OnCancel()
     CPropertyPage::OnCancel();
 }
 
+// Called before the property sheet is displayed.
 BOOL CButtonPage::OnInitDialog()
 {
     // Center the PropertySheet (parent) over the frame before it is displayed.
@@ -53,6 +62,7 @@ BOOL CButtonPage::OnInitDialog()
     return TRUE;
 }
 
+// Process the OK button.
 void CButtonPage::OnOK()
 {
     TRACE ("OK button pressed\n");
@@ -61,6 +71,7 @@ void CButtonPage::OnOK()
     CPropertyPage::OnOK();
 }
 
+// Process the query cancel request.
 BOOL CButtonPage::OnQueryCancel()
 {
     TRACE ("Ok to Cancel?\n");
@@ -68,6 +79,7 @@ BOOL CButtonPage::OnQueryCancel()
     return FALSE;    // Allow cancel to proceed
 }
 
+// Called when the propertysheet is activated.
 BOOL CButtonPage::OnSetActive()
 {
     TRACE("Button page is now active\n");
@@ -78,6 +90,7 @@ BOOL CButtonPage::OnSetActive()
     return TRUE;
 }
 
+// Validate the property sheet.
 BOOL CButtonPage::Validate()
 {
     // This is where we validate (and save) the contents of this page before it is closed
@@ -94,10 +107,16 @@ BOOL CButtonPage::Validate()
     return isValid;
 }
 
+//////////////////////////////////
+// CComboPage function definitions
+//
+
+// Constructor.
 CComboPage::CComboPage(UINT templateID, LPCTSTR title /* = NULL*/) : CPropertyPage(templateID, title)
 {
 }
 
+// Process the property sheet's window messages.
 INT_PTR CComboPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 
@@ -117,6 +136,7 @@ INT_PTR CComboPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Called before the property sheet is displayed.
 BOOL CComboPage::OnInitDialog()
 {
     TRACE("Combo page created\n");
@@ -132,6 +152,7 @@ BOOL CComboPage::OnInitDialog()
     return TRUE;
 }
 
+// Called when the property sheet is activated.
 BOOL CComboPage::OnSetActive()
 {
     TRACE("Combo page is now active\n");
@@ -142,11 +163,17 @@ BOOL CComboPage::OnSetActive()
     return TRUE;
 }
 
+////////////////////////////////////////
+// CMyPropertySheet function definitions
+//
+
+// Constructor.
 CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hParent /* = NULL*/) : CPropertySheet(pszCaption, hParent)
 {
     SetIcon(IDI_DIALOG);
 }
 
+// Called before the property sheet is displayed.
 void CMyPropertySheet::OnInitialUpdate()
 {
     // Remove system menu for wizards
@@ -156,9 +183,9 @@ void CMyPropertySheet::OnInitialUpdate()
         style &= ~WS_SYSMENU;
         SetStyle(style);
     }
-
 }
 
+// Process the property sheet's window messages.
 LRESULT CMyPropertySheet::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

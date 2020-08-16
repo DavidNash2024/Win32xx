@@ -1,11 +1,13 @@
-//////////////////////////////////////////////
+/////////////////////////////
 //FrameApp.cpp
+//
 
 #include "stdafx.h"
 #include "FrameApp.h"
 
-
-// Definitions for the CToolBarDemoApp class
+////////////////////////////////////////
+// CToolBarDemoApp function definitions.
+//
 CToolBarDemoApp::CToolBarDemoApp()
 {
 }

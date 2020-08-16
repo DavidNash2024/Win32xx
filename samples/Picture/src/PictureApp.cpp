@@ -1,19 +1,25 @@
-//////////////////////////////////////////////
+/////////////////////////////
 //PictureApp.cpp
+//
 
 #include "stdafx.h"
 #include "PictureApp.h"
 
+/////////////////////////////////
+// CFrameApp function definitions
+//
 
-// Definitions for the CFrameApp class
+// Constructor.
 CPictureApp::CPictureApp()
 {
 }
 
+// Destructor.
 CPictureApp::~CPictureApp()
 {
 }
 
+// Called when the application starts.
 BOOL CPictureApp::InitInstance()
 {
     //Create the Frame Window

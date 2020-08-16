@@ -1,10 +1,14 @@
-
+/////////////////////////////
+// Doc.cpp
+//
 
 #include "stdafx.h"
 #include "Doc.h"
 #include "View.h"
 
-
+////////////////////////////
+// CDoc function definitions
+//
 BOOL CDoc::FileOpen(LPCTSTR filename)
 {
     GetAllPoints().clear();

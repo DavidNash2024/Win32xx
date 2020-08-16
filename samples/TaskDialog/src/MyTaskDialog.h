@@ -1,9 +1,13 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // MyTaskDialog.h
+//
 
 #ifndef MYTASKDIALOG_H
 #define MYTASKDIALOG_H
 
+/////////////////////////////////////////
+// Declartion of the CMyTaskDialog class.
+//
 class CMyTaskDialog : public CTaskDialog
 {
 public:

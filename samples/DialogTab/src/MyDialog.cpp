@@ -62,21 +62,21 @@ BOOL CButtonDialog::OnButton()
     return TRUE;
 }
 
-// Called when the check box 1 is clicked. 
+// Called when the check box 1 is clicked.
 BOOL CButtonDialog::OnCheck1()
 {
     TRACE("Check Box 1\n");
     return TRUE;
 }
 
-// Called when the check box 2 is clicked. 
+// Called when the check box 2 is clicked.
 BOOL CButtonDialog::OnCheck2()
 {
     TRACE("Check Box 2\n");
     return TRUE;
 }
 
-// Called when the check box 3 is clicked. 
+// Called when the check box 3 is clicked.
 BOOL CButtonDialog::OnCheck3()
 {
     TRACE("Check Box 3\n");

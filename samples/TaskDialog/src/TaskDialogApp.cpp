@@ -1,12 +1,15 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // TaskDialogApp.cpp
+//
 
 #include "stdafx.h"
 #include "TaskDialogApp.h"
 #include "MyTaskDialog.h"
 #include "Resource.h"
 
-// Definitions for the CTaskDialogApp class
+///////////////////////////////////////
+// CTaskDialogApp function definitions.
+//
 CTaskDialogApp::CTaskDialogApp()
 {
 }

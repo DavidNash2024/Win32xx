@@ -99,10 +99,6 @@ SOURCE=..\src\App.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\AppGlobal.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\ColorChoice.cpp
 # End Source File
 # Begin Source File
@@ -151,14 +147,6 @@ SOURCE=..\src\App.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\AppGlobal.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\AppGlobalRC.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\ColorChoice.h
 # End Source File
 # Begin Source File
@@ -172,10 +160,6 @@ SOURCE=..\src\Doc.h
 # Begin Source File
 
 SOURCE=..\src\ListBoxDlg.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\ListBoxDlgRC.h
 # End Source File
 # Begin Source File
 
@@ -195,7 +179,7 @@ SOURCE=..\src\MyFontDlg.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyPrinter.h
+SOURCE=..\src\MyPrintDialog.h
 # End Source File
 # Begin Source File
 

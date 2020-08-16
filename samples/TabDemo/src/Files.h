@@ -1,11 +1,13 @@
-//////////////////////////////////////////////////////////
+/////////////////////////////
 // Files.h
-//  Declaration of  CViewFiles
+//
 
 #ifndef FILES_H
 #define FILES_H
 
-
+///////////////////////////////////////
+// Declaration of the CViewFiles class.
+//
 class CViewFiles : public CListView
 {
 public:
@@ -18,9 +20,6 @@ public:
 
 private:
     CImageList m_smallImages;
-
 };
 
-
 #endif // FILES_H
-

@@ -189,9 +189,6 @@
 		<Unit filename="../src/AboutBox.h" />
 		<Unit filename="../src/App.cpp" />
 		<Unit filename="../src/App.h" />
-		<Unit filename="../src/AppGlobal.cpp" />
-		<Unit filename="../src/AppGlobal.h" />
-		<Unit filename="../src/AppGlobalRC.h" />
 		<Unit filename="../src/ColorChoice.cpp" />
 		<Unit filename="../src/ColorChoice.h" />
 		<Unit filename="../src/ColorDefs.h" />
@@ -199,14 +196,13 @@
 		<Unit filename="../src/Doc.h" />
 		<Unit filename="../src/ListBoxDlg.cpp" />
 		<Unit filename="../src/ListBoxDlg.h" />
-		<Unit filename="../src/ListBoxDlgRC.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/MyFileDlg.h" />
 		<Unit filename="../src/MyFindReplaceDlg.h" />
 		<Unit filename="../src/MyFontDlg.cpp" />
 		<Unit filename="../src/MyFontDlg.h" />
-		<Unit filename="../src/MyPrinter.h" />
+		<Unit filename="../src/MyPrintDialog.h" />
 		<Unit filename="../src/PrintInfo.cpp" />
 		<Unit filename="../src/PrintInfo.h" />
 		<Unit filename="../src/Resource.rc">

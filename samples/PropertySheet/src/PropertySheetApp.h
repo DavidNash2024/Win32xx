@@ -1,14 +1,15 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // PropertySheetApp.h
+//
 
 #ifndef PROPERTYSHEETAPP_H
 #define PROPERTYSHEETAPP_H
 
-
 #include "Mainfrm.h"
 
-
-// Declaration of the CFrameApp class
+/////////////////////////////////////////////
+// Declaration of the CPropertySheetApp class
+//
 class CPropertySheetApp : public CWinApp
 {
 public:

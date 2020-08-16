@@ -1,7 +1,6 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // View.cpp
-//  Definitions for the CView class
-
+//
 
 #include "stdafx.h"
 #include "view.h"
@@ -10,6 +9,11 @@
 
 #define HIMETRIC_INCH   2540
 
+/////////////////////////////
+// CView function definitions
+//
+
+// Constructor.
 CView::CView() : m_pPicture(NULL)
 {
     // Initializes the COM library on the current thread
@@ -17,6 +21,7 @@ CView::CView() : m_pPicture(NULL)
         throw CWinException(_T("Failed to initialize COM"));
 }
 
+// Destructor.
 CView::~CView()
 {
     if (m_pPicture)
@@ -25,9 +30,9 @@ CView::~CView()
     ::CoUninitialize();
 }
 
+// Retrieves the width and height of picture.
 CRect CView::GetImageRect()
 {
-    // get width and height of picture
     long width = 0;
     long height = 0;
 
@@ -48,6 +53,7 @@ CRect CView::GetImageRect()
     return imageRect;
 }
 
+// Displays a blank (black) image.
 void CView::NewPictureFile()
 {
     if (m_pPicture)
@@ -64,6 +70,7 @@ void CView::NewPictureFile()
     Invalidate();
 }
 
+// Loads an image from the specified file.
 BOOL CView::LoadPictureFile(LPCTSTR fileName)
 {
     if (m_pPicture)
@@ -103,6 +110,7 @@ BOOL CView::LoadPictureFile(LPCTSTR fileName)
     return IsPictureLoaded;
 }
 
+// Called when the window is created.
 int CView::OnCreate(CREATESTRUCT& cs)
 {
     // Set the window background to black
@@ -118,6 +126,7 @@ int CView::OnCreate(CREATESTRUCT& cs)
     return CWnd::OnCreate(cs);
 }
 
+// Called when part of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {
     if (m_pPicture)
@@ -137,6 +146,7 @@ void CView::OnDraw(CDC& dc)
     }
 }
 
+// Called when a file is dropped on the window.
 LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -159,6 +169,7 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set the Window Class name
@@ -170,6 +181,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+// Saves the image to the specified file.
 void CView::SavePicture(LPCTSTR fileName)
 {
     // get a IPictureDisp interface from your IPicture pointer
@@ -183,6 +195,7 @@ void CView::SavePicture(LPCTSTR fileName)
     }
 }
 
+// Process the view's window messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -193,5 +206,4 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // Pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }
-
 

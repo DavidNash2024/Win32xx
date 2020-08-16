@@ -31,7 +31,7 @@ void CViewText::OnAttach()
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
-// Respond to keyboard accelerator keys. 
+// Respond to keyboard accelerator keys.
 BOOL CViewText::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -63,7 +63,7 @@ void CViewText::OnEditPaste()
     PasteSpecial(CF_TEXT);
 }
 
-// Deletes the selected text and copies it to the windows clipboard. 
+// Deletes the selected text and copies it to the windows clipboard.
 void CViewText::OnEditCut()
 {
     Cut();

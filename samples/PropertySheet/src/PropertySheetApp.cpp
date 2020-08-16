@@ -1,19 +1,24 @@
-//////////////////////////////////////////////
-//PropertySheetApp.cpp
-
+/////////////////////////////
+// PropertySheetApp.cpp
+//
 #include "stdafx.h"
 #include "PropertySheetApp.h"
 
+/////////////////////////////////////////
+// CPropertySheetApp function definitions
+//
 
-// Definitions for the CFrameApp class
+// Constructor.
 CPropertySheetApp::CPropertySheetApp()
 {
 }
 
+// Destructor.
 CPropertySheetApp::~CPropertySheetApp()
 {
 }
 
+// Called when the application starts.
 BOOL CPropertySheetApp::InitInstance()
 {
     //Create the Frame Window

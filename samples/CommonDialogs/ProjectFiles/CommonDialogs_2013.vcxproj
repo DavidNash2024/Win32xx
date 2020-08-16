@@ -62,17 +62,15 @@
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\AboutBox.h" />
     <ClInclude Include="..\src\App.h" />
-    <ClInclude Include="..\src\AppGlobal.h" />
     <ClInclude Include="..\src\ColorChoice.h" />
     <ClInclude Include="..\src\ColorDefs.h" />
     <ClInclude Include="..\src\Doc.h" />
     <ClInclude Include="..\src\ListBoxDlg.h" />
-    <ClInclude Include="..\src\ListBoxDlgRC.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\MyFileDlg.h" />
     <ClInclude Include="..\src\MyFindReplaceDlg.h" />
     <ClInclude Include="..\src\MyFontDlg.h" />
-    <ClInclude Include="..\src\MyPrinter.h" />
+    <ClInclude Include="..\src\MyPrintDialog.h" />
     <ClInclude Include="..\src\PrintInfo.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\RichEditView.h" />
@@ -87,7 +85,6 @@
   <ItemGroup>
     <ClCompile Include="..\src\AboutBox.cpp" />
     <ClCompile Include="..\src\App.cpp" />
-    <ClCompile Include="..\src\AppGlobal.cpp" />
     <ClCompile Include="..\src\ColorChoice.cpp" />
     <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\ListBoxDlg.cpp" />
@@ -97,7 +94,6 @@
     <ClCompile Include="..\src\RichEditView.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\src\View.cpp" />
   </ItemGroup>

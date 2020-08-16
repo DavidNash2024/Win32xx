@@ -1,12 +1,16 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
+///////////////////////////////////
+// CMainFrame functions definitions
+//
 
-// Definitions for the CMainFrame class
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Constructor for CMainFrame. Its called after CFrame's constructor
@@ -19,11 +23,13 @@ CMainFrame::CMainFrame()
     LoadRegistrySettings(_T("Win32++\\ReBarDemo"));
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
     // Destructor for CMainFrame.
 }
 
+// Retrieves the size view rectangle.
 CRect CMainFrame::GetViewRect() const
 {
     CRect rcClient = GetClientRect();
@@ -43,6 +49,7 @@ CRect CMainFrame::GetViewRect() const
     return rcClient;
 }
 
+// Place the rebar at the bottom of the view.
 void CMainFrame::OnBottom()
 {
     DWORD dwStyle = m_toolBar.GetStyle();
@@ -58,6 +65,7 @@ void CMainFrame::OnBottom()
     RecalcLayout();
 }
 
+// Place the rebar on the left of the view.
 void CMainFrame::OnLeft()
 {
     DWORD dwStyle = m_toolBar.GetStyle();
@@ -73,6 +81,7 @@ void CMainFrame::OnLeft()
     RecalcLayout();
 }
 
+// Place the rebar on the right of the view.
 void CMainFrame::OnRight()
 {
     DWORD dwStyle = m_toolBar.GetStyle();
@@ -86,6 +95,7 @@ void CMainFrame::OnRight()
     RecalcLayout();
 }
 
+// Place the rebar at top of the view.
 void CMainFrame::OnTop()
 {
     DWORD dwStyle = m_toolBar.GetStyle();
@@ -99,11 +109,9 @@ void CMainFrame::OnTop()
     RecalcLayout();
 }
 
-
+// Respond to menu and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -128,6 +136,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the window is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -189,13 +198,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Issue a close request to the frame to end the application.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Sample code to load data from a file.
 BOOL CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE);
@@ -210,6 +220,7 @@ BOOL CMainFrame::OnFileOpen()
     return TRUE;
 }
 
+// Sample code to save data to a file.
 BOOL CMainFrame::OnFileSave()
 {
     CFileDialog fileDlg(FALSE);
@@ -224,6 +235,7 @@ BOOL CMainFrame::OnFileSave()
     return TRUE;
 }
 
+// Sample code to send output to a printer.
 BOOL CMainFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
@@ -250,6 +262,8 @@ BOOL CMainFrame::OnFilePrint()
     }
 }
 
+// Called after the window is created.
+// Called after OnCreate.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
@@ -258,19 +272,8 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-// Process notification messages sent by child windows
-{
-//  switch (((LPNMHDR)lparam)->code)
-//  {
-//  }
-
-    // Some notifications should return a value when handled
-    return CFrame::OnNotify(wparam, lparam);
-}
-
+// Overrides CFrame::RecalcLayout to add the positioning of our rebar
 void CMainFrame::RecalcLayout()
-// Override CFrame::RecalcLayout to add the positioning of our rebar
 {
     // Resize the status bar
     if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
@@ -310,6 +313,7 @@ void CMainFrame::RecalcLayout()
     }
 }
 
+// Sets the position of the Rebar.
 void CMainFrame::SetReBarPos()
 {
     int cxRB = 0;
@@ -346,6 +350,7 @@ void CMainFrame::SetReBarPos()
     m_reBar.RedrawWindow();
 }
 
+// Sets the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the toolbar buttons
@@ -365,7 +370,9 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-// Note: Vertical toolbars require each button to have TBSTATE_WRAP, set for group buttons to work.
+// Add the TBSTATE_WRAP style to the rebar's toolbar.
+// Note: Vertical toolbars require each button to have TBSTATE_WRAP,
+//       set for group buttons to work.
 //       Horizontal toolbars require the TBSTATE_WRAP removed.
 void CMainFrame::SetWrapState(CToolBar* pToolBar, BOOL isWrapped)
 {
@@ -376,6 +383,7 @@ void CMainFrame::SetWrapState(CToolBar* pToolBar, BOOL isWrapped)
     }
 }
 
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)

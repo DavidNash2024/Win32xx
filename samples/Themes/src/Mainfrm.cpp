@@ -1,12 +1,14 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
-
-// Definitions for the CMainFrame class
+///////////////////////////////////
+// CMainFrame function definitions.
+//
 CMainFrame::CMainFrame() : m_color(IDM_BLUE), m_useThemes(TRUE), m_useBandColors(TRUE), m_useFlatStyle(FALSE),
                             m_keepBandsLeft(TRUE), m_lockMenuBand(TRUE), m_useRoundBorders(TRUE),
                             m_useShortBands(TRUE), m_useLines(FALSE), m_showArrows(TRUE), m_showCards(TRUE)

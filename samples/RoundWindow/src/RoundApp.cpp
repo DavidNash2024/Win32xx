@@ -1,10 +1,12 @@
-////////////////////////////////////////
+/////////////////////////////
 // SimpleApp.cpp
+//
 
 #include "RoundApp.h"
 
-
-// Definitions for the CRoundApp class
+//////////////////////////////////
+// CRoundApp function definitions.
+//
 CRoundApp::CRoundApp()
 {
     // Constructor for CRoundApp

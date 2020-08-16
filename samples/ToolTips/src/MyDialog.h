@@ -1,10 +1,13 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.h
+//
 
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-
+////////////////////////////////////////
+// CBalloonToolTip function definitions.
+//
 class CBalloonToolTip : public CToolTip
 {
 public:

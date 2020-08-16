@@ -1,5 +1,6 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // Client.h
+//
 
 #ifndef CLIENT_H
 #define CLIENT_H
@@ -11,7 +12,9 @@
 #define USER_DISCONNECT WM_APP+3
 #define USER_RECEIVE    WM_APP+4
 
-
+////////////////////////////////////////
+// Declaration of the ClientSocket class
+//
 class CClientSocket : public CSocket
 {
 public:

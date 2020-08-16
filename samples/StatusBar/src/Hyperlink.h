@@ -1,20 +1,22 @@
 /////////////////////////////
 // Hyperlink.h
+//
 
 #ifndef HYPERLINK_H
 #define HYPERLINK_H
-
 
 #ifndef IDC_HAND
 #define IDC_HAND  MAKEINTRESOURCE(32649)
 #endif
 
+////////////////////////////////////////////////////////////////////////
+// Declaration of the CHyperlink class.
 // Creates a window that behaves like a hyperlink.
 // * A hand cursor is displayed when the Mouse hovers over the text
 // * A browser is launched and the Win32++ SourceForge page is displayed
 //    when the text is clicked.
 // * The text color is adjusted.
-
+//
 class CHyperlink :  public CStatic
 {
 public:
@@ -40,4 +42,3 @@ private:
 };
 
 #endif // HYPERLINK_H
-

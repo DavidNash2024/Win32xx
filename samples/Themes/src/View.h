@@ -1,12 +1,13 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // View.h
+//
 
 #ifndef VIEW_H
 #define VIEW_H
 
-
-
-// Declaration of the CView class
+//////////////////////////////////
+// Declaration of the CView class.
+//
 class CView : public CWnd
 {
 public:
@@ -19,6 +20,5 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
-
 
 #endif // VIEW_H

@@ -1,14 +1,15 @@
-///////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.h
-//  Declaration of the CMainFrame class
+//
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-
 #include "SplitterPanes.h"
 
-
+///////////////////////////////////////
+// Declaration of the CMainFrame class.
+//
 class CMainFrame : public CDockFrame
 {
 public:

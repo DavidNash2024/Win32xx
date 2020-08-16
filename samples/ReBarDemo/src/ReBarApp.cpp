@@ -1,19 +1,25 @@
-//////////////////////////////////////////////
+/////////////////////////////
 //FrameApp.cpp
+//
 
 #include "stdafx.h"
 #include "ReBarApp.h"
 
+/////////////////////////////////
+// CReBarApp function definitions
+//
 
-// Definitions for the CReBarApp class
+// Constructor.
 CReBarApp::CReBarApp()
 {
 }
 
+// Destructor.
 CReBarApp::~CReBarApp()
 {
 }
 
+// Called when the application starts.
 BOOL CReBarApp::InitInstance()
 {
     //Create the Frame Window
@@ -21,5 +27,4 @@ BOOL CReBarApp::InitInstance()
 
     return TRUE;
 }
-
 

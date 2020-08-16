@@ -107,7 +107,7 @@ BOOL CMyDialog::OnButton()
     return TRUE;
 }
 
-// Called when check box 1 is clicked. 
+// Called when check box 1 is clicked.
 BOOL CMyDialog::OnCheck1()
 {
     SetStatic(_T("Check Box 1"));

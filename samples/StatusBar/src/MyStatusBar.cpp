@@ -1,8 +1,13 @@
+/////////////////////////////
+// MyStatusBar.cpp
+//
 
 #include "stdafx.h"
 #include "MyStatusBar.h"
 
-
+/////////////////////////////////////
+// CMyStatusBar function definitions.
+//
 void CMyStatusBar::OnAttach()
 {
     // Start a timer for the progress bar

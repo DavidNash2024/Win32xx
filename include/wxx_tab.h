@@ -655,8 +655,8 @@ namespace Win32xx
         {
             rc = GetClientRect();
             int Gap = 2;
-            int cx = GetSystemMetrics(SM_CXSMICON) -1;
-            int cy = GetSystemMetrics(SM_CYSMICON) -1;
+            int cx = ::GetSystemMetrics(SM_CXSMICON) -1;
+            int cy = ::GetSystemMetrics(SM_CYSMICON) -1;
             rc.right -= Gap;
             rc.left = rc.right - cx;
 

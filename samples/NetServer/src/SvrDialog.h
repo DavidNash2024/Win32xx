@@ -1,5 +1,6 @@
-///////////////////////////////////////
+/////////////////////////////
 // SvrDialog.h
+//
 
 #ifndef SVRDIALOG_H
 #define SVRDIALOG_H
@@ -13,7 +14,9 @@ class CTCPClientDlg;
 typedef Shared_Ptr<CWorkerSocket> ServerSocketPtr;
 typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
 
+/////////////////////////////////////////
 // Declaration of the CTCPClientDlg class
+//
 class CTCPClientDlg : public CDialog
 {
 public:
@@ -42,8 +45,9 @@ private:
     CButtonSend m_buttonSend;
 };
 
-
+//////////////////////////////////////
 // Declaration of the CSvrDialog class
+//
 class CSvrDialog : public CDialog
 {
 public:

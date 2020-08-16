@@ -32,7 +32,7 @@ CMainFrame::~CMainFrame()
 
 }
 
-// Hides or shows the tab for a container with a single tab. 
+// Hides or shows the tab for a container with a single tab.
 void CMainFrame::HideSingleContainerTab(BOOL hideSingle)
 {
     m_hideSingleTab = hideSingle;
@@ -155,7 +155,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CDockFrame::OnCreate(cs);
 }
 
-// Replaces the current docking arrangement with the default. 
+// Replaces the current docking arrangement with the default.
 BOOL CMainFrame::OnDockDefault()
 {
     SetRedraw(FALSE);

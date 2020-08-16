@@ -230,7 +230,7 @@ void CMyListView::DoDisplay()
         HCURSOR  hCur = ::LoadCursor(NULL, IDC_WAIT);
         hCur = ::SetCursor(hCur);
 
-        // Turn redawing off in the ListView. 
+        // Turn redawing off in the ListView.
         // This will speed things up as we add items.
         SetRedraw(FALSE);
 
@@ -438,7 +438,7 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lparam)
 }
 
 // Enumerates the items in the specified folder, and inerts each item into
-// the list-view. The LVITEM param parameter holds a pointer to the 
+// the list-view. The LVITEM param parameter holds a pointer to the
 // ListItemData.
 void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
 {

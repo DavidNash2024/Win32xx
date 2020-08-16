@@ -10,6 +10,9 @@ using namespace std;
 // UDP Client.
 // Initiate a connect to the UDP server by sending it some text.
 
+/////////////////////////////////////////
+// Declaration of the CClientSocket class
+//
 class CClientSocket : public CSocket
 {
 public:

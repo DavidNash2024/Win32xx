@@ -1,5 +1,6 @@
-///////////////////////////////////////
+/////////////////////////////
 // ClientDialog.h
+//
 
 #ifndef CLIENTDIALOG_H
 #define CLIENTDIALOG_H
@@ -7,8 +8,9 @@
 // User defined message
 #define UWM_SOCKETMSG    WM_APP+1
 
-
+/////////////////////////////////////////
 // Declaration of the CClientDialog class
+//
 class CClientDialog : public CDialog
 {
 public:

@@ -1,11 +1,14 @@
-////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainFrame class
+/////////////////////////////
+// Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
-
+///////////////////////////////////
+// CMainFrame function definitions.
+//
 CMainFrame::CMainFrame() : m_pDockText(0), m_pDockTree(0), m_pDockList(0)
 {
     SetView(m_mainView);

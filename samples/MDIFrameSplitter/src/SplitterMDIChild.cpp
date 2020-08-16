@@ -123,7 +123,7 @@ BOOL CSplitterMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-// Sets the text color in the simple view. 
+// Sets the text color in the simple view.
 void CSplitterMDIChild::OnColor(COLORREF rgb)
 {
     m_view.GetSimpleView().SetColor(rgb);

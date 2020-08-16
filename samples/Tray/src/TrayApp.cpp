@@ -1,11 +1,13 @@
-////////////////////////////////////////
+/////////////////////////////
 // SimpleApp.cpp
+//
 
 #include "stdafx.h"
 #include "TrayApp.h"
 
-
-// Definitions for the CTrayApp class
+/////////////////////////////////
+// CTrayApp function definitions.
+//
 CTrayApp::CTrayApp()
 {
     // Constructor for CTrayApp

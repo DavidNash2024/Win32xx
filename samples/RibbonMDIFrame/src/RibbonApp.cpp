@@ -1,11 +1,13 @@
-////////////////////////////////////////
+/////////////////////////////
 // RibbonApp.cpp
+//
 
 #include "stdafx.h"
 #include "RibbonApp.h"
 
-
-// Definitions for the CRibbonFrameApp class
+////////////////////////////////////////
+// CRibbonFrameApp function definitions.
+//
 CRibbonFrameApp::CRibbonFrameApp()
 {
     // Constructor for CRibbonFrameApp

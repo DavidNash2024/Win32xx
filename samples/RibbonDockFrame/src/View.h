@@ -1,10 +1,9 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // View.h
-//  Declaration of the CView class
+//
 
 #ifndef VIEW_H
 #define VIEW_H
-
 
 // Message - sent to the parent (Frame) window when a file is dropped on the View window
 //   WPARAM: A pointer to the filename (LPCTSTR)
@@ -20,8 +19,9 @@
 //   LPARAM: unused
 #define UWM_SENDPOINT (WM_APP + 0x0003)
 
-
-// The PlotPoint struct holds the drawing information for each point
+////////////////////////////////////////////////////////////
+// Declaration of the PlotPoint struct.
+// This struct holds the drawing information for each point.
 struct PlotPoint
 {
     int x;
@@ -30,7 +30,9 @@ struct PlotPoint
     COLORREF color;
 };
 
-
+/////////////////////////////////
+// Declaration of the CView class
+//
 class CView : public CWnd
 {
 public:
@@ -59,7 +61,6 @@ private:
 
     CBrush m_brush;
     COLORREF m_penColor;
-
 };
 
 

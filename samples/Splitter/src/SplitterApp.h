@@ -1,13 +1,15 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // SplitterApp.h
-//  Declaration of the CApp class
+//
 
 #ifndef SPLITTERAPP_H
 #define SPLITTERAPP_H
 
 #include "Mainfrm.h"
 
-
+/////////////////////////////////////////
+// Declaration of the CSplitterApp class.
+//
 class CSplitterApp : public CWinApp
 {
 public:
@@ -20,10 +22,7 @@ private:
     CMainFrame m_frame;
 };
 
-
 // returns a pointer to the CSplitterApp object
 inline CSplitterApp* GetSplitApp() { return static_cast<CSplitterApp*>(GetApp()); }
 
-
 #endif // define EFRAMEAPP_H
-

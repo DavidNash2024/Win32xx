@@ -1,42 +1,13 @@
 /* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                  (App.cpp) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2016, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
-|                          robert.c.tausworthe@ieee.org                        |
+|                    Authors: Robert Tausworthe, David Nash                    |
 |                                                                              |
 ===============================================================================*
 
     Contents Description:  This file contains the WinMain() function and
     CApp Class implementation for the CommonDialogs demonstration sample
-    application using the Win32++ Windows interface classes, Copyright
-    (c) 2005-2016 David Nash, under permissions granted therein.
-
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Special Conventions:
+    application using the Win32++ Windows interface classes.
 
     Programming Notes: The architectural members of this program set,
     viz., CApp, CDoc, CMainFrame, and CView, are meant to be edited and
@@ -46,96 +17,18 @@
     controls, and client area, font selection for controls, standard file
     open and save-as dialogs, and most-recently used list (MRU), with
     persistent data stored in and retrieved from archive files.
-
-    Acknowledgement:
-        The author would like to thank and acknowledge the advice,
-        critical review, insight, and assistance provided by David Nash
-        in the development of this work.
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
+    
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
 #include "stdafx.h"
-
-#include <sys\stat.h>
-#include <io.h>
 #include "StdApp.h"
 
-/*******************************************************************************
-
-    Implementation of the CApp class
-
-********************************************************************************
-
-    Local extern and (static) default constants         */
-
-
-/*******************************************************************************
-
-    Implementation of the CApp class
-
-*=============================================================================*/
-    BOOL CApp::
-InitInstance()                              /*
-
-    This method is immediately called from the base class (CWinApp) Run()
-    method to create the frame, perform initialization of the app, and
-    return TRUE on success. Returning FALSE terminates the program.
-
-    Here, the About box information, app path, app directory, app name,
-    app exe name, archive file name, and other constants are generated and
-    saved as public data members of this object via the mere declaration of
-    the CAppGlobal m_AppGlobal object in App.h.
-*-----------------------------------------------------------------------------*/
-{
-      //Create the Frame Window
-    m_Frame.Create();   // throws a CWinException on failure
-
-    return TRUE;
-}
-
-/*******************************************************************************
-
-    Static Members                                                  */
-
-static const CString months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec";
-
-/*============================================================================*/
-    ULONG CApp::
-DatInt(const CString &date)                                             /*
-
-    Convert the date, of form mmm dd yyyy, to a long integer of the form
-    0xyyyymodd, where mmm is character based month, and mo is 0 (Jan) to
-    11 (Dec).
-*-----------------------------------------------------------------------------*/
-{
-    int     yyyy = _ttoi(date.Mid(7, 4));
-    int     dd = _ttoi(date.Mid(4, 2));
-    int     mo   = months.Find(date.Mid(0, 3)) / 4;
-    ULONG   ans  = ((yyyy * 100 + mo) * 100) + dd;
-    return  ans;
-}
-
-/*============================================================================*/
-    CString CApp::
-IntDat(ULONG hexdate)                                               /*
-
-    Convert the hex date, of form 0xyyyymodd, to a CString date of the form
-    mmm dd yyyy,  where mmm is character based month, and mo is 0 (Jan) to
-    11 (Dec).
-*-----------------------------------------------------------------------------*/
-{
-    UINT dd = hexdate % 100;
-    UINT mo = (hexdate / 100) % 100;
-    UINT yyyy = (hexdate / 10000);
-    CString ans;
-    ans.Format(_T("%s %02d, %u"),  months.Mid(4 * mo, 3).c_str(), dd, yyyy);
-    return ans;
-}
+  // the one and only CApp object, put here to reduce the stack size
+static CApp thisApp;
 
 /*******************************************************************************
 
@@ -143,16 +36,17 @@ IntDat(ULONG hexdate)                                               /*
 
 *=============================================================================*/
     int APIENTRY
-WinMain(HINSTANCE , HINSTANCE , LPSTR , int nCmdShow)                         /*
+WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int show)/*
 
-    Application entry point: hInstance is the handle to the current
-    instance of the application; hPrevInstance is always 0; lpCmdLine
-    is a pointer to a null-terminated string specifying the command line
-    for the application, excluding the program name; nCmdShow specifies
-    how the window is to be shown (consult WinMain() documentation for
-    parameter values).
+    Application entry point. The normal current and previous instance handles, 
+    as well as the command line string and window show parameter, are unused 
+    in this application.
 *-----------------------------------------------------------------------------*/
 {
+    UNREFERENCED_PARAMETER(instance);
+    UNREFERENCED_PARAMETER(prevInstance);
+    UNREFERENCED_PARAMETER(cmdLine);
+    UNREFERENCED_PARAMETER(show);
       // set default return value
     int rtn = -1;
       // Create and check the semaphore that limits the number of
@@ -161,29 +55,24 @@ WinMain(HINSTANCE , HINSTANCE , LPSTR , int nCmdShow)                         /*
     static  const   LPCTSTR semaphoreName = _T("Win32++_CommonDialogsDemo");
     static  const   int     nInstances = 1; // number of allowed instances
     static  HANDLE  m_hSem;
-
     m_hSem = CreateSemaphore(NULL, nInstances, nInstances, semaphoreName);
     if (WaitForSingleObject(m_hSem, 0) == WAIT_TIMEOUT)
     {
         ::MessageBox(NULL, _T("The allowed number of instances of this\n")
-        _T("application are already running."), _T("Stop"), MB_OK |
+        _T("application are already running."), _T("Stop"), MB_OK | 
         MB_ICONSTOP | MB_TASKMODAL);
         CloseHandle(m_hSem);
         return 0;  // before entering the message loop
     }
-      // declare the CApp object and run the application
+      // Run the application
     try
     {
-        CApp thisApp;
-          // save entry parameters
-        thisApp.SetCmdShow(nCmdShow);
-          // Run the application
         rtn = thisApp.Run();
     }
     catch (CException &e)   // catch all CException events
     {
           // Process the exception and quit
-        CString msg = e.what() + (CString)_T("\n") + e.GetText() +
+        CString msg = e.what() + (CString)_T("\n") + e.GetText() + 
         (CString)_T("\nWinMain Goodbye...");
         ::MessageBox(NULL, msg, _T("Standard Exception"), MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);
@@ -207,10 +96,115 @@ WinMain(HINSTANCE , HINSTANCE , LPSTR , int nCmdShow)                         /*
         ::MessageBox(NULL, msg, _T("Unknown Exception"), MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);
     }
-
       // release the semaphore
     ReleaseSemaphore(m_hSem, 1, NULL);
     CloseHandle(m_hSem);
     return rtn;
 }
 
+/*******************************************************************************
+
+    Implementation of the CApp class
+
+*=============================================================================*/
+    BOOL CApp::
+InitInstance()                                                              /*
+
+    This method is immediately called from the base class (CWinApp) Run()
+    method to create the frame, perform initialization of the app and
+    return TRUE on success. Returning FALSE terminates the program.
+*-----------------------------------------------------------------------------*/
+{
+      // Initialize data strings containing the AboutBox information, the 
+      // app path, the app directory, the app name, and the archive path.
+    CString appPath;
+    ::GetModuleFileName(NULL, appPath.GetBuffer(FILENAME_MAX), FILENAME_MAX);
+    appPath.ReleaseBuffer();
+    CFile f; // no file opened here, just using the name parsing parts
+    f.SetFilePath(appPath);
+    CString appName  = f.GetFileNameWOExt();
+      // locate the archive file
+    CString archiveDir = MakeAppDataPath(LoadString(IDS_DATAPATH_SUBDIR) + appName);
+      // form the archive file path name
+    CString archivePath  = archiveDir + _T("\\") + appName +
+         LoadString(IDS_ARCHIVE_FILE_EXT);
+    m_frame.SetArchivePath( archivePath);
+      // the document default extension
+    m_frame.SetDocExt(LoadString(IDS_DOC_DEFAULT_EXT));
+      // the document open/save filter
+    m_frame.SetDocFilter(LoadString(IDS_FILE_FILTER));
+      // the maximum allowed number of MRU entries (limit <= 16 by Win32++)
+    m_frame.SetMaxMRU(MIN(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16));
+      // make Win32++ version string
+    UINT ver = _WIN32XX_VER;
+    CString Win32PPVersion;
+    Win32PPVersion.Format(_T("Win32++ Version %d.%d.%d"), ver / 0x100,
+        (ver % 0x100) / 0x10, (ver % 0x10));
+      // generate compiler information for the About box
+    CString compiler;
+#ifdef __GNUC__
+    compiler.Format(_T("Gnu C++ %d.%d.%d"), __GNUC__, __GNUC_MINOR__,
+        __GNUC_PATCHLEVEL__);
+#elif defined(_MSC_VER)
+    compiler.Format(_T("MS C++ %d.%d"), _MSC_VER / 100, _MSC_VER % 100);
+#else
+    compiler = _T("(unknown compiler name)");
+#endif
+    CString compileDate = __DATE__;
+      // put this information into the AboutBox information
+    CString aboutBoxInfo;
+    aboutBoxInfo.Format(_T("%s\n\n(%s.exe)\n%s\n%s\ncompiled with ")
+        _T("%s on %s"), LoadString(IDW_MAIN).c_str(), appName.c_str(),
+        LoadString(IDS_APP_VERSION).c_str(), Win32PPVersion.c_str(),
+        compiler.c_str(), compileDate.c_str());
+    m_frame.GetAboutBox().SetStatus(aboutBoxInfo);
+      // now create the Frame Window
+    m_frame.Create();   // throws a CWinException on failure  
+    return TRUE;
+}
+
+/*=============================================================================*/
+    CString CApp::
+MakeAppDataPath(const CString& subpath) const                /*
+
+    Return a string consisting of the APPDATA environmental path with the
+    given subpath appended.  Create this path if it does not exist. If
+    an error is encountered, throw a user exception.
+*-----------------------------------------------------------------------------*/
+{
+    ::SetLastError(0);
+    CString app_data_path = GetAppDataPath();
+
+    int from, to, next;
+    for (from = 0, to = subpath.GetLength(); from < to; from = ++next)
+    {
+        int nextbk = subpath.Find(_T("\\"), from);
+        int nextfwd = subpath.Find(_T("/"), from);
+        next = MAX(nextbk, nextfwd);
+        if (next < 0)
+            next = to;
+
+        CString add = subpath.Mid(from, next - from);
+        app_data_path += _T("\\") + add;
+        if ((::CreateDirectory(app_data_path, 0) == 0) && 
+        GetLastError() != ERROR_ALREADY_EXISTS)
+        {
+            CString msg = app_data_path + _T("\nDirectory creation error.");
+            throw CUserException(msg);
+        }
+    }
+    return app_data_path;
+}
+
+/*============================================================================*/
+    BOOL CApp::
+OnIdle(LONG count)                                                          /*
+
+    Update the status of controls when the message queue is empty.
+*-----------------------------------------------------------------------------*/
+{
+       UNREFERENCED_PARAMETER(count);
+       m_frame.UpdateControlUIState();
+       return FALSE;
+}
+/*----------------------------------------------------------------------------*/

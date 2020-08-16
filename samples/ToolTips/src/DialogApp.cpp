@@ -1,12 +1,14 @@
-///////////////////////////////////////
+/////////////////////////////
 // DialogApp.cpp
+//
 
 #include "stdafx.h"
 #include "DialogApp.h"
 #include "resource.h"
 
-
-// Definitions for the CDialogApp class
+///////////////////////////////////
+// CDialogApp function definitions.
+//
 CDialogApp::CDialogApp() : m_myDialog(IDD_DIALOG1)
 {
 }

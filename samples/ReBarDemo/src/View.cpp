@@ -1,18 +1,22 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // View.cpp
-//  Definitions for the CView class
-
+//
 
 #include "stdafx.h"
 #include "view.h"
 #include "resource.h"
 
+/////////////////////////////
+// CView function definitions
+//
+
+// Constructor.
 CView::CView()
 {
 }
 
+// Called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
-// OnDraw is called when part or all of the window needs to be redrawn
 {
     CRect rc = GetClientRect();
 
@@ -20,12 +24,13 @@ void CView::OnDraw(CDC& dc)
     dc.DrawText(_T("Press the arrows to change the rebar's orientation"), -1, rc,  DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
+// Called after the window is created.
 void CView::OnInitialUpdate()
-// OnInitialUpdate is called immediately after the window is created
 {
     TRACE("View window created\n");
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Here we set the defaults used by the create function for the view window
@@ -36,6 +41,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+// Sets the WNDCLASS parameters before the window is created.
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Here we set the Window class parameters.
@@ -55,6 +61,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
 
+// Process the view's window messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // All window messages for this window pass through WndProc
 {

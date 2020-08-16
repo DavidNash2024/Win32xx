@@ -126,7 +126,7 @@ CContainClasses::CContainClasses()
     SetView(m_viewClasses);
 }
 
-// Adds a ComboBoxEx control to the toolbar. 
+// Adds a ComboBoxEx control to the toolbar.
 void CContainClasses::AddCombo()
 {
     int comboWidth = 120;

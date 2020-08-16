@@ -1,10 +1,14 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // MyPropertySheet.h
+//
 
 #ifndef MYPROPERTYSHEET_H
 #define MYPROPERTYSHEET_H
 
-
+////////////////////////////////////////////
+// Declaration of the CMyPropertySheet class
+// A property sheet has several property pages
+//
 class CMyPropertySheet : public CPropertySheet
 {
 public:
@@ -13,9 +17,12 @@ public:
     virtual void OnDestroy() { TRACE("OnDestroy\n"); }
     virtual void OnInitialUpdate();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
 };
 
+///////////////////////////////////////
+// Declaration of the CButtonPage class
+// The property sheet for the button page
+//
 class CButtonPage : public CPropertyPage
 {
 public:
@@ -30,6 +37,10 @@ public:
     virtual BOOL Validate();
 };
 
+///////////////////////////////////////
+// Declaration of the CComboPage class
+// The property sheet for the combo page
+//
 class CComboPage : public CPropertyPage
 {
 public:
@@ -42,7 +53,6 @@ public:
         SetModified(TRUE);
         return TRUE;
     }
-
 };
 
 

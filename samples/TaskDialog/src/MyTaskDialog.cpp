@@ -1,10 +1,13 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // MyTaskDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyTaskDialog.h"
 
-
+//////////////////////////////////////
+// CMyTaskDialog function definitions.
+//
 BOOL CMyTaskDialog::OnTDButtonClicked(int buttonID)
 // Called when the user selects a button or command link.
 {

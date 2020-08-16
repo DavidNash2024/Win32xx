@@ -1,13 +1,17 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "Mainfrm.h"
 #include "PictureApp.h"
 #include "resource.h"
 
+//////////////////////////////////
+// CMainFrame function definitions
+//
 
-// Definitions for the CMainFrame class
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Constructor for CMainFrame. Its called after CFrame's constructor
@@ -23,15 +27,14 @@ CMainFrame::CMainFrame()
     LoadRegistryMRUSettings(4);
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -56,6 +59,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called when the window is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -76,13 +80,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+// Issue a close request to the frame to end the application.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
     return TRUE;
 }
 
+// Called when a MRU file selection is made.
 BOOL CMainFrame::OnFileMRU(WPARAM wparam)
 {
     UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
@@ -97,12 +102,14 @@ BOOL CMainFrame::OnFileMRU(WPARAM wparam)
     return TRUE;
 }
 
+// Displays a blank (black) image.
 BOOL CMainFrame::OnFileNew()
 {
     m_view.NewPictureFile();
     return TRUE;
 }
 
+// Displays the file choose dialog an loads an image file.
 BOOL CMainFrame::OnFileOpen()
 {
     LPCTSTR filters = _T("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
@@ -119,6 +126,7 @@ BOOL CMainFrame::OnFileOpen()
     return TRUE;
 }
 
+// Called when an image has been loaded from a file.
 LRESULT CMainFrame::OnFileLoaded(LPCTSTR fileName)
 {
     SetWindowText(fileName);
@@ -127,6 +135,7 @@ LRESULT CMainFrame::OnFileLoaded(LPCTSTR fileName)
     return 0;
 }
 
+// Displays the file choose dialog and saves the image to the file.
 BOOL CMainFrame::OnFileSaveAs()
 {
     if (m_view.GetPicture())
@@ -172,9 +181,10 @@ BOOL CMainFrame::OnFileSaveAs()
     return TRUE;
 }
 
+// Sets the resource identifiers and images for the toolbar buttons
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
+    // Set the resource identifiers for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN  );
     AddToolBarButton( IDM_FILE_SAVE  );
@@ -194,6 +204,7 @@ void CMainFrame::SetupToolBar()
     SetToolBarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 }
 
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

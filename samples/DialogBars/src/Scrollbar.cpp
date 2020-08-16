@@ -16,7 +16,7 @@ CMyScrollBar::CMyScrollBar()
     ZeroMemory(&m_si, sizeof(SCROLLINFO));
 }
 
-// Called after the Scrollbar is attached. 
+// Called after the Scrollbar is attached.
 void CMyScrollBar::OnInitialUpdate()
 {
     // Set the Scroll bar position

@@ -1,16 +1,22 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // TestWnd.cpp
-//  Definitions for the CTestWindow class
+//
 
 #include "stdafx.h"
 #include "TestWnd.h"
 #include "PerfApp.h"
 
 
+///////////////////////////////////
+// CTestWindow function definitions
+//
+
+// Constructor.
 CTestWindow::CTestWindow() : m_windowCount(0)
 {
 }
 
+// Creates the test window.
 void CTestWindow::CreateWin(int i)
 {
     m_windowCount = i + 1;
@@ -20,6 +26,7 @@ void CTestWindow::CreateWin(int i)
         420, 50 + 4*i, 300, 200, NULL, NULL);
 }
 
+// Called after the test window is created.
 void CTestWindow::OnInitialUpdate()
 {
     // Get a pointer to the CMainWnd object
@@ -29,6 +36,7 @@ void CTestWindow::OnInitialUpdate()
     mainWnd.PostMessage(WM_WINDOWCREATED, 0, 0);
 }
 
+// Processes the Test Window's messages.
 LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     static LRESULT messages = 0;

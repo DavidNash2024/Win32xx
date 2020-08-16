@@ -1,59 +1,17 @@
 /* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]         (MyFontDialog.cpp) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2016, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
-|                          robert.c.tausworthe@ieee.org                        |
+|                    Authors: Robert Tausworthe, David Nash                    |
 |                                                                              |
 ===============================================================================*
 
     Contents Description: Implementation of the MyFontDialog class for
-    applications using the Win32++ Windows interface classes, Copyright
-    (c) 2005-2016 David Nash, under permissions granted therein. This class
-    derives from the CFontDalog class found in the Win32++ Windows interface
-    framework.
-
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Usage Information: This class may be used in place of the CFontDialog
-    class in instances where serialization of the font characteristics
-    are meant to be persisitent across executions of the application.
-
-    Acknowledgement:
-    The author would like to thank and acknowledge the advice, critical
-    review, insight, and assistance provided by David Nash in the
-    development of this work.
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-
-********************************************************************************
-
-    Implementation of the MyFontDialog class
+    applications using the Win32++ Windows interface classes. This class
+    derives from the CFontDalog class found in the framework. 
+    
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -76,8 +34,8 @@ MyFontDialog(DWORD dwFlags, HDC hdcPrinter /* = 0 */)           /*
     ZeroMemory(&m_tm, sizeof(m_tm));
     SetBoxTitle(_T("Font"));
       // default font, 10pt Courier New
-    m_Font.CreatePointFont(10, _T("Courier New"));
-    SetChoiceFont(m_Font);
+    m_font.CreatePointFont(10, _T("Courier New"));
+    SetChoiceFont(m_font);
 }
 
 /*============================================================================*/
@@ -120,12 +78,12 @@ RecordFontMetrics()                                                     /*
 
       // select the current font into the device context:
       // save the old
-    CFont oldfont = dc.SelectObject(m_Font);
+    CFont oldfont = dc.SelectObject(m_font);
 
       // measure the font width and height
     dc.GetTextMetrics(m_tm);
-    m_avgWdHt.cx = m_tm.tmAveCharWidth;
-    m_avgWdHt.cy = m_tm.tmHeight + m_tm.tmExternalLeading;
+    m_fontSize.cx = m_tm.tmAveCharWidth;
+    m_fontSize.cy = m_tm.tmHeight + m_tm.tmExternalLeading;
 
       // restore entry environment
     dc.SelectObject(oldfont);
@@ -145,36 +103,36 @@ Serialize(CArchive &ar)                                                 /*
     {
           // save the font as a LOGFONT
         LOGFONT lf = GetLogFont();
-        ArchiveObject f(&lf, sizeof(LOGFONT));
+        ArchiveObject f(&lf, sizeof(LOGFONT));              
             ar << f;
           // save m_tm
-        ArchiveObject g(GetTextMetricPtr(), sizeof(TEXTMETRIC));
+        ArchiveObject g(GetTextMetric(), sizeof(TEXTMETRIC));
         ar << g;
           // save character height and width
         ar << GetAvgSize();
           // save the font color
         ar << GetParameters().rgbColors;
     }
-    else
+    else 
     {     // recover the font as LOGFONT
         LOGFONT lf;
-        ArchiveObject f(&lf, sizeof(LOGFONT));
-        ar >> f;
-        CHOOSEFONT cf = GetParameters();
-        cf.lpLogFont = &lf;
-        SetParameters(cf);
-        SetChoiceLogFont(lf);
+        ArchiveObject f(&lf, sizeof(LOGFONT));              
+        ar >> f;                                            
+        CHOOSEFONT cf = GetParameters();                    
+        cf.lpLogFont = &lf;                                 
+        SetParameters(cf);                                  
+        SetChoiceLogFont(lf);                               
           // recover the text metrics
-        ArchiveObject g(GetTextMetricPtr(), sizeof(TEXTMETRIC));
+        ArchiveObject g(GetTextMetric(), sizeof(TEXTMETRIC));
         ar >> g;
           // recover character height and width
         SIZE z;
         ar >> z;
-        m_avgWdHt = z;
+        m_fontSize = z;
           // retrieve the font color
         COLORREF rgb;
         ar >> rgb;
-        SetColor(rgb);
+        SetColor(rgb);          
     }
 }
 
@@ -190,20 +148,20 @@ SetFontIndirect(const LOGFONT& lf)                                      /*
   // convert lf to a CFont
     try
     {
-        m_Font.CreateFontIndirect(lf);
+        m_font.CreateFontIndirect(lf);
 
         // if it worked, put it in this object
-        m_LogFont = lf;
+        m_logFont = lf;
         CHOOSEFONT cf = GetParameters();
-        cf.lpLogFont = &m_LogFont;
+        cf.lpLogFont = &m_logFont;
         SetParameters(cf);
     }
-
-    catch (const CResourceException&)
+    
+    catch (const CResourceException&) 
     {
         ::MessageBox(NULL, _T("Font creation error."),
             _T("Error"), MB_OK | MB_ICONEXCLAMATION |
             MB_TASKMODAL);
     }
 }
-
+/*----------------------------------------------------------------------------*/

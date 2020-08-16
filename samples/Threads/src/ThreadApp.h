@@ -1,12 +1,15 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // ThreadApp.h
-//  Declaration of the CThreadApp class
+//
 
 #ifndef THREADAPP_H
 #define THREADAPP_H
 
 #include "MainWnd.h"
 
+///////////////////////////////////////
+// Declaration of the CThreadApp class.
+//
 class CThreadApp : public CWinApp
 {
 public:

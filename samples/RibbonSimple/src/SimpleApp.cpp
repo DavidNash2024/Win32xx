@@ -1,11 +1,13 @@
-////////////////////////////////////////
+/////////////////////////////
 // SimpleApp.cpp
+//
 
 #include "stdafx.h"
 #include "SimpleApp.h"
 
-
-// Definitions for the CSimpleRibbonApp class
+/////////////////////////////////////////
+// CSimpleRibbonApp function definitions.
+//
 CSimpleRibbonApp::CSimpleRibbonApp()
 {
     // Constructor for CSimpleRibbonApp

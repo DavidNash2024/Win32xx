@@ -1,13 +1,15 @@
-/////////////////////////////////////////
+/////////////////////////////
 // RibbonApp.h
+//
 
 #ifndef RIBBONAPP_H
 #define RIBBONAPP_H
 
 #include "MainMDIFrm.h"
 
-
-// Declaration of the CRibbonFrameApp class
+////////////////////////////////////////////
+// Declaration of the CRibbonFrameApp class.
+//
 class CRibbonFrameApp : public CWinApp
 {
 public:

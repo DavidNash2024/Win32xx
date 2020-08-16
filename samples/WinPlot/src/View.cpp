@@ -1,6 +1,6 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // View.cpp
-//  Definitions for the CView class
+//
 
 #include "stdafx.h"
 #include "view.h"
@@ -9,13 +9,15 @@
 
 using namespace Calc;
 
+//////////////////////////////
+// CView function definitions.
+//
 CView::CView() : m_inputDlg(IDD_INPUT), m_ymin(0), m_ymax(0)
 {
 }
 
-//////////////////////////////////////////////////////////////////////
-// Fills the m_points array
-//////////////////////////////////////////////////////////////////////
+
+// Fills the m_points array.
 bool CView::CalcPoints(double xmin, double xmax)
 {
     assert(xmin < xmax);
@@ -95,11 +97,9 @@ bool CView::CalcPoints(double xmin, double xmax)
     return isValid;
 }
 
-//////////////////////////////////////////////////////////////////////
 // Plot the function to the screen
 //  > sets up the device context, and calculates the scaling
 //  > calls the PlotAxis and PlotFunction subroutines
-//////////////////////////////////////////////////////////////////////
 void CView::DoPlot(CDC& dc)
 {
     if (m_points.size() == 0)
@@ -163,8 +163,8 @@ void CView::DrawLabel(CDC& dc)
     dc.TextOut(pt.x, pt.y, str);
 }
 
+// Called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
-// OnDraw is called when part or all of the window needs to be redrawn
 {
     if (m_calc.Get_Status() != st_ERROR)
     {
@@ -173,18 +173,16 @@ void CView::OnDraw(CDC& dc)
     }
 }
 
+// OnInitialUpdate is called after the window is created
 void CView::OnInitialUpdate()
-// OnInitialUpdate is called immediately after the window is created
 {
     TRACE("View window created\n");
 }
 
-//////////////////////////////////////////////////////////////////////
 // Draws the x and y axis,  called by DoPlot
 // > draw the major axis
 // > draw the ticks
 // > write the tick labels
-//////////////////////////////////////////////////////////////////////
 void CView::PlotAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
 {
     CRect rect;
@@ -216,16 +214,11 @@ void CView::PlotAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double
     int oldbkmode = dc.SetBkMode(TRANSPARENT);
     dc.SetTextAlign(TA_LEFT);
 
-    //////////////////////////
     //plot the x axis
-    //////////////////////////
 
     //adjust for rounding errors for m_ymin and m_ymax
     double ymax = m_ymax + .001 * (m_ymax - m_ymin);
     double ymin = m_ymin - .001 * (m_ymax - m_ymin);
-
-//  double ymax = m_ymax;
-//  double ymin = m_ymin;
 
     //ylinepos shifts the x axis down if the function doesn't cross it
     double ylinepos;
@@ -267,9 +260,7 @@ void CView::PlotAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double
         x = ++xticknum * xtickgap;
     }
 
-    ////////////////////
-    //plot the y axis
-    ////////////////////
+    // plot the y axis
 
     //xlinepos shifts the y axis left if the function doesn't cross it
     double xlinepos;
@@ -316,9 +307,8 @@ void CView::PlotAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double
     dc.SetBkMode(oldbkmode);
 }
 
-//////////////////////////////////////////////////////////////////////
-// Plots the function,   called by DoPlot
-//////////////////////////////////////////////////////////////////////
+
+// Plots the function, called by DoPlot
 void CView::PlotFunction(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
 {
     CRect rect;
@@ -351,22 +341,16 @@ void CView::PlotFunction(CDC& dc, double xnorm, double ynorm, double xoffset, do
     }
 }
 
+// Set the CREATESTRUCT parameters before the window is created.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
-    // Here we set the defaults used by the create function for the view window
-    // Preforming this is optional, but doing so allows us to
-    // take more precise control over the window we create.
-
     // Set the extended style
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+// Set the WNDCLASS parameters before the window is created.
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
-    // Here we set the Window class parameters.
-    // Preforming this is optional, but doing so allows us to
-    // take more precise control over the type of window we create.
-
     // Set the Window Class name
     wc.lpszClassName = _T("Win32++ View");
 
@@ -380,8 +364,8 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
 
-LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // All window messages for this window pass through WndProc
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
@@ -393,6 +377,3 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }
-
-
-
