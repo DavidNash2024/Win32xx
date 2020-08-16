@@ -1,14 +1,15 @@
-///////////////////////////////////////
+/////////////////////////////
 // DialogApp.h
+//
 
 #ifndef DIALOGAPP_H
 #define DIALOGAPP_H
 
-
 #include "SvrDialog.h"
 
-
+//////////////////////////////////////
 // Declaration of the CDialogApp class
+//
 class CDialogApp : public CWinApp
 {
 public:

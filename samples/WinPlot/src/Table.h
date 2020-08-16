@@ -1,15 +1,16 @@
-// Table.h: interface for the FunctionTable and SymbolTable classes.
+/////////////////////////////
+// Table.h:
 //
-//////////////////////////////////////////////////////////////////////
 
 #if !defined(_TABLE_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED)
 #define _TABLE_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
 
 namespace Calc
 {
-
+    /////////////////////////////
+    // A table of math functions.
+    //
     class FunctionTable
-        // A table of math functions.
     {
     public:
         FunctionTable();

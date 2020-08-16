@@ -1,12 +1,14 @@
 ///////////////////////////////
 // View.cpp
+//
 
 #include "stdafx.h"
 #include "View.h"
 #include "resource.h"
 
-
-// Definitions for the CView class
+//////////////////////////////
+// CView function definitions.
+//
 void CView::Minimize()
 {
     NOTIFYICONDATA nid;

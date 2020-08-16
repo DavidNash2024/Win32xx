@@ -1,5 +1,6 @@
-/////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.h
+//
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
@@ -7,7 +8,9 @@
 #include "View.h"
 #include "InputDlg.h"
 
-// Declaration of the CMainFrame class
+///////////////////////////////////////
+// Declaration of the CMainFrame class.
+//
 class CMainFrame : public CFrame
 {
 public:
@@ -36,4 +39,3 @@ private:
 };
 
 #endif //MAINFRM_H
-

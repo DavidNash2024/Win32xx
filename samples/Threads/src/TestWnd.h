@@ -1,11 +1,13 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // TestWnd.h
-//  Declaration of the CTestWindow class
+//
 
 #ifndef TESTWND_H
 #define TESTWND_H
 
-
+////////////////////////////////////////
+// Declaration of the CTestWindow class.
+//
 class CTestWindow : public CWnd
 {
 public:
@@ -28,6 +30,5 @@ private:
 
     int m_window;
 };
-
 
 #endif  //TESTWIN_H

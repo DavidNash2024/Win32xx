@@ -1,8 +1,13 @@
+/////////////////////////////
+// Doc.cpp
+//
 
 #include "stdafx.h"
 #include "Doc.h"
 
-
+/////////////////////////////
+// CDoc function definitions.
+//
 void CDoc::FileOpen(LPCTSTR filename)
 // Loads the plotpoint data from the archive.
 // Throws an exception if unable to read the file.

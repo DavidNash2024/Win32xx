@@ -1,12 +1,15 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // SplitterPanes.h
+//
 
 #ifndef SPLITTERPANES_H
 #define SPLITTERPANES_H
 
 #include "Views.h"
 
-
+///////////////////////////////////////
+// Declaration for the CDockText class.
+//
 class CDockText : public CDocker
 {
 public:
@@ -17,6 +20,9 @@ private:
     CViewText m_view;
 };
 
+///////////////////////////////////////
+// Declaration for the CDockTree class.
+//
 class CDockTree : public CDocker
 {
 public:
@@ -27,6 +33,9 @@ private:
     CViewTree m_view;
 };
 
+///////////////////////////////////////
+// Declaration for the CDockList class.
+//
 class CDockList : public CDocker
 {
 public:

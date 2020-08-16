@@ -1,11 +1,13 @@
-//////////////////////////////////////////////
-//TabDemoApp.cpp
+/////////////////////////////
+// TabDemoApp.cpp
+//
 
 #include "stdafx.h"
 #include "TabDemoApp.h"
 
-
-// Definitions for the CTabDemoApp class
+////////////////////////////////////
+// CTabDemoApp function definitions.
+//
 CTabDemoApp::CTabDemoApp()
 {
 }

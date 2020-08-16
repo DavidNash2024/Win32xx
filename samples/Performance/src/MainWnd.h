@@ -1,6 +1,6 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // MainWnd.h
-//  Declaration of the CMainWindow class
+//
 
 #ifndef MAINWND_H
 #define MAINWND_H
@@ -12,6 +12,9 @@
 
 typedef Shared_Ptr<CTestWindow> TestWindowPtr;
 
+//////////////////////////////////////
+// Declaration of the CMainFrame class
+//
 class CMainWindow : public CWnd
 {
 public:

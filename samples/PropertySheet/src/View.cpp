@@ -1,15 +1,20 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // View.cpp
-//  Definitions for the CView class
+//
 
 #include "stdafx.h"
 #include "view.h"
 
+/////////////////////////////
+// CView function definitions
+//
 
+// Constructor.
 CView::CView()
 {
 }
 
+// Called when part of the view window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {
     CRect rc = GetClientRect();
@@ -18,12 +23,14 @@ void CView::OnDraw(CDC& dc)
     dc.DrawText(_T("Choose a Property Sheet from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
+// Called after the view window is created.
 void CView::OnInitialUpdate()
 {
     // OnInitialUpdate is called immediately after the window is created
     TRACE("View Window Created\n");
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Here we set the defaults used by the create function for the view window
@@ -37,6 +44,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+// Process the view's window messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

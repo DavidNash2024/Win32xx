@@ -78,7 +78,7 @@ void CMainFrame::OnClose()
     CFrame::OnClose();
 }
 
-// Issue a close request to the frame. 
+// Issue a close request to the frame.
 // OnClose is called when the window is closed.
 void CMainFrame::OnFileExit()
 {

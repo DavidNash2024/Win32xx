@@ -1,8 +1,13 @@
+/////////////////////////////
+// CDoc.h
+//
 
 #include "stdafx.h"
 #include "Doc.h"
 
-
+/////////////////////////////
+// CDoc function definitions.
+//
 BOOL CDoc::FileLoad(LPCTSTR filename)
 {
     BOOL isLoaded = FALSE;

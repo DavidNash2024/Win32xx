@@ -1,57 +1,17 @@
 /* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                    (Doc.h) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2016, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
-|                          robert.c.tausworthe@ieee.org                        |
+|                    Authors: Robert Tausworthe, David Nash                    |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CDoc class for the
-    CommonDialogs sample  application using the Win32++ Windows interface
-    classes, Copyright (c) 2005-2016 David Nash, under permissions granted
-    therein.
+    Contents Description: Declaration of the CDoc class for the CommonDialogs 
+    sample program using the Win32++ Windows interface classes. This class
+    provides the document management functions for the application.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-
-    Special Conventions:
-
-    Acknowledgement:
-        The author would like to thank and acknowledge the advice,
-        critical review, insight, and assistance provided by David Nash
-        in the development of this work.
-
-    Programming Notes:
-               The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-
-********************************************************************************
-
-    Declaration of the CDoc class
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -62,71 +22,45 @@ class CMainFrame;
 class CView;
 
 /*============================================================================*/
-    class
-CDoc    : public CObject                        /*
+    class 
+CDoc    : public CObject                                                    /*
 
-    This application's document class, a pattern for developing new apps.
+    This application's document management class.
 *-----------------------------------------------------------------------------*/
 {
     public:
         CDoc();
-        virtual ~CDoc();
-        const CString&  GetExt();
-        const CString&  GetFilter();
+        virtual ~CDoc(){}
 
-        const  CString& GetFilePath() const
-                        { return (m_open_doc_path.IsEmpty() ?
-                          m_Doc_file.GetFilePath() :
-                          m_open_doc_path);}
+        CString GetDocDir()  const 
+                    { CFile f; f.SetFilePath(m_docPath);
+                      return f.GetFileDirectory();}
+        CString GetDocPath() const { return m_docPath;}
         BOOL    IsDirty();
-        BOOL    IsOpen() const {return m_Doc_is_open;}
-        BOOL    MakeNewDoc(const CString&);
+        BOOL    IsOpen() const {return m_isOpen;}
+        BOOL    MakeNewDoc(LPCTSTR);
         void    OnCloseDoc();
-        void    OnCopy();
-        void    OnCut();
-        void    OnDelete();
-        void    OnPaste();
         void    OnFindReplace(UINT, WPARAM, LPARAM);
         void    OnFRFindNext(MyFindReplaceDialog*);
         void    OnFRReplaceAll(MyFindReplaceDialog*);
         void    OnFRReplaceCurrent(MyFindReplaceDialog*);
         void    OnFRTerminating(MyFindReplaceDialog*);
-        void    OnNewDoc();
-        void    OnOpenDoc();
-        void    OnRedo();
-        void    OnUndo();
         BOOL    OnSaveDoc();
-        void    OnSaveDocAs();
-        void    OnPageSetup();
-        BOOL    OpenDoc(const CString &);
-        void    Register(CMainFrame*, CView*);
+        BOOL    OpenDoc(LPCTSTR);
         void    SetDirty(BOOL b);
-        void    SetExt(const CString& ext)
-                          { m_Doc_file_ext = ext;}
-        void    SetFilter(const CString &s)
-                          { m_Doc_file_filter = s;}
-
-    protected:
-        CMainFrame&    GetFrame() { return *m_pParent;}
-        CRichEditView& GetREView();
-        CView&         GetView() { return *m_pView;}
-        virtual void   Serialize(CArchive &ar);
+        void    SetDataPath(CView*);
 
     private:
-        CHARRANGE FindNext(const MyFindReplaceDialog&, CHARRANGE);
-        void      NotFound(const MyFindReplaceDialog&);
-
-          // private data
-        CFile   m_Doc_file;        // holds the document name, path, etc.
-        BOOL    m_Doc_is_open;     // the document status
-        CString m_Doc_file_ext;    // default file extension
-        CString m_Doc_file_filter; // file dialog filter
-        CString m_find_next;       // current string to find
-        CString m_replace_with;    // replacement string
-        CString m_open_doc_path;   // the path of the open document
-        CView*  m_pView;           // the view for this document
-        CMainFrame* m_pParent;     // the parent frame
-        BOOL    m_UnicodeFile;     // Unicode if TRUE
+        CHARRANGE   FindNext(const MyFindReplaceDialog&, CHARRANGE);
+        CRichEditView& GetRichView() const;
+        void        NotFound(const MyFindReplaceDialog&);
+        void        Serialize(CArchive &ar);
+            
+        BOOL        m_isOpen;       // the document status  
+        CString     m_findNext;     // current string to find
+        CString     m_replaceWith;  // replacement string
+        CString     m_docPath;      // the path of the open document
+        CView*      m_data;         // path to the document data
 };
 /*-----------------------------------------------------------------------------*/
 #endif //SDI_DOC_H

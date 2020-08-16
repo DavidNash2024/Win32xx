@@ -1,14 +1,15 @@
-//////////////////////////////////////////////////////////////
-// Views.cpp -  Definitions for the CViewSimple, CViewList,
-//              CViewTree and CViewText classes
+/////////////////////////////
+// Views.cpp
+//
 
 #include "stdafx.h"
 #include "Views.h"
 #include "resource.h"
 
 
-///////////////////////////////////////////////
-// CViewSimple functions
+////////////////////////////////////
+// CViewSimple function definitions.
+//
 void CViewSimple::OnDraw(CDC& dc)
 {
     //Centre some text in the window
@@ -28,9 +29,9 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-
-///////////////////////////////////////////////
-// CViewList functions
+//////////////////////////////////
+// CViewList function definitions.
+//
 CViewList::CViewList()
 {
 }
@@ -109,8 +110,9 @@ void CViewList::InsertItems()
 }
 
 
-///////////////////////////////////////////////
-// CViewTree functions
+//////////////////////////////////
+// CViewTree function definitions.
+//
 CViewTree::CViewTree()
 {
 }
@@ -174,8 +176,9 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
 }
 
 
-///////////////////////////////////////////////
-// CViewText functions
+//////////////////////////////////
+// CViewText function definitions.
+//
 void CViewText::OnAttach()
 {
     SetWindowText(_T("Text Edit Window\r\n\r\n\r\n\r\n You can type some text here ..."));
@@ -186,4 +189,3 @@ void CViewText::PreCreate(CREATESTRUCT& cs)
     cs.lpszClass = _T("EDIT");
     cs.style = ES_MULTILINE|WS_CHILD;
 }
-

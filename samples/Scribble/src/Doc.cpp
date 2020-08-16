@@ -1,7 +1,13 @@
+/////////////////////////////
+// Doc.h
+//
 
 #include "stdafx.h"
 #include "Doc.h"
 
+/////////////////////////////
+// CDoc function definitions.
+//
 
 // Loads the plotpoint data from the archive.
 // Throws an exception if unable to read the file.
@@ -12,7 +18,6 @@ void CDoc::FileOpen(LPCTSTR filename)
     ar >> *this;
 }
 
-
 // Stores the plotpoint data in the archive.
 // Throws an exception if unable to save the file.
 void CDoc::FileSave(LPCTSTR filename)
@@ -20,7 +25,6 @@ void CDoc::FileSave(LPCTSTR filename)
     CArchive ar(filename, CArchive::store);
     ar << *this;
 }
-
 
 // Uses CArchive to stream data to or from a file
 void CDoc::Serialize(CArchive &ar)
@@ -57,9 +61,7 @@ void CDoc::Serialize(CArchive &ar)
             GetAllPoints().push_back(pp);
         }
     }
-
 }
-
 
 // Stores the specified point information.
 void CDoc::StorePoint(int x, int y, bool isPenDown, COLORREF penColor)

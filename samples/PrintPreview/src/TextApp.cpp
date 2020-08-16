@@ -1,9 +1,14 @@
-///////////////////////////////////////////////
-// TextApp.cpp -  Definitions for the CTextApp class
+/////////////////////////////
+// TextApp.cpp
+//
 
 #include "stdafx.h"
 #include "TextApp.h"
 #include "resource.h"
+
+////////////////////////////////
+// CTextApp function definitions
+//
 
 // Constructor.
 CTextApp::CTextApp()

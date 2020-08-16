@@ -1,11 +1,13 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // MyEdit.cpp
-//  Definitions for the CMyEdit class
+//
 
 #include "stdafx.h"
 #include "MyEdit.h"
 
-
+////////////////////////////////
+// CMyEdit function definitions.
+//
 CMyEdit::CMyEdit()
 // Constructor
 {

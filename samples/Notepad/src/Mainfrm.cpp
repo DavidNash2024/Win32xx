@@ -1,5 +1,6 @@
-/////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.cpp
+//
 
 #include "stdafx.h"
 #include "mainfrm.h"
@@ -9,8 +10,11 @@
   #define SF_USECODEPAGE    0x0020
 #endif
 
+///////////////////////////////////
+// CMainFrame function definitions
+//
 
-// definitions for the CMainFrame class
+// Constructor.
 CMainFrame::CMainFrame() : m_encoding(ANSI), m_isWrapped(false), m_isRTF(false), m_oldFocus(0)
 {
     SetView(m_richView);
@@ -23,10 +27,10 @@ CMainFrame::CMainFrame() : m_encoding(ANSI), m_isWrapped(false), m_isRTF(false),
     LoadRegistryMRUSettings(5);
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
-
 
 // Clears the contents of the richedit view.
 void CMainFrame::ClearContents()
@@ -43,7 +47,6 @@ void CMainFrame::ClearContents()
 
     SetStatusIndicators();
 }
-
 
 // Determines the encoding of the specified file.
 void CMainFrame::DetermineEncoding(CFile& file)
@@ -90,8 +93,7 @@ void CMainFrame::DetermineEncoding(CFile& file)
     SetEncoding(encoding);
 }
 
-
-// The stream in callback function.
+// The stream in callback function. Reads from the file.
 DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamIn
@@ -105,8 +107,7 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
     return 0;
 }
 
-
-// The stream out callback function.
+// The stream out callback function. Writes to the file.
 DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamOut
@@ -118,7 +119,6 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
         ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }
-
 
 // Called when the window is closed.
 void CMainFrame::OnClose()
@@ -173,7 +173,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
 // OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
@@ -209,7 +208,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return  CFrame::OnCreate(cs);
 }
 
-
 // Called in response to the EN_DROPFILES notification.
 void CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
@@ -229,13 +227,11 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
     DragFinish(hDropInfo);
 }
 
-
 // Delete (cut) the current selection, if any.
 void CMainFrame::OnEditCut()
 {
     m_richView.Cut();
 }
-
 
 // Copy the current selection to the clipboard.
 void CMainFrame::OnEditCopy()
@@ -243,6 +239,7 @@ void CMainFrame::OnEditCopy()
     m_richView.Copy();
 }
 
+// Paste plain text or rich text to the document.
 void CMainFrame::OnEditPaste()
 {
    if (m_isRTF)
@@ -253,21 +250,25 @@ void CMainFrame::OnEditPaste()
         m_richView.PasteSpecial(CF_TEXT);
 }
 
+// Clears the contents of the document.
 void CMainFrame::OnEditDelete()
 {
     m_richView.Clear();
 }
 
+// Redoes the next action in the redo queue.
 void CMainFrame::OnEditRedo()
 {
     m_richView.Redo();
 }
 
+// Undoes the last operation in the undo queue.
 void CMainFrame::OnEditUndo()
 {
     m_richView.Undo();
 }
 
+// Select ANSI encoding.
 void CMainFrame::OnEncodeANSI()
 {
     SetEncoding(ANSI);
@@ -279,6 +280,7 @@ void CMainFrame::OnEncodeANSI()
     }
 }
 
+// Select UTF8 encoding.
 void CMainFrame::OnEncodeUTF8()
 {
     SetEncoding(UTF8);
@@ -290,6 +292,7 @@ void CMainFrame::OnEncodeUTF8()
     }
 }
 
+// Select UTF16 encoding.
 void CMainFrame::OnEncodeUTF16()
 {
     SetEncoding(UTF16LE);
@@ -301,12 +304,13 @@ void CMainFrame::OnEncodeUTF16()
     }
 }
 
+// Issue a close request to the frame to end the application.
 void CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
 }
 
+// Respond to a MRU selection.
 void CMainFrame::OnFileMRU(WPARAM wparam)
 {
     UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
@@ -320,6 +324,7 @@ void CMainFrame::OnFileMRU(WPARAM wparam)
     SetWindowTitle();
 }
 
+// Create a blank plain text document.
 void CMainFrame::OnFileNewPlain()
 {
     //Check for unsaved text
@@ -329,6 +334,7 @@ void CMainFrame::OnFileNewPlain()
     ClearContents();
 }
 
+// Create a blank rich text document.
 void CMainFrame::OnFileNewRich()
 {
     //Check for unsaved text
@@ -338,6 +344,7 @@ void CMainFrame::OnFileNewRich()
     ClearContents();
 }
 
+// Preview the print job before sending it to a printer.
 void CMainFrame::OnFilePreview()
 {
     // Verify a print preview is possible
@@ -377,6 +384,7 @@ void CMainFrame::OnFilePreview()
 
 }
 
+// Select the printer and print the document.
 void CMainFrame::OnFilePrint()
 {
     try
@@ -391,7 +399,6 @@ void CMainFrame::OnFilePrint()
     }
 
 }
-
 
 // Select the printer for use by the application.
 void CMainFrame::OnFilePrintSetup()
@@ -416,11 +423,13 @@ void CMainFrame::OnFilePrintSetup()
 
 }
 
+// Print the document without selecting the printer.
 void CMainFrame::OnFileQuickPrint()
 {
     m_richView.QuickPrint(m_pathName);
 }
 
+// Display the file choose dialog and load text from a file.
 void CMainFrame::OnFileOpen()
 {
     // szFilters is a text string that includes two file name filters:
@@ -447,6 +456,7 @@ void CMainFrame::OnFileOpen()
 
 }
 
+// Save the document text to the current file.
 void CMainFrame::OnFileSave()
 {
     if (m_pathName.IsEmpty())
@@ -455,6 +465,7 @@ void CMainFrame::OnFileSave()
         WriteFile(m_pathName);
 }
 
+// Display the file chooise dialog and save text to the file.
 void CMainFrame::OnFileSaveAs()
 {
     // szFilter is a text string that includes two file name filters:
@@ -477,6 +488,8 @@ void CMainFrame::OnFileSaveAs()
 
 }
 
+// Called after the window is created.
+// Called after OnCreate.
 void CMainFrame::OnInitialUpdate()
 {
     DragAcceptFiles(TRUE);
@@ -503,6 +516,7 @@ void CMainFrame::OnInitialUpdate()
     ShowToolBar(GetToolBar().IsWindow());
 }
 
+// Updates menu items before they are displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
     switch (id)
@@ -555,6 +569,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CFrame::OnMenuUpdate(id);
 }
 
+// Respond to notification messages (WM_NOTIFY) from child windows.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     NMHDR* pNMH = reinterpret_cast<LPNMHDR>(lparam);
@@ -573,6 +588,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
+// Select a font for the document.
 void CMainFrame::OnOptionsFont()
 {
     // Retrieve the current character format.
@@ -751,14 +767,16 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
     return TRUE;
 }
 
+// Provides an opportunity to save the document before it is closed.
 void CMainFrame::SaveModifiedText()
 {
-    //Check for unsaved text
+    // Check for unsaved text
     if (m_richView.GetModify())
         if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
             OnFileSave();
 }
 
+// Set the encoding type.
 void CMainFrame::SetEncoding(Encoding encoding)
 {
     m_encoding = encoding;
@@ -773,6 +791,7 @@ void CMainFrame::SetEncoding(Encoding encoding)
 
 }
 
+// Saves the documents full path name.
 void CMainFrame::SetPathName(LPCTSTR filePathName)
 {
     m_pathName = filePathName;
@@ -860,6 +879,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// Sets the frame's title.
 void CMainFrame::SetWindowTitle()
 {
     CString title;
@@ -872,6 +892,7 @@ void CMainFrame::SetWindowTitle()
     SetWindowText(title);
 }
 
+// Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

@@ -1,4 +1,4 @@
-/////////////////////////////////////////
+/////////////////////////////
 // RibbonApp.h
 
 #ifndef RIBBONAPP_H
@@ -6,8 +6,9 @@
 
 #include "MainFrm.h"
 
-
+///////////////////////////////////////////
 // Declaration of the CRibbonFrameApp class
+//
 class CRibbonFrameApp : public CWinApp
 {
 public:

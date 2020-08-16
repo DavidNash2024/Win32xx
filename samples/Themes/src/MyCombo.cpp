@@ -1,12 +1,14 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // MyCombo.cpp
-//  Definitions for the CMyCombo class
+//
 
 #include "stdafx.h"
 #include "MyCombo.h"
 #include "resource.h"
 
-
+/////////////////////////////////
+// CMyCombo function definitions.
+//
 CMyCombo::CMyCombo()
 {
     SetImage(3, IDB_STATUS);

@@ -1,6 +1,6 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // View.h
-//  Declaration of the CView class
+//
 
 #ifndef VIEW_H
 #define VIEW_H
@@ -13,7 +13,9 @@
 //   LPARAM: unused
 #define UWM_DROPFILE (WM_APP + 0x0001)
 
-
+//////////////////////////////////
+// Declaration of the CView class.
+//
 class CView : public CWnd
 {
 public:

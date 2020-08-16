@@ -1,14 +1,14 @@
-//////////////////////////////////////////////
-// Files.cpp - Definitions for CViewFiles, CContainFiles
-//             and DockFiles classes
+/////////////////////////////
+// Files.cpp
+//
 
 #include "stdafx.h"
 #include "Files.h"
 #include "resource.h"
 
-
-///////////////////////////////////////////////
-// CViewFiles functions
+//////////////////////////////////
+// CViewFiles function definitions
+//
 CViewFiles::CViewFiles()
 {
 }
@@ -109,9 +109,9 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-
-///////////////////////////////////////////////
-// CContainFiles functions
+/////////////////////////////////////
+// CContainFiles function definitions
+//
 CContainFiles::CContainFiles()
 {
     SetTabText(_T("FileView"));
@@ -120,8 +120,9 @@ CContainFiles::CContainFiles()
     SetView(m_viewFiles);
 }
 
-/////////////////////////////////////////////////
-//  Definitions for the CDockFiles class
+///////////////////////////////////
+//  CDockFiles function definitions
+//
 CDockFiles::CDockFiles()
 {
     SetView(m_files);

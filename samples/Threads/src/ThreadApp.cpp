@@ -1,10 +1,13 @@
-///////////////////////////////////////////////////////
-//ThreadApp.cpp -  Definitions for the CThreadApp class
+/////////////////////////////
+//ThreadApp.cpp
+//
 
 #include "stdafx.h"
 #include "ThreadApp.h"
 
-
+///////////////////////////////////
+// CThreadApp function definitions.
+//
 CThreadApp::CThreadApp()
 {
 }

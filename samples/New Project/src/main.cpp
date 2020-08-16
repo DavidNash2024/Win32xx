@@ -12,8 +12,11 @@
 // alternatively include all library features
 // #include "stdafx.h"
 
-
-// A class that inherits from CWnd. It is used to create the window.
+/////////////////////////////////
+// Declaration of the CView class
+// This class inherits from CWnd.
+// It is used to create the window.
+//
 class CView : public CWnd
 {
 public:

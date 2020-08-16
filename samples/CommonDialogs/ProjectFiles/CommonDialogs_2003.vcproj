@@ -125,9 +125,6 @@
 				RelativePath="..\src\App.cpp">
 			</File>
 			<File
-				RelativePath="..\src\AppGlobal.cpp">
-			</File>
-			<File
 				RelativePath="..\src\ColorChoice.cpp">
 			</File>
 			<File
@@ -166,12 +163,6 @@
 				RelativePath="..\src\App.h">
 			</File>
 			<File
-				RelativePath="..\src\AppGlobal.h">
-			</File>
-			<File
-				RelativePath="..\src\AppGlobalRC.h">
-			</File>
-			<File
 				RelativePath="..\src\ColorChoice.h">
 			</File>
 			<File
@@ -182,9 +173,6 @@
 			</File>
 			<File
 				RelativePath="..\src\ListBoxDlg.h">
-			</File>
-			<File
-				RelativePath="..\src\ListBoxDlgRC.h">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">
@@ -199,7 +187,7 @@
 				RelativePath="..\src\MyFontDlg.h">
 			</File>
 			<File
-				RelativePath="..\src\MyPrinter.h">
+				RelativePath="..\src\MyPrintDialog.h">
 			</File>
 			<File
 				RelativePath="..\src\PrintInfo.h">

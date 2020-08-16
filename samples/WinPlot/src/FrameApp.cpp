@@ -1,11 +1,13 @@
-//////////////////////////////////////////////
+/////////////////////////////
 //FrameApp.cpp
+//
 
 #include "stdafx.h"
 #include "FrameApp.h"
 
-
-// Definitions for the CFrameApp class
+//////////////////////////////////
+// CFrameApp function definitions.
+//
 CFrameApp::CFrameApp()
 {
 }

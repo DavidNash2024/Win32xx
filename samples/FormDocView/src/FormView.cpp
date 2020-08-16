@@ -34,7 +34,7 @@ INT_PTR CFormView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
-// Returns a reference to CDoc. 
+// Returns a reference to CDoc.
 CFormDoc& CFormView::GetDoc()
 {
     return m_doc;

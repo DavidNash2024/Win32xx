@@ -1,13 +1,15 @@
-//////////////////////////////////////
+/////////////////////////////
 // MyThread.h
-//  Declaration of the CMyThread class
+//
 
 #ifndef MYTHREAD_H
 #define MYTHREAD_H
 
 #include "TestWnd.h"
 
-
+//////////////////////////////////////
+// Declaration of the CMyThread class.
+//
 class CMyThread : public CWinThread
 {
 public:

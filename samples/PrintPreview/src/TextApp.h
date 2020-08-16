@@ -1,13 +1,15 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // TextApp.h
-//  Declaration of the CTextApp class
+//
 
 #ifndef TEXTAPP_H
 #define TEXTAPP_H
 
 #include "Mainfrm.h"
 
-
+////////////////////////////////////
+// Declaration of the CTextApp class
+//
 class CTextApp : public CWinApp
 {
 public:

@@ -1,111 +1,66 @@
 /* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2016, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
-|                          robert.c.tausworthe@ieee.org                        |
+|                    Authors: Robert Tausworthe, David Nash                    |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Application resources file for a mininmal
-    application. Adapted to use Win32++ Windows interface classes,
-    Copyright (c) 2005-2016 David Nash, under permissions granted therein.
-
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and to the alterations,
-    additions, deletions, and other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and any associated documentation composed by
-    the author, to utilize this material, free of charge and without
-    restriction or limitation, subject to the following conditions:
-
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Special Conventions:
-
-    Acknowledgement:
-        The author would like to thank and acknowledge the advice,
-        critical review, insight, and assistance provided by David Nash
-        in the development of this work.
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
+    Contents Description: Application resources definition file for this 
+    application using the Win32++ Windows interface classes.
 
 /******************************************************************************/
 
-// Microsoft Visual C++ generated resource script.
-//
+// Microsoft Visual C++ generated resource script. (originally)
+
 #include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
-/////////////////////////////////////////////////////////////////////////////
-//
+/*============================================================================*/
+
 // Generated from the TEXTINCLUDE 2 resource.
-//
+
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #include "richedit.h"
-#include "ListBoxDlgRC.h"
-#include "AppGlobalRC.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
-/////////////////////////////////////////////////////////////////////////////
+/*============================================================================*/
+
 #undef APSTUDIO_READONLY_SYMBOLS
 
-/////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
+/*============================================================================*/
 
+  // English (United States) resources
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// RT_MANIFEST
-//
+/*============================================================================*/
 
+  // RT_MANIFEST
 1    RT_MANIFEST "../src/res/Win32++.manifest"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Menu
-//
+/*============================================================================*/
 
+  // The Main Menu
 IDW_MAIN MENU
-BEGIN
+{
     POPUP "&File"
-    BEGIN
+    {
         MENUITEM "&New\tCtrl+N",          IDM_FILE_NEW
         MENUITEM "&Open\tCtrl+O",         IDM_FILE_OPEN
         MENUITEM "&Save\tCtrl+S",         IDM_FILE_SAVE
         MENUITEM "Save &As\tCtrl+Shft+S", IDM_FILE_SAVEAS
         MENUITEM "&Close",                IDM_FILE_CLOSE
         MENUITEM SEPARATOR
-        MENUITEM "Print Pre&view\tShift+Ctrl+P", IDM_FILE_PREVIEW
         MENUITEM "&Print...\tCtrl+P",     IDM_FILE_PRINT
-        MENUITEM "PageSetup...\tAlt+P",   IDM_FILE_PAGESETUP
+        MENUITEM "Page Setup...\tAlt+P",   IDM_FILE_PAGESETUP
         MENUITEM SEPARATOR
         MENUITEM "Recent Files",          IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
-    END
+    }
     POPUP "&Edit"
-    BEGIN
+    {
         MENUITEM "Undo\tCtrl+Z",          IDM_EDIT_UNDO    //, GRAYED
         MENUITEM "Redo\tShift+Ctrl+Z",    IDM_EDIT_REDO    //, GRAYED
         MENUITEM SEPARATOR
@@ -117,9 +72,9 @@ BEGIN
         MENUITEM "Find\tCtrl+F",          IDM_EDIT_FIND    //, GRAYED
         MENUITEM "Replace\tCtrl+R",       IDM_EDIT_REPLACE //, GRAYED
         MENUITEM SEPARATOR
-    END
+    }
     POPUP "&View"
-    BEGIN
+    {
         MENUITEM "&Tool Bar",             IDW_VIEW_TOOLBAR,   CHECKED
         MENUITEM "&Status Bar",           IDW_VIEW_STATUSBAR, CHECKED
         MENUITEM SEPARATOR
@@ -127,84 +82,76 @@ BEGIN
         MENUITEM "&Font Face+Color",      IDM_FONT_CHOICE
         MENUITEM SEPARATOR
         MENUITEM "&Wrap Text Lines",      IDM_RICHEDWRAP, CHECKED
-    END
+    }
     POPUP "&Help"
-    BEGIN
+    {
         MENUITEM "&About",                IDW_ABOUT
-    END
-END
+    }
+}
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
+/*============================================================================*/
 
-// The icon with the lowest ID value is placed first to ensure that
-// the application icon remains consistent on all systems.
+  // Program Icon. Note that the icon with the lowest id value is placed first 
+  // to ensure that the application icon remains consistent on all systems.
 
 IDW_MAIN        ICON                            "../src/res/smile.ico"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
+/*============================================================================*/
 
+  // Bitmaps
 IDW_MAIN                BITMAP DISCARDABLE      "../src/res/Toolbar.bmp"
 IDB_MENUICONS           BITMAP DISCARDABLE      "../src/res/MenuIcons.bmp"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
+/*============================================================================*/
 
-// Main Window Form Dialog
-IDD_FORM_DIALOG DIALOGEX 0, 0, 300, 200
+  // Main Window Dialog
+IDD_MAIN_DIALOG DIALOGEX 0, 0, 300, 200
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE
 EXSTYLE WS_EX_CLIENTEDGE
 FONT 10, "Courier New", 0, 0
-BEGIN
+{
       // controls within the client area:
-    CONTROL         "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |
-                    ES_AUTOHSCROLL | WS_BORDER  | WS_TABSTOP |
-                    ES_WANTRETURN  | WS_VSCROLL | WS_HSCROLL,
-                    10, 10, 310, 210, WS_EX_CLIENTEDGE |
+    CONTROL "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |ES_AUTOHSCROLL | 
+                    WS_BORDER  | WS_TABSTOP | ES_WANTRETURN  | WS_VSCROLL | 
+                    WS_HSCROLL, 10, 10, 280, 180, WS_EX_CLIENTEDGE | 
                     WS_EX_ACCEPTFILES
-END
+}
 
-// AboutBox Dialog
+/*============================================================================*/
+
+  // AboutBox Dialog
 IDW_ABOUT DIALOGEX 0, 0, 200, 100
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
-FONT 8, "MS Shell Dlg", 400, 0
-BEGIN
+FONT 10, "MS Shell Dlg", 400, 0
+{
     DEFPUSHBUTTON   "OK", IDOK, 80, 80, 40, 15
     CTEXT           "Common Controls Demo", IDC_ABOUT_MSG, 30, 5, 160, 70
     ICON            IDW_MAIN, 0, 5, 5, 20, 20
-END
+}
 
-// CListBoxDlg Dialog
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-IDD_CLISTVIEWBOX_DIALOG DIALOG 0, 0, 150, 160
+/*============================================================================*/
+
+  // CListBoxDlg Dialog
+IDD_CLISTVIEWBOX DIALOG 0, 0, 100, 100
 STYLE WS_POPUP | WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_VISIBLE | DS_SETFONT |
     DS_MODALFRAME | DS_FIXEDSYS
 CAPTION "CListBoxDlg Dialog"
 FONT 10, "Microsoft Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "OK", IDOK, 5, 140, 30, 15
-    PUSHBUTTON      "Cancel", IDCANCEL, 115, 140, 30, 15
-    LISTBOX         IDC_LIST_BOX, 5, 5, 140, 130, WS_GROUP | WS_TABSTOP |
+{
+    DEFPUSHBUTTON   "OK", IDOK, 5, 83, 30, 15
+    PUSHBUTTON      "Cancel", IDCANCEL, 65, 83, 30, 15
+    LISTBOX         IDC_LIST_BOX, 5, 5, 90, 75, WS_GROUP | WS_TABSTOP |
                       WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
-                      LBS_NOTIFY
-END
+                      LBS_NOTIFY | CS_DBLCLKS
+}
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
+/*============================================================================*/
 
+  // Accelerator Keys
 IDW_MAIN ACCELERATORS
-BEGIN
+{
     "N",            IDM_FILE_NEW,    VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,   VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,   VIRTKEY, CONTROL, NOINVERT
@@ -214,7 +161,6 @@ BEGIN
     "X",            IDM_EDIT_CUT,    VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,  VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,  VIRTKEY, CONTROL, NOINVERT
-    "P",            IDM_FILE_PREVIEW, VIRTKEY, SHIFT, CONTROL, NOINVERT
     "P",            IDM_FILE_PAGESETUP,VIRTKEY, ALT, NOINVERT
     "H",            IDW_ABOUT,       VIRTKEY, CONTROL, NOINVERT
     "Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
@@ -222,15 +168,13 @@ BEGIN
     "Z",            IDM_EDIT_UNDO,   VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_REDO,   VIRTKEY, SHIFT, CONTROL, NOINVERT
     VK_DELETE,      IDM_EDIT_DELETE, VIRTKEY, SHIFT, NOINVERT
-END
+}
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
+/*============================================================================*/
 
+  // String Tables
 STRINGTABLE  // for the mainframe
-BEGIN
+{
     IDW_MAIN                "Common Dialogs Demo"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
@@ -241,16 +185,15 @@ BEGIN
       // for menu items
     IDM_COLOR_CHOICE        "Change the background color."
     IDM_FONT_CHOICE         "Change the display font."
-END
+}
 
 STRINGTABLE   // standard file menu or toolbar items
-BEGIN
+{
     IDM_FILE_NEW            "Create a New Document."
     IDM_FILE_OPEN           "Open Existing Document."
     IDM_FILE_SAVE           "Save the Document."
     IDM_FILE_SAVEAS         "Save the Document with a new name."
     IDM_FILE_PRINT          "Print the Document."
-    IDM_FILE_PREVIEW        "Preview Print the Document."
     IDM_FILE_CLOSE          "Close the current document."
     IDW_FILE_MRU_FILE1      "Open this document"
     IDW_FILE_MRU_FILE2      "Open this document"
@@ -259,10 +202,10 @@ BEGIN
     IDW_FILE_MRU_FILE5      "Open this document"
       // add more mru IDs if needed
     IDM_FILE_EXIT           "End the Program."
-END
+}
 
 STRINGTABLE   // standard edit menu or toolbar items
-BEGIN
+{
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard."
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard."
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document."
@@ -271,15 +214,15 @@ BEGIN
     IDM_EDIT_FIND           "Find something..."
     IDM_EDIT_REPLACE        "Replace something..."
     IDM_EDIT_DELETE         "Erase the selected Contents."
-END
+}
 
 STRINGTABLE     // about box and toolbar items
-BEGIN
+{
     IDW_ABOUT               "Display information about this program."
-END
+}
 
 STRINGTABLE     // window-related items
-BEGIN
+{
     SC_CLOSE                "Close the Window."
     SC_MAXIMIZE             "Maximize the Window."
     SC_MINIMIZE             "Minimize the Window."
@@ -288,23 +231,22 @@ BEGIN
     SC_PREVWINDOW           "Select Previous Window."
     SC_RESTORE              "Restore the Window."
     SC_SIZE                 "Resize the Window."
-END
+}
 
 STRINGTABLE     // client area items
-BEGIN
+{
     IDC_RICHEDITBOX         "This is a rich edit control."
-END
+}
 
 STRINGTABLE     // app-specific program values
-BEGIN
+{
     IDS_APP_VERSION         "Version 1.0 (2016)"
     IDS_ARCHIVE_FILE_EXT    ".arc"
     IDS_DATAPATH_SUBDIR     "win32++\\"
     IDS_DOC_DEFAULT_EXT     ".txt"
     IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
     IDS_MAX_MRU_ENTRIES     "5"
-END
+}
 
+/*----------------------------------------------------------------------------*/
 #endif    // English (U.S.) resources
-/////////////////////////////////////////////////////////////////////////////
-

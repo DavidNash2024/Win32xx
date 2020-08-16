@@ -1,10 +1,13 @@
-///////////////////////////////////////////////////////////
-//SplitterApp.cpp -  Definitions for the CSplitterApp class
+/////////////////////////////
+// SplitterApp.cpp
+//
 
 #include "stdafx.h"
 #include "SplitterApp.h"
 
-
+/////////////////////////////////////
+// CSplitterApp function definitions.
+//
 CSplitterApp::CSplitterApp()
 {
 }

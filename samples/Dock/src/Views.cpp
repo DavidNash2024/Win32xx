@@ -101,7 +101,7 @@ void CViewList::InsertItems()
     SetItemText(item, 2, _T("Folder"));
 }
 
-// Called when a window handle (HWND) is attached to the List-View. 
+// Called when a window handle (HWND) is attached to the List-View.
 void CViewList::OnAttach()
 {
     // Set the image lists

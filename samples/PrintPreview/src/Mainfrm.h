@@ -1,13 +1,15 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.h
+//
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
 #include "RichView.h"
 
-
+//////////////////////////////////////
 // Declaration of the CMainFrame class
+//
 class CMainFrame : public CFrame
 {
 public:
@@ -68,7 +70,6 @@ private:
     CString m_pathName;
     bool m_isWrapped;
     HWND m_oldFocus;
-
 };
 
 #endif //MAINFRM_H

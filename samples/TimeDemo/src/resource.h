@@ -1,28 +1,13 @@
 /* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]               (resource.h) *
 ********************************************************************************
 |                                                                              |
-|             Copyright (c) 2020, Robert C. Tausworthe, David Nash             |
-|                             All Rights Reserved.                             |
+|               Authors: Robert C. Tausworthe, David Nash, 2020                |
 |                                                                              |
 ===============================================================================*
 
     Contents Description:  Resource definitions used by a minimal SDI
     application's resource.rc file.  Adapted to the Win32++ Windows
-    interface classes, Copyright (c) 2005-2020 David Nash, under
-    permissions granted therein.
-
-    The above copyright notice, as well as that of David Nash and Win32++,
-    together with the respective permissionconditions shall be included in all
-    copies or substantial portions of this material so copied, modified, merged,
-    published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
+    interface classes.
 
     Special Conventions:  The specification of IDs for resource objects
     generally adhere to prefixes as shown in the following table. Note

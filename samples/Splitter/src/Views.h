@@ -1,13 +1,13 @@
-/////////////////////////////////////////////////
+/////////////////////////////
 // Views.h
-//  Declaration of the CViewSimple, CViewText,
-//   CViewTree, and CViewList classes
+//
 
 #ifndef VIEWS_H
 #define VIEWS_H
 
-
-
+////////////////////////////////////////
+// Declaration of the CViewSimple class.
+//
 class CViewSimple : public CWnd
 {
 public:
@@ -19,7 +19,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
-
+//////////////////////////////////////
+// Declaration of the CViewText class.
+//
 class CViewText : public CWnd
 {
 public:
@@ -29,9 +31,11 @@ public:
 protected:
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
-
 };
 
+//////////////////////////////////////
+// Declaration of the CViewTree class.
+//
 class CViewTree : public CTreeView
 {
 public:
@@ -42,9 +46,11 @@ public:
 
 private:
     CImageList m_smallImages;
-
 };
 
+//////////////////////////////////////
+// Declaration of the CViewList class.
+//
 class CViewList : public CListView
 {
 public:
@@ -57,8 +63,6 @@ public:
 
 private:
     CImageList m_smallImages;
-
 };
-
 
 #endif // VIEWS_H

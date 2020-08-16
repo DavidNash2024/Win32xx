@@ -1,5 +1,6 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // Server.h
+//
 
 #ifndef SERVER_H
 #define SERVER_H
@@ -43,7 +44,7 @@
 
 /////////////////////////////////////////
 // Declaration of the CServerSocket class
-//  A socket which listens for connection requests from clients.
+// This socket listens for connection requests from clients.
 //
 class CServerSocket : public CSocket
 {
@@ -57,7 +58,8 @@ public:
 
 /////////////////////////////////////////
 // Declaration of the CWorkerSocket class
-//  A socket which communicates with clients.
+// A worker socket is created for each TCP
+// client that connects to the server.
 //
 class CWorkerSocket : public CSocket
 {

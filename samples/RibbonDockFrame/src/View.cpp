@@ -1,12 +1,14 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // View.cpp
-//  Definitions for the CView class
+//
 
 #include "stdafx.h"
 #include "View.h"
 #include "resource.h"
 
-
+////////////////////////////
+// CView function definition
+//
 CView::CView() : m_penColor(RGB(0,0,0))
 {
     m_brush.CreateSolidBrush(RGB(255,255,230));

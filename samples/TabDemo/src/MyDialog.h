@@ -1,11 +1,13 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.h
+//
 
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-
-// Declaration of the CViewDialog class
+////////////////////////////////////////
+// Declaration of the CViewDialog class.
+//
 class CViewDialog : public CDialog
 {
 public:

@@ -1,11 +1,13 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // View.cpp
-//  Definitions for the CView class
+//
 
 #include "stdafx.h"
 #include "view.h"
 
-
+//////////////////////////////
+// CView function definitions.
+//
 CView::CView()
 {
 }

@@ -1,6 +1,6 @@
-////////////////////////////////////////
+/////////////////////////////
 // MainWnd.h
-//  Declaration of the CMainWindow class
+//
 
 #ifndef MAINWND_H
 #define MAINWND_H
@@ -11,7 +11,9 @@
 
 typedef Shared_Ptr<CMyThread> MyThreadPtr;
 
-
+////////////////////////////////////////
+// Declaration of the CMainWindow class.
+//
 class CMainWindow : public CWnd
 {
 public:
@@ -40,6 +42,5 @@ private:
     int m_windowsCount;              // Count of windows actually created
     CMyEdit m_edit;
 };
-
 
 #endif  //MAINWND_H

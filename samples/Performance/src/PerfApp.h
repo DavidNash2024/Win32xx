@@ -1,14 +1,15 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // PerfApp.h
-//  Declaration of the CPerformanceApp class
+//
 
 #ifndef PERFAPP_H
 #define PERFAPP_H
 
-
 #include "MainWnd.h"
 
-
+///////////////////////////////////////////
+// Declaration of the CPerformanceApp class
+//
 class CPerformanceApp : public CWinApp
 {
 public:

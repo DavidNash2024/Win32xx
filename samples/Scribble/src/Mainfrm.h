@@ -1,14 +1,15 @@
-///////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.h
-//  Declaration of the CMainFrame class
+//
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-
 #include "View.h"
 
-
+///////////////////////////////////////
+// Declaration of the CMainFrame class.
+//
 class CMainFrame : public CFrame
 {
 public:
@@ -43,7 +44,6 @@ private:
     CView m_view;
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
-
 };
 
 #endif //MAINFRM_H

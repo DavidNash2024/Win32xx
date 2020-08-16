@@ -1,13 +1,15 @@
-/////////////////////////////////
+/////////////////////////////
 // View.h
+//
 
 #ifndef VIEW_H
 #define VIEW_H
 
-
 #include "wxx_wincore.h"
 
-
+//////////////////////////////////
+// Declaration of the CView class.
+//
 class CView : public CWnd
 {
 public:

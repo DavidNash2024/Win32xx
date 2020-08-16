@@ -1,12 +1,14 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
 
-
-// Definitions for the CViewDialog class
+////////////////////////////////////
+// CViewDialog function definitions.
+//
 CViewDialog::CViewDialog(UINT resID) : CDialog(resID)
 {
 }

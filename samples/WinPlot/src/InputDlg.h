@@ -1,8 +1,15 @@
+/////////////////////////////
+// InputDlg.h
+//
+
 #ifndef __INPUTDLG_H__
 #define __INPUTDLG_H__
 
 #include "resource.h"
 
+//////////////////////////////////////
+// Declaration of the CInputDlg class.
+//
 class CInputDlg : public CDialog
 {
 public:
@@ -23,6 +30,4 @@ private:
     CString m_function;
 };
 
-
 #endif  // __INPUTDLG_H__
-

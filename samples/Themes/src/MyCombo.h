@@ -1,11 +1,13 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // MyCombo.h
+//
 
 #ifndef MYCOMBO_H
 #define MYCOMBO_H
 
-
-// Declaration of the CMyCombo class
+/////////////////////////////////////
+// Declaration of the CMyCombo class.
+//
 class CMyCombo : public CComboBoxEx
 {
 public:

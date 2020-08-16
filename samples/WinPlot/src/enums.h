@@ -1,8 +1,6 @@
+/////////////////////////////
 // Enums.h
 //
-// Definitions of the eToken and eStatus enums
-//
-////////////////////////////////////////
 
 #ifndef ENUMS_H_CF6AD5B7_507F_4DE4_8980_A3940530D108__INCLUDED
 #define ENUMS_H_CF6AD5B7_507F_4DE4_8980_A3940530D108__INCLUDED

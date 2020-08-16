@@ -1,13 +1,14 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // SimpleMDIChild.cpp
-//  Definitions for the CSimpleView and CSimpleMDIChild classes
+//
 
 #include "stdafx.h"
 #include "SimpleMDIChild.h"
 #include "resource.h"
 
-
-// CSimpleView definitions
+////////////////////////////////////
+// CSimpleView function definitions.
+//
 CSimpleView::CSimpleView() : m_color(RGB(0,0,255))
 {
 }

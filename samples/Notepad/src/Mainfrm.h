@@ -1,5 +1,6 @@
-////////////////////////////////////////////////////
+/////////////////////////////
 // Mainfrm.h
+//
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
@@ -16,8 +17,9 @@ enum Encoding
     UTF16LE_BOM   = 3,
 };
 
-
+//////////////////////////////////////
 // Declaration of the CMainFrame class
+//
 class CMainFrame : public CFrame
 {
 public:

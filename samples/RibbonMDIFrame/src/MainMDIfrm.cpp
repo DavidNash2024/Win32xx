@@ -1,5 +1,6 @@
-////////////////////////////////////////////////////
-// MainMDIfrm.cpp  - definitions for the CMainMDIFrame class
+/////////////////////////////
+// MainMDIfrm.cpp
+//
 
 #include "stdafx.h"
 
@@ -9,8 +10,9 @@
 #include "SimpleMDIChild.h"
 #include "resource.h"
 
-
-// Definitions for the CMainMDIFrame class
+//////////////////////////////////////
+// CMainMDIFrame function definitions.
+//
 CMainMDIFrame::CMainMDIFrame()
 {
     // Constructor for CMainMDIFrame.

@@ -1,9 +1,13 @@
 /////////////////////////////
 // Hyperlink.cpp
+//
 
 #include "stdafx.h"
 #include "Hyperlink.h"
 
+///////////////////////////////////
+// CHyperlink function definitions.
+//
 CHyperlink::CHyperlink() : m_isUrlVisited(FALSE), m_isClicked(FALSE), m_visitedColor(RGB(128, 0, 128)),
                             m_notVisitedColor(RGB(0,0,255))
 {

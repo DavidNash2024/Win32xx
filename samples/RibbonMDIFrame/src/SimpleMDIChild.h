@@ -1,6 +1,6 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // SimpleMDIChild.h
-//  Declaration of the CSimpleView and CSimpleMDIChild class
+//
 
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
@@ -10,7 +10,9 @@
 // WPARAM is a pointer to the view window.
 #define UWM_SIMPLECREATED       (WM_APP + 0x0001)
 
-// Declaration of CSimpleView
+////////////////////////////////////////
+// Declaration of the CSimpleView class.
+//
 class CSimpleView : public CWnd
 {
 public:
@@ -26,8 +28,9 @@ private:
     COLORREF m_color;
 };
 
-
-// Declaration of CSimpleMDIChild
+////////////////////////////////////////////
+// Declaration of the CSimpleMDIChild class.
+//
 class CSimpleMDIChild : public CMDIChild
 {
 public:

@@ -1,28 +1,32 @@
-///////////////////////////////////////
+/////////////////////////////
 // ClientDialog.cpp
+//
 
 #include "stdafx.h"
 #include "ClientDialog.h"
 #include "resource.h"
 
+/////////////////////////////////////
+// CClientDialog function definitions
+//
 
-// Definitions for the CMyDialog class
+// Constructor.
 CClientDialog::CClientDialog(UINT resID) : CDialog(resID),
                    m_isClientConnected(FALSE), m_socketType(SOCK_STREAM)
 {
-    // Add support for the IP Address control
+    // Adds support for the IP Address control.
     // It requires Win95 with IE4 intergrated or a later version of Windows OS.
     LoadCommonControlsEx();
 }
 
+// Destructor.
 CClientDialog::~CClientDialog()
 {
 }
 
+// Appends text to the specified edit control.
 void CClientDialog::AppendText(const CEdit& edit, LPCTSTR text)
 {
-    // This function appends text to an edit control
-
     // Append Line Feed
     int length = edit.GetWindowTextLength();
     if (length > 0)
@@ -31,6 +35,7 @@ void CClientDialog::AppendText(const CEdit& edit, LPCTSTR text)
     edit.AppendText(text);
 }
 
+// Process the dialog's window messages.
 INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -45,6 +50,7 @@ INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return DialogProcDefault(msg, wparam, lparam);
 }
 
+// Called when the dialog window is activated.
 LRESULT CClientDialog::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -58,7 +64,7 @@ LRESULT CClientDialog::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return TRUE;
 }
 
-// Called when the dialog window is about to be closed
+// Called when the dialog window is about to be closed.
 void CClientDialog::OnClose()
 {
     // Disconnect before shutting down the dialog
@@ -66,7 +72,7 @@ void CClientDialog::OnClose()
     PostQuitMessage(0);
 }
 
-// Called when the connection to the server is established
+// Called when the connection to the server is established.
 BOOL CClientDialog::OnSocketConnect()
 {
     m_isClientConnected = TRUE;
@@ -92,7 +98,7 @@ BOOL CClientDialog::OnSocketConnect()
     return TRUE;
 }
 
-// Called when the socket is disconnected from the server
+// Called when the socket is disconnected from the server.
 BOOL CClientDialog::OnSocketDisconnect()
 {
     m_isClientConnected = FALSE;
@@ -117,7 +123,7 @@ BOOL CClientDialog::OnSocketDisconnect()
     return TRUE;
 }
 
-// Called when the socket has data to receive
+// Called when the socket has data to receive.
 BOOL CClientDialog::OnSocketReceive()
 {
     std::vector<CHAR> bufVector( 1025, '\0' );
@@ -177,7 +183,7 @@ void CClientDialog::LoadCommonControlsEx()
     }
 }
 
-// Respond to the dialog buttons
+// Respond to the dialog buttons.
 BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -198,6 +204,7 @@ BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called before the dialog is displayed.
 BOOL CClientDialog::OnInitDialog()
 {
     // Set the Icon

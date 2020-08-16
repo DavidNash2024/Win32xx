@@ -1,14 +1,20 @@
-/////////////////////////////////////////////
+/////////////////////////////
 // RichView.cpp
+//
 
 #include "stdafx.h"
 #include "richview.h"
 
+/////////////////////////////////
+// CRichView function definitions
+//
 
+// Constructor.
 CRichView::CRichView()
 {
 }
 
+// Destructor.
 CRichView::~CRichView()
 {
 }
@@ -54,6 +60,7 @@ UINT CRichView::CollatePages()
     return m_pageBreaks.size();
 }
 
+// Choose the printer and print the document.
 void CRichView::DoPrint(LPCTSTR docName)
 {
     // Prepare the print dialog
@@ -113,6 +120,7 @@ CRect CRichView::GetPrintRect()
     return rcPrintArea;
 }
 
+// Called when the window handle (HWND) is attached to CRichView.
 void CRichView::OnAttach()
 {
     //increase the text limit of the rich edit window
@@ -125,6 +133,7 @@ void CRichView::OnAttach()
     SetFontDefaults();
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CRichView::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
@@ -204,6 +213,7 @@ void CRichView::QuickPrint(LPCTSTR docName)
     printerDC.EndDoc();
 }
 
+// Sets the initial font for the document.
 void CRichView::SetFontDefaults()
 {
     //Set font

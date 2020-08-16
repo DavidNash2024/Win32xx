@@ -194,8 +194,8 @@ namespace Win32xx
 
         if (IsMDIChildMaxed())
         {
-            int cx = GetSystemMetrics(SM_CXSMICON);
-            int cy = GetSystemMetrics(SM_CYSMICON);
+            int cx = ::GetSystemMetrics(SM_CXSMICON);
+            int cy = ::GetSystemMetrics(SM_CYSMICON);
             CRect rc = GetClientRect();
             int gap = 4;
             rc.right -= gap;

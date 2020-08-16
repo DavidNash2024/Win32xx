@@ -1,19 +1,20 @@
-//////////////////////////////////////////////////////
+/////////////////////////////
 // View.h
-//  Declaration of the CView class
+//
 
 #ifndef VIEW_H
 #define VIEW_H
 
 #include "Doc.h"
 
-
 // Message - sent to the parent (Frame) window when a file is dropped on the View window
 //   WPARAM: A pointer to the filename (LPCTSTR)
 //   LPARAM: unused
 #define UWM_DROPFILE (WM_APP + 0x0001)
 
-
+/////////////////////////////////
+// Declaration of the CView class
+//
 class CView : public CWnd
 {
 public:
@@ -43,7 +44,6 @@ private:
     CDoc m_doc;
     CBrush m_brush;
     COLORREF m_penColor;
-
 };
 
 

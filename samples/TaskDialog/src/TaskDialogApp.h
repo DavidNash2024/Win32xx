@@ -1,11 +1,13 @@
-//////////////////////////////////////////////////
+/////////////////////////////
 // TaskDialogApp.h
+//
 
 #ifndef TASKDIALOGAPP_H
 #define TASKDIALOGAPP_H
 
-
-// Declaration of the CTaskDialogApp class
+///////////////////////////////////////////
+// Declaration of the CTaskDialogApp class.
+//
 class CTaskDialogApp : public CWinApp
 {
 public:

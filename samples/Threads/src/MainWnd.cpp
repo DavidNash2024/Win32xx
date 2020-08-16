@@ -1,11 +1,13 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // MainWnd.cpp
-//  Definitions for the CMainWindow class
+//
 
 #include "stdafx.h"
 #include "MainWnd.h"
 
-
+////////////////////////////////////
+// CMainWindow function definitions.
+//
 CMainWindow::CMainWindow() : m_windowsCount(0)
 {
     // Set the number of threads

@@ -1,11 +1,13 @@
-///////////////////////////////
+/////////////////////////////
 // View.cpp
+//
 
 #include "View.h"
 #include "resource.h"
 
-
-// Definitions for the CView class
+//////////////////////////////
+// CView function definitions.
+//
 int CView::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate is called automatically during window creation when a

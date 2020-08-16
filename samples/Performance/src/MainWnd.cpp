@@ -1,6 +1,6 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // MainWnd.cpp
-//  Definitions for the CMainWindow class
+//
 
 #include "stdafx.h"
 #include "MainWnd.h"
@@ -8,15 +8,21 @@
 #include "PerfApp.h"
 #include "resource.h"
 
+///////////////////////////////////
+// CMainWindow function definitions
+//
 
+// Constructor.
 CMainWindow::CMainWindow() : m_testMessages(0), m_testWindows(0), m_windowsCreated(0)
 {
 }
 
+// Destructor.
 CMainWindow::~CMainWindow()
 {
 }
 
+// Creates the main window.
 HWND CMainWindow::Create(HWND hParent /*= 0*/)
 {
     CString str = _T("Main Window");
@@ -28,6 +34,7 @@ HWND CMainWindow::Create(HWND hParent /*= 0*/)
         rc, hParent, 0);
 }
 
+// Creates several test windows.
 void CMainWindow::CreateTestWindows(int windows)
 {
     m_testWindows = windows;
@@ -41,6 +48,7 @@ void CMainWindow::CreateTestWindows(int windows)
     }
 }
 
+// Called when the main window is created.
 int CMainWindow::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
@@ -50,19 +58,22 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Called when the main window is destroyed.
 void CMainWindow::OnDestroy()
 {
     // End the application
     ::PostQuitMessage(0);
 }
 
-
+// Called after the main window is created.
+// Called after OnCreate.
 void CMainWindow::OnInitialUpdate()
 {
     CMyDialog myDialog(IDD_DIALOG1);
     myDialog.DoModal(*this);
 }
 
+// Called when the main window is resized.
 LRESULT CMainWindow::OnSize()
 {
     CRect r = GetClientRect();
@@ -73,16 +84,16 @@ LRESULT CMainWindow::OnSize()
     return 0;
 }
 
-
+// Respond to the message recieved when a test window is created.
 LRESULT CMainWindow::OnWindowCreated()
 {
-    // Message recieved when a test window is created
     if (++m_windowsCreated == m_testWindows)
         OnAllWindowsCreated();
 
     return 0;
 }
 
+// Called when all the test windows have been created.
 void CMainWindow::OnAllWindowsCreated()
 {
     CString str;
@@ -107,6 +118,7 @@ void CMainWindow::OnAllWindowsCreated()
     SendText(_T("Testing complete"));
 }
 
+// Do the performance test.
 void CMainWindow::PerformanceTest()
 {
     LRESULT result = 0;
@@ -140,9 +152,9 @@ void CMainWindow::PerformanceTest()
     MessageBox(str, _T("Info"), MB_OK);
 }
 
+// Send text to the edit window.
 void CMainWindow::SendText(LPCTSTR str)
 {
-    // Send text to the Edit window
     m_edit.AppendText(str);
     m_edit.AppendText(_T("\r\n"));
 
@@ -150,6 +162,7 @@ void CMainWindow::SendText(LPCTSTR str)
     TRACE("\n");
 }
 
+// Process the main window's messages.
 LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

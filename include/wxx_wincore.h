@@ -2816,7 +2816,7 @@ namespace Win32xx
     inline BOOL IsLeftButtonDown()
     {
         SHORT state;
-        if (GetSystemMetrics(SM_SWAPBUTTON))
+        if (::GetSystemMetrics(SM_SWAPBUTTON))
             // Mouse buttons are swapped
             state = ::GetAsyncKeyState(VK_RBUTTON);
         else

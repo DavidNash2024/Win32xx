@@ -1,12 +1,14 @@
-///////////////////////////////////////
+/////////////////////////////
 // MyDialog.cpp
+//
 
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
 
-
-// Definitions for the CMyDialog class
+//////////////////////////////////
+// CMyDialog function definitions.
+//
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
     m_info = (HICON)GetApp()->LoadIcon(IDI_INFO);
