@@ -218,15 +218,12 @@ OnNotify(WPARAM wparam, LPARAM lparam)                                      /*
     Process messages that controls send to the parent.
 **-----------------------------------------------------------------------------*/
 {
-    NMHDR* pNMH;
-    pNMH = (LPNMHDR) lparam;
+    NMHDR* pNMH = (LPNMHDR) lparam;
     switch (pNMH->code)
     {
         case EN_DROPFILES: // a file has been dropped in the rich edit box
-        {
-            SendMessage(m_parent, EN_DROPFILES, wparam, lparam);
-        }
-        return TRUE;
+            SendMessage(m_parent, WM_NOTIFY, wparam, lparam);
+            return TRUE;
     }
 
     return CDialog::OnNotify(wparam, lparam);

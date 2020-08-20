@@ -10,14 +10,14 @@
     classes.
 
     Programming notes: Documents in this sample program are assumed to derive
-    from simple text files of single byte characters from the Windows standard 
-    UTF8 code page.  For a complete Unicode operation, see the NotePad sample 
+    from simple text files of single byte characters from the Windows standard
+    UTF8 code page.  For a complete Unicode operation, see the NotePad sample
     function in this distribution.
 
-    Internally, the document contents are managed (as well as viewed) by the 
+    Internally, the document contents are managed (as well as viewed) by the
     RichEditView class.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
 
@@ -31,7 +31,7 @@
 CDoc()                                                                      /*
 
 *-----------------------------------------------------------------------------*/
-    :   m_data(NULL), m_isOpen(FALSE)
+    : m_isOpen(FALSE), m_data(NULL)
 {
 }
 
@@ -333,7 +333,7 @@ OpenDoc(LPCTSTR docPath)                                             /*
 
     Open the document from the given path. Previous state parameters that
     were serialized in the prior execution will have already been loaded.
-    Return TRUE if file is open on return, FALSE if not. 
+    Return TRUE if file is open on return, FALSE if not.
 *-----------------------------------------------------------------------------*/
 {
     CString msg;

@@ -226,7 +226,7 @@ StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)        /*
 
     Printing Methods (much like the MFC print loop)
 
-/*============================================================================*/
+*============================================================================*/
     BOOL    CRichEditView::
 DoPreparePrinting(CPrintInfo& info)                                         /*
 

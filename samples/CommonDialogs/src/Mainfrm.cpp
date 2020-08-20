@@ -7,13 +7,13 @@
 
     Contents Description: Implementation of the CMainFrame class for the
     CommonDialogs demonstration sample application using the Win32++ Windows
-    interface classes. This particular frame class contains features a 
-    fixed-size form for the display, with no resizing gripper tool at the end 
-    of the status bar, and provisions for selection of client background color, 
-    selection of edit box font, use of external serialization files, and MRU 
+    interface classes. This particular frame class contains features a
+    fixed-size form for the display, with no resizing gripper tool at the end
+    of the status bar, and provisions for selection of client background color,
+    selection of edit box font, use of external serialization files, and MRU
     lists.
 
-    Programming Notes: The programming standards roughly follow those 
+    Programming Notes: The programming standards roughly follow those
     established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
     Planning and Preparation Subsystem project for C++ programming.
 
@@ -31,8 +31,8 @@ CMainFrame()                                                                /*
     resource defined in resource.rc. Note that the initial window location and
     size are set here.
 *-----------------------------------------------------------------------------*/
-    :   m_view(IDD_MAIN_DIALOG), m_frameXY(100, 100), m_frameSize(700, 600),
-        m_isTextWrap(TRUE), m_maxMRU(0)
+    :   m_view(IDD_MAIN_DIALOG), m_maxMRU(0), m_isTextWrap(TRUE),
+          m_frameXY(100, 100), m_frameSize(700, 600)
 {
       // Set m_view as the view window of the frame
     SetView(m_view);
@@ -263,7 +263,7 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
         case IDM_FILE_SAVE:
             m_doc.OnSaveDoc();
             return TRUE;
- 
+
         case IDM_FILE_SAVEAS:
             OnSaveAs();
             return TRUE;
@@ -488,7 +488,7 @@ OnInitialUpdate()                                                           /*
 OnNewDoc()                                                                  /*
 
     Prompt the user for a new document file name and, if valid, open a new
-    document. The open status and path name are available from the document 
+    document. The open status and path name are available from the document
     object.
 *-----------------------------------------------------------------------------*/
 {
@@ -501,7 +501,7 @@ OnNewDoc()                                                                  /*
         OFN_NONETWORKBUTTON |
         OFN_ENABLESIZING,
         m_docFilter
-    ); 
+    );
     fd.SetBoxTitle(_T("New document file..."));
     fd.SetDefExt(m_docFilter);
     CString msg;
@@ -527,6 +527,23 @@ OnNewDoc()                                                                  /*
     ::MessageBox(NULL, msg, _T("Information"),
         MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
     return;
+}
+
+/*============================================================================*/
+    LRESULT CMainFrame::
+OnNotify(WPARAM wparam, LPARAM lparam)                                      /*
+
+    Process messages that controls send to the parent.
+*-----------------------------------------------------------------------------*/
+{
+    NMHDR* pNMH = reinterpret_cast<LPNMHDR>(lparam);
+    switch (pNMH->code)
+    {
+        case EN_DROPFILES:
+            DropFiles(lparam);
+            return TRUE;
+    }
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 /*============================================================================*/
@@ -601,7 +618,7 @@ SetRichEditColor()                                                           /*
 OnSaveAs()                                                                  /*
 
     Save the current document into a file named in a file dialog and make
-    that file the current document. Return TRUE and set the path if the 
+    that file the current document. Return TRUE and set the path if the
     document was saved, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
@@ -618,8 +635,8 @@ OnSaveAs()                                                                  /*
         OFN_EXPLORER |
         OFN_ENABLEHOOK |
         OFN_NONETWORKBUTTON,
-        m_docFilter             // filter defined by app 
-     ); 
+        m_docFilter             // filter defined by app
+     );
     fd.SetBoxTitle(_T("Save document file as"));
     CString msg;
       // query user for the save-as file path name
@@ -674,7 +691,7 @@ OnWrapText()                                                                /*
     BOOL CMainFrame::
 OpenDoc(LPCTSTR docPath)                                             /*
 
-    Open the document from the given path. Return TRUE if successful, FALSE 
+    Open the document from the given path. Return TRUE if successful, FALSE
     otherwise.
 *-----------------------------------------------------------------------------*/
 {
@@ -694,7 +711,7 @@ OpenDoc(LPCTSTR docPath)                                             /*
     if (m_doc.OpenDoc(docPath))
     {
         m_docDir = m_doc.GetDocPath();
-        AddMRUEntry(docPath); 
+        AddMRUEntry(docPath);
         SetWindowTitle(docPath);
         return TRUE;
     }
@@ -737,7 +754,7 @@ SaveRegistrySettings()                                                      /*
 {
     try
     {
-        CArchive ar(m_archivePath, CArchive::store);  
+        CArchive ar(m_archivePath, CArchive::store);
              // serialize in the following order
         ar << *TheApp();   // for the App
         ar << *this;    // for the mainframe and base classes
@@ -1038,9 +1055,9 @@ SetWindowTitle(LPCTSTR path)                                                /*
       // form the caption title
     if (!docPath.IsEmpty())
         appTitle  += _T(":    ") + docPath;;
-      // compute maximum characters in the caption from its height in pixels, 
+      // compute maximum characters in the caption from its height in pixels,
       // assumed to be proportional to the font width
-    INT height = ::GetSystemMetrics(SM_CYCAPTION); 
+    INT height = ::GetSystemMetrics(SM_CYCAPTION);
       // the width = client - 3 buttons - the icon
     int width = m_view.GetClientRect().Width() - ::GetSystemMetrics(SM_CXSMICON)
         - 3 * ::GetSystemMetrics(SM_CXSIZE);
@@ -1213,12 +1230,11 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
         return TRUE;
     }
 
-    switch (msg)
-    {
-        case EN_DROPFILES: // a file has been dropped in the rich edit box
-            return DropFiles(lparam);
+    //switch (msg)
+    //{
+    //    TODO: add message handlers here
+    //}
 
-    }
       // pass unhandled messages on for default processing
     return WndProcDefault(msg, wparam, lparam);
 }

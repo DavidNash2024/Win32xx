@@ -65,8 +65,6 @@
 					<Add option="/GX" />
 					<Add option="/GR" />
 					<Add option="/W3" />
-					<Add option="/Zi" />
-					<Add option="/Zi /D_DEBUG" />
 					<Add option="/DWIN32" />
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
@@ -78,7 +76,6 @@
 					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add option="/DEBUG" />
 					<Add library="gdi32" />
 					<Add library="user32" />
 					<Add library="kernel32" />

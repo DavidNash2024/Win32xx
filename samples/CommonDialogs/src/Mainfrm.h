@@ -72,6 +72,7 @@ CMainFrame : public CFrame                                                  /*
         void    OnFontChoice();
         BOOL    OnHelp();
         void    OnInitialUpdate();
+        LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         void    OnNewDoc();
         void    OnOpenDoc();
         void    OnSaveAs();
