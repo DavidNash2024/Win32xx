@@ -243,6 +243,9 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
     // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
     // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
+	
+	// Call base clase to set defaults
+    CFrame::PreCreate(cs);
 }
 
 // Configure the menu icons.

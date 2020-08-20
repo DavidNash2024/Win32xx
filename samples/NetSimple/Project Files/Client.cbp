@@ -65,13 +65,11 @@
 				<Option compiler="msvctk" />
 				<Option use_console_runner="0" />
 				<Compiler>
+					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
 					<Add option="/GR" />
 					<Add option="/W3" />
-					<Add option="/Zi" />
-					<Add option="/MTd" />
-					<Add option="/Zi /D_DEBUG" />
 					<Add option="/DWIN32" />
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
@@ -83,7 +81,6 @@
 					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add option="/DEBUG" />
 					<Add library="gdi32" />
 					<Add library="user32" />
 					<Add library="kernel32" />
@@ -180,10 +177,6 @@
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
 		<Unit filename="../src/Client.cpp" />
-		<Extensions>
-			<code_completion />
-			<debugger />
-			<envvars />
-		</Extensions>
+		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

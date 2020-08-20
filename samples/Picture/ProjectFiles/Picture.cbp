@@ -60,13 +60,11 @@
 				<Option type="0" />
 				<Option compiler="msvctk" />
 				<Compiler>
+					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
 					<Add option="/GR" />
 					<Add option="/W3" />
-					<Add option="/Zi" />
-					<Add option="/MTd" />
-					<Add option="/Zi /D_DEBUG" />
 					<Add option="/DWIN32" />
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
@@ -78,7 +76,6 @@
 					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add option="/DEBUG" />
 					<Add library="ComCtl32" />
 					<Add library="Gdi32" />
 					<Add library="User32" />

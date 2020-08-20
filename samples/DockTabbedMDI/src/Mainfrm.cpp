@@ -405,6 +405,9 @@ void CMainFrame::OnMenuUpdate(UINT id)
 // Sets the CREATESTRUCT paramaters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
+    // Call base clase to set defaults
+    CDockFrame::PreCreate(cs);
+
     // Hide the window initially by removing the WS_VISIBLE style
     cs.style &= ~WS_VISIBLE;
 }

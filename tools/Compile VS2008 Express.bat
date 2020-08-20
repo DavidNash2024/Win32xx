@@ -17,6 +17,11 @@ if exist "..\output\VS2008\Debug" rmdir /s /q "..\output\VS2008\Debug"
 if exist "..\output\VS2008\Release" rmdir /s /q "..\output\VS2008\Release"
 if exist "..\output\VS2008\Tutorials" rmdir /s /q "..\output\VS2008\Tutorials"
 
+set INCLUDE="C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include";%INCLUDE%
+set INCLUDE="C:\Program Files\Microsoft SDKs\Windows\v7.1\Include";%INCLUDE%
+set LIB="C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86";%LIB%
+set LIB="C:\Program Files\Microsoft SDKs\Windows\v7.1\Lib";%LIB%
+set PATH="C:\Program Files\Microsoft SDKs\Windows\v7.1\Bin";%PATH%
 
 ::Compile code
 vcbuild /rebuild Animation\ProjectFiles\Animation_2008.vcproj debug                 > "..\output\VS2008.log"
@@ -45,10 +50,10 @@ vcbuild /rebuild DialogResizing\ProjectFiles\DialogResizing_2008.vcproj debug   
 vcbuild /rebuild DialogResizing\ProjectFiles\DialogResizing_2008.vcproj release     >>"..\output\VS2008.log"
 vcbuild /rebuild DialogTab\ProjectFiles\DialogTab_2008.vcproj debug                 >>"..\output\VS2008.log"
 vcbuild /rebuild DialogTab\ProjectFiles\DialogTab_2008.vcproj release               >>"..\output\VS2008.log"
-vcbuild /rebuild Direct2D\ProjectFiles\Direct2D_2008.vcproj debug                   >>"..\output\VS2008.log"
-vcbuild /rebuild Direct2D\ProjectFiles\Direct2D_2008.vcproj release                 >>"..\output\VS2008.log"
-vcbuild /rebuild DirectX9\ProjectFiles\DirectX9_2008.vcproj debug                   >>"..\output\VS2008.log"
-vcbuild /rebuild DirectX9\ProjectFiles\DirectX9_2008.vcproj release                 >>"..\output\VS2008.log"
+vcbuild /u /rebuild Direct2D\ProjectFiles\Direct2D_2008.vcproj debug                >>"..\output\VS2008.log"
+vcbuild /u /rebuild Direct2D\ProjectFiles\Direct2D_2008.vcproj release              >>"..\output\VS2008.log"
+vcbuild /u /rebuild DirectX9\ProjectFiles\DirectX9_2008.vcproj debug                >>"..\output\VS2008.log"
+vcbuild /u /rebuild DirectX9\ProjectFiles\DirectX9_2008.vcproj release              >>"..\output\VS2008.log"
 vcbuild /rebuild DLL\ProjectFiles\MakeDLL_2008.vcproj debug                         >>"..\output\VS2008.log"
 vcbuild /rebuild DLL\ProjectFiles\MakeDLL_2008.vcproj release                       >>"..\output\VS2008.log"
 vcbuild /rebuild DLL\ProjectFiles\TestDLL_2008.vcproj debug                         >>"..\output\VS2008.log"
@@ -107,14 +112,14 @@ vcbuild /rebuild PropertySheet\ProjectFiles\PropertySheet_2008.vcproj debug     
 vcbuild /rebuild PropertySheet\ProjectFiles\PropertySheet_2008.vcproj release       >>"..\output\VS2008.log"
 vcbuild /rebuild ReBarDemo\ProjectFiles\ReBarDemo_2008.vcproj debug                 >>"..\output\VS2008.log"
 vcbuild /rebuild ReBarDemo\ProjectFiles\ReBarDemo_2008.vcproj release               >>"..\output\VS2008.log"
-vcbuild /rebuild RibbonDockFrame\ProjectFiles\RibbonDockFrame_2008.vcproj debug     >>"..\output\VS2008.log"
-vcbuild /rebuild RibbonDockFrame\ProjectFiles\RibbonDockFrame_2008.vcproj release   >>"..\output\VS2008.log"
-vcbuild /rebuild RibbonFrame\ProjectFiles\RibbonFrame_2008.vcproj debug             >>"..\output\VS2008.log"
-vcbuild /rebuild RibbonFrame\ProjectFiles\RibbonFrame_2008.vcproj release           >>"..\output\VS2008.log"
-vcbuild /rebuild RibbonMDIFrame\ProjectFiles\RibbonMDIFrame_2008.vcproj debug       >>"..\output\VS2008.log"
-vcbuild /rebuild RibbonMDIFrame\ProjectFiles\RibbonMDIFrame_2008.vcproj release     >>"..\output\VS2008.log"
-vcbuild /rebuild RibbonSimple\ProjectFiles\SimpleRibbon_2008.vcproj debug           >>"..\output\VS2008.log"
-vcbuild /rebuild RibbonSimple\ProjectFiles\SimpleRibbon_2008.vcproj release         >>"..\output\VS2008.log"
+vcbuild /u /rebuild RibbonDockFrame\ProjectFiles\RibbonDockFrame_2008.vcproj debug  >>"..\output\VS2008.log"
+vcbuild /u /rebuild RibbonDockFrame\ProjectFiles\RibbonDockFrame_2008.vcproj release>>"..\output\VS2008.log"
+vcbuild /u /rebuild RibbonFrame\ProjectFiles\RibbonFrame_2008.vcproj debug          >>"..\output\VS2008.log"
+vcbuild /u /rebuild RibbonFrame\ProjectFiles\RibbonFrame_2008.vcproj release        >>"..\output\VS2008.log"
+vcbuild /u /rebuild RibbonMDIFrame\ProjectFiles\RibbonMDIFrame_2008.vcproj debug    >>"..\output\VS2008.log"
+vcbuild /u /rebuild RibbonMDIFrame\ProjectFiles\RibbonMDIFrame_2008.vcproj release  >>"..\output\VS2008.log"
+vcbuild /u /rebuild RibbonSimple\ProjectFiles\SimpleRibbon_2008.vcproj debug        >>"..\output\VS2008.log"
+vcbuild /u /rebuild RibbonSimple\ProjectFiles\SimpleRibbon_2008.vcproj release      >>"..\output\VS2008.log"
 vcbuild /rebuild RoundWindow\ProjectFiles\Round_2008.vcproj debug                   >>"..\output\VS2008.log"
 vcbuild /rebuild RoundWindow\ProjectFiles\Round_2008.vcproj release                 >>"..\output\VS2008.log"
 vcbuild /rebuild Scribble\ProjectFiles\Scribble_2008.vcproj debug                   >>"..\output\VS2008.log"

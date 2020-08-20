@@ -101,13 +101,13 @@ CApp()                                                                  /*
 
       // generate compiler information for the About box
 #ifdef __GNUC__
-    m_sCompiled_with = _T("GNU C++ ") + CString(__GNUC__)
+    m_compiledWith = _T("GNU C++ ") + CString(__GNUC__)
         + _T(".") + CString(__GNUC_MINOR__) + _T(".") + CString(__GNUC_PATCHLEVEL__);
 #elif defined(_MSC_VER)
     m_compiledWith = _T("MS C++ ") + CString(_MSC_VER / 100)
         + _T(".") + CString(_MSC_VER % 100);
 #elif defined(__BORLANDC__)
-    m_sCompiled_with = _T("Borland C++ ") + CString(__BORLANDC__ / 0x100)
+    m_compiledWith = _T("Borland C++ ") + CString(__BORLANDC__ / 0x100)
         + _T(".") + CString((__BORLANDC__ & 0x0F0) / 0x10);
 #else
     m_sCompiled_with = _T("(unknown compiler)");

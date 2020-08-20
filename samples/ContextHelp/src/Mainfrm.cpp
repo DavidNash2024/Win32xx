@@ -362,6 +362,9 @@ void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 // Sets the CREATESTRUCT parameters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
+    // Call base clase to set defaults
+    CFrame::PreCreate(cs);
+
     cs.style &= ~WS_MAXIMIZEBOX;
     cs.style &= ~WS_MINIMIZEBOX;
     cs.dwExStyle |= WS_EX_CONTEXTHELP;
