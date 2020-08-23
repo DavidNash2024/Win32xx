@@ -1,67 +1,42 @@
  /* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
 ********************************************************************************
+|                                                                              |
+|                    Authors: Robert Tausworthe, David Nash                    |
+|                                                                              |
+===============================================================================*
 
     Program resource definitions for the FilePrintPreview demo program.
-
-********************************************************************************
-
-    Acknowledgement. This demo program was adapted from the PrintPreview
-    sample program appearing in the Win32++ framework sample folder, created
-    by  David Nash and published under the permissions granted in that work.
-    The adaptation here implements the PrintView window as a separate popup
-    window that appears on screen along with the regular program window.
-    This work has been developed under the co-authorship of Robert C.
-    Tausworthe and David Nash, and released under the copyright provisions
-    of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his
-    patient direction and inspiration in the development of the classes of
-    these classes.
 
 *******************************************************************************/
 
 #include "resource.h"
-
-#define APSTUDIO_READONLY_SYMBOLS
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 2 resource.
-//
-#define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
-#undef APSTUDIO_HIDDEN_SYMBOLS
 
-/////////////////////////////////////////////////////////////////////////////
-#undef APSTUDIO_READONLY_SYMBOLS
+/*============================================================================*/
 
-/////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
-
+  // English (United States) resources
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// RT_MANIFEST
-//
+/*============================================================================*/
 
+  // RT_MANIFEST
 1       RT_MANIFEST                     "../src/res/Win32++.manifest"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Menu
-//
+/*============================================================================*/
 
+  // Main Menu
 IDW_MAIN MENU
-BEGIN
+{
     POPUP "&File"
-    BEGIN
+    {
         MENUITEM "New...",                      IDM_FILE_NEW
         MENUITEM "&Open...",                    IDM_FILE_OPEN
         MENUITEM "&Save",                       IDM_FILE_SAVE
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
-        MENUITEM "Print Setup",                 IDM_FILE_PRINTSETUP
+        MENUITEM "Print Setup",                 IDM_FILE_PRINTSETUP 
         MENUITEM "Print P&review",              IDM_FILE_PREVIEW
         MENUITEM "&Print",                      IDM_FILE_PRINT
         MENUITEM "Quick Print",                 IDM_FILE_QUICKPRINT
@@ -69,9 +44,9 @@ BEGIN
         MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
-    END
+    }
     POPUP "&Edit"
-    BEGIN
+    {
         MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
         MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO
         MENUITEM SEPARATOR
@@ -79,33 +54,30 @@ BEGIN
         MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
         MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
         MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
-    END
+    }
     POPUP "&View"
-    BEGIN
+    {
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-    END
+    }
     POPUP "&Options"
-    BEGIN
+    {
         MENUITEM "Font",                        IDM_OPTIONS_FONT
         MENUITEM SEPARATOR
-        MENUITEM "No Wrap",                     IDM_WRAP_NONE
+        MENUITEM "No Wrap",                     IDM_WRAP_NONE       
         MENUITEM "Window Wrap",                 IDM_WRAP_WINDOW
         MENUITEM "Printer Wrap",                IDM_WRAP_PRINTER
-    END
+    }
     POPUP "&Help"
-    BEGIN
+    {
         MENUITEM "&About",                      IDM_HELP_ABOUT
-    END
-END
+    }
+}
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icons
-//
+/*============================================================================*/
 
-// The icon with lowest ID value is placed first to ensure the application icon
-// remains consistent on all systems.
+  // Icons: The icon with lowest ID value is placed first to ensure the 
+  // application icon remains consistent on all systems.
 IDW_MAIN                ICON                    "../src/res/PrintPreview.ico"
 IDI_PRINTPREVIEW        ICON                    "../src/res/Print Preview.ico"
 IDI_PRINTSETUP          ICON                    "../src/res/Print Settings.ico"
@@ -114,97 +86,94 @@ IDI_PRINT               ICON                    "../src/res/Print.ico"
 IDI_FONT_OPTION         ICON                    "../src/res/FontsS.ico"
 IDI_CHECKBOX_OFF        ICON                    "../src/res/CheckBoxOff.ico"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
+/*============================================================================*/
 
+  // Bitmaps
 IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
 IDB_PREVIEW_FIRST       BITMAP                  "../src/res/recfirst.bmp"
 IDB_PREVIEW_PREV        BITMAP                  "../src/res/recprev.bmp"
 IDB_PREVIEW_NEXT        BITMAP                  "../src/res/recnext.bmp"
 IDB_PREVIEW_LAST        BITMAP                  "../src/res/reclast.bmp"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
+/*============================================================================*/
 
-// About dialog
+  // About Dialog
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
-BEGIN
+{
     DEFPUSHBUTTON   "OK",                            IDOK,       68, 49, 50, 14
     CTEXT           "FilePrintPreview Demo Program", IDC_STATIC, 61, 22, 64, 18
     ICON            IDW_MAIN, 0, 4, 4, 20, 20
-END
+}
 
-// PrintPreview dialog
-IDD_PRINTPREVIEW DIALOGEX 0, 0, PVW_DLG_WIDTH, PVW_DLG_HEIGHT
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_POPUP
-     | DS_MODALFRAME | WS_CLIPCHILDREN
+/*============================================================================*/
+
+  // PrintPreview dialog  
+IDD_PRINTPREVIEW DIALOGEX 0, 0, PVW_DLG_WIDTH, PVW_DLG_HEIGHT 
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_VISIBLE | WS_OVERLAPPEDWINDOW | WS_POPUP 
+     | DS_MODALFRAME | WS_CLIPCHILDREN 
 EXSTYLE WS_EX_CLIENTEDGE
 FONT 8, "MS Shell Dlg", 400, 0
-BEGIN
+{
     PUSHBUTTON      "Print",     IDC_PREVIEW_PRINT,     5, 3, 45, 15
     PUSHBUTTON      "Setup",     IDC_PREVIEW_SETUP,    55, 3, 45, 15
     LTEXT           "Page: ",    IDC_STATIC,          105, 6, 20, 15
-    PUSHBUTTON      "1st Page",  IDC_PREVIEW_FIRST,   130, 3, 15, 15,
+    PUSHBUTTON      "1st Page",  IDC_PREVIEW_FIRST,   130, 3, 15, 15, 
                                     BS_BITMAP
-    PUSHBUTTON      "Prev Page", IDC_PREVIEW_PREV,    150, 3, 15, 15,
+    PUSHBUTTON      "Prev Page", IDC_PREVIEW_PREV,    150, 3, 15, 15, 
                                     BS_BITMAP
-    EDITTEXT                     IDC_PREVIEW_PAGE,    170, 4, 20, 13,
-                                    ES_RIGHT | ES_NUMBER | WS_BORDER |
+    EDITTEXT                     IDC_PREVIEW_PAGE,    170, 4, 20, 13, 
+                                    ES_RIGHT | ES_NUMBER | WS_BORDER | 
                                     WS_TABSTOP
     CTEXT           "of (nn)",   IDC_PREVIEW_OFPAGES, 195, 6, 30, 15
-    PUSHBUTTON      "Next Page", IDC_PREVIEW_NEXT,    230, 3, 15, 15,
+    PUSHBUTTON      "Next Page", IDC_PREVIEW_NEXT,    230, 3, 15, 15, 
                                     BS_BITMAP
-    PUSHBUTTON      "Last Page", IDC_PREVIEW_LAST,    250, 3, 15, 15,
+    PUSHBUTTON      "Last Page", IDC_PREVIEW_LAST,    250, 3, 15, 15, 
                                     BS_BITMAP
     RTEXT           "Scale:",    IDC_STATIC,        270, 6, 25, 15
-    COMBOBOX                    IDC_PREVIEW_ZOOMCOMBO,  300, 3, 45, 150,
-                                    CBS_DROPDOWNLIST | CBS_HASSTRINGS |
+    COMBOBOX                    IDC_PREVIEW_ZOOMCOMBO,  300, 3, 45, 150, 
+                                    CBS_DROPDOWNLIST | CBS_HASSTRINGS | 
                                     WS_TABSTOP | WS_VSCROLL
     PUSHBUTTON      "Close",     IDC_PREVIEW_CLOSE,   350, 3, 45, 15
     PUSHBUTTON      "Help",      IDC_PREVIEW_HELP,    400, 3, 45, 15
-    CONTROL         "",          IDC_PREVIEW_PANE,    "PreviewPane",
-                                    WS_TABSTOP | SBS_HORZ | SBS_VERT,
-                                    0, PVW_TB_HEIGHT, PVW_DLG_WIDTH,
+    CONTROL         "",          IDC_PREVIEW_PANE,    "PreviewPane", 
+                                    WS_TABSTOP | SBS_HORZ | SBS_VERT,      
+                                    0, PVW_TB_HEIGHT, PVW_DLG_WIDTH, 
                                     (PVW_DLG_HEIGHT - PVW_TB_HEIGHT)
-END
+}
 
-// PrintPreview Screen and Page Setup dialog
+/*============================================================================*/
+
+  // PrintPreview Screen and Page Setup dialog
 IDD_PREVIEW_SETUP DIALOGEX 0, 0, 211, 145
-STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION |
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | 
     WS_VISIBLE | WS_POPUP | WS_SYSMENU
 EXSTYLE WS_EX_CLIENTEDGE
 CAPTION "Print Preview and Page Setup"
 FONT 8, "Ms Shell Dlg", 400, 0
-BEGIN
-    RTEXT           "Screen size:\r\nWidth (inches);", IDC_STATIC,
+{
+    RTEXT           "Screen size:\r\nWidth (inches);", IDC_STATIC, 
                         5, 20, 60, 17
     EDITTEXT                            IDC_SCREEN_WIDTH,   68, 25, 40, 14
     RTEXT           "Height (inches):", IDC_STATIC,          5, 55, 60,  9
     EDITTEXT                            IDC_SCREEN_HEIGHT,  68, 52, 40, 14
-    RTEXT           "Preview size:\r\nWidth (inches):", IDC_STATIC,
+    RTEXT           "Preview size:\r\nWidth (inches):", IDC_STATIC, 
                          5, 75, 60, 17
     EDITTEXT                            IDC_PREVIEW_WIDTH,  68,  79, 40, 14
     RTEXT           "Height (inches):", IDC_STATIC,          5, 110, 60,  9
-    EDITTEXT                            IDC_PREVIEW_HEIGHT, 68, 106, 40, 14,
+    EDITTEXT                            IDC_PREVIEW_HEIGHT, 68, 106, 40, 14, 
                                             ES_AUTOHSCROLL
     PUSHBUTTON      "Page Setup",       IDC_PAGE_SETUP,     130,  30, 50, 14, 0
     DEFPUSHBUTTON   "OK",               IDOK,               130,  65, 50, 14, 0
     PUSHBUTTON      "Cancel",           IDCANCEL,           130, 100, 50, 14, 0
-END
+}
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
+/*============================================================================*/
 
+  // Accelerator Keys
 IDW_MAIN ACCELERATORS
 {
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
@@ -219,67 +188,11 @@ IDW_MAIN ACCELERATORS
     "Y",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, NOINVERT
 }
 
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
+/*============================================================================*/
 
-1 TEXTINCLUDE
-BEGIN
-    "resource.h\0"
-END
-
-2 TEXTINCLUDE
-BEGIN
-    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""windows.h""\r\n"
-    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE
-BEGIN
-    "\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-//    DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO
-BEGIN
-    IDD_PRINTPREVIEW, DIALOG
-    BEGIN
-    END
-END
-
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// AFX_DIALOG_LAYOUT
-//
-
-IDD_PRINTPREVIEW AFX_DIALOG_LAYOUT
-BEGIN
-    0
-END
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
+  // String Tables
 STRINGTABLE
-BEGIN
+{
     IDW_MAIN                "Print Preview Demo"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
@@ -287,10 +200,10 @@ BEGIN
     IDW_READY               "Ready"
     IDOK                    "Accept current dialog values"
     IDCANCEL                "Close dialog, ignore entered values"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     IDM_FILE_NEW             "Create a New Document"
     IDM_FILE_OPEN            "Open Existing Document"
     IDM_FILE_SAVE            "Save the Document"
@@ -300,10 +213,10 @@ BEGIN
     IDM_FILE_PRINT           "Print the Document"
     IDM_FILE_QUICKPRINT      "Print with the current print and page settings"
     IDM_FILE_EXIT            "End the Program"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     IDM_EDIT_UNDO            "Undo the last action"
     IDM_EDIT_REDO            "Redo the previously undone action"
     IDM_EDIT_CUT             "Cut the Selected Contents to the Clipboard"
@@ -312,15 +225,15 @@ BEGIN
     IDM_EDIT_DELETE          "Erase the selected Contents"
     IDW_VIEW_TOOLBAR         "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR       "Show or hide the status bar"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     IDM_HELP_ABOUT           "Display Information about this program"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the Window"
@@ -329,19 +242,19 @@ BEGIN
     SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     IDW_FILE_MRU_FILE1       "Open this document"
     IDW_FILE_MRU_FILE2       "Open this document"
     IDW_FILE_MRU_FILE3       "Open this document"
     IDW_FILE_MRU_FILE4       "Open this document"
     IDW_FILE_MRU_FILE5       "Open this document"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     IDD_PRINTPREVIEW         "Print preview window"
     IDC_PREVIEW_PRINT        "Print the document"
     IDC_PREVIEW_SETUP        "Setup the screen and printer page"
@@ -350,30 +263,29 @@ BEGIN
     IDC_PREVIEW_PREV         "Display the previousl page of the document"
     IDC_PREVIEW_NEXT         "Display the next page of the document"
     IDC_PREVIEW_LAST         "Display the last page of the document"
-    IDC_PREVIEW_CLOSE        "Close the preview window"
+    IDC_PREVIEW_CLOSE        "Close the preview window" 
     IDC_PREVIEW_PANE         "Print preview window"
     IDC_PREVIEW_HELP         "Display help topics"
     IDC_PREVIEW_ZOOMCOMBO    "Select Print Preview scaling"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     IDC_SCREEN_WIDTH         "Enter the monitor screen width."
     IDC_SCREEN_HEIGHT        "Enter the monitor screen height"
     IDC_PREVIEW_WIDTH        "Enter the initial preview width"
     IDC_PREVIEW_HEIGHT       "Enter the initial preview height"
     IDC_PAGE_SETUP           "Set up the printer page parameters"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     IDM_OPTIONS_FONT         "Change the displayed font."
     IDM_WRAP_NONE            "Do not wrap long lines."
     IDM_WRAP_WINDOW          "Wrap lines longer than the window width."
     IDM_WRAP_PRINTER         "Wrap lines longer than the printer width."
-END
-
+}
+/*----------------------------------------------------------------------------*/
 #endif    // English (United States) resources
-/////////////////////////////////////////////////////////////////////////////
 
 

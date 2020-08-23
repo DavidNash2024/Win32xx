@@ -21,11 +21,40 @@ CMyDialog::~CMyDialog()
 {
 }
 
+INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    switch (msg)
+    {
+    case WM_HSCROLL:   return OnHScroll(wparam, lparam);
+    }
+
+    // Pass unhandled messages on to parent DialogProc
+    return DialogProcDefault(msg, wparam, lparam);
+}
+
 // Called when the dialog window is destroyed.
 void CMyDialog::OnDestroy()
 {
     // End the application
     ::PostQuitMessage(0);
+}
+
+BOOL CMyDialog::OnHScroll(WPARAM wparam, LPARAM lparam)
+{
+    HWND wnd = reinterpret_cast<HWND>(lparam);
+    int pos = 0;
+    BOOL isSlider = (wnd == m_slider.GetHwnd());
+
+    if (isSlider)
+        pos = m_slider.GetPos();
+    else
+        pos = m_scrollBar.GetPos(wparam);
+
+    SetSliderPos(pos);
+    SetScrollPos(pos);
+    SetProgressPos(pos);
+    SetStatic(isSlider, pos);
+    return TRUE;
 }
 
 // Called before the dialog is displayed.
@@ -40,6 +69,8 @@ BOOL CMyDialog::OnInitDialog()
     AttachItem(IDC_SCROLLBAR1, m_scrollBar);
     AttachItem(IDC_SLIDER1, m_slider);
 
+    m_slider.SetTicFreq(10);
+
     return TRUE;
 }
 
@@ -51,19 +82,19 @@ void CMyDialog::OnOK()
 }
 
 // Sets the progress bar's position.
-void CMyDialog::SetProgress(int pos)
+void CMyDialog::SetProgressPos(int pos)
 {
-    m_progressBar.SetProgress(pos);
+    m_progressBar.SetPos(pos);
 }
 
 // Sets the scroll bar's position.
-void CMyDialog::SetScroll(int pos)
+void CMyDialog::SetScrollPos(int pos)
 {
-    m_scrollBar.SetScroll(pos);
+    m_scrollBar.SetPos(pos);
 }
 
 // Sets the slider control's position.
-void CMyDialog::SetSlider(int pos)
+void CMyDialog::SetSliderPos(int pos)
 {
     m_slider.SetPos(pos, TRUE);
 }

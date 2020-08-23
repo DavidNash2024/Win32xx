@@ -1,8 +1,7 @@
 /* (12-Jun-2015) [Tab/Indent: 8/8][Line/Box: 80/74]                    (Doc.h) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2015, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
+|                      Author: Robert C. Tausworthe, 2020                      |
 |                                                                              |
 ===============================================================================*
 
@@ -10,50 +9,17 @@
     interfaces the document, held in the registry, with the remainder of the
     DDX/DDV Demonstration program. This class is a modified version of that
     found in the FormDocView sample distributed with the Win32++ Windows
-    interface classes, Copyright (c) 2005-2015 David Nash, used under
-    permissions granted therein. The modified sample program was based on
-    code provided by Lynn Allan. This demo extends the given sample by
-    application of Dialog Data Exchange and Validation (DDX/DDV).
+    interface classes. The modified sample program was based on code provided
+    by Lynn Allan. This demo extends the given sample by application of
+    Dialog Data Exchange and Validation (DDX/DDV).
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and  to the alterations,
-    additions, deletions, and  other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and  any associated documentation composed by
-    the author, to utilize this material, free of charge and  without
-    restriction or limitation, subject to the following conditions:
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Special Conventions:
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-
-    Acknowledgement:
-    The author would like to thank and acknowledge the advice, critical
-    review, insight, and assistance provided by David Nash in the development
-    of this work.
-
-********************************************************************************
-
-    Declaration of the CDoc class
+    Acknowledgement: The author would like to thank and acknowledge the advice,
+    critical review, insight, and assistance provided by David Nash in the
+    development of this work.
 
 *******************************************************************************/
 
@@ -62,112 +28,113 @@
 
 /*============================================================================*/
     class
-CDoc    : public CObject                        /*
+CDoc    : public CObject                                                    /*
 
-    Declaration of the CDoc class
+    Declaration of the CDoc class of the App-Frame-Doc-View architecture.
 *-----------------------------------------------------------------------------*/
 {
     public:
         CDoc();
-        virtual ~CDoc();
-        void    LoadDocRegistry(LPCTSTR szKeyName);
-        void    SaveDocRegistry(LPCTSTR szKeyName);
+        virtual ~CDoc() {}
+
+        void    LoadDocRegistry(LPCTSTR keyName);
+        void    SaveDocRegistry(LPCTSTR keyName);
         BOOL    RegQueryBOOLValue(CRegKey& key, LPCTSTR pName);
         DWORD   RegQueryDWORDValue(CRegKey& key, LPCTSTR pName);
         CString RegQueryStringValue(CRegKey& key, LPCTSTR pName);
         SYSTEMTIME RegQuerySYSTEMTIMEValue(CRegKey &key, LPCTSTR pName);
-        BOOL    GetCheckA() const {return m_iCheckA;}
-        void    SetCheckA(BOOL IsChecked) { m_iCheckA = IsChecked;}
+        BOOL    GetCheckA() const {return m_checkAVal;}
+        void    SetCheckA(BOOL IsChecked) { m_checkAVal = IsChecked;}
 
-        BOOL    GetCheckB() const {return m_iCheckB;}
-        void    SetCheckB(BOOL IsChecked) { m_iCheckB = IsChecked;}
+        BOOL    GetCheckB() const {return m_checkBVal;}
+        void    SetCheckB(BOOL IsChecked) { m_checkBVal = IsChecked;}
 
-        BOOL    GetCheckC() const {return m_iCheckC;}
-        void    SetCheckC(BOOL IsChecked) { m_iCheckC = IsChecked;}
+        BOOL    GetCheckC() const {return m_checkCVal;}
+        void    SetCheckC(BOOL IsChecked) { m_checkCVal = IsChecked;}
 
-        UINT    GetRadio() const {return m_iRadioA;}
-        void    SetRadio(UINT radio) { m_iRadioA = radio;}
+        UINT    GetRadio() const {return m_radioA;}
+        void    SetRadio(UINT radio) { m_radioA = radio;}
 
-        const CString& GetListBoxS() const {return m_sListBox;}
-        void    SetListBoxS(const CString &s){ m_sListBox = s;}
+        const CString& GetListBoxS() const {return m_listBoxVal;}
+        void    SetListBoxS(const CString &s){ m_listBoxVal = s;}
 
-        int GetListBoxX() const {return m_iListBox;}
-        void    SetListBoxX(int index){m_iListBox = index;}
+        int     GetListBoxX() const {return m_listBoxIndx;}
+        void    SetListBoxX(int index){m_listBoxIndx = index;}
 
-        const CString& GetComboBoxS() const {return m_sComboBox;}
-        void    SetComboBoxS(const CString &s){ m_sComboBox = s;}
+        const CString& GetComboBoxS() const {return m_comboBoxVal;}
+        void    SetComboBoxS(const CString &s){ m_comboBoxVal = s;}
 
-        int GetComboBoxX() const {return m_iComboBox;}
-        void    SetComboBoxX(int index){m_iComboBox = index;}
+        int     GetComboBoxX() const {return m_comboBoxIndx;}
+        void    SetComboBoxX(int index){m_comboBoxIndx = index;}
 
-        const CString& GetEditBox() const {return m_sString;}
-        void    SetEditBox(const CString &s){m_sString = s;}
+        const CString& GetEditBox() const {return m_editVal;}
+        void    SetEditBox(const CString &s){m_editVal = s;}
 
-        const CString& GetRichEditBox() const {return m_sRichEdit;}
-        void    SetRichEditBox(const CString &s){ m_sRichEdit = s;}
+        const CString& GetRichEditBox() const {return m_richEditVal;}
+        void    SetRichEditBox(const CString &s){ m_richEditVal = s;}
 
-        BYTE    GetByte() const {return m_iByte;}
-        void    SetByte(BYTE val) {m_iByte = val;}
+        BYTE    GetByte() const {return m_byteVal;}
+        void    SetByte(BYTE val) {m_byteVal = val;}
 
-        short   GetShort() const {return m_iShort;}
-        void    SetShort(short val) {m_iShort = val;}
+        short   GetShort() const {return m_shortVal;}
+        void    SetShort(short val) {m_shortVal = val;}
 
-        int     GetInt() const {return m_iInt;}
-        void    SetInt(int val) {m_iInt = val;}
+        int     GetInt() const {return m_intVal;}
+        void    SetInt(int val) {m_intVal = val;}
 
-        UINT    GetUINT() const {return m_iUINT;}
-        void    SetUINT(UINT val) {m_iUINT = val;}
+        UINT    GetUINT() const {return m_UINTVal;}
+        void    SetUINT(UINT val) {m_UINTVal = val;}
 
-        long    GetLong() {return m_iLong;}
-        void    SetLong(long val) {m_iLong = val;}
+        long    GetLong() {return m_longVal;}
+        void    SetLong(long val) {m_longVal = val;}
 
-        DWORD   GetULong() const {return m_ULong;}
-        void    SetULong(DWORD val) {m_ULong = val;}
+        DWORD   GetULong() const {return m_ULongVal;}
+        void    SetULong(DWORD val) {m_ULongVal = val;}
 
-        float   GetFloat() const {return m_fFloat;}
-        void    SetFloat(float val) {m_fFloat = val;}
+        float   GetFloat() const {return m_floatVal;}
+        void    SetFloat(float val) {m_floatVal = val;}
 
-        double  GetDouble() const {return m_dDouble;}
-        void    SetDouble(double val) {m_dDouble = val;}
+        double  GetDouble() const {return m_doubleVal;}
+        void    SetDouble(double val) {m_doubleVal = val;}
 
-        const CString& GetString() const {return m_sString;}
-        void     SetString(const CString& val) {m_sString = val;}
+        const CString& GetString() const {return m_editVal;}
+        void     SetString(const CString& val) {m_editVal = val;}
 
-        LPCTSTR GetLPTSTR() const {return m_LPTSTR;}
-        void SetLPTSTR(LPCTSTR val) {StrCopy(m_LPTSTR, val, 256); }
+        LPCTSTR GetLPTSTR() const {return m_LPTSTRVal;}
+        void SetLPTSTR(LPCTSTR val) {StrCopy(m_LPTSTRVal, val, 256); }
 
-        int GetSlider() const {return m_iSlider;}
-        void    SetSlider(int val) {m_iSlider = val;}
+        int     GetSlider() const {return m_sliderVal;}
+        void    SetSlider(int val) {m_sliderVal = val;}
 
-        SYSTEMTIME GetDateTime() const {return m_stDateTime;}
-        void    SetDateTime(const SYSTEMTIME &st){m_stDateTime = st;}
+        SYSTEMTIME GetDateTime() const {return m_dateSysTime;}
+        void    SetDateTime(const SYSTEMTIME &st){m_dateSysTime = st;}
 
-        SYSTEMTIME GetMoCalendar() const {return m_stMoCalendar;}
-        void    SetMoCalendar(const SYSTEMTIME &st){m_stMoCalendar = st;}
+        SYSTEMTIME GetMoCalendar() const {return m_calDateSysTime;}
+        void    SetMoCalendar(const SYSTEMTIME &st){m_calDateSysTime = st;}
 
     private:
-        BYTE    m_iByte;
-        short   m_iShort;
-        int     m_iInt;
-        int     m_iComboBox;
-        int     m_iListBox;
-        int     m_iSlider;
-        UINT    m_iUINT;
-        long    m_iLong;
-        DWORD   m_ULong;
-        float   m_fFloat;
-        double  m_dDouble;
-        BOOL    m_iCheckA;
-        BOOL    m_iCheckB;
-        BOOL    m_iCheckC;
-        UINT    m_iRadioA;
-        CString m_sListBox;
-        CString m_sComboBox;
-        CString m_sString;
-        CString m_sRichEdit;
-        TCHAR   m_LPTSTR[256];
-        SYSTEMTIME m_stDateTime;
-        SYSTEMTIME m_stMoCalendar;
+        BYTE        m_byteVal;
+        short       m_shortVal;
+        int         m_intVal;
+        int         m_comboBoxIndx;
+        int         m_listBoxIndx;
+        int         m_sliderVal;
+        UINT        m_UINTVal;
+        long        m_longVal;
+        DWORD       m_ULongVal;
+        float       m_floatVal;
+        double      m_doubleVal;
+        BOOL        m_checkAVal;
+        BOOL        m_checkBVal;
+        BOOL        m_checkCVal;
+        UINT        m_radioA;
+        CString     m_listBoxVal;
+        CString     m_comboBoxVal;
+        CString     m_editVal;
+        CString     m_richEditVal;
+        TCHAR       m_LPTSTRVal[256];
+        SYSTEMTIME  m_dateSysTime;
+        SYSTEMTIME  m_calDateSysTime;
 };
 
 /*----------------------------------------------------------------------------*/

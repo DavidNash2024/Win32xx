@@ -140,9 +140,6 @@
 				RelativePath="..\src\MyScrollbar.cpp">
 			</File>
 			<File
-				RelativePath="..\src\MySlider.cpp">
-			</File>
-			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
 			<File
@@ -173,9 +170,6 @@
 			</File>
 			<File
 				RelativePath="..\src\MyScrollbar.h">
-			</File>
-			<File
-				RelativePath="..\src\MySlider.h">
 			</File>
 			<File
 				RelativePath="..\src\resource.h">

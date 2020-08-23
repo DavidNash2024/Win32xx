@@ -1,55 +1,21 @@
 /* (24-Jul-2015) [Tab/Indent: 8/8][Line/Box: 80/74]          (MyScrollBar.cpp) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2015, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
+|                      Author: Robert C. Tausworthe, 2020                      |
 |                                                                              |
 ===============================================================================*
 
     Contents Description: The custom scroll bar class implementation for
     this DDX-DDV Test program. This class is derived from the MyScrollBar
-    class found in the Win32++ Windows sample programs, Copyright
-    (c)2005-2015 David Nash, under permissions granted therein.
+    class found in the Win32++ Windows sample programs.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and  to the alterations,
-    additions, deletions, and  other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and  any associated documentation composed by
-    the author, to utilize this material, free of charge and  without
-    restriction or limitation, subject to the following conditions:
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Special Conventions:
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-
-    Acknowledgement:
-    The author would like to thank and acknowledge the advice, critical
-    review, insight, and assistance provided by David Nash in the development
-    of this work.
-
-********************************************************************************
-
-    Implementation of the CMyScrollBar class
+    Acknowledgement: The author would like to thank and acknowledge the advice,
+    critical review, insight, and assistance provided by David Nash in the
+    development of this work.
 
 *******************************************************************************/
 
@@ -58,97 +24,69 @@
 #include "App.h"
 #include "resource.h"
 
-
 /*============================================================================*/
     CMyScrollBar::
-CMyScrollBar()                                                           /*
+CMyScrollBar()                                                              /*
 
 *-----------------------------------------------------------------------------*/
 {
-    ZeroMemory(&m_siScroll, sizeof(SCROLLINFO));
+    ZeroMemory(&m_scrollInfo, sizeof(SCROLLINFO));
 }
 
 /*============================================================================*/
-    LRESULT CMyScrollBar::
-OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)          /*
+    int CMyScrollBar::
+GetHScrollPos(UINT msg, WPARAM wparam, LPARAM lparam)                       /*
 
+    Respond to WM_HSCROLL messages and return the current position of the 
+    scroll bar.
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(uMsg);
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(msg);
+    UNREFERENCED_PARAMETER(lparam);
 
-    GetScrollInfo(m_siScroll);
-
-    switch (LOWORD (wParam))
+    GetScrollInfo(m_scrollInfo);
+    switch (LOWORD (wparam))
     {
         case SB_LINELEFT:  // user clicked left or up arrow
-        m_siScroll.nPos -= 1;
+        m_scrollInfo.nPos -= 1;
         break;
 
         case SB_LINERIGHT:  // clicked right or down arrow
-        m_siScroll.nPos += 1;
+        m_scrollInfo.nPos += 1;
         break;
 
         case SB_PAGELEFT:  // clicked page up or scroll bar left of thumb
-        m_siScroll.nPos -= m_siScroll.nPage;
+        m_scrollInfo.nPos -= m_scrollInfo.nPage;
         break;
 
         case SB_PAGERIGHT: // clicked page down or scroll bar right of thumb
-        m_siScroll.nPos += m_siScroll.nPage;
+        m_scrollInfo.nPos += m_scrollInfo.nPage;
         break;
 
         case SB_THUMBTRACK: // user dragged the scroll box
-        m_siScroll.nPos = m_siScroll.nTrackPos;
+        m_scrollInfo.nPos = m_scrollInfo.nTrackPos;
         break;
 
         default :
         break;
     }
-
-      // get a view dialog reference
-    CView& theView = TheApp()->TheFrame()->TheView();
-      // get the scoll bar position, set slider and progress to same
-    theView.SetSlider(m_siScroll.nPos);
-    theView.SetScrollBar(m_siScroll.nPos);
-    theView.SetProgress(m_siScroll.nPos);
-    theView.UpdateDialog(SENDTOCONTROL);
-    theView.SetFocusID(IDC_SCROLLBAR);
-    theView.AdjustParameters();
-
-    return 0L;
-}
-
-/*============================================================================*/
-    LRESULT CMyScrollBar::
-OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)       /*
-
-*-----------------------------------------------------------------------------*/
-{
-    UNREFERENCED_PARAMETER(lParam);
-
-    switch (uMsg)
-    {
-        case WM_HSCROLL:
-        return OnHScroll(uMsg, wParam, lParam);
-    }
-
-    return 0L;
+    return m_scrollInfo.nPos;
 }
 
 /*============================================================================*/
     void CMyScrollBar::
-SetScrollInfo(int lo, int hi, int pos, int page)            /*
+SetScrollInfo(int lo, int hi, int pos, int page)                            /*
 
 *-----------------------------------------------------------------------------*/
 {
-    m_siScroll.cbSize = sizeof(SCROLLINFO);
-    m_siScroll.nPos   = pos;
-    m_siScroll.nPage  = page;
-    m_siScroll.nMin   = lo;
-    m_siScroll.nMax   = hi + (page - 1);
-    m_siScroll.fMask  = SIF_ALL;
+    m_scrollInfo.cbSize = sizeof(SCROLLINFO);
+    m_scrollInfo.nPos   = pos;
+    m_scrollInfo.nPage  = page;
+    m_scrollInfo.nMin   = lo;
+    m_scrollInfo.nMax   = hi + (page - 1);
+    m_scrollInfo.fMask  = SIF_ALL;
 
       // Set the scroll bar position
-    CScrollBar::SetScrollInfo(m_siScroll, TRUE);
+    CScrollBar::SetScrollInfo(m_scrollInfo, TRUE);
 }
-
+/*----------------------------------------------------------------------------*/

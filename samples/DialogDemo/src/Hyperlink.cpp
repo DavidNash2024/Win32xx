@@ -62,9 +62,9 @@ void CHyperlink::OnLButtonUp(LPARAM lparam)
 // Opens the default browser and displays the web page.
 void CHyperlink::OpenUrl()
 {
-    TCHAR szUrl[ MAX_PATH + 1 ] = _T("http://sourceforge.net/projects/win32-framework/");
+    LPCTSTR url = _T("http://sourceforge.net/projects/win32-framework/");
 
-   HINSTANCE result = ::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
+    HINSTANCE result = ::ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
     if (reinterpret_cast<INT_PTR>(result) > 32)
     {
         m_isUrlVisited = TRUE;

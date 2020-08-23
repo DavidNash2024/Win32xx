@@ -1,57 +1,22 @@
 /* (12-Jun-2015) [Tab/Indent: 8/8][Line/Box: 80/74]                (MainFrm.h) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2015, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
+|                      Author: Robert C. Tausworthe, 2020                      |
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: The DDXDemo CMainFrame and NoResizeStatusBar
-    class declarations. These classes control the appearance and frame-
-    related actions of the DDXDemo program. This program is a modified
-    version of that found in the FormDocView sample distributed with the
-    Win32++ Windows interface classes, Copyright (c) 2005-2015 David Nash,
-    used under permissions granted therein. The modified sample program was
-    based on code provided by Lynn Allan. This proram extends the given
-    sample by application of Dialog Data Exchange and Validation DDX/DDV).
-    The NoResizeStatusBar class creates a status bar without the resizing
+    Contents Description: The DDXDemo CMainFrame class declaration. This class
+    controls the appearance and frame-related actions of the DDXDemo program.
+    This class presents a fixed-size frame whose status bar has no resizing
     gripper in the lower-right-hand corner.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and  to the alterations,
-    additions, deletions, and  other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and  any associated documentation composed by
-    the author, to utilize this material, free of charge and  without
-    restriction or limitation, subject to the following conditions:
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Special Conventions:
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-
-    Acknowledgement:
-    The author would like to thank and acknowledge the advice, critical
-    review, insight, and assistance provided by David Nash in the development
-    of this work.
+    Acknowledgement: The author would like to thank and acknowledge the advice,
+    critical review, insight, and assistance provided by David Nash in the
+    development of this work.
 
 *******************************************************************************/
 
@@ -60,48 +25,40 @@
 
 #include "View.h"
 
-
-/*******************************************************************************
-
-    Declaration of the CMainFrame class
-
-*=============================================================================*/
+/*============================================================================*/
     class
-CMainFrame : public CFrame
+CMainFrame : public CFrame                                                  /*
 
-/*----------------------------------------------------------------------------*/
+    Declaration of the CMainFrame class of the App-Frame-Doc-View architecture.
+*----------------------------------------------------------------------------*/
 {
     public:
         CMainFrame(void);
-        virtual ~CMainFrame();
-        CDoc& TheDoc()   { return m_View.TheDoc(); }
-        CView& TheView() { return m_View; };
+        virtual ~CMainFrame() {}
 
-        BOOL UpdateDialog(BOOL bReadFromControl = SENDTOCONTROL);
+        CDoc&   TheDoc()   { return m_view.TheDoc(); }
+        CView&  TheView() { return m_view; };
 
-    protected:
-        virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
-        virtual void OnClose();
-        virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-        virtual int  OnCreate(CREATESTRUCT& cs);
-        virtual void OnFileExit();
-        virtual void OnInitialUpdate();
-        virtual void PreCreate(CREATESTRUCT& cs);
-        virtual void SetReBarColors(COLORREF clrBkGnd1,
-                COLORREF clrBkGnd2, COLORREF clrBand1,
-                COLORREF clrBand2);
-        virtual BOOL SetThemeColors();
-        virtual void SetupToolBar();
-        virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
+        BOOL    UpdateDialog(BOOL bReadFromControl = SENDTOCONTROL);
 
     private:
-        CView   m_View;
-        std::vector<UINT> m_vBandIDs;
-        std::vector<UINT> m_vBandStyles;
-        std::vector<UINT> m_vBandSizes;
+        BOOL    LoadRegistrySettings(LPCTSTR keyName);
+        void    OnClose();
+        BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+        int     OnCreate(CREATESTRUCT& cs);
+        void    OnFileExit();
+        void    OnInitialUpdate();
+        void    PreCreate(CREATESTRUCT& cs);
+        void    SetReBarColors(COLORREF, COLORREF, COLORREF, COLORREF);
+        BOOL    SetThemeColors();
+        void    SetupToolBar();
+        LRESULT WndProc(UINT msg, WPARAM, LPARAM);
+
+        CView             m_view;
+        std::vector<UINT> m_bandIDs;
+        std::vector<UINT> m_bandStyles;
+        std::vector<UINT> m_bandSizes;
 };
-
-
 /*----------------------------------------------------------------------------*/
 #endif //MAINFRM_H
 

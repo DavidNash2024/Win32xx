@@ -495,6 +495,7 @@ namespace Win32xx
 
         // Create Fonts
         void CreateFontIndirect(const LOGFONT& lf);
+        void CreatePointFont(int pointSize, LPCTSTR pFaceName, HDC dc = NULL, BOOL isBold = FALSE, BOOL isItalic = FALSE);
 
 #ifndef _WIN32_WCE
         void CreateFont(int height, int width, int escapement, int orientation, int weight,
@@ -3292,6 +3293,18 @@ namespace Win32xx
 
         CFont font;
         font.CreateFontIndirect(lf);
+        SelectObject(font);
+        m_pData->font = font;
+    }
+
+    // Creates a font of a specified typeface and point size and selects it into the device context.
+    // Refer to CreateFontIndirect in the Windows API documentation for more information.
+    inline void CDC::CreatePointFont(int pointSize, LPCTSTR pFaceName, HDC dc /*= NULL*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
+    {
+        assert(m_pData->dc != 0);
+
+        CFont font;
+        font.CreatePointFont(pointSize, pFaceName, dc, isBold, isItalic);
         SelectObject(font);
         m_pData->font = font;
     }

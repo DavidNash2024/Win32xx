@@ -1,7 +1,7 @@
 [Project]
 FileName=DialogBars_DEBUG.dev
 Name=DialogBarsDemo
-UnitCount=16
+UnitCount=12
 Type=0
 Ver=2
 ObjFiles=
@@ -82,9 +82,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\src\Progressbar.cpp
+FileName=..\src\resource.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -92,19 +92,19 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\src\Progressbar.h
-Folder=Header
+FileName=..\src\Resource.rc
+Folder=Resource
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 CompileCpp=1
 
 [Unit8]
-FileName=..\src\resource.h
+FileName=..\src\Scrollbar.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -131,7 +131,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit10]
-FileName=..\src\Scrollbar.cpp
+FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -141,7 +141,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\src\Scrollbar.h
+FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -151,9 +151,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\src\Slider.cpp
+FileName=..\src\targetver.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -181,11 +181,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=..\src\Resource.rc
+FileName=..\src\Scrollbar.h
 CompileCpp=1
-Folder=Resource
+Folder=Header
 Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

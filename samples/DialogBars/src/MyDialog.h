@@ -5,10 +5,7 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-
-#include "ProgressBar.h"
 #include "ScrollBar.h"
-#include "Slider.h"
 
 /////////////////////////////////////
 // Declaration of the CMyDialog class
@@ -19,20 +16,22 @@ public:
     CMyDialog(UINT resID);
     virtual ~CMyDialog();
 
-    void SetProgress(int pos);
-    void SetScroll(int pos);
-    void SetSlider(int pos);
+    BOOL OnHScroll(WPARAM wparam, LPARAM lparam);
+    void SetProgressPos(int pos);
+    void SetScrollPos(int pos);
+    void SetSliderPos(int pos);
     void SetStatic(BOOL isSlider, int pos);
 
 protected:
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnDestroy();
     virtual BOOL OnInitDialog();
     virtual void OnOK();
 
 private:
-    CMyProgressBar m_progressBar;
     CMyScrollBar m_scrollBar;
-    CMySlider m_slider;
+    CSlider      m_slider;
+    CProgressBar m_progressBar;
 };
 
 #endif //MYDIALOG_H

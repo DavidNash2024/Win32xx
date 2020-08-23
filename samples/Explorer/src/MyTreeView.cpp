@@ -296,7 +296,6 @@ void CMyTreeView::OnAttach()
 // Called when the window is destroyed.
 void CMyTreeView::OnDestroy()
 {
-    m_pItems.clear();
 }
 
 // Called in response to a right mouse click to open a context menu.

@@ -2,30 +2,12 @@
 ********************************************************************************
 
     Contents Description: Definition of the resource set for a sample
-    program demonstrating an expanded use of the status bar within the
-    Win32++ Windows framework, Copyright (c) 2005-2017 David Nash.
+    program demonstrating  custom status bar within the Win32++ Windows 
+    framework.
 
-    This particular program was adapted from the StatusBar sample progam
-    in the Win32++ distribution by Robert C. Tausworthe to illustrate the
-    definition of the status bar makeup by way of a data structure, in a
-    similar fashion as that appearing in the Microsoft Foundation Classes
-    (MFC), and to override the Win32++ normal statusbar definition of four
-    parts to any number suitable for an application.
-
-    The code changes to the StatusBar sample program only occur in the
-    CMainFrame and MyStatusBar classes. However, the entire program has
-    been reformatted for better readability, per the Programming Notes,
-    below.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-
-    Programming Notes:
-                The programming conventions used here roughly follow those
-        established by the 1997-1999 Jet Propulsion Laboratory Deep
-        Space Network Planning and Preparation Subsystem project for
-        C++ programming.
+    Programming Notes: The programming conventions used here roughly follow 
+    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space 
+    Network Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
@@ -34,39 +16,28 @@
 *-----------------------------------------------------------------------------*/
 
 #include "resource.h"
-
-#define APSTUDIO_READONLY_SYMBOLS
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 2 resource.
-//
-#define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
-#undef APSTUDIO_HIDDEN_SYMBOLS
-#undef APSTUDIO_READONLY_SYMBOLS
 
-/////////////////////////////////////////////////////////////////////////////
+/*============================================================================*/
+
 // English (United States) resources
-
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// RT_MANIFEST
-//
+/*=============================================================================*
 
-1                       RT_MANIFEST             "../src/res/Win32++.manifest"
+    RT_MANIFEST                                                             */
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Menu
-//
+1   RT_MANIFEST                         "../src/res/Win32++.manifest"
+
+/*=============================================================================*
+
+    Main Menu                                                               */
 
 IDW_MAIN MENU
-BEGIN
+{
     POPUP "&File"
-    BEGIN
+    {
         MENUITEM "New...",                      IDM_FILE_NEW
         MENUITEM "&Open...",                    IDM_FILE_OPEN
         MENUITEM "&Save",                       IDM_FILE_SAVE
@@ -75,9 +46,9 @@ BEGIN
         MENUITEM "&Print",                      IDM_FILE_PRINT
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
-    END
+    }
     POPUP "&Edit"
-    BEGIN
+    {
         MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO, GRAYED
         MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO, GRAYED
         MENUITEM SEPARATOR
@@ -85,59 +56,52 @@ BEGIN
         MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY, GRAYED
         MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE, GRAYED
         MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE, GRAYED
-    END
+    }
     POPUP "&View"
-    BEGIN
+    {
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-    END
+    }
     POPUP "&Help"
-    BEGIN
+    {
         MENUITEM "&About",                      IDM_HELP_ABOUT
-    END
-END
+    }
+}
 
+/*=============================================================================*
+* 
+    Icons: The Icon with lowest ID value placed first to ensure application 
+    icon remains consistent on all systems.                                 */
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// The Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
 IDW_MAIN                ICON                    "../src/res/Win32xx.ico"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
+/*=============================================================================*
+
+    Bitmaps                                                                 */
 
 IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
+/*=============================================================================*
+
+    About Dialog                                                            */
 
 IDW_ABOUT DIALOGEX 0, 0, 200, 100
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
-BEGIN
+{
     DEFPUSHBUTTON   "OK", IDOK, 75, 70, 50, 15
     CTEXT           "Extended Status Bar Demo", IDC_STATIC, 50, 25, 100, 30
     ICON            IDW_MAIN, 0, 5, 5, 20, 20
-END
+}
 
+/*=============================================================================*
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
+    Accelerator Table                                                       */
 
 IDW_MAIN ACCELERATORS
-BEGIN
+{
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
@@ -147,54 +111,26 @@ BEGIN
     "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
     "Y",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, NOINVERT
-END
+}
 
+/*=============================================================================*
 
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE
-BEGIN
-    "resource.h\0"
-END
-
-2 TEXTINCLUDE
-BEGIN
-    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "#include ""windows.h""\r\n"
-    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE
-BEGIN
-    "\r\n"
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
+    String Tables                                                           */
 
 STRINGTABLE
-BEGIN
+{
     IDW_MAIN                "StatusBarEx Demo"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
+    IDM_INDICATOR_INS       "OVR"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     IDM_FILE_NEW            "Create a New Document"
     IDM_FILE_OPEN           "Open Existing Document"
     IDM_FILE_SAVE           "Save the Document"
@@ -203,19 +139,19 @@ BEGIN
     IDM_FILE_EXIT           "End the Program"
     IDM_EDIT_UNDO           "Undo the last action"
     IDM_EDIT_REDO           "Redo the previously undone action"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
     IDM_HELP_ABOUT          "Display Information about this program"
-END
+}
 
 STRINGTABLE
-BEGIN
+{
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the Window"
@@ -224,10 +160,9 @@ BEGIN
     SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
-END
-
+}
+/*----------------------------------------------------------------------------*/
 #endif    // English (U.S.) resources
-/////////////////////////////////////////////////////////////////////////////
 
 
 

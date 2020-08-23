@@ -119,10 +119,6 @@ SOURCE=..\src\MyScrollbar.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MySlider.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
@@ -160,10 +156,6 @@ SOURCE=..\src\MyMonthCalendar.h
 # Begin Source File
 
 SOURCE=..\src\MyScrollbar.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\MySlider.h
 # End Source File
 # Begin Source File
 

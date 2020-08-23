@@ -1,6 +1,17 @@
 StatusBarEx Example
-=================
-This project demonstrates the how do the following with a status bar:
+===================
+This sample program demonstrates the use of a custom status bar class to 
+define a program's statusbar properties in a fashion similar to that
+found in the Microsoft Foundation Classes (MFC) and to extend the number of 
+its parts from four to any number deemed suitable for an application.
+
+The sample was adapted from the StatusBar sample progam by the addition of
+a CustomStatusBar class derived from the CStatusBar class, with alterations
+made in theCMainFrame class to accommodate and illustrate the new features.
+The entire program has been reformatted for consistency and better readability
+using the format described in the Programming Notes in each file.
+
+In particular, this project demonstrates the how do the following:
 * Create a status bar with an arbitrary number of customized parts via a declared
   array describing the contents of each part.
 * Set the color of the status bar.
@@ -12,7 +23,7 @@ This project demonstrates the how do the following with a status bar:
   respond to the WM_CTLCOLORSTATIC message.
 * Host a ProgressBar child in a status bar part.
 * Display string and icon resources on the status bar.
-* Display the status of the CAP, NUM, and SCRL keyboard states.
+* Display the status of the OVR, CAP, NUM, and SCRL keyboard states.
 * Create the status bar in the WS_CLIPCHILDREN style to reduce flicker on resizing
   the frame.
 
@@ -26,7 +37,7 @@ and below), we set a solid background color using the SB_SETBKCOLOR message.
 
 The status bar in this program has 8 parts: a menu and tooltip message area, the 
 mainframe icon and string title resources part, a progress control, the hyperlink 
-control, the owner drawn part, and the status indicators for CAP, NUM, and SCRL 
+control, the owner drawn part, and the status indicators for OVR, CAP, NUM, and SCRL 
 keyboard states. 
 
 Features demonstrated in this example

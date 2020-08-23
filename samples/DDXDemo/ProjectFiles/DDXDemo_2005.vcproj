@@ -211,10 +211,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\MySlider.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -270,10 +266,6 @@
 			</File>
 			<File
 				RelativePath="..\src\MyScrollbar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\MySlider.h"
 				>
 			</File>
 			<File

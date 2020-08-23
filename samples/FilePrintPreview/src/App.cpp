@@ -1,66 +1,63 @@
 /* (11-Nov-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                  (App.CPP) *
 ********************************************************************************
+|                                                                              |
+|                    Authors: Robert Tausworthe, David Nash                    |
+|                                                                              |
+===============================================================================*
 
-    Implementation of the CApp class for the FilePrintPreview demo program
-    and the WinMain interface with the Windows operating system.
+    Contents Description: Implementation of the CApp class for the 
+    FilePrintPreview demo program and the WinMain interface with the Windows 
+    operating system using the Win32++ Windows interface classes. 
 
-********************************************************************************
-
-    Acknowledgement. This demo program was adapted from the PrintPreview
-    sample program appearing in the Win32++ framework sample folder, created
-    by  David Nash and published under the permissions granted in that work.
-    The adaptation here implements the PrintView window as a separate popup
-    window that appears on screen along with the regular program window.
-    This work has been developed under the co-authorship of Robert C.
-    Tausworthe and David Nash, and released under the copyright provisions
-    of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his
-    patient direction and inspiration in the development of the classes of
-    these classes.
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
 #include "stdafx.h"
 #include "App.h"
 
+  // the one and only CApp object, not on the stack for efficiency
+CApp theApp;
+
 /*============================================================================*/
     BOOL CApp::
 InitInstance()                                                          /*
 
-    Called by the framework to create the frame
+    Called by the framework to create the frame.
 *-----------------------------------------------------------------------------*/
 {
       //Create the Frame Window
-    m_Frame.Create();   // throws a CWinException on failure
+    m_frame.Create();   // throws a CWinException on failure  
     return TRUE;
 }
 
 /*******************************************************************************
 
-    Windows API top-level program
+    Windows program interface
 
 *=============================================================================*/
-    int APIENTRY
-WinMain(HINSTANCE, HINSTANCE, LPSTR, int)               /*
+    int APIENTRY 
+WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
 
-    Launch the application.
+    Launch the application. The instances, command line, and show state are
+    unused in this program.
 *-----------------------------------------------------------------------------*/
 {
     try
     {
-          // Start Win32++
-        CApp theApp;
-
-          // Run the application: invoke theApp::InitInstance() and
-          // start the thread's message loop
+          // Start Win32++ and run the application: invoke theApp::InitInstance()
+          // and start the thread's message loop
         return theApp.Run();
     }
-
+    
       // catch all unhandled CException types
     catch (const CException &e)
     {
-        // Display the exception and quit
+          // Display the exception and quit
         MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
         return -1;
     }
 }
+/*----------------------------------------------------------------------------*/

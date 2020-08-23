@@ -1,24 +1,18 @@
 /* (11-Nov-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                (MainFrm.h) *
 ********************************************************************************
+|                                                                              |
+|                    Authors: Robert Tausworthe, David Nash                    |
+|                                                                              |
+===============================================================================*
 
-    Declaration of the CMainFrame class for the FilelPrintPreview program.
+    Contents Description: Declaration of the CMainFrame class for the 
+    FilelPrintPreview program using the Win32++ Windows interface classes. 
 
-********************************************************************************
-
-    Acknowledgement. This demo program was adapted from the PrintPreview
-    sample program appearing in the Win32++ framework sample folder, created
-    by  David Nash and published under the permissions granted in that work.
-    The adaptation here reimplements the PrintView window as a separate
-    popup window that appears on screen along with the regular program
-    window. This work has been developed under the co-authorship of Robert
-    Tausworthe and David Nash, and released under the copyright provisions
-    of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his
-    patient direction and inspiration in the development of the classes of
-    these classes.
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
-
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
@@ -28,19 +22,19 @@
 
 /*============================================================================*/
     class
-CMainFrame : public CFrame                                              /*
+CMainFrame : public CFrame                                                  /*
 
     Declaration of the CMainFrame class.
 *-----------------------------------------------------------------------------*/
 {
     public:
         CMainFrame();
-        virtual ~CMainFrame();
+        virtual ~CMainFrame() {}
 
-        const CString& GetPathName() const  { return m_PathName;}
-        CRichView& GetRichView() { return m_RichView; }
-
-        BOOL    OnDropFiles(HDROP hDropInfo);
+        const CString& GetPath() const  { return m_path;}
+        CRichView& GetRichView()        { return m_richView; }
+        
+        BOOL    OnDropFiles(HDROP dropInfo);
         BOOL    OnEditCopy();
         BOOL    OnEditCut();
         BOOL    OnEditDelete();
@@ -48,7 +42,7 @@ CMainFrame : public CFrame                                              /*
         BOOL    OnEditRedo();
         BOOL    OnEditUndo();
         BOOL    OnFileExit();
-        BOOL    OnFileMRU(WPARAM wParam);
+        BOOL    OnFileMRU(WPARAM wparam);
         BOOL    OnFileNew();
         BOOL    OnFileOpen();
         BOOL    OnFilePreview();
@@ -60,31 +54,29 @@ CMainFrame : public CFrame                                              /*
         BOOL    OnOptionsFont();
         BOOL    OnOptionsWrap(WordWrapType);
 
-        void    QuickPrint(CPrintDialog& PrintDlg);
-        BOOL    ReadFile(LPCTSTR szFileName);
-        void    SetPathName(LPCTSTR szFilePathName)
-                    {   m_PathName = szFilePathName;}
-        void    SetWindowTitle();
-        BOOL    WriteFile(LPCTSTR szFileName);
+        void    QuickPrint(CPrintDialog& printDlg);
+        BOOL    ReadFile(LPCTSTR path);
+        void    SetPath(LPCTSTR path); 
+        BOOL    WriteFile(LPCTSTR path);
 
     protected:
         virtual void    OnClose();
-        virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+        virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
         virtual int     OnCreate(CREATESTRUCT& cs);
         virtual void    OnInitialUpdate();
-        virtual void    OnMenuUpdate(UINT nID);
-        virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+        virtual void    OnMenuUpdate(UINT id);
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual void    PreCreate(CREATESTRUCT& cs);
                 void    SaveModifiedText();
         virtual void    SetupMenuIcons();
         virtual void    SetupToolBar();
-        virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
-        CPrintPreviewEx   m_PrintPreview;
-        CRichView       m_RichView;
-        CString         m_PathName;
-        WordWrapType    m_WrapOption;
+        CPrintPreviewEx m_printPreview;
+        CRichView       m_richView;
+        CString         m_path;
+        WordWrapType    m_wrapOption;
 };
 /*----------------------------------------------------------------------------*/
 #endif // MAINFRM_H

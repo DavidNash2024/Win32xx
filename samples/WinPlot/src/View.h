@@ -30,18 +30,19 @@ public:
     CView();
     virtual ~CView(){}
 
-    bool CalcPoints(double xmin, double xmax);
-    void DoPlot(CDC& dc);
-    void DrawLabel(CDC& dc);
     CDoc& GetDoc() { return m_doc; }
     double GetXMin() { return m_inputDlg.GetMin(); }
     double GetXMax() { return m_inputDlg.GetMax(); }
     Calc::Calculator& GetCalc() { return m_calc; }
+    CInputDlg& GetInput() { return m_inputDlg; }
 
-    void PlotAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
+    void CalcPoints(double xmin, double xmax);
+    void DoPlot(CDC& dc);
+    void DrawLabel(CDC& dc);
+    void PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
+    void PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
     void PlotFunction(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
-
-    CInputDlg m_inputDlg;
+    void PrepareDC(CDC& dc);
 
 protected:
     virtual void OnDraw(CDC& dc);
@@ -54,6 +55,7 @@ private:
     CDoc m_doc;
     Calc::Calculator m_calc;
     std::vector<PointData> m_points;  // vector of Data, stores x, y, & status
+    CInputDlg m_inputDlg;
 
     double m_ymin;
     double m_ymax;

@@ -600,7 +600,6 @@ void CMyListView::OnAttach()
 // Called when the window is destroyed.
 void CMyListView::OnDestroy()
 {
-    m_pItems.clear();
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.

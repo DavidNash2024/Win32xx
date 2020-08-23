@@ -103,15 +103,7 @@ SOURCE=..\src\MyDialog.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\Progressbar.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\Scrollbar.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\Slider.cpp
 # End Source File
 # Begin Source File
 
@@ -131,19 +123,11 @@ SOURCE=..\src\MyDialog.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\Progressbar.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\Scrollbar.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\Slider.h
 # End Source File
 # Begin Source File
 
