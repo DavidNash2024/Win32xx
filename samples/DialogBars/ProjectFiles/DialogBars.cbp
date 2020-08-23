@@ -174,15 +174,11 @@
 		<Unit filename="../src/DialogApp.h" />
 		<Unit filename="../src/MyDialog.cpp" />
 		<Unit filename="../src/MyDialog.h" />
-		<Unit filename="../src/Progressbar.cpp" />
-		<Unit filename="../src/Progressbar.h" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/Scrollbar.cpp" />
 		<Unit filename="../src/Scrollbar.h" />
-		<Unit filename="../src/Slider.cpp" />
-		<Unit filename="../src/Slider.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.h">

@@ -28,9 +28,6 @@
     <ClInclude Include="..\src\MyDateTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\MySlider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\MyMonthCalendar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -224,9 +221,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\MyScrollbar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\MySlider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,135 +1,81 @@
 /* (04-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2015, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
+|                      Author: Robert C. Tausworthe, 2020                      |
 |                                                                              |
 ===============================================================================*
 
     Contents Description: Application resources file for a this DDXDemo
-    application. Adapted to use Win32++ Windows interface classes,
-    Copyright (c) 2005-2015 David Nash, under permissions granted therein.
+    application. Adapted to use Win32++ Windows interface classes.
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and  to the alterations,
-    additions, deletions, and  other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and  any associated documentation composed by
-    the author, to utilize this material, free of charge and  without
-    restriction or limitation, subject to the following conditions:
+    Acknowledgement: The author would like to thank and acknowledge the advice,
+    critical review, insight, and assistance provided by David Nash in the
+    development of this work.
 
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
+******************************************************************************/
 
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
+// Microsoft Visual C++ generated resource script (originally).
 
-    Special Conventions:
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-
-    Acknowledgement:
-    The author would like to thank and acknowledge the advice, critical
-    review, insight, and assistance provided by David Nash in the development
-    of this work.
-*/
-
-// Microsoft Visual C++ generated resource script.
-//
 #include "resource.h"
-
-#define APSTUDIO_READONLY_SYMBOLS
-/////////////////////////////////////////////////////////////////////////////
-//
-// Generated from the TEXTINCLUDE 2 resource.
-//
-#define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #include <richedit.h>
-#undef APSTUDIO_HIDDEN_SYMBOLS
 
-/////////////////////////////////////////////////////////////////////////////
-#undef APSTUDIO_READONLY_SYMBOLS
+/*============================================================================*/
 
-/////////////////////////////////////////////////////////////////////////////
-// English (United States) resources
-
+  // English (United States) resources
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// RT_MANIFEST
-//
+/*============================================================================*/
 
+  // RT_MANIFEST
 1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
+/*============================================================================*/
 
-// The icon with the lowest ID value is placed first to ensure that
-// the application icon remains consistent on all systems.
-
+  // Icon: The icon with the lowest ID value is placed first to ensure that
+  // the application icon remains consistent on all systems.
 IDW_MAIN           ICON           "../src/res/Form.ico"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
+/*============================================================================*/
 
+  // Bitmaps
 IDB_ROSE_BITMAP    BITMAP         "../src/res/moondance.bmp"
 IDW_MAIN           BITMAP         "../src/res/toolbar.bmp"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Menu
-//
+/*============================================================================*/
 
+  // Main Menu
 IDW_MAIN MENU
-BEGIN
+{
     POPUP "&File"
-    BEGIN
-        MENUITEM "New...",      IDM_FILE_NEW
+    {
+        MENUITEM "New...",          IDM_FILE_NEW
         MENUITEM "&Open...",        IDM_FILE_OPEN
-        MENUITEM "&Save",       IDM_FILE_SAVE
+        MENUITEM "&Save",           IDM_FILE_SAVE
         MENUITEM "Save &As...",     IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
-        MENUITEM "&Print",      IDM_FILE_PRINT
+        MENUITEM "&Print",          IDM_FILE_PRINT
         MENUITEM SEPARATOR
-        MENUITEM "E&xit",       IDM_FILE_EXIT
-    END
+        MENUITEM "E&xit",           IDM_FILE_EXIT
+    }
     POPUP "&Edit"
-    BEGIN
+    {
         MENUITEM "Undo\tCtrl+Z",    IDM_EDIT_UNDO, GRAYED
-        MENUITEM "Redo\tShift+Ctrl+Z",  IDM_EDIT_REDO, GRAYED
+        MENUITEM "Redo\tShift+Ctrl+Z", IDM_EDIT_REDO, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "Cut\tCtrl+X",     IDM_EDIT_CUT, GRAYED
         MENUITEM "Copy\tCtrl+C",    IDM_EDIT_COPY, GRAYED
         MENUITEM "Paste\tCtrl+V",   IDM_EDIT_PASTE, GRAYED
         MENUITEM "Delete\tDel",     IDM_EDIT_DELETE, GRAYED
-    END
+    }
     POPUP "&View"
-    BEGIN
+    {
         MENUITEM "&Tool Bar",       IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",     IDW_VIEW_STATUSBAR, CHECKED
-    END
+    }
     POPUP "&Select"
-    BEGIN
+    {
         MENUITEM "Radio A",         IDC_RADIO_A
         MENUITEM "Radio B",         IDC_RADIO_B
         MENUITEM "Radio C",         IDC_RADIO_C
@@ -137,78 +83,76 @@ BEGIN
         MENUITEM "Check A",         IDC_CHECK_A
         MENUITEM "Check B",         IDC_CHECK_B
         MENUITEM "Check C",         IDC_CHECK_C
-    END
+    }
     POPUP "&Help"
-    BEGIN
-        MENUITEM "&About",      IDM_HELP_ABOUT
-    END
-END
+    {
+        MENUITEM "&About",          IDW_ABOUT
+    }
+}
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
+/*============================================================================*/
 
-// Main Dialog: the CView form
+  // Main Dialog: the CView form
 IDD_MAIN_DIALOG DIALOGEX 0, 0, 400, 368
 STYLE /*DS_SHELLFONT |*/ WS_VISIBLE | WS_CHILDWINDOW
 FONT 8, "Courier", 0, 0
-BEGIN
-    EDITTEXT        IDC_EDIT_BYTE, 90, 20, 15, 14, WS_GROUP | NOT WS_BORDER |
-                ES_NUMBER | ES_RIGHT, WS_EX_STATICEDGE
-    LTEXT           " BYTE ", IDC_STATIC, 110, 20, 40, 14, SS_LEFT // | SS_NOTIFY
-    EDITTEXT        IDC_EDIT_SHORT, 75, 40, 30, 14, NOT WS_BORDER | ES_RIGHT,
-                WS_EX_STATICEDGE
-    LTEXT           " short ", IDC_STATIC, 110, 40, 40, 14, SS_LEFT //| SS_NOTIFY
-    EDITTEXT        IDC_EDIT_INT, 50, 60, 55, 14, NOT WS_BORDER | ES_RIGHT,
-                WS_EX_STATICEDGE
-    LTEXT           " int ", IDC_STATIC, 110, 60, 40, 14, SS_LEFT // | SS_NOTIFY
-    EDITTEXT        IDC_EDIT_UINT, 50, 80, 55, 14, NOT WS_BORDER | ES_NUMBER |
-                ES_RIGHT, WS_EX_STATICEDGE
-    LTEXT           " UINT ", IDC_STATIC, 110, 80, 40, 14, SS_LEFT // | SS_NOTIFY
-    EDITTEXT        IDC_EDIT_LONG, 50, 100, 55, 14, NOT WS_BORDER | ES_RIGHT,
-                ES_NUMBER | WS_EX_STATICEDGE
-    LTEXT           " long ", IDC_STATIC, 110, 100, 40, 14, SS_LEFT // | SS_NOTIFY
-    EDITTEXT        IDC_EDIT_DWORD, 50, 120, 55, 14, NOT WS_BORDER | ES_NUMBER |
-                ES_RIGHT, WS_EX_STATICEDGE
-    LTEXT           " DWORD ", IDC_STATIC, 110, 120, 40, 14, SS_LEFT // | SS_NOTIFY
-    EDITTEXT        IDC_EDIT_FLOAT, 15, 140, 90, 14, NOT WS_BORDER | ES_RIGHT,
-                WS_EX_STATICEDGE
-    LTEXT           " float ", IDC_STATIC, 110, 140, 40, 14, SS_LEFT // | SS_NOTIFY
-    EDITTEXT        IDC_EDIT_DOUBLE, 15, 160, 90, 14, NOT WS_BORDER | ES_RIGHT,
-                WS_EX_STATICEDGE
-    LTEXT           " double ", IDC_STATIC, 110, 160, 40, 14, SS_LEFT // | SS_NOTIFY
+{
+    EDITTEXT    IDC_EDIT_BYTE, 90, 20, 15, 14, WS_GROUP | NOT WS_BORDER |
+                    ES_NUMBER | ES_RIGHT, WS_EX_STATICEDGE
+    LTEXT       " BYTE ", IDC_STATIC, 110, 20, 40, 14, SS_LEFT 
+    EDITTEXT    IDC_EDIT_SHORT, 75, 40, 30, 14, NOT WS_BORDER | ES_RIGHT,
+                    WS_EX_STATICEDGE
+    LTEXT       " short ", IDC_STATIC, 110, 40, 40, 14, SS_LEFT
+    EDITTEXT    IDC_EDIT_INT, 50, 60, 55, 14, NOT WS_BORDER | ES_RIGHT,
+                    WS_EX_STATICEDGE
+    LTEXT       " int ", IDC_STATIC, 110, 60, 40, 14, SS_LEFT
+    EDITTEXT    IDC_EDIT_UINT, 50, 80, 55, 14, NOT WS_BORDER | ES_NUMBER |
+                    ES_RIGHT, WS_EX_STATICEDGE
+    LTEXT       " UINT ", IDC_STATIC, 110, 80, 40, 14, SS_LEFT
+    EDITTEXT    IDC_EDIT_LONG, 50, 100, 55, 14, NOT WS_BORDER | ES_RIGHT,
+                    ES_NUMBER | WS_EX_STATICEDGE
+    LTEXT       " long ", IDC_STATIC, 110, 100, 40, 14, SS_LEFT 
+    EDITTEXT    IDC_EDIT_DWORD, 50, 120, 55, 14, NOT WS_BORDER | ES_NUMBER |
+                    ES_RIGHT, WS_EX_STATICEDGE
+    LTEXT       " DWORD ", IDC_STATIC, 110, 120, 40, 14, SS_LEFT
+    EDITTEXT    IDC_EDIT_FLOAT, 15, 140, 90, 14, NOT WS_BORDER | ES_RIGHT,
+                    WS_EX_STATICEDGE
+    LTEXT       " float ", IDC_STATIC, 110, 140, 40, 14, SS_LEFT
+    EDITTEXT    IDC_EDIT_DOUBLE, 15, 160, 90, 14, NOT WS_BORDER | ES_RIGHT,
+                    WS_EX_STATICEDGE
+    LTEXT       " double ", IDC_STATIC, 110, 160, 40, 14, SS_LEFT
     EDITTEXT        IDC_EDIT_LPTSTR, 15, 180, 135, 14, NOT WS_BORDER,
-                WS_EX_STATICEDGE
-    EDITTEXT        IDC_EDIT_CSTRING, 15, 200, 135, 35, WS_GROUP | NOT WS_BORDER |
-                ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE |
-            ES_WANTRETURN, WS_EX_STATICEDGE
-    CONTROL         "Rich edit box", IDC_EDIT_RICHEDIT, RICHEDIT_CLASS,
-                WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL | ES_MULTILINE |
-            ES_WANTRETURN, 15, 240, 135, 35
-    LISTBOX         IDC_LISTBOX, 15, 280, 135, 70, WS_GROUP | WS_TABSTOP |
-                WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
-            LBS_SORT | LBS_NOTIFY
-    CONTROL         "", IDC_SLIDER, "msctls_trackbar32", WS_TABSTOP |
-                TBS_NOTICKS | TBS_BOTH, 185, 15, 135, 15
-    CONTROL         "", IDC_PROGRESSBAR, "msctls_progress32",
-                WS_TABSTOP | PBS_SMOOTH, 185, 45, 135, 14
-    SCROLLBAR       IDC_SCROLLBAR, 185, 70, 135, 14, SBS_HORZ | WS_TABSTOP
+                    WS_EX_STATICEDGE
+    EDITTEXT    IDC_EDIT_CSTRING, 15, 200, 135, 35, WS_GROUP | NOT WS_BORDER |
+                    ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE |
+                    ES_WANTRETURN, WS_EX_STATICEDGE
+    CONTROL     "Rich edit box", IDC_EDIT_RICHEDIT, RICHEDIT_CLASS,
+                    WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL | ES_MULTILINE |
+                    ES_WANTRETURN, 15, 240, 135, 35
+    LISTBOX     IDC_LISTBOX, 15, 280, 135, 70, WS_GROUP | WS_TABSTOP |
+                    WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
+                    LBS_SORT | LBS_NOTIFY
+    CONTROL     "", IDC_SLIDER, "msctls_trackbar32", WS_TABSTOP |
+                    TBS_NOTICKS | TBS_BOTH, 185, 15, 135, 15
+    CONTROL     "", IDC_PROGRESSBAR, "msctls_progress32",
+                    WS_TABSTOP | PBS_SMOOTH, 185, 45, 135, 14
+    SCROLLBAR   IDC_SCROLLBAR, 185, 70, 135, 14, SBS_HORZ | WS_TABSTOP
     COMBOBOX        IDC_COMBOBOX, 185, 95, 135, 150, CBS_DROPDOWN |
-                CBS_HASSTRINGS | WS_TABSTOP | WS_VSCROLL
-    AUTORADIOBUTTON "Radio_A", IDC_RADIO_A, 190, 125, 48, 10, WS_GROUP | BS_NOTIFY
+                    CBS_HASSTRINGS | WS_TABSTOP | WS_VSCROLL
+    AUTORADIOBUTTON "Radio_A", IDC_RADIO_A, 190, 125, 48, 10, WS_GROUP | 
+                        BS_NOTIFY
     AUTORADIOBUTTON "Radio_B", IDC_RADIO_B, 190, 140, 48, 10, BS_NOTIFY
     AUTORADIOBUTTON "Radio_C", IDC_RADIO_C, 190, 155, 48, 10, BS_NOTIFY
     AUTOCHECKBOX    "Check Box A", IDC_CHECK_A, 190, 180, 55, 10,
-                WS_GROUP | WS_TABSTOP | BS_NOTIFY
+                        WS_GROUP | WS_TABSTOP | BS_NOTIFY
     AUTOCHECKBOX    "Check Box B", IDC_CHECK_B, 190, 195, 55, 10, WS_GROUP |
-                 WS_TABSTOP | BS_NOTIFY
+                        WS_TABSTOP | BS_NOTIFY
     AUTOCHECKBOX    "Check Box C", IDC_CHECK_C, 190, 210, 55, 10, WS_GROUP |
-                 WS_TABSTOP | BS_NOTIFY
-    CONTROL         "", IDC_DATE_TIME, "SysDateTimePick32", WS_GROUP |
-                WS_TABSTOP | DTS_TIMEFORMAT , 190, 230, 100, 15
-    CONTROL         "", IDC_CALENDAR, "SysMonthCal32", WS_TABSTOP |
-                MCS_NOTODAY, 185, 250, 110, 100
+                        WS_TABSTOP | BS_NOTIFY
+    CONTROL     "", IDC_DATE_TIME, "SysDateTimePick32", WS_GROUP |
+                    WS_TABSTOP | DTS_TIMEFORMAT , 190, 230, 100, 15
+    CONTROL     "", IDC_CALENDAR, "SysMonthCal32", WS_TABSTOP |
+                    MCS_NOTODAY, 185, 250, 110, 100
     PUSHBUTTON  "PUSH ME", IDC_PUSH_ME_BUTTON, 330, 15, 50, 16,
                     WS_GROUP | WS_TABSTOP | BS_OWNERDRAW
     PUSHBUTTON  "STATUS", IDOK, 330, 35, 50, 16,
@@ -219,31 +163,28 @@ BEGIN
                     BS_CENTER
     LTEXT       "Actions are displayed here", IDC_EDIT_STATUS,
                     335, 95, 120, 245, SS_LEFT | SS_NOTIFY
-END
+}
 
+/*============================================================================*/
 
-// About Dialog: triggered by CFrame::OnHelp()
+  // About Dialog: triggered by CFrame::OnHelp()
 IDW_ABOUT DIALOGEX 0, 0, 200, 100
 STYLE DS_MODALFRAME /*| DS_SHELLFONT*/ | WS_CAPTION | WS_VISIBLE | WS_POPUP |
     WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
-BEGIN
+{
     DEFPUSHBUTTON   "OK", IDOK, 75, 75, 50, 14, 0, WS_EX_LEFT
     CTEXT           "DDX/DDV Demo Application", IDC_STATIC, 25, 25, 150, 25,
                 SS_CENTER | SS_CENTERIMAGE | SS_NOTIFY, WS_EX_LEFT
     ICON            IDW_MAIN, 0, 5, 5, 20, 20, SS_ICON, WS_EX_LEFT
-END
+}
 
+/*============================================================================*/
 
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// String Table
-//
-
+  // String Table
 STRINGTABLE
-BEGIN
+{
       // Standard resource ID messages
     IDW_MAIN            "DDX/DDV Demo"
     IDW_VIEW_TOOLBAR    "Show or hide the tool bar"
@@ -265,7 +206,7 @@ BEGIN
     IDM_EDIT_COPY       "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE      "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE     "Erase the selected Contents"
-    IDM_HELP_ABOUT      "Display Information about this program"
+    IDW_ABOUT           "Display Information about this program"
       // Tool Tips Text
     IDOK                "Hint for STATUS button: Collect and show status."
     IDC_CHECK_A         "Hint for Check A: Check or uncheck."
@@ -305,15 +246,13 @@ BEGIN
     SC_NEXTWINDOW       "Select Next Window"
     SC_PREVWINDOW       "Select Previous Window"
     SC_RESTORE          "Restore the Window"
-END
+}
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Accelerator
-//
+/*============================================================================*/
 
+  // Accelerator Keys
 IDW_MAIN ACCELERATORS
-BEGIN
+{
     "N",            IDM_FILE_NEW, VIRTKEY, CONTROL
     "O",            IDM_FILE_OPEN, VIRTKEY, CONTROL
     "P",            IDM_FILE_PRINT, VIRTKEY, CONTROL
@@ -323,8 +262,6 @@ BEGIN
     "V",            IDM_EDIT_PASTE, VIRTKEY, CONTROL
     "Z",            IDM_EDIT_UNDO, VIRTKEY, CONTROL
     "Y",            IDM_EDIT_REDO, VIRTKEY, CONTROL, SHIFT
-END
-
-
+}
+/*----------------------------------------------------------------------------*/
 #endif    // English (U.S.) resources
-/////////////////////////////////////////////////////////////////////////////

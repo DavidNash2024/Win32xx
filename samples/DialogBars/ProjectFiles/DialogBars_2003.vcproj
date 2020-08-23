@@ -128,13 +128,7 @@
 				RelativePath="..\src\MyDialog.cpp">
 			</File>
 			<File
-				RelativePath="..\src\Progressbar.cpp">
-			</File>
-			<File
 				RelativePath="..\src\Scrollbar.cpp">
-			</File>
-			<File
-				RelativePath="..\src\Slider.cpp">
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp">
@@ -151,16 +145,10 @@
 				RelativePath="..\src\MyDialog.h">
 			</File>
 			<File
-				RelativePath="..\src\Progressbar.h">
-			</File>
-			<File
 				RelativePath="..\src\resource.h">
 			</File>
 			<File
 				RelativePath="..\src\Scrollbar.h">
-			</File>
-			<File
-				RelativePath="..\src\Slider.h">
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">

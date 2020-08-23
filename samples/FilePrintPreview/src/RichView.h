@@ -1,21 +1,12 @@
 /* (06-Sep-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (RichView.h) *
 ********************************************************************************
 
-    Declaration of the CRichView class.
+    Contents Description: Declaration of the CRichView class using the 
+    Win32++ Windows interface classes.
 
-********************************************************************************
-
-    Acknowledgement. This class was adapted from that in the PrintPreview
-    sample program appearing in the Win32++ framework sample folder, created
-    by David Nash and published under the permissions granted in that work.
-    The adaptation here implements the CRichView class as self-contained
-    package that implements reading, writing, print, and print preview
-    functions. This work has been developed under the co-authorship of
-    Robert C. Tausworthe and David Nash, and released under the copyright
-    provisions of the Win32++ framework software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his
-    patient direction and inspiration in the development of the classes of
-    these classes.
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -31,7 +22,7 @@ enum WordWrapType
 };
 
 /*============================================================================*/
-    class
+    class 
 CRichView : public CRichEdit                                            /*
 
     This class is the customized class derived from the CRichEdit class
@@ -39,36 +30,33 @@ CRichView : public CRichEdit                                            /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-        CRichView();
-        virtual ~CRichView();
+        CRichView() {}
+        virtual ~CRichView() {}
 
         UINT    GetPageBreaks(CDC& dcPrinter);
         BOOL    GetNewFont() const;
         void    PrintDC(UINT, CDC&, CDC&);
-        BOOL    ReadFile(LPCTSTR szFileName);
+        BOOL    ReadFile(LPCTSTR filePath);
         void    SetFontDefaults();
-        void    SetDocName(LPCTSTR &szFileName)
-                            { m_sDocPath = szFileName;}
-        void    PrintPages(CPrintDialog& PrintDlg);
+        void    SetDocName(LPCTSTR &filePath)       { m_docPath = filePath;}
+        void    PrintPages(CPrintDialog& printDlg);
         void    WordWrap(WordWrapType setting);
-        BOOL    WriteFile(LPCTSTR szFileName);
-
+        BOOL    WriteFile(LPCTSTR filePath);
+    
     protected:
         virtual void    OnAttach();
         virtual void    PreCreate(CREATESTRUCT& cs);
 
     private:
           // static callback functions
-        static  DWORD CALLBACK RVStreamInCallback(DWORD dwCookie,
-                    LPBYTE pbBuff, LONG cb, LONG *pcb);
-        static  DWORD CALLBACK RVStreamOutCallback(DWORD dwCookie,
-                    LPBYTE pbBuff, LONG cb, LONG *pcb);
-
-        CFont   m_Font;
-        CString m_sDocPath;
-
-        // RichView data
-        std::vector<int> m_PageBreaks;  // page starting position list
+        static  DWORD CALLBACK RVStreamInCallback(DWORD cookie, LPBYTE pbBuff,
+                    LONG cb, LONG *pcb);
+        static  DWORD CALLBACK RVStreamOutCallback(DWORD cookie, LPBYTE pbBuff,
+                    LONG cb, LONG *pcb);
+        
+        CFont   m_font;
+        CString m_docPath;
+        std::vector<int> m_pageBreaks;  // page starting position list
 };
 /*----------------------------------------------------------------------------*/
 #endif // RICHVIEW_H

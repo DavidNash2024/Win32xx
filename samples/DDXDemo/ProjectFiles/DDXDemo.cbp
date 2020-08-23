@@ -191,8 +191,6 @@
 		<Unit filename="../src/MyMonthCalendar.h" />
 		<Unit filename="../src/MyScrollbar.cpp" />
 		<Unit filename="../src/MyScrollbar.h" />
-		<Unit filename="../src/MySlider.cpp" />
-		<Unit filename="../src/MySlider.h" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

@@ -34,9 +34,6 @@
     <ClInclude Include="..\src\MyScrollbar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\MySlider.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\default_resource.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -224,9 +221,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\MyScrollbar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\MySlider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

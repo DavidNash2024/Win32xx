@@ -12,29 +12,26 @@ using namespace Calc;
 //////////////////////////////
 // CView function definitions.
 //
+
+// Constructor
 CView::CView() : m_inputDlg(IDD_INPUT), m_ymin(0), m_ymax(0)
 {
 }
 
-
-// Fills the m_points array.
-bool CView::CalcPoints(double xmin, double xmax)
+// Fills the m_points vector with values to plot.
+void CView::CalcPoints(double xmin, double xmax)
 {
     assert(xmin < xmax);
-    bool isValid = false;
+    m_points.clear();
 
-    //Get the size of the client area of the view window
+    // Get the size of the client area of the view window.
     CRect rect = GetClientRect();
 
     int numPoints = int(0.8 * MIN(rect.bottom, rect.right));
     numPoints = MAX(10, numPoints);
-
-    // clear the current contents
-    m_points.clear();
-
     double d_incr = (xmax - xmin) / (numPoints - 1.0);
 
-    //fill the points array
+    // Fill the points vector.
     for (int i = 0; i < numPoints; i++)
     {
         double x;
@@ -48,12 +45,12 @@ bool CView::CalcPoints(double xmin, double xmax)
         m_points.push_back(PointData(x, y, m_calc.Get_Status()));
     }
 
-    // find the first valid value
+    // Find the first valid value.
     std::vector<PointData>::iterator index = m_points.begin();
     while (index != m_points.end() && (*index).status != st_OK)
         index++;
 
-    // find the maximum and minimum y values
+    // Find the maximum and minimum y values.
     if (index != m_points.end())
     {
         double ymin = (*index).y;
@@ -68,7 +65,7 @@ bool CView::CalcPoints(double xmin, double xmax)
             }
         }
 
-        //if ymin and ymax are approximately equal ...
+        // If ymin and ymax are approximately equal ...
         if ((fabs((ymax - ymin) / (ymax + ymin)) < 1.0e-010) || (ymin == ymax))
         {
             ymin = ymin * 2;
@@ -84,22 +81,14 @@ bool CView::CalcPoints(double xmin, double xmax)
 
         m_ymin = ymin;
         m_ymax = ymax;
-
-        //set true, as there are some valid points to plot
-        isValid = true;
     }
     else
     {
-        //  CString buffer = _T("The Expression was valid, but there were no valid points to plot! \n \n Try a different range of values for x");
-        //  MessageBox(NULL, buffer, _T("Invalid Values"), MB_ICONEXCLAMATION);
         m_points.clear();
     }
-    return isValid;
 }
 
-// Plot the function to the screen
-//  > sets up the device context, and calculates the scaling
-//  > calls the PlotAxis and PlotFunction subroutines
+// Plot the function to the window.
 void CView::DoPlot(CDC& dc)
 {
     if (m_points.size() == 0)
@@ -129,35 +118,24 @@ void CView::DoPlot(CDC& dc)
     double xoffset = (GetXMin() + GetXMax()) / 2;
     double yoffset = (m_ymin + m_ymax) / 2;
 
-    PlotAxis(dc, xnorm, ynorm, xoffset, yoffset);
+    PrepareDC(dc);
+    PlotXAxis(dc, xnorm, ynorm, xoffset, yoffset);
+    PlotYAxis(dc, xnorm, ynorm, xoffset, yoffset);
     PlotFunction(dc, xnorm, ynorm, xoffset, yoffset);
     DrawLabel(dc);
 }
 
 void CView::DrawLabel(CDC& dc)
 {
-    int fontHeight = 5 + int(.04 * m_points.size());
-    dc.CreateFont(
-        fontHeight, // height
-        0, // width (0 means use default)
-        0, // escapement (0 means none)
-        0, // orientation (0 means none)
-        FW_NORMAL, // "boldness" of font
-        TRUE, // italic?  true or false
-        FALSE, // underline? true or false
-        FALSE, // strikeout?  true or false
-        ANSI_CHARSET, // desired character set
-        OUT_TT_PRECIS, // output precision - use TrueType only
-        CLIP_DEFAULT_PRECIS, // clip precision - use default
-        PROOF_QUALITY, // proof quality
-        DEFAULT_PITCH | FF_DONTCARE, // pitch and family
-        _T("Candara") // name of font face desired
-    );
+    // Select the font.
+    int pointSize = 20 + int(.2 * m_points.size());
+    dc.CreatePointFont(pointSize, _T("Candara"));
+
+    // Draw the text.
     CRect rc = GetClientRect();
     CString str = "f(x) = ";
     str += m_inputDlg.GetFunction();
     CSize sz = dc.GetTextExtentPoint32(str);
-
     CPoint pt((rc.Width() - sz.cx) / 2, rc.Height() / 50);
     dc.DPtoLP(pt, 1);
     dc.TextOut(pt.x, pt.y, str);
@@ -179,61 +157,43 @@ void CView::OnInitialUpdate()
     TRACE("View window created\n");
 }
 
-// Draws the x and y axis,  called by DoPlot
-// > draw the major axis
-// > draw the ticks
-// > write the tick labels
-void CView::PlotAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
+void CView::PrepareDC(CDC& dc)
 {
-    CRect rect;
-    CRect rc = GetClientRect();
-    CSize size(rc.right, rc.bottom);
+    // Select the pen.
     dc.CreatePen(PS_SOLID, 2, RGB(195, 0, 0));
 
-    // create the font
-    int fontHeight = 4 + int(.03 * m_points.size());
-    dc.CreateFont(
-        fontHeight, // height
-        0, // width (0 means use default)
-        0, // escapement (0 means none)
-        0, // orientation (0 means none)
-        FW_NORMAL, // "boldness" of font
-        FALSE, // italic?  true or false
-        FALSE, // underline? true or false
-        FALSE, // strikeout?  true or false
-        ANSI_CHARSET, // desired character set
-        OUT_TT_PRECIS, // output precision - use TrueType only
-        CLIP_DEFAULT_PRECIS, // clip precision - use default
-        PROOF_QUALITY, // proof quality
-        DEFAULT_PITCH | FF_DONTCARE, // pitch and family
-        _T("Microsoft Sans Serif") // name of font face desired
-    );
+    // Select the font.
+    int pointSize = 20 + int(.15 * m_points.size());
+    dc.CreatePointFont(pointSize, _T("Microsoft Sans Serif"));
 
-    // select the new font + color & store the old
-    COLORREF oldcolor = dc.SetTextColor(RGB(0, 0, 0));
-    int oldbkmode = dc.SetBkMode(TRANSPARENT);
+    // Select the color.
+    dc.SetTextColor(RGB(0, 0, 0));
+    dc.SetBkMode(TRANSPARENT);
     dc.SetTextAlign(TA_LEFT);
+}
 
-    //plot the x axis
+// Draws the x axis, including the ticks and tick labels.
+void CView::PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
+{
+    CRect rc = GetClientRect();
+    CSize size(rc.right, rc.bottom);
 
-    //adjust for rounding errors for m_ymin and m_ymax
+    // Adjust for rounding errors for m_ymin and m_ymax.
     double ymax = m_ymax + .001 * (m_ymax - m_ymin);
     double ymin = m_ymin - .001 * (m_ymax - m_ymin);
 
-    //ylinepos shifts the x axis down if the function doesn't cross it
+    // Shift the x axis down if the function doesn't cross it
     double ylinepos;
-    if ((ymin * ymax <= 0) /*|| (ymin < (ymax - ymin)/10)*/)
+    if ((ymin * ymax <= 0))
         ylinepos = 0;
     else
         ylinepos = ymin - .05 * (ymax - ymin);
 
-    // Major axis
-    {
-        dc.MoveTo((int)(xnorm * (GetXMin() - xoffset)), (int)(ynorm * (ylinepos - yoffset)));
-        dc.LineTo((int)(xnorm * (GetXMax() - xoffset)), (int)(ynorm * (ylinepos - yoffset)));
-    }
+    // Draw the major axis
+    dc.MoveTo((int)(xnorm * (GetXMin() - xoffset)), (int)(ynorm * (ylinepos - yoffset)));
+    dc.LineTo((int)(xnorm * (GetXMax() - xoffset)), (int)(ynorm * (ylinepos - yoffset)));
 
-    //Ticks
+    // Draw the ticks.
     double xtickgap = floor(log10(GetXMax() - GetXMin()));
     xtickgap = pow(double(10), xtickgap);
     int numticks = int((GetXMax() - GetXMin()) / xtickgap);
@@ -248,35 +208,44 @@ void CView::PlotAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double
     {
         dc.MoveTo(int(xnorm * (x - xoffset)), int(ynorm * (ylinepos - xtickheight - yoffset)));
         dc.LineTo(int(xnorm * (x - xoffset)), int(ynorm * (ylinepos + xtickheight - yoffset)));
-        // Output tick text.
-        // Avoid outputing zero if it would be written on a major axis
+        // Draw tick text.
+        // Avoid outputing zero if it would be written on a major axis.
         if ((x != 0) || ((ymin * ymax >= 0) && (ymin >= 0)))
         {
             CString str;
             str.Format(_T("%g"), x);
-            size = dc.GetTextExtentPoint32(str);  //Determine the size of the text
+            size = dc.GetTextExtentPoint32(str);  //Determine the size of the text.
             dc.TextOut((int)(xnorm * (x - xoffset) - size.cx / 2), (int)(ynorm * (ylinepos - yoffset - 2 * xtickheight)), str);
         }
         x = ++xticknum * xtickgap;
     }
+}
 
-    // plot the y axis
+// Draws the y axis, including the ticks and tick labels.
+void CView::PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
+{
+    CRect rc = GetClientRect();
+    CSize size(rc.right, rc.bottom);
 
-    //xlinepos shifts the y axis left if the function doesn't cross it
+    // Adjust for rounding errors for m_ymin and m_ymax.
+    double ymax = m_ymax + .001 * (m_ymax - m_ymin);
+    double ymin = m_ymin - .001 * (m_ymax - m_ymin);
+
+    // Shift the y axis left if the function doesn't cross it.
     double xlinepos;
-    if ((GetXMin() * GetXMax() <= 0) /*|| (GetXMin() < (GetXMax() - GetXMin()) / 10)*/)
+    if ((GetXMin() * GetXMax() <= 0))
         xlinepos = 0;
     else
         xlinepos = GetXMin() - .05 * (GetXMax() - GetXMin());
 
-    //plot the major axis
+    // Draw the major axis.
     dc.MoveTo((int)(xnorm * (xlinepos - xoffset)), (int)(ynorm * (ymin - yoffset)));
     dc.LineTo((int)(xnorm * (xlinepos - xoffset)), (int)(ynorm * (ymax - yoffset)));
 
-    //plot the ticks
+    // Draw the ticks.
     double ytickgap = floor(log10(ymax - ymin));
     ytickgap = pow((double)10, ytickgap);
-    numticks = (int)((ymax - ymin) / ytickgap);
+    int numticks = (int)((ymax - ymin) / ytickgap);
 
     if (numticks < 2) ytickgap = ytickgap / 10;
     else if (numticks < 4) ytickgap = ytickgap / 5;
@@ -290,48 +259,41 @@ void CView::PlotAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double
         dc.MoveTo((int)(xnorm * (xlinepos - ytickheight - xoffset)), (int)(ynorm * (y - yoffset)));
         dc.LineTo((int)(xnorm * (xlinepos + ytickheight - xoffset)), (int)(ynorm * (y - yoffset)));
 
-        // Output tick text.
-        // Avoid outputing zero if it would be written on a major axis
+        // Draw tick text.
+        // Avoid outputing zero if it would be written on a major axis.
         if ((y != 0) || ((GetXMin() * GetXMax() >= 0) && (GetXMin() >= 0)))
         {
             CString str;
             str.Format(_T("%g"), y);
-            size = dc.GetTextExtentPoint32(str);  //Determine the size of the text
+            size = dc.GetTextExtentPoint32(str);  //Determine the size of the text.
             dc.TextOut((int)(xnorm * (xlinepos - xoffset - 2 * ytickheight) - size.cx), (int)(ynorm * (y - yoffset) + size.cy / 2), str);
         }
         y = ++yticknum * ytickgap;
     }
-
-    // cleanup
-    dc.SetTextColor(oldcolor);
-    dc.SetBkMode(oldbkmode);
 }
 
-
-// Plots the function, called by DoPlot
+// Plots the function.
 void CView::PlotFunction(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
 {
     CRect rect;
     dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
 
-    // find the first valid value
+    // Find the first valid value.
     size_t index = 0;
     while ((m_points[index].status != st_OK) && (index < m_points.size() - 1))
         index++;
 
-    //Draw the function
+    // Draw the function.
     dc.MoveTo((int)(xnorm * (m_points[index].x - xoffset)), (int)(ynorm * (m_points[index].y - yoffset)));
     while (index < m_points.size())
     {
         if (m_points[index].status == st_OK)
         {
             dc.LineTo((int)(xnorm * (m_points[index].x - xoffset)), (int)(ynorm * (m_points[index].y - yoffset)));
-            //  CString str = CString(index) + (", ") + CString(m_points[index].x) + (", ") + CString(m_points[index].y);
-            //  Trace(str); Trace("\n");
             index++;
         }
         else
-        {   //skip plotting invalid points
+        {   // Skip plotting invalid points.
             while ((index < m_points.size()) && (m_points[index].status != st_OK))
                 index++;
 

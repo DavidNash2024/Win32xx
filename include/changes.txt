@@ -63,10 +63,11 @@ Added BrowserATL                                 sample
 Added MovieShow                                  sample
 Added WinPlot                                    sample
 
-Added CWnd::Close                                member function
+Added CDC::CreatePointFont                       member function
 Added CFrameT::AddMenuIcon (additional overload) member function
 Added CFrameT::SetKbdHook                        member function
 Added CImageList::AddIcon                        member function
+Added CWnd::Close                                member function
 Modified CMonthCalendar::SetDayState             member function
 Modified CRibbon::CreateRibbon                   member function
 Modified CRibbon::DestroyRibbon                  member function

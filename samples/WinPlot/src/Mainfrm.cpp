@@ -71,9 +71,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 BOOL CMainFrame::OnEditFunction()
 {
-    if (m_view.m_inputDlg.DoModal(*this) == IDOK)
+    if (m_view.GetInput().DoModal(*this) == IDOK)
     {
-        CString str = m_view.m_inputDlg.GetFunction();
+        CString str = m_view.GetInput().GetFunction();
         m_view.GetCalc().Input(str);
         m_view.RedrawWindow();
 

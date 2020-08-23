@@ -849,27 +849,35 @@ namespace Win32xx
 
         switch (LOWORD(wparam))
         {
-            case SB_PAGEUP: // User clicked the scroll bar shaft left of the scroll box.
+            case SB_LEFT: // Scrolls to the upper left.
+                xNewPos = 0;
+                break;
+
+            case SB_RIGHT: // Scrolls to the lower right.
+                xNewPos = m_minRect.Width();
+                break;
+
+            case SB_PAGELEFT: // User clicked the scroll bar shaft left of the scroll box.
                 xNewPos = m_xScrollPos - 50;
                 break;
 
-            case SB_PAGEDOWN: // User clicked the scroll bar shaft right of the scroll box.
+            case SB_PAGERIGHT: // User clicked the scroll bar shaft right of the scroll box.
                 xNewPos = m_xScrollPos + 50;
                 break;
 
-            case SB_LINEUP: // User clicked the left arrow.
+            case SB_LINELEFT: // User clicked the left arrow.
                 xNewPos = m_xScrollPos - 5;
                 break;
 
-            case SB_LINEDOWN: // User clicked the right arrow.
+            case SB_LINERIGHT: // User clicked the right arrow.
                 xNewPos = m_xScrollPos + 5;
                 break;
 
-            case SB_THUMBPOSITION: // User dragged the scroll box.
+            case SB_THUMBPOSITION: // User has dragged the scroll box.
                 xNewPos = HIWORD(wparam);
                 break;
 
-            case SB_THUMBTRACK: // User dragging the scroll box.
+            case SB_THUMBTRACK: // User is dragging the scroll box.
                 xNewPos = HIWORD(wparam);
                 break;
 
@@ -902,6 +910,14 @@ namespace Win32xx
 
         switch (LOWORD(wparam))
         {
+            case SB_TOP: // Scrolls to the top.
+                yNewPos = 0;
+                break;
+
+            case SB_BOTTOM: // Scrolls to the bottom.
+                yNewPos = m_minRect.Height();
+                break;
+
             case SB_PAGEUP: // User clicked the scroll bar shaft above the scroll box.
                 yNewPos = m_yScrollPos - 50;
                 break;
@@ -918,11 +934,11 @@ namespace Win32xx
                 yNewPos = m_yScrollPos + 5;
                 break;
 
-            case SB_THUMBPOSITION: // User dragged the scroll box.
+            case SB_THUMBPOSITION: // User has dragged the scroll box.
                 yNewPos = HIWORD(wparam);
                 break;
 
-            case SB_THUMBTRACK: // User dragging the scroll box.
+            case SB_THUMBTRACK: // User is dragging the scroll box.
                 yNewPos = HIWORD(wparam);
                 break;
 

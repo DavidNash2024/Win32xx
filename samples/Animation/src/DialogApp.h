@@ -21,9 +21,5 @@ private:
     CMyDialog m_myDialog;
 };
 
-// returns a pointer to the CDialogApp object
-inline CDialogApp* GetDialogApp() { return static_cast<CDialogApp*>(GetApp()); }
-
 
 #endif // define DIALOGAPP_H
-

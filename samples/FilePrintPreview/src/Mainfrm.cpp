@@ -1,22 +1,16 @@
 /* (11-Nov-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                (MainFrm.h) *
 ********************************************************************************
-|
-    Implementation of the CMainFrame class for the FilePrintPreview demo
-    program.
+|                                                                              |
+|                    Authors: Robert Tausworthe, David Nash                    |
+|                                                                              |
+===============================================================================*
 
-********************************************************************************
+    Contents Description: Implementation of the CMainFrame class for the 
+    FilePrintPreview demo program using the Win32++ Windows interface classes. 
 
-    Acknowledgment. This demo program was adapted from the PrintPreview
-    sample program appearing in the Win32++ framework sample folder, created
-    by  David Nash and published under the permissions granted in that work.
-    The adaptation here implements the PrintView window as a separate popup
-    window that appears on screen along with the regular program window.
-    This work has been developed under the co-authorship of Robert C.
-    Tausworthe and David Nash, and released under the copyright provisions
-    of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his
-    patient direction and inspiration in the development of the classes of
-    these classes.
+    Programming Notes: The programming standards roughly follow those 
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -25,39 +19,31 @@
 #include <richedit.h>
 #include "resource.h"
 
-  // Registry key for saving and loading screen and initial print preview
-  // sizes. The persistent items appear in the registry key
-  // "Software\\" + LPCTSTR FRAME_REGISTRY_KEY_NAME + "\\Frame Settings"
-static const LPCTSTR FRAME_REGISTRY_KEY_NAME = _T("Win32++\\FilePrintPreview");
+  // Registry key for saving and loading the program's persistent data, which
+  // is placed in the registry location
+  // "Software\\" + LPCTSTR FRAME_REGISTRY_KEY + "\\Frame Settings"
+static const LPCTSTR FRAME_REGISTRY_KEY = _T("Win32++\\FilePrintPreview");
+  // set the allowed number of MRU items
+static const int MAXMRU = 5;
 
 /*============================================================================*/
     CMainFrame::
-CMainFrame()                                                            /*
+CMainFrame()                                                                /*
 
     Construct the main frame object for the PrintPreviewClass demo.
 *-----------------------------------------------------------------------------*/
-    :    m_PrintPreview(IDD_PRINTPREVIEW, 0), m_WrapOption(WRAP_NONE)
+    :   m_wrapOption(WRAP_NONE) 
 {
-    SetView(m_RichView);
-
-      // Set the registry key name, and load the initial window position
-    LoadRegistrySettings(FRAME_REGISTRY_KEY_NAME);
-      // Load the settings from the registry with 5 MRU entries
-    LoadRegistryMRUSettings(5);
-}
-
-/*============================================================================*/
-    CMainFrame::
-~CMainFrame()                                                           /*
-
-    Destructor.
-*-----------------------------------------------------------------------------*/
-{
+    SetView(m_richView);
+      // Set the registry key name, and load persistent data
+    LoadRegistrySettings(FRAME_REGISTRY_KEY);
+      // Load the MRU settings from the registry: allow MAXMRU entries
+    LoadRegistryMRUSettings(MAXMRU);
 }
 
 /*============================================================================*/
     void CMainFrame::
-OnClose()                                                               /*
+OnClose()                                                                   /*
 
     Save the document file, if modified, and shut down the program.
 *-----------------------------------------------------------------------------*/
@@ -71,15 +57,19 @@ OnClose()                                                               /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
+OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
 
     Route all command messages to their proper handlers.
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT msg = LOWORD(wParam);
-    switch (msg)
+    UINT id = LOWORD(wparam);
+      // handle a MRU load request
+    if (IDW_FILE_MRU_FILE1 <= id && id < IDW_FILE_MRU_FILE1 + MAXMRU)
+        return OnFileMRU(wparam);
+
+    switch (id)
     {
         case IDM_FILE_NEW:          return OnFileNew();
         case IDM_FILE_OPEN:         return OnFileOpen();
@@ -98,24 +88,19 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
         case IDM_FILE_EXIT:         return OnFileExit();
         case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
         case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-        case IDM_WRAP_NONE:
-        case IDM_WRAP_WINDOW:
-        case IDM_WRAP_PRINTER:
-            return OnOptionsWrap((WordWrapType)(msg - IDM_WRAP_NONE));
         case IDM_OPTIONS_FONT:      return OnOptionsFont();
         case IDM_HELP_ABOUT:        return OnHelp();
-        case IDW_FILE_MRU_FILE1:
-        case IDW_FILE_MRU_FILE2:
-        case IDW_FILE_MRU_FILE3:
-        case IDW_FILE_MRU_FILE4:
-        case IDW_FILE_MRU_FILE5:    return OnFileMRU(wParam);
+        case IDM_WRAP_NONE: 
+        case IDM_WRAP_WINDOW:
+        case IDM_WRAP_PRINTER:
+            return OnOptionsWrap((WordWrapType)(id - IDM_WRAP_NONE));
     }
     return FALSE;
 }
 
 /*============================================================================*/
     int CMainFrame::
-OnCreate(CREATESTRUCT& cs)                                              /*
+OnCreate(CREATESTRUCT& cs)                                                  /*
 
     Specify values that control the way the frame is created. Overriding
     CFrame::OnCreate is optional.
@@ -125,7 +110,7 @@ OnCreate(CREATESTRUCT& cs)                                              /*
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default.
+    // Frames have all options enabled by default. 
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -141,97 +126,94 @@ OnCreate(CREATESTRUCT& cs)                                              /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnDropFiles(HDROP hDropInfo)                                            /*
+OnDropFiles(HDROP dropInfo)                                                 /*
 
-    Enable files dropped in the client area to be opened. Any file
+    Enable files dropped in the client area to be opened. Any file 
     currently open is closed.
 *-----------------------------------------------------------------------------*/
 {
-    TCHAR szFileName[_MAX_PATH];
-    ::DragQueryFile(hDropInfo, 0, szFileName, _MAX_PATH);
+    TCHAR filePath[_MAX_PATH];
+    ::DragQueryFile(dropInfo, 0, filePath, _MAX_PATH);
 
-    if (ReadFile(szFileName))
+    if (ReadFile(filePath))
     {
-        SetPathName(szFileName);
-        ReadFile(szFileName);
-        SetWindowTitle();
-        AddMRUEntry(szFileName);
+        SetPath(filePath);
+        AddMRUEntry(filePath);
     }
-
-    ::DragFinish(hDropInfo);
+    ::DragFinish(dropInfo);
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditCopy()                                                            /*
+OnEditCopy()                                                                /*
 
     Copy the current selection (if any) to the clipboard.
 *-----------------------------------------------------------------------------*/
 {
-    m_RichView.Copy();
+    m_richView.Copy();
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditCut()                                                             /*
+OnEditCut()                                                                 /*
 
     Cut the current selection (if any) into the clipboard.
 *-----------------------------------------------------------------------------*/
 {
-    m_RichView.Cut();
+    m_richView.Cut();
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditDelete()                                                          /*
+OnEditDelete()                                                              /*
 
     Delete the current selection (if any).
 *-----------------------------------------------------------------------------*/
 {
-    m_RichView.Clear();
+    m_richView.Clear();
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditPaste()                                                           /*
+OnEditPaste()                                                               /*
 
     Copy the clipboard contents, if any, into the rich edit control at the
     caret, replacing any selected item(s).
 *-----------------------------------------------------------------------------*/
 {
-    m_RichView.PasteSpecial(CF_TEXT);
+    m_richView.PasteSpecial(CF_TEXT);
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditRedo()                                                            /*
+OnEditRedo()                                                                /*
 
     Reapply the last edit function to the rich edit control.
 *-----------------------------------------------------------------------------*/
 {
-    m_RichView.Redo();
+    m_richView.Redo();
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditUndo()                                                            /*
+OnEditUndo()                                                                /*
 
     Remove the effects of the last edit function to the rich edit control.
 *-----------------------------------------------------------------------------*/
 {
-    m_RichView.Undo();
+    m_richView.Undo();
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileExit()                                                            /*
+OnFileExit()                                                                /*
 
     Close the application.
 *-----------------------------------------------------------------------------*/
@@ -243,105 +225,99 @@ OnFileExit()                                                            /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileMRU(WPARAM wParam)                                                /*
+OnFileMRU(WPARAM wparam)                                                    /*
 
     Load the file whose path appears in the MRU list at the index given
-    in the wParam, if one exists. Return TRUE on termination.
+    in the wparam, if one exists and is readable. If the file cannot be loaded,
+    remove the MRU entry. Return TRUE on termination.
 *-----------------------------------------------------------------------------*/
 {
-    UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-    CString strMRUText = GetMRUEntry(nMRUIndex);
+    UINT MRUIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
+    CString path = GetMRUEntry(MRUIndex);
       // skip this if the MRU list is empty
-    if (strMRUText.IsEmpty())
+    if (path.IsEmpty())
         return TRUE;
 
-    if (ReadFile(strMRUText))
-        SetPathName(strMRUText);
+    if (ReadFile(path))
+        SetPath(path);
     else
-        RemoveMRUEntry(strMRUText);
-
-    SetWindowTitle();
+        RemoveMRUEntry(path);
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileNew()                                                             /*
+OnFileNew()                                                                 /*
 
-    Close any existing open document and create a new empty one.
+    Close any existing open document and create a new empty one with no path.
 *-----------------------------------------------------------------------------*/
 {
       //Check for unsaved text
     SaveModifiedText();
       // reset the rich view object
-    m_RichView.SetWindowText(_T(""));
-    SetPathName(_T(""));
-    SetWindowTitle();
-    m_RichView.SetFontDefaults();
-    m_RichView.SetModify(FALSE);
+    m_richView.SetWindowText(_T(""));
+    SetPath(_T(""));
+    m_richView.SetFontDefaults();
+    m_richView.SetModify(FALSE);
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileOpen()                                                            /*
+OnFileOpen()                                                                /*
 
     Prompt the user for a document file name and, if valid, load this file
     into the application.
 *-----------------------------------------------------------------------------*/
 {
-      // szFilters is a text string that includes two file name filters:
-      // "*.my" for "MyType Files" and "*.*' for "All Files."
-    LPCTSTR szFilters =
-        _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
-    CFileDialog FileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST,
-         szFilters);
-
-    if (FileDlg.DoModal(*this) == IDOK)
+      // define two-part CFileDialog filter, one for text strings and another
+      // for all files.
+    LPCTSTR filter = _T("Text Files (*.txt)|*.txt|All Files (*.*)|*.*||");
+    CFileDialog fileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, filter);
+      // open the dialog and get the path
+    if (fileDlg.DoModal(*this) == IDOK)
     {
-        CString str = FileDlg.GetPathName();
-        ReadFile(str);
-        SetPathName(str);
-        AddMRUEntry(str);
-        SetWindowTitle();
+        CString path = fileDlg.GetPathName();
+        ReadFile(path);
+        SetPath(path);
+        AddMRUEntry(path);
     }
-
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFilePreview()                                                         /*
+OnFilePreview()                                                             /*
 
     Create the print preview window with the displayed file title in the
     caption window and the document in separate the display window.
 *-----------------------------------------------------------------------------*/
 {
-    return m_PrintPreview.OnPreview(GetPathName());
+    return m_printPreview.OnPreview(GetPath()); 
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFilePrint(HWND parent)                                                /*
+OnFilePrint(HWND parent)                                                    /*
 
     Print the currently loaded document o the currently selected printer.
 *-----------------------------------------------------------------------------*/
 {
       // initialize the current print dialog
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    PRINTDLG pd = PrintDlg.GetParameters();
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    PRINTDLG pd = printDlg.GetParameters();
     pd.nCopies   = 1;
     pd.nFromPage = 0xFFFF;
     pd.nToPage   = 0xFFFF;
     pd.nMinPage  = 1;
     pd.nMaxPage  = 0xFFFF;
-    PrintDlg.SetParameters(pd);
+    printDlg.SetParameters(pd);
     try
     {
           // display the printer dialog box
-        if (PrintDlg.DoModal(parent) == IDOK)
+        if (printDlg.DoModal(parent) == IDOK)
         {
-            QuickPrint(PrintDlg);
+            QuickPrint(printDlg);
         }
         else
             return FALSE;
@@ -349,7 +325,7 @@ OnFilePrint(HWND parent)                                                /*
     catch (const CWinException& /* e */)
     {
           // no default printer chosen
-        MessageBox(_T("Unable to display print dialog"),
+        MessageBox(_T("Unable to display print dialog"), 
             _T("Print Failed"), MB_OK);
         return FALSE;
     }
@@ -358,26 +334,26 @@ OnFilePrint(HWND parent)                                                /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFilePrintSetup(HWND parent)                                           /*
+OnFilePrintSetup(HWND parent)                                               /*
 
     Display the printer setup dialog to select a printer and associated
     parameters for printing or previewing the current document.
 *-----------------------------------------------------------------------------*/
 {
       // Prepare the print dialog
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC |
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC | 
         PD_PRINTSETUP);
-    PRINTDLG pd = PrintDlg.GetParameters();
+    PRINTDLG pd  = printDlg.GetParameters();
     pd.nCopies   = 1;
     pd.nFromPage = 0xFFFF;
     pd.nToPage   = 0xFFFF;
     pd.nMinPage  = 1;
     pd.nMaxPage  = 0xFFFF;
-    PrintDlg.SetParameters(pd);
+    printDlg.SetParameters(pd);
     try
     {
           // Display the print dialog
-        PrintDlg.DoModal(parent);
+        printDlg.DoModal(parent);
     }
     catch (const CWinException& /* e */)
     {
@@ -391,112 +367,107 @@ OnFilePrintSetup(HWND parent)                                           /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileQuickPrint()                                                      /*
+OnFileQuickPrint()                                                          /*
 
     Print the current document using the currently selected printer
     parameters, without bringing up the printer dialog box.
 *-----------------------------------------------------------------------------*/
 {
       // Acquire the currently selected printer and page settings
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    QuickPrint(PrintDlg);
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    QuickPrint(printDlg);
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileSave()                                                            /*
+OnFileSave()                                                                /*
 
     Save the current document.
 *-----------------------------------------------------------------------------*/
 {
-    if (GetPathName().IsEmpty())
+    if (GetPath().IsEmpty())
         OnFileSaveAs();
     else
-        WriteFile(GetPathName());
+        WriteFile(GetPath());
 
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileSaveAs()                                                          /*
+OnFileSaveAs()                                                              /*
 
     Save the current document under a new name and make this the current
     document.
 *-----------------------------------------------------------------------------*/
 {
-      // szFilter is a text string that includes two file name filters:
-      // "*.my" for "MyType Files" and "*.*' for "All Files."
-    LPCTSTR szFilters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0"));
-    CFileDialog FileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT,
-        szFilters);
-
-    if (FileDlg.DoModal(*this) == IDOK)
+      // define two-part CFileDialog filter, one for text strings and another
+      // for all files.
+    LPCTSTR filter = _T("Text Files (*.txt)|*.txt|All Files (*.*)|*.*||");
+    CFileDialog fileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT, filter);
+      // bring up the dialog and get the file path
+    if (fileDlg.DoModal(*this) == IDOK)
     {
-        CString str = FileDlg.GetPathName();
+        CString str = fileDlg.GetPathName();
         WriteFile(str);
-        SetPathName(str);
+        SetPath(str);
         AddMRUEntry(str);
-        SetWindowTitle();
     }
     return TRUE;
 }
 
 /*============================================================================*/
     void CMainFrame::
-OnInitialUpdate()                                                       /*
+OnInitialUpdate()                                                           /*
 
     Perform initializations necessary for application startup.
 *-----------------------------------------------------------------------------*/
 {
     DragAcceptFiles(TRUE);
-    SetWindowTitle();
       // reopen most recently used file
     OnFileMRU(IDW_FILE_MRU_FILE1);
 }
 
 /*============================================================================*/
     void CMainFrame::
-OnMenuUpdate(UINT nID)                                                  /*
+OnMenuUpdate(UINT id)                                                       /*
 
-    Called by the framework to update the menu item with identifier nID.
+    Called by the framework to update the menu item with identifier id.
 *-----------------------------------------------------------------------------*/
 {
-    if (IDM_WRAP_NONE <= nID && nID <= IDM_WRAP_PRINTER)
+    if (IDM_WRAP_NONE <= id && id <= IDM_WRAP_PRINTER)
     {
-        UINT active = m_WrapOption + IDM_WRAP_NONE;
-        GetFrameMenu().CheckMenuRadioItem(IDM_WRAP_NONE, IDM_WRAP_PRINTER,
+        UINT active = m_wrapOption + IDM_WRAP_NONE;
+        GetFrameMenu().CheckMenuRadioItem(IDM_WRAP_NONE, IDM_WRAP_PRINTER, 
             active, MF_BYCOMMAND);
     }
-
-    CFrame::OnMenuUpdate(nID);
+    CFrame::OnMenuUpdate(id);
 }
 
 /*============================================================================*/
     LRESULT CMainFrame::
-OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
+OnNotify(WPARAM wparam, LPARAM lparam)                                      /*
 
 *-----------------------------------------------------------------------------*/
 {
-    NMHDR* pNMH;
-    pNMH = (LPNMHDR) lParam;
-    switch (pNMH->code)
+    NMHDR* nmh = (LPNMHDR) lparam;
+    switch (nmh->code)
     {
         case EN_DROPFILES:
         {
-            ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
-            HDROP hDropInfo = (HDROP) ENDrop->hDrop;
-            OnDropFiles(hDropInfo);
+            ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lparam);
+            HDROP dropInfo = (HDROP) ENDrop->hDrop;
+            OnDropFiles(dropInfo);
         }
         return TRUE;
     }
-    return CFrame::OnNotify(wParam, lParam);
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnOptionsFont()                                                         /*
+OnOptionsFont()                                                             /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -505,19 +476,19 @@ OnOptionsFont()                                                         /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnOptionsWrap(WordWrapType option)                                      /*
+OnOptionsWrap(WordWrapType option)                                          /*
 
     Set the rich view word wrap option.
 *-----------------------------------------------------------------------------*/
 {
       // Note: this is an undocumented feature of the CRichEdit class
-    m_RichView.WordWrap(m_WrapOption = option);
+    m_richView.WordWrap(m_wrapOption = option);
     return TRUE;
 }
 
 /*============================================================================*/
     void CMainFrame::
-PreCreate(CREATESTRUCT& cs)                                             /*
+PreCreate(CREATESTRUCT& cs)                                                 /*
 
     Customize the CREATESTRUCT structure prior to creation of the frame.
 *-----------------------------------------------------------------------------*/
@@ -530,58 +501,56 @@ PreCreate(CREATESTRUCT& cs)                                             /*
 
 /*============================================================================*/
     void CMainFrame::
-QuickPrint(CPrintDialog& PrintDlg)                                      /*
+QuickPrint(CPrintDialog& printDlg)                                          /*
 
     Print the document without bringing up the print dialog box using the
-    PrintDlg object.
+    printDlg object.
 *-----------------------------------------------------------------------------*/
 {
     CPrintDialog dlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
     HDC hPrinter = dlg.GetPrinterDC();
     if (hPrinter == 0)
     {
-        ::MessageBox(NULL, _T("Quick Print requires a printer"),
-            _T("No Printer found"), MB_ICONWARNING);
-
+        MessageBox(_T("Quick Print requires a printer"),_T("No Printer found"), 
+            MB_ICONWARNING);
         return;
     }
-
-    GetRichView().PrintPages(PrintDlg);
+    GetRichView().PrintPages(printDlg);
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-ReadFile(LPCTSTR szFileName)                                            /*
+ReadFile(LPCTSTR filePath)                                                  /*
 
-    Open the szFileName file as a rich edit view stream for display in
+    Open the filePath file as a rich edit view stream for display in
     the main window.
 *-----------------------------------------------------------------------------*/
 {
       //Check for unsaved text
     SaveModifiedText();
-    return GetRichView().ReadFile(szFileName);
+    return GetRichView().ReadFile(filePath);
 }
 
 /*============================================================================*/
     void CMainFrame::
-SaveModifiedText()                                                      /*
+SaveModifiedText()                                                          /*
 
     If the current document has been changed, save it; otherwise do
     nothing.
 *-----------------------------------------------------------------------------*/
 {
       //Check for unsaved text
-    if (m_RichView.GetModify())
-        if (::MessageBox(NULL, _T("Save changes to this document?"),
+    if (m_richView.GetModify())
+        if (MessageBox(_T("Save changes to this document?"), 
             _T("Question..."), MB_YESNO | MB_ICONQUESTION) == IDYES)
             OnFileSave();
 }
 
 /*============================================================================*/
     void CMainFrame::
-SetupMenuIcons()                                                        /*
+SetupMenuIcons()                                                            /*
 
-    Override to add icons to the main menu items not having toolbar icons.
+    Add icons to the main menu items not having toolbar icons.
 *-----------------------------------------------------------------------------*/
 {
       // print and preview menu bitmaps
@@ -604,69 +573,67 @@ SetupMenuIcons()                                                        /*
 
 /*============================================================================*/
     void CMainFrame::
-SetupToolBar()                                                          /*
+SetupToolBar()                                                              /*
 
+    Define the resource identfiers for the toolbar, in order.
 *-----------------------------------------------------------------------------*/
 {
-    // Define the resource IDs for the toolbar
-    AddToolBarButton( IDM_FILE_NEW   );
-    AddToolBarButton( IDM_FILE_OPEN  );
-    AddToolBarButton( IDM_FILE_SAVE  );
-    AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_EDIT_CUT   );
-    AddToolBarButton( IDM_EDIT_COPY  );
-    AddToolBarButton( IDM_EDIT_PASTE );
-    AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_FILE_PRINT );
-    AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_HELP_ABOUT );
+    AddToolBarButton(IDM_FILE_NEW);
+    AddToolBarButton(IDM_FILE_OPEN);
+    AddToolBarButton(IDM_FILE_SAVE);
+    AddToolBarButton(0);              // Separator
+    AddToolBarButton(IDM_EDIT_CUT);
+    AddToolBarButton(IDM_EDIT_COPY);
+    AddToolBarButton(IDM_EDIT_PASTE);
+    AddToolBarButton(0);              // Separator
+    AddToolBarButton(IDM_FILE_PRINT);
+    AddToolBarButton(0 );              // Separator
+    AddToolBarButton(IDM_HELP_ABOUT);
 }
 
 /*============================================================================*/
     void CMainFrame::
-SetWindowTitle()                                                        /*
+SetPath(LPCTSTR path)                                                       /*
 
+    Set the document path and display it in the window caption if it is non
+    null. Put the app title in the caption if not.
 *-----------------------------------------------------------------------------*/
 {
-    CString Title;
-
-    if (GetPathName().IsEmpty())
-        Title = _T("FilePrintPreview Demo");
-    else
-        Title = GetPathName();
-
-    SetWindowText(Title);
+    m_path = path;
+    CString title = (m_path.IsEmpty() ? _T("FilePrintPreview Demo") : m_path);
+    SetWindowText(title);
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-WriteFile(LPCTSTR szFileName)                                           /*
+WriteFile(LPCTSTR filePath)                                                 /*
 
+    Write the contents of the rich view control into the given file path.
 *-----------------------------------------------------------------------------*/
 {
-    return GetRichView().WriteFile(szFileName);
+    return GetRichView().WriteFile(filePath);
 }
 
 /*=============================================================================*/
     LRESULT CMainFrame::
-WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
+WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
 
     The mainframe message pocessing procedure.
 *-----------------------------------------------------------------------------*/
 {
-    switch (uMsg)
+    switch (msg)
     {
         case WM_SYSCOMMAND:
         {
-            switch (LOWORD(wParam))
+            switch (LOWORD(wparam))
             {
                 case SC_CLOSE:
-                m_PrintPreview.Destroy();
+                m_printPreview.Destroy();
                 break;  // let default process this further
             }
         }
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
-
+/*----------------------------------------------------------------------------*/

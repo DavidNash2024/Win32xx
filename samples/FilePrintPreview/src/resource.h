@@ -1,21 +1,26 @@
 /* (12-Nov-2016) [Tab/Indent: 8/8][Line/Box: 80/74]               (resource.h) *
 ********************************************************************************
+|                                                                              |
+|                    Authors: Robert Tausworthe, David Nash                    |
+|                                                                              |
+===============================================================================*
 
-    Definitions of this application's resource identifiers.
-
-********************************************************************************
-
-    Acknowledgement. This demo program was adapted from the PrintPreview
-    sample program appearing in the Win32++ framework sample folder, created
-    by  David Nash and published under the permissions granted in that work.
-    The adaptation here implements the PrintView window as a separate popup
-    window that appears on screen along with the regular program window.
-    This work has been developed under the co-authorship of Robert C.
-    Tausworthe and David Nash, and released under the copyright provisions
-    of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2018. The former author acknowledges and thanks the latter for his
-    patient direction and inspiration in the development of the classes of
-    these classes.
+    Contents Description: Definitions of this application's resource identifiers.
+    
+    Special Conventions:  The specification of IDs for resource objects
+    generally adhere to prefixes as shown in the following table. Note
+    that different kinds of resource objects have different prefixes to
+    distinguish the types of entities they belong to:
+    
+        Entity id   Object
+        IDP_        Message-box prompt
+        IDD_        Dialog-box id
+        ID_         Standard MFC toolbar and menu command
+        IDT_        Toolbar command
+        IDM_        Menu command
+        IDR_        Frame-related resource
+        IDC_        Control resource
+        IDW_        Win32++ default resources.
 
 *******************************************************************************/
 

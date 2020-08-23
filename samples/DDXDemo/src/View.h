@@ -1,203 +1,162 @@
 /* (12-Jun-2015) [Tab/Indent: 8/8][Line/Box: 80/74]                  (View.h) *
 ********************************************************************************
 |                                                                              |
-|                   Copyright (c) 2015, Robert C. Tausworthe                   |
-|                             All Rights Reserved.                             |
+|                      Author: Robert C. Tausworthe, 2020                      |
 |                                                                              |
 ===============================================================================*
 
     Contents Description: The DDXDemo CView class declaration. This class
     defines the appearance and related actions of the DDX/DDV test program.
     This class is a modified version of that found in the FormDocView sample
-    distributed with the Win32++ Windows interface classes, Copyright (c)
-    2005-2015 David Nash, used under permissions granted therein. The
-    modified sample program was based on code provided by Lynn Allan. This
-    program extends the given sample by application of Dialog Data Exchange
-    and Validation (DDX/DDV).
+    distributed with the Win32++ Windows interface classes. The modified sample
+    program was based on code provided by Lynn Allan. This program extends the
+    given sample by application of Dialog Data Exchange and Validation (DDX/DDV).
 
-        Caveats: The copyright displayed above extends only to the author's
-    original contributions to the subject class, and  to the alterations,
-    additions, deletions, and  other treatments of materials that may have
-    been extracted from the cited sources.  Unaltered portions of those
-    materials retain their original copyright status. The author hereby
-    grants permission to any person obtaining a copy of this treatment
-    of the subject class and  any associated documentation composed by
-    the author, to utilize this material, free of charge and  without
-    restriction or limitation, subject to the following conditions:
+    Programming Notes: The programming standards roughly follow those
+    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+    Planning and Preparation Subsystem project for C++ programming.
 
-        The above copyright notice, as well as that of David Nash
-        and Win32++, together with the respective permission
-        conditions shall be included in all copies or substantial
-        portions of this material so copied, modified, merged,
-        published, distributed, or otherwise held by others.
-
-    These materials are provided "as is", without warranty of any kind,
-    express or implied, including but not limited to: warranties of
-    merchantability, fitness for a particular purpose, and non-infringement.
-    In no event shall the authors or copyright holders be liable for any
-    claim, damages, or other liability, whether in an action of contract,
-    tort or otherwise, arising from, out of, or in connection with, these
-    materials, the use thereof, or any other other dealings therewith.
-
-    Special Conventions:
-
-    Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-        Planning and Preparation Subsystem project for C++ programming.
-
-    Acknowledgement:
-    The author would like to thank and acknowledge the advice, critical
-    review, insight, and assistance provided by David Nash in the development
-    of this work.
-
-********************************************************************************
-
-    Declaration of the CView class
+    Acknowledgement: The author would like to thank and acknowledge the advice,
+    critical review, insight, and assistance provided by David Nash in the
+    development of this work.
 
 *******************************************************************************/
 
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H
 
-
 #include "MyButton.h"
-#include "MySlider.h"
 #include "MyScrollbar.h"
 #include "MyMonthCalendar.h"
 #include "MyDateTime.h"
 #include "Doc.h"
 
-
-
 /*============================================================================*/
-class
-    CView : public CDialog                        /*
+    class
+CView : public CDialog                                                      /*
 
-    *-----------------------------------------------------------------------------*/
+    Declaration of the CView class of the App-Frame-Doc-View architecture.
+*----------------------------------------------------------------------------*/
 {
-public:
-    CView(UINT nResID);
-    virtual ~CView();
-    virtual void    AdjustParameters();
-    virtual HWND    Create(HWND hParent);
-    CDoc&           TheDoc() { return m_Doc; }
-    BOOL            UpdateDialog(BOOL bReadFromControl = SENDTOCONTROL);
-    virtual void    UpdateParameters();
-    int             GetCheckA() const { return m_iCheckA; }
-    int             GetCheckB() const { return m_iCheckB; }
-    int             GetCheckC() const { return m_iCheckC; }
-    void            SetCheckA(int value) { m_iCheckA = value; }
-    void            SetCheckB(int value) { m_iCheckB = value; }
-    void            SetCheckC(int value) { m_iCheckC = value; }
-    void            SetFocusID(int value) { m_nIDFocus = value; }
-    void            SetProgress(int value) { m_iProgress = value; }
-    void            SetRadioA(int value) { m_iRadioA = value; }
-    void            SetScrollBar(int value) { m_iScrollBar = value; }
-    void            SetSlider(int value) { m_iSlider = value; }
+    public:
+        CView(UINT nResID);
+        virtual ~CView() {}
 
-protected:
-    virtual BOOL    AddToolTip(HWND, UINT nID);
-    virtual BOOL    AddToolTip(HWND, UINT nID, const CString & s);
-    virtual void    AssignToolTips();
-    virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-    virtual void    DoDataExchange(CDataExchange& DX);
-    virtual void    GetDocumentValues();
-    virtual void    OnCancel() {}   // Suppress esc key closing the dialog
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
-    virtual INT_PTR OnCtlColor(HDC, HWND, UINT);
-    virtual BOOL    OnInitDialog();
-    virtual void    OnOK();
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+        void    AdjustParameters();
+        HWND    Create(HWND hParent);
+        int     GetCheckA() const       { return m_checkAVal; }
+        int     GetCheckB() const       { return m_checkBVal; }
+        int     GetCheckC() const       { return m_checkCVal; }
+        void    SetCheckA(int value)    { m_checkAVal = value; }
+        void    SetCheckB(int value)    { m_checkBVal = value; }
+        void    SetCheckC(int value)    { m_checkCVal = value; }
+        void    SetFocusID(int value)   { m_focusID = value; }
+        void    SetProgress(int value)  { m_progressVal = value; }
+        void    SetRadioA(int value)    { m_radioA = value; }
+        void    SetScrollBar(int value) { m_scrollBarVal = value; }
+        void    SetSlider(int value)    { m_sliderVal = value; }
+        CDoc&   TheDoc()                { return m_doc; }
+        BOOL    UpdateDialog(BOOL bReadFromControl);
+        void    UpdateParameters();
 
-private:
-    void OnBitmap();
-    void OnButton();
+    private:
+        BOOL    AddToolTip(HWND, UINT id);
+        BOOL    AddToolTip(HWND, UINT id, const CString & s);
+        void    AssignToolTips();
+        INT_PTR DialogProc(UINT, WPARAM, LPARAM);
+        void    DoDataExchange(CDataExchange& DX);
+        void    GetDocumentValues();
+        void    OnBitmap();
+        void    OnButton();
+        void    OnCancel() {}   // Suppress esc key closing the dialog
+        BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+        INT_PTR OnCtlColor(HDC, HWND, UINT);
+        BOOL    OnInitDialog();
+        void    OnOK();
+        LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+        void    SetControlPositions(int pos);
+          // nested classes for some of this dialog's child windows
+          // that require no changes from the base class
+          // (nesting is optional--it's done here to keep the IDE's
+          // class view tidy)
+        class CMyComboBox      : public CComboBox      {};
+        class CMyListBox       : public CListBox       {};
+        class CMyProgressBar   : public CProgressBar   {};
+        class CMyRichEdit      : public CRichEdit      {};
+        class CMySlider        : public CSlider        {};
 
-      // nested classes for some of this dialog's child windows
-      // that require no changes from the base class
-      // (nesting is optional--it's done here to keep the IDE's
-      // class view tidy)
-    class CMyComboBox      : public CComboBox      {};
-    class CMyListBox       : public CListBox       {};
-    class CMyProgressBar   : public CProgressBar   {};
-    class CMyRichEdit      : public CRichEdit      {};
+        // DDX/DDV variables that need to be visible to friends
+        int         m_sliderVal;
+        int         m_progressVal;
+        int         m_scrollBarVal;
+        int         m_focusID;  // the control with current focus
+          // DDX/DDV variables for controls on the form
+        BYTE        m_byteVal;
+        short       m_shortVal;
+        UINT        m_UINTVal;
+        long        m_longVal;
+        DWORD       m_ULongVal;
+        float       m_floatVal;
+        double      m_doubleVal;
+        int         m_intVal;
+        int         m_checkAVal;
+        int         m_checkBVal;
+        int         m_checkCVal;
+        int         m_comboBoxIndx;
+        int         m_listBoxIndx;
+        int         m_radioA;
+        CString     m_comboBoxVal;
+        CString     m_listBoxVal;
+        CString     m_editVal;
+        CString     m_richEditVal;
+        CString     m_statusBoxVal;
+        TCHAR       m_LPTSTRVal[256];
+        SYSTEMTIME  m_dateSysTime;
+        SYSTEMTIME  m_calDateSysTime;
 
-    // DDX/DDV variables that need to be visible to friends
-    int     m_iSlider;
-    int     m_iProgress;
-    int     m_iScrollBar;
-    int     m_nIDFocus;  // the control with current focus
+          // controls on the form that need to be attached
+        CMyComboBox      m_comboBox;
+        CMyDateTime      m_dateTime;
+        CMyListBox       m_listBox;
+        CMyMonthCalendar m_monthCal;
+        CMyProgressBar   m_progressBar;
+        CMyRichEdit      m_richEdit;
+        CMyScrollBar     m_scrollBar;
+        CMyButton        m_statusButton;
+        CMyButton        m_pushButton;
+        CMySlider        m_slider;
 
-      // DDX/DDV variables for controls on the form
-    BYTE            m_iByte;
-    short           m_iShort;
-    UINT            m_iUINT;
-    long            m_iLong;
-    DWORD           m_ULong;
-    float           m_fFloat;
-    double          m_dDouble;
-    int             m_iInt;
-    int             m_iCheckA;
-    int             m_iCheckB;
-    int             m_iCheckC;
-    int             m_iComboBox;
-    int             m_iListBox;
-    int             m_iRadioA;
-    CString         m_sComboBox;
-    CString         m_sListBox;
-    CString         m_sString;
-    CString         m_sRichEdit;
-    CString         m_sStatus;
-    TCHAR           m_LPTSTR[256];
-    SYSTEMTIME      m_stDateTime;
-    SYSTEMTIME      m_stMoCalendar;
+          // form control display colors
+        COLORREF        m_buttonFgClr;
+        COLORREF        m_buttonBgClr;
+        COLORREF        m_editFgClr;
+        COLORREF        m_editBgClr;
+        COLORREF        m_richEditFgClr;
+        COLORREF        m_richEditBgClr;
+        COLORREF        m_richEditClientBgClr;
+        COLORREF        m_dialogFgClr;
+        COLORREF        m_dialogBgClr;
+        COLORREF        m_listBoxFgClr;
+        COLORREF        m_listBoxBgClr;
+        COLORREF        m_scrollFgClr;
+        COLORREF        m_scrollBgClr;
+        COLORREF        m_staticBoxFgClr;
+        COLORREF        m_staticBoxBgClr;
 
-      // to enable scrolling if reduced
-    CResizer    m_Resizer;
+          // form display backgound brushes
+        CBrush          m_buttonBgBrush;
+        CBrush          m_editBgBrush;
+        CBrush          m_dialogBgBrush;
+        CBrush          m_listBoxBgBrush;
+        CBrush          m_scrollBgBrush;
+        CBrush          m_staticBoxBgBrush;
 
-      // controls on the form that need to be attached
-    CMyComboBox      m_ComboBox;
-    CMyDateTime      m_DateTime;
-    CMyListBox       m_ListBox;
-    CMyMonthCalendar m_MoCalendar;
-    CMyProgressBar   m_Progress;
-    CMyRichEdit      m_RichEdit;
-    CMyScrollBar     m_ScrollBar;
-    CMySlider        m_Slider;
-    CMyButton        m_StatusButton;
-    CMyButton        m_PushButton;
+          // form tool tips
+        CToolTip        m_toolTip;
 
-      // form display colors
-    COLORREF        m_clrCtlBtnFg;
-    COLORREF        m_clrCtlBtnBg;
-    COLORREF        m_clrCtlEditFg;
-    COLORREF        m_clrCtlEditBg;
-    COLORREF        m_clrCtlRichEditFg;
-    COLORREF        m_clrCtlRichEditBg;
-    COLORREF        m_clrCtlRichEditBk;
-    COLORREF        m_clrCtlDlgFg;
-    COLORREF        m_clrCtlDlgBg;
-    COLORREF        m_clrCtlLBFg;
-    COLORREF        m_clrCtlLBBg;
-    COLORREF        m_clrCtlScrlFg;
-    COLORREF        m_clrCtlScrlBg;
-    COLORREF        m_clrCtlStatFg;
-    COLORREF        m_clrCtlStatBg;
+          // the document
+        CDoc            m_doc;
 
-      // form display backgound brushes
-    CBrush          m_brCtlBtnBg;
-    CBrush          m_brCtlEditBg;
-    CBrush          m_brCtlDlgBg;
-    CBrush          m_brCtlLBBg;
-    CBrush          m_brCtlScrlBg;
-    CBrush          m_brCtlStatBg;
-
-      // form tool tips
-    CToolTip        m_ToolTip;
-
-      // the document
-    CDoc    m_Doc;
 };
 /*----------------------------------------------------------------------------*/
 #endif //SDI_VIEW_H

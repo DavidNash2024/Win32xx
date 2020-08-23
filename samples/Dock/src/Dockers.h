@@ -19,7 +19,6 @@ public:
 
 private:
     CViewSimple m_view;
-
 };
 
 ////////////////////////////////////////
@@ -33,7 +32,6 @@ public:
 
 private:
     CViewTree m_view;
-
 };
 
 //////////////////////////////////////
@@ -47,7 +45,6 @@ public:
 
 private:
     CViewList m_view;
-
 };
 
 /////////////////////////////////////
@@ -61,7 +58,6 @@ public:
 
 private:
     CViewText m_view;
-
 };
 
 
