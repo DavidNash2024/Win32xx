@@ -122,6 +122,10 @@ int CALLBACK CViewList::CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortView
 // Called when the listview window is attached to CViewList during Create.
 void CViewList::OnAttach()
 {
+    SetWindowTheme(L"Explorer", NULL);
+
+
+
     // Set the image lists
     m_small.Create(16, 16, ILC_COLOR32, 1, 0);
     m_small.AddIcon(IDI_MOVIES);
@@ -250,7 +254,7 @@ void CViewList::SortColumn(int column, bool isSortDown)
 void CViewList::PreCreate(CREATESTRUCT& cs)
 {
     cs.dwExStyle = WS_EX_CLIENTEDGE;
-    cs.style = LVS_SHOWSELALWAYS | /*LVS_SINGLESEL | TVS_NOTOOLTIPS |*/ WS_CHILD;
+    cs.style = LVS_SHOWSELALWAYS | /*LVS_SINGLESEL | TVS_NOTOOLTIPS |*/ WS_CHILD | LVS_ALIGNLEFT;
 }
 
 // Configures the columns in the list view's header.

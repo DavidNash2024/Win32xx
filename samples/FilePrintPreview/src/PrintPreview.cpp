@@ -5,12 +5,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the CPrintPreview, CPreviewPane, 
-    and PreviewSetupclasses using the Win32++ Windows interface classes. 
+    Contents Description: Implementation of the CPrintPreview, CPreviewPane,
+    and PreviewSetupclasses using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -34,7 +34,7 @@ static const double SCREEN_MAX  = 35.0;     // maximum monitor screen dimension
   // Registry key for saving screen and initial print preview sizes. Note:
   // this should match the mainframe's registry key, but with "Software"
   // prefixed, in order to place these entries with the frame's entries.
-static const LPCTSTR PREVIEW_REGISTRY_KEY = _T("Software\\") 
+static const LPCTSTR PREVIEW_REGISTRY_KEY = _T("Software\\")
     _T("Win32++\\FilePrintPreview") _T("\\Sizes");
 
 /*******************************************************************************

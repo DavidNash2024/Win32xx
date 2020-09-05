@@ -5,13 +5,13 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CApp class for the CommonDialogs 
+    Contents Description: Declaration of the CApp class for the CommonDialogs
     sample program using the Win32++ Windows interface classes. A global access
     function is also defined to the CApp object.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -19,7 +19,7 @@
 #define SDI_APP_H
 
 /*============================================================================*/
-    class 
+    class
 CApp : public CWinApp                                                       /*
 
     This application's app class, a pattern for developing new apps.
@@ -29,8 +29,8 @@ CApp : public CWinApp                                                       /*
         CApp() {}
         ~CApp(){}
 
-        BOOL    InitInstance(); 
-        CString MakeAppDataPath(const CString& subpath) const;
+        BOOL    InitInstance();
+        CString MakeAppDataPath(const CString&) const;
 
     private:
         BOOL    OnIdle(LONG);

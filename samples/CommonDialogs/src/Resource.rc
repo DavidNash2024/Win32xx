@@ -5,7 +5,7 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Application resources definition file for this 
+    Contents Description: Application resources definition file for this
     application using the Win32++ Windows interface classes.
 
 /******************************************************************************/
@@ -13,20 +13,8 @@
 // Microsoft Visual C++ generated resource script. (originally)
 
 #include "resource.h"
-
-#define APSTUDIO_READONLY_SYMBOLS
-/*============================================================================*/
-
-// Generated from the TEXTINCLUDE 2 resource.
-
-#define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
 #include "richedit.h"
-#undef APSTUDIO_HIDDEN_SYMBOLS
-
-/*============================================================================*/
-
-#undef APSTUDIO_READONLY_SYMBOLS
 
 /*============================================================================*/
 
@@ -91,7 +79,7 @@ IDW_MAIN MENU
 
 /*============================================================================*/
 
-  // Program Icon. Note that the icon with the lowest id value is placed first 
+  // Program Icon. Note that the icon with the lowest id value is placed first
   // to ensure that the application icon remains consistent on all systems.
 
 IDW_MAIN        ICON                            "../src/res/smile.ico"
@@ -111,9 +99,9 @@ EXSTYLE WS_EX_CLIENTEDGE
 FONT 10, "Courier New", 0, 0
 {
       // controls within the client area:
-    CONTROL "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |ES_AUTOHSCROLL | 
-                    WS_BORDER  | WS_TABSTOP | ES_WANTRETURN  | WS_VSCROLL | 
-                    WS_HSCROLL, 10, 10, 280, 180, WS_EX_CLIENTEDGE | 
+    CONTROL "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |ES_AUTOHSCROLL |
+                    WS_BORDER  | WS_TABSTOP | ES_WANTRETURN  | WS_VSCROLL |
+                    WS_HSCROLL, 10, 10, 280, 180, WS_EX_CLIENTEDGE |
                     WS_EX_ACCEPTFILES
 }
 

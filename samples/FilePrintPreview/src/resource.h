@@ -6,12 +6,12 @@
 ===============================================================================*
 
     Contents Description: Definitions of this application's resource identifiers.
-    
+
     Special Conventions:  The specification of IDs for resource objects
     generally adhere to prefixes as shown in the following table. Note
     that different kinds of resource objects have different prefixes to
     distinguish the types of entities they belong to:
-    
+
         Entity id   Object
         IDP_        Message-box prompt
         IDD_        Dialog-box id
@@ -98,3 +98,5 @@
 #define IDC_PREVIEW_WIDTH               203
 #define IDC_PREVIEW_HEIGHT              204
 #define IDC_PAGE_SETUP                  205
+
+/*----------------------------------------------------------------------------*/

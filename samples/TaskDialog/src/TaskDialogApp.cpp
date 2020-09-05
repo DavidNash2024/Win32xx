@@ -26,7 +26,7 @@ BOOL CTaskDialogApp::InitInstance()
     if (!CTaskDialog::IsSupported())
     {
         // Task Dialogs are only supported on Vista and above
-        MessageBox(NULL, _T("Vista or better is required for Task Dialogs"), _T("Not Supported!"), MB_ICONERROR);
+        MessageBox(NULL, L"Vista or better is required for Task Dialogs", L"Not Supported!", MB_ICONERROR);
         return FALSE;
     }
 
@@ -48,7 +48,7 @@ BOOL CTaskDialogApp::InitInstance()
     td.SetWindowTitle( MAKEINTRESOURCE(IDS_WINDOWTITLE) );
     td.SetMainInstruction( MAKEINTRESOURCE(IDS_MAININSTRUCTION) );
     td.SetContent( MAKEINTRESOURCE(IDS_CONTENT) );
-    td.SetExpansionArea( MAKEINTRESOURCE(IDS_EXPANDED), _T("Hide the expanded information"), _T("Show the expanded information") );
+    td.SetExpansionArea( MAKEINTRESOURCE(IDS_EXPANDED), L"Hide the expanded information", L"Show the expanded information" );
     td.SetVerificationCheckboxText( MAKEINTRESOURCE(IDS_VERIFICATIONTEXT) );
     td.SetFooterText( MAKEINTRESOURCE(IDS_FOOTER) );
 

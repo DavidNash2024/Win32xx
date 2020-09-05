@@ -5,12 +5,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the CMainFrame class for the 
-    FilePrintPreview demo program using the Win32++ Windows interface classes. 
+    Contents Description: Implementation of the CMainFrame class for the
+    FilePrintPreview demo program using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -32,7 +32,7 @@ CMainFrame()                                                                /*
 
     Construct the main frame object for the PrintPreviewClass demo.
 *-----------------------------------------------------------------------------*/
-    :   m_wrapOption(WRAP_NONE) 
+    :   m_wrapOption(WRAP_NONE)
 {
     SetView(m_richView);
       // Set the registry key name, and load persistent data
@@ -90,7 +90,7 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
         case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
         case IDM_OPTIONS_FONT:      return OnOptionsFont();
         case IDM_HELP_ABOUT:        return OnHelp();
-        case IDM_WRAP_NONE: 
+        case IDM_WRAP_NONE:
         case IDM_WRAP_WINDOW:
         case IDM_WRAP_PRINTER:
             return OnOptionsWrap((WordWrapType)(id - IDM_WRAP_NONE));
@@ -110,7 +110,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -128,7 +128,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
     BOOL CMainFrame::
 OnDropFiles(HDROP dropInfo)                                                 /*
 
-    Enable files dropped in the client area to be opened. Any file 
+    Enable files dropped in the client area to be opened. Any file
     currently open is closed.
 *-----------------------------------------------------------------------------*/
 {
@@ -293,7 +293,7 @@ OnFilePreview()                                                             /*
     caption window and the document in separate the display window.
 *-----------------------------------------------------------------------------*/
 {
-    return m_printPreview.OnPreview(GetPath()); 
+    return m_printPreview.OnPreview(GetPath());
 }
 
 /*============================================================================*/
@@ -325,7 +325,7 @@ OnFilePrint(HWND parent)                                                    /*
     catch (const CWinException& /* e */)
     {
           // no default printer chosen
-        MessageBox(_T("Unable to display print dialog"), 
+        MessageBox(_T("Unable to display print dialog"),
             _T("Print Failed"), MB_OK);
         return FALSE;
     }
@@ -341,7 +341,7 @@ OnFilePrintSetup(HWND parent)                                               /*
 *-----------------------------------------------------------------------------*/
 {
       // Prepare the print dialog
-    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC | 
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC |
         PD_PRINTSETUP);
     PRINTDLG pd  = printDlg.GetParameters();
     pd.nCopies   = 1;
@@ -439,7 +439,7 @@ OnMenuUpdate(UINT id)                                                       /*
     if (IDM_WRAP_NONE <= id && id <= IDM_WRAP_PRINTER)
     {
         UINT active = m_wrapOption + IDM_WRAP_NONE;
-        GetFrameMenu().CheckMenuRadioItem(IDM_WRAP_NONE, IDM_WRAP_PRINTER, 
+        GetFrameMenu().CheckMenuRadioItem(IDM_WRAP_NONE, IDM_WRAP_PRINTER,
             active, MF_BYCOMMAND);
     }
     CFrame::OnMenuUpdate(id);
@@ -511,7 +511,7 @@ QuickPrint(CPrintDialog& printDlg)                                          /*
     HDC hPrinter = dlg.GetPrinterDC();
     if (hPrinter == 0)
     {
-        MessageBox(_T("Quick Print requires a printer"),_T("No Printer found"), 
+        MessageBox(_T("Quick Print requires a printer"),_T("No Printer found"),
             MB_ICONWARNING);
         return;
     }
@@ -541,7 +541,7 @@ SaveModifiedText()                                                          /*
 {
       //Check for unsaved text
     if (m_richView.GetModify())
-        if (MessageBox(_T("Save changes to this document?"), 
+        if (MessageBox(_T("Save changes to this document?"),
             _T("Question..."), MB_YESNO | MB_ICONQUESTION) == IDYES)
             OnFileSave();
 }
@@ -600,7 +600,7 @@ SetPath(LPCTSTR path)                                                       /*
 *-----------------------------------------------------------------------------*/
 {
     m_path = path;
-    CString title = (m_path.IsEmpty() ? _T("FilePrintPreview Demo") : m_path);
+    CString title = (m_path.IsEmpty() ? _T("FilePrintPreview Demo") : m_path.c_str());
     SetWindowText(title);
 }
 

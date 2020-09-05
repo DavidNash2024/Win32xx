@@ -1,8 +1,8 @@
 /* [Tab/Indent: 8/8][Line/Box: 80/74]                             (Resource.h) *
 ********************************************************************************
 
-    Contents Description: Declaration of the resource identifiers for a 
-    sample program demonstrating an custom status bar within the Win32++ 
+    Contents Description: Declaration of the resource identifiers for a
+    sample program demonstrating an custom status bar within the Win32++
     Windows framework.
 
 *******************************************************************************/

@@ -57,7 +57,7 @@ int CView::OnCreate(CREATESTRUCT& cs)
     SetIconLarge(IDW_MAIN);
 
     // Use ATL to create the ActiveX control, initializes it, and hosts it in the specified window.
-    LRESULT hr = AtlAxCreateControlEx(TtoOLE(_T("about:blank")), *this, NULL, NULL, &m_pSourceUnk, IID_NULL);
+    LRESULT hr = AtlAxCreateControlEx(L"about:blank", *this, NULL, NULL, &m_pSourceUnk, IID_NULL);
     if (SUCCEEDED(hr))
     {
         // Set the IWebBrowser2 pointer.
@@ -96,7 +96,7 @@ void CView::OnInitialUpdate()
     // Suppress Java script errors.
     GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
 
-    TRACE(_T("CView::OnInitialUpdate\n"));
+    TRACE("CView::OnInitialUpdate\n");
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.

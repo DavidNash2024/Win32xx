@@ -5,13 +5,13 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CColorChoice popup dialog class 
-    for this application using the Win32++ Windows interface classes. 
+    Contents Description: Declaration of the CColorChoice popup dialog class
+    for this application using the Win32++ Windows interface classes.
     Information on the use of this class appears in the CColorChoice.cpp file.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -33,24 +33,24 @@ CColorChoice   : public CColorDialog                                        /*
     public:
         CColorChoice();
         virtual ~CColorChoice(){}
-        
+
         virtual void    AddColorChoice(UINT, LPCTSTR, COLORREF);
         virtual void    ClearColorTable(){m_colorTable.clear();}
         virtual INT_PTR DoModal(HWND owner = 0);
-        virtual CBrush  GetBrush(UINT) const; 
+        virtual CBrush  GetBrush(UINT) const;
         virtual CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
         virtual UINT    GetSelectedColorID() const {return m_selection;}
         virtual COLORREF GetTableColor(UINT id) const;
         virtual UINT    GetTableIndex(UINT id) const;
-        virtual CString GetTableUsage(UINT id) const; 
+        virtual CString GetTableUsage(UINT id) const;
         virtual void    SetBoxTitle(LPCTSTR title) {m_boxTitle = title;}
         virtual void    SetTableColor(UINT id, COLORREF rgb);
         virtual void    SetTableUsage(UINT id, LPCTSTR s);
 
     protected:
-        virtual BOOL    OnInitDialog(); 
-        virtual void    InitCustomColors();        
-        virtual void    SetWindowTitle() const {SetWindowText(m_boxTitle);}   
+        virtual BOOL    OnInitDialog();
+        virtual void    InitCustomColors();
+        virtual void    SetWindowTitle() const {SetWindowText(m_boxTitle);}
         virtual void    Serialize(CArchive &ar);
 
     private:

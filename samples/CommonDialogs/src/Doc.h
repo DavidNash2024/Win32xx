@@ -5,13 +5,13 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CDoc class for the CommonDialogs 
+    Contents Description: Declaration of the CDoc class for the CommonDialogs
     sample program using the Win32++ Windows interface classes. This class
     provides the document management functions for the application.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -22,7 +22,7 @@ class CMainFrame;
 class CView;
 
 /*============================================================================*/
-    class 
+    class
 CDoc    : public CObject                                                    /*
 
     This application's document management class.
@@ -32,7 +32,7 @@ CDoc    : public CObject                                                    /*
         CDoc();
         virtual ~CDoc(){}
 
-        CString GetDocDir()  const 
+        CString GetDocDir()  const
                     { CFile f; f.SetFilePath(m_docPath);
                       return f.GetFileDirectory();}
         CString GetDocPath() const { return m_docPath;}
@@ -55,8 +55,8 @@ CDoc    : public CObject                                                    /*
         CRichEditView& GetRichView() const;
         void        NotFound(const MyFindReplaceDialog&);
         void        Serialize(CArchive &ar);
-            
-        BOOL        m_isOpen;       // the document status  
+
+        BOOL        m_isOpen;       // the document status
         CString     m_findNext;     // current string to find
         CString     m_replaceWith;  // replacement string
         CString     m_docPath;      // the path of the open document

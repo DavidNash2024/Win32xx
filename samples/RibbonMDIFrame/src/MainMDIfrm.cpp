@@ -19,7 +19,7 @@ CMainMDIFrame::CMainMDIFrame()
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\Ribbon MDI Frame"));
+    LoadRegistrySettings(L"Win32++\\Ribbon MDI Frame");
 
     // Load the settings from the registry with 4 MRU entries
     LoadRegistryMRUSettings(4);
@@ -76,7 +76,7 @@ STDMETHODIMP CMainMDIFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const P
         default:
             {
                 CString str;
-                str.Format(_T("Unknown Button %d\n"),cmdID);
+                str.Format(L"Unknown Button %d\n", cmdID);
                 TRACE(str);
             }
             break;

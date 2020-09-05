@@ -99,7 +99,7 @@ void CView::DoPlot(CDC& dc)
     assert(m_ymin < m_ymax);
 
     // Choose a resolution based on the number of points to minamise rounding errors.
-    int Resolution = m_points.size();
+    int Resolution = static_cast<int>(m_points.size());
     dc.SetMapMode(MM_ISOTROPIC);    // Scale X and Y equally
     dc.SetWindowExtEx(Resolution, Resolution);
 

@@ -462,7 +462,7 @@ std::vector<CString> CMainFrame::GetWords(const CString& str) const
 // Returns true if the file's extension is m4v, mp4 or mp3.
 bool CMainFrame::IsVideoFile(const CString& filename) const
 {
-    int dot = filename.ReverseFind(_T('.'));
+    int dot = filename.ReverseFind(L'.');
     CString ext = filename.Mid(dot + 1, lstrlen(filename));
 
     return (ext == L"m4v" || ext == L"mp4" || ext == L"mov");
@@ -1444,12 +1444,11 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
     MediaInfo MI;
     if (MI.IsReady())   // Is MediaInfo.dll loaded?
     {
-        // Lock this code for thread safety
-        CThreadLock lock(pFrame->m_cs);
-
-        pFrame->m_splash.ShowText(L"Updating Library");
-        pFrame->m_splash.AddBar();
-        pFrame->m_splash.GetBar().SetRange(0, (short)pFrame->m_foundFiles.size());
+        CSplash splash;
+        splash.Create();
+        splash.ShowText(L"Updating Library");
+        splash.AddBar();
+        splash.GetBar().SetRange(0, (short)pFrame->m_foundFiles.size());
 
         unsigned short barPos = 0;
         for (size_t i = 0; i < pFrame->m_foundFiles.size(); i++)
@@ -1464,7 +1463,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
             barPos++;
 
             // Update the splash screen's progress bar
-            pFrame->m_splash.GetBar().SetPos(barPos);
+            splash.GetBar().SetPos(barPos);
 
             CString fullName = pFrame->m_foundFiles[i].fileName;
             bool isFileInLibrary = false;
@@ -1479,6 +1478,9 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
                     CTime t2((*it).lastModifiedTime);
                     if (t1 != t2)
                     {
+                        // Lock this code for thread safety
+                        CThreadLock lock(pFrame->m_cs);
+
                         // remove the modified file from the library
                         TRACE(fullName); TRACE(" removed modified file from library\n");
                         pFrame->m_moviesData.erase(it);
@@ -1499,13 +1501,14 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
                 pFrame->m_isDirty = true;
                 MovieInfo mi;
                 pFrame->LoadMovieInfoFromFile(pFrame->m_foundFiles[i], mi);
+
+                // Lock this code for thread safety
+                CThreadLock lock(pFrame->m_cs);
                 pFrame->m_moviesData.push_back(mi);
 
                 TRACE(fullName); TRACE(" added to library\n");
             }
         }
-
-        pFrame->m_splash.RemoveBar();
     }
     else
     {
@@ -1513,9 +1516,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
         ::MessageBox(NULL, MI.Inform().c_str(), L"Error", MB_OK);
     }
 
-    // The UWM_FILESLOADED updates the list view with the new data.
-    // Post the message becase the frame is in a different thread.
-    pFrame->PostMessage(UWM_FILESLOADED);
+    pFrame->OnFilesLoaded();
 
     return 0;
 }
@@ -1527,10 +1528,6 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case WM_EXITSIZEMOVE:
         GetViewList().SetLastColumnWidth();
-        break;
-
-    case UWM_FILESLOADED:
-        OnFilesLoaded();
         break;
     }
 

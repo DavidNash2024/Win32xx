@@ -52,7 +52,7 @@ Features demonstrated in this example
   control colors for the RichEdit control, as well as the colors of the dialog
   and status bar backgrounds.
 
-* Reusable derived classes MyFileDlg, MyFindReplaceDlg, MyFontDlg, MyPrinter,
+* Reusable derived classes MyFileDlg, MyFindReplaceDlg, MyFontDlg, MyPrintDialog,
   and MyPrintSetup that customize the appearance of their respective common
   dialog base classes and bring context help functions to these dialogs.
 

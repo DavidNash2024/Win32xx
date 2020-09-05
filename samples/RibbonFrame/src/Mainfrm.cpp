@@ -21,7 +21,7 @@ CMainFrame::CMainFrame()
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\Ribbon Frame"));
+    LoadRegistrySettings(L"Win32++\\Ribbon Frame");
 
     // Load the settings from the registry with 4 MRU entries
     LoadRegistryMRUSettings(4);
@@ -60,7 +60,7 @@ STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROP
         default:
             {
                 CString str;
-                str.Format(_T("Unknown Button %d\n"),cmdID);
+                str.Format(L"Unknown Button %d\n", cmdID);
                 TRACE(str);
             }
             break;
@@ -84,7 +84,7 @@ void CMainFrame::MRUFileOpen(UINT mruIndex)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         RemoveMRUEntry(mruText);
         m_view.GetAllPoints().clear();
@@ -107,7 +107,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -129,7 +129,7 @@ void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -227,9 +227,9 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
-        m_pathName = _T("");
+        m_pathName = L"";
         m_view.GetAllPoints().clear();
     }
 }
@@ -238,8 +238,8 @@ void CMainFrame::OnFileOpen()
 {
     try
     {
-        CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-        fileDlg.SetTitle(_T("Open File"));
+        CFileDialog fileDlg(TRUE, L"dat", 0, OFN_FILEMUSTEXIST, L"Scribble Files (*.dat)\0*.dat\0\0");
+        fileDlg.SetTitle(L"Open File");
 
         // Bring up the file open dialog retrieve the selected filename
         if (fileDlg.DoModal(*this) == IDOK)
@@ -252,7 +252,7 @@ void CMainFrame::OnFileOpen()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -261,7 +261,7 @@ void CMainFrame::OnFileOpen()
 void CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
-    m_pathName = _T("");
+    m_pathName = L"";
     GetView().Invalidate();
 }
 
@@ -269,7 +269,7 @@ void CMainFrame::OnFileSave()
 {
     try
     {
-        if (m_pathName == _T(""))
+        if (m_pathName == L"")
             OnFileSaveAs();
         else
             GetDoc().FileSave(m_pathName);
@@ -278,7 +278,7 @@ void CMainFrame::OnFileSave()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        ::MessageBox(NULL, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -288,8 +288,8 @@ void CMainFrame::OnFileSaveAs()
 {
     try
     {
-        CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-        FileDlg.SetTitle(_T("Save File"));
+        CFileDialog FileDlg(FALSE, L"dat", 0, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
+        FileDlg.SetTitle(L"Save File");
 
         // Bring up the file open dialog retrieve the selected filename
         if (FileDlg.DoModal(*this) == IDOK)
@@ -306,7 +306,7 @@ void CMainFrame::OnFileSaveAs()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+        ::MessageBox(NULL, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }

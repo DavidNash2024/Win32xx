@@ -167,7 +167,7 @@ void CD2DView::PreRegisterClass(WNDCLASS& wc)
 {
     wc.style = CS_HREDRAW | CS_VREDRAW;
     wc.hCursor = ::LoadCursor(NULL, IDI_APPLICATION);
-    wc.lpszClassName = _T("Direct2D");
+    wc.lpszClassName = L"Direct2D";
 }
 
 // Called when the window is created.

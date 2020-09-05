@@ -6,13 +6,13 @@
 ===============================================================================*
 
     Contents Description: Declaration of the CListBoxDlg subclass of the common
-    dialog class for this sample program based on the Win32++ Windows interface 
-    classes. This class is displays a popup window containing a list box whose 
+    dialog class for this sample program based on the Win32++ Windows interface
+    classes. This class is displays a popup window containing a list box whose
     items may be selected.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 

@@ -1,13 +1,13 @@
 /* [Tab/Indent: 8/8][Line/Box: 80/74]                          (Hyperlink.cpp) *
 ********************************************************************************
 
-    Contents Description: Implementation of the CHyperlink class for a sample 
-    program demonstrating the custom status bar within the  Win32++ Windows 
+    Contents Description: Implementation of the CHyperlink class for a sample
+    program demonstrating the custom status bar within the  Win32++ Windows
     framework.
 
-    Programming Notes: The programming conventions used here roughly follow 
-    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space 
-    Network Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -20,13 +20,13 @@ CHyperlink()                                                                /*
 
     Create the custom hyperlink for this sample program.
 *-----------------------------------------------------------------------------*/
-    :   m_isUrlVisited(FALSE), m_isClicked(FALSE), 
+    :   m_isUrlVisited(FALSE), m_isClicked(FALSE),
         m_crVisited(hyTextColor[0]), m_crNotVisited(hyTextColor[1])
 {
       // Create the cursor
     m_cursor = ::LoadCursor(NULL, IDC_HAND);
 
-      // IDC_HAND is not available on Win95, so load a reasonable 
+      // IDC_HAND is not available on Win95, so load a reasonable
       // alternative
     if( !m_cursor )
         m_cursor = ::LoadCursor(NULL, IDC_ARROW);
@@ -74,8 +74,8 @@ OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)                        /*
         pt.x = (short)LOWORD(lparam);
         pt.y = (short)HIWORD(lparam);
         ClientToScreen(pt);
-        CRect rc = GetWindowRect(); 
-        if (rc.PtInRect(pt)) 
+        CRect rc = GetWindowRect();
+        if (rc.PtInRect(pt))
             OpenUrl();
     }
     return FinalWindowProc(msg, wparam, lparam);
@@ -90,7 +90,7 @@ OpenUrl()                                                                   /*
 *-----------------------------------------------------------------------------*/
 {
     LPCTSTR url = _T("http://sourceforge.net/projects/win32-framework/");
-    
+
     HINSTANCE result = ::ShellExecute(NULL, _T("open"), url, NULL, NULL,
         SW_SHOWNORMAL);
 
@@ -106,7 +106,8 @@ OpenUrl()                                                                   /*
     LRESULT CHyperlink::
 OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)                   /*
 
-    Reflect WM_CTLCOLORSTATIC messages back here for processing.
+    Reflect WM_CTLCOLORSTATIC messages back here for processing to set the
+    color of the hyperlink statusbar part.
 *-----------------------------------------------------------------------------*/
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -130,8 +131,8 @@ OnSetCursor(UINT, WPARAM, LPARAM)                                           /*
 
 *-----------------------------------------------------------------------------*/
 {
-        // Must use ::SetCursor here. CStatic::SetCursor does not do the 
-        // same thing. 
+        // Must use ::SetCursor here. CStatic::SetCursor does not do the
+        // same thing.
     ::SetCursor(m_cursor);
     return TRUE;  // Non-zero return prevents default processing
 }
@@ -144,16 +145,16 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
 {
     switch (msg)
     {
-        case WM_LBUTTONDOWN: 
+        case WM_LBUTTONDOWN:
             return OnLButtonDown(msg, wparam, lparam);
 
-        case WM_LBUTTONUP:    
+        case WM_LBUTTONUP:
             return OnLButtonUp(msg, wparam, lparam);
 
-        case WM_SETCURSOR:    
-            return OnSetCursor(msg, wparam, lparam);   
+        case WM_SETCURSOR:
+            return OnSetCursor(msg, wparam, lparam);
 
-        case WM_NCHITTEST:    
+        case WM_NCHITTEST:
             return HTCLIENT;// Claim that the mouse is in a client area
     }
     return WndProcDefault(msg, wparam, lparam);

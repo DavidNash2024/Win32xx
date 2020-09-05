@@ -1,16 +1,16 @@
 /* [Tab/Indent: 8/8][Line/Box: 80/74]                      (CustomStatusBar.h) *
 ********************************************************************************
 
-    Contents Description: Declaration of the CustomStatusBar class for a 
+    Contents Description: Declaration of the CustomStatusBar class for a
     sample program demonstrating an expanded use of the status bar within
     the Win32++ Windows framework.
 
     Usage of the class is discussed in the CustomStatusBar.cpp file
     preamble.
 
-    Programming Notes: The programming conventions used here roughly follow 
-    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space 
-    Network Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -28,11 +28,11 @@ const COLORREF
         ODBkgrColor[2]  = {RGB(230, 180,   0), RGB(240, 210,  90)};
 
 /*============================================================================*/
-    struct 
+    struct
 PartInfo                                                                    /*
 
     The PartInfo struct describes the makeup of a statusbar part, namely its
-    numeric identifier, size, style, and current string contents. 
+    numeric identifier, size, style, and current string contents.
 *-----------------------------------------------------------------------------*/
 {
     PartInfo(UINT id, int sz, UINT Style = 0)
@@ -49,8 +49,8 @@ PartInfo                                                                    /*
     Declaration of the CustomStatusBar class.
 
 *============================================================================*/
-    class 
-CustomStatusBar : public CStatusBar                 /*
+    class
+CustomStatusBar : public CStatusBar                                         /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -75,7 +75,7 @@ CustomStatusBar : public CStatusBar                 /*
         CHyperlink      m_hyperlink;
         CProgressBar    m_progressBar;
         CString         m_ownerDrawMsg;
-        std::vector<PartInfo> m_statusBarParts; 
+        std::vector<PartInfo> m_statusBarParts;
 };
 /*----------------------------------------------------------------------------*/
 #endif // CUSTOMSTATUSBAR_H

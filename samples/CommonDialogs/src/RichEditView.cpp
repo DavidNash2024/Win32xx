@@ -9,9 +9,9 @@
     CommonDialogs sample application using the Win32++ Windows interface
     class. This class serves both as the document view and content manager.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -27,9 +27,8 @@
 CRichEditView()                                                             /*
 
 *-----------------------------------------------------------------------------*/
+    :   m_textLength(0), m_isAppBanded(FALSE)
 {
-    m_isAppBanded = FALSE;
-    m_textLength = 0;
     ZeroMemory(&m_fr, sizeof(m_fr));
 }
 
@@ -91,11 +90,11 @@ SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                        /*
 
 /*============================================================================*/
     void CRichEditView::
-SetFont(HFONT font, BOOL redraw) const                                    /*
+SetFont(HFONT font, BOOL redraw) const                                      /*
 
     Set the display font; if NULL, the system font is used. Immediately
     redraw the view if TRUE.  Prevent the control from automatically changing
-    fonts if there is a change in the keyboard layout. 
+    fonts if there is a change in the keyboard layout.
 *-----------------------------------------------------------------------------*/
 {
     CRichEdit::SetFont(font, redraw);
@@ -216,7 +215,7 @@ StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)        /*
         return (1);
 
     *pcb = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, 
+    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb,
       NULL))
         ::MessageBox(NULL, _T("StreamOutFile Failed"), _T(""), MB_OK);
     return 0;
@@ -267,9 +266,9 @@ DoPrintView()                                                               /*
 
     Perform standard printing of a customized view of the current document,
     whose name appears should have been set prior to entry by DoPrintRichView()
-    to label the spooling object. If banding is supported, this should also 
-    have been set. If the printer uses a data type to record the print job, 
-    this should also have been set. The printing device is placed in MM_TEXT 
+    to label the spooling object. If banding is supported, this should also
+    have been set. If the printer uses a data type to record the print job,
+    this should also have been set. The printing device is placed in MM_TEXT
     mode, so units are measured in twips.
 *-----------------------------------------------------------------------------*/
 {

@@ -389,7 +389,7 @@ int CDXView::OnCreate(CREATESTRUCT& cs)
 
     if (FAILED(InitDevice()))
     {
-        MessageBox(_T("DirectX Failed to Initialize"), _T("Error"), MB_OK);
+        MessageBox(L"DirectX Failed to Initialize", L"Error", MB_OK);
 
         // Window creation failed
         return -1;

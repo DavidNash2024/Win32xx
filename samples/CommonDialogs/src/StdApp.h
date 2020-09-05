@@ -7,7 +7,7 @@
 
     Contents Description: Standard application declarations header file.
     This file is used to #include all this application's header files in the
-    order required for error-free compilation using the Win32++ interface 
+    order required for error-free compilation using the Win32++ interface
     classes.
 
 *******************************************************************************/

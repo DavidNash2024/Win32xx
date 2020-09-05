@@ -9,9 +9,9 @@
     using the Win32++ Windows interface classes. Extensions include font size,
     color, font dialog option flags, and coordinate mapping mode.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
-    and Preparation Subsystem project for C++ programming.
+     Programming Notes: The programming style roughly follows that established
+     got the 1995-1999 Jet Propulsion Laboratory Network Planning and
+     Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -39,9 +39,7 @@ CFontExDialog : public CFontDialog                                          /*
 
     protected:
         BOOL    OnInitDialog()
-                    {
-                        SetWindowText(m_dlgBoxTitle);
-                        return TRUE; }
+                    {  SetWindowText(m_dlgBoxTitle); return TRUE; }
 
     private:
         CString m_dlgBoxTitle;
@@ -79,7 +77,6 @@ CFontEx : public CObject                                                       /
     private:
         void    SaveFontSize();
 
-          // protected data
         CFont    m_font;
         COLORREF m_txcolor;
         DWORD    m_flags;

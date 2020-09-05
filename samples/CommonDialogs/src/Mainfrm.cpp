@@ -13,9 +13,9 @@
     selection of edit box font, use of external serialization files, and MRU
     lists.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -32,7 +32,7 @@ CMainFrame()                                                                /*
     size are set here.
 *-----------------------------------------------------------------------------*/
     :   m_view(IDD_MAIN_DIALOG), m_maxMRU(0), m_isTextWrap(TRUE),
-          m_frameXY(100, 100), m_frameSize(700, 600)
+        m_frameXY(100, 100), m_frameSize(700, 600)
 {
       // Set m_view as the view window of the frame
     SetView(m_view);

@@ -7,25 +7,25 @@
 
     Contents Description: Declaration of the CMainFrame class for the
     CommonDialogs sample application using the Win32++ Windows interface
-    classes. This particular frame class contains features a fixed-size form 
+    classes. This particular frame class contains features a fixed-size form
     for the display, with no resizing gripper tool at the end of the status bar,
     and provisions for selection of client background color, selection of
     edit box font, use of external serialization files, and MRU lists.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
 #ifndef SDI_MAINFRM_H
 #define SDI_MAINFRM_H
-    
+
   // designation of where a control id appears, used when enabling/disabling
 enum ControlBars {toolbar, mainmenu, both};
 
 /*============================================================================*/
-    class 
+    class
 CMainFrame : public CFrame                                                  /*
 
     This application's mainframe class.
@@ -34,10 +34,10 @@ CMainFrame : public CFrame                                                  /*
     public:
         CMainFrame();
         ~CMainFrame() {}
-        
-        void    AddMRUEntry(LPCTSTR MRUEntry) 
+
+        void    AddMRUEntry(LPCTSTR MRUEntry)
                     { CFrame::AddMRUEntry (MRUEntry);}
-        AboutBox& GetAboutBox() { return m_aboutBox; }  
+        AboutBox& GetAboutBox() { return m_aboutBox; }
         void    EmptyMRUList();
         size_t  GetMRUSize() { return GetMRUEntries().size();}
         COLORREF GetSBBkColor()
@@ -59,7 +59,7 @@ CMainFrame : public CFrame                                                  /*
 
     private:
         BOOL    DropFiles(LPARAM lparam);
-        CRichEditView& GetRichView() { return m_view.GetRichView();} 
+        CRichEditView& GetRichView() { return m_view.GetRichView();}
         void    InitCtlColors();
         void    LoadPersistentData();
         void    OnCloseDoc();
@@ -90,14 +90,14 @@ CMainFrame : public CFrame                                                  /*
         BOOL    SetThemeColors();
         void    SetupMenuIcons();
         void    SetupToolBar();
-        void    SetViewBgColor() 
+        void    SetViewBgColor()
                      {m_view.SetBgColor(m_colorChoice.GetBrush(DlgBg));}
         void    UpdateMRUMenu();
         LRESULT WndProc(UINT msg, WPARAM, LPARAM);
         void    ValidateMRU();
 
         CDoc         m_doc;         // the document
-        CView        m_view;        // the view 
+        CView        m_view;        // the view
         AboutBox     m_aboutBox;    // the AboutBox dialog
         CString      m_archivePath, // archive file
                      m_docDir,      // for the file open/save dialogs

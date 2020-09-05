@@ -1,13 +1,13 @@
 /* [Tab/Indent: 8/8][Line/Box: 80/74]                            (MainFrm.cpp) *
 ********************************************************************************
 
-    Contents Description: Implementation of the CMainFrame class for a 
-    sample program demonstrating a custom status bar within the Win32++ Windows 
+    Contents Description: Implementation of the CMainFrame class for a sample
+    program demonstrating a custom status bar within the Win32++ Windows
     framework.
 
-    Programming Notes: The programming conventions used here roughly follow 
-    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space 
-    Network Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -63,7 +63,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default. 
+    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -100,7 +100,7 @@ OnInitialUpdate()                                                           /*
     // Place any additional startup code here.
 
       // The content of the owner drawn status bar part can be set anywhere
-      // according to the needs of the app. We put it here for the demo. 
+      // according to the needs of the app. We put it here for the demo.
     m_customStatusBar.SetOwnerDrawText(_T(" Owner Draw"));
     TRACE("Frame created\n");
 }
@@ -117,7 +117,7 @@ OnFileOpen()                                                                /*
       // bring up the dialog and retrieve the selected filename
     if (FileDlg.DoModal(*this) == IDOK)
     {
-        // TODO: Add your own code here. Refer to the tutorial for 
+        // TODO: Add your own code here. Refer to the tutorial for
         // additional information
     }
     return TRUE;
@@ -134,7 +134,7 @@ OnFileSave()                                                                /*
       // bring up the dialog and retrieve the selected filename
     if (FileDlg.DoModal(*this) == IDOK)
     {
-        // TODO: Add your own code here. Refer to the tutorial for 
+        // TODO: Add your own code here. Refer to the tutorial for
         // additional information
     }
     return TRUE;
@@ -152,11 +152,10 @@ OnFilePrint()                                                               /*
     try
     {
         INT_PTR result = printdlg.DoModal(*this);
-
         // Retrieve the printer DC
         CDC dcPrinter = printdlg.GetPrinterDC();
 
-        // TODO: Add your own code here. Refer to the tutorial for 
+        // TODO: Add your own code here. Refer to the tutorial for
         // additional information
 
         return (result == IDOK);   // boolean expression
@@ -165,7 +164,7 @@ OnFilePrint()                                                               /*
     catch (const CWinException& /* e */)
     {
         // No default printer
-        MessageBox(_T("Unable to display print dialog"), 
+        MessageBox(_T("Unable to display print dialog"),
             _T("Print Failed"), MB_OK);
         return FALSE;
     }
@@ -182,8 +181,7 @@ OnNotify(WPARAM wparam, LPARAM lparam)                                      /*
 //  {
 //      Add case statements for each notification message here
 //  }
-
-    // Some notifications should return a value when handled
+      // Some notifications should return a value when handled
     return CFrame::OnNotify(wparam, lparam);
 }
 
@@ -225,22 +223,22 @@ SetStatusIndicators()                                                       /*
 SetupToolBar()                                                              /*
 
     Declare the toolbar buttons and set their resource identifiers. Here, the
-    buttons are taken from the IDW_MAIN bitmap, in order, all present, and 
+    buttons are taken from the IDW_MAIN bitmap, in order, all present, and
     without text.
 *-----------------------------------------------------------------------------*/
 {
     AddToolBarButton(IDM_FILE_NEW);
     AddToolBarButton(IDM_FILE_OPEN);
     AddToolBarButton(IDM_FILE_SAVE);
-    
+
     AddToolBarButton(0);                       // Separator
     AddToolBarButton(IDM_EDIT_CUT,   FALSE);   // disabled button
     AddToolBarButton(IDM_EDIT_COPY,  FALSE );  // disabled button
     AddToolBarButton(IDM_EDIT_PASTE, FALSE );  // disabled button
-    
+
     AddToolBarButton(0);                       // Separator
     AddToolBarButton(IDM_FILE_PRINT);
-    
+
     AddToolBarButton(0);                       // Separator
     AddToolBarButton(IDM_HELP_ABOUT);
 }

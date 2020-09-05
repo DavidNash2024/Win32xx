@@ -15,9 +15,9 @@
     those not wishing to use the system's registry, but prefer a separate
     application parameter file.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
-    and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -27,7 +27,7 @@
 
 /*=============================================================================*/
     CMRU::
-CMRU()                                                                  /*
+CMRU()                                                                      /*
 
     Construct an empty MRU object.
 *-----------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ CMRU()                                                                  /*
 
 /*============================================================================*/
     void CMRU::
-AddEntry(LPCTSTR entryName)                                             /*
+AddEntry(LPCTSTR entryName)                                                 /*
 
     Add the entryName string to the Most Recently Used (MRU) menu at the
     top of the menu.  Eliminate list members if they exceed the specified
@@ -60,7 +60,7 @@ AddEntry(LPCTSTR entryName)                                             /*
 
 /*============================================================================*/
     void CMRU::
-AssignMenu(CMenu frameMenu, size_t maxMRU /*= 16*/)                     /*
+AssignMenu(CMenu frameMenu, size_t maxMRU /*= 16*/)                         /*
 
     Register the frame's menu and the maximum number of elements (maxMRU)
     of the MRU list to be shown. This method may be invoked at any time after
@@ -79,7 +79,7 @@ AssignMenu(CMenu frameMenu, size_t maxMRU /*= 16*/)                     /*
 
 /*============================================================================*/
     void CMRU::
-EmptyList()                                                             /*
+EmptyList()                                                                 /*
 
     Remove all entries from the MRU list and  display the default list
     on the MRU menu.
@@ -91,7 +91,7 @@ EmptyList()                                                             /*
 
 /*============================================================================*/
     CString CMRU::
-GetEntry(size_t index)                                                  /*
+GetEntry(size_t index)                                                      /*
 
     Return a MRU CString entry given its index. If the index is not within the
     MRU list bounds, return an empty string.
@@ -105,7 +105,7 @@ GetEntry(size_t index)                                                  /*
 
 /*============================================================================*/
     void CMRU::
-RemoveEntry(LPCTSTR entryName)                                          /*
+RemoveEntry(LPCTSTR entryName)                                              /*
 
     Remove the entryName entry from the MRU list if it is in the list.
 *-----------------------------------------------------------------------------*/
@@ -124,7 +124,7 @@ RemoveEntry(LPCTSTR entryName)                                          /*
 
 /*============================================================================*/
     void CMRU::
-Serialize(CArchive &ar)                                                 /*
+Serialize(CArchive &ar)                                                     /*
 
     Serialize or deserialize the MRU list to from the archive ar, depending
     on the sense of IsStoring(). If the archive has encountered errors at
@@ -167,7 +167,7 @@ Serialize(CArchive &ar)                                                 /*
 
 /*============================================================================*/
     void CMRU::
-UpdateMenu()                                                            /*
+UpdateMenu()                                                                /*
 
     Update the MRU menu with the current Most Recently Used (MRU) list.
     Display the MRU entries in the leftmost submenu of the CFrame's main
@@ -232,7 +232,7 @@ UpdateMenu()                                                            /*
 
 /*============================================================================*/
     void CMRU::
-ValidateMRU()                                                           /*
+ValidateMRU()                                                               /*
 
     Validate the that the MRU list entries, if there are any, correspond
     to actual file paths. Remove any that do not.

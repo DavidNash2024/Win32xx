@@ -8,9 +8,9 @@
     Contents Description: Declaration of the CDoc class for this sample program
     using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
-    and Preparation Subsystem project for C++ programming.
+     Programming Notes: The programming style roughly follows that established
+     got the 1995-1999 Jet Propulsion Laboratory Network Planning and
+     Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -60,7 +60,6 @@ CDoc                                                                        /*
         void        ReadWBytes(Encoding encoding, UINT doclen, UINT offset);
         void        RecordEntry(wchar_t w, CStringW& entry);
 
-        CString     m_compiledOn;           // compilation date, mmm dd yyyy
         CFile       m_file;                 // the document file object
         BOOL        m_isOpen;               // the document status
         UINT        m_width;                // width, in characters

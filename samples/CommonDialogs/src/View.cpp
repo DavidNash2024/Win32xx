@@ -11,9 +11,9 @@
     client background color, selection of edit box font, and use of external
     serialization files.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -31,7 +31,7 @@ CView(UINT id)                                                              /*
 }
 
 /*============================================================================*/
-    BOOL CView:: 
+    BOOL CView::
 AddToolTip(HWND parent, UINT id)                                            /*
 
     Add the string with the resource id to the control whose resource
@@ -42,7 +42,7 @@ AddToolTip(HWND parent, UINT id)                                            /*
 }
 
 /*============================================================================*/
-    BOOL CView:: 
+    BOOL CView::
 AddToolTip(HWND parent, UINT id, LPCTSTR toolTip)                          /*
 
     Add the toolTip string to the control whose resource identifer is
@@ -104,8 +104,8 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
     are passed to the window default procedure for further action.
 **----------------------------------------------------------------------------*/
 {
-	if (WM_CTLCOLORMSGBOX <= msg && msg <= WM_CTLCOLORSTATIC)
-		return OnCtlColor(msg, wparam, lparam);
+    if (WM_CTLCOLORMSGBOX <= msg && msg <= WM_CTLCOLORSTATIC)
+        return OnCtlColor(msg, wparam, lparam);
 
     switch (msg)
     {
@@ -130,7 +130,7 @@ NoDocOpen()                                                                 /*
 }
 
 /*============================================================================*/
-    BOOL CView:: 
+    BOOL CView::
 OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
 
     Respond to the activation of a control on the view.
@@ -152,14 +152,14 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
 }
 
 /*============================================================================*/
-	INT_PTR CView::
-OnCtlColor(UINT msg, WPARAM wparam, LPARAM lparam)				            /*
+    INT_PTR CView::
+OnCtlColor(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
 
-	Normally here we set the foreground and background colors of controls 
-    given their color type identifier msg, their hDC display context 
-    (HDC)wparam, and their handle (HWND)lparam, and then return an HBRUSH 
+    Normally here we set the foreground and background colors of controls
+    given their color type identifier msg, their hDC display context
+    (HDC)wparam, and their handle (HWND)lparam, and then return an HBRUSH
     cast to an INT_PTR for the color to be used to paint the control. However,
-    in this case, only the client background color is set, as the colors of the 
+    in this case, only the client background color is set, as the colors of the
     statusbar and the rich edit control are set elsewhere. See View::
     SetRichEditColors() for the latter process.
 *-----------------------------------------------------------------------------*/
@@ -169,7 +169,7 @@ OnCtlColor(UINT msg, WPARAM wparam, LPARAM lparam)				            /*
       // get the display context
     CDC dcCtl((HDC)wparam);
     switch (nCtlColor)
-    {   
+    {
         case CTLCOLOR_DLG:
             return (UINT_PTR)(HBRUSH)m_bgBrush; // preset by the frame
 
@@ -181,8 +181,8 @@ OnCtlColor(UINT msg, WPARAM wparam, LPARAM lparam)				            /*
         case CTLCOLOR_STATIC:
             break;
     }
-	  // else, not handled here
-	return (INT_PTR)0;
+      // else, not handled here
+    return (INT_PTR)0;
 }
 
 /*============================================================================*/
@@ -212,7 +212,7 @@ OnInitDialog()                                                              /*
 }
 
 /*============================================================================*/
-    LRESULT CView::  
+    LRESULT CView::
 OnNotify(WPARAM wparam, LPARAM lparam)                                      /*
 
     Process messages that controls send to the parent.
@@ -238,7 +238,7 @@ OnPageSetup()                                                               /*
 {
     MyPageSetup PSD(PSD_MARGINS);
     PSD.SetBoxTitle(_T("Page Parameter Setup"));
-    PSD.DoModal(GetParent()); 
+    PSD.DoModal(GetParent());
 
     // TODO: Add code here to set up the printer.  Note: control does not
     // return here until after OnOK() or OnCancel() have concluded.
@@ -273,7 +273,7 @@ SetRichEditColors(COLORREF txfg, COLORREF txbg, COLORREF bg)                /*
 Serialize(CArchive &ar)                                                     /*
 
         Called to serialize or deserialize the view to and from the archive ar,
-        depending on the sense of IsStoring().  
+        depending on the sense of IsStoring().
 *-----------------------------------------------------------------------------*/
 {
       // perform loading or storing

@@ -46,6 +46,10 @@ New Features and Enhancements
    This class implements a COM container which hosts an ActiveX control,
    such as internet explorer. The CWebBrowser class uses CAXHost as a
    COM container for the IWebBrowser2 interface.
+   
+* Updated the manifest file in the samples.
+   The manifest file now provides support for Windows 10 features, and
+   support for Per-Monitor DPI Awareness, version 2.
 
 * Minor updates to the samples
   - The Notepad and PrintPreview samples use OnIdle to update the toolbar.

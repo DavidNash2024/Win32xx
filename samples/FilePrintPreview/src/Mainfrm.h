@@ -5,12 +5,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CMainFrame class for the 
-    FilelPrintPreview program using the Win32++ Windows interface classes. 
+    Contents Description: Declaration of the CMainFrame class for the
+    FilelPrintPreview program using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -32,8 +32,8 @@ CMainFrame : public CFrame                                                  /*
         virtual ~CMainFrame() {}
 
         const CString& GetPath() const  { return m_path;}
-        CRichView& GetRichView()        { return m_richView; }
-        
+        CRichView&  GetRichView()       { return m_richView; }
+
         BOOL    OnDropFiles(HDROP dropInfo);
         BOOL    OnEditCopy();
         BOOL    OnEditCut();
@@ -56,7 +56,7 @@ CMainFrame : public CFrame                                                  /*
 
         void    QuickPrint(CPrintDialog& printDlg);
         BOOL    ReadFile(LPCTSTR path);
-        void    SetPath(LPCTSTR path); 
+        void    SetPath(LPCTSTR path);
         BOOL    WriteFile(LPCTSTR path);
 
     protected:

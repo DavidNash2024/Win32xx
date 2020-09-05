@@ -12,9 +12,9 @@
     classes. This class presents a fixed-size frame whose status bar has no
     resizing  gripper in the lower-right-hand corner.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
     Acknowledgement: The author would like to thank and acknowledge the advice,
     critical review, insight, and assistance provided by David Nash in the

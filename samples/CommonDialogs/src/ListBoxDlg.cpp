@@ -9,9 +9,9 @@
     dialog class for applications using the Win32++ Windows interface
     classes.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -31,21 +31,21 @@ CListBoxDlg()                                                               /*
 }
 
 /*============================================================================*/
-    INT_PTR CListBoxDlg::   
+    INT_PTR CListBoxDlg::
 DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
 
     The list box message loop.
 *-----------------------------------------------------------------------------*/
 {
     switch (msg)
-    {     
+    {
         case WM_COMMAND:
         {
             switch (HIWORD(wparam))
             {
                 case LBN_DBLCLK:
                 {     // select the current color
-                    OnOK(); 
+                    OnOK();
                     break;
                 }
             }
@@ -68,7 +68,7 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
     void CListBoxDlg::
 OnOK()                                                                      /*
 
-    This method executes after the box terminates when the OK button was 
+    This method executes after the box terminates when the OK button was
     activated.
 *-----------------------------------------------------------------------------*/
 {
@@ -81,9 +81,9 @@ OnOK()                                                                      /*
     void CListBoxDlg::
 OnCancel()                                                                  /*
 
-    This method executes after the box terminates and either Cancel or [X] 
-    button on the dialog caption was activated. Since the CDialog::() method 
-    returns the parameter sent in the EndDialog() statement, this member 
+    This method executes after the box terminates and either Cancel or [X]
+    button on the dialog caption was activated. Since the CDialog::() method
+    returns the parameter sent in the EndDialog() statement, this member
     sets that value to INT_MAX so that no unwanted assert(0) occurs.
 *-----------------------------------------------------------------------------*/
 {

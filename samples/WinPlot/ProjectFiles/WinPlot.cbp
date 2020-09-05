@@ -246,8 +246,6 @@
 		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/Calc.cpp" />
 		<Unit filename="../src/Calc.h" />
-		<Unit filename="../src/Doc.cpp" />
-		<Unit filename="../src/Doc.h" />
 		<Unit filename="../src/FrameApp.cpp" />
 		<Unit filename="../src/FrameApp.h" />
 		<Unit filename="../src/InputDlg.cpp" />

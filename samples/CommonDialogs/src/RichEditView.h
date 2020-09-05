@@ -7,13 +7,13 @@
 
     Contents Description: Declaration of the CRichEditView class for the
     CommonDialogs sample application using the Win32++ Windows interface
-    classes. This class serves as both the view object as well as the 
+    classes. This class serves as both the view object as well as the
     document repository and manager. In similarity to Microsoft Foundation
     Classes (MFC) architecture it also contains the print loop.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 

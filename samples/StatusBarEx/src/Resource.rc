@@ -2,16 +2,12 @@
 ********************************************************************************
 
     Contents Description: Definition of the resource set for a sample
-    program demonstrating  custom status bar within the Win32++ Windows 
+    program demonstrating  custom status bar within the Win32++ Windows
     framework.
-
-    Programming Notes: The programming conventions used here roughly follow 
-    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space 
-    Network Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
-    Microsoft Visual C++ generated resource script.
+    Microsoft Visual C++ generated resource script (originally).
 
 *-----------------------------------------------------------------------------*/
 
@@ -20,20 +16,18 @@
 
 /*============================================================================*/
 
-// English (United States) resources
+  // English (United States) resources
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
-/*=============================================================================*
+/*============================================================================*/
 
-    RT_MANIFEST                                                             */
-
+  //  RT_MANIFEST
 1   RT_MANIFEST                         "../src/res/Win32++.manifest"
 
-/*=============================================================================*
+/*============================================================================*/
 
-    Main Menu                                                               */
-
+  // Main Menu
 IDW_MAIN MENU
 {
     POPUP "&File"
@@ -68,25 +62,22 @@ IDW_MAIN MENU
     }
 }
 
-/*=============================================================================*
-* 
-    Icons: The Icon with lowest ID value placed first to ensure application 
-    icon remains consistent on all systems.                                 */
+/*============================================================================*/
 
+  // Icons: The Icon with lowest ID value placed first to ensure application
+  // icon remains consistent on all systems.
 IDW_MAIN                ICON                    "../src/res/Win32xx.ico"
 
-/*=============================================================================*
+/*============================================================================*/
 
-    Bitmaps                                                                 */
-
+  // Bitmaps
 IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
 
-/*=============================================================================*
+/*============================================================================*/
 
-    About Dialog                                                            */
-
+  // About Dialog
 IDW_ABOUT DIALOGEX 0, 0, 200, 100
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
     WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
@@ -96,10 +87,9 @@ FONT 8, "MS Shell Dlg", 400, 0
     ICON            IDW_MAIN, 0, 5, 5, 20, 20
 }
 
-/*=============================================================================*
+/*============================================================================*/
 
-    Accelerator Table                                                       */
-
+  // Accelerators
 IDW_MAIN ACCELERATORS
 {
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
@@ -113,10 +103,9 @@ IDW_MAIN ACCELERATORS
     "Y",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, NOINVERT
 }
 
-/*=============================================================================*
+/*=============================================================================*/
 
-    String Tables                                                           */
-
+  //String Tables
 STRINGTABLE
 {
     IDW_MAIN                "StatusBarEx Demo"

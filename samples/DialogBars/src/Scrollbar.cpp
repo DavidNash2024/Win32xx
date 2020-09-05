@@ -17,7 +17,7 @@ CMyScrollBar::CMyScrollBar()
 }
 
 // Returns the current scroll bar position.
-int CMyScrollBar::GetPos(WPARAM wparam)                       
+int CMyScrollBar::GetPos(WPARAM wparam)
 {
     GetScrollInfo(m_si);
 

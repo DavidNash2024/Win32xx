@@ -1,14 +1,13 @@
 /* [Tab/Indent: 8/8][Line/Box: 80/74]                                (App.cpp) *
 ********************************************************************************
 
-    Contents Description: Implementation of the Windows interface andCApp 
-    class for a sample program demonstrating the use of a custom status bar 
+    Contents Description: Implementation of the Windows interface andCApp
+    class for a sample program demonstrating the use of a custom status bar
     within the Win32++ Windows framework.
 
-    Programming Notes: The programming conventions used here roughly follow 
-    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space 
-    Network Planning and Preparation Subsystem project for C++ programming.
-        C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -20,7 +19,7 @@
     Implementation of the Windows execution interface
 
 *=============================================================================*/
-    int APIENTRY 
+    int APIENTRY
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
 
     This function is called by the system as the initial entry point for
@@ -43,7 +42,6 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
     {
           // Display the exception and quit
         MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
         return -1;
     }
 }
@@ -52,7 +50,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
 
     Implementation of the CApp class
 
-/*============================================================================*/
+*=============================================================================*/
     BOOL CApp::
 InitInstance()                                                              /*
 
@@ -66,7 +64,7 @@ InitInstance()                                                              /*
     }
     catch (...)
     {     // We get here if the Frame creation fails
-        ::MessageBox(NULL, _T("Failed to create Frame window"), 
+        ::MessageBox(NULL, _T("Failed to create Frame window"),
             _T("ERROR"), MB_ICONERROR);
     }
     return FALSE; // returning FALSE ends the application

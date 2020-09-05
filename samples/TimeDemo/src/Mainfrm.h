@@ -9,9 +9,9 @@
     application using the Win32++ framework, Copyright (c) 2005-2020 David Nash,
     under permissions granted therein.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -39,15 +39,15 @@ CMainFrame : public CFrame                      /*
                     CMainFrame();
         virtual     ~CMainFrame(){}
 
-        void            SetAppName(const CString& appName)
-                                        { m_appName = appName; }
-        void            SetArcFileName(const CString& arcName)
-                                        { m_arcName = arcName; }
-        void            SetWindowTitle(const CString &title = _T(""));
-        CView&          TheView()       {return m_view;}
-        CDoc&           ThisDoc()       {return m_view.TheDoc();}
-        CMRU&           TheMRU()        {return m_MRU;};
-        AboutBox&       GetAboutBox()   { return m_aboutDialog; }
+        void        SetAppName(const CString& appName)
+                                    { m_appName = appName; }
+        void        SetArcFileName(const CString& arcName)
+                                    { m_arcName = arcName; }
+        void        SetWindowTitle(const CString &title = _T(""));
+        CView&      TheView()       {return m_view;}
+        CDoc&       ThisDoc()       {return m_view.TheDoc();}
+        CMRU&       TheMRU()        {return m_MRU;};
+        AboutBox&   GetAboutBox()   { return m_aboutDialog; }
 
         static const CString m_compiledOn; // compilation date
 

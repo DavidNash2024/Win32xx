@@ -102,8 +102,8 @@ void CSplash::OnDraw(CDC& dc)
 // Sets the CREATESTRUCT struct prior to window creation.
 void CSplash::PreCreate(CREATESTRUCT& cs)
 {
-    cs.style = WS_CLIPCHILDREN | WS_POPUP;  // Initially hidden
-    cs.dwExStyle = WS_EX_TOPMOST;
+    cs.style = WS_CLIPCHILDREN | WS_POPUP;           // Initially hidden
+    cs.dwExStyle = WS_EX_TOPMOST | WS_EX_TOOLWINDOW; // Topmost and hidden from taskbar
 
     cs.cx = 256;
     cs.cy = 256;

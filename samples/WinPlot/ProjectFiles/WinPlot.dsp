@@ -91,11 +91,15 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\src\Doc.cpp
+SOURCE=..\src\Calc.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\FrameApp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\InputDlg.cpp
 # End Source File
 # Begin Source File
 
@@ -107,19 +111,11 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\StdAfx.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\Calc.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\InputDlg.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\Node.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
 
@@ -136,10 +132,6 @@ SOURCE=..\src\View.cpp
 # Begin Source File
 
 SOURCE=..\src\Calc.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\Doc.h
 # End Source File
 # Begin Source File
 

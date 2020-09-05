@@ -36,10 +36,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     switch(id)
     {
     case IDM_EDIT_FUNCTION:     return OnEditFunction();
-    case IDM_FILE_OPEN:         return OnFileOpen();
-    case IDM_FILE_SAVE:         return OnFileSave();
-    case IDM_FILE_SAVEAS:       return OnFileSave();
-    case IDM_FILE_PRINT:        return OnFilePrint();
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
@@ -100,85 +96,6 @@ void CMainFrame::OnInitialUpdate()
 
     OnEditFunction();
     TRACE("Frame created\n");
-}
-
-BOOL CMainFrame::OnFileOpen()
-{
-    CFileDialog fileDlg(TRUE);
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        GetDoc().FileLoad(fileDlg.GetPathName());
-    }
-
-    return TRUE;
-}
-
-BOOL CMainFrame::OnFileSave()
-{
-    CFileDialog fileDlg(FALSE);
-
-    // Bring up the file save dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        GetDoc().FileStore(fileDlg.GetPathName());
-    }
-
-    return TRUE;
-}
-
-BOOL CMainFrame::OnFilePrint()
-{
-    // Bring up a dialog to choose the printer
-    CPrintDialog printdlg;
-
-    try
-    {
-        INT_PTR result = printdlg.DoModal(*this);
-
-        // Retrieve the printer DC
-        // CDC dcPrinter = printdlg.GetPrinterDC();
-
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-
-        return (result == IDOK);   // boolean expression
-    }
-
-    catch (const CException& /* e */)
-    {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-        return FALSE;
-    }
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-    // Process notification messages sent by child windows
-//  switch(((LPNMHDR)lparam)->code)
-//  {
-//      Add case statements for each notification message here
-//  }
-
-    // Some notifications should return a value when handled
-    return CFrame::OnNotify(wparam, lparam);
-}
-
-void CMainFrame::PreCreate(CREATESTRUCT& cs)
-{
-    // This function is called before the frame is created.
-    // It provides an opportunity to modify the various CREATESTRUCT
-    // parameters used in the frame window's creation.
-
-    // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
-    // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
-
-    // Call base clase to set defaults
-    CFrame::PreCreate(cs);
-
-    // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
 
 void CMainFrame::SetupToolBar()

@@ -185,10 +185,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Doc.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\FrameApp.cpp"
 				>
 			</File>
@@ -244,10 +240,6 @@
 			>
 			<File
 				RelativePath="..\src\Calc.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Doc.h"
 				>
 			</File>
 			<File

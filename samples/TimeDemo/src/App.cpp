@@ -8,9 +8,9 @@
     Contents Description:  The WinMain() function and  CApp Class implementation
     for this application using the Win32++ framework.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -26,10 +26,12 @@ const CString CApp::m_compiledOn = __DATE__;
 
 *=============================================================================*/
     int APIENTRY
-WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                /*
+WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
 
-    Application entry point. None of the entry parameters are used and
-    are therefore omitted above.
+    This function is called by the system as the initial entry point for
+    a WinApi-based application. None of the passed parameters are used by
+    this application, and are thus not named in the calling sequence above
+    in order to suppress compiler messages.
 *-----------------------------------------------------------------------------*/
 {
       // semaphore name, instances, and  handle: make sure the name is
@@ -91,7 +93,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                /*
 
 *=============================================================================*/
     CApp::
-CApp()                                                                  /*
+CApp()                                                                      /*
 
     Default constructor.
 *-----------------------------------------------------------------------------*/
@@ -120,7 +122,7 @@ CApp()                                                                  /*
 
 /*============================================================================*/
     BOOL CApp::
-InitInstance()                                                          /*
+InitInstance()                                                              /*
 
     This method is immediately called from the Run() method above to
     create the frame, perform initialization of the app, and  return
@@ -166,10 +168,10 @@ InitInstance()                                                          /*
 
 /*============================================================================*/
     ULONG CApp::
-DatInt(const CString &date)                                             /*
+DatInt(const CString &date)                                                 /*
 
-    Convert the date, of form mmm dd yyyy, to a long integer of the form
-    0xyyyymodd, where mmm is character based month, and  mo is 0 (Jan) to
+    Convert the date, of form mmm dd yyyy, to a ULONG integer of the form
+    yyyymodd, where mmm is character based month, and  mo is 0 (Jan) to
     11 (Dec).
 *-----------------------------------------------------------------------------*/
 {
@@ -182,9 +184,9 @@ DatInt(const CString &date)                                             /*
 
 /*============================================================================*/
     CString CApp::
-IntDat(ULONG hexdate)                                                   /*
+IntDat(ULONG hexdate)                                                       /*
 
-    Convert the hex date, of form 0xyyyymodd, to a CString date of the form
+    Convert the ULONG date, of form yyyymodd, to a CString date of the form
     mmm dd yyyy,  where mmm is character based month, and  mo is 0 (Jan) to
     11 (Dec).
 *-----------------------------------------------------------------------------*/

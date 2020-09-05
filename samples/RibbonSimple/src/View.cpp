@@ -59,7 +59,7 @@ void CView::OnDraw(CDC& dc)
     // Centre some text in our view window
     CRect r = GetClientRect();
     r.top += GetRibbonHeight();
-    dc.DrawText(_T("Simple Ribon Demo"), -1, r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    dc.DrawText(L"Simple Ribon Demo", -1, r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnInitialUpdate()
@@ -87,7 +87,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 
     // Set some optional parameters for the window
     cs.dwExStyle = WS_EX_CLIENTEDGE;        // Extended style
-    cs.lpszClass = _T("View Window");       // Window Class
+    cs.lpszClass = L"View Window";       // Window Class
     cs.x = 50;                              // top x
     cs.y = 50;                              // top y
     cs.cx = 400;                            // width
