@@ -21,7 +21,7 @@ CMainFrame::CMainFrame()
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\Ribbon Frame"));
+    LoadRegistrySettings(L"Win32++\\Ribbon Frame");
 
     // Load the settings from the registry with 4 MRU entries
     LoadRegistryMRUSettings(4);
@@ -60,7 +60,7 @@ STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROP
         default:
             {
                 CString str;
-                str.Format(_T("Unknown Button %d\n"),cmdID);
+                str.Format(L"Unknown Button %d\n",cmdID);
                 TRACE(str);
             }
             break;
@@ -177,15 +177,15 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
         AddMRUEntry(fileName);
     }
     else
-        m_pathName=_T("");
+        m_pathName=L"";
 
     GetView().Invalidate();
 }
 
 void CMainFrame::OnFileOpen()
 {
-    CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    fileDlg.SetTitle(_T("Open File"));
+    CFileDialog fileDlg(TRUE, L"dat", 0, OFN_FILEMUSTEXIST, L"Scribble Files (*.dat)\0*.dat\0\0");
+    fileDlg.SetTitle(L"Open File");
 
     // Bring up the file open dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)
@@ -198,13 +198,13 @@ void CMainFrame::OnFileOpen()
 void CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
-    m_pathName = _T("");
+    m_pathName = L"";
     GetView().Invalidate();
 }
 
 void CMainFrame::OnFileSave()
 {
-    if (m_pathName == _T(""))
+    if (m_pathName == L"")
         OnFileSaveAs();
     else
         GetDoc().FileSave(m_pathName);
@@ -212,8 +212,8 @@ void CMainFrame::OnFileSave()
 
 void CMainFrame::OnFileSaveAs()
 {
-    CFileDialog fileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    fileDlg.SetTitle(_T("Save File"));
+    CFileDialog fileDlg(FALSE, L"dat", 0, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
+    fileDlg.SetTitle(L"Save File");
 
     // Bring up the file open dialog retrieve the selected filename
     if (fileDlg.DoModal(*this) == IDOK)
@@ -257,7 +257,7 @@ void CMainFrame::OnFilePrint()
             DOCINFO di;
             memset(&di, 0, sizeof(DOCINFO));
             di.cbSize = sizeof(DOCINFO);
-            di.lpszDocName = _T("Scribble Printout");
+            di.lpszDocName = L"Scribble Printout";
             di.lpszOutput = static_cast<LPTSTR>(NULL);
             di.lpszDatatype = static_cast<LPTSTR>(NULL);
             di.fwType = 0;
@@ -265,11 +265,11 @@ void CMainFrame::OnFilePrint()
             // Begin a print job by calling the StartDoc function.
             CDC printDC = printDlg.GetPrinterDC();
             if (SP_ERROR == StartDoc(printDC, &di))
-                throw CUserException(_T("Failed to start print job"));
+                throw CUserException(L"Failed to start print job");
 
             // Inform the driver that the application is about to begin sending data.
             if (0 > StartPage(printDC))
-                throw CUserException(_T("StartPage failed"));
+                throw CUserException(L"StartPage failed");
 
             BITMAPINFOHEADER bi;
             ZeroMemory(&bi, sizeof(bi));
@@ -305,16 +305,16 @@ void CMainFrame::OnFilePrint()
                                         pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY);
             if (GDI_ERROR == result)
             {
-                throw CUserException(_T("Failed to resize image for printing"));
+                throw CUserException(L"Failed to resize image for printing");
             }
 
             // Inform the driver that the page is finished.
             if (0 > EndPage(printDC))
-                throw CUserException(_T("EndPage failed"));
+                throw CUserException(L"EndPage failed");
 
             // Inform the driver that document has ended.
             if (0 > EndDoc(printDC))
-                throw CUserException(_T("EndDoc failed"));
+                throw CUserException(L"EndDoc failed");
         }
     }
 

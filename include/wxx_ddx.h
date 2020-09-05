@@ -286,11 +286,11 @@ namespace Win32xx
                                 + _T("in control ID ") + id + _T(" \n");
                 TRACE(str);
 
-                return;     // continue on
+                return;
             }
         }
 
-          // set the given DateTime range
+        // Set the given DateTime range
         SYSTEMTIME sta[2];
         sta[0] = minRange;
         sta[1] = maxRange;
@@ -310,13 +310,13 @@ namespace Win32xx
 
         if (!m_retrieveAndValidate)
         {
-            // just leave a debugging trace if writing to a control
+            // Just leave a debugging trace if writing to a control
             TRACE(_T("Warning: control data is out of range.\n"));
             return; // don't throw
         }
 
-        // when reading a number outside the range, put out an error
-        // message with the range tuple
+        // Throw includes an error message with the range tuple when
+        // reading a number outside the range.
         CString message;
         message.Format(g_msgDDV_RealRange, precision, minVal, precision, maxVal);
 
@@ -357,8 +357,8 @@ namespace Win32xx
             return;     // don't stop
         }
 
-        // when reading a number outside the range, put out an error
-        // message with the range tuple
+        // Throw includes an error message with the range tuple when
+        // reading a number outside the range.
         CString message;
         message.Format(g_msgDDV_IntRange, minVal, maxVal);
 
@@ -464,8 +464,8 @@ namespace Win32xx
             return;     // don't stop
         }
 
-        // when reading a number outside the range, put out an error
-        // message with the range tuple
+        // Throw includes an error message with the range tuple when
+        // reading a number outside the range.
         CString message;
         message.Format(g_msgDDV_UINTRange, minVal, maxVal);
 
@@ -538,13 +538,13 @@ namespace Win32xx
             int nLen = ::GetWindowTextLength(control);
             if (nLen > 0)
             {
-                // get the known length
+                // Get the known length.
                 ::GetWindowText(control, value.GetBuffer(nLen), nLen + 1);
             }
             else
             {
-                // for drop lists GetWindowTextLength does not work
-                // so here assume max of 255 characters
+                // GetWindowTextLength does not work for drop lists 
+                // so here assume max of 255 characters.
                 const int maxLen = 255;
                 ::GetWindowText(control, value.GetBuffer(maxLen), maxLen + 1);
             }
@@ -552,11 +552,11 @@ namespace Win32xx
         }
         else
         {
-            // set the current selection based on value string
+            // Set the current selection based on value string.
             if (::SendMessage(control, CB_SELECTSTRING, (WPARAM)-1,
                 (LPARAM)value.c_str()) == CB_ERR)
             {
-                // value was not found, so just set the edit text
+                // Value was not found, so just set the edit text.
                 // (this will be ignored if the control is a DROPDOWNLIST)
                 ::SetWindowText(control, value);
             }
@@ -669,11 +669,11 @@ namespace Win32xx
         HWND control = PrepareCtrl(id);
         if (m_retrieveAndValidate)
         {
-             // find the index of the item selected in the list box
+             // Find the index of the item selected in the list box.
             int index = static_cast<int>(::SendMessage(control, LB_GETCURSEL, 0, 0));
             if (index != -1)
             {
-                // if text was selected, read it into the CString
+                // Read selected text into the CString.
                 int nLen = static_cast<int>(::SendMessage(control, LB_GETTEXTLEN, (WPARAM)index, 0));
                 ::SendMessage(control, LB_GETTEXT, (WPARAM)index, (LPARAM)value.GetBuffer(nLen));
 
@@ -681,7 +681,7 @@ namespace Win32xx
             }
             else
             {
-                // no selection, do nothing
+                // No text selected.
                 value.Empty();
             }
         }
@@ -715,20 +715,20 @@ namespace Win32xx
         HWND control = PrepareCtrl(id);
         if (m_retrieveAndValidate)
         {
-            // read and return the CString value
+            // Read and return the CString value
             DDX_LBString(id, value);
         }
         else if (!value.IsEmpty())
         {
-            // find the first entry that matches the entire value,
+            // Find the first entry that matches the entire value,
             // in a case insensitive search, perhaps in sorted order,
-            // if the box has that style
+            // if the box has that style.
             int index = static_cast<int>(::SendMessage(control, LB_FINDSTRINGEXACT,
                 (WPARAM)-1, (LPARAM)value.c_str()));
 
             if (index < 0)
             {
-                // no match found
+                // No match found.
                 CString str = (_T("Warning: listbox item was not found:  ")) + value + _T( "\n");
                 TRACE(str);
             }
@@ -790,11 +790,11 @@ namespace Win32xx
     {
         HWND control = PrepareCtrl(id);
 
-        // assure that the control is a radio button and part of a group
+        // Assure that the control is a radio button and part of a group.
         BOOL firstInGroup = ::GetWindowLongPtr(control, GWL_STYLE) & WS_GROUP;
         assert(firstInGroup);
 
-        // assure the button is a radio button
+        // Assure the button is a radio button.
         BOOL isRadioButton = ::GetWindowLongPtr(control, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON);
         assert(isRadioButton);
 
@@ -832,7 +832,7 @@ namespace Win32xx
                 TRACE(_T("a radio button group.\n"));
             }
 
-            // check the next window in the group, if any
+            // Check the next window in the group, if any.
             control = ::GetWindow(control, GW_HWNDNEXT);
             if (control)
             {

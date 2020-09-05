@@ -5,12 +5,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration of the CApp class for the FilePrintPreview 
-    program using the Win32++ Windows interface classes. 
+    Contents Description: Declaration of the CApp class for the FilePrintPreview
+    program using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -43,11 +43,11 @@ TheApp()                                                                    /*
     Return a reference to the CApp object.
 *-----------------------------------------------------------------------------*/
 {
-    return static_cast<CApp*>(GetApp()); 
+    return static_cast<CApp*>(GetApp());
 }
 
 /*============================================================================*/
-    inline CMainFrame& 
+    inline CMainFrame&
 GetFrame()                                                      /*
 
     Return a reference to the CMainFrame object.
@@ -57,7 +57,7 @@ GetFrame()                                                      /*
 }
 
 /*============================================================================*/
-    inline CRichView& 
+    inline CRichView&
 GetRichView()                                                       /*
 
     Return a reference to the rich view object being previewed.
@@ -66,4 +66,4 @@ GetRichView()                                                       /*
     return GetFrame().GetRichView();
 }
 /*----------------------------------------------------------------------------*/
-#endif // THE_APP_H 
+#endif // THE_APP_H

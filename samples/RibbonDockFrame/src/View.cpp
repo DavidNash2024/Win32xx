@@ -127,7 +127,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     if ( (wparam & MK_LBUTTON) && (GetCapture() == *this) )
     {
         CString str;
-        str.Format( _T("Draw Point:  %hd, %hd\n"), GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) );
+        str.Format( L"Draw Point:  %hd, %hd\n", GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) );
         TRACE(str);
 
         DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
@@ -147,7 +147,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Set the background brush, class name and cursor
     wc.hbrBackground = m_brush;
-    wc.lpszClassName = _T("Scribble Window");
+    wc.lpszClassName = L"Scribble Window";
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 

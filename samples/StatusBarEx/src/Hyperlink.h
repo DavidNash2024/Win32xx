@@ -2,12 +2,12 @@
 ********************************************************************************
 
     Contents Description: Declaration of the CHyperlink class for a sample
-    program demonstrating the use of the status bar within the Win32++ 
+    program demonstrating the use of the status bar within the Win32++
     Windows framework.
 
-    Programming Notes: The programming conventions used here roughly follow 
-    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space 
-    Network Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -21,14 +21,14 @@
   // the hyperlink text visited/unvisited and background gradient colors
 const COLORREF
         hyTextColor[2]  = {RGB(128,   0, 128), RGB(  0,   0, 255)},
-        hyBkgrColor     =  RGB(125, 230, 255); 
+        hyBkgrColor     =  RGB(125, 230, 255);
 
 /*============================================================================*/
-    class 
+    class
 CHyperlink :    public CStatic                                              /*
 
-    Create a window that behaves like a hyperlink. Display a hand cursor when 
-    the mouse hovers over the text. Launch a browser and the Win32++ SourceForge 
+    Create a window that behaves like a hyperlink. Display a hand cursor when
+    the mouse hovers over the text. Launch a browser and the Win32++ SourceForge
     page when the text is clicked. Adjust the text color.
 *-----------------------------------------------------------------------------*/
 {

@@ -50,7 +50,7 @@ namespace Calc
         delete m_pTree; //deletes all nodes created
     }
 
-    // Loads the calculator buffer, and checks for correct syntax. 
+    // Loads the calculator buffer, and checks for correct syntax.
     // Use Get_Status() to verify the expression syntax.
     void Calculator::Input(const CString& buffer)
     {
@@ -131,15 +131,15 @@ namespace Calc
     }
 
     // Builds the expresssion from branch nodes which are multiplied or divided.
-    //x/y/z  is evaluated as (x / y)/z
+    // x/y/z  is evaluated as (x / y)/z
     Node* Calculator::Product()
     {
-        //x/y/z  is evaluated as (x / y)/z
+        // x/y/z  is evaluated as (x / y)/z
         Node* pnode = Power();
         eToken Token = m_parse.GetToken();
         if (Token == tMultiply || Token == tDivide)
         {
-            //Create a BranchNode to hold one or more powers
+            // Create a BranchNode to hold one or more powers
             // {Power} */ {Power} */ {Power} ...
             // Powers can be:  Units or Powers
             Node_Branch * pBranchNode = new Node_Branch(pnode);
@@ -163,7 +163,7 @@ namespace Calc
         eToken Token = m_parse.GetToken();
         if (Token == tPower)
         {
-            //Create a BranchNode to hold one or more units
+            // Create a BranchNode to hold one or more units
             // {Unit} ^ {Unit} ^ {Unit} ...
             Node_Branch * pBranchNode = new Node_Branch(pnode);
             do
@@ -186,14 +186,14 @@ namespace Calc
 
         switch (Token)
         {
-        case tNumber:   //number
+        case tNumber:    // number
             if (m_parse.AcceptToken())
             {
                 pnode = new Node_Number(m_parse.GetNumber());
             }
             else m_status = st_ERROR;
             break;
-        case tMinus:    //unary Minus
+        case tMinus:     // unary Minus
             m_parse.AcceptToken();
             if (m_parse.GetToken() == tNumber)
             {
@@ -205,11 +205,11 @@ namespace Calc
                 m_status = st_ERROR;
             }
             break;
-        case tLeftParenth://an expression within parenthesis
+        case tLeftParenth: // An expression within parenthesis
             m_parse.AcceptToken();
             pnode = Expression();
 
-            //Expression began with '(' so must end with ')'
+            // Expression began with '(' so must end with ')'
             if (m_parse.GetToken() == tRightParenth)
                 m_parse.AcceptToken();
             else
@@ -220,7 +220,7 @@ namespace Calc
             m_parse.AcceptToken();
             if (!m_symTab.IsSymbol(m_parse.GetAlphaName()))
             {
-                //Add new variable to symbol table
+                // Add new variable to symbol table
                 m_symTab.SetValue(m_parse.GetAlphaName(), 0);
             }
 
@@ -242,22 +242,22 @@ namespace Calc
             {
                 FunctionTable funTab;
                 CString FunctionName = m_parse.GetAlphaName();
-                PFun pFun = funTab.GetFun(FunctionName);  //pointer to the function
+                PFun pFun = funTab.GetFun(FunctionName);  // pointer to the function
                 if (pFun != NULL)
                 {
                     m_parse.AcceptToken();
 
-                    //Create node tree for expression between parenthesis
+                    // Create node tree for expression between parenthesis.
                     Node* pnodeTree = Expression();
 
                     if (m_status != st_ERROR)
                         pnode = new Node_Function(FunctionName, pnodeTree);
 
-                    //normally the destructor for Node_Function does this but
-                    //we need to do it manually if a Node_Function isn't created
+                    // Normally the destructor for Node_Function does this but
+                    // we need to do it manually if a Node_Function isn't created.
                     else delete pnodeTree;
 
-                    //Expression began with '(' so must end with ')'
+                    // Expression began with '(' so must end with ')'
                     if (m_parse.GetToken() == tRightParenth) m_parse.AcceptToken();
                     else m_status = st_ERROR;
                 }
@@ -269,7 +269,7 @@ namespace Calc
             m_status = st_ERROR;
             break;
         }
-        //clean up any mess before returning the pnode
+        // Clean up any mess before returning the pnode.
         if (m_status == st_ERROR)
         {
             delete pnode;
@@ -291,7 +291,7 @@ namespace Calc
         double inf = HUGE_VAL;       //Infinity
         double neg_inf = -HUGE_VAL;  //Negative Infinity
 
-        // if value is "Not A Number" (ie NaN) then (value != value)
+        // Return true when value is "Not A Number" (NaN).
         // examples of NaN are:  0/0,  sqrt(-1), infinity/infinity
         if ((value == inf) || (value == neg_inf) || (value != value))
             return true;
@@ -322,11 +322,11 @@ namespace Calc
         int Index = m_index;
         LPCTSTR charArray = m_buffer.c_str();
 
-        //Move past white space
+        // Move past white space
         while (isspace(charArray[Index]))
             Index++;
 
-        //Check the next char
+        // Check the next char
         switch (charArray[Index])
         {
         case '+':
@@ -370,7 +370,7 @@ namespace Calc
                     m_alphaName += charArray[TempIndex++];
                 } while (isalnum(charArray[TempIndex]));
 
-                //AlphaName could be either a function or a variable
+                // AlphaName could be either a function or a variable.
                 FunctionTable funTab;
                 if (funTab.IsFunction(m_alphaName)) Token = tFunction;
                 else Token = tVariable;
@@ -390,7 +390,7 @@ namespace Calc
         bool bRet = true;
         eToken Token = GetToken();
 
-        //Move past white space
+        // Move past white space
         while (isspace(m_buffer[m_index]))
             m_index++;
 
@@ -403,12 +403,12 @@ namespace Calc
             double value = _tcstod(charArray + m_index, &p);
             if (p != charArray)
             {
-                m_index = p - charArray;
+                m_index = static_cast<int>(p - charArray);
                 m_number = value;
             }
             else
             {
-                //a valid number could not be formed
+                // A valid number could not be formed
                 bRet = false;
                 m_index++;
             }

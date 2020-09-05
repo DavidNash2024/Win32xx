@@ -17,20 +17,13 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CDoc& GetDoc()      { return m_view.GetDoc(); }
-
     BOOL    OnEditFunction();
     BOOL    OnFileExit();
-    BOOL    OnFileOpen();
-    BOOL    OnFilePrint();
-    BOOL    OnFileSave();
 
 protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
     virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

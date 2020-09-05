@@ -8,9 +8,9 @@
     Contents Description: Declaration of the CMainFrame class for this sample
     program using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
-    and Preparation Subsystem project for C++ programming.
+     Programming Notes: The programming style roughly follows that established
+     got the 1995-1999 Jet Propulsion Laboratory Network Planning and
+     Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -56,7 +56,7 @@ CMainFrame : public CFrame                                                  /*
         BOOL        OnHelp();
         void        OnInitialUpdate()
                         { GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING,
-                           MF_UNCHECKED); }
+                            MF_UNCHECKED); }
         BOOL        OnProcessMRU(WPARAM wparam, LPARAM lparam);
         void        PreCreate(CREATESTRUCT& cs);
         void        Serialize(CArchive& ar);
@@ -66,7 +66,6 @@ CMainFrame : public CFrame                                                  /*
     private:
           // private data members
          CString    m_arcvPath;       // archived data path
-         CString    m_compiledOn;     // compilation date, mmm dd yyyy
          CView      m_view;           // the view
          UINT       m_xWin;           // deserialized window x position
          UINT       m_yWin;           // deserialized window y position

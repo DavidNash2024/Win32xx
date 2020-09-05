@@ -50,14 +50,14 @@ BOOL CD2DApp::InitInstance()
         if (SUCCEEDED(hr))
         {
             m_view.Create();    // Throws a CWinException on failure.
-            m_view.SetWindowText(_T("Direct2D Demo"));
+            m_view.SetWindowText(L"Direct2D Demo");
             return TRUE;
         }
         else
-            ::MessageBox(0, _T("Failed to start DirectX"), _T("Error"), MB_OK);
+            ::MessageBox(0, L"Failed to start DirectX", L"Error", MB_OK);
     }
     else
-        ::MessageBox(0, _T("Failed to initialize COM"), _T("Error"), MB_OK);
+        ::MessageBox(0, L"Failed to initialize COM", L"Error", MB_OK);
 
     return FALSE;
 }

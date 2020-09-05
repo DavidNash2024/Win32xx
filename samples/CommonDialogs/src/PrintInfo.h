@@ -6,13 +6,13 @@
 ===============================================================================*
 
     Contents Description: Declaration of the CPrintInfo class for
-    applications using the Win32++ Windows interface classes. This class is 
+    applications using the Win32++ Windows interface classes. This class is
     similar to that bearing the same name in the Microsoft Foundation Classes
     (MFC), with noted exceptions.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -23,15 +23,15 @@
     class
 CPrintInfo                                                              /*
 
-    This class encapsulates the services provided by the Windows common dialog 
+    This class encapsulates the services provided by the Windows common dialog
     box for printing. It emulates and largely uses the same notation as its
     MFC counterpart.
 *-----------------------------------------------------------------------------*/
 {
     public:
             CPrintInfo();
-            ~CPrintInfo();
-            
+            ~CPrintInfo() {}
+
         UINT    GetFromPage() const { return m_nFromPage;}
         UINT    GetMaxPage() const  { return m_nMaxPage; }
         UINT    GetMinPage() const  { return m_nMinPage; }
@@ -59,8 +59,8 @@ CPrintInfo                                                              /*
         UINT    m_nToPage;      // last printed page
         UINT    m_nCurPage;     // current page
         UINT    m_nNumPreviewPages; // (not supported)
-        LPVOID  m_lpUserData;   // pointer to user created struct       
-        CRect   m_rectDraw;     // rect of current usable page area     
+        LPVOID  m_lpUserData;   // pointer to user created struct
+        CRect   m_rectDraw;     // rect of current usable page area
         CString m_strPageDesc;  // format string for page number display
         UINT    m_nMargin;      // page margin, in twips
 

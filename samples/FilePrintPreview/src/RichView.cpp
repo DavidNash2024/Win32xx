@@ -5,12 +5,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of the CRichView class using the 
-    Win32++ Windows interface classes. 
+    Contents Description: Implementation of the CRichView class using the
+    Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -66,7 +66,7 @@ GetPageBreaks(CDC& dcPrinter)                                               /*
 {
       // Get the device context of the default or currently chosen printer
     dcPrinter.SetMapMode(MM_TEXT);
-      // set up printer to receive pages: specific accommodation of the 
+      // set up printer to receive pages: specific accommodation of the
       // Rich Edit document
     FORMATRANGE fr;
     fr.hdcTarget  = dcPrinter;  // format for this
@@ -160,22 +160,22 @@ PrintPages(CPrintDialog& printDlg)                                          /*
     di.lpszOutput  = NULL;      // NULL here means output to fr.hdc
     dcPrinter.StartDoc(&di);    // start the printing
       // get the length of document to print
-    LONG textLength = GetTextLengthEx(GTL_NUMCHARS); 
+    LONG textLength = GetTextLengthEx(GTL_NUMCHARS);
     LONG textPrinted;  // amount of document printed so far
     do
     {
           // start at the first page
         dcPrinter.StartPage();
-          // Print as much text as will fit on a page. The return 
+          // Print as much text as will fit on a page. The return
           // value is the index of the first character on the next
-          // page.  Using TRUE for the wparam parameter causes the 
+          // page.  Using TRUE for the wparam parameter causes the
           // text to be  printed.
         textPrinted = FormatRange(fr, TRUE);
         DisplayBand(fr.rc);
           // indicate printing this page is complete
         dcPrinter.EndPage();
-          // If there is more text to print, adjust the range of 
-          // characters for StartPage() to begin printing at the first 
+          // If there is more text to print, adjust the range of
+          // characters for StartPage() to begin printing at the first
           // character of the next page, for the length default of
           // characters.
         if (textPrinted < textLength)
@@ -220,7 +220,7 @@ ReadFile(LPCTSTR filePath)                                                  /*
     }
     return TRUE;
 }
-    
+
 /*============================================================================*/
     void CRichView::
 SetFontDefaults()                                                           /*
@@ -232,7 +232,7 @@ SetFontDefaults()                                                           /*
       //Set font
     if (m_font.GetHandle() == 0)
         m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET,
-            OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, 
+            OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
             FF_MODERN, _T("Courier New"));
     SetFont(m_font, FALSE);
 
@@ -254,11 +254,11 @@ WordWrap(WordWrapType setting)                                              /*
     Set the rich view word wrapping to the new setting.
 *-----------------------------------------------------------------------------*/
 {
-      // Note:  Although the CRichEdit::SetTargetDevice() function itself  
-      // is documented, the first two forms of it used below are not 
+      // Note:  Although the CRichEdit::SetTargetDevice() function itself
+      // is documented, the first two forms of it used below are not
       // described in any Microsoft documentation. In fact, the only
-      // occurrences found in the Microsoft Windows Software Development 
-      // Kit are found in the CRichEditView::WrapChanged() method source 
+      // occurrences found in the Microsoft Windows Software Development
+      // Kit are found in the CRichEditView::WrapChanged() method source
       // code. The CRichView::WordWrap() method derives from that source.
     switch (setting)
     {
@@ -278,7 +278,7 @@ WordWrap(WordWrapType setting)                                              /*
             SetTargetDevice(dcPrinter, rc.Width());
             break;
         }
-        
+
         default:
             break;
     }
@@ -323,7 +323,7 @@ WriteFile(LPCTSTR filePath)                                                 /*
     DWORD CALLBACK CRichView::
 RVStreamInCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *read)      /*
 
-    Stream siaze bytes from the file handle into memory located by buffer. 
+    Stream siaze bytes from the file handle into memory located by buffer.
     On termination read contains the number actually entered.
 *-----------------------------------------------------------------------------*/
 {
@@ -341,7 +341,7 @@ RVStreamInCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *read)      /*
     DWORD CALLBACK CRichView::
 RVStreamOutCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *out)      /*
 
-    Stream size bytes of memory from buffer into the file handle. On 
+    Stream size bytes of memory from buffer into the file handle. On
     termination out contains the number actually written.
 *-----------------------------------------------------------------------------*/
 {

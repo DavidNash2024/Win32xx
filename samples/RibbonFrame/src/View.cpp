@@ -118,7 +118,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     if ( (wparam & MK_LBUTTON) && (GetCapture() == *this) )
     {
         CString str;
-        str.Format( _T("Draw Point:  %hd, %hd\n"), GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) );
+        str.Format( L"Draw Point:  %hd, %hd\n", GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) );
         TRACE(str);
 
         DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
@@ -138,7 +138,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Set the background brush, class name and cursor
     wc.hbrBackground = m_brush;
-    wc.lpszClassName = _T("Scribble Window");
+    wc.lpszClassName = L"Scribble Window";
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 
@@ -167,16 +167,16 @@ void CView::Print()
         DOCINFO di;
         memset(&di, 0, sizeof(DOCINFO));
         di.cbSize = sizeof(DOCINFO);
-        di.lpszDocName = _T("Scribble Printout");
+        di.lpszDocName = L"Scribble Printout";
 
         // Begin a print job by calling the StartDoc function.
         CDC printDC = printDlg.GetPrinterDC();
         if (SP_ERROR == StartDoc(printDC, &di))
-            throw CUserException(_T("Failed to start print job"));
+            throw CUserException(L"Failed to start print job");
 
         // Inform the driver that the application is about to begin sending data.
         if (0 > StartPage(printDC))
-            throw CUserException(_T("StartPage failed"));
+            throw CUserException(L"StartPage failed");
 
         BITMAPINFOHEADER bih;
         ZeroMemory(&bih, sizeof(bih));
@@ -213,15 +213,15 @@ void CView::Print()
             width, height, pByteArray, pBI, DIB_RGB_COLORS, SRCCOPY);
 
         if (GDI_ERROR == result)
-            throw CUserException(_T("Failed to resize image for printing"));
+            throw CUserException(L"Failed to resize image for printing");
 
         // Inform the driver that the page is finished.
         if (0 > EndPage(printDC))
-            throw CUserException(_T("EndPage failed"));
+            throw CUserException(L"EndPage failed");
 
         // Inform the driver that document has ended.
         if (0 > EndDoc(printDC))
-            throw CUserException(_T("EndDoc failed"));
+            throw CUserException(L"EndDoc failed");
     }
 }
 

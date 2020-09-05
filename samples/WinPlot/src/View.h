@@ -6,7 +6,6 @@
 #define VIEW_H
 
 #include "Calc.h"
-#include "Doc.h"
 #include "InputDlg.h"
 
 class CDoc;
@@ -30,7 +29,6 @@ public:
     CView();
     virtual ~CView(){}
 
-    CDoc& GetDoc() { return m_doc; }
     double GetXMin() { return m_inputDlg.GetMin(); }
     double GetXMax() { return m_inputDlg.GetMax(); }
     Calc::Calculator& GetCalc() { return m_calc; }
@@ -52,7 +50,6 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CDoc m_doc;
     Calc::Calculator m_calc;
     std::vector<PointData> m_points;  // vector of Data, stores x, y, & status
     CInputDlg m_inputDlg;

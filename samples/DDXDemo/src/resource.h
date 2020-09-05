@@ -12,10 +12,6 @@
     program was based on code provided by Lynn Allan. This program extends the
     given sample by application of Dialog Data Exchange and Validation (DDX/DDV).
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
-
     Acknowledgement: The author would like to thank and acknowledge the advice,
     critical review, insight, and assistance provided by David Nash in the
     development of this work.

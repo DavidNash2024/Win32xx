@@ -5,13 +5,13 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Declaration and implementation of the DSize class and 
-    declaration of the CPreviewPaneEx, CPrintPreviewEx, and PreviewSetup classes  
-    using the Win32++ Windows interface classes. 
+    Contents Description: Declaration and implementation of the DSize class and
+    declaration of the CPreviewPaneEx, CPrintPreviewEx, and PreviewSetup classes
+    using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -50,7 +50,7 @@ DSize                                                                       /*
                     { return DSize(cx - size.cx, cy - size.cy); }
         DSize   operator-() const
                     { return DSize(-cx, -cy); }
-        
+
           // class data
         double  cx;
         double  cy;
@@ -68,10 +68,10 @@ PreviewSetup    : public CDialog                                            /*
     public:
         PreviewSetup() : CDialog(IDD_PREVIEW_SETUP) {}
         virtual ~PreviewSetup() {}
-        
+
     protected:
         virtual void    DoDataExchange(CDataExchange& dx);
-        CPrintPreviewEx&  GetPreviewWnd()
+        CPrintPreviewEx& GetPreviewWnd()
                             { HWND h = ::GetParent(*this);
                               return *(CPrintPreviewEx*)GetCWndPtr(h);}
         virtual BOOL    OnInitDialog();
@@ -86,7 +86,7 @@ PreviewSetup    : public CDialog                                            /*
                     { HWND h = GetDlgItem(id);
                       return m_toolTips.AddTool(h, id); }
         HWND    CreateToolTip(HWND dlg)
-                    {   HWND rtn = m_toolTips.Create(dlg);
+                    { HWND rtn = m_toolTips.Create(dlg);
                         m_toolTips.SetWindowTheme(L" ", L" "); // XP themes off
                         return rtn;}
         void    InitializeToolTips();
@@ -98,7 +98,7 @@ PreviewSetup    : public CDialog                                            /*
         DSize           m_inScreenInches;
         DSize           m_inPreviewInches;
 };
-    
+
 /*=============================================================================*/
     class
 CPreviewPaneEx : public CScrollView                                       /*
@@ -164,8 +164,8 @@ CPrintPreviewEx : public CDialog                                         /*
         DSize   GetScreenSize() const         {return m_screenInches;}
         void    SetScreenSize(DSize size)     {m_screenInches = size;}
         void    InitializeContexts();
-        BOOL    OnPreview(const CString&); 
-        void    SetSizes(DSize scrn, DSize prevw) 
+        BOOL    OnPreview(const CString&);
+        void    SetSizes(DSize scrn, DSize prevw)
                     {m_screenInches = scrn; m_previewInches = prevw;}
         void    SetWindowSizes();
 

@@ -18,7 +18,7 @@ CMainFrame::CMainFrame()
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\Browser ATL Sample"));
+    LoadRegistrySettings(L"Win32++\\Browser ATL Sample");
 }
 
 // Destructor for CMainFrame.
@@ -47,7 +47,7 @@ void CMainFrame::AddComboBoxBand(int height)
     rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
     rbbi.clrBack    = RBTheme.clrBand1;
     rbbi.hwndChild  = m_combo.GetHwnd();
-    rbbi.lpText     = _T("Address");
+    rbbi.lpText     = L"Address";
 
     RB.InsertBand(-1, rbbi);
 }
@@ -162,7 +162,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
     UNREFERENCED_PARAMETER(pDispParams);
-    GetStatusBar().SetPartText(0, _T("Done"));
+    GetStatusBar().SetPartText(0, L"Done");
 }
 
 // Called when a navigation operation is beginning.
@@ -270,7 +270,7 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 {
-    CString str = _T("NavigateComplete2: ");
+    CString str = L"NavigateComplete2: ";
 
     if (pDispParams->rgvarg[0].vt == (VT_BYREF|VT_VARIANT))
     {
@@ -278,7 +278,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
         vtURL.ChangeType(VT_BSTR);
 
         str += vtURL.bstrVal;
-        str += _T("\n");
+        str += L"\n";
         TRACE(str);
     }
 
@@ -295,7 +295,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 {
     UNREFERENCED_PARAMETER(pDispParams);
-    TRACE(_T("NewWindow2\n"));
+    TRACE("NewWindow2\n");
 }
 
 // Called when the frame recieves a notification (WM_NOTIFY).
@@ -392,7 +392,7 @@ BOOL CMainFrame::OnPrint()
                 vArg.vt = VT_ARRAY | VT_BYREF;
                 vArg.parray = psaHeadFoot;
                 if (FAILED(GetBrowser()->ExecWB(OLECMDID_PRINT, OLECMDEXECOPT_DONTPROMPTUSER, &vArg, NULL)))
-                    throw CUserException(_T("Print Failed"));
+                    throw CUserException(L"Print Failed");
             }
         }
 
@@ -418,16 +418,16 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
         if (pDispParams->cArgs > 1 && pDispParams->rgvarg[1].vt == VT_I4)
         {
             int progress = pDispParams->rgvarg[1].lVal;
-            str += _T("Progress = ") + CString(progress);
+            str += L"Progress = " + CString(progress);
         }
 
         if (pDispParams->rgvarg[0].vt == VT_I4)
         {
             int progressMax = pDispParams->rgvarg[0].lVal;
-            str += _T(", ProgressMax = ") + CString(progressMax);
+            str += L", ProgressMax = " + CString(progressMax);
         }
 
-        str += _T("\n");
+        str += L"\n";
         TRACE(str);
    }
 }
@@ -439,11 +439,11 @@ void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
     CString str;
     if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
     {
-        str += _T("Property Change:");
+        str += L"Property Change:";
         str += pDispParams->rgvarg[0].bstrVal;
     }
 
-    str += _T("\n");
+    str += L"\n";
     TRACE(str);
 }
 
@@ -459,10 +459,10 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 {
     CString statusText = pDispParams->rgvarg->bstrVal;
 
-    if (statusText != _T(""))
+    if (statusText != L"")
         GetStatusBar().SetPartText(0, statusText);
     else
-        GetStatusBar().SetPartText(0, _T("Done"));
+        GetStatusBar().SetPartText(0, L"Done");
 }
 
 // Stop loading the current web page.
@@ -476,13 +476,13 @@ BOOL CMainFrame::OnStop()
 // or changes.
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
-    TRACE(_T("TitleChange: \n"));
+    TRACE(L"TitleChange: \n");
     CString str;
 
     if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
     {
         str = pDispParams->rgvarg[0].bstrVal;
-        str += _T(" - Win32++ ATL Browser");
+        str += L" - Win32++ ATL Browser";
         TRACE(str);
     }
     else

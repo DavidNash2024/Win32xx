@@ -27,9 +27,9 @@
     The display features wide characters, and is therefore able to show
     Unicode code point glyphs.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Network
-    Planning and Preparation Subsystem project for C++ programming.
+     Programming Notes: The programming style roughly follows that established
+     got the 1995-1999 Jet Propulsion Laboratory Network Planning and
+     Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -38,7 +38,7 @@
 
 /*============================================================================*/
     CView::
-CView()                                                                   /*
+CView()                                                                     /*
 
     Construct a scrollable view with colored text and background.
 *-----------------------------------------------------------------------------*/

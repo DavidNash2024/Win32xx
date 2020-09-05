@@ -17,10 +17,10 @@
     controls, and client area, font selection for controls, standard file
     open and save-as dialogs, and most-recently used list (MRU), with
     persistent data stored in and retrieved from archive files.
-    
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -36,22 +36,19 @@ static CApp thisApp;
 
 *=============================================================================*/
     int APIENTRY
-WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int show)/*
+WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
 
-    Application entry point. The normal current and previous instance handles, 
-    as well as the command line string and window show parameter, are unused 
+    Application entry point. The normal current and previous instance handles,
+    as well as the command line string and window show parameter, are unused
     in this application.
 *-----------------------------------------------------------------------------*/
 {
-    UNREFERENCED_PARAMETER(instance);
-    UNREFERENCED_PARAMETER(prevInstance);
-    UNREFERENCED_PARAMETER(cmdLine);
-    UNREFERENCED_PARAMETER(show);
       // set default return value
     int rtn = -1;
       // Create and check the semaphore that limits the number of
       // simultaneously executing instances of this application
       // to m_nInstances.
+
     static  const   LPCTSTR semaphoreName = _T("Win32++_CommonDialogsDemo");
     static  const   int     nInstances = 1; // number of allowed instances
     static  HANDLE  m_hSem;
@@ -59,7 +56,7 @@ WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int show)/*
     if (WaitForSingleObject(m_hSem, 0) == WAIT_TIMEOUT)
     {
         ::MessageBox(NULL, _T("The allowed number of instances of this\n")
-        _T("application are already running."), _T("Stop"), MB_OK | 
+        _T("application are already running."), _T("Stop"), MB_OK |
         MB_ICONSTOP | MB_TASKMODAL);
         CloseHandle(m_hSem);
         return 0;  // before entering the message loop
@@ -72,7 +69,7 @@ WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int show)/*
     catch (CException &e)   // catch all CException events
     {
           // Process the exception and quit
-        CString msg = e.what() + (CString)_T("\n") + e.GetText() + 
+        CString msg = e.what() + (CString)_T("\n") + e.GetText() +
         (CString)_T("\nWinMain Goodbye...");
         ::MessageBox(NULL, msg, _T("Standard Exception"), MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);
@@ -115,7 +112,7 @@ InitInstance()                                                              /*
     return TRUE on success. Returning FALSE terminates the program.
 *-----------------------------------------------------------------------------*/
 {
-      // Initialize data strings containing the AboutBox information, the 
+      // Initialize data strings containing the AboutBox information, the
       // app path, the app directory, the app name, and the archive path.
     CString appPath;
     ::GetModuleFileName(NULL, appPath.GetBuffer(FILENAME_MAX), FILENAME_MAX);
@@ -159,13 +156,13 @@ InitInstance()                                                              /*
         compiler.c_str(), compileDate.c_str());
     m_frame.GetAboutBox().SetStatus(aboutBoxInfo);
       // now create the Frame Window
-    m_frame.Create();   // throws a CWinException on failure  
+    m_frame.Create();   // throws a CWinException on failure
     return TRUE;
 }
 
 /*=============================================================================*/
     CString CApp::
-MakeAppDataPath(const CString& subpath) const                /*
+MakeAppDataPath(const CString& subpath) const                               /*
 
     Return a string consisting of the APPDATA environmental path with the
     given subpath appended.  Create this path if it does not exist. If
@@ -186,7 +183,7 @@ MakeAppDataPath(const CString& subpath) const                /*
 
         CString add = subpath.Mid(from, next - from);
         app_data_path += _T("\\") + add;
-        if ((::CreateDirectory(app_data_path, 0) == 0) && 
+        if ((::CreateDirectory(app_data_path, 0) == 0) &&
         GetLastError() != ERROR_ALREADY_EXISTS)
         {
             CString msg = app_data_path + _T("\nDirectory creation error.");

@@ -1,43 +1,43 @@
 /* [Tab/Indent: 8/8][Line/Box: 80/74]                    (CustomStatusBar.cpp) *
 ********************************************************************************
 
-    Contents Description: Implementation of the CustomStatusBar class for a 
+    Contents Description: Implementation of the CustomStatusBar class for a
     sample program demonstrating an expanded use of the status bar within
     the Win32++ Windows framework.
 
     Usage:  The content of the custom status bar in an application is
-    determined by a vector of PartInfo structs, each of which sets the 
-    position, content, size and style of that status bar part. Each 
-    PartInfo packet contains a numeric identifier, a size, a style, and an 
-    internally used string value.  If the identifier is that of a resource 
-    string or icon, then that string or icon is placed in the status bar part 
-    associated with this struct. If a part is designated to contain one of 
-    the INS, CAP, NUM, or SCRL resources, the corresponding keyboard INS, CAP, 
-    NUM, or SCRL lock state is displayed when set. Other string resource 
-    identifiers will also appear on the status bar. 
-    
+    determined by a vector of PartInfo structs, each of which sets the
+    position, content, size and style of that status bar part. Each
+    PartInfo packet contains a numeric identifier, a size, a style, and an
+    internally used string value.  If the identifier is that of a resource
+    string or icon, then that string or icon is placed in the status bar part
+    associated with this struct. If a part is designated to contain one of
+    the INS, CAP, NUM, or SCRL resources, the corresponding keyboard INS, CAP,
+    NUM, or SCRL lock state is displayed when set. Other string resource
+    identifiers will also appear on the status bar.
+
     Note: all string and icon resources inserted into parts of the status
-    bar continue to appear until assignments to these parts are made in 
+    bar continue to appear until assignments to these parts are made in
     other parts of the program and the status bar is redrawn.
 
     The size designation in each PartInfo struct is either an extent in
     pixel units, or else the SB_AUTOSIZE value. If a pixel size is given,
     that value prevails. If the SB_AUTOSIZE value appears and the identifier
     is that of a string or icon, the size is changed to fit the item(s).
-    The remaining parts designated SB_AUTOSIZE share in the available client 
+    The remaining parts designated SB_AUTOSIZE share in the available client
     width remaining after the fixed sizes have been allocated.
 
     The style refers to the third parameter of the CStatusBar::SetPartText()
     method, which sets the appearance of the statusbar. See the documentation
-    of that method for particulars. 
+    of that method for particulars.
 
-    PartInfo entries designated to have the SBT_OWNERDRAW style are owner 
+    PartInfo entries designated to have the SBT_OWNERDRAW style are owner
     drawn by the OnMessageReflect() method.  In this demo, only one such
-    owner drawn entry is accommodated. 
-    
-    Other entries may be used for special purposes, such as the display 
-    of progress contols or hypertext links. Such special usages should be 
-    defined in the OnAttach() method and set to occupy their designated 
+    owner drawn entry is accommodated.
+
+    Other entries may be used for special purposes, such as the display
+    of progress contols or hypertext links. Such special usages should be
+    defined in the OnAttach() method and set to occupy their designated
     parts in the PositionCustomParts() method.
 
     To use this class, insert into the CMainFrame class definition an
@@ -45,7 +45,7 @@
 
         CustomStatusBar m_customStatusBar;
 
-    Then, override the CFrame::GetStatusBar() method by placing the 
+    Then, override the CFrame::GetStatusBar() method by placing the
     following in the CMainFrame class declaration file:
 
         virtual CustomStatusBar& GetStatusBar() const
@@ -58,9 +58,9 @@
 
         virtual void SetStatusIndicators();
 
-    and defining this override as 
+    and defining this override as
 
-        void CMainFrame::SetStatusIndicators() 
+        void CMainFrame::SetStatusIndicators()
         {
             m_customStatusBar.SetStatusIndicators();
         }
@@ -71,11 +71,11 @@
 
     or some other message appropriate to the application.
 
-    Finally, define the parts of the custom status bar by entering 
+    Finally, define the parts of the custom status bar by entering
     AddPartInfo(id, size, style) statements in the class constructor.
 
-    Programming Notes: The programming conventions used here roughly follow 
-    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space 
+    Programming Notes: The programming conventions used here roughly follow
+    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space
     Network Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
@@ -91,16 +91,16 @@ const UINT BORDER_SIZE  =  8;
 /*============================================================================*/
     CustomStatusBar::
 CustomStatusBar()                                                           /*
-  
+
     Construct a CustomStatusBar object and populate the PartInfo array
     that defines the parts and content of the status bar.
 *-----------------------------------------------------------------------------*/
 {
-    AddPartInfo(IDM_STATUS_MESSAGE, SB_AUTOSIZE, SBT_NOBORDERS); 
-    AddPartInfo(IDW_MAIN,           SB_AUTOSIZE); 
-    AddPartInfo(IDM_STATUS_HLINK,    80); 
-    AddPartInfo(IDM_PROGRESS,       100);        
-    AddPartInfo(IDM_BLANK,          100,         SBT_OWNERDRAW); 
+    AddPartInfo(IDM_STATUS_MESSAGE, SB_AUTOSIZE, SBT_NOBORDERS);
+    AddPartInfo(IDW_MAIN,           SB_AUTOSIZE);
+    AddPartInfo(IDM_STATUS_HLINK,    80);
+    AddPartInfo(IDM_PROGRESS,       100);
+    AddPartInfo(IDM_BLANK,          100,         SBT_OWNERDRAW);
     AddPartInfo(IDW_INDICATOR_CAPS, SB_AUTOSIZE, SBT_POPOUT);
     AddPartInfo(IDW_INDICATOR_NUM,  SB_AUTOSIZE, SBT_POPOUT);
     AddPartInfo(IDM_INDICATOR_INS,  SB_AUTOSIZE, SBT_POPOUT);
@@ -111,19 +111,19 @@ CustomStatusBar()                                                           /*
         void  CustomStatusBar::
 AddPartInfo(UINT id, int size, UINT style /* = 0 */)                        /*
 
-    Set the the next status bar part in sequence to have the given resource 
+    Set the the next status bar part in sequence to have the given resource
     id, size, and style.
 *-----------------------------------------------------------------------------*/
-{ 
+{
     PartInfo pi(id, size, style);
-    m_statusBarParts.push_back(pi); 
+    m_statusBarParts.push_back(pi);
 }
 
 /*============================================================================*/
     int CustomStatusBar::
 IDtoPart(UINT idSeek)                                                       /*
 
-    Return the part number of the numeric identifier idSeek in the 
+    Return the part number of the numeric identifier idSeek in the
     status bar PartInfo vector if it exists there; otherwise, return -1.
 *-----------------------------------------------------------------------------*/
 {
@@ -143,7 +143,7 @@ OnAttach()                                                                  /*
     bar part objects.
 *-----------------------------------------------------------------------------*/
 {
-      // Assign a numeric identifier to the status bar. This is needed 
+      // Assign a numeric identifier to the status bar. This is needed
       // in order for  the owner drawn pane to work)
     SetWindowLongPtr(GWLP_ID, IDM_STATUSBAR);
       // Start a timer for the progress bar
@@ -152,7 +152,7 @@ OnAttach()                                                                  /*
     m_hyperlink.Create(*this);
       // Create the ProgressBar
     m_progressBar.Create(*this);
-      // Set the background color 
+      // Set the background color
     SendMessage(SB_SETBKCOLOR, 0, SBBkgrColor);
 }
 
@@ -165,8 +165,8 @@ OnEraseBkgnd(CDC& dc)                                                       /*
 {
     if (IsXPThemed())
     {
-        dc.GradientFill(SBEraseColor[0], SBEraseColor[1], 
-            GetClientRect(), TRUE); 
+        dc.GradientFill(SBEraseColor[0], SBEraseColor[1],
+            GetClientRect(), TRUE);
         return TRUE;
     }
     else
@@ -178,7 +178,7 @@ OnEraseBkgnd(CDC& dc)                                                       /*
     LRESULT CustomStatusBar::
 OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)                   /*
 
-    Reflect the WM_OWNERDRAW message back here to perform owner drawing of 
+    Reflect the WM_OWNERDRAW message back here to perform owner drawing of
     that status bar part designated as a drawing item.
 *-----------------------------------------------------------------------------*/
 {
@@ -197,7 +197,7 @@ OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)                   /*
         lf.lfItalic = TRUE;
         dc.CreateFontIndirect(lf);
           // Display the gradient background and text
-        dc.GradientFill(ODBkgrColor[0], ODBkgrColor[1], 
+        dc.GradientFill(ODBkgrColor[0], ODBkgrColor[1],
             rcPart, TRUE);
         dc.SetTextColor(ODTextColor);
         dc.SetBkMode(TRANSPARENT);
@@ -242,7 +242,7 @@ PreCreate(CREATESTRUCT& cs)                                                 /*
     Adjust the style parameters of the custom statusbar.
 *-----------------------------------------------------------------------------*/
 {
-    cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | 
+    cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM |
         WS_CLIPCHILDREN;  // to reduce flicker on resizing
 
       // Suppress the gripper unless XP themes are enabled
@@ -256,18 +256,18 @@ SetOwnerDrawText(LPCTSTR odmsg)                                             /*
 
     Enter the odmsg string into the owner-drawn part of the custom status bar.
 *-----------------------------------------------------------------------------*/
-{ 
+{
     m_ownerDrawMsg = odmsg;
-    SetStatusIndicators(); 
+    SetStatusIndicators();
 }
 
 /*============================================================================*/
     void CustomStatusBar::
 SetStatusIndicators()                                                       /*
 
-    Place string, icon, and custom resources into their designated status 
-    bar parts. Designate owner drawn parts to be filled by the main frame 
-    OnDraw() method. Recompute the sizes of parts, as these may have 
+    Place string, icon, and custom resources into their designated status
+    bar parts. Designate owner drawn parts to be filled by the main frame
+    OnDraw() method. Recompute the sizes of parts, as these may have
     changed due to resizing.
 *-----------------------------------------------------------------------------*/
 {
@@ -275,7 +275,7 @@ SetStatusIndicators()                                                       /*
     if (!IsWindow() || idCount == 0)
         return;
 
-      // load panes with specified id strings, count the number of 
+      // load panes with specified id strings, count the number of
       // SB_AUTOSIZE's, and calculate committed width
     UINT autoWidths = 0;
       // make room for a gripper control if the style says it's there
@@ -299,7 +299,7 @@ SetStatusIndicators()                                                       /*
             CClientDC dcStatus(*this);
             dcStatus.SelectObject(GetFont());
             // get the pane width to fit the text, logical units
-            CSize size = dcStatus.GetTextExtentPoint32(s, 
+            CSize size = dcStatus.GetTextExtentPoint32(s,
                 s.GetLength());
               // convert size to device units
             CRect rc(0, 0, size.cx, size.cy);
@@ -314,9 +314,9 @@ SetStatusIndicators()                                                       /*
             cumulativeWidths += part.width;
     }
       // distribute available width among auto_sized panes
-    int auto_size = autoWidths > 0 ? 
+    int auto_size = autoWidths > 0 ?
         (GetClientRect().Width() - cumulativeWidths) / autoWidths : 0;
-      // set part, icons, and owner drawn parts         
+      // set part, icons, and owner drawn parts
     for (UINT j = 0; j < idCount; j++)
     {
         BOOL skip = FALSE; // skip if status is not of use
@@ -325,43 +325,43 @@ SetStatusIndicators()                                                       /*
           // if this id has an icon, set in the part, but only if
           // different than the current icon.
         HICON curIcon = GetPartIcon(j),
-              idIcon  = (HICON)GetApp()->LoadImage(id, IMAGE_ICON, 16, 16, 
+              idIcon  = (HICON)GetApp()->LoadImage(id, IMAGE_ICON, 16, 16,
                         LR_DEFAULTCOLOR | LR_SHARED);
         if (idIcon != NULL && curIcon != idIcon)
             SetPartIcon(j, idIcon);
           // evaluate strings and owner drawn
-        CString status, 
+        CString status,
             idString = LoadString(id);
         switch (id)
         {
             case IDW_INDICATOR_CAPS:
-            status = (::GetKeyState(VK_CAPITAL) & 0x0001) ?  
+            status = (::GetKeyState(VK_CAPITAL) & 0x0001) ?
                 idString : CString(_T(" "));
             break;
 
             case IDW_INDICATOR_NUM:
-            status = (::GetKeyState(VK_NUMLOCK) & 0x0001)? 
+            status = (::GetKeyState(VK_NUMLOCK) & 0x0001)?
                 idString : CString(_T(" "));
             break;
 
             case IDM_INDICATOR_INS:
-            status = (::GetKeyState(VK_INSERT) & 0x0001)? 
+            status = (::GetKeyState(VK_INSERT) & 0x0001)?
                 idString : CString(_T(" "));
             break;
 
             case IDW_INDICATOR_SCRL:
-            status = (::GetKeyState(VK_SCROLL) & 0x0001)? 
+            status = (::GetKeyState(VK_SCROLL) & 0x0001)?
                 idString : CString(_T(" "));
             break;
 
             default:
             if (part.style & SBT_OWNERDRAW)
-            {    // Set this part as owner drawn. The drawing  
+            {    // Set this part as owner drawn. The drawing
                  // is performed in OnMessageReflect().
                 status = m_ownerDrawMsg;
             }
             else
-            {     // if the part id has a resource string, 
+            {     // if the part id has a resource string,
                    //use it; otherwise, do not alter this entry
                 status = idString;
                 skip = idString.IsEmpty();
@@ -369,7 +369,7 @@ SetStatusIndicators()                                                       /*
             break;
         }
           // reset the size in case the width changed
-        int size = (part.width == SB_AUTOSIZE ? 
+        int size = (part.width == SB_AUTOSIZE ?
             auto_size : m_statusBarParts[j].width);
         SetPartWidth(j, size);
           // reset indicators only if they changed
@@ -394,7 +394,7 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
     switch(msg)
     {
         case WM_TIMER:
-        {   
+        {
               // Change the Progress Bar indicator
             m_progressBar.OffsetPos(1);
             if (m_progressBar.GetRange(FALSE) == m_progressBar.GetPos())
@@ -403,5 +403,5 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
         }
     }
     return WndProcDefault(msg, wparam, lparam);
-} 
+}
 /*----------------------------------------------------------------------------*/

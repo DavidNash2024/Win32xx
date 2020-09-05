@@ -8,9 +8,9 @@
     Contents Description:  Implementation of the CMainFrm class for this
     application using the Win32++ framework.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -21,7 +21,7 @@
 
 /*******************************************************************************
 
-    Static constants initialization                                     */
+    Static constants initialization                                         */
 
   // latest main frame file compilation date
 const CString CMainFrame::m_compiledOn = __DATE__;
@@ -29,17 +29,17 @@ const CString CMainFrame::m_compiledOn = __DATE__;
 
 /*============================================================================*/
     CMainFrame::
-CMainFrame()                                                            /*
+CMainFrame()                                                                /*
 
     Construct and initiallize the CMainFrame object.
 *-----------------------------------------------------------------------------*/
     :   m_maxMRUEntries(5)
 {
       // set screen default position and  size
-    m_xWin = 100;
-    m_yWin = 100;
-    m_cxWin  = 800;
-    m_cyWin  = 700;
+    m_xWin  = 100;
+    m_yWin  = 100;
+    m_cxWin = 800;
+    m_cyWin = 700;
     ZeroMemory(&m_plWnd, sizeof(WINDOWPLACEMENT));
 
       // Set m_view as the view window of the frame
@@ -48,7 +48,7 @@ CMainFrame()                                                            /*
 
 /*============================================================================*/
     void CMainFrame::
-OnColorChoice()                                                         /*
+OnColorChoice()                                                             /*
 
         Select the view's backbround color.
 *-----------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ OnColorChoice()                                                         /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnCommand(WPARAM wparam, LPARAM lparam)                                 /*
+OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
 
     The framework calls this member function when the user selects an
     item from a menu, when a child control sends a notification message,
@@ -103,7 +103,7 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                 /*
 
 /*============================================================================*/
     int CMainFrame::
-OnCreate(CREATESTRUCT& cs)                                              /*
+OnCreate(CREATESTRUCT& cs)                                                  /*
 
     This method controls the way the frame is created.
 *-----------------------------------------------------------------------------*/
@@ -170,7 +170,7 @@ OnCreate(CREATESTRUCT& cs)                                              /*
 
 /*============================================================================*/
     void CMainFrame::
-OnDestroy()                                                  /*
+OnDestroy()                                                                 /*
 
     Save the mainframe, MRU, and view status parameters before termination.
 *-----------------------------------------------------------------------------*/
@@ -202,7 +202,7 @@ OnDestroy()                                                  /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileExit()                                                            /*
+OnFileExit()                                                                /*
 
     Perform whatever functions are necessary, other than Serialize(), as
     it is invoked in response to the WM_CLOSE message that is sent when
@@ -215,7 +215,7 @@ OnFileExit()                                                            /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileNew()                                                         /*
+OnFileNew()                                                                 /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -230,7 +230,7 @@ OnFileNew()                                                         /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileOpen()                                                            /*
+OnFileOpen()                                                                /*
 
     Bring up the open file dialog to choose a document file to open.
 *-----------------------------------------------------------------------------*/
@@ -251,7 +251,7 @@ OnFileOpen()                                                            /*
 
 /*============================================================================*/
     bool CMainFrame::
-OnFileOpenMRU(UINT index)                                               /*
+OnFileOpenMRU(UINT index)                                                   /*
 
     Open the MRU file at nIndex as the next document.
 *-----------------------------------------------------------------------------*/
@@ -276,7 +276,7 @@ OnFileOpenMRU(UINT index)                                               /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileSave()                                                            /*
+OnFileSave()                                                                /*
 
     Save the current document.
 *-----------------------------------------------------------------------------*/
@@ -291,7 +291,7 @@ OnFileSave()                                                            /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFileSaveAs()                                                          /*
+OnFileSaveAs()                                                              /*
 
     Engage the file save dialog to obtain the file name to be used in
     saving the current document and  to retain that new document as the
@@ -308,7 +308,7 @@ OnFileSaveAs()                                                          /*
 
 /*============================================================================*/
     void CMainFrame::
-OnFontChoice()                                                          /*
+OnFontChoice()                                                              /*
 
         Select the app font typeface, characteristics, and  color. The font
         background color is always the same as the client area background.
@@ -344,7 +344,7 @@ OnFontChoice()                                                          /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnHelpAbout()                                                           /*
+OnHelpAbout()                                                               /*
 
     Display the application's help dialog box, which contains the app
     name, copyright information, and  date of most recent compilation.
@@ -361,7 +361,7 @@ OnHelpAbout()                                                           /*
 
 /*============================================================================*/
     void CMainFrame::
-OnInitialUpdate()                                                       /*
+OnInitialUpdate()                                                           /*
 
     The frame has now been created. Provide any desired main frame
     formatting.
@@ -377,7 +377,7 @@ OnInitialUpdate()                                                       /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnProcessMRU(WPARAM wparam, LPARAM lparam)                              /*
+OnProcessMRU(WPARAM wparam, LPARAM lparam)                                  /*
 
     One of the MRU entries has been selected.  Process accordingly.
 *-----------------------------------------------------------------------------*/
@@ -392,7 +392,7 @@ OnProcessMRU(WPARAM wparam, LPARAM lparam)                              /*
 
 /*============================================================================*/
     void CMainFrame::
-PreCreate(CREATESTRUCT& cs)                                             /*
+PreCreate(CREATESTRUCT& cs)                                                 /*
 
     Set cs members to select window frame parameters desired. This gets
     executed before CView::PreCreate(). Use the deserialized position
@@ -415,7 +415,7 @@ PreCreate(CREATESTRUCT& cs)                                             /*
 
 /*============================================================================*/
         void CMainFrame::
-Serialize(CArchive &ar)                                                 /*
+Serialize(CArchive &ar)                                                     /*
 
         Called serialize or deserialize the frame to and  from the archive ar,
         depending on the sense of IsStoring().
@@ -488,7 +488,7 @@ Serialize(CArchive &ar)                                                 /*
 
 /*============================================================================*/
     void CMainFrame::
-SetupMenuIcons()                                                        /*
+SetupMenuIcons()                                                            /*
 
 Called from the CFrame::OnCreate() function to load the menu icons.
 *-----------------------------------------------------------------------------*/
@@ -500,7 +500,7 @@ Called from the CFrame::OnCreate() function to load the menu icons.
 
 /*============================================================================*/
     void CMainFrame::
-SetupToolBar()                                                           /*
+SetupToolBar()                                                              /*
 
     Called from the CFrame::CreateToolBar() function to load the toolbar
     bitmaps, to connect the tool bar buttons to Resource IDs of the
@@ -525,7 +525,7 @@ SetupToolBar()                                                           /*
 
 /*============================================================================*/
     void CMainFrame::
-SetWindowTitle(const CString &docPath /* = _T("") */)                   /*
+SetWindowTitle(const CString &docPath /* = _T("") */)                       /*
 
     Set the window title to the application base title plus the document
     file name.
@@ -537,7 +537,7 @@ SetWindowTitle(const CString &docPath /* = _T("") */)                   /*
 
 /*============================================================================*/
     LRESULT CMainFrame::
-WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                        /*
+WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
 
     This is the main frame message loop. By default, it handles the
     normal housekeeping functions (see Win32++\include\frame.h).

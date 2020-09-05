@@ -10,8 +10,6 @@
 #include "CoverImage.h"
 #include "Splash.h"
 
-// User defined message issued when the video library has been updated.
-#define UWM_FILESLOADED      (WM_APP + 0x0001)
 
 struct MovieInfo
 {

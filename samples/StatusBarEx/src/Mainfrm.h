@@ -2,12 +2,12 @@
 ********************************************************************************
 
     Contents Description: Declaration of the CMainFrame class for a sample
-    program demonstrating the use of a custom status bar within the Win32++ 
+    program demonstrating the use of a custom status bar within the Win32++
     Windows framework.
 
-    Programming Notes: The programming conventions used here roughly follow 
-    those established by the 1997-1999 Jet Propulsion Laboratory Deep Space 
-    Network Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -18,8 +18,8 @@
 #include "CustomStatusBar.h"
 
 /*============================================================================*/
-    class 
-CMainFrame : public CFrame                                              /*
+    class
+CMainFrame : public CFrame                                                  /*
 
     Declaration of the CMainFrame class.
 *-----------------------------------------------------------------------------*/

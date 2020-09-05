@@ -8,9 +8,9 @@
     Contents Description: Implementation of the AboutBox dialog for this
     application using the Win32++ framework.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 
 *******************************************************************************/
@@ -22,7 +22,7 @@
 
 /*============================================================================*/
     AboutBox::
-AboutBox()                                                              /*
+AboutBox()                                                                  /*
 
     AboutBox constructor: uses the IDW_ABOUT dialog in resource.rc
 *-----------------------------------------------------------------------------*/
@@ -32,7 +32,7 @@ AboutBox()                                                              /*
 
 /*============================================================================*/
      BOOL AboutBox::
-OnInitDialog()                                                          /*
+OnInitDialog()                                                              /*
 
      When the AboutBox is instantiated, enter the box contents.
 *-----------------------------------------------------------------------------*/

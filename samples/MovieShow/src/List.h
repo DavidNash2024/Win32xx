@@ -40,7 +40,8 @@ public:
 
         virtual void OnAttach()
         {
-            // Disable XP themes. Fixes a Windows 10 bug drawing the sorting arrows.
+            // Disable XP themes for the ListView's header.
+            // Avoids a Windows 10 bug drawing the sorting arrows with DPI aware enabled.
             SetWindowTheme(L" ", L" ");
         }
 

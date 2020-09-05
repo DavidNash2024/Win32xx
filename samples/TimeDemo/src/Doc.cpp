@@ -6,29 +6,22 @@
 ===============================================================================*
 
     Contents Description:  Implementation of the CDoc class for this application
-    using the Win32++ framework.
+    using the Win32++ framework. This particular formulation of the document
+    class presumes that the document souce is a series of textual lines that
+    are accessed and formatted by the methods of this class and passed to the
+    CView object for display. In the present usage of this skeleton implementation,
+    a document is simulated as the results of computations illustrating the
+    capabilities of the CTime class, the numeric version information of the
+    Windows system, and the command line parameters.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
-
-********************************************************************************
-
-    Implementation of the CDoc class
-
-    This particular formulation of the document class presumes that the
-    document souce is a series of textual lines that are accessed and
-    formatted by the methods of this class and passed to the CView object
-    for display. In the present usage of this skeleton implementation,
-    a document is simulated as the results of computations illustrating
-    the capabilities of the CTime class, the numeric version information
-    of the Windows system, and the command line parameters.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
 #include "stdafx.h"
 #include "App.h"
-
 
   // local formats for displaying CTime values as strings
 static const CString longDateFmt = TEXT("%d-%b-%Y [%j] (%a) %H:%M:%S %z");
@@ -40,7 +33,7 @@ const CString CDoc::m_compiledOn = __DATE__;
 
 /*============================================================================*/
     CDoc::
-CDoc()                                                                  /*
+CDoc()                                                                      /*
 
     Construct the document object and load the document to be initially
     displayed at the start of operations.
@@ -65,7 +58,7 @@ CDoc()                                                                  /*
 
 /*============================================================================*/
     int CDoc::
-GetDocLength() const                                                    /*
+GetDocLength() const                                                        /*
 
     Return the document length, in records.
 *----------------------------------------------------------------------------*/
@@ -75,7 +68,7 @@ GetDocLength() const                                                    /*
 
 /*============================================================================*/
     CString CDoc::
-GetDocOpenFileName(const CString &title) const                          /*
+GetDocOpenFileName(const CString &title) const                              /*
 
     Bring up the open file dialog and get the path of the file to open.
     If none is given, return an empty path. Use the title as the dialog
@@ -94,13 +87,12 @@ GetDocOpenFileName(const CString &title) const                          /*
             _T("The document cannot be opened."),
             _T("Information"), MB_OK | MB_ICONINFORMATION |
             MB_TASKMODAL);
-
     return str;
 }
 
 /*============================================================================*/
     CString CDoc::
-GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const  /*
+GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const      /*
 
     Return a CString containing the document rcd record, starting at
     the left position and continuing for length characters.
@@ -111,7 +103,6 @@ GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const  /*
         return _T("");
 
     CString s  = m_docContent[rcd];
-
       // compute length of text to extract
     if (length < 0)
         length = s.GetLength();
@@ -122,7 +113,7 @@ GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const  /*
 
 /*============================================================================*/
     CString CDoc::
-GetDocSaveFileName(const CString &title) const                          /*
+GetDocSaveFileName(const CString &title) const                              /*
 
     Bring up the file save dialog and get the path of file to save the
     document in. If nont is selected, return an empty path.  Use the title
@@ -134,7 +125,6 @@ GetDocSaveFileName(const CString &title) const                          /*
     DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
     CFileDialog FileDlg(FALSE, extbuff, NULL, dwFlags, m_fileDlgFilter);
     FileDlg.SetTitle(title);
-
     if (FileDlg.DoModal() == IDOK)
         str = FileDlg.GetPathName();
     else
@@ -142,13 +132,12 @@ GetDocSaveFileName(const CString &title) const                          /*
             _T("The current document will not be saved."),
             _T("Information"), MB_OK | MB_ICONINFORMATION |
             MB_TASKMODAL);
-
     return str;
 }
 
 /*============================================================================*/
     int CDoc::
-GetDocWidth() const                                                     /*
+GetDocWidth() const                                                         /*
 
     Return the document width, in characters.
 *----------------------------------------------------------------------------*/
@@ -158,7 +147,7 @@ GetDocWidth() const                                                     /*
 
 /*============================================================================*/
     bool CDoc::
-OpenDoc(const CString &docFileName)                                   /*
+OpenDoc(const CString &docFileName)                                         /*
 
     Open the document having the given doc_file_name and load its contents
     into the internal CString array.  Return true if the document was
@@ -211,7 +200,7 @@ OpenDoc(const CString &docFileName)                                   /*
 
 /*============================================================================*/
     CString CApp::
-MakeAppDataPath(const CString & subpath)                                /*
+MakeAppDataPath(const CString & subpath)                                    /*
 
         Return a string giving the path APPDATA environmental path, with the
         given subpath appended.  Create this path if it does not exist. If
@@ -231,7 +220,8 @@ MakeAppDataPath(const CString & subpath)                                /*
 
         CString add = subpath.Mid(from, next - from);
         appdata += _T("\\") + add;
-        if ((::CreateDirectory(appdata, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
+        if ((::CreateDirectory(appdata, 0) == 0) &&
+            GetLastError() != ERROR_ALREADY_EXISTS)
         {
             CString msg = appdata + _T("\nDirectory creation error.");
             throw CUserException(msg);
@@ -242,7 +232,7 @@ MakeAppDataPath(const CString & subpath)                                /*
 
 /*============================================================================*/
     void CDoc::
-NewDocument()                                                           /*
+NewDocument()                                                               /*
 
     For this TimeDemo, develop the ad hoc array of strings that contain the
     results of various tests of the CTime class and Win32++ functions.
@@ -483,7 +473,7 @@ NewDocument()                                                           /*
 
 /*============================================================================*/
     CTime CDoc::
-GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const               /*
+GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
 
     Construct a CTime as directed by the formatting CString timestr, whose
     specifications appear below. Any nonconformity between timestr  and
@@ -626,7 +616,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const               /*
 
 /*============================================================================*/
     void  CDoc::
-PushContent(const CString &s)                                            /*
+PushContent(const CString &s)                                               /*
 
     Insert the CString s at the bottom of the document content list  and
     adjust the document maximum width indicator to accommodate s, if
@@ -639,7 +629,7 @@ PushContent(const CString &s)                                            /*
 
 /*============================================================================*/
     bool CDoc::
-SaveDoc()                                                               /*
+SaveDoc()                                                                   /*
 
     Save current CString array of the document into the currently named
     source file path. Return true if able to do so, or false otherwise.
@@ -683,7 +673,7 @@ SaveDoc()                                                               /*
 
 /*============================================================================*/
     bool CDoc::
-SaveDocAs()                                                             /*
+SaveDocAs()                                                                 /*
 
     Get a new name for the document file and replace the old one with
     this.  Save the newly named document and retain it as the current
@@ -702,7 +692,7 @@ SaveDocAs()                                                             /*
 
 /*============================================================================*/
     void CDoc::
-Serialize(CArchive &ar)                                                 /*
+Serialize(CArchive &ar)                                                     /*
 
         Serialize or deserialize the CDoc document from the archive ar,
     depending on the sense of ar.IsStoring().  Throw exceptions during

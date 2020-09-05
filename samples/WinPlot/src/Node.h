@@ -16,11 +16,11 @@ namespace Calc
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
     ///////////////////////////////////////////////////////////
-    //"Node" is the parent class of all nodes
+    // "Node" is the parent class of all nodes
     // The member function "Calc" is a pure virtual function,
     // This makes "Node" and abstract class, so no instances of
-    // can be made of this class.  Classes inherited from
-    // this must implement the Calc function.
+    // can be made of this class.  Classes inherited from this
+    // must implement the Calc function.
     class Node
     {
     public:
@@ -32,8 +32,8 @@ namespace Calc
     };
 
     /////////////////////////////////////////////////////
-    // a node type which holds a simple number, but not a
-    //  variable or constant from the SymbolTable
+    // A node type which holds a simple number, but not a
+    // variable or constant from the SymbolTable.
     class Node_Number : public Node
     {
     public:
@@ -45,19 +45,19 @@ namespace Calc
         const double m_number;
     };
 
-    ////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
     // A branch node has one or more leaf nodes.
-    // All leaves will have the same precedence,
-    // so a branch will combine add with subtract, or
-    // multiply with divide, but not add with multiply.
-    // Each leaf will in turn be either a branch node,
-    // a number node, a variable node or a function node.
+    // All leaves will have the same precedence, so a branch
+    // will combine add with subtract, or multiply with divide,
+    // but not add with multiply.
+    // Each leaf will in turn be either a branch node, a number
+    // node, a variable node or a function node.
     class Node_Branch : public Node
     {
     public:
         Node_Branch(Node * pNode)
         {
-            //branch is constructed with it's first leaf
+            // Branch is constructed with it's first leaf.
             m_leaves.push_back(pNode);
             m_tokens.push_back(tPlus);
         }
@@ -75,7 +75,7 @@ namespace Calc
     };
 
     /////////////////////////////////////////
-    // retrieves values from the symbol table
+    // Retrieves values from the symbol table.
     class Node_Variable : public Node
     {
     public:
@@ -89,7 +89,7 @@ namespace Calc
     };
 
     ///////////////////////////////////////////////////
-    // Assigns the value of an expression to a variable
+    // Assigns the value of an expression to a variable.
     class Node_Assign : public Node
     {
     public:
@@ -104,7 +104,7 @@ namespace Calc
     };
 
     //////////////////////////////////////////////////////////////
-    // calls a math function on the expression pointed to by pnode
+    // Calls a math function on the expression pointed to by pnode.
     class Node_Function : public Node
     {
     public:

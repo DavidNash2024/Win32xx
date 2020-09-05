@@ -7,11 +7,11 @@
 
     Contents Description: Implementation of the MyFontDialog class for
     applications using the Win32++ Windows interface classes. This class
-    derives from the CFontDalog class found in the framework. 
-    
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    derives from the CFontDalog class found in the framework.
+
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -103,7 +103,7 @@ Serialize(CArchive &ar)                                                 /*
     {
           // save the font as a LOGFONT
         LOGFONT lf = GetLogFont();
-        ArchiveObject f(&lf, sizeof(LOGFONT));              
+        ArchiveObject f(&lf, sizeof(LOGFONT));
             ar << f;
           // save m_tm
         ArchiveObject g(GetTextMetric(), sizeof(TEXTMETRIC));
@@ -113,15 +113,15 @@ Serialize(CArchive &ar)                                                 /*
           // save the font color
         ar << GetParameters().rgbColors;
     }
-    else 
+    else
     {     // recover the font as LOGFONT
         LOGFONT lf;
-        ArchiveObject f(&lf, sizeof(LOGFONT));              
-        ar >> f;                                            
-        CHOOSEFONT cf = GetParameters();                    
-        cf.lpLogFont = &lf;                                 
-        SetParameters(cf);                                  
-        SetChoiceLogFont(lf);                               
+        ArchiveObject f(&lf, sizeof(LOGFONT));
+        ar >> f;
+        CHOOSEFONT cf = GetParameters();
+        cf.lpLogFont = &lf;
+        SetParameters(cf);
+        SetChoiceLogFont(lf);
           // recover the text metrics
         ArchiveObject g(GetTextMetric(), sizeof(TEXTMETRIC));
         ar >> g;
@@ -132,7 +132,7 @@ Serialize(CArchive &ar)                                                 /*
           // retrieve the font color
         COLORREF rgb;
         ar >> rgb;
-        SetColor(rgb);          
+        SetColor(rgb);
     }
 }
 
@@ -156,8 +156,8 @@ SetFontIndirect(const LOGFONT& lf)                                      /*
         cf.lpLogFont = &m_logFont;
         SetParameters(cf);
     }
-    
-    catch (const CResourceException&) 
+
+    catch (const CResourceException&)
     {
         ::MessageBox(NULL, _T("Font creation error."),
             _T("Error"), MB_OK | MB_ICONEXCLAMATION |

@@ -5,12 +5,8 @@
 |                                                                              |
 ===============================================================================*
 
-    Content Description: This file provides descriptive identifiers for a 
+    Content Description: This file provides descriptive identifiers for a
     number of commonly used RGB Color Definitions.
-
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 

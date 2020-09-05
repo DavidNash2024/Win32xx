@@ -18,7 +18,7 @@ void CSimpleView::OnDraw(CDC& dc)
     //Centre some text in our view window
     CRect rc = GetClientRect();
     dc.SetTextColor(m_color);
-    dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    dc.DrawText(L"View Window", -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 LRESULT CSimpleView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -50,7 +50,7 @@ CSimpleMDIChild::CSimpleMDIChild()
     SetView(m_view);
 
     // Set the menu for this MDI child
-    m_menu.LoadMenu(_T("MdiMenuView"));
+    m_menu.LoadMenu(L"MdiMenuView");
     SetHandles(m_menu, NULL);
 }
 
@@ -61,7 +61,7 @@ CSimpleMDIChild::~CSimpleMDIChild()
 int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 {
     // Set the window caption
-    SetWindowText( _T("Simple Window") );
+    SetWindowText( L"Simple Window" );
 
     // Set the window icons
     SetIconLarge(IDI_VIEW);

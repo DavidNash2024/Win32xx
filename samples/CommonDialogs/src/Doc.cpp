@@ -17,9 +17,9 @@
     Internally, the document contents are managed (as well as viewed) by the
     RichEditView class.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -329,7 +329,7 @@ OnSaveDoc()                                                                 /*
 
 /*============================================================================*/
     BOOL CDoc::
-OpenDoc(LPCTSTR docPath)                                             /*
+OpenDoc(LPCTSTR docPath)                                                    /*
 
     Open the document from the given path. Previous state parameters that
     were serialized in the prior execution will have already been loaded.
@@ -372,7 +372,7 @@ OpenDoc(LPCTSTR docPath)                                             /*
 
 /*============================================================================*/
     void CDoc::
-SetDataPath(CView* path)                                                      /*
+SetDataPath(CView* path)                                                    /*
 
     Register the path to the document data repository.
 *-----------------------------------------------------------------------------*/
@@ -409,5 +409,5 @@ SetDirty(BOOL b)                                                            /*
 {
     GetRichView().SetModify(b);
 }
-
+/*----------------------------------------------------------------------------*/
 

@@ -13,9 +13,9 @@
     by Lynn Allan. This demo extends the given sample by application of
     Dialog Data Exchange and Validation (DDX/DDV).
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
     Acknowledgement: The author would like to thank and acknowledge the advice,
     critical review, insight, and assistance provided by David Nash in the
@@ -54,12 +54,12 @@ CDoc()                                                                  /*
     m_comboBoxIndx  = 0;
     m_sliderVal     = 0;
     CTime t = CTime::GetCurrentTime();
-    t.GetAsSystemTime(m_dateSysTime); 
+    t.GetAsSystemTime(m_dateSysTime);
     m_calDateSysTime = m_dateSysTime;
 }
 
 /*============================================================================*/
-    void CDoc:: 
+    void CDoc::
 LoadDocRegistry(LPCTSTR keyName)                                            /*
 
     Load the saved document value parameters from the registry from the

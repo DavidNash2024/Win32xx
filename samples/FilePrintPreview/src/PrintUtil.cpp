@@ -5,12 +5,12 @@
 |                                                                              |
 ===============================================================================*
 
-    Contents Description: Implementation of printer global utilities using the 
-    Win32++ Windows interface classes. 
+    Contents Description: Implementation of printer global utilities using the
+    Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -24,20 +24,20 @@ static const int TWIPSperIn = 1440;
 static int InchesToTWIPS(double inches) { return (int)(TWIPSperIn * inches);}
 
 /*============================================================================*/
-    CRect 
+    CRect
 GetPrinterPageRect(CDC& dcPrinter, CSize margin /* = CSize(0, 0) */)        /*
 
     Return a CRect of the current printer's page area within a margin
     on all sides. The margin and returned units are measured in twips.
 *-----------------------------------------------------------------------------*/
 {
-      // Get the printer page specifications, 
+      // Get the printer page specifications,
     int nHorizRes   = dcPrinter.GetDeviceCaps(HORZRES); // Pixels (dots)
     int nVertRes    = dcPrinter.GetDeviceCaps(VERTRES);
     int nLogPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);  // Pixels / in
     int nLogPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);
       // form the page rectangle with margins
-    CRect rcPage(margin.cx, margin.cy, 
+    CRect rcPage(margin.cx, margin.cy,
         (nHorizRes * TWIPSperIn) / nLogPixelsX  - margin.cx,
         (nVertRes  * TWIPSperIn) / nLogPixelsY  - margin.cy);
     return rcPage;
@@ -47,7 +47,7 @@ GetPrinterPageRect(CDC& dcPrinter, CSize margin /* = CSize(0, 0) */)        /*
     CRect
 GetPageRect(CDC& dcPrinter)                                                 /*
 
-    Return a CRect of the current printer's page rectangle having an 
+    Return a CRect of the current printer's page rectangle having an
     outer_margin. Units are measured in twips.
 *-----------------------------------------------------------------------------*/
 {
@@ -57,10 +57,10 @@ GetPageRect(CDC& dcPrinter)                                                 /*
 }
 
 /*============================================================================*/
-    CRect 
+    CRect
 GetPrintRect(CDC& dcPrinter)                                                /*
 
-    Return a CRect of the current printer's page rectangle having an 
+    Return a CRect of the current printer's page rectangle having an
     inner_margin. Units are measured in twips.
 *-----------------------------------------------------------------------------*/
 {

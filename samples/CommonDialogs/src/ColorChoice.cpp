@@ -24,12 +24,12 @@
     The user calls upon the DoModal() method to display the color selection
     ListBox and thence the color choice dialog to supply the color for that
     selection.  Access to a particular element in the color table is made
-    using its index in the GetTableColor(), GetBrush(), GetTableUsage(), 
+    using its index in the GetTableColor(), GetBrush(), GetTableUsage(),
     SetTableColor(), and SetTableUsage() methods.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -42,7 +42,7 @@ CColorChoice()                                                              /*
 
     Construct a color choice object with or without initial values.
 *-----------------------------------------------------------------------------*/
-    : m_selection(0) 
+    : m_selection(0)
 {
     ClearColorTable();
     InitCustomColors();

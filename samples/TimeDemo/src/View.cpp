@@ -9,9 +9,9 @@
     CScrollView base class for this application using the Win32++ Windows
     framework.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -22,14 +22,14 @@
 
 /*******************************************************************************
 
-    Class static variable initialization                                */
+    Class static variable initialization                                    */
 
     // latest file compilation date
 const CString CView::m_compiledOn = __DATE__;
 
 /*============================================================================*/
     CView::
-CView()                                                                 /*
+CView()                                                                     /*
 
     Construct a scrollable view with colored text and background.
 *-----------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ CView()                                                                 /*
 
 /*============================================================================*/
     CSize CView::
-GetFontSize() const                                                     /*
+GetFontSize() const                                                         /*
 
     Retrieves the size of the current font's characters in pixels.
 *-----------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ GetFontSize() const                                                     /*
 
 /*============================================================================*/
     void    CView::
-OnDraw(CDC& dcMem)                                                      /*
+OnDraw(CDC& dcMem)                                                          /*
 
     Called by OnPaint. This function draws to the window's compatible
     bitmap whose device context is dcMem. The content of the window
@@ -94,7 +94,7 @@ OnDraw(CDC& dcMem)                                                      /*
 
 /*============================================================================*/
     LRESULT  CView::
-OnPaint(UINT, WPARAM, LPARAM)                                           /*
+OnPaint(UINT, WPARAM, LPARAM)                                               /*
 
     Called when part or all of the window needs to be redrawn. Here we override
     CScrollView::OnPaint and provide our own bitmap. This avoids the scrolling
@@ -123,7 +123,7 @@ OnPaint(UINT, WPARAM, LPARAM)                                           /*
 
 /*============================================================================*/
     void CView::
-PreCreate(CREATESTRUCT &cs)                                             /*
+PreCreate(CREATESTRUCT &cs)                                                 /*
 
     Set defaults used by the create function for the view window for
     precise control over the window created.
@@ -136,7 +136,7 @@ PreCreate(CREATESTRUCT &cs)                                             /*
 
 /*============================================================================*/
     void CView::
-Serialize(CArchive& ar)                                                 /*
+Serialize(CArchive& ar)                                                     /*
 
     Called to serialize or deserialize the view to and  from the archive ar,
     depending on the sense of IsStoring().
@@ -173,7 +173,7 @@ Serialize(CArchive& ar)                                                 /*
 
 /*============================================================================*/
     void CView::
-SetAppSize(BOOL keepPos)                                                /*
+SetAppSize(BOOL keepPos)                                                    /*
 
     Calculate the nominal numbers of horizontal characters and vertical
     lines that span the document in display. Set scrolling parameters.
@@ -218,7 +218,7 @@ SetAppSize(BOOL keepPos)                                                /*
 
 /*============================================================================*/
     void CView::
-SetDefaultFont()                                                        /*
+SetDefaultFont()                                                            /*
 
     Create the default app font.
 *-----------------------------------------------------------------------------*/
@@ -256,7 +256,7 @@ SetDefaultFont()                                                        /*
 
 /*============================================================================*/
     void CView::
-SetDefaults()                                                           /*
+SetDefaults()                                                               /*
 
     Sets the member variables to their default values.
 *-----------------------------------------------------------------------------*/
@@ -271,7 +271,7 @@ SetDefaults()                                                           /*
 
 /*============================================================================*/
     void    CView::
-TextLineOut(CDC& dc, UINT leftcol, UINT line, LPCTSTR s) const          /*
+TextLineOut(CDC& dc, UINT leftcol, UINT line, LPCTSTR s) const              /*
 
     Output the character string s beginning at leftcol on the given line of
     the client area with device context dc, within the client rectangle rc
@@ -288,7 +288,7 @@ TextLineOut(CDC& dc, UINT leftcol, UINT line, LPCTSTR s) const          /*
 
 /*============================================================================*/
     LRESULT CView::
-WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
+WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
 
     All messages for this window pass through this WndProc.  In particular,
     handling scrollbar messages are dispatched here.

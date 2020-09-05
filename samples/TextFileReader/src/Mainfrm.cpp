@@ -8,9 +8,9 @@
     Contents Description: Implementation of the CMainFrame class for this sample
     program using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
-    and Preparation Subsystem project for C++ programming.
+     Programming Notes: The programming style roughly follows that established
+     got the 1995-1999 Jet Propulsion Laboratory Network Planning and
+     Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -33,7 +33,6 @@ CMainFrame()                                                                /*
     m_wndPl.length = sizeof(WINDOWPLACEMENT);
       // Set m_View as the view window of the frame
     SetView(m_view);
-    m_compiledOn = __DATE__;
 }
 
 /*============================================================================*/

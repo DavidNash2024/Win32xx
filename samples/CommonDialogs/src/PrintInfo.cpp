@@ -37,9 +37,9 @@
     of CPrintInfo to FALSE; this informs the base class to stop the print
     loop.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -75,20 +75,11 @@ CPrintInfo()                                                            /*
     m_nMargin     = 0;     // page margin, in twips
 }
 
-
-/*============================================================================*/
-    CPrintInfo::
-~CPrintInfo()                                                            /*
-
-*-----------------------------------------------------------------------------*/
-{
-}
-
 /*============================================================================*/
     void CPrintInfo::
 InitInfo(CPrintDialog* pPD, UINT fromPage, UINT toPage, UINT minPage,
     UINT maxPage, UINT nCopies)                     /*
-    
+
         Set initial values for the CPrintInfo object. This member must be
     invoked with a valid CPrintDialog pPD before a DoModal operation using
     the object for other uses.

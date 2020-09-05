@@ -7,10 +7,10 @@
     Contents Description: The declaration and implementation of the
     MyPrintDialog and MyPageSetup classes, which are derived from the
     CPrintDialog and CPageSetupDialog class.
-    
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -18,7 +18,7 @@
 #define MYPRINTER_H
 
 /*============================================================================*/
-    class 
+    class
 MyPrintDialog : public CPrintDialog                                         /*
 
 *-----------------------------------------------------------------------------*/
@@ -37,8 +37,8 @@ MyPrintDialog : public CPrintDialog                                         /*
                   { ::MessageBox(NULL, _T("Print job cancelled."),
                       _T("Information"), MB_OK | MB_ICONINFORMATION |
                       MB_TASKMODAL); }
- 
-          // override thid method to provide the needed preparation to 
+
+          // override thid method to provide the needed preparation to
           // print the document upon user approval
         virtual void    OnOK() {}
 
@@ -48,7 +48,7 @@ MyPrintDialog : public CPrintDialog                                         /*
 };
 
 /*============================================================================*/
-    class 
+    class
 MyPageSetup : public CPageSetupDialog                                   /*
 
 *-----------------------------------------------------------------------------*/
@@ -58,8 +58,8 @@ MyPageSetup : public CPageSetupDialog                                   /*
             :   CPageSetupDialog(dwFlags) { }
         virtual ~MyPageSetup() {}
 
-           // Record the title of the page setup dialog box after an object 
-          // of this class is constructed, but before DoModal() is invoked. 
+           // Record the title of the page setup dialog box after an object
+          // of this class is constructed, but before DoModal() is invoked.
        virtual void SetBoxTitle(LPCTSTR title) {m_PSDTitle = title;}
 
     protected:
@@ -67,15 +67,15 @@ MyPageSetup : public CPageSetupDialog                                   /*
           //  when the printer box is initialized. Return TRUE.
         virtual BOOL OnInitDialog() {SetWindowTitle(); return TRUE;}
 
-          // Override this member to perform any special processing to reset 
-          // the printer to its incoming state. For now just announce that 
+          // Override this member to perform any special processing to reset
+          // the printer to its incoming state. For now just announce that
           //the dialog was cancelled
         virtual void OnCancel()
-                        { ::MessageBox(NULL, _T("Page setup cancelled. "), 
-                            _T("Information"), MB_OK | MB_ICONINFORMATION | 
+                        { ::MessageBox(NULL, _T("Page setup cancelled. "),
+                            _T("Information"), MB_OK | MB_ICONINFORMATION |
                             MB_TASKMODAL); }
-  
-          // override this member to store the page parameters for  use 
+
+          // override this member to store the page parameters for  use
           // in printing
         virtual void OnOK() {}
         virtual void SetWindowTitle() const { SetWindowText( m_PSDTitle);}

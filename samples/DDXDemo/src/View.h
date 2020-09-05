@@ -12,9 +12,9 @@
     program was based on code provided by Lynn Allan. This program extends the
     given sample by application of Dialog Data Exchange and Validation (DDX/DDV).
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
     Acknowledgement: The author would like to thank and acknowledge the advice,
     critical review, insight, and assistance provided by David Nash in the
@@ -27,8 +27,6 @@
 
 #include "MyButton.h"
 #include "MyScrollbar.h"
-#include "MyMonthCalendar.h"
-#include "MyDateTime.h"
 #include "Doc.h"
 
 /*============================================================================*/
@@ -84,6 +82,8 @@ CView : public CDialog                                                      /*
         class CMyProgressBar   : public CProgressBar   {};
         class CMyRichEdit      : public CRichEdit      {};
         class CMySlider        : public CSlider        {};
+        class CMyMonthCalendar : public CMonthCalendar {};
+        class CMyDateTime      : public CDateTime      {};
 
         // DDX/DDV variables that need to be visible to friends
         int         m_sliderVal;

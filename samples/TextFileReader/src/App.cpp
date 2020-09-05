@@ -8,9 +8,9 @@
     Contents Description: Implementation of the CApp class for this sample
     program using the Win32++ Windows interface classes.
 
-    Programming Notes: The programming standards roughly follow those
-    established by the 1997-1999 Jet Propulsion Laboratory Network Planning
-    and Preparation Subsystem project for C++ programming.
+     Programming Notes: The programming style roughly follows that established
+     got the 1995-1999 Jet Propulsion Laboratory Network Planning and
+     Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -20,11 +20,18 @@
 
 #include "StdApp.h"
 
-/*============================================================================*/
+/*******************************************************************************
+
+    Windows application entry point.
+
+*=============================================================================*/
     int APIENTRY
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int )                                  /*
 
-    Application entry point.
+    This function is called by the system as the initial entry point for
+    a WinApi-based application. None of the passed parameters are used by
+    this application, and are thus not named in the calling sequence above
+    in order to suppress compiler messages.
 *-----------------------------------------------------------------------------*/
 {
       // set default return value

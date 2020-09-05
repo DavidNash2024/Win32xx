@@ -10,9 +10,9 @@
     derives from the CFontDalog class found in the framework to add needed
     functionality in displaying the view.
 
-    Programming Notes: The programming standards roughly follow those 
-    established by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-    Planning and Preparation Subsystem project for C++ programming.
+    Programming Notes: The programming style roughly follows that established
+    by the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+    Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -39,7 +39,7 @@ MyFontDialog : public CFontDialog                                       /*
                       SetChoiceLogFont(lf);}
 
     protected:
-        virtual TEXTMETRIC* GetTextMetric() { return &m_tm;} 
+        virtual TEXTMETRIC* GetTextMetric() { return &m_tm;}
         virtual BOOL    OnInitDialog();
         virtual void    RecordFontMetrics();
         virtual void    Serialize(CArchive &ar);
@@ -52,7 +52,7 @@ MyFontDialog : public CFontDialog                                       /*
     private:
         CString     m_boxTitle;
         TEXTMETRIC  m_tm;       // font text metrics
-        CSize       m_fontSize; // font average width & height 
+        CSize       m_fontSize; // font average width & height
         CFont       m_font;     // the current font
         LOGFONT     m_logFont;  // the current logfont
 };
