@@ -8,6 +8,7 @@
 
 struct MovieInfo;
 
+// Struct used by the compare function.
 struct SortViewItems
 {
     SortViewItems(int column, bool isSortDown) : m_column(column), m_isSortDown(isSortDown)
@@ -15,7 +16,6 @@ struct SortViewItems
     int m_column;
     bool m_isSortDown;
 };
-
 
 // Enum for the sorting arrow
 enum SHOW_ARROW
@@ -31,31 +31,20 @@ enum SHOW_ARROW
 class CViewList : public CListView
 {
 public:
-    // a nested class for the ListView's header
-    class CLVHeader : public CHeader
-    {
-    public:
-        CLVHeader() {}
-        virtual ~CLVHeader() {}
-
-        virtual void OnAttach()
-        {
-            // Disable XP themes for the ListView's header.
-            // Avoids a Windows 10 bug drawing the sorting arrows with DPI aware enabled.
-            SetWindowTheme(L" ", L" ");
-        }
-
-    };
-
     CViewList();
     virtual ~CViewList();
 
-    void AddItem(const MovieInfo& mi);
-    void SetColumn();
-    BOOL SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow);
-    void SetLastColumnWidth();
-    void SortColumn(int column, bool isSortDown);
-    void UpdateItemImage(int item);
+    void    AddItem(const MovieInfo& mi);
+    CString GetFileTime(FILETIME fileTime);
+    LRESULT OnItemActivate(LPNMITEMACTIVATE pnmitem);
+    LRESULT OnItemChanged(LPNMITEMACTIVATE pnmitem);
+    LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);
+    LRESULT OnRClick();
+    void    SetColumn();
+    BOOL    SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow);
+    void    SetLastColumnWidth();
+    void    SortColumn(int column, bool isSortDown);
+    void    UpdateItemImage(int item);
 
 protected:
     virtual void    OnAttach();
@@ -69,7 +58,6 @@ private:
 
     CImageList m_normal;
     CImageList m_small;
-    CLVHeader  m_header;
 };
 
 

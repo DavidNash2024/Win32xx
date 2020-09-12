@@ -2,8 +2,8 @@
 // MovieShowApp.h
 //
 
-#ifndef MOVIESHOWAPP_H
-#define MOVIESHOWAPP_H
+#ifndef _MOVIESHOWAPP_H_
+#define _MOVIESHOWAPP_H_
 
 #include "Mainfrm.h"
 
@@ -17,8 +17,6 @@ public:
     CMovieShowApp();
     virtual ~CMovieShowApp();
 
-    CMainFrame& GetMainFrame() { return m_frame; }
-
 protected:
     virtual BOOL InitInstance();
 
@@ -27,9 +25,4 @@ private:
 };
 
 
-//returns a pointer to the CFrameApp object
-inline CMovieShowApp* GetMovieShowApp() { return static_cast<CMovieShowApp*>(GetApp()); }
-
-
-#endif // define MOVIESHOWAPP_H
-
+#endif // _MOVIESHOWAPP_H_

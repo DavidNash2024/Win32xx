@@ -35,6 +35,7 @@
 #include <tchar.h>              // Add support for C style TCHARs.
 
 #include <wxx_appcore.h>        // Add CCriticalSection, CObject, CWinThread, CWinApp
+#include <uxtheme.h>            // Add windows theming API.
 #include <wxx_archive.h>        // Add CArchive
 #include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip
@@ -78,6 +79,5 @@
 #include <wxx_treeview.h>       // Add CTreeView
 #include <wxx_webbrowser.h>     // Add CWebBrowser, CAXHost
 #include <wxx_wincore.h>        // Add CWnd
-
 
 #endif

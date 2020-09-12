@@ -38,9 +38,8 @@ New Features and Enhancements
 
 * Updated the Code::Blocks project files support version 20.03.
    Note: The MinGW compiler that ships with version 20.03 of Code::Blocks
-   compiles 64 bit code only. To support code 32bit code, download the
-   latest MinGW compiler from https://sourceforge.net/projects/tdm-gcc/
-   or elsewhere.
+   compiles 64 bit code only. To support code 32bit code you can use the
+   MinGW compiler that ships with Code::Blocks version 17:12.
 
 * Updated the CAXHost class.
    This class implements a COM container which hosts an ActiveX control,
@@ -51,12 +50,16 @@ New Features and Enhancements
    The manifest file now provides support for Windows 10 features, and
    support for Per-Monitor DPI Awareness, version 2.
 
-* Minor updates to the samples
+* Minor updates to the samples.
   - The Notepad and PrintPreview samples use OnIdle to update the toolbar.
   - Samples which use CWebBrowser now suppress the display of java script
     errors.
+  - Added column sort to explorer sample.
+  - Samples which require Windows XP and above use wide characters. Samples
+    which are supported on Windows 98 continue to use tchar characters.
+  
 
-* Minor updates to the help documentation
+* Minor updates to the help documentation.
 
 
 Changes in detail
@@ -67,7 +70,15 @@ Added BrowserATL                                 sample
 Added MovieShow                                  sample
 Added WinPlot                                    sample
 
+Added CDC::AbortPath                             member function  
 Added CDC::CreatePointFont                       member function
+Added CDC::CreatePointFontIndirect               member function
+Added CDC::CreateRgnFromData                     member function                     
+Added CDC::CreateRgnFromPath                     member function
+Added CDC::CreateRoundRectRgn                    member function
+Added CDC::ExtCreatePen                          member function             
+Added CDC::StrokePath                            member function
+Added CDC::StrokeAndFillPath                     member function
 Added CFrameT::AddMenuIcon (additional overload) member function
 Added CFrameT::SetKbdHook                        member function
 Added CImageList::AddIcon                        member function

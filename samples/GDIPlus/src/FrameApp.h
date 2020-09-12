@@ -16,16 +16,10 @@ public:
     CFrameApp();
     virtual ~CFrameApp();
     virtual BOOL InitInstance();
-    CMainFrame& GetMainFrame() { return m_frame; }
 
 private:
     CMainFrame m_frame;
 };
 
 
-// a useful function that returns a pointer to the CFrameApp object
-inline CFrameApp* GetFrameApp() { return static_cast<CFrameApp*>(GetApp()); }
-
-
 #endif // define FRAMEAPP_H
-

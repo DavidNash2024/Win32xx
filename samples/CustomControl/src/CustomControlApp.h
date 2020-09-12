@@ -15,7 +15,6 @@ class CCustomControlApp : public CWinApp
 public:
     CCustomControlApp();
     virtual ~CCustomControlApp();
-    CMyDialog& GetDialog() {return m_myDialog;}
     virtual BOOL InitInstance();
 
 private:
@@ -24,4 +23,3 @@ private:
 
 
 #endif // define CUSTOMCONTROLAPP_H
-

@@ -23,7 +23,7 @@ CMyTreeView::~CMyTreeView()
 }
 
 // Compares param1 and param2. Used for sorting.
-int CALLBACK CMyTreeView::CompareProc(LPARAM param1, LPARAM param2, LPARAM paramSort)
+int CALLBACK CMyTreeView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM paramSort)
 {
     UNREFERENCED_PARAMETER(paramSort);
     TreeItemData* pItem1 = reinterpret_cast<TreeItemData*>(param1);
@@ -207,7 +207,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM parentItem)
     // Sort the new items.
     TV_SORTCB sortInfo;
     sortInfo.hParent = parentItem;
-    sortInfo.lpfnCompare = CompareProc;
+    sortInfo.lpfnCompare = CompareFunction;
     sortInfo.lParam = 0;
     SortChildrenCB(&sortInfo, 0);
 

@@ -57,7 +57,7 @@ UINT CRichView::CollatePages()
     m_pageBreaks.push_back(-1);
 
     // return the number of pages.
-    return m_pageBreaks.size();
+    return static_cast<UINT>(m_pageBreaks.size());
 }
 
 // Choose the printer and start the print job.

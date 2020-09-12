@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "view.h"
-#include "PictureApp.h"
+#include "UserMessages.h"
 #include "resource.h"
 
 #define HIMETRIC_INCH   2540
@@ -12,6 +12,8 @@
 /////////////////////////////
 // CView function definitions
 //
+
+
 
 // Constructor.
 CView::CView() : m_pPicture(NULL)
@@ -65,8 +67,7 @@ void CView::NewPictureFile()
         SetScrollSizes();
     }
 
-    CMainFrame& frame = GetPicApp()->GetMainFrame();
-    frame.SetWindowText(LoadString(IDW_MAIN).c_str());
+    GetAncestor().SetWindowText(LoadString(IDW_MAIN).c_str());
     Invalidate();
 }
 
@@ -84,8 +85,7 @@ BOOL CView::LoadPictureFile(LPCTSTR fileName)
     // Create IPicture from image file
     if (S_OK == ::OleLoadPicturePath(TtoOLE(fileName), NULL, 0, 0,    IID_IPicture, (LPVOID *)&m_pPicture))
     {
-        CMainFrame& frame = GetPicApp()->GetMainFrame();
-        frame.SendMessage(UWM_FILELOADED, 0, (LPARAM)fileName);
+        GetAncestor().SendMessage(UWM_FILELOADED, 0, (LPARAM)fileName);
         Invalidate();
         CSize size = CSize(GetImageRect().Width(), GetImageRect().Height());
         SetScrollSizes(size);
@@ -101,8 +101,7 @@ BOOL CView::LoadPictureFile(LPCTSTR fileName)
         TRACE(str); TRACE("\n");
 
         // Set Frame title back to default
-        CMainFrame& frame = GetPicApp()->GetMainFrame();
-        frame.SetWindowText(LoadString(IDW_MAIN).c_str());
+        GetAncestor().SetWindowText(LoadString(IDW_MAIN).c_str());
         SetScrollSizes();
         IsPictureLoaded = FALSE;
     }

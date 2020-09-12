@@ -174,7 +174,7 @@ void CContainClasses::OnFileNew()
 void CContainClasses::OnHelpAbout()
 {
     // Send a message to the frame requesting the help dialog
-    GetTabbedMDIApp()->GetMainFrame().SendMessage(WM_HELP);
+    GetAncestor().SendMessage(WM_HELP);
 }
 
 // Set the Bitmap resource for the toolbar

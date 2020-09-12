@@ -7,6 +7,7 @@
 
 #include "Mainfrm.h"
 
+
 ///////////////////////////////////////
 // Declaration of the CPictureApp class
 //
@@ -16,18 +17,10 @@ public:
     CPictureApp();
     virtual ~CPictureApp();
     virtual BOOL InitInstance();
-    CMainFrame& GetMainFrame() { return m_frame; }
 
 private:
     CMainFrame m_frame;
 };
-
-
-// returns a pointer to the CPictureApp object
-inline CPictureApp* GetPicApp() { return static_cast<CPictureApp*>(GetApp()); }
-
-// User Defined message
-#define UWM_FILELOADED       (WM_APP + 1)   // Message - Sent by CView to parent to indicate file loaded.
 
 
 #endif // define PICTUREAPP_H

@@ -496,6 +496,7 @@ namespace Win32xx
         // Create Fonts
         void CreateFontIndirect(const LOGFONT& lf);
         void CreatePointFont(int pointSize, LPCTSTR pFaceName, HDC dc = NULL, BOOL isBold = FALSE, BOOL isItalic = FALSE);
+        void CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = NULL);
 
 #ifndef _WIN32_WCE
         void CreateFont(int height, int width, int escapement, int orientation, int weight,
@@ -516,6 +517,10 @@ namespace Win32xx
         void CreatePen(int style, int width, COLORREF color);
         void CreatePenIndirect(const LOGPEN& logPen);
 
+#ifndef _WIN32_WCE
+        void ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount, const DWORD* pStyle);
+#endif
+
         // Retrieve and Select Stock Objects
         HGDIOBJ GetStockObject(int index) const;
         HGDIOBJ SelectStockObject(int index) const;
@@ -523,13 +528,16 @@ namespace Win32xx
         // Create Regions
         int CreateRectRgn(int left, int top, int right, int bottom);
         int CreateRectRgnIndirect(const RECT& rc);
-        int CreateFromData(const XFORM* pXform, DWORD count, const RGNDATA* pRgnData);
+
+        int CreateRgnFromData(const XFORM* pXform, DWORD count, const RGNDATA* pRgnData);
+        int CreateRgnFromPath(HDC dc);
 
 #ifndef _WIN32_WCE
         int CreateEllipticRgn(int left, int top, int right, int bottom);
         int CreateEllipticRgnIndirect(const RECT& rc);
         int CreatePolygonRgn(LPPOINT pPointArray, int points, int polyFillMode);
         int CreatePolyPolygonRgn(LPPOINT pPointArray, LPINT pPolyCounts, int count, int polyFillMode);
+        int CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3);
 #endif
 
         // Wrappers for WinAPI functions
@@ -707,6 +715,7 @@ namespace Win32xx
         int  SelectClipRgn(HRGN rgn) const;
 
 #ifndef _WIN32_WCE
+        BOOL AbortPath() const;
         BOOL BeginPath() const;
         BOOL EndPath() const;
         int  ExtSelectClipRgn(HRGN rgn, int mode) const;
@@ -715,6 +724,8 @@ namespace Win32xx
         int  OffsetClipRgn(int xOffset, int yOffset) const;
         BOOL PtVisible(int x, int y) const;
         BOOL SelectClipPath(int mode) const;
+        BOOL StrokeAndFillPath() const;
+        BOOL StrokePath() const;
         BOOL WidenPath() const;
 #endif
 
@@ -1962,8 +1973,8 @@ namespace Win32xx
     }
 
     // Creates a font of a specified typeface and point size.
-    // This function automatically converts the height in lfHeight to logical units
-    // using the specified device context.
+    // This function automatically converts the height in lfHeight to logical
+    // units using the specified device context.
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
     inline HFONT CFont::CreatePointFontIndirect(const LOGFONT& logFont, HDC dc /* = NULL*/)
     {
@@ -3309,6 +3320,20 @@ namespace Win32xx
         m_pData->font = font;
     }
 
+    // Creates a font of a specified typeface and point size.
+    // This function automatically converts the height in lfHeight to logical
+    // units using the specified device context.
+    // Refer to CreateFontIndirect in the Windows API documentation for more information.
+    inline void CDC::CreatePointFontIndirect(const LOGFONT& logFont, HDC dc)
+    {
+        assert(m_pData->dc != 0);
+
+        CFont font;
+        font.CreatePointFontIndirect(logFont, dc);
+        SelectObject(font);
+        m_pData->font = font;
+    }
+
     // Retrieves the handle to the current font object.
     // Refer to GetCurrentObject in the Windows API documentation for more information.
     inline HFONT CDC::GetCurrentFont() const
@@ -3483,6 +3508,22 @@ namespace Win32xx
         m_pData->pen = pen;
     }
 
+#ifndef _WIN32_WCE
+
+    // Creates a logical cosmetic or geometric pen that has the specified style, width, and brush attributes.
+    // Refer to ExtCreatePen in the Windows API documentation for more information.
+    inline void CDC::ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount , const DWORD* pStyle)
+    {
+        assert(m_pData->dc != 0);
+
+        CPen pen;
+        pen.ExtCreatePen(penStyle, width, logBrush, styleCount, pStyle);
+        SelectObject(pen);
+        m_pData->pen = pen;
+    }
+
+#endif
+
     // Retrieves the handle to the currently selected pen.
     // Refer to GetCurrentObject in the Windows API documentation for more information.
     inline HPEN CDC::GetCurrentPen() const
@@ -3566,7 +3607,7 @@ namespace Win32xx
     // Notes: GetRegionData can be used to get a region's data
     //        If the XFROM pointer is NULL, the identity transformation is used.
     // Refer to ExtCreateRegion in the Windows API documentation for more information.
-    inline int CDC::CreateFromData(const XFORM* pXform, DWORD count, const RGNDATA* pRgnData)
+    inline int CDC::CreateRgnFromData(const XFORM* pXform, DWORD count, const RGNDATA* pRgnData)
     {
         assert(m_pData->dc != 0);
 
@@ -3633,6 +3674,33 @@ namespace Win32xx
 
         CRgn rgn;
         rgn.CreatePolyPolygonRgn(pPointArray, pCount, count, polyFillMode);
+        int Complexity = SelectClipRgn(rgn);
+        m_pData->rgn = rgn;
+        return Complexity;
+    }
+
+    // Creates a region from the path that is selected into the specified device context.
+    // The resulting region uses device coordinates.
+    // Refer to PathToRegion in the Windows API documentation for more information.
+    inline int CDC::CreateRgnFromPath(HDC dc)
+    {
+        assert(m_pData->dc != 0);
+
+        CRgn rgn;
+        rgn.CreateFromPath(dc);
+        int Complexity = SelectClipRgn(rgn);
+        m_pData->rgn = rgn;
+        return Complexity;
+    }
+
+    // Creates a rectangular region with rounded corners.
+    // Refer to CreateRoundRectRgn in the Windows API documentation for more information.
+    inline int CDC::CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3)
+    {
+        assert(m_pData->dc != 0);
+
+        CRgn rgn;
+        rgn.CreateRoundRectRgn(x1, y1, x2, y2, x3, y3);
         int Complexity = SelectClipRgn(rgn);
         m_pData->rgn = rgn;
         return Complexity;
@@ -3812,6 +3880,14 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
+    // The AbortPath function closesand discards any paths in the specified device context.
+    // Refer to AbortPath in the Windows API documentation for more information.
+    inline BOOL CDC::AbortPath() const
+    {
+        assert(m_pData->dc != 0);
+        return ::AbortPath(m_pData->dc);
+    }
+
     // Opens a path bracket in the device context.
     // Refer to BeginPath in the Windows API documentation for more information.
     inline BOOL CDC::BeginPath() const
@@ -3880,6 +3956,24 @@ namespace Win32xx
     {
         assert(m_pData->dc != 0);
         return ::SelectClipPath(m_pData->dc, mode);
+    }
+
+    // The StrokeAndFillPath function closes any open figures in a path, 
+    // strokes the outline of the path by using the current pen, and fills
+    // its interior by using the current brush.
+    // Refer to StrokeAndFillPath in the Windows API documentation for more information.
+    inline BOOL CDC::StrokeAndFillPath() const
+    {
+        assert(m_pData->dc != 0);
+        return ::StrokeAndFillPath(m_pData->dc);
+    }
+
+    // The StrokePath function renders the specified path by using the current pen.
+    // Refer to StrokePath in the Windows API documentation for more information.
+    inline BOOL CDC::StrokePath() const
+    {
+        assert(m_pData->dc != 0);
+        return ::StrokePath(m_pData->dc);
     }
 
     // Redefines the current path as the area that would be painted if the path were

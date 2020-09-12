@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "Mainfrm.h"
-#include "PictureApp.h"
+#include "UserMessages.h"
 #include "resource.h"
 
 //////////////////////////////////

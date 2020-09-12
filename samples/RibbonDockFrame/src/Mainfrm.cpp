@@ -9,6 +9,7 @@
 #include "mainfrm.h"
 #include "files.h"
 #include "resource.h"
+#include "UserMessages.h"
 
 //////////////////////////////////
 // CMainFrame function definitions
@@ -411,7 +412,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 }
 
 LRESULT CMainFrame::OnGetAllPoints()
-// Called in response to a UWN_GETALLPOINTS message
+// Called in response to a UWM_GETALLPOINTS message
 {
     // Get a pointer to the vector of PlotPoints
     std::vector<PlotPoint>* pAllPoints = &GetDoc().GetAllPoints();
@@ -436,7 +437,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch (msg)
     {
     case UWM_DROPFILE:          return OnDropFile(wparam);
-    case UWN_GETALLPOINTS:      return OnGetAllPoints();
+    case UWM_GETALLPOINTS:      return OnGetAllPoints();
     case UWM_SENDPOINT:         return OnSendPoint(wparam);
     }
 

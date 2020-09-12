@@ -38,8 +38,7 @@ CApp : public CWinApp                                                   /*
         CApp() {}
         virtual ~CApp() {}
 
-        BOOL        InitInstance();
-        CMainFrame* TheFrame() { return &m_frame; }
+        virtual BOOL InitInstance();
 
     private:
         CMainFrame m_frame;

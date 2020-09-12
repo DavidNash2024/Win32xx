@@ -17,16 +17,10 @@ public:
     virtual ~CTextApp()  {}
     virtual BOOL InitInstance();
     virtual BOOL OnIdle(LONG count);
-    CMainFrame& GetMainFrame() { return m_frame; }
 
 private:
     CMainFrame m_frame;
 };
 
 
-// returns a pointer to the CTextApp object
-inline CTextApp* GetTextApp() { return static_cast<CTextApp*>(GetApp()); }
-
-
 #endif // define TEXTAPP_H
-

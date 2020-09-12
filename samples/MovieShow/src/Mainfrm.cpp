@@ -6,6 +6,7 @@
 #include "resource.h"
 #include "mainfrm.h"
 #include "SearchDialog.h"
+#include "UserMessages.h"
 
 #ifdef _MSC_VER
 #pragma warning (disable : 4458) // disable declaration hides class member warning
@@ -212,30 +213,6 @@ void CMainFrame::FillList()
         ClearDisplay();
 }
 
-// Fills the list view with movies belonging to the specified boxset.
-void CMainFrame::FillListFromBoxSet(LPCTSTR boxset)
-{
-    GetViewList().SetRedraw(FALSE);
-    m_splash.ShowText(L"Updating List");
-    ClearList();
-
-    // Lock this function for thread safety
-    CThreadLock lock(m_cs);
-
-    std::list<MovieInfo>::const_iterator iter;
-    for (iter = m_moviesData.begin(); iter != m_moviesData.end(); ++iter)
-    {
-        if ((*iter).boxset == boxset)
-            GetViewList().AddItem(*iter);
-    }
-
-    m_splash.Hide();
-    GetViewList().SetRedraw(TRUE);
-    GetViewList().SetLastColumnWidth();
-    if (GetViewList().GetItemCount() == 0)
-        ClearDisplay();
-}
-
 // Fills the list view with movies belonging to all boxsets.
 void CMainFrame::FillListFromAllBoxSets()
 {
@@ -250,6 +227,30 @@ void CMainFrame::FillListFromAllBoxSets()
     for (iter = m_moviesData.begin(); iter != m_moviesData.end(); ++iter)
     {
         if ((*iter).boxset != L"")
+            GetViewList().AddItem(*iter);
+    }
+
+    m_splash.Hide();
+    GetViewList().SetRedraw(TRUE);
+    GetViewList().SetLastColumnWidth();
+    if (GetViewList().GetItemCount() == 0)
+        ClearDisplay();
+}
+
+// Fills the list view with movies belonging to the specified boxset.
+void CMainFrame::FillListFromBoxSet(LPCTSTR boxset)
+{
+    GetViewList().SetRedraw(FALSE);
+    m_splash.ShowText(L"Updating List");
+    ClearList();
+
+    // Lock this function for thread safety
+    CThreadLock lock(m_cs);
+
+    std::list<MovieInfo>::const_iterator iter;
+    for (iter = m_moviesData.begin(); iter != m_moviesData.end(); ++iter)
+    {
+        if ((*iter).boxset == boxset)
             GetViewList().AddItem(*iter);
     }
 
@@ -313,6 +314,22 @@ void CMainFrame::FillListFromFlags(DWORD mask)
         ClearDisplay();
 }
 
+// Fills the list view with movies matching the specified genre.
+void CMainFrame::FillListFromGenre(LPCTSTR genre)
+{
+    // Lock this function for thread safety
+    CThreadLock lock(m_cs);
+
+    std::list<MovieInfo>::const_iterator iter;
+    for (iter = m_moviesData.begin(); iter != m_moviesData.end(); ++iter)
+    {
+        if (((*iter).genre.Find(genre, 0) >= 0) && (*iter).videoType == L"Movies")
+            GetViewList().AddItem(*iter);
+    }
+
+    GetViewList().SetLastColumnWidth();
+}
+
 // Fills the list view with movies from all genres.
 void CMainFrame::FillListFromGenres(LPCTSTR genreList)
 {
@@ -339,20 +356,31 @@ void CMainFrame::FillListFromGenres(LPCTSTR genreList)
         ClearDisplay();
 }
 
-// Fills the list view with movies matching the specified genre.
-void CMainFrame::FillListFromGenre(LPCTSTR genre)
+// Fill the listview with movies found while searching.
+void CMainFrame::FillListFromSearch()
 {
-    // Lock this function for thread safety
-    CThreadLock lock(m_cs);
+    GetViewList().SetRedraw(FALSE);
+    m_splash.ShowText(L"Updating List");
+    ClearList();
 
-    std::list<MovieInfo>::const_iterator iter;
-    for (iter = m_moviesData.begin(); iter != m_moviesData.end(); ++iter)
+    for (UINT i = 0; i < m_foundMovies.size(); ++i)
     {
-        if (((*iter).genre.Find(genre, 0) >= 0) && (*iter).videoType == L"Movies")
-            GetViewList().AddItem(*iter);
+        MoviesData::iterator it;
+        for (it = m_moviesData.begin(); it != m_moviesData.end(); ++it)
+        {
+            if (&(*it) == m_foundMovies[i])
+            {
+                GetViewList().AddItem(*it);
+                break;
+            }
+        }
     }
 
+    m_splash.Hide();
+    GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
+    if (GetViewList().GetItemCount() == 0)
+        ClearDisplay();
 }
 
 // Fills the list view with movies matching the specified type.
@@ -409,6 +437,8 @@ void CMainFrame::FillTreeItems()
 
     GetViewTree().AddItem(libraryItem, L"Live Performances", 6);
     GetViewTree().AddItem(libraryItem, L"Favourites", 4);
+    GetViewTree().AddItem(libraryItem, L"Watch List", 8);
+    m_searchItem = GetViewTree().AddItem(libraryItem, L"Search", 7);
 
     // Expand some tree-view items
     GetViewTree().Expand(libraryItem, TVE_EXPAND);
@@ -416,6 +446,7 @@ void CMainFrame::FillTreeItems()
 
     GetViewTree().SelectItem(libraryItem);
 }
+
 
 // Returns a vector of CString holding the box set names.
 std::vector<CString> CMainFrame::GetBoxSets()
@@ -442,7 +473,6 @@ CString CMainFrame::GetDataPath() const
 
     return filePath;
 }
-
 // Converts a text string to a vector of words.
 std::vector<CString> CMainFrame::GetWords(const CString& str) const
 {
@@ -519,7 +549,7 @@ void CMainFrame::LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movi
     FillImageData(CoverImage, movie.imageData);
     movie.genre.Remove(L" / 57");
     movie.videoType = L"Movies";
-    movie.flags = 0;
+    movie.flags = 0x0002;   // Adds video to the watch list.
 
     MI.Close();
 }
@@ -691,7 +721,7 @@ BOOL CMainFrame::OnAddFolder()
             CString searchString = fd.GetFolderPath() + L"\\*.m??";
             CFileFind fileFound;
 
-            m_foundFiles.clear();
+            m_filesToAdd.clear();
             if (fileFound.FindFirstFile(searchString))
             {
                 do
@@ -703,7 +733,7 @@ BOOL CMainFrame::OnAddFolder()
                         if (IsVideoFile(ffi.fileName))
                         {
                             ffi.lastModifiedTime = fileFound.GetLastWriteTime();
-                            m_foundFiles.push_back(ffi);
+                            m_filesToAdd.push_back(ffi);
                         }
                     }
                 while (fileFound.FindNextFile());
@@ -723,19 +753,19 @@ BOOL CMainFrame::OnBoxSet(UINT nID)
 {
     int index = nID - IDM_BOXSET_1;
     std::vector<CString> boxsets = GetBoxSets();
-    int iItem = -1;
-    while ((iItem = GetViewList().GetNextItem(iItem, LVIS_SELECTED)) != -1)
+    int item = -1;
+    while ((item = GetViewList().GetNextItem(item, LVIS_SELECTED)) != -1)
     {
         m_isDirty = true;
-        MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(iItem);
+        MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(item);
         pmi->boxset = (index < 0) ? L"" : boxsets[index];
-        GetViewList().UpdateItemImage(iItem);
+        GetViewList().UpdateItemImage(item);
     }
 
-    HTREEITEM item = GetViewTree().GetSelection();
-    CString itemText = GetViewTree().GetItemText(item);
+    HTREEITEM treeItem = GetViewTree().GetSelection();
+    CString itemText = GetViewTree().GetItemText(treeItem);
 
-    HTREEITEM parentItem = GetViewTree().GetParentItem(item);
+    HTREEITEM parentItem = GetViewTree().GetParentItem(treeItem);
     CString parentText = GetViewTree().GetItemText(parentItem);
 
     if (parentText == L"Box Sets")
@@ -760,7 +790,7 @@ BOOL CMainFrame::OnBoxSet(UINT nID)
 // Stores the movie data in an archive if it has changed.
 void CMainFrame::OnClose()
 {
-    // terminate the load files thread
+    // Terminate the load files thread.
     ::SetEvent(m_stopRequest);
     ::WaitForSingleObject(m_thread, INFINITE);
 
@@ -850,6 +880,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     case IDM_RENAME_BOXSET:     return OnRenameBoxSet();
     case IDM_REMOVE_BOXSET:     return OnRemoveBoxSet();
 
+    case IDM_WATCHLIST:         return OnWatchList();
+
     case IDM_REMOVE_FILE:       return OnRemoveFile();
     case IDM_SEARCH:            return OnSearch();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
@@ -890,29 +922,41 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CDockFrame::OnCreate(cs);
 }
 
+// Adjust the column sizes to match the list view window width.
+LRESULT CMainFrame::OnExitSizeMove()
+{
+    GetViewList().SetLastColumnWidth();
+    return 0;
+}
+
 // Called in response to favourites on the toolbar or the
 // list view popup menu. Sets the movie's favourite flag.
 BOOL CMainFrame::OnFavourite()
 {
-    int iItem = -1;
-    while ((iItem = GetViewList().GetNextItem(iItem, LVIS_SELECTED)) != -1)
+    // Update the item flag.
+    int item = -1;
+    while ((item = GetViewList().GetNextItem(item, LVIS_SELECTED)) != -1)
     {
         m_isDirty = true;
-        MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(iItem);
+        MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(item);
         BOOL IsFavourite = pmi->flags & 0x0001;
         IsFavourite = !IsFavourite;
-        pmi->flags = ((pmi->flags & 0xFFFE) | IsFavourite) ? 0x0001 : 0x000;
+        if (IsFavourite)
+            pmi->flags |= 0x0001;
+        else
+            pmi->flags &= ~0x0001;
+
+        // Update the toolbar button and list view image.
         GetToolBar().CheckButton(IDM_FAVOURITE, IsFavourite);
-
-        // Update the list view
-        HTREEITEM item = GetViewTree().GetSelection();
-        CString itemText = GetViewTree().GetItemText(item);
-
-        if (itemText == L"Favourites")
-            FillListFromFlags(0x0001);
-
-        GetViewList().UpdateItemImage(iItem);
+        GetViewList().UpdateItemImage(item);
     }
+
+    // Update the list view.
+    HTREEITEM treeItem = GetViewTree().GetSelection();
+    CString itemText = GetViewTree().GetItemText(treeItem);
+
+    if (itemText == L"Favourites")
+        FillListFromFlags(0x0001);
 
     return TRUE;
 }
@@ -921,7 +965,7 @@ BOOL CMainFrame::OnFavourite()
 void CMainFrame::OnFilesLoaded()
 {
     m_splash.ShowText(L"Updating List");
-    m_foundFiles.clear();
+    m_filesToAdd.clear();
     OnSelectTreeItem();
 }
 
@@ -945,6 +989,7 @@ void CMainFrame::OnInitialUpdate()
 }
 
 // Called when a menu is about to be displayed.
+// Updates the enable state of menu items.
 void CMainFrame::OnMenuUpdate(UINT nID)
 {
     switch (nID)
@@ -1000,6 +1045,23 @@ BOOL CMainFrame::OnMoveUp()
     return TRUE;
 }
 
+// Process notification messages (WM_NOTIFY) from child windows.
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
+{
+    switch (((LPNMHDR)lparam)->code)
+    {
+    // Notification from the listview's header control. The header
+    // control is a child window of the listview control.
+    // The columns in listview control have been resized.
+    case HDN_ENDTRACK:
+        GetViewList().SetLastColumnWidth();
+        return 0;
+    }
+
+    // Call the base class function.
+    return CDockFrame::OnNotify(wparam, lparam);
+}
+
 // Called in response to toolbar input or a context menu on
 // the list view. Plays the chosen movie.
 BOOL CMainFrame::OnPlay()
@@ -1013,7 +1075,8 @@ BOOL CMainFrame::OnPlay()
 }
 
 // Called in response to a right mouse click on the list view.
-void CMainFrame::OnRClickListItem()
+// Displays the popup menus
+LRESULT CMainFrame::OnRClickListItem()
 {
     // Load the popup menu
     CMenu topMenu(IDM_VIDEO_MENU);
@@ -1031,10 +1094,13 @@ void CMainFrame::OnRClickListItem()
 
     // Start the popup menu
     m_popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, NULL/*&tpm*/);
+
+    return 0;
 }
 
-// Called in response to a right mouse click on the tree view.
-void CMainFrame::OnRClickTreeItem()
+// Displays the popup menus for the tree view. Called in response to a right
+// mouse click on the tree view.
+LRESULT CMainFrame::OnRClickTreeItem()
 {
     CPoint screenPoint = GetCursorPos();
     CPoint clientPoint = screenPoint;
@@ -1067,10 +1133,12 @@ void CMainFrame::OnRClickTreeItem()
         // Start the popup menu
         m_boxSetMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, NULL/*&tpm*/);
     }
+
+    return 0;
 }
 
-// Called in response to the popup menu when the user right clicks
-// on a box set in the tree view.
+// Called in response to the popup menu. The popup menu is displayed when the
+// user right clicks on a box set in the tree view.
 BOOL CMainFrame::OnRemoveBoxSet()
 {
     HTREEITEM item = GetViewTree().GetSelection();
@@ -1142,15 +1210,14 @@ BOOL CMainFrame::OnRenameBoxSet()
 BOOL CMainFrame::OnSearch()
 {
     CSearchDialog dlg(IDD_SEARCHDLG);
-
     if (dlg.DoModal(*this) == IDOK)
     {
         ClearList();
+        m_foundMovies.clear();
 
         // Lock this code for thread safety
         CThreadLock lock(m_cs);
 
-        std::vector<const MovieInfo*> foundMovies;
         std::list<MovieInfo>::const_iterator iter;
 
         // Find movies matching each title word.
@@ -1163,7 +1230,7 @@ BOOL CMainFrame::OnSearch()
                 for (iter = m_moviesData.begin(); iter != m_moviesData.end(); ++iter)
                 {
                     if (IsWordInString((*iter).movieName, words[i]))
-                        foundMovies.push_back(&(*iter));
+                        m_foundMovies.push_back(&(*iter));
                 }
             }
         }
@@ -1177,7 +1244,7 @@ BOOL CMainFrame::OnSearch()
                 for (iter = m_moviesData.begin(); iter != m_moviesData.end(); ++iter)
                 {
                     if (IsWordInString((*iter).actors, words[i]))
-                        foundMovies.push_back(&(*iter));
+                        m_foundMovies.push_back(&(*iter));
                 }
             }
         }
@@ -1191,27 +1258,14 @@ BOOL CMainFrame::OnSearch()
                 for (iter = m_moviesData.begin(); iter != m_moviesData.end(); ++iter)
                 {
                     if (IsWordInString((*iter).description, words[i]))
-                        foundMovies.push_back(&(*iter));
+                        m_foundMovies.push_back(&(*iter));
                 }
             }
         }
 
         // Fill the listview with the found movies.
-        for (UINT i = 0; i < foundMovies.size(); ++i)
-        {
-            MoviesData::iterator it;
-            for (it = m_moviesData.begin(); it != m_moviesData.end(); ++it)
-            {
-                if (&(*it) == foundMovies[i])
-                {
-                    GetViewList().AddItem(*it);
-                    break;
-                }
-            }
-        }
-
-        // Select the first ListView item.
-        GetViewList().SetItemState(0, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
+        GetViewTree().SelectItem(m_searchItem);
+        FillListFromSearch();
 
         CString str;
         int listItemsCount = GetViewList().GetItemCount();
@@ -1228,7 +1282,7 @@ BOOL CMainFrame::OnSearch()
 }
 
 // Updates the dialog with information about the movie.
-void CMainFrame::OnSelectListItem(const MovieInfo* pmi)
+LRESULT CMainFrame::OnSelectListItem(const MovieInfo* pmi)
 {
     CViewDialog& dialog = (CViewDialog&)m_pDockDialog->GetView();
     assert(pmi);
@@ -1245,16 +1299,26 @@ void CMainFrame::OnSelectListItem(const MovieInfo* pmi)
     dialog.SetPicture().Invalidate();
 
     BOOL isFavourite = pmi->flags & 0x0001;
+    BOOL isWatch = pmi->flags & 0x0002;
 
     if (GetViewList().GetNextItem(-1, LVNI_SELECTED) < 0)
+    {
         isFavourite = FALSE;
+        isWatch = FALSE;
+    }
 
     GetToolBar().CheckButton(IDM_FAVOURITE, isFavourite);
+    GetToolBar().CheckButton(IDM_WATCHLIST, isWatch);
+
+    return 0;
 }
 
 // Called when a selection is made on the tree view.
-void CMainFrame::OnSelectTreeItem()
+LRESULT CMainFrame::OnSelectTreeItem()
 {
+    GetToolBar().CheckButton(IDM_FAVOURITE, FALSE);
+    GetToolBar().CheckButton(IDM_WATCHLIST, FALSE);
+
     HTREEITEM item = GetViewTree().GetSelection();
     CString itemText = GetViewTree().GetItemText(item);
 
@@ -1281,10 +1345,14 @@ void CMainFrame::OnSelectTreeItem()
         FillListFromGenres(itemText);
     else if (itemText == L"Favourites")
         FillListFromFlags(0x0001);
+    else if (itemText == L"Watch List")
+        FillListFromFlags(0x0002);
+    else if (itemText == L"Search")
+        FillListFromSearch();
     else
         ClearList();
 
-    GetViewList().SortColumn(0, true);
+    GetViewList().SortColumn(0, false);
 
     CString str;
     int listItemsCount = GetViewList().GetItemCount();
@@ -1295,26 +1363,71 @@ void CMainFrame::OnSelectTreeItem()
 
     str = itemText + str;
     SetStatusText(str);
+
+    return 0;
+}
+
+// Respond to system commands such as maximize and restore.
+// Adjust the column sizes to match the list view window width.
+LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Perform default processing first.
+    DefWindowProc(msg, wparam, lparam);
+
+    // Now resize the columns.
+    OnExitSizeMove();
+    return 0;
 }
 
 // Called in response to the popup menu on the list view.
 // Sets the video type to a "Movie" or "Live Performance"
 BOOL CMainFrame::OnVideoType(LPCTSTR videoType)
 {
-    int iItem = -1;
-    while ((iItem = GetViewList().GetNextItem(iItem, LVIS_SELECTED)) != -1)
+    int item = -1;
+    while ((item = GetViewList().GetNextItem(item, LVIS_SELECTED)) != -1)
     {
         m_isDirty = true;
-        MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(iItem);
+        MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(item);
         pmi->videoType = videoType;
-        GetViewList().UpdateItemImage(iItem);
+        GetViewList().UpdateItemImage(item);
     }
 
     return TRUE;
 }
 
+// Called in response to the popup menu on the list view or toolbar.
+// Toggles items in the Watch list.
+BOOL CMainFrame::OnWatchList()
+{
+    int item = -1;
+    while ((item = GetViewList().GetNextItem(item, LVIS_SELECTED)) != -1)
+    {
+        // Adjust the movie item flag.
+        m_isDirty = true;
+        MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(item);
+        BOOL isWatch = pmi->flags & 0x0002;
+        isWatch = !isWatch;
+        if (isWatch)
+            pmi->flags |= 0x0002;
+        else
+            pmi->flags &= ~0x0002;
+
+        // Update the toolbar button and list view image.
+        GetToolBar().CheckButton(IDM_WATCHLIST, isWatch);
+        GetViewList().UpdateItemImage(item);
+    }
+
+    // Update the list view.
+    HTREEITEM treeItem = GetViewTree().GetSelection();
+    CString itemText = GetViewTree().GetItemText(treeItem);
+    if (itemText == L"Watch List")
+        FillListFromFlags(0x0002);
+
+    return TRUE;
+}
+
 // Plays the selected movie.
-void CMainFrame::PlayMovie(LPCTSTR path)
+LRESULT CMainFrame::PlayMovie(LPCTSTR path)
 {
     if (PathFileExists(path))
         ::ShellExecute(*this, L"open", path, NULL, NULL, SW_SHOW);
@@ -1323,6 +1436,8 @@ void CMainFrame::PlayMovie(LPCTSTR path)
         CString str = CString(L"Unable to play\n") + path;
         MessageBox(str, L"Unable to play movie", MB_OK);
     }
+
+    return 0;
 }
 
 // Sets the CREATESTRUCT struct prior to window creation.
@@ -1332,13 +1447,11 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     // It provides an opportunity to modify the various CREATESTRUCT
     // parameters used in the frame window's creation.
 
-    // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
-    // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
-
-    // Call base clase to set defaults
+    // Call base class function to set defaults.
     CDockFrame::PreCreate(cs);
 
-    cs.style &= ~WS_VISIBLE;    // Remove the WS_VISIBLE style. The frame will be initially hidden.
+    // Remove the WS_VISIBLE style. The frame will be initially hidden.
+    cs.style &= ~WS_VISIBLE;
 }
 
 // Saves some settings in the registry.
@@ -1394,6 +1507,7 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_ADD_FOLDER,  IDI_ADDFOLDER);
     AddMenuIcon(IDM_PLAY,        IDI_PLAY);
     AddMenuIcon(IDM_FAVOURITE,   IDI_FAVOURITES);
+    AddMenuIcon(IDM_WATCHLIST,   IDI_EYE);
     AddMenuIcon(IDM_REMOVE_FILE, IDI_REMOVE);
     AddMenuIcon(IDM_HELP_ABOUT,  IDI_HELPABOUT);
 
@@ -1419,6 +1533,7 @@ void CMainFrame::SetupToolBar()
     m_toolbarImages.AddIcon(IDI_ADDFOLDER);
     m_toolbarImages.AddIcon(IDI_PLAY);
     m_toolbarImages.AddIcon(IDI_FAVOURITES);
+    m_toolbarImages.AddIcon(IDI_EYE);
     m_toolbarImages.AddIcon(IDI_SEARCH);
     m_toolbarImages.AddIcon(IDI_HELPABOUT);
     GetToolBar().SetImageList(m_toolbarImages);
@@ -1428,15 +1543,15 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(0);                        // Separator
     AddToolBarButton(IDM_PLAY);
     AddToolBarButton(IDM_FAVOURITE);
+    AddToolBarButton(IDM_WATCHLIST);
     AddToolBarButton(IDM_SEARCH);
     AddToolBarButton(0);                        // Separator
     AddToolBarButton(IDM_HELP_ABOUT);
 }
 
-// This function runs in a separate thread because
-// loading the meta data from files can be time consuming.
-// This thread modifies m_moviesData, so all access to
-// m_moviesData should be protected by a CThreadLock.
+// This function runs in a separate thread because loading the meta data from
+// files can be time consuming. This thread modifies m_moviesData, so all
+// access to m_moviesData should be protected by a CThreadLock.
 UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
 {
     CMainFrame* pFrame = reinterpret_cast<CMainFrame*>(pVoid);
@@ -1448,10 +1563,10 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
         splash.Create();
         splash.ShowText(L"Updating Library");
         splash.AddBar();
-        splash.GetBar().SetRange(0, (short)pFrame->m_foundFiles.size());
+        splash.GetBar().SetRange(0, (short)pFrame->m_filesToAdd.size());
 
         unsigned short barPos = 0;
-        for (size_t i = 0; i < pFrame->m_foundFiles.size(); i++)
+        for (size_t i = 0; i < pFrame->m_filesToAdd.size(); i++)
         {
             // The stop request is set if the app is trying to close.
             if (::WaitForSingleObject(pFrame->m_stopRequest, 0) != WAIT_TIMEOUT)
@@ -1465,7 +1580,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
             // Update the splash screen's progress bar
             splash.GetBar().SetPos(barPos);
 
-            CString fullName = pFrame->m_foundFiles[i].fileName;
+            CString fullName = pFrame->m_filesToAdd[i].fileName;
             bool isFileInLibrary = false;
             std::list<MovieInfo>::iterator it = pFrame->m_moviesData.begin();
             while (it != pFrame->m_moviesData.end())
@@ -1500,7 +1615,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
             {
                 pFrame->m_isDirty = true;
                 MovieInfo mi;
-                pFrame->LoadMovieInfoFromFile(pFrame->m_foundFiles[i], mi);
+                pFrame->LoadMovieInfoFromFile(pFrame->m_filesToAdd[i], mi);
 
                 // Lock this code for thread safety
                 CThreadLock lock(pFrame->m_cs);
@@ -1526,9 +1641,18 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case WM_EXITSIZEMOVE:
-        GetViewList().SetLastColumnWidth();
-        break;
+    case WM_SYSCOMMAND:                 return OnSysCommand(msg, wparam, lparam);
+    case WM_EXITSIZEMOVE:               return OnExitSizeMove();
+
+    // User Messages called by CTreeList
+    case UWM_GETMOVIESDATA:             return (LRESULT)GetMoviesData();
+    case UWM_ONSELECTTREEITEM:          return OnSelectTreeItem();
+    case UWM_ONRCLICKTREEITEM:          return OnRClickTreeItem();
+
+    // Use Messages called by CViewList
+    case UWM_PLAYMOVIE:                 return PlayMovie((LPCTSTR)wparam);
+    case UWM_ONSELECTLISTITEM:          return OnSelectListItem((const MovieInfo*)wparam);
+    case UWM_ONRCLICKLISTITEM:          return OnRClickListItem();
     }
 
     // pass unhandled messages on for default processing

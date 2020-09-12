@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
+#include "UserMessages.h"
 
 ///////////////////////////////////////
 // Definitions for the CMainFrame class

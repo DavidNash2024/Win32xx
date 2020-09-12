@@ -16,7 +16,6 @@ public:
     CDialogApp();
     virtual ~CDialogApp();
     virtual BOOL InitInstance();
-    CMyDialog& GetDialog() {return m_myDialog;}
 
 private:
     CMyDialog m_myDialog;

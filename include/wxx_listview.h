@@ -144,7 +144,7 @@ namespace Win32xx
         BOOL    RedrawItems( int first, int last ) const;
         BOOL    Scroll( CSize sz ) const;
         BOOL    SortItems( PFNLVCOMPARE pCompareFn, DWORD_PTR data ) const;
-        BOOL    Update( int iItem ) const;
+        BOOL    Update( int item ) const;
 
     private:
         CListView(const CListView&);              // Disable copy construction

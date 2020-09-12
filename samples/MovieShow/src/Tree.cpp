@@ -4,8 +4,9 @@
 
 #include "stdafx.h"
 #include "Tree.h"
-#include "MovieShowApp.h"
+#include "MovieInfo.h"
 #include "resource.h"
+#include "UserMessages.h"
 
 
 /////////////////////////////////
@@ -50,34 +51,16 @@ HTREEITEM CViewTree::AddItem(HTREEITEM parent, LPCTSTR text, int imageIndex)
     return item;
 }
 
-// Called when the treeview window is destroyed.
-void CViewTree::OnDestroy()
+// Retrieves the item's CString* from the item map
+CString* CViewTree::GetItemString(HTREEITEM item)
 {
-    SetImageList(NULL, LVSIL_SMALL);
-}
+    CString* pString = 0;
+    std::map<HTREEITEM, CString*>::const_iterator m;
+    m = m_itemMap.find(item);
+    if (m != m_itemMap.end())
+        pString = m->second;
 
-// Called after the treeview window is created.
-// Sets the icons for the treeview.
-void CViewTree::OnInitialUpdate()
-{
-    //set the image lists
-    m_imlNormal.Create(24, 24, ILC_COLOR32, 1, 0);
-
-    m_imlNormal.AddIcon(IDI_LIBRARY);
-    m_imlNormal.AddIcon(IDI_MOVIES);
-    m_imlNormal.AddIcon(IDI_BOXSET);
-    m_imlNormal.AddIcon(IDI_CALENDAR);
-    m_imlNormal.AddIcon(IDI_FAVOURITES);
-    m_imlNormal.AddIcon(IDI_MASK);
-    m_imlNormal.AddIcon(IDI_VIOLIN);
-    m_imlNormal.AddIcon(IDI_SEARCH);
-
-    SetImageList(m_imlNormal, LVSIL_NORMAL);
-
-    // Adjust style to show lines and [+] button
-    DWORD dwStyle = GetStyle();
-    dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
-    SetStyle(dwStyle);
+    return pString;
 }
 
 // Returns true if the text for the box set is unique.
@@ -101,30 +84,6 @@ bool CViewTree::IsBoxSetUnique(LPCTSTR text, HTREEITEM item)
     return isUnique;
 }
 
-// Called when the WM_NOTIFY message is reflected back to CViewTree
-// by the framework.
-LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lParam)
-{
-    LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
-
-    switch (pnmtv->hdr.code)
-    {
-        case TVN_SELCHANGED:       return OnSelChanged();
-        case TVN_BEGINLABELEDIT:   return OnBeginLabelEdit(lParam);
-        case TVN_ENDLABELEDIT:     return OnEndLabelEdit(lParam);
-    }
-
-    return 0;
-}
-
-// Called when a treview item is selected
-BOOL CViewTree::OnSelChanged()
-{
-    CMainFrame& Frame = GetMovieShowApp()->GetMainFrame();
-    Frame.OnSelectTreeItem();
-    return TRUE;
-}
-
 // Allows label editing for Box Set children
 BOOL CViewTree::OnBeginLabelEdit(LPARAM lparam)
 {
@@ -142,16 +101,10 @@ BOOL CViewTree::OnBeginLabelEdit(LPARAM lparam)
     return TRUE;
 }
 
-// Retrieves the item's CString* from the item map
-CString* CViewTree::GetItemString(HTREEITEM item)
+// Called when the treeview window is destroyed.
+void CViewTree::OnDestroy()
 {
-    CString* pString = 0;
-    std::map<HTREEITEM, CString*>::const_iterator m;
-    m = m_itemMap.find(item);
-    if (m != m_itemMap.end())
-        pString = m->second;
-
-    return pString;
+    SetImageList(NULL, LVSIL_SMALL);
 }
 
 // Finalises the editing of a Box Set child's label.
@@ -192,10 +145,10 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
 
         if (oldText != *pString)
         {
-            CMainFrame& frame = GetMovieShowApp()->GetMainFrame();
             std::list<MovieInfo>::iterator it;
-            std::list<MovieInfo>& data = frame.SetMoviesData();
-            for (it = data.begin(); it != data.end(); ++it)
+            std::list<MovieInfo>* data;
+            data = (std::list<MovieInfo>*)GetAncestor().SendMessage(UWM_GETMOVIESDATA, 0, 0);
+            for (it = data->begin(); it != data->end(); ++it)
             {
                 if ((*it).boxset == oldText)
                     (*it).boxset = *pString;
@@ -203,6 +156,55 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
         }
     }
 
+    return TRUE;
+}
+
+// Called after the treeview window is created.
+// Sets the icons for the treeview.
+void CViewTree::OnInitialUpdate()
+{
+    //set the image lists
+    m_imlNormal.Create(24, 24, ILC_COLOR32, 1, 0);
+
+    m_imlNormal.AddIcon(IDI_LIBRARY);
+    m_imlNormal.AddIcon(IDI_MOVIES);
+    m_imlNormal.AddIcon(IDI_BOXSET);
+    m_imlNormal.AddIcon(IDI_CALENDAR);
+    m_imlNormal.AddIcon(IDI_FAVOURITES);
+    m_imlNormal.AddIcon(IDI_MASK);
+    m_imlNormal.AddIcon(IDI_VIOLIN);
+    m_imlNormal.AddIcon(IDI_SEARCH);
+    m_imlNormal.AddIcon(IDI_EYE);
+
+    SetImageList(m_imlNormal, LVSIL_NORMAL);
+
+    // Adjust style to show lines and [+] button
+    DWORD dwStyle = GetStyle();
+    dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
+    SetStyle(dwStyle);
+}
+
+// Called when the WM_NOTIFY message is reflected back to CViewTree
+// by the framework.
+LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lParam)
+{
+    LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
+
+    switch (pnmtv->hdr.code)
+    {
+        case TVN_SELCHANGED:       return OnSelChanged();
+        case TVN_BEGINLABELEDIT:   return OnBeginLabelEdit(lParam);
+        case TVN_ENDLABELEDIT:     return OnEndLabelEdit(lParam);
+    }
+
+    return 0;
+}
+
+// Called when a treview item is selected
+BOOL CViewTree::OnSelChanged()
+{
+    // Send the message to CMainFrame.
+    GetAncestor().SendMessage(UWM_ONSELECTTREEITEM, 0, 0);
     return TRUE;
 }
 
@@ -278,11 +280,8 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return DefWindowProc(msg, wparam, lparam);
 
     case WM_RBUTTONUP:
-        {
-            CMainFrame& Frame = GetMovieShowApp()->GetMainFrame();
-            Frame.OnRClickTreeItem();
-            return DefWindowProc(msg, wparam, lparam);
-        }
+        GetAncestor().SendMessage(UWM_ONRCLICKTREEITEM, 0, 0);
+        return DefWindowProc(msg, wparam, lparam);
     }
 
     return WndProcDefault(msg, wparam, lparam);

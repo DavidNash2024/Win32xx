@@ -291,6 +291,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\UserMessages.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\View.h"
 				>
 			</File>

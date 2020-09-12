@@ -16,15 +16,10 @@ public:
     CMDIFrameSplitterApp();
     virtual ~CMDIFrameSplitterApp() {}
     virtual BOOL InitInstance();
-    CMainMDIFrame& GetMDIFrame() { return m_mainMDIFrame; }
 
 private:
     CMainMDIFrame m_mainMDIFrame;
 };
-
-
-// returns a pointer to the CMDIFrameSplitterApp object
-inline CMDIFrameSplitterApp* GetMDIApp() { return static_cast<CMDIFrameSplitterApp*>(GetApp()); }
 
 
 #endif // MDIFRAMESPLITTERAPP_H

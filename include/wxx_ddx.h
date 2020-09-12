@@ -543,7 +543,7 @@ namespace Win32xx
             }
             else
             {
-                // GetWindowTextLength does not work for drop lists 
+                // GetWindowTextLength does not work for drop lists
                 // so here assume max of 255 characters.
                 const int maxLen = 255;
                 ::GetWindowText(control, value.GetBuffer(maxLen), maxLen + 1);

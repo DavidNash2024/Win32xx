@@ -18,8 +18,9 @@ CView::CView() : m_pInetExplorer(NULL), m_pSourceUnk(0), m_pSinkUnk(0),
                  m_adviseCookie(0)
 {
     // Initialise OLE
-    OleInitialize(NULL);
-}
+    if FAILED(OleInitialize(NULL))
+        throw CUserException(_T("Failed to initial COM"));
+ }
 
 // Destructor.
 CView::~CView()

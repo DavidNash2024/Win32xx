@@ -16,13 +16,10 @@ public:
     CApp();
     virtual ~CApp();
     virtual BOOL InitInstance();
-    CMainFrame& GetMainFrame() { return m_frame; }
 
 private:
     CMainFrame m_frame;
-
 };
 
 
 #endif // define SDI_APP_H
-

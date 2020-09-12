@@ -54,7 +54,7 @@ private:
 
     typedef Shared_Ptr<TreeItemData> TreeItemDataPtr;
 
-    static int CALLBACK CompareProc(LPARAM param1, LPARAM param2, LPARAM paramSort);
+    static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM paramSort);
     void DeleteItems();
     void DoItemMenu(HTREEITEM item, CPoint& point);
     void DoContextMenu(CPoint& point);

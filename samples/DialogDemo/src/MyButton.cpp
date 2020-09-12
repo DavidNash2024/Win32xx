@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "MyButton.h"
 #include "DialogDemoApp.h"
+#include "UserMessages.h"
 
 /////////////////////////////////
 // CMyButton function definitions
@@ -14,8 +15,7 @@
 LRESULT CMyButton::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_MOUSEMOVE Message\n");
-    CMyDialog& Dialog = GetDlgApp()->GetDialog();
-    Dialog.SetStatic(_T("WM_MOUSEMOVE"));
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_MOUSEMOVE"));
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -23,8 +23,7 @@ LRESULT CMyButton::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_NCHITTEST Message\n");
-    CMyDialog& Dialog = GetDlgApp()->GetDialog();
-    Dialog.SetStatic(_T("WM_NCHITTEST"));
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_NCHITTEST"));
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -32,8 +31,7 @@ LRESULT CMyButton::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_SETCURSOR Message\n");
-    CMyDialog& Dialog = GetDlgApp()->GetDialog();
-    Dialog.SetStatic(_T("WM_SETCURSOR"));
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_SETCURSOR"));
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -41,9 +39,7 @@ LRESULT CMyButton::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_LBUTTONDOWN Message\n");
-    CMyDialog& Dialog = GetDlgApp()->GetDialog();
-    Dialog.SetStatic(_T("WM_LBUTTONDOWN"));
-
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_LBUTTONDOWN"));
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -51,9 +47,7 @@ LRESULT CMyButton::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_LBUTTONUP Message\n");
-    CMyDialog& Dialog = GetDlgApp()->GetDialog();
-    Dialog.SetStatic(_T("WM_LBUTTONUP"));
-
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_LBUTTONUP"));
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -61,9 +55,7 @@ LRESULT CMyButton::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMyButton::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     TRACE("CButton::WndProc - WM_RBUTTONDOWN Message\n");
-    CMyDialog& Dialog = GetDlgApp()->GetDialog();
-    Dialog.SetStatic(_T("WM_RBUTTONDOWN"));
-
+    GetParent().SendMessage(UWM_SETSTATIC, (WPARAM)_T("WM_RBUTTONDOWN"));
     return FinalWindowProc(msg, wparam, lparam);
 }
 

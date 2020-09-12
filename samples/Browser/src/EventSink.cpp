@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "EventSink.h"
-#include "MainFrm.h"
+#include "UserMessages.h"
 
 //////////////////////////////////
 // CEventSink function definitions
