@@ -182,7 +182,7 @@ BOOL CContainClasses::OnFileNew()
 BOOL CContainClasses::OnHelpAbout()
 {
     // Send a message to the frame requesting the help dialog
-    GetContainerApp()->GetMainFrame().SendMessage(WM_HELP);
+    GetAncestor().SendMessage(WM_HELP);
     return TRUE;
 }
 

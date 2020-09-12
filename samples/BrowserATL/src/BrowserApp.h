@@ -16,7 +16,6 @@ public:
     CBrowserApp();
     virtual ~CBrowserApp();
     BOOL InitInstance();
-    const CMainFrame* GetMainFrame() const { return &m_frame; }
 
 private:
     CMainFrame m_frame;

@@ -186,6 +186,9 @@
     <ClInclude Include="..\src\DispatchSink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\UserMessages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Win32++">

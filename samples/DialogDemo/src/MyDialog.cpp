@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "MyDialog.h"
 #include "resource.h"
+#include "UserMessages.h"
 
 
 /////////////////////////////////
@@ -28,10 +29,10 @@ CMyDialog::~CMyDialog()
 // Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//      //Additional messages to be handled go here
-//  }
+  switch (msg)
+  {
+  case UWM_SETSTATIC:     return SetStatic((LPCTSTR)wparam);
+  }
 
     // Pass unhandled messages on to parent DialogProc
     return DialogProcDefault(msg, wparam, lparam);
@@ -145,8 +146,9 @@ BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 }
 
 // Sets the text in the static control.
-void CMyDialog::SetStatic(LPCTSTR text)
+INT_PTR CMyDialog::SetStatic(LPCTSTR text)
 {
     SetDlgItemText(IDC_STATIC3, text);
+    return 0;
 }
 

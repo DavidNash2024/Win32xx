@@ -10,6 +10,11 @@
   #define SF_USECODEPAGE    0x0020
 #endif
 
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
 ///////////////////////////////////
 // CMainFrame function definitions
 //
@@ -963,3 +968,6 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
     return TRUE;
 }
 
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)

@@ -7,6 +7,17 @@
 #include "MyListView.h"
 #include "resource.h"
 
+#ifndef HDF_SORTUP
+#define HDF_SORTUP              0x0400
+#define HDF_SORTDOWN            0x0200
+#endif
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
+
 //////////////////////////////////
 // CMyListView function definitions
 //
@@ -23,18 +34,87 @@ CMyListView::~CMyListView()
 }
 
 // Compares param1 and param2. Used to sort items in a list view.
-int CALLBACK CMyListView::CompareProc(LPARAM param1, LPARAM param2, LPARAM paramSort)
+int CALLBACK CMyListView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM pSortViewItems)
 {
-    UNREFERENCED_PARAMETER(paramSort);
-    ListItemData* pItem1 = reinterpret_cast<ListItemData*>(param1);
-    ListItemData* pItem2 = reinterpret_cast<ListItemData*>(param2);
+    assert(param1);
+    assert(param2);
+    assert(pSortViewItems);
 
-    HRESULT result = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelCpidl(), pItem2->GetRelCpidl());
-
-    if (FAILED(result))
+    if (param1 == 0 || param2 == 0 || pSortViewItems == 0)
         return 0;
 
-    return (short)SCODE_CODE(GetScode(result));
+    ListItemData* pItem1 = reinterpret_cast<ListItemData*>(param1);
+    ListItemData* pItem2 = reinterpret_cast<ListItemData*>(param2);
+    SortViewItems* pSort = reinterpret_cast<SortViewItems*>(pSortViewItems);
+
+    int compare = 0;
+
+    switch (pSort->m_column)
+    {
+    case 0:  // Sort by file name using IShellFolder::CompareIDs.
+    {
+        HRESULT result = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelCpidl(), pItem2->GetRelCpidl());
+        if (FAILED(result))
+            break;
+
+        short value = (short)SCODE_CODE(GetScode(result));
+        compare = pSort->m_isSortDown ? value : -value;
+        break;
+    }
+    case 1:  // Sort by file size.
+    {
+        if (pItem1->m_fileSize > pItem2->m_fileSize)
+            compare = pSort->m_isSortDown ? 1 : -1;
+
+        if (pItem1->m_fileSize < pItem2->m_fileSize)
+            compare = pSort->m_isSortDown ? -1 : 1;
+
+        if (pItem1->m_isFolder && !pItem2->m_isFolder)
+            compare = pSort->m_isSortDown ? -1 : 1;
+
+        if (!pItem1->m_isFolder && pItem2->m_isFolder)
+            compare = pSort->m_isSortDown ? 1 : -1;
+
+        break;
+    }
+    case 2:  // Sort by file type.
+    {
+        if (pItem1->m_fileType > pItem2->m_fileType)
+            compare = pSort->m_isSortDown ? 1 : -1;
+
+        if (pItem1->m_fileType < pItem2->m_fileType)
+            compare = pSort->m_isSortDown ? -1 : 1;
+
+        if (pItem1->m_isFolder && !pItem2->m_isFolder)
+            compare = pSort->m_isSortDown ? -1 : 1;
+
+        if (!pItem1->m_isFolder && pItem2->m_isFolder)
+            compare = pSort->m_isSortDown ? 1 : -1;
+
+        break;
+    }
+    case 3:  // Sort by modified time
+    {
+        ULONGLONG t1 = FileTimeToULL(pItem1->m_fileTime);
+        ULONGLONG t2 = FileTimeToULL(pItem2->m_fileTime);
+
+        if (t1 > t2)
+            compare = pSort->m_isSortDown ? 1 : -1;
+
+        if (t1 < t2)
+            compare = pSort->m_isSortDown ? -1 : 1;
+
+        if (pItem1->m_isFolder && !pItem2->m_isFolder)
+            compare = pSort->m_isSortDown ? -1 : 1;
+
+        if (!pItem1->m_isFolder && pItem2->m_isFolder)
+            compare = pSort->m_isSortDown ? 1 : -1;
+
+        break;
+    }
+    }
+
+    return compare;
 }
 
 // Deletes all the items from the list-view.
@@ -235,7 +315,8 @@ void CMyListView::DoDisplay()
         SetRedraw(FALSE);
 
         EnumObjects(m_csfCurFolder, m_cpidlCurFull);
-        SortItems(CompareProc, 0);
+        SortViewItems sort(0, TRUE);
+        SortItems(CompareFunction, (LPARAM)&sort);
 
         // Turn redawing back on.
         SetRedraw(TRUE);
@@ -320,6 +401,23 @@ LRESULT CMyListView::OnNMRClick(LPNMHDR pNMHDR)
     return 0;
 }
 
+// Called when a list view column is clicked.
+LRESULT CMyListView::OnLVColumnClick(LPNMITEMACTIVATE pnmitem)
+{
+    // Determine the required sort order.
+    HDITEM  hdrItem;
+    ZeroMemory(&hdrItem, sizeof(hdrItem));
+    hdrItem.mask = HDI_FORMAT;
+    int column = pnmitem->iSubItem;
+    VERIFY(Header_GetItem(GetHeader(), column, &hdrItem));
+    bool isSortDown = (hdrItem.fmt & HDF_SORTUP) ? false : true;
+
+    // Perform the sort.
+    SortColumn(column, isSortDown);
+
+    return 0;
+}
+
 // Called in response to a LVN_GETDISPINFO notification.
 // Updates the list view item with the relevant file information.
 LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
@@ -335,11 +433,11 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
         pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
 
-        HANDLE hFile = INVALID_HANDLE_VALUE;
+        HANDLE file = INVALID_HANDLE_VALUE;
 
         // Retrieve the file handle for an existing file
         if (attr & SFGAO_CANDELETE)
-            hFile = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
+            file = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
                 OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
 
         const int maxLength = 32;
@@ -361,9 +459,10 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 TCHAR szSize[maxLength];
 
                 // Report the size files and not folders
-                if ((hFile != INVALID_HANDLE_VALUE)&&(~attr & SFGAO_FOLDER))
+                if ((file != INVALID_HANDLE_VALUE)&&(~attr & SFGAO_FOLDER))
                 {
-                    GetFileSizeText(hFile, szSize);
+                    // Retrieve the file size.
+                    GetFileSizeText(pItem->m_fileSize, szSize);
                     StrCopy(pdi->item.pszText, szSize, maxLength);
                 }
                 else
@@ -374,15 +473,18 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
             {
                 SHFILEINFO sfi;
                 ZeroMemory(&sfi, sizeof(SHFILEINFO));
-                if(pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
+                if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
+                {
                     StrCopy(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax);
+                }
             }
             break;
         case 3: // Modified
             {
-                if (hFile != INVALID_HANDLE_VALUE)
+                // Retrieve the modified file time for the file.
+                if (pItem->m_fileTime.dwHighDateTime != 0 && pItem->m_fileTime.dwLowDateTime != 0)
                 {
-                    GetLastWriteTime(hFile, text);
+                    GetLastWriteTime(pItem->m_fileTime, text);
                     StrCopy(pdi->item.pszText, text, maxLength);
                 }
                 else
@@ -390,8 +492,8 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
             }
             break;
         }
-        if (hFile != INVALID_HANDLE_VALUE)
-            ::CloseHandle(hFile);
+        if (file != INVALID_HANDLE_VALUE)
+            ::CloseHandle(file);
     }
 
     // Add the unselected image.
@@ -426,12 +528,15 @@ LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
 LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
     LPNMHDR  pNMHDR = (LPNMHDR)lparam;
+    LPNMITEMACTIVATE pnmitem = (LPNMITEMACTIVATE)lparam;
+    NMLVDISPINFO* pDispInfo = (NMLVDISPINFO*)lparam;
 
     switch(pNMHDR->code)
     {
-    case NM_RCLICK:         return OnNMRClick(pNMHDR);
-    case LVN_GETDISPINFO:   return OnLVNDispInfo(reinterpret_cast<NMLVDISPINFO*>(lparam));
+    case LVN_COLUMNCLICK:   return OnLVColumnClick(pnmitem);
+    case LVN_GETDISPINFO:   return OnLVNDispInfo(pDispInfo);
     case NM_DBLCLK:         return OnNMReturn(pNMHDR);
+    case NM_RCLICK:         return OnNMRClick(pNMHDR);
     case NM_RETURN:         return OnNMReturn(pNMHDR);
     }
     return 0;
@@ -458,7 +563,6 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
         {
             LVITEM lvItem;
             ZeroMemory(&lvItem, sizeof(lvItem));
-            ULONG  attr;
 
             // Fill in the TV_ITEM structure for this item.
             lvItem.mask = LVIF_PARAM | LVIF_TEXT | LVIF_IMAGE | LVIF_STATE;
@@ -466,6 +570,43 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
             // Store a pointer to the ListItemData in the lParam and m_pItems.
             ListItemData* pItem = new ListItemData(cpidlParent, cpidlRel, folder);
             lvItem.lParam = reinterpret_cast<LPARAM>(pItem);
+
+            TCHAR szFileName[MAX_PATH];
+            GetFullFileName(pItem->GetFullCpidl().GetPidl(), szFileName);
+
+            ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
+            pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
+            pItem->m_isFolder = (attr & SFGAO_FOLDER) != 0;
+
+            HANDLE file = INVALID_HANDLE_VALUE;
+
+            // Retrieve the file handle for an existing file
+            if (attr & SFGAO_CANDELETE)
+                file = ::CreateFile(szFileName, 0, FILE_SHARE_READ, NULL,
+                    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
+
+            // Retrieve the file size.
+            DWORD fileSizeHi;
+            DWORD fileSizeLo = ::GetFileSize(file, &fileSizeHi);
+            ULONGLONG fileSize = ((ULONGLONG)fileSizeHi) << 32 | fileSizeLo;
+            pItem->m_fileSize = fileSize;
+
+            // Retrieve the file type.
+            SHFILEINFO sfi;
+            ZeroMemory(&sfi, sizeof(SHFILEINFO));
+            if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
+            {
+                pItem->m_fileType = sfi.szTypeName;
+            }
+
+            // Retrieve the modified file time for the file.
+            FILETIME modified;
+            if ((file != INVALID_HANDLE_VALUE) /* && (~attr & SFGAO_FOLDER)*/)
+            {
+                ::GetFileTime(file, NULL, NULL, &modified);
+                pItem->m_fileTime = modified;
+            }
+
             m_pItems.push_back(pItem);
 
             // Text and images are done on a callback basis.
@@ -500,63 +641,53 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
             InsertItem(lvItem);
             fetched = 0;
         }
+
+        // Sort by the first column, sorting down.
+        SortColumn(0, TRUE);
     }
 }
 
 // Retrieves the file's size and stores the text in string.
-BOOL CMyListView::GetFileSizeText(HANDLE file, LPTSTR string)
+BOOL CMyListView::GetFileSizeText(ULONGLONG fileSize, LPTSTR string)
 {
-    DWORD dwFileSizeLo;
-    DWORD dwFileSizeHi;
-    DWORDLONG ldwSize;
-    int nMaxSize = 31;
-    CString strPreFormat;
-    CString strPostFormat;
-
-    dwFileSizeLo = ::GetFileSize (file, &dwFileSizeHi);
-    ldwSize = ((DWORDLONG) dwFileSizeHi)<<32 | dwFileSizeLo;
-    strPreFormat.Format(_T("%d"), ((1023 + ldwSize)>>10));
-
-    // Convert our number string using Locale information.
-    ::GetNumberFormat(LOCALE_USER_DEFAULT, LOCALE_NOUSEROVERRIDE, strPreFormat, NULL, strPostFormat.GetBuffer(nMaxSize), nMaxSize);
-    strPostFormat.ReleaseBuffer();
+    // Convert the fileSize to a string using Locale information.
+    CString preFormat;
+    preFormat.Format(_T("%d"), ((1023 + fileSize) >> 10));
+    CString postFormat;
+    const int maxSize = 31;
+    ::GetNumberFormat(LOCALE_USER_DEFAULT, LOCALE_NOUSEROVERRIDE, preFormat, NULL, postFormat.GetBuffer(maxSize), maxSize);
+    postFormat.ReleaseBuffer();
 
     // Get our decimal point character from Locale information.
-    int nBuffLen = ::GetLocaleInfo( LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, NULL, 0 );
-    assert(nBuffLen > 0);
-    CString Decimal;
-    ::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, Decimal.GetBuffer(nBuffLen), nBuffLen);
-    Decimal.ReleaseBuffer();
+    int buffLen = ::GetLocaleInfo( LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, NULL, 0 );
+    assert(buffLen > 0);
+    CString decimal;
+    ::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, decimal.GetBuffer(buffLen), buffLen);
+    decimal.ReleaseBuffer();
 
     // Truncate at the "decimal" point.
-    int nPos = strPostFormat.Find(Decimal);
-    if (nPos > 0)
-        strPostFormat = strPostFormat.Left(nPos);
+    int pos = postFormat.Find(decimal);
+    if (pos > 0)
+        postFormat = postFormat.Left(pos);
 
-    strPostFormat += _T(" KB");
-    StrCopy(string, strPostFormat, nMaxSize);
+    postFormat += _T(" KB");
+    StrCopy(string, postFormat, maxSize);
     return TRUE;
 }
 
 // Retrieves the file's last write time and stores the text in string.
-BOOL CMyListView::GetLastWriteTime(HANDLE file, LPTSTR string)
+BOOL CMyListView::GetLastWriteTime(FILETIME modified, LPTSTR string)
 {
-    FILETIME create, access, write;
+    // Convert the last-write time to local time.
     SYSTEMTIME localSysTime;
     FILETIME localFileTime;
-    const int maxChars = 32;
-    TCHAR time[maxChars];
-    TCHAR date[maxChars];
-
-    // Retrieve the file times for the file.
-    if (!::GetFileTime(file, &create, &access, &write))
-        return FALSE;
-
-    // Convert the last-write time to local time.
-    ::FileTimeToLocalFileTime(&write, &localFileTime);
+    ::FileTimeToLocalFileTime(&modified, &localFileTime);
     ::FileTimeToSystemTime(&localFileTime, &localSysTime);
 
     // Build a string showing the date and time with regional settings.
+    const int maxChars = 32;
+    TCHAR time[maxChars];
+    TCHAR date[maxChars];
     ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &localSysTime, NULL, date, maxChars-1);
     ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &localSysTime, NULL, time, maxChars-1);
 
@@ -610,6 +741,39 @@ void CMyListView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
+// Sets the up and down sort arrows in the listview's header.
+BOOL CMyListView::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
+{
+    HWND    hHeader = NULL;
+    HDITEM  hdrItem = { 0 };
+
+    hHeader = GetHeader();
+    if (hHeader)
+    {
+        hdrItem.mask = HDI_FORMAT;
+
+        if (Header_GetItem(hHeader, columnIndex, &hdrItem))
+        {
+            if (showArrow == SHOW_UP_ARROW)
+            {
+                hdrItem.fmt = (hdrItem.fmt & ~HDF_SORTDOWN) | HDF_SORTUP;
+            }
+            else if (showArrow == SHOW_DOWN_ARROW)
+            {
+                hdrItem.fmt = (hdrItem.fmt & ~HDF_SORTUP) | HDF_SORTDOWN;
+            }
+            else
+            {
+                hdrItem.fmt = hdrItem.fmt & ~(HDF_SORTDOWN | HDF_SORTUP);
+            }
+
+            return Header_SetItem(hHeader, columnIndex, &hdrItem);
+        }
+    }
+
+    return FALSE;
+}
+
 // Sets the image lists for the list-view control.
 void CMyListView::SetImageLists()
 {
@@ -625,6 +789,36 @@ void CMyListView::SetImageLists()
 
     SetImageList(hLargeImages, LVSIL_NORMAL);
     SetImageList(hSmallImages, LVSIL_SMALL);
+}
+
+// Called when the user clicks on a column in the listview's header.
+void CMyListView::SortColumn(int column, bool isSortDown)
+{
+    // Perform the sort.
+    SortViewItems sort(column, isSortDown);
+    SortItems(CompareFunction, (LPARAM)&sort);
+
+    // Ensure the selected item is visible after sorting.
+    int itemint = GetNextItem(-1, LVNI_SELECTED);
+    EnsureVisible(itemint, FALSE);
+
+    // Add an arrow to the column header.
+    for (int col = 0; col < Header_GetItemCount(GetHeader()); col++)
+        SetHeaderSortImage(col, SHOW_NO_ARROW);
+
+    SetHeaderSortImage(column, isSortDown ? SHOW_UP_ARROW : SHOW_DOWN_ARROW);
+
+    // Select the previously selected or first item
+    if (GetSelectedCount() > 0)
+        SetItemState(GetSelectionMark(), LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
+    else
+        SetItemState(0, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
+}
+
+// Converts a filetime to ULONGLONG.
+ULONGLONG CMyListView::FileTimeToULL(FILETIME ft)
+{
+    return static_cast<ULONGLONG>(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
 }
 
 // Set the view-list mode to large icons.
@@ -686,9 +880,17 @@ CMyListView::ListItemData::ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CSh
     m_parentFolder = cParentFolder;
     m_cpidlFull     = cpidlParent + cpidlRel;
     m_cpidlRel      = cpidlRel;
+
+    m_fileSize = 0;
+    ZeroMemory(&m_fileTime, sizeof(m_fileTime));
+    m_isFolder = false;
 }
 
 // Destructor.
 CMyListView::ListItemData::~ListItemData()
 {
 }
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)

@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "View.h"
 #include "resource.h"
+#include "UserMessages.h"
 
 ////////////////////////////
 // CView function definition
@@ -30,7 +31,7 @@ void CView::DrawLine(int x, int y)
 
 std::vector<PlotPoint>* CView::GetAllPoints()
 {
-    LRESULT plotPoints = GetAncestor().SendMessage(UWN_GETALLPOINTS, 0, 0);
+    LRESULT plotPoints = GetAncestor().SendMessage(UWM_GETALLPOINTS, 0, 0);
     assert(plotPoints);
     return reinterpret_cast<std::vector<PlotPoint>*>(plotPoints);
 }

@@ -70,7 +70,7 @@ namespace Win32xx
     {
     public:
         CAXHost();
-        ~CAXHost();
+        virtual ~CAXHost();
 
         // CAXHost methods
         virtual STDMETHODIMP Activate();

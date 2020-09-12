@@ -5,8 +5,13 @@
 #include "stdafx.h"
 #include "List.h"
 #include "resource.h"
-#include "MovieShowApp.h"
+#include "MovieInfo.h"
+#include "UserMessages.h"
 
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( push )
+#pragma warning ( disable : 26812 )       // enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 /////////////////////////////////
 // CViewList function definitions
@@ -40,6 +45,8 @@ void CViewList::AddItem(const MovieInfo& mi)
             nImage = 2;
         if (mi.flags & 0x0001)
             nImage = 3;
+        if (mi.flags & 0x0002)
+            nImage = 4;
         int item = GetItemCount();
         LVITEM lvi;
         ZeroMemory(&lvi, sizeof(LVITEM));
@@ -53,6 +60,7 @@ void CViewList::AddItem(const MovieInfo& mi)
         SetItemText(item, 1, mi.releaseDate);
         SetItemText(item, 2, mi.genre);
         SetItemText(item, 3, mi.fileName);
+        SetItemText(item, 4, GetFileTime(mi.lastModifiedTime));
     }
 }
 
@@ -67,7 +75,7 @@ int CALLBACK CViewList::CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortView
     assert(lp2);
     assert(pSortViewItems);
 
-    if (lp1 == 0 || lp2 == 0 || !pSortViewItems)
+    if (lp1 == 0 || lp2 == 0 || pSortViewItems == 0)
         return 0;
 
     SortViewItems* pSort = reinterpret_cast<SortViewItems*>(pSortViewItems);
@@ -81,42 +89,74 @@ int CALLBACK CViewList::CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortView
     case 0:
         {
             if (pmi1->movieName > pmi2->movieName)
-                compare = pSort->m_isSortDown ? 1 : -1;
+                compare = pSort->m_isSortDown ? -1 : 1;
 
             if (pmi1->movieName < pmi2->movieName)
-                compare = pSort->m_isSortDown ? -1 : 1;
+                compare = pSort->m_isSortDown ? 1 : -1;
             break;
         }
     case 1:
         {
             if (pmi1->releaseDate > pmi2->releaseDate)
-                compare = pSort->m_isSortDown ? 1 : -1;
+                compare = pSort->m_isSortDown ? -1 : 1;
 
             if (pmi1->releaseDate < pmi2->releaseDate)
-                compare = pSort->m_isSortDown ? -1 : 1;
+                compare = pSort->m_isSortDown ? 1 : -1;
             break;
         }
     case 2:
         {
             if (pmi1->genre > pmi2->genre)
-                compare = pSort->m_isSortDown ? 1 : -1;
+                compare = pSort->m_isSortDown ? -1 : 1;
 
             if (pmi1->genre < pmi2->genre)
-                compare = pSort->m_isSortDown ? -1 : 1;
+                compare = pSort->m_isSortDown ? 1 : -1;
             break;
         }
     case 3:
         {
             if (pmi1->fileName > pmi2->fileName)
-                compare = pSort->m_isSortDown ? 1 : -1;
+                compare = pSort->m_isSortDown ? -1 : 1;
 
             if (pmi1->fileName < pmi2->fileName)
-                compare = pSort->m_isSortDown ? -1 : 1;
+                compare = pSort->m_isSortDown ? 1 : -1;
             break;
         }
+    case 4:
+    {
+        if (CTime(pmi1->lastModifiedTime) > CTime(pmi2->lastModifiedTime))
+            compare = pSort->m_isSortDown ? -1 : 1;
+
+        if (CTime(pmi1->lastModifiedTime) < CTime(pmi2->lastModifiedTime))
+            compare = pSort->m_isSortDown ? 1 : -1;
+        break;
+    }
     }
 
     return compare;
+}
+
+// Returns a CString containing the file's date and time.
+CString CViewList::GetFileTime(FILETIME fileTime)
+{
+    // Convert the file time to local time.
+    FILETIME localFileTime;
+    SYSTEMTIME localSysTime;
+    ::FileTimeToLocalFileTime(&fileTime, &localFileTime);
+    ::FileTimeToSystemTime(&localFileTime, &localSysTime);
+
+    // Build strings with the date and time with regional settings.
+    const int maxChars = 32;
+    WCHAR time[maxChars];
+    WCHAR date[maxChars];
+    ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &localSysTime, NULL, date, maxChars - 1);
+    ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &localSysTime, NULL, time, maxChars - 1);
+
+    // Combine the date and time in a CString.
+    CString str = date;
+    str += L" ";
+    str += time;
+    return str;
 }
 
 // Called when the listview window is attached to CViewList during Create.
@@ -124,14 +164,13 @@ void CViewList::OnAttach()
 {
     SetWindowTheme(L"Explorer", NULL);
 
-
-
     // Set the image lists
     m_small.Create(16, 16, ILC_COLOR32, 1, 0);
     m_small.AddIcon(IDI_MOVIES);
     m_small.AddIcon(IDI_VIOLIN);
     m_small.AddIcon(IDI_BOXSET);
     m_small.AddIcon(IDI_FAVOURITES);
+    m_small.AddIcon(IDI_EYE);
     SetImageList(m_small, LVSIL_SMALL);
 
     // Set the report style
@@ -154,7 +193,50 @@ void CViewList::OnDestroy()
 void CViewList::OnInitialUpdate()
 {
     // Attach's ListView's header window to the CLVHeader object
-    m_header.Attach(GetHeader());
+    ::SetWindowTheme(GetHeader(), L" ", L" ");
+}
+
+// Called with a double click left mouse button or press the Enter key
+// on a list view item.
+LRESULT CViewList::OnItemActivate(LPNMITEMACTIVATE pnmitem)
+{
+    int item = pnmitem->iItem;
+    MovieInfo* pmi = reinterpret_cast<MovieInfo*>(GetItemData(item));
+    assert(pmi);
+    if (pmi)
+    {
+        LPCTSTR movie = pmi->fileName.c_str();
+        GetAncestor().SendMessage(UWM_PLAYMOVIE, (WPARAM)movie, 0);
+    }
+
+    return 0;
+}
+
+// Called when a list view item is selected.
+LRESULT CViewList::OnItemChanged(LPNMITEMACTIVATE pnmitem)
+{
+    int item = pnmitem->iItem;
+    MovieInfo* pmi = reinterpret_cast<MovieInfo*>(GetItemData(item));
+    GetAncestor().SendMessage(UWM_ONSELECTLISTITEM, (WPARAM)pmi, 0);
+
+    return 0;
+}
+
+// Called when a list view column is clicked.
+LRESULT CViewList::OnLVColumnClick(LPNMITEMACTIVATE pnmitem)
+{
+    // Determine the required sort order.
+    HDITEM  hdrItem;
+    ZeroMemory(&hdrItem, sizeof(hdrItem));
+    hdrItem.mask = HDI_FORMAT;
+    int column = pnmitem->iSubItem;
+    VERIFY(Header_GetItem(GetHeader(), column, &hdrItem));
+    bool isSortDown = (hdrItem.fmt & HDF_SORTUP) ? true : false;
+
+    // Perform the sort.
+    SortColumn(column, isSortDown);
+
+    return 0;
 }
 
 // Called when the framework reflects the WM_NOTIFY message
@@ -165,96 +247,29 @@ LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
 
     switch (pnmitem->hdr.code)
     {
-    case NM_RCLICK:
-    {
-        CMainFrame& Frame = GetMovieShowApp()->GetMainFrame();
-        if (GetNextItem(-1, LVNI_SELECTED) >= 0)
-            Frame.OnRClickListItem();
-
-        return 0;
+    case LVN_COLUMNCLICK:          return OnLVColumnClick(pnmitem);
+    case LVN_ITEMACTIVATE:         return OnItemActivate(pnmitem);
+    case LVN_ITEMCHANGED:          return OnItemChanged(pnmitem);
+    case NM_RCLICK:                return OnRClick();
     }
 
-    case LVN_ITEMACTIVATE:
-    {
-        CMainFrame& frame = GetMovieShowApp()->GetMainFrame();
-        int item = pnmitem->iItem;
-
-        MovieInfo* pmi = (MovieInfo*)GetItemData(item);
-        assert(pmi);
-        if (pmi)
-            frame.PlayMovie(pmi->fileName);
-
-        return 0;
-    }
-
-    case LVN_ITEMCHANGED:
-    {
-        CMainFrame& frame = GetMovieShowApp()->GetMainFrame();
-        int item = pnmitem->iItem;
-
-        MovieInfo* pmi = reinterpret_cast<MovieInfo*>(GetItemData(item));
-        frame.OnSelectListItem(pmi);
-
-        return 0;
-    }
-
-    case LVN_COLUMNCLICK:
-    {
-        int column = pnmitem->iSubItem;
-
-        // Determine the required sort order.
-        HDITEM  hdrItem;
-        ZeroMemory(&hdrItem, sizeof(hdrItem));
-        hdrItem.mask = HDI_FORMAT;
-        VERIFY(Header_GetItem(GetHeader(), column, &hdrItem));
-        bool isSortDown = (hdrItem.fmt & HDF_SORTDOWN) ? false : true;
-
-        // Perform the sort.
-        SortColumn(column, isSortDown);
-    }
-
-    }
     return 0;
 }
 
-// Called when the user clicks on a column in the listview's header.
-void CViewList::SortColumn(int column, bool isSortDown)
+// Called with a right mouse click on one or more list view items.
+LRESULT CViewList::OnRClick()
 {
-    // Perform the sort.
-    SortViewItems sort(column, isSortDown);
-    SortItems(CompareFunction, (LPARAM)&sort);
+    if (GetNextItem(-1, LVNI_SELECTED) >= 0)
+        GetAncestor().SendMessage(UWM_ONRCLICKLISTITEM, 0, 0);
 
-    // Ensure the selected item is visible after sorting.
-    int itemint = GetNextItem(-1, LVNI_SELECTED);
-    EnsureVisible(itemint, FALSE);
-
-    // Add an arrow to the column header.
-    for (int col = 0; col < Header_GetItemCount(GetHeader()); col++)
-        SetHeaderSortImage(col, SHOW_NO_ARROW);
-
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
-
-    SetHeaderSortImage(column, isSortDown ? SHOW_DOWN_ARROW : SHOW_UP_ARROW);
-
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
-
-    // Select the previously selected or first item
-    if (GetSelectedCount() > 0)
-        SetItemState(GetSelectionMark(), LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
-    else
-        SetItemState(0, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
+    return 0;
 }
 
 // Sets the CREATESTRUCT parameters prior to the window's creation.
 void CViewList::PreCreate(CREATESTRUCT& cs)
 {
     cs.dwExStyle = WS_EX_CLIENTEDGE;
-    cs.style = LVS_SHOWSELALWAYS | /*LVS_SINGLESEL | TVS_NOTOOLTIPS |*/ WS_CHILD | LVS_ALIGNLEFT;
+    cs.style = LVS_SHOWSELALWAYS | WS_CHILD | LVS_ALIGNLEFT;
 }
 
 // Configures the columns in the list view's header.
@@ -279,8 +294,12 @@ void CViewList::SetColumn()
     InsertColumn(2, lvColumn);
 
     lvColumn.cx = 200;
-    lvColumn.pszText = const_cast<LPTSTR>(L"FileName");
+    lvColumn.pszText = const_cast<LPTSTR>(L"File Name");
     InsertColumn(3, lvColumn);
+
+    lvColumn.cx = 200;
+    lvColumn.pszText = const_cast<LPTSTR>(L"File Date");
+    InsertColumn(4, lvColumn);
 }
 
 // Sets the up and down sort arrows in the listview's header.
@@ -314,20 +333,46 @@ BOOL CViewList::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
     }
 
     return FALSE;
-
 }
 
 // Sets the width of the last column to match the window width.
 void CViewList::SetLastColumnWidth()
 {
-    int remainingWidth = GetClientRect().Width();
-    int lastCol = m_header.GetItemCount() - 1;
-    for (int i = 0; i < lastCol; i++)
+    if (IsWindow())
     {
-        remainingWidth -= GetColumnWidth(i);
-    }
+        int remainingWidth = GetClientRect().Width();
+        int lastCol = Header_GetItemCount(GetHeader()) - 1;
+        for (int i = 0; i < lastCol; i++)
+        {
+            remainingWidth -= GetColumnWidth(i);
+        }
 
-    SetColumnWidth(lastCol, MAX(remainingWidth, 200));
+        SetColumnWidth(lastCol, MAX(remainingWidth, 100));
+    }
+}
+
+// Called when the user clicks on a column in the listview's header.
+void CViewList::SortColumn(int column, bool isSortDown)
+{
+    // Perform the sort.
+    SortViewItems sort(column, isSortDown);
+    SortItems(CompareFunction, (LPARAM)&sort);
+
+    // Ensure the selected item is visible after sorting.
+    int itemint = GetNextItem(-1, LVNI_SELECTED);
+    EnsureVisible(itemint, FALSE);
+
+    // Add an arrow to the column header.
+    for (int col = 0; col < Header_GetItemCount(GetHeader()); col++)
+        SetHeaderSortImage(col, SHOW_NO_ARROW);
+
+    SetHeaderSortImage(column, isSortDown ? SHOW_DOWN_ARROW : SHOW_UP_ARROW);
+
+    // Select the previously selected or first item
+    if (GetSelectedCount() > 0)
+        SetItemState(GetSelectionMark(), LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
+    else
+        SetItemState(0, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
 }
 
 // Sets the image associated with the listview item.
@@ -344,6 +389,8 @@ void CViewList::UpdateItemImage(int item)
             nImage = 2;
         if (mi->flags & 0x0001)
             nImage = 3;
+        if (mi->flags & 0x0002)
+            nImage = 4;
 
         LVITEM lvi;
         ZeroMemory(&lvi, sizeof(LVITEM));
@@ -355,3 +402,6 @@ void CViewList::UpdateItemImage(int item)
     }
 }
 
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)

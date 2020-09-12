@@ -91,6 +91,7 @@
 #define IDI_VIOLIN                      201
 #define IDI_MOVEDOWN                    202
 #define IDI_MOVEUP                      203
+#define IDI_EYE                         204
 
 #define IDM_REMOVE_FILE                 240
 #define IDM_ADD_BOXSET                  242
@@ -107,6 +108,7 @@
 #define IDM_VIDEOTYPE_LIVEPERFORMANCE   307
 #define IDM_SEARCH                      308
 #define IDM_VIDEO_MENU                  310
+#define IDM_WATCHLIST                   311
 #define IDF_MYFONT                      320
 #define IDC_DESCRIPTION                 1000
 #define IDC_TITLE                       1001

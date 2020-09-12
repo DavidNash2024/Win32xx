@@ -16,16 +16,10 @@ public:
     CThemesApp();
     virtual ~CThemesApp();
     virtual BOOL InitInstance();
-    CMainFrame& GetMainFrame() { return m_frame; }
 
 private:
     CMainFrame m_frame;
 };
 
 
-// returns a pointer to the CThemesApp object
-inline CThemesApp* GetThemeApp() { return static_cast<CThemesApp*>(GetApp()); }
-
-
 #endif // define THEMESAPP_H
-

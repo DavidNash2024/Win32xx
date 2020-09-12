@@ -439,14 +439,14 @@ namespace ShellWrapper
         if (!pidlRel)
             return; // pidlRel should not be NULL
 
-        UINT cb1 = 0;
+        size_t cb1 = 0;
 
         // Calculate the size of pidlParent without the two bytes of NULL terminator.
         // This size can be zero if pidlParent points to the desktop.
         if (pidlParent)
             cb1 = GetSize(pidlParent) - (2 * sizeof(BYTE));
 
-        UINT cb2 = GetSize(pidlRel);
+        size_t cb2 = GetSize(pidlRel);
 
         // Create a new ITEMIDLIST that is the size of both pidlParent and pidlRel,
         // then copy pidlParent and pidlRel to the new list.
@@ -459,7 +459,6 @@ namespace ShellWrapper
             ::CopyMemory(m_pidl, pidlParent, cb1);
 
         ::CopyMemory(((LPBYTE)m_pidl) + cb1, pidlRel, cb2);
-
     }
 
     // The Cpidl object stores a copy of the pidlSource's m_pidl.
@@ -473,7 +472,7 @@ namespace ShellWrapper
     // pidlSource is NOT released.
     void Cpidl::Copy(LPCITEMIDLIST pidlSource)
     {
-        UINT cbSource;
+        size_t cbSource;
         Delete();
 
         if(NULL == pidlSource) return;

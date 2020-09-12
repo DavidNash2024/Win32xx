@@ -16,7 +16,6 @@ public:
     CDoubleBufferApp();
     virtual ~CDoubleBufferApp();
     virtual BOOL InitInstance();
-    CMainFrame& GetMainFrame() { return m_frame; }
 
 private:
     CMainFrame m_frame;

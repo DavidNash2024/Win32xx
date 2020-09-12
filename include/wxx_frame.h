@@ -136,7 +136,10 @@ namespace Win32xx
     // Declarations of structures for themes
     //
 
-    // define some structs and enums from uxtheme.h and vssym32.h
+    // define some structs and enums from uxtheme.h, vssym32.h and vsstyle.h
+
+#ifndef _UXTHEME_H_
+
     struct MARGINS
     {
         int cxLeftWidth;      // width of left border that retains its size
@@ -144,6 +147,15 @@ namespace Win32xx
         int cyTopHeight;      // height of top border that retains its size
         int cyBottomHeight;   // height of bottom border that retains its size
     };
+
+    enum THEMESIZE
+    {
+        TS_MIN,             // minimum size
+        TS_TRUE,            // size without stretching
+        TS_DRAW             // size that theme mgr will use to draw part
+    };
+
+#endif
 
     class CMargins : public MARGINS
     {
@@ -165,13 +177,6 @@ namespace Win32xx
             cxLeftWidth    = cxLeft;    cxRightWidth   = cxRight;
             cyTopHeight    = cyTop;     cyBottomHeight = cyBottom;
         }
-    };
-
-    enum THEMESIZE
-    {
-        TS_MIN,             // minimum size
-        TS_TRUE,            // size without stretching
-        TS_DRAW             // size that theme mgr will use to draw part
     };
 
     enum POPUPCHECKSTATES
@@ -2703,13 +2708,13 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnTBNDropDown(LPNMTOOLBAR pNMTB)
     {
-        int iItem = pNMTB->iItem;
+        int item = pNMTB->iItem;
         CToolBar* pTB = static_cast<CToolBar*>(T::GetCWndPtr(pNMTB->hdr.hwndFrom));
 
         if (pTB)
         {
             // a boolean expression
-            m_drawArrowBkgrnd = (pTB->GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
+            m_drawArrowBkgrnd = (pTB->GetButtonStyle(item) & TBSTYLE_DROPDOWN);
         }
 
         return 0;

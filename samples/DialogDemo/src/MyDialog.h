@@ -17,7 +17,7 @@ class CMyDialog : public CDialog
 public:
     CMyDialog(UINT resID);
     CMyDialog(LPCTSTR resName);
-    void SetStatic(LPCTSTR text);
+    INT_PTR SetStatic(LPCTSTR text);
     virtual ~CMyDialog();
 
 protected:

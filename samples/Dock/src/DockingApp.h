@@ -16,7 +16,6 @@ public:
     CDockingApp();
     virtual ~CDockingApp() {}
     virtual BOOL InitInstance();
-    CMainFrame& GetMainFrame() { return m_MainFrame; }
 
 private:
     CMainFrame m_MainFrame;

@@ -16,16 +16,10 @@ public:
     CTabbedMDIApp();
     virtual ~CTabbedMDIApp();
     virtual BOOL InitInstance();
-    CMainFrame& GetMainFrame() { return m_frame; }
 
 private:
     CMainFrame m_frame;
 };
 
 
-// returns a pointer to the CTabbedMDIApp object
-inline CTabbedMDIApp* GetTabbedMDIApp() { return static_cast<CTabbedMDIApp*>(GetApp()); }
-
-
 #endif // TABBEDMDIAPP_H
-

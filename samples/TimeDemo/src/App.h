@@ -32,7 +32,6 @@ CApp : public CWinApp                                                   /*
         virtual ~CApp(){}
 
         virtual BOOL    InitInstance();
-        CMainFrame*     TheFrame() {return &m_frame;}
         const CString&  GetAppName() const { return m_appName; }
         const CString&  GetArcFileName() const { return m_arcvFile; }
         const CString&  GetAboutStatement() const { return m_aboutStatement; }
@@ -60,15 +59,6 @@ CApp : public CWinApp                                                   /*
 
 };
 
-/*============================================================================*/
-    inline
-CApp* TheApp()                                                      /*
-
-    Global function for access to this application.
-*----------------------------------------------------------------------------*/
-{
-    return (CApp*)GetApp();
-}
 /*-----------------------------------------------------------------------------*/
 #endif // define SDI_APP_H
 

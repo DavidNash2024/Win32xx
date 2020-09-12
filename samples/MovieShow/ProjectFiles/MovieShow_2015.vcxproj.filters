@@ -1,84 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Mainfrm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\StdAfx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\MovieShowApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\CoverImage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Tree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\List.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\MyDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Splash.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\SearchDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{9d21a1ff-54f0-4453-b042-ab801db4cb25}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{6c7f92bd-31c4-43e9-8123-4f3f94f984a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{57f97a9d-51b4-49ff-b10b-6be238f4deb6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Win32++">
-      <UniqueIdentifier>{8b0ec2f9-3b2a-4aee-84d3-0080b0e7cc10}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="..\src\Resource.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\src\Mainfrm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\MovieShowApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\MediaInfoDLL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\CoverImage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Tree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\List.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_appcore.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -115,6 +37,12 @@
     <ClInclude Include="..\..\..\include\wxx_file.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_filefind.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_folderdialog.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_frame.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -137,6 +65,12 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_metafile.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_mutex.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_preview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h">
@@ -196,12 +130,6 @@
     <ClInclude Include="..\..\..\include\wxx_treeview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wceframe.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wcestddef.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -211,98 +139,98 @@
     <ClInclude Include="..\..\..\include\wxx_wincore0.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\CoverImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\List.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Mainfrm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MediaInfoDLL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MovieInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MovieShowApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\MyDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_folderdialog.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Splash.h">
+    <ClInclude Include="..\src\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\SearchDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Splash.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\UserMessages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\MediaInfoDLL.def" />
-    <None Include="..\src\res\SplitH.cur">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\src\res\SplitV.cur">
-      <Filter>Resource Files</Filter>
-    </None>
+    <Filter Include="Win32++">
+      <UniqueIdentifier>{1b90f4eb-9bc6-42ba-a15f-827ddb0eceac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{f82fdd6d-da28-4ab3-a665-6800c1ccd219}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{6f9265c2-e298-4b76-a692-1a4007b5fccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{e44843a5-cc0b-4bf9-8196-cbb2de2f94ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\src\res\Add Folder.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\BoxSet.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Calendar.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Curtains.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\classview.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\fileview.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Help.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Library.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Mask.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\MoveDown.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Add BoxSet.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Edit BoxSet.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\MoveUp.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Movies.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Play.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Remove.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Search.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Star.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\src\res\Violin.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <ClCompile Include="..\src\CoverImage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\List.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Mainfrm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MovieShowApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SearchDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MyDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Splash.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\StdAfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Tree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\src\res\FRSCRIPT.TTF">
+    <ResourceCompile Include="..\src\Resource.rc">
       <Filter>Resource Files</Filter>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="..\src\res\Win32++.manifest">
-      <Filter>Resource Files</Filter>
-    </Manifest>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

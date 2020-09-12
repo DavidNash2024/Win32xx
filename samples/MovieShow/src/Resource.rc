@@ -42,13 +42,14 @@ BEGIN
         MENUITEM "Favourite",                   IDM_FAVOURITE
         POPUP "Video Type"
         BEGIN
-            MENUITEM "Movie",                       IDM_VIDEOTYPE_MOVIE
-            MENUITEM "Live Performance",            IDM_VIDEOTYPE_LIVEPERFORMANCE
+            MENUITEM "Movie",                   IDM_VIDEOTYPE_MOVIE
+            MENUITEM "Live Performance",        IDM_VIDEOTYPE_LIVEPERFORMANCE
         END
         POPUP "Put in BoxSet"
         BEGIN
-            MENUITEM "None",                        IDM_BOXSET_0
+            MENUITEM "None",                    IDM_BOXSET_0
         END
+        MENUITEM "&Watch List"                  IDM_WATCHLIST
         MENUITEM "&Remove File From Library",   IDM_REMOVE_FILE
     END
 END
@@ -97,6 +98,7 @@ IDI_PLAY                ICON                    "../src/res/Play.ico"
 IDI_REMOVE              ICON                    "../src/res/Remove.ico"
 IDI_SEARCH              ICON                    "../src/res/Search.ico"
 IDI_VIOLIN              ICON                    "../src/res/Violin.ico"
+IDI_EYE                 ICON                    "../src/res/eye.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -253,11 +255,12 @@ STRINGTABLE
 BEGIN
     IDM_ADD_FOLDER          "Add folder to, or update folder in the video library"
     IDM_PLAY                "Play this video"
-    IDM_FAVOURITE           "Add this video to favourites"
+    IDM_FAVOURITE           "Toggle the favourite state of this video"
     IDM_VIDEOTYPE_MOVIE     "Move this video to Movies"
     IDM_VIDEOTYPE_LIVEPERFORMANCE "Move this video to Live Performances"
     IDM_SEARCH              "Search for a video"
     IDM_REMOVE_FILE         "Remove this file from the library"
+    IDM_WATCHLIST           "Toggle the watch list state of this video"
 END
 
 #endif    // English (United States) resources

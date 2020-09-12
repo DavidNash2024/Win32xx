@@ -16,7 +16,6 @@ public:
     CMDIFrameApp();
     virtual ~CMDIFrameApp() {}
     virtual BOOL InitInstance();
-    CMainMDIFrame& GetMDIFrame() { return m_mainMDIFrame; }
 
 private:
     CMainMDIFrame m_mainMDIFrame;

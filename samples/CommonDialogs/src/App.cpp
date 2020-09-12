@@ -27,9 +27,6 @@
 #include "stdafx.h"
 #include "StdApp.h"
 
-  // the one and only CApp object, put here to reduce the stack size
-static CApp thisApp;
-
 /*******************************************************************************
 
     The WinMain() function invoked by the system to launch the application.
@@ -49,19 +46,19 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
       // simultaneously executing instances of this application
       // to m_nInstances.
 
-    static  const   LPCTSTR semaphoreName = _T("Win32++_CommonDialogsDemo");
-    static  const   int     nInstances = 1; // number of allowed instances
-    static  HANDLE  m_hSem;
-    m_hSem = CreateSemaphore(NULL, nInstances, nInstances, semaphoreName);
-    if (WaitForSingleObject(m_hSem, 0) == WAIT_TIMEOUT)
+    const LPCTSTR semaphoreName = _T("Win32++_CommonDialogsDemo");
+    const int instances = 1; // number of allowed instances
+    HANDLE semaphore = CreateSemaphore(NULL, instances, instances, semaphoreName);
+    if (WaitForSingleObject(semaphore, 0) == WAIT_TIMEOUT)
     {
         ::MessageBox(NULL, _T("The allowed number of instances of this\n")
         _T("application are already running."), _T("Stop"), MB_OK |
         MB_ICONSTOP | MB_TASKMODAL);
-        CloseHandle(m_hSem);
+        CloseHandle(semaphore);
         return 0;  // before entering the message loop
     }
       // Run the application
+    CApp thisApp;
     try
     {
         rtn = thisApp.Run();
@@ -94,8 +91,8 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
             MB_ICONSTOP | MB_TASKMODAL);
     }
       // release the semaphore
-    ReleaseSemaphore(m_hSem, 1, NULL);
-    CloseHandle(m_hSem);
+    ReleaseSemaphore(semaphore, 1, NULL);
+    CloseHandle(semaphore);
     return rtn;
 }
 

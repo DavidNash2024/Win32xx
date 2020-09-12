@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "DispatchSink.h"
 #include "BrowserApp.h"
+#include "UserMessages.h"
 
 /////////////////////////////////////
 // CDispatchSink function definitions
