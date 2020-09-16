@@ -7,9 +7,10 @@
 
 #include "TestWnd.h"
 
-//////////////////////////////////////
-// Declaration of the CMyThread class.
-//
+
+/////////////////////////////////////////////////////////
+// CMyThread manages a windows thread. It runs a separate
+// message loop and creates a test window when it starts.
 class CMyThread : public CWinThread
 {
 public:

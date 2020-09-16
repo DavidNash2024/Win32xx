@@ -7,9 +7,11 @@
 
 #include "Doc.h"
 
-//////////////////////////////////////////
-// Declaration of the CMainMDIFrame class.
-//
+
+///////////////////////////////////////////////////////////
+// CMainMDIFrame manages the application's main window.
+// The main window is a MDI frame which has a statusbar.
+// It uses a ribbon in place of the toolbar and menubar.
 class CMainMDIFrame : public CRibbonMDIFrame
 {
 public:

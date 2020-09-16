@@ -5,9 +5,11 @@
 #ifndef MAINMDIFRM_H
 #define MAINMDIFRM_H
 
-/////////////////////////////////////////
-// Declaration of the CMainMDIFrame class
-//
+
+///////////////////////////////////////////////////////////////
+// CMainMDIFrame manages the application's main window.
+// The main window is a MDI frame which has a menubar, toolbar,
+// statusbar and view window.
 class CMainMDIFrame : public CMDIFrame
 {
 public:

@@ -5,9 +5,10 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-/////////////////////////////////////
-// Declaration of the CMyDialog class
-//
+
+/////////////////////////////////////////////////////////
+// CMyDialog manages the application's main dialog.
+// The CResizer member provides the support for resizing.
 class CMyDialog : public CDialog
 {
 public:

@@ -7,9 +7,9 @@
 
 #include "wxx_wincore.h"
 
-//////////////////////////////////
-// Declaration of the CView class.
-//
+
+///////////////////////////////////////////////
+// CView manages the application's main window.
 class CView : public CWnd
 {
 public:

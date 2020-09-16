@@ -5,9 +5,10 @@
 #ifndef MDICHILDTEXT_H
 #define MDICHILDTEXT_H
 
-//////////////////////////////////////
-// Declaration oif the CViewText class
-//
+
+///////////////////////////////////////////////////////
+// CViewText manages a rich edit control. It is used as
+// the view window for CMDIChildText.
 class CViewText : public CRichEdit
 {
 public:
@@ -19,9 +20,10 @@ private:
     CFont   m_font;
 };
 
-/////////////////////////////////////////
-// Declaration of the CMDIChildText class
-//
+
+//////////////////////////////////////////////////////////////
+// CMDIChildText manages a MDI child window. It uses CViewText
+// as its view window.
 class CMDIChildText : public CMDIChild
 {
 public:

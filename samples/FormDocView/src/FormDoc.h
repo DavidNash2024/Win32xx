@@ -8,9 +8,9 @@
 #define SDI_DOC_H
 
 
-////////////////////////////////////
-// Declaration of the CFormDoc class
-//
+//////////////////////////////////////////////////////////////
+// CDoc holds the application's data. It inherits from CObject
+// to perform data serialization to and from the archive.
 class CFormDoc
 {
 public:

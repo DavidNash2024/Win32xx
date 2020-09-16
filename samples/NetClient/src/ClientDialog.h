@@ -8,9 +8,11 @@
 
 #include "Client.h"
 
-/////////////////////////////////////////
-// Declaration of the CClientDialog class
-//
+
+//////////////////////////////////////////////////////////////
+// CClientDialog manages the application's main dialog.
+// The dialog allows users to enter information to communicate
+// to the NetServer application.
 class CClientDialog : public CDialog
 {
 public:

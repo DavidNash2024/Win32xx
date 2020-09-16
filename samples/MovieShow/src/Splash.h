@@ -5,11 +5,10 @@
 #ifndef SPLASH_H
 #define SPLASH_H
 
-//////////////////////////////////////////////////////////////////////////
-// This class creates a splash screen with optional text and progress bar.
+///////////////////////////////////////////////////////////////////////
+// CSplash creates a splash screen with optional text and progress bar.
 // The splash screen is shown to indicate time consuming tasks, and
 // hidden when they're complete.
-//
 class CSplash : public CWnd
 {
 public:

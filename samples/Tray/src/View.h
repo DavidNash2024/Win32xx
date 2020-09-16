@@ -5,9 +5,9 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-//////////////////////////////////
-// Declaration of the CView class.
-//
+////////////////////////////////////////////////////
+// CView is the application's main window. It can be
+// minimized to the tray.
 class CView : public CWnd
 {
 public:

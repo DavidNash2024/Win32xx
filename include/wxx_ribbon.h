@@ -62,8 +62,10 @@
 
 namespace Win32xx
 {
-    //////////////////////////////////////////////
-    // The CRibbon class is used to add the Ribbon framework to a window.
+    ////////////////////////////////////////////////////////////
+    // The CRibbon class is used to add the Ribbon to a window.
+    // The ribbon user interface typically replaces the menu and
+    // toolbar used by a frame window.
     class CRibbon : public IUICommandHandler, public IUIApplication
     {
     public:
@@ -162,7 +164,9 @@ namespace Win32xx
         virtual ~CRibbonFrame() {}
     };
 
-    // This class provide an SDI frame with a Ribbon Framework that supports docking.
+    ////////////////////////////////////////////////////
+    // CRibbonDockFrame manages a frame which supports the
+    // ribbon user interface and docking.
     class CRibbonDockFrame : public CRibbonFrameT<CDockFrame>
     {
     public:
@@ -170,7 +174,9 @@ namespace Win32xx
         virtual ~CRibbonDockFrame() {}
     };
 
-    // This class provides a MDI frame with a Ribbon Framework.
+    //////////////////////////////////////////////////////////////
+    // CRibbonMDIFrame manages a frame which supports the Multiple
+    // Document Interface (MDI) and the Ribbon user interface.
     class CRibbonMDIFrame : public CRibbonFrameT<CMDIFrame>
     {
     public:
@@ -178,7 +184,10 @@ namespace Win32xx
         virtual ~CRibbonMDIFrame() {}
     };
 
-    // This class provides a MDI frame with a Ribbon Framework that supports docking.
+    ////////////////////////////////////////////////////////////////
+    // CRibbonMDIDockFrame manages a frame which supports the
+    // Multiple Document Interface (MDI), the Ribbon user interface,
+    // and docking.
     class CRibbonMDIDockFrame : public CRibbonFrameT<CMDIDockFrame>
     {
     public:

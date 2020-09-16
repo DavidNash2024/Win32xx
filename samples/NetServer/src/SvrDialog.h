@@ -14,9 +14,10 @@ class CTCPClientDlg;
 typedef Shared_Ptr<CWorkerSocket> ServerSocketPtr;
 typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
 
-/////////////////////////////////////////
-// Declaration of the CTCPClientDlg class
-//
+
+//////////////////////////////////////////////////////////////
+// CTCPClientDlg manages the dialog that is displayed for each
+// a TCP connection which is made with the server.
 class CTCPClientDlg : public CDialog
 {
 public:
@@ -45,9 +46,11 @@ private:
     CButtonSend m_buttonSend;
 };
 
-//////////////////////////////////////
-// Declaration of the CSvrDialog class
-//
+
+//////////////////////////////////////////////////////////////
+// CSvrDialog manages the application's main dialog.
+// The dialog allows users to enter accept connects with network
+// clients and communicate with them.
 class CSvrDialog : public CDialog
 {
 public:

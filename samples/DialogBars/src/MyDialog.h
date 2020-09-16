@@ -7,9 +7,9 @@
 
 #include "ScrollBar.h"
 
-/////////////////////////////////////
-// Declaration of the CMyDialog class
-//
+
+///////////////////////////////////////////////////
+// CMyDialog manages the application's main dialog.
 class CMyDialog : public CDialog
 {
 public:

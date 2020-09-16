@@ -6,8 +6,8 @@
 #define MYDIALOG_H
 
 /////////////////////////////////////
-// Declaration of the CMyDialog class
-//
+// CMyDialog manages the dialog which allows users to configure
+// the performance test.
 class CMyDialog : public CDialog
 {
 public:

@@ -84,8 +84,9 @@ namespace Win32xx
     class CMDIChild;
     typedef Shared_Ptr<CMDIChild> MDIChildPtr;
 
-    /////////////////////////////////////
-    // The CMDIChild class the functionality of a MDI child window.
+    ///////////////////////////////////////////////////////////////
+    // CMDIChild manages a MDI child window. CMDIChild also manages
+    // the creation and position of the MDI Child's view window.
     class CMDIChild : public CWnd
     {
     public:
@@ -128,8 +129,8 @@ namespace Win32xx
     };
 
     /////////////////////////////////////
-    // The CMDIClient class provides the functionality of a MDI client window.
-    // This is used as the view window for a CMDIFrame window.
+    // CMDIClient manages the MDI frame's MDI client window.
+    // The MDI client window manages the arrangement of the MDI child windows.
     template <class T>
     class CMDIClient : public T     // The template parameter T is either CWnd, or CDocker::CDockClient
     {
@@ -207,7 +208,9 @@ namespace Win32xx
 
 
     /////////////////////////////////////////
-    // The CMDIFrame class provides a frame window that can host one or more MDI child windows.
+    // The CMDIFrame class provides a frame window that can host one or
+    // more MDI child windows. CMDIFrame also manages the creation and
+    // position of child windows, such as the menubar, toolbar, and statusbar.
     class CMDIFrame : public CMDIFrameT<CFrame>
     {
     public:

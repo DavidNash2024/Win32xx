@@ -5,9 +5,10 @@
 #ifndef FILES_H
 #define FILES_H
 
-///////////////////////////////////////
-// Declaration of the CViewFiles class.
-//
+
+//////////////////////////////////////////////////
+// CViewDialog manages a list view control.
+// It is used as a view window by the tab control.
 class CViewFiles : public CListView
 {
 public:

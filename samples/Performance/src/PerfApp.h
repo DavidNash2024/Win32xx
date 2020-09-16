@@ -7,9 +7,11 @@
 
 #include "MainWnd.h"
 
-///////////////////////////////////////////
-// Declaration of the CPerformanceApp class
-//
+
+/////////////////////////////////////////////////////////////////
+// CPerformanceApp manages the application. It initializes the
+// Win32++ framework when it is constructed, and creates the main
+// window when it runs.
 class CPerformanceApp : public CWinApp
 {
 public:

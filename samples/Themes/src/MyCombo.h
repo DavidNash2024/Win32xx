@@ -5,9 +5,10 @@
 #ifndef MYCOMBO_H
 #define MYCOMBO_H
 
-/////////////////////////////////////
-// Declaration of the CMyCombo class.
-//
+
+/////////////////////////////////////////////////////////
+// CMyCombo manages the ComboBoxEx control, It is used by
+// the toolbar.
 class CMyCombo : public CComboBoxEx
 {
 public:

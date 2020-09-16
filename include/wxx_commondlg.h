@@ -80,6 +80,8 @@ namespace Win32xx
     const UINT UWM_FINDMSGSTRING = ::RegisterWindowMessage(FINDMSGSTRING);      // Used by the Find/Replace common dialog. Sent when the user clicks the Find Next, Replace, or Replace All button, or closes the dialog box.
 #endif
 
+
+    //////////////////////////////////////////////////////////
     // CCommonDialog is the base class for all common dialogs.
     class CCommonDialog : public CDialog
     {
@@ -102,8 +104,9 @@ namespace Win32xx
     };
 
 
-
-    // The color choice common dialog box class.
+    //////////////////////////////////////////////////////////////
+    // CColorDialog manages Color dialog box that enables the user
+    // to select a color.
     class CColorDialog : public CCommonDialog
     {
     public:
@@ -133,8 +136,9 @@ namespace Win32xx
     };
 
 
-
-    // The file open/save-as common dialog box class.
+    ///////////////////////////////////////////////////////
+    // CFileDialog manages the file open and save-as common
+    // dialog boxes.
     class CFileDialog : public CCommonDialog
     {
     public:
@@ -248,7 +252,9 @@ namespace Win32xx
     };
 
 
-    // The font choice common dialog box class.
+    ////////////////////////////////////////////////
+    // CFontDialog manages a dialog box that allows
+    // users to select a font.
     class CFontDialog : public CCommonDialog
     {
     public:

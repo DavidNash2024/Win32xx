@@ -7,9 +7,10 @@
 
 #include "resource.h"
 
-//////////////////////////////////////
-// Declaration of the CInputDlg class.
-//
+
+/////////////////////////////////////////////
+// CInputDlg manages the dialog used to input
+// the function for plotting.
 class CInputDlg : public CDialog
 {
 public:

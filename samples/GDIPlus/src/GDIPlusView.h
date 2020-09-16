@@ -16,9 +16,9 @@
 #endif
 
 
-////////////////////////////////////////
-// Declaration of the CGDIPlusView class
-//
+//////////////////////////////////////////////////
+// CView manages CMainFrame's view window. It uses
+// GDIPlus to perform drawing.
 class CGDIPlusView : public CWnd
 {
 public:

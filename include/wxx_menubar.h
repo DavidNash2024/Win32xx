@@ -56,10 +56,7 @@
 namespace Win32xx
 {
 
-    ////////////////////////////////////
-    // Declaration of the CMenuBar class
-    //
-
+    /////////////////////////////////////////////////////////////
     // The CMenuBar class provides a menu inside a rebar control.
     // CMenuBar inherits from CToolBar.
     class CMenuBar : public CToolBar

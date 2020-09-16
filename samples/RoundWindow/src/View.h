@@ -7,9 +7,10 @@
 
 #include "wxx_wincore.h"
 
-//////////////////////////////////
-// Declaration of the CView class.
-//
+
+//////////////////////////////////////////
+// CView manages the application's main window.
+// The main window is round.
 class CView : public CWnd
 {
 public:

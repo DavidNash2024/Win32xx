@@ -77,12 +77,11 @@
 namespace Win32xx
 {
     ////////////////////////////////////////
-    // Declaration of the CException class
-    //
-    //  This class has a pure virtual function and is an abstract class.
-    //  We can't throw a CException directly, but we can throw any exception
-    //  inherited from CException. We can catch all exceptions inherited from
-    //  CException with a single catch statement.
+    // This is the base class for all exceptions defined by Win32++.
+    // This class has a pure virtual function and is an abstract class.
+    // We can't throw a CException directly, but we can throw any exception
+    // inherited from CException. We can catch all exceptions inherited from
+    // CException with a single catch statement.
     //
     class CException
     {
@@ -105,9 +104,7 @@ namespace Win32xx
     };
 
 
-    //////////////////////////////////////////////////
-    // Declaration of the CFileException class
-    //
+    ///////////////////////////////////////////////////////////
     // This exception is used by CArchive and CFile to indicate
     // a problem creating or accessing a file.
     // Note: Each function guarantees not to throw an exception
@@ -127,9 +124,7 @@ namespace Win32xx
     };
 
 
-    //////////////////////////////////////////////////
-    // Declaration of the CNotSupportedException class
-    //
+    //////////////////////////////////////////////////////////////
     // This exception is used by the Win32++ framework to indicate
     // errors that prevent Win32++ from running.
     // Note: Each function guarantees not to throw an exception
@@ -143,9 +138,7 @@ namespace Win32xx
     };
 
 
-    //////////////////////////////////////////////////
-    // Declaration of the CResourceException class
-    //
+    //////////////////////////////////////////////////////////////
     // This exception is used by the Win32++ framework to indicate
     // a failure to create a GDI resource.
     // Note: Each function guarantees not to throw an exception
@@ -159,9 +152,7 @@ namespace Win32xx
     };
 
 
-    //////////////////////////////////////////
-    // Declaration of the CUserException class
-    //
+    ////////////////////////////////////////////////////////////////////////
     // This exception it thrown by CDataExchange when verifications fail.
     // It is also the exception that is typically thrown by users.
     // Users have the option of specifying text when the exception is thrown,
@@ -178,9 +169,7 @@ namespace Win32xx
     };
 
 
-    ////////////////////////////////////////
-    // Declaration of the CWinException class
-    //
+    /////////////////////////////////////////////////////////////////////
     // This is thrown when an attempt to create a thread or window fails.
     // GetErrorString can be used to retrieve the reason for the failure.
     // Note: Each function guarantees not to throw an exception
@@ -194,7 +183,7 @@ namespace Win32xx
     };
 
 
-    //////////////////////////////////////////
+    ///////////////////////////////////////
     // Definitions for the CException class
     //
 

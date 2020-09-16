@@ -68,7 +68,11 @@ namespace Win32xx
     };
 
 
-    // The CTab class provides the functionality of a tab control.
+    //////////////////////////////////////////////////////////////
+    // CTab manages a tab control. A tab control is analogous to
+    // the dividers in a notebook or the labels in a file cabinet.
+    // By using a tab control, an application can define multiple
+    // pages for the same area of a window or dialog box.
     class CTab : public CWnd
     {
     protected:
@@ -218,9 +222,10 @@ namespace Win32xx
         COLORREF m_blankPageColor;
     };
 
-    ////////////////////////////////////////
-    // The CTabbedMDI class combines many of the features of a MDI Frame and a tab control.
-    // Each MDI child is displayed as a separate tab page.
+    ////////////////////////////////////////////////////////////////////
+    // The CTabbedMDI class combines many of the features of a MDI Frame
+    // and a tab control. Each MDI child is displayed as a separate tab
+    // page.
     class CTabbedMDI : public CWnd
     {
     public:

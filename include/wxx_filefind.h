@@ -78,9 +78,9 @@ if (ff.FindFirstFile(_T("C:\\SomeFolder\\*.*")))
 namespace Win32xx
 {
 
-    /////////////////////////////////////
-    // The CFindFile class finds one or more files matching the string specified
-    // by FindFirstFile
+    ////////////////////////////////////////////////////////
+    // CFindFile finds one or more files matching the string
+    // specified by FindFirstFile.
     class CFileFind
     {
         public:

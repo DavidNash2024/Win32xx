@@ -51,8 +51,11 @@
 
 namespace Win32xx
 {
-
-    // The CTreeView class provides the functionality of a tree view control.
+    ///////////////////////////////////////////////////////////////
+    // CTreeView manages a tree view control. A tree-view control
+    // is a window that displays a hierarchical list of items,
+    // such as the headings in a document, the entries in an index,
+    // or the files and directories on a disk.
     class CTreeView : public CWnd
     {
     public:

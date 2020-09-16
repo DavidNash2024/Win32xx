@@ -6,9 +6,9 @@
 #define BROWSER_H
 
 
-////////////////////////////////////
-// Declaration of the CViewWeb class
-//
+//////////////////////////////////////////////////////
+// CViewWeb manages a window that displays a web page.
+// This a view window used by CMyTabbedMDI.
 class CViewWeb : public CWebBrowser
 {
 public:

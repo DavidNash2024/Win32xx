@@ -59,8 +59,10 @@ namespace Win32xx
     class CMonthCalendar;
     class CToolTip;
 
-
+    ///////////////////////////////////////////////////////////////////////////
     // The CAnimation class provides the functionality of an animation control.
+    // An animation control is a window that displays an Audio-Video
+    // Interleaved (AVI) clip.
     class CAnimation : public CWnd
     {
     public:
@@ -83,7 +85,10 @@ namespace Win32xx
     };
 
 
-    // The CComboBox class provides the functionality of a combo box control.
+    ///////////////////////////////////////////////////////
+    // CComboBox class manages a combo box control.
+    // A combo box consists of either a static text box or
+    // an edit box combined with a list box.
     class CComboBox : public CWnd
     {
     public:
@@ -147,7 +152,10 @@ namespace Win32xx
     };
 
 
-    // The CComboBoxEx class provides the functionality of a ComboBoxEx control.
+    /////////////////////////////////////////////////////////////////
+    // CComboBoxEx manages a ComboBoxEx control. ComboBoxEx Controls
+    // are an extension of the combo box control that provides native
+    // support for item images.
     class CComboBoxEx : public CComboBox
     {
     public:
@@ -176,7 +184,11 @@ namespace Win32xx
     };
 
 
-    // The CHeader class provides the functionality of a header control.
+    ////////////////////////////////////////////////////////////
+    // CHeader manages a header control. A header control is
+    // a window that is usually positioned above columns of text
+    // or numbers. It contains a title for each column, and it
+    // can be divided into parts.
     class CHeader : public CWnd
     {
     public:
@@ -222,7 +234,10 @@ namespace Win32xx
     };
 
 
-    // The CHotKey class provides the functionality a hot key control.
+    ////////////////////////////////////////////////////////////
+    // CHotKey manages a hot key control. A hot key control is a
+    // window that enables the user to enter a combination of
+    // keystrokes to be used as a hot key.
     class CHotKey : public CWnd
     {
     public:
@@ -244,7 +259,10 @@ namespace Win32xx
     };
 
 
-    // The CIPAddress class provides the functionality of an IP Address control.
+    ////////////////////////////////////////////////////////////////////
+    // CIPAddress manages an IP Address control. An Internet Protocol
+    // (IP) address control allows the user to enter an IP address in an
+    // easily understood format.
     class CIPAddress : public CWnd
     {
     public:
@@ -271,7 +289,10 @@ namespace Win32xx
     };
 
 
-    // The CMonthCalendar class provides the functionality of a Month Calendar control.
+    //////////////////////////////////////////////////////
+    // CMonthCalendar manages a Month Calendar control.
+    // A month calendar control implements a calendar-like
+    // user interface.
     class CMonthCalendar : public CWnd
     {
     public:
@@ -311,8 +332,11 @@ namespace Win32xx
         CMonthCalendar& operator = (const CMonthCalendar&); // Disable assignment operator
     };
 
-
-    // The CDateTime class provides the functionality of a Date Time control.
+    ///////////////////////////////////////////////////////////
+    // CDateTime manages a Date and Time picker control.
+    // A date and time picker (DTP) control provides a
+    // simple and intuitive interface through which to exchange
+    // date and time information with a user.
     class CDateTime : public CWnd
     {
     public:
@@ -341,7 +365,10 @@ namespace Win32xx
     };
 
 
-    // The CProgressBar class provides the functionality of a ProgressBar control.
+    /////////////////////////////////////////////////////////////
+    // CProgressBar manages a ProgressBar control. A progress bar
+    // is a window that an application can use to indicate the
+    // progress of a lengthy operation.
     class CProgressBar : public CWnd
     {
     public:
@@ -367,10 +394,12 @@ namespace Win32xx
     };
 
 
-    // The CScrollBar class provides the functionality of a ScrollBar control.
-    // Note:  Windows usually implement scroll bars internally with the WS_HSCROLL
-    //        and WS_VSCROLL styles without the use of a separate ScrollBar control.
-    //        Use CScrollBar if the bar needs to be displayed outside the scrolling window.
+    /////////////////////////////////////////////////////////////////////////
+    // CScrollBar manages a ScrollBar control.
+    // Windows usually implement scroll bars internally with the WS_HSCROLL
+    // and WS_VSCROLL styles without the use of a separate ScrollBar control.
+    // Use CScrollBar if the bar needs to be displayed outside the scrolling
+    // window.
     class CScrollBar : public CWnd
     {
     public:
@@ -395,8 +424,12 @@ namespace Win32xx
         CScrollBar& operator = (const CScrollBar&); // Disable assignment operator
     };
 
-
-    // The CSlider class provides the functionality of a TrackBar (aka Slider) control.
+    ///////////////////////////////////////////////////////////////////
+    // CSlider manages a TrackBar control, also known a Slider control.
+    // A trackbar is a window that contains a slider and optional tick
+    // marks. When the user moves the slider, using either the mouse or
+    // the direction keys, the trackbar sends notification messages to
+    // indicate the change.
     class CSlider : public CWnd
     {
     public:
@@ -441,8 +474,12 @@ namespace Win32xx
         CSlider& operator = (const CSlider&);   // Disable assignment operator
     };
 
-
-    // The CSpinButton class provides the functionality of an Up-Down (aka SpinButton) control.
+    ////////////////////////////////////////////////////////////
+    // CSpinButton manages an Up-Down control, also known as a
+    // SpinButton control. An up-down control is a pair of arrow
+    // buttons that the user can click to increment or decrement
+    // a value, such as a scroll position or a number displayed
+    // in a companion control.
     class CSpinButton : public CWnd
     {
     public:
@@ -471,7 +508,9 @@ namespace Win32xx
     };
 
 
-    // The CToolTip class provides the functionality of a ToolTip control.
+    ///////////////////////////////////////////////////////////
+    // CToolTip manages a ToolTip control. ToolTip controls are
+    // pop-up windows that display text.
     class CToolTip : public CWnd
     {
     public:

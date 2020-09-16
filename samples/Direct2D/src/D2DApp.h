@@ -9,9 +9,11 @@
 #include <d2d1helper.h>
 #include "D2DView.h"
 
-///////////////////////////////////
-// Declaration of the CD2DApp class
-//
+
+///////////////////////////////////////////////////////////////
+// CD2DApp manages the application. It initializes the Win32++
+// framework when it is constructed, and creates the main
+// window when it runs.
 class CD2DApp : public CWinApp
 {
 public:

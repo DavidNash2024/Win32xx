@@ -42,9 +42,10 @@
 // * OnDisconnect can be used to detect when the client is disconnected from the server.
 
 
-/////////////////////////////////////////
-// Declaration of the CServerSocket class
-// This socket listens for connection requests from clients.
+///////////////////////////////////////////////////
+// CServerSocket manages the network socket used by
+// the client. This socket listens for connection
+// requests from clients.
 //
 class CServerSocket : public CSocket
 {
@@ -56,11 +57,10 @@ public:
 };
 
 
-/////////////////////////////////////////
-// Declaration of the CWorkerSocket class
+///////////////////////////////////////////
+// CWorkerSocket manages the worker socket.
 // A worker socket is created for each TCP
 // client that connects to the server.
-//
 class CWorkerSocket : public CSocket
 {
 public:

@@ -6,9 +6,10 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-/////////////////////////////////////
-// Declaration of the CViewText class
-//
+
+////////////////////////////////////////////////////////////
+// CViewText manages an rich edit control. It displays text.
+// This is the view window for CContainText.
 class CViewText : public CRichEdit
 {
 public:
@@ -18,12 +19,12 @@ public:
 protected:
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void OnAttach();
-
 };
 
-////////////////////////////////////////
-// Declaration of the CContainText class
-//
+
+/////////////////////////////////////////////////
+// CContainText manages a dock container. It uses
+// CViewText as its view.
 class CContainText : public CDockContainer
 {
 public:
@@ -34,9 +35,10 @@ private:
     CViewText m_viewText;
 };
 
-/////////////////////////////////////
-// Declaration of the CDockText class
-//
+
+///////////////////////////////////////////////////
+// CDockText manages a docker. It uses CContainText
+// as its view.
 class CDockText : public CDocker
 {
 public:
@@ -45,7 +47,6 @@ public:
 
 private:
     CContainText m_view;
-
 };
 
 

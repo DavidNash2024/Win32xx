@@ -7,9 +7,11 @@
 
 #include "Mainfrm.h"
 
-/////////////////////////////////////////
-// Declaration of the CSplitterApp class.
-//
+
+///////////////////////////////////////////////////////////////////
+// CSplitterApp manages the application. It initializes the Win32++
+// framework when it is constructed, and creates the main frame
+// window when it runs.
 class CSplitterApp : public CWinApp
 {
 public:

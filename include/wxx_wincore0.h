@@ -114,9 +114,10 @@ namespace Win32xx
     // Registered messages defined by Win32++
     const UINT UWM_WINDOWCREATED = ::RegisterWindowMessage(_T("UWM_WINDOWCREATED"));    // Posted when a window is created or attached.
 
-    ////////////////////////////////
-    // The CWnd class provides the functionality of a generic window.
-    // Other classes which provide the functionality of more specialized windows inherit from CWnd.
+    ////////////////////////////////////////////////////////////////
+    // The CWnd class manages a generic window. Other classes
+    // which provide the functionality of more specialized windows,
+    // inherit from CWnd. These include dialogs and window controls.
     class CWnd : public CObject
     {
     friend class CColorDialog;

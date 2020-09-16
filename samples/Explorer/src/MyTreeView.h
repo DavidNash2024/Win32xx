@@ -9,9 +9,10 @@
 
 using namespace ShellWrapper;
 
-/////////////////////////////////////
-// Declaration of the CTreeView class
-//
+
+//////////////////////////////////////////////////.
+// CMyTreeView manages a tree view control.
+// The tree view control is used to display folders.
 class CMyTreeView : public CTreeView
 {
 public:

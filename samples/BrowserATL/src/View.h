@@ -11,6 +11,7 @@
 #include <exdispid.h>           // ATL IDispatchID helper
 #include <exdisp.h>             // ATL WebBrowser2 helper
 
+
 ////////////////////////////////////////////////////////////
 // CView uses ATL to create a web browser. ATL is then used
 // to connect a dispatch sink to the browser.

@@ -7,9 +7,8 @@
 
 #include "Doc.h"
 
-/////////////////////////////////
-// Declaration of the CView class
-//
+//////////////////////////////////////////
+// CView manages CMainFrame's view window.
 class CView : public CDialog
 {
 public:

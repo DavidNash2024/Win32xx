@@ -81,7 +81,13 @@
 
 namespace Win32xx
 {
-    // This class displays and manages a dialog.
+    ///////////////////////////////////////////////////////////
+    // CDialog manages a dialog box. Dialog boxes are typically
+    // used by an application to retrieve user input.
+    // A modal dialog box requires the user to supply information or
+    // cancel the dialog box before allowing the application to continue.
+    // A modeless dialog box allows the user to supply information and
+    // return to the previous task without closing the dialog box.
     class CDialog : public CWnd
     {
 
@@ -161,8 +167,10 @@ namespace Win32xx
     enum Alignment {topleft, topright, bottomleft, bottomright, center, leftcenter, rightcenter, topcenter, bottomcenter };
 
 
-    // The CResizer class can be used to rearrange a dialog's child
-    // windows when the dialog is resized.
+    ////////////////////////////////////////////////////////////////
+    // The CResizer class is used to automatically rearrange child
+    // child windows when the parent window is resized. It displays
+    // scroll bars as required. CResizer is often used with dialogs.
     class CResizer
     {
     public:

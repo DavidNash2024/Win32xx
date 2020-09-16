@@ -35,13 +35,9 @@
 #define CONTEXTHELP_H
 
 
-
-/////////////////////////////////////////////////////////
-// CContextHelp Class Declaration
-//
-//  A class used to open a help file and display the specified topic.
-//
-
+////////////////////////////////////////////////////
+// CContextHelp opens the help file and displays the
+// required topic.
 class CContextHelp : public CWnd
 {
     public:

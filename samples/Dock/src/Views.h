@@ -1,16 +1,15 @@
-/////////////////////////////
+//////////////////////////////////////////////
 // Views.h
-//  Declaration of the CPaneTopLeft, CPaneBottomLeft
-//   and CView classes
-//
+//  Declaration of the CViewSimple, CViewText,
+//  CViewTree and CViewList classes.
 
 #ifndef VIEWS_H
 #define VIEWS_H
 
 
-///////////////////////////////////////
-// Declaration of the CViewSimple class
-//
+////////////////////////////////////////
+// CViewSimple manages an simple window.
+// Text is rendered by OnDraw.
 class CViewSimple : public CWnd
 {
 public:
@@ -24,9 +23,10 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
+
 /////////////////////////////////////
-// Declaration of the CViewText class
-//
+// CViewText manages an edit control.
+// The edit control displays text.
 class CViewText : public CWnd
 {
 public:
@@ -38,9 +38,10 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 };
 
-/////////////////////////////////////
-// Declaration of the CViewTree class
-//
+
+//////////////////////////////////////////
+// CViewTree manages a tree view control.
+// The tree view control displays classes.
 class CViewTree : public CTreeView
 {
 public:
@@ -58,9 +59,10 @@ private:
     CImageList m_normalImages;
 };
 
-/////////////////////////////////////
-// Declaration of the CViewList class
-//
+
+/////////////////////////////////////////
+// CViewList manages a list view control.
+// The list view control displays files.
 class CViewList : public CListView
 {
 public:

@@ -544,6 +544,29 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                  /*
     case IDC_EDIT_STATUS:
         m_focusID = id;
         return TRUE;
+
+
+    case IDC_RADIO_A:
+    case IDC_RADIO_B:
+    case IDC_RADIO_C:
+        SetRadioA(id - IDC_RADIO_A);
+        UpdateDialog(SENDTOCONTROL);
+        return TRUE;
+
+    case IDC_CHECK_A:
+        SetCheckA( !GetCheckA() );
+        UpdateDialog(SENDTOCONTROL);
+        return TRUE;
+
+    case IDC_CHECK_B:
+        SetCheckB( !GetCheckB() );
+        UpdateDialog(SENDTOCONTROL);
+        return TRUE;
+
+    case IDC_CHECK_C:
+        SetCheckC( !GetCheckC() );
+        UpdateDialog(SENDTOCONTROL);
+        return TRUE;
     }
       // deal with setting the focus for edit controls, combo boxes,
       // list boxes, radio buttons, and check boxes

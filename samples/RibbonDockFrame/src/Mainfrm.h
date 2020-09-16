@@ -8,9 +8,12 @@
 #include "View.h"
 #include "Doc.h"
 
-//////////////////////////////////////
-// Declaration of the CMainFrame class
-//
+
+////////////////////////////////////////////////////////
+// CMainFrame manages the application's main window.
+// The main window is a frame which has a statusbar and
+// view window. It uses a ribbon in place of the menubar
+// and toolbar. The frame window supports docking.
 class CMainFrame : public CRibbonDockFrame
 {
 public:

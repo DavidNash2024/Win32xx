@@ -5,9 +5,10 @@
 #ifndef MYEDIT_H
 #define MYEDIT_H
 
-////////////////////////////////////
-// Declaration of the CMyEdit class.
-//
+
+/////////////////////////////////////////////////////
+// CMyEdit manages an edit control. It is used as the
+// child window of the main window.
 class CMyEdit : public CEdit
 {
 public:

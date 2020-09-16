@@ -7,11 +7,11 @@
 
 #include "CoverImage.h"
 
-////////////////////////////////////////////////////////////
-// Declaration of the CViewDialog class
-// The dialog displays information about the selected movie
-//  including the title, release date, cast, description and
-//  the cover image.
+
+////////////////////////////////////////////////////////////////
+// CViewDialog manages the dialog which displays the information
+// about the selected movie including the title, release date,
+// cast, description and the cover image.
 class CViewDialog : public CDialog
 {
 public:
@@ -50,10 +50,9 @@ private:
     CFont       m_titleFont;
 };
 
-////////////////////////////////////////////////////////////
-// Declaration of the CDockDialog class
-// Manages the resizing of the dialog window when the
-//  splitter bar is dragged.
+////////////////////////////////////////////////////////
+// CDockDialog manages the resizing of the dialog window
+// when the splitter bar is dragged.
 class CDockDialog : public CDocker
 {
 public:

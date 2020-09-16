@@ -5,9 +5,10 @@
 #ifndef RICHVIEW_H
 #define RICHVIEW_H
 
+
 /////////////////////////////////////
-// Declaration of the CRichView class
-//
+// CRichView manages a rich edit control. It is used
+// as the view window by CMainFrame.
 class CRichView : public CRichEdit
 {
 public:

@@ -1,15 +1,15 @@
-/////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 // Files.h - Declaration of the CViewFiles, CContainFiles
-//           and CDockFiles classes
+//           and CDockFiles classes.
 //
 
 #ifndef FILES_H
 #define FILES_H
 
 
-//////////////////////////////////////
-// Declaration of the CViewFiles class
-//
+/////////////////////////////////////////////////////////////
+// CViewFiles manages a list view control. It displays files.
+// This is the view window for CContainClasses.
 class CViewFiles : public CListView
 {
 public:
@@ -27,9 +27,10 @@ private:
     CImageList m_smallImages;
 };
 
-/////////////////////////////////////////
-// Declaration of the CContainFiles class
-//
+
+//////////////////////////////////////////////////
+// CContainFiles manages a dock container. It uses
+// CViewFiles as its view.
 class CContainFiles : public CDockContainer
 {
 public:
@@ -40,9 +41,10 @@ private:
     CViewFiles m_viewFiles;
 };
 
-//////////////////////////////////////
-// Declaration of the CDockFiles class
-//
+
+/////////////////////////////////////////////////////
+// CDockFiles manages a docker. It uses CContainFiles
+// as its view.
 class CDockFiles : public CDocker
 {
 public:

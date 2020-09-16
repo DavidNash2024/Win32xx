@@ -177,9 +177,10 @@
 namespace Win32xx
 {
 
-    ///////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////
     // CObject provides the functionality of a HGDIOBJECT
-    // This is the base class for other classes managing GDI objects.
+    // This is the base class for other classes managing GDI objects,
+    // such as bitmaps, brushes, palettes, fonts, pens and regions.
     class CGDIObject
     {
     public:
@@ -207,8 +208,8 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CBitmap provides the functionality of a bitmap GDI object.
+    ///////////////////////////////////////
+    // CBitmap manages a bitmap GDI object.
     class CBitmap : public CGDIObject
     {
 
@@ -248,8 +249,8 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CBrush provides the functionality of a brush GDI object.
+    /////////////////////////////////////
+    // CBrush manages a brush GDI object.
     class CBrush : public CGDIObject
     {
       public:
@@ -273,8 +274,8 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CFont provides the functionality of a font GDI object.
+    ///////////////////////////////////
+    // CFont manages a font GDI object.
     class CFont : public CGDIObject
     {
     public:
@@ -302,8 +303,8 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CPalette provides the functionality of a palette GDI object.
+    /////////////////////////////////////////
+    // CPalette manages a palette GDI object.
     class CPalette : public CGDIObject
     {
       public:
@@ -335,8 +336,8 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CPen provides the functionality of a pen GDI object.
+    /////////////////////////////////
+    // CPen manages a pen GDI object.
     class CPen : public CGDIObject
     {
     public:
@@ -361,8 +362,8 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CRgn provides the functionality of a region GDI object.
+    ////////////////////////////////////
+    // CRgn manages a region GDI object.
     class CRgn : public CGDIObject
     {
       public:
@@ -422,8 +423,14 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CDC provides the functionality of a GDI device context.
+    /////////////////////////////////////////////////////////////////////////
+    // CDC manages a GDI device context. A device context is a structure
+    // that defines a set of graphic objects and their associated attributes,
+    // as well as the graphic modes that affect output. The graphic objects
+    // include a pen for line drawing, a brush for painting and filling, a
+    // bitmap for copying or scrolling parts of the screen, a palette for
+    // defining the set of available colors, a region for clipping and other
+    // operations, and a path for painting and drawing operations.
     class CDC
     {
         friend class CWinApp;
@@ -826,8 +833,9 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CClientDC provides the functionality of a GDI device context for a client window.
+    /////////////////////////////////////////////////////////////
+    // CClientDC manages a GDI device context for the client area
+    // of a window.
     class CClientDC : public CDC
     {
     public:
@@ -857,8 +865,12 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CClientDCEx provides the functionality of a GDI device context for the client area of a window.
+    ///////////////////////////////////////////////////////////////////
+    // CClientDCEx manages a GDI device context for the client area
+    // of a window. A clip regions can be specified, along with flags
+    // such as DCX_WINDOW, DCX_CACHE, DCX_PARENTCLIP, DCX_CLIPSIBLINGS,
+    // DCX_CLIPCHILDREN, DCX_NORESETATTRS, DCX_LOCKWINDOWUPDATE,
+    // DCX_EXCLUDERGN, DCX_INTERSECTRGN and DCX_VALIDATE.
     class CClientDCEx : public CDC
     {
     public:
@@ -888,8 +900,10 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CMemDC provides the functionality of a memory device context.
+    /////////////////////////////////////////////////////////////////////
+    // CMemDC manage a memory device context which is compatable with the
+    // specified device context. If this device context 0, the memory DC
+    // is compatible with the application's current screen.
     class CMemDC : public CDC
     {
     public:
@@ -910,8 +924,9 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CPaintDC provides the functionality of a GDI device used by WM_PAINT.
+    ///////////////////////////////////////////////////////////////
+    // CPaintDC manages a GDI device used for painting via WM_PAINT
+    // on the specified window.
     class CPaintDC : public CDC
     {
     public:
@@ -965,8 +980,9 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // CWindowDC provides the functionality of a GDI device context for the entire window.
+    ///////////////////////////////////////////////////////////////////
+    // CWindowDC manages a GDI device context for the specified window,
+    // including its client and non-client areas.
     class CWindowDC : public CDC
     {
     public:
@@ -998,7 +1014,8 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
     ///////////////////////////////////////////////
-    // CMetaFileDC provides the functionality of a GDI device context for a metafile.
+    // CMetaFileDC manages a GDI device context for
+    // a Windows-format metafile.
     class CMetaFileDC : public CDC
     {
     public:
@@ -1047,8 +1064,9 @@ namespace Win32xx
 
     };
 
-    ///////////////////////////////////////////////
-    // CEnhMetaFileDC provides the functionality of a GDI device context for an enhanced metafile.
+    ///////////////////////////////////////////////////////////////////
+    // CEnhMetaFileDC manages a GDI device context for a Windows-format
+    // enhanced metafile.
     class CEnhMetaFileDC : public CDC
     {
     public:
@@ -3958,7 +3976,7 @@ namespace Win32xx
         return ::SelectClipPath(m_pData->dc, mode);
     }
 
-    // The StrokeAndFillPath function closes any open figures in a path, 
+    // The StrokeAndFillPath function closes any open figures in a path,
     // strokes the outline of the path by using the current pen, and fills
     // its interior by using the current brush.
     // Refer to StrokeAndFillPath in the Windows API documentation for more information.

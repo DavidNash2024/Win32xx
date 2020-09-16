@@ -5,9 +5,9 @@
 #ifndef MYCOMBO_H
 #define MYCOMBO_H
 
-////////////////////////////////////
-// Declaration of the CMyCombo class
-//
+//////////////////////////////////////////////////////
+// CMyCombo manages the ComboBoxEx control used by the
+// main frame to hold the web address.
 class CMyCombo : public CComboBoxEx
 {
 public:

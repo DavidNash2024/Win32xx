@@ -5,9 +5,10 @@
 #ifndef MDICHILDRECT_H
 #define MDICHILDRECT_H
 
-/////////////////////////////////////
-// Declaration of the CViewRect class
-//
+///////////////////////////////////////////////////////////
+// CViewRect manages a window that displays rectangles with
+// a random size and color. It is used as the view window
+// for CMDIChildRect.
 class CViewRect : public CWnd
 {
 public:
@@ -23,9 +24,9 @@ private:
     int m_cyClientMax;
 };
 
-/////////////////////////////////////////
-// Declaration of the CMDIChildRect class
-//
+//////////////////////////////////////////////////////////////
+// CMDIChildRect manages a MDI child window. It uses CViewRect
+// as its view window.
 class CMDIChildRect : public CMDIChild
 {
 public:

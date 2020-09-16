@@ -10,9 +10,9 @@
 // WPARAM is a pointer to the view window.
 #define UWM_SIMPLECREATED       (WM_APP + 0x0001)
 
-////////////////////////////////////////
-// Declaration of the CSimpleView class.
-//
+
+///////////////////////////////////////////////////////////
+// CSimpleView manages the view window for CSimpleMDIChild.
 class CSimpleView : public CWnd
 {
 public:
@@ -28,9 +28,10 @@ private:
     COLORREF m_color;
 };
 
+
 ////////////////////////////////////////////
-// Declaration of the CSimpleMDIChild class.
-//
+// CSimpleMDIChild manages a MDI child window.
+// It uses CSimpleView as its view window.
 class CSimpleMDIChild : public CMDIChild
 {
 public:

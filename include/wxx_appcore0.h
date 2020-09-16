@@ -448,11 +448,11 @@ namespace Win32xx
     };
 
 
-    /////////////////////////////////////////
-    // Provides a convenient RAII-style mechanism for owning a CCriticalSection
-    // for the duration of a scoped block. Automatically locks the specified
-    // CCriticalSection when constructed, and releases the critical section
-    // when destroyed.
+    /////////////////////////////////////////////////////////////////
+    // CThreadLock provides a convenient RAII-style mechanism for
+    // owning a CCriticalSection for the duration of a scoped block.
+    // Automatically locks the specified CCriticalSection when
+    // constructed, and releases the critical section when destroyed.
     class CThreadLock
     {
     public:
@@ -465,10 +465,11 @@ namespace Win32xx
         CCriticalSection& m_cs;
     };
 
-    //////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
     // CHGlobal is a class used to wrap a global memory handle.
-    // It automatically frees the global memory when the object goes out of scope.
-    // This class is used by CDevMode and CDevNames defined in wxx_printdialogs.h
+    // It automatically frees the global memory when the object goes
+    // out of scope. This class is used by CDevMode and CDevNames
+    // defined in wxx_printdialogs.h
     class CHGlobal
     {
     public:
@@ -492,7 +493,7 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     // The CObject class provides support for Serialization by CArchive.
     class CObject
     {
@@ -508,8 +509,9 @@ namespace Win32xx
     typedef UINT (WINAPI *PFNTHREADPROC)(LPVOID);
 
 
-    //////////////////////////////////////
-    // CWinThread manages a thread. For a GUI thread, it runs the message loop.
+    //////////////////////////////////////////////////////////////
+    // CWinThread manages a thread. It supports GUI threads and
+    // worker threads. For a GUI thread, it runs the message loop.
     class CWinThread : public CObject
     {
     public:
@@ -555,8 +557,10 @@ namespace Win32xx
         HWND m_accelWnd;                // handle to the window for accelerator keys
     };
 
-    ///////////////////////////////////
-    // CWinApp manages the application, and runs the application's message loop.
+    ///////////////////////////////////////////////////////////////
+    // CWinApp manages the application. Its constructor initializes
+    // the Win32++ framework. The Run function calls InitInstance,
+    // and starts the message loop on the main thread.
     // There can only be one instance of CWinApp.
     class CWinApp : public CWinThread
     {

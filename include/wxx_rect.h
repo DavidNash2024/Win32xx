@@ -63,8 +63,8 @@ namespace Win32xx
     class CRect;
 
 
-    /////////////////////////////////////////
-    // This class can be used to replace the SIZE structure
+    ////////////////////////////////////////////////////////
+    // This class can be used to replace the SIZE structure.
     class CSize : public SIZE
     {
     public:
@@ -97,8 +97,8 @@ namespace Win32xx
     };
 
 
-    /////////////////////////////////////////
-    // This class can be used to replace the POINT structure
+    /////////////////////////////////////////////////////////
+    // This class can be used to replace the POINT structure.
     class CPoint : public POINT
     {
     public:
@@ -136,7 +136,7 @@ namespace Win32xx
     };
 
 
-    /////////////////////////////////////////
+    ////////////////////////////////////////////////////////
     // This class can be used to replace the RECT structure.
     class CRect : public RECT
     {

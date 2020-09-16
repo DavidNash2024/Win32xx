@@ -5,13 +5,14 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-
 #include "View.h"
 #include "AppHelp.h"
 
-//////////////////////////////////////
-// Declaration of the CMainFrame class
-//
+
+///////////////////////////////////////////////////////////
+// CMainFrame manages the application's main window.
+// The main window is a frame which has a menubar, toolbar,
+// statusbar and view window.
 class CMainFrame : public CFrame
 {
 public:

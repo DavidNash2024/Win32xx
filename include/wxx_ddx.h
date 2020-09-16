@@ -97,7 +97,10 @@ namespace Win32xx
     ///////////////////////////////////////////////////////////////////////////
 
 
-    // A class used for for data exchange and validation.
+    ////////////////////////////////////////////////////////////
+    // CDataExchange is used to manage the data exchange between
+    // the user and a dialog control. It also validates the data
+    // passed between the user and the control.
     class CDataExchange
     {
 

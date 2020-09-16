@@ -5,9 +5,8 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-/////////////////////////////////
-// Declaration of the CView class
-//
+//////////////////////////////////////////
+// CView manages CMainFrame's view window.
 class CView : public CWnd
 {
 public:

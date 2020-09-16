@@ -8,9 +8,10 @@
 #include "MyListView.h"
 #include "MyTreeView.h"
 
-/////////////////////////////////////
-// Declaration of the CLeftPane class
-//
+
+////////////////////////////////////////////////////
+// CLeftPane is a docker that manages the left view.
+// CLeftPane's view window is CMyTreeView.
 class CLeftPane : public CDocker
 {
 public:
@@ -21,9 +22,10 @@ private:
     CMyTreeView m_view;
 };
 
-//////////////////////////////////////
-// Declaration of the CRightPane class
-//
+
+//////////////////////////////////////////////////////
+// CRightPane is a docker that manages the right view.
+// CRightPane's view window is CMyListView.
 class CRightPane : public CDocker
 {
 public:

@@ -6,12 +6,12 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-
 #include "resource.h"
 
-///////////////////////////////////////
-// Declaration of the CViewOutput class
-//
+
+///////////////////////////////////////////////////////////
+// CViewOutput manages an edit control. It displays output.
+// This is the view window for CContainOutput.
 class CViewOutput : public CRichEdit
 {
 public:
@@ -24,9 +24,10 @@ protected:
 
 };
 
-//////////////////////////////////////////
-// Declaration of the CContainOutput class
-//
+
+///////////////////////////////////////////////////
+// CContainOutput manages a dock container. It uses
+// CViewOutput as its view.
 class CContainOutput : public CDockContainer
 {
 public:
@@ -37,9 +38,10 @@ private:
     CViewOutput m_viewOutput;
 };
 
-///////////////////////////////////////
-// Declaration of the CDockOutput class
-//
+
+///////////////////////////////////////////////////////
+// CDockOutput manages a docker. It uses CContainOutput
+// as its view.
 class CDockOutput : public CDocker
 {
 public:

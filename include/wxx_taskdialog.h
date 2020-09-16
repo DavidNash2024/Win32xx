@@ -58,9 +58,9 @@
 namespace Win32xx
 {
 
-    ///////////////////////////////////////////////
-    // The CTaskDialog class provides the functionality a task dialog.
-    // A task dialog is similar to, while much more flexible than, a basic message box.
+    //////////////////////////////////////////////////////////////////
+    // CTaskDialog manages a task dialog. A task dialog is similar to,
+    // while much more flexible than, a basic message box.
     class CTaskDialog : public CWnd
     {
     public:

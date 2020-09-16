@@ -47,8 +47,9 @@
 namespace Win32xx
 {
 
-    ////////////////////////////////////
-    // The CRebar class is provides the functionality of a rebar control.
+    /////////////////////////////////////////////////////
+    // CRebar manages a rebar control. Rebar controls act
+    // as containers for child windows such as toolbars.
     class CReBar : public CWnd
     {
     public:

@@ -5,9 +5,9 @@
 #ifndef TESTWND_H
 #define TESTWND_H
 
-////////////////////////////////////////
-// Declaration of the CTestWindow class.
-//
+
+////////////////////////////////////////////////////////////
+// CTestWindow manages the test window created by CMyThread.
 class CTestWindow : public CWnd
 {
 public:

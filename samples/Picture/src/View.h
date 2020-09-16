@@ -7,9 +7,10 @@
 
 #include <olectl.h>
 
-/////////////////////////////////
-// Declaration of the CView class
-//
+
+//////////////////////////////////////////
+// CView manages CMainFrame's view window.
+// It uses IPicture to render the image.
 class CView : public CScrollView
 {
 public:

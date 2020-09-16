@@ -44,9 +44,10 @@
 
 namespace Win32xx
 {
-
-    // The CRegKey class manages access to the system registry. It provides a
-    // means of creating, querying, modifying and deleting registry entries.
+    ///////////////////////////////////////////////////////////
+    // The CRegKey class manages access to the system registry.
+    // It provides a means of creating, querying, modifying and
+    // deleting registry entries.
     class CRegKey
     {
     public:

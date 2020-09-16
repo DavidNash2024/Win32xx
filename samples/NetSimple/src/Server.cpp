@@ -15,9 +15,10 @@ using namespace std;
 // The socket address of the most recently connected UDP client.
 SOCKADDR g_saUDPClient;
 
-/////////////////////////////////////////
-// Declaration of the CServerSocket class
-//
+
+///////////////////////////////////////////////////
+// CServerSocket manages the network socket used by
+// the server.
 class CServerSocket : public CSocket
 {
 public:

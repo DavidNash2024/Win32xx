@@ -5,9 +5,8 @@
 #ifndef MDICHILDMAX_H
 #define MDICHILDMAX_H
 
-////////////////////////////////////
-// Declaration of the CViewMax class
-//
+////////////////////////////////////////////////////////
+// CViewMax is used as the view window for CMDIChildMax.
 class CViewMax : public CWnd
 {
 public:
@@ -19,9 +18,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
-////////////////////////////////////////
-// Declaration of the CMDIChildMax class
-//
+////////////////////////////////////////////////////////////
+// CMDIChildMax manages a MDI child window that is maximised
+// when it is created. It uses CViewMax as its view window.
 class CMDIChildMax : public CMDIChild
 {
 public:

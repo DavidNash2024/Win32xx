@@ -5,9 +5,9 @@
 #ifndef MYBUTTON_H
 #define MYBUTTON_H
 
-/////////////////////////////////////
-// Declaration of the CMyButton class
-//
+
+///////////////////////////////////////
+// CMyButton manages the button control.
 class CMyButton : public CButton
 {
 public:

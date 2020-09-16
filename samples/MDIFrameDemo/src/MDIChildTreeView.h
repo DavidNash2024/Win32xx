@@ -5,9 +5,10 @@
 #ifndef MDICHILDTREEVIEW_H
 #define MDICHILDTREEVIEW_H
 
-/////////////////////////////////////
-// Declaration of the CViewTree class
-//
+
+//////////////////////////////////////////////////////
+// CViewTree manages a tre view control. It is used as
+// the view window for CMDIChildTree.
 class CViewTree : public CTreeView
 {
 public:
@@ -21,9 +22,10 @@ private:
     CImageList m_normalImages;
 };
 
-/////////////////////////////////////////////
-// Declaration of the CMDIChildTree class
-//
+
+//////////////////////////////////////////////////////////////
+// CMDIChildTree manages a MDI child window. It uses CViewTree
+// as its view window.
 class CMDIChildTree : public CMDIChild
 {
 public:
