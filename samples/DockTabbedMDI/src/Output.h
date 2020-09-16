@@ -6,13 +6,12 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
-
 #include <richedit.h>
 
 
-/////////////////////////////////////
-// Declaration of the CViewText class
-//
+////////////////////////////////////////////////////////////////
+// CViewOutput manages an rich edit control. It displays output.
+// This is the view window for CContainOutput.
 class CViewOutput : public CRichEdit
 {
 public:
@@ -27,9 +26,10 @@ private:
     CFont m_font;
 };
 
-////////////////////////////////////////
-// Declaration of the CContainText class
-//
+
+///////////////////////////////////////////////////
+// CContainOutput manages a dock container. It uses
+// CViewOutput as its view.
 class CContainOutput : public CDockContainer
 {
 public:
@@ -40,9 +40,10 @@ private:
     CViewOutput m_viewOutput;
 };
 
-/////////////////////////////////////
-// Declaration of the CDockText class
-//
+
+//////////////////////////////////////////
+// CDockOutput manages a docker that uses
+// CContainOutput as its view.
 class CDockOutput : public CDocker
 {
 public:

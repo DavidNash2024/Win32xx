@@ -51,9 +51,9 @@ namespace Calc
 
     class Node;
 
-    ///////////////////////////////////////
-    // Declaration of the Calculator class.
-    //
+    //////////////////////////////////////////////////////
+    // Calculator evaluates the expression supplied by the
+    // Input function.
     class Calculator
     {
     public:

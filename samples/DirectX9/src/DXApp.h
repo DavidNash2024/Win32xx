@@ -7,9 +7,11 @@
 
 #include "MainFrm.h"
 
-//////////////////////////////////
-// Declaration of the CDXApp class
-//
+
+///////////////////////////////////////////////////////////////
+// CDXApp manages the application. It initializes the Win32++
+// framework when it is constructed, and creates the main frame
+// window when it runs.
 class CDXApp : public CWinApp
 {
 public:

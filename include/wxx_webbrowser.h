@@ -60,8 +60,7 @@
 
 namespace Win32xx
 {
-    ///////////////////////////////////////////////////
-    // Declaration of the CAXHost class
+    ////////////////////////////////////////////////////////////////////////
     // This class implements a COM container which hosts an ActiveX control,
     // such as internet explorer.
     class CAXHost : public IOleInPlaceFrame, public IOleClientSite,
@@ -152,10 +151,9 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // Declaration of the CWebBrowser class.
-    // This class provides the functionality of a WebBrower, using the
-    // IWebBrower2 interface.
+    ////////////////////////////////////////////////////////
+    // This class provides the functionality of a WebBrower,
+    // using the IWebBrower2 interface.
     class CWebBrowser : public CWnd
     {
     public:

@@ -125,28 +125,6 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
             CFrame::OnHelp();
             return TRUE;
 
-        case IDC_RADIO_A:
-        case IDC_RADIO_B:
-        case IDC_RADIO_C:
-            TheView().SetRadioA(id - IDC_RADIO_A);
-            UpdateDialog(SENDTOCONTROL);
-            return TRUE;
-
-        case IDC_CHECK_A:
-            TheView().SetCheckA( !TheView().GetCheckA() );
-            UpdateDialog(SENDTOCONTROL);
-            return TRUE;
-
-        case IDC_CHECK_B:
-            TheView().SetCheckB( !TheView().GetCheckB() );
-            UpdateDialog(SENDTOCONTROL);
-            return TRUE;
-
-        case IDC_CHECK_C:
-            TheView().SetCheckC( !TheView().GetCheckC() );
-            UpdateDialog(SENDTOCONTROL);
-            return TRUE;
-
         case WM_CLOSE:
             return TRUE;
     }

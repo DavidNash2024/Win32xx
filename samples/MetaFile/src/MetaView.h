@@ -9,9 +9,10 @@
 
 #include "wxx_wincore.h"
 
-/////////////////////////////////////
-// Declaration of the CMetaView class
-//
+
+////////////////////////////////////////////////////////////
+// CMetaView manages the application's main window.
+// An enhanced meta file is drawn in a pattern on the window.
 class CMetaView : public CWnd
 {
 public:

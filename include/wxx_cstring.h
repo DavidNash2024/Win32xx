@@ -114,9 +114,9 @@ namespace Win32xx
         MAX_STRING_SIZE = 255
     };
 
-    /////////////////////////////////////////////
-    // Declaration of the CStringT class template
-    //
+    /////////////////////////////////////////////////
+    // CStringT is a class template used to impliment
+    // CStringA, CStringW and CString.
     template <class T>
     class CStringT
     {

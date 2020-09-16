@@ -5,12 +5,11 @@
 #ifndef DOCKABLES_H
 #define DOCKABLES_H
 
-
 #include "Views.h"
 
-///////////////////////////////////////
-// Declaration of the CDockSimple class
-//
+
+/////////////////////////////////////////////////////
+// CDockSimple manages the docker with a simple view.
 class CDockSimple : public CDocker
 {
 public:
@@ -21,9 +20,10 @@ private:
     CViewSimple m_view;
 };
 
-////////////////////////////////////////
-// Declaration of the CDockClasses class
-//
+
+///////////////////////////////////////////////////////
+// CDockClasses manages the docker which uses CViewTree
+// as its view.
 class CDockClasses : public CDocker
 {
 public:
@@ -34,9 +34,10 @@ private:
     CViewTree m_view;
 };
 
-//////////////////////////////////////
-// Declaration of the CDockFiles class
-//
+
+/////////////////////////////////////////////////////
+// CDockFiles manages the docker which uses CViewList
+// as its view.
 class CDockFiles : public CDocker
 {
 public:
@@ -47,9 +48,10 @@ private:
     CViewList m_view;
 };
 
-/////////////////////////////////////
-// Declaration of the CDockText class
-//
+
+////////////////////////////////////////////////////
+// CDockText manages the docker which uses CViewText
+// as its view.
 class CDockText : public CDocker
 {
 public:

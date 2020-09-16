@@ -20,9 +20,10 @@ inline void SafeRelease( Interface **ppInterfaceToRelease )
     }
 }
 
-////////////////////////////////////
-// Declaration of the CD2DView class
-//
+
+///////////////////////////////////////////////
+// CD2DView manages the window that renders the
+// Direct2D images.
 class CD2DView : public CWnd
 {
 public:

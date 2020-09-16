@@ -8,9 +8,10 @@
 
 #include <richedit.h>
 
-/////////////////////////////////////
-// Declaration of the CViewText class
-//
+
+///////////////////////////////////////////////////////////
+// CViewText manages a rich edit control. It displays text.
+// This is the view window used byCContainText.
 class CViewText : public CRichEdit
 {
 public:
@@ -32,7 +33,10 @@ private:
     CFont m_font;
 };
 
-// Declaration of the CContainText class
+
+/////////////////////////////////////////////////
+// CContainText manages a dock container. It uses
+// CViewText as its view.
 class CContainText : public CDockContainer
 {
 public:
@@ -43,9 +47,10 @@ private:
     CViewText m_viewText;
 };
 
-/////////////////////////////////////
-// Declaration of the CDockText class
-//
+
+////////////////////////////////////////////////////
+// CDockText manages a docker that uses CContainText
+// as its view.
 class CDockText : public CDocker
 {
 public:

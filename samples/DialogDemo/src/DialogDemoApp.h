@@ -7,9 +7,11 @@
 
 #include "MyDialog.h"
 
-//////////////////////////////////////////
-// Declaration of the CDialogDemoApp class
-//
+
+/////////////////////////////////////////////////////////////
+// CDialogDemoApp manages the application. It initializes the
+// Win32++ framework when it is constructed, and creates the
+// main dialog when it runs.
 class CDialogDemoApp : public CWinApp
 {
 public:

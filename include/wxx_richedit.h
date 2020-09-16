@@ -66,9 +66,10 @@ namespace Win32xx
     } UNDONAMEID;
 #endif
 
-    ///////////////////////////////////////////////
-    // The CRichEdit class provides the functionality a rich edit control.
-    // It provides methods to create a rich edit control and modify its contents.
+    ////////////////////////////////////////////////////////////
+    // CRichEdit manages a rich edit control. Rich Edit controls
+    // support plain text and rich text. Rich text can utilize
+    // several fonts in a single document.
     class CRichEdit : public CWnd
     {
     public:

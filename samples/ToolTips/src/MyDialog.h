@@ -5,9 +5,10 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-////////////////////////////////////////
-// CBalloonToolTip function definitions.
-//
+
+///////////////////////////////////////////////
+// CBalloonToolTip manages a tooltip which uses
+// a balloon style.
 class CBalloonToolTip : public CToolTip
 {
 public:
@@ -24,7 +25,8 @@ protected:
 };
 
 
-// Declaration of the CMyDialog class
+///////////////////////////////////////////////////
+// CMyDialog manages the application's main dialog.
 class CMyDialog : public CDialog
 {
 public:

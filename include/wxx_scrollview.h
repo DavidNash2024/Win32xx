@@ -68,7 +68,7 @@
 namespace Win32xx
 {
 
-    ///////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////
     // The CScrollView class adds scrolling to a view window. Inherit your
     // view window from CScrollView, and use the SetScrollSizes function
     // to set up the scrolling. Override OnDraw and perform the drawing to

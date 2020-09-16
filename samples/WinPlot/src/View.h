@@ -8,11 +8,9 @@
 #include "Calc.h"
 #include "InputDlg.h"
 
-class CDoc;
 
-//////////////////////////////////
-// Declaration of the CView class.
-//
+//////////////////////////////////////////
+// CView manages CMainFrame's view window.
 class CView : public CWnd
 {
 public:

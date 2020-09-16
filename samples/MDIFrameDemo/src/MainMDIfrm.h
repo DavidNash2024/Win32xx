@@ -11,9 +11,11 @@
   #define BTNS_WHOLEDROPDOWN 0x0080
 #endif
 
-/////////////////////////////////////////
-// Declaration of the CMainMDIFrame class
-//
+
+///////////////////////////////////////////////////////////
+// CMainMDIFrame manages the application's main window.
+// The main window is a MDI frame which has a menubar, toolbar,
+// statusbar and MDI child windows.
 class CMainMDIFrame : public CMDIFrame
 {
 public:

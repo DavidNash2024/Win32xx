@@ -5,9 +5,10 @@
 #ifndef CLASSES_H
 #define CLASSES_H
 
-/////////////////////////////////////////
-// Declaration of the CViewClasses class.
-//
+
+//////////////////////////////////////////////////
+// CViewClasses manages a tree view control.
+// It is used as a view window by the tab control.
 class CViewClasses : public CTreeView
 {
 public:

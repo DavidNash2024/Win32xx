@@ -3,16 +3,16 @@
 //              and CDockClasses classes
 //
 
-
 #ifndef CLASSES_H
 #define CLASSES_H
 
-
 #include "MyCombo.h"
 
-////////////////////////////////////////
-// Declaration of the CViewClasses class
-//
+
+///////////////////////////////////////////////
+// CViewClasses manages a tree view control.
+// This is the view window for CContainClasses,
+// and is used to display classes.
 class CViewClasses : public CTreeView
 {
 public:
@@ -32,9 +32,10 @@ private:
 
 };
 
-///////////////////////////////////////////
-// Declaration of the CContainClasses class
-//
+
+////////////////////////////////////////////////////
+// CContainClasses manages a dock container. It uses
+// CViewClasses as its view.
 class CContainClasses : public CDockContainer
 {
 public:
@@ -51,9 +52,10 @@ private:
     CMyCombo m_comboBoxEx;
 };
 
-////////////////////////////////////////
-// Declaration of the CDockClasses class
-//
+
+/////////////////////////////////////////
+// CDockClasses manages a docker. It uses
+// CContainClasses as its view.
 class CDockClasses : public CDocker
 {
 public:

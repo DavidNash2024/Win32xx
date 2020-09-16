@@ -55,8 +55,10 @@
 namespace Win32xx
 {
 
-    ///////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////
     // The CButton class provides the functionality of a button control.
+    // A button is a control the user can click to provide input to an
+    // application.
     class CButton : public CWnd
     {
     public:
@@ -87,8 +89,10 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // The CEdit class provides the functionality of an edit control.
+    ///////////////////////////////////////////////////////////////////
+    // CEdit manages an edit control. An edit control is a rectangular
+    // control window typically used in a dialog box to permit the user
+    // to enter and edit text by typing on the keyboard.
     class CEdit : public CWnd
     {
     public:
@@ -154,8 +158,9 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // The CListBox class provides the functionality of a list box control.
+    ////////////////////////////////////////////////////////////
+    // CListBox manages a list box control. List boxes display a
+    // list from which a user can select one or more items.
     class CListBox : public CWnd
     {
     public:
@@ -224,8 +229,10 @@ namespace Win32xx
     };
 
 
-    ///////////////////////////////////////////////
-    // The CStatic class provides the functionality of a static control.
+    ///////////////////////////////////////////////////////////
+    // CStatic manages a static control. Applications often use
+    // static controls to label other controls or to separate a
+    // group of controls.
     class CStatic : public CWnd
     {
     public:

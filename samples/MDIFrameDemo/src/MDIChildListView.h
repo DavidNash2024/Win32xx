@@ -5,9 +5,10 @@
 #ifndef MDICHILDLISTVIEW_H
 #define MDICHILDLISTVIEW_H
 
-////////////////////////////////////
-// Definition of the CViewList class
-//
+
+///////////////////////////////////////////
+// CViewList manages a list view control.
+// It is the view window for CMDIChildList.
 class CViewList : public CListView
 {
 public:
@@ -24,9 +25,10 @@ private:
 
 };
 
-////////////////////////////////////////
-// Definition of the CMDIChildList class
-//
+
+////////////////////////////////////////////
+// CMDIChildList manages a MDI child window.
+// It use CViewList as its view window.
 class CMDIChildList : public CMDIChild
 {
 public:

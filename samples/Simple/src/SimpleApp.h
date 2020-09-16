@@ -7,9 +7,11 @@
 
 #include "View.h"
 
-///////////////////////////////////////
-// Declaration of the CSimpleApp class.
-//
+
+////////////////////////////////////////////////////////////
+// CSimpleApp manages the application. It initializes the
+// Win32++ framework when it is constructed, and creates the
+// main window when it runs.
 class CSimpleApp : public CWinApp
 {
 public:

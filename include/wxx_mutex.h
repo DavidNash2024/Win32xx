@@ -69,7 +69,10 @@
 
 namespace Win32xx
 {
-
+    ////////////////////////////////////////////////////////////////
+    // CEvent manages an event object. Event objects can be set to
+    // a signaled or nonsignaled state to facilitate synchronisation
+    // between threads.
     class CEvent
     {
     public:
@@ -89,7 +92,12 @@ namespace Win32xx
         HANDLE m_event;
     };
 
-
+    ////////////////////////////////////////////////////////
+    // CMutex manages a mutex object. A mutex object is a
+    // synchronization object whose state is set to signaled
+    // when it is not owned by any thread, and nonsignaled
+    // when it is owned. Only one thread at a time can own
+    // a mutex object.
     class CMutex
     {
     public:
@@ -106,7 +114,12 @@ namespace Win32xx
         HANDLE m_mutex;
     };
 
-
+    ///////////////////////////////////////////////////////////////
+    // CSemaphore manages a semaphore object. A semaphore object
+    // is a synchronization object that maintains a count between
+    // zero and a specified maximum value. The count is decremented
+    // each time a thread completes a wait for the semaphore object
+    // and incremented each time a thread releases the semaphore.
     class CSemaphore
     {
     public:

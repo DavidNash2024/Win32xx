@@ -5,9 +5,10 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-////////////////////////////////////////
-// Declaration of the CViewDialog class.
-//
+
+//////////////////////////////////////////////////
+// CViewDialog manages a dialog.
+// It is used as a view window by the tab control.
 class CViewDialog : public CDialog
 {
 public:

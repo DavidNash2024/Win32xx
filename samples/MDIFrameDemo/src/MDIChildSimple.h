@@ -5,8 +5,9 @@
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
 
-///////////////////////////////////////
-// Declaration of the CViewSimple class
+/////////////////////////////////////////////////////
+// CViewSimple manages a simple window. It is used as
+// the view window for CMDIChildSimple.
 class CViewSimple : public CWnd
 {
 public:
@@ -21,9 +22,10 @@ private:
     COLORREF m_color;
 };
 
-///////////////////////////////////////////
-// Declaration of the CMDIChildSimple class
-//
+
+//////////////////////////////////////////////////////////////////
+// CMDIChildSimple manages a MDI child window. It uses CViewSimple
+// as its view window.
 class CMDIChildSimple : public CMDIChild
 {
 public:

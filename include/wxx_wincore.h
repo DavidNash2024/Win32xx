@@ -2766,6 +2766,7 @@ namespace Win32xx
     //  2601     Windows 7 and Windows Server 2008 r2
     //  2602     Windows 8 and Windows Server 2012
     //  2603     Windows 8.1 and Windows Server 2012 r2
+    //  3000     Windows 10
     // Note: For windows 8.1 and above, the value returned is also affected by the embedded manifest
     //       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602).
     inline int GetWinVersion()

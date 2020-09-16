@@ -7,9 +7,9 @@
 
 #define ID_TIMER 101
 
-/////////////////////////////////////
-// Declaration of the CMyDialog class
-//
+
+///////////////////////////////////////////////////
+// CMyDialog manages the application's main dialog.
 class CMyDialog : public CDialog
 {
 public:

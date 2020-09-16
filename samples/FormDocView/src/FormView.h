@@ -6,9 +6,10 @@
 
 #include "FormDoc.h"
 
-/////////////////////////////////////
-// Declaration of the CFormView class
-//
+
+//////////////////////////////////////////////
+// CFormView manages CMainFrame's view window.
+// The view window is a modeless dialog.
 class CFormView : public CDialog
 {
 public:

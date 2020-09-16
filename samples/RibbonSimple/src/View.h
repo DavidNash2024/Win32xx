@@ -5,9 +5,9 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-//////////////////////////////////
-// Declaration of the CView class.
-//
+//////////////////////////////////////////
+// CView manages the main window. It uses a Ribbon
+// in place of a menu and toolbar.
 class CView : public CWnd, public CRibbon
 {
 public:

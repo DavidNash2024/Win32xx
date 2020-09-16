@@ -192,7 +192,7 @@ void CViewList::OnDestroy()
 // Called after the listview window is created.
 void CViewList::OnInitialUpdate()
 {
-    // Attach's ListView's header window to the CLVHeader object
+    // Use old fashioned rendering for arrows in the list-view's header.
     ::SetWindowTheme(GetHeader(), L" ", L" ");
 }
 

@@ -5,9 +5,9 @@
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
 
-/////////////////////////////
-// Declaration of CSimpleView
-//
+
+/////////////////////////////////////////////////////
+// CSimpleView manages CSimpleMDIChild's view window.
 class CSimpleView : public CWnd
 {
 public:
@@ -23,9 +23,9 @@ private:
     COLORREF m_color;
 };
 
-/////////////////////////////////
-// Declaration of CSimpleMDIChild
-//
+//////////////////////////////////////////////
+// CSimpleMDIChild manages a MDI Child window.
+// It uses CSimpleView as its view window.
 class CSimpleMDIChild : public CMDIChild
 {
 public:

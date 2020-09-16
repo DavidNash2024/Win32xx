@@ -7,9 +7,11 @@
 
 #include "MainMDIFrm.h"
 
-////////////////////////////////////////
-// Declaration of the CMDIFrameApp class
-//
+
+///////////////////////////////////////////////////////////////////
+// CMDIFrameApp manages the application. It initializes the Win32++
+// framework when it is constructed, and creates the main frame
+// window when it runs.
 class CMDIFrameApp : public CWinApp
 {
 public:

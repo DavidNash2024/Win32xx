@@ -45,9 +45,9 @@
 namespace Win32xx
 {
 
-    /////////////////////////////////////
-    // The CFile class manages files. It can be used to: create; read from;
-    // write to; rename; and remove a file.
+    //////////////////////////////////////////////////////////
+    // The CFile class manages files. It can be used to
+    // create, read from, write to, rename, and remove a file.
     class CFile
     {
     public:

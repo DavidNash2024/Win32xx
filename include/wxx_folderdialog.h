@@ -118,7 +118,9 @@
 
 namespace Win32xx
 {
-
+    ////////////////////////////////////////////////////////
+    // CFolderDialog manages a dialog box which allows users
+    // to select a folder.
     class CFolderDialog : public CDialog
     {
     public:

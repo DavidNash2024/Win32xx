@@ -5,9 +5,10 @@
 #ifndef MYTASKDIALOG_H
 #define MYTASKDIALOG_H
 
-/////////////////////////////////////////
-// Declartion of the CMyTaskDialog class.
-//
+
+/////////////////////////////////////////////
+// CMyTaskDialog manages a task dialog. It is
+// used as the application's main window.
 class CMyTaskDialog : public CTaskDialog
 {
 public:

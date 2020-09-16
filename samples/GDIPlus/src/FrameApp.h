@@ -7,9 +7,11 @@
 
 #include "Mainfrm.h"
 
-/////////////////////////////////////
-// Declaration of the CFrameApp class
-//
+
+////////////////////////////////////////////////////////////////
+// CFrameApp manages the application. It initializes the Win32++
+// framework when it is constructed, and creates the main frame
+// window when it runs.
 class CFrameApp : public CWinApp
 {
 public:

@@ -5,9 +5,9 @@
 #ifndef MYSCROLLBAR_H
 #define MYSCROLLBAR_H
 
-////////////////////////////////////////
-// Declaration of the CMyScrollBar class
-//
+
+//////////////////////////////////////////////
+// CMyScrollBar manages the scrollbar control.
 class CMyScrollBar : public CScrollBar
 {
 public:

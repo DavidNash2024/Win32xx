@@ -5,9 +5,10 @@
 #ifndef FILES_H
 #define FILES_H
 
-//////////////////////////////////////
-// Declaration of the CViewFiles class
-//
+
+/////////////////////////////////////////////////////////////
+// CViewFiles manages a list view control. It displays files.
+// This is the view window for CContainClasses.
 class CViewFiles : public CListView
 {
 public:
@@ -27,9 +28,10 @@ private:
     CImageList m_smallImages;
 };
 
-/////////////////////////////////////////
-// Declaration of the CContainFiles class
-//
+
+/////////////////////////////////////////////////////
+// CContainClasses manages a dock container. It has a
+// CViewClasses view.
 class CContainFiles : public CDockContainer
 {
 public:
@@ -40,7 +42,10 @@ private:
     CViewFiles m_viewFiles;
 };
 
-// Declaration of the CDockFiles class
+
+/////////////////////////////////////////
+// CDockFiles manages a docker that has a
+// CContainFiles view.
 class CDockFiles : public CDocker
 {
 public:

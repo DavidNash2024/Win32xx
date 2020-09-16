@@ -5,9 +5,10 @@
 #ifndef __MYCONTROL_H
 #define __MYCONTROL_H
 
-///////////////////////////////////////
-// Declaration of teh CWebControl class
-//
+
+/////////////////////////////////////////////////
+// CWebControl is a custom control for the dialog
+// that displays a web browser.
 class CWebControl : public CWebBrowser
 {
 public:

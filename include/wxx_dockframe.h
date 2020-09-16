@@ -96,8 +96,10 @@ namespace Win32xx
     };
 
 
-    /////////////////////////////////////////
-    // Provides a Multiple Document Interface (MDI) frame with docking
+    //////////////////////////////////////////////////////////////////
+    // Provides a frame which supports the Multiple Document Interface
+    // (MDI) and docking. It also manages the creation and position
+    // of child windows, such as the menubar, toolbar, and statusbar.
     class CMDIDockFrame : public CMDIFrameT<CDockFrame>
     {
     public:

@@ -5,9 +5,11 @@
 #ifndef TASKDIALOGAPP_H
 #define TASKDIALOGAPP_H
 
-///////////////////////////////////////////
-// Declaration of the CTaskDialogApp class.
-//
+
+////////////////////////////////////////////////////////////////
+// CFrameApp manages the application. It initializes the Win32++
+// framework when it is constructed, and creates the task dialog
+// when it runs.
 class CTaskDialogApp : public CWinApp
 {
 public:

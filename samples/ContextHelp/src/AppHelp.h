@@ -8,10 +8,10 @@
 #include "ContextHelp.h"
 #include "HelpAbout.h"
 
-////////////////////////////////////////////////////////////////
-// The CHelp class combines the features of the CContextHelp and
-//  CAboutHelp classes.
-//
+
+//////////////////////////////////////////////////////
+// CHelp combines the features of the CContextHelp and
+// CAboutHelp classes.
 class CHelp
 {
 public:

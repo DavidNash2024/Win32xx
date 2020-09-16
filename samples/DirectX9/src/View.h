@@ -22,14 +22,12 @@ struct CUSTOMVERTEX
 
 
 ///////////////////////////////////////////////////////
-// Declaration of the CDXView class
-//  CDXView is the view window of CMainFrame. It is the
-//   parent window of CDX.
+// CDXView is the view window of CMainFrame. It is the
+// parent window of CDX.
 //
-//  Note: this class has two nested classes:
+// Note: this class has two nested classes:
 //  CDX         - the child window that renders the DirectX scene
 //  CDXThread   - A separate thread with the DirectX message loop
-//
 class CDXView : public CWnd
 {
     // CDX nested class within CDXView

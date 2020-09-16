@@ -6,9 +6,9 @@
 #define MYDIALOG_H
 
 
-///////////////////////////////////////
-// Declaration of the CViewDialog class
-//
+////////////////////////////////////////////////////////
+// CViewDialog manages a dialog. This is the view window
+// that CContainDialog uses.
 class CViewDialog : public CDialog
 {
 public:
@@ -57,9 +57,10 @@ private:
     CRichEdit2  m_richEdit2;
 };
 
-//////////////////////////////////////////
-// Declaration of the CContainDialog class
-//
+
+////////////////////////////////////////////////////
+// CContainDialog manages a dock container. It has a
+// CViewDialog view.
 class CContainDialog : public CDockContainer
 {
 public:
@@ -70,9 +71,10 @@ private:
     CViewDialog m_viewDialog;
 };
 
-///////////////////////////////////////
-// Declaration of the CDockDialog class
-//
+
+/////////////////////////////////////////
+// CDockDialog manages a docker that has a
+// CContainDialog view.
 class CDockDialog : public CDocker
 {
 public:

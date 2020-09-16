@@ -7,9 +7,10 @@
 
 #include "Views.h"
 
-///////////////////////////////////////
-// Declaration for the CDockText class.
-//
+
+////////////////////////////////////////////////////
+// CDockTest manages the docker which uses CViewText
+// as its view.
 class CDockText : public CDocker
 {
 public:
@@ -20,9 +21,10 @@ private:
     CViewText m_view;
 };
 
-///////////////////////////////////////
-// Declaration for the CDockTree class.
-//
+
+///////////////////////////////////////////////////////////
+// CDockTree manages the docker which uses CViewTree as its
+// view.
 class CDockTree : public CDocker
 {
 public:
@@ -33,9 +35,10 @@ private:
     CViewTree m_view;
 };
 
-///////////////////////////////////////
-// Declaration for the CDockList class.
-//
+
+////////////////////////////////////////////////////
+// CDockList manages the docker which uses CViewList
+// as its view.
 class CDockList : public CDocker
 {
 public:

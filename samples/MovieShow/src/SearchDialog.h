@@ -6,11 +6,9 @@
 #define SEARCHDIALOG_H
 
 
-///////////////////////////////////////////////
-// Declaration of the CSearchDialog class.
-// Allows the user to perform a word search for
-//  the movie's title, actors or description.
-//
+/////////////////////////////////////////////////////////
+// CSearchDialog allows the user to perform a word search
+// for the movie's title, actors or description.
 class CSearchDialog : public CDialog
 {
 public:

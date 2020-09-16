@@ -5,9 +5,10 @@
 #ifndef RECT_H
 #define RECT_H
 
-///////////////////////////
-// Declaration of CViewRect
-//
+
+//////////////////////////////////////////////////////////////
+// CViewRect manages a window that displays random rectangles.
+// This a view window used by CMyTabbedMDI.
 class CViewRect : public CWnd
 {
 public:

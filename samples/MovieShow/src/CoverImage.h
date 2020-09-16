@@ -6,9 +6,7 @@
 #define _COVERIMAGE_H_
 
 ////////////////////////////////////////////////////////////
-// Declaration of the CoverImage class.
-// This class is used by the dialog to draw the cover image.
-//
+// CCoverImage is used by the dialog to draw the cover image.
 class CCoverImage : public CWnd
 {
 public:

@@ -111,6 +111,7 @@ namespace Win32xx
     time_t UTCtime(time_tm *atm);
 
 
+    ////////////////////////////////////////////////////////
     // The CTime class represents an absolute time and date.
     class CTime
     {
@@ -183,8 +184,9 @@ namespace Win32xx
     };
 
 
-    //  The CTimeSpan class defines the data type for differences between two
-    //  CTime values, measured in seconds of time.
+    ////////////////////////////////////////////////////////////
+    // The CTimeSpan class defines the data type for differences
+    // between two CTime values, measured in seconds of time.
     class CTimeSpan
     {
         friend class CTime;     // CTime can access private members

@@ -12,9 +12,8 @@
 
 typedef Shared_Ptr<CTestWindow> TestWindowPtr;
 
-//////////////////////////////////////
-// Declaration of the CMainFrame class
-//
+///////////////////////////////////////////////////////////
+// CMainWindow manages the main window for the application.
 class CMainWindow : public CWnd
 {
 public:
@@ -43,7 +42,7 @@ private:
     };
 
     std::vector<TestWindowPtr> m_pTestWindows; // A vector CTestWindow smart pointers
-    CMyEdit m_edit;         // Handle to the edit window
+    CMyEdit m_edit;        // Handle to the edit window
     int m_testMessages;    // Number of test messages to be sent
     int m_testWindows;     // Number of test windows to create
     int m_windowsCreated;  // Number of windows created

@@ -105,9 +105,9 @@ namespace Win32xx
     };
 
 
-    //////////////////////////////////////////
-    // Declaration of the CPreviewPane class
-    // CPreviewPane provides a preview pane to CPrintPreview
+    //////////////////////////////////////////////
+    // CPreviewPane provides the preview pane used
+    // by CPrintPreview.
     class CPreviewPane : public CWnd
     {
     public:
@@ -129,9 +129,10 @@ namespace Win32xx
     };
 
 
-    //////////////////////////////////////////
-    // Declaration of the CPrintPreview class
-    //
+    ////////////////////////////////////////////////////////////
+    // CPrintPreview adds print preview support to applications.
+    // It is used to view print output before it is sent to the
+    // printer.
     template <typename T>
     class CPrintPreview : public CDialog
     {

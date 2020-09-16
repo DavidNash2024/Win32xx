@@ -10,9 +10,10 @@
 #define IDC_HAND  MAKEINTRESOURCE(32649)
 #endif
 
-/////////////////////////////////////
-// Declaration of the CHyperlink class
-//
+
+//////////////////////////////////////////////////
+// CHyperlink manages the hyperlink. The hyperlink
+// is a modified static control.
 class CHyperlink :  public CStatic
 {
 public:

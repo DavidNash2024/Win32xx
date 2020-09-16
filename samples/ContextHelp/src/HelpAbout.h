@@ -5,9 +5,9 @@
 #ifndef HELPABOUT_H
 #define HELPABOUT_H
 
-//////////////////////////////////////
-// Declaration of the CAboutHelp class
-//
+/////////////////////////////////////////////////////////////////
+// CAboutHelp manages the dialog which displays information about
+// this application.
 class CAboutHelp : public CDialog
 {
 public:

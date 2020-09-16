@@ -2,15 +2,14 @@
 // Tree.h - Declaration of CViewTree and CDockTree classes
 //
 
-
 #ifndef _TREE_H
 #define _TREE_H
 
+
 ///////////////////////////////////////////////////////////////////
-// Declaration of the CViewTree class
-// Organises videos into groups such as genres, release dates,
-//  boxsets, video types (movie / live performance) and favourites.
-//
+// CViewTree manages a tree view control. The tree view control
+// organises videos into groups such as genres, release dates,
+// boxsets, video types (movie / live performance) and favourites.
 class CViewTree : public CTreeView
 {
 public:
@@ -40,10 +39,9 @@ private:
 };
 
 
-////////////////////////////////////////////////////////////
-// Declaration of the CDockTree class
-// Manages the resizing of the treeview window when the
-//  splitter bar is dragged.
+////////////////////////////////////////////////////////
+// CDockTree manages the resizing of the treeview window
+// when the splitter bar is dragged.
 class CDockTree : public CDocker
 {
 public:

@@ -250,12 +250,11 @@ namespace Win32xx
     };
 
 
-    /////////////////////////////////////
-    // Declaration of the CMenuMetrics class
-    //  This class is used by CFrameT to retrieve the size of the components
-    //  used to perform owner-drawing of menu items.  Windows Visual Styles
-    //  are used to render menu items for systems running Aero (Vista and above).
-    //  Win32++ custom themes are used to render menu items for systems without Aero.
+    ////////////////////////////////////////////////////////////////////////////////
+    // CMenuMetrics is used by CFrameT to retrieve the size of the components
+    // used to perform owner-drawing of menu items.  Windows Visual Styles
+    // are used to render menu items for systems running Aero (Vista and above).
+    // Win32++ custom themes are used to render menu items for systems without Aero.
     class CMenuMetrics
     {
     public:
@@ -326,8 +325,8 @@ namespace Win32xx
 
 
     //////////////////////////////////
-    // CFrameT is the base class for all frames in Win32++
-    // The template parameter T is either CWnd or CDocker
+    // CFrameT is the base class for all frames in Win32++.
+    // The template parameter T is either CWnd or CDocker.
     template <class T>
     class CFrameT : public T
     {
@@ -545,7 +544,9 @@ namespace Win32xx
 
 
     /////////////////////////////////////////
-    // CFrame provides a Single Document Interface (SDI) frame
+    // CFrame manages the frame window. CFrame also manages the
+    // creation and position of child windows, such as the menubar,
+    // toolbar, view window and statusbar.
     class CFrame : public CFrameT<CWnd>
     {
     public:

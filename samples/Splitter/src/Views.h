@@ -5,9 +5,8 @@
 #ifndef VIEWS_H
 #define VIEWS_H
 
-////////////////////////////////////////
-// Declaration of the CViewSimple class.
-//
+///////////////////////////////////////
+// CViewSimple manages a simple window.
 class CViewSimple : public CWnd
 {
 public:
@@ -19,9 +18,10 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
-//////////////////////////////////////
-// Declaration of the CViewText class.
-//
+
+//////////////////////////////////////////////
+// CViewText manages an edit control.
+// It is used as the view window by CDockText.
 class CViewText : public CWnd
 {
 public:
@@ -33,9 +33,10 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 };
 
-//////////////////////////////////////
-// Declaration of the CViewTree class.
-//
+
+//////////////////////////////////////////////
+// CViewText manages a tree view control.
+// It is used as the view window by CDockTree.
 class CViewTree : public CTreeView
 {
 public:
@@ -48,9 +49,9 @@ private:
     CImageList m_smallImages;
 };
 
-//////////////////////////////////////
-// Declaration of the CViewList class.
-//
+/////////////////////////////////////////////
+// CViewList manages a list view control.
+// It is used as the view window by CDockList.
 class CViewList : public CListView
 {
 public:

@@ -20,9 +20,11 @@ enum DockIDs
     ID_DOCK_TEXT2 = 8
 };
 
-//////////////////////////////////////
-// Declaration of the CMainFrame class
-//
+
+///////////////////////////////////////////////////////////
+// CMainFrame manages the application's main window.
+// The main window is a frame which has a menubar, toolbar,
+// statusbar and view window.
 class CMainFrame : public CDockFrame
 {
 public:

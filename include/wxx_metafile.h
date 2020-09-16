@@ -60,7 +60,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
 
-    /////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
     // CMetaFile wraps a HMETAFILE. CMetaFile can be used anywhere a HMETAFILE can
     // be used. CMetaFile objects are reference counted, so they can be safely
     // copied. CMetatFile automatically deletes the HMETAFILE when the last copy of

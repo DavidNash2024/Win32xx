@@ -7,9 +7,11 @@
 
 #include "View.h"
 
-//////////////////////////////////////
-// Declaration of the CRoundApp class.
-//
+
+////////////////////////////////////////////////////////
+// CRoundApp manages the application. It initializes the
+// Win32++ framework when it is constructed, and creates
+// the main window when it runs.
 class CRoundApp : public CWinApp
 {
 public:

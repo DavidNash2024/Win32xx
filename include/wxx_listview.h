@@ -47,8 +47,10 @@
 namespace Win32xx
 {
 
-    /////////////////////////////////////
-    // The ClistView class provides the functionality of a List View control
+    /////////////////////////////////////////////////////////////
+    // ClistView manages a List View control. A list-view control
+    // is a window that displays a collection of items. Each item
+    // consists of an icon and a label.
     class CListView : public CWnd
     {
     public:

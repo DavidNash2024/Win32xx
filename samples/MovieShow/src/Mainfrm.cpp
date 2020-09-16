@@ -1263,9 +1263,11 @@ BOOL CMainFrame::OnSearch()
             }
         }
 
-        // Fill the listview with the found movies.
+        // Select the treeview search item to fill the listview
+        // with the found movies.
+        GetViewTree().SelectItem(0);
         GetViewTree().SelectItem(m_searchItem);
-        FillListFromSearch();
+        GetViewTree().SetFocus();
 
         CString str;
         int listItemsCount = GetViewList().GetItemCount();

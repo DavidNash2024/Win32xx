@@ -42,8 +42,10 @@
 
 namespace Win32xx
 {
-
-    // The CStatusBar class provides the functionality of a status bar control.
+    //////////////////////////////////////////////////////////////////
+    // CStatusBar manages a status bar control. A status bar is a
+    // horizontal window at the bottom of a parent window in which
+    // an application can display various kinds of status information.
     class CStatusBar : public CWnd
     {
     public:

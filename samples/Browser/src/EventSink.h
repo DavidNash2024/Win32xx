@@ -22,11 +22,11 @@
 #define DISPID_DOCUMENTCOMPLETE   259
 
 
-///////////////////////////////////////////////
-// About the CEventSink class.
-//  The CEventSink implements the event sink for our browser. An Event Sink
-//  provides a mechanism to respond to events triggered by an ActiveX control.
-//  The ActiveX browser is the event source, and CEventSink is the event sink.
+/////////////////////////////////////////////////////////////////
+// CEventSink implements the event sink for our browser. An Event
+// Sink provides a mechanism to respond to events triggered by an
+// ActiveX control. The ActiveX browser is the event source, and
+// CEventSink is the event sink.
 class CEventSink : public IDispatch
 {
 public:

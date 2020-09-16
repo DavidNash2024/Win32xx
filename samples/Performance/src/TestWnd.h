@@ -5,9 +5,10 @@
 #ifndef TESTWND_H
 #define TESTWND_H
 
-///////////////////////////////////////
-// Declaration of the CTestWindow class
-//
+///////////////////////////////////////////////////////////
+// CTestWindow manages the test windows.
+// Several test windows are created. Each of these are sent
+// messages by the main window.
 class CTestWindow : public CWnd
 {
 public:

@@ -34,9 +34,9 @@ struct ConstantBuffer
 };
 
 
-///////////////////////////////////
-// Declaration of the CDXView class
-//
+////////////////////////////////////////////
+// CView manages main window. It renders the
+// DirectX11 images.
 class CDXView : public CWnd
 {
 public:
@@ -70,7 +70,6 @@ private:
     XMMATRIX                m_world;
     XMMATRIX                m_view;
     XMMATRIX                m_projection;
-
 };
 
 #endif  // DXVIEW_H

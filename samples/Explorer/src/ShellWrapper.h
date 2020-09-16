@@ -23,9 +23,9 @@ namespace ShellWrapper
     BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName);
     BOOL GetDisplayName(LPCITEMIDLIST pidlFull, LPTSTR pszDisplayName);
 
-    //////////////////////////////////////////////////////////
-    // Wrapper class for a LPITEMIDLIST commonly called a pidl
-    //
+
+    ////////////////////////////////////////////////////////////////
+    // Cpidl is a wrapper for a LPITEMIDLIST, commonly called a pidl
     class Cpidl
     {
         friend class CEnumIDList;
@@ -59,9 +59,9 @@ namespace ShellWrapper
         LPITEMIDLIST m_pidlParent;
     };
 
-    /////////////////////////////////////////////
-    // Wrapper class for an IContextMenu2 pointer
-    //
+
+    ///////////////////////////////////////////////////////////
+    // CContextMenu2 is a wrapper for an IContextMenu2 pointer.
     class CContextMenu2
     {
     friend class CContextMenu;
@@ -78,9 +78,9 @@ namespace ShellWrapper
         IContextMenu2* m_pIContextMenu2;
     };
 
-    ////////////////////////////////////////////
-    // Wrapper class for an IContextMenu pointer
-    //
+
+    /////////////////////////////////////////////////////////
+    // CContextMenu is a wrapper for an IContextMenu pointer.
     class CContextMenu
     {
     friend class CShellFolder;
@@ -97,8 +97,9 @@ namespace ShellWrapper
         IContextMenu* m_pIContextMenu;
     };
 
-    ///////////////////////////////////
-    // Wrapper class for a LPENUMIDLIST
+
+    ///////////////////////////////////////////////
+    // CEnumIDList is a wrapper for a LPENUMIDLIST.
     //
     class CEnumIDList
     {
@@ -113,9 +114,9 @@ namespace ShellWrapper
         LPENUMIDLIST m_pEnumIDList;
     };
 
-    ////////////////////////////////////
-    // Wrapper class for a LPSHELLFOLDER
-    //
+
+    /////////////////////////////////////////////////
+    // CShellFolder is a wrapper for a LPSHELLFOLDER.
     class CShellFolder
     {
     public:

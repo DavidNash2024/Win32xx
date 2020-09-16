@@ -6,9 +6,9 @@
 #define MYCOMBO_H
 
 
-////////////////////////////////////
-// Declaration of the CMyCombo class
-//
+//////////////////////////////////////////////////////////////
+// CMyCombo manages the ComboBoxEx control used by the toolbar
+// in CContainClasses.
 class CMyCombo : public CComboBoxEx
 {
 public:

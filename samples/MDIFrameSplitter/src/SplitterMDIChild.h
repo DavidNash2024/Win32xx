@@ -5,9 +5,10 @@
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
 
-///////////////////////////////////
-// Declaration of CSimpleView class
-//
+
+/////////////////////////////////////////////////////////
+// CSimpleView manages a simple window. It is used as the
+// view window by CDockSimple.
 class CSimpleView : public CWnd
 {
 public:
@@ -25,9 +26,10 @@ private:
     COLORREF m_color;
 };
 
-///////////////////////////////////////
-// Declaration of the CDockSimple class
-//
+
+//////////////////////////////////////////
+// CDockSimple manages a docker that has a
+// CSimpleView view.
 class CDockSimple : public CDocker
 {
 public:
@@ -40,9 +42,11 @@ private:
     CSimpleView m_view;
 };
 
-/////////////////////////////////////////////
-// Declaration of the CSplitterMDIChild class
-//
+
+//////////////////////////////////////////////////////
+// CSplitterMDIChild manages the MDI child window.
+// It uses CDockSimple as its view window. CDockSimple
+// as other dockers docked within it.
 class CSplitterMDIChild : public CMDIChild
 {
 public:

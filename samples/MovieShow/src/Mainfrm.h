@@ -12,11 +12,10 @@
 #include "MovieInfo.h"
 
 
-//////////////////////////////////////////////////////////////////
-// Declaration of the CMainFrame class
-// The frame has a toolbar and statusbar.
-// A resizable treeview, listview and dialog occupy the view area.
-//
+///////////////////////////////////////////////////////////
+// CMainFrame manages the application's main window.
+// The main window is a frame which has a menubar, toolbar,
+// statusbar and view window.
 class CMainFrame : public CDockFrame
 {
 public:

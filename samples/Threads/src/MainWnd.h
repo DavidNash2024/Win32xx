@@ -11,9 +11,9 @@
 
 typedef Shared_Ptr<CMyThread> MyThreadPtr;
 
-////////////////////////////////////////
-// Declaration of the CMainWindow class.
-//
+
+/////////////////////////////////////////////////////
+// CMainWindow manages the application's main window.
 class CMainWindow : public CWnd
 {
 public:

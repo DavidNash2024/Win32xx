@@ -4,9 +4,10 @@
 #ifndef COLOURDIALOG_H
 #define COLOURDIALOG_H
 
-/////////////////////////////////////////
-// Declaration of the CColourDialog class
-//
+
+/////////////////////////////////////////////////////
+// CColourDialog manages a dialog which allows the
+// user to choose the color adjustment for the image.
 class CColourDialog : public CDialog
 {
 public:

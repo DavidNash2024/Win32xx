@@ -149,7 +149,8 @@ namespace Win32xx
     typedef int  WINAPI GETADDRINFO(LPCSTR, LPCSTR, const struct addrinfo*, struct addrinfo**);
     typedef void WINAPI FREEADDRINFO(struct addrinfo*);
 
-    // The CSocket class represents a network socket. It can be used to create
+    /////////////////////////////////////////////////////////////
+    // CSocket manages a network socket. It can be used to create
     // network connections, and pass data over those connections.
     class CSocket
     {

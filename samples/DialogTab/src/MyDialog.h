@@ -5,9 +5,10 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-/////////////////////////////////////////
-// Declaration of the CButtonDialog class
-//
+
+/////////////////////////////////////////////////////
+// CButtonDialog manages a dialog with several button
+// controls.
 class CButtonDialog : public CDialog
 {
 public:
@@ -31,6 +32,10 @@ private:
     CBrush m_brush;
 };
 
+
+/////////////////////////////////////////////////////////
+// CComboBoxDialog manages a dialog that contains several
+// ComboBox controls.
 class CComboBoxDialog : public CDialog
 {
 public:
@@ -48,7 +53,11 @@ private:
 };
 
 
-// Declaration of the CMyDialog class
+/////////////////////////////////////////////////////
+// CMyDialog manages the application's main dialog.
+// The main dialog has a tab control. The tab control
+// is used to display either the button dialog or the
+// ComboBox dialog.
 class CMyDialog : public CDialog
 {
 public:

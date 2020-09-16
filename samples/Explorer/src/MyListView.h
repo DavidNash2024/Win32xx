@@ -26,9 +26,9 @@ enum SHOW_ARROW
     SHOW_DOWN_ARROW
 };
 
-/////////////////////////////////////
-// Declaration of the CListView class
-//
+//////////////////////////////////////////////////
+// CMyListView manages a list view control.
+// The list view control is used to display files.
 class CMyListView : public CListView
 {
 public:

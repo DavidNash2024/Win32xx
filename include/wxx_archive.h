@@ -93,7 +93,8 @@ namespace Win32xx
     //  ArchiveObject ao(&Data, sizeof(Data));
     //  ar << ao; or ar >> ao;
 
-    // The CArchive serializes data to and from a file archive.
+    //////////////////////////////////////////////////////////////
+    // CArchive serializes data to and from a file archive.
     // CArchive uses the >> and << operator overloads to serialize
     // the various data types to the archive.
     class CArchive

@@ -127,12 +127,12 @@ namespace Win32xx
         ContainerInfo() : image(0), pContainer(0) {}
     };
 
-    ///////////////////////////////////////
-    // Declaration of the CDockContainer class
-    //  A CDockContainer is a CTab window. A CTab has a view window, and optionally a toolbar control.
-    //  A top level CDockContainer can contain other CDockContainers. The view for each container
-    //  (including the top level container) along with possibly its toolbar, is displayed
-    //  within the container parent's view page.
+    //////////////////////////////////////////////////////////////////////
+    // A CDockContainer is a CTab window. Each tab displays a view window,
+    // and can display an optional toolbar. A top level CDockContainer
+    // can contain other CDockContainers. The view for each container
+    // (including the top level container) along with possibly its
+    // toolbar, is displayed within the container parent's view page.
     class CDockContainer : public CTab
     {
 
@@ -268,11 +268,10 @@ namespace Win32xx
     } *LPDRAGPOS;
 
 
-    /////////////////////////////////////////
-    // Declaration of the CDocker class
-    //  A CDocker window allows other CDocker windows to be "docked" inside it.
-    //  A CDocker can dock on the top, left, right or bottom side of a parent CDocker.
-    //  There is no theoretical limit to the number of CDockers within CDockers.
+    /////////////////////////////////////////////////////////////////////////////////
+    // A CDocker window allows other CDocker windows to be "docked" inside it.
+    // A CDocker can dock on the top, left, right or bottom side of a parent CDocker.
+    // There is no theoretical limit to the number of CDockers within CDockers.
     class CDocker : public CWnd
     {
     public:
