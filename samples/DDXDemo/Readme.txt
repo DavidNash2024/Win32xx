@@ -22,7 +22,7 @@ Features demonstrated in this example
   an interactive application programming interface to dialog boxes and the 
   view class accessing or depositing data in those controls. These are 
   consistent with similar capabililties in the Microsoft Foundation Classes.
-* A fixed-size form for the display, with no resizing gripper tool at the
+* A resizable form for the display, with a resizing gripper tool at the
   end of the status bar.
 * Programmer-selectable menu, tool bar, and status bar themes, as well as
   selectable foreground and background colors of the dialog controls and

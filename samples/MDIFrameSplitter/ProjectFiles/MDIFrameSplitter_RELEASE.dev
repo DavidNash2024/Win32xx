@@ -142,26 +142,6 @@ BuildCmd=
 CompileCpp=1
 
 [Unit12]
-FileName=..\src\SimpleMDIChild.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit13]
-FileName=..\src\SimpleMDIChild.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit14]
 FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
@@ -171,10 +151,30 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit13]
 FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=..\src\targetver.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=..\src\SplitterMDIChild.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -221,7 +221,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit16]
-FileName=..\src\targetver.h
+FileName=..\src\SplitterMDIChild.h
 CompileCpp=1
 Folder=Header
 Compile=1

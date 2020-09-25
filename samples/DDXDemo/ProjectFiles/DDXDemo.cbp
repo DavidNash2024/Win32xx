@@ -185,10 +185,6 @@
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/MyButton.cpp" />
 		<Unit filename="../src/MyButton.h" />
-		<Unit filename="../src/MyDateTime.cpp" />
-		<Unit filename="../src/MyDateTime.h" />
-		<Unit filename="../src/MyMonthCalendar.cpp" />
-		<Unit filename="../src/MyMonthCalendar.h" />
 		<Unit filename="../src/MyScrollbar.cpp" />
 		<Unit filename="../src/MyScrollbar.h" />
 		<Unit filename="../src/Resource.rc">

@@ -14,89 +14,118 @@
 
 ******************************************************************************/
 
-// Microsoft Visual C++ generated resource script (originally).
+// Microsoft Visual C++ generated resource script.
+//
 
 #include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
-#include <richedit.h>
+#undef APSTUDIO_HIDDEN_SYMBOLS
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
 
-  // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
 
-  // RT_MANIFEST
 1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
-/*============================================================================*/
 
-  // Icon: The icon with the lowest ID value is placed first to ensure that
-  // the application icon remains consistent on all systems.
-IDW_MAIN           ICON           "../src/res/Form.ico"
-
-/*============================================================================*/
-
-  // Bitmaps
-IDB_ROSE_BITMAP    BITMAP         "../src/res/moondance.bmp"
-IDW_MAIN           BITMAP         "../src/res/toolbar.bmp"
-
-/*============================================================================*/
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
 
   // Main Menu
 IDW_MAIN MENU
-{
+BEGIN
     POPUP "&File"
-    {
-        MENUITEM "New...",          IDM_FILE_NEW
-        MENUITEM "&Open...",        IDM_FILE_OPEN
-        MENUITEM "&Save",           IDM_FILE_SAVE
-        MENUITEM "Save &As...",     IDM_FILE_SAVEAS
+    BEGIN
+        MENUITEM "New...",                      IDM_FILE_NEW
+        MENUITEM "&Open...",                    IDM_FILE_OPEN
+        MENUITEM "&Save",                       IDM_FILE_SAVE
+        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
-        MENUITEM "&Print",          IDM_FILE_PRINT
+        MENUITEM "&Print",                      IDM_FILE_PRINT
         MENUITEM SEPARATOR
-        MENUITEM "E&xit",           IDM_FILE_EXIT
-    }
+        MENUITEM "E&xit",                       IDM_FILE_EXIT
+    END
     POPUP "&Edit"
-    {
-        MENUITEM "Undo\tCtrl+Z",    IDM_EDIT_UNDO, GRAYED
-        MENUITEM "Redo\tShift+Ctrl+Z", IDM_EDIT_REDO, GRAYED
+    BEGIN
+        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO, GRAYED
+        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "Cut\tCtrl+X",     IDM_EDIT_CUT, GRAYED
-        MENUITEM "Copy\tCtrl+C",    IDM_EDIT_COPY, GRAYED
-        MENUITEM "Paste\tCtrl+V",   IDM_EDIT_PASTE, GRAYED
-        MENUITEM "Delete\tDel",     IDM_EDIT_DELETE, GRAYED
-    }
+        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT, GRAYED
+        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY, GRAYED
+        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE, GRAYED
+        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE, GRAYED
+    END
     POPUP "&View"
-    {
-        MENUITEM "&Tool Bar",       IDW_VIEW_TOOLBAR, CHECKED
-        MENUITEM "&Status Bar",     IDW_VIEW_STATUSBAR, CHECKED
-    }
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
     POPUP "&Select"
-    {
-        MENUITEM "Radio A",         IDC_RADIO_A
-        MENUITEM "Radio B",         IDC_RADIO_B
-        MENUITEM "Radio C",         IDC_RADIO_C
+    BEGIN
+        MENUITEM "Radio A",                     IDC_RADIO_A
+        MENUITEM "Radio B",                     IDC_RADIO_B
+        MENUITEM "Radio C",                     IDC_RADIO_C
         MENUITEM SEPARATOR
-        MENUITEM "Check A",         IDC_CHECK_A
-        MENUITEM "Check B",         IDC_CHECK_B
-        MENUITEM "Check C",         IDC_CHECK_C
-    }
+        MENUITEM "Check A",                     IDC_CHECK_A
+        MENUITEM "Check B",                     IDC_CHECK_B
+        MENUITEM "Check C",                     IDC_CHECK_C
+    END
     POPUP "&Help"
-    {
-        MENUITEM "&About",          IDW_ABOUT
-    }
-}
+    BEGIN
+        MENUITEM "&About",                      IDW_ABOUT
+    END
+END
 
-/*============================================================================*/
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "../src/res/Form.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_ROSE_BITMAP         BITMAP                  "../src/res/moondance.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
 
   // Main Dialog: the CView form
 IDD_MAIN_DIALOG DIALOGEX 0, 0, 400, 368
 STYLE /*DS_SHELLFONT |*/ WS_VISIBLE | WS_CHILDWINDOW
 FONT 8, "Courier", 0, 0
-{
+BEGIN
     EDITTEXT    IDC_EDIT_BYTE, 90, 20, 15, 14, WS_GROUP | NOT WS_BORDER |
                     ES_NUMBER | ES_RIGHT, WS_EX_STATICEDGE
     LTEXT       " BYTE ", IDC_STATIC, 110, 20, 40, 14, SS_LEFT
@@ -126,7 +155,7 @@ FONT 8, "Courier", 0, 0
     EDITTEXT    IDC_EDIT_CSTRING, 15, 200, 135, 35, WS_GROUP | NOT WS_BORDER |
                     ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE |
                     ES_WANTRETURN, WS_EX_STATICEDGE
-    CONTROL     "Rich edit box", IDC_EDIT_RICHEDIT, RICHEDIT_CLASS,
+    CONTROL     "Rich edit box", IDC_EDIT_RICHEDIT, "RichEdit20A",
                     WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL | ES_MULTILINE |
                     ES_WANTRETURN, 15, 240, 135, 35
     LISTBOX     IDC_LISTBOX, 15, 280, 135, 70, WS_GROUP | WS_TABSTOP |
@@ -152,7 +181,7 @@ FONT 8, "Courier", 0, 0
     CONTROL     "", IDC_DATE_TIME, "SysDateTimePick32", WS_GROUP |
                     WS_TABSTOP | DTS_TIMEFORMAT , 190, 230, 100, 15
     CONTROL     "", IDC_CALENDAR, "SysMonthCal32", WS_TABSTOP |
-                    MCS_NOTODAY, 185, 250, 110, 100
+                    MCS_NOTODAY, 175, 250, 127, 108
     PUSHBUTTON  "PUSH ME", IDC_PUSH_ME_BUTTON, 330, 15, 50, 16,
                     WS_GROUP | WS_TABSTOP | BS_OWNERDRAW
     PUSHBUTTON  "STATUS", IDOK, 330, 35, 50, 16,
@@ -163,105 +192,190 @@ FONT 8, "Courier", 0, 0
                     BS_CENTER
     LTEXT       "Actions are displayed here", IDC_EDIT_STATUS,
                     335, 95, 120, 245, SS_LEFT | SS_NOTIFY
-}
+END
 
-/*============================================================================*/
 
   // About Dialog: triggered by CFrame::OnHelp()
 IDW_ABOUT DIALOGEX 0, 0, 200, 100
-STYLE DS_MODALFRAME /*| DS_SHELLFONT*/ | WS_CAPTION | WS_VISIBLE | WS_POPUP |
-    WS_SYSMENU
+STYLE DS_MODALFRAME | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
-{
+BEGIN
     DEFPUSHBUTTON   "OK", IDOK, 75, 75, 50, 14, 0, WS_EX_LEFT
     CTEXT           "DDX/DDV Demo Application", IDC_STATIC, 25, 25, 150, 25,
                 SS_CENTER | SS_CENTERIMAGE | SS_NOTIFY, WS_EX_LEFT
     ICON            IDW_MAIN, 0, 5, 5, 20, 20, SS_ICON, WS_EX_LEFT
-}
+END
 
-/*============================================================================*/
 
-  // String Table
-STRINGTABLE
-{
-      // Standard resource ID messages
-    IDW_MAIN            "DDX/DDV Demo"
-    IDW_VIEW_TOOLBAR    "Show or hide the tool bar"
-    IDW_VIEW_STATUSBAR  "Show or hide the status bar"
-    IDW_INDICATOR_CAPS  "CAP"
-    IDW_INDICATOR_NUM   "NUM"
-    IDW_INDICATOR_SCRL  "SCRL"
-    IDW_READY           "Ready"
-      // Menu selection messages
-    IDM_FILE_NEW        "Create a New Document"
-    IDM_FILE_OPEN       "Open Existing Document"
-    IDM_FILE_SAVE       "Save the Document"
-    IDM_FILE_SAVEAS     "Save the Document with a new name"
-    IDM_FILE_PRINT      "Print the Document"
-    IDM_FILE_EXIT       "End the Program"
-    IDM_EDIT_UNDO       "Undo the last action"
-    IDM_EDIT_REDO       "Redo the previously undone action"
-    IDM_EDIT_CUT        "Cut the Selected Contents to the Clipboard"
-    IDM_EDIT_COPY       "Copy the Selected Contents to the Clipboard"
-    IDM_EDIT_PASTE      "Paste the Clipboard Contents to the Document"
-    IDM_EDIT_DELETE     "Erase the selected Contents"
-    IDW_ABOUT           "Display Information about this program"
-      // Tool Tips Text
-    IDOK                "Hint for STATUS button: Collect and show status."
-    IDC_CHECK_A         "Hint for Check A: Check or uncheck."
-    IDC_CHECK_B         "Hint for Check B: Check or uncheck."
-    IDC_CHECK_C         "Hint for Check C: Check or uncheck."
-    IDC_RADIO_A         "Hint for Radio Button A: Click to select."
-    IDC_RADIO_B         "Hint for Radio Button B: Click to select."
-    IDC_RADIO_C         "Hint for Radio Button C: Click to select."
-    IDD_MAIN_DIALOG     "Hint for Main Dialog: Does not display."
-    IDC_EDIT_CSTRING    "Hint for Edit Box: Enter text here."
-    IDC_LISTBOX         "Hint for List Box entries: Select one."
-    IDC_PUSH_ME_BUTTON  "Hint for Button: Push to see status."
-    IDC_EDIT_RICHEDIT        "Hint for Rich Edit: Enter text here."
-    IDC_ROSE_BITMAP     "Hint for Rose Bitmap: Push to see rose variety."
-    IDC_STATUS_GROUP    "Hint for Status Group: This tool tip does not display."
-    IDC_EDIT_STATUS     "Hint for Status area: Display status of controls."
-    IDC_EDIT_BYTE       "Hint for byte: Enter one byte."
-    IDC_EDIT_SHORT      "Hint for short: Enter short integer."
-    IDC_EDIT_INT        "Hint for int: Enter integer."
-    IDC_EDIT_UINT   "Hint for UINT: Enter unsigned integer."
-    IDC_EDIT_LONG       "Hint for long: Enter long integer."
-    IDC_EDIT_DWORD      "Hint for DWORD: Enter double word integer."
-    IDC_EDIT_FLOAT      "Hint for float: Enter floating point number."
-    IDC_EDIT_DOUBLE     "Hint for double: Enter double precision floating point number."
-    IDC_EDIT_LPTSTR     "Hint for LPTSTR: Enter string characters."
-    IDC_CALENDAR        "Hint for calendar: choose a date."
-    IDC_DATE_TIME       "Hint for date and time: choose a date and time."
-    IDC_SCROLLBAR       "Hint for scrollbar: click or slide thumb to value."
-    IDC_PROGRESSBAR     "Hint for progressbar: this shows progress."
-    IDC_SLIDER          "Hint for slider: click or slide thumb to value."
-    IDC_COMBOBOX        "Hint for combo box: choose an entry."
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
 
-      // Standard frame messages
-    SC_CLOSE            "Close the Window"
-    SC_MINIMIZE         "Minimize the Window"
-    SC_MOVE             "Move the Window"
-    SC_NEXTWINDOW       "Select Next Window"
-    SC_PREVWINDOW       "Select Previous Window"
-    SC_RESTORE          "Restore the Window"
-}
-
-/*============================================================================*/
-
-  // Accelerator Keys
 IDW_MAIN ACCELERATORS
-{
-    "N",            IDM_FILE_NEW, VIRTKEY, CONTROL
-    "O",            IDM_FILE_OPEN, VIRTKEY, CONTROL
-    "P",            IDM_FILE_PRINT, VIRTKEY, CONTROL
-    "S",            IDM_FILE_SAVE, VIRTKEY, CONTROL
-    "C",            IDM_EDIT_COPY, VIRTKEY, CONTROL
-    "X",            IDM_EDIT_CUT, VIRTKEY, CONTROL
-    "V",            IDM_EDIT_PASTE, VIRTKEY, CONTROL
-    "Z",            IDM_EDIT_UNDO, VIRTKEY, CONTROL
-    "Y",            IDM_EDIT_REDO, VIRTKEY, CONTROL, SHIFT
-}
-/*----------------------------------------------------------------------------*/
-#endif    // English (U.S.) resources
+BEGIN
+    "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL
+    "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL
+    "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL
+    "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL
+    "Y",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_MAIN_DIALOG, DIALOG
+    BEGIN
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_MAIN_DIALOG AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+  // Standard resource ID messages
+STRINGTABLE
+BEGIN
+    IDW_MAIN                "DDX/DDV Demo"
+    IDW_ABOUT               "Display Information about this program"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_READY               "Ready"
+    IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_NUM       "NUM"
+    IDW_INDICATOR_SCRL      "SCRL"
+END
+
+  // Menu selection messages
+STRINGTABLE
+BEGIN
+    IDM_FILE_NEW            "Create a New Document"
+    IDM_FILE_OPEN           "Open Existing Document"
+    IDM_FILE_SAVE           "Save the Document"
+    IDM_FILE_SAVEAS         "Save the Document with a new name"
+    IDM_FILE_PRINT          "Print the Document"
+    IDM_FILE_EXIT           "End the Program"
+    IDM_EDIT_UNDO           "Undo the last action"
+    IDM_EDIT_REDO           "Redo the previously undone action"
+    IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
+    IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
+    IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
+    IDM_EDIT_DELETE         "Erase the selected Contents"
+END
+
+  // Tool Tips Text
+STRINGTABLE
+BEGIN
+    IDOK                    "Hint for STATUS button: Collect and show status."
+    IDC_RADIO_A             "Hint for Radio Button A: Click to select."
+    IDC_RADIO_B             "Hint for Radio Button B: Click to select."
+    IDC_RADIO_C             "Hint for Radio Button C: Click to select."
+    IDC_CHECK_A             "Hint for Check A: Check or uncheck."
+    IDC_CHECK_B             "Hint for Check B: Check or uncheck."
+    IDC_CHECK_C             "Hint for Check C: Check or uncheck."
+    IDD_MAIN_DIALOG         "Hint for Main Dialog: Does not display."
+    IDC_EDIT_BYTE           "Hint for byte: Enter one byte."
+    IDC_EDIT_SHORT          "Hint for short: Enter short integer."
+    IDC_EDIT_INT            "Hint for int: Enter integer."
+    IDC_EDIT_UINT           "Hint for UINT: Enter unsigned integer."
+    IDC_EDIT_LONG           "Hint for long: Enter long integer."
+    IDC_EDIT_DWORD          "Hint for DWORD: Enter double word integer."
+    IDC_EDIT_FLOAT          "Hint for float: Enter floating point number."
+    IDC_EDIT_DOUBLE         "Hint for double: Enter double precision floating point number."
+    IDC_EDIT_LPTSTR         "Hint for LPTSTR: Enter string characters."
+    IDC_EDIT_CSTRING        "Hint for Edit Box: Enter text here."
+    IDC_EDIT_RICHEDIT       "Hint for Rich Edit: Enter text here."
+    IDC_EDIT_STATUS         "Hint for Status area: Display status of controls."
+    IDC_LISTBOX             "Hint for List Box entries: Select one."
+    IDC_SLIDER              "Hint for slider: click or slide thumb to value."
+    IDC_PROGRESSBAR         "Hint for progressbar: this shows progress."
+    IDC_SCROLLBAR           "Hint for scrollbar: click or slide thumb to value."
+    IDC_COMBOBOX            "Hint for combo box: choose an entry."
+    IDC_DATE_TIME           "Hint for date and time: choose a date and time."
+    IDC_CALENDAR            "Hint for calendar: choose a date."
+    IDC_STATUS_GROUP        "Hint for Status Group: This tool tip does not display."
+    IDC_PUSH_ME_BUTTON      "Hint for Button: Push to see status."
+    IDC_ROSE_BITMAP         "Hint for Rose Bitmap: Push to see rose variety."
+END
+
+  // Standard frame messages
+STRINGTABLE
+BEGIN
+    SC_CLOSE                "Close the Window"
+    SC_MAXIMIZE             "Maximize the Window"
+    SC_MINIMIZE             "Minimize the Window"
+    SC_MOVE                 "Move the Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
+    SC_RESTORE              "Restore the Window"
+    SC_SIZE                 "Resize the Window"
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

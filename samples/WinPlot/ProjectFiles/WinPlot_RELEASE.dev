@@ -1,7 +1,7 @@
 [Project]
 FileName=WinPlot_RELEASE.dev
 Name=WinPlot
-UnitCount=23
+UnitCount=21
 Type=0
 Ver=2
 ObjFiles=
@@ -32,26 +32,6 @@ LogOutput=
 LogOutputEnabled=0
 
 [Unit1]
-FileName=..\src\Doc.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit2]
-FileName=..\src\Doc.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit3]
 FileName=..\src\FrameApp.cpp
 CompileCpp=1
 Folder=Source
@@ -61,7 +41,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
+[Unit2]
 FileName=..\src\FrameApp.h
 CompileCpp=1
 Folder=Header
@@ -71,7 +51,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit5]
+[Unit3]
 FileName=..\src\main.cpp
 CompileCpp=1
 Folder=Source
@@ -81,7 +61,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit4]
 FileName=..\src\Mainfrm.cpp
 CompileCpp=1
 Folder=Source
@@ -91,17 +71,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit5]
 FileName=..\src\Mainfrm.h
+CompileCpp=1
 Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
-CompileCpp=1
 
-[Unit8]
+[Unit6]
 FileName=..\src\resource.h
 CompileCpp=1
 Folder=Header
@@ -111,12 +91,32 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit7]
 FileName=..\src\Resource.rc
-CompileCpp=1
 Folder=Resource
 Compile=1
 Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+CompileCpp=1
+
+[Unit8]
+FileName=..\src\StdAfx.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit9]
+FileName=..\src\stdafx.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -141,26 +141,6 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit10]
-FileName=..\src\StdAfx.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
-FileName=..\src\stdafx.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit12]
 FileName=..\src\targetver.h
 CompileCpp=1
 Folder=Header
@@ -170,7 +150,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit11]
 FileName=..\src\View.cpp
 CompileCpp=1
 Folder=Source
@@ -180,7 +160,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit12]
 FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
@@ -190,7 +170,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit13]
 FileName=..\src\Calc.cpp
 CompileCpp=1
 Folder=Source
@@ -200,7 +180,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
+[Unit14]
 FileName=..\src\InputDlg.cpp
 CompileCpp=1
 Folder=Source
@@ -210,7 +190,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit17]
+[Unit15]
 FileName=..\src\Node.cpp
 CompileCpp=1
 Folder=Source
@@ -220,7 +200,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit16]
 FileName=..\src\Table.cpp
 CompileCpp=1
 Folder=Source
@@ -230,7 +210,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit19]
+[Unit17]
 FileName=..\src\Calc.h
 CompileCpp=1
 Folder=Header
@@ -240,7 +220,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit18]
 FileName=..\src\enums.h
 CompileCpp=1
 Folder=Header
@@ -250,8 +230,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit21]
+[Unit19]
 FileName=..\src\InputDlg.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit20]
+FileName=..\src\Node.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit21]
+FileName=..\src\Table.h
 CompileCpp=1
 Folder=Header
 Compile=1

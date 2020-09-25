@@ -1,7 +1,7 @@
 [Project]
 FileName=TimeDemo_RELEASE.dev
 Name=timedemo
-UnitCount=19
+UnitCount=17
 Type=0
 Ver=2
 ObjFiles=
@@ -132,7 +132,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\src\ScrollBars.h
+FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -142,9 +142,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\src\stdafx.cpp
+FileName=..\src\targetver.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -171,7 +171,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit17]
-FileName=..\src\targetver.h
+FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -251,7 +251,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\src\ScrollBars.cpp
+FileName=..\src\stdafx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -261,9 +261,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=..\src\stdafx.h
+FileName=..\src\View.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

@@ -9,7 +9,6 @@
 //
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
-#include "richedit.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
@@ -138,7 +137,7 @@ BEGIN
                 NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP, WS_EX_STATICEDGE
     EDITTEXT        IDC_EDIT1, 120, 82, 84, 35, ES_MULTILINE | ES_AUTOHSCROLL |
                 NOT WS_BORDER | WS_VSCROLL | WS_HSCROLL, WS_EX_STATICEDGE
-    CONTROL         "", IDC_RICHEDIT1,  RICHEDIT_CLASS,  ES_MULTILINE |
+    CONTROL         "", IDC_RICHEDIT1,  "RichEdit20A",  ES_MULTILINE |
                 ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP | WS_VSCROLL |
             WS_HSCROLL, 120, 142, 84, 35
     CONTROL         IDB_BITMAP1, IDC_BITMAP1, "Static", SS_BITMAP | SS_NOTIFY |

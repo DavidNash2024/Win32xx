@@ -199,14 +199,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\MyDateTime.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\MyMonthCalendar.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\MyScrollbar.cpp"
 				>
 			</File>
@@ -254,14 +246,6 @@
 			</File>
 			<File
 				RelativePath="..\src\MyButton.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\MyDateTime.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\MyMonthCalendar.h"
 				>
 			</File>
 			<File

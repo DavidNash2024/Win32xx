@@ -1,7 +1,7 @@
 [Project]
 FileName=NetClientAsync_DEBUG.dev
 Name=NetClient
-UnitCount=12
+UnitCount=10
 Type=0
 Ver=2
 ObjFiles=
@@ -32,7 +32,7 @@ LogOutput=
 LogOutputEnabled=0
 
 [Unit5]
-FileName=..\src\DialogApp.cpp
+FileName=..\src\main.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -42,17 +42,27 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=..\src\main.cpp
-Folder=Source
+FileName=..\src\Resource.rc
+Folder=Resource
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 CompileCpp=1
 
 [Unit8]
-FileName=..\src\resource.h
+FileName=..\src\StdAfx.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit9]
+FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -61,20 +71,10 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
-FileName=..\src\Resource.rc
-CompileCpp=1
-Folder=Resource
-Compile=1
-Link=0
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
 [Unit10]
-FileName=..\src\StdAfx.cpp
+FileName=..\src\targetver.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -121,26 +121,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit1]
-FileName=..\src\Client.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit2]
-FileName=..\src\Client.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit3]
 FileName=..\src\ClientDialog.cpp
 CompileCpp=1
 Folder=Source
@@ -150,7 +130,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
+[Unit2]
 FileName=..\src\ClientDialog.h
 CompileCpp=1
 Folder=Header
@@ -160,8 +140,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit3]
+FileName=..\src\DialogApp.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit4]
 FileName=..\src\DialogApp.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit6]
+FileName=..\src\resource.h
 CompileCpp=1
 Folder=Header
 Compile=1

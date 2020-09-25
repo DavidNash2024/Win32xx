@@ -1,14 +1,14 @@
 [Project]
 FileName=DDXDemo_DEBUG.dev
 Name=DDXDemo
-UnitCount=23
+UnitCount=17
 Type=0
 Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
 PrivateResource=DDXDemo_private.rc
-ResourceIncludes=C:\Tausware\win32++\include
+ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _DEBUG_@@_-g_@@__@@__@@__@@__@@_
@@ -141,7 +141,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\src\MyDateTime.cpp
+FileName=..\src\Doc.cpp
 Folder=Source
 Compile=1
 Link=1
@@ -151,7 +151,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit13]
-FileName=..\src\MyDateTime.h
+FileName=..\src\Doc.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -161,7 +161,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\src\Doc.cpp
+FileName=..\src\MyScrollbar.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -191,7 +191,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit15]
-FileName=..\src\Doc.h
+FileName=..\src\MyScrollbar.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -201,7 +201,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=..\src\MyMonthCalendar.cpp
+FileName=..\src\View.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -211,7 +211,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\src\MyMonthCalendar.h
+FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
 Compile=1

@@ -2513,14 +2513,7 @@ namespace Win32xx
         // Ensure only one dialog displayed even for multiple hits of the F1 button
         if (!m_aboutDialog.IsWindow())
         {
-            // Store the window handle that currently has keyboard focus
-            HWND hPrevFocus = ::GetFocus();
-            if (hPrevFocus == GetMenuBar().GetHwnd())
-                hPrevFocus = T::GetHwnd();
-
             m_aboutDialog.DoModal(*this);
-
-            ::SetFocus(hPrevFocus);
         }
 
         return TRUE;

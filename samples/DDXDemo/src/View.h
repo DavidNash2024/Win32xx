@@ -40,22 +40,22 @@ CView : public CDialog                                                      /*
         CView(UINT nResID);
         virtual ~CView() {}
 
-        void    AdjustParameters();
+        void    AdjustStatus();
         HWND    Create(HWND hParent);
         int     GetCheckA() const       { return m_checkAVal; }
         int     GetCheckB() const       { return m_checkBVal; }
         int     GetCheckC() const       { return m_checkCVal; }
-        void    SetCheckA(int value)    { m_checkAVal = value; }
-        void    SetCheckB(int value)    { m_checkBVal = value; }
-        void    SetCheckC(int value)    { m_checkCVal = value; }
+        void    SetCheckAStatus();
+        void    SetCheckBStatus();
+        void    SetCheckCStatus();
         void    SetFocusID(int value)   { m_focusID = value; }
         void    SetProgress(int value)  { m_progressVal = value; }
-        void    SetRadioA(int value)    { m_radioA = value; }
+        void    SetRadioAStatus();
         void    SetScrollBar(int value) { m_scrollBarVal = value; }
         void    SetSlider(int value)    { m_sliderVal = value; }
         CDoc&   TheDoc()                { return m_doc; }
         BOOL    UpdateDialog(BOOL bReadFromControl);
-        void    UpdateParameters();
+        void    UpdateDocument();
 
     private:
         BOOL    AddToolTip(HWND, UINT id);
@@ -85,12 +85,13 @@ CView : public CDialog                                                      /*
         class CMyMonthCalendar : public CMonthCalendar {};
         class CMyDateTime      : public CDateTime      {};
 
-        // DDX/DDV variables that need to be visible to friends
+          // DDX/DDV variables that are connected
         int         m_sliderVal;
         int         m_progressVal;
         int         m_scrollBarVal;
         int         m_focusID;  // the control with current focus
           // DDX/DDV variables for controls on the form
+        CDataExchange m_dx;
         BYTE        m_byteVal;
         short       m_shortVal;
         UINT        m_UINTVal;
@@ -156,7 +157,6 @@ CView : public CDialog                                                      /*
 
           // the document
         CDoc            m_doc;
-
 };
 /*----------------------------------------------------------------------------*/
 #endif //SDI_VIEW_H

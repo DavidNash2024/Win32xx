@@ -37,9 +37,7 @@ CMainFrame : public CFrame                                                  /*
         virtual ~CMainFrame() {}
 
         CDoc&   TheDoc()   { return m_view.TheDoc(); }
-        CView&  TheView() { return m_view; };
-
-        BOOL    UpdateDialog(BOOL bReadFromControl = SENDTOCONTROL);
+        BOOL    UpdateDialog(BOOL bReadFromControl);
 
     private:
         BOOL    LoadRegistrySettings(LPCTSTR keyName);
