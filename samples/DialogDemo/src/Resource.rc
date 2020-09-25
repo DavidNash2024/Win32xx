@@ -9,7 +9,6 @@
 //
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
-#include "richedit.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
@@ -57,7 +56,7 @@ BEGIN
     CONTROL         "Check Box 3",IDC_CHECK3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,139,55,10
     LISTBOX         IDC_LIST1,120,23,84,35,LBS_SORT | LBS_NOINTEGRALHEIGHT | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
     PUSHBUTTON      "Button",IDC_BUTTON1,30,82,49,11
-    CONTROL         "",IDC_RICHEDIT1, RICHEDIT_CLASS, ES_MULTILINE | ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP,120,86,84,35
+    CONTROL         "",IDC_RICHEDIT1, "RichEdit20A", ES_MULTILINE | ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP,120,86,84,35
     GROUPBOX        "Static Window",IDC_STATIC2,226,78,78,51,BS_CENTER
     LTEXT           "Actions are displayed here",IDC_STATIC3,229,91,71,35
     PUSHBUTTON      "Subclassed Button",IDC_BUTTON2,220,15,81,45

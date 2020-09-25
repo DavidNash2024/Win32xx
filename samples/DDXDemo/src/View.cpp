@@ -33,6 +33,8 @@
 #define CFM_BACKCOLOR       0x04000000
 #endif // CFM_BACKCOLOR
 
+static const  TCHAR radio[] = {_T('A'), _T('B'), _T('C')};
+
 /*=============================================================================*
 
     Define the color palette                                                */
@@ -177,14 +179,13 @@ AddToolTip(HWND hParent, UINT id, const CString & sToolTip)                /*
 
 /*============================================================================*/
     void CView::
-AdjustParameters()                                                          /*
+AdjustStatus()                                                              /*
 
     Set the status control to reflect the values of variable controls on the
     dialog.
 *-----------------------------------------------------------------------------*/
 {
-    TCHAR radio[] = {_T('A'), _T('B'), _T('C')};
-    LPCTSTR TorF[]   = {_T("false"), _T("true")};
+    LPCTSTR TorF[]   = {_T("OFF"), _T("ON")};
 
       // display the DateTime control content
     CTime t(m_dateSysTime);
@@ -355,7 +356,7 @@ DoDataExchange(CDataExchange& DX)                                           /*
     Verification (DDV). This function is invoked each time UpdateData is called.
 *-----------------------------------------------------------------------------*/
 {
-      // DDX_Control is used to attach controls to the numeric IDs
+      // DDX_Control is used to attach controls to the numeric ID
     DX.DDX_Control(IDC_COMBOBOX,        m_comboBox);
     DX.DDX_Control(IDC_LISTBOX,         m_listBox);
     DX.DDX_Control(IDC_EDIT_RICHEDIT,   m_richEdit);
@@ -457,28 +458,28 @@ GetDocumentValues()                                                         /*
     Load those things from the document that it saves.
 *-----------------------------------------------------------------------------*/
 {
-    m_byteVal       = TheDoc().GetByte();
-    m_shortVal      = TheDoc().GetShort();
-    m_intVal        = TheDoc().GetInt();
-    m_UINTVal       = TheDoc().GetUINT();
-    m_longVal       = TheDoc().GetLong();
-    m_ULongVal      = TheDoc().GetULong();
-    m_floatVal      = TheDoc().GetFloat();
-    m_doubleVal     = TheDoc().GetDouble();
-    m_radioA        = TheDoc().GetRadio();
-    m_checkAVal     = TheDoc().GetCheckA();
-    m_checkBVal     = TheDoc().GetCheckB();
-    m_checkCVal     = TheDoc().GetCheckC();
-    m_editVal       = TheDoc().GetEditBox();
-    m_richEditVal   = TheDoc().GetRichEditBox();
-    m_listBoxVal    = TheDoc().GetListBoxS();
-    m_listBoxIndx   = TheDoc().GetListBoxX();
-    m_comboBoxVal   = TheDoc().GetComboBoxS();
-    m_comboBoxIndx  = TheDoc().GetComboBoxX();
-    m_sliderVal     = TheDoc().GetSlider();
-    m_dateSysTime   = TheDoc().GetDateTime();
-    m_calDateSysTime = TheDoc().GetMoCalendar();
-    StrCopy(m_LPTSTRVal, TheDoc().GetLPTSTR(), 256);
+    m_byteVal       = m_doc.GetByte();
+    m_shortVal      = m_doc.GetShort();
+    m_intVal        = m_doc.GetInt();
+    m_UINTVal       = m_doc.GetUINT();
+    m_longVal       = m_doc.GetLong();
+    m_ULongVal      = m_doc.GetULong();
+    m_floatVal      = m_doc.GetFloat();
+    m_doubleVal     = m_doc.GetDouble();
+    m_radioA        = m_doc.GetRadio();
+    m_checkAVal     = m_doc.GetCheckA();
+    m_checkBVal     = m_doc.GetCheckB();
+    m_checkCVal     = m_doc.GetCheckC();
+    m_editVal       = m_doc.GetEditBox();
+    m_richEditVal   = m_doc.GetRichEditBox();
+    m_listBoxVal    = m_doc.GetListBoxS();
+    m_listBoxIndx   = m_doc.GetListBoxX();
+    m_comboBoxVal   = m_doc.GetComboBoxS();
+    m_comboBoxIndx  = m_doc.GetComboBoxX();
+    m_sliderVal     = m_doc.GetSlider();
+    m_dateSysTime   = m_doc.GetDateTime();
+    m_calDateSysTime = m_doc.GetMoCalendar();
+    StrCopy(m_LPTSTRVal, m_doc.GetLPTSTR(), 256);
 }
 
 /*============================================================================*/
@@ -491,11 +492,11 @@ OnBitmap()                                                                  /*
 {
       // save current contents of controls
 
-    UpdateDialog(READFROMCONTROL);
+    UpdateData(m_dx, READFROMCONTROL);
       // reset status to just this message:
     m_statusBoxVal = _T("The moondance rose.");
       // post the message
-    UpdateDialog(SENDTOCONTROL);
+    UpdateData(m_dx, SENDTOCONTROL);
     TRACE("Bitmap Pressed\n");
 }
 
@@ -508,12 +509,12 @@ OnButton()                                                                  /*
 *-----------------------------------------------------------------------------*/
 {
       // read current contents of controls to memory
-    UpdateDialog(READFROMCONTROL);
+    UpdateData(m_dx, READFROMCONTROL);
       // reset the status message to just this:
     m_statusBoxVal = _T("PUSH ME button Pressed");
       // send this status message (and also the other values) back into
       // the control
-    UpdateDialog(SENDTOCONTROL);
+    UpdateData(m_dx, SENDTOCONTROL);
     TRACE("PUSH ME button Pressed\n");
 }
 
@@ -549,23 +550,19 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                  /*
     case IDC_RADIO_A:
     case IDC_RADIO_B:
     case IDC_RADIO_C:
-        SetRadioA(id - IDC_RADIO_A);
-        UpdateDialog(SENDTOCONTROL);
+        SetRadioAStatus();
         return TRUE;
 
     case IDC_CHECK_A:
-        SetCheckA( !GetCheckA() );
-        UpdateDialog(SENDTOCONTROL);
+        SetCheckAStatus();
         return TRUE;
 
     case IDC_CHECK_B:
-        SetCheckB( !GetCheckB() );
-        UpdateDialog(SENDTOCONTROL);
+        SetCheckBStatus();
         return TRUE;
 
     case IDC_CHECK_C:
-        SetCheckC( !GetCheckC() );
-        UpdateDialog(SENDTOCONTROL);
+        SetCheckCStatus();
         return TRUE;
     }
       // deal with setting the focus for edit controls, combo boxes,
@@ -685,7 +682,7 @@ OnInitDialog()                                                              /*
       // add tool tips to controls in client area
     AssignToolTips();
       // Connect controls to IDs and read default data values into them.
-    UpdateDialog(SENDTOCONTROL);
+    UpdateData(m_dx, SENDTOCONTROL);
       // Set the rich edit control text foreground and background colors
       // and the control background color.  This is needed only once (not
       // like other controls set in OnCtlColor()).
@@ -744,10 +741,10 @@ OnOK()                                                                      /*
     contents of all controls and save those that are part of the document.
 *-----------------------------------------------------------------------------*/
 {
-    UpdateDialog(READFROMCONTROL);
-    AdjustParameters();
-    UpdateDialog(SENDTOCONTROL);
-    UpdateParameters();
+    UpdateData(m_dx, READFROMCONTROL);
+    AdjustStatus();
+    UpdateData(m_dx, SENDTOCONTROL);
+    UpdateDocument();
 
     TRACE("STATUS Button Pressed.\n\n");
 }
@@ -776,60 +773,116 @@ OnNotify(WPARAM wparam, LPARAM lparam)                                  /*
 
 /*============================================================================*/
     void    CView::
-SetControlPositions(int pos)                                                       /*
+SetCheckAStatus()                                                           /*
+
+*-----------------------------------------------------------------------------*/
+{
+    UpdateData(m_dx, READFROMCONTROL);
+    m_statusBoxVal = CString("Check A set ") + (m_checkAVal ?
+        _T("ON.") : _T("OFF."));
+    UpdateData(m_dx, SENDTOCONTROL);
+}
+/*============================================================================*/
+    void    CView::
+SetCheckBStatus()                                                           /*
+
+*-----------------------------------------------------------------------------*/
+{
+    UpdateData(m_dx, READFROMCONTROL);
+    m_statusBoxVal = CString("Check B set ") + (m_checkBVal ?
+        _T("ON.") : _T("OFF."));
+    UpdateData(m_dx, SENDTOCONTROL);
+}
+
+/*============================================================================*/
+    void    CView::
+SetCheckCStatus()                                                           /*
+
+*-----------------------------------------------------------------------------*/
+{
+    UpdateData(m_dx, READFROMCONTROL);
+    m_statusBoxVal = CString("Check C set ") + (m_checkCVal ?
+        _T("ON.") : _T("OFF."));
+    UpdateData(m_dx, SENDTOCONTROL);
+}
+
+/*============================================================================*/
+    void    CView::
+SetRadioAStatus()                                                           /*
+
+*-----------------------------------------------------------------------------*/
+{
+    UpdateData(m_dx, READFROMCONTROL);
+    m_statusBoxVal = CString("Radio button set to ") + radio[m_radioA];
+    UpdateData(m_dx, SENDTOCONTROL);
+}
+
+/*============================================================================*/
+    void    CView::
+SetControlPositions(int pos)                                                /*
 
 *-----------------------------------------------------------------------------*/
 {
     SetSlider(pos);
     SetScrollBar(pos);
     SetProgress(pos);
-    UpdateDialog(SENDTOCONTROL);
+    UpdateData(m_dx, SENDTOCONTROL);
     SetFocusID(IDC_SCROLLBAR);
-    AdjustParameters();
-}
-
-/*============================================================================*/
-    BOOL    CView::
-UpdateDialog(BOOL bReadFromControl)                                         /*
-
-    Update data items in memory (when bReadFromControl is READFROMCONTROL) or
-    in the dialog controls (when bReadFromControl is SENDTOCONTROL). The list
-    of affected controls is specified in the DoDataExchange() method.
-*-----------------------------------------------------------------------------*/
-{
-    CDataExchange DX;
-    return UpdateData(DX, bReadFromControl);
+    AdjustStatus();
 }
 
 /*============================================================================*/
     void CView::
-UpdateParameters()                                                          /*
+UpdateDocument()                                                            /*
 
     Save the pertinent members of the view that are also members of the
     document.
 *-----------------------------------------------------------------------------*/
 {
-    TheDoc().SetByte(m_byteVal);
-    TheDoc().SetShort(m_shortVal);
-    TheDoc().SetInt(m_intVal);
-    TheDoc().SetUINT(m_UINTVal);
-    TheDoc().SetLong(m_longVal);
-    TheDoc().SetULong(m_ULongVal);
-    TheDoc().SetFloat(m_floatVal);
-    TheDoc().SetDouble(m_doubleVal);
-    TheDoc().SetLPTSTR(m_LPTSTRVal);
-    TheDoc().SetEditBox(m_editVal);
-    TheDoc().SetRichEditBox(m_richEditVal);
-    TheDoc().SetListBoxS(m_listBoxVal);
-    TheDoc().SetListBoxX(m_listBoxIndx);
-    TheDoc().SetComboBoxS(m_comboBoxVal);
-    TheDoc().SetComboBoxX(m_comboBoxIndx);
-    TheDoc().SetRadio(m_radioA);
-    TheDoc().SetCheckA(m_checkAVal);
-    TheDoc().SetCheckB(m_checkBVal);
-    TheDoc().SetCheckC(m_checkCVal);
-    TheDoc().SetSlider(m_sliderVal);
-    TheDoc().SetDateTime(m_dateSysTime);
-    TheDoc().SetMoCalendar(m_calDateSysTime);
+    m_doc.SetByte(m_byteVal);
+    m_doc.SetShort(m_shortVal);
+    m_doc.SetInt(m_intVal);
+    m_doc.SetUINT(m_UINTVal);
+    m_doc.SetLong(m_longVal);
+    m_doc.SetULong(m_ULongVal);
+    m_doc.SetFloat(m_floatVal);
+    m_doc.SetDouble(m_doubleVal);
+    m_doc.SetLPTSTR(m_LPTSTRVal);
+    m_doc.SetEditBox(m_editVal);
+    m_doc.SetRichEditBox(m_richEditVal);
+    m_doc.SetListBoxS(m_listBoxVal);
+    m_doc.SetListBoxX(m_listBoxIndx);
+    m_doc.SetComboBoxS(m_comboBoxVal);
+    m_doc.SetComboBoxX(m_comboBoxIndx);
+    m_doc.SetRadio(m_radioA);
+    m_doc.SetCheckA(m_checkAVal);
+    m_doc.SetCheckB(m_checkBVal);
+    m_doc.SetCheckC(m_checkCVal);
+    m_doc.SetSlider(m_sliderVal);
+    m_doc.SetDateTime(m_dateSysTime);
+    m_doc.SetMoCalendar(m_calDateSysTime);
+}
+
+/*============================================================================*/
+    BOOL CView::
+UpdateDialog(BOOL bReadFromControl)                                         /*
+
+    Update the DDX controls according to bReadFromControl and save document
+    values if successful. Return TRUE on success, FALSE on failure.
+*-----------------------------------------------------------------------------*/
+{
+    if (bReadFromControl == SENDTOCONTROL)
+        AdjustStatus();
+    BOOL ok = UpdateData(m_dx, bReadFromControl);
+    if (ok)
+    {   // all is well
+        TRACE("Verification passed\n");
+        UpdateDocument();
+    }
+    else
+    {     // oops! there is a problem with some of the control data
+        TRACE("*** Verification failed ***\n");
+    }
+    return ok;
 }
 /*----------------------------------------------------------------------------*/

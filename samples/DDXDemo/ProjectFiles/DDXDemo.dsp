@@ -107,14 +107,6 @@ SOURCE=..\src\MyButton.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyDateTime.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\MyMonthCalendar.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\MyScrollbar.cpp
 # End Source File
 # Begin Source File
@@ -144,14 +136,6 @@ SOURCE=..\src\Mainfrm.h
 # Begin Source File
 
 SOURCE=..\src\MyButton.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\MyDateTime.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\MyMonthCalendar.h
 # End Source File
 # Begin Source File
 

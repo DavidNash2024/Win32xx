@@ -23,8 +23,6 @@
     <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\MyButton.cpp" />
-    <ClCompile Include="..\src\MyDateTime.cpp" />
-    <ClCompile Include="..\src\MyMonthCalendar.cpp" />
     <ClCompile Include="..\src\MyScrollbar.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -96,6 +94,14 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="..\src\res\Win32++.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\src\res\Form.ico" />
+    <Image Include="..\src\res\moondance.bmp" />
+    <Image Include="..\src\res\toolbar.bmp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

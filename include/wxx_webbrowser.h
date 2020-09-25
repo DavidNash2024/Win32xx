@@ -161,7 +161,7 @@ namespace Win32xx
         virtual ~CWebBrowser();
 
         //Attributes
-        virtual CAXHost* const GetAXHost() { return &m_axHost; }
+        virtual CAXHost* GetAXHost() { return &m_axHost; }
 
         LPDISPATCH GetApplication() const;
         BOOL    GetBusy() const;
@@ -169,7 +169,7 @@ namespace Win32xx
         LPDISPATCH GetDocument() const;
         BOOL    GetFullScreen() const;
         long    GetHeight() const;
-        IWebBrowser2* const GetIWebBrowser2() const { return m_pIWebBrowser2; }
+        IWebBrowser2* GetIWebBrowser2() const { return m_pIWebBrowser2; }
         long    GetLeft() const;
         CString GetLocationName() const;
         CString GetLocationURL() const;

@@ -78,15 +78,10 @@ OnClose()                                                                   /*
     in the offending control so the user can correct it.
 *-----------------------------------------------------------------------------*/
 {
-    if (UpdateDialog(READFROMCONTROL))
-    {   // all is well
-        TRACE("Verification passed\n");
-        TheView().UpdateParameters();
-    }
-    else
+    if (!UpdateDialog(READFROMCONTROL))
     {     // oops! there is a problem with some of the control data
         TRACE("*** Verification failed ***\n");
-            return;  // return control to user to fix this problem
+        return;  // return control to user to fix this problem
     }
       // save the document contents into the registry
     TheDoc().SaveDocRegistry(GetRegistryKeyName().c_str());
@@ -157,9 +152,6 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
         SetThemeColors();
     }
 
-      // just before the window appears, set the status box to show all
-      // of the dialog contents and the initial focus
-    TheView().AdjustParameters();
       // show the initial document and status
     UpdateDialog(SENDTOCONTROL);
     return rtn;
@@ -212,7 +204,7 @@ PreCreate(CREATESTRUCT& cs)                                                 /*
         | WS_CAPTION        // redundant, but put in anyway
         | WS_SYSMENU        // adds close box at top right
         | WS_MINIMIZEBOX    // adds minimize box to close box
-//      | WS_THICKFRAME     // enables resizing, unwanted here
+        | WS_THICKFRAME     // enables resizing
         ;
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
@@ -294,14 +286,14 @@ SetupToolBar()                                                              /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-UpdateDialog(BOOL bReadFromControl /* = SENDTOCONTROL */)                   /*
+UpdateDialog(BOOL bReadFromControl)                                         /*
 
     Update data items in memory (bReadFromControl is READFROMCONTROL) or in
     the dialog controls (bReadFromControl is SENDTOCONTROL). The list of
     affected controls is specified in the CView::DoDataExchange() method.
 *-----------------------------------------------------------------------------*/
 {
-    return TheView().UpdateDialog(bReadFromControl);
+    return m_view.UpdateDialog(bReadFromControl);
 }
 
 /*============================================================================*/

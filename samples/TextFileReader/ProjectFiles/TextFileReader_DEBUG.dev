@@ -1,7 +1,7 @@
 [Project]
-FileName=ScrollTextFile_DEBUG.dev
+FileName=TextFileReader_DEBUG.dev
 Name=TextFileReader
-UnitCount=20
+UnitCount=18
 Type=0
 Ver=2
 ObjFiles=
@@ -71,16 +71,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\src\GlobalUtils.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit6]
 FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
@@ -90,7 +80,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit6]
 FileName=..\src\App.h
 CompileCpp=1
 Folder=Header
@@ -100,7 +90,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit7]
 FileName=..\src\Doc.h
 CompileCpp=1
 Folder=Header
@@ -110,7 +100,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit8]
 FileName=..\src\Mainfrm.cpp
 CompileCpp=1
 Folder=Source
@@ -120,7 +110,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit9]
 FileName=..\src\Mainfrm.h
 CompileCpp=1
 Folder=Header
@@ -130,27 +120,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit16]
-FileName=..\src\StdApp.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
-FileName=..\src\FontEx.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
+[Unit10]
 FileName=..\src\AboutBox.cpp
 CompileCpp=1
 Folder=Source
@@ -160,7 +130,27 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit16]
+FileName=..\src\FontEx.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=..\src\FontEx.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
 FileName=..\src\AboutBox.h
 CompileCpp=1
 Folder=Header
@@ -170,7 +160,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit12]
 FileName=..\src\Doc.cpp
 CompileCpp=1
 Folder=Source
@@ -180,7 +170,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit13]
 FileName=..\src\App.cpp
 CompileCpp=1
 Folder=Source
@@ -190,8 +180,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit14]
 FileName=..\src\resource.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=..\src\StdApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -250,7 +250,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=..\src\FontEx.cpp
+FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
 Compile=1

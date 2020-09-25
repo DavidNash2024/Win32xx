@@ -1,7 +1,7 @@
 [Project]
 FileName=DDXDemo_RELEASE.dev
 Name=DDXDemo
-UnitCount=23
+UnitCount=17
 Type=0
 Ver=2
 ObjFiles=
@@ -201,7 +201,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit16]
-FileName=..\src\MyDateTime.cpp
+FileName=..\src\MyScrollbar.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -211,7 +211,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=..\src\MyDateTime.h
+FileName=..\src\MyScrollbar.h
 CompileCpp=1
 Folder=Header
 Compile=1
