@@ -37,9 +37,9 @@ private:
         WM_TESTMESSAGE   = WM_USER+2    // the test message
     };
 
-    std::vector<MyThreadPtr> m_threads;// A vectore of CMyThread smart pointers
-    int m_maxWindows;                // Number of additional test windows to be created
-    int m_windowsCount;              // Count of windows actually created
+    std::vector<MyThreadPtr> m_threads; // A vector of CMyThread smart pointers
+    int m_maxWindows;                   // Number of additional test windows to be created
+    int m_windowsCount;                 // Count of windows actually created
     CMyEdit m_edit;
 };
 

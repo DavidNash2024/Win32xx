@@ -1,5 +1,5 @@
-Version 8.7.1
-=============
+Version 8.8
+===========
 
 This version adds the BrowserATL, MovieShow and WinPlot samples. It also adds support
 for Code::Blocks version 20.03.
@@ -65,30 +65,32 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-Updated CAXHost                                  class
+Updated CAXHost                                    class
 
-Added BrowserATL                                 sample
-Added MovieShow                                  sample
-Added WinPlot                                    sample
+Added BrowserATL                                   sample
+Added MovieShow                                    sample
+Added WinPlot                                      sample
 
-Added CDC::AbortPath                             member function  
-Added CDC::CreatePointFont                       member function
-Added CDC::CreatePointFontIndirect               member function
-Added CDC::CreateRgnFromData                     member function                     
-Added CDC::CreateRgnFromPath                     member function
-Added CDC::CreateRoundRectRgn                    member function
-Added CDC::ExtCreatePen                          member function             
-Added CDC::StrokePath                            member function
-Added CDC::StrokeAndFillPath                     member function
-Added CFrameT::AddMenuIcon (additional overload) member function
-Added CFrameT::SetKbdHook                        member function
-Added CImageList::AddIcon                        member function
-Added CWnd::Close                                member function
-Modified CMonthCalendar::SetDayState             member function
-Modified CRibbon::CreateRibbon                   member function
-Modified CRibbon::DestroyRibbon                  member function
-Modified CToolbar::EnableButton                  member function
-Renamed CTab::SetFont to CTab::SetTabFont        member function
+Added CDC::AbortPath                               member function  
+Added CDC::CreatePointFont                         member function
+Added CDC::CreatePointFontIndirect                 member function
+Added CDC::CreateRgnFromData                       member function                     
+Added CDC::CreateRgnFromPath                       member function
+Added CDC::CreateRoundRectRgn                      member function
+Added CDC::ExtCreatePen                            member function             
+Added CDC::StrokePath                              member function
+Added CDC::StrokeAndFillPath                       member function
+Added CFrameT::AddMenuIcon (additional overload)   member function
+Added CFrameT::SetKbdHook                          member function
+Added CImageList::AddIcon                          member function
+Added CListView::InsertItem (additional overload)  member function
+Added CTreeView::InsertItem (additional overload)  member function
+Added CWnd::Close                                  member function
+Modified CMonthCalendar::SetDayState               member function
+Modified CRibbon::CreateRibbon                     member function
+Modified CRibbon::DestroyRibbon                    member function
+Modified CToolbar::EnableButton                    member function
+Renamed CTab::SetFont to CTab::SetTabFont          member function
 
 
 Version 8.7.0

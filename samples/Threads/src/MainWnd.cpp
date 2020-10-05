@@ -84,9 +84,6 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
             // Display the exception and allow the program to continue
             CString Error = CString(e.GetText()) + "\n" + CString(e.GetErrorString());
             ::MessageBox(NULL, Error, AtoT(e.what()), MB_ICONERROR) ;
-
-            // return -1 here to close the main window and end the application
-        //  return -1;
         }
     }
 
@@ -96,7 +93,7 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
 void CMainWindow::OnClose()
 {
     // Close each thread window.
-    // The thread is then terminated with PostWuitMessage when its window is destroyed.
+    // The thread is then terminated with PostQuitMessage when its window is destroyed.
 
     std::vector<MyThreadPtr>::iterator iter;
     for (iter = m_threads.begin(); iter < m_threads.end(); ++iter)
@@ -110,6 +107,15 @@ void CMainWindow::OnClose()
 
 void CMainWindow::OnDestroy()
 {
+    // Create an array of thread handles.
+    int nThreads = static_cast<int>(m_threads.size());
+    std::vector<HANDLE> threadArray;  // use a vector as our array.
+    for (int i = 0; i < nThreads; ++i)
+        threadArray.push_back(m_threads[i]->GetThread());
+    
+    // Wait for all the threads to end before proceeding.
+    WaitForMultipleObjects(nThreads, &threadArray[0], TRUE, INFINITE);
+
     // End the application
     ::PostQuitMessage(0);
 }

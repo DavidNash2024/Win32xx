@@ -19,7 +19,6 @@ class CViewClasses : public CTreeView
 public:
     CViewClasses();
     virtual ~CViewClasses();
-    virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR text, int image);
 
 protected:
     virtual void OnAttach();

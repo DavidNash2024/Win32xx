@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -287,7 +287,7 @@ namespace Win32xx
 
         // Create methods
         HFONT CreateFontIndirect(const LOGFONT& logFont);
-        HFONT CreatePointFont(int pointSize, LPCTSTR pFaceName, HDC dc = NULL, BOOL isBold = FALSE, BOOL isItalic = FALSE);
+        HFONT CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = NULL, BOOL isBold = FALSE, BOOL isItalic = FALSE);
         HFONT CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = NULL);
 
 #ifndef _WIN32_WCE
@@ -295,7 +295,7 @@ namespace Win32xx
                 int orientation, int weight, DWORD italic, DWORD underline,
                 DWORD strikeOut, DWORD charSet, DWORD outPrecision,
                 DWORD clipPrecision, DWORD quality, DWORD pitchAndFamily,
-                LPCTSTR pFacename);
+                LPCTSTR faceName);
 #endif // #ifndef _WIN32_WCE
 
         // Attributes
@@ -463,10 +463,10 @@ namespace Win32xx
 
         // Initialization
         HDC CreateCompatibleDC(HDC source);
-        HDC CreateDC(LPCTSTR pDriver, LPCTSTR pDevice, LPCTSTR pOutput, const DEVMODE* pInitData);
+        HDC CreateDC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
         int GetDeviceCaps(int index) const;
 #ifndef _WIN32_WCE
-        HDC CreateIC(LPCTSTR pDriver, LPCTSTR pDevice, LPCTSTR pOutput, const DEVMODE* pInitData);
+        HDC CreateIC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
 #endif
 
         // Create Bitmaps
@@ -477,9 +477,9 @@ namespace Win32xx
         CBitmap DetachBitmap();
 
         BOOL LoadBitmap(UINT id);
-        BOOL LoadBitmap(LPCTSTR pResName);
+        BOOL LoadBitmap(LPCTSTR resName);
         BOOL LoadImage(UINT id, UINT flags);
-        BOOL LoadImage(LPCTSTR pResName, UINT flags);
+        BOOL LoadImage(LPCTSTR resName, UINT flags);
         BOOL LoadOEMBitmap(UINT bitmapID); // for OBM_/OCR_/OIC
 
 #ifndef _WIN32_WCE
@@ -502,14 +502,14 @@ namespace Win32xx
 
         // Create Fonts
         void CreateFontIndirect(const LOGFONT& lf);
-        void CreatePointFont(int pointSize, LPCTSTR pFaceName, HDC dc = NULL, BOOL isBold = FALSE, BOOL isItalic = FALSE);
+        void CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = NULL, BOOL isBold = FALSE, BOOL isItalic = FALSE);
         void CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = NULL);
 
 #ifndef _WIN32_WCE
         void CreateFont(int height, int width, int escapement, int orientation, int weight,
                             DWORD italic, DWORD underline, DWORD strikeOut, DWORD charSet,
                             DWORD outputPrecision, DWORD clipPrecision, DWORD quality,
-                            DWORD pitchAndFamily, LPCTSTR pFaceName);
+                            DWORD pitchAndFamily, LPCTSTR faceName);
 #endif
 
         // Create and select Palettes
@@ -785,12 +785,12 @@ namespace Win32xx
         int SetAbortProc(BOOL (CALLBACK* pfn)(HDC, int)) const;
 
         // Text Functions
-        int   DrawText(LPCTSTR pString, int count, const RECT& rc, UINT format) const;
-        BOOL  ExtTextOut(int x, int y, UINT options, const RECT& rc, LPCTSTR pString, int count = -1, LPINT pDxWidths = NULL) const;
+        int   DrawText(LPCTSTR string, int count, const RECT& rc, UINT format) const;
+        BOOL  ExtTextOut(int x, int y, UINT options, const RECT& rc, LPCTSTR string, int count = -1, LPINT pDxWidths = NULL) const;
         COLORREF GetBkColor() const;
         int   GetBkMode() const;
         UINT  GetTextAlign() const;
-        int   GetTextFace(int count, LPTSTR pFacename) const;
+        int   GetTextFace(int count, LPTSTR facename) const;
         COLORREF GetTextColor() const;
         BOOL  GetTextMetrics(TEXTMETRIC& metrics) const;
         COLORREF SetBkColor(COLORREF color) const;
@@ -799,21 +799,21 @@ namespace Win32xx
         COLORREF SetTextColor(COLORREF color) const;
 
 #ifndef _WIN32_WCE
-        int   DrawTextEx(LPTSTR pString, int count, const RECT& rc, UINT format, LPDRAWTEXTPARAMS pDTParams) const;
-        DWORD GetCharacterPlacement(LPCTSTR pString, int count, int maxExtent,
+        int   DrawTextEx(LPTSTR string, int count, const RECT& rc, UINT format, LPDRAWTEXTPARAMS pDTParams) const;
+        DWORD GetCharacterPlacement(LPCTSTR string, int count, int maxExtent,
                                     LPGCP_RESULTS pResults, DWORD flags) const;
 
         BOOL  GetCharABCWidths(UINT firstChar, UINT lastChar, LPABC pABC) const;
         BOOL  GetCharWidth(UINT firstChar, UINT lastChar, float* pBuffer) const;
-        CSize GetTabbedTextExtent(LPCTSTR pString, int count, int tabPositions, LPINT pTabStopPositions) const;
+        CSize GetTabbedTextExtent(LPCTSTR string, int count, int tabPositions, LPINT pTabStopPositions) const;
         int   GetTextCharacterExtra() const;
-        CSize GetTextExtentPoint32(LPCTSTR pString, int count) const;
-        CSize GetTextExtentPoint32(LPCTSTR pString) const;
+        CSize GetTextExtentPoint32(LPCTSTR string, int count) const;
+        CSize GetTextExtentPoint32(LPCTSTR string) const;
         BOOL  GrayString(HBRUSH brush, GRAYSTRINGPROC pOutputFunc, LPARAM pData, int count, int x, int y, int width, int height) const;
         int   SetTextCharacterExtra(int charExtra) const;
         int   SetTextJustification(int breakExtra, int breakCount) const;
-        CSize TabbedTextOut(int x, int y, LPCTSTR pString, int count, int tabPositions, LPINT pTabStopPositions, int tabOrigin) const;
-        BOOL  TextOut(int x, int y, LPCTSTR pString, int count = -1) const;
+        CSize TabbedTextOut(int x, int y, LPCTSTR string, int count, int tabPositions, LPINT pTabStopPositions, int tabOrigin) const;
+        BOOL  TextOut(int x, int y, LPCTSTR string, int count = -1) const;
 
   #if (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
         BOOL  GetCharABCWidthsI(UINT first, UINT cgi, LPWORD pGI, LPABC pABC) const;
@@ -1973,14 +1973,14 @@ namespace Win32xx
 
     // Creates a font of a specified typeface and point size.
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
-    inline HFONT CFont::CreatePointFont(int pointSize, LPCTSTR pFaceName, HDC dc /*= NULL*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
+    inline HFONT CFont::CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc /*= NULL*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
     {
         LOGFONT logFont;
         ZeroMemory(&logFont, sizeof(logFont));
         logFont.lfCharSet = DEFAULT_CHARSET;
         logFont.lfHeight = pointSize;
 
-        StrCopy(logFont.lfFaceName, pFaceName, LF_FACESIZE);
+        StrCopy(logFont.lfFaceName, faceName, LF_FACESIZE);
 
         if (isBold)
             logFont.lfWeight = FW_BOLD;
@@ -2026,12 +2026,12 @@ namespace Win32xx
             int orientation, int weight, DWORD italic, DWORD underline,
             DWORD strikeOut, DWORD charSet, DWORD outPrecision,
             DWORD clipPrecision, DWORD quality, DWORD pitchAndFamily,
-            LPCTSTR pFacename)
+            LPCTSTR faceName)
     {
         HFONT font = ::CreateFont(height, width, escapement,
             orientation, weight, italic, underline, strikeOut,
             charSet, outPrecision, clipPrecision, quality,
-            pitchAndFamily, pFacename);
+            pitchAndFamily, faceName);
 
         if (font == 0)
             throw CResourceException(g_msgGdiFont);
@@ -3328,12 +3328,12 @@ namespace Win32xx
 
     // Creates a font of a specified typeface and point size and selects it into the device context.
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
-    inline void CDC::CreatePointFont(int pointSize, LPCTSTR pFaceName, HDC dc /*= NULL*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
+    inline void CDC::CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc /*= NULL*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
     {
         assert(m_pData->dc != 0);
 
         CFont font;
-        font.CreatePointFont(pointSize, pFaceName, dc, isBold, isItalic);
+        font.CreatePointFont(pointSize, faceName, dc, isBold, isItalic);
         SelectObject(font);
         m_pData->font = font;
     }
@@ -3391,7 +3391,7 @@ namespace Win32xx
                     DWORD clipPrecision,      // clipping precision
                     DWORD quality,            // output quality
                     DWORD pitchAndFamily,     // pitch and family
-                    LPCTSTR pFaceName         // typeface name
+                    LPCTSTR faceName         // typeface name
                     )
 
     {
@@ -3400,7 +3400,7 @@ namespace Win32xx
         CFont font;
         font.CreateFont(height, width, escapement, orientation, weight,
             italic, underline, strikeOut, charSet, outputPrecision,
-            clipPrecision, quality, pitchAndFamily, pFaceName);
+            clipPrecision, quality, pitchAndFamily, faceName);
 
         SelectObject(font);
         m_pData->font = font;
@@ -4097,11 +4097,11 @@ namespace Win32xx
 
     // Draws an elliptical arc.
     // Refer to Arc in the Windows API documentation for more information.
-    inline BOOL CDC::Arc(const RECT& rc, POINT ptStart, POINT ptEnd) const
+    inline BOOL CDC::Arc(const RECT& rc, POINT start, POINT end) const
     {
         assert(m_pData->dc != 0);
         return ::Arc(m_pData->dc, rc.left, rc.top, rc.right, rc.bottom,
-            ptStart.x, ptStart.y, ptEnd.x, ptEnd.y);
+            start.x, start.y, end.x, end.y);
     }
 
     // Draws an elliptical arc.
@@ -4930,22 +4930,22 @@ namespace Win32xx
 
     // Draws text using the currently selected font, background color, and text color.
     // Refer to ExtTextOut in the Windows API documentation for more information.
-    inline BOOL CDC::ExtTextOut(int x, int y, UINT options, const RECT& rc, LPCTSTR pString, int count /*= -1*/, LPINT pDxWidths /*=NULL*/) const
+    inline BOOL CDC::ExtTextOut(int x, int y, UINT options, const RECT& rc, LPCTSTR string, int count /*= -1*/, LPINT pDxWidths /*=NULL*/) const
     {
         assert(m_pData->dc != 0);
 
         if (count == -1)
-            count = lstrlen (pString);
+            count = lstrlen (string);
 
-        return ::ExtTextOut(m_pData->dc, x, y, options, &rc, pString, count, pDxWidths);
+        return ::ExtTextOut(m_pData->dc, x, y, options, &rc, string, count, pDxWidths);
     }
 
     // Draws formatted text in the specified rectangle.
     // Refer to DrawText in the Windows API documentation for more information.
-    inline int CDC::DrawText(LPCTSTR pString, int count, const RECT& rc, UINT format) const
+    inline int CDC::DrawText(LPCTSTR string, int count, const RECT& rc, UINT format) const
     {
         assert(m_pData->dc != 0);
-        return ::DrawText(m_pData->dc, pString, count, (LPRECT)&rc, format );
+        return ::DrawText(m_pData->dc, string, count, (LPRECT)&rc, format );
     }
 
     // Retrieves the text-alignment setting.
@@ -4968,10 +4968,10 @@ namespace Win32xx
 
     // Retrieves the typeface name of the font that is selected into the device context.
     // Refer to GetTextFace in the Windows API documentation for more information.
-    inline int CDC::GetTextFace(int count, LPTSTR pFacename) const
+    inline int CDC::GetTextFace(int count, LPTSTR faceName) const
     {
         assert(m_pData->dc != 0);
-        return ::GetTextFace(m_pData->dc, count, pFacename);
+        return ::GetTextFace(m_pData->dc, count, faceName);
     }
 
     // Fills the specified buffer with the metrics for the currently selected font.
@@ -5034,10 +5034,10 @@ namespace Win32xx
 
     // Draws formatted text in the specified rectangle with more formatting options.
     // Refer to DrawTextEx in the Windows API documentation for more information.
-    inline int CDC::DrawTextEx(LPTSTR pString, int count, const RECT& rc, UINT format, LPDRAWTEXTPARAMS pDTParams) const
+    inline int CDC::DrawTextEx(LPTSTR string, int count, const RECT& rc, UINT format, LPDRAWTEXTPARAMS pDTParams) const
     {
         assert(m_pData->dc != 0);
-        return ::DrawTextEx(m_pData->dc, pString, count, (LPRECT)&rc, format, pDTParams);
+        return ::DrawTextEx(m_pData->dc, string, count, (LPRECT)&rc, format, pDTParams);
     }
 
     // Retrieves the widths, in logical units, of consecutive characters in a specified range from the
@@ -5052,10 +5052,10 @@ namespace Win32xx
     // Retrieves information about a character string, such as character widths, caret positioning,
     // ordering within the string, and glyph rendering.
     // Refer to GetCharacterPlacement in the Windows API documentation for more information.
-    inline DWORD CDC::GetCharacterPlacement(LPCTSTR pString, int count, int maxExtent, LPGCP_RESULTS pResults, DWORD flags) const
+    inline DWORD CDC::GetCharacterPlacement(LPCTSTR string, int count, int maxExtent, LPGCP_RESULTS pResults, DWORD flags) const
     {
         assert(m_pData->dc != 0);
-        return ::GetCharacterPlacement(m_pData->dc, pString, count, maxExtent, pResults, flags);
+        return ::GetCharacterPlacement(m_pData->dc, string, count, maxExtent, pResults, flags);
     }
 
     // Retrieves the fractional widths of consecutive characters in a specified range from the current font.
@@ -5068,30 +5068,30 @@ namespace Win32xx
 
     // Computes the width and height of the specified string of text.
     // Refer to GetTextExtentPoint32 in the Windows API documentation for more information.
-    inline CSize CDC::GetTextExtentPoint32(LPCTSTR pString, int count) const
+    inline CSize CDC::GetTextExtentPoint32(LPCTSTR string, int count) const
     {
         assert(m_pData->dc != 0);
-        assert(pString);
-        assert(count <= lstrlen(pString));
+        assert(string != 0);
+        assert(count <= lstrlen(string));
         CSize sz;
-        ::GetTextExtentPoint32(m_pData->dc, pString, count, &sz);
+        ::GetTextExtentPoint32(m_pData->dc, string, count, &sz);
         return sz;
     }
 
     // Computes the width and height of the specified string of text.
     // Refer to GetTextExtentPoint32 in the Windows API documentation for more information.
-    inline CSize CDC::GetTextExtentPoint32(LPCTSTR pString) const
+    inline CSize CDC::GetTextExtentPoint32(LPCTSTR string) const
     {
-        assert(pString);
-        return GetTextExtentPoint32(pString, lstrlen(pString));
+        assert(string != 0);
+        return GetTextExtentPoint32(string, lstrlen(string));
     }
 
     // Computes the width and height of a character string.
     // Refer to GetTabbedTextExtent in the Windows API documentation for more information.
-    inline CSize CDC::GetTabbedTextExtent(LPCTSTR pString, int count, int tabPositions, LPINT pTabStopPositions) const
+    inline CSize CDC::GetTabbedTextExtent(LPCTSTR string, int count, int tabPositions, LPINT pTabStopPositions) const
     {
         assert(m_pData->dc != 0);
-        DWORD size = ::GetTabbedTextExtent(m_pData->dc, pString, count, tabPositions, pTabStopPositions);
+        DWORD size = ::GetTabbedTextExtent(m_pData->dc, string, count, tabPositions, pTabStopPositions);
         CSize sz(size);
         return sz;
     }
@@ -5131,23 +5131,23 @@ namespace Win32xx
     // Writes a character string at a specified location, expanding tabs to the values.
     // specified in an array of tab-stop positions.
     // Refer to TabbedTextOut in the Windows API documentation for more information.
-    inline CSize CDC::TabbedTextOut(int x, int y, LPCTSTR pString, int count, int tabPositions, LPINT pTabStopPositions, int tabOrigin) const
+    inline CSize CDC::TabbedTextOut(int x, int y, LPCTSTR string, int count, int tabPositions, LPINT pTabStopPositions, int tabOrigin) const
     {
         assert(m_pData->dc != 0);
-        DWORD size = ::TabbedTextOut(m_pData->dc, x, y, pString, count, tabPositions, pTabStopPositions, tabOrigin);
+        DWORD size = ::TabbedTextOut(m_pData->dc, x, y, string, count, tabPositions, pTabStopPositions, tabOrigin);
         CSize sz(size);
         return sz;
     }
 
     // Writes a character string at the specified location.
     // Refer to TextOut in the Windows API documentation for more information.
-    inline BOOL CDC::TextOut(int x, int y, LPCTSTR pString, int count/* = -1*/) const
+    inline BOOL CDC::TextOut(int x, int y, LPCTSTR string, int count/* = -1*/) const
     {
         assert(m_pData->dc != 0);
         if (count == -1)
-            count = lstrlen (pString);
+            count = lstrlen (string);
 
-        return ::TextOut(m_pData->dc, x, y, pString, count);
+        return ::TextOut(m_pData->dc, x, y, string, count);
     }
 
   #if (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)

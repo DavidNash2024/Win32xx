@@ -57,17 +57,6 @@ void CViewList::OnAttach()
     InsertItems();
 }
 
-int CViewList::AddItem(LPCTSTR text, int image)
-{
-    LVITEM lvi;
-    ZeroMemory(&lvi, sizeof(LVITEM));
-    lvi.mask = LVIF_TEXT|LVIF_IMAGE;
-    lvi.iImage = image;
-    lvi.pszText = const_cast<LPTSTR>(text);
-
-    return InsertItem(lvi);
-}
-
 void CViewList::SetColumns()
 {
     //empty the list
@@ -87,25 +76,26 @@ void CViewList::SetColumns()
     }
 }
 
+// Insert 4 list view items.
 void CViewList::InsertItems()
 {
     // Add 4th item
-    int item = AddItem(_T("ListViewApp.h"), 2);
+    int item = InsertItem(0, _T("ListViewApp.h"), 2);
     SetItemText(item, 1, _T("1 KB"));
     SetItemText(item, 2, _T("C Header file"));
 
     // add 3rd item
-    item = AddItem(_T("ListViewApp.cpp"), 1);
+    item = InsertItem(item, _T("ListViewApp.cpp"), 1);
     SetItemText(item, 1, _T("3 KB"));
     SetItemText(item, 2, _T("C++ Source file"));
 
     // add 2nd item
-    item = AddItem(_T("main.cpp"), 1);
+    item = InsertItem(item, _T("main.cpp"), 1);
     SetItemText(item, 1, _T("1 KB"));
     SetItemText(item, 2, _T("C++ Source file"));
 
     // add 1st item
-    item = AddItem(_T("ListView"), 0);
+    item = InsertItem(item, _T("ListView"), 0);
     SetItemText(item, 2, _T("Folder"));
 }
 
@@ -138,41 +128,23 @@ void CViewTree::OnAttach()
     DeleteAllItems();
 
     // Add some tree-view items
-    HTREEITEM htiRoot = AddItem(NULL, _T("TreeView"), 0);
-    HTREEITEM htiCTreeViewApp = AddItem(htiRoot, _T("CTreeViewApp"), 1);
-    AddItem(htiCTreeViewApp, _T("CTreeViewApp()"), 3);
-    AddItem(htiCTreeViewApp, _T("GetMainFrame()"), 3);
-    AddItem(htiCTreeViewApp, _T("InitInstance()"), 3);
-    HTREEITEM htiMainFrame = AddItem(htiRoot, _T("CMainFrame"), 1);
-    AddItem(htiMainFrame, _T("CMainFrame()"), 3);
-    AddItem(htiMainFrame, _T("OnCommand()"), 4);
-    AddItem(htiMainFrame, _T("OnInitialUpdate()"), 4);
-    AddItem(htiMainFrame, _T("WndProc()"), 4);
-    HTREEITEM htiView = AddItem(htiRoot, _T("CView"), 1);
-    AddItem(htiView, _T("CView()"), 3);
-    AddItem(htiView, _T("OnInitialUpdate()"), 4);
-    AddItem(htiView, _T("WndProc()"), 4);
+    HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
+    HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
+    InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
+    InsertItem(_T("GetMainFrame()"), 3, 3, htiCTreeViewApp);
+    InsertItem(_T("InitInstance()"), 3, 3, htiCTreeViewApp);
+    HTREEITEM htiMainFrame = InsertItem(_T("CMainFrame"), 1, 1, htiRoot);
+    InsertItem(_T("CMainFrame()"), 3, 3, htiMainFrame);
+    InsertItem(_T("OnCommand()"), 4, 4, htiMainFrame);
+    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiMainFrame);
+    HTREEITEM htiView = InsertItem(_T("CView"), 1, 1, htiRoot);
+    InsertItem(_T("CView()"), 3, 3, htiView);
+    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
+    InsertItem(_T("WndProc()"), 4, 4, htiView);
 
     // Expand some tree-view items
     Expand(htiRoot, TVE_EXPAND);
     Expand(htiCTreeViewApp, TVE_EXPAND);
-}
-
-HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
-{
-    TVITEM tvi;
-    ZeroMemory(&tvi, sizeof(tvi));
-    tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-    tvi.iImage = image;
-    tvi.iSelectedImage = image;
-    tvi.pszText = (LPTSTR)text;
-
-    TVINSERTSTRUCT tvis;
-    ZeroMemory(&tvis, sizeof(tvis));
-    tvis.hParent = hParent;
-    tvis.item = tvi;
-
-    return InsertItem(tvis);
 }
 
 

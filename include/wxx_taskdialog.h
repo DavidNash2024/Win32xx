@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -126,12 +126,12 @@ namespace Win32xx
     private:
         struct TaskButton
         {
-            TaskButton(UINT id, LPCTSTR pText) : buttonID(id)
+            TaskButton(UINT id, LPCTSTR text) : buttonID(id)
             {
-                if (IS_INTRESOURCE(pText))        // support MAKEINTRESOURCE
-                    buttonText = LoadString((UINT)(UINT_PTR)pText);
+                if (IS_INTRESOURCE(text))        // support MAKEINTRESOURCE
+                    buttonText = LoadString((UINT)(UINT_PTR)text);
                 else
-                    buttonText = pText;
+                    buttonText = text;
             }
 
             UINT buttonID;
@@ -142,7 +142,7 @@ namespace Win32xx
         CTaskDialog(const CTaskDialog&);                // Disable copy construction
         CTaskDialog& operator = (const CTaskDialog&);   // Disable assignment operator
 
-        CString FillString(LPCTSTR pText);
+        CString FillString(LPCTSTR text);
         void Reset();
         static HRESULT CALLBACK StaticTaskDialogProc(HWND wnd, UINT notification, WPARAM wparam, LPARAM lparam, LONG_PTR refData);
 

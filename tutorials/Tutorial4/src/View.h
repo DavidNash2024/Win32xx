@@ -18,6 +18,10 @@ struct PlotPoint
 };
 
 
+////////////////////////////////////////////////
+// CView is the application's main window.
+// In this view, we use the mouse to draw on the
+// window.
 class CView : public CWnd
 {
 public:

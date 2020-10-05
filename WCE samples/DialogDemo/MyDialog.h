@@ -1,3 +1,7 @@
+/////////////////////////////
+// MyDialog.h
+
+
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
@@ -6,6 +10,8 @@
 #include "resource.h"
 
 
+///////////////////////////////////////////////////
+// CMyDialog manages the application's main dialog.
 class CMyDialog : public CDialog
 {
 public:
@@ -17,11 +23,12 @@ public:
     void AddToComboBox();
     void AddToButton();
 
-private:
+protected:
     virtual BOOL OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnOK();
 
+private:
     int m_counter;
 };
 

@@ -18,37 +18,27 @@ CViewFiles::~CViewFiles()
     if (IsWindow()) DeleteAllItems();
 }
 
-int CViewFiles::AddItem(LPCTSTR text, int image)
-{
-    LVITEM lvi;
-    ZeroMemory(&lvi, sizeof(lvi));
-    lvi.mask = LVIF_TEXT | LVIF_IMAGE;
-    lvi.iImage = image;
-    lvi.pszText = const_cast<LPTSTR>(text);
-
-    return InsertItem(lvi);
-}
-
+// Insert 4 list view items.
 void CViewFiles::InsertItems()
 {
     // Add 4th item
-    int item = AddItem(L"ListViewApp.h", 2);
-    SetItemText(item, 1, L"1 KB");
-    SetItemText(item, 2, L"C Header file");
+    int item = InsertItem(0, _T("ListViewApp.h"), 2);
+    SetItemText(item, 1, _T("1 KB"));
+    SetItemText(item, 2, _T("C Header file"));
 
     // add 3rd item
-    item = AddItem(L"ListViewApp.cpp", 1);
-    SetItemText(item, 1, L"3 KB");
-    SetItemText(item, 2, L"C++ Source file");
+    item = InsertItem(item, _T("ListViewApp.cpp"), 1);
+    SetItemText(item, 1, _T("3 KB"));
+    SetItemText(item, 2, _T("C++ Source file"));
 
     // add 2nd item
-    item = AddItem(L"main.cpp", 1);
-    SetItemText(item, 1, L"1 KB");
-    SetItemText(item, 2, L"C++ Source file");
+    item = InsertItem(item, _T("main.cpp"), 1);
+    SetItemText(item, 1, _T("1 KB"));
+    SetItemText(item, 2, _T("C++ Source file"));
 
     // add 1st item
-    item = AddItem(L"ListView", 0);
-    SetItemText(item, 2, L"Folder");
+    item = InsertItem(item, _T("ListView"), 0);
+    SetItemText(item, 2, _T("Folder"));
 }
 
 void CViewFiles::OnAttach()

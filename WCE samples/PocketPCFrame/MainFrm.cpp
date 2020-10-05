@@ -1,7 +1,12 @@
+/////////////////////////////
+// MainFrm.cpp
+
+
 #include "MainFrm.h"
 #include "resource.h"
 
 
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Set the Resource IDs for the toolbar buttons
@@ -11,13 +16,14 @@ CMainFrame::CMainFrame()
     AddToolBarButton( IDM_UNDERLINE);
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
 
+// Respond to menu and command bar selections
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Respond to menu and toolbar selections
     switch (LOWORD(wparam))
     {
     // Respond to menu items

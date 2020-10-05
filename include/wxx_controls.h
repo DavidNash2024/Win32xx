@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -97,14 +97,14 @@ namespace Win32xx
 
         virtual int CompareItem(LPCOMPAREITEMSTRUCT pCompareItemStruct);
 
-        int   AddString(LPCTSTR pString) const;
+        int   AddString(LPCTSTR string) const;
         void  Clear() const;
         void  Copy() const;
         void  Cut() const;
         int   DeleteString(int index) const;
         int   Dir(UINT attr, LPCTSTR pWildCard ) const;
-        int   FindString(int indexStart, LPCTSTR pString) const;
-        int   FindStringExact(int indexStart, LPCTSTR pString) const;
+        int   FindString(int indexStart, LPCTSTR string) const;
+        int   FindStringExact(int indexStart, LPCTSTR string) const;
         int   GetCount() const;
         int   GetCurSel() const;
         CRect GetDroppedControlRect() const;
@@ -115,16 +115,16 @@ namespace Win32xx
         int   GetHorizontalExtent() const;
         DWORD GetItemData(int index) const;
         int   GetItemHeight(int index) const;
-        int   GetLBText(int index, LPTSTR pText) const;
+        int   GetLBText(int index, LPTSTR text) const;
         int   GetLBTextLen(int index) const;
         LCID  GetLocale() const;
         int   GetTopIndex() const;
         int   InitStorage(int items, int byteCount) const;
-        int   InsertString(int index, LPCTSTR pString) const;
+        int   InsertString(int index, LPCTSTR string) const;
         void  LimitText(int maxChars) const;
         void  Paste() const;
         void  ResetContent() const;
-        int   SelectString(int startAfter, LPCTSTR pString) const;
+        int   SelectString(int startAfter, LPCTSTR string) const;
         int   SetCurSel(int index) const;
         int   SetDroppedWidth(int width) const;
         BOOL  SetEditSel(int startChar, int endChar) const;
@@ -541,25 +541,25 @@ namespace Win32xx
         void Activate(BOOL activate) const;
         BOOL AddTool(HWND control, const RECT& toolRect, UINT id, UINT textID) const;
         BOOL AddTool(HWND control, UINT textID) const;
-        BOOL AddTool(HWND control, const RECT& toolRect, UINT id, LPCTSTR pText = LPSTR_TEXTCALLBACK) const;
-        BOOL AddTool(HWND control, LPCTSTR pText = LPSTR_TEXTCALLBACK) const;
+        BOOL AddTool(HWND control, const RECT& toolRect, UINT id, LPCTSTR text = LPSTR_TEXTCALLBACK) const;
+        BOOL AddTool(HWND control, LPCTSTR text = LPSTR_TEXTCALLBACK) const;
         void DelTool(HWND control, UINT id = -1) const;
         BOOL HitTest(HWND wnd, CPoint pt, const TOOLINFO& toolInfo) const;
         void Pop() const;
         void RelayEvent(MSG& msg) const;
         void SetToolRect(const RECT& rc, HWND control, UINT id = -1) const;
         void Update() const;
-        void UpdateTipText(LPCTSTR pText, HWND control, UINT id = -1) const;
+        void UpdateTipText(LPCTSTR text, HWND control, UINT id = -1) const;
         void UpdateTipText(UINT textID, HWND control, UINT id = -1) const;
 
 #if (_WIN32_IE >=0x0500)
         BOOL AdjustRect(RECT& rc, BOOL isLarger = TRUE) const;
   #ifdef TTM_SETTITLE
-        BOOL SetTitle(UINT icon, LPCTSTR pTitle) const;
+        BOOL SetTitle(UINT icon, LPCTSTR title) const;
   #endif
 #endif
 #if (WINVER >= 0x0501) && defined(TTM_SETWINDOWTHEME)
-        void SetTTWindowTheme(LPCWSTR pTheme) const;
+        void SetTTWindowTheme(LPCWSTR theme) const;
 #endif
 
     protected:
@@ -641,10 +641,10 @@ namespace Win32xx
     // have the CBS_SORT style, the string is added to the end of the list.
     // Otherwise, the string is inserted into the list, and the list is sorted.
     // Refer to CB_ADDSTRING in the Windows API documentation for more information.
-    inline int  CComboBox::AddString(LPCTSTR pString) const
+    inline int  CComboBox::AddString(LPCTSTR string) const
     {
         assert(IsWindow());
-        return (int)SendMessage(CB_ADDSTRING, 0, (LPARAM)pString);
+        return (int)SendMessage(CB_ADDSTRING, 0, (LPARAM)string);
     }
 
     // Called by in response to the WM_COMPAREITEM message to determine the relative position
@@ -700,27 +700,27 @@ namespace Win32xx
     // Adds the names of directories and files that match a specified string
     // and set of file attributes.
     // Refer to CB_DIR in the Windows API documentation for more information.
-    inline int  CComboBox::Dir(UINT attr, LPCTSTR pWildCard ) const
+    inline int  CComboBox::Dir(UINT attr, LPCTSTR wildCard ) const
     {
         assert(IsWindow());
-        return (int)SendMessage(CB_DIR, (WPARAM)attr, (LPARAM)pWildCard);
+        return (int)SendMessage(CB_DIR, (WPARAM)attr, (LPARAM)wildCard);
     }
 
     // Search the list box of a combo box for an item beginning with the
     // characters in a specified string.
     // Refer to CB_FINDSTRING in the Windows API documentation for more information.
-    inline int  CComboBox::FindString(int indexStart, LPCTSTR pString) const
+    inline int  CComboBox::FindString(int indexStart, LPCTSTR string) const
     {
         assert(IsWindow());
-        return (int)SendMessage(CB_FINDSTRING, (WPARAM)indexStart, (LPARAM)pString);
+        return (int)SendMessage(CB_FINDSTRING, (WPARAM)indexStart, (LPARAM)string);
     }
 
-    // Find the first list box string in a combo box that matches the string specified in pString.
+    // Find the first list box string in a combo box that matches the string specified in string.
     // Refer to CB_FINDSTRINGEXACT in the Windows API documentation for more information.
-    inline int  CComboBox::FindStringExact(int indexStart, LPCTSTR pString) const
+    inline int  CComboBox::FindStringExact(int indexStart, LPCTSTR string) const
     {
         assert(IsWindow());
-        return (int)SendMessage(CB_FINDSTRINGEXACT, (WPARAM)indexStart, (LPARAM)pString);
+        return (int)SendMessage(CB_FINDSTRINGEXACT, (WPARAM)indexStart, (LPARAM)string);
     }
 
     // Retrieves the number of items in the list box of the combo box.
@@ -840,10 +840,10 @@ namespace Win32xx
 
     // Retrieves a string from the list of the combo box.
     // Refer to CB_GETLBTEXT in the Windows API documentation for more information.
-    inline int  CComboBox::GetLBText(int index, LPTSTR pText) const
+    inline int  CComboBox::GetLBText(int index, LPTSTR text) const
     {
         assert(IsWindow());
-        return (int)SendMessage(CB_GETLBTEXT, (WPARAM)index, (LPARAM)pText);
+        return (int)SendMessage(CB_GETLBTEXT, (WPARAM)index, (LPARAM)text);
     }
 
     // Retrieves the length, in characters, of a string in the list of the combo box.
@@ -882,10 +882,10 @@ namespace Win32xx
     // Inserts a string into the list box of the combo box. Unlike the AddString,
     // a list with the CBS_SORT style is not sorted.
     // Refer to CB_INSERTSTRING in the Windows API documentation for more information.
-    inline int  CComboBox::InsertString(int index, LPCTSTR pString) const
+    inline int  CComboBox::InsertString(int index, LPCTSTR string) const
     {
         assert(IsWindow());
-        return (int)SendMessage(CB_INSERTSTRING, (WPARAM)index, (LPARAM)pString);
+        return (int)SendMessage(CB_INSERTSTRING, (WPARAM)index, (LPARAM)string);
     }
 
     // Limits the length of the text the user may type into the edit control of the combo box.
@@ -931,10 +931,10 @@ namespace Win32xx
     // Searches the list of a combo box for an item that begins with the characters in a
     // specified string. If a matching item is found, it is selected and copied to the edit control.
     // Refer to CB_SELECTSTRING in the Windows API documentation for more information.
-    inline int  CComboBox::SelectString(int startAfter, LPCTSTR pString) const
+    inline int  CComboBox::SelectString(int startAfter, LPCTSTR string) const
     {
         assert(IsWindow());
-        return (int)SendMessage(CB_SELECTSTRING, (WPARAM)startAfter, (LPARAM)pString);
+        return (int)SendMessage(CB_SELECTSTRING, (WPARAM)startAfter, (LPARAM)string);
     }
 
     // Selects a string in the list of the combo box. If necessary, the list scrolls the string into view.
@@ -1445,7 +1445,7 @@ namespace Win32xx
         if (isExtended)
             lparam |= 0x01000000L;
 
-        CString str;
+        CString string;
         int incompleteLength = 64;
         int length = incompleteLength;
 
@@ -1453,12 +1453,12 @@ namespace Win32xx
         while (length == incompleteLength)
         {
             incompleteLength *= 4;
-            LPTSTR pStr = str.GetBuffer(incompleteLength);
-            length = ::GetKeyNameText(static_cast<LONG>(lparam), pStr, incompleteLength + 1);
-            str.ReleaseBuffer();
+            LPTSTR str = string.GetBuffer(incompleteLength);
+            length = ::GetKeyNameText(static_cast<LONG>(lparam), str, incompleteLength + 1);
+            string.ReleaseBuffer();
         }
 
-        return str;
+        return string;
     }
 
     // Sets the hot key combination for the control.
@@ -2334,30 +2334,30 @@ namespace Win32xx
     // Registers a tool with a ToolTip control.
     // control specifies the window which triggers the tooltip.
     // toolRect specifies the part of the window which triggers the tooltip.
-    // If pText contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
+    // If text contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
     // messages are sent to the parent window.
     // id is a user defined ID. It is required if the control has multiple tooltips.
     // Refer to TTM_ADDTOOL in the Windows API documentation for more information.
-    inline BOOL CToolTip::AddTool(HWND control, const RECT& toolRect, UINT id, LPCTSTR pText /*= LPSTR_TEXTCALLBACK*/) const
+    inline BOOL CToolTip::AddTool(HWND control, const RECT& toolRect, UINT id, LPCTSTR text /*= LPSTR_TEXTCALLBACK*/) const
     {
         assert(IsWindow());
         TOOLINFO info;
         FillToolInfo(info, control, toolRect, id);
-        info.lpszText = const_cast<LPTSTR>(pText);
+        info.lpszText = const_cast<LPTSTR>(text);
         return (SendMessage(TTM_ADDTOOL, 0, (LPARAM)&info) != 0);
     }
 
     // Registers a tool with a ToolTip control.
     // control specifies the window which triggers the tooltip.
-    // If pText contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
+    // If text contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
     // messages are sent to the parent window.
     // Refer to TTM_ADDTOOL in the Windows API documentation for more information.
-    inline BOOL CToolTip::AddTool(HWND control, LPCTSTR pText /*= LPSTR_TEXTCALLBACK*/) const
+    inline BOOL CToolTip::AddTool(HWND control, LPCTSTR text /*= LPSTR_TEXTCALLBACK*/) const
     {
         assert(IsWindow());
         TOOLINFO info;
         FillToolInfo(info, control);
-        info.lpszText = const_cast<LPTSTR>(pText);
+        info.lpszText = const_cast<LPTSTR>(text);
         return (SendMessage(TTM_ADDTOOL, 0, (LPARAM)&info) != 0);
     }
 
@@ -2410,8 +2410,8 @@ namespace Win32xx
         CString str;
         TOOLINFO info = GetToolInfo(control, id);
 
-        LPTSTR pText = str.GetBuffer(80); // Maximum allowed ToolTip is 80 characters for Windows XP and below
-        info.lpszText = pText;
+        LPTSTR text = str.GetBuffer(80); // Maximum allowed ToolTip is 80 characters for Windows XP and below
+        info.lpszText = text;
         SendMessage(TTM_GETTEXT, 0, (LPARAM)&info);
         str.ReleaseBuffer();
 
@@ -2628,11 +2628,11 @@ namespace Win32xx
 
     // Sets the ToolTip text for a tool.
     // Refer to TTM_UPDATETIPTEXT in the Windows API documentation for more information.
-    inline void CToolTip::UpdateTipText(LPCTSTR pText, HWND control, UINT id) const
+    inline void CToolTip::UpdateTipText(LPCTSTR text, HWND control, UINT id) const
     {
         assert(IsWindow());
         TOOLINFO info = GetToolInfo(control, id);
-        info.lpszText = const_cast<LPTSTR>(pText);
+        info.lpszText = const_cast<LPTSTR>(text);
         SendMessage(TTM_UPDATETIPTEXT, 0, (LPARAM)&info);
     }
 
@@ -2672,10 +2672,10 @@ namespace Win32xx
 
     // Adds a standard icon and title string to a ToolTip.
     // Refer to TTM_SETTITLE in the Windows API documentation for more information.
-    inline BOOL CToolTip::SetTitle(UINT icon, LPCTSTR pTitle) const
+    inline BOOL CToolTip::SetTitle(UINT icon, LPCTSTR title) const
     {
         assert(IsWindow());
-        return (SendMessage(TTM_SETTITLE, (WPARAM)icon, (LPARAM)pTitle) != 0);
+        return (SendMessage(TTM_SETTITLE, (WPARAM)icon, (LPARAM)title) != 0);
     }
 
 #endif
@@ -2685,10 +2685,10 @@ namespace Win32xx
 
     // Sets the visual style of a ToolTip control.
     // Refer to TTM_SETWINDOWTHEME in the Windows API documentation for more information.
-    inline void CToolTip::SetTTWindowTheme(LPCWSTR pTheme) const
+    inline void CToolTip::SetTTWindowTheme(LPCWSTR theme) const
     {
         assert(IsWindow());
-        SendMessage(TTM_SETWINDOWTHEME, 0, (LPARAM)pTheme);
+        SendMessage(TTM_SETWINDOWTHEME, 0, (LPARAM)theme);
     }
 
 #endif

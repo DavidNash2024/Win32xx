@@ -1,3 +1,6 @@
+/////////////////////////////
+// MyDialog.cpp
+
 
 #include "MyDialog.h"
 #include "resource.h"

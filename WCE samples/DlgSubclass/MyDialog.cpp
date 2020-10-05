@@ -1,6 +1,7 @@
 ///////////////////////////////////////
 // MyDialog.cpp
 
+
 #include "MyDialog.h"
 #include "Hyperlink.h"
 #include "resource.h"

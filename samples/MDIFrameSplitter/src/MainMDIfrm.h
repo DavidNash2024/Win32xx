@@ -16,10 +16,7 @@ public:
 
     BOOL OnFileClose();
     BOOL OnFileExit();
-    BOOL OnFileOpen();
     BOOL OnFileNew();
-    BOOL OnFileSave();
-    BOOL OnFilePrint();
     BOOL OnMDICascade();
     BOOL OnMDICloseAll();
     BOOL OnMDIIconArrange();

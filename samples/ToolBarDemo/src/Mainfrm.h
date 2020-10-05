@@ -19,12 +19,10 @@ public:
     virtual ~CMainFrame();
 
     BOOL    OnFileExit();
-    BOOL    OnFileOpen();
-    BOOL    OnFilePrint();
-    BOOL    OnFileSave();
     BOOL    OnTBBigIcons();
     BOOL    OnTBCustomize();
     BOOL    OnTBDefault();
+    void    ResizeToolbarBand() const;
     void    SaveTBDefault();
 
 protected:
@@ -42,7 +40,6 @@ protected:
     virtual LRESULT OnToolBarChange(LPNMTOOLBAR pNMTB);
     virtual BOOL    OnViewToolBar();
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CView m_view;

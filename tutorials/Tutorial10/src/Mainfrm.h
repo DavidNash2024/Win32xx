@@ -14,6 +14,10 @@
 #include "Doc.h"
 
 
+///////////////////////////////////////////////////////////
+// CMainFrame manages the application's main window.
+// The main window is a frame which has a menubar, toolbar,
+// statusbar and view window.
 class CMainFrame : public CFrame
 {
 public:
@@ -47,7 +51,6 @@ private:
     CView m_view;
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
-
 };
 
 #endif //MAINFRM_H

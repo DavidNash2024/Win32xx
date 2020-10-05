@@ -1,4 +1,5 @@
-
+//////////////////////////////////
+// Doc.cpp
 
 #include "Doc.h"
 #include "ScribbleApp.h"

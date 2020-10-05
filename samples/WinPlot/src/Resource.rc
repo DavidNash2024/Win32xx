@@ -70,7 +70,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "../src/res/Star.ico"
+IDW_MAIN                ICON                    "../src/res/Plot.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -85,16 +85,6 @@ IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
 //
 // Dialog
 //
-
-IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-CAPTION "About"
-FONT 8, "MS Shell Dlg", 400, 0
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "Plot Function Application",IDC_STATIC,60,22,64,17
-    ICON            IDW_MAIN,0,4,4,20,20
-END
 
 IDD_INPUT DIALOG 0, 0, 297, 111
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
@@ -113,6 +103,31 @@ BEGIN
     EDITTEXT        IDC_XMAX,128,83,40,11,ES_AUTOHSCROLL
 END
 
+
+IDW_ABOUT DIALOGEX 0, 0, 255, 231
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About WinPlot"
+FONT 8, "MS Sans Serif", 0, 0
+BEGIN
+    ICON            IDW_MAIN,IDC_STATIC,11,17,20,20
+    LTEXT           "WinPlot Version 1.0\n by David Nash",IDC_STATIC,40,10,
+                    119,17,SS_NOPREFIX
+    DEFPUSHBUTTON   "OK",IDOK,198,7,50,14,WS_GROUP
+    LTEXT           "Choose function from the menu to input the function to plot",
+                    IDC_STATIC,39,34,192,8
+    LTEXT           "Examples of valid functions:",IDC_STATIC,40,164,93,8
+    LTEXT           "x^3  -  4*x^2  +  3*x  -4\nsin(x) / x\nsqrt(1 - x^2)\nVar = 32\nVar*((x + Var)/(x-Var))",
+                    IDC_STATIC,40,174,93,44
+    LTEXT           "Operators:",IDC_STATIC,40,52,34,8
+    LTEXT           "Math Functions:",IDC_STATIC,159,52,52,8
+    LTEXT           "+    Add\n-    Subtract\n*    Multiply\n/    Divide\n^    Raise Power\n( )   Parenthesis\n=    Assign Constant",
+                    IDC_STATIC,40,62,68,64
+    LTEXT           "Predefined Constants:",IDC_STATIC,40,130,71,8
+    LTEXT           "pi =  3.1415926537979",IDC_STATIC,40,139,77,8
+    LTEXT           "e  =  2.718281828459",IDC_STATIC,40,147,71,8
+    LTEXT           "sin\ncos\ntan\nasin\nacos\natan\nsinh\ncosh\ntanh\ncotan\nexp\nlog\nlog10\nsqrt",
+                    IDC_STATIC,175,62,34,119
+END
 
 /////////////////////////////////////////////////////////////////////////////
 //

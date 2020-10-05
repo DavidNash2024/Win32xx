@@ -1,3 +1,7 @@
+/////////////////////////////
+// MainFrm.h
+
+
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
@@ -7,6 +11,8 @@
 #include "wxx_dialog.h"
 
 
+////////////////////////////////////////////////////
+// CMainFrame manages the application's main window.
 class CMainFrame : public CWceFrame
 {
 public:

@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -138,12 +138,12 @@ namespace Win32xx
         void SetExpanded(LPCWSTR pPath);
         void SetExpanded(LPITEMIDLIST pItemIDList);
         void SetFlags(UINT flags) { m_flags = flags; }
-        void SetOKText(LPCWSTR pText);
+        void SetOKText(LPCWSTR text);
         void SetRoot(LPITEMIDLIST pItemIDList);
         void SetSelection(LPITEMIDLIST pItemIDList);
-        void SetSelection(LPCTSTR pPath);
-        void SetStatusText(LPCTSTR pText);
-        void SetTitle(LPCTSTR pTitle);
+        void SetSelection(LPCTSTR path);
+        void SetStatusText(LPCTSTR text);
+        void SetTitle(LPCTSTR title);
 
     protected:
         virtual void OnCancel();
@@ -335,9 +335,9 @@ namespace Win32xx
 
     // Sets the text of the OK button.
     // Refer to BFFM_SETOKTEXT in the Windows API documentation for more information.
-    inline void CFolderDialog::SetOKText(LPCWSTR pText)
+    inline void CFolderDialog::SetOKText(LPCWSTR text)
     {
-        SendMessage(BFFM_SETOKTEXT, 0, (LPARAM)pText);
+        SendMessage(BFFM_SETOKTEXT, 0, (LPARAM)text);
     }
 
     // Sets the location of the root folder from which to start browsing.
@@ -363,9 +363,9 @@ namespace Win32xx
     // Sets the status text.
     // This is incompatible with the BIF_USENEWUI or BIF_NEWDIALOGSTYLE flags.
     // Refer to BFFM_SETSTATUSTEXT in the Windows API documentation for more information.
-    inline void CFolderDialog::SetStatusText(LPCTSTR pText)
+    inline void CFolderDialog::SetStatusText(LPCTSTR text)
     {
-        SendMessage(BFFM_SETSTATUSTEXT, 0, (LPARAM)pText);
+        SendMessage(BFFM_SETSTATUSTEXT, 0, (LPARAM)text);
     }
 
     // Sets the title of the browse for folder dialog.

@@ -5,6 +5,8 @@
 
   !include "MUI2.nsh"
 
+  Unicode true
+
 ;--------------------------------
 ;General
 

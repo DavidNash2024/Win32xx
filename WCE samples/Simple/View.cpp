@@ -1,7 +1,12 @@
+/////////////////////////////
+// View.cpp
+
+
 #include "view.h"
 #include "resource.h"
 
 
+// Called when the window's client area is drawn.
 void CView::OnDraw(CDC& dc)
 {
     // Define a rectangle to contain some text
@@ -13,7 +18,7 @@ void CView::OnDraw(CDC& dc)
     dc.DrawText(string, lstrlen(string), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
-
+// Handle the view window's messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -60,7 +60,7 @@ namespace Win32xx
         virtual BOOL AddReplaceBitmap(UINT id);
         virtual void Destroy();
         virtual BOOL ReplaceBitmap(UINT newBitmapID);
-        virtual BOOL SetButtonText(int buttonID, LPCTSTR pText);
+        virtual BOOL SetButtonText(int buttonID, LPCTSTR text);
 
         // Wrappers for Win32 API functions
         BOOL  AddButtons(UINT buttonCount, LPTBBUTTON pButtonInfoArray) const;
@@ -889,14 +889,14 @@ namespace Win32xx
     // This rather convoluted approach to setting ToolBar button text supports
     // all versions of Windows, including Win95 with COMCTL32.DLL version 4.0.
     // Refer to TB_INSERTBUTTON in the Windows API documentation for more information.
-    inline BOOL CToolBar::SetButtonText(int buttonID, LPCTSTR pText)
+    inline BOOL CToolBar::SetButtonText(int buttonID, LPCTSTR text)
     {
         assert(IsWindow());
         int index = CommandToIndex(buttonID);
         assert(index != -1);
 
         BOOL succeeded = FALSE;
-        CString string = pText;
+        CString string = text;
         std::map<CString, int>::iterator m;
         int stringIndex;
 
@@ -916,7 +916,7 @@ namespace Win32xx
             }
 
             // No index for this string exists, so create it now
-            str = pText;
+            str = text;
             str += _T('\0');        // Double-null terminate
 
             stringIndex = AddStrings(str);

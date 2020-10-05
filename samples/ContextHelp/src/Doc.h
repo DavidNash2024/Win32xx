@@ -6,9 +6,9 @@
 #define SDI_DOC_H
 
 
-//////////////////////////////////////////////////////////////
-// CDoc holds the application's data. It inherits from CObject
-// to perform data serialization to and from the archive.
+/////////////////////////////////////////////////////////////////
+// CDoc holds the application's data. It stores the application's
+// settings in the registry.
 class CDoc
 {
 public:

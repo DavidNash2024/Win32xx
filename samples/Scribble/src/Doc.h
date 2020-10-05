@@ -1,13 +1,10 @@
-/////////////////////////////
+//////////////////////////////////
 // Doc.h
-//
 
 #ifndef WIN32XX_DOC_H
 #define WIN32XX_DOC_H
 
-///////////////////////////////////////
-// Declaration of the PlotPoint struct.
-//
+
 struct PlotPoint
 {
     int x;
@@ -15,6 +12,7 @@ struct PlotPoint
     bool isPenDown;
     COLORREF penColor;
 };
+
 
 //////////////////////////////////////////////////////////////
 // CDoc holds the application's data. It inherits from CObject

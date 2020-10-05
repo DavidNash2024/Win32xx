@@ -7,7 +7,8 @@
 #include "wxx_wincore.h"
 
 
-// A class that inherits from CWnd. It is used to create the window.
+//////////////////////////////////////////
+// CView is the application's main window.
 class CView : public CWnd
 {
 public:
@@ -17,6 +18,7 @@ public:
 };
 
 
+////////////////////////////////////////////////////
 // A class that inherits from CWinApp.
 // It is used to run the application's message loop.
 class CSimpleApp : public CWinApp
@@ -30,6 +32,7 @@ private:
     CView m_view;
 };
 
+// Called when the application starts.
 BOOL CSimpleApp::InitInstance()
 {
     // Create the Window
@@ -39,6 +42,7 @@ BOOL CSimpleApp::InitInstance()
 }
 
 
+// WinMain is the program's entry point. The program starts here.
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Start Win32++

@@ -5,16 +5,15 @@
 #include "view.h"
 #include "resource.h"
 
-
+// Constructor.
 CView::CView()
 {
 }
 
-
+// Destructor.
 CView::~CView()
 {
 }
-
 
 // Draws a line in the window's client area.
 void CView::DrawLine(int x, int y)
@@ -23,7 +22,6 @@ void CView::DrawLine(int x, int y)
     clientDC.MoveTo(m_points.back().x, m_points.back().y);
     clientDC.LineTo(x, y);
 }
-
 
 // Called when drawing to the window.
 void CView::OnDraw(CDC& dc)
@@ -44,7 +42,6 @@ void CView::OnDraw(CDC& dc)
     }
 }
 
-
 // Store the specified point information.
 void CView::StorePoint(int x, int y, bool isPenDown)
 {
@@ -56,8 +53,8 @@ void CView::StorePoint(int x, int y, bool isPenDown)
     m_points.push_back(pp); //Add the point to the vector
 }
 
-
-// Called when the left mouse button is pressed while the cursor is over the window.
+// Called when the left mouse button is pressed while the cursor is over
+// the window.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
@@ -66,7 +63,6 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 
     return FinalWindowProc(msg, wparam, lparam);
 }
-
 
 // Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -77,7 +73,6 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 
     return FinalWindowProc(msg, wparam, lparam);
 }
-
 
 // Called when the mouse is moved while captured.
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -92,7 +87,6 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
 // Called to handle the window's messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -103,7 +97,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
     }
 
-    //Use the default message handling for remaining messages
+    // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
 }
 

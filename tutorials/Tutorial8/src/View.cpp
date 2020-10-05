@@ -6,16 +6,16 @@
 #include "resource.h"
 
 
+// Constructor.
 CView::CView() : m_penColor(RGB(0,0,0))
 {
     m_brush.CreateSolidBrush(RGB(255,255,230));
 }
 
-
+// Destructor.
 CView::~CView()
 {
 }
-
 
 // Draws a line in the window's client area.
 void CView::DrawLine(int x, int y)
@@ -26,20 +26,17 @@ void CView::DrawLine(int x, int y)
     clientDC.LineTo(x, y);
 }
 
-
 // Retrieve a reference to CDoc.
 CDoc& CView::GetDoc()
 {
     return m_doc;
 }
 
-
 // Retrieve the PlotPoint data.
 std::vector<PlotPoint>& CView::GetAllPoints()
 {
     return GetDoc().GetAllPoints();
 }
-
 
 // Called during window creation.
 int CView::OnCreate(CREATESTRUCT&)
@@ -48,7 +45,6 @@ int CView::OnCreate(CREATESTRUCT&)
     DragAcceptFiles(TRUE);
     return 0;
 }
-
 
 // Called when drawing to the window.
 void CView::OnDraw(CDC& dc)
@@ -68,7 +64,6 @@ void CView::OnDraw(CDC& dc)
         }
     }
 }
-
 
 // Called when a file is dropped on the window.
 LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -94,7 +89,6 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
-
 // Called when the left mouse button is pressed while the cursor is over the window.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -104,7 +98,6 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
 // Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -113,7 +106,6 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), false, m_penColor);
     return FinalWindowProc(msg, wparam, lparam);
 }
-
 
 // Called when the mouse is moved while captured.
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -128,14 +120,12 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
 // Called before window creation to update the window's CREATESTRUCT.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set the extra style to provide a sunken effect
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
-
 
 // Called before the window is registered to update the window's WNDCLASS.
 void CView::PreRegisterClass(WNDCLASS& wc)
@@ -145,7 +135,6 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.lpszClassName = _T("Scribble Window");
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
-
 
 // Called to handle the window's messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -161,4 +150,3 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
 }
-

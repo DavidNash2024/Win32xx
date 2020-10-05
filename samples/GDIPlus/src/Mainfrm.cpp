@@ -35,10 +35,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     UINT id = LOWORD(wparam);
     switch(id)
     {
-    case IDM_FILE_OPEN:      return OnFileOpen();
-    case IDM_FILE_SAVE:      return OnFileSave();
-    case IDM_FILE_SAVEAS:    return OnFileSave();
-    case IDM_FILE_PRINT:     return OnFilePrint();
     case IDM_FILE_EXIT:      return OnFileExit();
     case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
@@ -83,63 +79,6 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
-// Sample code to load from a file.
-BOOL CMainFrame::OnFileOpen()
-{
-    CFileDialog fileDlg(TRUE);
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-// Sample code to save to a file.
-BOOL CMainFrame::OnFileSave()
-{
-    CFileDialog fileDlg(FALSE);
-
-    // Bring up the file save dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-// Sample code to print information.
-BOOL CMainFrame::OnFilePrint()
-{
-    // Bring up a dialog to choose the printer
-    CPrintDialog printdlg;
-
-    try
-    {
-        INT_PTR result = printdlg.DoModal(*this);
-
-        // Retrieve the printer DC
-        // CDC dcPrinter = Printdlg.GetPrinterDC();
-
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-
-        return (result == IDOK);   // boolean expression
-    }
-
-    catch (const CWinException& /* e */)
-    {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-        return FALSE;
-    }
-}
-
 // Process notification messages (WM_NOTIFY) sent by child windows.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
@@ -156,8 +95,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 void CMainFrame::SetupToolBar()
 {
     AddToolBarButton( IDM_FILE_NEW   );
-    AddToolBarButton( IDM_FILE_OPEN  );
-    AddToolBarButton( IDM_FILE_SAVE  );
+    AddToolBarButton( IDM_FILE_OPEN, FALSE);    // disabled button
+    AddToolBarButton( IDM_FILE_SAVE, FALSE);    // disabled button
 
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
@@ -165,21 +104,9 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
 
     AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_FILE_PRINT );
+    AddToolBarButton( IDM_FILE_PRINT, FALSE);   // disabled button
 
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-}
-
-// Process the frame's window messages.
-LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-//  switch (msg)
-//  {
-//      Add case statements for each messages to be handled here
-//  }
-
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
 }
 

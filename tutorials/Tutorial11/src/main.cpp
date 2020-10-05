@@ -5,6 +5,7 @@
 #include "ScribbleApp.h"
 
 
+// WinMain is the program's entry point. The program starts here.
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try

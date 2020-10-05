@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -280,11 +280,11 @@ namespace Win32xx
         // Wrappers for Windows API functions
         HRESULT CloseThemeData() const;
         HRESULT DrawThemeBackground(HDC dc, int partID, int stateID, const RECT* pRect, const RECT* pClipRect) const;
-        HRESULT DrawThemeText(HDC dc, int partID, int stateID, LPCWSTR pText, int charCount, DWORD textFlags, DWORD textFlags2, LPCRECT pRect) const;
+        HRESULT DrawThemeText(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, DWORD textFlags2, LPCRECT pRect) const;
         HRESULT GetThemePartSize(HDC dc, int partID, int stateID, LPCRECT prc, THEMESIZE eSize, SIZE* psz) const;
         HRESULT GetThemeInt(int partID, int stateID, int propID, int* pVal) const;
         HRESULT GetThemeMargins(HDC dc, int partID, int stateID, int propID, LPRECT prc, MARGINS* pMargins) const;
-        HRESULT GetThemeTextExtent(HDC dc, int partID, int stateID, LPCWSTR pText, int charCount, DWORD textFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const;
+        HRESULT GetThemeTextExtent(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const;
         BOOL    IsThemeBackgroundPartiallyTransparent(int partID, int stateID) const;
         HANDLE  OpenThemeData(HWND wnd, LPCWSTR pClassList) const;
 
@@ -397,8 +397,8 @@ namespace Win32xx
         void SetMRULimit(UINT MRULimit);
         void SetReBarTheme(const ReBarTheme& rbt);
         void SetStatusBarTheme(const StatusBarTheme& sbt);
-        void SetStatusText(LPCTSTR pText);
-        void SetTitle(LPCTSTR pText)                   { T::SetWindowText(pText); }
+        void SetStatusText(LPCTSTR text);
+        void SetTitle(LPCTSTR text)                    { T::SetWindowText(text); }
         void SetToolBarTheme(const ToolBarTheme& tbt);
 
     protected:
@@ -410,7 +410,7 @@ namespace Win32xx
         virtual void AddMenuBarBand();
         virtual void AddMRUEntry(LPCTSTR pMRUEntry);
         virtual void AddToolBarBand(CToolBar& tb, DWORD bandStyle, UINT id);
-        virtual void AddToolBarButton(UINT id, BOOL isEnabled = TRUE, LPCTSTR pText = 0, int image = -1);
+        virtual void AddToolBarButton(UINT id, BOOL isEnabled = TRUE, LPCTSTR text = 0, int image = -1);
         virtual void CreateToolBar();
         virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
         virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
@@ -606,11 +606,11 @@ namespace Win32xx
     }
 
     // Draws text using the color and font defined by the visual style.
-    inline HRESULT CMenuMetrics::DrawThemeText(HDC dc, int partID, int stateID, LPCWSTR pText, int charCount, DWORD textFlags, DWORD textFlags2, LPCRECT pRect) const
+    inline HRESULT CMenuMetrics::DrawThemeText(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, DWORD textFlags2, LPCRECT pRect) const
     {
         assert(m_theme);
         if (m_pfnDrawThemeText)
-            return m_pfnDrawThemeText(m_theme, dc, partID, stateID, pText, charCount, textFlags, textFlags2, pRect);
+            return m_pfnDrawThemeText(m_theme, dc, partID, stateID, text, charCount, textFlags, textFlags2, pRect);
 
         return E_NOTIMPL;
     }
@@ -773,11 +773,11 @@ namespace Win32xx
     }
 
     // Calculates the size and location of the specified text when rendered in the visual style font.
-    inline HRESULT CMenuMetrics::GetThemeTextExtent(HDC dc, int partID, int stateID, LPCWSTR pText, int charCount, DWORD textFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const
+    inline HRESULT CMenuMetrics::GetThemeTextExtent(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const
     {
         assert(m_theme);
         if (m_pfnGetThemeTextExtent)
-            return m_pfnGetThemeTextExtent(m_theme, dc, partID, stateID, pText, charCount, textFlags, pBoundingRect, pExtentRect);
+            return m_pfnGetThemeTextExtent(m_theme, dc, partID, stateID, text, charCount, textFlags, pBoundingRect, pExtentRect);
 
         return E_NOTIMPL;
     }
@@ -1194,14 +1194,14 @@ namespace Win32xx
     // Adds Resource IDs to toolbar buttons.
     // A resource ID of 0 is a separator.
     template <class T>
-    inline void CFrameT<T>::AddToolBarButton(UINT id, BOOL isEnabled /* = TRUE*/, LPCTSTR pText /* = 0 */, int image /* = -1 */)
+    inline void CFrameT<T>::AddToolBarButton(UINT id, BOOL isEnabled /* = TRUE*/, LPCTSTR text /* = 0 */, int image /* = -1 */)
     {
         m_toolBarData.push_back(id);
 
         GetToolBar().AddButton(id, isEnabled, image);
 
-        if (0 != pText)
-            GetToolBar().SetButtonText(id, pText);
+        if (0 != text)
+            GetToolBar().SetButtonText(id, text);
     }
 
     // Adjust the size of the frame to accommodate the View window's dimensions.
@@ -3339,9 +3339,9 @@ namespace Win32xx
 
     // Stores the status text and displays it in the StatusBar.
     template <class T>
-    inline void CFrameT<T>::SetStatusText(LPCTSTR pText)
+    inline void CFrameT<T>::SetStatusText(LPCTSTR text)
     {
-        m_statusText = pText;
+        m_statusText = text;
 
         if (GetStatusBar().IsWindow())
         {

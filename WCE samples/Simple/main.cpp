@@ -5,6 +5,7 @@
 #include "resource.h"
 
 
+// WinMain is the program's entry point. The program starts here.
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR, int)
 {
     TCHAR szBuf[MAX_STRING_SIZE];

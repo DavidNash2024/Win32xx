@@ -11,10 +11,10 @@
 ///////////////////////////////////
 // CMainFrame function definitions.
 //
+
+// Constructor for CMainFrame. Its called after CFrame's constructor.
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
     //Set m_View as the view window of the frame
     SetView(m_view);
 
@@ -23,24 +23,19 @@ CMainFrame::CMainFrame()
     LoadRegistrySettings(_T("Win32++\\StatusBar Sample"));
 }
 
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
     switch(id)
     {
-    case IDM_FILE_OPEN:      return OnFileOpen();
-    case IDM_FILE_SAVE:      return OnFileSave();
-    case IDM_FILE_SAVEAS:    return OnFileSave();
-    case IDM_FILE_PRINT:     return OnFilePrint();
     case IDM_FILE_EXIT:      return OnFileExit();
     case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
@@ -50,13 +45,9 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
-    // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
        UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
@@ -74,11 +65,11 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Perform the owner draw for Part 3 in the status bar
 LRESULT CMainFrame::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
 
-    // Perform the owner draw for Part 3 in the status bar
     LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT)lparam;
 
     if (pDrawItem->CtlID == STATUS_ID) // Message comes from the status bar
@@ -106,14 +97,15 @@ LRESULT CMainFrame::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
     return CFrame::OnDrawItem(msg, wparam, lparam);
 }
 
+// Issue a close request to the frame.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
 
     return TRUE;
 }
 
+// Called after the frame is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
@@ -122,90 +114,13 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
-BOOL CMainFrame::OnFileOpen()
-{
-    CFileDialog fileDlg(TRUE);
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-BOOL CMainFrame::OnFileSave()
-{
-    CFileDialog fileDlg(FALSE);
-
-    // Bring up the file save dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-BOOL CMainFrame::OnFilePrint()
-{
-    // Bring up a dialog to choose the printer
-    CPrintDialog printdlg;
-
-    try
-    {
-        INT_PTR Res = printdlg.DoModal(*this);
-
-        // Retrieve the printer DC
-        // CDC dcPrinter = Printdlg.GetPrinterDC();
-
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-
-        return (Res == IDOK);   // boolean expression
-    }
-
-    catch (const CWinException& /* e */)
-    {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-        return FALSE;
-    }
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-    // Process notification messages sent by child windows
-//  switch(((LPNMHDR)lparam)->code)
-//  {
-//      Add case statements for each notification message here
-//  }
-
-    // Some notifications should return a value when handled
-    return CFrame::OnNotify(wparam, lparam);
-}
-
-void CMainFrame::PreCreate(CREATESTRUCT& cs)
-{
-    // This function is called before the frame is created.
-    // It provides an opportunity to modify the various CREATESTRUCT
-    // parameters used in the frame window's creation.
-
-    // Call base clase to set defaults
-    CFrame::PreCreate(cs);
-
-    // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
-}
-
+// Configure the toolbar.
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
-    AddToolBarButton( IDM_FILE_OPEN  );
-    AddToolBarButton( IDM_FILE_SAVE  );
+    AddToolBarButton( IDM_FILE_OPEN, FALSE);    // disabled button
+    AddToolBarButton( IDM_FILE_SAVE, FALSE);    // disabled button
 
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
@@ -213,20 +128,9 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
 
     AddToolBarButton( 0 );                      // Separator
-    AddToolBarButton( IDM_FILE_PRINT );
+    AddToolBarButton( IDM_FILE_PRINT, FALSE);   // disabled button
 
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-}
-
-LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-//  switch (msg)
-//  {
-//      Add case statements for each messages to be handled here
-//  }
-
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
 }
 

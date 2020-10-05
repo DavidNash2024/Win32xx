@@ -7,15 +7,16 @@
 #include "resource.h"
 
 
+// Constructor.
 CView::CView() : m_penColor(RGB(0,0,0))
 {
     m_brush.CreateSolidBrush(RGB(255,255,230));
 }
 
+// Destructor.
 CView::~CView()
 {
 }
-
 
 // Draws a line in the window's client area
 void CView::DrawLine(int x, int y)
@@ -26,20 +27,19 @@ void CView::DrawLine(int x, int y)
     clientDC.LineTo(x, y);
 }
 
-
 // Retrieves a reference to CDoc
 CDoc& CView::GetDoc()
 {
     return m_doc;
 }
 
-
+// Retrieves the PlotPoint data.
 std::vector<PlotPoint>& CView::GetAllPoints()
 {
     return GetDoc().GetAllPoints();
 }
 
-
+// Called during window creation.
 int CView::OnCreate(CREATESTRUCT&)
 {
     // Support Drag and Drop on this window
@@ -47,8 +47,8 @@ int CView::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
-
-// Draws the points to a memory DC. A memory DC provides double buffering for smoother rendering.
+// Draws the points to a memory DC. A memory DC provides double buffering
+// for smoother rendering.
 CMemDC CView::Draw()
 {
     // Set up our Memory DC and bitmap
@@ -79,7 +79,6 @@ CMemDC CView::Draw()
     return memDC;
 }
 
-
 // Called when part of the view window needs to be redawn.
 // Calls the Draw function to perform the drawing to a memory DC.
 void CView::OnDraw(CDC& dc)
@@ -90,7 +89,6 @@ void CView::OnDraw(CDC& dc)
     // Copy from the memory DC to our painting dc
     dc.BitBlt(0, 0, width, height, Draw(), 0, 0, SRCCOPY);
 }
-
 
 // Called when a file is dropped on the view window.
 LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -115,7 +113,6 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
-
 // Called when the left mouse buton is pressed.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -125,7 +122,6 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
 // Called when the left mouse buton is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -134,7 +130,6 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), false, m_penColor);
     return FinalWindowProc(msg, wparam, lparam);
 }
-
 
 // Called when the mouse is moved while it is captured.
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -153,14 +148,12 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
 // Called before window creation to update the window's CREATESTRUCT
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set the extra style to provide a sunken effect
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
-
 
 // Called before the window is registered to update the window's WNDCLASS
 void CView::PreRegisterClass(WNDCLASS& wc)
@@ -170,7 +163,6 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.lpszClassName = _T("Scribble Window");
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
-
 
 // Select the printer, and call QuickPrint.
 void CView::Print(LPCTSTR docName)
@@ -184,7 +176,6 @@ void CView::Print(LPCTSTR docName)
     }
 
 }
-
 
 // Prints the view window's bitmap to the specified dc.
 // Called by CPrintPreview, and by QuickPrint.
@@ -240,7 +231,6 @@ void CView::PrintPage(CDC& dc, UINT)
     // The specified dc now holds the Device Independent Bitmap printout.
 }
 
-
 // Print to the default or previously chosen printer.
 void CView::QuickPrint(LPCTSTR docName)
 {
@@ -274,8 +264,7 @@ void CView::QuickPrint(LPCTSTR docName)
         throw CUserException(_T("EndDoc failed"));
 }
 
-
-// Handle the view's messages.
+// Handle the view window's messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -286,7 +275,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
     }
 
-    //Use the default message handling for remaining messages
+    // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
 }
 

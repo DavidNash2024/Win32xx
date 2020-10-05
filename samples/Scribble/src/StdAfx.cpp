@@ -1,6 +1,5 @@
 /////////////////////////////
 // StdAfx.cpp
-//
 
 // This file is used for precompiled hearders. Precompiled headers allow
 //  programs to be recompiled more quickly

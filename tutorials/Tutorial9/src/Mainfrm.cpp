@@ -6,17 +6,17 @@
 #include "resource.h"
 
 
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
     SetView(m_view);
 }
 
-
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
-
 
 // Called by OnFileOpen and in response to a UWM_DROPFILE message.
 void CMainFrame::LoadFile(LPCTSTR fileName)
@@ -39,8 +39,7 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
     }
 }
 
-
-// Process the messages from the Menu and Tool Bar.
+// Process the messages from the Menu and Toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -62,8 +61,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
-// OnCreate controls the way the frame is created.
+// OnCreate is called during window creation.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -84,8 +82,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-
-// Called in response to the UWM_DROPFILE user defined message
+// Called in response to the UWM_DROPFILE user defined message.
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
     try
@@ -109,13 +106,11 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     return 0;
 }
 
-
-// Issue a close request to the frame
+// Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
     PostMessage(WM_CLOSE);
 }
-
 
 // Creates a blank scribble view.
 void CMainFrame::OnFileNew()
@@ -124,7 +119,6 @@ void CMainFrame::OnFileNew()
     m_pathName = _T("");
     GetView().Invalidate();
 }
-
 
 // Loads the PlotPoint data from a file.
 void CMainFrame::OnFileOpen()
@@ -151,7 +145,6 @@ void CMainFrame::OnFileOpen()
     }
 }
 
-
 // Saves the PlotPoint data to a file.
 void CMainFrame::OnFileSave()
 {
@@ -170,7 +163,6 @@ void CMainFrame::OnFileSave()
     }
 }
 
-
 // Saves the PlotPoint data to a specified file.
 void CMainFrame::OnFileSaveAs()
 {
@@ -179,7 +171,7 @@ void CMainFrame::OnFileSaveAs()
         CFileDialog fileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
         fileDlg.SetTitle(_T("Save File"));
 
-        // Bring up the file open dialog retrieve the selected filename
+        // Bring up the file open dialog retrieve the selected filename.
         if (fileDlg.DoModal(*this) == IDOK)
         {
             CString fileName = fileDlg.GetPathName();
@@ -200,7 +192,6 @@ void CMainFrame::OnFileSaveAs()
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice.
-// This function provides a useful reference for printing bitmaps in general.
 void CMainFrame::OnFilePrint()
 {
     try
@@ -215,7 +206,6 @@ void CMainFrame::OnFilePrint()
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
-
 
 // Initiate the Choose Color dialog to select a color.
 void CMainFrame::OnPenColor()
@@ -240,7 +230,6 @@ void CMainFrame::OnPenColor()
     }
 }
 
-
 // Configures the ToolBar.
 void CMainFrame::SetupToolBar()
 {
@@ -263,7 +252,6 @@ void CMainFrame::SetupToolBar()
     //       The color mask is a color used for transparency.
 }
 
-
 // Called to handle the window's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -273,7 +261,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
     }
 
-    //Use the default message handling for remaining messages
+    // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
 }
 

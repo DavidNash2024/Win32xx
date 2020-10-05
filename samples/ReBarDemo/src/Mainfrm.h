@@ -19,9 +19,6 @@ public:
     virtual ~CMainFrame();
 
     BOOL OnFileExit();
-    BOOL OnFileOpen();
-    BOOL OnFilePrint();
-    BOOL OnFileSave();
     void OnBottom();
     void OnLeft();
     void OnRight();

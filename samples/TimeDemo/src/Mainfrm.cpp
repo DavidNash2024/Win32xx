@@ -219,9 +219,8 @@ OnFileNew()                                                                 /*
 
 *-----------------------------------------------------------------------------*/
 {
-      // TODO: Add code here to implement this member. For this demo,
-      // refill the document with the initial document and empty the
-      // document file name
+      // Refill the document with the initial document and empty the
+      // document file name.
     ThisDoc().NewDocument();
     m_view.SetAppSize();
     CString title = LoadString(IDW_MAIN);
@@ -367,8 +366,6 @@ OnInitialUpdate()                                                           /*
     formatting.
 *-----------------------------------------------------------------------------*/
 {
-    // TODO: Place any additional startup code here.
-
       // Initialize view scrolling
     m_view.SetAppSize();
 

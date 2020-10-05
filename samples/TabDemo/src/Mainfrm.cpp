@@ -12,6 +12,8 @@
 ///////////////////////////////////
 // CMainFrame function definitions.
 //
+
+// Constructor for CMainFrame.
 CMainFrame::CMainFrame()
 {
     //Set the tab control as the fram's view window
@@ -22,15 +24,14 @@ CMainFrame::CMainFrame()
     LoadRegistrySettings(_T("Win32++\\Container Demo"));
 }
 
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -54,6 +55,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Called during the frame's creation.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -81,14 +83,15 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Issue a close request to the frame.
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
     Close();
 
     return TRUE;
 }
 
+// Called after the frame is created.
 void CMainFrame::OnInitialUpdate()
 {
     // Add some tabs to the tab control
@@ -104,10 +107,9 @@ void CMainFrame::OnInitialUpdate()
     ShowWindow();
 }
 
+// Update the check state of the various menu items.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
-    // Update the check state of the various menu items
-
     BOOL isOwnerDraw  = m_view.GetStyle() & TCS_OWNERDRAWFIXED;
     BOOL isFixed = m_view.GetStyle() & TCS_FIXEDWIDTH;
 
@@ -147,28 +149,30 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CFrame::OnMenuUpdate(id);
 }
 
+// Add a Files tab.
 BOOL CMainFrame::OnNewFilesTab()
 {
     m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
     return TRUE;
 }
 
+// Add a Classes tab.
 BOOL CMainFrame::OnNewClassesTab()
 {
     m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
     return TRUE;
 }
 
+// Add a Dialog tab.
 BOOL CMainFrame::OnNewDialogTab()
 {
     m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
     return TRUE;
 }
 
+// Creates the popup menu when the "New" toolbar button is pressed.
 BOOL CMainFrame::OnNewTab()
 {
-    // Creates the popup menu when the "New" toolbar button is pressed
-
     // Position the popup menu
     CToolBar& tb = GetToolBar();
     RECT rc = tb.GetItemRect(tb.CommandToIndex(IDM_NEW_TAB));
@@ -187,6 +191,7 @@ BOOL CMainFrame::OnNewTab()
     return TRUE;
 }
 
+// Show or hide the tab control buttons.
 BOOL CMainFrame::OnShowButtons()
 {
     BOOL isShown = m_view.GetShowButtons();
@@ -195,6 +200,7 @@ BOOL CMainFrame::OnShowButtons()
     return TRUE;
 }
 
+// Called when a tab is closed.
 BOOL CMainFrame::OnTabClose()
 {
     int tab = m_view.GetCurSel();
@@ -205,6 +211,7 @@ BOOL CMainFrame::OnTabClose()
     return TRUE;
 }
 
+// Enable or disable fixed tab width.
 BOOL CMainFrame::OnTabFixedWidth()
 {
     BOOL isFixed = m_view.GetStyle() & TCS_FIXEDWIDTH;
@@ -212,6 +219,7 @@ BOOL CMainFrame::OnTabFixedWidth()
     return TRUE;
 }
 
+// Enable or disable tab owner draw.
 BOOL CMainFrame::OnTabOwnerDraw()
 {
     BOOL isOwnerDraw = m_view.GetStyle() & TCS_OWNERDRAWFIXED;
@@ -219,6 +227,7 @@ BOOL CMainFrame::OnTabOwnerDraw()
     return TRUE;
 }
 
+// Position the tabs at the top or bottom.
 BOOL CMainFrame::OnTabsAtTop()
 {
     BOOL isAtTop = m_view.GetTabsAtTop();
@@ -226,6 +235,7 @@ BOOL CMainFrame::OnTabsAtTop()
     return TRUE;
 }
 
+// Set the CREATESTRUCT parameters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
     // Call the base class function first
@@ -235,6 +245,7 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     cs.style &= ~WS_VISIBLE;
 }
 
+// Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
 {
     // Load default set of menu icons from the toolbar
@@ -246,6 +257,7 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_NEW_DIALOG,  IDI_DIALOGVIEW);
 }
 
+// Configure the toolbar.
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the toolbar buttons
@@ -266,16 +278,5 @@ void CMainFrame::SetupToolBar()
 
     // Set the Checkmarks in the menu
     GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, MF_UNCHECKED);
-}
-
-LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-//  switch (msg)
-//  {
-//      Add case statements for each messages to be handled here
-//  }
-
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
 }
 

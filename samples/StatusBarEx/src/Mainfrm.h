@@ -29,20 +29,15 @@ CMainFrame : public CFrame                                                  /*
         virtual ~CMainFrame() {}
 
         BOOL    OnFileExit();
-        BOOL    OnFileOpen();
-        BOOL    OnFilePrint();
-        BOOL    OnFileSave();
 
     protected:
         virtual CStatusBar& GetStatusBar() const { return m_customStatusBar; }
         virtual BOOL    OnCommand(WPARAM, LPARAM);
         virtual int     OnCreate(CREATESTRUCT& cs);
         virtual void    OnInitialUpdate();
-        virtual LRESULT OnNotify(WPARAM, LPARAM);
         virtual void    PreCreate(CREATESTRUCT&);
         virtual void    SetStatusIndicators();
         virtual void    SetupToolBar();
-        virtual LRESULT WndProc(UINT, WPARAM, LPARAM);
 
     private:
         CView   m_view;

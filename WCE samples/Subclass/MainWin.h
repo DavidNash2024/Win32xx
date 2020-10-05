@@ -9,6 +9,8 @@
 #include "Button.h"
 
 
+///////////////////////////////////////////////
+// CView manages the application's main window.
 class CMainWin : public CWnd
 {
 public:
@@ -22,7 +24,6 @@ protected:
 private:
     CButton m_button;
 };
-
 
 
 #endif //MAINWIN_H

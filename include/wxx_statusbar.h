@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -62,7 +62,7 @@ namespace Win32xx
         CRect GetPartRect(int part) const;
         CString GetPartText(int part) const;
         BOOL IsSimple() const;
-        BOOL SetPartText(int part, LPCTSTR pText, UINT style = 0) const;
+        BOOL SetPartText(int part, LPCTSTR text, UINT style = 0) const;
         BOOL SetPartWidth(int part, int width) const;
         HICON GetPartIcon(int part) const;
         BOOL SetPartIcon(int part, HICON icon) const;
@@ -202,13 +202,13 @@ namespace Win32xx
     //SBT_POPOUT        The text is drawn with a border to appear higher than the plane of the window.
     //SBT_RTLREADING    The text will be displayed in the opposite direction to the text in the parent window.
     // Refer to SB_SETTEXT in the Windows API documentation for more information.
-    inline BOOL CStatusBar::SetPartText(int part, LPCTSTR pText, UINT style) const
+    inline BOOL CStatusBar::SetPartText(int part, LPCTSTR text, UINT style) const
     {
         assert(IsWindow());
 
         BOOL result = FALSE;
         if (static_cast<int>(SendMessage(SB_GETPARTS, 0, 0) >= part))
-            result = (SendMessage(SB_SETTEXT, (WPARAM)(part | style), (LPARAM)pText) != 0);
+            result = (SendMessage(SB_SETTEXT, (WPARAM)(part | style), (LPARAM)text) != 0);
 
         return result;
     }

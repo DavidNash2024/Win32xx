@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -440,7 +440,7 @@ namespace Win32xx
         Cleanup();
     }
 
-    // Reverse an Attach
+    // Reverse an Attach or AttachDlgItem.
     inline HWND CWnd::Detach()
     {
         assert(m_prevWindowProc);   // Only previously attached CWnds can be detached
@@ -1742,10 +1742,10 @@ namespace Win32xx
     // Possible combinations of type values include: MB_OK, MB_HELP, MB_OKCANCEL, MB_RETRYCANCEL,
     // MB_YESNO, MB_YESNOCANCEL, MB_ICONEXCLAMATION, MB_ICONWARNING, MB_ICONERROR (+ many others).
     // Refer to MessageBox in the Windows API documentation for more information.
-    inline int CWnd::MessageBox(LPCTSTR pText, LPCTSTR pCaption, UINT type) const
+    inline int CWnd::MessageBox(LPCTSTR text, LPCTSTR caption, UINT type) const
     {
         assert(IsWindow());
-        return ::MessageBox(*this, pText, pCaption, type);
+        return ::MessageBox(*this, text, caption, type);
     }
 
     // The MoveWindow function changes the position and dimensions of the window.
@@ -1926,10 +1926,10 @@ namespace Win32xx
 
     // The SetDlgItemText function sets the title or text of a control in a dialog box.
     // Refer to SetDlgItemText in the Windows API documentation for more information.
-    inline BOOL CWnd::SetDlgItemText(int dlgItemID, LPCTSTR pString) const
+    inline BOOL CWnd::SetDlgItemText(int dlgItemID, LPCTSTR string) const
     {
         assert(IsWindow());
-        return ::SetDlgItemText(*this, dlgItemID, pString);
+        return ::SetDlgItemText(*this, dlgItemID, string);
     }
 
     // Assigns a new windows extended style to the window.
@@ -2055,10 +2055,10 @@ namespace Win32xx
 
     // The SetWindowText function changes the text of the window's title bar (if it has one).
     // Refer to SetWindowText in the Windows API documentation for more information.
-    inline BOOL CWnd::SetWindowText(LPCTSTR pString) const
+    inline BOOL CWnd::SetWindowText(LPCTSTR string) const
     {
         assert(IsWindow());
-        return ::SetWindowText(*this, pString);
+        return ::SetWindowText(*this, string);
     }
 
     // Set the XP Theme for a window.
@@ -2157,38 +2157,38 @@ namespace Win32xx
     // The DlgDirList function replaces the contents of a list box with the names of the subdirectories and files
     // in a specified directory. You can filter the list of names by specifying a set of file attributes.
     // Refer to DlgDirList in the Windows API documentation for more information.
-    inline int CWnd::DlgDirList(LPTSTR pPathSpec, int listBoxID, int staticPathID, UINT fileType) const
+    inline int CWnd::DlgDirList(LPTSTR pathSpec, int listBoxID, int staticPathID, UINT fileType) const
     {
         assert(IsWindow());
-        return ::DlgDirList(*this, pPathSpec, listBoxID, staticPathID, fileType);
+        return ::DlgDirList(*this, pathSpec, listBoxID, staticPathID, fileType);
     }
 
     // The DlgDirListComboBox function replaces the contents of a combo box with the names of the subdirectories
     // and files in a specified directory. You can filter the list of names by specifying a set of file attributes.
     // in a specified directory. You can filter the list of names by specifying a set of file attributes.
     // Refer to DlgDirListComboBox in the Windows API documentation for more information.
-    inline int CWnd::DlgDirListComboBox(LPTSTR pPathSpec, int comboBoxID, int staticPathID, UINT fileType) const
+    inline int CWnd::DlgDirListComboBox(LPTSTR pathSpec, int comboBoxID, int staticPathID, UINT fileType) const
     {
         assert(IsWindow());
-        return ::DlgDirListComboBox(*this, pPathSpec, comboBoxID, staticPathID, fileType);
+        return ::DlgDirListComboBox(*this, pathSpec, comboBoxID, staticPathID, fileType);
     }
 
     // The DlgDirSelectEx function retrieves the current selection from a single-selection list box. It assumes that the list box
     // has been filled by the DlgDirList function and that the selection is a drive letter, filename, or directory name.
     // Refer to DlgDirSelectEx in the Windows API documentation for more information.
-    inline BOOL CWnd::DlgDirSelectEx(LPTSTR pString, int count, int listBoxID) const
+    inline BOOL CWnd::DlgDirSelectEx(LPTSTR string, int count, int listBoxID) const
     {
         assert(IsWindow());
-        return ::DlgDirSelectEx(*this, pString, count, listBoxID);
+        return ::DlgDirSelectEx(*this, string, count, listBoxID);
     }
 
     // The DlgDirSelectComboBoxEx function retrieves the current selection from a combo box filled by using the
     // DlgDirListComboBox function. The selection is interpreted as a drive letter, a file, or a directory name.
     // Refer to DlgDirSelectComboBoxEx in the Windows API documentation for more information.
-    inline BOOL CWnd::DlgDirSelectComboBoxEx(LPTSTR pString, int count, int comboBoxID) const
+    inline BOOL CWnd::DlgDirSelectComboBoxEx(LPTSTR string, int count, int comboBoxID) const
     {
         assert(IsWindow());
-        return ::DlgDirSelectComboBoxEx(*this, pString, count, comboBoxID);
+        return ::DlgDirSelectComboBoxEx(*this, string, count, comboBoxID);
     }
 
     #ifndef WIN32_LEAN_AND_MEAN

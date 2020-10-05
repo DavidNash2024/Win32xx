@@ -4,16 +4,15 @@
 
 #include "view.h"
 
-
+// Constructor.
 CView::CView()
 {
 }
 
-
+// Destructor.
 CView::~CView()
 {
 }
-
 
 // Draws a line in the window's client area.
 void CView::DrawLine(int x, int y)
@@ -23,7 +22,6 @@ void CView::DrawLine(int x, int y)
     clientDC.LineTo(x, y);
 }
 
-
 // Called when the window is destroyed.
 void CView::OnDestroy()
 {
@@ -31,8 +29,8 @@ void CView::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-
-// Called when the left mouse button is pressed while the cursor is over the window.
+// Called when the left mouse button is pressed while the cursor is over
+// the window.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
@@ -44,16 +42,14 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
 // Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    //Release the capture on the mouse
+    // Release the capture on the mouse.
     ReleaseCapture();
 
     return FinalWindowProc(msg, wparam, lparam);
 }
-
 
 // Called when the mouse is moved while captured.
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -69,7 +65,6 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
 // Called to handle the window's messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -80,7 +75,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
     }
 
-    //Use the default message handling for remaining messages
+    // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
 }
 

@@ -6,10 +6,12 @@
 #include "DialogApp.h"
 
 
+// Constructor.
 CDialogApp::CDialogApp() : myDialog(IDD_DIALOG)
 {
 }
 
+// Called when the application starts.
 BOOL CDialogApp::InitInstance()
 {
     //Display the Modal Dialog
@@ -21,6 +23,7 @@ BOOL CDialogApp::InitInstance()
     return TRUE;
 }
 
+// Destructor.
 CDialogApp::~CDialogApp()
 {
 }
