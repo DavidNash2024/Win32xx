@@ -4,6 +4,7 @@
 #include "DialogApp.h"
 
 
+// WinMain is the program's entry point. The program starts here.
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int iCmdShow)
 {
     TCHAR szBuf[MAX_STRING_SIZE];

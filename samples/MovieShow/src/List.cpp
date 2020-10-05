@@ -48,15 +48,12 @@ void CViewList::AddItem(const MovieInfo& mi)
         if (mi.flags & 0x0002)
             nImage = 4;
         int item = GetItemCount();
-        LVITEM lvi;
-        ZeroMemory(&lvi, sizeof(LVITEM));
-        lvi.mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
-        lvi.iImage = nImage;
-        lvi.pszText = const_cast<LPTSTR>(mi.movieName.c_str());
-        lvi.iItem = item;
-        lvi.lParam = reinterpret_cast<LPARAM>(&mi);
 
-        InsertItem(lvi);
+        UINT mask = LVIF_TEXT | LVIF_IMAGE | LVIF_PARAM;
+        LPTSTR text = const_cast<LPTSTR>(mi.movieName.c_str());
+        LPARAM lparam = reinterpret_cast<LPARAM>(&mi);
+        InsertItem(mask, item, text, 0, 0, nImage, lparam);
+
         SetItemText(item, 1, mi.releaseDate);
         SetItemText(item, 2, mi.genre);
         SetItemText(item, 3, mi.fileName);

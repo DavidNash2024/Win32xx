@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -221,7 +221,7 @@ namespace Win32xx
         BOOL  IsWindowEnabled() const;
         BOOL  IsWindowVisible() const;
         BOOL  KillTimer(UINT_PTR eventID) const;
-        int   MessageBox(LPCTSTR pText, LPCTSTR pCaption, UINT type) const;
+        int   MessageBox(LPCTSTR text, LPCTSTR caption, UINT type) const;
         void  MapWindowPoints(HWND to, POINT& point) const;
         void  MapWindowPoints(HWND to, RECT& rect) const;
         void  MapWindowPoints(HWND to, LPPOINT pointsArray, UINT count) const;
@@ -244,7 +244,7 @@ namespace Win32xx
         ULONG_PTR SetClassLongPtr(int index, LONG_PTR newLong) const;
         LONG_PTR SetDlgCtrlID(int id) const;
         BOOL  SetDlgItemInt(int dlgItemID, UINT value, BOOL isSigned) const;
-        BOOL  SetDlgItemText(int dlgItemID, LPCTSTR pString) const;
+        BOOL  SetDlgItemText(int dlgItemID, LPCTSTR string) const;
         void  SetExStyle(DWORD exStyle) const;
         HWND  SetFocus() const;
         void  SetFont(HFONT font, BOOL redraw = TRUE) const;
@@ -270,10 +270,10 @@ namespace Win32xx
 
   #ifndef _WIN32_WCE
         BOOL  CloseWindow() const;
-        int   DlgDirList(LPTSTR pPathSpec, int listBoxID, int staticPathID, UINT fileType) const;
-        int   DlgDirListComboBox(LPTSTR pPathSpec, int comboBoxID, int staticPathID, UINT filetype) const;
-        BOOL  DlgDirSelectEx(LPTSTR pString, int count, int listBoxID) const;
-        BOOL  DlgDirSelectComboBoxEx(LPTSTR pString, int count, int comboBoxID) const;
+        int   DlgDirList(LPTSTR pathSpec, int listBoxID, int staticPathID, UINT fileType) const;
+        int   DlgDirListComboBox(LPTSTR pathSpec, int comboBoxID, int staticPathID, UINT filetype) const;
+        BOOL  DlgDirSelectEx(LPTSTR string, int count, int listBoxID) const;
+        BOOL  DlgDirSelectComboBoxEx(LPTSTR string, int count, int comboBoxID) const;
         BOOL  DrawAnimatedRects(int aniID, const RECT& from, const RECT& to) const;
         BOOL  DrawCaption(HDC dc, const RECT& rect, UINT flags) const;
         BOOL  EnableScrollBar(UINT flags, UINT arrows) const;

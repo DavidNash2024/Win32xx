@@ -130,28 +130,6 @@ NoDocOpen()                                                                 /*
 }
 
 /*============================================================================*/
-    BOOL CView::
-OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
-
-    Respond to the activation of a control on the view.
-**----------------------------------------------------------------------------*/
-{
-    UNREFERENCED_PARAMETER(wparam);
-    UNREFERENCED_PARAMETER(lparam);
-
-//  UINT id = LOWORD(wparam);
-//  switch (id)
-//  {
-//              TODO: add cases to respond to application-specific needs.
-//
-//      default:
-//          break;
-//  }
-
-    return FALSE;
-}
-
-/*============================================================================*/
     INT_PTR CView::
 OnCtlColor(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
 

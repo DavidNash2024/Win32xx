@@ -5,10 +5,12 @@
 #include "Button.h"
 
 
+// Destructor.
 CButton::~CButton()
 {
 }
 
+// Sets the CREATESTRUCT parameters before the window is created.
 void CButton::PreCreate(CREATESTRUCT &cs)
 {
     cs.lpszClass = TEXT("BUTTON");
@@ -20,6 +22,7 @@ void CButton::PreCreate(CREATESTRUCT &cs)
     cs.lpszName = TEXT("OK");
 }
 
+// Handle the button window's messages.
 LRESULT CButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -45,6 +48,6 @@ LRESULT CButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         break;
     }
 
-    // Pass unhandled messages on for default processing
+    // Pass unhandled messages on for default processing.
     return CWnd::WndProc(msg, wparam, lparam);
 }

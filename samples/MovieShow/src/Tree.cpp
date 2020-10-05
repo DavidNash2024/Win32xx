@@ -24,33 +24,6 @@ CViewTree::~CViewTree()
     if (IsWindow()) DeleteAllItems();
 }
 
-// Adds an item to the treeview and updates the item map.
-HTREEITEM CViewTree::AddItem(HTREEITEM parent, LPCTSTR text, int imageIndex)
-{
-    TVITEM tvi;
-    ZeroMemory(&tvi, sizeof(TVITEM));
-    tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-    tvi.iImage = imageIndex;
-    tvi.iSelectedImage = imageIndex;
-
-    // Make a local copy of the item's text
-    m_itemsText.push_back(text);
-    CString* pString = &m_itemsText.back();
-    tvi.pszText = const_cast<LPTSTR>(pString->c_str());
-
-    TVINSERTSTRUCT tvis;
-    ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));
-    tvis.hParent = parent;
-    tvis.item = tvi;
-
-    HTREEITEM item = InsertItem(tvis);
-
-    // Add the item and CString pointer to the map
-    m_itemMap.insert(std::make_pair(item, pString));
-
-    return item;
-}
-
 // Retrieves the item's CString* from the item map
 CString* CViewTree::GetItemString(HTREEITEM item)
 {

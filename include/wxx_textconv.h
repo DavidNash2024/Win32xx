@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -118,17 +118,17 @@ namespace Win32xx
     class CAtoW
     {
     public:
-        CAtoW(LPCSTR pStr, UINT codePage = CP_ACP, int charCount = -1) : m_pStr(pStr)
+        CAtoW(LPCSTR str, UINT codePage = CP_ACP, int charCount = -1) : m_str(str)
         {
-            if (pStr)
+            if (str)
             {
                 // Resize the vector and assign null WCHAR to each element
                 int charBytes = (charCount == -1) ? -1 : 2 * charCount;
-                int length = MultiByteToWideChar(codePage, 0, pStr, charBytes, NULL, 0) + 1;
+                int length = MultiByteToWideChar(codePage, 0, str, charBytes, NULL, 0) + 1;
                 m_wideArray.assign(length, L'\0');
 
                 // Fill our vector with the converted WCHAR array
-                MultiByteToWideChar(codePage, 0, pStr, charBytes, &m_wideArray[0], length);
+                MultiByteToWideChar(codePage, 0, str, charBytes, &m_wideArray[0], length);
             }
         }
         ~CAtoW()
@@ -136,20 +136,20 @@ namespace Win32xx
             // Clear the array.
             std::fill(m_wideArray.begin(), m_wideArray.end(), L'\0');
         }
-        operator LPCWSTR() { return m_pStr? &m_wideArray[0] : NULL; }
-        operator LPOLESTR() { return m_pStr? (LPOLESTR)&m_wideArray[0] : (LPOLESTR)NULL; }
+        operator LPCWSTR() { return m_str? &m_wideArray[0] : NULL; }
+        operator LPOLESTR() { return m_str? (LPOLESTR)&m_wideArray[0] : (LPOLESTR)NULL; }
 
     private:
         CAtoW(const CAtoW&);
         CAtoW& operator= (const CAtoW&);
         std::vector<wchar_t> m_wideArray;
-        LPCSTR m_pStr;
+        LPCSTR m_str;
     };
 
     class CWtoA
     {
     public:
-        CWtoA(LPCWSTR pWStr, UINT codePage = CP_ACP, int charCount = -1) : m_pWStr(pWStr)
+        CWtoA(LPCWSTR str, UINT codePage = CP_ACP, int charCount = -1) : m_str(str)
         // Usage:
         //   CWtoA ansiString(L"Some Text");
         //   CWtoA utf8String(L"Some Text", CP_UTF8);
@@ -158,11 +158,11 @@ namespace Win32xx
         //   SetWindowTextA( WtoA(L"Some Text") ); The ANSI version of SetWindowText
         {
             // Resize the vector and assign null char to each element
-            int length = WideCharToMultiByte(codePage, 0, pWStr, charCount, NULL, 0, NULL, NULL) + 1;
+            int length = WideCharToMultiByte(codePage, 0, str, charCount, NULL, 0, NULL, NULL) + 1;
             m_ansiArray.assign(length, '\0');
 
             // Fill our vector with the converted char array
-            WideCharToMultiByte(codePage, 0, pWStr, charCount, &m_ansiArray[0], length, NULL,NULL);
+            WideCharToMultiByte(codePage, 0, str, charCount, &m_ansiArray[0], length, NULL,NULL);
         }
 
         ~CWtoA()
@@ -170,13 +170,13 @@ namespace Win32xx
             // Clear the array.
             std::fill(m_ansiArray.begin(), m_ansiArray.end(), '\0');
         }
-        operator LPCSTR() { return m_pWStr? &m_ansiArray[0] : NULL; }
+        operator LPCSTR() { return m_str? &m_ansiArray[0] : NULL; }
 
     private:
         CWtoA(const CWtoA&);
         CWtoA& operator= (const CWtoA&);
         std::vector<char> m_ansiArray;
-        LPCWSTR m_pWStr;
+        LPCWSTR m_str;
     };
 
     class CWtoW
@@ -200,18 +200,18 @@ namespace Win32xx
     class CAtoA
     {
     public:
-        CAtoA(LPCSTR pStr, UINT codePage = CP_ACP, int charCount = -1) : m_pStr(pStr)
+        CAtoA(LPCSTR str, UINT codePage = CP_ACP, int charCount = -1) : m_str(str)
         {
             UNREFERENCED_PARAMETER(codePage);
             UNREFERENCED_PARAMETER(charCount);
         }
-        operator LPCSTR() { return m_pStr; }
+        operator LPCSTR() { return m_str; }
 
     private:
         CAtoA(const CAtoA&);
         CAtoA& operator= (const CAtoA&);
 
-        LPCSTR m_pStr;
+        LPCSTR m_str;
     };
 
     class CWtoBSTR
@@ -230,7 +230,7 @@ namespace Win32xx
     class CAtoBSTR
     {
     public:
-        CAtoBSTR(LPCSTR pStr) { m_bstrString = ::SysAllocString(AtoW(pStr)); }
+        CAtoBSTR(LPCSTR str) { m_bstrString = ::SysAllocString(AtoW(str)); }
         ~CAtoBSTR() { ::SysFreeString(m_bstrString); }
         operator BSTR() { return m_bstrString;}
 

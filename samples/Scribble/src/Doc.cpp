@@ -1,13 +1,9 @@
-/////////////////////////////
-// Doc.h
-//
+//////////////////////////////////
+// Doc.cpp
 
 #include "stdafx.h"
 #include "Doc.h"
 
-/////////////////////////////
-// CDoc function definitions.
-//
 
 // Loads the plotpoint data from the archive.
 // Throws an exception if unable to read the file.
@@ -26,7 +22,7 @@ void CDoc::FileSave(LPCTSTR filename)
     ar << *this;
 }
 
-// Uses CArchive to stream data to or from a file
+// Uses CArchive to stream data to or from a file.
 void CDoc::Serialize(CArchive &ar)
 {
 
@@ -36,7 +32,7 @@ void CDoc::Serialize(CArchive &ar)
         UINT points = UINT(GetAllPoints().size());
         ar << points;
 
-        // Store the PlotPoint data
+        // Store the PlotPoint data.
         std::vector<PlotPoint>::iterator iter;
         for (iter = GetAllPoints().begin(); iter < GetAllPoints().end(); ++iter)
         {
@@ -50,10 +46,10 @@ void CDoc::Serialize(CArchive &ar)
         PlotPoint pp;
         GetAllPoints().clear();
 
-        // Load the number of points
+        // Load the number of points.
         ar >> points;
 
-        // Load the PlotPoint data
+        // Load the PlotPoint data.
         for (UINT u = 0; u < points; ++u)
         {
             ArchiveObject ao( &pp, sizeof(pp) );
@@ -61,6 +57,7 @@ void CDoc::Serialize(CArchive &ar)
             GetAllPoints().push_back(pp);
         }
     }
+
 }
 
 // Stores the specified point information.

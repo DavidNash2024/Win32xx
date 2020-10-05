@@ -30,6 +30,7 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// Position the toolbar on the bottom.
 void CView::OnBottom()
 {
     DWORD style = m_toolBar.GetStyle();
@@ -40,6 +41,7 @@ void CView::OnBottom()
     RecalcLayout();
 }
 
+// Position the toolbar on the left.
 void CView::OnLeft()
 {
     DWORD style = m_toolBar.GetStyle();
@@ -50,6 +52,7 @@ void CView::OnLeft()
     RecalcLayout();
 }
 
+// Position the toolbar on the right.
 void CView::OnRight()
 {
     DWORD style = m_toolBar.GetStyle();
@@ -59,6 +62,7 @@ void CView::OnRight()
     RecalcLayout();
 }
 
+// Position the toolbar at the top.
 void CView::OnTop()
 {
     DWORD style = m_toolBar.GetStyle();
@@ -220,7 +224,8 @@ void CView::RecalcLayout()
     Invalidate();
 }
 
-// Note: Vertical toolbars require each button to have TBSTATE_WRAP, set for group buttons to work.
+// Set the wrap state for each toolbar button.
+// Note: Vertical toolbars require each button to have TBSTATE_WRAP set.
 //       Horizontal toolbars require the TBSTATE_WRAP removed.
 void CView::SetWrapState(BOOL isWrapped)
 {
@@ -231,7 +236,7 @@ void CView::SetWrapState(BOOL isWrapped)
     }
 }
 
-// All window messages for this window pass through WndProc
+// All window messages for this window pass through WndProc.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

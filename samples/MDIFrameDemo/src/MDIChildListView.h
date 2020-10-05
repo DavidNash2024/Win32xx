@@ -14,7 +14,6 @@ class CViewList : public CListView
 public:
     CViewList();
     virtual ~CViewList();
-    virtual int  AddItem(LPCTSTR text, int image);
     virtual void OnAttach();
     virtual void OnDestroy();
     virtual void InsertItems();

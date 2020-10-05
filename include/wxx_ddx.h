@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -110,21 +110,21 @@ namespace Win32xx
         virtual ~CDataExchange();
 
         // Dialog Data Validation (DDV) functions
-        virtual void DDV_MaxChars(CString const& value, int count) const;
-        virtual void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal) const;
-        virtual void DDV_MinMaxDateTime(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&) const;
-        virtual void DDV_MinMaxDouble(double const& value,double minVal, double maxVal, int precision = DBL_DIG) const;
-        virtual void DDV_MinMaxFloat(float const& value, float minVal, float maxVal, int precision = FLT_DIG) const;
-        virtual void DDV_MinMaxInt(int value, int minVal, int maxVal) const;
-        virtual void DDV_MinMaxLong(long value,  long minVal, long maxVal) const;
-        virtual void DDV_MinMaxMonth(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&) const;
-        virtual void DDV_MinMaxShort(short value, short minVal, short maxVal) const;
-        virtual void DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal) const;
-        virtual void DDV_MinMaxUInt(UINT value, UINT minVal, UINT maxVal) const;
-        virtual void DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal) const;
+        virtual void DDV_MaxChars(const CString& value, int count) const;
+        virtual void DDV_MinMaxByte(BYTE value, BYTE min, BYTE max) const;
+        virtual void DDV_MinMaxDateTime(const SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&) const;
+        virtual void DDV_MinMaxDouble(const double& value, double min, double max, int precision = DBL_DIG) const;
+        virtual void DDV_MinMaxFloat(const float& value, float min, float max, int precision = FLT_DIG) const;
+        virtual void DDV_MinMaxInt(int value, int min, int max) const;
+        virtual void DDV_MinMaxLong(long value, long min, long max) const;
+        virtual void DDV_MinMaxMonth(const SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&) const;
+        virtual void DDV_MinMaxShort(short value, short min, short max) const;
+        virtual void DDV_MinMaxSlider(ULONG value, ULONG min, ULONG max) const;
+        virtual void DDV_MinMaxUInt(UINT value, UINT min, UINT max) const;
+        virtual void DDV_MinMaxULong(ULONG value, ULONG min, ULONG max) const;
 
         // DDX Initialisation
-        virtual void DDX_Control(int id, CWnd& controlRef);
+        virtual void DDX_Control(int id, CWnd& control);
 
         // Dialog Data eXchange (DDX) functions
         virtual void DDX_CBIndex(int id, int& index);
@@ -238,7 +238,7 @@ namespace Win32xx
     // Ensures that the length of value <= count when validating, otherwise
     // throws a CUserException. If writing, send the box the message to set
     // the limit to count, which must be at least one.
-    inline void CDataExchange::DDV_MaxChars(CString const& value, int count) const
+    inline void CDataExchange::DDV_MaxChars(const CString& value, int count) const
     {
         assert(count >= 1);  // must allow at least one char
         if (m_retrieveAndValidate && value.GetLength() > count)
@@ -257,9 +257,9 @@ namespace Win32xx
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise throws
     // a CUserException.  BYTE is unsigned char.
-    inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal) const
+    inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE min, BYTE max) const
     {
-          DDV_MinMaxULong(value, minVal, maxVal);
+          DDV_MinMaxULong(value, min, max);
     }
 
     // When validating, this method sets the range of the DateTime control
@@ -269,19 +269,19 @@ namespace Win32xx
     // before setting the range; if refValue is outside these limits,
     // no setting of the range takes place and a trace message is written
     // in debug mode.
-    inline void CDataExchange::DDV_MinMaxDateTime(SYSTEMTIME& refValue,
-        const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange) const
+    inline void CDataExchange::DDV_MinMaxDateTime(const SYSTEMTIME& value,
+        const  SYSTEMTIME& min, const  SYSTEMTIME& max) const
     {
         ULONGLONG zero = 0;
-        ULONGLONG val = SystemTimeToULL(refValue);
-        ULONGLONG min = SystemTimeToULL(minRange);
-        ULONGLONG max = SystemTimeToULL(maxRange);
-        assert(min == zero || max == zero || min <= max);
+        ULONGLONG val = SystemTimeToULL(value);
+        ULONGLONG nMin = SystemTimeToULL(min);
+        ULONGLONG nMax = SystemTimeToULL(max);
+        assert(nMin == zero || nMax == zero || nMin <= nMax);
 
         if (m_retrieveAndValidate)
         {
-            if ((min != zero && min > val) ||
-                (max != zero && max < val))
+            if ((nMin != zero && nMin > val) ||
+                (nMax != zero && nMax < val))
             {
                   // retrieve the control ID
                 int id = static_cast<int>(::GetWindowLongPtr(m_lastControl, GWLP_ID));
@@ -295,8 +295,8 @@ namespace Win32xx
 
         // Set the given DateTime range
         SYSTEMTIME sta[2];
-        sta[0] = minRange;
-        sta[1] = maxRange;
+        sta[0] = min;
+        sta[1] = max;
 
         ::SendMessage(m_lastControl, DTM_SETRANGE, (WPARAM)GDTR_MIN | GDTR_MAX, (LPARAM)sta);
     }
@@ -304,11 +304,11 @@ namespace Win32xx
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.
-    inline void CDataExchange::DDV_MinMaxDouble(double const& value, double minVal,
-        double maxVal, int precision /* = DBL_DIG */) const
+    inline void CDataExchange::DDV_MinMaxDouble(const double& value, double min,
+        double max, int precision /* = DBL_DIG */) const
     {
-        assert(minVal <= maxVal);
-        if (minVal <= value && value <= maxVal)
+        assert(min <= max);
+        if (min <= value && value <= max)
             return;
 
         if (!m_retrieveAndValidate)
@@ -321,7 +321,7 @@ namespace Win32xx
         // Throw includes an error message with the range tuple when
         // reading a number outside the range.
         CString message;
-        message.Format(g_msgDDV_RealRange, precision, minVal, precision, maxVal);
+        message.Format(g_msgDDV_RealRange, precision, min, precision, max);
 
         throw CUserException(message);
     }
@@ -329,28 +329,28 @@ namespace Win32xx
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.
-    inline void CDataExchange::DDV_MinMaxFloat(float const& value, float minVal,
-        float maxVal, int precision /* = FLT_DIG */) const
+    inline void CDataExchange::DDV_MinMaxFloat(const float& value, float min,
+        float max, int precision /* = FLT_DIG */) const
     {
-        DDV_MinMaxDouble(static_cast<double>(value), static_cast<double>(minVal),
-            static_cast<double>(maxVal), precision);
+        DDV_MinMaxDouble(static_cast<double>(value), static_cast<double>(min),
+            static_cast<double>(max), precision);
     }
 
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.
-    inline void CDataExchange::DDV_MinMaxInt(int value, int minVal, int maxVal) const
+    inline void CDataExchange::DDV_MinMaxInt(int value, int min, int max) const
     {
-        DDV_MinMaxLong(value, minVal, maxVal);
+        DDV_MinMaxLong(value, min, max);
     }
 
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.
-    inline void CDataExchange::DDV_MinMaxLong(long value, long minVal, long maxVal) const
+    inline void CDataExchange::DDV_MinMaxLong(long value, long min, long max) const
     {
-        assert(minVal <= maxVal);
-        if (minVal <= value && value <= maxVal)
+        assert(min <= max);
+        if (min <= value && value <= max)
             return;
 
         // just leave a debugging trace if writing to a control
@@ -363,7 +363,7 @@ namespace Win32xx
         // Throw includes an error message with the range tuple when
         // reading a number outside the range.
         CString message;
-        message.Format(g_msgDDV_IntRange, minVal, maxVal);
+        message.Format(g_msgDDV_IntRange, min, max);
 
         throw CUserException(message);
     }
@@ -375,19 +375,19 @@ namespace Win32xx
     // before setting the range; if refValue is outside these limits,
     // no setting of the range takes place and a trace message is written
     // in debug mode.
-    inline void CDataExchange::DDV_MinMaxMonth(SYSTEMTIME& refValue, const SYSTEMTIME& minRange,
-        const SYSTEMTIME& maxRange) const
+    inline void CDataExchange::DDV_MinMaxMonth(const SYSTEMTIME& value, const SYSTEMTIME& min,
+        const SYSTEMTIME& max) const
     {
         ULONGLONG zero = 0;
-        ULONGLONG val = SystemTimeToULL(refValue);
-        ULONGLONG min = SystemTimeToULL(minRange);
-        ULONGLONG max = SystemTimeToULL(maxRange);
-        assert(min == zero || max == zero || min <= max);
+        ULONGLONG val = SystemTimeToULL(value);
+        ULONGLONG nMin = SystemTimeToULL(min);
+        ULONGLONG nMax = SystemTimeToULL(max);
+        assert(nMin == zero || nMax == zero || nMin <= nMax);
 
         if (!m_retrieveAndValidate)
         {
-            if ((min != zero && min > val) ||
-                (max != zero && max < val))
+            if ((nMin != zero && nMin > val) ||
+                (nMax != zero && nMax < val))
             {
                 int id = static_cast<int>(::GetWindowLongPtr(m_lastControl, GWLP_ID));
                 CString str = CString(_T("Warning: Calendar data is out of range "))
@@ -399,17 +399,17 @@ namespace Win32xx
 
         SYSTEMTIME MinMax[2];
         DWORD limit = GDTR_MIN | GDTR_MAX;
-        memcpy(&MinMax[0], &minRange, sizeof(SYSTEMTIME));
-        memcpy(&MinMax[1], &maxRange, sizeof(SYSTEMTIME));
+        memcpy(&MinMax[0], &min, sizeof(SYSTEMTIME));
+        memcpy(&MinMax[1], &max, sizeof(SYSTEMTIME));
 
         ::SendMessage(m_lastControl, MCM_SETRANGE, (WPARAM)limit, (LPARAM)&MinMax);
     }
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.
-    inline void CDataExchange::DDV_MinMaxShort(short value, short minVal, short maxVal) const
+    inline void CDataExchange::DDV_MinMaxShort(short value, short min, short max) const
     {
-        DDV_MinMaxLong(value, minVal, maxVal);
+        DDV_MinMaxLong(value, min, max);
     }
 
     // When validating, this method sets the range of the slider
@@ -419,12 +419,12 @@ namespace Win32xx
     // before setting the range; if refValue is outside these limits,
     // no setting of the range takes place and a trace message is written
     // in debug mode.
-    inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal) const
+    inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG min, ULONG max) const
     {
-        assert(minVal <= maxVal);
+        assert(min <= max);
         if (m_retrieveAndValidate)
         {
-            if (minVal > value || maxVal < value)
+            if (min > value || max < value)
             {
     #ifdef _DEBUG
                   // just leave a trace if writing to the control
@@ -438,23 +438,23 @@ namespace Win32xx
         }
 
         // set the range tuple
-        ::SendMessage(m_lastControl,TBM_SETRANGEMIN, (WPARAM)FALSE, (LPARAM)minVal);
-        ::SendMessage(m_lastControl, TBM_SETRANGEMAX, (WPARAM)TRUE, (LPARAM)maxVal);
+        ::SendMessage(m_lastControl,TBM_SETRANGEMIN, (WPARAM)FALSE, (LPARAM)min);
+        ::SendMessage(m_lastControl, TBM_SETRANGEMAX, (WPARAM)TRUE, (LPARAM)max);
     }
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.
-    inline void CDataExchange::DDV_MinMaxUInt( UINT value, UINT minVal, UINT maxVal) const
+    inline void CDataExchange::DDV_MinMaxUInt( UINT value, UINT min, UINT max) const
     {
-        DDV_MinMaxULong(value, minVal, maxVal);
+        DDV_MinMaxULong(value, min, max);
     }
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.
-    inline void CDataExchange::DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal) const
+    inline void CDataExchange::DDV_MinMaxULong(ULONG value, ULONG min, ULONG max) const
     {
-        assert(minVal <= maxVal);
-        if (minVal <= value && value <= maxVal)
+        assert(min <= max);
+        if (min <= value && value <= max)
             return;
 
         if (!m_retrieveAndValidate)
@@ -470,7 +470,7 @@ namespace Win32xx
         // Throw includes an error message with the range tuple when
         // reading a number outside the range.
         CString message;
-        message.Format(g_msgDDV_UINTRange, minVal, maxVal);
+        message.Format(g_msgDDV_UINTRange, min, max);
 
         throw CUserException(message);
     }
@@ -485,14 +485,14 @@ namespace Win32xx
 
     // This function attaches the window with a control ID of id
     // to the specified CWnd. Controls are only attached once.
-    inline void CDataExchange::DDX_Control(int id, CWnd& controlRef)
+    inline void CDataExchange::DDX_Control(int id, CWnd& control)
     {
-        if (!controlRef.IsWindow())    // not subclassed yet
+        if (!control.IsWindow())    // not subclassed yet
         {
             assert (!m_retrieveAndValidate);
-            HWND control = PrepareCtrl(id);
-            assert(control);
-            controlRef.Attach(control);
+            HWND handle = PrepareCtrl(id);
+            assert(handle);
+            control.Attach(handle);
         }
     }
 

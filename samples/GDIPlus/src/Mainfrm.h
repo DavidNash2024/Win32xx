@@ -19,9 +19,6 @@ public:
     virtual ~CMainFrame();
 
     BOOL OnFileExit();
-    BOOL OnFileOpen();
-    BOOL OnFilePrint();
-    BOOL OnFileSave();
 
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
@@ -29,7 +26,6 @@ protected:
     virtual void OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CGDIPlusView m_view;

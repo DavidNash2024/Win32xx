@@ -413,32 +413,32 @@ void CMainFrame::FillTreeItems()
     GetViewTree().DeleteAllItems();
 
     // Add some tree-view items
-    HTREEITEM libraryItem = GetViewTree().AddItem(NULL, L"Video Library", 0);
-    HTREEITEM moviesItem = GetViewTree().AddItem(libraryItem, L"Movies", 1);
+    HTREEITEM libraryItem = GetViewTree().InsertItem(L"Video Library", 0, 0);
+    HTREEITEM moviesItem = GetViewTree().InsertItem(L"Movies", 1, 1, libraryItem);
 
-    m_boxSetsItem = GetViewTree().AddItem(moviesItem, L"Box Sets", 2);
+    m_boxSetsItem = GetViewTree().InsertItem(L"Box Sets", 2, 2, moviesItem);
     std::list<CString>::iterator it;
     for (it = m_boxSets.begin(); it != m_boxSets.end(); ++it)
     {
-        GetViewTree().AddItem(m_boxSetsItem, (*it), 2);
+        GetViewTree().InsertItem((*it), 2, 2, m_boxSetsItem);
     }
 
-    HTREEITEM genreItem = GetViewTree().AddItem(moviesItem, L"Genre", 5);
+    HTREEITEM genreItem = GetViewTree().InsertItem(L"Genre", 5, 5, moviesItem);
     for (it = m_genres.begin(); it != m_genres.end(); ++it)
     {
-        GetViewTree().AddItem(genreItem, (*it), 5);
+        GetViewTree().InsertItem((*it), 5, 5, genreItem);
     }
 
-    HTREEITEM decadesItem = GetViewTree().AddItem(moviesItem, L"Release Dates", 3);
+    HTREEITEM decadesItem = GetViewTree().InsertItem(L"Release Dates", 3, 3, moviesItem);
     for (it = m_decades.begin(); it != m_decades.end(); ++it)
     {
-        GetViewTree().AddItem(decadesItem, (*it), 3);
+        GetViewTree().InsertItem((*it), 3, 3, decadesItem);
     }
 
-    GetViewTree().AddItem(libraryItem, L"Live Performances", 6);
-    GetViewTree().AddItem(libraryItem, L"Favourites", 4);
-    GetViewTree().AddItem(libraryItem, L"Watch List", 8);
-    m_searchItem = GetViewTree().AddItem(libraryItem, L"Search", 7);
+    GetViewTree().InsertItem(L"Live Performances", 6, 6, libraryItem);
+    GetViewTree().InsertItem(L"Favourites", 4, 4, libraryItem);
+    GetViewTree().InsertItem(L"Watch List", 8, 8, libraryItem);
+    m_searchItem = GetViewTree().InsertItem(L"Search", 7, 7, libraryItem);
 
     // Expand some tree-view items
     GetViewTree().Expand(libraryItem, TVE_EXPAND);
@@ -446,7 +446,6 @@ void CMainFrame::FillTreeItems()
 
     GetViewTree().SelectItem(libraryItem);
 }
-
 
 // Returns a vector of CString holding the box set names.
 std::vector<CString> CMainFrame::GetBoxSets()
@@ -678,7 +677,7 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 BOOL CMainFrame::OnAddBoxSet()
 {
     GetViewTree().SetFocus();
-    HTREEITEM newItem = GetViewTree().AddItem(m_boxSetsItem, L"New Box Set", 2);
+    HTREEITEM newItem = GetViewTree().InsertItem(L"New Box Set", 2, 2, m_boxSetsItem);
 
     GetViewTree().Expand(m_boxSetsItem, TVE_EXPAND);
     GetViewTree().EditLabel(newItem);
@@ -964,9 +963,12 @@ BOOL CMainFrame::OnFavourite()
 // Called after the video library is updated.
 void CMainFrame::OnFilesLoaded()
 {
-    m_splash.ShowText(L"Updating List");
     m_filesToAdd.clear();
-    OnSelectTreeItem();
+    
+    // Re-select first tree item.
+    HTREEITEM item = GetViewTree().GetFirstVisible();
+    GetViewTree().SelectItem(0);
+    GetViewTree().SelectItem(item);
 }
 
 // Called after the frame is created, but before it is displayed.

@@ -1,10 +1,10 @@
-/////////////////////////////
+//////////////////////////////////////////////
 // StdAfx.h
-//
 
-// This file is used for precompiled headers.
+// This file is used for precompiled headers
 // Rarely modified header files should be included.
-// Based on code provided by Lynn Allan.
+
+// Based on code provided by Lynn Allan
 
 
 #ifndef STDAFX_H

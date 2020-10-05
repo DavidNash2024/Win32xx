@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -105,7 +105,7 @@ namespace Win32xx
 
         // construction and  destruction
         CArchive(CFile& file, Mode mode);
-        CArchive(LPCTSTR pFileName, Mode mode);
+        CArchive(LPCTSTR fileName, Mode mode);
         ~CArchive();
 
         // method members
@@ -114,14 +114,14 @@ namespace Win32xx
         bool    IsLoading() const;
         bool    IsStoring() const;
         void    Read(void* pBuf, UINT size);
-        LPTSTR  ReadString(LPTSTR pString, UINT max);
-        LPSTR   ReadStringA(LPSTR pString, UINT max);
-        LPWSTR  ReadStringW(LPWSTR pString, UINT max);
+        LPTSTR  ReadString(LPTSTR string, UINT max);
+        LPSTR   ReadStringA(LPSTR string, UINT max);
+        LPWSTR  ReadStringW(LPWSTR string, UINT max);
         void    SetObjectSchema(UINT schema);
         void    Write(const void* pBuf, UINT size);
-        void    WriteString(LPCTSTR pString);
-        void    WriteStringA(LPCSTR pString);
-        void    WriteStringW(LPCWSTR pString);
+        void    WriteString(LPCTSTR string);
+        void    WriteStringA(LPCSTR string);
+        void    WriteStringW(LPCWSTR string);
 
         // insertion operations
         CArchive& operator<<(BYTE by);
@@ -220,7 +220,7 @@ namespace Win32xx
     // Constructs a CArchive object.
     // A file with the specified name is created for storing (if required), and
     // also opened. A failure to open the file will throw an exception.
-    inline CArchive::CArchive(LPCTSTR pFileName, Mode mode) : m_pFile(0), m_schema(static_cast<UINT>(-1))
+    inline CArchive::CArchive(LPCTSTR fileName, Mode mode) : m_pFile(0), m_schema(static_cast<UINT>(-1))
     {
         m_isFileManaged = true;
 
@@ -229,13 +229,13 @@ namespace Win32xx
             if (mode == load)
             {
                 // Open the archive for loading
-                m_pFile = new CFile(pFileName, CFile::modeRead);
+                m_pFile = new CFile(fileName, CFile::modeRead);
                 m_isStoring = false;
             }
             else
             {
                 // Open the archive for storing. Creates file if required
-                m_pFile = new CFile(pFileName, CFile::modeCreate);
+                m_pFile = new CFile(fileName, CFile::modeCreate);
                 m_isStoring = true;
             }
         }
@@ -838,94 +838,94 @@ namespace Win32xx
         return *this;
     }
 
-    // The size (in characters) of the pString array must be nMax or greater.
+    // The size (in characters) of the string array must be nMax or greater.
     // Reads at most nMax-1 TCHAR characters from the archive and stores it
-    // in pString. Strings read from the archive are converted from ANSI
+    // in a string. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throws an exception if an error occurs.
-    inline LPTSTR CArchive::ReadString(LPTSTR pString, UINT max)
+    inline LPTSTR CArchive::ReadString(LPTSTR string, UINT max)
     {
         assert (max > 0);
 
         CString str;
         *this >> str;
-        StrCopy(pString, str.c_str(), max);
-        return pString;
+        StrCopy(string, str.c_str(), max);
+        return string;
     }
 
-    // The size (in characters) of the pString array must be nMax or greater.
+    // The size (in characters) of the string array must be nMax or greater.
     // Reads at most nMax-1 TCHAR characters from the archive and store it
-    // in pString. Strings read from the archive are converted from ANSI
+    // in a string. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throws an exception if an error occurs.
-    inline LPSTR CArchive::ReadStringA(LPSTR pString, UINT max)
+    inline LPSTR CArchive::ReadStringA(LPSTR string, UINT max)
     {
         assert (max > 0);
 
         CStringA str;
         *this >> str;
-        StrCopyA(pString, str.c_str(), max);
-        return pString;
+        StrCopyA(string, str.c_str(), max);
+        return string;
     }
 
-    // The size (in characters) of the pString array must be nMax or greater.
+    // The size (in characters) of the string array must be nMax or greater.
     // Reads at most nMax-1 TCHAR characters from the archive and store it
-    // in pString. Strings read from the archive are converted from ANSI
+    // in a string. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throws an exception if an error occurs.
-    inline LPWSTR CArchive::ReadStringW(LPWSTR pString, UINT max)
+    inline LPWSTR CArchive::ReadStringW(LPWSTR string, UINT max)
     {
         assert (max > 0);
 
         CStringW str;
         *this >> str;
-        StrCopyW(pString, str.c_str(), max);
-        return pString;
+        StrCopyW(string, str.c_str(), max);
+        return string;
     }
 
     // Writes the LPCTSTR string into the archive file.
     // The string must be null terminated.
     // Throws an exception if an error occurs.
-    inline void CArchive::WriteString(LPCTSTR pString)
+    inline void CArchive::WriteString(LPCTSTR string)
     {
-        int chars = lstrlen(pString);
+        int chars = lstrlen(string);
         bool isUnicode = (sizeof(TCHAR) == sizeof(WCHAR));
 
         // Store the Unicode state and number of characters in the archive
         *this << isUnicode;
         *this << chars;
 
-        Write(pString, chars*sizeof(TCHAR));
+        Write(string, chars*sizeof(TCHAR));
     }
 
     // Writes the LPCSTR string into the archive file.
     // The string must be null terminated.
     // Throws an exception if an error occurs.
-    inline void CArchive::WriteStringA(LPCSTR pString)
+    inline void CArchive::WriteStringA(LPCSTR string)
     {
-        int chars = lstrlenA(pString);
+        int chars = lstrlenA(string);
         bool isUnicode = false;
 
         // Store the Unicode state and number of characters in the archive
         *this << isUnicode;
         *this << chars;
 
-        Write(pString, chars*sizeof(CHAR));
+        Write(string, chars*sizeof(CHAR));
     }
 
     // Writes the LPCWSTR string into the archive file.
     // The string must be null terminated.
     // Throws an exception if an error occurs.
-    inline void CArchive::WriteStringW(LPCWSTR pString)
+    inline void CArchive::WriteStringW(LPCWSTR string)
     {
-        int chars = lstrlenW(pString);
+        int chars = lstrlenW(string);
         bool isUnicode = true;
 
         // Store the Unicode state and number of characters in the archive
         *this << isUnicode;
         *this << chars;
 
-        Write(pString, chars*sizeof(WCHAR));
+        Write(string, chars*sizeof(WCHAR));
     }
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)

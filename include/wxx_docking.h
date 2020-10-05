@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -215,8 +215,8 @@ namespace Win32xx
         void SetTabIcon(UINT iconID);
         void SetTabIcon(int i, HICON icon)    { CTab::SetTabIcon(i, icon); }
         void SetTabSize();
-        void SetTabText(LPCTSTR pText)        { m_tabText = pText; }
-        void SetTabText(UINT tab, LPCTSTR pText);
+        void SetTabText(LPCTSTR text)        { m_tabText = text; }
+        void SetTabText(UINT tab, LPCTSTR text);
         void SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID);
         void SetView(CWnd& wnd);
 
@@ -5047,12 +5047,12 @@ namespace Win32xx
 
 
     // Shows or hides the tab if it has only one page.
-    inline void CDockContainer::SetTabText(UINT tab, LPCTSTR pText)
+    inline void CDockContainer::SetTabText(UINT tab, LPCTSTR text)
     {
         CDockContainer* pContainer = GetContainerParent()->GetContainerFromIndex(tab);
-        pContainer->SetTabText(pText);
+        pContainer->SetTabText(text);
 
-        CTab::SetTabText(tab, pText);
+        CTab::SetTabText(tab, text);
     }
 
 

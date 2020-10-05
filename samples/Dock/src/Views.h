@@ -47,7 +47,6 @@ class CViewTree : public CTreeView
 public:
     CViewTree();
     virtual ~CViewTree();
-    virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR text, int image);
 
 protected:
     virtual void OnAttach();
@@ -68,7 +67,6 @@ class CViewList : public CListView
 public:
     CViewList();
     virtual ~CViewList();
-    virtual int  AddItem(LPCTSTR text, int image);
     virtual void InsertItems();
     virtual void OnAttach();
     virtual void OnDestroy();

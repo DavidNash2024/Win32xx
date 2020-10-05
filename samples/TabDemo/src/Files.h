@@ -14,10 +14,11 @@ class CViewFiles : public CListView
 public:
     CViewFiles();
     virtual ~CViewFiles();
-    virtual int  AddItem(LPCTSTR text, int image);
-    virtual void InsertItems();
+    void InsertItems();
+    void SetColumns();
+
+protected:
     virtual void OnAttach();
-    virtual void SetColumns();
 
 private:
     CImageList m_smallImages;

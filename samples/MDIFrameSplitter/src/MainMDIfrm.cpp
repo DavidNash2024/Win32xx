@@ -32,10 +32,6 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     {
     case IDM_FILE_NEW:          return OnFileNew();
     case IDM_FILE_CLOSE:        return OnFileClose();
-    case IDM_FILE_OPEN:         return OnFileOpen();
-    case IDM_FILE_SAVE:         return OnFileSave();
-    case IDM_FILE_SAVEAS:       return OnFileSave();
-    case IDM_FILE_PRINT:        return OnFilePrint();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDW_MDI_ARRANGE:       return OnMDIIconArrange();
@@ -73,63 +69,6 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 
     // call the base class function
     return CMDIFrame::OnCreate(cs);
-}
-
-// Sample code to load data from a file.
-BOOL CMainMDIFrame::OnFileOpen()
-{
-    CFileDialog fileDlg(TRUE);
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-// Sample code to save data to a file.
-BOOL CMainMDIFrame::OnFileSave()
-{
-    CFileDialog fileDlg(FALSE);
-
-    // Bring up the file save dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-// Sample code to send output to a printer.
-BOOL CMainMDIFrame::OnFilePrint()
-{
-    // Bring up a dialog to choose the printer
-    CPrintDialog printdlg;
-
-    try
-    {
-        INT_PTR result = printdlg.DoModal(*this);
-
-        // Retrieve the printer DC
-        // CDC printerDC = printdlg.GetPrinterDC();
-
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-
-        return (result == IDOK);   // boolean expression
-    }
-
-    catch (const CWinException& /* e */)
-    {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-        return FALSE;
-    }
 }
 
 // Called after the window is created.
@@ -195,15 +134,15 @@ void CMainMDIFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
     AddToolBarButton( IDM_FILE_NEW   );
-    AddToolBarButton( IDM_FILE_OPEN  );
-    AddToolBarButton( IDM_FILE_SAVE  );
-    AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_EDIT_CUT   );
-    AddToolBarButton( IDM_EDIT_COPY  );
-    AddToolBarButton( IDM_EDIT_PASTE );
-    AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_FILE_PRINT );
-    AddToolBarButton( 0 );              // Separator
+    AddToolBarButton( IDM_FILE_OPEN, FALSE);   // disabled button
+    AddToolBarButton( IDM_FILE_SAVE, FALSE);   // disabled button
+    AddToolBarButton( 0 );                     // Separator
+    AddToolBarButton( IDM_EDIT_CUT, FALSE);    // disabled button
+    AddToolBarButton( IDM_EDIT_COPY, FALSE);   // disabled button
+    AddToolBarButton( IDM_EDIT_PASTE, FALSE);  // disabled button
+    AddToolBarButton( 0 );                     // Separator
+    AddToolBarButton( IDM_FILE_PRINT, FALSE);  // disabled button
+    AddToolBarButton( 0 );                     // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 

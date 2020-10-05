@@ -6,19 +6,19 @@
 #include "resource.h"
 
 
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
     SetView(m_view);
 }
 
-
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
 
-
-// Process the messages from the Menu and Tool Bar
+// Process the messages from the Menu and Toolbar
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -40,8 +40,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
-// OnCreate controls the way the frame is created.
+// Called during window creation.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -63,7 +62,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 }
 
 
-// Issue a close request to the frame
+// Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
     PostMessage(WM_CLOSE);
@@ -94,7 +93,6 @@ void CMainFrame::OnFileSaveAs()
     ::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
-
 // Initiates the Choose Color dialog.
 void CMainFrame::OnPenColor()
 {
@@ -118,8 +116,7 @@ void CMainFrame::OnPenColor()
     }
 }
 
-
-// Configures the ToolBar.
+// Configures the Toolbar.
 void CMainFrame::SetupToolBar()
 {
     AddToolBarButton( IDM_FILE_NEW   );
@@ -140,7 +137,6 @@ void CMainFrame::SetupToolBar()
     //       The color mask is a color used for transparency.
 }
 
-
 // Handle the frame's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -149,6 +145,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
 //  } // switch (msg)
 
+    // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
-} // LRESULT CMainFrame::WndProc(...)
+}
 

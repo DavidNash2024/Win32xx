@@ -1,6 +1,6 @@
-/////////////////////////////
+//////////////////////////////////////////////////////
 // View.h
-//
+//  Declaration of the CView class
 
 #ifndef VIEW_H
 #define VIEW_H
@@ -14,8 +14,10 @@
 #define UWM_DROPFILE (WM_APP + 0x0001)
 
 
-//////////////////////////////////////////
+////////////////////////////////////////////////
 // CView manages CMainFrame's view window.
+// In this view, we use the mouse to draw on the
+// window.
 class CView : public CWnd
 {
 public:
@@ -48,7 +50,6 @@ private:
     CDoc m_doc;
     CBrush m_brush;
     COLORREF m_penColor;
-
 };
 
 

@@ -9,8 +9,10 @@
 #include "Mainfrm.h"
 
 
-// A class that inherits from CWinApp.
-// It is used to run the application's message loop.
+///////////////////////////////////////////////////////////////////
+// CScribbleApp manages the application. It initializes the Win32++
+// framework when it is constructed, and create the main frame
+// window when it runs.
 class CScribbleApp : public CWinApp
 {
 public:

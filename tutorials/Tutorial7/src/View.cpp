@@ -7,16 +7,16 @@
 #include "resource.h"
 
 
+// Constructor.
 CView::CView() : m_penColor(RGB(0,0,0))
 {
     m_brush.CreateSolidBrush(RGB(255,255,230));
 }
 
-
+// Destructor.
 CView::~CView()
 {
 }
-
 
 // Draws a line in the window's client area.
 void CView::DrawLine(int x, int y)
@@ -27,8 +27,7 @@ void CView::DrawLine(int x, int y)
     clientDC.LineTo(x, y);
 }
 
-
-// Called when drawing to the window
+// Called when drawing to the window.
 void CView::OnDraw(CDC& dc)
 {
     if (m_points.size() > 0)
@@ -47,7 +46,6 @@ void CView::OnDraw(CDC& dc)
     }
 }
 
-
 // Stores the specified point information.
 void CView::StorePoint(int x, int y, bool isPenDown)
 {
@@ -60,8 +58,8 @@ void CView::StorePoint(int x, int y, bool isPenDown)
     m_points.push_back(pp); //Add the point to the vector
 }
 
-
-// Called when the left mouse button is pressed while the cursor is over the window.
+// Called when the left mouse button is pressed while the cursor is over
+// the window.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
@@ -70,7 +68,6 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 
     return FinalWindowProc(msg, wparam, lparam);
 }
-
 
 // Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -82,8 +79,7 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
-// Called when the mouse is moved while captured
+// Called when the mouse is moved while captured.
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // hold down the left mouse button and move mouse to draw lines.
@@ -96,14 +92,12 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-
 // Called before window creation to update the window's CREATESTRUCT
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set the extra style to provide a sunken effect
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
-
 
 // Called before the window is registered to update the window's WNDCLASS
 void CView::PreRegisterClass(WNDCLASS& wc)
@@ -114,8 +108,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.hCursor = GetApp()->LoadCursor(IDC_CURSOR1);
 }
 
-
-// Called to handle the window's messages
+// Called to handle the window's messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
@@ -125,7 +118,6 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
     }
 
-    //Use the default message handling for remaining messages
+    // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
 }
-

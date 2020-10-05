@@ -7,7 +7,8 @@
 //  * Add the Win32++\include  directory to project's additional include directories
 
 
-// A class that inherits from CWnd. It is used to create the window.
+//////////////////////////////////////////////
+// CMyWindow is the application's main window.
 class CMyWindow : public CWnd
 {
 public:
@@ -17,6 +18,7 @@ public:
 };
 
 
+// WinMain is the program's entry point. The program starts here.
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Start Win32++

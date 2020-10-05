@@ -6,19 +6,19 @@
 #include "resource.h"
 
 
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
     SetView(m_view);
 }
 
-
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
 
-
-// Process the messages from the Menu and Tool Bar
+// Process the messages from the Menu and Toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -40,8 +40,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
-// OnCreate controls the way the frame is created.
+// Called during window creation.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -61,7 +60,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // call the base class function
     return CFrame::OnCreate(cs);
 }
-
 
 // Issue a close request to the frame.
 void CMainFrame::OnFileExit()
@@ -94,6 +92,7 @@ void CMainFrame::OnFileSaveAs()
     ::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
+// Handle the frame window's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 //  switch (msg)
@@ -101,6 +100,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
 //  } // switch (msg)
 
+    // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
 }
 

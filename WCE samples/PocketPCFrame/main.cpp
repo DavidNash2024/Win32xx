@@ -6,7 +6,7 @@
 #include "FrameApp.h"
 
 
-
+// WinMain is the program's entry point. The program starts here.
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
     TCHAR szBuf[100];

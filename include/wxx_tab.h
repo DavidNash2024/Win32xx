@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -83,7 +83,7 @@ namespace Win32xx
         public:
             CSelectDialog(LPCDLGTEMPLATE pDlgTemplate);
             virtual ~CSelectDialog() {}
-            virtual void AddItem(LPCTSTR pString);
+            virtual void AddItem(LPCTSTR string);
             virtual BOOL IsTab() const { return FALSE; }
 
         protected:
@@ -123,7 +123,7 @@ namespace Win32xx
         virtual void SetTabIcon(int tab, HICON icon);
         virtual void SetTabFont(HFONT font);
         virtual void SetTabsAtTop(BOOL isAtTop);
-        virtual void SetTabText(UINT tab, LPCTSTR pText);
+        virtual void SetTabText(UINT tab, LPCTSTR text);
         virtual void ShowListDialog();
         virtual void ShowListMenu();
         virtual void SwapTabs(UINT tab1, UINT tab2);
@@ -297,9 +297,9 @@ namespace Win32xx
         return true;
     }
 
-    inline void CTab::CSelectDialog::AddItem(LPCTSTR pString)
+    inline void CTab::CSelectDialog::AddItem(LPCTSTR string)
     {
-        m_items.push_back(pString);
+        m_items.push_back(string);
     }
 
     inline void CTab::CSelectDialog::OnOK()
@@ -1379,7 +1379,7 @@ namespace Win32xx
     }
 
     // Allows the text to be changed on an existing tab.
-    inline void CTab::SetTabText(UINT tab, LPCTSTR pText)
+    inline void CTab::SetTabText(UINT tab, LPCTSTR text)
     {
 
         if (tab < GetAllTabs().size())
@@ -1387,10 +1387,10 @@ namespace Win32xx
             TCITEM Item;
             ZeroMemory(&Item, sizeof(Item));
             Item.mask = TCIF_TEXT;
-            Item.pszText = const_cast<LPTSTR>(pText);
+            Item.pszText = const_cast<LPTSTR>(text);
 
             if (SetItem(tab, &Item))
-                m_allTabPageInfo[tab].TabText = pText;
+                m_allTabPageInfo[tab].TabText = text;
         }
     }
 

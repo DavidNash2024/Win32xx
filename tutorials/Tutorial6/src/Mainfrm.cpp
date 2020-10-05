@@ -6,19 +6,19 @@
 #include "resource.h"
 
 
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
     SetView(m_view);
 }
 
-
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
 
-
-// Process the messages from the Menu and Tool Bar.
+// Process the messages from the Menu and Toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
@@ -40,8 +40,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
-// OnCreate controls the way the frame is created.
+// Called during window creation.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // OnCreate controls the way the frame is created.
@@ -62,37 +61,31 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-
-// Issue a close request to the frame
+// Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
     PostMessage(WM_CLOSE);
 }
-
 
 void CMainFrame::OnFileNew()
 {
     ::MessageBox(NULL, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
-
 void CMainFrame::OnFileOpen()
 {
     ::MessageBox(NULL, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
 }
-
 
 void CMainFrame::OnFilePrint()
 {
     ::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
-
 void CMainFrame::OnFileSave()
 {
     ::MessageBox(NULL, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
 }
-
 
 void CMainFrame::OnFileSaveAs()
 {
@@ -108,6 +101,6 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
 //  } // switch (msg)
 
+    // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
 }
-

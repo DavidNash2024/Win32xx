@@ -1,9 +1,15 @@
+/////////////////////////////
+// View.h
+
+
 #ifndef VIEW_H
 #define VIEW_H
 
 #include "wxx_wincore.h"
 
 
+///////////////////////////////////////////////
+// CView manages the application's main window.
 class CView : public CWnd
 {
 public:

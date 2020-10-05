@@ -57,7 +57,7 @@ FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.aps"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.bak"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.bml"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.layout"
-
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\src\*.aps"
 
 popd
 

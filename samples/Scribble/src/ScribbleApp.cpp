@@ -1,13 +1,10 @@
-/////////////////////////////
+//////////////////////////////////
 // ScribbleApp.cpp
-//
 
 #include "stdafx.h"
 #include "ScribbleApp.h"
 
-/////////////////////////////////////
-// CScribbleApp function definitions.
-//
+
 CScribbleApp::CScribbleApp()
 {
 }

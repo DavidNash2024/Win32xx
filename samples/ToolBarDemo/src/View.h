@@ -6,8 +6,9 @@
 #define VIEW_H
 
 
-//////////////////////////////////////////
+///////////////////////////////////////////////
 // CView manages CMainFrame's view window.
+// This view also has a movable toolbar window.
 class CView : public CWnd
 {
 public:

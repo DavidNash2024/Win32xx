@@ -8,6 +8,8 @@
 #include "wxx_wincore.h"
 
 
+//////////////////////////////////////
+// CButton manages the button control.
 class CButton : public CWnd
 {
 public:
@@ -16,7 +18,6 @@ public:
 
 protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
 };
 
 

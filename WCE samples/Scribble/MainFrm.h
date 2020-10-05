@@ -1,3 +1,7 @@
+/////////////////////////////
+// MainFrm.h
+
+
 #ifndef VIEW_H
 #define VIEW_H
 
@@ -8,6 +12,8 @@
 #include <vector>
 
 
+////////////////////////////////////////////////////
+// CMainFrame manages the application's main window.
 class CMainFrame : public CWceFrame
 {
 public:

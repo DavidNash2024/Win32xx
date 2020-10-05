@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -63,7 +63,7 @@ namespace Win32xx
         virtual ~CTreeView() {}
         virtual void PreRegisterClass(WNDCLASS& wc);
 
-// Attributes
+        // Attributes
         COLORREF GetBkColor() const;
         HTREEITEM GetChild(HTREEITEM item) const;
         UINT    GetCount() const;
@@ -99,16 +99,16 @@ namespace Win32xx
         BOOL    SetInsertMark(HTREEITEM item, BOOL after = TRUE) const;
         COLORREF SetInsertMarkColor(COLORREF color) const;
         BOOL    SetItem(TVITEM& itemInfo) const;
-        BOOL    SetItem(HTREEITEM item, UINT mask, LPCTSTR pText, int image, int selectedImage, UINT state, UINT stateMask, LPARAM lparam) const;
+        BOOL    SetItem(HTREEITEM item, UINT mask, LPCTSTR text, int image, int selectedImage, UINT state, UINT stateMask, LPARAM lparam) const;
         BOOL    SetItemData(HTREEITEM item, DWORD_PTR data) const;
         int     SetItemHeight(SHORT cy) const;
         BOOL    SetItemImage(HTREEITEM item, int image, int selectedImage) const;
-        BOOL    SetItemText(HTREEITEM item, LPCTSTR pText) const;
+        BOOL    SetItemText(HTREEITEM item, LPCTSTR text) const;
         UINT    SetScrollTime(UINT scrollTime) const;
         COLORREF SetTextColor(COLORREF color) const;
         HWND    SetToolTips(HWND toolTip) const;
 
-// Operations
+        // Operations
         CImageList CreateDragImage(HTREEITEM item) const;
         BOOL    DeleteAllItems() const;
         BOOL    DeleteItem(HTREEITEM item) const;
@@ -118,6 +118,15 @@ namespace Win32xx
         BOOL    Expand(HTREEITEM hItem, UINT code) const;
         HTREEITEM HitTest(TVHITTESTINFO& hitInfo) const;
         HTREEITEM InsertItem(TVINSERTSTRUCT& insertInfo) const;
+        HTREEITEM InsertItem(UINT mask, LPCTSTR text, int image,
+                             int selectedImage, UINT state, UINT stateMask,
+                             LPARAM lparam, HTREEITEM parent, 
+                             HTREEITEM insertAfter) const;
+        HTREEITEM InsertItem(LPCTSTR text, HTREEITEM parent = TVI_ROOT,
+                             HTREEITEM insertAfter = TVI_LAST) const;
+        HTREEITEM InsertItem(LPCTSTR text, int image, int selectedImage,
+                             HTREEITEM parent = TVI_ROOT, 
+                             HTREEITEM insertAfter = TVI_LAST) const;
         BOOL    Select(HTREEITEM item, UINT flag) const;
         BOOL    SelectDropTarget(HTREEITEM item) const;
         BOOL    SelectItem(HTREEITEM item) const;
@@ -467,7 +476,7 @@ namespace Win32xx
 
     // Sets some or all of a tree-view item's attributes.
     // Refer to TreeView_SetItem in the Windows API documentation for more information.
-    inline BOOL CTreeView::SetItem(HTREEITEM item, UINT mask, LPCTSTR pText, int image, int selectedImage, UINT state, UINT stateMask, LPARAM lparam) const
+    inline BOOL CTreeView::SetItem(HTREEITEM item, UINT mask, LPCTSTR text, int image, int selectedImage, UINT state, UINT stateMask, LPARAM lparam) const
     {
         assert(IsWindow());
 
@@ -475,7 +484,7 @@ namespace Win32xx
         ZeroMemory(&tvi, sizeof(tvi));
         tvi.hItem = item;
         tvi.mask  = mask;
-        tvi.pszText = const_cast<LPTSTR>(pText);
+        tvi.pszText = const_cast<LPTSTR>(text);
         tvi.iImage  = image;
         tvi.iSelectedImage = selectedImage;
         tvi.state = state;
@@ -523,14 +532,14 @@ namespace Win32xx
 
     // Sets the tree-view item's application text.
     // Refer to TreeView_SetItem in the Windows API documentation for more information.
-    inline BOOL CTreeView::SetItemText(HTREEITEM item, LPCTSTR pText) const
+    inline BOOL CTreeView::SetItemText(HTREEITEM item, LPCTSTR text) const
     {
         assert(IsWindow());
 
         TVITEM tvi;
         ZeroMemory(&tvi, sizeof(tvi));
         tvi.hItem = item;
-        tvi.pszText = const_cast<LPTSTR>(pText);
+        tvi.pszText = const_cast<LPTSTR>(text);
         tvi.mask = TVIF_TEXT;
         return TreeView_SetItem(*this, &tvi );
     }
@@ -638,6 +647,72 @@ namespace Win32xx
     {
         assert(IsWindow());
         return TreeView_InsertItem( *this, &insertInfo );
+    }
+
+    // Inserts a new item in a tree-view control.
+    // Refer to TreeView_InsertItem in the Windows API documentation for more information.
+    inline HTREEITEM CTreeView::InsertItem(UINT mask, LPCTSTR text, int image,
+                                    int selectedImage, UINT state, UINT stateMask,
+                                    LPARAM lparam, HTREEITEM parent,
+                                    HTREEITEM insertAfter) const
+    {
+        TVITEM tvi;
+        ZeroMemory(&tvi, sizeof(tvi));
+        tvi.mask = mask;
+        tvi.iImage = image;
+        tvi.iSelectedImage = selectedImage;
+        tvi.state = state;
+        tvi.stateMask = stateMask;
+        tvi.lParam = lparam;
+        tvi.pszText = const_cast<LPTSTR>(text);
+
+        TVINSERTSTRUCT tvis;
+        ZeroMemory(&tvis, sizeof(tvis));
+        tvis.hParent = parent;
+        tvis.hInsertAfter = insertAfter;
+        tvis.item = tvi;
+
+        return InsertItem(tvis);    
+    }
+
+    // Inserts a new item in a tree-view control.
+    // Refer to TreeView_InsertItem in the Windows API documentation for more information.
+    inline HTREEITEM CTreeView::InsertItem(LPCTSTR text, HTREEITEM parent,
+                                    HTREEITEM insertAfter) const
+    {
+        TVITEM tvi;
+        ZeroMemory(&tvi, sizeof(tvi));
+        tvi.mask = TVIF_TEXT;
+        tvi.pszText = const_cast<LPTSTR>(text);
+
+        TVINSERTSTRUCT tvis;
+        ZeroMemory(&tvis, sizeof(tvis));
+        tvis.hParent = parent;
+        tvis.hInsertAfter = insertAfter;
+        tvis.item = tvi;
+
+        return InsertItem(tvis);
+    }
+
+    // Inserts a new item in a tree-view control.
+    // Refer to TreeView_InsertItem in the Windows API documentation for more information.
+    inline HTREEITEM CTreeView::InsertItem(LPCTSTR text, int image, int selectedImage,
+                                    HTREEITEM parent, HTREEITEM insertAfter) const
+    {
+        TVITEM tvi;
+        ZeroMemory(&tvi, sizeof(tvi));
+        tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
+        tvi.iImage = image;
+        tvi.iSelectedImage = selectedImage;
+        tvi.pszText = const_cast<LPTSTR>(text);
+
+        TVINSERTSTRUCT tvis;
+        ZeroMemory(&tvis, sizeof(tvis));
+        tvis.hParent = parent;
+        tvis.hInsertAfter = insertAfter;
+        tvis.item = tvi;
+
+        return InsertItem(tvis);
     }
 
     // Selects the specified tree-view item, scrolls the item into view, or redraws

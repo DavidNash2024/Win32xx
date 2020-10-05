@@ -1,3 +1,7 @@
+/////////////////////////////
+// FrameApp.h
+
+
 #ifndef SIMPLEAPP_H
 #define SIMPLEAPP_H
 
@@ -5,6 +9,10 @@
 #include "MainFrm.h"
 
 
+////////////////////////////////////////////////////////////
+// CWceFrameApp manages the application. It initializes the
+// Win32++ framework when it is constructed, and creates the
+// main dialog when it runs.
 class CWceFrameApp : public CWinApp
 {
 public:

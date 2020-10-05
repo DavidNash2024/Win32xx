@@ -1,7 +1,9 @@
+/////////////////////////////
+// MyDialog.cpp
+
 
 #include "MyDialog.h"
 #include "resource.h"
-
 
 
 CMyDialog::CMyDialog(UINT resID)

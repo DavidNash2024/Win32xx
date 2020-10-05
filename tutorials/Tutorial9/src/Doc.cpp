@@ -1,4 +1,5 @@
-
+//////////////////////////////////
+// Doc.cpp
 
 #include "Doc.h"
 #include "ScribbleApp.h"
@@ -13,7 +14,6 @@ void CDoc::FileOpen(LPCTSTR filename)
     ar >> *this;
 }
 
-
 // Stores the plotpoint data in the archive.
 // Throws an exception if unable to save the file.
 void CDoc::FileSave(LPCTSTR filename)
@@ -21,7 +21,6 @@ void CDoc::FileSave(LPCTSTR filename)
     CArchive ar(filename, CArchive::store);
     ar << *this;
 }
-
 
 // Uses CArchive to stream data to or from a file.
 void CDoc::Serialize(CArchive &ar)
@@ -60,7 +59,6 @@ void CDoc::Serialize(CArchive &ar)
     }
 
 }
-
 
 // Store the specified point information.
 void CDoc::StorePoint(int x, int y, bool isPenDown, COLORREF penColor)

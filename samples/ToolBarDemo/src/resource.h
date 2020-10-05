@@ -32,11 +32,13 @@
 #define IDM_LEFT                        142
 #define IDM_RIGHT                       143
 #define IDM_BOTTOM                      144
-#define IDB_NORMAL                      150
+#define IDB_SMALL                       150
 #define IDB_DISABLED                    151
 #define IDB_HOT                         152
-#define IDB_ARROWS                      154
-#define IDB_CARDS                       155
+#define IDB_ARROWS                      153
+#define IDB_CARDS                       154
+#define IDB_SMALLARROWS                 155
+#define IDB_SMALLCARDS                  156
 #define IDC_ARROWS                      157
 #define IDC_CARDS                       158
 #define IDI_TOP                         160

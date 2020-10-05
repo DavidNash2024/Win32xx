@@ -45,43 +45,25 @@ void CViewTree::OnAttach()
     DeleteAllItems();
 
     // Add some tree-view items.
-    HTREEITEM htiRoot = AddItem(NULL, _T("TreeView"), 0);
-    HTREEITEM htiCTreeViewApp = AddItem(htiRoot, _T("CTreeViewApp"), 1);
-    AddItem(htiCTreeViewApp, _T("CTreeViewApp()"), 3);
-    AddItem(htiCTreeViewApp, _T("GetMainFrame()"), 3);
-    AddItem(htiCTreeViewApp, _T("InitInstance()"), 3);
-    HTREEITEM htiMainFrame = AddItem(htiRoot, _T("CMainFrame"), 1);
-    AddItem(htiMainFrame, _T("CMainFrame()"), 3);
-    AddItem(htiMainFrame, _T("OnCommand()"), 4);
-    AddItem(htiMainFrame, _T("OnInitialUpdate()"), 4);
-    AddItem(htiMainFrame, _T("WndProc()"), 4);
-    HTREEITEM htiView = AddItem(htiRoot, _T("CView"), 1);
-    AddItem(htiView, _T("CView()"), 3);
-    AddItem(htiView, _T("OnInitialUpdate()"), 4);
-    AddItem(htiView, _T("WndProc()"), 4);
+    HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
+    HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
+    InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
+    InsertItem(_T("GetMainFrame()"), 3, 3, htiCTreeViewApp);
+    InsertItem(_T("InitInstance()"), 3, 3, htiCTreeViewApp);
+    HTREEITEM htiMainFrame = InsertItem(_T("CMainFrame"), 1, 1, htiRoot);
+    InsertItem(_T("CMainFrame()"), 3, 3, htiMainFrame);
+    InsertItem(_T("OnCommand()"), 4, 4, htiMainFrame);
+    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiMainFrame);
+    HTREEITEM htiView = InsertItem(_T("CView"), 1, 1, htiRoot);
+    InsertItem(_T("CView()"), 3, 3, htiView);
+    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
+    InsertItem(_T("WndProc()"), 4, 4, htiView);
 
     // Expand some tree-view items.
     Expand(htiRoot, TVE_EXPAND);
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
-// Add a tree view item.
-HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
-{
-    TVITEM tvi;
-    ZeroMemory(&tvi, sizeof(tvi));
-    tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-    tvi.iImage = image;
-    tvi.iSelectedImage = image;
-    tvi.pszText = const_cast<LPTSTR>(text);
-
-    TVINSERTSTRUCT tvis;
-    ZeroMemory(&tvis, sizeof(tvis));
-    tvis.hParent = hParent;
-    tvis.item = tvi;
-
-    return InsertItem(tvis);
-}
 
 /////////////////////////////////////////
 // CMDIChildTreeView function definitions

@@ -6,6 +6,7 @@
 #include "resource.h"
 
 
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
@@ -19,10 +20,10 @@ CMainFrame::CMainFrame()
     LoadRegistryMRUSettings(4);
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
-
 
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
 void CMainFrame::LoadFile(LPCTSTR fileName)
@@ -47,7 +48,6 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
     }
 
 }
-
 
 // Process the messages from the Menu and Tool Bar
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
@@ -80,7 +80,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
 // OnCreate controls the way the frame is created.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
@@ -101,7 +100,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // call the base class function
     return CFrame::OnCreate(cs);
 }
-
 
 // Called in response to the UWM_DROPFILE user defined message.
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
@@ -127,13 +125,11 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     return 0;
 }
 
-
 // Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
     PostMessage(WM_CLOSE);
 }
-
 
 // Called when a MRU file is selected from the menu.
 void CMainFrame::OnFileMRU(WPARAM wparam)
@@ -157,7 +153,6 @@ void CMainFrame::OnFileMRU(WPARAM wparam)
     }
 }
 
-
 // Create a new scribble screen.
 void CMainFrame::OnFileNew()
 {
@@ -165,7 +160,6 @@ void CMainFrame::OnFileNew()
     m_pathName = _T("");
     GetView().Invalidate();
 }
-
 
 // Load the PlotPoint data from the file.
 void CMainFrame::OnFileOpen()
@@ -192,7 +186,6 @@ void CMainFrame::OnFileOpen()
     }
 }
 
-
 // Save the PlotPoint data to the current file.
 void CMainFrame::OnFileSave()
 {
@@ -212,7 +205,6 @@ void CMainFrame::OnFileSave()
         m_view.GetAllPoints().clear();
     }
 }
-
 
 // Save the PlotPoint data to a specified file.
 void CMainFrame::OnFileSaveAs()
@@ -287,7 +279,6 @@ void CMainFrame::OnFilePreview()
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice
-// This function provides a useful reference for printing bitmaps in general
 void CMainFrame::OnFilePrint()
 {
     try
@@ -302,7 +293,6 @@ void CMainFrame::OnFilePrint()
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
-
 
 // Called after the frame is created.
 void CMainFrame::OnInitialUpdate()
@@ -320,7 +310,6 @@ void CMainFrame::OnInitialUpdate()
     ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(GetToolBar().IsWindow());
 }
-
 
 // Initiates the Choose Color dialog.
 void CMainFrame::OnPenColor()
@@ -345,7 +334,6 @@ void CMainFrame::OnPenColor()
     }
 }
 
-
 // Called when the Print Preview's "Close" button is pressed.
 void CMainFrame::OnPreviewClose()
 {
@@ -358,7 +346,6 @@ void CMainFrame::OnPreviewClose()
 
     SetStatusText(LoadString(IDW_READY));
 }
-
 
 // Called when the Print Preview's "Print Now" button is pressed.
 void CMainFrame::OnPreviewPrint()
@@ -373,7 +360,6 @@ void CMainFrame::OnPreviewPrint()
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
-
 
 // Called when the Print Preview's "Print Setup" button is pressed.
 void CMainFrame::OnPreviewSetup()
@@ -400,8 +386,7 @@ void CMainFrame::OnPreviewSetup()
     m_preview.DoPrintPreview(*this);
 }
 
-
-// Configures the ToolBar
+// Configures the ToolBar.
 void CMainFrame::SetupToolBar()
 {
     // Define our toolbar buttons
@@ -422,7 +407,6 @@ void CMainFrame::SetupToolBar()
     //       a color mask of RGB(192,192,192) is used for the ToolBar.
     //       The color mask is a color used for transparency.
 }
-
 
 // Handle the frame's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

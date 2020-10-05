@@ -5,10 +5,12 @@
 #include "SubclassApp.h"
 
 
+// Constructor.
 CSubclassApp::CSubclassApp()
 {
 }
 
+// Called when the application starts.
 BOOL CSubclassApp::InitInstance()
 {
     TRACE("Move the mouse over the button to see messages");
@@ -19,6 +21,7 @@ BOOL CSubclassApp::InitInstance()
     return TRUE;
 }
 
+// Destructor.
 CSubclassApp::~CSubclassApp()
 {
 }

@@ -337,9 +337,6 @@ DoPrintView()                                                               /*
             if (!info.m_bContinuePrinting)
                 break;
 
-              // TODO: print the current page number in a progress
-              // status area
-
               // attempt to start the current page
             if (DC.StartPage() < 0)
             {

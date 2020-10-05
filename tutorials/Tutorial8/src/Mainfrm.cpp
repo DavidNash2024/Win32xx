@@ -6,16 +6,17 @@
 #include "resource.h"
 
 
+// Constructor.
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
     SetView(m_view);
 }
 
+// Destructor.
 CMainFrame::~CMainFrame()
 {
 }
-
 
 // Process the messages from the Menu and Tool Bar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
@@ -39,11 +40,9 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-
-// OnCreate controls the way the frame is created.
+// Called during window creation.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-
     // Overriding CFrame::OnCreate is optional.
 
     // A menu is added if the IDW_MAIN menu resource is defined.
@@ -60,7 +59,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // call the base class function
     return CFrame::OnCreate(cs);
 }
-
 
 // Called in response to the UWM_DROPFILE user defined message.
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
@@ -86,13 +84,11 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     return 0;
 }
 
-
 // Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
     PostMessage(WM_CLOSE);
 }
-
 
 // Create a new scribble screen.
 void CMainFrame::OnFileNew()
@@ -102,13 +98,12 @@ void CMainFrame::OnFileNew()
     GetView().Invalidate();
 }
 
-
-// Called by OnFileOpen and in response to a UWM_DROPFILE message
+// Called by OnFileOpen and in response to a UWM_DROPFILE message.
 void CMainFrame::LoadFile(LPCTSTR fileName)
 {
     try
     {
-        // Retrieve the PlotPoint data
+        // Retrieve the PlotPoint data.
         GetDoc().FileOpen(fileName);
         m_pathName = fileName;
         GetView().Invalidate();
@@ -122,7 +117,6 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
-
 
 // Display the file dialog to choose a file to open.
 void CMainFrame::OnFileOpen()
@@ -154,7 +148,6 @@ void CMainFrame::OnFilePrint()
     MessageBox(_T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
-
 // Save the Plotoint data to a file.
 void CMainFrame::OnFileSave()
 {
@@ -172,7 +165,6 @@ void CMainFrame::OnFileSave()
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 }
-
 
 // Save the Plotoint data to a specified file.
 void CMainFrame::OnFileSaveAs()
@@ -201,7 +193,6 @@ void CMainFrame::OnFileSaveAs()
     }
 }
 
-
 // Display a choose color dialog to choose a color.
 void CMainFrame::OnPenColor()
 {
@@ -225,7 +216,6 @@ void CMainFrame::OnPenColor()
     }
 }
 
-
 // Configures the ToolBar.
 void CMainFrame::SetupToolBar()
 {
@@ -248,7 +238,6 @@ void CMainFrame::SetupToolBar()
     //       The color mask is a color used for transparency.
 }
 
-
 // Called to handle the window's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -257,7 +246,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case UWM_DROPFILE:          OnDropFile(wparam); break;
     }
 
-    //Use the default message handling for remaining messages
+    // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);
 }
 

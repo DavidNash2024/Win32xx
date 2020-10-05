@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -76,7 +76,7 @@ namespace Win32xx
         CRichEdit();
         virtual ~CRichEdit();
 
-        void    AppendText(LPCTSTR pText) const;
+        void    AppendText(LPCTSTR text) const;
         BOOL    CanPaste(UINT format = 0) const;
         BOOL    CanRedo() const;
         BOOL    CanUndo() const;
@@ -234,11 +234,11 @@ namespace Win32xx
     }
 
     // Adds text to the end of the document
-    inline void CRichEdit::AppendText(LPCTSTR pText) const
+    inline void CRichEdit::AppendText(LPCTSTR text) const
     {
         LRESULT position = SendMessage(WM_GETTEXTLENGTH, 0, 0);
         SendMessage(EM_SETSEL, (WPARAM)position, (LPARAM)position);
-        SendMessage(EM_REPLACESEL, 0, (LPARAM)pText);
+        SendMessage(EM_REPLACESEL, 0, (LPARAM)text);
     }
 
     // Determines whether a rich edit control can paste a specified clipboard format.

@@ -16,7 +16,7 @@ public:
     CViewTree();
     virtual ~CViewTree();
 
-    HTREEITEM AddItem(HTREEITEM parent, LPCTSTR text, int imageIndex);
+//    HTREEITEM AddItem(HTREEITEM parent, LPCTSTR text, int imageIndex);
     CString*  GetItemString(HTREEITEM item);
     bool      IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
     BOOL      OnBeginLabelEdit(LPARAM lparam);

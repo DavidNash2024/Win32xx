@@ -10,6 +10,10 @@
 #include <vector>
 
 
+////////////////////////////////////////////////
+// CView is the application's main window.
+// In this view, we use the mouse to draw on the
+// window.
 class CView : public CWnd
 {
 public:
@@ -27,7 +31,6 @@ private:
     void DrawLine(int x, int y);
 
     POINT m_OldPt;
-
 };
 
 

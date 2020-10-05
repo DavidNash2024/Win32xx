@@ -21,9 +21,6 @@ public:
     CDXView& GetDXView() const { return const_cast<CDXView&>(m_dxView); }
 
     BOOL OnFileExit();
-    BOOL OnFileOpen();
-    BOOL OnFilePrint();
-    BOOL OnFileSave();
 
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);

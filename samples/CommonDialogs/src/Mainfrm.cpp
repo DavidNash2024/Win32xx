@@ -321,8 +321,6 @@ OnCreate(CREATESTRUCT& rcs)                                                 /*
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
 
-    // TODO: set CREATESTRUCT desired options here
-
       // call the base class OnCreate() method with these options
     int rtn = CFrame::OnCreate(rcs);
       // set theme colors, if supported
@@ -456,8 +454,6 @@ OnInitialUpdate()                                                           /*
     formatting.
 *-----------------------------------------------------------------------------*/
 {
-    // TODO: Place any additional startup code here.
-
     CRect framePos = CRect(m_frameXY, m_frameSize);
     SetWindowPos(HWND_TOP, framePos, SWP_SHOWWINDOW);
       // the status bar cannot be recolored if XP themes are on, so
@@ -1083,8 +1079,6 @@ UpdateControlUIState()                                                      /*
     only use one SetXXXXStatus per control m_Win32Version.
 *-----------------------------------------------------------------------------*/
 {
-    // TODO: Add and modify code here to implement this member
-
       // document status
     BOOL    doc_is_ready = m_doc.IsOpen();
 

@@ -62,7 +62,6 @@ CView : public CDialog                                                      /*
         INT_PTR     DialogProc(UINT, WPARAM, LPARAM);
         void        OnCancel() {}  // Suppress esc key closing the dialog
         void        OnClose() {}   // Suppress esc key closing the dialog
-        BOOL        OnCommand(WPARAM wparam, LPARAM lparam);
         INT_PTR     OnCtlColor(UINT, WPARAM, LPARAM);
         BOOL        OnInitDialog();
         LRESULT     OnNotify(WPARAM wparam, LPARAM lparam);

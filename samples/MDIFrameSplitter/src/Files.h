@@ -16,7 +16,6 @@ public:
     virtual ~CViewFiles();
 
 protected:
-    virtual int  AddItem(LPCTSTR text, int image);
     virtual void InsertItems();
     virtual void OnAttach();
     virtual void OnDestroy();

@@ -16,7 +16,6 @@ public:
     virtual ~CViewTree();
     virtual void OnDestroy();
     virtual void OnAttach();
-    virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR text, int image);
 
 private:
     CImageList m_normalImages;

@@ -1,8 +1,12 @@
+/////////////////////////////
+// MainFrm.cpp
+
+
 #include "MainFrm.h"
 #include "resource.h"
 
 
-
+// Constructor.
 CMainFrame::CMainFrame() : m_penColor(RGB(0,0,0))
 {
     // Set the Resource IDs for the toolbar buttons
@@ -13,6 +17,7 @@ CMainFrame::CMainFrame() : m_penColor(RGB(0,0,0))
     AddToolBarButton( IDM_BLACK );
 }
 
+// Draws a line to the specified point.
 void CMainFrame::DrawLine(short x, short y)
 {
     CDC dc = GetDC();
@@ -21,9 +26,9 @@ void CMainFrame::DrawLine(short x, short y)
     dc.LineTo(x, y);
 }
 
+// Respond to menu and command bar selections
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM /*lparam*/)
 {
-    // Respond to menu and toolbar selections
     switch (LOWORD(wparam))
     {
     // Respond to menu items
@@ -65,6 +70,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM /*lparam*/)
     return FALSE;
 }
 
+// Draws the client area of the window.
 void CMainFrame::OnDraw(CDC& dc)
 {
     // Redraw our client area
@@ -84,11 +90,13 @@ void CMainFrame::OnDraw(CDC& dc)
     }
 }
 
+// Called after the frame window is created
 void CMainFrame::OnInitialUpdate()
 {
     // Startup code goes here
 }
 
+// Called when the left mouse button is pressed.
 LRESULT CMainFrame::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -102,6 +110,7 @@ LRESULT CMainFrame::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the left mouse button is released.
 LRESULT CMainFrame::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -115,6 +124,7 @@ LRESULT CMainFrame::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the mouse is moved.
 LRESULT CMainFrame::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(msg);
@@ -133,11 +143,13 @@ LRESULT CMainFrame::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Selects the pen color.
 void CMainFrame::SetPen(COLORREF color)
 {
     m_penColor = color;
 }
 
+// Stores the specified point.
 void CMainFrame::StorePoint(int x, int y, bool isPenDown)
 {
     PlotPoint P1;
@@ -149,6 +161,7 @@ void CMainFrame::StorePoint(int x, int y, bool isPenDown)
     m_points.push_back(P1); //Add the point to the vector
 }
 
+// Handle the main frame window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // handle left mouse button up/down and mouse move messages
@@ -160,7 +173,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_LBUTTONUP:      return  OnLButtonUp(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on to WndProcDefault
+    // Pass unhandled messages on to WndProcDefault.
     return WndProcDefault(msg, wparam, lparam);
 }
 

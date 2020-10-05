@@ -1,4 +1,4 @@
-// Win32++   Version 8.7.1
+// Win32++   Version 8.8
 // Release Date: TBA
 //
 //      David Nash
@@ -141,8 +141,8 @@ namespace Win32xx
         UINT GetMenuItemID(int pos) const;
         BOOL GetMenuItemInfo(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition = FALSE) const;
         UINT GetMenuState(UINT id, UINT flags) const;
-        int GetMenuString(UINT itemID, LPTSTR pString, int maxCount, UINT flags) const;
-        int GetMenuString(UINT itemID, CString& stringRef, UINT flags) const;
+        int GetMenuString(UINT itemID, LPTSTR string, int maxCount, UINT flags) const;
+        int GetMenuString(UINT itemID, CString& string, UINT flags) const;
         CMenu GetSubMenu(int pos) const;
         BOOL InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL) const;
         BOOL InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP bitmap) const;
@@ -596,26 +596,26 @@ namespace Win32xx
 
     // Copies the text string of the specified menu item into the specified buffer.
     // Refer to GetMenuString in the Windows API documentation for more information.
-    inline int CMenu::GetMenuString(UINT itemID, LPTSTR pString, int maxCount, UINT flags) const
+    inline int CMenu::GetMenuString(UINT itemID, LPTSTR string, int maxCount, UINT flags) const
     {
         assert(m_pData);
         if (!m_pData) return 0;
 
         assert(IsMenu(m_pData->menu));
-        assert(pString);
-        return ::GetMenuString(m_pData->menu, itemID, pString, maxCount, flags);
+        assert(string != 0);
+        return ::GetMenuString(m_pData->menu, itemID, string, maxCount, flags);
     }
 
     // Copies the text string of the specified menu item into the specified buffer.
     // Refer to GetMenuString in the Windows API documentation for more information.
-    inline int CMenu::GetMenuString(UINT itemID, CString& stringRef, UINT flags) const
+    inline int CMenu::GetMenuString(UINT itemID, CString& string, UINT flags) const
     {
         assert(m_pData);
         if (!m_pData) return 0;
 
         assert(IsMenu(m_pData->menu));
-        int n = ::GetMenuString(m_pData->menu, itemID, stringRef.GetBuffer(MAX_MENU_STRING), MAX_MENU_STRING, flags);
-        stringRef.ReleaseBuffer();
+        int n = ::GetMenuString(m_pData->menu, itemID, string.GetBuffer(MAX_MENU_STRING), MAX_MENU_STRING, flags);
+        string.ReleaseBuffer();
         return n;
     }
 

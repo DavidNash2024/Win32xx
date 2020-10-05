@@ -11,7 +11,7 @@
 //
 
 // Constructor for CMainFrame. Its called after CFrame's constructor
-CMainFrame::CMainFrame() : m_useBigIcons(FALSE)
+CMainFrame::CMainFrame() : m_useBigIcons(TRUE)
 {
     //Set m_View as the view window of the frame
     SetView(m_view);
@@ -58,10 +58,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     UINT id = LOWORD(wparam);
     switch(id)
     {
-    case IDM_FILE_OPEN:         return OnFileOpen();
-    case IDM_FILE_SAVE:         return OnFileSave();
-    case IDM_FILE_SAVEAS:       return OnFileSave();
-    case IDM_FILE_PRINT:        return OnFilePrint();
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
@@ -96,8 +92,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     DWORD style = GetToolBar().GetStyle();
     GetToolBar().SetStyle(CCS_ADJUSTABLE|style);
 
-    // Untick the Large Icons menu item
-    GetFrameMenu().CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | MF_UNCHECKED);
+    // Tick the Large Icons menu item
+    GetFrameMenu().CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | MF_CHECKED);
 
     return 0;
 }
@@ -116,6 +112,8 @@ LRESULT CMainFrame::OnEndAdjust(LPNMHDR pNMHDR)
 {
     UNREFERENCED_PARAMETER(pNMHDR);
 
+    ResizeToolbarBand();
+
     return TRUE;
 }
 
@@ -124,60 +122,6 @@ BOOL CMainFrame::OnFileExit()
 {
     Close();
     return TRUE;
-}
-
-BOOL CMainFrame::OnFileOpen()
-{
-    CFileDialog fileDlg(TRUE);
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-BOOL CMainFrame::OnFileSave()
-{
-    CFileDialog fileDlg(FALSE);
-
-    // Bring up the file save dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-    }
-
-    return TRUE;
-}
-
-BOOL CMainFrame::OnFilePrint()
-{
-    // Bring up a dialog to choose the printer
-    CPrintDialog printdlg;
-
-    try
-    {
-        INT_PTR result = printdlg.DoModal(*this);
-
-        // Retrieve the printer DC
-        // CDC dcPrinter = printdlg.GetPrinterDC();
-
-        // TODO:
-        // Add your own code here. Refer to the tutorial for additional information
-
-        return (result == IDOK);   // boolean expression
-    }
-
-    catch (const CWinException& /* e */)
-    {
-        // No default printer
-        MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-        return FALSE;
-    }
 }
 
 // Called after the frame window is created.
@@ -264,6 +208,8 @@ LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR pNMTB)
 {
     UNREFERENCED_PARAMETER(pNMTB);
 
+    ResizeToolbarBand();
+
     // Permit all buttons to be deleted
     return TRUE;
 }
@@ -274,14 +220,15 @@ LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR pNMTB)
 {
     UNREFERENCED_PARAMETER(pNMTB);
 
+    ResizeToolbarBand();
+
     // Permit all buttons to be inserted
     return TRUE;
 }
 
-// Called when the user presses the Reset button on teh ToolBar customize dialog.
+// Called when the user presses the Reset button on the ToolBar customize dialog.
 // Here we restore the Toolbar to the settings saved in OnBeginAdjust.
 LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
-
 {
     CToolBar* pToolBar = static_cast<CToolBar*>(GetCWndPtr(pNMTB->hdr.hwndFrom));
     assert (dynamic_cast<CToolBar*> (pToolBar));
@@ -304,6 +251,7 @@ LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
         }
     }
 
+    ResizeToolbarBand();
     RecalcLayout();
 
     return TRUE;
@@ -320,19 +268,19 @@ LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR pNMTB)
     return TRUE;
 }
 
+// Show or hide the toolbars
 inline BOOL CMainFrame::OnViewToolBar()
 {
     BOOL show = GetToolBar().IsWindow() && !GetToolBar().IsWindowVisible();
-
-    // Show or hide the toolbars
+    
     GetReBar().ShowBand(GetReBar().GetBand(GetToolBar()), show);
     GetReBar().ShowBand(GetReBar().GetBand(m_cards), show);
     GetReBar().ShowBand(GetReBar().GetBand(m_arrows), show);
     return TRUE;
 }
 
-BOOL CMainFrame::OnTBBigIcons()
 // Toggle the Image size for the ToolBar by changing Image Lists.
+BOOL CMainFrame::OnTBBigIcons()
 {
     m_useBigIcons = !m_useBigIcons;
 
@@ -341,28 +289,34 @@ BOOL CMainFrame::OnTBBigIcons()
     if (m_useBigIcons)
     {
         // Set Large Images. 3 Imagelists - Normal, Hot and Disabled
-        SetToolBarImages(RGB(192,192,192), IDB_NORMAL, IDB_HOT, IDB_DISABLED);
+        SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_HOT, IDB_DISABLED);
+        SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255, 0, 255));
+        SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255, 0, 255));
     }
     else
     {
         // Set Small icons
-        SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+        SetToolBarImages(RGB(192,192,192), IDB_SMALL, 0, 0);
+        SetTBImageList(m_arrows, m_arrowImages, IDB_SMALLARROWS, RGB(255, 0, 255));
+        SetTBImageList(m_cards, m_cardImages, IDB_SMALLCARDS, RGB(255, 0, 255));
     }
 
     RecalcLayout();
     GetToolBar().Invalidate();
+    m_arrows.Invalidate();
+    m_cards.Invalidate();
     return TRUE;
 }
 
+// Customize the toolbar.
 BOOL CMainFrame::OnTBCustomize()
 {
-    // Customize CFrame's Toolbar
     GetToolBar().Customize();
     return TRUE;
 }
 
-BOOL CMainFrame::OnTBDefault()
 // Set the Toolbar back to its intial settings.
+BOOL CMainFrame::OnTBDefault()
 {
     // Remove all current buttons
     int count = GetToolBar().GetButtonCount();
@@ -379,12 +333,21 @@ BOOL CMainFrame::OnTBDefault()
         GetToolBar().InsertButton(j, tbb);
     }
 
+    ResizeToolbarBand();
     RecalcLayout();
     return TRUE;
 }
 
+// Readjust the toolbar band size after customization.
+void CMainFrame::ResizeToolbarBand() const
+{
+    CSize size = GetToolBar().GetMaxSize();
+    int band = GetReBar().GetBand(GetToolBar());
+    GetReBar().ResizeBand(band, size);
+}
+
+// Saves the initial Toolbar configuration in a vector of TBBUTTON.
 void CMainFrame::SaveTBDefault()
-// Saves the initial Toolbar configuration in a vector of TBBUTTON
 {
     int nCount = GetToolBar().GetButtonCount();
 
@@ -396,22 +359,23 @@ void CMainFrame::SaveTBDefault()
     }
 }
 
+// Configure the Toolbar.
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( IDM_FILE_NEW   );
-    AddToolBarButton( IDM_FILE_OPEN  );
-    AddToolBarButton( IDM_FILE_SAVE  );
+    AddToolBarButton( IDM_FILE_OPEN, FALSE);    // disabled button
+    AddToolBarButton( IDM_FILE_SAVE, FALSE);    // disabled button
 
-    AddToolBarButton( 0 );              // Separator
+    AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
 
-    AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_FILE_PRINT );
+    AddToolBarButton( 0 );                      // Separator
+    AddToolBarButton( IDM_FILE_PRINT, FALSE);   // disabled button
 
-    AddToolBarButton( 0 );              // Separator
+    AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 
     // Add the two other toolbars if we can use rebars (Need Win95 and IE 4 or better)
@@ -435,15 +399,3 @@ void CMainFrame::SetupToolBar()
     }
 
 }
-
-LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-//  switch (msg)
-//  {
-//      Add case statements for each messages to be handled here
-//  }
-
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
-}
-
