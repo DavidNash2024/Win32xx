@@ -67,7 +67,6 @@ private:
     CRadioIP6   m_radioIP6;
     CRadioTCP   m_radioTCP;
     CRadioUDP   m_radioUDP;
-
 };
 
 #endif //CLIENTDIALOG_H

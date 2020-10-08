@@ -65,7 +65,7 @@ class CContainDialog : public CDockContainer
 {
 public:
     CContainDialog();
-    ~CContainDialog() {}
+    virtual ~CContainDialog() {}
 
 private:
     CViewDialog m_viewDialog;

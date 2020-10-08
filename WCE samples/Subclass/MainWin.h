@@ -1,10 +1,8 @@
 ///////////////////////////////
 // MainWin.h
 
-
 #ifndef MAINWIN_H
 #define MAINWIN_H
-
 
 #include "Button.h"
 
@@ -15,7 +13,7 @@ class CMainWin : public CWnd
 {
 public:
     CMainWin();
-    ~CMainWin() {}
+    virtual ~CMainWin() {}
 
 protected:
     LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);

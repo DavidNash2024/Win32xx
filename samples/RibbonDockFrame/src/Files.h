@@ -5,6 +5,7 @@
 #ifndef FILES_H
 #define FILES_H
 
+
 ///////////////////////////////////////////////////////
 // CViewFiles manages a list view control It is used as
 // the view window by CContainFiles.
@@ -32,7 +33,7 @@ class CContainFiles : public CDockContainer
 {
 public:
     CContainFiles();
-    ~CContainFiles() {}
+    virtual ~CContainFiles() {}
 
 private:
     CViewFiles m_viewFiles;

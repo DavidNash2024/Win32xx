@@ -73,5 +73,6 @@ private:
     BOOL m_showCards;
 };
 
+
 #endif //MAINFRM_H
 

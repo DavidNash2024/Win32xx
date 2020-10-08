@@ -93,6 +93,7 @@ namespace Win32xx
     //  ArchiveObject ao(&Data, sizeof(Data));
     //  ar << ao; or ar >> ao;
 
+
     //////////////////////////////////////////////////////////////
     // CArchive serializes data to and from a file archive.
     // CArchive uses the >> and << operator overloads to serialize
@@ -106,7 +107,7 @@ namespace Win32xx
         // construction and  destruction
         CArchive(CFile& file, Mode mode);
         CArchive(LPCTSTR fileName, Mode mode);
-        ~CArchive();
+        virtual ~CArchive();
 
         // method members
         const CFile&    GetFile();

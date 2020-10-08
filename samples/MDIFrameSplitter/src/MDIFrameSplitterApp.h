@@ -7,6 +7,7 @@
 
 #include "MainMDIFrm.h"
 
+
 ////////////////////////////////////////////////
 // Declaration of the CMDIFrameSplitterApp class
 //

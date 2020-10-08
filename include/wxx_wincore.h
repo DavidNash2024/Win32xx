@@ -2042,13 +2042,13 @@ namespace Win32xx
     // The window region determines the area within the window where the system permits drawing.
     // The window now owns the region so it is detached from Rgn.
     // Refer to SetWindowRgn in the Windows API documentation for more information.
-    inline int CWnd::SetWindowRgn(CRgn& rgn, BOOL redraw /*= TRUE*/) const
+    inline int CWnd::SetWindowRgn(HRGN rgn, BOOL redraw /*= TRUE*/) const
     {
         assert(IsWindow());
-        HRGN rgnHandle = reinterpret_cast<HRGN>(rgn.GetHandle());
-        int iResult = ::SetWindowRgn(*this, rgnHandle, redraw);
-        if (iResult && rgnHandle)
-            rgn.Detach();   // The system owns the region now
+        int iResult = ::SetWindowRgn(*this, rgn, redraw);
+        CRgn region(rgn);
+        if (iResult)
+            region.Detach();   // The system owns the region now
 
         return iResult;
     }
@@ -2134,7 +2134,7 @@ namespace Win32xx
 
     // Retrieves the window that contains the specified point (in screen coordinates).
     // Refer to WindowFromPoint in the Windows API documentation for more information.
-    inline CWnd CWnd::WindowFromPoint(POINT point)
+    inline CWnd CWnd::WindowFromPoint(POINT point) const
     {
         return CWnd(::WindowFromPoint(point));
     }

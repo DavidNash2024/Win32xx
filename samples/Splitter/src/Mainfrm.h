@@ -35,5 +35,6 @@ private:
     CDockList* m_pDockList;
 };
 
+
 #endif //MAINFRM_H
 

@@ -5,6 +5,7 @@
 #ifndef MAINMDIFRM_H
 #define MAINMDIFRM_H
 
+
 /////////////////////////////////////
 // Declaration of CMainMDIFrame class
 //

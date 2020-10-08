@@ -5,6 +5,7 @@
 #ifndef MDICHILDRECT_H
 #define MDICHILDRECT_H
 
+
 ///////////////////////////////////////////////////////////
 // CViewRect manages a window that displays rectangles with
 // a random size and color. It is used as the view window
@@ -23,6 +24,7 @@ private:
     int m_cxClientMax;
     int m_cyClientMax;
 };
+
 
 //////////////////////////////////////////////////////////////
 // CMDIChildRect manages a MDI child window. It uses CViewRect

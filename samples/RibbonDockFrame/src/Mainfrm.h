@@ -53,4 +53,3 @@ private:
 };
 
 #endif //MAINFRM_H
-

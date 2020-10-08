@@ -5,6 +5,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+
 //////////////////////////////////////////
 // CView manages the main window. It uses a Ribbon
 // in place of a menu and toolbar.
@@ -24,7 +25,7 @@ protected:
     virtual void OnSize();
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
 };
+
 
 #endif

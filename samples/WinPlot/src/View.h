@@ -56,4 +56,5 @@ private:
     double m_ymax;
 };
 
+
 #endif // VIEW_H

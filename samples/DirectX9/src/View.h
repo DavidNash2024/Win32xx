@@ -64,6 +64,7 @@ class CDXView : public CWnd
         CDXThread() : m_pDX(0) {}
         virtual ~CDXThread() {}
 
+    protected:
         virtual BOOL InitInstance();
         virtual int MessageLoop();
 

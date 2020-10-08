@@ -15,11 +15,14 @@ class CViewFiles : public CListView
 public:
     CViewFiles();
     virtual ~CViewFiles();
-    virtual void InsertItems();
+
+    void InsertItems();
+    void SetColumns();
+
+protected:
     virtual void OnAttach();
     virtual void OnDestroy();
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void SetColumns();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
@@ -34,7 +37,7 @@ class CContainFiles : public CDockContainer
 {
 public:
     CContainFiles();
-    ~CContainFiles() {}
+    virtual ~CContainFiles() {}
 
 private:
     CViewFiles m_viewFiles;

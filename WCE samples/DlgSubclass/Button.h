@@ -1,7 +1,6 @@
 /////////////////////////////
 // Button.h
 
-
 #ifndef BUTTON_H
 #define BUTTON_H
 
@@ -19,7 +18,6 @@ public:
 protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
-
 
 
 #endif //BUTTON_H

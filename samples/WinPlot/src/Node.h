@@ -7,6 +7,7 @@
 
 #include <iostream>
 
+
 namespace Calc
 {
 
@@ -14,6 +15,7 @@ namespace Calc
 #pragma warning ( push )
 #pragma warning ( disable : 26812 )       // enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
 
     ///////////////////////////////////////////////////////////
     // "Node" is the parent class of all nodes
@@ -31,6 +33,7 @@ namespace Calc
         Node& operator=(const Node&);       // Disable copy constructor
     };
 
+
     /////////////////////////////////////////////////////
     // A node type which holds a simple number, but not a
     // variable or constant from the SymbolTable.
@@ -44,6 +47,7 @@ namespace Calc
     private:
         const double m_number;
     };
+
 
     ///////////////////////////////////////////////////////////
     // A branch node has one or more leaf nodes.
@@ -74,6 +78,7 @@ namespace Calc
         std::vector<eToken> m_tokens;
     };
 
+
     /////////////////////////////////////////
     // Retrieves values from the symbol table.
     class Node_Variable : public Node
@@ -87,6 +92,7 @@ namespace Calc
         const SymbolTable& m_symTab;
         CString m_symbol;
     };
+
 
     ///////////////////////////////////////////////////
     // Assigns the value of an expression to a variable.
@@ -102,6 +108,7 @@ namespace Calc
         SymbolTable& m_symTab;
         CString m_symbol;
     };
+
 
     //////////////////////////////////////////////////////////////
     // Calls a math function on the expression pointed to by pnode.
@@ -122,5 +129,6 @@ namespace Calc
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 }
+
 
 #endif  //define _CF6AD5B7_507F_4DE4_8980_A3940530D108_NODE_H

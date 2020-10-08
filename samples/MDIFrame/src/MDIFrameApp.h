@@ -7,6 +7,7 @@
 
 #include "MainMDIFrm.h"
 
+
 ///////////////////////////////////////////////////////////////////
 // CMDIFrameApp manages the application. It initializes the Win32++
 // framework when it is constructed, and creates the main MDI frame

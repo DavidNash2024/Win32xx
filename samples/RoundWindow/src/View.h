@@ -39,4 +39,5 @@ private:
     CRect m_rect;
 };
 
+
 #endif

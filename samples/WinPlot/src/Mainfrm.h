@@ -33,4 +33,5 @@ private:
     CView m_view;
 };
 
+
 #endif //MAINFRM_H

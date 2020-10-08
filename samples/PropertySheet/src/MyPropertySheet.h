@@ -13,11 +13,13 @@ class CMyPropertySheet : public CPropertySheet
 {
 public:
     CMyPropertySheet(LPCTSTR caption = NULL, HWND hParent = NULL);
+    virtual ~CMyPropertySheet() {}
     virtual void OnClose() { TRACE("OnClose\n"); CPropertySheet::OnClose(); }
     virtual void OnDestroy() { TRACE("OnDestroy\n"); }
     virtual void OnInitialUpdate();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
+
 
 /////////////////////////////////////////////////////////
 // CButtonPage manages a property page which displays a
@@ -27,6 +29,7 @@ class CButtonPage : public CPropertyPage
 {
 public:
     CButtonPage(UINT templateID, LPCTSTR title = NULL);
+    virtual ~CButtonPage() {}
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnApply();
     virtual void OnCancel();
@@ -46,6 +49,7 @@ class CComboPage : public CPropertyPage
 {
 public:
     CComboPage(UINT templateID, LPCTSTR title  = NULL);
+    virtual ~CComboPage() {}
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnInitDialog();
     virtual BOOL OnSetActive();
@@ -58,4 +62,3 @@ public:
 
 
 #endif // MYPROPERTYSHEET_H
-

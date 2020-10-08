@@ -20,4 +20,5 @@ private:
     CImageList m_normalImages;
 };
 
+
 #endif  //CLASSES_H

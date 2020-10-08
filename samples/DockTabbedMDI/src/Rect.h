@@ -13,6 +13,7 @@ class CViewRect : public CWnd
 {
 public:
     CViewRect() : m_cxClientMax(0), m_cyClientMax(0) {}
+    virtual ~CViewRect() {}
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);

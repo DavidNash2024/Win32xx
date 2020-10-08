@@ -13,6 +13,7 @@ class CMyEdit : public CEdit
 {
 public:
     CMyEdit();
+    virtual ~CMyEdit() {}
 
 protected:
     virtual void OnAttach();
@@ -21,5 +22,6 @@ protected:
 private:
     CFont m_font;
 };
+
 
 #endif // MYEDIT_H

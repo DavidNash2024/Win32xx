@@ -25,4 +25,3 @@ private:
 
 
 #endif // define PICTUREAPP_H
-

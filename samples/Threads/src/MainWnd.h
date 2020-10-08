@@ -43,4 +43,5 @@ private:
     CMyEdit m_edit;
 };
 
+
 #endif  //MAINWND_H

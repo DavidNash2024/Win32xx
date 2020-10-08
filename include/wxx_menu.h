@@ -103,7 +103,7 @@ namespace Win32xx
         CMenu(const CMenu& rhs);
         CMenu& operator = (const CMenu& rhs);
         void operator = (const HMENU menu);
-        ~CMenu();
+        virtual ~CMenu();
 
         //Initialization
         void Attach(HMENU menu);

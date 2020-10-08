@@ -2,8 +2,8 @@
 // MainFrm.h
 
 
-#ifndef VIEW_H
-#define VIEW_H
+#ifndef MAINFRM_H_
+#define MAINFRM_H_
 
 
 #include "wxx_wincore.h"
@@ -45,4 +45,5 @@ private:
     COLORREF m_penColor;
 };
 
-#endif   //VIEW_H
+
+#endif   // MAINFRM_H_

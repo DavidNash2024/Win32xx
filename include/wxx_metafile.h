@@ -72,7 +72,7 @@ namespace Win32xx
         CMetaFile();
         CMetaFile(HMETAFILE metaFile);
         CMetaFile(const CMetaFile& rhs);
-        ~CMetaFile();
+        virtual ~CMetaFile();
         CMetaFile& operator = (const CMetaFile& rhs);
         void operator = (const HMETAFILE metaFile);
         operator HMETAFILE() { return m_pData->metaFile; }

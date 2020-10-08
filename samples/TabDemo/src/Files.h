@@ -24,4 +24,5 @@ private:
     CImageList m_smallImages;
 };
 
+
 #endif // FILES_H

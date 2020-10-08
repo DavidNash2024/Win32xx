@@ -31,4 +31,5 @@ private:
     int m_window;
 };
 
+
 #endif  //TESTWIN_H

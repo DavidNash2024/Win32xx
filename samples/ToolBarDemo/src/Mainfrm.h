@@ -52,5 +52,6 @@ private:
     BOOL    m_useBigIcons;
 };
 
+
 #endif //MAINFRM_H
 

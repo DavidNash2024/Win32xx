@@ -175,7 +175,6 @@ namespace Win32xx
 
         // Static methods
         static  CTime   GetCurrentTime();
-        static  FILETIME FileTimePlus(const FILETIME& ft, double addend);
 
     private:
 
@@ -806,31 +805,6 @@ namespace Win32xx
         return CTime(::time(NULL));
     }
 
-    // Returns a FILETIME structure containing the FILETIME ft
-    // increased by addend seconds.
-    inline FILETIME CTime::FileTimePlus(const FILETIME& ft, double addend)
-    {
-        // convert ft to unsigned long long
-        ULONGLONG ftlong = static_cast<ULONGLONG>(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
-        BOOL sign = FALSE;
-        if (addend < 0.)
-        {
-            sign = TRUE;
-            addend = -addend;
-        }
-        ULONGLONG ftaddend = static_cast<ULONGLONG>(addend) * 10000000;
-        if (sign)
-        {
-            assert(ftlong >= ftaddend); //FILETIME addition underflow.
-            ftlong -= ftaddend;
-        }
-        else
-            ftlong += ftaddend;
-        FILETIME fts;
-        fts.dwHighDateTime = static_cast<DWORD>(ftlong >> 32);
-        fts.dwLowDateTime  = static_cast<DWORD>(ftlong & ~0);
-        return fts;
-    }
 
     //
     // Global functions within the Win32xx namespace

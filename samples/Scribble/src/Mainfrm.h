@@ -8,6 +8,7 @@
 
 #include "View.h"
 
+
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
 // The main window is a frame which has a menubar, toolbar,
@@ -47,6 +48,7 @@ private:
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
 };
+
 
 #endif //MAINFRM_H
 

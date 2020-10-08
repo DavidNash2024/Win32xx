@@ -21,7 +21,6 @@ public:
 protected:
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
-
 };
 
 
@@ -32,7 +31,7 @@ class CContainOutput : public CDockContainer
 {
 public:
     CContainOutput();
-    ~CContainOutput() {}
+    virtual ~CContainOutput() {}
 
 private:
     CViewOutput m_viewOutput;

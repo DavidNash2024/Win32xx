@@ -258,7 +258,7 @@ namespace Win32xx
         LONG_PTR SetWindowLongPtr(int index, LONG_PTR newLong) const;
         BOOL  SetWindowPos(HWND insertAfter, int x, int y, int cx, int cy, UINT flags) const;
         BOOL  SetWindowPos(HWND insertAfter, const RECT& rect, UINT flags) const;
-        int   SetWindowRgn(CRgn& rgn, BOOL redraw = TRUE) const;
+        int   SetWindowRgn(HRGN rgn, BOOL redraw = TRUE) const;
         BOOL  SetWindowText(LPCTSTR pString) const;
         HRESULT SetWindowTheme(LPCWSTR pSubAppName, LPCWSTR pSubIdList) const;
         BOOL  ShowWindow(int showCmd = SW_SHOWNORMAL) const;
@@ -266,7 +266,7 @@ namespace Win32xx
         BOOL  ValidateRect(const RECT& rect) const;
         BOOL  ValidateRect() const;
         BOOL  ValidateRgn(HRGN rgn) const;
-        static CWnd WindowFromPoint(POINT point);
+        CWnd  WindowFromPoint(POINT point) const;
 
   #ifndef _WIN32_WCE
         BOOL  CloseWindow() const;

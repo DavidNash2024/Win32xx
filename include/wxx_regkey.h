@@ -54,7 +54,7 @@ namespace Win32xx
         CRegKey();
         CRegKey(HKEY key);
         CRegKey(const CRegKey&);
-        ~CRegKey();
+        virtual ~CRegKey();
         operator HKEY() const { return m_key; }
         CRegKey& operator =(CRegKey& key);
 

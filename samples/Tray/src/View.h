@@ -5,6 +5,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+
 ////////////////////////////////////////////////////
 // CView is the application's main window. It can be
 // minimized to the tray.

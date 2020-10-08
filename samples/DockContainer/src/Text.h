@@ -29,7 +29,7 @@ class CContainText : public CDockContainer
 {
 public:
     CContainText();
-    ~CContainText() {}
+    virtual ~CContainText() {}
 
 private:
     CViewText m_viewText;

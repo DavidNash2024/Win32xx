@@ -69,7 +69,6 @@ private:
     CMyStatus   m_status;
     COK         m_ok;
     CGroup      m_group;
-
 };
 
 #endif //SDI_VIEW_H

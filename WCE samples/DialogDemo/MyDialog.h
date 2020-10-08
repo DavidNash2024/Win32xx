@@ -32,4 +32,5 @@ private:
     int m_counter;
 };
 
+
 #endif //MYDIALOG_H

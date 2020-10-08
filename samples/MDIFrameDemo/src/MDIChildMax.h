@@ -5,6 +5,7 @@
 #ifndef MDICHILDMAX_H
 #define MDICHILDMAX_H
 
+
 ////////////////////////////////////////////////////////
 // CViewMax is used as the view window for CMDIChildMax.
 class CViewMax : public CWnd
@@ -17,6 +18,7 @@ protected:
     virtual void OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
+
 
 ////////////////////////////////////////////////////////////
 // CMDIChildMax manages a MDI child window that is maximised

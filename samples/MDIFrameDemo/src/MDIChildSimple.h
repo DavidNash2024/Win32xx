@@ -5,6 +5,7 @@
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
 
+
 /////////////////////////////////////////////////////
 // CViewSimple manages a simple window. It is used as
 // the view window for CMDIChildSimple.

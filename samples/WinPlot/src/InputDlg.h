@@ -31,4 +31,5 @@ private:
     CString m_function;
 };
 
+
 #endif  // __INPUTDLG_H__

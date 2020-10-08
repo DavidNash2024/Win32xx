@@ -5,6 +5,7 @@
 #ifndef VIEWS_H
 #define VIEWS_H
 
+
 ///////////////////////////////////////
 // CViewSimple manages a simple window.
 class CViewSimple : public CWnd
@@ -42,8 +43,8 @@ class CViewTree : public CTreeView
 public:
     CViewTree();
     virtual ~CViewTree();
-	
-protected:	
+
+protected:
     virtual void OnAttach();
 
 private:
@@ -60,7 +61,7 @@ public:
     virtual ~CViewList();
     void InsertItems();
     void SetColumns();
-	
+
 protected:
     virtual void OnAttach();
 

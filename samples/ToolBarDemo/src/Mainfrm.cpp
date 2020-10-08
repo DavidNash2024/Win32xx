@@ -272,7 +272,7 @@ LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR pNMTB)
 inline BOOL CMainFrame::OnViewToolBar()
 {
     BOOL show = GetToolBar().IsWindow() && !GetToolBar().IsWindowVisible();
-    
+
     GetReBar().ShowBand(GetReBar().GetBand(GetToolBar()), show);
     GetReBar().ShowBand(GetReBar().GetBand(m_cards), show);
     GetReBar().ShowBand(GetReBar().GetBand(m_arrows), show);

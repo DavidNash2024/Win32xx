@@ -16,11 +16,7 @@ public:
     CTaskDialogApp();
     virtual ~CTaskDialogApp();
     virtual BOOL InitInstance();
-
-private:
-//  CTaskDialog m_TaskDialog;
 };
-
 
 
 #endif // define TASKDIALOGAPP_H

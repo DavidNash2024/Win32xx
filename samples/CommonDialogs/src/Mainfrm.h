@@ -33,7 +33,7 @@ CMainFrame : public CFrame                                                  /*
 {
     public:
         CMainFrame();
-        ~CMainFrame() {}
+        virtual ~CMainFrame() {}
 
         void    AddMRUEntry(LPCTSTR MRUEntry)
                     { CFrame::AddMRUEntry (MRUEntry);}
