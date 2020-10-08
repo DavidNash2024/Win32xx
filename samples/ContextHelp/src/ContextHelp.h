@@ -44,11 +44,11 @@ class CContextHelp : public CWnd
         CContextHelp();
         virtual ~CContextHelp();
 
-        virtual void    AddHelpTopic(UINT id, LPCTSTR topic);
-        virtual HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
-        virtual UINT    GetIDFromCursorPos() const;
-        virtual void    ShowHelpTopic(UINT id);
-        virtual void    ShowHelpTopic(LPCTSTR topic);
+        void    AddHelpTopic(UINT id, LPCTSTR topic);
+        HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
+        UINT    GetIDFromCursorPos() const;
+        void    ShowHelpTopic(UINT id);
+        void    ShowHelpTopic(LPCTSTR topic);
 
         const CString&  GetHelpFilePath() const             { return m_helpFilePath; }
         void            SetHelpFilePath(LPCTSTR chmName)    { m_helpFilePath = chmName; }

@@ -7,6 +7,7 @@
 
 struct PlotPoint;
 
+
 //////////////////////////////////////////////////////////////
 // Declartion of the CDoc Class
 // CDoc holds the application's data. It inherits from CObject
@@ -16,7 +17,7 @@ class CDoc : public CObject
 {
 public:
     CDoc() {}
-    ~CDoc() {}
+    virtual ~CDoc() {}
 
     std::vector<PlotPoint>& GetAllPoints() {return m_points;}
     BOOL FileOpen(LPCTSTR filename);
@@ -26,7 +27,6 @@ public:
 
 private:
     std::vector<PlotPoint> m_points;    // Points of lines to draw
-
 };
 
 #endif  // WIN32XX_DOC_H

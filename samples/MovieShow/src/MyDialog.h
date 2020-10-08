@@ -50,6 +50,7 @@ private:
     CFont       m_titleFont;
 };
 
+
 ////////////////////////////////////////////////////////
 // CDockDialog manages the resizing of the dialog window
 // when the splitter bar is dragged.

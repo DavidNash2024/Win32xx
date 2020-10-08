@@ -120,12 +120,12 @@ namespace Win32xx
         HTREEITEM InsertItem(TVINSERTSTRUCT& insertInfo) const;
         HTREEITEM InsertItem(UINT mask, LPCTSTR text, int image,
                              int selectedImage, UINT state, UINT stateMask,
-                             LPARAM lparam, HTREEITEM parent, 
+                             LPARAM lparam, HTREEITEM parent,
                              HTREEITEM insertAfter) const;
         HTREEITEM InsertItem(LPCTSTR text, HTREEITEM parent = TVI_ROOT,
                              HTREEITEM insertAfter = TVI_LAST) const;
         HTREEITEM InsertItem(LPCTSTR text, int image, int selectedImage,
-                             HTREEITEM parent = TVI_ROOT, 
+                             HTREEITEM parent = TVI_ROOT,
                              HTREEITEM insertAfter = TVI_LAST) const;
         BOOL    Select(HTREEITEM item, UINT flag) const;
         BOOL    SelectDropTarget(HTREEITEM item) const;
@@ -672,7 +672,7 @@ namespace Win32xx
         tvis.hInsertAfter = insertAfter;
         tvis.item = tvi;
 
-        return InsertItem(tvis);    
+        return InsertItem(tvis);
     }
 
     // Inserts a new item in a tree-view control.

@@ -34,7 +34,7 @@ class CContainOutput : public CDockContainer
 {
 public:
     CContainOutput();
-    ~CContainOutput() {}
+    virtual ~CContainOutput() {}
 
 private:
     CViewOutput m_viewOutput;

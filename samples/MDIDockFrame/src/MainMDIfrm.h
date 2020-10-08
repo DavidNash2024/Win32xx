@@ -35,7 +35,6 @@ protected:
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
 };
 
 #endif  //MAINMDIFRM_H

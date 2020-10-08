@@ -122,7 +122,7 @@ namespace Win32xx
     // This class provides support for a property sheet. A property
     // sheet is also known as a tab dialog box. It has one or more
     // property pages. A Property sheet can present its pages as a
-    // wizard. 
+    // wizard.
     class CPropertySheet : public CWnd
     {
     public:

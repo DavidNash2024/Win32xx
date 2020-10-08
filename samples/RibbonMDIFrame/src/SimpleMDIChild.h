@@ -48,4 +48,5 @@ private:
     CMenu m_menu;
 };
 
+
 #endif  //MDICHILDVIEW_H

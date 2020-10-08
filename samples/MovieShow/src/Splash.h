@@ -5,6 +5,7 @@
 #ifndef SPLASH_H
 #define SPLASH_H
 
+
 ///////////////////////////////////////////////////////////////////////
 // CSplash creates a splash screen with optional text and progress bar.
 // The splash screen is shown to indicate time consuming tasks, and
@@ -13,7 +14,7 @@ class CSplash : public CWnd
 {
 public:
     CSplash();
-    ~CSplash();
+    virtual ~CSplash();
 
     const CProgressBar& GetBar() const { return m_progress; }
 

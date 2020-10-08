@@ -30,4 +30,5 @@ protected:
     virtual LRESULT TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
+
 #endif

@@ -33,7 +33,7 @@ class CContainFiles : public CDockContainer
 {
 public:
     CContainFiles();
-    ~CContainFiles() {}
+    virtual ~CContainFiles() {}
 
 private:
     CViewFiles m_viewFiles;

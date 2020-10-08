@@ -70,7 +70,7 @@ namespace Win32xx
     {
     public:
         CRibbon();
-        ~CRibbon();
+        virtual ~CRibbon();
 
         // IUIApplication methods
         virtual STDMETHODIMP OnCreateUICommand(UINT nCmdID, __in UI_COMMANDTYPE typeID,

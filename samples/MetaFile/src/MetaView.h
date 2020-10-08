@@ -2,7 +2,6 @@
 // MetaView.h
 //
 
-
 #ifndef METAVIEW_H
 #define METAVIEW_H
 
@@ -25,7 +24,6 @@ public:
 
 private:
     CEnhMetaFile  m_enhMetaFile;
-
 };
 
 #endif // METAVIEW_H

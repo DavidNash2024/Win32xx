@@ -18,7 +18,7 @@ class CD2DApp : public CWinApp
 {
 public:
     CD2DApp();
-    ~CD2DApp();
+    virtual ~CD2DApp();
 
     BOOL InitInstance();
     ID2D1Factory* GetD2DFactory() { return m_pDirect2dFactory; }

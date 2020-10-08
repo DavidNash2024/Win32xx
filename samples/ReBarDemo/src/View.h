@@ -5,6 +5,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+
 /////////////////////////////////////////////
 // CView manages CMainFrame's view window.
 // This view also has a movable rebar window.

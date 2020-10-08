@@ -37,7 +37,7 @@ public:
         SetTabText(_T("Output"));
         SetTabIcon(IDI_TEXT);
     }
-    ~CContainOutput() {}
+    virtual ~CContainOutput() {}
 
 private:
     CViewOutput m_viewOutput;

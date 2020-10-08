@@ -13,15 +13,11 @@ class CDoc : public CObject
 {
 public:
     CDoc() {}
-    ~CDoc() {}
+    virtual ~CDoc() {}
 
     BOOL FileLoad(LPCTSTR filename);
     BOOL FileStore(LPCTSTR filename);
-    void Serialize(CArchive& ar);
-
-private:
-//  int m_memberVariable;
-
+    virtual void Serialize(CArchive& ar);
 };
 
 #endif  // WIN32XX_DOC_H

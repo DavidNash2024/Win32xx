@@ -15,7 +15,6 @@ public:
     CViewWeb() {}
     virtual ~CViewWeb() {}
     virtual int OnCreate(CREATESTRUCT& cs);
-
 };
 
 

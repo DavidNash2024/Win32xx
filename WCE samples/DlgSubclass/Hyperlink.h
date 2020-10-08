@@ -11,6 +11,10 @@
 #define IDC_HAND  MAKEINTRESOURCE(32649)
 #endif
 
+
+//////////////////////////////////////////////////
+// CHyperlink manages the hyperlink. The hyperlink
+// is a modified static control.
 class CHyperlink :  public CWnd
 {
 public:
@@ -33,6 +37,7 @@ private:
     HCURSOR m_hCursor;
     CFont   m_urlFont;
 };
+
 
 #endif // HYPERLINK_H
 

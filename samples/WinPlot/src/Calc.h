@@ -48,7 +48,6 @@
 
 namespace Calc
 {
-
     class Node;
 
     //////////////////////////////////////////////////////
@@ -101,5 +100,6 @@ namespace Calc
     };
 
 } // namespace Calc
+
 
 #endif // #define _CALCULATOR_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED

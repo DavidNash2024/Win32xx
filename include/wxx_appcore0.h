@@ -465,6 +465,7 @@ namespace Win32xx
         CCriticalSection& m_cs;
     };
 
+
     ////////////////////////////////////////////////////////////////
     // CHGlobal is a class used to wrap a global memory handle.
     // It automatically frees the global memory when the object goes
@@ -648,5 +649,6 @@ namespace Win32xx
 
 
 } // namespace Win32xx
+
 
 #endif // _WIN32XX_APPCORE0_H_

@@ -56,4 +56,5 @@ private:
     HICON m_info;      // Icon used by tooltips for the RichEdit and Edit controls
 };
 
+
 #endif //MYDIALOG_H

@@ -21,7 +21,6 @@ public:
 
 private:
     CImageList m_smallImages;
-
 };
 
 
@@ -40,7 +39,6 @@ protected:
 private:
     CViewList m_listView;
     CMenu m_menu;
-
 };
 
 #endif  //MDICHILDLISTVIEW_H

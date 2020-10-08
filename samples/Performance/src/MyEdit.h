@@ -13,6 +13,7 @@ class CMyEdit : public CEdit
 {
 public:
     CMyEdit();
+    virtual ~CMyEdit() {}
 
 protected:
     virtual void OnAttach();

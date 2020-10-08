@@ -7,6 +7,7 @@
 
 #include "Hyperlink.h"
 
+
 /////////////////////////////////////////
 // Declaration of the CMyStatusBar class.
 //
@@ -28,20 +29,6 @@ private:
     CHyperlink m_hyperlink;
     CProgressBar m_progressBar;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif      // MYSTATUSBAR_H

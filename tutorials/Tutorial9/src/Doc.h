@@ -27,7 +27,7 @@ class CDoc : public CObject
 {
 public:
     CDoc() {}
-    ~CDoc() {}
+    virtual ~CDoc() {}
 
     std::vector<PlotPoint>& GetAllPoints() {return m_points;}   // returns a vector of PlotPoint data
     void FileOpen(LPCTSTR filename);
@@ -38,5 +38,6 @@ public:
 private:
     std::vector<PlotPoint> m_points;    // Points of lines to draw
 };
+
 
 #endif  // WIN32XX_DOC_H

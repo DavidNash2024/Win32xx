@@ -42,8 +42,8 @@ protected:
 private:
     CDoc m_doc;
     CString m_pathName;
-
 };
+
 
 #endif //MAINMDIFRM_H
 

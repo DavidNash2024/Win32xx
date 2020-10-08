@@ -964,7 +964,7 @@ BOOL CMainFrame::OnFavourite()
 void CMainFrame::OnFilesLoaded()
 {
     m_filesToAdd.clear();
-    
+
     // Re-select first tree item.
     HTREEITEM item = GetViewTree().GetFirstVisible();
     GetViewTree().SelectItem(0);

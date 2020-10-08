@@ -27,14 +27,15 @@ CApp : public CWinApp                                                       /*
 {
     public:
         CApp() {}
-        ~CApp(){}
+        virtual ~CApp(){}
 
-        BOOL    InitInstance();
         CString MakeAppDataPath(const CString&) const;
 
-    private:
-        BOOL    OnIdle(LONG);
+    protected:
+        virtual BOOL    InitInstance();
+        virtual BOOL    OnIdle(LONG);
 
+    private:
         CMainFrame  m_frame;        // the main frame object
 };
 

@@ -56,4 +56,5 @@ private:
     CRichEdit2  m_richEdit2;
 };
 
+
 #endif //MYDIALOG_H

@@ -98,7 +98,7 @@ UINT CContextHelp::GetIDFromCursorPos() const
 {
     UINT id = 0;
     CPoint pt = GetCursorPos();
-    HWND hCtrl = WindowFromPoint(pt);
+    HWND hCtrl = ::WindowFromPoint(pt);
 
     if (hCtrl != 0)
     {

@@ -9,6 +9,7 @@
 #define IDC_HAND  MAKEINTRESOURCE(32649)
 #endif
 
+
 ////////////////////////////////////////////////////////////////////////
 // CHyperlink creates a window that behaves like a hyperlink.
 // * A hand cursor is displayed when the Mouse hovers over the text
@@ -38,5 +39,6 @@ private:
     HCURSOR  m_hCursor;
     CFont    m_urlFont;
 };
+
 
 #endif // HYPERLINK_H

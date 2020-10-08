@@ -76,7 +76,7 @@ namespace Win32xx
         CImageList(const CImageList& rhs);
         CImageList& operator = (const CImageList& rhs);
         void operator = (const HIMAGELIST rhs);
-        ~CImageList();
+        virtual ~CImageList();
 
         //Initialization
         BOOL Create(int cx, int cy, UINT flags, int initial, int grow);

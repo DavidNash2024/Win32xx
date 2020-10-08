@@ -21,4 +21,5 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
+
 #endif // VIEW_H

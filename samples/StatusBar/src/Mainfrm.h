@@ -34,4 +34,5 @@ private:
     mutable CMyStatusBar m_myStatusBar;
 };
 
+
 #endif //MAINFRM_H

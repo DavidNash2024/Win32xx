@@ -18,7 +18,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CDXView& GetDXView() const { return const_cast<CDXView&>(m_dxView); }
+    CDXView& GetDXView() const { return m_dxView; }
 
     BOOL OnFileExit();
 
@@ -30,7 +30,7 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CDXView m_dxView;
+    mutable CDXView m_dxView;
 };
 
 #endif //MAINFRM_H

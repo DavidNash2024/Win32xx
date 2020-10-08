@@ -5,7 +5,7 @@
 #include "SimpleApp.h"
 
 
-// Constructor. 
+// Constructor.
 CSimpleApp::CSimpleApp()
 {
 }

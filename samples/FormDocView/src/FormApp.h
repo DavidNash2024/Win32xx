@@ -21,7 +21,6 @@ public:
 
 private:
     CMainFrame m_frame;
-
 };
 
 

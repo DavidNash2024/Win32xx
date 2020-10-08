@@ -5,8 +5,10 @@
 #if !defined(_TABLE_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED)
 #define _TABLE_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED
 
+
 namespace Calc
 {
+
     /////////////////////////////
     // A table of math functions.
     //
@@ -25,6 +27,7 @@ namespace Calc
         //  is declared as static
         static double cotan(double x);
     };
+
 
     //////////////////////////////////////////////////////
     // This class provides a table of symbols.  Used for variables eg x,
@@ -45,5 +48,6 @@ namespace Calc
     };
 
 } // namespace Calc
+
 
 #endif // !defined(_TABLE_H_CF6AD5B7_507F_4DE4_8980_A3940530D108_INCLUDED)

@@ -112,7 +112,7 @@ void CMainWindow::OnDestroy()
     std::vector<HANDLE> threadArray;  // use a vector as our array.
     for (int i = 0; i < nThreads; ++i)
         threadArray.push_back(m_threads[i]->GetThread());
-    
+
     // Wait for all the threads to end before proceeding.
     WaitForMultipleObjects(nThreads, &threadArray[0], TRUE, INFINITE);
 
