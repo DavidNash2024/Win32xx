@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1163,7 +1163,7 @@ namespace Win32xx
         return static_cast<int>(m_str.size());
     }
 
-    // Returns TRUE if the string is empty
+    // Returns TRUE if the string is empty.
     template <class T>
     inline bool CStringT<T>::IsEmpty() const
     {

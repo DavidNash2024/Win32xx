@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1119,7 +1119,6 @@ namespace Win32xx
             CBitmap disabled(disabledID);
 
             m_menuDisabledImages.Add(disabled, mask);
-
         }
         else
         {
@@ -1263,7 +1262,6 @@ namespace Win32xx
                     GetReBar().ShowGripper(GetReBar().GetBand(GetToolBar()), FALSE);
             }
         }
-
     }
 
     // CustomDraw is used to render the MenuBar's toolbar buttons
@@ -1643,7 +1641,6 @@ namespace Win32xx
             CRect rc = pDIS->rcItem;
             drawDC.ExcludeClipRect(rc);
         }
-
     }
 
     // Called by DrawMenuItem to render the popup menu background.
@@ -2446,6 +2443,7 @@ namespace Win32xx
     }
 
     // Called when the frame is about to be destroyed (WM_DESTROY received).
+    // Calls PostQuitMessage to end the application.
     template <class T>
     inline void CFrameT<T>::OnDestroy()
     {

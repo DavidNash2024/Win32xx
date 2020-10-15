@@ -49,14 +49,13 @@ private:
     private:
         Cpidl        m_cpidlFull;       //Fully Qualified PIDL
         Cpidl        m_cpidlRel;        //Relative PIDL
-        CShellFolder m_parentFolder;   //Parent Folder
+        CShellFolder m_parentFolder;    //Parent Folder
 
     };  //class TreeItemData
 
-    typedef Shared_Ptr<TreeItemData> TreeItemDataPtr;
+    typedef Shared_Ptr<TreeItemData> TreeItemDataPtr; // vector of smart pointers.
 
     static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM paramSort);
-    void DeleteItems();
     void DoItemMenu(HTREEITEM item, CPoint& point);
     void DoContextMenu(CPoint& point);
     void EnumObjects(HTREEITEM parentItem, CShellFolder& parentFolder, Cpidl& cpidlParent);

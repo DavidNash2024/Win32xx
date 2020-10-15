@@ -83,7 +83,6 @@ private:
     typedef Shared_Ptr<ListItemData> ListItemDataPtr;
 
     static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM pSortViewItems);
-    void DeleteItems();
     void DoBackgroundMenu(CPoint& ptScreen);
     void DoContextMenu(CPoint& ptScreen);
     void DoDefault(int item);
@@ -96,7 +95,7 @@ private:
     Cpidl         m_cpidlCurFull;    // Fully Qualified pidl
     CShellFolder  m_csfCurFolder;    // Current Folder
     CContextMenu2 m_ccm2;
-    std::vector <ListItemDataPtr> m_pItems;
+    std::vector <ListItemDataPtr> m_pItems; // vector of smart pointers.
 };
 
 #endif  // MYLISTVIEW_H

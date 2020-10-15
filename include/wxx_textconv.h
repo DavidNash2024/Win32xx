@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -251,7 +251,6 @@ namespace Win32xx
     {
         OutputDebugString(AtoT(str));
     }
-
 
     // Trace sends a string to the debug/output pane, or an external debugger
     inline void Trace(LPCWSTR str)

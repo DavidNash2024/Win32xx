@@ -19,7 +19,7 @@ public:
 
 protected:
     virtual void OnInitialUpdate();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wparam, LPARAM lparam);
 
 private:
     enum Constants

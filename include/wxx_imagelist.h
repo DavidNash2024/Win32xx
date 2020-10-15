@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -410,6 +410,8 @@ namespace Win32xx
     }
 
     // Detaches the HIMAGELIST from all CImageList objects.
+    // Note: We rarely need to detach the HIMAGELIST from CImageList.
+    // The framework will delete the HIMAGELIST automatically if required.
     inline HIMAGELIST CImageList::Detach()
     {
         assert(m_pData);

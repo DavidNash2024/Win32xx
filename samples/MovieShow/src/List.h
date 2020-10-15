@@ -51,7 +51,7 @@ protected:
     virtual void    OnAttach();
     virtual void    OnDestroy();
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lParam);
+    virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
 
 private:

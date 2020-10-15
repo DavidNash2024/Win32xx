@@ -59,7 +59,6 @@ New Features and Enhancements
   - Samples which require Windows XP and above use wide characters. Samples
     which are supported on Windows 98 continue to use tchar characters.
   
-
 * Minor updates to the help documentation.
 
 
@@ -479,83 +478,9 @@ New Features and Enhancements
  6) ToolTips sample.
    This sample demonstrates how to add tooltips to controls in a modal dialog.
 
-* Improved the PrintPreview sample. It now accurately renders the preview,
-   irrespective of the font and paper size.
-
-
-Changes in detail
------------------
-Added wxx_dockframe.h                   header file
-Added wxx_metafile.h                    header file
-Added CFrameT                           class template
-Added CMDIFrameT                        class template
-Added CRibbonFrameT                     class template
-Added CRibbonMDIFrame                   class
-Added CRibbonMDIDockFrame               class
-Added CMetaFile                         class
-Added CEnhMetaFile                      class
-Added CScrollView                       class
-Added ::Trace                           global function
-Added CDC::PlayMetaFile                 member function
-Added CDockContainer::GetToolBarData    member function
-Added CFrameT::GetMenuMetrics           member function
-Added CFrameT::GetToolBarData           member function
-Added CFrameT::IsVistaMenuUsed          member function
-Added CFrameT::OnSettingChange          member function
-Added CMDIChild::GetChildAccel          member function
-Added CMDIChild::GetChildMenu           member function
-Added CMDIFrameT::OnMDIMaximized        member function
-Added CMDIFrameT::UpdateFrameMenu       member function
-Added CTab::GetMaxTabSize               member function
-Added CTabbedMDI::OnSetFocus            member function
-Added CTime::operator ()                member function
-Added CTimeSpan::operator ()            member function
-
-Added UWM_MDIACTIVATED                  window message
-Added UWM_MDIDESTROYED                  window message
-
-Modified TRACE                          now implemented as a macro.
-Modified CBitmap::LoadImage
-Modified CDC::LoadImage
-Modified CMetaFileDC::Close             now returns CMetaFile
-Modified CMetaFileDC::CloseEnhanced     now returns CEnhMetaFile
-Modified CToolTip::AddTool
-Modified CToolTip::DelTool
-Modified CToolTip::GetText
-Modified CToolTip::GetToolInfo
-Modified CToolTip::SetToolRect
-Modified CToolTip::UpdateTipText
-
-Renamed A2BSTR  to  AtoBSTR
-Renamed A2OLE   to  AtoOLE
-Renamed A2T     to  AtoT
-Renamed A2W     to  AtoW
-Renamed OLE2A   to  OLEtoA
-Renamed OLE2T   to  OLEtoT
-Renamed OLE2W   to  OLEtoW
-Renamed T2A     to  TtoA
-Renamed T2BSTR  to  TtoBSTR
-Renamed T2OLE   to  TtoOLE
-Renamed T2W     to  TtoW
-Renamed W2A     to  WtoA
-Renamed W2BSTR  to  WtoBSTR
-Renamed W2OLE   to  WtoOLE
-Renamed W2T     to  WtoT
-Renamed CToolTip::SetWindowTheme to CToolTip::SetTTWindowTheme
-
-
 
 Version 8.3
 ===========
-
-Bug Fixes:
- - Sometimes the view window of an undocked docker wasn't resized.
- - CFileDialog::GetPathName failed on Win98.
- - A dock ancestor didn't support docking unless it was also a top level window.
- - Dockers can now be used as a view window for a tab in CTab and CTabbedMDI.
- - An exception could be thrown when CTab was destroyed.
- - The highlighted menu radio box was out of position on Windows XP and older.
- - The Scribble sample destroyed a pen while it was selected in the device context.
 
 New Features and Enhancements
 -----------------------------

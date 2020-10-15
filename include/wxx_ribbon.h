@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -230,7 +230,6 @@ namespace Win32xx
     {
         return InterlockedDecrement(&m_count);
     }
-
 
     // Responds to execute events on Commands bound to the Command handler.
     inline STDMETHODIMP CRibbon::Execute(UINT cmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* value,
