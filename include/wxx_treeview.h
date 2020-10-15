@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -152,8 +152,6 @@ namespace Win32xx
         // Set the Window Class
         wc.lpszClassName =  WC_TREEVIEW;
     }
-
-// Attributes
 
     // Retrieves the current background color of the control.
     // Refer to TreeView_GetBkColor in the Windows API documentation for more information.

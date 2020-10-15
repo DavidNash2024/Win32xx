@@ -21,9 +21,9 @@ CSearchDialog::~CSearchDialog()
 }
 
 // Respond to command messages (WM_COMMAND) from the dialog's controls.
-BOOL CSearchDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CSearchDialog::OnCommand(WPARAM wparam, LPARAM /*lparam*/)
 {
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch (nID)
     {
     case IDC_CHECKTITLE:

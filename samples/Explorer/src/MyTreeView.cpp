@@ -19,7 +19,6 @@ CMyTreeView::CMyTreeView()
 // Destructor.
 CMyTreeView::~CMyTreeView()
 {
-    DeleteItems();
 }
 
 // Compares param1 and param2. Used for sorting.
@@ -35,12 +34,6 @@ int CALLBACK CMyTreeView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM p
         return 0;
 
     return (short)SCODE_CODE(GetScode(result));
-}
-
-// Deletes all tree view items.
-void CMyTreeView::DeleteItems()
-{
-    m_pItems.clear();
 }
 
 // Identifies the tree view item for the point, and calls DoItemMenu.
@@ -141,6 +134,9 @@ void CMyTreeView::EnumObjects(HTREEITEM parentItem, CShellFolder& parentFolder, 
             // Store a pointer to the TreeItemData in the lParam and m_pItems.
             TreeItemData* pItem = new TreeItemData(cpidlParent, cpidlRel, parentFolder);
             itemInfo.lParam = reinterpret_cast<LPARAM>(pItem);
+
+            // m_pItems is a vector of smart pointers. The memory allocated by
+            // new is automatically deleted when the vector goes out of scope.
             m_pItems.push_back(pItem);
 
             // Text and images are done on a callback basis.
@@ -237,6 +233,9 @@ BOOL CMyTreeView::GetRootItems()
         // Store a pointer to the TreeItemData in the lParam and m_pItems.
         TreeItemData* pItem = new TreeItemData(cpidlDesk);
         itemInfo.lParam = reinterpret_cast<LPARAM>(pItem);
+
+        // m_pItems is a vector of smart pointers. The memory allocated by
+        // new is automatically deleted when the vector goes out of scope.
         m_pItems.push_back(pItem);
 
         // Text and images are done on a callback basis.

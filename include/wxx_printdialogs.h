@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -566,7 +566,6 @@ namespace Win32xx
         else
             return m_pd.nCopies;
     }
-
 
     // Sets the printer and the page settings to default, without displaying a dialog.
     // The hDevMode and hDevNames memory is freed and reallocated.

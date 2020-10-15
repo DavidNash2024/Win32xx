@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2640,7 +2640,10 @@ namespace Win32xx
         }
     }
 
-    // Detaches the HDC from all CDC objects.
+    // Detaches the HDC from all CDC objects. Restores the HDC back to the
+    // state saved when it was attached.
+    // Note: We rarely need to detach the HDC from CDC. The framework will
+    // release or delete the HDC automatically if required.
     inline HDC CDC::Detach()
     {
         assert(m_pData);

@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -326,7 +326,6 @@ namespace Win32xx
         throw CUserException(message);
     }
 
-
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.
     inline void CDataExchange::DDV_MinMaxFloat(const float& value, float min,
@@ -336,14 +335,12 @@ namespace Win32xx
             static_cast<double>(max), precision);
     }
 
-
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.
     inline void CDataExchange::DDV_MinMaxInt(int value, int min, int max) const
     {
         DDV_MinMaxLong(value, min, max);
     }
-
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
     // throws a CUserException.

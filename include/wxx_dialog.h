@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -243,7 +243,7 @@ namespace Win32xx
         LoadCommonControls();
     }
 
-    //For indirect dialogs - created from a dialog box template in memory.
+    // Constructor for indirect dialogs, created from a dialog box template in memory.
     inline CDialog::CDialog(LPCDLGTEMPLATE pDlgTemplate) : m_isModal(TRUE),
                         m_pResName(NULL), m_pDlgTemplate(pDlgTemplate)
     {
@@ -268,7 +268,8 @@ namespace Win32xx
         wnd.AttachDlgItem(id, *this);
     }
 
-    // Override this function in your class derived from CDialog if you wish to handle messages.
+    // The dialog's message procedure. Override this function in your class derived
+    // from CDialog if you wish to handle messages.
     inline INT_PTR CDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // A typical function might look like this:
@@ -541,13 +542,15 @@ namespace Win32xx
             Destroy();
     }
 
-    // Called when the Cancel button is pressed. Override to customize OnCancel behaviour.
+    // Called when the Cancel button is pressed. Automatically closes the dialog.
+    // Override to customize OnCancel behaviour.
     inline void CDialog::OnCancel()
     {
         EndDialog(IDCANCEL);
     }
 
-    // Called when the Close button is pressed.
+    // Called when the Close button is pressed. Automatically closes the dialog.
+    // Override to customize OnClose behaviour.
     inline void CDialog::OnClose()
     {
         EndDialog(0);
@@ -561,7 +564,8 @@ namespace Win32xx
         return TRUE;
     }
 
-    // Called when the OK button is pressed. Override to customize OnOK behaviour.
+    // Called when the OK button is pressed. Automatically closes the dialog.
+    // Override to customize OnOK behaviour.
     inline void CDialog::OnOK()
     {
         if ( IsWindow() )

@@ -30,7 +30,6 @@ CMyListView::CMyListView()
 // Destructor.
 CMyListView::~CMyListView()
 {
-    DeleteItems();
 }
 
 // Compares param1 and param2. Used to sort items in a list view.
@@ -115,12 +114,6 @@ int CALLBACK CMyListView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM p
     }
 
     return compare;
-}
-
-// Deletes all the items from the list-view.
-void CMyListView::DeleteItems()
-{
-    m_pItems.clear();
 }
 
 // Displays the contents of the specified folder.
@@ -303,7 +296,7 @@ void CMyListView::DoDefault(int item)
 void CMyListView::DoDisplay()
 {
     DeleteAllItems();
-    DeleteItems();
+    m_pItems.clear();
 
     if(m_csfCurFolder.GetIShellFolder())
     {
@@ -568,8 +561,8 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
             lvItem.mask = LVIF_PARAM | LVIF_TEXT | LVIF_IMAGE | LVIF_STATE;
 
             // Store a pointer to the ListItemData in the lParam and m_pItems.
-            ListItemData* pItem = new ListItemData(cpidlParent, cpidlRel, folder);
-            lvItem.lParam = reinterpret_cast<LPARAM>(pItem);
+            ListItemDataPtr pItem = new ListItemData(cpidlParent, cpidlRel, folder);
+            lvItem.lParam = reinterpret_cast<LPARAM>(pItem.get());
 
             TCHAR szFileName[MAX_PATH];
             GetFullFileName(pItem->GetFullCpidl().GetPidl(), szFileName);
@@ -607,6 +600,8 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
                 pItem->m_fileTime = modified;
             }
 
+            // m_pItems is a vector of smart pointers. The memory allocated by
+            // new is automatically deleted when the vector goes out of scope.
             m_pItems.push_back(pItem);
 
             // Text and images are done on a callback basis.

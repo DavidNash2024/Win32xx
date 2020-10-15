@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -350,7 +350,6 @@ namespace Win32xx
 
         HWND m_wnd;                    // handle to this object's window
         WNDPROC m_prevWindowProc;
-
     }; // class CWnd
 
 } // namespace Win32xx

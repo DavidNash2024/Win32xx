@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -246,7 +246,6 @@ namespace Win32xx
         m_threadPtr = new CWinThread(EventThread, this);
 
     }
-
 
     inline CSocket::~CSocket()
     {

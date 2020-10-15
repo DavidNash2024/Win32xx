@@ -1,5 +1,5 @@
 // Win32++   Version 8.8
-// Release Date: TBA
+// Release Date: 15th October 2020
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -360,7 +360,7 @@ namespace Win32xx
     inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD style, int x, int y, int width, int height, HWND hWParent, HMENU idOrMenu, LPVOID lparam /*= NULL*/)
     {
         assert( GetApp() );        // Test if Win32++ has been started
-        assert( !IsWindow() );      // Only one window per CWnd instance allowed
+        assert( !IsWindow() );     // Only one window per CWnd instance allowed
 
         // Ensure a window class is registered
         CString className;
@@ -2500,7 +2500,6 @@ namespace Win32xx
         }
     }
 
-
     // Formats the string as sprintf does.
     template <class T>
     inline void CStringT<T>::Format(UINT id, ...)
@@ -2514,7 +2513,6 @@ namespace Win32xx
             va_end(args);
         }
     }
-
 
     // Loads the string from a Windows resource.
     template <>
@@ -2544,7 +2542,6 @@ namespace Win32xx
 
         return (chars != 0);
     }
-
 
     // Loads the string from a Windows resource.
     // Refer to LoadString in the Windows API documentation for more information.
@@ -2791,7 +2788,6 @@ namespace Win32xx
         return result;
     }
 
-
     // Returns a NONCLIENTMETRICS struct filled from the system parameters.
     // Refer to NONCLIENTMETRICS in the Windows API documentation for more information.
     inline NONCLIENTMETRICS GetNonClientMetrics()
@@ -2810,7 +2806,6 @@ namespace Win32xx
 
         return ncm;
     }
-
 
     // Reports the state of the left mouse button
     // Refer to GetAsyncKeyState in the Windows API documentation for more information.
@@ -2877,7 +2872,6 @@ namespace Win32xx
             ::FreeLibrary(comCtl);
         }
     }
-
 
     // Returns a CString containing the specified string resource.
     // Refer to LoadString in the Windows API documentation for more information.

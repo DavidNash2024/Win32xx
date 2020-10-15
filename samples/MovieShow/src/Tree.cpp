@@ -159,15 +159,15 @@ void CViewTree::OnInitialUpdate()
 
 // Called when the WM_NOTIFY message is reflected back to CViewTree
 // by the framework.
-LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lParam)
+LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
+    LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lparam;
 
     switch (pnmtv->hdr.code)
     {
         case TVN_SELCHANGED:       return OnSelChanged();
-        case TVN_BEGINLABELEDIT:   return OnBeginLabelEdit(lParam);
-        case TVN_ENDLABELEDIT:     return OnEndLabelEdit(lParam);
+        case TVN_BEGINLABELEDIT:   return OnBeginLabelEdit(lparam);
+        case TVN_ENDLABELEDIT:     return OnEndLabelEdit(lparam);
     }
 
     return 0;
