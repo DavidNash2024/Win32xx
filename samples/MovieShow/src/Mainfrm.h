@@ -11,6 +11,10 @@
 #include "Splash.h"
 #include "MovieInfo.h"
 
+// Support older compilers.
+#ifndef WM_DPICHANGED
+#define WM_DPICHANGED                   0x02E0
+#endif
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -59,6 +63,7 @@ public:
     BOOL    OnAddBoxSet();
     BOOL    OnAddFolder();
     BOOL    OnBoxSet(UINT nID);
+    LRESULT OnDPIChanged();
     LRESULT OnExitSizeMove();
     BOOL    OnFavourite();
     void    OnFilesLoaded();
