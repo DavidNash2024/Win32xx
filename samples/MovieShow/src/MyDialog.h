@@ -46,8 +46,6 @@ private:
     CStatic     m_static2;
     CStatic     m_static3;
     CStatic     m_static4;
-    CFont       m_textFont;
-    CFont       m_titleFont;
 };
 
 

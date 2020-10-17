@@ -1291,6 +1291,16 @@ LRESULT CMainFrame::OnSelectListItem(const MovieInfo* pmi)
     CViewDialog& dialog = (CViewDialog&)m_pDockDialog->GetView();
     assert(pmi);
 
+    // Set the fonts.
+    NONCLIENTMETRICS info = GetNonClientMetrics();
+    LOGFONT lf = info.lfMenuFont;
+    int arraySize = sizeof(lf.lfFaceName) / sizeof(TCHAR);
+    StrCopy(lf.lfFaceName, L"Consolas", arraySize);    // A good font for text
+    CFont textFont;
+    textFont.CreateFontIndirect(lf);
+    dialog.GetActors().SetFont(textFont, FALSE);
+    dialog.GetInfo().SetFont(textFont, FALSE);
+
     dialog.GetTitle().SetWindowText(pmi->movieName);
     dialog.GetYear().SetWindowText(pmi->releaseDate);
 
@@ -1640,6 +1650,21 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
     return 0;
 }
 
+LRESULT CMainFrame::OnDPIChanged()
+{
+    // Dialogs handle DPI changes rather badly. The easiest
+    // approach is to destroy and recreate the dialog.
+    m_pDockDialog->GetView().Destroy();
+    m_pDockDialog->GetView().Create(m_pDockDialog->GetDockClient());
+
+    // Re-select the list view item.
+    int item = m_viewList.GetNextItem(-1, LVNI_SELECTED);
+    m_viewList.SetItemState(item, 0, 0x000F);
+    m_viewList.SetItemState(item, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
+
+    return 0;
+}
+
 // Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -1647,6 +1672,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case WM_SYSCOMMAND:                 return OnSysCommand(msg, wparam, lparam);
     case WM_EXITSIZEMOVE:               return OnExitSizeMove();
+    case WM_DPICHANGED:                 return OnDPIChanged();
 
     // User Messages called by CTreeList
     case UWM_GETMOVIESDATA:             return (LRESULT)GetMoviesData();
