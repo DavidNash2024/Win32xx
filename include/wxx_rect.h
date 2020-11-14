@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -214,8 +214,8 @@ namespace Win32xx
     };
 
     // CSize member function definitions
-    inline CPoint CSize::operator + (POINT pt) const    { return CPoint(pt) + *this; }
-    inline CPoint CSize::operator - (POINT pt) const    { return CPoint(pt) - *this; }
+    inline CPoint CSize::operator + (POINT pt) const    { return CPoint(cx + pt.x, cy + pt.y); }
+    inline CPoint CSize::operator - (POINT pt) const    { return CPoint(cx - pt.x, cy - pt.y); }
     inline CRect CSize::operator + (LPCRECT prc) const  { return CRect(*prc) + *this; }
     inline CRect CSize::operator - (LPCRECT prc) const  { return CRect(*prc) - *this; }
 
