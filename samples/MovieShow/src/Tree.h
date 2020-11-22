@@ -16,12 +16,10 @@ public:
     CViewTree();
     virtual ~CViewTree();
 
-    CString*  GetItemString(HTREEITEM item);
     bool      IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
     BOOL      OnBeginLabelEdit(LPARAM lparam);
     BOOL      OnEndLabelEdit(LPARAM lparam);
     BOOL      OnSelChanged();
-    void      RemoveItem(HTREEITEM item);
     void      Swap(HTREEITEM item1, HTREEITEM item2);
 
 protected:
@@ -33,8 +31,7 @@ protected:
 
 private:
     CImageList m_imlNormal;
-    std::list<CString> m_itemsText;
-    std::map<HTREEITEM, CString*> m_itemMap;
+    CString m_itemText;
 };
 
 
