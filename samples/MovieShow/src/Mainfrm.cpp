@@ -123,7 +123,7 @@ void CMainFrame::ClearDisplay()
     GetViewDialog().RedrawWindow();
 }
 
-// Clears the contents of the ListView
+// Clears the contents of the ListView.
 void CMainFrame::ClearList()
 {
     GetViewList().DeleteAllItems();
@@ -472,6 +472,7 @@ CString CMainFrame::GetDataPath() const
 
     return filePath;
 }
+
 // Converts a text string to a vector of words.
 std::vector<CString> CMainFrame::GetWords(const CString& str) const
 {
@@ -620,6 +621,7 @@ void CMainFrame::LoadMovies()
         }
         catch (const CFileException& e)
         {
+            m_splash.Hide();
             Trace(e.GetErrorString()); Trace("\n");
             ::MessageBox(NULL, L"Failed to load Movie Library", L"Error", MB_OK);
             m_moviesData.clear();
@@ -744,6 +746,13 @@ BOOL CMainFrame::OnAddFolder()
     }
 
     return TRUE;
+}
+
+// Called when the splitter bar move has completed.
+LRESULT CMainFrame::OnBarEnd(LPDRAGPOS pDragPos)
+{
+    GetViewList().SetLastColumnWidth();
+    return CDockFrame::OnBarEnd(pDragPos);
 }
 
 // Called when the user clicks on Box Sets (parent or child)
@@ -1144,7 +1153,7 @@ LRESULT CMainFrame::OnRClickTreeItem()
 BOOL CMainFrame::OnRemoveBoxSet()
 {
     HTREEITEM item = GetViewTree().GetSelection();
-    CString* pString = GetViewTree().GetItemString(item);
+    CString str = GetViewTree().GetItemText(item);
 
     // Lock this function for thread safety
     CThreadLock lock(m_cs);
@@ -1152,11 +1161,11 @@ BOOL CMainFrame::OnRemoveBoxSet()
     std::list<MovieInfo>::iterator it;
     for (it = m_moviesData.begin(); it != m_moviesData.end(); ++it)
     {
-        if ((*it).boxset == *pString)
+        if ((*it).boxset == str)
             (*it).boxset = L"";
     }
 
-    GetViewTree().RemoveItem(item);
+    GetViewTree().DeleteItem(item);
     m_isDirty = TRUE;
 
     return TRUE;

@@ -89,6 +89,7 @@ public:
 
 protected:
     virtual BOOL    LoadRegistrySettings(LPCTSTR szKeyName);
+    virtual LRESULT OnBarEnd(LPDRAGPOS pDragPos);
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
