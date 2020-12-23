@@ -8,7 +8,8 @@
 //////////////////////////////////
 // CMyThread function definitions.
 //
-CMyThread::CMyThread(int thread) :  m_testWnd(thread), m_thread(thread)
+CMyThread::CMyThread(int threadNumber) :  m_testWnd(threadNumber), 
+                                          m_threadNumber(threadNumber)
 {
 }
 

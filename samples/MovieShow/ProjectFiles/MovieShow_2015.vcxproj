@@ -75,6 +75,7 @@
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\SearchDialog.h" />
     <ClInclude Include="..\src\Splash.h" />
+    <ClInclude Include="..\src\SplashThread.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\targetver.h" />
     <ClInclude Include="..\src\Tree.h" />
@@ -89,6 +90,7 @@
     <ClCompile Include="..\src\MyDialog.cpp" />
     <ClCompile Include="..\src\SearchDialog.cpp" />
     <ClCompile Include="..\src\Splash.cpp" />
+    <ClCompile Include="..\src\SplashThread.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

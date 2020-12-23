@@ -169,8 +169,6 @@ OnEraseBkgnd(CDC& dc)                                                       /*
             GetClientRect(), TRUE);
         return TRUE;
     }
-    else
-        SendMessage(SB_SETBKCOLOR, 0, (LPARAM)SBEraseColor[0]);
     return FALSE;
 }
 

@@ -14,16 +14,16 @@
 class CMyThread : public CWinThread
 {
 public:
-    CMyThread(int thread);
+    CMyThread(int threadNumber);
     virtual ~CMyThread() {}
 
     virtual BOOL InitInstance();
     CTestWindow* GetTestWnd()   { return &m_testWnd; }
-    int GetThreadCount()        { return m_thread; }
+    int GetThreadNumber()        { return m_threadNumber; }
 
 private:
     CTestWindow m_testWnd;
-    int m_thread;
+    int m_threadNumber;
 };
 
 

@@ -194,7 +194,7 @@ void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
 void CMainFrame::FillList()
 {
     GetViewList().SetRedraw(FALSE);
-    m_splash.ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -206,7 +206,7 @@ void CMainFrame::FillList()
         GetViewList().AddItem(*iter);
     }
 
-    m_splash.Hide();
+    m_splashThread.GetSplash()->Hide();
     GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
     if (GetViewList().GetItemCount() == 0)
@@ -217,7 +217,7 @@ void CMainFrame::FillList()
 void CMainFrame::FillListFromAllBoxSets()
 {
     GetViewList().SetRedraw(FALSE);
-    m_splash.ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -230,7 +230,7 @@ void CMainFrame::FillListFromAllBoxSets()
             GetViewList().AddItem(*iter);
     }
 
-    m_splash.Hide();
+    m_splashThread.GetSplash()->Hide();
     GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
     if (GetViewList().GetItemCount() == 0)
@@ -241,7 +241,7 @@ void CMainFrame::FillListFromAllBoxSets()
 void CMainFrame::FillListFromBoxSet(LPCTSTR boxset)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splash.ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -254,7 +254,7 @@ void CMainFrame::FillListFromBoxSet(LPCTSTR boxset)
             GetViewList().AddItem(*iter);
     }
 
-    m_splash.Hide();
+    m_splashThread.GetSplash()->Hide();
     GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
     if (GetViewList().GetItemCount() == 0)
@@ -265,7 +265,7 @@ void CMainFrame::FillListFromBoxSet(LPCTSTR boxset)
 void CMainFrame::FillListFromDateRange(LPCTSTR dateRange)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splash.ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -283,7 +283,7 @@ void CMainFrame::FillListFromDateRange(LPCTSTR dateRange)
             GetViewList().AddItem(*iter);
     }
 
-    m_splash.Hide();
+    m_splashThread.GetSplash()->Hide();
     GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
     if (GetViewList().GetItemCount() == 0)
@@ -294,7 +294,7 @@ void CMainFrame::FillListFromDateRange(LPCTSTR dateRange)
 void CMainFrame::FillListFromFlags(DWORD mask)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splash.ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -307,7 +307,7 @@ void CMainFrame::FillListFromFlags(DWORD mask)
             GetViewList().AddItem(*iter);
     }
 
-    m_splash.Hide();
+    m_splashThread.GetSplash()->Hide();
     GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
     if (GetViewList().GetItemCount() == 0)
@@ -334,7 +334,7 @@ void CMainFrame::FillListFromGenre(LPCTSTR genre)
 void CMainFrame::FillListFromGenres(LPCTSTR genreList)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splash.ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List");
     ClearList();
 
     CString str = genreList;
@@ -349,7 +349,7 @@ void CMainFrame::FillListFromGenres(LPCTSTR genreList)
         resToken = str.Tokenize(L",", curPos);
     }
 
-    m_splash.Hide();
+    m_splashThread.GetSplash()->Hide();
     GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
     if (GetViewList().GetItemCount() == 0)
@@ -360,7 +360,7 @@ void CMainFrame::FillListFromGenres(LPCTSTR genreList)
 void CMainFrame::FillListFromSearch()
 {
     GetViewList().SetRedraw(FALSE);
-    m_splash.ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List");
     ClearList();
 
     for (UINT i = 0; i < m_foundMovies.size(); ++i)
@@ -376,7 +376,7 @@ void CMainFrame::FillListFromSearch()
         }
     }
 
-    m_splash.Hide();
+    m_splashThread.GetSplash()->Hide();
     GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
     if (GetViewList().GetItemCount() == 0)
@@ -387,7 +387,7 @@ void CMainFrame::FillListFromSearch()
 void CMainFrame::FillListFromType(LPCTSTR videoType)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splash.ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List");
     ClearList();
 
     // Lock this function for thread safety
@@ -400,7 +400,7 @@ void CMainFrame::FillListFromType(LPCTSTR videoType)
             GetViewList().AddItem(*iter);
     }
 
-    m_splash.Hide();
+    m_splashThread.GetSplash()->Hide();
     GetViewList().SetRedraw(TRUE);
     GetViewList().SetLastColumnWidth();
     if (GetViewList().GetItemCount() == 0)
@@ -569,7 +569,7 @@ void CMainFrame::LoadMovies()
         try
         {
             // Display the splash screen.
-            m_splash.ShowText(L"Loading Library");
+            m_splashThread.GetSplash()->ShowText(L"Loading Library");
 
             CArchive ar(DataFile, CArchive::load);
             std::vector<MovieInfo>::iterator it;
@@ -621,7 +621,7 @@ void CMainFrame::LoadMovies()
         }
         catch (const CFileException& e)
         {
-            m_splash.Hide();
+            m_splashThread.GetSplash()->Hide();
             Trace(e.GetErrorString()); Trace("\n");
             ::MessageBox(NULL, L"Failed to load Movie Library", L"Error", MB_OK);
             m_moviesData.clear();
@@ -800,7 +800,8 @@ void CMainFrame::OnClose()
 {
     // Terminate the load files thread.
     ::SetEvent(m_stopRequest);
-    ::WaitForSingleObject(m_thread, INFINITE);
+    if (::WaitForSingleObject(m_thread, 1000) == WAIT_TIMEOUT)
+        Trace("Splash Thread failed to end cleanly\n");
 
     ShowWindow(SW_HIDE);
 
@@ -811,7 +812,7 @@ void CMainFrame::OnClose()
 
         // Display the splash screen.
         // The splash window is destroyed when splash goes out of scope.
-        m_splash.ShowText(L"Saving Library");
+        m_splashThread.GetSplash()->ShowText(L"Saving Library");
 
         CString DataPath = GetDataPath();
         CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
@@ -851,7 +852,6 @@ void CMainFrame::OnClose()
                     ar.Write(&(*it).imageData[0], ImageDataSize);
             }
             TRACE("\nSave Movies data complete \n ");
-            m_splash.Hide();
         }
 
         catch (const CFileException& e)
@@ -860,6 +860,12 @@ void CMainFrame::OnClose()
             ::MessageBox(NULL, L"Failed to store Movie Library", L"Error", MB_OK);
         }
     }
+
+    m_splashThread.GetSplash()->Destroy();
+    m_splashThread.PostThreadMessage(WM_QUIT, 0, 0);
+
+    if (::WaitForSingleObject(m_splashThread, 1000) == WAIT_TIMEOUT)
+        Trace("Splash Thread failed to end cleanly\n");
 
     CDockFrame::OnClose();
 }
@@ -924,7 +930,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
        // Create the splash screen
-       m_splash.Create();
+       m_splashThread.CreateThread();
 
     // call the base class function
     return CDockFrame::OnCreate(cs);
@@ -975,7 +981,7 @@ void CMainFrame::OnFilesLoaded()
     m_filesToAdd.clear();
 
     // Re-select first tree item.
-    HTREEITEM item = GetViewTree().GetFirstVisible();
+    HTREEITEM item = GetViewTree().GetSelection();
     GetViewTree().SelectItem(0);
     GetViewTree().SelectItem(item);
 }
@@ -1582,11 +1588,16 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
     MediaInfo MI;
     if (MI.IsReady())   // Is MediaInfo.dll loaded?
     {
-        CSplash splash;
-        splash.Create();
-        splash.ShowText(L"Updating Library");
-        splash.AddBar();
-        splash.GetBar().SetRange(0, (short)pFrame->m_filesToAdd.size());
+        CSplashThread splashThread;
+        splashThread.CreateThread();
+        CSplash* splash = splashThread.GetSplash();
+
+        while (!splash->IsWindow())
+        {}
+
+        splash->ShowText(L"Updating Library");
+        splash->AddBar();
+        splash->GetBar().SetRange(0, (short)pFrame->m_filesToAdd.size());
 
         unsigned short barPos = 0;
         for (size_t i = 0; i < pFrame->m_filesToAdd.size(); i++)
@@ -1594,14 +1605,13 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
             // The stop request is set if the app is trying to close.
             if (::WaitForSingleObject(pFrame->m_stopRequest, 0) != WAIT_TIMEOUT)
             {
-                // Abort the thread
                 return 0;
             }
 
             barPos++;
 
             // Update the splash screen's progress bar
-            splash.GetBar().SetPos(barPos);
+            splash->GetBar().SetPos(barPos);
 
             CString fullName = pFrame->m_filesToAdd[i].fileName;
             bool isFileInLibrary = false;

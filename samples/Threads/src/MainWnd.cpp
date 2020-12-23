@@ -75,7 +75,7 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
             (*iter)->ResumeThread();
 
             CString str;
-            str.Format( _T("Thread %d started "), (*iter)->GetThreadCount() );
+            str.Format( _T("Thread %d started "), (*iter)->GetThreadNumber() );
             AppendText(str);
         }
 
@@ -99,7 +99,7 @@ void CMainWindow::OnClose()
     for (iter = m_threads.begin(); iter < m_threads.end(); ++iter)
     {
         if ((*iter)->GetTestWnd()->IsWindow())
-            (*iter)->GetTestWnd()->Close();
+            (*iter)->GetTestWnd()->SendMessage(WM_CLOSE);
     }
 
     Destroy();

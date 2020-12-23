@@ -102,8 +102,8 @@ void CSplash::OnDraw(CDC& dc)
 // Sets the CREATESTRUCT struct prior to window creation.
 void CSplash::PreCreate(CREATESTRUCT& cs)
 {
-    cs.style = WS_CLIPCHILDREN | WS_POPUP;           // Initially hidden
-    cs.dwExStyle = WS_EX_TOPMOST | WS_EX_TOOLWINDOW; // Topmost and hidden from taskbar
+    cs.style = WS_POPUP;           // Initially hidden
+    cs.dwExStyle = WS_EX_TOPMOST | WS_EX_NOACTIVATE; // Topmost and hidden from taskbar
 
     cs.cx = 256;
     cs.cy = 256;
@@ -114,6 +114,7 @@ void CSplash::PreRegisterClass(WNDCLASS& wc)
 {
     wc.lpszClassName = L"Splash Screen";
     wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
+    wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 }
 
 // Removes the progress bar.
