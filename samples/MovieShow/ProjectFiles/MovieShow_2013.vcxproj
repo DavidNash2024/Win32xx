@@ -27,6 +27,7 @@
     <ClCompile Include="..\src\MyDialog.cpp" />
     <ClCompile Include="..\src\SearchDialog.cpp" />
     <ClCompile Include="..\src\Splash.cpp" />
+    <ClCompile Include="..\src\SplashThread.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp" />
     <ClCompile Include="..\src\Tree.cpp" />
   </ItemGroup>

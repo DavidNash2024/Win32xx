@@ -8,7 +8,7 @@
 #include "list.h"
 #include "MyDialog.h"
 #include "CoverImage.h"
-#include "Splash.h"
+#include "SplashThread.h"
 #include "MovieInfo.h"
 
 // Support older compilers.
@@ -106,7 +106,7 @@ private:
     CCriticalSection m_cs;
     CViewList        m_viewList;
     CWinThread       m_thread;
-    CSplash          m_splash;
+    CSplashThread    m_splashThread;
     std::vector<FoundFileInfo> m_filesToAdd;
     std::vector<const MovieInfo*> m_foundMovies;
     HTREEITEM        m_searchItem;

@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1306,7 +1306,7 @@ namespace Win32xx
     inline void CWnd::Close() const
     {
         assert(IsWindow());
-        SendMessage(WM_CLOSE);
+        PostMessage(WM_CLOSE);
     }
 
     // The DeferWindowPos function updates the specified multiple window position structure for the window.
