@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -337,7 +337,7 @@ namespace Win32xx
     inline LONG CRegKey::SetKeyValue(LPCTSTR pKeyName, LPCTSTR pValue, LPCTSTR pValueName) const
     {
         assert(m_key);
-        return ::RegSetKeyValue(m_key, pKeyName, pValueName, REG_SZ, pValue, lstrlen(pValue)*sizeof(TCHAR) );
+        return ::RegSetKeyValue(m_key, pKeyName, pValueName, REG_SZ, pValue, (lstrlen(pValue)+1)*sizeof(TCHAR) );
     }
 
 #endif
@@ -357,14 +357,14 @@ namespace Win32xx
 
         // pszValue contains one or more null terminated strings.
         // Calculate the length of all strings including the terminating characters.
-        ULONG bytes = 0;
+        ULONG bytes = sizeof(TCHAR);
         LPCTSTR pTemp = pValue;
         ULONG length = lstrlen(pTemp) +1; // +1 to include the terminating character
 
         while (length != 1)
         {
             pTemp += length;
-            bytes += length *sizeof(TCHAR);
+            bytes += length * sizeof(TCHAR);
             length = lstrlen(pTemp) +1;
         }
 
@@ -375,7 +375,7 @@ namespace Win32xx
     inline LONG CRegKey::SetStringValue(LPCTSTR pValueName, LPCTSTR pValue, DWORD type) const
     {
         assert(m_key);
-        return ::RegSetValueEx(m_key, pValueName, 0, type, reinterpret_cast<const BYTE*>(pValue), lstrlen(pValue)*sizeof(TCHAR));
+        return ::RegSetValueEx(m_key, pValueName, 0, type, reinterpret_cast<const BYTE*>(pValue), (lstrlen(pValue)+1)*sizeof(TCHAR));
     }
 
     // Sets the value of the registry key.

@@ -13,12 +13,10 @@ class CTestWindow : public CWnd
 public:
     CTestWindow(int window);
     virtual ~CTestWindow() {}
-
     virtual HWND Create(HWND parent = 0);
 
 protected:
     virtual void OnClose();
-    virtual void OnDestroy();
     virtual void OnInitialUpdate();
 
 private:

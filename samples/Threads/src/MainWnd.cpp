@@ -8,6 +8,8 @@
 ////////////////////////////////////
 // CMainWindow function definitions.
 //
+
+// Constructor.
 CMainWindow::CMainWindow() : m_windowsCount(0)
 {
     // Set the number of threads
@@ -22,10 +24,9 @@ CMainWindow::CMainWindow() : m_windowsCount(0)
     // Note 4: This sample is intended as "proof of concept" only. A well written program should not require 20 GUI threads!
 }
 
+// Appends the specified text to the edit control.
 void CMainWindow::AppendText(LPCTSTR text)
 {
-    // This function appends text to an edit control
-
     // Append Line Feed
     int length = m_edit.GetWindowTextLength();
     if (length > 0)
@@ -39,6 +40,7 @@ void CMainWindow::AppendText(LPCTSTR text)
     TRACE(_T("\n"));
 }
 
+// Create the window.
 HWND CMainWindow::Create(HWND parent)
 {
     CString str = _T("Main Thread Window");
@@ -49,30 +51,30 @@ HWND CMainWindow::Create(HWND parent)
         rc, parent, 0);
 }
 
+// Called when the window is created.
 int CMainWindow::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
 
-    // Create the Edit child window to display text
+    // Create the Edit child window to display text.
     m_edit.Create(*this);
 
 
-    // Create each CMyThread object
+    // Create each CMyThread object.
     for (int i = 1 ; i <= m_maxWindows ; i++)
     {
         CMyThread* pMyThread = new CMyThread(i);
         m_threads.push_back(pMyThread);
     }
 
-    // Create the threads belonging to the MyThread objects
-    // Each thread creates a TestWindow when it runs
+    // Create the threads belonging to the MyThread objects.
+    // Each thread creates a TestWindow when it runs.
     std::vector<MyThreadPtr>::iterator iter;
     for (iter = m_threads.begin(); iter < m_threads.end(); ++iter)
     {
         try
         {
-            (*iter)->CreateThread(CREATE_SUSPENDED);
-            (*iter)->ResumeThread();
+            (*iter)->CreateThread();
 
             CString str;
             str.Format( _T("Thread %d started "), (*iter)->GetThreadNumber() );
@@ -90,36 +92,27 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Called when the window is closed.
 void CMainWindow::OnClose()
 {
-    // Close each thread window.
-    // The thread is then terminated with PostQuitMessage when its window is destroyed.
-
+    // Close each test window thread.
     std::vector<MyThreadPtr>::iterator iter;
     for (iter = m_threads.begin(); iter < m_threads.end(); ++iter)
     {
-        if ((*iter)->GetTestWnd()->IsWindow())
-            (*iter)->GetTestWnd()->SendMessage(WM_CLOSE);
+        (*iter)->CloseThread();
     }
 
     Destroy();
 }
 
+// Called when the window is destroyed.
 void CMainWindow::OnDestroy()
 {
-    // Create an array of thread handles.
-    int nThreads = static_cast<int>(m_threads.size());
-    std::vector<HANDLE> threadArray;  // use a vector as our array.
-    for (int i = 0; i < nThreads; ++i)
-        threadArray.push_back(m_threads[i]->GetThread());
-
-    // Wait for all the threads to end before proceeding.
-    WaitForMultipleObjects(nThreads, &threadArray[0], TRUE, INFINITE);
-
     // End the application
     ::PostQuitMessage(0);
 }
 
+// Called when all test windows are created.
 void CMainWindow::OnAllWindowsCreated()
 {
     CString str;
@@ -127,9 +120,9 @@ void CMainWindow::OnAllWindowsCreated()
     AppendText(str);
 }
 
+// Called when a test window is created.
 void CMainWindow::OnWindowCreated()
 {
-    // Message recieved when a test window is created
     CString str;
     ++m_windowsCount;
     str.Format( _T("Created Window %d"), m_windowsCount);
@@ -139,6 +132,7 @@ void CMainWindow::OnWindowCreated()
         OnAllWindowsCreated();
 }
 
+// Process this window's messages.
 LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
