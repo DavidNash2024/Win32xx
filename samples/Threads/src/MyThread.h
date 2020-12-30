@@ -17,9 +17,12 @@ public:
     CMyThread(int threadNumber);
     virtual ~CMyThread() {}
 
-    virtual BOOL InitInstance();
+    void CloseThread();
     CTestWindow* GetTestWnd()   { return &m_testWnd; }
-    int GetThreadNumber()        { return m_threadNumber; }
+    int GetThreadNumber()       { return m_threadNumber; }
+
+protected:
+    virtual BOOL InitInstance();
 
 private:
     CTestWindow m_testWnd;

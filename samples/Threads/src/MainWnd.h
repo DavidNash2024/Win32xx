@@ -19,10 +19,10 @@ class CMainWindow : public CWnd
 public:
     CMainWindow();
     virtual ~CMainWindow() {}
-    virtual void AppendText(LPCTSTR text);
-    virtual HWND Create(HWND parent = 0);
-    virtual void OnAllWindowsCreated();
-    virtual void OnWindowCreated();
+    void AppendText(LPCTSTR text);
+    HWND Create(HWND parent = 0);
+    void OnAllWindowsCreated();
+    void OnWindowCreated();
 
 protected:
     virtual void OnClose();

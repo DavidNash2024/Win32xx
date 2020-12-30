@@ -218,7 +218,7 @@ void CRichView::SetFontDefaults()
 {
     //Set font
     if (m_font.GetHandle() == 0)
-        m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+        m_font.CreateFont(20, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
                     CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
     SetFont(m_font, FALSE);
 

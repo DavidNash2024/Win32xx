@@ -9,10 +9,13 @@
 ////////////////////////////////////
 // CTestWindow function definitions.
 //
+
+// Constructor.
 CTestWindow::CTestWindow(int window) : m_window(window)
 {
 }
 
+// Create the Test Window.
 HWND CTestWindow::Create(HWND parent)
 {
     UNREFERENCED_PARAMETER(parent);
@@ -23,6 +26,7 @@ HWND CTestWindow::Create(HWND parent)
         380 + 20*m_window, 40 + 20*m_window, 300, 200, NULL, NULL);
 }
 
+// Called when the test window is closed.
 void CTestWindow::OnClose()
 {
     CMainWindow& MainWnd = GetThreadApp()->GetMainWnd();
@@ -30,18 +34,10 @@ void CTestWindow::OnClose()
     str.Format( _T("Closing test Window %d"), m_window );
     MainWnd.AppendText(str);
 
-    CWnd::OnClose();
-}
-void CTestWindow::OnDestroy()
-{
-    CMainWindow& MainWnd = GetThreadApp()->GetMainWnd();
-    CString str(_T("Terminating the thread"));
-    MainWnd.AppendText(str);
-
-    // Terminate the thread.
-    ::PostQuitMessage(0);
+    Destroy();
 }
 
+// Called after the window is created.
 void CTestWindow::OnInitialUpdate()
 {
     // Get a pointer to the CMainWindow object
@@ -52,5 +48,4 @@ void CTestWindow::OnInitialUpdate()
     //  SendMessage would wait for the MainWnd thread to respond.
     MainWnd.PostMessage(WM_WINDOWCREATED, 0, 0);
 }
-
 

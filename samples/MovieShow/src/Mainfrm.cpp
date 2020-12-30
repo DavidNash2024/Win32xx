@@ -1404,7 +1404,7 @@ LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     DefWindowProc(msg, wparam, lparam);
 
     // Now resize the columns.
-    OnExitSizeMove();
+    GetViewList().SetLastColumnWidth();
     return 0;
 }
 
