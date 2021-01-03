@@ -133,13 +133,13 @@ namespace ShellWrapper
         HRESULT GetEnumIDList(HWND owner, int grfFlags, CEnumIDList& cenumIDList);
         LPSHELLFOLDER GetIShellFolder() {return m_pIShellFolder;}
         HRESULT GetSubFolder(const Cpidl& pidl, CShellFolder& subFolder);
+        void Release();
 
     private:
         HRESULT AddRef() {return m_pIShellFolder->AddRef();}
         void Attach(LPSHELLFOLDER ShellFolder);
         void Copy(const CShellFolder& Source);
         void Copy(LPSHELLFOLDER Source);
-        void Release();
 
         LPSHELLFOLDER m_pIShellFolder;
     };

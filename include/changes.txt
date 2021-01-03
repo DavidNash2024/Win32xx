@@ -1,3 +1,11 @@
+Version 8.8.1
+=============
+Bug fixes:
+- Corrected CRegKey::SetMultiStringValue
+- Corrected CRegKey::SetStringValue
+- CWnd::Close can now be used to close applications with a Ribbon UI.
+
+
 Version 8.8
 ===========
 

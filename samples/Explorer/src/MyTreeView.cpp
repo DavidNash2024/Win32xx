@@ -295,6 +295,9 @@ void CMyTreeView::OnAttach()
 // Called when the window is destroyed.
 void CMyTreeView::OnDestroy()
 {
+    // Cleanup required by Win2000
+    DeleteAllItems();
+    m_pItems.clear();
 }
 
 // Called in response to a right mouse click to open a context menu.
@@ -314,7 +317,7 @@ LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
 {
     TreeItemData* pItem = reinterpret_cast<TreeItemData*>(pDI->item.lParam);
 
-    // Add the item text
+    // Add the item text.
     if (pDI->item.mask & TVIF_TEXT)
     {
         SHFILEINFO sfi;
@@ -378,7 +381,7 @@ LRESULT CMyTreeView::OnTVNSelChanged(LPNMTREEVIEW pNMTV)
     return 0;
 }
 
-// Procress notification reflected back from the parent window.
+// Process notification reflected back from the parent window.
 LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
     LPNMHDR  lpnmh = (LPNMHDR)lparam;

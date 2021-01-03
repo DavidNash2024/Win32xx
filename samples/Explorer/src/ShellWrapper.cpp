@@ -7,8 +7,9 @@
 
 namespace ShellWrapper
 {
-    ///////////////////////////////
-    // Global functionn definitions (within this namespace)
+    //////////////////////////////////////////////////////
+    // Global function definitions (within this namespace)
+    //
 
     // Retrieves the file's path name from its pidl.
     BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName)
@@ -185,7 +186,7 @@ namespace ShellWrapper
         return result;
     }
 
-    //Assigns the value to the CShellFolder object.
+    // Assigns the value to the CShellFolder object.
     void CShellFolder::Copy(LPSHELLFOLDER source)
     {
         Release();
@@ -194,7 +195,7 @@ namespace ShellWrapper
             AddRef();
     }
 
-    //Assigns the value to the CShellFolder object.
+    // Assigns the value to the CShellFolder object.
     void CShellFolder::Copy(const CShellFolder& rhs)
     {
         if (&rhs != this)

@@ -303,7 +303,7 @@ void CMyListView::DoDisplay()
         HCURSOR  hCur = ::LoadCursor(NULL, IDC_WAIT);
         hCur = ::SetCursor(hCur);
 
-        // Turn redawing off in the ListView.
+        // Turn redrawing off in the ListView.
         // This will speed things up as we add items.
         SetRedraw(FALSE);
 
@@ -311,7 +311,7 @@ void CMyListView::DoDisplay()
         SortViewItems sort(0, TRUE);
         SortItems(CompareFunction, (LPARAM)&sort);
 
-        // Turn redawing back on.
+        // Turn redrawing back on.
         SetRedraw(TRUE);
         ::SetCursor(hCur);
     }
@@ -428,7 +428,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
 
         HANDLE file = INVALID_HANDLE_VALUE;
 
-        // Retrieve the file handle for an existing file
+        // Retrieve the file handle for an existing file.
         if (attr & SFGAO_CANDELETE)
             file = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
                 OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
@@ -451,7 +451,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
             {
                 TCHAR szSize[maxLength];
 
-                // Report the size files and not folders
+                // Report the size files and not folders.
                 if ((file != INVALID_HANDLE_VALUE)&&(~attr & SFGAO_FOLDER))
                 {
                     // Retrieve the file size.
@@ -495,7 +495,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         SHFILEINFO sfi;
         ZeroMemory(&sfi, sizeof(SHFILEINFO));
 
-        // Get the unselected image for this item
+        // Get the unselected image for this item.
         if(pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
             pdi->item.iImage = sfi.iIcon;
     }
@@ -535,7 +535,7 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lparam)
     return 0;
 }
 
-// Enumerates the items in the specified folder, and inerts each item into
+// Enumerates the items in the specified folder, and inserts each item into
 // the list-view. The LVITEM param parameter holds a pointer to the
 // ListItemData.
 void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
@@ -699,7 +699,7 @@ void CMyListView::OnAttach()
     // Set the image lists.
     SetImageLists();
 
-    // Set up the colmns for report mode.
+    // Set up the columns for report mode.
     LVCOLUMN lvc;
     ZeroMemory(&lvc, sizeof(LVCOLUMN));
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
@@ -726,6 +726,9 @@ void CMyListView::OnAttach()
 // Called when the window is destroyed.
 void CMyListView::OnDestroy()
 {
+    // Cleanup required by Win2000
+    m_pItems.clear();
+    m_csfCurFolder.Release();
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.
@@ -870,11 +873,11 @@ LRESULT CMyListView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 //
 
 // Constructor.
-CMyListView::ListItemData::ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
+CMyListView::ListItemData::ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& parentFolder)
 {
-    m_parentFolder = cParentFolder;
-    m_cpidlFull     = cpidlParent + cpidlRel;
-    m_cpidlRel      = cpidlRel;
+    m_parentFolder = parentFolder;
+    m_cpidlFull    = cpidlParent + cpidlRel;
+    m_cpidlRel     = cpidlRel;
 
     m_fileSize = 0;
     ZeroMemory(&m_fileTime, sizeof(m_fileTime));
