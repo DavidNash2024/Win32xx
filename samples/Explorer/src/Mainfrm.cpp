@@ -61,28 +61,6 @@ void CMainFrame::DoPopupMenu()
     popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
-// Called after the frame window is created.
-void CMainFrame::OnInitialUpdate()
-{
-    // Add the right window pane
-    int width = GetWindowRect().Width() / 3;
-    DWORD dockStyle = DS_DOCKED_LEFT  | DS_NO_UNDOCK | DS_NO_CAPTION;
-    m_pLeftPane = static_cast<CLeftPane*>(m_rightPane.AddDockedChild(new CLeftPane, dockStyle, width));
-
-    // All windows are now created, so populate the treeview
-    GetTreeView().GetRootItems();
-
-    // Uncheck the hidden menu item
-    GetFrameMenu().CheckMenuItem(IDM_SHOW_HIDDEN, MF_UNCHECKED);
-
-    // Place Radio button in view menu
-    CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
-    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
-
-    // Uncomment the following to use a hash bar and disable of auto resizing
-    // m_rightPane.SetDragAutoResize(FALSE);
-}
-
 // Process input from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
@@ -133,6 +111,28 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
+// Called after the frame window is created.
+void CMainFrame::OnInitialUpdate()
+{
+    // Add the right window pane
+    int width = GetWindowRect().Width() / 3;
+    DWORD dockStyle = DS_DOCKED_LEFT  | DS_NO_UNDOCK | DS_NO_CAPTION;
+    m_pLeftPane = static_cast<CLeftPane*>(m_rightPane.AddDockedChild(new CLeftPane, dockStyle, width));
+
+    // All windows are now created, so populate the treeview
+    GetTreeView().GetRootItems();
+
+    // Uncheck the hidden menu item
+    GetFrameMenu().CheckMenuItem(IDM_SHOW_HIDDEN, MF_UNCHECKED);
+
+    // Place Radio button in view menu
+    CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
+    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+
+    // Uncomment the following to use a hash bar and disable of auto resizing
+    // m_rightPane.SetDragAutoResize(FALSE);
+}
+
 // Change the view mode to large icon.
 BOOL CMainFrame::OnViewLargeIcon()
 {
@@ -158,7 +158,7 @@ BOOL CMainFrame::OnViewList()
 // Initiate a popup menu to select the view mode.
 BOOL CMainFrame::OnViewMenu()
 {
-    // This Command is recieved if Comctl32.dll version is below 4.7
+    // This Command is received if Comctl32.dll version is below 4.7
     DoPopupMenu();
     return TRUE;
 }
@@ -202,7 +202,7 @@ BOOL CMainFrame::OnShowHidden()
 // Process notification messages (WM_NOTIFY) from child windows.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    // Notification from our dropdown button is recieved if Comctl32.dll version
+    // Notification from our dropdown button is received if Comctl32.dll version
     // is 4.70 or later (IE v3 required).
     switch(((LPNMHDR)lparam)->code)
     {

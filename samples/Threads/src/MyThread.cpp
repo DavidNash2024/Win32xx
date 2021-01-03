@@ -27,7 +27,7 @@ void CMyThread::CloseThread()
         MainWnd.AppendText(str);
     }
 
-    // All the thread's windows have ended, so we can post a WM_QUIT to end the thread. 
+    // All the thread's windows have ended, so we can post a WM_QUIT to end the thread.
     PostThreadMessage(WM_QUIT, 0, 0);
     WaitForSingleObject(*this, INFINITE);
     str.Format(_T("Thread %d has ended"), m_threadNumber);
