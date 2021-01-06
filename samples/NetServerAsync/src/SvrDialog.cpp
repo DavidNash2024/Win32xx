@@ -153,7 +153,7 @@ CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE),
     ZeroMemory(&m_saUDPClient, sizeof(m_saUDPClient));
 
     // Add support for the IP Address control
-    // It requires Win95 with IE4 intergrated or a later version of Windows OS.
+    // It requires Win95 with IE4 integrated or a later version of Windows OS.
     LoadCommonControlsEx();
 }
 

@@ -75,7 +75,7 @@ BOOL CTCPClientDlg::OnInitDialog()
     return TRUE;
 }
 
-// Recieves data from the socket.
+// Receives data from the socket.
 void CTCPClientDlg::Receive()
 {
     std::vector<char> bufVector( 1025, '\0' );
@@ -109,7 +109,7 @@ CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE),
     ZeroMemory(&m_saUDPClient, sizeof(m_saUDPClient));
 
     // Add support for the IP Address control
-    // It requires Win95 with IE4 intergrated or a later version of Windows OS.
+    // It requires Win95 with IE4 integrated or a later version of Windows OS.
     LoadCommonControlsEx();
 }
 
@@ -316,7 +316,7 @@ BOOL CSvrDialog::OnSend()
     switch(m_socketType)
     {
         case SOCK_STREAM:
-            // TCP connections have a seperate chat dialog for sending/receiving data
+            // TCP connections have a separate chat dialog for sending/receiving data
             break;
         case SOCK_DGRAM:
             {
@@ -370,7 +370,7 @@ BOOL CSvrDialog::OnSocketAccept()
     return TRUE;
 }
 
-// Called when the socket is disconneted.
+// Called when the socket is disconnected.
 BOOL CSvrDialog::OnSocketDisconnect(WPARAM wParam)
 {
     CWorkerSocket* pClient = reinterpret_cast<CWorkerSocket*>(wParam);

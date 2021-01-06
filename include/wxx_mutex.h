@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -71,7 +71,7 @@ namespace Win32xx
 {
     ////////////////////////////////////////////////////////////////
     // CEvent manages an event object. Event objects can be set to
-    // a signaled or nonsignaled state to facilitate synchronisation
+    // a signalled or nonsignalled state to facilitate synchronisation
     // between threads.
     class CEvent
     {
@@ -94,8 +94,8 @@ namespace Win32xx
 
     ////////////////////////////////////////////////////////
     // CMutex manages a mutex object. A mutex object is a
-    // synchronization object whose state is set to signaled
-    // when it is not owned by any thread, and nonsignaled
+    // synchronization object whose state is set to signalled
+    // when it is not owned by any thread, and non-signalled
     // when it is owned. Only one thread at a time can own
     // a mutex object.
     class CMutex

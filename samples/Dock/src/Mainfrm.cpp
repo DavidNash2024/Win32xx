@@ -152,7 +152,7 @@ BOOL CMainFrame::OnDockCloseAll()
     return TRUE;
 }
 
-// Dragging the docker's splitter bar will either dynamicly resize the dockers
+// Dragging the docker's splitter bar will either dynamically resize the dockers
 // during the dragging, or simply display a hashed splitter bar.
 BOOL CMainFrame::OnDynamicResize()
 {
@@ -264,7 +264,7 @@ BOOL CMainFrame::OnNoUndocking()
     return TRUE;
 }
 
-// Togggles proprotional resizing.
+// Toggles proportional resizing.
 BOOL CMainFrame::OnPropResize()
 {
     m_useProportionalResize = !m_useProportionalResize;
@@ -275,7 +275,7 @@ BOOL CMainFrame::OnPropResize()
 // Specify the CREATESTRUCT parameters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // Call base clase to set defaults
+    // Call base class to set defaults
     CDockFrame::PreCreate(cs);
 
     // Hide the window initially by removing the WS_VISIBLE style

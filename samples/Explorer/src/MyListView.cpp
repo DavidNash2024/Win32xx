@@ -382,16 +382,206 @@ void CMyListView::DoItemMenu(LPINT pItems, UINT items, CPoint& point)
     }
 }
 
-// Respond to a right mouse click on the window.
-LRESULT CMyListView::OnNMRClick(LPNMHDR pNMHDR)
+// Enumerates the items in the specified folder, and inserts each item into
+// the list-view. The LVITEM param parameter holds a pointer to the
+// ListItemData.
+void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
 {
-    UNREFERENCED_PARAMETER(pNMHDR);
+    CEnumIDList list;
 
-    CPoint ptScreen;
-    ::GetCursorPos(&ptScreen);
-    DoContextMenu(ptScreen);
+    int flags = SHCONTF_FOLDERS | SHCONTF_NONFOLDERS;
+    if ( GetExplorerApp()->GetMainFrame().GetShowHidden() )
+        flags |= SHCONTF_INCLUDEHIDDEN;
 
-    return 0;
+    if(SUCCEEDED(folder.GetEnumIDList(NULL, flags, list)))
+    {
+        ULONG fetched = 1;
+        Cpidl cpidlRel;
+
+        // Enumerate the item's PIDLs.
+        while(S_OK == (list.Next(1, cpidlRel, fetched)) && fetched)
+        {
+            LVITEM lvItem;
+            ZeroMemory(&lvItem, sizeof(lvItem));
+
+            // Fill in the TV_ITEM structure for this item.
+            lvItem.mask = LVIF_PARAM | LVIF_TEXT | LVIF_IMAGE | LVIF_STATE;
+
+            // Store a pointer to the ListItemData in the lParam and m_pItems.
+            ListItemDataPtr pItem = new ListItemData(cpidlParent, cpidlRel, folder);
+            lvItem.lParam = reinterpret_cast<LPARAM>(pItem.get());
+
+            TCHAR szFileName[MAX_PATH];
+            GetFullFileName(pItem->GetFullCpidl().GetPidl(), szFileName);
+
+            ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
+            pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
+            pItem->m_isFolder = (attr & SFGAO_FOLDER) != 0;
+
+            HANDLE file = INVALID_HANDLE_VALUE;
+
+            // Retrieve the file handle for an existing file
+            if (attr & SFGAO_CANDELETE)
+                file = ::CreateFile(szFileName, 0, FILE_SHARE_READ, NULL,
+                    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
+
+            // Retrieve the file size.
+            DWORD fileSizeHi;
+            DWORD fileSizeLo = ::GetFileSize(file, &fileSizeHi);
+            ULONGLONG fileSize = ((ULONGLONG)fileSizeHi) << 32 | fileSizeLo;
+            pItem->m_fileSize = fileSize;
+
+            // Retrieve the file type.
+            SHFILEINFO sfi;
+            ZeroMemory(&sfi, sizeof(SHFILEINFO));
+            if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
+            {
+                pItem->m_fileType = sfi.szTypeName;
+            }
+
+            // Retrieve the modified file time for the file.
+            FILETIME modified;
+            if ((file != INVALID_HANDLE_VALUE) /* && (~attr & SFGAO_FOLDER)*/)
+            {
+                ::GetFileTime(file, NULL, NULL, &modified);
+                pItem->m_fileTime = modified;
+            }
+
+            // m_pItems is a vector of smart pointers. The memory allocated by
+            // new is automatically deleted when the vector goes out of scope.
+            m_pItems.push_back(pItem);
+
+            // Text and images are done on a callback basis.
+            lvItem.pszText = LPSTR_TEXTCALLBACK;
+            lvItem.iImage = I_IMAGECALLBACK;
+
+            // Determine if the item's icon characteristics
+            attr = SFGAO_SHARE | SFGAO_LINK | SFGAO_GHOSTED;
+            folder.GetAttributes(1, cpidlRel, attr);
+
+            if(attr & SFGAO_SHARE)
+            {
+                lvItem.mask |= LVIF_STATE;
+                lvItem.stateMask |= LVIS_OVERLAYMASK;
+                lvItem.state |= INDEXTOOVERLAYMASK(1); // 1 is the index for the shared overlay image
+            }
+
+            if (attr & SFGAO_LINK)
+            {
+                lvItem.mask |= LVIF_STATE;
+                lvItem.stateMask |= LVIS_OVERLAYMASK;
+                lvItem.state |= INDEXTOOVERLAYMASK(2); // 2 is the index for the link overlay image
+            }
+
+            if(attr & SFGAO_GHOSTED)
+            {
+                lvItem.mask |= LVIF_STATE;
+                lvItem.stateMask |= LVIS_CUT;
+                lvItem.state |= LVIS_CUT;
+            }
+
+            InsertItem(lvItem);
+            fetched = 0;
+        }
+
+        // Sort by the first column, sorting down.
+        SortColumn(0, TRUE);
+    }
+}
+
+// Converts a filetime to ULONGLONG.
+ULONGLONG CMyListView::FileTimeToULL(FILETIME ft)
+{
+    return static_cast<ULONGLONG>(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
+}
+
+// Retrieves the file's size and stores the text in string.
+BOOL CMyListView::GetFileSizeText(ULONGLONG fileSize, LPTSTR string)
+{
+    // Convert the fileSize to a string using Locale information.
+    CString preFormat;
+    preFormat.Format(_T("%d"), ((1023 + fileSize) >> 10));
+    CString postFormat;
+    const int maxSize = 31;
+    ::GetNumberFormat(LOCALE_USER_DEFAULT, LOCALE_NOUSEROVERRIDE, preFormat, NULL, postFormat.GetBuffer(maxSize), maxSize);
+    postFormat.ReleaseBuffer();
+
+    // Get our decimal point character from Locale information.
+    int buffLen = ::GetLocaleInfo( LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, NULL, 0 );
+    assert(buffLen > 0);
+    CString decimal;
+    ::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, decimal.GetBuffer(buffLen), buffLen);
+    decimal.ReleaseBuffer();
+
+    // Truncate at the "decimal" point.
+    int pos = postFormat.Find(decimal);
+    if (pos > 0)
+        postFormat = postFormat.Left(pos);
+
+    postFormat += _T(" KB");
+    StrCopy(string, postFormat, maxSize);
+    return TRUE;
+}
+
+// Retrieves the file's last write time and stores the text in string.
+BOOL CMyListView::GetLastWriteTime(FILETIME modified, LPTSTR string)
+{
+    // Convert the last-write time to local time.
+    SYSTEMTIME localSysTime;
+    FILETIME localFileTime;
+    ::FileTimeToLocalFileTime(&modified, &localFileTime);
+    ::FileTimeToSystemTime(&localFileTime, &localSysTime);
+
+    // Build a string showing the date and time with regional settings.
+    const int maxChars = 32;
+    TCHAR time[maxChars];
+    TCHAR date[maxChars];
+    ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &localSysTime, NULL, date, maxChars-1);
+    ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &localSysTime, NULL, time, maxChars-1);
+
+    StrCopy(string, date, maxChars);
+    ::lstrcat(string, _T(" "));
+    ::lstrcat(string, time);
+
+    return TRUE;
+}
+
+// Called when the window handle (HWND) is attached to CMyListView.
+void CMyListView::OnAttach()
+{
+    // Set the image lists.
+    SetImageLists();
+
+    // Set up the columns for report mode.
+    LVCOLUMN lvc;
+    ZeroMemory(&lvc, sizeof(LVCOLUMN));
+    lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+    int columns = 4;   // Number of columns
+    int colSizes[4] = {150, 70, 100, 120}; // Width of columns in pixels
+
+    for (int i = 0; i < columns; i++)
+    {
+        CString str = LoadString(IDS_COLUMN1 + i);
+        lvc.iSubItem = i;
+        lvc.pszText = const_cast<LPTSTR>(str.c_str());
+        lvc.cx = colSizes[i];
+
+        if (i == 1) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
+        else lvc.fmt = LVCFMT_LEFT;         // left-aligned column
+
+        InsertColumn(i, lvc);
+    }
+
+    // Set initial the view style as report
+    ViewReport();
+}
+
+// Called when the window is destroyed.
+void CMyListView::OnDestroy()
+{
+    // Cleanup required by Win2000
+    m_pItems.clear();
+    m_csfCurFolder.Release();
 }
 
 // Called when a list view column is clicked.
@@ -503,6 +693,18 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
     return 0;
 }
 
+// Respond to a right mouse click on the window.
+LRESULT CMyListView::OnNMRClick(LPNMHDR pNMHDR)
+{
+    UNREFERENCED_PARAMETER(pNMHDR);
+
+    CPoint ptScreen;
+    ::GetCursorPos(&ptScreen);
+    DoContextMenu(ptScreen);
+
+    return 0;
+}
+
 // Called when the list-view has focus and the Enter key is pressed.
 LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
 {
@@ -533,202 +735,6 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lparam)
     case NM_RETURN:         return OnNMReturn(pNMHDR);
     }
     return 0;
-}
-
-// Enumerates the items in the specified folder, and inserts each item into
-// the list-view. The LVITEM param parameter holds a pointer to the
-// ListItemData.
-void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
-{
-    CEnumIDList list;
-
-    int flags = SHCONTF_FOLDERS | SHCONTF_NONFOLDERS;
-    if ( GetExplorerApp()->GetMainFrame().GetShowHidden() )
-        flags |= SHCONTF_INCLUDEHIDDEN;
-
-    if(SUCCEEDED(folder.GetEnumIDList(NULL, flags, list)))
-    {
-        ULONG fetched = 1;
-        Cpidl cpidlRel;
-
-        // Enumerate the item's PIDLs.
-        while(S_OK == (list.Next(1, cpidlRel, fetched)) && fetched)
-        {
-            LVITEM lvItem;
-            ZeroMemory(&lvItem, sizeof(lvItem));
-
-            // Fill in the TV_ITEM structure for this item.
-            lvItem.mask = LVIF_PARAM | LVIF_TEXT | LVIF_IMAGE | LVIF_STATE;
-
-            // Store a pointer to the ListItemData in the lParam and m_pItems.
-            ListItemDataPtr pItem = new ListItemData(cpidlParent, cpidlRel, folder);
-            lvItem.lParam = reinterpret_cast<LPARAM>(pItem.get());
-
-            TCHAR szFileName[MAX_PATH];
-            GetFullFileName(pItem->GetFullCpidl().GetPidl(), szFileName);
-
-            ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
-            pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
-            pItem->m_isFolder = (attr & SFGAO_FOLDER) != 0;
-
-            HANDLE file = INVALID_HANDLE_VALUE;
-
-            // Retrieve the file handle for an existing file
-            if (attr & SFGAO_CANDELETE)
-                file = ::CreateFile(szFileName, 0, FILE_SHARE_READ, NULL,
-                    OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
-
-            // Retrieve the file size.
-            DWORD fileSizeHi;
-            DWORD fileSizeLo = ::GetFileSize(file, &fileSizeHi);
-            ULONGLONG fileSize = ((ULONGLONG)fileSizeHi) << 32 | fileSizeLo;
-            pItem->m_fileSize = fileSize;
-
-            // Retrieve the file type.
-            SHFILEINFO sfi;
-            ZeroMemory(&sfi, sizeof(SHFILEINFO));
-            if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
-            {
-                pItem->m_fileType = sfi.szTypeName;
-            }
-
-            // Retrieve the modified file time for the file.
-            FILETIME modified;
-            if ((file != INVALID_HANDLE_VALUE) /* && (~attr & SFGAO_FOLDER)*/)
-            {
-                ::GetFileTime(file, NULL, NULL, &modified);
-                pItem->m_fileTime = modified;
-            }
-
-            // m_pItems is a vector of smart pointers. The memory allocated by
-            // new is automatically deleted when the vector goes out of scope.
-            m_pItems.push_back(pItem);
-
-            // Text and images are done on a callback basis.
-            lvItem.pszText = LPSTR_TEXTCALLBACK;
-            lvItem.iImage = I_IMAGECALLBACK;
-
-            // Determine if the item's icon characteristics
-            attr = SFGAO_SHARE | SFGAO_LINK | SFGAO_GHOSTED;
-            folder.GetAttributes(1, cpidlRel, attr);
-
-            if(attr & SFGAO_SHARE)
-            {
-                lvItem.mask |= LVIF_STATE;
-                lvItem.stateMask |= LVIS_OVERLAYMASK;
-                lvItem.state |= INDEXTOOVERLAYMASK(1); // 1 is the index for the shared overlay image
-            }
-
-            if (attr & SFGAO_LINK)
-            {
-                lvItem.mask |= LVIF_STATE;
-                lvItem.stateMask |= LVIS_OVERLAYMASK;
-                lvItem.state |= INDEXTOOVERLAYMASK(2); // 2 is the index for the link overlay image
-            }
-
-            if(attr & SFGAO_GHOSTED)
-            {
-                lvItem.mask |= LVIF_STATE;
-                lvItem.stateMask |= LVIS_CUT;
-                lvItem.state |= LVIS_CUT;
-            }
-
-            InsertItem(lvItem);
-            fetched = 0;
-        }
-
-        // Sort by the first column, sorting down.
-        SortColumn(0, TRUE);
-    }
-}
-
-// Retrieves the file's size and stores the text in string.
-BOOL CMyListView::GetFileSizeText(ULONGLONG fileSize, LPTSTR string)
-{
-    // Convert the fileSize to a string using Locale information.
-    CString preFormat;
-    preFormat.Format(_T("%d"), ((1023 + fileSize) >> 10));
-    CString postFormat;
-    const int maxSize = 31;
-    ::GetNumberFormat(LOCALE_USER_DEFAULT, LOCALE_NOUSEROVERRIDE, preFormat, NULL, postFormat.GetBuffer(maxSize), maxSize);
-    postFormat.ReleaseBuffer();
-
-    // Get our decimal point character from Locale information.
-    int buffLen = ::GetLocaleInfo( LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, NULL, 0 );
-    assert(buffLen > 0);
-    CString decimal;
-    ::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, decimal.GetBuffer(buffLen), buffLen);
-    decimal.ReleaseBuffer();
-
-    // Truncate at the "decimal" point.
-    int pos = postFormat.Find(decimal);
-    if (pos > 0)
-        postFormat = postFormat.Left(pos);
-
-    postFormat += _T(" KB");
-    StrCopy(string, postFormat, maxSize);
-    return TRUE;
-}
-
-// Retrieves the file's last write time and stores the text in string.
-BOOL CMyListView::GetLastWriteTime(FILETIME modified, LPTSTR string)
-{
-    // Convert the last-write time to local time.
-    SYSTEMTIME localSysTime;
-    FILETIME localFileTime;
-    ::FileTimeToLocalFileTime(&modified, &localFileTime);
-    ::FileTimeToSystemTime(&localFileTime, &localSysTime);
-
-    // Build a string showing the date and time with regional settings.
-    const int maxChars = 32;
-    TCHAR time[maxChars];
-    TCHAR date[maxChars];
-    ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &localSysTime, NULL, date, maxChars-1);
-    ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &localSysTime, NULL, time, maxChars-1);
-
-    StrCopy(string, date, maxChars);
-    ::lstrcat(string, _T(" "));
-    ::lstrcat(string, time);
-
-    return TRUE;
-}
-
-// Called when the window handle (HWND) is attached to CMyListView.
-void CMyListView::OnAttach()
-{
-    // Set the image lists.
-    SetImageLists();
-
-    // Set up the columns for report mode.
-    LVCOLUMN lvc;
-    ZeroMemory(&lvc, sizeof(LVCOLUMN));
-    lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-    int columns = 4;   // Number of columns
-    int colSizes[4] = {150, 70, 100, 120}; // Width of columns in pixels
-
-    for (int i = 0; i < columns; i++)
-    {
-        CString str = LoadString(IDS_COLUMN1 + i);
-        lvc.iSubItem = i;
-        lvc.pszText = const_cast<LPTSTR>(str.c_str());
-        lvc.cx = colSizes[i];
-
-        if (i == 1) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
-        else lvc.fmt = LVCFMT_LEFT;         // left-aligned column
-
-        InsertColumn(i, lvc);
-    }
-
-    // Set initial the view style as report
-    ViewReport();
-}
-
-// Called when the window is destroyed.
-void CMyListView::OnDestroy()
-{
-    // Cleanup required by Win2000
-    m_pItems.clear();
-    m_csfCurFolder.Release();
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.
@@ -811,12 +817,6 @@ void CMyListView::SortColumn(int column, bool isSortDown)
         SetItemState(GetSelectionMark(), LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
     else
         SetItemState(0, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
-}
-
-// Converts a filetime to ULONGLONG.
-ULONGLONG CMyListView::FileTimeToULL(FILETIME ft)
-{
-    return static_cast<ULONGLONG>(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
 }
 
 // Set the view-list mode to large icons.

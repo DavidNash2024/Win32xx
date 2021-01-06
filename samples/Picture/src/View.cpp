@@ -91,7 +91,7 @@ BOOL CView::LoadPictureFile(LPCTSTR fileName)
         SetScrollSizes(size);
         IsPictureLoaded = TRUE;
 
-        TRACE("Succesfully loaded: "); TRACE(fileName); TRACE("\n");
+        TRACE("Successfully loaded: "); TRACE(fileName); TRACE("\n");
     }
     else
     {

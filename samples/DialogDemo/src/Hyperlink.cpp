@@ -74,7 +74,7 @@ void CHyperlink::OpenUrl()
     }
 }
 
-// Handles messages reflected back freom the dialog.
+// Handles messages reflected back from the dialog.
 LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);

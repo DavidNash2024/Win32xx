@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -165,7 +165,7 @@ namespace Win32xx
         static void CALLBACK Callback(HWND hwnd, UINT msg, LPARAM lparam);
 
         CString m_title;
-        std::vector<PropertyPagePtr> m_allPages;       // vector of CPropertyPage
+        std::vector<PropertyPagePtr> m_allPages;           // vector of CPropertyPage
         std::vector<PROPSHEETPAGE> m_allSheetPages;        // vector of PROPSHEETPAGE
         PROPSHEETHEADER m_psh;
     };

@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -442,7 +442,7 @@ namespace Win32xx
     template <typename T>
     inline void CPrintPreview<T>::PreviewPage(UINT page)
     {
-        // Get the device contect of the default or currently chosen printer
+        // Get the device context of the default or currently chosen printer
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
         if (printerDC.GetHDC() == 0)

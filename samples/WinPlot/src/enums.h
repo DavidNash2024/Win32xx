@@ -31,7 +31,7 @@ namespace Calc
     {
         st_ERROR,
         st_OK,                  // Invalid sequence of numbers and operators
-        st_OVERFLOW             // Infinity, or invalid function arguement
+        st_OVERFLOW             // Infinity, or invalid function argument
     };
 
 } // namespace Calc

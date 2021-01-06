@@ -51,7 +51,7 @@ LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         break;
 
     case WM_TESTMESSAGE:
-        // return the number of WM_TESTMESSAGE messages processsed so far
+        // return the number of WM_TESTMESSAGE messages processed so far
         return ++messages;
     }
 

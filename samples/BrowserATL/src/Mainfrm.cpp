@@ -299,7 +299,7 @@ void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
     TRACE("NewWindow2\n");
 }
 
-// Called when the frame recieves a notification (WM_NOTIFY).
+// Called when the frame receives a notification (WM_NOTIFY).
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     LPNMHDR pNMHDR = (LPNMHDR)lparam;

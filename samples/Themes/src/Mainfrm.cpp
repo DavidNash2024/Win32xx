@@ -443,7 +443,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     // Process notification messages sent by child windows
 //  switch(((LPNMHDR)lparam)->code)
 //  {
-        //Add case statments for each notification message here
+        //Add case statements for each notification message here
 //  }
 
     // Pass any unhandled messages on for default processing

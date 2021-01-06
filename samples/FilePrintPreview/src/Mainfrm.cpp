@@ -575,7 +575,7 @@ SetupMenuIcons()                                                            /*
     void CMainFrame::
 SetupToolBar()                                                              /*
 
-    Define the resource identfiers for the toolbar, in order.
+    Define the resource identifiers for the toolbar, in order.
 *-----------------------------------------------------------------------------*/
 {
     AddToolBarButton(IDM_FILE_NEW);

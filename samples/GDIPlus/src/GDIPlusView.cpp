@@ -77,7 +77,7 @@ void CGDIPlusView::DrawGamaShapes(CDC& dc)
     graphics.FillPath(&pthGrBrushGama, &pathGama);
 }
 
-// Draw an elipse with a gradient brush.
+// Draw an ellipse with a gradient brush.
 void CGDIPlusView::DrawGradientElipse(CDC& dc)
 {
     Graphics graphics(dc);
@@ -100,7 +100,7 @@ void CGDIPlusView::DrawGradientElipse(CDC& dc)
     graphics.FillEllipse(&pathBrush, 0, 80, 140, 70);
 }
 
-// Draw a solid elipse.
+// Draw a solid ellipse.
 void CGDIPlusView::DrawSolidElipse(CDC& dc)
 {
     Graphics graphics(dc);

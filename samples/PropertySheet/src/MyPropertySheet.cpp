@@ -15,7 +15,7 @@ CButtonPage::CButtonPage(UINT templateID, LPCTSTR title /* = NULL*/) : CProperty
 {
 }
 
-// Proces the property sheet's window messages.
+// Process the property sheet's window messages.
 INT_PTR CButtonPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

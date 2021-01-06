@@ -8,7 +8,7 @@
 
 
 //////////////////////////////////
-// CMainFrame dunction definitions
+// CMainFrame function definitions
 //
 
 // Constructor for CMainFrame.

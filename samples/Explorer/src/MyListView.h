@@ -36,9 +36,9 @@ public:
     virtual ~CMyListView();
     void DisplayFolder(CShellFolder& parentFolder, Cpidl& cpidlParent, Cpidl& cpidlRel);
     void DoDisplay();
+    static ULONGLONG FileTimeToULL(FILETIME ft);	
     BOOL SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow);
     void SortColumn(int column, bool isSortDown);
-    static ULONGLONG FileTimeToULL(FILETIME ft);
     void ViewLargeIcons();
     void ViewList();
     void ViewSmallIcons();
@@ -49,9 +49,9 @@ protected:
     virtual void OnDestroy();
     virtual LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);
     virtual LRESULT OnLVNDispInfo(NMLVDISPINFO* pdi);
-    virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnNMRClick(LPNMHDR pNMHDR);
     virtual LRESULT OnNMReturn(LPNMHDR pNMHDR);
+    virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);	
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

@@ -52,7 +52,7 @@ it might be best to use PostMessage in response to these functions in a
 windows environment.
 
 For a TCP server, inherit a class from CSocket and override OnAccept, OnDisconnect
-and OnRecieve. Create one instance of this class and use it as a listening socket.
+and OnReceive. Create one instance of this class and use it as a listening socket.
 The purpose of the listening socket is to detect connections from clients and accept them.
 For the listening socket, we do the following:
  1) Create the socket.

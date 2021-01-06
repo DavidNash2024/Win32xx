@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -295,7 +295,7 @@ namespace Win32xx
         // private data
         LOGFONT     m_logFont;          // Font characteristics
         CHOOSEFONT  m_cf;               // ChooseFont parameters
-        CString     m_styleName;     // Style name on the dialog
+        CString     m_styleName;        // Style name on the dialog
     };
 
 }
@@ -1275,7 +1275,7 @@ namespace Win32xx
         m_fr.lpfnHook           = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
         m_fr.lpTemplateName     = fr.lpTemplateName;
 
-        // Enable the hook proc for the help button
+        // Enable the hook procedure for the help button
         if (m_fr.Flags & FR_SHOWHELP)
             m_fr.Flags |= FR_ENABLEHOOK;
     }

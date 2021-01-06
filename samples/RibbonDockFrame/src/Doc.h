@@ -9,7 +9,7 @@ struct PlotPoint;
 
 
 //////////////////////////////////////////////////////////////
-// Declartion of the CDoc Class
+// Declaration of the CDoc Class
 // CDoc holds the application's data. It inherits from CObject
 // to perform data serialization to and from the archive.
 //

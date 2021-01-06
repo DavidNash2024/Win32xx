@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -93,7 +93,7 @@ namespace Win32xx
         void SetToolTips(HWND toolTip) const;
 
     protected:
-        //Overridables
+        // Overridables
         virtual BOOL OnEraseBkgnd(CDC& dc);
         virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);

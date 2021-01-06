@@ -96,13 +96,13 @@ BOOL CMyDialog::OnInitDialog()
     AttachItem(IDC_DATETIMEPICKER1, m_dateTime);
     AttachItem(IDC_MONTHCALENDAR1, m_monthCal);
 
-    // Set timer for 1000 miliseconds
+    // Set timer for 1000 milliseconds
     SetTimer(ID_TIMER, 1000, 0);
 
     return TRUE;
 }
 
-// Called when a notification (WM_NOTIFY) is recieved.
+// Called when a notification (WM_NOTIFY) is received.
 LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(wparam);
@@ -114,7 +114,7 @@ LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
         KillTimer(ID_TIMER);
         break;
     case NM_KILLFOCUS:
-        // Set timer for 1000 miliseconds
+        // Set timer for 1000 milliseconds
         SetTimer(ID_TIMER, 1000, 0);
         break;
     }

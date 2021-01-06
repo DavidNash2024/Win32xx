@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -725,7 +725,7 @@ namespace Win32xx
         return m_time >= time.m_time;
     }
 
-    // Returns a CString that contains formatted time. The pFormat parammater
+    // Returns a CString that contains formatted time. The pFormat parameter
     // is a formatting string similar to the printf formatting string.
     // The valid format directives are
     //   %D - number of days
@@ -750,7 +750,7 @@ namespace Win32xx
         return CString(szBuffer);
     }
 
-    // Returns a CString that contains formatted time. The FormatID parammater
+    // Returns a CString that contains formatted time. The FormatID parameter
     // specifies a resource containing the formatting string which is similar
     // to the printf formatting string.  The valid format directives are
     //   %D - number of days
@@ -765,7 +765,7 @@ namespace Win32xx
     }
 
     // Returns a CString that contains formatted time as a UTC time. The pFormat
-    // parammater is a formatting string similar to the printf formatting string.
+    // parameter is a formatting string similar to the printf formatting string.
     inline CString CTime::FormatGmt(LPCTSTR pFormat) const
     {
         const size_t  maxTimeBufferSize = 128;

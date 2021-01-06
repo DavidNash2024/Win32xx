@@ -1178,7 +1178,7 @@ BOOL CMainFrame::OnRemoveBoxSet()
 }
 
 // Called in response to a popup menu on the list view.
-// Removes the chosen file from the movie libaray.
+// Removes the chosen file from the movie library.
 BOOL CMainFrame::OnRemoveFile()
 {
     // Lock this function for thread safety

@@ -558,7 +558,7 @@ OnOpenDoc()                                                            /*
         OFN_HIDEREADONLY    |   // flags
         OFN_EXPLORER        |
         OFN_NONETWORKBUTTON |
-        OFN_FILEMUSTEXIST   |  // only exising files allowed
+        OFN_FILEMUSTEXIST   |  // only existing files allowed
         OFN_PATHMUSTEXIST   |
         OFN_ENABLEHOOK      |
         OFN_ENABLESIZING,

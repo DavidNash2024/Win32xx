@@ -59,7 +59,7 @@ LRESULT CMyButton::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-// Process the window messages for the button contol.
+// Process the window messages for the button control.
 LRESULT CMyButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)

@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -901,7 +901,7 @@ namespace Win32xx
 
 
     /////////////////////////////////////////////////////////////////////
-    // CMemDC manage a memory device context which is compatable with the
+    // CMemDC manage a memory device context which is compatible with the
     // specified device context. If this device context 0, the memory DC
     // is compatible with the application's current screen.
     class CMemDC : public CDC
@@ -3901,7 +3901,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-    // The AbortPath function closesand discards any paths in the specified device context.
+    // The AbortPath function closes and discards any paths in the specified device context.
     // Refer to AbortPath in the Windows API documentation for more information.
     inline BOOL CDC::AbortPath() const
     {

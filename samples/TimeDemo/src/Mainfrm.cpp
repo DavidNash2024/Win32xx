@@ -126,7 +126,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
     CFrame::OnCreate(cs);
       // Connect the MRU to the frame's menu
     m_MRU.AssignMenu(GetFrameMenu(), m_maxMRUEntries);
-      // get archved values
+      // get archived values
     try
     {
           // open the application's saved parameter archive
@@ -454,7 +454,7 @@ Serialize(CArchive &ar)                                                     /*
           // retrieved by first reading its length and  then
           // loading in that number of bytes into the data
           // item saved in the archive, as above. Some items require
-          // additional converstion procedures, as shown below.
+          // additional conversion procedures, as shown below.
 
           // recover window frame placement, but do not invoke
           // SetWindowPlacement(), as the window is not yet created.

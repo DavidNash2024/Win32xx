@@ -8,7 +8,7 @@
     Contents Description: The DDXDemo CApp class implementation. This class
     governs the overall actions of the DDX/DDV Demonstration program. This
     class is a modified version of that found in the FormDocView sample
-    distributed with the Win32++ Windows interface classe. The modified sample
+    distributed with the Win32++ Windows interface classes. The modified sample
     program was based on code provided by Lynn Allan. This demo extends the
     given sample by application of Dialog Data Exchange and Validation (DDX/DDV).
 

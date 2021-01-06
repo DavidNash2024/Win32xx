@@ -79,7 +79,7 @@ CMemDC CView::Draw()
     return memDC;
 }
 
-// Called when part of the view window needs to be redawn.
+// Called when part of the view window needs to be redrawn.
 // Calls the Draw function to perform the drawing to a memory DC.
 void CView::OnDraw(CDC& dc)
 {
@@ -113,7 +113,7 @@ LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
-// Called when the left mouse buton is pressed.
+// Called when the left mouse button is pressed.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
@@ -122,7 +122,7 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-// Called when the left mouse buton is released.
+// Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     //Release the capture on the mouse

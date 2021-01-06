@@ -106,7 +106,7 @@ namespace Calc
         return RetValue;
     }
 
-    // Builds the expresssion from branch nodes which are added or subtracted.
+    // Builds the expression from branch nodes which are added or subtracted.
     // x-y+z is evaluated as:  (x-y) + z.
     Node* Calculator::Expression()
     {
@@ -130,7 +130,7 @@ namespace Calc
         return pnode;
     }
 
-    // Builds the expresssion from branch nodes which are multiplied or divided.
+    // Builds the expression from branch nodes which are multiplied or divided.
     // x/y/z  is evaluated as (x / y)/z
     Node* Calculator::Product()
     {
@@ -156,7 +156,7 @@ namespace Calc
         return pnode;
     }
 
-    // Builds the expresssion from branch nodes which are raised to the power of.
+    // Builds the expression from branch nodes which are raised to the power of.
     Node* Calculator::Power()
     {
         Node* pnode = Unit();
@@ -178,7 +178,7 @@ namespace Calc
         return pnode;
     }
 
-    // Builds the expresssion from nodes which are constants or variables.
+    // Builds the expression from nodes which are constants or variables.
     Node* Calculator::Unit()
     {
         Node* pnode = NULL;
@@ -285,7 +285,7 @@ namespace Calc
 
     bool Calculator::IsOverflow(double value)
     {
-        // This code could give rise to compatability issues.
+        // This code could give rise to compatibility issues.
         // Verify when migrating to a different version of compiler
 
         double inf = HUGE_VAL;       //Infinity

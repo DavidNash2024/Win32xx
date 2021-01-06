@@ -101,7 +101,7 @@ CContainClasses::CContainClasses()
     SetView(m_viewClasses);
 }
 
-// Adds a ComboBoxEx controll to the container's toolbar.
+// Adds a ComboBoxEx control to the container's toolbar.
 void CContainClasses::AddCombo()
 {
     int width = 120;
@@ -120,7 +120,7 @@ void CContainClasses::AddCombo()
     m_comboBoxEx.Create(tb);
     m_comboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
 
-    // Adjust the toolbar height to accomodate the ComboBoxEx control
+    // Adjust the toolbar height to accommodate the ComboBoxEx control
     CRect rc = m_comboBoxEx.GetWindowRect();
     tb.SetButtonSize(rc.Height(), rc.Height());
 

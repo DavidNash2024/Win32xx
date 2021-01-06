@@ -182,7 +182,7 @@ StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)         /*
     deposition of cb bytes of data into the pbBuff. The pcb points to the
     location receiving the number of bytes actually transferred in. Returns
     zero on success, or nonzero if cb is zero, indicating completion.
-    Throws an exception on gilr error. In this usage, dwCookie contains the
+    Throws an exception on file error. In this usage, dwCookie contains the
     handle of an open file.
 *-----------------------------------------------------------------------------*/
 {
@@ -202,7 +202,7 @@ StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)         /*
     DWORD CALLBACK CRichEditView::
 StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)        /*
 
-    Tansfer data out of the rich edit view window. The dwCookie is an
+    Transfer data out of the rich edit view window. The dwCookie is an
     app-defined value that directs the transfer of cb bytes of data from
     the pbBuff. The pcb points to the location receiving the number of bytes
     actually transferred out. Returns zero on success, or nonzero if cb is
@@ -239,7 +239,7 @@ DoPreparePrinting(CPrintInfo& info)                                         /*
     contains the settings specified in the dialog box and deposits this
     information so as to be available through the info parameter. This
     device context is used to print the document. Return TRUE if printing
-    can begin; FALSE if the operation is canceled.
+    can begin; FALSE if the operation is cancelled.
 *-----------------------------------------------------------------------------*/
 {
       // set up a dialog to choose the printer and printing parameters

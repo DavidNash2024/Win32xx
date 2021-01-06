@@ -16,7 +16,7 @@
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame()
 {
-    //Set the tab control as the fram's view window
+    // Set the tab control as the frame's view window
     SetView(m_view);
 
     // Set the registry key name, and load the initial window position

@@ -8,7 +8,7 @@
 
 ////////////////////////////////////////////////////////////
 // CLimitSingleInstance uses a mutex to ensure that only
-// a single intance of the application runs.
+// a single instance of the application runs.
 // This code is from Microsoft KnowledgeBase Article Q243953.
 class CLimitSingleInstance
 {

@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -78,7 +78,7 @@ namespace Win32xx
         void operator = (const HIMAGELIST rhs);
         virtual ~CImageList();
 
-        //Initialization
+        // Initialization
         BOOL Create(int cx, int cy, UINT flags, int initial, int grow);
         BOOL Create(UINT bitmapID, int cx, int grow, COLORREF mask);
         BOOL Create(LPCTSTR pBitmapID, int cx, int grow, COLORREF mask);
@@ -88,7 +88,7 @@ namespace Win32xx
         BOOL CreateDisabledImageList(HIMAGELIST normalImages);
 #endif
 
-        //Operations
+        // Operations
         int Add(HBITMAP bitmap, HBITMAP mask) const;
         int Add(HBITMAP bitmap, COLORREF mask) const;
         int Add(HICON icon) const;
@@ -113,7 +113,7 @@ namespace Win32xx
         int Replace(int image, HICON icon) const;
         BOOL Write(LPSTREAM pStream) const;
 
-        //Attributes
+        // Attributes
         COLORREF GetBkColor() const;
         HIMAGELIST GetDragImage(POINT* pPoint, POINT* pHotspot) const;
         HIMAGELIST GetHandle() const;
@@ -124,7 +124,7 @@ namespace Win32xx
         COLORREF SetBkColor(COLORREF bckgnd) const;
         BOOL SetDragCursorImage(int drag, int dxHotspot, int dyHotspot) const;
 
-        //Operators
+        // Operators
         operator HIMAGELIST () const;
 
     private:
