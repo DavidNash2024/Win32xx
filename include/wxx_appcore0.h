@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -429,7 +429,7 @@ namespace Win32xx
     // except that a critical section can be used only by the threads of a
     // single process. Critical sections are faster and more efficient than mutexes.
     // The CCriticalSection object should be created in the primary thread. Create
-    // them as member variables in your CWinApp derrived class.
+    // them as member variables in your CWinApp derived class.
     class CCriticalSection
     {
     public:

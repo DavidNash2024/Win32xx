@@ -36,7 +36,7 @@ CDoc()                                                                  /*
       //Initialize the values of ALL controls using DDX/DDV.  These are
       // overwritten by saved values from the registry after initial
       // startup, but it is important to have valid values for the
-      // initil startup.
+      // initial startup.
     m_byteVal       = 10;
     m_shortVal      = 0;
     m_intVal        = 0;

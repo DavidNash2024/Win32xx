@@ -311,6 +311,22 @@ LRESULT CMyTreeView::OnNMRClick(LPNMHDR pNMHDR)
     return 0;
 }
 
+// Process notification reflected back from the parent window.
+LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lparam)
+{
+    LPNMHDR  lpnmh = (LPNMHDR)lparam;
+
+    switch (lpnmh->code)
+    {
+    case NM_RCLICK:         return OnNMRClick(lpnmh);
+    case TVN_ITEMEXPANDING: return OnTVNExpanding((LPNMTREEVIEW)lparam);
+    case TVN_GETDISPINFO:   return OnTVNGetDispInfo((LPNMTVDISPINFO)lparam);
+    case TVN_SELCHANGED:    return OnTVNSelChanged((LPNMTREEVIEW)lparam);
+    }
+
+    return 0;
+}
+
 // Called in response to a TVN_GETDISPINFO notification.
 // Updates the tree-view item with file information.
 LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
@@ -377,22 +393,6 @@ LRESULT CMyTreeView::OnTVNSelChanged(LPNMTREEVIEW pNMTV)
 
     CMyListView& LeftView = GetExplorerApp()->GetMainFrame().GetListView();
     LeftView.DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
-
-    return 0;
-}
-
-// Process notification reflected back from the parent window.
-LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lparam)
-{
-    LPNMHDR  lpnmh = (LPNMHDR)lparam;
-
-    switch (lpnmh->code)
-    {
-    case NM_RCLICK:         return OnNMRClick(lpnmh);
-    case TVN_ITEMEXPANDING: return OnTVNExpanding((LPNMTREEVIEW)lparam);
-    case TVN_GETDISPINFO:   return OnTVNGetDispInfo((LPNMTVDISPINFO)lparam);
-    case TVN_SELCHANGED:    return OnTVNSelChanged((LPNMTREEVIEW)lparam);
-    }
 
     return 0;
 }

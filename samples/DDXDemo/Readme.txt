@@ -21,7 +21,7 @@ Features demonstrated in this example
 * Use of Dialog Data Exchange (DDX) and Validation (DDV) classes to create 
   an interactive application programming interface to dialog boxes and the 
   view class accessing or depositing data in those controls. These are 
-  consistent with similar capabililties in the Microsoft Foundation Classes.
+  consistent with similar capabilities in the Microsoft Foundation Classes.
 * A resizable form for the display, with a resizing gripper tool at the
   end of the status bar.
 * Programmer-selectable menu, tool bar, and status bar themes, as well as

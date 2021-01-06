@@ -7,7 +7,7 @@ It is meant to serve as the template for applications that require a full
 range of features, including AboutBox help, full color selection of frame, 
 controls, and client area, font selection for text display, standard file 
 open and save-as dialogs, selection and use of printers, and serialization 
-of the program's persistent paramters and the most-recently used list (MRU) 
+of the program's persistent parameters and the most-recently used list (MRU) 
 data relegated to CArchive files located in the user's Application Data 
 folder.
 
@@ -68,12 +68,12 @@ Features demonstrated in this example
   AboutBox dialog.
 
 * MRU strings that are recovered from serialization that are not valid file 
-  paths are discarded at program statup by the CMainFrame::ValidateMRU() 
+  paths are discarded at program startup by the CMainFrame::ValidateMRU() 
   method. In this way, files that may have been deleted between executions
   do not adversely affect operations.
 
 * Use of a CRichEdit control as a file view window with extensive editing
-  and access capabilies, including cut, copy, paste, undo, redo, save, 
+  and access capabilities, including cut, copy, paste, undo, redo, save, 
   save as, drag-and-drop, and print capabilities. The control is limited 
   to textual content. Only ABSI/UTF8 text operation is accommodated. For a
   full Unicode capability consult the NotePad sample program of this release. 

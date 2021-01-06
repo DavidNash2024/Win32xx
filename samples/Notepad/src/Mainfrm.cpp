@@ -470,7 +470,7 @@ void CMainFrame::OnFileSave()
         WriteFile(m_pathName);
 }
 
-// Display the file chooise dialog and save text to the file.
+// Display the file choose dialog and save text to the file.
 void CMainFrame::OnFileSaveAs()
 {
     // szFilter is a text string that includes two file name filters:
@@ -646,7 +646,7 @@ void CMainFrame::OnPreviewClose()
     ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(GetToolBar().IsWindow());
 
-    // Restore focus to the window focussed before DoPrintPreview was called.
+    // Restore focus to the window focused before DoPrintPreview was called.
     RestoreFocus();
 }
 

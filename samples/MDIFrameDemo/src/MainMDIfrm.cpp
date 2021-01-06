@@ -202,7 +202,7 @@ BOOL CMainMDIFrame::OnMDITile()
 // Process notification messages (WM_NOTIFY) from child windows.
 LRESULT CMainMDIFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    // Notification from our dropdown button is recieved if Comctl32.dll version
+    // Notification from our dropdown button is received if Comctl32.dll version
     // is 4.70 or later (IE v3 required).
     switch(((LPNMHDR)lparam)->code)
     {

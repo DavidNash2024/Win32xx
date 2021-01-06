@@ -7,7 +7,7 @@
 
     Contents Description:  Implementation of the CDoc class for this application
     using the Win32++ framework. This particular formulation of the document
-    class presumes that the document souce is a series of textual lines that
+    class presumes that the document source is a series of textual lines that
     are accessed and formatted by the methods of this class and passed to the
     CView object for display. In the present usage of this skeleton implementation,
     a document is simulated as the results of computations illustrating the
@@ -28,7 +28,7 @@ static const CString longDateFmt = TEXT("%d-%b-%Y [%j] (%a) %H:%M:%S %z");
 static const CString shortDateFmt = TEXT("%d-%b-%Y");
 static const CString simpleHMSFmt = TEXT("%I:%M:%S %p");
 
-  // static constant initiallization: latest CDoc.cpp file compilation date
+  // static constant initialization: latest CDoc.cpp file compilation date
 const CString CDoc::m_compiledOn = __DATE__;
 
 /*============================================================================*/
@@ -116,7 +116,7 @@ GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const      /*
 GetDocSaveFileName(const CString &title) const                              /*
 
     Bring up the file save dialog and get the path of file to save the
-    document in. If nont is selected, return an empty path.  Use the title
+    document in. If none is selected, return an empty path.  Use the title
     as the window title.
 *-----------------------------------------------------------------------------*/
 {

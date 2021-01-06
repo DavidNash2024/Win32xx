@@ -209,7 +209,7 @@ void CView::PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
         dc.MoveTo(int(xnorm * (x - xoffset)), int(ynorm * (ylinepos - xtickheight - yoffset)));
         dc.LineTo(int(xnorm * (x - xoffset)), int(ynorm * (ylinepos + xtickheight - yoffset)));
         // Draw tick text.
-        // Avoid outputing zero if it would be written on a major axis.
+        // Avoid outputting zero if it would be written on a major axis.
         if ((x != 0) || ((ymin * ymax >= 0) && (ymin >= 0)))
         {
             CString str;
@@ -260,7 +260,7 @@ void CView::PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
         dc.LineTo((int)(xnorm * (xlinepos + ytickheight - xoffset)), (int)(ynorm * (y - yoffset)));
 
         // Draw tick text.
-        // Avoid outputing zero if it would be written on a major axis.
+        // Avoid outputting zero if it would be written on a major axis.
         if ((y != 0) || ((GetXMin() * GetXMax() >= 0) && (GetXMin() >= 0)))
         {
             CString str;

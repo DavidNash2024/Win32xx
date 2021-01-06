@@ -11,18 +11,6 @@ namespace ShellWrapper
     // Global function definitions (within this namespace)
     //
 
-    // Retrieves the file's path name from its pidl.
-    BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName)
-    {
-        if (!::SHGetPathFromIDList(pidlFull, pszPathName))
-        {
-            pszPathName[0] = _T('\0');
-            return FALSE;
-        }
-
-        return TRUE;
-    }
-
     // Retrieves the display name for the file from its pidl.
     // This is the name as it appears in Windows Explorer.
     BOOL GetDisplayName(LPCITEMIDLIST pidlFull, LPTSTR pszDisplayName)
@@ -40,6 +28,18 @@ namespace ShellWrapper
         StrCopy(pszDisplayName, sfi.szDisplayName, MAX_PATH);
         return TRUE;
     }
+	
+    // Retrieves the file's path name from its pidl.
+    BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName)
+    {
+        if (!::SHGetPathFromIDList(pidlFull, pszPathName))
+        {
+            pszPathName[0] = _T('\0');
+            return FALSE;
+        }
+
+        return TRUE;
+    }	
 
 
     ///////////////////////////////////
@@ -66,12 +66,6 @@ namespace ShellWrapper
         m_pIContextMenu = pIContextMenu;
     }
 
-    // Carries out the command associated with the menu item.
-    HRESULT CContextMenu::Invoke(CMINVOKECOMMANDINFO& Ici)
-    {
-        return m_pIContextMenu->InvokeCommand(&Ici);
-    }
-
     // Attaches the IContextMenu2 pointer to ccm2.
     HRESULT CContextMenu::GetContextMenu2(CContextMenu2& ccm2)
     {
@@ -84,6 +78,12 @@ namespace ShellWrapper
             ccm2.Attach(pIContextMenu2);
 
         return result;
+    }
+	
+    // Carries out the command associated with the menu item.
+    HRESULT CContextMenu::Invoke(CMINVOKECOMMANDINFO& Ici)
+    {
+        return m_pIContextMenu->InvokeCommand(&Ici);
     }
 
     // Adds the context menu commands to the specified menu.

@@ -402,10 +402,10 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CDockFrame::OnMenuUpdate(id);
 }
 
-// Sets the CREATESTRUCT paramaters before the window is created.
+// Sets the CREATESTRUCT parameters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // Call base clase to set defaults
+    // Call base class to set defaults
     CDockFrame::PreCreate(cs);
 
     // Hide the window initially by removing the WS_VISIBLE style

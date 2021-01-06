@@ -44,7 +44,7 @@
 //   - can be a number   eg. -3.14
 //   - can be a variable eg. x
 //   - can be a function eg. cos(x)
-//   - can be an expression enclosed within paranthesis
+//   - can be an expression enclosed within parenthesis
 
 namespace Calc
 {

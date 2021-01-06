@@ -24,7 +24,7 @@
 // 4) Use StartNotifyRevents to receive notification of network events.
 // 5) Override OnAccept and Accept requests on a newly created data CSocket object.
 //
-// The purpose of the data socket is to send data to, and recieve data from the client.
+// The purpose of the data socket is to send data to, and receive data from the client.
 // There will be one data socket for each client accepted by the server.
 // It is already set up ready for use by Accept. To use it we do the following:
 // * To recieve data from the client, override OnReceive and use Receive.
@@ -36,9 +36,9 @@
 // 1) Create the socket.
 // 2) Connect to the server.
 // 3) Use StartNotifyRevents to receive notification of network events.
-//    We are now ready to send and recieve data from the server.
+//    We are now ready to send and receive data from the server.
 // * Use Send to send data to the server.
-// * Override OnReceive and use Recieve to receive data from the server
+// * Override OnReceive and use Receive to receive data from the server
 // * OnDisconnect can be used to detect when the client is disconnected from the server.
 
 

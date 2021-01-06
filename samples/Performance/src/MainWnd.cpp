@@ -84,7 +84,7 @@ LRESULT CMainWindow::OnSize()
     return 0;
 }
 
-// Respond to the message recieved when a test window is created.
+// Respond to the message received when a test window is created.
 LRESULT CMainWindow::OnWindowCreated()
 {
     if (++m_windowsCreated == m_testWindows)

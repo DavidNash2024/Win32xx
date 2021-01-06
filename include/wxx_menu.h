@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -96,7 +96,7 @@ namespace Win32xx
     {
 
     public:
-        //Construction
+        // Construction
         CMenu();
         CMenu(UINT id);
         CMenu(HMENU menu);
@@ -105,7 +105,7 @@ namespace Win32xx
         void operator = (const HMENU menu);
         virtual ~CMenu();
 
-        //Initialization
+        // Initialization
         void Attach(HMENU menu);
         void CreateMenu();
         void CreatePopupMenu();
@@ -117,11 +117,11 @@ namespace Win32xx
         BOOL LoadMenu(UINT resourceID);
         BOOL LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate);
 
-        //Menu Operations
+        // Menu Operations
         BOOL TrackPopupMenu(UINT flags, int x, int y, HWND wnd, LPCRECT pRect = 0) const;
         BOOL TrackPopupMenuEx(UINT flags, int x, int y, HWND wnd, LPTPMPARAMS pTPMP) const;
 
-        //Menu Item Operations
+        // Menu Item Operations
         BOOL AppendMenu(UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL);
         BOOL AppendMenu(UINT flags, UINT_PTR newItemID, HBITMAP bitmap);
         UINT CheckMenuItem(UINT checkItemID, UINT check) const;
@@ -156,7 +156,7 @@ namespace Win32xx
         BOOL SetMenuItemBitmaps(UINT pos, UINT flags, HBITMAP unchecked, HBITMAP checked) const;
         BOOL SetMenuItemInfo(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition = FALSE) const;
 
-        //Operators
+        // Operators
         operator HMENU () const;
 
     private:

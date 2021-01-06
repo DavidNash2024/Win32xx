@@ -84,7 +84,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
 //  switch(((LPNMHDR)lparam)->code)
 //  {
-        //Add case statments for each notification message here
+        //Add case statements for each notification message here
 //  }
 
     // Some notifications should return a value when handled

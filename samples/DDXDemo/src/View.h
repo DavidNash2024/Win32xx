@@ -144,7 +144,7 @@ CView : public CDialog                                                      /*
         COLORREF        m_staticBoxFgClr;
         COLORREF        m_staticBoxBgClr;
 
-          // form display backgound brushes
+          // form display background brushes
         CBrush          m_buttonBgBrush;
         CBrush          m_editBgBrush;
         CBrush          m_dialogBgBrush;

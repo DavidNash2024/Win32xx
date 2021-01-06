@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -115,7 +115,7 @@ namespace Win32xx
     };
 
     /////////////////////////////////////////////////
-    // CStringT is a class template used to impliment
+    // CStringT is a class template used to implement
     // CStringA, CStringW and CString.
     template <class T>
     class CStringT

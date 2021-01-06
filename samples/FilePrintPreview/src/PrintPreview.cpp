@@ -235,7 +235,7 @@ InitializeToolTips()                                                        /*
 LoadSizesRegistry()                                                         /*
 
     Load the saved screen and initial preview window size parameters from
-    the registry key labeled PREVIEW_REGISTRY_KEY.
+    the registry key labelled PREVIEW_REGISTRY_KEY.
 *-----------------------------------------------------------------------------*/
 {
     CRegKey key;
@@ -407,7 +407,7 @@ OnPreparePrintPreview()                                                     /*
 
     Prepare to preview the document printout. Called by OnPreview() before
     a document is previewed. Create the print preview dialog window using
-    the desktop window as owner, so the previewe window is not hidden by
+    the desktop window as owner, so the preview window is not hidden by
     the document view window. Override this function to specialize the
     preview for the application particulars.
 *-----------------------------------------------------------------------------*/

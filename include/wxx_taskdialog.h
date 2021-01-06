@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -786,7 +786,7 @@ namespace Win32xx
 
 
     // Updates a text element on the TaskDialog after it is created. The size of the TaskDialog
-    // is not adjusted to accomodate the new text.
+    // is not adjusted to accommodate the new text.
     // Possible element values are:
     // TDE_CONTENT, TDE_EXPANDED_INFORMATION, TDE_FOOTER, TDE_MAIN_INSTRUCTION.
     // Refer to TDM_UPDATE_ELEMENT_TEXT in the Windows API documentation for more information.

@@ -400,7 +400,7 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  
 }
 
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
-// Called in reponse to a UWM_DROPFILE message
+// Called in response to a UWM_DROPFILE message
 {
     // wParam is a pointer (LPCTSTR) to the filename
     LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);

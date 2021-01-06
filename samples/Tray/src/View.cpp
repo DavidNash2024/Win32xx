@@ -160,7 +160,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 {
     // This function will be called automatically by Create. It provides an
     // opportunity to set various window parameters prior to window creation.
-    // You are not required to set these parameters, any paramters which
+    // You are not required to set these parameters, any parameters which
     // aren't specified are set to reasonable defaults.
 
     // Set some optional parameters for the window

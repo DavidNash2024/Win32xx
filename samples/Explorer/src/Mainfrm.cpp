@@ -133,6 +133,39 @@ void CMainFrame::OnInitialUpdate()
     // m_rightPane.SetDragAutoResize(FALSE);
 }
 
+// Process notification messages (WM_NOTIFY) from child windows.
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
+{
+    // Notification from our dropdown button is received if Comctl32.dll version
+    // is 4.70 or later (IE v3 required).
+    switch(((LPNMHDR)lparam)->code)
+    {
+        //Menu for dropdown toolbar button
+        case TBN_DROPDOWN:
+        {
+            if (((LPNMHDR)lparam)->hwndFrom == GetToolBar())
+                DoPopupMenu();
+        }
+
+    } //switch LPNMHDR
+
+    return CFrame::OnNotify(wparam, lparam);
+}
+
+// Toggle the show state of hidden items.
+BOOL CMainFrame::OnShowHidden()
+{
+    // Handle the the View submenu
+    CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
+
+    m_showHidden = !m_showHidden;
+    viewMenu.CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_showHidden)? MF_CHECKED : MF_UNCHECKED);
+
+    // Refresh the Listview display
+    GetListView().DoDisplay();
+    return TRUE;
+}
+
 // Change the view mode to large icon.
 BOOL CMainFrame::OnViewLargeIcon()
 {
@@ -183,39 +216,6 @@ BOOL CMainFrame::OnViewSmallIcon()
     GetListView().ViewSmallIcons();
     viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
     return TRUE;
-}
-
-// Toggle the show state of hidden items.
-BOOL CMainFrame::OnShowHidden()
-{
-    // Handle the the View submenu
-    CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
-
-    m_showHidden = !m_showHidden;
-    viewMenu.CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_showHidden)? MF_CHECKED : MF_UNCHECKED);
-
-    // Refresh the Listview display
-    GetListView().DoDisplay();
-    return TRUE;
-}
-
-// Process notification messages (WM_NOTIFY) from child windows.
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-    // Notification from our dropdown button is received if Comctl32.dll version
-    // is 4.70 or later (IE v3 required).
-    switch(((LPNMHDR)lparam)->code)
-    {
-        //Menu for dropdown toolbar button
-        case TBN_DROPDOWN:
-        {
-            if (((LPNMHDR)lparam)->hwndFrom == GetToolBar())
-                DoPopupMenu();
-        }
-
-    } //switch LPNMHDR
-
-    return CFrame::OnNotify(wparam, lparam);
 }
 
 // Define our toolbar.

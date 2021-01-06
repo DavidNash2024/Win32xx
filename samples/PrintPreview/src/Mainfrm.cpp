@@ -417,7 +417,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CFrame::OnMenuUpdate(id);
 }
 
-// Called when a notification (WM_NOTIFY) is recieved from a child window.
+// Called when a notification (WM_NOTIFY) is received from a child window.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     NMHDR* pNMH;
@@ -473,7 +473,7 @@ void CMainFrame::OnPreviewClose()
     ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(GetToolBar().IsWindow());
 
-    // Restore focus to the window focussed before DoPrintPreview was called.
+    // Restore focus to the window focused before DoPrintPreview was called.
     RestoreFocus();
 }
 

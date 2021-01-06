@@ -18,7 +18,7 @@ void CServerSocket::OnAccept()
     dialog.PostMessage(USER_ACCEPT, 0, 0);
 }
 
-// Called when the socket recieves data.
+// Called when the socket receives data.
 // Used for UDP only.
 void CServerSocket::OnReceive()
 {

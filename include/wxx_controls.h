@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2371,7 +2371,7 @@ namespace Win32xx
     }
 
     // Retrieves the initial, pop-up, and reshow durations currently set for a ToolTip control.
-    // Returns an intvalue with the specified duration in milliseconds.
+    // Returns an int value with the specified duration in milliseconds.
     //
     // duration is one of:
     //  TTDT_AUTOPOP - time the ToolTip window remains visible if the pointer is stationary

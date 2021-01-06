@@ -116,7 +116,7 @@ void CMainWindow::OnDestroy()
 void CMainWindow::OnAllWindowsCreated()
 {
     CString str;
-    str.Format( _T("%d Test windows created in seperate threads"), m_maxWindows );
+    str.Format( _T("%d Test windows created in separate threads"), m_maxWindows );
     AppendText(str);
 }
 

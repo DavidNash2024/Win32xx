@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -123,7 +123,7 @@ namespace Win32xx
         virtual void DDV_MinMaxUInt(UINT value, UINT min, UINT max) const;
         virtual void DDV_MinMaxULong(ULONG value, ULONG min, ULONG max) const;
 
-        // DDX Initialisation
+        // DDX Initialization
         virtual void DDX_Control(int id, CWnd& control);
 
         // Dialog Data eXchange (DDX) functions

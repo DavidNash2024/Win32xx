@@ -16,8 +16,10 @@ class CExplorerApp : public CWinApp
 public:
     CExplorerApp();
     virtual ~CExplorerApp();
-    virtual BOOL InitInstance();
     CMainFrame& GetMainFrame() { return m_frame; }
+
+protected:	
+    virtual BOOL InitInstance();
 
 private:
     CMainFrame m_frame;

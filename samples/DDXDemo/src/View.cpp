@@ -8,7 +8,7 @@
     Contents Description: The DDXDemo CView class implementation. This class
     controls the appearance and view-related actions of the DDX/DDV test
     program. This class is a modified version of that found in the
-    FormDocView smple distributed with the Win32++ Windows interface classes.
+    FormDocView sample distributed with the Win32++ Windows interface classes.
     The modified sample program was based on code provided by LynnAllan. This
     program extends the given sample by application of Dialog Data Exchange
     and Validation (DDX/DDV).
@@ -149,7 +149,7 @@ CView(UINT nResID)                                                          /*
 AddToolTip(HWND hParent, UINT id)                                          /*
 
     Add the string with the resource id to the control whose resource
-    identrifer is also id. Return TRUE on success, FALSE otherwise.
+    identifier is also id. Return TRUE on success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
     return AddToolTip(hParent, id, LoadString(id));
@@ -159,7 +159,7 @@ AddToolTip(HWND hParent, UINT id)                                          /*
     BOOL CView::
 AddToolTip(HWND hParent, UINT id, const CString & sToolTip)                /*
 
-    Add the sToolTip string to the control whose resource identrifer is
+    Add the sToolTip string to the control whose resource identifier is
     id. Return TRUE on success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
@@ -594,7 +594,7 @@ OnCtlColor(HDC dc, HWND hWnd, UINT nCtlColor)                               /*
     COLORREF fg = COLOR_BLACK;
     COLORREF bk = COLOR_BLACK;
     CBrush   br = CBrush(COLOR_BLACK);
-      // handle each color message separtely
+      // handle each color message separately
     switch (nCtlColor)
     {
         case WM_CTLCOLORBTN:
@@ -698,7 +698,7 @@ OnInitDialog()                                                              /*
       // list box, combo box, slider, progress bar, and scroll bar:
       // put some text in the list box (normally, entries might be
       // retrieved from the document, saved in the registry, but here,
-      // for simplplicity, we just enter some sample values)
+      // for simplicity, we just enter some sample values)
     m_listBox.ResetContent();
     for (int i = 0 ; i < 10 ; i++)
     {

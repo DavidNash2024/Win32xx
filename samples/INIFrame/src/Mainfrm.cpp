@@ -131,28 +131,28 @@ void CMainFrame::OnFilePreview()
 {
     try
     {
-        // Get the device contect of the default or currently chosen printer
+        // Get the device context of the default or currently chosen printer.
         CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
         CDC printerDC = printDlg.GetPrinterDC();
 
-        // Create the preview window if required
+        // Create the preview window if required.
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
 
-        // Specify the source of the PrintPage function
+        // Specify the source of the PrintPage function.
         m_preview.SetSource(m_view);
 
-        // Set the preview's owner (for messages)
+        // Set the preview's owner (for messages).
         m_preview.DoPrintPreview(*this);
 
-        // Swap views
+        // Swap views.
         SetView(m_preview);
 
-        // Hide the menu and toolbar
+        // Hide the menu and toolbar.
         ShowMenu(FALSE);
         ShowToolBar(FALSE);
 
-        // Update status
+        // Update status.
         CString status = _T("Printer: ") + printDlg.GetDeviceName();
         SetStatusText(status);
     }

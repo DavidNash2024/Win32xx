@@ -35,7 +35,7 @@ CView(UINT id)                                                              /*
 AddToolTip(HWND parent, UINT id)                                            /*
 
     Add the string with the resource id to the control whose resource
-    identrifer is also id. Return TRUE on success, FALSE otherwise.
+    identifier is also id. Return TRUE on success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
     return AddToolTip(parent, id, LoadString(id));
@@ -45,7 +45,7 @@ AddToolTip(HWND parent, UINT id)                                            /*
     BOOL CView::
 AddToolTip(HWND parent, UINT id, LPCTSTR toolTip)                          /*
 
-    Add the toolTip string to the control whose resource identifer is
+    Add the toolTip string to the control whose resource identifier is
     id. Return TRUE on success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {

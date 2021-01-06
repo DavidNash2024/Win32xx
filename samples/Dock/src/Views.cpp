@@ -238,7 +238,7 @@ void CViewText::OnAttach()
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
-// Specifiy the CREATESTRUCT parameters before the window is created.
+// Specify the CREATESTRUCT parameters before the window is created.
 void CViewText::PreCreate(CREATESTRUCT& cs)
 {
     cs.lpszClass = _T("EDIT");

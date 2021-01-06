@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1330,7 +1330,7 @@ namespace Win32xx
 
     }
 
-    // Sends custom motification messages to the parent window.
+    // Sends custom notification messages to the parent window.
     inline void CDocker::CDockClient::SendNotify(UINT messageID)
     {
         // Fill the DragPos structure with data
@@ -3335,7 +3335,7 @@ namespace Win32xx
             GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
         }
 
-        return 0;  // Return 0 to stop propogating this message to parent windows
+        return 0;  // Return 0 to stop propagating this message to parent windows
     }
 
     // Called with a left mouse button double click.
@@ -3806,7 +3806,7 @@ namespace Win32xx
             try
             {
                 if (!VerifyDockers())
-                    throw (CUserException(_T("Dockers are in an inconsistant state")));
+                    throw (CUserException(_T("Dockers are in an inconsistent state")));
 
                 // Create the App's registry key
                 if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
@@ -4404,7 +4404,7 @@ namespace Win32xx
     }
 
     // Static callback function to enumerate top level dockers excluding
-    // the one being dragged. Top level windows are enumurated in Z order.
+    // the one being dragged. Top level windows are enumerated in Z order.
     inline BOOL CALLBACK CDocker::EnumWindowsProc(HWND hTop, LPARAM lparam)
     {
         CDocker* pThis = reinterpret_cast<CDocker*>(lparam);
@@ -4950,7 +4950,7 @@ namespace Win32xx
         SetTabIcon(icon);
     }
 
-    // Sets the size of the tabs to accomodate the tab's text.
+    // Sets the size of the tabs to accommodate the tab's text.
     inline void CDockContainer::SetTabSize()
     {
         CRect rc = GetClientRect();

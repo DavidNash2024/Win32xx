@@ -54,7 +54,7 @@ PreCreate(CREATESTRUCT& cs)                                                 /*
     void CView::
 PreRegisterClass(WNDCLASS& wc)                                              /*
 
-    Sset the Window class parameters. Preforming this is optional, but
+    Set the Window class parameters. Preforming this is optional, but
     doing so allows more precise control over the type of window created.
 *-----------------------------------------------------------------------------*/
 {

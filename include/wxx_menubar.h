@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -75,7 +75,7 @@ namespace Win32xx
         virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
     protected:
-        //Overridables
+        // Overridables
         virtual void OnAttach();
         virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnExitMenuLoop(UINT msg, WPARAM wparam, LPARAM lparam);

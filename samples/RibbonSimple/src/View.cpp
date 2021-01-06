@@ -59,7 +59,7 @@ void CView::OnDraw(CDC& dc)
     // Centre some text in our view window
     CRect r = GetClientRect();
     r.top += GetRibbonHeight();
-    dc.DrawText(L"Simple Ribon Demo", -1, r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    dc.DrawText(L"Simple Ribbon Demo", -1, r, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnInitialUpdate()

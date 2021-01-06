@@ -110,7 +110,7 @@ PreCreate(CREATESTRUCT& cs)                                                 /*
     // It provides an opportunity to modify the various CREATESTRUCT
     // parameters used in the frame window's creation.
 
-      // Call base clase to set defaults
+      // Call base class to set defaults
     CFrame::PreCreate(cs);
       // window size is constant, overwrites registry values
     cs.cx = 640;

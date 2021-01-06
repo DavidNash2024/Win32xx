@@ -36,7 +36,7 @@
     owner drawn entry is accommodated.
 
     Other entries may be used for special purposes, such as the display
-    of progress contols or hypertext links. Such special usages should be
+    of progress controls or hypertext links. Such special usages should be
     defined in the OnAttach() method and set to occupy their designated
     parts in the PositionCustomParts() method.
 

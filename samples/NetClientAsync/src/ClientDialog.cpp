@@ -15,7 +15,7 @@ CClientDialog::CClientDialog(UINT resID) : CDialog(resID),
                    m_isClientConnected(FALSE), m_socketType(SOCK_STREAM)
 {
     // Add support for the IP Address control
-    // It requires Win95 with IE4 intergrated or a later version of Windows OS.
+    // It requires Win95 with IE4 integrated or a later version of Windows OS.
     LoadCommonControlsEx();
 }
 
