@@ -123,7 +123,7 @@ private:
 
     CDockTree*   m_pDockTree;
     CDockDialog* m_pDockDialog;
-    HANDLE       m_stopRequest;     // An event to signal the event thread should stop
+    CEvent       m_stopRequest;     // An event to signal the event thread should stop
     bool         m_isDirty;         // Has m_MoviesData has been modified?
     HTREEITEM    m_boxSetsItem;
     int          m_dialogWidth;

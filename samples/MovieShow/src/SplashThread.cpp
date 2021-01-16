@@ -31,5 +31,6 @@ CSplashThread::~CSplashThread()
 BOOL CSplashThread::InitInstance()
 {
     m_splash.Create();
+    m_splashCreated.SetEvent();
     return TRUE;
 }

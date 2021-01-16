@@ -24,7 +24,7 @@ public:
     void DisconnectEvents();
     IWebBrowser2* GetIWebBrowser2() const { return m_browser.GetIWebBrowser2(); }
     const CEdit* GetCBEdit() const  { return m_combo.GetCBEdit(); }
-    IConnectionPoint* GetConnectionPoint(REFIID riid);
+    IConnectionPoint* GetConnectionPoint(REFIID riid) const;
 
     void OnBeforeNavigate2(DISPPARAMS* pDispParams);
     void OnCommandStateChange(DISPPARAMS* pDispParams);

@@ -944,7 +944,7 @@ SetStatusbarMsg(CString status)                                             /*
     Write the status message on the status bar.
 *-----------------------------------------------------------------------------*/
 {
-    GetStatusBar().SetPartText(0, status);
+    SetStatusText(status);
 }
 
 /*============================================================================*/

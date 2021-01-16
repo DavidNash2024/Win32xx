@@ -18,7 +18,7 @@ public:
     virtual ~CExplorerApp();
     CMainFrame& GetMainFrame() { return m_frame; }
 
-protected:	
+protected:
     virtual BOOL InitInstance();
 
 private:

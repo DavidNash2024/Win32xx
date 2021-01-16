@@ -88,8 +88,6 @@ CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_pDockTree(0), m_pDockDi
     // Use a registry key name like "CompanyName\\Application"
     LoadRegistrySettings(L"Win32++\\MovieShow");
 
-    m_stopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
-
     m_genres.push_back(L"Action, Crime, Thriller, War, Western");
     m_genres.push_back(L"Adventure, Horror, Fantasy, Science Fiction");
     m_genres.push_back(L"Animation, Family");
@@ -691,7 +689,7 @@ BOOL CMainFrame::OnAddBoxSet()
 // Called when the Add Folder toolbar button is pressed.
 BOOL CMainFrame::OnAddFolder()
 {
-    if (::WaitForSingleObject(m_thread, 0) != WAIT_TIMEOUT) // ensure the thread isn't already running
+    if (::WaitForSingleObject(m_thread, 0) != WAIT_TIMEOUT) // if thread is not running
     {
         CFolderDialog fd;
         fd.SetTitle(L"Choose a folder to add to the video library.");
@@ -743,6 +741,11 @@ BOOL CMainFrame::OnAddFolder()
             // Create the thread and run ThreadProc
             m_thread.CreateThread(0, 0, 0);
         }
+
+    }
+    else
+    {
+        m_stopRequest.SetEvent();
     }
 
     return TRUE;
@@ -799,7 +802,7 @@ BOOL CMainFrame::OnBoxSet(UINT nID)
 void CMainFrame::OnClose()
 {
     // Terminate the load files thread.
-    ::SetEvent(m_stopRequest);
+    m_stopRequest.SetEvent();
     if (::WaitForSingleObject(m_thread, 1000) == WAIT_TIMEOUT)
         Trace("Splash Thread failed to end cleanly\n");
 
@@ -990,12 +993,12 @@ void CMainFrame::OnFilesLoaded()
 void CMainFrame::OnInitialUpdate()
 {
     // Add the dialog.
-    int width = m_dialogWidth? m_dialogWidth : (GetViewRect().Width() / 3);
+    int width = m_dialogWidth ? m_dialogWidth : (GetViewRect().Width() / 3);
     DWORD dockStyle = DS_NO_UNDOCK | DS_NO_CAPTION;
     m_pDockDialog = static_cast<CDockDialog*>(AddDockedChild(new CDockDialog, dockStyle | DS_DOCKED_LEFT, width));
 
     // Add the tree view.
-    int height = m_treeHeight? m_treeHeight : GetViewRect().Height() / 3;
+    int height = m_treeHeight ? m_treeHeight : GetViewRect().Height() / 3;
     m_pDockTree = static_cast<CDockTree*>(m_pDockDialog->AddDockedChild(new CDockTree, dockStyle | DS_DOCKED_TOP, height));
 
     // Fill the tree view and list view.
@@ -1003,6 +1006,7 @@ void CMainFrame::OnInitialUpdate()
     FillTreeItems();
 
     ShowWindow(SW_SHOW);
+    SetForegroundWindow();
 }
 
 // Called when a menu is about to be displayed.
@@ -1592,9 +1596,10 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
         splashThread.CreateThread();
         CSplash* splash = splashThread.GetSplash();
 
-        while (!splash->IsWindow())
-        {}
+        // Wait for the splash window to be created.
+        ::WaitForSingleObject(splashThread.GetSplashCreated(), INFINITE);
 
+        pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, TRUE);
         splash->ShowText(L"Updating Library");
         splash->AddBar();
         splash->GetBar().SetRange(0, (short)pFrame->m_filesToAdd.size());
@@ -1605,7 +1610,8 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
             // The stop request is set if the app is trying to close.
             if (::WaitForSingleObject(pFrame->m_stopRequest, 0) != WAIT_TIMEOUT)
             {
-                return 0;
+                // Break out of the loop and end the thread.
+                break;
             }
 
             barPos++;
@@ -1665,6 +1671,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
     }
 
     pFrame->OnFilesLoaded();
+    pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, FALSE);
 
     return 0;
 }
