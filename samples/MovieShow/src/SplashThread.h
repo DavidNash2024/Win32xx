@@ -20,9 +20,11 @@ public:
     virtual BOOL InitInstance();
 
     CSplash* GetSplash() { return &m_splash; }
+    CEvent& GetSplashCreated() { return m_splashCreated; }
 
 private:
     CSplash m_splash;
+    CEvent  m_splashCreated;
 };
 
 

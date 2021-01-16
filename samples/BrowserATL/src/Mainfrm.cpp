@@ -163,7 +163,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
     UNREFERENCED_PARAMETER(pDispParams);
-    GetStatusBar().SetPartText(0, L"Done");
+    SetStatusText(L"Done");
 }
 
 // Called when a navigation operation is beginning.
@@ -461,9 +461,9 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
     CString statusText = pDispParams->rgvarg->bstrVal;
 
     if (statusText != L"")
-        GetStatusBar().SetPartText(0, statusText);
+        SetStatusText(statusText);
     else
-        GetStatusBar().SetPartText(0, L"Done");
+        SetStatusText(L"Done");
 }
 
 // Stop loading the current web page.

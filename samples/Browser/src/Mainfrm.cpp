@@ -76,7 +76,7 @@ void CMainFrame::DisconnectEvents()
 
 // Retrieve pointer to IConnectionPoint.
 // Call Release on this pointer when it is no longer required.
-IConnectionPoint* CMainFrame::GetConnectionPoint(REFIID riid)
+IConnectionPoint* CMainFrame::GetConnectionPoint(REFIID riid) const
 {
     IConnectionPoint* pcp = NULL;
     IUnknown* pUnk = NULL;
@@ -221,7 +221,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
     UNREFERENCED_PARAMETER(pDispParams);
-    GetStatusBar().SetPartText(0, _T("Done"));
+    SetStatusText(_T("Done"));
 }
 
 // Called when a navigation operation is beginning.
@@ -519,9 +519,9 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
     CString statusText = pDispParams->rgvarg->bstrVal;
 
     if (statusText != _T(""))
-        GetStatusBar().SetPartText(0, statusText);
+        SetStatusText(statusText);
     else
-        GetStatusBar().SetPartText(0, _T("Done"));
+        SetStatusText(_T("Done"));
 }
 
 // Stop loading the current web page.

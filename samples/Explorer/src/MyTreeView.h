@@ -25,7 +25,7 @@ public:
     virtual void    OnAttach();
     virtual void    OnDestroy();
     virtual LRESULT OnNMRClick(LPNMHDR pNMHDR);
-    virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);	
+    virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnTVNGetDispInfo(LPNMTVDISPINFO pNMTVDI);
     virtual LRESULT OnTVNExpanding(LPNMTREEVIEW pNMTV);
     virtual LRESULT OnTVNSelChanged(LPNMTREEVIEW pNMTV);
@@ -57,7 +57,7 @@ private:
 
     static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM paramSort);
     void DoContextMenu(CPoint& point);
-    void DoItemMenu(HTREEITEM item, CPoint& point);	
+    void DoItemMenu(HTREEITEM item, CPoint& point);
     void EnumObjects(HTREEITEM parentItem, CShellFolder& parentFolder, Cpidl& cpidlParent);
     BOOL GetChildItems(HTREEITEM parentItem);
 

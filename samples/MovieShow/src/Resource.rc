@@ -253,7 +253,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_ADD_FOLDER          "Add folder to, or update folder in the video library"
+    IDM_ADD_FOLDER          "Add folder to, or update folder in the video library. Toggle button."
     IDM_PLAY                "Play this video"
     IDM_FAVOURITE           "Toggle the favourite state of this video"
     IDM_VIDEOTYPE_MOVIE     "Move this video to Movies"

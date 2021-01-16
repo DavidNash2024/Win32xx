@@ -182,7 +182,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM parentItem)
     // Change the cursor.
     HCURSOR hCursor = ::SetCursor(LoadCursor(NULL, IDC_WAIT));
 
-    // Turn redawing off in the TreeView.
+    // Turn redrawing off in the TreeView.
     // This will speed things up as we add items.
     SetRedraw(FALSE);
 
@@ -207,7 +207,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM parentItem)
     sortInfo.lParam = 0;
     SortChildrenCB(&sortInfo, 0);
 
-    // Turn redawing back on in the TreeView.
+    // Turn redrawing back on in the TreeView.
     SetRedraw(TRUE);
 
     UpdateWindow();

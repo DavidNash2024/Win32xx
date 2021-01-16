@@ -31,15 +31,15 @@ class CEventSink : public IDispatch
 {
 public:
     // IUnknown Methods
-    STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
-    STDMETHODIMP_(ULONG) AddRef();
-    STDMETHODIMP_(ULONG) Release();
+    virtual STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
+    virtual STDMETHODIMP_(ULONG) AddRef();
+    virtual STDMETHODIMP_(ULONG) Release();
 
     // IDispatch Methods
-    STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid);
-    STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
-    STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
-    STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
+    virtual STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid);
+    virtual STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
+    virtual STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
+    virtual STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
 };
 
 #endif // EVENTSINK_H

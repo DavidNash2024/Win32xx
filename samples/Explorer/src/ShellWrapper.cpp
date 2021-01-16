@@ -28,7 +28,7 @@ namespace ShellWrapper
         StrCopy(pszDisplayName, sfi.szDisplayName, MAX_PATH);
         return TRUE;
     }
-	
+
     // Retrieves the file's path name from its pidl.
     BOOL GetFullFileName(LPCITEMIDLIST pidlFull, LPTSTR pszPathName)
     {
@@ -39,7 +39,7 @@ namespace ShellWrapper
         }
 
         return TRUE;
-    }	
+    }
 
 
     ///////////////////////////////////
@@ -79,7 +79,7 @@ namespace ShellWrapper
 
         return result;
     }
-	
+
     // Carries out the command associated with the menu item.
     HRESULT CContextMenu::Invoke(CMINVOKECOMMANDINFO& Ici)
     {

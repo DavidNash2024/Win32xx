@@ -2447,11 +2447,11 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::OnDestroy()
     {
+        GetView().Destroy();
         GetMenuBar().Destroy();
         GetToolBar().Destroy();
         GetReBar().Destroy();
         GetStatusBar().Destroy();
-        GetView().Destroy();
 
         ::PostQuitMessage(0);   // Terminates the application
     }
