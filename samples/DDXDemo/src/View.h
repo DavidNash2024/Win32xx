@@ -73,17 +73,6 @@ CView : public CDialog                                                      /*
         void    OnOK();
         LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         void    SetControlPositions(int pos);
-          // nested classes for some of this dialog's child windows
-          // that require no changes from the base class
-          // (nesting is optional--it's done here to keep the IDE's
-          // class view tidy)
-        class CMyComboBox      : public CComboBox      {};
-        class CMyListBox       : public CListBox       {};
-        class CMyProgressBar   : public CProgressBar   {};
-        class CMyRichEdit      : public CRichEdit      {};
-        class CMySlider        : public CSlider        {};
-        class CMyMonthCalendar : public CMonthCalendar {};
-        class CMyDateTime      : public CDateTime      {};
 
           // DDX/DDV variables that are connected
         int         m_sliderVal;
@@ -116,16 +105,16 @@ CView : public CDialog                                                      /*
         SYSTEMTIME  m_calDateSysTime;
 
           // controls on the form that need to be attached
-        CMyComboBox      m_comboBox;
-        CMyDateTime      m_dateTime;
-        CMyListBox       m_listBox;
-        CMyMonthCalendar m_monthCal;
-        CMyProgressBar   m_progressBar;
-        CMyRichEdit      m_richEdit;
-        CMyScrollBar     m_scrollBar;
-        CMyButton        m_statusButton;
-        CMyButton        m_pushButton;
-        CMySlider        m_slider;
+        CComboBox      m_comboBox;
+        CDateTime      m_dateTime;
+        CListBox       m_listBox;
+        CMonthCalendar m_monthCal;
+        CProgressBar   m_progressBar;
+        CRichEdit      m_richEdit;
+        CMyScrollBar   m_scrollBar;
+        CMyButton      m_statusButton;
+        CMyButton      m_pushButton;
+        CSlider        m_slider;
 
           // form control display colors
         COLORREF        m_buttonFgClr;

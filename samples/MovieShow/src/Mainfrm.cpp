@@ -699,11 +699,11 @@ BOOL CMainFrame::OnAddFolder()
             CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
             ::SHCreateDirectoryEx(NULL, DataPath.c_str(), NULL);
 
-            // Remove entries from the library if the file has been removed
             {
                 // Lock this code for thread safety
                 CThreadLock lock(m_cs);
 
+                // Remove entries from the library if the file has been removed
                 std::list<MovieInfo>::iterator it = m_moviesData.begin();
                 while (it != m_moviesData.end())
                 {
@@ -1607,7 +1607,8 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
         unsigned short barPos = 0;
         for (size_t i = 0; i < pFrame->m_filesToAdd.size(); i++)
         {
-            // The stop request is set if the app is trying to close.
+            // The stop request is set if the app is trying to close,
+            // or when the 'Add Folder' button toggled.
             if (::WaitForSingleObject(pFrame->m_stopRequest, 0) != WAIT_TIMEOUT)
             {
                 // Break out of the loop and end the thread.

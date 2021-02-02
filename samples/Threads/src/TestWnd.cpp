@@ -40,6 +40,9 @@ void CTestWindow::OnClose()
 // Called after the window is created.
 void CTestWindow::OnInitialUpdate()
 {
+    SetIconSmall(IDW_MAIN);
+    SetIconLarge(IDW_MAIN);
+
     // Get a pointer to the CMainWindow object
     CMainWindow& MainWnd = GetThreadApp()->GetMainWnd();
 

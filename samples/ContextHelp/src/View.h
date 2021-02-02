@@ -35,41 +35,23 @@ protected:
 private:
     CDoc     m_doc;
     CResizer m_resizer;
+    HWND     m_hParent;      // handle of parent frame
 
-    // Nested classes for this dialog's child windows
-    // Nesting is optional. Its done to keep the IDE's class view tidy.
-    // Inheriting these classes from the base class is optional, but the derived
-    // classes can be customized if required.
-    class CRadioA : public CButton {};
-    class CRadioB : public CButton {};
-    class CRadioC : public CButton {};
-    class CCheckA : public CButton {};
-    class CCheckB : public CButton {};
-    class CCheckC : public CButton {};
-    class CMyButton : public CButton {};
-    class CMyListBox : public CListBox {};
-    class CMyEdit : public CEdit {};
-    class CMyRichEdit : public CRichEdit {};
-    class CMyPicture : public CStatic {};
-    class CMyStatus : public CStatic {};
-    class COK : public CButton {};
-    class CGroup : public CWnd {};
-
-    CRadioA     m_radioA;
-    CRadioB     m_radioB;
-    CRadioC     m_radioC;
-    CCheckA     m_checkA;
-    CCheckB     m_checkB;
-    CCheckC     m_checkC;
-    CMyButton   m_button;
-    CMyListBox  m_listBox;
-    CMyEdit     m_edit;
-    CMyRichEdit m_richEdit;
-    CMyPicture  m_picture;
-    CMyStatus   m_status;
-    COK         m_ok;
-    CGroup      m_group;
-    HWND        m_hParent;      // handle of parent frame
+    // Dialog controls.
+    CButton   m_radioA;
+    CButton   m_radioB;
+    CButton   m_radioC;
+    CButton   m_checkA;
+    CButton   m_checkB;
+    CButton   m_checkC;
+    CButton   m_button;
+    CListBox  m_listBox;
+    CEdit     m_edit;
+    CRichEdit m_richEdit;
+    CStatic   m_picture;
+    CStatic   m_status;
+    CButton   m_ok;
+    CWnd      m_group;
 };
 
 #endif //SDI_VIEW_H

@@ -26,6 +26,17 @@ void CTestWindow::CreateWin(int i)
         420, 50 + 4*i, 300, 200, NULL, NULL);
 }
 
+// Called when the window is created.
+int CTestWindow::OnCreate(CREATESTRUCT& cs)
+{
+    UNREFERENCED_PARAMETER(cs);
+
+    SetIconSmall(IDW_MAIN);
+    SetIconLarge(IDW_MAIN);
+
+    return 0;
+}
+
 // Called after the test window is created.
 void CTestWindow::OnInitialUpdate()
 {

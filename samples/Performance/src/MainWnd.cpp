@@ -53,6 +53,9 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
 
+    SetIconSmall(IDW_MAIN);
+    SetIconLarge(IDW_MAIN);
+
     m_edit.Create(*this);
 
     return 0;

@@ -118,10 +118,6 @@ LoadPersistentData()                                                        /*
         ar >> *TheApp();  // for the app
         ar >> *this;    // for the mainframe and base classes
         ar >> m_view;   // for the view, including control colors
-        Invalidate();   // repaint the client with recovered colors
-
-          // weed out any MRU entries that have disappeared
-        ValidateMRU(); // remove invalid file path names
           // the ar object closes on destruction
     }
     catch(...) // catch all exceptions in trying to load the archive
@@ -131,6 +127,11 @@ LoadPersistentData()                                                        /*
         ::MessageBox(NULL, msg, _T("Exception"), MB_OK | MB_ICONSTOP |
             MB_TASKMODAL);
     }
+
+    Invalidate();   // repaint the client with recovered colors
+
+      // weed out any MRU entries that have disappeared
+    ValidateMRU(); // remove invalid file path names
 }
 
 /*============================================================================*/
