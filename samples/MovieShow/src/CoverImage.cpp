@@ -68,14 +68,14 @@ void CCoverImage::DrawImage(CDC& dc)
                 memcpy(pMem, &m_imageData[0], len);
                 IStream* stream = NULL;
                 VERIFY(S_OK == CreateStreamOnHGlobal(mem, FALSE, &stream));
-                Image imgTest(stream);
+                Image cover(stream);
 
                 // Draw the image
                 UINT width = GetClientRect().Width();
                 UINT height = GetClientRect().Height();
                 Rect destRect(0, 0, width, height);
                 Graphics graphics(dc);
-                graphics.DrawImage(&imgTest, destRect);
+                graphics.DrawImage(&cover, destRect);
 
                 // Cleanup
                 stream->Release();

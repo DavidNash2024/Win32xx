@@ -73,9 +73,13 @@ BOOL CMainFrame::OnEditFunction()
         m_view.GetCalc().Input(str);
         m_view.RedrawWindow();
 
-        if (m_view.GetCalc().Get_Status() != Calc::st_OK)
+        if (m_view.GetCalc().Get_Status() == Calc::st_ERROR)
         {
             MessageBox(_T("Invalid Function Input"), _T("Error"), MB_ICONEXCLAMATION);
+        }
+        else if (m_view.GetCalc().Get_Status() == Calc::st_OVERFLOW)
+        {
+            MessageBox(_T("Overflow"), _T("Error"), MB_ICONEXCLAMATION);
         }
     }
 

@@ -18,6 +18,7 @@ public:
     void CreateWin(int i);
 
 protected:
+    virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual LRESULT WndProc(UINT uMsg, WPARAM wparam, LPARAM lparam);
 

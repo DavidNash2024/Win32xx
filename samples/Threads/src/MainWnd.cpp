@@ -13,7 +13,7 @@
 CMainWindow::CMainWindow() : m_windowsCount(0)
 {
     // Set the number of threads
-    m_maxWindows = 20;
+    m_maxWindows = 900;
 
     // A couple of notes in case you're tempted to test how many threads with test windows can be created ...
 
@@ -56,9 +56,11 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
 
+    SetIconSmall(IDW_MAIN);
+    SetIconLarge(IDW_MAIN);
+
     // Create the Edit child window to display text.
     m_edit.Create(*this);
-
 
     // Create each CMyThread object.
     for (int i = 1 ; i <= m_maxWindows ; i++)
