@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "ScrollBar.h"
+#include "Scrollbar.h"
 #include "DialogApp.h"
 
 ////////////////////////////////////
@@ -13,7 +13,7 @@
 // Constructor.
 CMyScrollBar::CMyScrollBar()
 {
-    ZeroMemory(&m_si, sizeof(SCROLLINFO));
+    ZeroMemory(&m_si, sizeof(m_si));
 }
 
 // Returns the current scroll bar position.

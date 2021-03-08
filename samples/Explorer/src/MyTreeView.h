@@ -53,7 +53,7 @@ private:
 
     };  //class TreeItemData
 
-    typedef Shared_Ptr<TreeItemData> TreeItemDataPtr; // vector of smart pointers.
+    typedef Shared_Ptr<TreeItemData> TreeItemDataPtr;
 
     static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM paramSort);
     void DoContextMenu(CPoint& point);
@@ -62,7 +62,7 @@ private:
     BOOL GetChildItems(HTREEITEM parentItem);
 
     CContextMenu2 m_ccm2;
-    std::vector <TreeItemDataPtr> m_pItems;
+    std::vector <TreeItemDataPtr> m_pItems; // vector of smart pointers.
 };
 
 #endif  // MYTREEVIEW_H

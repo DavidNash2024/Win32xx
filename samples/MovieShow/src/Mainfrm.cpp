@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "mainfrm.h"
+#include "Mainfrm.h"
 #include "SearchDialog.h"
 #include "UserMessages.h"
 
@@ -475,7 +475,8 @@ CString CMainFrame::GetDataPath() const
 std::vector<CString> CMainFrame::GetWords(const CString& str) const
 {
     int position = 0;
-    CString token = str.Tokenize(L" ", position);
+    CString token;
+    token = str.Tokenize(L" ", position);
     std::vector<CString> words;
     while (!token.IsEmpty())
     {
@@ -940,7 +941,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 }
 
 // Adjust the column sizes to match the list view window width.
-LRESULT CMainFrame::OnExitSizeMove()
+LRESULT CMainFrame::OnExitSizeMove(UINT, WPARAM, LPARAM)
 {
     GetViewList().SetLastColumnWidth();
     return 0;
@@ -1126,7 +1127,8 @@ LRESULT CMainFrame::OnRClickTreeItem()
     CPoint screenPoint = GetCursorPos();
     CPoint clientPoint = screenPoint;
     GetViewTree().ScreenToClient(clientPoint);
-    TVHITTESTINFO tv = { 0 };
+    TVHITTESTINFO tv;
+    ZeroMemory(&tv, sizeof(tv));
     tv.pt = clientPoint;
     HTREEITEM item = GetViewTree().HitTest(tv);
     if (item != 0)
@@ -1698,7 +1700,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch (msg)
     {
     case WM_SYSCOMMAND:                 return OnSysCommand(msg, wparam, lparam);
-    case WM_EXITSIZEMOVE:               return OnExitSizeMove();
+    case WM_EXITSIZEMOVE:               return OnExitSizeMove(msg, wparam, lparam);
     case WM_DPICHANGED:                 return OnDPIChanged();
 
     // User Messages called by CTreeList

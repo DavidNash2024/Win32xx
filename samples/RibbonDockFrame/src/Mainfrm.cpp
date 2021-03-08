@@ -6,9 +6,9 @@
 
 #include <UIRibbonPropertyHelpers.h>
 #include "RibbonUI.h"
-#include "mainfrm.h"
-#include "files.h"
-#include "resource.h"
+#include "Mainfrm.h"
+#include "Files.h"
+#include "Resource.h"
 #include "UserMessages.h"
 
 //////////////////////////////////

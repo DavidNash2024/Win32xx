@@ -6,8 +6,8 @@
 
 #include <UIRibbonPropertyHelpers.h>
 #include "RibbonUI.h"
-#include "mainfrm.h"
-#include "resource.h"
+#include "Mainfrm.h"
+#include "Resource.h"
 
 ///////////////////////////////////
 // CMainFrame function definitions.

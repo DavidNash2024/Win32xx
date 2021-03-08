@@ -19,7 +19,7 @@
 #include <math.h>
 
 #include "enums.h"
-#include "table.h"
+#include "Table.h"
 
 // An Expression:
 //   - is any valid self-contained function
@@ -61,7 +61,7 @@ namespace Calc
 
         void        Input(const CString& buffer);
         double      Eval();
-        int const   Get_Status() const;
+        int         Get_Status() const;
         void        SetVar(const CString& szVar, double Val);
 
     private:
@@ -79,7 +79,7 @@ namespace Calc
             bool    AcceptToken();
             void    Input(const CString& buffer);
             const CString& GetAlphaName() const { return m_alphaName; };
-            const double GetNumber() const { return m_number; };
+            double GetNumber() const { return m_number; };
 
         private:
             CString         m_buffer;

@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "mainfrm.h"
+#include "Mainfrm.h"
 #include "Classes.h"
 #include "Files.h"
 #include "MyDialog.h"

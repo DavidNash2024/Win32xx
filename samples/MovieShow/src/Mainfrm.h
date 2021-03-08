@@ -4,8 +4,8 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "tree.h"
-#include "list.h"
+#include "Tree.h"
+#include "List.h"
 #include "MyDialog.h"
 #include "CoverImage.h"
 #include "SplashThread.h"
@@ -64,7 +64,7 @@ public:
     BOOL    OnAddFolder();
     BOOL    OnBoxSet(UINT nID);
     LRESULT OnDPIChanged();
-    LRESULT OnExitSizeMove();
+    LRESULT OnExitSizeMove(UINT msg, WPARAM wparam, LPARAM lparam);
     BOOL    OnFavourite();
     void    OnFilesLoaded();
     BOOL    OnPlay();

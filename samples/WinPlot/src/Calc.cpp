@@ -9,8 +9,8 @@
 #include <map>
 #include <cctype>
 #include "enums.h"
-#include "table.h"
-#include "node.h"
+#include "Table.h"
+#include "Node.h"
 #include "Calc.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ namespace Calc
     // 0 = Syntax Error in Expression
     // 1 = OK
     // 2 = Expression valid, but calculation produced overflow
-    int const Calculator::Get_Status() const
+    int Calculator::Get_Status() const
     {
         return m_status;
     }

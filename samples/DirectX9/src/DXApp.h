@@ -5,7 +5,7 @@
 #ifndef DXAPP_H
 #define DXAPP_H
 
-#include "MainFrm.h"
+#include "Mainfrm.h"
 
 
 ///////////////////////////////////////////////////////////////

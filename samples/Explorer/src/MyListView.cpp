@@ -749,7 +749,8 @@ void CMyListView::PreCreate(CREATESTRUCT& cs)
 BOOL CMyListView::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
 {
     HWND    hHeader = NULL;
-    HDITEM  hdrItem = { 0 };
+    HDITEM  hdrItem;
+    ZeroMemory(&hdrItem, sizeof(hdrItem));
 
     hHeader = GetHeader();
     if (hHeader)

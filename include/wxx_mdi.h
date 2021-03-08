@@ -527,7 +527,7 @@ namespace Win32xx
     template <class T>
     inline BOOL CMDIFrameT<T>::OnViewStatusBar()
     {
-        OnViewStatusBar();
+        T::OnViewStatusBar();
         T::GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
         return TRUE;
     }
@@ -536,7 +536,7 @@ namespace Win32xx
     template <class T>
     inline BOOL CMDIFrameT<T>::OnViewToolBar()
     {
-        OnViewToolBar();
+        T::OnViewToolBar();
         T::GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
         return TRUE;
     }

@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "HelpABout.h"
+#include "HelpAbout.h"
 #include "resource.h"
 
 //////////////////////////////////

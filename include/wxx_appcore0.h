@@ -103,20 +103,21 @@
   #pragma GCC diagnostic ignored "-Wmissing-braces"
 #endif
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include <cassert>
 #include <vector>
 #include <algorithm>
 #include <string>
 #include <map>
-#include <winsock2.h>
-#include <windows.h>
-#include <commctrl.h>
+#include <WinSock2.h>
+#include <Windows.h>
+#include <CommCtrl.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <tchar.h>
 #ifndef _WIN32_WCE
-  #include <shlwapi.h>
+  #include <Shlwapi.h>
   #include <process.h>
   #include <sstream>
 #endif

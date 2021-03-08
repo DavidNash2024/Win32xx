@@ -46,7 +46,7 @@
 #include "wxx_wincore.h"
 #include "wxx_gdi.h"
 #include <Richedit.h>
-#include <Richole.h>
+#include <RichOle.h>
 
 
 namespace Win32xx

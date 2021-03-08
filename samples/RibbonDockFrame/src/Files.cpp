@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "Files.h"
-#include "resource.h"
+#include "Resource.h"
 
 //////////////////////////////////
 // CViewFiles function definitions

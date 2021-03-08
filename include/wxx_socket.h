@@ -138,7 +138,7 @@
   #endif
 #endif
 
-#include <ws2tcpip.h>
+#include <WS2tcpip.h>
 
 #define THREAD_TIMEOUT 100
 

@@ -17,7 +17,7 @@
 
 /*============================================================================*/
 
-#include "Resource.h"
+#include "resource.h"
 #include "ColorDefs.h"
 #include "ColorChoice.h"
 #include "MyFileDlg.h"
@@ -29,7 +29,7 @@
 #include "PrintInfo.h"
 #include "View.h"
 #include "AboutBox.h"
-#include "MainFrm.h"
+#include "Mainfrm.h"
 #include "App.h"
 
 /*----------------------------------------------------------------------------*/

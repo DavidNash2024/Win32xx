@@ -42,7 +42,7 @@
 
 #include "wxx_wincore.h"
 #include "wxx_controls.h"
-#include <commctrl.h>
+#include <Commctrl.h>
 
 
 // Disable macros from Windowsx.h

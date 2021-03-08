@@ -2774,7 +2774,16 @@ namespace Win32xx
   #pragma warning ( disable : 28159 )       // Deprecated function. Consider using IsWindows instead.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
+#if defined __clang_major__
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wdeprecated-declarations"  // Disable Clang deprecated warning.
+#endif
+
         DWORD version = GetVersion();
+
+#if defined __clang_major__
+  #pragma clang diagnostic pop
+#endif
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)
   #pragma warning ( pop )

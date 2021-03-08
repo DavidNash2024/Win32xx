@@ -5,7 +5,7 @@
 #ifndef MDIFRAMESPLITTERAPP_H
 #define MDIFRAMESPLITTERAPP_H
 
-#include "MainMDIFrm.h"
+#include "MainMDIfrm.h"
 
 
 ////////////////////////////////////////////////

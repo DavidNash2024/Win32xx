@@ -18,7 +18,7 @@
 #include "stdafx.h"
 #include "AboutBox.h"
 #include "App.h"
-#include "Resource.h"
+#include "resource.h"
 
 /*============================================================================*/
     AboutBox::
