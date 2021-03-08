@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "mainMDIfrm.h"
+#include "MainMDIfrm.h"
 #include "SimpleMDIChild.h"
 #include "Files.h"
 #include "resource.h"

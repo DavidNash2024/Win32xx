@@ -303,7 +303,8 @@ void CViewList::SetColumn()
 BOOL CViewList::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
 {
     HWND    hHeader = NULL;
-    HDITEM  hdrItem = { 0 };
+    HDITEM  hdrItem;
+    ZeroMemory(&hdrItem, sizeof(hdrItem));
 
     hHeader = GetHeader();
     if (hHeader)

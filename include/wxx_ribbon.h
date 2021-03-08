@@ -121,7 +121,7 @@ namespace Win32xx
         {
         public:
             CRecentFiles(PWSTR pFullPath);
-            ~CRecentFiles() {}
+            virtual ~CRecentFiles() {}
 
             // IUnknown methods.
             STDMETHODIMP_(ULONG) AddRef();
@@ -207,7 +207,7 @@ namespace Win32xx
     // Definitions for the CRibbon class
     //
 
-    inline CRibbon::CRibbon() : m_count(0), m_pRibbonFramework(NULL)
+    inline CRibbon::CRibbon() : m_pRibbonFramework(NULL), m_count(0)
     {
         VERIFY(SUCCEEDED(::CoInitialize(NULL)));
     }
@@ -381,18 +381,18 @@ namespace Win32xx
     template <class T>
     inline CRect CRibbonFrameT<T>::GetViewRect() const
     {
-        CRect clientRect = GetClientRect();
+        CRect clientRect = T::GetClientRect();
 
         clientRect.top += GetRibbonHeight();
 
-        if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
-            clientRect = ExcludeChildRect(clientRect, GetStatusBar());
+        if (T::GetStatusBar().IsWindow() && T::GetStatusBar().IsWindowVisible())
+            clientRect = T::ExcludeChildRect(clientRect, T::GetStatusBar());
 
-        if (GetReBar().IsWindow() && GetReBar().IsWindowVisible())
-            clientRect = ExcludeChildRect(clientRect, GetReBar());
+        if (T::GetReBar().IsWindow() && T::GetReBar().IsWindowVisible())
+            clientRect = T::ExcludeChildRect(clientRect, T::GetReBar());
         else
-            if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
-                clientRect = ExcludeChildRect(clientRect, GetToolBar());
+            if (T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible())
+                clientRect = T::ExcludeChildRect(clientRect, T::GetToolBar());
 
         return clientRect;
     }
@@ -410,8 +410,8 @@ namespace Win32xx
         {
             if (SUCCEEDED(CreateRibbon(*this)))
             {
-                UseReBar(FALSE);     // Don't use a ReBar
-                UseToolBar(FALSE);   // Don't use a ToolBar
+                T::UseReBar(FALSE);     // Don't use a ReBar
+                T::UseToolBar(FALSE);   // Don't use a ToolBar
             }
             else
             {
@@ -423,8 +423,8 @@ namespace Win32xx
         T::OnCreate(cs);
         if (GetRibbonFramework())
         {
-            SetMenu(NULL);              // Disable the window menu
-            SetFrameMenu(reinterpret_cast<HMENU>(0));
+            T::SetMenu(NULL);              // Disable the window menu
+            T::SetFrameMenu(reinterpret_cast<HMENU>(0));
         }
 
         return 0;
@@ -457,10 +457,13 @@ namespace Win32xx
                 result = S_OK;
                 break;
             case UI_VIEWVERB_SIZE:      // Ribbon size has changed
-                RecalcLayout();
+                T::RecalcLayout();
                 break;
             case UI_VIEWVERB_DESTROY:   // The view was destroyed.
                 result = S_OK;
+                break;
+            case UI_VIEWVERB_ERROR:
+                result = E_FAIL;
                 break;
             }
         }
@@ -473,7 +476,7 @@ namespace Win32xx
     inline HRESULT CRibbonFrameT<T>::PopulateRibbonRecentItems(PROPVARIANT* pvarValue)
     {
         LONG currentFile = 0;
-        std::vector<CString> fileNames = GetMRUEntries();
+        std::vector<CString> fileNames = T::GetMRUEntries();
         std::vector<CString>::const_iterator iter;
         ULONG_PTR fileCount = fileNames.size();
         HRESULT result = E_FAIL;

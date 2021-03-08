@@ -38,15 +38,15 @@
 #define _WIN32XX_WEBBROWSER_H_
 
 #include "wxx_appcore0.h"
-#include <exdisp.h>
-#include <ocidl.h>
+#include <ExDisp.h>
+#include <OCidl.h>
 
 #ifdef _MSC_VER
   #pragma warning ( push )
   #pragma warning ( disable : 4091 )  // temporarily disable C4091 warning
 #endif // _MSC_VER
 
-#include <shlobj.h>
+#include <ShlObj.h>
 
 #ifdef _MSC_VER
   #pragma warning ( pop )

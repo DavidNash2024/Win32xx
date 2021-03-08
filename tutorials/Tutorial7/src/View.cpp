@@ -3,7 +3,7 @@
 //  Definitions for the CView class
 
 #include "targetver.h"
-#include "view.h"
+#include "View.h"
 #include "resource.h"
 
 

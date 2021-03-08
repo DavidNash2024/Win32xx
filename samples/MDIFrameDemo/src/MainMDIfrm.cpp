@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "mainMDIfrm.h"
+#include "MainMDIfrm.h"
 #include "MDIChildSimple.h"
 #include "MDIChildRect.h"
 #include "MDIChildMax.h"

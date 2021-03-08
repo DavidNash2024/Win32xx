@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "View.h"
-#include "resource.h"
+#include "Resource.h"
 #include "RibbonUI.h"
 
 //////////////////////////////
@@ -161,6 +161,9 @@ STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* p
             break;
         case UI_VIEWVERB_DESTROY:   // The view was destroyed.
             result = S_OK;
+            break;
+        case UI_VIEWVERB_ERROR:
+            result = E_FAIL;
             break;
         }
     }

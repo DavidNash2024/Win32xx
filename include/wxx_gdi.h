@@ -3132,7 +3132,7 @@ namespace Win32xx
     // Refer to LoadImage in the Windows API documentation for more information.
     inline BOOL CDC::LoadImage(UINT id, UINT flags)
     {
-        return LoadImage(id, flags);
+        return LoadImage(MAKEINTRESOURCE(id), flags);
     }
 
     // Loads a bitmap from the resource and selects it into the device context.
@@ -3441,7 +3441,7 @@ namespace Win32xx
     inline COLORREF CDC::GetNearestColor(COLORREF color) const
     {
         assert(m_pData->dc != 0);
-        return GetNearestColor(color);
+        return ::GetNearestColor(m_pData->dc, color);
     }
 
     // Use this to attach an existing palette.

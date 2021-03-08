@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "View.h"
-#include "resource.h"
+#include "Resource.h"
 
 //////////////////////////////
 // CView function definitions.

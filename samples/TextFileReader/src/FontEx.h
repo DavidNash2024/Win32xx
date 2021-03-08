@@ -19,7 +19,7 @@
 #ifndef CFONTEX_H
 #define CFONTEX_H
 
-#include "StdAfx.h"
+#include "stdafx.h"
 
 /*============================================================================*/
     class

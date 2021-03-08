@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "TaskDialogApp.h"
 #include "MyTaskDialog.h"
-#include "Resource.h"
+#include "resource.h"
 
 ///////////////////////////////////////
 // CTaskDialogApp function definitions.

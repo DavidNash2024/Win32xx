@@ -5,7 +5,7 @@
 #ifndef MDIDEMOAPP_H
 #define MDIDEMOAPP_H
 
-#include "MainMDIFrm.h"
+#include "MainMDIfrm.h"
 
 
 ///////////////////////////////////////////////////////////////////

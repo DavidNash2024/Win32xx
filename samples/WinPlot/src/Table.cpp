@@ -7,8 +7,8 @@
 #include <vector>
 #include <map>
 #include "enums.h"
-#include "table.h"
-#include "node.h"
+#include "Table.h"
+#include "Node.h"
 
 namespace Calc
 {

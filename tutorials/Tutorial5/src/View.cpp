@@ -2,7 +2,7 @@
 // View.cpp
 //  Definitions for the CView class
 
-#include "view.h"
+#include "View.h"
 #include "resource.h"
 
 // Constructor.

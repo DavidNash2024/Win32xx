@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "richview.h"
+#include "RichView.h"
 
 /////////////////////////////////
 // CRichView function definitions

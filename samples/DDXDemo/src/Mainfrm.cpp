@@ -23,7 +23,7 @@
 *******************************************************************************/
 
 #include "stdafx.h"
-#include "mainfrm.h"
+#include "Mainfrm.h"
 #include "App.h"
 #include "resource.h"
 
@@ -220,7 +220,7 @@ SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
     if (IsReBarSupported())
     {
         ReBarTheme rt;
-        ZeroMemory(&rt, sizeof(ReBarTheme));
+        ZeroMemory(&rt, sizeof(rt));
         rt.UseThemes    = TRUE;
         rt.clrBkgnd1    = clrBkGnd1;
         rt.clrBkgnd2    = clrBkGnd2;

@@ -8,7 +8,7 @@
 #include "RibbonUI.h"
 #include "MainMDIfrm.h"
 #include "SimpleMDIChild.h"
-#include "resource.h"
+#include "Resource.h"
 
 //////////////////////////////////////
 // CMainMDIFrame function definitions.

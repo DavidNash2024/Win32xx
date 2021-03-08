@@ -30,7 +30,7 @@ CMyScrollBar()                                                              /*
 
 *-----------------------------------------------------------------------------*/
 {
-    ZeroMemory(&m_scrollInfo, sizeof(SCROLLINFO));
+    ZeroMemory(&m_scrollInfo, sizeof(m_scrollInfo));
 }
 
 /*============================================================================*/

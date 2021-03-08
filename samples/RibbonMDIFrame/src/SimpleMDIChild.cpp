@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "SimpleMDIChild.h"
-#include "resource.h"
+#include "Resource.h"
 
 ////////////////////////////////////
 // CSimpleView function definitions.

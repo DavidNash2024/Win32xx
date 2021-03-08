@@ -2,7 +2,7 @@
 // Mainfrm.cpp
 
 #include "stdafx.h"
-#include "mainfrm.h"
+#include "Mainfrm.h"
 #include "ColourDialog.h"
 #include "resource.h"
 

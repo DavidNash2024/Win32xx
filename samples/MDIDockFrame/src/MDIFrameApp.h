@@ -5,7 +5,7 @@
 #ifndef MDIFRAMEAPP_H
 #define MDIFRAMEAPP_H
 
-#include "MainMDIFrm.h"
+#include "MainMDIfrm.h"
 
 
 ///////////////////////////////////////////////////////////////////

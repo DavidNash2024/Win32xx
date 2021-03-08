@@ -24,7 +24,7 @@
 #include "AboutBox.h"
 #include "View.h"
 #include "Doc.h"
-#include "mainfrm.h"
+#include "Mainfrm.h"
 #include "App.h"
 
 /*------------------------------------------------------------------------------*/

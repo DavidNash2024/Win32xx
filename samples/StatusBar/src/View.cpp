@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "view.h"
+#include "View.h"
 
 //////////////////////////////
 // CView function definitions.

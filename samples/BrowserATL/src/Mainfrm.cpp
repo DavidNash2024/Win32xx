@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "mainfrm.h"
+#include "Mainfrm.h"
 #include "UserMessages.h"
 
 //////////////////////////////////
@@ -38,7 +38,8 @@ void CMainFrame::AddComboBoxBand(int height)
     m_combo.Create(GetReBar());
 
     // Put the window in a new rebar band.
-    REBARBANDINFO rbbi = {0};
+    REBARBANDINFO rbbi;
+    ZeroMemory(&rbbi, sizeof(rbbi));
     rbbi.cbSize     = sizeof(REBARBANDINFO);
     rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_TEXT;
     rbbi.cyMinChild = height;
@@ -48,7 +49,7 @@ void CMainFrame::AddComboBoxBand(int height)
     rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
     rbbi.clrBack    = RBTheme.clrBand1;
     rbbi.hwndChild  = m_combo.GetHwnd();
-    rbbi.lpText     = L"Address";
+    rbbi.lpText     = (LPWSTR)L"Address";
 
     RB.InsertBand(-1, rbbi);
 }

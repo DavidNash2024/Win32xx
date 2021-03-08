@@ -100,7 +100,7 @@
 #include <stdio.h>
 #include <string>
 #include <algorithm>
-#include <windows.h>
+#include <Windows.h>
 #include "wxx_textconv.h"
 
 

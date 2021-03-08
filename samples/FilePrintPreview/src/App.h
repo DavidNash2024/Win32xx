@@ -17,7 +17,7 @@
 #ifndef THE_APP_H
 #define THE_APP_H
 
-#include "MainFrm.h"
+#include "Mainfrm.h"
 
 /*============================================================================*/
     class

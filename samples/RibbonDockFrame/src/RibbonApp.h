@@ -4,7 +4,7 @@
 #ifndef RIBBONAPP_H
 #define RIBBONAPP_H
 
-#include "MainFrm.h"
+#include "Mainfrm.h"
 
 
 /////////////////////////////////////////////////////////////////

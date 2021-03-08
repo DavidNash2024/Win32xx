@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "mainfrm.h"
+#include "Mainfrm.h"
 
 //////////////////////////////////
 // CMainFrame function definitions

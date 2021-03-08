@@ -5,7 +5,7 @@
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
 
-#include "ScrollBar.h"
+#include "Scrollbar.h"
 
 
 ///////////////////////////////////////////////////

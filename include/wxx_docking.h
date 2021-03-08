@@ -3822,7 +3822,7 @@ namespace Win32xx
                 for (iter = sortedDockers.begin(); iter != sortedDockers.end(); ++iter)
                 {
                     DockInfo di;
-                    ZeroMemory(&di, sizeof(DockInfo));
+                    ZeroMemory(&di, sizeof(di));
                     if (! (*iter)->IsWindow())
                         throw (CUserException(_T("Can't save Docker in registry. \n")));
 

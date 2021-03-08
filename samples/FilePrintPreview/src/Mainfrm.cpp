@@ -15,7 +15,7 @@
 *******************************************************************************/
 
 #include "stdafx.h"
-#include "mainfrm.h"
+#include "Mainfrm.h"
 #include <richedit.h>
 #include "resource.h"
 
