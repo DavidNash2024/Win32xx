@@ -2026,8 +2026,6 @@ namespace Win32xx
     // Destructor.
     inline CDocker::~CDocker()
     {
-        GetDockBar().Destroy();
-
         std::vector<DockPtr>::const_iterator iter;
         if (GetDockAncestor() == this)
         {

@@ -132,8 +132,8 @@ void CMyTreeView::EnumObjects(HTREEITEM parentItem, CShellFolder& parentFolder, 
             itemInfo.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
 
             // Store a pointer to the TreeItemData in the lParam and m_pItems.
-            TreeItemData* pItem = new TreeItemData(cpidlParent, cpidlRel, parentFolder);
-            itemInfo.lParam = reinterpret_cast<LPARAM>(pItem);
+            TreeItemDataPtr pItem(new TreeItemData(cpidlParent, cpidlRel, parentFolder));
+            itemInfo.lParam = reinterpret_cast<LPARAM>(pItem.get());
 
             // m_pItems is a vector of smart pointers. The memory allocated by
             // new is automatically deleted when the vector goes out of scope.
@@ -231,8 +231,8 @@ BOOL CMyTreeView::GetRootItems()
         itemInfo.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
 
         // Store a pointer to the TreeItemData in the lParam and m_pItems.
-        TreeItemData* pItem = new TreeItemData(cpidlDesk);
-        itemInfo.lParam = reinterpret_cast<LPARAM>(pItem);
+        TreeItemDataPtr pItem(new TreeItemData(cpidlDesk));
+        itemInfo.lParam = reinterpret_cast<LPARAM>(pItem.get());
 
         // m_pItems is a vector of smart pointers. The memory allocated by
         // new is automatically deleted when the vector goes out of scope.

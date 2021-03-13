@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -146,7 +146,6 @@ namespace Win32xx
                               HMENU idOrMenu, LPVOID lparam = NULL);
         virtual HWND CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName,
                               DWORD style, const RECT& rectc, HWND parent, UINT id, LPVOID lparam = NULL);
-        virtual void Destroy();
         virtual HWND Detach();
         static  CWnd* GetCWndPtr(HWND wnd);
         virtual HICON SetIconLarge(int iconID);
@@ -176,6 +175,7 @@ namespace Win32xx
         LRESULT DefWindowProc(UINT msg, WPARAM wparam, LPARAM lparam) const;
         HDWP  DeferWindowPos(HDWP winPosInfo, HWND insertAfter, int x, int y, int cx, int cy, UINT flags) const;
         HDWP  DeferWindowPos(HDWP winPosInfo, HWND insertAfter, const RECT& rect, UINT flags) const;
+        void  Destroy();
         BOOL  DrawMenuBar() const;
         BOOL  EnableWindow(BOOL Enable = TRUE) const;
         BOOL  EndPaint(PAINTSTRUCT& ps) const;

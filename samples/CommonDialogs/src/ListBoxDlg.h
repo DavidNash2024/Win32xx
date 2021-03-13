@@ -29,12 +29,12 @@ CListBoxDlg : public CDialog                                                  /*
         CListBoxDlg();
         virtual ~CListBoxDlg(){}
 
-        virtual  void   AddListItem(LPCTSTR s)
+        void   AddListItem(LPCTSTR s)
                           { m_listContent.push_back(s);}
-        virtual void    ClearList(){ m_listContent.clear();}
-        virtual void    OnCancel();
-        virtual void    OnOK();
-        virtual void    SetBoxTitle(LPCTSTR title)
+        void    ClearList(){ m_listContent.clear();}
+        void    OnCancel();
+        void    OnOK();
+        void    SetBoxTitle(LPCTSTR title)
                           { m_boxTitle = title;}
 
     protected:

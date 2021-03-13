@@ -9,6 +9,8 @@
 #include "MyThread.h"
 #include "MyEdit.h"
 
+// Note: Modern C++ compilers can use this typedef instead.
+// typedef std::shared_ptr<CMyThread> MyThreadPtr;
 typedef Shared_Ptr<CMyThread> MyThreadPtr;
 
 

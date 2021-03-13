@@ -475,23 +475,23 @@ namespace Win32xx
     class CHGlobal
     {
     public:
-        CHGlobal() : m_hGlobal(0) {}
-        CHGlobal(HGLOBAL handle) : m_hGlobal(handle) {}
-        CHGlobal(size_t size) : m_hGlobal(0) { Alloc(size); }
+        CHGlobal() : m_global(0) {}
+        CHGlobal(HGLOBAL handle) : m_global(handle) {}
+        CHGlobal(size_t size) : m_global(0) { Alloc(size); }
         ~CHGlobal()                     { Free(); }
 
         void Alloc(size_t size);
         void Free();
-        HGLOBAL Get() const             { return m_hGlobal; }
-        void Reassign(HGLOBAL hGlobal);
+        HGLOBAL Get() const             { return m_global; }
+        void Reassign(HGLOBAL global);
 
-        operator HGLOBAL() const        { return m_hGlobal; }
+        operator HGLOBAL() const        { return m_global; }
 
     private:
         CHGlobal(const CHGlobal&);              // Disable copy
         CHGlobal& operator = (const CHGlobal&); // Disable assignment
 
-        HGLOBAL m_hGlobal;
+        HGLOBAL m_global;
     };
 
 

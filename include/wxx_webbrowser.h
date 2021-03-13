@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -265,9 +265,10 @@ namespace Win32xx
             IOleObject* pObject;
             VERIFY(SUCCEEDED(hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pObject))));
             if (pObject)
+            {
                 VERIFY(SUCCEEDED(hr = pObject->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_hwnd, &m_controlRect)));
-
-            pObject->Release();
+                pObject->Release();
+            }
         }
 
         return hr;

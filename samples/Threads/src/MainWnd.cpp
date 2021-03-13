@@ -65,7 +65,7 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
     // Create each CMyThread object.
     for (int i = 1 ; i <= m_maxWindows ; i++)
     {
-        CMyThread* pMyThread = new CMyThread(i);
+        MyThreadPtr pMyThread(new CMyThread(i));
         m_threads.push_back(pMyThread);
     }
 

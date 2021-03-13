@@ -159,7 +159,7 @@ InitializeContexts()                                                        /*
 *-----------------------------------------------------------------------------*/
 {
       // Get the device context of the default or currently chosen printer.
-    CDC dcPreview = m_previewPane.GetDC();
+    CClientDC dcPreview = m_previewPane.GetDC();
       // compute the screen pixels/inch
     m_screenPixels = CSize(dcPreview.GetDeviceCaps(HORZRES),
         dcPreview.GetDeviceCaps(VERTRES));

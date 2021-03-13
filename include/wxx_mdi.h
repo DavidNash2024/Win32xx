@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -159,6 +159,7 @@ namespace Win32xx
 
         // Overridable virtual functions
         virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
+        virtual HWND Create(HWND parent = 0);
         virtual CMDIChild* GetActiveMDIChild() const;
         virtual CMenu GetActiveMenu() const;
         virtual CWnd& GetMDIClient() const { return m_mdiClient; }
@@ -234,8 +235,16 @@ namespace Win32xx
     template <class T>
     inline CMDIFrameT<T>::CMDIFrameT()
     {
-        // The view for a CMDIFrame is the MDIClient
+    }
+
+    // Create the MDI frame.
+    template <class T>
+    inline HWND CMDIFrameT<T>::Create(HWND parent /* = 0 */)
+    {
+        // The view for a CMDIFrame is the MDIClient.
         T::SetView(GetMDIClient());
+
+        return T::Create(parent);
     }
 
     // Adds a MDI child to the MDI frame. The pointer to the MDI child will be
@@ -463,20 +472,21 @@ namespace Win32xx
     template <class T>
     inline void CMDIFrameT<T>::OnMenuUpdate(UINT id)
     {
+        CMenu activeMenu = GetActiveMenu();
         switch (id)
         {
         case IDW_VIEW_STATUSBAR:
             {
                 BOOL isVisible = T::GetStatusBar().IsWindow() && T::GetStatusBar().IsWindowVisible();
-                GetActiveMenu().CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
+                activeMenu.CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
 
         case IDW_VIEW_TOOLBAR:
             {
                 BOOL isVisible = T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible();
-                GetActiveMenu().EnableMenuItem(id, T::IsUsingToolBar() ? MF_ENABLED : MF_DISABLED);
-                GetActiveMenu().CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
+                activeMenu.EnableMenuItem(id, T::IsUsingToolBar() ? MF_ENABLED : MF_DISABLED);
+                activeMenu.CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
         }

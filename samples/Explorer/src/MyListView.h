@@ -80,6 +80,8 @@ private:
 
     };  // class ListItemData (nested class)
 
+    // Note: Modern C++ compilers can use this typedef instead.
+    // typedef std::shared_ptr<ListItemData> ListItemDataPtr;
     typedef Shared_Ptr<ListItemData> ListItemDataPtr;
 
     static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM pSortViewItems);

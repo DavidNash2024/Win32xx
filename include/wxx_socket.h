@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -249,7 +249,24 @@ namespace Win32xx
 
     inline CSocket::~CSocket()
     {
-        Disconnect();
+        ::shutdown(m_socket, SD_BOTH);
+        // Ask the event thread to stop
+        m_stopRequest.SetEvent();
+
+        // Wait for the event thread to stop.
+        while (WAIT_TIMEOUT == ::WaitForSingleObject(*m_threadPtr, THREAD_TIMEOUT * 10))
+        {
+            // Waiting for the event thread to signal the m_stopped event.
+
+            // Note: An excessive delay in processing any of the notification functions
+            // can cause us to get here.
+            TRACE("*** Error: Event Thread won't die ***\n");
+        }
+
+        m_stopRequest.ResetEvent();
+
+        ::closesocket(m_socket);
+        m_socket = INVALID_SOCKET;
 
         if (m_stopRequest.GetHandle())
             CloseHandle(m_stopRequest);

@@ -396,7 +396,7 @@ BOOL CSvrDialog::OnSend()
 // Accept the connection from the client
 BOOL CSvrDialog::OnSocketAccept()
 {
-    SocketPtr pClient = new CSocket;
+    SocketPtr pClient(new CSocket);
     m_mainSocket.Accept(*pClient, NULL, NULL);
     if (INVALID_SOCKET == m_mainSocket.GetSocket())
     {
@@ -406,7 +406,7 @@ BOOL CSvrDialog::OnSocketAccept()
     }
 
     // Create the new chat dialog
-    TCPClientDlgPtr pDialog = new CTCPClientDlg(IDD_CHAT);
+    TCPClientDlgPtr pDialog(new CTCPClientDlg(IDD_CHAT));
     pDialog->m_pSocket = pClient;
     pDialog->DoModeless(*this);
     long events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;

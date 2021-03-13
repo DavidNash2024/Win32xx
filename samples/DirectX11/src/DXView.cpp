@@ -152,7 +152,7 @@ HRESULT CDXView::InitDevice()
     // Create swap chain
     IDXGIFactory2* dxgiFactory2 = nullptr;
     hr = dxgiFactory->QueryInterface(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory2));
-    if (dxgiFactory2)
+    if (SUCCEEDED(hr))
     {
         // DirectX 11.1 or later
         hr = m_pd3dDevice->QueryInterface(__uuidof(ID3D11Device1), reinterpret_cast<void**>(&m_pd3dDevice1));
@@ -451,12 +451,11 @@ void CDXView::Render()
 LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     PAINTSTRUCT ps;
-    HDC hdc;
 
     switch (msg)
     {
     case WM_PAINT:
-        hdc = BeginPaint(ps);
+        BeginPaint(ps);
         EndPaint(ps);
         break;
 

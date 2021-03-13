@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1763,7 +1763,6 @@ namespace Win32xx
 
     inline CTabbedMDI::CTabbedMDI()
     {
-        GetTab().SetShowButtons(TRUE);
     }
 
     inline CTabbedMDI::~CTabbedMDI()
@@ -1970,6 +1969,7 @@ namespace Win32xx
     inline void CTabbedMDI::OnAttach()
     {
         GetTab().Create(*this);
+        GetTab().SetShowButtons(TRUE);
         GetTab().SetFixedWidth(TRUE);
         GetTab().SetOwnerDraw(TRUE);
     }

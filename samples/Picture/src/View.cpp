@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "view.h"
+#include "View.h"
 #include "UserMessages.h"
 #include "resource.h"
 

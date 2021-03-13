@@ -28,7 +28,7 @@ BOOL CView::OnColor()
     // Initiate the Choose Color dialog
     if (ChooseColor(&cc)==TRUE)
     {
-        m_brush = CreateSolidBrush(cc.rgbResult);
+        m_brush.CreateSolidBrush(cc.rgbResult);
         SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_brush.GetHandle());
         Invalidate();
     }
