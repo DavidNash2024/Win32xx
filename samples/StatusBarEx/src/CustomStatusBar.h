@@ -58,7 +58,7 @@ CustomStatusBar : public CStatusBar                                         /*
         CustomStatusBar();
         virtual ~CustomStatusBar() {}
 
-        virtual void    AddPartInfo(UINT id, int size, UINT style = 0);
+                void    AddPartInfo(UINT id, int size, UINT style = 0);
         virtual void    PositionCustomParts();
                 void    SetOwnerDrawText(LPCTSTR odmsg);
         virtual void    SetStatusIndicators();

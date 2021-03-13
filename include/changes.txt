@@ -1,16 +1,29 @@
 Version 8.8.1
 =============
+
+This version adds support for the Clang compiler.
+
 Bug fixes:
 - Corrected CRegKey::SetMultiStringValue
 - Corrected CRegKey::SetStringValue
-- CWnd::Close can now be used to close applications with a Ribbon UI.
+- Corrected CDC::LoadImage
+- Corrected CDC::GetNearestColor
+- Corrected CMDIFrameT<T>::OnViewStatusBar
+- Corrected CMDIFrameT<T>::OnViewToolBar()
+- CWnd::Close can now be used to close applications with a Ribbon UI.  
+
+New Features and Enhancements
+-----------------------------
+* Adds support for the Clang c++ compiler available with Microsoft's
+Visual Studio Community 2019.
+
 
 
 Version 8.8
 ===========
 
-This version adds the BrowserATL, MovieShow and WinPlot samples. It also adds support
-for Code::Blocks version 20.03.
+This version adds the BrowserATL, MovieShow and WinPlot samples. It also adds
+support for Code::Blocks version 20.03.
 
 Bug Fixes:
 - Corrected the definition of CEventSink in the Browser sample.

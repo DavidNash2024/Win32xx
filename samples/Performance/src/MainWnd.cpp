@@ -42,7 +42,7 @@ void CMainWindow::CreateTestWindows(int windows)
     for (int i = 0 ; i < windows; i++)
     {
         // Create the test windows
-        TestWindowPtr pTestWindow = new CTestWindow();
+        TestWindowPtr pTestWindow(new CTestWindow());
         m_pTestWindows.push_back(pTestWindow);
         m_pTestWindows[i]->CreateWin(i);
     }

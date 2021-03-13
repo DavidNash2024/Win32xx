@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -115,27 +115,27 @@ namespace Win32xx
     inline void CHGlobal::Alloc(size_t size)
     {
         Free();
-        m_hGlobal = ::GlobalAlloc(GHND, size);
-        if (m_hGlobal == 0)
+        m_global = ::GlobalAlloc(GHND, size);
+        if (m_global == 0)
             throw std::bad_alloc();
     }
 
     // Manually frees the global memory assigned to this object
     inline void CHGlobal::Free()
     {
-        if (m_hGlobal != 0)
-            ::GlobalFree(m_hGlobal);
+        if (m_global != 0)
+            ::GlobalFree(m_global);
 
-        m_hGlobal = 0;
+        m_global = 0;
     }
 
     // Reassign is used when global memory has been reassigned, as
     // can occur after a call to ::PrintDlg or ::PageSetupDlg.
     // It assigns a new memory handle to be managed by this object
     // and assumes any old memory has already been freed.
-    inline void  CHGlobal::Reassign(HGLOBAL hGlobal)
+    inline void  CHGlobal::Reassign(HGLOBAL global)
     {
-        m_hGlobal = hGlobal;
+        m_global = global;
     }
 
     ///////////////////////////////////////
@@ -278,32 +278,32 @@ namespace Win32xx
     // to a window procedure.
     inline int CWinThread::MessageLoop()
     {
-        MSG Msg;
-        ZeroMemory(&Msg, sizeof(Msg));
+        MSG msg;
+        ZeroMemory(&msg, sizeof(msg));
         int status = 1;
         LONG lCount = 0;
 
         while (status != 0)
         {
             // While idle, perform idle processing until OnIdle returns FALSE
-            while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) != FALSE)
+            while (!::PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) != FALSE)
                 ++lCount;
 
             lCount = 0;
 
             // Now wait until we get a message
-            if ((status = ::GetMessage(&Msg, NULL, 0, 0)) == -1)
+            if ((status = ::GetMessage(&msg, NULL, 0, 0)) == -1)
                 return -1;
 
-            if (!PreTranslateMessage(Msg))
+            if (!PreTranslateMessage(msg))
             {
-                ::TranslateMessage(&Msg);
-                ::DispatchMessage(&Msg);
+                ::TranslateMessage(&msg);
+                ::DispatchMessage(&msg);
             }
 
         }
 
-        return LOWORD(Msg.wParam);
+        return LOWORD(msg.wParam);
     }
 
     // This function is called by the MessageLoop. It is called when the message queue

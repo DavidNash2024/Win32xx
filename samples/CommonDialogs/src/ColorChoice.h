@@ -34,22 +34,22 @@ CColorChoice   : public CColorDialog                                        /*
         CColorChoice();
         virtual ~CColorChoice(){}
 
-        virtual void    AddColorChoice(UINT, LPCTSTR, COLORREF);
-        virtual void    ClearColorTable(){m_colorTable.clear();}
-        virtual INT_PTR DoModal(HWND owner = 0);
-        virtual CBrush  GetBrush(UINT) const;
-        virtual CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
-        virtual UINT    GetSelectedColorID() const {return m_selection;}
-        virtual COLORREF GetTableColor(UINT id) const;
-        virtual UINT    GetTableIndex(UINT id) const;
-        virtual CString GetTableUsage(UINT id) const;
-        virtual void    SetBoxTitle(LPCTSTR title) {m_boxTitle = title;}
-        virtual void    SetTableColor(UINT id, COLORREF rgb);
-        virtual void    SetTableUsage(UINT id, LPCTSTR s);
+        void    AddColorChoice(UINT, LPCTSTR, COLORREF);
+        void    ClearColorTable(){m_colorTable.clear();}
+        void    InitCustomColors();
+        INT_PTR DoModal(HWND owner = 0);
+        CBrush  GetBrush(UINT) const;
+        CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
+        UINT    GetSelectedColorID() const {return m_selection;}
+        COLORREF GetTableColor(UINT id) const;
+        UINT    GetTableIndex(UINT id) const;
+        CString GetTableUsage(UINT id) const;
+        void    SetBoxTitle(LPCTSTR title) {m_boxTitle = title;}
+        void    SetTableColor(UINT id, COLORREF rgb);
+        void    SetTableUsage(UINT id, LPCTSTR s);
 
     protected:
         virtual BOOL    OnInitDialog();
-        virtual void    InitCustomColors();
         virtual void    SetWindowTitle() const {SetWindowText(m_boxTitle);}
         virtual void    Serialize(CArchive &ar);
 

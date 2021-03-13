@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -374,7 +374,7 @@ namespace Win32xx
         // These functions aren't virtual, and shouldn't be overridden
         CRect ExcludeChildRect(const CRect& clientRect, HWND child) const;
         HACCEL GetFrameAccel() const                    { return m_accel; }
-        CMenu  GetFrameMenu() const                     { return m_menu; }
+        const CMenu&  GetFrameMenu() const              { return m_menu; }
         const InitValues& GetInitValues() const         { return m_initValues; }
         const MenuTheme& GetMenuBarTheme() const        { return m_mbTheme; }
         const CMenuMetrics& GetMenuMetrics() const      { return m_menuMetrics; }

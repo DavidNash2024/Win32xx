@@ -9,7 +9,8 @@
 #include "MyEdit.h"
 #include "TestWnd.h"
 
-
+// Note: Modern C++ compilers can use this typedef instead.
+// typedef std::shared_ptr<CTestWindow> TestWindowPtr;
 typedef Shared_Ptr<CTestWindow> TestWindowPtr;
 
 ///////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -71,31 +71,31 @@ namespace Win32xx
         virtual ~CFile();
         operator HANDLE() const;
 
-        virtual void Close();
-        virtual void Flush();
-        virtual CString GetFileDirectory() const;
-        virtual const CString& GetFileName() const;
-        virtual CString GetFileNameExt() const;
-        virtual CString GetFileNameWOExt() const;
-        virtual const CString& GetFilePath() const;
-        virtual CString GetFileTitle() const;
+        void Close();
+        void Flush();
+        CString GetFileDirectory() const;
+        const CString& GetFileName() const;
+        CString GetFileNameExt() const;
+        CString GetFileNameWOExt() const;
+        const CString& GetFilePath() const;
+        CString GetFileTitle() const;
         HANDLE GetHandle() const;
-        virtual ULONGLONG GetLength() const;
-        virtual ULONGLONG GetPosition() const;
-        virtual void Open(LPCTSTR pFileName, UINT openFlags);
-        virtual UINT Read(void* pBuf, UINT count);
-        virtual void Remove(LPCTSTR pFileName);
-        virtual void Rename(LPCTSTR pOldName, LPCTSTR pNewName);
-        virtual ULONGLONG Seek(LONGLONG seekTo, UINT method);
-        virtual void SeekToBegin();
-        virtual ULONGLONG SeekToEnd();
-        virtual void SetLength(ULONGLONG length);
-        virtual void Write(const void* pBuf, UINT count);
+        ULONGLONG GetLength() const;
+        ULONGLONG GetPosition() const;
+        void Open(LPCTSTR pFileName, UINT openFlags);
+        UINT Read(void* pBuf, UINT count);
+        void Remove(LPCTSTR pFileName);
+        void Rename(LPCTSTR pOldName, LPCTSTR pNewName);
+        ULONGLONG Seek(LONGLONG seekTo, UINT method);
+        void SeekToBegin();
+        ULONGLONG SeekToEnd();
+        void SetLength(ULONGLONG length);
+        void Write(const void* pBuf, UINT count);
 
 #ifndef _WIN32_WCE
-        virtual void LockRange(ULONGLONG pos, ULONGLONG count);
-        virtual void SetFilePath(LPCTSTR pFileName);
-        virtual void UnlockRange(ULONGLONG pos, ULONGLONG count);
+        void LockRange(ULONGLONG pos, ULONGLONG count);
+        void SetFilePath(LPCTSTR pFileName);
+        void UnlockRange(ULONGLONG pos, ULONGLONG count);
 #endif
 
     private:

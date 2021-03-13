@@ -148,11 +148,11 @@ namespace Win32xx
         int GetPageCount() const;
         int GetPageIndex(CPropertyPage* pPage) const;
         HWND GetTabControl() const;
-        virtual BOOL SetActivePage(int page);
-        virtual BOOL SetActivePage(CPropertyPage* pPage);
-        virtual void SetIcon(UINT iconID);
-        virtual void SetTitle(LPCTSTR pTitle);
-        virtual void SetWizardMode(BOOL isWizard);
+        BOOL SetActivePage(int page);
+        BOOL SetActivePage(CPropertyPage* pPage);
+        void SetIcon(UINT iconID);
+        void SetTitle(LPCTSTR pTitle);
+        void SetWizardMode(BOOL isWizard);
 
     protected:
         virtual BOOL PreTranslateMessage(MSG& msg);

@@ -408,7 +408,7 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
             lvItem.mask = LVIF_PARAM | LVIF_TEXT | LVIF_IMAGE | LVIF_STATE;
 
             // Store a pointer to the ListItemData in the lParam and m_pItems.
-            ListItemDataPtr pItem = new ListItemData(cpidlParent, cpidlRel, folder);
+            ListItemDataPtr pItem(new ListItemData(cpidlParent, cpidlRel, folder));
             lvItem.lParam = reinterpret_cast<LPARAM>(pItem.get());
 
             TCHAR szFileName[MAX_PATH];

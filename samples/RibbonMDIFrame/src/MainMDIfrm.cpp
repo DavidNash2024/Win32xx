@@ -123,7 +123,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
         if (SUCCEEDED(hr))
             hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
         if (SUCCEEDED(hr))
-            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
+            GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
     }
 
     return result;
@@ -201,7 +201,7 @@ void CMainMDIFrame::OnMDIMaximized(BOOL isMax)
         if (SUCCEEDED(hr))
             hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
         if (SUCCEEDED(hr))
-            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
+            GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
     }
 }
 

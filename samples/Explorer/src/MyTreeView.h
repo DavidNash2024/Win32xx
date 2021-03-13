@@ -53,6 +53,8 @@ private:
 
     };  //class TreeItemData
 
+    // Note: Modern C++ compilers can use this typedef instead.
+    // typedef std::shared_ptr<TreeItemData> TreeItemDataPtr;
     typedef Shared_Ptr<TreeItemData> TreeItemDataPtr;
 
     static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM paramSort);
