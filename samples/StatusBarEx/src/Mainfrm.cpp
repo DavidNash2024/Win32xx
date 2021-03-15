@@ -19,13 +19,24 @@
     CMainFrame::
 CMainFrame()                                                                /*
 
-    Construct mainframe object and the view; load persistent parameters.
+    Construct mainframe object.
 *-----------------------------------------------------------------------------*/
 {
-      //Set m_view as the view window of the frame
+}
+
+/*============================================================================*/
+    HWND CMainFrame::
+Create(HWND parent)                                                         /*
+
+    Create the frame window and the view; load persistent parameters.
+*-----------------------------------------------------------------------------*/
+{
+    //Set m_view as the view window of the frame
     SetView(m_view);
-      // Set the registry key name and load the initial window position
+    // Set the registry key name and load the initial window position
     LoadRegistrySettings(_T("Win32++\\StatusBarEx Sample"));
+
+    return CFrame::Create(parent);
 }
 
 /*============================================================================*/

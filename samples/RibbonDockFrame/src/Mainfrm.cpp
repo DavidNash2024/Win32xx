@@ -15,8 +15,16 @@
 // CMainFrame function definitions
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
+}
 
+// Destructor for CMainFrame.
+CMainFrame::~CMainFrame()
+{
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
     // Set m_View as the view window of the frame
     SetView(m_view);
 
@@ -26,19 +34,14 @@ CMainFrame::CMainFrame()
 
     // Load the settings from the registry with 4 MRU entries
     LoadRegistryMRUSettings(4);
+
+    return CRibbonDockFrame::Create(parent);
 }
 
-CMainFrame::~CMainFrame()
-{
-    // Destructor for CMainFrame.
-    DestroyRibbon();
-}
-
+// This function is called when a ribbon button is pressed.
+// Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation.
 STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    // This function is called when a ribbon button is pressed.
-    // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation
-
     if (UI_EXECUTIONVERB_EXECUTE == verb)
     {
         switch(cmdID)
@@ -92,10 +95,9 @@ void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
     }
 }
 
+// Called when the DropdownColorPicker button is pressed.
 void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-     // DropdownColorPicker button pressed
-
     if (ppropvarValue != NULL)
     {
         // Retrieve color type.
@@ -115,16 +117,16 @@ void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
     }
 }
 
+// Used when there isn't a ribbon.
 void CMainFrame::SetPenColor(COLORREF clr)
 {
-    // Used when there isn't a ribbon
     m_view.SetPenColor(clr);
 }
 
+// Process the messages from the (non-ribbon) Menu and Tool Bar.
+// Used when there isn't a ribbon.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Process the messages from the (non-ribbon) Menu and Tool Bar
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -167,8 +169,8 @@ void CMainFrame::OnFileExit()
     Close();
 }
 
+// Called by OnFileOpen and in response to a UWM_DROPFILE message.
 void CMainFrame::LoadFile(LPCTSTR fileName)
-// Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
     // Retrieve the PlotPoint data
     if (GetDoc().FileOpen(fileName))
@@ -363,10 +365,10 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// This function is called when a ribbon button is updated.
+// Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation.
 STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue)
 {
-    // This function is called when a ribbon button is updated.
-    // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
     UNREFERENCED_PARAMETER(currentValue);
 
     HRESULT result = E_NOTIMPL;
@@ -399,8 +401,8 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  
     return result;
 }
 
+// Called in response to a UWM_DROPFILE message.
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
-// Called in response to a UWM_DROPFILE message
 {
     // wParam is a pointer (LPCTSTR) to the filename
     LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
@@ -411,8 +413,8 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     return 0;
 }
 
+// Called in response to a UWM_GETALLPOINTS message.
 LRESULT CMainFrame::OnGetAllPoints()
-// Called in response to a UWM_GETALLPOINTS message
 {
     // Get a pointer to the vector of PlotPoints
     std::vector<PlotPoint>* pAllPoints = &GetDoc().GetAllPoints();
@@ -421,8 +423,8 @@ LRESULT CMainFrame::OnGetAllPoints()
     return reinterpret_cast<LRESULT>(pAllPoints);
 }
 
+// Called in response to a UWM_SENDPOINT message.
 LRESULT CMainFrame::OnSendPoint(WPARAM wparam)
-// Called in response to a UWM_SENDPOINT message
 {
     // wParam is a pointer to the vector of PlotPoints
     PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wparam);

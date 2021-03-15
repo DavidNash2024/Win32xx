@@ -33,7 +33,7 @@ class CMainFrame : public CDockFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-
+    virtual HWND Create(HWND parent = 0);
     void HideSingleContainerTab(BOOL hideSingle);
     BOOL OnCloseMDIs();
     BOOL OnCloseDockers();

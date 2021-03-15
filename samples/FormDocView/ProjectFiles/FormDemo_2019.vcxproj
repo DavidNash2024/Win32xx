@@ -78,6 +78,7 @@
     <ClCompile Include="..\src\FormApp.cpp" />
     <ClCompile Include="..\src\FormDoc.cpp" />
     <ClCompile Include="..\src\FormView.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -21,6 +21,7 @@ public:
 
     void AddComboBoxBand(int height);
     void ConnectEvents();
+    virtual HWND Create(HWND parent = 0);
     void DisconnectEvents();
     IWebBrowser2* GetIWebBrowser2() const { return m_browser.GetIWebBrowser2(); }
     const CEdit* GetCBEdit() const  { return m_combo.GetCBEdit(); }

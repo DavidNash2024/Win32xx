@@ -22,6 +22,7 @@
     <ClCompile Include="..\src\App.cpp" />
     <ClCompile Include="..\src\CustomStatusBar.cpp" />
     <ClCompile Include="..\src\Hyperlink.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp" />
     <ClCompile Include="..\src\View.cpp" />

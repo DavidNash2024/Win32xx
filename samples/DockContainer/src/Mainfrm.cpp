@@ -18,18 +18,24 @@
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_hideSingleTab(TRUE)
 {
+}
+
+// Destructor for CMainFrame.
+CMainFrame::~CMainFrame()
+{
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
     //Set m_View as the view window of the frame
     SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
     LoadRegistrySettings(_T("Win32++\\DockContainer"));
-}
 
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
-
+    return CDockFrame::Create(parent);
 }
 
 // Hides or shows the tab for a container with a single tab.

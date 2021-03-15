@@ -22,6 +22,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
+    virtual HWND Create(HWND parent = 0);
     void DoPopupMenu();
     CMyListView& GetListView() const {return static_cast<CMyListView&>(m_rightPane.GetView());}
     CMyTreeView& GetTreeView() const {return static_cast<CMyTreeView&>(m_pLeftPane->GetView());}

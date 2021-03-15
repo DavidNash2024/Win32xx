@@ -30,7 +30,7 @@ class CMainFrame : public CDockFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-
+    virtual HWND Create(HWND parent = 0);
     void LoadDefaultDockers();
     BOOL On3DBorder();
     BOOL OnDockCloseAll();

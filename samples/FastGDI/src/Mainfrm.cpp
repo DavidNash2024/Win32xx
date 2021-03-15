@@ -13,6 +13,16 @@
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame()
 {
+}
+
+// Destructor for CMainFrame.
+CMainFrame::~CMainFrame()
+{
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
     //Set m_MyView as the view window of the frame
     SetView(m_view);
 
@@ -22,11 +32,8 @@ CMainFrame::CMainFrame()
 
     // Load the settings from the registry with 4 MRU entries
     LoadRegistryMRUSettings(4);
-}
 
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
+    return CFrame::Create(parent);
 }
 
 // Displays the Color Adjust dialog to choose the red, blue and green adjustments.

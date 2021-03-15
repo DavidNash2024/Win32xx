@@ -18,6 +18,8 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
+    virtual HWND Create(HWND parent = 0);
+
     CDXView& GetDXView() const { return m_dxView; }
 
     BOOL OnFileExit();

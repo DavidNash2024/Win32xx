@@ -21,7 +21,7 @@ class CMainMDIFrame : public CMDIFrame
 public:
     CMainMDIFrame();
     virtual ~CMainMDIFrame();
-
+    virtual HWND Create(HWND parent = 0);
     BOOL OnFileClose();
     BOOL OnFileExit();
     BOOL OnFileNew();

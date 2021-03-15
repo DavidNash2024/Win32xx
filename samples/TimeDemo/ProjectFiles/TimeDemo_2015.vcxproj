@@ -88,6 +88,7 @@
     <ClCompile Include="..\src\AboutBox.cpp" />
     <ClCompile Include="..\src\App.cpp" />
     <ClCompile Include="..\src\Doc.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\MRU.cpp" />
     <ClCompile Include="..\src\stdafx.cpp" />

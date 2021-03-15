@@ -189,6 +189,7 @@
 		</Unit>
 		<Unit filename="../src/View.cpp" />
 		<Unit filename="../src/View.h" />
+		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.cpp" />
 		<Unit filename="../src/stdafx.h">

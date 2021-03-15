@@ -17,6 +17,16 @@
 // Constructor.
 CMainFrame::CMainFrame() : m_isWrapped(false), m_oldFocus(0)
 {
+}
+
+// Destructor.
+CMainFrame::~CMainFrame()
+{
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
     SetView(m_richView);
 
     // Set the registry key name, and load the initial window position
@@ -25,11 +35,8 @@ CMainFrame::CMainFrame() : m_isWrapped(false), m_oldFocus(0)
 
     // Load the settings from the registry with 5 MRU entries
     LoadRegistryMRUSettings(5);
-}
 
-// Destructor.
-CMainFrame::~CMainFrame()
-{
+    return CFrame::Create(parent);
 }
 
 // Stream in callback function. Reads from file.

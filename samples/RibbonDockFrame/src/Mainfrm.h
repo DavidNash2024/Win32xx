@@ -19,7 +19,7 @@ class CMainFrame : public CRibbonDockFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-
+    virtual HWND Create(HWND parent = 0);
     CDoc& GetDoc() { return m_doc; }
     void LoadFile(LPCTSTR fileName);
     void MRUFileOpen(UINT mruIndex);

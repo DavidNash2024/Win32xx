@@ -27,15 +27,26 @@
     CMainFrame::
 CMainFrame()                                                                /*
 
-    Construct and initiallize the CMainFrame object from the IDD_MAIN_DIALOG
+    Construct and initialize the CMainFrame object from the IDD_MAIN_DIALOG
     resource defined in resource.rc. Note that the initial window location and
     size are set here.
 *-----------------------------------------------------------------------------*/
     :   m_view(IDD_MAIN_DIALOG), m_maxMRU(0), m_isTextWrap(TRUE),
         m_frameXY(100, 100), m_frameSize(700, 600)
 {
-      // Set m_view as the view window of the frame
+}
+
+/*============================================================================*/
+    HWND CMainFrame::                                                        /*
+
+    Create the frame window.
+*-----------------------------------------------------------------------------*/
+Create(HWND parent)
+{
+    // Set m_view as the view window of the frame
     SetView(m_view);
+
+    return CFrame::Create(parent);
 }
 
 /*============================================================================*/

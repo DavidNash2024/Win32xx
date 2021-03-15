@@ -67,8 +67,6 @@
 
 namespace Win32xx
 {
-    class CPropertyPage;
-    typedef Shared_Ptr<CPropertyPage> PropertyPagePtr;
 
 
     /////////////////////////////////////////////////////////////

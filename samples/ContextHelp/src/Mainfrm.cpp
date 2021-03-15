@@ -14,6 +14,24 @@
 // Constructor
 CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
 {
+}
+
+// Destructor for CMainFrame.
+CMainFrame::~CMainFrame()
+{
+}
+
+// Enables choose topic mode
+void CMainFrame::ChooseHelpTopic()
+{
+    ::SetCursor(::LoadCursor(NULL, IDC_HELP));
+    SetCapture();
+    m_isChoosing = TRUE;
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
     // Set the modeless dialog as the view window of the frame
     SetView(m_view);
 
@@ -79,19 +97,8 @@ CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
     aboutBoxInfo += _T(" on ") + CString(__DATE__);
     aboutBoxInfo += _T("\n") + win32Version;
     m_appHelp.SetCredits(aboutBoxInfo);
-}
 
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
-}
-
-// Enables choose topic mode
-void CMainFrame::ChooseHelpTopic()
-{
-    ::SetCursor(::LoadCursor(NULL, IDC_HELP));
-    SetCapture();
-    m_isChoosing = TRUE;
+    return CFrame::Create(parent);
 }
 
 // Return a string consisting of the APPDATA folder with the specified

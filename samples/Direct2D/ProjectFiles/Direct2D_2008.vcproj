@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\StdAfx.cpp"
 				>
 				<FileConfiguration

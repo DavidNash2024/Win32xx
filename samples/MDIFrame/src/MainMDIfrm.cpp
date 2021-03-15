@@ -14,14 +14,21 @@
 // Constructor.
 CMainMDIFrame::CMainMDIFrame()
 {
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\MDI Frame"));
 }
 
 // Destructor.
 CMainMDIFrame::~CMainMDIFrame()
 {
+}
+
+// Create the MDI frame window.
+HWND CMainMDIFrame::Create(HWND parent)
+{
+    // Set the registry key name, and load the initial window position
+    // Use a registry key name like "CompanyName\\Application"
+    LoadRegistrySettings(_T("Win32++\\MDI Frame"));
+
+    return CMDIFrame::Create(parent);
 }
 
 // Respond to input from the menu and toolbar.

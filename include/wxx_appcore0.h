@@ -297,20 +297,26 @@ namespace Win32xx
     class CClientDCEx;
     class CDataExchange;
     class CDC;
+    class CDocker;
     class CFont;
     class CGDIObject;
     class CImageList;
+    class CMDIChild;
     class CMemDC;
     class CMenu;
     class CMenuBar;
     class CPaintDC;
     class CPalette;
     class CPen;
+    class CPropertyPage;
     class CRgn;
     class CWinApp;
+    class CWinThread;
     class CWindowDC;
     class CWnd;
     struct CDC_Data;
+    struct MenuItemData;
+    struct TLSData;
 
     // tString is a TCHAR std::string
     typedef std::basic_string<TCHAR> tString;
@@ -319,17 +325,41 @@ namespace Win32xx
   #endif
 
     // Some useful smart pointers
-    typedef Shared_Ptr<CDC> DCPtr;
-    typedef Shared_Ptr<CGDIObject> GDIPtr;
-    typedef Shared_Ptr<CMenu> MenuPtr;
-    typedef Shared_Ptr<CWnd> WndPtr;
+    // Note: Modern C++ compilers can use these typedefs instead.
+    // typedef std::shared_ptr<CBitmap> BitmapPtr;
+    // typedef std::shared_ptr<CBrush> BrushPtr;
+    // typedef std::shared_ptr<CDC> DCPtr;
+    // typedef std::shared_ptr<CDocker> DockPtr;
+    // typedef std::shared_ptr<CFont> FontPtr;
+    // typedef std::shared_ptr<CGDIObject> GDIPtr;
+    // typedef std::shared_ptr<CImageList> ImageListPtr;
+    // typedef std::shared_ptr<CMDIChild> MDIChildPtr;
+    // typedef std::shared_ptr<CMenu> MenuPtr;
+    // typedef std::shared_ptr<MenuItemData> ItemDataPtr;
+    // typedef std::shared_ptr<CPalette> PalettePtr;
+    // typedef std::shared_ptr<CPen> PenPtr;
+    // typedef std::shared_ptr<CPropertyPage> PropertyPagePtr;
+    // typedef std::shared_ptr<CRgn> RgnPtr;
+    // typedef std::shared_ptr<TLSData> TLSDataPtr;
+    // typedef std::shared_ptr<CWinThread> ThreadPtr;
+    // typedef std::shared_ptr<CWnd> WndPtr;
     typedef Shared_Ptr<CBitmap> BitmapPtr;
     typedef Shared_Ptr<CBrush> BrushPtr;
+    typedef Shared_Ptr<CDC> DCPtr;
+    typedef Shared_Ptr<CDocker> DockPtr;
     typedef Shared_Ptr<CFont> FontPtr;
+    typedef Shared_Ptr<CGDIObject> GDIPtr;
     typedef Shared_Ptr<CImageList> ImageListPtr;
+    typedef Shared_Ptr<CMDIChild> MDIChildPtr;
+    typedef Shared_Ptr<CMenu> MenuPtr;
+    typedef Shared_Ptr<MenuItemData> ItemDataPtr;
     typedef Shared_Ptr<CPalette> PalettePtr;
     typedef Shared_Ptr<CPen> PenPtr;
+    typedef Shared_Ptr<CPropertyPage> PropertyPagePtr;
     typedef Shared_Ptr<CRgn> RgnPtr;
+    typedef Shared_Ptr<TLSData> TLSDataPtr;
+    typedef Shared_Ptr<CWinThread> ThreadPtr;
+    typedef Shared_Ptr<CWnd> WndPtr;
 
 
     // A structure that contains the data members for CGDIObject.
@@ -575,8 +605,6 @@ namespace Win32xx
         friend class CPrintDialog;
         friend class CPageSetupDialog;
         friend CWinApp* GetApp();
-
-        typedef Shared_Ptr<TLSData> TLSDataPtr;
 
     public:
         CWinApp();

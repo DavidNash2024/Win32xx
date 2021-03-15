@@ -28,6 +28,7 @@ class CMainFrame : public CDockFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
+    virtual HWND Create(HWND parent = 0);
     void LoadDefaultDockers();
     BOOL OnContainerTabsAtTop();
     BOOL OnDockCloseAll();

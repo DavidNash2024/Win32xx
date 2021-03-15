@@ -22,17 +22,24 @@
 CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_isHideSingleTab(TRUE),
                             m_isMDITabsAtTop(TRUE), m_pActiveDocker(NULL)
 {
+}
+
+// Destructor for CMainFrame.
+CMainFrame::~CMainFrame()
+{
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
     //Set m_MyTabbedMDI as the view window of the frame
     SetView(m_myTabbedMDI);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
     LoadRegistrySettings(_T("Win32++\\TabbedMDI Docking"));
-}
 
-// Destructor for CMainFrame.
-CMainFrame::~CMainFrame()
-{
+    return CDockFrame::Create(parent);
 }
 
 // Hides or shows tabs for containers with a single tab.

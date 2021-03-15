@@ -16,7 +16,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-
+    virtual HWND Create(HWND parent = 0);
     void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray);
     void OnAdjustImage();
     void OnFileExit();

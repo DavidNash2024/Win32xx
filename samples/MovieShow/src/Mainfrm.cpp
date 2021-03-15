@@ -81,28 +81,6 @@ CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_pDockTree(0), m_pDockDi
                            m_isDirty(false), m_boxSetsItem(0), m_dialogWidth(0),
                            m_treeHeight(0)
 {
-    //Set m_View as the view window of the frame
-    SetView(m_viewList);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(L"Win32++\\MovieShow");
-
-    m_genres.push_back(L"Action, Crime, Thriller, War, Western");
-    m_genres.push_back(L"Adventure, Horror, Fantasy, Science Fiction");
-    m_genres.push_back(L"Animation, Family");
-    m_genres.push_back(L"Comedy");
-    m_genres.push_back(L"Documentary, History, Music, TV Movie");
-    m_genres.push_back(L"Drama, Romance");
-
-    int currentYear = CTime::GetCurrentTime().GetYear();
-    m_decades.push_back(L"1900 - 1949");
-    for (int year = 1950; year <= currentYear; year += 10)
-    {
-        CString str;
-        str.Format(L"%d - %d", year, year + 9);
-        m_decades.push_back(str);
-    }
 }
 
 // Destructor.
@@ -125,6 +103,35 @@ void CMainFrame::ClearDisplay()
 void CMainFrame::ClearList()
 {
     GetViewList().DeleteAllItems();
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
+    //Set m_View as the view window of the frame
+    SetView(m_viewList);
+
+    // Set the registry key name, and load the initial window position
+    // Use a registry key name like "CompanyName\\Application"
+    LoadRegistrySettings(L"Win32++\\MovieShow");
+
+    m_genres.push_back(L"Action, Crime, Thriller, War, Western");
+    m_genres.push_back(L"Adventure, Horror, Fantasy, Science Fiction");
+    m_genres.push_back(L"Animation, Family");
+    m_genres.push_back(L"Comedy");
+    m_genres.push_back(L"Documentary, History, Music, TV Movie");
+    m_genres.push_back(L"Drama, Romance");
+
+    int currentYear = CTime::GetCurrentTime().GetYear();
+    m_decades.push_back(L"1900 - 1949");
+    for (int year = 1950; year <= currentYear; year += 10)
+    {
+        CString str;
+        str.Format(L"%d - %d", year, year + 9);
+        m_decades.push_back(str);
+    }
+
+    return CDockFrame::Create(parent);
 }
 
 // Converts a text string to a byte stream.

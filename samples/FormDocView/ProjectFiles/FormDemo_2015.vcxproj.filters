@@ -16,6 +16,9 @@
     <ClCompile Include="..\src\StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\FormApp.h">
@@ -80,10 +83,10 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_preview.h">
       <Filter>Win32++</Filter>
-    </ClInclude>	
+    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h">
       <Filter>Win32++</Filter>
-    </ClInclude>	
+    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h">
       <Filter>Win32++</Filter>
     </ClInclude>

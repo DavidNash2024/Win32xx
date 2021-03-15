@@ -33,8 +33,8 @@ CMainFrame : public CFrame                                                  /*
 {
     public:
         CMainFrame(void);
-        virtual       ~CMainFrame(){}
-
+        virtual      ~CMainFrame(){}
+        virtual     HWND Create(HWND parent = 0);
         CDoc&       TheDoc()      {return m_view.TheDoc();}
 
         AboutBox&   GetAboutBox()   { return m_aboutDialog; }

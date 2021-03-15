@@ -81,8 +81,6 @@
 
 namespace Win32xx
 {
-    class CMDIChild;
-    typedef Shared_Ptr<CMDIChild> MDIChildPtr;
 
     ///////////////////////////////////////////////////////////////
     // CMDIChild manages a MDI child window. CMDIChild also manages
