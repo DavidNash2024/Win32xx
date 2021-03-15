@@ -18,8 +18,6 @@
 #include "stdafx.h"
 #include "App.h"
 
-  // the one and only CApp object, not on the stack for efficiency
-CApp theApp;
 
 /*============================================================================*/
     BOOL CApp::
