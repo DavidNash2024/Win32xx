@@ -189,6 +189,7 @@
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.h">
 			<Option compile="1" />

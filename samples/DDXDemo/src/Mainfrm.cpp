@@ -33,19 +33,30 @@ static const LPCTSTR registryKeyName = _T("Win32++\\DDX-DDVDemo");
     CMainFrame::
 CMainFrame()                                                                /*
 
-    Construct the CMainFrame and load the persistent frame and view parameters
+    Construct the CMainFrame.
+*-----------------------------------------------------------------------------*/
+    : m_view(IDD_MAIN_DIALOG)
+{
+}
+
+/*============================================================================*/
+    HWND CMainFrame::
+Create(HWND parent)                                                          /*
+
+    Create the frame window and load the persistent frame and view parameters
     that will have been saved in previous invocations of the program via
     the registry in the key section 'Software\<key name>\Frame Settings'.
     Also load the document's saved parameters from the
     'Software\<key name>\Document Settings' key.
 
     Note: the <key name> used here refers to the registerKeyName above.
-*-----------------------------------------------------------------------------*/
-    : m_view(IDD_MAIN_DIALOG)
+* ---------------------------------------------------------------------------- - */
 {
-      //Set m_View as the view window of the frame
+      // Set m_View as the view window of the frame.
     SetView(m_view);
     LoadRegistrySettings(registryKeyName);
+
+    return CFrame::Create(parent);
 }
 
 /*============================================================================*/

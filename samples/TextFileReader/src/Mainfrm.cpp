@@ -31,8 +31,19 @@ CMainFrame()                                                                /*
     m_cyWin  = 400;
     ZeroMemory(&m_wndPl, sizeof(WINDOWPLACEMENT));
     m_wndPl.length = sizeof(WINDOWPLACEMENT);
-      // Set m_View as the view window of the frame
+}
+
+/*============================================================================*/
+    HWND CMainFrame::
+Create(HWND parent)                                                         /*
+
+    Create the frame window.
+*-----------------------------------------------------------------------------*/
+{
+     // Set m_View as the view window of the frame
     SetView(m_view);
+
+    return CFrame::Create(parent);
 }
 
 /*============================================================================*/

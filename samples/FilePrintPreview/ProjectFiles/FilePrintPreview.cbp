@@ -190,6 +190,7 @@
 		<Unit filename="../src/RichView.cpp" />
 		<Unit filename="../src/RichView.h" />
 		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.h" />
 		<Unit filename="../src/targetver.h" />

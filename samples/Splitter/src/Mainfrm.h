@@ -17,7 +17,7 @@ class CMainFrame : public CDockFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-
+    virtual HWND Create(HWND parent = 0);
     BOOL OnFileExit();
     BOOL OnViewList();
     BOOL OnViewText();

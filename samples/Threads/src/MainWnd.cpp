@@ -13,7 +13,7 @@
 CMainWindow::CMainWindow() : m_windowsCount(0)
 {
     // Set the number of threads
-    m_maxWindows = 900;
+    m_maxWindows = 20;
 
     // A couple of notes in case you're tempted to test how many threads with test windows can be created ...
 

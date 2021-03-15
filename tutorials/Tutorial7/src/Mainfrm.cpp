@@ -9,13 +9,20 @@
 // Constructor.
 CMainFrame::CMainFrame()
 {
-    // Set m_View as the view window of the frame
-    SetView(m_view);
 }
 
 // Destructor.
 CMainFrame::~CMainFrame()
 {
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
+    // Set m_View as the view window of the frame
+    SetView(m_view);
+
+    return CFrame::Create(parent);
 }
 
 // Process the messages from the Menu and Toolbar

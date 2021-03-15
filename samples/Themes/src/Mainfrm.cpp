@@ -9,25 +9,20 @@
 ///////////////////////////////////
 // CMainFrame function definitions.
 //
+
+// Constructor for CMainFrame. Its called after CFrame's constructor.
 CMainFrame::CMainFrame() : m_color(IDM_BLUE), m_useThemes(TRUE), m_useBandColors(TRUE), m_useFlatStyle(FALSE),
                             m_keepBandsLeft(TRUE), m_lockMenuBand(TRUE), m_useRoundBorders(TRUE),
                             m_useShortBands(TRUE), m_useLines(FALSE), m_showArrows(TRUE), m_showCards(TRUE)
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
-
-    //Set m_View as the view window of the frame
-    SetView(m_view);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\Themes Sample"));
 }
 
+// Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
-    // Destructor for CMainFrame.
 }
 
+// Adds a comboBoxEx to the toolbar.
 void CMainFrame::AddCombo()
 {
     // We'll be placing the ComboBoxEx control over the 'File Save' toolbar button
@@ -228,8 +223,21 @@ BOOL CMainFrame::ChooseColor(UINT color)
     return TRUE;
 }
 
-LRESULT CMainFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
+    //Set m_View as the view window of the frame
+    SetView(m_view);
+
+    // Set the registry key name, and load the initial window position
+    // Use a registry key name like "CompanyName\\Application"
+    LoadRegistrySettings(_T("Win32++\\Themes Sample"));
+
+    return CFrame::Create(parent);
+}
+
 // Set the text color for the menubar
+LRESULT CMainFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
 {
     LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
 
@@ -319,10 +327,9 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
     return TRUE;
 }
 
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -357,11 +364,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
@@ -546,8 +552,8 @@ BOOL CMainFrame::OnLockMenuBar()
     return TRUE;
 }
 
+// Called just before the menu is displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
-// Called just before the menu is displayed
 {
     // Update the check buttons before displaying the menu
     switch(id)

@@ -13,22 +13,28 @@
 //////////////////////////////////////
 // CMainMDIFrame function definitions.
 //
+
+// Constructor for CMainMDIFrame.
 CMainMDIFrame::CMainMDIFrame()
 {
-    // Constructor for CMainMDIFrame.
+}
 
+// Destructor for CMainMDIFrame.
+CMainMDIFrame::~CMainMDIFrame()
+{
+}
+
+// Create the MDI frame window.
+HWND CMainMDIFrame::Create(HWND parent)
+{
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
     LoadRegistrySettings(L"Win32++\\Ribbon MDI Frame");
 
     // Load the settings from the registry with 4 MRU entries
     LoadRegistryMRUSettings(4);
-}
 
-CMainMDIFrame::~CMainMDIFrame()
-{
-    // Destructor for CMainMDIFrame.
-    DestroyRibbon();
+    return CRibbonMDIFrame::Create(parent);
 }
 
 COLORREF CMainMDIFrame::GetColorFromPicker() const
@@ -42,11 +48,10 @@ COLORREF CMainMDIFrame::GetColorFromPicker() const
     return color;
 }
 
+// This function is called when a ribbon button is pressed.
+// Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation.
 STDMETHODIMP CMainMDIFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    // This function is called when a ribbon button is pressed.
-    // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation
-
     UNREFERENCED_PARAMETER(key);
 
     if (UI_EXECUTIONVERB_EXECUTE == verb)
@@ -129,10 +134,9 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
     return result;
 }
 
+// Process the messages from the (non-ribbon) Menu and Tool Bar.
 BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Process the messages from the (non-ribbon) Menu and Tool Bar
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -210,10 +214,9 @@ void CMainMDIFrame::OnMDIRestore()
     MDIRestore();
 }
 
+// Called when the DropdownColorPicker button is pressed.
 void CMainMDIFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    // DropdownColorPicker button pressed
-
     if (ppropvarValue != NULL)
     {
         // Retrieve color type.
@@ -237,9 +240,9 @@ void CMainMDIFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimpleProper
     }
 }
 
+// Set the Pen Color when a color toolbar button is pressed.
+// Called by OnCommand when there isn't a ribbon.
 void CMainMDIFrame::SetPenColor(COLORREF clr)
-// Set the Pen Color when a color toolbar button is pressed
-// Called by OnCommand when there isn't a ribbon
 {
     if (GetActiveMDIChild())
     {
@@ -249,8 +252,8 @@ void CMainMDIFrame::SetPenColor(COLORREF clr)
     }
 }
 
-void CMainMDIFrame::SetupToolBar()
 // Configures the ToolBar. Used when there isn't a ribbon.
+void CMainMDIFrame::SetupToolBar()
 {
     // Define our toolbar buttons. Used when there isn't a ribbon.
     AddToolBarButton( IDM_FILE_NEW   );
@@ -270,10 +273,10 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// This function is called when a ribbon button is updated.
+// Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation.
 STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue)
 {
-    // This function is called when a ribbon button is updated.
-    // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
     UNREFERENCED_PARAMETER(currentValue);
 
     HRESULT result = E_NOTIMPL;
@@ -306,8 +309,8 @@ STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key
     return result;
 }
 
+// Called to handle the window's messages.
 LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-// Called to handle the window's messages
 {
     switch (msg)
     {

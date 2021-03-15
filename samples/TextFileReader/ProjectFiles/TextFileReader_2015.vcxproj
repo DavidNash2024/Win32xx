@@ -23,6 +23,7 @@
     <ClCompile Include="..\src\App.cpp" />
     <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\FontEx.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

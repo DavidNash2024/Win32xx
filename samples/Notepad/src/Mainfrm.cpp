@@ -22,14 +22,6 @@
 // Constructor.
 CMainFrame::CMainFrame() : m_encoding(ANSI), m_isWrapped(false), m_isRTF(false), m_oldFocus(0)
 {
-    SetView(m_richView);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\Notepad Sample"));
-
-    // Load the settings from the registry with 5 MRU entries
-    LoadRegistryMRUSettings(5);
 }
 
 // Destructor.
@@ -51,6 +43,21 @@ void CMainFrame::ClearContents()
     VERIFY(m_richView.SetTextMode(mode) == 0);
 
     SetStatusIndicators();
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
+    SetView(m_richView);
+
+    // Set the registry key name, and load the initial window position
+    // Use a registry key name like "CompanyName\\Application"
+    LoadRegistrySettings(_T("Win32++\\Notepad Sample"));
+
+    // Load the settings from the registry with 5 MRU entries
+    LoadRegistryMRUSettings(5);
+
+    return CFrame::Create(parent);
 }
 
 // Determines the encoding of the specified file.

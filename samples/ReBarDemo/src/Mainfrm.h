@@ -17,7 +17,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-
+    virtual HWND Create(HWND parent = 0);
     BOOL OnFileExit();
     void OnBottom();
     void OnLeft();

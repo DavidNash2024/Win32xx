@@ -12,10 +12,20 @@
 ///////////////////////////////////
 // CMainFrame function definitions.
 //
+
+// Constructor for CMainFrame.
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
+}
 
+// Destructor for CMainFrame.
+CMainFrame::~CMainFrame()
+{
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
     // Set m_View as the view window of the frame
     SetView(m_view);
 
@@ -25,19 +35,14 @@ CMainFrame::CMainFrame()
 
     // Load the settings from the registry with 4 MRU entries
     LoadRegistryMRUSettings(4);
+
+    return CRibbonFrame::Create(parent);
 }
 
-CMainFrame::~CMainFrame()
-{
-    // Destructor for CMainFrame.
-    DestroyRibbon();
-}
-
+// This function is called when a ribbon button is pressed.
+// Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation
 STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    // This function is called when a ribbon button is pressed.
-    // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation
-
     if (UI_EXECUTIONVERB_EXECUTE == verb)
     {
         switch(cmdID)
@@ -91,16 +96,16 @@ void CMainFrame::MRUFileOpen(UINT mruIndex)
     }
 }
 
+// Called in response to the UWM_DROPFILE user defined message.
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
-// Called in response to the UWM_DROPFILE user defined message
 {
     try
     {
-        // wParam is a pointer (LPCTSTR) to the filename
+        // wParam is a pointer (LPCTSTR) to the filename.
         LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
         assert(fileName);
 
-        // Load the file
+        // Load the file.
         LoadFile(fileName);
     }
 
@@ -135,10 +140,9 @@ void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
     }
 }
 
+// Called when the DropdownColorPicker button is pressed.
 void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-     // DropdownColorPicker button pressed
-
     if (ppropvarValue != NULL)
     {
         // Retrieve color type.
@@ -158,16 +162,15 @@ void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
     }
 }
 
+// Used when there isn't a ribbon.
 void CMainFrame::SetPenColor(COLORREF clr)
 {
-    // Used when there isn't a ribbon
     m_view.SetPenColor(clr);
 }
 
+// Process the messages from the (non-ribbon) Menu and Tool Bar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Process the messages from the (non-ribbon) Menu and Tool Bar
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -211,8 +214,8 @@ void CMainFrame::OnFileExit()
     Close();
 }
 
-void CMainFrame::LoadFile(LPCTSTR fileName)
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
+void CMainFrame::LoadFile(LPCTSTR fileName)
 {
     try
     {
@@ -331,9 +334,8 @@ void CMainFrame::OnFilePrint()
     }
 }
 
-
-void CMainFrame::SetupToolBar()
 // Configures the ToolBar. Used when there isn't a ribbon.
+void CMainFrame::SetupToolBar()
 {
     // Define our toolbar buttons. Used when there isn't a ribbon.
     AddToolBarButton( IDM_FILE_NEW   );
@@ -353,10 +355,10 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+// This function is called when a ribbon button is updated.
+// Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
 STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue)
 {
-    // This function is called when a ribbon button is updated.
-    // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
     UNREFERENCED_PARAMETER(currentValue);
 
     HRESULT result = E_NOTIMPL;
@@ -389,8 +391,8 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  
     return result;
 }
 
+// Called to handle the window's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-// Called to handle the window's messages
 {
     switch (msg)
     {

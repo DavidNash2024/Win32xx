@@ -103,6 +103,10 @@ SOURCE=..\src\Hyperlink.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\main.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File

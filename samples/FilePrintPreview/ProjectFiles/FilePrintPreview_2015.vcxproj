@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\App.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\PrintPreview.cpp" />
     <ClCompile Include="..\src\PrintUtil.cpp" />

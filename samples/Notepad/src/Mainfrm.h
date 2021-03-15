@@ -27,7 +27,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-
+    virtual HWND Create(HWND parent = 0);
     static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
     static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
 

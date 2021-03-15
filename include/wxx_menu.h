@@ -625,7 +625,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        CMenu* pMenu = new CMenu;
+        MenuPtr pMenu(new CMenu);
         if (m_pData)
         {
             assert(IsMenu(m_pData->menu));

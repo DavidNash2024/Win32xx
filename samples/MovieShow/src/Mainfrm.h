@@ -33,7 +33,7 @@ public:
 
     CMainFrame();
     virtual ~CMainFrame();
-
+    virtual HWND Create(HWND parent = 0);
     void ClearDisplay();
     void ClearList();
     void FillImageData(const CString& source, std::vector<BYTE>& dest);

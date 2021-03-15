@@ -117,7 +117,6 @@ namespace Win32xx
     class CDockContainer;
     class CDocker;
 
-    typedef Shared_Ptr<CDocker> DockPtr;
 
     struct ContainerInfo
     {

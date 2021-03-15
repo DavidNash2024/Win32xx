@@ -20,6 +20,7 @@ public:
     virtual ~CMainFrame();
 
     void    ChooseHelpTopic();
+    virtual HWND Create(HWND parent = 0);
     CString CreateAppDataFolder(const CString& subfolder);
     CDoc&   GetDoc()    { return m_view.GetDoc(); }
     UINT    GetIDFromCursorPos();

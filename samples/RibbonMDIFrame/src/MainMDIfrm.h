@@ -17,7 +17,7 @@ class CMainMDIFrame : public CRibbonMDIFrame
 public:
     CMainMDIFrame();
     virtual ~CMainMDIFrame();
-
+    virtual HWND Create(HWND parent = 0);
     COLORREF GetColorFromPicker() const;
     CDoc& GetDoc() { return m_doc; }
 

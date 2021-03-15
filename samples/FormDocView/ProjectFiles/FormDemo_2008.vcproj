@@ -193,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.cpp"
 				>
 			</File>
@@ -356,9 +360,9 @@
 				RelativePath="..\..\..\include\wxx_mutex.h"
 				>
 			</File>
-            <File
-                RelativePath="..\..\..\include\wxx_preview.h"
-		        >
+			<File
+				RelativePath="..\..\..\include\wxx_preview.h"
+				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_printdialogs.h"

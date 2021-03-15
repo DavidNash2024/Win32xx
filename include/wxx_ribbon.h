@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -137,6 +137,8 @@ namespace Win32xx
             WCHAR m_fullPath[MAX_PATH];
         };
 
+        // Note: Modern C++ compilers can use this typedef instead.
+        // typedef std::shared_ptr<CRecentFiles> RecentFilesPtr;
         typedef Shared_Ptr<CRecentFiles> RecentFilesPtr;
 
         CRibbonFrameT() {}
@@ -490,9 +492,9 @@ namespace Win32xx
                 WCHAR curFileName[MAX_PATH] = {0};
                 StrCopyW(curFileName, TtoW(*iter), MAX_PATH);
 
-                CRecentFiles* pRecentFiles = new CRecentFiles(curFileName);
-                m_recentFiles.push_back(RecentFilesPtr(pRecentFiles));
-                result = SafeArrayPutElement(psa, &currentFile, static_cast<void*>(pRecentFiles));
+                RecentFilesPtr pRecentFiles(new CRecentFiles(curFileName));
+                m_recentFiles.push_back(pRecentFiles);
+                result = SafeArrayPutElement(psa, &currentFile, static_cast<void*>(pRecentFiles.get()));
                 ++currentFile;
             }
 

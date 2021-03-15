@@ -41,6 +41,9 @@
     <ClCompile Include="..\src\FontEx.cpp">
       <Filter>SourceFiles</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>SourceFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\AboutBox.h">

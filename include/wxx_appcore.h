@@ -774,9 +774,10 @@ namespace Win32xx
         if (NULL == pTLSData)
         {
             pTLSData = new TLSData;
+            TLSDataPtr dataPtr(pTLSData);
 
             CThreadLock TLSLock(m_appLock);
-            m_allTLSData.push_back(pTLSData); // store as a Shared_Ptr
+            m_allTLSData.push_back(dataPtr); // store as a smart pointer
 
             ::TlsSetValue(m_tlsData, pTLSData);
         }

@@ -9,27 +9,33 @@
 ///////////////////////////////////
 // CMainFrame function definitions.
 //
+
+// Constructor for CMainFrame. Its called after CFrame's constructor.
 CMainFrame::CMainFrame()
 {
-    // Constructor for CMainFrame. Its called after CFrame's constructor
+}
 
+// Destructor for CMainFrame.
+CMainFrame::~CMainFrame()
+{
+}
+
+// Create the frame window.
+HWND CMainFrame::Create(HWND parent)
+{
     //Set m_View as the view window of the frame
     SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\Frame"));
+    LoadRegistrySettings(_T("Win32++\\WinPlot"));
+
+    return CFrame::Create(parent);
 }
 
-CMainFrame::~CMainFrame()
-{
-    // Destructor for CMainFrame.
-}
-
+// OnCommand responds to menu and and toolbar input
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // OnCommand responds to menu and and toolbar input
-
     UNREFERENCED_PARAMETER(lparam);
 
     UINT id = LOWORD(wparam);
@@ -45,11 +51,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
+// OnCreate controls the way the frame is created.
+// Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // OnCreate controls the way the frame is created.
-    // Overriding CFrame::OnCreate is optional.
-
     // A menu is added if the IDW_MAIN menu resource is defined.
     // Frames have all options enabled by default.
     // Use the following functions to disable options.

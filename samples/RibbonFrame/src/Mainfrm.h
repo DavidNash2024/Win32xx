@@ -18,7 +18,7 @@ class CMainFrame : public CRibbonFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-
+    virtual HWND Create(HWND parent = 0);
     CDoc& GetDoc() { return m_view.GetDoc(); }
     void LoadFile(LPCTSTR str);
     void MRUFileOpen(UINT mruIndex);

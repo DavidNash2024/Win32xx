@@ -330,7 +330,6 @@ namespace Win32xx
     template <class T>
     class CFrameT : public T
     {
-        typedef Shared_Ptr<MenuItemData> ItemDataPtr;
 
     public:
 

@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Hyperlink.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\CustomStatusBar.cpp" />
     <ClCompile Include="..\src\App.cpp" />

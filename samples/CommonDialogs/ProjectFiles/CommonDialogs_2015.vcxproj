@@ -90,6 +90,7 @@
     <ClCompile Include="..\src\ColorChoice.cpp" />
     <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\ListBoxDlg.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\MyFontDlg.cpp" />
     <ClCompile Include="..\src\PrintInfo.cpp" />

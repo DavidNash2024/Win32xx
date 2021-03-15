@@ -244,8 +244,7 @@ namespace Win32xx
 
     inline CAXHost::CAXHost() : m_hwnd(NULL), m_pUnk(NULL)
     {
-        HRESULT hr;
-        VERIFY(SUCCEEDED(hr = OleInitialize(NULL)));
+        VERIFY(SUCCEEDED(OleInitialize(NULL)));
     }
 
     inline CAXHost::~CAXHost()

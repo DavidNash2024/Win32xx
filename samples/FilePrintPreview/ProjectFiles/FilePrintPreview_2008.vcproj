@@ -185,6 +185,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\main.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.cpp"
 				>
 			</File>

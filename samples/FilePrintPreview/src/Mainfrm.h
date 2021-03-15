@@ -30,7 +30,7 @@ CMainFrame : public CFrame                                                  /*
     public:
         CMainFrame();
         virtual ~CMainFrame() {}
-
+        virtual HWND Create(HWND parent = 0);
         const CString& GetPath() const  { return m_path;}
         CRichView&  GetRichView()       { return m_richView; }
 
