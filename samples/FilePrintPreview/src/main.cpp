@@ -31,10 +31,14 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
     unused in this program.
 *-----------------------------------------------------------------------------*/
 {
-    CApp theApp;
+    
 
     try
-    {     // Start Win32++ and run the application: invoke theApp::InitInstance()
+    {
+          // Start Win32++
+        CApp theApp;
+
+          // run the application: invoke theApp::InitInstance()
           // and start the thread's message loop
         return theApp.Run();
     }
