@@ -30,7 +30,7 @@ CListBoxDlg : public CDialog                                                  /*
         virtual ~CListBoxDlg(){}
 
         void   AddListItem(LPCTSTR s)
-                          { m_listContent.push_back(s);}
+                   { m_listContent.push_back(s);}
         void    ClearList(){ m_listContent.clear();}
         void    OnCancel();
         void    OnOK();

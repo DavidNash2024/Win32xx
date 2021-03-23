@@ -427,18 +427,30 @@ namespace Win32xx
 
     inline CWinApp::CWinApp() : m_callback(NULL)
     {
-        if ( 0 != SetnGetThis() )
-        {
-            // Test if this is the only instance of CWinApp
-            throw CNotSupportedException(g_msgAppInstanceFailed);
-        }
+        CThreadLock appLock(m_appLock);
 
-        m_tlsData = ::TlsAlloc();
-        if (m_tlsData == TLS_OUT_OF_INDEXES)
+        try
         {
-            // We only get here in the unlikely event that all TLS indexes are already allocated by this app
-            // At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
-            throw CNotSupportedException(g_msgAppTLSFailed);
+            if (0 != SetnGetThis())
+            {
+                // Test if this is the only instance of CWinApp
+                throw CNotSupportedException(g_msgAppInstanceFailed);
+            }
+
+            m_tlsData = ::TlsAlloc();
+            if (m_tlsData == TLS_OUT_OF_INDEXES)
+            {
+                // We only get here in the unlikely event that all TLS indexes are already allocated by this app
+                // At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
+                throw CNotSupportedException(g_msgAppTLSFailed);
+            }
+        }
+        catch (const CException& e)
+        {
+            // Display the exception and rethrow.
+            MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+            throw;
         }
 
         SetnGetThis(this);

@@ -2884,7 +2884,7 @@ namespace Win32xx
         if (!m_pData) return 0;
 
         HBITMAP oldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
-        assert(oldBitmap != 0);     // SelectObject will fail if bitmap is invalid.
+        assert(oldBitmap != 0);     // asserts if bitmap is invalid or incompatable.
 
         return oldBitmap;
     }
