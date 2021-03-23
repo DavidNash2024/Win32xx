@@ -44,9 +44,9 @@ Create(HWND parent)                                                         /*
 *-----------------------------------------------------------------------------*/
 {
     SetView(m_richView);
-    // Set the registry key name, and load persistent data
+      // Set the registry key name, and load persistent data
     LoadRegistrySettings(FRAME_REGISTRY_KEY);
-    // Load the MRU settings from the registry: allow MAXMRU entries
+      // Load the MRU settings from the registry: allow MAXMRU entries
     LoadRegistryMRUSettings(MAXMRU);
 
     return CFrame::Create(parent);

@@ -17,8 +17,6 @@
 #include "stdafx.h"
 #include "App.h"
 
-
-
 /*******************************************************************************
 
     Windows program interface
@@ -31,9 +29,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
     unused in this program.
 *-----------------------------------------------------------------------------*/
 {
-    
-
-    try
+     try
     {
           // Start Win32++
         CApp theApp;

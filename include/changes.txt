@@ -10,12 +10,14 @@ Bug fixes:
 - Corrected CDC::GetNearestColor
 - Corrected CMDIFrameT<T>::OnViewStatusBar
 - Corrected CMDIFrameT<T>::OnViewToolBar()
-- CWnd::Close can now be used to close applications with a Ribbon UI.  
+- CWnd::Close can now be used to close applications with a Ribbon UI.
 
 New Features and Enhancements
 -----------------------------
 * Adds support for the Clang c++ compiler available with Microsoft's
 Visual Studio Community 2019.
+
+* Updated CPrintPreview to support changes to Windows 10.
 
 
 

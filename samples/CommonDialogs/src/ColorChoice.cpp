@@ -52,11 +52,11 @@ CColorChoice()                                                              /*
 
 /*============================================================================*/
     void CColorChoice::
-        AddColorChoice(UINT id, LPCTSTR usage, COLORREF color)                      /*
+AddColorChoice(UINT id, LPCTSTR usage, COLORREF color)                      /*
 
-            Add the (id, name, color) tuple to the color table, return TRUE on
-            success, FALSE otherwise.
-        *-----------------------------------------------------------------------------*/
+    Add the (id, name, color) tuple to the color table, return TRUE on
+    success, FALSE otherwise.
+*-----------------------------------------------------------------------------*/
 {
     ctl_color triplet;
     triplet.id = id;

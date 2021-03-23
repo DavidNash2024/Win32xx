@@ -33,7 +33,16 @@
 #include <stdlib.h>             // Add support for C style character conversions atoi etc.
 #include <tchar.h>              // Add support for C style TCHARs.
 
+// Add the Win32++ app core header file first
 #include <wxx_appcore.h>        // Add CCriticalSection, CObject, CWinThread, CWinApp
+
+// Add additionally required window SDK header files here
+// #include <dwmapi.h>
+// #include <uxtheme.h>
+// #include <vsstyle.h>
+// #include <vssym32.h>
+
+// Add remaining Win32++ header files
 #include <wxx_archive.h>        // Add CArchive
 #include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip

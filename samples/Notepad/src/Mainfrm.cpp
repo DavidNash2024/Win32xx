@@ -737,7 +737,10 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
         // Use RFT mode if the file has an rtf extension
         CString ext = file.GetFileNameExt();
         ext.MakeLower();
-        m_isRTF = (ext == _T("rtf"));
+        if (ext == _T("rtf"))
+            OnFileNewRich();
+        else
+            OnFileNewPlain();
 
         // set the EDITSTREAM mode
         int stream_mode = m_isRTF? SF_RTF : SF_TEXT;

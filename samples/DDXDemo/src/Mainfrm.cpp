@@ -41,7 +41,7 @@ CMainFrame()                                                                /*
 
 /*============================================================================*/
     HWND CMainFrame::
-Create(HWND parent)                                                          /*
+Create(HWND parent)                                                         /*
 
     Create the frame window and load the persistent frame and view parameters
     that will have been saved in previous invocations of the program via
