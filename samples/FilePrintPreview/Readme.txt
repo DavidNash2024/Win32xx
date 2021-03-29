@@ -53,7 +53,8 @@ Features demonstrated in this example
 * Adding custom controls and tool tips to a dialog.
 * Supporting OnDraw for a custom control used in a dialog.
 * The use of a memory device context and compatible bitmap to copy an image to.
-* The use of StretchBlt to scale an image copied from a compatible bitmap
+* Transfer of the bitmap image into a device-independent bitmap (DIB) for display.
+* The use of StretchDIBits to scale an image copied from the DIB to the screen.
 * A CPrintPreview class architecture that may be overridden to provide preview
   support for arbitrary applications.
 * The use of CRichEdit features in the base class methods that will normally be
