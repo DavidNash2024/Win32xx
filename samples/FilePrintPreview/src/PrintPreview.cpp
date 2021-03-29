@@ -24,8 +24,8 @@
 
     Program constants                                                       */
   // zoom states
-static const int    ZOOM_OUT    = 0;
-static const int    ZOOM_WIDTH  = 1;
+static const int    FIT_PAGE    = 0;
+static const int    FIT_WIDTH  = 1;
   // program options
 static const int    BORDER      =   20;     // pixels around rendered preview
 static const double PREVIEW_MIN =  2.0;     // minimum preview screen dimension
@@ -45,17 +45,18 @@ static const LPCTSTR PREVIEW_REGISTRY_KEY = _T("Software\\")
     CPrintPreviewEx::
 CPrintPreviewEx(DWORD flags /* = HIDE_HELP */ )                             /*
 
-    Construct the preview dialog object.
+    Construct the preview dialog object. Use a nominal screen size, to be
+    adjusted later for the actual monitor being used.
 *-----------------------------------------------------------------------------*/
     : CDialog(IDD_PRINTPREVIEW), m_dcMem(0)
 {
+    m_screenInches    = DSize(20.25, 11.5);  // a 20.25 x 11.5 monitor
+    m_previewInches   = DSize(8.0, 10.0);
     m_currentPage     = 0;
     m_flags           = flags;
-    m_screenInches    = DSize(20.25, 11.5);
-    m_previewInches   = DSize(8.0, 10.0);
     m_numPreviewPages = 0;
     m_shrink          = 0;
-    m_previewPane.SetPaneZoomState(ZOOM_OUT);
+    m_previewPane.SetPaneZoomState(FIT_PAGE);
  }
 
 /*============================================================================*/
@@ -67,7 +68,7 @@ ClosePreview()                                                              /*
 *-----------------------------------------------------------------------------*/
 {
     SaveSizesRegistry();
-    m_previewPane.SetPaneZoomState(ZOOM_OUT);
+    m_previewPane.SetPaneZoomState(FIT_PAGE);
     Close();
     return TRUE;
 }
@@ -162,7 +163,7 @@ InitializeContexts()                                                        /*
     CClientDC dcPreview = m_previewPane.GetDC();
       // compute the screen pixels/inch
     m_screenPixels = CSize(dcPreview.GetDeviceCaps(HORZRES),
-        dcPreview.GetDeviceCaps(VERTRES));
+                           dcPreview.GetDeviceCaps(VERTRES));
       // We will need to create a compatible bitmap in memory for the
       // preview. However, that may be too big for practicality, so we
       // will reduce the size of the memory bitmap from the full printer
@@ -172,11 +173,11 @@ InitializeContexts()                                                        /*
         double(m_printerDots.cy) / m_screenPixels.cy);
       // Create a memory DC for the printer
     m_dcMem = CMemDC(m_dcPrinter);
-      // Create a compatible bitmap in memory for the preview that reduces
-      // the size of the memory bitmap.
+      // Create a bitmap in memory for the preview compatible with the
+      // printer DC that reduces the size of the memory bitmap.
     CSize viewport((int)(m_printerDots.cx / m_shrink + 0.5),
-        (int)(m_printerDots.cy / m_shrink + 0.5));
-    m_dcMem.CreateCompatibleBitmap(dcPreview, viewport.cx, viewport.cy);
+                   (int)(m_printerDots.cy / m_shrink + 0.5));
+    m_dcMem.CreateCompatibleBitmap(m_dcPrinter, viewport.cx, viewport.cy);
       // set the mapping mode to translate between printer and screen
       // coordinates to utilize the bitmap dimensions
     m_dcMem.SetMapMode(MM_ANISOTROPIC);
@@ -298,11 +299,12 @@ OnInitDialog()                                                              /*
     InitializeControls();
       // add tooltips to the preview buttons
     InitializeToolTips();
+      // get the printer context, no collation and a single copy only
     CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
     m_dcPrinter = printDlg.GetPrinterDC();
       // Get the printer resolution,
     m_printerDots = CSize(m_dcPrinter.GetDeviceCaps(HORZRES),
-        m_dcPrinter.GetDeviceCaps(VERTRES));
+                          m_dcPrinter.GetDeviceCaps(VERTRES));
       // fill combo box with scale values
     PopulateScaleBox();
       // If screen and initial preview window sizes are initially out of
@@ -361,7 +363,7 @@ OnOK()                                                                      /*
         TCHAR *stop;
         UINT nPage = _tcstol(sPage, &stop, 10);
         nPage = MIN(MAX(1, nPage), m_numPreviewPages);
-        OnPreviewPage(m_currentPage = nPage - 1);
+        OnPreviewPage(nPage - 1);
     }
 }
 
@@ -372,7 +374,7 @@ OnFirstButton()                                                             /*
     Display the first page of the document.
 *-----------------------------------------------------------------------------*/
 {
-    OnPreviewPage(m_currentPage = 0);
+    OnPreviewPage(0);
     return TRUE;
 }
 
@@ -383,7 +385,7 @@ OnLastButton()                                                              /*
     Display the last page of the document.
 *-----------------------------------------------------------------------------*/
 {
-    OnPreviewPage(m_currentPage = m_numPreviewPages - 1);
+    OnPreviewPage(m_numPreviewPages - 1);
     return TRUE;
 }
 
@@ -452,7 +454,7 @@ OnPreview(const CString &docPath)                                           /*
       // set up device contexts, determine pagination, and number of pages
     OnPreparePrintPreview();
       // Preview the first page;
-    OnPreviewPage(m_currentPage = 0);
+    OnPreviewPage(0);
     return TRUE;
 }
 
@@ -463,7 +465,7 @@ OnPreviewHelp()                                                             /*
     Respond to requests for help on the print preview function.
 *-----------------------------------------------------------------------------*/
 {
-    MessageBox(_T("Preview help not yet available."),
+    MessageBox(_T("Preview help has not been provided."),
         _T("Information..."), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
     return TRUE;
 }
@@ -472,10 +474,26 @@ OnPreviewHelp()                                                             /*
     void CPrintPreviewEx::
 OnPreviewPage(UINT nPage)                                                   /*
 
+    Display page numbered nPage to the screen(view port).
 *-----------------------------------------------------------------------------*/
 {
     OnPrepareDC();
-    PreviewPage(m_currentPage = nPage);
+    m_currentPage = nPage;
+    // check validity of request
+    assert(m_numPreviewPages > 0);
+    assert(nPage < m_numPreviewPages);
+    // Fill the bitmap with a white background
+    CRect rc(0, 0, m_printerDots.cx, m_printerDots.cy);
+    m_dcMem.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
+    // render the nPage of the document into dcMem
+    DocPageToBmp(nPage);
+    // transfer the bitmap from the memory DC to the preview pane
+    CBitmap Bitmap = m_dcMem.DetachBitmap();
+    m_previewPane.SetBitmap(Bitmap);
+    // reset the current status of the preview dialog's buttons
+    UpdateButtons();
+    // display the print preview
+    m_previewPane.Invalidate();
 }
 
 /*============================================================================*/
@@ -500,7 +518,7 @@ OnZoomChange()                                                              /*
       // query the scale combo box selection
     int selection = m_comboZoom.GetCurSel();
       // if it is one of the first two entries, use that for the zoom
-    if (selection <= ZOOM_WIDTH)
+    if (selection <= FIT_WIDTH)
         m_previewPane.SetPaneZoomState(selection);
     else // it is a numeric scaling, figure it out
     {
@@ -509,7 +527,7 @@ OnZoomChange()                                                              /*
         m_comboZoom.GetLBText(selection, val);
         m_previewPane.SetPaneZoomState(_tcstol(val, &stop, 10));
     }
-    m_previewPane.ShowScrollBars(selection == ZOOM_OUT ?
+    m_previewPane.ShowScrollBars(selection == FIT_PAGE ?
         FALSE : TRUE);
     m_previewPane.SetScrollSizes(CSize(0, 0));
     m_previewPane.Invalidate();
@@ -550,40 +568,20 @@ PopulateScaleBox()                                                          /*
 PreviewAndPageSetup()                                                       /*
 
     Prompt for user input of screen and initial preview window sizes. Do
-    printer page setup if requested. Return TRUE if the setup dialog was
-    terminated in OK, or FALSE otherwise.
+    printer page setup if requested. Close the preview and return TRUE if the
+    setup dialog was terminated in OK, or FALSE otherwise. Closing the preview
+    assures that the amended configuration will be seen on reopening the
+    preview.
 *-----------------------------------------------------------------------------*/
 {
     if (m_setupDlg.DoModal(*this) == IDOK)
     {
         SetWindowSizes();
+        SaveSizesRegistry();
+        Close();
         return TRUE;
     }
     return FALSE;
-}
-
-/*============================================================================*/
-    void CPrintPreviewEx::
-PreviewPage(UINT nPage)                                                     /*
-
-    Display page numbered nPage to the screen (view port).
-*-----------------------------------------------------------------------------*/
-{
-      // check validity of request
-    assert(m_numPreviewPages > 0);
-    assert(nPage < m_numPreviewPages);
-      // Fill the bitmap with a white background
-    CRect rc(0, 0, m_printerDots.cx, m_printerDots.cy);
-    m_dcMem.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
-      // render the nPage of the document into dcMem
-    DocPageToBmp(nPage);
-      // transfer the bitmap from the memory DC to the preview pane
-    CBitmap Bitmap = m_dcMem.DetachBitmap();
-    m_previewPane.SetBitmap(Bitmap);
-      // reset the current status of the preview dialog's buttons
-    UpdateButtons();
-      // display the print preview
-    m_previewPane.Invalidate();
 }
 
 /*============================================================================*/
@@ -640,26 +638,24 @@ SetWindowSizes()                                                            /*
     values of the m_screenInches and m_previewInches size members.
 *-----------------------------------------------------------------------------*/
 {
-      // make sure the contexts are current
+       // make sure the contexts are current
     InitializeContexts();
       // determine the printer dots/inch (this works for the printer!)
-    DSize PrinterPPI(m_dcPrinter.GetDeviceCaps(LOGPIXELSX),
-        m_dcPrinter.GetDeviceCaps(LOGPIXELSY));
+    DSize printerDPI(m_dcPrinter.GetDeviceCaps(LOGPIXELSX),
+                     m_dcPrinter.GetDeviceCaps(LOGPIXELSY));
       // compute the screen m_screenPixels/inch
-    DSize ScreenPPI((m_screenPixels.cx / m_screenInches.cx),
-        (m_screenPixels.cy / m_screenInches.cy));
-    m_printerScreenRatio = DSize((PrinterPPI.cx / ScreenPPI.cx) / m_shrink,
-        (PrinterPPI.cy / ScreenPPI.cy) / m_shrink);
+    DSize screenDPI((m_screenPixels.cx / m_screenInches.cx),
+                    (m_screenPixels.cy / m_screenInches.cy));
+    m_screenPrinterRatio = (screenDPI / printerDPI) * m_shrink;
       // compute the initial preview size, in pixels
-    CSize frame(int(m_previewInches.cx * ScreenPPI.cx),
-        int(m_previewInches.cy * ScreenPPI.cy));
+    CSize frame(int(m_previewInches.cx * screenDPI.cx),
+                int(m_previewInches.cy * screenDPI.cy));
       // set the dialog size
-    CRect rcWorkArea;
-    ::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcWorkArea, 0);
-    CSize screen(rcWorkArea.Width(), rcWorkArea.Height());
-    CSize preview(MIN(frame.cx, screen.cx), MIN(frame.cy, screen.cy));
+    CSize preview(MIN(frame.cx, m_screenPixels.cx),
+                  MIN(frame.cy, m_screenPixels.cy));
       // center the preview window on the screen
-    CSize ctr((screen.cx - preview.cx) / 2, (screen.cy - preview.cy) / 2);
+    CSize ctr((m_screenPixels.cx - preview.cx) / 2,
+              (m_screenPixels.cy - preview.cy) / 2);
     CRect rcPos(ctr.cx, ctr.cy, ctr.cx + preview.cx, ctr.cy + preview.cy);
     SetWindowPos(NULL, rcPos, SWP_SHOWWINDOW);
 }
@@ -712,7 +708,7 @@ CPreviewPaneEx()                                                            /*
     }
     assert(::GetClassInfo(TheApp()->GetInstanceHandle(), ClassName, &wc));
     SetScrollSizes(m_scrollSize = m_prevWindowSize = CSize(0, 0));
-    m_zoomState      = ZOOM_OUT;
+    m_zoomState      = FIT_PAGE;
     m_prevZoomState  = -1;
     m_showScrollBars = FALSE;
 }
@@ -731,12 +727,6 @@ GetZoom()                                                                   /*
     if (!m_bitmap.GetHandle())
         return DSize(0.0, 0.0);
 
-      // The unit_zoom is meant to provide a screen image equal in size to
-      // the printer page size. However, some difference may be seen on
-      // some monitors due to roundoff.
-    DSize printerScreenRatio = GetPreviewWnd().GetPrinterScreenRatio();
-    DSize unit_zoom = DSize(1.0 / printerScreenRatio.cx,
-        1.0 / printerScreenRatio.cx);
       // get client, bitmap, and preview window sizes
     BITMAP bm = m_bitmap.GetBitmapData();
     CSize Client = GetClientRect().Size(), Bitmap(bm.bmWidth, bm.bmHeight),
@@ -744,42 +734,46 @@ GetZoom()                                                                   /*
       // compute the zoom value
     DSize zoom = DSize(double(Preview.cx) / double(Bitmap.cx),
             double(Preview.cy) / double(Bitmap.cy));
-    if (m_zoomState == ZOOM_OUT)
+    if (m_zoomState == FIT_PAGE)
     {
         double min = MIN(zoom.cx, zoom.cy);
         zoom = DSize(min, min);
     }
       // see the notes below for the rationale of this value
-    else if (m_zoomState == ZOOM_WIDTH)
+    else if (m_zoomState == FIT_WIDTH)
     {
         zoom.cy = zoom.cx;
     }
     else
+    {     // unit_zoom nominally provides a screen image equal in size to
+          // the printer page size. However, some slight difference may
+          // occur on some monitors.
+        DSize unit_zoom = GetPreviewDlg().GetScreenPrinterRatio();
         zoom = DSize(unit_zoom.cx * m_zoomState / 100.0,
             unit_zoom.cy * m_zoomState / 100.0);
-
+    }
       // compute the scroll sizes
-    CSize ScrollSize(0, 0); // default to ZOOM_OUT and no scroll bars case
-    if (m_zoomState != ZOOM_OUT && m_showScrollBars)
+    CSize scrollSize(0, 0); // default to FIT_PAGE and no scroll bars case
+    if (m_zoomState != FIT_PAGE && m_showScrollBars)
     {
           // Compute the scroll sizes for this zoom (see notes below).
           // The zoom factor zf is
         DSize zf(1.0 / zoom.cx - 1.0, 1.0 / zoom.cy - 1.0);
-        ScrollSize = CSize(m_zoomState == ZOOM_WIDTH ? 0 :
+        scrollSize = CSize(m_zoomState == FIT_WIDTH ? 0 :
             MAX(0, Bitmap.cx + 2 * BORDER - static_cast<int>(Preview.cx * zf.cx)),
             MAX(0, Bitmap.cy + 2 * BORDER - static_cast<int>(Preview.cy * zf.cy)));
           // Reset the scrolling sizes only if the bars are visible
           // and either (1) the zoom state changed, or (2) the size
-          // has chanted and the scaling is not ZOOM_WIDTH, or, (3)
-          // when scaling ZOOM_WIDTH, when the window has also changed
-          // size. During ZOOM_WIDTH, the preview width changes as
+          // has chanted and the scaling is not FIT_WIDTH, or, (3)
+          // when scaling FIT_WIDTH, when the window has also changed
+          // size. During FIT_WIDTH, the preview width changes as
           // scrollbars are added, and this would cause change in
           // the zoom, which would cause resizing and screen flicker.
         CSize WindowSize = GetWindowRect().Size();
         if (m_prevZoomState != m_zoomState ||
-            (ScrollSize != m_scrollSize && (m_zoomState != ZOOM_WIDTH ||
+            (scrollSize != m_scrollSize && (m_zoomState != FIT_WIDTH ||
             (m_prevWindowSize != WindowSize))))
-                SetScrollSizes(m_scrollSize = ScrollSize);
+                SetScrollSizes(m_scrollSize = scrollSize);
         m_prevWindowSize = WindowSize;
     }
     m_prevZoomState = m_zoomState;
@@ -796,7 +790,7 @@ GetZoom()                                                                   /*
 *
 *   The total scroll size required to achieve this will then be
 *
-*       ScrollSize = pos0 + Preview + 2 * Border
+*       scrollSize = pos0 + Preview + 2 * Border
 *              = BitMap + 2 * Border - Preview * (1 / zoom - 1)
 *
 *   We may also note that the zoom value that gives a pos0 value of zero
@@ -822,14 +816,12 @@ OnDraw(CDC& dc)                                                             /*
     applied is the scaling of target size to source size. The three factors
     available range from fitting the entire bitmap page onto the rendered
     page (the zoom-out case), to rendering a fuller scale view of perhaps
-    only a portion of the bitmap into the available screen area.
+    only a portion of the bitmap into the available screen area. The given
+    bitmap data is inserted into a device-independent bitmap (DIB) for display.
 *-----------------------------------------------------------------------------*/
 {
     if (m_bitmap.GetHandle())
     {
-        CMemDC dcMem(dc);
-        dcMem.SelectObject(m_bitmap);
-        dcMem.SetMapMode(MM_TEXT);
         BITMAP bm = m_bitmap.GetBitmapData();
           // determine the size of the PreviewPane window with a border
           // around the area used to show the bitmap
@@ -838,15 +830,36 @@ OnDraw(CDC& dc)                                                             /*
             Client = GetClientRect().Size(),
             Preview(Client.cx - (2 * BORDER), Client.cy - (2 * BORDER)),
             Bitmap(bm.bmWidth, bm.bmHeight);
-        CPoint p = (m_zoomState == ZOOM_OUT ? CPoint (0, 0) :
-            GetScrollPosition());
+          // compute the scroll position p for the page
+        CPoint p(0, 0);
+        if (m_zoomState != FIT_PAGE)
+        {     // DIB origin is the bottom of the bitmap, whereas the
+              // scroll position is at the top. So make the adjustment.
+            int maxPosY = GetTotalScrollSize().cy - GetClientRect().Height();
+            p = GetScrollPosition();
+            p.y = MAX(maxPosY - p.y, 0);
+        }
           // resize the document preview window according to bitmap
-          // size and zoom level
+          // size, scroll position, and zoom level
         Preview.cx = MIN(Preview.cx, int((Bitmap.cx - p.x) * zoom.cx));
         Preview.cy = MIN(Preview.cy, int((Bitmap.cy - p.y) * zoom.cy));
+
           // set the size of the borders around the document view
-         CSize Border(MAX((Client.cx - Preview.cx)  / 2, BORDER),
-            MAX((Client.cy - Preview.cy) / 2, BORDER));
+        CSize Border(MAX((Client.cx - Preview.cx) / 2, BORDER),
+                     MAX((Client.cy - Preview.cy) / 2, BORDER));
+          // Process the bitmap as a device-independent structure: first,
+          // locate and access the bitmap information
+        CBitmapInfoPtr pbmi(m_bitmap);
+        BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>
+            (pbmi.get());
+          // Extract the m_bitmap information into a device independent image
+          // data format (DIB).
+        CMemDC dcMem(dc);
+        dcMem.GetDIBits(m_bitmap, 0, bm.bmHeight, NULL, pbmi, DIB_RGB_COLORS);
+        std::vector<byte> byteArray(pBIH->biSizeImage, 0);
+        byte* pByteArray = &byteArray.front();
+        dcMem.GetDIBits(m_bitmap, 0, bm.bmHeight, pByteArray, pbmi,
+            DIB_RGB_COLORS);
           // draw a line on the bitmap around the document page
         CRect rc(0, 0, Bitmap.cx, Bitmap.cy);
         CRgn rg; rg.CreateRectRgnIndirect(rc);
@@ -855,9 +868,10 @@ OnDraw(CDC& dc)                                                             /*
           // scaling, using HALFTONE anti-aliasing for better quality
         dc.SetStretchBltMode(HALFTONE);
         dc.SetBrushOrgEx(0, 0);
-        dc.StretchBlt(Border.cx, Border.cy, Preview.cx, Preview.cy,
-            dcMem, p.x, p.y,  int(Preview.cx / zoom.cx),
-            int(Preview.cy / zoom.cy), SRCCOPY);
+          // Stretch fit the device-independent bitmap into the preview area
+        dc.StretchDIBits(Border.cx, Border.cy, Preview.cx, Preview.cy,
+            p.x, p.y,  int(Preview.cx / zoom.cx), int(Preview.cy / zoom.cy),
+            pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
           // draw a grey border around the preview:
         // 1. left stripe down
         CRect rcFill(0, 0, Border.cx, Preview.cy + Border.cy);
@@ -891,52 +905,49 @@ OnEraseBkgnd(CDC& )                                                         /*
     LRESULT CPreviewPaneEx::
 OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)                           /*
 
-    Respond to a horizontal scroll bar event and set the current scroll
-    position accordingly. This override is necessary to prevent the
-    CScrollView's automatic scroll of the window pixels.
+    Override the base class method to respond to a horizontal scroll bar event
+    and set the current bitmap scrollposition accordingly. This override is
+    necessary to prevent the CScrollView's automatic scroll of window pixels.
 *-----------------------------------------------------------------------------*/
 {
     UNREFERENCED_PARAMETER(msg);
     UNREFERENCED_PARAMETER(lparam);
-
-    int xNewPos;
-    CPoint CurrentPos = GetScrollPosition();
+      // retrieve scroll parameters
+    CPoint newPos = GetScrollPosition();
     CSize szTotal = GetTotalScrollSize();
-      // generate information not available from CScrollView
-    CSize sizePage(szTotal.cx / 10, szTotal.cy / 10);
-    CSize sizeLine(szTotal.cx / 10, szTotal.cy / 10);
-
+    CSize sizePage = GetPageScrollSize();
+    CSize sizeLine = GetLineScrollSize();
+      // respond to the event
     switch (LOWORD(wparam))
     {
     case SB_PAGEUP: // clicked the scroll bar left of the scroll box.
-        xNewPos = CurrentPos.x - sizePage.cx;
+        newPos.x -= sizePage.cx;
         break;
 
     case SB_PAGEDOWN: // clicked the scroll bar right of the scroll box.
-        xNewPos = CurrentPos.x + sizePage.cx;
+        newPos.x += sizePage.cx;
         break;
 
     case SB_LINEUP: // clicked the left arrow.
-        xNewPos = CurrentPos.x - sizeLine.cx;
+        newPos.x -= sizeLine.cx;
         break;
 
     case SB_LINEDOWN: // clicked the right arrow.
-        xNewPos = CurrentPos.x + sizeLine.cx;
+        newPos.y += sizeLine.cx;
         break;
 
     case SB_THUMBTRACK: // dragging the scroll box.
-        xNewPos = HIWORD(wparam);
+        newPos.x = HIWORD(wparam);
         break;
 
     default:
-        xNewPos = CurrentPos.x;
+       break;
     }
-
       // set new position
-    xNewPos = MAX(0, xNewPos);
-    xNewPos = MIN(xNewPos, szTotal.cx - GetClientRect().Width());
-    CurrentPos.x = xNewPos;
-    SetScrollPosition(CurrentPos);
+    int maxPosX = szTotal.cx - GetClientRect().Width();
+    newPos.x = MIN(newPos.x, maxPosX);
+    newPos.x = MAX(0, newPos.x);
+    SetScrollPosition(newPos);
       // display the offset pane contents
     Invalidate();
     return 0L;
@@ -946,29 +957,27 @@ OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)                           /*
     LRESULT CPreviewPaneEx::
 OnMouseWheel(UINT msg, WPARAM wparam, LPARAM lparam)                        /*
 
-    Position the vertical scroll bar using the mouse wheel. This override
-    is necessary to prevent the CScrollView's automatic scroll of the
-    window pixels.
+    Override the base class method to respond to a vertial scroll mouse event
+    and set the current bitmap scroll position accordingly. This override is
+    necessary to prevent the CScrollView's automatic scroll of window pixels.
 *-----------------------------------------------------------------------------*/
 {
     UNREFERENCED_PARAMETER(msg);
     UNREFERENCED_PARAMETER(lparam);
-
-    CPoint CurrentPos = GetScrollPosition();
+    // retrieve scroll parameters
+    CPoint newPos = GetScrollPosition();
     CSize szTotal = GetTotalScrollSize();
-    CSize sizePage(szTotal.cx / 10, szTotal.cy / 10);
-    CSize sizeLine(szTotal.cx / 10, szTotal.cy / 10);
-
+    CSize sizeLine = GetLineScrollSize();
+      // respond to the wheel event
     int WheelDelta = GET_WHEEL_DELTA_WPARAM(wparam);
     int cyPos = ::MulDiv(WheelDelta, sizeLine.cy, WHEEL_DELTA);
-
       // set the new position
-    int yNewPos = CurrentPos.y - cyPos;
-    yNewPos = MIN(yNewPos, szTotal.cy - GetClientRect().Height());
-    yNewPos = MAX(yNewPos, 0);
-    CurrentPos.y = yNewPos;
-    SetScrollPosition(CurrentPos);
+    newPos.y -= cyPos;
+    int maxPosY = szTotal.cy - GetClientRect().Height();
+    newPos.y = MIN(newPos.y, maxPosY);
+    newPos.y = MAX(newPos.y, 0);
       // display the offset pane contents
+    SetScrollPosition(newPos);
     Invalidate();
     return 0L;
 }
@@ -1000,55 +1009,53 @@ OnPaint(UINT, WPARAM, LPARAM)                                               /*
     LRESULT CPreviewPaneEx::
 OnVScroll(UINT msg, WPARAM wparam, LPARAM lparam)                           /*
 
-    Respond to a vertical scroll bar event and set the current scroll
-    position accordingly. This override is necessary to prevent the
-    CScrollView's automatic scroll of the window pixels.
+    Override the base class method to respond to a vertical scroll bar event
+    and set the current bitmap scroll position accordingly. This override is
+    necessary to prevent the CScrollView's automatic scroll of window pixels.
 *-----------------------------------------------------------------------------*/
 {
     UNREFERENCED_PARAMETER(msg);
     UNREFERENCED_PARAMETER(lparam);
-
-    int yNewPos;
-    CPoint CurrentPos = GetScrollPosition();
-    CSize szTotal = GetTotalScrollSize();
-      // generate information not available from CScrollView
-    CSize sizePage(szTotal.cx / 10, szTotal.cy / 10);
-    CSize sizeLine(szTotal.cx / 10, szTotal.cy / 10);
+      // retrieve scroll parameters
+    CPoint newPos  = GetScrollPosition();
+    CSize szTotal  = GetTotalScrollSize();
+    CSize sizePage = GetPageScrollSize();
+    CSize sizeLine = GetLineScrollSize();
+      // respond to the event
     switch (LOWORD(wparam))
     {
         case SB_PAGEUP: // clicked the scroll bar above the scroll box
-            yNewPos = CurrentPos.y - sizePage.cy;
+            newPos.y -= sizePage.cy;
             break;
 
         case SB_PAGEDOWN: // clicked the scroll bar below the scroll box
-            yNewPos = CurrentPos.y + sizePage.cy;
+            newPos.y += sizePage.cy;
             break;
 
         case SB_LINEUP: // clicked the top arrow
-            yNewPos = CurrentPos.y - sizeLine.cy;
+            newPos.y = sizeLine.cy;
             break;
 
         case SB_LINEDOWN: // clicked the bottom arrow
-            yNewPos = CurrentPos.y + sizeLine.cy;;
+            newPos.y += sizeLine.cy;;
             break;
 
         case SB_THUMBTRACK: // dragging the scroll box
-            yNewPos = HIWORD(wparam);
+            newPos.y = HIWORD(wparam);
             break;
 
         default:
-            yNewPos = CurrentPos.y;
+            break;
     }
       // set the new position
-    yNewPos = MAX(0, yNewPos);
-    yNewPos = MIN( yNewPos, szTotal.cy - GetClientRect().Height() );
-    CurrentPos.y = yNewPos;
-    SetScrollPosition(CurrentPos);
-      // display the offset pane contents
+    int maxPosY = szTotal.cy - GetClientRect().Height();
+    newPos.y = MIN(newPos.y, maxPosY);
+    newPos.y = MAX(0, newPos.y);
+    SetScrollPosition(newPos);
+    // display the offset pane contents
     Invalidate();
     return 0L;
 }
-
 
 /*******************************************************************************
 
@@ -1062,7 +1069,7 @@ DoDataExchange(CDataExchange& dx)                                           /*
     and validation of values entered into, and read from, these controls.
 *-----------------------------------------------------------------------------*/
 {
-    CPrintPreviewEx& pvw = GetPreviewWnd();
+    CPrintPreviewEx& pvw = GetPreviewDlg();
     dx.DDX_Control(IDC_PAGE_SETUP,  m_pageSetup);
     dx.DDX_Text(IDC_SCREEN_WIDTH,   pvw.m_screenInches.cx);
     dx.DDV_MinMaxDouble(pvw.GetScreenSize().cx, SCREEN_MIN, SCREEN_MAX);
@@ -1107,8 +1114,8 @@ OnInitDialog()                                                              /*
       // update controls
     UpdateData(m_dx, SENDTOCONTROL);
       // save incoming sizes in case of cancel
-    m_inScreenInches  = GetPreviewWnd().GetScreenSize();
-    m_inPreviewInches = GetPreviewWnd().GetPreviewSize();
+    m_inScreenInches  = GetPreviewDlg().GetScreenSize();
+    m_inPreviewInches = GetPreviewDlg().GetPreviewSize();
     return TRUE;
 }
 
@@ -1164,10 +1171,10 @@ OnPageSetupButton()                                                         /*
     if (!UpdateData(m_dx, READFROMCONTROL))
         return TRUE;
 
-     GetFrame().SendMessage(WM_COMMAND, IDM_FILE_PRINTSETUP, 0);
+    GetFrame().SendMessage(WM_COMMAND, IDM_FILE_PRINTSETUP, 0);
       // in case the page setup has changed the preview layout, reset the
       // context and resize as necessary
-    GetPreviewWnd().SetWindowSizes();
+    GetPreviewDlg().SetWindowSizes();
 
     return TRUE;
 }
@@ -1179,8 +1186,8 @@ OnCancel()                                                                  /*
     Handle the cancel message from the preview setup dialog.
 *-----------------------------------------------------------------------------*/
 {
-    GetPreviewWnd().SetScreenSize(m_inScreenInches);
-    GetPreviewWnd().SetPreviewSize(m_inPreviewInches);
+    GetPreviewDlg().SetScreenSize(m_inScreenInches);
+    GetPreviewDlg().SetPreviewSize(m_inPreviewInches);
 
     CDialog::OnCancel();
 }

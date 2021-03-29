@@ -50,6 +50,14 @@ DSize                                                                       /*
                     { return DSize(cx - size.cx, cy - size.cy); }
         DSize   operator-() const
                     { return DSize(-cx, -cy); }
+        DSize   operator/(DSize div) const
+                    { return DSize(cx / div.cx, cy / div.cy); }
+        DSize   operator*(DSize mul) const
+                    { return DSize(cx * mul.cx, cy * mul.cy); }
+        DSize   operator/(double div) const
+                    { return DSize(cx / div, cy / div); }
+        DSize   operator*(double fac) const
+                    { return DSize(cx * fac, cy * fac); }
 
           // class data
         double  cx;
@@ -71,7 +79,7 @@ PreviewSetup    : public CDialog                                            /*
 
     protected:
         virtual void    DoDataExchange(CDataExchange& dx);
-        CPrintPreviewEx& GetPreviewWnd()
+        CPrintPreviewEx& GetPreviewDlg()
                             { HWND h = ::GetParent(*this);
                               return *(CPrintPreviewEx*)GetCWndPtr(h);}
         virtual BOOL    OnInitDialog();
@@ -118,7 +126,7 @@ CPreviewPaneEx : public CScrollView                                       /*
         void    ShowScrollBars(BOOL b)    {m_showScrollBars = b;}
 
     protected:
-        CPrintPreviewEx&  GetPreviewWnd()
+        CPrintPreviewEx&  GetPreviewDlg()
                             { HWND h = ::GetParent(*this);
                               return *(CPrintPreviewEx*)GetCWndPtr(h);}
         virtual void    OnDraw(CDC& dc);
@@ -160,7 +168,7 @@ CPrintPreviewEx : public CDialog                                         /*
         CPreviewPaneEx& GetPreviewPane()      {return m_previewPane;}
         DSize   GetPreviewSize() const        {return m_previewInches;}
         void    SetPreviewSize(DSize size)    {m_previewInches = size;}
-        DSize   GetPrinterScreenRatio() const {return m_printerScreenRatio;}
+        DSize   GetScreenPrinterRatio() const {return m_screenPrinterRatio;}
         DSize   GetScreenSize() const         {return m_screenInches;}
         void    SetScreenSize(DSize size)     {m_screenInches = size;}
         void    InitializeContexts();
@@ -202,7 +210,6 @@ CPrintPreviewEx : public CDialog                                         /*
         BOOL    OnZoomChange();
         void    PopulateScaleBox();
         BOOL    PreviewAndPageSetup();
-        void    PreviewPage(UINT nPage);
         CString RegQueryStringValue(CRegKey &key, LPCTSTR name);
         void    UpdateButtons();
 
@@ -230,7 +237,7 @@ CPrintPreviewEx : public CDialog                                         /*
         PreviewSetup m_setupDlg;            // setup dialog
         DSize       m_screenInches;         // screen size, in inches
         DSize       m_previewInches;        // preview size, inches
-        DSize       m_printerScreenRatio;   // PrinterPPI/ScreenPPI
+        DSize       m_screenPrinterRatio;   // printerDPI/screenDPI
         CSize       m_printerDots;          // printer size, in dots
         CSize       m_screenPixels;         // screen size, in pixels
 

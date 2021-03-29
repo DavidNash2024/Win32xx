@@ -190,10 +190,11 @@ namespace Win32xx
     // Constructor.
     inline CPreviewPane::CPreviewPane()
     {
-        // The entry for the dialog's control in resource.rc must match this name.
+        // The class name of this custom dialog control.
+        // This matches the control's class name used in the dialog template.
         CString className = _T("PreviewPane");
 
-        // Register the window class for use as a custom control in the dialog
+        // Register the window class for use as a custom control in the dialog.
         WNDCLASS wc;
         ZeroMemory(&wc, sizeof(WNDCLASS));
 
@@ -217,6 +218,7 @@ namespace Win32xx
         return TRUE;
     }
 
+    // Called to perform the drawing on this window.
     inline void CPreviewPane::OnDraw(CDC& dc)
     {
         Render(dc);
@@ -326,7 +328,7 @@ namespace Win32xx
     {
     }
 
-    // The dialog's window procdure. Handles the dialog's window messages.
+    // The dialog's window procdure. It handles the dialog's window messages.
     template <typename T>
     inline INT_PTR CPrintPreview<T>::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
@@ -397,7 +399,6 @@ namespace Win32xx
         m_resizer.AddChild(m_buttonClose, topleft, 0);
         m_resizer.AddChild(m_previewPane, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 
-        m_currentPage = 0;
         return TRUE;
     }
 
@@ -477,8 +478,6 @@ namespace Win32xx
         // A bitmap to hold all the pixels of the printed page would be too large.
         // Shrinking its dimensions by 4 reduces it to 1/16th its original size.
         int shrink = width > 8000 ? 8 : 4;
-
-        CDC previewDC = GetPreviewPane().GetDC();
         memDC.CreateCompatibleBitmap(printerDC, width / shrink, height / shrink);
 
         memDC.SetMapMode(MM_ANISOTROPIC);
@@ -499,6 +498,7 @@ namespace Win32xx
 
         // Display the print preview
         UpdateButtons();
+        CDC previewDC = GetPreviewPane().GetDC();
         GetPreviewPane().Render(previewDC);
     }
 
