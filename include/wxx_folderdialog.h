@@ -52,7 +52,7 @@
 //
 //      // Set the root folder to list the computer's drives (or C:).
 //      ITEMIDLIST* pidlRoot = 0;
-//      SHGetSpecialFolderLocation(NULL, CSIDL_DRIVES, &pidlRoot);
+//      SHGetSpecialFolderLocation(0, CSIDL_DRIVES, &pidlRoot);
 //      // or
 //      // ITEMIDLIST* pidl = ILCreateFromPath(_T("C:"));
 //      fd.SetRoot(pidlRoot);

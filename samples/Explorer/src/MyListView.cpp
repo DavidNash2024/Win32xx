@@ -300,7 +300,7 @@ void CMyListView::DoDisplay()
 
     if(m_csfCurFolder.GetIShellFolder())
     {
-        HCURSOR  hCur = ::LoadCursor(NULL, IDC_WAIT);
+        HCURSOR  hCur = ::LoadCursor(0, IDC_WAIT);
         hCur = ::SetCursor(hCur);
 
         // Turn redrawing off in the ListView.
@@ -393,7 +393,7 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
     if ( GetExplorerApp()->GetMainFrame().GetShowHidden() )
         flags |= SHCONTF_INCLUDEHIDDEN;
 
-    if(SUCCEEDED(folder.GetEnumIDList(NULL, flags, list)))
+    if(SUCCEEDED(folder.GetEnumIDList(0, flags, list)))
     {
         ULONG fetched = 1;
         Cpidl cpidlRel;
@@ -748,7 +748,7 @@ void CMyListView::PreCreate(CREATESTRUCT& cs)
 // Sets the up and down sort arrows in the listview's header.
 BOOL CMyListView::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
 {
-    HWND    hHeader = NULL;
+    HWND    hHeader = 0;
     HDITEM  hdrItem;
     ZeroMemory(&hdrItem, sizeof(hdrItem));
 

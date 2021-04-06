@@ -152,13 +152,13 @@ namespace Win32xx
     inline CMenuBar::CMenuBar()
     {
         m_isExitAfter   = FALSE;
-        m_topMenu      = NULL;
+        m_topMenu      = 0;
         m_hotItem       = -1;
         m_isSelPopup    = FALSE;
-        m_selMenu      = NULL;
+        m_selMenu      = 0;
         m_isMenuActive  = FALSE;
         m_isKeyMode     = FALSE;
-        m_prevFocus    = NULL;
+        m_prevFocus    = 0;
         m_mdiButton     = 0;
         m_popupMenu    = 0;
     }
@@ -376,7 +376,7 @@ namespace Win32xx
         if (::GetFocus() != *this)
             m_prevFocus = ::SetFocus(*this);
         ::SetCapture(*this);
-        ::SetCursor(::LoadCursor(NULL, IDC_ARROW));
+        ::SetCursor(::LoadCursor(0, IDC_ARROW));
     }
 
     // Returns TRUE of the MDI child is maximized.
@@ -856,7 +856,7 @@ namespace Win32xx
         SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(TRUE, 0));
 
         m_isSelPopup = FALSE;
-        m_selMenu = NULL;
+        m_selMenu = 0;
         m_isMenuActive = TRUE;
 
         // We hook mouse input to process mouse and keyboard input during
@@ -1035,7 +1035,7 @@ namespace Win32xx
         if (m_prevFocus)
             ::SetFocus(m_prevFocus);
 
-        m_prevFocus = NULL;
+        m_prevFocus = 0;
         ::ReleaseCapture();
     }
 

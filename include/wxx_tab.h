@@ -987,7 +987,7 @@ namespace Win32xx
     {
         // Ensure we have an arrow cursor when the tab has no view window
         if (GetAllTabs().size() == 0)
-            SetCursor(LoadCursor(NULL, IDC_ARROW));
+            SetCursor(LoadCursor(0, IDC_ARROW));
 
         // Cause WM_LBUTTONUP and WM_LBUTTONDOWN messages to be sent for buttons
         CPoint pt(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
@@ -1183,7 +1183,7 @@ namespace Win32xx
                 CRect rc = GetClientRect();
                 MapWindowPoints(GetParent(), rc);
                 AdjustRect(FALSE, &rc);
-                GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+                GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
             }
 
             RedrawWindow(RDW_INVALIDATE|RDW_NOCHILDREN);
@@ -1259,7 +1259,7 @@ namespace Win32xx
 
             // Remove Image list for fixed width and Owner drawn tabs
             if (style & TCS_OWNERDRAWFIXED)
-                SetImageList(NULL);
+                SetImageList(0);
             else
                 SetImageList(m_odImages);
         }
@@ -1282,7 +1282,7 @@ namespace Win32xx
 
             // Remove Image list for tabs with both fixed width and Owner drawn tabs
             if (style & TCS_FIXEDWIDTH)
-                SetImageList(NULL);
+                SetImageList(0);
             else
                 SetImageList(m_odImages);
         }
@@ -1816,7 +1816,7 @@ namespace Win32xx
     }
 
     // Creates the TabbedMDI window.
-    inline HWND CTabbedMDI::Create(HWND parent /* = NULL*/)
+    inline HWND CTabbedMDI::Create(HWND parent /* = 0*/)
     {
         CLIENTCREATESTRUCT clientcreate ;
         clientcreate.hWindowMenu  = *this;
@@ -2051,13 +2051,13 @@ namespace Win32xx
             if (GetTab().GetItemCount() >0)
             {
                 CRect rcClient = GetClientRect();
-                GetTab().SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
+                GetTab().SetWindowPos(0, rcClient, SWP_SHOWWINDOW);
                 GetTab().UpdateWindow();
             }
             else
             {
                 CRect rcClient = GetClientRect();
-                GetTab().SetWindowPos(NULL, rcClient, SWP_HIDEWINDOW);
+                GetTab().SetWindowPos(0, rcClient, SWP_HIDEWINDOW);
                 Invalidate();
             }
         }
@@ -2069,8 +2069,8 @@ namespace Win32xx
         if (pKeyName)
         {
             CString KeyName = _T("Software\\") + CString(pKeyName);
-            HKEY hKey = NULL;
-            HKEY hKeyMDIChild = NULL;
+            HKEY hKey = 0;
+            HKEY hKeyMDIChild = 0;
 
             try
             {

@@ -258,6 +258,10 @@
 				RelativePath="..\src\ThreadApp.h"
 				>
 			</File>
+			<File
+				RelativePath="..\src\UserMessages.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

@@ -69,7 +69,7 @@ SaveFontSize()                                                              /*
 *-----------------------------------------------------------------------------*/
 {
       // select the current font into a temporary device context
-    CClientDC dc(NULL);
+    CClientDC dc(0);
     dc.SelectObject(m_font);
       // measure the font width and height
     TEXTMETRIC tm;

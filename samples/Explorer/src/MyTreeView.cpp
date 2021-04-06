@@ -116,7 +116,7 @@ void CMyTreeView::DoItemMenu(HTREEITEM item, CPoint& point)
 void CMyTreeView::EnumObjects(HTREEITEM parentItem, CShellFolder& parentFolder, Cpidl& cpidlParent)
 {
     CEnumIDList list;
-    if(SUCCEEDED(parentFolder.GetEnumIDList(NULL, SHCONTF_FOLDERS | SHCONTF_INCLUDEHIDDEN, list)))
+    if(SUCCEEDED(parentFolder.GetEnumIDList(0, SHCONTF_FOLDERS | SHCONTF_INCLUDEHIDDEN, list)))
     {
         ULONG fetched = 1;
         Cpidl cpidlRel;
@@ -180,7 +180,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM parentItem)
         return FALSE;
 
     // Change the cursor.
-    HCURSOR hCursor = ::SetCursor(LoadCursor(NULL, IDC_WAIT));
+    HCURSOR hCursor = ::SetCursor(LoadCursor(0, IDC_WAIT));
 
     // Turn redrawing off in the TreeView.
     // This will speed things up as we add items.
@@ -222,7 +222,7 @@ BOOL CMyTreeView::GetRootItems()
     DeleteAllItems();
 
     Cpidl cpidlDesk;
-    cpidlDesk.GetSpecialFolderLocation(NULL, CSIDL_DESKTOP);
+    cpidlDesk.GetSpecialFolderLocation(0, CSIDL_DESKTOP);
     if (cpidlDesk.GetPidl())
     {
         // Fill in the TVITEM structure for this item.
@@ -425,7 +425,7 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
     HTREEITEM childItem = GetChild(item);
 
     // Search for the item displayed in the list view.
-    while (childItem != NULL)
+    while (childItem != 0)
     {
         // Get the TVITEM structure for this item.
         ZeroMemory(&itemInfo, sizeof(itemInfo));

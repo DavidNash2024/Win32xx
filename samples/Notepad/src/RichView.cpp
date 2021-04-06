@@ -174,6 +174,8 @@ void CRichView::QuickPrint(LPCTSTR docName)
     // Acquire the currently selected printer and page settings
     CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
+    if (printerDC.GetHDC() == 0)
+        throw CResourceException(_T("No printer available"));
 
     // Assign values to the FORMATRANGE struct
     FORMATRANGE fr;

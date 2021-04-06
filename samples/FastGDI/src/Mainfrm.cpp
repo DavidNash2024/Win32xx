@@ -122,7 +122,7 @@ void CMainFrame::OnFileNew()
     TB.DisableButton(IDM_FILE_SAVEAS);
     TB.DisableButton(IDM_FILE_PRINT);
     TB.DisableButton(IDM_IMAGE_ADJUST);
-    m_view.LoadFileImage(NULL);
+    m_view.LoadFileImage(0);
 
     // Set the caption
     SetWindowText(_T("FastGDI"));

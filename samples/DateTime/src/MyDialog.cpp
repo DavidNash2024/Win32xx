@@ -14,7 +14,7 @@
 CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
     if (GetComCtlVersion() < 471)
-        ::MessageBox(NULL,  _T("Date Time control not supported"), _T(""), MB_OK );
+        ::MessageBox(0,  _T("Date Time control not supported"), _T(""), MB_OK );
 }
 
 // Destructor.

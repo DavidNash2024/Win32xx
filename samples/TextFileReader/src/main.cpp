@@ -43,7 +43,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int )                                  /*
     CSemaphore sf(nInstances, nInstances, semaphoreName, NULL);
     if (WaitForSingleObject(sf, 0) == WAIT_TIMEOUT)
     {
-        ::MessageBox(NULL, _T("The allowed number of instances of this\n")
+        ::MessageBox(0, _T("The allowed number of instances of this\n")
         _T("application are already running."), _T("Stop"),
         MB_OK | MB_ICONSTOP | MB_TASKMODAL);
         sf.ReleaseSemaphore(1, NULL);

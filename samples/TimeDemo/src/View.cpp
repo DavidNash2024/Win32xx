@@ -45,7 +45,7 @@ GetFontSize() const                                                         /*
 *-----------------------------------------------------------------------------*/
 {
       // select the current font into a temporary device context
-    CClientDC dc(NULL);
+    CClientDC dc(0);
     dc.SelectObject(m_font);
       // measure the font width and height
     TEXTMETRIC tm;
@@ -224,7 +224,7 @@ SetDefaultFont()                                                            /*
 *-----------------------------------------------------------------------------*/
 {
       // compute the logical font height for the nDefaultFontSize
-    CClientDC dc(NULL);
+    CClientDC dc(0);
       // define default size and face
     int nDefaultFontSize = 10;
     TCHAR lpszFaceDefault[] = _T("Courier New");

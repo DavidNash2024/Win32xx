@@ -187,6 +187,7 @@
 		<Unit filename="../src/TestWnd.h" />
 		<Unit filename="../src/ThreadApp.cpp" />
 		<Unit filename="../src/ThreadApp.h" />
+		<Unit filename="../src/UserMessages.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.h">

@@ -6,8 +6,8 @@
 ===============================================================================*
 
     Contents Description: Declaration and implementation of the DSize class and
-    declaration of the CPreviewPaneEx, CPrintPreviewEx, and PreviewSetup classes
-    using the Win32++ Windows interface classes.
+    declaration of the CPreviewPaneEx and CPrintPreviewEx classes using the
+    Win32++ Windows interface classes.
 
     Programming Notes: The programming style roughly follows that established
     for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
@@ -24,6 +24,8 @@
 class CPrintPreviewEx;
 class CPreviewPaneEx;
 
+const double    IN_PER_MM      = 0.03937;    // convert mm to inches
+
 /*=============================================================================*/
     class
 DSize                                                                       /*
@@ -34,7 +36,10 @@ DSize                                                                       /*
 {
     public:
         DSize() {cx = cy = 0.0;}
-        DSize(double x, double y) {cx = x; cy = y;}
+        DSize(double x, double y)
+            {cx = x; cy = y;}
+        DSize(CSize size)
+            {cx = size.cx, cy = size.cy; }
 
         BOOL    operator==(const DSize& size) const
                     { return size.cx == cx && size.cy == cy;}
@@ -64,48 +69,9 @@ DSize                                                                       /*
         double  cy;
 };
 
-/*============================================================================*/
-    class
-PreviewSetup    : public CDialog                                            /*
-
-    The preview setup dialog class, which permits input of screen and
-    initial preview window sizes, as well as particulars for the printer
-    page.
-*-----------------------------------------------------------------------------*/
-{
-    public:
-        PreviewSetup() : CDialog(IDD_PREVIEW_SETUP) {}
-        virtual ~PreviewSetup() {}
-
-    protected:
-        virtual void    DoDataExchange(CDataExchange& dx);
-        CPrintPreviewEx& GetPreviewDlg()
-                            { HWND h = ::GetParent(*this);
-                              return *(CPrintPreviewEx*)GetCWndPtr(h);}
-        virtual BOOL    OnInitDialog();
-        virtual INT_PTR DialogProc(UINT msg, WPARAM, LPARAM);
-        virtual BOOL    OnCommand(WPARAM, LPARAM);
-        virtual BOOL    OnPageSetupButton();
-        virtual void    OnCancel();
-        virtual void    OnOK();
-
-    private:
-        BOOL    AddToolTip(UINT id)
-                    { HWND h = GetDlgItem(id);
-                      return m_toolTips.AddTool(h, id); }
-        HWND    CreateToolTip(HWND dlg)
-                    { HWND rtn = m_toolTips.Create(dlg);
-                        m_toolTips.SetWindowTheme(L" ", L" "); // XP themes off
-                        return rtn;}
-        void    InitializeToolTips();
-
-          // private data
-        CDataExchange   m_dx;
-        CButton         m_pageSetup;
-        CToolTip        m_toolTips;
-        DSize           m_inScreenInches;
-        DSize           m_inPreviewInches;
-};
+  // conversion to CSize, with rounding
+inline  CSize   ToCSize(DSize d)
+                    { return CSize(int(d.cx + 0.5), int(d.cy + 0.5)); }
 
 /*=============================================================================*/
     class
@@ -158,30 +124,19 @@ CPrintPreviewEx : public CDialog                                         /*
     The print preview dialog window class.
 *-----------------------------------------------------------------------------*/
 {
-    friend class PreviewSetup;
-
     public:
         CPrintPreviewEx(DWORD flags = HIDE_HELP);
         virtual ~CPrintPreviewEx() {}
 
-        BOOL    ClosePreview();
-        CPreviewPaneEx& GetPreviewPane()      {return m_previewPane;}
-        DSize   GetPreviewSize() const        {return m_previewInches;}
-        void    SetPreviewSize(DSize size)    {m_previewInches = size;}
-        DSize   GetScreenPrinterRatio() const {return m_screenPrinterRatio;}
-        DSize   GetScreenSize() const         {return m_screenInches;}
-        void    SetScreenSize(DSize size)     {m_screenInches = size;}
-        void    InitializeContexts();
         BOOL    OnPreview(const CString&);
-        void    SetSizes(DSize scrn, DSize prevw)
-                    {m_screenInches = scrn; m_previewInches = prevw;}
-        void    SetWindowSizes();
 
     protected:
+        virtual BOOL    ClosePreview();
         virtual void    DoDataExchange(CDataExchange& dx);
         virtual void    DocPageToBmp(UINT);
         virtual void    DoPreparePreview();
         virtual INT_PTR DialogProc(UINT msg, WPARAM, LPARAM);
+        virtual void    InitializeContexts();
         virtual void    LoadSizesRegistry();
         virtual BOOL    OnCommand(WPARAM, LPARAM);
         virtual BOOL    OnInitDialog();
@@ -190,6 +145,7 @@ CPrintPreviewEx : public CDialog                                         /*
         virtual void    OnPreparePrintPreview();
         virtual void    OnPreviewPage(UINT);
         virtual void    SaveSizesRegistry();
+        virtual void    SetWindowSizes();
 
     private:
         BOOL    AddToolTip(UINT id)
@@ -209,11 +165,10 @@ CPrintPreviewEx : public CDialog                                         /*
         BOOL    OnPrintButton();
         BOOL    OnZoomChange();
         void    PopulateScaleBox();
-        BOOL    PreviewAndPageSetup();
         CString RegQueryStringValue(CRegKey &key, LPCTSTR name);
         void    UpdateButtons();
 
-        CDataExchange   m_dx;
+        CDataExchange m_dx;
           // preview dialog controls
         CPreviewPaneEx m_previewPane;         // preview window
         CButton     m_buttonPrint;
@@ -234,20 +189,18 @@ CPrintPreviewEx : public CDialog                                         /*
         CBitmap     m_nextPage;
         CBitmap     m_lastPage;
           // screen, initial preview size, and print page setup
-        PreviewSetup m_setupDlg;            // setup dialog
-        DSize       m_screenInches;         // screen size, in inches
         DSize       m_previewInches;        // preview size, inches
-        DSize       m_screenPrinterRatio;   // printerDPI/screenDPI
         CSize       m_printerDots;          // printer size, in dots
+        DSize       m_printerPPI;           // printer points per inch
+        DSize       m_screenInches;         // screen size, in inches
         CSize       m_screenPixels;         // screen size, in pixels
-
+        CSize       m_screenPPI;            // screen pixels per inch
           // preview particulars
         CString     m_docPath;              // previewed document path
         CDC         m_dcPrinter;            // printer context
         CMemDC      m_dcMem;                // memory context
         UINT        m_currentPage;          // page number, zero based
         UINT        m_numPreviewPages;      // total pages
-        double      m_shrink;               // printer/screen ratio
         DWORD       m_flags;                // dialog invocation flags
 };
 /*----------------------------------------------------------------------------*/

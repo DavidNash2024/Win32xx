@@ -156,7 +156,7 @@ namespace Win32xx
     : m_event(0)
     {
         m_event = ::CreateEvent(pAttributes, isManualReset, isInitiallySignaled, pstrName);
-        if (m_event == NULL)
+        if (m_event == 0)
             throw CResourceException(g_msgMtxEvent);
     }
 
@@ -189,7 +189,7 @@ namespace Win32xx
     : m_mutex(0)
     {
         m_mutex = ::CreateMutex(pAttributes, isInitiallySignaled, pName);
-        if (m_mutex == NULL)
+        if (m_mutex == 0)
             throw CResourceException(g_msgMtxMutex);
     }
 
@@ -213,7 +213,7 @@ namespace Win32xx
         assert(initialCount <= maxCount);
 
         m_semaphore = ::CreateSemaphore(pAttributes, initialCount, maxCount, pName);
-        if (m_semaphore == NULL)
+        if (m_semaphore == 0)
             throw CResourceException(g_msgMtxSemaphore);
     }
 

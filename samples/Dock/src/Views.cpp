@@ -109,7 +109,7 @@ void CViewList::OnAttach()
 // Called when the window is destroyed.
 void CViewList::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Called when the mouse is clicked on the window.
@@ -206,7 +206,7 @@ void CViewTree::OnAttach()
 // Called when the window is destroyed.
 void CViewTree::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Called when the mouse is clicked on the window.

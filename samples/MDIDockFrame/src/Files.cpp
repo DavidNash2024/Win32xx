@@ -48,7 +48,7 @@ void CViewFiles::InsertItems()
 // Called when the window is destroyed.
 void CViewFiles::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Called when a window handle (HWND) is attached to CViewFiles.

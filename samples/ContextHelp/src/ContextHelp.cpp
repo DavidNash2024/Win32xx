@@ -143,7 +143,7 @@ void CContextHelp::ShowHelpTopic(LPCTSTR topic)
             : _T("\n\nMake sure the .chm file is in the .exe directory."));
 
         s.Format(fmt, topic, add.c_str());
-        ::MessageBox(NULL, s, _T("Information"), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+        ::MessageBox(0, s, _T("Information"), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
     }
 }
 

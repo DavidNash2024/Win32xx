@@ -326,7 +326,7 @@ void CMainFrame::OnFilePrint()
         // Display a message box indicating why printing failed.
         CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
         CString type = CString(e.what());
-        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+        ::MessageBox(0, message, type, MB_ICONWARNING);
     }
 
 }

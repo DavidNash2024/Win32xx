@@ -216,7 +216,7 @@ namespace Win32xx
     }
 
     // Adds an image or images to an image list, generating a mask from the specified bitmap.
-    // The mask parameter can be NULL.
+    // The mask parameter can be 0.
     // Refer to ImageList_Add in the Windows API documentation for more information.
     inline int CImageList::Add(HBITMAP bitmap, HBITMAP mask) const
     {
@@ -659,7 +659,7 @@ namespace Win32xx
 
         if (InterlockedDecrement(&m_pData->count) == 0)
         {
-            if (m_pData->images != NULL)
+            if (m_pData->images != 0)
             {
                 if (m_pData->isManagedHiml)
                 {
@@ -680,7 +680,7 @@ namespace Win32xx
     // Creates a gray scale image list from the specified color image list.
     inline BOOL CImageList::CreateDisabledImageList(HIMAGELIST normalImages)
     {
-        assert(NULL == m_pData->images);
+        assert(0 == m_pData->images);
         assert(normalImages);
 
         int count = ImageList_GetImageCount(normalImages);
@@ -695,8 +695,8 @@ namespace Win32xx
             // Process each image in the ImageList
             for (int i = 0 ; i < count; ++i)
             {
-                CClientDC DesktopDC(NULL);
-                CMemDC memDC(NULL);
+                CClientDC DesktopDC(0);
+                CMemDC memDC(0);
                 memDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
                 CRect rc;
                 rc.SetRect(0, 0, cx, cx);

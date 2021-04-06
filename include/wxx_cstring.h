@@ -693,7 +693,7 @@ namespace Win32xx
     inline BSTR CStringT<CHAR>::AllocSysString() const
     {
         BSTR bstr = ::SysAllocStringLen(AtoW(m_str.c_str()), static_cast<UINT>(m_str.size()));
-        if (bstr == NULL)
+        if (bstr == 0)
             throw std::bad_alloc();
 
         return bstr;
@@ -705,7 +705,7 @@ namespace Win32xx
     inline BSTR CStringT<WCHAR>::AllocSysString() const
     {
         BSTR bstr = ::SysAllocStringLen(m_str.c_str(), static_cast<UINT>(m_str.size()));
-        if (bstr == NULL)
+        if (bstr == 0)
             throw std::bad_alloc();
 
         return bstr;

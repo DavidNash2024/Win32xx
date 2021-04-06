@@ -24,12 +24,12 @@ CHyperlink()                                                                /*
         m_crVisited(hyTextColor[0]), m_crNotVisited(hyTextColor[1])
 {
       // Create the cursor
-    m_cursor = ::LoadCursor(NULL, IDC_HAND);
+    m_cursor = ::LoadCursor(0, IDC_HAND);
 
       // IDC_HAND is not available on Win95, so load a reasonable
       // alternative
     if( !m_cursor )
-        m_cursor = ::LoadCursor(NULL, IDC_ARROW);
+        m_cursor = ::LoadCursor(0, IDC_ARROW);
 }
 
 /*============================================================================*/
@@ -91,7 +91,7 @@ OpenUrl()                                                                   /*
 {
     LPCTSTR url = _T("http://sourceforge.net/projects/win32-framework/");
 
-    HINSTANCE result = ::ShellExecute(NULL, _T("open"), url, NULL, NULL,
+    HINSTANCE result = ::ShellExecute(0, _T("open"), url, NULL, NULL,
         SW_SHOWNORMAL);
 
     if (reinterpret_cast<INT_PTR>(result) > 32)

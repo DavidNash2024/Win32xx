@@ -221,7 +221,7 @@ void CMainFrame::RecalcLayout()
     // Resize the status bar
     if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
     {
-        GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
+        GetStatusBar().SetWindowPos(0, 0, 0, 0, 0, SWP_SHOWWINDOW);
         GetStatusBar().Invalidate();
         if (IsUsingMenuStatus())
             GetStatusBar().SetWindowText(GetStatusText());
@@ -272,15 +272,15 @@ void CMainFrame::SetReBarPos()
     switch(style)
     {
     case CCS_LEFT:
-        m_reBar.SetWindowPos(NULL, 0, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
+        m_reBar.SetWindowPos(0, 0, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
         m_toolBar.PressButton(IDM_LEFT, TRUE);
         break;
     case CCS_RIGHT:
-        m_reBar.SetWindowPos(NULL, rc.Width() - cxRB, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
+        m_reBar.SetWindowPos(0, rc.Width() - cxRB, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
         m_toolBar.PressButton(IDM_RIGHT, TRUE);
         break;
     case CCS_BOTTOM:
-        m_reBar.SetWindowPos(NULL, 0, rc.bottom - cyRB, rc.Width(), cyRB, SWP_SHOWWINDOW);
+        m_reBar.SetWindowPos(0, 0, rc.bottom - cyRB, rc.Width(), cyRB, SWP_SHOWWINDOW);
         m_toolBar.PressButton(IDM_BOTTOM, TRUE);
         break;
     default:

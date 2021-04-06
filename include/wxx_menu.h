@@ -262,7 +262,7 @@ namespace Win32xx
 
         if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
-            if (m_pData->menu != NULL)
+            if (m_pData->menu != 0)
             {
                 if (m_pData->isManagedMenu)
                 {
@@ -323,7 +323,7 @@ namespace Win32xx
         return ::AppendMenu(m_pData->menu, flags, newItemID, reinterpret_cast<LPCTSTR>(bitmap));
     }
 
-    // Attaches an existing menu to this CMenu. The menu can be NULL
+    // Attaches an existing menu to this CMenu. The menu can be 0.
     inline void CMenu::Attach(HMENU menu)
     {
         assert(m_pData);
@@ -696,7 +696,7 @@ namespace Win32xx
         assert(m_pData);
         if (!m_pData) return FALSE;
 
-        assert(NULL == m_pData->menu);
+        assert(0 == m_pData->menu);
         assert(pResName);
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), pResName);
         if (menu != 0)
@@ -705,7 +705,7 @@ namespace Win32xx
             m_pData->isManagedMenu = TRUE;
         }
 
-        return NULL != m_pData->menu;
+        return 0 != m_pData->menu;
     }
 
     // Loads the menu from the specified windows resource.
@@ -715,7 +715,7 @@ namespace Win32xx
         assert(m_pData);
         if (!m_pData) return FALSE;
 
-        assert(NULL == m_pData->menu);
+        assert(0 == m_pData->menu);
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(resID));
         if (menu != 0)
         {
@@ -741,7 +741,7 @@ namespace Win32xx
             m_pData->isManagedMenu = TRUE;
         }
 
-        return NULL != m_pData->menu;
+        return 0 != m_pData->menu;
     }
 
     // Changes an existing menu item. This function is used to specify the content, appearance, and behaviour of the menu item.

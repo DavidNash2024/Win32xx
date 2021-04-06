@@ -204,7 +204,7 @@ namespace Win32xx
             wc.lpfnWndProc = ::DefWindowProc;
             wc.hInstance = GetApp()->GetInstanceHandle();
             wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
-            wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+            wc.hCursor = ::LoadCursor(0, IDC_ARROW);
             ::RegisterClass(&wc);
         }
 

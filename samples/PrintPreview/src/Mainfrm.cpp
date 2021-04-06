@@ -48,7 +48,7 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
 
     *pcb = 0;
     if (!::ReadFile((HANDLE)(DWORD_PTR)cookie, pBuffer, cb, (LPDWORD)pcb, NULL))
-        ::MessageBox(NULL, _T("ReadFile Failed"), _T(""), MB_OK);
+        ::MessageBox(0, _T("ReadFile Failed"), _T(""), MB_OK);
 
     return 0;
 }
@@ -62,7 +62,7 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
 
     *pcb = 0;
     if (!::WriteFile((HANDLE)(DWORD_PTR)cookie, pBuffer, cb, (LPDWORD)pcb, NULL))
-        ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
+        ::MessageBox(0, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }
 
@@ -245,6 +245,8 @@ void CMainFrame::OnFilePreview()
         // Verify a print preview is possible
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
+        if (printerDC.GetHDC() == 0)
+            throw CResourceException(_T("No printer available"));
 
         // Setup the print preview.
         m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
@@ -466,7 +468,7 @@ void CMainFrame::OnOptionsFont()
 // Toggles the word wrap.
 void CMainFrame::OnOptionsWrap()
 {
-    m_richView.SetTargetDevice(NULL, m_isWrapped);
+    m_richView.SetTargetDevice(0, m_isWrapped);
     m_isWrapped = !m_isWrapped;
 }
 
@@ -565,7 +567,7 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
         str += e.GetFilePath();
         str += "\n";
         str += e.GetText();
-        ::MessageBox(NULL, str, AtoT(e.what()), MB_ICONWARNING);
+        ::MessageBox(0, str, AtoT(e.what()), MB_ICONWARNING);
         return FALSE;
     }
 
@@ -577,7 +579,7 @@ void CMainFrame::SaveModifiedText()
 {
     //Check for unsaved text
     if (m_richView.GetModify())
-        if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
+        if (::MessageBox(0, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
             OnFileSave();
 }
 
@@ -668,7 +670,7 @@ BOOL CMainFrame::WriteFile(LPCTSTR fileName)
     {
         CString str = _T("Failed to write:  ");
         str += fileName;
-        ::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
+        ::MessageBox(0, str, _T("Warning"), MB_ICONWARNING);
         return FALSE;
     }
 

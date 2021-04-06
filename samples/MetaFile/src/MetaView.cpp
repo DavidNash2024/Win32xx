@@ -21,7 +21,7 @@ int CMetaView::OnCreate(CREATESTRUCT&)
 
     CEnhMetaFileDC metaDC;
     // Creates an enhanced MetaFile called "Pattern.emf", and also the EnhMetaFile device context
-    metaDC.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
+    metaDC.CreateEnhanced(0, _T("Pattern.emf"), NULL, NULL);
 
     // Draw to the Metafile device context
     metaDC.Rectangle(0, 0, 100, 100);

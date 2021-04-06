@@ -12,10 +12,8 @@
 class CMyPropertySheet : public CPropertySheet
 {
 public:
-    CMyPropertySheet(LPCTSTR caption = NULL, HWND hParent = NULL);
+    CMyPropertySheet(LPCTSTR caption = NULL, HWND hParent = 0);
     virtual ~CMyPropertySheet() {}
-    virtual void OnClose() { TRACE("OnClose\n"); CPropertySheet::OnClose(); }
-    virtual void OnDestroy() { TRACE("OnDestroy\n"); }
     virtual void OnInitialUpdate();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };

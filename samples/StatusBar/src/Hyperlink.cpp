@@ -12,11 +12,11 @@ CHyperlink::CHyperlink() : m_isUrlVisited(FALSE), m_isClicked(FALSE), m_visitedC
                             m_notVisitedColor(RGB(0,0,255))
 {
     // Create the cursor
-    m_hCursor = ::LoadCursor(NULL, IDC_HAND);
+    m_hCursor = ::LoadCursor(0, IDC_HAND);
 
     // IDC_HAND is not available on Win95, so load a reasonable alternative
     if( !m_hCursor )
-        m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
+        m_hCursor = ::LoadCursor(0, IDC_ARROW);
 }
 
 CHyperlink::~CHyperlink()
@@ -63,7 +63,7 @@ void CHyperlink::OpenUrl()
 {
     TCHAR szUrl[ MAX_PATH + 1 ] = _T("http://sourceforge.net/projects/win32-framework/");
 
-    HINSTANCE result = ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
+    HINSTANCE result = ShellExecute(0, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
 
     if (reinterpret_cast<INT_PTR>(result) > 32)
     {

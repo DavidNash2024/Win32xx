@@ -14,8 +14,8 @@
 class CMyThread : public CWinThread
 {
 public:
-    CMyThread(int threadNumber);
-    virtual ~CMyThread() {}
+    CMyThread(int threadNumber, HWND mainWindow);
+    virtual ~CMyThread();
 
     void CloseThread();
     CTestWindow* GetTestWnd()   { return &m_testWnd; }
@@ -26,7 +26,8 @@ protected:
 
 private:
     CTestWindow m_testWnd;
-    int m_threadNumber;
+    int         m_threadNumber;
+    HWND        m_mainWindow;
 };
 
 

@@ -32,7 +32,7 @@ BOOL CExplorerApp::InitInstance()
     }
     else
     {
-        ::MessageBox(NULL, _T("Failed to initialize COM"), _T("ERROR"), MB_ICONERROR);
+        ::MessageBox(0, _T("Failed to initialize COM"), _T("ERROR"), MB_ICONERROR);
         return FALSE;
     }
 

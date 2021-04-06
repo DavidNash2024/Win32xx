@@ -40,7 +40,7 @@ int CDXView::CDXThread::MessageLoop()
     ZeroMemory(&msg, sizeof(msg));
     while( msg.message != WM_QUIT )
     {
-        if ( PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+        if ( PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
         {
             ::TranslateMessage(&msg);
             ::DispatchMessage(&msg);
@@ -170,7 +170,7 @@ LRESULT CDXView::CDX::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     int cx = GET_X_LPARAM(lparam);
     int cy = GET_Y_LPARAM(lparam);
 
-    SetWindowPos(NULL, 0, 0, cx, cy, SWP_SHOWWINDOW);
+    SetWindowPos(0, 0, 0, cx, cy, SWP_SHOWWINDOW);
     return FinalWindowProc(msg, wparam, lparam);
 }
 
@@ -267,7 +267,7 @@ void CDXView::CDX::Render()
                     TRACE("Failed to render the scene\n");
 
                 // Present the backbuffer contents to the display
-                m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
+                m_pd3dDevice->Present( NULL, NULL, 0, NULL );
             }
             break;
         case D3DERR_DEVICELOST:

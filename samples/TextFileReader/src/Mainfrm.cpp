@@ -172,7 +172,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
         CString msg = _T("Default values are being used on this first\n")
             _T("startup. Your customized settings, colors, and font\n")
             _T("will be restored in future usages.\n");
-        ::MessageBox(NULL, msg, _T("Information"), MB_OK |
+        ::MessageBox(0, msg, _T("Information"), MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
         return 0;
     }
@@ -193,13 +193,13 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
             text += _T("\n");
         CString msg = (CString)"Error restoring program's previous state.\n" +
             text + e.GetErrorString() + _T("\n") + e.what();
-        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
+        ::MessageBox(0, msg.c_str(), _T("Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     catch(...) // catch all other exception events
     {
         CString msg = _T("Program's previous state not restored.\n");
-        ::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
+        ::MessageBox(0, msg.c_str(), _T("Unknown Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     m_wndPl.showCmd = SW_RESTORE;
@@ -358,13 +358,13 @@ SaveSettings()                                                              /*
             text += _T("\n");
         CString msg = (CString)"Error while saving program's state.\n" + text +
             e.GetErrorString() + _T("\n") + e.what();
-        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
+        ::MessageBox(0, msg.c_str(), _T("Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     catch(...) // catch all other exception events
     {
         CString msg = _T("Program's current state not saved.\n");
-        ::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
+        ::MessageBox(0, msg.c_str(), _T("Unknown Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
 }

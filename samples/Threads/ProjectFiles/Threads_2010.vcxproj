@@ -65,6 +65,7 @@
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\TestWnd.h" />
     <ClInclude Include="..\src\ThreadApp.h" />
+    <ClInclude Include="..\src\UserMessages.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />

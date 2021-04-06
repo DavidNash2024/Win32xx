@@ -11,7 +11,7 @@
 class CTestWindow : public CWnd
 {
 public:
-    CTestWindow(int window);
+    CTestWindow(int thread, HWND mainWindow);
     virtual ~CTestWindow() {}
     virtual HWND Create(HWND parent = 0);
 
@@ -20,13 +20,8 @@ protected:
     virtual void OnInitialUpdate();
 
 private:
-    enum Constants
-    {
-        WM_WINDOWCREATED     = WM_USER+1,
-        WM_TESTMESSAGE       = WM_USER+2
-    };
-
-    int m_window;
+    int  m_threadNumber;
+    HWND m_mainWindow;
 };
 
 

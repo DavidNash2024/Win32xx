@@ -246,7 +246,7 @@ ValidateMRU()                                                               /*
         CString s = m_MRUEntries[i];
         if (_taccess(s.c_str(), 4) != 0)
         {
-            ::MessageBox(NULL, s, _T("Removing invalid MRU entry."),
+            ::MessageBox(0, s, _T("Removing invalid MRU entry."),
                 MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
               // convert index to the proper forward iterator for erase
             it = m_MRUEntries.begin() + i;

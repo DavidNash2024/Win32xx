@@ -99,9 +99,6 @@
   #define STRICT 1
 #endif
 
-#ifdef __GNUC__
-  #pragma GCC diagnostic ignored "-Wmissing-braces"
-#endif
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 

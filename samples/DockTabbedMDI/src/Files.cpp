@@ -86,7 +86,7 @@ void CViewFiles::InsertItems()
 // Called when the window is destroyed.
 void CViewFiles::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Process the list-view's window messages.

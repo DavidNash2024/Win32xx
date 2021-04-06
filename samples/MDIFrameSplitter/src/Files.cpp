@@ -65,7 +65,7 @@ void CViewFiles::OnAttach()
 // Called when the window is destroyed.
 void CViewFiles::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Respond to a mouse click on the window.

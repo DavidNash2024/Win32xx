@@ -33,7 +33,7 @@ int CSplash::OnCreate(CREATESTRUCT&)
 void CSplash::AddBar()
 {
     m_progress.Create(*this);
-    m_progress.SetWindowPos(NULL, 50, 200, 156, 10, SWP_SHOWWINDOW);
+    m_progress.SetWindowPos(0, 50, 200, 156, 10, SWP_SHOWWINDOW);
     m_progress.SetStep(1);
 }
 
@@ -53,10 +53,10 @@ void CSplash::LoadFont()
     if (res)
     {
         HGLOBAL mem = LoadResource(hResInstance, res);
-        if (mem != NULL)
+        if (mem != 0)
         {
             void* data = LockResource(mem);
-            if (data != NULL)
+            if (data != 0)
             {
                 DWORD len = SizeofResource(hResInstance, res);
                 DWORD fonts = 0;
@@ -64,7 +64,7 @@ void CSplash::LoadFont()
                 m_fontHandle = AddFontMemResourceEx(
                     data,           // font resource
                     len,            // number of bytes in font resource
-                    NULL,           // Reserved. Must be 0.
+                    0,              // Reserved. Must be 0.
                     &fonts          // number of fonts installed
                 );
 
@@ -114,7 +114,7 @@ void CSplash::PreRegisterClass(WNDCLASS& wc)
 {
     wc.lpszClassName = L"Splash Screen";
     wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
-    wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+    wc.hCursor = ::LoadCursor(0, IDC_ARROW);
 }
 
 // Removes the progress bar.

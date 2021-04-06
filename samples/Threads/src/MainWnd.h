@@ -24,25 +24,22 @@ public:
     void AppendText(LPCTSTR text);
     HWND Create(HWND parent = 0);
     void OnAllWindowsCreated();
+    void OnAppendText(WPARAM wparam);
+    void OnCloseThread(WPARAM wparam);
+    void OnSize();
     void OnWindowCreated();
 
 protected:
-    virtual void OnClose();
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    enum Constants
-    {
-        WM_WINDOWCREATED = WM_USER+1,   // the message sent when window is created
-        WM_TESTMESSAGE   = WM_USER+2    // the test message
-    };
-
-    std::vector<MyThreadPtr> m_threads; // A vector of CMyThread smart pointers
-    int m_maxWindows;                   // Number of additional test windows to be created
-    int m_windowsCount;                 // Count of windows actually created
-    CMyEdit m_edit;
+    CCriticalSection m_cs;              // Used to ensure thread safe access to m_threads.
+    CMyEdit m_edit;                     // Child window edit control.
+    std::vector<MyThreadPtr> m_threads; // A vector of CMyThread smart pointers.
+    int m_maxWindows;                   // Number of additional test windows to be created.
+    int m_windowsCount;                 // Count of windows actually created.
 };
 
 

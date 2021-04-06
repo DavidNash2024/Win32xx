@@ -65,7 +65,7 @@ void CViewClasses::OnAttach()
 // Called when the window is destroyed.
 void CViewClasses::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.
@@ -118,7 +118,7 @@ void CContainClasses::AddCombo()
 
     // Create the ComboboxEx window
     m_comboBoxEx.Create(tb);
-    m_comboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
+    m_comboBoxEx.SetWindowPos(0, rect, SWP_NOACTIVATE);
 
     // Adjust the toolbar height to accommodate the ComboBoxEx control
     CRect rc = m_comboBoxEx.GetWindowRect();

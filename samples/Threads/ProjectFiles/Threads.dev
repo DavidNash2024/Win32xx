@@ -1,7 +1,7 @@
 [Project]
 FileName=Threads.dev
 Name=Threads
-UnitCount=16
+UnitCount=17
 Type=0
 Ver=2
 ObjFiles=
@@ -171,9 +171,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit17]
-FileName=MyDialog.h
+FileName=..\src\UserMessages.h
 CompileCpp=1
-Folder=Threads
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

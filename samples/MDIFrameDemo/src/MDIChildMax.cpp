@@ -15,7 +15,7 @@
 CMDIChildMax::CMDIChildMax()
 {
     m_menu.LoadMenu(_T("MdiMenuMax"));
-    SetHandles(m_menu, NULL);
+    SetHandles(m_menu, 0);
     SetView(m_maxView);
 }
 

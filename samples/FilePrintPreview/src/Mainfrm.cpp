@@ -6,7 +6,7 @@
 ===============================================================================*
 
     Contents Description: Implementation of the CMainFrame class for the
-    FilePrintPreview demo program using the Win32++ Windows interface classes.
+    FilePrintPreview sample program using the Win32++ Windows interface classes.
 
     Programming Notes: The programming style roughly follows that established
     for the 1995-1999 Jet Propulsion Laboratory Deep Space Network Planning and
@@ -30,7 +30,7 @@ static const int MAXMRU = 5;
     CMainFrame::
 CMainFrame()                                                                /*
 
-    Construct the main frame object for the PrintPreviewClass demo.
+    Construct the main frame object for the sample program.
 *-----------------------------------------------------------------------------*/
     :   m_wrapOption(WRAP_NONE)
 {
@@ -506,8 +506,8 @@ PreCreate(CREATESTRUCT& cs)                                                 /*
 {
     CFrame::PreCreate(cs); // Set the saved frame creation parameters
 
-//  cs.cx = 755;    // you may uncomment this to override saved settings
-//  cs.cy = 420;    // but remove resizing in OnInitialUpdate()
+//  cs.cx = 755;    // you may uncomment these to override saved settings
+//  cs.cy = 420;
 }
 
 /*============================================================================*/
@@ -565,7 +565,6 @@ SetupMenuIcons()                                                            /*
 *-----------------------------------------------------------------------------*/
 {
       // print and preview menu bitmaps
-    AddMenuIcon(IDM_FILE_PRINTSETUP, GetApp()->LoadIcon(IDI_PRINTSETUP));
     AddMenuIcon(IDM_FILE_PREVIEW,    GetApp()->LoadIcon(IDI_PRINTPREVIEW));
     AddMenuIcon(IDM_FILE_QUICKPRINT, GetApp()->LoadIcon(IDI_QUICKPRINT));
     AddMenuIcon(IDM_FILE_PRINT,      GetApp()->LoadIcon(IDI_PRINT));
@@ -592,13 +591,13 @@ SetupToolBar()                                                              /*
     AddToolBarButton(IDM_FILE_NEW);
     AddToolBarButton(IDM_FILE_OPEN);
     AddToolBarButton(IDM_FILE_SAVE);
-    AddToolBarButton(0);              // Separator
+    AddToolBarButton(0);                // Separator
     AddToolBarButton(IDM_EDIT_CUT);
     AddToolBarButton(IDM_EDIT_COPY);
     AddToolBarButton(IDM_EDIT_PASTE);
-    AddToolBarButton(0);              // Separator
+    AddToolBarButton(0);                // Separator
     AddToolBarButton(IDM_FILE_PRINT);
-    AddToolBarButton(0 );              // Separator
+    AddToolBarButton(0 );               // Separator
     AddToolBarButton(IDM_HELP_ABOUT);
 }
 
@@ -611,7 +610,8 @@ SetPath(LPCTSTR path)                                                       /*
 *-----------------------------------------------------------------------------*/
 {
     m_path = path;
-    CString title = (m_path.IsEmpty() ? _T("FilePrintPreview Demo") : m_path.c_str());
+    CString title = (m_path.IsEmpty() ?
+        _T("FilePrintPreview Sample Program") : m_path.c_str());
     SetWindowText(title);
 }
 

@@ -162,7 +162,7 @@ namespace Win32xx
             m_ansiArray.assign(length, '\0');
 
             // Fill our vector with the converted char array
-            WideCharToMultiByte(codePage, 0, str, charCount, &m_ansiArray[0], length, NULL,NULL);
+            WideCharToMultiByte(codePage, 0, str, charCount, &m_ansiArray[0], length, NULL, NULL);
         }
 
         ~CWtoA()

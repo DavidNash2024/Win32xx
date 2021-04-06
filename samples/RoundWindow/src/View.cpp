@@ -136,7 +136,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
 
     wc.hbrBackground = m_brush;                 // Background color
     wc.lpszClassName = _T("Round Window");      // Class Name
-    wc.hCursor = ::LoadCursor(NULL,IDC_ARROW);  // Arrow cursor
+    wc.hCursor = ::LoadCursor(0,IDC_ARROW);  // Arrow cursor
 }
 
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -172,7 +172,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         int y = pt.y - m_point.y;
 
         // Move the window
-        SetWindowPos(NULL, x, y, 0, 0, SWP_NOSIZE);
+        SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE);
     }
 
     // Pass this message on for default processing

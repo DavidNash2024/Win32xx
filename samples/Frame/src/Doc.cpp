@@ -21,7 +21,7 @@ void CDoc::FileLoad(LPCTSTR filename)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
     }
 }
 
@@ -37,7 +37,7 @@ void CDoc::FileStore(LPCTSTR /* filename */)
 //  catch (const CFileException &e)
 //  {
 //      // An exception occurred. Display the relevant information.
-//      ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+//      ::MessageBox(0, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
 //  }
 
 }
