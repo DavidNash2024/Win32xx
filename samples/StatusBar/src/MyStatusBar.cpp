@@ -21,12 +21,12 @@ void CMyStatusBar::OnAttach()
 
     // Create the Hyperlink
     m_hyperlink.Create(*this);
-    m_hyperlink.SetWindowPos(NULL, CRect(3,3,100, 20), SWP_SHOWWINDOW);
+    m_hyperlink.SetWindowPos(0, CRect(3,3,100, 20), SWP_SHOWWINDOW);
 
     // Create the ProgressBar
     m_progressBar.Create(*this);
     CRect partRect = GetPartRect(1);
-    m_progressBar.SetWindowPos(NULL, partRect, SWP_SHOWWINDOW);
+    m_progressBar.SetWindowPos(0, partRect, SWP_SHOWWINDOW);
 
     // Add the icon
     SetPartIcon(2, (HICON)GetApp()->LoadImage(MAKEINTRESOURCE(IDW_MAIN), IMAGE_ICON, 16, 16));
@@ -89,7 +89,7 @@ LRESULT CMyStatusBar::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
             // Reposition the Progress Bar
             CRect partRect = GetPartRect(1);
-            m_progressBar.SetWindowPos(NULL, partRect, SWP_SHOWWINDOW);
+            m_progressBar.SetWindowPos(0, partRect, SWP_SHOWWINDOW);
             break;
         }
     }

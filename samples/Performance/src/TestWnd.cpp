@@ -23,7 +23,7 @@ void CTestWindow::CreateWin(int i)
     TCHAR str[80];
     wsprintf(str, _T("Test Window %d"), m_windowCount);
     CreateEx(0, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-        420, 50 + 4*i, 300, 200, NULL, NULL);
+        420, 50 + 4*i, 300, 200, 0, NULL);
 }
 
 // Called when the window is created.

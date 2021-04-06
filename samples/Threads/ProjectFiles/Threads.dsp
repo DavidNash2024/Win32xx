@@ -145,6 +145,10 @@ SOURCE=..\src\TestWnd.h
 
 SOURCE=..\src\ThreadApp.h
 # End Source File
+# Begin Source File
+
+SOURCE=..\src\UserMessages.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 

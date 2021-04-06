@@ -14,7 +14,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     HMODULE hModule = LoadLibrary(_T("MyDLL.dll"));
     if (0 == hModule)
     {
-        MessageBox(NULL, _T("Failed to load MyDLL.dll"), _T("Error"), MB_OK);
+        MessageBox(0, _T("Failed to load MyDLL.dll"), _T("Error"), MB_OK);
         return 0;
     }
 

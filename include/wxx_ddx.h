@@ -248,7 +248,7 @@ namespace Win32xx
 
             throw CUserException(message);
         }
-        else if (m_lastControl != NULL && m_isEditLastControl)
+        else if (m_lastControl != 0 && m_isEditLastControl)
         {
             // limit the control max-chars automatically
             ::SendMessage(m_lastControl, EM_LIMITTEXT, (WPARAM)count, 0);
@@ -805,7 +805,7 @@ namespace Win32xx
         // traverse all buttons in the group: we've already established
         // there's a group, so set up for the radio buttons in the group
         firstInGroup = FALSE;
-        for (int iButton = 0; control != NULL && !firstInGroup; )
+        for (int iButton = 0; control != 0 && !firstInGroup; )
         {
             if (isRadioButton) // this control in the group is a radio button
             {
@@ -1129,14 +1129,14 @@ namespace Win32xx
     // be overridden as required.
     inline void CDataExchange::Fail(LPCTSTR message) const
     {
-        ::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+        ::MessageBox(0, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 
         if (!m_retrieveAndValidate)
         {
             TRACE(_T("Warning: CDataExchange::Fail() called while "));
             TRACE(_T("writing to a control.\n"));
         }
-        else if (m_lastControl != NULL)
+        else if (m_lastControl != 0)
         {
             if (m_isEditLastControl) // if the offender is an edit control
             {
@@ -1161,7 +1161,7 @@ namespace Win32xx
         // record the default action and parent window
         m_retrieveAndValidate = retrieveAndValidate;
         m_parent       = dlgWnd;
-        m_lastControl  = NULL;
+        m_lastControl  = 0;
     }
 
     // Find the handle to the control whose numeric identifier is id and

@@ -210,7 +210,7 @@ namespace Win32xx
 
         // Scroll the window
         int deltaX = newPos.x - m_currentPos.x;
-        ScrollWindowEx(-deltaX, 0, NULL, NULL, NULL, NULL, SW_INVALIDATE);
+        ScrollWindowEx(-deltaX, 0, NULL, NULL, 0, NULL, SW_INVALIDATE);
         SetScrollPosition(newPos);
 
         return 0;
@@ -276,7 +276,7 @@ namespace Win32xx
             // Scroll the window.
             int deltaX = newPos.x - m_currentPos.x;
             int deltaY = newPos.y - m_currentPos.y;
-            ScrollWindowEx(-deltaX, -deltaY, NULL, NULL, NULL, NULL, SW_INVALIDATE);
+            ScrollWindowEx(-deltaX, -deltaY, NULL, NULL, 0, NULL, SW_INVALIDATE);
             SetScrollPosition(newPos);
         }
 
@@ -336,7 +336,7 @@ namespace Win32xx
 
         // Scroll the window.
         int deltaY = newPos.y - m_currentPos.y;
-        ScrollWindowEx(0, -deltaY, NULL, NULL, NULL, NULL, SW_INVALIDATE);
+        ScrollWindowEx(0, -deltaY, NULL, NULL, 0, NULL, SW_INVALIDATE);
         SetScrollPosition(newPos);
 
         return 0;
@@ -387,7 +387,7 @@ namespace Win32xx
 
         // Scroll the window.
         int deltaY = newPos.y - m_currentPos.y;
-        ScrollWindowEx(0, -deltaY, NULL, NULL, NULL, NULL, SW_INVALIDATE);
+        ScrollWindowEx(0, -deltaY, NULL, NULL, 0, NULL, SW_INVALIDATE);
         SetScrollPosition(newPos);
 
         return 0;
@@ -561,7 +561,7 @@ namespace Win32xx
                 int yNewPos = MIN(m_currentPos.y, totalRect.Height() - viewRect.Height() + cyScroll);
                 yNewPos = MAX(yNewPos, 0);
                 int yDelta = yNewPos - m_currentPos.y;
-                ScrollWindowEx(-xDelta, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE);
+                ScrollWindowEx(-xDelta, -yDelta, NULL, NULL, 0, NULL, SW_INVALIDATE);
 
                 m_currentPos.x = xNewPos;
                 m_currentPos.y = yNewPos;

@@ -136,7 +136,7 @@ namespace Win32xx
     // Attaches a KEY handle to this CRegKey object.
     inline void CRegKey::Attach(HKEY key)
     {
-        assert(m_key == NULL);
+        assert(m_key == 0);
         m_key = key;
     }
 
@@ -145,10 +145,10 @@ namespace Win32xx
     {
         LONG lRes = ERROR_SUCCESS;
 
-        if (m_key != NULL)
+        if (m_key != 0)
         {
             lRes = ::RegCloseKey(m_key);
-            m_key = NULL;
+            m_key = 0;
         }
 
         return lRes;

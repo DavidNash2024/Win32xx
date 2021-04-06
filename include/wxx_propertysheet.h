@@ -474,7 +474,7 @@ namespace Win32xx
         assert( GetApp() );
         UNREFERENCED_PARAMETER(wnd);
 
-        // Note: the hwnd is always NULL
+        // Note: the hwnd is always 0
 
         switch (msg)
         {
@@ -601,7 +601,7 @@ namespace Win32xx
 
         switch(msg)
         {
-        //called before the dialog is created, wnd = NULL, lparam points to dialog resource
+        // Called before the dialog is created, wnd = 0, lparam points to dialog resource.
         case PSCB_PRECREATE:
             {
                 LPDLGTEMPLATE  lpTemplate = (LPDLGTEMPLATE)lparam;
@@ -693,7 +693,7 @@ namespace Win32xx
         assert(IsWindow());
 
         HWND button = ::GetDlgItem(*this, buttonID);
-        if (button != NULL)
+        if (button != 0)
         {
             // Hide and disable the button
             ::ShowWindow(button, SW_HIDE);

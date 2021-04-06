@@ -48,7 +48,7 @@ TheApp()                                                                    /*
 
 /*============================================================================*/
     inline CMainFrame&
-GetFrame()                                                      /*
+GetFrame()                                                                  /*
 
     Return a reference to the CMainFrame object.
 *-----------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ GetFrame()                                                      /*
 
 /*============================================================================*/
     inline CRichView&
-GetRichView()                                                       /*
+GetRichView()                                                               /*
 
     Return a reference to the rich view object being previewed.
 *-----------------------------------------------------------------------------*/

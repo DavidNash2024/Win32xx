@@ -42,7 +42,7 @@ void CViewList::OnAttach()
 // Called when the window is destroyed.
 void CViewList::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Configures the columns for the list view.
@@ -97,7 +97,7 @@ void CViewList::InsertItems()
 CMDIChildList::CMDIChildList()
 {
     m_menu.LoadMenu(_T("MdiMenuList"));
-    SetHandles(m_menu, NULL);
+    SetHandles(m_menu, 0);
     SetView(m_listView);
 }
 

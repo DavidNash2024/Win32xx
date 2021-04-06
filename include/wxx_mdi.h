@@ -92,7 +92,7 @@ namespace Win32xx
         virtual ~CMDIChild();
 
         // These are the functions you might wish to override
-        virtual HWND Create(HWND parent = NULL);
+        virtual HWND Create(HWND parent = 0);
         virtual void RecalcLayout();
 
         // These functions aren't virtual, and shouldn't be overridden
@@ -807,7 +807,7 @@ namespace Win32xx
 
     // Create the MDI child window and then maximize if required.
     // This technique avoids unnecessary flicker when creating maximized MDI children.
-    inline HWND CMDIChild::Create(HWND parent /*= NULL*/)
+    inline HWND CMDIChild::Create(HWND parent /*= 0*/)
     {
         CREATESTRUCT cs;
         WNDCLASS wc;
@@ -869,7 +869,7 @@ namespace Win32xx
         pParent->RedrawWindow(RDW_INVALIDATE | RDW_ALLCHILDREN);
 
         // Ensure bits revealed by round corners (XP themes) are redrawn
-        SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
+        SetWindowPos(0, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
         return GetHwnd();
     }
@@ -962,7 +962,7 @@ namespace Win32xx
     {
         // Resize the View window
         CRect rc = GetClientRect();
-        GetView().SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
+        GetView().SetWindowPos( 0, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
     }
 
     // Sets the MDI child's menu and accelerator handles.

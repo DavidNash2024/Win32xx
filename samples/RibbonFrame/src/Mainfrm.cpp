@@ -89,7 +89,7 @@ void CMainFrame::MRUFileOpen(UINT mruIndex)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         RemoveMRUEntry(mruText);
         m_view.GetAllPoints().clear();
@@ -112,7 +112,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -134,7 +134,7 @@ void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -230,7 +230,7 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_pathName = L"";
         m_view.GetAllPoints().clear();
@@ -255,7 +255,7 @@ void CMainFrame::OnFileOpen()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -281,7 +281,7 @@ void CMainFrame::OnFileSave()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -309,7 +309,7 @@ void CMainFrame::OnFileSaveAs()
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
 
         m_view.GetAllPoints().clear();
     }
@@ -330,7 +330,7 @@ void CMainFrame::OnFilePrint()
         // Display a message box indicating why printing failed.
         CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
         CString type = CString(e.what());
-        ::MessageBox(NULL, message, type, MB_ICONWARNING);
+        ::MessageBox(0, message, type, MB_ICONWARNING);
     }
 }
 

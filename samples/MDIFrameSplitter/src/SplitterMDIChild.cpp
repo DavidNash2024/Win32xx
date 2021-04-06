@@ -69,7 +69,7 @@ CSplitterMDIChild::CSplitterMDIChild()
     SetView(m_view);
 
     // Set the menu for this MDI child
-    SetHandles(LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView")), NULL);
+    SetHandles(LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView")), 0);
 }
 
 // Destructor.

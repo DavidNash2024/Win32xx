@@ -215,7 +215,7 @@ ReadFile(LPCTSTR filePath)                                                  /*
     {
         CString msg = _T("Failed to load:  ");
         msg += e.GetFilePath();
-        ::MessageBox(NULL, msg, AtoT(e.what()), MB_ICONWARNING);
+        ::MessageBox(0, msg, AtoT(e.what()), MB_ICONWARNING);
         return FALSE;
     }
     return TRUE;
@@ -263,11 +263,11 @@ WordWrap(WordWrapType setting)                                              /*
     switch (setting)
     {
         case WRAP_NONE:
-            SetTargetDevice(NULL, 1);
+            SetTargetDevice(0, 1);
             break;
 
         case WRAP_WINDOW:
-            SetTargetDevice(NULL, 0);
+            SetTargetDevice(0, 0);
             break;
 
         case WRAP_PRINTER:
@@ -333,7 +333,7 @@ RVStreamInCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *read)      /*
 
     *read = 0;
     if (!::ReadFile((HANDLE)(DWORD_PTR) handle, buffer, size, (LPDWORD)read, NULL))
-        ::MessageBox(NULL, _T("ReadFile Failed"), _T(""), MB_OK);
+        ::MessageBox(0, _T("ReadFile Failed"), _T(""), MB_OK);
     return 0;
 }
 
@@ -351,7 +351,7 @@ RVStreamOutCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *out)      /*
 
     *out = 0;
     if (!::WriteFile((HANDLE)(DWORD_PTR)handle, buffer, size, (LPDWORD)out, NULL))
-        ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
+        ::MessageBox(0, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }
 /*----------------------------------------------------------------------------*/

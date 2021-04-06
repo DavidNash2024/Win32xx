@@ -22,7 +22,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     catch (const CException &e)
     {
         // Display the exception and quit
-        MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return -1;
     }

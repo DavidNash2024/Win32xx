@@ -3,35 +3,49 @@
 //
 
 #include "stdafx.h"
+#include "UserMessages.h"
 #include "MyThread.h"
 
-#include "ThreadApp.h"
 
 //////////////////////////////////
 // CMyThread function definitions.
 //
-CMyThread::CMyThread(int threadNumber) :  m_testWnd(threadNumber),
-                                          m_threadNumber(threadNumber)
+CMyThread::CMyThread(int threadNumber, HWND mainWindow)
+    :  m_testWnd(threadNumber, mainWindow),
+       m_threadNumber(threadNumber),
+       m_mainWindow(mainWindow)
 {
+}
+
+CMyThread::~CMyThread()
+{
+    CloseThread();
+    CString str;
+    str.Format(_T("Thread %d has ended\n"), m_threadNumber);
+    Trace(str);
 }
 
 // Close this thread.
 void CMyThread::CloseThread()
 {
-    CMainWindow& MainWnd = GetThreadApp()->GetMainWnd();
-    CString str;
     if (m_testWnd.IsWindow())
-    {
         m_testWnd.Destroy();
-        str.Format(_T("Destroyed Window %d"), m_threadNumber);
-        MainWnd.AppendText(str);
-    }
+
+    CString str;
+    str.Format(_T("Test Window %d destroyed"), m_threadNumber);
+
+    // We use SendMessage here to keep the str pointer in scope.
+    ::SendMessage(m_mainWindow, UWM_APPENDTEXT, (WPARAM)&str, 0);
+
+    // Also send the text to the debugger output.
+    Trace(str);
+    Trace("\n");
 
     // All the thread's windows have ended, so we can post a WM_QUIT to end the thread.
     PostThreadMessage(WM_QUIT, 0, 0);
-    WaitForSingleObject(*this, INFINITE);
-    str.Format(_T("Thread %d has ended"), m_threadNumber);
-    MainWnd.AppendText(str);
+
+    // Wait for the thread to end.
+    ::WaitForSingleObject(*this, INFINITE);
 }
 
 // Called when the thread starts.

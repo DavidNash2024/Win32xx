@@ -339,7 +339,7 @@ namespace Win32xx
         if (create & OPEN_ALWAYS) openFlags = OPEN_ALWAYS;
         if (create == 0) create = OPEN_EXISTING;
 
-        m_file = ::CreateFile(pFileName, access, share, NULL, create, FILE_ATTRIBUTE_NORMAL, NULL);
+        m_file = ::CreateFile(pFileName, access, share, NULL, create, FILE_ATTRIBUTE_NORMAL, 0);
 
         if (INVALID_HANDLE_VALUE == m_file)
         {
@@ -396,8 +396,8 @@ namespace Win32xx
         assert(m_file != INVALID_HANDLE_VALUE);
         assert(method == FILE_BEGIN || method == FILE_CURRENT || method == FILE_END);
 
-        LONG high = LONG(seekTo >> 32);
-        LONG low = (LONG)(seekTo & 0xFFFFFFFF);
+        LONG high = static_cast<LONG>(seekTo >> 32);
+        LONG low  = static_cast<LONG>(seekTo & 0xFFFFFFFF);
 
         DWORD lowPos = SetFilePointer(m_file, low, &high, method);
 

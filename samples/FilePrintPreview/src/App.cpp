@@ -6,7 +6,7 @@
 ===============================================================================*
 
     Contents Description: Implementation of the CApp class for the
-    FilePrintPreview demo program with the Windows operating system using the
+    FilePrintPreview sample program with the Windows operating system using the
     Win32++ Windows interface classes.
 
     Programming Notes: The programming style roughly follows that established

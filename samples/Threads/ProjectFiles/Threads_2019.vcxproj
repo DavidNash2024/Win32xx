@@ -88,6 +88,7 @@
     <ClInclude Include="..\src\targetver.h" />
     <ClInclude Include="..\src\TestWnd.h" />
     <ClInclude Include="..\src\ThreadApp.h" />
+    <ClInclude Include="..\src\UserMessages.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />

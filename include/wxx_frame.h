@@ -698,7 +698,7 @@ namespace Win32xx
     {
         CSize sizeText;
         assert(m_frame);
-        CClientDC DesktopDC(NULL);
+        CClientDC DesktopDC(0);
         LPCTSTR szItemText = pmd->GetItemText();
 
         if (IsVistaMenu())
@@ -814,13 +814,13 @@ namespace Win32xx
         {
             int borderSize = 0;    // Border space between item text and accelerator
             int bgBorderSize = 0;  // Border space between item text and gutter
-            GetThemePartSize(NULL, MENU_POPUPCHECK, 0, NULL, TS_TRUE, &m_sizeCheck);
-            GetThemePartSize(NULL, MENU_POPUPSEPARATOR, 0, NULL, TS_TRUE, &m_sizeSeparator);
+            GetThemePartSize(0, MENU_POPUPCHECK, 0, NULL, TS_TRUE, &m_sizeCheck);
+            GetThemePartSize(0, MENU_POPUPSEPARATOR, 0, NULL, TS_TRUE, &m_sizeSeparator);
             GetThemeInt(MENU_POPUPITEM, 0, TMT_BORDERSIZE, &borderSize);
             GetThemeInt(MENU_POPUPBACKGROUND, 0, TMT_BORDERSIZE, &bgBorderSize);
-            GetThemeMargins(NULL, MENU_POPUPCHECK, 0, TMT_CONTENTMARGINS, NULL, &m_marCheck);
-            GetThemeMargins(NULL, MENU_POPUPCHECKBACKGROUND, 0, TMT_CONTENTMARGINS, NULL, &m_marCheckBackground);
-            GetThemeMargins(NULL, MENU_POPUPITEM, 0, TMT_CONTENTMARGINS, NULL, &m_marItem);
+            GetThemeMargins(0, MENU_POPUPCHECK, 0, TMT_CONTENTMARGINS, NULL, &m_marCheck);
+            GetThemeMargins(0, MENU_POPUPCHECKBACKGROUND, 0, TMT_CONTENTMARGINS, NULL, &m_marCheckBackground);
+            GetThemeMargins(0, MENU_POPUPITEM, 0, TMT_CONTENTMARGINS, NULL, &m_marItem);
 
             // Popup text margins
             m_marText = m_marItem;
@@ -855,7 +855,7 @@ namespace Win32xx
         if (m_pfnOpenThemeData)
             return m_pfnOpenThemeData(wnd, pClassList);
 
-        return NULL;
+        return 0;
     }
 
     inline BOOL CMenuMetrics::IsVistaMenu() const
@@ -867,7 +867,7 @@ namespace Win32xx
     inline CRect CMenuMetrics::ScaleRect(const CRect& item) const
     {
         // DC for the desktop
-        CWindowDC dc(NULL);
+        CWindowDC dc(0);
 
         int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
         int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
@@ -885,7 +885,7 @@ namespace Win32xx
     inline CSize CMenuMetrics::ScaleSize(const CSize& item) const
     {
         // DC for the desktop
-        CWindowDC dc(NULL);
+        CWindowDC dc(0);
 
         int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
         int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
@@ -990,8 +990,8 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::AddDisabledMenuImage(HICON icon, COLORREF mask, int iconWidth)
     {
-        CClientDC desktopDC(NULL);
-        CMemDC memDC(NULL);
+        CClientDC desktopDC(0);
+        CMemDC memDC(0);
         int cx = iconWidth;
         int cy = iconWidth;
 
@@ -1040,7 +1040,7 @@ namespace Win32xx
         int cyImage = iconWidth;
 
         // Create a new ImageList if required.
-        if (NULL == m_menuImages.GetHandle())
+        if (0 == m_menuImages.GetHandle())
         {
             m_menuImages.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, 1, 0);
             m_menuIcons.clear();
@@ -1092,7 +1092,7 @@ namespace Win32xx
         int cyImage = data.bmHeight;
 
         // Create the ImageList if required.
-        if (NULL == m_menuImages.GetHandle())
+        if (0 == m_menuImages.GetHandle())
         {
             m_menuImages.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, images, 0);
             m_menuIcons.clear();
@@ -1223,7 +1223,7 @@ namespace Win32xx
         AdjustWindowRectEx(&rc, style, FALSE, exStyle);
 
         // Calculate final rect size, and reposition frame
-        T::SetWindowPos(NULL, 0, 0, rc.Width(), height, SWP_NOMOVE);
+        T::SetWindowPos(0, 0, 0, rc.Width(), height, SWP_NOMOVE);
     }
 
     // Creates the frame's toolbar. Additional toolbars can be added with AddToolBarBand
@@ -1292,14 +1292,14 @@ namespace Win32xx
                     if (pActiveChild)
                     {
                         HICON icon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0));
-                        if (NULL == icon)
+                        if (0 == icon)
                             icon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
 
                         int cx = ::GetSystemMetrics(SM_CXSMICON);
                         int cy = ::GetSystemMetrics(SM_CYSMICON);
                         int y = 1 + (GetMenuBar().GetWindowRect().Height() - cy) / 2;
                         int x = (rc.Width() - cx) / 2;
-                        drawDC.DrawIconEx(x, y, icon, cx, cy, 0, NULL, DI_NORMAL);
+                        drawDC.DrawIconEx(x, y, icon, cx, cy, 0, 0, DI_NORMAL);
                     }
                     return CDRF_SKIPDEFAULT;  // No further drawing
                 }
@@ -2943,7 +2943,7 @@ namespace Win32xx
         // Resize the status bar
         if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
         {
-            GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
+            GetStatusBar().SetWindowPos(0, 0, 0, 0, 0, SWP_SHOWWINDOW);
             SetStatusIndicators();
         }
 
@@ -2975,7 +2975,7 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::RecalcViewLayout()
     {
-        GetView().SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
+        GetView().SetWindowPos( 0, GetViewRect(), SWP_SHOWWINDOW);
     }
 
     // Removes an entry from the MRU list.
@@ -3167,7 +3167,7 @@ namespace Win32xx
         if (GetMenuBar().IsWindow())
         {
             GetMenuBar().SetMenu( GetFrameMenu() );
-            BOOL show = (menu != NULL);    // boolean expression
+            BOOL show = (menu != 0);    // boolean expression
             ShowMenu(show);
         }
         else
@@ -3209,7 +3209,7 @@ namespace Win32xx
     {
         TLSData* pTLSData = GetApp()->SetTlsData();
         pTLSData->mainWnd = T::GetHwnd();
-        m_kbdHook = ::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
+        m_kbdHook = ::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, 0, ::GetCurrentThreadId());
     }
 
     // Sets the minimum width of the MenuBar band to the width of the rebar.
@@ -3353,7 +3353,7 @@ namespace Win32xx
     inline void CFrameT<T>::SetTheme()
     {
         // Avoid themes if using less than 16 bit colors
-        CClientDC DesktopDC(NULL);
+        CClientDC DesktopDC(0);
         if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
             UseThemes(FALSE);
 
@@ -3675,7 +3675,7 @@ namespace Win32xx
                     GetView().SetParent(*this);
 
                 CRect rc = GetViewRect();
-                GetView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+                GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW);
             }
         }
     }
@@ -3696,7 +3696,7 @@ namespace Win32xx
             if (GetReBar().IsWindow())
                 GetReBar().ShowBand(GetReBar().GetBand(GetMenuBar()), FALSE);
             else
-                T::SetMenu(NULL);
+                T::SetMenu(0);
         }
 
         if (GetReBar().IsWindow())

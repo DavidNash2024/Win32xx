@@ -68,7 +68,7 @@ BOOL CViewTree::OnBeginLabelEdit(LPARAM lparam)
 // Called when the treeview window is destroyed.
 void CViewTree::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Finalises the editing of a Box Set child's label.

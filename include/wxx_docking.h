@@ -727,7 +727,7 @@ namespace Win32xx
             return TRUE;
         }
         else
-            SetCursor(LoadCursor(NULL, IDC_ARROW));
+            SetCursor(LoadCursor(0, IDC_ARROW));
 
         return FinalWindowProc(msg, wparam, lparam);
     }
@@ -1302,7 +1302,7 @@ namespace Win32xx
     {
         // Reposition the View window to cover the DockClient's client area
         CRect rc = GetClientRect();
-        GetView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+        GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW);
 
         return FinalWindowProc(msg, wparam, lparam);
     }
@@ -1310,7 +1310,7 @@ namespace Win32xx
     inline void CDocker::CDockClient::PreRegisterClass(WNDCLASS& wc)
     {
         wc.lpszClassName = _T("Win32++ DockClient");
-        wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+        wc.hCursor = ::LoadCursor(0, IDC_ARROW);
     }
 
     inline void CDocker::CDockClient::PreCreate(CREATESTRUCT& cs)
@@ -1387,7 +1387,7 @@ namespace Win32xx
                 }
 
                 CRect rc = GetClientRect();
-                GetView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+                GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW);
             }
         }
     }
@@ -1586,7 +1586,7 @@ namespace Win32xx
                 return;
 
             // Save the Dock window's blue tinted bitmap
-            CClientDC dcDesktop(NULL);
+            CClientDC dcDesktop(0);
             CMemDC memDC(dcDesktop);
             CRect rcBitmap = rcHint;
             CRect rcTarget = rcHint;
@@ -1618,7 +1618,7 @@ namespace Win32xx
             }
 
             pDockTarget->ClientToScreen(rcHint);
-            SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
+            SetWindowPos(0, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
         }
     }
 
@@ -2715,7 +2715,7 @@ namespace Win32xx
     // Returns true if the specified window is a child of this docker.
     inline BOOL CDocker::IsChildOfDocker(HWND wnd) const
     {
-        while ((wnd != NULL) && (wnd != *GetDockAncestor()))
+        while ((wnd != 0) && (wnd != *GetDockAncestor()))
         {
             if ( wnd == *this ) return TRUE;
             if (IsRelated(wnd)) break;
@@ -3417,7 +3417,7 @@ namespace Win32xx
             {
                 BOOL isEnabled = FALSE;
                 m_isDragging = TRUE;
-                SetCursor(LoadCursor(NULL, IDC_ARROW));
+                SetCursor(LoadCursor(0, IDC_ARROW));
                 ::SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &isEnabled, 0);
 
                 // Turn on DragFullWindows for this move
@@ -3488,7 +3488,7 @@ namespace Win32xx
     inline void CDocker::PreRegisterClass(WNDCLASS& wc)
     {
         wc.lpszClassName = _T("Win32++ Docker");
-        wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+        wc.hCursor = ::LoadCursor(0, IDC_ARROW);
     }
 
     // Repositions child windows
@@ -3586,7 +3586,7 @@ namespace Win32xx
             if ((*iter)->IsDocked())
             {
                 // Position this docker's children
-                hdwp = (*iter)->DeferWindowPos(hdwp, NULL, rcChild, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+                hdwp = (*iter)->DeferWindowPos(hdwp, 0, rcChild, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
                 (*iter)->m_childRect = rcChild;
 
                 rc.SubtractRect(rc, rcChild);
@@ -3618,7 +3618,7 @@ namespace Win32xx
 
         // Step 2: Position the Dock client and dock bar
         if (GetDockClient().IsWindow())
-            hdwp = GetDockClient().DeferWindowPos(hdwp, NULL, rc, SWP_SHOWWINDOW |SWP_FRAMECHANGED);
+            hdwp = GetDockClient().DeferWindowPos(hdwp, 0, rc, SWP_SHOWWINDOW |SWP_FRAMECHANGED);
         EndDeferWindowPos(hdwp);
 
         // Position the dockbar. Only docked dockers have a dock bar.
@@ -3628,7 +3628,7 @@ namespace Win32xx
             barRect.IntersectRect(m_barRect, GetDockParent()->GetViewRect());
 
             // The SWP_NOCOPYBITS forces a redraw of the dock bar.
-            GetDockBar().SetWindowPos(NULL, barRect, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS);
+            GetDockBar().SetWindowPos(0, barRect, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS);
         }
 
         // Step 3: Now recurse through the docker's children. They might have children of their own.
@@ -4157,8 +4157,8 @@ namespace Win32xx
         SetParent(0);
 
         DWORD styleShow = showUndocked? SWP_SHOWWINDOW : 0;
-        SetWindowPos(NULL, rc, styleShow | SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
-        GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
+        SetWindowPos(0, rc, styleShow | SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
+        GetDockClient().SetWindowPos(0, GetClientRect(), SWP_SHOWWINDOW);
         SetWindowText(GetCaption().c_str());
     }
 
@@ -4324,7 +4324,7 @@ namespace Win32xx
                     pDockNew->SetStyle(style);
                     pDockNew->m_pDockParent = 0;
                     pDockNew->SetParent(0);
-                    pDockNew->SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+                    pDockNew->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
                 }
                 pDockNew->GetDockBar().SetParent(pDockOld->GetParent());
                 pDockNew->GetView().SetFocus();
@@ -4369,7 +4369,7 @@ namespace Win32xx
 
         CRect rc = GetDockClient().GetWindowRect();
         ScreenToClient(rc);
-        pDocker->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+        pDocker->GetDockClient().SetWindowPos(0, rc, SWP_SHOWWINDOW);
         pDocker->Undock(pt, showUndocked);
         pDocker->GetDockBar().SetParent(*GetDockAncestor());
         pDockUndockedFrom->ShowWindow();
@@ -5189,7 +5189,7 @@ namespace Win32xx
     inline void CDockContainer::CViewPage::PreRegisterClass(WNDCLASS& wc)
     {
         wc.lpszClassName = _T("Win32++ TabPage");
-        wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+        wc.hCursor = ::LoadCursor(0, IDC_ARROW);
     }
 
     // Called when the window is resized. Repositions the toolbar and view window.
@@ -5204,7 +5204,7 @@ namespace Win32xx
         }
 
         if (GetView())
-            GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+            GetView()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
     }
 
     // Sets or changes the View window displayed within the container

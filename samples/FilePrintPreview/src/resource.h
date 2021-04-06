@@ -65,7 +65,6 @@
   // resource IDs for the print preview dialog window
 #define IDD_PRINTPREVIEW                160
 #define IDC_PREVIEW_PRINT               161
-#define IDC_PREVIEW_SETUP               162
 #define IDC_PREVIEW_PAGE                163
 #define IDC_PREVIEW_OFPAGES             164
 #define IDC_PREVIEW_FIRST               165
@@ -83,20 +82,11 @@
 #define IDB_PREVIEW_NEXT                182
 #define IDB_PREVIEW_LAST                183
 
- // resource IDs of the demo program icons
+ // resource IDs of the program icons
 #define IDI_PRINTPREVIEW                190
-#define IDI_PRINTSETUP                  191
 #define IDI_QUICKPRINT                  192
 #define IDI_PRINT                       193
 #define IDI_FONT_OPTION                 194
 #define IDI_CHECKBOX_OFF                195
-
-  // resource IDs of the print preview setup dialog
-#define IDD_PREVIEW_SETUP               200
-#define IDC_SCREEN_WIDTH                201
-#define IDC_SCREEN_HEIGHT               202
-#define IDC_PREVIEW_WIDTH               203
-#define IDC_PREVIEW_HEIGHT              204
-#define IDC_PAGE_SETUP                  205
 
 /*----------------------------------------------------------------------------*/

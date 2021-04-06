@@ -49,10 +49,10 @@ void CColourDialog::CreateImagePreviews()
     }
 
     // Create the Device Contexts and compatible bitmaps
-    CMemDC dest1DC(NULL);
-    CMemDC dest2DC(NULL);
-    CMemDC memDC(NULL);
-    CClientDC desktopDC(NULL);
+    CMemDC dest1DC(0);
+    CMemDC dest2DC(0);
+    CMemDC memDC(0);
+    CClientDC desktopDC(0);
     m_previewImage.CreateCompatibleBitmap(desktopDC, widthDest, heightDest);
     m_previewOrigImage.CreateCompatibleBitmap(desktopDC, widthDest, heightDest);
     memDC.SelectObject(m_image);
@@ -225,9 +225,9 @@ void CColourDialog::Paint()
 void CColourDialog::UpdatePreview()
 {
     // Copy m_hbmPreviewOrig to m_hbmPreview
-    CMemDC Mem1DC(NULL);    // Compatible with the desktop
+    CMemDC Mem1DC(0);    // Compatible with the desktop
     Mem1DC.SelectObject(m_previewOrigImage);
-    CMemDC Mem2DC(NULL);    // Compatible with the desktop
+    CMemDC Mem2DC(0);    // Compatible with the desktop
     Mem2DC.SelectObject(m_previewImage);
     int cx = m_preview.GetWindowRect().Width();
     int cy = m_preview.GetWindowRect().Height();

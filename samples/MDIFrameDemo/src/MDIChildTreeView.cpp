@@ -25,7 +25,7 @@ CViewTree::~CViewTree()
 // Called when the window is destroyed.
 void CViewTree::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Called when a window handle (HWND) is attached to CViewTree.
@@ -73,7 +73,7 @@ void CViewTree::OnAttach()
 CMDIChildTree::CMDIChildTree()
 {
     m_Menu.LoadMenu(_T("MdiMenuTree"));
-    SetHandles(m_Menu, NULL);
+    SetHandles(m_Menu, 0);
     SetView(m_TreeView);
 }
 

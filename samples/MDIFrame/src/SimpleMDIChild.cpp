@@ -60,7 +60,7 @@ CSimpleMDIChild::CSimpleMDIChild()
 
     // Set the menu for this MDI child
     m_menu.LoadMenu(_T("MdiMenuView"));
-    SetHandles(m_menu, NULL);
+    SetHandles(m_menu, 0);
 }
 
 // Destructor.

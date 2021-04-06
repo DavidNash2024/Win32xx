@@ -51,7 +51,7 @@ CSimpleMDIChild::CSimpleMDIChild()
 
     // Set the menu for this MDI child
     m_menu.LoadMenu(L"MdiMenuView");
-    SetHandles(m_menu, NULL);
+    SetHandles(m_menu, 0);
 }
 
 CSimpleMDIChild::~CSimpleMDIChild()

@@ -37,7 +37,7 @@ CCoverImage::CCoverImage()
     HINSTANCE instance = GetApp()->GetInstanceHandle();
     if (!::GetClassInfo(instance, className, &wc))
     {
-        wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+        wc.hCursor = ::LoadCursor(0, IDC_ARROW);
         wc.lpszClassName = className;
         wc.lpfnWndProc = ::DefWindowProc;
         wc.hInstance = instance;
@@ -60,7 +60,7 @@ void CCoverImage::DrawImage(CDC& dc)
     {
         UINT len = (UINT)m_imageData.size();
         HGLOBAL mem = GlobalAlloc(GMEM_MOVEABLE, len);
-        if (mem != NULL)
+        if (mem != 0)
         {
             BYTE* pMem = (BYTE*)GlobalLock(mem);
             if (pMem != NULL)

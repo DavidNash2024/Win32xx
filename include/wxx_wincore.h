@@ -110,7 +110,7 @@ namespace Win32xx
     // Definitions for the CWnd class
     //
 
-    inline CWnd::CWnd() : m_wnd(NULL), m_prevWindowProc(NULL)
+    inline CWnd::CWnd() : m_wnd(0), m_prevWindowProc(NULL)
     {
         // Note: m_wnd is set in CWnd::CreateEx(...)
     }
@@ -124,8 +124,16 @@ namespace Win32xx
 
     inline CWnd::~CWnd()
     {
-        // Destroys the window for this object and cleans up resources.
-        Destroy();
+        if (GetApp())          // Is the CWinApp object still valid?
+        {
+            if (GetCWndPtr(*this) == this)  // Is window managed by Win32++?
+            {
+                if (IsWindow())
+                    ::DestroyWindow(*this);
+            }
+
+            RemoveFromMap();
+        }
     }
 
     // Store the window handle and CWnd pointer in the HWND map
@@ -135,7 +143,7 @@ namespace Win32xx
         assert(GetApp());
 
         // This HWND is should not be in the map yet
-        assert (NULL == GetApp()->GetCWndFromMap(*this));
+        assert (0 == GetApp()->GetCWndFromMap(*this));
 
         // Remove any old map entry for this CWnd (required when the CWnd is reused)
         RemoveFromMap();
@@ -238,7 +246,7 @@ namespace Win32xx
                 if (pfnGetMonitorInfo(hActiveMonitor, &mi))
                 {
                     desktopRect = mi.rcWork;
-                    if (GetParent().GetHwnd() == NULL) desktopRect = mi.rcWork;
+                    if (GetParent().GetHwnd() == 0) desktopRect = mi.rcWork;
                 }
             }
             ::FreeLibrary(hUser32);
@@ -302,7 +310,7 @@ namespace Win32xx
         cs.style = WS_VISIBLE | ((parent)? WS_CHILD : dwOverlappedStyle );
 
         // Set a reasonable default window position
-        if (NULL == parent)
+        if (0 == parent)
         {
             cs.x  = CW_USEDEFAULT;
             cs.cx = CW_USEDEFAULT;
@@ -373,7 +381,7 @@ namespace Win32xx
         ZeroMemory(&wc, sizeof(wc));
         wc.lpszClassName = className;
         wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
-        wc.hCursor       = ::LoadCursor(NULL, IDC_ARROW);
+        wc.hCursor       = ::LoadCursor(0, IDC_ARROW);
 
         // Register the window class (if not already registered)
         if (RegisterClass(wc) == 0)
@@ -597,9 +605,10 @@ namespace Win32xx
 
     // Called in response to WM_CLOSE, before the window is destroyed.
     // Override this function to suppress destroying the window.
-    // WM_CLOSE is sent by SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0) or by clicking X
+    // WM_CLOSE is sent by SendMessage(WM_CLOSE, 0, 0) or by clicking X
     //  in the top right corner.
-    // Child windows don't receive WM_CLOSE unless they are closed using the Close function.
+    // Child windows don't receive WM_CLOSE unless they are closed using
+    //  the Close function.
     inline void CWnd::OnClose()
     {
         Destroy();
@@ -869,9 +878,9 @@ namespace Win32xx
         // ADDITIONAL NOTES:
         // 1) The lpszClassName must be set for this function to take effect.
         // 2) No other defaults are set, so the following settings might prove useful
-        //     wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
+        //     wc.hCursor = ::LoadCursor(0, IDC_ARROW);
         //     wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
-        //     wc.icon = ::LoadIcon(NULL, IDI_APPLICATION);
+        //     wc.icon = ::LoadIcon(0, IDI_APPLICATION);
         // 3) The styles that can be set here are WNDCLASS styles. These are a different
         //     set of styles to those set by CREATESTRUCT (used in PreCreate).
         // 4) RegisterClassEx is not used because its not supported on WinCE.
@@ -1018,7 +1027,6 @@ namespace Win32xx
             {
                 // Retrieve pointer to CWnd object from Thread Local Storage TLS
                 w = pTLSData->pWnd;
-                assert(w);              // pTLSData->pCWnd is assigned in CreateEx
                 if (w)
                 {
                     pTLSData->pWnd = NULL;
@@ -1026,6 +1034,13 @@ namespace Win32xx
                     // Store the CWnd pointer in the HWND map
                     w->m_wnd = wnd;
                     w->AddToMap();
+                }
+                else
+                {
+                    // Got a message for a window thats not in the map.
+                    // We should never get here.
+                    Trace("*** Warning in CWnd::StaticWindowProc: HWND not in window map ***\n");
+                    return 0;
                 }
             }
         }
@@ -1070,7 +1085,7 @@ namespace Win32xx
         try
         {
             DoDataExchange(dx);
-            if (dx.GetLastControl() != NULL && dx.GetLastEditControl() != NULL)
+            if (dx.GetLastControl() != 0 && dx.GetLastEditControl() != 0)
             {
                 // select all characters in the edit control
                 ::SetFocus(dx.GetLastEditControl());
@@ -1296,7 +1311,7 @@ namespace Win32xx
     inline BOOL CWnd::ClientToScreen(RECT& rect) const
     {
         assert(IsWindow());
-        return (::MapWindowPoints(*this, NULL, (LPPOINT)&rect, 2) != 0);
+        return (::MapWindowPoints(*this, 0, (LPPOINT)&rect, 2) != 0);
     }
 
     // The Close function issues a close requests to the window. The OnClose function is called
@@ -1834,7 +1849,7 @@ namespace Win32xx
     inline BOOL CWnd::ScreenToClient(RECT& rect) const
     {
         assert(IsWindow());
-        return (::MapWindowPoints(NULL, *this, (LPPOINT)&rect, 2) != 0);
+        return (::MapWindowPoints(0, *this, (LPPOINT)&rect, 2) != 0);
     }
 
     // The SendDlgItemMessage function sends a message to the specified control in a dialog box.
@@ -2374,7 +2389,7 @@ namespace Win32xx
     // pClipRect:   Pointer to a RECT structure that contains the coordinates of the clipping rectangle.
     //              Only device bits within the clipping rectangle are affected. This parameter may be NULL.
     // update:      Handle to the region that is modified to hold the region invalidated by scrolling.
-    //              This parameter may be NULL.
+    //              This parameter may be 0.
     // pUpdateRect: Pointer to a RECT structure that receives the boundaries of the rectangle invalidated by scrolling.
     //              This parameter may be NULL.
     // flags:       Specifies flags that control scrolling.This parameter can be one of the following values.
@@ -2390,7 +2405,7 @@ namespace Win32xx
     }
 
     // The SetMenu function assigns a menu to the specified window.
-    // A menu of NULL removes the menu.
+    // A menu of 0 removes the menu.
     // Refer to SetMenu in the Windows API documentation for more information.
     inline BOOL CWnd::SetMenu(HMENU menu) const
     {

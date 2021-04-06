@@ -183,7 +183,7 @@ BOOL CMainFrame::OnNewTab()
     // Position the popup menu
     CToolBar& tb = GetToolBar();
     RECT rc = tb.GetItemRect(tb.CommandToIndex(IDM_NEW_TAB));
-    tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+    tb.MapWindowPoints(0, (LPPOINT)&rc, 2);
 
     TPMPARAMS tpm;
     tpm.cbSize = sizeof(TPMPARAMS);

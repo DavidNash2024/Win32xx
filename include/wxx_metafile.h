@@ -181,7 +181,7 @@ namespace Win32xx
     }
 
     // Attaches an existing HMETAFILE to this CMetaFile
-    // The HMETAFILE can be NULL
+    // The HMETAFILE can be 0
     inline void CMetaFile::Attach(HMETAFILE metaFile)
     {
         assert(m_pData);
@@ -205,7 +205,7 @@ namespace Win32xx
 
         if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
-            if (m_pData->metaFile != NULL)
+            if (m_pData->metaFile != 0)
             {
                 ::DeleteMetaFile(m_pData->metaFile);
             }
@@ -259,7 +259,7 @@ namespace Win32xx
     }
 
     // Attaches an existing HENHMETAFILE to this CEnhMetaFile
-    // The HENHMETAFILE can be NULL
+    // The HENHMETAFILE can be 0
     inline void CEnhMetaFile::Attach(HENHMETAFILE enhMetaFile)
     {
         assert(m_pData);
@@ -283,7 +283,7 @@ namespace Win32xx
 
         if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
-            if (m_pData->enhMetaFile != NULL)
+            if (m_pData->enhMetaFile != 0)
             {
                 ::DeleteEnhMetaFile(m_pData->enhMetaFile);
             }

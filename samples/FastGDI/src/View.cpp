@@ -141,7 +141,7 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
        CBitmapInfoPtr pbmi(m_image);
 
        // Create the reference DC for GetDIBits to use
-       CMemDC memDC(NULL);
+       CMemDC memDC(0);
 
        // Use GetDIBits to create a DIB from our DDB, and extract the colour data
        memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);

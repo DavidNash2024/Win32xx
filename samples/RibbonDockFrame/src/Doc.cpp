@@ -24,7 +24,7 @@ BOOL CDoc::FileOpen(LPCTSTR filename)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), L"Failed to Load File", MB_ICONWARNING);
 
         GetAllPoints().clear();
     }
@@ -44,7 +44,7 @@ BOOL CDoc::FileSave(LPCTSTR filename)
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
-        ::MessageBox(NULL, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
+        ::MessageBox(0, e.GetText(), L"Failed to Save File", MB_ICONWARNING);
         result = FALSE;
     }
 

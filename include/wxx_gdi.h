@@ -153,7 +153,7 @@
 // GetDIBits and SetDIBits.
 //
 // Coding example ...
-//  CDC memDC = CreateCompatibleDC(NULL);
+//  CDC memDC = CreateCompatibleDC(0);
 //  CBitmapInfoPtr pbmi(bitmap);
 //  memDC.GetDIBits(bitmap, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 
@@ -167,6 +167,7 @@
 #include "wxx_exception.h"
 #include "wxx_metafile.h"
 
+// Required for WinCE
 #ifndef HGDI_ERROR
   #define HGDI_ERROR ((HANDLE)-1)
 #endif
@@ -287,8 +288,8 @@ namespace Win32xx
 
         // Create methods
         HFONT CreateFontIndirect(const LOGFONT& logFont);
-        HFONT CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = NULL, BOOL isBold = FALSE, BOOL isItalic = FALSE);
-        HFONT CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = NULL);
+        HFONT CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = 0, BOOL isBold = FALSE, BOOL isItalic = FALSE);
+        HFONT CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = 0);
 
 #ifndef _WIN32_WCE
         HFONT CreateFont(int height, int width, int escapement,
@@ -450,12 +451,12 @@ namespace Win32xx
         HDC GetHDC() const { return m_pData->dc; }
         BOOL RestoreDC(int savedDC) const;
         int SaveDC() const;
-        HGDIOBJ SelectObject(HGDIOBJ object) const;
         HBITMAP SelectObject(HBITMAP bitmap) const;
         HBRUSH SelectObject(HBRUSH brush) const;
         HFONT SelectObject(HFONT font) const;
         HPEN SelectObject(HPEN pen) const;
         int SelectObject(HRGN rgn) const;
+        HPALETTE SelectPalette(HPALETTE palette, BOOL forceBkgnd) const;
 
 #ifndef _WIN32_WCE
         void operator = (const HDC dc);
@@ -502,8 +503,8 @@ namespace Win32xx
 
         // Create Fonts
         void CreateFontIndirect(const LOGFONT& lf);
-        void CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = NULL, BOOL isBold = FALSE, BOOL isItalic = FALSE);
-        void CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = NULL);
+        void CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = 0, BOOL isBold = FALSE, BOOL isItalic = FALSE);
+        void CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = 0);
 
 #ifndef _WIN32_WCE
         void CreateFont(int height, int width, int escapement, int orientation, int weight,
@@ -512,9 +513,8 @@ namespace Win32xx
                             DWORD pitchAndFamily, LPCTSTR faceName);
 #endif
 
-        // Create and select Palettes
+        // Create Palettes
         void CreatePalette(LPLOGPALETTE pLogPalette, BOOL forceBkgnd);
-        HPALETTE SelectPalette(HPALETTE palette, BOOL forceBkgnd);
 
 #ifndef _WIN32_WCE
         void CreateHalftonePalette(BOOL forceBkgnd);
@@ -1320,7 +1320,7 @@ namespace Win32xx
 
         if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
-            if (m_pData->hGDIObject != NULL)
+            if (m_pData->hGDIObject != 0)
             {
                 if (m_pData->isManagedObject)
                 {
@@ -1445,10 +1445,10 @@ namespace Win32xx
     // Refer to LoadBitmap in the Windows API documentation for more information.
     inline BOOL CBitmap::LoadOEMBitmap(UINT bitmapID) // for OBM_/OCR_/OIC_
     {
-        HBITMAP bitmap = ::LoadBitmap(NULL, MAKEINTRESOURCE(bitmapID));
+        HBITMAP bitmap = ::LoadBitmap(0, MAKEINTRESOURCE(bitmapID));
         if (bitmap != 0)
         {
-            Attach( ::LoadBitmap(NULL, MAKEINTRESOURCE(bitmapID)) );
+            Attach(bitmap);
             SetManaged(true);
         }
         return (0 != bitmap);  // boolean expression
@@ -1578,7 +1578,7 @@ namespace Win32xx
     // Refer to GetObject in the Windows API documentation for more information.
     inline BITMAP CBitmap::GetBitmapData() const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         BITMAP data;
         ZeroMemory(&data, sizeof(data));
         VERIFY(::GetObject(GetHandle(), sizeof(data), &data) != 0);
@@ -1592,7 +1592,7 @@ namespace Win32xx
     // Refer to GetBitmapDimensionEx in the Windows API documentation for more information.
     inline CSize CBitmap::GetBitmapDimensionEx() const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         CSize Size;
         ::GetBitmapDimensionEx(reinterpret_cast<HBITMAP>(GetHandle()), &Size);
         return Size;
@@ -1603,7 +1603,7 @@ namespace Win32xx
     // Refer to SetBitmapDimensionEx in the Windows API documentation for more information.
     inline CSize CBitmap::SetBitmapDimensionEx(int width, int height) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         CSize Size;
         ::SetBitmapDimensionEx(reinterpret_cast<HBITMAP>(GetHandle()), width, height, Size);
         return Size;
@@ -1634,7 +1634,7 @@ namespace Win32xx
         bmiHeader.biBitCount = 24;
 
         // Create the reference DC for GetDIBits to use
-        CMemDC memDC(NULL);
+        CMemDC memDC(0);
 
         // Use GetDIBits to create a DIB from our DDB, and extract the colour data
         GetDIBits(memDC, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
@@ -1686,7 +1686,7 @@ namespace Win32xx
         bmiHeader.biBitCount = 24;
 
         // Create the reference DC for GetDIBits to use
-        CMemDC memDC(NULL);
+        CMemDC memDC(0);
 
         // Use GetDIBits to create a DIB from our DDB, and extract the colour data
         GetDIBits(memDC, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
@@ -1777,7 +1777,7 @@ namespace Win32xx
     // Refer to GetDIBits in the Windows API documentation for more information.
     inline int CBitmap::GetDIBits(HDC dc, UINT startScan, UINT scanLines,  LPVOID pBits, LPBITMAPINFO pBMI, UINT colorUse) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::GetDIBits(dc, reinterpret_cast<HBITMAP>(GetHandle()), startScan, scanLines,  pBits, pBMI, colorUse);
     }
 
@@ -1786,7 +1786,7 @@ namespace Win32xx
     // Refer to SetDIBits in the Windows API documentation for more information.
     inline int CBitmap::SetDIBits(HDC dc, UINT startScan, UINT scanLines, LPCVOID pBits, const LPBITMAPINFO pBMI, UINT colorUse) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::SetDIBits(dc, reinterpret_cast<HBITMAP>(GetHandle()), startScan, scanLines, pBits, pBMI, colorUse);
     }
 
@@ -1915,7 +1915,7 @@ namespace Win32xx
     // Refer to GetObject in the Windows API documentation for more information.
     inline LOGBRUSH CBrush::GetLogBrush() const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         LOGBRUSH logBrush;
         ZeroMemory(&logBrush, sizeof(logBrush));
         VERIFY(::GetObject (GetHandle(), sizeof(logBrush), &logBrush) != 0);
@@ -1973,7 +1973,7 @@ namespace Win32xx
 
     // Creates a font of a specified typeface and point size.
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
-    inline HFONT CFont::CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc /*= NULL*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
+    inline HFONT CFont::CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc /*= 0*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
     {
         LOGFONT logFont;
         ZeroMemory(&logFont, sizeof(logFont));
@@ -1994,9 +1994,9 @@ namespace Win32xx
     // This function automatically converts the height in lfHeight to logical
     // units using the specified device context.
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
-    inline HFONT CFont::CreatePointFontIndirect(const LOGFONT& logFont, HDC dc /* = NULL*/)
+    inline HFONT CFont::CreatePointFontIndirect(const LOGFONT& logFont, HDC dc /* = 0*/)
     {
-        dc = (dc != NULL) ? dc : ::GetDC(HWND_DESKTOP);
+        dc = (dc != 0) ? dc : ::GetDC(HWND_DESKTOP);
 
         // convert nPointSize to logical units based on hDC
         LOGFONT logFont1 = logFont;
@@ -2047,7 +2047,7 @@ namespace Win32xx
     // Refer to GetObject in the Windows API documentation for more information.
     inline LOGFONT CFont::GetLogFont() const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         LOGFONT logFont;
         ZeroMemory(&logFont, sizeof(logFont));
         VERIFY(::GetObject(GetHandle(), sizeof(logFont), &logFont) != 0);
@@ -2111,7 +2111,7 @@ namespace Win32xx
     // Refer to GetObject in the Windows API documentation for more information.
     inline int CPalette::GetEntryCount() const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         WORD entries = 0;
         VERIFY(::GetObject(GetHandle(), sizeof(WORD), &entries) != 0);
         return static_cast<int>(entries);
@@ -2121,7 +2121,7 @@ namespace Win32xx
     // Refer to GetPaletteEntries in the Windows API documentation for more information.
     inline UINT CPalette::GetPaletteEntries(UINT startIndex, UINT entries, LPPALETTEENTRY pPaletteColors) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::GetPaletteEntries(reinterpret_cast<HPALETTE>(GetHandle()), startIndex, entries, pPaletteColors);
     }
 
@@ -2129,7 +2129,7 @@ namespace Win32xx
     // Refer to SetPaletteEntries in the Windows API documentation for more information.
     inline UINT CPalette::SetPaletteEntries(UINT startIndex, UINT entries, LPPALETTEENTRY pPaletteColors) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::SetPaletteEntries(reinterpret_cast<HPALETTE>(GetHandle()), startIndex, entries, pPaletteColors);
     }
 
@@ -2139,7 +2139,7 @@ namespace Win32xx
     // Refer to AnimatePalette in the Windows API documentation for more information.
     inline void CPalette::AnimatePalette(UINT startIndex, UINT entries, LPPALETTEENTRY pPaletteColors) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         ::AnimatePalette(reinterpret_cast<HPALETTE>(GetHandle()), startIndex, entries, pPaletteColors);
     }
 
@@ -2147,7 +2147,7 @@ namespace Win32xx
     // Refer to ResizePalette in the Windows API documentation for more information.
     inline BOOL CPalette::ResizePalette(UINT entries) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::ResizePalette(reinterpret_cast<HPALETTE>(GetHandle()), entries);
     }
 
@@ -2157,7 +2157,7 @@ namespace Win32xx
     // Refer to GetNearestPaletteIndex in the Windows API documentation for more information.
     inline UINT CPalette::GetNearestPaletteIndex(COLORREF color) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::GetNearestPaletteIndex(reinterpret_cast<HPALETTE>(GetHandle()), color);
     }
 
@@ -2239,7 +2239,7 @@ namespace Win32xx
     // Refer to GetObject in the Windows API documentation for more information.
     inline LOGPEN CPen::GetLogPen() const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
 
         LOGPEN logPen;
         ZeroMemory(&logPen, sizeof(logPen));
@@ -2263,7 +2263,7 @@ namespace Win32xx
     // Refer to GetObject in the Windows API documentation for more information.
     inline EXTLOGPEN CPen::GetExtLogPen() const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
 
         EXTLOGPEN exLogPen;
         ZeroMemory(&exLogPen, sizeof(exLogPen));
@@ -2393,7 +2393,7 @@ namespace Win32xx
     // Refer to PathToRegion in the Windows API documentation for more information.
     inline HRGN CRgn::CreateFromPath(HDC dc)
     {
-        assert(dc != NULL);
+        assert(dc != 0);
         HRGN rgn = ::PathToRegion(dc);
         if (rgn == 0)
             throw CResourceException(g_msgGdiRegion);
@@ -2423,7 +2423,7 @@ namespace Win32xx
     // Refer to SetRectRgn in the Windows API documentation for more information.
     inline void CRgn::SetRectRgn(int x1, int y1, int x2, int y2) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         ::SetRectRgn(reinterpret_cast<HRGN>(GetHandle()), x1, y1, x2, y2);
     }
 
@@ -2431,7 +2431,7 @@ namespace Win32xx
     // Refer to SetRectRgn in the Windows API documentation for more information.
     inline void CRgn::SetRectRgn(const RECT& rc) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         ::SetRectRgn(reinterpret_cast<HRGN>(GetHandle()), rc.left, rc.top, rc.right, rc.bottom);
     }
 
@@ -2439,7 +2439,7 @@ namespace Win32xx
     // Refer to CombineRgn in the Windows API documentation for more information.
     inline int CRgn::CombineRgn(HRGN hSrc1, HRGN hSrc2, int combineMode) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::CombineRgn(reinterpret_cast<HRGN>(GetHandle()), hSrc1, hSrc2, combineMode);
     }
 
@@ -2447,7 +2447,7 @@ namespace Win32xx
     // Refer to CombineRgn in the Windows API documentation for more information.
     inline int CRgn::CombineRgn(HRGN hSrc, int combineMode) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::CombineRgn(reinterpret_cast<HRGN>(GetHandle()), (HRGN)GetHandle(), hSrc, combineMode);
     }
 
@@ -2455,16 +2455,16 @@ namespace Win32xx
     // Refer to CombineRgn in the Windows API documentation for more information.
     inline int CRgn::CopyRgn(HRGN hSrc) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         assert(hSrc);
-        return ::CombineRgn(reinterpret_cast<HRGN>(GetHandle()), hSrc, NULL, RGN_COPY);
+        return ::CombineRgn(reinterpret_cast<HRGN>(GetHandle()), hSrc, 0, RGN_COPY);
     }
 
     // Checks the two regions to determine whether they are identical.
     // Refer to EqualRgn in the Windows API documentation for more information.
     inline BOOL CRgn::EqualRgn(HRGN rgn) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::EqualRgn(reinterpret_cast<HRGN>(GetHandle()), rgn);
     }
 
@@ -2472,7 +2472,7 @@ namespace Win32xx
     // Refer to OffsetRgn in the Windows API documentation for more information.
     inline int CRgn::OffsetRgn(int x, int y) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::OffsetRgn(reinterpret_cast<HRGN>(GetHandle()), x, y);
     }
 
@@ -2480,7 +2480,7 @@ namespace Win32xx
     // Refer to OffsetRgn in the Windows API documentation for more information.
     inline int CRgn::OffsetRgn(POINT& pt) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::OffsetRgn(reinterpret_cast<HRGN>(GetHandle()), pt.x, pt.y);
     }
 
@@ -2489,7 +2489,7 @@ namespace Win32xx
     // Refer to GetRgnBox in the Windows API documentation for more information.
     inline int CRgn::GetRgnBox(RECT& rc) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::GetRgnBox(reinterpret_cast<HRGN>(GetHandle()), &rc);
     }
 
@@ -2497,7 +2497,7 @@ namespace Win32xx
     // Refer to GetRegionData in the Windows API documentation for more information.
     inline int CRgn::GetRegionData(LPRGNDATA pRgnData, int dataSize) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return static_cast<int>(::GetRegionData(reinterpret_cast<HRGN>(GetHandle()), dataSize, pRgnData));
     }
 
@@ -2505,7 +2505,7 @@ namespace Win32xx
     // Refer to PtInRegion in the Windows API documentation for more information.
     inline BOOL CRgn::PtInRegion(int x, int y) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::PtInRegion(reinterpret_cast<HRGN>(GetHandle()), x, y);
     }
 
@@ -2513,7 +2513,7 @@ namespace Win32xx
     // Refer to PtInRegion in the Windows API documentation for more information.
     inline BOOL CRgn::PtInRegion(POINT& pt) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::PtInRegion(reinterpret_cast<HRGN>(GetHandle()), pt.x, pt.y);
     }
 
@@ -2521,7 +2521,7 @@ namespace Win32xx
     // Refer to RectInRegion in the Windows API documentation for more information.
     inline BOOL CRgn::RectInRegion(const RECT& rc) const
     {
-        assert(GetHandle() != NULL);
+        assert(GetHandle() != 0);
         return ::RectInRegion(reinterpret_cast<HRGN>(GetHandle()), &rc);
     }
 
@@ -2688,10 +2688,10 @@ namespace Win32xx
     // Refer to CreateCompatibleDC in the Windows API documentation for more information.
     inline HDC CDC::CreateCompatibleDC(HDC hSource)
     {
-        assert(m_pData->dc == NULL);
+        assert(m_pData->dc == 0);
         HDC dc = ::CreateCompatibleDC(hSource);
 
-        if (dc == NULL)
+        if (dc == 0)
             throw CResourceException(g_msgGdiDC);
 
         m_pData->dc = dc;
@@ -2705,10 +2705,10 @@ namespace Win32xx
     // Refer to CreateDC in the Windows API documentation for more information.
     inline HDC CDC::CreateDC(LPCTSTR pDriver, LPCTSTR pDevice, LPCTSTR pOutput, const DEVMODE* pInitData)
     {
-        assert(m_pData->dc == NULL);
+        assert(m_pData->dc == 0);
         HDC dc = ::CreateDC(pDriver, pDevice, pOutput, pInitData);
 
-        if (dc == NULL)
+        if (dc == 0)
             throw CResourceException(g_msgGdiDC);
 
         m_pData->dc = dc;
@@ -2725,7 +2725,7 @@ namespace Win32xx
     // Refer to CreateIC in the Windows API documentation for more information.
     inline HDC CDC::CreateIC(LPCTSTR pDriver, LPCTSTR pDevice, LPCTSTR pOutput, const DEVMODE* pInitData)
     {
-        assert(m_pData->dc == NULL);
+        assert(m_pData->dc == 0);
         HDC dc = ::CreateIC(pDriver, pDevice, pOutput, pInitData);
 
         if (dc == 0)
@@ -2844,9 +2844,6 @@ namespace Win32xx
     // Refer to RestoreDC in the Windows API documentation for more information.
     inline BOOL CDC::RestoreDC(int savedDC) const
     {
-        assert(m_pData);
-        if (!m_pData) return 0;
-
         assert(m_pData->dc != 0);
         return ::RestoreDC(m_pData->dc, savedDC);
     }
@@ -2855,36 +2852,19 @@ namespace Win32xx
     // Refer to SaveDC in the Windows API documentation for more information.
     inline int CDC::SaveDC() const
     {
-        assert(m_pData);
-        if (!m_pData) return 0;
-
         assert(m_pData->dc != 0);
         return ::SaveDC(m_pData->dc);
-    }
-
-    // Select a GDI object into the device context.
-    // Refer to SelectObject in the Windows API documentation for more information.
-    inline HGDIOBJ CDC::SelectObject(HGDIOBJ object) const
-    {
-        assert(m_pData);
-        if (!m_pData) return 0;
-
-        HGDIOBJ oldObject = ::SelectObject(m_pData->dc, object);
-        if (oldObject == 0)
-            throw CResourceException(g_msgGdiSelObject);
-
-        return oldObject;
     }
 
     // Select a bitmap into the device context.
     // Refer to SelectObject in the Windows API documentation for more information.
     inline HBITMAP CDC::SelectObject(HBITMAP bitmap) const
     {
-        assert(m_pData);
-        if (!m_pData) return 0;
-
+        assert(m_pData->dc != 0);
         HBITMAP oldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
-        assert(oldBitmap != 0);     // asserts if bitmap is invalid or incompatable.
+        if (oldBitmap == 0)
+            // throws if an error occurs (bitmap is invalid or incompatable).
+            throw CResourceException(g_msgGdiSelObject);
 
         return oldBitmap;
     }
@@ -2893,11 +2873,11 @@ namespace Win32xx
     // Refer to SelectObject in the Windows API documentation for more information.
     inline HBRUSH CDC::SelectObject(HBRUSH brush) const
     {
-        assert(m_pData);
-        if (!m_pData) return 0;
-
+        assert(m_pData->dc != 0);
         HBRUSH oldBrush = reinterpret_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
-        assert(oldBrush != 0);
+        if (oldBrush == 0)
+            // throws if an error occurs.
+            throw CResourceException(g_msgGdiSelObject);
 
         return oldBrush;
     }
@@ -2906,11 +2886,11 @@ namespace Win32xx
     // Refer to SelectObject in the Windows API documentation for more information.
     inline HFONT CDC::SelectObject(HFONT font) const
     {
-        assert(m_pData);
-        if (!m_pData) return 0;
-
+        assert(m_pData->dc != 0);
         HFONT oldFont = reinterpret_cast<HFONT>(::SelectObject(m_pData->dc, font));
-        assert(oldFont != 0);
+        if (oldFont == 0)
+            // throws if an error occurs.
+            throw CResourceException(g_msgGdiSelObject);
 
         return oldFont;
     }
@@ -2919,11 +2899,11 @@ namespace Win32xx
     // Refer to SelectObject in the Windows API documentation for more information.
     inline HPEN CDC::SelectObject(HPEN pen) const
     {
-        assert(m_pData);
-        if (!m_pData) return 0;
-
+        assert(m_pData->dc != 0);
         HPEN oldPen = reinterpret_cast<HPEN>(::SelectObject(m_pData->dc, pen));
-        assert(oldPen != 0);
+        if (oldPen == 0)
+            // throws if an error occurs.
+            throw CResourceException(g_msgGdiSelObject);
 
         return oldPen;
     }
@@ -2933,12 +2913,23 @@ namespace Win32xx
     // Refer to SelectObject in the Windows API documentation for more information.
     inline int CDC::SelectObject(HRGN rgn) const
     {
-        assert(m_pData);
-        if (!m_pData) return 0;
+        assert(m_pData->dc != 0);
+        HANDLE rgnType = ::SelectObject(m_pData->dc, rgn);
+        if (rgnType == HGDI_ERROR)
+            // throws if an error occurs.
+            throw CResourceException(g_msgGdiSelObject);
 
-        HGDIOBJ object = ::SelectObject(m_pData->dc, rgn);
-        assert(object != HGDI_ERROR);
-        return static_cast<int> (reinterpret_cast<INT_PTR>(object));
+        return static_cast<int> (reinterpret_cast<INT_PTR>(rgnType));
+    }
+
+    // Select a palette into the device context.
+    // Refer to SelectPalette in the Windows API documentation for more information.
+    inline HPALETTE CDC::SelectPalette(const HPALETTE palette, BOOL forceBkgnd) const
+    {
+        assert(m_pData->dc != 0);
+        HGDIOBJ object = ::SelectPalette(m_pData->dc, palette, forceBkgnd);
+        assert(object != 0);     // asserts if SelectPalette failed.
+        return static_cast<HPALETTE>(object);
     }
 
     // Fills a rectangle with a solid color
@@ -2968,9 +2959,6 @@ namespace Win32xx
     // Refer to CreateBitmap in the Windows API documentation for more information.
     inline void CDC::CreateBitmap(int cx, int cy, UINT planes, UINT bitsPerPixel, LPCVOID pColors)
     {
-        assert(m_pData);
-        if (!m_pData) return;
-
         assert(m_pData->dc != 0);
 
         CBitmap bitmap;
@@ -2985,9 +2973,6 @@ namespace Win32xx
     // Refer to CreateBitmapIndirect in the Windows API documentation for more information.
     inline void CDC::CreateBitmapIndirect (const BITMAP& bitmap)
     {
-        assert(m_pData);
-        if (!m_pData) return;
-
         assert(m_pData->dc != 0);
 
         CBitmap newBitmap;
@@ -3002,9 +2987,6 @@ namespace Win32xx
     inline void CDC::CreateDIBitmap(HDC dc, const BITMAPINFOHEADER& bmih, DWORD init, LPCVOID pInit,
                                         const LPBITMAPINFO pBMI,  UINT flags)
     {
-        assert(m_pData);
-        if (!m_pData) return;
-
         assert(m_pData->dc != 0);
 
         CBitmap newBitmap;
@@ -3021,9 +3003,6 @@ namespace Win32xx
     inline void CDC::CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT usage, LPVOID* pBits,
                                         HANDLE hSection, DWORD offset)
     {
-        assert(m_pData);
-        if (!m_pData) return;
-
         assert(m_pData->dc != 0);
 
         CBitmap newBitmap;
@@ -3037,6 +3016,8 @@ namespace Win32xx
     // Usage:  CBitmap MyBitmap = MyMemDC.DetachBitmap();
     inline CBitmap CDC::DetachBitmap()
     {
+        assert(m_pData->dc != 0);
+
         // Create a stock bitmap to replace the current one.
         CBitmap bitmap;
         bitmap.CreateBitmap(1, 1, 1, 1, 0);
@@ -3068,7 +3049,7 @@ namespace Win32xx
                     ::ReleaseDC(m_pData->wnd, m_pData->dc);
                 else
                     if (!::DeleteDC(m_pData->dc))
-                        ::ReleaseDC(NULL, m_pData->dc);
+                        ::ReleaseDC(0, m_pData->dc);
             }
 
             m_pData->dc = 0;
@@ -3331,7 +3312,7 @@ namespace Win32xx
 
     // Creates a font of a specified typeface and point size and selects it into the device context.
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
-    inline void CDC::CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc /*= NULL*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
+    inline void CDC::CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc /*= 0*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
     {
         assert(m_pData->dc != 0);
 
@@ -3442,14 +3423,6 @@ namespace Win32xx
     {
         assert(m_pData->dc != 0);
         return ::GetNearestColor(m_pData->dc, color);
-    }
-
-    // Use this to attach an existing palette.
-    // Refer to SelectPalette in the Windows API documentation for more information.
-    inline HPALETTE CDC::SelectPalette(const HPALETTE palette, BOOL forceBkgnd)
-    {
-        assert(m_pData->dc != 0);
-        return static_cast<HPALETTE>(::SelectPalette(m_pData->dc, palette, forceBkgnd));
     }
 
     // Use this to realize changes to the device context palette.
@@ -3588,7 +3561,12 @@ namespace Win32xx
     {
         assert(m_pData->dc != 0);
         HGDIOBJ hStockObject = ::GetStockObject(index);
-        return SelectObject(hStockObject);
+
+        HGDIOBJ oldObject = ::SelectObject(m_pData->dc, hStockObject);
+        if (oldObject == 0)
+            throw CResourceException(g_msgGdiSelObject);
+
+        return oldObject;
     }
 
 
@@ -4679,6 +4657,8 @@ namespace Win32xx
     // Refer to GetLayout in the Windows API documentation for more information.
     inline DWORD CDC::GetLayout() const
     {
+        assert(m_pData->dc != 0);
+
 #if (WINVER >= 0x0500)
         return ::GetLayout(m_pData->dc);
 #else
@@ -4692,6 +4672,8 @@ namespace Win32xx
     // Refer to SetLayout in the Windows API documentation for more information.
     inline DWORD CDC::SetLayout(DWORD layout) const
     {
+        assert(m_pData->dc != 0);
+
 #if (WINVER >= 0x0500)
         // Sets the layout of a device context
         return ::SetLayout(m_pData->dc, layout);

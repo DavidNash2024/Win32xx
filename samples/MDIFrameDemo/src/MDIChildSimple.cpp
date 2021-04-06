@@ -47,7 +47,7 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 CMDIChildSimple::CMDIChildSimple()
 {
     m_menu.LoadMenu(_T("MdiMenuView"));
-    SetHandles(m_menu, NULL);
+    SetHandles(m_menu, 0);
     SetView(m_view);
 }
 

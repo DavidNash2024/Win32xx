@@ -444,9 +444,9 @@ namespace Win32xx
         TLSData* pTLSData = GetApp()->SetTlsData();
 
     #ifndef _WIN32_WCE
-        if (NULL == pTLSData->msgHook )
+        if (0 == pTLSData->msgHook )
         {
-            pTLSData->msgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+            pTLSData->msgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, 0, ::GetCurrentThreadId());
         }
         InterlockedIncrement(&pTLSData->dlgHooks);
     #endif
@@ -473,7 +473,7 @@ namespace Win32xx
         if (pTLSData->dlgHooks == 0)
         {
             ::UnhookWindowsHookEx(pTLSData->msgHook);
-            pTLSData->msgHook = NULL;
+            pTLSData->msgHook = 0;
         }
 
     #endif
@@ -583,7 +583,7 @@ namespace Win32xx
             if (!IsModal())
             {
                 TLSData* pTLSData = GetApp()->GetTlsData();
-                if (NULL == pTLSData->msgHook)
+                if (0 == pTLSData->msgHook)
                 {
                     if (IsDialogMessage(msg))
                         return TRUE;
@@ -717,7 +717,7 @@ namespace Win32xx
             if (pMsg && ((pMsg->message >= WM_KEYFIRST && pMsg->message <= WM_KEYLAST) ||
                 (pMsg->message >= WM_MOUSEFIRST && pMsg->message <= WM_MOUSELAST)))
             {
-                for (HWND wnd = pMsg->hwnd; wnd != NULL; wnd = ::GetParent(wnd))
+                for (HWND wnd = pMsg->hwnd; wnd != 0; wnd = ::GetParent(wnd))
                 {
                     // Only CDialogs respond to this message
                     CDialog* pDialog = reinterpret_cast<CDialog*>(::SendMessage(wnd, UWM_GETCDIALOG, 0, 0));
@@ -774,7 +774,7 @@ namespace Win32xx
         rd.isFixedHeight = !(style & RD_STRETCH_HEIGHT);
         CRect initRect;
         ::GetWindowRect(wnd, &initRect);
-        ::MapWindowPoints(NULL, m_parent, (LPPOINT)&initRect, 2);
+        ::MapWindowPoints(0, m_parent, (LPPOINT)&initRect, 2);
         rd.initRect = initRect;
         rd.wnd = wnd;
 
@@ -1094,7 +1094,7 @@ namespace Win32xx
                 //       they are specified in the resource script (resource.rc).
 
                 // Store the window's new position. Repositioning happens later.
-                hdwp = ::DeferWindowPos(hdwp, (*iter).wnd, NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOZORDER|SWP_NOCOPYBITS);
+                hdwp = ::DeferWindowPos(hdwp, (*iter).wnd, 0, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOZORDER|SWP_NOCOPYBITS);
 
                 (*iter).oldRect = rc;
             }

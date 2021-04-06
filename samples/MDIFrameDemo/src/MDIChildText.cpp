@@ -41,7 +41,7 @@ void CViewText::OnAttach()
 CMDIChildText::CMDIChildText()
 {
     m_menu.LoadMenu(_T("MdiMenuText"));
-    SetHandles(m_menu, NULL);
+    SetHandles(m_menu, 0);
     SetView(m_textView);
 }
 

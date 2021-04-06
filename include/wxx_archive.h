@@ -754,7 +754,7 @@ namespace Win32xx
             memcpy(string.GetBuffer(chars), buf, size_t(chars)*2);
 #else
             // Convert the archive string from Wide to Ansi
-            WideCharToMultiByte(CP_ACP, 0, buf, chars, string.GetBuffer(chars), chars, NULL,NULL);
+            WideCharToMultiByte(CP_ACP, 0, buf, chars, string.GetBuffer(chars), chars, NULL, NULL);
 #endif
 
             string.ReleaseBuffer(chars);

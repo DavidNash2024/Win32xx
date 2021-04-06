@@ -183,7 +183,7 @@ void CViewList::OnAttach()
 // Called when the listview window is destroyed.
 void CViewList::OnDestroy()
 {
-    SetImageList(NULL, LVSIL_SMALL);
+    SetImageList(0, LVSIL_SMALL);
 }
 
 // Called after the listview window is created.
@@ -302,7 +302,7 @@ void CViewList::SetColumn()
 // Sets the up and down sort arrows in the listview's header.
 BOOL CViewList::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
 {
-    HWND    hHeader = NULL;
+    HWND    hHeader = 0;
     HDITEM  hdrItem;
     ZeroMemory(&hdrItem, sizeof(hdrItem));
 

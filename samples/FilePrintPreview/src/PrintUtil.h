@@ -18,8 +18,9 @@
 #ifndef PRINTERUTIL_H
 #define PRINTERUTIL_H
 
-    CRect   GetPrinterPageRect(CDC* dcPrinter, CSize margin = CSize(0, 0));
     CRect   GetPageRect(CDC& dcPrinter);
+    CSize   GetPPI(CDC&);
+    CRect   GetPrinterPageRect(CDC& dcPrinter, CSize margin = CSize(0, 0));
     CRect   GetPrintRect(CDC& dcPrinter);
 
 /*----------------------------------------------------------------------------*/

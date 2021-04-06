@@ -85,7 +85,7 @@ BOOL CMyDialog::OnInitDialog()
 // Called when the OK button or Enter key is pressed.
 void CMyDialog::OnOK()
 {
-    ::MessageBox(NULL, _T("OK Button Pressed.  Dialog will now end."), _T("Button"), MB_OK);
+    ::MessageBox(0, _T("OK Button Pressed.  Dialog will now end."), _T("Button"), MB_OK);
     CDialog::OnOK();
 }
 

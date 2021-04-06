@@ -778,7 +778,7 @@ namespace Win32xx
 
         time_tm tmTemp;
         time_tm* ptmTemp = GetGmtTm(&tmTemp);
-        if (ptmTemp ==NULL || !::_tcsftime(szBuffer, maxTimeBufferSize, fmt0.c_str(), ptmTemp))
+        if (ptmTemp == NULL || !::_tcsftime(szBuffer, maxTimeBufferSize, fmt0.c_str(), ptmTemp))
             szBuffer[0] = '\0';
         return CString(szBuffer);
     }

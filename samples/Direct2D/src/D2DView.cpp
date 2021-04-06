@@ -166,7 +166,7 @@ void CD2DView::PreCreate(CREATESTRUCT&cs)
 void CD2DView::PreRegisterClass(WNDCLASS& wc)
 {
     wc.style = CS_HREDRAW | CS_VREDRAW;
-    wc.hCursor = ::LoadCursor(NULL, IDI_APPLICATION);
+    wc.hCursor = ::LoadCursor(0, IDI_APPLICATION);
     wc.lpszClassName = L"Direct2D";
 }
 

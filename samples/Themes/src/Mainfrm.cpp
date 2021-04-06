@@ -39,7 +39,7 @@ void CMainFrame::AddCombo()
 
     // Create and position the ComboboxEx window
     m_comboBoxEx.Create(tb);
-    m_comboBoxEx.SetWindowPos(NULL, rc, SWP_NOACTIVATE);
+    m_comboBoxEx.SetWindowPos(0, rc, SWP_NOACTIVATE);
 
     // Set ComboBox Height
     m_comboBoxEx.SetItemHeight(-1, rc.Height() - 6);

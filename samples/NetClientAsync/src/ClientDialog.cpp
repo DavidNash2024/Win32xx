@@ -93,7 +93,7 @@ void CClientDialog::LoadCommonControlsEx()
         }
         else
         {
-            ::MessageBox(NULL, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
+            ::MessageBox(0, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
         }
 
         ::FreeLibrary(module);

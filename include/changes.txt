@@ -15,8 +15,8 @@ Bug fixes:
 New Features and Enhancements
 -----------------------------
 * Adds support for the Clang c++ compiler available with Microsoft's
-Visual Studio Community 2019.
-
+   Visual Studio Community 2019.
+* CDC::SelectObject throws a CResourceException on failure.
 * Updated CPrintPreview to support changes to Windows 10.
 
 
@@ -55,7 +55,7 @@ New Features and Enhancements
    It does the same thing as the Browser sample, except that it uses ATL.
 
 * Extended the Toolbar sample.
-   The toobar sample now demonstrates how to add additional toolbars to the
+   The toolbar sample now demonstrates how to add additional toolbars to the
    frame. It continues to demonstrate how to customise a toolbar in runtime,
    and how to add a horizontal or vertical toolbar to the frame's view.
 

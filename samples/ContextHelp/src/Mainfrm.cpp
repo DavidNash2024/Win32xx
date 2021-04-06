@@ -24,7 +24,7 @@ CMainFrame::~CMainFrame()
 // Enables choose topic mode
 void CMainFrame::ChooseHelpTopic()
 {
-    ::SetCursor(::LoadCursor(NULL, IDC_HELP));
+    ::SetCursor(::LoadCursor(0, IDC_HELP));
     SetCapture();
     m_isChoosing = TRUE;
 }
@@ -68,7 +68,7 @@ HWND CMainFrame::Create(HWND parent)
     }
     else
     {
-        ::MessageBox(NULL, _T("Failed to find ") + LoadString(IDS_HELP_FILE), _T("File not found"), MB_ICONWARNING);
+        ::MessageBox(0, _T("Failed to find ") + LoadString(IDS_HELP_FILE), _T("File not found"), MB_ICONWARNING);
     }
 
     // generate the Win32++ version string
@@ -179,7 +179,7 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 // Used for some toolbar buttons
 void CMainFrame::NotImplemented() const
 {
-    ::MessageBox(NULL, _T("Feature not implemented."),
+    ::MessageBox(0, _T("Feature not implemented."),
         _T("Information"), MB_OK | MB_ICONINFORMATION |
         MB_TASKMODAL);
 }
@@ -323,7 +323,7 @@ LRESULT CMainFrame::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (m_isChoosing)
     {
-        ::SetCursor(::LoadCursor(NULL, IDC_HELP));
+        ::SetCursor(::LoadCursor(0, IDC_HELP));
         return TRUE;
     }
 

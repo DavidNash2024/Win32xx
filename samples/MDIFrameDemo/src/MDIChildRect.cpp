@@ -93,7 +93,7 @@ LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 CMDIChildRect::CMDIChildRect()
 {
     m_menu.LoadMenu(_T("MdiMenuRect"));
-    SetHandles(m_menu, NULL);
+    SetHandles(m_menu, 0);
     SetView(m_rectView);
 }
 

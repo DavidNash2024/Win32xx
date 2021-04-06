@@ -149,7 +149,7 @@ void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
 
         // Convert the binary data to an IStream
         HGLOBAL hMem = ::GlobalAlloc(GMEM_MOVEABLE, size);
-        if(hMem != NULL)
+        if(hMem != 0)
         {
             LPVOID pImage = ::GlobalLock(hMem);
             if (pImage != NULL)
@@ -568,7 +568,7 @@ void CMainFrame::LoadMovies()
 
     CString DataPath = GetDataPath();
     CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-    SHCreateDirectoryEx(NULL, DataPath.c_str(), NULL);
+    SHCreateDirectoryEx(0, DataPath.c_str(), NULL);
 
     if (PathFileExists(DataFile))
     {
@@ -629,7 +629,7 @@ void CMainFrame::LoadMovies()
         {
             m_splashThread.GetSplash()->Hide();
             Trace(e.GetErrorString()); Trace("\n");
-            ::MessageBox(NULL, L"Failed to load Movie Library", L"Error", MB_OK);
+            ::MessageBox(0, L"Failed to load Movie Library", L"Error", MB_OK);
             m_moviesData.clear();
             m_boxSets.clear();
         }
@@ -705,7 +705,7 @@ BOOL CMainFrame::OnAddFolder()
         {
             CString DataPath = GetDataPath();
             CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-            ::SHCreateDirectoryEx(NULL, DataPath.c_str(), NULL);
+            ::SHCreateDirectoryEx(0, DataPath.c_str(), NULL);
 
             {
                 // Lock this code for thread safety
@@ -827,7 +827,7 @@ void CMainFrame::OnClose()
 
         CString DataPath = GetDataPath();
         CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-        ::SHCreateDirectoryEx(NULL, DataPath.c_str(), NULL);
+        ::SHCreateDirectoryEx(0, DataPath.c_str(), NULL);
 
         try
         {
@@ -868,7 +868,7 @@ void CMainFrame::OnClose()
         catch (const CFileException& e)
         {
             Trace(e.GetErrorString()); Trace("\n");
-            ::MessageBox(NULL, L"Failed to store Movie Library", L"Error", MB_OK);
+            ::MessageBox(0, L"Failed to store Movie Library", L"Error", MB_OK);
         }
     }
 
@@ -1677,7 +1677,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
     else
     {
         // Report the error in a message  box.
-        ::MessageBox(NULL, MI.Inform().c_str(), L"Error", MB_OK);
+        ::MessageBox(0, MI.Inform().c_str(), L"Error", MB_OK);
     }
 
     pFrame->OnFilesLoaded();
