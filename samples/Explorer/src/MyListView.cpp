@@ -851,21 +851,33 @@ void CMyListView::ViewReport()
 // Process the list-view's window messages.
 LRESULT CMyListView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_DRAWITEM:
-    case WM_MENUCHAR:
-    case WM_MEASUREITEM:
-    case WM_INITMENUPOPUP:
+        switch (msg)
+        {
+        case WM_DRAWITEM:
+        case WM_MENUCHAR:
+        case WM_MEASUREITEM:
+        case WM_INITMENUPOPUP:
         {
             // Add features implemented via IContextMenu2 such as 'New'.
-            if(m_ccm2.GetIContextMenu2())
+            if (m_ccm2.GetIContextMenu2())
                 m_ccm2.HandleMenuMsg(msg, wparam, lparam);
         }
         break;
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 ///////////////////////////////////

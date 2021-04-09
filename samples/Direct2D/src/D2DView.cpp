@@ -218,11 +218,23 @@ LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
 // Process the window messages.
 LRESULT CD2DView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_DISPLAYCHANGE:  return OnDisplayChange(msg, wparam, lparam);
-    case WM_SIZE:           return OnSize(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_DISPLAYCHANGE:  return OnDisplayChange(msg, wparam, lparam);
+        case WM_SIZE:           return OnSize(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

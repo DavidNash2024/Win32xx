@@ -53,6 +53,7 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual BOOL SaveRegistrySettings();
     virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewSimple m_view;

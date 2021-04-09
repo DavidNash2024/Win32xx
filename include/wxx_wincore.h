@@ -793,7 +793,7 @@ namespace Win32xx
         // }
 
         // return 0 for unhandled notifications
-        // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result) for dialogs
+        // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result) for dialogs.
         return 0;
     }
 
@@ -1021,8 +1021,6 @@ namespace Win32xx
 
             // Retrieve the pointer to the TLS Data
             TLSData* pTLSData = GetApp()->GetTlsData();
-            assert(pTLSData);
-
             if (pTLSData)
             {
                 // Retrieve pointer to CWnd object from Thread Local Storage TLS
@@ -1035,14 +1033,15 @@ namespace Win32xx
                     w->m_wnd = wnd;
                     w->AddToMap();
                 }
-                else
-                {
-                    // Got a message for a window thats not in the map.
-                    // We should never get here.
-                    Trace("*** Warning in CWnd::StaticWindowProc: HWND not in window map ***\n");
-                    return 0;
-                }
             }
+        }
+
+        if (w == 0)
+        {
+            // Got a message for a window thats not in the map.
+            // We should never get here.
+            Trace("*** Warning in CWnd::StaticWindowProc: HWND not in window map ***\n");
+            return 0;
         }
 
         return w->WndProc(msg, wparam, lparam);
@@ -2820,7 +2819,7 @@ namespace Win32xx
         ZeroMemory(&ncm, sizeof(ncm));
         ncm.cbSize = sizeof(ncm);
 
-#if (WINVER >= 0x2600)
+#if (WINVER >= 0x0600)
         // Is OS version less than Vista, adjust size to correct value
         if (GetWinVersion() < 2600)
             ncm.cbSize = CCSIZEOF_STRUCT(NONCLIENTMETRICS, lfMessageFont);

@@ -135,7 +135,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 // Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
-    PostMessage(WM_CLOSE);
+    Close();
 }
 
 // Called when a MRU file is selected from the menu.
@@ -418,14 +418,26 @@ void CMainFrame::SetupToolBar()
 // Handle the frame's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case UWM_DROPFILE:          OnDropFile(wparam); break;
-    case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
-    case UWM_PRINTNOW:          OnPreviewPrint();   break;
-    case UWM_PRINTSETUP:        OnPreviewSetup();   break;
+        switch (msg)
+        {
+        case UWM_DROPFILE:          OnDropFile(wparam); break;
+        case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
+        case UWM_PRINTNOW:          OnPreviewPrint();   break;
+        case UWM_PRINTSETUP:        OnPreviewSetup();   break;
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

@@ -329,12 +329,25 @@ void CMainFrame::SetWrapState(CToolBar* pToolBar, BOOL isWrapped)
 // Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//      Add case statements for each messages to be handled here
-//  }
+    try
+    {
 
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+    //  switch (msg)
+    //  {
+    //  Add case statements for each messages to be handled here
+    //  }
+
+        // pass unhandled messages on for default processing
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

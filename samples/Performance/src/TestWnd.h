@@ -16,11 +16,13 @@ public:
     CTestWindow();
     virtual ~CTestWindow(){}
     void CreateWin(int i);
+    LRESULT OnTestMessage();
 
 protected:
+    virtual void OnClose();
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     enum Constants

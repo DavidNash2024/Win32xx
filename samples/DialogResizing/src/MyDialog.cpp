@@ -24,16 +24,28 @@ CMyDialog::~CMyDialog()
 // Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Pass resizing messages on to the resizer
-    m_resizer.HandleMessage(msg, wparam, lparam);
+    try
+    {
+        // Pass resizing messages on to the resizer.
+        m_resizer.HandleMessage(msg, wparam, lparam);
 
-//  switch (msg)
-//  {
-        //Additional messages to be handled go here
-//  }
+    //  switch (msg)
+    //  {
+    //  Additional messages to be handled go here.
+    //  }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Process the dialog's command messages(WM_COMMAND)

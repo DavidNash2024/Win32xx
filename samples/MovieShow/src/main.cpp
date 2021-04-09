@@ -59,19 +59,22 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
         // Start Win32++
         CMovieShowApp theApp;
 
-        // Run the application and the message loop
+        // Run the application and the message loop.
         return theApp.Run();
     }
 
-    // catch all unhandled CException types
+    // Catch all unhandled CException types.
     catch (const CException &e)
     {
-        // Display the exception and quit
-        MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        // Display the exception and quit.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
     }
+
+    // Catch all unhandled exceptions.
     catch (...)
     {
-        MessageBox(0, L"Got an unexpected exception", L"Error", MB_ICONERROR);
+        // Display the exception and quit.
+        ::MessageBox(0, L"Got an unexpected exception", L"Error", MB_ICONERROR);
     }
 
     return -1;

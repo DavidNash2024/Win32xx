@@ -209,17 +209,29 @@ void CViewTree::Swap(HTREEITEM item1, HTREEITEM item2)
 // Process the messages for the treeview window.
 LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_RBUTTONDOWN:
-        return DefWindowProc(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_RBUTTONDOWN:
+            return DefWindowProc(msg, wparam, lparam);
 
-    case WM_RBUTTONUP:
-        GetAncestor().SendMessage(UWM_ONRCLICKTREEITEM, 0, 0);
-        return DefWindowProc(msg, wparam, lparam);
+        case WM_RBUTTONUP:
+            GetAncestor().SendMessage(UWM_ONRCLICKTREEITEM, 0, 0);
+            return DefWindowProc(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 /////////////////////////////////

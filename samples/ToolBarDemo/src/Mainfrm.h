@@ -39,7 +39,8 @@ protected:
     virtual LRESULT OnReset(LPNMTOOLBAR pNMTB);
     virtual LRESULT OnToolBarChange(LPNMTOOLBAR pNMTB);
     virtual BOOL    OnViewToolBar();
-    virtual void SetupToolBar();
+    virtual void    SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CView m_view;

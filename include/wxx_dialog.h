@@ -662,14 +662,11 @@ namespace Win32xx
         {
             // The HWND wasn't in the map, so add it now
             TLSData* pTLSData = GetApp()->GetTlsData();
-            assert(pTLSData);
-
             if (pTLSData)
             {
 
                 // Retrieve pointer to CWnd object from Thread Local Storage TLS
                 pDialog = static_cast<CDialog*>(pTLSData->pWnd);
-                assert(pDialog);
                 if (pDialog)
                 {
                     pTLSData->pWnd = NULL;
@@ -679,6 +676,14 @@ namespace Win32xx
                     pDialog->AddToMap();
                 }
             }
+        }
+
+        if (pDialog == 0)
+        {
+            // Got a message for a window thats not in the map.
+            // We should never get here.
+            Trace("*** Warning in CDialog::StaticDialogProc: HWND not in window map ***\n");
+            return 0;
         }
 
         return pDialog->DialogProc(msg, wparam, lparam);
@@ -691,7 +696,6 @@ namespace Win32xx
     // Used by Modal Dialogs for idle processing and PreTranslateMessage.
     inline LRESULT CALLBACK CDialog::StaticMsgHook(int code, WPARAM wparam, LPARAM lparam)
     {
-        TLSData* pTLSData = GetApp()->GetTlsData();
         MSG msg;
         ZeroMemory(&msg, sizeof(msg));
         LONG count = 0;
@@ -711,7 +715,6 @@ namespace Win32xx
         if (code == MSGF_DIALOGBOX)
         {
             MSG* pMsg = reinterpret_cast<MSG*>(lparam);
-            assert(pMsg);
 
             // only pre-translate keyboard and mouse events
             if (pMsg && ((pMsg->message >= WM_KEYFIRST && pMsg->message <= WM_KEYLAST) ||
@@ -731,6 +734,15 @@ namespace Win32xx
                     }
                 }
             }
+        }
+
+        TLSData* pTLSData = GetApp()->GetTlsData();
+        if (pTLSData == 0)
+        {
+            // Thread Local Storage data isn't assigned.
+            // We should never get here.
+            Trace("*** Warning in CDialog::StaticMsgHook: TLS not assigned ***\n");
+            return 0;
         }
 
         return ::CallNextHookEx(pTLSData->msgHook, code, wparam, lparam);

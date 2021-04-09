@@ -202,14 +202,26 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // the view window here.  Unprocessed messages are passed on for
     //  default processing.
 
-    switch (msg)
+    try
     {
-    case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
-    case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
-    case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
-    case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
+        case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
+        case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
+        case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
+        }
+
+        // Pass unhandled messages on for default processing
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

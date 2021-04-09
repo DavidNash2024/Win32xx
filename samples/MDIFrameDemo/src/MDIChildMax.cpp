@@ -56,12 +56,25 @@ void CViewMax::OnDraw(CDC& dc)
 // Process the max view's window messages.
 LRESULT CViewMax::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_SIZE:
-        Invalidate();
-        return 0;
+        switch (msg)
+        {
+        case WM_SIZE:
+            Invalidate();
+            return 0;
 
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
-    return WndProcDefault(msg, wparam, lparam);
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

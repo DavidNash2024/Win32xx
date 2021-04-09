@@ -408,7 +408,7 @@ namespace Win32xx
         CWinThread* pThread = static_cast<CWinThread*>(pCThread);
         assert(pThread);
 
-        if (pThread->InitInstance())
+        if ((pThread != 0) && (pThread->InitInstance()))
         {
             GetApp()->SetTlsData();
             return pThread->MessageLoop();

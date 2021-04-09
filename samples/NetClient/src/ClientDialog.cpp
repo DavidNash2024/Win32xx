@@ -38,16 +38,28 @@ void CClientDialog::AppendText(const CEdit& edit, LPCTSTR text)
 // Process the dialog's window messages.
 INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
-    case USER_CONNECT:      return OnSocketConnect();
-    case USER_DISCONNECT:   return OnSocketDisconnect();
-    case USER_RECEIVE:      return OnSocketReceive();
+        switch (msg)
+        {
+        case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
+        case USER_CONNECT:      return OnSocketConnect();
+        case USER_DISCONNECT:   return OnSocketDisconnect();
+        case USER_RECEIVE:      return OnSocketReceive();
+        }
+
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Called when the dialog window is activated.

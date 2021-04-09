@@ -2657,7 +2657,7 @@ namespace Win32xx
         case UWN_UNDOCKED:      return OnUndocked();
         }
 
-        return CWnd::OnNotify(wparam, lparam);
+        return 0;
     }
 
     // Called when the rebar's height changes.

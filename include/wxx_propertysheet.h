@@ -88,7 +88,6 @@ namespace Win32xx
         virtual void OnOK();
         virtual BOOL OnQueryCancel();
         virtual BOOL OnQuerySiblings(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual void OnReset();
         virtual BOOL OnSetActive();
         virtual BOOL OnWizardBack();
         virtual BOOL OnWizardFinish();
@@ -234,7 +233,7 @@ namespace Win32xx
 
         return CDialog::DialogProcDefault(msg, wparam, lparam);
 
-    } // INT_PTR CALLBACK CPropertyPage::DialogProc(...)
+    }
 
     // Returns TRUE if the button is enabled
     inline BOOL CPropertyPage::IsButtonEnabled(int button) const
@@ -286,12 +285,6 @@ namespace Win32xx
         return FALSE;
     }
 
-    // Called when the user chooses the Cancel button
-    inline void CPropertyPage::OnReset()
-    {
-        OnCancel();
-    }
-
     // Called when the property page is created.
     // Override this function to perform operations when the property page is created.
     inline BOOL CPropertyPage::OnInitDialog()
@@ -319,17 +312,18 @@ namespace Win32xx
     // Handles the WM_NOTIFY message and call the appropriate functions.
     inline LRESULT CPropertyPage::OnNotify(WPARAM wparam, LPARAM lparam)
     {
-
         UNREFERENCED_PARAMETER(wparam);
 
         LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lparam;
         assert(pNotify);
         if (!pNotify) return 0;
 
+        // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result)
+        // for non-zero returns.
         switch(pNotify->hdr.code)
         {
         case PSN_SETACTIVE:
-            return OnSetActive() ? 0 : -1L;
+            return OnSetActive() ? 0 : -1;
         case PSN_KILLACTIVE:
             return OnKillActive();
         case PSN_APPLY:
@@ -341,7 +335,7 @@ namespace Win32xx
             }
             return PSNRET_INVALID_NOCHANGEPAGE;
         case PSN_RESET:
-            OnReset();
+            OnCancel();
             break;
         case PSN_QUERYCANCEL:
             return OnQueryCancel();
@@ -355,12 +349,10 @@ namespace Win32xx
             OnHelp();
             break;
         default:
-            return FALSE;   // notification not handled
+            return 0;   // notification not handled
         }
 
-        // notification handled
-        // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result) for non-zero returns
-        return TRUE;
+        return 0; // PSNRET_NOERROR
     }
 
     // Called when a page becomes active. Override this function to perform tasks
@@ -508,6 +500,14 @@ namespace Win32xx
             // Set the wnd members and call DialogProc for this message
             pPage->m_wnd = hDlg;
             pPage->AddToMap();
+        }
+
+        if (pPage == 0)
+        {
+            // Got a message for a window thats not in the map.
+            // We should never get here.
+            Trace("*** Warning in CPropertyPage::StaticDialogProc: HWND not in window map ***\n");
+            return 0;
         }
 
         return pPage->DialogProc(msg, wparam, lparam);
@@ -865,7 +865,6 @@ namespace Win32xx
         else
             m_psh.dwFlags &= ~PSH_WIZARD;
     }
-
 }
 
 #endif // _WIN32XX_PROPERTYSHEET_H_

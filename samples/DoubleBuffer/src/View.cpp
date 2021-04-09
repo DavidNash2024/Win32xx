@@ -145,13 +145,25 @@ void CView::PreRegisterClass(WNDCLASS& wc)
 // All window messages for this window pass through WndProc
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
+        switch (msg)
+        {
         case WM_TIMER:  return OnTimer(msg, wparam, lparam);
+        }
+
+        // pass unhandled messages on for default processing
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 

@@ -339,3 +339,19 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 }
+
+// Process the frame's window messages.
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    catch (const CException& e)
+    {
+        // Display the exception.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        return 0;
+    }
+}

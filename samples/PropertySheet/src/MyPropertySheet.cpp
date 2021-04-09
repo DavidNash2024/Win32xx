@@ -18,20 +18,32 @@ CButtonPage::CButtonPage(UINT templateID, LPCTSTR title /* = NULL*/) : CProperty
 // Process the property sheet's window messages.
 INT_PTR CButtonPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    // on any command notification, tell the property sheet to enable the Apply button
-    case WM_COMMAND:
+        switch (msg)
+        {
+        // on any command notification, tell the property sheet to enable the Apply button
+        case WM_COMMAND:
         {
             PropSheet_Changed(GetParent(), GetHwnd());
             break;
         }
 
-    default:
-        break;
+        default:
+            break;
+        }
+
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Respond to the apply button.
@@ -119,21 +131,32 @@ CComboPage::CComboPage(UINT templateID, LPCTSTR title /* = NULL*/) : CPropertyPa
 // Process the property sheet's window messages.
 INT_PTR CComboPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-
-    switch (msg)
+    try
     {
-    // on any command notification, tell the property sheet to enable the Apply button
-    case WM_COMMAND:
+        switch (msg)
+        {
+        // on any command notification, tell the property sheet to enable the Apply button
+        case WM_COMMAND:
         {
             PropSheet_Changed(GetParent(), GetHwnd());
             break;
         }
 
-    default:
-        break;
+        default:
+            break;
+        }
+
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Called before the property sheet is displayed.
@@ -188,12 +211,24 @@ void CMyPropertySheet::OnInitialUpdate()
 // Process the property sheet's window messages.
 LRESULT CMyPropertySheet::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//
-//  }
+    try
+    {
+        //  switch (msg)
+        //  {
+        //
+        //  }
 
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

@@ -15,15 +15,15 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         // Start Win32++
         CToolBarDemoApp theApp;
 
-        // Run the application and the message loop
+        // Run the application and the message loop.
         return theApp.Run();
     }
 
-    // catch all unhandled CException types
+    // Catch all unhandled CException types.
     catch (const CException &e)
     {
-        // Display the exception and quit
-        MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        // Display the exception and quit.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return -1;
     }

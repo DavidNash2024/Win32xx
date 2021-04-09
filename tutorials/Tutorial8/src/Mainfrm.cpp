@@ -94,7 +94,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 // Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
-    PostMessage(WM_CLOSE);
+    Close();
 }
 
 // Create a new scribble screen.

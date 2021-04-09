@@ -62,17 +62,29 @@ LRESULT CMyButton::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 // Process the window messages for the button control.
 LRESULT CMyButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
-    case WM_NCHITTEST:      return OnNCHitTest(msg, wparam, lparam);
-    case WM_SETCURSOR:      return OnSetCursor(msg, wparam, lparam);
-    case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
-    case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
-    case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
-    default:
-        break;
+        switch (msg)
+        {
+        case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
+        case WM_NCHITTEST:      return OnNCHitTest(msg, wparam, lparam);
+        case WM_SETCURSOR:      return OnSetCursor(msg, wparam, lparam);
+        case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
+        case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
+        case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
+        default:
+            break;
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

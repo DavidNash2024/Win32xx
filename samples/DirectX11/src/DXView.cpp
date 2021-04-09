@@ -450,19 +450,31 @@ void CDXView::Render()
 // Window Procedure. Handles window messages.
 LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    PAINTSTRUCT ps;
-
-    switch (msg)
+    try
     {
-    case WM_PAINT:
-        BeginPaint(ps);
-        EndPaint(ps);
-        break;
+        PAINTSTRUCT ps;
 
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
+        switch (msg)
+        {
+        case WM_PAINT:
+            BeginPaint(ps);
+            EndPaint(ps);
+            break;
+
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            break;
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

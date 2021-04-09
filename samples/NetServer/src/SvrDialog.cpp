@@ -136,15 +136,27 @@ void CSvrDialog::AppendText(const CEdit& edit, LPCTSTR text)
 // Respond to the user defined message posted to the dialog.
 INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case USER_ACCEPT:       return OnSocketAccept();
-    case USER_DISCONNECT:   return OnSocketDisconnect(wparam);
-    case USER_RECEIVE:      return OnSocketReceive(wparam);
+        switch (msg)
+        {
+        case USER_ACCEPT:       return OnSocketAccept();
+        case USER_DISCONNECT:   return OnSocketDisconnect(wparam);
+        case USER_RECEIVE:      return OnSocketReceive(wparam);
+        }
+
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Adds support for the IP address control in the dialog.

@@ -24,12 +24,25 @@ CMyDialog::~CMyDialog()
 // Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-        //Additional messages to be handled go here
-//  }
+    try
+    {
 
-    return DialogProcDefault(msg, wparam, lparam);
+    //  switch (msg)
+    //  {
+    //  Additional messages to be handled go here
+    //  }
+
+        return DialogProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Called before the dialog is displayed.

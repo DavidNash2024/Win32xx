@@ -17,6 +17,9 @@ public:
     CMyStatusBar() {}
     virtual ~CMyStatusBar() {}
 
+    void OnSize();
+    void OnTimer();
+
 protected:
     virtual void OnAttach();
     virtual BOOL OnEraseBkgnd(CDC& dc);

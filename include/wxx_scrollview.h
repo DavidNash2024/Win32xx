@@ -65,6 +65,10 @@
   #define GET_WHEEL_DELTA_WPARAM(wparam)  ((short)HIWORD(wparam))
 #endif
 
+#ifndef WM_MOUSEWHEEL
+  #define WM_MOUSEWHEEL                   0x020A
+#endif
+
 namespace Win32xx
 {
 

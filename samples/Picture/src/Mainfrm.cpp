@@ -212,23 +212,24 @@ void CMainFrame::SetupToolBar()
 // Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    // A message defined in PictureApp.h
-    case UWM_FILELOADED: return OnFileLoaded((LPCTSTR) lparam);
-    case WM_SIZE:
+        switch (msg)
         {
-            // Remove scrollbars and redraw the view if the frame is maximized
-            if (wparam == SIZE_MAXIMIZED)
-            {
-                GetView().ShowScrollBar(SB_BOTH, FALSE);
-                GetView().Invalidate();
-            }
-
-            break;
+        // A message defined in PictureApp.h
+        case UWM_FILELOADED: return OnFileLoaded((LPCTSTR)lparam);
         }
+
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

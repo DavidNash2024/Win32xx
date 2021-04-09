@@ -23,15 +23,27 @@ CFormView::~CFormView()
 // Process the dialog's window messages.
 INT_PTR CFormView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    m_resizer.HandleMessage(msg, wparam, lparam);
+    try
+    {
+        m_resizer.HandleMessage(msg, wparam, lparam);
 
-//  switch (uMsg)
-//  {
-//      Add case statements for each messages to be handled here
-//  }
+    //  switch (uMsg)
+    //  {
+    //  Add case statements for each messages to be handled here
+    //  }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Returns a reference to CDoc.
@@ -55,7 +67,7 @@ void CFormView::OnCancel()
     TRACE("Cancel Pressed.\n");
 }
 
-// Suppress closing the dialog when the Esc button is pressed on a rich edit control
+// Suppress closing the dialog when the Esc button is pressed on a rich edit control.
 void CFormView::OnClose()
 {
 }

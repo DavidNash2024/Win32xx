@@ -266,16 +266,28 @@ void CView::QuickPrint(LPCTSTR docName)
 // Handle the view window's messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_DROPFILES:      return OnDropFiles(msg, wparam, lparam);
-    case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
-    case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
-    case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_DROPFILES:      return OnDropFiles(msg, wparam, lparam);
+        case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
+        case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
+        case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
+        }
+
+        // Use the default message handling for remaining messages.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Use the default message handling for remaining messages.
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 

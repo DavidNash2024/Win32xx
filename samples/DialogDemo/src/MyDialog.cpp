@@ -29,13 +29,25 @@ CMyDialog::~CMyDialog()
 // Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-  switch (msg)
-  {
-  case UWM_SETSTATIC:     return SetStatic((LPCTSTR)wparam);
-  }
+    try
+    {
+        switch (msg)
+        {
+        case UWM_SETSTATIC:     return SetStatic((LPCTSTR)wparam);
+        }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Process the command messages (WM_COMMAND) from the controls.

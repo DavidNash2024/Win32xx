@@ -34,13 +34,25 @@ LRESULT CSimpleView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 
 LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_SIZE:   return OnSize(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_SIZE:   return OnSize(msg, wparam, lparam);
+        }
+
+        // Do default processing for other messages.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Do default processing for other messages
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // CSimpleMDIChild definitions
@@ -107,11 +119,24 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
 
 LRESULT CSimpleMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//      Add case statements for each messages to be handled here
-//  }
+    try
+    {
 
-    // Do default processing for other messages
-    return WndProcDefault(msg, wparam, lparam);
+    //  switch (msg)
+    //  {
+    //  Add case statements for each messages to be handled here
+    //  }
+
+        // Do default processing for other messages/
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

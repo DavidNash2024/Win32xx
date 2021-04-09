@@ -30,13 +30,25 @@ void CMyDialog::OnDestroy()
 // Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-        //Additional messages to be handled go here
-//  }
+    try
+    {
+    //  switch (msg)
+    //  {
+    //  Additional messages to be handled go here
+    //  }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
+    }
+
+    // catch all CException types
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Handle the command notifications from controls.

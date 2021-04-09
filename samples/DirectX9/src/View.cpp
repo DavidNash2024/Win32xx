@@ -336,11 +336,23 @@ LRESULT CDXView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 // Process the window's messages.
 LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(msg)
+    try
     {
+        switch (msg)
+        {
         case WM_SIZE: return OnSize(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

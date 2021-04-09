@@ -156,10 +156,11 @@ void CMainMDIFrame::SetupToolBar()
 // Process the MDI frame's window messages.
 LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_MOUSEACTIVATE:
-        // Called when a MDI child is activated with a mouse click
+        switch (msg)
+        {
+        case WM_MOUSEACTIVATE:  // MDI child is activated with a mouse click.
         {
             // Redraw all MDI children to update docker caption
             std::vector<MDIChildPtr>::const_iterator iter;
@@ -169,9 +170,19 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             }
         }
         break;
+        }
+
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-//  pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
