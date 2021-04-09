@@ -1704,24 +1704,36 @@ LRESULT CMainFrame::OnDPIChanged()
 // Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_SYSCOMMAND:                 return OnSysCommand(msg, wparam, lparam);
-    case WM_EXITSIZEMOVE:               return OnExitSizeMove(msg, wparam, lparam);
-    case WM_DPICHANGED:                 return OnDPIChanged();
+        switch (msg)
+        {
+        case WM_SYSCOMMAND:                 return OnSysCommand(msg, wparam, lparam);
+        case WM_EXITSIZEMOVE:               return OnExitSizeMove(msg, wparam, lparam);
+        case WM_DPICHANGED:                 return OnDPIChanged();
 
-    // User Messages called by CTreeList
-    case UWM_GETMOVIESDATA:             return (LRESULT)GetMoviesData();
-    case UWM_ONSELECTTREEITEM:          return OnSelectTreeItem();
-    case UWM_ONRCLICKTREEITEM:          return OnRClickTreeItem();
+        // User Messages called by CTreeList
+        case UWM_GETMOVIESDATA:             return (LRESULT)GetMoviesData();
+        case UWM_ONSELECTTREEITEM:          return OnSelectTreeItem();
+        case UWM_ONRCLICKTREEITEM:          return OnRClickTreeItem();
 
-    // Use Messages called by CViewList
-    case UWM_PLAYMOVIE:                 return PlayMovie((LPCTSTR)wparam);
-    case UWM_ONSELECTLISTITEM:          return OnSelectListItem((const MovieInfo*)wparam);
-    case UWM_ONRCLICKLISTITEM:          return OnRClickListItem();
+        // Use Messages called by CViewList
+        case UWM_PLAYMOVIE:                 return PlayMovie((LPCTSTR)wparam);
+        case UWM_ONSELECTLISTITEM:          return OnSelectListItem((const MovieInfo*)wparam);
+        case UWM_ONRCLICKLISTITEM:          return OnRClickListItem();
+        }
+
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

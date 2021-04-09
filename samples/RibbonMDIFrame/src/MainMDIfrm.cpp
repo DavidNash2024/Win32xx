@@ -312,21 +312,33 @@ STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key
 // Called to handle the window's messages.
 LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case UWM_SIMPLECREATED:
+        switch (msg)
+        {
+        case UWM_SIMPLECREATED:
         {
             CSimpleView* pSimpleView = reinterpret_cast<CSimpleView*>(wparam);
             assert(pSimpleView);
 
             if (GetRibbonFramework())
-                pSimpleView->SetColor( GetColorFromPicker() );
+                pSimpleView->SetColor(GetColorFromPicker());
 
             return 0;
         }
+        }
+
+        // Use the default message handling for remaining messages.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    //Use the default message handling for remaining messages
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

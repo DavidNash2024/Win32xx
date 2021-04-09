@@ -70,13 +70,25 @@ void CColourDialog::CreateImagePreviews()
 // Process the dialog's window messages.
 INT_PTR CColourDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_HSCROLL:    return OnHScroll(msg, wparam, lparam);
-    case WM_PAINT:      return OnPaint(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_HSCROLL:    return OnHScroll(msg, wparam, lparam);
+        case WM_PAINT:      return OnPaint(msg, wparam, lparam);
+        }
+
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Process the command messages (WM_COMMAND) from the dialog's controls.

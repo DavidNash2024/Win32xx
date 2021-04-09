@@ -27,16 +27,28 @@ void CViewSimple::OnDraw(CDC& dc)
 // Process the simple view's window messages.
 LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_SIZE:
-        // Force the window to be repainted.
-        Invalidate();
-        break;      // Also do default processing
+        switch (msg)
+        {
+        case WM_SIZE:
+            // Force the window to be repainted.
+            Invalidate();
+            break;      // Also do default processing
+        }
+
+        // Do default processing for other messages
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Do default processing for other messages
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 ///////////////////////////////////////
@@ -111,11 +123,24 @@ BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM lparam)
 // Process the simple MDI child's window messages.
 LRESULT CMDIChildSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//      Add case statements for each messages to be handled here
-//  }
+    try
+    {
 
-    // Do default processing for other messages
-    return WndProcDefault(msg, wparam, lparam);
+    //  switch (msg)
+    //  {
+    //  Add case statements for each messages to be handled here.
+    //  }
+
+        // Do default processing for other messages.
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

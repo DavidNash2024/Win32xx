@@ -717,6 +717,14 @@ namespace Win32xx
             }
         }
 
+        if (t == 0)
+        {
+            // Got a message for a window thats not in the map.
+            // We should never get here.
+            Trace("*** Warning in CTaskDialog::StaticTaskDialogProc: HWND not in window map ***\n");
+            return 0;
+        }
+
         return static_cast<HRESULT>(t->TaskDialogProc(notification, wparam, lparam));
 
     } // LRESULT CALLBACK StaticTaskDialogProc(...)

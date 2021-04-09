@@ -436,14 +436,26 @@ LRESULT CMainFrame::OnSendPoint(WPARAM wparam)
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case UWM_DROPFILE:          return OnDropFile(wparam);
-    case UWM_GETALLPOINTS:      return OnGetAllPoints();
-    case UWM_SENDPOINT:         return OnSendPoint(wparam);
+        switch (msg)
+        {
+        case UWM_DROPFILE:          return OnDropFile(wparam);
+        case UWM_GETALLPOINTS:      return OnGetAllPoints();
+        case UWM_SENDPOINT:         return OnSendPoint(wparam);
+        }
+
+        // Use the default message handling for remaining messages.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    //Use the default message handling for remaining messages
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

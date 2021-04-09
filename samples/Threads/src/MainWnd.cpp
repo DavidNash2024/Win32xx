@@ -161,14 +161,26 @@ void CMainWindow::OnWindowCreated()
 // Process this window's messages.
 LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case UWM_APPENDTEXT:     OnAppendText(wparam);  break;
-    case UWM_CLOSETHREAD:    OnCloseThread(wparam); break;
-    case UWM_WINDOWCREATED:  OnWindowCreated();     break;
-    case WM_SIZE:            OnSize();              break;
+        switch (msg)
+        {
+        case UWM_APPENDTEXT:     OnAppendText(wparam);  break;
+        case UWM_CLOSETHREAD:    OnCloseThread(wparam); break;
+        case UWM_WINDOWCREATED:  OnWindowCreated();     break;
+        case WM_SIZE:            OnSize();              break;
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

@@ -40,16 +40,28 @@ void CViewDialog::AppendText(int nID, LPCTSTR text)
 // Process the dialog's window messages.
 INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Pass resizing messages on to the resizer.
-    m_Resizer.HandleMessage(msg, wparam, lparam);
-
-    switch (msg)
+    try
     {
-    case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        // Pass resizing messages on to the resizer.
+        m_Resizer.HandleMessage(msg, wparam, lparam);
+
+        switch (msg)
+        {
+        case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        }
+
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Called when the dialog is created, but before it is displayed.

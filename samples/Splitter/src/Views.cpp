@@ -19,14 +19,26 @@ void CViewSimple::OnDraw(CDC& dc)
 
 LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(msg)
+    try
     {
-    case WM_SIZE:
-        Invalidate();
-        break;
+        switch (msg)
+        {
+        case WM_SIZE:
+            Invalidate();
+            break;
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 //////////////////////////////////

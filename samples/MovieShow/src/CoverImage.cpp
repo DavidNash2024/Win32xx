@@ -122,15 +122,27 @@ LRESULT CCoverImage::OnPaint(UINT, WPARAM, LPARAM)
 // Process the window messages for the CCoverImage window.
 LRESULT CCoverImage::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_SIZE:
+        switch (msg)
+        {
+        case WM_SIZE:
         {
             CDC dc = GetDC();
             OnDraw(dc);
         }
         break;
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

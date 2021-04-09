@@ -76,13 +76,25 @@ LRESULT CViewRect::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
 // Process the view rect's window messages.
 LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_TIMER:  return OnTimer(msg, wparam, lparam);       // Display a random rectangle
-    case WM_SIZE:   return OnSize(msg, wparam, lparam);        // If not minimized, save the window size
+        switch (msg)
+        {
+        case WM_TIMER:  return OnTimer(msg, wparam, lparam);       // Display a random rectangle
+        case WM_SIZE:   return OnSize(msg, wparam, lparam);        // If not minimized, save the window size
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 /////////////////////////////////////

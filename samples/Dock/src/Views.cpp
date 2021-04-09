@@ -42,13 +42,25 @@ LRESULT CViewSimple::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 // Process the window's messages.
 LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(msg)
+    try
     {
-    case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
-    case WM_SIZE:               return OnSize(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        case WM_SIZE:               return OnSize(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 /////////////////////////////////
@@ -143,12 +155,24 @@ void CViewList::SetColumns()
 // Process the list-view's window messages.
 LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(msg)
+    try
     {
-    case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 /////////////////////////////////
@@ -220,12 +244,24 @@ LRESULT CViewTree::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Process window messages for the tree-view control.
 LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(msg)
+    try
     {
-    case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 /////////////////////////////////

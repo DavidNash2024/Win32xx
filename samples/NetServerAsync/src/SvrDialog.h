@@ -66,10 +66,11 @@ public:
     virtual ~CSvrDialog();
     void AppendText(const CEdit& edit, LPCTSTR text);
     void LoadCommonControlsEx();
+    BOOL OnSend();
+    BOOL OnSocketAccept();
     BOOL OnSocketDisconnect(WPARAM wparam);
     BOOL OnSocketReceive();
-    BOOL OnSocketAccept();
-    BOOL OnSend();
+    LRESULT OnSocketMessage(WPARAM wparam, LPARAM lparam);
     BOOL OnStartServer();
     BOOL StartServer();
     void StopServer();

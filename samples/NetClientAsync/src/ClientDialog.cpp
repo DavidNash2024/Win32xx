@@ -38,32 +38,26 @@ void CClientDialog::AppendText(const CEdit& edit, LPCTSTR text)
 // Processes the dialog's window messages.
 INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-        case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
-        case UWM_SOCKETMSG:
+        switch (msg)
         {
-            if (WSAGETSELECTERROR(lparam))
-            {
-                // Display the error and close the socket
-                AppendText(m_editStatus, _T("Socket error, closing socket."));
-                closesocket(static_cast<SOCKET>(wparam));
-            }
-            else
-            {
-                switch (WSAGETSELECTEVENT(lparam))
-                {
-                case FD_CONNECT:    return OnSocketConnect();
-                case FD_CLOSE:      return OnSocketDisconnect();
-                case FD_READ:       return OnSocketReceive();
-                default:            return 0;
-                }
-            }
+        case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
+        case UWM_SOCKETMSG:     return OnSocketMessage(wparam, lparam);
         }
+
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on to parent DialogProc.
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Add support for the IP address control in the dialog.
@@ -241,6 +235,28 @@ BOOL CClientDialog::OnSocketDisconnect()
     }
 
     return TRUE;
+}
+
+// Process async socket events.
+LRESULT CClientDialog::OnSocketMessage(WPARAM wparam, LPARAM lparam)
+{
+    if (WSAGETSELECTERROR(lparam))
+    {
+        // Display the error and close the socket.
+        AppendText(m_editStatus, _T("Socket error, closing socket."));
+        closesocket(static_cast<SOCKET>(wparam));
+        return 0;
+    }
+    else
+    {
+        switch (WSAGETSELECTEVENT(lparam))
+        {
+        case FD_CONNECT:    return OnSocketConnect();
+        case FD_CLOSE:      return OnSocketDisconnect();
+        case FD_READ:       return OnSocketReceive();
+        default:            return 0;
+        }
+    }
 }
 
 // Called when the socket has data to receive.

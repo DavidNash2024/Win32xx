@@ -25,13 +25,26 @@ CButtonDialog::~CButtonDialog()
 // Process the dialog's window messages.
 INT_PTR CButtonDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_CTLCOLORDLG:    return OnCtlColorDlg(msg, wparam, lparam);
-    case WM_CTLCOLORSTATIC: return OnCtlColorStatic(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_CTLCOLORDLG:    return OnCtlColorDlg(msg, wparam, lparam);
+        case WM_CTLCOLORSTATIC: return OnCtlColorStatic(msg, wparam, lparam);
+        }
+
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
     }
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Process the dialog's command messages (WM_COMMAND).
@@ -133,21 +146,34 @@ CComboBoxDialog::~CComboBoxDialog()
 // Process the dialog's window messages.
 INT_PTR CComboBoxDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    // Set the background color of the dialog
-    case WM_CTLCOLORDLG:
-        if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
-        break;
+        switch (msg)
+        {
+            // Set the background color of the dialog
+        case WM_CTLCOLORDLG:
+            if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
+            break;
 
-    // Set the background color of static controls
-    case WM_CTLCOLORSTATIC:
-        if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
-        break;
+            // Set the background color of static controls
+        case WM_CTLCOLORSTATIC:
+            if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
+            break;
 
+        }
+
+        // Pass unhandled messages on to parent DialogProc
+        return DialogProcDefault(msg, wparam, lparam);
     }
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+
+    // catch all CException types
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Called before the dialog is displayed.
@@ -183,13 +209,25 @@ CMyDialog::~CMyDialog()
 // Process the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//
-//  }
+    try
+    {
+        //  switch (msg)
+        //  {
+        //
+        //  }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+        // Pass unhandled messages on to parent DialogProc
+        return DialogProcDefault(msg, wparam, lparam);
+    }
+
+    // catch all CException types
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Called when the dialog window is destroyed.

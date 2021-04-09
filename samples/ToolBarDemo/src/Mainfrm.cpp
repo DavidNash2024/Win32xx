@@ -404,5 +404,20 @@ void CMainFrame::SetupToolBar()
         SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));
         SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
     }
+}
 
+// Process the frame's window messages.
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    catch (const CException& e)
+    {
+        // Display the exception.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        return 0;
+    }
 }

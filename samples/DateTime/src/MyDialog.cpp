@@ -32,22 +32,34 @@ void CMyDialog::OnDestroy()
 // Processes the dialog's window messages.
 INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_TIMER:
-        if (wparam == ID_TIMER)
+        switch (msg)
         {
-            // Update the time displayed every second
-            SYSTEMTIME lt;
-            GetLocalTime(&lt);
-            m_dateTime.SetTime(lt);
+        case WM_TIMER:
+            if (wparam == ID_TIMER)
+            {
+                // Update the time displayed every second
+                SYSTEMTIME lt;
+                GetLocalTime(&lt);
+                m_dateTime.SetTime(lt);
 
-            return 0;
+                return 0;
+            }
         }
+
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Called when a control sends a command notification (WM_COMMAND).

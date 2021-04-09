@@ -14,7 +14,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     HMODULE hModule = LoadLibrary(_T("MyDLL.dll"));
     if (0 == hModule)
     {
-        MessageBox(0, _T("Failed to load MyDLL.dll"), _T("Error"), MB_OK);
+        ::MessageBox(0, _T("Failed to load MyDLL.dll"), _T("Error"), MB_OK);
         return 0;
     }
 
@@ -23,10 +23,10 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     SHOWDIALOG* pfnShowDialog = (SHOWDIALOG*)::GetProcAddress(hModule, "ShowDialog");
     assert(pfnShowDialog);
 
-    // Call MyDLL's ShowDialog function
+    // Call MyDLL's ShowDialog function.
     pfnShowDialog();
 
-    // We get here when the dialog is closed
+    // We get here when the dialog is closed.
     FreeLibrary(hModule);
 
     return 0;

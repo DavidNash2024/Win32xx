@@ -30,16 +30,28 @@ HWND CView::Create(HWND hParent = 0)
 // Process the dialog's window messages.
 INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Pass messages on to the resizer.
-    m_resizer.HandleMessage(msg, wparam, lparam);
+    try
+    {
+        // Pass messages on to the resizer.
+        m_resizer.HandleMessage(msg, wparam, lparam);
 
-//  switch (msg)
-//  {
-//      Add case statements for each message to be handled here
-//  }
+    //  switch (msg)
+    //  {
+    //      Add case statements for each message to be handled here
+    //  }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Retrieves a reference to CDoc.

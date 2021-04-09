@@ -26,6 +26,13 @@ void CTestWindow::CreateWin(int i)
         420, 50 + 4*i, 300, 200, 0, NULL);
 }
 
+void CTestWindow::OnClose()
+{
+    CString str;
+    str.Format(str, _T("Closing test Window #%d\n"), m_windowCount);
+    TRACE(str);
+}
+
 // Called when the window is created.
 int CTestWindow::OnCreate(CREATESTRUCT& cs)
 {
@@ -47,25 +54,34 @@ void CTestWindow::OnInitialUpdate()
     mainWnd.PostMessage(WM_WINDOWCREATED, 0, 0);
 }
 
+LRESULT CTestWindow::OnTestMessage()
+{
+    static LRESULT messages = 0;
+
+    // Return the number of WM_TESTMESSAGE messages processed so far.
+    return ++messages;
+}
+
 // Processes the Test Window's messages.
 LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    static LRESULT messages = 0;
-    switch (msg)
+    try
     {
-    case WM_CLOSE:
+        switch (msg)
         {
-            CString str;
-            str.Format(str, _T("Closing test Window #%d\n"), m_windowCount);
-            TRACE(str);
+        case WM_TESTMESSAGE:   return OnTestMessage();
         }
-        break;
 
-    case WM_TESTMESSAGE:
-        // return the number of WM_TESTMESSAGE messages processed so far
-        return ++messages;
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

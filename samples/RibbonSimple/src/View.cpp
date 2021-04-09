@@ -173,14 +173,26 @@ STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* p
 
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_SIZE:
-        OnSize();
-        break;  // and also do default processing for this message
+        switch (msg)
+        {
+        case WM_SIZE:
+            OnSize();
+            break;  // and also do default processing for this message
+        }
+
+        // pass unhandled messages on for default processing
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

@@ -493,11 +493,23 @@ void CMainFrame::SetupToolBar()
 // Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (msg)
-//  {
-//
-//  }
+    try
+    {
+    //  switch (msg)
+    //  {
+    //  }
 
-    // Always pass unhandled messages on to WndProcDefault
-    return WndProcDefault(msg, wparam, lparam);
+        // Always pass unhandled messages on to WndProcDefault.
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
+

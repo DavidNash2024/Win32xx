@@ -37,33 +37,45 @@ void CTCPClientDlg::AppendText(int id, LPCTSTR text)
 // Respond to the user defined message posted to the dialog.
 INT_PTR CTCPClientDlg::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case UWM_SOCKETMSG:
-    {
-        if (WSAGETSELECTERROR(lparam))
+        switch (msg)
         {
-            // Display the error and close the socket
-            AppendText(IDC_EDIT_STATUS, _T("Socket error, closing socket."));
-            closesocket(static_cast<SOCKET>(wparam));
-        }
-        else
+        case UWM_SOCKETMSG:
         {
-            switch (WSAGETSELECTEVENT(lparam))
+            if (WSAGETSELECTERROR(lparam))
             {
-            //TCP Incoming data to receive
-            case FD_READ:   return OnSocketReceive();
-
-            // TCP socket disconnected
-            case FD_CLOSE:  return OnSocketDisconnect();
+                // Display the error and close the socket
+                AppendText(IDC_EDIT_STATUS, _T("Socket error, closing socket."));
+                closesocket(static_cast<SOCKET>(wparam));
             }
+            else
+            {
+                switch (WSAGETSELECTEVENT(lparam))
+                {
+                //TCP Incoming data to receive
+                case FD_READ:   return OnSocketReceive();
+
+                // TCP socket disconnected
+                case FD_CLOSE:  return OnSocketDisconnect();
+                }
+            }
+            break;
         }
-        break;
-    }
+        }
+
+        // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Called when the dialog is closed.
@@ -175,38 +187,31 @@ void CSvrDialog::AppendText(const CEdit& edit, LPCTSTR text)
     TRACE(text); TRACE("\n");
 }
 
+
+
 // Respond to the user defined message posted to the dialog.
 INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case USER_DISCONNECT:  return OnSocketDisconnect(wparam);
-    case UWM_SOCKETMSG:
-    {
-        if (WSAGETSELECTERROR(lparam))
+        switch (msg)
         {
-            // Display the error and close the socket
-            AppendText(m_editStatus, _T("Socket error, closing socket.\n"));
-            closesocket(static_cast<SOCKET>(wparam));
+        case USER_DISCONNECT:  return OnSocketDisconnect(wparam);
+        case UWM_SOCKETMSG:    return OnSocketMessage(wparam, lparam);
         }
-        else
-        {
-            switch (WSAGETSELECTEVENT(lparam))
-            {
-            // UDP Incoming data to receive
-            case FD_READ:       return OnSocketReceive();
 
-            // TCP Connection request
-            case FD_ACCEPT:     return OnSocketAccept();
-
-            }
-        }
-        break;
-    }
+        // Pass unhandled messages on to parent DialogProc
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 // Add support for the IP address control in the dialog.
@@ -312,6 +317,32 @@ BOOL CSvrDialog::OnInitDialog()
     }
 
     return TRUE;
+}
+
+// Process async socket events.
+LRESULT CSvrDialog::OnSocketMessage(WPARAM wparam, LPARAM lparam)
+{
+    if (WSAGETSELECTERROR(lparam))
+    {
+        // Display the error and close the socket
+        AppendText(m_editStatus, _T("Socket error, closing socket.\n"));
+        closesocket(static_cast<SOCKET>(wparam));
+        return 0;
+    }
+    else
+    {
+        switch (WSAGETSELECTEVENT(lparam))
+        {
+            // UDP Incoming data to receive
+        case FD_READ:       return OnSocketReceive();
+
+            // TCP Connection request
+        case FD_ACCEPT:     return OnSocketAccept();
+
+        }
+    }
+
+    return 0;
 }
 
 // Respond to the Start/Stop Button press

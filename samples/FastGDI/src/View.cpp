@@ -255,12 +255,24 @@ void CView::PreCreate(CREATESTRUCT& cs)
 // Process the view's window messages.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_DROPFILES:          return OnDropFiles(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_DROPFILES:          return OnDropFiles(msg, wparam, lparam);
+        }
+
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

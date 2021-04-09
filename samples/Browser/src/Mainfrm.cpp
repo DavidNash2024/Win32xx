@@ -610,21 +610,33 @@ void CMainFrame::SetupToolBar()
 // Process frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case UWM_BEFORENAVIGATE:      OnBeforeNavigate2((DISPPARAMS*)wparam);    break;
-    case UWM_COMMANDSTATECHANGE:  OnCommandStateChange((DISPPARAMS*)wparam); break;
-    case UWM_DOCUMENTCOMPLETE:    OnDocumentComplete((DISPPARAMS*)wparam);   break;
-    case UWM_DOWNLOADBEGIN:       OnDownloadBegin((DISPPARAMS*)wparam);      break;
-    case UWM_NAVIGATECOMPLETE2:   OnNavigateComplete2((DISPPARAMS*)wparam);  break;
-    case UWM_NEWWINDOW2:          OnNewWindow2((DISPPARAMS*)wparam);         break;
-    case UWM_PROGRESSCHANGE:      OnProgressChange((DISPPARAMS*)wparam);     break;
-    case UWM_PROPERTYCHANGE:      OnPropertyChange((DISPPARAMS*)wparam);     break;
-    case UWM_STATUSTEXTCHANGE:    OnStatusTextChange((DISPPARAMS*)wparam);   break;
-    case UWM_TITLECHANGE:         OnTitleChange((DISPPARAMS*)wparam);        break;
+        switch (msg)
+        {
+        case UWM_BEFORENAVIGATE:      OnBeforeNavigate2((DISPPARAMS*)wparam);    break;
+        case UWM_COMMANDSTATECHANGE:  OnCommandStateChange((DISPPARAMS*)wparam); break;
+        case UWM_DOCUMENTCOMPLETE:    OnDocumentComplete((DISPPARAMS*)wparam);   break;
+        case UWM_DOWNLOADBEGIN:       OnDownloadBegin((DISPPARAMS*)wparam);      break;
+        case UWM_NAVIGATECOMPLETE2:   OnNavigateComplete2((DISPPARAMS*)wparam);  break;
+        case UWM_NEWWINDOW2:          OnNewWindow2((DISPPARAMS*)wparam);         break;
+        case UWM_PROGRESSCHANGE:      OnProgressChange((DISPPARAMS*)wparam);     break;
+        case UWM_PROPERTYCHANGE:      OnPropertyChange((DISPPARAMS*)wparam);     break;
+        case UWM_STATUSTEXTCHANGE:    OnStatusTextChange((DISPPARAMS*)wparam);   break;
+        case UWM_TITLECHANGE:         OnTitleChange((DISPPARAMS*)wparam);        break;
+        }
+
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // pass unhandled messages on for default processing.
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 

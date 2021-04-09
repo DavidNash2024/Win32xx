@@ -191,13 +191,25 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // the view window here.  Unprocessed messages are passed on for
     //  default processing.
 
-    switch(msg)
+    try
     {
-    case WM_SIZE:       return OnSize(msg, wparam, lparam);
-    case WM_SYSCOMMAND: return OnSysCommand(msg, wparam, lparam);
-    case MSG_TRAYICON:  return OnTrayIcon(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_SIZE:       return OnSize(msg, wparam, lparam);
+        case WM_SYSCOMMAND: return OnSysCommand(msg, wparam, lparam);
+        case MSG_TRAYICON:  return OnTrayIcon(msg, wparam, lparam);
+        }
+
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

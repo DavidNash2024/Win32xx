@@ -8,6 +8,9 @@
 /////////////////////////////////////
 // CMyStatusBar function definitions.
 //
+
+// This function is called when the status bar is created and
+// a HWND is attached to this CWnd.
 void CMyStatusBar::OnAttach()
 {
     // Start a timer for the progress bar
@@ -48,6 +51,7 @@ BOOL CMyStatusBar::OnEraseBkgnd(CDC& dc)
     return FALSE;
 }
 
+// Called before the window is created to set some window creation parameters.
 void CMyStatusBar::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM;
@@ -57,6 +61,7 @@ void CMyStatusBar::PreCreate(CREATESTRUCT& cs)
         cs.style |= SBARS_SIZEGRIP;
 }
 
+// Creates several panes within the status bar.
 void CMyStatusBar::SetStatusParts()
 {
     // Create the StatusBar parts
@@ -68,31 +73,46 @@ void CMyStatusBar::SetStatusParts()
     SetPartWidth(3, 90);
 }
 
+// Called when the status bar is resized.
+void CMyStatusBar::OnSize()
+{
+    // Reposition the StatusBar parts.
+    SetStatusParts();
+
+    // Reposition the Progress Bar.
+    CRect partRect = GetPartRect(1);
+    m_progressBar.SetWindowPos(0, partRect, SWP_SHOWWINDOW);
+}
+
+// Process the timer message.
+void CMyStatusBar::OnTimer()
+{
+    // Change the Progress Bar indication.
+    m_progressBar.OffsetPos(1);
+    if (m_progressBar.GetRange(FALSE) == m_progressBar.GetPos())
+        m_progressBar.SetPos(0);
+}
+
+// Process the statusbar's messages
 LRESULT CMyStatusBar::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-
-    switch(msg)
+    try
     {
-    case WM_TIMER:
+        switch (msg)
         {
-            // Change the Progress Bar indication
-            m_progressBar.OffsetPos(1);
-            if (m_progressBar.GetRange(FALSE) == m_progressBar.GetPos())
-                m_progressBar.SetPos(0);
-
-            break;
+        case WM_TIMER:    OnTimer();     break;
+        case WM_SIZE:     OnSize();      break;
         }
-    case WM_SIZE:
-        {
-            // Reposition the StatusBar parts
-            SetStatusParts();
 
-            // Reposition the Progress Bar
-            CRect partRect = GetPartRect(1);
-            m_progressBar.SetWindowPos(0, partRect, SWP_SHOWWINDOW);
-            break;
-        }
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

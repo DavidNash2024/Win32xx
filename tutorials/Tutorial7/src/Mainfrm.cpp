@@ -72,32 +72,32 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // Issue a close request to the frame.
 void CMainFrame::OnFileExit()
 {
-    PostMessage(WM_CLOSE);
+    Close();
 }
 
 void CMainFrame::OnFileNew()
 {
-    ::MessageBox(NULL, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(0, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
 void CMainFrame::OnFileOpen()
 {
-    ::MessageBox(NULL, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(0, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
 void CMainFrame::OnFilePrint()
 {
-    ::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(0, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
 void CMainFrame::OnFileSave()
 {
-    ::MessageBox(NULL, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(0, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
 void CMainFrame::OnFileSaveAs()
 {
-    ::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
+    ::MessageBox(0, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
 }
 
 // Initiates the Choose Color dialog.
@@ -147,10 +147,10 @@ void CMainFrame::SetupToolBar()
 // Handle the frame's messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
+
 //  switch (msg)
 //  {
-
-//  } // switch (msg)
+//  }
 
     // Use the default message handling for remaining messages.
     return WndProcDefault(msg, wparam, lparam);

@@ -341,11 +341,21 @@ namespace Win32xx
 
             // Retrieve pointer to CWnd object from Thread Local Storage TLS
             pCommonDlg = static_cast<CCommonDialog*>(pTLSData->pWnd);
-            assert(pCommonDlg);
-            pTLSData->pWnd = NULL;
+            if (pCommonDlg)
+            {
+                pTLSData->pWnd = NULL;
 
-            // Attach the HWND to the CommonDialog object
-            pCommonDlg->Attach(wnd);
+                // Attach the HWND to the CommonDialog object
+                pCommonDlg->Attach(wnd);
+            }
+        }
+
+        if (pCommonDlg == 0)
+        {
+            // Got a message for a window thats not in the map.
+            // We should never get here.
+            Trace("*** Warning in CCommonDialog::CDHookProc: HWND not in window map ***\n");
+            return 0;
         }
 
         return pCommonDlg->DialogProc(msg, wparam, lparam);
@@ -883,7 +893,8 @@ namespace Win32xx
                 return TRUE;
         }
 
-        // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result) for non-zero returns
+        // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result)
+        // for non-zero returns.
         return FALSE;   // not handled
     }
 
