@@ -143,20 +143,30 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
 
 *-----------------------------------------------------------------------------*/
 {
-    switch (msg)
+    try
     {
-        case WM_LBUTTONDOWN:
-            return OnLButtonDown(msg, wparam, lparam);
+        switch (msg)
+        {
+            case WM_LBUTTONDOWN:
+                return OnLButtonDown(msg, wparam, lparam);
 
-        case WM_LBUTTONUP:
-            return OnLButtonUp(msg, wparam, lparam);
+            case WM_LBUTTONUP:
+                return OnLButtonUp(msg, wparam, lparam);
 
-        case WM_SETCURSOR:
-            return OnSetCursor(msg, wparam, lparam);
+            case WM_SETCURSOR:
+                return OnSetCursor(msg, wparam, lparam);
 
-        case WM_NCHITTEST:
-            return HTCLIENT;// Claim that the mouse is in a client area
+            case WM_NCHITTEST:
+                return HTCLIENT;// Claim that the mouse is in a client area
+        }
+        return WndProcDefault(msg, wparam, lparam);
     }
-    return WndProcDefault(msg, wparam, lparam);
+      // Catch all CException types.
+    catch (const CException& e)
+    {
+          // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        return 0;
+    }
 }
 /*----------------------------------------------------------------------------*/

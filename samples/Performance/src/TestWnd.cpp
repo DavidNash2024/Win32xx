@@ -26,13 +26,6 @@ void CTestWindow::CreateWin(int i)
         420, 50 + 4*i, 300, 200, 0, NULL);
 }
 
-void CTestWindow::OnClose()
-{
-    CString str;
-    str.Format(str, _T("Closing test Window #%d\n"), m_windowCount);
-    TRACE(str);
-}
-
 // Called when the window is created.
 int CTestWindow::OnCreate(CREATESTRUCT& cs)
 {

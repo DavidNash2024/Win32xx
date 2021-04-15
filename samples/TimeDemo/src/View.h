@@ -56,7 +56,6 @@ protected:
     virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT &cs);
     virtual void    Serialize(CArchive &ar);
-    virtual LRESULT WndProc(UINT msg, WPARAM, LPARAM);
 
 private:
     // data members

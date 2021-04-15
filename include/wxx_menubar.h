@@ -1099,24 +1099,27 @@ namespace Win32xx
     // This callback used to capture keyboard input while a popup menu is active.
     inline LRESULT CALLBACK CMenuBar::StaticMsgHook(int code, WPARAM wparam, LPARAM lparam)
     {
-        assert( GetApp() );
         MSG* pMsg = reinterpret_cast<MSG*>(lparam);
         TLSData* pTLSData = GetApp()->GetTlsData();
-        assert(pTLSData);
-        if (!pTLSData) return 0;
 
-        CMenuBar* pMenuBar = pTLSData->pMenuBar;
-
-        if (pMenuBar && (MSGF_MENU == code))
+        if (pTLSData != NULL)
         {
-            // process menu message
-            if (pMenuBar->OnMenuInput(pMsg->message, pMsg->wParam, pMsg->lParam))
+            CMenuBar* pMenuBar = pTLSData->pMenuBar;
+
+            if ((pMenuBar != NULL) && (MSGF_MENU == code))
             {
-                return TRUE;
+                // process menu message
+                if (pMenuBar->OnMenuInput(pMsg->message, pMsg->wParam, pMsg->lParam))
+                {
+                    return TRUE;
+                }
             }
+
+            return CallNextHookEx(pTLSData->msgHook, code, wparam, lparam);
         }
 
-        return CallNextHookEx(pTLSData->msgHook, code, wparam, lparam);
+
+        return 0;
     }
 
     // Provides default message processing for the menubar.

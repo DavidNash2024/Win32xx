@@ -1493,7 +1493,7 @@ namespace Win32xx
             InitCommonControlsEx(&initStruct);
         }
         else
-            throw CNotSupportedException(g_msgIPControl);
+            throw CNotSupportedException(GetApp()->m_msgIPControl);
     }
 
     // Clears the contents of the IP address control.

@@ -36,24 +36,24 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New...",                      IDM_FILE_NEW
-        MENUITEM "&Open...",                    IDM_FILE_OPEN
-        MENUITEM "&Save",                       IDM_FILE_SAVE
-        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
+        MENUITEM "New...",                      IDM_FILE_NEW, GRAYED
+        MENUITEM "&Open...",                    IDM_FILE_OPEN, GRAYED
+        MENUITEM "&Save",                       IDM_FILE_SAVE, GRAYED
+        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "&Print",                      IDM_FILE_PRINT
+        MENUITEM "&Print",                      IDM_FILE_PRINT, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
     POPUP "&Edit"
     BEGIN
-        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
-        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO
+        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO, GRAYED
+        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
-        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
-        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
-        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
+        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT, GRAYED
+        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY, GRAYED
+        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE, GRAYED
+        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE, GRAYED
     END
     POPUP "&View"
     BEGIN

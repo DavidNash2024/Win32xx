@@ -46,9 +46,9 @@ CDoc()                                                                  /*
     m_floatVal      = 0.0;
     m_doubleVal     = 0.0;
     m_LPTSTRVal[0]  = _T('\0');
-    m_checkAVal     = FALSE;
-    m_checkBVal     = FALSE;
-    m_checkCVal     = FALSE;
+    m_checkVal[0]     = FALSE;
+    m_checkVal[1]     = FALSE;
+    m_checkVal[2]     = FALSE;
     m_radioA        = 0;
     m_listBoxIndx   = 0;
     m_comboBoxIndx  = 0;
@@ -84,9 +84,9 @@ LoadDocRegistry(LPCTSTR keyName)                                            /*
         m_doubleVal = _tcstod(s, &p);
         s           = RegQueryStringValue(key, _T("LPTSTR1"));
         StrCopy(m_LPTSTRVal, s.c_str(), 256);
-        m_checkAVal = RegQueryBOOLValue(key,   _T("CheckA"));
-        m_checkBVal = RegQueryBOOLValue(key,   _T("CheckB"));
-        m_checkCVal = RegQueryBOOLValue(key,   _T("CheckC"));
+        m_checkVal[0] = RegQueryBOOLValue(key,   _T("CheckA"));
+        m_checkVal[1] = RegQueryBOOLValue(key,   _T("CheckB"));
+        m_checkVal[2] = RegQueryBOOLValue(key,   _T("CheckC"));
         m_radioA    = RegQueryDWORDValue(key,  _T("Radio"));
         m_editVal   = RegQueryStringValue(key, _T("Edit1"));
         m_richEditVal = RegQueryStringValue(key, _T("RichEdit1"));
@@ -180,9 +180,9 @@ SaveDocRegistry(LPCTSTR keyName)                                          /*
       // Create() closes the key handle, so we have to reopen it
     if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, strKey, KEY_WRITE))
     {
-        key.SetDWORDValue(_T("CheckA"),     m_checkAVal);
-        key.SetDWORDValue(_T("CheckB"),     m_checkBVal);
-        key.SetDWORDValue(_T("CheckC"),     m_checkCVal);
+        key.SetDWORDValue(_T("CheckA"),     m_checkVal[0]);
+        key.SetDWORDValue(_T("CheckB"),     m_checkVal[1]);
+        key.SetDWORDValue(_T("CheckC"),     m_checkVal[2]);
         key.SetDWORDValue(_T("Radio"),      m_radioA);
         key.SetDWORDValue(_T("Byte1"),      m_byteVal);
         key.SetDWORDValue(_T("Short1"),     m_shortVal);

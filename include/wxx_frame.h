@@ -1326,8 +1326,8 @@ namespace Win32xx
                         }
 
                         // Draw border.
-                        CPen Pen(PS_SOLID, 1, GetMenuBarTheme().clrOutline);
-                        CPen oldPen = drawDC.SelectObject(Pen);
+                        CPen pen(PS_SOLID, 1, GetMenuBarTheme().clrOutline);
+                        CPen oldPen = drawDC.SelectObject(pen);
                         drawDC.MoveTo(rc.left, rc.bottom);
                         drawDC.LineTo(rc.left, rc.top);
                         drawDC.LineTo(rc.right-1, rc.top);
@@ -1341,8 +1341,8 @@ namespace Win32xx
                     CString str = GetMenuBar().GetButtonText(itemID);
 
                     // Draw highlight text.
-                    CFont Font = GetMenuBar().GetFont();
-                    CFont oldFont = drawDC.SelectObject(Font);
+                    CFont font = GetMenuBar().GetFont();
+                    CFont oldFont = drawDC.SelectObject(font);
 
                     rc.bottom += 1;
                     drawDC.SetBkMode(TRANSPARENT);

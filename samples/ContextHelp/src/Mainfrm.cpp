@@ -176,14 +176,6 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
     return TRUE;
 }
 
-// Used for some toolbar buttons
-void CMainFrame::NotImplemented() const
-{
-    ::MessageBox(0, _T("Feature not implemented."),
-        _T("Information"), MB_OK | MB_ICONINFORMATION |
-        MB_TASKMODAL);
-}
-
 // Processes accelerators, toolbar buttons and menu input
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
@@ -192,26 +184,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
     switch(id)
     {
-    case IDM_FILE_NEW:       NotImplemented();      return TRUE;
-    case IDM_FILE_OPEN:      NotImplemented();      return TRUE;
-    case IDM_FILE_SAVE:      NotImplemented();      return TRUE;
-    case IDM_FILE_SAVEAS:    NotImplemented();      return TRUE;
-    case IDM_FILE_PRINT:     NotImplemented();      return TRUE;
-    case IDM_FILE_PRINT_PREVIEW: NotImplemented();  return TRUE;
-    case IDM_FILE_CLOSE:     NotImplemented();      return TRUE;
-
-    case IDM_EDIT_UNDO:      NotImplemented();      return TRUE;
-    case IDM_EDIT_REDO:      NotImplemented();      return TRUE;
-    case IDM_EDIT_CUT:       NotImplemented();      return TRUE;
-    case IDM_EDIT_COPY:      NotImplemented();      return TRUE;
-    case IDM_EDIT_PASTE:     NotImplemented();      return TRUE;
-    case IDM_EDIT_FIND:      NotImplemented();      return TRUE;
-    case IDM_EDIT_REPLACE:   NotImplemented();      return TRUE;
-    case IDM_EDIT_DELETE:    NotImplemented();      return TRUE;
-
-    case IDM_FONT_CHOICE:    NotImplemented();      return TRUE;
-    case IDM_COLOR_CHOICE:   NotImplemented();      return TRUE;
-
     case ID_CHECK_A:         m_view.OnCheckA();     return TRUE;
     case ID_CHECK_B:         m_view.OnCheckB();     return TRUE;
     case ID_CHECK_C:         m_view.OnCheckC();     return TRUE;
@@ -389,32 +361,17 @@ BOOL CMainFrame::SaveRegistrySettings()
 // Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Start with a separator to give some space at the left of the toolbar.
-    AddToolBarButton(0);  // Separator
-
     // Connect button IDs to button icons.
-    AddToolBarButton(IDM_FILE_NEW);
-    AddToolBarButton(IDM_FILE_OPEN);
-    AddToolBarButton(IDM_FILE_SAVE);
-    AddToolBarButton(IDM_FILE_SAVEAS);
-    AddToolBarButton(IDM_FILE_CLOSE);
+    AddToolBarButton(IDM_FILE_NEW, FALSE);
+    AddToolBarButton(IDM_FILE_OPEN, FALSE);
+    AddToolBarButton(IDM_FILE_SAVE, FALSE);
+    AddToolBarButton(IDM_FILE_SAVEAS, FALSE);
     AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_EDIT_CUT);
-    AddToolBarButton(IDM_EDIT_COPY);
-    AddToolBarButton(IDM_EDIT_PASTE);
-    AddToolBarButton(IDM_EDIT_DELETE);
+    AddToolBarButton(IDM_EDIT_CUT, FALSE);
+    AddToolBarButton(IDM_EDIT_COPY, FALSE);
+    AddToolBarButton(IDM_EDIT_PASTE, FALSE);
     AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_FILE_PRINT_PREVIEW);
-    AddToolBarButton(IDM_FILE_PRINT);
-    AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_EDIT_UNDO);
-    AddToolBarButton(IDM_EDIT_REDO);
-    AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_FONT_CHOICE);
-    AddToolBarButton(IDM_COLOR_CHOICE);
-    AddToolBarButton(0);  // Separator
-    AddToolBarButton(IDM_EDIT_FIND);
-    AddToolBarButton(IDM_EDIT_REPLACE);
+    AddToolBarButton(IDM_FILE_PRINT, FALSE);
     AddToolBarButton(0);  // Separator
     AddToolBarButton(IDM_HELP_CONTENT);
     AddToolBarButton(IDM_HELP_CONTEXT);

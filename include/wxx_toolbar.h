@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -175,9 +175,9 @@ namespace Win32xx
     {
         assert(IsWindow());
 
-        CBitmap Bitmap(bitmapID);
-        assert (Bitmap.GetHandle());
-        BITMAP data = Bitmap.GetBitmapData();
+        CBitmap bitmap(bitmapID);
+        assert (bitmap.GetHandle());
+        BITMAP data = bitmap.GetBitmapData();
         int imageWidth  = MAX(data.bmHeight, 16);
         int images = data.bmWidth / imageWidth;
 

@@ -41,7 +41,7 @@ CMainFrame()                                                                /*
 
 /*============================================================================*/
     HWND CMainFrame::
-Create(HWND parent)                                                         /*
+Create(HWND parent)                                                          /*
 
     Create the frame window and load the persistent frame and view parameters
     that will have been saved in previous invocations of the program via
@@ -57,6 +57,18 @@ Create(HWND parent)                                                         /*
     LoadRegistrySettings(registryKeyName);
 
     return CFrame::Create(parent);
+}
+
+/*============================================================================*/
+    void  CMainFrame::
+FeatureNotImplemented()                                                     /*
+
+    Message the user that this feature is not yet implemented in this sample
+    program.
+*-----------------------------------------------------------------------------*/
+{
+    ::MessageBox(0, _T("This feature is not yet implemened."), _T(""),
+        MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 }
 
 /*============================================================================*/
@@ -115,9 +127,46 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
     UINT id = LOWORD(wparam);
     switch(id)
     {
+        case IDM_FILE_NEW:
+            return OnFileNew();
+
+        case IDM_FILE_OPEN:
+            return OnFileOpen();
+
+        case IDM_FILE_SAVE:
+            return OnFileSave();
+
+        case IDM_FILE_SAVEAS:
+            return OnFileSaveAs();
+
+        case IDM_FILE_PRINT:
+            return OnFilePrint();
+
         case IDM_FILE_EXIT:
-            OnFileExit();
+            return OnFileExit();
+
+        case IDM_EDIT_CUT:
+            GetFocus().SendMessage(WM_CUT, 0, 0);
             return TRUE;
+
+        case IDM_EDIT_COPY:
+            GetFocus().SendMessage(WM_COPY, 0, 0);
+            return TRUE;
+
+        case IDM_EDIT_PASTE:
+            GetFocus().SendMessage(WM_PASTE, 0, 0);
+            return TRUE;
+
+        case IDM_EDIT_DELETE:
+            GetFocus().SendMessage(WM_CLEAR, 0, 0);
+            return TRUE;
+
+        case IDM_EDIT_UNDO:
+            GetFocus().SendMessage(EM_UNDO, 0, 0);
+            return TRUE;
+
+        case IDM_EDIT_REDO:
+            GetFocus().SendMessage(EM_REDO, 0, 0);
 
         case IDW_VIEW_STATUSBAR:
             OnViewStatusBar();
@@ -125,6 +174,18 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
 
         case IDW_VIEW_TOOLBAR:
             OnViewToolBar();
+            return TRUE;
+
+        case IDC_RADIO_A:
+        case IDC_RADIO_B:
+        case IDC_RADIO_C:
+            m_view.SetRadio(id - IDC_RADIO_A);
+            return TRUE;
+
+        case IDC_CHECK_A:
+        case IDC_CHECK_B:
+        case IDC_CHECK_C:
+            m_view.SetCheck(id - IDC_CHECK_A);
             return TRUE;
 
         case IDW_ABOUT:
@@ -169,7 +230,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
 }
 
 /*============================================================================*/
-    void CMainFrame::
+    BOOL CMainFrame::
 OnFileExit()                                                                /*
 
     Close the application.
@@ -177,6 +238,62 @@ OnFileExit()                                                                /*
 {
       // Issue a close request to the frame
     Close();
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnFileNew()                                                                 /*
+
+    Open a new instance of the application.
+*-----------------------------------------------------------------------------*/
+{
+    FeatureNotImplemented();
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnFileOpen()                                                                /*
+
+    Close the application.
+*-----------------------------------------------------------------------------*/
+{
+    FeatureNotImplemented();
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnFilePrint()                                                                /*
+
+    Print the application data.
+*-----------------------------------------------------------------------------*/
+{
+    FeatureNotImplemented();
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnFileSave()                                                                /*
+
+    Save the application data.
+*-----------------------------------------------------------------------------*/
+{
+    FeatureNotImplemented();
+    return TRUE;
+}
+
+/*============================================================================*/
+    BOOL CMainFrame::
+OnFileSaveAs()                                                                /*
+
+    Close the application.
+*-----------------------------------------------------------------------------*/
+{
+    FeatureNotImplemented();
+    return TRUE;
 }
 
 /*============================================================================*/
@@ -305,23 +422,5 @@ UpdateDialog(BOOL bReadFromControl)                                         /*
 *-----------------------------------------------------------------------------*/
 {
     return m_view.UpdateDialog(bReadFromControl);
-}
-
-/*============================================================================*/
-    LRESULT CMainFrame::
-WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
-
-    All CWnd windows direct their messages here. This function can process
-    some of these and redirect the remaining messages to the base class
-    default handler.
-*-----------------------------------------------------------------------------*/
-{
-//  switch (msg)
-//  {
-//      // Add case statements for each messages to be handled here
-//  }
-
-      // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
 }
 /*----------------------------------------------------------------------------*/

@@ -1,7 +1,8 @@
 Version 8.8.1
 =============
 
-This version adds support for the Clang compiler.
+This version adds support for the Clang compiler, and improves the handling
+of error messages.
 
 Bug fixes:
 - Corrected CRegKey::SetMultiStringValue
@@ -14,10 +15,24 @@ Bug fixes:
 
 New Features and Enhancements
 -----------------------------
-* Adds support for the Clang c++ compiler available with Microsoft's
+* Adds support for the Clang C++ compiler available with Microsoft's
    Visual Studio Community 2019.
+   
 * CDC::SelectObject throws a CResourceException on failure.
+
+* GetApp throws a CNotSupportedException if CWinApp is not running.
+
 * Updated CPrintPreview to support changes to Windows 10.
+
+* The samples demonstrate exception handling in their window procedures.
+   Exceptions that are raised when messages are processed are handled
+   gracefully, and allow the program to continue. Adding exception handling
+   to WndProc and DialogProc also handles exceptions raised in OnCommand,
+   OnNotify, OnDraw etc.
+   
+* The error messages displayed when an exception is raised have been moved to
+  CWinApp as a set of public CString members. These messages can be updated to
+  support other languages if required.
 
 
 
@@ -93,13 +108,13 @@ Added BrowserATL                                   sample
 Added MovieShow                                    sample
 Added WinPlot                                      sample
 
-Added CDC::AbortPath                               member function  
+Added CDC::AbortPath                               member function
 Added CDC::CreatePointFont                         member function
 Added CDC::CreatePointFontIndirect                 member function
-Added CDC::CreateRgnFromData                       member function                     
+Added CDC::CreateRgnFromData                       member function
 Added CDC::CreateRgnFromPath                       member function
 Added CDC::CreateRoundRectRgn                      member function
-Added CDC::ExtCreatePen                            member function             
+Added CDC::ExtCreatePen                            member function
 Added CDC::StrokePath                              member function
 Added CDC::StrokeAndFillPath                       member function
 Added CFrameT::AddMenuIcon (additional overload)   member function

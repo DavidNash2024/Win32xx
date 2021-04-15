@@ -388,18 +388,27 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
     Process custom statusbar messages.
 *-----------------------------------------------------------------------------*/
 {
-
-    switch(msg)
+    try
     {
-        case WM_TIMER:
+        switch(msg)
         {
-              // Change the Progress Bar indicator
-            m_progressBar.OffsetPos(1);
-            if (m_progressBar.GetRange(FALSE) == m_progressBar.GetPos())
-                m_progressBar.SetPos(0);
-            break;
+            case WM_TIMER:
+            {
+                  // Change the Progress Bar indicator
+                m_progressBar.OffsetPos(1);
+                if (m_progressBar.GetRange(FALSE) == m_progressBar.GetPos())
+                    m_progressBar.SetPos(0);
+                break;
+            }
         }
+        return WndProcDefault(msg, wparam, lparam);
     }
-    return WndProcDefault(msg, wparam, lparam);
+      // Catch all CException types.
+    catch (const CException& e)
+    {
+          // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        return 0;
+    }
 }
 /*----------------------------------------------------------------------------*/

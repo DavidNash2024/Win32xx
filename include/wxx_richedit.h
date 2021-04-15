@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -180,7 +180,7 @@ namespace Win32xx
         m_rich1 = LoadLibrary(_T("riched32.dll"));
 
         if (m_rich1 == 0)
-            throw CNotSupportedException(g_msgRichEditDll);
+            throw CNotSupportedException(GetApp()->m_msgRichEditDll);
 
         // Load RichEdit version 2.0 or 3.0 (for Win98 and above)
         m_rich2 = LoadLibrary(_T("riched20.dll"));

@@ -214,75 +214,10 @@ using namespace Win32xx;
   #endif
 #endif
 
+#include "wxx_cstring.h"
 
 namespace Win32xx
 {
-
-    // Messages used for exceptions.
-    LPCTSTR const g_msgAppThreadFailed = _T("Failed to create thread");
-    LPCTSTR const g_msgAppInstanceFailed = _T("Only one instance of CWinApp is permitted");
-    LPCTSTR const g_msgAppTLSFailed = _T("CWinApp::CWinApp  Failed to allocate Thread Local Storage");
-    LPCTSTR const g_msgArReadFail = _T("Failed to read from archive.");
-    LPCTSTR const g_msgArNotCStringA = _T("ANSI characters stored. Not a CStringW");
-    LPCTSTR const g_msgArNotCStringW = _T("Unicode characters stored. Not a CStringA");
-    LPCTSTR const g_msgCriticalSection = _T("Failed to create critical section");
-    LPCTSTR const g_msgMtxEvent = _T("Unable to create event");
-    LPCTSTR const g_msgMtxMutex = _T("Unable to create mutex");
-    LPCTSTR const g_msgMtxSemaphore = _T("Unable to create semaphore");
-
-    LPCTSTR const g_msgWndCreateEx = _T("Failed to create window");
-    LPCTSTR const g_msgWndDoModal = _T("Failed to create dialog");
-    LPCTSTR const g_msgWndGlobalLock = _T("CGlobalLock failed to lock handle");
-    LPCTSTR const g_msgWndPropertSheet = _T("Failed to create PropertySheet");
-    LPCTSTR const g_msgSocWSAStartup = _T("WSAStartup failed");
-    LPCTSTR const g_msgSocWS2Dll  = _T("Failed to load WS2_2.dll");
-    LPCTSTR const g_msgIPControl  = _T("IP Address Control not supported!");
-    LPCTSTR const g_msgRichEditDll = _T("Failed to load RICHED32.DLL");
-    LPCTSTR const g_msgTaskDialog = _T("Failed to create Task Dialog");
-
-    LPCTSTR const g_msgFileClose  = _T("Failed to close file");
-    LPCTSTR const g_msgFileFlush  = _T("Failed to flush file");
-    LPCTSTR const g_msgFileLock   = _T("Failed to lock the file");
-    LPCTSTR const g_msgFileOpen   = _T("Failed to open file");
-    LPCTSTR const g_msgFileRead   = _T("Failed to read from file");
-    LPCTSTR const g_msgFileRename = _T("Failed to rename file");
-    LPCTSTR const g_msgFileRemove = _T("Failed to delete file");
-    LPCTSTR const g_msgFileLength = _T("Failed to change the file length");
-    LPCTSTR const g_msgFileUnlock = _T("Failed to unlock the file");
-    LPCTSTR const g_msgFileWrite  = _T("Failed to write to file");
-
-    LPCTSTR const g_msgGdiDC      = _T("Failed to create device context");
-    LPCTSTR const g_msgGdiIC      = _T("Failed to create information context");
-    LPCTSTR const g_msgGdiBitmap  = _T("Failed to create bitmap");
-    LPCTSTR const g_msgGdiBrush   = _T("Failed to create brush");
-    LPCTSTR const g_msgGdiFont    = _T("Failed to create font");
-    LPCTSTR const g_msgGdiPalette = _T("Failed to create palette");
-    LPCTSTR const g_msgGdiPen     = _T("Failed to create pen");
-    LPCTSTR const g_msgGdiRegion  = _T("Failed to region");
-    LPCTSTR const g_msgGdiGetDC   = _T("GetDC failed");
-    LPCTSTR const g_msgGdiGetDCEx = _T("GetDCEx failed");
-    LPCTSTR const g_msgGdiSelObject = _T("Failed to select object into device context");
-    LPCTSTR const g_msgGdiGetWinDC  = _T("GetWindowDC failed");
-    LPCTSTR const g_msgGdiBeginPaint = _T("BeginPaint failed");
-
-    LPCTSTR const g_msgPrintFound = _T("No printer available");
-
-    // DDX anomaly prompting messages
-    LPCTSTR const g_msgDDX_Byte = _T("Please enter an integer between 0 and 255.");
-    LPCTSTR const g_msgDDX_Int = _T("Please enter an integer.");
-    LPCTSTR const g_msgDDX_Long = _T("Please enter a long integer.");
-    LPCTSTR const g_msgDDX_Short = _T("Please enter a short integer.");
-    LPCTSTR const g_msgDDX_Real = _T("Please enter a number.");
-    LPCTSTR const g_msgDDX_UINT = _T("Please enter a positive integer.");
-    LPCTSTR const g_msgDDX_ULONG = _T("Please enter a positive long integer.");
-
-    // DDV formats and prompts
-    LPCTSTR const g_msgDDV_IntRange = _T("Please enter an integer in (%ld, %ld).");
-    LPCTSTR const g_msgDDV_UINTRange = _T("Please enter an integer in (%lu, %lu).");
-    LPCTSTR const g_msgDDV_RealRange = _T("Please enter a number in (%.*g, %.*g).");
-    LPCTSTR const g_msgDDV_StringSize = _T("%s\n is too long.\nPlease enter no ")\
-        _T("more than %ld characters.");
-
 
     ////////////////////////////////////////////////
     // Forward declarations.
@@ -595,6 +530,7 @@ namespace Win32xx
     {
         // Provide these access to CWinApp's private members:
         friend class CDC;
+        friend class CDialog;
         friend class CGDIObject;
         friend class CImageList;
         friend class CMenu;
@@ -639,6 +575,7 @@ namespace Win32xx
         CGDI_Data* GetCGDIData(HGDIOBJ object);
         CIml_Data* GetCImlData(HIMAGELIST images);
         void SetCallback();
+        void SetMessages();
         static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
         void UpdateDefaultPrinter();
 
@@ -664,6 +601,68 @@ namespace Win32xx
         std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
 #endif
 
+    public:
+    // Messages used for exceptions.
+    CString m_msgAppThreadFailed;
+    CString m_msgArReadFail;
+    CString m_msgArNotCStringA;
+    CString m_msgArNotCStringW;
+    CString m_msgCriticalSection;
+    CString m_msgMtxEvent;
+    CString m_msgMtxMutex;
+    CString m_msgMtxSemaphore;
+
+    CString m_msgWndCreateEx;
+    CString m_msgWndDoModal;
+    CString m_msgWndGlobalLock;
+    CString m_msgWndPropertSheet;
+    CString m_msgSocWSAStartup;
+    CString m_msgSocWS2Dll;
+    CString m_msgIPControl;
+    CString m_msgRichEditDll;
+    CString m_msgTaskDialog;
+
+    CString m_msgFileClose;
+    CString m_msgFileFlush;
+    CString m_msgFileLock;
+    CString m_msgFileOpen;
+    CString m_msgFileRead;
+    CString m_msgFileRename;
+    CString m_msgFileRemove;
+    CString m_msgFileLength;
+    CString m_msgFileUnlock;
+    CString m_msgFileWrite;
+
+    CString m_msgGdiDC;
+    CString m_msgGdiIC;
+    CString m_msgGdiBitmap;
+    CString m_msgGdiBrush;
+    CString m_msgGdiFont;
+    CString m_msgGdiPalette;
+    CString m_msgGdiPen;
+    CString m_msgGdiRegion;
+    CString m_msgGdiGetDC;
+    CString m_msgGdiGetDCEx;
+    CString m_msgGdiSelObject;
+    CString m_msgGdiGetWinDC;
+    CString m_msgGdiBeginPaint;
+
+    CString m_msgPrintFound;
+
+    // DDX anomaly prompting messages
+    CString m_msgDDX_Byte;
+    CString m_msgDDX_Int;
+    CString m_msgDDX_Long;
+    CString m_msgDDX_Short;
+    CString m_msgDDX_Real;
+    CString m_msgDDX_UINT;
+    CString m_msgDDX_ULONG;
+
+    // DDV formats and prompts
+    CString m_msgDDV_IntRange;
+    CString m_msgDDV_UINTRange;
+    CString m_msgDDV_RealRange;
+    CString m_msgDDV_StringSize;
     };
 
 

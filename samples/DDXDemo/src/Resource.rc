@@ -67,13 +67,13 @@ BEGIN
     END
     POPUP "&Edit"
     BEGIN
-        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO, GRAYED
-        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO, GRAYED
+        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
+        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO
         MENUITEM SEPARATOR
-        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT, GRAYED
-        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY, GRAYED
-        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE, GRAYED
-        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE, GRAYED
+        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
+        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
+        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
+        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
     END
     POPUP "&View"
     BEGIN

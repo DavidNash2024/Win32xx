@@ -110,15 +110,15 @@ BOOL CMainFrame::OnViewText()
 void CMainFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
-    AddToolBarButton( IDM_FILE_NEW   );
-    AddToolBarButton( IDM_FILE_OPEN  );
-    AddToolBarButton( IDM_FILE_SAVE  );
+    AddToolBarButton( IDM_FILE_NEW, FALSE );
+    AddToolBarButton( IDM_FILE_OPEN, FALSE );
+    AddToolBarButton( IDM_FILE_SAVE, FALSE );
     AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_EDIT_CUT   );
-    AddToolBarButton( IDM_EDIT_COPY  );
-    AddToolBarButton( IDM_EDIT_PASTE );
+    AddToolBarButton( IDM_EDIT_CUT, FALSE );
+    AddToolBarButton( IDM_EDIT_COPY, FALSE );
+    AddToolBarButton( IDM_EDIT_PASTE, FALSE );
     AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_FILE_PRINT );
+    AddToolBarButton( IDM_FILE_PRINT, FALSE );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 }

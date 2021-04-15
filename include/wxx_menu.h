@@ -84,7 +84,6 @@
 
 
 #include "wxx_appcore0.h"
-#include "wxx_cstring.h"
 
 
 namespace Win32xx
@@ -245,7 +244,6 @@ namespace Win32xx
     // Store the HMENU and CMenu pointer in the HMENU map
     inline void CMenu::AddToMap() const
     {
-        assert( GetApp() );
         assert(m_pData);
 
         if (m_pData)
@@ -281,12 +279,12 @@ namespace Win32xx
     {
         BOOL success = FALSE;
 
-        if ( GetApp() )
+        CWinApp* pApp = CWinApp::SetnGetThis();
+        if (pApp != NULL)          // Is the CWinApp object still valid?
         {
             // Allocate an iterator for our HMENU map
             std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
 
-            CWinApp* pApp = GetApp();
             CThreadLock mapLock(pApp->m_wndLock);
             m = pApp->m_mapCMenuData.find(m_pData->menu);
             if (m != pApp->m_mapCMenuData.end())

@@ -819,7 +819,7 @@ namespace Win32xx
         if (size != sizeof(ULONGLONG))
         {
             CString str = ar.GetFile().GetFilePath();
-            throw CFileException(str, g_msgArReadFail);
+            throw CFileException(str, GetApp()->m_msgArReadFail);
         }
 
         // load CTime as x64
@@ -1087,7 +1087,7 @@ namespace Win32xx
         if (size != sizeof(ULONGLONG))
         {
             CString str = ar.GetFile().GetFilePath();
-            throw CFileException(str, g_msgArReadFail);
+            throw CFileException(str, GetApp()->m_msgArReadFail);
         }
 
         // load CTimeSpan as x64

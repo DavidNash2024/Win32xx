@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -310,7 +310,7 @@ namespace Win32xx
         {
             UINT nBytes = m_pFile->Read(pBuf, size);
             if (nBytes != size)
-                throw CFileException(m_pFile->GetFilePath(), g_msgArReadFail);
+                throw CFileException(m_pFile->GetFilePath(), GetApp()->m_msgArReadFail);
         }
     }
 
@@ -703,7 +703,7 @@ namespace Win32xx
         *this >> chars;
 
         if (isUnicode)
-            throw CFileException(m_pFile->GetFilePath(), g_msgArNotCStringA);
+            throw CFileException(m_pFile->GetFilePath(), GetApp()->m_msgArNotCStringA);
 
         Read(string.GetBuffer(chars), chars);
         string.ReleaseBuffer(chars);
@@ -723,7 +723,7 @@ namespace Win32xx
         *this >> chars;
 
         if (!isUnicode)
-            throw CFileException(m_pFile->GetFilePath(), g_msgArNotCStringW);
+            throw CFileException(m_pFile->GetFilePath(), GetApp()->m_msgArNotCStringW);
 
         Read(string.GetBuffer(chars), chars * 2);
         string.ReleaseBuffer(chars);
@@ -816,7 +816,7 @@ namespace Win32xx
         Read(&size, sizeof(size));
         if (size != ao.m_size)
         {
-            throw CFileException(m_pFile->GetFilePath(), g_msgArReadFail);
+            throw CFileException(m_pFile->GetFilePath(), GetApp()->m_msgArReadFail);
         }
 
         Read(ao.m_pData, ao.m_size);

@@ -45,7 +45,6 @@
 
 
 #include "wxx_rect.h"
-#include "wxx_cstring.h"
 #include "wxx_appcore0.h"
 
 
@@ -222,9 +221,9 @@ namespace Win32xx
         BOOL  IsWindowVisible() const;
         BOOL  KillTimer(UINT_PTR eventID) const;
         int   MessageBox(LPCTSTR text, LPCTSTR caption, UINT type) const;
-        void  MapWindowPoints(HWND to, POINT& point) const;
-        void  MapWindowPoints(HWND to, RECT& rect) const;
-        void  MapWindowPoints(HWND to, LPPOINT pointsArray, UINT count) const;
+        int   MapWindowPoints(HWND to, POINT& point) const;
+        int   MapWindowPoints(HWND to, RECT& rect) const;
+        int   MapWindowPoints(HWND to, LPPOINT pointsArray, UINT count) const;
         BOOL  MoveWindow(int x, int y, int width, int height, BOOL repaint = TRUE) const;
         BOOL  MoveWindow(const RECT& rect, BOOL repaint = TRUE) const;
         BOOL  PostMessage(UINT msg, WPARAM wparam = 0, LPARAM lparam = 0) const;

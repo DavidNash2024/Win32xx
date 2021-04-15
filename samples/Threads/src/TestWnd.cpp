@@ -28,13 +28,14 @@ HWND CTestWindow::Create(HWND parent)
         380 + 20* m_threadNumber, 40 + 20* m_threadNumber, 300, 200, 0, NULL);
 }
 
-// Called when the test window is closed.
+// Called when the test window is manually closed by the user.
 void CTestWindow::OnClose()
 {
     // Destroy the window.
     Destroy();
 
-    // Close the window's thread.
+    // Ask the main window to close this window's thread.
+    // Must post this message.
     ::PostMessage(m_mainWindow, UWM_CLOSETHREAD, m_threadNumber, 0);
 }
 

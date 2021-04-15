@@ -69,7 +69,6 @@
 
 #include <float.h>
 #include <iomanip>
-#include "wxx_cstring.h"
 #include "wxx_wincore0.h"
 #include "wxx_exception.h"
 
@@ -244,7 +243,7 @@ namespace Win32xx
         if (m_retrieveAndValidate && value.GetLength() > count)
         {
             CString message;
-            message.Format(g_msgDDV_StringSize, value.c_str(), count);
+            message.Format(GetApp()->m_msgDDV_StringSize, value.c_str(), count);
 
             throw CUserException(message);
         }
@@ -321,7 +320,7 @@ namespace Win32xx
         // Throw includes an error message with the range tuple when
         // reading a number outside the range.
         CString message;
-        message.Format(g_msgDDV_RealRange, precision, min, precision, max);
+        message.Format(GetApp()->m_msgDDV_RealRange, precision, min, precision, max);
 
         throw CUserException(message);
     }
@@ -360,7 +359,7 @@ namespace Win32xx
         // Throw includes an error message with the range tuple when
         // reading a number outside the range.
         CString message;
-        message.Format(g_msgDDV_IntRange, min, max);
+        message.Format(GetApp()->m_msgDDV_IntRange, min, max);
 
         throw CUserException(message);
     }
@@ -467,7 +466,7 @@ namespace Win32xx
         // Throw includes an error message with the range tuple when
         // reading a number outside the range.
         CString message;
-        message.Format(g_msgDDV_UINTRange, min, max);
+        message.Format(GetApp()->m_msgDDV_UINTRange, min, max);
 
         throw CUserException(message);
     }
@@ -897,7 +896,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(g_msgDDX_Byte);
+                throw CUserException(GetApp()->m_msgDDX_Byte);
             }
         }
         else
@@ -923,7 +922,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(g_msgDDX_Short);
+                throw CUserException(GetApp()->m_msgDDX_Short);
             }
         }
         else
@@ -949,7 +948,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(g_msgDDX_Int);
+                throw CUserException(GetApp()->m_msgDDX_Int);
             }
         }
         else
@@ -975,7 +974,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(g_msgDDX_UINT);
+                throw CUserException(GetApp()->m_msgDDX_UINT);
             }
         }
         else
@@ -1001,7 +1000,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(g_msgDDX_Long);
+                throw CUserException(GetApp()->m_msgDDX_Long);
             }
         }
         else
@@ -1027,7 +1026,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(g_msgDDX_ULONG);
+                throw CUserException(GetApp()->m_msgDDX_ULONG);
             }
         }
         else
@@ -1053,7 +1052,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(g_msgDDX_Real);
+                throw CUserException(GetApp()->m_msgDDX_Real);
             }
         }
         else
@@ -1079,7 +1078,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(g_msgDDX_Real);
+                throw CUserException(GetApp()->m_msgDDX_Real);
             }
         }
         else
@@ -1203,7 +1202,7 @@ namespace Win32xx
     inline ULONGLONG SystemTimeToULL(const SYSTEMTIME &systime)
     {
         FILETIME ft;
-        SystemTimeToFileTime(&systime, &ft);
+        VERIFY(SystemTimeToFileTime(&systime, &ft));
         return static_cast<ULONGLONG>(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
     }
 

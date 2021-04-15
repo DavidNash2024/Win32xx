@@ -70,7 +70,6 @@ CMainFrame : public CFrame                      /*
         virtual void    Serialize(CArchive &ar);
         virtual void    SetupMenuIcons();
         virtual void    SetupToolBar();
-        virtual LRESULT WndProc(UINT msg, WPARAM, LPARAM);
 
     private:
           // private data members

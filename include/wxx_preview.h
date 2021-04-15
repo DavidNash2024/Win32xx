@@ -337,7 +337,7 @@ namespace Win32xx
 
         //  switch (msg)
         //  {
-                //Additional messages to be handled go here
+        //  Additional messages to be handled go here
         //  }
 
             // Pass unhandled messages on to parent DialogProc
@@ -465,7 +465,7 @@ namespace Win32xx
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
         if (printerDC.GetHDC() == 0)
-            throw CResourceException(g_msgPrintFound);
+            throw CResourceException(GetApp()->m_msgPrintFound);
 
         // Create a memory DC for the printer.
         // Note: we use the printer's DC here to render text accurately

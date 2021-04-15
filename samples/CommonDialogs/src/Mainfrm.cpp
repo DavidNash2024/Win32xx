@@ -1229,19 +1229,29 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                            /*
     normal housekeeping functions (see Win32++\include\frame.h).
 *-----------------------------------------------------------------------------*/
 {
-      // can't use a case statement on this ::RegisterWindowMessage() value
-    if (msg == UWM_FINDMSGSTRING)
+    try
     {
-        m_doc.OnFindReplace(msg, wparam, lparam);
-        return TRUE;
+          // can't use a case statement on this ::RegisterWindowMessage() value
+        if (msg == UWM_FINDMSGSTRING)
+        {
+            m_doc.OnFindReplace(msg, wparam, lparam);
+            return TRUE;
+        }
+
+        //switch (msg)
+        //{
+        //    TODO: add message handlers here
+        //}
+
+          // pass unhandled messages on for default processing
+        return WndProcDefault(msg, wparam, lparam);
     }
-
-    //switch (msg)
-    //{
-    //    TODO: add message handlers here
-    //}
-
-      // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
+      // Catch all CException types.
+    catch (const CException& e)
+    {
+          // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        return 0;
+    }
 }
 /*----------------------------------------------------------------------------*/

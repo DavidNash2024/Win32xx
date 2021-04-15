@@ -222,7 +222,7 @@ namespace Win32xx
 #endif
 
         if (m_thread == 0)
-            throw CWinException(g_msgAppThreadFailed);
+            throw CWinException(GetApp()->m_msgAppThreadFailed);
 
         return m_thread;
     }
@@ -406,7 +406,7 @@ namespace Win32xx
     {
         // Get the pointer for this CWinThread object
         CWinThread* pThread = static_cast<CWinThread*>(pCThread);
-        assert(pThread);
+        assert(pThread != 0);
 
         if ((pThread != 0) && (pThread->InitInstance()))
         {
@@ -434,22 +434,22 @@ namespace Win32xx
             if (0 != SetnGetThis())
             {
                 // Test if this is the only instance of CWinApp
-                throw CNotSupportedException(g_msgAppInstanceFailed);
+                throw CNotSupportedException(_T("Only one instance of CWinApp is permitted"));
             }
 
             m_tlsData = ::TlsAlloc();
             if (m_tlsData == TLS_OUT_OF_INDEXES)
             {
-                // We only get here in the unlikely event that all TLS indexes are already allocated by this app
-                // At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
-                throw CNotSupportedException(g_msgAppTLSFailed);
+                // We only get here in the unlikely event that all TLS indexes
+                // are already allocated by this app. At least 64 TLS indexes
+                // per process are allowed. Win32++ requires only one TLS index.
+                throw CNotSupportedException(_T("Failed to allocate Thread Local Storage"));
             }
         }
         catch (const CException& e)
         {
             // Display the exception and rethrow.
             MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
             throw;
         }
 
@@ -469,6 +469,7 @@ namespace Win32xx
 
         m_resource = m_instance;
         SetCallback();
+        SetMessages();
     }
 
     inline CWinApp::~CWinApp()
@@ -728,7 +729,7 @@ namespace Win32xx
         defaultWC.lpfnWndProc   = CWnd::StaticWindowProc;
         defaultWC.lpszClassName = pClassName;
 
-        VERIFY(::RegisterClass(&defaultWC) != 0);
+        VERIFY(::RegisterClass(&defaultWC));
 
         // Retrieve the class information
         ZeroMemory(&defaultWC, sizeof(defaultWC));
@@ -737,7 +738,7 @@ namespace Win32xx
         // Save the callback address of CWnd::StaticWindowProc
         assert(defaultWC.lpfnWndProc);  // Assert fails when running UNICODE build on ANSI OS.
         m_callback = defaultWC.lpfnWndProc;
-        VERIFY(::UnregisterClass(pClassName, GetInstanceHandle()) != 0);
+        VERIFY(::UnregisterClass(pClassName, GetInstanceHandle()));
     }
 
     // Sets the current cursor and returns the previous one.
@@ -767,6 +768,73 @@ namespace Win32xx
             pWinApp = 0;
 
         return pWinApp;
+    }
+
+    // This function assigns the error messages displayed when an exception
+    // is thrown. Override this function to display error messages in other
+    // languages.
+    inline void CWinApp::SetMessages()
+    {
+        m_msgAppThreadFailed = "Failed to create thread";
+        m_msgArReadFail = "Failed to read from archive.";
+        m_msgArNotCStringA = "ANSI characters stored. Not a CStringW";
+        m_msgArNotCStringW = "Unicode characters stored. Not a CStringA";
+        m_msgCriticalSection = "Failed to create critical section";
+        m_msgMtxEvent = "Unable to create event";
+        m_msgMtxMutex = "Unable to create mutex";
+        m_msgMtxSemaphore = "Unable to create semaphore";
+
+        m_msgWndCreateEx = "Failed to create window";
+        m_msgWndDoModal = "Failed to create dialog";
+        m_msgWndGlobalLock = "CGlobalLock failed to lock handle";
+        m_msgWndPropertSheet = "Failed to create PropertySheet";
+        m_msgSocWSAStartup = "WSAStartup failed";
+        m_msgSocWS2Dll = "Failed to load WS2_2.dll";
+        m_msgIPControl = "IP Address Control not supported!";
+        m_msgRichEditDll = "Failed to load RICHED32.DLL";
+        m_msgTaskDialog = "Failed to create Task Dialog";
+
+        m_msgFileClose = "Failed to close file";
+        m_msgFileFlush = "Failed to flush file";
+        m_msgFileLock = "Failed to lock the file";
+        m_msgFileOpen = "Failed to open file";
+        m_msgFileRead = "Failed to read from file";
+        m_msgFileRename = "Failed to rename file";
+        m_msgFileRemove = "Failed to delete file";
+        m_msgFileLength = "Failed to change the file length";
+        m_msgFileUnlock = "Failed to unlock the file";
+        m_msgFileWrite = "Failed to write to file";
+
+        m_msgGdiDC = "Failed to create device context";
+        m_msgGdiIC = "Failed to create information context";
+        m_msgGdiBitmap = "Failed to create bitmap";
+        m_msgGdiBrush = "Failed to create brush";
+        m_msgGdiFont = "Failed to create font";
+        m_msgGdiPalette = "Failed to create palette";
+        m_msgGdiPen = "Failed to create pen";
+        m_msgGdiRegion = "Failed to region";
+        m_msgGdiGetDC = "GetDC failed";
+        m_msgGdiGetDCEx = "GetDCEx failed";
+        m_msgGdiSelObject = "Failed to select object into device context";
+        m_msgGdiGetWinDC = "GetWindowDC failed";
+        m_msgGdiBeginPaint = "BeginPaint failed";
+
+        m_msgPrintFound = "No printer available";
+
+        // DDX anomaly prompting messages
+        m_msgDDX_Byte = "Please enter an integer between 0 and 255.";
+        m_msgDDX_Int = "Please enter an integer.";
+        m_msgDDX_Long = "Please enter a long integer.";
+        m_msgDDX_Short = "Please enter a short integer.";
+        m_msgDDX_Real = "Please enter a number.";
+        m_msgDDX_UINT = "Please enter a positive integer.";
+        m_msgDDX_ULONG = "Please enter a positive long integer.";
+
+        // DDV formats and prompts
+        m_msgDDV_IntRange = "Please enter an integer in (%ld, %ld).";
+        m_msgDDV_UINTRange = "Please enter an integer in (%lu, %lu).";
+        m_msgDDV_RealRange = "Please enter a number in (%.*g, %.*g).";
+        m_msgDDV_StringSize = "%s\n is too long.\nPlease enter no more than %ld characters.";
     }
 
     // This function can be used to load a resource dll.
@@ -806,6 +874,19 @@ namespace Win32xx
     inline CWinApp* GetApp()
     {
         CWinApp* pApp = CWinApp::SetnGetThis();
+        try
+        {
+            if (pApp == NULL)
+                throw CNotSupportedException(_T("Win32++ hasn't been started"));
+        }
+
+        catch (const CException& e)
+        {
+            // Display the exception and rethrow.
+            ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+            throw;
+        }
+
         return pApp;
     }
 
