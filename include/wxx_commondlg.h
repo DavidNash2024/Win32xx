@@ -434,7 +434,6 @@ namespace Win32xx
     // An exception is thrown if the dialog box isn't created.
     inline INT_PTR CColorDialog::DoModal(HWND owner /* = 0 */)
     {
-        assert( GetApp() );    // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         // Ensure this thread has the TLS index set
@@ -455,7 +454,7 @@ namespace Win32xx
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
-                throw CWinException(g_msgWndDoModal, error);
+                throw CWinException(GetApp()->m_msgWndDoModal, error);
 
             OnCancel();
             return IDCANCEL;
@@ -628,7 +627,6 @@ namespace Win32xx
     // Use SetParamaters to set a larger size if required.
     inline INT_PTR CFileDialog::DoModal(HWND owner /* = 0 */)
     {
-        assert( GetApp() );    // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         // Ensure this thread has the TLS index set
@@ -652,7 +650,7 @@ namespace Win32xx
             {
                 // ignore the exception caused by closing the dialog
                 if (error != CDERR_DIALOGFAILURE || (m_ofn.Flags & OFN_EXPLORER))
-                    throw CWinException(g_msgWndDoModal, error);
+                    throw CWinException(GetApp()->m_msgWndDoModal, error);
             }
 
             OnCancel();
@@ -1087,7 +1085,6 @@ namespace Win32xx
     inline BOOL CFindReplaceDialog::Create(BOOL isFindDialogOnly, LPCTSTR pFindWhat,
             LPCTSTR pReplaceWith, DWORD flags, HWND parent /* = 0*/)
     {
-        assert( GetApp() );    // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         m_isFindDialogOnly = isFindDialogOnly;
@@ -1119,7 +1116,7 @@ namespace Win32xx
         if (wnd == 0)
         {
             // Throw an exception when window creation fails
-            throw CWinException(g_msgWndDoModal);
+            throw CWinException(GetApp()->m_msgWndDoModal);
         }
 
         m_findWhat.ReleaseBuffer();
@@ -1434,7 +1431,6 @@ namespace Win32xx
     // Display the FontDialog. hOwner specifies dialog's owner window.
     inline INT_PTR CFontDialog::DoModal(HWND owner /* = 0 */)
     {
-        assert( GetApp() );    // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         // Ensure this thread has the TLS index set
@@ -1459,7 +1455,7 @@ namespace Win32xx
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
-                throw CWinException(g_msgWndDoModal, error);
+                throw CWinException(GetApp()->m_msgWndDoModal, error);
 
             OnCancel();
             return IDCANCEL;

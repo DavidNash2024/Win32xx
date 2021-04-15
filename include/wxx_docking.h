@@ -285,7 +285,7 @@ namespace Win32xx
             CDocker& GetDocker() const      {assert (m_pDocker); return *m_pDocker;}
             int GetWidth() const            {return m_dockBarWidth;}
             void SetColor(COLORREF color);
-            void SetDocker(CDocker& Docker) {m_pDocker = &Docker;}
+            void SetDocker(CDocker& docker) {m_pDocker = &docker;}
             void SetWidth(int width)        {m_dockBarWidth = width;}
 
         protected:
@@ -328,7 +328,7 @@ namespace Win32xx
             void SetDocker(CDocker* pDocker)      { m_pDocker = pDocker;}
             void SetCaption(LPCTSTR pCaption)     { m_caption = pCaption; }
             void SetCaptionColors(COLORREF foregnd1, COLORREF backgnd1, COLORREF foreGnd2, COLORREF backGnd2, COLORREF penColor);
-            void SetView(CWnd& wndView);
+            void SetView(CWnd& view);
 
         protected:
             virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -515,7 +515,7 @@ namespace Win32xx
         virtual CDockHint& GetDockHint() const      { return m_pDockAncestor->m_dockHint; }
         virtual CWnd& GetView() const               { return GetDockClient().GetView(); }
         virtual CRect GetViewRect() const           { return GetClientRect(); }
-        virtual void SetView(CWnd& wndView);
+        virtual void SetView(CWnd& view);
 
         // Attributes
         const std::vector <DockPtr> & GetAllDockChildren() const    {return GetDockAncestor()->m_allDockChildren;}
@@ -604,7 +604,7 @@ namespace Win32xx
         void SendNotify(UINT messageID);
         void SetUndockPosition(CPoint pt, BOOL showUndocked);
         std::vector<CDocker*> SortDockers();
-        static BOOL CALLBACK EnumWindowsProc(HWND hTop, LPARAM lparam);
+        static BOOL CALLBACK EnumWindowsProc(HWND top, LPARAM lparam);
 
         mutable CDockBar        m_dockBar;
         mutable CDockHint       m_dockHint;
@@ -2025,15 +2025,6 @@ namespace Win32xx
     // Destructor.
     inline CDocker::~CDocker()
     {
-        std::vector<DockPtr>::const_iterator iter;
-        if (GetDockAncestor() == this)
-        {
-            // Destroy all dock descendants of this dock ancestor
-            for (iter = GetAllChildren().begin(); iter != GetAllChildren().end(); ++iter)
-            {
-                (*iter)->Destroy();
-            }
-        }
     }
 
     // This function creates the docker, and adds it to the docker hierarchy as docked.
@@ -3758,28 +3749,28 @@ namespace Win32xx
             else     dockSize = MAX(pt.x, barWidth / 2) - rcDock.left - (barWidth / 2);
 
             dockSize = MAX(-barWidth, dockSize);
-            pDocker->SetDockSize(dockSize);
             pDocker->m_dockSizeRatio = dockStartSize / parentWidth;
+            pDocker->SetDockSize(dockSize);
             break;
         case DS_DOCKED_RIGHT:
             if (rtl)  dockSize = MAX(pt.x, barWidth / 2) - rcDock.left - (barWidth / 2);
             else      dockSize = rcDock.right - MAX(pt.x, barWidth / 2) - (barWidth / 2);
 
             dockSize = MAX(-barWidth, dockSize);
-            pDocker->SetDockSize(dockSize);
             pDocker->m_dockSizeRatio = dockStartSize / parentWidth;
+            pDocker->SetDockSize(dockSize);
             break;
         case DS_DOCKED_TOP:
             dockSize = MAX(pt.y, barWidth / 2) - rcDock.top - (barWidth / 2);
             dockSize = MAX(-barWidth, dockSize);
-            pDocker->SetDockSize(dockSize);
             pDocker->m_dockSizeRatio = dockStartSize / parentHeight;
+            pDocker->SetDockSize(dockSize);
             break;
         case DS_DOCKED_BOTTOM:
             dockSize = rcDock.bottom - MAX(pt.y, barWidth / 2) - (barWidth / 2);
             dockSize = MAX(-barWidth, dockSize);
-            pDocker->SetDockSize(dockSize);
             pDocker->m_dockSizeRatio = dockStartSize / parentHeight;
+            pDocker->SetDockSize(dockSize);
             break;
         }
 
@@ -4066,9 +4057,9 @@ namespace Win32xx
     // The Docker's view can be changed during runtime.
     // The Docker's view can be a DockContainer or another child window.
     // Note: DockContainers have their own view which is not set here.
-    inline void CDocker::SetView(CWnd& wndView)
+    inline void CDocker::SetView(CWnd& view)
     {
-        GetDockClient().SetView(wndView);
+        GetDockClient().SetView(view);
         CDockContainer* pContainer = GetContainer();
         if (pContainer)
         {
@@ -4402,7 +4393,7 @@ namespace Win32xx
 
     // Static callback function to enumerate top level dockers excluding
     // the one being dragged. Top level windows are enumerated in Z order.
-    inline BOOL CALLBACK CDocker::EnumWindowsProc(HWND hTop, LPARAM lparam)
+    inline BOOL CALLBACK CDocker::EnumWindowsProc(HWND top, LPARAM lparam)
     {
         CDocker* pThis = reinterpret_cast<CDocker*>(lparam);
         assert(dynamic_cast<CDocker*>(pThis));
@@ -4411,17 +4402,17 @@ namespace Win32xx
         CPoint pt = pThis->m_dockPoint;
 
         // Update hWndTop if the DockAncestor is a child of the top level window
-        if (::IsChild(hTop, pThis->GetDockAncestor()->GetHwnd()))
-            hTop = pThis->GetDockAncestor()->GetHwnd();
+        if (::IsChild(top, pThis->GetDockAncestor()->GetHwnd()))
+            top = pThis->GetDockAncestor()->GetHwnd();
 
         // Assign this docker's m_dockUnderPoint
-        if (pThis->IsRelated(hTop) && hTop != pThis->GetHwnd())
+        if (pThis->IsRelated(top) && top != pThis->GetHwnd())
         {
             CRect rc;
-            ::GetWindowRect(hTop, &rc);
+            ::GetWindowRect(top, &rc);
             if ( rc.PtInRect(pt) )
             {
-                pThis->m_dockUnderPoint = hTop;
+                pThis->m_dockUnderPoint = top;
                 return FALSE;   // Stop enumerating
             }
         }
@@ -4992,37 +4983,37 @@ namespace Win32xx
         }
 
         // Set the button images
-        CBitmap Bitmap(normalID);
-        assert(Bitmap.GetHandle());
+        CBitmap bitmap(normalID);
+        assert(bitmap.GetHandle());
 
-        BITMAP data = Bitmap.GetBitmapData();
+        BITMAP data = bitmap.GetBitmapData();
         int cy = data.bmHeight;
         int cx  = MAX(data.bmHeight, 16);
 
         m_normalImages.DeleteImageList();
         m_normalImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-        m_normalImages.Add(Bitmap, mask);
+        m_normalImages.Add(bitmap, mask);
         GetToolBar().SetImageList(m_normalImages);
 
         if (hotID)
         {
-            CBitmap BitmapHot(hotID);
-            assert(BitmapHot);
+            CBitmap bitmapHot(hotID);
+            assert(bitmapHot);
 
             m_hotImages.DeleteImageList();
             m_hotImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-            m_hotImages.Add(BitmapHot, mask);
+            m_hotImages.Add(bitmapHot, mask);
             GetToolBar().SetHotImageList(m_hotImages);
         }
 
         if (disabledID)
         {
-            CBitmap BitmapDisabled(disabledID);
-            assert(BitmapDisabled);
+            CBitmap bitmapDisabled(disabledID);
+            assert(bitmapDisabled);
 
             m_disabledImages.DeleteImageList();
             m_disabledImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-            m_disabledImages.Add(BitmapDisabled, mask);
+            m_disabledImages.Add(bitmapDisabled, mask);
             GetToolBar().SetDisableImageList(m_disabledImages);
         }
         else
@@ -5053,9 +5044,9 @@ namespace Win32xx
 
     // Sets or changes the container's view window.
     // The view window can be any resizable child window.
-    inline void CDockContainer::SetView(CWnd& Wnd)
+    inline void CDockContainer::SetView(CWnd& wnd)
     {
-        GetViewPage().SetView(Wnd);
+        GetViewPage().SetView(wnd);
     }
 
     // Swaps the positions of the specified tabs.
@@ -5111,7 +5102,7 @@ namespace Win32xx
 
     ///////////////////////////////////////////
     // Declaration of the nested CViewPage class
-    // This is the Wnd for the window displayed over the client area
+    // This is the class for the window displayed over the client area
     // of the tab control.  The toolbar and view window are child windows of the
     // viewpage window. Only the ViewPage of the parent CDockContainer is displayed.
     // Its contents are updated with the view window of the active container

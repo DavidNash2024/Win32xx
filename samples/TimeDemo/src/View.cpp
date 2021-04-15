@@ -285,24 +285,5 @@ TextLineOut(CDC& dc, UINT leftcol, UINT line, LPCTSTR s) const              /*
       // output the line to the view dc
     TextOut(dc, pt.x - sPos.x, pt.y - sPos.y, s, lstrlen(s));
 }
-
-/*============================================================================*/
-    LRESULT CView::
-WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
-
-    All messages for this window pass through this WndProc.  In particular,
-    handling scrollbar messages are dispatched here.
-*-----------------------------------------------------------------------------*/
-{
-    //switch (msg)
-    //{
-    //    case ...:
-    //    {
-    //      return TRUE;
-    //    }
-    //}
-
-    return WndProcDefault(msg, wparam, lparam);
-}
 /*----------------------------------------------------------------------------*/
 

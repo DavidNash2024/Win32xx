@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -258,7 +258,19 @@ namespace Win32xx
             if (IsModal())
                 ::EndDialog(GetHwnd(), 0);
             else
-                Destroy();
+            {
+                CWinApp* pApp = CWinApp::SetnGetThis();
+                if (pApp != NULL)          // Is the CWinApp object still valid?
+                {
+                    if (GetCWndPtr(*this) == this)  // Is window managed by Win32++?
+                    {
+                        if (IsWindow())
+                            ::DestroyWindow(*this);
+                    }
+
+                    RemoveFromMap();
+                }
+            }
         }
     }
 
@@ -432,7 +444,6 @@ namespace Win32xx
     // Refer to DialogBox and DialogBoxIndirect in the Windows API documentation for more information.
     inline INT_PTR CDialog::DoModal(HWND parent /* = 0 */)
     {
-        assert( GetApp() );        // Test if Win32++ has been started
         assert(!IsWindow());        // Only one window per CWnd instance allowed
         assert(m_pDlgTemplate || m_pResName);  // Dialog layout must be defined.
 
@@ -481,7 +492,7 @@ namespace Win32xx
         // Throw an exception if the dialog creation fails
         if (result == -1)
         {
-            throw CWinException(g_msgWndDoModal);
+            throw CWinException(GetApp()->m_msgWndDoModal);
         }
 
         return result;
@@ -491,8 +502,6 @@ namespace Win32xx
     // Refer to CreateDialog and CreateDialogIndirect in the Windows API documentation for more information.
     inline HWND CDialog::DoModeless(HWND parent /* = 0 */)
     {
-        assert( GetApp() );        // Test if Win32++ has been started
-        assert(!IsWindow());        // Only one window per CWnd instance allowed
         assert(m_pDlgTemplate || m_pResName);  // Dialog layout must be defined.
 
         m_isModal=FALSE;
@@ -524,7 +533,7 @@ namespace Win32xx
         // Display information on dialog creation failure
         if (wnd == 0)
         {
-            throw CWinException(g_msgWndDoModal);
+            throw CWinException(GetApp()->m_msgWndDoModal);
         }
 
         return wnd;
@@ -726,7 +735,6 @@ namespace Win32xx
                     CDialog* pDialog = reinterpret_cast<CDialog*>(::SendMessage(wnd, UWM_GETCDIALOG, 0, 0));
                     if (pDialog != 0)
                     {
-                        assert(GetCWndPtr(wnd));
                         if (pDialog->PreTranslateMessage(*pMsg))
                             return 1; // Eat the message
 
@@ -785,7 +793,7 @@ namespace Win32xx
         rd.isFixedWidth  = !(style & RD_STRETCH_WIDTH);
         rd.isFixedHeight = !(style & RD_STRETCH_HEIGHT);
         CRect initRect;
-        ::GetWindowRect(wnd, &initRect);
+        VERIFY(::GetWindowRect(wnd, &initRect));
         ::MapWindowPoints(0, m_parent, (LPPOINT)&initRect, 2);
         rd.initRect = initRect;
         rd.wnd = wnd;
@@ -850,7 +858,7 @@ namespace Win32xx
         assert (::IsWindow(parent));
 
         m_parent = parent;
-        VERIFY(::GetClientRect(parent, &m_initRect) != 0);
+        VERIFY(::GetClientRect(parent, &m_initRect));
 
         m_minRect = minRect;
         m_maxRect = maxRect;
@@ -912,11 +920,11 @@ namespace Win32xx
         // Scroll the window.
         xNewPos = MAX(0, xNewPos);
         CRect rc;
-        VERIFY(::GetClientRect(m_parent, &rc) != 0);
+        VERIFY(::GetClientRect(m_parent, &rc));
         xNewPos = MIN( xNewPos, GetMinRect().Width() - rc.Width() );
         int xDelta = xNewPos - m_xScrollPos;
         m_xScrollPos = xNewPos;
-        ::ScrollWindow(m_parent, -xDelta, 0, NULL, NULL);
+        VERIFY(::ScrollWindow(m_parent, -xDelta, 0, NULL, NULL));
 
         // Reset the scroll bar.
         SCROLLINFO si;
@@ -973,11 +981,11 @@ namespace Win32xx
         // Scroll the window.
         yNewPos = MAX(0, yNewPos);
         CRect rc;
-        VERIFY(::GetClientRect(m_parent, &rc) != 0);
+        VERIFY(::GetClientRect(m_parent, &rc));
         yNewPos = MIN( yNewPos, GetMinRect().Height() - rc.Height() );
         int yDelta = yNewPos - m_yScrollPos;
         m_yScrollPos = yNewPos;
-        ::ScrollWindow(m_parent, 0, -yDelta, NULL, NULL);
+        VERIFY(::ScrollWindow(m_parent, 0, -yDelta, NULL, NULL));
 
         // Reset the scroll bar.
         SCROLLINFO si;
@@ -996,7 +1004,7 @@ namespace Win32xx
         assert (::IsWindow(m_parent));
 
         CRect currentRect;
-        VERIFY(::GetClientRect(m_parent, &currentRect) != 0);
+        VERIFY(::GetClientRect(m_parent, &currentRect));
 
         // Adjust the scrolling if required
         m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_minRect.Width()  - currentRect.Width() ) );
@@ -1016,7 +1024,7 @@ namespace Win32xx
 
         // Note: calls to SetScrollInfo may have changed the client rect, so
         // we get it again.
-        VERIFY(::GetClientRect(m_parent, &currentRect) != 0);
+        VERIFY(::GetClientRect(m_parent, &currentRect));
 
         currentRect.right  = MAX(currentRect.Width(),  m_minRect.Width() );
         currentRect.bottom = MAX(currentRect.Height(), m_minRect.Height() );
@@ -1114,7 +1122,7 @@ namespace Win32xx
         }
 
         // Reposition all the child windows simultaneously.
-        VERIFY(::EndDeferWindowPos(hdwp) != 0);
+        VERIFY(::EndDeferWindowPos(hdwp));
     }
 
 #endif // #ifndef _WIN32_WCE

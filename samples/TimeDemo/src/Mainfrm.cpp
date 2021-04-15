@@ -541,16 +541,4 @@ SetWindowTitle(const CString &docPath /* = _T("") */)                       /*
     CString s = m_appName + _T(":   ") + docPath;
     SetTitle(s);
 }
-
-/*============================================================================*/
-    LRESULT CMainFrame::
-WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
-
-    This is the main frame message loop. By default, it handles the
-    normal housekeeping functions (see Win32++\include\frame.h).
-*-----------------------------------------------------------------------------*/
-{
-      // pass unhandled messages on for default processing
-    return WndProcDefault(msg, wparam, lparam);
-}
 /*----------------------------------------------------------------------------*/

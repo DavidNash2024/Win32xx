@@ -13,16 +13,13 @@
 CMyEdit::CMyEdit()
 {
     // Create the font for the Edit window
-    m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    m_font.CreateFont(18, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
                     CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 }
 
 // Called after the edit window is created.
 void CMyEdit::OnAttach()
 {
-    // Permit the Edit window to display up to 128000 characters
-    SendMessage(EM_SETLIMITTEXT, 128000, 0);
-
     // Set the font for the Edit window
     SetFont(m_font, FALSE);
 }

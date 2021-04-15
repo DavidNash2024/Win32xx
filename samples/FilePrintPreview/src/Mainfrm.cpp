@@ -632,19 +632,28 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
     The mainframe message pocessing procedure.
 *-----------------------------------------------------------------------------*/
 {
-    switch (msg)
+    try
     {
-        case WM_SYSCOMMAND:
+        switch (msg)
         {
-            switch (LOWORD(wparam))
+            case WM_SYSCOMMAND:
             {
-                case SC_CLOSE:
-                m_printPreview.Destroy();
-                break;  // let default process this further
+                switch (LOWORD(wparam))
+                {
+                    case SC_CLOSE:
+                    m_printPreview.Destroy();
+                    break;  // let default process this further
+                }
             }
         }
+        return WndProcDefault(msg, wparam, lparam);
     }
-
-    return WndProcDefault(msg, wparam, lparam);
+      // Catch all CException types.
+    catch (const CException& e)
+    {
+          // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        return 0;
+    }
 }
 /*----------------------------------------------------------------------------*/

@@ -691,8 +691,6 @@ namespace Win32xx
     {
         UNREFERENCED_PARAMETER(refData);
 
-        assert( GetApp() );
-
         CTaskDialog* t = static_cast<CTaskDialog*>(GetCWndPtr(wnd));
         if (t == 0)
         {

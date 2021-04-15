@@ -42,9 +42,11 @@ CView : public CDialog                                                      /*
 
         void    AdjustStatus();
         HWND    Create(HWND hParent);
-        int     GetCheckA() const       { return m_checkAVal; }
-        int     GetCheckB() const       { return m_checkBVal; }
-        int     GetCheckC() const       { return m_checkCVal; }
+        BOOL    GetCheckA() const       { return m_checkVal[0]; }
+        BOOL    GetCheckB() const       { return m_checkVal[1]; }
+        BOOL    GetCheckC() const       { return m_checkVal[2]; }
+        void    SetCheck(UINT);
+        void    SetRadio(UINT);
         void    SetCheckAStatus();
         void    SetCheckBStatus();
         void    SetCheckCStatus();
@@ -58,8 +60,8 @@ CView : public CDialog                                                      /*
         void    UpdateDocument();
 
     private:
-        BOOL    AddToolTip(HWND, UINT id);
-        BOOL    AddToolTip(HWND, UINT id, const CString & s);
+        BOOL    AddToolTip(UINT id);
+        BOOL    AddToolTip(UINT id, const CString & s);
         void    AssignToolTips();
         INT_PTR DialogProc(UINT, WPARAM, LPARAM);
         void    DoDataExchange(CDataExchange& DX);
@@ -89,9 +91,7 @@ CView : public CDialog                                                      /*
         float       m_floatVal;
         double      m_doubleVal;
         int         m_intVal;
-        int         m_checkAVal;
-        int         m_checkBVal;
-        int         m_checkCVal;
+        BOOL        m_checkVal[3];
         int         m_comboBoxIndx;
         int         m_listBoxIndx;
         int         m_radioA;

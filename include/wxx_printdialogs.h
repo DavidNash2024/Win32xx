@@ -1,5 +1,5 @@
-// Win32++   Version 8.8
-// Release Date: 15th October 2020
+// Win32++   Version 8.8.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -164,7 +164,7 @@ namespace Win32xx
                 if (m_p == 0)
                 {
                     // The handle is probably invalid
-                    throw CWinException(g_msgWndGlobalLock);
+                    throw CWinException(GetApp()->m_msgWndGlobalLock);
                 }
             }
             else
@@ -503,7 +503,6 @@ namespace Win32xx
     // An exception is thrown if there is no default printer.
     inline INT_PTR CPrintDialog::DoModal( HWND owner /* = 0 */)
     {
-        assert( GetApp() );     // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         // Ensure only one print dialog is running at a time.
@@ -547,7 +546,7 @@ namespace Win32xx
                 // Reset global memory
                 GetApp()->m_devMode.Free();
                 GetApp()->m_devNames.Free();
-                throw CWinException(g_msgWndDoModal, error);
+                throw CWinException(GetApp()->m_msgWndDoModal, error);
             }
 
             OnCancel();
@@ -625,7 +624,7 @@ namespace Win32xx
             GetApp()->UpdateDefaultPrinter();
 
         if (GetApp()->m_devNames.Get() == 0)
-            throw CResourceException(g_msgPrintFound);
+            throw CResourceException(GetApp()->m_msgPrintFound);
 
         return CDevMode(GetApp()->m_devMode);
     }
@@ -840,7 +839,6 @@ namespace Win32xx
     // An exception is thrown if there is no default printer.
     inline INT_PTR CPageSetupDialog::DoModal(HWND owner /* = 0 */)
     {
-        assert(GetApp());       // Test if Win32++ has been started
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
         // Ensure only one page-setup dialog is running at a time.
@@ -876,7 +874,7 @@ namespace Win32xx
                 // Reset global memory
                 GetApp()->m_devMode.Free();
                 GetApp()->m_devNames.Free();
-                throw CWinException(g_msgWndDoModal, error);
+                throw CWinException(GetApp()->m_msgWndDoModal, error);
             }
 
             OnCancel();
@@ -917,7 +915,7 @@ namespace Win32xx
             GetApp()->UpdateDefaultPrinter();
 
         if (GetApp()->m_devNames.Get() == 0)
-            throw CResourceException(g_msgPrintFound);
+            throw CResourceException(GetApp()->m_msgPrintFound);
 
         return CDevNames(GetApp()->m_devNames);
     }

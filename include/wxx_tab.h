@@ -1826,7 +1826,7 @@ namespace Win32xx
         // Create the MDICLIENT view window
         if (!CreateEx(0, _T("MDICLIENT"), _T(""),
             style, 0, 0, 0, 0, parent, NULL, (PSTR) &clientcreate))
-                throw CWinException(g_msgWndCreateEx);
+                throw CWinException(GetApp()->m_msgWndCreateEx);
 
         return *this;
     }

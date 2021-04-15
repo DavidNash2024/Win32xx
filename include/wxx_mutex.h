@@ -157,7 +157,7 @@ namespace Win32xx
     {
         m_event = ::CreateEvent(pAttributes, isManualReset, isInitiallySignaled, pstrName);
         if (m_event == 0)
-            throw CResourceException(g_msgMtxEvent);
+            throw CResourceException(GetApp()->m_msgMtxEvent);
     }
 
     // Sets the specified event object to the non-signalled state.
@@ -190,7 +190,7 @@ namespace Win32xx
     {
         m_mutex = ::CreateMutex(pAttributes, isInitiallySignaled, pName);
         if (m_mutex == 0)
-            throw CResourceException(g_msgMtxMutex);
+            throw CResourceException(GetApp()->m_msgMtxMutex);
     }
 
 
@@ -214,7 +214,7 @@ namespace Win32xx
 
         m_semaphore = ::CreateSemaphore(pAttributes, initialCount, maxCount, pName);
         if (m_semaphore == 0)
-            throw CResourceException(g_msgMtxSemaphore);
+            throw CResourceException(GetApp()->m_msgMtxSemaphore);
     }
 
     // Increases the count of the specified semaphore object by a specified amount.

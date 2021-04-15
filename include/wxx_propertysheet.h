@@ -463,7 +463,6 @@ namespace Win32xx
 
     inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND wnd, UINT msg, LPPROPSHEETPAGE ppsp)
     {
-        assert( GetApp() );
         UNREFERENCED_PARAMETER(wnd);
 
         // Note: the hwnd is always 0
@@ -471,15 +470,20 @@ namespace Win32xx
         switch (msg)
         {
         case PSPCB_CREATE:
+        {
+            TLSData* pTLSData = GetApp()->GetTlsData();
+            if (pTLSData == NULL)
             {
-                TLSData* pTLSData = GetApp()->GetTlsData();
-                assert(pTLSData);
-                if (!pTLSData) return 0;
-
-                // Store the CPropertyPage pointer in Thread Local Storage
-                pTLSData->pWnd = reinterpret_cast<CWnd*>(ppsp->lParam);
+                // Got a message for a window thats not in the map.
+                // We should never get here.
+                Trace("*** Warning in CPropertyPage::StaticPropSheetPageProc: HWND not in window map ***\n");
+                return 0;
             }
-            break;
+
+            // Store the CPropertyPage pointer in Thread Local Storage
+            pTLSData->pWnd = reinterpret_cast<CWnd*>(ppsp->lParam);
+        }
+        break;
         }
 
         return TRUE;
@@ -487,8 +491,6 @@ namespace Win32xx
 
     inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hDlg, UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        assert( GetApp() );
-
         // Find matching CWnd pointer for this HWND
         CPropertyPage* pPage = static_cast<CPropertyPage*>(GetCWndPtr(hDlg));
         if (!pPage)
@@ -597,8 +599,6 @@ namespace Win32xx
     // being passed to the DialogProc.
     inline void CALLBACK CPropertySheet::Callback(HWND wnd, UINT msg, LPARAM lparam)
     {
-        assert( GetApp() );
-
         switch(msg)
         {
         // Called before the dialog is created, wnd = 0, lparam points to dialog resource.
@@ -635,7 +635,6 @@ namespace Win32xx
     // Refer to PropertySheet in the Windows API documentation for more information.
     inline HWND CPropertySheet::Create(HWND parent /*= 0*/)
     {
-        assert( GetApp() );
         assert(!IsWindow());        // Only one window per CWnd instance allowed
 
         if (parent)
@@ -652,7 +651,7 @@ namespace Win32xx
         m_psh.dwFlags |= PSH_MODELESS;
         HWND wnd = reinterpret_cast<HWND>(CreatePropertySheet(&m_psh));
         if (wnd == 0)
-            throw CWinException(g_msgWndPropertSheet);
+            throw CWinException(GetApp()->m_msgWndPropertSheet);
 
         return wnd;
     }
@@ -661,8 +660,6 @@ namespace Win32xx
     // Refer to PropertySheet in the Windows API documentation for more information.
     inline INT_PTR CPropertySheet::CreatePropertySheet(LPCPROPSHEETHEADER pPSH)
     {
-        assert( GetApp() );
-
         // Only one window per CWnd instance allowed
         assert(!IsWindow());
 
@@ -682,7 +679,7 @@ namespace Win32xx
         pTLSData->pWnd = NULL;
 
         if (ipResult == -1)
-            throw CWinException(g_msgWndPropertSheet);
+            throw CWinException(GetApp()->m_msgWndPropertSheet);
 
         return ipResult;
     }
@@ -713,7 +710,6 @@ namespace Win32xx
     // Refer to PropertySheet in the Windows API documentation for more information.
     inline int CPropertySheet::DoModal()
     {
-        assert( GetApp() );
         assert(!IsWindow());        // Only one window per CWnd instance allowed
 
         BuildPageArray();

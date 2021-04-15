@@ -41,17 +41,22 @@ CMainFrame : public CFrame                                                  /*
         BOOL    UpdateDialog(BOOL bReadFromControl);
 
     private:
+        void    FeatureNotImplemented();
         BOOL    LoadRegistrySettings(LPCTSTR keyName);
         void    OnClose();
         BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
         int     OnCreate(CREATESTRUCT& cs);
-        void    OnFileExit();
+        BOOL    OnFileExit();
+        BOOL    OnFileNew();
+        BOOL    OnFileOpen();
+        BOOL    OnFilePrint();
+        BOOL    OnFileSave();
+        BOOL    OnFileSaveAs();
         void    OnInitialUpdate();
         void    PreCreate(CREATESTRUCT& cs);
         void    SetReBarColors(COLORREF, COLORREF, COLORREF, COLORREF);
         BOOL    SetThemeColors();
         void    SetupToolBar();
-        LRESULT WndProc(UINT msg, WPARAM, LPARAM);
 
         CView             m_view;
         std::vector<UINT> m_bandIDs;

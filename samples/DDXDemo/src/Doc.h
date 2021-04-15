@@ -43,14 +43,14 @@ CDoc    : public CObject                                                    /*
         DWORD   RegQueryDWORDValue(CRegKey& key, LPCTSTR pName);
         CString RegQueryStringValue(CRegKey& key, LPCTSTR pName);
         SYSTEMTIME RegQuerySYSTEMTIMEValue(CRegKey &key, LPCTSTR pName);
-        BOOL    GetCheckA() const {return m_checkAVal;}
-        void    SetCheckA(BOOL IsChecked) { m_checkAVal = IsChecked;}
+        BOOL    GetCheckA() const {return m_checkVal[0];}
+        void    SetCheckA(BOOL IsChecked) { m_checkVal[0] = IsChecked;}
 
-        BOOL    GetCheckB() const {return m_checkBVal;}
-        void    SetCheckB(BOOL IsChecked) { m_checkBVal = IsChecked;}
+        BOOL    GetCheckB() const {return m_checkVal[1];}
+        void    SetCheckB(BOOL IsChecked) { m_checkVal[1] = IsChecked;}
 
-        BOOL    GetCheckC() const {return m_checkCVal;}
-        void    SetCheckC(BOOL IsChecked) { m_checkCVal = IsChecked;}
+        BOOL    GetCheckC() const {return m_checkVal[2];}
+        void    SetCheckC(BOOL IsChecked) { m_checkVal[2] = IsChecked;}
 
         UINT    GetRadio() const {return m_radioA;}
         void    SetRadio(UINT radio) { m_radioA = radio;}
@@ -124,9 +124,7 @@ CDoc    : public CObject                                                    /*
         DWORD       m_ULongVal;
         float       m_floatVal;
         double      m_doubleVal;
-        BOOL        m_checkAVal;
-        BOOL        m_checkBVal;
-        BOOL        m_checkCVal;
+        BOOL        m_checkVal[3];
         UINT        m_radioA;
         CString     m_listBoxVal;
         CString     m_comboBoxVal;

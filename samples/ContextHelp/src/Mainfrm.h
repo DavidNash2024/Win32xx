@@ -48,8 +48,6 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    void    NotImplemented() const;
-
     CView       m_view;
     CHelp       m_appHelp;  // Help object for context help and help about dialog
     BOOL        m_isChoosing;

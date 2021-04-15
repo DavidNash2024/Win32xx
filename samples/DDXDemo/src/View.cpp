@@ -33,7 +33,7 @@
 #define CFM_BACKCOLOR       0x04000000
 #endif // CFM_BACKCOLOR
 
-static const  TCHAR radio[] = {_T('A'), _T('B'), _T('C')};
+static const  CString unit[] = {_T("A"), _T("B"), _T("C")};
 
 /*=============================================================================*
 
@@ -98,9 +98,9 @@ CView(UINT nResID)                                                          /*
     m_floatVal      = 0.0;
     m_doubleVal     = 0.0;
     m_LPTSTRVal[0]  = _T('\0');
-    m_checkAVal     = FALSE;
-    m_checkBVal     = FALSE;
-    m_checkCVal     = FALSE;
+    m_checkVal[0]     = FALSE;
+    m_checkVal[1]     = FALSE;
+    m_checkVal[2]     = FALSE;
     m_radioA        = 0;
     m_editVal.Empty();
     m_richEditVal.Empty();
@@ -146,24 +146,24 @@ CView(UINT nResID)                                                          /*
 
 /*============================================================================*/
     BOOL CView::
-AddToolTip(HWND hParent, UINT id)                                          /*
+AddToolTip(UINT id)                                                         /*
 
     Add the string with the resource id to the control whose resource
     identifier is also id. Return TRUE on success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
-    return AddToolTip(hParent, id, LoadString(id));
+    return AddToolTip(id, LoadString(id));
 }
 
 /*============================================================================*/
     BOOL CView::
-AddToolTip(HWND hParent, UINT id, const CString & sToolTip)                /*
+AddToolTip(UINT id, const CString & sToolTip)                               /*
 
     Add the sToolTip string to the control whose resource identifier is
     id. Return TRUE on success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
-    HWND ctl = ::GetDlgItem(hParent, id);
+    HWND ctl = ::GetDlgItem(*this, id);
     if (ctl == NULL)
     {
         TRACE(_T("cannot connect tooltip: ") + sToolTip);
@@ -210,7 +210,7 @@ AdjustStatus()                                                              /*
         _T("RichEdit    is '%s'\n")
         _T("ListBox     is '%s'\n")
         _T("ComboBox    is '%s'\n")
-        _T("Radio_%c     is selected\n")
+        _T("Radio_%s     is selected\n")
         _T("Check Box A is %s\n")
         _T("Check Box B is %s\n")
         _T("Check Box C is %s\n")
@@ -235,10 +235,10 @@ AdjustStatus()                                                              /*
         m_richEditVal.c_str(),
         m_listBoxVal.c_str(),
         m_comboBoxVal.c_str(),
-        radio[m_radioA],
-        TorF[m_checkAVal],
-        TorF[m_checkBVal],
-        TorF[m_checkCVal],
+        unit[m_radioA].c_str(),
+        TorF[m_checkVal[0]],
+        TorF[m_checkVal[1]],
+        TorF[m_checkVal[2]],
         m_sliderVal,
         m_scrollBarVal,
         m_progressVal,
@@ -261,35 +261,35 @@ AssignToolTips()                                                            /*
         return;
     }
     m_toolTip.AddTool(hParent, _T("Client area"));
-    AddToolTip(hParent, IDC_RADIO_A);
-    AddToolTip(hParent, IDC_RADIO_B);
-    AddToolTip(hParent, IDC_RADIO_C);
-    AddToolTip(hParent, IDC_PUSH_ME_BUTTON);
-    AddToolTip(hParent, IDC_CHECK_A);
-    AddToolTip(hParent, IDC_CHECK_B);
-    AddToolTip(hParent, IDC_CHECK_C);
-    AddToolTip(hParent, IDOK);
-    AddToolTip(hParent, IDC_LISTBOX);
-    AddToolTip(hParent, IDC_EDIT_CSTRING);
-    AddToolTip(hParent, IDC_EDIT_RICHEDIT);
-    AddToolTip(hParent, IDC_STATUS_GROUP);
-    AddToolTip(hParent, IDC_EDIT_STATUS);
-    AddToolTip(hParent, IDC_ROSE_BITMAP);
-    AddToolTip(hParent, IDC_EDIT_BYTE);
-    AddToolTip(hParent, IDC_EDIT_SHORT);
-    AddToolTip(hParent, IDC_EDIT_INT);
-    AddToolTip(hParent, IDC_EDIT_UINT);
-    AddToolTip(hParent, IDC_EDIT_LONG);
-    AddToolTip(hParent, IDC_EDIT_DWORD);
-    AddToolTip(hParent, IDC_EDIT_FLOAT);
-    AddToolTip(hParent, IDC_EDIT_DOUBLE);
-    AddToolTip(hParent, IDC_EDIT_LPTSTR);
-    AddToolTip(hParent, IDC_CALENDAR);
-    AddToolTip(hParent, IDC_DATE_TIME);
-    AddToolTip(hParent, IDC_SCROLLBAR);
-    AddToolTip(hParent, IDC_PROGRESSBAR);
-    AddToolTip(hParent, IDC_SLIDER);
-    AddToolTip(hParent, IDC_COMBOBOX);
+    AddToolTip(IDC_RADIO_A);
+    AddToolTip(IDC_RADIO_B);
+    AddToolTip(IDC_RADIO_C);
+    AddToolTip(IDC_PUSH_ME_BUTTON);
+    AddToolTip(IDC_CHECK_A);
+    AddToolTip(IDC_CHECK_B);
+    AddToolTip(IDC_CHECK_C);
+    AddToolTip(IDOK);
+    AddToolTip(IDC_LISTBOX);
+    AddToolTip(IDC_EDIT_CSTRING);
+    AddToolTip(IDC_EDIT_RICHEDIT);
+    AddToolTip(IDC_STATUS_GROUP);
+    AddToolTip(IDC_EDIT_STATUS);
+    AddToolTip(IDC_ROSE_BITMAP);
+    AddToolTip(IDC_EDIT_BYTE);
+    AddToolTip(IDC_EDIT_SHORT);
+    AddToolTip(IDC_EDIT_INT);
+    AddToolTip(IDC_EDIT_UINT);
+    AddToolTip(IDC_EDIT_LONG);
+    AddToolTip(IDC_EDIT_DWORD);
+    AddToolTip(IDC_EDIT_FLOAT);
+    AddToolTip(IDC_EDIT_DOUBLE);
+    AddToolTip(IDC_EDIT_LPTSTR);
+    AddToolTip(IDC_CALENDAR);
+    AddToolTip(IDC_DATE_TIME);
+    AddToolTip(IDC_SCROLLBAR);
+    AddToolTip(IDC_PROGRESSBAR);
+    AddToolTip(IDC_SLIDER);
+    AddToolTip(IDC_COMBOBOX);
     m_toolTip.Activate(TRUE);
 }
 
@@ -411,13 +411,13 @@ DoDataExchange(CDataExchange& DX)                                           /*
       // connect the progress bar to m_progressVal
     DX.DDX_Progress(IDC_PROGRESSBAR, m_progressVal);
       // connect scroll bar to m_scrollBarVal
-    DX.DDX_Scroll(  IDC_SCROLLBAR,  m_scrollBarVal);
+    DX.DDX_Scroll(IDC_SCROLLBAR,    m_scrollBarVal);
       // connect the radio boxes
     DX.DDX_Radio( IDC_RADIO_A,      m_radioA);
       // connect check boxes
-    DX.DDX_Check(IDC_CHECK_A,       m_checkAVal);
-    DX.DDX_Check(IDC_CHECK_B,       m_checkBVal);
-    DX.DDX_Check(IDC_CHECK_C,       m_checkCVal);
+    DX.DDX_Check(IDC_CHECK_A,       m_checkVal[0]);
+    DX.DDX_Check(IDC_CHECK_B,       m_checkVal[1]);
+    DX.DDX_Check(IDC_CHECK_C,       m_checkVal[2]);
       // Note: Data in a combo box may be accessed two ways: by string or by
       // index. Only one of these two methods should be used.  Comment the
       // other out below.
@@ -467,9 +467,9 @@ GetDocumentValues()                                                         /*
     m_floatVal      = m_doc.GetFloat();
     m_doubleVal     = m_doc.GetDouble();
     m_radioA        = m_doc.GetRadio();
-    m_checkAVal     = m_doc.GetCheckA();
-    m_checkBVal     = m_doc.GetCheckB();
-    m_checkCVal     = m_doc.GetCheckC();
+    m_checkVal[0]   = m_doc.GetCheckA();
+    m_checkVal[1]   = m_doc.GetCheckB();
+    m_checkVal[2]   = m_doc.GetCheckC();
     m_editVal       = m_doc.GetEditBox();
     m_richEditVal   = m_doc.GetRichEditBox();
     m_listBoxVal    = m_doc.GetListBoxS();
@@ -491,7 +491,6 @@ OnBitmap()                                                                  /*
 *-----------------------------------------------------------------------------*/
 {
       // save current contents of controls
-
     UpdateData(m_dx, READFROMCONTROL);
       // reset status to just this message:
     m_statusBoxVal = _T("The moondance rose.");
@@ -745,7 +744,6 @@ OnOK()                                                                      /*
     AdjustStatus();
     UpdateData(m_dx, SENDTOCONTROL);
     UpdateDocument();
-
     TRACE("STATUS Button Pressed.\n\n");
 }
 
@@ -773,23 +771,42 @@ OnNotify(WPARAM wparam, LPARAM lparam)                                  /*
 
 /*============================================================================*/
     void    CView::
+SetCheck(UINT check)                                                        /*
+
+    Toggle the check box control whose ID is (IDC_CHECK_A + check).
+*-----------------------------------------------------------------------------*/
+{
+      // toggle the check control
+    m_checkVal[check] = (m_checkVal[check]? FALSE : TRUE);
+      // set the status
+    m_statusBoxVal = CString("Check ") + unit[check] + " set " +
+        (m_checkVal[check] ? _T("ON.") : _T("OFF."));
+    UpdateData(m_dx, SENDTOCONTROL);
+}
+
+/*============================================================================*/
+    void    CView::
 SetCheckAStatus()                                                           /*
 
+    Show the status of the A check control.
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal = CString("Check A set ") + (m_checkAVal ?
+    m_statusBoxVal = CString("Check A set ") + (m_checkVal[0] ?
         _T("ON.") : _T("OFF."));
     UpdateData(m_dx, SENDTOCONTROL);
 }
+
 /*============================================================================*/
     void    CView::
 SetCheckBStatus()                                                           /*
 
+    Show the status of the B check control.
+
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal = CString("Check B set ") + (m_checkBVal ?
+    m_statusBoxVal = CString("Check B set ") + (m_checkVal[1] ?
         _T("ON.") : _T("OFF."));
     UpdateData(m_dx, SENDTOCONTROL);
 }
@@ -798,11 +815,25 @@ SetCheckBStatus()                                                           /*
     void    CView::
 SetCheckCStatus()                                                           /*
 
+    Show the status of the C check control.
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal = CString("Check C set ") + (m_checkCVal ?
+    m_statusBoxVal = CString("Check C set ") + (m_checkVal[2] ?
         _T("ON.") : _T("OFF."));
+    UpdateData(m_dx, SENDTOCONTROL);
+}
+
+/*============================================================================*/
+    void   CView::
+SetRadio(UINT id)                                                           /*
+
+    Set the radio control to select that whose ID is (IDC_RADIO_A + id), and
+    set the status box radio value accordingly.
+*-----------------------------------------------------------------------------*/
+{
+    m_radioA = id;
+    m_statusBoxVal = CString("Radio button set to ") + unit[m_radioA];
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
@@ -810,10 +841,11 @@ SetCheckCStatus()                                                           /*
     void    CView::
 SetRadioAStatus()                                                           /*
 
+    Set the status box radio button value to that in the DDX specification.
 *-----------------------------------------------------------------------------*/
 {
     UpdateData(m_dx, READFROMCONTROL);
-    m_statusBoxVal = CString("Radio button set to ") + radio[m_radioA];
+    m_statusBoxVal = CString("Radio button set to ") + unit[m_radioA];
     UpdateData(m_dx, SENDTOCONTROL);
 }
 
@@ -821,6 +853,7 @@ SetRadioAStatus()                                                           /*
     void    CView::
 SetControlPositions(int pos)                                                /*
 
+    Set the slider, scroll, and progress bars to the given pos.
 *-----------------------------------------------------------------------------*/
 {
     SetSlider(pos);
@@ -855,9 +888,9 @@ UpdateDocument()                                                            /*
     m_doc.SetComboBoxS(m_comboBoxVal);
     m_doc.SetComboBoxX(m_comboBoxIndx);
     m_doc.SetRadio(m_radioA);
-    m_doc.SetCheckA(m_checkAVal);
-    m_doc.SetCheckB(m_checkBVal);
-    m_doc.SetCheckC(m_checkCVal);
+    m_doc.SetCheckA(m_checkVal[0]);
+    m_doc.SetCheckB(m_checkVal[1]);
+    m_doc.SetCheckC(m_checkVal[2]);
     m_doc.SetSlider(m_sliderVal);
     m_doc.SetDateTime(m_dateSysTime);
     m_doc.SetMoCalendar(m_calDateSysTime);

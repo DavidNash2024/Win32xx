@@ -185,7 +185,6 @@ namespace Win32xx
     // Store the HIMAGELIST and CImageList pointer in the HIMAGELIST map
     inline void CImageList::AddToMap() const
     {
-        assert( GetApp() );
         assert(m_pData->images);
 
         GetApp()->AddCImlData(m_pData->images, m_pData);
@@ -195,12 +194,12 @@ namespace Win32xx
     {
         BOOL success = FALSE;
 
-        if ( GetApp() )
+        CWinApp* pApp = CWinApp::SetnGetThis();
+        if (pApp != NULL)          // Is the CWinApp object still valid?
         {
             // Allocate an iterator for our CImageList data
             std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
 
-            CWinApp* pApp = GetApp();
             CThreadLock mapLock(pApp->m_wndLock);
             m = pApp->m_mapCImlData.find(m_pData->images);
             if (m != pApp->m_mapCImlData.end())
