@@ -92,17 +92,6 @@ void CMainFrame::OnFileExit()
     Close();
 }
 
-// Called after the frame is created.
-// Place any additional startup code here.
-void CMainFrame::OnInitialUpdate()
-{
-    // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != 0);
-    ShowToolBar(GetToolBar().IsWindow());
-
-    TRACE("Frame created\n");
-}
-
 // Create the File Open dialog to choose the file to load.
 void CMainFrame::OnFileOpen()
 {
@@ -194,6 +183,16 @@ void CMainFrame::OnFilePrint()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
+}
+
+// Called after the frame is created.
+// Place any additional startup code here.
+void CMainFrame::OnInitialUpdate()
+{
+    // Show the toolbar
+    ShowToolBar(GetToolBar().IsWindow());
+
+    TRACE("Frame created\n");
 }
 
 // Process notification messages (WM_NOTIFY) sent by child windows

@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -98,7 +98,7 @@ namespace Win32xx
         // These functions aren't virtual, and shouldn't be overridden
         HACCEL GetChildAccel() const { return m_childAccel; }
         HMENU GetChildMenu() const { return m_childMenu; }
-        CWnd& GetView() const           { assert(m_pView); return *m_pView; }
+        CWnd& GetView() const;
         void SetView(CWnd& view);
         void SetHandles(HMENU menu, HACCEL accel);
         void MDIActivate() const;
@@ -869,7 +869,7 @@ namespace Win32xx
         pParent->RedrawWindow(RDW_INVALIDATE | RDW_ALLCHILDREN);
 
         // Ensure bits revealed by round corners (XP themes) are redrawn
-        SetWindowPos(0, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
+        VERIFY(SetWindowPos(0, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED));
 
         return GetHwnd();
     }
@@ -878,6 +878,14 @@ namespace Win32xx
     inline LRESULT CMDIChild::FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         return ::DefMDIChildProc(*this, msg, wparam, lparam);
+    }
+
+    // Returns a reference to the view window.
+    inline CWnd& CMDIChild::GetView() const
+    {
+        // Note: Use SetView to set the view window.
+        assert(m_pView);
+        return *m_pView;
     }
 
     // Activate a MDI child.
@@ -962,7 +970,7 @@ namespace Win32xx
     {
         // Resize the View window
         CRect rc = GetClientRect();
-        GetView().SetWindowPos( 0, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
+        VERIFY(GetView().SetWindowPos( 0, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW ));
     }
 
     // Sets the MDI child's menu and accelerator handles.

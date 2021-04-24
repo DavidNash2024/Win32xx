@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -354,7 +354,7 @@ namespace Win32xx
         {
             // Got a message for a window thats not in the map.
             // We should never get here.
-            Trace("*** Warning in CCommonDialog::CDHookProc: HWND not in window map ***\n");
+            TRACE("*** Warning in CCommonDialog::CDHookProc: HWND not in window map ***\n");
             return 0;
         }
 
@@ -1515,14 +1515,13 @@ namespace Win32xx
     // Return the current font size, in 1/10th points (1 pt = 1/72 inch).
     inline int CFontDialog::GetSize() const
     {
-        HDC dc = ::GetDC(0); // the device context for the entire screen
+        CClientDC dc = GetDesktopWindow().GetDC(); // the device context for the entire screen
 
         // number of pixels per inch along the screen height.
-        int pxpi = GetDeviceCaps(dc, LOGPIXELSY);
+        int pxpi = dc.GetDeviceCaps(LOGPIXELSY);
 
         // point size is (pixel height) * 72 / pxpi, so in 1/10ths size is
         int charsize = -MulDiv(m_logFont.lfHeight, 720, pxpi);
-        ::ReleaseDC(0, dc);
         return charsize;
     }
 

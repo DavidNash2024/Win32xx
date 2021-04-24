@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -70,16 +70,17 @@
 //
 
 // Specify minimum acceptable version macros
-// These are suitable for Windows 95
+// These are suitable for Windows 95 and Windows NT
 #ifndef WINVER
-  #define WINVER          0x0400
-  #ifndef _WIN32_WINDOWS
-    #define _WIN32_WINDOWS  0x0400
-  #endif
+  #define WINVER            0x0400
+#endif
+#ifndef _WIN32_WINDOWS
+  #define _WIN32_WINDOWS    WINVER
 #endif
 #ifndef _WIN32_IE
- #define _WIN32_IE        0x0400
+ #define _WIN32_IE          WINVER
 #endif
+
 
 // Remove pointless warning messages
 #ifdef _MSC_VER
@@ -190,7 +191,7 @@ using namespace Win32xx;
 #define MIN(a,b)        (((a) < (b)) ? (a) : (b))
 
 // Version macro
-#define _WIN32XX_VER 0x0881     // Win32++ version 8.8.1
+#define _WIN32XX_VER 0x0890     // Win32++ version 8.9.0
 
 // Define the TRACE Macro
 // In debug mode, TRACE send text to the debug/output pane, or an external debugger
@@ -534,9 +535,10 @@ namespace Win32xx
         friend class CGDIObject;
         friend class CImageList;
         friend class CMenu;
-        friend class CWnd;
-        friend class CPrintDialog;
         friend class CPageSetupDialog;
+        friend class CPrintDialog;
+        friend class CPropertyPage;
+        friend class CWnd;
         friend CWinApp* GetApp();
 
     public:
@@ -647,6 +649,8 @@ namespace Win32xx
     CString m_msgGdiGetWinDC;
     CString m_msgGdiBeginPaint;
 
+    CString m_msgImageList;
+    CString m_msgMenu;
     CString m_msgPrintFound;
 
     // DDX anomaly prompting messages

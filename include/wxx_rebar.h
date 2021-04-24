@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -284,7 +284,7 @@ namespace Win32xx
         assert(IsWindow());
 
         // Convert the point to client co-ordinates
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
 
         // Get the rebar band with the point
         RBHITTESTINFO rbhti;

@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -253,7 +253,7 @@ namespace Win32xx
         assert(atm != NULL);           // atm must exist
         time_t t0 = ::mktime(atm);     // atm = *localtime(t0)
         assert(t0 != -1);
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )  // not VS or VS < 2005
         time_tm* ptm0 = ::gmtime(&t0); // atm0 = UTC time of atm
 #else
         time_tm tm0;
@@ -265,7 +265,7 @@ namespace Win32xx
         timespan_t zt = static_cast<timespan_t>(t0 - t1);  // time zone bias
         t0 += zt;
 
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )  // not VS or VS < 2005
         assert(::gmtime(&t0));
 #else
         assert(0 == ::gmtime_s(ptm0, &t0));
@@ -290,11 +290,11 @@ namespace Win32xx
     inline CTime::CTime(time_t t)
     {
 
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )  // not VS or VS < 2005
         assert(::gmtime(&t));
 #else
         time_tm tm;
-        VERIFY(0 == ::gmtime_s(&tm, &t));
+        ::gmtime_s(&tm, &t);
 #endif
         m_time = t;
     }
@@ -334,13 +334,13 @@ namespace Win32xx
 
         // recover the day of the week
 
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )  // not VS or VS < 2005
         time_tm* ptm1 = ::gmtime(&t1st);
         assert(ptm1);
 #else
         time_tm tm1;
         time_tm* ptm1 = &tm1;
-        VERIFY( gmtime_s(ptm1, &t1st) == 0);
+        gmtime_s(ptm1, &t1st);
 #endif
 
         // Compute number of days until the nthwk occurrence of wkday
@@ -401,13 +401,13 @@ namespace Win32xx
         time_t Jan1 = UTCtime(&atm1st);
         time_t sec_per_day = 86400;
         time_t tDoy = Jan1 + (doy - 1) * sec_per_day;
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )  // not VS or VS < 2005
         time_tm* ptm = ::gmtime(&tDoy);
         assert(ptm);
 #else
         time_tm tm;
         time_tm* ptm = &tm;
-        VERIFY( ::gmtime_s(ptm, &tDoy) == 0);
+        ::gmtime_s(ptm, &tDoy);
 #endif
 
         // compute the object time_t
@@ -536,7 +536,7 @@ namespace Win32xx
         if (ptm)
         {
 
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )  // not VS or VS < 2005
             time_tm* ptmTemp = ::localtime(&m_time);
             if (ptmTemp == NULL)
                 return NULL;    // the m_time was not initialized!
@@ -737,7 +737,7 @@ namespace Win32xx
         const size_t  maxTimeBufferSize = 128;
         TCHAR szBuffer[maxTimeBufferSize];
 
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )  // not VS or VS < 2005
         time_tm* ptm = ::localtime(&m_time);
 #else
         time_tm tm;
@@ -760,7 +760,7 @@ namespace Win32xx
     inline CString CTime::Format(UINT formatID) const
     {
         CString strFormat;
-        VERIFY( strFormat.LoadString(formatID) );
+        strFormat.LoadString(formatID);
         return Format(strFormat);
     }
 
@@ -790,7 +790,7 @@ namespace Win32xx
     inline CString CTime::FormatGmt(UINT formatID) const
     {
         CString strFormat;
-        VERIFY( strFormat.LoadString(formatID) );
+        strFormat.LoadString(formatID);
         return FormatGmt(strFormat);
     }
 

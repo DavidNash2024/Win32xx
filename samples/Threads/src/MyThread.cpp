@@ -29,7 +29,7 @@ CMyThread::~CMyThread()
 void CMyThread::CloseThread()
 {
     if (m_testWnd.IsWindow())
-        m_testWnd.Destroy();
+        m_testWnd.Close();
 
     CString str;
     str.Format(_T("Test Window %d destroyed"), m_threadNumber);

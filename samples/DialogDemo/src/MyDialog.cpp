@@ -153,6 +153,7 @@ BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
     int nButton = idClicked - idFirst + 1;
     str.Format(_T("Radio%d"), nButton);
     TRACE(str); TRACE("\n");
+    SetStatic(str);
 
     return TRUE;
 }

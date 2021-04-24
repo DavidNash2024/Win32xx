@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -66,16 +66,16 @@ namespace Win32xx
     //
     inline CCriticalSection::CCriticalSection() : m_count(0)
     {
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)  // >= VS2005
 #pragma warning ( push )
-#pragma warning ( disable : 28125 )       // call within __try __catch block.
+#pragma warning ( disable : 28125 )           // call within __try __catch block.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
         ::InitializeCriticalSection(&m_cs);
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( pop )
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)  // Note: Only Windows Server 2003 and Windows XP
+#pragma warning ( pop )                       //       require this warning to be suppressed.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)    //       This exception was removed in Vista and above.
     }
 
     inline CCriticalSection::~CCriticalSection()
@@ -193,7 +193,7 @@ namespace Win32xx
             }
 
             // Close the thread's handle
-            VERIFY(::CloseHandle(m_thread));
+            ::CloseHandle(m_thread);
         }
     }
 
@@ -212,7 +212,7 @@ namespace Win32xx
         if (m_thread)
         {
             assert(!IsRunning());
-            VERIFY(CloseHandle(m_thread));
+            CloseHandle(m_thread);
         }
 
 #ifdef _WIN32_WCE
@@ -427,49 +427,48 @@ namespace Win32xx
 
     inline CWinApp::CWinApp() : m_callback(NULL)
     {
-        CThreadLock appLock(m_appLock);
+        static CCriticalSection cs;
+        CThreadLock appLock(cs);
 
-        try
+        if (0 == SetnGetThis())
         {
-            if (0 != SetnGetThis())
-            {
-                // Test if this is the only instance of CWinApp
-                throw CNotSupportedException(_T("Only one instance of CWinApp is permitted"));
-            }
-
             m_tlsData = ::TlsAlloc();
-            if (m_tlsData == TLS_OUT_OF_INDEXES)
+            if (m_tlsData != TLS_OUT_OF_INDEXES)
             {
-                // We only get here in the unlikely event that all TLS indexes
-                // are already allocated by this app. At least 64 TLS indexes
-                // per process are allowed. Win32++ requires only one TLS index.
-                throw CNotSupportedException(_T("Failed to allocate Thread Local Storage"));
-            }
-        }
-        catch (const CException& e)
-        {
-            // Display the exception and rethrow.
-            MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-            throw;
-        }
+                SetnGetThis(this);
 
-        SetnGetThis(this);
-
-        // Set the instance handle
+                // Set the instance handle
 #ifdef _WIN32_WCE
-        m_instance = (HINSTANCE)GetModuleHandle(0);
+                m_instance = (HINSTANCE)GetModuleHandle(0);
 #else
-        MEMORY_BASIC_INFORMATION mbi;
-        ZeroMemory(&mbi, sizeof(mbi));
-        static int Address = 0;
-        VirtualQuery( &Address, &mbi, sizeof(mbi) );
-        assert(mbi.AllocationBase);
-        m_instance = (HINSTANCE)mbi.AllocationBase;
+                MEMORY_BASIC_INFORMATION mbi;
+                ZeroMemory(&mbi, sizeof(mbi));
+                static int Address = 0;
+                VirtualQuery(&Address, &mbi, sizeof(mbi));
+                assert(mbi.AllocationBase);
+                m_instance = (HINSTANCE)mbi.AllocationBase;
 #endif
 
-        m_resource = m_instance;
-        SetCallback();
-        SetMessages();
+                m_resource = m_instance;
+                SetCallback();
+                SetMessages();
+            }
+            else
+            {
+                // Should not get here.
+                // All TLS indexes are already allocated by this app.
+                // At least 64 TLS indexes per process are allowed.
+                // Win32++ requires only one TLS index.
+                TRACE("\n*** Error: Unable to allocate Thread Local Storage. ***");
+                TRACE("\n*** Error: Win32++ hasn't been started. ***\n\n");
+            }
+        }
+        else
+        {
+            // Should not get here.
+            TRACE("\n*** Warning: Win32++ has already been started. ***");
+            TRACE("\n*** Warning: This instance of CWinApp has been ignored. ***\n\n");
+        }
     }
 
     inline CWinApp::~CWinApp()
@@ -678,7 +677,7 @@ namespace Win32xx
     // Loads an icon, cursor, animated cursor, or bitmap image.
     // uType is the image type. It can be IMAGE_BITMAP, IMAGE_CURSOR or IMAGE_ICON.
     // cx and cy are the desired width and height in pixels.
-    // fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE,
+    // flags can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE,
     // LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
     // Ideally the image should be destroyed unless it is loaded with LR_SHARED.
     // Refer to LoadImage in the Windows API documentation for more information.
@@ -690,7 +689,7 @@ namespace Win32xx
     // Loads an icon, cursor, animated cursor, or bitmap.
     // uType is the image type. It can be IMAGE_BITMAP, IMAGE_CURSOR or IMAGE_ICON.
     // cx and cy are the desired width and height in pixels.
-    // fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE,
+    // flags can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE,
     // LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
     // Ideally the image should be destroyed unless it is loaded with LR_SHARED.
     // Refer to LoadImage in the Windows API documentation for more information.
@@ -819,6 +818,8 @@ namespace Win32xx
         m_msgGdiGetWinDC = "GetWindowDC failed";
         m_msgGdiBeginPaint = "BeginPaint failed";
 
+        m_msgImageList = "Failed to create imagelist";
+        m_msgMenu = "Failed to create menu";
         m_msgPrintFound = "No printer available";
 
         // DDX anomaly prompting messages
@@ -859,7 +860,7 @@ namespace Win32xx
             CThreadLock TLSLock(m_appLock);
             m_allTLSData.push_back(dataPtr); // store as a smart pointer
 
-            ::TlsSetValue(m_tlsData, pTLSData);
+            VERIFY(::TlsSetValue(m_tlsData, pTLSData));
         }
 
         return pTLSData;
@@ -874,18 +875,9 @@ namespace Win32xx
     inline CWinApp* GetApp()
     {
         CWinApp* pApp = CWinApp::SetnGetThis();
-        try
-        {
-            if (pApp == NULL)
-                throw CNotSupportedException(_T("Win32++ hasn't been started"));
-        }
-
-        catch (const CException& e)
-        {
-            // Display the exception and rethrow.
-            ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-            throw;
-        }
+        
+        // This assert fails if Win32++ isn't started.
+        assert(pApp);
 
         return pApp;
     }

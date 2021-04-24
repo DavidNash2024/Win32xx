@@ -210,10 +210,14 @@ BOOL CFormView::OnCheckC()
 BOOL CFormView::OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked)
 {
     CheckRadioButton(idFirst, idLast, idClicked);
-
     GetDoc().SetRadio(idClicked);
-    SetDlgItemText(IDC_STATUS, _T("Radio changed"));
-    TRACE("Radio changed\n");
+
+    CString str;
+    int nButton = idClicked - idFirst + 1;
+    str.Format(_T("Radio%d"), nButton);
+    TRACE(str); TRACE("\n");
+    SetDlgItemText(IDC_STATUS, str);
+
     return TRUE;
 }
 

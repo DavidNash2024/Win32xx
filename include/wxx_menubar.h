@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -204,7 +204,7 @@ namespace Win32xx
                 int top = rc.bottom/2 - cy/2;
                 int right = rc.right - i*cx - gap*(i+1);
                 int bottom = rc.bottom/2 + cy/2;
-                ::SetRect(&m_mdiRect[2 - i], left, top, right, bottom);
+                VERIFY(::SetRect(&m_mdiRect[2 - i], left, top, right, bottom));
             }
 
             // Hide the MDI button if it won't fit
@@ -213,7 +213,7 @@ namespace Win32xx
 
                 if (m_mdiRect[k].left < GetMaxSize().cx)
                 {
-                    ::SetRectEmpty(&m_mdiRect[k]);
+                    VERIFY(::SetRectEmpty(&m_mdiRect[k]));
                 }
             }
 
@@ -334,7 +334,7 @@ namespace Win32xx
         SetHotItem(-1);
 
         CPoint pt = GetCursorPos();
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
 
         // Update mouse mouse position for hot tracking
         SendMessage(WM_MOUSEMOVE, 0, (LPARAM)MAKELONG(pt.x, pt.y));
@@ -563,7 +563,7 @@ namespace Win32xx
             if (pMDIChild && pMDIClient && IsMDIChildMaxed())
             {
                 CPoint pt = GetCursorPos();
-                ScreenToClient(pt);
+                VERIFY(ScreenToClient(pt));
 
                 // Process the MDI button action when the left mouse button is up
                 if (m_mdiRect[0].PtInRect(pt))
@@ -721,7 +721,7 @@ namespace Win32xx
 
                 m_oldMousePos.x = pt.x;
                 m_oldMousePos.y = pt.y;
-                ScreenToClient(pt);
+                VERIFY(ScreenToClient(pt));
 
                 // Reflect messages back to the MenuBar for hot tracking
                 SendMessage(WM_MOUSEMOVE, 0, (LPARAM)MAKELPARAM(pt.x, pt.y));
@@ -844,7 +844,7 @@ namespace Win32xx
         CRect rc = GetItemRect(m_hotItem);
 
         // convert rectangle to desktop coordinates
-        ClientToScreen(rc);
+        VERIFY(ClientToScreen(rc));
 
         // Position popup above toolbar if it won't fit below
         TPMPARAMS tpm;

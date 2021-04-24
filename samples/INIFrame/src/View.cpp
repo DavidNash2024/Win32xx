@@ -54,7 +54,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.lpszClassName = _T("Win32++ View");
 
     // Set a background brush to white
-    wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
+    wc.hbrBackground = static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
 
     // Set the default cursor
     wc.hCursor = ::LoadCursor(0, IDC_ARROW);
@@ -90,56 +90,43 @@ void CView::PrintPage(CDC& dc, UINT)
 
     // Extract the device independent image data.
     BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
-    memDC.GetDIBits(bmView, 0, cyView, NULL, pbmi, DIB_RGB_COLORS);
+    VERIFY(memDC.GetDIBits(bmView, 0, cyView, NULL, pbmi, DIB_RGB_COLORS));
     std::vector<byte> byteArray(pBIH->biSizeImage, 0);
     byte* pByteArray = &byteArray.front();
-    memDC.GetDIBits(bmView, 0, cyView, pByteArray, pbmi, DIB_RGB_COLORS);
+    VERIFY(memDC.GetDIBits(bmView, 0, cyView, pByteArray, pbmi, DIB_RGB_COLORS));
 
     // Copy the DI bits to the specified dc
-    dc.StretchDIBits(0, 0, cxPage, cyPage, 0, 0,
-        cxView, cyView, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
+    VERIFY(dc.StretchDIBits(0, 0, cxPage, cyPage, 0, 0, cxView,
+           cyView, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY));
 }
 
 // Print to the default or previously chosen printer.
 void CView::QuickPrint(LPCTSTR docName)
 {
-    try
-    {
-        // Create a DOCINFO structure.
-        DOCINFO di;
-        memset(&di, 0, sizeof(DOCINFO));
-        di.cbSize = sizeof(DOCINFO);
-        di.lpszDocName = docName;
+    // Create a DOCINFO structure.
+    DOCINFO di;
+    memset(&di, 0, sizeof(DOCINFO));
+    di.cbSize = sizeof(DOCINFO);
+    di.lpszDocName = docName;
 
-        // Get the device context of the default or currently chosen printer.
-        CPrintDialog printDlg;
-        CDC printDC = printDlg.GetPrinterDC();
+    // Get the device context of the default or currently chosen printer.
+    CPrintDialog printDlg;
+    CDC printDC = printDlg.GetPrinterDC();
 
-        // Begin a print job by calling the StartDoc function.
-        if (SP_ERROR == StartDoc(printDC, &di))
-            throw CUserException(_T("Failed to start print job"));
+    // Begin a print job by calling the StartDoc function.
+    printDC.StartDoc(&di);
 
-        // Inform the driver that the application is about to begin sending data.
-        if (0 > StartPage(printDC))
-            throw CUserException(_T("StartPage failed"));
+    // Inform the driver that the application is about to begin sending data.
+    printDC.StartPage();
 
-        // Print the page on the printer DC
-        PrintPage(printDC);
+    // Print the page on the printer DC
+    PrintPage(printDC);
 
-        // Inform the driver that the page is finished.
-        if (0 > EndPage(printDC))
-            throw CUserException(_T("EndPage failed"));
+    // Inform the driver that the page is finished.
+    printDC.EndPage();
 
-        // Inform the driver that document has ended.
-        if (0 > EndDoc(printDC))
-            throw CUserException(_T("EndDoc failed"));
-    }
-
-    catch (const CException& e)
-    {
-        // An exception occurred. Display the relevant information.
-        MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
-    }
+    // Inform the driver that document has ended.
+    printDC.EndDoc();
 }
 
 // All window messages for this window pass through WndProc.

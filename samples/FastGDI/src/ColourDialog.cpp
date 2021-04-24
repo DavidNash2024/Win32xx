@@ -61,10 +61,11 @@ void CColourDialog::CreateImagePreviews()
 
     // Stretch the bitmap to fit in the destination display area
     dest1DC.SetStretchBltMode(COLORONCOLOR);
-    dest1DC.StretchBlt(0, 0, widthDest, heightDest, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+    VERIFY(dest1DC.StretchBlt(0, 0, widthDest, heightDest, memDC, 0, 0,
+           bm.bmWidth, bm.bmHeight, SRCCOPY));
 
     // Make a second copy of the bitmap
-    dest2DC.BitBlt(0, 0, widthDest, heightDest, dest1DC, 0, 0, SRCCOPY);
+    VERIFY(dest2DC.BitBlt(0, 0, widthDest, heightDest, dest1DC, 0, 0, SRCCOPY));
 }
 
 // Process the dialog's window messages.

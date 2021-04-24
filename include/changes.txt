@@ -1,5 +1,5 @@
-Version 8.8.1
-=============
+Version 8.9
+===========
 
 This version adds support for the Clang compiler, and improves the handling
 of error messages.
@@ -17,23 +17,36 @@ New Features and Enhancements
 -----------------------------
 * Adds support for the Clang C++ compiler available with Microsoft's
    Visual Studio Community 2019.
-   
-* CDC::SelectObject throws a CResourceException on failure.
 
-* GetApp throws a CNotSupportedException if CWinApp is not running.
+* The error messages displayed when an exception is raised have been moved to
+  CWinApp as a set of public CString members. These messages can be updated to
+  support other languages if required.   
+
+* A CResource exception is now thrown in additional circumstances:
+  - CMenu throws a CResourceException if the menu can't be created.
+  - CImageList throws a CResourceException if the image list can't be created.
+  - CDC throws a CResourceException the selection of a GDI object fails.
 
 * Updated CPrintPreview to support changes to Windows 10.
 
 * The samples demonstrate exception handling in their window procedures.
    Exceptions that are raised when messages are processed are handled
    gracefully, and allow the program to continue. Adding exception handling
-   to WndProc and DialogProc also handles exceptions raised in OnCommand,
+   to WndProc and DialogProc also catches exceptions raised in OnCommand,
    OnNotify, OnDraw etc.
-   
-* The error messages displayed when an exception is raised have been moved to
-  CWinApp as a set of public CString members. These messages can be updated to
-  support other languages if required.
 
+
+Changes in detail
+-----------------
+Added a set of public CString member variables to CWinApp for error messages.
+
+The following functions now throw a CResourceException on failure:
+  CDC::SelectObject
+  CDC::SelectPalette
+  CImageList::Create
+  CImageList::CreateDisabledImageList
+  CMenu::CreateMenu 
+  CMenu::CreatePopupMenu 
 
 
 Version 8.8

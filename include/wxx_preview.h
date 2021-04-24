@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -205,7 +205,7 @@ namespace Win32xx
             wc.hInstance = GetApp()->GetInstanceHandle();
             wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
             wc.hCursor = ::LoadCursor(0, IDC_ARROW);
-            ::RegisterClass(&wc);
+            VERIFY(::RegisterClass(&wc));
         }
 
         assert(::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc));
@@ -283,18 +283,18 @@ namespace Win32xx
 
             // Extract the device independent image data.
             CMemDC memDC(dc);
-            memDC.GetDIBits(m_bitmap, 0, bm.bmHeight, NULL, pbmi, DIB_RGB_COLORS);
+            VERIFY(memDC.GetDIBits(m_bitmap, 0, bm.bmHeight, NULL, pbmi, DIB_RGB_COLORS));
             std::vector<byte> byteArray(pBIH->biSizeImage, 0);
             byte* pByteArray = &byteArray.front();
-            memDC.GetDIBits(m_bitmap, 0, bm.bmHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+            VERIFY(memDC.GetDIBits(m_bitmap, 0, bm.bmHeight, pByteArray, pbmi, DIB_RGB_COLORS));
 
             // Use half tone stretch mode for smoother rendering.
             dc.SetStretchBltMode(HALFTONE);
             dc.SetBrushOrgEx(0, 0);
 
             // Copy the DIB bitmap data to the PreviewPane's DC with stretching.
-            dc.StretchDIBits(xBorder, yBorder, previewWidth, previewHeight, 0, 0,
-                bm.bmWidth, bm.bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
+            VERIFY(dc.StretchDIBits(xBorder, yBorder, previewWidth, previewHeight, 0, 0,
+                   bm.bmWidth, bm.bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY));
 
             // Draw a grey border around the preview.
             CRect rcFill(0, 0, xBorder, previewHeight + yBorder);

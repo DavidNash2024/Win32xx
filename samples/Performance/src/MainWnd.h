@@ -21,11 +21,13 @@ public:
     CMainWindow();
     virtual ~CMainWindow();
     virtual HWND Create(HWND hParent = 0);
-    virtual void CreateTestWindows(int windows);
-    virtual void OnAllWindowsCreated();
-    virtual void PerformanceTest();
-    virtual void SendText(LPCTSTR str);
-    virtual void SetTestMessages(int testMessages) {m_testMessages = testMessages;}
+
+    void CreateTestWindows(int windows);
+    LONGLONG GetCounter() const;
+    void OnAllWindowsCreated();
+    void PerformanceTest() const;
+    void SendText(LPCTSTR str) const;
+    void SetTestMessages(int testMessages) {m_testMessages = testMessages;}
 
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
@@ -47,6 +49,7 @@ private:
     int m_testMessages;    // Number of test messages to be sent
     int m_testWindows;     // Number of test windows to create
     int m_windowsCreated;  // Number of windows created
+    LONGLONG m_frequency;
 };
 
 
