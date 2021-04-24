@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -941,7 +941,6 @@ namespace Win32xx
                     throw CResourceException(GetApp()->m_msgGdiBeginPaint);
 
                 Attach(dc, wnd);
-                SetManaged(true);
             }
 
             catch(...)
@@ -1027,7 +1026,6 @@ namespace Win32xx
                 // Note we should not get here.
                 TRACE("Warning! A MetaFile or EnhMetaFile was created but not closed\n");
                 ::DeleteMetaFile(Close());
-                Detach();
             }
         }
 
@@ -1057,11 +1055,10 @@ namespace Win32xx
         {
             assert(GetHDC());
 
-            HMETAFILE meta = ::CloseMetaFile(GetHDC());
-            Detach();
+            HDC dc = Detach();
+            HMETAFILE meta = ::CloseMetaFile(dc);
             return CMetaFile(meta);
         }
-
     };
 
     ///////////////////////////////////////////////////////////////////
@@ -1078,7 +1075,6 @@ namespace Win32xx
                 // Note we should not get here.
                 TRACE("Warning! An EnhMetaFile was created but not closed\n");
                 ::DeleteEnhMetaFile(CloseEnhanced());
-                Detach();
             }
         }
 
@@ -1108,8 +1104,8 @@ namespace Win32xx
         {
             assert(GetHDC());
 
-            HENHMETAFILE enhMeta = ::CloseEnhMetaFile(GetHDC());
-            Detach();
+            HDC dc = Detach();
+            HENHMETAFILE enhMeta = ::CloseEnhMetaFile(dc);
             return CEnhMetaFile(enhMeta);
         }
 
@@ -1274,17 +1270,22 @@ namespace Win32xx
         }
     }
 
-    // Detaches the HGDIOBJ from all objects.
+    // Detaches the HGDIOBJ from this CGDIObject and all its copies.
+    // The CGDIObject and its copies are returned to the default state.
+    // Note: We rarely need to detach the HGDIOBJ from CGDIObject.
+    //       The framework will delete the HGDIOBJ automatically if required
+    //       when the last copy of the CDC goes out of scope.
+    //       This also applies to classes inherited from CGDIObject, namely
+    //       CBitmap, CBrush, CFont, CPalette, CPen and CRgn.
     inline HGDIOBJ CGDIObject::Detach()
     {
         assert(m_pData);
-        if (!m_pData) return 0;
-
         assert(m_pData->hGDIObject);
 
         HGDIOBJ object = m_pData->hGDIObject;
         RemoveFromMap();
         m_pData->hGDIObject = 0;
+        SetManaged(false);
 
         if (m_pData->count > 0)
         {
@@ -1313,6 +1314,8 @@ namespace Win32xx
         return m_pData ? ::GetObject(m_pData->hGDIObject, count, pObject) : 0;
     }
 
+    // Decrements the reference count. 
+    // Destroys m_pData if the reference count is zero.
     inline void CGDIObject::Release()
     {
         assert(m_pData);
@@ -2094,7 +2097,7 @@ namespace Win32xx
             throw CResourceException(GetApp()->m_msgGdiPalette);
 
         Attach(palette);
-        VERIFY(::RealizePalette(dc) != GDI_ERROR);
+        ::RealizePalette(dc);
         SetManaged(true);
         return palette;
     }
@@ -2418,7 +2421,7 @@ namespace Win32xx
     inline void CRgn::SetRectRgn(int x1, int y1, int x2, int y2) const
     {
         assert(GetHandle() != 0);
-        ::SetRectRgn(reinterpret_cast<HRGN>(GetHandle()), x1, y1, x2, y2);
+        VERIFY(::SetRectRgn(reinterpret_cast<HRGN>(GetHandle()), x1, y1, x2, y2));
     }
 
     // Converts the region into a rectangular region with the specified coordinates.
@@ -2426,7 +2429,7 @@ namespace Win32xx
     inline void CRgn::SetRectRgn(const RECT& rc) const
     {
         assert(GetHandle() != 0);
-        ::SetRectRgn(reinterpret_cast<HRGN>(GetHandle()), rc.left, rc.top, rc.right, rc.bottom);
+        VERIFY(::SetRectRgn(reinterpret_cast<HRGN>(GetHandle()), rc.left, rc.top, rc.right, rc.bottom));
     }
 
     // Combines two specified regions and stores the result.
@@ -2633,21 +2636,21 @@ namespace Win32xx
         }
     }
 
-    // Detaches the HDC from all CDC objects. Restores the HDC back to the
-    // state saved when it was attached.
-    // Note: We rarely need to detach the HDC from CDC. The framework will
-    // release or delete the HDC automatically if required.
+    // Detaches the HDC from this CDC object and all its copies.
+    // The CDC object and its copies are returned to the default state.
+    // Note: We rarely need to detach the HDC from a CDC. The framework will
+    //       release or delete the HDC automatically if required when the
+    //       last copy of the CDC goes out of scope.
     inline HDC CDC::Detach()
     {
+        HDC dc = 0;
         assert(m_pData);
-        if (!m_pData) return 0;
-
         assert(m_pData->dc != 0);
 
-        HDC hDC = m_pData->dc;
+        dc = m_pData->dc;
         RemoveFromMap();
         m_pData->dc = 0;
-        ::RestoreDC(hDC, m_pData->savedDCState);
+        SetManaged(false);
 
         if (m_pData->count > 0)
         {
@@ -2660,7 +2663,7 @@ namespace Win32xx
         // Assign values to our data members
         m_pData = new CDC_Data;
 
-        return hDC;
+        return dc;
     }
 
 #ifndef _WIN32_WCE
@@ -2687,10 +2690,8 @@ namespace Win32xx
         if (dc == 0)
             throw CResourceException(GetApp()->m_msgGdiDC);
 
-        m_pData->dc = dc;
-        m_pData->isManagedHDC = TRUE;
-        AddToMap();
-
+        Attach(dc);
+        SetManaged(true);
         return dc;
     }
 
@@ -2704,9 +2705,8 @@ namespace Win32xx
         if (dc == 0)
             throw CResourceException(GetApp()->m_msgGdiDC);
 
-        m_pData->dc = dc;
-        m_pData->isManagedHDC = TRUE;
-        AddToMap();
+        Attach(dc);
+        SetManaged(true);
         return dc;
     }
 
@@ -2724,9 +2724,8 @@ namespace Win32xx
         if (dc == 0)
             throw CResourceException(GetApp()->m_msgGdiIC);
 
-        m_pData->dc = dc;
-        m_pData->isManagedHDC = TRUE;
-        AddToMap();
+        Attach(dc);
+        SetManaged(true);
         return dc;
     }
 
@@ -2796,6 +2795,8 @@ namespace Win32xx
         SetBkColor(oldBkColor);
     }
 
+    // Decrements the reference count. 
+    // Destroys m_pData if the reference count is zero.
     inline void CDC::Release()
     {
         if (m_pData->count > 0)
@@ -3024,12 +3025,10 @@ namespace Win32xx
         return oldBitmap;
     }
 
-    // Deletes or releases the device context and returns the CDC object to its
-    // default state, ready for reuse.
+    // Deletes or releases the device context.
     inline void CDC::Destroy()
     {
         assert(m_pData);
-        if (!m_pData) return;
 
         if (m_pData->dc != 0)
         {
@@ -3050,7 +3049,7 @@ namespace Win32xx
 
             m_pData->dc = 0;
             m_pData->wnd = 0;
-            m_pData->isManagedHDC = FALSE;
+            SetManaged(false);
         }
     }
 
@@ -3103,7 +3102,7 @@ namespace Win32xx
     }
 
     // Loads a bitmap from the resource and selects it into the device context.
-    // The fuLoad parameter can be one of  LR_DEFAULTCOLOR, LR_CREATEDIBSECTION,
+    // The flags parameter can be one of  LR_DEFAULTCOLOR, LR_CREATEDIBSECTION,
     // LR_LOADFROMFILE, LR_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED and LR_VGACOLOR.
     // Returns TRUE if successful.
     // Refer to LoadImage in the Windows API documentation for more information.
@@ -3113,7 +3112,7 @@ namespace Win32xx
     }
 
     // Loads a bitmap from the resource and selects it into the device context.
-    // The fuLoad parameter can be one of  LR_DEFAULTCOLOR, LR_CREATEDIBSECTION,
+    // The flags parameter can be one of  LR_DEFAULTCOLOR, LR_CREATEDIBSECTION,
     // LR_LOADFROMFILE, LR_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED and LR_VGACOLOR.
     // Returns TRUE if successful.
     // Refer to LoadImage in the Windows API documentation for more information.
@@ -3441,7 +3440,7 @@ namespace Win32xx
         palette.CreateHalftonePalette(*this);
         SelectPalette(palette, forceBkgnd);
         m_pData->palette = palette;
-        VERIFY(RealizePalette() != GDI_ERROR);
+        RealizePalette();
     }
 
     // Retrieves the color adjustment values for the device context.
@@ -5150,7 +5149,7 @@ namespace Win32xx
         return ::GetCharWidthI(m_pData->dc, giFirst, cgi, pGI, pBuffer);
     }
 
-  #endif
+  #endif // (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
 
 #endif
 

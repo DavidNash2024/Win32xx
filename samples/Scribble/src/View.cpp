@@ -87,7 +87,8 @@ void CView::OnDraw(CDC& dc)
     int height = GetClientRect().Height();
 
     // Copy from the memory DC to our painting dc
-    dc.BitBlt(0, 0, width, height, Draw(), 0, 0, SRCCOPY);
+    CMemDC memDC = Draw();
+    dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
 }
 
 // Called when a file is dropped on the view window.
@@ -198,10 +199,10 @@ void CView::PrintPage(CDC& dc, UINT)
     BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
 
     // Extract the device independent image data.
-    memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS);
+    VERIFY(memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS));
     std::vector<byte> byteArray(pBIH->biSizeImage, 0);
     byte* pByteArray = &byteArray.front();
-    memDC.GetDIBits(bmView, 0, height, pByteArray, pbmi, DIB_RGB_COLORS);
+    VERIFY(memDC.GetDIBits(bmView, 0, height, pByteArray, pbmi, DIB_RGB_COLORS));
 
     // Get the device context of the default or currently chosen printer
     CPrintDialog printDlg;
@@ -221,11 +222,8 @@ void CView::PrintPage(CDC& dc, UINT)
 
     // Copy and stretch the DIB to the specified dc, maintaining its
     //  original aspect ratio.
-    UINT result = dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
-        width, height, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
-
-    if (GDI_ERROR == result)
-        throw CUserException(_T("Failed to resize image for printing"));
+    VERIFY(dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
+           width, height, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY));
 
     // The specified dc now holds the Device Independent Bitmap printout.
 }
@@ -244,23 +242,19 @@ void CView::QuickPrint(LPCTSTR docName)
     CDC printDC = printDlg.GetPrinterDC();
 
     // Begin a print job by calling the StartDoc function.
-    if (SP_ERROR == StartDoc(printDC, &di))
-        throw CUserException(_T("Failed to start print job"));
+    printDC.StartDoc(&di);
 
     // Inform the driver that the application is about to begin sending data.
-    if (0 > StartPage(printDC))
-        throw CUserException(_T("StartPage failed"));
+    printDC.StartPage();
 
-    // Print the page on the printer DC
+    // Print the page on the printer DC.
     PrintPage(printDC);
 
     // Inform the driver that the page is finished.
-    if (0 > EndPage(printDC))
-        throw CUserException(_T("EndPage failed"));
+    printDC.EndPage();
 
     // Inform the driver that document has ended.
-    if (0 > EndDoc(printDC))
-        throw CUserException(_T("EndDoc failed"));
+    printDC.EndDoc();
 }
 
 // Handle the view window's messages.

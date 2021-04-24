@@ -53,7 +53,6 @@ void CView::OnDraw(CDC& dc)
     memDC.CreateCompatibleBitmap(dc, width, height);
     memDC.FillRect(GetClientRect(), m_brush);
 
-
     if (GetAllPoints().size() > 0)
     {
         bool isDrawing = false;  //Start with the pen up
@@ -171,12 +170,11 @@ void CView::Print()
 
         // Begin a print job by calling the StartDoc function.
         CDC printDC = printDlg.GetPrinterDC();
-        if (SP_ERROR == StartDoc(printDC, &di))
-            throw CUserException(L"Failed to start print job");
+
+        printDC.StartDoc(&di);
 
         // Inform the driver that the application is about to begin sending data.
-        if (0 > StartPage(printDC))
-            throw CUserException(L"StartPage failed");
+        printDC.StartPage();
 
         BITMAPINFOHEADER bih;
         ZeroMemory(&bih, sizeof(bih));
@@ -190,16 +188,16 @@ void CView::Print()
         // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
         // Get the size of the image data
         BITMAPINFO* pBI = reinterpret_cast<BITMAPINFO*>(&bih);
-        memDC.GetDIBits(bmView, 0, height, NULL, pBI, DIB_RGB_COLORS);
+        VERIFY(memDC.GetDIBits(bmView, 0, height, NULL, pBI, DIB_RGB_COLORS));
 
         // Retrieve the image data
         std::vector<byte> vBits(bih.biSizeImage, 0); // a vector to hold the byte array
         byte* pByteArray = &vBits.front();
-        memDC.GetDIBits(bmView, 0, height, pByteArray, pBI, DIB_RGB_COLORS);
+        VERIFY(memDC.GetDIBits(bmView, 0, height, pByteArray, pBI, DIB_RGB_COLORS));
 
         // Determine the scaling factors required to print the bitmap and retain its original proportions.
-        double viewPixelsX  = double(viewDC.GetDeviceCaps(LOGPIXELSX));
-        double viewPixelsY  = double(viewDC.GetDeviceCaps(LOGPIXELSY));
+        double viewPixelsX = double(viewDC.GetDeviceCaps(LOGPIXELSX));
+        double viewPixelsY = double(viewDC.GetDeviceCaps(LOGPIXELSY));
         double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
         double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
         double scaleX = printPixelsX / viewPixelsX;
@@ -209,19 +207,14 @@ void CView::Print()
         int scaledHeight = int(height * scaleY);
 
         // Use StretchDIBits to scale the bitmap and maintain its original proportions
-        UINT result = StretchDIBits(printDC, 0, 0, scaledWidth, scaledHeight, 0, 0,
-            width, height, pByteArray, pBI, DIB_RGB_COLORS, SRCCOPY);
-
-        if (GDI_ERROR == result)
-            throw CUserException(L"Failed to resize image for printing");
+        VERIFY(printDC.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
+               width, height, pByteArray, pBI, DIB_RGB_COLORS, SRCCOPY));
 
         // Inform the driver that the page is finished.
-        if (0 > EndPage(printDC))
-            throw CUserException(L"EndPage failed");
+        printDC.EndPage();
 
         // Inform the driver that document has ended.
-        if (0 > EndDoc(printDC))
-            throw CUserException(L"EndDoc failed");
+        printDC.EndDoc();
     }
 }
 

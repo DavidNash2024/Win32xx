@@ -7,52 +7,6 @@
 		<Option default_target="Release MinGW GNU compiler" />
 		<Option compiler="bcc" />
 		<Build>
-			<Target title="Debug Borland">
-				<Option output="Borland/Debug/WinPlot.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Borland/Debug" />
-				<Option object_output="Borland/Debug" />
-				<Option type="0" />
-				<Option compiler="bcc" />
-				<Compiler>
-					<Add option="-tWM" />
-					<Add option="-v" />
-					<Add option="-w-par" />
-					<Add option="-D_DEBUG" />
-					<Add directory="../../../include" />
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="C:/Borland/BCC55/Include" />
-					<Add directory="../../../include" />
-				</ResourceCompiler>
-				<Linker>
-					<Add library="cw32mt" />
-					<Add library="comctl32" />
-					<Add library="import32" />
-				</Linker>
-			</Target>
-			<Target title="Release Borland">
-				<Option output="Borland/Release/WinPlot.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Borland/Release" />
-				<Option object_output="Borland/Release" />
-				<Option type="0" />
-				<Option compiler="bcc" />
-				<Compiler>
-					<Add option="-tWM" />
-					<Add option="-vi-" />
-					<Add option="-w-par" />
-					<Add option="-DNDEBUG" />
-					<Add directory="../../../include" />
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="C:/Borland/BCC55/Include" />
-					<Add directory="../../../include" />
-				</ResourceCompiler>
-				<Linker>
-					<Add library="comctl32" />
-					<Add library="import32" />
-					<Add library="cw32mt" />
-				</Linker>
-			</Target>
 			<Target title="Debug Microsoft Visual C++">
 				<Option output="Microsoft/Debug/WinPlot.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft/Debug" />
@@ -170,33 +124,9 @@
 					<Add library="Ws2_32" />
 				</Linker>
 			</Target>
-			<Target title="MinGW-w64">
-				<Option output="GNU64/WinPlot.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="GNU64" />
-				<Option object_output="GNU64" />
-				<Option type="0" />
-				<Option compiler="mingw-w64" />
-				<Compiler>
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-D_DEBUG" />
-					<Add directory="../../../include" />
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="../../../include" />
-				</ResourceCompiler>
-				<Linker>
-					<Add option="-static" />
-					<Add option="-Wl,--enable-auto-import" />
-					<Add library="comctl32" />
-					<Add library="Ole32" />
-					<Add library="Oleaut32" />
-					<Add library="Uuid" />
-					<Add library="Ws2_32" />
-				</Linker>
-			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
+			<Add alias="All" targets="Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
 		<Unit filename="../../../include/wxx_appcore.h" />
 		<Unit filename="../../../include/wxx_appcore0.h" />

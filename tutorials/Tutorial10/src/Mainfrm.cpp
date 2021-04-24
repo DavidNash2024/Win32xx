@@ -257,6 +257,12 @@ void CMainFrame::OnFilePrint()
     }
 }
 
+// Called after the frame is created.
+void CMainFrame::OnInitialUpdate()
+{
+    ShowToolBar(GetToolBar().IsWindow());
+}
+
 // Initiates the Choose Color dialog.
 void CMainFrame::OnPenColor()
 {

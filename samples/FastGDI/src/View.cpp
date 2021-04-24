@@ -96,14 +96,14 @@ void CView::PrintPage(CDC& dc, UINT)
 
         // Extract the device independent image data.
         CMemDC memDC(viewDC);
-        memDC.GetDIBits(m_image, 0, bmHeight, NULL, pbmi, DIB_RGB_COLORS);
+        VERIFY(memDC.GetDIBits(m_image, 0, bmHeight, NULL, pbmi, DIB_RGB_COLORS));
         std::vector<byte> byteArray(pBIH->biSizeImage, 0);
         byte* pByteArray = &byteArray.front();
-        memDC.GetDIBits(m_image, 0, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+        VERIFY(memDC.GetDIBits(m_image, 0, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS));
 
         // Copy (stretch) the DI bits to the specified dc.
-        dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
-            bmWidth, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
+        VERIFY(dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
+               bmWidth, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY));
     }
 }
 
@@ -144,11 +144,11 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
        CMemDC memDC(0);
 
        // Use GetDIBits to create a DIB from our DDB, and extract the colour data
-       memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+       VERIFY(memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS));
        std::vector<byte> byteArray(pbmi->bmiHeader.biSizeImage, 0);
        byte* pByteArray = &byteArray.front();
 
-       memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+       VERIFY(memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
 
        LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
        BITMAPFILEHEADER hdr;

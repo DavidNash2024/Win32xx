@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -74,10 +74,10 @@
     #define SWP_NOCOPYBITS      0x0100
 #endif
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)   // >= VS2019
 #pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( disable : 26812 )            // enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
 namespace Win32xx
 {
@@ -229,14 +229,14 @@ namespace Win32xx
     // Definitions for the CDialog class
     //
 
-    inline CDialog::CDialog(LPCTSTR pResName) : m_isModal(TRUE),
+    inline CDialog::CDialog(LPCTSTR pResName) : m_isModal(FALSE),
                         m_pResName(pResName), m_pDlgTemplate(NULL)
     {
         // Initialize the common controls.
         LoadCommonControls();
     }
 
-    inline CDialog::CDialog(UINT resID) : m_isModal(TRUE),
+    inline CDialog::CDialog(UINT resID) : m_isModal(FALSE),
                         m_pResName(MAKEINTRESOURCE (resID)), m_pDlgTemplate(NULL)
     {
         // Initialize the common controls.
@@ -244,7 +244,7 @@ namespace Win32xx
     }
 
     // Constructor for indirect dialogs, created from a dialog box template in memory.
-    inline CDialog::CDialog(LPCDLGTEMPLATE pDlgTemplate) : m_isModal(TRUE),
+    inline CDialog::CDialog(LPCDLGTEMPLATE pDlgTemplate) : m_isModal(FALSE),
                         m_pResName(NULL), m_pDlgTemplate(pDlgTemplate)
     {
         // Initialize the common controls.
@@ -691,7 +691,7 @@ namespace Win32xx
         {
             // Got a message for a window thats not in the map.
             // We should never get here.
-            Trace("*** Warning in CDialog::StaticDialogProc: HWND not in window map ***\n");
+            TRACE("*** Warning in CDialog::StaticDialogProc: HWND not in window map ***\n");
             return 0;
         }
 
@@ -749,7 +749,7 @@ namespace Win32xx
         {
             // Thread Local Storage data isn't assigned.
             // We should never get here.
-            Trace("*** Warning in CDialog::StaticMsgHook: TLS not assigned ***\n");
+            TRACE("*** Warning in CDialog::StaticMsgHook: TLS not assigned ***\n");
             return 0;
         }
 
@@ -1129,9 +1129,9 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)
 #pragma warning ( pop )
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+#endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
 #endif // _WIN32XX_DIALOG_H_
 

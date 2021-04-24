@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -922,7 +922,7 @@ namespace Win32xx
                 // Determine the close button's drawing position relative to the window
                 CRect rcClose = GetCloseRect();
                 UINT uState = GetCloseRect().PtInRect(GetCursorPos()) ? m_isClosePressed && IsLeftButtonDown() ? 2 : 1 : 0;
-                ScreenToClient(rcClose);
+                VERIFY(ScreenToClient(rcClose));
 
                 if (GetExStyle() & WS_EX_CLIENTEDGE)
                 {
@@ -1036,7 +1036,7 @@ namespace Win32xx
                 if ((GetWinVersion() > 1400) && (GetCloseRect().PtInRect(pt)))
                     return HTCLOSE;
 
-                ScreenToClient(pt);
+                VERIFY(ScreenToClient(pt));
 
                 // Indicate if the point is in the caption
                 if (pt.y < 0)
@@ -1302,7 +1302,7 @@ namespace Win32xx
     {
         // Reposition the View window to cover the DockClient's client area
         CRect rc = GetClientRect();
-        GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW);
+        VERIFY(GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW));
 
         return FinalWindowProc(msg, wparam, lparam);
     }
@@ -1387,7 +1387,7 @@ namespace Win32xx
                 }
 
                 CRect rc = GetClientRect();
-                GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW);
+                VERIFY(GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW));
             }
         }
     }
@@ -1440,7 +1440,7 @@ namespace Win32xx
         CRect rcHint = pDockTarget->GetDockClient().GetWindowRect();
         if (pDockTarget->GetDockClient().GetExStyle() & WS_EX_CLIENTEDGE)
             rcHint.InflateRect(-2, -2);
-        pDockTarget->ScreenToClient(rcHint);
+        VERIFY(pDockTarget->ScreenToClient(rcHint));
 
         return rcHint;
     }
@@ -1463,7 +1463,7 @@ namespace Win32xx
 
         if (pDockClient->GetExStyle() & WS_EX_CLIENTEDGE)
             rcHint.InflateRect(-2, -2);
-        pDockTarget->ScreenToClient(rcHint);
+        VERIFY(pDockTarget->ScreenToClient(rcHint));
 
         int Width;
         CRect rcDockDrag = pDockDrag->GetWindowRect();
@@ -1590,7 +1590,7 @@ namespace Win32xx
             CMemDC memDC(dcDesktop);
             CRect rcBitmap = rcHint;
             CRect rcTarget = rcHint;
-            pDockTarget->ClientToScreen(rcTarget);
+            VERIFY(pDockTarget->ClientToScreen(rcTarget));
 
             m_bmBlueTint.DeleteObject();
             m_bmBlueTint.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
@@ -1617,8 +1617,8 @@ namespace Win32xx
                 SetWindowRgn(Rgn, FALSE);
             }
 
-            pDockTarget->ClientToScreen(rcHint);
-            SetWindowPos(0, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
+            VERIFY(pDockTarget->ClientToScreen(rcHint));
+            VERIFY(SetWindowPos(0, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE));
         }
     }
 
@@ -1670,20 +1670,11 @@ namespace Win32xx
         if (style & DS_NO_DOCKCHILD_BOTTOM) bmBottom.TintBitmap(150, 150, 150);
 
         // Draw the dock targets
-        if (bmCentre.GetHandle())   dc.DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
-        else TRACE("Missing docking resource: Target Centre\n");
-
-        if (bmLeft.GetHandle()) dc.DrawBitmap(0, 29, 31, 29, bmLeft, RGB(255,0,255));
-        else TRACE("Missing docking resource: Target Left\n");
-
-        if (bmTop.GetHandle()) dc.DrawBitmap(29, 0, 29, 31, bmTop, RGB(255,0,255));
-        else TRACE("Missing docking resource: Target Top\n");
-
-        if (bmRight.GetHandle()) dc.DrawBitmap(55, 29, 31, 29, bmRight, RGB(255,0,255));
-        else TRACE("Missing docking resource: Target Right\n");
-
-        if (bmBottom.GetHandle()) dc.DrawBitmap(29, 55, 29, 31, bmBottom, RGB(255,0,255));
-        else TRACE("Missing docking resource: Target Bottom\n");
+        dc.DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
+        dc.DrawBitmap(0, 29, 31, 29, bmLeft, RGB(255,0,255));
+        dc.DrawBitmap(29, 0, 29, 31, bmTop, RGB(255,0,255));
+        dc.DrawBitmap(55, 29, 31, 29, bmRight, RGB(255,0,255));
+        dc.DrawBitmap(29, 55, 29, 31, bmBottom, RGB(255,0,255));
 
         if (IsOverContainer())
         {
@@ -1729,11 +1720,11 @@ namespace Win32xx
         CRect rcTarget = pDockTarget->GetDockClient().GetWindowRect();
         int xMid = rcTarget.left + (rcTarget.Width() - cxImage)/2;
         int yMid = rcTarget.top + (rcTarget.Height() - cyImage)/2;
-        SetWindowPos(HWND_TOPMOST, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+        VERIFY(SetWindowPos(HWND_TOPMOST, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW));
 
         // Create the docking zone rectangles
         CPoint pt = pDragPos->pos;
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
         CRect rcLeft(0, 29, 31, 58);
         CRect rcTop(29, 0, 58, 31);
         CRect rcRight(55, 29, 87, 58);
@@ -1839,13 +1830,13 @@ namespace Win32xx
         {
             Create();
             CRect rc = pDockTarget->GetViewRect();
-            pDockTarget->ClientToScreen(rc);
+            VERIFY(pDockTarget->ClientToScreen(rc));
             int yMid = rc.top + (rc.Height() - cyImage)/2;
-            SetWindowPos(HWND_TOPMOST, rc.left + 8, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+            VERIFY(SetWindowPos(HWND_TOPMOST, rc.left + 8, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW));
         }
 
         CRect rcLeft(0, 0, cxImage, cyImage);
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
 
         // Test if our cursor is in one of the docking zones
         if (rcLeft.PtInRect(pt))
@@ -1888,13 +1879,13 @@ namespace Win32xx
         {
             Create();
             CRect rc = pDockTarget->GetViewRect();
-            pDockTarget->ClientToScreen(rc);
+            VERIFY(pDockTarget->ClientToScreen(rc));
             int xMid = rc.left + (rc.Width() - cxImage)/2;
-            SetWindowPos(HWND_TOPMOST, xMid, rc.top + 8, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+            VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.top + 8, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW));
         }
 
         CRect rcTop(0, 0, cxImage, cyImage);
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
 
         // Test if our cursor is in one of the docking zones
         if (rcTop.PtInRect(pt))
@@ -1937,13 +1928,13 @@ namespace Win32xx
         {
             Create();
             CRect rc = pDockTarget->GetViewRect();
-            pDockTarget->ClientToScreen(rc);
+            VERIFY(pDockTarget->ClientToScreen(rc));
             int yMid = rc.top + (rc.Height() - cyImage)/2;
-            SetWindowPos(HWND_TOPMOST, rc.right - 8 - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+            VERIFY(SetWindowPos(HWND_TOPMOST, rc.right - 8 - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW));
         }
 
         CRect rcRight(0, 0, cxImage, cyImage);
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
 
         // Test if our cursor is in one of the docking zones
         if (rcRight.PtInRect(pt))
@@ -1986,12 +1977,12 @@ namespace Win32xx
         {
             Create();
             CRect rc = pDockTarget->GetViewRect();
-            pDockTarget->ClientToScreen(rc);
+            VERIFY(pDockTarget->ClientToScreen(rc));
             int xMid = rc.left + (rc.Width() - cxImage)/2;
-            SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - 8 - cyImage, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+            VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - 8 - cyImage, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW));
         }
         CRect rcBottom(0, 0, cxImage, cyImage);
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
 
         // Test if our cursor is in one of the docking zones
         if (rcBottom.PtInRect(pt))
@@ -2117,7 +2108,7 @@ namespace Win32xx
         pDocker->SetStyle(style);
         pDocker->SetRedraw(FALSE);
         pDocker->SetParent(0);
-        pDocker->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+        VERIFY(pDocker->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED));
         pDocker->SetRedraw(TRUE);
         pDocker->RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
         pDocker->SetWindowText(pDocker->GetCaption().c_str());
@@ -2474,7 +2465,7 @@ namespace Win32xx
         dcBar.CreatePatternBrush(hash);
 
         CRect rc = pDockBar->GetWindowRect();
-        ScreenToClient(rc);
+        VERIFY(ScreenToClient(rc));
         int cx = rc.Width();
         int cy = rc.Height();
         int barWidth = Docker.GetDockBar().GetWidth();
@@ -2568,7 +2559,7 @@ namespace Win32xx
             {
                 dockParent = dockTest;
                 CPoint ptLocal = pt;
-                ::ScreenToClient(dockParent, &ptLocal);
+                VERIFY(::ScreenToClient(dockParent, &ptLocal));
                 dockTest = ::ChildWindowFromPoint(dockParent, ptLocal);
                 if (dockTest == dockParent) break;
             }
@@ -2806,7 +2797,7 @@ namespace Win32xx
                     {
                         CDocker* pDocker = NewDockerFromID(di.dockID);
                         if (!pDocker)
-                            throw CUserException(_T("Failed to add dockers without parents from registry"));
+                            throw CUserException();
 
                         if ((di.dockStyle & 0xF) || (di.isInAncestor))
                             AddDockedChild(pDocker, di.dockStyle, di.dockSize, di.dockID);
@@ -2836,7 +2827,7 @@ namespace Win32xx
                         {
                             CDocker* pDocker = NewDockerFromID(di.dockID);
                             if (!pDocker)
-                                throw CUserException(_T("Failed to add dockers with parents from registry"));
+                                throw CUserException();
 
                             pDockParent->AddDockedChild(pDocker, di.dockStyle, di.dockSize, di.dockID);
                             found = true;
@@ -2846,16 +2837,16 @@ namespace Win32xx
                     }
 
                     if (!found)
-                        throw CUserException(_T("Orphaned dockers stored in registry"));
+                        throw CUserException();
 
                     if (!VerifyDockers())
-                        throw CUserException(_T("Dockers are in an inconsistant state"));
+                        throw CUserException();
                 }
             }
 
-            catch (const CUserException& e)
+            catch (const CUserException&)
             {
-                Trace(e.GetText()); Trace("\n");
+                TRACE("*** Failed to load dockers from registry. ***\n");
                 isLoaded = FALSE;
                 CloseAllDockers();
 
@@ -2918,13 +2909,13 @@ namespace Win32xx
 
                             CDockContainer* pParentContainer = pDocker->GetContainer();
                             if (!pParentContainer)
-                                throw CUserException(_T("Failed to get parent container"));
+                                throw CUserException();
 
                             for (UINT tab = 0; tab < tabOrder.size(); ++tab)
                             {
                                 CDocker* pOldDocker = GetDockFromView(pParentContainer->GetContainerFromIndex(tab));
                                 if (!pOldDocker)
-                                    throw CUserException(_T("Failed to get docker from view"));
+                                    throw CUserException();
 
                                 UINT oldID = pOldDocker->GetDockID();
 
@@ -2932,10 +2923,10 @@ namespace Win32xx
                                 UINT oldTab = static_cast<UINT>((it - tabOrder.begin()));
 
                                 if (tab >= pParentContainer->GetAllContainers().size())
-                                    throw CUserException(_T("Invalid Container configuration"));
+                                    throw CUserException();
 
                                 if (oldTab >= pParentContainer->GetAllContainers().size())
-                                    throw CUserException(_T("Invalid Container configuration"));
+                                    throw CUserException();
 
                                 if (tab != oldTab)
                                     pParentContainer->SwapTabs(tab, oldTab);
@@ -2951,7 +2942,7 @@ namespace Win32xx
                             {
                                 CDockContainer* pContainer = pDocker->GetContainer();
                                 if (!pContainer)
-                                    throw CUserException(_T("Failed to get container view"));
+                                    throw CUserException();
 
                                 int page = pContainer->GetContainerIndex(pContainer);
                                 if (page >= 0)
@@ -2963,10 +2954,9 @@ namespace Win32xx
                     }
                 }
 
-                catch (const CUserException& e)
+                catch (const CUserException&)
                 {
-                    Trace("*** Failed to load values from registry, using defaults. ***\n");
-                    Trace(e.GetText()); Trace("\n");
+                    TRACE("*** Failed to load dock containers from registry. ***\n");
                     CloseAllDockers();
 
                     // Delete the bad key from the registry
@@ -3042,7 +3032,7 @@ namespace Win32xx
     inline LRESULT CDocker::OnBarStart(LPDRAGPOS pDragPos)
     {
         CPoint pt = pDragPos->pos;
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
         if (!IsDragAutoResize())
             DrawHashBar(pDragPos->hdr.hwndFrom, pt);
         m_oldPoint = pt;
@@ -3054,7 +3044,7 @@ namespace Win32xx
     inline LRESULT CDocker::OnBarMove(LPDRAGPOS pDragPos)
     {
         CPoint pt = pDragPos->pos;
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
 
         if (pt != m_oldPoint)
         {
@@ -3076,7 +3066,7 @@ namespace Win32xx
     inline LRESULT CDocker::OnBarEnd(LPDRAGPOS pDragPos)
     {
         POINT pt = pDragPos->pos;
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
 
         if (!IsDragAutoResize())
             DrawHashBar(pDragPos->hdr.hwndFrom, pt);
@@ -3409,16 +3399,16 @@ namespace Win32xx
                 BOOL isEnabled = FALSE;
                 m_isDragging = TRUE;
                 SetCursor(LoadCursor(0, IDC_ARROW));
-                ::SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &isEnabled, 0);
+                VERIFY(::SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &isEnabled, 0));
 
                 // Turn on DragFullWindows for this move
-                ::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
+                VERIFY(::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0));
 
                 // Process this message
                 DefWindowProc(WM_SYSCOMMAND, wparam, lparam);
 
                 // Return DragFullWindows to its previous state
-                ::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, isEnabled, 0, 0);
+                VERIFY(::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, isEnabled, 0, 0));
                 return 0;
             }
         case SC_CLOSE:
@@ -3610,7 +3600,7 @@ namespace Win32xx
         // Step 2: Position the Dock client and dock bar
         if (GetDockClient().IsWindow())
             hdwp = GetDockClient().DeferWindowPos(hdwp, 0, rc, SWP_SHOWWINDOW |SWP_FRAMECHANGED);
-        EndDeferWindowPos(hdwp);
+        VERIFY(EndDeferWindowPos(hdwp));
 
         // Position the dockbar. Only docked dockers have a dock bar.
         if (IsDocked())
@@ -3619,7 +3609,7 @@ namespace Win32xx
             barRect.IntersectRect(m_barRect, GetDockParent()->GetViewRect());
 
             // The SWP_NOCOPYBITS forces a redraw of the dock bar.
-            GetDockBar().SetWindowPos(0, barRect, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS);
+            VERIFY(GetDockBar().SetWindowPos(0, barRect, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS));
         }
 
         // Step 3: Now recurse through the docker's children. They might have children of their own.
@@ -3719,14 +3709,14 @@ namespace Win32xx
         if (!pDragPos) return;
 
         POINT pt = pDragPos->pos;
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
 
         CDocker* pDocker = pDragPos->pDocker;
         assert(pDocker);
         if (!pDocker) return;
 
         RECT rcDock = pDocker->GetWindowRect();
-        ScreenToClient(rcDock);
+        VERIFY(ScreenToClient(rcDock));
 
         int barWidth = pDocker->GetDockBar().GetWidth();
         int dockSize;
@@ -3794,14 +3784,14 @@ namespace Win32xx
             try
             {
                 if (!VerifyDockers())
-                    throw (CUserException(_T("Dockers are in an inconsistent state")));
+                    throw CUserException();
 
                 // Create the App's registry key
                 if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
-                    throw (CUserException(_T("Create Key failed")));
+                    throw CUserException();
 
                 if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
-                    throw (CUserException(_T("Open Key failed")));
+                    throw CUserException();
 
                 // Remove Old Docking info ...
                 key.RecurseDeleteKey(_T("Dock Windows"));
@@ -3812,7 +3802,7 @@ namespace Win32xx
                     DockInfo di;
                     ZeroMemory(&di, sizeof(di));
                     if (! (*iter)->IsWindow())
-                        throw (CUserException(_T("Can't save Docker in registry. \n")));
+                        throw CUserException();
 
                     di.dockID    = (*iter)->GetDockID();
                     di.dockStyle = (*iter)->GetDockStyle();
@@ -3827,10 +3817,10 @@ namespace Win32xx
                 }
 
                 if (ERROR_SUCCESS != key.Create(key, _T("Dock Windows")))
-                    throw (CUserException(_T("Create KeyDock failed")));
+                    throw CUserException();
 
                 if (ERROR_SUCCESS != keyDock.Open(key, _T("Dock Windows")))
-                    throw (CUserException(_T("Open KeyDock failed")));
+                    throw CUserException();
 
                 CString SubKeyName;
 
@@ -3840,7 +3830,7 @@ namespace Win32xx
                     DockInfo di = allDockInfo[u];
                     SubKeyName.Format(_T("DockChild%u"), u);
                     if (ERROR_SUCCESS != keyDock.SetBinaryValue(SubKeyName, &di, sizeof(DockInfo)))
-                        throw (CUserException(_T("KeyDock SetBinaryValue failed")));
+                        throw CUserException();
                 }
 
                 // Add dock container info to the registry
@@ -3861,10 +3851,9 @@ namespace Win32xx
                 }
             }
 
-            catch (const CUserException& e)
+            catch (const CUserException&)
             {
-                Trace("*** Failed to save dock settings in registry. ***");
-                Trace(e.GetText()); Trace("\n");
+                TRACE("*** Failed to save dock settings in registry. ***\n");
 
                 // Roll back the registry changes by deleting the subkeys
                 if (key.GetKey())
@@ -3886,18 +3875,18 @@ namespace Win32xx
         CString subKeyName;
         subKeyName.Format(_T("DockContainer%u"), container++);
         if (ERROR_SUCCESS != keyDock.Create(keyDock, subKeyName))
-            throw (CUserException(_T("Create KeyDockContainer failed")));
+            throw CUserException();
 
         if (ERROR_SUCCESS != keyContainer.Open(keyDock, subKeyName))
-            throw (CUserException(_T("Open KeyContainer failed")));
+            throw CUserException();
 
         // Store the container group's parent
         CDocker* pDocker = GetDockFromView(pContainer);
         if (pDocker == 0)
-            throw CUserException(_T("Failed to get docker from container view"));
+            throw CUserException();
         int id = pDocker->GetDockID();
         if (ERROR_SUCCESS != keyContainer.SetDWORDValue(_T("Parent Container"), id))
-            throw (CUserException(_T("KeyContainer SetDWORDValue failed")));
+            throw CUserException();
 
         // Store the active (selected) container
         pDocker = GetDockFromView(pContainer->GetActiveContainer());
@@ -3907,7 +3896,7 @@ namespace Win32xx
             id = pDocker->GetDockID();
 
         if (ERROR_SUCCESS != keyContainer.SetDWORDValue(_T("Active Container"), id))
-            throw (CUserException(_T("KeyContainer SetDWORDValue failed")));
+            throw CUserException();
 
         // Store the tab order
         for (UINT u2 = 0; u2 < pContainer->GetAllContainers().size(); ++u2)
@@ -3915,14 +3904,14 @@ namespace Win32xx
             subKeyName.Format(_T("Tab%u"), u2);
             CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
             if (pTab == 0)
-                throw CUserException(_T("Failed to get container from index"));
+                throw CUserException();
             pDocker = GetDockFromView(pTab);
             if (pDocker == 0)
-                throw CUserException(_T("Failed to get docker from view"));
+                throw CUserException();
             int tabID = pDocker->GetDockID();
 
             if (ERROR_SUCCESS != keyContainer.SetDWORDValue(subKeyName, tabID))
-                throw (CUserException(_T("RegSetValueEx failed")));
+                throw CUserException();
         }
     }
 
@@ -4143,13 +4132,13 @@ namespace Win32xx
         if (GetDockBar().IsWindow())
             GetDockBar().ShowWindow(SW_HIDE);
 
-        SetWindowPos(0, 0, 0, 0, 0, SWP_NOSENDCHANGING|SWP_HIDEWINDOW|SWP_NOREDRAW);
+        VERIFY(SetWindowPos(0, 0, 0, 0, 0, SWP_NOSENDCHANGING|SWP_HIDEWINDOW|SWP_NOREDRAW));
         m_pDockParent = 0;
         SetParent(0);
 
         DWORD styleShow = showUndocked? SWP_SHOWWINDOW : 0;
-        SetWindowPos(0, rc, styleShow | SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
-        GetDockClient().SetWindowPos(0, GetClientRect(), SWP_SHOWWINDOW);
+        VERIFY(SetWindowPos(0, rc, styleShow | SWP_FRAMECHANGED | SWP_NOOWNERZORDER));
+        VERIFY(GetDockClient().SetWindowPos(0, GetClientRect(), SWP_SHOWWINDOW));
         SetWindowText(GetCaption().c_str());
     }
 
@@ -4209,7 +4198,7 @@ namespace Win32xx
 
         // Initiate the window move.
         SetCursorPos(pt.x, pt.y);
-        ScreenToClient(pt);
+        VERIFY(ScreenToClient(pt));
         PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
     }
 
@@ -4315,7 +4304,7 @@ namespace Win32xx
                     pDockNew->SetStyle(style);
                     pDockNew->m_pDockParent = 0;
                     pDockNew->SetParent(0);
-                    pDockNew->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
+                    VERIFY(pDockNew->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER));
                 }
                 pDockNew->GetDockBar().SetParent(pDockOld->GetParent());
                 pDockNew->GetView().SetFocus();
@@ -4359,8 +4348,8 @@ namespace Win32xx
         if (!pDocker) return;
 
         CRect rc = GetDockClient().GetWindowRect();
-        ScreenToClient(rc);
-        pDocker->GetDockClient().SetWindowPos(0, rc, SWP_SHOWWINDOW);
+        VERIFY(ScreenToClient(rc));
+        VERIFY(pDocker->GetDockClient().SetWindowPos(0, rc, SWP_SHOWWINDOW));
         pDocker->Undock(pt, showUndocked);
         pDocker->GetDockBar().SetParent(*GetDockAncestor());
         pDockUndockedFrom->ShowWindow();
@@ -4409,7 +4398,7 @@ namespace Win32xx
         if (pThis->IsRelated(top) && top != pThis->GetHwnd())
         {
             CRect rc;
-            ::GetWindowRect(top, &rc);
+            VERIFY(::GetWindowRect(top, &rc));
             if ( rc.PtInRect(pt) )
             {
                 pThis->m_dockUnderPoint = top;
@@ -4818,7 +4807,7 @@ namespace Win32xx
                 CDockContainer* pContainer = m_allInfo[m_currentPage].pContainer;
 
                 if (pContainer->GetViewPage().IsWindow())
-                    pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW);
+                    VERIFY(pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW));
 
             }
             RedrawWindow(RDW_INVALIDATE | RDW_NOCHILDREN);
@@ -4900,7 +4889,7 @@ namespace Win32xx
                     (*it).pContainer->GetViewPage().ShowWindow(SW_HIDE);
                 }
 
-                pNewContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW);
+                VERIFY(pNewContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW));
                 pNewContainer->GetViewPage().GetView()->SetFocus();
 
                 // Adjust the docking caption
@@ -5195,7 +5184,7 @@ namespace Win32xx
         }
 
         if (GetView())
-            GetView()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
+            VERIFY(GetView()->SetWindowPos(0, rc, SWP_SHOWWINDOW));
     }
 
     // Sets or changes the View window displayed within the container

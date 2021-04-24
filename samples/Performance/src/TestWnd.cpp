@@ -22,8 +22,9 @@ void CTestWindow::CreateWin(int i)
     m_windowCount = i + 1;
     TCHAR str[80];
     wsprintf(str, _T("Test Window %d"), m_windowCount);
-    CreateEx(0, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-        420, 50 + 4*i, 300, 200, 0, NULL);
+
+    // Create a test window without a close button.
+    CreateEx(0, NULL, str, WS_VISIBLE, 420, 50 + 4*i, 300, 200, 0, NULL);
 }
 
 // Called when the window is created.

@@ -15,6 +15,9 @@
 // Constructor.
 CMainWindow::CMainWindow() : m_testMessages(0), m_testWindows(0), m_windowsCreated(0)
 {
+    LARGE_INTEGER li;
+    VERIFY(QueryPerformanceFrequency(&li));
+    m_frequency = li.QuadPart;
 }
 
 // Destructor.
@@ -46,6 +49,14 @@ void CMainWindow::CreateTestWindows(int windows)
         m_pTestWindows.push_back(pTestWindow);
         m_pTestWindows[i]->CreateWin(i);
     }
+}
+
+// Retrieves the current performance counter.
+LONGLONG CMainWindow::GetCounter() const
+{
+    LARGE_INTEGER current;
+    QueryPerformanceCounter(&current);
+    return current.QuadPart;
 }
 
 // Called when the main window is created.
@@ -122,7 +133,7 @@ void CMainWindow::OnAllWindowsCreated()
 }
 
 // Do the performance test.
-void CMainWindow::PerformanceTest()
+void CMainWindow::PerformanceTest() const
 {
     LRESULT result = 0;
     int messages = 0;
@@ -134,19 +145,19 @@ void CMainWindow::PerformanceTest()
     // Choose a Window handle(HWND) to send the messages to
     HWND hWnd = m_pTestWindows[(m_testWindows-1)/2]->GetHwnd();
 
-    // Store the starting time
-    DWORD tStart = ::GetTickCount();
+    // Store the starting counter
+    LONGLONG start = GetCounter();
 
     // Send the messages
     while(messages++ < m_testMessages)
         result = ::SendMessage(hWnd, WM_TESTMESSAGE, 0, 0);
 
     // Calculate the time the messages took to send
-    DWORD tEnd = ::GetTickCount();
-    DWORD mSeconds = tEnd - tStart;
+    LONGLONG end = GetCounter();
+    double mSeconds = 1000.0 * (end - start) / m_frequency;
 
     // Display the results
-    str.Format(_T("%d milliseconds to process %d messages"), mSeconds, m_testMessages);
+    str.Format(_T("%.2f milliseconds to process %d messages"), mSeconds, m_testMessages);
     SendText(str);
 
     str.Format(_T("%d total messages sent\n"), result);
@@ -156,7 +167,7 @@ void CMainWindow::PerformanceTest()
 }
 
 // Send text to the edit window.
-void CMainWindow::SendText(LPCTSTR str)
+void CMainWindow::SendText(LPCTSTR str) const
 {
     m_edit.AppendText(str);
     m_edit.AppendText(_T("\r\n"));

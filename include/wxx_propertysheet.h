@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -77,7 +77,6 @@ namespace Win32xx
     public:
         CPropertyPage (UINT templateID, LPCTSTR pTitle = NULL);
         virtual ~CPropertyPage() {}
-
         virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual BOOL OnApply();
         virtual void OnCancel();
@@ -476,7 +475,7 @@ namespace Win32xx
             {
                 // Got a message for a window thats not in the map.
                 // We should never get here.
-                Trace("*** Warning in CPropertyPage::StaticPropSheetPageProc: HWND not in window map ***\n");
+                TRACE("*** Warning in CPropertyPage::StaticPropSheetPageProc: HWND not in window map ***\n");
                 return 0;
             }
 
@@ -508,7 +507,7 @@ namespace Win32xx
         {
             // Got a message for a window thats not in the map.
             // We should never get here.
-            Trace("*** Warning in CPropertyPage::StaticDialogProc: HWND not in window map ***\n");
+            TRACE("*** Warning in CPropertyPage::StaticDialogProc: HWND not in window map ***\n");
             return 0;
         }
 

@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -123,10 +123,10 @@
   #define WM_MENURBUTTONUP      0x0122
 #endif
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)   // >= VS2019
 #pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( disable : 26812 )            // enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
 
 namespace Win32xx
@@ -357,7 +357,7 @@ namespace Win32xx
         virtual void RecalcLayout();
         virtual void RecalcViewLayout();
 
-        virtual CWnd& GetView() const        { return *m_pView; }
+        virtual CWnd& GetView() const;
         virtual void SetView(CWnd& view);
 
         // Virtual Attributes
@@ -582,7 +582,7 @@ namespace Win32xx
             CloseThemeData();
 
         if (m_uxTheme != 0)
-            ::FreeLibrary(m_uxTheme);
+            VERIFY(::FreeLibrary(m_uxTheme));
     }
 
     // Closes the theme data handle.
@@ -1002,8 +1002,8 @@ namespace Win32xx
         // Set the mask color to grey for the new ImageList
         if (GetDeviceCaps(desktopDC, BITSPIXEL) < 24)
         {
-            HPALETTE hPal = reinterpret_cast<HPALETTE>(GetCurrentObject(desktopDC, OBJ_PAL));
-            UINT index = GetNearestPaletteIndex(hPal, mask);
+            HPALETTE hPal = desktopDC.GetCurrentPalette();
+            UINT index = ::GetNearestPaletteIndex(hPal, mask);
             if (index != CLR_INVALID) mask = PALETTEINDEX(index);
         }
 
@@ -1051,12 +1051,12 @@ namespace Win32xx
             m_menuIcons.push_back(menuItemID);
 
             // Set the mask color to grey for the new ImageList
-            COLORREF mask = RGB(200, 200, 200);
+            COLORREF mask = RGB(192, 192, 192);
             CClientDC desktopDC(HWND_DESKTOP);
             if (GetDeviceCaps(desktopDC, BITSPIXEL) < 24)
             {
-                HPALETTE hPal = reinterpret_cast<HPALETTE>(GetCurrentObject(desktopDC, OBJ_PAL));
-                UINT index = GetNearestPaletteIndex(hPal, mask);
+                HPALETTE hPal = desktopDC.GetCurrentPalette();
+                UINT index = ::GetNearestPaletteIndex(hPal, mask);
                 if (index != CLR_INVALID) mask = PALETTEINDEX(index);
             }
 
@@ -1210,7 +1210,7 @@ namespace Win32xx
         CRect rc = viewRect;
         DWORD style = GetView().GetStyle();
         DWORD exStyle = GetView().GetExStyle();
-        AdjustWindowRectEx(&rc, style, FALSE, exStyle);
+        VERIFY(AdjustWindowRectEx(&rc, style, FALSE, exStyle));
 
         // Calculate the new frame height
         CRect frameBefore = T::GetWindowRect();
@@ -1220,10 +1220,10 @@ namespace Win32xx
         // Adjust for the frame styles
         style = T::GetStyle();
         exStyle = T::GetExStyle();
-        AdjustWindowRectEx(&rc, style, FALSE, exStyle);
+        VERIFY(AdjustWindowRectEx(&rc, style, FALSE, exStyle));
 
         // Calculate final rect size, and reposition frame
-        T::SetWindowPos(0, 0, 0, rc.Width(), height, SWP_NOMOVE);
+        VERIFY(T::SetWindowPos(0, 0, 0, rc.Width(), height, SWP_NOMOVE));
     }
 
     // Creates the frame's toolbar. Additional toolbars can be added with AddToolBarBand
@@ -1906,8 +1906,8 @@ namespace Win32xx
                             rbbi.fMask = RBBIM_CHILD ;
                             rebar.GetBandInfo(band, rbbi);
                             CRect childRect;
-                            ::GetWindowRect(rbbi.hwndChild, &childRect);
-                            T::ScreenToClient(childRect);
+                            VERIFY(::GetWindowRect(rbbi.hwndChild, &childRect));
+                            VERIFY(T::ScreenToClient(childRect));
 
                             // Determine our drawing rectangle
                             int startPad = IsXPThemed()? 2: 0;
@@ -1925,7 +1925,7 @@ namespace Win32xx
                             }
 
                             if (!rt.FlatStyle)
-                                ::InflateRect(&drawRect, 1, 1);
+                                VERIFY(::InflateRect(&drawRect, 1, 1));
 
                             // Fill the Source CDC with the band's background
                             CMemDC sourceDC(dc);
@@ -2024,10 +2024,10 @@ namespace Win32xx
     inline CRect CFrameT<T>::ExcludeChildRect(const CRect& clientRect, HWND child) const
     {
         CRect clientRC = clientRect;
-        T::ClientToScreen(clientRC);
+        VERIFY(T::ClientToScreen(clientRC));
 
         CRect childRect;
-        ::GetWindowRect(child, &childRect);
+        VERIFY(::GetWindowRect(child, &childRect));
 
         if (clientRC.Width() == childRect.Width())
         {
@@ -2044,7 +2044,7 @@ namespace Win32xx
                 clientRC.right -= childRect.Width();
         }
 
-        T::ScreenToClient(clientRC);
+        VERIFY(T::ScreenToClient(clientRC));
 
         return clientRC;
     }
@@ -2126,6 +2126,35 @@ namespace Win32xx
         return CSize(cx, cy);
     }
 
+    // Returns the XP theme name.
+    template <class T>
+    inline CString CFrameT<T>::GetThemeName() const
+    {
+        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
+        WCHAR themeName[31] = L"";
+        if (theme != 0)
+        {
+            typedef HRESULT(__stdcall* PFNGETCURRENTTHEMENAME)(LPWSTR pThemeFileName, int maxNameChars,
+                LPWSTR pColorBuff, int maxColorChars, LPWSTR pSizeBuff, int maxSizeChars);
+
+            PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(theme, "GetCurrentThemeName");
+            pfn(0, 0, themeName, 30, 0, 0);
+
+            VERIFY(::FreeLibrary(theme));
+        }
+
+        return CString(themeName);
+    }
+
+    // Returns a reference to the view window.
+    template <class T>
+    inline CWnd& CFrameT<T>::GetView() const
+    {
+        // Note: Use SetView to set the view window.
+        assert(m_pView);
+        return *m_pView;
+    }
+
     // Returns the dimensions of the view window.
     template <class T>
     inline CRect CFrameT<T>::GetViewRect() const
@@ -2142,26 +2171,6 @@ namespace Win32xx
                 clientRect = ExcludeChildRect(clientRect, GetToolBar());
 
         return clientRect;
-    }
-
-    // Returns the XP theme name.
-    template <class T>
-    inline CString CFrameT<T>::GetThemeName() const
-    {
-        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
-        WCHAR themeName[31] = L"";
-        if (theme != 0)
-        {
-            typedef HRESULT (__stdcall *PFNGETCURRENTTHEMENAME)(LPWSTR pThemeFileName, int maxNameChars,
-                LPWSTR pColorBuff, int maxColorChars, LPWSTR pSizeBuff, int maxSizeChars);
-
-            PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(theme, "GetCurrentThemeName");
-            pfn(0, 0, themeName, 30, 0, 0);
-
-            ::FreeLibrary(theme);
-        }
-
-        return CString(themeName);
     }
 
     // Load the MRU list from the registry.
@@ -2229,19 +2238,19 @@ namespace Win32xx
                 DWORD top, left, width, height, showCmd, statusBar, toolBar;
 
                 if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Top"), top))
-                    throw CUserException(_T("RegQueryValueEx Failed"));
+                    throw CUserException();
                 if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Left"), left))
-                    throw CUserException(_T("RegQueryValueEx Failed"));
+                    throw CUserException();
                 if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Width"), width))
-                    throw CUserException(_T("RegQueryValueEx Failed"));
+                    throw CUserException();
                 if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Height"), height))
-                    throw CUserException(_T("RegQueryValueEx Failed"));
+                    throw CUserException();
                 if (ERROR_SUCCESS != key.QueryDWORDValue(_T("ShowCmd"), showCmd))
-                    throw CUserException(_T("RegQueryValueEx Failed"));
+                    throw CUserException();
                 if (ERROR_SUCCESS != key.QueryDWORDValue(_T("StatusBar"), statusBar))
-                    throw CUserException(_T("RegQueryValueEx Failed"));
+                    throw CUserException();
                 if (ERROR_SUCCESS != key.QueryDWORDValue(_T("ToolBar"), toolBar))
-                    throw CUserException(_T("RegQueryValueEx Failed"));
+                    throw CUserException();
 
                 values.position = CRect(left, top, left + width, top + height);
                 values.showCmd = (SW_MAXIMIZE == showCmd) ? SW_MAXIMIZE : SW_SHOW;
@@ -2251,10 +2260,9 @@ namespace Win32xx
                 isOK = TRUE;
             }
 
-            catch (const CUserException& e)
+            catch (const CUserException&)
             {
-                Trace("*** Failed to load values from registry, using defaults. ***\n");
-                Trace(e.GetText()); Trace(strKey); Trace("\n");
+                TRACE("*** Failed to load values from registry, using defaults. ***\n");
 
                 // Delete the bad key from the registry
                 CString strParentKey = _T("Software\\") + m_keyName;
@@ -2298,12 +2306,15 @@ namespace Win32xx
         // Perform default processing first
         CWnd::WndProcDefault(WM_ACTIVATE, wparam, lparam);
 
-
         if (LOWORD(wparam) == WA_INACTIVE)
         {
             // Save the hwnd of the window which currently has focus.
             // This must be CFrame window itself or a child window.
             if (!T::IsIconic()) m_oldFocus = ::GetFocus();
+
+            // Ensure no toolbar button is still hot.
+            if (GetToolBar().IsWindow())
+                GetToolBar().SendMessage(TB_SETHOTITEM, (WPARAM)-1, 0);
         }
         else
         {
@@ -2602,9 +2613,10 @@ namespace Win32xx
         if (IsUsingMenuStatus() && GetStatusBar().IsWindow())
         {
             int id = LOWORD (wparam);
-            CMenu menu(reinterpret_cast<HMENU>(lparam));
+            HMENU menu = reinterpret_cast<HMENU>(lparam);
 
             if ((menu != T::GetMenu()) && (id != 0) && !(HIWORD(wparam) & MF_POPUP))
+
                 GetStatusBar().SetWindowText(LoadString(id));
             else
                 GetStatusBar().SetWindowText(m_statusText);
@@ -2875,7 +2887,7 @@ namespace Win32xx
             mii.dwTypeData = m_menuItemData[item]->GetItemText();
             mii.cch = lstrlen(m_menuItemData[item]->GetItemText());
             mii.dwItemData = 0;
-            ::SetMenuItemInfo(m_menuItemData[item]->menu, m_menuItemData[item]->pos, TRUE, &mii);
+            VERIFY(::SetMenuItemInfo(m_menuItemData[item]->menu, m_menuItemData[item]->pos, TRUE, &mii));
             int pos = m_menuItemData[item]->pos;
             m_menuItemData.pop_back();
 
@@ -2943,7 +2955,7 @@ namespace Win32xx
         // Resize the status bar
         if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
         {
-            GetStatusBar().SetWindowPos(0, 0, 0, 0, 0, SWP_SHOWWINDOW);
+            VERIFY(GetStatusBar().SetWindowPos(0, 0, 0, 0, 0, SWP_SHOWWINDOW));
             SetStatusIndicators();
         }
 
@@ -2975,7 +2987,7 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::RecalcViewLayout()
     {
-        GetView().SetWindowPos( 0, GetViewRect(), SWP_SHOWWINDOW);
+        VERIFY(GetView().SetWindowPos(0, GetViewRect(), SWP_SHOWWINDOW));
     }
 
     // Removes an entry from the MRU list.
@@ -3015,10 +3027,10 @@ namespace Win32xx
 
                 // Add Current MRUs
                 if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
-                    throw CUserException(_T("RegCreateKeyEx failed"));
+                    throw CUserException();
 
                 if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
-                    throw CUserException(_T("RegCreateKeyEx failed"));
+                    throw CUserException();
 
                 CString subKeyName;
                 CString pathName;
@@ -3031,16 +3043,15 @@ namespace Win32xx
                         pathName = m_mruEntries[i];
 
                         if (ERROR_SUCCESS != key.SetStringValue(subKeyName, pathName.c_str()))
-                            throw CUserException(_T("RegSetValueEx failed"));
+                            throw CUserException();
                     }
                 }
             }
         }
 
-        catch (const CUserException& e)
+        catch (const CUserException&)
         {
-            Trace("*** Failed to save registry MRU settings. ***\n");
-            Trace(e.GetText()); Trace("\n");
+            TRACE("*** Failed to save registry MRU settings. ***\n");
 
             CString keyName = _T("Software\\") + m_keyName;
             CRegKey key;
@@ -3089,15 +3100,15 @@ namespace Win32xx
                     DWORD showCmd = wndpl.showCmd;
 
                     if (ERROR_SUCCESS != key.SetDWORDValue(_T("Top"), top))
-                        throw CUserException(_T("RegSetValueEx failed"));
+                        throw CUserException();
                     if (ERROR_SUCCESS != key.SetDWORDValue(_T("Left"), left))
-                        throw CUserException(_T("RegSetValueEx failed"));
+                        throw CUserException();
                     if (ERROR_SUCCESS != key.SetDWORDValue(_T("Width"), width))
-                        throw CUserException(_T("RegSetValueEx failed"));
+                        throw CUserException();
                     if (ERROR_SUCCESS != key.SetDWORDValue(_T("Height"), height))
-                        throw CUserException(_T("RegSetValueEx failed"));
+                        throw CUserException();
                     if (ERROR_SUCCESS != key.SetDWORDValue(_T("ShowCmd"), showCmd))
-                        throw CUserException(_T("RegSetValueEx failed"));
+                        throw CUserException();
                 }
 
                 // Store the ToolBar and statusbar states
@@ -3105,15 +3116,14 @@ namespace Win32xx
                 DWORD showStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
 
                 if (ERROR_SUCCESS != key.SetDWORDValue(_T("ToolBar"), showToolBar))
-                    throw CUserException(_T("RegSetValueEx failed"));
+                    throw CUserException();
                 if (ERROR_SUCCESS != key.SetDWORDValue(_T("StatusBar"), showStatusBar))
-                    throw CUserException(_T("RegSetValueEx failed"));
+                    throw CUserException();
             }
 
-            catch (const CUserException& e)
+            catch (const CUserException&)
             {
-                Trace("*** Failed to save registry settings. ***\n");
-                Trace(e.GetText()); Trace("\n");
+                TRACE("*** Failed to save registry settings. ***\n");
 
                 CString keyName = _T("Software\\") + m_keyName;
                 CRegKey key;
@@ -3675,7 +3685,7 @@ namespace Win32xx
                     GetView().SetParent(*this);
 
                 CRect rc = GetViewRect();
-                GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW);
+                VERIFY(GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW));
             }
         }
     }
@@ -3941,8 +3951,8 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)
 #pragma warning ( pop )
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+#endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
 #endif // _WIN32XX_FRAME_H_

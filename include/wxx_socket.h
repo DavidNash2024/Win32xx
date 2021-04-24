@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -131,11 +131,9 @@
 #include "wxx_mutex.h"
 
 // Work around a bugs in older versions of Visual Studio
-#ifdef _MSC_VER
-  #if _MSC_VER < 1500
-    // Skip loading wspiapi.h
-    #define _WSPIAPI_H_
-  #endif
+#if defined (_MSC_VER) && (_MSC_VER < 1500)  // < VS2008
+  // Skip loading wspiapi.h
+  #define _WSPIAPI_H_
 #endif
 
 #include <WS2tcpip.h>
@@ -274,7 +272,7 @@ namespace Win32xx
         // Terminate the  Windows Socket services
         ::WSACleanup();
 
-        ::FreeLibrary(m_ws2_32);
+        VERIFY(::FreeLibrary(m_ws2_32));
     }
 
     // The accept function permits an incoming connection attempt on the socket.

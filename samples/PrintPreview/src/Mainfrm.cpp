@@ -69,8 +69,6 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
 // Called when the window is closed.
 void CMainFrame::OnClose()
 {
-    ShowToolBar(TRUE);
-
     //Check for unsaved text
     SaveModifiedText();
 
@@ -351,7 +349,6 @@ void CMainFrame::OnFileSave()
         OnFileSaveAs();
     else
         WriteFile(m_pathName);
-
 }
 
 // Save the text to a new file.

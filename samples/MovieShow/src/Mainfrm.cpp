@@ -872,7 +872,7 @@ void CMainFrame::OnClose()
         }
     }
 
-    m_splashThread.GetSplash()->Destroy();
+    m_splashThread.GetSplash()->Close();
     m_splashThread.PostThreadMessage(WM_QUIT, 0, 0);
 
     if (::WaitForSingleObject(m_splashThread, 1000) == WAIT_TIMEOUT)

@@ -263,7 +263,6 @@ copy TimeDemo\ProjectFiles\Borland\Debug\TimeDemo.exe                 "..\output
 copy ToolBarDemo\ProjectFiles\Borland\Debug\ToolBarDemo.exe           "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy ToolTips\ProjectFiles\Borland\Debug\ToolTips.exe                 "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Borland\Debug\Tray.exe                         "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
-copy WinPlot\ProjectFiles\Borland\Debug\WinPlot.exe                   "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 
 mkdir "..\output\Borland\Release"
 
@@ -323,7 +322,6 @@ copy TimeDemo\ProjectFiles\Borland\Release\TimeDemo.exe                 "..\outp
 copy ToolBarDemo\ProjectFiles\Borland\Release\ToolBarDemo.exe           "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy ToolTips\ProjectFiles\Borland\Release\ToolTips.exe                 "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Borland\Release\Tray.exe                         "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
-copy WinPlot\ProjectFiles\Borland\Release\WinPlot.exe                   "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 
 
 REM: Copy the executables to the testing directories

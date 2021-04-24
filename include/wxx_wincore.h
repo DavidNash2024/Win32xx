@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -248,8 +248,8 @@ namespace Win32xx
                     if (GetParent().GetHwnd() == 0) desktopRect = mi.rcWork;
                 }
             }
-            ::FreeLibrary(hUser32);
 
+            VERIFY(::FreeLibrary(hUser32));
         }
  #endif
 
@@ -264,7 +264,7 @@ namespace Win32xx
         y = (y < desktopRect.top) ? desktopRect.top: y;
         y = (y > desktopRect.bottom - rc.Height())? desktopRect.bottom - rc.Height() : y;
 
-        SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE);
+        VERIFY(SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE));
     }
 
     // Returns the CWnd to its default state
@@ -406,7 +406,7 @@ namespace Win32xx
         // Automatically subclass predefined window class types
         if (pClassName)
         {
-            ::GetClassInfo(GetApp()->GetInstanceHandle(), pClassName, &wc);
+            VERIFY(::GetClassInfo(GetApp()->GetInstanceHandle(), pClassName, &wc));
             if (wc.lpfnWndProc != GetApp()->m_callback)
             {
                 Subclass(wnd);
@@ -425,17 +425,15 @@ namespace Win32xx
         return wnd;
     }
 
-    // Destroys the window and returns the CWnd back to its default state, ready for reuse.
+    // Destroys the window and returns the CWnd back to its default state,
+    //  ready for reuse.
     inline void CWnd::Destroy()
     {
-
-
         if (GetCWndPtr(*this) == this)
         {
             if (IsWindow())
                 ::DestroyWindow(*this);
         }
-
 
         // Return the CWnd to its default state
         Cleanup();
@@ -545,7 +543,7 @@ namespace Win32xx
             if (pfnGetAncestor)
                 wnd = (*pfnGetAncestor)(*this, flags);
 
-            ::FreeLibrary(user32);
+            VERIFY(::FreeLibrary(user32));
         }
 
         if (!pfnGetAncestor)
@@ -1025,7 +1023,7 @@ namespace Win32xx
         {
             // Got a message for a window thats not in the map.
             // We should never get here.
-            Trace("*** Warning in CWnd::StaticWindowProc: HWND not in window map ***\n");
+            TRACE("*** Warning in CWnd::StaticWindowProc: HWND not in window map ***\n");
             return 0;
         }
 
@@ -1617,7 +1615,7 @@ namespace Win32xx
     inline void CWnd::Invalidate(BOOL erase /*= TRUE*/) const
     {
         assert(IsWindow());
-        ::InvalidateRect(*this, NULL, erase);
+        VERIFY(::InvalidateRect(*this, NULL, erase));
     }
 
     // The InvalidateRect function adds a rectangle to the window's update region.
@@ -2079,7 +2077,7 @@ namespace Win32xx
 
             result = pfn(*this, pSubAppName, pSubIdList);
 
-            ::FreeLibrary(theme);
+            VERIFY(::FreeLibrary(theme));
         }
 
 #endif
@@ -2634,7 +2632,7 @@ namespace Win32xx
                 }
             }
 
-            ::FreeLibrary(hShell);
+            VERIFY(::FreeLibrary(hShell));
         }
 
 #endif // _WIN32_WCE
@@ -2744,7 +2742,7 @@ namespace Win32xx
                 comCtlVer = 471;    // InitializeFlatSB is unique to version 4.71
         }
 
-        ::FreeLibrary(comCtl);
+        VERIFY(::FreeLibrary(comCtl));
 
         return comCtlVer;
     }
@@ -2767,10 +2765,10 @@ namespace Win32xx
     //       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602).
     inline int GetWinVersion()
     {
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)   // >= VS2005
   #pragma warning ( push )
-  #pragma warning ( disable : 4996 )        // GetVersion declared deprecated.
-  #pragma warning ( disable : 28159 )       // Deprecated function. Consider using IsWindows instead.
+  #pragma warning ( disable : 4996 )           // GetVersion declared deprecated.
+  #pragma warning ( disable : 28159 )          // Deprecated function. Consider using IsWindows instead.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 #if defined __clang_major__
@@ -2877,11 +2875,12 @@ namespace Win32xx
                 InitCommonControls();
             }
 
-            ::FreeLibrary(comCtl);
+            VERIFY(::FreeLibrary(comCtl));
         }
     }
 
     // Returns a CString containing the specified string resource.
+    // Returns an empty string if the string resource is not defined.
     // Refer to LoadString in the Windows API documentation for more information.
     inline CString LoadString(UINT id)
     {

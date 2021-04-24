@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -197,10 +197,10 @@ namespace Win32xx
 namespace Win32xx
 {
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1920) // >= VS2019
 #pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( disable : 26812 )          // enum type is unscoped.
+#endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
     // Constructs a CArchive object.
     // The specified file must already be open for loading or storing.
@@ -929,9 +929,9 @@ namespace Win32xx
         Write(string, chars*sizeof(WCHAR));
     }
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)       // >= VS2019
 #pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+#endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
 } // namespace Win32xx
 

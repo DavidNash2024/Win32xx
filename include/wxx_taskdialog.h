@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -282,7 +282,7 @@ namespace Win32xx
         // Call TaskDialogIndirect through our function pointer
         HRESULT result = pTaskDialogIndirect(&m_tc, &m_selectedButtonID, &m_selectedRadioButtonID, &m_verificationCheckboxState);
 
-        ::FreeLibrary(comCtl);
+        VERIFY(::FreeLibrary(comCtl));
         pTLSData->pWnd = NULL;
         m_wnd = 0;
         Reset();
@@ -290,7 +290,7 @@ namespace Win32xx
         if (result != S_OK)
         {
             // Throw an exception to indicate task dialog creation failure
-            throw CWinException(g_msgTaskDialog);
+            throw CWinException(GetApp()->m_msgTaskDialog);
         }
 
         return result;
@@ -374,7 +374,7 @@ namespace Win32xx
 
         BOOL result = (::GetProcAddress(comctl, "TaskDialogIndirect") != FALSE);
 
-        ::FreeLibrary(comctl);
+        VERIFY(::FreeLibrary(comctl));
         return result;
     }
 
@@ -719,7 +719,7 @@ namespace Win32xx
         {
             // Got a message for a window thats not in the map.
             // We should never get here.
-            Trace("*** Warning in CTaskDialog::StaticTaskDialogProc: HWND not in window map ***\n");
+            TRACE("*** Warning in CTaskDialog::StaticTaskDialogProc: HWND not in window map ***\n");
             return 0;
         }
 

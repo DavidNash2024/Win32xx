@@ -1,12 +1,12 @@
-// Win32++   Version 8.8.1
-// Release Date: TBA
+// Win32++   Version 8.9
+// Release Date: 24th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2020  David Nash
+// Copyright (c) 2005-2021  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -52,9 +52,9 @@
   #pragma warning ( pop )
 #endif // _MSC_VER
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)   // >= VS2005
 #pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped.
+#pragma warning ( disable : 26812 )            // enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 
@@ -449,7 +449,7 @@ namespace Win32xx
         *ppIIPUIWin = NULL;
 
         RECT rect;
-        ::GetClientRect(m_hwnd, &rect);
+        VERIFY(::GetClientRect(m_hwnd, &rect));
         pRect->left       = 0;
         pRect->top        = 0;
         pRect->right      = rect.right;
