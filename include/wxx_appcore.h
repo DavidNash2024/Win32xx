@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -222,7 +222,7 @@ namespace Win32xx
 #endif
 
         if (m_thread == 0)
-            throw CWinException(GetApp()->m_msgAppThreadFailed);
+            throw CWinException(GetApp()->MsgAppThread());
 
         return m_thread;
     }
@@ -451,7 +451,6 @@ namespace Win32xx
 
                 m_resource = m_instance;
                 SetCallback();
-                SetMessages();
             }
             else
             {
@@ -769,75 +768,6 @@ namespace Win32xx
         return pWinApp;
     }
 
-    // This function assigns the error messages displayed when an exception
-    // is thrown. Override this function to display error messages in other
-    // languages.
-    inline void CWinApp::SetMessages()
-    {
-        m_msgAppThreadFailed = "Failed to create thread";
-        m_msgArReadFail = "Failed to read from archive.";
-        m_msgArNotCStringA = "ANSI characters stored. Not a CStringW";
-        m_msgArNotCStringW = "Unicode characters stored. Not a CStringA";
-        m_msgCriticalSection = "Failed to create critical section";
-        m_msgMtxEvent = "Unable to create event";
-        m_msgMtxMutex = "Unable to create mutex";
-        m_msgMtxSemaphore = "Unable to create semaphore";
-
-        m_msgWndCreateEx = "Failed to create window";
-        m_msgWndDoModal = "Failed to create dialog";
-        m_msgWndGlobalLock = "CGlobalLock failed to lock handle";
-        m_msgWndPropertSheet = "Failed to create PropertySheet";
-        m_msgSocWSAStartup = "WSAStartup failed";
-        m_msgSocWS2Dll = "Failed to load WS2_2.dll";
-        m_msgIPControl = "IP Address Control not supported!";
-        m_msgRichEditDll = "Failed to load RICHED32.DLL";
-        m_msgTaskDialog = "Failed to create Task Dialog";
-
-        m_msgFileClose = "Failed to close file";
-        m_msgFileFlush = "Failed to flush file";
-        m_msgFileLock = "Failed to lock the file";
-        m_msgFileOpen = "Failed to open file";
-        m_msgFileRead = "Failed to read from file";
-        m_msgFileRename = "Failed to rename file";
-        m_msgFileRemove = "Failed to delete file";
-        m_msgFileLength = "Failed to change the file length";
-        m_msgFileUnlock = "Failed to unlock the file";
-        m_msgFileWrite = "Failed to write to file";
-
-        m_msgGdiDC = "Failed to create device context";
-        m_msgGdiIC = "Failed to create information context";
-        m_msgGdiBitmap = "Failed to create bitmap";
-        m_msgGdiBrush = "Failed to create brush";
-        m_msgGdiFont = "Failed to create font";
-        m_msgGdiPalette = "Failed to create palette";
-        m_msgGdiPen = "Failed to create pen";
-        m_msgGdiRegion = "Failed to region";
-        m_msgGdiGetDC = "GetDC failed";
-        m_msgGdiGetDCEx = "GetDCEx failed";
-        m_msgGdiSelObject = "Failed to select object into device context";
-        m_msgGdiGetWinDC = "GetWindowDC failed";
-        m_msgGdiBeginPaint = "BeginPaint failed";
-
-        m_msgImageList = "Failed to create imagelist";
-        m_msgMenu = "Failed to create menu";
-        m_msgPrintFound = "No printer available";
-
-        // DDX anomaly prompting messages
-        m_msgDDX_Byte = "Please enter an integer between 0 and 255.";
-        m_msgDDX_Int = "Please enter an integer.";
-        m_msgDDX_Long = "Please enter a long integer.";
-        m_msgDDX_Short = "Please enter a short integer.";
-        m_msgDDX_Real = "Please enter a number.";
-        m_msgDDX_UINT = "Please enter a positive integer.";
-        m_msgDDX_ULONG = "Please enter a positive long integer.";
-
-        // DDV formats and prompts
-        m_msgDDV_IntRange = "Please enter an integer in (%ld, %ld).";
-        m_msgDDV_UINTRange = "Please enter an integer in (%lu, %lu).";
-        m_msgDDV_RealRange = "Please enter a number in (%.*g, %.*g).";
-        m_msgDDV_StringSize = "%s\n is too long.\nPlease enter no more than %ld characters.";
-    }
-
     // This function can be used to load a resource dll.
     // A resource dll can be used to define resources in different languages.
     // To use this function, place code like this in InitInstance
@@ -866,6 +796,174 @@ namespace Win32xx
         return pTLSData;
     }
 
+    // Messages used for exceptions.
+    inline CString CWinApp::MsgAppThread() const
+    { return _T("Failed to create thread."); }
+
+    inline CString CWinApp::MsgArReadFail() const
+    { return _T("Failed to read from archive."); }
+
+    inline CString CWinApp::MsgArNotCStringA() const
+    { return _T("ANSI characters stored. Not a CStringW."); }
+
+    inline CString CWinApp::MsgArNotCStringW() const
+    { return _T("Unicode characters stored. Not a CStringA."); }
+
+    inline CString CWinApp::MsgCriticalSection() const
+    { return _T("Failed to create critical section."); }
+
+    inline CString CWinApp::MsgMtxEvent() const
+    { return _T("Unable to create event."); }
+
+    inline CString CWinApp::MsgMtxMutex() const
+    { return _T("Unable to create mutex."); }
+
+    inline CString CWinApp::MsgMtxSemaphore() const
+    { return _T("Unable to create semaphore."); }
+
+    inline CString CWinApp::MsgWndCreate() const
+    { return _T("Failed to create window."); }
+
+    inline CString CWinApp::MsgWndDialog() const
+    { return _T("Failed to create dialog."); }
+
+    inline CString CWinApp::MsgWndGlobalLock() const
+    { return _T("CGlobalLock failed to lock handle."); }
+
+    inline CString CWinApp::MsgWndPropertSheet() const
+    { return _T("Failed to create PropertySheet."); }
+
+    inline CString CWinApp::MsgSocWSAStartup() const
+    { return _T("WSAStartup failed."); }
+
+    inline CString CWinApp::MsgSocWS2Dll() const
+    { return _T("Failed to load WS2_2.dll."); }
+
+    inline CString CWinApp::MsgIPControl() const
+    { return _T("IP Address Control not supported!."); }
+
+    inline CString CWinApp::MsgRichEditDll() const
+    { return _T("Failed to load RICHED32.DLL."); }
+
+    inline CString CWinApp::MsgTaskDialog() const
+    { return _T("Failed to create Task Dialog."); }
+
+    // CFile Messages
+    inline CString CWinApp::MsgFileClose() const
+    { return _T("Failed to close file."); }
+
+    inline CString CWinApp::MsgFileFlush() const
+    { return _T("Failed to flush file."); }
+
+    inline CString CWinApp::MsgFileLock() const
+    { return _T("Failed to lock the file."); }
+
+    inline CString CWinApp::MsgFileOpen() const
+    { return _T("Failed to open file."); }
+
+    inline CString CWinApp::MsgFileRead() const
+    { return _T("Failed to read from file."); }
+
+    inline CString CWinApp::MsgFileRename() const
+    { return _T("Failed to rename file."); }
+
+    inline CString CWinApp::MsgFileRemove() const
+    { return _T("Failed to delete file."); }
+
+    inline CString CWinApp::MsgFileLength() const
+    { return _T("Failed to change the file length."); }
+
+    inline CString CWinApp::MsgFileUnlock() const
+    { return _T("Failed to unlock the file."); }
+
+    inline CString CWinApp::MsgFileWrite() const
+    { return _T("Failed to write to file."); }
+
+    // GDI Messages
+    inline CString CWinApp::MsgGdiDC() const
+    { return _T("Failed to create device context."); }
+
+    inline CString CWinApp::MsgGdiIC() const
+    { return _T("Failed to create information context."); }
+
+    inline CString CWinApp::MsgGdiBitmap() const
+    { return _T("Failed to create bitmap."); }
+
+    inline CString CWinApp::MsgGdiBrush() const
+    { return _T("Failed to create brush."); }
+
+    inline CString CWinApp::MsgGdiFont() const
+    { return _T("Failed to create font."); }
+
+    inline CString CWinApp::MsgGdiPalette() const
+    { return _T("Failed to create palette."); }
+
+    inline CString CWinApp::MsgGdiPen() const
+    { return _T("Failed to create pen."); }
+
+    inline CString CWinApp::MsgGdiRegion() const
+    { return  _T("Failed to create region."); }
+
+    inline CString CWinApp::MsgGdiGetDC() const
+    { return  _T("GetDC failed."); }
+
+    inline CString CWinApp::MsgGdiGetDCEx() const
+    { return _T("GetDCEx failed."); }
+
+    inline CString CWinApp::MsgGdiSelObject() const
+    { return _T("Failed to select object into device context."); }
+
+    inline CString CWinApp::MsgGdiGetWinDC() const
+    { return _T("GetWindowDC failed."); }
+
+    inline CString CWinApp::MsgGdiBeginPaint() const
+    { return _T("BeginPaint failed."); }
+
+    // Image list, Menu and Printer messages
+    inline CString CWinApp::MsgImageList() const
+    { return _T("Failed to create imagelist."); }
+
+    inline CString CWinApp::MsgMenu() const
+    { return _T("Failed to create menu."); }
+
+    inline CString CWinApp::MsgPrintFound() const
+    { return _T("No printer available."); }
+
+    // DDX anomaly prompting messages
+    inline CString CWinApp::MsgDDX_Byte() const
+    { return _T("Please enter an integer between 0 and 255."); }
+
+    inline CString CWinApp::MsgDDX_Int() const
+    { return _T("Please enter an integer."); }
+
+    inline CString CWinApp::MsgDDX_Long() const
+    { return _T("Please enter a long integer."); }
+
+    inline CString CWinApp::MsgDDX_Short() const
+    { return _T("Please enter a short integer."); }
+
+    inline CString CWinApp::MsgDDX_Real() const
+    { return _T("Please enter a number."); }
+
+    inline CString CWinApp::MsgDDX_UINT() const
+    { return _T("Please enter a positive integer."); }
+
+    inline CString CWinApp::MsgDDX_ULONG() const
+    { return _T("Please enter a positive long integer."); }
+
+    // DDV formats and prompts
+    inline CString CWinApp::MsgDDV_IntRange() const
+    { return _T("Please enter an integer in (%ld, %ld)."); }
+
+    inline CString CWinApp::MsgDDV_UINTRange() const
+    { return _T("Please enter an positive integer in (%lu, %lu)."); }
+
+    inline CString CWinApp::MsgDDV_RealRange() const
+    { return _T("Please enter a number in (%.*g, %.*g)."); }
+
+    inline CString CWinApp::MsgDDV_StringSize() const
+    { return _T("%s\n is too long.\nPlease enter no more than %ld characters."); }
+
 
     ////////////////////////////////////////
     // Global Functions
@@ -875,7 +973,7 @@ namespace Win32xx
     inline CWinApp* GetApp()
     {
         CWinApp* pApp = CWinApp::SetnGetThis();
-        
+
         // This assert fails if Win32++ isn't started.
         assert(pApp);
 

@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -164,7 +164,7 @@ namespace Win32xx
                 if (m_p == 0)
                 {
                     // The handle is probably invalid
-                    throw CWinException(GetApp()->m_msgWndGlobalLock);
+                    throw CWinException(GetApp()->MsgWndGlobalLock());
                 }
             }
             else
@@ -546,7 +546,7 @@ namespace Win32xx
                 // Reset global memory
                 GetApp()->m_devMode.Free();
                 GetApp()->m_devNames.Free();
-                throw CWinException(GetApp()->m_msgWndDoModal, error);
+                throw CWinException(GetApp()->MsgWndDialog(), error);
             }
 
             OnCancel();
@@ -624,7 +624,7 @@ namespace Win32xx
             GetApp()->UpdateDefaultPrinter();
 
         if (GetApp()->m_devNames.Get() == 0)
-            throw CResourceException(GetApp()->m_msgPrintFound);
+            throw CResourceException(GetApp()->MsgPrintFound());
 
         return CDevMode(GetApp()->m_devMode);
     }
@@ -874,7 +874,7 @@ namespace Win32xx
                 // Reset global memory
                 GetApp()->m_devMode.Free();
                 GetApp()->m_devNames.Free();
-                throw CWinException(GetApp()->m_msgWndDoModal, error);
+                throw CWinException(GetApp()->MsgWndDialog(), error);
             }
 
             OnCancel();
@@ -915,7 +915,7 @@ namespace Win32xx
             GetApp()->UpdateDefaultPrinter();
 
         if (GetApp()->m_devNames.Get() == 0)
-            throw CResourceException(GetApp()->m_msgPrintFound);
+            throw CResourceException(GetApp()->MsgPrintFound());
 
         return CDevNames(GetApp()->m_devNames);
     }

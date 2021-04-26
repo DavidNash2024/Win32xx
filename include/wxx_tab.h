@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1827,7 +1827,7 @@ namespace Win32xx
         // Create the MDICLIENT view window
         if (!CreateEx(0, _T("MDICLIENT"), _T(""),
             style, 0, 0, 0, 0, parent, NULL, (PSTR) &clientcreate))
-                throw CWinException(GetApp()->m_msgWndCreateEx);
+                throw CWinException(GetApp()->MsgWndCreate());
 
         return *this;
     }

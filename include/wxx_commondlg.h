@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -454,7 +454,7 @@ namespace Win32xx
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
-                throw CWinException(GetApp()->m_msgWndDoModal, error);
+                throw CWinException(GetApp()->MsgWndDialog(), error);
 
             OnCancel();
             return IDCANCEL;
@@ -650,7 +650,7 @@ namespace Win32xx
             {
                 // ignore the exception caused by closing the dialog
                 if (error != CDERR_DIALOGFAILURE || (m_ofn.Flags & OFN_EXPLORER))
-                    throw CWinException(GetApp()->m_msgWndDoModal, error);
+                    throw CWinException(GetApp()->MsgWndDialog(), error);
             }
 
             OnCancel();
@@ -1116,7 +1116,7 @@ namespace Win32xx
         if (wnd == 0)
         {
             // Throw an exception when window creation fails
-            throw CWinException(GetApp()->m_msgWndDoModal);
+            throw CWinException(GetApp()->MsgWndDialog());
         }
 
         m_findWhat.ReleaseBuffer();
@@ -1455,7 +1455,7 @@ namespace Win32xx
             DWORD error = CommDlgExtendedError();
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
-                throw CWinException(GetApp()->m_msgWndDoModal, error);
+                throw CWinException(GetApp()->MsgWndDialog(), error);
 
             OnCancel();
             return IDCANCEL;

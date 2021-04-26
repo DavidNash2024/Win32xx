@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -243,7 +243,7 @@ namespace Win32xx
         if (m_retrieveAndValidate && value.GetLength() > count)
         {
             CString message;
-            message.Format(GetApp()->m_msgDDV_StringSize, value.c_str(), count);
+            message.Format(GetApp()->MsgDDV_StringSize(), value.c_str(), count);
 
             throw CUserException(message);
         }
@@ -320,7 +320,7 @@ namespace Win32xx
         // Throw includes an error message with the range tuple when
         // reading a number outside the range.
         CString message;
-        message.Format(GetApp()->m_msgDDV_RealRange, precision, min, precision, max);
+        message.Format(GetApp()->MsgDDV_RealRange(), precision, min, precision, max);
 
         throw CUserException(message);
     }
@@ -359,7 +359,7 @@ namespace Win32xx
         // Throw includes an error message with the range tuple when
         // reading a number outside the range.
         CString message;
-        message.Format(GetApp()->m_msgDDV_IntRange, min, max);
+        message.Format(GetApp()->MsgDDV_IntRange(), min, max);
 
         throw CUserException(message);
     }
@@ -466,7 +466,7 @@ namespace Win32xx
         // Throw includes an error message with the range tuple when
         // reading a number outside the range.
         CString message;
-        message.Format(GetApp()->m_msgDDV_UINTRange, min, max);
+        message.Format(GetApp()->MsgDDV_UINTRange(), min, max);
 
         throw CUserException(message);
     }
@@ -896,7 +896,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(GetApp()->m_msgDDX_Byte);
+                throw CUserException(GetApp()->MsgDDX_Byte());
             }
         }
         else
@@ -922,7 +922,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(GetApp()->m_msgDDX_Short);
+                throw CUserException(GetApp()->MsgDDX_Short());
             }
         }
         else
@@ -948,7 +948,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(GetApp()->m_msgDDX_Int);
+                throw CUserException(GetApp()->MsgDDX_Int());
             }
         }
         else
@@ -974,7 +974,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(GetApp()->m_msgDDX_UINT);
+                throw CUserException(GetApp()->MsgDDX_UINT());
             }
         }
         else
@@ -1000,7 +1000,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(GetApp()->m_msgDDX_Long);
+                throw CUserException(GetApp()->MsgDDX_Long());
             }
         }
         else
@@ -1026,7 +1026,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(GetApp()->m_msgDDX_ULONG);
+                throw CUserException(GetApp()->MsgDDX_ULONG());
             }
         }
         else
@@ -1052,7 +1052,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(GetApp()->m_msgDDX_Real);
+                throw CUserException(GetApp()->MsgDDX_Real());
             }
         }
         else
@@ -1078,7 +1078,7 @@ namespace Win32xx
             if (ts.fail())
             {
                 value = oldvalue;
-                throw CUserException(GetApp()->m_msgDDX_Real);
+                throw CUserException(GetApp()->MsgDDX_Real());
             }
         }
         else
