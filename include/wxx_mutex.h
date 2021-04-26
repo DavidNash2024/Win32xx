@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -157,7 +157,7 @@ namespace Win32xx
     {
         m_event = ::CreateEvent(pAttributes, isManualReset, isInitiallySignaled, pstrName);
         if (m_event == 0)
-            throw CResourceException(GetApp()->m_msgMtxEvent);
+            throw CResourceException(GetApp()->MsgMtxEvent());
     }
 
     // Sets the specified event object to the non-signalled state.
@@ -190,7 +190,7 @@ namespace Win32xx
     {
         m_mutex = ::CreateMutex(pAttributes, isInitiallySignaled, pName);
         if (m_mutex == 0)
-            throw CResourceException(GetApp()->m_msgMtxMutex);
+            throw CResourceException(GetApp()->MsgMtxMutex());
     }
 
 
@@ -214,7 +214,7 @@ namespace Win32xx
 
         m_semaphore = ::CreateSemaphore(pAttributes, initialCount, maxCount, pName);
         if (m_semaphore == 0)
-            throw CResourceException(GetApp()->m_msgMtxSemaphore);
+            throw CResourceException(GetApp()->MsgMtxSemaphore());
     }
 
     // Increases the count of the specified semaphore object by a specified amount.

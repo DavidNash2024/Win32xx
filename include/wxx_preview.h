@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -465,7 +465,7 @@ namespace Win32xx
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
         if (printerDC.GetHDC() == 0)
-            throw CResourceException(GetApp()->m_msgPrintFound);
+            throw CResourceException(GetApp()->MsgPrintFound());
 
         // Create a memory DC for the printer.
         // Note: we use the printer's DC here to render text accurately

@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1493,7 +1493,7 @@ namespace Win32xx
             InitCommonControlsEx(&initStruct);
         }
         else
-            throw CNotSupportedException(GetApp()->m_msgIPControl);
+            throw CNotSupportedException(GetApp()->MsgIPControl());
     }
 
     // Clears the contents of the IP address control.

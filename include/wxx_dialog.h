@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -492,7 +492,7 @@ namespace Win32xx
         // Throw an exception if the dialog creation fails
         if (result == -1)
         {
-            throw CWinException(GetApp()->m_msgWndDoModal);
+            throw CWinException(GetApp()->MsgWndDialog());
         }
 
         return result;
@@ -533,7 +533,7 @@ namespace Win32xx
         // Display information on dialog creation failure
         if (wnd == 0)
         {
-            throw CWinException(GetApp()->m_msgWndDoModal);
+            throw CWinException(GetApp()->MsgWndDialog());
         }
 
         return wnd;

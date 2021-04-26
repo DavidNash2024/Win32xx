@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -577,7 +577,6 @@ namespace Win32xx
         CGDI_Data* GetCGDIData(HGDIOBJ object);
         CIml_Data* GetCImlData(HIMAGELIST images);
         void SetCallback();
-        void SetMessages();
         static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
         void UpdateDefaultPrinter();
 
@@ -604,69 +603,69 @@ namespace Win32xx
 #endif
 
     public:
-    // Messages used for exceptions.
-    CString m_msgAppThreadFailed;
-    CString m_msgArReadFail;
-    CString m_msgArNotCStringA;
-    CString m_msgArNotCStringW;
-    CString m_msgCriticalSection;
-    CString m_msgMtxEvent;
-    CString m_msgMtxMutex;
-    CString m_msgMtxSemaphore;
+        // Messages used for exceptions.
+        virtual CString MsgAppThread() const;
+        virtual CString MsgArReadFail() const;
+        virtual CString MsgArNotCStringA() const;
+        virtual CString MsgArNotCStringW() const;
+        virtual CString MsgCriticalSection() const;
+        virtual CString MsgMtxEvent() const;
+        virtual CString MsgMtxMutex() const;
+        virtual CString MsgMtxSemaphore() const;
 
-    CString m_msgWndCreateEx;
-    CString m_msgWndDoModal;
-    CString m_msgWndGlobalLock;
-    CString m_msgWndPropertSheet;
-    CString m_msgSocWSAStartup;
-    CString m_msgSocWS2Dll;
-    CString m_msgIPControl;
-    CString m_msgRichEditDll;
-    CString m_msgTaskDialog;
+        virtual CString MsgWndCreate() const;
+        virtual CString MsgWndDialog() const;
+        virtual CString MsgWndGlobalLock() const;
+        virtual CString MsgWndPropertSheet() const;
+        virtual CString MsgSocWSAStartup() const;
+        virtual CString MsgSocWS2Dll() const;
+        virtual CString MsgIPControl() const;
+        virtual CString MsgRichEditDll() const;
+        virtual CString MsgTaskDialog() const;
 
-    CString m_msgFileClose;
-    CString m_msgFileFlush;
-    CString m_msgFileLock;
-    CString m_msgFileOpen;
-    CString m_msgFileRead;
-    CString m_msgFileRename;
-    CString m_msgFileRemove;
-    CString m_msgFileLength;
-    CString m_msgFileUnlock;
-    CString m_msgFileWrite;
+        virtual CString MsgFileClose() const;
+        virtual CString MsgFileFlush() const;
+        virtual CString MsgFileLock() const;
+        virtual CString MsgFileOpen() const;
+        virtual CString MsgFileRead() const;
+        virtual CString MsgFileRename() const;
+        virtual CString MsgFileRemove() const;
+        virtual CString MsgFileLength() const;
+        virtual CString MsgFileUnlock() const;
+        virtual CString MsgFileWrite() const;
 
-    CString m_msgGdiDC;
-    CString m_msgGdiIC;
-    CString m_msgGdiBitmap;
-    CString m_msgGdiBrush;
-    CString m_msgGdiFont;
-    CString m_msgGdiPalette;
-    CString m_msgGdiPen;
-    CString m_msgGdiRegion;
-    CString m_msgGdiGetDC;
-    CString m_msgGdiGetDCEx;
-    CString m_msgGdiSelObject;
-    CString m_msgGdiGetWinDC;
-    CString m_msgGdiBeginPaint;
+        virtual CString MsgGdiDC() const;
+        virtual CString MsgGdiIC() const;
+        virtual CString MsgGdiBitmap() const;
+        virtual CString MsgGdiBrush() const;
+        virtual CString MsgGdiFont() const;
+        virtual CString MsgGdiPalette() const;
+        virtual CString MsgGdiPen() const;
+        virtual CString MsgGdiRegion() const;
+        virtual CString MsgGdiGetDC() const;
+        virtual CString MsgGdiGetDCEx() const;
+        virtual CString MsgGdiSelObject() const;
+        virtual CString MsgGdiGetWinDC() const;
+        virtual CString MsgGdiBeginPaint() const;
 
-    CString m_msgImageList;
-    CString m_msgMenu;
-    CString m_msgPrintFound;
+        virtual CString MsgImageList() const;
+        virtual CString MsgMenu() const;
+        virtual CString MsgPrintFound() const;
 
-    // DDX anomaly prompting messages
-    CString m_msgDDX_Byte;
-    CString m_msgDDX_Int;
-    CString m_msgDDX_Long;
-    CString m_msgDDX_Short;
-    CString m_msgDDX_Real;
-    CString m_msgDDX_UINT;
-    CString m_msgDDX_ULONG;
+        // DDX anomaly prompting messages
+        virtual CString MsgDDX_Byte() const;
+        virtual CString MsgDDX_Int() const;
+        virtual CString MsgDDX_Long() const;
+        virtual CString MsgDDX_Short() const;
+        virtual CString MsgDDX_Real() const;
+        virtual CString MsgDDX_UINT() const;
+        virtual CString MsgDDX_ULONG() const;
 
-    // DDV formats and prompts
-    CString m_msgDDV_IntRange;
-    CString m_msgDDV_UINTRange;
-    CString m_msgDDV_RealRange;
-    CString m_msgDDV_StringSize;
+        // DDV formats and prompts
+        virtual CString MsgDDV_IntRange() const;
+        virtual CString MsgDDV_UINTRange() const;
+        virtual CString MsgDDV_RealRange() const;
+        virtual CString MsgDDV_StringSize() const;
     };
 
 

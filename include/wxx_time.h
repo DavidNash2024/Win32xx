@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -819,7 +819,7 @@ namespace Win32xx
         if (size != sizeof(ULONGLONG))
         {
             CString str = ar.GetFile().GetFilePath();
-            throw CFileException(str, GetApp()->m_msgArReadFail);
+            throw CFileException(str, GetApp()->MsgArReadFail());
         }
 
         // load CTime as x64
@@ -1087,7 +1087,7 @@ namespace Win32xx
         if (size != sizeof(ULONGLONG))
         {
             CString str = ar.GetFile().GetFilePath();
-            throw CFileException(str, GetApp()->m_msgArReadFail);
+            throw CFileException(str, GetApp()->MsgArReadFail());
         }
 
         // load CTimeSpan as x64

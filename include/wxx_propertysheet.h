@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -650,7 +650,7 @@ namespace Win32xx
         m_psh.dwFlags |= PSH_MODELESS;
         HWND wnd = reinterpret_cast<HWND>(CreatePropertySheet(&m_psh));
         if (wnd == 0)
-            throw CWinException(GetApp()->m_msgWndPropertSheet);
+            throw CWinException(GetApp()->MsgWndPropertSheet());
 
         return wnd;
     }
@@ -678,7 +678,7 @@ namespace Win32xx
         pTLSData->pWnd = NULL;
 
         if (ipResult == -1)
-            throw CWinException(GetApp()->m_msgWndPropertSheet);
+            throw CWinException(GetApp()->MsgWndPropertSheet());
 
         return ipResult;
     }

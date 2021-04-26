@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -250,7 +250,7 @@ namespace Win32xx
         GetApp()->AddCMenuData(m_pData->menu, m_pData);
     }
 
-    // Decrements the reference count. 
+    // Decrements the reference count.
     // Destroys m_pData if the reference count is zero.
     inline void CMenu::Release()
     {
@@ -380,7 +380,7 @@ namespace Win32xx
 
         HMENU menu = ::CreateMenu();
         if (menu == 0)
-            throw CResourceException(GetApp()->m_msgMenu);
+            throw CResourceException(GetApp()->MsgMenu());
 
         Attach(menu);
         m_pData->isManagedMenu = true;
@@ -394,7 +394,7 @@ namespace Win32xx
 
         HMENU menu = ::CreatePopupMenu();
         if (menu == 0)
-            throw CResourceException(GetApp()->m_msgMenu);
+            throw CResourceException(GetApp()->MsgMenu());
 
         Attach(menu);
         m_pData->isManagedMenu = true;

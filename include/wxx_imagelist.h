@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -328,7 +328,7 @@ namespace Win32xx
         HIMAGELIST images = ImageList_Create(cx, cy, flags, initial, grow);
 
         if (images == 0)
-            throw CResourceException(GetApp()->m_msgImageList);
+            throw CResourceException(GetApp()->MsgImageList());
 
         Attach(images);
         m_pData->isManagedHiml = true;
@@ -363,7 +363,7 @@ namespace Win32xx
 
         HIMAGELIST images = ImageList_LoadBitmap(GetApp()->GetInstanceHandle(), pResourceName, cx, grow, mask);
         if (images == 0)
-            throw CResourceException(GetApp()->m_msgImageList);
+            throw CResourceException(GetApp()->MsgImageList());
 
         Attach(images);
         m_pData->isManagedHiml = true;
@@ -379,7 +379,7 @@ namespace Win32xx
 
         HIMAGELIST copyImages = ImageList_Duplicate(images);
         if (copyImages == 0)
-            throw CResourceException(GetApp()->m_msgImageList);
+            throw CResourceException(GetApp()->MsgImageList());
 
         Attach(copyImages);
         m_pData->isManagedHiml = true;
@@ -640,7 +640,7 @@ namespace Win32xx
         return m_pData->images;
     }
 
-    // Decrements the reference count. 
+    // Decrements the reference count.
     // Destroys m_pData if the reference count is zero.
     inline void CImageList::Release()
     {

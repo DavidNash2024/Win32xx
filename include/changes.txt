@@ -19,8 +19,8 @@ New Features and Enhancements
    Visual Studio Community 2019.
 
 * The error messages displayed when an exception is raised have been moved to
-  CWinApp as a set of public CString members. These messages can be updated to
-  support other languages if required.   
+  CWinApp as a set of virtual member functions. These can be overridden to
+  support other languages if required.
 
 * A CResource exception is now thrown in additional circumstances:
   - CMenu throws a CResourceException if the menu can't be created.
@@ -38,15 +38,69 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-Added a set of public CString member variables to CWinApp for error messages.
+Added the following set of virtual functions to CWinApp for error messages.
+  CWinApp::MsgAppThreadFailed
+  CWinApp::MsgArReadFail
+  CWinApp::MsgArNotCStringA
+  CWinApp::MsgArNotCStringW
+  CWinApp::MsgCriticalSection
+  CWinApp::MsgMtxEvent
+  CWinApp::MsgMtxMutex
+  CWinApp::MsgMtxSemaphore
+  CWinApp::MsgWndCreateEx
+  CWinApp::MsgWndDoModal
+  CWinApp::MsgWndGlobalLock
+  CWinApp::MsgWndPropertSheet
+  CWinApp::MsgSocWSAStartup
+  CWinApp::MsgSocWS2Dll
+  CWinApp::MsgIPControl
+  CWinApp::MsgRichEditDll
+  CWinApp::MsgTaskDialog
+  CWinApp::MsgFileClose
+  CWinApp::MsgFileFlush
+  CWinApp::MsgFileLock
+  CWinApp::MsgFileOpen
+  CWinApp::MsgFileRead
+  CWinApp::MsgFileRename
+  CWinApp::MsgFileRemove
+  CWinApp::MsgFileLength
+  CWinApp::MsgFileUnlock
+  CWinApp::MsgFileWrite
+  CWinApp::MsgGdiDC
+  CWinApp::MsgGdiIC
+  CWinApp::MsgGdiBitmap
+  CWinApp::MsgGdiBrush
+  CWinApp::MsgGdiFont
+  CWinApp::MsgGdiPalette
+  CWinApp::MsgGdiPen
+  CWinApp::MsgGdiRegion
+  CWinApp::MsgGdiGetDC
+  CWinApp::MsgGdiGetDCEx
+  CWinApp::MsgGdiSelObject
+  CWinApp::MsgGdiGetWinDC
+  CWinApp::MsgGdiBeginPaint
+  CWinApp::MsgImageList
+  CWinApp::MsgMenu
+  CWinApp::MsgPrintFound
+  CWinApp::MsgDDX_Byte
+  CWinApp::MsgDDX_Int
+  CWinApp::MsgDDX_Long
+  CWinApp::MsgDDX_Short
+  CWinApp::MsgDDX_Real
+  CWinApp::MsgDDX_UINT
+  CWinApp::MsgDDX_ULONG
+  CWinApp::MsgDDV_IntRange
+  CWinApp::MsgDDV_UINTRange
+  CWinApp::MsgDDV_RealRange
+  CWinApp::MsgDDV_StringSize
 
 The following functions now throw a CResourceException on failure:
   CDC::SelectObject
   CDC::SelectPalette
   CImageList::Create
   CImageList::CreateDisabledImageList
-  CMenu::CreateMenu 
-  CMenu::CreatePopupMenu 
+  CMenu::CreateMenu
+  CMenu::CreatePopupMenu
 
 
 Version 8.8

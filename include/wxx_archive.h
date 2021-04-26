@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -310,7 +310,7 @@ namespace Win32xx
         {
             UINT nBytes = m_pFile->Read(pBuf, size);
             if (nBytes != size)
-                throw CFileException(m_pFile->GetFilePath(), GetApp()->m_msgArReadFail);
+                throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArReadFail());
         }
     }
 
@@ -703,7 +703,7 @@ namespace Win32xx
         *this >> chars;
 
         if (isUnicode)
-            throw CFileException(m_pFile->GetFilePath(), GetApp()->m_msgArNotCStringA);
+            throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArNotCStringA());
 
         Read(string.GetBuffer(chars), chars);
         string.ReleaseBuffer(chars);
@@ -723,7 +723,7 @@ namespace Win32xx
         *this >> chars;
 
         if (!isUnicode)
-            throw CFileException(m_pFile->GetFilePath(), GetApp()->m_msgArNotCStringW);
+            throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArNotCStringW());
 
         Read(string.GetBuffer(chars), chars * 2);
         string.ReleaseBuffer(chars);
@@ -816,7 +816,7 @@ namespace Win32xx
         Read(&size, sizeof(size));
         if (size != ao.m_size)
         {
-            throw CFileException(m_pFile->GetFilePath(), GetApp()->m_msgArReadFail);
+            throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArReadFail());
         }
 
         Read(ao.m_pData, ao.m_size);

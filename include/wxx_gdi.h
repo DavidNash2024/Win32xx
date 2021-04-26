@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -848,7 +848,7 @@ namespace Win32xx
             {
                 HDC dc = ::GetDC(wnd);
                 if (dc == 0)
-                    throw CResourceException(GetApp()->m_msgGdiGetDC);
+                    throw CResourceException(GetApp()->MsgGdiGetDC());
 
                 Attach(dc, wnd);
                 SetManaged(true);
@@ -883,7 +883,7 @@ namespace Win32xx
             {
                 HDC dc = ::GetDCEx(wnd, hrgnClip, flags);
                 if (dc == 0)
-                    throw CResourceException(GetApp()->m_msgGdiGetDCEx);
+                    throw CResourceException(GetApp()->MsgGdiGetDCEx());
 
                 Attach(dc, wnd);
                 SetManaged(true);
@@ -938,7 +938,7 @@ namespace Win32xx
             {
                 HDC dc = ::BeginPaint(wnd, &m_ps);
                 if (dc == 0)
-                    throw CResourceException(GetApp()->m_msgGdiBeginPaint);
+                    throw CResourceException(GetApp()->MsgGdiBeginPaint());
 
                 Attach(dc, wnd);
             }
@@ -994,7 +994,7 @@ namespace Win32xx
             {
                 HDC dc = ::GetWindowDC(wnd);
                 if (dc == 0)
-                    throw CResourceException(GetApp()->m_msgGdiGetWinDC);
+                    throw CResourceException(GetApp()->MsgGdiGetWinDC());
 
                 Attach(dc, wnd);
                 SetManaged(true);
@@ -1036,7 +1036,7 @@ namespace Win32xx
                 assert(GetHDC() == 0);
                 HDC dc = ::CreateMetaFile(pFilename);
                 if (dc == 0)
-                    throw CResourceException(GetApp()->m_msgGdiDC);
+                    throw CResourceException(GetApp()->MsgGdiDC());
 
                 Attach(dc);
                 SetManaged(true);
@@ -1085,7 +1085,7 @@ namespace Win32xx
                 assert(GetHDC() == 0);
                 HDC dc = ::CreateEnhMetaFile(ref, pFileName, pBounds, pDescription);
                 if (dc == 0)
-                    throw CResourceException(GetApp()->m_msgGdiDC);
+                    throw CResourceException(GetApp()->MsgGdiDC());
 
                 Attach(dc);
                 SetManaged(true);
@@ -1314,7 +1314,7 @@ namespace Win32xx
         return m_pData ? ::GetObject(m_pData->hGDIObject, count, pObject) : 0;
     }
 
-    // Decrements the reference count. 
+    // Decrements the reference count.
     // Destroys m_pData if the reference count is zero.
     inline void CGDIObject::Release()
     {
@@ -1519,7 +1519,7 @@ namespace Win32xx
     {
         HBITMAP bitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), bitmapID, static_cast<WORD>(flags), pColorMap, mapSize);
         if (bitmap == 0)
-            throw CResourceException(GetApp()->m_msgGdiBitmap);
+            throw CResourceException(GetApp()->MsgGdiBitmap());
 
         Attach(bitmap);
         SetManaged(true);
@@ -1534,7 +1534,7 @@ namespace Win32xx
     {
         HBITMAP bitmap = ::CreateBitmap(width, height, planes, bitsPerPixel, pBits);
         if (bitmap == 0)
-            throw CResourceException(GetApp()->m_msgGdiBitmap);
+            throw CResourceException(GetApp()->MsgGdiBitmap());
 
         Attach(bitmap);
         SetManaged(true);
@@ -1549,7 +1549,7 @@ namespace Win32xx
     {
         HBITMAP copyBitmap = ::CreateBitmapIndirect(&bitmap);
         if (copyBitmap == 0)
-            throw CResourceException(GetApp()->m_msgGdiBitmap);
+            throw CResourceException(GetApp()->MsgGdiBitmap());
 
         Attach(copyBitmap);
         SetManaged(true);
@@ -1564,7 +1564,7 @@ namespace Win32xx
     {
         HBITMAP bitmap = ::CreateCompatibleBitmap(dc, width, height);
         if (bitmap == 0)
-            throw CResourceException(GetApp()->m_msgGdiBitmap);
+            throw CResourceException(GetApp()->MsgGdiBitmap());
 
         Attach(bitmap);
         SetManaged(true);
@@ -1831,7 +1831,7 @@ namespace Win32xx
     {
         HBRUSH brush = ::CreateSolidBrush(color);
         if (brush == 0)
-            throw CResourceException(GetApp()->m_msgGdiBrush);
+            throw CResourceException(GetApp()->MsgGdiBrush());
 
         Attach(brush);
         SetManaged(true);
@@ -1846,7 +1846,7 @@ namespace Win32xx
     {
         HBRUSH brush = ::CreateHatchBrush(index, color);
         if (brush == 0)
-            throw CResourceException(GetApp()->m_msgGdiBrush);
+            throw CResourceException(GetApp()->MsgGdiBrush());
 
         Attach(brush);
         SetManaged(true);
@@ -1859,7 +1859,7 @@ namespace Win32xx
     {
         HBRUSH brush = ::CreateBrushIndirect(&logBrush);
         if (brush == 0)
-            throw CResourceException(GetApp()->m_msgGdiBrush);
+            throw CResourceException(GetApp()->MsgGdiBrush());
 
         Attach(brush);
         SetManaged(true);
@@ -1872,7 +1872,7 @@ namespace Win32xx
     {
         HBRUSH brush = ::CreateDIBPatternBrush(hDIBPacked, colorSpec);
         if (brush == 0)
-            throw CResourceException(GetApp()->m_msgGdiBrush);
+            throw CResourceException(GetApp()->MsgGdiBrush());
 
         Attach(brush);
         SetManaged(true);
@@ -1885,7 +1885,7 @@ namespace Win32xx
     {
         HBRUSH brush = ::CreateDIBPatternBrushPt(pPackedDIB, usage);
         if (brush == 0)
-            throw CResourceException(GetApp()->m_msgGdiBrush);
+            throw CResourceException(GetApp()->MsgGdiBrush());
 
         Attach(brush);
         SetManaged(true);
@@ -1901,7 +1901,7 @@ namespace Win32xx
     {
         HBRUSH brush = ::CreatePatternBrush(bitmap);
         if (brush == 0)
-            throw CResourceException(GetApp()->m_msgGdiBrush);
+            throw CResourceException(GetApp()->MsgGdiBrush());
 
         Attach(brush);
         SetManaged(true);
@@ -1961,7 +1961,7 @@ namespace Win32xx
     {
         HFONT font = ::CreateFontIndirect(&logFont);
         if (font == 0)
-            throw CResourceException(GetApp()->m_msgGdiFont);
+            throw CResourceException(GetApp()->MsgGdiFont());
 
         Attach(font);
         SetManaged(true);
@@ -2031,7 +2031,7 @@ namespace Win32xx
             pitchAndFamily, faceName);
 
         if (font == 0)
-            throw CResourceException(GetApp()->m_msgGdiFont);
+            throw CResourceException(GetApp()->MsgGdiFont());
 
         Attach(font);
         SetManaged(true);
@@ -2079,7 +2079,7 @@ namespace Win32xx
     {
         HPALETTE palette = ::CreatePalette (lpLogPalette);
         if (palette == 0)
-            throw CResourceException(GetApp()->m_msgGdiPalette);
+            throw CResourceException(GetApp()->MsgGdiPalette());
 
         Attach(palette);
         SetManaged(true);
@@ -2094,7 +2094,7 @@ namespace Win32xx
     {
         HPALETTE palette = ::CreateHalftonePalette(dc);
         if (palette == 0)
-            throw CResourceException(GetApp()->m_msgGdiPalette);
+            throw CResourceException(GetApp()->MsgGdiPalette());
 
         Attach(palette);
         ::RealizePalette(dc);
@@ -2298,7 +2298,7 @@ namespace Win32xx
     {
         HRGN rgn = ::CreateRectRgn(x1, y1, x2, y2);
         if (rgn == 0)
-            throw CResourceException(GetApp()->m_msgGdiRegion);
+            throw CResourceException(GetApp()->MsgGdiRegion());
 
         Attach(rgn);
         SetManaged(true);
@@ -2311,7 +2311,7 @@ namespace Win32xx
     {
         HRGN rgn = ::CreateRectRgnIndirect(&rc);
         if (rgn == 0)
-            throw CResourceException(GetApp()->m_msgGdiRegion);
+            throw CResourceException(GetApp()->MsgGdiRegion());
 
         Attach(rgn);
         SetManaged(true);
@@ -2326,7 +2326,7 @@ namespace Win32xx
     {
         HRGN rgn = ::CreateEllipticRgn(x1, y1, x2, y2);
         if (rgn == 0)
-            throw CResourceException(GetApp()->m_msgGdiRegion);
+            throw CResourceException(GetApp()->MsgGdiRegion());
 
         Attach(rgn);
         SetManaged(true);
@@ -2339,7 +2339,7 @@ namespace Win32xx
     {
         HRGN rgn = ::CreateEllipticRgnIndirect(&rc);
         if (rgn == 0)
-            throw CResourceException(GetApp()->m_msgGdiRegion);
+            throw CResourceException(GetApp()->MsgGdiRegion());
 
         Attach(rgn);
         SetManaged(true);
@@ -2352,7 +2352,7 @@ namespace Win32xx
     {
         HRGN rgn = ::CreatePolygonRgn(pPoints, count, mode);
         if (rgn == 0)
-            throw CResourceException(GetApp()->m_msgGdiRegion);
+            throw CResourceException(GetApp()->MsgGdiRegion());
 
         Attach(rgn);
         SetManaged(true);
@@ -2365,7 +2365,7 @@ namespace Win32xx
     {
         HRGN rgn = ::CreatePolyPolygonRgn(pPoints, pPolyCounts, count, polyFillMode);
         if (rgn == 0)
-            throw CResourceException(GetApp()->m_msgGdiRegion);
+            throw CResourceException(GetApp()->MsgGdiRegion());
 
         Attach(rgn);
         SetManaged(true);
@@ -2378,7 +2378,7 @@ namespace Win32xx
     {
         HRGN rgn = ::CreateRoundRectRgn(x1, y1, x2, y2, x3, y3);
         if (rgn == 0)
-            throw CResourceException(GetApp()->m_msgGdiRegion);
+            throw CResourceException(GetApp()->MsgGdiRegion());
 
         Attach(rgn);
         SetManaged(true);
@@ -2393,7 +2393,7 @@ namespace Win32xx
         assert(dc != 0);
         HRGN rgn = ::PathToRegion(dc);
         if (rgn == 0)
-            throw CResourceException(GetApp()->m_msgGdiRegion);
+            throw CResourceException(GetApp()->MsgGdiRegion());
 
         Attach(rgn);
         SetManaged(true);
@@ -2409,7 +2409,7 @@ namespace Win32xx
     {
         HRGN rgn = ::ExtCreateRegion(pXForm, count, pRgnData);
         if (rgn == 0)
-            throw CResourceException(GetApp()->m_msgGdiRegion);
+            throw CResourceException(GetApp()->MsgGdiRegion());
 
         Attach(rgn);
         SetManaged(true);
@@ -2688,7 +2688,7 @@ namespace Win32xx
         HDC dc = ::CreateCompatibleDC(hSource);
 
         if (dc == 0)
-            throw CResourceException(GetApp()->m_msgGdiDC);
+            throw CResourceException(GetApp()->MsgGdiDC());
 
         Attach(dc);
         SetManaged(true);
@@ -2703,7 +2703,7 @@ namespace Win32xx
         HDC dc = ::CreateDC(pDriver, pDevice, pOutput, pInitData);
 
         if (dc == 0)
-            throw CResourceException(GetApp()->m_msgGdiDC);
+            throw CResourceException(GetApp()->MsgGdiDC());
 
         Attach(dc);
         SetManaged(true);
@@ -2722,7 +2722,7 @@ namespace Win32xx
         HDC dc = ::CreateIC(pDriver, pDevice, pOutput, pInitData);
 
         if (dc == 0)
-            throw CResourceException(GetApp()->m_msgGdiIC);
+            throw CResourceException(GetApp()->MsgGdiIC());
 
         Attach(dc);
         SetManaged(true);
@@ -2795,7 +2795,7 @@ namespace Win32xx
         SetBkColor(oldBkColor);
     }
 
-    // Decrements the reference count. 
+    // Decrements the reference count.
     // Destroys m_pData if the reference count is zero.
     inline void CDC::Release()
     {
@@ -2858,7 +2858,7 @@ namespace Win32xx
         HBITMAP oldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
         if (oldBitmap == 0)
             // throws if an error occurs (bitmap is invalid or incompatable).
-            throw CResourceException(GetApp()->m_msgGdiSelObject);
+            throw CResourceException(GetApp()->MsgGdiSelObject());
 
         return oldBitmap;
     }
@@ -2871,7 +2871,7 @@ namespace Win32xx
         HBRUSH oldBrush = reinterpret_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
         if (oldBrush == 0)
             // throws if an error occurs.
-            throw CResourceException(GetApp()->m_msgGdiSelObject);
+            throw CResourceException(GetApp()->MsgGdiSelObject());
 
         return oldBrush;
     }
@@ -2884,7 +2884,7 @@ namespace Win32xx
         HFONT oldFont = reinterpret_cast<HFONT>(::SelectObject(m_pData->dc, font));
         if (oldFont == 0)
             // throws if an error occurs.
-            throw CResourceException(GetApp()->m_msgGdiSelObject);
+            throw CResourceException(GetApp()->MsgGdiSelObject());
 
         return oldFont;
     }
@@ -2897,7 +2897,7 @@ namespace Win32xx
         HPEN oldPen = reinterpret_cast<HPEN>(::SelectObject(m_pData->dc, pen));
         if (oldPen == 0)
             // throws if an error occurs.
-            throw CResourceException(GetApp()->m_msgGdiSelObject);
+            throw CResourceException(GetApp()->MsgGdiSelObject());
 
         return oldPen;
     }
@@ -2911,7 +2911,7 @@ namespace Win32xx
         HANDLE rgnType = ::SelectObject(m_pData->dc, rgn);
         if (rgnType == HGDI_ERROR)
             // throws if an error occurs.
-            throw CResourceException(GetApp()->m_msgGdiSelObject);
+            throw CResourceException(GetApp()->MsgGdiSelObject());
 
         return static_cast<int> (reinterpret_cast<INT_PTR>(rgnType));
     }
@@ -2924,7 +2924,7 @@ namespace Win32xx
         HGDIOBJ object = ::SelectPalette(m_pData->dc, palette, forceBkgnd);
         if (object == 0)
             // throws if an error occurs.
-            throw CResourceException(GetApp()->m_msgGdiSelObject);
+            throw CResourceException(GetApp()->MsgGdiSelObject());
 
         return static_cast<HPALETTE>(object);
     }
@@ -3559,7 +3559,7 @@ namespace Win32xx
 
         HGDIOBJ oldObject = ::SelectObject(m_pData->dc, hStockObject);
         if (oldObject == 0)
-            throw CResourceException(GetApp()->m_msgGdiSelObject);
+            throw CResourceException(GetApp()->MsgGdiSelObject());
 
         return oldObject;
     }

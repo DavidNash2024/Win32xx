@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -290,7 +290,7 @@ namespace Win32xx
         if (result != S_OK)
         {
             // Throw an exception to indicate task dialog creation failure
-            throw CWinException(GetApp()->m_msgTaskDialog);
+            throw CWinException(GetApp()->MsgTaskDialog());
         }
 
         return result;

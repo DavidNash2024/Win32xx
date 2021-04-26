@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 24th April 2021
+// Release Date: 26th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -227,11 +227,11 @@ namespace Win32xx
         WSADATA wsaData;
 
         if (::WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
-            throw CNotSupportedException(GetApp()->m_msgSocWSAStartup);
+            throw CNotSupportedException(GetApp()->MsgSocWSAStartup());
 
         m_ws2_32 = LoadLibrary(_T("WS2_32.dll"));
         if (m_ws2_32 == 0)
-            throw CNotSupportedException(GetApp()->m_msgSocWS2Dll);
+            throw CNotSupportedException(GetApp()->MsgSocWS2Dll());
 
 #ifdef _WIN32_WCE
         m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_ws2_32, L"getaddrinfo") );
