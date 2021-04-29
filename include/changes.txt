@@ -34,6 +34,10 @@ New Features and Enhancements
    gracefully, and allow the program to continue. Adding exception handling
    to WndProc and DialogProc also catches exceptions raised in OnCommand,
    OnNotify, OnDraw etc.
+   
+* Updated the manifests used in the samples.
+   The manifests now use GDI scaling. This provides better support for dual
+   monitors, and monitors with high resolution.
 
 
 Changes in detail

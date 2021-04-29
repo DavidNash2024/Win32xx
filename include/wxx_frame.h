@@ -1,5 +1,5 @@
 // Win32++   Version 8.9
-// Release Date: 26th April 2021
+// Release Date: 29th April 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -121,6 +121,10 @@
 
 #ifndef WM_MENURBUTTONUP
   #define WM_MENURBUTTONUP      0x0122
+#endif
+
+#ifndef WM_DPICHANGED
+  #define WM_DPICHANGED         0x02E0
 #endif
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1920)   // >= VS2019
@@ -2766,11 +2770,12 @@ namespace Win32xx
     }
 
     // Called when the SystemParametersInfo function changes a system-wide
-    // setting or when policy settings have changed.
+    // setting or when policy settings have changed. Also called in response
+    // to a WM_DPICHANGED message.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSettingChange(UINT, WPARAM, LPARAM)
+    inline LRESULT CFrameT<T>::OnSettingChange(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        T::RedrawWindow();
+        OnSysColorChange(msg, wparam, lparam);
         return 0;
     }
 
@@ -2788,7 +2793,7 @@ namespace Win32xx
     // Called in response to a WM_SYSCOLORCHANGE message. This message is sent
     // to all top-level windows when a change is made to a system color setting.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSysColorChange(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         UNREFERENCED_PARAMETER(wparam);
         UNREFERENCED_PARAMETER(lparam);
@@ -2837,7 +2842,7 @@ namespace Win32xx
 
         // Forward the message to the view window
         if (GetView().IsWindow())
-            GetView().PostMessage(WM_SYSCOLORCHANGE, 0, 0);
+            GetView().PostMessage(msg, 0, 0);
 
         return 0;
     }
@@ -3918,6 +3923,7 @@ namespace Win32xx
         switch (msg)
         {
         case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
+        case WM_DPICHANGED:     return OnSettingChange(msg, wparam, lparam);
         case WM_DRAWITEM:       return OnDrawItem(msg, wparam, lparam);
         case WM_ERASEBKGND:     return 0;
         case WM_HELP:           return OnHelp();
