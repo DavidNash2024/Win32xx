@@ -24,15 +24,15 @@ public:
     void MRUFileOpen(UINT mruIndex);
 
     LRESULT OnDropFile(WPARAM wparam);
-    void OnFileExit();
-    void OnFileNew();
-    void OnFileOpen();
-    void OnFileSave();
-    void OnFileSaveAs();
-    void OnFilePrint();
-    void OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue);
-    void OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
-    void SetPenColor(COLORREF clr);
+    BOOL OnFileExit();
+    BOOL OnFileNew();
+    BOOL OnFileOpen();
+    BOOL OnFileSave();
+    BOOL OnFileSaveAs();
+    BOOL OnFilePrint();
+    BOOL OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue);
+    BOOL OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
+    BOOL SetPenColor(COLORREF clr);
 
 protected:
     virtual STDMETHODIMP Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);

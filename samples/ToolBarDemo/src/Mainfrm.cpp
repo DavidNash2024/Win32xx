@@ -58,11 +58,10 @@ LRESULT CMainFrame::OnBeginAdjust(LPNMTOOLBAR pNMTB)
 }
 
 // OnCommand responds to menu and and toolbar input
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch(id)
     {
     case IDM_FILE_EXIT:         return OnFileExit();
@@ -106,19 +105,16 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 }
 
 // Called when the help button on the customize dialog is pressed.
-LRESULT CMainFrame::OnCustHelp(LPNMHDR pNMHDR)
+LRESULT CMainFrame::OnCustHelp(LPNMHDR)
 {
-    UNREFERENCED_PARAMETER(pNMHDR);
     MessageBox(_T("Help Button Pressed"), _T("Help"), MB_ICONINFORMATION | MB_OK);
 
     return 0;
 }
 
 // Called when the user has stopped customizing a toolbar.
-LRESULT CMainFrame::OnEndAdjust(LPNMHDR pNMHDR)
+LRESULT CMainFrame::OnEndAdjust(LPNMHDR)
 {
-    UNREFERENCED_PARAMETER(pNMHDR);
-
     ResizeToolbarBand();
 
     return TRUE;
@@ -211,10 +207,8 @@ LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
 
 // Called when a button may be deleted from a toolbar while the user is customizing the toolbar.
 // Return TRUE to permit button deletion, and FALSE to prevent it.
-LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR pNMTB)
+LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR)
 {
-    UNREFERENCED_PARAMETER(pNMTB);
-
     ResizeToolbarBand();
 
     // Permit all buttons to be deleted
@@ -223,10 +217,8 @@ LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR pNMTB)
 
 // Called when a button may be inserted to the left of the specified button while the user
 //  is customizing a toolbar. Return TRUE to permit button deletion, and FALSE to prevent it.
-LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR pNMTB)
+LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR)
 {
-    UNREFERENCED_PARAMETER(pNMTB);
-
     ResizeToolbarBand();
 
     // Permit all buttons to be inserted
@@ -265,10 +257,8 @@ LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
 }
 
 // Called when the toolbar has been changed during customization.
-LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR pNMTB)
+LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR)
 {
-    UNREFERENCED_PARAMETER(pNMTB);
-
     // Reposition the toolbar
     RecalcLayout();
 

@@ -21,12 +21,12 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void OnFileExit();
-    void OnFileNew();
-    void OnFileOpen();
-    void OnFileSave();
-    void OnFileSaveAs();
-    void OnFilePrint();
+    BOOL OnFileExit();
+    BOOL OnFileNew();
+    BOOL OnFileOpen();
+    BOOL OnFileSave();
+    BOOL OnFileSaveAs();
+    BOOL OnFilePrint();
 
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);

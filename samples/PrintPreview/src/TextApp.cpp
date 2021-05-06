@@ -25,9 +25,8 @@ BOOL CTextApp::InitInstance()
 }
 
 // Called when the message queue is empty.
-BOOL CTextApp::OnIdle(LONG count)
+BOOL CTextApp::OnIdle(LONG)
 {
-    UNREFERENCED_PARAMETER(count);
     m_frame.OnToolbarUpdate();
 
     return FALSE;

@@ -33,12 +33,8 @@ LRESULT CSimpleView::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Called when the window is resized.
-LRESULT CSimpleView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CSimpleView::OnSize(UINT, WPARAM, LPARAM)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(wparam);
-    UNREFERENCED_PARAMETER(lparam);
-
     // Force the window to be repainted
     Invalidate();
     return 0;
@@ -103,11 +99,10 @@ int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 }
 
 // Respond to menu and toolbar input forwarded from the MDI Frame.
-BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDM_COLOR_BLACK:

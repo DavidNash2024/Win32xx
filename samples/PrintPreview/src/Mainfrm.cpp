@@ -77,11 +77,10 @@ void CMainFrame::OnClose()
 }
 
 // Handle input from the menu, toolbar or accelerator keys.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDM_FILE_NEW:          OnFileNew();            return TRUE;

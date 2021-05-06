@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -468,12 +468,8 @@ namespace Win32xx
     }
 
     // Called when a child toolbar window is resizing.
-    inline LRESULT CReBar::OnTBWinPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CReBar::OnTBWinPosChanging(UINT, WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(msg);
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         // Adjust size for toolbars inside a rebar
         ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0, 0));
 

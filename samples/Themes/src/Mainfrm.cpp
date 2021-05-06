@@ -328,11 +328,10 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 }
 
 // OnCommand responds to menu and and toolbar input.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch(id)
     {
     case IDM_FILE_EXIT:      return OnFileExit();

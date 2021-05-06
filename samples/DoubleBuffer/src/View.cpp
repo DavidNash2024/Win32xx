@@ -40,10 +40,8 @@ CBitmap CView::CreateMaskBitmap()
 }
 
 // Called when the window is created.
-int CView::OnCreate(CREATESTRUCT& cs)
+int CView::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER (cs);
-
     m_blue.LoadBitmap(IDB_BLUE);
     m_orange.LoadBitmap(IDB_ORANGE);
     m_mask = CreateMaskBitmap();

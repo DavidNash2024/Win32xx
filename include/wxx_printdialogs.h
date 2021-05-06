@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -472,11 +472,9 @@ namespace Win32xx
     //  The default message handling for CPrintDialog. Don't override this
     //  function, override DialogProc instead.
     //  Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CPrintDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM lparam)
+    inline INT_PTR CPrintDialog::DialogProcDefault(UINT msg, WPARAM wparam, LPARAM)
     {
-        UNREFERENCED_PARAMETER(lparam);
-
-        switch (message)
+        switch (msg)
         {
             case WM_INITDIALOG:
             {     // handle the initialization message
@@ -807,10 +805,8 @@ namespace Win32xx
     //  The Default message handling for CPageSetupDialog. Don't override this
     //  function, override DialogProc instead.
     //  Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CPageSetupDialog::DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline INT_PTR CPageSetupDialog::DialogProcDefault(UINT msg, WPARAM wparam, LPARAM)
     {
-        UNREFERENCED_PARAMETER(lparam);
-
         switch (msg)
         {
         case WM_INITDIALOG:
@@ -974,20 +970,14 @@ namespace Win32xx
     // Override this function to customize drawing of the sample page in the Page Setup dialog box.
     // It is called in response to the following messages: WM_PSD_FULLPAGERECT; WM_PSD_MINMARGINRECT;
     // WM_PSD_MARGINRECT; WM_PSD_GREEKTEXTRECT; WM_PSD_ENVSTAMPRECT; and WM_PSD_YAFULLPAGERECT.
-    inline UINT CPageSetupDialog::OnDrawPage(HDC dc, UINT message, const RECT& /* rc*/)
+    inline UINT CPageSetupDialog::OnDrawPage(HDC, UINT, const RECT&)
     {
-        UNREFERENCED_PARAMETER(dc);
-        UNREFERENCED_PARAMETER(message);
-
         return 0; // do the default
     }
 
     // Called before drawing is preformed on the sample page.
-    inline UINT CPageSetupDialog::OnPreDrawPage(WORD paper, WORD flags, const PAGESETUPDLG& /*psd*/)
+    inline UINT CPageSetupDialog::OnPreDrawPage(WORD /*paper*/, WORD /*flags*/, const PAGESETUPDLG& /*psd*/)
     {
-        UNREFERENCED_PARAMETER(paper);
-        UNREFERENCED_PARAMETER(flags);
-
         return 0;
     }
 

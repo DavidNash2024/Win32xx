@@ -60,10 +60,8 @@ LONGLONG CMainWindow::GetCounter() const
 }
 
 // Called when the main window is created.
-int CMainWindow::OnCreate(CREATESTRUCT& cs)
+int CMainWindow::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     SetIconSmall(IDW_MAIN);
     SetIconLarge(IDW_MAIN);
 

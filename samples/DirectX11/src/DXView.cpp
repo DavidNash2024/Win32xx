@@ -376,10 +376,8 @@ HRESULT CDXView::InitDevice()
 // WM_CREATE message received.
 // Tasks such as setting the icon, creating child windows, or anything
 // associated with creating windows are normally performed here.
-int CDXView::OnCreate(CREATESTRUCT& cs)
+int CDXView::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     // Set the window's icon
     SetIconSmall(IDI_DIRECTX11);
     SetIconLarge(IDI_DIRECTX11);

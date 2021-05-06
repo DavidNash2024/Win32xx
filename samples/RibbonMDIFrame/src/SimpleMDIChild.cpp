@@ -21,12 +21,8 @@ void CSimpleView::OnDraw(CDC& dc)
     dc.DrawText(L"View Window", -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-LRESULT CSimpleView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CSimpleView::OnSize(UINT, WPARAM, LPARAM)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(wparam);
-    UNREFERENCED_PARAMETER(lparam);
-
     // Force the window to be repainted
     Invalidate();
     return 0;

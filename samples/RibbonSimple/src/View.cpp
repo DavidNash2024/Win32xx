@@ -10,15 +10,13 @@
 //////////////////////////////
 // CView function definitions.
 //
-int CView::OnCreate(CREATESTRUCT& cs)
+int CView::OnCreate(CREATESTRUCT&)
 {
     // OnCreate is called automatically during window creation when a
     // WM_CREATE message received.
 
     // Tasks such as setting the icon, creating child windows, or anything
     // associated with creating windows are normally performed here.
-
-    UNREFERENCED_PARAMETER(cs);
 
     TRACE("OnCreate\n");
 
@@ -94,14 +92,10 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.cy = 300;                            // height
 }
 
-STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
+STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*)
 {
-    UNREFERENCED_PARAMETER(pCommandExecutionProperties);
-    UNREFERENCED_PARAMETER(ppropvarValue);
-    UNREFERENCED_PARAMETER(key);
-    UNREFERENCED_PARAMETER(verb);
-
     HRESULT result = S_OK;
+
     switch(cmdID)
     {
     case cmdButton1:
@@ -140,12 +134,8 @@ STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYK
     return result;
 }
 
-STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode)
+STDMETHODIMP CView::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEWVERB verb, INT32)
 {
-    UNREFERENCED_PARAMETER(viewId);
-    UNREFERENCED_PARAMETER(pView);
-    UNREFERENCED_PARAMETER(reasonCode);
-
     HRESULT result = E_NOTIMPL;
 
     // Checks to see if the view that was changed was a Ribbon view.

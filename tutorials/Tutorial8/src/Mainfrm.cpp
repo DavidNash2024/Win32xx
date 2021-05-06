@@ -26,22 +26,20 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Process the messages from the Menu and Tool Bar.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     switch (LOWORD(wparam))
     {
-    case IDM_FILE_NEW:          OnFileNew();        return TRUE;
-    case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
-    case IDM_FILE_SAVE:         OnFileSave();       return TRUE;
-    case IDM_FILE_SAVEAS:       OnFileSaveAs();     return TRUE;
-    case IDM_FILE_PRINT:        OnFilePrint();      return TRUE;
-    case IDM_FILE_EXIT:         OnFileExit();       return TRUE;
-    case IDM_PEN_COLOR:         OnPenColor();       return TRUE;
-    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-    case IDM_HELP_ABOUT:        return OnHelp();
+    case IDM_FILE_NEW:        return OnFileNew();
+    case IDM_FILE_OPEN:       return OnFileOpen();
+    case IDM_FILE_SAVE:       return OnFileSave();
+    case IDM_FILE_SAVEAS:     return OnFileSaveAs();
+    case IDM_FILE_PRINT:      return OnFilePrint();
+    case IDM_FILE_EXIT:       return OnFileExit();
+    case IDM_PEN_COLOR:       return OnPenColor();
+    case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
+    case IDM_HELP_ABOUT:      return OnHelp();
     }
 
     return FALSE;
@@ -92,17 +90,19 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 }
 
 // Issue a close request to the frame.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
 // Create a new scribble screen.
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
     m_pathName = _T("");
     GetView().Invalidate();
+    return TRUE;
 }
 
 // Called by OnFileOpen and in response to a UWM_DROPFILE message.
@@ -126,7 +126,7 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
 }
 
 // Display the file dialog to choose a file to open.
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
     try
     {
@@ -148,15 +148,18 @@ void CMainFrame::OnFileOpen()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
+
+    return TRUE;
 }
 
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
     MessageBox(_T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
 // Save the Plotoint data to a file.
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
     try
     {
@@ -171,10 +174,12 @@ void CMainFrame::OnFileSave()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
+
+    return TRUE;
 }
 
 // Save the Plotoint data to a specified file.
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
     try
     {
@@ -198,10 +203,12 @@ void CMainFrame::OnFileSaveAs()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
+
+    return TRUE;
 }
 
 // Display a choose color dialog to choose a color.
-void CMainFrame::OnPenColor()
+BOOL CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
     static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
@@ -221,6 +228,8 @@ void CMainFrame::OnPenColor()
         // Retrieve the chosen color
         m_view.SetPenColor(colorDlg.GetColor());
     }
+
+    return TRUE;
 }
 
 // Configures the ToolBar.
@@ -250,7 +259,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_DROPFILE:          OnDropFile(wparam); break;
+    case UWM_DROPFILE:     return OnDropFile(wparam);
     }
 
     // Use the default message handling for remaining messages.

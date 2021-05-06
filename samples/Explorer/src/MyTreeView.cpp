@@ -22,9 +22,8 @@ CMyTreeView::~CMyTreeView()
 }
 
 // Compares param1 and param2. Used for sorting.
-int CALLBACK CMyTreeView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM paramSort)
+int CALLBACK CMyTreeView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM)
 {
-    UNREFERENCED_PARAMETER(paramSort);
     TreeItemData* pItem1 = reinterpret_cast<TreeItemData*>(param1);
     TreeItemData* pItem2 = reinterpret_cast<TreeItemData*>(param2);
     HRESULT result;
@@ -301,10 +300,8 @@ void CMyTreeView::OnDestroy()
 }
 
 // Called in response to a right mouse click to open a context menu.
-LRESULT CMyTreeView::OnNMRClick(LPNMHDR pNMHDR)
+LRESULT CMyTreeView::OnNMRClick(LPNMHDR)
 {
-    UNREFERENCED_PARAMETER(pNMHDR);
-
     CPoint pos = GetCursorPos();
     DoContextMenu(pos);
 

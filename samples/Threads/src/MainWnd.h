@@ -23,11 +23,11 @@ public:
     virtual ~CMainWindow() {}
     void AppendText(LPCTSTR text);
     HWND Create(HWND parent = 0);
-    void OnAllWindowsCreated();
-    void OnAppendText(WPARAM wparam);
-    void OnCloseThread(WPARAM wparam);
-    void OnSize();
-    void OnWindowCreated();
+    void    OnAllWindowsCreated();
+    LRESULT OnAppendText(WPARAM wparam);
+    LRESULT OnCloseThread(WPARAM wparam);
+    LRESULT OnSize();
+    LRESULT OnWindowCreated();
 
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs);

@@ -882,11 +882,10 @@ void CMainFrame::OnClose()
 }
 
 // Respond to toolbar or context menu input.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT nID = LOWORD(wparam);
+
     switch (nID)
     {
     case IDM_EDIT_COPY:     GetFocus().SendMessage(WM_COPY);    return TRUE;

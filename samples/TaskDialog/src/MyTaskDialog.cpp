@@ -8,10 +8,9 @@
 //////////////////////////////////////
 // CMyTaskDialog function definitions.
 //
-BOOL CMyTaskDialog::OnTDButtonClicked(int buttonID)
+BOOL CMyTaskDialog::OnTDButtonClicked(int)
 // Called when the user selects a button or command link.
 {
-    UNREFERENCED_PARAMETER(buttonID);
     TRACE("Button or command link pressed\n");
 
     // we could return TRUE to prevent the task dialog from closing
@@ -36,10 +35,9 @@ void CMyTaskDialog::OnTDDestroyed()
     TRACE("Task Dialog Destroyed\n");
 }
 
-void CMyTaskDialog::OnTDExpandButtonClicked(BOOL isExpanded)
+void CMyTaskDialog::OnTDExpandButtonClicked(BOOL)
 // Called when the expand button is clicked.
 {
-    UNREFERENCED_PARAMETER(isExpanded);
     TRACE("Expand Button Pressed\n");
 }
 
@@ -49,10 +47,9 @@ void CMyTaskDialog::OnTDHelp()
     TRACE("F1 Pressed\n");
 }
 
-void CMyTaskDialog::OnTDHyperlinkClicked(LPCTSTR hyperlink)
+void CMyTaskDialog::OnTDHyperlinkClicked(LPCTSTR)
 // Called when the user clicks on a hyperlink.
 {
-    UNREFERENCED_PARAMETER(hyperlink);
     TRACE("Hyperlink clicked\n");
 }
 
@@ -62,18 +59,16 @@ void CMyTaskDialog::OnTDNavigatePage()
     TRACE("Navigation occurred\n");
 }
 
-BOOL CMyTaskDialog::OnTDRadioButtonClicked(int radioButtonID)
+BOOL CMyTaskDialog::OnTDRadioButtonClicked(int)
 // Called when the user selects a radio button.
 {
-    UNREFERENCED_PARAMETER(radioButtonID);
     TRACE("Radio Button Clicked\n");
     return TRUE;
 }
 
-BOOL CMyTaskDialog::OnTDTimer(DWORD tickCount)
+BOOL CMyTaskDialog::OnTDTimer(DWORD)
 // Called every 200 milliseconds (aproximately) when the TDF_CALLBACK_TIMER flag is set.
 {
-    UNREFERENCED_PARAMETER(tickCount);
     static int i = 0;
     if (i <= 100)
         SetProgressBarPosition(++i);
@@ -81,10 +76,9 @@ BOOL CMyTaskDialog::OnTDTimer(DWORD tickCount)
     return FALSE;
 }
 
-void CMyTaskDialog::OnTDVerificationCheckboxClicked(BOOL isChecked)
+void CMyTaskDialog::OnTDVerificationCheckboxClicked(BOOL)
 // Called when the user clicks the Task Dialog verification check box.
 {
-    UNREFERENCED_PARAMETER(isChecked);
     TRACE("Verification Checkbox Clicked\n");
 }
 

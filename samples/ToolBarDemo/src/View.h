@@ -17,10 +17,10 @@ public:
 
     void RecalcLayout();
     void SetWrapState(BOOL isWrapped);
-    void OnBottom();
-    void OnLeft();
-    void OnRight();
-    void OnTop();
+    BOOL OnBottom();
+    BOOL OnLeft();
+    BOOL OnRight();
+    BOOL OnTop();
 
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);

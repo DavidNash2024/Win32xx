@@ -177,9 +177,8 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 }
 
 // Processes accelerators, toolbar buttons and menu input
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
     UINT id = LOWORD(wparam);
 
     switch(id)

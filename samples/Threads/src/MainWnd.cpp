@@ -52,10 +52,8 @@ HWND CMainWindow::Create(HWND parent)
 }
 
 // Called when the window is created.
-int CMainWindow::OnCreate(CREATESTRUCT& cs)
+int CMainWindow::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     SetIconSmall(IDW_MAIN);
     SetIconLarge(IDW_MAIN);
 
@@ -116,14 +114,15 @@ void CMainWindow::OnAllWindowsCreated()
 }
 
 // Called in response to a UWM_APPENDTEXT message.
-void CMainWindow::OnAppendText(WPARAM wparam)
+LRESULT CMainWindow::OnAppendText(WPARAM wparam)
 {
     CString* pStr = reinterpret_cast<CString*>(wparam);
     AppendText(pStr->c_str());
+    return 0;
 }
 
 // Called in response to a UWM_CLOSETHREAD message.
-void CMainWindow::OnCloseThread(WPARAM wparam)
+LRESULT CMainWindow::OnCloseThread(WPARAM wparam)
 {
     // Ensure thread safe access to the m_threads vector.
     CThreadLock lock(m_cs);
@@ -138,16 +137,19 @@ void CMainWindow::OnCloseThread(WPARAM wparam)
             break;
         }
     }
+
+    return 0;
 }
 
 // Called in the main window is resized.
-void CMainWindow::OnSize()
+LRESULT CMainWindow::OnSize()
 {
     m_edit.SetWindowPos(0, GetClientRect(), 0);
+    return 0;
 }
 
 // Called when a test window is created.
-void CMainWindow::OnWindowCreated()
+LRESULT CMainWindow::OnWindowCreated()
 {
     CString str;
     ++m_windowsCount;
@@ -156,6 +158,8 @@ void CMainWindow::OnWindowCreated()
 
     if (m_windowsCount == m_maxWindows)
         OnAllWindowsCreated();
+
+    return 0;
 }
 
 // Process this window's messages.
@@ -165,10 +169,10 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_APPENDTEXT:     OnAppendText(wparam);  break;
-        case UWM_CLOSETHREAD:    OnCloseThread(wparam); break;
-        case UWM_WINDOWCREATED:  OnWindowCreated();     break;
-        case WM_SIZE:            OnSize();              break;
+        case UWM_APPENDTEXT:     return OnAppendText(wparam);
+        case UWM_CLOSETHREAD:    return OnCloseThread(wparam);
+        case UWM_WINDOWCREATED:  return OnWindowCreated();
+        case WM_SIZE:            return OnSize();
         }
 
         return WndProcDefault(msg, wparam, lparam);

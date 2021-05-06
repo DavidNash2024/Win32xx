@@ -35,12 +35,8 @@ LRESULT CSimpleView::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Called when the window is resized.
-LRESULT CSimpleView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CSimpleView::OnSize(UINT, WPARAM, LPARAM)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(wparam);
-    UNREFERENCED_PARAMETER(lparam);
-
     Invalidate();   // Force the window to be repainted
     return 0;
 }
@@ -116,13 +112,12 @@ void CSplitterMDIChild::OnInitialUpdate()
 }
 
 // Respond to menu and toolbar input.
-BOOL CSplitterMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CSplitterMDIChild::OnCommand(WPARAM wparam, LPARAM)
 {
     // Respond to menu and toolbar input
 
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDM_COLOR_BLACK:   OnColor(RGB(0,0,0));        return TRUE;

@@ -70,9 +70,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
 }
 
 // Respond to the toolbar and menu.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
     UINT id = LOWORD(wparam);
 
     switch(id)

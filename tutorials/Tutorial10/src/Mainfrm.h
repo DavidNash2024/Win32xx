@@ -29,17 +29,17 @@ public:
 
     LRESULT OnDropFile(WPARAM wparam);
 
-    void OnFileExit();
-    void OnFileNew();
-    void OnFileOpen();
-    void OnFileSave();
-    void OnFileSaveAs();
-    void OnFilePreview();
-    void OnFilePrint();
-    void OnPenColor();
-    void OnPreviewClose();
-    void OnPreviewPrint();
-    void OnPreviewSetup();
+    BOOL OnFileExit();
+    BOOL OnFileNew();
+    BOOL OnFileOpen();
+    BOOL OnFileSave();
+    BOOL OnFileSaveAs();
+    BOOL OnFilePreview();
+    BOOL OnFilePrint();
+    BOOL OnPenColor();
+    LRESULT OnPreviewClose();
+    LRESULT OnPreviewPrint();
+    LRESULT OnPreviewSetup();
 
 protected:
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);

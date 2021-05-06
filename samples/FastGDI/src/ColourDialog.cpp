@@ -119,11 +119,8 @@ void CColourDialog::OnGrayScale()
 }
 
 // Processes messages from the slider controls.
-LRESULT CColourDialog::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CColourDialog::OnHScroll(UINT, WPARAM, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(wparam);
-
     HWND hWnd = reinterpret_cast<HWND>(lparam);
 
     // Update the text for the colour's edit control
@@ -172,12 +169,8 @@ BOOL CColourDialog::OnInitDialog()
     return TRUE;
 }
 
-LRESULT CColourDialog::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CColourDialog::OnPaint(UINT, WPARAM, LPARAM)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(wparam);
-    UNREFERENCED_PARAMETER(lparam);
-
     Paint();
     return 0;
 }

@@ -171,10 +171,8 @@ void CD2DView::PreRegisterClass(WNDCLASS& wc)
 }
 
 // Called when the window is created.
-int CD2DView::OnCreate(CREATESTRUCT& cs)
+int CD2DView::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     // Set the window's icon
     SetIconSmall(IDW_MAIN);
     SetIconLarge(IDW_MAIN);

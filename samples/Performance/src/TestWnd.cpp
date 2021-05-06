@@ -28,10 +28,8 @@ void CTestWindow::CreateWin(int i)
 }
 
 // Called when the window is created.
-int CTestWindow::OnCreate(CREATESTRUCT& cs)
+int CTestWindow::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     SetIconSmall(IDW_MAIN);
     SetIconLarge(IDW_MAIN);
 

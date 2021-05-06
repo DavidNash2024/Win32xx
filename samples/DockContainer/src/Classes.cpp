@@ -147,10 +147,8 @@ void CContainClasses::AddCombo()
 }
 
 // Process the command messages (WM_COMMAND).
-BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     // OnCommand responds to menu and and toolbar input
     UINT id = LOWORD(wparam);
     switch(id)

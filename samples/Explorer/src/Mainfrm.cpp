@@ -69,10 +69,8 @@ void CMainFrame::DoPopupMenu()
 }
 
 // Process input from the menu and toolbar.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
     switch (id)
     {

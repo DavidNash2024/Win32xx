@@ -66,11 +66,8 @@ void CView::OnDraw(CDC& dc)
 }
 
 // Called when a file is dropped on the window.
-LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CView::OnDropFiles(UINT, WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(lparam);
-
     HDROP hDrop = (HDROP)wparam;
     UINT length = DragQueryFile(hDrop, 0, 0, 0);
 

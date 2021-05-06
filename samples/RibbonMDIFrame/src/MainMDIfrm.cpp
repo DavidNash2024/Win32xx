@@ -50,10 +50,8 @@ COLORREF CMainMDIFrame::GetColorFromPicker() const
 
 // This function is called when a ribbon button is pressed.
 // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation.
-STDMETHODIMP CMainMDIFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
+STDMETHODIMP CMainMDIFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY*, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
-    UNREFERENCED_PARAMETER(key);
-
     if (UI_EXECUTIONVERB_EXECUTE == verb)
     {
         switch(cmdID)
@@ -135,11 +133,10 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
 }
 
 // Process the messages from the (non-ribbon) Menu and Tool Bar.
-BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDM_FILE_NEW:          OnFileNew();            return TRUE;
@@ -275,11 +272,10 @@ void CMainMDIFrame::SetupToolBar()
 
 // This function is called when a ribbon button is updated.
 // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation.
-STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue)
+STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT*, __out PROPVARIANT* newValue)
 {
-    UNREFERENCED_PARAMETER(currentValue);
-
     HRESULT result = E_NOTIMPL;
+
     if(UI_PKEY_Enabled == key)
     {
         return UIInitPropertyFromBoolean(UI_PKEY_Enabled, TRUE, newValue);

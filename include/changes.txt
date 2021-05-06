@@ -1,3 +1,14 @@
+Version 8.9.1
+=============
+
+New Features and Enhancements
+-----------------------------
+* Updated CMenuBar.
+  - CMenuBar now emulates the behaviour of a traditional menu more closely.
+  - The accelerator prefixes are now normally hidden, but are displayed for
+    keyboard navigation.
+
+
 Version 8.9
 ===========
 

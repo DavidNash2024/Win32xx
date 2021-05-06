@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1683,10 +1683,8 @@ namespace Win32xx
         }
     }
 
-    inline int CDocker::CTargetCentre::OnCreate(CREATESTRUCT& cs)
+    inline int CDocker::CTargetCentre::OnCreate(CREATESTRUCT&)
     {
-        UNREFERENCED_PARAMETER(cs);
-
         // Use a region to create an irregularly shapped window
         POINT ptArray[16] = { {0,29}, {22, 29}, {29, 22}, {29, 0},
                               {58, 0}, {58, 22}, {64, 29}, {87, 29},
@@ -2990,9 +2988,8 @@ namespace Win32xx
     }
 
     // Used in LoadRegistrySettings. Creates a new Docker from the specified ID.
-    inline CDocker* CDocker::NewDockerFromID(int id)
+    inline CDocker* CDocker::NewDockerFromID(int /*id*/)
     {
-        UNREFERENCED_PARAMETER(id);
 
         // Override this function to create the Docker objects as shown below
 
@@ -3076,9 +3073,8 @@ namespace Win32xx
     }
 
     // Called when this docker is created.
-    inline int CDocker::OnCreate(CREATESTRUCT& cs)
+    inline int CDocker::OnCreate(CREATESTRUCT&)
     {
-        UNREFERENCED_PARAMETER(cs);
 
 #if (WINVER >= 0x0500)
         if (GetParent().GetExStyle() & WS_EX_LAYOUTRTL)
@@ -3175,10 +3171,8 @@ namespace Win32xx
     }
 
     // Called when this docker is destroyed.
-    inline LRESULT CDocker::OnDockDestroyed(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDocker::OnDockDestroyed(UINT, WPARAM wparam, LPARAM)
     {
-        UNREFERENCED_PARAMETER(msg);
-        UNREFERENCED_PARAMETER(lparam);
         CDocker* pDocker = reinterpret_cast<CDocker*>(wparam);
 
         assert( this == GetDockAncestor() );
@@ -3290,12 +3284,8 @@ namespace Win32xx
     }
 
     // Called when docker resizing is complete.
-    inline LRESULT CDocker::OnExitSizeMove(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDocker::OnExitSizeMove(UINT, WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(msg);
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         m_isBlockMove = FALSE;
         m_isDragging = FALSE;
         SendNotify(UWN_DOCKEND);
@@ -3324,9 +3314,8 @@ namespace Win32xx
     }
 
     // Process docker notifications,
-    inline LRESULT CDocker::OnNotify(WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDocker::OnNotify(WPARAM, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
         LPDRAGPOS pdp = (LPDRAGPOS)lparam;
 
         if (IsWindowVisible())
@@ -3361,9 +3350,6 @@ namespace Win32xx
     // Called when the system colors are changed.
     inline LRESULT CDocker::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         if (this == GetDockAncestor())
         {
             COLORREF colour = GetSysColor(COLOR_BTNFACE);
@@ -3436,8 +3422,6 @@ namespace Win32xx
     // Called when the undocked docker move is complete.
     inline LRESULT CDocker::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-
         if (m_isDragging)
         {
             // Send a Move notification to the parent
@@ -4653,8 +4637,6 @@ namespace Win32xx
     // Overrides CTab::OnLButtonDown.
     inline LRESULT CDockContainer::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-
         CPoint pt(lparam);
         TCHITTESTINFO info;
         ZeroMemory(&info, sizeof(info));
@@ -4668,8 +4650,6 @@ namespace Win32xx
     // Overrides CTab::OnLButtonUp and takes no action.
     inline LRESULT CDockContainer::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
         return FinalWindowProc(msg, wparam, lparam);
     }
 
@@ -4726,10 +4706,8 @@ namespace Win32xx
     }
 
     // Process notifications (WM_NOTIFY) reflected back from the parent.
-    inline LRESULT CDockContainer::OnNotifyReflect(WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDockContainer::OnNotifyReflect(WPARAM, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-
         LPNMHDR pNMHDR = (LPNMHDR)lparam;
         switch (pNMHDR->code)
         {
@@ -4740,10 +4718,8 @@ namespace Win32xx
     }
 
     // Called when the currently selected tab has changed.
-    inline LRESULT CDockContainer::OnTCNSelChange(LPNMHDR pNMHDR)
+    inline LRESULT CDockContainer::OnTCNSelChange(LPNMHDR)
     {
-        UNREFERENCED_PARAMETER(pNMHDR);
-
         // Display the newly selected tab page
         int page = GetCurSel();
         SelectPage(page);
@@ -4772,12 +4748,8 @@ namespace Win32xx
     }
 
     // Called when the window is resized.
-    inline LRESULT CDockContainer::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDockContainer::OnSize(UINT, WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(msg);
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         RecalcLayout();
         return 0;
     }
@@ -5116,9 +5088,8 @@ namespace Win32xx
     }
 
     // Called during window creation. Creates the child view window.
-    inline int CDockContainer::CViewPage::OnCreate(CREATESTRUCT& cs)
+    inline int CDockContainer::CViewPage::OnCreate(CREATESTRUCT&)
     {
-        UNREFERENCED_PARAMETER(cs);
         if (m_pView)
             m_pView->Create(*this);
 
@@ -5128,8 +5099,6 @@ namespace Win32xx
     // Process WM_NOTIFY notifications from the child view window.
     inline LRESULT CDockContainer::CViewPage::OnNotify(WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-
         switch (((LPNMHDR)lparam)->code)
         {
 

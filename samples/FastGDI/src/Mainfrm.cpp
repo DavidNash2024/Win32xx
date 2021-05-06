@@ -37,7 +37,7 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Displays the Color Adjust dialog to choose the red, blue and green adjustments.
-void CMainFrame::OnAdjustImage()
+BOOL CMainFrame::OnAdjustImage()
 {
     if (m_view.GetImage())
     {
@@ -49,6 +49,7 @@ void CMainFrame::OnAdjustImage()
     else
         MessageBox(_T("Open a Bitmap file first!"), _T("Error"), MB_OK);
 
+    return TRUE;
 }
 
 // Modify the color of the bitmap.
@@ -68,21 +69,21 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     UINT id = LOWORD(wparam);
     switch(id)
     {
-    case IDM_FILE_EXIT:         OnFileExit();        return TRUE;
-    case IDM_FILE_NEW:          OnFileNew();         return TRUE;
-    case IDM_FILE_OPEN:         OnFileOpen();        return TRUE;
-    case IDM_FILE_SAVE:         OnFileSave();        return TRUE;
-    case IDM_FILE_SAVEAS:       OnFileSaveAs();      return TRUE;
-    case IDM_FILE_PREVIEW:      OnFilePreview();     return TRUE;
-    case IDM_FILE_PRINT:        OnFilePrint();       return TRUE;
-    case IDM_HELP_ABOUT:        OnHelp();            return TRUE;
-    case IDM_IMAGE_ADJUST:      OnAdjustImage();     return TRUE;
-    case IDW_VIEW_STATUSBAR:    OnViewStatusBar();   return TRUE;
-    case IDW_VIEW_TOOLBAR:      OnViewToolBar();     return TRUE;
+    case IDM_FILE_EXIT:       return OnFileExit();
+    case IDM_FILE_NEW:        return OnFileNew();
+    case IDM_FILE_OPEN:       return OnFileOpen();
+    case IDM_FILE_SAVE:       return OnFileSave();
+    case IDM_FILE_SAVEAS:     return OnFileSaveAs();
+    case IDM_FILE_PREVIEW:    return OnFilePreview();
+    case IDM_FILE_PRINT:      return OnFilePrint();
+    case IDM_HELP_ABOUT:      return OnHelp();
+    case IDM_IMAGE_ADJUST:    return OnAdjustImage();
+    case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
     case IDW_FILE_MRU_FILE1:
     case IDW_FILE_MRU_FILE2:    // Intentionally blank
     case IDW_FILE_MRU_FILE3:
-    case IDW_FILE_MRU_FILE4:    OnFileOpenMRU(wparam, lparam); return TRUE;
+    case IDW_FILE_MRU_FILE4:  return OnFileOpenMRU(wparam, lparam);
     }
 
     return FALSE;
@@ -110,13 +111,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 }
 
 // Issue a close request to the frame to end the application.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
 // Clears any selected image.
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
     CToolBar& TB = GetToolBar();
     TB.DisableButton(IDM_FILE_SAVEAS);
@@ -126,6 +128,8 @@ void CMainFrame::OnFileNew()
 
     // Set the caption
     SetWindowText(_T("FastGDI"));
+
+    return TRUE;
 }
 
 // Load the bitmap from the specified file.
@@ -163,7 +167,7 @@ BOOL CMainFrame::LoadFile(CString& fileName)
 }
 
 // Displays the File Open dialog, to choose a file to load.
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE, _T("bmp"), NULL, OFN_FILEMUSTEXIST, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
 
@@ -172,13 +176,13 @@ void CMainFrame::OnFileOpen()
         CString str = fileDlg.GetPathName();
         LoadFile(str);
     }
+
+    return TRUE;
 }
 
 // Called when a MRU file is selected from the menu.
-void CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
     CString mruText = GetMRUEntry(mruIndex);
     CToolBar& tb = GetToolBar();
@@ -213,10 +217,12 @@ void CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
     // Set the caption
     CString str = _T("FastGDI - ") + m_pathName;
     SetWindowText(str);
+
+    return TRUE;
 }
 
 // Preview the page before it is printed.
-void CMainFrame::OnFilePreview()
+BOOL CMainFrame::OnFilePreview()
 {
     try
     {
@@ -255,10 +261,11 @@ void CMainFrame::OnFilePreview()
         ShowToolBar(GetToolBar().IsWindow());
     }
 
+    return TRUE;
 }
 
 // Print the bitmap.
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
     try
     {
@@ -271,16 +278,18 @@ void CMainFrame::OnFilePrint()
         MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
 
+    return TRUE;
 }
 
 // Save the bitmap to the file.
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
     SaveFile(m_pathName);
+    return TRUE;
 }
 
 // Save the bitmap to the specified file.
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
     CFileDialog FileDlg(FALSE, _T("bmp"), NULL, 0, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
 
@@ -290,6 +299,7 @@ void CMainFrame::OnFileSaveAs()
         SaveFile(strName);
     }
 
+    return TRUE;
 }
 
 // Called after the window is created.
@@ -330,7 +340,7 @@ inline void CMainFrame::OnMenuUpdate(UINT id)
 }
 
 // Called when the Print Preview's "Close" button is pressed.
-void CMainFrame::OnPreviewClose()
+LRESULT CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_view);
@@ -340,10 +350,12 @@ void CMainFrame::OnPreviewClose()
     ShowToolBar(GetToolBar().IsWindow());
 
     SetStatusText(LoadString(IDW_READY));
+
+    return 0;
 }
 
 // Called when the Print Preview's "Print Now" button is pressed.
-void CMainFrame::OnPreviewPrint()
+LRESULT CMainFrame::OnPreviewPrint()
 {
     try
     {
@@ -355,10 +367,12 @@ void CMainFrame::OnPreviewPrint()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
+
+    return 0;
 }
 
 // Called when the Print Preview's "Print Setup" button is pressed.
-void CMainFrame::OnPreviewSetup()
+LRESULT CMainFrame::OnPreviewSetup()
 {
     // Call the print setup dialog.
     CPrintDialog printDlg(PD_PRINTSETUP);
@@ -380,6 +394,8 @@ void CMainFrame::OnPreviewSetup()
 
     // Initiate the print preview.
     m_preview.DoPrintPreview(*this);
+
+    return 0;
 }
 
 // Saves the current bitmap to the specified file.
@@ -441,9 +457,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
-        case UWM_PRINTNOW:          OnPreviewPrint();   break;
-        case UWM_PRINTSETUP:        OnPreviewSetup();   break;
+        case UWM_PREVIEWCLOSE:    return OnPreviewClose();
+        case UWM_PRINTNOW:        return OnPreviewPrint();
+        case UWM_PRINTSETUP:      return OnPreviewSetup();
         }
 
         return WndProcDefault(msg, wparam, lparam);

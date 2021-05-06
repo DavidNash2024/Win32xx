@@ -37,11 +37,10 @@ HWND CMainFrame::Create(HWND parent)
 
 
 // OnCommand responds to menu and and toolbar input.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch(id)
     {
     case IDM_FILE_EXIT:      return OnFileExit();
@@ -76,8 +75,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // Perform the owner draw for Part 3 in the status bar
 LRESULT CMainFrame::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(msg);
-
     LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT)lparam;
 
     if (pDrawItem->CtlID == STATUS_ID) // Message comes from the status bar

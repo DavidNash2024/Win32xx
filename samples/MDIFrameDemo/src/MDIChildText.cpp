@@ -51,11 +51,10 @@ CMDIChildText::~CMDIChildText()
 }
 
 // Process menu and toolbar input forwarded from the MDI frame.
-BOOL CMDIChildText::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMDIChildText::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch(id)
     {
     case IDM_EDIT_COPY:

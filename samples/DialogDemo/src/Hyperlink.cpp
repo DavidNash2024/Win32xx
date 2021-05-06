@@ -75,10 +75,8 @@ void CHyperlink::OpenUrl()
 }
 
 // Handles messages reflected back from the dialog.
-LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     // Messages such as WM_CTLCOLORSTATIC are reflected back to the CWnd object that created them.
     if (msg ==  WM_CTLCOLORSTATIC)
     {

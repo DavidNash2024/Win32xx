@@ -84,9 +84,8 @@ void CView::OnClose()
 }
 
 // Process command notifications from the dialog's controls.
-BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CView::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
     WORD id = LOWORD(wparam);
 
     switch (id)

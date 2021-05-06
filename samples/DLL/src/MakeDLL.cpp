@@ -17,11 +17,8 @@ CWinApp App;
 CMyDialog MyDialog(IDD_DIALOG1);
 
 // The entry point for the dll.
-BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved )
+BOOL APIENTRY DllMain( HANDLE, DWORD  ul_reason_for_call, LPVOID )
 {
-    UNREFERENCED_PARAMETER(hModule);
-    UNREFERENCED_PARAMETER(lpReserved);
-
     switch( ul_reason_for_call )
     {
     case DLL_PROCESS_ATTACH:

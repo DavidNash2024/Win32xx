@@ -28,13 +28,9 @@ LRESULT CViewSimple::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-// Called when the window is resised.
-LRESULT CViewSimple::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+// Called when the window is resized.
+LRESULT CViewSimple::OnSize(UINT, WPARAM, LPARAM)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(wparam);
-    UNREFERENCED_PARAMETER(lparam);
-
     Invalidate();
     return 0;
 }

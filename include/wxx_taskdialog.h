@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -388,10 +388,8 @@ namespace Win32xx
     }
 
     // Called when the user selects a button or command link.
-    inline BOOL CTaskDialog::OnTDButtonClicked(int buttonID)
+    inline BOOL CTaskDialog::OnTDButtonClicked(int)
     {
-        UNREFERENCED_PARAMETER(buttonID);
-
         // return TRUE to prevent the task dialog from closing
         return FALSE;
     }
@@ -413,9 +411,8 @@ namespace Win32xx
     }
 
     // Called when the expand button is clicked.
-    inline void CTaskDialog::OnTDExpandButtonClicked(BOOL isExpanded)
+    inline void CTaskDialog::OnTDExpandButtonClicked(BOOL)
     {
-        UNREFERENCED_PARAMETER(isExpanded);
     }
 
     // Called when the user presses F1 on the keyboard.
@@ -424,9 +421,8 @@ namespace Win32xx
     }
 
     // Called when the user clicks on a hyperlink.
-    inline void CTaskDialog::OnTDHyperlinkClicked(LPCTSTR hyperLink)
+    inline void CTaskDialog::OnTDHyperlinkClicked(LPCTSTR)
     {
-        UNREFERENCED_PARAMETER(hyperLink);
     }
 
     // Called when a navigation has occurred.
@@ -435,25 +431,21 @@ namespace Win32xx
     }
 
     // Called when the user selects a radio button.
-    inline BOOL CTaskDialog::OnTDRadioButtonClicked(int radioButtonID)
+    inline BOOL CTaskDialog::OnTDRadioButtonClicked(int)
     {
-        UNREFERENCED_PARAMETER(radioButtonID);
         return TRUE;
     }
 
     // Called every 200 milliseconds (approximately) when the TDF_CALLBACK_TIMER flag is set.
-    inline BOOL CTaskDialog::OnTDTimer(DWORD tickCount)
+    inline BOOL CTaskDialog::OnTDTimer(DWORD)
     {
-        UNREFERENCED_PARAMETER(tickCount);
-
         // return TRUE to reset the tick count
         return FALSE;
     }
 
     // Called when the user clicks the Task Dialog verification check box.
-    inline void CTaskDialog::OnTDVerificationCheckboxClicked(BOOL isChecked)
+    inline void CTaskDialog::OnTDVerificationCheckboxClicked(BOOL)
     {
-        UNREFERENCED_PARAMETER(isChecked);
     }
 
     // Returns the dialog to its default state.
@@ -687,10 +679,8 @@ namespace Win32xx
     }
 
     // TaskDialogs direct their messages here.
-    inline HRESULT CALLBACK CTaskDialog::StaticTaskDialogProc(HWND wnd, UINT notification, WPARAM wparam, LPARAM lparam, LONG_PTR refData)
+    inline HRESULT CALLBACK CTaskDialog::StaticTaskDialogProc(HWND wnd, UINT notification, WPARAM wparam, LPARAM lparam, LONG_PTR)
     {
-        UNREFERENCED_PARAMETER(refData);
-
         CTaskDialog* t = static_cast<CTaskDialog*>(GetCWndPtr(wnd));
         if (t == 0)
         {

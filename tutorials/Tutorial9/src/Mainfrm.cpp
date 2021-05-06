@@ -47,22 +47,20 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
 }
 
 // Process the messages from the Menu and Toolbar.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     switch (LOWORD(wparam))
     {
-    case IDM_FILE_NEW:          OnFileNew();        return TRUE;
-    case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
-    case IDM_FILE_SAVE:         OnFileSave();       return TRUE;
-    case IDM_FILE_SAVEAS:       OnFileSaveAs();     return TRUE;
-    case IDM_FILE_PRINT:        OnFilePrint();      return TRUE;
-    case IDM_PEN_COLOR:         OnPenColor();       return TRUE;
-    case IDM_FILE_EXIT:         OnFileExit();       return TRUE;
-    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-    case IDM_HELP_ABOUT:        return OnHelp();
+    case IDM_FILE_NEW:        return OnFileNew();
+    case IDM_FILE_OPEN:       return OnFileOpen();
+    case IDM_FILE_SAVE:       return OnFileSave();
+    case IDM_FILE_SAVEAS:     return OnFileSaveAs();
+    case IDM_FILE_PRINT:      return OnFilePrint();
+    case IDM_PEN_COLOR:       return OnPenColor();
+    case IDM_FILE_EXIT:       return OnFileExit();
+    case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
+    case IDM_HELP_ABOUT:      return OnHelp();
     }
 
     return FALSE;
@@ -114,21 +112,23 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 }
 
 // Issue a close request to the frame.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
 // Creates a blank scribble view.
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
     m_pathName = _T("");
     GetView().Invalidate();
+    return TRUE;
 }
 
 // Loads the PlotPoint data from a file.
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
     try
     {
@@ -150,10 +150,12 @@ void CMainFrame::OnFileOpen()
 
         GetDoc().GetAllPoints().clear();
     }
+
+    return TRUE;
 }
 
 // Saves the PlotPoint data to a file.
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
     try
     {
@@ -168,10 +170,12 @@ void CMainFrame::OnFileSave()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
+
+    return TRUE;
 }
 
 // Saves the PlotPoint data to a specified file.
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
     try
     {
@@ -196,10 +200,11 @@ void CMainFrame::OnFileSaveAs()
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
+    return TRUE;
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice.
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
     try
     {
@@ -212,10 +217,12 @@ void CMainFrame::OnFilePrint()
         // Display a message box indicating why printing failed.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
+
+    return TRUE;
 }
 
 // Initiate the Choose Color dialog to select a color.
-void CMainFrame::OnPenColor()
+BOOL CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
     static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
@@ -235,6 +242,8 @@ void CMainFrame::OnPenColor()
         // Retrieve the chosen color
         m_view.SetPenColor(colorDlg.GetColor());
     }
+
+    return TRUE;
 }
 
 // Configures the ToolBar.
@@ -264,8 +273,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_DROPFILE:          OnDropFile(wparam); break;
-
+    case UWM_DROPFILE:    return OnDropFile(wparam);
     }
 
     // Use the default message handling for remaining messages.

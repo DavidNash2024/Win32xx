@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -275,12 +275,8 @@ namespace Win32xx
     // The values for wparam and lparam are the ones set by the CPropertySheet::QuerySiblings call.
     // return FALSE to allow other siblings to be queried, or
     // return TRUE to stop query at this page.
-    inline BOOL CPropertyPage::OnQuerySiblings(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline BOOL CPropertyPage::OnQuerySiblings(UINT, WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(msg);
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         return FALSE;
     }
 
@@ -309,10 +305,8 @@ namespace Win32xx
     }
 
     // Handles the WM_NOTIFY message and call the appropriate functions.
-    inline LRESULT CPropertyPage::OnNotify(WPARAM wparam, LPARAM lparam)
+    inline LRESULT CPropertyPage::OnNotify(WPARAM, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-
         LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lparam;
         assert(pNotify);
         if (!pNotify) return 0;
@@ -460,12 +454,8 @@ namespace Win32xx
         PropSheet_SetWizButtons(::GetParent(*this), flags);
     }
 
-    inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND wnd, UINT msg, LPPROPSHEETPAGE ppsp)
+    inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND, UINT msg, LPPROPSHEETPAGE ppsp)
     {
-        UNREFERENCED_PARAMETER(wnd);
-
-        // Note: the hwnd is always 0
-
         switch (msg)
         {
         case PSPCB_CREATE:
