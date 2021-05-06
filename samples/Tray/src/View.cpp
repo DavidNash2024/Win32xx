@@ -33,15 +33,13 @@ void CView::OnAbout()
     MessageBox(str, _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
 }
 
-int CView::OnCreate(CREATESTRUCT& cs)
+int CView::OnCreate(CREATESTRUCT&)
 {
     // OnCreate is called automatically during window creation when a
     // WM_CREATE message received.
 
     // Tasks such as setting the icon, creating child windows, or anything
     // associated with creating windows are normally performed here.
-
-    UNREFERENCED_PARAMETER(cs);
 
     // Set the window's icon
     SetIconSmall(IDW_MAIN);
@@ -54,13 +52,12 @@ int CView::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
-BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CView::OnCommand(WPARAM wparam, LPARAM)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch(id)
     {
     case IDM_MINTOTRAY:     Minimize();     return TRUE;
@@ -122,12 +119,11 @@ LRESULT CView::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CView::OnTrayIcon(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CView::OnTrayIcon(UINT, WPARAM wparam, LPARAM lparam)
 {
     // For a NOTIFYICONDATA with uVersion= 0, wparam and lparam have the following values:
     // The wparam parameter contains the identifier of the taskbar icon in which the event occurred.
     // The lparam parameter holds the mouse or keyboard message associated with the event.
-    UNREFERENCED_PARAMETER(msg);
 
     if (wparam != IDW_MAIN)
         return 0;

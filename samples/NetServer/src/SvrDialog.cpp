@@ -42,10 +42,8 @@ void CTCPClientDlg::OnClose()
 }
 
 // // Respond to the various dialog buttons.
-BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM)
 {
-     UNREFERENCED_PARAMETER(lparam);
-
     switch (LOWORD(wparam))
     {
     case IDC_BUTTON_SEND2:
@@ -209,11 +207,10 @@ void CSvrDialog::OnClose()
 }
 
 // Respond to the various dialog buttons.
-BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDC_BUTTON_START:      return OnStartServer();

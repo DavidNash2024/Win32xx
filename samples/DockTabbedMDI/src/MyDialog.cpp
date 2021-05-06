@@ -78,11 +78,10 @@ void CViewDialog::OnClose()
 }
 
 // Process the command messages (WM_COMMAND) sent by the dialog's controls.
-BOOL CViewDialog::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CViewDialog::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDC_BUTTON1:   return OnButton();

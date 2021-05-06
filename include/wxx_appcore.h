@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -310,10 +310,8 @@ namespace Win32xx
     // is empty. Return TRUE to continue idle processing or FALSE to end idle processing
     // until another message is queued. The count is incremented each time OnIdle is
     // called, and reset to 0 each time a new messages is processed.
-    inline BOOL CWinThread::OnIdle(LONG count)
+    inline BOOL CWinThread::OnIdle(LONG /*count*/)
     {
-        UNREFERENCED_PARAMETER(count);
-
         return FALSE;
     }
 

@@ -18,10 +18,8 @@ CTestWindow::CTestWindow(int thread, HWND mainWindow)
 }
 
 // Create the Test Window.
-HWND CTestWindow::Create(HWND parent)
+HWND CTestWindow::Create(HWND)
 {
-    UNREFERENCED_PARAMETER(parent);
-
     CString Title;
     Title.Format( _T("Test Window %d"), m_threadNumber );
     return CreateEx(0, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE,

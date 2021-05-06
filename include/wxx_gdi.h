@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -745,8 +745,10 @@ namespace Win32xx
 #endif
 
         // Layout Functions
+#if (WINVER >= 0x0500)
         DWORD GetLayout() const;
         DWORD SetLayout(DWORD layout) const;
+#endif
 
         // Mapping functions
 #ifndef _WIN32_WCE
@@ -2597,8 +2599,9 @@ namespace Win32xx
     // The wnd parameter is only required on WinCE.
     inline void CDC::Attach(HDC dc, HWND wnd /* = 0*/)
     {
-        UNREFERENCED_PARAMETER(wnd);
         assert(m_pData);
+        if (wnd != 0)
+            VERIFY(::IsWindow(wnd));
 
         if (m_pData && dc != m_pData->dc)
         {
@@ -4647,36 +4650,24 @@ namespace Win32xx
     ///////////////////
     // Layout Functions
 
-
+#if (WINVER >= 0x0500)
     // Returns the layout of a device context (LAYOUT_RTL and LAYOUT_BITMAPORIENTATIONPRESERVED).
     // Refer to GetLayout in the Windows API documentation for more information.
     inline DWORD CDC::GetLayout() const
     {
         assert(m_pData->dc != 0);
-
-#if (WINVER >= 0x0500)
         return ::GetLayout(m_pData->dc);
-#else
-        return 0;
-#endif
     }
 
-
-    // changes the layout of a device context (DC).
+    // Sets the layout of a device context (DC).
     // layout values:  LAYOUT_RTL or LAYOUT_BITMAPORIENTATIONPRESERVED
     // Refer to SetLayout in the Windows API documentation for more information.
     inline DWORD CDC::SetLayout(DWORD layout) const
     {
         assert(m_pData->dc != 0);
-
-#if (WINVER >= 0x0500)
-        // Sets the layout of a device context
         return ::SetLayout(m_pData->dc, layout);
-#else
-        UNREFERENCED_PARAMETER(layout); // no-op
-        return 0;
-#endif
     }
+#endif
 
     ////////////////////
     // Mapping Functions

@@ -26,22 +26,20 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Process the messages from the Menu and Toolbar
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     switch (LOWORD(wparam))
     {
-    case IDM_FILE_NEW:          OnFileNew();        return TRUE;
-    case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
-    case IDM_FILE_SAVE:         OnFileSave();       return TRUE;
-    case IDM_FILE_SAVEAS:       OnFileSaveAs();     return TRUE;
-    case IDM_FILE_PRINT:        OnFilePrint();      return TRUE;
-    case IDM_FILE_EXIT:         OnFileExit();       return TRUE;
-    case IDM_PEN_COLOR:         OnPenColor();       return TRUE;
-    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-    case IDM_HELP_ABOUT:        return OnHelp();
+    case IDM_FILE_NEW:        return OnFileNew();
+    case IDM_FILE_OPEN:       return OnFileOpen();
+    case IDM_FILE_SAVE:       return OnFileSave();
+    case IDM_FILE_SAVEAS:     return OnFileSaveAs();
+    case IDM_FILE_PRINT:      return OnFilePrint();
+    case IDM_FILE_EXIT:       return OnFileExit();
+    case IDM_PEN_COLOR:       return OnPenColor();
+    case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
+    case IDM_HELP_ABOUT:      return OnHelp();
     }
 
     return FALSE;
@@ -70,38 +68,44 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 
 // Issue a close request to the frame.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
     ::MessageBox(0, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
     ::MessageBox(0, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
     ::MessageBox(0, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
     ::MessageBox(0, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
     ::MessageBox(0, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
 // Initiates the Choose Color dialog.
-void CMainFrame::OnPenColor()
+BOOL CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
     static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
@@ -121,6 +125,8 @@ void CMainFrame::OnPenColor()
         // Retrieve the chosen color
         m_view.SetPenColor(colorDlg.GetColor());
     }
+
+    return TRUE;
 }
 
 // Configures the Toolbar.

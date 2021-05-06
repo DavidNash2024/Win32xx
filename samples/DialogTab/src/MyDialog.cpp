@@ -48,10 +48,8 @@ INT_PTR CButtonDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Process the dialog's command messages (WM_COMMAND).
-BOOL CButtonDialog::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CButtonDialog::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
     switch (id)
     {

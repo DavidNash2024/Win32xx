@@ -102,12 +102,8 @@ void CClientDialog::LoadCommonControlsEx()
 }
 
 // Called when the dialog window is activated.
-LRESULT CClientDialog::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CClientDialog::OnActivate(UINT, WPARAM, LPARAM)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(wparam);
-    UNREFERENCED_PARAMETER(lparam);
-
     // Give focus to the Send Edit box.
     if (m_editSend.IsWindow())
         GotoDlgCtrl(m_editSend);
@@ -124,11 +120,10 @@ void CClientDialog::OnClose()
 }
 
 // Respond to the dialog buttons.
-BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDC_BUTTON_CONNECT:

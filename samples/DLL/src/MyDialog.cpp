@@ -53,10 +53,8 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Process the dialog's command messages (WM_COMMAND).
-BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
     switch (id)
     {

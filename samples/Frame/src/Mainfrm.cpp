@@ -34,22 +34,20 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // OnCommand responds to menu and and toolbar input.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
     switch(id)
     {
-    case IDM_FILE_OPEN:         OnFileOpen();      return TRUE;
-    case IDM_FILE_SAVE:         OnFileSave();      return TRUE;
-    case IDM_FILE_SAVEAS:       OnFileSave();      return TRUE;
-    case IDM_FILE_PREVIEW:      OnFilePreview();   return TRUE;
-    case IDM_FILE_PRINT:        OnFilePrint();     return TRUE;
-    case IDM_FILE_EXIT:         OnFileExit();      return TRUE;
-    case IDW_VIEW_STATUSBAR:    OnViewStatusBar(); return TRUE;
-    case IDW_VIEW_TOOLBAR:      OnViewToolBar();   return TRUE;
-    case IDM_HELP_ABOUT:        OnHelp();          return TRUE;
+    case IDM_FILE_OPEN:       return OnFileOpen();
+    case IDM_FILE_SAVE:       return OnFileSave();
+    case IDM_FILE_SAVEAS:     return OnFileSave();
+    case IDM_FILE_PREVIEW:    return OnFilePreview();
+    case IDM_FILE_PRINT:      return OnFilePrint();
+    case IDM_FILE_EXIT:       return OnFileExit();
+    case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
+    case IDM_HELP_ABOUT:      return OnHelp();
     }
 
     return FALSE;
@@ -75,9 +73,10 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 }
 
 // Issue a close request to the frame to end the program.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
 // Called after the window is created.
@@ -93,7 +92,7 @@ void CMainFrame::OnInitialUpdate()
 }
 
 // Create the File Open dialog to choose the file to load.
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
     CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");
     CFileDialog fileDlg(TRUE);    // TRUE for file open
@@ -105,10 +104,12 @@ void CMainFrame::OnFileOpen()
     {
         GetDoc().FileLoad(fileDlg.GetPathName());
     }
+
+    return TRUE;
 }
 
 // Create the File Save dialog to choose the file to save.
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
     CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");
     CFileDialog fileDlg(FALSE);    // FALSE for file save
@@ -120,10 +121,12 @@ void CMainFrame::OnFileSave()
     {
         GetDoc().FileStore(fileDlg.GetPathName());
     }
+
+    return TRUE;
 }
 
 // Previews a print job before sending it to the printer.
-void CMainFrame::OnFilePreview()
+BOOL CMainFrame::OnFilePreview()
 {
     try
     {
@@ -161,10 +164,12 @@ void CMainFrame::OnFilePreview()
         ShowMenu(GetFrameMenu() != 0);
         ShowToolBar(GetToolBar().IsWindow());
     }
+
+    return TRUE;
 }
 
 // Bring up a dialog to choose the printer.
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
     CPrintDialog printdlg;
 
@@ -182,6 +187,8 @@ void CMainFrame::OnFilePrint()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
+
+    return TRUE;
 }
 
 // Process notification messages (WM_NOTIFY) sent by child windows
@@ -197,7 +204,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 }
 
 // Called when the Print Preview's "Close" button is pressed.
-void CMainFrame::OnPreviewClose()
+LRESULT CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_view);
@@ -207,16 +214,19 @@ void CMainFrame::OnPreviewClose()
     ShowToolBar(GetToolBar().IsWindow());
 
     SetStatusText(LoadString(IDW_READY));
+
+    return 0;
 }
 
 // Called when the Print Preview's "Print Now" button is pressed.
-void CMainFrame::OnPreviewPrint()
+LRESULT CMainFrame::OnPreviewPrint()
 {
     m_view.QuickPrint(_T("Frame Sample"));
+    return 0;
 }
 
 // Called when the Print Preview's "Print Setup" button is pressed.
-void CMainFrame::OnPreviewSetup()
+LRESULT CMainFrame::OnPreviewSetup()
 {
     // Call the print setup dialog.
     CPrintDialog printDlg(PD_PRINTSETUP);
@@ -238,6 +248,8 @@ void CMainFrame::OnPreviewSetup()
 
     // Initiate the print preview.
     m_preview.DoPrintPreview(*this);
+
+    return 0;
 }
 
 // This function is called before the frame is created.
@@ -245,8 +257,6 @@ void CMainFrame::OnPreviewSetup()
 // parameters used before the frame window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
     // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
     // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
@@ -288,9 +298,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
-        case UWM_PRINTNOW:          OnPreviewPrint();   break;
-        case UWM_PRINTSETUP:        OnPreviewSetup();   break;
+        case UWM_PREVIEWCLOSE:    return OnPreviewClose();
+        case UWM_PRINTNOW:        return OnPreviewPrint();
+        case UWM_PRINTSETUP:      return OnPreviewSetup();
         }
 
         return WndProcDefault(msg, wparam, lparam);

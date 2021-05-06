@@ -57,21 +57,20 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
 }
 
 // Process the messages from the Menu and Tool Bar
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
-    case IDM_FILE_NEW:          OnFileNew();        return TRUE;
-    case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
-    case IDM_FILE_SAVE:         OnFileSave();       return TRUE;
-    case IDM_FILE_SAVEAS:       OnFileSaveAs();     return TRUE;
-    case IDM_FILE_PREVIEW:      OnFilePreview();    return TRUE;
-    case IDM_FILE_PRINT:        OnFilePrint();      return TRUE;
-    case IDM_PEN_COLOR:         OnPenColor();       return TRUE;
-    case IDM_FILE_EXIT:         OnFileExit();       return TRUE;
+    case IDM_FILE_NEW:        return OnFileNew();
+    case IDM_FILE_OPEN:       return OnFileOpen();
+    case IDM_FILE_SAVE:       return OnFileSave();
+    case IDM_FILE_SAVEAS:     return OnFileSaveAs();
+    case IDM_FILE_PREVIEW:    return OnFilePreview();
+    case IDM_FILE_PRINT:      return OnFilePrint();
+    case IDM_PEN_COLOR:       return OnPenColor();
+    case IDM_FILE_EXIT:       return OnFileExit();
 
     case IDW_FILE_MRU_FILE1:
     case IDW_FILE_MRU_FILE2:
@@ -133,13 +132,14 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 }
 
 // Issue a close request to the frame.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
 // Called when a MRU file is selected from the menu.
-void CMainFrame::OnFileMRU(WPARAM wparam)
+BOOL CMainFrame::OnFileMRU(WPARAM wparam)
 {
     UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
     CString mruText = GetMRUEntry(mruIndex);
@@ -158,18 +158,21 @@ void CMainFrame::OnFileMRU(WPARAM wparam)
         RemoveMRUEntry(mruText);
         m_view.GetAllPoints().clear();
     }
+
+    return TRUE;
 }
 
 // Create a new scribble screen.
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
     m_pathName = _T("");
     GetView().Invalidate();
+    return TRUE;
 }
 
 // Load the PlotPoint data from the file.
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
     CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
     fileDlg.SetTitle(_T("Open File"));
@@ -191,10 +194,12 @@ void CMainFrame::OnFileOpen()
 
         m_view.GetAllPoints().clear();
     }
+
+    return TRUE;
 }
 
 // Save the PlotPoint data to the current file.
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
     try
     {
@@ -211,10 +216,12 @@ void CMainFrame::OnFileSave()
 
         m_view.GetAllPoints().clear();
     }
+
+    return TRUE;
 }
 
 // Save the PlotPoint data to a specified file.
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
     CFileDialog fileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
     fileDlg.SetTitle(_T("Save File"));
@@ -241,10 +248,11 @@ void CMainFrame::OnFileSaveAs()
         m_view.GetAllPoints().clear();
     }
 
+    return TRUE;
 }
 
 // Preview the page before it is printed.
-void CMainFrame::OnFilePreview()
+BOOL CMainFrame::OnFilePreview()
 {
     try
     {
@@ -283,10 +291,11 @@ void CMainFrame::OnFilePreview()
         ShowToolBar(GetToolBar().IsWindow());
     }
 
+    return TRUE;
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
     try
     {
@@ -299,6 +308,8 @@ void CMainFrame::OnFilePrint()
         // Display a message box indicating why printing failed.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
+
+    return TRUE;
 }
 
 // Called after the frame is created.
@@ -318,7 +329,7 @@ void CMainFrame::OnInitialUpdate()
 }
 
 // Initiates the Choose Color dialog.
-void CMainFrame::OnPenColor()
+BOOL CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
     static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
@@ -338,10 +349,12 @@ void CMainFrame::OnPenColor()
         // Retrieve the chosen color
         m_view.SetPenColor(colorDlg.GetColor());
     }
+
+    return TRUE;
 }
 
 // Called when the Print Preview's "Close" button is pressed.
-void CMainFrame::OnPreviewClose()
+LRESULT CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_view);
@@ -351,10 +364,12 @@ void CMainFrame::OnPreviewClose()
     ShowToolBar(GetToolBar().IsWindow());
 
     SetStatusText(LoadString(IDW_READY));
+
+    return 0;
 }
 
 // Called when the Print Preview's "Print Now" button is pressed.
-void CMainFrame::OnPreviewPrint()
+LRESULT CMainFrame::OnPreviewPrint()
 {
     try
     {
@@ -365,10 +380,12 @@ void CMainFrame::OnPreviewPrint()
     {
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
+
+    return 0;
 }
 
 // Called when the Print Preview's "Print Setup" button is pressed.
-void CMainFrame::OnPreviewSetup()
+LRESULT CMainFrame::OnPreviewSetup()
 {
     // Call the print setup dialog.
     CPrintDialog printDlg(PD_PRINTSETUP);
@@ -390,6 +407,8 @@ void CMainFrame::OnPreviewSetup()
 
     // Initiate the print preview.
     m_preview.DoPrintPreview(*this);
+
+    return 0;
 }
 
 // Configures the ToolBar.
@@ -421,10 +440,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_DROPFILE:          OnDropFile(wparam); break;
-        case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
-        case UWM_PRINTNOW:          OnPreviewPrint();   break;
-        case UWM_PRINTSETUP:        OnPreviewSetup();   break;
+        case UWM_DROPFILE:        return OnDropFile(wparam);
+        case UWM_PREVIEWCLOSE:    return OnPreviewClose();
+        case UWM_PRINTNOW:        return OnPreviewPrint();
+        case UWM_PRINTSETUP:      return OnPreviewSetup();
         }
 
         return WndProcDefault(msg, wparam, lparam);

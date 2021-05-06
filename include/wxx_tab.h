@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1000,10 +1000,8 @@ namespace Win32xx
     }
 
     // Handle the notifications we send.
-    inline LRESULT CTab::OnNotifyReflect(WPARAM wparam, LPARAM lparam)
+    inline LRESULT CTab::OnNotifyReflect(WPARAM, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-
         LPNMHDR pNMHDR = (LPNMHDR)lparam;
         switch (pNMHDR->code)
         {
@@ -1014,10 +1012,8 @@ namespace Win32xx
     }
 
     // Called when a different tab is selected.
-    inline LRESULT CTab::OnTCNSelChange(LPNMHDR pNMHDR)
+    inline LRESULT CTab::OnTCNSelChange(LPNMHDR)
     {
-        UNREFERENCED_PARAMETER(pNMHDR);
-
         // Display the newly selected tab page
         int nPage = GetCurSel();
         ShowActiveView(m_allTabPageInfo[nPage].pView);
@@ -2029,10 +2025,8 @@ namespace Win32xx
 
     // Override this function to determine what happens when a tab is about to close.
     // Return TRUE to allow the tab to close, or FALSE to prevent the tab closing.
-    inline BOOL CTabbedMDI::OnTabClose(int page)
+    inline BOOL CTabbedMDI::OnTabClose(int)
     {
-        UNREFERENCED_PARAMETER(page);
-
         // Allow the tab to be close
         return TRUE;
     }

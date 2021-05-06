@@ -21,14 +21,14 @@ public:
 
     CDoc& GetDoc()      { return m_view.GetDoc(); }
 
-    void    OnFileExit();
-    void    OnFileOpen();
-    void    OnFilePrint();
-    void    OnFileSave();
-    void    OnFilePreview();
-    void    OnPreviewClose();
-    void    OnPreviewPrint();
-    void    OnPreviewSetup();
+    BOOL    OnFileExit();
+    BOOL    OnFileOpen();
+    BOOL    OnFilePrint();
+    BOOL    OnFileSave();
+    BOOL    OnFilePreview();
+    LRESULT    OnPreviewClose();
+    LRESULT    OnPreviewPrint();
+    LRESULT    OnPreviewSetup();
 
 protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);

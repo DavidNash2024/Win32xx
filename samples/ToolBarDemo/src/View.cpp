@@ -14,24 +14,23 @@ CView::CView()
 }
 
 // Process menu or toolbar input
-BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CView::OnCommand(WPARAM wparam, LPARAM)
 {
     // Process the messages from the child ToolBar
-    UNREFERENCED_PARAMETER(lparam);
 
     switch(LOWORD(wparam))
     {
-    case IDM_TOP:       OnTop();        return TRUE;
-    case IDM_LEFT:      OnLeft();       return TRUE;
-    case IDM_RIGHT:     OnRight();      return TRUE;
-    case IDM_BOTTOM:    OnBottom();     return TRUE;
+    case IDM_TOP:       return OnTop();
+    case IDM_LEFT:      return OnLeft();
+    case IDM_RIGHT:     return OnRight();
+    case IDM_BOTTOM:    return OnBottom();
     }
 
     return FALSE;
 }
 
 // Position the toolbar on the bottom.
-void CView::OnBottom()
+BOOL CView::OnBottom()
 {
     DWORD style = m_toolBar.GetStyle();
 
@@ -39,10 +38,11 @@ void CView::OnBottom()
     style |= CCS_BOTTOM;
     m_toolBar.SetStyle(style);
     RecalcLayout();
+    return TRUE;
 }
 
 // Position the toolbar on the left.
-void CView::OnLeft()
+BOOL CView::OnLeft()
 {
     DWORD style = m_toolBar.GetStyle();
 
@@ -50,33 +50,34 @@ void CView::OnLeft()
     style |= CCS_LEFT;
     m_toolBar.SetStyle(style);
     RecalcLayout();
+    return TRUE;
 }
 
 // Position the toolbar on the right.
-void CView::OnRight()
+BOOL CView::OnRight()
 {
     DWORD style = m_toolBar.GetStyle();
 
     style |= CCS_RIGHT;
     m_toolBar.SetStyle(style);
     RecalcLayout();
+    return TRUE;
 }
 
 // Position the toolbar at the top.
-void CView::OnTop()
+BOOL CView::OnTop()
 {
     DWORD style = m_toolBar.GetStyle();
 
     style &= ~(CCS_VERT | CCS_BOTTOM);
     m_toolBar.SetStyle(style);
     RecalcLayout();
+    return TRUE;
 }
 
 // Called during frame creation.
-int CView::OnCreate(CREATESTRUCT& cs)
+int CView::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     // Create the ToolBar's image list from 4 icons
     m_toolBarImages.Create(48, 48, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
@@ -101,6 +102,7 @@ int CView::OnCreate(CREATESTRUCT& cs)
         { 2, IDM_RIGHT,     TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 },
         { 3, IDM_BOTTOM,    TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 }
     };
+
     m_toolBar.AddButtons(4, buttonInfo);
 
     return 0;
@@ -146,9 +148,8 @@ void CView::OnInitialUpdate()
 // Called when a notification is received from a child window.
 inline LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(wparam);
-
     LPNMHDR pNMHDR = (LPNMHDR)lparam;
+
     switch (pNMHDR->code)
     {
     // Pass the ToolBar's ToolTip info up to the frame

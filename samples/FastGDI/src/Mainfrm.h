@@ -18,19 +18,19 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
     void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray);
-    void OnAdjustImage();
-    void OnFileExit();
-    void OnFileSave();
-    void OnFileSaveAs();
-    void OnFileNew();
-    void OnFileOpen();
-    void OnFileOpenMRU(WPARAM wparam, LPARAM lparam);
-    void OnFilePreview();
-    void OnFilePrint();
+    BOOL OnAdjustImage();
+    BOOL OnFileExit();
+    BOOL OnFileSave();
+    BOOL OnFileSaveAs();
+    BOOL OnFileNew();
+    BOOL OnFileOpen();
+    BOOL OnFileOpenMRU(WPARAM wparam, LPARAM lparam);
+    BOOL OnFilePreview();
+    BOOL OnFilePrint();
 
-    void OnPreviewClose();
-    void OnPreviewPrint();
-    void OnPreviewSetup();
+    LRESULT OnPreviewClose();
+    LRESULT OnPreviewPrint();
+    LRESULT OnPreviewSetup();
     BOOL LoadFile(CString& fileName);
     void SaveFile(CString& fileName);
 

@@ -32,11 +32,10 @@ void CViewText::OnAttach()
 }
 
 // Respond to keyboard accelerator keys.
-BOOL CViewText::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CViewText::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDM_EDIT_COPY:     OnEditCopy();   return TRUE;

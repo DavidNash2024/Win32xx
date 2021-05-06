@@ -36,11 +36,10 @@ BOOL CView::OnColor()
     return TRUE;
 }
 
-BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CView::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id= LOWORD(wparam);
+
     switch (id)
     {
     case IDM_COLOR:     return OnColor();

@@ -125,11 +125,10 @@ void CMainFrame::SetPenColor(COLORREF clr)
 
 // Process the messages from the (non-ribbon) Menu and Tool Bar.
 // Used when there isn't a ribbon.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDM_FILE_NEW:          OnFileNew();            return TRUE;
@@ -347,11 +346,10 @@ void CMainFrame::SetupToolBar()
 
 // This function is called when a ribbon button is updated.
 // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation.
-STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue)
+STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT*, __out PROPVARIANT* newValue)
 {
-    UNREFERENCED_PARAMETER(currentValue);
-
     HRESULT result = E_NOTIMPL;
+
     if(UI_PKEY_Enabled == key)
     {
         return UIInitPropertyFromBoolean(UI_PKEY_Enabled, TRUE, newValue);

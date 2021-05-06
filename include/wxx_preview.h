@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -354,10 +354,8 @@ namespace Win32xx
 
     // Processes the dialog's buttons.
     template <typename T>
-    inline BOOL CPrintPreview<T>::OnCommand(WPARAM wparam, LPARAM lparam)
+    inline BOOL CPrintPreview<T>::OnCommand(WPARAM wparam, LPARAM)
     {
-        UNREFERENCED_PARAMETER(lparam);
-
         UINT id = LOWORD(wparam);
         switch (id)
         {

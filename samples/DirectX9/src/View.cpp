@@ -138,10 +138,8 @@ HRESULT CDXView::CDX::InitGeometry()
     return S_OK;
 }
 
-int CDXView::CDX::OnCreate(CREATESTRUCT& cs)
+int CDXView::CDX::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     // Initialize Direct3D
     if (SUCCEEDED(InitD3D(*this)))
     {

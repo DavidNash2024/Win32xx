@@ -20,14 +20,14 @@ public:
     virtual HWND Create(HWND parent = 0);
     CDoc& GetDoc() {return m_view.GetDoc(); }
 
-    void    OnFileExit();
-    void    OnFileOpen();
-    void    OnFilePreview();
-    void    OnFilePrint();
-    void    OnFileSave();
-    void    OnPreviewClose();
-    void    OnPreviewPrint();
-    void    OnPreviewSetup();
+    BOOL    OnFileExit();
+    BOOL    OnFileOpen();
+    BOOL    OnFilePreview();
+    BOOL    OnFilePrint();
+    BOOL    OnFileSave();
+    LRESULT    OnPreviewClose();
+    LRESULT    OnPreviewPrint();
+    LRESULT    OnPreviewSetup();
 
     CString ItoT(int i);
     int     TtoI(LPCTSTR string);

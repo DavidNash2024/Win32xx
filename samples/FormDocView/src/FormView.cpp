@@ -73,10 +73,8 @@ void CFormView::OnClose()
 }
 
 // Process command messages (WM_COMMAND) from the dialog's controls.
-BOOL CFormView::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CFormView::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
 
     switch (id)

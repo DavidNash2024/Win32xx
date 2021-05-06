@@ -694,10 +694,8 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
 }
 
 // Respond to a right mouse click on the window.
-LRESULT CMyListView::OnNMRClick(LPNMHDR pNMHDR)
+LRESULT CMyListView::OnNMRClick(LPNMHDR)
 {
-    UNREFERENCED_PARAMETER(pNMHDR);
-
     CPoint ptScreen;
     ::GetCursorPos(&ptScreen);
     DoContextMenu(ptScreen);
@@ -706,10 +704,8 @@ LRESULT CMyListView::OnNMRClick(LPNMHDR pNMHDR)
 }
 
 // Called when the list-view has focus and the Enter key is pressed.
-LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
+LRESULT CMyListView::OnNMReturn(LPNMHDR)
 {
-    UNREFERENCED_PARAMETER(pNMHDR);
-
     // Get the item that has the focus.
     int item = GetNextItem(-1, LVNI_FOCUSED);
 

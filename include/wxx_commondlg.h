@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -416,10 +416,8 @@ namespace Win32xx
     // The Default message handling for CColorDialog. Don't override this
     // function, override DialogProc instead.
     // Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CColorDialog::DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline INT_PTR CColorDialog::DialogProcDefault(UINT msg, WPARAM wparam, LPARAM)
     {
-        UNREFERENCED_PARAMETER(lparam);
-
         switch (msg)
         {
         case WM_INITDIALOG:     return OnInitDialog();
@@ -844,20 +842,14 @@ namespace Win32xx
     // selection changes in the list box. The ID of the list or combo box in
     // which the selection occurred is boxID. The index of the current
     // selection is curSel. The control notification code is code.
-    inline void CFileDialog::OnLBSelChangedNotify(UINT boxID, UINT curSel, UINT code)
+    inline void CFileDialog::OnLBSelChangedNotify(UINT, UINT, UINT)
     {
-        UNREFERENCED_PARAMETER(boxID);
-        UNREFERENCED_PARAMETER(curSel);
-        UNREFERENCED_PARAMETER(code);
-
     }
 
     // This method handles the WM_NOTIFY message loop functions of the hook
     // procedure.
-    inline LRESULT CFileDialog::OnNotify(WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFileDialog::OnNotify(WPARAM, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-
         OFNOTIFY* pNotify = reinterpret_cast<OFNOTIFY*>(lparam);
         assert(pNotify);
         if (!pNotify) return 0;
@@ -911,10 +903,8 @@ namespace Win32xx
     //                    The application is responsible for displaying a warning message.
     // OFN_SHAREWARN    - Reject the file name and displays a warning message
     //                    (the same result as if there were no hook procedure).
-    inline LRESULT CFileDialog::OnShareViolation(LPCTSTR pPathName )
+    inline LRESULT CFileDialog::OnShareViolation(LPCTSTR)
     {
-        UNREFERENCED_PARAMETER(pPathName);
-
         return OFN_SHAREWARN; // default:
     }
 
@@ -1152,10 +1142,8 @@ namespace Win32xx
     // The Default message handling for CFindReplaceDialog. Don't override this function,
     // override DialogProc instead.
     // Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CFindReplaceDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM lparam)
+    inline INT_PTR CFindReplaceDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM)
     {
-        UNREFERENCED_PARAMETER(lparam);
-
         switch (message)
         {
         case WM_INITDIALOG:
@@ -1412,9 +1400,8 @@ namespace Win32xx
     // The Default message handling for CFontDialog.
     // Don't override this function, override DialogProc instead.
     // Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CFontDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM lparam)
+    inline INT_PTR CFontDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM)
     {
-        UNREFERENCED_PARAMETER(lparam);
         if (message == WM_INITDIALOG)
         {
             OnInitDialog();

@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -462,7 +462,7 @@ namespace Win32xx
     //  member function. Call UpdateData() to write data into, or retrieve
     //  validated data from the controls.  Override this method in the dialog
     //  or other window that utilize the DDX/DDV functions.
-    inline void CWnd::DoDataExchange(CDataExchange& dx)
+    inline void CWnd::DoDataExchange(CDataExchange&)
     {
         // Any dialog or window using DDX/DDV for its controls should
         // override of this member, and put calls to the DDX and DDV functions
@@ -497,8 +497,6 @@ namespace Win32xx
         // dx.DDX_Check(IDC_CHECK_A,        m_checkA);
         // dx.DDX_Check(IDC_CHECK_B,        m_checkB);
         // dx.DDX_Check(IDC_CHECK_C,        m_checkC);
-
-        UNREFERENCED_PARAMETER(dx);
     }
 #endif
 
@@ -605,10 +603,8 @@ namespace Win32xx
     }
 
     // Called when the user interacts with the menu or toolbar.
-    inline BOOL CWnd::OnCommand(WPARAM wparam, LPARAM lparam)
+    inline BOOL CWnd::OnCommand(WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
 
         // Override this to handle WM_COMMAND messages, for example
 
@@ -633,7 +629,7 @@ namespace Win32xx
 
     // Called during window creation. Override this functions to perform tasks
     // such as creating child windows.
-    inline int CWnd::OnCreate(CREATESTRUCT& cs)
+    inline int CWnd::OnCreate(CREATESTRUCT&)
     {
         // This function is called when a WM_CREATE message is received
         // Override it to automatically perform tasks during window creation.
@@ -642,7 +638,6 @@ namespace Win32xx
         // Note: Window controls don't call OnCreate. They are sublcassed (attached)
         //  after their window is created.
 
-        UNREFERENCED_PARAMETER (cs);
         return 0;
     }
 
@@ -655,19 +650,16 @@ namespace Win32xx
 
     // Called when part of the client area of the window needs to be drawn.
     // Override this function in your derived class to perform drawing tasks.
-    inline void CWnd::OnDraw(CDC& dc)
+    inline void CWnd::OnDraw(CDC&)
     {
-        UNREFERENCED_PARAMETER(dc);
     }
 
     // Called when the background of the window's client area needs to be erased.
     // Override this function in your derived class to perform drawing tasks.
     // Return Value: Return FALSE to also permit default erasure of the background
     //               Return TRUE to prevent default erasure of the background
-    inline BOOL CWnd::OnEraseBkgnd(CDC& dc)
+    inline BOOL CWnd::OnEraseBkgnd(CDC&)
     {
-        UNREFERENCED_PARAMETER(dc);
-
         return FALSE;
     }
 
@@ -681,10 +673,8 @@ namespace Win32xx
     // Called when menu items are about to be displayed. Override this function to
     // enable/disable the menu item, or add/remove the check box or radio button
     // to menu items.
-    inline void CWnd::OnMenuUpdate(UINT id)
+    inline void CWnd::OnMenuUpdate(UINT)
     {
-        UNREFERENCED_PARAMETER(id);
-
         // Override this function to modify the behaviour of menu items,
         // such as adding or removing checkmarks
     }
@@ -741,11 +731,8 @@ namespace Win32xx
     // WM_CTLCOLORSCROLLBAR, WM_CTLCOLORSTATIC, WM_CHARTOITEM,  WM_VKEYTOITEM,
     // WM_HSCROLL, WM_VSCROLL, WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM,
     // WM_COMPAREITEM, WM_PARENTNOTIFY.
-    inline LRESULT CWnd::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CWnd::OnMessageReflect(UINT, WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(msg);
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
         // This function processes those special messages (see above) sent
         // by some older controls, and reflects them back to the originating CWnd object.
         // Override this function in your derived class to handle these special messages.
@@ -762,11 +749,8 @@ namespace Win32xx
     }
 
     // Processes notification (WM_NOTIFY) messages from a child window.
-    inline LRESULT CWnd::OnNotify(WPARAM wparam, LPARAM lparam)
+    inline LRESULT CWnd::OnNotify(WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         // You can use either OnNotifyReflect or OnNotify to handle notifications
         // Override OnNotifyReflect to handle notifications in the CWnd class that
         //   generated the notification.   OR
@@ -788,11 +772,8 @@ namespace Win32xx
     }
 
     // Processes the notification (WM_NOTIFY) messages in the child window that originated them.
-    inline LRESULT CWnd::OnNotifyReflect(WPARAM wparam, LPARAM lparam)
+    inline LRESULT CWnd::OnNotifyReflect(WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         // Override OnNotifyReflect to handle notifications in the CWnd class that
         //   generated the notification.
 
@@ -841,10 +822,8 @@ namespace Win32xx
     }
 
     // Called by CWnd::Create to set some window creation parameters.
-    inline void CWnd::PreCreate(CREATESTRUCT& cs)
+    inline void CWnd::PreCreate(CREATESTRUCT&)
     {
-        UNREFERENCED_PARAMETER(cs);
-
         // Override this function to set the CREATESTRUCT values prior to window creation.
         // Here we set the initial values for the following:
         //  window styles (WS_VISABLE, WS_CHILD, WS_WS_MAXIMIZEBOX etc.)
@@ -857,10 +836,8 @@ namespace Win32xx
 
     // Called by CWnd::Create to set some window class parameters.
     // Used to set the window type (ClassName) and for setting the background brush and cursor.
-    inline void CWnd::PreRegisterClass(WNDCLASS& wc)
+    inline void CWnd::PreRegisterClass(WNDCLASS&)
     {
-        UNREFERENCED_PARAMETER(wc);
-
         // Override this function to set the WNDCLASS values prior to window creation.
         // for example, for a ToolBar, we use this:
         // wc.lpszClassName = TOOLBARCLASSNAME;
@@ -881,10 +858,8 @@ namespace Win32xx
     // translated before normal processing. Function which translate messages
     // include TranslateAccelerator, TranslateMDISysAccel and IsDialogMessage.
     // Return TRUE if the message is translated.
-    inline BOOL CWnd::PreTranslateMessage(MSG& msg)
+    inline BOOL CWnd::PreTranslateMessage(MSG&)
     {
-        UNREFERENCED_PARAMETER(msg);
-
         return FALSE;
     }
 

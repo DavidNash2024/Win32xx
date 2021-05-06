@@ -12,10 +12,8 @@
 //
 
 // Called when the window is created.
-int CViewRect::OnCreate(CREATESTRUCT& cs)
+int CViewRect::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     SetTimer (1, 250, NULL) ;
     return 0;
 }
@@ -34,10 +32,8 @@ LRESULT CViewRect::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Called when the window is resized.
-LRESULT CViewRect::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CViewRect::OnSize(UINT, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(msg);
-
     // If not minimized, save the window size.
     if (wparam != SIZE_MINIMIZED)
     {
@@ -54,12 +50,8 @@ LRESULT CViewRect::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Responds to the timer event. Displays a random rectangle.
-LRESULT CViewRect::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CViewRect::OnTimer(UINT, WPARAM, LPARAM)
 {
-    UNREFERENCED_PARAMETER(msg);
-    UNREFERENCED_PARAMETER(wparam);
-    UNREFERENCED_PARAMETER(lparam);
-
     int red, green, blue;
     int left, right, top, bottom;
     left   = rand () % m_cxClientMax;

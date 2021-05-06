@@ -88,11 +88,10 @@ void CMDIChildSimple::OnClose()
 }
 
 // Respond to menu and toolbar input forwarded from the MDI frame.
-BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDM_COLOR_BLACK:

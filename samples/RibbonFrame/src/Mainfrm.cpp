@@ -120,7 +120,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     return 0;
 }
 
-void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
+BOOL CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
 {
     try
     {
@@ -138,10 +138,12 @@ void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
 
         m_view.GetAllPoints().clear();
     }
+
+    return TRUE;
 }
 
 // Called when the DropdownColorPicker button is pressed.
-void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
+BOOL CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
     if (ppropvarValue != NULL)
     {
@@ -160,29 +162,31 @@ void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
             }
         }
     }
+
+    return TRUE;
 }
 
 // Used when there isn't a ribbon.
-void CMainFrame::SetPenColor(COLORREF clr)
+BOOL CMainFrame::SetPenColor(COLORREF clr)
 {
     m_view.SetPenColor(clr);
+    return TRUE;
 }
 
 // Process the messages from the (non-ribbon) Menu and Tool Bar.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
-    case IDM_FILE_NEW:          OnFileNew();            return TRUE;
-    case IDM_FILE_OPEN:         OnFileOpen();           return TRUE;
-    case IDM_FILE_SAVE:         OnFileSave();           return TRUE;
-    case IDM_FILE_SAVEAS:       OnFileSaveAs();         return TRUE;
-    case IDM_FILE_PRINT:        OnFilePrint();          return TRUE;
+    case IDM_FILE_NEW:        return OnFileNew();
+    case IDM_FILE_OPEN:       return OnFileOpen();
+    case IDM_FILE_SAVE:       return OnFileSave();
+    case IDM_FILE_SAVEAS:     return OnFileSaveAs();
+    case IDM_FILE_PRINT:      return OnFilePrint();
 
-    case IDM_FILE_EXIT:         OnFileExit();           return TRUE;
+    case IDM_FILE_EXIT:       OnFileExit();
     case IDW_FILE_MRU_FILE1:
     case IDW_FILE_MRU_FILE2:
     case IDW_FILE_MRU_FILE3:
@@ -194,24 +198,25 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
             return TRUE;
         }
 
-    case IDM_PEN_RED:   SetPenColor(RGB(255, 0, 0));    return TRUE;
-    case IDM_PEN_BLUE:  SetPenColor(RGB(0, 0, 255));    return TRUE;
-    case IDM_PEN_GREEN: SetPenColor(RGB(0, 196, 0));    return TRUE;
-    case IDM_PEN_BLACK: SetPenColor(RGB(0, 0, 0));      return TRUE;
+    case IDM_PEN_RED:         return SetPenColor(RGB(255, 0, 0));
+    case IDM_PEN_BLUE:        return SetPenColor(RGB(0, 0, 255));
+    case IDM_PEN_GREEN:       return SetPenColor(RGB(0, 196, 0));
+    case IDM_PEN_BLACK:       return SetPenColor(RGB(0, 0, 0));
 
-    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-    case IDM_HELP_ABOUT:        return OnHelp();
+    case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
+    case IDM_HELP_ABOUT:      return OnHelp();
 
     }
 
     return FALSE;
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     // Issue a close request to the frame
     Close();
+    return TRUE;
 }
 
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
@@ -237,7 +242,7 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
     }
 }
 
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
     try
     {
@@ -259,16 +264,19 @@ void CMainFrame::OnFileOpen()
 
         m_view.GetAllPoints().clear();
     }
+
+    return TRUE;
 }
 
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
     m_pathName = L"";
     GetView().Invalidate();
+    return TRUE;
 }
 
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
     try
     {
@@ -285,9 +293,11 @@ void CMainFrame::OnFileSave()
 
         m_view.GetAllPoints().clear();
     }
+
+    return TRUE;
 }
 
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
     try
     {
@@ -313,11 +323,13 @@ void CMainFrame::OnFileSaveAs()
 
         m_view.GetAllPoints().clear();
     }
+
+    return TRUE;
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice.
 // This function provides a useful reference for printing bitmaps in general.
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
     try
     {
@@ -332,6 +344,8 @@ void CMainFrame::OnFilePrint()
         CString type = CString(e.what());
         ::MessageBox(0, message, type, MB_ICONWARNING);
     }
+
+    return TRUE;
 }
 
 // Configures the ToolBar. Used when there isn't a ribbon.
@@ -357,10 +371,8 @@ void CMainFrame::SetupToolBar()
 
 // This function is called when a ribbon button is updated.
 // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
-STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue)
+STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT*, __out PROPVARIANT* newValue)
 {
-    UNREFERENCED_PARAMETER(currentValue);
-
     HRESULT result = E_NOTIMPL;
     if(UI_PKEY_Enabled == key)
     {

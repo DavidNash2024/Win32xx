@@ -26,22 +26,20 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Process the messages from the Menu and Toolbar.
-BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     switch (LOWORD(wparam))
     {
-    case IDM_FILE_NEW:          OnFileNew();        return TRUE;
-    case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
-    case IDM_FILE_SAVE:         OnFileSave();       return TRUE;
-    case IDM_FILE_SAVEAS:       OnFileSaveAs();     return TRUE;
-    case IDM_FILE_PRINT:        OnFilePrint();      return TRUE;
+    case IDM_FILE_NEW:        return OnFileNew();
+    case IDM_FILE_OPEN:       return OnFileOpen();
+    case IDM_FILE_SAVE:       return OnFileSave();
+    case IDM_FILE_SAVEAS:     return OnFileSaveAs();
+    case IDM_FILE_PRINT:      return OnFilePrint();
 
-    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-    case IDM_HELP_ABOUT:        return OnHelp();
-    case IDM_FILE_EXIT:         OnFileExit();       return TRUE;
+    case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
+    case IDM_HELP_ABOUT:      return OnHelp();
+    case IDM_FILE_EXIT:       return OnFileExit();
     }
 
     return FALSE;
@@ -69,34 +67,40 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 }
 
 // Issue a close request to the frame.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
     ::MessageBox(0, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
     ::MessageBox(0, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
     ::MessageBox(0, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
     ::MessageBox(0, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
     ::MessageBox(0, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
+    return TRUE;
 }
 
 // Handle the frame window's messages.

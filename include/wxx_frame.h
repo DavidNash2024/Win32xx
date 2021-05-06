@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -542,6 +542,7 @@ namespace Win32xx
         BOOL m_useStatusBar;                // set to TRUE if the statusbar is used
         BOOL m_useThemes;                   // set to TRUE if themes are to be used
         BOOL m_useToolBar;                  // set to TRUE if the toolbar is used
+        BOOL m_altKeyPressed;               // set to TRUE if the alt key is held down;
 
     };  // class CFrameT
 
@@ -962,7 +963,8 @@ namespace Win32xx
     template <class T>
     inline CFrameT<T>::CFrameT() : m_aboutDialog(IDW_ABOUT), m_accel(0), m_pView(NULL), m_maxMRU(0), m_oldFocus(0),
                               m_drawArrowBkgrnd(FALSE), m_kbdHook(0), m_useIndicatorStatus(TRUE),
-                              m_useMenuStatus(TRUE), m_useStatusBar(TRUE), m_useThemes(TRUE), m_useToolBar(TRUE)
+                              m_useMenuStatus(TRUE), m_useStatusBar(TRUE), m_useThemes(TRUE), m_useToolBar(TRUE),
+                              m_altKeyPressed(FALSE)
     {
         ZeroMemory(&m_mbTheme, sizeof(m_mbTheme));
         ZeroMemory(&m_rbTheme, sizeof(m_rbTheme));
@@ -1319,7 +1321,6 @@ namespace Win32xx
                     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
                     if (state & (CDIS_HOT | CDIS_SELECTED))
                     {
-
                         if ((state & CDIS_SELECTED) || (GetMenuBar().GetButtonState(item) & TBSTATE_PRESSED))
                         {
                             drawDC.GradientFill(GetMenuBarTheme().clrPressed1, GetMenuBarTheme().clrPressed2, rc, FALSE);
@@ -1350,7 +1351,13 @@ namespace Win32xx
 
                     rc.bottom += 1;
                     drawDC.SetBkMode(TRANSPARENT);
-                    drawDC.DrawText(str, str.GetLength(), rc, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+                    UINT format = DT_VCENTER | DT_CENTER | DT_SINGLELINE | DT_HIDEPREFIX;
+
+                    // Turn off 'hide prefix' style for keyboard navigation.
+                    if (m_altKeyPressed || GetMenuBar().IsAltMode())
+                        format &= ~DT_HIDEPREFIX;
+
+                    drawDC.DrawText(str, str.GetLength(), rc, format);
                     drawDC.SelectObject(oldFont);
 
                     return CDRF_SKIPDEFAULT;  // No further drawing
@@ -2349,10 +2356,8 @@ namespace Win32xx
     // This is called when the frame window is being created.
     // Override this in CMainFrame if you wish to modify what happens here.
     template <class T>
-    inline int CFrameT<T>::OnCreate(CREATESTRUCT& cs)
+    inline int CFrameT<T>::OnCreate(CREATESTRUCT&)
     {
-        UNREFERENCED_PARAMETER(cs);
-
         // Start the keyboard hook to capture the CapsLock, NumLock,
         // ScrollLock and Insert keys.
         SetKbdHook();
@@ -2657,10 +2662,8 @@ namespace Win32xx
 
     // Called when a notification from a child window (WM_NOTIFY) is received.
     template <class T>
-    inline LRESULT CFrameT<T>::OnNotify(WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnNotify(WPARAM, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wparam);
-
         LPNMHDR pNMHDR = (LPNMHDR)lparam;
         switch (pNMHDR->code)
         {
@@ -2678,10 +2681,8 @@ namespace Win32xx
 
     // Called when the rebar's height changes.
     template <class T>
-    inline LRESULT CFrameT<T>::OnRBNHeightChange(LPNMHDR pNMHDR)
+    inline LRESULT CFrameT<T>::OnRBNHeightChange(LPNMHDR)
     {
-        UNREFERENCED_PARAMETER(pNMHDR);
-
         RecalcLayout();
 
         return 0;
@@ -2689,10 +2690,8 @@ namespace Win32xx
 
     // Notification of rebar layout change.
     template <class T>
-    inline LRESULT CFrameT<T>::OnRBNLayoutChanged(LPNMHDR pNMHDR)
+    inline LRESULT CFrameT<T>::OnRBNLayoutChanged(LPNMHDR)
     {
-        UNREFERENCED_PARAMETER(pNMHDR);
-
         if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
             GetReBar().MoveBandsLeft();
 
@@ -2701,10 +2700,8 @@ namespace Win32xx
 
     // Notification of a rebar band minimized or maximized.
     template <class T>
-    inline LRESULT CFrameT<T>::OnRBNMinMax(LPNMHDR pNMHDR)
+    inline LRESULT CFrameT<T>::OnRBNMinMax(LPNMHDR)
     {
-        UNREFERENCED_PARAMETER(pNMHDR);
-
         if (GetReBarTheme().UseThemes && GetReBarTheme().ShortBands)
             return 1;  // Suppress maximise or minimise rebar band
 
@@ -2760,11 +2757,8 @@ namespace Win32xx
 
     // Called when the frame window (not a child window) receives focus.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSetFocus(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnSetFocus(UINT, WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         SetStatusIndicators();
         return 0;
     }
@@ -2781,11 +2775,8 @@ namespace Win32xx
 
     // Called when the frame window is resized.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSize(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnSize(UINT, WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         RecalcLayout();
         return 0;
     }
@@ -2793,11 +2784,8 @@ namespace Win32xx
     // Called in response to a WM_SYSCOLORCHANGE message. This message is sent
     // to all top-level windows when a change is made to a system color setting.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnSysColorChange(UINT msg, WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         // Honour theme color changes
         if (GetReBar().IsWindow())
         {
@@ -2850,11 +2838,11 @@ namespace Win32xx
     // Called in response to a WM_SYSCOMMAND notification. This notification
     // is passed on to the MenuBar to process alt keys and maximise or restore.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSysCommand(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if ((SC_KEYMENU == wparam) && (VK_SPACE != lparam) && GetMenuBar().IsWindow())
         {
-            GetMenuBar().OnSysCommand(WM_SYSCOMMAND, wparam, lparam);
+            GetMenuBar().OnSysCommand(msg, wparam, lparam);
             return 0;
         }
 
@@ -2862,7 +2850,7 @@ namespace Win32xx
             m_oldFocus = ::GetFocus();
 
         // Pass remaining system commands on for default processing
-        return T::FinalWindowProc(WM_SYSCOMMAND, wparam, lparam);
+        return T::FinalWindowProc(msg, wparam, lparam);
     }
 
     // Notification of undocked from CDocker received via OnNotify
@@ -2876,11 +2864,8 @@ namespace Win32xx
     // Called when the drop-down menu or submenu has been destroyed.
     // Win95 & WinNT don't support the WM_UNINITMENUPOPUP message.
     template <class T>
-    inline LRESULT CFrameT<T>::OnUnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnUnInitMenuPopup(UINT, WPARAM, LPARAM)
     {
-        UNREFERENCED_PARAMETER(wparam);
-        UNREFERENCED_PARAMETER(lparam);
-
         for (int item = static_cast<int>(m_menuItemData.size()) - 1; item >= 0; --item)
         {
             // Undo OwnerDraw and put the text back.
@@ -3793,6 +3778,24 @@ namespace Win32xx
                 (wparam == VK_SCROLL) || (wparam == VK_INSERT))
             {
                 pFrame->SetStatusIndicators();
+            }
+        }
+
+        if (wparam == VK_MENU)
+        {
+            BOOL keyState = lparam & 0x80000000;
+            if (!pFrame->m_altKeyPressed && !keyState)
+            {
+                pFrame->m_altKeyPressed = TRUE;
+                if (pFrame->GetMenuBar().IsWindow())
+                    pFrame->GetMenuBar().RedrawWindow();
+            }
+
+            if (pFrame->m_altKeyPressed && keyState)
+            {
+                pFrame->m_altKeyPressed = FALSE;
+                if (pFrame->GetMenuBar().IsWindow())
+                    pFrame->GetMenuBar().RedrawWindow();
             }
         }
 

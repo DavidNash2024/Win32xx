@@ -141,10 +141,8 @@ void CContainClasses::AddCombo()
 }
 
 // Responds to menu and and toolbar input.
-BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM)
 {
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
     switch(id)
     {
