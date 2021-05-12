@@ -84,6 +84,9 @@ LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM)
         dc.SetBkMode(TRANSPARENT);
         dc.SelectObject(m_urlFont);
 
+        // Keep our changes.
+        dc.Detach();
+
         // Return a NULL brush for a transparent background
         return (LRESULT)GetStockObject(NULL_BRUSH);
     }

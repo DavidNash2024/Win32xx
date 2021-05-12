@@ -26,9 +26,9 @@ protected:
 
 private:
     void    CreateImagePreviews();
-    void    OnGrayScale();
+    BOOL    OnGrayScale();
     LRESULT OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
-    void    OnTextChange(HWND editCtrl);
+    BOOL    OnTextChange(HWND editCtrl);
     void    Paint();
     void    UpdatePreview();
 

@@ -55,7 +55,7 @@ public:
 
 protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void    OnColor(COLORREF rgb);
+    virtual BOOL    OnColor(COLORREF rgb);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
     virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);

@@ -58,6 +58,5 @@ DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)                     /*
         rect.bottom -= iChange;
         dc.DrawFocusRect(rect);
     }
-    dc.Detach();
 }
 /*----------------------------------------------------------------------------*/

@@ -50,15 +50,13 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
     return FALSE;
 }
 
-int CView::OnCreate(CREATESTRUCT& cs)
+int CView::OnCreate(CREATESTRUCT&)
 {
     // OnCreate is called automatically during window creation when a
     // WM_CREATE message received.
 
     // Tasks such as setting the icon, creating child windows, or anything
     // associated with creating windows are normally performed here.
-
-    UNREFERENCED_PARAMETER(cs);
 
     // Set the window's icon
     SetIconSmall(IDW_MAIN);

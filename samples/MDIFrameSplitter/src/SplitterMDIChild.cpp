@@ -120,21 +120,22 @@ BOOL CSplitterMDIChild::OnCommand(WPARAM wparam, LPARAM)
 
     switch (id)
     {
-    case IDM_COLOR_BLACK:   OnColor(RGB(0,0,0));        return TRUE;
-    case IDM_COLOR_RED:     OnColor(RGB(255,0,0));      return TRUE;
-    case IDM_COLOR_GREEN:   OnColor(RGB(0,255,0));      return TRUE;
-    case IDM_COLOR_BLUE:    OnColor(RGB(0,0,255));      return TRUE;
-    case IDM_COLOR_WHITE:   OnColor(RGB(255,255,255));  return TRUE;
+    case IDM_COLOR_BLACK:   return OnColor(RGB(0,0,0));
+    case IDM_COLOR_RED:     return OnColor(RGB(255,0,0));
+    case IDM_COLOR_GREEN:   return OnColor(RGB(0,255,0));
+    case IDM_COLOR_BLUE:    return OnColor(RGB(0,0,255));
+    case IDM_COLOR_WHITE:   return OnColor(RGB(255,255,255));
     }
 
     return FALSE;
 }
 
 // Sets the text color in the simple view.
-void CSplitterMDIChild::OnColor(COLORREF rgb)
+BOOL CSplitterMDIChild::OnColor(COLORREF rgb)
 {
     m_view.GetSimpleView().SetColor(rgb);
     m_view.GetSimpleView().Invalidate();
+    return TRUE;
 }
 
 // Called when the window is resized.

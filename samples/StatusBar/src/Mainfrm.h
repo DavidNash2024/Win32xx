@@ -25,7 +25,6 @@ protected:
     virtual CStatusBar& GetStatusBar() const    { return m_myStatusBar; }
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);

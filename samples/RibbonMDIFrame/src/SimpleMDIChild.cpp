@@ -79,13 +79,11 @@ int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
     return CMDIChild::OnCreate(cs);
 }
 
-BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM lparam)
+BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM)
 {
     // Respond to menu and toolbar input
-
-    UNREFERENCED_PARAMETER(lparam);
-
     UINT id = LOWORD(wparam);
+
     switch (id)
     {
     case IDM_COLOR_BLACK:

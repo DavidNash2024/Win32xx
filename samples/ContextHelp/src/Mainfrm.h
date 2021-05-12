@@ -19,19 +19,19 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    void    ChooseHelpTopic();
+    BOOL    ChooseHelpTopic();
     virtual HWND Create(HWND parent = 0);
     CString CreateAppDataFolder(const CString& subfolder);
     CDoc&   GetDoc()    { return m_view.GetDoc(); }
     UINT    GetIDFromCursorPos();
-    void    OnF1();
-    void    OnFileExit();
-    void    OnShiftF1();
+    BOOL    OnF1();
+    BOOL    OnFileExit();
+    BOOL    OnShiftF1();
     void    OnUpdateCheckA(UINT id);
     void    OnUpdateCheckB(UINT id);
     void    OnUpdateCheckC(UINT id);
     void    OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
-    void    ShowHelpTopic(UINT id);
+    BOOL    ShowHelpTopic(UINT id);
 
 protected:
     virtual BOOL    LoadRegistrySettings(LPCTSTR keyName);

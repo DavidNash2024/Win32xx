@@ -72,36 +72,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
-// Perform the owner draw for Part 3 in the status bar
-LRESULT CMainFrame::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT)lparam;
-
-    if (pDrawItem->CtlID == STATUS_ID) // Message comes from the status bar
-    {
-        CRect partRect = pDrawItem->rcItem;
-        CDC dc;
-        dc.Attach(pDrawItem->hDC);
-
-        // Set the font to italic
-        CFont Font = GetStatusBar().GetFont();
-        LOGFONT lf = Font.GetLogFont();
-        lf.lfItalic = TRUE;
-        dc.CreateFontIndirect(lf);
-
-        // Display the gradient background and text
-        dc.GradientFill(RGB(230, 180, 0), RGB(240, 210, 90), partRect, TRUE);
-        dc.SetTextColor(RGB(10,20,250));
-        dc.SetBkMode(TRANSPARENT);
-        dc.TextOut(partRect.left, partRect.top,_T("Owner Draw"), 10);
-
-        return TRUE;
-    }
-
-    // Allow the frame to perform owner drawing menu items.
-    return CFrame::OnDrawItem(msg, wparam, lparam);
-}
-
 // Issue a close request to the frame.
 BOOL CMainFrame::OnFileExit()
 {

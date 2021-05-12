@@ -19,9 +19,10 @@ CHelp::CHelp()
 }
 
 // Opens the help about dialog.
-void CHelp::About(HWND hParent)
+BOOL CHelp::About(HWND hParent)
 {
     m_helpAbout.DoModal(hParent);
+    return TRUE;
 }
 
 // Adds a topic to the context help map.

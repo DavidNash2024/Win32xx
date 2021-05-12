@@ -42,9 +42,10 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 }
 
 // Close the frame window to end the application.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
 // Update the check state of the various menu items
@@ -76,17 +77,17 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 
     switch(id)
     {
-    case ID_CHECK_A:         m_sdiView.OnCheckA();  return TRUE;
-    case ID_CHECK_B:         m_sdiView.OnCheckB();  return TRUE;
-    case ID_CHECK_C:         m_sdiView.OnCheckC();  return TRUE;
-    case IDM_FILE_EXIT:      OnFileExit();          return TRUE;
-    case IDW_VIEW_STATUSBAR: OnViewStatusBar();     return TRUE;
-    case IDW_VIEW_TOOLBAR:   OnViewToolBar();       return TRUE;
-    case IDM_HELP_ABOUT:     OnHelp();              return TRUE;
+    case ID_CHECK_A:         return m_sdiView.OnCheckA();
+    case ID_CHECK_B:         return m_sdiView.OnCheckB();
+    case ID_CHECK_C:         return m_sdiView.OnCheckC();
+    case IDM_FILE_EXIT:      return OnFileExit();
+    case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
+    case IDM_HELP_ABOUT:     return OnHelp();
 
     case ID_RADIO_A:
     case ID_RADIO_B:        // intentionally blank
-    case ID_RADIO_C:        m_sdiView.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);    return TRUE;
+    case ID_RADIO_C:        return m_sdiView.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
 
     case IDM_EDIT_COPY:
     {

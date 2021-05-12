@@ -76,7 +76,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_FILE_MRU_FILE2:
     case IDW_FILE_MRU_FILE3:
     case IDW_FILE_MRU_FILE4:
-    case IDW_FILE_MRU_FILE5:    OnFileMRU(wparam);  return TRUE;
+    case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
 
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();

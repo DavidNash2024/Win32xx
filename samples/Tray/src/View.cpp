@@ -9,7 +9,7 @@
 //////////////////////////////
 // CView function definitions.
 //
-void CView::Minimize()
+BOOL CView::Minimize()
 {
     NOTIFYICONDATA nid;
     ZeroMemory(&nid, sizeof(nid));
@@ -25,12 +25,15 @@ void CView::Minimize()
     Shell_NotifyIcon(NIM_ADD, &nid);
     ShowWindow(SW_HIDE);
     m_isMinimized = true;
+
+    return TRUE;
 }
 
-void CView::OnAbout()
+BOOL CView::OnAbout()
 {
     CString str = _T("Tray Example: Demonstrates minimizing a window to the tray.");
     MessageBox(str, _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
+    return TRUE;
 }
 
 int CView::OnCreate(CREATESTRUCT&)
@@ -60,9 +63,9 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM)
 
     switch(id)
     {
-    case IDM_MINTOTRAY:     Minimize();     return TRUE;
-    case IDM_FILE_EXIT:     OnFileExit();   return TRUE;
-    case IDM_HELP_ABOUT:    OnAbout();      return TRUE;
+    case IDM_MINTOTRAY:     return Minimize();
+    case IDM_FILE_EXIT:     return OnFileExit();
+    case IDM_HELP_ABOUT:    return OnAbout();
     }
 
     return FALSE;
@@ -85,10 +88,11 @@ void CView::OnDraw(CDC& dc)
     dc.DrawText(text, text.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-void CView::OnFileExit()
+BOOL CView::OnFileExit()
 {
     // End the application
     Close();
+    return TRUE;
 }
 
 void CView::OnInitialUpdate()

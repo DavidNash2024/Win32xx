@@ -186,7 +186,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_SAVEAS:     return OnFileSaveAs();
     case IDM_FILE_PRINT:      return OnFilePrint();
 
-    case IDM_FILE_EXIT:       OnFileExit();
+    case IDM_FILE_EXIT:       return OnFileExit();
     case IDW_FILE_MRU_FILE1:
     case IDW_FILE_MRU_FILE2:
     case IDW_FILE_MRU_FILE3:

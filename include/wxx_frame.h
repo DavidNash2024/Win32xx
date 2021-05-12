@@ -429,19 +429,20 @@ namespace Win32xx
         virtual BOOL LoadRegistryMRUSettings(UINT maxMRU = 0);
         virtual void MeasureMenuItem(MEASUREITEMSTRUCT* pMIS);
         virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual void OnClose();
-        virtual int  OnCreate(CREATESTRUCT& cs);
+        virtual void    OnClose();
+        virtual int     OnCreate(CREATESTRUCT& cs);
         virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
-        virtual void OnDestroy();
+        virtual void    OnDestroy();
         virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDrawRBBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDrawSBBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual BOOL OnHelp();
+        virtual BOOL    OnHelp();
         virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual void    OnKeyboardHook(int code, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMeasureItem(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMenuSelect(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual void OnMenuUpdate(UINT id);
+        virtual void    OnMenuUpdate(UINT id);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnRBNHeightChange(LPNMHDR pNMHDR);
         virtual LRESULT OnRBNLayoutChanged(LPNMHDR pNMHDR);
@@ -455,8 +456,8 @@ namespace Win32xx
         virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
         virtual LRESULT OnUndocked();
         virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam);
-        virtual BOOL OnViewStatusBar();
-        virtual BOOL OnViewToolBar();
+        virtual BOOL    OnViewStatusBar();
+        virtual BOOL    OnViewToolBar();
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
         virtual void RemoveMRUEntry(LPCTSTR pMRUEntry);
@@ -1623,34 +1624,6 @@ namespace Win32xx
             // Draw the text.
             DrawMenuItemText(pDIS);
         }
-
-        if (IsUsingVistaMenu())
-        {
-            // Draw the Submenu arrow.
-            // We extract the bitmap from DrawFrameControl to support Windows 10
-            if (pmid->mii.hSubMenu)
-            {
-                CRect subMenuRect = pDIS->rcItem;
-                subMenuRect.left = pDIS->rcItem.right - GetMenuMetrics().m_marItem.cxRightWidth - GetMenuMetrics().m_marText.cxRightWidth;
-
-                // Copy the menu's arrow to a memory DC
-                CMemDC memDC(drawDC);
-                memDC.CreateBitmap(subMenuRect.Width(), subMenuRect.Height(), 1, 1, NULL);
-                CRect rc(0, 0, subMenuRect.Width(), subMenuRect.Height());
-                memDC.DrawFrameControl(rc, DFC_MENU, DFCS_MENUARROW);
-
-                // Mask the arrow image back to the menu's dc
-                CMemDC maskDC(drawDC);
-                maskDC.CreateCompatibleBitmap(pDIS->hDC, subMenuRect.Width(), subMenuRect.Height());
-                maskDC.BitBlt(0, 0, subMenuRect.Width(), subMenuRect.Height(), maskDC, 0, 0, WHITENESS);
-                maskDC.BitBlt(0, 0, subMenuRect.Width(), subMenuRect.Height(), memDC, 0, 0, SRCAND);
-                drawDC.BitBlt(subMenuRect.left, subMenuRect.top, subMenuRect.Width(), subMenuRect.Height(), maskDC, 0, 0, SRCAND);
-            }
-
-            // Suppress further drawing to prevent an incorrect Submenu arrow being drawn.
-            CRect rc = pDIS->rcItem;
-            drawDC.ExcludeClipRect(rc);
-        }
     }
 
     // Called by DrawMenuItem to render the popup menu background.
@@ -1849,7 +1822,13 @@ namespace Win32xx
         {
             SetTextColor(pDIS->hDC, colorText);
             int mode = SetBkMode(pDIS->hDC, TRANSPARENT);
-            DrawText(pDIS->hDC, pItem, tab, textRect, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+
+            UINT format = DT_VCENTER | DT_LEFT | DT_SINGLELINE;
+            // Turn on 'hide prefix' style for mouse navigation.
+            if (!m_altKeyPressed && (GetMenuBar().IsWindow() && !GetMenuBar().IsAltMode()))
+                format |= DT_HIDEPREFIX;
+
+            DrawText(pDIS->hDC, pItem, tab, textRect, format);
 
             // Draw text after tab, right aligned
             if (tab != -1)
@@ -2477,7 +2456,7 @@ namespace Win32xx
 
     // OwnerDraw is used to render the popup menu items.
     template <class T>
-    inline LRESULT CFrameT<T>::OnDrawItem(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT)lparam;
         assert(pdis);
@@ -2488,7 +2467,7 @@ namespace Win32xx
             return TRUE;
         }
 
-        return CWnd::WndProcDefault(WM_DRAWITEM, wparam, lparam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
     // Called when the Rebar's background is redrawn.
@@ -2584,6 +2563,40 @@ namespace Win32xx
         }
 
         return 0;
+    }
+
+    // Called by the keyboard hook procedure whenever a key is pressed.
+    template <class T>
+    inline void CFrameT<T>::OnKeyboardHook(int code, WPARAM wparam, LPARAM lparam)
+    {
+        // Detect the state of the toggle keys.
+        if (HC_ACTION == code)
+        {
+            if ((wparam == VK_CAPITAL) || (wparam == VK_NUMLOCK) ||
+                (wparam == VK_SCROLL) || (wparam == VK_INSERT))
+            {
+                SetStatusIndicators();
+            }
+        }
+
+        // Detect the press state of the alt key.
+        if (wparam == VK_MENU)
+        {
+            BOOL keyState = lparam & 0x80000000;
+            if (!m_altKeyPressed && !keyState)
+            {
+                m_altKeyPressed = TRUE;
+                if (GetMenuBar().IsWindow())
+                    GetMenuBar().RedrawWindow();
+            }
+
+            if (m_altKeyPressed && keyState)
+            {
+                m_altKeyPressed = FALSE;
+                if (GetMenuBar().IsWindow())
+                    GetMenuBar().RedrawWindow();
+            }
+        }
     }
 
     // Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
@@ -2800,7 +2813,6 @@ namespace Win32xx
         if (GetStatusBar().IsWindow())
         {
             // Update the status bar font and text
-            m_statusBarFont.DeleteObject();
             m_statusBarFont.CreateFontIndirect(info.lfStatusFont);
             GetStatusBar().SetFont(m_statusBarFont, TRUE);
             if (IsUsingMenuStatus())
@@ -2812,7 +2824,6 @@ namespace Win32xx
         if (GetMenuBar().IsWindow())
         {
             // Update the MenuBar font and button size
-            m_menuBarFont.DeleteObject();
             m_menuBarFont.CreateFontIndirect(info.lfMenuFont);
             GetMenuBar().SetFont(m_menuBarFont, TRUE);
             GetMenuBar().SetMenu( GetFrameMenu() );
@@ -3772,32 +3783,8 @@ namespace Win32xx
         CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(CWnd::GetCWndPtr(hFrame));
         assert(pFrame);
 
-        if (pFrame && HC_ACTION == code)
-        {
-            if ((wparam ==  VK_CAPITAL) || (wparam == VK_NUMLOCK) ||
-                (wparam == VK_SCROLL) || (wparam == VK_INSERT))
-            {
-                pFrame->SetStatusIndicators();
-            }
-        }
-
-        if (wparam == VK_MENU)
-        {
-            BOOL keyState = lparam & 0x80000000;
-            if (!pFrame->m_altKeyPressed && !keyState)
-            {
-                pFrame->m_altKeyPressed = TRUE;
-                if (pFrame->GetMenuBar().IsWindow())
-                    pFrame->GetMenuBar().RedrawWindow();
-            }
-
-            if (pFrame->m_altKeyPressed && keyState)
-            {
-                pFrame->m_altKeyPressed = FALSE;
-                if (pFrame->GetMenuBar().IsWindow())
-                    pFrame->GetMenuBar().RedrawWindow();
-            }
-        }
+        if (pFrame)
+            pFrame->OnKeyboardHook(code, wparam, lparam);
 
         // The HHOOK parameter in CallNextHookEx should be supplied for Win95, Win98 and WinME.
         // The HHOOK parameter is ignored for Windows NT and above.

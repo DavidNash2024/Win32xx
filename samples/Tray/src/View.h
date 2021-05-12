@@ -14,16 +14,16 @@ class CView : public CWnd
 public:
     CView() : m_menu(IDW_MAIN), m_isMinimized(FALSE) {}
     virtual ~CView() {}
-    void Minimize();
+    BOOL Minimize();
     void Restore();
 
 protected:
-    virtual void    OnAbout();
+    virtual BOOL    OnAbout();
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void    OnDestroy();
     virtual void    OnDraw(CDC& dc);
-    virtual void    OnFileExit();
+    virtual BOOL    OnFileExit();
     virtual void    OnInitialUpdate();
     virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);

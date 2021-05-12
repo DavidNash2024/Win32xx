@@ -25,11 +25,11 @@ protected:
 
 private:
     void AppendText(int id, LPCTSTR text);
-    void OnButton();
-    void OnCheck1();
-    void OnCheck2();
-    void OnCheck3();
-    void OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
+    BOOL OnButton();
+    BOOL OnCheck1();
+    BOOL OnCheck2();
+    BOOL OnCheck3();
+    BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
     CResizer m_resizer;
 

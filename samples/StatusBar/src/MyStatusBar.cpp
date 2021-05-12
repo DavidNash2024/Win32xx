@@ -24,7 +24,10 @@ void CMyStatusBar::OnAttach()
 
     // Create the Hyperlink
     m_hyperlink.Create(*this);
-    m_hyperlink.SetWindowPos(0, CRect(3,3,100, 20), SWP_SHOWWINDOW);
+    CRect rc = GetClientRect();
+    rc.DeflateRect(3, 3, 3, 3);
+    rc.right = 100;
+    m_hyperlink.SetWindowPos(0, rc, SWP_SHOWWINDOW);
 
     // Create the ProgressBar
     m_progressBar.Create(*this);
@@ -38,17 +41,66 @@ void CMyStatusBar::OnAttach()
     SetPartText(3, _T(""), SBT_OWNERDRAW);
 }
 
+// Perform the owner draw for Part 3 in the status bar
+LRESULT CMyStatusBar::OnDrawItem(UINT, WPARAM, LPARAM lparam)
+{
+    LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT)lparam;
+
+    if (!IsWindow()) return 0;
+
+    CRect partRect = pDrawItem->rcItem;
+    CDC dc(pDrawItem->hDC);
+    CDC memDC(dc);
+
+    // Set the font to italic
+    CFont Font = GetFont();
+    LOGFONT lf = Font.GetLogFont();
+    lf.lfItalic = TRUE;
+
+    // Use a memory DC for flicker free drawing.
+    memDC.CreateFontIndirect(lf);
+    // Display the gradient background and text
+    memDC.GradientFill(RGB(230, 180, 0), RGB(240, 210, 90), partRect, TRUE);
+    memDC.SetTextColor(RGB(10, 20, 250));
+    memDC.SetBkMode(TRANSPARENT);
+    memDC.TextOut(partRect.left, partRect.top, _T("Owner Draw"), 10);
+    dc.BitBlt(0, 0, partRect.Width(), partRect.Height(), memDC, 0, 0, SRCCOPY);
+
+    return TRUE;
+}
+
 BOOL CMyStatusBar::OnEraseBkgnd(CDC& dc)
 {
     // The background can be set here if XP themes are enabled
     if (IsXPThemed())
     {
+        // Exclude the progress bar window from the update region.
+        CRect rc = m_progressBar.GetWindowRect();
+        ScreenToClient(rc);
+        dc.ExcludeClipRect(rc);
+
         // Fill the background with a color gradient
-        dc.GradientFill(RGB(125, 230, 255), RGB(250, 150, 150), GetClientRect(), TRUE);
+        rc = GetClientRect();
+        CMemDC memDC(dc);
+        memDC.CreateCompatibleBitmap(dc, rc.Width(), rc.Height());
+        memDC.GradientFill(RGB(125, 230, 255), RGB(250, 150, 150), GetClientRect(), TRUE);
+        dc.BitBlt(0, 0, rc.Width(), rc.Height(), memDC, 0, 0, SRCCOPY);
+
         return TRUE;
     }
 
     return FALSE;
+}
+
+// Called when a message is reflected back from the parent window.
+LRESULT CMyStatusBar::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    switch (msg)
+    {
+    case WM_DRAWITEM:   return OnDrawItem(msg, wparam, lparam);
+    }
+
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Called before the window is created to set some window creation parameters.
@@ -56,7 +108,7 @@ void CMyStatusBar::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM;
 
-    // Suppress the gripper unless XPThemes are enabled
+    // Suppress the gripper unless XPThemes are enabled.
     if (IsXPThemed())
         cs.style |= SBARS_SIZEGRIP;
 }
@@ -64,13 +116,31 @@ void CMyStatusBar::PreCreate(CREATESTRUCT& cs)
 // Creates several panes within the status bar.
 void CMyStatusBar::SetStatusParts()
 {
-    // Create the StatusBar parts
+    // Retrieve the text size for the hyperlink.
+    CString str;
+    str.GetWindowText(m_hyperlink);
+
+    CDC dc = GetWindowDC();
+    CSize sz = dc.GetTextExtentPoint32(str);
+
+    // Create the StatusBar parts.
     CRect clientRect = GetClientRect();
-    int width = MAX(270, clientRect.right);
-    SetPartWidth(0, width - 216);
-    SetPartWidth(1, 100);
-    SetPartWidth(2, 26);
-    SetPartWidth(3, 90);
+    int parts = IsXPThemed()?  236 : 216;
+    int width = MAX(sz.cx + parts, clientRect.right);
+
+    SetPartWidth(0, width - parts); // Win3++ hyperlink
+    SetPartWidth(1, 100);         // Progress bar
+    SetPartWidth(2, 26);          // Icon
+    SetPartWidth(3, 90);          // Owner Drawn text
+
+    if (IsXPThemed())
+        SetPartWidth(4, 20);      // Gripper
+
+    // Set the hyperlink window size and position.
+    CRect rc = GetPartRect(0);
+    rc.right = sz.cx;
+    if (m_hyperlink.IsWindow())
+        m_hyperlink.SetWindowPos(0, rc, SWP_SHOWWINDOW);
 }
 
 // Called when the status bar is resized.

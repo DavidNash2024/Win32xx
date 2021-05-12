@@ -98,13 +98,13 @@ BOOL CColourDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     // Notification from the GreyScale check box.
     switch (LOWORD(wparam))
     {
-    case IDC_CHECK1:   OnGrayScale();              return TRUE;
+    case IDC_CHECK1:   return OnGrayScale();
     }
 
     // Notifications of text change for the edit controls.
     switch (HIWORD(wparam))
     {
-    case EN_CHANGE:    OnTextChange(HWND(lparam)); return TRUE;
+    case EN_CHANGE:    return OnTextChange(HWND(lparam));
     }
 
     // return FALSE for unhandled commands
@@ -112,10 +112,11 @@ BOOL CColourDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 }
 
 // Called when the GreyScale check button is clicked
-void CColourDialog::OnGrayScale()
+BOOL CColourDialog::OnGrayScale()
 {
     // Update the colour of the preview image
     UpdatePreview();
+    return TRUE;
 }
 
 // Processes messages from the slider controls.
@@ -176,10 +177,10 @@ LRESULT CColourDialog::OnPaint(UINT, WPARAM, LPARAM)
 }
 
 // A value in an edit control has been changed.
-void CColourDialog::OnTextChange(HWND editCtrl)
+BOOL CColourDialog::OnTextChange(HWND editCtrl)
 {
     if (IsLeftButtonDown())
-        return;
+        return FALSE;
 
     CString str;;
     str.GetWindowText(editCtrl);
@@ -197,6 +198,8 @@ void CColourDialog::OnTextChange(HWND editCtrl)
 
     if (m_previewImage.GetHandle() != 0)
         UpdatePreview();
+
+    return TRUE;
 }
 
 // Displays the bitmap in the preview area of our dialog.

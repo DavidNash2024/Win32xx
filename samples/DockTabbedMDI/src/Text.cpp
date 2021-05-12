@@ -38,12 +38,12 @@ BOOL CViewText::OnCommand(WPARAM wparam, LPARAM)
 
     switch (id)
     {
-    case IDM_EDIT_COPY:     OnEditCopy();   return TRUE;
-    case IDM_EDIT_PASTE:    OnEditPaste();  return TRUE;
-    case IDM_EDIT_CUT:      OnEditCut();    return TRUE;
-    case IDM_EDIT_DELETE:   OnEditDelete(); return TRUE;
-    case IDM_EDIT_REDO:     OnEditRedo();   return TRUE;
-    case IDM_EDIT_UNDO:     OnEditUndo();   return TRUE;
+    case IDM_EDIT_COPY:     return OnEditCopy();
+    case IDM_EDIT_PASTE:    return OnEditPaste();
+    case IDM_EDIT_CUT:      return OnEditCut();
+    case IDM_EDIT_DELETE:   return OnEditDelete();
+    case IDM_EDIT_REDO:     return OnEditRedo();
+    case IDM_EDIT_UNDO:     return OnEditUndo();
     }
 
     // return FALSE for unhandled commands
@@ -51,39 +51,45 @@ BOOL CViewText::OnCommand(WPARAM wparam, LPARAM)
 }
 
 // Copies the selected text to the windows clipboard.
-void CViewText::OnEditCopy()
+BOOL CViewText::OnEditCopy()
 {
     Copy();
+    return TRUE;
 }
 
 // Copies text from the windows clipboard.
-void CViewText::OnEditPaste()
+BOOL CViewText::OnEditPaste()
 {
     PasteSpecial(CF_TEXT);
+    return TRUE;
 }
 
 // Deletes the selected text and copies it to the windows clipboard.
-void CViewText::OnEditCut()
+BOOL CViewText::OnEditCut()
 {
     Cut();
+    return TRUE;
 }
 
 // Deletes the selected text.
-void CViewText::OnEditDelete()
+BOOL CViewText::OnEditDelete()
 {
     Clear();
+    return TRUE;
 }
 
 // Redoes the next action in the control's redo queue.
-void CViewText::OnEditRedo()
+BOOL CViewText::OnEditRedo()
 {
     Redo();
+    return TRUE;
 }
 
 // Undoes the last edit control operation in the control's undo queue.
-void CViewText::OnEditUndo()
+BOOL CViewText::OnEditUndo()
 {
     Undo();
+    return TRUE;
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.

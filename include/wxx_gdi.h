@@ -408,7 +408,11 @@ namespace Win32xx
     struct CDC_Data
     {
         // Constructor
-        CDC_Data() : dc(0), count(1L), isManagedHDC(FALSE), wnd(0), savedDCState(0) {}
+        CDC_Data() : dc(0), count(1L), isManagedHDC(FALSE), wnd(0),
+                     savedDCState(0), isPaintDC(false)
+        {
+            ZeroMemory(&ps, sizeof(ps));
+        }
 
         CBitmap bitmap;
         CBrush  brush;
@@ -421,6 +425,8 @@ namespace Win32xx
         bool    isManagedHDC;   // Delete/Release the HDC on destruction
         HWND    wnd;            // The HWND of a Window or Client window DC
         int     savedDCState;   // The save state of the HDC.
+        bool    isPaintDC;
+        PAINTSTRUCT ps;
     };
 
 
@@ -434,18 +440,15 @@ namespace Win32xx
     // operations, and a path for painting and drawing operations.
     class CDC
     {
-        friend class CWinApp;
-        friend class CWnd;
-
     public:
         CDC();                                  // Constructs a new CDC without assigning a HDC
-        CDC(HDC dc, HWND wnd = 0);              // Constructs a new CDC and assigns a HDC
+        CDC(HDC dc);                            // Constructs a new CDC and assigns a HDC
         CDC(const CDC& rhs);                    // Constructs a new copy of the CDC
         virtual ~CDC();
         operator HDC() const { return m_pData->dc; }   // Converts a CDC to a HDC
         CDC& operator = (const CDC& rhs);       // Assigns a CDC to an existing CDC
 
-        void Attach(HDC dc, HWND wnd = 0);
+        void Attach(HDC dc);
         void Destroy();
         HDC  Detach();
         HDC GetHDC() const { return m_pData->dc; }
@@ -824,11 +827,15 @@ namespace Win32xx
 #endif  // _WIN32_WCE
 
     protected:
+        PAINTSTRUCT* GetPaintStruct() const { return &m_pData->ps; }
         void Release();
-        void SetManaged(bool IsManaged) { m_pData->isManagedHDC = IsManaged; }
+        void SetManaged(bool isManaged) { m_pData->isManagedHDC = isManaged; }
+        void SetPaintDC(bool isPaintDC) { m_pData->isPaintDC = isPaintDC; }
+        void SetWindow(HWND wnd) { m_pData->wnd = wnd; }
 
     private:
         void AddToMap();
+        void Initialize();
         BOOL RemoveFromMap();
 
         CDC_Data* m_pData;      // pointer to the class's data members
@@ -852,8 +859,9 @@ namespace Win32xx
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiGetDC());
 
-                Attach(dc, wnd);
+                Attach(dc);
                 SetManaged(true);
+                SetWindow(wnd);
             }
 
             catch(...)
@@ -887,8 +895,9 @@ namespace Win32xx
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiGetDCEx());
 
-                Attach(dc, wnd);
+                Attach(dc);
                 SetManaged(true);
+                SetWindow(wnd);
             }
 
             catch(...)
@@ -932,17 +941,20 @@ namespace Win32xx
     class CPaintDC : public CDC
     {
     public:
-        CPaintDC(HWND wnd) : m_paint(wnd)
+        CPaintDC(HWND wnd)
         {
             assert(::IsWindow(wnd));
 
             try
             {
-                HDC dc = ::BeginPaint(wnd, &m_ps);
+                HDC dc = ::BeginPaint(wnd, GetPaintStruct());
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiBeginPaint());
 
-                Attach(dc, wnd);
+                Attach(dc);
+                SetManaged(true);
+                SetPaintDC(true);
+                SetWindow(wnd);
             }
 
             catch(...)
@@ -952,32 +964,7 @@ namespace Win32xx
             }
         }
 
-        CPaintDC(const CPaintDC& rhs)  : CDC(rhs) // Copy constructor
-        {
-            m_paint = rhs.m_paint;
-            m_ps = rhs.m_ps;
-        }
-
-        CPaintDC& operator = (const CPaintDC& rhs)
-        {
-            if (this != &rhs)
-            {
-                CDC::operator=(rhs);
-                m_paint = rhs.m_paint;
-                m_ps = rhs.m_ps;
-            }
-
-            return *this;
-        }
-
-        virtual ~CPaintDC()
-        {
-            ::EndPaint(m_paint, &m_ps);
-        }
-
-    private:
-        HWND m_paint;
-        PAINTSTRUCT m_ps;
+        virtual ~CPaintDC()  {}
     };
 
 
@@ -998,8 +985,9 @@ namespace Win32xx
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiGetWinDC());
 
-                Attach(dc, wnd);
+                Attach(dc);
                 SetManaged(true);
+                SetWindow(wnd);
             }
 
             catch(...)
@@ -1176,7 +1164,7 @@ namespace Win32xx
 {
 
     ///////////////////////////////////////////////
-    // Declarations for the CGDIObject class
+    // Definitions for the CGDIObject class
     //
 
     // Constructs the CGDIObject
@@ -1267,7 +1255,7 @@ namespace Win32xx
         {
             RemoveFromMap();
 
-            ::DeleteObject(m_pData->hGDIObject);
+            VERIFY(::DeleteObject(m_pData->hGDIObject));
             m_pData->hGDIObject = 0;
         }
     }
@@ -1365,7 +1353,7 @@ namespace Win32xx
 
 
     ///////////////////////////////////////////////
-    // Declarations for the CBitmap class
+    // Definitions for the CBitmap class
     //
 
     inline CBitmap::CBitmap()
@@ -2535,16 +2523,14 @@ namespace Win32xx
         m_pData = new CDC_Data;
     }
 
-    // This constructor assigns an existing HDC to the CDC
-    // The HDC WILL be released or deleted when the CDC object is destroyed
-    // The wnd parameter is only used in WindowsCE. It specifies the HWND of a Window or
-    // Window Client DC.
+    // This constructor assigns a pre-existing HDC to the CDC.
+    // The HDC will NOT be released or deleted when the CDC object is destroyed.
     // Note: this constructor permits a call like this:
     // CDC MyCDC = SomeHDC;
-    inline CDC::CDC(HDC dc, HWND wnd /*= 0*/)
+    inline CDC::CDC(HDC dc)
     {
         m_pData = new CDC_Data;
-        Attach(dc, wnd);
+        Attach(dc);
     }
 
 #ifndef _WIN32_WCE
@@ -2596,12 +2582,9 @@ namespace Win32xx
     }
 
     // Attaches a HDC to the CDC object.
-    // The wnd parameter is only required on WinCE.
-    inline void CDC::Attach(HDC dc, HWND wnd /* = 0*/)
+    inline void CDC::Attach(HDC dc)
     {
         assert(m_pData);
-        if (wnd != 0)
-            VERIFY(::IsWindow(wnd));
 
         if (m_pData && dc != m_pData->dc)
         {
@@ -2626,14 +2609,8 @@ namespace Win32xx
                 {
                     m_pData->dc = dc;
 
-        #ifndef _WIN32_WCE
-                    m_pData->wnd = ::WindowFromDC(dc);
-        #else
-                    m_pData->wnd = wnd;
-        #endif
-
                     AddToMap();
-                    m_pData->savedDCState = ::SaveDC(dc);
+                    m_pData->savedDCState = SaveDC();
                 }
             }
         }
@@ -2641,19 +2618,21 @@ namespace Win32xx
 
     // Detaches the HDC from this CDC object and all its copies.
     // The CDC object and its copies are returned to the default state.
+    // The detached HDC is left untouched.
     // Note: We rarely need to detach the HDC from a CDC. The framework will
     //       release or delete the HDC automatically if required when the
     //       last copy of the CDC goes out of scope.
+    //       Use Detach to keep changes made to the device context, such as
+    //       when handling WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG,
+    //       WM_CTLCOLORLISTBOX, WM_CTLCOLORSCROLLBAR or WM_CTLCOLORSTATIC.
     inline HDC CDC::Detach()
     {
         HDC dc = 0;
         assert(m_pData);
         assert(m_pData->dc != 0);
 
-        dc = m_pData->dc;
         RemoveFromMap();
-        m_pData->dc = 0;
-        SetManaged(false);
+        Initialize();
 
         if (m_pData->count > 0)
         {
@@ -3037,23 +3016,36 @@ namespace Win32xx
         {
             RemoveFromMap();
 
+            // Return the DC back to its initial state
+            VERIFY(::RestoreDC(m_pData->dc, m_pData->savedDCState));
+
             if (m_pData->isManagedHDC)
             {
-                // Return the DC back to its initial state
-                ::RestoreDC(m_pData->dc, m_pData->savedDCState);
-
-                // We need to release a Window DC, and delete a memory DC
+                // We need to release a window DC, end a paint DC,
+                // and delete a memory DC.
                 if (m_pData->wnd != 0)
-                    ::ReleaseDC(m_pData->wnd, m_pData->dc);
+                {
+                    if (m_pData->isPaintDC)
+                        VERIFY(::EndPaint(m_pData->wnd, &m_pData->ps));
+                    else
+                        VERIFY(::ReleaseDC(m_pData->wnd, m_pData->dc));
+                }
                 else
-                    if (!::DeleteDC(m_pData->dc))
-                        ::ReleaseDC(0, m_pData->dc);
+                    VERIFY(::DeleteDC(m_pData->dc));
             }
 
-            m_pData->dc = 0;
-            m_pData->wnd = 0;
-            SetManaged(false);
+            Initialize();
         }
+    }
+
+    inline void CDC::Initialize()
+    {
+        m_pData->savedDCState = 0;
+        m_pData->dc = 0;
+        SetWindow(0);
+        SetPaintDC(false);
+        ZeroMemory(&m_pData->ps, sizeof(m_pData->ps));
+        SetManaged(false);
     }
 
     // Retrieves the BITMAP information for the current HBITMAP.

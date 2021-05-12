@@ -17,10 +17,12 @@ public:
     CMyStatusBar() {}
     virtual ~CMyStatusBar() {}
 
+    LRESULT OnDrawItem(UINT, WPARAM, LPARAM lparam);
     void OnSize();
     void OnTimer();
 
 protected:
+    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM);
     virtual void OnAttach();
     virtual BOOL OnEraseBkgnd(CDC& dc);
     virtual void PreCreate(CREATESTRUCT& cs);

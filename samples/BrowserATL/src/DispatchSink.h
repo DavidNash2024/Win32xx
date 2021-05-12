@@ -30,26 +30,17 @@ END_COM_MAP()
                                      EXCEPINFO* pexcepinfo, UINT* puArgErr);
 
     // These must be present, even though they are not implemented.
-    virtual HRESULT __stdcall GetTypeInfoCount(UINT* pctinfo)
+    virtual HRESULT __stdcall GetTypeInfoCount(UINT*)
     {
-         UNREFERENCED_PARAMETER(pctinfo);
          return E_NOTIMPL;
     }
-    virtual HRESULT __stdcall GetTypeInfo(UINT itinfo, LCID lcid, ITypeInfo** pptinfo)
+    virtual HRESULT __stdcall GetTypeInfo(UINT, LCID, ITypeInfo**)
     {
-        UNREFERENCED_PARAMETER(itinfo);
-        UNREFERENCED_PARAMETER(lcid);
-        UNREFERENCED_PARAMETER(pptinfo);
         return E_NOTIMPL;
     }
-    virtual HRESULT __stdcall GetIDsOfNames(REFIID riid, LPOLESTR* rgszNames, UINT cNames,
-                                            LCID lcid, DISPID* rgdispid)
+    virtual HRESULT __stdcall GetIDsOfNames(REFIID, LPOLESTR*, UINT,
+                                            LCID, DISPID*)
     {
-        UNREFERENCED_PARAMETER(riid);
-        UNREFERENCED_PARAMETER(rgszNames);
-        UNREFERENCED_PARAMETER(cNames);
-        UNREFERENCED_PARAMETER(lcid);
-        UNREFERENCED_PARAMETER(rgdispid);
         return E_NOTIMPL;
     }
 };
