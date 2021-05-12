@@ -761,7 +761,6 @@ namespace Win32xx
         // GetSysColor(COLOR_BTNFACE)   // Default Grey
         // RGB(196, 215, 250)           // Default Blue
 
-        m_brBackground.DeleteObject();
         m_brBackground.CreateSolidBrush(color);
     }
 
@@ -1592,7 +1591,6 @@ namespace Win32xx
             CRect rcTarget = rcHint;
             VERIFY(pDockTarget->ClientToScreen(rcTarget));
 
-            m_bmBlueTint.DeleteObject();
             m_bmBlueTint.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
             memDC.SelectObject(m_bmBlueTint);
             memDC.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);

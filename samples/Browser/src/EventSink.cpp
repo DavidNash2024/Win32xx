@@ -37,42 +37,29 @@ STDMETHODIMP CEventSink::QueryInterface(REFIID riid, void** ppvObject)
 }
 
 // Not implemented. Retrieves an array of DISPID.
-STDMETHODIMP CEventSink::GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid)
+STDMETHODIMP CEventSink::GetIDsOfNames(REFIID, OLECHAR**, unsigned int, LCID, DISPID* rgdispid)
 {
-    UNREFERENCED_PARAMETER((IID)riid);          // IID cast required for the MinGW compiler
-    UNREFERENCED_PARAMETER(rgszNames);
-    UNREFERENCED_PARAMETER(cNames);
-    UNREFERENCED_PARAMETER(lcid);
-    *rgdispid = DISPID_UNKNOWN;
+    if (!rgdispid)
+        *rgdispid = DISPID_UNKNOWN;
+
     return DISP_E_UNKNOWNNAME;
 }
 
 // Not implemented. Retrieves the type information for an object.
-STDMETHODIMP CEventSink::GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo)
+STDMETHODIMP CEventSink::GetTypeInfo(unsigned int, LCID, ITypeInfo**)
 {
-    UNREFERENCED_PARAMETER(itinfo);
-    UNREFERENCED_PARAMETER(lcid);
-    UNREFERENCED_PARAMETER(pptinfo);
     return E_NOTIMPL;
 }
 
 // Not implemented. Retrieves the number of type information interfaces that an object provides.
-STDMETHODIMP CEventSink::GetTypeInfoCount(unsigned int* pctinfo)
+STDMETHODIMP CEventSink::GetTypeInfoCount(unsigned int*)
 {
-    UNREFERENCED_PARAMETER(pctinfo);
     return E_NOTIMPL;
 }
 
 // Sends a window message to the frame when a browser event occurs.
-STDMETHODIMP CEventSink::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pDispParams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr)
+STDMETHODIMP CEventSink::Invoke(DISPID dispid, REFIID, LCID, WORD, DISPPARAMS* pDispParams, VARIANT*, EXCEPINFO*, unsigned int*)
 {
-    UNREFERENCED_PARAMETER((IID)riid);          // IID cast required for the MinGW compiler
-    UNREFERENCED_PARAMETER(lcid);
-    UNREFERENCED_PARAMETER(wFlags);
-    UNREFERENCED_PARAMETER(pvarResult);
-    UNREFERENCED_PARAMETER(pexecinfo);
-    UNREFERENCED_PARAMETER(puArgErr);
-
     if (!pDispParams)
         return E_INVALIDARG;
 

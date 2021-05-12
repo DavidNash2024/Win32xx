@@ -38,3 +38,7 @@ Features demonstrated in this example
    progress bar on the StatusBar.
 * Displaying an icon in a StatusBar part
 * Performing owner drawing on a StatusBar part.
+* The use of OnMessageReflect to handle messages sent to the parent window
+   (WM_DRAWITEM and WM_CTLCOLORSTATIC).
+* ExcludeClipRect is used to exclude the progress bar from the background's
+   region.

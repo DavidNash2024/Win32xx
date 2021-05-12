@@ -119,6 +119,10 @@ OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)                   /*
         dc.SetTextColor(m_isUrlVisited? m_crVisited : m_crNotVisited);
         dc.SetBkMode(TRANSPARENT);
         dc.SelectObject(m_urlFont);
+
+          // Keep our changes.
+        dc.Detach();
+
           // Return a NULL brush for a transparent background
         return (LRESULT)GetStockObject(NULL_BRUSH);
     }

@@ -201,8 +201,6 @@ OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)                   /*
         dc.SetBkMode(TRANSPARENT);
         dc.TextOut(rcPart.left, rcPart.top, m_ownerDrawMsg,
             m_ownerDrawMsg.GetLength());
-          // release the attachment above
-        dc.Detach();
           // indicate that the message was handled
         return TRUE;
     }

@@ -67,14 +67,14 @@ BOOL CViewDialog::OnCommand(WPARAM wparam, LPARAM)
 
     switch (id)
     {
-    case IDC_BUTTON1:   OnButton();     return TRUE;
-    case IDC_CHECK1:    OnCheck1();     return TRUE;
-    case IDC_CHECK2:    OnCheck2();     return TRUE;
-    case IDC_CHECK3:    OnCheck3();     return TRUE;
+    case IDC_BUTTON1:   return OnButton();
+    case IDC_CHECK1:    return OnCheck1();
+    case IDC_CHECK2:    return OnCheck2();
+    case IDC_CHECK3:    return OnCheck3();
 
     case IDC_RADIO1:    // intentionally blank
     case IDC_RADIO2:
-    case IDC_RADIO3:    OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id); return TRUE;
+    case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
     }
 
     return FALSE;
@@ -137,31 +137,35 @@ void CViewDialog::OnOK()
     TRACE("OnOK called \n");
 }
 
-void CViewDialog::OnButton()
+BOOL CViewDialog::OnButton()
 {
     AppendText(IDC_RICHEDIT2, _T("Button Pressed"));
     TRACE("Button Pressed\n");
+    return TRUE;
 }
 
-void CViewDialog::OnCheck1()
+BOOL CViewDialog::OnCheck1()
 {
     AppendText(IDC_RICHEDIT2, _T("Check Box 1"));
     TRACE("Check Box 1\n");
+    return TRUE;
 }
 
-void CViewDialog::OnCheck2()
+BOOL CViewDialog::OnCheck2()
 {
     AppendText(IDC_RICHEDIT2, _T("Check Box 2"));
     TRACE("Check Box 2\n");
+    return TRUE;
 }
 
-void CViewDialog::OnCheck3()
+BOOL CViewDialog::OnCheck3()
 {
     AppendText(IDC_RICHEDIT2, _T("Check Box 3"));
     TRACE("Check Box 3\n");
+    return TRUE;
 }
 
-void CViewDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
+BOOL CViewDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 {
     CheckRadioButton(idFirst, idLast, idClicked);
 
@@ -170,4 +174,6 @@ void CViewDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
     str.Format(_T("Radio%d"), nButton);
     AppendText(IDC_RICHEDIT2, str);
     TRACE(str); TRACE("\n");
+
+    return TRUE;
 }

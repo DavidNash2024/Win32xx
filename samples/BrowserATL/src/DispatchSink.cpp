@@ -12,18 +12,9 @@
 //
 
 // Sends a window message to the frame when a browser event occurs.
-STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID riid, LCID lcid, WORD wFlags,
-                               DISPPARAMS* pDispParams, VARIANT* pvarResult,
-                               EXCEPINFO*  pExcepInfo,  UINT* puArgErr)
+STDMETHODIMP CDispatchSink::Invoke(DISPID dispidMember, REFIID, LCID, WORD,
+                               DISPPARAMS* pDispParams, VARIANT*, EXCEPINFO*, UINT*)
 {
-    UNREFERENCED_PARAMETER(riid);
-    UNREFERENCED_PARAMETER(lcid);
-    UNREFERENCED_PARAMETER(wFlags);
-    UNREFERENCED_PARAMETER(pDispParams);
-    UNREFERENCED_PARAMETER(pvarResult);
-    UNREFERENCED_PARAMETER(pExcepInfo);
-    UNREFERENCED_PARAMETER(puArgErr);
-
     if (!pDispParams)
         return E_INVALIDARG;
 

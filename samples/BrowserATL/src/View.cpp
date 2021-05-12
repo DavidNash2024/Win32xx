@@ -49,10 +49,8 @@ void CView::Navigate(LPCTSTR str)
 }
 
 // Called when the window is created.
-int CView::OnCreate(CREATESTRUCT& cs)
+int CView::OnCreate(CREATESTRUCT&)
 {
-    UNREFERENCED_PARAMETER(cs);
-
     // Set the window's icon
     SetIconSmall(IDW_MAIN);
     SetIconLarge(IDW_MAIN);

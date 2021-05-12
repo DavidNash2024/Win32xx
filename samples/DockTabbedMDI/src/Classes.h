@@ -41,8 +41,8 @@ public:
     virtual ~CContainClasses() {}
     virtual void AddCombo();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnFileNew();
-    virtual void OnHelpAbout();
+    virtual BOOL OnFileNew();
+    virtual BOOL OnHelpAbout();
     virtual void SetupToolBar();
 
 private:

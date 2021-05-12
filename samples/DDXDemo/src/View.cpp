@@ -662,6 +662,8 @@ OnCtlColor(HDC dc, HWND hWnd, UINT nCtlColor)                               /*
       // set the foreground and background device contexts
     dcCtl.SetTextColor(fg);
     dcCtl.SetBkColor(bk);
+      // Keep changes to the device context
+    dcCtl.Detach();
       // return the brush handle
     return (INT_PTR)(HBRUSH)br;
 }

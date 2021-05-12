@@ -2019,7 +2019,7 @@ namespace Win32xx
         assert(IsWindow());
         int iResult = ::SetWindowRgn(*this, rgn, redraw);
         CRgn region(rgn);
-        if (iResult)
+        if (iResult != 0)
             region.Detach();   // The system owns the region now
 
         return iResult;

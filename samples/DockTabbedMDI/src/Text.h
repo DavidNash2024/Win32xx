@@ -17,12 +17,12 @@ class CViewText : public CRichEdit
 public:
     CViewText();
     virtual ~CViewText();
-    void OnEditCopy();
-    void OnEditPaste();
-    void OnEditCut();
-    void OnEditDelete();
-    void OnEditRedo();
-    void OnEditUndo();
+    BOOL OnEditCopy();
+    BOOL OnEditPaste();
+    BOOL OnEditCut();
+    BOOL OnEditDelete();
+    BOOL OnEditRedo();
+    BOOL OnEditUndo();
 
 protected:
     virtual void OnAttach();

@@ -22,11 +22,12 @@ CMainFrame::~CMainFrame()
 }
 
 // Enables choose topic mode
-void CMainFrame::ChooseHelpTopic()
+BOOL CMainFrame::ChooseHelpTopic()
 {
     ::SetCursor(::LoadCursor(0, IDC_HELP));
     SetCapture();
     m_isChoosing = TRUE;
+    return TRUE;
 }
 
 // Create the frame window.
@@ -183,23 +184,23 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 
     switch(id)
     {
-    case ID_CHECK_A:         m_view.OnCheckA();     return TRUE;
-    case ID_CHECK_B:         m_view.OnCheckB();     return TRUE;
-    case ID_CHECK_C:         m_view.OnCheckC();     return TRUE;
+    case ID_CHECK_A:         return m_view.OnCheckA();
+    case ID_CHECK_B:         return m_view.OnCheckB();
+    case ID_CHECK_C:         return m_view.OnCheckC();
 
-    case IDM_FILE_EXIT:      OnFileExit();          return TRUE;
-    case IDW_VIEW_STATUSBAR: OnViewStatusBar();     return TRUE;
-    case IDW_VIEW_TOOLBAR:   OnViewToolBar();       return TRUE;
+    case IDM_FILE_EXIT:      return OnFileExit();
+    case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:   return OnViewToolBar();
 
     case ID_RADIO_A:
-    case ID_RADIO_B:        // intentionally blank
-    case ID_RADIO_C:        m_view.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);   return TRUE;
+    case ID_RADIO_B:         // intentionally blank
+    case ID_RADIO_C:         return m_view.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
 
-    case IDM_HELP_ABOUT:    m_appHelp.About(*this); return TRUE;    // Menu item
-    case IDM_HELP_CONTENT:  ShowHelpTopic(id);      return TRUE;    // Menu item
-    case IDM_HELP_CONTEXT:  ChooseHelpTopic();      return TRUE;    // Toolbar Button
-    case IDM_SHIFT_F1:      OnShiftF1();            return TRUE;    // Accelerator
-    case IDM_F1:            OnF1();                 return TRUE;    // Accelerator
+    case IDM_HELP_ABOUT:    return m_appHelp.About(*this);    // Menu item
+    case IDM_HELP_CONTENT:  return ShowHelpTopic(id);         // Menu item
+    case IDM_HELP_CONTEXT:  return ChooseHelpTopic();         // Toolbar Button
+    case IDM_SHIFT_F1:      return OnShiftF1();               // Accelerator
+    case IDM_F1:            return OnF1();                    // Accelerator
 
     }
 
@@ -233,7 +234,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 }
 
 // Called when the F1 key is pressed.
-void CMainFrame::OnF1()
+BOOL CMainFrame::OnF1()
 {
     UINT id = GetIDFromCursorPos();
 
@@ -241,12 +242,15 @@ void CMainFrame::OnF1()
         m_appHelp.ShowHelpTopic(id);
     else
         m_appHelp.ShowHelpTopic(_T("Introduction"));
+
+    return TRUE;
 }
 
 // Issue a close request to the frame.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -302,9 +306,10 @@ LRESULT CMainFrame::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Called when the F1 key is pressed while SHIFT is held down.
-void CMainFrame::OnShiftF1()
+BOOL CMainFrame::OnShiftF1()
 {
     ChooseHelpTopic();
+    return TRUE;
 }
 
 // Updates the menu when check box A is clicked.
@@ -391,9 +396,10 @@ LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Display the context help for the specified topic.
-void CMainFrame::ShowHelpTopic(UINT id)
+BOOL CMainFrame::ShowHelpTopic(UINT id)
 {
     m_appHelp.ShowHelpTopic(id);
+    return TRUE;
 }
 
 // Handle the frame's window messages.

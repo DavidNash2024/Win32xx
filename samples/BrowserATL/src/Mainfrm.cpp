@@ -68,9 +68,8 @@ BOOL CMainFrame::OnBack()
 }
 
 // Called before navigation occurs on either a window or frameset element.
-void CMainFrame::OnBeforeNavigate2(DISPPARAMS* pDispParams)
+void CMainFrame::OnBeforeNavigate2(DISPPARAMS*)
 {
-    UNREFERENCED_PARAMETER(pDispParams);
 }
 
 // Called when the enabled state of a command changes.
@@ -167,22 +166,19 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 }
 
 // Called when a document has been completely loaded and initialized.
-void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
+void CMainFrame::OnDocumentComplete(DISPPARAMS*)
 {
-    UNREFERENCED_PARAMETER(pDispParams);
     SetStatusText(L"Done");
 }
 
 // Called when a navigation operation is beginning.
-void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
+void CMainFrame::OnDownloadBegin(DISPPARAMS*)
 {
-    UNREFERENCED_PARAMETER(pDispParams);
 }
 
 // Called when a navigation operation finishes, is halted, or fails.
-void CMainFrame::OnDownloadComplete(DISPPARAMS* pDispParams)
+void CMainFrame::OnDownloadComplete(DISPPARAMS*)
 {
-    UNREFERENCED_PARAMETER(pDispParams);
 }
 
 // Deletes the selected text.
@@ -300,9 +296,8 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 }
 
 // Called when a new window is to be created.
-void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
+void CMainFrame::OnNewWindow2(DISPPARAMS*)
 {
-    UNREFERENCED_PARAMETER(pDispParams);
     TRACE("NewWindow2\n");
 }
 

@@ -7,6 +7,19 @@ New Features and Enhancements
   - CMenuBar now emulates the behaviour of a traditional menu more closely.
   - The accelerator prefixes are now normally hidden, but are displayed for
     keyboard navigation.
+	
+ * Updated CDC
+  - A CDC restores its device context to its original state when its last
+    copy is destroyed, unless the Detach function is used to detach it.
+    Use Detach to keep changes made to the device context, such as when
+	handling WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG,
+	WM_CTLCOLORLISTBOX, WM_CTLCOLORSCROLLBAR or WM_CTLCOLORSTATIC.
+	
+	
+Changes in Detail
+-----------------
+Added CFrameT::OnKeyboardHook
+Added CMenuBar::IsAltMode
 
 
 Version 8.9

@@ -150,35 +150,35 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 
     switch (id)
     {
-    case IDM_FILE_NEW_PLAIN:    OnFileNewPlain();       return TRUE;
-    case IDM_FILE_NEW_RICH:     OnFileNewRich();        return TRUE;
-    case IDM_FILE_OPEN:         OnFileOpen();           return TRUE;
-    case IDM_FILE_SAVE:         OnFileSave();           return TRUE;
-    case IDM_FILE_SAVEAS:       OnFileSaveAs();         return TRUE;
-    case IDM_FILE_PREVIEW:      OnFilePreview();        return TRUE;
-    case IDM_FILE_PRINT:        OnFilePrint();          return TRUE;
-    case IDM_FILE_PRINTSETUP:   OnFilePrintSetup();     return TRUE;
-    case IDM_EDIT_COPY:         OnEditCopy();           return TRUE;
-    case IDM_EDIT_PASTE:        OnEditPaste();          return TRUE;
-    case IDM_EDIT_CUT:          OnEditCut();            return TRUE;
-    case IDM_EDIT_DELETE:       OnEditDelete();         return TRUE;
-    case IDM_EDIT_REDO:         OnEditRedo();           return TRUE;
-    case IDM_EDIT_UNDO:         OnEditUndo();           return TRUE;
-    case IDM_ENC_ANSI:          OnEncodeANSI();         return TRUE;
-    case IDM_ENC_UTF8:          OnEncodeUTF8();         return TRUE;
-    case IDM_ENC_UTF16:         OnEncodeUTF16();        return TRUE;
-    case IDM_FILE_EXIT:         OnFileExit();           return TRUE;
-    case IDW_VIEW_STATUSBAR:    OnViewStatusBar();      return TRUE;
-    case IDW_VIEW_TOOLBAR:      OnViewToolBar();        return TRUE;
-    case IDM_OPTIONS_WRAP:      OnOptionsWrap();        return TRUE;
-    case IDM_OPTIONS_FONT:      OnOptionsFont();        return TRUE;
-    case IDM_HELP_ABOUT:        OnHelp();               return TRUE;
+    case IDM_FILE_NEW_PLAIN:    return OnFileNewPlain();
+    case IDM_FILE_NEW_RICH:     return OnFileNewRich();
+    case IDM_FILE_OPEN:         return OnFileOpen();
+    case IDM_FILE_SAVE:         return OnFileSave();
+    case IDM_FILE_SAVEAS:       return OnFileSaveAs();
+    case IDM_FILE_PREVIEW:      return OnFilePreview();
+    case IDM_FILE_PRINT:        return OnFilePrint();
+    case IDM_FILE_PRINTSETUP:   return OnFilePrintSetup();
+    case IDM_EDIT_COPY:         return OnEditCopy();
+    case IDM_EDIT_PASTE:        return OnEditPaste();
+    case IDM_EDIT_CUT:          return OnEditCut();
+    case IDM_EDIT_DELETE:       return OnEditDelete();
+    case IDM_EDIT_REDO:         return OnEditRedo();
+    case IDM_EDIT_UNDO:         return OnEditUndo();
+    case IDM_ENC_ANSI:          return OnEncodeANSI();
+    case IDM_ENC_UTF8:          return OnEncodeUTF8();
+    case IDM_ENC_UTF16:         return OnEncodeUTF16();
+    case IDM_FILE_EXIT:         return OnFileExit();
+    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
+    case IDM_OPTIONS_WRAP:      return OnOptionsWrap();
+    case IDM_OPTIONS_FONT:      return OnOptionsFont();
+    case IDM_HELP_ABOUT:        return OnHelp();
 
     case IDW_FILE_MRU_FILE1:
     case IDW_FILE_MRU_FILE2:
     case IDW_FILE_MRU_FILE3:
     case IDW_FILE_MRU_FILE4:
-    case IDW_FILE_MRU_FILE5:    OnFileMRU(wparam);      return TRUE;
+    case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
     }
 
     return FALSE;
@@ -239,19 +239,21 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
 }
 
 // Delete (cut) the current selection, if any.
-void CMainFrame::OnEditCut()
+BOOL CMainFrame::OnEditCut()
 {
     m_richView.Cut();
+    return TRUE;
 }
 
 // Copy the current selection to the clipboard.
-void CMainFrame::OnEditCopy()
+BOOL CMainFrame::OnEditCopy()
 {
     m_richView.Copy();
+    return TRUE;
 }
 
 // Paste plain text or rich text to the document.
-void CMainFrame::OnEditPaste()
+BOOL CMainFrame::OnEditPaste()
 {
    if (m_isRTF)
         // Paste rich text and plain text.
@@ -259,28 +261,33 @@ void CMainFrame::OnEditPaste()
     else
         // Paste plain text only.
         m_richView.PasteSpecial(CF_TEXT);
+
+   return TRUE;
 }
 
 // Clears the contents of the document.
-void CMainFrame::OnEditDelete()
+BOOL CMainFrame::OnEditDelete()
 {
     m_richView.Clear();
+    return TRUE;
 }
 
 // Redoes the next action in the redo queue.
-void CMainFrame::OnEditRedo()
+BOOL CMainFrame::OnEditRedo()
 {
     m_richView.Redo();
+    return TRUE;
 }
 
 // Undoes the last operation in the undo queue.
-void CMainFrame::OnEditUndo()
+BOOL CMainFrame::OnEditUndo()
 {
     m_richView.Undo();
+    return TRUE;
 }
 
 // Select ANSI encoding.
-void CMainFrame::OnEncodeANSI()
+BOOL CMainFrame::OnEncodeANSI()
 {
     SetEncoding(ANSI);
     int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
@@ -289,10 +296,12 @@ void CMainFrame::OnEncodeANSI()
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
         ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_ANSI, 0);
     }
+
+    return TRUE;
 }
 
 // Select UTF8 encoding.
-void CMainFrame::OnEncodeUTF8()
+BOOL CMainFrame::OnEncodeUTF8()
 {
     SetEncoding(UTF8);
     int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
@@ -301,10 +310,12 @@ void CMainFrame::OnEncodeUTF8()
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
         ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_UTF8, 0);
     }
+
+    return TRUE;
 }
 
 // Select UTF16 encoding.
-void CMainFrame::OnEncodeUTF16()
+BOOL CMainFrame::OnEncodeUTF16()
 {
     SetEncoding(UTF16LE);
     int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
@@ -313,16 +324,19 @@ void CMainFrame::OnEncodeUTF16()
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
         ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_UTF16, 0);
     }
+
+    return TRUE;
 }
 
 // Issue a close request to the frame to end the application.
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
     Close();
+    return TRUE;
 }
 
 // Respond to a MRU selection.
-void CMainFrame::OnFileMRU(WPARAM wparam)
+BOOL CMainFrame::OnFileMRU(WPARAM wparam)
 {
     UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
     CString mruText = GetMRUEntry(mruIndex);
@@ -333,30 +347,34 @@ void CMainFrame::OnFileMRU(WPARAM wparam)
         RemoveMRUEntry(mruText);
 
     SetWindowTitle();
+
+    return TRUE;
 }
 
 // Create a blank plain text document.
-void CMainFrame::OnFileNewPlain()
+BOOL CMainFrame::OnFileNewPlain()
 {
     //Check for unsaved text
     SaveModifiedText();
     m_isRTF = false;
     SetEncoding(ANSI);
     ClearContents();
+    return TRUE;
 }
 
 // Create a blank rich text document.
-void CMainFrame::OnFileNewRich()
+BOOL CMainFrame::OnFileNewRich()
 {
     //Check for unsaved text
     SaveModifiedText();
     m_isRTF = true;
     SetEncoding(ANSI);
     ClearContents();
+    return TRUE;
 }
 
 // Preview the print job before sending it to a printer.
-void CMainFrame::OnFilePreview()
+BOOL CMainFrame::OnFilePreview()
 {
     // Verify a print preview is possible
     try
@@ -395,10 +413,11 @@ void CMainFrame::OnFilePreview()
         ShowToolBar(GetToolBar().IsWindow());
     }
 
+    return TRUE;
 }
 
 // Select the printer and print the document.
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
     try
     {
@@ -411,10 +430,11 @@ void CMainFrame::OnFilePrint()
         MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
 
+    return TRUE;
 }
 
 // Select the printer for use by the application.
-void CMainFrame::OnFilePrintSetup()
+BOOL CMainFrame::OnFilePrintSetup()
 {
     // Display the print dialog.
     CPrintDialog printDlg;
@@ -434,16 +454,18 @@ void CMainFrame::OnFilePrintSetup()
         MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
     }
 
+    return TRUE;
 }
 
 // Print the document without selecting the printer.
-void CMainFrame::OnFileQuickPrint()
+BOOL CMainFrame::OnFileQuickPrint()
 {
     m_richView.QuickPrint(m_pathName);
+    return TRUE;
 }
 
 // Display the file choose dialog and load text from a file.
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
     // szFilters is a text string that includes two file name filters:
     // "*.txt" for Plain Text files, "*.rtf" for Rich Text files and "*.*' for "All Files."
@@ -467,19 +489,22 @@ void CMainFrame::OnFileOpen()
         }
     }
 
+    return TRUE;
 }
 
 // Save the document text to the current file.
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
     if (m_pathName.IsEmpty())
         OnFileSaveAs();
     else
         WriteFile(m_pathName);
+
+    return TRUE;
 }
 
 // Display the file choose dialog and save text to the file.
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
     // szFilter is a text string that includes two file name filters:
     // "*.txt" for Plain Text Files, "*.rtf" for Rich Text Files, and "*.*' for All Files.
@@ -499,6 +524,7 @@ void CMainFrame::OnFileSaveAs()
         SetWindowTitle();
     }
 
+    return TRUE;
 }
 
 // Called after the window is created.
@@ -602,7 +628,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 }
 
 // Select a font for the document.
-void CMainFrame::OnOptionsFont()
+BOOL CMainFrame::OnOptionsFont()
 {
     // Retrieve the current character format.
     CHARFORMAT cf;
@@ -635,17 +661,19 @@ void CMainFrame::OnOptionsFont()
         }
     }
 
+    return TRUE;
 }
 
 // Turn word wrap on or off.
-void CMainFrame::OnOptionsWrap()
+BOOL CMainFrame::OnOptionsWrap()
 {
     m_richView.SetTargetDevice(0, m_isWrapped);
     m_isWrapped = !m_isWrapped;
+    return TRUE;
 }
 
 // Called when the Print Preview's "Close" button is pressed.
-void CMainFrame::OnPreviewClose()
+BOOL CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_richView);
@@ -656,17 +684,20 @@ void CMainFrame::OnPreviewClose()
 
     // Restore focus to the window focused before DoPrintPreview was called.
     RestoreFocus();
+
+    return TRUE;
 }
 
 // Called when the Print Preview's "Print Now" button is pressed
-void CMainFrame::OnPreviewPrint()
+BOOL CMainFrame::OnPreviewPrint()
 {
     m_richView.QuickPrint(m_pathName);
+    return TRUE;
 }
 
 
 // Called when the Print Preview's "Print Setup" button is pressed.
-void CMainFrame::OnPreviewSetup()
+BOOL CMainFrame::OnPreviewSetup()
 {
     // Call the print setup dialog.
     CPrintDialog printDlg(PD_PRINTSETUP);
@@ -689,6 +720,8 @@ void CMainFrame::OnPreviewSetup()
     // Initiate the print preview.
     UINT maxPage = m_richView.CollatePages();
     m_preview.DoPrintPreview(*this, maxPage);
+
+    return TRUE;
 }
 
 // Called by CTextApp::OnIdle to update toolbar buttons
@@ -707,13 +740,15 @@ void CMainFrame::OnToolbarUpdate()
 }
 
 // Update the radio buttons in the menu.
-void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
+BOOL CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
     int menuItem = GetMenuItemPos(GetFrameMenu(), _T("Encoding"));
     CMenu radioMenu = GetFrameMenu().GetSubMenu(menuItem);
     UINT enc = m_encoding + IDM_ENC_ANSI;
     if (enc == id)
         radioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
+
+    return TRUE;
 }
 
 // Streams the file into the rich edit control.
