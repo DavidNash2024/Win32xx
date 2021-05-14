@@ -15,9 +15,14 @@ New Features and Enhancements
 	handling WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG,
 	WM_CTLCOLORLISTBOX, WM_CTLCOLORSCROLLBAR or WM_CTLCOLORSTATIC.
 	
-	
+ * Updated CBitmap
+ - Added CopyImage 
+
+
 Changes in Detail
 -----------------
+Added CBitmap::CopyImage
+Added CBitmap::LoadImage      (additional overloads)
 Added CFrameT::OnKeyboardHook
 Added CMenuBar::IsAltMode
 
