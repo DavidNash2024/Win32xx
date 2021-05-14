@@ -500,7 +500,6 @@ namespace Win32xx
         GetPreviewPane().Render(previewDC);
     }
 
-
     // Enables or disables the page selection buttons.
     template <typename T>
     inline void CPrintPreview<T>::UpdateButtons()

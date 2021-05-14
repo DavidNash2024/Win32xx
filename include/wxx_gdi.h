@@ -224,10 +224,13 @@ namespace Win32xx
 
         // Create and load methods
         BOOL LoadBitmap(LPCTSTR pResName);
-        BOOL LoadBitmap(int resID);
-        BOOL LoadImage(LPCTSTR pResName, UINT flags);
-        BOOL LoadImage(UINT resID, UINT flags);
+        BOOL LoadBitmap(int id);
+        BOOL LoadImage(LPCTSTR pResName, UINT flags = 0);
+        BOOL LoadImage(UINT id, UINT flags = 0);
+        BOOL LoadImage(LPCTSTR pResName, int cxDesired, int cyDesired, UINT flags);
+        BOOL LoadImage(UINT id, int cxDesired, int cyDesired, UINT flags);
         BOOL LoadOEMBitmap(UINT bitmapID);
+        HBITMAP CopyImage(HBITMAP origBitmap, int cxDesired = 0, int cyDesired = 0, UINT fuFlags = 0);
         HBITMAP CreateBitmap(int width, int height, UINT planes, UINT bitsPerPixel, LPCVOID pBits);
         HBITMAP CreateCompatibleBitmap(HDC dc, int width, int height);
         HBITMAP CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* ppBits, HANDLE section, DWORD offset);
@@ -1406,9 +1409,16 @@ namespace Win32xx
 
     // Loads a bitmap from a resource using the resource ID.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadImage(UINT resID, UINT flags)
+    inline BOOL CBitmap::LoadImage(UINT id, UINT flags)
     {
-        return LoadImage(MAKEINTRESOURCE(resID), flags);
+        return LoadImage(MAKEINTRESOURCE(id), flags);
+    }
+
+    // Loads a bitmap from a resource using the resource ID.
+    // Refer to LoadImage in the Windows API documentation for more information.
+    inline BOOL CBitmap::LoadImage(UINT id, int cxDesired, int cyDesired, UINT flags)
+    {
+        return LoadImage(MAKEINTRESOURCE(id), cxDesired, cyDesired, flags);
     }
 
     // Loads a bitmap from a resource using the resource string.
@@ -1416,6 +1426,20 @@ namespace Win32xx
     inline BOOL CBitmap::LoadImage(LPCTSTR pResName, UINT flags)
     {
         HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), pResName, IMAGE_BITMAP, 0, 0, flags));
+        if (bitmap != 0)
+        {
+            Attach(bitmap);
+            SetManaged(true);
+        }
+        return (0 != bitmap);  // boolean expression
+    }
+
+    // Loads a bitmap from a resource using the resource string.
+    // Refer to LoadImage in the Windows API documentation for more information.
+    inline BOOL CBitmap::LoadImage(LPCTSTR pResName, int cxDesired, int cyDesired, UINT flags)
+    {
+        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), 
+                                       pResName, IMAGE_BITMAP, cxDesired, cyDesired, flags));
         if (bitmap != 0)
         {
             Attach(bitmap);
@@ -1501,6 +1525,33 @@ namespace Win32xx
         }
 
         VERIFY(dc.SetDIBits(*this, 0, data.bmHeight, bits, pbmi, DIB_RGB_COLORS));
+    }
+
+    // Creates a new image and copies the attributes of the specified image
+    // to the new one. If necessary, the function stretches the bits to fit
+    // the desired size of the new image.
+    // Refer to CopyImage in the Windows API documentation for more information.
+    inline HBITMAP CBitmap::CopyImage(HBITMAP origBitmap, int cxDesired, int cyDesired, UINT flags)
+    {
+        assert(origBitmap);
+        CBitmap orig(origBitmap);
+
+        HBITMAP bitmap = (HBITMAP)::CopyImage(origBitmap, IMAGE_BITMAP, cxDesired, cyDesired, flags);
+
+        if (bitmap == 0)
+            throw CResourceException(GetApp()->MsgGdiBitmap());
+
+        Attach(bitmap);
+        if (bitmap != origBitmap)
+        {
+            SetManaged(true);
+            if (flags & LR_COPYDELETEORG)
+            {
+                orig.Detach();
+            }
+        }
+
+        return bitmap;
     }
 
     // Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
