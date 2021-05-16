@@ -39,6 +39,10 @@ void CMyStatusBar::OnAttach()
 
     // Set a Part as owner drawn. The part's drawing is performed in CMainFrame::OnDrawItem.
     SetPartText(3, _T(""), SBT_OWNERDRAW);
+
+    // Required by owner draw.
+    const int STATUS_ID = 1211;
+    SetWindowLongPtr(GWLP_ID, STATUS_ID);
 }
 
 // Perform the owner draw for Part 3 in the status bar

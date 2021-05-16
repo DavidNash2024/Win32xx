@@ -81,6 +81,7 @@ public:
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
     BOOL    OnVideoType(LPCTSTR videoType);
     BOOL    OnWatchList();
+    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
     LRESULT PlayMovie(LPCTSTR path);
     std::list<MovieInfo>* GetMoviesData() { return &m_moviesData; }

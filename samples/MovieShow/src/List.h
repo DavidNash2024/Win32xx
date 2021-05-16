@@ -37,6 +37,7 @@ public:
 
     void    AddItem(const MovieInfo& mi);
     CString GetFileTime(FILETIME fileTime);
+    LRESULT OnCustomDraw(LPNMCUSTOMDRAW pnmitem);
     LRESULT OnItemActivate(LPNMITEMACTIVATE pnmitem);
     LRESULT OnItemChanged(LPNMITEMACTIVATE pnmitem);
     LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);
@@ -51,6 +52,7 @@ protected:
     virtual void    OnAttach();
     virtual void    OnDestroy();
     virtual void    OnInitialUpdate();
+    virtual LRESULT OnNotify(WPARAM, LPARAM lparam);
     virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
 

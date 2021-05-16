@@ -69,7 +69,7 @@
 // std::vector already handles this for us. Consider the following example:
 //    int length = ::GetWindowTextLength(wnd);
 //    pTChar = new TCHAR[length+1];
-//    memset(pTChar, 0, (length+1)*sizeof(TCHAR));
+//    ZeroMemory(pTChar, (length+1)*sizeof(TCHAR));
 //    ::GetWindowText(wnd, m_pTChar, length);
 //    ....
 //    delete[] pTChar;

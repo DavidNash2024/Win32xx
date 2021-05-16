@@ -6,7 +6,7 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
-#define STATUS_ID 1211
+
 
 ///////////////////////////////////
 // CMainFrame function definitions.
@@ -66,8 +66,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // call the base class function
     CFrame::OnCreate(cs);
-
-    GetStatusBar().SetWindowLongPtr(GWLP_ID, STATUS_ID);
 
     return 0;
 }

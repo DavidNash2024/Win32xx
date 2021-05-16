@@ -62,18 +62,19 @@ void CMainFrame::LoadDefaultDockers()
 
     DWORD style = DS_CLIENTEDGE; // The style added to each docker
 
-                                   // Add the parent dockers
+    // Add the right most dockers
     CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | style, 200, ID_DOCK_CLASSES1);
-    CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | style, 100, ID_DOCK_TEXT1);
-
-    // Add the remaining dockers
     pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, 200, ID_DOCK_FILES1);
     pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | style, 200, ID_DOCK_CLASSES2);
     pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, 200, ID_DOCK_FILES2);
 
-    pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_OUTPUT1);
+    // Add the bottom dockers
+    CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | style, 100, ID_DOCK_TEXT1);
     pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_TEXT2);
-    pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_OUTPUT2);
+
+    // Add the frame's dockers
+    AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_OUTPUT1);
+    AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_OUTPUT2);
 }
 
 // Adds a new docker. The id specifies its type.

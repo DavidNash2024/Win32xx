@@ -175,7 +175,7 @@ void CViewList::OnAttach()
     SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
     SetExtendedStyle( LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES
-        | LVS_EX_HEADERDRAGDROP | LVS_EX_DOUBLEBUFFER/* | LVS_EX_TRANSPARENTBKGND*/);
+       /* | LVS_EX_HEADERDRAGDROP */| LVS_EX_DOUBLEBUFFER  );
 
     SetColumn();
 }
@@ -236,6 +236,57 @@ LRESULT CViewList::OnLVColumnClick(LPNMITEMACTIVATE pnmitem)
     return 0;
 }
 
+// Call to perform custom drawing.
+LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pnmitem)
+{
+    switch (pnmitem->dwDrawStage)
+    {
+    case CDDS_PREPAINT: // Before the paint cycle begins.
+        // Request notifications for individual header items.
+        return CDRF_NOTIFYITEMDRAW;
+
+    case CDDS_ITEMPREPAINT: // Before an item is drawn
+    {
+        // Get an appropriate color for the header
+        COLORREF color = GetSysColor(COLOR_BTNFACE);
+        HWND hFrame = GetAncestor();
+        ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hFrame, UWM_GETRBTHEME, 0, 0));
+        if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
+            color = pTheme->clrBkgnd2;
+
+        // Set the background color of the header
+        CBrush br;
+        br.CreateSolidBrush(color);
+        ::FillRect(pnmitem->hdc, &pnmitem->rc, br);
+
+        // Also set the text background color
+        ::SetBkColor(pnmitem->hdc, color);
+
+        return CDRF_DODEFAULT;
+    }
+    }
+
+    return CDRF_DODEFAULT;
+}
+
+// Respond to notifications from child windows,
+LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
+{
+    LPNMCUSTOMDRAW  pnmitem = (LPNMCUSTOMDRAW)lparam;
+    switch (pnmitem->hdr.code)
+    {
+ //   case HDN_ENDTRACK:
+ //   //    TRACE("Got a header tracking notification\n");
+ //       SetLastColumnWidth();
+  //      break;
+
+
+    case NM_CUSTOMDRAW:          return OnCustomDraw(pnmitem);
+    }
+
+    return 0;
+}
+
 // Called when the framework reflects the WM_NOTIFY message
 // back to CViewList.
 LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
@@ -266,7 +317,7 @@ LRESULT CViewList::OnRClick()
 void CViewList::PreCreate(CREATESTRUCT& cs)
 {
     cs.dwExStyle = WS_EX_CLIENTEDGE;
-    cs.style = LVS_SHOWSELALWAYS | WS_CHILD | LVS_ALIGNLEFT;
+    cs.style = LVS_SHOWSELALWAYS | WS_CHILD | LVS_ALIGNLEFT | HDS_HOTTRACK;
 }
 
 // Configures the columns in the list view's header.
