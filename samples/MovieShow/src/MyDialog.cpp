@@ -88,8 +88,11 @@ BOOL CViewDialog::OnInitDialog()
     wp.rcNormalPosition.bottom = wp.rcNormalPosition.top + width * 3 / 2;
     m_picture.SetWindowPlacement(wp);
 
+    CRect rc = m_year.GetWindowRect();
+    MapWindowPoints(*this, rc);
+
     // Initialize dialog resizing
-    m_Resizer.Initialize( *this, CRect(0, 0, 400, 210) );
+    m_Resizer.Initialize(*this, CRect(0, 0, width + rc.right + 10, 210));
 
     m_Resizer.AddChild(m_static1, topleft, 0);
     m_Resizer.AddChild(m_static2, topleft, 0);

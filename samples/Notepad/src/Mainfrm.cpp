@@ -754,9 +754,6 @@ BOOL CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 // Streams the file into the rich edit control.
 BOOL CMainFrame::ReadFile(LPCTSTR fileName)
 {
-    // Ask to save if file was modified
-    SaveModifiedText();
-
     try
     {
         // Open the file for reading

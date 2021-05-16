@@ -77,9 +77,9 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_pDockTree(0), m_pDockDialog(0),
-                           m_isDirty(false), m_boxSetsItem(0), m_dialogWidth(0),
-                           m_treeHeight(0)
+CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_searchItem(0), m_pDockTree(0),
+                           m_pDockDialog(0), m_isDirty(false), m_boxSetsItem(0),
+                           m_dialogWidth(0), m_treeHeight(0)
 {
 }
 
@@ -1700,6 +1700,12 @@ LRESULT CMainFrame::OnDPIChanged()
     return 0;
 }
 
+LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    GetViewList().SetLastColumnWidth();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
 // Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -1707,6 +1713,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
+        case WM_WINDOWPOSCHANGING: return OnWindowPosChanged(msg, wparam, lparam);
         case WM_SYSCOMMAND:                 return OnSysCommand(msg, wparam, lparam);
         case WM_EXITSIZEMOVE:               return OnExitSizeMove(msg, wparam, lparam);
         case WM_DPICHANGED:                 return OnDPIChanged();

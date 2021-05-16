@@ -128,7 +128,7 @@ LRESULT CCoverImage::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_SIZE:
         {
-            CDC dc = GetDC();
+            CClientDC dc = GetDC();
             OnDraw(dc);
         }
         break;

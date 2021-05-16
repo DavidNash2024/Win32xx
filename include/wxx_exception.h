@@ -198,9 +198,8 @@ namespace Win32xx
     inline CException::CException(int messageID) WXX_NOEXCEPT
             : m_messageID(messageID), m_error(::GetLastError())
     {
-        memset(m_text, 0, MAX_STRING_SIZE * sizeof(TCHAR));
-        memset(m_errorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
-
+        ZeroMemory(m_text, MAX_STRING_SIZE * sizeof(TCHAR));
+        ZeroMemory(m_errorString, MAX_STRING_SIZE * sizeof(TCHAR));
 
         // Store error information in m_errorString
         DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
@@ -212,8 +211,8 @@ namespace Win32xx
     inline CException::CException(LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
             : m_messageID(messageID), m_error(::GetLastError())
     {
-        memset(m_text, 0, MAX_STRING_SIZE * sizeof(TCHAR));
-        memset(m_errorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
+        ZeroMemory(m_text, MAX_STRING_SIZE * sizeof(TCHAR));
+        ZeroMemory(m_errorString, MAX_STRING_SIZE * sizeof(TCHAR));
 
         if (text)
             StrCopy(m_text, text, MAX_STRING_SIZE);
@@ -262,10 +261,10 @@ namespace Win32xx
     inline CFileException::CFileException(LPCTSTR pFilePath, int messageID) WXX_NOEXCEPT
         : CException(messageID)
     {
+        ZeroMemory(m_filePath, MAX_STRING_SIZE * sizeof(TCHAR));
+
         // Display some text in the debugger
         ::OutputDebugString(_T("*** CFileException thrown ***\n"));
-
-        memset(m_filePath, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
         if (pFilePath)
         {
@@ -283,10 +282,10 @@ namespace Win32xx
     inline CFileException::CFileException(LPCTSTR pFilePath, LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
         : CException(text, messageID)
     {
+        ZeroMemory(m_filePath, MAX_STRING_SIZE * sizeof(TCHAR));
+
         // Display some text in the debugger
         ::OutputDebugString(_T("*** CFileException thrown ***\n"));
-
-        memset(m_filePath, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
         if (pFilePath)
         {

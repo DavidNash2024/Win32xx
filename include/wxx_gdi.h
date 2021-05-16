@@ -1438,7 +1438,7 @@ namespace Win32xx
     // Refer to LoadImage in the Windows API documentation for more information.
     inline BOOL CBitmap::LoadImage(LPCTSTR pResName, int cxDesired, int cyDesired, UINT flags)
     {
-        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), 
+        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(),
                                        pResName, IMAGE_BITMAP, cxDesired, cyDesired, flags));
         if (bitmap != 0)
         {
@@ -1537,7 +1537,6 @@ namespace Win32xx
         CBitmap orig(origBitmap);
 
         HBITMAP bitmap = (HBITMAP)::CopyImage(origBitmap, IMAGE_BITMAP, cxDesired, cyDesired, flags);
-
         if (bitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
@@ -2678,9 +2677,9 @@ namespace Win32xx
     //       WM_CTLCOLORLISTBOX, WM_CTLCOLORSCROLLBAR or WM_CTLCOLORSTATIC.
     inline HDC CDC::Detach()
     {
-        HDC dc = 0;
         assert(m_pData);
         assert(m_pData->dc != 0);
+        HDC dc = m_pData->dc;
 
         RemoveFromMap();
         Initialize();
