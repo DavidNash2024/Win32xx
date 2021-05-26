@@ -537,6 +537,7 @@ namespace Win32xx
         friend class CMenu;
         friend class CPageSetupDialog;
         friend class CPrintDialog;
+        friend class CPrintDialogEx;
         friend class CPropertyPage;
         friend class CWnd;
         friend CWinApp* GetApp();

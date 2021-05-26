@@ -241,19 +241,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\src\res\Dialog.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Resource.rc"
-				>
-			</File>
-			<File
-				RelativePath="..\src\res\Win32++.manifest"
-				>
-			</File>
-			<File
-				RelativePath="..\src\res\Zapotec.bmp"
 				>
 			</File>
 		</Filter>

@@ -6,6 +6,7 @@
 // Rarely modified header files should be included.
 // Based on code provided by Lynn Allan.
 
+
 #ifndef STDAFX_H
 #define STDAFX_H
 
@@ -64,12 +65,11 @@
 #include <wxx_metafile.h>       // Add CMetaFile, CEnhMetaFile
 #include <wxx_mutex.h>          // Add CEvent, CMutex, CSemaphore
 #include <wxx_preview.h>        // Add CPrintPreview
-#include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintSetupDialog
+#include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
 #include <wxx_propertysheet.h>  // Add CPropertyPage, CPropertySheet
 #include <wxx_rebar.h>          // Add CRebar
 #include <wxx_rect.h>           // Add CPoint, CRect, CSize
 #include <wxx_regkey.h>         // Add CRegKey
-//#include <wxx_ribbon.h>       // Add CRibbon, CRibbonFrame
 #include <wxx_richedit.h>       // Add CRichEdit
 #include <wxx_scrollview.h>     // Add CScrollView
 #include <wxx_shared_ptr.h>     // Add Shared_Ptr
@@ -77,7 +77,6 @@
 #include <wxx_statusbar.h>      // Add CStatusBar
 #include <wxx_stdcontrols.h>    // Add CButton, CEdit, CListBox
 #include <wxx_tab.h>            // Add CTab, CTabbedMDI
-//#include <wxx_taskdialog.h>   // Add CTaskDialog
 #include <wxx_textconv.h>       // Add AtoT, AtoW, TtoA, TtoW, WtoA, WtoT etc.
 #include <wxx_themes.h>         // Add MenuTheme, ReBarTheme, StatusBarTheme, ToolBarTheme
 #include <wxx_time.h>           // Add CTime
@@ -85,6 +84,21 @@
 #include <wxx_treeview.h>       // Add CTreeView
 #include <wxx_webbrowser.h>     // Add CWebBrowser, CAXHost
 #include <wxx_wincore.h>        // Add CWnd
+
+// Win2000 or higher
+#if (WINVER >= 0x0500)
+#include <wxx_printdialogex.h>  // Add CPrintDialogEx
+#endif
+
+// Windows Vista or higher with Microsoft VS2008 or higher, or Clang compiler
+#if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500) || defined(__clang_major__)))
+#include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
+#endif
+
+// Windows Vista or higher, not Borland, not Microsoft unless VS2008 or higher. Requires Unicode.
+#if (WINVER >= 0x0600) && (!defined (__BORLANDC__)) && (!defined (_MSC_VER) || (_MSC_VER >= 1500))
+#include <wxx_taskdialog.h>     // Add CTaskDialog
+#endif
 
 
 #endif

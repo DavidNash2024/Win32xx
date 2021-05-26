@@ -175,7 +175,7 @@ void CViewList::OnAttach()
     SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
     SetExtendedStyle( LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES
-       /* | LVS_EX_HEADERDRAGDROP */| LVS_EX_DOUBLEBUFFER  );
+        | LVS_EX_HEADERDRAGDROP | LVS_EX_DOUBLEBUFFER/* | LVS_EX_TRANSPARENTBKGND*/);
 
     SetColumn();
 }
@@ -275,12 +275,6 @@ LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
     LPNMCUSTOMDRAW  pnmitem = (LPNMCUSTOMDRAW)lparam;
     switch (pnmitem->hdr.code)
     {
- //   case HDN_ENDTRACK:
- //   //    TRACE("Got a header tracking notification\n");
- //       SetLastColumnWidth();
-  //      break;
-
-
     case NM_CUSTOMDRAW:          return OnCustomDraw(pnmitem);
     }
 
@@ -317,7 +311,7 @@ LRESULT CViewList::OnRClick()
 void CViewList::PreCreate(CREATESTRUCT& cs)
 {
     cs.dwExStyle = WS_EX_CLIENTEDGE;
-    cs.style = LVS_SHOWSELALWAYS | WS_CHILD | LVS_ALIGNLEFT | HDS_HOTTRACK;
+    cs.style = LVS_SHOWSELALWAYS | WS_CHILD | LVS_ALIGNLEFT;
 }
 
 // Configures the columns in the list view's header.

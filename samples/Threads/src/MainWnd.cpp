@@ -19,7 +19,7 @@ CMainWindow::CMainWindow() : m_windowsCount(0)
     // A couple of notes in case you're tempted to test how many threads with test windows can be created ...
 
     // Note 1: Each process has a limited amount of resources allocated to it. Attempts to create
-    //         more than say 1000 threads in a process might fail and throw a CWinException.
+    //         more than say 500 threads in a process might fail and throw a CWinException.
     // Note 2: All our threads belong to the one process.
     // Note 3: Creating (or destroying) more than say 200 windows may temporarily stress the Explorer process.
     // Note 4: This sample is intended as "proof of concept" only. A well written program should not require 20 GUI threads!

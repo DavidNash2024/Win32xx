@@ -26,8 +26,7 @@ void CViewText::OnAttach()
     // Set the font.
     if (!m_font)
     {
-        m_font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
+        m_font.CreatePointFont(96, _T("Courier New"));
     }
 
     SetFont(m_font);

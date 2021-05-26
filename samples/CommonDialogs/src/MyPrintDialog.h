@@ -25,20 +25,25 @@ MyPrintDialog : public CPrintDialog                                         /*
 {
     public:
         MyPrintDialog(DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES |
-            PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION)
-            :   CPrintDialog(dwFlags){}
-        virtual ~MyPrintDialog(){}
+            PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION | PD_ENABLEPRINTHOOK)
+            :   CPrintDialog(dwFlags) {}
+        virtual ~MyPrintDialog() {}
 
         virtual void    SetBoxTitle (LPCTSTR title) {m_sPDTitle  = title;}
 
     private:
-        virtual BOOL    OnInitDialog() { SetWindowTitle(); return TRUE; }
-        virtual void    OnCancel()
-                  { ::MessageBox(NULL, _T("Print job cancelled."),
-                      _T("Information"), MB_OK | MB_ICONINFORMATION |
-                      MB_TASKMODAL); }
+        virtual BOOL    OnInitDialog()
+                        { SetWindowTitle();
+                          HWND hbtn = FindWindowEx(*this, NULL, _T("Button"), _T("OK"));
+                          if (hbtn != NULL)
+                              ::SetWindowText(hbtn, _T("&Print"));
+                          return TRUE; }
 
-          // override thid method to provide the needed preparation to
+        virtual void    OnCancel()
+                                  { ::MessageBox(0, _T("Print job cancelled."),
+                                    _T("Information"), MB_OK | MB_TASKMODAL |
+                                    MB_ICONINFORMATION); }
+          // override this method to provide the needed preparation to
           // print the document upon user approval
         virtual void    OnOK() {}
 

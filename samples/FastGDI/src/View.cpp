@@ -96,14 +96,14 @@ void CView::PrintPage(CDC& dc, UINT)
 
         // Extract the device independent image data.
         CMemDC memDC(viewDC);
-        VERIFY(memDC.GetDIBits(m_image, 0, bmHeight, NULL, pbmi, DIB_RGB_COLORS));
+        memDC.GetDIBits(m_image, 0, bmHeight, NULL, pbmi, DIB_RGB_COLORS);
         std::vector<byte> byteArray(pBIH->biSizeImage, 0);
         byte* pByteArray = &byteArray.front();
-        VERIFY(memDC.GetDIBits(m_image, 0, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS));
+        memDC.GetDIBits(m_image, 0, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 
         // Copy (stretch) the DI bits to the specified dc.
-        VERIFY(dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
-               bmWidth, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY));
+        dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
+               bmWidth, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
     }
 }
 

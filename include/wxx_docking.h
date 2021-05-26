@@ -2688,6 +2688,7 @@ namespace Win32xx
         }
 
         ShowWindow(SW_HIDE);
+        RecalcDockLayout();
     }
 
     // Returns true if the specified window is a child of this docker.
@@ -4825,6 +4826,7 @@ namespace Win32xx
 
             RecalcLayout();
         }
+
     }
 
     // Activates the specified page number.

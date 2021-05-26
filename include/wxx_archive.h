@@ -839,8 +839,8 @@ namespace Win32xx
         return *this;
     }
 
-    // The size (in characters) of the string array must be nMax or greater.
-    // Reads at most nMax-1 TCHAR characters from the archive and stores it
+    // The size (in characters) of the string array must be max or greater.
+    // Reads at most max-1 TCHAR characters from the archive and stores it
     // in a string. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throws an exception if an error occurs.
@@ -854,8 +854,8 @@ namespace Win32xx
         return string;
     }
 
-    // The size (in characters) of the string array must be nMax or greater.
-    // Reads at most nMax-1 TCHAR characters from the archive and store it
+    // The size (in characters) of the string array must be max or greater.
+    // Reads at most max-1 TCHAR characters from the archive and store it
     // in a string. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throws an exception if an error occurs.
@@ -869,8 +869,8 @@ namespace Win32xx
         return string;
     }
 
-    // The size (in characters) of the string array must be nMax or greater.
-    // Reads at most nMax-1 TCHAR characters from the archive and store it
+    // The size (in characters) of the string array must be max or greater.
+    // Reads at most max-1 TCHAR characters from the archive and store it
     // in a string. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throws an exception if an error occurs.
