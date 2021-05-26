@@ -3,28 +3,46 @@ Version 8.9.1
 
 New Features and Enhancements
 -----------------------------
+* Added CPrintDialogEx
+  - The CPrintDialogEx class uses PrintDlgEx to display a property sheet
+    which allows the user to select the printer to use.
+
 * Updated CMenuBar.
   - CMenuBar now emulates the behaviour of a traditional menu more closely.
   - The accelerator prefixes are now normally hidden, but are displayed for
     keyboard navigation.
-	
+
  * Updated CDC
   - A CDC restores its device context to its original state when its last
     copy is destroyed, unless the Detach function is used to detach it.
     Use Detach to keep changes made to the device context, such as when
-	handling WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG,
-	WM_CTLCOLORLISTBOX, WM_CTLCOLORSCROLLBAR or WM_CTLCOLORSTATIC.
-	
+    handling WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG,
+    WM_CTLCOLORLISTBOX, WM_CTLCOLORSCROLLBAR or WM_CTLCOLORSTATIC.
+
  * Updated CBitmap
- - Added CopyImage 
+  - Added CopyImage 
+  - Added GetSize
+  
+ * Updated CString
+  - Added << operator overload. It accepts integers, doubles, characters,
+    character arrays and CStrings. Use as follows:
+    CString str;
+    int x = 5;
+    double y = 3.14;
+    str << "Equation: " << x << " + " << y << " = " << x+y << '\n';
+  
 
 
 Changes in Detail
 -----------------
-Added CBitmap::CopyImage
-Added CBitmap::LoadImage      (additional overloads)
-Added CFrameT::OnKeyboardHook
-Added CMenuBar::IsAltMode
+Added CPrintDialogEx            class
+Added CBitmap::CopyImage        member function
+Added CBitmap::GetSize          member function
+Added CBitmap::LoadImage        (additional overloads)
+Added CFrameT::OnKeyboardHook   member function
+Added CMenuBar::IsAltMode       member function
+Added CString::operator <<      global function
+Added CStringT::operator <<     global function
 
 
 Version 8.9

@@ -250,6 +250,7 @@ namespace Win32xx
 
         // Attributes
         BITMAP GetBitmapData() const;
+        CSize  GetSize() const;
     };
 
 
@@ -1655,6 +1656,15 @@ namespace Win32xx
         Attach(bitmap);
         SetManaged(true);
         return bitmap;
+    }
+
+    inline CSize CBitmap::GetSize() const
+    {
+        assert(GetHandle() != 0);
+        BITMAP bitmap = GetBitmapData();
+        CSize size(bitmap.bmWidth, bitmap.bmHeight);
+
+        return size;
     }
 
     // Convert a bitmap image to gray scale.
@@ -4062,7 +4072,8 @@ namespace Win32xx
     inline CPoint CDC::MoveTo(int x, int y) const
     {
         assert(m_pData->dc != 0);
-        return ::MoveToEx(m_pData->dc, x, y, NULL);
+        ::MoveToEx(m_pData->dc, x, y, NULL);
+        return CPoint(x, y);
     }
 
     // Updates the current position to the specified point
@@ -4070,7 +4081,8 @@ namespace Win32xx
     inline CPoint CDC::MoveTo(POINT pt) const
     {
         assert(m_pData->dc != 0);
-        return ::MoveToEx(m_pData->dc, pt.x, pt.y, NULL);
+        ::MoveToEx(m_pData->dc, pt.x, pt.y, NULL);
+        return pt;
     }
 
     // Draws a line from the current position up to, but not including, the specified point.

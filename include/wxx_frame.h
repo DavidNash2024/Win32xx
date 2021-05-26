@@ -974,9 +974,6 @@ namespace Win32xx
 
         m_statusText = LoadString(IDW_READY);
 
-        // Load the common controls. Uses InitCommonControlsEx.
-        LoadCommonControls();
-
         // By default, we use the rebar if we can.
         m_useReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
 

@@ -203,10 +203,10 @@ void CView::PrintPage(CDC& dc, UINT)
     BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
 
     // Extract the device independent image data.
-    VERIFY(memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS));
+    memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS);
     std::vector<byte> byteArray(pBIH->biSizeImage, 0);
     byte* pByteArray = &byteArray.front();
-    VERIFY(memDC.GetDIBits(bmView, 0, height, pByteArray, pbmi, DIB_RGB_COLORS));
+    memDC.GetDIBits(bmView, 0, height, pByteArray, pbmi, DIB_RGB_COLORS);
 
     // Get the device context of the default or currently chosen printer
     CPrintDialog printDlg;
@@ -226,8 +226,8 @@ void CView::PrintPage(CDC& dc, UINT)
 
     // Copy and stretch the DIB to the specified dc, maintaining its
     //  original aspect ratio.
-    VERIFY(dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
-           width, height, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY));
+    dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
+           width, height, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
 
     // The specified dc now holds the Device Independent Bitmap printout.
 }

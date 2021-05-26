@@ -24,9 +24,7 @@ CViewText::~CViewText()
 // Called when a window handle (HWND) is attached to CViewText.
 void CViewText::OnAttach()
 {
-    m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-        CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-
+    m_font.CreatePointFont(96, _T("Courier New"));
     SetFont(m_font, FALSE);
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }

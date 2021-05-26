@@ -51,8 +51,20 @@ void CMyThread::CloseThread()
 // Called when the thread starts.
 BOOL CMyThread::InitInstance()
 {
-    // Create a test window for this thread.
-    m_testWnd.Create();
+    try
+    {
+        // Create a test window for this thread.
+        m_testWnd.Create();
+    }
+
+    // Catch all unhandled CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and quit.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return FALSE;
+    }
 
     return TRUE;    // return TRUE to run the message loop.
 }

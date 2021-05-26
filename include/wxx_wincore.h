@@ -887,9 +887,7 @@ namespace Win32xx
             wc.lpfnWndProc  = CWnd::StaticWindowProc;
 
             // Register the WNDCLASS structure
-            VERIFY ( ::RegisterClass(&wc));
-
-            done = TRUE;
+            done = ::RegisterClass(&wc);
         }
 
         return done;

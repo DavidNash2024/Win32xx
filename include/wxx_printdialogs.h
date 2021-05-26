@@ -402,19 +402,8 @@ namespace Win32xx
         ZeroMemory(&m_pd, sizeof(m_pd));
 
         m_pd.Flags = flags;
-
-        // Support the PD_PRINTSETUP flag which displays the obsolete PrintSetup dialog.
-        // Note: CPageSetupDialog should be used instead of the PrintSetup dialog.
-        if (flags & PD_PRINTSETUP)
-        {
-            m_pd.Flags &= ~PD_RETURNDC;
-        }
-        else
-        {
-            m_pd.Flags |= PD_RETURNDC;
-        }
-
         m_pd.Flags &= ~PD_RETURNIC;
+        m_pd.Flags &= ~PD_RETURNDC;   // use GetPrinterDC to retrieve the dc.
 
         // Enable the hook proc for the help button
         if (m_pd.Flags & PD_SHOWHELP)
@@ -425,8 +414,6 @@ namespace Win32xx
 
     inline CPrintDialog::~CPrintDialog()
     {
-        if (m_pd.hDC)
-            ::DeleteDC(m_pd.hDC);
     }
 
     // Returns the device context of the default or currently chosen printer.
@@ -513,12 +500,6 @@ namespace Win32xx
         m_pd.hDevMode = GetApp()->m_devMode;
         m_pd.hDevNames = GetApp()->m_devNames;
         m_pd.hwndOwner = owner;
-
-        if (m_pd.hDC != 0)
-        {
-            ::DeleteDC(m_pd.hDC);
-            m_pd.hDC = 0;
-        }
 
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp()->SetTlsData();
@@ -618,10 +599,10 @@ namespace Win32xx
     {
         CThreadLock lock(GetApp()->m_printLock);
 
-        if (GetApp()->m_devNames.Get() == 0)
+        if (GetApp()->m_devMode.Get() == 0)
             GetApp()->UpdateDefaultPrinter();
 
-        if (GetApp()->m_devNames.Get() == 0)
+        if (GetApp()->m_devMode.Get() == 0)
             throw CResourceException(GetApp()->MsgPrintFound());
 
         return CDevMode(GetApp()->m_devMode);
@@ -639,6 +620,9 @@ namespace Win32xx
 
         if (GetApp()->m_devNames.Get() == 0)
             GetApp()->UpdateDefaultPrinter();
+
+        if (GetApp()->m_devNames.Get() == 0)
+            throw CResourceException(GetApp()->MsgPrintFound());
 
         return CDevNames(GetApp()->m_devNames);
     }
@@ -756,6 +740,8 @@ namespace Win32xx
         m_pd.hSetupTemplate = pd.hSetupTemplate;
         m_pd.lpPrintTemplateName = pd.lpPrintTemplateName;
         m_pd.lpSetupTemplateName = pd.lpSetupTemplateName;
+        m_pd.Flags &= ~PD_RETURNIC;
+        m_pd.Flags &= ~PD_RETURNDC;   // use GetPrinterDC to retrieve the dc.
     }
 
 

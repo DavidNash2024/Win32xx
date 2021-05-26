@@ -131,8 +131,9 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-g3" />
-					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
 					<Add directory="../../../include" />
 				</Compiler>
 				<ResourceCompiler>
@@ -157,6 +158,8 @@
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-DNDEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
 					<Add directory="../../../include" />
 				</Compiler>
 				<ResourceCompiler>

@@ -10,12 +10,6 @@
 #include "resource.h"
 
 
-// Start Win32++ for the DLL
-CWinApp App;
-
-// MyDialog is global for the DLL
-CMyDialog MyDialog(IDD_DIALOG1);
-
 // The entry point for the dll.
 BOOL APIENTRY DllMain( HANDLE, DWORD  ul_reason_for_call, LPVOID )
 {
@@ -44,7 +38,11 @@ void __declspec(dllexport) ShowDialog()
     //      CThread can be used to put the dialog creation and message loop in
     //      a separate thread if you wish the function to return immediately.
 
+    // Start Win32++ for the DLL
+    CWinApp App;
+
     // Create the dialog
+    CMyDialog MyDialog(IDD_DIALOG1);
     TRACE(_T("Creating a dialog inside the DLL:\n"));
     MyDialog.Create();
     TRACE(_T("Dialog inside DLL created\n"));

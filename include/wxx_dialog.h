@@ -1,4 +1,4 @@
-// Win32++   Version 8.9
+// Win32++   Version 8.9.1
 // Release Date: 29th April 2021
 //
 //      David Nash
@@ -232,23 +232,17 @@ namespace Win32xx
     inline CDialog::CDialog(LPCTSTR pResName) : m_isModal(FALSE),
                         m_pResName(pResName), m_pDlgTemplate(NULL)
     {
-        // Initialize the common controls.
-        LoadCommonControls();
     }
 
     inline CDialog::CDialog(UINT resID) : m_isModal(FALSE),
                         m_pResName(MAKEINTRESOURCE (resID)), m_pDlgTemplate(NULL)
     {
-        // Initialize the common controls.
-        LoadCommonControls();
     }
 
     // Constructor for indirect dialogs, created from a dialog box template in memory.
     inline CDialog::CDialog(LPCDLGTEMPLATE pDlgTemplate) : m_isModal(FALSE),
                         m_pResName(NULL), m_pDlgTemplate(pDlgTemplate)
     {
-        // Initialize the common controls.
-        LoadCommonControls();
     }
 
     inline CDialog::~CDialog()

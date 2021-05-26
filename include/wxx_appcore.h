@@ -449,6 +449,7 @@ namespace Win32xx
 
                 m_resource = m_instance;
                 SetCallback();
+                LoadCommonControls();
             }
             else
             {

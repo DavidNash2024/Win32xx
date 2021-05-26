@@ -1321,10 +1321,7 @@ LRESULT CMainFrame::OnSelectListItem(const MovieInfo* pmi)
     // Set the fonts.
     NONCLIENTMETRICS info = GetNonClientMetrics();
     LOGFONT lf = info.lfMenuFont;
-    int arraySize = sizeof(lf.lfFaceName) / sizeof(TCHAR);
-    StrCopy(lf.lfFaceName, L"Consolas", arraySize);    // A good font for text
-    CFont textFont;
-    textFont.CreateFontIndirect(lf);
+    CFont textFont(lf);
     dialog.GetActors().SetFont(textFont, FALSE);
     dialog.GetInfo().SetFont(textFont, FALSE);
 
