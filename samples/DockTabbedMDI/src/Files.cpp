@@ -43,10 +43,10 @@ void CViewFiles::OnAttach()
 // Configures the columns (header control) of the list view.
 void CViewFiles::SetColumns()
 {
-    //empty the list
+    // empty the list
     DeleteAllItems();
 
-    //initialise the columns
+    // initialize the columns
     LV_COLUMN lvColumn;
     ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
     lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;

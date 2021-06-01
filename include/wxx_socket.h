@@ -227,7 +227,7 @@ namespace Win32xx
 
     inline CSocket::CSocket() : m_socket(INVALID_SOCKET), m_stopRequest(FALSE, TRUE)
     {
-        // Initialise the Windows Socket services
+        // Initialize the Windows Socket services
         WSADATA wsaData;
 
         if (::WSAStartup(MAKEWORD(2,2), &wsaData) != 0)

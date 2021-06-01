@@ -1683,7 +1683,7 @@ namespace Win32xx
         // Create the reference DC for GetDIBits to use
         CMemDC memDC(0);
 
-        // Use GetDIBits to create a DIB from our DDB, and extract the colour data
+        // Use GetDIBits to create a DIB from our DDB, and extract the color data
         VERIFY(GetDIBits(memDC, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS));
         std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
         byte* pByteArray = &vBits[0];
@@ -1717,13 +1717,13 @@ namespace Win32xx
             yOffset += widthBytes;
         }
 
-        // Save the modified colour back into our source DDB
+        // Save the modified color back into our source DDB
         VERIFY(SetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
     }
 
-    // Modifies the colour of the Device Dependant Bitmap, by the colour.
+    // Modifies the color of the Device Dependant Bitmap, by the color.
     // correction values specified. The correction values can range from -255 to +255.
-    // This function gains its speed by accessing the bitmap colour information
+    // This function gains its speed by accessing the bitmap color information
     // directly, rather than using GetPixel/SetPixel.
     inline void CBitmap::TintBitmap (int cRed, int cGreen, int cBlue)
     {
@@ -1735,7 +1735,7 @@ namespace Win32xx
         // Create the reference DC for GetDIBits to use
         CMemDC memDC(0);
 
-        // Use GetDIBits to create a DIB from our DDB, and extract the colour data
+        // Use GetDIBits to create a DIB from our DDB, and extract the color data
         VERIFY(GetDIBits(memDC, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS));
         std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
         byte* pByteArray = &vBits[0];
@@ -1743,7 +1743,7 @@ namespace Win32xx
         VERIFY(GetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
         UINT widthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
-        // Ensure sane colour correction values
+        // Ensure sane color correction values
         cBlue  = MIN(cBlue, 255);
         cBlue  = MAX(cBlue, -255);
         cRed   = MIN(cRed, 255);
@@ -1760,7 +1760,7 @@ namespace Win32xx
         int g2 = 256 + cGreen;
         int r2 = 256 + cRed;
 
-        // Modify the colour
+        // Modify the color
         int yOffset = 0;
         int xOffset;
         size_t index;
@@ -1773,7 +1773,7 @@ namespace Win32xx
                 // Calculate index
                 index = size_t(yOffset) + size_t(xOffset);
 
-                // Adjust the colour values
+                // Adjust the color values
                 if (cBlue > 0)
                     pByteArray[index]   = (BYTE)(cBlue + (((pByteArray[index] *b1)) >>8));
                 else if (cBlue < 0)
@@ -1797,7 +1797,7 @@ namespace Win32xx
             yOffset += widthBytes;
         }
 
-        // Save the modified colour back into our source DDB
+        // Save the modified color back into our source DDB
         VERIFY(SetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
     }
 

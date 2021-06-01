@@ -49,7 +49,7 @@ INT_PTR CButtonPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to the apply button.
 BOOL CButtonPage::OnApply()
 {
-    TRACE ("Appy button pressed\n");
+    TRACE ("CButton Appy button pressed\n");
 
     SetModified(FALSE);
     return Validate();
@@ -159,6 +159,13 @@ INT_PTR CComboPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     }
 }
 
+BOOL CComboPage::OnApply()
+{
+    TRACE("CComboPage Apply button pressed\n");
+    SetModified(TRUE);
+    return TRUE;
+}
+
 // Called before the property sheet is displayed.
 BOOL CComboPage::OnInitDialog()
 {
@@ -196,8 +203,8 @@ CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hParent /*
     SetIcon(IDI_DIALOG);
 }
 
-// Called before the property sheet is displayed.
-void CMyPropertySheet::OnInitialUpdate()
+// Called when the property sheet is created.
+void CMyPropertySheet::OnAttach()
 {
     // Remove system menu for wizards
     if (IsWizard())
@@ -206,6 +213,29 @@ void CMyPropertySheet::OnInitialUpdate()
         style &= ~WS_SYSMENU;
         SetStyle(style);
     }
+
+    TRACE("CMyPropertySheet::OnAttach\n");
+}
+
+// Called after the property sheet is displayed.
+void CMyPropertySheet::OnInitialUpdate()
+{
+    TRACE("CMyPropertySheet::OnInitialUpdate\n");
+}
+
+// Manage the default button.
+LRESULT CMyPropertySheet::OnSetDefID(WPARAM wparam)
+{
+    // Ensure the button is not default.
+    CPropertyPage* pPage = GetActivePage();
+    if (pPage != NULL)
+    {
+        HWND button = pPage->GetDlgItem(IDC_BUTTON2);
+        if (::IsWindow(button))
+            ::SendMessage(button, BM_SETSTYLE, BS_PUSHBUTTON, TRUE);
+    }
+
+    return CPropertySheet::OnSetDefID(wparam);
 }
 
 // Process the property sheet's window messages.

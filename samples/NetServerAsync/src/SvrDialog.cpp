@@ -130,7 +130,7 @@ BOOL CTCPClientDlg::OnSocketDisconnect()
 BOOL CTCPClientDlg::OnSocketReceive()
 {
     std::vector<char> bufVector(1025, '\0');
-    char* bufArray = &bufVector.front(); // char array with 1025 elements initialised to '\0'
+    char* bufArray = &bufVector.front(); // char array with 1025 elements initialized to '\0'
     if (m_pSocket->Receive(bufArray, 1024, 0) != SOCKET_ERROR)
     {
         AppendText(IDC_EDIT_RECEIVE2, AtoT(bufArray));

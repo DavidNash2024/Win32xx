@@ -27,6 +27,7 @@ CViewOutput::~CViewOutput()
 void CViewOutput::OnAttach()
 {
     SetWindowText(_T("Output Window"));
+    SetReadOnly();
 }
 
 // Sets the CREATESTRUCT parameters before the window is created.

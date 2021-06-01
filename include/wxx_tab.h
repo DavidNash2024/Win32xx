@@ -1106,7 +1106,7 @@ namespace Win32xx
 
         if (GetItemCount() == 0)
         {
-            // No tabs, so simply display a grey background and exit
+            // No tabs, so simply display a gray background and exit
             dcView.SolidFill(m_blankPageColor, rcClient);
             return;
         }
@@ -1129,7 +1129,7 @@ namespace Win32xx
         rgnClip.CreateRectRgn(0, 0, 0, 0);
         rgnClip.CombineRgn(rgnSrc1, rgnSrc2, RGN_DIFF);
 
-        // Use the region in the memory DC to paint the grey background
+        // Use the region in the memory DC to paint the gray background
         memDC.SelectClipRgn(rgnClip);
         memDC.CreateSolidBrush( GetSysColor(COLOR_BTNFACE) );
         memDC.PaintRgn(rgnClip);

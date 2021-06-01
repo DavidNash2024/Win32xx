@@ -317,7 +317,7 @@ void CViewList::PreCreate(CREATESTRUCT& cs)
 // Configures the columns in the list view's header.
 void CViewList::SetColumn()
 {
-    // Initialise the columns
+    // Initialize the columns
     LV_COLUMN lvColumn;
     ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
     lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;

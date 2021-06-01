@@ -96,7 +96,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             SetMenuTheme(mt);
         }
         break;
-    case IDM_GREY:  // Grey Theme
+    case IDM_GRAY:  // Gray Theme
         {
             SetReBarColors( RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172) );
 
@@ -337,7 +337,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_EXIT:      return OnFileExit();
     case IDM_WIN7:           return ChooseColor(IDM_WIN7);
     case IDM_BLUE:           return ChooseColor(IDM_BLUE);
-    case IDM_GREY:           return ChooseColor(IDM_GREY);
+    case IDM_GRAY:           return ChooseColor(IDM_GRAY);
     case IDM_OLIVE:          return ChooseColor(IDM_OLIVE);
     case IDM_OCHRE:          return ChooseColor(IDM_OCHRE);
     case IDM_MAUVE:          return ChooseColor(IDM_MAUVE);

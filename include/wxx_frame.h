@@ -1003,7 +1003,7 @@ namespace Win32xx
         CRect rc;
         rc.SetRect(0, 0, cx, cy);
 
-        // Set the mask color to grey for the new ImageList
+        // Set the mask color to gray for the new ImageList
         if (GetDeviceCaps(desktopDC, BITSPIXEL) < 24)
         {
             HPALETTE hPal = desktopDC.GetCurrentPalette();
@@ -1054,7 +1054,7 @@ namespace Win32xx
         {
             m_menuIcons.push_back(menuItemID);
 
-            // Set the mask color to grey for the new ImageList
+            // Set the mask color to gray for the new ImageList
             COLORREF mask = RGB(192, 192, 192);
             CClientDC desktopDC(HWND_DESKTOP);
             if (GetDeviceCaps(desktopDC, BITSPIXEL) < 24)
@@ -3373,10 +3373,10 @@ namespace Win32xx
             // Retrieve the XP theme name
             m_xpThemeName = GetThemeName();
 
-            enum Themetype{ Win8, Win7, XP_Blue, XP_Silver, XP_Olive, Grey };
+            enum Themetype{ Win8, Win7, XP_Blue, XP_Silver, XP_Olive, gray };
 
             // For Win2000 and below
-            int theme = Grey;
+            int theme = gray;
 
             if (GetWinVersion() < 2600) // For Windows XP
             {
@@ -3474,7 +3474,7 @@ namespace Win32xx
                 }
                 break;
 
-            case Grey:  // A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
+            case gray:  // A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
                 {
                     MenuTheme mt = {t, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
                     ReBarTheme rbt = {t, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), f, t, t, t, t, f};
@@ -3492,7 +3492,7 @@ namespace Win32xx
         else
         {
             // Set a default menu theme. This allows the menu to display icons.
-            // The colours specified here are used for Windows 2000 and below.
+            // The colors specified here are used for Windows 2000 and below.
             MenuTheme mt = {FALSE, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
             SetMenuTheme(mt);  // Sets the theme for popup menus and MenuBar
         }
@@ -3596,8 +3596,8 @@ namespace Win32xx
     // Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
     // The ToolBarIDs are bitmap resources containing a set of toolbar button images.
     // Each toolbar button image must have a minimum height of 16. Its height must equal its width.
-    // The colour mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
-    // The colour mask is often grey RGB(192,192,192) or magenta (255,0,255)
+    // The color mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
+    // The color mask is often gray RGB(192,192,192) or magenta (255,0,255)
     // The Hot and disabled bitmap resources can be 0.
     // A Disabled image list is created from ToolBarID if one isn't provided.
     template <class T>

@@ -234,7 +234,7 @@ namespace Win32xx
             switch (state)
             {
             case 0:
-                // Draw a grey outline
+                // Draw a gray outline
                 drawDC.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
                 drawDC.MoveTo(m_mdiRect[button].left, m_mdiRect[button].bottom);
                 drawDC.LineTo(m_mdiRect[button].right, m_mdiRect[button].bottom);

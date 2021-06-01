@@ -95,7 +95,7 @@ INT_PTR CColourDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Process the command messages (WM_COMMAND) from the dialog's controls.
 BOOL CColourDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    // Notification from the GreyScale check box.
+    // Notification from the GrayScale check box.
     switch (LOWORD(wparam))
     {
     case IDC_CHECK1:   return OnGrayScale();
@@ -111,7 +111,7 @@ BOOL CColourDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     return FALSE;
 }
 
-// Called when the GreyScale check button is clicked
+// Called when the GrayScale check button is clicked
 BOOL CColourDialog::OnGrayScale()
 {
     // Update the colour of the preview image

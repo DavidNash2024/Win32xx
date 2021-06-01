@@ -24,7 +24,7 @@ CExplorerApp::~CExplorerApp()
 // Called when the application starts.
 BOOL CExplorerApp::InitInstance()
 {
-    // Initialise COM
+    // Initialize COM
     if (SUCCEEDED(CoInitialize(NULL)))
     {
         //Create the Frame Window

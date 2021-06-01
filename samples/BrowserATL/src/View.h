@@ -20,7 +20,7 @@
 //
 class CView : public CWnd
 {
-    // A private class which uses CAtlExeModuleT to initialise ATL.
+    // A private class which uses CAtlExeModuleT to initialize ATL.
     // This implementation requires ATL version 10.0 (VS2010) or later.
     // It eliminates the need for a global CComModule _Module variable.
     // CAtlExeModuleT replaces CComModule which is depreciated.
@@ -39,7 +39,7 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-    MyModule m_module;                  // Instanciates (initialises) ATL
+    MyModule m_module;                  // Instanciates (initializes) ATL
     IWebBrowser2* m_pInetExplorer;      // pointer to IWebBrowser2
     LPUNKNOWN m_pSourceUnk;             // pointer to IUnknown for the ActiveX control
     LPUNKNOWN m_pSinkUnk;               // pointer to IUnknown for CDispatchSink
