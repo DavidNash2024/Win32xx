@@ -825,7 +825,7 @@ OnDraw(CDC& dc)                                                             /*
         dc.StretchDIBits(Border.cx, Border.cy, preview.cx, preview.cy,
             p.x, p.y,  int(preview.cx / zoom.cx), int(preview.cy / zoom.cy),
             pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
-          // draw a grey border around the preview:
+          // draw a gray border around the preview:
         // 1. left stripe down
         CRect rcFill(0, 0, Border.cx, preview.cy + Border.cy);
         dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));

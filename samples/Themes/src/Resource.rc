@@ -60,7 +60,7 @@ BEGIN
         MENUITEM "Windows 10",                  IDM_WIN10
         MENUITEM "Windows 7",                   IDM_WIN7
         MENUITEM "Blue",                        IDM_BLUE
-        MENUITEM "Grey",                        IDM_GREY
+        MENUITEM "Gray",                        IDM_GRAY
         MENUITEM "Olive",                       IDM_OLIVE
         MENUITEM "Ochre",                       IDM_OCHRE
         MENUITEM "Mauve",                       IDM_MAUVE
@@ -249,7 +249,7 @@ BEGIN
     IDM_WIN10                "Windows 8 and Windows 10 theme"
     IDM_WIN7                "Vista & Windows 7 theme"
     IDM_BLUE                "Blue theme"
-    IDM_GREY                "Grey theme"
+    IDM_GRAY                "Gray theme"
     IDM_OLIVE               "Olive theme"
     IDM_OCHRE               "Ochre theme"
     IDM_MAUVE               "Mauve theme"

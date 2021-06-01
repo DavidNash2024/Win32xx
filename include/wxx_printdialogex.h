@@ -71,7 +71,6 @@
 //     CDC printerDC = printDialog.GetPrinterDC();
 //
 // NOTE: CPrintDialogEx requires Win2000 or greater (WINVER >= 0x0500).
-// NOTE: Not supported on VS6.
 
 #ifndef _WIN32XX_PRINTDIALOGEX_H_
 #define _WIN32XX_PRINTDIALOGEX_H_
@@ -89,9 +88,9 @@ namespace Win32xx
     // sheet allows the user to specify the printer, and the properties
     // of the print job.
     // NOTE: DoModal throws an exception if there is no default printer
-    class CPrintDialogEx : public CCommonDialog,
-                           private IPrintDialogCallback,
-                           private IObjectWithSite
+    class CPrintDialogEx : public CDialog,
+                           public IPrintDialogCallback,
+                           public IObjectWithSite
     {
     public:
         // Constructor
@@ -116,7 +115,7 @@ namespace Win32xx
         CDevMode GetDevMode() const;
         CDevNames GetDevNames() const;
         CString GetDriverName() const;
-        PRINTDLGEX GetParameters()  const { return m_pdex; }
+        const PRINTDLGEX& GetParameters()  const { return m_pdex; }
         CString GetPortName() const;
         CDC GetPrinterDC() const;
         BOOL PrintCollate() const;
@@ -130,21 +129,20 @@ namespace Win32xx
     protected:
         virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
-    private:
         // IUnknown
-        STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
+        virtual STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
         virtual STDMETHODIMP_(ULONG) AddRef()   { return 1; }
         virtual STDMETHODIMP_(ULONG) Release()  { return 1; }
 
         // IPrintDialogCallback
-        STDMETHODIMP InitDone()                 { return S_FALSE; }
-        STDMETHODIMP SelectionChange()          { return S_FALSE; }
-        STDMETHODIMP HandleMessage(HWND wnd, UINT msg, WPARAM wparam,
+        virtual STDMETHODIMP InitDone()                 { return S_FALSE; }
+        virtual STDMETHODIMP SelectionChange()          { return S_FALSE; }
+        virtual STDMETHODIMP HandleMessage(HWND wnd, UINT msg, WPARAM wparam,
                                    LPARAM lparam, LRESULT* pResult);
 
         // IObjectWithSite
-        STDMETHODIMP GetSite(REFIID riid, void** ppvSite);
-        STDMETHODIMP SetSite(IUnknown* pUnknown);
+        virtual STDMETHODIMP GetSite(REFIID riid, void** ppvSite);
+        virtual STDMETHODIMP SetSite(IUnknown* pUnknown);
 
     private:
         CPrintDialogEx(const CPrintDialogEx&);              // Disable copy construction
@@ -156,7 +154,7 @@ namespace Win32xx
     // Constructor for CPrintDialogEx class. The flags parameter specifies the
     // flags for the PRINTDLGEX structure. Refer to the description of the
     // PRINTDLGEX struct in the Windows API documentation.
-    inline CPrintDialogEx::CPrintDialogEx(DWORD flags) : m_pServices(NULL)
+    inline CPrintDialogEx::CPrintDialogEx(DWORD flags) : CDialog(UINT(0)), m_pServices(NULL)
     {
         ZeroMemory(&m_pdex, sizeof(m_pdex));
         m_pdex.lStructSize = sizeof(m_pdex);
@@ -202,7 +200,7 @@ namespace Win32xx
         // Update the default printer
         GetApp()->UpdateDefaultPrinter();
 
-        // Assign values to the PRINTDLG structure
+        // Assign values to the PRINTDLGEX structure
         m_pdex.hDevMode = GetApp()->m_devMode;
         m_pdex.hDevNames = GetApp()->m_devNames;
         if (::IsWindow(owner))
@@ -212,9 +210,9 @@ namespace Win32xx
 
         m_pdex.lpCallback = (IPrintDialogCallback*)this;
 
-        // Create the modal dialog
-        if (S_OK != ::PrintDlgEx(&m_pdex))
-            throw CResourceException(GetApp()->MsgWndDialog());
+        // Create the dialog
+        if (S_OK != PrintDlgEx(&m_pdex))
+            throw CResourceException(GetApp()->MsgWndDialog());    
 
         switch (m_pdex.dwResultAction)
         {

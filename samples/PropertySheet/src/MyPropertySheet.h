@@ -14,7 +14,9 @@ class CMyPropertySheet : public CPropertySheet
 public:
     CMyPropertySheet(LPCTSTR caption = NULL, HWND hParent = 0);
     virtual ~CMyPropertySheet() {}
+    virtual void OnAttach();
     virtual void OnInitialUpdate();
+    virtual LRESULT OnSetDefID(WPARAM wparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
@@ -49,13 +51,9 @@ public:
     CComboPage(UINT templateID, LPCTSTR title  = NULL);
     virtual ~CComboPage() {}
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnApply();
     virtual BOOL OnInitDialog();
     virtual BOOL OnSetActive();
-    virtual BOOL OnApply()
-    {
-        SetModified(TRUE);
-        return TRUE;
-    }
 };
 
 

@@ -914,7 +914,7 @@ namespace Win32xx
         GetParent().SendMessage(WM_MDIRESTORE, (WPARAM)GetHwnd(), 0);
     }
 
-    // Override this to customise what happens when the window asks to be closed.
+    // Override this to customize what happens when the window asks to be closed.
     inline void CMDIChild::OnClose()
     {
         MDIDestroy();

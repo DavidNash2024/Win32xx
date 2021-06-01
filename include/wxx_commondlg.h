@@ -86,7 +86,7 @@ namespace Win32xx
     class CCommonDialog : public CDialog
     {
     public:
-        CCommonDialog(UINT resID = 0) : CDialog(resID) {}
+        CCommonDialog() : CDialog(UINT(0)) {}
         virtual ~CCommonDialog(){}
 
     protected:
@@ -389,7 +389,7 @@ namespace Win32xx
     }
 
     // Dialog procedure for the Color dialog. Override this function to
-    // customise the message handling.
+    // customize the message handling.
     inline INT_PTR CColorDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  Message intercepted by the hook procedure are passed here.
@@ -527,7 +527,7 @@ namespace Win32xx
     }
 
     // Dialog procedure for the FileOpen and FileSave dialogs. Override
-    // this function to customise the message handling.
+    // this function to customize the message handling.
     inline INT_PTR CFileDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  Message intercepted by the hook procedure are passed here.
@@ -1118,7 +1118,7 @@ namespace Win32xx
     }
 
     // Dialog procedure for the Find and Replace dialogs. Override this function
-    // to customise the message handling.
+    // to customize the message handling.
     inline INT_PTR CFindReplaceDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  Message intercepted by the hook procedure are passed here.
@@ -1373,7 +1373,7 @@ namespace Win32xx
     }
 
     // Dialog procedure for the Font dialog. Override this function
-    // to customise the message handling.
+    // to customize the message handling.
     inline INT_PTR CFontDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  Message intercepted by the hook procedure are passed here.

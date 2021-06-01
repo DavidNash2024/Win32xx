@@ -296,7 +296,7 @@ namespace Win32xx
             VERIFY(dc.StretchDIBits(xBorder, yBorder, previewWidth, previewHeight, 0, 0,
                    bm.bmWidth, bm.bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY));
 
-            // Draw a grey border around the preview.
+            // Draw a gray border around the preview.
             CRect rcFill(0, 0, xBorder, previewHeight + yBorder);
             dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));
 

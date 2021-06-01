@@ -57,7 +57,7 @@
 
 // Use the Dialog generic program as the starting point for your own dialog
 // applications.
-// The DialogDemo sample demonstrates how to use subclassing to customise
+// The DialogDemo sample demonstrates how to use subclassing to customize
 // the behaviour of common controls in a dialog.
 
 // Note: The following functions often used with dialogs are provided by CWnd:

@@ -71,7 +71,7 @@ void CViewTree::OnDestroy()
     SetImageList(0, LVSIL_SMALL);
 }
 
-// Finalises the editing of a Box Set child's label.
+// Finalizes the editing of a Box Set child's label.
 BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
 {
     LPNMTVDISPINFO pTVDispInfo = (LPNMTVDISPINFO)lparam;

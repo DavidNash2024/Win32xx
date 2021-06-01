@@ -690,7 +690,7 @@ namespace Win32xx
                 CRect rc;
                 rc.SetRect(0, 0, cx, cx);
 
-                // Set the mask color to grey for the new ImageList
+                // Set the mask color to gray for the new ImageList
                 COLORREF mask = RGB(200, 200, 200);
                 if (GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
                 {

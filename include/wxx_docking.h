@@ -758,7 +758,7 @@ namespace Win32xx
     inline void CDocker::CDockBar::SetColor(COLORREF color)
     {
         // Useful colors:
-        // GetSysColor(COLOR_BTNFACE)   // Default Grey
+        // GetSysColor(COLOR_BTNFACE)   // Default Gray
         // RGB(196, 215, 250)           // Default Blue
 
         m_brBackground.CreateSolidBrush(color);
@@ -871,7 +871,7 @@ namespace Win32xx
                 NONCLIENTMETRICS info = GetNonClientMetrics();
                 memDC.CreateFontIndirect(info.lfStatusFont);
 
-                // Set the Colours
+                // Set the Colors
                 if (m_pDocker->GetActiveDocker() == m_pDocker)
                 {
                     memDC.SetTextColor(m_foregnd1);
@@ -1342,11 +1342,11 @@ namespace Win32xx
         GetParent().SendMessage(WM_NOTIFY, 0, (LPARAM)&DragPos);
     }
 
-    // Sets the caption's foreground and background colours.
-    // foregnd1 specifies the foreground colour(focused).
-    // backgnd1 specifies the background colour(focused).
-    // foregnd2 specifies the foreground colour(not focused).
-    // backgnd2 specifies the background colour(not focused).
+    // Sets the caption's foreground and background colors.
+    // foregnd1 specifies the foreground color(focused).
+    // backgnd1 specifies the background color(focused).
+    // foregnd2 specifies the foreground color(not focused).
+    // backgnd2 specifies the background color(not focused).
     // penColor specifies the pen color used for drawing the outline.
     inline void CDocker::CDockClient::SetCaptionColors(COLORREF foregnd1, COLORREF backgnd1, COLORREF foregnd2, COLORREF backgnd2, COLORREF penColor)
     {
@@ -1660,7 +1660,7 @@ namespace Win32xx
         CBitmap bmTop(IDW_SDTOP);
         CBitmap bmBottom(IDW_SDBOTTOM);
 
-        // Grey out invalid dock targets
+        // Gray out invalid dock targets
         DWORD style = m_pOldDockTarget->GetDockStyle();
         if (style & DS_NO_DOCKCHILD_LEFT)  bmLeft.TintBitmap(150, 150, 150);
         if (style & DS_NO_DOCKCHILD_TOP)   bmTop.TintBitmap(150, 150, 150);
@@ -3099,7 +3099,7 @@ namespace Win32xx
         SetStyle(WS_CHILD);
         SetParent(GetParent());     // Reinstate the window's parent
 
-        // Set the default colour for the splitter bar if it hasn't already been set
+        // Set the default color for the splitter bar if it hasn't already been set
         if (!GetDockBar().GetBrushBkgnd().GetHandle())
         {
             COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
@@ -3351,23 +3351,23 @@ namespace Win32xx
     {
         if (this == GetDockAncestor())
         {
-            COLORREF colour = GetSysColor(COLOR_BTNFACE);
+            COLORREF color = GetSysColor(COLOR_BTNFACE);
             HWND hFrame = GetDockAncestor()->GetAncestor();
 
             ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hFrame, UWM_GETRBTHEME, 0, 0));
 
             if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
-                colour = pTheme->clrBkgnd2;
+                color = pTheme->clrBkgnd2;
             else
-                colour = GetSysColor(COLOR_BTNFACE);
+                color = GetSysColor(COLOR_BTNFACE);
 
-            // Set the splitter bar colour for each docker descendant
+            // Set the splitter bar color for each docker descendant
             std::vector<DockPtr>::const_iterator iter;
             for (iter = GetAllChildren().begin(); iter != GetAllChildren().end(); ++iter)
-                (*iter)->SetBarColor(colour);
+                (*iter)->SetBarColor(color);
 
-            // Set the splitter bar colour for the docker ancestor
-            SetBarColor(colour);
+            // Set the splitter bar color for the docker ancestor
+            SetBarColor(color);
         }
 
         return FinalWindowProc(msg, wparam, lparam);
@@ -3967,10 +3967,10 @@ namespace Win32xx
     }
 
     // Sets the caption's foreground and background colours.
-    // foregnd1 specifies the foreground colour(focused).
-    // backgnd1 specifies the background colour(focused).
-    // foregnd2 specifies the foreground colour(not focused).
-    // backgnd2 specifies the background colour(not focused).
+    // foregnd1 specifies the foreground color(focused).
+    // backgnd1 specifies the background color(focused).
+    // foregnd2 specifies the foreground color(not focused).
+    // backgnd2 specifies the background color(not focused).
     // penColor specifies the pen color used for drawing the outline.
     inline void CDocker::SetCaptionColors(COLORREF foregnd1, COLORREF backgnd1, COLORREF foreGnd2, COLORREF backGnd2, COLORREF penColor /*= RGB(160, 150, 140)*/)
     {
@@ -4928,8 +4928,8 @@ namespace Win32xx
 
     // Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
     // Assumes the width of the button image = height, minimum width = 16
-    // The colour mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
-    // The colour mask is often grey RGB(192,192,192) or magenta (255,0,255)
+    // The color mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
+    // The color mask is often gray RGB(192,192,192) or magenta (255,0,255)
     // The hot and disabled bitmap resources can be 0
     // A disabled image list is created from the normal image list if one isn't provided.
     inline void CDockContainer::SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID)

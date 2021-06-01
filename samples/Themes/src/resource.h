@@ -54,7 +54,7 @@
 #define IDM_WIN10                       180
 #define IDM_WIN7                      181
 #define IDM_BLUE                        182
-#define IDM_GREY                        183
+#define IDM_GRAY                        183
 #define IDM_OLIVE                       184
 #define IDM_OCHRE                       185
 #define IDM_MAUVE                       186

@@ -258,7 +258,7 @@ LRESULT CClientDialog::OnSocketMessage(WPARAM wparam, LPARAM lparam)
 BOOL CClientDialog::OnSocketReceive()
 {
     std::vector<CHAR> bufVector( 1025, '\0' );
-    CHAR* bufArray = &bufVector.front(); // CHAR array with 1025 elements initialised to '\0'
+    CHAR* bufArray = &bufVector.front(); // CHAR array with 1025 elements initialized to '\0'
     if (m_client.Receive(bufArray, 1024, 0 ) == SOCKET_ERROR)
     {
         AppendText(m_editStatus, _T("Receive failed.") );

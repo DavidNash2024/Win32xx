@@ -151,8 +151,9 @@ namespace Win32xx
         void SetWizardMode(BOOL isWizard);
 
     protected:
+        virtual LRESULT OnSetDefID(WPARAM wparam);
         virtual BOOL PreTranslateMessage(MSG& msg);
-
+        virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CPropertySheet(const CPropertySheet&);              // Disable copy construction
@@ -254,7 +255,7 @@ namespace Win32xx
     inline void CPropertyPage::OnCancel()
     {
         // Close the propertysheet.
-        GetParent().PostMessage(WM_CLOSE);
+        GetParent().Close();
     }
 
     // This function is called in response to the PSN_HELP notification.
@@ -301,7 +302,7 @@ namespace Win32xx
     inline void CPropertyPage::OnOK()
     {
         // Close the propertysheet.
-        GetParent().PostMessage(WM_CLOSE);
+        GetParent().Close();
     }
 
     // Handles the WM_NOTIFY message and call the appropriate functions.
@@ -342,10 +343,10 @@ namespace Win32xx
             OnHelp();
             break;
         default:
-            return 0;   // notification not handled
+            return PSNRET_NOERROR;   // page is valid
         }
 
-        return 0; // PSNRET_NOERROR
+        return PSNRET_NOERROR;   // page is valid
     }
 
     // Called when a page becomes active. Override this function to perform tasks
@@ -770,6 +771,30 @@ namespace Win32xx
         return (m_psh.dwFlags & PSH_WIZARD);
     }
 
+    // Called in response to a DM_SETDEFID message.
+    // A DM_SETDEFID message is sent when a property page is selected.
+    // Override this to modify the property sheet's default ID.
+    inline LRESULT CPropertySheet::OnSetDefID(WPARAM wparam)
+    {
+        if (!IsWizard())
+        {
+            // Change the default button to IDOK.
+            HWND ok = GetDlgItem(IDOK);
+            HWND cancel = GetDlgItem(IDCANCEL);
+
+            if (::IsWindow(ok) && ::IsWindowVisible(ok) && ::IsWindowEnabled(ok))
+            {
+                ::SetFocus(ok);
+                FinalWindowProc(DM_SETDEFID, IDOK, 0);
+
+                ::SendMessage(cancel, BM_SETSTYLE, BS_PUSHBUTTON, TRUE);
+                return 0;
+            }
+        }
+
+        return FinalWindowProc(DM_SETDEFID, wparam, 0);
+    }
+
     // Removes a Property Page from the Property Sheet.
     inline void CPropertySheet::RemovePage(CPropertyPage* pPage)
     {
@@ -849,6 +874,17 @@ namespace Win32xx
             m_psh.dwFlags |= PSH_WIZARD;
         else
             m_psh.dwFlags &= ~PSH_WIZARD;
+    }
+
+    // Provides default processing of the PropertySheet's messages.
+    inline LRESULT CPropertySheet::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        switch (msg)
+        {
+        case DM_SETDEFID:  return OnSetDefID(wparam);
+        }
+        // pass unhandled messages on for default processing
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 }
 

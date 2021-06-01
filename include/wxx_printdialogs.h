@@ -434,7 +434,7 @@ namespace Win32xx
     }
 
     // Dialog procedure for the Font dialog. Override this function
-    // to customise the message handling.
+    // to customize the message handling.
     inline INT_PTR CPrintDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  A typical override might look like this:
@@ -766,7 +766,7 @@ namespace Win32xx
     }
 
     // Dialog procedure for the PageSetup dialog. Override this function
-    // to customise the message handling.
+    // to customize the message handling.
     inline INT_PTR CPageSetupDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  A typical override might look like this:

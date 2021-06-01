@@ -77,7 +77,7 @@ BOOL CTCPClientDlg::OnInitDialog()
 void CTCPClientDlg::Receive()
 {
     std::vector<char> bufVector( 1025, '\0' );
-    char* bufArray = &bufVector.front(); // char array with 1025 elements initialised to '\0'
+    char* bufArray = &bufVector.front(); // char array with 1025 elements initialized to '\0'
     if (m_pSocket->Receive(bufArray, 1024, 0) == SOCKET_ERROR)
         TRACE(_T("Network error.  Failed to receive"));
 
