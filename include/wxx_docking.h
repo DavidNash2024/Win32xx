@@ -1118,6 +1118,8 @@ namespace Win32xx
         {
             CWindowDC dc(*this);
             DrawCloseButton(dc, m_isOldFocusStored);
+            dc.Destroy();  // Destroy the dc before destroying its window.
+
             if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
             {
                 m_isCaptionPressed = FALSE;
@@ -1135,7 +1137,7 @@ namespace Win32xx
 
                             assert(pDocker);
                             if (pDocker)
-                                pDocker->Close();
+                                pDocker->SendMessage(WM_CLOSE);
 
                             if (pContainer != pParentC)
                             {
@@ -1154,7 +1156,7 @@ namespace Win32xx
                     }
                     else
                     {
-                        m_pDocker->Close();
+                        m_pDocker->SendMessage(WM_CLOSE);
                     }
                 }
             }
