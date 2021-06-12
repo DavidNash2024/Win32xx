@@ -118,10 +118,10 @@ namespace Win32xx
         const PRINTDLGEX& GetParameters()  const { return m_pdex; }
         CString GetPortName() const;
         CDC GetPrinterDC() const;
-        BOOL PrintCollate() const;
-        BOOL PrintSelection() const;
         BOOL PrintAll() const;
+        BOOL PrintCollate() const;
         BOOL PrintRange() const;
+        BOOL PrintSelection() const;
         BOOL PrintToFile() const;
         void SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames);
         void SetParameters(const PRINTDLGEX& pdx);
@@ -209,10 +209,14 @@ namespace Win32xx
             m_pdex.hwndOwner = GetActiveWindow();
 
         m_pdex.lpCallback = (IPrintDialogCallback*)this;
+        m_pdex.dwResultAction = 0;
 
         // Create the dialog
         if (S_OK != PrintDlgEx(&m_pdex))
-            throw CResourceException(GetApp()->MsgWndDialog());    
+        {
+            DWORD error = CommDlgExtendedError();
+            throw CWinException(GetApp()->MsgWndDialog(), error);
+        }
 
         switch (m_pdex.dwResultAction)
         {
@@ -244,6 +248,9 @@ namespace Win32xx
 
         m_pdex.hDevMode = 0;
         m_pdex.hDevNames = 0;
+
+        // Prepare this CWnd for reuse.
+        Destroy();
 
         return m_pdex.dwResultAction;
     }
@@ -287,7 +294,7 @@ namespace Win32xx
         if (m_pServices != 0)
         {
             UINT size = 0;
-            m_pServices->GetCurrentPortName(0, &size);;
+            m_pServices->GetCurrentPortName(0, &size);
             m_pServices->GetCurrentPortName(str.GetBuffer(size), &size);
             str.ReleaseBuffer();
         }
@@ -324,9 +331,15 @@ namespace Win32xx
             m_pdex.hDC = 0;
         }
 
+        HWND oldOwner = m_pdex.hwndOwner;
+        if (!::IsWindow(m_pdex.hwndOwner))
+            m_pdex.hwndOwner = ::GetActiveWindow();
+
         m_pdex.Flags |= PD_RETURNDEFAULT;
         ::PrintDlgEx(&m_pdex);
         m_pdex.Flags &= ~PD_RETURNDEFAULT;
+
+        m_pdex.hwndOwner = oldOwner;
 
         // Reset global memory
         SetDefaults(m_pdex.hDevMode, m_pdex.hDevNames);

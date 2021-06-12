@@ -361,7 +361,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        HIMAGELIST images = ImageList_LoadBitmap(GetApp()->GetInstanceHandle(), pResourceName, cx, grow, mask);
+        HIMAGELIST images = ImageList_LoadBitmap(GetApp()->GetResourceHandle(), pResourceName, cx, grow, mask);
         if (images == 0)
             throw CResourceException(GetApp()->MsgImageList());
 

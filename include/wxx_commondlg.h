@@ -237,6 +237,7 @@ namespace Win32xx
 
     protected:
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
+        virtual void    OnDestroy()    { Destroy(); }
 
         // Not intended to be overridden
         INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -459,6 +460,10 @@ namespace Win32xx
         }
 
         OnOK();
+
+        // Prepare the CWnd for reuse.
+        Destroy();
+
         return IDOK;
     }
 
@@ -656,6 +661,10 @@ namespace Win32xx
         }
 
         OnOK();
+
+        // Prepare the CWnd for reuse.
+        Destroy();
+
         return IDOK;
     }
 
@@ -1449,6 +1458,8 @@ namespace Win32xx
         }
 
         OnOK();
+        Destroy();
+
         return IDOK;
     }
 

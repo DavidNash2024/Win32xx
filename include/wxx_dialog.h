@@ -390,12 +390,8 @@ namespace Win32xx
         case WM_ERASEBKGND:
             {
                 CDC dc(reinterpret_cast<HDC>(wparam));
-                BOOL PreventErasure;
-
-                PreventErasure = OnEraseBkgnd(dc);
-                if (PreventErasure) return TRUE;
+                return OnEraseBkgnd(dc);
             }
-            break;
 
         // A set of messages to be reflected back to the control that generated them
         case WM_CTLCOLORBTN:

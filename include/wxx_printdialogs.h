@@ -535,6 +535,9 @@ namespace Win32xx
         m_pd.hDevMode = 0;
         m_pd.hDevNames = 0;
 
+        // Prepare the CWnd for reuse.
+        Destroy();
+
         return ok;
     }
 
@@ -866,6 +869,9 @@ namespace Win32xx
         m_psd.hDevMode = 0;
         m_psd.hDevNames = 0;
 
+        // Prepare the CWnd for reuse.
+        Destroy();
+
         return ok;
     }
 
@@ -878,8 +884,13 @@ namespace Win32xx
     inline CDevMode CPageSetupDialog::GetDevMode() const
     {
         CThreadLock lock(GetApp()->m_printLock);
-        if (GetApp()->m_devNames.Get() == 0)
+
+        if (GetApp()->m_devMode.Get() == 0)
             GetApp()->UpdateDefaultPrinter();
+
+        if (GetApp()->m_devMode.Get() == 0)
+            throw CResourceException(GetApp()->MsgPrintFound());
+
         return CDevMode(GetApp()->m_devMode);
     }
 
