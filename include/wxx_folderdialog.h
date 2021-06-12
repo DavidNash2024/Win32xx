@@ -256,8 +256,8 @@ namespace Win32xx
             OnCancel();
         }
 
-        // The dialog is closed so detach the HWND.
-        Detach();
+        // Prepare the CWnd for reuse.
+        Destroy();
 
         return result;
     }

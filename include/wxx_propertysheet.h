@@ -185,7 +185,7 @@ namespace Win32xx
 
         m_psp.dwSize        = sizeof(m_psp);
         m_psp.dwFlags       |= PSP_USECALLBACK;
-        m_psp.hInstance     = GetApp()->GetResourceHandle();
+        m_psp.hInstance     = GetApp()->GetInstanceHandle();
         m_psp.pszTemplate   = MAKEINTRESOURCE(templateID);
         m_psp.pszTitle      = m_title;
         m_psp.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
@@ -489,9 +489,12 @@ namespace Win32xx
             TLSData* pTLSData = GetApp()->GetTlsData();
             pPage = static_cast<CPropertyPage*>(pTLSData->pWnd);
 
-            // Set the wnd members and call DialogProc for this message
-            pPage->m_wnd = hDlg;
-            pPage->AddToMap();
+            if (pPage)
+            {
+                // Set the wnd members and call DialogProc for this message
+                pPage->m_wnd = hDlg;
+                pPage->AddToMap();
+            }
         }
 
         if (pPage == 0)
