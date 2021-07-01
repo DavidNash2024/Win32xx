@@ -1204,7 +1204,7 @@ ValidateMRU()                                                               /*
 *-----------------------------------------------------------------------------*/
 {
       // get a copy of the MRU list entries
-    const std::vector<CString>& MRUEntries = GetMRUEntries();
+    const std::vector<CString> MRUEntries = GetMRUEntries();
       // check them one by one as a valid file path
     std::vector<CString>::const_iterator it;
     for (it = MRUEntries.begin(); it != MRUEntries.end(); ++it)

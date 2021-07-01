@@ -124,13 +124,13 @@ namespace Win32xx
     inline void CHGlobal::Free()
     {
         if (m_global != 0)
-            ::GlobalFree(m_global);
+            VERIFY(::GlobalFree(m_global) == 0);  // Fails if the memory was already freed.
 
         m_global = 0;
     }
 
     // Reassign is used when global memory has been reassigned, as
-    // can occur after a call to ::PrintDlg or ::PageSetupDlg.
+    // can occur after a call to ::PrintDlg, ::PrintDlgEx, or ::PageSetupDlg.
     // It assigns a new memory handle to be managed by this object
     // and assumes any old memory has already been freed.
     inline void  CHGlobal::Reassign(HGLOBAL global)

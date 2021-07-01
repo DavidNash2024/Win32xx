@@ -19,6 +19,8 @@ New Features and Enhancements
     Use Detach to keep changes made to the device context, such as when
     handling WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG,
     WM_CTLCOLORLISTBOX, WM_CTLCOLORSCROLLBAR or WM_CTLCOLORSTATIC.
+    Detach is not required unless we need to keep the changes made to the
+    device context.
 
  * Updated CBitmap.
   - Added CopyImage.
