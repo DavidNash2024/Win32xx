@@ -130,19 +130,19 @@ namespace Win32xx
         virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
         // IUnknown
-        virtual STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
-        virtual STDMETHODIMP_(ULONG) AddRef()   { return 1; }
-        virtual STDMETHODIMP_(ULONG) Release()  { return 1; }
+        STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject);
+        STDMETHOD_(ULONG, AddRef)()   { return 1; }
+        STDMETHOD_(ULONG, Release)()  { return 1; }
 
         // IPrintDialogCallback
-        virtual STDMETHODIMP InitDone()                 { return S_FALSE; }
-        virtual STDMETHODIMP SelectionChange()          { return S_FALSE; }
-        virtual STDMETHODIMP HandleMessage(HWND wnd, UINT msg, WPARAM wparam,
+        STDMETHOD(InitDone)()                 { return S_FALSE; }
+        STDMETHOD(SelectionChange)()          { return S_FALSE; }
+        STDMETHOD(HandleMessage)(HWND wnd, UINT msg, WPARAM wparam,
                                    LPARAM lparam, LRESULT* pResult);
 
         // IObjectWithSite
-        virtual STDMETHODIMP GetSite(REFIID riid, void** ppvSite);
-        virtual STDMETHODIMP SetSite(IUnknown* pUnknown);
+        STDMETHOD(GetSite)(REFIID riid, void** ppvSite);
+        STDMETHOD(SetSite)(IUnknown* pUnknown);
 
     private:
         CPrintDialogEx(const CPrintDialogEx&);              // Disable copy construction
@@ -451,7 +451,7 @@ namespace Win32xx
         return dc;
     }
 
-    inline STDMETHODIMP CPrintDialogEx::GetSite(REFIID riid, void** ppvSite)
+    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::GetSite(REFIID riid, void** ppvSite)
     {
         if (riid == IID_IPrintDialogServices)
         {
@@ -463,7 +463,7 @@ namespace Win32xx
     }
 
     // Passes messages on to the DialogProc for processing.
-    inline STDMETHODIMP CPrintDialogEx::HandleMessage(HWND wnd, UINT msg, WPARAM wparam,
+    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::HandleMessage(HWND wnd, UINT msg, WPARAM wparam,
                                                       LPARAM lparam, LRESULT* pResult)
     {
         if (GetHwnd() == 0)
@@ -504,7 +504,7 @@ namespace Win32xx
     }
 
     // Returns a pointer to the requested object.
-    inline STDMETHODIMP CPrintDialogEx::QueryInterface(REFIID riid, void** ppvObject)
+    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::QueryInterface(REFIID riid, void** ppvObject)
     {
         if (ppvObject == NULL)
             return E_POINTER;
@@ -576,7 +576,7 @@ namespace Win32xx
         // m_pdex.lpCallback   - app callback interface
     }
 
-    inline STDMETHODIMP CPrintDialogEx::SetSite(IUnknown* pUnknown)
+    inline DECLSPEC_NOTHROW HRESULT CPrintDialogEx::SetSite(IUnknown* pUnknown)
     {
         m_pServices = (IPrintDialogServices*)pUnknown;
         return S_OK;
