@@ -63,6 +63,16 @@ void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray)
     m_view.RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
 
+// Called when the frame window is closed.
+void CMainFrame::OnClose()
+{
+    // Close the preview
+    if (GetView() == m_preview)
+        OnPreviewClose();
+
+    CFrame::OnClose();
+}
+
 // OnCommand responds to menu and and toolbar input
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
@@ -308,8 +318,6 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
-    // Show the toolbar
-    ShowToolBar(GetToolBar().IsWindow());
 
     TRACE("Frame created\n");
 }

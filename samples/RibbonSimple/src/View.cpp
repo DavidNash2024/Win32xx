@@ -18,7 +18,7 @@ int CView::OnCreate(CREATESTRUCT&)
     // Tasks such as setting the icon, creating child windows, or anything
     // associated with creating windows are normally performed here.
 
-    TRACE("OnCreate\n");
+    TRACE(L"OnCreate\n");
 
     // Set the window's icon
     SetIconSmall(IDI_SMALL);
@@ -30,9 +30,9 @@ int CView::OnCreate(CREATESTRUCT&)
     if (GetWinVersion() >= 2601)        // Ribbon only supported on Windows 7 and above
     {
         if (SUCCEEDED(CreateRibbon(*this)))
-            TRACE("Ribbon Created Succesfully\n");
+            TRACE(L"Ribbon Created Successfully\n");
         else
-            TRACE("Failed to create ribbon\n");
+            TRACE(L"Failed to create ribbon\n");
     }
 
     return 0;
@@ -66,7 +66,7 @@ void CView::OnInitialUpdate()
     // Tasks which are to be done after the window is created go here.
 
     RedrawWindow();
-    TRACE("OnInitialUpdate\n");
+    TRACE(L"OnInitialUpdate\n");
 }
 
 void CView::OnSize()
@@ -99,35 +99,35 @@ STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB, const PROPERTYKEY*, 
     switch(cmdID)
     {
     case cmdButton1:
-        TRACE("Button 1\n");
+        TRACE(L"Button 1\n");
         break;
     case cmdButton2:
-        TRACE("Button 2\n");
+        TRACE(L"Button 2\n");
         break;
     case cmdButton3:
-        TRACE("Button 3\n");
+        TRACE(L"Button 3\n");
         break;
     case cmdButton4:
-        TRACE("Button 4\n");
+        TRACE(L"Button 4\n");
         break;
     case cmdButton5:
-        TRACE("Button 5\n");
+        TRACE(L"Button 5\n");
         break;
     case cmdButton6:
-        TRACE("Button 6\n");
+        TRACE(L"Button 6\n");
         break;
     case cmdToggleButton1:
-        TRACE("Toggle Button 1\n");
+        TRACE(L"Toggle Button 1\n");
         break;
     case cmdToggleButton2:
-        TRACE("Toggle Button 2\n");
+        TRACE(L"Toggle Button 2\n");
         break;
     case IDC_CMD_EXIT:
-        TRACE("Exit button\n");
+        TRACE(L"Exit button\n");
         Close();
         break;
     default:
-        TRACE("Unknown button\n");
+        TRACE(L"Unknown button\n");
         break;
     }
 

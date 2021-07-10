@@ -46,6 +46,15 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
     }
 }
 
+// Called when the window is closed.
+void CMainFrame::OnClose()
+{
+    OnPreviewClose();
+
+    // Ends the application.
+    CFrame::OnClose();
+}
+
 // Process the messages from the Menu and Tool Bar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {

@@ -67,14 +67,14 @@ void CClientDialog::LoadCommonControlsEx()
 
     try
     {
-        // Load the Common Controls DLL.
+        // Load the Common Controls DLL
         module = ::LoadLibrary(_T("COMCTL32.DLL"));
-        if (!module)
+        if (module == 0)
             throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
         if (GetComCtlVersion() > 470)
         {
-            // Declare a pointer to the InItCommonControlsEx function.
+            // Declare a pointer to the InItCommonControlsEx function
             typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
             INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(module, "InitCommonControlsEx");
 
@@ -93,10 +93,10 @@ void CClientDialog::LoadCommonControlsEx()
         ::FreeLibrary(module);
     }
 
-    catch (const CWinException &e)
+    catch (const CWinException& e)
     {
         e.what();
-        if (module)
+        if (module != 0)
             ::FreeLibrary(module);
     }
 }

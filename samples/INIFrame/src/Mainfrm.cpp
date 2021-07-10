@@ -78,6 +78,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // Called when the window is closed.
 void CMainFrame::OnClose()
 {
+    OnPreviewClose();
     SerializeINI(true);
 
     // Ends the application.
@@ -196,9 +197,6 @@ BOOL CMainFrame::OnFilePrint()
 // Place any additional startup code here.
 void CMainFrame::OnInitialUpdate()
 {
-    // Show the toolbar
-    ShowToolBar(GetToolBar().IsWindow());
-
     TRACE("Frame created\n");
 }
 

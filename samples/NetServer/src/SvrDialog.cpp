@@ -160,20 +160,20 @@ INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Adds support for the IP address control in the dialog.
 void CSvrDialog::LoadCommonControlsEx()
 {
-    HMODULE hComCtl = 0;
+    HMODULE module = 0;
 
     try
     {
         // Load the Common Controls DLL
-        hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
-        if (!hComCtl)
+        module = ::LoadLibrary(_T("COMCTL32.DLL"));
+        if (module == 0)
             throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
         if (GetComCtlVersion() > 470)
         {
             // Declare a pointer to the InItCommonControlsEx function
             typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
-            INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
+            INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(module, "InitCommonControlsEx");
 
             // Call InitCommonControlsEx
             INITCOMMONCONTROLSEX initStruct;
@@ -184,17 +184,17 @@ void CSvrDialog::LoadCommonControlsEx()
         }
         else
         {
-            ::MessageBox(NULL, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
+            ::MessageBox(0, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
         }
 
-        ::FreeLibrary(hComCtl);
+        ::FreeLibrary(module);
     }
 
     catch (const CWinException &e)
     {
         e.what();
-        if (hComCtl)
-            ::FreeLibrary(hComCtl);
+        if (module != 0)
+            ::FreeLibrary(module);
     }
 }
 

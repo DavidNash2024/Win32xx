@@ -85,10 +85,10 @@
 #include <wxx_webbrowser.h>     // Add CWebBrowser, CAXHost
 #include <wxx_wincore.h>        // Add CWnd
 
-// Win2000 or higher
-#if (WINVER >= 0x0500)
-#include <wxx_printdialogex.h>  // Add CPrintDialogEx
-#endif
+// Win2000 or higher (also VS2005 or higher)
+// #if (WINVER >= 0x0500)
+// #include <wxx_printdialogex.h>  // Add CPrintDialogEx
+// #endif
 
 // Windows Vista or higher with Microsoft VS2008 or higher, or Clang compiler
 #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500) || defined(__clang_major__)))

@@ -22,23 +22,23 @@ CViewFiles::~CViewFiles()
 void CViewFiles::InsertItems()
 {
     // Add 4th item
-    int item = InsertItem(0, _T("ListViewApp.h"), 2);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemText(item, 2, _T("C Header file"));
+    int item = InsertItem(0, L"ListViewApp.h", 2);
+    SetItemText(item, 1, L"1 KB");
+    SetItemText(item, 2, L"C Header file");
 
     // add 3rd item
-    item = InsertItem(item, _T("ListViewApp.cpp"), 1);
-    SetItemText(item, 1, _T("3 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
+    item = InsertItem(item, L"ListViewApp.cpp", 1);
+    SetItemText(item, 1, L"3 KB");
+    SetItemText(item, 2, L"C++ Source file");
 
     // add 2nd item
-    item = InsertItem(item, _T("main.cpp"), 1);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
+    item = InsertItem(item, L"main.cpp", 1);
+    SetItemText(item, 1, L"1 KB");
+    SetItemText(item, 2, L"C++ Source file");
 
     // add 1st item
-    item = InsertItem(item, _T("ListView"), 0);
-    SetItemText(item, 2, _T("Folder"));
+    item = InsertItem(item, L"ListView", 0);
+    SetItemText(item, 2, L"Folder");
 }
 
 void CViewFiles::OnAttach()
@@ -81,7 +81,7 @@ void CViewFiles::SetColumns()
     column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
     column.fmt = LVCFMT_LEFT;
     column.cx = 120;
-    TCHAR string[3][20] = {L"Name", L"Size", L"Type"};
+    WCHAR string[3][20] = {L"Name", L"Size", L"Type"};
     for(int i = 0; i < 3; ++i)
     {
         column.pszText = string[i];

@@ -37,9 +37,13 @@ New Features and Enhancements
  * Updated CPropertySheet.
    OnSetDEFID can be overridden to set the default push button for the 
    property sheet.
-	
+
+ * Updated CTaskTialog
+   The declarations of several member functions have changed. Member functions
+   which previously used a LPTCSTR parameter now use use a LPWCSTR parameter.   
+
  * Added ListView sample.
-  
+
 
 
 Changes in Detail
@@ -53,6 +57,7 @@ Added CMenuBar::IsAltMode           member function
 Added CPropertySheet::OnSetDEFID    member function
 Added CString::operator <<          global function
 Added CStringT::operator <<         global function
+Modified CTaskDialog. Replaced LPCTSTR function arguments with LPCWSTR
 
 
 Version 8.9
