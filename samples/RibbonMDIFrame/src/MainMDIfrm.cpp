@@ -75,7 +75,7 @@ STDMETHODIMP CMainMDIFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const P
         // Other
         case IDC_CMD_ABOUT:         OnHelp();           break;
         case IDC_RIBBONHELP:        OnHelp();           break;
-        case IDC_CUSTOMIZE_QAT:     TRACE("Customize Quick Access ToolBar\n");  break;
+        case IDC_CUSTOMIZE_QAT:     TRACE(L"Customize Quick Access ToolBar\n");  break;
         default:
             {
                 CString str;

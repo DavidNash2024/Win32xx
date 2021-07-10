@@ -153,20 +153,20 @@ BOOL CClientDialog::OnSocketReceive()
 // This function adds support for the IP address control in the dialog.
 void CClientDialog::LoadCommonControlsEx()
 {
-    HMODULE hModule = 0;
+    HMODULE module = 0;
 
     try
     {
         // Load the Common Controls DLL
-        hModule = ::LoadLibrary(_T("COMCTL32.DLL"));
-        if (!hModule)
+        module = ::LoadLibrary(_T("COMCTL32.DLL"));
+        if (module == 0)
             throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
         if (GetComCtlVersion() > 470)
         {
             // Declare a pointer to the InItCommonControlsEx function
             typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
-            INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hModule, "InitCommonControlsEx");
+            INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(module, "InitCommonControlsEx");
 
             // Call InitCommonControlsEx
             INITCOMMONCONTROLSEX initStruct;
@@ -180,14 +180,14 @@ void CClientDialog::LoadCommonControlsEx()
             ::MessageBox(0, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
         }
 
-        ::FreeLibrary(hModule);
+        ::FreeLibrary(module);
     }
 
     catch (const CWinException &e)
     {
         e.what();
-        if (hModule)
-            ::FreeLibrary(hModule);
+        if (module != 0)
+            ::FreeLibrary(module);
     }
 }
 

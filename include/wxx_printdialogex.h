@@ -108,8 +108,8 @@ namespace Win32xx
         INT_PTR DoModal(HWND owner /* = 0 */);
         int GetCopies() const;
         CDevMode GetCurrentDevMode() const;
-        CString GetCurrentPortName() const;
-        CString GetCurrentPrinterName() const;
+        CStringW GetCurrentPortName() const;
+        CStringW GetCurrentPrinterName() const;
         BOOL GetDefaults();
         CString GetDeviceName() const;
         CDevMode GetDevMode() const;
@@ -288,9 +288,9 @@ namespace Win32xx
 
     // Returns the port name for the currently selected printer, while
     // the print dialog is displayed.
-    inline CString CPrintDialogEx::GetCurrentPortName() const
+    inline CStringW CPrintDialogEx::GetCurrentPortName() const
     {
-        CString str;
+        CStringW str;
         if (m_pServices != 0)
         {
             UINT size = 0;
@@ -304,9 +304,9 @@ namespace Win32xx
 
     // Returns the printer name for the currently selected printer, while
     // the print dialog is displayed.
-    inline CString CPrintDialogEx::GetCurrentPrinterName() const
+    inline CStringW CPrintDialogEx::GetCurrentPrinterName() const
     {
-        CString str;
+        CStringW str;
         if (m_pServices != 0)
         {
             UINT size = 0;

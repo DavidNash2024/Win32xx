@@ -52,16 +52,16 @@ STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROP
         case IDC_CMD_SAVE:      OnFileSave();       break;
         case IDC_CMD_SAVE_AS:   OnFileSaveAs();     break;
         case IDC_CMD_PRINT:     OnFilePrint();      break;
-        case IDC_CMD_COPY:      TRACE("Copy\n");    break;
-        case IDC_CMD_CUT:       TRACE("Cut\n");     break;
-        case IDC_CMD_PASTE:     TRACE("Paste\n");   break;
+        case IDC_CMD_COPY:      TRACE(L"Copy\n");   break;
+        case IDC_CMD_CUT:       TRACE(L"Cut\n");    break;
+        case IDC_CMD_PASTE:     TRACE(L"Paste\n");  break;
         case IDC_CMD_ABOUT:     OnHelp();           break;
         case IDC_CMD_EXIT:      OnFileExit();       break;
-        case IDC_RICHFONT:      TRACE("Font dialog\n");     break;
+        case IDC_RICHFONT:      TRACE(L"Font dialog\n");    break;
         case IDC_RIBBONHELP:    OnHelp();                   break;
         case IDC_MRULIST:       OnMRUList(key, ppropvarValue);      break;
         case IDC_PEN_COLOR:     OnPenColor(ppropvarValue, pCmdExProp);  break;
-        case IDC_CUSTOMIZE_QAT: TRACE("Customize Quick Access ToolBar\n");  break;
+        case IDC_CUSTOMIZE_QAT: TRACE(L"Customize Quick Access ToolBar\n");  break;
         default:
             {
                 CString str;

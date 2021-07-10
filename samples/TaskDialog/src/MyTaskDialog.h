@@ -22,7 +22,7 @@ protected:
     virtual void OnTDDestroyed();
     virtual void OnTDExpandButtonClicked(BOOL isExpanded);
     virtual void OnTDHelp();
-    virtual void OnTDHyperlinkClicked(LPCTSTR hyperlink);
+    virtual void OnTDHyperlinkClicked(LPCWSTR hyperlink);
     virtual void OnTDNavigatePage();
     virtual BOOL OnTDRadioButtonClicked(int radioButtonID);
     virtual BOOL OnTDTimer(DWORD tickCount);

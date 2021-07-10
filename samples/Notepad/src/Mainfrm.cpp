@@ -135,6 +135,10 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
 // Called when the window is closed.
 void CMainFrame::OnClose()
 {
+    // Close the preview
+    if (GetView() == m_preview)
+        OnPreviewClose();
+
     //Check for unsaved text
     SaveModifiedText();
 
@@ -550,9 +554,6 @@ void CMainFrame::OnInitialUpdate()
     // The second argument (if any) contains our file name.
     if (args.size() > 1)
         ReadFile(args[1]);
-
-    // Show the toolbar
-    ShowToolBar(GetToolBar().IsWindow());
 }
 
 // Updates menu items before they are displayed.

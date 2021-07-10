@@ -33,6 +33,16 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
+// Called when the frame window is closed.
+void CMainFrame::OnClose()
+{
+    // Close the preview
+    if (GetView() == m_preview)
+        OnPreviewClose();
+
+    CFrame::OnClose();
+}
+
 // OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {

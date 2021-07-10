@@ -8,66 +8,67 @@
 //////////////////////////////////////
 // CMyTaskDialog function definitions.
 //
-BOOL CMyTaskDialog::OnTDButtonClicked(int)
+
 // Called when the user selects a button or command link.
+BOOL CMyTaskDialog::OnTDButtonClicked(int)
 {
-    TRACE("Button or command link pressed\n");
+    TRACE(L"Button or command link pressed\n");
 
     // we could return TRUE to prevent the task dialog from closing
     return FALSE;
 }
 
-void CMyTaskDialog::OnTDConstructed()
 // Called when the task dialog is constructed, before it is displayed.
+void CMyTaskDialog::OnTDConstructed()
 {
-    TRACE("Task Dialog Constructed\n");
+    TRACE(L"Task Dialog Constructed\n");
 }
 
-void CMyTaskDialog::OnTDCreated()
 // Called when the task dialog is displayed.
+void CMyTaskDialog::OnTDCreated()
 {
-    TRACE("Task Dialog Created\n");
+    TRACE(L"Task Dialog Created\n");
 }
 
-void CMyTaskDialog::OnTDDestroyed()
 // Called when the task dialog is destroyed.
+void CMyTaskDialog::OnTDDestroyed()
 {
-    TRACE("Task Dialog Destroyed\n");
+    TRACE(L"Task Dialog Destroyed\n");
 }
 
-void CMyTaskDialog::OnTDExpandButtonClicked(BOOL)
 // Called when the expand button is clicked.
+void CMyTaskDialog::OnTDExpandButtonClicked(BOOL)
 {
-    TRACE("Expand Button Pressed\n");
+    TRACE(L"Expand Button Pressed\n");
 }
 
-void CMyTaskDialog::OnTDHelp()
 // Called when the user presses F1 on the keyboard.
+void CMyTaskDialog::OnTDHelp()
 {
-    TRACE("F1 Pressed\n");
+    TRACE(L"F1 Pressed\n");
 }
 
-void CMyTaskDialog::OnTDHyperlinkClicked(LPCTSTR)
 // Called when the user clicks on a hyperlink.
+void CMyTaskDialog::OnTDHyperlinkClicked(LPCWSTR)
 {
-    TRACE("Hyperlink clicked\n");
+    TRACE(L"Hyperlink clicked\n");
 }
 
 void CMyTaskDialog::OnTDNavigatePage()
 // Called when a navigation has occurred.
 {
-    TRACE("Navigation occurred\n");
+    TRACE(L"Navigation occurred\n");
 }
 
+// Called when a radio button. is selected.
 BOOL CMyTaskDialog::OnTDRadioButtonClicked(int)
-// Called when the user selects a radio button.
 {
-    TRACE("Radio Button Clicked\n");
+    TRACE(L"Radio Button Selected\n");
     return TRUE;
 }
 
+// Called approximately every 200 milliseconds when the TDF_CALLBACK_TIMER flag is set.
 BOOL CMyTaskDialog::OnTDTimer(DWORD)
-// Called every 200 milliseconds (aproximately) when the TDF_CALLBACK_TIMER flag is set.
 {
     static int i = 0;
     if (i <= 100)
@@ -76,12 +77,13 @@ BOOL CMyTaskDialog::OnTDTimer(DWORD)
     return FALSE;
 }
 
-void CMyTaskDialog::OnTDVerificationCheckboxClicked(BOOL)
 // Called when the user clicks the Task Dialog verification check box.
+void CMyTaskDialog::OnTDVerificationCheckboxClicked(BOOL)
 {
-    TRACE("Verification Checkbox Clicked\n");
+    TRACE(L"Verification Checkbox Clicked\n");
 }
 
+// Processes the task dialog's messages.
 LRESULT CMyTaskDialog::TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
