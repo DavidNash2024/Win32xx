@@ -46,15 +46,13 @@
 
 ////////////////////////////////////////////////////////
 //
-//  Coding example.
+//  Coding example for Win2000 and below.
 //
 //      CFolderDialog fd;
 //
 //      // Set the root folder to list the computer's drives (or C:).
 //      ITEMIDLIST* pidlRoot = 0;
 //      SHGetSpecialFolderLocation(0, CSIDL_DRIVES, &pidlRoot);
-//      // or
-//      // ITEMIDLIST* pidl = ILCreateFromPath(_T("C:"));
 //      fd.SetRoot(pidlRoot);
 //
 //      // Set the title for the dialog.
@@ -70,6 +68,33 @@
 //      // Release the memory allocated for our pidlRoot.
 //      CoTaskMemFree(pidlRoot);
 //
+////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////
+//
+//  Coding example for WinXP and above.
+//
+//      CFolderDialog fd;
+//
+//      // Set the root folder to list the computer's drives (or C:).
+//      PIDLIST_ABSOLUTE pidlRoot = ILCreateFromPath(_T("C:"));
+//      fd.SetRoot(pidlRoot);
+//
+//      // Set the title for the dialog.
+//      fd.SetTitle(_T("Choose a folder"));
+//
+//      // Display the dialog
+//      if (fd.DoModal() == IDOK)
+//      {
+//          // Do something with the folder found
+//          MessageBox(fd.GetFolderPath(), _T("Folder Chosen"), MB_OK);
+//      }
+//
+//      // Release the memory allocated for our pidlRoot.
+//      ILFree(pidlRoot);
+//
+////////////////////////////////////////////////////////
+
 
 #ifndef _WIN32XX_FOLDERDIALOG_H_
 #define _WIN32XX_FOLDERDIALOG_H_
