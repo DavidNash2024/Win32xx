@@ -7,7 +7,7 @@
 
 
 // Constructor.
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_isToolbarShown(TRUE)
 {
 }
 
@@ -265,6 +265,8 @@ BOOL CMainFrame::OnFilePreview()
 {
     try
     {
+        m_isToolbarShown = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
+
         // Get the device contect of the default or currently chosen printer
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
@@ -297,7 +299,7 @@ BOOL CMainFrame::OnFilePreview()
         MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_view);
         ShowMenu(GetFrameMenu() != 0);
-        ShowToolBar(GetToolBar().IsWindow());
+        ShowToolBar(m_isToolbarShown);
     }
 
     return TRUE;
@@ -369,7 +371,7 @@ LRESULT CMainFrame::OnPreviewClose()
 
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
-    ShowToolBar(GetToolBar().IsWindow());
+    ShowToolBar(m_isToolbarShown);
 
     SetStatusText(LoadString(IDW_READY));
 

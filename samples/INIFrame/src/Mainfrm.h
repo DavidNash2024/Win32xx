@@ -48,6 +48,7 @@ protected:
 private:
     CView m_view;
     CPrintPreview<CView> m_preview;
+    BOOL m_isToolbarShown;
 };
 
 #endif //MAINFRM_H

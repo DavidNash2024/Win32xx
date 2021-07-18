@@ -20,7 +20,8 @@
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_encoding(ANSI), m_isWrapped(false), m_isRTF(false), m_oldFocus(0)
+CMainFrame::CMainFrame() : m_encoding(ANSI), m_isToolbarShown(TRUE),
+                           m_isWrapped(FALSE), m_isRTF(FALSE), m_oldFocus(0)
 {
 }
 
@@ -383,6 +384,8 @@ BOOL CMainFrame::OnFilePreview()
     // Verify a print preview is possible
     try
     {
+        m_isToolbarShown = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
+
         // Retrieve the device context of the default or currently chosen printer.
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
@@ -414,7 +417,7 @@ BOOL CMainFrame::OnFilePreview()
         MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_richView);
         ShowMenu(GetFrameMenu() != 0);
-        ShowToolBar(GetToolBar().IsWindow());
+        ShowToolBar(m_isToolbarShown);
     }
 
     return TRUE;
@@ -681,7 +684,7 @@ BOOL CMainFrame::OnPreviewClose()
 
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
-    ShowToolBar(GetToolBar().IsWindow());
+    ShowToolBar(m_isToolbarShown);
 
     // Restore focus to the window focused before DoPrintPreview was called.
     RestoreFocus();
