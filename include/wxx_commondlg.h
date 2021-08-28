@@ -353,7 +353,7 @@ namespace Win32xx
 
         if (pCommonDlg == 0)
         {
-            // Got a message for a window thats not in the map.
+            // Got a message for a window that's not in the map.
             // We should never get here.
             TRACE("*** Warning in CCommonDialog::CDHookProc: HWND not in window map ***\n");
             return 0;

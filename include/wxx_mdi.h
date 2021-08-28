@@ -118,7 +118,7 @@ namespace Win32xx
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
-        CMDIChild(const CMDIChild&);                // Disable copy construction
+        CMDIChild(const CMDIChild&);              // Disable copy construction
         CMDIChild& operator = (const CMDIChild&); // Disable assignment operator
 
         CWnd* m_pView;              // pointer to the View CWnd object
@@ -166,7 +166,7 @@ namespace Win32xx
         virtual void RemoveMDIChild(HWND wnd);
         virtual BOOL RemoveAllMDIChildren();
 
-        // These functions aren't virtual. Don't override these
+        // These functions aren't virtual. Don't override these.
         const std::vector<MDIChildPtr>& GetAllMDIChildren() const { return m_mdiChildren; }
         void MDICascade(int nType = 0) const;
         void MDIIconArrange() const;
@@ -735,7 +735,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CMDIClient<T>::OnMDIActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        // Suppress redraw to avoid flicker when activating maximised MDI children
+        // Suppress redraw to avoid flicker when activating maximized MDI children
         T::SetRedraw(FALSE);
         LRESULT result = T::FinalWindowProc(msg, wparam, lparam);
         T::SetRedraw(TRUE);
@@ -924,7 +924,7 @@ namespace Win32xx
     inline int CMDIChild::OnCreate(CREATESTRUCT&)
     {
         // Create the view window
-        assert( &GetView() );           // Use SetView in CMDIChild's constructor to set the view window
+        assert( &GetView() );           // Use SetView in CMDIChild's constructor to set the view window.
         GetView().Create(*this);
         GetView().SetFocus();
         RecalcLayout();
@@ -972,7 +972,7 @@ namespace Win32xx
         m_childMenu.Attach(menu);
         m_childAccel = accel;
 
-        // Note: It is valid to call SetHandles before the window is created
+        // Note: It is valid to call SetHandles before the window is created.
         if (IsWindow())
         {
             GetParent().SendMessage(WM_MDIACTIVATE, (WPARAM)GetHwnd(), 0);

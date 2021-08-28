@@ -136,7 +136,7 @@ The sample applications include:
  * Threads - Demonstrates multi-threaded Windows.
  * TimeDemo - Demonstrates various uses of the CTime class.
  * ToolBarDemo - Demonstrates how to customize a toolbar.
- * Tray - Demonstrates how to "minimise" an application to the system tray.
+ * Tray - Demonstrates how to "minimize" an application to the system tray.
  * WinPlot - Plots a function specified by the user.
  * WinCE samples - A small collection of samples for Windows CE
 

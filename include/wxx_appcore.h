@@ -775,7 +775,7 @@ namespace Win32xx
     //   HINSTANCE resource = LoadLibrary(_T("MyResourceDLL.dll"));
     //   SetResourceHandle(resource);
     //
-    // The resouce is automatically freed when it is no longer required.
+    // The resource is automatically freed when it is no longer required.
     inline void CWinApp::SetResourceHandle(HINSTANCE resource)
     {
         if ((resource != m_resource) && (m_resource != 0))

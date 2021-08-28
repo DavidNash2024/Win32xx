@@ -54,7 +54,7 @@
 // CPrintDialog displays the Print dialog which allows the user to
 // select the printer to use.
 
-// CPageSetupDialog displays the PageSetup dialg which allows the user
+// CPageSetupDialog displays the PageSetup dialog which allows the user
 // to select the page settings.
 
 // The CPrintDialog and CPageSetupDialog classes share global memory

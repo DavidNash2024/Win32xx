@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -179,8 +179,8 @@ namespace Win32xx
         virtual int  OnValidateFailed(LPARAM lparam);
 
     private:
-        CFolderDialog(const CFolderDialog&);              // Disable copy construction
-        CFolderDialog& operator = (const CFolderDialog&); // Disable assignment operator
+        CFolderDialog(const CFolderDialog&);              // Disable copy construction.
+        CFolderDialog& operator = (const CFolderDialog&); // Disable assignment operator.
 
         static int CALLBACK BrowseCallbackProc(HWND wnd, UINT msg, LPARAM param1, LPARAM lparam2);
 
@@ -287,7 +287,7 @@ namespace Win32xx
         return result;
     }
 
-    // Enables or disables the OK button
+    // Enables or disables the OK button.
     inline void CFolderDialog::EnableOK(BOOL enable /*TRUE*/)
     {
         SendMessage(BFFM_ENABLEOK, (WPARAM)enable, 0);
@@ -304,12 +304,12 @@ namespace Win32xx
         return str;
     }
 
-    // Called when the cancel button is pressed
+    // Called when the cancel button is pressed.
     inline void CFolderDialog::OnCancel()
     {
     }
 
-    // Called when the Folder dialog is displayed
+    // Called when the Folder dialog is displayed.
     // Override this function to perform tasks when the dialog starts.
     inline void CFolderDialog::OnInitialized()
     {

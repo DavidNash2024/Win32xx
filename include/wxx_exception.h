@@ -1,4 +1,4 @@
-// Win32++   Version 8.9
+// Win32++   Version 8.9.1
 // Release Date: TBA
 //
 //      David Nash
@@ -148,7 +148,7 @@ namespace Win32xx
     //////////////////////////////////////////////////////////////
     // This exception is used by the Win32++ framework to indicate
     // a failure to create a GDI resource.
-    // Note: Each function guarantees not to throw an exception
+    // Note: Each function guarantees not to throw an exception.
     class CResourceException : public CException
     {
     public:
@@ -165,7 +165,7 @@ namespace Win32xx
     // Users have the option of specifying text when the exception is thrown,
     // and the option of specifying a message ID which could load text from
     // a resource.
-    // Note: Each function guarantees not to throw an exception
+    // Note: Each function guarantees not to throw an exception.
     class CUserException : public CException
     {
     public:
@@ -179,7 +179,7 @@ namespace Win32xx
     /////////////////////////////////////////////////////////////////////
     // This is thrown when an attempt to create a thread or window fails.
     // GetErrorString can be used to retrieve the reason for the failure.
-    // Note: Each function guarantees not to throw an exception
+    // Note: Each function guarantees not to throw an exception.
     class CWinException : public CException
     {
     public:
@@ -194,20 +194,20 @@ namespace Win32xx
     // Definitions for the CException class
     //
 
-    // CException constructor
+    // CException constructor.
     inline CException::CException(int messageID) WXX_NOEXCEPT
             : m_messageID(messageID), m_error(::GetLastError())
     {
         ZeroMemory(m_text, MAX_STRING_SIZE * sizeof(TCHAR));
         ZeroMemory(m_errorString, MAX_STRING_SIZE * sizeof(TCHAR));
 
-        // Store error information in m_errorString
+        // Store error information in m_errorString.
         DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
         ::FormatMessage(flags, NULL, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_errorString, MAX_STRING_SIZE-1, NULL);
     }
 
 
-    // CException constructor
+    // CException constructor.
     inline CException::CException(LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
             : m_messageID(messageID), m_error(::GetLastError())
     {
@@ -217,17 +217,17 @@ namespace Win32xx
         if (text)
             StrCopy(m_text, text, MAX_STRING_SIZE);
 
-        // Store error information in m_errorString
+        // Store error information in m_errorString.
         DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
         ::FormatMessage(flags, NULL, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_errorString, MAX_STRING_SIZE-1, NULL);
     }
 
-    // CException destructor
+    // CException destructor.
     inline CException::~CException() WXX_NOEXCEPT
     {
     }
 
-    // Returns the error reported by GetLastError
+    // Returns the error reported by GetLastError.
     inline DWORD CException::GetError() const WXX_NOEXCEPT
     {
         return m_error;
@@ -253,8 +253,8 @@ namespace Win32xx
     }
 
 
-    ///////////////////////////////////////////
-    // Definitions for the CFileException class
+    ////////////////////////////////////////////
+    // Definitions for the CFileException class.
     //
 
     // CFileException constructor
@@ -263,7 +263,7 @@ namespace Win32xx
     {
         ZeroMemory(m_filePath, MAX_STRING_SIZE * sizeof(TCHAR));
 
-        // Display some text in the debugger
+        // Display some text in the debugger.
         ::OutputDebugString(_T("*** CFileException thrown ***\n"));
 
         if (pFilePath)
@@ -284,7 +284,7 @@ namespace Win32xx
     {
         ZeroMemory(m_filePath, MAX_STRING_SIZE * sizeof(TCHAR));
 
-        // Display some text in the debugger
+        // Display some text in the debugger.
         ::OutputDebugString(_T("*** CFileException thrown ***\n"));
 
         if (pFilePath)
@@ -305,12 +305,12 @@ namespace Win32xx
             ::OutputDebugString(GetErrorString());
     }
 
-    // CFileException destructor
+    // CFileException destructor.
     inline CFileException::~CFileException() WXX_NOEXCEPT
     {
     }
 
-    // Returns the filename and path specified when the exception was thrown
+    // Returns the filename and path specified when the exception was thrown.
     inline LPCTSTR CFileException::GetFilePath() const WXX_NOEXCEPT
     {
         return m_filePath;
@@ -329,15 +329,15 @@ namespace Win32xx
         return m_filePath + index;    // pointer arithmetic
     }
 
-    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR
+    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR.
     inline const char* CFileException::what() const WXX_NOEXCEPT
     {
         return "Win32xx::CFileException";
     }
 
 
-    //////////////////////////////////////////////////
-    // Definitions of the CNotSupportedException class
+    ///////////////////////////////////////////////////
+    // Definitions of the CNotSupportedException class.
     //
 
     // CNotSupportedException constructor
@@ -351,11 +351,11 @@ namespace Win32xx
             ::OutputDebugString(GetErrorString());
     }
 
-    // CNotSupportedException constructor
+    // CNotSupportedException constructor.
     inline CNotSupportedException::CNotSupportedException(LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
         : CException(text, messageID)
     {
-        // Display some text in the debugger
+        // Display some text in the debugger.
         ::OutputDebugString(_T("*** CNotSupportedException thrown ***\n"));
 
         if (text)
@@ -368,14 +368,14 @@ namespace Win32xx
             ::OutputDebugString(GetErrorString());
     }
 
-    // CNotSupportedException destructor
+    // CNotSupportedException destructor.
     inline CNotSupportedException::~CNotSupportedException() WXX_NOEXCEPT
     {
         if (GetError() != 0)
             ::OutputDebugString(GetErrorString());
     }
 
-    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR
+    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR.
     inline const char* CNotSupportedException::what() const WXX_NOEXCEPT
     {
         return "Win32xx::CNotSupportedException";
@@ -383,7 +383,7 @@ namespace Win32xx
 
 
     //////////////////////////////////////////////////
-    // Definitions of the CResourceException class
+    // Definitions of the CResourceException class.
     //
 
     // CResourceException constructor
@@ -397,11 +397,11 @@ namespace Win32xx
             ::OutputDebugString(GetErrorString());
     }
 
-    // CResourceException constructor
+    // CResourceException constructor.
     inline CResourceException::CResourceException(LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
         : CException(text, messageID)
     {
-        // Display some text in the debugger
+        // Display some text in the debugger.
         ::OutputDebugString(_T("*** CResourceException thrown ***\n"));
 
         if (text)
@@ -414,27 +414,27 @@ namespace Win32xx
             ::OutputDebugString(GetErrorString());
     }
 
-    // CResourceException destructor
+    // CResourceException destructor.
     inline CResourceException::~CResourceException() WXX_NOEXCEPT
     {
     }
 
-    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR
+    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR.
     inline const char* CResourceException::what() const WXX_NOEXCEPT
     {
         return "Win32xx::CResourceException";
     }
 
 
-    ////////////////////////////////////////
-    // Definitions of the CUserException class
+    ///////////////////////////////////////////
+    // Definitions of the CUserException class.
     //
 
     // CUserException constructor
     inline CUserException::CUserException(int messageID) WXX_NOEXCEPT
             : CException(messageID)
     {
-        // Display some text in the debugger
+        // Display some text in the debugger.
         ::OutputDebugString(_T("*** CUserException thrown ***\n"));
 
         if (GetError() != 0)
@@ -445,7 +445,7 @@ namespace Win32xx
     inline CUserException::CUserException(LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
             : CException(text, messageID)
     {
-        // Display some text in the debugger
+        // Display some text in the debugger.
         ::OutputDebugString(_T("*** CUserException thrown ***\n"));
 
         if (text)
@@ -458,38 +458,38 @@ namespace Win32xx
             ::OutputDebugString(GetErrorString());
     }
 
-    // CUserException destructor
+    // CUserException destructor.
     inline CUserException::~CUserException() WXX_NOEXCEPT
     {
     }
 
-    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR
+    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR.
     inline const char* CUserException::what() const WXX_NOEXCEPT
     {
         return "Win32xx::CUserException";
     }
 
 
-    //////////////////////////////////////////
-    // Definitions for the CWinException class
+    ///////////////////////////////////////////
+    // Definitions for the CWinException class.
     //
 
     // CWinException constructor
     inline CWinException::CWinException(int messageID) WXX_NOEXCEPT
         : CException(messageID)
     {
-        // Display some text in the debugger
+        // Display some text in the debugger.
         ::OutputDebugString(_T("*** CWinException thrown ***\n"));
 
         if (GetError() != 0)
             ::OutputDebugString(GetErrorString());
     }
 
-    // CWinException constructor
+    // CWinException constructor.
     inline CWinException::CWinException(LPCTSTR text, int messageID) WXX_NOEXCEPT
         : CException(text, messageID)
     {
-        // Display some text in the debugger
+        // Display some text in the debugger.
         ::OutputDebugString(_T("*** CWinException thrown ***\n"));
         if (text)
         {
@@ -501,12 +501,12 @@ namespace Win32xx
             ::OutputDebugString(GetErrorString());
     }
 
-    // CWinException destructor
+    // CWinException destructor.
     inline CWinException::~CWinException() WXX_NOEXCEPT
     {
     }
 
-    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR
+    // Returns the exception type as a char string. Use AtoT to convert this to TCHAR.
     inline const char * CWinException::what() const WXX_NOEXCEPT
     {
         return "Win32xx::CWinException";
