@@ -9,7 +9,7 @@ New Features and Enhancements
     Requires Windows 2000 or newer ( WINVER >= 0500 ).
 
 * Updated CMenuBar.
-  - CMenuBar now emulates the behaviour of a traditional menu more closely.
+  - CMenuBar now emulates the behavior of a traditional menu more closely.
   - The accelerator prefixes are now normally hidden, but are displayed for
     keyboard navigation.
 

@@ -146,7 +146,7 @@
 
 
 // The CBitmapInfoPtr class is a convenient wrapper for the BITMAPINFO structure.
-// The size of the BITMAPINFO structure is dependant on the type of HBITMAP, and its
+// The size of the BITMAPINFO structure is dependent on the type of HBITMAP, and its
 // space needs to be allocated dynamically. CBitmapInfoPtr automatically allocates
 // and deallocates the memory for the structure. A CBitmapInfoPtr object can be
 // used anywhere in place of a LPBITMAPINFO. LPBITMAPINFO is used in functions like
@@ -1225,7 +1225,7 @@ namespace Win32xx
 
         if (m_pData && object != m_pData->hGDIObject)
         {
-            // Release any existing GDI object
+            // Release any existing GDI object.
             if (m_pData->hGDIObject != 0)
             {
                 Release();
@@ -1234,7 +1234,7 @@ namespace Win32xx
 
             if (object)
             {
-                // Add the GDI object to this CCGDIObject
+                // Add the GDI object to this CCGDIObject.
                 CGDI_Data* pCGDIData = GetApp()->GetCGDIData(object);
                 if (pCGDIData)
                 {
@@ -1721,7 +1721,7 @@ namespace Win32xx
         VERIFY(SetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
     }
 
-    // Modifies the color of the Device Dependant Bitmap, by the color.
+    // Modifies the color of the Device Dependent Bitmap, by the color.
     // correction values specified. The correction values can range from -255 to +255.
     // This function gains its speed by accessing the bitmap color information
     // directly, rather than using GetPixel/SetPixel.
@@ -2773,7 +2773,7 @@ namespace Win32xx
 
 #endif
 
-    // Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
+    // Draws the specified bitmap to the specified DC using the mask color provided as the transparent colour
     // Suitable for use with a Window DC or a memory DC
     inline void CDC::DrawBitmap(int x, int y, int cx, int cy, HBITMAP bitmap, COLORREF mask) const
     {
@@ -2899,7 +2899,7 @@ namespace Win32xx
         assert(m_pData->dc != 0);
         HBITMAP oldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
         if (oldBitmap == 0)
-            // throws if an error occurs (bitmap is invalid or incompatable).
+            // throws if an error occurs (bitmap is invalid or incompatible).
             throw CResourceException(GetApp()->MsgGdiSelObject());
 
         return oldBitmap;
@@ -4542,13 +4542,13 @@ namespace Win32xx
     }
 
     // Combines the color data for the source and destination bitmaps using the specified mask and raster operation.
-    //  xDest     x-coord of destination upper-left corner
-    //  yDest     y-coord of destination upper-left corner
+    //  xDest     x coordinate of destination upper-left corner
+    //  yDest     y coordinate of destination upper-left corner
     //  width     width of source and destination
-    //  yeight    height of source and destination
+    //  height    height of source and destination
     //  hSrc      pointer to source DC
-    //  xSrc      x-coord of upper-left corner of source
-    //  ySrc      y-coord of upper-left corner of source
+    //  xSrc      x coordinate of upper-left corner of source
+    //  ySrc      y coordinate of upper-left corner of source
     //  mask      handle to monochrome bit mask
     //  xMask     horizontal offset into mask bitmap
     //  yMask     vertical offset into mask bitmap
@@ -4562,13 +4562,13 @@ namespace Win32xx
 
     // Copies a bitmap from a source rectangle into a destination rectangle, stretching or compressing
     // the bitmap to fit the dimensions of the destination rectangle, if necessary.
-    //  x            x-coord of destination upper-left corner
-    //  y            y-coord of destination upper-left corner
+    //  x            x coordinate of destination upper-left corner
+    //  y            y coordinate of destination upper-left corner
     //  width        width of destination rectangle
     //  height       height of destination rectangle
     //  hSrc         handle to source DC
-    //  xSrc         x-coord of source upper-left corner
-    //  ySrc         y-coord of source upper-left corner
+    //  xSrc         x coordinate of source upper-left corner
+    //  ySrc         y coordinate of source upper-left corner
     //  srcWidth     width of source rectangle
     //  srcHeight    height of source rectangle
     //  rop          raster operation code
@@ -4623,13 +4623,13 @@ namespace Win32xx
 
     // Performs a bit-block transfer of the color data corresponding to a rectangle
     // of pixels from the specified source device context into a destination device context.
-    //  x             x-coord of destination upper-left corner
-    //  y             y-coord of destination upper-left corner
+    //  x             x coordinate of destination upper-left corner
+    //  y             y coordinate of destination upper-left corner
     //  width         width of destination rectangle
     //  height        height of destination rectangle
     //  hSrc          handle to source DC
-    //  xSrc          x-coord of source upper-left corner
-    //  ySrc          y-coord of source upper-left corner
+    //  xSrc          x coordinate of source upper-left corner
+    //  ySrc          y coordinate of source upper-left corner
     //  widthSrc      width of source rectangle
     //  heightSrc     height of source rectangle
     //  transparent   color to make transparent

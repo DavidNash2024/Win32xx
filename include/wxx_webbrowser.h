@@ -1275,7 +1275,8 @@ namespace Win32xx
         return hr;
     }
 
-    // Cancels a pending navigation or download, and stops dynamic page elements, such as background sounds and animations.
+    // Cancels a pending navigation or download, and stops dynamic page elements,
+    // such as background sounds and animations.
     inline HRESULT CWebBrowser::Stop()
     {
         return GetIWebBrowser2()->Stop();

@@ -208,12 +208,12 @@ namespace Win32xx
     {
         if (str)
         {
-            // Resize the vector and assign null WCHAR to each element
+            // Resize the vector and assign null WCHAR to each element.
             int charBytes = (charCount == -1) ? -1 : 2 * charCount;
             int length = MultiByteToWideChar(codePage, 0, str, charBytes, NULL, 0) + 1;
             m_wideArray.assign(length, L'\0');
 
-            // Fill our vector with the converted WCHAR array
+            // Fill our vector with the converted WCHAR array.
             MultiByteToWideChar(codePage, 0, str, charBytes, &m_wideArray[0], length);
         }
     }
@@ -259,13 +259,13 @@ namespace Win32xx
     // Global Functions
     //
 
-    // Trace sends a string to the debug/output pane, or an external debugger
+    // Trace sends a string to the debug/output pane, or an external debugger.
     inline void Trace(LPCSTR str)
     {
         OutputDebugString(AtoT(str));
     }
 
-    // Trace sends a string to the debug/output pane, or an external debugger
+    // Trace sends a string to the debug/output pane, or an external debugger.
     inline void Trace(LPCWSTR str)
     {
         OutputDebugString(WtoT(str));

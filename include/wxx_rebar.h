@@ -251,7 +251,7 @@ namespace Win32xx
 
         UINT uSizeof = sizeof(REBARBANDINFO);
 
-    #if defined REBARBANDINFO_V6_SIZE   // only defined for VS2008 or higher
+    #if defined REBARBANDINFO_V6_SIZE   // Only defined for VS2008 or higher.
       #if !defined (_WIN32_WINNT) || _WIN32_WINNT >= 0x0600
         if ((GetWinVersion() < 2600) || (GetComCtlVersion() < 610)) // Vista and Vista themes?
             uSizeof = REBARBANDINFO_V6_SIZE;
@@ -278,15 +278,15 @@ namespace Win32xx
         return static_cast<int>(SendMessage(RB_HITTEST, 0, (LPARAM)&hitTestInfo));
     }
 
-    // Return the child HWND at the given point
+    // Return the child HWND at the given point.
     inline HWND CReBar::HitTest(POINT pt) const
     {
         assert(IsWindow());
 
-        // Convert the point to client co-ordinates
+        // Convert the point to client co-ordinates.
         VERIFY(ScreenToClient(pt));
 
-        // Get the rebar band with the point
+        // Get the rebar band with the point.
         RBHITTESTINFO rbhti;
         ZeroMemory(&rbhti, sizeof(rbhti));
         rbhti.pt = pt;
@@ -294,7 +294,7 @@ namespace Win32xx
 
         if (iBand >= 0)
         {
-            // Get the rebar band's wnd
+            // Get the rebar band's wnd.
             REBARBANDINFO rbbi;
             ZeroMemory(&rbbi, GetSizeofRBBI());
             rbbi.cbSize = GetSizeofRBBI();

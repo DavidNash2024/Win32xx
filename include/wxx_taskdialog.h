@@ -269,13 +269,13 @@ namespace Win32xx
         m_tc.cRadioButtons = static_cast<UINT>(radioButtons.size());
         m_tc.hwndParent = parent;
 
-        // Ensure this thread has the TLS index set
+        // Ensure this thread has the TLS index set.
         TLSData* pTLSData = GetApp()->SetTlsData();
 
-        // Store the CWnd pointer in thread local storage
+        // Store the CWnd pointer in thread local storage.
         pTLSData->pWnd = this;
 
-        // Declare a pointer to the TaskDialogIndirect function
+        // Declare a pointer to the TaskDialogIndirect function.
         HMODULE comCtl = LoadLibraryW(L"COMCTL32.DLL");
         assert(comCtl);
         typedef HRESULT WINAPI TASKDIALOGINDIRECT(const TASKDIALOGCONFIG*, int*, int*, BOOL*);
@@ -285,7 +285,7 @@ namespace Win32xx
         {
             TASKDIALOGINDIRECT* pTaskDialogIndirect = reinterpret_cast<TASKDIALOGINDIRECT*>(::GetProcAddress(comCtl, "TaskDialogIndirect"));
 
-            // Call TaskDialogIndirect through our function pointer
+            // Call TaskDialogIndirect through our function pointer.
             result = pTaskDialogIndirect(&m_tc, &m_selectedButtonID, &m_selectedRadioButtonID, &m_verificationCheckboxState);
 
             VERIFY(::FreeLibrary(comCtl));
@@ -295,7 +295,7 @@ namespace Win32xx
 
         if (result != S_OK)
         {
-            // Throw an exception to indicate task dialog creation failure
+            // Throw an exception to indicate task dialog creation failure.
             throw CWinException(GetApp()->MsgTaskDialog());
         }
 
@@ -450,7 +450,7 @@ namespace Win32xx
     // Called approximately every 200 milliseconds when the TDF_CALLBACK_TIMER flag is set.
     inline BOOL CTaskDialog::OnTDTimer(DWORD)
     {
-        // return TRUE to reset the tick count
+        // Return TRUE to reset the tick count.
         return FALSE;
     }
 

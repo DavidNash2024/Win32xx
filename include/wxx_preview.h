@@ -234,7 +234,7 @@ namespace Win32xx
             OnDraw(dc);
         }
         else
-        // RedrawWindow can require repainting without an update rect
+        // RedrawWindow can require repainting without an update rect.
         {
             CClientDC dc(*this);
             OnDraw(dc);
@@ -466,7 +466,7 @@ namespace Win32xx
             throw CResourceException(GetApp()->MsgPrintFound());
 
         // Create a memory DC for the printer.
-        // Note: we use the printer's DC here to render text accurately
+        // Note: we use the printer's DC here to render text accurately.
         CMemDC memDC(printerDC);
 
         // Create a compatible bitmap for the memory DC

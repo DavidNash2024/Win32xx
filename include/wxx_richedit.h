@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

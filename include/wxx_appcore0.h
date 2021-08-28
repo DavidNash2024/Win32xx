@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -586,10 +586,10 @@ namespace Win32xx
         std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
         std::map<HWND, CWnd*, CompareHWND> m_mapHWND;       // maps window handles to CWnd objects
         std::vector<TLSDataPtr> m_allTLSData;     // vector of TLSData smart pointers, one for each thread
-        CCriticalSection m_appLock;   // thread synchronisation for CWinApp and TLS.
-        CCriticalSection m_gdiLock;   // thread synchronisation for m_mapCDCData and m_mapCGDIData.
-        CCriticalSection m_wndLock;   // thread synchronisation for m_mapHWND etc.
-        CCriticalSection m_printLock; // thread synchronisation for printing.
+        CCriticalSection m_appLock;   // thread synchronization for CWinApp and TLS.
+        CCriticalSection m_gdiLock;   // thread synchronization for m_mapCDCData and m_mapCGDIData.
+        CCriticalSection m_wndLock;   // thread synchronization for m_mapHWND etc.
+        CCriticalSection m_printLock; // thread synchronization for printing.
         HINSTANCE m_instance;         // handle to the application's instance
         HINSTANCE m_resource;         // handle to the application's resources
         DWORD m_tlsData;              // Thread Local Storage data

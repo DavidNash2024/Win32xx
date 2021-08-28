@@ -1,5 +1,5 @@
-// Win32++   Version 8.9
-// Release Date: 29th April 2021
+// Win32++   Version 8.9.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -63,7 +63,7 @@
 //      CString string1(_T("Hello World"));
 //      CString string2;
 //
-//      // This is invalid, and produces undefined behaviour.
+//      // This is invalid, and produces undefined behavior.
 //      string2.Format(_T("String1 is: %s"), string1); // No! you can't do this
 //
 //      // This is ok

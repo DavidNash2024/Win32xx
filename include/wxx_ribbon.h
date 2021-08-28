@@ -1,5 +1,6 @@
 // Win32++   Version 8.9.1
 // Release Date: TBA
+//
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
@@ -427,7 +428,7 @@ namespace Win32xx
             case UI_VIEWVERB_CREATE:    // The view was newly created.
                 result = S_OK;
                 break;
-            case UI_VIEWVERB_SIZE:      // Ribbon size has changed
+            case UI_VIEWVERB_SIZE:      // Ribbon size has changed.
                 T::RecalcLayout();
                 break;
             case UI_VIEWVERB_DESTROY:   // The view was destroyed.
@@ -471,7 +472,7 @@ namespace Win32xx
             SafeArrayRedim(psa, &sab);
             result = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
 
-            SafeArrayDestroy(psa);  // Calls release for each element in the array
+            SafeArrayDestroy(psa);  // Calls release for each element in the array.
         }
 
         return result;
@@ -481,7 +482,7 @@ namespace Win32xx
     template <class T>
     inline void CRibbonFrameT<T>::UpdateMRUMenu()
     {
-        // Suppress UpdateMRUMenu when ribbon is used
+        // Suppress UpdateMRUMenu when ribbon is used.
         if (GetRibbonFramework() != 0) return;
 
         T::UpdateMRUMenu();
