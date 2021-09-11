@@ -452,6 +452,28 @@ void CMainFrame::FillTreeItems()
     GetViewTree().SelectItem(libraryItem);
 }
 
+// Force the window to the foreground.
+void CMainFrame::ForceToForeground()
+{
+    // Simulate Alt Key down.
+    BYTE keyState[256] = { 0 };
+    if (::GetKeyboardState((LPBYTE)&keyState))
+    {
+        if (!(keyState[VK_MENU] & 0x80))
+            ::keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | 0, 0);
+    }
+
+    ShowWindow(SW_SHOW);
+    SetForegroundWindow();
+
+    // Simulate Alt Key up.
+    if (::GetKeyboardState((LPBYTE)&keyState))
+    {
+        if (!(keyState[VK_MENU] & 0x80))
+            ::keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    }
+}
+
 // Returns a vector of CString holding the box set names.
 std::vector<CString> CMainFrame::GetBoxSets()
 {
@@ -1012,8 +1034,7 @@ void CMainFrame::OnInitialUpdate()
     LoadMovies();
     FillTreeItems();
 
-    ShowWindow(SW_SHOW);
-    SetForegroundWindow();
+    ForceToForeground();
 }
 
 // Called when a menu is about to be displayed.

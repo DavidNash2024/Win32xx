@@ -1,5 +1,5 @@
 // Win32++   Version 8.9.1
-// Release Date: TBA
+// Release Date: 10th September 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -127,7 +127,7 @@ namespace Win32xx
                         IsAeroThemed = TRUE;
                     }
                 }
-                VERIFY(::FreeLibrary(module));
+                ::FreeLibrary(module);
             }
         }
 
@@ -157,7 +157,7 @@ namespace Win32xx
                         isXPThemed = (GetComCtlVersion() >= 600);
                     }
                 }
-                VERIFY(::FreeLibrary(theme));
+                ::FreeLibrary(theme);
             }
         }
 

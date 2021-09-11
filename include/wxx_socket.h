@@ -1,5 +1,5 @@
 // Win32++   Version 8.9.1
-// Release Date: TBA
+// Release Date: 10th September 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -276,7 +276,7 @@ namespace Win32xx
         // Terminate the  Windows Socket services
         ::WSACleanup();
 
-        VERIFY(::FreeLibrary(m_ws2_32));
+        ::FreeLibrary(m_ws2_32);
     }
 
     // The accept function permits an incoming connection attempt on the socket.

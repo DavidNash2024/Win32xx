@@ -1,5 +1,5 @@
 // Win32++   Version 8.9.1
-// Release Date: TBA
+// Release Date: 10th September 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -588,7 +588,7 @@ namespace Win32xx
             CloseThemeData();
 
         if (m_uxTheme != 0)
-            VERIFY(::FreeLibrary(m_uxTheme));
+            ::FreeLibrary(m_uxTheme);
     }
 
     // Closes the theme data handle.
@@ -2127,7 +2127,7 @@ namespace Win32xx
             PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(theme, "GetCurrentThemeName");
             pfn(0, 0, themeName, 30, 0, 0);
 
-            VERIFY(::FreeLibrary(theme));
+            ::FreeLibrary(theme);
         }
 
         return CString(themeName);

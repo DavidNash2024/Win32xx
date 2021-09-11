@@ -1,5 +1,5 @@
 // Win32++   Version 8.9.1
-// Release Date: TBA
+// Release Date: 10th September 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -288,7 +288,7 @@ namespace Win32xx
             // Call TaskDialogIndirect through our function pointer.
             result = pTaskDialogIndirect(&m_tc, &m_selectedButtonID, &m_selectedRadioButtonID, &m_verificationCheckboxState);
 
-            VERIFY(::FreeLibrary(comCtl));
+            ::FreeLibrary(comCtl);
         }
         pTLSData->pWnd = NULL;
         m_wnd = 0;
@@ -384,7 +384,7 @@ namespace Win32xx
         if (comctl)
         {
             result = (::GetProcAddress(comctl, "TaskDialogIndirect") != FALSE);
-            VERIFY(::FreeLibrary(comctl));
+            ::FreeLibrary(comctl);
         }
 
         return result;
