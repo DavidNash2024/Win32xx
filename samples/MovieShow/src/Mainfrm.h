@@ -47,6 +47,7 @@ public:
     void FillListFromSearch();
     void FillListFromType(LPCTSTR videoType);
     void FillTreeItems();
+    void ForceToForeground();
 
     bool IsVideoFile(const CString& filename) const;
 

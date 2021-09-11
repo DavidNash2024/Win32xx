@@ -1,5 +1,5 @@
 // Win32++   Version 8.9.1
-// Release Date: TBA
+// Release Date: 10th September 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -249,7 +249,7 @@ namespace Win32xx
                 }
             }
 
-            VERIFY(::FreeLibrary(hUser32));
+            ::FreeLibrary(hUser32);
         }
  #endif
 
@@ -541,7 +541,7 @@ namespace Win32xx
             if (pfnGetAncestor)
                 wnd = (*pfnGetAncestor)(*this, flags);
 
-            VERIFY(::FreeLibrary(user32));
+            ::FreeLibrary(user32);
         }
 
         if (!pfnGetAncestor)
@@ -2051,7 +2051,7 @@ namespace Win32xx
 
             result = pfn(*this, pSubAppName, pSubIdList);
 
-            VERIFY(::FreeLibrary(theme));
+            ::FreeLibrary(theme);
         }
 
 #endif
@@ -2606,7 +2606,7 @@ namespace Win32xx
                 }
             }
 
-            VERIFY(::FreeLibrary(hShell));
+            ::FreeLibrary(hShell);
         }
 
 #endif // _WIN32_WCE
@@ -2716,7 +2716,7 @@ namespace Win32xx
                 comCtlVer = 471;    // InitializeFlatSB is unique to version 4.71.
         }
 
-        VERIFY(::FreeLibrary(comCtl));
+        ::FreeLibrary(comCtl);
 
         return comCtlVer;
     }
@@ -2849,7 +2849,7 @@ namespace Win32xx
                 InitCommonControls();
             }
 
-            VERIFY(::FreeLibrary(comCtl));
+            ::FreeLibrary(comCtl);
         }
     }
 

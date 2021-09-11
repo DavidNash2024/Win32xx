@@ -1,5 +1,5 @@
 // Win32++   Version 8.9.1
-// Release Date: TBA
+// Release Date: 10th September 2021
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1259,7 +1259,7 @@ namespace Win32xx
         {
             RemoveFromMap();
 
-            VERIFY(::DeleteObject(m_pData->hGDIObject));
+            ::DeleteObject(m_pData->hGDIObject);
             m_pData->hGDIObject = 0;
         }
     }
@@ -3077,7 +3077,7 @@ namespace Win32xx
             RemoveFromMap();
 
             // Return the DC back to its initial state
-            VERIFY(::RestoreDC(m_pData->dc, m_pData->savedDCState));
+            ::RestoreDC(m_pData->dc, m_pData->savedDCState);
 
             if (m_pData->isManagedHDC)
             {
@@ -3086,12 +3086,12 @@ namespace Win32xx
                 if (m_pData->wnd != 0)
                 {
                     if (m_pData->isPaintDC)
-                        VERIFY(::EndPaint(m_pData->wnd, &m_pData->ps));
+                        ::EndPaint(m_pData->wnd, &m_pData->ps);
                     else
-                        VERIFY(::ReleaseDC(m_pData->wnd, m_pData->dc));
+                        ::ReleaseDC(m_pData->wnd, m_pData->dc);
                 }
                 else
-                    VERIFY(::DeleteDC(m_pData->dc));
+                    ::DeleteDC(m_pData->dc);
             }
 
             Initialize();
