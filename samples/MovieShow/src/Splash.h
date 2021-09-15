@@ -22,7 +22,7 @@ public:
     void Hide();
     void LoadFont();
     void RemoveBar();
-    void ShowText(LPCTSTR text);
+    void ShowText(LPCTSTR text, CWnd* parent = 0);
 
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
