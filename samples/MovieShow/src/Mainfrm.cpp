@@ -199,7 +199,7 @@ void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
 void CMainFrame::FillList()
 {
     GetViewList().SetRedraw(FALSE);
-    m_splashThread.GetSplash()->ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List", this);
     ClearList();
 
     // Lock this function for thread safety
@@ -222,7 +222,7 @@ void CMainFrame::FillList()
 void CMainFrame::FillListFromAllBoxSets()
 {
     GetViewList().SetRedraw(FALSE);
-    m_splashThread.GetSplash()->ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List", this);
     ClearList();
 
     // Lock this function for thread safety
@@ -246,7 +246,7 @@ void CMainFrame::FillListFromAllBoxSets()
 void CMainFrame::FillListFromBoxSet(LPCTSTR boxset)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splashThread.GetSplash()->ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List", this);
     ClearList();
 
     // Lock this function for thread safety
@@ -270,7 +270,7 @@ void CMainFrame::FillListFromBoxSet(LPCTSTR boxset)
 void CMainFrame::FillListFromDateRange(LPCTSTR dateRange)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splashThread.GetSplash()->ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List", this);
     ClearList();
 
     // Lock this function for thread safety
@@ -299,7 +299,7 @@ void CMainFrame::FillListFromDateRange(LPCTSTR dateRange)
 void CMainFrame::FillListFromFlags(DWORD mask)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splashThread.GetSplash()->ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List", this);
     ClearList();
 
     // Lock this function for thread safety
@@ -339,7 +339,7 @@ void CMainFrame::FillListFromGenre(LPCTSTR genre)
 void CMainFrame::FillListFromGenres(LPCTSTR genreList)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splashThread.GetSplash()->ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List", this);
     ClearList();
 
     CString str = genreList;
@@ -392,7 +392,7 @@ void CMainFrame::FillListFromSearch()
 void CMainFrame::FillListFromType(LPCTSTR videoType)
 {
     GetViewList().SetRedraw(FALSE);
-    m_splashThread.GetSplash()->ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List", this);
     ClearList();
 
     // Lock this function for thread safety
@@ -597,7 +597,7 @@ void CMainFrame::LoadMovies()
         try
         {
             // Display the splash screen.
-            m_splashThread.GetSplash()->ShowText(L"Loading Library");
+            m_splashThread.GetSplash()->ShowText(L"Loading Library", this);
 
             CArchive ar(DataFile, CArchive::load);
             std::vector<MovieInfo>::iterator it;
@@ -845,7 +845,7 @@ void CMainFrame::OnClose()
 
         // Display the splash screen.
         // The splash window is destroyed when splash goes out of scope.
-        m_splashThread.GetSplash()->ShowText(L"Saving Library");
+        m_splashThread.GetSplash()->ShowText(L"Saving Library", this);
 
         CString DataPath = GetDataPath();
         CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
@@ -1626,7 +1626,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
         ::WaitForSingleObject(splashThread.GetSplashCreated(), INFINITE);
 
         pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, TRUE);
-        splash->ShowText(L"Updating Library");
+        splash->ShowText(L"Updating Library", pFrame);
         splash->AddBar();
         splash->GetBar().SetRange(0, (short)pFrame->m_filesToAdd.size());
 

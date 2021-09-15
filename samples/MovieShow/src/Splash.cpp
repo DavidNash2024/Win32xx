@@ -24,7 +24,9 @@ CSplash::~CSplash()
 // Called during window creation.
 int CSplash::OnCreate(CREATESTRUCT&)
 {
-    m_hIcon = (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, 256, 256, LR_SHARED);
+    int xImage = 256;
+    int yImage = 256;
+    m_hIcon = (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, xImage, yImage, LR_SHARED);
     CenterWindow();
     return 0;
 }
@@ -82,9 +84,10 @@ void CSplash::LoadFont()
 void CSplash::OnDraw(CDC& dc)
 {
     CMemDC dcMem(dc);
-    dcMem.CreateCompatibleBitmap(dc, 256, 256);
-
-    DrawIconEx(dcMem, 0, 0, m_hIcon, 256, 256, 0, 0, DI_NORMAL);
+    int xImage = 256;
+    int yImage = 256;
+    dcMem.CreateCompatibleBitmap(dc, xImage, yImage);
+    DrawIconEx(dcMem, 0, 0, m_hIcon, xImage, yImage, 0, 0, DI_NORMAL);
 
     dcMem.SetTextColor(RGB(0, 255, 0));
     dcMem.SetBkMode(TRANSPARENT);
@@ -96,7 +99,7 @@ void CSplash::OnDraw(CDC& dc)
 
     dcMem.DrawText(m_text.c_str(), m_text.GetLength(), rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
-    dc.BitBlt(0, 0, 256, 256, dcMem, 0, 0, SRCCOPY);
+    dc.BitBlt(0, 0, xImage, yImage, dcMem, 0, 0, SRCCOPY);
 }
 
 // Sets the CREATESTRUCT struct prior to window creation.
@@ -123,13 +126,23 @@ void CSplash::RemoveBar()
     m_progress.Destroy();
 }
 
-void CSplash::ShowText(LPCTSTR text)
+// Centers the splash screen with text over the parent window.
+void CSplash::ShowText(LPCTSTR text, CWnd* parent)
 {
+    assert(text != 0);
+    assert(parent != 0);
+    assert(parent->IsWindow());
+
     m_text = text;
+    int xImage = 256;
+    int yImage = 256;
+
+    CRect parentRect = parent->GetWindowRect();
+    int x = parentRect.left + (parentRect.Width()  - xImage) / 2;
+    int y = parentRect.top  + (parentRect.Height() - yImage) / 2;
 
     // Show the window on top without activating it.
-    DWORD flags = SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_SHOWWINDOW;
-    SetWindowPos(HWND_TOPMOST, 0, 0, 0, 0, flags);
+    SetWindowPos(HWND_TOPMOST, x, y, xImage, yImage, SWP_NOACTIVATE | SWP_SHOWWINDOW);
 
     UpdateWindow();
     Invalidate();
