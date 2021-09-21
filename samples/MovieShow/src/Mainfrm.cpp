@@ -365,7 +365,7 @@ void CMainFrame::FillListFromGenres(LPCTSTR genreList)
 void CMainFrame::FillListFromSearch()
 {
     GetViewList().SetRedraw(FALSE);
-    m_splashThread.GetSplash()->ShowText(L"Updating List");
+    m_splashThread.GetSplash()->ShowText(L"Updating List", this);
     ClearList();
 
     for (UINT i = 0; i < m_foundMovies.size(); ++i)
