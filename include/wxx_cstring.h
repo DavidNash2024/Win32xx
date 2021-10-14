@@ -1276,11 +1276,15 @@ namespace Win32xx
         int count = 0;
         size_t pos = 0;
         size_t len = lstrlenT(text);
-        while ((pos = m_str.find(text, pos)) != std::string::npos)
+        if (len > 0)
         {
-            m_str.erase(pos, len);
-            ++count;
+            while ((pos = m_str.find(text, pos)) != std::string::npos)
+            {
+                m_str.erase(pos, len);
+                ++count;
+            }
         }
+
         return count;
     }
 
