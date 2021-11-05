@@ -5,6 +5,11 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+// VS6 requires these macros to be set before including wxx_wincore.h.
+#define WINVER            0x0400
+#define _WIN32_WINDOWS    0x0400
+#define _WIN32_IE         0x0400
+
 #include "wxx_wincore.h"
 
 

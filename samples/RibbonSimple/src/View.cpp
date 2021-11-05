@@ -147,6 +147,7 @@ STDMETHODIMP CView::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEW
             result = S_OK;
             break;
         case UI_VIEWVERB_SIZE:      //  The ribbon's size has changed
+            Invalidate();
             result = S_OK;
             break;
         case UI_VIEWVERB_DESTROY:   // The view was destroyed.

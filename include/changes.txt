@@ -1,3 +1,14 @@
+Version 8.9.2
+=============
+
+New Features and Enhancements
+-----------------------------
+* The values for WINVER and related macros now default to Windows 10.
+  Different values can be specified before including wincore.h if required.
+  Visual Studio 6 will require WINVER to be set for Win95 or Win98. 
+  
+
+
 Version 8.9.1
 =============
 
