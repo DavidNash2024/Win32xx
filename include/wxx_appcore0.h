@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -69,16 +69,19 @@
 //  Include the C++ and windows header files
 //
 
-// Specify minimum acceptable version macros
-// These are suitable for Windows 95 and Windows NT
+// Set the version macros if they aren't already set.
+// These values are suitable for Windows 10.
 #ifndef WINVER
-  #define WINVER            0x0400
+  #define WINVER            0x0A00
+  #define _WIN32_WINNT      0x0A00
+  #define _WIN32_IE         0x0A00
+  #define NTDDI_VERSION     0x0A000000
 #endif
 #ifndef _WIN32_WINDOWS
   #define _WIN32_WINDOWS    WINVER
 #endif
 #ifndef _WIN32_IE
- #define _WIN32_IE          WINVER
+  #define _WIN32_IE         WINVER
 #endif
 
 
@@ -191,7 +194,7 @@ using namespace Win32xx;
 #define MIN(a,b)        (((a) < (b)) ? (a) : (b))
 
 // Version macro
-#define _WIN32XX_VER 0x0891     // Win32++ version 8.9.1
+#define _WIN32XX_VER 0x0892     // Win32++ version 8.9.2
 
 // Define the TRACE Macro
 // In debug mode, TRACE send text to the debug/output pane, or an external debugger
