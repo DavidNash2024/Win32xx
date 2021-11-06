@@ -55,6 +55,7 @@ public:
 
 protected:
     virtual CDocker* NewDockerFromID(int dockID);
+    virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);

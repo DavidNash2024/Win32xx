@@ -149,6 +149,14 @@ BOOL CMainFrame::OnCloseMDIs()
     return TRUE;
 }
 
+// Called when the main window is asked to close.
+void CMainFrame::OnClose()
+{
+    SaveRegistrySettings();
+    m_myTabbedMDI.CloseAllMDIChildren();
+    Destroy();
+}
+
 // OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {

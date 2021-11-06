@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -714,6 +714,7 @@ namespace Win32xx
         int nResult = static_cast<int>(CreatePropertySheet(&m_psh));
 
         m_allPages.clear();
+        Cleanup();
 
         return nResult;
     }
