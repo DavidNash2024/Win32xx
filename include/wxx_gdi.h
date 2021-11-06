@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2062,6 +2062,7 @@ namespace Win32xx
         logFont1.lfHeight = -abs(((::GetDeviceCaps(dc, LOGPIXELSY)* logFont.lfHeight)/ 720));
 #endif // _WIN32_WCE
 
+        ::ReleaseDC(HWND_DESKTOP, dc);
         return CreateFontIndirect (logFont1);
     }
 
@@ -3781,7 +3782,6 @@ namespace Win32xx
         assert(m_pData->dc != 0);
         return ::GetDCBrushColor(m_pData->dc);
     }
-
 
     // Sets the current brush color for the device context.
     // Refer to SetDCBrushColor in the Windows API documentation for more information.

@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -291,7 +291,7 @@ namespace Win32xx
             ::FreeLibrary(comCtl);
         }
         pTLSData->pWnd = NULL;
-        m_wnd = 0;
+        Cleanup();
 
         if (result != S_OK)
         {
