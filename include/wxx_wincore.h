@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -267,12 +267,16 @@ namespace Win32xx
         VERIFY(SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE));
     }
 
-    // Returns the CWnd to its default state
+    // Returns the CWnd to its default state.
     inline void CWnd::Cleanup()
     {
-        RemoveFromMap();
-        m_wnd = 0;
-        m_prevWindowProc = 0;
+        assert(!IsWindow());
+        if (!IsWindow())
+        {
+            RemoveFromMap();
+            m_wnd = 0;
+            m_prevWindowProc = 0;
+        }
     }
 
     // Creates the window with default parameters. The PreRegisterClass and PreCreate
@@ -280,7 +284,6 @@ namespace Win32xx
     // to register a new window class for the window, otherwise a default window class is used.
     // Override PreCreate to specify the CREATESTRUCT parameters, otherwise default parameters
     // are used. A failure to create a window throws an exception.
-    // A failure to create a window throws an exception.
     inline HWND CWnd::Create(HWND parent /* = 0 */)
     {
         WNDCLASS wc;
@@ -2233,13 +2236,23 @@ namespace Win32xx
         return ::GetScrollRange(*this, bar, &minPos, &maxPos );
     }
 
-    // The GetSystemMenu function allows the application to access the window menu (also known as the system menu
-    // or the control menu) for copying and modifying.
+    // The GetSystemMenu function allows the application to access the window menu (AKA system menu).
+    // If this parameter is TRUE, GetSystemMenu resets the window menu back to the default state.
     // Refer to GetSystemMenu in the Windows API documentation for more information.
     inline CMenu CWnd::GetSystemMenu(BOOL revertToDefault) const
     {
         assert(IsWindow());
-        return CMenu( ::GetSystemMenu(*this, revertToDefault) );
+        if (revertToDefault)
+        {
+            // Detach any currently attached CMenu before the menu is destroyed.
+            CMenu menu(::GetSystemMenu(*this, FALSE));
+            menu.Detach();
+
+            // Reset the window menu back to the default state.
+            ::GetSystemMenu(*this, revertToDefault);
+        }
+
+        return CMenu( ::GetSystemMenu(*this, FALSE) );
     }
 
     // The GetTopWindow function examines the Z order of the child windows associated with the parent window and

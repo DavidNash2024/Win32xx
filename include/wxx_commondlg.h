@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -462,7 +462,7 @@ namespace Win32xx
         OnOK();
 
         // Prepare the CWnd for reuse.
-        Destroy();
+        Cleanup();
 
         return IDOK;
     }
@@ -663,7 +663,7 @@ namespace Win32xx
         OnOK();
 
         // Prepare the CWnd for reuse.
-        Destroy();
+        Cleanup();
 
         return IDOK;
     }
@@ -1458,7 +1458,7 @@ namespace Win32xx
         }
 
         OnOK();
-        Destroy();
+        Cleanup();
 
         return IDOK;
     }

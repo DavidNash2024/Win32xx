@@ -130,6 +130,7 @@ namespace Win32xx
 
     private:
         using CWnd::WndProc;                  // Make WndProc private
+        using CWnd::WndProcDefault;           // Make WndProcDefault private
         CDialog(const CDialog&);              // Disable copy construction
         CDialog& operator = (const CDialog&); // Disable assignment operator
 

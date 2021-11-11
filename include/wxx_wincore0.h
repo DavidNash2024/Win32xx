@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -123,8 +123,12 @@ namespace Win32xx
     friend class CCommonDialog;
     friend class CDialog;
     friend class CFileDialog;
+    friend class CFolderDialog;
     friend class CFontDialog;
     friend class CMDIChild;
+    friend class CPageSetupDialog;
+    friend class CPrintDialog;
+    friend class CPrintDialogEx;
     friend class CPropertyPage;
     friend class CPropertySheet;
     friend class CTaskDialog;
@@ -280,7 +284,7 @@ namespace Win32xx
         CMenu GetMenu() const;
         int   GetScrollPos(int barType) const;
         BOOL  GetScrollRange(int barType, int& minPos, int& maxPos) const;
-        CMenu GetSystemMenu(BOOL revertToDefault) const;
+        CMenu GetSystemMenu(BOOL revertToDefault = FALSE) const;
         CWnd  GetTopWindow() const;
         BOOL  GetWindowPlacement(WINDOWPLACEMENT& wp) const;
         BOOL  HiliteMenuItem(HMENU menu, UINT itemID, UINT hilite) const;
