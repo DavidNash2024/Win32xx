@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -457,7 +457,7 @@ namespace Win32xx
     }
 
     // Enables, disables, or grays the specified menu item.
-    // The uEnable parameter must be a combination of either MF_BYCOMMAND or MF_BYPOSITION
+    // The enable parameter must be a combination of either MF_BYCOMMAND or MF_BYPOSITION
     // and MF_ENABLED, MF_DISABLED, or MF_GRAYED.
     // MF_DISABLED and MF_GRAYED are different without XP themes, but the same with XP themes enabled.
     // Refer to EnableMenuItem in the Windows API documentation for more information.

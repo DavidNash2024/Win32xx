@@ -1,12 +1,22 @@
 Version 8.9.2
 =============
 
+Bug fixes:
+- Fixed GDI resource leak in CFont::CreatePointFontIndirect.
+
 New Features and Enhancements
 -----------------------------
 * The values for WINVER and related macros now default to Windows 10.
   Different values can be specified before including wincore.h if required.
-  Visual Studio 6 will require WINVER to be set for Win95 or Win98. 
-  
+  Visual Studio 6 will require WINVER to be set for Win95 or Win98.
+
+* Added the titlbar sample.
+  This sample demonstrates how to customize a windows title bar. It sets
+  the title bar's color and draws the minimize, maximize and close buttons.
+
+* Added the titlebar frame sample.
+  This sample demonstrates how to use a customized title bar with a frame.  
+
 
 
 Version 8.9.1
