@@ -2,12 +2,10 @@
 // Miniframe.cpp
 //
 
-#include "wxx_wincore.h"
+#include "stdafx.h"
 #include "MiniFrame.h"
 #include "resource.h"
-#include <uxtheme.h>
-#include <vssym32.h>
-#include <dwmapi.h>
+
 
 #pragma comment(lib, "uxtheme.lib")
 #pragma comment(lib, "Dwmapi.lib")
@@ -278,6 +276,24 @@ LRESULT CMiniFrame::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
+// OnCommand responds to menu input.
+BOOL CMiniFrame::OnCommand(WPARAM wparam, LPARAM)
+{
+    UINT id = LOWORD(wparam);
+    switch (id)
+    {
+ //   case IDM_FILE_OPEN:       return OnFileOpen();
+ //   case IDM_FILE_SAVE:       return OnFileSave();
+ //   case IDM_FILE_SAVEAS:     return OnFileSave();
+ //   case IDM_FILE_PREVIEW:    return OnFilePreview();
+ //   case IDM_FILE_PRINT:      return OnFilePrint();
+    case IDM_FILE_EXIT:       return OnFileExit();
+    case IDM_HELP_ABOUT:      return OnHelp();
+    }
+
+    return FALSE;
+}
+
 // OnCreate is called automatically during window creation when a
 // WM_CREATE message received.
 int CMiniFrame::OnCreate(CREATESTRUCT&)
@@ -293,9 +309,18 @@ int CMiniFrame::OnCreate(CREATESTRUCT&)
     // Set the window title.
     SetWindowText(LoadString(IDW_MAIN));
 
+    // Configure the menu bar.
+    m_menubar.Create(*this);
+    m_menu.LoadMenu(IDW_MAIN);
+    m_menubar.SetMenu(m_menu);
     m_view.Create(*this);
+    m_accel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+    if (m_accel)
+        GetApp()->SetAccelerators(m_accel, *this);
 
-    TRACE("OnCreate\n");
+    // Position the window.
+    CenterWindow();
+    
     return 0;
 }
 
@@ -312,6 +337,25 @@ LRESULT CMiniFrame::OnEraseBkGnd(UINT, WPARAM, LPARAM)
     // Supress occasional titlebar flicker when resizing across
     // multiple monitors.
     return 0;
+}
+
+// Issue a close request to the frame to end the program.
+BOOL CMiniFrame::OnFileExit()
+{
+    Close();
+    return TRUE;
+}
+
+// Displays the About dialog when F1 is pressed or when selected from the menu.
+BOOL CMiniFrame::OnHelp()
+{
+    // Ensure only one dialog displayed even for multiple hits of the F1 button.
+    if (!m_aboutDialog.IsWindow())
+    {
+        m_aboutDialog.DoModal(*this);
+    }
+
+    return TRUE;
 }
 
 // Handle WM_NCCALCSIZE to extend client (paintable) area into the title bar region.
@@ -463,6 +507,22 @@ LRESULT CMiniFrame::OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
+LRESULT CMiniFrame::OnNotify(WPARAM, LPARAM lparam)
+{
+    // Set the background color of the menubar.
+    LPNMHDR pnmh = (LPNMHDR)lparam;
+    if (pnmh->hwndFrom == m_menubar.GetHwnd())
+    {
+        LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)lparam;
+        CRect rect = m_menubar.GetClientRect();
+        COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
+        CBrush brush(titlebarColor);
+        FillRect(lpNMCustomDraw->nmcd.hdc, rect, brush);
+    }
+
+    return 0;
+}
+
 // Called when any part of the window is repainted.
 LRESULT CMiniFrame::OnPaint(UINT, WPARAM, LPARAM)
 {
@@ -478,7 +538,7 @@ LRESULT CMiniFrame::OnPaint(UINT, WPARAM, LPARAM)
     DrawMinimizeButton(dc);
     DrawMaximizeButton(dc);
     DrawCloseButton(dc);
-    DrawTitleText(dc);
+//    DrawTitleText(dc);
     DrawWindowIcon(dc);
 
     // Draw the top shadow. Original is missing because of the client rect extension.
@@ -499,16 +559,7 @@ LRESULT CMiniFrame::OnPaint(UINT, WPARAM, LPARAM)
 // Called when the window is resized.
 LRESULT CMiniFrame::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Redraw the title bar.
-    CRect rect = GetTitlebarRect();
-    InvalidateRect(rect, FALSE);
-
-    // Position the view window.
-    if (m_view.IsWindow())
-    {
-        rect = GetViewRect();
-        m_view.SetWindowPos(NULL, rect, SWP_SHOWWINDOW);
-    }
+    RecalcLayout();
 
     return WndProcDefault(msg, wparam, lparam);
 }
@@ -520,15 +571,44 @@ LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-// This function will be called automatically by Create.
+// Called before the window is created to set the CREATESTRUCT parameters.
 void CMiniFrame::PreCreate(CREATESTRUCT& cs)
 {
     // Set some optional parameters for the window
-    cs.lpszClass = _T("View Window");       // Window Class
+    cs.dwExStyle = WS_EX_CLIENTEDGE;        // Extended style
+    cs.lpszClass = _T("MiniFrame Window");  // Window Class
     cs.x = 50;                              // top x
     cs.y = 50;                              // top y
     cs.cx = 400;                            // width
     cs.cy = 300;                            // height
+}
+
+// Repositions the child windows.
+void CMiniFrame::RecalcLayout() const
+{
+    // Redraw the title bar.
+    CRect rect = GetTitlebarRect();
+    InvalidateRect(rect, FALSE);
+
+    // Position the menu bar.
+    if (m_menubar.IsWindow())
+    {
+        CRect menuRect = GetClientRect();
+        CSize size = m_menubar.GetMaxSize();
+        menuRect.left = GetButtonRects().system.right;
+        menuRect.top = (rect.Height() - size.cy) / 2;;
+        menuRect.right = menuRect.left + size.cx;
+        menuRect.bottom = menuRect.top + size.cy;
+        m_menubar.SetWindowPos(NULL, menuRect, SWP_SHOWWINDOW);
+    }
+
+    // Position the view window.
+    if (m_view.IsWindow())
+    {
+        rect = GetViewRect();
+        m_view.SetWindowPos(NULL, rect, SWP_SHOWWINDOW);
+    }
+
 }
 
 // The system menu is displayed when the application's icon is clicked.
@@ -558,6 +638,7 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case WM_ACTIVATE:      return OnActivate(msg, wparam, lparam);
     case WM_ERASEBKGND:    return OnEraseBkGnd(msg, wparam, lparam);
+    case WM_HELP:          return OnHelp();
     case WM_NCMOUSELEAVE:  return OnNCMouseLeave(msg, wparam, lparam);
     case WM_NCCALCSIZE:    return OnNCCalcSize(msg, wparam, lparam);
     case WM_NCHITTEST:     return OnNCHitTest(msg, wparam, lparam);

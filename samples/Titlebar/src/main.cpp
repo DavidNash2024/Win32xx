@@ -2,8 +2,7 @@
 // main.cpp
 //
 
-
-#include "wxx_wincore.h"
+#include "stdafx.h"
 #include "App.h"
 
 

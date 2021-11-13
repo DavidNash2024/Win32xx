@@ -2,7 +2,7 @@
 // View.cpp
 //
 
-#include "wxx_wincore.h"
+#include "stdafx.h"
 #include "View.h"
 #include "resource.h"
 

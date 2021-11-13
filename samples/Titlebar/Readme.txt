@@ -1,8 +1,14 @@
 Titlebar Sample
 ===============
-This sample demonstrates how to customise the title bar of a window in a
-manner that is supported on Windows 10 and Windows 11. A child view window
-is positioned over the client area of the main window.
+This sample demonstrates how to customize the title bar of a window in a
+manner that is supported on Windows 10 and Windows 11.
+
+The main window with the customized title bar is a "mini frame". It has 
+the following features:
+* The application's icon is displayed in the title bar. 
+* A system menu is displayed when the application's icon is clicked.
+* CMenuBar is used to display a menu in the caption area.
+* A child view window is positioned over the client area of the main window.
 
 
 Background
@@ -27,14 +33,17 @@ custom title bar within the handling of WM_PAINT.
 
 Features demonstrated in this example
 =====================================
-* Handling the WM_NCCALCSIZE message to adjust the non-client area size.
-* Handling the WM_NCHITTEST message for hit testing on our custom title bar.
-* Using ::OpenThemeData to access the windows's theme data.
-* Using ::GetDpiForWindow to retrieve the DPI for the window.
-* Using ::DrawThemeTextEx to draw the tile bar caption.
-* Drawing a custom title bar with minimize, maximize and close buttons.
-* Drawing an icon on the title bar.
-* Displaying a system menu when the icon on the title bar is clicked.
-* Positioning a child view window over the view area of the window.
-* Using double buffer when drawing the contents of the view window. 
+* Handles the WM_NCCALCSIZE message to adjust the non-client area size.
+* Handles the WM_NCHITTEST message for hit testing on our custom title bar.
+* Uses ::OpenThemeData to access the windows's theme data.
+* Uses ::GetDpiForWindow to retrieve the DPI for the window.
+* Uses ::DrawThemeTextEx to draw the tile bar caption.
+* Draws a custom title bar with minimize, maximize and close buttons.
+* Draws an icon on the title bar.
+* Displays a system menu when the icon on the title bar is clicked.
+* Positions a child view window over the view area of the window.
+* Uses double buffer when drawing the contents of the view window.
+* Positions a CMenuBar window on the title bar to display the window menu.
+* Uses custom draw to provide the background color for the CMenuBar window.
+* Displays the 'About' dialog when F1 is pressed, or from the menu.
 
