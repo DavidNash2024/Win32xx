@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -392,7 +392,7 @@ namespace Win32xx
         CString GetStatusText() const                   { return m_statusText; }
         CString GetTitle() const                        { return T::GetWindowText(); }
         void SetAccelerators(UINT accelID);
-        void SetFrameMenu(UINT menuID);
+        void SetFrameMenu(int menuID);
         void SetFrameMenu(HMENU menu);
         void SetInitValues(const InitValues& values);
         void SetKbdHook();
@@ -3153,7 +3153,7 @@ namespace Win32xx
     // Sets the frame's menu from a Resource ID.
     // A resource ID of 0 removes the menu from the frame.
     template <class T>
-    inline void CFrameT<T>::SetFrameMenu(UINT menuID)
+    inline void CFrameT<T>::SetFrameMenu(int menuID)
     {
         CMenu menu;
         if (menuID != 0)

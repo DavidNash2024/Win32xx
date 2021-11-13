@@ -6,6 +6,7 @@
 #define MINIFRAME_H
 
 #include "view.h"
+#include "resource.h"
 
 enum class TitlebarButton
 {
@@ -42,7 +43,9 @@ class CMiniFrame : public CWnd
 {
 public:
     CMiniFrame() : m_hoveredButton(TitlebarButton::None),
-              m_oldHoveredButton(TitlebarButton::None)
+                   m_oldHoveredButton(TitlebarButton::None),
+                   m_aboutDialog(IDW_ABOUT),
+                   m_accel(0)
               {}
     virtual ~CMiniFrame() {}
 
@@ -51,8 +54,10 @@ public:
     void DrawCloseButton(CDC& dc) const;
     void DrawTitleText(CDC& dc) const;
     void DrawWindowIcon(CDC& dc) const;
+    void RecalcLayout() const;
     void SystemMenu() const;
 
+    // Accessors
     ButtonRects    GetButtonRects() const;
     TitlebarButton GetHoveredButton() const;
     CRect    GetShadowRect() const;
@@ -61,6 +66,7 @@ public:
     bool     IsActive() const { return (GetForegroundWindow() == *this); }
     bool     IsMaximized() const;
 
+    // Message handlers
     LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnEraseBkGnd(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -73,17 +79,27 @@ public:
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
+    // Command handlers
+    BOOL OnFileExit();
+    BOOL OnHelp();
+
 protected:
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDestroy();
-    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM);
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    OnDestroy();
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+    virtual void    PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_view;
-    TitlebarButton m_hoveredButton;
-    TitlebarButton m_oldHoveredButton;
-    TitlebarColors m_colors;
+    CDialog m_aboutDialog;              // Help about dialog.
+    CMenuBar m_menubar;                 // Menubar window.
+    CView m_view;                       // View window.
+    CMenu m_menu;                       // handle to the frame menu.
+    HACCEL m_accel;                     // handle to the frame's accelerator table.
+    TitlebarButton m_hoveredButton;     // Current hovered button.
+    TitlebarButton m_oldHoveredButton;  // Hovered button when left mouse button pressed.
+    TitlebarColors m_colors;            // A struct holding the title bar colors.
 };
 
 #endif // MINIFRAME_H

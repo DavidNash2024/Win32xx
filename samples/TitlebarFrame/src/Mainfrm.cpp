@@ -414,7 +414,18 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
         DWORD style = (DWORD)GetToolBar().GetWindowLongPtr(GWL_STYLE);
         style += CCS_NORESIZE | CCS_NOPARENTALIGN;
         GetToolBar().SetWindowLongPtr(GWL_STYLE, style);
+
+        // Disable the menu.
+        SetFrameMenu(0);
     }
+
+    // Adjust the title bar colors to the rebar theme.
+    ReBarTheme theme = GetReBarTheme();
+    m_colors.active = theme.clrBkgnd1;
+    m_colors.inactive = RGB(255, 255, 255);
+    m_colors.hover = RGB( (GetRValue(m_colors.active) + 180) / 2,
+                          (GetGValue(m_colors.active) + 180) / 2,
+                          (GetBValue(m_colors.active) + 180) / 2 );
 
     return result;
 }
