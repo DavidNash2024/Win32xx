@@ -52,26 +52,27 @@ public:
     void DrawCloseButton(CDC& dc) const;
     void DrawTitleText(CDC& dc) const;
     void DrawWindowIcon(CDC& dc) const;
+    void SystemMenu() const;
 
+    // Accessors
     CDoc& GetDoc()      { return m_view.GetDoc(); }
     ButtonRects    GetButtonRects() const;
     TitlebarButton GetHoveredButton() const;
     CRect GetShadowRect() const;
     CRect GetTitlebarRect() const;
-
     bool  IsActive() const { return (GetForegroundWindow() == *this); }
     bool  IsMaximized() const;
 
-    LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    // Command Handlers
     BOOL    OnFileExit();
     BOOL    OnFileOpen();
     BOOL    OnFilePrint();
     BOOL    OnFileSave();
     BOOL    OnFilePreview();
-    LRESULT OnPreviewClose();
-    LRESULT OnPreviewPrint();
-    LRESULT OnPreviewSetup();
 
+    // Message handlers.
+    LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMenuChar(UINT, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCCalcSize(UINT, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -81,14 +82,17 @@ public:
     LRESULT OnPaint(UINT, WPARAM, LPARAM);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    void SystemMenu() const;
+    LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnPreviewClose();
+    LRESULT OnPreviewPrint();
+    LRESULT OnPreviewSetup();
 
 protected:
     virtual CRect   GetViewRect() const;
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
     virtual void    OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
@@ -99,11 +103,13 @@ protected:
 
 private:
     CView m_view;
+    CMenuBar m_menubar2;
     CPrintPreview<CView> m_preview;
     BOOL m_isToolbarShown;
     TitlebarButton m_hoveredButton;
     TitlebarButton m_oldHoveredButton;
     TitlebarColors m_colors;
+    BOOL m_isMiniFrame;
 };
 
 #endif //MAINFRM_H

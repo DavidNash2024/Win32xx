@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -68,8 +68,8 @@ namespace Win32xx
         BOOL MoveBand(UINT from, UINT to) const;
         void MoveBandsLeft() const;
         BOOL ResizeBand(int band, const CSize& sz) const;
-        BOOL ShowGripper(int band, BOOL show) const;
         BOOL ShowBand(int band, BOOL show) const;
+        BOOL ShowGripper(int band, BOOL show) const;
         BOOL SizeToRect(RECT& rect) const;
 
         // Attributes

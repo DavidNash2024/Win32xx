@@ -75,13 +75,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-// Called when the window is closed.
+// Called when the frame window is asked to close.
 void CMainFrame::OnClose()
 {
-    OnPreviewClose();
-    SerializeINI(true);
+    // Close the preview.
+    if (GetView() == m_preview)
+        OnPreviewClose();
 
-    // Ends the application.
+    // Proceed with closing the frame.
     CFrame::OnClose();
 }
 

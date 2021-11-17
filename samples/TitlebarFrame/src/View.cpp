@@ -23,11 +23,17 @@ CDoc& CView::GetDoc()
 // OnDraw is called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {
+    // Use a memory device context for double buffering.
+    CMemDC memDC(dc);
     CRect rc = GetClientRect();
-    dc.SolidFill(RGB(255, 255, 255), rc);
+    memDC.CreateCompatibleBitmap(dc, rc.Width(), rc.Height());
+    memDC.SolidFill(RGB(255, 255, 255), rc);
 
     // Centre some text in our view window.
-    dc.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    memDC.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+    // Copy from the memory dc to our drawing dc.
+    dc.BitBlt(0, 0, rc.Width(), rc.Height(), memDC, 0, 0, SRCCOPY);
 }
 
 // OnInitialUpdate is called immediately after the window is created.

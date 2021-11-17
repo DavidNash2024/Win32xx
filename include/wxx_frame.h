@@ -1272,6 +1272,9 @@ namespace Win32xx
     inline LRESULT CFrameT<T>::CustomDrawMenuBar(NMHDR* pNMHDR)
     {
         LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+        CMenuBar* pMenubar = reinterpret_cast<CMenuBar*>
+                             (::SendMessage(pNMHDR->hwndFrom, UWM_GETCMENUBAR, 0, 0));
+        assert(pMenubar != 0);
 
         switch (lpNMCustomDraw->nmcd.dwDrawStage)
         {
@@ -1291,7 +1294,7 @@ namespace Win32xx
                 // Draw over MDI Max button
                 {
                     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
-                    CWnd* pActiveChild = GetMenuBar().GetActiveMDIChild();
+                    CWnd* pActiveChild = pMenubar->GetActiveMDIChild();
                     assert(pActiveChild);
                     if (pActiveChild)
                     {
@@ -1301,7 +1304,7 @@ namespace Win32xx
 
                         int cx = ::GetSystemMetrics(SM_CXSMICON);
                         int cy = ::GetSystemMetrics(SM_CYSMICON);
-                        int y = 1 + (GetMenuBar().GetWindowRect().Height() - cy) / 2;
+                        int y = 1 + (pMenubar->GetWindowRect().Height() - cy) / 2;
                         int x = (rc.Width() - cx) / 2;
                         drawDC.DrawIconEx(x, y, icon, cx, cy, 0, 0, DI_NORMAL);
                     }
@@ -1319,7 +1322,7 @@ namespace Win32xx
                     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
                     if (state & (CDIS_HOT | CDIS_SELECTED))
                     {
-                        if ((state & CDIS_SELECTED) || (GetMenuBar().GetButtonState(item) & TBSTATE_PRESSED))
+                        if ((state & CDIS_SELECTED) || (pMenubar->GetButtonState(item) & TBSTATE_PRESSED))
                         {
                             drawDC.GradientFill(GetMenuBarTheme().clrPressed1, GetMenuBarTheme().clrPressed2, rc, FALSE);
                         }
@@ -1341,10 +1344,10 @@ namespace Win32xx
                     }
 
                     int itemID = static_cast<int>(lpNMCustomDraw->nmcd.dwItemSpec);
-                    CString str = GetMenuBar().GetButtonText(itemID);
+                    CString str = pMenubar->GetButtonText(itemID);
 
                     // Draw highlight text.
-                    CFont font = GetMenuBar().GetFont();
+                    CFont font = pMenubar->GetFont();
                     CFont oldFont = drawDC.SelectObject(font);
 
                     rc.bottom += 1;
@@ -1352,7 +1355,7 @@ namespace Win32xx
                     UINT format = DT_VCENTER | DT_CENTER | DT_SINGLELINE | DT_HIDEPREFIX;
 
                     // Turn off 'hide prefix' style for keyboard navigation.
-                    if (m_altKeyPressed || GetMenuBar().IsAltMode())
+                    if (m_altKeyPressed || pMenubar->IsAltMode())
                         format &= ~DT_HIDEPREFIX;
 
                     drawDC.DrawText(str, str.GetLength(), rc, format);
@@ -1368,7 +1371,7 @@ namespace Win32xx
             // Draw MDI Minimize, Restore and Close buttons.
             {
                 CDC dc(lpNMCustomDraw->nmcd.hdc);
-                GetMenuBar().DrawAllMDIButtons(dc);
+                pMenubar->DrawAllMDIButtons(dc);
             }
             break;
         }
@@ -1822,8 +1825,13 @@ namespace Win32xx
 
             UINT format = DT_VCENTER | DT_LEFT | DT_SINGLELINE;
             // Turn on 'hide prefix' style for mouse navigation.
-            if (!m_altKeyPressed && (GetMenuBar().IsWindow() && !GetMenuBar().IsAltMode()))
-                format |= DT_HIDEPREFIX;
+            CMenuBar* pMenubar = reinterpret_cast<CMenuBar*>
+                                 (::SendMessage(pDIS->hwndItem, UWM_GETCMENUBAR, 0, 0));
+            if (pMenubar != 0)
+            {
+                if (!m_altKeyPressed && !pMenubar->IsAltMode())
+                    format |= DT_HIDEPREFIX;
+            }
 
             DrawText(pDIS->hDC, pItem, tab, textRect, format);
 

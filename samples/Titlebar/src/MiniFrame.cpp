@@ -7,14 +7,18 @@
 #include "resource.h"
 
 
+// Add the following libraries to the linker.
 #pragma comment(lib, "uxtheme.lib")
 #pragma comment(lib, "Dwmapi.lib")
 
+// Scales the value to the window's dots per inch (dpi) value. 
 int dpi_scale(int value, UINT dpi)
 {
+    // A scale factor of 100 percent is 96 (logical) DPI.
     return (value * dpi) / 96;
 }
 
+// Center the inner rectangle within the outer rectangle.
 void CenterRectInRect(RECT* toCenter, const RECT* outerRect)
 {
     int toWidth = toCenter->right - toCenter->left;
@@ -32,7 +36,7 @@ void CenterRectInRect(RECT* toCenter, const RECT* outerRect)
 }
 
 
-//////////////////////////////
+///////////////////////////////////
 // CMiniframe function definitions.
 //
 
@@ -230,7 +234,7 @@ CRect CMiniFrame::GetShadowRect() const
 }
 
 // Returns the rect for the titlebar.
-// Adopted from:
+// Adapted from:
 // https://github.com/oberth/custom-chrome/blob/master/source/gui/window_helper.hpp#L52-L64
 CRect CMiniFrame::GetTitlebarRect() const
 {
@@ -320,7 +324,7 @@ int CMiniFrame::OnCreate(CREATESTRUCT&)
 
     // Position the window.
     CenterWindow();
-    
+
     return 0;
 }
 
@@ -334,12 +338,11 @@ void CMiniFrame::OnDestroy()
 // Called when the window's background is drawn.
 LRESULT CMiniFrame::OnEraseBkGnd(UINT, WPARAM, LPARAM)
 {
-    // Supress occasional titlebar flicker when resizing across
-    // multiple monitors.
+    // Suppress background drawing to eliminate flicker.
     return 0;
 }
 
-// Issue a close request to the frame to end the program.
+// Issue a close request to the window to end the program.
 BOOL CMiniFrame::OnFileExit()
 {
     Close();
@@ -507,17 +510,24 @@ LRESULT CMiniFrame::OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
+// Processes notification (WM_NOTIFY) messages from a child window.
 LRESULT CMiniFrame::OnNotify(WPARAM, LPARAM lparam)
 {
-    // Set the background color of the menubar.
-    LPNMHDR pnmh = (LPNMHDR)lparam;
-    if (pnmh->hwndFrom == m_menubar.GetHwnd())
+    LPNMHDR pHeader = (LPNMHDR)lparam;
+    switch (pHeader->code)
     {
-        LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)lparam;
-        CRect rect = m_menubar.GetClientRect();
-        COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
-        CBrush brush(titlebarColor);
-        FillRect(lpNMCustomDraw->nmcd.hdc, rect, brush);
+    case NM_CUSTOMDRAW:
+        if (pHeader->hwndFrom == m_menubar.GetHwnd())
+        {
+            // Set the background color of the menubar.
+            LPNMTBCUSTOMDRAW pCustomDraw = (LPNMTBCUSTOMDRAW)lparam;
+            CRect rect = m_menubar.GetClientRect();
+            COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
+            CBrush brush(titlebarColor);
+            FillRect(pCustomDraw->nmcd.hdc, rect, brush);
+        }
+
+        return CDRF_DODEFAULT;   // Do default drawing.
     }
 
     return 0;
@@ -560,14 +570,37 @@ LRESULT CMiniFrame::OnPaint(UINT, WPARAM, LPARAM)
 LRESULT CMiniFrame::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     RecalcLayout();
+    return WndProcDefault(msg, wparam, lparam);
+}
+
+// Called in response to system commands, such as when the window is
+// maximized, minimized or restored.
+LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    m_hoveredButton = TitlebarButton::None;
+
+    // Pass menu keystrokes to the CMenuBar to process alt keys, F10 etc.
+    if ((SC_KEYMENU == wparam) && (VK_SPACE != lparam) && m_menubar.IsWindow())
+    {
+        m_menubar.OnSysCommand(msg, wparam, lparam);
+        return 0;
+    }
 
     return WndProcDefault(msg, wparam, lparam);
 }
 
-// Called when the window is maximized, minimized or restored.
-LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
+// Called when the window is about to be resized or moved.
+LRESULT CMiniFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    m_hoveredButton = TitlebarButton::None;
+    // Limit the minimum size of the window.
+    LPWINDOWPOS windowPos = (LPWINDOWPOS)lparam;
+
+    if (windowPos->cx < 400)
+        windowPos->cx = 400;
+
+    if (windowPos->cy < 300)
+        windowPos->cy = 300;
+
     return WndProcDefault(msg, wparam, lparam);
 }
 
@@ -575,7 +608,6 @@ LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
 void CMiniFrame::PreCreate(CREATESTRUCT& cs)
 {
     // Set some optional parameters for the window
-    cs.dwExStyle = WS_EX_CLIENTEDGE;        // Extended style
     cs.lpszClass = _T("MiniFrame Window");  // Window Class
     cs.x = 50;                              // top x
     cs.y = 50;                              // top y
@@ -636,18 +668,19 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case WM_ACTIVATE:      return OnActivate(msg, wparam, lparam);
-    case WM_ERASEBKGND:    return OnEraseBkGnd(msg, wparam, lparam);
-    case WM_HELP:          return OnHelp();
-    case WM_NCMOUSELEAVE:  return OnNCMouseLeave(msg, wparam, lparam);
-    case WM_NCCALCSIZE:    return OnNCCalcSize(msg, wparam, lparam);
-    case WM_NCHITTEST:     return OnNCHitTest(msg, wparam, lparam);
-    case WM_NCLBUTTONDOWN: return OnNCLButtonDown(msg, wparam, lparam);
-    case WM_NCLBUTTONUP:   return OnNCLButtonUp(msg, wparam, lparam);
-    case WM_NCMOUSEMOVE:   return OnNCMouseMove(msg, wparam, lparam);
-    case WM_PAINT:         return OnPaint(msg, wparam, lparam);
-    case WM_SIZE:          return OnSize(msg, wparam, lparam);
-    case WM_SYSCOMMAND:    return OnSysCommand(msg, wparam, lparam);
+    case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
+    case WM_ERASEBKGND:         return OnEraseBkGnd(msg, wparam, lparam);
+    case WM_HELP:               return OnHelp();
+    case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
+    case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
+    case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
+    case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
+    case WM_NCLBUTTONUP:        return OnNCLButtonUp(msg, wparam, lparam);
+    case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);
+    case WM_PAINT:              return OnPaint(msg, wparam, lparam);
+    case WM_SIZE:               return OnSize(msg, wparam, lparam);
+    case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
+    case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
     }
 
     // Pass unhandled messages on for default processing.

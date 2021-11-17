@@ -10,9 +10,9 @@
 
 
 ////////////////////////////////////////////////////////////
-// CApp manages the application. It initializes the
-// Win32++ framework when it is constructed, and creates the
-// main window when it runs.
+// CApp manages the application. It initializes the Win32++
+// framework when it is constructed, and creates the main
+// window when it runs.
 class CApp : public CWinApp
 {
 public:

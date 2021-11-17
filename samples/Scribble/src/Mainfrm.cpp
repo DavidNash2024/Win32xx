@@ -56,12 +56,12 @@ void CMainFrame::LoadFile(LPCTSTR fileName)
 
 }
 
-// Called when the window is closed.
+// Called when the window is asked to close.
 void CMainFrame::OnClose()
 {
     OnPreviewClose();
 
-    // Ends the application.
+    // Proceed with closing the frame.
     CFrame::OnClose();
 }
 

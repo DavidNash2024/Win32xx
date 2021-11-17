@@ -37,7 +37,6 @@ Features demonstrated in this example
 * Handles the WM_NCHITTEST message for hit testing on our custom title bar.
 * Uses ::OpenThemeData to access the windows's theme data.
 * Uses ::GetDpiForWindow to retrieve the DPI for the window.
-* Uses ::DrawThemeTextEx to draw the tile bar caption.
 * Draws a custom title bar with minimize, maximize and close buttons.
 * Draws an icon on the title bar.
 * Displays a system menu when the icon on the title bar is clicked.

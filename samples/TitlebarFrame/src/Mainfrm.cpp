@@ -6,14 +6,18 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
+// Add the following libraries to the linker.
 #pragma comment(lib, "uxtheme.lib")
 #pragma comment(lib, "Dwmapi.lib")
 
+// Scales the value to the window's dots per inch (dpi) value. 
 int dpi_scale(int value, UINT dpi)
 {
+    // A scale factor of 100 percent is 96 (logical) DPI.
     return (value * dpi) / 96;
 }
 
+// Center the inner rectangle within the outer rectangle.
 void CenterRectInRect(RECT* toCenter, const RECT* outerRect)
 {
     int toWidth = toCenter->right - toCenter->left;
@@ -36,7 +40,10 @@ void CenterRectInRect(RECT* toCenter, const RECT* outerRect)
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_isToolbarShown(TRUE)
+CMainFrame::CMainFrame() : m_isToolbarShown(TRUE),
+                           m_hoveredButton(TitlebarButton::None),
+                           m_oldHoveredButton(TitlebarButton::None),
+                           m_isMiniFrame(FALSE)
 {
 }
 
@@ -56,6 +63,31 @@ HWND CMainFrame::Create(HWND parent)
     LoadRegistrySettings(_T("Win32++\\Titlebar Frame"));
 
     return CFrame::Create(parent);
+}
+
+// Draw the title bar close button.
+void CMainFrame::DrawCloseButton(CDC& dc) const
+{
+    ButtonRects buttonRects = GetButtonRects();
+    UINT dpi = GetDpiForWindow(*this);
+    int iconDimension = dpi_scale(10, dpi);
+    COLORREF itemColor = IsActive() ? m_colors.activeItem : m_colors.inactiveItem;
+    dc.CreatePen(PS_SOLID, 1, itemColor);
+    if (m_hoveredButton == TitlebarButton::Close)
+    {
+        CBrush fillBrush(m_colors.hoverClose);
+        dc.FillRect(buttonRects.close, fillBrush);
+        dc.CreatePen(PS_SOLID, 1, RGB(0xFF, 0xFF, 0xFF));
+    }
+
+    CRect iconRect;
+    iconRect.right = iconDimension;
+    iconRect.bottom = iconDimension;
+    CenterRectInRect(&iconRect, &buttonRects.close);
+    dc.MoveTo(iconRect.left, iconRect.top);
+    dc.LineTo(iconRect.right + 1, iconRect.bottom + 1);
+    dc.MoveTo(iconRect.left, iconRect.bottom);
+    dc.LineTo(iconRect.right + 1, iconRect.top - 1);
 }
 
 // Draw the title bar minimize button.
@@ -102,31 +134,6 @@ void CMainFrame::DrawMaximizeButton(CDC& dc) const
     dc.CreatePen(PS_SOLID, 1, itemColor);
     SelectObject(dc, GetStockObject(HOLLOW_BRUSH));
     dc.Rectangle(iconRect.left, iconRect.top, iconRect.right, iconRect.bottom);
-}
-
-// Draw the title bar close button.
-void CMainFrame::DrawCloseButton(CDC& dc) const
-{
-    ButtonRects buttonRects = GetButtonRects();
-    UINT dpi = GetDpiForWindow(*this);
-    int iconDimension = dpi_scale(10, dpi);
-    COLORREF itemColor = IsActive() ? m_colors.activeItem : m_colors.inactiveItem;
-    dc.CreatePen(PS_SOLID, 1, itemColor);
-    if (m_hoveredButton == TitlebarButton::Close)
-    {
-        CBrush fillBrush(m_colors.hoverClose);
-        dc.FillRect(buttonRects.close, fillBrush);
-        dc.CreatePen(PS_SOLID, 1, RGB(0xFF, 0xFF, 0xFF));
-    }
-
-    CRect iconRect;
-    iconRect.right = iconDimension;
-    iconRect.bottom = iconDimension;
-    CenterRectInRect(&iconRect, &buttonRects.close);
-    dc.MoveTo(iconRect.left, iconRect.top);
-    dc.LineTo(iconRect.right + 1, iconRect.bottom + 1);
-    dc.MoveTo(iconRect.left, iconRect.bottom);
-    dc.LineTo(iconRect.right + 1, iconRect.top - 1);
 }
 
 // Draw the title bar caption.
@@ -213,24 +220,6 @@ ButtonRects CMainFrame::GetButtonRects() const
     return buttonRects;
 }
 
-// Returns the rect for the titlebar.
-// Adopted from:
-// https://github.com/oberth/custom-chrome/blob/master/source/gui/window_helper.hpp#L52-L64
-CRect CMainFrame::GetTitlebarRect() const
-{
-    CSize barSize;
-    const int borders = 2;
-    HTHEME theme = ::OpenThemeData(*this, L"WINDOW");
-    UINT dpi = ::GetDpiForWindow(*this);
-    ::GetThemePartSize(theme, NULL, WP_CAPTION, CS_ACTIVE, NULL, TS_TRUE, &barSize);
-    ::CloseThemeData(theme);
-    int height = dpi_scale(barSize.cy, dpi) + borders;
-
-    CRect rect = GetClientRect();
-    rect.bottom = rect.top + height;
-    return rect;
-}
-
 // Returns the button under the mouse cursor.
 TitlebarButton CMainFrame::GetHoveredButton() const
 {
@@ -268,6 +257,25 @@ CRect CMainFrame::GetShadowRect() const
     return rect;
 }
 
+// Returns the rect for the titlebar.
+// Adapted from:
+// https://github.com/oberth/custom-chrome/blob/master/source/gui/window_helper.hpp#L52-L64
+CRect CMainFrame::GetTitlebarRect() const
+{
+    CSize barSize;
+    const int borders = 2;
+    HTHEME theme = ::OpenThemeData(*this, L"WINDOW");
+    UINT dpi = ::GetDpiForWindow(*this);
+    ::GetThemePartSize(theme, NULL, WP_CAPTION, CS_ACTIVE, NULL, TS_TRUE, &barSize);
+    ::CloseThemeData(theme);
+    int height = dpi_scale(barSize.cy, dpi) + borders;
+
+    CRect rect = GetClientRect();
+    rect.bottom = rect.top + height;
+    return rect;
+}
+
+// Returns the rect for the view area.
 CRect CMainFrame::GetViewRect() const
 {
     CRect clientRect = GetClientRect();
@@ -283,49 +291,6 @@ CRect CMainFrame::GetViewRect() const
             clientRect = ExcludeChildRect(clientRect, GetToolBar());
 
     return clientRect;
-}
-
-// Repositions the frame's child windows.
-void CMainFrame::RecalcLayout()
-{
-    // Resize the status bar
-    if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
-    {
-        VERIFY(GetStatusBar().SetWindowPos(0, 0, 0, 0, 0, SWP_SHOWWINDOW));
-        SetStatusIndicators();
-    }
-
-    // Resize the rebar or toolbar
-    if (GetReBar().IsWindow())
-    {
-        CRect rc = GetTitlebarRect();
-
-        int cyRB = 0;
-        for (UINT u = 0; u < GetReBar().GetRowCount(); ++u)
-            cyRB += GetReBar().GetRowHeight(u);
-
-        GetReBar().SetWindowPos(NULL, 0, rc.Height(), rc.Width(), cyRB, SWP_SHOWWINDOW);
-    }
-    else if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
-    {
-        int cyTB = GetToolBar().GetMaxSize().cy;
-        CRect rc = GetTitlebarRect();
-        GetToolBar().SetWindowPos(NULL, 0, rc.Height(), rc.Width(), cyTB, SWP_SHOWWINDOW);
-    }
-
-    // Position the view window.
-    if (GetView().IsWindow())
-        RecalcViewLayout();
-
-    // Adjust rebar bands.
-    if (GetReBar().IsWindow())
-    {
-        if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
-            GetReBar().MoveBandsLeft();
-
-        if (GetMenuBar().IsWindow())
-            SetMenuBarBandSize();
-    }
 }
 
 // Returns true of the window is maximized, false otherwise.
@@ -349,13 +314,14 @@ LRESULT CMainFrame::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return CFrame::OnActivate(msg, wparam, lparam);
 }
 
-// Called when the frame window is closed.
+// Called when the frame window is asked to close.
 void CMainFrame::OnClose()
 {
-    // Close the preview
+    // Close the preview.
     if (GetView() == m_preview)
         OnPreviewClose();
 
+    // Proceed with closing the frame.
     CFrame::OnClose();
 }
 
@@ -371,6 +337,33 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_PREVIEW:    return OnFilePreview();
     case IDM_FILE_PRINT:      return OnFilePrint();
     case IDM_FILE_EXIT:       return OnFileExit();
+    case IDM_MODE_FULL:
+    {
+        m_isMiniFrame = FALSE;
+
+        // Check the full frame radio button.
+        CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
+        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, 0);
+
+        // Show the menu bar in the rebar.
+        GetReBar().ShowBand(0, TRUE);
+        RecalcLayout();
+        return TRUE;
+    }
+    case IDM_MODE_MINI:
+    {
+        m_isMiniFrame = TRUE;
+
+        // Check the mini frame radio button.
+        CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
+        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_MINI, 0);
+
+        // Hide the menu bar in the rebar.
+        GetReBar().ShowBand(0, FALSE);
+        RecalcLayout();
+        return TRUE;
+    }
+        
     case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
     case IDM_HELP_ABOUT:      return OnHelp();
@@ -383,43 +376,30 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 // Overriding CFrame::OnCreate is optional.
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-    // A menu is added if the IDW_MAIN menu resource is defined.
-    // Frames have all options enabled by default.
-    // Use the following functions to disable options.
-
-    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
-    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
-    // UseReBar(FALSE);              // Don't use a ReBar
-    // UseStatusBar(FALSE);          // Don't use a StatusBar
-    // UseThemes(FALSE);             // Don't use themes
-    // UseToolBar(FALSE);            // Don't use a ToolBar
-
     // Inform the application of the frame change to force redrawing with the new
     // client area that is extended into the title bar.
     SetWindowPos(NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
 
-    // call the base class function
+    // Call the base class function.
     int result = CFrame::OnCreate(cs);
 
     if (GetReBar().IsWindow())
     {
-        // Adjust the rebar style.
+        // Adjust the rebar style so we can reposition it.
         DWORD style = (DWORD)GetReBar().GetWindowLongPtr(GWL_STYLE);
         style += CCS_NOPARENTALIGN;
         GetReBar().SetWindowLongPtr(GWL_STYLE, style);
     }
-    else if (GetToolBar().IsWindow())
-    {
-        // Adjust the toolbar style.
-        DWORD style = (DWORD)GetToolBar().GetWindowLongPtr(GWL_STYLE);
-        style += CCS_NORESIZE | CCS_NOPARENTALIGN;
-        GetToolBar().SetWindowLongPtr(GWL_STYLE, style);
 
-        // Disable the menu.
-        SetFrameMenu(0);
-    }
+    // Create the menubar for the mini frame.
+    m_menubar2.Create(*this);
+    m_menubar2.SetMenu(GetFrameMenu());
 
-    // Adjust the title bar colors to the rebar theme.
+    // Check the full mode radio button.
+    CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
+    ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, 0);
+
+    // Adjust the title bar colors to match the rebar theme.
     ReBarTheme theme = GetReBarTheme();
     m_colors.active = theme.clrBkgnd1;
     m_colors.inactive = RGB(255, 255, 255);
@@ -428,6 +408,38 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
                           (GetBValue(m_colors.active) + 180) / 2 );
 
     return result;
+}
+
+// Handles CustomDraw notification from WM_NOTIFY.
+LRESULT CMainFrame::OnCustomDraw(LPNMHDR pNMHDR)
+{
+    if (::SendMessage(pNMHDR->hwndFrom, UWM_GETCTOOLBAR, 0, 0))
+    {
+        // Custom draw the menubar within the rebar.
+        if (pNMHDR->hwndFrom == GetMenuBar())
+            return CustomDrawMenuBar(pNMHDR);
+        
+        // Custom draw the menubar within the titlebar.
+        if (pNMHDR->hwndFrom == m_menubar2)
+        {
+            LPNMTBCUSTOMDRAW pCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+            if (pCustomDraw->nmcd.dwDrawStage == CDDS_PREPAINT)
+            { 
+                // Set titlebar's menubar background color before doing
+                // the rest of the custom drawing.
+                CRect rect = m_menubar2.GetClientRect();
+                COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
+                CBrush brush(titlebarColor);
+                FillRect(pCustomDraw->nmcd.hdc, rect, brush);
+            }
+            return CustomDrawMenuBar(pNMHDR);
+        }
+
+        // Custom draw the toolbar within the rebar.
+        return CustomDrawToolBar(pNMHDR);
+    }
+
+    return 0;
 }
 
 // Issue a close request to the frame to end the program.
@@ -548,6 +560,22 @@ BOOL CMainFrame::OnFilePrint()
     return TRUE;
 }
 
+// Called when a menu is active, and a key is pressed other than an accelerator.
+LRESULT CMainFrame::OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    if (m_isMiniFrame)
+    {
+        if ((m_menubar2.IsWindow()) && (LOWORD(wparam) != VK_SPACE))
+        {
+            // Activate the menubar for key pressed with Alt key held down.
+            m_menubar2.OnMenuChar(WM_MENUCHAR, wparam, lparam);
+            return -1;
+        }
+    }
+
+    return CFrame::OnMenuChar(msg, wparam, lparam);
+}
+
 // Handle WM_NCCALCSIZE to extend client (paintable) area into the title bar region.
 LRESULT CMainFrame::OnNCCalcSize(UINT, WPARAM wparam, LPARAM lparam)
 {
@@ -620,6 +648,65 @@ LRESULT CMainFrame::OnNCMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam)
     }
 
     return WndProcDefault(msg, wparam, lparam);
+}
+
+// Repositions the frame's child windows.
+void CMainFrame::RecalcLayout()
+{
+    // Resize the status bar
+    if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
+    {
+        VERIFY(GetStatusBar().SetWindowPos(0, 0, 0, 0, 0, SWP_SHOWWINDOW));
+        SetStatusIndicators();
+    }
+
+    // Reposition the rebar.
+    if (GetReBar().IsWindow())
+    {
+        CRect rc = GetTitlebarRect();
+
+        int cyRB = 0;
+        for (UINT u = 0; u < GetReBar().GetRowCount(); ++u)
+            cyRB += GetReBar().GetRowHeight(u);
+
+        GetReBar().SetWindowPos(NULL, 0, rc.Height(), rc.Width(), cyRB, SWP_SHOWWINDOW);
+    }
+
+    if (m_isMiniFrame)
+    {
+        // Position the second menubar.
+        CRect rect = GetTitlebarRect();
+
+        if (m_menubar2.IsWindow())
+        {
+            CRect menuRect = GetClientRect();
+            CSize size = m_menubar2.GetMaxSize();
+            menuRect.left = GetButtonRects().system.right;
+            menuRect.top = (rect.Height() - size.cy) / 2;;
+            menuRect.right = menuRect.left + size.cx;
+            menuRect.bottom = menuRect.top + size.cy;
+            m_menubar2.SetWindowPos(NULL, menuRect, SWP_SHOWWINDOW);
+        }
+    }
+    else if (m_menubar2.IsWindow())
+    {
+        // Hide the second menubar.
+        m_menubar2.SetWindowPos(NULL, CRect(0,0,0,0), 0);
+    }
+
+    // Position the view window.
+    if (GetView().IsWindow())
+        RecalcViewLayout();
+
+    // Adjust rebar bands.
+    if (GetReBar().IsWindow())
+    {
+        if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
+            GetReBar().MoveBandsLeft();
+
+        if (GetMenuBar().IsWindow())
+            SetMenuBarBandSize();
+    }
 }
 
 // Returns the hot spot location of the cursor's position.
@@ -724,7 +811,10 @@ LRESULT CMainFrame::OnPaint(UINT, WPARAM, LPARAM)
     DrawMinimizeButton(dc);
     DrawMaximizeButton(dc);
     DrawCloseButton(dc);
-    DrawTitleText(dc);
+    if (!m_isMiniFrame)
+    {
+        DrawTitleText(dc);
+    }
     DrawWindowIcon(dc);
 
     // Draw the top shadow. Original is missing because of the client rect extension.
@@ -806,7 +896,32 @@ LRESULT CMainFrame::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     m_hoveredButton = TitlebarButton::None;
+
+    if (m_isMiniFrame)
+    {
+        // Pass menu keystrokes to the CMenuBar to process alt keys, F10 etc.
+        if ((SC_KEYMENU == wparam) && (VK_SPACE != lparam) && GetMenuBar().IsWindow())
+        {
+            m_menubar2.OnSysCommand(msg, wparam, lparam);
+            return 0;
+        }
+    }
+
     return CFrame::OnSysCommand(msg, wparam, lparam);
+}
+
+// Limit the minimum size of the window.
+LRESULT CMainFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    LPWINDOWPOS windowPos = (LPWINDOWPOS)lparam;
+
+    if (windowPos->cx < 500)
+        windowPos->cx = 500;
+
+    if (windowPos->cy < 400)
+        windowPos->cy = 400;
+
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 // This function is called before the frame is created.
@@ -875,17 +990,18 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-//        case WM_ACTIVATE:      return OnActivate(msg, wparam, lparam);
-//        case WM_ERASEBKGND:    return OnEraseBkGnd(msg, wparam, lparam);
-        case WM_NCMOUSELEAVE:  return OnNCMouseLeave(msg, wparam, lparam);
-        case WM_NCCALCSIZE:    return OnNCCalcSize(msg, wparam, lparam);
-        case WM_NCHITTEST:     return OnNCHitTest(msg, wparam, lparam);
-        case WM_NCLBUTTONDOWN: return OnNCLButtonDown(msg, wparam, lparam);
-        case WM_NCLBUTTONUP:   return OnNCLButtonUp(msg, wparam, lparam);
-        case WM_NCMOUSEMOVE:   return OnNCMouseMove(msg, wparam, lparam);
-        case WM_PAINT:         return OnPaint(msg, wparam, lparam);
-        case WM_SIZE:          return OnSize(msg, wparam, lparam);
-        case WM_SYSCOMMAND:    return OnSysCommand(msg, wparam, lparam);
+        case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
+        case WM_MENUCHAR:           return OnMenuChar(msg, wparam, lparam);
+        case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
+        case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
+        case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
+        case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
+        case WM_NCLBUTTONUP:        return OnNCLButtonUp(msg, wparam, lparam);
+        case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);
+        case WM_PAINT:              return OnPaint(msg, wparam, lparam);
+        case WM_SIZE:               return OnSize(msg, wparam, lparam);
+        case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
 
         case UWM_PREVIEWCLOSE:    return OnPreviewClose();
         case UWM_PRINTNOW:        return OnPreviewPrint();

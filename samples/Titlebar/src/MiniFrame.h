@@ -28,12 +28,12 @@ struct ButtonRects
 // Specify the colors for title bar.
 struct TitlebarColors
 {
-    COLORREF active =       RGB(150, 200, 180);
-    COLORREF inactive =     RGB(202, 227, 218);
+    COLORREF active =       RGB(255, 255, 155);
+    COLORREF inactive =     RGB(255, 255, 218);
     COLORREF activeItem =   RGB(33, 33, 33);
-    COLORREF inactiveItem = RGB(127, 127, 127);
-    COLORREF hover =        RGB(130, 180, 160);
-    COLORREF hoverClose =   RGB(204, 0, 0);
+    COLORREF inactiveItem = RGB(191, 191, 191);
+    COLORREF hover =        RGB(220, 220, 160);
+    COLORREF hoverClose =   RGB(220, 0, 0);
     COLORREF topShadow =    RGB(100, 100, 100);
 };
 
@@ -78,6 +78,7 @@ public:
     LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Command handlers
     BOOL OnFileExit();
