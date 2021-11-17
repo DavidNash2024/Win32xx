@@ -1122,7 +1122,7 @@ namespace Win32xx
         Empty();
         CHAR* temp = 0;
         DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageA(flags, NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPSTR>(&temp), 1, NULL);
+        ::FormatMessageA(flags, NULL, error, 0, reinterpret_cast<LPSTR>(&temp), 1, NULL);
         m_str.assign(temp);
         ::LocalFree(temp);
     }
@@ -1134,7 +1134,7 @@ namespace Win32xx
         Empty();
         WCHAR* temp = 0;
         DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageW(flags, NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&temp, 1, NULL);
+        ::FormatMessageW(flags, NULL, error, 0, reinterpret_cast<LPWSTR>(&temp), 1, NULL);
         m_str.assign(temp);
         ::LocalFree(temp);
     }

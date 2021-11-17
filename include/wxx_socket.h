@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -596,8 +596,7 @@ namespace Win32xx
 
         FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS |
                       FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_MAX_WIDTH_MASK,
-                      NULL, errorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-                      reinterpret_cast<LPTSTR>(&message), 1024, NULL);
+                      NULL, errorCode, 0, reinterpret_cast<LPTSTR>(&message), 1024, NULL);
 
         if (message)
         {

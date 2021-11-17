@@ -1,7 +1,16 @@
 Titlebar Frame Sample
 =====================
 This sample adapts the features demonstrated with the titlebar sample for 
-use with a frame.
+use with a frame. The frame can be presented in either of two modes.
+
+The full-frame mode has the following features:
+ - The caption is displayed in the frame's titlebar.
+ - The menu is displayed by CMenubar within the rebar control.
+ - The toolbar is displayed within the rebar control.
+
+The mini-frame mode has the following features:
+ - The menu is displayed by CMenubar in the frame's titlebar.
+ - The toolbar is displayed within the rebar control.
 
 
 Background
@@ -24,20 +33,21 @@ window's non-client and add it to the window's client area. We then draw our
 custom title bar within the handling of WM_PAINT.  
  
 
-Features demonstrated in this example
-=====================================
-* Handling the WM_NCCALCSIZE message to adjust the non-client area size.
-* Handling the WM_NCHITTEST message for hit testing on our custom title bar.
-* Using ::OpenThemeData to access the windows's theme data.
-* Using ::GetDpiForWindow to retrieve the DPI for the window.
-* Using ::DrawThemeTextEx to draw the tile bar caption.
-* Drawing a custom title bar with minimize, maximize and close buttons.
-* Drawing an icon on the title bar.
-* Displaying a system menu when the icon on the title bar is clicked.
-* Positioning a child view window over the view area of the window.
-* Using double buffer when drawing the contents of the view window.
-* Overriding CFrame<T>::RecalcLayout to reposition the frame's child windows.
-* Adjusting the position of the frame's rebar control.
-* Overriding GetViewRect to adjust the frame's view area.
-  
+This sample demonstrates the following:
+======================================
+* Handles the WM_NCCALCSIZE message to adjust the non-client area size.
+* Handles the WM_NCHITTEST message for hit testing on our custom title bar.
+* Uses ::OpenThemeData to access the windows's theme data.
+* Uses ::GetDpiForWindow to retrieve the DPI for the window.
+* Uses ::DrawThemeTextEx to draw the tile bar caption.
+* Draws a custom title bar with minimize, maximize and close buttons.
+* Draws an icon on the title bar.
+* Displays a system menu when the icon on the title bar is clicked.
+* Positions a child view window over the view area of the window.
+* Uses double buffer when drawing the contents of the view window.
+* Overrides CFrame<T>::RecalcLayout to reposition the frame's child windows.
+* Adjusts the position of the frame's rebar control.
+* Overrides GetViewRect to adjust the frame's view area.
+* Uses CRebar::ShowBand to dynamically show or hide a rebar band.
+
 

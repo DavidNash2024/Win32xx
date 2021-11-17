@@ -33,13 +33,14 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
-// Called when the frame window is closed.
+// Called when the frame window is asked to close.
 void CMainFrame::OnClose()
 {
-    // Close the preview
+    // Close the preview.
     if (GetView() == m_preview)
         OnPreviewClose();
 
+    // Proceed with closing the frame.
     CFrame::OnClose();
 }
 

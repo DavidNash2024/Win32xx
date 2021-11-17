@@ -362,7 +362,7 @@ namespace Win32xx
     // Creates the window by specifying each parameter. The lpszClassName must
     //  be a predefined class name or registered with RegisterClass. A failure
     //  to create a window throws an exception.
-    inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD style, int x, int y, int width, int height, HWND hWParent, HMENU idOrMenu, LPVOID lparam /*= NULL*/)
+    inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD style, int x, int y, int width, int height, HWND parent, HMENU idOrMenu, LPVOID lparam /*= NULL*/)
     {
         assert( !IsWindow() );     // Only one window per CWnd instance allowed.
 
@@ -395,7 +395,7 @@ namespace Win32xx
 
         // Create window
         HWND wnd = ::CreateWindowEx(exStyle, className, pWindowName, style, x, y, width, height,
-                                hWParent, idOrMenu, GetApp()->GetInstanceHandle(), lparam);
+                                parent, idOrMenu, GetApp()->GetInstanceHandle(), lparam);
 
         // Tidy up
         pTLSData->pWnd = NULL;

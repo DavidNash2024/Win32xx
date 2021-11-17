@@ -1201,6 +1201,7 @@ namespace Win32xx
 
         // Messages defined by Win32++
         case UWM_POPUPMENU:         return OnPopupMenu();
+        case UWM_GETCMENUBAR:       return reinterpret_cast<LRESULT>(this);
 
         } // switch (msg)
 

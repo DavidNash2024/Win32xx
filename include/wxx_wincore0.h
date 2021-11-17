@@ -60,21 +60,22 @@
 #define UWM_GETCDOCKCONTAINER (WM_APP + 0x3F06) // Message - returns a pointer to this CWnd if it inherits from CDockContainer.
 #define UWM_GETCDOCKER        (WM_APP + 0x3F07) // Message - returns a pointer to this CWnd if it inherits from CDocker.
 #define UWM_GETCFRAMET        (WM_APP + 0x3F08) // Message - returns a pointer to this CWnd if it inherits from CFrameT.
-#define UWM_GETCTABBEDMDI     (WM_APP + 0x3F09) // Message - returns a pointer to this CWnd if it inherits from CTabbedMDI.
-#define UWM_GETCTOOLBAR       (WM_APP + 0x3F0A) // Message - returns a pointer to this CWnd if it inherits from CToolBar.
-#define UWM_GETCWND           (WM_APP + 0x3F0B) // Message - returns a pointer to this CWnd.
-#define UWM_GETFRAMEVIEW      (WM_APP + 0x3F0C) // Message - returns the HWND of the frame's view window. Used by CMenuBar.
-#define UWM_GETMBTHEME        (WM_APP + 0x3F0D) // Message - returns a pointer to MenuBarTheme.
-#define UWM_GETRBTHEME        (WM_APP + 0x3F0E) // Message - returns a pointer to ReBarTheme.
-#define UWM_GETSBTHEME        (WM_APP + 0x3F0F) // Message - returns a pointer to StatusBarTheme.
-#define UWM_GETTBTHEME        (WM_APP + 0x3F10) // Message - returns a pointer to ToolBarTheme.
-#define UWM_MDIACTIVATED      (WM_APP + 0x3F11) // Message - sent by MDI child to MDIFrame when it is activated.
-#define UWM_MDIDESTROYED      (WM_APP + 0x3F12) // Message - sent by MDI client when a MDI child is destroyed.
-#define UWM_MDIGETACTIVE      (WM_APP + 0x3F13) // Message - sent by MDI client when the state of a MDI child is queried.
-#define UWM_POPUPMENU         (WM_APP + 0x3F14) // Message - creates the menubar popup menu.
-#define UWM_TBRESIZE          (WM_APP + 0x3F15) // Message - sent by toolbar to parent. Used by the rebar.
-#define UWM_TBWINPOSCHANGING  (WM_APP + 0x3F16) // Message - sent to parent. Toolbar is resizing.
-#define UWM_UPDATECOMMAND     (WM_APP + 0x3F17) // Message - sent before a menu is displayed. Used by OnMenuUpdate.
+#define UWM_GETCMENUBAR       (WM_APP + 0x3F09) // Message - returns a pointer to this CWnd if it inherits from CMenuBar.
+#define UWM_GETCTABBEDMDI     (WM_APP + 0x3F0A) // Message - returns a pointer to this CWnd if it inherits from CTabbedMDI.
+#define UWM_GETCTOOLBAR       (WM_APP + 0x3F0B) // Message - returns a pointer to this CWnd if it inherits from CToolBar.
+#define UWM_GETCWND           (WM_APP + 0x3F0C) // Message - returns a pointer to this CWnd.
+#define UWM_GETFRAMEVIEW      (WM_APP + 0x3F0D) // Message - returns the HWND of the frame's view window. Used by CMenuBar.
+#define UWM_GETMBTHEME        (WM_APP + 0x3F0E) // Message - returns a pointer to MenuBarTheme.
+#define UWM_GETRBTHEME        (WM_APP + 0x3F0F) // Message - returns a pointer to ReBarTheme.
+#define UWM_GETSBTHEME        (WM_APP + 0x3F10) // Message - returns a pointer to StatusBarTheme.
+#define UWM_GETTBTHEME        (WM_APP + 0x3F11) // Message - returns a pointer to ToolBarTheme.
+#define UWM_MDIACTIVATED      (WM_APP + 0x3F12) // Message - sent by MDI child to MDIFrame when it is activated.
+#define UWM_MDIDESTROYED      (WM_APP + 0x3F13) // Message - sent by MDI client when a MDI child is destroyed.
+#define UWM_MDIGETACTIVE      (WM_APP + 0x3F14) // Message - sent by MDI client when the state of a MDI child is queried.
+#define UWM_POPUPMENU         (WM_APP + 0x3F15) // Message - creates the menubar popup menu.
+#define UWM_TBRESIZE          (WM_APP + 0x3F16) // Message - sent by toolbar to parent. Used by the rebar.
+#define UWM_TBWINPOSCHANGING  (WM_APP + 0x3F17) // Message - sent to parent. Toolbar is resizing.
+#define UWM_UPDATECOMMAND     (WM_APP + 0x3F18) // Message - sent before a menu is displayed. Used by OnMenuUpdate.
 
 #define UWN_BARSTART          (WM_APP + 0x3F20) // Notification - sent by CDocker when the docker bar selected for move.
 #define UWN_BARMOVE           (WM_APP + 0x3F21) // Notification - sent by CDocker when the docker bar is moved.
