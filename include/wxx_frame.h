@@ -2524,11 +2524,11 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam)
     {
-        // The system menu shouldn't be owner drawn
-        if (HIWORD(lparam))
+        // The system menu shouldn't be owner drawn.
+        if (::GetSystemMenu(*this, FALSE) == reinterpret_cast<HMENU>(wparam))
             return CWnd::WndProcDefault(WM_INITMENUPOPUP, wparam, lparam);
 
-        // Not supported on Win95 or WinNT
+        // Not supported on Win95 or WinNT.
         if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
             return CWnd::WndProcDefault(WM_INITMENUPOPUP, wparam, lparam);
 
@@ -2548,11 +2548,11 @@ namespace Win32xx
             mii.dwTypeData = pItem->GetItemText();  // Assign TCHAR pointer, text is assigned by GetMenuItemInfo.
             mii.cch = MAX_MENU_STRING;
 
-            // Send message for menu updates
+            // Send message for menu updates.
             UINT menuItem = menu.GetMenuItemID(i);
             T::SendMessage(UWM_UPDATECOMMAND, menuItem, 0);
 
-            // Specify owner-draw for the menu item type
+            // Specify owner-draw for the menu item type.
             if (menu.GetMenuItemInfo(i, mii, TRUE))
             {
                 if (mii.dwItemData == 0)

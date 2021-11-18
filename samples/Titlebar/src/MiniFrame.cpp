@@ -654,8 +654,7 @@ void CMiniFrame::SystemMenu() const
     tpm.rcExclude = rc;
 
     // Display the system menu.
-    CMenu systemMenu = GetSystemMenu();
-    systemMenu.EnableMenuItem(SC_RESTORE, MF_BYCOMMAND | MF_ENABLED);
+    CMenu systemMenu = GetSystemMenu(TRUE);
     UINT flags = TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL | TPM_RETURNCMD;
     UINT command = systemMenu.TrackPopupMenuEx(flags, rc.left, rc.bottom, *this, &tpm);
 
