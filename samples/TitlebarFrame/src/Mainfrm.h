@@ -94,8 +94,6 @@ protected:
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
     virtual void    RecalcLayout();
     virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();

@@ -567,7 +567,7 @@ LRESULT CMainFrame::OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if ((m_menubar2.IsWindow()) && (LOWORD(wparam) != VK_SPACE))
         {
-            // Activate the menubar for key pressed with Alt key held down.
+            // Activate the menubar for key a pressed with the Alt key is held down.
             m_menubar2.OnMenuChar(WM_MENUCHAR, wparam, lparam);
             return -1;
         }
@@ -602,18 +602,6 @@ LRESULT CMainFrame::OnNCCalcSize(UINT, WPARAM wparam, LPARAM lparam)
     }
 
     return 0;
-}
-
-// Process notification messages (WM_NOTIFY) sent by child windows
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-//  switch(((LPNMHDR)lparam)->code)
-//  {
-//      Add case statements for each notification message here
-//  }
-
-    // Some notifications should return a value when handled
-    return CFrame::OnNotify(wparam, lparam);
 }
 
 // Track when mouse hovers each of the title bar buttons to draw the highlight correctly.
@@ -832,15 +820,17 @@ LRESULT CMainFrame::OnPaint(UINT, WPARAM, LPARAM)
     return 0;
 }
 
-
 // Called when the Print Preview's "Close" button is pressed.
 LRESULT CMainFrame::OnPreviewClose()
 {
-    // Swap the view
+    // Swap the view.
     SetView(m_view);
 
-    // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != 0);
+    // Show the menu and toolbar.
+    if (!m_isMiniFrame)
+    {
+        ShowMenu(GetFrameMenu() != 0);
+    }
     ShowToolBar(m_isToolbarShown);
 
     SetStatusText(LoadString(IDW_READY));
@@ -924,19 +914,6 @@ LRESULT CMainFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-// This function is called before the frame is created.
-// It provides an opportunity to modify the various CREATESTRUCT
-// parameters used before the frame window is created.
-void CMainFrame::PreCreate(CREATESTRUCT& cs)
-{
-    // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
-    // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
-    // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
-
-    // Call base clase to set defaults
-    CFrame::PreCreate(cs);
-}
-
 // Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
 {
@@ -974,8 +951,7 @@ void CMainFrame::SystemMenu() const
     tpm.rcExclude = rc;
 
     // Display the system menu.
-    CMenu systemMenu = GetSystemMenu();
-    systemMenu.EnableMenuItem(SC_RESTORE, MF_BYCOMMAND | MF_ENABLED);
+    CMenu systemMenu = GetSystemMenu(TRUE);
     UINT flags = TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL | TPM_RETURNCMD;
     UINT command = systemMenu.TrackPopupMenuEx(flags, rc.left, rc.bottom, *this, &tpm);
 
