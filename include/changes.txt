@@ -13,9 +13,11 @@ New Features and Enhancements
 * Added the titlbar sample.
   This sample demonstrates how to customize a windows title bar. It sets
   the title bar's color and draws the minimize, maximize and close buttons.
+  It uses CMenuBar to display a menu in the title bar.
 
 * Added the titlebar frame sample.
-  This sample demonstrates how to use a customized title bar with a frame.  
+  This sample demonstrates how to use a customized title bar with a frame.
+  It demonstrates the frame in two modes: mini-frame and full-frame.
 
 
 

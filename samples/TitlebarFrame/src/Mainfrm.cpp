@@ -10,7 +10,7 @@
 #pragma comment(lib, "uxtheme.lib")
 #pragma comment(lib, "Dwmapi.lib")
 
-// Scales the value to the window's dots per inch (dpi) value. 
+// Scales the value to the window's dots per inch (dpi) value.
 int dpi_scale(int value, UINT dpi)
 {
     // A scale factor of 100 percent is 96 (logical) DPI.
@@ -363,7 +363,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
         RecalcLayout();
         return TRUE;
     }
-        
+
     case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
     case IDM_HELP_ABOUT:      return OnHelp();
@@ -418,13 +418,13 @@ LRESULT CMainFrame::OnCustomDraw(LPNMHDR pNMHDR)
         // Custom draw the menubar within the rebar.
         if (pNMHDR->hwndFrom == GetMenuBar())
             return CustomDrawMenuBar(pNMHDR);
-        
+
         // Custom draw the menubar within the titlebar.
         if (pNMHDR->hwndFrom == m_menubar2)
         {
             LPNMTBCUSTOMDRAW pCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
             if (pCustomDraw->nmcd.dwDrawStage == CDDS_PREPAINT)
-            { 
+            {
                 // Set titlebar's menubar background color before doing
                 // the rest of the custom drawing.
                 CRect rect = m_menubar2.GetClientRect();
@@ -739,6 +739,21 @@ LRESULT CMainFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     return HTCLIENT;
 }
 
+// Handle left mouse button double clicks in the non-client area.
+LRESULT CMainFrame::OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    CPoint cursorPoint = GetCursorPos();
+    ScreenToClient(cursorPoint);
+
+    // Convert a double click to a single click for the system menu.
+    if (PtInRect(GetButtonRects().system, cursorPoint))
+    {
+        return OnNCLButtonDown(msg, wparam, lparam);
+    }
+
+    return WndProcDefault(msg, wparam, lparam);
+}
+
 // Handle left mouse button clicks in the non-client area.
 LRESULT CMainFrame::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -905,8 +920,8 @@ LRESULT CMainFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     LPWINDOWPOS windowPos = (LPWINDOWPOS)lparam;
 
-    if (windowPos->cx < 500)
-        windowPos->cx = 500;
+    if (windowPos->cx < 550)
+        windowPos->cx = 550;
 
     if (windowPos->cy < 400)
         windowPos->cy = 400;
@@ -943,8 +958,11 @@ void CMainFrame::SetupToolBar()
 // The system menu is displayed when the application's icon is clicked.
 void CMainFrame::SystemMenu() const
 {
+    SetForegroundWindow();
+
     // Calculate the position of the system menu.
     CRect rc = GetButtonRects().system;
+    rc.bottom = GetTitlebarRect().bottom;
     ClientToScreen(rc);
     TPMPARAMS tpm;
     tpm.cbSize = sizeof(tpm);
@@ -971,6 +989,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
         case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
         case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
+        case WM_NCLBUTTONDBLCLK:    return OnNCLButtonDblClk(msg, wparam, lparam);
         case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
         case WM_NCLBUTTONUP:        return OnNCLButtonUp(msg, wparam, lparam);
         case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);
