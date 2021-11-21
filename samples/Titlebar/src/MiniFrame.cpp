@@ -11,7 +11,7 @@
 #pragma comment(lib, "uxtheme.lib")
 #pragma comment(lib, "Dwmapi.lib")
 
-// Scales the value to the window's dots per inch (dpi) value. 
+// Scales the value to the window's dots per inch (dpi) value.
 int dpi_scale(int value, UINT dpi)
 {
     // A scale factor of 100 percent is 96 (logical) DPI.
@@ -431,6 +431,21 @@ LRESULT CMiniFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     return HTCLIENT;
 }
 
+// Handle left mouse button double clicks in the non-client area.
+LRESULT CMiniFrame::OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    CPoint cursorPoint = GetCursorPos();
+    ScreenToClient(cursorPoint);
+
+    // Convert a double click to a single click for the system menu.
+    if (PtInRect(GetButtonRects().system, cursorPoint))
+    {
+        return OnNCLButtonDown(msg, wparam, lparam);
+    }
+
+    return WndProcDefault(msg, wparam, lparam);
+}
+
 // Handle left mouse button clicks in the non-client area.
 LRESULT CMiniFrame::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -646,8 +661,11 @@ void CMiniFrame::RecalcLayout() const
 // The system menu is displayed when the application's icon is clicked.
 void CMiniFrame::SystemMenu() const
 {
+    SetForegroundWindow();
+
     // Calculate the position of the system menu.
     CRect rc = GetButtonRects().system;
+    rc.bottom = GetTitlebarRect().bottom;
     ClientToScreen(rc);
     TPMPARAMS tpm;
     tpm.cbSize = sizeof(tpm);
@@ -673,6 +691,7 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
     case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
     case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
+    case WM_NCLBUTTONDBLCLK:    return OnNCLButtonDblClk(msg, wparam, lparam);
     case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
     case WM_NCLBUTTONUP:        return OnNCLButtonUp(msg, wparam, lparam);
     case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);

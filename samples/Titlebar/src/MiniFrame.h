@@ -73,6 +73,7 @@ public:
     LRESULT OnNCCalcSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);

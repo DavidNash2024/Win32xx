@@ -61,11 +61,11 @@ BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
-	POPUP "&Mode"
-	BEGIN
+    POPUP "&Mode"
+    BEGIN
         MENUITEM "&Mini Frame",                 IDM_MODE_MINI
-        MENUITEM "&Full Frame",                 IDM_MODE_FULL	
-	END
+        MENUITEM "&Full Frame",                 IDM_MODE_FULL
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
