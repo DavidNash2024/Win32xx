@@ -442,6 +442,15 @@ LRESULT CMainFrame::OnCustomDraw(LPNMHDR pNMHDR)
     return 0;
 }
 
+// Limit the minimum size of the window.
+LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
+    lpMMI->ptMinTrackSize.x = 550;
+    lpMMI->ptMinTrackSize.y = 400;
+    return WndProcDefault(msg, wparam, lparam);
+}
+
 // Issue a close request to the frame to end the program.
 BOOL CMainFrame::OnFileExit()
 {
@@ -915,20 +924,6 @@ LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     return CFrame::OnSysCommand(msg, wparam, lparam);
 }
 
-// Limit the minimum size of the window.
-LRESULT CMainFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    LPWINDOWPOS windowPos = (LPWINDOWPOS)lparam;
-
-    if (windowPos->cx < 550)
-        windowPos->cx = 550;
-
-    if (windowPos->cy < 400)
-        windowPos->cy = 400;
-
-    return WndProcDefault(msg, wparam, lparam);
-}
-
 // Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
 {
@@ -985,6 +980,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
+        case WM_GETMINMAXINFO:      return OnGetMinMaxInfo(msg, wparam, lparam);
         case WM_MENUCHAR:           return OnMenuChar(msg, wparam, lparam);
         case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
         case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
@@ -996,7 +992,6 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_PAINT:              return OnPaint(msg, wparam, lparam);
         case WM_SIZE:               return OnSize(msg, wparam, lparam);
         case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
-        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
 
         case UWM_PREVIEWCLOSE:    return OnPreviewClose();
         case UWM_PRINTNOW:        return OnPreviewPrint();

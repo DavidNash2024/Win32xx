@@ -69,6 +69,7 @@ public:
     // Message handlers
     LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnEraseBkGnd(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCCalcSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -79,7 +80,6 @@ public:
     LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Command handlers
     BOOL OnFileExit();
