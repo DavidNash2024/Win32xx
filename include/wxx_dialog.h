@@ -553,7 +553,7 @@ namespace Win32xx
     // Override to customize OnClose behavior.
     inline void CDialog::OnClose()
     {
-        EndDialog(0);
+        FinalWindowProc(WM_CLOSE, 0, 0);
     }
 
     // Called when the dialog is initialized.

@@ -72,6 +72,7 @@ public:
 
     // Message handlers.
     LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMenuChar(UINT, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCCalcSize(UINT, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -83,7 +84,6 @@ public:
     LRESULT OnPaint(UINT, WPARAM, LPARAM);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnPreviewClose();
     LRESULT OnPreviewPrint();
     LRESULT OnPreviewSetup();

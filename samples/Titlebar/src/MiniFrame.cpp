@@ -361,6 +361,16 @@ BOOL CMiniFrame::OnHelp()
     return TRUE;
 }
 
+// Limit the minimum size of the window.
+LRESULT CMiniFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
+    lpMMI->ptMinTrackSize.x = 400;
+    lpMMI->ptMinTrackSize.y = 300;
+
+    return WndProcDefault(msg, wparam, lparam);
+}
+
 // Handle WM_NCCALCSIZE to extend client (paintable) area into the title bar region.
 LRESULT CMiniFrame::OnNCCalcSize(UINT, WPARAM wparam, LPARAM lparam)
 {
@@ -604,21 +614,6 @@ LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-// Called when the window is about to be resized or moved.
-LRESULT CMiniFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Limit the minimum size of the window.
-    LPWINDOWPOS windowPos = (LPWINDOWPOS)lparam;
-
-    if (windowPos->cx < 400)
-        windowPos->cx = 400;
-
-    if (windowPos->cy < 300)
-        windowPos->cy = 300;
-
-    return WndProcDefault(msg, wparam, lparam);
-}
-
 // Called before the window is created to set the CREATESTRUCT parameters.
 void CMiniFrame::PreCreate(CREATESTRUCT& cs)
 {
@@ -687,6 +682,7 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
     case WM_ERASEBKGND:         return OnEraseBkGnd(msg, wparam, lparam);
+    case WM_GETMINMAXINFO:      return OnGetMinMaxInfo(msg, wparam, lparam);
     case WM_HELP:               return OnHelp();
     case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
     case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
@@ -698,7 +694,6 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_PAINT:              return OnPaint(msg, wparam, lparam);
     case WM_SIZE:               return OnSize(msg, wparam, lparam);
     case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
-    case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
     }
 
     // Pass unhandled messages on for default processing.
