@@ -104,7 +104,7 @@ namespace Win32xx
         virtual HWND DoModeless(HWND parent = 0);
 
         // State functions
-        BOOL IsModal() const { return m_isModal; }
+        virtual BOOL IsModal() const { return m_isModal; }
         BOOL IsIndirect() const { return (NULL != m_pDlgTemplate); }
 
         // Wrappers for Windows API functions
@@ -553,7 +553,7 @@ namespace Win32xx
     // Override to customize OnClose behavior.
     inline void CDialog::OnClose()
     {
-        FinalWindowProc(WM_CLOSE, 0, 0);
+        EndDialog(0);
     }
 
     // Called when the dialog is initialized.
