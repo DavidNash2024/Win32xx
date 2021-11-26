@@ -148,7 +148,7 @@ BEGIN
     PUSHBUTTON      "Cancel", IDCANCEL, 65, 83, 30, 15
     LISTBOX         IDC_LIST_BOX, 5, 5, 90, 75, WS_GROUP | WS_TABSTOP |
                       WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
-                      LBS_NOTIFY | CS_DBLCLKS
+                      LBS_NOTIFY
 END
 
 /////////////////////////////////////////////////////////////////////////////

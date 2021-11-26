@@ -90,6 +90,7 @@ namespace Win32xx
         virtual ~CCommonDialog(){}
 
     protected:
+        virtual BOOL    IsModal() const { return TRUE; }
         virtual void    OnCancel()  {}  // a required to override
         virtual void    OnHelpButton();
         virtual BOOL    OnInitDialog();
