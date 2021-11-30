@@ -464,9 +464,9 @@ namespace Win32xx
             TLSData* pTLSData = GetApp()->GetTlsData();
             if (pTLSData == NULL)
             {
-                // Got a message for a window thats not in the map.
+                // Thread Local Storage data isn't assigned.
                 // We should never get here.
-                TRACE("*** Warning in CPropertyPage::StaticPropSheetPageProc: HWND not in window map ***\n");
+                TRACE("*** Warning in CPropertyPage::StaticPropSheetPageProc: TLS data isn't assigned ***\n");
                 return 0;
             }
 
@@ -588,13 +588,13 @@ namespace Win32xx
         m_psh.ppsp = pPSPArray;
     }
 
-    // Override this function to filter mouse and keyboard messages prior to
-    // being passed to the DialogProc.
+    // Perform initial processing of the property sheet messages.
     inline void CALLBACK CPropertySheet::Callback(HWND wnd, UINT msg, LPARAM lparam)
     {
         switch(msg)
         {
-        // Called before the dialog is created, wnd = 0, lparam points to dialog resource.
+        // Called before the property sheet is created.
+        // wnd = 0, and lparam points to dialog resource.
         case PSCB_PRECREATE:
             {
                 LPDLGTEMPLATE  lpTemplate = (LPDLGTEMPLATE)lparam;
@@ -606,7 +606,7 @@ namespace Win32xx
             }
             break;
 
-        // Called after the dialog is created.
+        // Called when the property sheet is created.
         case PSCB_INITIALIZED:
             {
                 // Retrieve pointer to CWnd object from Thread Local Storage.
@@ -615,10 +615,19 @@ namespace Win32xx
                 if (!pTLSData) return;
 
                 CPropertySheet* w = static_cast<CPropertySheet*>(pTLSData->pWnd);
-                assert(w);
 
                 if (w != 0)
+                {
+                    // Subclass the property sheet, so that messages are forwarded
+                    // to CWnd::StaticWindowProc for handling in WndProc.
                     w->Attach(wnd);
+                }
+                else
+                {
+                    // Thread Local Storage data isn't assigned.
+                    // We should never get here.
+                    TRACE("*** Warning in CPropertySheet::Callback: TLS data isn't assigned. ***\n");
+                }
             }
             break;
         }

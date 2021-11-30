@@ -102,6 +102,7 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
     }
 
     // Confirm the edit, and update the item text.
+    SetItemText(item, m_itemText);
     pTVDispInfo->item.pszText = (LPTSTR)m_itemText.c_str();
 
     if (oldText != m_itemText)

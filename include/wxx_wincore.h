@@ -451,7 +451,9 @@ namespace Win32xx
             SetWindowLongPtr(GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_prevWindowProc));
 
         HWND wnd = GetHwnd();
-        Cleanup();
+        RemoveFromMap();
+        m_wnd = 0;
+        m_prevWindowProc = 0;
 
         return wnd;
     }
@@ -997,7 +999,7 @@ namespace Win32xx
 
         if (w == 0)
         {
-            // Got a message for a window thats not in the map.
+            // Got a message for a window that's not in the map.
             // We should never get here.
             TRACE("*** Warning in CWnd::StaticWindowProc: HWND not in window map ***\n");
             return 0;

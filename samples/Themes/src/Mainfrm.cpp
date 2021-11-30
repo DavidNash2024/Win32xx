@@ -168,15 +168,15 @@ BOOL CMainFrame::ChooseColor(UINT color)
         break;
     case IDM_MAUVE:
         {
-            SetReBarColors( RGB(210, 128, 155), RGB(230, 160, 190), RGB(230, 158, 188), RGB(110, 100, 125) );
+            SetReBarColors( RGB(210, 6, 100), RGB(240, 66, 120), RGB(240, 66, 128), RGB(110, 6, 105) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(210, 128, 155), RGB(230, 160, 190)};
+            StatusBarTheme sbt = {m_useThemes, RGB(210, 6, 100), RGB(240, 66, 120)};
             SetStatusBarTheme (sbt);
 
-            ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+            ToolBarTheme tbt = {m_useThemes, RGB(242, 106, 228), RGB(192, 6, 88), RGB(152, 6, 56), RGB(152, 6, 56), RGB(149, 6, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
+            MenuTheme mt = { m_useThemes, RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210) };
             SetMenuTheme(mt);
         }
         break;
@@ -243,7 +243,7 @@ LRESULT CMainFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
 
     COLORREF clr;
     if (m_color == IDM_BLACK)
-        clr = RGB(255,255,255);
+        clr = RGB(255, 255, 255);
     else
         clr = RGB(0, 0, 0);
 
