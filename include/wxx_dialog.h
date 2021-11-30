@@ -671,7 +671,7 @@ namespace Win32xx
                 {
                     pTLSData->pWnd = NULL;
 
-                    // Store the Window pointer into the HWND map
+                    // Store the window pointer in the HWND map.
                     pDialog->m_wnd = wnd;
                     pDialog->AddToMap();
                 }

@@ -82,6 +82,8 @@ void CMainFrame::OnClose()
     if (GetView() == m_preview)
         OnPreviewClose();
 
+    SerializeINI(true);
+
     // Proceed with closing the frame.
     CFrame::OnClose();
 }

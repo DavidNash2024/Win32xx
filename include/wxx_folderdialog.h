@@ -235,7 +235,10 @@ namespace Win32xx
         int result = 0;
 
         if (pThis->GetHwnd() == 0)
-            pThis->Attach(wnd);
+        {
+            pThis->m_wnd = wnd;
+            pThis->AddToMap();
+        }
 
         switch (msg)
         {

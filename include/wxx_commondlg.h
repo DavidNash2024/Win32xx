@@ -347,8 +347,9 @@ namespace Win32xx
             {
                 pTLSData->pWnd = NULL;
 
-                // Attach the HWND to the CommonDialog object
-                pCommonDlg->Attach(wnd);
+                // Store the window pointer in the HWND map.
+                pCommonDlg->m_wnd = wnd;
+                pCommonDlg->AddToMap();
             }
         }
 

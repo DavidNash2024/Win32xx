@@ -344,8 +344,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,0,0,0
- PRODUCTVERSION 2,0,0,0
+ FILEVERSION 8,9,2,0
+ PRODUCTVERSION 8,9,2,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -362,12 +362,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "David Nash"
             VALUE "FileDescription", "Manages a library of m4v videos"
-            VALUE "FileVersion", "2, 0, 0, 0"
+            VALUE "FileVersion", "8.9.2"
             VALUE "InternalName", "MovieShow.exe"
-            VALUE "LegalCopyright", "Copyright (C) 2020"
+            VALUE "LegalCopyright", "Copyright (c) 2005-2021  David Nash"
             VALUE "OriginalFilename", "MovieShow.exe"
             VALUE "ProductName", "MovieShow"
-            VALUE "ProductVersion", "10th June 2020"
+            VALUE "ProductVersion", "Win32++ 8.9.2"
         END
     END
     BLOCK "VarFileInfo"

@@ -13,7 +13,7 @@
 //
 
 // Constructor.
-CFormDoc::CFormDoc() : m_isCheckA(0), m_isCheckB(0), m_isCheckC(0), m_radio(0)
+CFormDoc::CFormDoc() : m_isCheckA(0), m_isCheckB(0), m_isCheckC(0), m_radio(200)
 {
 }
 
