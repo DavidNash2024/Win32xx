@@ -78,7 +78,9 @@ namespace Win32xx
         CString GetFileNameExt() const;
         CString GetFileNameWOExt() const;
         const CString& GetFilePath() const;
+#ifndef WIN32_LEAN_AND_MEAN
         CString GetFileTitle() const;
+#endif
         HANDLE GetHandle() const;
         ULONGLONG GetLength() const;
         ULONGLONG GetPosition() const;
@@ -230,6 +232,7 @@ namespace Win32xx
         return m_filePath;
     }
 
+#ifndef WIN32_LEAN_AND_MEAN
     // Returns the string that the system would use to display the file name to
     // the user. The string might or might not contain the filename's extension
     // depending on user settings.
@@ -246,6 +249,7 @@ namespace Win32xx
 
         return fileTitle;
     }
+#endif
 
     // Returns the length of the file in bytes.
     // Refer to SetFilePointer in the Windows API documentation for more information.

@@ -12,7 +12,7 @@ ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _DEBUG_@@__@@_
-Linker=-lComctl32_@@_
+Linker=-lComctl32_@@_-lole32_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Debug
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=0000000100000000001000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 

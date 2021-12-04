@@ -18,6 +18,11 @@ New Features and Enhancements
 * Added the titlebar frame sample.
   This sample demonstrates how to use a customized title bar with a frame.
   It demonstrates the frame in two modes: mini-frame and full-frame.
+  
+* Added the PrintDialogEx sample.
+  This sample upgrades the Notepad sample. The Notepad sample used CPrintDialog
+  to display the print dialog. This sample demonstrates the use of 
+  CPrintDialogEx to display the print dialog.
 
 
 

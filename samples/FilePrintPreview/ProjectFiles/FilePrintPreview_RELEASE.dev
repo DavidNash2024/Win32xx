@@ -1,7 +1,7 @@
 [Project]
 FileName=FilePrintPreview_RELEASE.dev
 Name=PrintPreview
-UnitCount=15
+UnitCount=16
 Type=0
 Ver=2
 ObjFiles=
@@ -17,8 +17,8 @@ IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Release
 ObjectOutput=.\Dev-C++\Release
-OverrideOutput=0
-OverrideOutputName=PrintPreview.exe
+OverrideOutput=1
+OverrideOutputName=FilePrintPreview.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000000000
+CompilerSettings=0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -194,6 +194,16 @@ BuildCmd=
 FileName=..\src\PrintUtil.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit16]
+FileName=..\src\main.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

@@ -83,6 +83,7 @@
 					<Add library="advapi32" />
 					<Add library="Oleaut32" />
 					<Add library="shell32" />
+					<Add library="ole32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -117,6 +118,7 @@
 					<Add library="advapi32" />
 					<Add library="Oleaut32" />
 					<Add library="shell32" />
+					<Add library="ole32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -147,6 +149,7 @@
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
 					<Add library="shell32" />
+					<Add library="ole32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">

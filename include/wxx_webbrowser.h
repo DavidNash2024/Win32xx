@@ -244,15 +244,12 @@ namespace Win32xx
 
     inline CAXHost::CAXHost() : m_hwnd(NULL), m_pUnk(NULL)
     {
-        VERIFY(SUCCEEDED(OleInitialize(NULL)));
     }
 
     inline CAXHost::~CAXHost()
     {
         if (m_pUnk)
             m_pUnk->Release();
-
-        OleUninitialize();
     }
 
     // Activates the hosted control, along with any of its UI tools.

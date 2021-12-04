@@ -1,7 +1,7 @@
 [Project]
 FileName=TextFileReader_DEBUG.dev
 Name=TextFileReader
-UnitCount=18
+UnitCount=19
 Type=0
 Ver=2
 ObjFiles=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=00000001c0111000001000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -201,9 +201,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\src\ScrollWnd.h
+FileName=..\src\main.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

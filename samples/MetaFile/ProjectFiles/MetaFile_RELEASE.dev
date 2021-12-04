@@ -12,7 +12,7 @@ ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D NDEBUG_@@__@@_
-Linker=-lComctl32_@@_-s_@@_
+Linker=-lComctl32_@@_-lOle32_@@_-s_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Release
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=3
-CompilerSettings=0000000100000000000000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 

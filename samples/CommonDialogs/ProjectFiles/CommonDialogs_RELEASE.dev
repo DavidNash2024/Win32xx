@@ -1,7 +1,7 @@
 [Project]
 FileName=CommonDialogs_RELEASE.dev
 Name=CommonDialogs
-UnitCount=29
+UnitCount=30
 Type=0
 Ver=2
 ObjFiles=
@@ -27,7 +27,7 @@ CustomMakefile=stdafx.mak
 IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=3
-CompilerSettings=0000000100000000000000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -181,9 +181,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit30]
-FileName=..\src\stdafx.h
+FileName=..\src\main.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
