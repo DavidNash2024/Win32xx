@@ -2,8 +2,8 @@
 // Server.cpp
 //
 
-#include <iostream>
 #include "wxx_socket.h"
+#include <iostream>
 
 
 // This UDP server can connect to multiple UDP clients.

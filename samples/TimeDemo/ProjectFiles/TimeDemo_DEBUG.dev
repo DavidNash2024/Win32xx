@@ -1,7 +1,7 @@
 [Project]
 FileName=TimeDemo_DEBUG.dev
 Name=timedemo
-UnitCount=17
+UnitCount=18
 Type=0
 Ver=2
 ObjFiles=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=000000e1c0111000001000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -271,7 +271,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit18]
-FileName=..\src\View.cpp
+FileName=..\src\main.cpp
 CompileCpp=1
 Folder=Source
 Compile=1

@@ -1,7 +1,7 @@
 [Project]
 FileName=StatusBarEx_DEBUG.dev
 Name=StatusBarEx
-UnitCount=15
+UnitCount=16
 Type=0
 Ver=2
 ObjFiles=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=0000000100111000001000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -193,6 +193,16 @@ BuildCmd=
 FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit16]
+FileName=..\src\main.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

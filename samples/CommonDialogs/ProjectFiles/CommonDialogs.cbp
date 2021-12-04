@@ -39,6 +39,7 @@
 					<Add library="Oleaut32" />
 					<Add library="htmlhelp" />
 					<Add library="shell32" />
+					<Add library="ole32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -74,6 +75,7 @@
 					<Add library="Oleaut32" />
 					<Add library="htmlhelp" />
 					<Add library="shell32" />
+					<Add library="ole32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -103,6 +105,7 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
+					<Add library="ole32" />
 					<Add directory="../src/help" />
 				</Linker>
 			</Target>

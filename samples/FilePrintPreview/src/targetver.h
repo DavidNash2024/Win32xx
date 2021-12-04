@@ -9,9 +9,9 @@
 //#define _WIN32_IE       0x0400
 
 // For Windows 98
-//#define WINVER          0x0410
-//#define _WIN32_WINDOWS  0x0410
-//#define _WIN32_IE       0x0401
+#define WINVER          0x0410
+#define _WIN32_WINDOWS  0x0410
+#define _WIN32_IE       0x0401
 
 // For Windows NT4
 //#define WINVER          0x0400
@@ -25,10 +25,10 @@
 
 // For Windows 2000: Note: the values below are necessary for tooltips to work
 // on Windows XP
-#define WINVER          0x0500
-#define _WIN32_WINNT    0x0500
-#define _WIN32_IE       0x0500
-#define NTDDI_VERSION   0x05000000
+//#define WINVER          0x0500
+//#define _WIN32_WINNT    0x0500
+//#define _WIN32_IE       0x0500
+//#define NTDDI_VERSION   0x05000000
 
 //// For Windows XP
 //#define WINVER          0x0501

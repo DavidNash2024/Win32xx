@@ -1,7 +1,7 @@
 [Project]
 FileName=FormDemo_DEBUG.dev
 Name=FormDemo
-UnitCount=13
+UnitCount=14
 Type=0
 Ver=2
 ObjFiles=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=0000000100000000001000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -161,9 +161,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=stdafx.h
+FileName=..\src\main.cpp
 CompileCpp=1
-Folder=FormDemo
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
