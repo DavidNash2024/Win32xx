@@ -4,6 +4,11 @@
 // Note:
 //  * Add the Win32++\include  directory to project's additional include directories
 
+// VS6 requires these macros to be defined.
+#define WINVER          0x0410
+#define _WIN32_WINDOWS  0x0410
+#define _WIN32_IE       0x0401
+
 #include "wxx_wincore.h"
 
 

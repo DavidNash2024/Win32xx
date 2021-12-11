@@ -50,8 +50,8 @@ public:
     BOOL OnFileOpen();
     BOOL OnFilePreview();
     BOOL OnFilePrint();
+    BOOL OnFilePrintNow();
     BOOL OnFilePrintSetup();
-    BOOL OnFileQuickPrint();
     BOOL OnFileSaveAs();
     BOOL OnFileSave();
     BOOL OnOptionsFont();

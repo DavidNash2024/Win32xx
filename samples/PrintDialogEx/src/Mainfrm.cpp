@@ -162,6 +162,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_SAVEAS:       return OnFileSaveAs();
     case IDM_FILE_PREVIEW:      return OnFilePreview();
     case IDM_FILE_PRINT:        return OnFilePrint();
+    case IDM_FILE_PRINTNOW:     return OnFilePrintNow();
     case IDM_FILE_PRINTSETUP:   return OnFilePrintSetup();
     case IDM_EDIT_COPY:         return OnEditCopy();
     case IDM_EDIT_PASTE:        return OnEditPaste();
@@ -398,7 +399,7 @@ BOOL CMainFrame::OnFilePreview()
         m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
 
         // Set the preview's owner (for messages), and number of pages.
-        UINT maxPage = m_richView.CollatePages();
+        UINT maxPage = m_richView.CollatePages(printerDC);
         m_preview.DoPrintPreview(*this, maxPage);
 
         // Save the current Focus.
@@ -442,11 +443,18 @@ BOOL CMainFrame::OnFilePrint()
     return TRUE;
 }
 
+// Print the document without selecting the printer.
+BOOL CMainFrame::OnFilePrintNow()
+{
+    m_richView.QuickPrint(m_pathName);
+    return TRUE;
+}
+
 // Select the printer for use by the application.
 BOOL CMainFrame::OnFilePrintSetup()
 {
-    // Display the print dialog.
-    CPrintDialogEx printDialog;
+    // Display the print setup dialog.
+    CPrintDialog printDialog(PD_PRINTSETUP);
     try
     {
         // Display the print dialog
@@ -463,13 +471,6 @@ BOOL CMainFrame::OnFilePrintSetup()
         MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
     }
 
-    return TRUE;
-}
-
-// Print the document without selecting the printer.
-BOOL CMainFrame::OnFileQuickPrint()
-{
-    m_richView.QuickPrint(m_pathName);
     return TRUE;
 }
 
@@ -725,7 +726,8 @@ BOOL CMainFrame::OnPreviewSetup()
     }
 
     // Initiate the print preview.
-    UINT maxPage = m_richView.CollatePages();
+    CDC printerDC = printDlg.GetPrinterDC();
+    UINT maxPage = m_richView.CollatePages(printerDC);
     m_preview.DoPrintPreview(*this, maxPage);
 
     return TRUE;
@@ -955,8 +957,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
-        case UWM_PRINTNOW:          OnPreviewPrint();   break;
-        case UWM_PRINTSETUP:        OnPreviewSetup();   break;
+        case UWM_PREVIEWPRINT:      OnPreviewPrint();   break;
+        case UWM_PREVIEWSETUP:      OnPreviewSetup();   break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

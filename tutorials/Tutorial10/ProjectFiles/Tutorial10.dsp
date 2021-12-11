@@ -108,7 +108,7 @@ SOURCE=..\src\ScribbleApp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\View.cpp
+SOURCE=..\src\View.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"

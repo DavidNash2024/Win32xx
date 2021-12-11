@@ -46,7 +46,7 @@ BEGIN
         MENUITEM "Print Setup",                 IDM_FILE_PRINTSETUP
         MENUITEM "Print Preview",               IDM_FILE_PREVIEW
         MENUITEM "&Print",                      IDM_FILE_PRINT
-        MENUITEM "Quick Print",                 IDM_FILE_QUICKPRINT
+        MENUITEM "Print Now",                   IDM_FILE_PRINTNOW
         MENUITEM SEPARATOR
         MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -212,7 +212,7 @@ BEGIN
     IDM_FILE_PREVIEW         "Preview the print job before printing"
     IDM_FILE_PRINTSETUP      "Choose the printer and page settings"
     IDM_FILE_PRINT           "Print the Document"
-    IDM_FILE_QUICKPRINT      "Print with the current print and page settings"
+    IDM_FILE_PRINTNOW        "Print without displaying a print dialog"
     IDM_FILE_EXIT            "End the Program"
 END
 

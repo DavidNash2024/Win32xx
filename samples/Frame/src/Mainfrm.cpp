@@ -309,8 +309,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case UWM_PREVIEWCLOSE:    return OnPreviewClose();
-        case UWM_PRINTNOW:        return OnPreviewPrint();
-        case UWM_PRINTSETUP:      return OnPreviewSetup();
+        case UWM_PREVIEWPRINT:    return OnPreviewPrint();
+        case UWM_PREVIEWSETUP:    return OnPreviewSetup();
         }
 
         return WndProcDefault(msg, wparam, lparam);

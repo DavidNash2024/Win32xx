@@ -90,8 +90,8 @@
 
 // print preview messages
 #define UWM_PREVIEWCLOSE      (WM_APP + 0x3F2A) // Message - sent by CPrintPreview when the 'Close' button is pressed.
-#define UWM_PRINTNOW          (WM_APP + 0x3F2B) // Message - sent by CPrintPreview when the 'Print Now' button is pressed.
-#define UWM_PRINTSETUP        (WM_APP + 0x3F2C) // Message - sent by CPrintPreview when the 'Print Setup' is button pressed.
+#define UWM_PREVIEWPRINT      (WM_APP + 0x3F2B) // Message - sent by CPrintPreview when the 'Print Now' button is pressed.
+#define UWM_PREVIEWSETUP        (WM_APP + 0x3F2C) // Message - sent by CPrintPreview when the 'Print Setup' is button pressed.
 
 
 namespace Win32xx

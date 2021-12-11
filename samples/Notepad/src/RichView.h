@@ -18,7 +18,7 @@ public:
     void  DoPrint(LPCTSTR docName);
     void  PrintPage(CDC& dc, UINT page);
     void  QuickPrint(LPCTSTR docName);
-    virtual void SetFontDefaults();
+    void  SetFontDefaults();
 
 protected:
     virtual void OnAttach();
