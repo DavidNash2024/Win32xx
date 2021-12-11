@@ -395,8 +395,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
     case UWM_DROPFILE:        return OnDropFile(wparam);
     case UWM_PREVIEWCLOSE:    return OnPreviewClose();
-    case UWM_PRINTNOW:        return OnPreviewPrint();
-    case UWM_PRINTSETUP:      return OnPreviewSetup();
+    case UWM_PREVIEWPRINT:    return OnPreviewPrint();
+    case UWM_PREVIEWSETUP:    return OnPreviewSetup();
     }
 
     // Use the default message handling for remaining messages.

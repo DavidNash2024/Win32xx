@@ -161,6 +161,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_SAVE:         return OnFileSave();
     case IDM_FILE_SAVEAS:       return OnFileSaveAs();
     case IDM_FILE_PREVIEW:      return OnFilePreview();
+    case IDM_FILE_PRINTNOW:     return OnFilePrintNow();
     case IDM_FILE_PRINT:        return OnFilePrint();
     case IDM_FILE_PRINTSETUP:   return OnFilePrintSetup();
     case IDM_EDIT_COPY:         return OnEditCopy();
@@ -443,8 +444,8 @@ BOOL CMainFrame::OnFilePrint()
 // Select the printer for use by the application.
 BOOL CMainFrame::OnFilePrintSetup()
 {
-    // Display the print dialog.
-    CPrintDialog printDlg;
+    // Display the print setup dialog.
+    CPrintDialog printDlg(PD_PRINTSETUP);
     try
     {
         // Display the print dialog
@@ -465,7 +466,7 @@ BOOL CMainFrame::OnFilePrintSetup()
 }
 
 // Print the document without selecting the printer.
-BOOL CMainFrame::OnFileQuickPrint()
+BOOL CMainFrame::OnFilePrintNow()
 {
     m_richView.QuickPrint(m_pathName);
     return TRUE;
@@ -824,7 +825,7 @@ void CMainFrame::SaveModifiedText()
 {
     // Check for unsaved text
     if (m_richView.GetModify())
-        if (::MessageBox(0, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
+        if (::MessageBox(0, _T("Save changes to this document"), _T("Notepad"), MB_YESNO | MB_ICONWARNING) == IDYES)
             OnFileSave();
 }
 
@@ -937,9 +938,9 @@ void CMainFrame::SetWindowTitle()
     CString title;
 
     if (m_pathName.IsEmpty())
-        title = _T("TextEdit");
+        title = _T("Notepad");
     else
-        title = m_pathName + _T(" - TextEdit");
+        title = m_pathName + _T(" - Notepad");
 
     SetWindowText(title);
 }
@@ -952,8 +953,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
-        case UWM_PRINTNOW:          OnPreviewPrint();   break;
-        case UWM_PRINTSETUP:        OnPreviewSetup();   break;
+        case UWM_PREVIEWPRINT:      OnPreviewPrint();   break;
+        case UWM_PREVIEWSETUP:      OnPreviewSetup();   break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

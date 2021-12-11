@@ -107,7 +107,7 @@ namespace Win32xx
         // Operations
         INT_PTR DoModal(HWND owner /* = 0 */);
         int GetCopies() const;
-        CDevMode GetCurrentDevMode() const;
+        CDevMode GetCurrentDevMode();
         CStringW GetCurrentPortName() const;
         CStringW GetCurrentPrinterName() const;
         BOOL GetDefaults();
@@ -149,6 +149,7 @@ namespace Win32xx
         CPrintDialogEx& operator = (const CPrintDialogEx&); // Disable assignment operator
         PRINTDLGEX m_pdex;
         IPrintDialogServices* m_pServices;
+        CHGlobal m_currentModeBuffer;
     };
 
     // Constructor for CPrintDialogEx class. The flags parameter specifies the
@@ -266,19 +267,17 @@ namespace Win32xx
 
     // Fill a DEVMODE structure with information about the currently
     // selected printer, while the print dialog is displayed.
-    inline CDevMode CPrintDialogEx::GetCurrentDevMode() const
+    inline CDevMode CPrintDialogEx::GetCurrentDevMode()
     {
         if (m_pServices != 0)
         {
-            CHGlobal modeBufferTest;
-            modeBufferTest.Alloc(sizeof(DEVMODE));
+            // Retrieve the size of the current DevMode.
             UINT size = 0;
-            CDevMode devModeTest(modeBufferTest);
-            m_pServices->GetCurrentDevMode(devModeTest, &size);
+            m_pServices->GetCurrentDevMode(0, &size);
 
-            CHGlobal modeBuffer;
-            modeBuffer.Alloc(size);
-            CDevMode devMode(modeBuffer);
+            // Retrieve the current DevMode.
+            m_currentModeBuffer.Alloc(size);
+            CDevMode devMode(m_currentModeBuffer);
             m_pServices->GetCurrentDevMode(devMode, &size);
             return devMode;
         }

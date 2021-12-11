@@ -993,9 +993,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_SIZE:               return OnSize(msg, wparam, lparam);
         case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
 
-        case UWM_PREVIEWCLOSE:    return OnPreviewClose();
-        case UWM_PRINTNOW:        return OnPreviewPrint();
-        case UWM_PRINTSETUP:      return OnPreviewSetup();
+        case UWM_PREVIEWCLOSE:      return OnPreviewClose();
+        case UWM_PREVIEWPRINT:      return OnPreviewPrint();
+        case UWM_PREVIEWSETUP:      return OnPreviewSetup();
         }
 
         return WndProcDefault(msg, wparam, lparam);

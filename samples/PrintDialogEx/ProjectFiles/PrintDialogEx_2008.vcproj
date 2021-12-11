@@ -227,6 +227,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\PrintDialog.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\resource.h"
 				>
 			</File>

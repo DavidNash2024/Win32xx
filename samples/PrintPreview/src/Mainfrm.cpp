@@ -69,6 +69,10 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
 // Called when the window is closed.
 void CMainFrame::OnClose()
 {
+        // Close the preview
+    if (GetView() == m_preview)
+        OnPreviewClose();
+
     //Check for unsaved text
     SaveModifiedText();
 
@@ -90,7 +94,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_PREVIEW:      return OnFilePreview();
     case IDM_FILE_PRINTSETUP:   return OnFilePrintSetup();
     case IDM_FILE_PRINT:        return OnFilePrint();
-    case IDM_FILE_QUICKPRINT:   return OnFileQuickPrint();
+    case IDM_FILE_PRINTNOW:     return OnFilePrintNow();
     case IDM_EDIT_COPY:         return OnEditCopy();
     case IDM_EDIT_PASTE:        return OnEditPaste();
     case IDM_EDIT_CUT:          return OnEditCut();
@@ -333,7 +337,7 @@ BOOL CMainFrame::OnFilePrint()
 BOOL CMainFrame::OnFilePrintSetup()
 {
     // Display the print dialog.
-    CPrintDialog printDlg;
+    CPrintDialog printDlg(PD_PRINTSETUP);
     try
     {
         // Display the print dialog
@@ -354,7 +358,7 @@ BOOL CMainFrame::OnFilePrintSetup()
 }
 
 // Start a print job without choosing the printer.
-BOOL CMainFrame::OnFileQuickPrint()
+BOOL CMainFrame::OnFilePrintNow()
 {
     m_richView.QuickPrint(m_pathName);
     return TRUE;
@@ -602,7 +606,7 @@ void CMainFrame::SaveModifiedText()
 {
     //Check for unsaved text
     if (m_richView.GetModify())
-        if (::MessageBox(0, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
+        if (::MessageBox(0, _T("Save changes to this document"), _T("PrintPreview"), MB_YESNO | MB_ICONWARNING) == IDYES)
             OnFileSave();
 }
 
@@ -621,7 +625,7 @@ void CMainFrame::SetupMenuIcons()
     // Add more images for menu items.
     AddMenuIcon(IDM_FILE_PRINTSETUP, IDI_PRINTSETUP);
     AddMenuIcon(IDM_FILE_PREVIEW,    IDI_PRINTPREVIEW);
-    AddMenuIcon(IDM_FILE_QUICKPRINT, IDI_QUICKPRINT);
+    AddMenuIcon(IDM_FILE_PRINTNOW,   IDI_QUICKPRINT);
     AddMenuIcon(IDM_FILE_PRINT,      IDI_PRINT);
 }
 
@@ -663,8 +667,8 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
-        case UWM_PRINTNOW:          OnPreviewPrint();   break;
-        case UWM_PRINTSETUP:        OnPreviewSetup();   break;
+        case UWM_PREVIEWPRINT:      OnPreviewPrint();   break;
+        case UWM_PREVIEWSETUP:      OnPreviewSetup();   break;
         }
 
         return WndProcDefault(msg, wparam, lparam);

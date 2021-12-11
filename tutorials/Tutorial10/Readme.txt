@@ -20,8 +20,8 @@ Features demonstrated in this tutorial
 * How to create the preview window, and swap it into the frame's view.
 * How to handle UWM_PREVIEWCLOSE to swap back to the default view when the preview
    closes.
-* How to handle UWM_PRINTNOW to send the print job to the default or selected
+* How to handle UWM_PREVIEWPRINT to send the print job to the default or selected
    printer.
-* How to handle UWM_PRINTSETUP to initiate a PrintDlg to select the printer and
+* How to handle UWM_PREVIEWSETUP to initiate a PrintDlg to select the printer and
    page settings.
 

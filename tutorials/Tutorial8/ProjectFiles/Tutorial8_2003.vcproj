@@ -151,22 +151,7 @@
 				RelativePath="..\src\Doc.cpp">
 			</File>
 			<File
-				RelativePath="main.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
+				RelativePath="..\src\main.cpp">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.cpp">

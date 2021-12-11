@@ -166,7 +166,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDW_PREVIEWPRINT         "Print Now"
+    IDW_PREVIEWPRINT         "Print"
     IDW_PREVIEWSETUP         "Print Setup"
     IDW_PREVIEWPREV          "Prev Page"
     IDW_PREVIEWNEXT          "Next Page"

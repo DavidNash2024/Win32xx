@@ -19,7 +19,7 @@
 #define IDM_FILE_PRINTSETUP             125
 #define IDM_FILE_PREVIEW                126
 #define IDM_FILE_PRINT                  127
-#define IDM_FILE_QUICKPRINT             128
+#define IDM_FILE_PRINTNOW               128
 #define IDM_FILE_CLOSE                  130
 #define IDM_FILE_EXIT                   131
 #define IDM_EDIT_UNDO                   140

@@ -433,7 +433,7 @@ namespace Win32xx
         return dc;
     }
 
-    // Dialog procedure for the Font dialog. Override this function
+    // Dialog procedure for the Print dialog. Override this function
     // to customize the message handling.
     inline INT_PTR CPrintDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {

@@ -53,7 +53,7 @@ UINT CRichView::CollatePages()
         }
     } while (lastChar < textLength);
 
-    // Add the final bage break.
+    // Add the final page break.
     m_pageBreaks.push_back(-1);
 
     // return the number of pages.
