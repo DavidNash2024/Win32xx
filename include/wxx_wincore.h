@@ -596,6 +596,58 @@ namespace Win32xx
         return str;
     }
 
+    // A function used internally to call OnMessageReflect. Don't call or override this function.
+    inline LRESULT CWnd::MessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        HWND wnd = 0;
+        switch (msg)
+        {
+        case WM_COMMAND:
+        case WM_CTLCOLORBTN:
+        case WM_CTLCOLOREDIT:
+        case WM_CTLCOLORDLG:
+        case WM_CTLCOLORLISTBOX:
+        case WM_CTLCOLORSCROLLBAR:
+        case WM_CTLCOLORSTATIC:
+        case WM_CHARTOITEM:
+        case WM_VKEYTOITEM:
+        case WM_HSCROLL:
+        case WM_VSCROLL:
+            wnd = reinterpret_cast<HWND>(lparam);
+            break;
+
+        case WM_DRAWITEM:
+        case WM_MEASUREITEM:
+        case WM_DELETEITEM:
+        case WM_COMPAREITEM:
+            wnd = GetDlgItem(static_cast<int>(wparam));
+            break;
+
+        case WM_PARENTNOTIFY:
+            switch(LOWORD(wparam))
+            {
+            case WM_CREATE:
+            case WM_DESTROY:
+                wnd = reinterpret_cast<HWND>(lparam);
+                break;
+            }
+        }
+
+        CWnd* pWnd = GetApp()->GetCWndFromMap(wnd);
+
+        if (pWnd != NULL)
+            return pWnd->OnMessageReflect(msg, wparam, lparam);
+
+        return 0;
+    }
+	
+	// This function is called when a window is attached to the CWnd.
+    // Override it to automatically perform tasks when the window is attached.
+    // Note:  Window controls are attached.
+    inline void CWnd::OnAttach()
+    {
+    }
+	
     // Called in response to WM_CLOSE, before the window is destroyed.
     // Override this function to suppress destroying the window.
     // WM_CLOSE is sent by SendMessage(WM_CLOSE, 0, 0) or by clicking X
@@ -623,13 +675,6 @@ namespace Win32xx
 
         // return FALSE for unhandled commands
         return FALSE;
-    }
-
-    // This function is called when a window is attached to the CWnd.
-    // Override it to automatically perform tasks when the window is attached.
-    // Note:  Window controls are attached.
-    inline void CWnd::OnAttach()
-    {
     }
 
     // Called during window creation. Override this functions to perform tasks
@@ -682,52 +727,7 @@ namespace Win32xx
     {
         // Override this function to modify the behavior of menu items,
         // such as adding or removing checkmarks.
-    }
-
-    // A function used internally to call OnMessageReflect. Don't call or override this function.
-    inline LRESULT CWnd::MessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
-    {
-        HWND wnd = 0;
-        switch (msg)
-        {
-        case WM_COMMAND:
-        case WM_CTLCOLORBTN:
-        case WM_CTLCOLOREDIT:
-        case WM_CTLCOLORDLG:
-        case WM_CTLCOLORLISTBOX:
-        case WM_CTLCOLORSCROLLBAR:
-        case WM_CTLCOLORSTATIC:
-        case WM_CHARTOITEM:
-        case WM_VKEYTOITEM:
-        case WM_HSCROLL:
-        case WM_VSCROLL:
-            wnd = reinterpret_cast<HWND>(lparam);
-            break;
-
-        case WM_DRAWITEM:
-        case WM_MEASUREITEM:
-        case WM_DELETEITEM:
-        case WM_COMPAREITEM:
-            wnd = GetDlgItem(static_cast<int>(wparam));
-            break;
-
-        case WM_PARENTNOTIFY:
-            switch(LOWORD(wparam))
-            {
-            case WM_CREATE:
-            case WM_DESTROY:
-                wnd = reinterpret_cast<HWND>(lparam);
-                break;
-            }
-        }
-
-        CWnd* pWnd = GetApp()->GetCWndFromMap(wnd);
-
-        if (pWnd != NULL)
-            return pWnd->OnMessageReflect(msg, wparam, lparam);
-
-        return 0;
-    }
+    }	
 
     // This function processes those special messages sent by some older controls,
     // and reflects them back to the originating CWnd object.

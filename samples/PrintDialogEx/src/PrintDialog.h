@@ -20,8 +20,7 @@
 //
 // CRichView updates the PrintDlgEx's maximum page parameter when it
 // receives the UWN_SETTINGCHANGE message.
-
-
+//
 class CPrintParent : public CWnd
 {
 public:
@@ -57,7 +56,6 @@ private:
     HWND m_owner;
 
 };
-
 
 
 //////////////////////////////////////////////

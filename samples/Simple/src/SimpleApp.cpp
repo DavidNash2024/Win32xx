@@ -7,15 +7,15 @@
 ///////////////////////////////////
 // CSimpleApp function definitions.
 //
+
+// Constructor for CSimpleApp.
 CSimpleApp::CSimpleApp()
 {
-    // Constructor for CSimpleApp
 }
 
+// This function is called automatically when the application starts.
 BOOL CSimpleApp::InitInstance()
 {
-    // This function is called automatically when the application starts
-
     // Create the Window
     m_view.Create();
 
