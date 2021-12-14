@@ -37,6 +37,7 @@ This sample demonstrates the following:
 ======================================
 * Handles the WM_NCCALCSIZE message to adjust the non-client area size.
 * Handles the WM_NCHITTEST message for hit testing on our custom title bar.
+* Handles the WM_GETMINMAXINFO message to limit the minimum window size.
 * Uses ::OpenThemeData to access the windows's theme data.
 * Uses ::GetDpiForWindow to retrieve the DPI for the window.
 * Uses ::DrawThemeTextEx to draw the tile bar caption.

@@ -12,17 +12,17 @@
 //////////////////////////////////
 // CRoundApp function definitions.
 //
+
+// Constructor for CRoundApp
 CRoundApp::CRoundApp()
 {
-    // Constructor for CRoundApp
 }
 
+// This function is called automatically when the application starts.
 BOOL CRoundApp::InitInstance()
 {
-    // This function is called automatically when the application starts
-
-    // Create the Window
-    m_view.Create();    // throws a CWinException on failure
+    // Create the Window.
+    m_view.Create();    // Throws a CWinException on failure.
 
     return TRUE;
 }

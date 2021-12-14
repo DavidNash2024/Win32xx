@@ -1318,11 +1318,14 @@ namespace Win32xx
         size_t pos = 0;
         size_t lenOld = lstrlenT(oldText);
         size_t lenNew = lstrlenT(newText);
-        while ((pos = m_str.find(oldText, pos)) != std::string::npos)
+        if (lenOld > 0 && lenNew > 0)
         {
-            m_str.replace(pos, lenOld, newText);
-            pos += lenNew;
-            ++count;
+            while ((pos = m_str.find(oldText, pos)) != std::string::npos)
+            {
+                m_str.replace(pos, lenOld, newText);
+                pos += lenNew;
+                ++count;
+            }
         }
         return count;
     }

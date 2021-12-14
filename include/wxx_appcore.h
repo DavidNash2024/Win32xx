@@ -399,7 +399,7 @@ namespace Win32xx
         return ::SuspendThread(m_thread);
     }
 
-    // When the thread starts, it runs this function.
+    // When the GUI thread starts, it runs this function.
     inline UINT WINAPI CWinThread::StaticThreadProc(LPVOID pCThread)
     {
         // Get the pointer for this CWinThread object

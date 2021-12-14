@@ -341,7 +341,7 @@ namespace Win32xx
     private:
         CWnd(const CWnd&);              // Disable copy construction
         CWnd& operator = (const CWnd&); // Disable assignment operator
-        CWnd(HWND wnd);                // Private constructor used internally
+        CWnd(HWND wnd);                 // Private constructor used internally
 
         static LRESULT CALLBACK StaticWindowProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
