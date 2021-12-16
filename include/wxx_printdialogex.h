@@ -434,6 +434,7 @@ namespace Win32xx
     }
 
     // Returns the device context of the default or currently chosen printer.
+    // Throws on failure.
     inline CDC CPrintDialogEx::GetPrinterDC() const
     {
         CThreadLock lock(GetApp()->m_printLock);
@@ -446,6 +447,9 @@ namespace Win32xx
             dc.CreateDC(GetDriverName(), GetDeviceName(),
                 GetPortName(), GetDevMode());
         }
+
+        if (dc.GetHDC() == 0)
+            throw CResourceException(GetApp()->MsgPrintFound());
 
         return dc;
     }

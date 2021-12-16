@@ -356,7 +356,7 @@ namespace Win32xx
         //  Additional messages to be handled go here
         //  }
 
-            // Pass unhandled messages on to parent DialogProc
+        // Pass unhandled messages on to parent DialogProc
         return DialogProcDefault(msg, wparam, lparam);
     }
 
@@ -475,45 +475,51 @@ namespace Win32xx
     template <typename T>
     inline void CPrintPreview<T>::PreviewPage(UINT page)
     {
-        // Get the device context of the default or currently chosen printer
-        CPrintDialog printDlg;
-        CDC printerDC = printDlg.GetPrinterDC();
-        if (printerDC.GetHDC() == 0)
-            throw CResourceException(GetApp()->MsgPrintFound());
+        try
+        {
+            // Get the device context of the default or currently chosen printer
+            CPrintDialog printDlg;
+            CDC printerDC = printDlg.GetPrinterDC();
 
-        // Create a memory DC for the printer.
-        // Note: we use the printer's DC here to render text accurately.
-        CMemDC memDC(printerDC);
+            // Create a memory DC for the printer.
+            // Note: we use the printer's DC here to render text accurately.
+            CMemDC memDC(printerDC);
 
-        // Create a compatible bitmap for the memory DC
-        int width = printerDC.GetDeviceCaps(HORZRES);
-        int height = printerDC.GetDeviceCaps(VERTRES);
+            // Create a compatible bitmap for the memory DC
+            int width = printerDC.GetDeviceCaps(HORZRES);
+            int height = printerDC.GetDeviceCaps(VERTRES);
 
-        // A bitmap to hold all the pixels of the printed page would be too large.
-        // Shrinking its dimensions by 4 reduces it to 1/16th its original size.
-        int shrink = width > 8000 ? 8 : 4;
-        memDC.CreateCompatibleBitmap(printerDC, width / shrink, height / shrink);
+            // A bitmap to hold all the pixels of the printed page would be too large.
+            // Shrinking its dimensions by 4 reduces it to 1/16th its original size.
+            int shrink = width > 8000 ? 8 : 4;
+            memDC.CreateCompatibleBitmap(printerDC, width / shrink, height / shrink);
 
-        memDC.SetMapMode(MM_ANISOTROPIC);
-        memDC.SetWindowExtEx(width, height, NULL);
-        memDC.SetViewportExtEx(width / shrink, height / shrink, NULL);
+            memDC.SetMapMode(MM_ANISOTROPIC);
+            memDC.SetWindowExtEx(width, height, NULL);
+            memDC.SetViewportExtEx(width / shrink, height / shrink, NULL);
 
-        // Fill the bitmap with a white background
-        CRect rc(0, 0, width, height);
-        memDC.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
+            // Fill the bitmap with a white background
+            CRect rc(0, 0, width, height);
+            memDC.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
 
-        // Call PrintPage from the source.
-        assert(m_pSource);
-        m_pSource->PrintPage(memDC, page);
+            // Call PrintPage from the source.
+            assert(m_pSource);
+            m_pSource->PrintPage(memDC, page);
 
-        // Detach the bitmap from the memory DC and save it
-        CBitmap bitmap = memDC.DetachBitmap();
-        GetPreviewPane().SetBitmap(bitmap);
+            // Detach the bitmap from the memory DC and save it
+            CBitmap bitmap = memDC.DetachBitmap();
+            GetPreviewPane().SetBitmap(bitmap);
 
-        // Display the print preview
-        UpdateButtons();
-        CDC previewDC = GetPreviewPane().GetDC();
-        GetPreviewPane().Render(previewDC);
+            // Display the print preview
+            UpdateButtons();
+            CDC previewDC = GetPreviewPane().GetDC();
+            GetPreviewPane().Render(previewDC);
+        }
+
+        catch (const CException&)
+        {
+            TRACE("Failed to render preview page.\n");
+        }
     }
 
     // Enables or disables the page selection buttons.

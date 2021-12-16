@@ -71,61 +71,79 @@ void CView::Print(LPCTSTR docName)
 // Prints the image on either the preview pane or the printer.
 void CView::PrintPage(CDC& dc, UINT)
 {
-    if (m_image.GetHandle() != 0)
+    try
     {
-        BITMAP bitmap = m_image.GetBitmapData();
-        int bmWidth = bitmap.bmWidth;
-        int bmHeight = bitmap.bmHeight;
+        if (m_image.GetHandle() != 0)
+        {
+            BITMAP bitmap = m_image.GetBitmapData();
+            int bmWidth = bitmap.bmWidth;
+            int bmHeight = bitmap.bmHeight;
 
-        // Get the device context of the default or currently chosen printer
-        CPrintDialog printDlg;
-        CDC printDC = printDlg.GetPrinterDC();
-        CClientDC viewDC(*this);
-        double viewPixelsX = double(viewDC.GetDeviceCaps(LOGPIXELSX));
-        double viewPixelsY = double(viewDC.GetDeviceCaps(LOGPIXELSY));
-        double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
-        double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
-        double scaleX = printPixelsX / viewPixelsX;
-        double scaleY = printPixelsY / viewPixelsY;
-        int scaledWidth = int(bmWidth * scaleX);
-        int scaledHeight = int(bmHeight * scaleY);
+            // Get the device context of the default or currently chosen printer
+            CPrintDialog printDlg;
+            CDC printDC = printDlg.GetPrinterDC();
+            CClientDC viewDC(*this);
+            double viewPixelsX = double(viewDC.GetDeviceCaps(LOGPIXELSX));
+            double viewPixelsY = double(viewDC.GetDeviceCaps(LOGPIXELSY));
+            double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
+            double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
+            double scaleX = printPixelsX / viewPixelsX;
+            double scaleY = printPixelsY / viewPixelsY;
+            int scaledWidth = int(bmWidth * scaleX);
+            int scaledHeight = int(bmHeight * scaleY);
 
-        // Create the LPBITMAPINFO from the bitmap.
-        CBitmapInfoPtr pbmi(m_image);
-        BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
+            // Create the LPBITMAPINFO from the bitmap.
+            CBitmapInfoPtr pbmi(m_image);
+            BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
 
-        // Extract the device independent image data.
-        CMemDC memDC(viewDC);
-        memDC.GetDIBits(m_image, 0, bmHeight, NULL, pbmi, DIB_RGB_COLORS);
-        std::vector<byte> byteArray(pBIH->biSizeImage, 0);
-        byte* pByteArray = &byteArray.front();
-        memDC.GetDIBits(m_image, 0, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+            // Extract the device independent image data.
+            CMemDC memDC(viewDC);
+            memDC.GetDIBits(m_image, 0, bmHeight, NULL, pbmi, DIB_RGB_COLORS);
+            std::vector<byte> byteArray(pBIH->biSizeImage, 0);
+            byte* pByteArray = &byteArray.front();
+            memDC.GetDIBits(m_image, 0, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 
-        // Copy (stretch) the DI bits to the specified dc.
-        dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
-               bmWidth, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
+            // Copy (stretch) the DI bits to the specified dc.
+            dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
+                bmWidth, bmHeight, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
+        }
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
 }
 
 // Prints the image on the current default printer.
 void CView::QuickPrint(LPCTSTR docName)
 {
-    // Create a DOCINFO structure.
-    DOCINFO di;
-    memset(&di, 0, sizeof(DOCINFO));
-    di.cbSize = sizeof(DOCINFO);
-    di.lpszDocName = docName;
+    try
+    {
+        // Create a DOCINFO structure.
+        DOCINFO di;
+        memset(&di, 0, sizeof(DOCINFO));
+        di.cbSize = sizeof(DOCINFO);
+        di.lpszDocName = docName;
 
-    CPrintDialog printDlg;
-    CDC printDC = printDlg.GetPrinterDC();
+        CPrintDialog printDlg;
+        CDC printDC = printDlg.GetPrinterDC();
 
-    printDC.StartDoc(&di);
-    printDC.StartPage();
+        printDC.StartDoc(&di);
+        printDC.StartPage();
 
-    PrintPage(printDC);
+        PrintPage(printDC);
 
-    printDC.EndPage();
-    printDC.EndDoc();
+        printDC.EndPage();
+        printDC.EndDoc();
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
 }
 
 // Saves the bitmap to a file.

@@ -87,16 +87,16 @@
   #include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
   #include <wxx_preview.h>        // Add CPrintPreview
   #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
-#endif
 
-// Win2000 or higher
-#if (WINVER >= 0x0500) && (!defined (WIN32_LEAN_AND_MEAN))
-#include <wxx_printdialogex.h>  // Add CPrintDialogEx
-#endif
+  // Win2000 or higher
+  #if (WINVER >= 0x0500)
+    #include <wxx_printdialogex.h>  // Add CPrintDialogEx
+  #endif
 
-// Windows Vista or higher with Microsoft VS2008 or higher, or Clang compiler
-#if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500) || defined(__clang_major__)))
-#include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
+  // Windows Vista or higher with Microsoft VS2008 or higher, or Clang compiler
+  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500) || defined(__clang_major__)))
+  #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
+  #endif
 #endif
 
 // Windows Vista or higher, not Borland, not Microsoft unless VS2008 or higher. Requires Unicode.

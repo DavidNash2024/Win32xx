@@ -75,65 +75,83 @@ void CView::PreRegisterClass(WNDCLASS& wc)
 // to the printed page.
 void CView::PrintPage(CDC& dc, UINT)
 {
-    // Get the device context of the default or currently chosen printer
-    CPrintDialog printDlg;
-    CDC printDC = printDlg.GetPrinterDC();
+    try
+    {
+        // Get the device context of the default or currently chosen printer
+        CPrintDialog printDlg;
+        CDC printDC = printDlg.GetPrinterDC();
 
-    int cxPage = printDC.GetDeviceCaps(HORZRES);        // Width  in pixels.
-    int cyPage = printDC.GetDeviceCaps(VERTRES);        // Height in pixels.
+        int cxPage = printDC.GetDeviceCaps(HORZRES);        // Width  in pixels.
+        int cyPage = printDC.GetDeviceCaps(VERTRES);        // Height in pixels.
 
-    int cxView = GetClientRect().Width();
-    int cyView = GetClientRect().Height();
+        int cxView = GetClientRect().Width();
+        int cyView = GetClientRect().Height();
 
-    // Draw the view image to a memory DC.
-    CClientDC viewDC(*this);
-    CMemDC memDC(viewDC);
-    memDC.CreateCompatibleBitmap(viewDC, cxView, cyView);
-    OnDraw(memDC);
+        // Draw the view image to a memory DC.
+        CClientDC viewDC(*this);
+        CMemDC memDC(viewDC);
+        memDC.CreateCompatibleBitmap(viewDC, cxView, cyView);
+        OnDraw(memDC);
 
-    // Now we convert the bitmap from DDB to DIB
-    CBitmap bmView = memDC.DetachBitmap();
-    CBitmapInfoPtr pbmi(bmView);
+        // Now we convert the bitmap from DDB to DIB
+        CBitmap bmView = memDC.DetachBitmap();
+        CBitmapInfoPtr pbmi(bmView);
 
-    // Extract the device independent image data.
-    BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
-    memDC.GetDIBits(bmView, 0, cyView, NULL, pbmi, DIB_RGB_COLORS);
-    std::vector<byte> byteArray(pBIH->biSizeImage, 0);
-    byte* pByteArray = &byteArray.front();
-    memDC.GetDIBits(bmView, 0, cyView, pByteArray, pbmi, DIB_RGB_COLORS);
+        // Extract the device independent image data.
+        BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
+        memDC.GetDIBits(bmView, 0, cyView, NULL, pbmi, DIB_RGB_COLORS);
+        std::vector<byte> byteArray(pBIH->biSizeImage, 0);
+        byte* pByteArray = &byteArray.front();
+        memDC.GetDIBits(bmView, 0, cyView, pByteArray, pbmi, DIB_RGB_COLORS);
 
-    // Copy the DI bits to the specified dc
-    dc.StretchDIBits(0, 0, cxPage, cyPage, 0, 0,
-           cxView, cyView, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
+        // Copy the DI bits to the specified dc
+        dc.StretchDIBits(0, 0, cxPage, cyPage, 0, 0,
+            cxView, cyView, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
 }
 
 // Print to the default or previously chosen printer.
 void CView::QuickPrint(LPCTSTR docName)
 {
-    // Create a DOCINFO structure.
-    DOCINFO di;
-    memset(&di, 0, sizeof(DOCINFO));
-    di.cbSize = sizeof(DOCINFO);
-    di.lpszDocName = docName;
+    try
+    {
+        // Create a DOCINFO structure.
+        DOCINFO di;
+        memset(&di, 0, sizeof(DOCINFO));
+        di.cbSize = sizeof(DOCINFO);
+        di.lpszDocName = docName;
 
-    // Get the device context of the default or currently chosen printer.
-    CPrintDialog printDlg;
-    CDC printDC = printDlg.GetPrinterDC();
+        // Get the device context of the default or currently chosen printer.
+        CPrintDialog printDlg;
+        CDC printDC = printDlg.GetPrinterDC();
 
-    // Begin a print job by calling the StartDoc function.
-    printDC.StartDoc(&di);
+        // Begin a print job by calling the StartDoc function.
+        printDC.StartDoc(&di);
 
-    // Inform the driver that the application is about to begin sending data.
-    printDC.StartPage();
+        // Inform the driver that the application is about to begin sending data.
+        printDC.StartPage();
 
-    // Print the page on the printer DC
-    PrintPage(printDC);
+        // Print the page on the printer DC
+        PrintPage(printDC);
 
-    // Inform the driver that the page is finished.
-    printDC.EndPage();
+        // Inform the driver that the page is finished.
+        printDC.EndPage();
 
-    // Inform the driver that document has ended.
-    printDC.EndDoc();
+        // Inform the driver that document has ended.
+        printDC.EndDoc();
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
 }
 
 // All window messages for this window pass through WndProc.

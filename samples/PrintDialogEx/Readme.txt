@@ -12,9 +12,9 @@ New Features demonstrated in this example
 * How to use the Apply button to save settings for later use.
 * How to use a footer to display the page number on the printed page.
 * How to acquire the printer's device context from the dialog's current
-   settings while the print dialog is active. 
+   settings while the print dialog is active.
 * How to dynamically update the maximum pages to print while the print dialog
-   is active. 
+   is active.
 
 Notes:
 * The document needs to be over one page in length to enable the Pages option.
