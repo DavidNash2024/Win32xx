@@ -392,8 +392,6 @@ BOOL CMainFrame::OnFilePreview()
         // Retrieve the device context of the default or currently chosen printer.
         CPrintDialogEx printDialog;
         CDC printerDC = printDialog.GetPrinterDC();
-        if (printerDC.GetHDC() == 0)
-            throw CResourceException(_T("No printer available"));
 
         // Setup the print preview.
         m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
@@ -717,6 +715,11 @@ BOOL CMainFrame::OnPreviewSetup()
             CString status = _T("Printer: ") + printDlg.GetDeviceName();
             SetStatusText(status);
         }
+
+        // Initiate the print preview.
+        CDC printerDC = printDlg.GetPrinterDC();
+        UINT maxPage = m_richView.CollatePages(printerDC);
+        m_preview.DoPrintPreview(*this, maxPage);
     }
 
     catch (const CException& e)
@@ -724,11 +727,6 @@ BOOL CMainFrame::OnPreviewSetup()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
-
-    // Initiate the print preview.
-    CDC printerDC = printDlg.GetPrinterDC();
-    UINT maxPage = m_richView.CollatePages(printerDC);
-    m_preview.DoPrintPreview(*this, maxPage);
 
     return TRUE;
 }

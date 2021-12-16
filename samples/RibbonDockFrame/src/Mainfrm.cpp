@@ -237,76 +237,85 @@ void CMainFrame::OnFileSaveAs()
 // This function provides a useful reference for printing bitmaps in general
 void CMainFrame::OnFilePrint()
 {
-    // Get the dimensions of the View window
-    CRect viewRect = GetView().GetClientRect();
-    int width = viewRect.Width();
-    int height = viewRect.Height();
-
-    // Copy the bitmap from the View window
-    CClientDC viewDC(GetView());
-    CMemDC memDC(viewDC);
-    memDC.CreateCompatibleBitmap(viewDC, width, height);
-    BitBlt(memDC, 0, 0, width, height, viewDC, 0, 0, SRCCOPY);
-    CBitmap bmView = memDC.DetachBitmap();
-    CPrintDialog printDlg;
-
-    // Bring up a dialog to choose the printer
-    if (printDlg.DoModal(GetView()) == IDOK)    // throws exception if there is no default printer
+    try
     {
-        // Zero and then initialize the members of a DOCINFO structure.
-        DOCINFO di;
-        memset(&di, 0, sizeof(DOCINFO));
-        di.cbSize = sizeof(DOCINFO);
-        di.lpszDocName = L"Scribble Printout";
-        di.lpszOutput = static_cast<LPTSTR>(NULL);
-        di.lpszDatatype = static_cast<LPTSTR>(NULL);
-        di.fwType = 0;
+        // Get the dimensions of the View window
+        CRect viewRect = GetView().GetClientRect();
+        int width = viewRect.Width();
+        int height = viewRect.Height();
 
-        // Begin a print job by calling the StartDoc function.
-        CDC printDC = printDlg.GetPrinterDC();
-        printDC.StartDoc(&di);
+        // Copy the bitmap from the View window
+        CClientDC viewDC(GetView());
+        CMemDC memDC(viewDC);
+        memDC.CreateCompatibleBitmap(viewDC, width, height);
+        BitBlt(memDC, 0, 0, width, height, viewDC, 0, 0, SRCCOPY);
+        CBitmap bmView = memDC.DetachBitmap();
+        CPrintDialog printDlg;
 
-        // Inform the driver that the application is about to begin sending data.
-        printDC.StartPage();
+        // Bring up a dialog to choose the printer
+        if (printDlg.DoModal(GetView()) == IDOK)    // throws exception if there is no default printer
+        {
+            // Zero and then initialize the members of a DOCINFO structure.
+            DOCINFO di;
+            memset(&di, 0, sizeof(DOCINFO));
+            di.cbSize = sizeof(DOCINFO);
+            di.lpszDocName = L"Scribble Printout";
+            di.lpszOutput = static_cast<LPTSTR>(NULL);
+            di.lpszDatatype = static_cast<LPTSTR>(NULL);
+            di.fwType = 0;
 
-        BITMAPINFOHEADER bi;
-        ZeroMemory(&bi, sizeof(bi));
-        bi.biSize = sizeof(bi);
-        bi.biHeight = height;
-        bi.biWidth = width;
-        bi.biPlanes = 1;
-        bi.biBitCount = 24;
-        bi.biCompression = BI_RGB;
+            // Begin a print job by calling the StartDoc function.
+            CDC printDC = printDlg.GetPrinterDC();
+            printDC.StartDoc(&di);
 
-        // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
-        // Get the size of the image data
-        VERIFY(memDC.GetDIBits(bmView, 0, height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS));
+            // Inform the driver that the application is about to begin sending data.
+            printDC.StartPage();
 
-        // Retrieve the image data
-        std::vector<byte> vBits(bi.biSizeImage, 0); // a vector to hold the byte array
-        byte* pByteArray = &vBits.front();
-        VERIFY(memDC.GetDIBits(bmView, 0, height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS));
+            BITMAPINFOHEADER bi;
+            ZeroMemory(&bi, sizeof(bi));
+            bi.biSize = sizeof(bi);
+            bi.biHeight = height;
+            bi.biWidth = width;
+            bi.biPlanes = 1;
+            bi.biBitCount = 24;
+            bi.biCompression = BI_RGB;
 
-        // Determine the scaling factors required to print the bitmap and retain its original proportions.
-        float logPelsX1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSX));
-        float logPelsY1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSY));
-        float logPelsX2 = static_cast<float>(printDC.GetDeviceCaps(LOGPIXELSX));
-        float logPelsY2 = static_cast<float>(printDC.GetDeviceCaps(LOGPIXELSY));
-        float scaleX = logPelsX2 / logPelsX1;
-        float scaleY = logPelsY2 / logPelsY1;
+            // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
+            // Get the size of the image data
+            VERIFY(memDC.GetDIBits(bmView, 0, height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS));
 
-        int scaledWidth = static_cast<int>(static_cast<float>(width) * scaleX);
-        int scaledHeight = static_cast<int>(static_cast<float>(height) * scaleY);
+            // Retrieve the image data
+            std::vector<byte> vBits(bi.biSizeImage, 0); // a vector to hold the byte array
+            byte* pByteArray = &vBits.front();
+            VERIFY(memDC.GetDIBits(bmView, 0, height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS));
 
-        // Use StretchDIBits to scale the bitmap and maintain its original proportions
-        VERIFY(printDC.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0, width, height,
-               pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY));
+            // Determine the scaling factors required to print the bitmap and retain its original proportions.
+            float logPelsX1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSX));
+            float logPelsY1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSY));
+            float logPelsX2 = static_cast<float>(printDC.GetDeviceCaps(LOGPIXELSX));
+            float logPelsY2 = static_cast<float>(printDC.GetDeviceCaps(LOGPIXELSY));
+            float scaleX = logPelsX2 / logPelsX1;
+            float scaleY = logPelsY2 / logPelsY1;
 
-        // Inform the driver that the page is finished.
-        printDC.EndPage();
+            int scaledWidth = static_cast<int>(static_cast<float>(width) * scaleX);
+            int scaledHeight = static_cast<int>(static_cast<float>(height) * scaleY);
 
-        // Inform the driver that document has ended.
-        printDC.EndDoc();
+            // Use StretchDIBits to scale the bitmap and maintain its original proportions
+            VERIFY(printDC.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0, width, height,
+                pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY));
+
+            // Inform the driver that the page is finished.
+            printDC.EndPage();
+
+            // Inform the driver that document has ended.
+            printDC.EndDoc();
+        }
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
 }
 

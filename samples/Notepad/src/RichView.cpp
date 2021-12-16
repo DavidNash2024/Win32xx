@@ -23,38 +23,48 @@ CRichView::~CRichView()
 // the number of pages.
 UINT CRichView::CollatePages()
 {
-    CPrintDialog printDlg;
-    CDC printerDC = printDlg.GetPrinterDC();
-
-    FORMATRANGE fr;
-    fr.hdcTarget = printerDC;
-    fr.hdc = printerDC;
-    fr.rcPage = GetPageRect();
-    fr.rc = GetPrintRect();
-    fr.chrg.cpMin = 0;
-    fr.chrg.cpMax = -1;
-
-    // Find out real size of document in characters.
-    LONG textLength;   // Length of document.
-    textLength = GetTextLengthEx(GTL_NUMCHARS);
-
-    // Calculate the page breaks
-    LONG lastChar;  // The index of the last char which fits on the page.
     m_pageBreaks.clear();
-    do
+
+    try
     {
-        lastChar = FormatRange(fr, FALSE);
+        CPrintDialog printDlg;
+        CDC printerDC = printDlg.GetPrinterDC();
 
-        if (lastChar < textLength)
+        FORMATRANGE fr;
+        fr.hdcTarget = printerDC;
+        fr.hdc = printerDC;
+        fr.rcPage = GetPageRect();
+        fr.rc = GetPrintRect();
+        fr.chrg.cpMin = 0;
+        fr.chrg.cpMax = -1;
+
+        // Find out real size of document in characters.
+        LONG textLength;   // Length of document.
+        textLength = GetTextLengthEx(GTL_NUMCHARS);
+
+        // Calculate the page breaks
+        LONG lastChar;  // The index of the last char which fits on the page.
+        do
         {
-            fr.chrg.cpMin = lastChar;
-            fr.chrg.cpMax = -1;
-            m_pageBreaks.push_back(lastChar);   // store the page break index in the vector
-        }
-    } while (lastChar < textLength);
+            lastChar = FormatRange(fr, FALSE);
 
-    // Add the final page break.
-    m_pageBreaks.push_back(-1);
+            if (lastChar < textLength)
+            {
+                fr.chrg.cpMin = lastChar;
+                fr.chrg.cpMax = -1;
+                m_pageBreaks.push_back(lastChar);   // store the page break index in the vector
+            }
+        } while (lastChar < textLength);
+
+        // Add the final page break.
+        m_pageBreaks.push_back(-1);
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
 
     // return the number of pages.
     return static_cast<UINT>(m_pageBreaks.size());
@@ -81,22 +91,32 @@ void CRichView::DoPrint(LPCTSTR docName)
 // Returns a CRect of the entire printable area. Units are measured in twips.
 CRect CRichView::GetPageRect()
 {
+
     CRect rcPage;
 
-    // Get the device context of the default or currently chosen printer
-    CPrintDialog printDlg;
-    CDC dcPrinter = printDlg.GetPrinterDC();
+    try
+    {
+        // Get the device context of the default or currently chosen printer
+        CPrintDialog printDlg;
+        CDC dcPrinter = printDlg.GetPrinterDC();
 
-    // Get the printer page specifications
-    int horizRes = dcPrinter.GetDeviceCaps(HORZRES);        // in pixels
-    int vertRes = dcPrinter.GetDeviceCaps(VERTRES);         // in pixels
-    int logPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);   // in pixels per logical inch
-    int logPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);   // in pixels per logical inch
+        // Get the printer page specifications
+        int horizRes = dcPrinter.GetDeviceCaps(HORZRES);        // in pixels
+        int vertRes = dcPrinter.GetDeviceCaps(VERTRES);         // in pixels
+        int logPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);   // in pixels per logical inch
+        int logPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);   // in pixels per logical inch
 
-    int tpi = 1440;     // twips per inch
+        int tpi = 1440;     // twips per inch
 
-    rcPage.right = (horizRes / logPixelsX) * tpi;
-    rcPage.bottom = (vertRes / logPixelsY) * tpi;
+        rcPage.right = (horizRes / logPixelsX) * tpi;
+        rcPage.bottom = (vertRes / logPixelsY) * tpi;
+    }  
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
 
     return rcPage;
 }
@@ -146,73 +166,89 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
 // Called by CPrintPreview, and also used for printing.
 void CRichView::PrintPage(CDC& dc, UINT page)
 {
-    CPrintDialog printDlg;
-    CDC printerDC = printDlg.GetPrinterDC();
+    try
+    {
+        CPrintDialog printDlg;
+        CDC printerDC = printDlg.GetPrinterDC();
 
-    // Assign values to the FORMATRANGE struct
-    FORMATRANGE fr;
-    ZeroMemory(&fr, sizeof(fr));
-    fr.hdcTarget = printerDC;
-    fr.hdc = dc;
-    fr.rcPage = GetPageRect();
-    fr.rc = GetPrintRect();
-    fr.chrg.cpMin = (page > 0) ? m_pageBreaks[page - 1] : 0;
-    fr.chrg.cpMax = m_pageBreaks[page];
+        // Assign values to the FORMATRANGE struct
+        FORMATRANGE fr;
+        ZeroMemory(&fr, sizeof(fr));
+        fr.hdcTarget = printerDC;
+        fr.hdc = dc;
+        fr.rcPage = GetPageRect();
+        fr.rc = GetPrintRect();
+        fr.chrg.cpMin = (page > 0) ? m_pageBreaks[page - 1] : 0;
+        fr.chrg.cpMax = m_pageBreaks[page];
 
-    // Display text from the richedit control on the memory dc
-    FormatRange(fr, TRUE);
-    DisplayBand(GetPrintRect());
+        // Display text from the richedit control on the memory dc
+        FormatRange(fr, TRUE);
+        DisplayBand(GetPrintRect());
 
-    // Tell the control to release the cached information.
-    FormatRange();
+        // Tell the control to release the cached information.
+        FormatRange();
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
 }
 
 // Print the document without bringing up a print dialog.
 // docName - specifies the document name for the print job.
 void CRichView::QuickPrint(LPCTSTR docName)
 {
-    // Acquire the currently selected printer and page settings
-    CPrintDialog printDlg;
-    CDC printerDC = printDlg.GetPrinterDC();
-    if (printerDC.GetHDC() == 0)
-        throw CResourceException(_T("No printer available"));
-
-    // Assign values to the FORMATRANGE struct
-    FORMATRANGE fr;
-    ZeroMemory(&fr, sizeof(fr));
-    fr.hdc = printerDC;
-    fr.hdcTarget = printerDC;
-
-    fr.rcPage = GetPageRect();
-    fr.rc = GetPrintRect();
-
-    // Default the range of text to print as the entire document.
-    fr.chrg.cpMin = 0;
-    fr.chrg.cpMax = -1;
-
-    // Start print job.
-    DOCINFO di;
-    ZeroMemory(&di, sizeof(di));
-    di.cbSize = sizeof(DOCINFO);
-    di.lpszDocName = docName;
-    di.lpszOutput = NULL;   // Do not print to file.
-    printerDC.StartDoc(&di);
-
-    UINT maxPages = CollatePages();
-    for (UINT page = 0; page < maxPages; ++page)
+    try
     {
-        // Start the page.
-        printerDC.StartPage();
+        // Acquire the currently selected printer and page settings
+        CPrintDialog printDlg;
+        CDC printerDC = printDlg.GetPrinterDC();
 
-        // Print the page.
-        PrintPage(printerDC, page);
+        // Assign values to the FORMATRANGE struct
+        FORMATRANGE fr;
+        ZeroMemory(&fr, sizeof(fr));
+        fr.hdc = printerDC;
+        fr.hdcTarget = printerDC;
 
-        // End the page/
-        printerDC.EndPage();
+        fr.rcPage = GetPageRect();
+        fr.rc = GetPrintRect();
+
+        // Default the range of text to print as the entire document.
+        fr.chrg.cpMin = 0;
+        fr.chrg.cpMax = -1;
+
+        // Start print job.
+        DOCINFO di;
+        ZeroMemory(&di, sizeof(di));
+        di.cbSize = sizeof(DOCINFO);
+        di.lpszDocName = docName;
+        di.lpszOutput = NULL;   // Do not print to file.
+        printerDC.StartDoc(&di);
+
+        UINT maxPages = CollatePages();
+        for (UINT page = 0; page < maxPages; ++page)
+        {
+            // Start the page.
+            printerDC.StartPage();
+
+            // Print the page.
+            PrintPage(printerDC, page);
+
+            // End the page/
+            printerDC.EndPage();
+        }
+
+        // End the print job
+        printerDC.EndDoc();
     }
 
-    // End the print job
-    printerDC.EndDoc();
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
 }
 
 // Sets the initial font for the document.

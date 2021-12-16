@@ -179,79 +179,97 @@ void CView::Print(LPCTSTR docName)
 // This function provides a useful reference for printing bitmaps in general.
 void CView::PrintPage(CDC& dc, UINT)
 {
-    // Get the dimensions of the View window
-    CRect viewRect = GetClientRect();
-    int width = viewRect.Width();
-    int height = viewRect.Height();
+    try
+    {
+        // Get the dimensions of the View window
+        CRect viewRect = GetClientRect();
+        int width = viewRect.Width();
+        int height = viewRect.Height();
 
-    // Acquire the view's bitmap.
-    CMemDC memDC = Draw();
-    CBitmap bmView = memDC.DetachBitmap();
+        // Acquire the view's bitmap.
+        CMemDC memDC = Draw();
+        CBitmap bmView = memDC.DetachBitmap();
 
-    // Now we convert the Device Dependent Bitmap(DDB) to a
-    // Device Independent Bitmap(DIB) for printing.
+        // Now we convert the Device Dependent Bitmap(DDB) to a
+        // Device Independent Bitmap(DIB) for printing.
 
-    // Create the LPBITMAPINFO from the bitmap.
-    CBitmapInfoPtr pbmi(bmView);
-    BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
+        // Create the LPBITMAPINFO from the bitmap.
+        CBitmapInfoPtr pbmi(bmView);
+        BITMAPINFOHEADER* pBIH = reinterpret_cast<BITMAPINFOHEADER*>(pbmi.get());
 
-    // Extract the device independent image data.
-    memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS);
-    std::vector<byte> byteArray(pBIH->biSizeImage, 0);
-    byte* pByteArray = &byteArray.front();
-    memDC.GetDIBits(bmView, 0, height, pByteArray, pbmi, DIB_RGB_COLORS);
+        // Extract the device independent image data.
+        memDC.GetDIBits(bmView, 0, height, NULL, pbmi, DIB_RGB_COLORS);
+        std::vector<byte> byteArray(pBIH->biSizeImage, 0);
+        byte* pByteArray = &byteArray.front();
+        memDC.GetDIBits(bmView, 0, height, pByteArray, pbmi, DIB_RGB_COLORS);
 
-    // Get the device context of the default or currently chosen printer
-    CPrintDialog printDlg;
-    CDC printDC = printDlg.GetPrinterDC();
+        // Get the device context of the default or currently chosen printer
+        CPrintDialog printDlg;
+        CDC printDC = printDlg.GetPrinterDC();
 
-    // Determine the scaling factors required to print the bitmap and retain
-    // its original aspect ratio.
-    CClientDC viewDC(*this);
-    double viewPixelsX = double(viewDC.GetDeviceCaps(LOGPIXELSX));
-    double viewPixelsY = double(viewDC.GetDeviceCaps(LOGPIXELSY));
-    double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
-    double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
-    double scaleX = printPixelsX / viewPixelsX;
-    double scaleY = printPixelsY / viewPixelsY;
-    int scaledWidth = int(width * scaleX);
-    int scaledHeight = int(height * scaleY);
+        // Determine the scaling factors required to print the bitmap and retain
+        // its original aspect ratio.
+        CClientDC viewDC(*this);
+        double viewPixelsX = double(viewDC.GetDeviceCaps(LOGPIXELSX));
+        double viewPixelsY = double(viewDC.GetDeviceCaps(LOGPIXELSY));
+        double printPixelsX = double(printDC.GetDeviceCaps(LOGPIXELSX));
+        double printPixelsY = double(printDC.GetDeviceCaps(LOGPIXELSY));
+        double scaleX = printPixelsX / viewPixelsX;
+        double scaleY = printPixelsY / viewPixelsY;
+        int scaledWidth = int(width * scaleX);
+        int scaledHeight = int(height * scaleY);
 
-    // Copy and stretch the DIB to the specified dc, maintaining its
-    //  original aspect ratio.
-    dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
-           width, height, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
+        // Copy and stretch the DIB to the specified dc, maintaining its
+        //  original aspect ratio.
+        dc.StretchDIBits(0, 0, scaledWidth, scaledHeight, 0, 0,
+            width, height, pByteArray, pbmi, DIB_RGB_COLORS, SRCCOPY);
 
-    // The specified dc now holds the Device Independent Bitmap printout.
+        // The specified dc now holds the Device Independent Bitmap printout.
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
 }
 
 // Print to the default or previously chosen printer.
 void CView::QuickPrint(LPCTSTR docName)
 {
-    // Create a DOCINFO structure.
-    DOCINFO di;
-    memset(&di, 0, sizeof(DOCINFO));
-    di.cbSize = sizeof(DOCINFO);
-    di.lpszDocName = docName;
+    try
+    {
+        // Create a DOCINFO structure.
+        DOCINFO di;
+        memset(&di, 0, sizeof(DOCINFO));
+        di.cbSize = sizeof(DOCINFO);
+        di.lpszDocName = docName;
 
-    // Get the device context of the default or currently chosen printer.
-    CPrintDialog printDlg;
-    CDC printDC = printDlg.GetPrinterDC();
+        // Get the device context of the default or currently chosen printer.
+        CPrintDialog printDlg;
+        CDC printDC = printDlg.GetPrinterDC();
 
-    // Begin a print job by calling the StartDoc function.
-    printDC.StartDoc(&di);
+        // Begin a print job by calling the StartDoc function.
+        printDC.StartDoc(&di);
 
-    // Inform the driver that the application is about to begin sending data.
-    printDC.StartPage();
+        // Inform the driver that the application is about to begin sending data.
+        printDC.StartPage();
 
-    // Print the page on the printer DC.
-    PrintPage(printDC);
+        // Print the page on the printer DC.
+        PrintPage(printDC);
 
-    // Inform the driver that the page is finished.
-    printDC.EndPage();
+        // Inform the driver that the page is finished.
+        printDC.EndPage();
 
-    // Inform the driver that document has ended.
-    printDC.EndDoc();
+        // Inform the driver that document has ended.
+        printDC.EndDoc();
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
 }
 
 // Handle the view window's messages.
