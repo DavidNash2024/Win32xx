@@ -10,7 +10,6 @@ Features demonstrated in this example
 * Toolbar configuration
 * Setting the view window of the frame.
 * Responding to toolbar and menu commands in OnCommand
-* Responding to notifications in OnNotify.
 * How to set the colours of frame components, namely
    - Setting rebar background colors
    - Setting rebar band colors
@@ -18,6 +17,7 @@ Features demonstrated in this example
    - Setting toolbar button outline color
    - Setting menu hot and pressed colors
    - Setting menu outline color
+   - Setting menu text color (uses white text for black theme).
    - Setting popup menu colors
    
 * Setting various theme options, namely

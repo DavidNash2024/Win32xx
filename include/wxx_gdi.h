@@ -2043,7 +2043,9 @@ namespace Win32xx
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
     inline HFONT CFont::CreatePointFontIndirect(const LOGFONT& logFont, HDC dc /* = 0*/)
     {
-        dc = (dc != 0) ? dc : ::GetDC(HWND_DESKTOP);
+        bool isDC0 = (dc == 0);
+        if (isDC0)
+            dc = ::GetDC(HWND_DESKTOP);
 
         // convert nPointSize to logical units based on hDC
         LOGFONT logFont1 = logFont;
@@ -2062,7 +2064,9 @@ namespace Win32xx
         logFont1.lfHeight = -abs(((::GetDeviceCaps(dc, LOGPIXELSY)* logFont.lfHeight)/ 720));
 #endif // _WIN32_WCE
 
-        ::ReleaseDC(HWND_DESKTOP, dc);
+        if (isDC0)
+            ::ReleaseDC(HWND_DESKTOP, dc);
+
         return CreateFontIndirect (logFont1);
     }
 
@@ -3773,6 +3777,7 @@ namespace Win32xx
     //////////////////
     // Brush functions
 
+#ifndef _WIN32_WCE
 #if (_WIN32_WINNT >= 0x0500)
 
     // Retrieves the current brush color from the device context.
@@ -3791,7 +3796,8 @@ namespace Win32xx
         return ::SetDCBrushColor(m_pData->dc, color);
     }
 
-#endif
+#endif // _WIN32_WINNT >= 0x0500
+#endif // _WIN32_WCE
 
     /////////////////
     // Font Functions

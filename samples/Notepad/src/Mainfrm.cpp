@@ -390,8 +390,6 @@ BOOL CMainFrame::OnFilePreview()
         // Retrieve the device context of the default or currently chosen printer.
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
-        if (printerDC.GetHDC() == 0)
-            throw CResourceException(_T("No printer available"));
 
         // Setup the print preview.
         m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage

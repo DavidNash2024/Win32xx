@@ -417,7 +417,7 @@ namespace Win32xx
     }
 
     // Returns the device context of the default or currently chosen printer.
-    // Throws on failure. 
+    // Throws on failure.
     inline CDC CPrintDialog::GetPrinterDC() const
     {
         CThreadLock lock(GetApp()->m_printLock);

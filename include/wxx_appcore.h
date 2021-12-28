@@ -451,8 +451,10 @@ namespace Win32xx
                 SetCallback();
                 LoadCommonControls();
 
+#ifndef _WIN32_WCE
                 // Initializes the COM library.
                 VERIFY(SUCCEEDED(OleInitialize(NULL)));
+#endif
             }
             else
             {
@@ -498,7 +500,9 @@ namespace Win32xx
         if (m_resource != 0)
             ::FreeLibrary(m_resource);
 
+#ifndef _WIN32_WCE
         OleUninitialize();
+#endif
     }
 
     // Adds a HDC and CDC_Data* pair to the map.

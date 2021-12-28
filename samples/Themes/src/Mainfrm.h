@@ -38,7 +38,6 @@ public:
     void ShowCards(BOOL isShown);
 
 protected:
-    virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
     virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
