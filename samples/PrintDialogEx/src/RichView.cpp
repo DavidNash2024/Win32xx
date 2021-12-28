@@ -231,9 +231,9 @@ LRESULT CRichView::OnSettingChange(UINT, WPARAM, LPARAM)
         pdex.nMaxPage = CollatePages(printerDC);
         m_printDialog.SetParameters(pdex);
     }
-    catch (const CException&) 
+    catch (const CException&)
     {
-        // CreateDC throw a CResourceException on failure. 
+        // CreateDC throw a CResourceException on failure.
         Trace("CRichView::OnSettingChange Failed to create the current printer DC.\n");
     }
 

@@ -57,11 +57,12 @@ namespace Win32xx
     struct MenuTheme
     {
         BOOL UseThemes;         // TRUE if themes are used
-        COLORREF clrHot1;       // Color 1 for top menu. Color of selected menu item
-        COLORREF clrHot2;       // Color 2 for top menu. Color of checkbox
-        COLORREF clrPressed1;   // Color 1 for pressed top menu and side bar
-        COLORREF clrPressed2;   // Color 2 for pressed top menu and side bar
+        COLORREF clrHot1;       // Color 1 for menu bar. Color of selected menu item
+        COLORREF clrHot2;       // Color 2 for menu bar. Color of checkbox background
+        COLORREF clrPressed1;   // Color 1 for pressed menu bar and side bar
+        COLORREF clrPressed2;   // Color 2 for pressed menu bar and side bar
         COLORREF clrOutline;    // Color for border outline
+        COLORREF clrText;       // Color for the menu bar text
     };
 
 

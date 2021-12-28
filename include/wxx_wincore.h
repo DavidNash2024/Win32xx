@@ -640,14 +640,14 @@ namespace Win32xx
 
         return 0;
     }
-	
-	// This function is called when a window is attached to the CWnd.
+
+    // This function is called when a window is attached to the CWnd.
     // Override it to automatically perform tasks when the window is attached.
     // Note:  Window controls are attached.
     inline void CWnd::OnAttach()
     {
     }
-	
+
     // Called in response to WM_CLOSE, before the window is destroyed.
     // Override this function to suppress destroying the window.
     // WM_CLOSE is sent by SendMessage(WM_CLOSE, 0, 0) or by clicking X
@@ -727,7 +727,7 @@ namespace Win32xx
     {
         // Override this function to modify the behavior of menu items,
         // such as adding or removing checkmarks.
-    }	
+    }
 
     // This function processes those special messages sent by some older controls,
     // and reflects them back to the originating CWnd object.

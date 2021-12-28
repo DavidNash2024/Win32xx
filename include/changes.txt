@@ -10,12 +10,12 @@ New Features and Enhancements
   Different values can be specified before including wincore.h if required.
   Visual Studio 6 will require WINVER to be set for Win95 or Win98.
 
-* Added the titlbar sample.
+* Added the Titlebar sample.
   This sample demonstrates how to customize a windows title bar. It sets
   the title bar's color and draws the minimize, maximize and close buttons.
   It uses CMenuBar to display a menu in the title bar.
 
-* Added the titlebar frame sample.
+* Added the TitlebarFrame sample.
   This sample demonstrates how to use a customized title bar with a frame.
   It demonstrates the frame in two modes: mini-frame and full-frame.
 
@@ -26,12 +26,19 @@ New Features and Enhancements
   pages, as well as multiple page ranges. It also supports printing multiple
   copies, with or without collating. A footer displaying the page number is
   added to the bottom of the printed page.
+  
+* Updated the MenuTheme struct.
+  Added a clrText member to the MenuTheme struc to define the color of
+  menubar text. This is now used to set the menubar text color to white
+  for the BLACK theme in the themes sample.
 
 
 Changes in Detail
 -----------------
 Renamed UWM_PRINTNOW   to UWM_PREVIEWPRINT
 Renamed UWM_PRINTSETUP to UWM_PREVIEWSETUP
+
+Added MenuTheme::clrText     member variable
 
 
 

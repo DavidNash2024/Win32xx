@@ -1790,7 +1790,7 @@ namespace Win32xx
 
     // Appends the specified text to the string.
     template <class T>
-    inline CStringT<T>& operator << (CStringT<T>& str, CStringT<T>& text)
+    inline CStringT<T>& operator << (CStringT<T>& str, const CStringT<T>& text)
     {
         str += text;
         return str;
@@ -1806,7 +1806,7 @@ namespace Win32xx
 
     // Appends the specified character to the string.
     template <class T>
-    inline CStringT<T>& operator << (CStringT<T>& str, const T ch)
+    inline CStringT<T>& operator << (CStringT<T>& str, T ch)
     {
         str += ch;
         return str;
@@ -1942,14 +1942,14 @@ namespace Win32xx
     }
 
     // Appends the specified character to the string.
-    inline CString& operator << (CString& str, const char ch)
+    inline CString& operator << (CString& str, char ch)
     {
         str += ch;
         return str;
     }
 
     // Appends the specified character to the string.
-    inline CString& operator << (CString& str, const WCHAR ch)
+    inline CString& operator << (CString& str, WCHAR ch)
     {
         str += ch;
         return str;

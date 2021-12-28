@@ -110,7 +110,7 @@ CRect CRichView::GetPageRect()
 
         rcPage.right = (horizRes / logPixelsX) * tpi;
         rcPage.bottom = (vertRes / logPixelsY) * tpi;
-    }  
+    }
 
     catch (const CException& e)
     {

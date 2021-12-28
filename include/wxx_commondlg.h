@@ -115,10 +115,10 @@ namespace Win32xx
         virtual ~CColorDialog(){}
 
         virtual INT_PTR DoModal(HWND owner = 0);
-        COLORREF  GetColor() const              { return m_ofn.rgbResult;}
-        COLORREF* GetCustomColors()             { return m_customColors;}
-        const CHOOSECOLOR& GetParameters() const { return m_ofn; }
-        void    SetColor(COLORREF clr)          { m_ofn.rgbResult = clr;}
+        COLORREF  GetColor() const               { return m_cc.rgbResult;}
+        COLORREF* GetCustomColors()              { return m_customColors;}
+        const CHOOSECOLOR& GetParameters() const { return m_cc; }
+        void    SetColor(COLORREF clr)           { m_cc.rgbResult = clr;}
         void    SetCustomColors(const COLORREF* pColors = NULL);
         void    SetParameters(const CHOOSECOLOR& cc);
 
@@ -132,7 +132,7 @@ namespace Win32xx
         CColorDialog(const CColorDialog&);              // Disable copy construction
         CColorDialog& operator = (const CColorDialog&); // Disable assignment operator
 
-        CHOOSECOLOR     m_ofn;                   // ChooseColor parameters
+        CHOOSECOLOR     m_cc;                    // ChooseColor parameters
         COLORREF        m_customColors[16];      // Custom colors array
     };
 
@@ -375,20 +375,20 @@ namespace Win32xx
     inline CColorDialog::CColorDialog(COLORREF initColor /* = 0 */, DWORD flags /* = 0 */)
     {
         // set the parameters in the CHOOSECOLOR struct
-        ZeroMemory(&m_ofn,  sizeof(m_ofn));
-        m_ofn.rgbResult = initColor;
-        m_ofn.Flags = flags;
+        ZeroMemory(&m_cc,  sizeof(m_cc));
+        m_cc.rgbResult = initColor;
+        m_cc.Flags = flags;
 
         // Set all custom colors to white
         for (int i = 0; i <= 15; ++i)
             m_customColors[i] = RGB(255,255,255);
 
         // Enable the hook proc for the help button
-        if (m_ofn.Flags & CC_SHOWHELP)
-            m_ofn.Flags |= CC_ENABLEHOOK;
+        if (m_cc.Flags & CC_SHOWHELP)
+            m_cc.Flags |= CC_ENABLEHOOK;
 
         // Set the CHOOSECOLOR struct parameters to safe values
-        SetParameters(m_ofn);
+        SetParameters(m_cc);
     }
 
     // Dialog procedure for the Color dialog. Override this function to
@@ -443,10 +443,10 @@ namespace Win32xx
         // Create the modal dialog
         pTLSData->pWnd = this;
 
-        m_ofn.hwndOwner = owner;
+        m_cc.hwndOwner = owner;
 
         // invoke the control and save the result on success
-        BOOL isValid = ::ChooseColor(&m_ofn);
+        BOOL isValid = ::ChooseColor(&m_cc);
 
         m_wnd = 0;
 
@@ -485,15 +485,15 @@ namespace Win32xx
     // The parameters are set to sensible values.
     inline void CColorDialog::SetParameters(const CHOOSECOLOR& cc)
     {
-        m_ofn.lStructSize    = sizeof(m_ofn);
-        m_ofn.hwndOwner      = 0;            // Set this in DoModal
-        m_ofn.hInstance      = cc.hInstance;
-        m_ofn.rgbResult      = cc.rgbResult;
-        m_ofn.lpCustColors   = m_customColors;
-        m_ofn.Flags          = cc.Flags;
-        m_ofn.lCustData      = cc.lCustData;
-        m_ofn.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
-        m_ofn.lpTemplateName = cc.lpTemplateName;
+        m_cc.lStructSize    = sizeof(m_cc);
+        m_cc.hwndOwner      = 0;            // Set this in DoModal
+        m_cc.hInstance      = cc.hInstance;
+        m_cc.rgbResult      = cc.rgbResult;
+        m_cc.lpCustColors   = m_customColors;
+        m_cc.Flags          = cc.Flags;
+        m_cc.lCustData      = cc.lCustData;
+        m_cc.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+        m_cc.lpTemplateName = cc.lpTemplateName;
     }
 
 

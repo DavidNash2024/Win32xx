@@ -1,7 +1,8 @@
-Titlebar Frame Sample
-=====================
-This sample adapts the features demonstrated with the titlebar sample for 
-use with a frame. The frame can be presented in either of two modes.
+TitlebarFrame Sample
+====================
+This sample displays a frame with a modified titlebar. It adapts the 
+features demonstrated with the titlebar sample for use with a frame. 
+The frame can be presented in either of two modes.
 
 The full-frame mode has the following features:
  - The caption is displayed in the frame's titlebar.

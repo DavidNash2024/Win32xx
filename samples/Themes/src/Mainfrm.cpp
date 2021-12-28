@@ -64,7 +64,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+            MenuTheme mt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0)};
             SetMenuTheme(mt);
         }
         break;
@@ -78,7 +78,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+            MenuTheme mt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) };
             SetMenuTheme(mt);
         }
         break;
@@ -92,7 +92,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
+            MenuTheme mt = {m_useThemes, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200), RGB(0, 0, 0) };
             SetMenuTheme(mt);
         }
         break;
@@ -106,7 +106,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
+            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200), RGB(0, 0, 0) };
             SetMenuTheme(mt);
         }
         break;
@@ -120,7 +120,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128)};
+            MenuTheme mt = {m_useThemes, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128), RGB(0, 0, 0) };
             SetMenuTheme(mt);
         }
         break;
@@ -134,7 +134,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
+            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128), RGB(0, 0, 0) };
             SetMenuTheme(mt);
         }
         break;
@@ -148,7 +148,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
+            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128), RGB(0, 0, 0) };
             SetMenuTheme(mt);
         }
         break;
@@ -162,7 +162,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
+            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128), RGB(0, 0, 0) };
             SetMenuTheme(mt);
         }
         break;
@@ -176,7 +176,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(242, 106, 228), RGB(192, 6, 88), RGB(152, 6, 56), RGB(152, 6, 56), RGB(149, 6, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = { m_useThemes, RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210) };
+            MenuTheme mt = { m_useThemes, RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210), RGB(0, 0, 0) };
             SetMenuTheme(mt);
         }
         break;
@@ -190,7 +190,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(27,65, 160), RGB(49, 106, 197), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128)};
+            MenuTheme mt = {m_useThemes, RGB(27,65, 160), RGB(49, 106, 197), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128), RGB(255, 255, 255)};
             SetMenuTheme(mt);
         }
         break;
@@ -234,24 +234,6 @@ HWND CMainFrame::Create(HWND parent)
     LoadRegistrySettings(_T("Win32++\\Themes Sample"));
 
     return CFrame::Create(parent);
-}
-
-// Set the text color for the menubar
-LRESULT CMainFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
-{
-    LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
-
-    COLORREF clr;
-    if (m_color == IDM_BLACK)
-        clr = RGB(255, 255, 255);
-    else
-        clr = RGB(0, 0, 0);
-
-    // Set the text color for the custom draw's device context
-    CDC drawDC(lpNMCustomDraw->nmcd.hdc);
-    drawDC.SetTextColor(clr);
-
-    return CFrame::CustomDrawMenuBar(pNMHDR);
 }
 
 DWORD CMainFrame::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)

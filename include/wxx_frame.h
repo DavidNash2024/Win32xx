@@ -1352,6 +1352,7 @@ namespace Win32xx
 
                     rc.bottom += 1;
                     drawDC.SetBkMode(TRANSPARENT);
+                    drawDC.SetTextColor(GetMenuBarTheme().clrText);
                     UINT format = DT_VCENTER | DT_CENTER | DT_SINGLELINE | DT_HIDEPREFIX;
 
                     // Turn off 'hide prefix' style for keyboard navigation.
@@ -2319,7 +2320,6 @@ namespace Win32xx
 
         // Update DockClient captions.
         T::PostMessage(UWM_DOCKACTIVATE);
-
 
         // Also update DockClient captions if the view is a docker.
         if (GetView().IsWindow() && GetView().SendMessage(UWM_GETCDOCKER))
@@ -3410,7 +3410,7 @@ namespace Win32xx
             {
             case Win8:  // A pale blue scheme without gradients, suitable for Windows 8, 8.1, and 10.
                 {
-                    MenuTheme mt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+                    MenuTheme mt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(235, 237, 250), RGB(235, 237, 250), RGB(235, 237, 250), RGB(235, 237, 250), f, t, t, f, t, f };
                     StatusBarTheme sbt = {t, RGB(235, 237, 250), RGB(235, 237, 250)};
                     ToolBarTheme tbt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
@@ -3424,7 +3424,7 @@ namespace Win32xx
 
             case Win7:  // A pale blue color scheme suitable for Vista and Windows 7.
                 {
-                    MenuTheme mt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+                    MenuTheme mt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), f, t, t, t, t, f};
                     StatusBarTheme sbt = {t, RGB(225, 230, 255), RGB(240, 242, 250)};
                     ToolBarTheme tbt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
@@ -3440,7 +3440,7 @@ namespace Win32xx
             case XP_Blue:
                 {
                     // Used for XP default (blue) color scheme.
-                    MenuTheme mt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
+                    MenuTheme mt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), f, t, t, t, t, f};
                     StatusBarTheme sbt = {t, RGB(150,190,245), RGB(196,215,250)};
                     ToolBarTheme tbt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
@@ -3455,7 +3455,7 @@ namespace Win32xx
             case XP_Silver:
                 {
                     // Used for XP Silver color scheme.
-                    MenuTheme mt = {t, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
+                    MenuTheme mt = {t, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), f, t, t, t, t, f};
                     StatusBarTheme sbt = {t, RGB(225, 220, 240), RGB(240, 240, 245)};
                     ToolBarTheme tbt = {t, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
@@ -3470,7 +3470,7 @@ namespace Win32xx
             case XP_Olive:
                 {
                     // Used for XP Olive color scheme.
-                    MenuTheme mt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
+                    MenuTheme mt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), f, t, t, t, t, f};
                     StatusBarTheme sbt = {t, RGB(215, 216, 182), RGB(242, 242, 230)};
                     ToolBarTheme tbt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
@@ -3484,7 +3484,7 @@ namespace Win32xx
 
             case gray:  // A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
                 {
-                    MenuTheme mt = {t, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
+                    MenuTheme mt = {t, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), f, t, t, t, t, f};
                     StatusBarTheme sbt = {t, RGB(212, 208, 200), RGB(212, 208, 200)};
                     ToolBarTheme tbt = {t, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
@@ -3501,7 +3501,7 @@ namespace Win32xx
         {
             // Set a default menu theme. This allows the menu to display icons.
             // The colors specified here are used for Windows 2000 and below.
-            MenuTheme mt = {FALSE, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
+            MenuTheme mt = {FALSE, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100), RGB(0, 0, 0)};
             SetMenuTheme(mt);  // Sets the theme for popup menus and MenuBar.
         }
 
