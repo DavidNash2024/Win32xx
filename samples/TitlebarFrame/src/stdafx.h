@@ -37,10 +37,10 @@
 #include <wxx_appcore.h>        // Add CCriticalSection, CObject, CWinThread, CWinApp
 
 // Add additionally required window SDK header files here
- #include <dwmapi.h>
- #include <uxtheme.h>
- #include <vsstyle.h>
- #include <vssym32.h>
+#include <dwmapi.h>
+#include <uxtheme.h>
+#include <vsstyle.h>
+#include <vssym32.h>
 
 // Add remaining Win32++ header files
 #include <wxx_archive.h>        // Add CArchive
@@ -88,21 +88,21 @@
   #include <wxx_preview.h>        // Add CPrintPreview
   #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
 
-  // Win2000 or higher
-  #if (WINVER >= 0x0500)
+  // Win2000 or higher with Microsoft VS2008 or higher, or Clang or GNU compiler
+  #if (WINVER >= 0x0500) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || defined(__clang_major__) || defined(__GNUC__))
     #include <wxx_printdialogex.h>  // Add CPrintDialogEx
   #endif
 
   // Windows Vista or higher with Microsoft VS2008 or higher, or Clang compiler
-  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500) || defined(__clang_major__)))
-  #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
+  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || defined(__clang_major__))
+    #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
   #endif
 #endif
 
-// Windows Vista or higher, not Borland, not Microsoft unless VS2008 or higher. Requires Unicode.
-#if (WINVER >= 0x0600) && (!defined (__BORLANDC__)) && (!defined (_MSC_VER) || (_MSC_VER >= 1500))
-#include <wxx_taskdialog.h>     // Add CTaskDialog
+// Windows Vista or higher with Microsoft VS2008 or higher, or Clang or GNU compiler. Requires Unicode.
+#if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || defined(__clang_major__) || defined(__GNUC__))
+  #include <wxx_taskdialog.h>     // Add CTaskDialog
 #endif
 
 
-#endif
+#endif  // define STDAFX_H

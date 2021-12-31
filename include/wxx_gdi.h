@@ -854,8 +854,7 @@ namespace Win32xx
     public:
         CClientDC(HWND wnd)
         {
-            if (0 == wnd) wnd = GetDesktopWindow();
-            assert(::IsWindow(wnd));
+            assert(::IsWindow(wnd) || wnd == HWND_DESKTOP);
 
             try
             {
@@ -980,8 +979,7 @@ namespace Win32xx
     public:
         CWindowDC(HWND wnd)
         {
-            if (0 == wnd) wnd = GetDesktopWindow();
-            assert(::IsWindow(wnd));
+            assert(::IsWindow(wnd) || wnd == HWND_DESKTOP);
 
             try
             {
@@ -1489,7 +1487,7 @@ namespace Win32xx
         VERIFY(dc.GetDIBits(*this, 0, data.bmHeight, NULL, pbmi, DIB_RGB_COLORS));
         DWORD size = pbmi->bmiHeader.biSizeImage;
         std::vector<byte> vBits(size, 0);
-        byte* bits = &vBits[0];
+        byte* bits = &vBits.front();
         VERIFY(dc.GetDIBits(*this, 0, data.bmHeight, bits, pbmi, DIB_RGB_COLORS));
 
         UINT widthBytes = bmiHeader.biSizeImage / bmiHeader.biHeight;
@@ -2043,31 +2041,27 @@ namespace Win32xx
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
     inline HFONT CFont::CreatePointFontIndirect(const LOGFONT& logFont, HDC dc /* = 0*/)
     {
-        bool isDC0 = (dc == 0);
-        if (isDC0)
-            dc = ::GetDC(HWND_DESKTOP);
+        CClientDC desktopDC(HWND_DESKTOP);
+        CDC fontDC = (dc == 0) ? desktopDC : CDC(dc);
 
-        // convert nPointSize to logical units based on hDC
-        LOGFONT logFont1 = logFont;
+        // Set the new logfont's font size to logical units using the device context.
+        LOGFONT newLogFont = logFont;
 
 #ifndef _WIN32_WCE
         POINT pt = { 0, 0 };
-        pt.y = ::MulDiv(::GetDeviceCaps(dc, LOGPIXELSY), logFont.lfHeight, 720);   // 72 points/inch, 10 decipoints/point
-        VERIFY(::DPtoLP(dc, &pt, 1));
+        pt.y = ::MulDiv(fontDC.GetDeviceCaps(LOGPIXELSY), logFont.lfHeight, 720);   // 72 points/inch, 10 decipoints/point
+        VERIFY(fontDC.DPtoLP(&pt, 1));
 
         POINT ptOrg = { 0, 0 };
-        VERIFY(::DPtoLP(dc, &ptOrg, 1));
+        VERIFY(fontDC.DPtoLP(&ptOrg, 1));
 
-        logFont1.lfHeight = -abs(pt.y - ptOrg.y);
+        newLogFont.lfHeight = -abs(pt.y - ptOrg.y);
 #else // CE specific
         // DP and LP are always the same on CE
-        logFont1.lfHeight = -abs(((::GetDeviceCaps(dc, LOGPIXELSY)* logFont.lfHeight)/ 720));
+        newLogFont.lfHeight = -abs(((fontDC.GetDeviceCaps(LOGPIXELSY)* logFont.lfHeight)/ 720));
 #endif // _WIN32_WCE
 
-        if (isDC0)
-            ::ReleaseDC(HWND_DESKTOP, dc);
-
-        return CreateFontIndirect (logFont1);
+        return CreateFontIndirect (newLogFont);
     }
 
 #ifndef _WIN32_WCE

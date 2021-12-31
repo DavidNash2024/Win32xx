@@ -444,7 +444,16 @@ BOOL CMainFrame::OnFilePrint()
 // Print the document without selecting the printer.
 BOOL CMainFrame::OnFilePrintNow()
 {
-    m_richView.QuickPrint(m_pathName);
+    try
+    {
+        m_richView.QuickPrint(m_pathName);
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
     return TRUE;
 }
 
@@ -697,7 +706,16 @@ BOOL CMainFrame::OnPreviewClose()
 // Called when the Print Preview's "Print Now" button is pressed
 BOOL CMainFrame::OnPreviewPrint()
 {
-    m_richView.DoPrint(m_pathName);
+    try
+    {
+        m_richView.DoPrint(m_pathName);
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
     return TRUE;
 }
 

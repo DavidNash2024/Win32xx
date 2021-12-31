@@ -44,7 +44,6 @@
 
 // Add remaining Win32++ header files
 #include <wxx_archive.h>        // Add CArchive
-#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip
 #include <wxx_cstring.h>        // Add CString, CStringA, CStringW
 #include <wxx_ddx.h>            // Add CDataExchange
@@ -64,8 +63,6 @@
 #include <wxx_menubar.h>        // Add CMenuBar
 #include <wxx_metafile.h>       // Add CMetaFile, CEnhMetaFile
 #include <wxx_mutex.h>          // Add CEvent, CMutex, CSemaphore
-#include <wxx_preview.h>        // Add CPrintPreview
-#include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
 #include <wxx_propertysheet.h>  // Add CPropertyPage, CPropertySheet
 #include <wxx_rebar.h>          // Add CRebar
 #include <wxx_rect.h>           // Add CPoint, CRect, CSize
@@ -91,21 +88,21 @@
   #include <wxx_preview.h>        // Add CPrintPreview
   #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
 
-  // Win2000 or higher
-  #if (WINVER >= 0x0500)
+  // Win2000 or higher with Microsoft VS2008 or higher, or Clang or GNU compiler
+  #if (WINVER >= 0x0500) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || defined(__clang_major__) || defined(__GNUC__))
     #include <wxx_printdialogex.h>  // Add CPrintDialogEx
   #endif
 
   // Windows Vista or higher with Microsoft VS2008 or higher, or Clang compiler
-  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500) || defined(__clang_major__)))
-  #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
+  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || defined(__clang_major__))
+    #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
   #endif
 #endif
 
-// Windows Vista or higher, not Borland, not Microsoft unless VS2008 or higher. Requires Unicode.
-#if (WINVER >= 0x0600) && (!defined (__BORLANDC__)) && (!defined (_MSC_VER) || (_MSC_VER >= 1500))
-#include <wxx_taskdialog.h>     // Add CTaskDialog
+// Windows Vista or higher with Microsoft VS2008 or higher, or Clang or GNU compiler. Requires Unicode.
+#if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || defined(__clang_major__) || defined(__GNUC__))
+  #include <wxx_taskdialog.h>     // Add CTaskDialog
 #endif
 
 
-#endif
+#endif  // define STDAFX_H

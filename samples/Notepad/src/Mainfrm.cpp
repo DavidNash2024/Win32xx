@@ -466,7 +466,16 @@ BOOL CMainFrame::OnFilePrintSetup()
 // Print the document without selecting the printer.
 BOOL CMainFrame::OnFilePrintNow()
 {
-    m_richView.QuickPrint(m_pathName);
+    try
+    {
+        m_richView.QuickPrint(m_pathName);
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
     return TRUE;
 }
 
@@ -694,7 +703,16 @@ BOOL CMainFrame::OnPreviewClose()
 // Called when the Print Preview's "Print Now" button is pressed
 BOOL CMainFrame::OnPreviewPrint()
 {
-    m_richView.QuickPrint(m_pathName);
+    try
+    {
+        m_richView.QuickPrint(m_pathName);
+    }
+
+    catch (const CException& e)
+    {
+        // An exception occurred. Display the relevant information.
+        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+    }
     return TRUE;
 }
 
@@ -712,6 +730,10 @@ BOOL CMainFrame::OnPreviewSetup()
             CString status = _T("Printer: ") + printDlg.GetDeviceName();
             SetStatusText(status);
         }
+
+        // Initiate the print preview.
+        UINT maxPage = m_richView.CollatePages();
+        m_preview.DoPrintPreview(*this, maxPage);
     }
 
     catch (const CException& e)
@@ -719,10 +741,6 @@ BOOL CMainFrame::OnPreviewSetup()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
-
-    // Initiate the print preview.
-    UINT maxPage = m_richView.CollatePages();
-    m_preview.DoPrintPreview(*this, maxPage);
 
     return TRUE;
 }

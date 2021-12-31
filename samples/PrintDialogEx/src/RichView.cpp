@@ -62,6 +62,7 @@ UINT CRichView::CollatePages(const CDC& printerDC)
     return static_cast<UINT>(m_pageBreaks.size());
 }
 
+// Reset the print options to default.
 void CRichView::ClearPrintOptions()
 {
     PRINTDLGEX pdex;
@@ -70,6 +71,7 @@ void CRichView::ClearPrintOptions()
     m_printDialog.SetParameters(pdex);
 }
 
+// Set the print options. This function can throw an exception.
 void CRichView::SetPrintOptions()
 {
     PRINTDLGEX pdex = m_printDialog.GetParameters();
@@ -77,91 +79,72 @@ void CRichView::SetPrintOptions()
     // Set these if not already set.
     if (pdex.nMaxPageRanges == 0)
     {
-        try
-        {
-            CDC printerDC = m_printDialog.GetPrinterDC();
-            pdex.nMaxPageRanges = sizeof(m_pageRanges) / sizeof(PRINTPAGERANGE);
-            pdex.lpPageRanges = m_pageRanges;
-            pdex.nMinPage = 1;
-            pdex.nCopies = 1;
-            pdex.nMaxPage = CollatePages(printerDC);
-            pdex.nStartPage = START_PAGE_GENERAL;
+        CDC printerDC = m_printDialog.GetPrinterDC();
+        pdex.nMaxPageRanges = sizeof(m_pageRanges) / sizeof(PRINTPAGERANGE);
+        pdex.lpPageRanges = m_pageRanges;
+        pdex.nMinPage = 1;
+        pdex.nCopies = 1;
+        pdex.nMaxPage = CollatePages(printerDC);
+        pdex.nStartPage = START_PAGE_GENERAL;
 
-            // These flags specify the following:
-            // PD_ALLPAGES      - The All radio button is initially selected.
-            // PD_NOCURRENTPAGE - Disables the Current Page radio button.
-            // PD_NOSELECTION   - Disables the Selection radio button.
-            pdex.Flags = PD_ALLPAGES | PD_NOCURRENTPAGE | PD_NOSELECTION;
-            m_printDialog.SetParameters(pdex);
-        }
-
-        catch (const CException& e)
-        {
-            // An exception occurred. Display the relevant information.
-            MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
-        }
+        // These flags specify the following:
+        // PD_ALLPAGES      - The All radio button is initially selected.
+        // PD_NOCURRENTPAGE - Disables the Current Page radio button.
+        // PD_NOSELECTION   - Disables the Selection radio button.
+        pdex.Flags = PD_ALLPAGES | PD_NOCURRENTPAGE | PD_NOSELECTION;
+        m_printDialog.SetParameters(pdex);
     }
 }
 
 // Choose the printer and print the document.
 void CRichView::DoPrint(LPCTSTR docName)
 {
-    try
+    SetPrintOptions();
+    INT_PTR result = m_printDialog.DoModal(*this);
+    if (result == PD_RESULT_PRINT)
     {
-        SetPrintOptions();
-        INT_PTR result = m_printDialog.DoModal(*this);
-        if (result == PD_RESULT_PRINT)
+        // Acquire the currently selected printer and page settings
+        CDC printerDC = m_printDialog.GetPrinterDC();
+
+        // Calculate the pages to print.
+        std::vector<int> pages = SetPagesToPrint(printerDC);
+
+        // Assign values to the FORMATRANGE struct
+        FORMATRANGE fr;
+        ZeroMemory(&fr, sizeof(fr));
+        fr.hdc = printerDC;
+        fr.hdcTarget = printerDC;
+        fr.rcPage = GetPageRect(printerDC);
+        fr.rc = GetPrintRect(printerDC);
+
+        // Default the range of text to print as the entire document.
+        fr.chrg.cpMin = 0;
+        fr.chrg.cpMax = -1;
+
+        // Start print job.
+        DOCINFO di;
+        ZeroMemory(&di, sizeof(di));
+        di.cbSize = sizeof(DOCINFO);
+        di.lpszDocName = docName;
+        di.lpszOutput = NULL;   // Do not print to file.
+        printerDC.StartDoc(&di);
+
+        std::vector<int>::iterator i;
+        for (i = pages.begin(); i < pages.end(); ++i)
         {
-            // Acquire the currently selected printer and page settings
-            CDC printerDC = m_printDialog.GetPrinterDC();
+            // Start the page.
+            printerDC.StartPage();
 
-            // Calculate the pages to print.
-            std::vector<int> pages = SetPagesToPrint(printerDC);
+            // Print the page.
+            PrintPage(printerDC, *i -1);
 
-            // Assign values to the FORMATRANGE struct
-            FORMATRANGE fr;
-            ZeroMemory(&fr, sizeof(fr));
-            fr.hdc = printerDC;
-            fr.hdcTarget = printerDC;
-            fr.rcPage = GetPageRect(printerDC);
-            fr.rc = GetPrintRect(printerDC);
-
-            // Default the range of text to print as the entire document.
-            fr.chrg.cpMin = 0;
-            fr.chrg.cpMax = -1;
-
-            // Start print job.
-            DOCINFO di;
-            ZeroMemory(&di, sizeof(di));
-            di.cbSize = sizeof(DOCINFO);
-            di.lpszDocName = docName;
-            di.lpszOutput = NULL;   // Do not print to file.
-            printerDC.StartDoc(&di);
-
-            std::vector<int>::iterator i;
-            for (i = pages.begin(); i < pages.end(); ++i)
-            {
-                // Start the page.
-                printerDC.StartPage();
-
-                // Print the page.
-                PrintPage(printerDC, *i -1);
-
-                // End the page/
-                printerDC.EndPage();
-            }
-
-            // End the print job
-            printerDC.EndDoc();
+            // End the page/
+            printerDC.EndPage();
         }
-    }
 
-    catch (const CException& e)
-    {
-        // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
+        // End the print job
+        printerDC.EndDoc();
     }
-
 }
 
 // Returns a CRect of the entire printable area. Units are measured in twips.
@@ -269,91 +252,73 @@ void CRichView::PrintFooter(CDC& dc, UINT page)
 // Called by CPrintPreview, and also used for printing.
 void CRichView::PrintPage(CDC& dc, UINT page)
 {
-    try
-    {
-        CPrintDialog printDlg;
-        CDC printerDC = printDlg.GetPrinterDC();
+    CPrintDialog printDlg;
+    CDC printerDC = printDlg.GetPrinterDC();
 
-        // Assign values to the FORMATRANGE struct
-        FORMATRANGE fr;
-        ZeroMemory(&fr, sizeof(fr));
-        fr.hdcTarget = printerDC;
-        fr.hdc = dc;
-        fr.rcPage = GetPageRect(printerDC);
-        fr.rc = GetPrintRect(printerDC);
-        fr.chrg.cpMin = (page > 0) ? m_pageBreaks[page - 1] : 0;
-        fr.chrg.cpMax = m_pageBreaks[page];
+    // Assign values to the FORMATRANGE struct
+    FORMATRANGE fr;
+    ZeroMemory(&fr, sizeof(fr));
+    fr.hdcTarget = printerDC;
+    fr.hdc = dc;
+    fr.rcPage = GetPageRect(printerDC);
+    fr.rc = GetPrintRect(printerDC);
+    fr.chrg.cpMin = (page > 0) ? m_pageBreaks[page - 1] : 0;
+    fr.chrg.cpMax = m_pageBreaks[page];
 
-        // Display text from the richedit control on the memory dc
-        FormatRange(fr, TRUE);
-        DisplayBand(GetPrintRect(printerDC));
+    // Display text from the richedit control on the memory dc
+    FormatRange(fr, TRUE);
+    DisplayBand(GetPrintRect(printerDC));
 
-        // Tell the control to release the cached information.
-        FormatRange();
+    // Tell the control to release the cached information.
+    FormatRange();
 
-        PrintFooter(dc, page);
-    }
-
-    catch (const CException& e)
-    {
-        // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
-    }
+    PrintFooter(dc, page);
 }
 
 // Print the document without bringing up a print dialog.
 // docName - specifies the document name for the print job.
 void CRichView::QuickPrint(LPCTSTR docName)
 {
-    try
+    // Acquire the currently selected printer and page settings
+    CDC printerDC = m_printDialog.GetPrinterDC();
+
+    // Assign values to the FORMATRANGE struct
+    FORMATRANGE fr;
+    ZeroMemory(&fr, sizeof(fr));
+    fr.hdc = printerDC;
+    fr.hdcTarget = printerDC;
+
+    fr.rcPage = GetPageRect(printerDC);
+    fr.rc = GetPrintRect(printerDC);
+
+    // Default the range of text to print as the entire document.
+    fr.chrg.cpMin = 0;
+    fr.chrg.cpMax = -1;
+
+    // Start print job.
+    DOCINFO di;
+    ZeroMemory(&di, sizeof(di));
+    di.cbSize = sizeof(DOCINFO);
+    di.lpszDocName = docName;
+    di.lpszOutput = NULL;   // Do not print to file.
+    printerDC.StartDoc(&di);
+
+    UINT maxPages = CollatePages(printerDC);
+
+    for (UINT page = 0; page < maxPages; ++page)
     {
-        // Acquire the currently selected printer and page settings
-        CDC printerDC = m_printDialog.GetPrinterDC();
+        // Start the page.
+        printerDC.StartPage();
 
-        // Assign values to the FORMATRANGE struct
-        FORMATRANGE fr;
-        ZeroMemory(&fr, sizeof(fr));
-        fr.hdc = printerDC;
-        fr.hdcTarget = printerDC;
+        // Print the page.
+        PrintPage(printerDC, page);
 
-        fr.rcPage = GetPageRect(printerDC);
-        fr.rc = GetPrintRect(printerDC);
-
-        // Default the range of text to print as the entire document.
-        fr.chrg.cpMin = 0;
-        fr.chrg.cpMax = -1;
-
-        // Start print job.
-        DOCINFO di;
-        ZeroMemory(&di, sizeof(di));
-        di.cbSize = sizeof(DOCINFO);
-        di.lpszDocName = docName;
-        di.lpszOutput = NULL;   // Do not print to file.
-        printerDC.StartDoc(&di);
-
-        UINT maxPages = CollatePages(printerDC);
-
-        for (UINT page = 0; page < maxPages; ++page)
-        {
-            // Start the page.
-            printerDC.StartPage();
-
-            // Print the page.
-            PrintPage(printerDC, page);
-
-            // End the page/
-            printerDC.EndPage();
-        }
-
-        // End the print job
-        printerDC.EndDoc();
+        // End the page/
+        printerDC.EndPage();
     }
 
-    catch (const CException& e)
-    {
-        // An exception occurred. Display the relevant information.
-        MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
-    }
+    // End the print job
+    printerDC.EndDoc();
 }
 
 // Sets the initial font for the document.
