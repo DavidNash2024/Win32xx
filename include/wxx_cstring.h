@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -921,13 +921,13 @@ namespace Win32xx
                 buffer.assign( size_t(length)+1, 0 );
 
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
-                result = _vsnprintf(&buffer[0], length, format, args);
+                result = _vsnprintf(&buffer.front(), length, format, args);
 #else
-                result = _vsnprintf_s(&buffer[0], length, size_t(length)-1, format, args);
+                result = _vsnprintf_s(&buffer.front(), length, size_t(length)-1, format, args);
 #endif
                 length *= 2;
             }
-            m_str.assign(&buffer[0]);
+            m_str.assign(&buffer.front());
         }
     }
 
@@ -948,13 +948,13 @@ namespace Win32xx
             {
                 buffer.assign( size_t(length)+1, 0 );
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
-                result = _vsnwprintf(&buffer[0], length, format, args);
+                result = _vsnwprintf(&buffer.front(), length, format, args);
 #else
-                result = _vsnwprintf_s(&buffer[0], length, size_t(length)-1, format, args);
+                result = _vsnwprintf_s(&buffer.front(), length, size_t(length)-1, format, args);
 #endif
                 length *= 2;
             }
-            m_str.assign(&buffer[0]);
+            m_str.assign(&buffer.front());
         }
     }
 
@@ -1043,7 +1043,7 @@ namespace Win32xx
 
         std::copy(m_str.begin(), it_end, m_buf.begin());
 
-        return &m_buf[0];
+        return &m_buf.front();
     }
 
 #ifndef _WIN32_WCE
@@ -1059,8 +1059,8 @@ namespace Win32xx
         if (length > 0)
         {
             std::vector<CHAR> buffer(size_t(length) +1, 0 );
-            ::GetEnvironmentVariableA(var, &buffer[0], DWORD(length));
-            m_str = &buffer[0];
+            ::GetEnvironmentVariableA(var, &buffer.front(), DWORD(length));
+            m_str = &buffer.front();
         }
 
         return (length != 0);
@@ -1077,8 +1077,8 @@ namespace Win32xx
         if (length > 0)
         {
             std::vector<WCHAR> buffer(size_t(length) +1, 0 );
-            ::GetEnvironmentVariableW(var, &buffer[0], DWORD(length));
-            m_str = &buffer[0];
+            ::GetEnvironmentVariableW(var, &buffer.front(), DWORD(length));
+            m_str = &buffer.front();
         }
 
         return (length != 0);
@@ -1096,8 +1096,8 @@ namespace Win32xx
         if (length > 0)
         {
             std::vector<CHAR> buffer(size_t(length) +1, 0 );
-            ::GetWindowTextA(wnd, &buffer[0], length +1);
-            m_str = &buffer[0];
+            ::GetWindowTextA(wnd, &buffer.front(), length +1);
+            m_str = &buffer.front();
         }
     }
 
@@ -1110,8 +1110,8 @@ namespace Win32xx
         if (length > 0)
         {
             std::vector<WCHAR> buffer(size_t(length) +1, 0 );
-            ::GetWindowTextW(wnd, &buffer[0], length +1);
-            m_str = &buffer[0];
+            ::GetWindowTextW(wnd, &buffer.front(), length +1);
+            m_str = &buffer.front();
         }
     }
 
@@ -1250,7 +1250,7 @@ namespace Win32xx
 
         if (-1 == newLength)
         {
-            newLength = lstrlenT(&m_buf[0]);
+            newLength = lstrlenT(&m_buf.front());
         }
 
         assert(m_buf.size() > 0);

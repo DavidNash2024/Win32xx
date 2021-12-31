@@ -1520,7 +1520,7 @@ namespace Win32xx
         // number of pixels per inch along the screen height.
         int pxpi = dc.GetDeviceCaps(LOGPIXELSY);
 
-        // point size is (pixel height) * 72 / pxpi, so in 1/10ths size is
+        // 72 points/inch, 10 decipoints/point.
         int charsize = -MulDiv(m_logFont.lfHeight, 720, pxpi);
         return charsize;
     }

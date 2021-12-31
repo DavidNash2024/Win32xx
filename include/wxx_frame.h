@@ -2060,7 +2060,7 @@ namespace Win32xx
             TCHAR* pMenuString = &menuString[0];
 
             std::vector<TCHAR> strippedString( MAX_MENU_STRING+1, _T('\0') );
-            TCHAR* pStrippedString = &strippedString[0];
+            TCHAR* pStrippedString = &strippedString.front();
 
             mii.fMask      = MIIM_TYPE;
             mii.fType      = MFT_STRING;

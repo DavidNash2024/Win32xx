@@ -2519,7 +2519,7 @@ namespace Win32xx
         {
             startSize = startSize * 4;
             vString.assign(size_t(startSize)+1, 0);
-            pTCharArray = &vString[0];
+            pTCharArray = &vString.front();
             chars = ::LoadStringA (GetApp()->GetResourceHandle(), id, pTCharArray, startSize);
         }
 
@@ -2550,7 +2550,7 @@ namespace Win32xx
         {
             startSize = startSize * 4;
             vString.assign(size_t(startSize)+1, 0);
-            pTCharArray = &vString[0];
+            pTCharArray = &vString.front();
             chars = ::LoadStringW (GetApp()->GetResourceHandle(), id, pTCharArray, startSize);
         }
 

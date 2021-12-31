@@ -273,7 +273,9 @@ namespace Win32xx
         {
             // Retrieve the size of the current DevMode.
             UINT size = 0;
-            m_pServices->GetCurrentDevMode(0, &size);
+            DEVMODE tempMode;
+            ZeroMemory(&tempMode, sizeof(tempMode));
+            m_pServices->GetCurrentDevMode(&tempMode, &size);
 
             // Retrieve the current DevMode.
             m_currentModeBuffer.Alloc(size);
