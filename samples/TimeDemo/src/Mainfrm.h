@@ -24,8 +24,6 @@
 #include "AboutBox.h"
 #include "MRU.h"
 
-  // designation of where a control id appears, used when enabling/disabling
-enum ControlBars {toolbar, mainmenu, both};
 
 /*============================================================================*/
     class

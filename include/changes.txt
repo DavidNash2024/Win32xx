@@ -35,10 +35,14 @@ New Features and Enhancements
 
 Changes in Detail
 -----------------
-Renamed UWM_PRINTNOW   to UWM_PREVIEWPRINT
-Renamed UWM_PRINTSETUP to UWM_PREVIEWSETUP
+Add PrintDialogEx            sample
+Added Titlebar               sample
+Added TitlebarFrame          sample
 
 Added MenuTheme::clrText     member variable
+
+Renamed UWM_PRINTNOW   to UWM_PREVIEWPRINT
+Renamed UWM_PRINTSETUP to UWM_PREVIEWSETUP
 
 
 
@@ -92,6 +96,7 @@ New Features and Enhancements
 
 Changes in Detail
 -----------------
+Added ListView                      sample
 Added CPrintDialogEx                class
 Added CBitmap::CopyImage            member function
 Added CBitmap::GetSize              member function

@@ -1,7 +1,10 @@
 PrintDialogEx Sample
 ====================
 This project is an update to the Notepad sample. It demonstrates how to
-use CPrintDialogEx instead of CPrintDialog to print the document. 
+use CPrintDialogEx instead of CPrintDialog to print the document.
+
+The use of CPrintDialogEx allows users to specify a group of page ranges to
+be printed. 
 
 
 New Features demonstrated in this example
@@ -18,8 +21,7 @@ New Features demonstrated in this example
 
 Notes:
 * The document needs to be over one page in length to enable the Pages option.
-* CPrintDialogEx will display a message box if the pages selected are out of range.
-* This sample runs on Win2000 or later.
+* The print dialog will display a message if the pages selected are out of range.
 * This sample requires VS2008 or later, or a modern MinGW compiler.
 * The settings saved by Apply button are kept if we then use the Cancel button.
 * An example of a valid page range entry is: 1-4,2,6-2,8,4 

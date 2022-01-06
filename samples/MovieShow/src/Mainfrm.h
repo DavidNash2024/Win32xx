@@ -65,7 +65,6 @@ public:
     BOOL    OnAddFolder();
     BOOL    OnBoxSet(UINT nID);
     LRESULT OnDPIChanged();
-    LRESULT OnExitSizeMove(UINT msg, WPARAM wparam, LPARAM lparam);
     BOOL    OnFavourite();
     void    OnFilesLoaded();
     BOOL    OnPlay();

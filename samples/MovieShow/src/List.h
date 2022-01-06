@@ -55,6 +55,7 @@ protected:
     virtual LRESULT OnNotify(WPARAM, LPARAM lparam);
     virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     static int CALLBACK CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortViewItems);
