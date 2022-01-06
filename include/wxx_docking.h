@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -90,7 +90,7 @@
 #define DS_NO_RESIZE            0x0100  // Prevent resizing
 #define DS_NO_CAPTION           0x0200  // Prevent display of caption when docked
 #define DS_NO_CLOSE             0x0400  // Prevent closing of a docker while docked
-#define DS_NO_UNDOCK            0x0800  // Prevent undocking of a docker
+#define DS_NO_UNDOCK            0x0800  // Prevent manual undocking of a docker
 #define DS_CLIENTEDGE           0x1000  // Has a 3D border when docked
 #define DS_NO_FIXED_RESIZE      0x2000  // Perform a proportional resize instead of a fixed size resize on dock children
 #define DS_DOCKED_CONTAINER     0x4000  // Dock a container within a container
@@ -1199,7 +1199,8 @@ namespace Win32xx
                 if (IsLeftButtonDown() && (wparam == HTCAPTION)  && (m_isCaptionPressed))
                 {
                     assert(m_pDocker);
-                    m_pDocker->Undock(GetCursorPos());
+                    if (!(m_pDocker->GetDockStyle() & DS_NO_UNDOCK))
+                        m_pDocker->Undock(GetCursorPos());
                 }
 
                 // Update the close button
@@ -3213,7 +3214,7 @@ namespace Win32xx
     // Starts the undocking.
     inline LRESULT CDocker::OnDockStart(LPDRAGPOS pDragPos)
     {
-        if (IsDocked())
+        if (IsDocked() && !(GetDockStyle() & DS_NO_UNDOCK))
         {
             Undock(GetCursorPos());
             SendMessage(WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, MAKELPARAM(pDragPos->pos.x, pDragPos->pos.y));
@@ -4188,11 +4189,9 @@ namespace Win32xx
     }
 
     // Undocks a docker.
+    // Called when the user undocks a docker, or when a docker is closed.
     inline void CDocker::Undock(CPoint pt, BOOL showUndocked)
     {
-        // Return if we shouldn't undock.
-        if (GetDockStyle() & DS_NO_UNDOCK) return;
-
         // Undocking isn't supported on Win95.
         if (1400 == GetWinVersion()) return;
 
@@ -4211,15 +4210,13 @@ namespace Win32xx
     }
 
     // Undocks a CDockContainer.
+    // Called when the user undocks a container, or when a container is closed.
     inline void CDocker::UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL showUndocked)
     {
         assert(pContainer);
         if (!pContainer) return;
 
         assert(this == GetDockFromView(pContainer->GetContainerParent()));
-
-        // Return if we shouldn't undock.
-        if (GetDockFromView(pContainer)->GetDockStyle() & DS_NO_UNDOCK) return;
 
         if (GetDockFromView(pContainer) == GetDockAncestor()) return;
 
@@ -4655,13 +4652,12 @@ namespace Win32xx
     }
 
     // Called when the mouse cursor is moved over the window.
+    // Overrides CTab::OnMouseLeave
     inline LRESULT CDockContainer::OnMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        // Overrides CTab::OnMouseLeave
-
         if (IsLeftButtonDown() && (m_pressedTab >= 0))
         {
-            if (GetDocker())
+            if (GetDocker() && !(GetDocker()->GetDockStyle() & DS_NO_UNDOCK))
             {
                 CDockContainer* pContainer = GetContainerFromIndex(m_currentPage);
                 GetDocker()->UndockContainer(pContainer, GetCursorPos(), TRUE);

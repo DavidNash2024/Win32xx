@@ -1,5 +1,5 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -175,7 +175,8 @@ namespace Win32xx
     // Specify a pointer to the function to run when the thread starts.
     // Specifying pParam for a worker thread is optional.
     inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
-                        m_pThreadParams(0), m_thread(0), m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_accelWnd(0)
+                        m_pThreadParams(0), m_thread(0), m_threadID(0), m_threadIDForWinCE(0),
+                        m_accel(0), m_accelWnd(0)
     {
         m_pfnThreadProc = pfnThreadProc;
         m_pThreadParams = pParam;
@@ -203,7 +204,8 @@ namespace Win32xx
     // stack_size               Either the stack size or 0
     // pSecurityAttributes      Either a pointer to SECURITY_ATTRIBUTES or 0
     // Refer to CreateThread in the Windows API documentation for more information.
-    inline HANDLE CWinThread::CreateThread(unsigned initflag /* = 0 */, unsigned stack_size/* = 0 */, LPSECURITY_ATTRIBUTES pSecurityAttributes /*= NULL*/)
+    inline HANDLE CWinThread::CreateThread(unsigned initflag /* = 0 */, unsigned stack_size/* = 0 */,
+                                           LPSECURITY_ATTRIBUTES pSecurityAttributes /*= NULL*/)
     {
         if (NULL == m_pfnThreadProc) m_pfnThreadProc = CWinThread::StaticThreadProc;
         if (NULL == m_pThreadParams) m_pThreadParams = this;
@@ -216,9 +218,11 @@ namespace Win32xx
         }
 
 #ifdef _WIN32_WCE
-        m_thread = reinterpret_cast<HANDLE>(::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_threadIDForWinCE));
+        m_thread = reinterpret_cast<HANDLE>(::CreateThread(pSecurityAttributes, stack_size,
+                    (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_threadIDForWinCE));
 #else
-        m_thread = reinterpret_cast<HANDLE>(::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc, m_pThreadParams, initflag, &m_threadID));
+        m_thread = reinterpret_cast<HANDLE>(::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc,
+                     m_pThreadParams, initflag, &m_threadID));
 #endif
 
         if (m_thread == 0)

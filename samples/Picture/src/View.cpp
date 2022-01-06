@@ -83,7 +83,7 @@ BOOL CView::LoadPictureFile(LPCTSTR fileName)
     BOOL IsPictureLoaded;
 
     // Create IPicture from image file
-    if (S_OK == ::OleLoadPicturePath(TtoOLE(fileName), NULL, 0, 0,    IID_IPicture, (LPVOID *)&m_pPicture))
+    if (S_OK == ::OleLoadPicturePath(TtoOLE(fileName), NULL, 0, 0, IID_IPicture, (LPVOID*)&m_pPicture))
     {
         GetAncestor().SendMessage(UWM_FILELOADED, 0, (LPARAM)fileName);
         Invalidate();
@@ -141,7 +141,8 @@ void CView::OnDraw(CDC& dc)
         int HeightInPixels = MulDiv(height, GetDeviceCaps(dc, LOGPIXELSY), HIMETRIC_INCH);
 
         // Render the picture to the DC
-        m_pPicture->Render(dc, 0, 0, widthInPixels, HeightInPixels, 0, height, width, -height, NULL);
+        CRect rc;
+        m_pPicture->Render(dc, 0, 0, widthInPixels, HeightInPixels, 0, height, width, -height, &rc);
     }
 }
 

@@ -175,7 +175,7 @@ void CViewList::OnAttach()
     SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
     SetExtendedStyle( LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES
-        | LVS_EX_HEADERDRAGDROP | LVS_EX_DOUBLEBUFFER/* | LVS_EX_TRANSPARENTBKGND*/);
+                      | LVS_EX_HEADERDRAGDROP | LVS_EX_DOUBLEBUFFER );
 
     SetColumn();
 }
@@ -255,8 +255,7 @@ LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pnmitem)
             color = pTheme->clrBkgnd2;
 
         // Set the background color of the header
-        CBrush br;
-        br.CreateSolidBrush(color);
+        CBrush br(color);
         ::FillRect(pnmitem->hdc, &pnmitem->rc, br);
 
         // Also set the text background color
@@ -443,6 +442,15 @@ void CViewList::UpdateItemImage(int item)
 
         SetItem(lvi);
     }
+}
+
+LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Adjust the list view's columns when the window is resized.
+    if (msg == WM_WINDOWPOSCHANGED)
+        SetLastColumnWidth();
+
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)

@@ -95,10 +95,10 @@ protected:
 
 private:
     CDialog m_aboutDialog;              // Help about dialog.
-    CMenuBar m_menubar;                 // Menubar window.
+    CMenuBar m_menubar;                 // Displays the menu in the titlebar.
     CView m_view;                       // View window.
-    CMenu m_menu;                       // handle to the frame menu.
-    HACCEL m_accel;                     // handle to the frame's accelerator table.
+    CMenu m_menu;                       // The application's menu.
+    HACCEL m_accel;                     // The application's accelerator table.
     TitlebarButton m_hoveredButton;     // Current hovered button.
     TitlebarButton m_oldHoveredButton;  // Hovered button when left mouse button pressed.
     TitlebarColors m_colors;            // A struct holding the title bar colors.

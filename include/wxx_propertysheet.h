@@ -797,11 +797,10 @@ namespace Win32xx
 
             if (::IsWindow(ok) && ::IsWindowVisible(ok) && ::IsWindowEnabled(ok))
             {
-                ::SetFocus(ok);
                 FinalWindowProc(DM_SETDEFID, IDOK, 0);
 
                 ::SendMessage(cancel, BM_SETSTYLE, BS_PUSHBUTTON, TRUE);
-                return 0;
+                return TRUE;
             }
         }
 

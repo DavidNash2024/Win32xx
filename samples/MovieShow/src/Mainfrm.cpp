@@ -968,13 +968,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CDockFrame::OnCreate(cs);
 }
 
-// Adjust the column sizes to match the list view window width.
-LRESULT CMainFrame::OnExitSizeMove(UINT, WPARAM, LPARAM)
-{
-    GetViewList().SetLastColumnWidth();
-    return 0;
-}
-
 // Called in response to favourites on the toolbar or the
 // list view popup menu. Sets the movie's favourite flag.
 BOOL CMainFrame::OnFavourite()
@@ -1733,7 +1726,6 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_WINDOWPOSCHANGING: return OnWindowPosChanged(msg, wparam, lparam);
         case WM_SYSCOMMAND:                 return OnSysCommand(msg, wparam, lparam);
-        case WM_EXITSIZEMOVE:               return OnExitSizeMove(msg, wparam, lparam);
         case WM_DPICHANGED:                 return OnDPIChanged();
 
         // User Messages called by CTreeList
