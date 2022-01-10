@@ -73,7 +73,7 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
 // Called before the dialog is displayed.
 BOOL CMyDialog::OnInitDialog()
 {
-    // Set the Icon
+    // Set the application icon
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
 
@@ -89,6 +89,9 @@ BOOL CMyDialog::OnInitDialog()
     // Put some text in the list box
     for (int i = 0; i < 8; i++)
         m_listBox.AddString(_T("ListBox"));
+
+    // Select the first radio button
+    CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
 
     return TRUE;
 }

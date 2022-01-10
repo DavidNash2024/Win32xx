@@ -15,7 +15,7 @@ public:
     CView() {}
     virtual ~CView() {}
     virtual STDMETHODIMP Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
-    virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode);
+    virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUIApplication::IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode);
 
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs);

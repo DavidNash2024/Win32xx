@@ -126,6 +126,9 @@ BOOL CViewDialog::OnInitDialog()
     m_resizer.AddChild(m_richEdit1, topright, RD_STRETCH_WIDTH);
     m_resizer.AddChild(m_richEdit2, bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
 
+    // Select the first radio button
+    CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
+
     return TRUE;
 }
 
