@@ -6,6 +6,7 @@
 
 #include "stdafx.h"
 #include "FormDoc.h"
+#include "resource.h"
 
 
 ////////////////////////////////
@@ -13,7 +14,7 @@
 //
 
 // Constructor.
-CFormDoc::CFormDoc() : m_isCheckA(0), m_isCheckB(0), m_isCheckC(0), m_radio(200)
+CFormDoc::CFormDoc() : m_isCheckA(0), m_isCheckB(0), m_isCheckC(0), m_radio(ID_RADIO_A)
 {
 }
 

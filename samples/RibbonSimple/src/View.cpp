@@ -134,7 +134,7 @@ STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB, const PROPERTYKEY*, 
     return result;
 }
 
-STDMETHODIMP CView::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEWVERB verb, INT32)
+STDMETHODIMP CView::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUIApplication::IUnknown*, UI_VIEWVERB verb, INT32)
 {
     HRESULT result = E_NOTIMPL;
 

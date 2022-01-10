@@ -146,7 +146,7 @@ namespace Win32xx
         virtual CRect GetViewRect() const;
         virtual int  OnCreate(CREATESTRUCT& cs);
         virtual void OnDestroy();
-        virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode);
+        virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUIApplication::IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode);
         virtual HRESULT PopulateRibbonRecentItems(PROPVARIANT* value);
         virtual void UpdateMRUMenu();
 
@@ -416,7 +416,7 @@ namespace Win32xx
 
     // Called when the ribbon's view has changed.
     template <class T>
-    inline STDMETHODIMP CRibbonFrameT<T>::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEWVERB verb, INT32)
+    inline STDMETHODIMP CRibbonFrameT<T>::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUIApplication::IUnknown*, UI_VIEWVERB verb, INT32)
     {
         HRESULT result = E_NOTIMPL;
 
