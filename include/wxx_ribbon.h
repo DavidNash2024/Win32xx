@@ -73,17 +73,17 @@ namespace Win32xx
         virtual ~CRibbon();
 
         // IUIApplication methods
-        virtual STDMETHODIMP OnCreateUICommand(UINT nCmdID, __in UI_COMMANDTYPE typeID,
+        virtual STDMETHODIMP OnCreateUICommand(UINT32 nCmdID, __in UI_COMMANDTYPE typeID,
             __deref_out IUICommandHandler** ppCommandHandler);
         virtual STDMETHODIMP OnDestroyUICommand(UINT32 commandId, __in UI_COMMANDTYPE typeID,
             __in_opt IUICommandHandler* commandHandler);
-        virtual STDMETHODIMP OnViewChanged(UINT viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView,
+        virtual STDMETHODIMP OnViewChanged(UINT32 viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView,
             UI_VIEWVERB verb, INT uReasonCode);
 
         // IUICommandHandle methods
-        virtual STDMETHODIMP Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* value,
+        virtual STDMETHODIMP Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* value,
                                           __in_opt IUISimplePropertySet* pCommandExecutionProperties);
-        virtual STDMETHODIMP UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* currentValue,
+        virtual STDMETHODIMP UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* currentValue,
                                                  __out PROPVARIANT* newValue);
         virtual STDMETHODIMP CreateRibbon(HWND wnd);
         virtual STDMETHODIMP DestroyRibbon();
@@ -95,7 +95,7 @@ namespace Win32xx
 
         // Other
         STDMETHODIMP_(IUIFramework*) GetRibbonFramework() const { return m_pRibbonFramework; }
-        STDMETHODIMP_(UINT) GetRibbonHeight() const;
+        STDMETHODIMP_(UINT32) GetRibbonHeight() const;
 
     private:
         CRibbon(const CRibbon&);              // Disable copy construction
@@ -146,7 +146,7 @@ namespace Win32xx
         virtual CRect GetViewRect() const;
         virtual int  OnCreate(CREATESTRUCT& cs);
         virtual void OnDestroy();
-        virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUIApplication::IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode);
+        virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode);
         virtual HRESULT PopulateRibbonRecentItems(PROPVARIANT* value);
         virtual void UpdateMRUMenu();
 
@@ -234,7 +234,7 @@ namespace Win32xx
     }
 
     // Responds to execute events on Commands bound to the Command handler.
-    inline STDMETHODIMP CRibbon::Execute(UINT, UI_EXECUTIONVERB, __in_opt const PROPERTYKEY*, __in_opt const PROPVARIANT*,
+    inline STDMETHODIMP CRibbon::Execute(UINT32, UI_EXECUTIONVERB, __in_opt const PROPERTYKEY*, __in_opt const PROPVARIANT*,
                                           __in_opt IUISimplePropertySet*)
     {
         return E_NOTIMPL;
@@ -266,7 +266,7 @@ namespace Win32xx
 
 
     // Called by the Ribbon framework for each command specified in markup, to bind the Command to an IUICommandHandler.
-    inline STDMETHODIMP CRibbon::OnCreateUICommand(UINT, __in UI_COMMANDTYPE,
+    inline STDMETHODIMP CRibbon::OnCreateUICommand(UINT32, __in UI_COMMANDTYPE,
                                                  __deref_out IUICommandHandler** ppCommandHandler)
     {
         // By default we use the single command handler provided as part of CRibbon.
@@ -276,7 +276,7 @@ namespace Win32xx
     }
 
     // Called when the state of the Ribbon changes, for example, created, destroyed, or resized.
-    inline STDMETHODIMP CRibbon::OnViewChanged(UINT, __in UI_VIEWTYPE, __in IUnknown*,
+    inline STDMETHODIMP CRibbon::OnViewChanged(UINT32, __in UI_VIEWTYPE, __in IUnknown*,
                                              UI_VIEWVERB, INT)
     {
         return E_NOTIMPL;
@@ -290,7 +290,7 @@ namespace Win32xx
     }
 
     // Called by the Ribbon framework when a command property (PKEY) needs to be updated.
-    inline STDMETHODIMP CRibbon::UpdateProperty(UINT, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*,
+    inline STDMETHODIMP CRibbon::UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*,
                                                  __out PROPVARIANT*)
     {
         return E_NOTIMPL;
@@ -330,11 +330,11 @@ namespace Win32xx
     }
 
     // Retrieves the height of the ribbon.
-    inline STDMETHODIMP_(UINT) CRibbon::GetRibbonHeight() const
+    inline STDMETHODIMP_(UINT32) CRibbon::GetRibbonHeight() const
     {
         HRESULT result = E_FAIL;
         IUIRibbon* pRibbon = NULL;
-        UINT ribbonHeight = 0;
+        UINT32 ribbonHeight = 0;
 
         if (GetRibbonFramework())
         {

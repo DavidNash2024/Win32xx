@@ -2297,10 +2297,10 @@ namespace Win32xx
 
     // Called when the frame is activated (WM_ACTIVATE received).
     template <class T>
-    inline LRESULT CFrameT<T>::OnActivate(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Perform default processing first
-        CWnd::WndProcDefault(WM_ACTIVATE, wparam, lparam);
+        CWnd::WndProcDefault(msg, wparam, lparam);
 
         if (LOWORD(wparam) == WA_INACTIVE)
         {
@@ -2522,17 +2522,17 @@ namespace Win32xx
 
     // Called when the menu's modal loop begins (WM_INITMENUPOPUP received).
     template <class T>
-    inline LRESULT CFrameT<T>::OnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam)
     {
+        CMenu menu(reinterpret_cast<HMENU>(wparam));
+
         // The system menu shouldn't be owner drawn.
-        if (::GetSystemMenu(*this, FALSE) == reinterpret_cast<HMENU>(wparam))
-            return CWnd::WndProcDefault(WM_INITMENUPOPUP, wparam, lparam);
+        if (HIWORD(lparam) || (T::GetSystemMenu() == menu))
+            return CWnd::WndProcDefault(msg, wparam, lparam);
 
         // Not supported on Win95 or WinNT.
         if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
-            return CWnd::WndProcDefault(WM_INITMENUPOPUP, wparam, lparam);
-
-        CMenu menu(reinterpret_cast<HMENU>(wparam));
+            return CWnd::WndProcDefault(msg, wparam, lparam);
 
         for (UINT i = 0; i < menu.GetMenuItemCount(); ++i)
         {
@@ -2607,11 +2607,11 @@ namespace Win32xx
     // Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
     // values can be assigned with the menu item's dimensions.
     template <class T>
-    inline LRESULT CFrameT<T>::OnMeasureItem(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnMeasureItem(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lparam;
         if (pmis->CtlType != ODT_MENU)
-            return CWnd::WndProcDefault(WM_MEASUREITEM, wparam, lparam);
+            return CWnd::WndProcDefault(msg, wparam, lparam);
 
         MeasureMenuItem(pmis);
         return TRUE;
@@ -2619,16 +2619,16 @@ namespace Win32xx
 
     // Called when a menu is active, and a key is pressed other than an accelerator.
     template <class T>
-    inline LRESULT CFrameT<T>::OnMenuChar(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if ((GetMenuBar().IsWindow()) && (LOWORD(wparam)!= VK_SPACE))
         {
             // Activate MenuBar for key pressed with Alt key held down
-            GetMenuBar().OnMenuChar(WM_MENUCHAR, wparam, lparam);
+            GetMenuBar().OnMenuChar(msg, wparam, lparam);
             return -1;
         }
 
-        return T::FinalWindowProc(WM_MENUCHAR, wparam, lparam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
     // Called when a menu item is selected.
@@ -2866,7 +2866,7 @@ namespace Win32xx
             m_oldFocus = ::GetFocus();
 
         // Pass remaining system commands on for default processing.
-        return T::FinalWindowProc(msg, wparam, lparam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
     // Notification of undocked from CDocker received via OnNotify
@@ -3932,7 +3932,7 @@ namespace Win32xx
         case WM_SYSCOLORCHANGE: return OnSysColorChange(msg, wparam, lparam);
         case WM_SYSCOMMAND:     return OnSysCommand(msg, wparam, lparam);
         case WM_UNINITMENUPOPUP:  return OnUnInitMenuPopup(msg, wparam, lparam);
-        case WM_WINDOWPOSCHANGED: return T::FinalWindowProc(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGED: return CWnd::WndProcDefault(msg, wparam, lparam);
 
         // Messages defined by Win32++
         case UWM_GETFRAMEVIEW:      return reinterpret_cast<LRESULT>(GetView().GetHwnd());
