@@ -21,8 +21,14 @@
 #include "ColorDefs.h"
 #include "ListBoxDlg.h"
 
-  // id-usage-color triples forming the m_colorTable array
-struct ctl_color {UINT id; CString  usage;  COLORREF color;};
+ // id-usage-color triples forming the m_colorTable array
+struct ctl_color
+{
+    ctl_color() : id(0), color(0) {}
+    UINT id;
+    CString  usage;
+    COLORREF color;
+};
 
 /******************************************************************************/
     class

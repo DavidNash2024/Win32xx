@@ -40,6 +40,7 @@ HWND CMainMDIFrame::Create(HWND parent)
 COLORREF CMainMDIFrame::GetColorFromPicker() const
 {
     PROPVARIANT var;
+    PropVariantInit(&var);
     COLORREF color = RGB(0, 0, 0);
     HRESULT result = GetRibbonFramework()->GetUICommandProperty(IDC_PEN_COLOR, UI_PKEY_Color, &var);
     if (SUCCEEDED(result))

@@ -108,6 +108,7 @@ void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
         {
             // Retrieve color.
             PROPVARIANT var;
+            PropVariantInit(&var);
             if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
             {
                 UINT color = var.uintVal;

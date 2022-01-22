@@ -73,8 +73,11 @@
 // These values are suitable for Windows 10.
 #ifndef WINVER
   #define WINVER            0x0A00
+  #undef  _WIN32_WINNT
   #define _WIN32_WINNT      0x0A00
+  #undef  _WIN32_IE
   #define _WIN32_IE         0x0A00
+  #undef  NTDDI_VERSION
   #define NTDDI_VERSION     0x0A000000
 #endif
 #ifndef _WIN32_WINDOWS

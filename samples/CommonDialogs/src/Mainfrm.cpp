@@ -23,6 +23,10 @@
 #include "StdApp.h"
 #include <io.h>
 
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
+#pragma warning (disable : 26812 )  // allow unscoped enums
+#endif
+
 /*============================================================================*/
     CMainFrame::
 CMainFrame()                                                                /*
@@ -1139,7 +1143,7 @@ UpdateMRUMenu()                                                             /*
       // find in the leftmost submenu (i.e., the one with index 0)
     CMenu fileMenu = GetFrameMenu().GetSubMenu(0);
       // compute the index of the last entry in the MRU list
-    int iLast = static_cast<int>(MIN(GetMRUSize(), m_maxMRU)) -  1;
+    int last = static_cast<int>(MIN(GetMRUSize(), m_maxMRU)) - 1;
       // if there is no leftmost submenu, or if there are no entries to
       // post, or if we cannot modify the first entry to indicate an empty
       // MRU list, we cannot proceed
@@ -1148,7 +1152,7 @@ UpdateMRUMenu()                                                             /*
         DrawMenuBar();
         return;
     }
-       // insert the empty MRU list label in the top slot
+      // insert the empty MRU list label in the top slot
     fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
         IDW_FILE_MRU_FILE1, _T("Recent Files"));
     fileMenu.EnableMenuItem(IDW_FILE_MRU_FILE1, MF_BYCOMMAND | MF_GRAYED);
@@ -1158,14 +1162,14 @@ UpdateMRUMenu()                                                             /*
         static_cast<int>(m_maxMRU); ++i)
         fileMenu.DeleteMenu(i, MF_BYCOMMAND);
       // if the list is not empty, there's more to do
-    if (iLast >= 0)
+    if (last >= 0)
     {
           // create the MRU "show" list, which contains only strings
           // of limited length, chars removed at the midpoint, as needed
         int maxlen = MAX_MENU_STRING - 10;
-        int mid    = maxlen / 2;
+        int mid = maxlen / 2;
         CString strMRUShow[16];
-        for (int i = 0; i <= iLast; i++)
+        for (int i = 0; i <= last; i++)
         {
             CString s = GetMRUEntries()[i];
             if (s.GetLength() > maxlen)
@@ -1183,13 +1187,13 @@ UpdateMRUMenu()                                                             /*
           // display the MRU items: start by replacing the first item
           // in the the list with the last MRU item
         fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
-            IDW_FILE_MRU_FILE1 + iLast, strMRUShow[iLast]);
+            static_cast<INT_PTR>(last) + IDW_FILE_MRU_FILE1, strMRUShow[last]);
           // now insert the remaining items in reverse order, starting
-          // at the next-to-iLast entry and  pushing all the others
+          // at the next-to-last entry and  pushing all the others
           // down in the menu (entries thus end up in the correct order)
-        for (int j = iLast - 1 ; j >= 0; iLast--, j--)
-            fileMenu.InsertMenu(IDW_FILE_MRU_FILE1 + iLast,
-                MF_BYCOMMAND, IDW_FILE_MRU_FILE1 + j,
+        for (int j = last - 1; j >= 0; last--, j--)
+            fileMenu.InsertMenu(IDW_FILE_MRU_FILE1 + last,
+                static_cast<INT_PTR>(j) + MF_BYCOMMAND, IDW_FILE_MRU_FILE1,
                 strMRUShow[j]);
     }
       // refresh the frame menu bar and  leave

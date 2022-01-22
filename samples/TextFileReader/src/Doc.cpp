@@ -22,6 +22,10 @@
 #include "stdafx.h"
 #include "StdApp.h"
 
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher
+#pragma warning ( disable : 26812 ) // allow unscoped enum types
+#endif
+
 /*============================================================================*/
     CDoc::
 CDoc()                                                                      /*
@@ -267,7 +271,8 @@ ReadABytes(Encoding encoding, UINT docsize, UINT offset)                    /*
 *-----------------------------------------------------------------------------*/
 {
       // add a terminating 0 to the buffer
-    m_buffer.resize(docsize + 1, '\0');
+    UINT newSize = docsize + 1;
+    m_buffer.resize(newSize, '\0');
       // determine the text conversion code page to use
     UINT CPage = ((encoding == UTF8wBOM || encoding == UTF8noBOM) ?
         CP_UTF8 : CP_ACP);
@@ -299,8 +304,9 @@ ReadWBytes(Encoding encoding, UINT doclen, UINT offset)                     /*
 {
     UINT length = doclen - offset;
     UINT size   = length / 2;
+    UINT size1  = size + 1;
       // copy the file character buffer into a wide-character array
-    std::vector<wchar_t> wideArray(size + 1, L'\0');
+    std::vector<wchar_t> wideArray(size1, L'\0');
     memcpy(&wideArray[0], &m_buffer[0] + offset, length);
       // declare the entry string that will be added to the document and scan
       // the wide array for end-of-line characters
