@@ -39,7 +39,7 @@ STDMETHODIMP CEventSink::QueryInterface(REFIID riid, void** ppvObject)
 // Not implemented. Retrieves an array of DISPID.
 STDMETHODIMP CEventSink::GetIDsOfNames(REFIID, OLECHAR**, unsigned int, LCID, DISPID* rgdispid)
 {
-    if (!rgdispid)
+    if (rgdispid != NULL)
         *rgdispid = DISPID_UNKNOWN;
 
     return DISP_E_UNKNOWNNAME;

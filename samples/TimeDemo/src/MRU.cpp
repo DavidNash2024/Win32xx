@@ -177,23 +177,21 @@ UpdateMenu()                                                                /*
 {
       // find in the leftmost submenu (i.e., the one with index 0)
     CMenu fileMenu = m_frameMenu.GetSubMenu(0);
-      // compute the index of the last entry in the MRU list
-    int last = static_cast<int>(MIN(m_MRUEntries.size(), m_maxMRU)) -  1;
-      // if there is no leftmost submenu, or if there are no entries to
-      // post, or if we cannot modify the first entry to indicate an empty
-      // MRU list, we cannot proceed
+      // if there is no leftmost submenu, we cannot proceed
     if (!fileMenu.GetHandle())
         return;
 
+      // compute thesize of the MRU list
+    size_t nMRU = MIN(m_MRUEntries.size(), m_maxMRU);
       // insert the empty MRU list label in the top slot
     fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
         IDW_FILE_MRU_FILE1, m_emptyMRUListLabel.c_str());
       // remove all the other MRU Menu entries
-    for (int i = IDW_FILE_MRU_FILE2; i <= IDW_FILE_MRU_FILE1 +
-        static_cast<int>(m_maxMRU); ++i)
+    for (UINT i = IDW_FILE_MRU_FILE2; i <= IDW_FILE_MRU_FILE1 +
+            static_cast<UINT>(m_maxMRU); ++i)
         fileMenu.DeleteMenu(i, MF_BYCOMMAND);
       // if the list is not empty, there's more to do
-    if (last >= 0)
+    if (nMRU > 0)
     {
           // create the MRU "show" list, which contains only strings
           // of limited length, chars removed at the midpoint, as needed
@@ -201,7 +199,8 @@ UpdateMenu()                                                                /*
         int mid = maxLength / 2;
 
         std::vector<CString> Names(m_maxMRU);
-        for (int i = 0; i <= last; i++)
+        UINT last = static_cast<UINT>(nMRU - 1);
+        for (UINT i = 0; i <= last; i++)
         {
             CString s = m_MRUEntries[i];
             if (s.GetLength() > maxLength)
@@ -215,18 +214,16 @@ UpdateMenu()                                                                /*
             v.Format(_T("%d "), i + 1);
             Names[i] = v + s;
         }
-
           // display the MRU items: start by replacing the first item
           // in the the list with the last MRU item
         fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
-            IDW_FILE_MRU_FILE1 + last, Names[last]);
-          // now insert the remaining items in reverse order, starting
-          // at the next-to-iLast entry and  pushing all the others
-          // down in the menu (entries thus end up in the correct order)
+            static_cast<INT_PTR>(last) + IDW_FILE_MRU_FILE1, Names[last]);
+          // Now insert the remaining items in reverse order, starting
+          // at the next-to-last entry and  pushing all the others
+          // down in the menu (entries thus end up in the correct order).
         for (int j = last - 1 ; j >= 0; last--, j--)
-            fileMenu.InsertMenu(IDW_FILE_MRU_FILE1 + last,
-                MF_BYCOMMAND, IDW_FILE_MRU_FILE1 + j,
-                Names[j]);
+            fileMenu.InsertMenu(last + IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
+                static_cast<INT_PTR>(j) + IDW_FILE_MRU_FILE1,  Names[j]);
     }
 }
 

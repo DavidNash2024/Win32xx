@@ -108,8 +108,9 @@ Serialize(CArchive &ar)                                                     /*
         CString face;
         ar >> f;    // recover the top part
         ar >> face; // recover the face name and put it in the LOGFONT
+        UINT size = face.GetLength() + 1;
         memcpy(lf.lfFaceName, face.c_str(),
-            (face.GetLength() + 1) * sizeof(TCHAR));
+            size * sizeof(TCHAR));
         m_font.CreateFontIndirect((const LOGFONT&)lf);
         SaveFontSize();
          // recover the rest

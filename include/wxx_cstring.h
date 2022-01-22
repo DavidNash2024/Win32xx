@@ -426,6 +426,27 @@ namespace Win32xx
             return str;
         }
 
+        CString SpanExcluding(LPCTSTR text) const
+        {
+            CString str;
+            str = CStringT<TCHAR>::SpanExcluding(text);
+            return str;
+        }
+
+        CString SpanIncluding(LPCTSTR text) const
+        {
+            CString str;
+            str = CStringT<TCHAR>::SpanIncluding(text);
+            return str;
+        }
+
+        CString Tokenize(LPCTSTR tokens, int& start) const
+        {
+            CString str;
+            str = CStringT<TCHAR>::Tokenize(tokens, start);
+            return str;
+        }
+
     };
 
 } // namespace Win32xx

@@ -17,6 +17,9 @@
 #include "stdafx.h"
 #include "App.h"
 
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)      // VS2019 or higher          // dn ...
+#pragma warning ( disable : 28251 ) // allow WinMain without annotations
+#endif                                                                         // dn ...
 
 /*******************************************************************************
 

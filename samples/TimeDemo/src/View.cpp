@@ -157,7 +157,7 @@ Serialize(CArchive& ar)                                                     /*
     else    // recovering
     {
           // recover m_hfFont
-        LOGFONT lf;
+        LOGFONT lf = {};
         ArchiveObject f(&lf, sizeof(LOGFONT));
         ar >> f;
         // recover view colors
