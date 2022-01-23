@@ -3,6 +3,10 @@
 //
 
 #include "stdafx.h"
+#include <dwmapi.h>
+#include <uxtheme.h>
+#include <vsstyle.h>
+#include <vssym32.h>
 #include "Mainfrm.h"
 #include "resource.h"
 

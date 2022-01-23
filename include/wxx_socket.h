@@ -138,11 +138,10 @@
 
 #include <WS2tcpip.h>
 
-#define THREAD_TIMEOUT 100
-
 
 namespace Win32xx
 {
+    const int THREAD_TIMEOUT = 100;
 
     typedef int  WINAPI GETADDRINFO(LPCSTR, LPCSTR, const struct addrinfo*, struct addrinfo**);
     typedef void WINAPI FREEADDRINFO(struct addrinfo*);

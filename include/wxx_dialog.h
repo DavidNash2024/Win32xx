@@ -161,8 +161,8 @@ namespace Win32xx
     //
 
     // Resize Dialog Styles
-#define RD_STRETCH_WIDTH        0x0001  // The item has a variable width
-#define RD_STRETCH_HEIGHT       0x0002  // The item has a variable height
+    const int RD_STRETCH_WIDTH  = 0x0001;  // The item has a variable width
+    const int RD_STRETCH_HEIGHT = 0x0002;  // The item has a variable height
 
     // Resize Dialog alignments
     enum Alignment {topleft, topright, bottomleft, bottomright, center, leftcenter, rightcenter, topcenter, bottomcenter };

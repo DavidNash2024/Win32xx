@@ -799,7 +799,7 @@ BOOL CMainFrame::OnBoxSet(UINT nID)
     {
         m_isDirty = true;
         MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(item);
-        pmi->boxset = (index < 0) ? L"" : boxsets[index];
+        pmi->boxset = (index < 0) ? L"" : boxsets[index].c_str();
         GetViewList().UpdateItemImage(item);
     }
 
