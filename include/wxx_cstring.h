@@ -107,13 +107,6 @@
 namespace Win32xx
 {
 
-    // Defines the maximum size for TCHAR strings
-    enum Constants
-    {
-        MAX_MENU_STRING = 80,
-        MAX_STRING_SIZE = 255
-    };
-
     /////////////////////////////////////////////////
     // CStringT is a class template used to implement
     // CStringA, CStringW and CString.

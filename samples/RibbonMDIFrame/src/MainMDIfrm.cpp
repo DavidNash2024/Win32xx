@@ -127,7 +127,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
         if (SUCCEEDED(hr))
             hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
         if (SUCCEEDED(hr))
-            GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
     }
 
     return result;
@@ -203,7 +203,7 @@ void CMainMDIFrame::OnMDIMaximized(BOOL isMax)
         if (SUCCEEDED(hr))
             hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
         if (SUCCEEDED(hr))
-            GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
+            hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
     }
 }
 
@@ -225,6 +225,7 @@ void CMainMDIFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimpleProper
         {
             // Retrieve color.
             PROPVARIANT var;
+            PropVariantInit(&var);
             if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
             {
                 if (GetActiveMDIChild())

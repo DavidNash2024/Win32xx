@@ -3,6 +3,10 @@
 //
 
 #include "stdafx.h"
+#include <dwmapi.h>
+#include <uxtheme.h>
+#include <vsstyle.h>
+#include <vssym32.h>
 #include "MiniFrame.h"
 #include "resource.h"
 
@@ -242,7 +246,7 @@ CRect CMiniFrame::GetTitlebarRect() const
     const int borders = 2;
     HTHEME theme = ::OpenThemeData(*this, L"WINDOW");
     UINT dpi = ::GetDpiForWindow(*this);
-    ::GetThemePartSize(theme, NULL, WP_CAPTION, CS_ACTIVE, NULL, TS_TRUE, &barSize);
+    ::GetThemePartSize(theme, NULL, WP_CAPTION, CS_ACTIVE, NULL, THEMESIZE::TS_TRUE, &barSize);
     ::CloseThemeData(theme);
     int height = dpi_scale(barSize.cy, dpi) + borders;
 

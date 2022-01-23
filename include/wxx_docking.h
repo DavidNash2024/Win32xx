@@ -78,27 +78,6 @@
 #endif
 
 
-// Docking Styles
-#define DS_DOCKED_LEFT          0x0001  // Dock the child left
-#define DS_DOCKED_RIGHT         0x0002  // Dock the child right
-#define DS_DOCKED_TOP           0x0004  // Dock the child top
-#define DS_DOCKED_BOTTOM        0x0008  // Dock the child bottom
-#define DS_NO_DOCKCHILD_LEFT    0x0010  // Prevent a child docking left
-#define DS_NO_DOCKCHILD_RIGHT   0x0020  // Prevent a child docking right
-#define DS_NO_DOCKCHILD_TOP     0x0040  // Prevent a child docking at the top
-#define DS_NO_DOCKCHILD_BOTTOM  0x0080  // Prevent a child docking at the bottom
-#define DS_NO_RESIZE            0x0100  // Prevent resizing
-#define DS_NO_CAPTION           0x0200  // Prevent display of caption when docked
-#define DS_NO_CLOSE             0x0400  // Prevent closing of a docker while docked
-#define DS_NO_UNDOCK            0x0800  // Prevent manual undocking of a docker
-#define DS_CLIENTEDGE           0x1000  // Has a 3D border when docked
-#define DS_NO_FIXED_RESIZE      0x2000  // Perform a proportional resize instead of a fixed size resize on dock children
-#define DS_DOCKED_CONTAINER     0x4000  // Dock a container within a container
-#define DS_DOCKED_LEFTMOST      0x10000 // Leftmost outer docking
-#define DS_DOCKED_RIGHTMOST     0x20000 // Rightmost outer docking
-#define DS_DOCKED_TOPMOST       0x40000 // Topmost outer docking
-#define DS_DOCKED_BOTTOMMOST    0x80000 // Bottommost outer docking
-
 // Required for Dev-C++
 #ifndef TME_NONCLIENT
   #define TME_NONCLIENT 0x00000010
@@ -113,10 +92,30 @@
 
 namespace Win32xx
 {
+    // Docking Styles
+    const int DS_DOCKED_LEFT         = 0x0001;  // Dock the child left
+    const int DS_DOCKED_RIGHT        = 0x0002;  // Dock the child right
+    const int DS_DOCKED_TOP          = 0x0004;  // Dock the child top
+    const int DS_DOCKED_BOTTOM       = 0x0008;  // Dock the child bottom
+    const int DS_NO_DOCKCHILD_LEFT   = 0x0010;  // Prevent a child docking left
+    const int DS_NO_DOCKCHILD_RIGHT  = 0x0020;  // Prevent a child docking right
+    const int DS_NO_DOCKCHILD_TOP    = 0x0040;  // Prevent a child docking at the top
+    const int DS_NO_DOCKCHILD_BOTTOM = 0x0080;  // Prevent a child docking at the bottom
+    const int DS_NO_RESIZE           = 0x0100;  // Prevent resizing
+    const int DS_NO_CAPTION          = 0x0200;  // Prevent display of caption when docked
+    const int DS_NO_CLOSE            = 0x0400;  // Prevent closing of a docker while docked
+    const int DS_NO_UNDOCK           = 0x0800;  // Prevent manual undocking of a docker
+    const int DS_CLIENTEDGE          = 0x1000;  // Has a 3D border when docked
+    const int DS_NO_FIXED_RESIZE     = 0x2000;  // Perform a proportional resize instead of a fixed size resize on dock children
+    const int DS_DOCKED_CONTAINER    = 0x4000;  // Dock a container within a container
+    const int DS_DOCKED_LEFTMOST     = 0x10000; // Leftmost outer docking
+    const int DS_DOCKED_RIGHTMOST    = 0x20000; // Rightmost outer docking
+    const int DS_DOCKED_TOPMOST      = 0x40000; // Topmost outer docking
+    const int DS_DOCKED_BOTTOMMOST   = 0x80000; // Bottommost outer docking
+
     // Class declarations
     class CDockContainer;
     class CDocker;
-
 
     struct ContainerInfo
     {
@@ -134,7 +133,6 @@ namespace Win32xx
     // toolbar, is displayed within the container parent's view page.
     class CDockContainer : public CTab
     {
-
     public:
 
         // Nested class. This is the Wnd for the window displayed over the client area
@@ -144,7 +142,6 @@ namespace Win32xx
         // whenever a different tab is selected.
         class CViewPage : public CWnd
         {
-
         public:
             CViewPage() : m_pContainer(NULL), m_pView(NULL), m_pTab(NULL) {}
             virtual ~CViewPage() {}
@@ -274,6 +271,7 @@ namespace Win32xx
     class CDocker : public CWnd
     {
     public:
+
         // A nested class for the splitter bar that separates the docked panes.
         class CDockBar : public CWnd
         {

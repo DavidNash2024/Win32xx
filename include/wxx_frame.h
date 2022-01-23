@@ -140,11 +140,7 @@ namespace Win32xx
     // Declarations of structures for themes
     //
 
-    // define some structs and enums from uxtheme.h, vssym32.h and vsstyle.h
-
-#ifndef _UXTHEME_H_
-
-    struct MARGINS
+    struct WXX_MARGINS
     {
         int cxLeftWidth;      // width of left border that retains its size
         int cxRightWidth;     // width of right border that retains its size
@@ -152,16 +148,7 @@ namespace Win32xx
         int cyBottomHeight;   // height of bottom border that retains its size
     };
 
-    enum THEMESIZE
-    {
-        TS_MIN,             // minimum size
-        TS_TRUE,            // size without stretching
-        TS_DRAW             // size that theme mgr will use to draw part
-    };
-
-#endif
-
-    class CMargins : public MARGINS
+    class CMargins : public WXX_MARGINS
     {
     public:
         CMargins(int cxLeft, int cxRight, int cyTop, int cyBottom)
@@ -182,60 +169,6 @@ namespace Win32xx
             cyTopHeight    = cyTop;     cyBottomHeight = cyBottom;
         }
     };
-
-    enum POPUPCHECKSTATES
-    {
-        MC_CHECKMARKNORMAL = 1,
-        MC_CHECKMARKDISABLED = 2,
-        MC_BULLETNORMAL = 3,
-        MC_BULLETDISABLED = 4
-    };
-
-    enum POPUPCHECKBACKGROUNDSTATES
-    {
-        MCB_DISABLED = 1,
-        MCB_NORMAL = 2,
-        MCB_BITMAP = 3
-    };
-
-    enum POPUPITEMSTATES
-    {
-        MPI_NORMAL = 1,
-        MPI_HOT = 2,
-        MPI_DISABLED = 3,
-        MPI_DISABLEDHOT = 4
-    };
-
-    enum POPUPSUBMENUSTATES
-    {
-        MSM_NORMAL = 1,
-        MSM_DISABLED = 2
-    };
-
-    enum MENUPARTS
-    {
-        MENU_MENUITEM_TMSCHEMA = 1,
-        MENU_MENUDROPDOWN_TMSCHEMA = 2,
-        MENU_MENUBARITEM_TMSCHEMA = 3,
-        MENU_MENUBARDROPDOWN_TMSCHEMA = 4,
-        MENU_CHEVRON_TMSCHEMA = 5,
-        MENU_SEPARATOR_TMSCHEMA = 6,
-        MENU_BARBACKGROUND = 7,
-        MENU_BARITEM = 8,
-        MENU_POPUPBACKGROUND = 9,
-        MENU_POPUPBORDERS = 10,
-        MENU_POPUPCHECK = 11,
-        MENU_POPUPCHECKBACKGROUND = 12,
-        MENU_POPUPGUTTER = 13,
-        MENU_POPUPITEM = 14,
-        MENU_POPUPSEPARATOR = 15,
-        MENU_POPUPSUBMENU = 16,
-        MENU_SYSTEMCLOSE = 17,
-        MENU_SYSTEMMAXIMIZE = 18,
-        MENU_SYSTEMMINIMIZE = 19,
-        MENU_SYSTEMRESTORE = 20
-    };
-
 
     struct MenuItemData
     // Each Dropdown menu item has this data.
@@ -261,6 +194,66 @@ namespace Win32xx
     // Win32++ custom themes are used to render menu items for systems without Aero.
     class CMenuMetrics
     {
+        enum POPUPCHECKBACKGROUNDSTATES
+        {
+            MCB_DISABLED = 1,
+            MCB_NORMAL = 2,
+            MCB_BITMAP = 3
+        };
+
+        enum POPUPCHECKSTATES
+        {
+            MC_CHECKMARKNORMAL = 1,
+            MC_CHECKMARKDISABLED = 2,
+            MC_BULLETNORMAL = 3,
+            MC_BULLETDISABLED = 4
+        };
+
+        enum POPUPITEMSTATES
+        {
+            MPI_NORMAL = 1,
+            MPI_HOT = 2,
+            MPI_DISABLED = 3,
+            MPI_DISABLEDHOT = 4
+        };
+
+        enum POPUPSUBMENUSTATES
+        {
+            MSM_NORMAL = 1,
+            MSM_DISABLED = 2
+        };
+
+        enum THEMESIZE
+        {
+            TS_MIN,             // minimum size
+            TS_TRUE,            // size without stretching
+            TS_DRAW             // size that theme mgr will use to draw part
+        };
+
+        enum MENUPARTS
+        {
+            MENU_MENUITEM_TMSCHEMA = 1,
+            MENU_MENUDROPDOWN_TMSCHEMA = 2,
+            MENU_MENUBARITEM_TMSCHEMA = 3,
+            MENU_MENUBARDROPDOWN_TMSCHEMA = 4,
+            MENU_CHEVRON_TMSCHEMA = 5,
+            MENU_SEPARATOR_TMSCHEMA = 6,
+            MENU_BARBACKGROUND = 7,
+            MENU_BARITEM = 8,
+            MENU_POPUPBACKGROUND = 9,
+            MENU_POPUPBORDERS = 10,
+            MENU_POPUPCHECK = 11,
+            MENU_POPUPCHECKBACKGROUND = 12,
+            MENU_POPUPGUTTER = 13,
+            MENU_POPUPITEM = 14,
+            MENU_POPUPSEPARATOR = 15,
+            MENU_POPUPSUBMENU = 16,
+            MENU_SYSTEMCLOSE = 17,
+            MENU_SYSTEMMAXIMIZE = 18,
+            MENU_SYSTEMMINIMIZE = 19,
+            MENU_SYSTEMRESTORE = 20
+        };
+
     public:
         CMenuMetrics();
         ~CMenuMetrics();
@@ -287,7 +280,7 @@ namespace Win32xx
         HRESULT DrawThemeText(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, DWORD textFlags2, LPCRECT pRect) const;
         HRESULT GetThemePartSize(HDC dc, int partID, int stateID, LPCRECT prc, THEMESIZE eSize, SIZE* psz) const;
         HRESULT GetThemeInt(int partID, int stateID, int propID, int* pVal) const;
-        HRESULT GetThemeMargins(HDC dc, int partID, int stateID, int propID, LPRECT prc, MARGINS* pMargins) const;
+        HRESULT GetThemeMargins(HDC dc, int partID, int stateID, int propID, LPRECT prc, WXX_MARGINS* pMargins) const;
         HRESULT GetThemeTextExtent(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const;
         BOOL    IsThemeBackgroundPartiallyTransparent(int partID, int stateID) const;
         HANDLE  OpenThemeData(HWND wnd, LPCWSTR pClassList) const;
@@ -310,7 +303,7 @@ namespace Win32xx
         typedef HRESULT WINAPI DRAWTHEMETEXT(HANDLE, HDC, int, int, LPCWSTR, int, DWORD, DWORD, LPCRECT);
         typedef HRESULT WINAPI GETTHEMEPARTSIZE(HANDLE, HDC, int, int, LPCRECT, THEMESIZE, SIZE*);
         typedef HRESULT WINAPI GETTHEMEINT(HANDLE, int, int, int, int*);
-        typedef HRESULT WINAPI GETTHEMEMARGINS(HANDLE, HDC, int, int, int, LPRECT, MARGINS*);
+        typedef HRESULT WINAPI GETTHEMEMARGINS(HANDLE, HDC, int, int, int, LPRECT, WXX_MARGINS*);
         typedef HRESULT WINAPI GETTHEMETEXTEXTENT(HANDLE, HDC, int, int, LPCWSTR, int, DWORD, LPCRECT, LPCRECT);
         typedef BOOL    WINAPI ISTHEMEBGPARTTRANSPARENT(HANDLE, int, int);
         typedef HANDLE  WINAPI OPENTHEMEDATA(HWND, LPCWSTR);
@@ -334,6 +327,29 @@ namespace Win32xx
     template <class T>
     class CFrameT : public T
     {
+        enum MENUPARTS
+        {
+            MENU_MENUITEM_TMSCHEMA = 1,
+            MENU_MENUDROPDOWN_TMSCHEMA = 2,
+            MENU_MENUBARITEM_TMSCHEMA = 3,
+            MENU_MENUBARDROPDOWN_TMSCHEMA = 4,
+            MENU_CHEVRON_TMSCHEMA = 5,
+            MENU_SEPARATOR_TMSCHEMA = 6,
+            MENU_BARBACKGROUND = 7,
+            MENU_BARITEM = 8,
+            MENU_POPUPBACKGROUND = 9,
+            MENU_POPUPBORDERS = 10,
+            MENU_POPUPCHECK = 11,
+            MENU_POPUPCHECKBACKGROUND = 12,
+            MENU_POPUPGUTTER = 13,
+            MENU_POPUPITEM = 14,
+            MENU_POPUPSEPARATOR = 15,
+            MENU_POPUPSUBMENU = 16,
+            MENU_SYSTEMCLOSE = 17,
+            MENU_SYSTEMMAXIMIZE = 18,
+            MENU_SYSTEMMINIMIZE = 19,
+            MENU_SYSTEMRESTORE = 20
+        };
 
     public:
 
@@ -768,7 +784,7 @@ namespace Win32xx
     }
 
     // Retrieves the value of a MARGINS property.
-    inline HRESULT CMenuMetrics::GetThemeMargins(HDC dc, int partID, int stateID, int propID, LPRECT prc, MARGINS* pMargins) const
+    inline HRESULT CMenuMetrics::GetThemeMargins(HDC dc, int partID, int stateID, int propID, LPRECT prc, WXX_MARGINS* pMargins) const
     {
         assert(m_theme);
         if (m_pfnGetThemeMargins)
