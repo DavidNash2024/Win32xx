@@ -181,7 +181,7 @@ namespace Win32xx
         MenuItemData() : menu(0), pos(0)
         {
             ZeroMemory(&mii, GetSizeofMenuItemInfo());
-            itemText.assign(MAX_MENU_STRING, _T('\0'));
+            itemText.assign(WXX_MAX_MENU_STRING, _T('\0'));
         }
         LPTSTR GetItemText() {return &itemText[0];}
     };
@@ -675,7 +675,7 @@ namespace Win32xx
 
         if (tab != -1)
         {
-            DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, itemText.Right(tab + 1), -1, DT_SINGLELINE | DT_RIGHT | DT_VCENTER | accel, 0, &textRect);
+            DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, itemText.Mid(tab + 1), -1, DT_SINGLELINE | DT_RIGHT | DT_VCENTER | accel, 0, &textRect);
         }
     }
 
@@ -1846,7 +1846,7 @@ namespace Win32xx
         // Draw text after tab, right aligned.
         if (tab != -1)
         {
-            DrawText(pDIS->hDC, itemText.Right(tab + 1), -1, textRect, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
+            DrawText(pDIS->hDC, itemText.Mid(tab + 1), -1, textRect, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
         }
 
         SetBkMode(pDIS->hDC, mode);
@@ -2064,22 +2064,22 @@ namespace Win32xx
 
         for (int item = 0 ; item < menuItemCount; ++item)
         {
-            std::vector<TCHAR> menuString( MAX_MENU_STRING+1, _T('\0') );
+            std::vector<TCHAR> menuString( WXX_MAX_MENU_STRING+1, _T('\0') );
             TCHAR* pMenuString = &menuString[0];
 
-            std::vector<TCHAR> strippedString( MAX_MENU_STRING+1, _T('\0') );
+            std::vector<TCHAR> strippedString( WXX_MAX_MENU_STRING+1, _T('\0') );
             TCHAR* pStrippedString = &strippedString.front();
 
             mii.fMask      = MIIM_TYPE;
             mii.fType      = MFT_STRING;
             mii.dwTypeData = pMenuString;
-            mii.cch        = MAX_MENU_STRING;
+            mii.cch        = WXX_MAX_MENU_STRING;
 
             // Fill the contents of szStr from the menu item.
             if (::GetMenuItemInfo(menu, item, TRUE, &mii))
             {
                 int len = lstrlen(pMenuString);
-                if (len <= MAX_MENU_STRING)
+                if (len <= WXX_MAX_MENU_STRING)
                 {
                     // Strip out any & characters.
                     int j = 0;
@@ -2554,7 +2554,7 @@ namespace Win32xx
             // Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility.
             mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU |MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
             mii.dwTypeData = pItem->GetItemText();  // Assign TCHAR pointer, text is assigned by GetMenuItemInfo.
-            mii.cch = MAX_MENU_STRING;
+            mii.cch = WXX_MAX_MENU_STRING;
 
             // Send message for menu updates.
             UINT menuItem = menu.GetMenuItemID(i);
@@ -3845,7 +3845,7 @@ namespace Win32xx
                 str = count + str;
 
                 // Trim the string if its too long.
-                if (str.GetLength() > MAX_MENU_STRING)
+                if (str.GetLength() > WXX_MAX_MENU_STRING)
                 {
                     // Extract the first part of the string up until the first '\\'
                     CString prefix;
@@ -3853,9 +3853,9 @@ namespace Win32xx
                     if (index >= 0)
                         prefix = str.Left(index + 1);
 
-                    // Reduce the string to fit within MAX_MENU_STRING.
+                    // Reduce the string to fit within WXX_MAX_MENU_STRING.
                     CString gap = _T("...");
-                    str.Delete(0, str.GetLength() - MAX_MENU_STRING + prefix.GetLength() + gap.GetLength()+1);
+                    str.Delete(0, str.GetLength() - WXX_MAX_MENU_STRING + prefix.GetLength() + gap.GetLength()+1);
 
                     // Remove the front of the string up to the next '\\' if any.
                     index = str.Find(_T('\\'));

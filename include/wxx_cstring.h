@@ -1337,7 +1337,7 @@ namespace Win32xx
             return static_cast<int>(m_str.rfind(text, end));
     }
 
-    // Extracts the right part of a string.
+    // Extracts count characters from the right part of the string.
     template <class T>
     inline CStringT<T> CStringT<T>::Right(int count) const
     {
@@ -1345,7 +1345,7 @@ namespace Win32xx
 
         CStringT str;
         count = MIN(count, GetLength());
-        str.m_str.assign(m_str, count, m_str.size() - count);
+        str.m_str.assign(m_str, m_str.size() - count, count);
         return str;
     }
 
