@@ -52,10 +52,10 @@
   #pragma warning ( pop )
 #endif // _MSC_VER
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)   // >= VS2005
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)   // >= VS2019
 #pragma warning ( push )
 #pragma warning ( disable : 26812 )            // enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+#endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
 
 namespace Win32xx
@@ -1281,9 +1281,9 @@ namespace Win32xx
 
 }
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#if defined (_MSC_VER) && (_MSC_VER >= 1920)
 #pragma warning ( pop )
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+#endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
 #endif  // _WIN32XX_WEBBROWSER_H_
 

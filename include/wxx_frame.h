@@ -256,7 +256,11 @@ namespace Win32xx
 
     public:
         CMenuMetrics();
-        ~CMenuMetrics();
+        virtual ~CMenuMetrics();
+
+        virtual void DrawVistaMenuBackground(LPDRAWITEMSTRUCT pDIS) const;
+        virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const;
+        virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const;
 
         CRect GetCheckBackgroundRect(const CRect& item) const;
         CRect GetCheckRect(const CRect& item) const;
@@ -327,30 +331,6 @@ namespace Win32xx
     template <class T>
     class CFrameT : public T
     {
-        enum MENUPARTS
-        {
-            MENU_MENUITEM_TMSCHEMA = 1,
-            MENU_MENUDROPDOWN_TMSCHEMA = 2,
-            MENU_MENUBARITEM_TMSCHEMA = 3,
-            MENU_MENUBARDROPDOWN_TMSCHEMA = 4,
-            MENU_CHEVRON_TMSCHEMA = 5,
-            MENU_SEPARATOR_TMSCHEMA = 6,
-            MENU_BARBACKGROUND = 7,
-            MENU_BARITEM = 8,
-            MENU_POPUPBACKGROUND = 9,
-            MENU_POPUPBORDERS = 10,
-            MENU_POPUPCHECK = 11,
-            MENU_POPUPCHECKBACKGROUND = 12,
-            MENU_POPUPGUTTER = 13,
-            MENU_POPUPITEM = 14,
-            MENU_POPUPSEPARATOR = 15,
-            MENU_POPUPSUBMENU = 16,
-            MENU_SYSTEMCLOSE = 17,
-            MENU_SYSTEMMAXIMIZE = 18,
-            MENU_SYSTEMMINIMIZE = 19,
-            MENU_SYSTEMRESTORE = 20
-        };
-
     public:
 
         struct InitValues
@@ -384,10 +364,11 @@ namespace Win32xx
         // If you need to modify the default behavior of the MenuBar, ReBar,
         // StatusBar or ToolBar, inherit from those classes, and override
         // the following attribute functions.
-        virtual CMenuBar& GetMenuBar()  const       { return m_menuBar; }
-        virtual CReBar& GetReBar() const            { return m_reBar; }
-        virtual CStatusBar& GetStatusBar() const    { return m_statusBar; }
-        virtual CToolBar& GetToolBar() const        { return m_toolBar; }
+        virtual CMenuBar& GetMenuBar()  const        { return m_menuBar; }
+        virtual CReBar& GetReBar() const             { return m_reBar; }
+        virtual CStatusBar& GetStatusBar() const     { return m_statusBar; }
+        virtual CToolBar& GetToolBar() const         { return m_toolBar; }
+        virtual CMenuMetrics& GetMenuMetrics() const { return m_menuMetrics; }
 
         // Non-virtual Attributes
         // These functions aren't virtual, and shouldn't be overridden.
@@ -396,7 +377,7 @@ namespace Win32xx
         const CMenu&  GetFrameMenu() const              { return m_menu; }
         const InitValues& GetInitValues() const         { return m_initValues; }
         const MenuTheme& GetMenuBarTheme() const        { return m_mbTheme; }
-        const CMenuMetrics& GetMenuMetrics() const      { return m_menuMetrics; }
+
         const std::vector<CString>& GetMRUEntries() const { return m_mruEntries; }
         CString GetMRUEntry(UINT index);
         UINT GetMRULimit() const                        { return m_maxMRU; }
@@ -528,6 +509,7 @@ namespace Win32xx
         mutable CReBar m_reBar;             // CReBar object
         mutable CStatusBar m_statusBar;     // CStatusBar object
         mutable CToolBar m_toolBar;         // CToolBar object
+        mutable CMenuMetrics m_menuMetrics; // The MenuMetrics object
         CMenu m_menu;                       // handle to the frame menu
         CFont m_menuBarFont;                // MenuBar font
         CFont m_statusBarFont;              // StatusBar font
@@ -549,8 +531,6 @@ namespace Win32xx
         HWND m_oldFocus;                    // The window which had focus prior to the app's deactivation
         BOOL m_drawArrowBkgrnd;             // True if a separate arrow background is to be drawn on toolbar
         HHOOK m_kbdHook;                    // Keyboard hook.
-
-        CMenuMetrics m_menuMetrics;         // The MenuMetrics object
         CImageList m_menuImages;            // Imagelist of menu icons
         CImageList m_menuDisabledImages;    // Imagelist of disabled menu icons
         BOOL m_useIndicatorStatus;          // set to TRUE to see indicators in status bar
@@ -634,6 +614,69 @@ namespace Win32xx
             return m_pfnDrawThemeText(m_theme, dc, partID, stateID, text, charCount, textFlags, textFlags2, pRect);
 
         return E_NOTIMPL;
+    }
+
+
+    inline void CMenuMetrics::DrawVistaMenuBackground(LPDRAWITEMSTRUCT pDIS) const
+    {
+        int stateID = ToItemStateId(pDIS->itemState);
+
+        if (IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, stateID))
+        {
+            DrawThemeBackground(pDIS->hDC, MENU_POPUPBACKGROUND, 0, &pDIS->rcItem, NULL);
+        }
+
+        // Draw the gutter.
+        CRect gutter = GetGutterRect(pDIS->rcItem);
+        if (IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, stateID))
+        {
+            DrawThemeBackground(pDIS->hDC, MENU_POPUPGUTTER, 0, &gutter, NULL);
+        }
+
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        if (pmid->mii.fType & MFT_SEPARATOR)
+        {
+            // Draw the separator.
+            CRect sepRect = GetSeperatorRect(pDIS->rcItem);
+            DrawThemeBackground(pDIS->hDC, MENU_POPUPSEPARATOR, 0, &sepRect, NULL);
+        }
+
+        CRect selRect = GetSelectionRect(pDIS->rcItem);
+        DrawThemeBackground(pDIS->hDC, MENU_POPUPITEM, stateID, &selRect, NULL);
+    }
+
+    inline void CMenuMetrics::DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const
+    {
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        int stateID = ToItemStateId(pDIS->itemState);
+        CRect rcCheckBackground = GetCheckBackgroundRect(pDIS->rcItem);
+        DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECKBACKGROUND, ToCheckBackgroundStateId(stateID), &rcCheckBackground, NULL);
+
+        CRect rcCheck = GetCheckRect(pDIS->rcItem);
+        DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECK, ToCheckStateId(pmid->mii.fType, stateID), &rcCheck, NULL);
+    }
+
+    inline void CMenuMetrics::DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const
+    {
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        CStringW itemText = CStringW(TtoW(pmid->GetItemText()));
+
+        // Calculate the text rect size.
+        CRect textRect = GetTextRect(pDIS->rcItem);
+
+        ULONG accel = ((pDIS->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
+        int stateID = ToItemStateId(pDIS->itemState);
+
+        // find the position of tab character.
+        int tab = itemText.Find(L'\t');
+
+        // Draw the item text before the tab.
+        DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, itemText, tab, DT_SINGLELINE | DT_LEFT | DT_VCENTER | accel, 0, &textRect);
+
+        if (tab != -1)
+        {
+            DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, itemText.Right(tab + 1), -1, DT_SINGLELINE | DT_RIGHT | DT_VCENTER | accel, 0, &textRect);
+        }
     }
 
     inline CRect CMenuMetrics::GetCheckBackgroundRect(const CRect& item) const
@@ -1593,53 +1636,52 @@ namespace Win32xx
     inline void CFrameT<T>::DrawMenuItem(LPDRAWITEMSTRUCT pDIS)
     {
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
-        int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
-        const MenuTheme& mbt = GetMenuBarTheme();
-        CDC drawDC(pDIS->hDC);
 
-        if (IsUsingVistaMenu() && GetMenuMetrics().IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, stateID))
-        {
-            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPBACKGROUND, 0, &pDIS->rcItem, NULL);
-        }
-
-        // Draw the gutter.
-        CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
         if (IsUsingVistaMenu())
-            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPGUTTER, 0, &gutter, NULL);
+        {
+            GetMenuMetrics().DrawVistaMenuBackground(pDIS);
+
+            if (!(pmid->mii.fType & MFT_SEPARATOR))
+            {
+                if (pDIS->itemState & ODS_CHECKED)
+                    GetMenuMetrics().DrawVistaMenuCheckmark(pDIS);
+
+                GetMenuMetrics().DrawVistaMenuText(pDIS);
+            }
+        }
         else
+        {
+            // Draw the gutter.
+            CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
+            CDC drawDC(pDIS->hDC);
+            const MenuTheme& mbt = GetMenuBarTheme();
             drawDC.GradientFill(mbt.clrPressed1, mbt.clrPressed2, gutter, TRUE);
 
-        if (pmid->mii.fType & MFT_SEPARATOR)
-        {
-            // Draw the separator.
-            if (IsUsingVistaMenu())
+            if (pmid->mii.fType & MFT_SEPARATOR)
             {
-                CRect sepRect = GetMenuMetrics().GetSeperatorRect(pDIS->rcItem);
-                GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPSEPARATOR, 0, &sepRect, NULL);
-            }
-            else
-            {
+                // Draw the separator.
                 CRect rc = pDIS->rcItem;
                 CRect sepRect = pDIS->rcItem;
                 sepRect.left = GetMenuMetrics().GetGutterRect(rc).Width();
-                drawDC.SolidFill(RGB(255,255,255), sepRect);
-                sepRect.top += (rc.bottom - rc.top)/2;
-                drawDC.DrawEdge(sepRect,  EDGE_ETCHED, BF_TOP);
+
+                drawDC.SolidFill(RGB(255, 255, 255), sepRect);
+                sepRect.top += (rc.bottom - rc.top) / 2;
+                drawDC.DrawEdge(sepRect, EDGE_ETCHED, BF_TOP);
+            }
+            else
+            {
+                DrawMenuItemBkgnd(pDIS);
+                DrawMenuItemText(pDIS);
+
+                if (pDIS->itemState & ODS_CHECKED)
+                    DrawMenuItemCheckmark(pDIS);
             }
         }
-        else
+
+        if (!(pmid->mii.fType & MFT_SEPARATOR))
         {
-            // Draw the item background.
-            DrawMenuItemBkgnd(pDIS);
-
-            // Draw Checkmark or icon.
-            if (pDIS->itemState & ODS_CHECKED)
-                DrawMenuItemCheckmark(pDIS);
-            else
+            if (!(pDIS->itemState & ODS_CHECKED))
                 DrawMenuItemIcon(pDIS);
-
-            // Draw the text.
-            DrawMenuItemText(pDIS);
         }
     }
 
@@ -1648,37 +1690,28 @@ namespace Win32xx
     inline void CFrameT<T>::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDIS)
     {
         // Draw the item background
-        CRect selRect = GetMenuMetrics().GetSelectionRect(pDIS->rcItem);
-        if (IsUsingVistaMenu())
+        BOOL isDisabled = pDIS->itemState & ODS_GRAYED;
+        BOOL isSelected = pDIS->itemState & ODS_SELECTED;
+        CRect drawRect = pDIS->rcItem;
+        CDC drawDC(pDIS->hDC);
+        const MenuTheme& mbt = GetMenuBarTheme();
+
+        if ((isSelected) && (!isDisabled))
         {
-            int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
-            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPITEM, stateID, &selRect, NULL);
+            // draw selected item background.
+            CBrush brush(mbt.clrHot1);
+            CBrush oldBrush = drawDC.SelectObject(brush);
+            CPen pen(PS_SOLID, 1, mbt.clrOutline);
+            CPen oldPen = drawDC.SelectObject(pen);
+            drawDC.Rectangle(drawRect.left, drawRect.top, drawRect.right, drawRect.bottom);
+            drawDC.SelectObject(oldBrush);
+            drawDC.SelectObject(oldPen);
         }
         else
         {
-            BOOL isDisabled = pDIS->itemState & ODS_GRAYED;
-            BOOL isSelected = pDIS->itemState & ODS_SELECTED;
-            CRect drawRect = pDIS->rcItem;
-            CDC drawDC(pDIS->hDC);
-            const MenuTheme& mbt = GetMenuBarTheme();
-
-            if ((isSelected) && (!isDisabled))
-            {
-                // draw selected item background.
-                CBrush brush(mbt.clrHot1);
-                CBrush oldBrush = drawDC.SelectObject(brush);
-                CPen pen(PS_SOLID, 1, mbt.clrOutline);
-                CPen oldPen = drawDC.SelectObject(pen);
-                drawDC.Rectangle(drawRect.left, drawRect.top, drawRect.right, drawRect.bottom);
-                drawDC.SelectObject(oldBrush);
-                drawDC.SelectObject(oldPen);
-            }
-            else
-            {
-                // draw non-selected item background.
-                drawRect.left = GetMenuMetrics().GetGutterRect(pDIS->rcItem).Width();
-                drawDC.SolidFill(RGB(255,255,255), drawRect);
-            }
+            // draw non-selected item background.
+            drawRect.left = GetMenuMetrics().GetGutterRect(pDIS->rcItem).Width();
+            drawDC.SolidFill(RGB(255,255,255), drawRect);
         }
     }
 
@@ -1693,70 +1726,52 @@ namespace Win32xx
         CRect bkRect;
         CDC drawDC(pDIS->hDC);
 
-        if (IsUsingVistaMenu())
-        {
-            int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
-            CRect rcCheckBackground = GetMenuMetrics().GetCheckBackgroundRect(pDIS->rcItem);
-            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECKBACKGROUND, GetMenuMetrics().ToCheckBackgroundStateId(stateID), &rcCheckBackground, NULL);
+        // Draw the checkmark's background rectangle first.
+        int xIcon = GetMenuMetrics().m_sizeCheck.cx;
+        int yIcon = GetMenuMetrics().m_sizeCheck.cy;
+        int left = GetMenuMetrics().m_marCheck.cxLeftWidth;
+        int top = rc.top + (rc.Height() - yIcon) / 2;
+        bkRect.SetRect(left, top, left + xIcon, top + yIcon);
 
-            CRect rcCheck = GetMenuMetrics().GetCheckRect(pDIS->rcItem);
-            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECK, GetMenuMetrics().ToCheckStateId(pmid->mii.fType, stateID), &rcCheck, NULL);
+        // Draw the checkmark's background rectangle.
+        drawDC.CreatePen(PS_SOLID, 1, mbt.clrOutline);
+        drawDC.CreateSolidBrush(mbt.clrHot2);
+        drawDC.Rectangle(bkRect.left, bkRect.top, bkRect.right, bkRect.bottom);
+
+        CMemDC memDC(drawDC);
+        int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
+        int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
+        memDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
+        CRect checkRect(0, 0, cxCheck, cyCheck);
+
+        // Copy the check mark bitmap to hdcMem.
+        if (MFT_RADIOCHECK == fType)
+            memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUBULLET);
+        else
+            memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUCHECK);
+
+        int xoffset = (bkRect.Width() - checkRect.Width()  +1) / 2;
+        int yoffset = (bkRect.Height() - checkRect.Height() +1) / 2;
+        if (MFT_RADIOCHECK != fType) yoffset--;
+
+        // Draw a white or black check mark as required.
+        // Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way.
+        CMemDC maskDC(drawDC);
+        maskDC.CreateCompatibleBitmap(drawDC, cxCheck, cyCheck);
+        maskDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, WHITENESS);
+
+        if ((pDIS->itemState & ODS_SELECTED))
+        {
+            // Draw a white checkmark
+            memDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, DSTINVERT);
+            maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
+            drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCPAINT);
         }
         else
         {
-            // Draw the checkmark's background rectangle first.
-            int xIcon = GetMenuMetrics().m_sizeCheck.cx;
-            int yIcon = GetMenuMetrics().m_sizeCheck.cy;
-            int left = GetMenuMetrics().m_marCheck.cxLeftWidth;
-            int top = rc.top + (rc.Height() - yIcon) / 2;
-            bkRect.SetRect(left, top, left + xIcon, top + yIcon);
-
-            CBrush brush(mbt.clrHot2);
-            CBrush oldBrush = drawDC.SelectObject(brush);
-            CPen pen(PS_SOLID, 1, mbt.clrOutline);
-            CPen oldPen = drawDC.SelectObject(pen);
-
-            // Draw the checkmark's background rectangle.
-            drawDC.Rectangle(bkRect.left, bkRect.top, bkRect.right, bkRect.bottom);
-
-            CMemDC memDC(drawDC);
-            int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
-            int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
-            memDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-            CRect checkRect(0, 0, cxCheck, cyCheck);
-
-            // Copy the check mark bitmap to hdcMem.
-            if (MFT_RADIOCHECK == fType)
-                memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUBULLET);
-            else
-                memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUCHECK);
-
-            int xoffset = (bkRect.Width() - checkRect.Width()  +1) / 2;
-            int yoffset = (bkRect.Height() - checkRect.Height() +1) / 2;
-            if (MFT_RADIOCHECK != fType) yoffset--;
-
-            // Draw a white or black check mark as required.
-            // Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way.
-            CMemDC maskDC(drawDC);
-            maskDC.CreateCompatibleBitmap(drawDC, cxCheck, cyCheck);
-            maskDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, WHITENESS);
-
-            if ((pDIS->itemState & ODS_SELECTED))
-            {
-                // Draw a white checkmark
-                memDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, DSTINVERT);
-                maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
-                drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCPAINT);
-            }
-            else
-            {
-                // Draw a black checkmark
-                maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
-                drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
-            }
-
-            drawDC.SelectObject(oldBrush);
-            drawDC.SelectObject(oldPen);
+            // Draw a black checkmark
+            maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
+            drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
         }
     }
 
@@ -1802,8 +1817,7 @@ namespace Win32xx
     inline void CFrameT<T>::DrawMenuItemText(LPDRAWITEMSTRUCT pDIS)
     {
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
-
-        LPCTSTR pItem = pmid->GetItemText();
+        CString itemText = pmid->GetItemText();
         BOOL isDisabled = pDIS->itemState & ODS_GRAYED;
         COLORREF colorText = GetSysColor(isDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
 
@@ -1811,53 +1825,31 @@ namespace Win32xx
         CRect textRect = GetMenuMetrics().GetTextRect(pDIS->rcItem);
 
         // find the position of tab character.
-        int tab = -1;
-        int len = lstrlen(pItem);
-        for (int i = 0; i < len; ++i)
-        {
-            if (_T('\t') == pItem[i])
-            {
-                tab = i;
-                break;
-            }
-        }
+        int tab = itemText.Find(_T('\t'));
 
         // Draw the item text.
-        if (IsUsingVistaMenu())
+        SetTextColor(pDIS->hDC, colorText);
+        int mode = SetBkMode(pDIS->hDC, TRANSPARENT);
+
+        UINT format = DT_VCENTER | DT_LEFT | DT_SINGLELINE;
+        // Turn on 'hide prefix' style for mouse navigation.
+        CMenuBar* pMenubar = reinterpret_cast<CMenuBar*>
+                             (::SendMessage(pDIS->hwndItem, UWM_GETCMENUBAR, 0, 0));
+        if (pMenubar != 0)
         {
-            ULONG accel = ((pDIS->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
-            int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
-
-            // Draw the item text before the tab.
-            GetMenuMetrics().DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, TtoW(pItem), tab, DT_SINGLELINE | DT_LEFT | DT_VCENTER | accel, 0, &textRect);
-
-            // Draw text after tab, right aligned.
-            if (tab != -1)
-                GetMenuMetrics().DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, TtoW(&pItem[tab + 1]), -1, DT_SINGLELINE | DT_RIGHT | DT_VCENTER | accel, 0, &textRect);
+            if (!m_altKeyPressed && !pMenubar->IsAltMode())
+                format |= DT_HIDEPREFIX;
         }
-        else
+
+        DrawText(pDIS->hDC, itemText, tab, textRect, format);
+
+        // Draw text after tab, right aligned.
+        if (tab != -1)
         {
-            SetTextColor(pDIS->hDC, colorText);
-            int mode = SetBkMode(pDIS->hDC, TRANSPARENT);
-
-            UINT format = DT_VCENTER | DT_LEFT | DT_SINGLELINE;
-            // Turn on 'hide prefix' style for mouse navigation.
-            CMenuBar* pMenubar = reinterpret_cast<CMenuBar*>
-                                 (::SendMessage(pDIS->hwndItem, UWM_GETCMENUBAR, 0, 0));
-            if (pMenubar != 0)
-            {
-                if (!m_altKeyPressed && !pMenubar->IsAltMode())
-                    format |= DT_HIDEPREFIX;
-            }
-
-            DrawText(pDIS->hDC, pItem, tab, textRect, format);
-
-            // Draw text after tab, right aligned.
-            if (tab != -1)
-                DrawText(pDIS->hDC, &pItem[tab + 1], -1, textRect, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
-
-            SetBkMode(pDIS->hDC, mode);
+            DrawText(pDIS->hDC, itemText.Right(tab + 1), -1, textRect, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
         }
+
+        SetBkMode(pDIS->hDC, mode);
     }
 
     // Draws the ReBar's background when ReBar themes are enabled.
