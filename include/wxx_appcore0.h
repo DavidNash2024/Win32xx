@@ -258,8 +258,8 @@ namespace Win32xx
     struct TLSData;
 
     // Define the maximum size for TCHAR strings
-    const int MAX_MENU_STRING = 80;
-    const int MAX_STRING_SIZE = 255;
+    const int WXX_MAX_MENU_STRING = 80;
+    const int WXX_MAX_STRING_SIZE = 255;
 
     // tString is a TCHAR std::string
     typedef std::basic_string<TCHAR> tString;

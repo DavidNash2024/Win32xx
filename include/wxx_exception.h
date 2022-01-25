@@ -104,8 +104,8 @@ namespace Win32xx
         virtual const char* what() const WXX_NOEXCEPT = 0; // pure virtual function
 
     private:
-        TCHAR m_text[MAX_STRING_SIZE];
-        TCHAR m_errorString[MAX_STRING_SIZE];
+        TCHAR m_text[WXX_MAX_STRING_SIZE];
+        TCHAR m_errorString[WXX_MAX_STRING_SIZE];
         DWORD m_messageID;
         DWORD m_error;
     };
@@ -127,7 +127,7 @@ namespace Win32xx
         virtual const char* what () const WXX_NOEXCEPT;
 
     private:
-        TCHAR m_filePath[MAX_STRING_SIZE];
+        TCHAR m_filePath[WXX_MAX_STRING_SIZE];
     };
 
 
@@ -198,12 +198,12 @@ namespace Win32xx
     inline CException::CException(int messageID) WXX_NOEXCEPT
             : m_messageID(messageID), m_error(::GetLastError())
     {
-        ZeroMemory(m_text, MAX_STRING_SIZE * sizeof(TCHAR));
-        ZeroMemory(m_errorString, MAX_STRING_SIZE * sizeof(TCHAR));
+        ZeroMemory(m_text, WXX_MAX_STRING_SIZE * sizeof(TCHAR));
+        ZeroMemory(m_errorString, WXX_MAX_STRING_SIZE * sizeof(TCHAR));
 
         // Store error information in m_errorString.
         DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessage(flags, NULL, m_error, 0, m_errorString, MAX_STRING_SIZE-1, NULL);
+        ::FormatMessage(flags, NULL, m_error, 0, m_errorString, WXX_MAX_STRING_SIZE-1, NULL);
     }
 
 
@@ -211,15 +211,15 @@ namespace Win32xx
     inline CException::CException(LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
             : m_messageID(messageID), m_error(::GetLastError())
     {
-        ZeroMemory(m_text, MAX_STRING_SIZE * sizeof(TCHAR));
-        ZeroMemory(m_errorString, MAX_STRING_SIZE * sizeof(TCHAR));
+        ZeroMemory(m_text, WXX_MAX_STRING_SIZE * sizeof(TCHAR));
+        ZeroMemory(m_errorString, WXX_MAX_STRING_SIZE * sizeof(TCHAR));
 
         if (text)
-            StrCopy(m_text, text, MAX_STRING_SIZE);
+            StrCopy(m_text, text, WXX_MAX_STRING_SIZE);
 
         // Store error information in m_errorString.
         DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessage(flags, NULL, m_error, 0, m_errorString, MAX_STRING_SIZE-1, NULL);
+        ::FormatMessage(flags, NULL, m_error, 0, m_errorString, WXX_MAX_STRING_SIZE-1, NULL);
     }
 
     // CException destructor.
@@ -261,14 +261,14 @@ namespace Win32xx
     inline CFileException::CFileException(LPCTSTR pFilePath, int messageID) WXX_NOEXCEPT
         : CException(messageID)
     {
-        ZeroMemory(m_filePath, MAX_STRING_SIZE * sizeof(TCHAR));
+        ZeroMemory(m_filePath, WXX_MAX_STRING_SIZE * sizeof(TCHAR));
 
         // Display some text in the debugger.
         ::OutputDebugString(_T("*** CFileException thrown ***\n"));
 
         if (pFilePath)
         {
-            StrCopy(m_filePath, pFilePath, MAX_STRING_SIZE);
+            StrCopy(m_filePath, pFilePath, WXX_MAX_STRING_SIZE);
             ::OutputDebugString(_T("File name: "));
             ::OutputDebugString(pFilePath);
             ::OutputDebugString(_T("\n"));
@@ -282,14 +282,14 @@ namespace Win32xx
     inline CFileException::CFileException(LPCTSTR pFilePath, LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
         : CException(text, messageID)
     {
-        ZeroMemory(m_filePath, MAX_STRING_SIZE * sizeof(TCHAR));
+        ZeroMemory(m_filePath, WXX_MAX_STRING_SIZE * sizeof(TCHAR));
 
         // Display some text in the debugger.
         ::OutputDebugString(_T("*** CFileException thrown ***\n"));
 
         if (pFilePath)
         {
-            StrCopy(m_filePath, pFilePath, MAX_STRING_SIZE);
+            StrCopy(m_filePath, pFilePath, WXX_MAX_STRING_SIZE);
             ::OutputDebugString(_T("File name: "));
             ::OutputDebugString(pFilePath);
             ::OutputDebugString(_T("\n"));

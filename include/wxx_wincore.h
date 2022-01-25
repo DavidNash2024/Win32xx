@@ -574,7 +574,7 @@ namespace Win32xx
         assert(IsWindow());
 
         CString str;
-        VERIFY(::GetClassName(*this, str.GetBuffer(MAX_STRING_SIZE), MAX_STRING_SIZE));
+        VERIFY(::GetClassName(*this, str.GetBuffer(WXX_MAX_STRING_SIZE), WXX_MAX_STRING_SIZE));
         str.ReleaseBuffer();
         return str;
     }
@@ -877,7 +877,7 @@ namespace Win32xx
     // class prior to window creation.
     inline BOOL CWnd::RegisterClass(WNDCLASS& wc)
     {
-        assert( ('\0' != wc.lpszClassName[0] && ( lstrlen(wc.lpszClassName) <=  MAX_STRING_SIZE) ) );
+        assert( ('\0' != wc.lpszClassName[0] && ( lstrlen(wc.lpszClassName) <=  WXX_MAX_STRING_SIZE) ) );
 
         // Check to see if this classname is already registered.
         WNDCLASS wcTest;

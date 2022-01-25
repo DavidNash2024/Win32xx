@@ -336,7 +336,7 @@ namespace Win32xx
     inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, HICON icon, UINT tabID)
     {
         assert(pView);
-        assert(lstrlen(pTabText) < MAX_MENU_STRING);
+        assert(lstrlen(pTabText) < WXX_MAX_MENU_STRING);
 
         m_tabViews.push_back(WndPtr(pView));
 
@@ -734,8 +734,8 @@ namespace Win32xx
             TCITEM tcItem;
             ZeroMemory(&tcItem, sizeof(tcItem));
             tcItem.mask = TCIF_TEXT |TCIF_IMAGE;
-            tcItem.cchTextMax = MAX_MENU_STRING;
-            tcItem.pszText = str.GetBuffer(MAX_MENU_STRING);
+            tcItem.cchTextMax = WXX_MAX_MENU_STRING;
+            tcItem.pszText = str.GetBuffer(WXX_MAX_MENU_STRING);
             GetItem(i, &tcItem);
             str.ReleaseBuffer();
             CSize TempSize = dcClient.GetTextExtentPoint32(str, lstrlen(str));
@@ -1772,7 +1772,7 @@ namespace Win32xx
     inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR pTabText, int mdiChildID /*= 0*/)
     {
         assert(pView); // Cannot add Null CWnd*
-        assert(lstrlen(pTabText) < MAX_MENU_STRING);
+        assert(lstrlen(pTabText) < WXX_MAX_MENU_STRING);
 
         GetTab().AddTabPage(pView, pTabText, 0, mdiChildID);
 

@@ -599,7 +599,7 @@ namespace Win32xx
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        int n = ::GetMenuString(m_pData->menu, itemID, string.GetBuffer(MAX_MENU_STRING), MAX_MENU_STRING, flags);
+        int n = ::GetMenuString(m_pData->menu, itemID, string.GetBuffer(WXX_MAX_MENU_STRING), WXX_MAX_MENU_STRING, flags);
         string.ReleaseBuffer();
         return n;
     }
