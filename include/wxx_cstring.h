@@ -76,19 +76,12 @@
 //          behave like a POD. Other compilers (such as the MinGW compiler) specifically
 //          prohibit the use of non POD types for functions with variable argument lists.
 //
-// 4) This class provides only limited support for the Multi-Byte Character Set (MBCS).
-//    MBCS strings can be searched using Find, FindOneOf, and ReverseFind by character.
-//    Searches of MBCS strings stop at the first embedded null. Editing the contents of
-//    MBCS strings is not supported. The MBCS character set should be considered deprecated.
-//    Unicode (UTF-16) should be used instead where possible.
-//
-// 5) This class provides a few additional functions:
+// 4) This class provides a few additional functions:
 //       c_str          Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
 //       GetErrorString Assigns CString to the error string for the specified System Error Code
 //                      (from ::GetLastError() for example).
 //       GetString      Returns a reference to the underlying std::basic_string<TCHAR>. This
 //                      reference can be used to modify the string directly.
-
 
 
 #ifndef _WIN32XX_CSTRING_H_
@@ -856,55 +849,34 @@ namespace Win32xx
     }
 
     // Finds a character in the string.
-    // Note: MBCS strings are only searched up to the first embedded null.
     template <class T>
     inline int CStringT<T>::Find(T ch, int index /* = 0 */) const
     {
         assert(index >= 0);
 
-#ifdef _MBCS
-        LPCSTR str = (LPCSTR)m_str.c_str();
-        LPCSTR subStr = strchr(str + index, ch);
-        return (subStr == NULL) ? -1 : static_cast<int>(subStr - str);
-#else
         size_t s = m_str.find(ch, index);
         return static_cast<int>(s);
-#endif
     }
 
     // Finds a substring within the string.
-    // Note: MBCS strings are only searched up to the first embedded null.
     template <class T>
     inline int CStringT<T>::Find(const T* text, int index /* = 0 */) const
     {
         assert(text != 0);
         assert(index >= 0);
 
-#ifdef _MBCS
-        LPCTSTR str = m_str.c_str();
-        LPCTSTR subStr = _tcsstr(str + index, text);
-        return (subStr == NULL) ? -1 : static_cast<int>(subStr - str);
-#else
         size_t s = m_str.find(text, index);
         return static_cast<int>(s);
-#endif
     }
 
     // Finds the first matching character from a set.
-    // Note: MBCS strings are only searched up to the first embedded null.
     template <class T>
     inline int CStringT<T>::FindOneOf(const T* text) const
     {
         assert(text != 0);
 
-#ifdef _MBCS
-        LPCTSTR str = m_str.c_str();
-        LPCTSTR subStr = _tcspbrk(str, text);
-        return (subStr == NULL) ? -1 : static_cast<int>(subStr - str);
-#else
         size_t s = m_str.find_first_of(text);
         return static_cast<int>(s);
-#endif
     }
 
     // Formats the string as sprintf does.
@@ -1345,27 +1317,14 @@ namespace Win32xx
     }
 
     // Search for a character within the string, starting from the end.
-    // Note: MBCS strings are only searched up to the first embedded null.
     template <class T>
     inline int CStringT<T>::ReverseFind(T ch, int end /* -1 */) const
     {
-#ifdef _MBCS
-        std::basic_string<T> string = m_str;
-        if (end != -1 && end < lstrlenT(m_str.c_str()))
-            string[end] = static_cast<T>(0);
-
-        LPCTSTR str = string.c_str();
-        LPCTSTR subStr = _tcsrchr(str, ch);
-        return (subStr == NULL) ? -1 : static_cast<int>(subStr - str);
-#else
         size_t found = m_str.rfind(ch, end);
         return static_cast<int>(found);
-#endif
-
     }
 
     // Search for a substring within the string, starting from the end.
-    // Note: MBCS strings should reverse find by character.
     template <class T>
     inline int CStringT<T>::ReverseFind(const T* text, int end /* = -1 */) const
     {
@@ -1386,7 +1345,7 @@ namespace Win32xx
 
         CStringT str;
         count = MIN(count, GetLength());
-        str.m_str.assign(m_str, m_str.size() - count, count);
+        str.m_str.assign(m_str, count, m_str.size() - count);
         return str;
     }
 
