@@ -38,13 +38,11 @@
 ////////////////////////////////////////////////////////
 // wxx_frame.h
 //  Declaration of the following classes:
-//  CMargins, CMenuMetrics, CFrameT, CFrame, and CDockFrame.
+//  CFrameT, CFrame, and CDockFrame.
 
-// The classes declared in this file support SDI (Single Document Interface)
-// frames on Win32/Win64 operating systems (not Windows CE). For Windows CE,
-// use wceframe.h instead. SDI frames are a simple frame which supports a
-// single view window. Refer to mdi.h for frames that support several
-// child windows.
+// The classes declared in this file support frames with the Single
+// Document Interface (SDI). Refer to wxx_mdi.h for support for the
+// Multiple Document Interface (MDI) frames.
 
 // CFrame inherits from CFrameT<CWnd>.
 // CFrameT uses each of the following classes:
@@ -87,32 +85,12 @@
 #include "wxx_menubar.h"
 #include "wxx_rebar.h"
 #include "wxx_regkey.h"
+#include "wxx_menumetrics.h"
 #include "default_resource.h"
 
 
 #ifndef RBN_MINMAX
   #define RBN_MINMAX (RBN_FIRST - 21)
-#endif
-#ifndef TMT_BORDERSIZE
-  #define TMT_BORDERSIZE    2403
-#endif
-#ifndef TMT_CONTENTMARGINS
-  #define TMT_CONTENTMARGINS    3602
-#endif
-#ifndef VSCLASS_MENU
-  #define VSCLASS_MENU  L"MENU"
-#endif
-#ifndef ODS_NOACCEL
-  #define ODS_NOACCEL 0x0100
-#endif
-#ifndef ODS_HOTLIGHT
-  #define ODS_HOTLIGHT 0x0040
-#endif
-#ifndef ODS_INACTIVE
-  #define ODS_INACTIVE 0x0080
-#endif
-#ifndef DT_HIDEPREFIX
-  #define DT_HIDEPREFIX 0x00100000
 #endif
 
 #ifndef WM_UNINITMENUPOPUP
@@ -128,108 +106,35 @@
 #endif
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1920)   // >= VS2019
-#pragma warning ( push )
-#pragma warning ( disable : 26812 )            // enum type is unscoped.
+  #pragma warning ( push )
+  #pragma warning ( disable : 26812 )            // enum type is unscoped.
 #endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
 
 namespace Win32xx
 {
 
-    ////////////////////////////////////////////////
-    // Declarations of structures for themes
-    //
-
-    struct WXX_MARGINS
-    {
-        int cxLeftWidth;      // width of left border that retains its size
-        int cxRightWidth;     // width of right border that retains its size
-        int cyTopHeight;      // height of top border that retains its size
-        int cyBottomHeight;   // height of bottom border that retains its size
-    };
-
-    class CMargins : public WXX_MARGINS
+    //////////////////////////////////
+    // CFrameT is the base class for all frames in Win32++.
+    // The template parameter T is either CWnd or CDocker.
+    template <class T>
+    class CFrameT : public T
     {
     public:
-        CMargins(int cxLeft, int cxRight, int cyTop, int cyBottom)
-        {
-            cxLeftWidth    = cxLeft;    cxRightWidth   = cxRight;
-            cyTopHeight    = cyTop;     cyBottomHeight = cyBottom;
-        }
-        CMargins()
-        {
-            cxLeftWidth    = 0;         cxRightWidth   = 0;
-            cyTopHeight    = 0;         cyBottomHeight = 0;
-        }
-        int Width() const       { return cxLeftWidth + cxRightWidth; }
-        int Height() const      { return cyTopHeight + cyBottomHeight; }
-        void SetMargins(int cxLeft, int cxRight, int cyTop, int cyBottom)
-        {
-            cxLeftWidth    = cxLeft;    cxRightWidth   = cxRight;
-            cyTopHeight    = cyTop;     cyBottomHeight = cyBottom;
-        }
-    };
 
-    struct MenuItemData
-    // Each Dropdown menu item has this data.
-    {
-        HMENU menu;
-        MENUITEMINFO mii;
-        UINT  pos;
-        std::vector<TCHAR> itemText;
-
-        MenuItemData() : menu(0), pos(0)
+        struct InitValues
         {
-            ZeroMemory(&mii, GetSizeofMenuItemInfo());
-            itemText.assign(WXX_MAX_MENU_STRING, _T('\0'));
-        }
-        LPTSTR GetItemText() {return &itemText[0];}
-    };
+            CRect position;
+            int   showCmd;
+            BOOL  showStatusBar;
+            BOOL  showToolBar;
 
-
-    ////////////////////////////////////////////////////////////////////////////////
-    // CMenuMetrics is used by CFrameT to retrieve the size of the components
-    // used to perform owner-drawing of menu items.  Windows Visual Styles
-    // are used to render menu items for systems running Aero (Vista and above).
-    // Win32++ custom themes are used to render menu items for systems without Aero.
-    class CMenuMetrics
-    {
-        enum POPUPCHECKBACKGROUNDSTATES
-        {
-            MCB_DISABLED = 1,
-            MCB_NORMAL = 2,
-            MCB_BITMAP = 3
+            // Display StatusBar and ToolBar by default
+            InitValues() : showCmd(SW_SHOW), showStatusBar(TRUE), showToolBar(TRUE) {}  // constructor
         };
 
-        enum POPUPCHECKSTATES
-        {
-            MC_CHECKMARKNORMAL = 1,
-            MC_CHECKMARKDISABLED = 2,
-            MC_BULLETNORMAL = 3,
-            MC_BULLETDISABLED = 4
-        };
-
-        enum POPUPITEMSTATES
-        {
-            MPI_NORMAL = 1,
-            MPI_HOT = 2,
-            MPI_DISABLED = 3,
-            MPI_DISABLEDHOT = 4
-        };
-
-        enum POPUPSUBMENUSTATES
-        {
-            MSM_NORMAL = 1,
-            MSM_DISABLED = 2
-        };
-
-        enum THEMESIZE
-        {
-            TS_MIN,             // minimum size
-            TS_TRUE,            // size without stretching
-            TS_DRAW             // size that theme mgr will use to draw part
-        };
-
+        // A local copy of the MENUPARTS enum from uxtheme.h. It's declared within
+        // the CFrameT class to avoid name clashes when uxtheme.h is included.
         enum MENUPARTS
         {
             MENU_MENUITEM_TMSCHEMA = 1,
@@ -252,96 +157,6 @@ namespace Win32xx
             MENU_SYSTEMMAXIMIZE = 18,
             MENU_SYSTEMMINIMIZE = 19,
             MENU_SYSTEMRESTORE = 20
-        };
-
-    public:
-        CMenuMetrics();
-        virtual ~CMenuMetrics();
-
-        virtual void DrawVistaMenuBackground(LPDRAWITEMSTRUCT pDIS) const;
-        virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const;
-        virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const;
-
-        CRect GetCheckBackgroundRect(const CRect& item) const;
-        CRect GetCheckRect(const CRect& item) const;
-        CRect GetGutterRect(const CRect& item) const;
-        CSize GetItemSize(MenuItemData* pmd) const;
-        CRect GetSelectionRect(const CRect& item) const;
-        CRect GetSeperatorRect(const CRect& item) const;
-        CRect GetTextRect(const CRect& item) const;
-        CSize GetTextSize(MenuItemData* pmd) const;
-        void  Initialize(HWND frame);
-        BOOL  IsVistaMenu() const;
-        CRect ScaleRect(const CRect& item) const;
-        CSize ScaleSize(const CSize& item) const;
-        int   ToItemStateId(UINT itemState) const;
-        int   ToCheckBackgroundStateId(int stateID) const;
-        int   ToCheckStateId(UINT type, int stateID) const;
-
-        // Wrappers for Windows API functions.
-        HRESULT CloseThemeData() const;
-        HRESULT DrawThemeBackground(HDC dc, int partID, int stateID, const RECT* pRect, const RECT* pClipRect) const;
-        HRESULT DrawThemeText(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, DWORD textFlags2, LPCRECT pRect) const;
-        HRESULT GetThemePartSize(HDC dc, int partID, int stateID, LPCRECT prc, THEMESIZE eSize, SIZE* psz) const;
-        HRESULT GetThemeInt(int partID, int stateID, int propID, int* pVal) const;
-        HRESULT GetThemeMargins(HDC dc, int partID, int stateID, int propID, LPRECT prc, WXX_MARGINS* pMargins) const;
-        HRESULT GetThemeTextExtent(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const;
-        BOOL    IsThemeBackgroundPartiallyTransparent(int partID, int stateID) const;
-        HANDLE  OpenThemeData(HWND wnd, LPCWSTR pClassList) const;
-
-        HANDLE  m_theme;                // Theme handle
-        HWND    m_frame;                // Handle to the frame window
-        HMODULE m_uxTheme;              // Module handle to the UXTheme dll
-
-        CMargins m_marCheck;            // Check margins
-        CMargins m_marCheckBackground;  // Check background margins
-        CMargins m_marItem;             // Item margins
-        CMargins m_marText;             // Text margins
-
-        CSize   m_sizeCheck;            // Check size metric
-        CSize   m_sizeSeparator;        // Separator size metric
-
-    private:
-        typedef HRESULT WINAPI CLOSETHEMEDATA(HANDLE);
-        typedef HRESULT WINAPI DRAWTHEMEBACKGROUND(HANDLE, HDC, int, int, const RECT*, const RECT*);
-        typedef HRESULT WINAPI DRAWTHEMETEXT(HANDLE, HDC, int, int, LPCWSTR, int, DWORD, DWORD, LPCRECT);
-        typedef HRESULT WINAPI GETTHEMEPARTSIZE(HANDLE, HDC, int, int, LPCRECT, THEMESIZE, SIZE*);
-        typedef HRESULT WINAPI GETTHEMEINT(HANDLE, int, int, int, int*);
-        typedef HRESULT WINAPI GETTHEMEMARGINS(HANDLE, HDC, int, int, int, LPRECT, WXX_MARGINS*);
-        typedef HRESULT WINAPI GETTHEMETEXTEXTENT(HANDLE, HDC, int, int, LPCWSTR, int, DWORD, LPCRECT, LPCRECT);
-        typedef BOOL    WINAPI ISTHEMEBGPARTTRANSPARENT(HANDLE, int, int);
-        typedef HANDLE  WINAPI OPENTHEMEDATA(HWND, LPCWSTR);
-
-        // Pointers to functions defined in uxTheme.dll
-        CLOSETHEMEDATA*           m_pfnCloseThemeData;
-        DRAWTHEMEBACKGROUND*      m_pfnDrawThemeBackground;
-        DRAWTHEMETEXT*            m_pfnDrawThemeText;
-        GETTHEMEPARTSIZE*         m_pfnGetThemePartSize;
-        GETTHEMEINT*              m_pfnGetThemeInt;
-        GETTHEMEMARGINS*          m_pfnGetThemeMargins;
-        GETTHEMETEXTEXTENT*       m_pfnGetThemeTextExtent;
-        ISTHEMEBGPARTTRANSPARENT* m_pfnIsThemeBGPartTransparent;
-        OPENTHEMEDATA*            m_pfnOpenThemeData;
-    };
-
-
-    //////////////////////////////////
-    // CFrameT is the base class for all frames in Win32++.
-    // The template parameter T is either CWnd or CDocker.
-    template <class T>
-    class CFrameT : public T
-    {
-    public:
-
-        struct InitValues
-        {
-            CRect position;
-            int   showCmd;
-            BOOL  showStatusBar;
-            BOOL  showToolBar;
-
-            // Display StatusBar and ToolBar by default
-            InitValues() : showCmd(SW_SHOW), showStatusBar(TRUE), showToolBar(TRUE) {}  // constructor
         };
 
         CFrameT();
@@ -368,7 +183,6 @@ namespace Win32xx
         virtual CReBar& GetReBar() const             { return m_reBar; }
         virtual CStatusBar& GetStatusBar() const     { return m_statusBar; }
         virtual CToolBar& GetToolBar() const         { return m_toolBar; }
-        virtual CMenuMetrics& GetMenuMetrics() const { return m_menuMetrics; }
 
         // Non-virtual Attributes
         // These functions aren't virtual, and shouldn't be overridden.
@@ -377,7 +191,7 @@ namespace Win32xx
         const CMenu&  GetFrameMenu() const              { return m_menu; }
         const InitValues& GetInitValues() const         { return m_initValues; }
         const MenuTheme& GetMenuBarTheme() const        { return m_mbTheme; }
-
+        const CMenuMetrics& GetMenuMetrics() const      { return m_menuMetrics; }
         const std::vector<CString>& GetMRUEntries() const { return m_mruEntries; }
         CString GetMRUEntry(UINT index);
         UINT GetMRULimit() const                        { return m_maxMRU; }
@@ -421,6 +235,9 @@ namespace Win32xx
         virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pDIS);
         virtual BOOL DrawReBarBkgnd(CDC& dc, CReBar& reBar);
         virtual BOOL DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusBar);
+        virtual void DrawVistaMenuBackground(LPDRAWITEMSTRUCT pDIS) const;
+        virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const;
+        virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const;
         virtual int  GetMenuItemPos(HMENU menu, LPCTSTR pItem) const;
         virtual BOOL LoadRegistrySettings(LPCTSTR pKeyName);
         virtual BOOL LoadRegistryMRUSettings(UINT maxMRU = 0);
@@ -509,7 +326,6 @@ namespace Win32xx
         mutable CReBar m_reBar;             // CReBar object
         mutable CStatusBar m_statusBar;     // CStatusBar object
         mutable CToolBar m_toolBar;         // CToolBar object
-        mutable CMenuMetrics m_menuMetrics; // The MenuMetrics object
         CMenu m_menu;                       // handle to the frame menu
         CFont m_menuBarFont;                // MenuBar font
         CFont m_statusBarFont;              // StatusBar font
@@ -531,6 +347,8 @@ namespace Win32xx
         HWND m_oldFocus;                    // The window which had focus prior to the app's deactivation
         BOOL m_drawArrowBkgrnd;             // True if a separate arrow background is to be drawn on toolbar
         HHOOK m_kbdHook;                    // Keyboard hook.
+
+        CMenuMetrics m_menuMetrics;         // The MenuMetrics object
         CImageList m_menuImages;            // Imagelist of menu icons
         CImageList m_menuDisabledImages;    // Imagelist of disabled menu icons
         BOOL m_useIndicatorStatus;          // set to TRUE to see indicators in status bar
@@ -567,455 +385,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
-    //////////////////////////////////////////
-    // Definitions for the CMenuMetrics class.
-    //
-    inline CMenuMetrics::CMenuMetrics() : m_theme(0), m_uxTheme(0), m_pfnCloseThemeData(0), m_pfnDrawThemeBackground(0),
-                                            m_pfnDrawThemeText(0), m_pfnGetThemePartSize(0), m_pfnGetThemeInt(0), m_pfnGetThemeMargins(0),
-                                            m_pfnGetThemeTextExtent(0), m_pfnIsThemeBGPartTransparent(0), m_pfnOpenThemeData(0)
-    {
-        m_frame = 0;
-    }
-
-    inline CMenuMetrics::~CMenuMetrics()
-    {
-        if (m_theme != 0)
-            CloseThemeData();
-
-        if (m_uxTheme != 0)
-            ::FreeLibrary(m_uxTheme);
-    }
-
-    // Closes the theme data handle.
-    inline HRESULT CMenuMetrics::CloseThemeData() const
-    {
-        if (m_pfnCloseThemeData)
-            return m_pfnCloseThemeData(m_theme);
-
-        return E_NOTIMPL;
-    }
-
-    // Draws the border and fill defined by the visual style for the specified control part.
-    inline HRESULT CMenuMetrics::DrawThemeBackground(HDC dc, int partID, int stateID, const RECT *pRect, const RECT *pClipRect) const
-    {
-        assert(m_theme);
-        if (m_pfnDrawThemeBackground)
-            return m_pfnDrawThemeBackground(m_theme, dc, partID, stateID, pRect, pClipRect);
-
-        return E_NOTIMPL;
-    }
-
-    // Draws text using the color and font defined by the visual style.
-    inline HRESULT CMenuMetrics::DrawThemeText(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, DWORD textFlags2, LPCRECT pRect) const
-    {
-        assert(m_theme);
-        if (m_pfnDrawThemeText)
-            return m_pfnDrawThemeText(m_theme, dc, partID, stateID, text, charCount, textFlags, textFlags2, pRect);
-
-        return E_NOTIMPL;
-    }
-
-
-    inline void CMenuMetrics::DrawVistaMenuBackground(LPDRAWITEMSTRUCT pDIS) const
-    {
-        int stateID = ToItemStateId(pDIS->itemState);
-
-        if (IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, stateID))
-        {
-            DrawThemeBackground(pDIS->hDC, MENU_POPUPBACKGROUND, 0, &pDIS->rcItem, NULL);
-        }
-
-        // Draw the gutter.
-        CRect gutter = GetGutterRect(pDIS->rcItem);
-        if (IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, stateID))
-        {
-            DrawThemeBackground(pDIS->hDC, MENU_POPUPGUTTER, 0, &gutter, NULL);
-        }
-
-        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
-        if (pmid->mii.fType & MFT_SEPARATOR)
-        {
-            // Draw the separator.
-            CRect sepRect = GetSeperatorRect(pDIS->rcItem);
-            DrawThemeBackground(pDIS->hDC, MENU_POPUPSEPARATOR, 0, &sepRect, NULL);
-        }
-
-        CRect selRect = GetSelectionRect(pDIS->rcItem);
-        DrawThemeBackground(pDIS->hDC, MENU_POPUPITEM, stateID, &selRect, NULL);
-    }
-
-    inline void CMenuMetrics::DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const
-    {
-        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
-        int stateID = ToItemStateId(pDIS->itemState);
-        CRect rcCheckBackground = GetCheckBackgroundRect(pDIS->rcItem);
-        DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECKBACKGROUND, ToCheckBackgroundStateId(stateID), &rcCheckBackground, NULL);
-
-        CRect rcCheck = GetCheckRect(pDIS->rcItem);
-        DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECK, ToCheckStateId(pmid->mii.fType, stateID), &rcCheck, NULL);
-    }
-
-    inline void CMenuMetrics::DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const
-    {
-        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
-        CStringW itemText = CStringW(TtoW(pmid->GetItemText()));
-
-        // Calculate the text rect size.
-        CRect textRect = GetTextRect(pDIS->rcItem);
-
-        ULONG accel = ((pDIS->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
-        int stateID = ToItemStateId(pDIS->itemState);
-
-        // find the position of tab character.
-        int tab = itemText.Find(L'\t');
-
-        // Draw the item text before the tab.
-        DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, itemText, tab, DT_SINGLELINE | DT_LEFT | DT_VCENTER | accel, 0, &textRect);
-
-        if (tab != -1)
-        {
-            DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, itemText.Mid(tab + 1), -1, DT_SINGLELINE | DT_RIGHT | DT_VCENTER | accel, 0, &textRect);
-        }
-    }
-
-    inline CRect CMenuMetrics::GetCheckBackgroundRect(const CRect& item) const
-    {
-        int cx = m_sizeCheck.cx + m_marCheck.Width();
-        int cy = m_sizeCheck.cy + m_marCheck.Height();
-
-        int x = item.left + m_marCheckBackground.cxLeftWidth;
-        int y = item.top + (item.Height() - cy) / 2;
-
-        return CRect(x, y, x + cx, y + cy);
-    }
-
-    inline CRect CMenuMetrics::GetGutterRect(const CRect& item) const
-    {
-        int x = item.left;
-        int y = item.top;
-        int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() + m_marCheck.Width() + m_sizeCheck.cx;
-        int cy = item.Height();
-
-        return CRect(x, y, x + cx, y + cy);
-    }
-
-    inline CRect CMenuMetrics::GetCheckRect(const CRect& item) const
-    {
-        int x = item.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth;
-        int y = item.top + (item.Height() - m_sizeCheck.cy) / 2;
-
-        return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
-    }
-
-    // Retrieve the size of the menu item
-    inline CSize CMenuMetrics::GetItemSize(MenuItemData* pmd) const
-    {
-        CSize size;
-
-        // Add icon/check width.
-        size.cx += m_sizeCheck.cx + m_marCheckBackground.Width() + m_marCheck.Width();
-
-        if (pmd->mii.fType & MFT_SEPARATOR)
-        {
-            // separator height
-            size.cy = m_sizeSeparator.cy + m_marItem.Height();
-        }
-        else
-        {
-            // Add check background horizontal padding.
-            size.cx += m_marCheckBackground.Width();
-
-            // Add selection margin padding.
-            size.cx += m_marItem.Width();
-
-            // Account for text size
-            CSize sizeText = ScaleSize(GetTextSize(pmd));
-            size.cx += sizeText.cx;
-            size.cy = MAX(size.cy, sizeText.cy);
-
-            // Account for icon or check height.
-            size.cy = MAX(size.cy, m_sizeCheck.cy + m_marCheckBackground.Height() + m_marCheck.Height());
-        }
-
-        return (size);
-    }
-
-    inline CRect CMenuMetrics::GetSelectionRect(const CRect& item) const
-    {
-        int x = item.left + m_marItem.cxLeftWidth;
-        int y = item.top;
-
-        return CRect(x, y, item.right - m_marItem.cxRightWidth, y + item.Height());
-    }
-
-    inline CRect CMenuMetrics::GetSeperatorRect(const CRect& item) const
-    {
-        int left = GetGutterRect(item).right;
-        int top = item.top;
-        int right = item.right - m_marItem.cxRightWidth;
-        int bottom = item.top + m_sizeSeparator.cy;
-
-        return CRect(left, top, right, bottom);
-    }
-
-    inline CSize CMenuMetrics::GetTextSize(MenuItemData* pmd) const
-    {
-        CSize sizeText;
-        assert(m_frame);
-        CClientDC DesktopDC(0);
-        LPCTSTR szItemText = pmd->GetItemText();
-
-        if (IsVistaMenu())
-        {
-            CRect rcText;
-            GetThemeTextExtent(DesktopDC, MENU_POPUPITEM, 0, TtoW(szItemText), lstrlen(szItemText),
-                DT_LEFT | DT_SINGLELINE, NULL, &rcText);
-
-            sizeText.SetSize(rcText.right + m_marText.Width(), rcText.bottom + m_marText.Height());
-        }
-        else
-        {
-            // Get the font used in menu items.
-            NONCLIENTMETRICS info = GetNonClientMetrics();
-
-            // Default menu items are bold, so take this into account.
-            if (static_cast<int>(::GetMenuDefaultItem(pmd->menu, TRUE, GMDI_USEDISABLED)) != -1)
-                info.lfMenuFont.lfWeight = FW_BOLD;
-
-            // Calculate the size of the text.
-            DesktopDC.CreateFontIndirect(info.lfMenuFont);
-            sizeText = DesktopDC.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
-            sizeText.cx += m_marText.cxRightWidth;
-            sizeText.cy += m_marText.Height();
-        }
-
-        if (_tcschr(szItemText, _T('\t')))
-            sizeText.cx += 8;   // Add POST_TEXT_GAP if the text includes a tab.
-
-        return sizeText;
-    }
-
-    inline CRect CMenuMetrics::GetTextRect(const CRect& item) const
-    {
-        int left = GetGutterRect(item).Width() + m_marText.cxLeftWidth;
-        int top = item.top + m_marText.cyTopHeight;
-        int right = item.right - m_marItem.cxRightWidth - m_marText.cxRightWidth;
-        int bottom = item.bottom - m_marText.cyBottomHeight;
-
-        return CRect(left, top, right, bottom);
-    }
-
-    // Calculates the original size of the part defined by a visual style.
-    inline HRESULT CMenuMetrics::GetThemePartSize(HDC dc, int partID, int stateID, LPCRECT prc, THEMESIZE eSize, SIZE* psz) const
-    {
-        assert(m_theme);
-        if (m_pfnGetThemePartSize)
-            return m_pfnGetThemePartSize(m_theme, dc, partID, stateID, prc, eSize, psz);
-
-        return E_NOTIMPL;
-    }
-
-    // Retrieves the value of an int property.
-    inline HRESULT CMenuMetrics::GetThemeInt(int partID, int stateID, int propID, int* pVal) const
-    {
-        assert(m_theme);
-        if (m_pfnGetThemeInt)
-            return m_pfnGetThemeInt(m_theme, partID, stateID, propID, pVal);
-
-        return E_NOTIMPL;
-    }
-
-    // Retrieves the value of a MARGINS property.
-    inline HRESULT CMenuMetrics::GetThemeMargins(HDC dc, int partID, int stateID, int propID, LPRECT prc, WXX_MARGINS* pMargins) const
-    {
-        assert(m_theme);
-        if (m_pfnGetThemeMargins)
-            return m_pfnGetThemeMargins(m_theme, dc, partID, stateID, propID, prc, pMargins);
-
-        return E_NOTIMPL;
-    }
-
-    // Calculates the size and location of the specified text when rendered in the visual style font.
-    inline HRESULT CMenuMetrics::GetThemeTextExtent(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const
-    {
-        assert(m_theme);
-        if (m_pfnGetThemeTextExtent)
-            return m_pfnGetThemeTextExtent(m_theme, dc, partID, stateID, text, charCount, textFlags, pBoundingRect, pExtentRect);
-
-        return E_NOTIMPL;
-    }
-
-    inline void CMenuMetrics::Initialize(HWND frame)
-    {
-        assert(IsWindow(frame));
-        m_frame = frame;
-
-        if (m_uxTheme == 0)
-            m_uxTheme = ::LoadLibrary(_T("UXTHEME.DLL"));
-
-        if (m_uxTheme != 0)
-        {
-            m_pfnCloseThemeData = reinterpret_cast<CLOSETHEMEDATA*>(::GetProcAddress(m_uxTheme, "CloseThemeData"));
-            m_pfnDrawThemeBackground = reinterpret_cast<DRAWTHEMEBACKGROUND*>(::GetProcAddress(m_uxTheme, "DrawThemeBackground"));
-            m_pfnDrawThemeText = reinterpret_cast<DRAWTHEMETEXT*>(::GetProcAddress(m_uxTheme, "DrawThemeText"));
-            m_pfnGetThemePartSize = reinterpret_cast<GETTHEMEPARTSIZE*>(::GetProcAddress(m_uxTheme, "GetThemePartSize"));
-            m_pfnGetThemeInt = reinterpret_cast<GETTHEMEINT*>(::GetProcAddress(m_uxTheme, "GetThemeInt"));
-            m_pfnGetThemeMargins = reinterpret_cast<GETTHEMEMARGINS*>(::GetProcAddress(m_uxTheme, "GetThemeMargins"));
-            m_pfnGetThemeTextExtent = reinterpret_cast<GETTHEMETEXTEXTENT*>(::GetProcAddress(m_uxTheme, "GetThemeTextExtent"));
-            m_pfnIsThemeBGPartTransparent = reinterpret_cast<ISTHEMEBGPARTTRANSPARENT*>(::GetProcAddress(m_uxTheme, "IsThemeBackgroundPartiallyTransparent"));
-            m_pfnOpenThemeData = reinterpret_cast<OPENTHEMEDATA*>(::GetProcAddress(m_uxTheme, "OpenThemeData"));
-        }
-
-        if (m_theme != 0)
-        {
-            CloseThemeData();
-            m_theme = 0;
-        }
-
-        m_theme = OpenThemeData(m_frame, VSCLASS_MENU);
-
-        if (m_theme != 0)
-        {
-            int borderSize = 0;    // Border space between item text and accelerator
-            int bgBorderSize = 0;  // Border space between item text and gutter
-            GetThemePartSize(0, MENU_POPUPCHECK, 0, NULL, TS_TRUE, &m_sizeCheck);
-            GetThemePartSize(0, MENU_POPUPSEPARATOR, 0, NULL, TS_TRUE, &m_sizeSeparator);
-            GetThemeInt(MENU_POPUPITEM, 0, TMT_BORDERSIZE, &borderSize);
-            GetThemeInt(MENU_POPUPBACKGROUND, 0, TMT_BORDERSIZE, &bgBorderSize);
-            GetThemeMargins(0, MENU_POPUPCHECK, 0, TMT_CONTENTMARGINS, NULL, &m_marCheck);
-            GetThemeMargins(0, MENU_POPUPCHECKBACKGROUND, 0, TMT_CONTENTMARGINS, NULL, &m_marCheckBackground);
-            GetThemeMargins(0, MENU_POPUPITEM, 0, TMT_CONTENTMARGINS, NULL, &m_marItem);
-
-            // Popup text margins
-            m_marText = m_marItem;
-            m_marText.cxRightWidth = borderSize;
-            m_marText.cxLeftWidth = bgBorderSize;
-        }
-        else
-        {
-            m_sizeCheck.SetSize(::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON));
-            m_sizeSeparator.SetSize(1, 7);
-            m_marCheck.SetMargins(4, 4, 2, 2);
-            m_marCheckBackground.SetMargins(0, 0, 0, 0);
-            m_marItem.SetMargins(0, 0, 0, 0);
-            m_marText.SetMargins(8, 16, 0, 0);
-        }
-    }
-
-    // Retrieves whether the background specified by the visual style has transparent pieces or alpha-blended pieces.
-    inline BOOL CMenuMetrics::IsThemeBackgroundPartiallyTransparent(int partID, int stateID) const
-    {
-        assert(m_theme);
-        if (m_pfnIsThemeBGPartTransparent)
-            return m_pfnIsThemeBGPartTransparent(m_theme, partID, stateID);
-
-        return FALSE;
-    }
-
-    // Opens the theme data for a window and its associated class.
-    inline HANDLE CMenuMetrics::OpenThemeData(HWND wnd, LPCWSTR pClassList) const
-    {
-        assert(wnd);
-        if (m_pfnOpenThemeData)
-            return m_pfnOpenThemeData(wnd, pClassList);
-
-        return 0;
-    }
-
-    inline BOOL CMenuMetrics::IsVistaMenu() const
-    {
-        return (m_theme != FALSE);
-    }
-
-    // Re-scale the CRect to support the system's DPI.
-    inline CRect CMenuMetrics::ScaleRect(const CRect& item) const
-    {
-        // DC for the desktop
-        CWindowDC dc(0);
-
-        int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
-        int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
-
-        CRect rc  = item;
-        rc.left   = MulDiv(rc.left, dpiX, 96);
-        rc.right  = MulDiv(rc.right, dpiX, 96);
-        rc.top    = MulDiv(rc.top, dpiY, 96);
-        rc.bottom = MulDiv(rc.bottom, dpiY, 96);
-
-        return rc;
-    }
-
-    // Re-scale the CSize to support the system's DPI.
-    inline CSize CMenuMetrics::ScaleSize(const CSize& item) const
-    {
-        // DC for the desktop
-        CWindowDC dc(0);
-
-        int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
-        int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
-
-        CSize sz = item;
-        sz.cx = MulDiv(sz.cx, dpiX, 96);
-        sz.cy = MulDiv(sz.cy, dpiY, 96);
-
-        return sz;
-    }
-
-    // Convert from item state to MENU_POPUPITEM state.
-    inline int CMenuMetrics::ToItemStateId(UINT itemState) const
-    {
-        const bool      isDisabled   = ((itemState & (ODS_INACTIVE | ODS_DISABLED)) != 0);
-        const bool      isHot        = ((itemState & (ODS_HOTLIGHT | ODS_SELECTED)) != 0);
-        POPUPITEMSTATES state;
-
-        if (isDisabled)
-            state = (isHot ? MPI_DISABLEDHOT : MPI_DISABLED);
-        else if (isHot)
-            state = MPI_HOT;
-        else
-            state= MPI_NORMAL;
-
-        return state;
-    }
-
-    // Convert to MENU_POPUPCHECKBACKGROUND.
-    inline int CMenuMetrics::ToCheckBackgroundStateId(int stateID) const
-    {
-        POPUPCHECKBACKGROUNDSTATES stateIdCheckBackground;
-
-        // Determine the check background state.
-        if (stateID == MPI_DISABLED || stateID == MPI_DISABLEDHOT)
-            stateIdCheckBackground = MCB_DISABLED;
-        else
-            stateIdCheckBackground = MCB_NORMAL;
-
-        return stateIdCheckBackground;
-    }
-
-    // Convert to MENU_POPUPCHECK state.
-    inline int CMenuMetrics::ToCheckStateId(UINT type, int stateID) const
-    {
-        POPUPCHECKSTATES stateIdCheck;
-
-        if (type & MFT_RADIOCHECK)
-        {
-            if (stateID == MPI_DISABLED || stateID == MPI_DISABLEDHOT)
-                stateIdCheck = MC_BULLETDISABLED;
-            else
-                stateIdCheck = MC_BULLETNORMAL;
-        }
-        else
-        {
-            if (stateID == MPI_DISABLED || stateID == MPI_DISABLEDHOT)
-                stateIdCheck = MC_CHECKMARKDISABLED;
-            else
-                stateIdCheck = MC_CHECKMARKNORMAL;
-        }
-
-        return stateIdCheck;
-    }
-
 
     ///////////////////////////////////
     // Definitions for the CFrame class
@@ -1637,16 +1006,16 @@ namespace Win32xx
     {
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
 
-        if (IsUsingVistaMenu())
+        if (IsUsingVistaMenu())  // Is uxtheme.dll loaded?
         {
-            GetMenuMetrics().DrawVistaMenuBackground(pDIS);
+            DrawVistaMenuBackground(pDIS);
 
             if (!(pmid->mii.fType & MFT_SEPARATOR))
             {
                 if (pDIS->itemState & ODS_CHECKED)
-                    GetMenuMetrics().DrawVistaMenuCheckmark(pDIS);
+                    DrawVistaMenuCheckmark(pDIS);
 
-                GetMenuMetrics().DrawVistaMenuText(pDIS);
+                DrawVistaMenuText(pDIS);
             }
         }
         else
@@ -1685,7 +1054,7 @@ namespace Win32xx
         }
     }
 
-    // Called by DrawMenuItem to render the popup menu background.
+    // Draws the popup menu background if uxtheme.dll is not loaded.
     template <class T>
     inline void CFrameT<T>::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDIS)
     {
@@ -1715,7 +1084,7 @@ namespace Win32xx
         }
     }
 
-    // Draws the checkmark or radiocheck transparently.
+    // Draws the popup menu checkmark or radiocheck if uxtheme.dll is not loaded.
     template <class T>
     inline void CFrameT<T>::DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pDIS)
     {
@@ -1812,7 +1181,7 @@ namespace Win32xx
         }
     }
 
-    // Called by DrawMenuItem to render the text for popup menus.
+    // Draws the popup menu text if uxtheme.dll is not loaded.
     template <class T>
     inline void CFrameT<T>::DrawMenuItemText(LPDRAWITEMSTRUCT pDIS)
     {
@@ -2019,6 +1388,82 @@ namespace Win32xx
         }
 
         return isDrawn;
+    }
+
+    // Draws the popup menu background if uxtheme.dll is loaded.
+    template <class T>
+    inline void CFrameT<T>::DrawVistaMenuBackground(LPDRAWITEMSTRUCT pDIS) const
+    {
+        int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
+
+        if (GetMenuMetrics().IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, stateID))
+        {
+            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPBACKGROUND, 0, &pDIS->rcItem, NULL);
+        }
+
+        // Draw the gutter.
+        CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
+        if (GetMenuMetrics().IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, stateID))
+        {
+            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPGUTTER, 0, &gutter, NULL);
+        }
+
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        if (pmid->mii.fType & MFT_SEPARATOR)
+        {
+            // Draw the separator.
+            CRect sepRect = GetMenuMetrics().GetSeperatorRect(pDIS->rcItem);
+            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPSEPARATOR, 0, &sepRect, NULL);
+        }
+
+        CRect selRect = GetMenuMetrics().GetSelectionRect(pDIS->rcItem);
+        GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPITEM, stateID, &selRect, NULL);
+    }
+
+    // Draws the popup menu checkmark if uxtheme.dll is loaded.
+    template <class T>
+    inline void CFrameT<T>::DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const
+    {
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+
+        // Draw the checkmark background.
+        int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
+        CRect rcCheckBackground = GetMenuMetrics().GetCheckBackgroundRect(pDIS->rcItem);
+        int backgroundStateID = GetMenuMetrics().ToCheckBackgroundStateId(stateID);
+        GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECKBACKGROUND, backgroundStateID, &rcCheckBackground, NULL);
+
+        // Draw the checkmark.
+        CRect rcCheck = GetMenuMetrics().GetCheckRect(pDIS->rcItem);
+        int checkStateID = GetMenuMetrics().ToCheckStateId(pmid->mii.fType, stateID);
+        GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECK, checkStateID, &rcCheck, NULL);
+    }
+
+    // Draws the popup menu text if uxtheme.dll is loaded.
+    template <class T>
+    inline void CFrameT<T>::DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const
+    {
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+
+        // Calculate the text rect size.
+        CStringW itemText = CStringW(TtoW(pmid->GetItemText()));
+        CRect textRect = GetMenuMetrics().GetTextRect(pDIS->rcItem);
+
+        // find the position of tab character.
+        int tab = itemText.Find(L'\t');
+
+        // Draw the item text before the tab.
+        ULONG accel = ((pDIS->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
+        int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
+        DWORD flags = DT_SINGLELINE | DT_LEFT | DT_VCENTER | accel;
+        GetMenuMetrics().DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, itemText, tab, flags, 0, &textRect);
+
+        // Draw the item text after the tab.
+        if (tab != -1)
+        {
+            flags = DT_SINGLELINE | DT_RIGHT | DT_VCENTER | accel;
+            CStringW text = itemText.Mid(tab + 1);
+            GetMenuMetrics().DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, text, -1, flags, 0, &textRect);
+        }
     }
 
     // Calculates the remaining client rect when a child window is excluded.
@@ -3961,7 +3406,7 @@ namespace Win32xx
 } // namespace Win32xx
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1920)
-#pragma warning ( pop )
+  #pragma warning ( pop )
 #endif // (_MSC_VER) && (_MSC_VER >= 1920)
 
 #endif // _WIN32XX_FRAME_H_

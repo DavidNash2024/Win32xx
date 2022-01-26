@@ -45,7 +45,7 @@ CDoc                                                                        /*
 
         void        AddRecord(const CStringW& entry);
         UINT        GetLength();
-        CStringW    GetRecord(UINT, UINT left = 0, UINT length = MAX_STRING_SIZE);
+        CStringW    GetRecord(UINT, UINT left = 0, UINT length = WXX_MAX_STRING_SIZE);
         UINT        GetWidth();
         BOOL        IsOpen() const;
         BOOL        CloseDoc();

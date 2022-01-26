@@ -41,8 +41,10 @@ Added TitlebarFrame          sample
 
 Added MenuTheme::clrText     member variable
 
-Renamed UWM_PRINTNOW   to UWM_PREVIEWPRINT
-Renamed UWM_PRINTSETUP to UWM_PREVIEWSETUP
+Renamed UWM_PRINTNOW    to UWM_PREVIEWPRINT
+Renamed UWM_PRINTSETUP  to UWM_PREVIEWSETUP
+Renamed MAX_MENU_STRING to WXX_MAX_MENU_STRING
+Renamed MAX_STRING_SIZE to WXX_MAX_STRING_SIZE
 
 
 
