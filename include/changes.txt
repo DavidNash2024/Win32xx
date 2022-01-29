@@ -2,7 +2,9 @@ Version 8.9.2  (9.0)
 =============
 
 Bug fixes:
-- Fixed GDI resource leak in CFont::CreatePointFontIndirect.
+- Fixed a GDI resource leak in CFont::CreatePointFontIndirect.
+- Fixed a C++20 compliance issue in CRibbonFrameT.
+- Fixed several issues in CString.
 
 New Features and Enhancements
 -----------------------------
