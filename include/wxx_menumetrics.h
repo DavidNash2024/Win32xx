@@ -126,9 +126,9 @@ namespace Win32xx
 
     ///////////////////////////////////////////////////////////////////////////
     // CMenuMetrics is used by CFrameT to retrieve the size of the components
-    // used to perform owner-drawing of menu items. It loads uxtheme.dll and
-    // uses its visual style functions for the calculations on Windows Vista
-    // and above.
+    // used to perform owner-drawing of menu items. For Windows Vista and above
+    // it loads uxtheme.dll and uses its visual style functions for the
+    // calculations.
     class CMenuMetrics
     {
         // A local copy of enums from uxtheme.h. They're declared within the

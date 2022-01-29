@@ -266,13 +266,13 @@ namespace Win32xx
 
     public:
         CString() {}
-        CString(const CString& str)             : CStringT<TCHAR>(str) {}
+        CString(const CString& str)            : CStringT<TCHAR>(str) {}
         CString(LPCSTR text)                   : CStringT<TCHAR>(AtoT(text)) {}
         CString(LPCWSTR text)                  : CStringT<TCHAR>(WtoT(text))    {}
         CString(LPCSTR text, int length)       : CStringT<TCHAR>(AtoT(text, CP_ACP, length), length) {}
         CString(LPCWSTR text, int length)      : CStringT<TCHAR>(WtoT(text, CP_ACP, length), length) {}
-        CString(int val)                        : CStringT<TCHAR>(val) {}
-        CString(double val)                     : CStringT<TCHAR>(val) {}
+        CString(int val);
+        CString(double val);
 
         CString(char ch, int length = 1)
         {
@@ -493,17 +493,31 @@ namespace Win32xx
     }
 
     // Constructor. Assigns from an integer value.
-    template <class T>
-    inline CStringT<T>::CStringT(int val)
+    template <>
+    inline CStringT<CHAR>::CStringT(int val)
     {
-        Format(_T("%d"), val);
+        Format("%d", val);
     }
 
-    // Constructor. Assigns from a double value.
-    template <class T>
-    inline CStringT<T>::CStringT(double val)
+    // Constructor. Assigns from an integer value.
+    template <>
+    inline CStringT<WCHAR>::CStringT(int val)
     {
-        Format(_T("%g"), val);
+        Format(L"%d", val);
+    }
+
+    // Constructor. Assigns from an double value.
+    template <>
+    inline CStringT<CHAR>::CStringT(double val)
+    {
+        Format("%g", val);
+    }
+
+    // Constructor. Assigns from an integer value.
+    template <>
+    inline CStringT<WCHAR>::CStringT(double val)
+    {
+        Format(L"%g", val);
     }
 
     // Assign from a const CStringT<T>.
@@ -1157,7 +1171,8 @@ namespace Win32xx
         return m_str.empty();
     }
 
-    // Extracts the left part of a string.
+    // Retrieves the left part of a string. The count parameter specifies the
+    // number of characters.
     template <class T>
     inline CStringT<T> CStringT<T>::Left(int count) const
     {
@@ -1206,14 +1221,17 @@ namespace Win32xx
         std::transform(m_str.begin(), m_str.end(), m_str.begin(), ::towupper);
     }
 
-    // Extracts the middle part of a string.
+    // Retrieves the middle part of a string.
+    // The first parameter specifies the zero based index of the first character.
     template <class T>
     inline CStringT<T> CStringT<T>::Mid(int first) const
     {
         return Mid(first, GetLength());
     }
 
-    // Extracts the middle part of a string.
+    // Retrieves the middle part of a string.
+    // The first parameter specifies the zero based index of the first character.
+    // The count parameter specifies the number of characters.
     template <class T>
     inline CStringT<T> CStringT<T>::Mid(int first, int count) const
     {
@@ -1337,7 +1355,8 @@ namespace Win32xx
             return static_cast<int>(m_str.rfind(text, end));
     }
 
-    // Extracts count characters from the right part of the string.
+    // Retrieves count characters from the right part of the string.
+    // The count parameter specifies the number of characters.
     template <class T>
     inline CStringT<T> CStringT<T>::Right(int count) const
     {
@@ -1613,7 +1632,7 @@ namespace Win32xx
     inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, int val)
     {
         CStringT<CHAR> str;
-        str.Format("%s%a", string1.c_str(), val);
+        str.Format("%s%d", string1.c_str(), val);
         return str;
     }
 
@@ -1901,14 +1920,14 @@ namespace Win32xx
     }
 
     // Appends the specified text to the string.
-    inline CString& operator<<(CString& str, const LPCSTR text)
+    inline CString& operator << (CString& str, const LPCSTR text)
     {
         str += text;
         return str;
     }
 
     // Appends the specified text to the string.
-    inline CString& operator<<(CString& str, const LPCWSTR text)
+    inline CString& operator << (CString& str, const LPCWSTR text)
     {
         str += text;
         return str;
@@ -1941,6 +1960,11 @@ namespace Win32xx
         str += val;
         return str;
     }
+
+    // Late definitions to avoid specialization after instantiation errors.
+    // Additional CString constructors definitions.
+    inline CString::CString(int val)                       : CStringT<TCHAR>(val) {}
+    inline CString::CString(double val)                    : CStringT<TCHAR>(val) {}
 
 
 }   // namespace Win32xx

@@ -235,7 +235,7 @@ namespace Win32xx
         virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pDIS);
         virtual BOOL DrawReBarBkgnd(CDC& dc, CReBar& reBar);
         virtual BOOL DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusBar);
-        virtual void DrawVistaMenuBackground(LPDRAWITEMSTRUCT pDIS) const;
+        virtual void DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDIS) const;
         virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const;
         virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const;
         virtual int  GetMenuItemPos(HMENU menu, LPCTSTR pItem) const;
@@ -399,8 +399,6 @@ namespace Win32xx
         ZeroMemory(&m_rbTheme, sizeof(m_rbTheme));
         ZeroMemory(&m_sbTheme, sizeof(m_sbTheme));
         ZeroMemory(&m_tbTheme, sizeof(m_tbTheme));
-
-        m_statusText = LoadString(IDW_READY);
 
         // By default, we use the rebar if we can.
         m_useReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
@@ -1008,7 +1006,7 @@ namespace Win32xx
 
         if (IsUsingVistaMenu())  // Is uxtheme.dll loaded?
         {
-            DrawVistaMenuBackground(pDIS);
+            DrawVistaMenuBkgnd(pDIS);
 
             if (!(pmid->mii.fType & MFT_SEPARATOR))
             {
@@ -1392,7 +1390,7 @@ namespace Win32xx
 
     // Draws the popup menu background if uxtheme.dll is loaded.
     template <class T>
-    inline void CFrameT<T>::DrawVistaMenuBackground(LPDRAWITEMSTRUCT pDIS) const
+    inline void CFrameT<T>::DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDIS) const
     {
         int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
 
@@ -1857,6 +1855,7 @@ namespace Win32xx
             GetStatusBar().Create(*this);
             GetStatusBar().SetFont(m_statusBarFont, FALSE);
             ShowStatusBar(GetInitValues().showStatusBar);
+            SetStatusText(LoadString(IDW_READY)); // No text if IDW_READY string resource is missing.
         }
         else
         {
@@ -1864,8 +1863,7 @@ namespace Win32xx
                 GetFrameMenu().EnableMenuItem(IDW_VIEW_STATUSBAR, MF_GRAYED);
         }
 
-        if (IsUsingIndicatorStatus())
-            SetStatusIndicators();
+        SetStatusIndicators();
 
         // Create the view window.
         assert(&GetView());         // Use SetView in CMainFrame's constructor to set the view window.
@@ -2097,10 +2095,9 @@ namespace Win32xx
 
             if ((menu != T::GetMenu()) && (id != 0) && !(HIWORD(wparam) & MF_POPUP))
 
-                GetStatusBar().SetWindowText(LoadString(id));
+                GetStatusBar().SetPartText(0, LoadString(id));
             else
-                GetStatusBar().SetWindowText(m_statusText);
-
+                GetStatusBar().SetPartText(0, m_statusText);
         }
 
         return 0;
@@ -2273,10 +2270,7 @@ namespace Win32xx
             // Update the status bar font and text
             m_statusBarFont.CreateFontIndirect(info.lfStatusFont);
             GetStatusBar().SetFont(m_statusBarFont, TRUE);
-            if (IsUsingMenuStatus())
-                GetStatusBar().SetWindowText(m_statusText);
-
-            SetStatusIndicators();
+            GetStatusBar().Invalidate();
         }
 
         if (GetMenuBar().IsWindow())
