@@ -213,8 +213,6 @@ namespace Win32xx
         //  BIF_NEWDIALOGSTYLE    - Provides a resizable dialog without an edit box.
         //  BIF_NONEWFOLDERBUTTON - Do not include the New Folder button in the browse dialog box.
         m_flags = BIF_RETURNONLYFSDIRS |BIF_NEWDIALOGSTYLE | BIF_NONEWFOLDERBUTTON;
-        HRESULT hr;
-        VERIFY(SUCCEEDED(hr = ::CoInitialize(NULL)));
     }
 
     inline CFolderDialog::~CFolderDialog()
@@ -223,8 +221,6 @@ namespace Win32xx
         std::vector<LPITEMIDLIST>::iterator it;
         for (it = m_fullPidl.begin(); it != m_fullPidl.end(); ++it)
             CoTaskMemFree(*it);
-
-        ::CoUninitialize();
     }
 
     // The callback function used used to send messages to and process messages
