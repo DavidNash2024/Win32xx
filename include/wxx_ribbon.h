@@ -211,12 +211,10 @@ namespace Win32xx
 
     inline CRibbon::CRibbon() : m_pRibbonFramework(NULL), m_count(0)
     {
-        VERIFY(SUCCEEDED(::CoInitialize(NULL)));
     }
 
     inline CRibbon::~CRibbon()
     {
-        ::CoUninitialize();
     }
 
     //////////////////////////////////

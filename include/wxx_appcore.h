@@ -457,7 +457,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
                 // Initializes the COM library.
-                VERIFY(SUCCEEDED(OleInitialize(NULL)));
+                VERIFY(SUCCEEDED(CoInitializeEx(NULL, COINIT_MULTITHREADED)));
 #endif
             }
             else
@@ -505,7 +505,7 @@ namespace Win32xx
             ::FreeLibrary(m_resource);
 
 #ifndef _WIN32_WCE
-        OleUninitialize();
+        CoUninitialize();
 #endif
     }
 
