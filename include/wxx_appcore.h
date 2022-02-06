@@ -457,7 +457,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
                 // Initializes the COM library.
-                VERIFY(SUCCEEDED(CoInitializeEx(NULL, COINIT_MULTITHREADED)));
+                VERIFY(SUCCEEDED(CoInitialize(NULL)));
 #endif
             }
             else
