@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -236,13 +236,8 @@ namespace Win32xx
         if (m_ws2_32 == 0)
             throw CNotSupportedException(GetApp()->MsgSocWS2Dll());
 
-#ifdef _WIN32_WCE
-        m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_ws2_32, L"getaddrinfo") );
-        m_pfnFreeAddrInfo = reinterpret_cast<FREEADDRINFO*>( GetProcAddress(m_ws2_32, L"freeaddrinfo") );
-#else
         m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_ws2_32, "getaddrinfo") );
         m_pfnFreeAddrInfo = reinterpret_cast<FREEADDRINFO*>( GetProcAddress(m_ws2_32, "freeaddrinfo") );
-#endif
 
         ThreadPtr threadPtr(new CWinThread(EventThread, this));
         m_threadPtr = threadPtr;

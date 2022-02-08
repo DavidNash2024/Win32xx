@@ -12,7 +12,7 @@
 class CView : public CWnd
 {
 public:
-    CView() : m_menu(IDW_MAIN), m_isMinimized(FALSE) {}
+    CView() : m_menu(IDW_MAIN), m_isMinimized(false) {}
     virtual ~CView() {}
     BOOL Minimize();
     void Restore();
@@ -33,7 +33,7 @@ protected:
 
 private:
     CMenu m_menu;
-    BOOL m_isMinimized;
+    bool m_isMinimized;
 };
 
 #endif

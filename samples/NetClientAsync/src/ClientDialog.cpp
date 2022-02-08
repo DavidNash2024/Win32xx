@@ -12,7 +12,7 @@
 
 // Constructor.
 CClientDialog::CClientDialog(UINT resID) : CDialog(resID),
-                   m_isClientConnected(FALSE), m_socketType(SOCK_STREAM)
+                   m_isClientConnected(false), m_socketType(SOCK_STREAM)
 {
     // Add support for the IP Address control
     // It requires Win95 with IE4 integrated or a later version of Windows OS.
@@ -184,7 +184,7 @@ BOOL CClientDialog::OnInitDialog()
 // Called when the connection to the server is established.
 BOOL CClientDialog::OnSocketConnect()
 {
-    m_isClientConnected = TRUE;
+    m_isClientConnected = true;
     m_buttonConnect.EnableWindow( TRUE );
 
     // Move focus to the Send Edit box.
@@ -210,7 +210,7 @@ BOOL CClientDialog::OnSocketConnect()
 // Called when the socket is disconnected from the server.
 BOOL CClientDialog::OnSocketDisconnect()
 {
-    m_isClientConnected = FALSE;
+    m_isClientConnected = false;
     m_buttonConnect.EnableWindow( TRUE );
 
     // Update the dialog
@@ -356,7 +356,7 @@ void CClientDialog::OnStartClient()
                 m_buttonConnect.SetWindowText( _T("Disconnect") );
                 AppendText(m_editStatus, _T("Connected, ready to send"));
                 GotoDlgCtrl(m_editSend);
-                m_isClientConnected = TRUE;
+                m_isClientConnected = true;
             }
             break;
         }
@@ -382,7 +382,7 @@ void CClientDialog::OnStartClient()
             m_radioIP6.EnableWindow(TRUE);
             m_editIP6Address.EnableWindow(TRUE);
         }
-        m_isClientConnected = FALSE;
+        m_isClientConnected = false;
     }
 }
 

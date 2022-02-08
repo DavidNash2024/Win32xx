@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -95,6 +95,17 @@
 #include <algorithm>
 #include <Windows.h>
 #include "wxx_textconv.h"
+
+// Define our own MIN and MAX macros
+// This avoids inconsistencies with MinGW and other compilers, and
+// avoids conflicts between typical min/max macros and std::min/std::max
+#define MAX(a,b)        (((a) > (b)) ? (a) : (b))
+#define MIN(a,b)        (((a) < (b)) ? (a) : (b))
+
+namespace Win32xx {}
+#ifndef NO_USING_NAMESPACE
+using namespace Win32xx;
+#endif
 
 
 namespace Win32xx
@@ -193,6 +204,7 @@ namespace Win32xx
         void     FormatMessageV(const T* format, va_list args);
         T        GetAt(int index) const;
         T*       GetBuffer(int minBufLength);
+        bool     GetEnvironmentVariable(const T* var);
         void     GetErrorString(DWORD error);
         void     GetWindowText(HWND wnd);
         void     Empty();
@@ -226,10 +238,6 @@ namespace Win32xx
         void     TrimRight(T target);
         void     TrimRight(const T* targets);
         void     Truncate(int newLength);
-
-#ifndef _WIN32_WCE
-        bool     GetEnvironmentVariable(const T* var);
-#endif
 
     protected:
         std::basic_string<T> m_str;
@@ -920,7 +928,7 @@ namespace Win32xx
             {
                 buffer.assign( size_t(length)+1, 0 );
 
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
                 result = _vsnprintf(&buffer.front(), length, format, args);
 #else
                 result = _vsnprintf_s(&buffer.front(), length, size_t(length)-1, format, args);
@@ -947,7 +955,7 @@ namespace Win32xx
             while (-1 == result)
             {
                 buffer.assign( size_t(length)+1, 0 );
-#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 ) || defined (_WIN32_WCE)
+#if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
                 result = _vsnwprintf(&buffer.front(), length, format, args);
 #else
                 result = _vsnwprintf_s(&buffer.front(), length, size_t(length)-1, format, args);
@@ -1046,8 +1054,6 @@ namespace Win32xx
         return &m_buf.front();
     }
 
-#ifndef _WIN32_WCE
-
     // Sets the string to the value of the specified environment variable.
     template <>
     inline bool CStringT<CHAR>::GetEnvironmentVariable(const CHAR* var)
@@ -1083,9 +1089,6 @@ namespace Win32xx
 
         return (length != 0);
     }
-
-#endif // _WIN32_WCE
-
 
     // Retrieves the a window's text.
     template <>

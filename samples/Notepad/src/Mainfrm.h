@@ -89,9 +89,9 @@ private:
     CString m_oldStatus[4];                // Array of CString holding old status;
     CString m_pathName;
     Encoding m_encoding;
-    BOOL m_isToolbarShown;
-    BOOL m_isWrapped;
-    BOOL m_isRTF;
+    bool m_isToolbarShown;
+    bool m_isWrapped;
+    bool m_isRTF;
     HWND m_oldFocus;
 };
 

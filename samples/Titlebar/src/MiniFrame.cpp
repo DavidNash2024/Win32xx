@@ -44,6 +44,14 @@ void CenterRectInRect(RECT* toCenter, const RECT* outerRect)
 // CMiniframe function definitions.
 //
 
+// Draw the title bar background.
+void CMiniFrame::DrawBackground(CDC& dc) const
+{
+    CRect titlebarRect = GetTitlebarRect();
+    COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
+    CBrush titlebarBrush(titlebarColor);
+    dc.FillRect(titlebarRect, titlebarBrush);
+}
 
 // Draw the title bar close button.
 void CMiniFrame::DrawCloseButton(CDC& dc) const
@@ -150,6 +158,24 @@ void CMiniFrame::DrawTitleText(CDC& dc) const
     );
 
     ::CloseThemeData(theme);
+}
+
+// Draw the top shadow. Original is missing because of the client rect extension.
+// Might not be required on Windows 11.
+void CMiniFrame::DrawTopShadow(CDC& dc) const
+{
+    // Draw the top shadow. Original is missing because of the client rect extension.
+    COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
+    COLORREF shadowColor = m_colors.topShadow;
+    COLORREF topShadowColor = IsActive() ? shadowColor : RGB(
+        (GetRValue(titlebarColor) + GetRValue(shadowColor)) / 2,
+        (GetGValue(titlebarColor) + GetGValue(shadowColor)) / 2,
+        (GetBValue(titlebarColor) + GetBValue(shadowColor)) / 2
+    );
+
+    CBrush topShadowBrush(topShadowColor);
+    CRect topShadowRect = GetShadowRect();
+    dc.FillRect(topShadowRect, topShadowBrush);
 }
 
 // Draw title bar icon for the system menu.
@@ -567,30 +593,14 @@ LRESULT CMiniFrame::OnPaint(UINT, WPARAM, LPARAM)
 {
     CPaintDC dc(*this);
 
-    // Draw title bar background
-    CRect titlebarRect = GetTitlebarRect();
-    COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
-    CBrush titlebarBrush(titlebarColor);
-    dc.FillRect(titlebarRect, titlebarBrush);
-
-    // Draw the title bar text and buttons.
+    // Draw the title bar.
+    DrawBackground(dc);
     DrawMinimizeButton(dc);
     DrawMaximizeButton(dc);
     DrawCloseButton(dc);
 //    DrawTitleText(dc);
     DrawWindowIcon(dc);
-
-    // Draw the top shadow. Original is missing because of the client rect extension.
-    COLORREF shadowColor = m_colors.topShadow;
-    COLORREF topShadowColor = IsActive() ? shadowColor : RGB(
-        (GetRValue(titlebarColor) + GetRValue(shadowColor)) / 2,
-        (GetGValue(titlebarColor) + GetGValue(shadowColor)) / 2,
-        (GetBValue(titlebarColor) + GetBValue(shadowColor)) / 2
-    );
-
-    CBrush topShadowBrush(topShadowColor);
-    CRect topShadowRect = GetShadowRect();
-    dc.FillRect(topShadowRect, topShadowBrush);
+    DrawTopShadow(dc);
 
     return 0;
 }

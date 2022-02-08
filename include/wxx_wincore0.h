@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -103,12 +103,12 @@ namespace Win32xx
     inline void LoadCommonControls();
     inline CString LoadString(UINT id);
 
-#ifndef _WIN32_WCE
+
     inline int GetComCtlVersion();
     inline int GetWinVersion();
     inline NONCLIENTMETRICS GetNonClientMetrics();
     inline BOOL IsLeftButtonDown();
-#endif
+
 
     ////////////////////////////////
     // Registered messages defined by Win32++
@@ -157,10 +157,8 @@ namespace Win32xx
         virtual HICON SetIconSmall(int iconID);
 
         // For Data Exchange
-    #ifndef _WIN32_WCE
         virtual void DoDataExchange(CDataExchange& dx);
         virtual BOOL UpdateData(CDataExchange& dx, BOOL retrieveAndValidate);
-    #endif
 
         // Attributes
         HWND GetHwnd() const                { return m_wnd; }
@@ -272,7 +270,6 @@ namespace Win32xx
         BOOL  ValidateRgn(HRGN rgn) const;
         CWnd  WindowFromPoint(POINT point) const;
 
-  #ifndef _WIN32_WCE
         BOOL  CloseWindow() const;
         int   DlgDirList(LPTSTR pathSpec, int listBoxID, int staticPathID, UINT fileType) const;
         int   DlgDirListComboBox(LPTSTR pathSpec, int comboBoxID, int staticPathID, UINT filetype) const;
@@ -310,7 +307,6 @@ namespace Win32xx
     #ifndef WIN32_LEAN_AND_MEAN
         void  DragAcceptFiles(BOOL accept) const;
     #endif
-  #endif
 
         operator HWND() const { return GetHwnd(); }
 

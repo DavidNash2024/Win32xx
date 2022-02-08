@@ -112,7 +112,7 @@ void CMyDialog::SetSliderPos(int pos)
 }
 
 // Sets the static control's text.
-void CMyDialog::SetStatic(BOOL isSlider, int pos)
+void CMyDialog::SetStatic(bool isSlider, int pos)
 {
     CString str;
     if (isSlider)

@@ -386,7 +386,7 @@ namespace ShellWrapper
     }
 
     // Equivalence operator.
-    BOOL Cpidl::operator== (const Cpidl& cpidl)
+    bool Cpidl::operator== (const Cpidl& cpidl)
     {
         return IsEqual(cpidl);
     }
@@ -601,7 +601,7 @@ namespace ShellWrapper
     }
 
     // Returns true if the two Cpidl's identify the same item.
-    BOOL Cpidl::IsEqual(const Cpidl &cpidl)
+    bool Cpidl::IsEqual(const Cpidl &cpidl)
     {
         CShellFolder sf;
         sf.DesktopFolder();

@@ -15,7 +15,7 @@
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_isToolbarShown(TRUE), m_isWrapped(FALSE), m_oldFocus(0)
+CMainFrame::CMainFrame() : m_isToolbarShown(true), m_isWrapped(false), m_oldFocus(0)
 {
 }
 

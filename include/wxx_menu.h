@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -79,7 +79,7 @@
 //  }
 
 
-#if !defined (_WIN32XX_MENU_H_) && !defined(_WIN32_WCE)
+#if !defined (_WIN32XX_MENU_H_)
 #define _WIN32XX_MENU_H_
 
 
@@ -816,7 +816,6 @@ namespace Win32xx
 
         return m_pData->menu;
     }
-
 
 }   // namespace Win32xx
 

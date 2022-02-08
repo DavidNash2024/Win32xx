@@ -33,6 +33,9 @@ New Features and Enhancements
   Added a clrText member to the MenuTheme struc to define the color of
   menubar text. This is now used to set the menubar text color to white
   for the BLACK theme in the themes sample.
+  
+* Support for WinCE has been removed.
+  Version 8.9.1 is the most recent version of Win32++ that supports WinCE.
 
 
 Changes in Detail
@@ -47,6 +50,8 @@ Renamed UWM_PRINTNOW    to UWM_PREVIEWPRINT
 Renamed UWM_PRINTSETUP  to UWM_PREVIEWSETUP
 Renamed MAX_MENU_STRING to WXX_MAX_MENU_STRING
 Renamed MAX_STRING_SIZE to WXX_MAX_STRING_SIZE
+
+Removed support for WinCE.
 
 
 

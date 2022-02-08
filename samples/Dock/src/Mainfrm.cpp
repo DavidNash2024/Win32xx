@@ -14,13 +14,13 @@
 // Constructor.
 CMainFrame::CMainFrame()
 {
-    m_useProportionalResize = FALSE;
-    m_use3DBorder = TRUE;
-    m_disableUndocking = FALSE;
-    m_disableResize = FALSE;
-    m_disableDockLR = FALSE;
-    m_disableDockClose = FALSE;
-    m_useDynamicResize = TRUE;
+    m_useProportionalResize = false;
+    m_use3DBorder = true;
+    m_disableUndocking = false;
+    m_disableResize = false;
+    m_disableDockLR = false;
+    m_disableDockClose = false;
+    m_useDynamicResize = true;
 }
 
 // Destructor.

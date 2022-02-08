@@ -43,7 +43,7 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Hides or shows tabs for containers with a single tab.
-void CMainFrame::HideSingleContainerTab(BOOL hideSingle)
+void CMainFrame::HideSingleContainerTab(bool hideSingle)
 {
     m_isHideSingleTab = hideSingle;
     std::vector<DockPtr>::const_iterator iter;
@@ -442,7 +442,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 }
 
 // Positions the tabs at the top or bottom of the container.
-void CMainFrame::SetContainerTabsAtTop(BOOL atTop)
+void CMainFrame::SetContainerTabsAtTop(bool atTop)
 {
     m_isContainerTabsAtTop = atTop;
     std::vector<DockPtr>::const_iterator iter;
@@ -459,7 +459,7 @@ void CMainFrame::SetContainerTabsAtTop(BOOL atTop)
 }
 
 // Positions the MDI tabs at the top or bottom of the container.
-void CMainFrame::SetMDITabsAtTop(BOOL atTop)
+void CMainFrame::SetMDITabsAtTop(bool atTop)
 {
     m_isMDITabsAtTop = atTop;
     m_myTabbedMDI.GetTab().SetTabsAtTop(atTop);

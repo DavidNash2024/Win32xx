@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -166,7 +166,7 @@ namespace Win32xx
     // Override CWinThread and use this constructor for GUI threads.
     // InitInstance will be called when the thread runs.
     inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_thread(0),
-                                       m_threadID(0), m_threadIDForWinCE(0), m_accel(0), m_accelWnd(0)
+                                       m_threadID(0), m_accel(0), m_accelWnd(0)
     {
     }
 
@@ -175,8 +175,7 @@ namespace Win32xx
     // Specify a pointer to the function to run when the thread starts.
     // Specifying pParam for a worker thread is optional.
     inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
-                        m_pThreadParams(0), m_thread(0), m_threadID(0), m_threadIDForWinCE(0),
-                        m_accel(0), m_accelWnd(0)
+                        m_pThreadParams(0), m_thread(0), m_threadID(0), m_accel(0), m_accelWnd(0)
     {
         m_pfnThreadProc = pfnThreadProc;
         m_pThreadParams = pParam;
@@ -217,13 +216,8 @@ namespace Win32xx
             CloseHandle(m_thread);
         }
 
-#ifdef _WIN32_WCE
-        m_thread = reinterpret_cast<HANDLE>(::CreateThread(pSecurityAttributes, stack_size,
-                    (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_threadIDForWinCE));
-#else
         m_thread = reinterpret_cast<HANDLE>(::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc,
                      m_pThreadParams, initflag, &m_threadID));
-#endif
 
         if (m_thread == 0)
             throw CWinException(GetApp()->MsgAppThread());
@@ -254,10 +248,6 @@ namespace Win32xx
     inline int CWinThread::GetThreadID() const
     {
         assert(m_thread);
-
-#ifdef _WIN32_WCE
-        return m_threadIDForWinCE;
-#endif
 
         return m_threadID;
     }
@@ -440,25 +430,23 @@ namespace Win32xx
                 SetnGetThis(this);
 
                 // Set the instance handle
-#ifdef _WIN32_WCE
-                m_instance = (HINSTANCE)GetModuleHandle(0);
-#else
                 MEMORY_BASIC_INFORMATION mbi;
                 ZeroMemory(&mbi, sizeof(mbi));
                 static int Address = 0;
                 VirtualQuery(&Address, &mbi, sizeof(mbi));
                 assert(mbi.AllocationBase);
                 m_instance = (HINSTANCE)mbi.AllocationBase;
-#endif
 
                 m_resource = m_instance;
                 SetCallback();
                 LoadCommonControls();
 
-#ifndef _WIN32_WCE
-                // Initializes the COM library.
-                VERIFY(SUCCEEDED(CoInitialize(NULL)));
-#endif
+                // Initialize the COM library.
+                // Note: The ribbon UI requires the COINIT_APARTMENTTHREADED
+                //       concurrency model. OleInitialize calls CoInitializeEx
+                //       with COINIT_APARTMENTTHREADED, and provides support
+                //       for other OLE functionality.
+                VERIFY(SUCCEEDED(OleInitialize(NULL)));
             }
             else
             {
@@ -504,9 +492,7 @@ namespace Win32xx
         if (m_resource != 0)
             ::FreeLibrary(m_resource);
 
-#ifndef _WIN32_WCE
-        CoUninitialize();
-#endif
+        OleUninitialize();
     }
 
     // Adds a HDC and CDC_Data* pair to the map.
@@ -530,16 +516,12 @@ namespace Win32xx
         m_mapCImlData.insert(std::make_pair(images, pData));
     }
 
-#ifndef _WIN32_WCE
-
     // Adds a HMENU and CMenu_Data* to the map.
     inline void CWinApp::AddCMenuData(HMENU menu, CMenu_Data* pData)
     {
         CThreadLock mapLock(m_wndLock);
         m_mapCMenuData.insert(std::make_pair(menu, pData));
     }
-
-#endif
 
     // Retrieves a pointer to CDC_Data from the map
     inline CDC_Data* CWinApp::GetCDCData(HDC dc)
@@ -589,8 +571,6 @@ namespace Win32xx
         return pCImlData;
     }
 
-#ifndef _WIN32_WCE
-
     // Retrieves a pointer to CMenu_Data from the map
     inline CMenu_Data* CWinApp::GetCMenuData(HMENU menu)
     {
@@ -606,8 +586,6 @@ namespace Win32xx
 
         return pCMenuData;
     }
-
-#endif
 
     // Retrieves the CWnd pointer associated with the specified wnd.
     inline CWnd* CWinApp::GetCWndFromMap(HWND wnd)
@@ -730,7 +708,6 @@ namespace Win32xx
 
     // Registers a temporary window class so we can get the callback
     // address of CWnd::StaticWindowProc.
-    // This technique works for all Window versions, including WinCE.
     inline void CWinApp::SetCallback()
     {
         WNDCLASS defaultWC;

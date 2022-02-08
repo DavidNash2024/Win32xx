@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -135,18 +135,13 @@ namespace Win32xx
         CDialog& operator = (const CDialog&); // Disable assignment operator
 
         static INT_PTR CALLBACK StaticDialogProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
-
-#ifndef _WIN32_WCE
         static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam, LPARAM lparam);
-#endif
 
         BOOL m_isModal;                  // a flag for modal dialogs
         LPCTSTR m_pResName;              // the resource name for the dialog
         LPCDLGTEMPLATE m_pDlgTemplate;   // the dialog template for indirect dialogs
     };
 
-
-#ifndef _WIN32_WCE
 
     //////////////////////////////////////
     // Declaration of the CResizer class
@@ -216,8 +211,6 @@ namespace Win32xx
         int m_xScrollPos;
         int m_yScrollPos;
     };
-
-#endif
 
 }
 
@@ -445,13 +438,11 @@ namespace Win32xx
         // Ensure this thread has the TLS index set
         TLSData* pTLSData = GetApp()->SetTlsData();
 
-    #ifndef _WIN32_WCE
         if (0 == pTLSData->msgHook )
         {
             pTLSData->msgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, 0, ::GetCurrentThreadId());
         }
         InterlockedIncrement(&pTLSData->dlgHooks);
-    #endif
 
         HINSTANCE instance = GetApp()->GetInstanceHandle();
         pTLSData->pWnd = this;
@@ -470,15 +461,12 @@ namespace Win32xx
         pTLSData->pWnd = NULL;
         Cleanup();
 
-    #ifndef _WIN32_WCE
         InterlockedDecrement(&pTLSData->dlgHooks);
         if (pTLSData->dlgHooks == 0)
         {
             ::UnhookWindowsHookEx(pTLSData->msgHook);
             pTLSData->msgHook = 0;
         }
-
-    #endif
 
         // Throw an exception if the dialog creation fails
         if (result == -1)
@@ -690,9 +678,6 @@ namespace Win32xx
 
     } // INT_PTR CALLBACK CDialog::StaticDialogProc(...)
 
-
-#ifndef _WIN32_WCE
-
     // Used by modal dialogs for idle processing and PreTranslateMessage.
     inline LRESULT CALLBACK CDialog::StaticMsgHook(int code, WPARAM wparam, LPARAM lparam)
     {
@@ -746,11 +731,7 @@ namespace Win32xx
 
         return ::CallNextHookEx(pTLSData->msgHook, code, wparam, lparam);
     }
-#endif
 
-
-
-#ifndef _WIN32_WCE
 
     /////////////////////////////////////
     // Definitions for the CResizer class
@@ -1115,8 +1096,6 @@ namespace Win32xx
         // Reposition all the child windows simultaneously.
         VERIFY(::EndDeferWindowPos(hdwp));
     }
-
-#endif // #ifndef _WIN32_WCE
 
 } // namespace Win32xx
 

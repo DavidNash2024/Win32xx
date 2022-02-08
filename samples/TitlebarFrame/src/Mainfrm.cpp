@@ -44,10 +44,10 @@ void CenterRectInRect(RECT* toCenter, const RECT* outerRect)
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_isToolbarShown(TRUE),
+CMainFrame::CMainFrame() : m_isToolbarShown(true),
                            m_hoveredButton(TitlebarButton::None),
                            m_oldHoveredButton(TitlebarButton::None),
-                           m_isMiniFrame(FALSE)
+                           m_isMiniFrame(false)
 {
 }
 
@@ -67,6 +67,15 @@ HWND CMainFrame::Create(HWND parent)
     LoadRegistrySettings(_T("Win32++\\Titlebar Frame"));
 
     return CFrame::Create(parent);
+}
+
+// Draw title bar background
+void CMainFrame::DrawBackground(CDC& dc) const
+{
+    CRect titlebarRect = GetTitlebarRect();
+    COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
+    CBrush titlebarBrush(titlebarColor);
+    dc.FillRect(titlebarRect, titlebarBrush);
 }
 
 // Draw the title bar close button.
@@ -174,6 +183,23 @@ void CMainFrame::DrawTitleText(CDC& dc) const
     );
 
     ::CloseThemeData(theme);
+}
+
+// Draw the top shadow. Original is missing because of the client rect extension.
+// Might not be required on Windows 11.
+void CMainFrame::DrawTopShadow(CDC& dc) const
+{
+    COLORREF shadowColor = m_colors.topShadow;
+    COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
+    COLORREF topShadowColor = IsActive() ? shadowColor : RGB(
+        (GetRValue(titlebarColor) + GetRValue(shadowColor)) / 2,
+        (GetGValue(titlebarColor) + GetGValue(shadowColor)) / 2,
+        (GetBValue(titlebarColor) + GetBValue(shadowColor)) / 2
+    );
+
+    CBrush topShadowBrush(topShadowColor);
+    CRect topShadowRect = GetShadowRect();
+    dc.FillRect(topShadowRect, topShadowBrush);
 }
 
 // Draw title bar icon for the system menu.
@@ -343,7 +369,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_EXIT:       return OnFileExit();
     case IDM_MODE_FULL:
     {
-        m_isMiniFrame = FALSE;
+        m_isMiniFrame = false;
 
         // Check the full frame radio button.
         CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
@@ -356,7 +382,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     }
     case IDM_MODE_MINI:
     {
-        m_isMiniFrame = TRUE;
+        m_isMiniFrame = true;
 
         // Check the mini frame radio button.
         CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
@@ -406,7 +432,12 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Adjust the title bar colors to match the rebar theme.
     ReBarTheme theme = GetReBarTheme();
     m_colors.active = theme.clrBkgnd1;
-    m_colors.inactive = RGB(255, 255, 255);
+
+
+    m_colors.inactive = RGB((GetRValue(m_colors.active) * 2 + 256) / 3,
+                            (GetGValue(m_colors.active) * 2 + 256) / 3,
+                            (GetBValue(m_colors.active) * 2 + 256) / 3);
+
     m_colors.hover = RGB( (GetRValue(m_colors.active) + 180) / 2,
                           (GetGValue(m_colors.active) + 180) / 2,
                           (GetBValue(m_colors.active) + 180) / 2 );
@@ -817,13 +848,8 @@ LRESULT CMainFrame::OnPaint(UINT, WPARAM, LPARAM)
 {
     CPaintDC dc(*this);
 
-    // Draw title bar background
-    CRect titlebarRect = GetTitlebarRect();
-    COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
-    CBrush titlebarBrush(titlebarColor);
-    dc.FillRect(titlebarRect, titlebarBrush);
-
-    // Draw the title bar text and buttons.
+    // Draw the title bar.
+    DrawBackground(dc);
     DrawMinimizeButton(dc);
     DrawMaximizeButton(dc);
     DrawCloseButton(dc);
@@ -832,18 +858,7 @@ LRESULT CMainFrame::OnPaint(UINT, WPARAM, LPARAM)
         DrawTitleText(dc);
     }
     DrawWindowIcon(dc);
-
-    // Draw the top shadow. Original is missing because of the client rect extension.
-    COLORREF shadowColor = m_colors.topShadow;
-    COLORREF topShadowColor = IsActive() ? shadowColor : RGB(
-        (GetRValue(titlebarColor) + GetRValue(shadowColor)) / 2,
-        (GetGValue(titlebarColor) + GetGValue(shadowColor)) / 2,
-        (GetBValue(titlebarColor) + GetBValue(shadowColor)) / 2
-    );
-
-    CBrush topShadowBrush(topShadowColor);
-    CRect topShadowRect = GetShadowRect();
-    dc.FillRect(topShadowRect, topShadowBrush);
+    DrawTopShadow(dc);
 
     return 0;
 }

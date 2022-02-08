@@ -44,9 +44,9 @@ namespace ShellWrapper
         LPITEMIDLIST GetPidl() const { return m_pidl; }
         LPITEMIDLIST GetRelative();
         HRESULT GetSpecialFolderLocation(HWND hwnd, int csidl);
-        BOOL IsEqual(const Cpidl& cpidl);
+        bool IsEqual(const Cpidl& cpidl);
         void operator= (const Cpidl& cpidlSource);
-        BOOL operator== (const Cpidl& cpidl);
+        bool operator== (const Cpidl& cpidl);
         operator LPITEMIDLIST () { return m_pidl; }
 
     private:

@@ -50,7 +50,6 @@ Win32++ supports the following operating systems
 * Windows Server 2019
 * Windows 11
 * Windows Server 2022
-* Windows CE from WCE400 (Windows mobile 2003) to WCE600 (Windows mobile 6)
 
 
 Features
@@ -142,7 +141,6 @@ The sample applications include:
  * ToolBarDemo - Demonstrates how to customize a toolbar.
  * Tray - Demonstrates how to "minimize" an application to the system tray.
  * WinPlot - Plots a function specified by the user.
- * WinCE samples - A small collection of samples for Windows CE
 
 Getting Started
 ---------------

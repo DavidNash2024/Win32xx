@@ -16,7 +16,7 @@
 //
 
 // Constructor for CMainFrame.
-CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_hideSingleTab(TRUE)
+CMainFrame::CMainFrame() : m_isContainerTabsAtTop(false), m_hideSingleTab(true)
 {
 }
 
@@ -39,7 +39,7 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Hides or shows the tab for a container with a single tab.
-void CMainFrame::HideSingleContainerTab(BOOL hideSingle)
+void CMainFrame::HideSingleContainerTab(bool hideSingle)
 {
     m_hideSingleTab = hideSingle;
     std::vector<CDocker*>::const_iterator iter;
@@ -250,7 +250,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 }
 
 // Positions the tabs at the top or bottom of all containers.
-void CMainFrame::SetContainerTabsAtTop(BOOL isAtTop)
+void CMainFrame::SetContainerTabsAtTop(bool isAtTop)
 {
     m_isContainerTabsAtTop = isAtTop;
     std::vector<CDocker*>::const_iterator iter;
