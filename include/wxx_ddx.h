@@ -1,12 +1,12 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -71,8 +71,6 @@
 #include <iomanip>
 #include "wxx_wincore0.h"
 #include "wxx_exception.h"
-
-#ifndef _WIN32_WCE
 
 
 namespace Win32xx
@@ -1207,8 +1205,6 @@ namespace Win32xx
     }
 
 }   // namespace Win32xx
-
-#endif // _WIN32_WCE
 
 #endif // _WIN32XX_DDX_H_
 

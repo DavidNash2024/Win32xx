@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -70,7 +70,7 @@
 //
 
 // Set the version macros if they aren't already set.
-// These values are suitable for Windows 10.
+// These values are suitable for Windows 10 and Windows 11.
 #ifndef WINVER
   #define WINVER            0x0A00
   #undef  _WIN32_WINNT
@@ -109,37 +109,23 @@
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
+#include "wxx_shared_ptr.h"
+
+#include <WinSock2.h>
+#include <Windows.h>
+#include <CommCtrl.h>
+#include <Shlwapi.h>
+
 #include <cassert>
 #include <vector>
 #include <algorithm>
 #include <string>
 #include <map>
-#include <WinSock2.h>
-#include <Windows.h>
-#include <CommCtrl.h>
+#include <sstream>
 #include <stdio.h>
 #include <stdarg.h>
 #include <tchar.h>
-#ifndef _WIN32_WCE
-  #include <Shlwapi.h>
-  #include <process.h>
-  #include <sstream>
-#endif
-
-#ifdef _WIN32_WCE
-  #include "wxx_wcestddef.h"
-#endif
-
-#include "wxx_shared_ptr.h"
-
-// Required for WinCE
-#ifndef TLS_OUT_OF_INDEXES
-  #define TLS_OUT_OF_INDEXES (static_cast<DWORD_PTR>(-1))
-#endif
-#ifndef WM_PARENTNOTIFY
-  #define WM_PARENTNOTIFY 0x0210
-#endif
-
+#include <process.h>
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
@@ -263,9 +249,7 @@ namespace Win32xx
 
     // tString is a TCHAR std::string
     typedef std::basic_string<TCHAR> tString;
-  #ifndef _WIN32_WCE
     typedef std::basic_stringstream<TCHAR> tStringStream;
-  #endif
 
     // Some useful smart pointers
     // Note: Modern C++ compilers can use these typedefs instead.
@@ -328,8 +312,6 @@ namespace Win32xx
         long        count;
     };
 
-  #ifndef _WIN32_WCE
-
     // A structure that contains the data members for CMenu.
     struct CMenu_Data
     {
@@ -341,8 +323,6 @@ namespace Win32xx
         bool isManagedMenu;
         long count;
     };
-
-  #endif
 
     // The comparison function object used by CWinApp::m_mapHDC
     struct CompareHDC
@@ -527,7 +507,6 @@ namespace Win32xx
         LPVOID m_pThreadParams;         // Thread parameter for worker threads
         HANDLE m_thread;                // Handle of this thread
         UINT m_threadID;                // ID of this thread
-        DWORD m_threadIDForWinCE;       // ID of this thread (for WinCE only)
         HACCEL m_accel;                 // handle to the accelerator table
         HWND m_accelWnd;                // handle to the window for accelerator keys
     };
@@ -584,9 +563,11 @@ namespace Win32xx
         void AddCDCData(HDC dc, CDC_Data* pData);
         void AddCGDIData(HGDIOBJ gdi, CGDI_Data* pData);
         void AddCImlData(HIMAGELIST images, CIml_Data* pData);
+        void AddCMenuData(HMENU menu, CMenu_Data* pData);
         CDC_Data* GetCDCData(HDC dc);
         CGDI_Data* GetCGDIData(HGDIOBJ object);
         CIml_Data* GetCImlData(HIMAGELIST images);
+        CMenu_Data* GetCMenuData(HMENU menu);
         void SetCallback();
         static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
         void UpdateDefaultPrinter();
@@ -594,6 +575,7 @@ namespace Win32xx
         std::map<HDC, CDC_Data*, CompareHDC> m_mapCDCData;
         std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;
         std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
+        std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
         std::map<HWND, CWnd*, CompareHWND> m_mapHWND;       // maps window handles to CWnd objects
         std::vector<TLSDataPtr> m_allTLSData;     // vector of TLSData smart pointers, one for each thread
         CCriticalSection m_appLock;   // thread synchronization for CWinApp and TLS.
@@ -606,12 +588,6 @@ namespace Win32xx
         WNDPROC m_callback;           // callback address of CWnd::StaticWndowProc
         CHGlobal m_devMode;           // Used by CPrintDialog and CPageSetupDialog
         CHGlobal m_devNames;          // Used by CPrintDialog and CPageSetupDialog
-
-#ifndef _WIN32_WCE
-        void AddCMenuData(HMENU menu, CMenu_Data* pData);
-        CMenu_Data* GetCMenuData(HMENU menu);
-        std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
-#endif
 
     public:
         // Messages used for exceptions.

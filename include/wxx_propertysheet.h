@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -518,14 +518,10 @@ namespace Win32xx
         ZeroMemory(&m_psh, sizeof(m_psh));
         SetTitle(LoadString(captionID));
 
-#ifdef _WIN32_WCE
-        m_PSH.dwSize = sizeof(PROPSHEETHEADER);
-#else
         if (GetComCtlVersion() >= 471)
             m_psh.dwSize = sizeof(PROPSHEETHEADER);
         else
             m_psh.dwSize = PROPSHEETHEADER_V1_SIZE;
-#endif
 
         m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
         m_psh.hwndParent       = parent;
@@ -538,14 +534,10 @@ namespace Win32xx
         ZeroMemory(&m_psh, sizeof (m_psh));
         SetTitle(pCaption);
 
-#ifdef _WIN32_WCE
-        m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
-#else
         if (GetComCtlVersion() >= 471)
             m_psh.dwSize = sizeof(PROPSHEETHEADER);
         else
             m_psh.dwSize = PROPSHEETHEADER_V1_SIZE;
-#endif
 
         m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
         m_psh.hwndParent       = parent;

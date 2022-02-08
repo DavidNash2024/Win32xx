@@ -11,7 +11,7 @@
 //
 
 // Constructor for CMainFrame. Its called after CFrame's constructor
-CMainFrame::CMainFrame() : m_useBigIcons(TRUE)
+CMainFrame::CMainFrame() : m_useBigIcons(true)
 {
 }
 

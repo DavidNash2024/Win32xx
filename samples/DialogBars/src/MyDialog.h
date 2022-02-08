@@ -20,7 +20,7 @@ public:
     void SetProgressPos(int pos);
     void SetScrollPos(int pos);
     void SetSliderPos(int pos);
-    void SetStatic(BOOL isSlider, int pos);
+    void SetStatic(bool isSlider, int pos);
 
 protected:
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);

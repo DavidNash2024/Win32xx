@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -167,11 +167,6 @@
 #include "wxx_exception.h"
 #include "wxx_metafile.h"
 
-// Required for WinCE
-#ifndef HGDI_ERROR
-  #define HGDI_ERROR ((HANDLE)-1)
-#endif
-
 // Disable macros from Windowsx.h
 #undef CopyRgn
 
@@ -235,7 +230,6 @@ namespace Win32xx
         HBITMAP CreateCompatibleBitmap(HDC dc, int width, int height);
         HBITMAP CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* ppBits, HANDLE section, DWORD offset);
 
-#ifndef _WIN32_WCE
         void    ConvertToDisabled(COLORREF mask) const;
         HBITMAP CreateDIBitmap(HDC dc, const BITMAPINFOHEADER* pBMIH, DWORD init, LPCVOID pInit, const LPBITMAPINFO pBMI, UINT colorUse);
         HBITMAP CreateMappedBitmap(UINT bitmapID, UINT flags = 0, LPCOLORMAP pColorMap = NULL, int mapSize = 0);
@@ -246,7 +240,6 @@ namespace Win32xx
         int SetDIBits(HDC dc, UINT startScan, UINT scanLines, LPCVOID pBits, const LPBITMAPINFO pBMI, UINT colorUse) const;
         CSize GetBitmapDimensionEx() const;
         CSize SetBitmapDimensionEx(int width, int height) const;
-#endif // !_WIN32_WCE
 
         // Attributes
         BITMAP GetBitmapData() const;
@@ -269,12 +262,10 @@ namespace Win32xx
         HBRUSH CreatePatternBrush(HBITMAP bitmap);
         LOGBRUSH GetLogBrush() const;
 
-#ifndef _WIN32_WCE
         HBRUSH CreateHatchBrush(int index, COLORREF color);
         HBRUSH CreateBrushIndirect(const LOGBRUSH& logBrush);
         HBRUSH CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec);
         HBRUSH CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT usage);
-#endif // !defined(_WIN32_WCE)
 
     };
 
@@ -295,13 +286,11 @@ namespace Win32xx
         HFONT CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = 0, BOOL isBold = FALSE, BOOL isItalic = FALSE);
         HFONT CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = 0);
 
-#ifndef _WIN32_WCE
         HFONT CreateFont(int height, int width, int escapement,
                 int orientation, int weight, DWORD italic, DWORD underline,
                 DWORD strikeOut, DWORD charSet, DWORD outPrecision,
                 DWORD clipPrecision, DWORD quality, DWORD pitchAndFamily,
                 LPCTSTR faceName);
-#endif // #ifndef _WIN32_WCE
 
         // Attributes
         LOGFONT GetLogFont() const;
@@ -321,9 +310,8 @@ namespace Win32xx
         // Create methods
         HPALETTE CreatePalette(LPLOGPALETTE pLogPalette);
 
-#ifndef _WIN32_WCE
         HPALETTE CreateHalftonePalette(HDC dc);
-#endif // !_WIN32_WCE
+
 
         // Attributes
         int GetEntryCount() const;
@@ -331,10 +319,8 @@ namespace Win32xx
         UINT SetPaletteEntries(UINT startIndex, UINT entries, LPPALETTEENTRY pPaletteColors) const;
 
         // Operations
-#ifndef _WIN32_WCE
         BOOL ResizePalette(UINT entries) const;
         BOOL AnimatePalette(UINT startIndex, UINT entries, LPPALETTEENTRY pPaletteColors) const;
-#endif // !_WIN32_WCE
 
         UINT GetNearestPaletteIndex (COLORREF color) const;
 
@@ -349,9 +335,7 @@ namespace Win32xx
         CPen();
         CPen(HPEN pen);
         CPen(int penStyle, int width, COLORREF color);
-#ifndef _WIN32_WCE
         CPen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount = 0, const DWORD* pStyle = NULL);
-#endif // !_WIN32_WCE
         operator HPEN() const;
         virtual ~CPen();
 
@@ -359,10 +343,8 @@ namespace Win32xx
         HPEN CreatePenIndirect(const LOGPEN& logPen);
         LOGPEN GetLogPen() const;
 
-#ifndef _WIN32_WCE
         HPEN ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount = 0, const DWORD* pStyle = NULL) ;
         EXTLOGPEN GetExtLogPen() const;
-#endif // !_WIN32_WCE
 
     };
 
@@ -382,14 +364,12 @@ namespace Win32xx
         HRGN CreateRectRgnIndirect(const RECT& rc);
         HRGN CreateFromData(const XFORM* pXForm, int count, const RGNDATA* pRgnData);
 
-#ifndef _WIN32_WCE
         HRGN CreateEllipticRgn(int x1, int y1, int x2, int y2);
         HRGN CreateEllipticRgnIndirect(const RECT& rc);
         HRGN CreatePolygonRgn(LPPOINT pPoints, int count, int mode);
         HRGN CreatePolyPolygonRgn(LPPOINT pPoints, LPINT pPolyCounts, int count, int polyFillMode);
         HRGN CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3);
         HRGN CreateFromPath(HDC dc);
-#endif // !_WIN32_WCE
 
         // Operations
         void SetRectRgn(int x1, int y1, int x2, int y2) const;
@@ -465,17 +445,15 @@ namespace Win32xx
         int SelectObject(HRGN rgn) const;
         HPALETTE SelectPalette(HPALETTE palette, BOOL forceBkgnd) const;
 
-#ifndef _WIN32_WCE
         void operator = (const HDC dc);
-#endif
 
         // Initialization
         HDC CreateCompatibleDC(HDC source);
         HDC CreateDC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
         int GetDeviceCaps(int index) const;
-#ifndef _WIN32_WCE
+
         HDC CreateIC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
-#endif
+
 
         // Create Bitmaps
         void CreateBitmap(int cx, int cy, UINT planes, UINT bitsPerPixel, LPCVOID pColors);
@@ -490,50 +468,40 @@ namespace Win32xx
         BOOL LoadImage(LPCTSTR resName, UINT flags);
         BOOL LoadOEMBitmap(UINT bitmapID); // for OBM_/OCR_/OIC
 
-#ifndef _WIN32_WCE
         void CreateBitmapIndirect(const BITMAP& bitmap);
         void CreateDIBitmap(HDC dc, const BITMAPINFOHEADER& pBMIH, DWORD init, LPCVOID pInit,
                                         const LPBITMAPINFO pBMI, UINT usage);
         void CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/);
-#endif
 
         // Create Brushes
         void CreatePatternBrush(HBITMAP bitmap);
         void CreateSolidBrush(COLORREF color);
 
-#ifndef _WIN32_WCE
         void CreateBrushIndirect(const LOGBRUSH& logBrush);
         void CreateHatchBrush(int fnStyle, COLORREF color);
         void CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec);
         void CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT usage);
-#endif
 
         // Create Fonts
         void CreateFontIndirect(const LOGFONT& lf);
         void CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = 0, BOOL isBold = FALSE, BOOL isItalic = FALSE);
         void CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = 0);
 
-#ifndef _WIN32_WCE
         void CreateFont(int height, int width, int escapement, int orientation, int weight,
                             DWORD italic, DWORD underline, DWORD strikeOut, DWORD charSet,
                             DWORD outputPrecision, DWORD clipPrecision, DWORD quality,
                             DWORD pitchAndFamily, LPCTSTR faceName);
-#endif
 
         // Create Palettes
         void CreatePalette(LPLOGPALETTE pLogPalette, BOOL forceBkgnd);
 
-#ifndef _WIN32_WCE
         void CreateHalftonePalette(BOOL forceBkgnd);
-#endif
+
 
         // Create Pens
         void CreatePen(int style, int width, COLORREF color);
         void CreatePenIndirect(const LOGPEN& logPen);
-
-#ifndef _WIN32_WCE
         void ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount, const DWORD* pStyle);
-#endif
 
         // Retrieve and Select Stock Objects
         HGDIOBJ GetStockObject(int index) const;
@@ -546,18 +514,14 @@ namespace Win32xx
         int CreateRgnFromData(const XFORM* pXform, DWORD count, const RGNDATA* pRgnData);
         int CreateRgnFromPath(HDC dc);
 
-#ifndef _WIN32_WCE
         int CreateEllipticRgn(int left, int top, int right, int bottom);
         int CreateEllipticRgnIndirect(const RECT& rc);
         int CreatePolygonRgn(LPPOINT pPointArray, int points, int polyFillMode);
         int CreatePolyPolygonRgn(LPPOINT pPointArray, LPINT pPolyCounts, int count, int polyFillMode);
         int CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3);
-#endif
 
         // Wrappers for WinAPI functions
-#ifndef _WIN32_WCE
         int EnumObjects(int objectType, GOBJENUMPROC pObjectFunc, LPARAM lparam) const;
-#endif
 
         // Point and Line Drawing Functions
         CPoint GetCurrentPosition() const;
@@ -571,7 +535,6 @@ namespace Win32xx
         COLORREF SetPixel(POINT pt, COLORREF color) const;
         int SetROP2(int drawMode) const;
 
-#ifndef _WIN32_WCE
         BOOL Arc(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
         BOOL Arc(const RECT& rc, POINT start, POINT end) const;
         BOOL ArcTo(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
@@ -589,7 +552,6 @@ namespace Win32xx
         BOOL PolyBezierTo(const POINT* pPointArray, int count) const;
         BOOL SetPixelV(int x, int y, COLORREF color) const;
         BOOL SetPixelV(POINT pt, COLORREF color) const;
-#endif
 
         // Shape Drawing Functions
         BOOL DrawFocusRect(const RECT& rc) const;
@@ -601,13 +563,11 @@ namespace Win32xx
         BOOL RoundRect(int x1, int y1, int x2, int y2, int width, int height) const;
         BOOL RoundRect(const RECT& rc, int width, int height) const;
 
-#ifndef _WIN32_WCE
         BOOL Chord(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
         BOOL Chord(const RECT& rc, POINT start, POINT end) const;
         BOOL Pie(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
         BOOL Pie(const RECT& rc, POINT start, POINT end) const;
         BOOL PolyPolygon(LPPOINT pPointArray, LPINT pPolyCounts, int count) const;
-#endif
 
         // Fill and Image Drawing functions
         BOOL DrawEdge(const RECT& rc, UINT edge, UINT flags) const;
@@ -625,7 +585,6 @@ namespace Win32xx
         BOOL GradientFill(PTRIVERTEX pVertex, ULONG vertex, PVOID pMesh, ULONG mesh, ULONG mode) const;
 #endif
 
-#ifndef _WIN32_WCE
         BOOL DrawIcon(int x, int y, HICON icon) const;
         BOOL DrawIcon(POINT point, HICON icon) const;
         BOOL FrameRect(const RECT& rc, HBRUSH brush) const;
@@ -633,7 +592,6 @@ namespace Win32xx
         int  GetPolyFillMode() const;
         BOOL PaintRgn(HRGN rgn) const;
         int  SetPolyFillMode(int polyFillMode) const;
-#endif
 
         // Bitmap Functions
         BOOL BitBlt(int x, int y, int width, int height, HDC hSrc, int xSrc, int ySrc, DWORD rop) const;
@@ -653,7 +611,6 @@ namespace Win32xx
                            int xSrc, int ySrc, int srcWidth, int srcHeight,
                            DWORD rop) const;
 
-#ifndef _WIN32_WCE
         BOOL ExtFloodFill(int x, int y, COLORREF color, UINT fillType) const;
         BOOL FloodFill(int x, int y, COLORREF color) const;
         int  GetDIBits(HBITMAP bitmap, UINT startScan, UINT scanLines, LPVOID pBits,
@@ -664,21 +621,18 @@ namespace Win32xx
                         LPBITMAPINFO pBMI, UINT colorUse) const;
 
         int  SetStretchBltMode(int stretchMode) const;
-  #if (WINVER >= 0x0410)
+#if (WINVER >= 0x0410)
         BOOL TransparentBlt(int x, int y, int width, int height, HDC hSrc,
                            int xSrc, int ySrc, int widthSrc, int heightSrc,
                            UINT transparent) const;
-  #endif
 #endif
 
         // Brush Functions
         HBRUSH GetCurrentBrush() const;
         LOGBRUSH GetLogBrush() const;
 
-#ifndef _WIN32_WCE
         CPoint   GetBrushOrgEx() const;
         CPoint   SetBrushOrgEx(int x, int y);
-#endif
 
 #if (_WIN32_WINNT >= 0x0500)
         COLORREF GetDCBrushColor() const;
@@ -689,7 +643,6 @@ namespace Win32xx
         HFONT GetCurrentFont() const;
         LOGFONT GetLogFont() const;
 
-#ifndef _WIN32_WCE
         DWORD GetFontData(DWORD table, DWORD offset, LPVOID pBuffer,  DWORD data) const;
         DWORD GetFontLanguageInfo() const;
         DWORD GetGlyphOutline(UINT query, UINT format, LPGLYPHMETRICS pGM, DWORD bufferSize,
@@ -697,27 +650,22 @@ namespace Win32xx
 
         DWORD GetKerningPairs(DWORD numPairs, LPKERNINGPAIR pKrnPair) const;
         DWORD SetMapperFlags(DWORD flag) const;
-#endif
 
         // Palette and color functions
         HPALETTE GetCurrentPalette() const;
         COLORREF GetNearestColor(COLORREF color) const;
         UINT RealizePalette() const;
 
-#ifndef _WIN32_WCE
         BOOL GetColorAdjustment(LPCOLORADJUSTMENT pCA) const;
         BOOL SetColorAdjustment(const COLORADJUSTMENT* pCA) const;
         BOOL UpdateColors() const;
-#endif
 
         // Pen Functions
         HPEN GetCurrentPen() const;
         LOGPEN GetLogPen() const;
 
-#ifndef _WIN32_WCE
         BOOL GetMiterLimit(PFLOAT limit) const;
         BOOL SetMiterLimit(FLOAT newLimit, PFLOAT oldLimit) const;
-#endif
 
         // Clipping and Region Functions
         int  ExcludeClipRect(int left, int top, int right, int bottom) const;
@@ -728,7 +676,6 @@ namespace Win32xx
         BOOL RectVisible(const RECT& rc) const;
         int  SelectClipRgn(HRGN rgn) const;
 
-#ifndef _WIN32_WCE
         BOOL AbortPath() const;
         BOOL BeginPath() const;
         BOOL EndPath() const;
@@ -741,15 +688,12 @@ namespace Win32xx
         BOOL StrokeAndFillPath() const;
         BOOL StrokePath() const;
         BOOL WidenPath() const;
-#endif
 
         // Co-ordinate Functions
-#ifndef _WIN32_WCE
         BOOL DPtoLP(LPPOINT pPointArray, int count)  const;
         BOOL DPtoLP(RECT& rc)  const;
         BOOL LPtoDP(LPPOINT pPointArray, int count)  const;
         BOOL LPtoDP(RECT& rc)  const;
-#endif
 
         // Layout Functions
 #if (WINVER >= 0x0500)
@@ -758,7 +702,6 @@ namespace Win32xx
 #endif
 
         // Mapping functions
-#ifndef _WIN32_WCE
         int  GetMapMode() const;
         int  SetMapMode(int mapMode) const;
         BOOL GetViewportOrgEx(LPPOINT pPoint)  const;
@@ -777,13 +720,10 @@ namespace Win32xx
         BOOL SetWindowOrgEx(int x, int y, LPPOINT pPoint = NULL) const;
         BOOL SetWindowOrgEx(POINT point, LPPOINT pPointRet = NULL) const;
         BOOL OffsetWindowOrgEx(int width, int height, LPPOINT pPoint = NULL) const;
-#endif
 
         // MetaFile Functions
-#ifndef _WIN32_WCE
         BOOL PlayMetaFile(HMETAFILE metaFile) const;
         BOOL PlayMetaFile(HENHMETAFILE enhMetaFile, const RECT& bounds) const;
-#endif
 
         // Printer Functions
         int StartDoc(LPDOCINFO pDocInfo) const;
@@ -807,7 +747,6 @@ namespace Win32xx
         UINT  SetTextAlign(UINT flags) const;
         COLORREF SetTextColor(COLORREF color) const;
 
-#ifndef _WIN32_WCE
         int   DrawTextEx(LPTSTR string, int count, const RECT& rc, UINT format, LPDRAWTEXTPARAMS pDTParams) const;
         DWORD GetCharacterPlacement(LPCTSTR string, int count, int maxExtent,
                                     LPGCP_RESULTS pResults, DWORD flags) const;
@@ -828,7 +767,6 @@ namespace Win32xx
         BOOL  GetCharABCWidthsI(UINT first, UINT cgi, LPWORD pGI, LPABC pABC) const;
         BOOL  GetCharWidthI(UINT first, UINT cgi, LPWORD pGI, int* pBuffer) const;
   #endif // (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
-#endif  // _WIN32_WCE
 
     protected:
         PAINTSTRUCT* GetPaintStruct() const { return &m_pData->ps; }
@@ -1002,7 +940,6 @@ namespace Win32xx
         virtual ~CWindowDC() {}
     };
 
-#ifndef _WIN32_WCE
 
     ///////////////////////////////////////////////
     // CMetaFileDC manages a GDI device context for
@@ -1102,9 +1039,6 @@ namespace Win32xx
         }
 
     };
-
-
-#endif
 
 
     ///////////////////////////////////////////////
@@ -1465,8 +1399,6 @@ namespace Win32xx
         return (0 != bitmap);  // boolean expression
     }
 
-#ifndef _WIN32_WCE
-
     // Rapidly converts the bitmap image to pale grayscale image suitable for disabled icons.
     // The mask is the transparent color. Pixels with this color are not converted.
     // Supports 32 bit, 24 bit, 16 bit and 8 bit colors.
@@ -1565,8 +1497,6 @@ namespace Win32xx
         return bitmap;
     }
 
-#endif // !_WIN32_WCE
-
     // Creates a bitmap with the specified width, height, and color format (color planes and bits-per-pixel).
     // Refer to CreateBitmap in the Windows API documentation for more information.
     inline HBITMAP CBitmap::CreateBitmap(int width, int height, UINT planes, UINT bitsPerPixel, LPCVOID pBits)
@@ -1580,8 +1510,6 @@ namespace Win32xx
         return bitmap;
     }
 
-#ifndef _WIN32_WCE
-
     // Creates a bitmap with the width, height, and color format specified in the BITMAP structure.
     // Refer to CreateBitmapIndirect in the Windows API documentation for more information.
     inline HBITMAP CBitmap::CreateBitmapIndirect(const BITMAP& bitmap)
@@ -1594,8 +1522,6 @@ namespace Win32xx
         SetManaged(true);
         return copyBitmap;
     }
-
-#endif // !_WIN32_WCE
 
     // Creates a bitmap compatible with the device that is associated with the specified device context.
     // Refer to CreateCompatibleBitmap in the Windows API documentation for more information.
@@ -1620,8 +1546,6 @@ namespace Win32xx
         VERIFY(::GetObject(GetHandle(), sizeof(data), &data));
         return data;
     }
-
-#ifndef _WIN32_WCE
 
     // Retrieves the dimensions of a compatible bitmap.
     // The retrieved dimensions must have been set by the SetBitmapDimensionEx function.
@@ -1799,8 +1723,6 @@ namespace Win32xx
         VERIFY(SetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
     }
 
-#endif // !_WIN32_WCE
-
     // Creates a DIB that applications can write to directly. The function gives you
     // a pointer to the location of the bitmap bit values. You can supply a handle to
     // a file-mapping object that the function will use to create the bitmap,
@@ -1813,8 +1735,6 @@ namespace Win32xx
         SetManaged(true);
         return bitmap;
     }
-
-#ifndef _WIN32_WCE
 
     // Retrieves the bits of the specified compatible bitmap and copies them
     // into a buffer as a DIB using the specified format.
@@ -1834,8 +1754,6 @@ namespace Win32xx
         assert(GetHandle() != 0);
         return ::SetDIBits(dc, reinterpret_cast<HBITMAP>(GetHandle()), startScan, scanLines, pBits, pBMI, colorUse);
     }
-
-#endif // !_WIN32_WCE
 
 
     ///////////////////////////////////////////////
@@ -1885,8 +1803,6 @@ namespace Win32xx
         SetManaged(true);
         return brush;
     }
-
-#ifndef _WIN32_WCE
 
     // Creates a logical brush that has the specified hatch pattern and color.
     // Refer to CreateHatchBrush in the Windows API documentation for more information.
@@ -1939,8 +1855,6 @@ namespace Win32xx
         SetManaged(true);
         return brush;
     }
-
-#endif // !defined(_WIN32_WCE)
 
     // Creates a logical brush with the specified bitmap pattern. The bitmap can be a DIB section bitmap,
     // which is created by the CreateDIBSection function, or it can be a device-dependent bitmap.
@@ -2047,7 +1961,6 @@ namespace Win32xx
         // Set the new logfont's font size to logical units using the device context.
         LOGFONT newLogFont = logFont;
 
-#ifndef _WIN32_WCE
         POINT pt = { 0, 0 };
         pt.y = ::MulDiv(fontDC.GetDeviceCaps(LOGPIXELSY), logFont.lfHeight, 720);   // 72 points/inch, 10 decipoints/point
         VERIFY(fontDC.DPtoLP(&pt, 1));
@@ -2056,15 +1969,9 @@ namespace Win32xx
         VERIFY(fontDC.DPtoLP(&ptOrg, 1));
 
         newLogFont.lfHeight = -abs(pt.y - ptOrg.y);
-#else // CE specific
-        // DP and LP are always the same on CE
-        newLogFont.lfHeight = -abs(((fontDC.GetDeviceCaps(LOGPIXELSY)* logFont.lfHeight)/ 720));
-#endif // _WIN32_WCE
 
         return CreateFontIndirect (newLogFont);
     }
-
-#ifndef _WIN32_WCE
 
     // Creates a logical font with the specified characteristics.
     // Refer to CreateFont in the Windows API documentation for more information.
@@ -2086,8 +1993,6 @@ namespace Win32xx
         SetManaged(true);
         return font;
     }
-
-#endif // #ifndef _WIN32_WCE
 
     // Retrieves the Logfont structure that contains font attributes.
     // Refer to GetObject in the Windows API documentation for more information.
@@ -2135,8 +2040,6 @@ namespace Win32xx
         return palette;
     }
 
-#ifndef _WIN32_WCE
-
     // Creates a halftone palette for the specified device context (DC).
     // Refer to CreateHalftonePalette in the Windows API documentation for more information.
     inline HPALETTE CPalette::CreateHalftonePalette(HDC dc)
@@ -2150,8 +2053,6 @@ namespace Win32xx
         SetManaged(true);
         return palette;
     }
-
-#endif // !_WIN32_WCE
 
     // Retrieve the number of entries in the palette.
     // Refer to GetObject in the Windows API documentation for more information.
@@ -2179,8 +2080,6 @@ namespace Win32xx
         return ::SetPaletteEntries(reinterpret_cast<HPALETTE>(GetHandle()), startIndex, entries, pPaletteColors);
     }
 
-#ifndef _WIN32_WCE
-
     // Replaces entries in the palette.
     // Refer to AnimatePalette in the Windows API documentation for more information.
     inline BOOL CPalette::AnimatePalette(UINT startIndex, UINT entries, LPPALETTEENTRY pPaletteColors) const
@@ -2196,8 +2095,6 @@ namespace Win32xx
         assert(GetHandle() != 0);
         return ::ResizePalette(reinterpret_cast<HPALETTE>(GetHandle()), entries);
     }
-
-#endif // !_WIN32_WCE
 
     // Retrieves the index for the entry in the palette most closely matching a specified color value.
     // Refer to GetNearestPaletteIndex in the Windows API documentation for more information.
@@ -2234,8 +2131,6 @@ namespace Win32xx
         }
     }
 
-#ifndef _WIN32_WCE
-
     inline CPen::CPen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount /*= 0*/, const DWORD* pStyle /*= NULL*/)
     {
         try
@@ -2249,8 +2144,6 @@ namespace Win32xx
             throw;      // Rethrow
         }
     }
-
-#endif // !_WIN32_WCE
 
     inline CPen::operator HPEN () const
     {
@@ -2293,8 +2186,6 @@ namespace Win32xx
         return logPen;
     }
 
-#ifndef _WIN32_WCE
-
     // Creates a logical cosmetic or geometric pen that has the specified style, width, and brush attributes.
     // Refer to ExtCreatePen in the Windows API documentation for more information.
     inline HPEN CPen::ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount /* = 0*/, const DWORD* pStyle /*= NULL*/)
@@ -2316,8 +2207,6 @@ namespace Win32xx
         VERIFY(::GetObject(GetHandle(), sizeof(exLogPen), &exLogPen));
         return exLogPen;
     }
-
-#endif // !_WIN32_WCE
 
 
     ///////////////////////////////////////////////
@@ -2366,8 +2255,6 @@ namespace Win32xx
         SetManaged(true);
         return rgn;
     }
-
-#ifndef _WIN32_WCE
 
     // Creates an elliptical region.
     // Refer to CreateEllipticRgn in the Windows API documentation for more information.
@@ -2448,8 +2335,6 @@ namespace Win32xx
         SetManaged(true);
         return rgn;
     }
-
-#endif // !_WIN32_WCE
 
     // Creates a region from the specified region and transformation data.
     // If the XFORM pointer is NULL, the identity transformation is used.
@@ -2592,8 +2477,6 @@ namespace Win32xx
         Attach(dc);
     }
 
-#ifndef _WIN32_WCE
-
     // Note: this assignment operator permits a call like this:
     // CDC MyCDC;
     // MyCDC = SomeHDC;
@@ -2601,8 +2484,6 @@ namespace Win32xx
     {
         Attach(dc);
     }
-
-#endif
 
     // The copy constructor is called when a temporary copy of the CDC needs to be created.
     // This can happen when a CDC is passed by value in a function call. Each CDC copy manages
@@ -2707,8 +2588,6 @@ namespace Win32xx
         return dc;
     }
 
-#ifndef _WIN32_WCE
-
     // Enumerates the pens or brushes available for the device context. This function calls
     // the application-defined callback function once for each available object, supplying
     // data describing that object.
@@ -2718,8 +2597,6 @@ namespace Win32xx
         assert(m_pData->dc != 0);
         return ::EnumObjects(m_pData->dc, objectType, pObjectFunc, lparam);
     }
-
-#endif
 
     // Returns a memory device context (DC) compatible with the specified device.
     // Refer to CreateCompatibleDC in the Windows API documentation for more information.
@@ -2751,8 +2628,6 @@ namespace Win32xx
         return dc;
     }
 
-#ifndef _WIN32_WCE
-
     // Returns an information context for the specified device. The information context
     // provides a fast way to get information about the device without creating a device context (DC).
     // However, GDI drawing functions cannot accept a handle to an information context.
@@ -2769,8 +2644,6 @@ namespace Win32xx
         SetManaged(true);
         return dc;
     }
-
-#endif
 
     // Draws the specified bitmap to the specified DC using the mask color provided as the transparent colour
     // Suitable for use with a Window DC or a memory DC
@@ -3005,8 +2878,6 @@ namespace Win32xx
         m_pData->bitmap = bitmap;
     }
 
-#ifndef _WIN32_WCE
-
     // Creates a bitmap and selects it into the device context.
     // Refer to CreateBitmapIndirect in the Windows API documentation for more information.
     inline void CDC::CreateBitmapIndirect (const BITMAP& bitmap)
@@ -3032,8 +2903,6 @@ namespace Win32xx
         SelectObject(newBitmap);
         m_pData->bitmap = newBitmap;
     }
-
-#endif
 
     // Creates a bitmap and selects it into the device context.
     // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
@@ -3205,8 +3074,6 @@ namespace Win32xx
         return isLoaded;
     }
 
-#ifndef _WIN32_WCE
-
     // Creates and selects a new bitmap using the bitmap data and colors specified by
     // the bitmap resource and the color mapping information.
     // Refer to CreateMappedBitmap in the Windows API documentation for more information.
@@ -3219,8 +3086,6 @@ namespace Win32xx
         SelectObject(bitmap);
         m_pData->bitmap = bitmap;
     }
-
-#endif // !_WIN32_WCE
 
     //////////////////
     // Brush functions
@@ -3269,8 +3134,6 @@ namespace Win32xx
         VERIFY(::GetObject(brush, sizeof(logBrush), &logBrush));
         return logBrush;
     }
-
-#ifndef _WIN32_WCE
 
     // Creates the brush and selects it into the device context.
     // Refer to CreateBrushIndirect in the Windows API documentation for more information.
@@ -3342,7 +3205,6 @@ namespace Win32xx
         return oldPt;
     }
 
-#endif
 
     /////////////////
     // Font functions
@@ -3406,8 +3268,6 @@ namespace Win32xx
         return logFont;
     }
 
-#ifndef _WIN32_WCE
-
     // Creates a logical font with the specified characteristics.
     // Refer to CreateFont in the Windows API documentation for more information.
     inline void CDC::CreateFont (
@@ -3439,7 +3299,6 @@ namespace Win32xx
         m_pData->font = font;
     }
 
-#endif
 
     ////////////////////
     // Palette functions
@@ -3482,8 +3341,6 @@ namespace Win32xx
         return ::RealizePalette(m_pData->dc);
     }
 
-#ifndef _WIN32_WCE
-
     // Creates and selects halftone palette.
     // Refer to CreateHalftonePalette in the Windows API documentation for more information.
     inline void CDC::CreateHalftonePalette(BOOL forceBkgnd)
@@ -3522,7 +3379,6 @@ namespace Win32xx
         return ::UpdateColors(m_pData->dc);
     }
 
-#endif
 
     ////////////////
     // Pen functions
@@ -3551,8 +3407,6 @@ namespace Win32xx
         m_pData->pen = pen;
     }
 
-#ifndef _WIN32_WCE
-
     // Creates a logical cosmetic or geometric pen that has the specified style, width, and brush attributes.
     // Refer to ExtCreatePen in the Windows API documentation for more information.
     inline void CDC::ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount , const DWORD* pStyle)
@@ -3564,8 +3418,6 @@ namespace Win32xx
         SelectObject(pen);
         m_pData->pen = pen;
     }
-
-#endif
 
     // Retrieves the handle to the currently selected pen.
     // Refer to GetCurrentObject in the Windows API documentation for more information.
@@ -3666,8 +3518,6 @@ namespace Win32xx
         return Complexity;
     }
 
-#ifndef _WIN32_WCE
-
     // Creates the elliptical region from the bounding rectangle co-ordinates,
     // and selects it into the device context.
     // The return value specifies the region's complexity: NULLREGION;SIMPLEREGION;COMPLEXREGION;ERROR.
@@ -3754,7 +3604,6 @@ namespace Win32xx
         return Complexity;
     }
 
-#endif
 
     ////////////////////////////////
     // Wrappers for WinAPI functions
@@ -3771,7 +3620,6 @@ namespace Win32xx
     //////////////////
     // Brush functions
 
-#ifndef _WIN32_WCE
 #if (_WIN32_WINNT >= 0x0500)
 
     // Retrieves the current brush color from the device context.
@@ -3791,13 +3639,10 @@ namespace Win32xx
     }
 
 #endif // _WIN32_WINNT >= 0x0500
-#endif // _WIN32_WCE
 
     /////////////////
     // Font Functions
 
-
-#ifndef _WIN32_WCE
 
     // Retrieves font metric data for a TrueType font.
     // Refer to GetFontData in the Windows API documentation for more information.
@@ -3857,7 +3702,6 @@ namespace Win32xx
         return ::SetMiterLimit(m_pData->dc, newLimit, pOldLimit);
     }
 
-#endif
 
     /////////////////////
     // Clipping functions
@@ -3926,8 +3770,6 @@ namespace Win32xx
         assert(m_pData->dc != 0);
         return ::SelectClipRgn(m_pData->dc, rgn);
     }
-
-#ifndef _WIN32_WCE
 
     // The AbortPath function closes and discards any paths in the specified device context.
     // Refer to AbortPath in the Windows API documentation for more information.
@@ -4034,7 +3876,6 @@ namespace Win32xx
         return ::WidenPath(m_pData->dc);
     }
 
-#endif
 
     ///////////////////////////////////
     // Point and Line Drawing Functions
@@ -4117,8 +3958,6 @@ namespace Win32xx
         assert(m_pData->dc != 0);
         return ::SetPixel(m_pData->dc, x, y, color);
     }
-
-#ifndef _WIN32_WCE
 
     // Draws an elliptical arc.
     // Refer to Arc in the Windows API documentation for more information.
@@ -4267,7 +4106,6 @@ namespace Win32xx
         return ::SetPixelV(m_pData->dc, pt.x, pt.y, color);
     }
 
-#endif
 
     //////////////////////////
     // Shape Drawing Functions
@@ -4339,8 +4177,6 @@ namespace Win32xx
         return ::RoundRect(m_pData->dc, rc.left, rc.top, rc.right, rc.bottom, width, height );
     }
 
-#ifndef _WIN32_WCE
-
     // Draws a chord (a region bounded by the intersection of an ellipse and a line segment, called a secant).
     // Refer to Chord in the Windows API documentation for more information.
     inline BOOL CDC::Chord(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const
@@ -4383,7 +4219,6 @@ namespace Win32xx
         return ::PolyPolygon(m_pData->dc, pPointArray, pPolyCounts, count);
     }
 
-#endif
 
     ////////////////////////////////
     // Fill and 3D Drawing functions
@@ -4439,7 +4274,7 @@ namespace Win32xx
         return ::FillRgn(m_pData->dc, rgn, brush);
     }
 
-  #if (WINVER >= 0x0410)
+#if (WINVER >= 0x0410)
 
     // Fills rectangle and triangle structures.
     // Refer to GradientFill in the Windows API documentation for more information.
@@ -4449,9 +4284,7 @@ namespace Win32xx
         return ::GradientFill(m_pData->dc, pVertex, vertex, pMesh, mesh, mode);
     }
 
-  #endif
-
-#ifndef _WIN32_WCE
+#endif
 
     // Draws an icon or cursor.
     // Refer to DrawIcon in the Windows API documentation for more information.
@@ -4509,7 +4342,6 @@ namespace Win32xx
         return ::SetPolyFillMode(m_pData->dc, polyFillMode);
     }
 
-#endif
 
     ///////////////////
     // Bitmap Functions
@@ -4578,8 +4410,6 @@ namespace Win32xx
         assert(m_pData->dc != 0);
         return ::StretchBlt(m_pData->dc, x, y, width, height, src, xSrc, ySrc, srcWidth, srcHeight, rop);
     }
-
-#ifndef _WIN32_WCE
 
     // Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
     // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
@@ -4660,9 +4490,6 @@ namespace Win32xx
         return ::ExtFloodFill(m_pData->dc, x, y, color, fillType );
     }
 
-#endif
-
-#ifndef _WIN32_WCE
 
     ////////////////////////
     // co-ordinate functions
@@ -4699,7 +4526,6 @@ namespace Win32xx
         return ::LPtoDP(m_pData->dc, (LPPOINT)&rc, 2);
     }
 
-#endif
 
     ///////////////////
     // Layout Functions
@@ -4726,8 +4552,6 @@ namespace Win32xx
     ////////////////////
     // Mapping Functions
 
-
-#ifndef _WIN32_WCE
 
     // Retrieves the current mapping mode.
     // Possible modes: MM_ANISOTROPIC, MM_HIENGLISH, MM_HIMETRIC, MM_ISOTROPIC, MM_LOENGLISH, MM_LOMETRIC, MM_TEXT, and MM_TWIPS.
@@ -4895,7 +4719,6 @@ namespace Win32xx
         return ::PlayEnhMetaFile(m_pData->dc, enhMetaFile, &bounds);
     }
 
-#endif // _WIN32_WCE
 
     ////////////////////
     // Printer Functions
@@ -5055,8 +4878,6 @@ namespace Win32xx
         return ::SetBkMode(m_pData->dc, bkMode);
     }
 
-#ifndef _WIN32_WCE
-
     // Draws formatted text in the specified rectangle with more formatting options.
     // Refer to DrawTextEx in the Windows API documentation for more information.
     inline int CDC::DrawTextEx(LPTSTR string, int count, const RECT& rc, UINT format, LPDRAWTEXTPARAMS pDTParams) const
@@ -5195,9 +5016,6 @@ namespace Win32xx
     }
 
   #endif // (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
-
-#endif
-
 
 } // namespace Win32xx
 

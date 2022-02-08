@@ -8,8 +8,9 @@
 ///////////////////////////////////
 // CHyperlink function definitions.
 //
-CHyperlink::CHyperlink() : m_isUrlVisited(FALSE), m_isClicked(FALSE), m_visitedColor(RGB(128, 0, 128)),
-                            m_notVisitedColor(RGB(0,0,255))
+CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false), 
+                           m_visitedColor(RGB(128, 0, 128)),
+                           m_notVisitedColor(RGB(0,0,255))
 {
     // Create the cursor
     m_hCursor = ::LoadCursor(0, IDC_HAND);

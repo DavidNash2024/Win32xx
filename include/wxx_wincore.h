@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -96,11 +96,8 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #include "wxx_appcore.h"
 #include "wxx_wincore0.h"
 #include "wxx_gdi.h"
-#ifndef _WIN32_WCE
-  #include "wxx_menu.h"
-#endif
+#include "wxx_menu.h"
 #include "wxx_ddx.h"
-
 
 
 namespace Win32xx
@@ -185,22 +182,21 @@ namespace Win32xx
     {
 
     // Required for multi-monitor support with Dev-C++ and VC6.
-#ifndef _WIN32_WCE
-  #ifndef MONITOR_DEFAULTTONEAREST
-    #define MONITOR_DEFAULTTONEAREST    0x00000002
 
-        DECLARE_HANDLE(HMONITOR);
+#ifndef MONITOR_DEFAULTTONEAREST
+  #define MONITOR_DEFAULTTONEAREST    0x00000002
 
-        typedef struct tagMONITORINFO
-        {
-            DWORD   cbSize;
-            RECT    rcMonitor;
-            RECT    rcWork;
-            DWORD   dwFlags;
-        } MONITORINFO, *LPMONITORINFO;
+      DECLARE_HANDLE(HMONITOR);
 
-  #endif    // MONITOR_DEFAULTTONEAREST
-#endif  // _WIN32_WCE
+      typedef struct tagMONITORINFO
+      {
+          DWORD   cbSize;
+          RECT    rcMonitor;
+          RECT    rcWork;
+          DWORD   dwFlags;
+      } MONITORINFO, *LPMONITORINFO;
+
+#endif    // MONITOR_DEFAULTTONEAREST
 
         assert(IsWindow());
 
@@ -217,7 +213,6 @@ namespace Win32xx
         else
             parentRect = desktopRect;
 
- #ifndef _WIN32_WCE
         // Import the GetMonitorInfo and MonitorFromWindow functions.
         typedef BOOL(WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
         typedef HMONITOR(WINAPI* LPMFW)(HWND hwnd, DWORD flags);
@@ -251,7 +246,6 @@ namespace Win32xx
 
             ::FreeLibrary(hUser32);
         }
- #endif
 
         // Calculate point to center the dialog over the portion of parent window on this monitor.
         parentRect.IntersectRect(parentRect, desktopRect);
@@ -322,7 +316,6 @@ namespace Win32xx
         HWND wnd;
 
         // Create the window.
-#ifndef _WIN32_WCE
         wnd = CreateEx(cs.dwExStyle, cs.lpszClass, cs.lpszName, style,
                 cs.x, cs.y, cs.cx, cs.cy, parent,
                 cs.hMenu, cs.lpCreateParams);
@@ -333,12 +326,6 @@ namespace Win32xx
             else if (cs.style & WS_MINIMIZE) ShowWindow(SW_MINIMIZE);
             else    ShowWindow();
         }
-
-#else
-        wnd = CreateEx(cs.dwExStyle, cs.lpszClass, cs.lpszName, cs.style,
-                cs.x, cs.y, cs.cx, cs.cy, parent,
-                0, cs.lpCreateParams);
-#endif
 
         return wnd;
     }
@@ -463,8 +450,6 @@ namespace Win32xx
         return wnd;
     }
 
-#ifndef _WIN32_WCE
-
     //  This function performs dialog data exchange and dialog data
     //  validation using DDX and DDV functions. Typically this is done for
     //  controls in a dialogs, but controls in any window support DDX and DDV.
@@ -508,7 +493,6 @@ namespace Win32xx
         // dx.DDX_Check(IDC_CHECK_B,        m_checkB);
         // dx.DDX_Check(IDC_CHECK_C,        m_checkC);
     }
-#endif
 
     // Pass messages on to the appropriate default window procedure
     // CMDIChild and CMDIFrame override this function.
@@ -542,11 +526,7 @@ namespace Win32xx
         if (user32 != 0)
         {
             // Declare a pointer to the GetAncestor function.
-#ifndef _WIN32_WCE
             pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(user32, "GetAncestor"));
-#else
-            pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(user32, L"GetAncestor"));
-#endif
 
             if (pfnGetAncestor)
                 wnd = (*pfnGetAncestor)(*this, flags);
@@ -860,8 +840,7 @@ namespace Win32xx
         //     wc.icon = ::LoadIcon(0, IDI_APPLICATION);
         // 3) The styles that can be set here are WNDCLASS styles. These are a different
         //     set of styles to those set by CREATESTRUCT (used in PreCreate).
-        // 4) RegisterClassEx is not used because its not supported on WinCE.
-        //     To set a small icon for the window, use SetIconSmall.
+        // 4) To set a small icon for the window, use SetIconSmall.
     }
 
     // Override this function if your class requires input messages to be
@@ -939,11 +918,7 @@ namespace Win32xx
         int cxIcon = ::GetSystemMetrics(SM_CXICON);
         int cyIcon = ::GetSystemMetrics(SM_CYICON);
 
-#ifndef _WIN32_WCE
         HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
-#else
-        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, 0));
-#endif
 
         if (icon != 0)
             SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (icon));
@@ -962,11 +937,7 @@ namespace Win32xx
         int cxIcon = ::GetSystemMetrics(SM_CXSMICON);
         int cyIcon = ::GetSystemMetrics(SM_CYSMICON);
 
-#ifndef _WIN32_WCE
         HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
-#else
-        HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, 0));
-#endif
 
         if (icon != 0)
             SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (icon));
@@ -1026,8 +997,6 @@ namespace Win32xx
         m_prevWindowProc = reinterpret_cast<WNDPROC>(pRes);
     }
 
-#ifndef _WIN32_WCE
-
     //  Dialog Data Exchange support. Call this function to retrieve values from
     //  (retrieveAndValidate is TRUE) or assign values to (retrieveAndValidate
     //  is FALSE) a set of controls appearing in DDX/DDV statements in an
@@ -1066,8 +1035,6 @@ namespace Win32xx
 
         return ok;
     }
-#endif // _WIN32_WCE
-
 
     // Processes this window's message. Override this function in your class
     // derived from CWnd to handle window messages.
@@ -2051,8 +2018,6 @@ namespace Win32xx
     {
         HRESULT result = E_NOTIMPL;
 
-#ifndef _WIN32_WCE
-
         HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
         if (theme != 0)
         {
@@ -2063,8 +2028,6 @@ namespace Win32xx
 
             ::FreeLibrary(theme);
         }
-
-#endif
 
         return result;
     }
@@ -2119,12 +2082,6 @@ namespace Win32xx
     {
         return CWnd(::WindowFromPoint(point));
     }
-
-    //
-    // These functions aren't supported on WinCE
-    //
-
-  #ifndef _WIN32_WCE
 
     // The CloseWindow function minimizes (but does not destroy) the window.
     // To destroy a window, an application can use the Destroy function.
@@ -2466,9 +2423,6 @@ namespace Win32xx
         return CWnd( ::WindowFromDC(dc) );
     }
 
-  #endif    // _WIN32_WCE
-
-
 
     /////////////////////////////////////////////////////////
     // Definitions of CString functions that require CWinApp
@@ -2578,8 +2532,6 @@ namespace Win32xx
     {
         CString AppData;
 
-#ifndef _WIN32_WCE
-
         HMODULE hShell = ::LoadLibrary(_T("Shell32.dll"));
         if (hShell)
         {
@@ -2629,8 +2581,6 @@ namespace Win32xx
 
             ::FreeLibrary(hShell);
         }
-
-#endif // _WIN32_WCE
 
         return AppData;
     }
@@ -2686,8 +2636,6 @@ namespace Win32xx
         // CommandLineArgs is a vector of CStringT.
         return CommandLineArgs;
     }
-
-#ifndef _WIN32_WCE
 
     // Retrieves the version of common control dll used.
     // return values and DLL versions
@@ -2824,8 +2772,6 @@ namespace Win32xx
         return (state & 0x8000);
     }
 
-#endif
-
     // Loads the common controls using InitCommonControlsEx or InitCommonControls.
     // Returns TRUE if InitCommonControlsEx is used.
     // Refer to InitCommonControlsEx in the Windows API documentation for more information.
@@ -2841,11 +2787,7 @@ namespace Win32xx
             // Declare a typedef for the InItCommonControlsEx function.
             typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
-#ifdef _WIN32_WCE
-            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(comCtl, _T("InitCommonControlsEx")));
-#else
             INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(comCtl, "InitCommonControlsEx"));
-#endif
 
             if (pfnInitEx)
             {
@@ -2855,7 +2797,7 @@ namespace Win32xx
                 InitStruct.dwICC = ICC_WIN95_CLASSES | ICC_BAR_CLASSES | ICC_COOL_CLASSES | ICC_DATE_CLASSES;
 
 
-#if (!defined _WIN32_WCE && _WIN32_IE >= 0x0401)
+#if (_WIN32_IE >= 0x0401)
                 if (GetComCtlVersion() > 470)
                     InitStruct.dwICC |= ICC_INTERNET_CLASSES | ICC_NATIVEFNTCTL_CLASS | ICC_PAGESCROLLER_CLASS | ICC_USEREX_CLASSES;
 #endif

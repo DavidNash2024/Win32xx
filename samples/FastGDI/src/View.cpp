@@ -150,7 +150,7 @@ void CView::QuickPrint(LPCTSTR docName)
 BOOL CView::SaveFileImage(LPCTSTR fileName)
 {
     CFile file;
-    BOOL bResult = FALSE;
+    BOOL result = FALSE;
     try
     {
         file.Open(fileName, OPEN_ALWAYS);
@@ -179,17 +179,17 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
        file.Write(pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
        file.Write(pByteArray, pbmih->biSizeImage);
 
-       bResult = TRUE;
+       result = TRUE;
     }
 
     catch (const CFileException& e)
     {
         CString str = CString("Failed to save file: ") + e.GetFilePath();
         MessageBox(str, AtoT(e.what()), MB_OK);
-        bResult = FALSE;
+        result = FALSE;
     }
 
-    return bResult;
+    return result;
 }
 
 // Retrieves the image size as a rectangle.

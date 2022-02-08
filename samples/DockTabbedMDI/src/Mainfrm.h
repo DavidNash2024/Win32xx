@@ -34,7 +34,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void HideSingleContainerTab(BOOL hideSingle);
+    void HideSingleContainerTab(bool hideSingle);
     BOOL OnCloseMDIs();
     BOOL OnCloseDockers();
     BOOL OnContainerTabsAtTop();
@@ -50,8 +50,8 @@ public:
     BOOL OnMDITabsAtTop();
     void LoadDefaultDockers();
     void LoadDefaultMDIs();
-    void SetContainerTabsAtTop(BOOL atTop);
-    void SetMDITabsAtTop(BOOL atTop);
+    void SetContainerTabsAtTop(bool atTop);
+    void SetMDITabsAtTop(bool atTop);
 
 protected:
     virtual CDocker* NewDockerFromID(int dockID);
@@ -70,9 +70,9 @@ protected:
 
 private:
     CMyTabbedMDI m_myTabbedMDI;
-    BOOL m_isContainerTabsAtTop;
-    BOOL m_isHideSingleTab;
-    BOOL m_isMDITabsAtTop;
+    bool m_isContainerTabsAtTop;
+    bool m_isHideSingleTab;
+    bool m_isMDITabsAtTop;
     CDocker* m_pActiveDocker;
 };
 

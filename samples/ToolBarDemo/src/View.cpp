@@ -228,7 +228,7 @@ void CView::RecalcLayout()
 // Set the wrap state for each toolbar button.
 // Note: Vertical toolbars require each button to have TBSTATE_WRAP set.
 //       Horizontal toolbars require the TBSTATE_WRAP removed.
-void CView::SetWrapState(BOOL isWrapped)
+void CView::SetWrapState(bool isWrapped)
 {
     for (int i = 0; i < m_toolBar.GetButtonCount(); ++i)
     {

@@ -134,21 +134,21 @@ void CMainFrame::OnInitialUpdate()
 // Updates the Check A menu item.
 void CMainFrame::OnUpdateCheckA(UINT id)
 {
-    BOOL isCheckA = GetDoc().GetCheckA();
+    bool isCheckA = (GetDoc().GetCheckA() != 0);
     GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (isCheckA ? MF_CHECKED : MF_UNCHECKED));
 }
 
 // Updates the Check B menu item.
 void CMainFrame::OnUpdateCheckB(UINT id)
 {
-    BOOL isCheckB = GetDoc().GetCheckB();
+    bool isCheckB = (GetDoc().GetCheckB() != 0);
     GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (isCheckB ? MF_CHECKED : MF_UNCHECKED));
 }
 
 // Updates the Check C menu item.
 void CMainFrame::OnUpdateCheckC(UINT id)
 {
-    BOOL isCheckC = GetDoc().GetCheckC();
+    bool isCheckC = (GetDoc().GetCheckC() != 0);
     GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (isCheckC ? MF_CHECKED : MF_UNCHECKED));
 }
 

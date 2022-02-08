@@ -10,7 +10,7 @@
 //
 
 // Constructor.
-CHyperlink::CHyperlink() : m_isUrlVisited(FALSE), m_isClicked(FALSE), m_crVisited(RGB(128, 0, 128)),
+CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false), m_crVisited(RGB(128, 0, 128)),
                             m_crNotVisited(RGB(0,0,255))
 {
     // Create the cursor

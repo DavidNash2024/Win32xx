@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -70,15 +70,12 @@
 
 namespace Win32xx
 {
-
-#ifndef _WIN32_WCE
     // registered message used by common dialogs
     const UINT UWM_HELPMSGSTRING = ::RegisterWindowMessage(HELPMSGSTRING);      // Used by common dialogs. Sent when the user clicks the Help button.
     const UINT UWM_FILEOKSTRING  = ::RegisterWindowMessage(FILEOKSTRING);       // Used by common dialogs. Sent when the user specifies a file name and clicks the OK button.
     const UINT UWM_LBSELCHSTRING = ::RegisterWindowMessage(LBSELCHSTRING);      // Used by the File common dialog. Sent when the selection changes in any of the list boxes or combo boxes.
     const UINT UWM_SHAREVISTRING = ::RegisterWindowMessage(SHAREVISTRING);      // Used by the File common dialog. Sent if a sharing violation occurs for the selected file when the user clicks the OK button.
     const UINT UWM_FINDMSGSTRING = ::RegisterWindowMessage(FINDMSGSTRING);      // Used by the Find/Replace common dialog. Sent when the user clicks the Find Next, Replace, or Replace All button, or closes the dialog box.
-#endif
 
 
     //////////////////////////////////////////////////////////

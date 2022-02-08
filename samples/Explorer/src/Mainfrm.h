@@ -26,7 +26,7 @@ public:
     void DoPopupMenu();
     CMyListView& GetListView() const {return static_cast<CMyListView&>(m_rightPane.GetView());}
     CMyTreeView& GetTreeView() const {return static_cast<CMyTreeView&>(m_pLeftPane->GetView());}
-    BOOL GetShowHidden() {return m_showHidden;}
+    bool GetShowHidden() {return m_showHidden;}
     BOOL OnFileExit();
     BOOL OnViewLargeIcon();
     BOOL OnViewList();
@@ -46,7 +46,7 @@ protected:
 private:
     CLeftPane* m_pLeftPane;
     CRightPane m_rightPane;
-    BOOL m_showHidden;
+    bool m_showHidden;
 };
 
 #endif  //MAINFRM_H

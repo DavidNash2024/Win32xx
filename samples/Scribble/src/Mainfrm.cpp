@@ -7,7 +7,7 @@
 
 
 // Constructor.
-CMainFrame::CMainFrame() : m_isToolbarShown(TRUE)
+CMainFrame::CMainFrame() : m_isToolbarShown(true)
 {
 }
 

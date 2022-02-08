@@ -12,13 +12,13 @@
 // An example of how to load document data.
 BOOL CDoc::FileLoad(LPCTSTR filename)
 {
-    BOOL bResult = FALSE;
+    BOOL result = FALSE;
 
     try
     {
         CArchive ar(filename, CArchive::load);
         ar >> *this;        // Uses the Serialize function
-        bResult = TRUE;
+        result = TRUE;
     }
 
     catch (const CFileException &e)
@@ -29,7 +29,7 @@ BOOL CDoc::FileLoad(LPCTSTR filename)
         // Return CDoc data to default
     }
 
-    return bResult;
+    return result;
 }
 
 // An example of how to save document data.

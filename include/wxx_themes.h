@@ -1,12 +1,12 @@
-// Win32++   Version 8.9.1
-// Release Date: 10th September 2021
+// Win32++   Version 8.9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -103,9 +103,6 @@ namespace Win32xx
         COLORREF clrOutline;    // Color for border outline
     };
 
-
-  #ifndef _WIN32_WCE        // for Win32/64 operating systems, not WinCE
-
     // Returns TRUE if Aero themes are being used.
     inline BOOL IsAeroThemed()
     {
@@ -164,9 +161,6 @@ namespace Win32xx
 
         return isXPThemed;
     }
-
-  #endif // #ifndef _WIN32_WCE
-
 
 } // namespace Win32xx
 

@@ -20,8 +20,8 @@
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_encoding(ANSI), m_isToolbarShown(TRUE),
-                           m_isWrapped(FALSE), m_isRTF(FALSE), m_oldFocus(0)
+CMainFrame::CMainFrame() : m_encoding(ANSI), m_isToolbarShown(true),
+                           m_isWrapped(false), m_isRTF(false), m_oldFocus(0)
 {
 }
 

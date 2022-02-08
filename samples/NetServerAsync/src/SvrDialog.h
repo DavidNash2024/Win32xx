@@ -84,7 +84,7 @@ protected:
 private:
     CSocket m_mainSocket;
     std::map<SocketPtr, TCPClientDlgPtr> m_connectedClients; // Stores TCP client sockets and TCP client dialogs
-    BOOL m_isServerStarted;
+    bool m_isServerStarted;
     int  m_socketType;              // either SOCK_STREAM or SOCK_DGRAM
     sockaddr_in6  m_saUDPClient;    // connected UPD client's sockaddr
 

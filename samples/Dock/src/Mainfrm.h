@@ -57,13 +57,13 @@ protected:
 
 private:
     CViewSimple m_view;
-    BOOL m_useProportionalResize;
-    BOOL m_use3DBorder;
-    BOOL m_disableUndocking;
-    BOOL m_disableResize;
-    BOOL m_disableDockLR;
-    BOOL m_disableDockClose;
-    BOOL m_useDynamicResize;
+    bool m_useProportionalResize;
+    bool m_use3DBorder;
+    bool m_disableUndocking;
+    bool m_disableResize;
+    bool m_disableDockLR;
+    bool m_disableDockClose;
+    bool m_useDynamicResize;
 };
 
 #endif //MAINFRM_H

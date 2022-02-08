@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2021  David Nash
+// Copyright (c) 2005-2022  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -84,6 +84,7 @@ namespace Win32xx
         HANDLE GetHandle() const;
         ULONGLONG GetLength() const;
         ULONGLONG GetPosition() const;
+        void LockRange(ULONGLONG pos, ULONGLONG count);
         void Open(LPCTSTR pFileName, UINT openFlags);
         UINT Read(void* pBuf, UINT count);
         void Remove(LPCTSTR pFileName);
@@ -91,14 +92,10 @@ namespace Win32xx
         ULONGLONG Seek(LONGLONG seekTo, UINT method);
         void SeekToBegin();
         ULONGLONG SeekToEnd();
-        void SetLength(ULONGLONG length);
-        void Write(const void* pBuf, UINT count);
-
-#ifndef _WIN32_WCE
-        void LockRange(ULONGLONG pos, ULONGLONG count);
         void SetFilePath(LPCTSTR pFileName);
+        void SetLength(ULONGLONG length);
         void UnlockRange(ULONGLONG pos, ULONGLONG count);
-#endif
+        void Write(const void* pBuf, UINT count);
 
     private:
         CFile(const CFile&);                // Disable copy construction
@@ -280,8 +277,6 @@ namespace Win32xx
         return result;
     }
 
-#ifndef _WIN32_WCE
-
     // Locks a range of bytes in and open file.
     // Refer to LockFile in the Windows API documentation for more information.
     inline void CFile::LockRange(ULONGLONG pos, ULONGLONG count)
@@ -296,8 +291,6 @@ namespace Win32xx
         if (!::LockFile(m_file, posLow, posHigh, countLow, countHigh))
             throw CFileException(GetFilePath(), GetApp()->MsgFileLock());
     }
-
-#endif
 
     // Prepares a file to be written to or read from.
     // Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, OPEN_ALWAYS, TRUNCATE_EXISTING
@@ -352,12 +345,10 @@ namespace Win32xx
             throw CFileException(pFileName, GetApp()->MsgFileOpen());
         }
 
-#ifndef _WIN32_WCE
         if (m_file != INVALID_HANDLE_VALUE)
         {
             SetFilePath(pFileName);
         }
-#endif
 
     }
 
@@ -427,8 +418,6 @@ namespace Win32xx
         return Seek(0, FILE_END);
     }
 
-#ifndef _WIN32_WCE
-
     // Assigns the specified full file path to this object.
     // Call this function if the file path is not supplied when the CFile is constructed.
     // Note: this function does not open or create the specified file.
@@ -450,9 +439,6 @@ namespace Win32xx
         }
     }
 
-#endif
-
-
     // Changes the length of the file to the specified value.
     // Refer to SetEndOfFile in the Windows API documentation for more information.
     inline void CFile::SetLength(ULONGLONG length)
@@ -463,8 +449,6 @@ namespace Win32xx
         if (!::SetEndOfFile(m_file))
             throw CFileException(GetFilePath(), GetApp()->MsgFileLength());
     }
-
-#ifndef _WIN32_WCE
 
     // Unlocks a range of bytes in an open file.
     // Refer to UnlockFile in the Windows API documentation for more information.
@@ -480,9 +464,6 @@ namespace Win32xx
         if (!::UnlockFile(m_file, posLow, posHigh, countLow, countHigh))
             throw CFileException(GetFilePath(), GetApp()->MsgFileUnlock());
     }
-
-#endif
-
 
     // Writes the specified buffer to the file.
     // Refer to WriteFile in the Windows API documentation for more information.
@@ -500,7 +481,6 @@ namespace Win32xx
         if (written != count)
             throw CFileException(GetFilePath(), GetApp()->MsgFileWrite());
     }
-
 
 }   // namespace Win32xx
 

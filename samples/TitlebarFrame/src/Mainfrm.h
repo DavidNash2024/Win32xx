@@ -27,13 +27,13 @@ struct ButtonRects
 // Specify the colors for title bar.
 struct TitlebarColors
 {
-    COLORREF active = RGB(150, 200, 180);
-    COLORREF inactive = RGB(202, 227, 218);
-    COLORREF activeItem = RGB(33, 33, 33);
-    COLORREF inactiveItem = RGB(191, 191, 191);
-    COLORREF hover = RGB(130, 180, 160);
-    COLORREF hoverClose = RGB(204, 0, 0);
-    COLORREF topShadow = RGB(100, 100, 100);
+    COLORREF active = RGB(150, 200, 180);           // titlebar background
+    COLORREF inactive = RGB(202, 227, 218);         // titlebar background
+    COLORREF activeItem = RGB(33, 33, 33);          // text and max/min buttons
+    COLORREF inactiveItem = RGB(160, 160, 160);     // text and max/min buttons
+    COLORREF hover = RGB(130, 180, 160);            // min/max button background
+    COLORREF hoverClose = RGB(204, 0, 0);           // close button background
+    COLORREF topShadow = RGB(100, 100, 100);        // top edge of titlebar
 };
 
 ///////////////////////////////////////////////////////////
@@ -47,10 +47,12 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
+    void DrawCloseButton(CDC& dc) const;
+    void DrawBackground(CDC& dc) const;
     void DrawMinimizeButton(CDC& dc) const;
     void DrawMaximizeButton(CDC& dc) const;
-    void DrawCloseButton(CDC& dc) const;
     void DrawTitleText(CDC& dc) const;
+    void DrawTopShadow(CDC& dc) const;
     void DrawWindowIcon(CDC& dc) const;
     void SystemMenu() const;
 
@@ -104,11 +106,11 @@ private:
     CView m_view;
     CMenuBar m_menubar2;
     CPrintPreview<CView> m_preview;
-    BOOL m_isToolbarShown;
+    bool m_isToolbarShown;
     TitlebarButton m_hoveredButton;
     TitlebarButton m_oldHoveredButton;
     TitlebarColors m_colors;
-    BOOL m_isMiniFrame;
+    bool m_isMiniFrame;
 };
 
 #endif //MAINFRM_H

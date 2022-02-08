@@ -16,7 +16,7 @@ public:
     virtual ~CView(){}
 
     void RecalcLayout();
-    void SetWrapState(BOOL isWrapped);
+    void SetWrapState(bool isWrapped);
     BOOL OnBottom();
     BOOL OnLeft();
     BOOL OnRight();

@@ -11,9 +11,10 @@
 //
 
 // Constructor for CMainFrame. Its called after CFrame's constructor.
-CMainFrame::CMainFrame() : m_color(IDM_BLUE), m_useThemes(TRUE), m_useBandColors(TRUE), m_useFlatStyle(FALSE),
-                            m_keepBandsLeft(TRUE), m_lockMenuBand(TRUE), m_useRoundBorders(TRUE),
-                            m_useShortBands(TRUE), m_useLines(FALSE), m_showArrows(TRUE), m_showCards(TRUE)
+CMainFrame::CMainFrame() : m_color(IDM_BLUE), m_useThemes(true), m_useBandColors(true), 
+                            m_useFlatStyle(false), m_keepBandsLeft(true), m_lockMenuBand(true),
+                            m_useRoundBorders(true), m_useShortBands(true), m_useLines(false),
+                            m_showArrows(true), m_showCards(true)
 {
 }
 
@@ -294,16 +295,16 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
     {
         // Choose reasonable default values
         m_color = IDM_OLIVE;
-        m_useThemes = TRUE;
-        m_useBandColors = TRUE;
-        m_useFlatStyle = FALSE;
-        m_keepBandsLeft = TRUE;
-        m_lockMenuBand = TRUE;
-        m_useRoundBorders = TRUE;
-        m_useShortBands = TRUE;
-        m_useLines = FALSE;;
-        m_showArrows = TRUE;
-        m_showCards = TRUE;
+        m_useThemes = true;
+        m_useBandColors = true;
+        m_useFlatStyle = false;
+        m_keepBandsLeft = true;
+        m_lockMenuBand = true;
+        m_useRoundBorders = true;
+        m_useShortBands = true;
+        m_useLines = false;
+        m_showArrows = true;
+        m_showCards = true;
     }
 
     return TRUE;
@@ -774,7 +775,7 @@ void CMainFrame::SetupToolBar()
     AddCombo();
 }
 
-void CMainFrame::ShowArrows(BOOL isShown)
+void CMainFrame::ShowArrows(bool isShown)
 {
     if (IsReBarSupported())
     {
@@ -785,7 +786,7 @@ void CMainFrame::ShowArrows(BOOL isShown)
     }
 }
 
-void CMainFrame::ShowCards(BOOL isShown)
+void CMainFrame::ShowCards(bool isShown)
 {
     if (IsReBarSupported())
     {

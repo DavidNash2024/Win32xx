@@ -101,7 +101,7 @@ void CTCPClientDlg::Send()
 //
 
 // Constructor.
-CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE),
+CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(false),
                                       m_socketType(SOCK_STREAM)
 {
     ZeroMemory(&m_saUDPClient, sizeof(m_saUDPClient));

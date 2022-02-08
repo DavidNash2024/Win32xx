@@ -50,7 +50,7 @@ private:
     CImageList m_cardImages;
     std::vector<TBBUTTON>   m_defaultButtons;
     std::vector<TBBUTTON>   m_resetButtons;
-    BOOL    m_useBigIcons;
+    bool    m_useBigIcons;
 };
 
 

@@ -48,12 +48,12 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    void HideSingleContainerTab(BOOL hideSingle);
-    void SetContainerTabsAtTop(BOOL isAtTop);
+    void HideSingleContainerTab(bool hideSingle);
+    void SetContainerTabsAtTop(bool isAtTop);
 
     CDockContainer m_view;
-    BOOL m_isContainerTabsAtTop;
-    BOOL m_hideSingleTab;
+    bool m_isContainerTabsAtTop;
+    bool m_hideSingleTab;
 
 };
 

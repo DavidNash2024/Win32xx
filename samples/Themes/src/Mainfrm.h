@@ -34,8 +34,8 @@ public:
     BOOL OnViewArrows();
     BOOL OnViewCards();
     void SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2);
-    void ShowArrows(BOOL isShown);
-    void ShowCards(BOOL isShown);
+    void ShowArrows(bool isShown);
+    void ShowCards(bool isShown);
 
 protected:
     virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
@@ -60,16 +60,16 @@ private:
     CImageList m_cardImages;
 
     UINT m_color;
-    BOOL m_useThemes;
-    BOOL m_useBandColors;
-    BOOL m_useFlatStyle;
-    BOOL m_keepBandsLeft;
-    BOOL m_lockMenuBand;
-    BOOL m_useRoundBorders;
-    BOOL m_useShortBands;
-    BOOL m_useLines;
-    BOOL m_showArrows;
-    BOOL m_showCards;
+    bool m_useThemes;
+    bool m_useBandColors;
+    bool m_useFlatStyle;
+    bool m_keepBandsLeft;
+    bool m_lockMenuBand;
+    bool m_useRoundBorders;
+    bool m_useShortBands;
+    bool m_useLines;
+    bool m_showArrows;
+    bool m_showCards;
 };
 
 
