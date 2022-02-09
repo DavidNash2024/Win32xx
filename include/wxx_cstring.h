@@ -88,24 +88,10 @@
 #define _WIN32XX_CSTRING_H_
 
 
-#include <cassert>
-#include <tchar.h>
-#include <stdio.h>
-#include <string>
-#include <algorithm>
-#include <Windows.h>
+// The wxx_setup.h file defines the set of macros and includes the C, C++,
+// and windows header files required by Win32++.
+#include "wxx_setup.h"
 #include "wxx_textconv.h"
-
-// Define our own MIN and MAX macros
-// This avoids inconsistencies with MinGW and other compilers, and
-// avoids conflicts between typical min/max macros and std::min/std::max
-#define MAX(a,b)        (((a) > (b)) ? (a) : (b))
-#define MIN(a,b)        (((a) < (b)) ? (a) : (b))
-
-namespace Win32xx {}
-#ifndef NO_USING_NAMESPACE
-using namespace Win32xx;
-#endif
 
 
 namespace Win32xx

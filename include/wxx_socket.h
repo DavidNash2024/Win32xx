@@ -126,7 +126,7 @@
 #ifndef _WIN32XX_SOCKET_H_
 #define _WIN32XX_SOCKET_H_
 
-// include exception handling, TRACE etc.
+// CSocket requires features from the Win32++ framework.
 #include "wxx_wincore.h"
 #include "wxx_mutex.h"
 

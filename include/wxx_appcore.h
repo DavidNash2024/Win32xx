@@ -58,6 +58,7 @@
 #include "wxx_textconv.h"
 #include "wxx_wincore0.h"
 #include "wxx_exception.h"
+#include "wxx_cstring.h"
 
 namespace Win32xx
 {
