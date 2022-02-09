@@ -8,23 +8,30 @@ Bug fixes:
 
 New Features and Enhancements
 -----------------------------
-* The values for WINVER and related macros now default to Windows 10.
-  Different values can be specified before including wincore.h if required.
-  Visual Studio 6 will require WINVER to be set for Win95 or Win98.
+* Added wxx_setup.h to the Win32++ library. This file defines the set of macros
+  and includes the C, C++, and windows header files required by Win32++. The
+  wxx_cstring.h file now includes wxx_setup.h, allowing CString to be used
+  independently from the rest of the library.
+
+* The values for WINVER and related macros now default to values suitable for 
+  Windows 10 and Windows 11. Different values can be specified before including
+  wincore.h if required. These values can be specified in stdafx.h by including
+  targetver.h as shown in the samples. Visual Studio 6 will require WINVER to
+  be set for Win95 or Win98.
 
 * Added the Titlebar sample.
-  This sample demonstrates how to customize a windows title bar. It sets
+  This sample demonstrates how to customize the title bar of a window. It sets
   the title bar's color and draws the minimize, maximize and close buttons.
-  It uses CMenuBar to display a menu in the title bar.
+  The sample uses CMenuBar to display a menu in the title bar.
 
 * Added the TitlebarFrame sample.
   This sample demonstrates how to use a customized title bar with a frame.
   It demonstrates the frame in two modes: mini-frame and full-frame.
 
 * Added the PrintDialogEx sample.
-  This sample upgrades the Notepad sample. The Notepad sample used CPrintDialog
-  to display the print dialog. This sample demonstrates the use of 
-  CPrintDialogEx to display the print dialog. It supports printing individual
+  This sample upgrades the Notepad sample. Where the Notepad sample used
+  CPrintDialog to display the print dialog, this sample uses CPrintDialogEx
+  to display the print dialog. This sample supports printing individual
   pages, as well as multiple page ranges. It also supports printing multiple
   copies, with or without collating. A footer displaying the page number is
   added to the bottom of the printed page.
@@ -40,6 +47,8 @@ New Features and Enhancements
 
 Changes in Detail
 -----------------
+Added wxx_setup.h            Win32++ library file
+
 Added PrintDialogEx          sample
 Added Titlebar               sample
 Added TitlebarFrame          sample
