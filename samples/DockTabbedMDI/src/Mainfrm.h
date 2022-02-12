@@ -8,20 +8,19 @@
 
 #include "MyTabbedMDI.h"
 
-enum DockIDs
-{
-    ID_DOCK_CLASSES1 = 1,
-    ID_DOCK_CLASSES2 = 2,
-    ID_DOCK_FILES1 = 3,
-    ID_DOCK_FILES2 = 4,
-    ID_DOCK_OUTPUT1 = 5,
-    ID_DOCK_OUTPUT2 = 6,
-    ID_DOCK_TEXT1 = 7,
-    ID_DOCK_TEXT2 = 8,
-    ID_DOCK_BROWSER = 9,
-    ID_DOCK_RECT = 10,
-    ID_DOCK_DIALOG = 11
-};
+// The docker identifiers (dock IDs)
+const int ID_DOCK_CLASSES1 = 1;
+const int ID_DOCK_CLASSES2 = 2;
+const int ID_DOCK_FILES1 = 3;
+const int ID_DOCK_FILES2 = 4;
+const int ID_DOCK_OUTPUT1 = 5;
+const int ID_DOCK_OUTPUT2 = 6;
+const int ID_DOCK_TEXT1 = 7;
+const int ID_DOCK_TEXT2 = 8;
+const int ID_DOCK_BROWSER = 9;
+const int ID_DOCK_RECT = 10;
+const int ID_DOCK_DIALOG = 11;
+
 
 
 ///////////////////////////////////////////////////////////

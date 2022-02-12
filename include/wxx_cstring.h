@@ -109,22 +109,14 @@ namespace Win32xx
         friend CStringT<CHAR> operator + (const CStringT<CHAR>& string1, const CStringT<CHAR>& string2);
         friend CStringT<CHAR> operator + (const CStringT<CHAR>& string1, const CHAR* text);
         friend CStringT<CHAR> operator + (const CStringT<CHAR>& string1, CHAR ch);
-        friend CStringT<CHAR> operator + (const CStringT<CHAR>& string1, int val);
-        friend CStringT<CHAR> operator + (const CStringT<CHAR>& string1, double val);
         friend CStringT<CHAR> operator + (const CHAR* text, const CStringT<CHAR>& string1);
         friend CStringT<CHAR> operator + (CHAR ch, const CStringT<CHAR>& string1);
-        friend CStringT<CHAR> operator + (int val, const CStringT<CHAR>& string1);
-        friend CStringT<CHAR> operator + (double val, const CStringT<CHAR>& string1);
 
         friend CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, const CStringT<WCHAR>& string2);
         friend CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, const WCHAR* text);
         friend CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, WCHAR ch);
-        friend CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, int val);
-        friend CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, double val);
         friend CStringT<WCHAR> operator + (const WCHAR* text, const CStringT<WCHAR>& string1);
         friend CStringT<WCHAR> operator + (WCHAR ch, const CStringT<WCHAR>& string1);
-        friend CStringT<WCHAR> operator + (int val, const CStringT<WCHAR>& string1);
-        friend CStringT<WCHAR> operator + (double val, const CStringT<WCHAR>& string1);
 
         // These global functions don't need to be friends
     //  bool operator < (const CStringT<T>& string1, const CStringT<T>& string2);
@@ -143,14 +135,10 @@ namespace Win32xx
         CStringT(const T * text);
         CStringT(T ch, int length = 1);
         CStringT(const T * text, int length);
-        CStringT(int val);
-        CStringT(double val);
 
         CStringT& operator = (const CStringT& str);
         CStringT& operator = (const T ch);
         CStringT& operator = (const T* text);
-        CStringT& operator = (int val);
-        CStringT& operator = (double val);
 
         bool     operator == (const T* text) const;
         bool     operator == (const CStringT& str) const;
@@ -162,8 +150,6 @@ namespace Win32xx
         CStringT& operator += (const CStringT& str);
         CStringT& operator += (const T* text);
         CStringT& operator += (const T ch);
-        CStringT& operator += (int val);
-        CStringT& operator += (double val);
 
         // Attributes
         const T* c_str() const          { return m_str.c_str(); }                   // alternative for casting to const T*
@@ -250,13 +236,9 @@ namespace Win32xx
         friend CString operator + (const CString& string1, const CHAR* text);
         friend CString operator + (const CString& string1, CHAR ch);
         friend CString operator + (const CString& string1, WCHAR ch);
-        friend CString operator + (const CString& string1, int val);
-        friend CString operator + (const CString& string1, double val);
         friend CString operator + (const TCHAR* text, const CString& string1);
         friend CString operator + (CHAR ch, const CString& string1);
         friend CString operator + (WCHAR ch, const CString& string1);
-        friend CString operator + (int val, const CString& string1);
-        friend CString operator + (double val, const CString& string1);
 
     public:
         CString() {}
@@ -265,8 +247,6 @@ namespace Win32xx
         CString(LPCWSTR text)                  : CStringT<TCHAR>(WtoT(text))    {}
         CString(LPCSTR text, int length)       : CStringT<TCHAR>(AtoT(text, CP_ACP, length), length) {}
         CString(LPCWSTR text, int length)      : CStringT<TCHAR>(WtoT(text, CP_ACP, length), length) {}
-        CString(int val);
-        CString(double val);
 
         CString(char ch, int length = 1)
         {
@@ -362,22 +342,6 @@ namespace Win32xx
             return *this;
         }
 
-        CString& operator += (int val)
-        {
-            CString str;
-            str.Format(_T("%d"), val);
-            m_str.append(str);
-            return *this;
-        }
-
-        CString& operator += (double val)
-        {
-            CString str;
-            str.Format(_T("%g"), val);
-            m_str.append(str);
-            return *this;
-        }
-
         CString Left(int count) const
         {
             CString str;
@@ -465,6 +429,7 @@ namespace Win32xx
     template <class T>
     inline CStringT<T>::CStringT(const T* text)
     {
+        assert(text != NULL);
         m_str.assign(text);
     }
 
@@ -484,34 +449,6 @@ namespace Win32xx
     {
         memcpy(GetBuffer(length), text, length*sizeof(T));
         ReleaseBuffer(length);
-    }
-
-    // Constructor. Assigns from an integer value.
-    template <>
-    inline CStringT<CHAR>::CStringT(int val)
-    {
-        Format("%d", val);
-    }
-
-    // Constructor. Assigns from an integer value.
-    template <>
-    inline CStringT<WCHAR>::CStringT(int val)
-    {
-        Format(L"%d", val);
-    }
-
-    // Constructor. Assigns from an double value.
-    template <>
-    inline CStringT<CHAR>::CStringT(double val)
-    {
-        Format("%g", val);
-    }
-
-    // Constructor. Assigns from an integer value.
-    template <>
-    inline CStringT<WCHAR>::CStringT(double val)
-    {
-        Format(L"%g", val);
     }
 
     // Assign from a const CStringT<T>.
@@ -537,46 +474,6 @@ namespace Win32xx
     inline CStringT<T>& CStringT<T>::operator = (const T* text)
     {
         m_str.assign(text);
-        return *this;
-    }
-
-    // Assign from an int converted to CHAR array.
-    template <>
-    inline CStringT<CHAR>& CStringT<CHAR>::operator = (int val)
-    {
-        CStringT str;
-        str.Format("%d", val);
-        m_str.assign(str.m_str);
-        return *this;
-    }
-
-    // Assign from an int converted to a WCHAR array.
-    template <>
-    inline CStringT<WCHAR>& CStringT<WCHAR>::operator = (int val)
-    {
-        CStringT str;
-        str.Format(L"%d", val);
-        m_str.assign(str.m_str);
-        return *this;
-    }
-
-    // Assign from a double converted to a CHAR array.
-    template <>
-    inline CStringT<CHAR>& CStringT<CHAR>::operator = (double val)
-    {
-        CStringT str;
-        str.Format("%g", val);
-        m_str.assign(str.m_str);
-        return *this;
-    }
-
-    // Assign from a double converted to a WCHAR array.
-    template <>
-    inline CStringT<WCHAR>& CStringT<WCHAR>::operator = (double val)
-    {
-        CStringT str;
-        str.Format(L"%g", val);
-        m_str.assign(str.m_str);
         return *this;
     }
 
@@ -660,46 +557,6 @@ namespace Win32xx
         T str[2] = {0};
         str[0] = ch;
         m_str.append(1, str[0]);
-        return *this;
-    }
-
-    // Addition assignment. Appends an int converted to a CHAR character array.
-    template <>
-    inline CStringT<CHAR>& CStringT<CHAR>::operator += (int val)
-    {
-        CStringT str;
-        str.Format("%d", val);
-        m_str.append(str);
-        return *this;
-    }
-
-    // Addition assignment. Appends an int converted to a WCHAR character array.
-    template <>
-    inline CStringT<WCHAR>& CStringT<WCHAR>::operator += (int val)
-    {
-        CStringT str;
-        str.Format(L"%d", val);
-        m_str.append(str);
-        return *this;
-    }
-
-    // Addition assignment. Appends a double converted to a CHAR character array.
-    template <>
-    inline CStringT<CHAR>& CStringT<CHAR>::operator += (double val)
-    {
-        CStringT str;
-        str.Format("%g", val);
-        m_str.append(str);
-        return *this;
-    }
-
-    // Addition assignment. Appends a double converted to a WCHAR character array.
-    template <>
-    inline CStringT<WCHAR>& CStringT<WCHAR>::operator += (double val)
-    {
-        CStringT str;
-        str.Format(L"%g", val);
-        m_str.append(str);
         return *this;
     }
 
@@ -1564,6 +1421,34 @@ namespace Win32xx
         }
     }
 
+    /////////////////////////////
+    // Global ToCString functions
+    //
+
+    template <class V>
+    CStringA ToCStringA(V value)
+    {
+        std::basic_stringstream<CHAR> streamA;
+        streamA << value;
+        return CStringA(streamA.str().c_str());
+    }
+
+    template <class V>
+    CStringW ToCStringW(V value)
+    {
+        std::basic_stringstream<WCHAR> streamW;
+        streamW << value;
+        return CStringW(streamW.str().c_str());
+    }
+
+    template <class V>
+    CString ToCString(V value)
+    {
+        tStringStream streamT;
+        streamT << value;
+        return CString(streamT.str().c_str());
+    }
+
 
     //////////////////////////////////////
     // CStringT global operator functions
@@ -1618,38 +1503,6 @@ namespace Win32xx
     }
 
     // Addition operator.
-    inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, int val)
-    {
-        CStringT<CHAR> str;
-        str.Format("%s%d", string1.c_str(), val);
-        return str;
-    }
-
-    // Addition operator.
-    inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, int val)
-    {
-        CStringT<WCHAR> str;
-        str.Format(L"%s%d", string1.c_str(), val);
-        return str;
-    }
-
-    // Addition operator.
-    inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, double val)
-    {
-        CStringT<CHAR> str;
-        str.Format("%s%g", string1.c_str(), val);
-        return str;
-    }
-
-    // Addition operator.
-    inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, double val)
-    {
-        CStringT<WCHAR> str;
-        str.Format(L"%s%g", string1.c_str(), val);
-        return str;
-    }
-
-    // Addition operator.
     inline CStringT<CHAR> operator + (const CHAR* text, const CStringT<CHAR>& string1)
     {
         CStringT<CHAR> str(text);
@@ -1678,38 +1531,6 @@ namespace Win32xx
     {
         CStringT<WCHAR> str(ch);
         str.m_str.append(string1);
-        return str;
-    }
-
-    // Addition operator.
-    inline CStringT<CHAR> operator + (int val, const CStringT<CHAR>& string1)
-    {
-        CStringT<CHAR> str;
-        str.Format("%d%s", val, string1.c_str());
-        return str;
-    }
-
-    // Addition operator.
-    inline CStringT<WCHAR> operator + (int val, const CStringT<WCHAR>& string1)
-    {
-        CStringT<WCHAR> str;
-        str.Format(L"%d%s", val, string1.c_str());
-        return str;
-    }
-
-    // Addition operator.
-    inline CStringT<CHAR> operator + (double val, const CStringT<CHAR>& string1)
-    {
-        CStringT<CHAR> str;
-        str.Format("%g%s", val, string1.c_str());
-        return str;
-    }
-
-    // Addition operator.
-    inline CStringT<WCHAR> operator + (double val, const CStringT<WCHAR>& string1)
-    {
-        CStringT<WCHAR> str;
-        str.Format(L"%g%s", val, string1.c_str());
         return str;
     }
 
@@ -1769,44 +1590,32 @@ namespace Win32xx
         return (string1.Compare(text) >= 0); // boolean expression
     }
 
-    // Appends the specified text to the string.
-    template <class T>
-    inline CStringT<T>& operator << (CStringT<T>& str, const CStringT<T>& text)
+    template <class V>
+    inline CStringT<CHAR>& operator << (CStringT<CHAR>& str, V value)
     {
-        str += text;
+        str += ToCStringA(value);
         return str;
     }
 
-    // Appends the specified text to the string.
-    template <class T>
-    inline CStringT<T>& operator << (CStringT<T>& str, const T* text)
+    template <>  // Explicit specialization
+    inline CStringT<CHAR>& operator << (CStringT<CHAR>& str, CStringT<CHAR>& value)
     {
-        str += text;
+        str += value;
         return str;
     }
 
-    // Appends the specified character to the string.
-    template <class T>
-    inline CStringT<T>& operator << (CStringT<T>& str, T ch)
+    template <class V>
+    inline CStringT<WCHAR>& operator << (CStringT<WCHAR>& str, V value)
     {
-        str += ch;
+        str += ToCStringW(value);
         return str;
     }
 
-    // Appends the specified integer to the string.
-    template <class T>
-    inline CStringT<T>& operator << (CStringT<T>& str, int val)
+    template <>  // Explicit specialization
+    inline CStringT<WCHAR>& operator << (CStringT<WCHAR>& str, CStringT<WCHAR> value)
     {
-        str += val;
-        return str;
-    }
-
-    // Appends the specified double to the string.
-    template <class T>
-    inline CStringT<T>& operator << (CStringT<T>& str, double val)
-    {
-        str += val;
-        return str;
+       str += value;
+       return str;
     }
 
 
@@ -1850,20 +1659,6 @@ namespace Win32xx
         return str;
     }
 
-    inline CString operator + (const CString& string1, int val)
-    {
-        CString str;
-        str.Format(_T("%s%d"), string1.c_str(), val);
-        return str;
-    }
-
-    inline CString operator + (const CString& string1, double val)
-    {
-        CString str;
-        str.Format(_T("%s%g"), string1.c_str(), val);
-        return str;
-    }
-
     inline CString operator + (const TCHAR* text, const CString& string1)
     {
         CString str(text);
@@ -1887,20 +1682,6 @@ namespace Win32xx
         return str;
     }
 
-    inline CString operator + (int val, const CString& string1)
-    {
-        CString str;
-        str.Format(_T("%d%s"), val, string1.c_str());
-        return str;
-    }
-
-    inline CString operator + (double val, const CString& string1)
-    {
-        CString str;
-        str.Format(_T("%g%s"), val, string1.c_str());
-        return str;
-    }
-
     // Appends the specified string to the string.
     inline CString& operator << (CString& str, const CString& str2)
     {
@@ -1908,15 +1689,22 @@ namespace Win32xx
         return str;
     }
 
+    template <class V>
+    inline CString& operator << (CString& str, V value)
+    {
+        str += ToCString(value);
+        return str;
+    }
+
     // Appends the specified text to the string.
-    inline CString& operator << (CString& str, const LPCSTR text)
+    inline CString& operator << (CString& str, LPCSTR text)
     {
         str += text;
         return str;
     }
 
     // Appends the specified text to the string.
-    inline CString& operator << (CString& str, const LPCWSTR text)
+    inline CString& operator << (CString& str, LPCWSTR text)
     {
         str += text;
         return str;
@@ -1935,26 +1723,6 @@ namespace Win32xx
         str += ch;
         return str;
     }
-
-    // Appends the specified integer to the string.
-    inline CString& operator << (CString& str, int val)
-    {
-        str += val;
-        return str;
-    }
-
-    // Appends the specified double to the string.
-    inline CString& operator << (CString& str, double val)
-    {
-        str += val;
-        return str;
-    }
-
-    // Late definitions to avoid specialization after instantiation errors.
-    // Additional CString constructors definitions.
-    inline CString::CString(int val)                       : CStringT<TCHAR>(val) {}
-    inline CString::CString(double val)                    : CStringT<TCHAR>(val) {}
-
 
 }   // namespace Win32xx
 

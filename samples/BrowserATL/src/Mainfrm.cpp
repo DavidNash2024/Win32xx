@@ -421,16 +421,16 @@ void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
         if (pDispParams->cArgs > 1 && pDispParams->rgvarg[1].vt == VT_I4)
         {
             int progress = pDispParams->rgvarg[1].lVal;
-            str += L"Progress = " + CString(progress);
+            str << L"Progress = " << progress;
         }
 
         if (pDispParams->rgvarg[0].vt == VT_I4)
         {
             int progressMax = pDispParams->rgvarg[0].lVal;
-            str += L", ProgressMax = " + CString(progressMax);
+            str << L", ProgressMax = " << progressMax;
         }
 
-        str += L"\n";
+        str << L"\n";
         TRACE(str);
    }
 }

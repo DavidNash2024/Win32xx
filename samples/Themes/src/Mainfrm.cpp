@@ -11,7 +11,7 @@
 //
 
 // Constructor for CMainFrame. Its called after CFrame's constructor.
-CMainFrame::CMainFrame() : m_color(IDM_BLUE), m_useThemes(true), m_useBandColors(true), 
+CMainFrame::CMainFrame() : m_color(IDM_BLUE), m_useThemes(true), m_useBandColors(true),
                             m_useFlatStyle(false), m_keepBandsLeft(true), m_lockMenuBand(true),
                             m_useRoundBorders(true), m_useShortBands(true), m_useLines(false),
                             m_showArrows(true), m_showCards(true)
