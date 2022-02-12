@@ -280,10 +280,11 @@ namespace Win32xx
             if ((nMin != zero && nMin > val) ||
                 (nMax != zero && nMax < val))
             {
-                  // retrieve the control ID
+                // retrieve the control ID
                 int id = static_cast<int>(::GetWindowLongPtr(m_lastControl, GWLP_ID));
-                CString str = CString(_T("Warning: Date-Time data is out of range "))
-                                + _T("in control ID ") + id + _T(" \n");
+                CString str;
+                str << _T("Warning: Date-Time data is out of range ")
+                        << _T("in control ID ") << id << _T(" \n");
                 TRACE(str);
 
                 return;
@@ -384,8 +385,9 @@ namespace Win32xx
                 (nMax != zero && nMax < val))
             {
                 int id = static_cast<int>(::GetWindowLongPtr(m_lastControl, GWLP_ID));
-                CString str = CString(_T("Warning: Calendar data is out of range "))
-                            + _T("in control ID ") + id + _T(" \n");
+                CString str;
+                str << _T("Warning: Calendar data is out of range ")
+                        << _T("in control ID ") << id << _T(" \n");
                 TRACE(str);
                 return;     // continue on
             }
@@ -421,10 +423,11 @@ namespace Win32xx
             if (min > value || max < value)
             {
     #ifdef _DEBUG
-                  // just leave a trace if writing to the control
+                // just leave a trace if writing to the control
                 int id = static_cast<int>(::GetWindowLongPtr(m_lastControl, GWLP_ID));
-                CString str = CString(_T("Warning: slider position is outside given "))
-                            + _T("limits in the control with ID ") + id + _T(" \n");
+                CString str;
+                str << _T("Warning: slider position is outside given ")
+                        << _T("limits in the control with ID ") << id << _T(" \n");
                 TRACE(str);
     #endif
                 return;     // don't stop now
@@ -455,8 +458,9 @@ namespace Win32xx
         {
             // just leave a debugging trace if writing to a control
             int id = static_cast<int>(::GetWindowLongPtr(m_lastControl, GWLP_ID));
-            CString str = CString(_T("Warning: value is outside limits in control with ID "))
-                           + id + _T(" \n");
+            CString str;
+            str << _T("Warning: value is outside limits in control with ID ")
+                    << id << _T(" \n");
             TRACE(str);
             return;     // don't stop
         }
@@ -612,8 +616,9 @@ namespace Win32xx
         {
             if (value < 0 || value > 2)
             {
-                CString str = CString(_T("Warning: dialog data checkbox value "))
-                                + value + _T(" out of range.\n");
+                CString str;
+                str << _T("Warning: dialog data checkbox value ")
+                        << value << _T(" out of range.\n");
                 TRACE(str);
                 value = 0;  // set default to off
             }

@@ -240,7 +240,7 @@ void CRichView::PrintFooter(CDC& dc, UINT page)
     int cy = dc.GetDeviceCaps(VERTRES);         // in pixels
     dc.CreatePointFont(400, L"Microsoft Sans Serif");
     CString footer("Page ");
-    footer += int(page + 1);
+    footer << page + 1;
     CSize textSize = dc.GetTextExtentPoint32(footer);
 
     int x = (cx - textSize.cx) / 2;

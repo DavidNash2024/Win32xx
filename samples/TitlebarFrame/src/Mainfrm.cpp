@@ -22,20 +22,20 @@ int dpi_scale(int value, UINT dpi)
 }
 
 // Center the inner rectangle within the outer rectangle.
-void CenterRectInRect(RECT* toCenter, const RECT* outerRect)
+void CenterRectInRect(CRect* innerRect, const CRect& outerRect)
 {
-    int toWidth = toCenter->right - toCenter->left;
-    int toHeight = toCenter->bottom - toCenter->top;
-    int outerWidth = outerRect->right - outerRect->left;
-    int outerHeight = outerRect->bottom - outerRect->top;
+    int innerWidth = innerRect->Width();
+    int innerHeight = innerRect->Height();
+    int outerWidth = outerRect.Width();
+    int outerHeight = outerRect.Height();
 
-    int paddingX = (outerWidth - toWidth) / 2;
-    int paddingY = (outerHeight - toHeight) / 2;
+    int paddingX = (outerWidth - innerWidth) / 2;
+    int paddingY = (outerHeight - innerHeight) / 2;
 
-    toCenter->left = outerRect->left + paddingX;
-    toCenter->top = outerRect->top + paddingY;
-    toCenter->right = toCenter->left + toWidth;
-    toCenter->bottom = toCenter->top + toHeight;
+    innerRect->left = outerRect.left + paddingX;
+    innerRect->top = outerRect.top + paddingY;
+    innerRect->right = innerRect->left + innerWidth;
+    innerRect->bottom = innerRect->top + innerHeight;
 }
 
 
@@ -96,7 +96,7 @@ void CMainFrame::DrawCloseButton(CDC& dc) const
     CRect iconRect;
     iconRect.right = iconDimension;
     iconRect.bottom = iconDimension;
-    CenterRectInRect(&iconRect, &buttonRects.close);
+    CenterRectInRect(&iconRect, buttonRects.close);
     dc.MoveTo(iconRect.left, iconRect.top);
     dc.LineTo(iconRect.right + 1, iconRect.bottom + 1);
     dc.MoveTo(iconRect.left, iconRect.bottom);
@@ -121,7 +121,7 @@ void CMainFrame::DrawMinimizeButton(CDC& dc) const
     CRect iconRect;
     iconRect.right = iconDimension;
     iconRect.bottom = 1;
-    CenterRectInRect(&iconRect, &buttonRects.minimize);
+    CenterRectInRect(&iconRect, buttonRects.minimize);
     dc.FillRect(iconRect, buttonIconBrush);
 }
 
@@ -141,7 +141,7 @@ void CMainFrame::DrawMaximizeButton(CDC& dc) const
     CRect iconRect;
     iconRect.right = iconDimension;
     iconRect.bottom = iconDimension;
-    CenterRectInRect(&iconRect, &buttonRects.maximize);
+    CenterRectInRect(&iconRect, buttonRects.maximize);
 
     COLORREF itemColor = IsActive() ? m_colors.activeItem : m_colors.inactiveItem;
     dc.CreatePen(PS_SOLID, 1, itemColor);
@@ -186,7 +186,7 @@ void CMainFrame::DrawTitleText(CDC& dc) const
 }
 
 // Draw the top shadow. Original is missing because of the client rect extension.
-// Might not be required on Windows 11.
+// Required on Windows 10. Not required on Windows 11.
 void CMainFrame::DrawTopShadow(CDC& dc) const
 {
     COLORREF shadowColor = m_colors.topShadow;

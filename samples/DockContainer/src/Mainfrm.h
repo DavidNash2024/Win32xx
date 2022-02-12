@@ -6,17 +6,15 @@
 #define MAINFRM_H
 
 
-enum DockIDs
-{
-    ID_DOCK_CLASSES1 = 1,
-    ID_DOCK_CLASSES2 = 2,
-    ID_DOCK_FILES1 = 3,
-    ID_DOCK_FILES2 = 4,
-    ID_DOCK_TEXT1 = 5,
-    ID_DOCK_OUTPUT1 = 6,
-    ID_DOCK_TEXT2 = 7,
-    ID_DOCK_OUTPUT2 = 8,
-};
+// The docker identifiers (dock IDs)
+const int ID_DOCK_CLASSES1 = 1;
+const int ID_DOCK_CLASSES2 = 2;
+const int ID_DOCK_FILES1 = 3;
+const int ID_DOCK_FILES2 = 4;
+const int ID_DOCK_TEXT1 = 5;
+const int ID_DOCK_OUTPUT1 = 6;
+const int ID_DOCK_TEXT2 = 7;
+const int ID_DOCK_OUTPUT2 = 8;
 
 
 ///////////////////////////////////////////////////////////

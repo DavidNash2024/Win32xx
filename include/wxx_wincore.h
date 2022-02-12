@@ -2711,7 +2711,7 @@ namespace Win32xx
 #if defined (_MSC_VER) && (_MSC_VER >= 1400)   // >= VS2005
   #pragma warning ( push )
   #pragma warning ( disable : 4996 )           // GetVersion declared deprecated.
-  #pragma warning ( disable : 28159 )          // Deprecated function. Consider using IsWindows instead.
+  #pragma warning ( disable : 28159 )          // Deprecated function.
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 #if defined __clang_major__
@@ -2719,7 +2719,10 @@ namespace Win32xx
   #pragma clang diagnostic ignored "-Wdeprecated-declarations"  // Disable Clang deprecated warning.
 #endif
 
-        DWORD version = GetVersion();
+        OSVERSIONINFO osvi;
+        ZeroMemory(&osvi, sizeof(osvi));
+        osvi.dwOSVersionInfoSize = sizeof(osvi);
+        GetVersionEx (&osvi);
 
 #if defined __clang_major__
   #pragma clang diagnostic pop
@@ -2729,9 +2732,9 @@ namespace Win32xx
   #pragma warning ( pop )
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
-        int platform = (version < 0x80000000) ? 2 : 1;
-        int majorVer = LOBYTE(LOWORD(version));
-        int minorVer = HIBYTE(LOWORD(version));
+        int platform = osvi.dwPlatformId;
+        int majorVer = osvi.dwMajorVersion;
+        int minorVer = osvi.dwMinorVersion;
 
         int result = 1000 * platform + 100 * majorVer + minorVer;
         return result;

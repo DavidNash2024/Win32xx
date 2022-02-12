@@ -8,7 +8,7 @@
 ///////////////////////////////////
 // CHyperlink function definitions.
 //
-CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false), 
+CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false),
                            m_visitedColor(RGB(128, 0, 128)),
                            m_notVisitedColor(RGB(0,0,255))
 {

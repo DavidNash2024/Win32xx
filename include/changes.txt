@@ -8,6 +8,19 @@ Bug fixes:
 
 New Features and Enhancements
 -----------------------------
+* Major update to the CString class.
+  - CString's int and double constructors have been replaced with ToCString.
+    The ToCString function accepts all types supported by std::stringstream.
+  - The operator+ and operator+= overloads for int and double have been 
+    replaced with the operator<< overload. The operator<< overload accepts 
+	all types supported by std::stringstream.
+		  
+	Coding example:
+	int i = 3;
+	UINT u = 8;
+	CString str = ToCString(u);
+	str << "Some text " << u << " " << i << 'c' << 'h';
+
 * Added wxx_setup.h to the Win32++ library. This file defines the set of macros
   and includes the C, C++, and windows header files required by Win32++. The
   wxx_cstring.h file now includes wxx_setup.h, allowing CString to be used
@@ -60,8 +73,25 @@ Renamed UWM_PRINTSETUP  to UWM_PREVIEWSETUP
 Renamed MAX_MENU_STRING to WXX_MAX_MENU_STRING
 Renamed MAX_STRING_SIZE to WXX_MAX_STRING_SIZE
 
-Removed support for WinCE.
+Added template <class V>   CStringA ToCStringA(V)              global function
+Added template <class V>   CStringW ToCStringW(V)              global function
+Added template <class V>   CString  ToCString(V)               global function
+Added template <class V>   CString& operator << (CString&, V)  global function
 
+Removed CString(int)                                           constructor
+Removed CString(double)                                        constructor
+Removed CString operator + (const CString&, int)               global operator overload
+Removed CString operator + (const CString&, double)            global operator overload
+Removed CString operator + (int, const CString&)               global operator overload
+Removed CString operator + (double, const CString&)            global operator overload
+Removed CString& operator += (int val)                         global operator overload
+Removed CString& operator += (double val)                      global operator overload
+Removed CString& operator << (CString&, const TCHAR*)          global operator overload
+Removed CString& operator << (CString&, TCHAR)                 global operator overload
+Removed CString& operator << (CString&, int)                   global operator overload
+Removed CString& operator << (CString&, double)                global operator overload
+
+Removed support for WinCE.
 
 
 Version 8.9.1
