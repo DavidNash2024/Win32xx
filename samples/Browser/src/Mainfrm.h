@@ -15,6 +15,16 @@
 // statusbar and view window.
 class CMainFrame : public CFrame
 {
+# if defined(__GNUC__)
+    // Required by some TDM GCC compilers.
+    enum CommandStateChangeConstants
+    {
+        CSC_UPDATECOMMANDS = (int)0xffffffff,
+        CSC_NAVIGATEFORWARD = 0x1,
+        CSC_NAVIGATEBACK = 0x2
+    }     CommandStateChangeConstants;
+#endif
+
 public:
     CMainFrame();
     virtual ~CMainFrame();

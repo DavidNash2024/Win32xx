@@ -749,7 +749,8 @@ namespace Win32xx
 
         // Your overriding function should look like this ...
 
-        // switch (((LPNMHDR)lparam)->code)
+        // LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+        // switch (code)
         // {
         //      Handle your notifications from the CHILD window here
         //      Return the value recommended by the Windows API documentation.

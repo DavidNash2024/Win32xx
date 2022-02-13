@@ -276,7 +276,9 @@ namespace Win32xx
     inline BOOL CTreeView::GetItemRect(HTREEITEM item, RECT& rc, BOOL isTextOnly) const
     {
         assert(IsWindow());
-        return TreeView_GetItemRect( *this, item, &rc, isTextOnly );
+
+        *reinterpret_cast<HTREEITEM*>(&rc) = item;
+        return (BOOL)SendMessage(TVM_GETITEMRECT, (WPARAM)isTextOnly, (LPARAM)&rc);
     }
 
     // Retrieves the text for a tree-view item.

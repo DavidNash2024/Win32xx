@@ -721,8 +721,8 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lparam)
     LPNMHDR  pNMHDR = (LPNMHDR)lparam;
     LPNMITEMACTIVATE pnmitem = (LPNMITEMACTIVATE)lparam;
     NMLVDISPINFO* pDispInfo = (NMLVDISPINFO*)lparam;
-
-    switch(pNMHDR->code)
+    LONGLONG code = pNMHDR->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+    switch(code)
     {
     case LVN_COLUMNCLICK:   return OnLVColumnClick(pnmitem);
     case LVN_GETDISPINFO:   return OnLVNDispInfo(pDispInfo);

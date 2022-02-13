@@ -791,7 +791,7 @@ namespace Win32xx
                     return CDRF_SKIPDEFAULT;  // No further drawing
                 }
             }
-            return CDRF_DODEFAULT ;   // Do default drawing
+            return CDRF_DODEFAULT;   // Do default drawing
 
         // Painting cycle has completed.
         case CDDS_POSTPAINT:
@@ -2133,7 +2133,8 @@ namespace Win32xx
     inline LRESULT CFrameT<T>::OnNotify(WPARAM, LPARAM lparam)
     {
         LPNMHDR pNMHDR = (LPNMHDR)lparam;
-        switch (pNMHDR->code)
+        LONGLONG code = pNMHDR->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+        switch (code)
         {
         case NM_CUSTOMDRAW:     return OnCustomDraw(pNMHDR);
         case RBN_HEIGHTCHANGE:  return OnRBNHeightChange(pNMHDR);

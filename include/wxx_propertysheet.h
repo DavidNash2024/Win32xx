@@ -314,7 +314,8 @@ namespace Win32xx
 
         // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, result)
         // for non-zero returns.
-        switch(pNotify->hdr.code)
+        LONGLONG code = pNotify->hdr.code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+        switch(code)
         {
         case PSN_SETACTIVE:
             return OnSetActive() ? 0 : -1;

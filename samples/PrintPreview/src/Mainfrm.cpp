@@ -457,7 +457,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     NMHDR* pNMH;
     pNMH = (LPNMHDR)lparam;
-    switch (pNMH->code)
+    LONGLONG code = pNMH->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+    switch (code)
     {
     case EN_DROPFILES:
     {

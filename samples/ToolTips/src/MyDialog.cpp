@@ -149,7 +149,8 @@ BOOL CMyDialog::OnInitDialog()
 
 LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lparam)
 {
-    switch (((LPNMHDR)lparam)->code)
+    LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+    switch (code)
     {
         // notification sent by the tooltip to allow text to be set.
         case TTN_GETDISPINFO:
