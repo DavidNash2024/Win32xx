@@ -429,8 +429,7 @@ void CMainFrame::OnInitialUpdate()
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     // Process notification messages sent by child windows
-//    LONGLONG code = ((LPNMHDR)lparam->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-//  switch(code)
+//  switch(((LPNMHDR)lparam->code)
 //  {
         //Add case statements for each notification message here
 //  }

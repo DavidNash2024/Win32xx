@@ -211,8 +211,7 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     // Notification from our dropdown button is received if Comctl32.dll version
     // is 4.70 or later (IE v3 required).
-    LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch(code)
+    switch(((LPNMHDR)lparam)->code)
     {
         // Menu for dropdown toolbar button
         case TBN_DROPDOWN:

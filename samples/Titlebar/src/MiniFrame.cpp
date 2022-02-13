@@ -569,8 +569,7 @@ LRESULT CMiniFrame::OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CMiniFrame::OnNotify(WPARAM, LPARAM lparam)
 {
     LPNMHDR pHeader = (LPNMHDR)lparam;
-    LONGLONG code = pHeader->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    switch (pHeader->code)
     {
     case NM_CUSTOMDRAW:
         if (pHeader->hwndFrom == m_menubar.GetHwnd())

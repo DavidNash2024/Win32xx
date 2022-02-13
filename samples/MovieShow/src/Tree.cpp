@@ -150,8 +150,7 @@ void CViewTree::OnInitialUpdate()
 LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
     LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lparam;
-    LONGLONG code = pnmtv->hdr.code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    switch (pnmtv->hdr.code)
     {
         case TVN_SELCHANGED:       return OnSelChanged();
         case TVN_BEGINLABELEDIT:   return OnBeginLabelEdit(lparam);

@@ -861,8 +861,8 @@ namespace Win32xx
         OFNOTIFY* pNotify = reinterpret_cast<OFNOTIFY*>(lparam);
         assert(pNotify);
         if (!pNotify) return 0;
-        LONGLONG code = pNotify->hdr.code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-        switch(code)
+
+        switch(pNotify->hdr.code)
         {
             case CDN_INITDONE:
                 OnInitDone();

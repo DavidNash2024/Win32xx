@@ -758,8 +758,7 @@ OnNotify(WPARAM wparam, LPARAM lparam)                                  /*
 *-----------------------------------------------------------------------------*/
 {
     NMHDR *pNMHdr = reinterpret_cast<LPNMHDR>(lparam);
-    LONGLONG code = pNMHdr->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    switch (pNMHdr->code)
     {
         case NM_SETFOCUS:   // date-time picker
         case MCN_SELECT:    // month calendar

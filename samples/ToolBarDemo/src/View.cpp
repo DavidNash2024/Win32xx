@@ -149,8 +149,7 @@ void CView::OnInitialUpdate()
 inline LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     LPNMHDR pNMHDR = (LPNMHDR)lparam;
-    LONGLONG code = pNMHDR->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    switch (pNMHDR->code)
     {
     // Pass the ToolBar's ToolTip info up to the frame
     case TTN_GETDISPINFO: return GetParent().SendMessage(WM_NOTIFY, wparam, lparam);

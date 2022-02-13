@@ -2133,16 +2133,15 @@ namespace Win32xx
     inline LRESULT CFrameT<T>::OnNotify(WPARAM, LPARAM lparam)
     {
         LPNMHDR pNMHDR = (LPNMHDR)lparam;
-        LONGLONG code = pNMHDR->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-        switch (code)
+        switch (pNMHDR->code)
         {
-        case NM_CUSTOMDRAW:     return OnCustomDraw(pNMHDR);
-        case RBN_HEIGHTCHANGE:  return OnRBNHeightChange(pNMHDR);
-        case RBN_LAYOUTCHANGED: return OnRBNLayoutChanged(pNMHDR);
-        case RBN_MINMAX:        return OnRBNMinMax(pNMHDR);
-        case TBN_DROPDOWN:      return OnTBNDropDown((LPNMTOOLBAR)lparam);
-        case TTN_GETDISPINFO:   return OnTTNGetDispInfo((LPNMTTDISPINFO)lparam);
-        case UWN_UNDOCKED:      return OnUndocked();
+        case (UINT)NM_CUSTOMDRAW: return OnCustomDraw(pNMHDR);
+        case RBN_HEIGHTCHANGE:    return OnRBNHeightChange(pNMHDR);
+        case RBN_LAYOUTCHANGED:   return OnRBNLayoutChanged(pNMHDR);
+        case RBN_MINMAX:          return OnRBNMinMax(pNMHDR);
+        case TBN_DROPDOWN:        return OnTBNDropDown((LPNMTOOLBAR)lparam);
+        case TTN_GETDISPINFO:     return OnTTNGetDispInfo((LPNMTTDISPINFO)lparam);
+        case UWN_UNDOCKED:        return OnUndocked();
         }
 
         return 0;
