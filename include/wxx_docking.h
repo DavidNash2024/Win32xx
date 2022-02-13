@@ -3320,7 +3320,8 @@ namespace Win32xx
 
         if (IsWindowVisible())
         {
-            switch (((LPNMHDR)lparam)->code)
+            LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+            switch (code)
             {
             case UWN_BARSTART:      return OnBarStart(pdp);
             case UWN_BARMOVE:       return OnBarMove(pdp);
@@ -5095,7 +5096,8 @@ namespace Win32xx
     // Process WM_NOTIFY notifications from the child view window.
     inline LRESULT CDockContainer::CViewPage::OnNotify(WPARAM wparam, LPARAM lparam)
     {
-        switch (((LPNMHDR)lparam)->code)
+        LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+        switch (code)
         {
 
         // Display tooltips for the toolbar.

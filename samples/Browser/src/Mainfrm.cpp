@@ -366,7 +366,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 
     if (pNMHDR && pNMHDR->hwndFrom == m_combo)
     {
-        switch (pNMHDR->code)
+        LONGLONG code = pNMHDR->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+        switch (code)
         {
         case CBEN_ENDEDIT:
         {

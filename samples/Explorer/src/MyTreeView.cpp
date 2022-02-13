@@ -311,11 +311,11 @@ LRESULT CMyTreeView::OnNMRClick(LPNMHDR)
 // Process notification reflected back from the parent window.
 LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LPNMHDR  lpnmh = (LPNMHDR)lparam;
-
-    switch (lpnmh->code)
+    LPNMHDR  pNMHDR = (LPNMHDR)lparam;
+    LONGLONG code = pNMHDR->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+    switch (code)
     {
-    case NM_RCLICK:         return OnNMRClick(lpnmh);
+    case NM_RCLICK:         return OnNMRClick(pNMHDR);
     case TVN_ITEMEXPANDING: return OnTVNExpanding((LPNMTREEVIEW)lparam);
     case TVN_GETDISPINFO:   return OnTVNGetDispInfo((LPNMTVDISPINFO)lparam);
     case TVN_SELCHANGED:    return OnTVNSelChanged((LPNMTREEVIEW)lparam);

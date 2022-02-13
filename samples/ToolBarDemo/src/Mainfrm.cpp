@@ -143,8 +143,8 @@ void CMainFrame::OnInitialUpdate()
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     LPNMTOOLBAR pNMTB = (LPNMTOOLBAR)lparam;
-
-    switch(pNMTB->hdr.code)
+    LONGLONG code = pNMTB->hdr.code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
+    switch(code)
     {
     case TBN_QUERYDELETE:   return OnQueryDelete(pNMTB);
     case TBN_QUERYINSERT:   return OnQueryInsert(pNMTB);
