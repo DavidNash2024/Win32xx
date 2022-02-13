@@ -3320,8 +3320,7 @@ namespace Win32xx
 
         if (IsWindowVisible())
         {
-            LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-            switch (code)
+            switch (((LPNMHDR)lparam)->code)
             {
             case UWN_BARSTART:      return OnBarStart(pdp);
             case UWN_BARMOVE:       return OnBarMove(pdp);

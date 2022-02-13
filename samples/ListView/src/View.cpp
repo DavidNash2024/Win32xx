@@ -57,10 +57,9 @@ void CView::OnAttach()
 
 LRESULT CView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    switch (((LPNMHDR)lparam)->code)
     {
-    case NM_CUSTOMDRAW:  return OnCustomDraw(lparam);
+    case (UINT)NM_CUSTOMDRAW:  return OnCustomDraw(lparam);
     }
 
     return 0;

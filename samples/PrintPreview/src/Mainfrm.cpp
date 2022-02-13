@@ -455,10 +455,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
 // Called when a notification (WM_NOTIFY) is received from a child window.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    NMHDR* pNMH;
-    pNMH = (LPNMHDR)lparam;
-    LONGLONG code = pNMH->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    NMHDR* pNMH = (LPNMHDR)lparam;
+    switch (pNMH->code)
     {
     case EN_DROPFILES:
     {

@@ -1984,8 +1984,7 @@ namespace Win32xx
         assert(pnmhdr);
         if (!pnmhdr) return 0;
 
-        LONGLONG code = pnmhdr->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-        switch(code)
+        switch(pnmhdr->code)
         {
 
         case UMN_TABCHANGED:

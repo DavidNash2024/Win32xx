@@ -273,10 +273,9 @@ LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pnmitem)
 LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
 {
     LPNMCUSTOMDRAW  pnmitem = (LPNMCUSTOMDRAW)lparam;
-    LONGLONG code = pnmitem->hdr.code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    switch (pnmitem->hdr.code)
     {
-    case NM_CUSTOMDRAW:          return OnCustomDraw(pnmitem);
+    case (UINT)NM_CUSTOMDRAW:          return OnCustomDraw(pnmitem);
     }
 
     return 0;

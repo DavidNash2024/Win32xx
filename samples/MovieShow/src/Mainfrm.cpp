@@ -1090,8 +1090,7 @@ BOOL CMainFrame::OnMoveUp()
 // Process notification messages (WM_NOTIFY) from child windows.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    switch (((LPNMHDR)lparam)->code)
     {
     // Notification from the listview's header control. The header
     // control is a child window of the listview control.

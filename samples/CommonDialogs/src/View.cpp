@@ -197,8 +197,7 @@ OnNotify(WPARAM wparam, LPARAM lparam)                                      /*
 **-----------------------------------------------------------------------------*/
 {
     NMHDR* pNMH = (LPNMHDR) lparam;
-    LONGLONG code = pNMH->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    switch (pNMH->code)
     {
         case EN_DROPFILES: // a file has been dropped in the rich edit box
             SendMessage(m_parent, WM_NOTIFY, wparam, lparam);

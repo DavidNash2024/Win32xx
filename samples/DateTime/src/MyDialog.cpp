@@ -117,8 +117,8 @@ BOOL CMyDialog::OnInitDialog()
 LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(wparam);
-    LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+
+    switch (((LPNMHDR)lparam)->code)
     {
     case DTN_DATETIMECHANGE:
         // Stop the timer when the DataeTime's time is changed

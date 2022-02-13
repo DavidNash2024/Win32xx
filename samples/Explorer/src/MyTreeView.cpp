@@ -312,8 +312,7 @@ LRESULT CMyTreeView::OnNMRClick(LPNMHDR)
 LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
     LPNMHDR  pNMHDR = (LPNMHDR)lparam;
-    LONGLONG code = pNMHDR->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-    switch (code)
+    switch (pNMHDR->code)
     {
     case NM_RCLICK:         return OnNMRClick(pNMHDR);
     case TVN_ITEMEXPANDING: return OnTVNExpanding((LPNMTREEVIEW)lparam);
