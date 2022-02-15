@@ -3320,7 +3320,8 @@ namespace Win32xx
 
         if (IsWindowVisible())
         {
-            switch (((LPNMHDR)lparam)->code)
+            LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+            switch (pHeader->code)
             {
             case UWN_BARSTART:      return OnBarStart(pdp);
             case UWN_BARMOVE:       return OnBarMove(pdp);
@@ -4703,10 +4704,10 @@ namespace Win32xx
     // Process notifications (WM_NOTIFY) reflected back from the parent.
     inline LRESULT CDockContainer::OnNotifyReflect(WPARAM, LPARAM lparam)
     {
-        LPNMHDR pNMHDR = (LPNMHDR)lparam;
-        switch (pNMHDR->code)
+        LPNMHDR pHeader = (LPNMHDR)lparam;
+        switch (pHeader->code)
         {
-        case TCN_SELCHANGE: return OnTCNSelChange(pNMHDR);
+        case TCN_SELCHANGE: return OnTCNSelChange(pHeader);
         }
 
         return 0;
@@ -5095,8 +5096,8 @@ namespace Win32xx
     // Process WM_NOTIFY notifications from the child view window.
     inline LRESULT CDockContainer::CViewPage::OnNotify(WPARAM wparam, LPARAM lparam)
     {
-        LONGLONG code = ((LPNMHDR)lparam)->code;   // LONGLONG required by the TDM-GCC 10.3 compiler.
-        switch (code)
+        LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+        switch (pHeader->code)
         {
 
         // Display tooltips for the toolbar.
@@ -5119,7 +5120,7 @@ namespace Win32xx
             break;
         case NM_CUSTOMDRAW:
             {
-                if (((LPNMHDR)lparam)->hwndFrom == GetToolBar())
+                if (pHeader->hwndFrom == GetToolBar())
                 {
                     // Pass Toolbar's custom draw up to CFrame.
                     return GetAncestor().SendMessage(WM_NOTIFY, wparam, lparam);

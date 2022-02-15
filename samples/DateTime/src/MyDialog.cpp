@@ -118,7 +118,8 @@ LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(wparam);
 
-    switch (((LPNMHDR)lparam)->code)
+    LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+    switch (pHeader->code)
     {
     case DTN_DATETIMECHANGE:
         // Stop the timer when the DataeTime's time is changed

@@ -343,11 +343,11 @@ namespace Win32xx
             {
                 // Do notification reflection if message came from a child window.
                 // Restricting OnNotifyReflect to child windows avoids double handling.
-                LPNMHDR pNmhdr = reinterpret_cast<LPNMHDR>(lparam);
-                assert(pNmhdr);
-                if (pNmhdr)
+                LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+                assert(pHeader);
+                if (pHeader != 0)
                 {
-                    HWND from = pNmhdr->hwndFrom;
+                    HWND from = pHeader->hwndFrom;
                     CWnd* pFrom = GetApp()->GetCWndFromMap(from);
 
                     if (pFrom != NULL)

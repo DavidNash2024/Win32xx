@@ -30,8 +30,8 @@ New Features and Enhancements
   Windows 10 and Windows 11. Different values can be specified before including
   wincore.h if required. These values can be specified in stdafx.h by including
   targetver.h as shown in the samples. Visual Studio 6 will require WINVER to
-  be set for Win95 or Win98.
-
+  be set to values appropriate for Win95 or Win98.
+  
 * Added the Titlebar sample.
   This sample demonstrates how to customize the title bar of a window. It sets
   the title bar's color and draws the minimize, maximize and close buttons.
@@ -50,9 +50,9 @@ New Features and Enhancements
   added to the bottom of the printed page.
   
 * Updated the MenuTheme struct.
-  Added a clrText member to the MenuTheme struc to define the color of
-  menubar text. This is now used to set the menubar text color to white
-  for the BLACK theme in the themes sample.
+  A clrText member has been added to the MenuTheme struc to define the color of
+  menubar text. This is now used to set the menubar text color to white for the
+  BLACK theme in the themes sample.
   
 * Support for WinCE has been removed.
   Version 8.9.1 is the most recent version of Win32++ that supports WinCE.
@@ -84,8 +84,8 @@ Removed CString operator + (const CString&, int)               global operator o
 Removed CString operator + (const CString&, double)            global operator overload
 Removed CString operator + (int, const CString&)               global operator overload
 Removed CString operator + (double, const CString&)            global operator overload
-Removed CString& operator += (int val)                         global operator overload
-Removed CString& operator += (double val)                      global operator overload
+Removed CString& operator += (int)                             global operator overload
+Removed CString& operator += (double)                          global operator overload
 Removed CString& operator << (CString&, const TCHAR*)          global operator overload
 Removed CString& operator << (CString&, TCHAR)                 global operator overload
 Removed CString& operator << (CString&, int)                   global operator overload

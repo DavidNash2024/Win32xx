@@ -147,7 +147,6 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
-					<Add library="ole32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -222,8 +221,6 @@
 		<Unit filename="../../../include/wxx_time.h" />
 		<Unit filename="../../../include/wxx_toolbar.h" />
 		<Unit filename="../../../include/wxx_treeview.h" />
-		<Unit filename="../../../include/wxx_wceframe.h" />
-		<Unit filename="../../../include/wxx_wcestddef.h" />
 		<Unit filename="../../../include/wxx_webbrowser.h" />
 		<Unit filename="../../../include/wxx_wincore.h" />
 		<Unit filename="../../../include/wxx_wincore0.h" />

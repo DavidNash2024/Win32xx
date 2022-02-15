@@ -761,7 +761,8 @@ namespace Win32xx
     // Process the menubar's notifications.
     inline LRESULT CMenuBar::OnNotifyReflect(WPARAM, LPARAM lparam)
     {
-        switch (((LPNMHDR)lparam)->code)
+        LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+        switch (pHeader->code)
         {
         case TBN_DROPDOWN:      return OnTBNDropDown((LPNMTOOLBAR) lparam);
         case TBN_HOTITEMCHANGE: return OnTBNHotItemChange((LPNMTBHOTITEM) lparam);

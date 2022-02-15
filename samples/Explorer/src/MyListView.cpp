@@ -718,16 +718,16 @@ LRESULT CMyListView::OnNMReturn(LPNMHDR)
 // Process notification messages (WM_NOTIFY) reflected back from the parent window.
 LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LPNMHDR  pNMHDR = (LPNMHDR)lparam;
-    LPNMITEMACTIVATE pnmitem = (LPNMITEMACTIVATE)lparam;
-    NMLVDISPINFO* pDispInfo = (NMLVDISPINFO*)lparam;
-    switch(pNMHDR->code)
+    LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+    LPNMITEMACTIVATE pnmitem = reinterpret_cast<LPNMITEMACTIVATE>(lparam);
+    NMLVDISPINFO* pDispInfo = reinterpret_cast<NMLVDISPINFO*>(lparam);
+    switch(pHeader->code)
     {
     case LVN_COLUMNCLICK:   return OnLVColumnClick(pnmitem);
     case LVN_GETDISPINFO:   return OnLVNDispInfo(pDispInfo);
-    case NM_DBLCLK:         return OnNMReturn(pNMHDR);
-    case NM_RCLICK:         return OnNMRClick(pNMHDR);
-    case NM_RETURN:         return OnNMReturn(pNMHDR);
+    case NM_DBLCLK:         return OnNMReturn(pHeader);
+    case NM_RCLICK:         return OnNMRClick(pHeader);
+    case NM_RETURN:         return OnNMReturn(pHeader);
     }
     return 0;
 }

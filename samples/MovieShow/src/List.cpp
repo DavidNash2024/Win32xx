@@ -272,10 +272,10 @@ LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pnmitem)
 // Respond to notifications from child windows,
 LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
 {
-    LPNMCUSTOMDRAW  pnmitem = (LPNMCUSTOMDRAW)lparam;
-    switch (pnmitem->hdr.code)
+    LPNMCUSTOMDRAW  pCustomDraw = (LPNMCUSTOMDRAW)lparam;
+    switch (pCustomDraw->hdr.code)
     {
-    case (UINT)NM_CUSTOMDRAW:          return OnCustomDraw(pnmitem);
+    case NM_CUSTOMDRAW:          return OnCustomDraw(pCustomDraw);
     }
 
     return 0;
@@ -285,13 +285,13 @@ LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
 // back to CViewList.
 LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LPNMITEMACTIVATE pnmitem = (LPNMITEMACTIVATE)lparam;
+    LPNMITEMACTIVATE pItemActivate = (LPNMITEMACTIVATE)lparam;
 
-    switch (pnmitem->hdr.code)
+    switch (pItemActivate->hdr.code)
     {
-    case LVN_COLUMNCLICK:          return OnLVColumnClick(pnmitem);
-    case LVN_ITEMACTIVATE:         return OnItemActivate(pnmitem);
-    case LVN_ITEMCHANGED:          return OnItemChanged(pnmitem);
+    case LVN_COLUMNCLICK:          return OnLVColumnClick(pItemActivate);
+    case LVN_ITEMACTIVATE:         return OnItemActivate(pItemActivate);
+    case LVN_ITEMCHANGED:          return OnItemChanged(pItemActivate);
     case NM_RCLICK:                return OnRClick();
     }
 
