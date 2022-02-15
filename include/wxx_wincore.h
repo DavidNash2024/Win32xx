@@ -749,7 +749,8 @@ namespace Win32xx
 
         // Your overriding function should look like this ...
 
-        // switch (((LPNMHDR)lparam)->code)
+        // LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+        // switch (pHeader->code)
         // {
         //      Handle your notifications from the CHILD window here
         //      Return the value recommended by the Windows API documentation.
@@ -769,7 +770,8 @@ namespace Win32xx
 
         // Your overriding function should look like this ...
 
-        // switch (((LPNMHDR)lparam)->code)
+        // LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+        // switch (pHeader->code)
         // {
         //      Handle your notifications from this window here
         //      Return the value recommended by the Windows API documentation.
@@ -1089,7 +1091,7 @@ namespace Win32xx
             break;  // Note: Some MDI commands require default processing.
         case WM_CREATE:
             {
-                LPCREATESTRUCT pcs = (LPCREATESTRUCT) lparam;
+                LPCREATESTRUCT pcs = reinterpret_cast<LPCREATESTRUCT>(lparam);
                 if (pcs == NULL)
                     throw CWinException(_T("WM_CREATE failed"));
 
@@ -1102,7 +1104,8 @@ namespace Win32xx
             {
                 // Do notification reflection if message came from a child window.
                 // Restricting OnNotifyReflect to child windows avoids double handling.
-                HWND from = ((LPNMHDR)lparam)->hwndFrom;
+                LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+                HWND from = pHeader->hwndFrom;
                 CWnd* pWndFrom = GetApp()->GetCWndFromMap(from);
 
                 if (pWndFrom != NULL)

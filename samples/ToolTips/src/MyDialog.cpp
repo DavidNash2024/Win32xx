@@ -149,12 +149,13 @@ BOOL CMyDialog::OnInitDialog()
 
 LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lparam)
 {
-    switch (((LPNMHDR)lparam)->code)
+    LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+    switch (pHeader->code)
     {
         // notification sent by the tooltip to allow text to be set.
         case TTN_GETDISPINFO:
         {
-            LPNMTTDISPINFO lpnmtdi = (LPNMTTDISPINFO)lparam;
+            LPNMTTDISPINFO lpnmtdi = reinterpret_cast<LPNMTTDISPINFO>(lparam);
 
             if (lpnmtdi->hdr.idFrom == (UINT_PTR)m_edit.GetHwnd())
             {

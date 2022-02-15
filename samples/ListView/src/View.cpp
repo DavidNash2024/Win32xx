@@ -57,9 +57,10 @@ void CView::OnAttach()
 
 LRESULT CView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    switch (((LPNMHDR)lparam)->code)
+    LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+    switch (pHeader->code)
     {
-    case (UINT)NM_CUSTOMDRAW:  return OnCustomDraw(lparam);
+    case NM_CUSTOMDRAW:  return OnCustomDraw(lparam);
     }
 
     return 0;

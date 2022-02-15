@@ -429,7 +429,8 @@ void CMainFrame::OnInitialUpdate()
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     // Process notification messages sent by child windows
-//  switch(((LPNMHDR)lparam->code)
+//  LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+//  switch (pHeader->code)
 //  {
         //Add case statements for each notification message here
 //  }

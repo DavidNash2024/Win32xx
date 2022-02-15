@@ -88,7 +88,8 @@ BOOL CMainFrame::OnFileExit()
 // Process notification messages (WM_NOTIFY) sent by child windows.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-//  switch(((LPNMHDR)lparam)->code)
+//  LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+//  switch (pHeader->code)
 //  {
         //Add case statements for each notification message here
 //  }

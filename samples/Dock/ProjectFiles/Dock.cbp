@@ -145,7 +145,6 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
-					<Add library="ole32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -179,7 +178,55 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="../../../include/menubar.h" />
+		<Unit filename="../../../include/wxx_appcore.h" />
+		<Unit filename="../../../include/wxx_appcore0.h" />
+		<Unit filename="../../../include/wxx_archive.h" />
+		<Unit filename="../../../include/wxx_commondlg.h" />
+		<Unit filename="../../../include/wxx_controls.h" />
+		<Unit filename="../../../include/wxx_cstring.h" />
+		<Unit filename="../../../include/wxx_ddx.h" />
+		<Unit filename="../../../include/wxx_dialog.h" />
+		<Unit filename="../../../include/wxx_dockframe.h" />
+		<Unit filename="../../../include/wxx_docking.h" />
+		<Unit filename="../../../include/wxx_exception.h" />
+		<Unit filename="../../../include/wxx_file.h" />
+		<Unit filename="../../../include/wxx_filefind.h" />
+		<Unit filename="../../../include/wxx_folderdialog.h" />
+		<Unit filename="../../../include/wxx_frame.h" />
+		<Unit filename="../../../include/wxx_gdi.h" />
+		<Unit filename="../../../include/wxx_imagelist.h" />
+		<Unit filename="../../../include/wxx_listview.h" />
+		<Unit filename="../../../include/wxx_mdi.h" />
+		<Unit filename="../../../include/wxx_menu.h" />
+		<Unit filename="../../../include/wxx_menubar.h" />
+		<Unit filename="../../../include/wxx_menumetrics.h" />
+		<Unit filename="../../../include/wxx_metafile.h" />
+		<Unit filename="../../../include/wxx_mutex.h" />
+		<Unit filename="../../../include/wxx_preview.h" />
+		<Unit filename="../../../include/wxx_printdialogex.h" />
+		<Unit filename="../../../include/wxx_printdialogs.h" />
+		<Unit filename="../../../include/wxx_propertysheet.h" />
+		<Unit filename="../../../include/wxx_rebar.h" />
+		<Unit filename="../../../include/wxx_rect.h" />
+		<Unit filename="../../../include/wxx_regkey.h" />
+		<Unit filename="../../../include/wxx_ribbon.h" />
+		<Unit filename="../../../include/wxx_richedit.h" />
+		<Unit filename="../../../include/wxx_scrollview.h" />
+		<Unit filename="../../../include/wxx_setup.h" />
+		<Unit filename="../../../include/wxx_shared_ptr.h" />
+		<Unit filename="../../../include/wxx_socket.h" />
+		<Unit filename="../../../include/wxx_statusbar.h" />
+		<Unit filename="../../../include/wxx_stdcontrols.h" />
+		<Unit filename="../../../include/wxx_tab.h" />
+		<Unit filename="../../../include/wxx_taskdialog.h" />
+		<Unit filename="../../../include/wxx_textconv.h" />
+		<Unit filename="../../../include/wxx_themes.h" />
+		<Unit filename="../../../include/wxx_time.h" />
+		<Unit filename="../../../include/wxx_toolbar.h" />
+		<Unit filename="../../../include/wxx_treeview.h" />
+		<Unit filename="../../../include/wxx_webbrowser.h" />
+		<Unit filename="../../../include/wxx_wincore.h" />
+		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/Dockers.cpp" />
 		<Unit filename="../src/Dockers.h" />
 		<Unit filename="../src/DockingApp.cpp" />

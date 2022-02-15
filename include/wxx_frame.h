@@ -2132,13 +2132,13 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnNotify(WPARAM, LPARAM lparam)
     {
-        LPNMHDR pNMHDR = (LPNMHDR)lparam;
-        switch (pNMHDR->code)
+        LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+        switch (pHeader->code)
         {
-        case (UINT)NM_CUSTOMDRAW: return OnCustomDraw(pNMHDR);
-        case RBN_HEIGHTCHANGE:    return OnRBNHeightChange(pNMHDR);
-        case RBN_LAYOUTCHANGED:   return OnRBNLayoutChanged(pNMHDR);
-        case RBN_MINMAX:          return OnRBNMinMax(pNMHDR);
+        case (UINT)NM_CUSTOMDRAW: return OnCustomDraw(pHeader);   // The UINT cast is required by some 32bit MinGW compilers.
+        case RBN_HEIGHTCHANGE:    return OnRBNHeightChange(pHeader);
+        case RBN_LAYOUTCHANGED:   return OnRBNLayoutChanged(pHeader);
+        case RBN_MINMAX:          return OnRBNMinMax(pHeader);
         case TBN_DROPDOWN:        return OnTBNDropDown((LPNMTOOLBAR)lparam);
         case TTN_GETDISPINFO:     return OnTTNGetDispInfo((LPNMTTDISPINFO)lparam);
         case UWN_UNDOCKED:        return OnUndocked();

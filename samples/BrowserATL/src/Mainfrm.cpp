@@ -304,14 +304,15 @@ void CMainFrame::OnNewWindow2(DISPPARAMS*)
 // Called when the frame receives a notification (WM_NOTIFY).
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    LPNMHDR pNMHDR = (LPNMHDR)lparam;
-    if (pNMHDR && pNMHDR->hwndFrom == m_combo)
+    LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+    if (pHeader != 0 && pHeader->hwndFrom == m_combo)
     {
-        switch ((pNMHDR)->code)
+        switch ((pHeader)->code)
         {
         case CBEN_ENDEDIT:    // operation concluded in the combo edit box
         {
-            switch (((PNMCBEENDEDIT)lparam)->iWhy)
+            PNMCBEENDEDIT pEndEdit = reinterpret_cast<PNMCBEENDEDIT>(pHeader);
+            switch (pEndEdit->iWhy)
             {
             case CBENF_RETURN:    // return hit in the combo edit box
             {

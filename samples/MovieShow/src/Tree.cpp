@@ -149,8 +149,8 @@ void CViewTree::OnInitialUpdate()
 // by the framework.
 LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lparam;
-    switch (pnmtv->hdr.code)
+    LPNMTREEVIEW pTreeView = (LPNMTREEVIEW)lparam;
+    switch (pTreeView->hdr.code)
     {
         case TVN_SELCHANGED:       return OnSelChanged();
         case TVN_BEGINLABELEDIT:   return OnBeginLabelEdit(lparam);

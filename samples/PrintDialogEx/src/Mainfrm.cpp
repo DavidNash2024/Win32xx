@@ -626,8 +626,8 @@ void CMainFrame::OnMenuUpdate(UINT id)
 // Respond to notification messages (WM_NOTIFY) from child windows.
 LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    NMHDR* pNMH = reinterpret_cast<LPNMHDR>(lparam);
-    switch (pNMH->code)
+    LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+    switch (pHeader->code)
     {
     case EN_DROPFILES:
     {

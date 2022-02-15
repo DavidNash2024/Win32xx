@@ -1002,10 +1002,10 @@ namespace Win32xx
     // Handle the notifications we send.
     inline LRESULT CTab::OnNotifyReflect(WPARAM, LPARAM lparam)
     {
-        LPNMHDR pNMHDR = (LPNMHDR)lparam;
-        switch (pNMHDR->code)
+        LPNMHDR pHeader = (LPNMHDR)lparam;
+        switch (pHeader->code)
         {
-        case TCN_SELCHANGE: return OnTCNSelChange(pNMHDR);
+        case TCN_SELCHANGE: return OnTCNSelChange(pHeader);
         }
 
         return 0;
@@ -1980,45 +1980,48 @@ namespace Win32xx
     // Handles notifications.
     inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wparam*/, LPARAM lparam)
     {
-        LPNMHDR pnmhdr = (LPNMHDR)lparam;
-        assert(pnmhdr);
-        if (!pnmhdr) return 0;
-
-        switch(pnmhdr->code)
+        LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+        assert(pHeader);
+        if (pHeader != 0)
         {
 
-        case UMN_TABCHANGED:
-            RecalcLayout();
-            break;
-
-        case UWN_TABDRAGGED:
+            switch(pHeader->code)
             {
-                CPoint pt = GetCursorPos();
-                VERIFY(GetTab().ScreenToClient(pt));
 
-                TCHITTESTINFO info;
-                ZeroMemory(&info, sizeof(info));
-                info.pt = pt;
-                int nTab = GetTab().HitTest(info);
-                if (nTab >= 0)
+            case UMN_TABCHANGED:
+                RecalcLayout();
+                break;
+
+            case UWN_TABDRAGGED:
                 {
-                    if (nTab !=  GetActiveMDITab())
+                    CPoint pt = GetCursorPos();
+                    VERIFY(GetTab().ScreenToClient(pt));
+
+                    TCHITTESTINFO info;
+                    ZeroMemory(&info, sizeof(info));
+                    info.pt = pt;
+                    int nTab = GetTab().HitTest(info);
+                    if (nTab >= 0)
                     {
-                        GetTab().SwapTabs(nTab, GetActiveMDITab());
-                        SetActiveMDITab(nTab);
+                        if (nTab !=  GetActiveMDITab())
+                        {
+                            GetTab().SwapTabs(nTab, GetActiveMDITab());
+                            SetActiveMDITab(nTab);
+                        }
                     }
+
+                    break;
                 }
 
-                break;
-            }
+            case UWN_TABCLOSE:
+                {
+                    TABNMHDR* pTabNMHDR = reinterpret_cast<TABNMHDR*>(pHeader);
+                    return !OnTabClose(pTabNMHDR->nPage);
+                }
 
-        case UWN_TABCLOSE:
-            {
-                TABNMHDR* pTabNMHDR = reinterpret_cast<TABNMHDR*>(pnmhdr);
-                return !OnTabClose(pTabNMHDR->nPage);
-            }
+            }   // switch(pnmhdr->code)
 
-        }   // switch(pnmhdr->code)
+        }   // if (pHeader == 0)
 
         return 0;
     }

@@ -148,8 +148,8 @@ void CView::OnInitialUpdate()
 // Called when a notification is received from a child window.
 inline LRESULT CView::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    LPNMHDR pNMHDR = (LPNMHDR)lparam;
-    switch (pNMHDR->code)
+    LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+    switch (pHeader->code)
     {
     // Pass the ToolBar's ToolTip info up to the frame
     case TTN_GETDISPINFO: return GetParent().SendMessage(WM_NOTIFY, wparam, lparam);
