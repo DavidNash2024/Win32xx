@@ -32,6 +32,7 @@ public:
     BOOL OnFilePrint();
     BOOL OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue);
     BOOL OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
+    STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEWVERB verb, INT32);
     BOOL SetPenColor(COLORREF clr);
 
 protected:

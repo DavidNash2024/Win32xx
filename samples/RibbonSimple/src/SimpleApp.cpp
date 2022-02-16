@@ -8,21 +8,22 @@
 /////////////////////////////////////////
 // CSimpleRibbonApp function definitions.
 //
+
+// Constructor for CSimpleRibbonApp.
 CSimpleRibbonApp::CSimpleRibbonApp()
-{
-    // Constructor for CSimpleRibbonApp
+{  
 }
 
+// Destructor for CSimpleRibbonApp.
 CSimpleRibbonApp::~CSimpleRibbonApp()
 {
 }
 
+// This function is called automatically when the application starts.
 BOOL CSimpleRibbonApp::InitInstance()
 {
-    // This function is called automatically when the application starts
-
     // Create the Window
-    m_view.Create();    // throws a CWinException on failure
+    m_view.Create();    // throws a CWinException on failure.
 
     return TRUE;
 }
