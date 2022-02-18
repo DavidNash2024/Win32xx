@@ -15,7 +15,7 @@
 //
 
 // Constructor for CMainMDIFrame.
-CMainMDIFrame::CMainMDIFrame()
+CMainMDIFrame::CMainMDIFrame() : m_pIUIRibbon(0)
 {
 }
 
@@ -35,18 +35,6 @@ HWND CMainMDIFrame::Create(HWND parent)
     LoadRegistryMRUSettings(4);
 
     return CRibbonMDIFrame::Create(parent);
-}
-
-COLORREF CMainMDIFrame::GetColorFromPicker() const
-{
-    PROPVARIANT var;
-    PropVariantInit(&var);
-    COLORREF color = RGB(0, 0, 0);
-    HRESULT result = GetRibbonFramework()->GetUICommandProperty(IDC_PEN_COLOR, UI_PKEY_Color, &var);
-    if (SUCCEEDED(result))
-        color = PropVariantToUInt32WithDefault(var, 0);
-
-    return color;
 }
 
 // This function is called when a ribbon button is pressed.
@@ -90,6 +78,52 @@ STDMETHODIMP CMainMDIFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const P
     return S_OK;
 }
 
+COLORREF CMainMDIFrame::GetColorFromPicker() const
+{
+    PROPVARIANT var;
+    PropVariantInit(&var);
+    COLORREF color = RGB(0, 0, 0);
+    HRESULT result = GetRibbonFramework()->GetUICommandProperty(IDC_PEN_COLOR, UI_PKEY_Color, &var);
+    if (SUCCEEDED(result))
+        color = PropVariantToUInt32WithDefault(var, 0);
+
+    return color;
+}
+
+// The IUIRibbon interface provides the ability to specify settings and properties for thr ribbon.
+IUIRibbon* CMainMDIFrame::GetIUIRibbon() const
+{
+    return m_pIUIRibbon;
+}
+
+// Process the messages from the (non-ribbon) Menu and Tool Bar.
+BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM)
+{
+    UINT id = LOWORD(wparam);
+
+    switch (id)
+    {
+    case IDM_FILE_NEW:          OnFileNew();            return TRUE;
+    case IDM_FILE_EXIT:         OnFileExit();           return TRUE;
+
+    case IDM_COLOR_RED:     SetPenColor(RGB(255, 0, 0));    return TRUE;
+    case IDM_COLOR_BLUE:    SetPenColor(RGB(0, 0, 255));    return TRUE;
+    case IDM_COLOR_GREEN:   SetPenColor(RGB(0, 196, 0));    return TRUE;
+    case IDM_COLOR_BLACK:   SetPenColor(RGB(0, 0, 0));      return TRUE;
+
+    case IDW_MDI_ARRANGE:       MDIIconArrange();           return TRUE;
+    case IDW_MDI_CASCADE:       MDICascade();               return TRUE;
+    case IDW_MDI_CLOSEALL:      RemoveAllMDIChildren();     return TRUE;
+    case IDW_MDI_TILE:          MDITile();                  return TRUE;
+
+    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
+    case IDM_HELP_ABOUT:        return OnHelp();
+    }
+
+    return FALSE;
+}
+
 int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
 {
     int result = CRibbonMDIFrame::OnCreate(cs);
@@ -131,34 +165,6 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
     }
 
     return result;
-}
-
-// Process the messages from the (non-ribbon) Menu and Tool Bar.
-BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM)
-{
-    UINT id = LOWORD(wparam);
-
-    switch (id)
-    {
-    case IDM_FILE_NEW:          OnFileNew();            return TRUE;
-    case IDM_FILE_EXIT:         OnFileExit();           return TRUE;
-
-    case IDM_COLOR_RED:     SetPenColor(RGB(255, 0, 0));    return TRUE;
-    case IDM_COLOR_BLUE:    SetPenColor(RGB(0, 0, 255));    return TRUE;
-    case IDM_COLOR_GREEN:   SetPenColor(RGB(0, 196, 0));    return TRUE;
-    case IDM_COLOR_BLACK:   SetPenColor(RGB(0, 0, 0));      return TRUE;
-
-    case IDW_MDI_ARRANGE:       MDIIconArrange();           return TRUE;
-    case IDW_MDI_CASCADE:       MDICascade();               return TRUE;
-    case IDW_MDI_CLOSEALL:      RemoveAllMDIChildren();     return TRUE;
-    case IDW_MDI_TILE:          MDITile();                  return TRUE;
-
-    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
-    case IDM_HELP_ABOUT:        return OnHelp();
-    }
-
-    return FALSE;
 }
 
 void CMainMDIFrame::OnFileExit()
@@ -237,6 +243,36 @@ void CMainMDIFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimpleProper
             }
         }
     }
+}
+
+// OnViewChanged is called when the ribbon is changed.
+STDMETHODIMP CMainMDIFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32)
+{
+    HRESULT result = E_NOTIMPL;
+
+    // Checks to see if the view that was changed was a Ribbon view.
+    if (UI_VIEWTYPE_RIBBON == typeId)
+    {
+        switch (verb)
+        {
+        case UI_VIEWVERB_CREATE:    // The ribbon has been created.
+            m_pIUIRibbon = reinterpret_cast<IUIRibbon*>(pView);
+            result = S_OK;
+            break;
+        case UI_VIEWVERB_SIZE:      // The ribbon's size has changed.
+            RecalcLayout();
+            result = S_OK;
+            break;
+        case UI_VIEWVERB_DESTROY:   // The ribbon has been destroyed.
+            result = S_OK;
+            break;
+        case UI_VIEWVERB_ERROR:
+            result = E_FAIL;
+            break;
+        }
+    }
+
+    return result;
 }
 
 // Set the Pen Color when a color toolbar button is pressed.

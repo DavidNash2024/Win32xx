@@ -14,7 +14,7 @@
 //
 
 // Constructor for CMainFrame.
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_pIUIRibbon(0)
 {
 }
 
@@ -73,6 +73,12 @@ STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROP
     }
 
     return S_OK;
+}
+
+// The IUIRibbon interface provides the ability to specify settings and properties for thr ribbon.
+IUIRibbon* CMainFrame::GetIUIRibbon() const
+{
+    return m_pIUIRibbon;
 }
 
 // Loads data from the specified file. It is called by OnFileOpen,
@@ -192,6 +198,15 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
+// OnFileNew is called in response to the File New button.
+BOOL CMainFrame::OnFileNew()
+{
+    GetDoc().GetAllPoints().clear();
+    m_pathName = L"";
+    GetView().Invalidate();
+    return TRUE;
+}
+
 // OnFileOpen is called in response to the File Open button.
 BOOL CMainFrame::OnFileOpen()
 {
@@ -219,12 +234,23 @@ BOOL CMainFrame::OnFileOpen()
     return TRUE;
 }
 
-// OnFileNew is called in response to the File New button.
-BOOL CMainFrame::OnFileNew()
+// Prints the view window to a printer of your choice.
+BOOL CMainFrame::OnFilePrint()
 {
-    GetDoc().GetAllPoints().clear();
-    m_pathName = L"";
-    GetView().Invalidate();
+    try
+    {
+        // Print the view window.
+        m_view.Print();
+    }
+
+    catch (const CException& e)
+    {
+        // Display a message box indicating why printing failed.
+        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
+        CString type = CString(e.what());
+        ::MessageBox(0, message, type, MB_ICONWARNING);
+    }
+
     return TRUE;
 }
 
@@ -281,26 +307,6 @@ BOOL CMainFrame::OnFileSaveAs()
     return TRUE;
 }
 
-// Prints the view window to a printer of your choice.
-BOOL CMainFrame::OnFilePrint()
-{
-    try
-    {
-        // Print the view window.
-        m_view.Print();
-    }
-
-    catch (const CException& e)
-    {
-        // Display a message box indicating why printing failed.
-        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
-        CString type = CString(e.what());
-        ::MessageBox(0, message, type, MB_ICONWARNING);
-    }
-
-    return TRUE;
-}
-
 // OnMRUList is called in reponse to selection from the recent files list.
 // The recent files list contains a list of the Most Recently Used files.
 BOOL CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
@@ -351,7 +357,7 @@ BOOL CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
 }
 
 // OnViewChanged is called when the ribbon is changed.
-STDMETHODIMP CMainFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEWVERB verb, INT32)
+STDMETHODIMP CMainFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32)
 {
     HRESULT result = E_NOTIMPL;
 
@@ -361,6 +367,7 @@ STDMETHODIMP CMainFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI
         switch (verb)
         {
         case UI_VIEWVERB_CREATE:    // The ribbon has been created.
+            m_pIUIRibbon = reinterpret_cast<IUIRibbon*>(pView);
             result = S_OK;
             break;
         case UI_VIEWVERB_SIZE:      // The ribbon's size has changed.

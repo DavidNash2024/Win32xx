@@ -20,6 +20,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    IUIRibbon* GetIUIRibbon() const;
     CDoc& GetDoc() { return m_doc; }
     void LoadFile(LPCTSTR fileName);
     void MRUFileOpen(UINT mruIndex);
@@ -40,8 +41,10 @@ public:
     void SetPenColor(COLORREF clr);
 
 protected:
-    virtual STDMETHODIMP Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
-    virtual STDMETHODIMP UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key, __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue);
+    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*);
+    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUnknown*, UI_VIEWVERB, INT32);
+    virtual STDMETHODIMP UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt  const PROPVARIANT*, __out PROPVARIANT*);
+
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -50,6 +53,7 @@ private:
     CView m_view;
     CDoc m_doc;
     CString m_pathName;
+    IUIRibbon* m_pIUIRibbon;
 };
 
 #endif //MAINFRM_H
