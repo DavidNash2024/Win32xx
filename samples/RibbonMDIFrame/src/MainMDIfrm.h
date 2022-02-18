@@ -20,6 +20,7 @@ public:
     virtual HWND Create(HWND parent = 0);
     COLORREF GetColorFromPicker() const;
     CDoc& GetDoc() { return m_doc; }
+    IUIRibbon* GetIUIRibbon() const;
 
     void OnFileExit();
     void OnFileNew();
@@ -32,8 +33,10 @@ public:
     void SetPenColor(COLORREF clr);
 
 protected:
-    virtual STDMETHODIMP Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
-    virtual STDMETHODIMP UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key, __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue);
+    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*);
+    virtual STDMETHODIMP UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt const PROPVARIANT*, __out PROPVARIANT*);
+    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUnknown*, UI_VIEWVERB, INT32);
+
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int OnCreate(CREATESTRUCT &cs);
     virtual void SetupToolBar();
@@ -42,6 +45,7 @@ protected:
 private:
     CDoc m_doc;
     CString m_pathName;
+    IUIRibbon* m_pIUIRibbon;
 };
 
 

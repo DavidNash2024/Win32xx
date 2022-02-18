@@ -12,13 +12,15 @@
 class CView : public CWnd, public CRibbon
 {
 public:
-    CView() {}
+    CView() : m_pIUIRibbon(0) {}
     virtual ~CView() {}
+    IUIRibbon* GetIUIRibbon() const;
     void RecalcLayout();
 
 protected:
-    virtual STDMETHODIMP Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties);
-    virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUIApplication::IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode);
+    virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*);
+    virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUIApplication::IUnknown*, UI_VIEWVERB, INT32);
+
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
     virtual void OnDraw(CDC& dc);
@@ -26,6 +28,9 @@ protected:
     virtual LRESULT OnSize();
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    IUIRibbon* m_pIUIRibbon;
 };
 
 

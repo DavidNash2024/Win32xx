@@ -13,7 +13,7 @@
 
 //////////////////////////////////
 // CMainFrame function definitions
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_pIUIRibbon(0)
 {
 }
 
@@ -74,6 +74,28 @@ STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROP
     return S_OK;
 }
 
+// The IUIRibbon interface provides the ability to specify settings and properties for thr ribbon.
+IUIRibbon* CMainFrame::GetIUIRibbon() const
+{
+    return m_pIUIRibbon;
+}
+
+// Called by OnFileOpen and in response to a UWM_DROPFILE message.
+void CMainFrame::LoadFile(LPCTSTR fileName)
+{
+    // Retrieve the PlotPoint data
+    if (GetDoc().FileOpen(fileName))
+    {
+        // Save the filename
+        m_pathName = fileName;
+        AddMRUEntry(fileName);
+    }
+    else
+        m_pathName = L"";
+
+    GetView().Invalidate();
+}
+
 void CMainFrame::MRUFileOpen(UINT mruIndex)
 {
     CString mruText = GetMRUEntry(mruIndex);
@@ -84,44 +106,6 @@ void CMainFrame::MRUFileOpen(UINT mruIndex)
         RemoveMRUEntry(mruText);
 
     GetView().Invalidate();
-}
-
-void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
-{
-    if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
-    {
-        UINT mruItem = ppropvarValue->ulVal;
-        MRUFileOpen(mruItem);
-    }
-}
-
-// Called when the DropdownColorPicker button is pressed.
-void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
-{
-    if (ppropvarValue != NULL)
-    {
-        // Retrieve color type.
-        UINT type = ppropvarValue->uintVal;
-
-        // The Ribbon framework passes color as additional property if the color type is RGB.
-        if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != NULL)
-        {
-            // Retrieve color.
-            PROPVARIANT var;
-            PropVariantInit(&var);
-            if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
-            {
-                UINT color = var.uintVal;
-                m_view.SetPenColor((COLORREF)color);
-            }
-        }
-    }
-}
-
-// Used when there isn't a ribbon.
-void CMainFrame::SetPenColor(COLORREF clr)
-{
-    m_view.SetPenColor(clr);
 }
 
 // Process the messages from the (non-ribbon) Menu and Tool Bar.
@@ -144,11 +128,11 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDW_FILE_MRU_FILE3:
     case IDW_FILE_MRU_FILE4:
     case IDW_FILE_MRU_FILE5:
-        {
-            UINT uMRUEntry = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
-            MRUFileOpen(uMRUEntry);
-            return TRUE;
-        }
+    {
+        UINT uMRUEntry = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
+        MRUFileOpen(uMRUEntry);
+        return TRUE;
+    }
 
     case IDM_PEN_RED:   SetPenColor(RGB(255, 0, 0));    return TRUE;
     case IDM_PEN_BLUE:  SetPenColor(RGB(0, 0, 255));    return TRUE;
@@ -163,26 +147,22 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     return FALSE;
 }
 
+// Called in response to a UWM_DROPFILE message.
+LRESULT CMainFrame::OnDropFile(WPARAM wparam)
+{
+    // wParam is a pointer (LPCTSTR) to the filename
+    LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+    assert(fileName);
+
+    // Load the file
+    LoadFile(fileName);
+    return 0;
+}
+
 void CMainFrame::OnFileExit()
 {
     // Issue a close request to the frame
     Close();
-}
-
-// Called by OnFileOpen and in response to a UWM_DROPFILE message.
-void CMainFrame::LoadFile(LPCTSTR fileName)
-{
-    // Retrieve the PlotPoint data
-    if (GetDoc().FileOpen(fileName))
-    {
-        // Save the filename
-        m_pathName = fileName;
-        AddMRUEntry(fileName);
-    }
-    else
-        m_pathName=L"";
-
-    GetView().Invalidate();
 }
 
 void CMainFrame::OnFileOpen()
@@ -203,35 +183,6 @@ void CMainFrame::OnFileNew()
     GetDoc().GetAllPoints().clear();
     m_pathName = L"";
     GetView().Invalidate();
-}
-
-void CMainFrame::OnFileSave()
-{
-    if (m_pathName == L"")
-        OnFileSaveAs();
-    else
-        GetDoc().FileSave(m_pathName);
-}
-
-void CMainFrame::OnFileSaveAs()
-{
-    CFileDialog fileDlg(FALSE, L"dat", 0, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
-    fileDlg.SetTitle(L"Save File");
-
-    // Bring up the file open dialog retrieve the selected filename
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        CString str = fileDlg.GetPathName();
-
-        // Save the file
-        if (GetDoc().FileSave(str))
-        {
-            // Save the file name
-            m_pathName = str;
-            AddMRUEntry(m_pathName);
-        }
-    }
-
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice
@@ -320,6 +271,44 @@ void CMainFrame::OnFilePrint()
     }
 }
 
+void CMainFrame::OnFileSave()
+{
+    if (m_pathName == L"")
+        OnFileSaveAs();
+    else
+        GetDoc().FileSave(m_pathName);
+}
+
+void CMainFrame::OnFileSaveAs()
+{
+    CFileDialog fileDlg(FALSE, L"dat", 0, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
+    fileDlg.SetTitle(L"Save File");
+
+    // Bring up the file open dialog retrieve the selected filename
+    if (fileDlg.DoModal(*this) == IDOK)
+    {
+        CString str = fileDlg.GetPathName();
+
+        // Save the file
+        if (GetDoc().FileSave(str))
+        {
+            // Save the file name
+            m_pathName = str;
+            AddMRUEntry(m_pathName);
+        }
+    }
+}
+
+// Called in response to a UWM_GETALLPOINTS message.
+LRESULT CMainFrame::OnGetAllPoints()
+{
+    // Get a pointer to the vector of PlotPoints
+    std::vector<PlotPoint>* pAllPoints = &GetDoc().GetAllPoints();
+
+    // Cast the pointer to a LRESULT and return it
+    return reinterpret_cast<LRESULT>(pAllPoints);
+}
+
 void CMainFrame::OnInitialUpdate()
 {
     // Add some Dockers to the Ribbon Frame
@@ -328,10 +317,89 @@ void CMainFrame::OnInitialUpdate()
     CDocker* pDock1 = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | style, dockWidth);
     CDocker* pDock2 = AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | style, dockWidth);
 
-    assert (pDock1->GetContainer());
-    assert (pDock2->GetContainer());
+    assert(pDock1->GetContainer());
+    assert(pDock2->GetContainer());
     pDock1->GetContainer()->SetHideSingleTab(TRUE);
     pDock2->GetContainer()->SetHideSingleTab(TRUE);
+}
+
+void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
+{
+    if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
+    {
+        UINT mruItem = ppropvarValue->ulVal;
+        MRUFileOpen(mruItem);
+    }
+}
+
+// Called when the DropdownColorPicker button is pressed.
+void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
+{
+    if (ppropvarValue != NULL)
+    {
+        // Retrieve color type.
+        UINT type = ppropvarValue->uintVal;
+
+        // The Ribbon framework passes color as additional property if the color type is RGB.
+        if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != NULL)
+        {
+            // Retrieve color.
+            PROPVARIANT var;
+            PropVariantInit(&var);
+            if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
+            {
+                UINT color = var.uintVal;
+                m_view.SetPenColor((COLORREF)color);
+            }
+        }
+    }
+}
+
+// Called in response to a UWM_SENDPOINT message.
+LRESULT CMainFrame::OnSendPoint(WPARAM wparam)
+{
+    // wParam is a pointer to the vector of PlotPoints
+    PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wparam);
+
+    // Dereference the pointer and store the vector of PlotPoints in CDoc
+    GetDoc().StorePoint(*pPP);
+    return 0;
+}
+
+// OnViewChanged is called when the ribbon is changed.
+STDMETHODIMP CMainFrame::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32)
+{
+    HRESULT result = E_NOTIMPL;
+
+    // Checks to see if the view that was changed was a Ribbon view.
+    if (UI_VIEWTYPE_RIBBON == typeId)
+    {
+        switch (verb)
+        {
+        case UI_VIEWVERB_CREATE:    // The ribbon has been created.
+            m_pIUIRibbon = reinterpret_cast<IUIRibbon*>(pView);
+            result = S_OK;
+            break;
+        case UI_VIEWVERB_SIZE:      // The ribbon's size has changed.
+            RecalcLayout();
+            result = S_OK;
+            break;
+        case UI_VIEWVERB_DESTROY:   // The ribbon has been destroyed.
+            result = S_OK;
+            break;
+        case UI_VIEWVERB_ERROR:
+            result = E_FAIL;
+            break;
+        }
+    }
+
+    return result;
+}
+
+// Used when there isn't a ribbon.
+void CMainFrame::SetPenColor(COLORREF clr)
+{
+    m_view.SetPenColor(clr);
 }
 
 void CMainFrame::SetupToolBar()
@@ -356,16 +424,16 @@ void CMainFrame::SetupToolBar()
 
 // This function is called when a ribbon button is updated.
 // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation.
-STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT*, __out PROPVARIANT* newValue)
+STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key, __in_opt  const PROPVARIANT*, __out PROPVARIANT* newValue)
 {
     HRESULT result = E_NOTIMPL;
 
-    if(UI_PKEY_Enabled == key)
+    if (UI_PKEY_Enabled == key)
     {
         return UIInitPropertyFromBoolean(UI_PKEY_Enabled, TRUE, newValue);
     }
 
-    switch(cmdID)
+    switch (cmdID)
     {
     case IDC_MRULIST:
         // Set up the Most Recently Used (MRU) menu
@@ -387,39 +455,6 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  
     }
 
     return result;
-}
-
-// Called in response to a UWM_DROPFILE message.
-LRESULT CMainFrame::OnDropFile(WPARAM wparam)
-{
-    // wParam is a pointer (LPCTSTR) to the filename
-    LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
-    assert(fileName);
-
-    // Load the file
-    LoadFile(fileName);
-    return 0;
-}
-
-// Called in response to a UWM_GETALLPOINTS message.
-LRESULT CMainFrame::OnGetAllPoints()
-{
-    // Get a pointer to the vector of PlotPoints
-    std::vector<PlotPoint>* pAllPoints = &GetDoc().GetAllPoints();
-
-    // Cast the pointer to a LRESULT and return it
-    return reinterpret_cast<LRESULT>(pAllPoints);
-}
-
-// Called in response to a UWM_SENDPOINT message.
-LRESULT CMainFrame::OnSendPoint(WPARAM wparam)
-{
-    // wParam is a pointer to the vector of PlotPoints
-    PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wparam);
-
-    // Dereference the pointer and store the vector of PlotPoints in CDoc
-    GetDoc().StorePoint(*pPP);
-    return 0;
 }
 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)

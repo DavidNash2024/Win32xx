@@ -11,7 +11,7 @@
 
 // Constructor for CSimpleRibbonApp.
 CSimpleRibbonApp::CSimpleRibbonApp()
-{  
+{
 }
 
 // Destructor for CSimpleRibbonApp.

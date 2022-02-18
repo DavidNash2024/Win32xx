@@ -54,6 +54,12 @@ STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB, const PROPERTYKEY*, 
     return result;
 }
 
+// The IUIRibbon interface provides the ability to specify settings and properties for thr ribbon.
+IUIRibbon* CView::GetIUIRibbon() const
+{
+    return m_pIUIRibbon;
+}
+
 // OnCreate is called automatically during window creation when a
 // WM_CREATE message received.
 int CView::OnCreate(CREATESTRUCT&)
@@ -105,7 +111,7 @@ void CView::OnDraw(CDC& dc)
 
 // OnInitialUpdate is called after the window is created.
 void CView::OnInitialUpdate()
-{  
+{
     // Tasks which are to be done after the window is created go here.
 
     RedrawWindow();
@@ -120,7 +126,7 @@ LRESULT CView::OnSize()
 }
 
 // OnViewChanged is called when the ribbon has changed.
-STDMETHODIMP CView::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEWVERB verb, INT32)
+STDMETHODIMP CView::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32)
 {
     HRESULT result = E_NOTIMPL;
 
@@ -130,6 +136,7 @@ STDMETHODIMP CView::OnViewChanged(UINT32, UI_VIEWTYPE typeId, IUnknown*, UI_VIEW
         switch (verb)
         {
         case UI_VIEWVERB_CREATE:    // The ribbon has been created.
+            m_pIUIRibbon = reinterpret_cast<IUIRibbon*>(pView);
             result = S_OK;
             break;
         case UI_VIEWVERB_SIZE:      // The ribbon's size has changed
@@ -158,7 +165,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 
     // Set some optional parameters for the window
     cs.dwExStyle = WS_EX_CLIENTEDGE;        // Extended style
-    cs.lpszClass = L"View Window";       // Window Class
+    cs.lpszClass = L"View Window";          // Window Class
     cs.x = 50;                              // top x
     cs.y = 50;                              // top y
     cs.cx = 600;                            // width
@@ -180,7 +187,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_SIZE:   return OnSize();  
+        case WM_SIZE:   return OnSize();
         }
 
         // pass unhandled messages on for default processing
