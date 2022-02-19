@@ -146,6 +146,7 @@
 					<Add library="Ws2_32" />
 					<Add library="Oleaut32" />
 					<Add library="GDI32" />
+					<Add library="Ole32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -170,6 +171,7 @@
 					<Add library="Ws2_32" />
 					<Add library="Oleaut32" />
 					<Add library="GDI32" />
+					<Add library="Ole32" />
 				</Linker>
 			</Target>
 		</Build>

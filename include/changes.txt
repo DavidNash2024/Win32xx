@@ -54,6 +54,8 @@ New Features and Enhancements
   menubar text. This is now used to set the menubar text color to white for the
   BLACK theme in the themes sample.
   
+* Added the project files for Microsoft Visual Studio Community 2022.
+  
 * Support for WinCE has been removed.
   Version 8.9.1 is the most recent version of Win32++ that supports WinCE.
 
