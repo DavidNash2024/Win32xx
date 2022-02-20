@@ -12,11 +12,6 @@
 #define HDF_SORTDOWN            0x0200
 #endif
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
-
 
 //////////////////////////////////
 // CMyListView function definitions
@@ -741,7 +736,7 @@ void CMyListView::PreCreate(CREATESTRUCT& cs)
 }
 
 // Sets the up and down sort arrows in the listview's header.
-BOOL CMyListView::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
+BOOL CMyListView::SetHeaderSortImage(int  columnIndex, int showArrow)
 {
     HWND    hHeader = 0;
     HDITEM  hdrItem;
@@ -897,6 +892,3 @@ CMyListView::ListItemData::~ListItemData()
 {
 }
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)

@@ -8,6 +8,15 @@ Bug fixes:
 
 New Features and Enhancements
 -----------------------------
+* All unscoped enums have been replaced with scoped enums to avoid potential
+  name clashes. The Alignment enum used by CResizer no longer has global scope.
+  It is now used as follows:
+    m_resizer.AddChild(m_checkA, CResizer::bottomright, 0);
+    m_resizer.AddChild(m_checkB, CResizer::bottomright, 0);
+    m_resizer.AddChild(m_checkC, CResizer::bottomright, 0);
+    m_resizer.AddChild(m_richEdit1, CResizer::topright, RD_STRETCH_WIDTH);
+    m_resizer.AddChild(m_richEdit2, CResizer::bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
+
 * Major update to the CString class.
   - CString's int and double constructors have been replaced with ToCString.
     The ToCString function accepts all types supported by std::stringstream.
@@ -20,7 +29,7 @@ New Features and Enhancements
 	UINT u = 8;
 	CString str = ToCString(u);
 	str << "Some text " << u << " " << i << 'c' << 'h';
-
+	 
 * Added wxx_setup.h to the Win32++ library. This file defines the set of macros
   and includes the C, C++, and windows header files required by Win32++. The
   wxx_cstring.h file now includes wxx_setup.h, allowing CString to be used
@@ -62,6 +71,8 @@ New Features and Enhancements
 
 Changes in Detail
 -----------------
+Moved the Alignment enum used by CResizer from global scope to CResizer.
+
 Added wxx_setup.h            Win32++ library file
 
 Added PrintDialogEx          sample

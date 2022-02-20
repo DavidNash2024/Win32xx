@@ -9,13 +9,12 @@
 #include "resource.h"
 
 
-enum Encoding
-{
-    ANSI          = 0,            // Default for plain text
-    UTF8          = 1,            // Default for rich text
-    UTF16LE       = 2,
-    UTF16LE_BOM   = 3,
-};
+// Encoding IDs
+
+const int ANSI = 0;            // Default for plain text
+const int UTF8 = 1;            // Default for rich text
+const int UTF16LE = 2;
+const int UTF16LE_BOM  = 3;
 
 
 ///////////////////////////////////////////////////////////
@@ -66,7 +65,7 @@ public:
     void RestoreFocus() { ::SetFocus(m_oldFocus); }
     void SaveFocus() { m_oldFocus = ::GetFocus(); }
     void SaveModifiedText();
-    void SetEncoding(Encoding encoding);
+    void SetEncoding(int encoding);
     void SetPathName(LPCTSTR fullFileName);
     void SetStatusIndicators();
     void SetWindowTitle();
@@ -88,7 +87,7 @@ private:
     CRichView m_richView;
     CString m_oldStatus[4];                // Array of CString holding old status;
     CString m_pathName;
-    Encoding m_encoding;
+    int m_encoding;
     bool m_isToolbarShown;
     bool m_isWrapped;
     bool m_isRTF;

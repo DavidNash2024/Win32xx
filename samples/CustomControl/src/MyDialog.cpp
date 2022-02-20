@@ -111,7 +111,7 @@ BOOL CMyDialog::OnInitDialog()
 
     // Support automatic resizing
     m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
-    m_resizer.AddChild(m_webControl, topleft, RD_STRETCH_WIDTH|RD_STRETCH_HEIGHT);
+    m_resizer.AddChild(m_webControl, CResizer::topleft, RD_STRETCH_WIDTH|RD_STRETCH_HEIGHT);
 
     return TRUE;
 }
