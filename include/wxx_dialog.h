@@ -159,9 +159,6 @@ namespace Win32xx
     const int RD_STRETCH_WIDTH  = 0x0001;  // The item has a variable width
     const int RD_STRETCH_HEIGHT = 0x0002;  // The item has a variable height
 
-    // Resize Dialog alignments
-    enum Alignment {topleft, topright, bottomleft, bottomright, center, leftcenter, rightcenter, topcenter, bottomcenter };
-
 
     ////////////////////////////////////////////////////////////////
     // The CResizer class is used to automatically rearrange child
@@ -170,6 +167,9 @@ namespace Win32xx
     class CResizer
     {
     public:
+
+        enum Alignment { topleft, topright, bottomleft, bottomright, center, leftcenter, rightcenter, topcenter, bottomcenter };
+
         CResizer() : m_parent(0), m_xScrollPos(0), m_yScrollPos(0) {}
         virtual ~CResizer() {}
 

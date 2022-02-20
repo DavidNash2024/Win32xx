@@ -17,13 +17,10 @@ struct SortViewItems
     bool m_isSortDown;
 };
 
-// Enum for the sorting arrow
-enum SHOW_ARROW
-{
-    SHOW_NO_ARROW,
-    SHOW_UP_ARROW,
-    SHOW_DOWN_ARROW
-};
+// IDs for the sorting arrow
+const int SHOW_NO_ARROW = 1;
+const int SHOW_UP_ARROW = 2;
+const int SHOW_DOWN_ARROW = 3;
 
 
 ///////////////////////////////////////////////////////
@@ -43,7 +40,7 @@ public:
     LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);
     LRESULT OnRClick();
     void    SetColumn();
-    BOOL    SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow);
+    BOOL    SetHeaderSortImage(int  columnIndex, int showArrow);
     void    SetLastColumnWidth();
     void    SortColumn(int column, bool isSortDown);
     void    UpdateItemImage(int item);

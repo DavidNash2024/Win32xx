@@ -9,6 +9,11 @@
 #include "MyEdit.h"
 #include "TestWnd.h"
 
+
+#define WM_WINDOWCREATED WM_USER + 1   // the message sent when window is created
+#define WM_TESTMESSAGE   WM_USER + 2   // the test message
+
+
 // Note: Modern C++ compilers can use this typedef instead.
 // typedef std::shared_ptr<CTestWindow> TestWindowPtr;
 typedef Shared_Ptr<CTestWindow> TestWindowPtr;
@@ -38,12 +43,6 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    enum Constants
-    {
-        WM_WINDOWCREATED     = WM_USER+1,   // the message sent when window is created
-        WM_TESTMESSAGE       = WM_USER+2    // the test message
-    };
-
     std::vector<TestWindowPtr> m_pTestWindows; // A vector CTestWindow smart pointers
     CMyEdit m_edit;        // Handle to the edit window
     int m_testMessages;    // Number of test messages to be sent

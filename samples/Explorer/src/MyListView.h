@@ -18,13 +18,11 @@ struct SortViewItems
     bool m_isSortDown;
 };
 
-// Enum for the sorting arrow.
-enum SHOW_ARROW
-{
-    SHOW_NO_ARROW,
-    SHOW_UP_ARROW,
-    SHOW_DOWN_ARROW
-};
+// IDs for the sorting arrow.
+const int SHOW_NO_ARROW = 1;
+const int SHOW_UP_ARROW = 2;
+const int SHOW_DOWN_ARROW = 3;
+
 
 //////////////////////////////////////////////////
 // CMyListView manages a list view control.
@@ -37,7 +35,7 @@ public:
     void DisplayFolder(CShellFolder& parentFolder, Cpidl& cpidlParent, Cpidl& cpidlRel);
     void DoDisplay();
     static ULONGLONG FileTimeToULL(FILETIME ft);
-    BOOL SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow);
+    BOOL SetHeaderSortImage(int  columnIndex, int showArrow);
     void SortColumn(int column, bool isSortDown);
     void ViewLargeIcons();
     void ViewList();

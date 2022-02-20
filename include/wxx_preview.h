@@ -406,12 +406,12 @@ namespace Win32xx
 
         // Support dialog resizing
         m_resizer.Initialize(*this, CRect(0, 0, 100, 120));
-        m_resizer.AddChild(m_buttonPrint, topleft, 0);
-        m_resizer.AddChild(m_buttonSetup, topleft, 0);
-        m_resizer.AddChild(m_buttonPrev, topleft, 0);
-        m_resizer.AddChild(m_buttonNext, topleft, 0);
-        m_resizer.AddChild(m_buttonClose, topleft, 0);
-        m_resizer.AddChild(m_previewPane, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+        m_resizer.AddChild(m_buttonPrint, CResizer::topleft, 0);
+        m_resizer.AddChild(m_buttonSetup, CResizer::topleft, 0);
+        m_resizer.AddChild(m_buttonPrev, CResizer::topleft, 0);
+        m_resizer.AddChild(m_buttonNext, CResizer::topleft, 0);
+        m_resizer.AddChild(m_buttonClose, CResizer::topleft, 0);
+        m_resizer.AddChild(m_previewPane, CResizer::topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 
         return TRUE;
     }

@@ -116,15 +116,15 @@ BOOL CViewDialog::OnInitDialog()
 
     // Initialize dialog resizing
     m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
-    m_resizer.AddChild(m_radioA,   topleft, 0);
-    m_resizer.AddChild(m_radioB,   topleft, 0);
-    m_resizer.AddChild(m_radioC,   topleft, 0);
-    m_resizer.AddChild(m_button,   topleft, 0);
-    m_resizer.AddChild(m_checkA,   bottomright, 0);
-    m_resizer.AddChild(m_checkB,   bottomright, 0);
-    m_resizer.AddChild(m_checkC,   bottomright, 0);
-    m_resizer.AddChild(m_richEdit1, topright, RD_STRETCH_WIDTH);
-    m_resizer.AddChild(m_richEdit2, bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
+    m_resizer.AddChild(m_radioA,    CResizer::topleft, 0);
+    m_resizer.AddChild(m_radioB,    CResizer::topleft, 0);
+    m_resizer.AddChild(m_radioC,    CResizer::topleft, 0);
+    m_resizer.AddChild(m_button,    CResizer::topleft, 0);
+    m_resizer.AddChild(m_checkA,    CResizer::bottomright, 0);
+    m_resizer.AddChild(m_checkB,    CResizer::bottomright, 0);
+    m_resizer.AddChild(m_checkC,    CResizer::bottomright, 0);
+    m_resizer.AddChild(m_richEdit1, CResizer::topright, RD_STRETCH_WIDTH);
+    m_resizer.AddChild(m_richEdit2, CResizer::bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
 
     // Select the first radio button
     CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);

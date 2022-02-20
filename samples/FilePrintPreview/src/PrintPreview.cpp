@@ -191,7 +191,7 @@ InitializeControls()                                                        /*
     m_buttonLast.SetBitmap((HBITMAP)m_lastPage);
       // enable resizing the preview pane of the dialog
     m_resizer.Initialize(*this, CRect(0, 0, 0, 0));
-    m_resizer.AddChild(m_previewPane,   topleft,
+    m_resizer.AddChild(m_previewPane, CResizer::topleft,
         RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 }
 

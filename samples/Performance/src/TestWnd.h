@@ -24,12 +24,6 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    enum Constants
-    {
-        WM_WINDOWCREATED     = WM_USER+1,
-        WM_TESTMESSAGE       = WM_USER+2
-    };
-
     int m_windowCount;
 };
 

@@ -94,14 +94,14 @@ BOOL CViewDialog::OnInitDialog()
     // Initialize dialog resizing
     m_Resizer.Initialize(*this, CRect(0, 0, width + rc.right + 10, 210));
 
-    m_Resizer.AddChild(m_static1, topleft, 0);
-    m_Resizer.AddChild(m_static2, topleft, 0);
-    m_Resizer.AddChild(m_static3, topleft, 0);
-    m_Resizer.AddChild(m_picture,topright, 0);
-    m_Resizer.AddChild(m_title, topright, RD_STRETCH_WIDTH);
-    m_Resizer.AddChild(m_year, topleft, 0);
-    m_Resizer.AddChild(m_actors, topleft, RD_STRETCH_WIDTH);
-    m_Resizer.AddChild(m_info, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+    m_Resizer.AddChild(m_static1, CResizer::topleft, 0);
+    m_Resizer.AddChild(m_static2, CResizer::topleft, 0);
+    m_Resizer.AddChild(m_static3, CResizer::topleft, 0);
+    m_Resizer.AddChild(m_picture, CResizer::topright, 0);
+    m_Resizer.AddChild(m_title,   CResizer::topright, RD_STRETCH_WIDTH);
+    m_Resizer.AddChild(m_year,    CResizer::topleft, 0);
+    m_Resizer.AddChild(m_actors,  CResizer::topleft, RD_STRETCH_WIDTH);
+    m_Resizer.AddChild(m_info,    CResizer::topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 
     // Set the rich edit controls to read only.
     m_title.SetReadOnly(TRUE);

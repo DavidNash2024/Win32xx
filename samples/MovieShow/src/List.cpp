@@ -9,10 +9,6 @@
 #include "MovieInfo.h"
 #include "UserMessages.h"
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( push )
-#pragma warning ( disable : 26812 )       // enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
 /////////////////////////////////
 // CViewList function definitions
@@ -345,7 +341,7 @@ void CViewList::SetColumn()
 }
 
 // Sets the up and down sort arrows in the listview's header.
-BOOL CViewList::SetHeaderSortImage(int  columnIndex, SHOW_ARROW showArrow)
+BOOL CViewList::SetHeaderSortImage(int  columnIndex, int showArrow)
 {
     HWND    hHeader = 0;
     HDITEM  hdrItem;
@@ -454,6 +450,3 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)
-#pragma warning ( pop )  // ( disable : 26812 )    enum type is unscoped.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
