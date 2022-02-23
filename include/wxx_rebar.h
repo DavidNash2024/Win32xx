@@ -72,7 +72,7 @@ namespace Win32xx
         BOOL ShowGripper(int band, BOOL show) const;
         BOOL SizeToRect(RECT& rect) const;
 
-        // Attributes
+        // Accessors and mutators
         int  GetBand(HWND wnd) const;
         CRect GetBandBorders(int band) const;
         int  GetBandCount() const;

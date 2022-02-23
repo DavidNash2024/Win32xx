@@ -129,7 +129,7 @@ namespace Win32xx
         virtual void ShowListMenu();
         virtual void SwapTabs(UINT tab1, UINT tab2);
 
-        // Attributes
+        // Accessors and mutators
         const std::vector<TabPageInfo>& GetAllTabs() const { return m_allTabPageInfo; }
         CImageList GetODImageList() const   { return m_odImages; }
         CFont GetTabFont() const            { return m_tabFont; }

@@ -64,6 +64,7 @@ New Features and Enhancements
   BLACK theme in the themes sample.
   
 * Added the project files for Microsoft Visual Studio Community 2022.
+  These are configured to use C++20.
   
 * Support for WinCE has been removed.
   Version 8.9.1 is the most recent version of Win32++ that supports WinCE.

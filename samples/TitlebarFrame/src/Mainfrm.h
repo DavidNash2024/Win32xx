@@ -54,7 +54,7 @@ public:
     void DrawTitleText(CDC& dc) const;
     void DrawTopShadow(CDC& dc) const;
     void DrawWindowIcon(CDC& dc) const;
-    void SystemMenu() const;
+    void OnSystemButton() const;
 
     // Accessors
     CDoc& GetDoc()      { return m_view.GetDoc(); }
@@ -83,6 +83,7 @@ public:
     LRESULT OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnNCRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnPaint(UINT, WPARAM, LPARAM);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);

@@ -492,7 +492,7 @@ LRESULT CMiniFrame::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     m_oldHoveredButton = m_hoveredButton;
     if (m_hoveredButton == TitlebarButton::System)
     {
-        SystemMenu();
+        OnSystemButton();
         return 0;
     }
     else if (m_hoveredButton != TitlebarButton::None)
@@ -565,6 +565,28 @@ LRESULT CMiniFrame::OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
+// Display a system menu with a right mouse button click on the titlebar.
+LRESULT CMiniFrame::OnNCRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    CPoint cursor(lparam);
+    CPoint clientCursor = cursor;
+    ScreenToClient(clientCursor);  // Convert cursor position to window coordinates.
+
+    CRect titlebar = GetTitlebarRect();
+    if (titlebar.PtInRect(clientCursor))
+    {
+        // Display the system menu.
+        CMenu systemMenu = GetSystemMenu(TRUE);
+        UINT flags = TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL | TPM_RETURNCMD;
+        UINT command = systemMenu.TrackPopupMenu(flags, cursor.x, cursor.y, *this);
+
+        // Process the system command.
+        SendMessage(WM_SYSCOMMAND, command, 0);
+    }
+
+    return WndProcDefault(msg, wparam, lparam);
+}
+
 // Processes notification (WM_NOTIFY) messages from a child window.
 LRESULT CMiniFrame::OnNotify(WPARAM, LPARAM lparam)
 {
@@ -628,6 +650,28 @@ LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
+// The system menu is displayed when the application's icon is clicked.
+void CMiniFrame::OnSystemButton() const
+{
+    SetForegroundWindow();
+
+    // Calculate the position of the system menu.
+    CRect rc = GetButtonRects().system;
+    rc.bottom = GetTitlebarRect().bottom;
+    ClientToScreen(rc);
+    TPMPARAMS tpm;
+    tpm.cbSize = sizeof(tpm);
+    tpm.rcExclude = rc;
+
+    // Display the system menu.
+    CMenu systemMenu = GetSystemMenu(TRUE);
+    UINT flags = TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL | TPM_RETURNCMD;
+    UINT command = systemMenu.TrackPopupMenuEx(flags, rc.left, rc.bottom, *this, &tpm);
+
+    // Process the system command.
+    SendMessage(WM_SYSCOMMAND, command, 0);
+}
+
 // Called before the window is created to set the CREATESTRUCT parameters.
 void CMiniFrame::PreCreate(CREATESTRUCT& cs)
 {
@@ -667,28 +711,6 @@ void CMiniFrame::RecalcLayout() const
 
 }
 
-// The system menu is displayed when the application's icon is clicked.
-void CMiniFrame::SystemMenu() const
-{
-    SetForegroundWindow();
-
-    // Calculate the position of the system menu.
-    CRect rc = GetButtonRects().system;
-    rc.bottom = GetTitlebarRect().bottom;
-    ClientToScreen(rc);
-    TPMPARAMS tpm;
-    tpm.cbSize = sizeof(tpm);
-    tpm.rcExclude = rc;
-
-    // Display the system menu.
-    CMenu systemMenu = GetSystemMenu(TRUE);
-    UINT flags = TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL | TPM_RETURNCMD;
-    UINT command = systemMenu.TrackPopupMenuEx(flags, rc.left, rc.bottom, *this, &tpm);
-
-    // Process the system command.
-    SendMessage(WM_SYSCOMMAND, command, 0);
-}
-
 // Process the window's messages
 LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -705,6 +727,7 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
     case WM_NCLBUTTONUP:        return OnNCLButtonUp(msg, wparam, lparam);
     case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);
+    case WM_NCRBUTTONDOWN:      return OnNCRButtonDown(msg, wparam, lparam);
     case WM_PAINT:              return OnPaint(msg, wparam, lparam);
     case WM_SIZE:               return OnSize(msg, wparam, lparam);
     case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);

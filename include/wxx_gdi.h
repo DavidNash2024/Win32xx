@@ -241,7 +241,7 @@ namespace Win32xx
         CSize GetBitmapDimensionEx() const;
         CSize SetBitmapDimensionEx(int width, int height) const;
 
-        // Attributes
+        // Accessors
         BITMAP GetBitmapData() const;
         CSize  GetSize() const;
     };
@@ -292,7 +292,7 @@ namespace Win32xx
                 DWORD clipPrecision, DWORD quality, DWORD pitchAndFamily,
                 LPCTSTR faceName);
 
-        // Attributes
+        // Accessors
         LOGFONT GetLogFont() const;
     };
 

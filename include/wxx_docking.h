@@ -184,7 +184,7 @@ namespace Win32xx
         void SelectPage(int page);
         void SwapTabs(UINT tab1, UINT tab2);
 
-        // Attributes
+        // Accessors and mutators
         CDockContainer* GetActiveContainer() const;
         CWnd* GetActiveView() const;
         const std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_allInfo;}
@@ -507,7 +507,7 @@ namespace Win32xx
         virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL showUndocked);
         virtual BOOL VerifyDockers();
 
-        // Virtual attributes
+        // Virtual accessors and mutators
         virtual CDockBar& GetDockBar() const        { return m_dockBar; }
         virtual CDockClient& GetDockClient() const  { return m_dockClient; }
         virtual CDockHint& GetDockHint() const      { return m_pDockAncestor->m_dockHint; }
@@ -515,7 +515,7 @@ namespace Win32xx
         virtual CRect GetViewRect() const           { return GetClientRect(); }
         virtual void SetView(CWnd& view);
 
-        // Attributes
+        // Accessors
         const std::vector <DockPtr> & GetAllDockChildren() const    {return GetDockAncestor()->m_allDockChildren;}
         const std::vector <CDocker*> & GetDockChildren() const      {return m_dockChildren;}
         const std::vector <CDocker*> & GetAllDockers()  const       {return m_allDockers;}

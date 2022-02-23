@@ -57,7 +57,7 @@ namespace Win32xx
         virtual BOOL OnEraseBkgnd(CDC& dc);
         virtual void PreCreate(CREATESTRUCT& cs);
 
-        // Attributes
+        // Accessors and mutators
         int GetParts() const;
         CRect GetPartRect(int part) const;
         CString GetPartText(int part) const;

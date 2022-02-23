@@ -175,7 +175,7 @@ namespace Win32xx
         virtual CWnd& GetView() const;
         virtual void SetView(CWnd& view);
 
-        // Virtual Attributes
+        // Virtual Accessors
         // If you need to modify the default behavior of the MenuBar, ReBar,
         // StatusBar or ToolBar, inherit from those classes, and override
         // the following attribute functions.
@@ -184,7 +184,7 @@ namespace Win32xx
         virtual CStatusBar& GetStatusBar() const     { return m_statusBar; }
         virtual CToolBar& GetToolBar() const         { return m_toolBar; }
 
-        // Non-virtual Attributes
+        // Non-virtual Accessors and mutators
         // These functions aren't virtual, and shouldn't be overridden.
         CRect ExcludeChildRect(const CRect& clientRect, HWND child) const;
         HACCEL GetFrameAccel() const                    { return m_accel; }

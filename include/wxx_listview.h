@@ -59,7 +59,7 @@ namespace Win32xx
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
 
-        // Attributes
+        // Accessors and mutators
         CSize   ApproximateViewRect(CSize sz = CSize(-1, -1), int count = -1) const;
         COLORREF GetBkColor( ) const;
         BOOL    GetBkImage( LVBKIMAGE& image ) const;
