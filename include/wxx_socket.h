@@ -183,7 +183,7 @@ namespace Win32xx
         virtual void StartEvents();
         virtual void StopEvents();
 
-        // Attributes
+        // Accessors and mutators
         virtual int  GetPeerName(struct sockaddr* name, int* namelen) const;
         virtual int  GetSockName(struct sockaddr* name, int* namelen) const;
         SOCKET& GetSocket() { return m_socket; }

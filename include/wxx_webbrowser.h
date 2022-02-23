@@ -160,7 +160,7 @@ namespace Win32xx
         CWebBrowser();
         virtual ~CWebBrowser();
 
-        //Attributes
+        // Accessors
         virtual CAXHost* GetAXHost() { return &m_axHost; }
 
         LPDISPATCH GetApplication() const;

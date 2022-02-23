@@ -139,7 +139,7 @@ namespace Win32xx
         BOOL IsModeless() const;
         BOOL IsWizard() const;
 
-        //Attributes
+        // Accessors and mutators
         CPropertyPage* GetActivePage() const;
         int GetPageCount() const;
         int GetPageIndex(CPropertyPage* pPage) const;

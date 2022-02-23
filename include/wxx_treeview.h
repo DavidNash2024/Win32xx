@@ -62,7 +62,7 @@ namespace Win32xx
         virtual ~CTreeView() {}
         virtual void PreRegisterClass(WNDCLASS& wc);
 
-        // Attributes
+        // Accessors and mutators
         COLORREF GetBkColor() const;
         HTREEITEM GetChild(HTREEITEM item) const;
         UINT    GetCount() const;

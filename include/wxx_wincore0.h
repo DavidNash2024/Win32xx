@@ -160,7 +160,7 @@ namespace Win32xx
         virtual void DoDataExchange(CDataExchange& dx);
         virtual BOOL UpdateData(CDataExchange& dx, BOOL retrieveAndValidate);
 
-        // Attributes
+        // Accessors
         HWND GetHwnd() const                { return m_wnd; }
         WNDPROC GetPrevWindowProc() const   { return m_prevWindowProc; }
 

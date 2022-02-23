@@ -151,7 +151,7 @@ namespace Win32xx
         CStringT& operator += (const T* text);
         CStringT& operator += (const T ch);
 
-        // Attributes
+        // Accessors
         const T* c_str() const          { return m_str.c_str(); }                   // alternative for casting to const T*
         virtual  std::basic_string<T> GetString() const { return m_str; }           // returns copy of the std::basic_string<T>
         int      GetLength() const  { return static_cast<int>(m_str.length()); }    // returns the length in characters

@@ -65,7 +65,7 @@ namespace Win32xx
         CButton() {}
         virtual ~CButton() {}
 
-        // Attributes
+        // Accessors and mutators
         HBITMAP GetBitmap() const;
         UINT GetButtonStyle() const;
         int GetCheck() const;

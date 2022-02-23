@@ -111,7 +111,7 @@ namespace Win32xx
         int Replace(int image, HICON icon) const;
         BOOL Write(LPSTREAM pStream) const;
 
-        // Attributes
+        // Accessors and mutators
         COLORREF GetBkColor() const;
         HIMAGELIST GetDragImage(POINT* pPoint, POINT* pHotspot) const;
         HIMAGELIST GetHandle() const;

@@ -195,7 +195,7 @@ namespace Win32xx
         CHeader() {}
         virtual ~CHeader() {}
 
-        // Attributes
+        // Accessors and mutators
         CImageList GetImageList() const;
         BOOL    GetItem(int pos, HDITEM& item) const;
         int     GetItemCount() const;
@@ -299,7 +299,7 @@ namespace Win32xx
         CMonthCalendar();
         virtual ~CMonthCalendar() {}
 
-        // Attributes
+        // Accessors and mutators
         COLORREF GetColor(int region) const;
         int GetFirstDayOfWeek(BOOL* pLocal = NULL) const;
         CRect GetMinReqRect() const;
@@ -517,7 +517,7 @@ namespace Win32xx
         CToolTip();
         virtual ~CToolTip();
 
-        //Attributes
+        // Accessors and mutators
         int      GetDelayTime(DWORD duration) const;
         CRect    GetMargin() const;
         int      GetMaxTipWidth() const;
