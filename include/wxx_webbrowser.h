@@ -81,7 +81,7 @@ namespace Win32xx
         virtual STDMETHODIMP SetVisible(BOOL isVisible);
 
         // IDispatch Methods
-        virtual STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** pNames,
+        virtual STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** names,
                                 unsigned int namesCount, LCID lcid, DISPID* pID);
         virtual STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
         virtual STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);

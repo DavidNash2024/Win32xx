@@ -58,6 +58,11 @@ New Features and Enhancements
   copies, with or without collating. A footer displaying the page number is
   added to the bottom of the printed page.
   
+* Updated CFile.
+  Additional flags and attributes can be specified when files are created or 
+  opened. CFile's constructor and Open functions now support an additional
+  attributes parameter which allows the flags and attributes to be specified.
+  
 * Updated the MenuTheme struct.
   A clrText member has been added to the MenuTheme struc to define the color of
   menubar text. This is now used to set the menubar text color to white for the
@@ -104,6 +109,9 @@ Removed CString& operator << (CString&, const TCHAR*)          global operator o
 Removed CString& operator << (CString&, TCHAR)                 global operator overload
 Removed CString& operator << (CString&, int)                   global operator overload
 Removed CString& operator << (CString&, double)                global operator overload
+
+Updated CFile::CFile        added attributes parameter         constructor
+Updated CFile::Open         added attributes parameter         member function
 
 Removed support for WinCE.
 

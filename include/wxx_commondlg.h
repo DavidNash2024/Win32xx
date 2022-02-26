@@ -143,10 +143,10 @@ namespace Win32xx
 
         // Constructor/destructor
         CFileDialog (BOOL isOpenFileDialog = TRUE,
-                LPCTSTR pDefExt = NULL,
-                LPCTSTR pFileName = NULL,
+                LPCTSTR defExt = NULL,
+                LPCTSTR fileName = NULL,
                 DWORD   flags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-                LPCTSTR pFilter   = NULL );
+                LPCTSTR filter   = NULL );
 
         virtual ~CFileDialog()  {}
 
@@ -163,11 +163,11 @@ namespace Win32xx
 
         // methods for setting parameters before DoModal()
         BOOL    IsOpenFileDialog()  const           { return m_isOpenFileDialog; }
-        void    SetDefExt(LPCTSTR pExt);
-        void    SetFileName(LPCTSTR pFileName);
-        void    SetFilter(LPCTSTR pFilter);
+        void    SetDefExt(LPCTSTR ext);
+        void    SetFileName(LPCTSTR fileName);
+        void    SetFilter(LPCTSTR filter);
         void    SetParameters(const OPENFILENAME& ofn);
-        void    SetTitle(LPCTSTR pTitle);
+        void    SetTitle(LPCTSTR title);
 
         // Enumerating multiple file selections
         CString GetNextPathName(int& pos) const;
@@ -180,7 +180,7 @@ namespace Win32xx
         virtual void    OnInitDone();
         virtual void    OnLBSelChangedNotify(UINT boxID, UINT curSel, UINT code);
         virtual LRESULT OnNotify(WPARAM, LPARAM);
-        virtual LRESULT OnShareViolation(LPCTSTR pPathName);
+        virtual LRESULT OnShareViolation(LPCTSTR pathName);
         virtual void    OnTypeChange();
 
         // Not intended to be overridden
@@ -210,8 +210,8 @@ namespace Win32xx
 
         virtual HWND Create(HWND parent = 0);
         virtual BOOL Create(BOOL isFindDialogOnly,
-                        LPCTSTR pFindWhat,
-                        LPCTSTR pReplaceWith = NULL,
+                        LPCTSTR findWhat,
+                        LPCTSTR replaceWith = NULL,
                         DWORD   flags = FR_DOWN,
                         HWND    parent = 0);
 
@@ -505,10 +505,10 @@ namespace Win32xx
     // separated by '\0' or '|' chars. Refer to the description of the OPENFILENAME
     // struct in the Windows API documentation.
     inline CFileDialog::CFileDialog(BOOL isOpenFileDialog  /* = TRUE */,
-        LPCTSTR pDefExt /* = NULL */,
-        LPCTSTR pFileName /* = NULL */,
+        LPCTSTR defExt /* = NULL */,
+        LPCTSTR fileName /* = NULL */,
         DWORD   flags /* = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT */,
-        LPCTSTR pFilter /* = NULL */)
+        LPCTSTR filter /* = NULL */)
     {
         // set open/saveas toggle
         m_isOpenFileDialog = isOpenFileDialog;
@@ -517,9 +517,9 @@ namespace Win32xx
         ZeroMemory(&m_ofn, sizeof(m_ofn));
 
         // fill in the OPENFILENAME struct
-        m_ofn.lpstrFile     = const_cast<LPTSTR>(pFileName);
-        m_ofn.lpstrFilter   = pFilter;
-        m_ofn.lpstrDefExt   = pDefExt;
+        m_ofn.lpstrFile     = const_cast<LPTSTR>(fileName);
+        m_ofn.lpstrFilter   = filter;
+        m_ofn.lpstrDefExt   = defExt;
         m_ofn.Flags         = flags;
 
         // Enable the hook proc for the help button
@@ -925,13 +925,13 @@ namespace Win32xx
     {
     }
 
-    // Set the default extension of the dialog box to pExt.
+    // Set the default extension of the dialog box to ext.
     // Only the first three characters are sent to the dialog.
-    inline void CFileDialog::SetDefExt(LPCTSTR pExt)
+    inline void CFileDialog::SetDefExt(LPCTSTR ext)
     {
-        if (pExt)
+        if (ext)
         {
-            m_defExt = pExt;
+            m_defExt = ext;
             m_ofn.lpstrDefExt = m_defExt.c_str();
         }
         else
@@ -941,13 +941,13 @@ namespace Win32xx
         }
     }
 
-    // Set the initial file name in the dialog box to pFileName.
-    inline void CFileDialog::SetFileName(LPCTSTR pFileName)
+    // Set the initial file name in the dialog box to fileName.
+    inline void CFileDialog::SetFileName(LPCTSTR fileName)
     {
         // setup initial file name
-        if (pFileName)
+        if (fileName)
         {
-            m_fileName = pFileName;
+            m_fileName = fileName;
             m_ofn.lpstrFile = const_cast<LPTSTR>(m_fileName.c_str());
         }
         else
@@ -962,15 +962,15 @@ namespace Win32xx
     // The string must be either double terminated, or use '|' instead of '\0'
     // For Example: _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0")
     //          or: _T("Text Files (*.txt)|*.txt|All Files (*.*)|*.*|")
-    inline void CFileDialog::SetFilter(LPCTSTR pFilter)
+    inline void CFileDialog::SetFilter(LPCTSTR filter)
     {
         // Clear any existing filter
         m_ofn.lpstrFilter = NULL;
 
         // convert any '|' characters in pFilter to NULL characters
-        if (pFilter)
+        if (filter)
         {
-            CString str = pFilter;
+            CString str = filter;
             if (str.Find(_T('|')) >= 0)
             {
                 str.Replace(_T('|'), _T('\0'));
@@ -984,9 +984,9 @@ namespace Win32xx
                 while (i < MAX_PATH)
                 {
                     // Search for double termination
-                    if (pFilter[i] == _T('\0') && pFilter[i + 1] == _T('\0'))
+                    if (filter[i] == _T('\0') && filter[i + 1] == _T('\0'))
                     {
-                        m_filter.Assign(pFilter, i+1);
+                        m_filter.Assign(filter, i+1);
                         m_ofn.lpstrFilter = m_filter.c_str();
                         break;
                     }
@@ -1039,12 +1039,11 @@ namespace Win32xx
     }
 
     // Sets the title of the fileopen or filesave dialog.
-    inline void CFileDialog::SetTitle(LPCTSTR pTitle)
-
+    inline void CFileDialog::SetTitle(LPCTSTR title)
     {
-        if (pTitle)
+        if (title)
         {
-            m_title = pTitle;
+            m_title = title;
             m_ofn.lpstrTitle = m_title.c_str();
         }
         else
@@ -1075,13 +1074,13 @@ namespace Win32xx
         return *this;
     }
 
-    // Create and display either a Find or FindReplace dialog box. pFindWhat
-    // is the search string, and pReplaceWith is the replace string.
+    // Create and display either a Find or FindReplace dialog box. findWhat
+    // is the search string, and replaceWith is the replace string.
     // Set flags to a combination of one or more flags the dialog box.
     // Set parent to the handle of the dialog box’s parent or owner window.
     // An exception is thrown if the window isn't created.
-    inline BOOL CFindReplaceDialog::Create(BOOL isFindDialogOnly, LPCTSTR pFindWhat,
-            LPCTSTR pReplaceWith, DWORD flags, HWND parent /* = 0*/)
+    inline BOOL CFindReplaceDialog::Create(BOOL isFindDialogOnly, LPCTSTR findWhat,
+            LPCTSTR replaceWith, DWORD flags, HWND parent /* = 0*/)
     {
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
@@ -1097,12 +1096,12 @@ namespace Win32xx
         m_fr.hwndOwner = parent;
 
         m_fr.lpstrFindWhat = m_findWhat.GetBuffer(m_fr.wFindWhatLen);
-        if (pFindWhat)
-            StrCopy(m_fr.lpstrFindWhat, pFindWhat, m_fr.wFindWhatLen);
+        if (findWhat)
+            StrCopy(m_fr.lpstrFindWhat, findWhat, m_fr.wFindWhatLen);
 
         m_fr.lpstrReplaceWith = m_replaceWith.GetBuffer(m_fr.wReplaceWithLen);
-        if (pReplaceWith)
-            StrCopy(m_fr.lpstrReplaceWith, pReplaceWith, m_fr.wReplaceWithLen);
+        if (replaceWith)
+            StrCopy(m_fr.lpstrReplaceWith, replaceWith, m_fr.wReplaceWithLen);
 
         // Display the dialog box
         HWND wnd;
