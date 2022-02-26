@@ -114,12 +114,12 @@ namespace Win32xx
         UINT    GetObjectSchema();
         bool    IsLoading() const;
         bool    IsStoring() const;
-        void    Read(void* pBuf, UINT size);
+        void    Read(void* buffer, UINT size);
         LPTSTR  ReadString(LPTSTR string, UINT max);
         LPSTR   ReadStringA(LPSTR string, UINT max);
         LPWSTR  ReadStringW(LPWSTR string, UINT max);
         void    SetObjectSchema(UINT schema);
-        void    Write(const void* pBuf, UINT size);
+        void    Write(const void* buffer, UINT size);
         void    WriteString(LPCTSTR string);
         void    WriteStringA(LPCSTR string);
         void    WriteStringW(LPCWSTR string);
@@ -299,16 +299,16 @@ namespace Win32xx
         return m_isStoring;
     }
 
-    // Reads size bytes from the open archive file into the given lpBuf.
+    // Reads size bytes from the open archive file into the given buffer.
     // Throws an exception if not successful.
-    inline void CArchive::Read(void* pBuf, UINT size)
+    inline void CArchive::Read(void* buffer, UINT size)
     {
-        // read, simply and  in binary mode, the size into the lpBuf
+        // read, simply and  in binary mode, the size into the buffer
         assert(m_pFile);
 
         if (m_pFile)
         {
-            UINT nBytes = m_pFile->Read(pBuf, size);
+            UINT nBytes = m_pFile->Read(buffer, size);
             if (nBytes != size)
                 throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArReadFail());
         }
@@ -323,13 +323,13 @@ namespace Win32xx
         m_schema = schema;
     }
 
-    // Writes size characters of from the lpBuf into the open archive file.
+    // Writes size characters of from the buffer into the open archive file.
     // Throws an exception if unsuccessful.
-    inline void CArchive::Write(const void* pBuf, UINT size)
+    inline void CArchive::Write(const void* buffer, UINT size)
     {
-        // write size characters in lpBuf to the  file
+        // write size characters in buffer to the  file
         assert(m_pFile);
-        m_pFile->Write(pBuf, size);
+        m_pFile->Write(buffer, size);
     }
 
     // Writes the BYTE b into the archive file.

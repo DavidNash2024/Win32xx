@@ -262,7 +262,7 @@ namespace Win32xx
         BOOL  SetWindowPos(HWND insertAfter, const RECT& rect, UINT flags) const;
         int   SetWindowRgn(HRGN rgn, BOOL redraw = TRUE) const;
         BOOL  SetWindowText(LPCTSTR pString) const;
-        HRESULT SetWindowTheme(LPCWSTR pSubAppName, LPCWSTR pSubIdList) const;
+        HRESULT SetWindowTheme(LPCWSTR subAppName, LPCWSTR subIdList) const;
         BOOL  ShowWindow(int showCmd = SW_SHOWNORMAL) const;
         BOOL  UpdateWindow() const;
         BOOL  ValidateRect(const RECT& rect) const;

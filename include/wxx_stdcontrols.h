@@ -107,8 +107,8 @@ namespace Win32xx
         int    GetFirstVisibleLine() const;
         HLOCAL GetHandle() const;
         UINT   GetLimitText() const;
-        int    GetLine(int index, LPTSTR pBuffer) const;
-        int    GetLine(int index, LPTSTR pBuffer, int maxLength) const;
+        int    GetLine(int index, LPTSTR buffer) const;
+        int    GetLine(int index, LPTSTR buffer, int maxLength) const;
         int    GetLineCount() const;
         DWORD  GetMargins() const;
         BOOL   GetModify() const;
@@ -451,21 +451,21 @@ namespace Win32xx
 
     // Copies characters to a buffer and returns the number of characters copied.
     // Refer to EM_GETLINE in the Windows API documentation for more information.
-    inline int CEdit::GetLine(int index, LPTSTR pBuffer) const
+    inline int CEdit::GetLine(int index, LPTSTR buffer) const
     {
         assert(IsWindow());
-        return (int)SendMessage(EM_GETLINE, index, (LPARAM)pBuffer);
+        return (int)SendMessage(EM_GETLINE, index, (LPARAM)buffer);
     }
 
     // Copies characters to a buffer and returns the number of characters copied.
     // Refer to EM_GETLINE in the Windows API documentation for more information.
-    inline int CEdit::GetLine(int index, LPTSTR pBuffer, int maxLength) const
+    inline int CEdit::GetLine(int index, LPTSTR buffer, int maxLength) const
     {
         assert(IsWindow());
 
         // set the first word of this buffer to the size, in TCHARs, of the buffer.
-        *pBuffer = static_cast<TCHAR>(maxLength);
-        return (int)SendMessage(EM_GETLINE, (WPARAM)index, (LPARAM)pBuffer);
+        *buffer = static_cast<TCHAR>(maxLength);
+        return (int)SendMessage(EM_GETLINE, (WPARAM)index, (LPARAM)buffer);
     }
 
     // Returns the number of lines in the edit control.

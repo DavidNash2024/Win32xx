@@ -97,8 +97,8 @@ namespace Win32xx
         int     GetFirstVisibleLine() const;
         IRichEditOle* GetIRichEditOle() const;
         long    GetLimitText() const;
-        int     GetLine(int index, LPTSTR pBuffer) const;
-        int     GetLine(int index, LPTSTR pBuffer, int maxLength) const;
+        int     GetLine(int index, LPTSTR buffer) const;
+        int     GetLine(int index, LPTSTR buffer, int maxLength) const;
         int     GetLineCount() const;
         BOOL    GetModify() const;
         UINT    GetOptions() const;
@@ -112,7 +112,7 @@ namespace Win32xx
         DWORD   GetSelectionCharFormat(CHARFORMAT& cf) const;
         DWORD   GetSelectionCharFormat(CHARFORMAT2& cf) const;
         WORD    GetSelectionType() const;
-        long    GetSelText(LPSTR pBuf) const;
+        long    GetSelText(LPSTR buffer) const;
         CString GetSelText() const;
         long    GetTextLength() const;
         long    GetTextLengthEx(DWORD flags, UINT codePage = -1) const;
@@ -420,22 +420,22 @@ namespace Win32xx
     }
 
     // Copies a line of text from the rich edit control and places it in the specified buffer.
-    // lpszBuffer is a pointer to the buffer that receives a copy of the line. Before sending the message,
+    // buffer is a pointer to the buffer that receives a copy of the line. Before sending the message,
     // set the first word of this buffer to the size, in TCHARs, of the buffer.
     // Refer to EM_GETLINE in the Windows API documentation for more information.
-    inline int CRichEdit::GetLine(int index, LPTSTR pBuffer) const
+    inline int CRichEdit::GetLine(int index, LPTSTR buffer) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_GETLINE, (WPARAM)index, (LPARAM)pBuffer));
+        return static_cast<int>(SendMessage(EM_GETLINE, (WPARAM)index, (LPARAM)buffer));
     }
 
     // Copies a line of text from the rich edit control and places it in the specified buffer.
     // Refer to EM_GETLINE in the Windows API documentation for more information.
-    inline int CRichEdit::GetLine(int index, LPTSTR pBuffer, int maxLength) const
+    inline int CRichEdit::GetLine(int index, LPTSTR buffer, int maxLength) const
     {
         assert(IsWindow());
-        pBuffer[0] = (TCHAR)maxLength;
-        return static_cast<int>(SendMessage(EM_GETLINE, (WPARAM)index, (LPARAM)pBuffer));
+        buffer[0] = (TCHAR)maxLength;
+        return static_cast<int>(SendMessage(EM_GETLINE, (WPARAM)index, (LPARAM)buffer));
     }
 
     // Gets the number of lines in a multi-line edit control.
@@ -560,10 +560,10 @@ namespace Win32xx
 
     // Gets the text of the current selection.
     // Refer to EM_GETSELTEXT in the Windows API documentation for more information.
-    inline long CRichEdit::GetSelText(LPSTR pBuf) const
+    inline long CRichEdit::GetSelText(LPSTR buffer) const
     {
         assert(IsWindow());
-        return static_cast<long>(SendMessage(EM_GETSELTEXT, 0, (LPARAM)pBuf));
+        return static_cast<long>(SendMessage(EM_GETSELTEXT, 0, (LPARAM)buffer));
     }
 
     // Gets the text of the current selection.

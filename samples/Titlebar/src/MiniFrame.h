@@ -56,7 +56,7 @@ public:
     void DrawTitleText(CDC& dc) const;
     void DrawTopShadow(CDC& dc) const;
     void DrawWindowIcon(CDC& dc) const;
-    void OnSystemButton() const;	
+    void OnSystemButton() const;
     void RecalcLayout() const;
 
     // Accessors

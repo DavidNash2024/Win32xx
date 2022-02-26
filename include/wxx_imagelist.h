@@ -81,7 +81,7 @@ namespace Win32xx
         // Initialization
         BOOL Create(int cx, int cy, UINT flags, int initial, int grow);
         BOOL Create(UINT bitmapID, int cx, int grow, COLORREF mask);
-        BOOL Create(LPCTSTR pBitmapID, int cx, int grow, COLORREF mask);
+        BOOL Create(LPCTSTR resourceName, int cx, int grow, COLORREF mask);
         BOOL Create(HIMAGELIST images);
         BOOL CreateDisabledImageList(HIMAGELIST normalImages);
 
@@ -344,8 +344,8 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        LPCTSTR pBitmapName = MAKEINTRESOURCE (bitmapID);
-        return Create(pBitmapName, cx, grow, mask);
+        LPCTSTR bitmapName = MAKEINTRESOURCE (bitmapID);
+        return Create(bitmapName, cx, grow, mask);
     }
 
     // Creates a new image list.
@@ -355,11 +355,11 @@ namespace Win32xx
     // crMask   The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black,
     //          and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated.
     // Refer to ImageList_LoadBitmap in the Windows API documentation for more information.
-    inline BOOL CImageList::Create(LPCTSTR pResourceName, int cx, int grow, COLORREF mask)
+    inline BOOL CImageList::Create(LPCTSTR resourceName, int cx, int grow, COLORREF mask)
     {
         assert(m_pData);
 
-        HIMAGELIST images = ImageList_LoadBitmap(GetApp()->GetResourceHandle(), pResourceName, cx, grow, mask);
+        HIMAGELIST images = ImageList_LoadBitmap(GetApp()->GetResourceHandle(), resourceName, cx, grow, mask);
         if (images == 0)
             throw CResourceException(GetApp()->MsgImageList());
 

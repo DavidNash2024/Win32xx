@@ -60,41 +60,41 @@ namespace Win32xx
 
         void Attach(HKEY key);
         LONG Close();
-        LONG Create(HKEY keyParent, LPCTSTR pKeyName, LPTSTR pClass = REG_NONE,
+        LONG Create(HKEY keyParent, LPCTSTR keyName, LPTSTR className = REG_NONE,
                     DWORD options = REG_OPTION_NON_VOLATILE,
                     REGSAM samDesired = KEY_READ | KEY_WRITE,
-                    LPSECURITY_ATTRIBUTES pSecAttr = NULL,
-                    LPDWORD pDisposition = NULL);
-        LONG DeleteSubKey(LPCTSTR pSubKey) const;
-        LONG DeleteValue(LPCTSTR pSubKey) const;
+                    LPSECURITY_ATTRIBUTES secAttr = NULL,
+                    LPDWORD disposition = NULL);
+        LONG DeleteSubKey(LPCTSTR subKey) const;
+        LONG DeleteValue(LPCTSTR subKey) const;
         HKEY Detach();
-        LONG EnumKey(DWORD index, LPTSTR pName, LPDWORD pNameLength, FILETIME* pLastWriteTime = NULL) const;
+        LONG EnumKey(DWORD index, LPTSTR name, LPDWORD nameLength, FILETIME* lastWriteTime = NULL) const;
         LONG Flush() const;
         HKEY GetKey()  const { return m_key; }
         LONG NotifyChangeKeyValue(BOOL watchSubtree, DWORD notifyFilter, HANDLE event, BOOL isAsync = TRUE) const;
-        LONG Open(HKEY hKeyParent, LPCTSTR pKeyName, REGSAM samDesired = KEY_READ | KEY_WRITE);
-        LONG QueryBinaryValue(LPCTSTR pValueName, void* pValue, ULONG* pBytes) const;
-        LONG QueryDWORDValue(LPCTSTR pValueName, DWORD& value) const;
-        LONG QueryGUIDValue(LPCTSTR pValueName, GUID& value) const;
-        LONG QueryMultiStringValue(LPCTSTR pValueName, LPTSTR pValue, ULONG* pChars) const;
-        LONG QueryStringValue(LPCTSTR pValueName, LPTSTR pValue, ULONG* pChars) const;
-        LONG QueryValue(LPCTSTR pValueName, DWORD* pType, void* pData, ULONG* pBytes) const;
-        LONG RecurseDeleteKey(LPCTSTR pKeyName) const;
-        LONG SetBinaryValue(LPCTSTR pValueName, const void* pValue, ULONG bytes) const;
-        LONG SetDWORDValue(LPCTSTR pValueName, DWORD value) const;
-        LONG SetGUIDValue(LPCTSTR pValueName, REFGUID value) const;
+        LONG Open(HKEY keyParent, LPCTSTR keyName, REGSAM samDesired = KEY_READ | KEY_WRITE);
+        LONG QueryBinaryValue(LPCTSTR valueName, void* value, ULONG* bytes) const;
+        LONG QueryDWORDValue(LPCTSTR valueName, DWORD& value) const;
+        LONG QueryGUIDValue(LPCTSTR valueName, GUID& value) const;
+        LONG QueryMultiStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
+        LONG QueryStringValue(LPCTSTR valueName, LPTSTR pValue, ULONG* chars) const;
+        LONG QueryValue(LPCTSTR valueName, DWORD* type, void* data, ULONG* bytes) const;
+        LONG RecurseDeleteKey(LPCTSTR keyName) const;
+        LONG SetBinaryValue(LPCTSTR valueName, const void* value, ULONG bytes) const;
+        LONG SetDWORDValue(LPCTSTR valueName, DWORD value) const;
+        LONG SetGUIDValue(LPCTSTR valueName, REFGUID value) const;
         LONG SetKeySecurity(SECURITY_INFORMATION si, PSECURITY_DESCRIPTOR psd) const;
-        LONG SetMultiStringValue(LPCTSTR pValueName, LPCTSTR pValue) const;
-        LONG SetStringValue(LPCTSTR pValueName, LPCTSTR pValue, DWORD type = REG_SZ) const;
-        LONG SetValue(LPCTSTR pValueName, DWORD type, const void* pValue, ULONG bytes) const;
+        LONG SetMultiStringValue(LPCTSTR valueName, LPCTSTR value) const;
+        LONG SetStringValue(LPCTSTR valueName, LPCTSTR value, DWORD type = REG_SZ) const;
+        LONG SetValue(LPCTSTR valueName, DWORD type, const void* value, ULONG bytes) const;
 
 #ifdef REG_QWORD
-        LONG QueryQWORDValue(LPCTSTR pValueName, ULONGLONG& value) const;
-        LONG SetQWORDValue(LPCTSTR pValueName, ULONGLONG value) const;
+        LONG QueryQWORDValue(LPCTSTR valueName, ULONGLONG& value) const;
+        LONG SetQWORDValue(LPCTSTR valueName, ULONGLONG value) const;
 #endif
 
 #if (WINVER >= 0x0600) && defined(RegSetKeyValue)
-        LONG SetKeyValue(LPCTSTR pKeyName, LPCTSTR pValue, LPCTSTR pValueName = NULL) const;
+        LONG SetKeyValue(LPCTSTR keyName, LPCTSTR value, LPCTSTR valueName = NULL) const;
 #endif
 
     private:
@@ -116,9 +116,9 @@ namespace Win32xx
         Attach(key);
     }
 
-    inline CRegKey::CRegKey(const CRegKey& Key)
+    inline CRegKey::CRegKey(const CRegKey& key)
     {
-        m_key = Key.m_key;
+        m_key = key.m_key;
     }
 
     inline CRegKey::~CRegKey()
@@ -155,46 +155,46 @@ namespace Win32xx
     }
 
     // Creates the specified registry key.
-    inline LONG CRegKey::Create(HKEY keyParent, LPCTSTR pKeyName, LPTSTR pClass, DWORD options,
-                   REGSAM samDesired, LPSECURITY_ATTRIBUTES pSecAttr, LPDWORD pDisposition)
+    inline LONG CRegKey::Create(HKEY keyParent, LPCTSTR keyName, LPTSTR className, DWORD options,
+                   REGSAM samDesired, LPSECURITY_ATTRIBUTES secAttr, LPDWORD disposition)
     {
-        HKEY hKey = 0;
-        LONG result =  ::RegCreateKeyEx(keyParent, pKeyName, 0, pClass, options, samDesired, pSecAttr, &hKey, pDisposition);
+        HKEY key = 0;
+        LONG result =  ::RegCreateKeyEx(keyParent, keyName, 0, className, options, samDesired, secAttr, &key, disposition);
 
         // RegCreateKeyEx opens existing keys, so close it now.
-        ::RegCloseKey(hKey);
+        ::RegCloseKey(key);
 
         return result;
     }
 
     // Removes the specified key from the registry.
-    inline LONG CRegKey::DeleteSubKey(LPCTSTR pSubKey) const
+    inline LONG CRegKey::DeleteSubKey(LPCTSTR subKey) const
     {
         assert(m_key);
-        return ::RegDeleteKey(m_key, pSubKey);
+        return ::RegDeleteKey(m_key, subKey);
     }
 
     // Removes a named value from the specified registry key.
-    inline LONG CRegKey::DeleteValue(LPCTSTR pSubKey ) const
+    inline LONG CRegKey::DeleteValue(LPCTSTR subKey ) const
     {
         assert(m_key);
-        return ::RegDeleteValue(m_key, pSubKey);
+        return ::RegDeleteValue(m_key, subKey);
     }
 
     // Detaches the key handle from this CRegKey object.
     inline HKEY CRegKey::Detach()
     {
         assert(m_key);
-        HKEY hKey = m_key;
+        HKEY key = m_key;
         m_key = 0;
-        return hKey;
+        return key;
     }
 
     // Enumerates subkeys of the specified open registry key.
-    inline LONG CRegKey::EnumKey(DWORD index, LPTSTR pName, LPDWORD pNameLength, FILETIME* pLastWriteTime) const
+    inline LONG CRegKey::EnumKey(DWORD index, LPTSTR name, LPDWORD nameLength, FILETIME* lastWriteTime) const
     {
         assert(m_key);
-        return ::RegEnumKeyEx(m_key, index, pName, pNameLength, 0, 0, 0, pLastWriteTime);
+        return ::RegEnumKeyEx(m_key, index, name, nameLength, 0, 0, 0, lastWriteTime);
     }
 
     // Writes all the attributes of the specified open registry key into the registry.
@@ -212,39 +212,39 @@ namespace Win32xx
     }
 
     // Opens the specified registry key and assigns it to this CRegKey object.
-    inline LONG CRegKey::Open(HKEY keyParent, LPCTSTR pKeyName, REGSAM samDesired)
+    inline LONG CRegKey::Open(HKEY keyParent, LPCTSTR keyName, REGSAM samDesired)
     {
         assert(keyParent);
         Close();
-        return ::RegOpenKeyEx(keyParent, pKeyName, 0, samDesired, &m_key);
+        return ::RegOpenKeyEx(keyParent, keyName, 0, samDesired, &m_key);
     }
 
     // Retrieves the binary data for the specified value name.
-    inline LONG CRegKey::QueryBinaryValue(LPCTSTR pValueName, void* pValue, ULONG* pBytes) const
+    inline LONG CRegKey::QueryBinaryValue(LPCTSTR valueName, void* value, ULONG* bytes) const
     {
         assert(m_key);
         DWORD type = REG_BINARY;
-        return ::RegQueryValueEx(m_key, pValueName, 0, &type, static_cast<LPBYTE>(pValue), pBytes);
+        return ::RegQueryValueEx(m_key, valueName, 0, &type, static_cast<LPBYTE>(value), bytes);
     }
 
     // Retrieves the DWORD data for the specified value name.
-    inline LONG CRegKey::QueryDWORDValue(LPCTSTR pValueName, DWORD& value) const
+    inline LONG CRegKey::QueryDWORDValue(LPCTSTR valueName, DWORD& value) const
     {
         assert(m_key);
         DWORD type = REG_DWORD;
         DWORD bytes = sizeof(DWORD);
-        return ::RegQueryValueEx(m_key, pValueName, 0, &type, reinterpret_cast<LPBYTE>(&value), &bytes);
+        return ::RegQueryValueEx(m_key, valueName, 0, &type, reinterpret_cast<LPBYTE>(&value), &bytes);
     }
 
     // Retrieves the GUID data for the specified value name.
-    inline LONG CRegKey::QueryGUIDValue(LPCTSTR pValueName, GUID& value) const
+    inline LONG CRegKey::QueryGUIDValue(LPCTSTR valueName, GUID& value) const
     {
         assert(m_key);
 
         TCHAR szGUID[64];
         value = GUID_NULL;
         ULONG count = 64;
-        LONG result = QueryStringValue(pValueName, szGUID, &count);
+        LONG result = QueryStringValue(valueName, szGUID, &count);
 
         if (result == ERROR_SUCCESS)
         {
@@ -258,86 +258,86 @@ namespace Win32xx
     }
 
     // Retrieves the multistring data for the specified value name.
-    inline LONG CRegKey::QueryMultiStringValue(LPCTSTR pValueName, LPTSTR pValue, ULONG* pChars) const
+    inline LONG CRegKey::QueryMultiStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const
     {
         assert(m_key);
         DWORD type = REG_MULTI_SZ;
-        return ::RegQueryValueEx(m_key, pValueName, 0, &type, reinterpret_cast<LPBYTE>(pValue), pChars);
+        return ::RegQueryValueEx(m_key, valueName, 0, &type, reinterpret_cast<LPBYTE>(value), chars);
     }
 
     // Retrieves the string data for the specified value name.
-    inline LONG CRegKey::QueryStringValue(LPCTSTR pValueName, LPTSTR pValue, ULONG* pChars) const
+    inline LONG CRegKey::QueryStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const
     {
         assert(m_key);
         DWORD type = REG_SZ;
-        return ::RegQueryValueEx(m_key, pValueName, 0, &type, reinterpret_cast<LPBYTE>(pValue), pChars);
+        return ::RegQueryValueEx(m_key, valueName, 0, &type, reinterpret_cast<LPBYTE>(value), chars);
     }
 
     // Retrieves the data for the specified value name.
-    inline LONG CRegKey::QueryValue(LPCTSTR pValueName, DWORD* pType, void* pData, ULONG* pBytes) const
+    inline LONG CRegKey::QueryValue(LPCTSTR valueName, DWORD* type, void* data, ULONG* bytes) const
     {
         assert(m_key);
-        return ::RegQueryValueEx(m_key, pValueName, 0, pType, static_cast<LPBYTE>(pData), pBytes);
+        return ::RegQueryValueEx(m_key, valueName, 0, type, static_cast<LPBYTE>(data), bytes);
     }
 
     // Removes the specified key and any subkeys from the registry.
-    inline LONG CRegKey::RecurseDeleteKey(LPCTSTR pKeyName) const
+    inline LONG CRegKey::RecurseDeleteKey(LPCTSTR keyName) const
     {
         assert(m_key);
-        assert(pKeyName);
+        assert(keyName);
 
-        CRegKey Key;
-        LONG result = Key.Open(m_key, pKeyName, KEY_READ | KEY_WRITE);
+        CRegKey key;
+        LONG result = key.Open(m_key, keyName, KEY_READ | KEY_WRITE);
         if (result != ERROR_SUCCESS)
             return result;
 
         FILETIME time;
         DWORD size = MAX_PATH;
         TCHAR subKey[MAX_PATH];
-        while (ERROR_SUCCESS == ::RegEnumKeyEx(Key, 0, subKey, &size, NULL, NULL, NULL, &time))
+        while (ERROR_SUCCESS == ::RegEnumKeyEx(key, 0, subKey, &size, NULL, NULL, NULL, &time))
         {
-            result = Key.RecurseDeleteKey(subKey);
+            result = key.RecurseDeleteKey(subKey);
             if (result != ERROR_SUCCESS)
                 return result;
             size = MAX_PATH;
         }
 
-        Key.Close();
-        return DeleteSubKey(pKeyName);
+        key.Close();
+        return DeleteSubKey(keyName);
     }
 
     // Sets the binary value of the registry key.
-    inline LONG CRegKey::SetBinaryValue(LPCTSTR pValueName, const void* pValue, ULONG bytes) const
+    inline LONG CRegKey::SetBinaryValue(LPCTSTR valueName, const void* value, ULONG bytes) const
     {
         assert(m_key);
-        return ::RegSetValueEx(m_key, pValueName, 0, REG_BINARY, static_cast<const BYTE*>(pValue), bytes);
+        return ::RegSetValueEx(m_key, valueName, 0, REG_BINARY, static_cast<const BYTE*>(value), bytes);
     }
 
     // Sets the DWORD value of the registry key.
-    inline LONG CRegKey::SetDWORDValue(LPCTSTR pValueName, DWORD value) const
+    inline LONG CRegKey::SetDWORDValue(LPCTSTR valueName, DWORD value) const
     {
         assert(m_key);
-        return ::RegSetValueEx(m_key, pValueName, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&value), sizeof(DWORD));
+        return ::RegSetValueEx(m_key, valueName, 0, REG_DWORD, reinterpret_cast<const BYTE*>(&value), sizeof(DWORD));
     }
 
     // Sets the GUID value of the registry key.
-    inline LONG CRegKey::SetGUIDValue(LPCTSTR pValueName, REFGUID value) const
+    inline LONG CRegKey::SetGUIDValue(LPCTSTR valueName, REFGUID value) const
     {
         assert(m_key);
         OLECHAR szGUID[64];
         if (::StringFromGUID2(value, szGUID, 64) == 0)
             return ERROR_INSUFFICIENT_BUFFER;
         else
-            return SetStringValue(pValueName, OLEtoT(szGUID));
+            return SetStringValue(valueName, OLEtoT(szGUID));
     }
 
 #if (WINVER >= 0x0600) && defined(RegSetKeyValue)
 
     // Stores data in a specified value field of a specified key.
-    inline LONG CRegKey::SetKeyValue(LPCTSTR pKeyName, LPCTSTR pValue, LPCTSTR pValueName) const
+    inline LONG CRegKey::SetKeyValue(LPCTSTR keyName, LPCTSTR value, LPCTSTR valueName) const
     {
         assert(m_key);
-        return ::RegSetKeyValue(m_key, pKeyName, pValueName, REG_SZ, pValue, (lstrlen(pValue)+1)*sizeof(TCHAR) );
+        return ::RegSetKeyValue(m_key, keyName, valueName, REG_SZ, value, (lstrlen(value)+1)*sizeof(TCHAR) );
     }
 
 #endif
@@ -350,57 +350,57 @@ namespace Win32xx
     }
 
     // Sets the multistring value of the registry key.
-    inline LONG CRegKey::SetMultiStringValue(LPCTSTR pValueName, LPCTSTR pValue) const
+    inline LONG CRegKey::SetMultiStringValue(LPCTSTR valueName, LPCTSTR value) const
     {
         assert(m_key);
-        assert(pValue);
+        assert(value);
 
         // pszValue contains one or more null terminated strings.
         // Calculate the length of all strings including the terminating characters.
         ULONG bytes = sizeof(TCHAR);
-        LPCTSTR pTemp = pValue;
-        ULONG length = lstrlen(pTemp) +1; // +1 to include the terminating character
+        LPCTSTR temp = value;
+        ULONG length = lstrlen(temp) +1; // +1 to include the terminating character
 
         while (length != 1)
         {
-            pTemp += length;
+            temp += length;
             bytes += length * sizeof(TCHAR);
-            length = lstrlen(pTemp) +1;
+            length = lstrlen(temp) +1;
         }
 
-        return ::RegSetValueEx(m_key, pValueName, 0, REG_MULTI_SZ, reinterpret_cast<const BYTE*>(pValue), bytes);
+        return ::RegSetValueEx(m_key, valueName, 0, REG_MULTI_SZ, reinterpret_cast<const BYTE*>(value), bytes);
     }
 
     // Sets the string value of the registry key.
-    inline LONG CRegKey::SetStringValue(LPCTSTR pValueName, LPCTSTR pValue, DWORD type) const
+    inline LONG CRegKey::SetStringValue(LPCTSTR valueName, LPCTSTR value, DWORD type) const
     {
         assert(m_key);
-        return ::RegSetValueEx(m_key, pValueName, 0, type, reinterpret_cast<const BYTE*>(pValue), (lstrlen(pValue)+1)*sizeof(TCHAR));
+        return ::RegSetValueEx(m_key, valueName, 0, type, reinterpret_cast<const BYTE*>(value), (lstrlen(value)+1)*sizeof(TCHAR));
     }
 
     // Sets the value of the registry key.
-    inline LONG CRegKey::SetValue(LPCTSTR pValueName, DWORD type, const void* pValue, ULONG bytes) const
+    inline LONG CRegKey::SetValue(LPCTSTR valueName, DWORD type, const void* value, ULONG bytes) const
     {
         assert(m_key);
-        return ::RegSetValueEx(m_key, pValueName, 0, type, reinterpret_cast<const BYTE*>(pValue), bytes);
+        return ::RegSetValueEx(m_key, valueName, 0, type, reinterpret_cast<const BYTE*>(value), bytes);
     }
 
 #ifdef REG_QWORD
 
     // Retrieves the QWORD data for a specified value name.
-    inline LONG CRegKey::QueryQWORDValue(LPCTSTR pValueName, ULONGLONG& value) const
+    inline LONG CRegKey::QueryQWORDValue(LPCTSTR valueName, ULONGLONG& value) const
     {
         assert(m_key);
         DWORD type = REG_QWORD;
         DWORD bytes = sizeof(ULONGLONG);
-        return ::RegQueryValueEx(m_key, pValueName, 0, &type, reinterpret_cast<LPBYTE>(&value), &bytes);
+        return ::RegQueryValueEx(m_key, valueName, 0, &type, reinterpret_cast<LPBYTE>(&value), &bytes);
     }
 
     // Sets the QWORD value of the registry key.
-    inline LONG CRegKey::SetQWORDValue(LPCTSTR pValueName, ULONGLONG value) const
+    inline LONG CRegKey::SetQWORDValue(LPCTSTR valueName, ULONGLONG value) const
     {
         assert(m_key);
-        return ::RegSetValueEx(m_key, pValueName, 0, REG_QWORD, reinterpret_cast<const BYTE*>(&value), sizeof(ULONGLONG) );
+        return ::RegSetValueEx(m_key, valueName, 0, REG_QWORD, reinterpret_cast<const BYTE*>(&value), sizeof(ULONGLONG) );
     }
 
 #endif

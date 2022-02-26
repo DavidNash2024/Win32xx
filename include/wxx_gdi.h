@@ -643,10 +643,10 @@ namespace Win32xx
         HFONT GetCurrentFont() const;
         LOGFONT GetLogFont() const;
 
-        DWORD GetFontData(DWORD table, DWORD offset, LPVOID pBuffer,  DWORD data) const;
+        DWORD GetFontData(DWORD table, DWORD offset, LPVOID buffer,  DWORD data) const;
         DWORD GetFontLanguageInfo() const;
         DWORD GetGlyphOutline(UINT query, UINT format, LPGLYPHMETRICS pGM, DWORD bufferSize,
-                              LPVOID pBuffer, const MAT2* pMAT2) const;
+                              LPVOID buffer, const MAT2* pMAT2) const;
 
         DWORD GetKerningPairs(DWORD numPairs, LPKERNINGPAIR pKrnPair) const;
         DWORD SetMapperFlags(DWORD flag) const;
@@ -681,7 +681,7 @@ namespace Win32xx
         BOOL EndPath() const;
         int  ExtSelectClipRgn(HRGN rgn, int mode) const;
         BOOL FlattenPath() const;
-        int  GetPath(POINT* pPointArray, BYTE* pTypes, int count) const;
+        int  GetPath(POINT* pointArray, BYTE* types, int count) const;
         int  OffsetClipRgn(int xOffset, int yOffset) const;
         BOOL PtVisible(int x, int y) const;
         BOOL SelectClipPath(int mode) const;
@@ -749,10 +749,10 @@ namespace Win32xx
 
         int   DrawTextEx(LPTSTR string, int count, const RECT& rc, UINT format, LPDRAWTEXTPARAMS pDTParams) const;
         DWORD GetCharacterPlacement(LPCTSTR string, int count, int maxExtent,
-                                    LPGCP_RESULTS pResults, DWORD flags) const;
+                                    LPGCP_RESULTS results, DWORD flags) const;
 
         BOOL  GetCharABCWidths(UINT firstChar, UINT lastChar, LPABC pABC) const;
-        BOOL  GetCharWidth(UINT firstChar, UINT lastChar, float* pBuffer) const;
+        BOOL  GetCharWidth(UINT firstChar, UINT lastChar, float* buffer) const;
         CSize GetTabbedTextExtent(LPCTSTR string, int count, int tabPositions, LPINT pTabStopPositions) const;
         int   GetTextCharacterExtra() const;
         CSize GetTextExtentPoint32(LPCTSTR string, int count) const;
@@ -765,7 +765,7 @@ namespace Win32xx
 
   #if (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
         BOOL  GetCharABCWidthsI(UINT first, UINT cgi, LPWORD pGI, LPABC pABC) const;
-        BOOL  GetCharWidthI(UINT first, UINT cgi, LPWORD pGI, int* pBuffer) const;
+        BOOL  GetCharWidthI(UINT first, UINT cgi, LPWORD pGI, int* buffer) const;
   #endif // (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
 
     protected:
@@ -3646,10 +3646,10 @@ namespace Win32xx
 
     // Retrieves font metric data for a TrueType font.
     // Refer to GetFontData in the Windows API documentation for more information.
-    inline DWORD CDC::GetFontData(DWORD table, DWORD offset, LPVOID pBuffer, DWORD data) const
+    inline DWORD CDC::GetFontData(DWORD table, DWORD offset, LPVOID buffer, DWORD data) const
     {
         assert(m_pData->dc != 0);
-        return ::GetFontData(m_pData->dc, table, offset, pBuffer, data);
+        return ::GetFontData(m_pData->dc, table, offset, buffer, data);
     }
 
     // Returns information about the currently selected font for the display context.
@@ -3663,10 +3663,10 @@ namespace Win32xx
     // Retrieves the outline or bitmap for a character in the TrueType font that is selected into the device context.
     // Refer to GetGlyphOutline in the Windows API documentation for more information.
     inline DWORD CDC::GetGlyphOutline(UINT query, UINT format, LPGLYPHMETRICS pGM, DWORD bufSize,
-                              LPVOID pBuffer, const MAT2* pMAT2) const
+                              LPVOID buffer, const MAT2* pMAT2) const
     {
         assert(m_pData->dc != 0);
-        return ::GetGlyphOutline(m_pData->dc, query, format, pGM, bufSize, pBuffer, pMAT2);
+        return ::GetGlyphOutline(m_pData->dc, query, format, pGM, bufSize, buffer, pMAT2);
     }
 
     // retrieves the character-kerning pairs for the currently selected font for the device context.
@@ -3814,14 +3814,14 @@ namespace Win32xx
 
     // Retrieves the coordinates defining the endpoints of lines and the control points of curves found in the path
     // that is selected into the device context.
-    // pPoints: An array of POINT structures that receives the line endpoints and curve control points, in logical coordinates.
-    // pTypes: Pointer to an array of bytes that receives the vertex types (PT_MOVETO, PT_LINETO or PT_BEZIERTO).
+    // pointArray: An array of POINT structures that receives the line endpoints and curve control points, in logical coordinates.
+    // types: Pointer to an array of bytes that receives the vertex types (PT_MOVETO, PT_LINETO or PT_BEZIERTO).
     // count: The total number of POINT structures that can be stored in the array pointed to by pPoints.
     // Refer to GetPath in the Windows API documentation for more information.
-    inline int CDC::GetPath(POINT* pPoints, BYTE* pTypes, int count) const
+    inline int CDC::GetPath(POINT* pointArray, BYTE* types, int count) const
     {
         assert(m_pData->dc != 0);
-        return ::GetPath(m_pData->dc, pPoints, pTypes, count);
+        return ::GetPath(m_pData->dc, pointArray, types, count);
     }
 
     // Determines whether the specified point is within the clipping region of a device context.
@@ -4898,18 +4898,18 @@ namespace Win32xx
     // Retrieves information about a character string, such as character widths, caret positioning,
     // ordering within the string, and glyph rendering.
     // Refer to GetCharacterPlacement in the Windows API documentation for more information.
-    inline DWORD CDC::GetCharacterPlacement(LPCTSTR string, int count, int maxExtent, LPGCP_RESULTS pResults, DWORD flags) const
+    inline DWORD CDC::GetCharacterPlacement(LPCTSTR string, int count, int maxExtent, LPGCP_RESULTS results, DWORD flags) const
     {
         assert(m_pData->dc != 0);
-        return ::GetCharacterPlacement(m_pData->dc, string, count, maxExtent, pResults, flags);
+        return ::GetCharacterPlacement(m_pData->dc, string, count, maxExtent, results, flags);
     }
 
     // Retrieves the fractional widths of consecutive characters in a specified range from the current font.
     // Refer to GetCharWidthFloat in the Windows API documentation for more information.
-    inline BOOL CDC::GetCharWidth(UINT firstChar, UINT lastChar, float* pBuffer) const
+    inline BOOL CDC::GetCharWidth(UINT firstChar, UINT lastChar, float* buffer) const
     {
         assert(m_pData->dc != 0);
-        return ::GetCharWidthFloat(m_pData->dc, firstChar, lastChar, pBuffer);
+        return ::GetCharWidthFloat(m_pData->dc, firstChar, lastChar, buffer);
     }
 
     // Computes the width and height of the specified string of text.
@@ -5009,10 +5009,10 @@ namespace Win32xx
 
     // Retrieves the widths, in logical coordinates, of consecutive glyph indices in a specified range from the current font.
     // Refer to GetCharWidthI in the Windows API documentation for more information.
-    inline BOOL CDC::GetCharWidthI(UINT giFirst, UINT cgi, LPWORD pGI, int* pBuffer) const
+    inline BOOL CDC::GetCharWidthI(UINT giFirst, UINT cgi, LPWORD pGI, int* buffer) const
     {
         assert(m_pData->dc != 0);
-        return ::GetCharWidthI(m_pData->dc, giFirst, cgi, pGI, pBuffer);
+        return ::GetCharWidthI(m_pData->dc, giFirst, cgi, pGI, buffer);
     }
 
   #endif // (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)

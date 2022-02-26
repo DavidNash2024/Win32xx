@@ -2017,17 +2017,17 @@ namespace Win32xx
     //  SetWindowTheme(NULL, NULL);     // Reverts the window's XP theme back to default.
     //  SetWindowTheme(L" ", L" ");     // Disables XP theme for the window.
     // Refer to SetWindowTheme in the Windows API documentation for more information.
-    inline HRESULT CWnd::SetWindowTheme(LPCWSTR pSubAppName, LPCWSTR pSubIdList) const
+    inline HRESULT CWnd::SetWindowTheme(LPCWSTR subAppName, LPCWSTR subIdList) const
     {
         HRESULT result = E_NOTIMPL;
 
         HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
         if (theme != 0)
         {
-            typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND wnd, LPCWSTR pSubAppName, LPCWSTR pSubIdList);
+            typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND wnd, LPCWSTR subAppName, LPCWSTR subIdList);
             PFNSETWINDOWTHEME pfn = (PFNSETWINDOWTHEME)GetProcAddress(theme, "SetWindowTheme");
 
-            result = pfn(*this, pSubAppName, pSubIdList);
+            result = pfn(*this, subAppName, subIdList);
 
             ::FreeLibrary(theme);
         }
