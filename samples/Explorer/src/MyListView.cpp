@@ -385,106 +385,103 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
     CEnumIDList list;
 
     int flags = SHCONTF_FOLDERS | SHCONTF_NONFOLDERS;
-    if ( GetExplorerApp()->GetMainFrame().GetShowHidden() )
+    if (GetExplorerApp()->GetMainFrame().GetShowHidden())
+    {
         flags |= SHCONTF_INCLUDEHIDDEN;
+    }
 
-    if(SUCCEEDED(folder.GetEnumIDList(0, flags, list)))
+    if (SUCCEEDED(folder.GetEnumIDList(0, flags, list)))
     {
         ULONG fetched = 1;
         Cpidl cpidlRel;
 
         // Enumerate the item's PIDLs.
-        while(S_OK == (list.Next(1, cpidlRel, fetched)) && fetched)
+        while (S_OK == (list.Next(1, cpidlRel, fetched)) && fetched)
         {
-            try
+            LVITEM lvItem;
+            ZeroMemory(&lvItem, sizeof(lvItem));
+
+            // Fill in the TV_ITEM structure for this item.
+            lvItem.mask = LVIF_PARAM | LVIF_TEXT | LVIF_IMAGE | LVIF_STATE;
+
+            // Store a pointer to the ListItemData in the lParam and m_pItems.
+            ListItemDataPtr pItem(new ListItemData(cpidlParent, cpidlRel, folder));
+            lvItem.lParam = reinterpret_cast<LPARAM>(pItem.get());
+
+            TCHAR fileName[MAX_PATH];
+            GetFullFileName(pItem->GetFullCpidl().GetPidl(), fileName);
+
+            ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
+            pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
+            pItem->m_isFolder = (attr & SFGAO_FOLDER) != 0;
+
+            // Retrieve the file handle for an existing file
+            if ((lstrcmp(fileName, _T("")) != 0) && (attr & SFGAO_CANDELETE))
             {
-                LVITEM lvItem;
-                ZeroMemory(&lvItem, sizeof(lvItem));
-
-                // Fill in the TV_ITEM structure for this item.
-                lvItem.mask = LVIF_PARAM | LVIF_TEXT | LVIF_IMAGE | LVIF_STATE;
-
-                // Store a pointer to the ListItemData in the lParam and m_pItems.
-                ListItemDataPtr pItem(new ListItemData(cpidlParent, cpidlRel, folder));
-                lvItem.lParam = reinterpret_cast<LPARAM>(pItem.get());
-
-                TCHAR szFileName[MAX_PATH];
-                GetFullFileName(pItem->GetFullCpidl().GetPidl(), szFileName);
-
-                ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
-                pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
-                pItem->m_isFolder = (attr & SFGAO_FOLDER) != 0;
-
-                // Open the existing file.
-                CFile file;
-                UINT openFlags = OPEN_EXISTING | CFile::shareDenyWrite;
-                DWORD attributes = FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS;
-                if (attr & SFGAO_CANDELETE)
+                try
                 {
-                    file.Open(szFileName, openFlags, attributes);
+                    // Open the file or folder with the specified fileName.
+                    UINT openFlags = CFile::modeNone | OPEN_EXISTING | CFile::shareDenyWrite;
+                    DWORD attributes = FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS;
+                    CFile file(fileName, openFlags, attributes);
+
+                    // Retrieve the file size.
+                    pItem->m_fileSize = file.GetLength();
+
+                    // Retrieve the modified file time for the file.
+                    FILETIME modified;
+                    ::GetFileTime(file, NULL, NULL, &modified);
+                    pItem->m_fileTime = modified;
                 }
 
-                // Retrieve the file size.
-                DWORD fileSizeHi;
-                DWORD fileSizeLo = ::GetFileSize(file, &fileSizeHi);
-                ULONGLONG fileSize = ((ULONGLONG)fileSizeHi) << 32 | fileSizeLo;
-                pItem->m_fileSize = fileSize;
-
-                // Retrieve the file type.
-                SHFILEINFO sfi;
-                ZeroMemory(&sfi, sizeof(SHFILEINFO));
-                if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
+                catch (const CFileException&)  // Ignore any failure to open the file or folder.
                 {
-                    pItem->m_fileType = sfi.szTypeName;
                 }
-
-                // Retrieve the modified file time for the file.
-                FILETIME modified;
-                ::GetFileTime(file, NULL, NULL, &modified);
-                pItem->m_fileTime = modified;
-
-                // m_pItems is a vector of smart pointers. The memory allocated by
-                // new is automatically deleted when the vector goes out of scope.
-                m_pItems.push_back(pItem);
-
-                // Text and images are done on a callback basis.
-                lvItem.pszText = LPSTR_TEXTCALLBACK;
-                lvItem.iImage = I_IMAGECALLBACK;
-
-                // Determine if the item's icon characteristics
-                attr = SFGAO_SHARE | SFGAO_LINK | SFGAO_GHOSTED;
-                folder.GetAttributes(1, cpidlRel, attr);
-
-                if (attr & SFGAO_SHARE)
-                {
-                    lvItem.mask |= LVIF_STATE;
-                    lvItem.stateMask |= LVIS_OVERLAYMASK;
-                    lvItem.state |= INDEXTOOVERLAYMASK(1); // 1 is the index for the shared overlay image
-                }
-
-                if (attr & SFGAO_LINK)
-                {
-                    lvItem.mask |= LVIF_STATE;
-                    lvItem.stateMask |= LVIS_OVERLAYMASK;
-                    lvItem.state |= INDEXTOOVERLAYMASK(2); // 2 is the index for the link overlay image
-                }
-
-                if (attr & SFGAO_GHOSTED)
-                {
-                    lvItem.mask |= LVIF_STATE;
-                    lvItem.stateMask |= LVIS_CUT;
-                    lvItem.state |= LVIS_CUT;
-                }
-
-                InsertItem(lvItem);
-                fetched = 0;
             }
 
-            // Some enumerated IShellFolder objects aren't actually files.
-            // Discard any file exceptions.
-            catch (const CFileException&)
+            // Retrieve the file type.
+            SHFILEINFO sfi;
+            ZeroMemory(&sfi, sizeof(SHFILEINFO));
+            if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
             {
+                pItem->m_fileType = sfi.szTypeName;
             }
+
+            // m_pItems is a vector of smart pointers. The memory allocated by
+            // new is automatically deleted when the vector goes out of scope.
+            m_pItems.push_back(pItem);
+
+            // Text and images are done on a callback basis.
+            lvItem.pszText = LPSTR_TEXTCALLBACK;
+            lvItem.iImage = I_IMAGECALLBACK;
+
+            // Determine if the item's icon characteristics
+            attr = SFGAO_SHARE | SFGAO_LINK | SFGAO_GHOSTED;
+            folder.GetAttributes(1, cpidlRel, attr);
+
+            if (attr & SFGAO_SHARE)
+            {
+                lvItem.mask |= LVIF_STATE;
+                lvItem.stateMask |= LVIS_OVERLAYMASK;
+                lvItem.state |= INDEXTOOVERLAYMASK(1); // 1 is the index for the shared overlay image
+            }
+
+            if (attr & SFGAO_LINK)
+            {
+                lvItem.mask |= LVIF_STATE;
+                lvItem.stateMask |= LVIS_OVERLAYMASK;
+                lvItem.state |= INDEXTOOVERLAYMASK(2); // 2 is the index for the link overlay image
+            }
+
+            if (attr & SFGAO_GHOSTED)
+            {
+                lvItem.mask |= LVIF_STATE;
+                lvItem.stateMask |= LVIS_CUT;
+                lvItem.state |= LVIS_CUT;
+            }
+
+            InsertItem(lvItem);
+            fetched = 0;
         }
 
         // Sort by the first column, sorting down.
@@ -610,96 +607,75 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
 {
     ListItemData*   pItem = reinterpret_cast<ListItemData*>(pdi->item.lParam);
 
-    try
+    // Add text if available.
+    if (pdi->item.mask & LVIF_TEXT)
     {
-        // Add text if available.
-        if (pdi->item.mask & LVIF_TEXT)
+        ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
+        pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
+
+        const int maxLength = 32;
+        TCHAR text[maxLength];
+        SHFILEINFO sfi;
+        ZeroMemory(&sfi, sizeof(sfi));
+
+        switch (pdi->item.iSubItem)
         {
-            TCHAR szFileName[MAX_PATH];
-            GetFullFileName(pItem->GetFullCpidl().GetPidl(), szFileName);
-
-            ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
-            pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
-
-            // Open the existing file.
-            CFile file;
-            UINT openFlags = OPEN_EXISTING | CFile::shareDenyWrite;
-            DWORD attributes = FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS;
-            if (attr & SFGAO_CANDELETE)
+        case 0:  // Name
+        {
+            // Get the display name of the item.
+            if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
+                StrCopy(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax);
+        }
+        break;
+        case 1: // Size
+        {
+            // Report the size files and not folders.
+            if (~attr & SFGAO_FOLDER)
             {
-                file.Open(szFileName, openFlags, attributes);
+                // Retrieve the file size.
+                GetFileSizeText(pItem->m_fileSize, text);
+                StrCopy(pdi->item.pszText, text, maxLength);
             }
-
-            const int maxLength = 32;
-            TCHAR text[maxLength];
-
-            switch (pdi->item.iSubItem)
+            else
+                StrCopy(pdi->item.pszText, _T(""), 1);
+        }
+        break;
+        case 2: // Type
+        {
+            if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
             {
-            case 0:  // Name
-            {
-                SHFILEINFO sfi;
-                ZeroMemory(&sfi, sizeof(sfi));
-                // Get the display name of the item.
-                if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
-                    StrCopy(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax);
-            }
-            break;
-            case 1: // Size
-            {
-                TCHAR szSize[maxLength];
-
-                // Report the size files and not folders.
-                if (~attr & SFGAO_FOLDER)
-                {
-                    // Retrieve the file size.
-                    GetFileSizeText(pItem->m_fileSize, szSize);
-                    StrCopy(pdi->item.pszText, szSize, maxLength);
-                }
-                else
-                    StrCopy(pdi->item.pszText, _T(""), 1);
-            }
-            break;
-            case 2: // Type
-            {
-                SHFILEINFO sfi;
-                ZeroMemory(&sfi, sizeof(SHFILEINFO));
-                if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
-                {
-                    StrCopy(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax);
-                }
-            }
-            break;
-            case 3: // Modified
-            {
-                // Retrieve the modified file time for the file.
-                if (pItem->m_fileTime.dwHighDateTime != 0 && pItem->m_fileTime.dwLowDateTime != 0)
-                {
-                    GetLastWriteTime(pItem->m_fileTime, text);
-                    StrCopy(pdi->item.pszText, text, maxLength);
-                }
-                else
-                    StrCopy(pdi->item.pszText, _T(""), 1);
-            }
-            break;
+                StrCopy(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax);
             }
         }
-
-        // Add the unselected image.
-        if (pdi->item.mask & LVIF_IMAGE)
+        break;
+        case 3: // Modified
         {
-            SHFILEINFO sfi;
-            ZeroMemory(&sfi, sizeof(SHFILEINFO));
-
-            // Get the unselected image for this item.
-            if (pItem->GetFullCpidl().GetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
-                pdi->item.iImage = sfi.iIcon;
+            // Retrieve the modified file time for the file.
+            if (pItem->m_fileTime.dwHighDateTime != 0 && pItem->m_fileTime.dwLowDateTime != 0)
+            {
+                GetLastWriteTime(pItem->m_fileTime, text);
+                StrCopy(pdi->item.pszText, text, maxLength);
+            }
+            else
+                StrCopy(pdi->item.pszText, _T(""), 1);
+        }
+        break;
         }
     }
 
-    // Some enumerated IShellFolder objects aren't actually files.
-    // Discard any file exceptions.
-    catch (const CFileException&)
-    {}
+    // Add the unselected image.
+    if (pdi->item.mask & LVIF_IMAGE)
+    {
+        SHFILEINFO sfi;
+        ZeroMemory(&sfi, sizeof(SHFILEINFO));
+
+        // Get the unselected image for this item.
+        UINT flags = SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON;
+        if (pItem->GetFullCpidl().GetFileInfo(0, sfi, flags))
+        {
+            pdi->item.iImage = sfi.iIcon;
+        }
+    }
 
     return 0;
 }

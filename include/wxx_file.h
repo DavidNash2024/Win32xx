@@ -62,7 +62,8 @@ namespace Win32xx
             shareDenyNone =     0x0040, // No sharing restrictions.
             modeRead =          0x0100, // Requests read access only.
             modeWrite =         0x0200, // Requests write access only.
-            modeReadWrite =     0x0300  // Requests read and write access.
+            modeReadWrite =     0x0300, // Requests read and write access.
+            modeNone =          0x0400  // Requests neither read nor write access.
         };
 
         CFile();
@@ -335,6 +336,8 @@ namespace Win32xx
         DWORD access = 0;
         switch (openFlags & 0xF00)
         {
+        case modeNone:
+            access = 0; break;
         case modeRead:
             access = GENERIC_READ;    break;
         case modeWrite:
