@@ -130,6 +130,7 @@ namespace Win32xx
     //  modeRead        Requests read access only.
     //  modeWrite       Requests write access only.
     //  modeReadWrite   Requests read and write access.
+    //  modeNone        Requests neither read nor write access.
     //  shareExclusive  Denies read and write access to all others.
     //  shareDenyWrite  Denies write access to all others.
     //  shareDenyRead   Denies read access to all others.
@@ -317,6 +318,7 @@ namespace Win32xx
     //  modeRead        Requests read access only.
     //  modeWrite       Requests write access only.
     //  modeReadWrite   Requests read and write access.
+    //  modeNone        Requests neither read nor write access.
     //  shareExclusive  Denies read and write access to all others.
     //  shareDenyWrite  Denies write access to all others.
     //  shareDenyRead   Denies read access to all others.
