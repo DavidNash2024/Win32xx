@@ -415,27 +415,14 @@ void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
             pItem->GetParentFolder().GetAttributes(1, pItem->GetRelCpidl(), attr);
             pItem->m_isFolder = (attr & SFGAO_FOLDER) != 0;
 
-            // Retrieve the file handle for an existing file
-            if ((lstrcmp(fileName, _T("")) != 0) && (attr & SFGAO_CANDELETE))
+            // Retrieve the file find handle for an existing file.
+            if (lstrcmp(fileName, _T("")) != 0)
             {
-                try
+                CFileFind file;
+                if (file.FindFirstFile(fileName))
                 {
-                    // Open the file or folder with the specified fileName.
-                    UINT openFlags = CFile::modeNone | OPEN_EXISTING | CFile::shareDenyWrite;
-                    DWORD attributes = FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS;
-                    CFile file(fileName, openFlags, attributes);
-
-                    // Retrieve the file size.
+                    pItem->m_fileTime = file.GetLastWriteTime();
                     pItem->m_fileSize = file.GetLength();
-
-                    // Retrieve the modified file time for the file.
-                    FILETIME modified;
-                    ::GetFileTime(file, NULL, NULL, &modified);
-                    pItem->m_fileTime = modified;
-                }
-
-                catch (const CFileException&)  // Ignore any failure to open the file or folder.
-                {
                 }
             }
 
@@ -617,6 +604,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         TCHAR text[maxLength];
         SHFILEINFO sfi;
         ZeroMemory(&sfi, sizeof(sfi));
+        bool isTimeValid = (pItem->m_fileTime.dwHighDateTime != 0 && pItem->m_fileTime.dwLowDateTime != 0);
 
         switch (pdi->item.iSubItem)
         {
@@ -630,7 +618,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         case 1: // Size
         {
             // Report the size files and not folders.
-            if (~attr & SFGAO_FOLDER)
+            if ((~attr & SFGAO_FOLDER)  && (isTimeValid))
             {
                 // Retrieve the file size.
                 GetFileSizeText(pItem->m_fileSize, text);
@@ -651,7 +639,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         case 3: // Modified
         {
             // Retrieve the modified file time for the file.
-            if (pItem->m_fileTime.dwHighDateTime != 0 && pItem->m_fileTime.dwLowDateTime != 0)
+            if (isTimeValid)
             {
                 GetLastWriteTime(pItem->m_fileTime, text);
                 StrCopy(pdi->item.pszText, text, maxLength);

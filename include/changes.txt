@@ -670,7 +670,6 @@ Added UWM_GETCDIALOG                                 message
 
 Added Direct2D                                       sample
 Added FilePrintPreview                               sample
-Added StatusBarEx                                    sample
 
 Modified CFile::Rename          now throws an exception on failure
 Modified CFile::Remove          now throws an exception on failure
