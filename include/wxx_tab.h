@@ -1891,18 +1891,18 @@ namespace Win32xx
             {
                 DWORD dwIDTab;
                 int i = 0;
-                CString SubKeyName;
+                CString tabKeyName;
                 CString TabText;
-                SubKeyName.Format(_T("ID%d"), i);
+                tabKeyName.Format(_T("ID%d"), i);
 
                 // Fill the DockList vector from the registry
-                while (ERROR_SUCCESS == Key.QueryDWORDValue(SubKeyName, dwIDTab))
+                while (ERROR_SUCCESS == Key.QueryDWORDValue(tabKeyName, dwIDTab))
                 {
-                    SubKeyName.Format(_T("Text%d"), i);
+                    tabKeyName.Format(_T("Text%d"), i);
                     DWORD dwBufferSize = 0;
-                    if (ERROR_SUCCESS == Key.QueryStringValue(SubKeyName, 0, &dwBufferSize))
+                    if (ERROR_SUCCESS == Key.QueryStringValue(tabKeyName, 0, &dwBufferSize))
                     {
-                        Key.QueryStringValue(SubKeyName, TabText.GetBuffer(dwBufferSize), &dwBufferSize);
+                        Key.QueryStringValue(tabKeyName, TabText.GetBuffer(dwBufferSize), &dwBufferSize);
                         TabText.ReleaseBuffer();
                     }
 
@@ -1911,7 +1911,7 @@ namespace Win32xx
                     {
                         AddMDIChild(pWnd, TabText, dwIDTab);
                         i++;
-                        SubKeyName.Format(_T("ID%d"), i);
+                        tabKeyName.Format(_T("ID%d"), i);
                         isLoaded = TRUE;
                     }
                     else
@@ -1925,9 +1925,9 @@ namespace Win32xx
                 if (isLoaded)
                 {
                     // Load Active MDI Tab from the registry.
-                    SubKeyName = _T("Active MDI Tab");
+                    tabKeyName = _T("Active MDI Tab");
                     DWORD tab;
-                    if (ERROR_SUCCESS == Key.QueryDWORDValue(SubKeyName, tab))
+                    if (ERROR_SUCCESS == Key.QueryDWORDValue(tabKeyName, tab))
                         SetActiveMDITab(tab);
                     else
                         SetActiveMDITab(0);
@@ -2083,16 +2083,16 @@ namespace Win32xx
 
                 for (int i = 0; i < GetMDIChildCount(); ++i)
                 {
-                    CString SubKeyName;
+                    CString tabKeyName;
                     TabPageInfo pdi = GetTab().GetTabPageInfo(i);
 
-                    SubKeyName.Format(_T("ID%d"), i);
-                    if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, reinterpret_cast<const LPBYTE>(&pdi.idTab), sizeof(int)))
+                    tabKeyName.Format(_T("ID%d"), i);
+                    if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, tabKeyName, 0, REG_DWORD, reinterpret_cast<const LPBYTE>(&pdi.idTab), sizeof(int)))
                         throw CUserException();
 
-                    SubKeyName.Format(_T("Text%d"), i);
+                    tabKeyName.Format(_T("Text%d"), i);
                     CString TabText = GetTab().GetTabPageInfo(i).TabText;
-                    if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_SZ,
+                    if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, tabKeyName, 0, REG_SZ,
                                                            reinterpret_cast<const BYTE*>(TabText.c_str()),
                                                            (1 + TabText.GetLength() )*sizeof(TCHAR))
                                                            )
@@ -2100,9 +2100,9 @@ namespace Win32xx
                 }
 
                 // Add Active Tab to the registry.
-                CString SubKeyName = _T("Active MDI Tab");
+                CString tabKeyName = _T("Active MDI Tab");
                 int nTab = GetActiveMDITab();
-                if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, reinterpret_cast<LPBYTE>(&nTab), sizeof(int)))
+                if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, tabKeyName, 0, REG_DWORD, reinterpret_cast<LPBYTE>(&nTab), sizeof(int)))
                     throw CUserException();
 
                 RegCloseKey(hKeyMDIChild);

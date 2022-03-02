@@ -1635,16 +1635,16 @@ namespace Win32xx
         if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
         {
             CString pathName;
-            CString subKeyName;
+            CString fileKeyName;
             for (UINT i = 0; i < m_maxMRU; ++i)
             {
                 DWORD bufferSize = 0;
-                subKeyName.Format(_T("File %d"), i+1);
+                fileKeyName.Format(_T("File %d"), i+1);
 
-                if (ERROR_SUCCESS == key.QueryStringValue(subKeyName, NULL, &bufferSize))
+                if (ERROR_SUCCESS == key.QueryStringValue(fileKeyName, NULL, &bufferSize))
                 {
                     // load the entry from the registry.
-                    if (ERROR_SUCCESS == key.QueryStringValue(subKeyName, pathName.GetBuffer(bufferSize), &bufferSize))
+                    if (ERROR_SUCCESS == key.QueryStringValue(fileKeyName, pathName.GetBuffer(bufferSize), &bufferSize))
                     {
                         pathName.ReleaseBuffer();
 

@@ -25,7 +25,7 @@ Each CDocker has a view window. The view windows used by the dockers are:
 Features demonstrated in this example
 =====================================
 * Use of CDockFrame to provide a frame window
-* Use of a CDocker as the view window for the frame
-* Use of docker styles to treat dockers as splitter windows
+* Use of CDocker to display window panes separated by a splitter bar.
 * Use of ListView, TreeView and Edit controls as view windows
+* The storing of the window pane arrangement in the registry.
  

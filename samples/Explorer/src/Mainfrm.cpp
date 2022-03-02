@@ -68,6 +68,15 @@ void CMainFrame::DoPopupMenu()
     popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
+// Load the default arrangement of the window panes.
+void CMainFrame::LoadDefaultWindowPanes()
+{
+    // Add the right window pane
+    int width = GetWindowRect().Width() / 3;
+    DWORD dockStyle = DS_DOCKED_LEFT | DS_NO_UNDOCK | DS_NO_CAPTION;
+    m_pLeftPane = static_cast<CLeftPane*>(m_rightPane.AddDockedChild(new CLeftPane, dockStyle, width, ID_DOCK_LEFTPANE));
+}
+
 // Process input from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
@@ -87,7 +96,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     }
 
     return FALSE;
-
 }
 
 // OnCreate controls the way the frame is created.
@@ -116,15 +124,80 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
+void CMainFrame::LoadListViewRegistrySettings()
+{
+    CString appName = GetRegistryKeyName();
+
+    if (!appName.IsEmpty())
+    {
+        CHeader header;
+        CString listViewKeyName = _T("\\ListView Settings");
+        try
+        {
+            CString keyName = _T("Software\\") + appName + listViewKeyName;
+            CRegKey key;
+
+            if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
+                throw CUserException(_T("RegCreateKeyEx failed"));
+            if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
+                throw CUserException(_T("RegCreateKeyEx failed"));
+
+            DWORD columns[4];
+
+            if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Column0"), columns[0]))
+                throw CUserException();
+            if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Column1"), columns[1]))
+                throw CUserException();
+            if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Column2"), columns[2]))
+                throw CUserException();
+            if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Column3"), columns[3]))
+                throw CUserException();
+
+            header.Attach(GetListView().GetHeader());
+            for (int i = 0; i < 4; i++)
+            {
+                HDITEM headerItem;
+                ZeroMemory(&headerItem, sizeof(headerItem));
+                headerItem.mask = HDI_WIDTH;
+                headerItem.cxy = columns[i];
+                header.SetItem(i, headerItem);
+            }
+            header.Detach();
+        }
+
+        catch (const  CUserException&)
+        {
+            CString keyName = _T("Software\\") + appName;
+            CRegKey key;
+
+            if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName))
+            {
+                // Roll back the registry changes by deleting this subkey.
+                key.DeleteSubKey(listViewKeyName);
+            }
+        }
+    }
+}
+
 // Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
-    // Add the right window pane
-    int width = GetWindowRect().Width() / 3;
-    DWORD dockStyle = DS_DOCKED_LEFT  | DS_NO_UNDOCK | DS_NO_CAPTION;
-    m_pLeftPane = static_cast<CLeftPane*>(m_rightPane.AddDockedChild(new CLeftPane, dockStyle, width));
+    if (m_rightPane.LoadDockRegistrySettings(GetRegistryKeyName()))
+    {
+        m_pLeftPane = dynamic_cast<CLeftPane*>(m_rightPane.GetDockFromID(ID_DOCK_LEFTPANE));
+        if (m_pLeftPane == 0)
+        {
+            m_rightPane.CloseAllDockers();
+            LoadDefaultWindowPanes();
+        }
+    }
+    else
+        LoadDefaultWindowPanes();
 
-    // All windows are now created, so populate the treeview
+    // Load the ListView column widths from the registry.
+    LoadListViewRegistrySettings();
+
+    // All windows are now created, so populate the treeview.
     GetTreeView().GetRootItems();
 
     // Uncheck the hidden menu item
@@ -134,7 +207,7 @@ void CMainFrame::OnInitialUpdate()
     CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
     viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 
-    // Uncomment the following to use a hash bar and disable of auto resizing
+    // Uncomment the following to use a hash bar and disable of auto resizing.
     // m_rightPane.SetDragAutoResize(FALSE);
 }
 
@@ -222,6 +295,70 @@ BOOL CMainFrame::OnViewSmallIcon()
     GetListView().ViewSmallIcons();
     viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
     return TRUE;
+}
+
+BOOL CMainFrame::SaveRegistrySettings()
+{
+    if (CFrame::SaveRegistrySettings())
+    {
+        if (m_rightPane.SaveDockRegistrySettings(GetRegistryKeyName()))
+        {
+            CString appName = GetRegistryKeyName();
+
+            if (!appName.IsEmpty())
+            {
+                CHeader header;
+                CString listViewKeyName = _T("\\ListView Settings");
+                try
+                {
+                    CString keyName = _T("Software\\") + appName + listViewKeyName;
+                    CRegKey key;
+
+                    if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
+                        throw CUserException(_T("RegCreateKeyEx failed"));
+                    if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
+                        throw CUserException(_T("RegCreateKeyEx failed"));
+
+                    header.Attach(GetListView().GetHeader());
+                    DWORD columns[4];
+                    for (int i = 0; i < 4; i++)
+                    {
+                        HDITEM headerItem;
+                        ZeroMemory(&headerItem, sizeof(headerItem));
+                        headerItem.mask = HDI_WIDTH;
+                        header.GetItem(i, headerItem);
+                        columns[i] = headerItem.cxy;
+                    }
+                    header.Detach();
+
+                    if (ERROR_SUCCESS != key.SetDWORDValue(_T("Column0"), columns[0]))
+                        throw CUserException();
+                    if (ERROR_SUCCESS != key.SetDWORDValue(_T("Column1"), columns[1]))
+                        throw CUserException();
+                    if (ERROR_SUCCESS != key.SetDWORDValue(_T("Column2"), columns[2]))
+                        throw CUserException();
+                    if (ERROR_SUCCESS != key.SetDWORDValue(_T("Column3"), columns[3]))
+                        throw CUserException();
+
+                    return TRUE;
+                }
+
+                catch (const  CUserException&)
+                {
+                    CString keyName = _T("Software\\") + appName;
+                    CRegKey key;
+
+                    if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName))
+                    {
+                        // Roll back the registry changes by deleting this subkey.
+                        key.DeleteSubKey(listViewKeyName);
+                    }
+                }
+            }
+        }
+    }
+
+    return FALSE;
 }
 
 // Define our toolbar.
