@@ -7,6 +7,11 @@
 
 #include "SplitterPanes.h"
 
+// The docker identifiers (dock IDs)
+const int ID_DOCK_LIST = 1;
+const int ID_DOCK_TREE = 2;
+const int ID_DOCK_TEXT = 3;
+
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -18,13 +23,16 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    void LoadDefaultWindowPanes();
     BOOL OnFileExit();
     BOOL OnViewList();
     BOOL OnViewText();
 
 protected:
+    virtual CDocker* NewDockerFromID(int id);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
+    virtual BOOL SaveRegistrySettings();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

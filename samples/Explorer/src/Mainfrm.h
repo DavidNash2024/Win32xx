@@ -27,6 +27,8 @@ public:
     CMyListView& GetListView() const {return static_cast<CMyListView&>(m_rightPane.GetView());}
     CMyTreeView& GetTreeView() const {return static_cast<CMyTreeView&>(m_pLeftPane->GetView());}
     bool GetShowHidden() {return m_showHidden;}
+    void LoadDefaultWindowPanes();
+    void LoadListViewRegistrySettings();
     BOOL OnFileExit();
     BOOL OnViewLargeIcon();
     BOOL OnViewList();
@@ -40,6 +42,7 @@ protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+    virtual BOOL SaveRegistrySettings();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

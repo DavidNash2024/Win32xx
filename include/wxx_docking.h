@@ -2762,22 +2762,23 @@ namespace Win32xx
         if (pRegistryKeyName)
         {
             std::vector<DockInfo> dockList;
-            CString keyName = _T("Software\\") + CString(pRegistryKeyName) + _T("\\Dock Windows");
+            CString dockKeyName = _T("\\Dock Settings");
+            CString keyName = _T("Software\\") + CString(pRegistryKeyName) + dockKeyName;
             CRegKey key;
             if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName, KEY_READ))
             {
                 DWORD bufferSize = sizeof(DockInfo);
                 DockInfo di;
                 int i = 0;
-                CString subKeyName;
-                subKeyName.Format(_T("DockChild%d"), i);
+                CString dockChildName;
+                dockChildName.Format(_T("DockChild%d"), i);
 
                 // Fill the DockList vector from the registry.
-                while (ERROR_SUCCESS == key.QueryBinaryValue(subKeyName, &di, &bufferSize))
+                while (ERROR_SUCCESS == key.QueryBinaryValue(dockChildName, &di, &bufferSize))
                 {
                     dockList.push_back(di);
                     i++;
-                    subKeyName.Format(_T("DockChild%d"), i);
+                    dockChildName.Format(_T("DockChild%d"), i);
                 }
 
                 key.Close();
@@ -2852,7 +2853,7 @@ namespace Win32xx
                 CString parentKeyName = _T("Software\\") + CString(pRegistryKeyName);
                 CRegKey parentKey;
                 if (ERROR_SUCCESS == parentKey.Open(HKEY_CURRENT_USER, parentKeyName, KEY_READ))
-                    parentKey.RecurseDeleteKey(_T("Dock Windows"));
+                    parentKey.RecurseDeleteKey(dockKeyName);
             }
 
         }
@@ -2870,7 +2871,8 @@ namespace Win32xx
         if (pRegistryKeyName)
         {
             // Load Dock container tab order and active container.
-            CString keyName = _T("Software\\") + CString(pRegistryKeyName) + _T("\\Dock Windows");
+            CString dockKeyName = _T("\\Dock Settings");
+            CString keyName = _T("Software\\") + CString(pRegistryKeyName) + dockKeyName;
             CRegKey key;
 
             if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName, KEY_READ))
@@ -2878,11 +2880,11 @@ namespace Win32xx
                 try
                 {
                     UINT container = 0;
-                    CString subKeyName;
-                    subKeyName.Format(_T("DockContainer%u"), container);
+                    CString dockContainerName;
+                    dockContainerName.Format(_T("DockContainer%u"), container);
                     CRegKey containerKey;
 
-                    while (ERROR_SUCCESS == containerKey.Open(key, subKeyName, KEY_READ))
+                    while (ERROR_SUCCESS == containerKey.Open(key, dockContainerName, KEY_READ))
                     {
                         // Load tab order
                         isLoaded = TRUE;
@@ -2948,7 +2950,7 @@ namespace Win32xx
                             }
                         }
 
-                        subKeyName.Format(_T("DockContainer%u"), ++container);
+                        dockContainerName.Format(_T("DockContainer%u"), ++container);
                     }
                 }
 
@@ -2961,7 +2963,7 @@ namespace Win32xx
                     CString parentKeyName = _T("Software\\") + CString(pRegistryKeyName);
                     CRegKey parentKey;
                     if (ERROR_SUCCESS == parentKey.Open(HKEY_CURRENT_USER, parentKeyName, KEY_READ))
-                        parentKey.RecurseDeleteKey(_T("Dock Windows"));
+                        parentKey.RecurseDeleteKey(dockKeyName);
                 }
             }
         }
@@ -3765,7 +3767,7 @@ namespace Win32xx
             CRegKey key;
             CRegKey keyDock;
             CString keyName = _T("Software\\") + CString(pRegistryKeyName);
-
+            CString dockKeyName = _T("Dock Settings");
             try
             {
                 if (!VerifyDockers())
@@ -3779,11 +3781,24 @@ namespace Win32xx
                     throw CUserException();
 
                 // Remove Old Docking info ...
-                key.RecurseDeleteKey(_T("Dock Windows"));
+                key.RecurseDeleteKey(_T("Dock Settings"));
 
                 // Fill the DockInfo vector with the docking information.
                 for (iter = sortedDockers.begin(); iter != sortedDockers.end(); ++iter)
                 {
+                    // Recalculate the docker size.
+                    if ((*iter)->GetDockBar().IsWindow() && (*iter)->m_pDockParent != 0)
+                    {
+                        DRAGPOS dp;
+                        ZeroMemory(&dp, sizeof(dp));
+                        dp.dockZone = (*iter)->GetDockStyle();
+                        dp.pDocker = *iter;
+                        CRect rc = (*iter)->GetDockBar().GetWindowRect();
+                        CPoint pt((rc.left + rc.right)/2, (rc.top + rc.bottom)/2);
+                        dp.pos = pt;
+                        ResizeDockers(&dp);
+                    }
+
                     DockInfo di;
                     ZeroMemory(&di, sizeof(di));
                     if (! (*iter)->IsWindow())
@@ -3801,20 +3816,20 @@ namespace Win32xx
                     allDockInfo.push_back(di);
                 }
 
-                if (ERROR_SUCCESS != key.Create(key, _T("Dock Windows")))
+                if (ERROR_SUCCESS != key.Create(key, dockKeyName))
                     throw CUserException();
 
-                if (ERROR_SUCCESS != keyDock.Open(key, _T("Dock Windows")))
+                if (ERROR_SUCCESS != keyDock.Open(key, dockKeyName))
                     throw CUserException();
 
-                CString SubKeyName;
+                CString dockChildName;
 
-                // Add the Dock windows information to the registry.
+                // Add the dock settings information to the registry.
                 for (UINT u = 0; u < allDockInfo.size(); ++u)
                 {
                     DockInfo di = allDockInfo[u];
-                    SubKeyName.Format(_T("DockChild%u"), u);
-                    if (ERROR_SUCCESS != keyDock.SetBinaryValue(SubKeyName, &di, sizeof(DockInfo)))
+                    dockChildName.Format(_T("DockChild%u"), u);
+                    if (ERROR_SUCCESS != keyDock.SetBinaryValue(dockChildName, &di, sizeof(DockInfo)))
                         throw CUserException();
                 }
 
@@ -3843,7 +3858,7 @@ namespace Win32xx
                 // Roll back the registry changes by deleting the subkeys.
                 if (key.GetKey())
                 {
-                    key.RecurseDeleteKey(_T("Dock Windows"));
+                    key.RecurseDeleteKey(dockKeyName);
                 }
 
                 return FALSE;
@@ -3857,12 +3872,12 @@ namespace Win32xx
     inline void CDocker::SaveContainerRegistrySettings(CRegKey& keyDock, CDockContainer* pContainer, UINT& container)
     {
         CRegKey keyContainer;
-        CString subKeyName;
-        subKeyName.Format(_T("DockContainer%u"), container++);
-        if (ERROR_SUCCESS != keyDock.Create(keyDock, subKeyName))
+        CString dockContainerName;
+        dockContainerName.Format(_T("DockContainer%u"), container++);
+        if (ERROR_SUCCESS != keyDock.Create(keyDock, dockContainerName))
             throw CUserException();
 
-        if (ERROR_SUCCESS != keyContainer.Open(keyDock, subKeyName))
+        if (ERROR_SUCCESS != keyContainer.Open(keyDock, dockContainerName))
             throw CUserException();
 
         // Store the container group's parent.
@@ -3886,7 +3901,7 @@ namespace Win32xx
         // Store the tab order.
         for (UINT u2 = 0; u2 < pContainer->GetAllContainers().size(); ++u2)
         {
-            subKeyName.Format(_T("Tab%u"), u2);
+            dockContainerName.Format(_T("Tab%u"), u2);
             CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
             if (pTab == 0)
                 throw CUserException();
@@ -3895,7 +3910,7 @@ namespace Win32xx
                 throw CUserException();
             int tabID = pDocker->GetDockID();
 
-            if (ERROR_SUCCESS != keyContainer.SetDWORDValue(subKeyName, tabID))
+            if (ERROR_SUCCESS != keyContainer.SetDWORDValue(dockContainerName, tabID))
                 throw CUserException();
         }
     }
