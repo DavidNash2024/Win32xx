@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDll", "TestDll_2010.vcxproj", "{37BA5C8B-2C07-BCD5-FD30-6E4826D94BC1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestDll", "TestDll_2010.vcxproj", "{CF05E7D2-E0F1-C5F0-3F7E-CB65A8A9F5C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{37BA5C8B-2C07-BCD5-FD30-6E4826D94BC1}.Debug|Win32.ActiveCfg = Debug|Win32
-		{37BA5C8B-2C07-BCD5-FD30-6E4826D94BC1}.Debug|Win32.Build.0 = Debug|Win32
-		{37BA5C8B-2C07-BCD5-FD30-6E4826D94BC1}.Release|Win32.ActiveCfg = Release|Win32
-		{37BA5C8B-2C07-BCD5-FD30-6E4826D94BC1}.Release|Win32.Build.0 = Release|Win32
+		{CF05E7D2-E0F1-C5F0-3F7E-CB65A8A9F5C8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CF05E7D2-E0F1-C5F0-3F7E-CB65A8A9F5C8}.Debug|Win32.Build.0 = Debug|Win32
+		{CF05E7D2-E0F1-C5F0-3F7E-CB65A8A9F5C8}.Release|Win32.ActiveCfg = Release|Win32
+		{CF05E7D2-E0F1-C5F0-3F7E-CB65A8A9F5C8}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

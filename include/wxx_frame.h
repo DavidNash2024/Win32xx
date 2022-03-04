@@ -1,4 +1,4 @@
-// Win32++   Version 8.9.2
+// Win32++   Version 9.0
 // Release Date: TBA
 //
 //      David Nash
@@ -183,6 +183,7 @@ namespace Win32xx
         virtual CReBar& GetReBar() const             { return m_reBar; }
         virtual CStatusBar& GetStatusBar() const     { return m_statusBar; }
         virtual CToolBar& GetToolBar() const         { return m_toolBar; }
+        virtual BOOL SetStatusPartText(int part, LPCTSTR text, UINT style = 0) const;
 
         // Non-virtual Accessors and mutators
         // These functions aren't virtual, and shouldn't be overridden.
@@ -891,7 +892,7 @@ namespace Win32xx
                             toolBarImages = pTB->GetImageList();
                         }
 
-                        BOOL isWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
+                        bool isWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
 
                         // Calculate image position.
                         CSize szImage = toolBarImages.GetIconSize();
@@ -1057,8 +1058,8 @@ namespace Win32xx
     inline void CFrameT<T>::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDIS)
     {
         // Draw the item background
-        BOOL isDisabled = pDIS->itemState & ODS_GRAYED;
-        BOOL isSelected = pDIS->itemState & ODS_SELECTED;
+        bool isDisabled = (pDIS->itemState & ODS_GRAYED) != FALSE;
+        bool isSelected = (pDIS->itemState & ODS_SELECTED) != FALSE;
         CRect drawRect = pDIS->rcItem;
         CDC drawDC(pDIS->hDC);
         const MenuTheme& mbt = GetMenuBarTheme();
@@ -1171,7 +1172,7 @@ namespace Win32xx
         // draw the image
         if (image >= 0 )
         {
-            BOOL isDisabled = pDIS->itemState & ODS_GRAYED;
+            bool isDisabled = (pDIS->itemState & ODS_GRAYED) != FALSE;
             if ((isDisabled) && (m_menuDisabledImages.GetHandle()))
                 m_menuDisabledImages.Draw(pDIS->hDC, image, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
             else
@@ -1185,7 +1186,7 @@ namespace Win32xx
     {
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
         CString itemText = pmid->GetItemText();
-        BOOL isDisabled = pDIS->itemState & ODS_GRAYED;
+        bool isDisabled = (pDIS->itemState & ODS_GRAYED) != FALSE;
         COLORREF colorText = GetSysColor(isDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
 
         // Calculate the text rect size.
@@ -1237,7 +1238,7 @@ namespace Win32xx
         {
             assert(rebar.IsWindow());
 
-            BOOL isVertical = rebar.GetStyle() & CCS_VERT;
+            bool isVertical = (rebar.GetStyle() & CCS_VERT) != FALSE;
 
             // Create our memory DC.
             CRect rebarRect = rebar.GetClientRect();
@@ -2095,9 +2096,9 @@ namespace Win32xx
 
             if ((menu != T::GetMenu()) && (id != 0) && !(HIWORD(wparam) & MF_POPUP))
 
-                GetStatusBar().SetPartText(0, LoadString(id));
+                SetStatusPartText(0, LoadString(id));
             else
-                GetStatusBar().SetPartText(0, m_statusText);
+                SetStatusPartText(0, m_statusText);
         }
 
         return 0;
@@ -2114,13 +2115,13 @@ namespace Win32xx
         {
         case IDW_VIEW_STATUSBAR:
             {
-                BOOL isVisible = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
+                bool isVisible = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
                 GetFrameMenu().CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
         case IDW_VIEW_TOOLBAR:
             {
-                BOOL isVisible = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
+                bool isVisible = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
                 GetFrameMenu().EnableMenuItem(id, GetToolBar().IsWindow() ? MF_ENABLED : MF_DISABLED);
                 GetFrameMenu().CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
             }
@@ -2365,7 +2366,7 @@ namespace Win32xx
     template <class T>
     inline BOOL CFrameT<T>::OnViewToolBar()
     {
-        BOOL show = GetToolBar().IsWindow() && !GetToolBar().IsWindowVisible();
+        BOOL show = !(GetToolBar().IsWindow() && GetToolBar().IsWindowVisible());
         ShowToolBar(show);
         return TRUE;
     }
@@ -2737,6 +2738,20 @@ namespace Win32xx
         m_rbTheme = rbt;
     }
 
+    // Set the text in a status bar part.
+    // The Style parameter can be a combinations of ...
+    // 0                 The text is drawn with a border to appear lower than the plane of the window.
+    // SBT_NOBORDERS     The text is drawn without borders.
+    // SBT_OWNERDRAW     The text is drawn by the parent window.
+    // SBT_POPOUT        The text is drawn with a border to appear higher than the plane of the window.
+    // SBT_RTLREADING    The text will be displayed in the opposite direction to the text in the parent window.
+    // Refer to SB_SETTEXT in the Windows API documentation for more information.
+    template <class T>
+    BOOL  CFrameT<T>::SetStatusPartText(int part, LPCTSTR text, UINT style) const
+    { 
+        return GetStatusBar().SetPartText(part, text, style);
+    }
+
     // Stores the statusbar's theme colors.
     template <class T>
     inline void CFrameT<T>::SetStatusBarTheme(const StatusBarTheme& sbt)
@@ -2787,9 +2802,9 @@ namespace Win32xx
             CString status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? scrl: CString("");
 
             // Only update indicators if the text has changed.
-            if (status1 != m_oldStatus[0])  GetStatusBar().SetPartText(1, status1);
-            if (status2 != m_oldStatus[1])  GetStatusBar().SetPartText(2, status2);
-            if (status3 != m_oldStatus[2])  GetStatusBar().SetPartText(3, status3);
+            if (status1 != m_oldStatus[0])  SetStatusPartText(1, status1);
+            if (status2 != m_oldStatus[1])  SetStatusPartText(2, status2);
+            if (status3 != m_oldStatus[2])  SetStatusPartText(3, status3);
 
             m_oldStatus[0] = status1;
             m_oldStatus[1] = status2;
@@ -2806,7 +2821,7 @@ namespace Win32xx
         if (GetStatusBar().IsWindow())
         {
             // Place text in the 1st pane
-            GetStatusBar().SetPartText(0, m_statusText);
+            SetStatusPartText(0, m_statusText);
         }
     }
 

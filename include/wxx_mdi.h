@@ -1,4 +1,4 @@
-// Win32++   Version 8.9.2
+// Win32++   Version 9.0
 // Release Date: TBA
 //
 //      David Nash
@@ -475,14 +475,14 @@ namespace Win32xx
         {
         case IDW_VIEW_STATUSBAR:
             {
-                BOOL isVisible = T::GetStatusBar().IsWindow() && T::GetStatusBar().IsWindowVisible();
+                bool isVisible = T::GetStatusBar().IsWindow() && T::GetStatusBar().IsWindowVisible();
                 activeMenu.CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
 
         case IDW_VIEW_TOOLBAR:
             {
-                BOOL isVisible = T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible();
+                bool isVisible = T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible();
                 activeMenu.EnableMenuItem(id, T::IsUsingToolBar() ? MF_ENABLED : MF_DISABLED);
                 activeMenu.CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
             }

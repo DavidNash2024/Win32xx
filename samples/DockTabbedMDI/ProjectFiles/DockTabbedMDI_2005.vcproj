@@ -419,6 +419,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_menumetrics.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_metafile.h"
 				>
 			</File>
@@ -428,6 +432,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_preview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_printdialogex.h"
 				>
 			</File>
 			<File
@@ -460,6 +468,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_scrollview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_setup.h"
 				>
 			</File>
 			<File

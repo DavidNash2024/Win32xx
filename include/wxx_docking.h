@@ -1,4 +1,4 @@
-// Win32++   Version 8.9.2
+// Win32++   Version 9.0
 // Release Date: TBA
 //
 //      David Nash
@@ -646,7 +646,7 @@ namespace Win32xx
         int dockSize;
         int dockID;
         int dockParentID;
-        BOOL isInAncestor;
+        bool isInAncestor;
         RECT rect;
     };
 

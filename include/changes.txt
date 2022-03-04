@@ -1,5 +1,5 @@
-Version 8.9.2  (9.0)
-=============
+Version 9.0
+===========
 
 Bug fixes:
 - Fixed a GDI resource leak in CFont::CreatePointFontIndirect.
