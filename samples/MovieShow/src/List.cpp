@@ -186,8 +186,6 @@ void CViewList::OnDestroy()
 // Called after the listview window is created.
 void CViewList::OnInitialUpdate()
 {
-    // Use old fashioned rendering for arrows in the list-view's header.
-    ::SetWindowTheme(GetHeader(), L" ", L" ");
 }
 
 // Called with a double click left mouse button or press the Enter key

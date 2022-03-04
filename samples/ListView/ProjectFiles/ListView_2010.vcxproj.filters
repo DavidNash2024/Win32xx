@@ -83,10 +83,10 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_preview.h">
       <Filter>Win32++</Filter>
-    </ClInclude>	
+    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h">
       <Filter>Win32++</Filter>
-    </ClInclude>	
+    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -184,6 +184,15 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_mutex.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_menumetrics.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_printdialogex.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_setup.h">
       <Filter>Win32++</Filter>
     </ClInclude>
   </ItemGroup>
