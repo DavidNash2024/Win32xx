@@ -97,6 +97,8 @@ Added template <class V>   CStringW ToCStringW(V)              global function
 Added template <class V>   CString  ToCString(V)               global function
 Added template <class V>   CString& operator << (CString&, V)  global function
 
+Modified CFrameT::SetStatusText - has additional parameters    member function
+
 Removed CString(int)                                           constructor
 Removed CString(double)                                        constructor
 Removed CString operator + (const CString&, int)               global operator overload
