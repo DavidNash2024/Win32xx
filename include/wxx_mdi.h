@@ -299,10 +299,10 @@ namespace Win32xx
                 {
                     CString strMenuItem ( (*v)->GetWindowText() );
 
-                    if (strMenuItem.GetLength() > WXX_MAX_MENU_STRING -10)
+                    if (strMenuItem.GetLength() > WXX_MAX_STRING_SIZE -10)
                     {
                         // Truncate the string if its too long
-                        strMenuItem.Delete(strMenuItem.GetLength() - WXX_MAX_MENU_STRING +10);
+                        strMenuItem.Delete(strMenuItem.GetLength() - WXX_MAX_STRING_SIZE -10);
                         strMenuItem += _T(" ...");
                     }
 

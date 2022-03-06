@@ -1507,22 +1507,22 @@ namespace Win32xx
 
         for (int item = 0 ; item < menuItemCount; ++item)
         {
-            std::vector<TCHAR> menuString( WXX_MAX_MENU_STRING+1, _T('\0') );
+            std::vector<TCHAR> menuString(WXX_MAX_STRING_SIZE +1, _T('\0') );
             TCHAR* pMenuString = &menuString[0];
 
-            std::vector<TCHAR> strippedString( WXX_MAX_MENU_STRING+1, _T('\0') );
+            std::vector<TCHAR> strippedString(WXX_MAX_STRING_SIZE +1, _T('\0') );
             TCHAR* pStrippedString = &strippedString.front();
 
             mii.fMask      = MIIM_TYPE;
             mii.fType      = MFT_STRING;
             mii.dwTypeData = pMenuString;
-            mii.cch        = WXX_MAX_MENU_STRING;
+            mii.cch        = WXX_MAX_STRING_SIZE;
 
             // Fill the contents of szStr from the menu item.
             if (::GetMenuItemInfo(menu, item, TRUE, &mii))
             {
                 int len = lstrlen(pMenuString);
-                if (len <= WXX_MAX_MENU_STRING)
+                if (len <= WXX_MAX_STRING_SIZE)
                 {
                     // Strip out any & characters.
                     int j = 0;
@@ -1997,7 +1997,7 @@ namespace Win32xx
             // Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility.
             mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU |MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
             mii.dwTypeData = pItem->GetItemText();  // Assign TCHAR pointer, text is assigned by GetMenuItemInfo.
-            mii.cch = WXX_MAX_MENU_STRING;
+            mii.cch = WXX_MAX_STRING_SIZE;
 
             // Send message for menu updates.
             UINT menuItem = menu.GetMenuItemID(i);
@@ -3285,7 +3285,7 @@ namespace Win32xx
                 str = count + str;
 
                 // Trim the string if its too long.
-                if (str.GetLength() > WXX_MAX_MENU_STRING)
+                if (str.GetLength() > WXX_MAX_STRING_SIZE - 10)
                 {
                     // Extract the first part of the string up until the first '\\'
                     CString prefix;
@@ -3293,9 +3293,9 @@ namespace Win32xx
                     if (index >= 0)
                         prefix = str.Left(index + 1);
 
-                    // Reduce the string to fit within WXX_MAX_MENU_STRING.
+                    // Reduce the string to fit within WXX_MAX_STRING_SIZE.
                     CString gap = _T("...");
-                    str.Delete(0, str.GetLength() - WXX_MAX_MENU_STRING + prefix.GetLength() + gap.GetLength()+1);
+                    str.Delete(0, str.GetLength() - WXX_MAX_STRING_SIZE + prefix.GetLength() + gap.GetLength()+1);
 
                     // Remove the front of the string up to the next '\\' if any.
                     index = str.Find(_T('\\'));
