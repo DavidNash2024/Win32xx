@@ -1091,9 +1091,9 @@ namespace Win32xx
             SendMessage(TB_ADDBUTTONS, (WPARAM)1, (LPARAM)&tbb);
 
             // Add the menu title to the string table.
-            std::vector<TCHAR> menuName( WXX_MAX_MENU_STRING+1, _T('\0') );
+            std::vector<TCHAR> menuName(WXX_MAX_STRING_SIZE +1, _T('\0') );
             TCHAR* pMenuName = &menuName[0];
-            GetMenuString(menu, i, pMenuName, WXX_MAX_MENU_STRING, MF_BYPOSITION);
+            GetMenuString(menu, i, pMenuName, WXX_MAX_STRING_SIZE, MF_BYPOSITION);
             SetButtonText(i + maxedOffset, pMenuName);
         }
     }

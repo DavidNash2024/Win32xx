@@ -113,7 +113,7 @@ namespace Win32xx
         MenuItemData() : menu(0), pos(0)
         {
             ZeroMemory(&mii, GetSizeofMenuItemInfo());
-            itemText.assign(WXX_MAX_MENU_STRING, _T('\0'));
+            itemText.assign(WXX_MAX_STRING_SIZE, _T('\0'));
         }
         LPTSTR GetItemText() {return &itemText[0];}
 
@@ -355,7 +355,7 @@ namespace Win32xx
         CSize size;
 
         // Add icon/check width.
-        size.cx += m_sizeCheck.cx + m_marCheckBackground.Width() + m_marCheck.Width();
+        size.cx += m_sizeCheck.cx + m_marCheck.Width();
 
         if (pmd->mii.fType & MFT_SEPARATOR)
         {
