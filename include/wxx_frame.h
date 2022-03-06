@@ -183,7 +183,7 @@ namespace Win32xx
         virtual CReBar& GetReBar() const             { return m_reBar; }
         virtual CStatusBar& GetStatusBar() const     { return m_statusBar; }
         virtual CToolBar& GetToolBar() const         { return m_toolBar; }
-        virtual BOOL SetStatusText(LPCTSTR text, int part = 0, UINT style = 0) const;
+        virtual BOOL SetStatusPartText(int part, LPCTSTR text, UINT style = 0) const;
 
         // Non-virtual Accessors and mutators
         // These functions aren't virtual, and shouldn't be overridden.
@@ -212,7 +212,7 @@ namespace Win32xx
         void SetMRULimit(UINT MRULimit);
         void SetReBarTheme(const ReBarTheme& rbt);
         void SetStatusBarTheme(const StatusBarTheme& sbt);
-        void SetTitle(LPCTSTR text)                    { T::SetWindowText(text); }
+        void SetStatusText(LPCTSTR text);        void SetTitle(LPCTSTR text)                    { T::SetWindowText(text); }
         void SetToolBarTheme(const ToolBarTheme& tbt);
 
     protected:
@@ -2095,9 +2095,9 @@ namespace Win32xx
 
             if ((menu != T::GetMenu()) && (id != 0) && !(HIWORD(wparam) & MF_POPUP))
 
-                SetStatusText(LoadString(id));
+                SetStatusPartText(0, LoadString(id));
             else
-                SetStatusText(m_statusText);
+                SetStatusPartText(0, m_statusText);
         }
 
         return 0;
@@ -2746,7 +2746,7 @@ namespace Win32xx
     // SBT_RTLREADING    The text will be displayed in the opposite direction to the text in the parent window.
     // Refer to SB_SETTEXT in the Windows API documentation for more information.
     template <class T>
-    BOOL  CFrameT<T>::SetStatusText(LPCTSTR text, int part, UINT style) const
+    BOOL CFrameT<T>::SetStatusPartText(int part, LPCTSTR text, UINT style) const
     { 
         return GetStatusBar().SetPartText(part, text, style);
     }
@@ -2801,13 +2801,26 @@ namespace Win32xx
             CString status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? scrl: CString("");
 
             // Only update indicators if the text has changed.
-            if (status1 != m_oldStatus[0])  SetStatusText(status1, 1);
-            if (status2 != m_oldStatus[1])  SetStatusText(status2, 2);
-            if (status3 != m_oldStatus[2])  SetStatusText(status3, 3);
+            if (status1 != m_oldStatus[0])  SetStatusPartText(1, status1);
+            if (status2 != m_oldStatus[1])  SetStatusPartText(2, status2);
+            if (status3 != m_oldStatus[2])  SetStatusPartText(3, status3);
 
             m_oldStatus[0] = status1;
             m_oldStatus[1] = status2;
             m_oldStatus[2] = status3;
+        }
+    }
+
+    // Stores the status text and displays it in the StatusBar.
+    template <class T>
+    inline void CFrameT<T>::SetStatusText(LPCTSTR text)
+    {
+        m_statusText = text;
+
+        if (GetStatusBar().IsWindow())
+        {
+            // Place text in the 1st pane
+            SetStatusPartText(0, m_statusText);
         }
     }
 
