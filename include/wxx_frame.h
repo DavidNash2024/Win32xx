@@ -2747,7 +2747,7 @@ namespace Win32xx
     // Refer to SB_SETTEXT in the Windows API documentation for more information.
     template <class T>
     BOOL CFrameT<T>::SetStatusPartText(int part, LPCTSTR text, UINT style) const
-    { 
+    {
         return GetStatusBar().SetPartText(part, text, style);
     }
 

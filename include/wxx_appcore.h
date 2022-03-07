@@ -490,7 +490,7 @@ namespace Win32xx
         }
 
         SetnGetThis(0, true);
-        if (m_resource != 0)
+        if (m_resource != m_instance)
             ::FreeLibrary(m_resource);
 
         OleUninitialize();
@@ -765,12 +765,17 @@ namespace Win32xx
     // To use this function, place code like this in InitInstance
     //   HINSTANCE resource = LoadLibrary(_T("MyResourceDLL.dll"));
     //   SetResourceHandle(resource);
-    //
+    // A resource of 0 can be specified to revert the resource back to m_instance.
     // The resource is automatically freed when it is no longer required.
     inline void CWinApp::SetResourceHandle(HINSTANCE resource)
     {
-        if ((resource != m_resource) && (m_resource != 0))
+        // Free the current resource if appropriate.
+        if ((m_resource != resource) && (m_resource != m_instance))
             ::FreeLibrary(m_resource);
+
+        // Set the resources back to default.
+        if (resource == 0)
+            resource = m_instance;
 
         m_resource = resource;
     }
