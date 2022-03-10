@@ -26,6 +26,8 @@
 #define IDM_EDIT_DELETE                 135
 #define IDM_HELP_ABOUT                  140
 
+#define IDW_INDICATOR_OVR               150
+
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

@@ -183,7 +183,7 @@ namespace Win32xx
         virtual CReBar& GetReBar() const             { return m_reBar; }
         virtual CStatusBar& GetStatusBar() const     { return m_statusBar; }
         virtual CToolBar& GetToolBar() const         { return m_toolBar; }
-        virtual BOOL SetStatusPartText(int part, LPCTSTR text, UINT style = 0) const;
+        virtual void SetStatusParts();
 
         // Non-virtual Accessors and mutators
         // These functions aren't virtual, and shouldn't be overridden.
@@ -212,7 +212,8 @@ namespace Win32xx
         void SetMRULimit(UINT MRULimit);
         void SetReBarTheme(const ReBarTheme& rbt);
         void SetStatusBarTheme(const StatusBarTheme& sbt);
-        void SetStatusText(LPCTSTR text);        void SetTitle(LPCTSTR text)                    { T::SetWindowText(text); }
+        void SetStatusText(LPCTSTR text);
+        void SetTitle(LPCTSTR text)                    { T::SetWindowText(text); }
         void SetToolBarTheme(const ToolBarTheme& tbt);
 
     protected:
@@ -1863,6 +1864,7 @@ namespace Win32xx
                 GetFrameMenu().EnableMenuItem(IDW_VIEW_STATUSBAR, MF_GRAYED);
         }
 
+        SetStatusParts();
         SetStatusIndicators();
 
         // Create the view window.
@@ -2095,9 +2097,9 @@ namespace Win32xx
 
             if ((menu != T::GetMenu()) && (id != 0) && !(HIWORD(wparam) & MF_POPUP))
 
-                SetStatusPartText(0, LoadString(id));
+                GetStatusBar().SetPartText(0, LoadString(id));
             else
-                SetStatusPartText(0, m_statusText);
+                GetStatusBar().SetPartText(0, m_statusText);
         }
 
         return 0;
@@ -2409,6 +2411,8 @@ namespace Win32xx
         if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
         {
             VERIFY(GetStatusBar().SetWindowPos(0, 0, 0, 0, 0, SWP_SHOWWINDOW));
+
+            SetStatusParts();
             SetStatusIndicators();
         }
 
@@ -2737,20 +2741,6 @@ namespace Win32xx
         m_rbTheme = rbt;
     }
 
-    // Sets the text in the frame's status bar part.
-    // The Style parameter can be a combinations of:
-    // 0                 The text is drawn with a border to appear lower than the plane of the window.
-    // SBT_NOBORDERS     The text is drawn without borders.
-    // SBT_OWNERDRAW     The text is drawn by the parent window.
-    // SBT_POPOUT        The text is drawn with a border to appear higher than the plane of the window.
-    // SBT_RTLREADING    The text will be displayed in the opposite direction to the text in the parent window.
-    // Refer to SB_SETTEXT in the Windows API documentation for more information.
-    template <class T>
-    BOOL CFrameT<T>::SetStatusPartText(int part, LPCTSTR text, UINT style) const
-    {
-        return GetStatusBar().SetPartText(part, text, style);
-    }
-
     // Stores the statusbar's theme colors.
     template <class T>
     inline void CFrameT<T>::SetStatusBarTheme(const StatusBarTheme& sbt)
@@ -2764,51 +2754,59 @@ namespace Win32xx
     {
         if (GetStatusBar().IsWindow() && (IsUsingIndicatorStatus()))
         {
-            // Calculate the width of the text indicators
-            CClientDC statusDC(GetStatusBar());
-            statusDC.SelectObject(GetStatusBar().GetFont());
             CString cap = LoadString(IDW_INDICATOR_CAPS);
             CString num = LoadString(IDW_INDICATOR_NUM);
             CString scrl = LoadString(IDW_INDICATOR_SCRL);
-            CSize capSize = statusDC.GetTextExtentPoint32(cap, cap.GetLength());
-            CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
-            CSize scrlSize = statusDC.GetTextExtentPoint32(scrl, scrl.GetLength());
-
-            BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
-            int cxGripper = hasGripper? 20 : 0;
-            int cxBorder = 8;
-
-            // Adjust for DPI aware.
-            int defaultDPI = 96;
-            int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
-            cxGripper = MulDiv(cxGripper, xDPI, defaultDPI);
-            capSize.cx += cxBorder;
-            numSize.cx += cxBorder;
-            scrlSize.cx += cxBorder;
-
-            // Get the coordinates of the window's client area.
-            CRect clientRect = T::GetClientRect();
-            int width = MAX(300, clientRect.right);
-
-            // Create 4 panes
-            GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + scrlSize.cx + cxGripper));
-            GetStatusBar().SetPartWidth(1, capSize.cx);
-            GetStatusBar().SetPartWidth(2, numSize.cx);
-            GetStatusBar().SetPartWidth(3, scrlSize.cx);
 
             CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? cap : CString("");
             CString status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? num : CString("");
             CString status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? scrl: CString("");
 
             // Only update indicators if the text has changed.
-            if (status1 != m_oldStatus[0])  SetStatusPartText(1, status1);
-            if (status2 != m_oldStatus[1])  SetStatusPartText(2, status2);
-            if (status3 != m_oldStatus[2])  SetStatusPartText(3, status3);
+            if (status1 != m_oldStatus[0])  GetStatusBar().SetPartText(1, status1);
+            if (status2 != m_oldStatus[1])  GetStatusBar().SetPartText(2, status2);
+            if (status3 != m_oldStatus[2])  GetStatusBar().SetPartText(3, status3);
 
             m_oldStatus[0] = status1;
             m_oldStatus[1] = status2;
             m_oldStatus[2] = status3;
         }
+    }
+
+    template <class T>
+    inline void CFrameT<T>::SetStatusParts()
+    {
+        // Calculate the width of the text indicators
+        CClientDC statusDC(GetStatusBar());
+        statusDC.SelectObject(GetStatusBar().GetFont());
+        CString cap = LoadString(IDW_INDICATOR_CAPS);
+        CString num = LoadString(IDW_INDICATOR_NUM);
+        CString scrl = LoadString(IDW_INDICATOR_SCRL);
+        CSize capSize = statusDC.GetTextExtentPoint32(cap, cap.GetLength());
+        CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
+        CSize scrlSize = statusDC.GetTextExtentPoint32(scrl, scrl.GetLength());
+
+        BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
+        int cxGripper = hasGripper ? 20 : 0;
+        int cxBorder = 8;
+
+        // Adjust for DPI aware.
+        int defaultDPI = 96;
+        int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
+        cxGripper = MulDiv(cxGripper, xDPI, defaultDPI);
+        capSize.cx += cxBorder;
+        numSize.cx += cxBorder;
+        scrlSize.cx += cxBorder;
+
+        // Get the coordinates of the window's client area.
+        CRect clientRect = T::GetClientRect();
+        int width = MAX(300, clientRect.right);
+
+        // Create 4 panes
+        GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + scrlSize.cx + cxGripper));
+        GetStatusBar().SetPartWidth(1, capSize.cx);
+        GetStatusBar().SetPartWidth(2, numSize.cx);
+        GetStatusBar().SetPartWidth(3, scrlSize.cx);
     }
 
     // Stores the status text and displays it in the StatusBar.
@@ -2820,7 +2818,7 @@ namespace Win32xx
         if (GetStatusBar().IsWindow())
         {
             // Place text in the 1st pane
-            SetStatusPartText(0, m_statusText);
+            GetStatusBar().SetPartText(0, m_statusText);
         }
     }
 

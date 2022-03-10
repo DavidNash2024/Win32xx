@@ -14,25 +14,28 @@
 class CMyStatusBar : public CStatusBar
 {
 public:
-    CMyStatusBar() {}
-    virtual ~CMyStatusBar() {}
-
-    LRESULT OnDrawItem(UINT, WPARAM, LPARAM lparam);
-    void OnSize();
-    void OnTimer();
+    CMyStatusBar();
+    virtual ~CMyStatusBar();
+    void SetStatusIndicators();
+    void SetupParts();
 
 protected:
+    virtual void    OnAttach();
+    virtual BOOL    OnEraseBkgnd(CDC& dc);
     virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM);
-    virtual void OnAttach();
-    virtual BOOL OnEraseBkgnd(CDC& dc);
-    virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
-    void SetStatusParts();
-
 private:
+    int     AdjustForDPI(int value);
+    int     GetLinkWidth() const;
+    int     GetTextPartWidth(LPCTSTR text) const;
+    LRESULT OnDrawItem(UINT, WPARAM, LPARAM lparam);
+    void    OnSize();
+    void    OnTimer();
+
     CHyperlink m_hyperlink;
     CProgressBar m_progressBar;
+    CString m_ownerDraw;
 };
 
 

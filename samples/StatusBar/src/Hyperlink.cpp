@@ -28,7 +28,7 @@ void CHyperlink::OnAttach()
 {
     SetWindowText(_T("Win32++"));
     NONCLIENTMETRICS ncm = GetNonClientMetrics();
-    LOGFONT lf = ncm.lfMessageFont;
+    LOGFONT lf = ncm.lfStatusFont;
     lf.lfUnderline = TRUE;
     m_urlFont.CreateFontIndirect(lf);
 }

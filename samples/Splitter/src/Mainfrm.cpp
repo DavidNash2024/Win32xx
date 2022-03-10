@@ -73,7 +73,7 @@ CDocker* CMainFrame::NewDockerFromID(int id)
     return pDock;
 }
 
-// Responds to menu and toolbar input. 
+// Responds to menu and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
     UINT id = LOWORD(wparam);

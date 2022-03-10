@@ -7,7 +7,6 @@
 #include "resource.h"
 
 
-
 ///////////////////////////////////
 // CMainFrame function definitions.
 //
@@ -35,6 +34,12 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
+// Returns a reference to our CMyStatusbar member.
+// CFrame will now use our CMyStatusbar member, instead of its CStatusbar member.
+CStatusBar& CMainFrame::GetStatusBar() const
+{
+    return m_myStatusBar;
+}
 
 // OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
@@ -57,8 +62,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // Use the following functions to disable options.
 
-       UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
-       UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
+    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
+    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
     // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
@@ -105,6 +110,18 @@ void CMainFrame::SetupToolBar()
 
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
+}
+
+// Updates the status indicators.
+void CMainFrame::SetStatusIndicators()
+{
+    m_myStatusBar.SetStatusIndicators();
+}
+
+// Override the base class function to disable it.
+// The status will call SetParts when it is resized.
+void CMainFrame::SetStatusParts()
+{
 }
 
 // Process the frame's window messages.
