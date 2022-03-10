@@ -1166,7 +1166,7 @@ UpdateMRUMenu()                                                             /*
     {
           // create the MRU "show" list, which contains only strings
           // of limited length, chars removed at the midpoint, as needed
-        int maxlen = WXX_MAX_MENU_STRING - 10;
+        int maxlen = WXX_MAX_STRING_SIZE - 10;
         int mid = maxlen / 2;
         CString strMRUShow[16];
         for (int i = 0; i <= last; i++)

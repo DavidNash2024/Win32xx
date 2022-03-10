@@ -22,10 +22,12 @@ public:
     BOOL    OnFileExit();
 
 protected:
-    virtual CStatusBar& GetStatusBar() const    { return m_myStatusBar; }
+    virtual CStatusBar& GetStatusBar() const;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
+    virtual void    SetStatusIndicators();
+    virtual void    SetStatusParts();
     virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

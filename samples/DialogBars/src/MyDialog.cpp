@@ -55,7 +55,7 @@ BOOL CMyDialog::OnHScroll(WPARAM wparam, LPARAM lparam)
 {
     HWND wnd = reinterpret_cast<HWND>(lparam);
     int pos = 0;
-    BOOL isSlider = (wnd == m_slider.GetHwnd());
+    bool isSlider = (wnd == m_slider.GetHwnd());
 
     if (isSlider)
         pos = m_slider.GetPos();

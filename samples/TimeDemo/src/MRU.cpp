@@ -195,7 +195,7 @@ UpdateMenu()                                                                /*
     {
           // create the MRU "show" list, which contains only strings
           // of limited length, chars removed at the midpoint, as needed
-        int maxLength = WXX_MAX_MENU_STRING - 10;
+        int maxLength = WXX_MAX_STRING_SIZE - 10;
         int mid = maxLength / 2;
 
         std::vector<CString> Names(m_maxMRU);

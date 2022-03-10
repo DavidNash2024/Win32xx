@@ -21,12 +21,12 @@ class CHyperlink :  public CStatic
 public:
     CHyperlink();
     virtual ~CHyperlink();
-    virtual void OnAttach();
     LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
 
 protected:
+    virtual void OnAttach();
     virtual void OpenUrl();
     virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);

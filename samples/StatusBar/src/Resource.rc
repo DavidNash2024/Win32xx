@@ -154,10 +154,11 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                "StatusBar Demo"
-//    IDW_INDICATOR_CAPS      "CAP"
-//    IDW_INDICATOR_NUM       "NUM"
-//    IDW_INDICATOR_SCRL      "SCRL"
-//    IDW_READY               "Ready"
+    IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_NUM       "NUM"
+    IDW_INDICATOR_OVR       "OVR"
+    IDW_INDICATOR_SCRL      "SCRL"
+    IDW_READY               "Ready"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
 END
