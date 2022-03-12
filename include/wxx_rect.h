@@ -45,6 +45,7 @@
 
 #include <winsock2.h>       // must include before windows.h
 #include <windows.h>        // For SIZE, POINT, RECT etc.
+#include "wxx_setup.h"      // For VERIFY
 
 
 // define useful macros from WindowsX.h
@@ -77,8 +78,8 @@ namespace Win32xx
 
         // Operators
         operator LPSIZE()                   { return this; }
-        bool operator == (SIZE sz) const    { return (cx == sz.cx && cy == sz.cy); }
-        bool operator != (SIZE sz) const    { return (cx != sz.cx || cy != sz.cy); }
+        bool operator == (CSize sz) const   { return (cx == sz.cx && cy == sz.cy); }
+        bool operator != (CSize sz) const   { return (cx != sz.cx || cy != sz.cy); }
         void operator += (SIZE sz)          { cx += sz.cx; cy += sz.cy; }
         void operator -= (SIZE sz)          { cx -= sz.cx; cy -= sz.cy; }
 
@@ -116,8 +117,8 @@ namespace Win32xx
 
         // Operators
         operator LPPOINT()                  { return this; }
-        bool operator == (POINT pt) const   { return ((x == pt.x) && (y == pt.y)); }
-        bool operator != (POINT pt) const   { return ((x != pt.x) || (y != pt.y)); }
+        bool operator == (CPoint pt) const  { return ((x == pt.x) && (y == pt.y)); }
+        bool operator != (CPoint pt) const  { return ((x != pt.x) || (y != pt.y)); }
         void operator += (SIZE sz)          { x += sz.cx; y += sz.cy; }
         void operator -= (SIZE sz)          { x -= sz.cx; y -= sz.cy; }
         void operator += (POINT pt)         { x += pt.x; y += pt.y; }
@@ -191,8 +192,8 @@ namespace Win32xx
         // operators
         operator LPRECT()                           { return this; }
         operator LPCRECT() const                    { return this; }
-        bool operator == (const RECT& rc) const     { return (::EqualRect(this, &rc) != 0); }
-        bool operator != (const RECT& rc) const     { return (::EqualRect(this, &rc) == 0); }
+        bool operator == (const CRect& rc) const    { return (::EqualRect(this, &rc) != 0); }
+        bool operator != (const CRect& rc) const    { return (::EqualRect(this, &rc) == 0); }
         void operator += (POINT pt)                 { ::OffsetRect(this, pt.x, pt.y); }
         void operator += (SIZE size)                { ::OffsetRect(this, size.cx, size.cy); }
         void operator += (LPCRECT prc)              { ::InflateRect(this, prc->right - prc->left, prc->bottom - prc->top); }

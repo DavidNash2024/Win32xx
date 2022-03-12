@@ -611,8 +611,9 @@ namespace Win32xx
     // Refer to TB_HITTEST in the Windows API documentation for more information.
     inline int CToolBar::HitTest() const
     {
-        // We do our own hit test since TB_HITTEST is a bit buggy,
-        // and also doesn't work at all on earliest versions of Win95.
+        // We do our own hit test since TB_HITTEST on some older operating
+        // systems is a bit buggy, and it is not provided on the earliest
+        // versions of Win95.
 
         assert(IsWindow());
         CPoint pos = GetCursorPos();

@@ -264,13 +264,9 @@ namespace Win32xx
     // Returns the CWnd to its default state.
     inline void CWnd::Cleanup()
     {
-        assert(!IsWindow());
-        if (!IsWindow())
-        {
-            RemoveFromMap();
-            m_wnd = 0;
-            m_prevWindowProc = 0;
-        }
+        RemoveFromMap();
+        m_wnd = 0;
+        m_prevWindowProc = 0;
     }
 
     // Creates the window with default parameters. The PreRegisterClass and PreCreate
