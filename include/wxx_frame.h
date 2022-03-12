@@ -333,7 +333,6 @@ namespace Win32xx
         CImageList m_toolBarImages;         // Image list for the ToolBar buttons
         CImageList m_toolBarDisabledImages; // Image list for the Disabled ToolBar buttons
         CImageList m_toolBarHotImages;      // Image list for the Hot ToolBar buttons
-        CString m_oldStatus[3];             // Array of CString holding old status;
         CString m_keyName;                  // CString for Registry key name
         CString m_statusText;               // CString for status text
         CString m_tooltip;                  // CString for tool tips
@@ -1808,7 +1807,7 @@ namespace Win32xx
         SetAccelerators(IDW_MAIN);
 
         // Set the Caption.
-        T::SetWindowText(LoadString(IDW_MAIN));
+        SetTitle(LoadString(IDW_MAIN));
 
         // Set the theme for the frame elements.
         SetTheme();
@@ -1829,12 +1828,14 @@ namespace Win32xx
 
         // Setup the menu
         CMenu menu(IDW_MAIN);
-        SetFrameMenu(menu); // 0 if IDW_MAIN menu resource is missing.
         if (::IsMenu(menu))
         {
+            SetFrameMenu(menu);
             if (m_maxMRU > 0)
                 UpdateMRUMenu();
         }
+        else
+            SetFrameMenu(0);  // No menu if IDW_MAIN menu resource isn't defined.
 
         // Create the ToolBar
         if (IsUsingToolBar())
@@ -1856,7 +1857,9 @@ namespace Win32xx
             GetStatusBar().Create(*this);
             GetStatusBar().SetFont(m_statusBarFont, FALSE);
             ShowStatusBar(GetInitValues().showStatusBar);
-            SetStatusText(LoadString(IDW_READY)); // No text if IDW_READY string resource is missing.
+            CString status = LoadString(IDW_READY);
+            if (!status.IsEmpty())     // Is the IDW_READY string resource defined?
+                SetStatusText(status);
         }
         else
         {
@@ -2748,7 +2751,7 @@ namespace Win32xx
         m_sbTheme = sbt;
     }
 
-    // Creates 4 panes in the status bar and displays status and key states.
+    // Displays the caps lock, mum lock, and scroll lock key states.
     template <class T>
     inline void CFrameT<T>::SetStatusIndicators()
     {
@@ -2762,17 +2765,14 @@ namespace Win32xx
             CString status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? num : CString("");
             CString status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? scrl: CString("");
 
-            // Only update indicators if the text has changed.
-            if (status1 != m_oldStatus[0])  GetStatusBar().SetPartText(1, status1);
-            if (status2 != m_oldStatus[1])  GetStatusBar().SetPartText(2, status2);
-            if (status3 != m_oldStatus[2])  GetStatusBar().SetPartText(3, status3);
-
-            m_oldStatus[0] = status1;
-            m_oldStatus[1] = status2;
-            m_oldStatus[2] = status3;
+            // Update the indicators text.
+            GetStatusBar().SetPartText(1, status1);
+            GetStatusBar().SetPartText(2, status2);
+            GetStatusBar().SetPartText(3, status3);
         }
     }
 
+    // Creates and resizes the 4 parts in the status bar.
     template <class T>
     inline void CFrameT<T>::SetStatusParts()
     {

@@ -35,17 +35,6 @@ int CMyStatusBar::AdjustForDPI(int value)
     return value;
 }
 
-// Retrieves the width of the hyperlink window.
-int CMyStatusBar::GetLinkWidth() const
-{
-    CString str = m_hyperlink.GetWindowText();
-    CClientDC dc = m_hyperlink.GetDC();
-    CSize textSize = dc.GetTextExtentPoint32(str);
-    int textWidth = textSize.cx;
-
-    return textWidth;
-}
-
 // Retrieves the width of the part required to contain the specified text.
 int CMyStatusBar::GetTextPartWidth(LPCTSTR text) const
 {
@@ -213,6 +202,8 @@ void CMyStatusBar::SetupParts()
 
     // Reposition the hyperlink over part 1.
     CRect partRect = GetPartRect(1);
+    const int border = 2;
+    partRect.OffsetRect(border, 0);
     m_hyperlink.SetWindowPos(0, partRect, SWP_SHOWWINDOW);
 
     // Reposition the progress bar over part 2.

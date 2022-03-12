@@ -1089,7 +1089,8 @@ namespace Win32xx
     }
 
     // Paint the control manually.
-    // Microsoft's drawing for a tab control has quite a bit of flicker, so we do our own.
+    // Microsoft's drawing for a tab control has quite a bit of flicker on some
+    // of its operating systems, so we do our own.
     // We use double buffering and regions to eliminate flicker.
     inline void CTab::Paint()
     {

@@ -17,7 +17,6 @@ public:
     CMyStatusBar();
     virtual ~CMyStatusBar();
     void SetStatusIndicators();
-    void SetupParts();
 
 protected:
     virtual void    OnAttach();
@@ -27,11 +26,11 @@ protected:
 
 private:
     int     AdjustForDPI(int value);
-    int     GetLinkWidth() const;
     int     GetTextPartWidth(LPCTSTR text) const;
     LRESULT OnDrawItem(UINT, WPARAM, LPARAM lparam);
     void    OnSize();
     void    OnTimer();
+    void    SetupParts();
 
     CHyperlink m_hyperlink;
     CProgressBar m_progressBar;

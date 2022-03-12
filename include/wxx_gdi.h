@@ -1154,6 +1154,7 @@ namespace Win32xx
     inline void CGDIObject::Attach(HGDIOBJ object)
     {
         assert(m_pData);
+        CThreadLock mapLock(GetApp()->m_gdiLock);
 
         if (m_pData && object != m_pData->hGDIObject)
         {
@@ -1245,6 +1246,7 @@ namespace Win32xx
     inline void CGDIObject::Release()
     {
         assert(m_pData);
+        CThreadLock mapLock(GetApp()->m_gdiLock);
 
         if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
@@ -2525,6 +2527,7 @@ namespace Win32xx
     inline void CDC::Attach(HDC dc)
     {
         assert(m_pData);
+        CThreadLock mapLock(GetApp()->m_gdiLock);
 
         if (m_pData && dc != m_pData->dc)
         {
@@ -2713,6 +2716,9 @@ namespace Win32xx
     // Destroys m_pData if the reference count is zero.
     inline void CDC::Release()
     {
+        assert(m_pData);
+        CThreadLock mapLock(GetApp()->m_gdiLock);
+
         if (m_pData->count > 0)
         {
             if (InterlockedDecrement(&m_pData->count) == 0)

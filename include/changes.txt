@@ -97,7 +97,7 @@ Added template <class V>   CStringW ToCStringW(V)              global function
 Added template <class V>   CString  ToCString(V)               global function
 Added template <class V>   CString& operator << (CString&, V)  global function
 
-Modified CFrameT::SetStatusText - has additional parameters    member function
+Added CFrameT::SetStatusParts                                  member function
 
 Removed CString(int)                                           constructor
 Removed CString(double)                                        constructor
@@ -111,6 +111,8 @@ Removed CString& operator << (CString&, const TCHAR*)          global operator o
 Removed CString& operator << (CString&, TCHAR)                 global operator overload
 Removed CString& operator << (CString&, int)                   global operator overload
 Removed CString& operator << (CString&, double)                global operator overload
+
+Removed WXX_MAX_MENU_STRING                                    global constant
 
 Updated CFile::CFile        added attributes parameter         constructor
 Updated CFile::Open         added attributes parameter         member function
