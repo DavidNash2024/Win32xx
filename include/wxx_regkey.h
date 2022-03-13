@@ -77,7 +77,7 @@ namespace Win32xx
         LONG QueryDWORDValue(LPCTSTR valueName, DWORD& value) const;
         LONG QueryGUIDValue(LPCTSTR valueName, GUID& value) const;
         LONG QueryMultiStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
-        LONG QueryStringValue(LPCTSTR valueName, LPTSTR pValue, ULONG* chars) const;
+        LONG QueryStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
         LONG QueryValue(LPCTSTR valueName, DWORD* type, void* data, ULONG* bytes) const;
         LONG RecurseDeleteKey(LPCTSTR keyName) const;
         LONG SetBinaryValue(LPCTSTR valueName, const void* value, ULONG bytes) const;

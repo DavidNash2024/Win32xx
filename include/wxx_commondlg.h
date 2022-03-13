@@ -467,8 +467,8 @@ namespace Win32xx
     }
 
     // The pColors parameter is a pointer to an array of 16 COLORREF.
-    // If the pCustomColors is NULL, all custom colors are set to white,
-    // otherwise they are set to the colors specified in the pCustomColors array.
+    // If the pColors is NULL, all custom colors are set to white,
+    // otherwise they are set to the colors specified in the pColors array.
     inline void CColorDialog::SetCustomColors(const COLORREF* pColors /* = NULL */)
     {
         for (UINT i = 0; i < 16; i++)
@@ -623,6 +623,7 @@ namespace Win32xx
 
     // Display either a FileOpen or FileSave dialog, and allow the user to
     // select various options. An exception is thrown if the dialog isn't created.
+    //
     // If the OFN_ALLOWMULTISELECT flag is used, the size of the buffer required
     // to hold the file names can be quite large. An exception is thrown if the
     // buffer size specified by m_OFN.nMaxFile turns out to be too small.
@@ -667,7 +668,7 @@ namespace Win32xx
         return IDOK;
     }
 
-    // Return the name of the file that was entered in the DoModal() operation.
+    // Returns the name of the file that was entered in the DoModal() operation.
     // This name consists of only the file title and extension. If the
     // OFN_ALLOWMULTISELECT flag is specified, only the first file path selected
     // will be returned. If so, GetNextPathName can be used to retrieve subsequent
@@ -683,7 +684,7 @@ namespace Win32xx
         return fileName;
     }
 
-    // Return the file name's extension entered during the DoModal() operation.
+    // Returns the file name's extension entered during the DoModal() operation.
     // If the OFN_ALLOWMULTISELECT option set, only the extension on the first
     // file path selected will be returned.
     inline CString CFileDialog::GetFileExt() const
@@ -697,7 +698,7 @@ namespace Win32xx
         return fileExt;
     }
 
-    // Return the title of the file entered in the DoModal() operation. The
+    // Returns the title of the file entered in the DoModal() operation. The
     // title consists of the full path name with directory path and extension
     // removed.
     inline CString CFileDialog::GetFileTitle() const
@@ -710,7 +711,7 @@ namespace Win32xx
         return fileTitle;
     }
 
-    // Return the next file path name from a group of files selected. The
+    // Returns the next file path name from a group of files selected. The
     // OFN_ALLOWMULTISELECT flag allows multiple files to be selected. Use pos = 0
     // to retrieve the first file. The pos parameter is updated to point to the
     // next file name. The pos parameter is set to -1 when the last file is retrieved.
@@ -779,7 +780,7 @@ namespace Win32xx
         return pathName + _T('\\') + fileName;
     }
 
-    // Return the path name of the folder or directory of files retrieved
+    // Returns the path name of the folder or directory of files retrieved
     // from the dialog. The final character of the name includes the
     // directory separation character.
     inline CString CFileDialog::GetFolderPath() const
@@ -900,7 +901,7 @@ namespace Win32xx
     // Normally, this function is not needed because the framework provides
     // default checking of share violations and displays a message box if a
     // share violation occurs. The path of the file on which the share
-    // violation occurred is pPathName. To disable share violation checking,
+    // violation occurred is pathName. To disable share violation checking,
     // use the bitwise OR operator to combine the flag OFN_SHAREAWARE with
     // m_OFN.Flags.
 
@@ -911,8 +912,10 @@ namespace Win32xx
     //                    The application is responsible for displaying a warning message.
     // OFN_SHAREWARN    - Reject the file name and displays a warning message
     //                    (the same result as if there were no hook procedure).
-    inline LRESULT CFileDialog::OnShareViolation(LPCTSTR)
+    inline LRESULT CFileDialog::OnShareViolation(LPCTSTR pathName)
     {
+        UNREFERENCED_PARAMETER(pathName);
+
         return OFN_SHAREWARN; // default:
     }
 

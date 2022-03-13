@@ -129,7 +129,7 @@ namespace Win32xx
         void    PasteSpecial(UINT clipFormat, DWORD aspect = 0, HMETAFILE mf = 0) const;
         CPoint  PosFromChar(UINT fromChar) const;
         BOOL    Redo() const;
-        void    ReplaceSel(LPCTSTR pNewText, BOOL canUndo = FALSE) const;
+        void    ReplaceSel(LPCTSTR newText, BOOL canUndo = FALSE) const;
         void    RequestResize() const;
         BOOL    SetAutoURLDetect(BOOL enable = TRUE) const;
         COLORREF SetBackgroundColor(BOOL isSysColor, COLORREF color) const;
@@ -730,10 +730,10 @@ namespace Win32xx
 
     // Replaces the current selection with specified text.
     // Refer to EM_REPLACESEL in the Windows API documentation for more information.
-    inline void CRichEdit::ReplaceSel(LPCTSTR pNewText, BOOL canUndo /* = FALSE */) const
+    inline void CRichEdit::ReplaceSel(LPCTSTR newText, BOOL canUndo /* = FALSE */) const
     {
         assert(IsWindow());
-        SendMessage(EM_REPLACESEL, (WPARAM)canUndo, (LPARAM)pNewText);
+        SendMessage(EM_REPLACESEL, (WPARAM)canUndo, (LPARAM)newText);
     }
 
     // Forces the sending of a request resize notifications.

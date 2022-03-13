@@ -329,7 +329,7 @@ namespace Win32xx
     // Creates the window by specifying each parameter. The lpszClassName must
     //  be a predefined class name or registered with RegisterClass. A failure
     //  to create a window throws an exception.
-    inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName,
+    inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
                                DWORD style, const RECT& rc, HWND parent, UINT id,
                                LPVOID lparam /*= NULL*/)
     {
@@ -342,28 +342,28 @@ namespace Win32xx
         HMENU menu = parent ? reinterpret_cast<HMENU>(idMenu) :
                               ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(id));
 
-        return CreateEx(exStyle, pClassName, pWindowName, style, x, y, cx, cy, parent, menu, lparam);
+        return CreateEx(exStyle, className, windowName, style, x, y, cx, cy, parent, menu, lparam);
     }
 
     // Creates the window by specifying each parameter. The lpszClassName must
     //  be a predefined class name or registered with RegisterClass. A failure
     //  to create a window throws an exception.
-    inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName,
+    inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
                                DWORD style, int x, int y, int width, int height, HWND parent,
                                HMENU idOrMenu, LPVOID lparam /*= NULL*/)
     {
         assert( !IsWindow() );     // Only one window per CWnd instance allowed.
 
         // Ensure a window class is registered.
-        CString className;
-        if (pClassName == 0 || pClassName[0] == _T('\0'))
-            className = _T("Win32++ Window");
+        CString classString;
+        if (className == 0 || className[0] == _T('\0'))
+            classString = _T("Win32++ Window");
         else
-            className = pClassName;
+            classString = className;
 
         WNDCLASS wc;
         ZeroMemory(&wc, sizeof(wc));
-        wc.lpszClassName = className;
+        wc.lpszClassName = classString;
         wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
         wc.hCursor       = ::LoadCursor(0, IDC_ARROW);
 
@@ -382,7 +382,7 @@ namespace Win32xx
         m_wnd = 0;
 
         // Create window
-        HWND wnd = ::CreateWindowEx(exStyle, className, pWindowName, style, x, y, width, height,
+        HWND wnd = ::CreateWindowEx(exStyle, classString, windowName, style, x, y, width, height,
                                 parent, idOrMenu, GetApp()->GetInstanceHandle(), lparam);
 
         // Tidy up
@@ -395,9 +395,9 @@ namespace Win32xx
         }
 
         // Automatically subclass predefined window class types.
-        if (pClassName)
+        if (className)
         {
-            VERIFY(::GetClassInfo(GetApp()->GetInstanceHandle(), pClassName, &wc));
+            VERIFY(::GetClassInfo(GetApp()->GetInstanceHandle(), className, &wc));
             if (wc.lpfnWndProc != GetApp()->m_callback)
             {
                 Subclass(wnd);
@@ -2002,10 +2002,10 @@ namespace Win32xx
 
     // The SetWindowText function changes the text of the window's title bar (if it has one).
     // Refer to SetWindowText in the Windows API documentation for more information.
-    inline BOOL CWnd::SetWindowText(LPCTSTR string) const
+    inline BOOL CWnd::SetWindowText(LPCTSTR text) const
     {
         assert(IsWindow());
-        return ::SetWindowText(*this, string);
+        return ::SetWindowText(*this, text);
     }
 
     // Set the XP Theme for a window.

@@ -75,7 +75,7 @@ namespace Win32xx
     class CPropertyPage : public CDialog
     {
     public:
-        CPropertyPage (UINT templateID, LPCTSTR pTitle = NULL);
+        CPropertyPage (UINT templateID, LPCTSTR title = NULL);
         virtual ~CPropertyPage() {}
         virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual BOOL OnApply();
@@ -99,7 +99,7 @@ namespace Win32xx
         BOOL IsButtonEnabled(int button) const;
         LRESULT QuerySiblings(WPARAM wparam, LPARAM lparam) const;
         void SetModified(BOOL isChanged) const;
-        void SetTitle(LPCTSTR pTitle);
+        void SetTitle(LPCTSTR title);
         void SetWizardButtons(DWORD flags) const;
 
     private:
@@ -123,7 +123,7 @@ namespace Win32xx
     {
     public:
         CPropertySheet(UINT captionID, HWND parent = 0);
-        CPropertySheet(LPCTSTR pCaption = NULL, HWND parent = 0);
+        CPropertySheet(LPCTSTR caption = NULL, HWND parent = 0);
         virtual ~CPropertySheet() {}
 
         // Operations
@@ -147,7 +147,7 @@ namespace Win32xx
         BOOL SetActivePage(int page);
         BOOL SetActivePage(CPropertyPage* pPage);
         void SetIcon(UINT iconID);
-        void SetTitle(LPCTSTR pTitle);
+        void SetTitle(LPCTSTR title);
         void SetWizardMode(BOOL isWizard);
 
     protected:
@@ -178,10 +178,10 @@ namespace Win32xx
     // Definitions for the CPropertyPage class
     //
 
-    inline CPropertyPage::CPropertyPage(UINT templateID, LPCTSTR pTitle /* = 0*/) : CDialog(static_cast<UINT>(0))
+    inline CPropertyPage::CPropertyPage(UINT templateID, LPCTSTR title /* = 0*/) : CDialog(static_cast<UINT>(0))
     {
         ZeroMemory(&m_psp, sizeof(m_psp));
-        SetTitle(pTitle);
+        SetTitle(title);
 
         m_psp.dwSize        = sizeof(m_psp);
         m_psp.dwFlags       |= PSP_USECALLBACK;
@@ -427,11 +427,11 @@ namespace Win32xx
     }
 
     // Sets the title of the property page.
-    inline void CPropertyPage::SetTitle(LPCTSTR pTitle)
+    inline void CPropertyPage::SetTitle(LPCTSTR title)
     {
-        if (pTitle)
+        if (title)
         {
-            m_title = pTitle;
+            m_title = title;
             m_psp.dwFlags |= PSP_USETITLE;
         }
         else
@@ -529,10 +529,10 @@ namespace Win32xx
         m_psh.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
     }
 
-    inline CPropertySheet::CPropertySheet(LPCTSTR pCaption /*= NULL*/, HWND parent /* = 0*/)
+    inline CPropertySheet::CPropertySheet(LPCTSTR caption /*= NULL*/, HWND parent /* = 0*/)
     {
         ZeroMemory(&m_psh, sizeof (m_psh));
-        SetTitle(pCaption);
+        SetTitle(caption);
 
         if (GetComCtlVersion() >= 471)
             m_psh.dwSize = sizeof(PROPSHEETHEADER);
@@ -860,10 +860,10 @@ namespace Win32xx
     }
 
     // Sets the property sheet's title.
-    inline void CPropertySheet::SetTitle(LPCTSTR pTitle)
+    inline void CPropertySheet::SetTitle(LPCTSTR title)
     {
-        if (pTitle)
-            m_title = pTitle;
+        if (title)
+            m_title = title;
         else
             m_title.Empty();
 

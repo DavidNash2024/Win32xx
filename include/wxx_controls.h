@@ -70,7 +70,7 @@ namespace Win32xx
         virtual ~CAnimation() {}
 
         BOOL Close() const;
-        BOOL Open(LPCTSTR pPathName) const;
+        BOOL Open(LPCTSTR pathName) const;
         BOOL Play(int from, int to, int repeat) const;
         BOOL Seek(int frame) const;
         BOOL Stop() const;
@@ -102,7 +102,7 @@ namespace Win32xx
         void  Copy() const;
         void  Cut() const;
         int   DeleteString(int index) const;
-        int   Dir(UINT attr, LPCTSTR pWildCard ) const;
+        int   Dir(UINT attr, LPCTSTR wildCard ) const;
         int   FindString(int indexStart, LPCTSTR string) const;
         int   FindStringExact(int indexStart, LPCTSTR string) const;
         int   GetCount() const;
@@ -349,7 +349,7 @@ namespace Win32xx
         DWORD GetRange(SYSTEMTIME& minRange, SYSTEMTIME& maxRange) const;
         SYSTEMTIME GetTime(DWORD* pReturnCode = NULL) const;
         COLORREF SetMonthCalColor(int region, COLORREF color) const;
-        BOOL SetFormat(LPCTSTR pFormat) const;
+        BOOL SetFormat(LPCTSTR format) const;
         void SetMonthCalFont(HFONT font, BOOL redraw = TRUE) const;
         BOOL SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const;
         BOOL SetTime(const SYSTEMTIME& time) const;
@@ -596,10 +596,10 @@ namespace Win32xx
 
     // Opens an AVI clip and displays its first frame in an animation control.
     // Refer to Animate_Open in the Windows API documentation for more information.
-    inline BOOL CAnimation::Open(LPCTSTR pPathName) const
+    inline BOOL CAnimation::Open(LPCTSTR pathName) const
     {
         assert(IsWindow());
-        return Animate_Open(*this, const_cast<LPTSTR>(pPathName));
+        return Animate_Open(*this, const_cast<LPTSTR>(pathName));
     }
 
     // Plays an AVI clip in an animation control. The control plays the clip
@@ -1140,10 +1140,10 @@ namespace Win32xx
 
     // Sets the display of the date and time picker (DTP) control based on a given format string.
     // Refer to DateTime_SetFormat in the Windows API documentation for more information.
-    inline BOOL CDateTime::SetFormat(LPCTSTR pFormat) const
+    inline BOOL CDateTime::SetFormat(LPCTSTR format) const
     {
         assert(IsWindow());
-        return DateTime_SetFormat(*this, pFormat);
+        return DateTime_SetFormat(*this, format);
     }
 
     // Retrieves the handle to the date and time picker's (DTP) child month calendar control.

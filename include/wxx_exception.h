@@ -258,7 +258,7 @@ namespace Win32xx
     //
 
     // CFileException constructor
-    inline CFileException::CFileException(LPCTSTR pFilePath, int messageID) WXX_NOEXCEPT
+    inline CFileException::CFileException(LPCTSTR filePath, int messageID) WXX_NOEXCEPT
         : CException(messageID)
     {
         ZeroMemory(m_filePath, WXX_MAX_STRING_SIZE * sizeof(TCHAR));
@@ -266,11 +266,11 @@ namespace Win32xx
         // Display some text in the debugger.
         ::OutputDebugString(_T("*** CFileException thrown ***\n"));
 
-        if (pFilePath)
+        if (filePath)
         {
-            StrCopy(m_filePath, pFilePath, WXX_MAX_STRING_SIZE);
+            StrCopy(m_filePath, filePath, WXX_MAX_STRING_SIZE);
             ::OutputDebugString(_T("File name: "));
-            ::OutputDebugString(pFilePath);
+            ::OutputDebugString(filePath);
             ::OutputDebugString(_T("\n"));
         }
 
@@ -279,7 +279,7 @@ namespace Win32xx
     }
 
     // CFileException constructor
-    inline CFileException::CFileException(LPCTSTR pFilePath, LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
+    inline CFileException::CFileException(LPCTSTR filePath, LPCTSTR text /*= NULL*/, int messageID /*= 0*/) WXX_NOEXCEPT
         : CException(text, messageID)
     {
         ZeroMemory(m_filePath, WXX_MAX_STRING_SIZE * sizeof(TCHAR));
@@ -287,11 +287,11 @@ namespace Win32xx
         // Display some text in the debugger.
         ::OutputDebugString(_T("*** CFileException thrown ***\n"));
 
-        if (pFilePath)
+        if (filePath)
         {
-            StrCopy(m_filePath, pFilePath, WXX_MAX_STRING_SIZE);
+            StrCopy(m_filePath, filePath, WXX_MAX_STRING_SIZE);
             ::OutputDebugString(_T("File name: "));
-            ::OutputDebugString(pFilePath);
+            ::OutputDebugString(filePath);
             ::OutputDebugString(_T("\n"));
         }
 

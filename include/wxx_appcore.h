@@ -621,9 +621,9 @@ namespace Win32xx
 
     // Loads the cursor resource from the resource script (resource.rc)
     // Refer to LoadCursor in the Windows API documentation for more information.
-    inline HCURSOR CWinApp::LoadCursor(LPCTSTR pResourceName) const
+    inline HCURSOR CWinApp::LoadCursor(LPCTSTR resourceName) const
     {
-        return ::LoadCursor(GetResourceHandle(), pResourceName);
+        return ::LoadCursor(GetResourceHandle(), resourceName);
     }
 
     // Loads the cursor resource from the resource script (resource.rc)
@@ -637,17 +637,17 @@ namespace Win32xx
     // IDC_APPSTARTING, IDC_ARROW, IDC_CROSS, IDC_HAND, IDC_HELP, IDC_IBEAM, IDC_NO, IDC_SIZEALL,
     // IDC_SIZENESW, IDC_SIZENS, IDC_SIZENWSE, IDC_SIZEWE, IDC_UPARROW, IDC_WAIT
     // Refer to LoadCursor in the Windows API documentation for more information.
-    inline HCURSOR CWinApp::LoadStandardCursor(LPCTSTR pCursorName) const
+    inline HCURSOR CWinApp::LoadStandardCursor(LPCTSTR cursorName) const
     {
-        return ::LoadCursor(0, pCursorName);
+        return ::LoadCursor(0, cursorName);
     }
 
     // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values.
     // For other icon sizes, use the LoadImage windows API function.
     // Refer to LoadIcon in the Windows API documentation for more information.
-    inline HICON CWinApp::LoadIcon(LPCTSTR pResourceName) const
+    inline HICON CWinApp::LoadIcon(LPCTSTR resourceName) const
     {
-        return ::LoadIcon(GetResourceHandle(), pResourceName);
+        return ::LoadIcon(GetResourceHandle(), resourceName);
     }
 
     // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values.
@@ -661,9 +661,9 @@ namespace Win32xx
     // IDI_APPLICATION, IDI_ASTERISK, IDI_ERROR, IDI_EXCLAMATION,
     // IDI_HAND, IDI_INFORMATION, IDI_QUESTION, IDI_WARNING
     // Refer to LoadIcon in the Windows API documentation for more information.
-    inline HICON CWinApp::LoadStandardIcon(LPCTSTR pIconName) const
+    inline HICON CWinApp::LoadStandardIcon(LPCTSTR iconName) const
     {
-        return ::LoadIcon(0, pIconName);
+        return ::LoadIcon(0, iconName);
     }
 
     // Loads an icon, cursor, animated cursor, or bitmap image.
@@ -673,9 +673,9 @@ namespace Win32xx
     // LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
     // Ideally the image should be destroyed unless it is loaded with LR_SHARED.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline HANDLE CWinApp::LoadImage(LPCTSTR pResourceName, UINT type, int cx, int cy, UINT flags) const
+    inline HANDLE CWinApp::LoadImage(LPCTSTR resourceName, UINT type, int cx, int cy, UINT flags) const
     {
-        return ::LoadImage(GetResourceHandle(), pResourceName, type, cx, cy, flags);
+        return ::LoadImage(GetResourceHandle(), resourceName, type, cx, cy, flags);
     }
 
     // Loads an icon, cursor, animated cursor, or bitmap.
@@ -714,21 +714,21 @@ namespace Win32xx
         WNDCLASS defaultWC;
         ZeroMemory(&defaultWC, sizeof(defaultWC));
 
-        LPCTSTR pClassName    = _T("Win32++ Temporary Window Class");
+        LPCTSTR className    = _T("Win32++ Temporary Window Class");
         defaultWC.hInstance     = GetInstanceHandle();
         defaultWC.lpfnWndProc   = CWnd::StaticWindowProc;
-        defaultWC.lpszClassName = pClassName;
+        defaultWC.lpszClassName = className;
 
         VERIFY(::RegisterClass(&defaultWC));
 
         // Retrieve the class information
         ZeroMemory(&defaultWC, sizeof(defaultWC));
-        VERIFY(::GetClassInfo(GetInstanceHandle(), pClassName, &defaultWC));
+        VERIFY(::GetClassInfo(GetInstanceHandle(), className, &defaultWC));
 
         // Save the callback address of CWnd::StaticWindowProc
         assert(defaultWC.lpfnWndProc);  // Assert fails when running UNICODE build on ANSI OS.
         m_callback = defaultWC.lpfnWndProc;
-        VERIFY(::UnregisterClass(pClassName, GetInstanceHandle()));
+        VERIFY(::UnregisterClass(className, GetInstanceHandle()));
     }
 
     // Sets the current cursor and returns the previous one.

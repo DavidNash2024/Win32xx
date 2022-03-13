@@ -212,17 +212,17 @@ namespace Win32xx
       public:
         CBitmap();
         CBitmap(HBITMAP bitmap);
-        CBitmap(LPCTSTR pResName);
+        CBitmap(LPCTSTR resourceName);
         CBitmap(int resourceID);
         operator HBITMAP() const;
         virtual ~CBitmap();
 
         // Create and load methods
-        BOOL LoadBitmap(LPCTSTR pResName);
+        BOOL LoadBitmap(LPCTSTR resourceName);
         BOOL LoadBitmap(int id);
-        BOOL LoadImage(LPCTSTR pResName, UINT flags = 0);
+        BOOL LoadImage(LPCTSTR resourceName, UINT flags = 0);
         BOOL LoadImage(UINT id, UINT flags = 0);
-        BOOL LoadImage(LPCTSTR pResName, int cxDesired, int cyDesired, UINT flags);
+        BOOL LoadImage(LPCTSTR resourceName, int cxDesired, int cyDesired, UINT flags);
         BOOL LoadImage(UINT id, int cxDesired, int cyDesired, UINT flags);
         BOOL LoadOEMBitmap(UINT bitmapID);
         HBITMAP CopyImage(HBITMAP origBitmap, int cxDesired = 0, int cyDesired = 0, UINT fuFlags = 0);
@@ -958,12 +958,12 @@ namespace Win32xx
             }
         }
 
-        void Create(LPCTSTR pFilename = NULL)
+        void Create(LPCTSTR fileName = NULL)
         {
             try
             {
                 assert(GetHDC() == 0);
-                HDC dc = ::CreateMetaFile(pFilename);
+                HDC dc = ::CreateMetaFile(fileName);
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiDC());
 
@@ -1007,12 +1007,12 @@ namespace Win32xx
             }
         }
 
-        void CreateEnhanced(HDC ref, LPCTSTR pFileName, const RECT* pBounds, LPCTSTR pDescription)
+        void CreateEnhanced(HDC ref, LPCTSTR fileName, const RECT* pBounds, LPCTSTR description)
         {
             try
             {
                 assert(GetHDC() == 0);
-                HDC dc = ::CreateEnhMetaFile(ref, pFileName, pBounds, pDescription);
+                HDC dc = ::CreateEnhMetaFile(ref, fileName, pBounds, description);
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiDC());
 
@@ -1303,14 +1303,14 @@ namespace Win32xx
         Attach(bitmap);
     }
 
-    inline CBitmap::CBitmap(LPCTSTR pResName)
+    inline CBitmap::CBitmap(LPCTSTR resourceName)
     {
-        LoadBitmap(pResName);
+        LoadBitmap(resourceName);
     }
 
-    inline CBitmap::CBitmap(int resID)
+    inline CBitmap::CBitmap(int resourceID)
     {
-        LoadBitmap(resID);
+        LoadBitmap(resourceID);
     }
 
     inline CBitmap::operator HBITMAP() const
@@ -1324,16 +1324,16 @@ namespace Win32xx
 
     // Loads a bitmap from a resource using the resource ID.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadBitmap(int resID)
+    inline BOOL CBitmap::LoadBitmap(int resourceID)
     {
-        return LoadBitmap(MAKEINTRESOURCE(resID));
+        return LoadBitmap(MAKEINTRESOURCE(resourceID));
     }
 
     // Loads a bitmap from a resource using the resource string.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadBitmap(LPCTSTR pResName)
+    inline BOOL CBitmap::LoadBitmap(LPCTSTR resourceName)
     {
-        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), pResName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR));
+        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), resourceName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR));
         if (bitmap != 0)
         {
             Attach(bitmap);
@@ -1358,9 +1358,9 @@ namespace Win32xx
 
     // Loads a bitmap from a resource using the resource string.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadImage(LPCTSTR pResName, UINT flags)
+    inline BOOL CBitmap::LoadImage(LPCTSTR resourceName, UINT flags)
     {
-        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), pResName, IMAGE_BITMAP, 0, 0, flags));
+        HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), resourceName, IMAGE_BITMAP, 0, 0, flags));
         if (bitmap != 0)
         {
             Attach(bitmap);
@@ -1371,10 +1371,10 @@ namespace Win32xx
 
     // Loads a bitmap from a resource using the resource string.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadImage(LPCTSTR pResName, int cxDesired, int cyDesired, UINT flags)
+    inline BOOL CBitmap::LoadImage(LPCTSTR resourceName, int cxDesired, int cyDesired, UINT flags)
     {
         HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(),
-                                       pResName, IMAGE_BITMAP, cxDesired, cyDesired, flags));
+                                       resourceName, IMAGE_BITMAP, cxDesired, cyDesired, flags));
         if (bitmap != 0)
         {
             Attach(bitmap);
@@ -2618,10 +2618,10 @@ namespace Win32xx
 
     // Returns a device context (DC) for a device using the specified name.
     // Refer to CreateDC in the Windows API documentation for more information.
-    inline HDC CDC::CreateDC(LPCTSTR pDriver, LPCTSTR pDevice, LPCTSTR pOutput, const DEVMODE* pInitData)
+    inline HDC CDC::CreateDC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData)
     {
         assert(m_pData->dc == 0);
-        HDC dc = ::CreateDC(pDriver, pDevice, pOutput, pInitData);
+        HDC dc = ::CreateDC(driver, device, output, pInitData);
 
         if (dc == 0)
             throw CResourceException(GetApp()->MsgGdiDC());
@@ -2635,10 +2635,10 @@ namespace Win32xx
     // provides a fast way to get information about the device without creating a device context (DC).
     // However, GDI drawing functions cannot accept a handle to an information context.
     // Refer to CreateIC in the Windows API documentation for more information.
-    inline HDC CDC::CreateIC(LPCTSTR pDriver, LPCTSTR pDevice, LPCTSTR pOutput, const DEVMODE* pInitData)
+    inline HDC CDC::CreateIC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData)
     {
         assert(m_pData->dc == 0);
-        HDC dc = ::CreateIC(pDriver, pDevice, pOutput, pInitData);
+        HDC dc = ::CreateIC(driver, device, output, pInitData);
 
         if (dc == 0)
             throw CResourceException(GetApp()->MsgGdiIC());
@@ -3014,12 +3014,12 @@ namespace Win32xx
     // Loads a bitmap from the resource and selects it into the device context.
     // Returns TRUE if successful.
     // Refer to LoadBitmap in the Windows API documentation for more information.
-    inline BOOL CDC::LoadBitmap(LPCTSTR pResName)
+    inline BOOL CDC::LoadBitmap(LPCTSTR resourceName)
     {
         assert(m_pData->dc != 0);
 
         CBitmap bitmap;
-        BOOL isLoaded = bitmap.LoadBitmap(pResName);
+        BOOL isLoaded = bitmap.LoadBitmap(resourceName);
 
         if (isLoaded)
         {
@@ -3045,12 +3045,12 @@ namespace Win32xx
     // LR_LOADFROMFILE, LR_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED and LR_VGACOLOR.
     // Returns TRUE if successful.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CDC::LoadImage(LPCTSTR pResName, UINT flags)
+    inline BOOL CDC::LoadImage(LPCTSTR resourceName, UINT flags)
     {
         assert(m_pData->dc != 0);
 
         CBitmap bitmap;
-        BOOL IsLoaded = bitmap.LoadImage(pResName, flags);
+        BOOL IsLoaded = bitmap.LoadImage(resourceName, flags);
 
         if (IsLoaded)
         {

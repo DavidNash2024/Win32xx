@@ -139,7 +139,7 @@ namespace Win32xx
         int     HitTest( LVHITTESTINFO& hitTestInfo ) const;
         int     HitTest( CPoint pt, UINT* flags = NULL ) const;
         int     InsertColumn( int col, const LVCOLUMN& colInfo ) const;
-        int     InsertColumn( int col, LPCTSTR pColumnHeading, int format = LVCFMT_LEFT,
+        int     InsertColumn( int col, LPCTSTR columnHeading, int format = LVCFMT_LEFT,
                             int width = -1, int subItem = -1 ) const;
         int     InsertItem( const LVITEM& itemInfo ) const;
         int     InsertItem( int item, LPCTSTR text ) const;
@@ -886,7 +886,7 @@ namespace Win32xx
     //  LVCFMT_LEFT               Text is left-aligned.
     //  LVCFMT_RIGHT              Text is right-aligned.
     // Refer to ListView_InsertColumn in the Windows API documentation for more information.
-    inline int CListView::InsertColumn( int col, LPCTSTR pColumnHeading, int format /*= LVCFMT_LEFT*/,
+    inline int CListView::InsertColumn( int col, LPCTSTR columnHeading, int format /*= LVCFMT_LEFT*/,
                         int width /*= -1*/, int subItem /*= -1*/ ) const
     {
         assert(IsWindow());
@@ -906,7 +906,7 @@ namespace Win32xx
         }
 
         lvc.iOrder = col;
-        lvc.pszText = const_cast<LPTSTR>(pColumnHeading);
+        lvc.pszText = const_cast<LPTSTR>(columnHeading);
         lvc.fmt = format;
         lvc.iSubItem = subItem;
         return ListView_InsertColumn( *this, col, &lvc );

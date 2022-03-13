@@ -92,8 +92,8 @@ namespace Win32xx
     {
 
     public:
-        CDialog(UINT resID);
-        CDialog(LPCTSTR pResName);
+        CDialog(UINT resourceID);
+        CDialog(LPCTSTR resourceName);
         CDialog(LPCDLGTEMPLATE pDlgTemplate);
         virtual ~CDialog();
 
@@ -138,7 +138,7 @@ namespace Win32xx
         static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam, LPARAM lparam);
 
         BOOL m_isModal;                  // a flag for modal dialogs
-        LPCTSTR m_pResName;              // the resource name for the dialog
+        LPCTSTR m_resourceName;              // the resource name for the dialog
         LPCDLGTEMPLATE m_pDlgTemplate;   // the dialog template for indirect dialogs
     };
 
@@ -223,19 +223,19 @@ namespace Win32xx
     // Definitions for the CDialog class
     //
 
-    inline CDialog::CDialog(LPCTSTR pResName) : m_isModal(FALSE),
-                        m_pResName(pResName), m_pDlgTemplate(NULL)
+    inline CDialog::CDialog(LPCTSTR resourceName) : m_isModal(FALSE),
+                        m_resourceName(resourceName), m_pDlgTemplate(NULL)
     {
     }
 
-    inline CDialog::CDialog(UINT resID) : m_isModal(FALSE),
-                        m_pResName(MAKEINTRESOURCE (resID)), m_pDlgTemplate(NULL)
+    inline CDialog::CDialog(UINT resourceID) : m_isModal(FALSE),
+                        m_resourceName(MAKEINTRESOURCE (resourceID)), m_pDlgTemplate(NULL)
     {
     }
 
     // Constructor for indirect dialogs, created from a dialog box template in memory.
     inline CDialog::CDialog(LPCDLGTEMPLATE pDlgTemplate) : m_isModal(FALSE),
-                        m_pResName(NULL), m_pDlgTemplate(pDlgTemplate)
+                        m_resourceName(NULL), m_pDlgTemplate(pDlgTemplate)
     {
     }
 
@@ -429,7 +429,7 @@ namespace Win32xx
     inline INT_PTR CDialog::DoModal(HWND parent /* = 0 */)
     {
         assert(!IsWindow());        // Only one window per CWnd instance allowed
-        assert(m_pDlgTemplate || m_pResName);  // Dialog layout must be defined.
+        assert(m_pDlgTemplate || m_resourceName);  // Dialog layout must be defined.
 
         INT_PTR result = 0;
         m_isModal=TRUE;
@@ -452,9 +452,9 @@ namespace Win32xx
             result = ::DialogBoxIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
-            if (::FindResource(GetApp()->GetResourceHandle(), m_pResName, RT_DIALOG))
+            if (::FindResource(GetApp()->GetResourceHandle(), m_resourceName, RT_DIALOG))
                 instance = GetApp()->GetResourceHandle();
-            result = ::DialogBox(instance, m_pResName, parent, (DLGPROC)CDialog::StaticDialogProc);
+            result = ::DialogBox(instance, m_resourceName, parent, (DLGPROC)CDialog::StaticDialogProc);
         }
 
         // Tidy up
@@ -481,7 +481,7 @@ namespace Win32xx
     // Refer to CreateDialog and CreateDialogIndirect in the Windows API documentation for more information.
     inline HWND CDialog::DoModeless(HWND parent /* = 0 */)
     {
-        assert(m_pDlgTemplate || m_pResName);  // Dialog layout must be defined.
+        assert(m_pDlgTemplate || m_resourceName);  // Dialog layout must be defined.
 
         m_isModal=FALSE;
         m_wnd = 0;
@@ -500,10 +500,10 @@ namespace Win32xx
             wnd = ::CreateDialogIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
-            if (::FindResource(GetApp()->GetResourceHandle(), m_pResName, RT_DIALOG))
+            if (::FindResource(GetApp()->GetResourceHandle(), m_resourceName, RT_DIALOG))
                 instance = GetApp()->GetResourceHandle();
 
-            wnd = ::CreateDialog(instance, m_pResName, parent, (DLGPROC)CDialog::StaticDialogProc);
+            wnd = ::CreateDialog(instance, m_resourceName, parent, (DLGPROC)CDialog::StaticDialogProc);
         }
 
         // Tidy up

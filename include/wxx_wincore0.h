@@ -145,10 +145,10 @@ namespace Win32xx
         virtual BOOL AttachDlgItem(UINT id, HWND parent);
         virtual void CenterWindow() const;
         virtual HWND Create(HWND parent = 0);
-        virtual HWND CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName,
+        virtual HWND CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
                               DWORD style, int x, int y, int width, int height, HWND parent,
                               HMENU idOrMenu, LPVOID lparam = NULL);
-        virtual HWND CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName,
+        virtual HWND CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
                               DWORD style, const RECT& rectc, HWND parent, UINT id, LPVOID lparam = NULL);
         virtual void Destroy();
         virtual HWND Detach();
@@ -261,7 +261,7 @@ namespace Win32xx
         BOOL  SetWindowPos(HWND insertAfter, int x, int y, int cx, int cy, UINT flags) const;
         BOOL  SetWindowPos(HWND insertAfter, const RECT& rect, UINT flags) const;
         int   SetWindowRgn(HRGN rgn, BOOL redraw = TRUE) const;
-        BOOL  SetWindowText(LPCTSTR pString) const;
+        BOOL  SetWindowText(LPCTSTR text) const;
         HRESULT SetWindowTheme(LPCWSTR subAppName, LPCWSTR subIdList) const;
         BOOL  ShowWindow(int showCmd = SW_SHOWNORMAL) const;
         BOOL  UpdateWindow() const;
