@@ -158,7 +158,7 @@ namespace Win32xx
 
         // Operations
         BSTR     AllocSysString() const;
-        void     AppendFormat(const T* pFormat,...);
+        void     AppendFormat(const T* format,...);
         void     AppendFormat(UINT formatID, ...);
         void     Assign(const T* text, int count);
         int      Collate(const T* text) const;
@@ -586,13 +586,13 @@ namespace Win32xx
 
     // Appends formatted data to an the CStringT content.
     template <class T>
-    inline void CStringT<T>::AppendFormat(const T* pFormat,...)
+    inline void CStringT<T>::AppendFormat(const T* format,...)
     {
         CStringT str;
 
         va_list args;
-        va_start(args, pFormat);
-        str.FormatV(pFormat, args);
+        va_start(args, format);
+        str.FormatV(format, args);
         va_end(args);
 
         m_str.append(str);

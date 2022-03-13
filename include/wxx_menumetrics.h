@@ -224,7 +224,7 @@ namespace Win32xx
         HRESULT GetThemeTextExtent(HDC dc, int partID, int stateID, LPCWSTR text, int charCount, DWORD textFlags,
                                    LPCRECT pBoundingRect, LPRECT pExtentRect) const;
         BOOL    IsThemeBackgroundPartiallyTransparent(int partID, int stateID) const;
-        HANDLE  OpenThemeData(HWND wnd, LPCWSTR pClassList) const;
+        HANDLE  OpenThemeData(HWND wnd, LPCWSTR classList) const;
 
         HANDLE  m_theme;                // Theme handle
         HWND    m_frame;                // Handle to the frame window
@@ -559,11 +559,11 @@ namespace Win32xx
     }
 
     // Opens the theme data for a window and its associated class.
-    inline HANDLE CMenuMetrics::OpenThemeData(HWND wnd, LPCWSTR pClassList) const
+    inline HANDLE CMenuMetrics::OpenThemeData(HWND wnd, LPCWSTR classList) const
     {
         assert(wnd);
         if (m_pfnOpenThemeData)
-            return m_pfnOpenThemeData(wnd, pClassList);
+            return m_pfnOpenThemeData(wnd, classList);
 
         return 0;
     }

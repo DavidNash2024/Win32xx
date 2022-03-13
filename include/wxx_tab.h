@@ -103,9 +103,9 @@ namespace Win32xx
     public:
         CTab();
         virtual ~CTab();
-        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR pTabText, HICON icon, UINT tabID);
-        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR pTabText, int iconID, UINT tabID = 0);
-        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR pTabText);
+        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, HICON icon, UINT tabID);
+        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, int iconID, UINT tabID = 0);
+        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText);
         virtual CRect GetCloseRect() const;
         virtual CRect GetListRect() const;
         virtual CMenu& GetListMenu();
@@ -232,7 +232,7 @@ namespace Win32xx
     public:
         CTabbedMDI();
         virtual ~CTabbedMDI();
-        virtual CWnd* AddMDIChild(CWnd* pView, LPCTSTR pTabText, int mdiChildID = 0);
+        virtual CWnd* AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID = 0);
         virtual void  CloseActiveMDI();
         virtual void  CloseAllMDIChildren();
         virtual void  CloseMDIChild(int tab);
@@ -245,9 +245,9 @@ namespace Win32xx
         virtual CMenu& GetListMenu() const { return GetTab().GetListMenu(); }
         virtual void   ShowListDialog() { GetTab().ShowListDialog(); }
         virtual CTab& GetTab() const    { return m_tab; }
-        virtual BOOL LoadRegistrySettings(LPCTSTR pKeyName);
+        virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
         virtual void RecalcLayout();
-        virtual BOOL SaveRegistrySettings(LPCTSTR pKeyName);
+        virtual BOOL SaveRegistrySettings(LPCTSTR keyName);
         virtual void SetActiveMDIChild(CWnd* pWnd) const;
         virtual void SetActiveMDITab(int tab) const;
 
@@ -333,17 +333,17 @@ namespace Win32xx
     // and deletes the CWnd object when the tab is removed or destroyed.
     // Returns a pointer to the view window which was supplied.
     // Use RemoveTabPage to remove the tab and page added in this manner.
-    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, HICON icon, UINT tabID)
+    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR tabText, HICON icon, UINT tabID)
     {
         assert(pView);
-        assert(lstrlen(pTabText) < WXX_MAX_STRING_SIZE);
+        assert(lstrlen(tabText) < WXX_MAX_STRING_SIZE);
 
         m_tabViews.push_back(WndPtr(pView));
 
         TabPageInfo tpi;
         tpi.pView = pView;
         tpi.idTab = tabID;
-        tpi.TabText = pTabText;
+        tpi.TabText = tabText;
         if (icon != 0)
             tpi.image = GetODImageList().Add(icon);
         else
@@ -372,19 +372,19 @@ namespace Win32xx
     // The framework assumes ownership of the CWnd pointer provided,
     // and deletes the CWnd object when the tab is removed or destroyed.
     // Use RemoveTabPage to remove the tab and page added in this manner.
-    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText, int iconID, UINT tabID /* = 0*/)
+    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR tabText, int iconID, UINT tabID /* = 0*/)
     {
         HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
-        return AddTabPage(pView, pTabText, icon, tabID);
+        return AddTabPage(pView, tabText, icon, tabID);
     }
 
     // Adds a tab along with the specified view window.
     // The framework assumes ownership of the CWnd pointer provided,
     // and deletes the CWnd object when the tab is removed or destroyed.
     // Use RemoveTabPage to remove the tab and page added in this manner.
-    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR pTabText)
+    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR tabText)
     {
-        return AddTabPage(pView, pTabText, reinterpret_cast<HICON>(0), 0);
+        return AddTabPage(pView, tabText, reinterpret_cast<HICON>(0), 0);
     }
 
     // Draws the close button
@@ -1770,12 +1770,12 @@ namespace Win32xx
     // Adds a MDI tab, given a pointer to the view window, and the tab's text.
     // The framework assumes ownership of the CWnd pointer provided, and deletes
     // the CWnd object when the window is destroyed.
-    inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR pTabText, int mdiChildID /*= 0*/)
+    inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID /*= 0*/)
     {
         assert(pView); // Cannot add Null CWnd*
-        assert(lstrlen(pTabText) < WXX_MAX_STRING_SIZE);
+        assert(lstrlen(tabText) < WXX_MAX_STRING_SIZE);
 
-        GetTab().AddTabPage(pView, pTabText, 0, mdiChildID);
+        GetTab().AddTabPage(pView, tabText, 0, mdiChildID);
 
         // Fake a WM_MOUSEACTIVATE to propagate focus change to dockers
         if (IsWindow())
@@ -1880,13 +1880,13 @@ namespace Win32xx
     }
 
     // Load the MDI children layout from the registry.
-    inline BOOL CTabbedMDI::LoadRegistrySettings(LPCTSTR pKeyName)
+    inline BOOL CTabbedMDI::LoadRegistrySettings(LPCTSTR keyName)
     {
         BOOL isLoaded = FALSE;
 
-        if (pKeyName)
+        if (keyName)
         {
-            CString KeyName = _T("Software\\") + CString(pKeyName) + _T("\\MDI Children");
+            CString KeyName = _T("Software\\") + CString(keyName) + _T("\\MDI Children");
             CRegKey Key;
             if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName))
             {
@@ -2063,11 +2063,11 @@ namespace Win32xx
     }
 
     // Saves the MDI children layout in the registry.
-    inline BOOL CTabbedMDI::SaveRegistrySettings(LPCTSTR pKeyName)
+    inline BOOL CTabbedMDI::SaveRegistrySettings(LPCTSTR keyName)
     {
-        if (pKeyName)
+        if (keyName)
         {
-            CString KeyName = _T("Software\\") + CString(pKeyName);
+            CString KeyName = _T("Software\\") + CString(keyName);
             HKEY hKey = 0;
             HKEY hKeyMDIChild = 0;
 

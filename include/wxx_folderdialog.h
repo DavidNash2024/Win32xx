@@ -160,7 +160,7 @@ namespace Win32xx
         int  GetImageIndex() const           { return m_imageIndex; }
         int  GetFlags() const                { return m_flags; }
         void EnableOK(BOOL enable = TRUE);
-        void SetExpanded(LPCWSTR pPath);
+        void SetExpanded(LPCWSTR path);
         void SetExpanded(LPITEMIDLIST pItemIDList);
         void SetFlags(UINT flags) { m_flags = flags; }
         void SetOKText(LPCWSTR text);
@@ -345,9 +345,9 @@ namespace Win32xx
 
     // Specifies the path of a folder to expand in the Browse dialog box.
     // Refer to BFFM_SETEXPANDED in the Windows API documentation for more information.
-    inline void CFolderDialog::SetExpanded(LPCWSTR pPath)
+    inline void CFolderDialog::SetExpanded(LPCWSTR path)
     {
-        SendMessage(BFFM_SETEXPANDED, (WPARAM)TRUE, (LPARAM)pPath);
+        SendMessage(BFFM_SETEXPANDED, (WPARAM)TRUE, (LPARAM)path);
     }
 
     // Specifies the path of a folder to expand in the Browse dialog box.
@@ -379,9 +379,9 @@ namespace Win32xx
 
     // Specifies the path of a folder to select.
     // Refer to BFFM_SETSELECTION in the Windows API documentation for more information.
-    inline void CFolderDialog::SetSelection(LPCTSTR pPath)
+    inline void CFolderDialog::SetSelection(LPCTSTR path)
     {
-        SendMessage(BFFM_SETSELECTION, TRUE, (LPARAM)pPath);
+        SendMessage(BFFM_SETSELECTION, TRUE, (LPARAM)path);
     }
 
     // Sets the status text.
@@ -393,10 +393,10 @@ namespace Win32xx
     }
 
     // Sets the title of the browse for folder dialog.
-    inline void CFolderDialog::SetTitle(LPCTSTR pTitle)
+    inline void CFolderDialog::SetTitle(LPCTSTR title)
     {
-        if (pTitle)
-            m_title = pTitle;
+        if (title)
+            m_title = title;
         else
             m_title.Empty();
 

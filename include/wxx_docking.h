@@ -205,7 +205,7 @@ namespace Win32xx
         CWnd* GetView() const                 { return GetViewPage().GetView(); }
         void SetActiveContainer(CDockContainer* pContainer);
         void SetDocker(CDocker* pDocker)      { m_pDocker = pDocker; }
-        void SetDockCaption(LPCTSTR pCaption) { m_caption = pCaption; }
+        void SetDockCaption(LPCTSTR caption) { m_caption = caption; }
         void SetHideSingleTab(BOOL hideSingle);
         void SetTabIcon(HICON tabIcon)        { m_tabIcon = tabIcon; }
         void SetTabIcon(UINT iconID);
@@ -324,7 +324,7 @@ namespace Win32xx
             const CString& GetCaption() const     { return m_caption; }
             CWnd& GetView() const                 { assert (m_pView); return *m_pView; }
             void SetDocker(CDocker* pDocker)      { m_pDocker = pDocker;}
-            void SetCaption(LPCTSTR pCaption)     { m_caption = pCaption; }
+            void SetCaption(LPCTSTR caption)     { m_caption = caption; }
             void SetCaptionColors(COLORREF foregnd1, COLORREF backgnd1, COLORREF foreGnd2, COLORREF backGnd2, COLORREF penColor);
             void SetView(CWnd& view);
 
@@ -498,10 +498,10 @@ namespace Win32xx
         virtual void Dock(CDocker* pDocker, UINT dockSide);
         virtual void DockInContainer(CDocker* pDocker, DWORD dockStyle, BOOL selectPage = TRUE);
         virtual void Hide();
-        virtual BOOL LoadContainerRegistrySettings(LPCTSTR pRegistryKeyName);
-        virtual BOOL LoadDockRegistrySettings(LPCTSTR pRegistryKeyName);
+        virtual BOOL LoadContainerRegistrySettings(LPCTSTR registryKeyName);
+        virtual BOOL LoadDockRegistrySettings(LPCTSTR registryKeyName);
         virtual void RecalcDockLayout();
-        virtual BOOL SaveDockRegistrySettings(LPCTSTR pRegistryKeyName);
+        virtual BOOL SaveDockRegistrySettings(LPCTSTR registryKeyName);
         virtual void SaveContainerRegistrySettings(CRegKey& keyDock, CDockContainer* pContainer, UINT& container);
         virtual void Undock(CPoint pt, BOOL showUndocked = TRUE);
         virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL showUndocked);
@@ -543,7 +543,7 @@ namespace Win32xx
         BOOL IsUndockable() const;
         void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
         void SetBarWidth(int width) {GetDockBar().SetWidth(width);}
-        void SetCaption(LPCTSTR pCaption);
+        void SetCaption(LPCTSTR caption);
         void SetCaptionColors(COLORREF foregnd1, COLORREF backgnd1, COLORREF foreGnd2, COLORREF backGnd2, COLORREF penColor = RGB(160, 150, 140));
         void SetCaptionHeight(int height);
         void SetDockStyle(DWORD dockStyle);
@@ -2755,15 +2755,15 @@ namespace Win32xx
 
     // Recreates the docker layout based on information stored in the registry.
     // Assumes the DockAncestor window is already created.
-    inline BOOL CDocker::LoadDockRegistrySettings(LPCTSTR pRegistryKeyName)
+    inline BOOL CDocker::LoadDockRegistrySettings(LPCTSTR registryKeyName)
     {
         BOOL isLoaded = FALSE;
 
-        if (pRegistryKeyName)
+        if (registryKeyName)
         {
             std::vector<DockInfo> dockList;
             CString dockKeyName = _T("\\Dock Settings");
-            CString keyName = _T("Software\\") + CString(pRegistryKeyName) + dockKeyName;
+            CString keyName = _T("Software\\") + CString(registryKeyName) + dockKeyName;
             CRegKey key;
             if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName, KEY_READ))
             {
@@ -2850,7 +2850,7 @@ namespace Win32xx
                 CloseAllDockers();
 
                 // Delete the bad key from the registry.
-                CString parentKeyName = _T("Software\\") + CString(pRegistryKeyName);
+                CString parentKeyName = _T("Software\\") + CString(registryKeyName);
                 CRegKey parentKey;
                 if (ERROR_SUCCESS == parentKey.Open(HKEY_CURRENT_USER, parentKeyName, KEY_READ))
                     parentKey.RecurseDeleteKey(dockKeyName);
@@ -2859,20 +2859,20 @@ namespace Win32xx
         }
 
         if (isLoaded)
-            LoadContainerRegistrySettings(pRegistryKeyName);
+            LoadContainerRegistrySettings(registryKeyName);
 
         return isLoaded;
     }
 
     // Loads the information for CDockContainers from the registry.
-    inline BOOL CDocker::LoadContainerRegistrySettings(LPCTSTR pRegistryKeyName)
+    inline BOOL CDocker::LoadContainerRegistrySettings(LPCTSTR registryKeyName)
     {
         BOOL isLoaded = FALSE;
-        if (pRegistryKeyName)
+        if (registryKeyName)
         {
             // Load Dock container tab order and active container.
             CString dockKeyName = _T("\\Dock Settings");
-            CString keyName = _T("Software\\") + CString(pRegistryKeyName) + dockKeyName;
+            CString keyName = _T("Software\\") + CString(registryKeyName) + dockKeyName;
             CRegKey key;
 
             if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName, KEY_READ))
@@ -2960,7 +2960,7 @@ namespace Win32xx
                     CloseAllDockers();
 
                     // Delete the bad key from the registry.
-                    CString parentKeyName = _T("Software\\") + CString(pRegistryKeyName);
+                    CString parentKeyName = _T("Software\\") + CString(registryKeyName);
                     CRegKey parentKey;
                     if (ERROR_SUCCESS == parentKey.Open(HKEY_CURRENT_USER, parentKeyName, KEY_READ))
                         parentKey.RecurseDeleteKey(dockKeyName);
@@ -3756,17 +3756,17 @@ namespace Win32xx
 
     // Stores the docking configuration in the registry.
     // NOTE: This function assumes that each docker has a unique DockID.
-    inline BOOL CDocker::SaveDockRegistrySettings(LPCTSTR pRegistryKeyName)
+    inline BOOL CDocker::SaveDockRegistrySettings(LPCTSTR registryKeyName)
     {
         std::vector<CDocker*> sortedDockers = SortDockers();
         std::vector<CDocker*>::const_iterator iter;
         std::vector<DockInfo> allDockInfo;
 
-        if (pRegistryKeyName)
+        if (registryKeyName)
         {
             CRegKey key;
             CRegKey keyDock;
-            CString keyName = _T("Software\\") + CString(pRegistryKeyName);
+            CString keyName = _T("Software\\") + CString(registryKeyName);
             CString dockKeyName = _T("Dock Settings");
             try
             {
@@ -3975,12 +3975,12 @@ namespace Win32xx
     }
 
     // Sets the caption text.
-    inline void CDocker::SetCaption(LPCTSTR pCaption)
+    inline void CDocker::SetCaption(LPCTSTR caption)
     {
-        GetDockClient().SetCaption(pCaption);
+        GetDockClient().SetCaption(caption);
 
         if (IsWindow() && (this != GetDockAncestor()))
-            SetWindowText(pCaption);
+            SetWindowText(caption);
     }
 
     // Sets the caption's foreground and background colors.

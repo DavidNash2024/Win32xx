@@ -223,7 +223,7 @@ namespace Win32xx
         virtual BOOL AddMenuIcon(int menuItemID, HICON icon, int iconWidth = 16);
         virtual UINT AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID);
         virtual void AddMenuBarBand();
-        virtual void AddMRUEntry(LPCTSTR pMRUEntry);
+        virtual void AddMRUEntry(LPCTSTR MRUEntry);
         virtual void AddToolBarBand(CToolBar& tb, DWORD bandStyle, UINT id);
         virtual void AddToolBarButton(UINT id, BOOL isEnabled = TRUE, LPCTSTR text = 0, int image = -1);
         virtual void CreateToolBar();
@@ -239,8 +239,8 @@ namespace Win32xx
         virtual void DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDIS) const;
         virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const;
         virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const;
-        virtual int  GetMenuItemPos(HMENU menu, LPCTSTR pItem) const;
-        virtual BOOL LoadRegistrySettings(LPCTSTR pKeyName);
+        virtual int  GetMenuItemPos(HMENU menu, LPCTSTR itemName) const;
+        virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
         virtual BOOL LoadRegistryMRUSettings(UINT maxMRU = 0);
         virtual void MeasureMenuItem(MEASUREITEMSTRUCT* pMIS);
         virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -275,7 +275,7 @@ namespace Win32xx
         virtual BOOL    OnViewToolBar();
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
-        virtual void RemoveMRUEntry(LPCTSTR pMRUEntry);
+        virtual void RemoveMRUEntry(LPCTSTR MRUEntry);
         virtual BOOL SaveRegistryMRUSettings();
         virtual BOOL SaveRegistrySettings();
         virtual void SetMenuBarBandSize();
@@ -1498,7 +1498,7 @@ namespace Win32xx
 
     // Returns the position of the menu item, given it's name.
     template <class T>
-    inline int CFrameT<T>::GetMenuItemPos(HMENU menu, LPCTSTR pItem) const
+    inline int CFrameT<T>::GetMenuItemPos(HMENU menu, LPCTSTR itemName) const
     {
         int menuItemCount = ::GetMenuItemCount(menu);
         MENUITEMINFO mii;
@@ -1508,33 +1508,33 @@ namespace Win32xx
         for (int item = 0 ; item < menuItemCount; ++item)
         {
             std::vector<TCHAR> menuString(WXX_MAX_STRING_SIZE +1, _T('\0') );
-            TCHAR* pMenuString = &menuString[0];
+            TCHAR* menuName = &menuString[0];
 
             std::vector<TCHAR> strippedString(WXX_MAX_STRING_SIZE +1, _T('\0') );
             TCHAR* pStrippedString = &strippedString.front();
 
             mii.fMask      = MIIM_TYPE;
             mii.fType      = MFT_STRING;
-            mii.dwTypeData = pMenuString;
+            mii.dwTypeData = menuName;
             mii.cch        = WXX_MAX_STRING_SIZE;
 
             // Fill the contents of szStr from the menu item.
             if (::GetMenuItemInfo(menu, item, TRUE, &mii))
             {
-                int len = lstrlen(pMenuString);
+                int len = lstrlen(menuName);
                 if (len <= WXX_MAX_STRING_SIZE)
                 {
                     // Strip out any & characters.
                     int j = 0;
                     for (int i = 0; i < len; ++i)
                     {
-                        if (pMenuString[i] != _T('&'))
-                            pStrippedString[j++] = pMenuString[i];
+                        if (menuName[i] != _T('&'))
+                            pStrippedString[j++] = menuName[i];
                     }
                     pStrippedString[j] = _T('\0');   // Append null tchar.
 
                     // Compare the strings.
-                    if (lstrcmp(pStrippedString, pItem) == 0)
+                    if (lstrcmp(pStrippedString, itemName) == 0)
                         return item;
                 }
             }
@@ -1669,11 +1669,11 @@ namespace Win32xx
 
     // Loads various frame settings from the registry.
     template <class T>
-    inline BOOL CFrameT<T>::LoadRegistrySettings(LPCTSTR pKeyName)
+    inline BOOL CFrameT<T>::LoadRegistrySettings(LPCTSTR keyName)
     {
-        assert (NULL != pKeyName);
+        assert (NULL != keyName);
 
-        m_keyName = pKeyName;
+        m_keyName = keyName;
         CString strKey = _T("Software\\") + m_keyName + _T("\\Frame Settings");
         BOOL isOK = FALSE;
         InitValues values;
@@ -2452,12 +2452,12 @@ namespace Win32xx
 
     // Removes an entry from the MRU list.
     template <class T>
-    inline void CFrameT<T>::RemoveMRUEntry(LPCTSTR pMRUEntry)
+    inline void CFrameT<T>::RemoveMRUEntry(LPCTSTR MRUEntry)
     {
         std::vector<CString>::iterator it;
         for (it = m_mruEntries.begin(); it != m_mruEntries.end(); ++it)
         {
-            if ((*it) == pMRUEntry)
+            if ((*it) == MRUEntry)
             {
                 m_mruEntries.erase(it);
                 break;

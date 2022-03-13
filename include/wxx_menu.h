@@ -112,7 +112,7 @@ namespace Win32xx
         HMENU Detach();
 
         HMENU GetHandle() const;
-        BOOL LoadMenu(LPCTSTR pResName);
+        BOOL LoadMenu(LPCTSTR resourceName);
         BOOL LoadMenu(UINT resourceID);
         BOOL LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate);
 
@@ -121,13 +121,13 @@ namespace Win32xx
         BOOL TrackPopupMenuEx(UINT flags, int x, int y, HWND wnd, LPTPMPARAMS pTPMP) const;
 
         // Menu Item Operations
-        BOOL AppendMenu(UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL);
+        BOOL AppendMenu(UINT flags, UINT_PTR newItemID = 0, LPCTSTR newItemName = NULL);
         BOOL AppendMenu(UINT flags, UINT_PTR newItemID, HBITMAP bitmap);
         UINT CheckMenuItem(UINT checkItemID, UINT check) const;
         BOOL CheckMenuRadioItem(UINT firstID, UINT lastID, UINT itemID, UINT flags) const;
         BOOL DeleteMenu(UINT position, UINT flags) const;
         UINT EnableMenuItem(UINT enableItemID, UINT enable) const;
-        int FindMenuItem(LPCTSTR pMenuString) const;
+        int FindMenuItem(LPCTSTR menuName) const;
         UINT GetDefaultItem(UINT flags, BOOL byPosition = FALSE) const;
         DWORD GetMenuContextHelpId() const;
 
@@ -143,11 +143,11 @@ namespace Win32xx
         int GetMenuString(UINT itemID, LPTSTR string, int maxCount, UINT flags) const;
         int GetMenuString(UINT itemID, CString& string, UINT flags) const;
         CMenu GetSubMenu(int pos) const;
-        BOOL InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL) const;
+        BOOL InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID = 0, LPCTSTR newItemName = NULL) const;
         BOOL InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP bitmap) const;
         BOOL InsertMenuItem(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition = FALSE) const;
-        BOOL InsertPopupMenu(UINT pos, UINT flags, HMENU popupMenu, LPCTSTR pNewItem) const;
-        BOOL ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL) const;
+        BOOL InsertPopupMenu(UINT pos, UINT flags, HMENU popupMenu, LPCTSTR newItemName) const;
+        BOOL ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID = 0, LPCTSTR newItemName = NULL) const;
         BOOL ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP bitmap) const;
         BOOL RemoveMenu(UINT pos, UINT flags) const;
         BOOL SetDefaultItem(UINT item, BOOL byPosition = FALSE) const;
@@ -301,12 +301,12 @@ namespace Win32xx
 
     // Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.
     // Refer to AppendMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::AppendMenu(UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR pNewItem /*= NULL*/)
+    inline BOOL CMenu::AppendMenu(UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR newItemName /*= NULL*/)
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        return ::AppendMenu(m_pData->menu, flags, newItemID, pNewItem);
+        return ::AppendMenu(m_pData->menu, flags, newItemID, newItemName);
     }
 
     // Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.
@@ -473,7 +473,7 @@ namespace Win32xx
 
     // Finds the position of a menu item with the specified string.
     // Returns -1 if the string is not found.
-    inline int CMenu::FindMenuItem(LPCTSTR pMenuString) const
+    inline int CMenu::FindMenuItem(LPCTSTR menuName) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -484,7 +484,7 @@ namespace Win32xx
         {
             if (GetMenuString(i, str, MF_BYPOSITION))
             {
-                if (str == pMenuString)
+                if (str == menuName)
                     return i;
             }
         }
@@ -623,12 +623,12 @@ namespace Win32xx
 
     // Inserts a new menu item into a menu, moving other items down the menu.
     // Refer to InsertMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR pNewItem /*= NULL*/) const
+    inline BOOL CMenu::InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR newItemName /*= NULL*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        return ::InsertMenu(m_pData->menu, pos, flags, newItemID, pNewItem);
+        return ::InsertMenu(m_pData->menu, pos, flags, newItemID, newItemName);
     }
 
     // Inserts a new menu item into a menu, moving other items down the menu.
@@ -654,7 +654,7 @@ namespace Win32xx
 
     // Inserts a popup menu item at the specified position in the menu.
     // Refer to InsertMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::InsertPopupMenu(UINT pos, UINT flags, HMENU hPopupMenu, LPCTSTR pNewItem) const
+    inline BOOL CMenu::InsertPopupMenu(UINT pos, UINT flags, HMENU hPopupMenu, LPCTSTR newItemName) const
     {
         assert(hPopupMenu);
         assert(m_pData);
@@ -665,18 +665,18 @@ namespace Win32xx
         flags &= ~MF_OWNERDRAW;
         flags |= MF_POPUP;
 
-        return ::InsertMenu(m_pData->menu, pos, flags, (UINT_PTR)hPopupMenu, pNewItem);
+        return ::InsertMenu(m_pData->menu, pos, flags, (UINT_PTR)hPopupMenu, newItemName);
     }
 
     // Loads the menu from the specified windows resource.
     // Refer to LoadMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::LoadMenu(LPCTSTR pResName)
+    inline BOOL CMenu::LoadMenu(LPCTSTR resourceName)
     {
         assert(m_pData);
         assert(0 == m_pData->menu);
-        assert(pResName);
+        assert(resourceName);
 
-        HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), pResName);
+        HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), resourceName);
         if (menu != 0)
         {
             Attach(menu);
@@ -688,12 +688,12 @@ namespace Win32xx
 
     // Loads the menu from the specified windows resource.
     // Refer to LoadMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::LoadMenu(UINT resID)
+    inline BOOL CMenu::LoadMenu(UINT resourceID)
     {
         assert(m_pData);
         assert(m_pData->menu == 0);
 
-        HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(resID));
+        HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(resourceID));
         if (menu != 0)
         {
             Attach(menu);
@@ -722,12 +722,12 @@ namespace Win32xx
 
     // Changes an existing menu item. This function is used to specify the content, appearance, and behavior of the menu item.
     // Refer to ModifyMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR pNewItem /*= NULL*/) const
+    inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR newItemName /*= NULL*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        return ::ModifyMenu(m_pData->menu, pos, flags, newItemID, pNewItem);
+        return ::ModifyMenu(m_pData->menu, pos, flags, newItemID, newItemName);
     }
 
     // Changes an existing menu item. This function is used to specify the content, appearance, and behavior of the menu item.

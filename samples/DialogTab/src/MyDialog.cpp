@@ -249,7 +249,7 @@ BOOL CMyDialog::OnInitDialog()
     m_tab.SelectPage(0);
 
     // Add some checkmarks to buttons to the button dialog
-    m_pButtonDlg->CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO2);
+    m_pButtonDlg->CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
     m_pButtonDlg->CheckDlgButton(IDC_CHECK1, BST_CHECKED);
 
     return TRUE;

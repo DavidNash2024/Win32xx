@@ -130,7 +130,7 @@ namespace Win32xx
         int    LineIndex(int line = -1) const;
         int    LineLength(int line = -1) const;
         void   LineScroll(int lines, int chars = 0) const;
-        void   ReplaceSel(LPCTSTR pNewText, BOOL canUndo) const;
+        void   ReplaceSel(LPCTSTR newText, BOOL canUndo) const;
         void   SetPasswordChar(TCHAR ch) const;
         BOOL   SetReadOnly(BOOL isReadOnly = TRUE) const;
         void   SetRect(const RECT& rc) const;
@@ -629,10 +629,10 @@ namespace Win32xx
     // Replaces the current selection with the text in an application-supplied buffer, sends the parent window
     // EN_UPDATE and EN_CHANGE messages, and updates the undo buffer.
     // Refer to EM_REPLACESEL in the Windows API documentation for more information.
-    inline void CEdit::ReplaceSel(LPCTSTR pNewText, BOOL canUndo) const
+    inline void CEdit::ReplaceSel(LPCTSTR newText, BOOL canUndo) const
     {
         assert(IsWindow());
-        SendMessage(EM_REPLACESEL, (WPARAM)canUndo, (LPARAM)pNewText);
+        SendMessage(EM_REPLACESEL, (WPARAM)canUndo, (LPARAM)newText);
     }
 
     // Defines the character that edit controls use in conjunction with the ES_PASSWORD style.

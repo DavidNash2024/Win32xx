@@ -474,9 +474,9 @@ namespace Win32xx
 
     // Sets the task dialog's primary content.
     // Refer to TDM_SET_ELEMENT_TEXT in the Windows API documentation for more information.
-    inline void CTaskDialog::SetContent(LPCWSTR pContent)
+    inline void CTaskDialog::SetContent(LPCWSTR content)
     {
-        m_content = FillString(pContent);
+        m_content = FillString(content);
         m_tc.pszContent = m_content;
 
         if (IsWindow())

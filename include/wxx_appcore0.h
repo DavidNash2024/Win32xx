@@ -295,7 +295,7 @@ namespace Win32xx
         void Alloc(size_t size);
         void Free();
         HGLOBAL Get() const             { return m_global; }
-        void Reassign(HGLOBAL global);
+        void Reassign(HGLOBAL handle);
 
         operator HGLOBAL() const        { return m_global; }
 
@@ -403,13 +403,13 @@ namespace Win32xx
         HINSTANCE GetInstanceHandle() const { return m_instance; }
         HINSTANCE GetResourceHandle() const { return (m_resource ? m_resource : m_instance); }
         TLSData* GetTlsData() const;
-        HCURSOR LoadCursor(LPCTSTR pResourceName) const;
+        HCURSOR LoadCursor(LPCTSTR resourceName) const;
         HCURSOR LoadCursor(int cursorID) const;
-        HCURSOR LoadStandardCursor(LPCTSTR pCursorName) const;
-        HICON   LoadIcon(LPCTSTR pResourceName) const;
+        HCURSOR LoadStandardCursor(LPCTSTR cursorName) const;
+        HICON   LoadIcon(LPCTSTR resourceName) const;
         HICON   LoadIcon(int iconID) const;
-        HICON   LoadStandardIcon(LPCTSTR pIconName) const;
-        HANDLE  LoadImage(LPCTSTR pResourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
+        HICON   LoadStandardIcon(LPCTSTR iconName) const;
+        HANDLE  LoadImage(LPCTSTR resourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
         HANDLE  LoadImage(int imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
         HCURSOR SetCursor(HCURSOR cursor) const;
         void    SetResourceHandle(HINSTANCE resource);
