@@ -80,14 +80,14 @@ namespace Win32xx
 
     protected:
         virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual int OnCreate(CREATESTRUCT& cs);
-        virtual void OnDestroy();
+        virtual int     OnCreate(CREATESTRUCT& cs);
+        virtual void    OnDestroy();
         virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDockDestroyed(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual void RecalcViewLayout();
+        virtual void    RecalcViewLayout();
         virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:

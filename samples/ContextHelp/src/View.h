@@ -18,6 +18,7 @@ public:
 
     CDoc& GetDoc();
 
+    // Command handlers
     BOOL OnButton();
     BOOL OnCheckA();
     BOOL OnCheckB();
@@ -25,6 +26,7 @@ public:
     BOOL OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID);
 
 protected:
+    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnCancel();
     virtual void OnClose();
@@ -33,11 +35,12 @@ protected:
     virtual void OnOK();
 
 private:
+    // Member variables
     CDoc     m_doc;
     CResizer m_resizer;
-    HWND     m_hParent;      // handle of parent frame
+    HWND     m_parent;      // handle of parent frame
 
-    // Dialog controls.
+    // Member variables for dialog controls.
     CButton   m_radioA;
     CButton   m_radioB;
     CButton   m_radioC;

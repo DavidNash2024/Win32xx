@@ -18,13 +18,17 @@ public:
     virtual ~CView() {}
 
 protected:
+    // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
     virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
-    virtual void OnSize();
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    // Message handlers
+    void OnSize();
 };
 
 #endif

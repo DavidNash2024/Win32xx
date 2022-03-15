@@ -22,6 +22,7 @@ public:
     INT_PTR SetStatic(LPCTSTR text);
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnDestroy();
     virtual BOOL OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -29,12 +30,14 @@ protected:
     virtual void OnOK();
 
 private:
+    // Command handlers
     BOOL OnButton();
     BOOL OnCheck1();
     BOOL OnCheck2();
     BOOL OnCheck3();
     BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
+    // Member variables
     CRichEdit   m_richEdit;
     CMyButton   m_button;
     CHyperlink  m_hyperlink;

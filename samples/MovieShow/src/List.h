@@ -33,19 +33,12 @@ public:
     virtual ~CViewList();
 
     void    AddItem(const MovieInfo& mi);
-    CString GetFileTime(FILETIME fileTime);
-    LRESULT OnCustomDraw(LPNMCUSTOMDRAW pnmitem);
-    LRESULT OnItemActivate(LPNMITEMACTIVATE pnmitem);
-    LRESULT OnItemChanged(LPNMITEMACTIVATE pnmitem);
-    LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);
-    LRESULT OnRClick();
-    void    SetColumn();
-    BOOL    SetHeaderSortImage(int  columnIndex, int showArrow);
     void    SetLastColumnWidth();
     void    SortColumn(int column, bool isSortDown);
     void    UpdateItemImage(int item);
 
 protected:
+    // Virtual functions that override base class functions
     virtual void    OnAttach();
     virtual void    OnDestroy();
     virtual void    OnInitialUpdate();
@@ -57,6 +50,18 @@ protected:
 private:
     static int CALLBACK CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortViewItems);
 
+    // Message handlers
+    LRESULT OnCustomDraw(LPNMCUSTOMDRAW pnmitem);
+    LRESULT OnItemActivate(LPNMITEMACTIVATE pnmitem);
+    LRESULT OnItemChanged(LPNMITEMACTIVATE pnmitem);
+    LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);
+    LRESULT OnRClick();
+
+    CString GetFileTime(FILETIME fileTime);
+    void    SetColumn();
+    BOOL    SetHeaderSortImage(int  columnIndex, int showArrow);
+
+    // Member variables
     CImageList m_normal;
     CImageList m_small;
 };

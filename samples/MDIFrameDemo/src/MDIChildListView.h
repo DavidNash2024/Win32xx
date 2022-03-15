@@ -14,12 +14,16 @@ class CViewList : public CListView
 public:
     CViewList();
     virtual ~CViewList();
+
+protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void OnDestroy();
-    virtual void InsertItems();
-    virtual void SetColumns();
 
 private:
+    void InsertItems();
+    void SetColumns();
+
     CImageList m_smallImages;
 };
 
@@ -34,6 +38,7 @@ public:
     virtual ~CMDIChildList();
 
 protected:
+    // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:

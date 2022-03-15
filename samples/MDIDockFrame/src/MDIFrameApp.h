@@ -17,6 +17,8 @@ class CMDIFrameApp : public CWinApp
 public:
     CMDIFrameApp();
     virtual ~CMDIFrameApp() {}
+
+protected:
     virtual BOOL InitInstance();
 
 private:

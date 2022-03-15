@@ -21,7 +21,7 @@
 BOOL CDXView::CDXThread::InitInstance()
 {
     CMainFrame& frame = GetDXApp()->GetMainFrame();
-    CDXView& dxView = frame.GetDXView();
+    const CDXView& dxView = frame.GetDXView();
     CDX& DX = dxView.GetDX();
 
     // assign the m_pDX member variable

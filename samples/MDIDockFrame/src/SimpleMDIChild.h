@@ -13,15 +13,21 @@ class CSimpleView : public CWnd
 {
 public:
     CSimpleView();
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    COLORREF GetColor() {return m_color;}
+    virtual ~CSimpleView() {}
+    COLORREF GetColor() { return m_color; }
     void SetColor(COLORREF color) { m_color = color; }
 
+protected:
+    // Virtual functions that override base class functions
+    virtual void OnDraw(CDC& dc);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
 private:
+    // Message handlers
+    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    // Member variables
     COLORREF m_color;
 };
 
@@ -35,8 +41,9 @@ public:
     virtual ~CSimpleMDIChild();
 
 protected:
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int OnCreate(CREATESTRUCT& cs);
+    // Virtual functions that override base class functions
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int     OnCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

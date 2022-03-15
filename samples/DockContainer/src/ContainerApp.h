@@ -17,6 +17,9 @@ class CDockContainerApp : public CWinApp
 public:
     CDockContainerApp();
     virtual ~CDockContainerApp();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

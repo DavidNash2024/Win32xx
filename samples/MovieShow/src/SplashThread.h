@@ -17,10 +17,11 @@ class CSplashThread : public CWinThread
 public:
     CSplashThread();
     virtual ~CSplashThread();
-    virtual BOOL InitInstance();
-
     CSplash* GetSplash() { return &m_splash; }
     CEvent& GetSplashCreated() { return m_splashCreated; }
+
+protected:
+    virtual BOOL InitInstance();
 
 private:
     CSplash m_splash;

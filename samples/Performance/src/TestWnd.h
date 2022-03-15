@@ -16,14 +16,17 @@ public:
     CTestWindow();
     virtual ~CTestWindow(){}
     void CreateWin(int i);
-    LRESULT OnTestMessage();
 
 protected:
+    // Virtual functions that override base class functions 
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message handlers 
+    LRESULT OnTestMessage();
+
     int m_windowCount;
 };
 

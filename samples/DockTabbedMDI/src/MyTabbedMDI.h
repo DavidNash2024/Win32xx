@@ -22,6 +22,9 @@ class CMyTabbedMDI : public CTabbedMDI
 public:
     CMyTabbedMDI();
     virtual ~CMyTabbedMDI() {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual CWnd* NewMDIChildFromID(int mdiChild);
 };
 

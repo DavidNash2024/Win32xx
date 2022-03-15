@@ -14,9 +14,11 @@ class CDoc : public CObject
 public:
     CDoc() {}
     virtual ~CDoc() {}
-
     void FileLoad(LPCTSTR filename);
     void FileStore(LPCTSTR filename);
+
+protected:
+    // Virtual functions that override base class functions 
     virtual void Serialize(CArchive& ar);
 };
 

@@ -17,6 +17,9 @@ class CFrameApp : public CWinApp
 public:
     CFrameApp();
     virtual ~CFrameApp();
+
+protected:
+    // Virtual functions that override base class functions 
     virtual BOOL InitInstance();
 
 private:

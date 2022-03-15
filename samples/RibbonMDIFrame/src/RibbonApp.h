@@ -17,6 +17,9 @@ class CRibbonFrameApp : public CWinApp
 public:
     CRibbonFrameApp();
     virtual ~CRibbonFrameApp();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

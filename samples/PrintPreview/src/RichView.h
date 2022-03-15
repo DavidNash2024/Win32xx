@@ -21,6 +21,7 @@ public:
     void  SetFontDefaults();
 
 protected:
+    // Virtual functions that override base class functions
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void OnAttach();
 

@@ -979,7 +979,7 @@ BOOL CMainFrame::OnFavourite()
         m_isDirty = true;
         MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(item);
         BOOL IsFavourite = pmi->flags & 0x0001;
-        IsFavourite = !IsFavourite;
+        IsFavourite = !(IsFavourite != FALSE);
         if (IsFavourite)
             pmi->flags |= 0x0001;
         else
@@ -1459,7 +1459,7 @@ BOOL CMainFrame::OnWatchList()
         m_isDirty = true;
         MovieInfo* pmi = (MovieInfo*)GetViewList().GetItemData(item);
         BOOL isWatch = pmi->flags & 0x0002;
-        isWatch = !isWatch;
+        isWatch = !(isWatch != FALSE);
         if (isWatch)
             pmi->flags |= 0x0002;
         else

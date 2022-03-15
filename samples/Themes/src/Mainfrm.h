@@ -19,25 +19,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void AddCombo();
-    BOOL ChooseColor(UINT color);
-    DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
-    BOOL OnFileExit();
-    BOOL OnUseThemes();
-    BOOL OnBandColors();
-    BOOL OnFlatStyle();
-    BOOL OnLeftBands();
-    BOOL OnLockMenuBar();
-    BOOL OnRoundBorders();
-    BOOL OnShortBands();
-    BOOL OnUseLines();
-    BOOL OnViewArrows();
-    BOOL OnViewCards();
-    void SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2);
-    void ShowArrows(bool isShown);
-    void ShowCards(bool isShown);
 
 protected:
+    // Virtual functions that override base class functions 
     virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
@@ -49,6 +33,27 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    void AddCombo();
+    BOOL ChooseColor(UINT color);
+    DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
+    void SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2);
+    void ShowArrows(bool isShown);
+    void ShowCards(bool isShown);
+
+    // Command handlers
+    BOOL OnFileExit();
+    BOOL OnUseThemes();
+    BOOL OnBandColors();
+    BOOL OnFlatStyle();
+    BOOL OnLeftBands();
+    BOOL OnLockMenuBar();
+    BOOL OnRoundBorders();
+    BOOL OnShortBands();
+    BOOL OnUseLines();
+    BOOL OnViewArrows();
+    BOOL OnViewCards();
+
+    // Member variables
     CView m_view;
     CToolBar m_arrows;
     CToolBar m_cards;

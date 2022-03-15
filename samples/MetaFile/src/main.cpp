@@ -20,6 +20,8 @@ class CApp : public CWinApp
 public:
     CApp() {};
     virtual ~CApp() {}
+
+protected:
     virtual BOOL InitInstance()
     {
         m_metaView.Create();    // throws a CWinException on failure

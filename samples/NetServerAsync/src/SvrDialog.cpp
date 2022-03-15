@@ -435,7 +435,7 @@ BOOL CSvrDialog::OnSocketAccept()
 
     // Create the new chat dialog
     TCPClientDlgPtr pDialog(new CTCPClientDlg(IDD_CHAT));
-    pDialog->m_pSocket = pClient;
+    pDialog->Socket() = pClient;
     pDialog->DoModeless(*this);
     long events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;
     pClient->StartAsync(*pDialog, UWM_SOCKETMSG, events);

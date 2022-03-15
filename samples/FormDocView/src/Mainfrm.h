@@ -15,11 +15,14 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
+    CFormDoc& GetDoc()      { return m_sdiView.GetDoc(); }	
+
+    // Virtual functions that override public base class functions
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    CFormDoc& GetDoc()      { return m_sdiView.GetDoc(); }
 
 protected:
+    // Virtual functions that override base class functions
     virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
@@ -32,12 +35,14 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Menu updaters
     void OnUpdateCheckA(UINT id);
     void OnUpdateCheckB(UINT id);
     void OnUpdateCheckC(UINT id);
     void OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
 
-    CFormView m_sdiView;
+    // Member variables
+	CFormView m_sdiView;
 };
 
 

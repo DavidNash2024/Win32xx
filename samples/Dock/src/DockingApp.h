@@ -17,6 +17,9 @@ class CDockingApp : public CWinApp
 public:
     CDockingApp();
     virtual ~CDockingApp() {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

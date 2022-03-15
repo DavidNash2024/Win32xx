@@ -13,11 +13,15 @@ class CViewSimple : public CWnd
 {
 public:
     CViewSimple();
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual ~CViewSimple() {}
 
     COLORREF GetColor() {return m_color;}
     void SetColor(COLORREF color) { m_color = color; }
+
+protected:
+    // Virtual functions that override base class functions
+    virtual void OnDraw(CDC& dc);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     COLORREF m_color;
@@ -34,6 +38,7 @@ public:
     virtual ~CMDIChildSimple();
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);

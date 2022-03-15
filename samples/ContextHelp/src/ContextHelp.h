@@ -44,19 +44,19 @@ class CContextHelp : public CWnd
         CContextHelp();
         virtual ~CContextHelp();
 
-        void    AddHelpTopic(UINT id, LPCTSTR topic);
-        HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
-        UINT    GetIDFromCursorPos() const;
-        void    ShowHelpTopic(UINT id);
-        void    ShowHelpTopic(LPCTSTR topic);
-
-        const CString&  GetHelpFilePath() const             { return m_helpFilePath; }
-        void            SetHelpFilePath(LPCTSTR chmName)    { m_helpFilePath = chmName; }
+        void  AddHelpTopic(UINT id, LPCTSTR topic);
+        const CString& GetHelpFilePath() const     { return m_helpFilePath; }
+        void  SetHelpFilePath(LPCTSTR chmName)     { m_helpFilePath = chmName; }
+        void  ShowHelpTopic(UINT id);
+        void  ShowHelpTopic(LPCTSTR topic);
 
     private:
-        CString         m_helpFilePath;         // Help file path
-        std::map<UINT, CString> m_helpTopics;   // Map of help topics
+        UINT    GetIDFromCursorPos() const;
+        HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
 
+        // Member variables
+        CString m_helpFilePath;                 // Help file path
+        std::map<UINT, CString> m_helpTopics;   // Map of help topics
 };
 
 #endif // CONTEXTHELP_H

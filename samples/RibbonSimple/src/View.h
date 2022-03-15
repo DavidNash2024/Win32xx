@@ -14,10 +14,9 @@ class CView : public CWnd, public CRibbon
 public:
     CView() : m_pIUIRibbon(0) {}
     virtual ~CView() {}
-    IUIRibbon* GetIUIRibbon() const;
-    void RecalcLayout();
 
 protected:
+    // Virtual functions that override base class functions
     virtual STDMETHODIMP Execute(UINT32, UI_EXECUTIONVERB, const PROPERTYKEY*, const PROPVARIANT*, IUISimplePropertySet*);
     virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUIApplication::IUnknown*, UI_VIEWVERB, INT32);
 
@@ -30,6 +29,10 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    IUIRibbon* GetIUIRibbon() const;
+    void RecalcLayout();
+
+    // Member variables
     IUIRibbon* m_pIUIRibbon;
 };
 

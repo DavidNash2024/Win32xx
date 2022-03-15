@@ -18,11 +18,24 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-
-    BOOL    ChooseHelpTopic();
     virtual HWND Create(HWND parent = 0);
+
+protected:
+    // Virtual functions that override base class functions
+    virtual BOOL    LoadRegistrySettings(LPCTSTR keyName);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    OnInitialUpdate();
+    virtual void    OnMenuUpdate(UINT id);
+    virtual void    PreCreate(CREATESTRUCT& cs);
+    virtual BOOL    SaveRegistrySettings();
+    virtual void    SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    BOOL    ChooseHelpTopic();
     CString CreateAppDataFolder(const CString& subfolder);
-    CDoc&   GetDoc()    { return m_view.GetDoc(); }
+    CDoc& GetDoc() { return m_view.GetDoc(); }
     UINT    GetIDFromCursorPos();
     BOOL    OnF1();
     BOOL    OnFileExit();
@@ -33,21 +46,12 @@ public:
     void    OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
     BOOL    ShowHelpTopic(UINT id);
 
-protected:
-    virtual BOOL    LoadRegistrySettings(LPCTSTR keyName);
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnInitialUpdate();
-    virtual void    OnMenuUpdate(UINT id);
-    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual BOOL    SaveRegistrySettings();
-    virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    // Message handlers
+    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
-private:
+    // Member variables
     CView       m_view;
     CHelp       m_appHelp;  // Help object for context help and help about dialog
     BOOL        m_isChoosing;

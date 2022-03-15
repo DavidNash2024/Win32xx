@@ -27,14 +27,10 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void LoadDefaultDockers();
-    BOOL OnContainerTabsAtTop();
-    BOOL OnDockCloseAll();
-    BOOL OnDockDefault();
-    BOOL OnFileExit();
-    BOOL OnHideSingleTab();
+
 
 protected:
+    // Virtual functions that override base class functions
     virtual CDocker* NewDockerFromID(int id);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
@@ -46,13 +42,21 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Command handlers
+    BOOL OnContainerTabsAtTop();
+    BOOL OnDockCloseAll();
+    BOOL OnDockDefault();
+    BOOL OnFileExit();
+    BOOL OnHideSingleTab();
+
     void HideSingleContainerTab(bool hideSingle);
+    void LoadDefaultDockers();
     void SetContainerTabsAtTop(bool isAtTop);
 
+    // Member variables
     CDockContainer m_view;
     bool m_isContainerTabsAtTop;
     bool m_hideSingleTab;
-
 };
 
 #endif //MAINFRM_H

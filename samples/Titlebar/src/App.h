@@ -18,6 +18,9 @@ class CApp : public CWinApp
 public:
     CApp();
     virtual ~CApp() {}
+
+protected:
+    // Virtual functions that override base class functions 
     virtual BOOL InitInstance();
 
 private:

@@ -23,6 +23,7 @@ public:
     void SavePicture(LPCTSTR fileName);
 
 protected:
+    // Virtual functions that override base class functions
     virtual void    OnDraw(CDC& dc);
     virtual LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);

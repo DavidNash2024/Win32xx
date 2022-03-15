@@ -15,6 +15,15 @@ public:
     CButtonDialog(UINT resID);
     virtual ~CButtonDialog();
 
+protected:
+    // Virtual functions that override base class functions
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual void OnOK() {}      // suppress closing dialog with the enter key
+    virtual void OnCancel() {}  // suppress closing dialog with the esc key
+
+private:
+    // Command handlers
     BOOL OnButton();
     BOOL OnCheck1();
     BOOL OnCheck2();
@@ -23,13 +32,7 @@ public:
     INT_PTR OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam);
     BOOL OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID);
 
-protected:
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnOK() {}      // suppress closing dialog with the enter key
-    virtual void OnCancel() {}  // suppress closing dialog with the esc key
-
-private:
+    // Member variables
     CBrush m_brush;
 };
 
@@ -44,6 +47,7 @@ public:
     virtual ~CComboBoxDialog();
 
 protected:
+    // Virtual functions overriding base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnInitDialog();
     virtual void OnOK() {}      // supress closing dialog with the enter key
@@ -66,6 +70,7 @@ public:
     virtual ~CMyDialog();
 
 protected:
+    // Virtual functions overriding base class functions
     virtual void OnDestroy();
     virtual BOOL OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);

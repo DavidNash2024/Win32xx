@@ -16,6 +16,8 @@ class CDialogApp : public CWinApp
 public:
     CDialogApp();
     virtual ~CDialogApp();
+
+protected:
     virtual BOOL InitInstance();
 
 private:

@@ -16,7 +16,9 @@ class CBrowserApp : public CWinApp
 public:
     CBrowserApp();
     virtual ~CBrowserApp();
-    BOOL InitInstance();
+
+protected:
+    virtual BOOL InitInstance();
 
 private:
     CMainFrame m_frame;

@@ -17,6 +17,9 @@ class CToolBarDemoApp : public CWinApp
 public:
     CToolBarDemoApp();
     virtual ~CToolBarDemoApp();
+
+protected:
+    // Virtual functions that override base class functions 
     virtual BOOL InitInstance();
 
 private:

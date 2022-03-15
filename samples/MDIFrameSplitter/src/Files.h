@@ -16,14 +16,19 @@ public:
     virtual ~CViewFiles();
 
 protected:
-    virtual void InsertItems();
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void OnDestroy();
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void SetColumns();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message handlers
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    void InsertItems();
+    void SetColumns();
+
+    // Member variables
     CImageList m_smallImages;
 };
 
@@ -50,6 +55,8 @@ class CDockFiles : public CDocker
 public:
     CDockFiles();
     virtual ~CDockFiles() {}
+
+protected:
     virtual int OnCreate(CREATESTRUCT& cs);
 
 private:

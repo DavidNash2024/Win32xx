@@ -17,6 +17,9 @@ class CFormApp : public CWinApp
 public:
     CFormApp();
     virtual ~CFormApp();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

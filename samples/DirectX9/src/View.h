@@ -36,21 +36,23 @@ class CDXView : public CWnd
     public:
         CDX();
         virtual ~CDX();
-
-        HRESULT InitD3D(HWND hWnd);
-        HRESULT InitGeometry();
         void Render();
-        void SetupDefaultRenderStates();
-        void SetupMatrices();
 
     protected:
-        virtual int  OnCreate(CREATESTRUCT& cs);
-        virtual void OnDestroy();
+        // Virtual functions that override base class functions
+        virtual int     OnCreate(CREATESTRUCT& cs);
+        virtual void    OnDestroy();
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual void PreCreate(CREATESTRUCT& cs);
+        virtual void    PreCreate(CREATESTRUCT& cs);
         virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        HRESULT InitD3D(HWND hWnd);
+        HRESULT InitGeometry();
+        void SetupDefaultRenderStates();
+        void SetupMatrices();
+
+        // Member variables
         LPDIRECT3D9       m_pD3D;           // Used to create the D3DDevice
         LPDIRECT3DDEVICE9 m_pd3dDevice;     // Our rendering device
         LPDIRECT3DVERTEXBUFFER9 m_pVB;      // Buffer to hold vertices
@@ -65,6 +67,7 @@ class CDXView : public CWnd
         virtual ~CDXThread() {}
 
     protected:
+        // Virtual functions that override base class functions
         virtual BOOL InitInstance();
         virtual int MessageLoop();
 
@@ -79,11 +82,16 @@ public:
     CDX& GetDX() const { return const_cast<CDX&>(m_dx); }
 
 protected:
+    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message handlers
+    LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+	
+	// Member variables
     CDX m_dx;
     CDXThread m_dxThread;
 };

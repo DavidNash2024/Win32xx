@@ -17,6 +17,9 @@ class CReBarApp : public CWinApp
 public:
     CReBarApp();
     virtual ~CReBarApp();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

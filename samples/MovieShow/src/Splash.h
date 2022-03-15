@@ -20,17 +20,19 @@ public:
 
     void AddBar();
     void Hide();
-    void LoadFont();
-    void RemoveBar();
     void ShowText(LPCTSTR text, CWnd* parent);
 
 protected:
+    // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDraw(CDC& dc);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
 
 private:
+    void LoadFont();
+    void RemoveBar();
+
     CProgressBar m_progress;
     CString      m_text;
     HICON        m_hIcon;

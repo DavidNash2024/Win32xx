@@ -17,6 +17,9 @@ class CStatusBarApp : public CWinApp
 public:
     CStatusBarApp();
     virtual ~CStatusBarApp();
+
+protected:
+    // Virtual functions that override base class functions   
     virtual BOOL InitInstance();
 
 private:

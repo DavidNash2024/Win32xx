@@ -14,6 +14,8 @@
 // Constructor for CMainFrame. Its called after CFrame's constructor.
 CMainFrame::CMainFrame()
 {
+    // Use CMyStatusBar as our status bar. 
+    SetStatusBar(m_myStatusBar);
 }
 
 // Destructor for CMainFrame.
@@ -32,13 +34,6 @@ HWND CMainFrame::Create(HWND parent)
     LoadRegistrySettings(_T("Win32++\\StatusBar Sample"));
 
     return CFrame::Create(parent);
-}
-
-// Returns a reference to our CMyStatusbar member.
-// CFrame will now use our CMyStatusbar member, instead of its CStatusbar member.
-CStatusBar& CMainFrame::GetStatusBar() const
-{
-    return m_myStatusBar;
 }
 
 // OnCommand responds to menu and and toolbar input.

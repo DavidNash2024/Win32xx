@@ -26,23 +26,27 @@ public:
     CMainWindow();
     virtual ~CMainWindow();
     virtual HWND Create(HWND hParent = 0);
-
     void CreateTestWindows(int windows);
+    void SetTestMessages(int testMessages) {m_testMessages = testMessages;}
+
+protected:
+    // Virtual functions that override base class functions
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnDestroy();
+    virtual void OnInitialUpdate();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    // Message handlers
+    virtual LRESULT OnSize();
+    virtual LRESULT OnWindowCreated();
+
     LONGLONG GetCounter() const;
     void OnAllWindowsCreated();
     void PerformanceTest() const;
     void SendText(LPCTSTR str) const;
-    void SetTestMessages(int testMessages) {m_testMessages = testMessages;}
 
-protected:
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDestroy();
-    virtual void OnInitialUpdate();
-    virtual LRESULT OnSize();
-    virtual LRESULT OnWindowCreated();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
+    // Member variables
     std::vector<TestWindowPtr> m_pTestWindows; // A vector CTestWindow smart pointers
     CMyEdit m_edit;        // Handle to the edit window
     int m_testMessages;    // Number of test messages to be sent

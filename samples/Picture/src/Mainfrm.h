@@ -18,20 +18,26 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+
+protected:
+    // Virtual functions that override base class functions
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    // Message handlers
+    LRESULT OnFileLoaded(LPCTSTR fileName);
+
+    // Command handlers
     BOOL OnFileExit();
     BOOL OnFileMRU(WPARAM wparam);
     BOOL OnFileNew();
     BOOL OnFileOpen();
     BOOL OnFileSaveAs();
 
-protected:
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnFileLoaded(LPCTSTR fileName);
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
+    // Member variables
     CView m_view;
 };
 

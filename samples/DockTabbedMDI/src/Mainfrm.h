@@ -33,26 +33,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void HideSingleContainerTab(bool hideSingle);
-    BOOL OnCloseMDIs();
-    BOOL OnCloseDockers();
-    BOOL OnContainerTabsAtTop();
-    BOOL OnDefaultLayout();
-    BOOL OnFileNew();
-    BOOL OnFileExit();
-    BOOL OnFileNewBrowser();
-    BOOL OnFileNewRect();
-    BOOL OnFileNewList();
-    BOOL OnFileNewText();
-    BOOL OnFileNewTree();
-    BOOL OnHideSingleTab();
-    BOOL OnMDITabsAtTop();
-    void LoadDefaultDockers();
-    void LoadDefaultMDIs();
-    void SetContainerTabsAtTop(bool atTop);
-    void SetMDITabsAtTop(bool atTop);
 
 protected:
+    // Virtual functions that override base class functions
     virtual CDocker* NewDockerFromID(int dockID);
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
@@ -68,7 +51,29 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CMyTabbedMDI m_myTabbedMDI;
+    // Command handlers
+    BOOL OnCloseMDIs();
+    BOOL OnCloseDockers();
+    BOOL OnContainerTabsAtTop();
+    BOOL OnDefaultLayout();
+    BOOL OnFileNew();
+    BOOL OnFileExit();
+    BOOL OnFileNewBrowser();
+    BOOL OnFileNewRect();
+    BOOL OnFileNewList();
+    BOOL OnFileNewText();
+    BOOL OnFileNewTree();
+    BOOL OnHideSingleTab();
+    BOOL OnMDITabsAtTop();
+
+    void HideSingleContainerTab(bool hideSingle);
+    void LoadDefaultDockers();
+    void LoadDefaultMDIs();
+    void SetContainerTabsAtTop(bool atTop);
+    void SetMDITabsAtTop(bool atTop);
+
+    // Member variables
+	CMyTabbedMDI m_myTabbedMDI;
     bool m_isContainerTabsAtTop;
     bool m_isHideSingleTab;
     bool m_isMDITabsAtTop;

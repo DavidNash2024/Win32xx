@@ -34,6 +34,39 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+
+protected:
+    // Virtual functions that override base class functions
+    virtual BOOL    LoadRegistrySettings(LPCTSTR szKeyName);
+    virtual void    OnClose();
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    OnInitialUpdate();
+    virtual void    OnMenuUpdate(UINT nID);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+    virtual void    PreCreate(CREATESTRUCT& cs);
+    virtual BOOL    SaveRegistrySettings();
+    virtual void    SetupMenuIcons();
+    virtual void    SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+
+    static UINT WINAPI ThreadProc(void* pVoid);
+
+    // Accessors
+    std::vector<CString> GetBoxSets();
+    CString GetDataPath() const;
+    std::list<MovieInfo>* GetMoviesData() { return &m_moviesData; }
+    CViewDialog& GetViewDialog()          { return m_pDockDialog->GetViewDialog(); }
+    CViewList& GetViewList()              { return m_viewList; }
+    CViewTree& GetViewTree()              { return m_pDockTree->GetViewTree(); }
+    std::vector<CString> GetWords(const CString& str) const;
+
+    // State functions
+    bool IsWordInString(const CString& sentence, const CString& word) const;
+    bool IsVideoFile(const CString& filename) const;
+
     void ClearDisplay();
     void ClearList();
     void FillImageData(const CString& source, std::vector<BYTE>& dest);
@@ -48,62 +81,37 @@ public:
     void FillListFromType(LPCTSTR videoType);
     void FillTreeItems();
     void ForceToForeground();
+    void LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movie);
+    void LoadMovies();
+    void OnFilesLoaded();
 
-    bool IsVideoFile(const CString& filename) const;
+    // Message handlers
+    LRESULT PlayMovie(LPCTSTR path);
+    LRESULT OnBarEnd(LPDRAGPOS pDragPos);
+    LRESULT OnDPIChanged();
+    LRESULT OnRClickListItem();
+    LRESULT OnRClickTreeItem();
+    LRESULT OnSelectListItem(const MovieInfo* pmi);
+    LRESULT OnSelectTreeItem();
+    LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
-    std::vector<CString> GetBoxSets();
-    CString GetDataPath() const;
-
-    CViewDialog& GetViewDialog() { return m_pDockDialog->GetViewDialog(); }
-    CViewList& GetViewList() { return m_viewList; }
-    CViewTree& GetViewTree() { return m_pDockTree->GetViewTree(); }
-    std::vector<CString> GetWords(const CString& str) const;
-    bool    IsWordInString(const CString& sentence, const CString& word) const;
-    void    LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movie);
-    void    LoadMovies();
+    // Command handlers
     BOOL    OnAddBoxSet();
     BOOL    OnAddFolder();
     BOOL    OnBoxSet(UINT nID);
-    LRESULT OnDPIChanged();
     BOOL    OnFavourite();
-    void    OnFilesLoaded();
     BOOL    OnPlay();
     BOOL    OnMoveDown();
     BOOL    OnMoveUp();
     BOOL    OnRenameBoxSet();
     BOOL    OnRemoveBoxSet();
-    LRESULT OnRClickListItem();
-    LRESULT OnRClickTreeItem();
     BOOL    OnRemoveFile();
     BOOL    OnSearch();
-    LRESULT OnSelectListItem(const MovieInfo* pmi);
-    LRESULT OnSelectTreeItem();
-    LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
     BOOL    OnVideoType(LPCTSTR videoType);
     BOOL    OnWatchList();
-    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
-    LRESULT PlayMovie(LPCTSTR path);
-    std::list<MovieInfo>* GetMoviesData() { return &m_moviesData; }
-
-    static UINT WINAPI ThreadProc(void* pVoid);
-
-protected:
-    virtual BOOL    LoadRegistrySettings(LPCTSTR szKeyName);
-    virtual LRESULT OnBarEnd(LPDRAGPOS pDragPos);
-    virtual void    OnClose();
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnInitialUpdate();
-    virtual void    OnMenuUpdate(UINT nID);
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual BOOL    SaveRegistrySettings();
-    virtual void    SetupMenuIcons();
-    virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
+    // Member variables
     CCriticalSection m_cs;
     CViewList        m_viewList;
     CWinThread       m_thread;

@@ -16,6 +16,7 @@ public:
     const CEdit* GetCBEdit() const { return &m_edit; }
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
 

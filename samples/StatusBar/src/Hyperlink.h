@@ -21,17 +21,21 @@ class CHyperlink :  public CStatic
 public:
     CHyperlink();
     virtual ~CHyperlink();
-    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
 
 protected:
+    // Virtual functions overriding base class functions
     virtual void OnAttach();
-    virtual void OpenUrl();
     virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message handlers
+    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    void OpenUrl();
+
     bool     m_isUrlVisited;
     bool     m_isClicked;
     COLORREF m_visitedColor;

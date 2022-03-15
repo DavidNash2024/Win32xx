@@ -240,7 +240,8 @@ namespace Win32xx
                 if (pfnGetMonitorInfo(hActiveMonitor, &mi))
                 {
                     desktopRect = mi.rcWork;
-                    if (GetParent().GetHwnd() == 0) desktopRect = mi.rcWork;
+                    if (GetParent().GetHwnd() == 0) 
+                        parentRect = mi.rcWork;
                 }
             }
 

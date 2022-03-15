@@ -27,20 +27,11 @@ public:
     CView();
     virtual ~CView(){}
 
-    double GetXMin() { return m_inputDlg.GetMin(); }
-    double GetXMax() { return m_inputDlg.GetMax(); }
     Calc::Calculator& GetCalc() { return m_calc; }
     CInputDlg& GetInput() { return m_inputDlg; }
 
-    void CalcPoints(double xmin, double xmax);
-    void DoPlot(CDC& dc);
-    void DrawLabel(CDC& dc);
-    void PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
-    void PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
-    void PlotFunction(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
-    void PrepareDC(CDC& dc);
-
 protected:
+    // Virtual functions that override base class functions 
     virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
     virtual void PreCreate(CREATESTRUCT& cs);
@@ -48,6 +39,17 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    void CalcPoints(double xmin, double xmax);
+    void DoPlot(CDC& dc);
+    void DrawLabel(CDC& dc);
+    double GetXMin() { return m_inputDlg.GetMin(); }
+    double GetXMax() { return m_inputDlg.GetMax(); }
+    void PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
+    void PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
+    void PlotFunction(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
+    void PrepareDC(CDC& dc);
+
+    // Member varuables
     Calc::Calculator m_calc;
     std::vector<PointData> m_points;  // vector of Data, stores x, y, & status
     CInputDlg m_inputDlg;

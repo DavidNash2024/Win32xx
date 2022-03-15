@@ -19,10 +19,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    BOOL    OnEditFunction();
-    BOOL    OnFileExit();
 
 protected:
+    // Virtual functions that override base class functions 
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
@@ -30,6 +29,10 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Command handlers
+    BOOL    OnEditFunction();
+    BOOL    OnFileExit();
+
     CView m_view;
 };
 

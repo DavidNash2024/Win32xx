@@ -17,6 +17,9 @@ class CSimpleApp : public CWinApp
 public:
     CSimpleApp();
     virtual ~CSimpleApp() {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

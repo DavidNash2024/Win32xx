@@ -21,7 +21,8 @@ public:
     BOOL GetRootItems();
     BOOL SelectFromListView(Cpidl& cpidlFull);
 
- protected:
+protected:
+    // Virtual functions that override base class functions
     virtual void    OnAttach();
     virtual void    OnDestroy();
     virtual LRESULT OnNMRClick(LPNMHDR pNMHDR);
@@ -58,11 +59,13 @@ private:
     typedef Shared_Ptr<TreeItemData> TreeItemDataPtr;
 
     static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM paramSort);
+	
     void DoContextMenu(CPoint& point);
     void DoItemMenu(HTREEITEM item, CPoint& point);
     void EnumObjects(HTREEITEM parentItem, CShellFolder& parentFolder, Cpidl& cpidlParent);
     BOOL GetChildItems(HTREEITEM parentItem);
 
+    // Member variables
     CContextMenu2 m_ccm2;
     std::vector <TreeItemDataPtr> m_pItems; // vector of smart pointers.
 };

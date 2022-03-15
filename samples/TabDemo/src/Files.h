@@ -18,6 +18,7 @@ public:
     void SetColumns();
 
 protected:
+    // Virtual functions that override base class functions 
     virtual void OnAttach();
 
 private:

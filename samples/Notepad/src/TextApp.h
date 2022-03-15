@@ -17,6 +17,9 @@ class CTextApp : public CWinApp
 public:
     CTextApp();
     virtual ~CTextApp()  {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
     virtual BOOL OnIdle(LONG count);
 

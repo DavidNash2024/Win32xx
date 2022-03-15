@@ -16,6 +16,18 @@ public:
     CMainMDIFrame();
     virtual ~CMainMDIFrame();
     virtual HWND Create(HWND parent = 0);
+
+protected:
+    // Virtual functions that override base class functions
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnInitialUpdate();
+    virtual void SetupMenuIcons();
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    // Command handlers
     BOOL OnFileClose();
     BOOL OnFileExit();
     BOOL OnFileNewDocker();
@@ -27,14 +39,6 @@ public:
     BOOL OnMDICloseAll();
     BOOL OnMDIIconArrange();
     BOOL OnMDITile();
-
-protected:
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual void SetupMenuIcons();
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 #endif  //MAINMDIFRM_H

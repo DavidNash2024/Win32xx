@@ -14,15 +14,15 @@ public:
     CAboutHelp();
     virtual ~CAboutHelp() {}
 
-    const CString& GetCredits() const   { return m_credits; }
-    void SetCredits(LPCTSTR credits)  { m_credits = credits; }
+    const CString& GetCredits() const { return m_credits; }
+    void SetCredits(LPCTSTR credits) { m_credits = credits; }
 
 protected:
+    // Virtual functions that override base class functions
     virtual BOOL    OnInitDialog();
 
 private:
     CString     m_credits;          // AboutBox contents
-
 };
 
 #endif // HELPABOUT_H

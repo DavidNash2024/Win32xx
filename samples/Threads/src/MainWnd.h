@@ -21,20 +21,24 @@ class CMainWindow : public CWnd
 public:
     CMainWindow();
     virtual ~CMainWindow() {}
-    void AppendText(LPCTSTR text);
     HWND Create(HWND parent = 0);
+
+protected:
+    // Virtual functions that override base class functions 
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnDestroy();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    void AppendText(LPCTSTR text);
+
+    // Message handlers
     void    OnAllWindowsCreated();
     LRESULT OnAppendText(WPARAM wparam);
     LRESULT OnCloseThread(WPARAM wparam);
     LRESULT OnSize();
     LRESULT OnWindowCreated();
 
-protected:
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDestroy();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
     CCriticalSection m_cs;              // Used to ensure thread safe access to m_threads.
     CMyEdit m_edit;                     // Child window edit control.
     std::vector<MyThreadPtr> m_threads; // A vector of CMyThread smart pointers.

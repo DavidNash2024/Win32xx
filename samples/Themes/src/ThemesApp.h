@@ -17,6 +17,9 @@ class CThemesApp : public CWinApp
 public:
     CThemesApp();
     virtual ~CThemesApp();
+
+protected:
+    // Virtual functions that override base class functions 
     virtual BOOL InitInstance();
 
 private:

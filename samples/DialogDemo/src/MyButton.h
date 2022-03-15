@@ -15,16 +15,19 @@ public:
     virtual ~CMyButton() {}
 
 protected:
-    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    // Virtual functions that override base class functions
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    // Message handlers
+    LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 
 #endif //BUTTON_H
-
 

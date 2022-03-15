@@ -13,17 +13,21 @@ public:
     CView();
     virtual ~CView(){}
 
-    CBitmap CreateMaskBitmap();
-
 protected:
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void PreRegisterClass(WNDCLASS& wc);
+    // Virtual functions that override base class functions
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    OnInitialUpdate();
+    virtual void    PreRegisterClass(WNDCLASS& wc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CBitmap m_blue;
+    // Command handlers
+	LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    CBitmap CreateMaskBitmap();
+
+    // Member variables
+	CBitmap m_blue;
     CBitmap m_orange;
     CBitmap m_mask;
     CSize m_ballSize;

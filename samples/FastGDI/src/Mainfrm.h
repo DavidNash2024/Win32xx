@@ -17,7 +17,22 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray);
+
+    BOOL LoadFile(CString& fileName);
+    void SaveFile(CString& fileName);
+
+protected:
+    // Virtual functions that override base class functions
+    virtual void OnClose();
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnInitialUpdate();
+    virtual void OnMenuUpdate(UINT id);
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    // Command handlers
     BOOL OnAdjustImage();
     BOOL OnFileExit();
     BOOL OnFileSave();
@@ -28,22 +43,14 @@ public:
     BOOL OnFilePreview();
     BOOL OnFilePrint();
 
+    // Message handlers
     LRESULT OnPreviewClose();
     LRESULT OnPreviewPrint();
     LRESULT OnPreviewSetup();
-    BOOL LoadFile(CString& fileName);
-    void SaveFile(CString& fileName);
 
-protected:
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT id);
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray);
 
-private:
+    // Member variables
     CView m_view;
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;

@@ -15,14 +15,10 @@ class CViewTree : public CTreeView
 public:
     CViewTree();
     virtual ~CViewTree();
-
-    bool      IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
-    BOOL      OnBeginLabelEdit(LPARAM lparam);
-    BOOL      OnEndLabelEdit(LPARAM lparam);
-    BOOL      OnSelChanged();
-    void      Swap(HTREEITEM item1, HTREEITEM item2);
+    void Swap(HTREEITEM item1, HTREEITEM item2);
 
 protected:
+    // Virtual functions that override base class functions
     virtual void    OnDestroy();
     virtual void    OnInitialUpdate();
     virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
@@ -30,6 +26,14 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    bool      IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
+
+    // Notification message handlers
+    BOOL OnBeginLabelEdit(LPARAM lparam);
+    BOOL OnEndLabelEdit(LPARAM lparam);
+    BOOL OnSelChanged();
+
+    // Member variables
     CImageList m_imlNormal;
     CString m_itemText;
 };
@@ -43,7 +47,6 @@ class CDockTree : public CDocker
 public:
     CDockTree();
     virtual ~CDockTree() {}
-
     CViewTree& GetViewTree() { return m_treeView; }
 
 private:

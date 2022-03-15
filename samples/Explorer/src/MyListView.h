@@ -34,7 +34,6 @@ public:
     virtual ~CMyListView();
     void DisplayFolder(CShellFolder& parentFolder, Cpidl& cpidlParent, Cpidl& cpidlRel);
     void DoDisplay();
-    static ULONGLONG FileTimeToULL(FILETIME ft);
     BOOL SetHeaderSortImage(int  columnIndex, int showArrow);
     void SortColumn(int column, bool isSortDown);
     void ViewLargeIcons();
@@ -43,6 +42,7 @@ public:
     void ViewReport();
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void OnDestroy();
     virtual LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);
@@ -83,6 +83,8 @@ private:
     typedef Shared_Ptr<ListItemData> ListItemDataPtr;
 
     static int CALLBACK CompareFunction(LPARAM param1, LPARAM param2, LPARAM pSortViewItems);
+    static ULONGLONG FileTimeToULL(FILETIME ft);
+
     void DoBackgroundMenu(CPoint& ptScreen);
     void DoContextMenu(CPoint& ptScreen);
     void DoDefault(int item);
@@ -92,7 +94,8 @@ private:
     BOOL GetLastWriteTime(FILETIME modified, LPTSTR string);
     void SetImageLists();
 
-    Cpidl         m_cpidlCurFull;    // Fully Qualified pidl
+    // Member variables
+	Cpidl         m_cpidlCurFull;    // Fully Qualified pidl
     CShellFolder  m_csfCurFolder;    // Current Folder
     CContextMenu2 m_ccm2;
     std::vector <ListItemDataPtr> m_pItems; // vector of smart pointers.

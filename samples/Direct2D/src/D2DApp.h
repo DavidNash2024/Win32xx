@@ -19,13 +19,16 @@ class CD2DApp : public CWinApp
 public:
     CD2DApp();
     virtual ~CD2DApp();
-
-    BOOL InitInstance();
     ID2D1Factory* GetD2DFactory() { return m_pDirect2dFactory; }
+
+protected:
+    // Virtual functions that override base class functions
+    virtual BOOL InitInstance();
 
 private:
     HRESULT CreateDeviceIndependentResources();
 
+    // Member variables
     CD2DView m_view;
     ID2D1Factory* m_pDirect2dFactory;
 };

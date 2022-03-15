@@ -19,6 +19,7 @@ public:
     BOOL IsGray() const    { return m_isGray; }
 
 protected:
+    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnInitDialog();
     virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -31,8 +32,8 @@ private:
     BOOL    OnTextChange(HWND editCtrl);
     void    Paint();
     void    UpdatePreview();
-
-    // CWnd object for the dialog controls to attach to
+	
+	// Member variables for dialog  controls
     CSlider m_redSlider;
     CSlider m_greenSlider;
     CSlider m_blueSlider;
@@ -43,7 +44,9 @@ private:
     CBitmap m_image;
     CBitmap m_previewImage;
     CBitmap m_previewOrigImage;
-    int     m_cBlue;
+
+    // Member variables
+	int     m_cBlue;
     int     m_cGreen;
     int     m_cRed;
     BOOL    m_isGray;

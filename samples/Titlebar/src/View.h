@@ -15,6 +15,7 @@ public:
     virtual ~CView(){}
 
 protected:
+    // Virtual functions that override base class functions 
     virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);

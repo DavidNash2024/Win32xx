@@ -19,11 +19,14 @@ public:
     CDoc() {}
     virtual ~CDoc() {}
 
-    std::vector<PlotPoint>& GetAllPoints() {return m_points;}
+    std::vector<PlotPoint>& GetAllPoints() { return m_points; }
     BOOL FileOpen(LPCTSTR filename);
     BOOL FileSave(LPCTSTR filename);
-    void Serialize(CArchive &ar);
     void StorePoint(PlotPoint& pp);
+
+protected:
+    // Virtual functions that override base class functions
+    void Serialize(CArchive &ar);
 
 private:
     std::vector<PlotPoint> m_points;    // Points of lines to draw

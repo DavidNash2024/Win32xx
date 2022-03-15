@@ -16,12 +16,14 @@ class CDXApp : public CWinApp
 {
 public:
     virtual ~CDXApp() {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
     virtual int MessageLoop();
 
 private:
     CDXView m_dxView;
-
 };
 
 #endif // DXAPP_H

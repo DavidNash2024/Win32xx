@@ -16,26 +16,14 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
+    CDoc& GetDoc() {return m_view.GetDoc(); }	
+
+    // Virtual functions that override public base class functions
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    CDoc& GetDoc() {return m_view.GetDoc(); }
-
-    BOOL    OnFileExit();
-    BOOL    OnFileOpen();
-    BOOL    OnFilePreview();
-    BOOL    OnFilePrint();
-    BOOL    OnFileSave();
-    LRESULT    OnPreviewClose();
-    LRESULT    OnPreviewPrint();
-    LRESULT    OnPreviewSetup();
-
-    CString ItoT(int i);
-    int     TtoI(LPCTSTR string);
-
-    CString GetINIPath();
-    void SerializeINI(BOOL isStoring);
 
 protected:
+    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnClose();
@@ -46,7 +34,25 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_view;
+    // Command handlers
+    BOOL OnFileExit();
+    BOOL OnFileOpen();
+    BOOL OnFilePreview();
+    BOOL OnFilePrint();
+    BOOL OnFileSave();
+
+    // Message handlers
+    LRESULT OnPreviewClose();
+    LRESULT OnPreviewPrint();
+    LRESULT OnPreviewSetup();
+
+    CString GetINIPath();
+    CString ItoT(int i);
+    int     TtoI(LPCTSTR string);
+    void    SerializeINI(BOOL isStoring);
+
+    // Member variables
+	CView m_view;
     CPrintPreview<CView> m_preview;
     bool m_isToolbarShown;
 };

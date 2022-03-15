@@ -16,15 +16,16 @@ class CMyThread : public CWinThread
 public:
     CMyThread(int threadNumber, HWND mainWindow);
     virtual ~CMyThread();
-
-    void CloseThread();
-    CTestWindow* GetTestWnd()   { return &m_testWnd; }
-    int GetThreadNumber()       { return m_threadNumber; }
+    int GetThreadNumber() { return m_threadNumber; }
 
 protected:
+    // Virtual functions that override base class functions 
     virtual BOOL InitInstance();
 
 private:
+    void CloseThread();
+    CTestWindow* GetTestWnd() { return &m_testWnd; }
+
     CTestWindow m_testWnd;
     int         m_threadNumber;
     HWND        m_mainWindow;

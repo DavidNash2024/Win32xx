@@ -14,6 +14,9 @@ class CViewTree : public CTreeView
 public:
     CViewTree();
     virtual ~CViewTree();
+
+protected:
+    // Virtual functions that override base class functions
     virtual void OnDestroy();
     virtual void OnAttach();
 
@@ -32,6 +35,7 @@ public:
     virtual ~CMDIChildTree();
 
 protected:
+    // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:

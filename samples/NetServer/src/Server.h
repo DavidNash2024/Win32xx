@@ -52,6 +52,9 @@ class CServerSocket : public CSocket
 public:
     CServerSocket() { }
     virtual ~CServerSocket() { }
+
+protected:
+    // Virtual functions that override base class functions
     virtual void OnAccept();
     virtual void OnReceive();
 };
@@ -66,6 +69,9 @@ class CWorkerSocket : public CSocket
 public:
     CWorkerSocket() { }
     virtual ~CWorkerSocket() { }
+
+protected:
+    // Virtual functions that override base class functions
     virtual void OnDisconnect();
     virtual void OnReceive();
 };

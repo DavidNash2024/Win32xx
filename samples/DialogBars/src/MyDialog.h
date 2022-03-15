@@ -16,19 +16,23 @@ public:
     CMyDialog(UINT resID);
     virtual ~CMyDialog();
 
-    BOOL OnHScroll(WPARAM wparam, LPARAM lparam);
-    void SetProgressPos(int pos);
-    void SetScrollPos(int pos);
-    void SetSliderPos(int pos);
-    void SetStatic(bool isSlider, int pos);
-
 protected:
+    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnDestroy();
     virtual BOOL OnInitDialog();
     virtual void OnOK();
 
 private:
+    // Message Handlers
+    BOOL OnHScroll(WPARAM wparam, LPARAM lparam);
+
+    void SetProgressPos(int pos);
+    void SetScrollPos(int pos);
+    void SetSliderPos(int pos);
+    void SetStatic(bool isSlider, int pos);
+
+    // Member variables
     CMyScrollBar m_scrollBar;
     CSlider      m_slider;
     CProgressBar m_progressBar;

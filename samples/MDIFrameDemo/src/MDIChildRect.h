@@ -14,13 +14,19 @@ class CViewRect : public CWnd
 {
 public:
     CViewRect() : m_cxClientMax(0), m_cyClientMax(0) {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
-    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message Handlers
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    // Member variables
     int m_cxClientMax;
     int m_cyClientMax;
 };
@@ -36,6 +42,7 @@ public:
     virtual ~CMDIChildRect();
 
 protected:
+    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT& cs);
 
 private:

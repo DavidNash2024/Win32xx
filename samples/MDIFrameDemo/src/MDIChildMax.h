@@ -15,6 +15,7 @@ public:
     virtual ~CViewMax() {}
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
@@ -30,6 +31,7 @@ public:
     virtual ~CMDIChildMax();
 
 protected:
+    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void PreCreate(CREATESTRUCT& cs);
 

@@ -16,21 +16,14 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
+    CDoc& GetDoc()      { return m_view.GetDoc(); }	
+
+    // Virtual functions that override public base class functions
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    CDoc& GetDoc()      { return m_view.GetDoc(); }
-
-    BOOL    OnFileExit();
-    BOOL    OnFileOpen();
-    BOOL    OnFilePrint();
-    BOOL    OnFileSave();
-    BOOL    OnFilePreview();
-    LRESULT    OnPreviewClose();
-    LRESULT    OnPreviewPrint();
-    LRESULT    OnPreviewSetup();
-
 protected:
+    // Virtual functions that override base class functions
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
@@ -42,7 +35,20 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_view;
+    // Command Handlers
+    BOOL    OnFileExit();
+    BOOL    OnFileOpen();
+    BOOL    OnFilePrint();
+    BOOL    OnFileSave();
+    BOOL    OnFilePreview();
+
+    // Message handlers
+    LRESULT    OnPreviewClose();
+    LRESULT    OnPreviewPrint();
+    LRESULT    OnPreviewSetup();
+
+    // Member variables
+	CView m_view;
     CPrintPreview<CView> m_preview;
     bool m_isToolbarShown;
 };

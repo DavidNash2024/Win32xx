@@ -19,18 +19,22 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    CDXView& GetDXView() const { return m_dxView; }
-    BOOL OnFileExit();
+    const CDXView& GetDXView() const { return m_dxView; }
 
 protected:
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual void SetupToolBar();
+    // Virtual functions that override base class functions
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    OnInitialUpdate();
+    virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    mutable CDXView m_dxView;
+    // Command handler
+    BOOL OnFileExit();
+
+    // Member variable
+    CDXView m_dxView;
 };
 
 #endif //MAINFRM_H

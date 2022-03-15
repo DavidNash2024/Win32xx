@@ -14,6 +14,8 @@ class CViewText : public CRichEdit
 public:
     CViewText();
     virtual ~CViewText();
+
+protected:
     virtual void OnAttach();
 
 private:
@@ -31,6 +33,7 @@ public:
     virtual ~CMDIChildText();
 
 protected:
+    // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
 
