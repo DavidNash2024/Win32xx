@@ -18,6 +18,9 @@ class CTabDemoApp : public CWinApp
 public:
     CTabDemoApp();
     virtual ~CTabDemoApp();
+
+protected:
+    // Virtual functions that override base class functions 
     virtual BOOL InitInstance();
 
 private:

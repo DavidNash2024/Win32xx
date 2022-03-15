@@ -875,11 +875,11 @@ inline void CMainFrame::SetStatusIndicators()
         statusDC.SelectObject(GetStatusBar().GetFont());
         CString cap = LoadString(IDW_INDICATOR_CAPS);
         CString num = LoadString(IDW_INDICATOR_NUM);
-        CString ins = LoadString(IDW_INDICATOR_OVR);
+        CString ovr = LoadString(IDW_INDICATOR_OVR);
         CString mode = _T("Plain Text mode     ");
         CSize capSize = statusDC.GetTextExtentPoint32(cap, cap.GetLength());
         CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
-        CSize insSize = statusDC.GetTextExtentPoint32(_T("OVR"), ins.GetLength());
+        CSize ovrSize = statusDC.GetTextExtentPoint32(ovr, ovr.GetLength());
         CSize modeSize = statusDC.GetTextExtentPoint32(mode, mode.GetLength());
 
         BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
@@ -892,18 +892,18 @@ inline void CMainFrame::SetStatusIndicators()
         cxGripper = MulDiv(cxGripper, xDPI, defaultDPI);
         capSize.cx += cxBorder;
         numSize.cx += cxBorder;
-        insSize.cx += cxBorder;
+        ovrSize.cx += cxBorder;
 
         // Get the coordinates of the window's client area.
         CRect clientRect = GetClientRect();
         int width = clientRect.right;
 
         // Create 4 panes
-        GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + insSize.cx + modeSize.cx + cxGripper));
+        GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + ovrSize.cx + modeSize.cx + cxGripper));
         GetStatusBar().SetPartWidth(1, modeSize.cx);
         GetStatusBar().SetPartWidth(2, capSize.cx);
         GetStatusBar().SetPartWidth(3, numSize.cx);
-        GetStatusBar().SetPartWidth(4, insSize.cx);
+        GetStatusBar().SetPartWidth(4, ovrSize.cx);
 
         CString status0 = m_isRTF ? LoadString(IDW_INDICATOR_RICH) : LoadString(IDW_INDICATOR_PLAIN);
         CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
@@ -911,15 +911,10 @@ inline void CMainFrame::SetStatusIndicators()
         CString status3 = (::GetKeyState(VK_INSERT) & 0x0001) ? LoadString(IDW_INDICATOR_OVR) : LoadString(IDW_INDICATOR_INS);
 
         // Only update indicators if the text has changed
-        if (status0 != m_oldStatus[0])  GetStatusBar().SetPartText(1, status0);
-        if (status1 != m_oldStatus[1])  GetStatusBar().SetPartText(2, status1);
-        if (status2 != m_oldStatus[2])  GetStatusBar().SetPartText(3, status2);
-        if (status3 != m_oldStatus[3])  GetStatusBar().SetPartText(4, status3);
-
-        m_oldStatus[0] = status0;
-        m_oldStatus[1] = status1;
-        m_oldStatus[2] = status2;
-        m_oldStatus[3] = status3;
+        GetStatusBar().SetPartText(1, status0);
+        GetStatusBar().SetPartText(2, status1);
+        GetStatusBar().SetPartText(3, status2);
+        GetStatusBar().SetPartText(4, status3);
     }
 }
 

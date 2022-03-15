@@ -14,6 +14,9 @@ class CViewClasses : public CTreeView
 public:
     CViewClasses();
     virtual ~CViewClasses();
+
+protected:
+    // Virtual functions that override base class functions 
     virtual void OnAttach();
 
 private:

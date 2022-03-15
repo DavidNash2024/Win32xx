@@ -16,6 +16,8 @@ class CApp : public CWinApp
 public:
     CApp();
     virtual ~CApp();
+
+protected:
     virtual BOOL InitInstance();
 
 private:

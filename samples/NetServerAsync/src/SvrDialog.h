@@ -28,19 +28,15 @@ class CTCPClientDlg : public CDialog
 public:
     CTCPClientDlg(UINT resID);
     virtual ~CTCPClientDlg() {}
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnClose();
+    SocketPtr& Socket() { return m_pSocket; }
+
+protected:
+    // Virtual functions that override base class functions
     virtual void OnDestroy();
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnClose();
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual BOOL OnInitDialog();
-
-    void AppendText(int id, LPCTSTR text);
-    void Send();
-
-    BOOL OnSocketReceive();
-    BOOL OnSocketDisconnect();
-
-    SocketPtr m_pSocket;
 
 private:
     // Nested classes for this dialog's child windows
@@ -49,6 +45,17 @@ private:
     class CEditReceive : public CEdit {};
     class CButtonSend : public CButton {};
 
+    // Socket message handlers
+    BOOL OnSocketReceive();
+    BOOL OnSocketDisconnect();
+
+    void AppendText(int id, LPCTSTR text);
+    void Send();
+
+    // Member variables
+    SocketPtr m_pSocket;
+
+    // Member variables for dialog controls
     CEditSend   m_editSend;
     CEditReceive m_editReceive;
     CButtonSend m_buttonSend;
@@ -64,30 +71,15 @@ class CSvrDialog : public CDialog
 public:
     CSvrDialog(UINT resID);
     virtual ~CSvrDialog();
-    void AppendText(const CEdit& edit, LPCTSTR text);
-    void LoadCommonControlsEx();
-    BOOL OnSend();
-    BOOL OnSocketAccept();
-    BOOL OnSocketDisconnect(WPARAM wparam);
-    BOOL OnSocketReceive();
-    LRESULT OnSocketMessage(WPARAM wparam, LPARAM lparam);
-    BOOL OnStartServer();
-    BOOL StartServer();
-    void StopServer();
 
 protected:
-    virtual void OnClose();
-    virtual BOOL OnInitDialog();
+    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnInitDialog();
 
 private:
-    CSocket m_mainSocket;
-    std::map<SocketPtr, TCPClientDlgPtr> m_connectedClients; // Stores TCP client sockets and TCP client dialogs
-    bool m_isServerStarted;
-    int  m_socketType;              // either SOCK_STREAM or SOCK_DGRAM
-    sockaddr_in6  m_saUDPClient;    // connected UPD client's sockaddr
-
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
     class CIP4Address : public CIPAddress {};
@@ -103,6 +95,31 @@ private:
     class CRadioTCP : public CButton {};
     class CRadioUDP : public CButton {};
 
+    // Message handlers
+    BOOL OnSocketDisconnect(WPARAM wparam);
+    LRESULT OnSocketMessage(WPARAM wparam, LPARAM lparam);
+    
+    // Socket message handlers
+    BOOL OnSocketAccept();
+    BOOL OnSocketReceive();
+
+    // Command handlers
+    BOOL OnSend();
+    BOOL OnStartServer();
+
+    void AppendText(const CEdit& edit, LPCTSTR text);
+    void LoadCommonControlsEx();
+    BOOL StartServer();
+    void StopServer();
+
+    // Member variables
+    CSocket m_mainSocket;
+    std::map<SocketPtr, TCPClientDlgPtr> m_connectedClients; // Stores TCP client sockets and TCP client dialogs
+    bool m_isServerStarted;
+    int  m_socketType;              // either SOCK_STREAM or SOCK_DGRAM
+    sockaddr_in6  m_saUDPClient;    // connected UPD client's sockaddr
+
+    // Member variables for dialog controls
     CIP4Address m_ip4Address;
     CEditIP6Address m_editIP6Address;
     CEditStatus m_editStatus;

@@ -17,11 +17,12 @@ public:
     virtual ~CMyDialog();
 
 protected:
-    virtual void OnDestroy();
+    // Virtual functions that override base class functions
+    virtual void    OnDestroy();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void OnCancel();
-    virtual BOOL OnInitDialog();
-    virtual void OnOK();
+    virtual void    OnCancel();
+    virtual BOOL    OnInitDialog();
+    virtual void    OnOK();
 
 private:
     CResizer m_resizer;

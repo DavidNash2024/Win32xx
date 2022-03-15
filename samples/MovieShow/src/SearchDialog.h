@@ -20,6 +20,7 @@ public:
     const CString& GetInfoString() { return m_infoText; }
 
 protected:
+    // Virtual functions that override base class functions
     virtual BOOL OnInitDialog();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnOK();

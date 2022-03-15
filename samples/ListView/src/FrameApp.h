@@ -17,6 +17,8 @@ class CFrameApp : public CWinApp
 public:
     CFrameApp();
     virtual ~CFrameApp();
+
+protected:
     virtual BOOL InitInstance();
 
 private:

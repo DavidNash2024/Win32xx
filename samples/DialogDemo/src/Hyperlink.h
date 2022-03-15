@@ -20,18 +20,20 @@ public:
     CHyperlink();
     virtual ~CHyperlink();
 
+protected:
+    // Virtual functions that override base class functions
+    virtual void    OnAttach();
+    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    // Message handlers
     void OnLButtonDown();
     void OnLButtonUp(LPARAM lparam);
     void OpenUrl();
     LRESULT OnSetCursor();
 
-protected:
-    virtual void OnAttach();
-
-    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
+    // Member variables
     bool    m_isUrlVisited;
     bool    m_isClicked;
     COLORREF m_crVisited;

@@ -25,27 +25,30 @@ class CView : public CWnd
 public:
     CView();
     virtual ~CView();
-
-    std::vector<PlotPoint>* GetAllPoints();
-    COLORREF GetPenColor() { return m_penColor; }
     void SetPenColor(COLORREF Color) { m_penColor = Color; }
-    void SendPoint(int x, int y, bool isPenDown);
 
 protected:
+    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT&);
     virtual void OnDraw(CDC& dc);
-    virtual LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    void DrawLine(int x, int y);
+    // Message handlers
+    LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
 
+    void DrawLine(int x, int y);
+    std::vector<PlotPoint>* GetAllPoints();
+    COLORREF GetPenColor() { return m_penColor; }
+    void SendPoint(int x, int y, bool isPenDown);
+
+    // Member variables
     CBrush m_brush;
     COLORREF m_penColor;
 };

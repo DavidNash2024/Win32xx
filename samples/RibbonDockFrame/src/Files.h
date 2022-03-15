@@ -14,14 +14,21 @@ class CViewFiles : public CListView
 public:
     CViewFiles();
     virtual ~CViewFiles();
+
+protected:
+    // Virtual functions that override base class functions
     virtual void InsertItems();
     virtual void OnAttach();
     virtual void OnDestroy();
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void SetColumns();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message handlers
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    void SetColumns();
+
+    // Member variables
     CImageList m_imlSmall;
 };
 

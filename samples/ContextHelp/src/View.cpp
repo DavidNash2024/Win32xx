@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CView::CView(UINT resID) : CDialog(resID), m_hParent(0)
+CView::CView(UINT resID) : CDialog(resID), m_parent(0)
 {
 }
 
@@ -21,10 +21,10 @@ CView::~CView()
 }
 
 // Creates the view window. Its a modeless dialog.
-HWND CView::Create(HWND hParent = 0)
+HWND CView::Create(HWND parent = 0)
 {
-    m_hParent = hParent;
-    return DoModeless(hParent);
+    m_parent = parent;
+    return DoModeless(parent);
 }
 
 // Process the dialog's window messages.
@@ -181,7 +181,7 @@ BOOL CView::OnCheckA()
 {
     TRACE("Check Box A\n");
     BOOL checkA = GetDoc().GetCheckA();
-    checkA = !checkA;  // Toggle
+    checkA = !(checkA != FALSE);  // Toggle
     CheckDlgButton(ID_CHECK_A, checkA);
     GetDoc().SetCheckA(checkA);
 
@@ -194,7 +194,7 @@ BOOL CView::OnCheckB()
 {
     TRACE("Check Box B\n");
     BOOL checkB = GetDoc().GetCheckB();
-    checkB = !checkB;  // Toggle
+    checkB = !(checkB != FALSE);  // Toggle
     CheckDlgButton(ID_CHECK_B, checkB);
     GetDoc().SetCheckB(checkB);
 
@@ -207,7 +207,7 @@ BOOL CView::OnCheckC()
 {
     TRACE("Check Box C\n");
     BOOL checkC = GetDoc().GetCheckC();
-    checkC = !checkC;  // Toggle
+    checkC = !(checkC != FALSE);  // Toggle
     CheckDlgButton(ID_CHECK_C, checkC);
     GetDoc().SetCheckC(checkC);
 

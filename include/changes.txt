@@ -22,14 +22,27 @@ New Features and Enhancements
     The ToCString function accepts all types supported by std::stringstream.
   - The operator+ and operator+= overloads for int and double have been 
     replaced with the operator<< overload. The operator<< overload accepts 
-	all types supported by std::stringstream.
-		  
-	Coding example:
-	int i = 3;
-	UINT u = 8;
-	CString str = ToCString(u);
-	str << "Some text " << u << " " << i << 'c' << 'h';
-	 
+    all types supported by std::stringstream.
+
+    Coding example:
+    int i = 3;
+    UINT u = 8;
+    CString str = ToCString(u);
+    str << "Some text " << u << " " << i << 'c' << 'h';
+
+* Updated CFrameT
+  Frames provide their own rebar, menubar, toolbar and statusbar controls
+  which are used by default. Alternative controls that have been customised can
+  be used instead. These controls can be specified by using one of the
+  following functions: SetMenuBar, SetReBar, SetStatusBar, or SetToolBar.
+  Refer to the StatusBar sample for a demonstration of how to use a customised
+  status bar control with a frame. 
+ 
+  The following functions are no longer virtual:
+   GetMenuBar, GetReBar, GetStatusBar and GetToolBar.
+  To change the menubar, rebar, statusbar or toolbar, use one of the following:
+   SetMenuBar, SetReBar, SetStatusBar, or SetToolBar.   
+
 * Added wxx_setup.h to the Win32++ library. This file defines the set of macros
   and includes the C, C++, and windows header files required by Win32++. The
   wxx_cstring.h file now includes wxx_setup.h, allowing CString to be used
@@ -40,7 +53,7 @@ New Features and Enhancements
   wincore.h if required. These values can be specified in stdafx.h by including
   targetver.h as shown in the samples. Visual Studio 6 will require WINVER to
   be set to values appropriate for Win95 or Win98.
-  
+
 * Added the Titlebar sample.
   This sample demonstrates how to customize the title bar of a window. It sets
   the title bar's color and draws the minimize, maximize and close buttons.
@@ -57,7 +70,7 @@ New Features and Enhancements
   pages, as well as multiple page ranges. It also supports printing multiple
   copies, with or without collating. A footer displaying the page number is
   added to the bottom of the printed page.
-  
+
 * Updated CFile.
   Additional flags and attributes can be specified when files are created or 
   opened. CFile's constructor and Open functions now support an additional
@@ -67,10 +80,10 @@ New Features and Enhancements
   A clrText member has been added to the MenuTheme struc to define the color of
   menubar text. This is now used to set the menubar text color to white for the
   BLACK theme in the themes sample.
-  
+
 * Added the project files for Microsoft Visual Studio Community 2022.
   These are configured to use C++20.
-  
+
 * Support for WinCE has been removed.
   Version 8.9.1 is the most recent version of Win32++ that supports WinCE.
 
@@ -97,7 +110,16 @@ Added template <class V>   CStringW ToCStringW(V)              global function
 Added template <class V>   CString  ToCString(V)               global function
 Added template <class V>   CString& operator << (CString&, V)  global function
 
+Added CFrameT::SetMenuBar                                      member function
+Added CFrameT::SetReBar                                        member function
+Added CFrameT::SetStatusBar                                    member function
 Added CFrameT::SetStatusParts                                  member function
+Added CFrameT::SetToolBar                                      member function
+
+Modified CFrameT::GetMenuBar        no longer virtual          member function
+Modified CFrameT::GetReBar          no longer virtual          member function
+Modified CFrameT::GetStatusBar      no longer virtual          member function
+Modified CFrameT::SetToolBar        no longer virtual          member function
 
 Removed CString(int)                                           constructor
 Removed CString(double)                                        constructor

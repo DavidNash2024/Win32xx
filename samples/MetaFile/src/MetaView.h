@@ -17,6 +17,9 @@ class CMetaView : public CWnd
 public:
     CMetaView() {}
     virtual ~CMetaView() {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT&);
     virtual void OnDraw(CDC& dc);
     virtual void OnDestroy();

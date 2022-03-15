@@ -14,16 +14,18 @@ public:
     CView();
     virtual ~CView();
 
-    void InsertItems();
-    LRESULT OnCustomDraw(LPARAM lParam);
-    void SetColumns();
-
 protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message Handlers
+    LRESULT OnCustomDraw(LPARAM lParam);
+    
+    void InsertItems();
+    void SetColumns();
 };
 
 

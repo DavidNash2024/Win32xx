@@ -17,8 +17,11 @@ class CDXApp : public CWinApp
 public:
     CDXApp();
     virtual ~CDXApp() {}
-    virtual BOOL InitInstance();
     CMainFrame& GetMainFrame() { return m_frame; }
+
+protected:
+    // Virtual functions that override base class functions
+    virtual BOOL InitInstance();
 
 private:
     CMainFrame m_frame;

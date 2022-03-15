@@ -15,6 +15,9 @@ class CTaskDialogApp : public CWinApp
 public:
     CTaskDialogApp();
     virtual ~CTaskDialogApp();
+
+protected:
+    // Virtual functions that override base class functions 
     virtual BOOL InitInstance();
 };
 

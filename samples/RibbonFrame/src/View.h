@@ -20,7 +20,6 @@ class CView : public CWnd
 public:
     CView();
     virtual ~CView();
-
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();
     COLORREF GetPenColor() { return m_penColor; }
@@ -28,19 +27,23 @@ public:
     void SetPenColor(COLORREF color) { m_penColor = color; }
 
 protected:
+    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT&);
     virtual void OnDraw(CDC& dc);
-    virtual LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message handlers
+    LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+
     void DrawLine(int x, int y);
 
+    // Member variables
     CDoc m_doc;
     CBrush m_brush;
     COLORREF m_penColor;

@@ -26,14 +26,17 @@ public:
     CCoverImage& SetPicture() { return m_picture; }
 
 protected:
+    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnCancel() {} // Suppress closing the dialog with esc key.
     virtual void    OnClose() {}  // Suppress closing the dialog with return key on rich edit.
     virtual BOOL    OnInitDialog();
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnOK() {}     // Suppress closing the dialog with return key.
 
 private:
+    // Message handlers
+    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+
     void AppendText(int nID, LPCTSTR text);
 
     CResizer    m_Resizer;

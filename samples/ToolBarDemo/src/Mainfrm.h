@@ -18,31 +18,38 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    BOOL    OnFileExit();
-    BOOL    OnTBBigIcons();
-    BOOL    OnTBCustomize();
-    BOOL    OnTBDefault();
-    void    ResizeToolbarBand() const;
-    void    SaveTBDefault();
 
 protected:
+    // Virtual functions that override base class functions 
     virtual LRESULT OnBeginAdjust(LPNMTOOLBAR pNMTB);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnCustHelp(LPNMHDR pNMHDR);
-    virtual LRESULT OnEndAdjust(LPNMHDR pNMHDR);
-    virtual LRESULT OnGetButtonInfo(LPNMTOOLBAR pNMTB);
     virtual void OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnQueryDelete(LPNMTOOLBAR pNMTB);
-    virtual LRESULT OnQueryInsert(LPNMTOOLBAR pNMTB);
-    virtual LRESULT OnReset(LPNMTOOLBAR pNMTB);
-    virtual LRESULT OnToolBarChange(LPNMTOOLBAR pNMTB);
     virtual BOOL    OnViewToolBar();
     virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    void    ResizeToolbarBand() const;
+    void    SaveTBDefault();
+
+    // Command handlers
+    BOOL    OnFileExit();
+    BOOL    OnTBBigIcons();
+    BOOL    OnTBCustomize();
+    BOOL    OnTBDefault();
+
+    // Message handlers
+    LRESULT OnCustHelp(LPNMHDR pNMHDR);
+    LRESULT OnEndAdjust(LPNMHDR pNMHDR);
+    LRESULT OnGetButtonInfo(LPNMTOOLBAR pNMTB);
+    LRESULT OnQueryDelete(LPNMTOOLBAR pNMTB);
+    LRESULT OnQueryInsert(LPNMTOOLBAR pNMTB);
+    LRESULT OnReset(LPNMTOOLBAR pNMTB);
+    LRESULT OnToolBarChange(LPNMTOOLBAR pNMTB);
+
+    // Member variables
     CView m_view;
     CToolBar m_arrows;
     CToolBar m_cards;

@@ -18,22 +18,28 @@ public:
     virtual ~CView() {}
 
 protected:
-    virtual BOOL OnColor();
+    // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
     virtual void OnDraw(CDC& dc);
-    virtual BOOL OnExit();
     virtual void OnInitialUpdate();
-    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Command handlers
+    BOOL OnColor();
+    BOOL OnExit();
+
+    // Message handlers
+    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    // Member variables
     CBrush m_brush;
     CPoint m_point;
     CRect m_rect;

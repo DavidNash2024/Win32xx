@@ -14,6 +14,9 @@ class CViewWeb : public CWebBrowser
 public:
     CViewWeb() {}
     virtual ~CViewWeb() {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT& cs);
 };
 

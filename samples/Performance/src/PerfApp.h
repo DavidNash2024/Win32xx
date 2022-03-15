@@ -17,8 +17,11 @@ class CPerformanceApp : public CWinApp
 public:
     CPerformanceApp();
     virtual ~CPerformanceApp();
-    virtual BOOL InitInstance();
     CMainWindow& GetMainWnd() {return m_mainWnd;}
+
+protected:
+    // Virtual functions that override base class functions
+    virtual BOOL InitInstance();
 
 private:
     CMainWindow m_mainWnd;

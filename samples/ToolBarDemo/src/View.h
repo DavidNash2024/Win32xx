@@ -15,14 +15,8 @@ public:
     CView();
     virtual ~CView(){}
 
-    void RecalcLayout();
-    void SetWrapState(bool isWrapped);
-    BOOL OnBottom();
-    BOOL OnLeft();
-    BOOL OnRight();
-    BOOL OnTop();
-
 protected:
+    // Virtual functions that override base class functions 
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDraw(CDC& dc);
@@ -33,6 +27,15 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    void RecalcLayout();
+    void SetWrapState(bool isWrapped);
+
+    // Command handlers
+    BOOL OnBottom();
+    BOOL OnLeft();
+    BOOL OnRight();
+    BOOL OnTop();
+
     CToolBar m_toolBar;
     CImageList m_toolBarImages;
 };

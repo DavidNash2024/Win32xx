@@ -17,6 +17,9 @@ class CTrayApp : public CWinApp
 public:
     CTrayApp();
     virtual ~CTrayApp() {}
+
+protected:
+    // Virtual functions that override base class functions 
     virtual BOOL InitInstance();
 
 private:

@@ -28,27 +28,28 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
+    virtual HWND Create(HWND parent = 0);
+    IWebBrowser2* GetIWebBrowser2() const { return m_browser.GetIWebBrowser2(); }
+    const CEdit* GetCBEdit() const { return m_combo.GetCBEdit(); }
 
+protected:
+    // Virtual functions that override base class functions
+    virtual void OnClose();
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnInitialUpdate();
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+    virtual void SetupMenuIcons();
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
     void AddComboBoxBand(int height);
     void ConnectEvents();
-    virtual HWND Create(HWND parent = 0);
     void DisconnectEvents();
-    IWebBrowser2* GetIWebBrowser2() const { return m_browser.GetIWebBrowser2(); }
-    const CEdit* GetCBEdit() const  { return m_combo.GetCBEdit(); }
     IConnectionPoint* GetConnectionPoint(REFIID riid) const;
 
-    void OnBeforeNavigate2(DISPPARAMS* pDispParams);
-    void OnCommandStateChange(DISPPARAMS* pDispParams);
-    void OnDocumentComplete(DISPPARAMS* pDispParams);
-    void OnDownloadBegin(DISPPARAMS* pDispParams);
-    void OnDownloadComplete(DISPPARAMS* pDispParams);
-    void OnNavigateComplete2(DISPPARAMS* pDispParams);
-    void OnNewWindow2(DISPPARAMS* pDispParams);
-    void OnProgressChange(DISPPARAMS* pDispParams);
-    void OnPropertyChange(DISPPARAMS* pDispParams);
-    void OnStatusTextChange(DISPPARAMS* pDispParams);
-    void OnTitleChange(DISPPARAMS* pDispParams);
-
+    // Command Handlers
     BOOL OnBack();
     BOOL OnFileExit();
     BOOL OnEditCut();
@@ -63,17 +64,20 @@ public:
     BOOL OnRefresh();
     BOOL OnStop();
 
-protected:
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual void SetupMenuIcons();
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    // User defined message handlers
+    void OnBeforeNavigate2(DISPPARAMS* pDispParams);
+    void OnCommandStateChange(DISPPARAMS* pDispParams);
+    void OnDocumentComplete(DISPPARAMS* pDispParams);
+    void OnDownloadBegin(DISPPARAMS* pDispParams);
+    void OnDownloadComplete(DISPPARAMS* pDispParams);
+    void OnNavigateComplete2(DISPPARAMS* pDispParams);
+    void OnNewWindow2(DISPPARAMS* pDispParams);
+    void OnProgressChange(DISPPARAMS* pDispParams);
+    void OnPropertyChange(DISPPARAMS* pDispParams);
+    void OnStatusTextChange(DISPPARAMS* pDispParams);
+    void OnTitleChange(DISPPARAMS* pDispParams);
 
-private:
+    // Member variables
     CWebBrowser m_browser;          // Win32++'s web browser defined in wxx_webbrowser.h
     CMyCombo    m_combo;            // ComboBoxEx control used in the toolbar.
     CEventSink  m_eventSink;        // Routes event notifications from IWebBrowser.

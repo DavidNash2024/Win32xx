@@ -54,7 +54,6 @@ public:
 
 private:
     HWND m_owner;
-
 };
 
 

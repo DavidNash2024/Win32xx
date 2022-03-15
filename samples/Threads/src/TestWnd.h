@@ -16,6 +16,7 @@ public:
     virtual HWND Create(HWND parent = 0);
 
 protected:
+    // Virtual functions that override base class functions 
     virtual void OnClose();
     virtual void OnInitialUpdate();
 

@@ -19,28 +19,14 @@ public:
     CClientDialog(UINT resID);
     virtual ~CClientDialog();
 
-    LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnSocketMessage(WPARAM wparam, LPARAM lparam);
-    BOOL OnSocketDisconnect();
-    BOOL OnSocketConnect();
-    BOOL OnSocketReceive();
-
 protected:
-    virtual void OnClose();
-    virtual BOOL OnInitDialog();
+    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnInitDialog();
 
 private:
-    void AppendText(const CEdit& edit, LPCTSTR text);
-    void LoadCommonControlsEx();
-    void OnStartClient();
-    void OnSend();
-
-    CSocket m_client;
-    bool m_isClientConnected;
-    int  m_socketType;
-
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
     class CIP4Address : public CIPAddress {};
@@ -56,6 +42,28 @@ private:
     class CRadioTCP : public CButton {};
     class CRadioUDP : public CButton {};
 
+    // Message handlers
+    LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnSocketMessage(WPARAM wparam, LPARAM lparam);
+
+    // Socket message handlers
+    BOOL OnSocketDisconnect();
+    BOOL OnSocketConnect();
+    BOOL OnSocketReceive();
+
+    // Command handlers
+    void OnStartClient();
+    void OnSend();
+
+    void AppendText(const CEdit& edit, LPCTSTR text);
+    void LoadCommonControlsEx();
+
+    // Member variables
+    CSocket m_client;
+    bool m_isClientConnected;
+    int  m_socketType;
+
+    // Member variables for dialog controls
     CIP4Address m_ip4Address;
     CEditIP6Address m_editIP6Address;
     CEditStatus m_editStatus;

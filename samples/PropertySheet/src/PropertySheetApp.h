@@ -17,6 +17,9 @@ class CPropertySheetApp : public CWinApp
 public:
     CPropertySheetApp();
     virtual ~CPropertySheetApp();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

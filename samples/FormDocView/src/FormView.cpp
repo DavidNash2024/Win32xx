@@ -170,7 +170,7 @@ BOOL CFormView::OnCheckA()
 {
     TRACE("Check Box A\n");
     BOOL isCheckA = GetDoc().GetCheckA();
-    isCheckA = !isCheckA;  // Toggle
+    isCheckA = !(isCheckA != FALSE);  // Toggle
     CheckDlgButton(ID_CHECK_A, isCheckA);
     GetDoc().SetCheckA(isCheckA);
 
@@ -183,7 +183,7 @@ BOOL CFormView::OnCheckB()
 {
     TRACE("Check Box B\n");
     BOOL isCheckB = GetDoc().GetCheckB();
-    isCheckB = !isCheckB;  // Toggle
+    isCheckB = !(isCheckB != FALSE);  // Toggle
     CheckDlgButton(ID_CHECK_B, isCheckB);
     GetDoc().SetCheckB(isCheckB);
 
@@ -196,7 +196,7 @@ BOOL CFormView::OnCheckC()
 {
     TRACE("Check Box C\n");
     BOOL isCheckC = GetDoc().GetCheckC();
-    isCheckC = !isCheckC;  // Toggle
+    isCheckC = !(isCheckC != FALSE);  // Toggle
     CheckDlgButton(ID_CHECK_C, isCheckC);
     GetDoc().SetCheckC(isCheckC);
 

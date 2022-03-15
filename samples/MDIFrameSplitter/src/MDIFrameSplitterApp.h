@@ -16,6 +16,8 @@ class CMDIFrameSplitterApp : public CWinApp
 public:
     CMDIFrameSplitterApp();
     virtual ~CMDIFrameSplitterApp() {}
+
+protected:
     virtual BOOL InitInstance();
 
 private:

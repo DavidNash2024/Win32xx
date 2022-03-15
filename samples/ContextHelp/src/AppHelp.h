@@ -19,16 +19,18 @@ public:
     virtual ~CHelp() {}
 
     BOOL About(HWND hParent = 0);
-    void AddHelpTopic(UINT id, LPCTSTR topic);
-    void SetCommandHelpTopics();
-    void SetClientHelpTopics();
     void SetCredits(LPCTSTR credits);
-    void SetFrameHelpTopics();
     void SetHelpFilePath(LPCTSTR chmName);
     void ShowHelpTopic(UINT id);
     void ShowHelpTopic(LPCTSTR topic);
 
 private:
+    void AddHelpTopic(UINT id, LPCTSTR topic);
+    void SetCommandHelpTopics();
+    void SetClientHelpTopics();
+    void SetFrameHelpTopics();
+
+    // Member variables
     CContextHelp m_contextHelp;
     CAboutHelp m_helpAbout;
 };

@@ -17,6 +17,8 @@ class CMDIDemoApp : public CWinApp
 public:
     CMDIDemoApp();
     virtual ~CMDIDemoApp() {}
+
+protected:
     virtual BOOL InitInstance();
 
 private:

@@ -42,16 +42,19 @@ class CDXView : public CWnd
 public:
     CDXView();
     virtual ~CDXView();
-    void CleanupDevice();
-    HRESULT InitDevice();
     void Render();
 
 protected:
-    virtual int OnCreate(CREATESTRUCT& cs);
-    virtual void PreCreate(CREATESTRUCT& cs);
+    // Virtual functions that override base class functions
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    void CleanupDevice();
+    HRESULT InitDevice();
+
+    // Member variables
     D3D_DRIVER_TYPE         m_driverType = D3D_DRIVER_TYPE_NULL;
     D3D_FEATURE_LEVEL       m_featureLevel = D3D_FEATURE_LEVEL_11_0;
     ID3D11Device*           m_pd3dDevice = nullptr;

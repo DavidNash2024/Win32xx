@@ -16,25 +16,31 @@ public:
     virtual ~CViewDialog();
 
 protected:
+    // Virtual functions that override base class functions
     virtual BOOL OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnCancel();
     virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnOK();
 
 private:
-    void AppendText(int id, LPCTSTR text);
+    // Command handlers
     BOOL OnButton();
     BOOL OnCheck1();
     BOOL OnCheck2();
     BOOL OnCheck3();
     BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
+    // Message handlers
+    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    void AppendText(int id, LPCTSTR text);
+
+    // Member variables
     CResizer m_resizer;
 
-    // Dialog Controls.
+    // Dialog controls.
     CButton   m_radioA;
     CButton   m_radioB;
     CButton   m_radioC;

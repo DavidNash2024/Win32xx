@@ -361,7 +361,7 @@ BOOL CSvrDialog::OnSocketAccept()
 
     // Create the new chat dialog.
     TCPClientDlgPtr pDialog(new CTCPClientDlg(IDD_CHAT));
-    pDialog->m_pSocket = pClient;
+    pDialog->ServerSocket() = pClient;
     pDialog->DoModeless(*this);
 
     // Reposition the chat dialog.

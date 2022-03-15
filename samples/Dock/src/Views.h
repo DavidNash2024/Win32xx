@@ -17,10 +17,14 @@ public:
     virtual ~CViewSimple() {}
 
 protected:
-    virtual void OnDraw(CDC& dc);
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    // Virtual functions that override base class functions
+    virtual void    OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    // Message handlers
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 
@@ -34,6 +38,7 @@ public:
     virtual ~CViewText() {}
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
 };
@@ -49,12 +54,16 @@ public:
     virtual ~CViewTree();
 
 protected:
-    virtual void OnAttach();
-    virtual void OnDestroy();
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    // Virtual functions that override base class functions
+    virtual void    OnAttach();
+    virtual void    OnDestroy();  
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message handlers
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    // Member variables
     CImageList m_normalImages;
 };
 
@@ -67,14 +76,21 @@ class CViewList : public CListView
 public:
     CViewList();
     virtual ~CViewList();
-    virtual void InsertItems();
-    virtual void OnAttach();
-    virtual void OnDestroy();
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void SetColumns();
+
+protected:
+    // Virtual functions that override base class functions
+    virtual void    OnAttach();
+    virtual void    OnDestroy();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Message handlers
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    void InsertItems();
+    void SetColumns();
+
+    // Member variables
     CImageList m_smallImages;
 };
 

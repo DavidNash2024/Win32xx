@@ -17,6 +17,9 @@ class CTabbedMDIApp : public CWinApp
 public:
     CTabbedMDIApp();
     virtual ~CTabbedMDIApp();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

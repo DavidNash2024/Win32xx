@@ -17,6 +17,9 @@ class CSplitterApp : public CWinApp
 public:
     CSplitterApp();
     virtual ~CSplitterApp()  {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

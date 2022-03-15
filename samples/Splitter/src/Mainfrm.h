@@ -23,12 +23,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void LoadDefaultWindowPanes();
-    BOOL OnFileExit();
-    BOOL OnViewList();
-    BOOL OnViewText();
 
 protected:
+    // Virtual functions that override base class functions
     virtual CDocker* NewDockerFromID(int id);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
@@ -37,6 +34,14 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Command handlers
+    BOOL OnFileExit();
+    BOOL OnViewList();
+    BOOL OnViewText();
+
+    void LoadDefaultWindowPanes();
+
+    // Member variables
     CViewSimple m_mainView;
     CDockText* m_pDockText;
     CDockTree* m_pDockTree;

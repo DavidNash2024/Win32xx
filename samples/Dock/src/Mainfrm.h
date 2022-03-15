@@ -19,7 +19,6 @@ const int ID_DOCK_TEXT1 = 7;
 const int ID_DOCK_TEXT2 = 8;
 
 
-
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
 // The main window is a frame which has a menubar, toolbar,
@@ -30,20 +29,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void LoadDefaultDockers();
-    BOOL On3DBorder();
-    BOOL OnDockCloseAll();
-    BOOL OnDockDefault();
-    BOOL OnDynamicResize();
-    BOOL OnFileExit();
-    BOOL OnPropResize();
-    BOOL OnNoUndocking();
-    BOOL OnNoResize();
-    BOOL OnNoDockLR();
-    BOOL OnNoDockClose();
-    void SetDockStyles();
 
 protected:
+    // Virtual functions overriding base class functions
     virtual CDocker* NewDockerFromID(int id);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
@@ -55,6 +43,22 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Command handlers
+    BOOL On3DBorder();
+    BOOL OnDockCloseAll();
+    BOOL OnDockDefault();
+    BOOL OnDynamicResize();
+    BOOL OnFileExit();
+    BOOL OnPropResize();
+    BOOL OnNoUndocking();
+    BOOL OnNoResize();
+    BOOL OnNoDockLR();
+    BOOL OnNoDockClose();
+
+    void LoadDefaultDockers();
+    void SetDockStyles();
+
+    // member variables
     CViewSimple m_view;
     bool m_useProportionalResize;
     bool m_use3DBorder;

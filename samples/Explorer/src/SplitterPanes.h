@@ -34,6 +34,9 @@ class CRightPane : public CDocker
 public:
     CRightPane();
     virtual ~CRightPane() {}
+
+protected:
+    // Virtual functions that override base class functions
     virtual CDocker* NewDockerFromID(int id);
 
 private:

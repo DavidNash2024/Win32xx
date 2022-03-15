@@ -49,6 +49,25 @@ public:
               {}
     virtual ~CMiniFrame() {}
 
+    // Accessors
+    ButtonRects    GetButtonRects() const;
+    TitlebarButton GetHoveredButton() const;
+    CRect    GetShadowRect() const;
+    CRect    GetTitlebarRect() const;
+    CRect    GetViewRect() const;
+    bool     IsActive() const { return (GetForegroundWindow() == *this); }
+    bool     IsMaximized() const;
+
+protected:
+    // Virtual functions that override base class functions 
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM);
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    OnDestroy();
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+    virtual void    PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
     void DrawBackground(CDC& dc) const;
     void DrawCloseButton(CDC& dc) const;
     void DrawMinimizeButton(CDC& dc) const;
@@ -59,14 +78,9 @@ public:
     void OnSystemButton() const;
     void RecalcLayout() const;
 
-    // Accessors
-    ButtonRects    GetButtonRects() const;
-    TitlebarButton GetHoveredButton() const;
-    CRect    GetShadowRect() const;
-    CRect    GetTitlebarRect() const;
-    CRect    GetViewRect() const;
-    bool     IsActive() const { return (GetForegroundWindow() == *this); }
-    bool     IsMaximized() const;
+    // Command handlers
+    BOOL OnFileExit();
+    BOOL OnHelp();
 
     // Message handlers
     LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -84,19 +98,7 @@ public:
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
-    // Command handlers
-    BOOL OnFileExit();
-    BOOL OnHelp();
-
-protected:
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM);
-    virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual void    OnDestroy();
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
+    // Member variables
     CDialog m_aboutDialog;              // Help about dialog.
     CMenuBar m_menubar;                 // Displays the menu in the titlebar.
     CView m_view;                       // View window.

@@ -17,6 +17,9 @@ class CDoubleBufferApp : public CWinApp
 public:
     CDoubleBufferApp();
     virtual ~CDoubleBufferApp();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

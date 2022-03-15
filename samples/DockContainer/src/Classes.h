@@ -20,15 +20,18 @@ public:
     virtual ~CViewClasses();
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void OnDestroy();
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CImageList m_normalImages;
+    // Command handlers
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
+    // Member variables
+    CImageList m_normalImages;
 };
 
 
@@ -40,13 +43,20 @@ class CContainClasses : public CDockContainer
 public:
     CContainClasses();
     virtual ~CContainClasses() {}
-    virtual void AddCombo();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnFileNew();
-    virtual BOOL OnHelpAbout();
     virtual void SetupToolBar();
 
 private:
+    // Command handlers
+    BOOL OnFileNew();
+    BOOL OnHelpAbout();
+
+    void AddCombo();
+
+    // Member variables
     CViewClasses m_viewClasses;
     CMyCombo m_comboBoxEx;
 };
@@ -63,7 +73,6 @@ public:
 
 private:
     CContainClasses m_classes;
-
 };
 
 

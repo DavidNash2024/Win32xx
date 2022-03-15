@@ -57,3 +57,17 @@ int CDockOutput::OnCreate(CREATESTRUCT& cs)
 }
 
 
+//////////////////////////////////////
+// CContainOutput function definitions
+//
+
+// Constructor.
+CContainOutput::CContainOutput()
+{
+    SetView(m_viewOutput);
+    SetDockCaption(_T("Output View - Docking container"));
+    SetTabText(_T("Output"));
+    SetTabIcon(IDI_TEXT);
+}
+
+

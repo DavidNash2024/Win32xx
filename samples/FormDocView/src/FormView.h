@@ -15,9 +15,9 @@ class CFormView : public CDialog
 public:
     CFormView(UINT resID);
     virtual ~CFormView();
-
     CFormDoc& GetDoc();
 
+    // Command handlers
     BOOL OnButton();
     BOOL OnCheckA();
     BOOL OnCheckB();
@@ -25,6 +25,7 @@ public:
     BOOL OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
 protected:
+    // Virtual functions that override base class functions
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnCancel();
     virtual void OnClose();
@@ -33,10 +34,7 @@ protected:
     virtual void OnOK();
 
 private:
-    CFormDoc m_doc;
-    CResizer m_resizer;
-
-    // Dialog controls.
+    // Member variables for dialog controls.
     CButton   m_radioA;
     CButton   m_radioB;
     CButton   m_radioC;
@@ -51,6 +49,10 @@ private:
     CStatic   m_status;
     CButton   m_ok;
     CWnd      m_group;
+
+    // Member variables
+    CFormDoc m_doc;
+    CResizer m_resizer;
 };
 
 #endif //SDI_VIEW_H

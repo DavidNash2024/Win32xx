@@ -17,15 +17,16 @@ public:
     virtual ~CMyDialog();
 
 protected:
-    virtual void OnDestroy();
-    virtual BOOL OnInitDialog();
+    // Virtual functions that override base class functions
+    virtual void    OnDestroy();
+    virtual BOOL    OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual void OnOK();
+    virtual void    OnOK();
 
 private:
-
+    // Member variables
     CDateTime       m_dateTime;
     CMonthCalendar  m_monthCal;
 

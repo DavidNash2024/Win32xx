@@ -17,6 +17,9 @@ class CDialogApp : public CWinApp
 public:
     CDialogApp();
     virtual ~CDialogApp();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

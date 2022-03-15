@@ -16,6 +16,7 @@ public:
     virtual ~CMyDialog();
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnDestroy();
     virtual BOOL OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -24,6 +25,7 @@ protected:
     virtual void OnOK();
 
 private:
+    // Command handlers
     BOOL OnButton();
     BOOL OnCheck1();
     BOOL OnCheck2();
@@ -32,6 +34,7 @@ private:
 
     CResizer m_resizer;
 
+    // Member variables
     CButton   m_radioA;
     CButton   m_radioB;
     CButton   m_radioC;

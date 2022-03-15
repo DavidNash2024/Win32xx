@@ -16,16 +16,20 @@ public:
     CViewFiles();
     virtual ~CViewFiles();
 
-    void InsertItems();
-    void SetColumns();
-
 protected:
-    virtual void OnAttach();
-    virtual void OnDestroy();
-    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    // Virtual functions that override base class functions
+    virtual void    OnAttach();
+    virtual void    OnDestroy();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Command handlers
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    void InsertItems();
+    void SetColumns();
+
+    // Member variables
     CImageList m_smallImages;
 };
 

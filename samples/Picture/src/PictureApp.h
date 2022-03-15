@@ -17,6 +17,9 @@ class CPictureApp : public CWinApp
 public:
     CPictureApp();
     virtual ~CPictureApp();
+
+protected:
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

@@ -17,6 +17,15 @@ class CViewText : public CRichEdit
 public:
     CViewText();
     virtual ~CViewText();
+
+protected:
+    // Virtual functions that override base class functions
+    virtual void OnAttach();
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    void PreCreate(CREATESTRUCT& cs);
+
+private:
+    // Command handlers
     BOOL OnEditCopy();
     BOOL OnEditPaste();
     BOOL OnEditCut();
@@ -24,13 +33,8 @@ public:
     BOOL OnEditRedo();
     BOOL OnEditUndo();
 
-protected:
-    virtual void OnAttach();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    void PreCreate(CREATESTRUCT& cs);
-
-private:
-    CFont m_font;
+    // Member variables
+	CFont m_font;
 };
 
 

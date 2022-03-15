@@ -18,11 +18,26 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    CRichView& GetRichView() { return m_richView; }
+    void OnToolbarUpdate();
 
-    static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
-    static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
+protected:
+    // Virtual functions that override base class functions
+    virtual void OnClose();
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int OnCreate(CREATESTRUCT& cs);
+    virtual void OnInitialUpdate();
+    virtual void OnMenuUpdate(UINT id);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+    virtual void SetupMenuIcons();
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
+private:
+    // static callbacks
+    static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
+    static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
+
+    // Command handlers
     void OnDropFiles(HDROP hDropInfo);
     BOOL OnEditCut();
     BOOL OnEditCopy();
@@ -45,28 +60,16 @@ public:
     BOOL OnPreviewClose();
     BOOL OnPreviewPrint();
     BOOL OnPreviewSetup();
-    void OnToolbarUpdate();
 
     BOOL ReadFile(LPCTSTR fileName);
-    void RestoreFocus()         {::SetFocus(m_oldFocus);}
+    void RestoreFocus() { ::SetFocus(m_oldFocus); }
     void SaveFocus() { m_oldFocus = ::GetFocus(); }
     void SaveModifiedText();
     void SetPathName(LPCTSTR fullFileName);
     void SetWindowTitle();
     BOOL WriteFile(LPCTSTR fileName);
 
-protected:
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT id);
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-    virtual void SetupMenuIcons();
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
+    // Member variables
     CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
     CString m_pathName;

@@ -19,6 +19,7 @@ public:
     virtual ~CViewOutput();
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
 };
@@ -30,13 +31,7 @@ protected:
 class CContainOutput : public CDockContainer
 {
 public:
-    CContainOutput()
-    {
-        SetView(m_viewOutput);
-        SetDockCaption (_T("Output View - Docking container"));
-        SetTabText(_T("Output"));
-        SetTabIcon(IDI_TEXT);
-    }
+    CContainOutput();
     virtual ~CContainOutput() {}
 
 private:
@@ -52,6 +47,8 @@ class CDockOutput : public CDocker
 public:
     CDockOutput();
     virtual ~CDockOutput() {}
+
+protected:
     virtual int OnCreate(CREATESTRUCT& cs);
 
 private:

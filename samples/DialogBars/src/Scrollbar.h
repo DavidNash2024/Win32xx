@@ -14,10 +14,11 @@ public:
     CMyScrollBar();
     virtual ~CMyScrollBar() {}
 
-    int GetPos(WPARAM wparam);
+    int  GetPos(WPARAM wparam);
     void SetPos(int pos);
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnInitialUpdate();
 
 private:

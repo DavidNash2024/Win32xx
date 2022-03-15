@@ -15,6 +15,7 @@ public:
     virtual ~CViewSimple() {}
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
@@ -30,6 +31,7 @@ public:
     virtual ~CViewText() {}
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
 };
@@ -45,6 +47,7 @@ public:
     virtual ~CViewTree();
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
 
 private:
@@ -63,6 +66,7 @@ public:
     void SetColumns();
 
 protected:
+    // Virtual functions that override base class functions
     virtual void OnAttach();
 
 private:

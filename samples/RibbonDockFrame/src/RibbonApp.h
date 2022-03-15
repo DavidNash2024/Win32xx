@@ -16,6 +16,8 @@ class CRibbonFrameApp : public CWinApp
 public:
     CRibbonFrameApp();
     virtual ~CRibbonFrameApp();
+
+protected:
     virtual BOOL InitInstance();
 
 private:

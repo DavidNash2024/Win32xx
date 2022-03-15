@@ -18,15 +18,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    BOOL OnFileExit();
-    void OnBottom();
-    void OnLeft();
-    void OnRight();
-    void OnTop();
-    void SetReBarPos();
-    void SetWrapState(CToolBar* pToolBar, BOOL isWrapped);
 
 protected:
+    // Virtual functions that override base class functions
     virtual CRect   GetViewRect() const;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
@@ -36,6 +30,17 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wmaram, LPARAM lmaram);
 
 private:
+    // Command handlers
+    BOOL OnFileExit();
+    void OnBottom();
+    void OnLeft();
+    void OnRight();
+    void OnTop();
+
+    void SetReBarPos();
+    void SetWrapState(CToolBar* pToolBar, BOOL isWrapped);
+
+    // Member variables
     CReBar m_reBar;
     CToolBar m_toolBar;
     CImageList m_toolBarImages;

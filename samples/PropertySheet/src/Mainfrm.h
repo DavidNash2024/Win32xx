@@ -19,12 +19,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    BOOL OnFileExit();
-    BOOL OnModal();
-    BOOL OnModeless();
-    BOOL OnWizard();
 
 protected:
+    // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
@@ -32,6 +29,13 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Command handlers
+    BOOL OnFileExit();
+    BOOL OnModal();
+    BOOL OnModeless();
+    BOOL OnWizard();
+
+    // Member variables
     CView m_view;
     CMyPropertySheet m_modelessPS;
 };

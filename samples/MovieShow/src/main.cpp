@@ -12,10 +12,6 @@
 // This code is from Microsoft KnowledgeBase Article Q243953.
 class CLimitSingleInstance
 {
-protected:
-    DWORD  m_lastError;
-    HANDLE m_mutex;
-
 public:
     CLimitSingleInstance(LPCWSTR mutexName)
     {
@@ -39,6 +35,10 @@ public:
     {
         return (ERROR_ALREADY_EXISTS == m_lastError);
     }
+
+private:
+    DWORD  m_lastError;
+    HANDLE m_mutex;
 };
 
 // Create an instance of CLimitSingleInstance.

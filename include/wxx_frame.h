@@ -171,38 +171,38 @@ namespace Win32xx
         virtual void SetStatusIndicators();
         virtual void RecalcLayout();
         virtual void RecalcViewLayout();
+        virtual void SetStatusParts();
 
+        // virtual Accessors and mutators
         virtual CWnd& GetView() const;
         virtual void SetView(CWnd& view);
 
-        // Virtual Accessors
-        // If you need to modify the default behavior of the MenuBar, ReBar,
-        // StatusBar or ToolBar, inherit from those classes, and override
-        // the following attribute functions.
-        virtual CMenuBar& GetMenuBar()  const        { return m_menuBar; }
-        virtual CReBar& GetReBar() const             { return m_reBar; }
-        virtual CStatusBar& GetStatusBar() const     { return m_statusBar; }
-        virtual CToolBar& GetToolBar() const         { return m_toolBar; }
-        virtual void SetStatusParts();
+        // Accessors and mutators for the menubar, rebar, statusbar and toolbar.
+        CMenuBar& GetMenuBar() const { return *m_pMenuBar; }
+        CReBar& GetReBar() const { return *m_pReBar; }
+        CStatusBar& GetStatusBar() const { return *m_pStatusBar; }
+        CToolBar& GetToolBar() const { return *m_pToolBar; }
+        void SetMenuBar(CMenuBar& menuBar) { m_pMenuBar = &menuBar; }
+        void SetReBar(CReBar& reBar) { m_pReBar = &reBar; }
+        void SetStatusBar(CStatusBar& statusBar) { m_pStatusBar = &statusBar; }
+        void SetToolBar(CToolBar& toolBar) { m_pToolBar = &toolBar; }
 
-        // Non-virtual Accessors and mutators
-        // These functions aren't virtual, and shouldn't be overridden.
-        CRect ExcludeChildRect(const CRect& clientRect, HWND child) const;
-        HACCEL GetFrameAccel() const                    { return m_accel; }
-        const CMenu&  GetFrameMenu() const              { return m_menu; }
-        const InitValues& GetInitValues() const         { return m_initValues; }
-        const MenuTheme& GetMenuBarTheme() const        { return m_mbTheme; }
-        const CMenuMetrics& GetMenuMetrics() const      { return m_menuMetrics; }
+        // Other accessors and mutators.
+        HACCEL GetFrameAccel() const                      { return m_accel; }
+        const CMenu&  GetFrameMenu() const                { return m_menu; }
+        const InitValues& GetInitValues() const           { return m_initValues; }
+        const MenuTheme& GetMenuBarTheme() const          { return m_mbTheme; }
+        const CMenuMetrics& GetMenuMetrics() const        { return m_menuMetrics; }
         const std::vector<CString>& GetMRUEntries() const { return m_mruEntries; }
         CString GetMRUEntry(UINT index);
-        UINT GetMRULimit() const                        { return m_maxMRU; }
-        CString GetRegistryKeyName() const              { return m_keyName; }
-        const ReBarTheme& GetReBarTheme() const         { return m_rbTheme; }
-        const StatusBarTheme& GetStatusBarTheme() const { return m_sbTheme; }
-        const std::vector<UINT>& GetToolBarData() const { return m_toolBarData; }
-        const ToolBarTheme& GetToolBarTheme() const     { return m_tbTheme; }
-        CString GetStatusText() const                   { return m_statusText; }
-        CString GetTitle() const                        { return T::GetWindowText(); }
+        UINT GetMRULimit() const                          { return m_maxMRU; }
+        CString GetRegistryKeyName() const                { return m_keyName; }
+        const ReBarTheme& GetReBarTheme() const           { return m_rbTheme; }
+        const StatusBarTheme& GetStatusBarTheme() const   { return m_sbTheme; }
+        const std::vector<UINT>& GetToolBarData() const   { return m_toolBarData; }
+        const ToolBarTheme& GetToolBarTheme() const       { return m_tbTheme; }
+        CString GetStatusText() const                     { return m_statusText; }
+        CString GetTitle() const                          { return T::GetWindowText(); }
         void SetAccelerators(UINT accelID);
         void SetFrameMenu(int menuID);
         void SetFrameMenu(HMENU menu);
@@ -213,7 +213,7 @@ namespace Win32xx
         void SetReBarTheme(const ReBarTheme& rbt);
         void SetStatusBarTheme(const StatusBarTheme& sbt);
         void SetStatusText(LPCTSTR text);
-        void SetTitle(LPCTSTR text)                    { T::SetWindowText(text); }
+        void SetTitle(LPCTSTR text)                       { T::SetWindowText(text); }
         void SetToolBarTheme(const ToolBarTheme& tbt);
 
     protected:
@@ -293,6 +293,7 @@ namespace Win32xx
         virtual void UpdateMRUMenu();
 
         // Not intended to be overridden
+        CRect ExcludeChildRect(const CRect& clientRect, HWND child) const;
         BOOL IsReBarSupported() const { return (GetComCtlVersion() > 470); }
         BOOL IsUsingIndicatorStatus() const { return m_useIndicatorStatus; }
         BOOL IsUsingMenuStatus() const { return m_useMenuStatus; }
@@ -323,10 +324,14 @@ namespace Win32xx
         std::vector<UINT> m_toolBarData;    // vector of resource IDs for ToolBar buttons
         InitValues m_initValues;            // struct of initial values
         CDialog m_aboutDialog;              // Help about dialog
-        mutable CMenuBar m_menuBar;         // CMenuBar object
-        mutable CReBar m_reBar;             // CReBar object
-        mutable CStatusBar m_statusBar;     // CStatusBar object
-        mutable CToolBar m_toolBar;         // CToolBar object
+        CMenuBar m_menuBar;                 // Default CMenuBar object
+        CReBar m_reBar;                     // Default CReBar object
+        CStatusBar m_statusBar;             // Default CStatusBar object
+        CToolBar m_toolBar;                 // Default CToolBar object
+        CMenuBar* m_pMenuBar;               // Pointer to the CMenuBar object we actually use
+        CReBar* m_pReBar;                   // Pointer to the CReBar object we actually use
+        CStatusBar* m_pStatusBar;           // Pointer to the CStatusBar object we actually use
+        CToolBar* m_pToolBar;               // Pointer to the CToolBar object we actually use
         CMenu m_menu;                       // handle to the frame menu
         CFont m_menuBarFont;                // MenuBar font
         CFont m_statusBarFont;              // StatusBar font
@@ -402,6 +407,12 @@ namespace Win32xx
 
         // By default, we use the rebar if we can.
         m_useReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
+
+        // Assign the default menubar, rebar, statusbar and toolbar.
+        SetMenuBar(m_menuBar);
+        SetReBar(m_reBar);
+        SetStatusBar(m_statusBar);
+        SetToolBar(m_toolBar);
 
         // Set the fonts.
         NONCLIENTMETRICS info = GetNonClientMetrics();

@@ -15,12 +15,15 @@ public:
     CMyCombo();
     virtual ~CMyCombo();
     BOOL AddItems();
-    void SetImages(int nImages, UINT ImageID);
 
 protected:
+    // Virtual functions that override base class functions
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
+    void SetImages(int nImages, UINT ImageID);
+
+    // Member variables
     CImageList m_imlImages;
 };
 

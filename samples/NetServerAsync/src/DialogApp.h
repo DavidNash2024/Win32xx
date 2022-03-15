@@ -17,8 +17,11 @@ class CDialogApp : public CWinApp
 public:
     CDialogApp();
     virtual ~CDialogApp();
-    virtual BOOL InitInstance();
     CSvrDialog& GetDialog() {return m_svrDialog;}
+
+protected:
+    // Virtual functions that override base class functions
+    virtual BOOL InitInstance();
 
 private:
     CSvrDialog m_svrDialog;

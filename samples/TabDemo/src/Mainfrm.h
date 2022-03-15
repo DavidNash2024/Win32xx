@@ -16,6 +16,20 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+
+protected:
+    // Virtual functions that override base class functions 
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnInitialUpdate();
+    virtual void OnMenuUpdate(UINT id);
+    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void SetupMenuIcons();
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    // COmmand handlers
     BOOL OnFileExit();
     BOOL OnNewClassesTab();
     BOOL OnNewDialogTab();
@@ -27,17 +41,6 @@ public:
     BOOL OnTabFixedWidth();
     BOOL OnTabOwnerDraw();
 
-protected:
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT id);
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual void SetupMenuIcons();
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
     CTab m_view;
 };
 
