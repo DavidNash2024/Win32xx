@@ -57,7 +57,7 @@ public:
     bool  IsMaximized() const;
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual CRect   GetViewRect() const;
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);

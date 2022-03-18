@@ -15,7 +15,7 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-    CFormDoc& GetDoc()      { return m_sdiView.GetDoc(); }	
+    CFormDoc& GetDoc()      { return m_sdiView.GetDoc(); }
 
     // Virtual functions that override public base class functions
     virtual ~CMainFrame();
@@ -42,7 +42,7 @@ private:
     void OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
 
     // Member variables
-	CFormView m_sdiView;
+    CFormView m_sdiView;
 };
 
 

@@ -20,7 +20,7 @@ public:
     virtual ~CApp() {}
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual BOOL InitInstance();
 
 private:

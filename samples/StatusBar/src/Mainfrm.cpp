@@ -14,7 +14,7 @@
 // Constructor for CMainFrame. Its called after CFrame's constructor.
 CMainFrame::CMainFrame()
 {
-    // Use CMyStatusBar as our status bar. 
+    // Use CMyStatusBar as our status bar.
     SetStatusBar(m_myStatusBar);
 }
 

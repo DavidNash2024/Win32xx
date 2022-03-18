@@ -34,7 +34,7 @@ private:
     BOOL OnEditUndo();
 
     // Member variables
-	CFont m_font;
+    CFont m_font;
 };
 
 

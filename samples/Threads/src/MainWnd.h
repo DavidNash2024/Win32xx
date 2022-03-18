@@ -24,7 +24,7 @@ public:
     HWND Create(HWND parent = 0);
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);

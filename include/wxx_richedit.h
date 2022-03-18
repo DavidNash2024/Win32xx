@@ -422,6 +422,7 @@ namespace Win32xx
     // Copies a line of text from the rich edit control and places it in the specified buffer.
     // buffer is a pointer to the buffer that receives a copy of the line. Before sending the message,
     // set the first word of this buffer to the size, in TCHARs, of the buffer.
+    // The copied line does not contain a terminating null character.
     // Refer to EM_GETLINE in the Windows API documentation for more information.
     inline int CRichEdit::GetLine(int index, LPTSTR buffer) const
     {
@@ -430,11 +431,12 @@ namespace Win32xx
     }
 
     // Copies a line of text from the rich edit control and places it in the specified buffer.
+    // The copied line does not contain a terminating null character.
     // Refer to EM_GETLINE in the Windows API documentation for more information.
     inline int CRichEdit::GetLine(int index, LPTSTR buffer, int maxLength) const
     {
         assert(IsWindow());
-        buffer[0] = (TCHAR)maxLength;
+        *reinterpret_cast<LPWORD>(buffer) = static_cast<WORD>(maxLength);
         return static_cast<int>(SendMessage(EM_GETLINE, (WPARAM)index, (LPARAM)buffer));
     }
 

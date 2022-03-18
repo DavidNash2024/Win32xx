@@ -32,7 +32,7 @@ private:
     BOOL    OnFileExit();
 
     // Member variables
-	CView m_view;
+    CView m_view;
 };
 
 #endif //MAINFRM_H

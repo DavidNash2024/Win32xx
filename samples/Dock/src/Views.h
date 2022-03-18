@@ -24,7 +24,7 @@ protected:
 private:
     // Message handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 
@@ -56,7 +56,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void    OnAttach();
-    virtual void    OnDestroy();  
+    virtual void    OnDestroy();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

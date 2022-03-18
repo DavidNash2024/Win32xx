@@ -16,7 +16,7 @@ class CMainFrame : public CFrame
 {
 public:
     CMainFrame();
-    CDoc& GetDoc() {return m_view.GetDoc(); }	
+    CDoc& GetDoc() {return m_view.GetDoc(); }
 
     // Virtual functions that override public base class functions
     virtual ~CMainFrame();
@@ -52,7 +52,7 @@ private:
     void    SerializeINI(BOOL isStoring);
 
     // Member variables
-	CView m_view;
+    CView m_view;
     CPrintPreview<CView> m_preview;
     bool m_isToolbarShown;
 };

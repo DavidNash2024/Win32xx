@@ -23,7 +23,7 @@ protected:
 private:
     // Message Handlers
     LRESULT OnCustomDraw(LPARAM lParam);
-    
+
     void InsertItems();
     void SetColumns();
 };

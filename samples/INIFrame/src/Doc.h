@@ -17,7 +17,7 @@ public:
 
     BOOL FileLoad(LPCTSTR filename);
     BOOL FileStore(LPCTSTR filename);
-	
+
 protected:
     // Virtual functions that override base class functions
     virtual void Serialize(CArchive& ar);

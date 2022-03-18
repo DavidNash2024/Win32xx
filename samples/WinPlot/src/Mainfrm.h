@@ -21,7 +21,7 @@ public:
     virtual HWND Create(HWND parent = 0);
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();

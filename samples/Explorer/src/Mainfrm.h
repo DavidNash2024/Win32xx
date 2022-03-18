@@ -54,7 +54,7 @@ private:
     void LoadListViewRegistrySettings();
 
     // Member variables
-	CLeftPane* m_pLeftPane;
+    CLeftPane* m_pLeftPane;
     CRightPane m_rightPane;
     bool m_showHidden;
 };

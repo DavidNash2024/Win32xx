@@ -73,7 +73,7 @@ private:
     void SetMDITabsAtTop(bool atTop);
 
     // Member variables
-	CMyTabbedMDI m_myTabbedMDI;
+    CMyTabbedMDI m_myTabbedMDI;
     bool m_isContainerTabsAtTop;
     bool m_isHideSingleTab;
     bool m_isMDITabsAtTop;

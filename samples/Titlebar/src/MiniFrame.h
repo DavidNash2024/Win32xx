@@ -59,7 +59,7 @@ public:
     bool     IsMaximized() const;
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnDestroy();

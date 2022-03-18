@@ -228,7 +228,7 @@ void CMyStatusBar::SetStatusIndicators()
 
     CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
     CString status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : CString("");
-    CString status3 = (::GetKeyState(VK_INSERT)  & 0x0001) ? CString("") : ovr;
+    CString status3 = (::GetKeyState(VK_INSERT)  & 0x0001) ? ovr : CString("");
     CString status4 = (::GetKeyState(VK_SCROLL)  & 0x0001) ? scrl : CString("");
 
     // Update the indicators.

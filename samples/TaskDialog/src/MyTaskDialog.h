@@ -16,7 +16,7 @@ public:
     virtual ~CMyTaskDialog() {}
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual BOOL OnTDButtonClicked(int buttonID);
     virtual void OnTDConstructed();
     virtual void OnTDCreated();

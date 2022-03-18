@@ -31,7 +31,7 @@ public:
     CInputDlg& GetInput() { return m_inputDlg; }
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
     virtual void PreCreate(CREATESTRUCT& cs);
