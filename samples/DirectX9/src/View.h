@@ -90,8 +90,8 @@ protected:
 private:
     // Message handlers
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-	
-	// Member variables
+
+    // Member variables
     CDX m_dx;
     CDXThread m_dxThread;
 };

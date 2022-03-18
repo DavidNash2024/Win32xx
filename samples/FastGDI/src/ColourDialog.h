@@ -32,8 +32,8 @@ private:
     BOOL    OnTextChange(HWND editCtrl);
     void    Paint();
     void    UpdatePreview();
-	
-	// Member variables for dialog  controls
+
+    // Member variables for dialog  controls
     CSlider m_redSlider;
     CSlider m_greenSlider;
     CSlider m_blueSlider;
@@ -46,7 +46,7 @@ private:
     CBitmap m_previewOrigImage;
 
     // Member variables
-	int     m_cBlue;
+    int     m_cBlue;
     int     m_cGreen;
     int     m_cRed;
     BOOL    m_isGray;

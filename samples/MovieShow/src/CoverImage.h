@@ -22,7 +22,7 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    void DrawImage(CDC& dc); 
+    void DrawImage(CDC& dc);
 
     std::vector<BYTE> m_imageData;
     ULONG_PTR   m_gdiplusToken;

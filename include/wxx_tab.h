@@ -106,39 +106,45 @@ namespace Win32xx
         virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, HICON icon, UINT tabID);
         virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, int iconID, UINT tabID = 0);
         virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText);
-        virtual CRect GetCloseRect() const;
-        virtual CRect GetListRect() const;
-        virtual CMenu& GetListMenu();
-        virtual BOOL GetTabsAtTop() const;
-        virtual int  GetTabIndex(CWnd* pWnd) const;
-        virtual TabPageInfo GetTabPageInfo(UINT tab) const;
-        virtual int GetTabImageID(UINT tab) const;
-        virtual CString GetTabText(UINT tab) const;
-        virtual int GetTextHeight() const;
-        virtual void RecalcLayout();
-        virtual void RemoveTabPage(int page);
-        virtual void SelectPage(int page);
-        virtual void SetFixedWidth(BOOL isEnabled);
-        virtual void SetOwnerDraw(BOOL isEnabled);
-        virtual void SetShowButtons(BOOL show);
-        virtual void SetTabIcon(int tab, HICON icon);
-        virtual void SetTabFont(HFONT font);
-        virtual void SetTabsAtTop(BOOL isAtTop);
-        virtual void SetTabText(UINT tab, LPCTSTR text);
-        virtual void ShowListDialog();
-        virtual void ShowListMenu();
-        virtual void SwapTabs(UINT tab1, UINT tab2);
+        virtual void   SelectPage(int page);
+        virtual void   RecalcLayout();
+        virtual void   RemoveTabPage(int page);
+        virtual void   SwapTabs(UINT tab1, UINT tab2);
 
-        // Accessors and mutators
-        const std::vector<TabPageInfo>& GetAllTabs() const { return m_allTabPageInfo; }
-        CImageList GetODImageList() const   { return m_odImages; }
-        CFont GetTabFont() const            { return m_tabFont; }
-        BOOL GetShowButtons() const         { return m_isShowingButtons; }
-        int GetTabHeight() const            { return m_tabHeight; }
-        SIZE GetMaxTabSize() const;
+        // Virtual accessors, overridden by CDockContainer
+        virtual int     GetTabImageID(UINT tab) const;
+        virtual CString GetTabText(UINT tab) const;
+
+        // Accessors
         CWnd* GetActiveView() const         { return m_pActiveView; }
+        const std::vector<TabPageInfo>& GetAllTabs() const { return m_allTabPageInfo; }
+        CRect GetCloseRect() const;
+        CRect GetListRect() const;
+        CMenu& GetListMenu();
+        SIZE GetMaxTabSize() const;
+        CImageList GetODImageList() const   { return m_odImages; }
+        BOOL GetShowButtons() const         { return m_isShowingButtons; }
+        BOOL GetTabsAtTop() const;
+        CFont GetTabFont() const            { return m_tabFont; }
+        int  GetTabIndex(CWnd* pWnd) const;
+        int GetTabHeight() const            { return m_tabHeight; }
+        TabPageInfo GetTabPageInfo(UINT tab) const;
+        int GetTextHeight() const;
+
+        //  Mutators
         void SetBlankPageColor(COLORREF color) { m_blankPageColor = color; }
+        void SetFixedWidth(BOOL isEnabled);
+        void SetOwnerDraw(BOOL isEnabled);
+        void SetShowButtons(BOOL show);
+        void SetTabFont(HFONT font);
         void SetTabHeight(int height);
+        void SetTabIcon(int tab, HICON icon);
+        void SetTabsAtTop(BOOL isAtTop);
+        void SetTabText(UINT tab, LPCTSTR text);
+
+        // State functions
+        void ShowListDialog();
+        void ShowListMenu();
 
         // Wrappers for Win32 Macros
         void        AdjustRect(BOOL isLarger, RECT* prc) const;
@@ -232,27 +238,30 @@ namespace Win32xx
     public:
         CTabbedMDI();
         virtual ~CTabbedMDI();
+
         virtual CWnd* AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID = 0);
         virtual void  CloseActiveMDI();
         virtual void  CloseAllMDIChildren();
         virtual void  CloseMDIChild(int tab);
-        virtual CWnd*  GetActiveMDIChild() const;
-        virtual int   GetActiveMDITab() const;
-        virtual CWnd* GetMDIChild(int tab) const;
-        virtual int   GetMDIChildCount() const;
-        virtual int   GetMDIChildID(int tab) const;
-        virtual LPCTSTR GetMDIChildTitle(int tab) const;
-        virtual CMenu& GetListMenu() const { return GetTab().GetListMenu(); }
-        virtual void   ShowListDialog() { GetTab().ShowListDialog(); }
-        virtual CTab& GetTab() const    { return m_tab; }
-        virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
-        virtual void RecalcLayout();
-        virtual BOOL SaveRegistrySettings(LPCTSTR keyName);
-        virtual void SetActiveMDIChild(CWnd* pWnd) const;
-        virtual void SetActiveMDITab(int tab) const;
+        virtual HWND  Create(HWND hWndParent);
+        virtual BOOL  LoadRegistrySettings(LPCTSTR keyName);
+        virtual BOOL  SaveRegistrySettings(LPCTSTR keyName);
+        virtual void  ShowListDialog() { GetTab().ShowListDialog(); }
+
+        // Accessors and mutators
+        CWnd*   GetActiveMDIChild() const;
+        int     GetActiveMDITab() const;
+        CWnd*   GetMDIChild(int tab) const;
+        int     GetMDIChildCount() const;
+        int     GetMDIChildID(int tab) const;
+        LPCTSTR GetMDIChildTitle(int tab) const;
+        CMenu&  GetListMenu() const { return GetTab().GetListMenu(); }
+        CTab&   GetTab() const { return *m_pTab; }
+        void    SetActiveMDIChild(CWnd* pWnd) const;
+        void    SetActiveMDITab(int tab) const;
+        void    SetTab(CTab& tab) { m_pTab = &tab; }
 
     protected:
-        virtual HWND    Create(HWND hWndParent);
         virtual CWnd*   NewMDIChildFromID(int mdiChildID);
         virtual void    OnAttach();
         virtual void    OnDestroy();
@@ -260,6 +269,7 @@ namespace Win32xx
         virtual LRESULT OnSetFocus(UINT, WPARAM, LPARAM);
         virtual BOOL    OnTabClose(int page);
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual void    RecalcLayout();
 
         // Not intended to be overwritten
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -268,7 +278,8 @@ namespace Win32xx
         CTabbedMDI(const CTabbedMDI&);              // Disable copy construction
         CTabbedMDI& operator = (const CTabbedMDI&); // Disable assignment operator
 
-        mutable CTab m_tab;
+        CTab m_tab;
+        CTab* m_pTab;
     };
 
 }
@@ -1761,6 +1772,7 @@ namespace Win32xx
 
     inline CTabbedMDI::CTabbedMDI()
     {
+        SetTab(m_tab);
     }
 
     inline CTabbedMDI::~CTabbedMDI()

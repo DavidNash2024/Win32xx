@@ -18,13 +18,13 @@ public:
     void CreateWin(int i);
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    // Message handlers 
+    // Message handlers
     LRESULT OnTestMessage();
 
     int m_windowCount;

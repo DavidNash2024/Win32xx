@@ -106,14 +106,15 @@ namespace Win32xx
         CMDIDockFrame();
         virtual ~CMDIDockFrame() {}
 
-        virtual CWnd& GetMDIClient() const      { return m_dockMDIClient; }
-        virtual CDocker::CDockClient& GetDockClient() const { return m_dockMDIClient; }
+        virtual CWnd& GetMDIClient() const { return *m_pDockMDIClient; }
+        void SetDockClient(CMDIClient<CDocker::CDockClient>& dockClient) { m_pDockMDIClient = &dockClient; }
 
     protected:
         virtual int OnCreate(CREATESTRUCT& cs);
 
     private:
-        mutable CMDIClient<CDocker::CDockClient> m_dockMDIClient;   // MDIClient for docking
+        CMDIClient<CDocker::CDockClient> m_dockMDIClient;   // MDIClient for docking
+        CMDIClient<CDocker::CDockClient>* m_pDockMDIClient;
     };
 
 }
@@ -221,6 +222,9 @@ namespace Win32xx
     inline CMDIDockFrame::CMDIDockFrame()
     {
         // The view window for a CMDIDockFrame is the MDI Client
+        CDocker::SetDockClient(m_dockMDIClient);
+        SetDockClient(m_dockMDIClient);
+
         SetView(GetMDIClient());
         GetDockClient().SetDocker(this);
     }

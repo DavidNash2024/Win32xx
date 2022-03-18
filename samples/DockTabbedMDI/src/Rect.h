@@ -28,7 +28,7 @@ private:
     virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
-	int m_cxClientMax;
+    int m_cxClientMax;
     int m_cyClientMax;
 };
 

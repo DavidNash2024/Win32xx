@@ -21,7 +21,7 @@ public:
     CString& GetFunction() { return m_function; }
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual void DoDataExchange(CDataExchange& DX);
     virtual BOOL OnInitDialog();
     virtual void OnOK();

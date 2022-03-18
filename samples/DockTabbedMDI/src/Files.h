@@ -24,7 +24,7 @@ protected:
 
 private:
     void InsertItems();
-	void SetColumns();
+    void SetColumns();
 
     // Member variables
     CImageList m_smallImages;

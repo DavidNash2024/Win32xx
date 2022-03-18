@@ -68,7 +68,7 @@ private:
     CRadioIP6   m_radioIP6;
     CRadioTCP   m_radioTCP;
     CRadioUDP   m_radioUDP;
-    
+
     CClientSocket m_client;
     bool m_isClientConnected;
     int  m_socketType;

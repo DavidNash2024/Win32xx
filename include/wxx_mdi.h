@@ -158,16 +158,16 @@ namespace Win32xx
         // Overridable virtual functions
         virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
         virtual HWND Create(HWND parent = 0);
-        virtual CMDIChild* GetActiveMDIChild() const;
-        virtual CMenu GetActiveMenu() const;
-        virtual CWnd& GetMDIClient() const { return m_mdiClient; }
-        virtual BOOL IsMDIChildMaxed() const;
+        virtual CWnd& GetMDIClient() const { return *m_pMdiClient; }
         virtual BOOL IsMDIFrame() const { return TRUE; }
         virtual void RemoveMDIChild(HWND wnd);
         virtual BOOL RemoveAllMDIChildren();
 
         // These functions aren't virtual. Don't override these.
+        CMDIChild* GetActiveMDIChild() const;
+        CMenu GetActiveMenu() const;
         const std::vector<MDIChildPtr>& GetAllMDIChildren() const { return m_mdiChildren; }
+        BOOL IsMDIChildMaxed() const;
         void MDICascade(int nType = 0) const;
         void MDIIconArrange() const;
         void MDIMaximize() const;
@@ -176,6 +176,7 @@ namespace Win32xx
         void MDIRestore() const;
         void MDITile(int nType = 0) const;
         void SetActiveMDIChild(CMDIChild* pChild);
+        void SetMDIClient(CMDIClient<CWnd>& mdiClient) { m_pMdiClient = &mdiClient; }
 
     protected:
         // Overridable virtual functions
@@ -202,7 +203,8 @@ namespace Win32xx
         void AppendMDIMenu(CMenu menuWindow);
 
         std::vector<MDIChildPtr> m_mdiChildren;
-        mutable CMDIClient<CWnd> m_mdiClient;
+        CMDIClient<CWnd> m_mdiClient;
+        CMDIClient<CWnd>* m_pMdiClient;
     };
 
 
@@ -233,6 +235,7 @@ namespace Win32xx
     template <class T>
     inline CMDIFrameT<T>::CMDIFrameT()
     {
+        SetMDIClient(m_mdiClient);
     }
 
     // Create the MDI frame.

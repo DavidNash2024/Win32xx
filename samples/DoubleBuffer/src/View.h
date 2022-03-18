@@ -22,12 +22,12 @@ protected:
 
 private:
     // Command handlers
-	LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CBitmap CreateMaskBitmap();
 
     // Member variables
-	CBitmap m_blue;
+    CBitmap m_blue;
     CBitmap m_orange;
     CBitmap m_mask;
     CSize m_ballSize;

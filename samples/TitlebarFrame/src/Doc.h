@@ -18,7 +18,7 @@ public:
     void FileStore(LPCTSTR filename);
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual void Serialize(CArchive& ar);
 };
 

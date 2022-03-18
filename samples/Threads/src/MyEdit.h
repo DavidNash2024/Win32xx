@@ -16,7 +16,7 @@ public:
     virtual ~CMyEdit() {}
 
 protected:
-    // Virtual functions that override base class functions 
+    // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
 

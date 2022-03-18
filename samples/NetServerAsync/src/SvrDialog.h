@@ -98,7 +98,7 @@ private:
     // Message handlers
     BOOL OnSocketDisconnect(WPARAM wparam);
     LRESULT OnSocketMessage(WPARAM wparam, LPARAM lparam);
-    
+
     // Socket message handlers
     BOOL OnSocketAccept();
     BOOL OnSocketReceive();
