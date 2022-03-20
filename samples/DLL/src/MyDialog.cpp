@@ -89,6 +89,9 @@ BOOL CMyDialog::OnInitDialog()
     for (int i = 0 ; i < 8 ; i++)
         SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(_T("List Box")));
 
+    // Select the first radio button
+    CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
+
     return TRUE;
 }
 

@@ -209,7 +209,7 @@ namespace Win32xx
         if (str)
         {
             // Resize the vector and assign null WCHAR to each element.
-            int charBytes = (charCount == -1) ? -1 : 2 * charCount;
+            int charBytes = (charCount == -1) ? -1 : sizeof(CHAR) * charCount;
             int length = MultiByteToWideChar(codePage, 0, str, charBytes, NULL, 0) + 1;
             m_wideArray.assign(length, L'\0');
 
@@ -233,7 +233,8 @@ namespace Win32xx
     inline CWtoA::CWtoA(LPCWSTR str, UINT codePage /*= CP_ACP*/, int charCount /*= -1*/) : m_str(str)
     {
         // Resize the vector and assign null char to each element
-        int length = WideCharToMultiByte(codePage, 0, str, charCount, NULL, 0, NULL, NULL) + 1;
+        int charBytes = (charCount == -1) ? -1 : sizeof(WCHAR) * charCount;
+        int length = WideCharToMultiByte(codePage, 0, str, charBytes, NULL, 0, NULL, NULL) + 1;
         m_ansiArray.assign(length, '\0');
 
         // Fill our vector with the converted char array

@@ -189,6 +189,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\PrintDialog.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\PrintParent.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\RichView.cpp"
 				>
 			</File>
@@ -231,6 +239,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\PrintParent.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\resource.h"
 				>
 			</File>
@@ -240,6 +252,10 @@
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\targetver.h"
 				>
 			</File>
 			<File

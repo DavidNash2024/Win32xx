@@ -26,7 +26,8 @@
 #define IDM_EDIT_DELETE                 135
 #define IDM_HELP_ABOUT                  140
 
-#define IDW_INDICATOR_OVR               150
+#define IDW_INDICATOR_INS               150
+#define IDW_INDICATOR_OVR               151
 
 // Next default values for new objects
 //

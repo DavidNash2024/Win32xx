@@ -164,18 +164,19 @@ namespace Win32xx
 
         // Override these functions as required
         virtual void AdjustFrameRect(const RECT& viewRect);
-        virtual CString GetThemeName() const;
         virtual CRect GetViewRect() const;
-        virtual BOOL IsMDIChildMaxed() const { return FALSE; }
-        virtual BOOL IsMDIFrame() const      { return FALSE; }
         virtual void SetStatusIndicators();
         virtual void RecalcLayout();
         virtual void RecalcViewLayout();
         virtual void SetStatusParts();
 
-        // virtual Accessors and mutators
+        // Virtual accessors and mutators
         virtual CWnd& GetView() const;
         virtual void SetView(CWnd& view);
+
+        // Virtual state functions
+        virtual BOOL IsMDIChildMaxed() const { return FALSE; }
+        virtual BOOL IsMDIFrame() const { return FALSE; }
 
         // Accessors and mutators for the menubar, rebar, statusbar and toolbar.
         CMenuBar& GetMenuBar() const { return *m_pMenuBar; }
@@ -203,6 +204,7 @@ namespace Win32xx
         const ToolBarTheme& GetToolBarTheme() const       { return m_tbTheme; }
         CString GetStatusText() const                     { return m_statusText; }
         CString GetTitle() const                          { return T::GetWindowText(); }
+        CString GetXPThemeName() const;
         void SetAccelerators(UINT accelID);
         void SetFrameMenu(int menuID);
         void SetFrameMenu(HMENU menu);
@@ -341,7 +343,6 @@ namespace Win32xx
         CString m_keyName;                  // CString for Registry key name
         CString m_statusText;               // CString for status text
         CString m_tooltip;                  // CString for tool tips
-        CString m_xpThemeName;              // CString for Windows Theme Name
         MenuTheme m_mbTheme;                // struct of theme info for the popup Menu and MenuBar
         ReBarTheme m_rbTheme;               // struct of theme info for the ReBar
         StatusBarTheme m_sbTheme;           // struct of theme info for the StatusBar
@@ -1586,7 +1587,7 @@ namespace Win32xx
 
     // Returns the XP theme name.
     template <class T>
-    inline CString CFrameT<T>::GetThemeName() const
+    inline CString CFrameT<T>::GetXPThemeName() const
     {
         HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
         WCHAR themeName[31] = L"";
@@ -2300,8 +2301,7 @@ namespace Win32xx
             UpdateMenuBarBandSize();
         }
 
-        if (m_xpThemeName != GetThemeName())
-            SetTheme();
+        SetTheme();
 
         // Reposition and redraw everything.
         RecalcLayout();
@@ -2849,7 +2849,7 @@ namespace Win32xx
         if (IsUsingThemes())
         {
             // Retrieve the XP theme name.
-            m_xpThemeName = GetThemeName();
+            CString xpThemeName = GetXPThemeName();
 
             enum Themetype{ Win8, Win7, XP_Blue, XP_Silver, XP_Olive, gray };
 
@@ -2858,11 +2858,11 @@ namespace Win32xx
 
             if (GetWinVersion() < 2600) // For Windows XP.
             {
-                if (m_xpThemeName == _T("NormalColor"))
+                if (xpThemeName == _T("NormalColor"))
                     theme = XP_Blue;
-                if (m_xpThemeName == _T("Metallic"))
+                if (xpThemeName == _T("Metallic"))
                     theme = XP_Silver;
-                if (m_xpThemeName == _T("HomeStead"))
+                if (xpThemeName == _T("HomeStead"))
                     theme = XP_Olive;
             }
             else if (GetWinVersion() <= 2601)

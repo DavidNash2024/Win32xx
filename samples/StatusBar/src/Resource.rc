@@ -156,6 +156,7 @@ BEGIN
     IDW_MAIN                "StatusBar Demo"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
+    IDW_INDICATOR_INS       "INS"
     IDW_INDICATOR_OVR       "OVR"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"

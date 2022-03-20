@@ -26,6 +26,20 @@ CMainFrame::~CMainFrame()
 {
 }
 
+// Adjusts the specified value for the current DPI.
+int CMainFrame::AdjustForDPI(int value) const
+{
+    CClientDC statusDC(GetStatusBar());
+    statusDC.SelectObject(GetStatusBar().GetFont());
+
+    // Perform the DPI adjustment calculation.
+    const int defaultDPI = 96;
+    int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
+    value = MulDiv(value, xDPI, defaultDPI);
+
+    return value;
+}
+
 // Clears the contents of the richedit view.
 void CMainFrame::ClearContents()
 {
@@ -100,6 +114,19 @@ void CMainFrame::DetermineEncoding(CFile& file)
     file.SeekToBegin();
 
     SetEncoding(encoding);
+}
+
+// Retrieves the width of the part required to contain the specified text.
+int CMainFrame::GetTextPartWidth(LPCTSTR text) const
+{
+    CClientDC statusDC(GetStatusBar());
+    statusDC.SelectObject(GetStatusBar().GetFont());
+    CSize textSize = statusDC.GetTextExtentPoint32(text);
+    int width = textSize.cx;
+    const int border = 8;
+    width += border;
+
+    return width;
 }
 
 // The stream in callback function. Reads from the file.
@@ -711,7 +738,6 @@ BOOL CMainFrame::OnPreviewPrint()
     return TRUE;
 }
 
-
 // Called when the Print Preview's "Print Setup" button is pressed.
 BOOL CMainFrame::OnPreviewSetup()
 {
@@ -862,9 +888,9 @@ void CMainFrame::SetPathName(LPCTSTR filePathName)
 }
 
 // Override CFrame<T>::SetStatusIndicators to indicate insert character status.
-inline void CMainFrame::SetStatusIndicators()
+void CMainFrame::SetStatusIndicators()
 {
-    if (GetStatusBar().IsWindow() && (IsUsingIndicatorStatus()))
+    if (GetStatusBar().IsWindow())
     {
         // Calculate the width of the text indicators
         CClientDC statusDC(GetStatusBar());
@@ -872,34 +898,6 @@ inline void CMainFrame::SetStatusIndicators()
         CString cap = LoadString(IDW_INDICATOR_CAPS);
         CString num = LoadString(IDW_INDICATOR_NUM);
         CString ovr = LoadString(IDW_INDICATOR_OVR);
-        CString mode = _T("Plain Text mode     ");
-        CSize capSize = statusDC.GetTextExtentPoint32(cap, cap.GetLength());
-        CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
-        CSize ovrSize = statusDC.GetTextExtentPoint32(_T("OVR"), ovr.GetLength());
-        CSize modeSize = statusDC.GetTextExtentPoint32(mode, mode.GetLength());
-
-        BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
-        int cxGripper = hasGripper ? 20 : 0;
-        int cxBorder = 8;
-
-        // Adjust for DPI aware
-        int defaultDPI = 96;
-        int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
-        cxGripper = MulDiv(cxGripper, xDPI, defaultDPI);
-        capSize.cx += cxBorder;
-        numSize.cx += cxBorder;
-        ovrSize.cx += cxBorder;
-
-        // Get the coordinates of the window's client area.
-        CRect clientRect = GetClientRect();
-        int width = clientRect.right;
-
-        // Create 4 panes
-        GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + ovrSize.cx + modeSize.cx + cxGripper));
-        GetStatusBar().SetPartWidth(1, modeSize.cx);
-        GetStatusBar().SetPartWidth(2, capSize.cx);
-        GetStatusBar().SetPartWidth(3, numSize.cx);
-        GetStatusBar().SetPartWidth(4, ovrSize.cx);
 
         CString status0 = m_isRTF ? LoadString(IDW_INDICATOR_RICH) : LoadString(IDW_INDICATOR_PLAIN);
         CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
@@ -907,17 +905,55 @@ inline void CMainFrame::SetStatusIndicators()
         CString status3 = (::GetKeyState(VK_INSERT) & 0x0001) ? LoadString(IDW_INDICATOR_OVR) : LoadString(IDW_INDICATOR_INS);
 
         // Only update indicators if the text has changed
-        if (status0 != m_oldStatus[0])  GetStatusBar().SetPartText(1, status0);
-        if (status1 != m_oldStatus[1])  GetStatusBar().SetPartText(2, status1);
-        if (status2 != m_oldStatus[2])  GetStatusBar().SetPartText(3, status2);
-        if (status3 != m_oldStatus[3])  GetStatusBar().SetPartText(4, status3);
-
-        m_oldStatus[0] = status0;
-        m_oldStatus[1] = status1;
-        m_oldStatus[2] = status2;
-        m_oldStatus[3] = status3;
+        GetStatusBar().SetPartText(1, status0);
+        GetStatusBar().SetPartText(2, status1);
+        GetStatusBar().SetPartText(3, status2);
+        GetStatusBar().SetPartText(4, status3);
     }
 }
+
+void CMainFrame::SetStatusParts()
+{
+    // Calculate the width of the text indicators
+    CClientDC statusDC(GetStatusBar());
+    statusDC.SelectObject(GetStatusBar().GetFont());
+    CString mode = LoadString(IDW_INDICATOR_PLAIN);
+    CString cap = LoadString(IDW_INDICATOR_CAPS);
+    CString num = LoadString(IDW_INDICATOR_NUM);
+    CString ovr = LoadString(IDW_INDICATOR_OVR);
+
+    // Fill a vector with the status bar part widths.
+    std::vector<int> partWidths;
+    partWidths.push_back(GetTextPartWidth(mode));
+    partWidths.push_back(GetTextPartWidth(cap));
+    partWidths.push_back(GetTextPartWidth(num));
+    partWidths.push_back(GetTextPartWidth(ovr));
+
+    int sumWidths = 0;
+    std::vector<int>::iterator iter;
+    for (iter = partWidths.begin(); iter != partWidths.end(); ++iter)
+    {
+        sumWidths += *iter;
+    }
+
+    const int gripWidth = 20;
+    sumWidths += AdjustForDPI(gripWidth);
+
+    // Insert the width for the first status bar part into the vector.
+    CRect clientRect = GetClientRect();
+    const int minWidth = 300;
+    int width = MAX(minWidth, clientRect.right);
+    std::vector<int>::iterator begin = partWidths.begin();
+    partWidths.insert(begin, width - sumWidths);
+
+    // Create or resize the status bar parts.
+    for (iter = partWidths.begin(); iter != partWidths.end(); ++iter)
+    {
+        int part = static_cast<int>(iter - partWidths.begin());
+        GetStatusBar().SetPartWidth(part, *iter);
+    }
+}
+
 
 // Adds images to the popup menu items.
 void CMainFrame::SetupMenuIcons()
