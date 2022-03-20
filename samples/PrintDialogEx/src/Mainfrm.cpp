@@ -26,6 +26,20 @@ CMainFrame::~CMainFrame()
 {
 }
 
+// Adjusts the specified value for the current DPI.
+int CMainFrame::AdjustForDPI(int value) const
+{
+    CClientDC statusDC(GetStatusBar());
+    statusDC.SelectObject(GetStatusBar().GetFont());
+
+    // Perform the DPI adjustment calculation.
+    const int defaultDPI = 96;
+    int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
+    value = MulDiv(value, xDPI, defaultDPI);
+
+    return value;
+}
+
 // Clears the contents of the richedit view.
 void CMainFrame::ClearContents()
 {
@@ -100,6 +114,19 @@ void CMainFrame::DetermineEncoding(CFile& file)
     file.SeekToBegin();
 
     SetEncoding(encoding);
+}
+
+// Retrieves the width of the part required to contain the specified text.
+int CMainFrame::GetTextPartWidth(LPCTSTR text) const
+{
+    CClientDC statusDC(GetStatusBar());
+    statusDC.SelectObject(GetStatusBar().GetFont());
+    CSize textSize = statusDC.GetTextExtentPoint32(text);
+    int width = textSize.cx;
+    const int border = 8;
+    width += border;
+
+    return width;
 }
 
 // The stream in callback function. Reads from the file.
@@ -254,23 +281,23 @@ BOOL CMainFrame::OnEditCopy()
     return TRUE;
 }
 
+// Clears the contents of the document.
+BOOL CMainFrame::OnEditDelete()
+{
+    m_richView.Clear();
+    return TRUE;
+}
+
 // Paste plain text or rich text to the document.
 BOOL CMainFrame::OnEditPaste()
 {
-   if (m_isRTF)
+    if (m_isRTF)
         // Paste rich text and plain text.
         m_richView.Paste();
     else
         // Paste plain text only.
         m_richView.PasteSpecial(CF_TEXT);
 
-   return TRUE;
-}
-
-// Clears the contents of the document.
-BOOL CMainFrame::OnEditDelete()
-{
-    m_richView.Clear();
     return TRUE;
 }
 
@@ -377,6 +404,35 @@ BOOL CMainFrame::OnFileNewRich()
     return TRUE;
 }
 
+// Display the file choose dialog and load text from a file.
+BOOL CMainFrame::OnFileOpen()
+{
+    // szFilters is a text string that includes two file name filters:
+    // "*.txt" for Plain Text files, "*.rtf" for Rich Text files and "*.*' for "All Files."
+    LPCTSTR filters;
+    if (m_isRTF)
+        filters = _T("Rich Text Files (*.rtf)\0*.rtf\0Plain Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
+    else
+        filters = _T("Plain Text Files (*.txt)\0*.txt\0Rich Text Files (*.rtf)\0*.rtf\0All Files (*.*)\0*.*\0");
+
+    CFileDialog fileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, filters);
+
+    if (fileDlg.DoModal(*this) == IDOK)
+    {
+        CString str = fileDlg.GetPathName();
+
+        if (ReadFile(str))
+        {
+            SetPathName(str);
+            AddMRUEntry(str);
+            SetWindowTitle();
+            m_richView.ClearPrintOptions();
+        }
+    }
+
+    return TRUE;
+}
+
 // Preview the print job before sending it to a printer.
 BOOL CMainFrame::OnFilePreview()
 {
@@ -472,35 +528,6 @@ BOOL CMainFrame::OnFilePrintSetup()
     {
         // No default printer
         MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
-    }
-
-    return TRUE;
-}
-
-// Display the file choose dialog and load text from a file.
-BOOL CMainFrame::OnFileOpen()
-{
-    // szFilters is a text string that includes two file name filters:
-    // "*.txt" for Plain Text files, "*.rtf" for Rich Text files and "*.*' for "All Files."
-    LPCTSTR filters;
-    if (m_isRTF)
-        filters = _T("Rich Text Files (*.rtf)\0*.rtf\0Plain Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
-    else
-        filters = _T("Plain Text Files (*.txt)\0*.txt\0Rich Text Files (*.rtf)\0*.rtf\0All Files (*.*)\0*.*\0");
-
-    CFileDialog fileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, filters);
-
-    if (fileDlg.DoModal(*this) == IDOK)
-    {
-        CString str = fileDlg.GetPathName();
-
-        if (ReadFile(str))
-        {
-            SetPathName(str);
-            AddMRUEntry(str);
-            SetWindowTitle();
-            m_richView.ClearPrintOptions();
-        }
     }
 
     return TRUE;
@@ -714,7 +741,6 @@ BOOL CMainFrame::OnPreviewPrint()
     return TRUE;
 }
 
-
 // Called when the Print Preview's "Print Setup" button is pressed.
 BOOL CMainFrame::OnPreviewSetup()
 {
@@ -856,7 +882,6 @@ void CMainFrame::SetEncoding(int encoding)
     case UTF16LE:      SetStatusText(_T("Encoding: UTF-16"));          break;
     case UTF16LE_BOM:  SetStatusText(_T("Encoding: UTF-16 with BOM")); break;
     }
-
 }
 
 // Saves the documents full path name.
@@ -866,9 +891,9 @@ void CMainFrame::SetPathName(LPCTSTR filePathName)
 }
 
 // Override CFrame<T>::SetStatusIndicators to indicate insert character status.
-inline void CMainFrame::SetStatusIndicators()
+void CMainFrame::SetStatusIndicators()
 {
-    if (GetStatusBar().IsWindow() && (IsUsingIndicatorStatus()))
+    if (GetStatusBar().IsWindow())
     {
         // Calculate the width of the text indicators
         CClientDC statusDC(GetStatusBar());
@@ -876,34 +901,6 @@ inline void CMainFrame::SetStatusIndicators()
         CString cap = LoadString(IDW_INDICATOR_CAPS);
         CString num = LoadString(IDW_INDICATOR_NUM);
         CString ovr = LoadString(IDW_INDICATOR_OVR);
-        CString mode = _T("Plain Text mode     ");
-        CSize capSize = statusDC.GetTextExtentPoint32(cap, cap.GetLength());
-        CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
-        CSize ovrSize = statusDC.GetTextExtentPoint32(ovr, ovr.GetLength());
-        CSize modeSize = statusDC.GetTextExtentPoint32(mode, mode.GetLength());
-
-        BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
-        int cxGripper = hasGripper ? 20 : 0;
-        int cxBorder = 8;
-
-        // Adjust for DPI aware
-        int defaultDPI = 96;
-        int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
-        cxGripper = MulDiv(cxGripper, xDPI, defaultDPI);
-        capSize.cx += cxBorder;
-        numSize.cx += cxBorder;
-        ovrSize.cx += cxBorder;
-
-        // Get the coordinates of the window's client area.
-        CRect clientRect = GetClientRect();
-        int width = clientRect.right;
-
-        // Create 4 panes
-        GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + ovrSize.cx + modeSize.cx + cxGripper));
-        GetStatusBar().SetPartWidth(1, modeSize.cx);
-        GetStatusBar().SetPartWidth(2, capSize.cx);
-        GetStatusBar().SetPartWidth(3, numSize.cx);
-        GetStatusBar().SetPartWidth(4, ovrSize.cx);
 
         CString status0 = m_isRTF ? LoadString(IDW_INDICATOR_RICH) : LoadString(IDW_INDICATOR_PLAIN);
         CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
@@ -915,6 +912,48 @@ inline void CMainFrame::SetStatusIndicators()
         GetStatusBar().SetPartText(2, status1);
         GetStatusBar().SetPartText(3, status2);
         GetStatusBar().SetPartText(4, status3);
+    }
+}
+
+void CMainFrame::SetStatusParts()
+{
+    // Calculate the width of the text indicators
+    CClientDC statusDC(GetStatusBar());
+    statusDC.SelectObject(GetStatusBar().GetFont());
+    CString mode = LoadString(IDW_INDICATOR_PLAIN);
+    CString cap = LoadString(IDW_INDICATOR_CAPS);
+    CString num = LoadString(IDW_INDICATOR_NUM);
+    CString ovr = LoadString(IDW_INDICATOR_OVR);
+
+    // Fill a vector with the status bar part widths.
+    std::vector<int> partWidths;
+    partWidths.push_back(GetTextPartWidth(mode));
+    partWidths.push_back(GetTextPartWidth(cap));
+    partWidths.push_back(GetTextPartWidth(num));
+    partWidths.push_back(GetTextPartWidth(ovr));
+
+    int sumWidths = 0;
+    std::vector<int>::iterator iter;
+    for (iter = partWidths.begin(); iter != partWidths.end(); ++iter)
+    {
+        sumWidths += *iter;
+    }
+
+    const int gripWidth = 20;
+    sumWidths += AdjustForDPI(gripWidth);
+
+    // Insert the width for the first status bar part into the vector.
+    CRect clientRect = GetClientRect();
+    const int minWidth = 300;
+    int width = MAX(minWidth, clientRect.right);
+    std::vector<int>::iterator begin = partWidths.begin();
+    partWidths.insert(begin, width - sumWidths);
+
+    // Create or resize the status bar parts.
+    for (iter = partWidths.begin(); iter != partWidths.end(); ++iter)
+    {
+        int part = static_cast<int>(iter - partWidths.begin());
+        GetStatusBar().SetPartWidth(part, *iter);
     }
 }
 

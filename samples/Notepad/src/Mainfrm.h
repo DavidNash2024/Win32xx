@@ -33,15 +33,18 @@ protected:
     // Virtual functions that override base class functions
     virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int OnCreate(CREATESTRUCT& cs);
+    virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+    virtual void SetStatusIndicators();
+    virtual void SetStatusParts();
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    // Static callback functions
     static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
     static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
 
@@ -74,22 +77,23 @@ private:
     BOOL OnPreviewPrint();
     BOOL OnPreviewSetup();
 
+    int  AdjustForDPI(int value) const;
     void ClearContents();
     void DetermineEncoding(CFile& file);
+    int  GetTextPartWidth(LPCTSTR text) const;
     BOOL ReadFile(LPCTSTR fileName);
     void RestoreFocus() { ::SetFocus(m_oldFocus); }
     void SaveFocus() { m_oldFocus = ::GetFocus(); }
     void SaveModifiedText();
     void SetEncoding(int encoding);
     void SetPathName(LPCTSTR fullFileName);
-    void SetStatusIndicators();
+
     void SetWindowTitle();
     BOOL WriteFile(LPCTSTR fileName);
 
     // Member variables
     CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
-    CString m_oldStatus[4];                // Array of CString holding old status;
     CString m_pathName;
     int m_encoding;
     bool m_isToolbarShown;

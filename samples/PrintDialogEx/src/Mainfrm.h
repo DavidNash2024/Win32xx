@@ -38,12 +38,13 @@ protected:
     virtual void OnMenuUpdate(UINT id);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void SetStatusIndicators();
+    virtual void SetStatusParts();
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    // static callbacks
+    // Static callback functions
     static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
     static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
 
@@ -76,8 +77,10 @@ private:
     BOOL OnPreviewPrint();
     BOOL OnPreviewSetup();
 
+    int  AdjustForDPI(int value) const;
     void ClearContents();
     void DetermineEncoding(CFile& file);
+    int  GetTextPartWidth(LPCTSTR text) const;
     BOOL ReadFile(LPCTSTR fileName);
     void RestoreFocus() { ::SetFocus(m_oldFocus); }
     void SaveFocus() { m_oldFocus = ::GetFocus(); }

@@ -68,7 +68,10 @@
 		</VirtualTargets>
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
+		<Unit filename="../src/PrintDialog.cpp" />
 		<Unit filename="../src/PrintDialog.h" />
+		<Unit filename="../src/PrintParent.cpp" />
+		<Unit filename="../src/PrintParent.h" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

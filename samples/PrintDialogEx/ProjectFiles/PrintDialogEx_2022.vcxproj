@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
+    <ClCompile Include="..\src\PrintDialog.cpp" />
+    <ClCompile Include="..\src\PrintParent.cpp" />
     <ClCompile Include="..\src\RichView.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -83,6 +85,7 @@
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\PrintDialog.h" />
+    <ClInclude Include="..\src\PrintParent.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\RichView.h" />
     <ClInclude Include="..\src\stdafx.h" />
