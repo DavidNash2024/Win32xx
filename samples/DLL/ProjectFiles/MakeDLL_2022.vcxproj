@@ -259,6 +259,7 @@
     <ClInclude Include="..\..\..\include\wxx_archive.h" />
     <ClInclude Include="..\..\..\include\wxx_commondlg.h" />
     <ClInclude Include="..\..\..\include\wxx_controls.h" />
+    <ClInclude Include="..\..\..\include\wxx_criticalsection.h" />
     <ClInclude Include="..\..\..\include\wxx_cstring.h" />
     <ClInclude Include="..\..\..\include\wxx_ddx.h" />
     <ClInclude Include="..\..\..\include\wxx_dialog.h" />
@@ -270,12 +271,14 @@
     <ClInclude Include="..\..\..\include\wxx_folderdialog.h" />
     <ClInclude Include="..\..\..\include\wxx_frame.h" />
     <ClInclude Include="..\..\..\include\wxx_gdi.h" />
+    <ClInclude Include="..\..\..\include\wxx_hglobal.h" />
     <ClInclude Include="..\..\..\include\wxx_imagelist.h" />
     <ClInclude Include="..\..\..\include\wxx_listview.h" />
     <ClInclude Include="..\..\..\include\wxx_mdi.h" />
     <ClInclude Include="..\..\..\include\wxx_menu.h" />
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
     <ClInclude Include="..\..\..\include\wxx_menumetrics.h" />
+    <ClInclude Include="..\..\..\include\wxx_messagepump.h" />
     <ClInclude Include="..\..\..\include\wxx_metafile.h" />
     <ClInclude Include="..\..\..\include\wxx_mutex.h" />
     <ClInclude Include="..\..\..\include\wxx_preview.h" />
@@ -297,6 +300,7 @@
     <ClInclude Include="..\..\..\include\wxx_taskdialog.h" />
     <ClInclude Include="..\..\..\include\wxx_textconv.h" />
     <ClInclude Include="..\..\..\include\wxx_themes.h" />
+    <ClInclude Include="..\..\..\include\wxx_thread.h" />
     <ClInclude Include="..\..\..\include\wxx_time.h" />
     <ClInclude Include="..\..\..\include\wxx_toolbar.h" />
     <ClInclude Include="..\..\..\include\wxx_treeview.h" />

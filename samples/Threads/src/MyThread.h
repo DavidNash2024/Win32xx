@@ -9,13 +9,13 @@
 
 
 /////////////////////////////////////////////////////////
-// CMyThread manages a windows thread. It runs a separate
+// CMyWinThread manages a windows thread. It runs a separate
 // message loop and creates a test window when it starts.
-class CMyThread : public CWinThread
+class CMyWinThread : public CWinThread
 {
 public:
-    CMyThread(int threadNumber, HWND mainWindow);
-    virtual ~CMyThread();
+    CMyWinThread(int threadNumber, HWND mainWindow);
+    virtual ~CMyWinThread();
     int GetThreadNumber() { return m_threadNumber; }
 
 protected:

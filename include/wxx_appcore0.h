@@ -40,33 +40,17 @@
 #define _WIN32XX_APPCORE0_H_
 
 
-///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 // wxx_appcore0.h
-// This file contains the declarations of the following set of classes.
-//
-// 1) CCriticalSection: This class is used internally to manage thread access
-//            to shared resources. You can also use this class to lock and
-//            release your own critical sections.
-//
-// 2) CObject: A base class for CWnd and any other class that uses serialization.
-//             It provides a virtual Serialize function for use by CArchive.
-//
-// 3) CThreadLock: Provides a RAII-style wrapper for CCriticalSection.
-//
-// 4) CHGlobal:  A class which wraps a global memory handle. The memory is
-//               automatically freed when the CHGlobal object goes out of scope.
-//
-// 5) CWinThread: This class is the parent class for CWinApp. It is also the
-//            class used to create additional GUI and worker threads.
-//
-// 6) CWinApp: This class is used start Win32++ and run the message loop. You
-//            should inherit from this class to start Win32++ in your own
-//            application.
+// This file contains the declarations of the CWinApp class.
+// This class is used start Win32++ and run the message loop. You should
+// should inherit from this class to start Win32++ in your own application.
 
 
-// The wxx_setup.h file defines the set of macros and includes the C, C++,
-// and windows header files required by Win32++.
 #include "wxx_setup.h"
+#include "wxx_criticalsection.h"
+#include "wxx_hglobal.h"
+#include "wxx_messagepump.h"
 
 namespace Win32xx
 {
@@ -190,14 +174,12 @@ namespace Win32xx
             {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
 
-
     // The comparison function object used by CWinApp::m_mapGDI
     struct CompareGDI
     {
         bool operator()(const HGDIOBJ a, const HGDIOBJ b) const
             {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
-
 
     // The comparison function object used by CWinApp::m_mapHIMAGELIST
     struct CompareHIMAGELIST
@@ -206,14 +188,12 @@ namespace Win32xx
             {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
 
-
     // The comparison function object used by CWinApp::m_mapHMENU
     struct CompareHMENU
     {
         bool operator()(const HMENU a, const HMENU b) const
             {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
-
 
     // The comparison function object used by CWinApp::m_mapHWND
     struct CompareHWND
@@ -222,160 +202,25 @@ namespace Win32xx
             {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
 
-
     // Used for Thread Local Storage (TLS)
     struct TLSData
     {
-        CWnd* pWnd;         // pointer to CWnd object for Window creation
-        HWND  mainWnd;      //  handle to the main window for the thread (usually CFrame)
-        CMenuBar* pMenuBar; // pointer to CMenuBar object used for the WH_MSGFILTER hook
-        HHOOK msgHook;      // WH_MSGFILTER hook for CMenuBar and Modal Dialogs
-        long  dlgHooks;     // Number of Dialog MSG hooks
+        CWnd* pWnd;         // Pointer to CWnd object for window creation
+        HWND  mainWnd;      // Handle to the main window for the thread (usually CFrame)
+        CMenuBar* pMenuBar; // Pointer to CMenuBar object used for the WH_MSGFILTER hook
+        HHOOK msgHook;      // WH_MSGFILTER hook for CMenuBar and modal dialogs
+        long  dlgHooks;     // Number of dialog MSG hooks
 
         TLSData() : pWnd(0), mainWnd(0), pMenuBar(0), msgHook(0), dlgHooks(0) {} // Constructor
     };
 
-
-    /////////////////////////////////////////
-    // This class is used for thread synchronisation. A critical section object
-    // provides synchronization similar to that provided by a mutex object,
-    // except that a critical section can be used only by the threads of a
-    // single process. Critical sections are faster and more efficient than mutexes.
-    // The CCriticalSection object should be created in the primary thread. Create
-    // them as member variables in your CWinApp derived class.
-    class CCriticalSection
-    {
-    public:
-        CCriticalSection();
-        ~CCriticalSection();
-
-        void Lock();
-        void Release();
-
-    private:
-        CCriticalSection ( const CCriticalSection& );
-        CCriticalSection& operator = ( const CCriticalSection& );
-
-        CRITICAL_SECTION m_cs;
-        long m_count;
-    };
-
-
-    /////////////////////////////////////////////////////////////////
-    // CThreadLock provides a convenient RAII-style mechanism for
-    // owning a CCriticalSection for the duration of a scoped block.
-    // Automatically locks the specified CCriticalSection when
-    // constructed, and releases the critical section when destroyed.
-    class CThreadLock
-    {
-    public:
-        CThreadLock(CCriticalSection& cs) : m_cs(cs) { m_cs.Lock(); }
-        ~CThreadLock() { m_cs.Release(); }
-
-    private:
-        CThreadLock(const CThreadLock&);                // Disable copy construction
-        CThreadLock& operator= (const CThreadLock&);    // Disable assignment operator
-        CCriticalSection& m_cs;
-    };
-
-
-    ////////////////////////////////////////////////////////////////
-    // CHGlobal is a class used to wrap a global memory handle.
-    // It automatically frees the global memory when the object goes
-    // out of scope. This class is used by CDevMode and CDevNames
-    // defined in wxx_printdialogs.h
-    class CHGlobal
-    {
-    public:
-        CHGlobal() : m_global(0) {}
-        CHGlobal(HGLOBAL handle) : m_global(handle) {}
-        CHGlobal(size_t size) : m_global(0) { Alloc(size); }
-        ~CHGlobal()                     { Free(); }
-
-        void Alloc(size_t size);
-        void Free();
-        HGLOBAL Get() const             { return m_global; }
-        void Reassign(HGLOBAL handle);
-
-        operator HGLOBAL() const        { return m_global; }
-
-    private:
-        CHGlobal(const CHGlobal&);              // Disable copy
-        CHGlobal& operator = (const CHGlobal&); // Disable assignment
-
-        HGLOBAL m_global;
-    };
-
-
-    ////////////////////////////////////////////////////////////////////
-    // The CObject class provides support for Serialization by CArchive.
-    class CObject
-    {
-    public:
-        CObject() {}
-        virtual ~CObject() {}
-
-        virtual void Serialize(CArchive& ar);
-    };
-
-
-    // typedef for _beginthreadex's callback function.
-    typedef UINT (WINAPI *PFNTHREADPROC)(LPVOID);
-
-
-    //////////////////////////////////////////////////////////////
-    // CWinThread manages a thread. It supports GUI threads and
-    // worker threads. For a GUI thread, it runs the message loop.
-    class CWinThread : public CObject
-    {
-    public:
-        CWinThread();
-        CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam);
-        virtual ~CWinThread();
-
-        // Overridables
-        virtual BOOL InitInstance();
-        virtual int MessageLoop();
-        virtual BOOL OnIdle(LONG count);
-        virtual BOOL PreTranslateMessage(MSG& msg);
-
-        // Operations
-        HANDLE  CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
-        HACCEL  GetAcceleratorTable() const { return m_accel; }
-        HWND    GetAcceleratorsWindow() const { return m_accelWnd; }
-        HWND    GetMainWnd() const;
-        HANDLE  GetThread() const;
-        int     GetThreadID() const;
-        int     GetThreadPriority() const;
-        BOOL    IsRunning() const { return (WaitForSingleObject(m_thread, 0) == WAIT_TIMEOUT); }
-        BOOL    PostThreadMessage(UINT message, WPARAM wparam, LPARAM lparam) const;
-        DWORD   ResumeThread() const;
-        void    SetAccelerators(HACCEL accel, HWND hWndAccel);
-        void    SetMainWnd(HWND wnd);
-        BOOL    SetThreadPriority(int priority) const;
-        DWORD   SuspendThread() const;
-        operator HANDLE () const { return GetThread(); }
-
-    private:
-        CWinThread(const CWinThread&);              // Disable copy construction
-        CWinThread& operator = (const CWinThread&); // Disable assignment operator
-
-        static  UINT WINAPI StaticThreadProc(LPVOID pCThread);
-
-        PFNTHREADPROC m_pfnThreadProc;  // Callback function for worker threads
-        LPVOID m_pThreadParams;         // Thread parameter for worker threads
-        HANDLE m_thread;                // Handle of this thread
-        UINT m_threadID;                // ID of this thread
-        HACCEL m_accel;                 // handle to the accelerator table
-        HWND m_accelWnd;                // handle to the window for accelerator keys
-    };
 
     ///////////////////////////////////////////////////////////////
     // CWinApp manages the application. Its constructor initializes
     // the Win32++ framework. The Run function calls InitInstance,
     // and starts the message loop on the main thread.
     // There can only be one instance of CWinApp.
-    class CWinApp : public CWinThread
+    class CWinApp : public CMessagePump
     {
         // Provide these access to CWinApp's private members:
         friend class CDC;
@@ -395,24 +240,24 @@ namespace Win32xx
         virtual ~CWinApp();
 
         // Overridables
-        virtual BOOL InitInstance();
-        virtual int Run();
+        virtual BOOL PreTranslateMessage(MSG& msg);
 
         // Operations
         CWnd* GetCWndFromMap(HWND wnd);
         HINSTANCE GetInstanceHandle() const { return m_instance; }
+        HWND      GetMainWnd() const;
         HINSTANCE GetResourceHandle() const { return (m_resource ? m_resource : m_instance); }
-        TLSData* GetTlsData() const;
-        HCURSOR LoadCursor(LPCTSTR resourceName) const;
-        HCURSOR LoadCursor(int cursorID) const;
-        HCURSOR LoadStandardCursor(LPCTSTR cursorName) const;
-        HICON   LoadIcon(LPCTSTR resourceName) const;
-        HICON   LoadIcon(int iconID) const;
-        HICON   LoadStandardIcon(LPCTSTR iconName) const;
-        HANDLE  LoadImage(LPCTSTR resourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
-        HANDLE  LoadImage(int imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
-        HCURSOR SetCursor(HCURSOR cursor) const;
-        void    SetResourceHandle(HINSTANCE resource);
+        TLSData*  GetTlsData() const;
+        HCURSOR   LoadCursor(LPCTSTR resourceName) const;
+        HCURSOR   LoadCursor(int cursorID) const;
+        HCURSOR   LoadStandardCursor(LPCTSTR cursorName) const;
+        HICON     LoadIcon(LPCTSTR resourceName) const;
+        HICON     LoadIcon(int iconID) const;
+        HICON     LoadStandardIcon(LPCTSTR iconName) const;
+        HANDLE    LoadImage(LPCTSTR resourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
+        HANDLE    LoadImage(int imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
+        HCURSOR   SetCursor(HCURSOR cursor) const;
+        void      SetResourceHandle(HINSTANCE resource);
         TLSData* SetTlsData();
 
     private:

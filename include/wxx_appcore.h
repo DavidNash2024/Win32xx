@@ -41,17 +41,10 @@
 
 ///////////////////////////////////////////////////////
 // wxx_appcore.h
-// This file contains the definitions of the following set of classes.
-//
-// 1) CObject: A base class for CWnd and any other class that uses serialization.
-//             It provides a virtual Serialize function for use by CArchive.
-//
-// 2) CWinApp: This class is used start Win32++ and run the message loop. You
-//            should inherit from this class to start Win32++ in your own
-//            application.
-//
-// 3) CWinThread: This class is the parent class for CWinApp. It is also the
-//            class used to create additional GUI and worker threads.
+// This file contains the definitions of the CWinApp class.
+// This class is used start Win32++ and run the message loop. You
+// should inherit from this class to start Win32++ in your own
+// application.
 
 
 #include "wxx_appcore0.h"
@@ -62,353 +55,6 @@
 
 namespace Win32xx
 {
-    /////////////////////////////////////////////
-    // Definitions for the CCriticalSection class
-    //
-    inline CCriticalSection::CCriticalSection() : m_count(0)
-    {
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)  // >= VS2005
-#pragma warning ( push )
-#pragma warning ( disable : 28125 )           // call within __try __catch block.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)
-
-        ::InitializeCriticalSection(&m_cs);
-
-#if defined (_MSC_VER) && (_MSC_VER >= 1400)  // Note: Only Windows Server 2003 and Windows XP
-#pragma warning ( pop )                       //       require this warning to be suppressed.
-#endif // (_MSC_VER) && (_MSC_VER >= 1400)    //       This exception was removed in Vista and above.
-    }
-
-    inline CCriticalSection::~CCriticalSection()
-    {
-        while (m_count > 0)
-        {
-            Release();
-        }
-
-        ::DeleteCriticalSection(&m_cs);
-    }
-
-    // Enter the critical section and increment the lock count.
-    inline void CCriticalSection::Lock()
-    {
-        ::EnterCriticalSection(&m_cs);
-        InterlockedIncrement(&m_count);
-    }
-
-    // Leave the critical section and decrement the lock count.
-    inline void CCriticalSection::Release()
-    {
-        assert(m_count > 0);
-        if (m_count > 0)
-        {
-            ::LeaveCriticalSection(&m_cs);
-            ::InterlockedDecrement(&m_count);
-        }
-    }
-
-
-    ///////////////////////////////////////
-    // Definitions for the CHGlobal class
-    //
-
-    // Allocates a new global memory buffer for this object
-    inline void CHGlobal::Alloc(size_t size)
-    {
-        Free();
-        m_global = ::GlobalAlloc(GHND, size);
-        if (m_global == 0)
-            throw std::bad_alloc();
-    }
-
-    // Manually frees the global memory assigned to this object
-    inline void CHGlobal::Free()
-    {
-        if (m_global != 0)
-            VERIFY(::GlobalFree(m_global) == 0);  // Fails if the memory was already freed.
-
-        m_global = 0;
-    }
-
-    // Reassign is used when global memory has been reassigned, as
-    // can occur after a call to ::PrintDlg, ::PrintDlgEx, or ::PageSetupDlg.
-    // It assigns a new memory handle to be managed by this object
-    // and assumes any old memory has already been freed.
-    inline void  CHGlobal::Reassign(HGLOBAL global)
-    {
-        m_global = global;
-    }
-
-    ///////////////////////////////////////
-    // Definitions for the CObject class
-    //
-    inline void CObject::Serialize(CArchive& /* ar */ )
-    {
-    //  Override Serialize in the class inherited from CObject like this.
-
-    //  if (ar.IsStoring())
-    //  {
-    //      // Store a member variable in the archive
-    //      ar << m_someValue;
-    //  }
-    //  else
-    //  {
-    //      // Load a member variable from the archive
-    //      ar >> m_someValue;
-    //  }
-
-    }
-
-    ///////////////////////////////////////
-    // Definitions for the CWinThread class
-    //
-
-    // CWinThread constructor.
-    // Override CWinThread and use this constructor for GUI threads.
-    // InitInstance will be called when the thread runs.
-    inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_thread(0),
-                                       m_threadID(0), m_accel(0), m_accelWnd(0)
-    {
-    }
-
-    // CWinThread constructor.
-    // Use CWinThread directly and call this constructor for worker threads.
-    // Specify a pointer to the function to run when the thread starts.
-    // Specifying pParam for a worker thread is optional.
-    inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
-                        m_pThreadParams(0), m_thread(0), m_threadID(0), m_accel(0), m_accelWnd(0)
-    {
-        m_pfnThreadProc = pfnThreadProc;
-        m_pThreadParams = pParam;
-    }
-
-    inline CWinThread::~CWinThread()
-    {
-        if (m_thread)
-        {
-            // A thread's state is set to signalled when the thread terminates.
-            // If your thread is still running at this point, you have a bug.
-            if (IsRunning())
-            {
-                TRACE("*** Warning *** Ending CWinThread before ending its thread\n");
-            }
-
-            // Close the thread's handle
-            ::CloseHandle(m_thread);
-        }
-    }
-
-    // Creates a new thread
-    // Valid argument values:
-    // initflag                 Either CREATE_SUSPENDED or 0
-    // stack_size               Either the stack size or 0
-    // pSecurityAttributes      Either a pointer to SECURITY_ATTRIBUTES or 0
-    // Refer to CreateThread in the Windows API documentation for more information.
-    inline HANDLE CWinThread::CreateThread(unsigned initflag /* = 0 */, unsigned stack_size/* = 0 */,
-                                           LPSECURITY_ATTRIBUTES pSecurityAttributes /*= NULL*/)
-    {
-        if (NULL == m_pfnThreadProc) m_pfnThreadProc = CWinThread::StaticThreadProc;
-        if (NULL == m_pThreadParams) m_pThreadParams = this;
-
-        // Reusing the CWinThread
-        if (m_thread)
-        {
-            assert(!IsRunning());
-            CloseHandle(m_thread);
-        }
-
-        m_thread = reinterpret_cast<HANDLE>(::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc,
-                     m_pThreadParams, initflag, &m_threadID));
-
-        if (m_thread == 0)
-            throw CWinException(GetApp()->MsgAppThread());
-
-        return m_thread;
-    }
-
-    // Retrieves a handle to the main window for this thread.
-    // Note: CFrame set's itself as the main window of its thread
-    inline HWND CWinThread::GetMainWnd() const
-    {
-        TLSData* pTLSData = GetApp()->GetTlsData();
-
-        // Will assert if the thread doesn't have TLSData assigned.
-        // TLSData is assigned when the first window in the thread is created.
-        assert (pTLSData);
-
-        return pTLSData ? pTLSData->mainWnd : 0;
-    }
-
-    // Retrieves the handle of this thread.
-    inline HANDLE CWinThread::GetThread() const
-    {
-        return m_thread;
-    }
-
-    // Retrieves the thread's ID.
-    inline int CWinThread::GetThreadID() const
-    {
-        assert(m_thread);
-
-        return m_threadID;
-    }
-
-    // Retrieves this thread's priority
-    // Refer to GetThreadPriority in the Windows API documentation for more information.
-    inline int CWinThread::GetThreadPriority() const
-    {
-        assert(m_thread);
-        return ::GetThreadPriority(m_thread);
-    }
-
-    // Override this function to perform tasks when the thread starts.
-    // return TRUE to run a message loop, otherwise return FALSE.
-    // A thread with a window must run a message loop.
-    inline BOOL CWinThread::InitInstance()
-    {
-        return FALSE;
-    }
-
-    // This function manages the way window message are dispatched
-    // to a window procedure.
-    inline int CWinThread::MessageLoop()
-    {
-        MSG msg;
-        ZeroMemory(&msg, sizeof(msg));
-        int status = 1;
-        LONG lCount = 0;
-
-        while (status != 0)
-        {
-            // While idle, perform idle processing until OnIdle returns FALSE
-            while (!::PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) != FALSE)
-                ++lCount;
-
-            lCount = 0;
-
-            // Now wait until we get a message
-            if ((status = ::GetMessage(&msg, NULL, 0, 0)) == -1)
-                return -1;
-
-            if (!PreTranslateMessage(msg))
-            {
-                ::TranslateMessage(&msg);
-                ::DispatchMessage(&msg);
-            }
-
-        }
-
-        return LOWORD(msg.wParam);
-    }
-
-    // This function is called by the MessageLoop. It is called when the message queue
-    // is empty. Return TRUE to continue idle processing or FALSE to end idle processing
-    // until another message is queued. The count is incremented each time OnIdle is
-    // called, and reset to 0 each time a new messages is processed.
-    inline BOOL CWinThread::OnIdle(LONG /*count*/)
-    {
-        return FALSE;
-    }
-
-    // This function is called by the MessageLoop. It processes the
-    // keyboard accelerator keys and calls CWnd::PreTranslateMessage for
-    // keyboard and mouse events.
-    inline BOOL CWinThread::PreTranslateMessage(MSG& msg)
-    {
-        BOOL isProcessed = FALSE;
-
-        // only pre-translate mouse and keyboard input events
-        if ((msg.message >= WM_KEYFIRST && msg.message <= WM_KEYLAST) ||
-            (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST))
-        {
-            // Process keyboard accelerators
-            if ( ::TranslateAccelerator(GetAcceleratorsWindow(), GetAcceleratorTable(), &msg))
-                isProcessed = TRUE;
-            else
-            {
-                // Search the chain of parents for pretranslated messages.
-                for (HWND wnd = msg.hwnd; wnd != 0; wnd = ::GetParent(wnd))
-                {
-                    CWnd* pWnd = GetApp()->GetCWndFromMap(wnd);
-                    if (pWnd)
-                    {
-                        isProcessed = pWnd->PreTranslateMessage(msg);
-                        if (isProcessed)
-                            break;
-                    }
-                }
-            }
-        }
-
-        return isProcessed;
-    }
-
-    // Posts a message to the thread. The message will reach the MessageLoop, but
-    // will not call a CWnd's WndProc.
-    // Refer to PostThreadMessage in the Windows API documentation for more information.
-    inline BOOL CWinThread::PostThreadMessage(UINT msg, WPARAM wparam, LPARAM lparam) const
-    {
-        assert(m_thread);
-        return ::PostThreadMessage(GetThreadID(), msg, wparam, lparam);
-    }
-
-    // Resumes a thread that has been suspended, or created with the CREATE_SUSPENDED flag.
-    // Refer to ResumeThread in the Windows API documentation for more information.
-    inline DWORD CWinThread::ResumeThread() const
-    {
-        assert(m_thread);
-        return ::ResumeThread(m_thread);
-    }
-
-    // accel is the handle of the accelerator table
-    // accelWnd is the window handle for translated messages.
-    inline void CWinThread::SetAccelerators(HACCEL accel, HWND accelWnd)
-    {
-        m_accelWnd = accelWnd;
-        m_accel = accel;
-    }
-
-    // Sets the main window for this thread.
-    // Note: CFrame set's itself as the main window of its thread
-    inline void CWinThread::SetMainWnd(HWND wnd)
-    {
-        TLSData* pTLSData = GetApp()->SetTlsData();
-        pTLSData->mainWnd = wnd;
-    }
-
-    // Sets the priority of this thread. The nPriority parameter can
-    // be -7, -6, -5, -4, -3, 3, 4, 5, or 6 or other values permitted
-    // by the SetThreadPriority Windows API function.
-    // Refer to SetThreadPriority in the Windows API documentation for more information.
-    inline BOOL CWinThread::SetThreadPriority(int priority) const
-    {
-        assert(m_thread);
-        return ::SetThreadPriority(m_thread, priority);
-    }
-
-    // Suspends this thread. Use ResumeThread to resume the thread.
-    // Refer to SuspendThread in the Windows API documentation for more information.
-    inline DWORD CWinThread::SuspendThread() const
-    {
-        assert(m_thread);
-        return ::SuspendThread(m_thread);
-    }
-
-    // When the GUI thread starts, it runs this function.
-    inline UINT WINAPI CWinThread::StaticThreadProc(LPVOID pCThread)
-    {
-        // Get the pointer for this CWinThread object
-        CWinThread* pThread = static_cast<CWinThread*>(pCThread);
-        assert(pThread != 0);
-
-        if ((pThread != 0) && (pThread->InitInstance()))
-        {
-            GetApp()->SetTlsData();
-            return pThread->MessageLoop();
-        }
-
-        return 0;
-    }
 
 
     ////////////////////////////////////
@@ -605,18 +251,23 @@ namespace Win32xx
         return pWnd;
     }
 
+    // Retrieves a handle to the main window for this thread.
+    // Note: CFrame set's itself as the main window of its thread
+    inline HWND CWinApp::GetMainWnd() const
+    {
+        TLSData* pTLSData = GetApp()->GetTlsData();
+
+        // Will assert if the thread doesn't have TLSData assigned.
+        // TLSData is assigned when the first window in the thread is created.
+        assert(pTLSData);
+
+        return pTLSData ? pTLSData->mainWnd : 0;
+    }
+
     // Retrieves the pointer to the Thread Local Storage data for the current thread.
     inline TLSData* CWinApp::GetTlsData() const
     {
         return static_cast<TLSData*>(TlsGetValue(m_tlsData));
-    }
-
-    // InitInstance contains the initialization code for your application
-    // You should override this function with the code to run when the application starts.
-    // return TRUE to indicate success. FALSE will end the application,
-    inline BOOL CWinApp::InitInstance()
-    {
-        return TRUE;
     }
 
     // Loads the cursor resource from the resource script (resource.rc)
@@ -690,21 +341,37 @@ namespace Win32xx
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
     }
 
-    // Runs the application and starts the message loop.
-    inline int CWinApp::Run()
+    // This function is called by the MessageLoop. It processes the
+    // keyboard accelerator keys and calls CWnd::PreTranslateMessage for
+    // keyboard and mouse events.
+    inline BOOL CWinApp::PreTranslateMessage(MSG& msg)
     {
-        // InitInstance runs the App's initialization code
-        if (InitInstance())
+        BOOL isProcessed = FALSE;
+
+        // only pre-translate mouse and keyboard input events
+        if ((msg.message >= WM_KEYFIRST && msg.message <= WM_KEYLAST) ||
+            (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST))
         {
-            // Dispatch the window messages
-            return MessageLoop();
+            // Process keyboard accelerators
+            if (::TranslateAccelerator(GetAcceleratorsWindow(), GetAcceleratorTable(), &msg))
+                isProcessed = TRUE;
+            else
+            {
+                // Search the chain of parents for pretranslated messages.
+                for (HWND wnd = msg.hwnd; wnd != 0; wnd = ::GetParent(wnd))
+                {
+                    CWnd* pWnd = GetApp()->GetCWndFromMap(wnd);
+                    if (pWnd)
+                    {
+                        isProcessed = pWnd->PreTranslateMessage(msg);
+                        if (isProcessed)
+                            break;
+                    }
+                }
+            }
         }
-        else
-        {
-            TRACE("InitInstance failed!  Terminating program\n");
-            ::PostQuitMessage(-1);
-            return -1;
-        }
+
+        return isProcessed;
     }
 
     // Registers a temporary window class so we can get the callback
@@ -780,7 +447,8 @@ namespace Win32xx
         m_resource = resource;
     }
 
-    // Creates the Thread Local Storage data for the current thread if none already exists.
+    // Creates the Thread Local Storage data for the current thread if none already exists,
+    // and returns a pointer to the TLS data.
     inline TLSData* CWinApp::SetTlsData()
     {
         TLSData* pTLSData = GetTlsData();

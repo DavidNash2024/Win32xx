@@ -127,6 +127,7 @@ namespace Win32xx
     friend class CFolderDialog;
     friend class CFontDialog;
     friend class CMDIChild;
+    friend class CMessagePump;
     friend class CPageSetupDialog;
     friend class CPrintDialog;
     friend class CPrintDialogEx;

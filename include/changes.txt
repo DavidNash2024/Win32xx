@@ -92,7 +92,11 @@ Changes in Detail
 -----------------
 Moved the Alignment enum used by CResizer from global scope to CResizer.
 
+Added wxx_criticalsection.h  Win32++ library file
+Added wxx_hglobal.h          Win32++ library file
+Added wxx_messagepump.h      Win32++ library file
 Added wxx_setup.h            Win32++ library file
+Added wxx_thread.h           Win32++ library file
 
 Added PrintDialogEx          sample
 Added Titlebar               sample
