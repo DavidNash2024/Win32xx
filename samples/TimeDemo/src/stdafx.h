@@ -34,10 +34,11 @@
 #include <tchar.h>              // Add support for C style TCHARs.
 
 // Add the Win32++ library
-#include <wxx_appcore.h>        // Add CCriticalSection, CObject, CWinThread, CWinApp
+#include <wxx_appcore.h>        // Add CWinApp
 #include <wxx_archive.h>        // Add CArchive
 #include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip
+#include <wxx_criticalsection.h> // Add CCriticalSection, CThreadLock
 #include <wxx_cstring.h>        // Add CString, CStringA, CStringW
 #include <wxx_ddx.h>            // Add CDataExchange
 #include <wxx_dialog.h>         // Add CDialog, CResizer
@@ -49,6 +50,7 @@
 #include <wxx_folderdialog.h>   // Add CFolderDialog
 #include <wxx_frame.h>          // Add CFrame
 #include <wxx_gdi.h>            // Add CDC, CGDIObject, CBitmap, CBrush, CFont, CPalatte, CPen, CRgn
+#include <wxx_hglobal.h>        // Add CHGlobal
 #include <wxx_imagelist.h>      // Add CImageList
 #include <wxx_listview.h>       // Add CListView
 #include <wxx_mdi.h>            // Add CMDIChild, CMDIFrame, CDockMDIFrame
@@ -66,6 +68,7 @@
 #include <wxx_richedit.h>       // Add CRichEdit
 #include <wxx_scrollview.h>     // Add CScrollView
 #include <wxx_shared_ptr.h>     // Add Shared_Ptr
+#include <wxx_setup.h>          // Adds macros, windows header files, and CObject
 #include <wxx_socket.h>         // Add CSocket
 #include <wxx_statusbar.h>      // Add CStatusBar
 #include <wxx_stdcontrols.h>    // Add CButton, CEdit, CListBox
@@ -73,6 +76,7 @@
 //#include <wxx_taskdialog.h>   // Add CTaskDialog
 #include <wxx_textconv.h>       // Add AtoT, AtoW, TtoA, TtoW, WtoA, WtoT etc.
 #include <wxx_themes.h>         // Add MenuTheme, ReBarTheme, StatusBarTheme, ToolBarTheme
+#include <wxx_thread.h>         // Add CWinThread
 #include <wxx_time.h>           // Add CTime
 #include <wxx_toolbar.h>        // Add CToolBar
 #include <wxx_treeview.h>       // Add CTreeView

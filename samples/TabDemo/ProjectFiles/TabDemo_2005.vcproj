@@ -299,6 +299,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_criticalsection.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_cstring.h"
 				>
 			</File>
@@ -343,6 +347,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_hglobal.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_imagelist.h"
 				>
 			</File>
@@ -364,6 +372,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_menumetrics.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_messagepump.h"
 				>
 			</File>
 			<File
@@ -448,6 +460,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_themes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_thread.h"
 				>
 			</File>
 			<File

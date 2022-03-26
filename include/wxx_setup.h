@@ -37,6 +37,7 @@
 ////////////////////////////////////////////////////////
 // This file defines the set of macros and includes the
 // C, C++, and windows header files required by Win32++.
+// It also defines the CObject class.
 
 
 #ifndef _WIN32XX_SETUP_H_
@@ -180,6 +181,43 @@ using namespace Win32xx;
   #endif
 #endif
 
+namespace Win32xx
+{
 
+    class CArchive;
+
+    ////////////////////////////////////////////////////////////////////
+    // The CObject class provides support for Serialization by CArchive.
+    class CObject
+    {
+    public:
+        CObject() {}
+        virtual ~CObject() {}
+
+        virtual void Serialize(CArchive& ar);
+    };
+
+
+    ///////////////////////////////////////
+    // Definitions for the CObject class
+    //
+    inline void CObject::Serialize(CArchive& /* ar */ )
+    {
+    //  Override Serialize in the class inherited from CObject like this.
+
+    //  if (ar.IsStoring())
+    //  {
+    //      // Store a member variable in the archive
+    //      ar << m_someValue;
+    //  }
+    //  else
+    //  {
+    //      // Load a member variable from the archive
+    //      ar >> m_someValue;
+    //  }
+
+    }
+
+}
 
 #endif // _WIN32XX_SETUP_H_

@@ -10,8 +10,8 @@
 #include "MyEdit.h"
 
 // Note: Modern C++ compilers can use this typedef instead.
-// typedef std::shared_ptr<CMyThread> MyThreadPtr;
-typedef Shared_Ptr<CMyThread> MyThreadPtr;
+// typedef std::shared_ptr<CMyWinThread> MyThreadPtr;
+typedef Shared_Ptr<CMyWinThread> MyThreadPtr;
 
 
 /////////////////////////////////////////////////////
@@ -41,7 +41,7 @@ private:
 
     CCriticalSection m_cs;              // Used to ensure thread safe access to m_threads.
     CMyEdit m_edit;                     // Child window edit control.
-    std::vector<MyThreadPtr> m_threads; // A vector of CMyThread smart pointers.
+    std::vector<MyThreadPtr> m_threads; // A vector of CMyWinThread smart pointers.
     int m_maxWindows;                   // Number of additional test windows to be created.
     int m_windowsCount;                 // Count of windows actually created.
 };

@@ -7,7 +7,7 @@
 
 
 ////////////////////////////////////////////////////////////
-// CTestWindow manages the test window created by CMyThread.
+// CTestWindow manages the test window created by CMyWinThread.
 class CTestWindow : public CWnd
 {
 public:

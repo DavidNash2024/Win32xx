@@ -8,16 +8,16 @@
 
 
 //////////////////////////////////
-// CMyThread function definitions.
+// CMyWinThread function definitions.
 //
-CMyThread::CMyThread(int threadNumber, HWND mainWindow)
+CMyWinThread::CMyWinThread(int threadNumber, HWND mainWindow)
     :  m_testWnd(threadNumber, mainWindow),
        m_threadNumber(threadNumber),
        m_mainWindow(mainWindow)
 {
 }
 
-CMyThread::~CMyThread()
+CMyWinThread::~CMyWinThread()
 {
     CloseThread();
     CString str;
@@ -26,7 +26,7 @@ CMyThread::~CMyThread()
 }
 
 // Close this thread.
-void CMyThread::CloseThread()
+void CMyWinThread::CloseThread()
 {
     if (m_testWnd.IsWindow())
         m_testWnd.Close();
@@ -49,7 +49,7 @@ void CMyThread::CloseThread()
 }
 
 // Called when the thread starts.
-BOOL CMyThread::InitInstance()
+BOOL CMyWinThread::InitInstance()
 {
     try
     {

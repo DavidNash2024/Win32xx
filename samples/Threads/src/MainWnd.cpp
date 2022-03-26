@@ -63,13 +63,13 @@ int CMainWindow::OnCreate(CREATESTRUCT&)
     // Ensure thread safe access to the m_threads vector.
     CThreadLock lock(m_cs);
 
-    // Create each CMyThread object.
-    // m_threads is a vector of smart pointers to CMyThread.
-    // CMyThread's destructor is called when the smart pointer
+    // Create each CMyWinThread object.
+    // m_threads is a vector of smart pointers to CMyWinThread.
+    // CMyWinThread's destructor is called when the smart pointer
     //  goes out of scope.
     for (int i = 1 ; i <= m_maxWindows ; i++)
     {
-        MyThreadPtr threadPtr(new CMyThread(i, GetHwnd()));
+        MyThreadPtr threadPtr(new CMyWinThread(i, GetHwnd()));
         m_threads.push_back(threadPtr);
     }
 

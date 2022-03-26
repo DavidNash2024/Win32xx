@@ -346,7 +346,63 @@
 			Name="Win32++"
 			>
 			<File
+				RelativePath="..\..\..\include\wxx_appcore.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_appcore0.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_archive.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_commondlg.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_controls.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_criticalsection.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_cstring.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_ddx.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_dialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_dockframe.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_docking.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_exception.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_file.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_filefind.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_folderdialog.h"
 				>
 			</File>
 			<File
@@ -354,7 +410,143 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_gdi.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_hglobal.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_imagelist.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_listview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_mdi.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_menu.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_menubar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_menumetrics.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_messagepump.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_metafile.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_mutex.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_preview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_printdialogex.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_printdialogs.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_propertysheet.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_rebar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_rect.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_regkey.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_ribbon.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_richedit.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_scrollview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_setup.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_shared_ptr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_socket.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_statusbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_stdcontrols.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_tab.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_taskdialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_textconv.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_themes.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_thread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_time.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_toolbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_webbrowser.h"
 				>
 			</File>
 			<File
@@ -362,7 +554,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\wxx_winutils.h"
+				RelativePath="..\..\..\include\wxx_wincore0.h"
 				>
 			</File>
 		</Filter>

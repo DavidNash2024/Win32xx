@@ -128,6 +128,7 @@
 
 // CSocket requires features from the Win32++ framework.
 #include "wxx_wincore.h"
+#include "wxx_thread.h"
 #include "wxx_mutex.h"
 
 // Work around a bugs in older versions of Visual Studio
