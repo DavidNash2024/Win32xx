@@ -36,9 +36,10 @@
 
 
 
-#ifndef _WIN32XX_MESSAGEPUMP1_H_
-#define _WIN32XX_MESSAGEPUMP1_H_
+#ifndef _WIN32XX_MESSAGEPUMP_H_
+#define _WIN32XX_MESSAGEPUMP_H_
 
+#include "wxx_messagepump0.h"
 
 namespace Win32xx
 {
@@ -150,4 +151,4 @@ namespace Win32xx
 
 }
 
-#endif // _WIN32XX_MESSAGEPUMP1_H_
+#endif // _WIN32XX_MESSAGEPUMP_H_
