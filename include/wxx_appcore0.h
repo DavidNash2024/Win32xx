@@ -243,9 +243,6 @@ namespace Win32xx
         CWinApp();
         virtual ~CWinApp();
 
-        // Overridables
-        virtual BOOL PreTranslateMessage(MSG& msg);
-
         // Operations
         CWnd* GetCWndFromMap(HWND wnd);
         HINSTANCE GetInstanceHandle() const { return m_instance; }
