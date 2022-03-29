@@ -52,7 +52,7 @@
 #include "wxx_wincore0.h"
 #include "wxx_exception.h"
 #include "wxx_cstring.h"
-#include "wxx_messagepump1.h"
+#include "wxx_messagepump.h"
 
 
 namespace Win32xx

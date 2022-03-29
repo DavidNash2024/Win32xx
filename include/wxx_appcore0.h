@@ -50,7 +50,7 @@
 #include "wxx_setup.h"
 #include "wxx_criticalsection.h"
 #include "wxx_hglobal.h"
-#include "wxx_messagepump.h"
+#include "wxx_messagepump0.h"
 
 namespace Win32xx
 {
