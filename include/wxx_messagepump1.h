@@ -36,55 +36,22 @@
 
 
 
-#ifndef _WIN32XX_MESSAGEPUMP_H_
-#define _WIN32XX_MESSAGEPUMP_H_
+#ifndef _WIN32XX_MESSAGEPUMP1_H_
+#define _WIN32XX_MESSAGEPUMP1_H_
 
-#include "wxx_textconv.h"
-
-namespace Win32xx
-{
-
-    class CMessagePump : public CObject
-    {
-    public:
-        CMessagePump() : m_accel(0), m_accelWnd(0) {}
-        virtual ~CMessagePump() {}
-
-        HACCEL GetAcceleratorTable() const { return m_accel; }
-        HWND   GetAcceleratorsWindow() const { return m_accelWnd; }
-        void   SetAccelerators(HACCEL accel, HWND accelWnd);
-
-        // Overridables
-        virtual BOOL InitInstance();
-        virtual int  MessageLoop();
-        virtual BOOL OnIdle(LONG count);
-        virtual BOOL PreTranslateMessage(MSG& msg);
-        virtual int  Run();
-
-    private:
-        CMessagePump(const CMessagePump&);                // Disable copy construction
-        CMessagePump& operator = (const CMessagePump&);   // Disable assignment operator
-
-        HACCEL m_accel;               // handle to the accelerator table
-        HWND m_accelWnd;              // handle to the window for accelerator keys
-    };
-
-}
-
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 namespace Win32xx
 {
-    // InitInstance contains the initialization code for your application
-    // You should override this function with the code to run when the application starts.
-    // return TRUE to indicate success. FALSE will end the application,
+    // InitInstance is called when the thread or application starts. Override
+    // this function with the code to run when the thread or application starts.
+    // Return TRUE to indicate success and run the message loop.
     inline BOOL CMessagePump::InitInstance()
     {
         return TRUE;
     }
 
-    // This function manages the way window message are dispatched
-    // to a window procedure.
+    // This function translates the thread's window message and dispatches
+    // them to a window procedure.
     inline int CMessagePump::MessageLoop()
     {
         MSG msg;
@@ -119,14 +86,13 @@ namespace Win32xx
     // is empty. Return TRUE to continue idle processing or FALSE to end idle processing
     // until another message is queued. The count is incremented each time OnIdle is
     // called, and reset to 0 each time a new messages is processed.
-    inline BOOL CMessagePump::OnIdle(LONG /*count*/)
+    inline BOOL CMessagePump::OnIdle(LONG)
     {
         return FALSE;
     }
 
     // This function is called by the MessageLoop. It processes the
-   // keyboard accelerator keys and calls CWnd::PreTranslateMessage for
-   // keyboard and mouse events.
+    // keyboard accelerator keys.
     inline BOOL CMessagePump::PreTranslateMessage(MSG& msg)
     {
         BOOL isProcessed = FALSE;
@@ -138,7 +104,7 @@ namespace Win32xx
             // Process keyboard accelerators
             if (::TranslateAccelerator(GetAcceleratorsWindow(), GetAcceleratorTable(), &msg))
                 isProcessed = TRUE;
-    /*        else
+            else
             {
                 // Search the chain of parents for pretranslated messages.
                 for (HWND wnd = msg.hwnd; wnd != 0; wnd = ::GetParent(wnd))
@@ -151,7 +117,7 @@ namespace Win32xx
                             break;
                     }
                 }
-            } */
+            }
         }
 
         return isProcessed;
@@ -168,7 +134,7 @@ namespace Win32xx
         }
         else
         {
-            TRACE("InitInstance failed!  Terminating program\n");
+            TRACE("InitInstance failed!  Terminating the thread\n");
             ::PostQuitMessage(-1);
             return -1;
         }
@@ -184,4 +150,4 @@ namespace Win32xx
 
 }
 
-#endif // _WIN32XX_MESSAGEPUMP_H_
+#endif // _WIN32XX_MESSAGEPUMP1_H_

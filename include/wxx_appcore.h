@@ -52,18 +52,17 @@
 #include "wxx_wincore0.h"
 #include "wxx_exception.h"
 #include "wxx_cstring.h"
+#include "wxx_messagepump1.h"
+
 
 namespace Win32xx
 {
-
 
     ////////////////////////////////////
     // Definitions for the CWinApp class
     //
 
-    // To begin Win32++, inherit your application class from this one.
-    // You must run only one instance of the class inherited from CWinApp.
-
+    // Constructor
     inline CWinApp::CWinApp() : m_callback(NULL)
     {
         static CCriticalSection cs;
@@ -114,6 +113,7 @@ namespace Win32xx
         }
     }
 
+    // Destructor
     inline CWinApp::~CWinApp()
     {
         // Forcibly destroy any remaining windows now. Windows created from
@@ -342,6 +342,7 @@ namespace Win32xx
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
     }
 
+/*
     // This function is called by the MessageLoop. It processes the
     // keyboard accelerator keys and calls CWnd::PreTranslateMessage for
     // keyboard and mouse events.
@@ -374,6 +375,7 @@ namespace Win32xx
 
         return isProcessed;
     }
+*/
 
     // Registers a temporary window class so we can get the callback
     // address of CWnd::StaticWindowProc.
