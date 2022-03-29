@@ -114,7 +114,7 @@ private:
     // Member variables
     CCriticalSection m_cs;
     CViewList        m_viewList;
-    CWinThread       m_thread;
+    CWorkThread      m_thread;
     CSplashThread    m_splashThread;
     std::vector<FoundFileInfo> m_filesToAdd;
     std::vector<const MovieInfo*> m_foundMovies;

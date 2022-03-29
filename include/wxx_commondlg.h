@@ -434,8 +434,8 @@ namespace Win32xx
     {
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
-        // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         // Create the modal dialog
         pTLSData->pWnd = this;
@@ -632,8 +632,8 @@ namespace Win32xx
     {
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
-        // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         // Create the modal dialog
         pTLSData->pWnd = this;
@@ -1089,8 +1089,8 @@ namespace Win32xx
 
         m_isFindDialogOnly = isFindDialogOnly;
 
-        // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
         pTLSData->pWnd = this;
 
         // Initialize the FINDREPLACE struct values
@@ -1430,8 +1430,8 @@ namespace Win32xx
     {
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
-        // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         // Create the modal dialog
         pTLSData->pWnd = this;

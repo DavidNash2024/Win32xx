@@ -85,6 +85,7 @@ namespace Win32xx
                 m_instance = (HINSTANCE)mbi.AllocationBase;
 
                 m_resource = m_instance;
+                SetTlsData();
                 SetCallback();
                 LoadCommonControls();
 
@@ -427,6 +428,13 @@ namespace Win32xx
         return pWinApp;
     }
 
+    // Sets the main window for this thread.
+    inline void CWinApp::SetMainWnd(HWND wnd) const
+    {
+        TLSData* pTLSData = GetApp()->GetTlsData();
+        pTLSData->mainWnd = wnd;
+    }
+
     // This function can be used to load a resource dll.
     // A resource dll can be used to define resources in different languages.
     // To use this function, place code like this in InitInstance
@@ -449,7 +457,7 @@ namespace Win32xx
 
     // Creates the Thread Local Storage data for the current thread if none already exists,
     // and returns a pointer to the TLS data.
-    inline TLSData* CWinApp::SetTlsData()
+    inline void CWinApp::SetTlsData()
     {
         TLSData* pTLSData = GetTlsData();
         if (NULL == pTLSData)
@@ -462,8 +470,6 @@ namespace Win32xx
 
             VERIFY(::TlsSetValue(m_tlsData, pTLSData));
         }
-
-        return pTLSData;
     }
 
     // Messages used for exceptions.

@@ -81,6 +81,7 @@ namespace Win32xx
     class CString;
     class CWinApp;
     class CWinThread;
+    class CWorkThread;
     class CWindowDC;
     class CWnd;
     struct CDC_Data;
@@ -111,7 +112,8 @@ namespace Win32xx
     // typedef std::shared_ptr<CPropertyPage> PropertyPagePtr;
     // typedef std::shared_ptr<CRgn> RgnPtr;
     // typedef std::shared_ptr<TLSData> TLSDataPtr;
-    // typedef std::shared_ptr<CWinThread> ThreadPtr;
+    // typedef std::shared_ptr<CWinThread> WinThreadPtr;
+    // typedef std::shared_ptr<CWorkThread> WorkThreadPtr;
     // typedef std::shared_ptr<CWnd> WndPtr;
     typedef Shared_Ptr<CBitmap> BitmapPtr;
     typedef Shared_Ptr<CBrush> BrushPtr;
@@ -128,7 +130,8 @@ namespace Win32xx
     typedef Shared_Ptr<CPropertyPage> PropertyPagePtr;
     typedef Shared_Ptr<CRgn> RgnPtr;
     typedef Shared_Ptr<TLSData> TLSDataPtr;
-    typedef Shared_Ptr<CWinThread> ThreadPtr;
+    typedef Shared_Ptr<CWinThread> WinThreadPtr;
+    typedef Shared_Ptr<CWorkThread> WorkThreadPtr;
     typedef Shared_Ptr<CWnd> WndPtr;
 
 
@@ -232,6 +235,7 @@ namespace Win32xx
         friend class CPrintDialog;
         friend class CPrintDialogEx;
         friend class CPropertyPage;
+        friend class CWinThread;
         friend class CWnd;
         friend CWinApp* GetApp();
 
@@ -257,8 +261,8 @@ namespace Win32xx
         HANDLE    LoadImage(LPCTSTR resourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
         HANDLE    LoadImage(int imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
         HCURSOR   SetCursor(HCURSOR cursor) const;
+        void      SetMainWnd(HWND wnd) const;
         void      SetResourceHandle(HINSTANCE resource);
-        TLSData* SetTlsData();
 
     private:
         CWinApp(const CWinApp&);                // Disable copy construction
@@ -268,13 +272,15 @@ namespace Win32xx
         void AddCGDIData(HGDIOBJ gdi, CGDI_Data* pData);
         void AddCImlData(HIMAGELIST images, CIml_Data* pData);
         void AddCMenuData(HMENU menu, CMenu_Data* pData);
-        CDC_Data* GetCDCData(HDC dc);
-        CGDI_Data* GetCGDIData(HGDIOBJ object);
-        CIml_Data* GetCImlData(HIMAGELIST images);
+        CDC_Data*   GetCDCData(HDC dc);
+        CGDI_Data*  GetCGDIData(HGDIOBJ object);
+        CIml_Data*  GetCImlData(HIMAGELIST images);
         CMenu_Data* GetCMenuData(HMENU menu);
         void SetCallback();
-        static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
+        void SetTlsData();
         void UpdateDefaultPrinter();
+
+        static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
 
         std::map<HDC, CDC_Data*, CompareHDC> m_mapCDCData;
         std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;

@@ -212,7 +212,7 @@ namespace Win32xx
 
         SOCKET m_socket;
         HMODULE m_ws2_32;
-        ThreadPtr m_threadPtr;              // Smart pointer to the worker thread for the events
+        WorkThreadPtr m_threadPtr;          // Smart pointer to the worker thread for the events
         CEvent m_stopRequest;               // A manual reset event to signal the event thread should stop
 
         GETADDRINFO* m_pfnGetAddrInfo;      // pointer for the getaddrinfo function
@@ -240,7 +240,7 @@ namespace Win32xx
         m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_ws2_32, "getaddrinfo") );
         m_pfnFreeAddrInfo = reinterpret_cast<FREEADDRINFO*>( GetProcAddress(m_ws2_32, "freeaddrinfo") );
 
-        ThreadPtr threadPtr(new CWinThread(EventThread, this));
+        WorkThreadPtr threadPtr(new CWorkThread(EventThread, this));
         m_threadPtr = threadPtr;
     }
 

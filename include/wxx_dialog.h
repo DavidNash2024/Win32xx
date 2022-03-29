@@ -435,8 +435,8 @@ namespace Win32xx
         m_isModal=TRUE;
         m_wnd = 0;
 
-        // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         if (0 == pTLSData->msgHook )
         {
@@ -486,8 +486,8 @@ namespace Win32xx
         m_isModal=FALSE;
         m_wnd = 0;
 
-        // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         // Store the CWnd pointer in Thread Local Storage
         pTLSData->pWnd = this;
