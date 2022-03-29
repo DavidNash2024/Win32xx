@@ -95,7 +95,7 @@ LRESULT CMyStatusBar::OnDrawItem(UINT, WPARAM, LPARAM lparam)
     COLORREF textColor = RGB(10, 20, 250);
     memDC.SetTextColor(textColor);
     memDC.SetBkMode(TRANSPARENT);
-    memDC.TextOut(partRect.left, partRect.top, m_ownerDraw, m_ownerDraw.GetLength());
+    memDC.DrawText(m_ownerDraw, m_ownerDraw.GetLength(), partRect, DT_SINGLELINE | DT_VCENTER);
     dc.BitBlt(0, 0, partRect.Width(), partRect.Height(), memDC, 0, 0, SRCCOPY);
 
     return TRUE;
@@ -161,7 +161,7 @@ void CMyStatusBar::SetupParts()
     CString num = LoadString(IDW_INDICATOR_NUM);
     CString ovr = LoadString(IDW_INDICATOR_OVR);
     CString scrl = LoadString(IDW_INDICATOR_SCRL);
-    CString link = m_hyperlink.GetWindowText();
+    CString link = m_hyperlink.GetLinkName();
 
     const int progressWidth = 100;
     const int gripWidth = 20;

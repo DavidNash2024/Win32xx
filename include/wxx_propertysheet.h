@@ -660,8 +660,8 @@ namespace Win32xx
         INT_PTR ipResult = 0;
         m_wnd = 0;
 
-        // Ensure this thread has the TLS index set.
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         // Store the 'this' pointer in Thread Local Storage.
         pTLSData->pWnd = this;

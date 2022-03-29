@@ -505,8 +505,9 @@ namespace Win32xx
         m_pd.hDevNames = GetApp()->m_devNames;
         m_pd.hwndOwner = owner;
 
-        // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
+
         // Create the modal dialog
         pTLSData->pWnd = this;
 
@@ -841,8 +842,8 @@ namespace Win32xx
         m_psd.hDevNames = GetApp()->m_devNames;
         m_psd.hwndOwner = owner;
 
-        // Ensure this thread has the TLS index set
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         // Create the modal dialog
         pTLSData->pWnd = this;

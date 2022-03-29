@@ -12,6 +12,8 @@ CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false),
                            m_visitedColor(RGB(128, 0, 128)),
                            m_notVisitedColor(RGB(0,0,255))
 {
+    m_urlName = _T("Win32++");
+
     // Create the cursor
     m_hCursor = ::LoadCursor(0, IDC_HAND);
 
@@ -26,7 +28,6 @@ CHyperlink::~CHyperlink()
 
 void CHyperlink::OnAttach()
 {
-    SetWindowText(_T("Win32++"));
     NONCLIENTMETRICS ncm = GetNonClientMetrics();
     LOGFONT lf = ncm.lfStatusFont;
     lf.lfUnderline = TRUE;
@@ -84,6 +85,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM)
         dc.SetTextColor( m_isUrlVisited? m_visitedColor : m_notVisitedColor);
         dc.SetBkMode(TRANSPARENT);
         dc.SelectObject(m_urlFont);
+        dc.DrawText(m_urlName, -1, GetClientRect(), DT_VCENTER | DT_SINGLELINE);
 
         // Keep our changes.
         dc.Detach();

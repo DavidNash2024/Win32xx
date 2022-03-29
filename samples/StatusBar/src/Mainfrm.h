@@ -31,9 +31,10 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    // Command Handlers
+    // Command handlers
     BOOL    OnFileExit();
 
+    // Member variables
     CView m_view;
     CMyStatusBar m_myStatusBar;
 };

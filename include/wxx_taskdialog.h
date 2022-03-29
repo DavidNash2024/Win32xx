@@ -269,8 +269,8 @@ namespace Win32xx
         m_tc.cRadioButtons = static_cast<UINT>(radioButtons.size());
         m_tc.hwndParent = parent;
 
-        // Ensure this thread has the TLS index set.
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         // Store the CWnd pointer in thread local storage.
         pTLSData->pWnd = this;

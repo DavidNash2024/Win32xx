@@ -154,10 +154,6 @@ namespace Win32xx
         assert( ::IsWindow(wnd) );
         assert( !IsWindow() );
 
-        // Ensure this thread has the TLS index set.
-        // Note: Perform the attach from the same thread as the window's message loop.
-        GetApp()->SetTlsData();
-
         Subclass(wnd);     // Set the window's callback to CWnd::StaticWindowProc.
 
         OnAttach();
@@ -375,8 +371,8 @@ namespace Win32xx
             assert( 0 );
         }
 
-        // Ensure this thread has the TLS index set.
-        TLSData* pTLSData = GetApp()->SetTlsData();
+        // Retrieve this thread's TLS data
+        TLSData* pTLSData = GetApp()->GetTlsData();
 
         // Store the CWnd pointer in thread local storage.
         pTLSData->pWnd = this;

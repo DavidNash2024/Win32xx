@@ -1892,6 +1892,9 @@ namespace Win32xx
         // Adjust fonts to match the desktop theme.
         T::SendMessage(WM_SYSCOLORCHANGE);
 
+        // Set the frame as the main window for this thread.
+        GetApp()->SetMainWnd(*this);
+
         // Reposition the child windows.
         RecalcLayout();
 
@@ -2688,8 +2691,6 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::SetKbdHook()
     {
-        TLSData* pTLSData = GetApp()->SetTlsData();
-        pTLSData->mainWnd = T::GetHwnd();
         m_kbdHook = ::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, 0, ::GetCurrentThreadId());
     }
 
@@ -2787,37 +2788,40 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::SetStatusParts()
     {
-        // Calculate the width of the text indicators
-        CClientDC statusDC(GetStatusBar());
-        statusDC.SelectObject(GetStatusBar().GetFont());
-        CString cap = LoadString(IDW_INDICATOR_CAPS);
-        CString num = LoadString(IDW_INDICATOR_NUM);
-        CString scrl = LoadString(IDW_INDICATOR_SCRL);
-        CSize capSize = statusDC.GetTextExtentPoint32(cap, cap.GetLength());
-        CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
-        CSize scrlSize = statusDC.GetTextExtentPoint32(scrl, scrl.GetLength());
+        if (IsUsingIndicatorStatus())
+        {
+            // Calculate the width of the text indicators
+            CClientDC statusDC(GetStatusBar());
+            statusDC.SelectObject(GetStatusBar().GetFont());
+            CString cap = LoadString(IDW_INDICATOR_CAPS);
+            CString num = LoadString(IDW_INDICATOR_NUM);
+            CString scrl = LoadString(IDW_INDICATOR_SCRL);
+            CSize capSize = statusDC.GetTextExtentPoint32(cap, cap.GetLength());
+            CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
+            CSize scrlSize = statusDC.GetTextExtentPoint32(scrl, scrl.GetLength());
 
-        BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
-        int cxGripper = hasGripper ? 20 : 0;
-        int cxBorder = 8;
+            BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
+            int cxGripper = hasGripper ? 20 : 0;
+            int cxBorder = 8;
 
-        // Adjust for DPI aware.
-        int defaultDPI = 96;
-        int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
-        cxGripper = MulDiv(cxGripper, xDPI, defaultDPI);
-        capSize.cx += cxBorder;
-        numSize.cx += cxBorder;
-        scrlSize.cx += cxBorder;
+            // Adjust for DPI aware.
+            int defaultDPI = 96;
+            int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
+            cxGripper = MulDiv(cxGripper, xDPI, defaultDPI);
+            capSize.cx += cxBorder;
+            numSize.cx += cxBorder;
+            scrlSize.cx += cxBorder;
 
-        // Get the coordinates of the window's client area.
-        CRect clientRect = T::GetClientRect();
-        int width = MAX(300, clientRect.right);
+            // Get the coordinates of the window's client area.
+            CRect clientRect = T::GetClientRect();
+            int width = MAX(300, clientRect.right);
 
-        // Create 4 panes
-        GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + scrlSize.cx + cxGripper));
-        GetStatusBar().SetPartWidth(1, capSize.cx);
-        GetStatusBar().SetPartWidth(2, numSize.cx);
-        GetStatusBar().SetPartWidth(3, scrlSize.cx);
+            // Create 4 panes
+            GetStatusBar().SetPartWidth(0, width - (capSize.cx + numSize.cx + scrlSize.cx + cxGripper));
+            GetStatusBar().SetPartWidth(1, capSize.cx);
+            GetStatusBar().SetPartWidth(2, numSize.cx);
+            GetStatusBar().SetPartWidth(3, scrlSize.cx);
+        }
     }
 
     // Stores the status text and displays it in the StatusBar.
