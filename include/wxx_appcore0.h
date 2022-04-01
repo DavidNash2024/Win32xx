@@ -251,12 +251,12 @@ namespace Win32xx
         TLSData*  GetTlsData() const;
         HCURSOR   LoadCursor(LPCTSTR resourceName) const;
         HCURSOR   LoadCursor(int cursorID) const;
-        HCURSOR   LoadStandardCursor(LPCTSTR cursorName) const;
         HICON     LoadIcon(LPCTSTR resourceName) const;
         HICON     LoadIcon(int iconID) const;
-        HICON     LoadStandardIcon(LPCTSTR iconName) const;
         HANDLE    LoadImage(LPCTSTR resourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
         HANDLE    LoadImage(int imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
+        HCURSOR   LoadStandardCursor(LPCTSTR cursorName) const;
+        HICON     LoadStandardIcon(LPCTSTR iconName) const;
         HCURSOR   SetCursor(HCURSOR cursor) const;
         void      SetMainWnd(HWND wnd) const;
         void      SetResourceHandle(HINSTANCE resource);
@@ -362,13 +362,13 @@ namespace Win32xx
         virtual CString MsgDDV_StringSize() const;
     };
 
-
-    // Global function declarations
-    inline CWinApp* GetApp();
-    inline void StrCopyA(char* dst, const char* src, size_t dst_size);
-    inline void StrCopyW(wchar_t* dst, const wchar_t* src, size_t dst_size);
-    inline void StrCopy(TCHAR* dst, const TCHAR* src, size_t dst_size);
-
+    // Returns a pointer to the CWinApp derived class.
+    inline CWinApp* GetApp()
+    {
+        CWinApp* pApp = CWinApp::SetnGetThis();
+        assert(pApp);  // This assert fails if Win32++ isn't started.
+        return pApp;
+    }
 
 } // namespace Win32xx
 

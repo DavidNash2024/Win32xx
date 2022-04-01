@@ -342,41 +342,6 @@ namespace Win32xx
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
     }
 
-/*
-    // This function is called by the MessageLoop. It processes the
-    // keyboard accelerator keys and calls CWnd::PreTranslateMessage for
-    // keyboard and mouse events.
-    inline BOOL CWinApp::PreTranslateMessage(MSG& msg)
-    {
-        BOOL isProcessed = FALSE;
-
-        // only pre-translate mouse and keyboard input events
-        if ((msg.message >= WM_KEYFIRST && msg.message <= WM_KEYLAST) ||
-            (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST))
-        {
-            // Process keyboard accelerators
-            if (::TranslateAccelerator(GetAcceleratorsWindow(), GetAcceleratorTable(), &msg))
-                isProcessed = TRUE;
-            else
-            {
-                // Search the chain of parents for pretranslated messages.
-                for (HWND wnd = msg.hwnd; wnd != 0; wnd = ::GetParent(wnd))
-                {
-                    CWnd* pWnd = GetApp()->GetCWndFromMap(wnd);
-                    if (pWnd)
-                    {
-                        isProcessed = pWnd->PreTranslateMessage(msg);
-                        if (isProcessed)
-                            break;
-                    }
-                }
-            }
-        }
-
-        return isProcessed;
-    }
-*/
-
     // Registers a temporary window class so we can get the callback
     // address of CWnd::StaticWindowProc.
     inline void CWinApp::SetCallback()
@@ -641,88 +606,6 @@ namespace Win32xx
 
     inline CString CWinApp::MsgDDV_StringSize() const
     { return _T("%s\n is too long.\nPlease enter no more than %ld characters."); }
-
-
-    ////////////////////////////////////////
-    // Global Functions
-    //
-
-    // Returns a pointer to the CWinApp derived class.
-    inline CWinApp* GetApp()
-    {
-        CWinApp* pApp = CWinApp::SetnGetThis();
-
-        // This assert fails if Win32++ isn't started.
-        assert(pApp);
-
-        return pApp;
-    }
-
-
-    // The following functions perform string copies. The size of the dst buffer
-    // is specified, much like strcpy_s. The dst buffer is always null terminated.
-    // Null or zero arguments cause an assert.
-
-    // Copies an ANSI string from src to dst.
-    inline void StrCopyA(char* dst, const char* src, size_t dst_size)
-    {
-        assert(dst != 0);
-        assert(src != 0);
-        assert(dst_size != 0);
-
-        if (dst && src && dst_size != 0)
-        {
-            size_t index;
-
-            // Copy each character.
-            for (index = 0; index < dst_size - 1; ++index)
-            {
-                dst[index] = src[index];
-                if (src[index] == '\0')
-                    break;
-            }
-
-            // Add null termination if required.
-            if (dst[index] != '\0')
-                dst[dst_size - 1] = '\0';
-        }
-    }
-
-    // Copies a wide string from src to dst.
-    inline void StrCopyW(wchar_t* dst, const wchar_t* src, size_t dst_size)
-    {
-        assert(dst != 0);
-        assert(src != 0);
-        assert(dst_size != 0);
-
-        if (dst && src && dst_size != 0)
-        {
-            size_t index;
-
-            // Copy each character.
-            for (index = 0; index < dst_size - 1; ++index)
-            {
-                dst[index] = src[index];
-                if (src[index] == '\0')
-                    break;
-            }
-
-            // Add null termination if required.
-            if (dst[index] != '\0')
-                dst[dst_size - 1] = '\0';
-        }
-    }
-
-    // Copies a TCHAR string from src to dst.
-    inline void StrCopy(TCHAR* dst, const TCHAR* src, size_t dst_size)
-    {
-#ifdef UNICODE
-        StrCopyW(dst, src, dst_size);
-#else
-        StrCopyA(dst, src, dst_size);
-#endif
-    }
-
 
 } // namespace Win32xx
 

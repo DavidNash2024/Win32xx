@@ -96,19 +96,6 @@
 
 namespace Win32xx
 {
-    ///////////////////////////////
-    // Global function declarations
-    inline CString GetAppDataPath();
-    inline std::vector<CString> GetCommandLineArgs();
-    inline void LoadCommonControls();
-    inline CString LoadString(UINT id);
-
-
-    inline int GetComCtlVersion();
-    inline int GetWinVersion();
-    inline NONCLIENTMETRICS GetNonClientMetrics();
-    inline BOOL IsLeftButtonDown();
-
 
     ////////////////////////////////
     // Registered messages defined by Win32++

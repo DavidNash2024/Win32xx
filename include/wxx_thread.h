@@ -78,19 +78,19 @@ namespace Win32xx
         UINT m_threadID;                // ID of this thread
     };
 
-    typedef CThreadT<CObject> workThread;
-    typedef CThreadT<CMessagePump> winThread;
+    typedef CThreadT<CObject> WorkThread;
+    typedef CThreadT<CMessagePump> WinThread;
 
 
     //////////////////////////////////////////////////////////////
     // CWorkThread manages a worker thread. Use the constructor to
     // specify the thread's callback procedure and an optional
     // parameter.
-    class CWorkThread : public workThread
+    class CWorkThread : public WorkThread
     {
     public:
         CWorkThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam)
-              : workThread(pfnThreadProc, pParam) {}
+              : WorkThread(pfnThreadProc, pParam) {}
         virtual ~CWorkThread() {}
 
     private:
@@ -107,10 +107,10 @@ namespace Win32xx
     /////////////////////////////////////////////////////////////
     // CWinThread manages a thread which is capable of supporting
     // windows. It runs a message loop.
-    class CWinThread : public winThread
+    class CWinThread : public WinThread
     {
     public:
-        CWinThread() : winThread(StaticThreadProc, this) {}
+        CWinThread() : WinThread(StaticThreadProc, this) {}
         virtual ~CWinThread() {}
 
     private:
@@ -207,7 +207,6 @@ namespace Win32xx
     inline int CThreadT<T>::GetThreadID() const
     {
         assert(m_thread);
-
         return m_threadID;
     }
 
