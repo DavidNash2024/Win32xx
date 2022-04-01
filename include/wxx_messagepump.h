@@ -43,8 +43,8 @@
 
 namespace Win32xx
 {
-    // InitInstance is called when the thread or application starts. Override
-    // this function with the code to run when the thread or application starts.
+    // InitInstance is called when the thread or application starts. Override 
+    // this to perform tasks such as creating a window.
     // Return TRUE to indicate success and run the message loop.
     inline BOOL CMessagePump::InitInstance()
     {
@@ -92,8 +92,9 @@ namespace Win32xx
         return FALSE;
     }
 
-    // This function is called by the MessageLoop. It processes the
-    // keyboard accelerator keys.
+    // Override this function if your class requires input messages to be
+    // translated before normal processing.
+    // Return TRUE if the message is translated.
     inline BOOL CMessagePump::PreTranslateMessage(MSG& msg)
     {
         BOOL isProcessed = FALSE;
@@ -124,7 +125,7 @@ namespace Win32xx
         return isProcessed;
     }
 
-    // Runs the application and starts the message loop.
+    // Calls InitInstance and runs the message loop.
     inline int CMessagePump::Run()
     {
         // InitInstance runs the App's initialization code

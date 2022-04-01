@@ -218,6 +218,256 @@ namespace Win32xx
 
     }
 
+    ////////////////////////////////////////
+    // Global Functions
+    //
+
+    // Retrieves the version of common control dll used.
+    // return values and DLL versions
+    // 400  dll ver 4.00    Windows 95/Windows NT 4.0
+    // 470  dll ver 4.70    Internet Explorer 3.x
+    // 471  dll ver 4.71    Internet Explorer 4.0
+    // 472  dll ver 4.72    Internet Explorer 4.01 and Windows 98
+    // 580  dll ver 5.80    Internet Explorer 5
+    // 581  dll ver 5.81    Windows 2000 and Windows ME
+    // 582  dll ver 5.82    Windows XP, Vista, Windows 7 etc. without XP themes
+    // 600  dll ver 6.00    Windows XP with XP themes
+    // 610  dll ver 6.10    Windows Vista with XP themes
+    // 616  dll ver 6.16    Windows Vista SP1 or above with XP themes
+    inline int GetComCtlVersion()
+    {
+        // Load the Common Controls DLL.
+        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+        if (comCtl == 0)
+            return 0;
+
+        int comCtlVer = 400;
+
+        if (::GetProcAddress(comCtl, "InitCommonControlsEx"))
+        {
+            // InitCommonControlsEx is unique to 4.7 and later.
+            comCtlVer = 470;
+
+            if (::GetProcAddress(comCtl, "DllGetVersion"))
+            {
+                typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
+                DLLGETVERSION* pfnDLLGetVersion = NULL;
+
+                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSION*>(::GetProcAddress(comCtl, "DllGetVersion"));
+                if (pfnDLLGetVersion)
+                {
+                    DLLVERSIONINFO dvi;
+                    dvi.cbSize = sizeof dvi;
+                    if (NOERROR == pfnDLLGetVersion(&dvi))
+                    {
+                        DWORD verMajor = dvi.dwMajorVersion;
+                        DWORD verMinor = dvi.dwMinorVersion;
+                        comCtlVer = 100 * verMajor + verMinor;
+                    }
+                }
+            }
+            else if (::GetProcAddress(comCtl, "InitializeFlatSB"))
+                comCtlVer = 471;    // InitializeFlatSB is unique to version 4.71.
+        }
+
+        ::FreeLibrary(comCtl);
+
+        return comCtlVer;
+    }
+
+    // Retrieves the window version
+    // Return values and window versions:
+    //  1400     Windows 95
+    //  1410     Windows 98
+    //  1490     Windows ME
+    //  2400     Windows NT
+    //  2500     Windows 2000
+    //  2501     Windows XP
+    //  2502     Windows Server 2003
+    //  2600     Windows Vista and Windows Server 2008
+    //  2601     Windows 7 and Windows Server 2008 r2
+    //  2602     Windows 8 and Windows Server 2012
+    //  2603     Windows 8.1 and Windows Server 2012 r2
+    //  3000     Windows 10
+    // Note: For windows 8.1 and above, the value returned is also affected by the embedded manifest
+    //       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602).
+    inline int GetWinVersion()
+    {
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)   // >= VS2005
+#pragma warning ( push )
+#pragma warning ( disable : 4996 )           // GetVersion declared deprecated.
+#pragma warning ( disable : 28159 )          // Deprecated function.
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
+#if defined __clang_major__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"  // Disable Clang deprecated warning.
+#endif
+
+        OSVERSIONINFO osvi;
+        ZeroMemory(&osvi, sizeof(osvi));
+        osvi.dwOSVersionInfoSize = sizeof(osvi);
+        GetVersionEx(&osvi);
+
+#if defined __clang_major__
+#pragma clang diagnostic pop
+#endif
+
+#if defined (_MSC_VER) && (_MSC_VER >= 1400)
+#pragma warning ( pop )
+#endif // (_MSC_VER) && (_MSC_VER >= 1400)
+
+        int platform = osvi.dwPlatformId;
+        int majorVer = osvi.dwMajorVersion;
+        int minorVer = osvi.dwMinorVersion;
+
+        int result = 1000 * platform + 100 * majorVer + minorVer;
+        return result;
+    }
+
+    // Returns a NONCLIENTMETRICS struct filled from the system parameters.
+    // Refer to NONCLIENTMETRICS in the Windows API documentation for more information.
+    inline NONCLIENTMETRICS GetNonClientMetrics()
+    {
+        NONCLIENTMETRICS ncm;
+        ZeroMemory(&ncm, sizeof(ncm));
+        ncm.cbSize = sizeof(ncm);
+
+#if (WINVER >= 0x0600)
+        // If OS version less than Vista, adjust size to correct value.
+        if (GetWinVersion() < 2600)
+            ncm.cbSize = CCSIZEOF_STRUCT(NONCLIENTMETRICS, lfMessageFont);
+#endif
+
+        VERIFY(::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0));
+
+        return ncm;
+    }
+
+    // Reports the state of the left mouse button.
+    // Refer to GetAsyncKeyState in the Windows API documentation for more information.
+    inline BOOL IsLeftButtonDown()
+    {
+        SHORT state;
+        if (::GetSystemMetrics(SM_SWAPBUTTON))
+            // Mouse buttons are swapped.
+            state = ::GetAsyncKeyState(VK_RBUTTON);
+        else
+            // Mouse buttons are not swapped.
+            state = ::GetAsyncKeyState(VK_LBUTTON);
+
+        // Returns true if the left mouse button is down.
+        return (state & 0x8000);
+    }
+
+    // Loads the common controls using InitCommonControlsEx or InitCommonControls.
+    // Returns TRUE if InitCommonControlsEx is used.
+    // Refer to InitCommonControlsEx in the Windows API documentation for more information.
+    inline void LoadCommonControls()
+    {
+        // Load the Common Controls DLL
+        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+        if (comCtl == 0)
+            comCtl = ::LoadLibrary(_T("COMMCTRL.DLL"));
+
+        if (comCtl)
+        {
+            // Declare a typedef for the InItCommonControlsEx function.
+            typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
+
+            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(comCtl, "InitCommonControlsEx"));
+
+            if (pfnInitEx)
+            {
+                // Load the full set of common controls.
+                INITCOMMONCONTROLSEX InitStruct;
+                InitStruct.dwSize = sizeof(InitStruct);
+                InitStruct.dwICC = ICC_WIN95_CLASSES | ICC_BAR_CLASSES | ICC_COOL_CLASSES | ICC_DATE_CLASSES;
+
+
+#if (_WIN32_IE >= 0x0401)
+                if (GetComCtlVersion() > 470)
+                    InitStruct.dwICC |= ICC_INTERNET_CLASSES | ICC_NATIVEFNTCTL_CLASS | ICC_PAGESCROLLER_CLASS | ICC_USEREX_CLASSES;
+#endif
+
+                // Call InitCommonControlsEx.
+                if (!(pfnInitEx(&InitStruct)))
+                    InitCommonControls();
+            }
+            else
+            {
+                // InitCommonControlsEx not supported. Use older InitCommonControls.
+                InitCommonControls();
+            }
+
+            ::FreeLibrary(comCtl);
+        }
+    }
+
+    // The following functions perform string copies. The size of the dst buffer
+    // is specified, much like strcpy_s. The dst buffer is always null terminated.
+    // Null or zero arguments cause an assert.
+
+    // Copies an ANSI string from src to dst.
+    inline void StrCopyA(char* dst, const char* src, size_t dst_size)
+    {
+        assert(dst != 0);
+        assert(src != 0);
+        assert(dst_size != 0);
+
+        if (dst && src && dst_size != 0)
+        {
+            size_t index;
+
+            // Copy each character.
+            for (index = 0; index < dst_size - 1; ++index)
+            {
+                dst[index] = src[index];
+                if (src[index] == '\0')
+                    break;
+            }
+
+            // Add null termination if required.
+            if (dst[index] != '\0')
+                dst[dst_size - 1] = '\0';
+        }
+    }
+
+    // Copies a wide string from src to dst.
+    inline void StrCopyW(wchar_t* dst, const wchar_t* src, size_t dst_size)
+    {
+        assert(dst != 0);
+        assert(src != 0);
+        assert(dst_size != 0);
+
+        if (dst && src && dst_size != 0)
+        {
+            size_t index;
+
+            // Copy each character.
+            for (index = 0; index < dst_size - 1; ++index)
+            {
+                dst[index] = src[index];
+                if (src[index] == '\0')
+                    break;
+            }
+
+            // Add null termination if required.
+            if (dst[index] != '\0')
+                dst[dst_size - 1] = '\0';
+        }
+    }
+
+    // Copies a TCHAR string from src to dst.
+    inline void StrCopy(TCHAR* dst, const TCHAR* src, size_t dst_size)
+    {
+#ifdef UNICODE
+        StrCopyW(dst, src, dst_size);
+#else
+        StrCopyA(dst, src, dst_size);
+#endif
+    }
+
 }
 
 #endif // _WIN32XX_SETUP_H_
