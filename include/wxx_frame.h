@@ -1638,13 +1638,13 @@ namespace Win32xx
     {
         assert(!m_keyName.IsEmpty()); // KeyName must be set before calling LoadRegistryMRUSettings.
 
-        CRegKey key;
+        CRegKey recentKey;
         BOOL loaded = FALSE;
         SetMRULimit(maxMRU);
         std::vector<CString> mruEntries;
-        CString strKey = _T("Software\\") + m_keyName + _T("\\Recent Files");
+        const CString recentKeyName = _T("Software\\") + m_keyName + _T("\\Recent Files");
 
-        if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
+        if (ERROR_SUCCESS == recentKey.Open(HKEY_CURRENT_USER, recentKeyName, KEY_READ))
         {
             CString pathName;
             CString fileKeyName;
@@ -1653,10 +1653,10 @@ namespace Win32xx
                 DWORD bufferSize = 0;
                 fileKeyName.Format(_T("File %d"), i+1);
 
-                if (ERROR_SUCCESS == key.QueryStringValue(fileKeyName, NULL, &bufferSize))
+                if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName, NULL, &bufferSize))
                 {
                     // load the entry from the registry.
-                    if (ERROR_SUCCESS == key.QueryStringValue(fileKeyName, pathName.GetBuffer(bufferSize), &bufferSize))
+                    if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName, pathName.GetBuffer(bufferSize), &bufferSize))
                     {
                         pathName.ReleaseBuffer();
 
@@ -1666,7 +1666,7 @@ namespace Win32xx
                     else
                     {
                         pathName.ReleaseBuffer();
-                        TRACE(_T("LoadRegistryMRUSettings: RegQueryValueEx failed\n"));
+                        TRACE(_T("LoadRegistryMRUSettings: QueryStringValue failed\n"));
                     }
                 }
             }
@@ -1686,11 +1686,11 @@ namespace Win32xx
         assert (NULL != keyName);
 
         m_keyName = keyName;
-        CString strKey = _T("Software\\") + m_keyName + _T("\\Frame Settings");
+        const CString settingsKeyName = _T("Software\\") + m_keyName + _T("\\Frame Settings");
         BOOL isOK = FALSE;
         InitValues values;
         CRegKey key;
-        if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
+        if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, settingsKeyName, KEY_READ))
         {
             try
             {
@@ -1724,10 +1724,10 @@ namespace Win32xx
                 TRACE("*** Failed to load values from registry, using defaults. ***\n");
 
                 // Delete the bad key from the registry.
-                CString strParentKey = _T("Software\\") + m_keyName;
-                CRegKey parentKey;
-                if (ERROR_SUCCESS == parentKey.Open(HKEY_CURRENT_USER, strParentKey, KEY_READ))
-                    parentKey.DeleteSubKey(_T("Frame Settings"));
+                const CString appKeyName = _T("Software\\") + m_keyName;
+                CRegKey appKey;
+                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName, KEY_READ))
+                    appKey.DeleteSubKey(_T("Frame Settings"));
 
                 InitValues defaultValues;
                 values = defaultValues;
@@ -2489,21 +2489,21 @@ namespace Win32xx
         try
         {
             // Delete Old MRUs
-            CString keyParentName = _T("Software\\") + m_keyName;
-            CRegKey keyParent;
-            keyParent.Open(HKEY_CURRENT_USER, keyParentName);
-            keyParent.DeleteSubKey(_T("Recent Files"));
+            const CString appKeyName = _T("Software\\") + m_keyName;
+            CRegKey appKey;
+            appKey.Open(HKEY_CURRENT_USER, appKeyName);
+            appKey.DeleteSubKey(_T("Recent Files"));
 
             if (m_maxMRU > 0)
             {
-                CString keyName = _T("Software\\") + m_keyName + _T("\\Recent Files");
-                CRegKey key;
+                const CString recentKeyName = _T("Software\\") + m_keyName + _T("\\Recent Files");
+                CRegKey recentKey;
 
                 // Add Current MRUs.
-                if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
+                if (ERROR_SUCCESS != recentKey.Create(HKEY_CURRENT_USER, recentKeyName))
                     throw CUserException();
 
-                if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
+                if (ERROR_SUCCESS != recentKey.Open(HKEY_CURRENT_USER, recentKeyName))
                     throw CUserException();
 
                 CString subKeyName;
@@ -2516,7 +2516,7 @@ namespace Win32xx
                     {
                         pathName = m_mruEntries[i];
 
-                        if (ERROR_SUCCESS != key.SetStringValue(subKeyName, pathName.c_str()))
+                        if (ERROR_SUCCESS != recentKey.SetStringValue(subKeyName, pathName.c_str()))
                             throw CUserException();
                     }
                 }
@@ -2527,13 +2527,13 @@ namespace Win32xx
         {
             TRACE("*** Failed to save registry MRU settings. ***\n");
 
-            CString keyName = _T("Software\\") + m_keyName;
-            CRegKey key;
+            const CString appKeyName = _T("Software\\") + m_keyName;
+            CRegKey appKey;
 
-            if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName))
+            if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName))
             {
                 // Roll back the registry changes by deleting this subkey.
-                key.DeleteSubKey(_T("Recent Files"));
+                appKey.DeleteSubKey(_T("Recent Files"));
             }
 
             return FALSE;
@@ -2550,12 +2550,12 @@ namespace Win32xx
         {
             try
             {
-                CString keyName = _T("Software\\") + m_keyName + _T("\\Frame Settings");
-                CRegKey key;
+                const CString settingsKeyName = _T("Software\\") + m_keyName + _T("\\Frame Settings");
+                CRegKey settingsKey;
 
-                if (ERROR_SUCCESS != key.Create(HKEY_CURRENT_USER, keyName))
+                if (ERROR_SUCCESS != settingsKey.Create(HKEY_CURRENT_USER, settingsKeyName))
                     throw CUserException(_T("RegCreateKeyEx failed"));
-                if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
+                if (ERROR_SUCCESS != settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName))
                     throw CUserException(_T("RegCreateKeyEx failed"));
 
                 // Store the window position in the registry.
@@ -2573,15 +2573,15 @@ namespace Win32xx
                     DWORD height = MAX(rc.Height(), 50);
                     DWORD showCmd = wndpl.showCmd;
 
-                    if (ERROR_SUCCESS != key.SetDWORDValue(_T("Top"), top))
+                    if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("Top"), top))
                         throw CUserException();
-                    if (ERROR_SUCCESS != key.SetDWORDValue(_T("Left"), left))
+                    if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("Left"), left))
                         throw CUserException();
-                    if (ERROR_SUCCESS != key.SetDWORDValue(_T("Width"), width))
+                    if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("Width"), width))
                         throw CUserException();
-                    if (ERROR_SUCCESS != key.SetDWORDValue(_T("Height"), height))
+                    if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("Height"), height))
                         throw CUserException();
-                    if (ERROR_SUCCESS != key.SetDWORDValue(_T("ShowCmd"), showCmd))
+                    if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("ShowCmd"), showCmd))
                         throw CUserException();
                 }
 
@@ -2589,9 +2589,9 @@ namespace Win32xx
                 DWORD showToolBar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
                 DWORD showStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
 
-                if (ERROR_SUCCESS != key.SetDWORDValue(_T("ToolBar"), showToolBar))
+                if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("ToolBar"), showToolBar))
                     throw CUserException();
-                if (ERROR_SUCCESS != key.SetDWORDValue(_T("StatusBar"), showStatusBar))
+                if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("StatusBar"), showStatusBar))
                     throw CUserException();
             }
 
@@ -2599,13 +2599,13 @@ namespace Win32xx
             {
                 TRACE("*** Failed to save registry settings. ***\n");
 
-                CString keyName = _T("Software\\") + m_keyName;
-                CRegKey key;
+                const CString appKeyName = _T("Software\\") + m_keyName;
+                CRegKey appKey;
 
-                if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, keyName))
+                if (ERROR_SUCCESS == appKey.Open(HKEY_CURRENT_USER, appKeyName))
                 {
                     // Roll back the registry changes by deleting this subkey.
-                    key.DeleteSubKey(_T("Frame Settings"));
+                    appKey.DeleteSubKey(_T("Frame Settings"));
                 }
 
                 return FALSE;

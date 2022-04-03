@@ -221,22 +221,25 @@ void CMyStatusBar::SetupParts()
 // Updates the status indicators.
 void CMyStatusBar::SetStatusIndicators()
 {
-    CString cap = LoadString(IDW_INDICATOR_CAPS);
-    CString num = LoadString(IDW_INDICATOR_NUM);
-    CString ovr = LoadString(IDW_INDICATOR_OVR);
-    CString ins = LoadString(IDW_INDICATOR_INS);
-    CString scrl = LoadString(IDW_INDICATOR_SCRL);
+    if (IsWindow())
+    {
+        CString cap = LoadString(IDW_INDICATOR_CAPS);
+        CString num = LoadString(IDW_INDICATOR_NUM);
+        CString ovr = LoadString(IDW_INDICATOR_OVR);
+        CString ins = LoadString(IDW_INDICATOR_INS);
+        CString scrl = LoadString(IDW_INDICATOR_SCRL);
 
-    CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
-    CString status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : CString("");
-    CString status3 = (::GetKeyState(VK_INSERT)  & 0x0001) ? ovr : ins;
-    CString status4 = (::GetKeyState(VK_SCROLL)  & 0x0001) ? scrl : CString("");
+        CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
+        CString status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : CString("");
+        CString status3 = (::GetKeyState(VK_INSERT) & 0x0001) ? ovr : ins;
+        CString status4 = (::GetKeyState(VK_SCROLL) & 0x0001) ? scrl : CString("");
 
-    // Update the indicators.
-    SetPartText(5, status1);
-    SetPartText(6, status2);
-    SetPartText(7, status3);
-    SetPartText(8, status4);
+        // Update the indicators.
+        SetPartText(5, status1);
+        SetPartText(6, status2);
+        SetPartText(7, status3);
+        SetPartText(8, status4);
+    }
 }
 
 // Process the statusbar's messages

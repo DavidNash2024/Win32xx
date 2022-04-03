@@ -79,7 +79,7 @@ namespace Win32xx
         LONG QueryMultiStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
         LONG QueryStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
         LONG QueryValue(LPCTSTR valueName, DWORD* type, void* data, ULONG* bytes) const;
-        LONG RecurseDeleteKey(LPCTSTR keyName) const;
+        void RecurseDeleteKey(LPCTSTR keyName) const;
         LONG SetBinaryValue(LPCTSTR valueName, const void* value, ULONG bytes) const;
         LONG SetDWORDValue(LPCTSTR valueName, DWORD value) const;
         LONG SetGUIDValue(LPCTSTR valueName, REFGUID value) const;
@@ -98,6 +98,7 @@ namespace Win32xx
 #endif
 
     private:
+        LONG RecurseDeleteAllKeys(LPCTSTR keyName) const;
         HKEY m_key;
     };
 
@@ -308,8 +309,8 @@ namespace Win32xx
         return ::RegQueryValueEx(m_key, valueName, 0, type, static_cast<LPBYTE>(data), bytes);
     }
 
-    // Removes the specified key and any subkeys from the registry.
-    inline LONG CRegKey::RecurseDeleteKey(LPCTSTR keyName) const
+    // Private recursive function called by RecurseDeleteKey.
+    inline LONG CRegKey::RecurseDeleteAllKeys(LPCTSTR keyName) const
     {
         assert(m_key);
         assert(keyName);
@@ -324,7 +325,7 @@ namespace Win32xx
         TCHAR subKey[MAX_PATH];
         while (ERROR_SUCCESS == ::RegEnumKeyEx(key, 0, subKey, &size, NULL, NULL, NULL, &time))
         {
-            result = key.RecurseDeleteKey(subKey);
+            result = key.RecurseDeleteAllKeys(subKey);
             if (result != ERROR_SUCCESS)
                 return result;
             size = MAX_PATH;
@@ -332,6 +333,12 @@ namespace Win32xx
 
         key.Close();
         return DeleteSubKey(keyName);
+    }
+
+    // Removes the specified key and any subkeys from the registry.
+    inline void CRegKey::RecurseDeleteKey(LPCTSTR keyName) const
+    {
+        RecurseDeleteAllKeys(keyName);
     }
 
     // Sets the binary value of the registry key.
