@@ -70,6 +70,7 @@ void CHelp::SetClientHelpTopics()
     AddHelpTopic(IDD_DIALOG1,       _T("clientwindowcontrols"));
 
     // define the help topics for the client area controls
+    AddHelpTopic(IDC_LIST1,         _T("ListBoxDialogHelp"));
     AddHelpTopic(IDC_RICHEDIT1,     _T("RichEditBoxUsage"));
     AddHelpTopic(IDC_EDIT1,         _T("EditBoxUsage"));
     AddHelpTopic(ID_RADIO_A,        _T("RadioButtonUsage"));
