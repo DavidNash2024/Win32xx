@@ -7,18 +7,18 @@
 
 // Loads the plotpoint data from the archive.
 // Throws an exception if unable to read the file.
-void CDoc::FileOpen(LPCTSTR filename)
+void CDoc::FileOpen(LPCTSTR fileName)
 {
     GetAllPoints().clear();
-    CArchive ar(filename, CArchive::load);
+    CArchive ar(fileName, CArchive::load);
     ar >> *this;
 }
 
 // Stores the plotpoint data in the archive.
 // Throws an exception if unable to save the file.
-void CDoc::FileSave(LPCTSTR filename)
+void CDoc::FileSave(LPCTSTR fileName)
 {
-    CArchive ar(filename, CArchive::store);
+    CArchive ar(fileName, CArchive::store);
     ar << *this;
 }
 

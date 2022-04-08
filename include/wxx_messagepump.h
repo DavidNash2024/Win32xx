@@ -43,8 +43,8 @@
 
 namespace Win32xx
 {
-    // InitInstance is called when the thread or application starts. Override 
-    // this to perform tasks such as creating a window.
+    // InitInstance is called when the thread or application starts.
+    // Override this function to perform tasks such as creating a window.
     // Return TRUE to indicate success and run the message loop.
     inline BOOL CMessagePump::InitInstance()
     {

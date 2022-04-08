@@ -59,7 +59,7 @@ void CView::OnSize()
 
 // This function will be called automatically by Create. It provides an
 // opportunity to set various window parameters prior to window creation.
-// You are not required to set these parameters, any parameters which
+// You are not required to set these parameters. Any parameters which
 // aren't specified are set to reasonable defaults.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
@@ -74,7 +74,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 
 // This function is our message procedure. We process the messages for
 // the view window here.  Unprocessed messages are passed on for
-//  default processing.
+// default processing.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch(msg)

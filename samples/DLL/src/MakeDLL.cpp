@@ -17,7 +17,7 @@ CWinApp App;
 CMyDialog MyDialog(IDD_DIALOG1);
 
 // The entry point for the dll.
-BOOL APIENTRY DllMain( HANDLE, DWORD  ul_reason_for_call, LPVOID )
+BOOL WINAPI DllMain( HANDLE, DWORD  ul_reason_for_call, LPVOID )
 {
     switch( ul_reason_for_call )
     {

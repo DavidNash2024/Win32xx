@@ -184,8 +184,8 @@ LRESULT CView::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     // Create the menu.
     CMenu popup;
     popup.CreatePopupMenu();
-    popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_COLOR, _T("Color"));
-    popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_EXIT, _T("Exit"));
+    popup.AppendMenu(MF_STRING, IDM_COLOR, _T("Color"));
+    popup.AppendMenu(MF_STRING, IDM_EXIT, _T("Exit"));
 
     // Initiate the popup menu.
     CPoint pt = GetCursorPos();

@@ -35,7 +35,6 @@ protected:
 private:
     void AddCombo();
     BOOL ChooseColor(UINT color);
-    DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
     void SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2);
     void ShowArrows(bool isShown);
     void ShowCards(bool isShown);
@@ -64,7 +63,7 @@ private:
     CImageList m_arrowImages;
     CImageList m_cardImages;
 
-    UINT m_color;
+    DWORD m_color;
     bool m_useThemes;
     bool m_useBandColors;
     bool m_useFlatStyle;

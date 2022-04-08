@@ -2554,9 +2554,9 @@ namespace Win32xx
                 CRegKey settingsKey;
 
                 if (ERROR_SUCCESS != settingsKey.Create(HKEY_CURRENT_USER, settingsKeyName))
-                    throw CUserException(_T("RegCreateKeyEx failed"));
+                    throw CUserException(_T("CRegKey::Create failed"));
                 if (ERROR_SUCCESS != settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName))
-                    throw CUserException(_T("RegCreateKeyEx failed"));
+                    throw CUserException(_T("CRegKey::Open failed"));
 
                 // Store the window position in the registry.
                 WINDOWPLACEMENT wndpl;

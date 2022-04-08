@@ -145,7 +145,7 @@ BOOL CMainFrame::OnFileOpen()
         CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
         fileDlg.SetTitle(_T("Open File"));
 
-        // Bring up the file open dialog retrieve the selected filename
+        // Bring up the file open dialog retrieve the selected file name.
         if (fileDlg.DoModal(*this) == IDOK)
         {
             // Load the file
@@ -192,7 +192,7 @@ BOOL CMainFrame::OnFileSaveAs()
         CFileDialog fileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
         fileDlg.SetTitle(_T("Save File"));
 
-        // Bring up the file open dialog retrieve the selected filename
+        // Bring up the file open dialog retrieve the selected file name.
         if (fileDlg.DoModal(*this) == IDOK)
         {
             CString fileName = fileDlg.GetPathName();

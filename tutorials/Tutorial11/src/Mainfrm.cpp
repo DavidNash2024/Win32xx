@@ -7,7 +7,7 @@
 
 
 // Constructor.
-CMainFrame::CMainFrame() : m_isToolbarShown(TRUE)
+CMainFrame::CMainFrame() : m_isToolbarShown(true)
 {
 }
 
@@ -121,7 +121,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
     try
     {
-        // wParam is a pointer (LPCTSTR) to the filename.
+        // wParam is a pointer (LPCTSTR) to the file name.
         LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
         assert(fileName);
 
@@ -188,7 +188,7 @@ BOOL CMainFrame::OnFileOpen()
 
     try
     {
-        // Bring up the file open dialog retrieve the selected filename
+        // Bring up the file open dialog retrieve the selected file name.
         if (fileDlg.DoModal(*this) == IDOK)
         {
             // Load the file
@@ -237,7 +237,7 @@ BOOL CMainFrame::OnFileSaveAs()
 
     try
     {
-        // Bring up the file open dialog retrieve the selected filename
+        // Bring up the file open dialog retrieve the selected file name.
         if (fileDlg.DoModal(*this) == IDOK)
         {
             CString fileName = fileDlg.GetPathName();

@@ -28,6 +28,7 @@ int CSplash::OnCreate(CREATESTRUCT&)
     int yImage = 256;
     m_hIcon = (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, xImage, yImage, LR_SHARED);
     CenterWindow();
+    AddBar();
     return 0;
 }
 
@@ -35,7 +36,8 @@ int CSplash::OnCreate(CREATESTRUCT&)
 void CSplash::AddBar()
 {
     m_progress.Create(*this);
-    m_progress.SetWindowPos(0, 50, 200, 156, 10, SWP_SHOWWINDOW);
+    m_progress.SetWindowPos(0, 50, 200, 156, 10, 0);
+    m_progress.ShowWindow(SW_HIDE);
     m_progress.SetStep(1);
 }
 

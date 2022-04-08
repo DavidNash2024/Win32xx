@@ -237,74 +237,69 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
-DWORD CMainFrame::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
-{
-    DWORD   type;
-    DWORD   count = sizeof(DWORD);
-    DWORD   value = 0;
-    if (ERROR_SUCCESS == RegQueryValueEx(hKey, pName, NULL, &type, (LPBYTE)&value, &count))
-      return value;
-    else
-      return 0;
-}
-
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 {
-    CFrame::LoadRegistrySettings(keyName);
-
-    HKEY hKey;
-    CString fullKeyName = _T("Software\\");
-    fullKeyName += keyName;
-    fullKeyName += (_T("\\Theme Settings"));
-
-    if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, fullKeyName, 0, KEY_READ, &hKey))
+    // Call the base class function
+    if (CFrame::LoadRegistrySettings(keyName))
     {
-        m_color = GetRegDwordFromOpenKey(hKey, _T("ColorStyle"));
-        m_useThemes = GetRegDwordFromOpenKey(hKey, _T("UseThemes")) & 1;
-        m_useBandColors = GetRegDwordFromOpenKey(hKey, _T("UseBandColors")) & 1;
-        m_useFlatStyle = GetRegDwordFromOpenKey(hKey, _T("UseFlatStyle")) & 1;
-        m_keepBandsLeft = GetRegDwordFromOpenKey(hKey, _T("PutBandsLeft")) & 1;
-        m_lockMenuBand = GetRegDwordFromOpenKey(hKey, _T("LockMenuBand")) & 1;
-        m_useRoundBorders = GetRegDwordFromOpenKey(hKey, _T("UseRoundBorders")) & 1;
-        m_useShortBands = GetRegDwordFromOpenKey(hKey, _T("UseShortBands")) & 1;
-        m_useLines = GetRegDwordFromOpenKey(hKey, _T("UseLines")) & 1;
-        m_showArrows = GetRegDwordFromOpenKey(hKey, _T("ShowArrows")) & 1;
-        m_showCards = GetRegDwordFromOpenKey(hKey, _T("ShowCards")) & 1;
-        int nBands = GetRegDwordFromOpenKey(hKey, _T("NumBands"));
+        CString settingsKeyName;
+        settingsKeyName << _T("Software\\") << keyName << _T("\\Theme Settings");
+        CRegKey settingsKey;
+        int result = ERROR_SUCCESS;
 
-        // Retrieve the band styles and IDs
-        for (int i = 0; i < nBands; ++i)
+        result = settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName);
+        if (result == ERROR_SUCCESS)
         {
-            TCHAR szSubKey[16];
-            wsprintf(szSubKey, _T("Band ID %d\0"), i+1);
-            UINT id = GetRegDwordFromOpenKey(hKey, szSubKey);
-            m_bandIDs.push_back(id);
+            DWORD bands = 0;
+            result = result & settingsKey.QueryDWORDValue(_T("ColorStyle"), m_color);
+            result = result & settingsKey.QueryBoolValue(_T("UseThemes"), m_useThemes);
+            result = result & settingsKey.QueryBoolValue(_T("UseBandColors"), m_useBandColors);
+            result = result & settingsKey.QueryBoolValue(_T("UseFlatStyle"), m_useFlatStyle);
+            result = result & settingsKey.QueryBoolValue(_T("PutBandsLeft"), m_keepBandsLeft);
+            result = result & settingsKey.QueryBoolValue(_T("LockMenuBand"), m_lockMenuBand);
+            result = result & settingsKey.QueryBoolValue(_T("UseRoundBorders"), m_useRoundBorders);
+            result = result & settingsKey.QueryBoolValue(_T("UseShortBands"), m_useShortBands);
+            result = result & settingsKey.QueryBoolValue(_T("UseLines"), m_useLines);
+            result = result & settingsKey.QueryBoolValue(_T("ShowArrows"), m_showArrows);
+            result = result & settingsKey.QueryBoolValue(_T("ShowCards"), m_showCards);
+            result = result & settingsKey.QueryDWORDValue(_T("NumBands"), bands);
 
-            wsprintf(szSubKey, _T("Band Style %d\0"), i+1);
-            UINT nStyle = GetRegDwordFromOpenKey(hKey, szSubKey);
-            m_bandStyles.push_back(nStyle);
+            // Retrieve the band styles and IDs
+            for (UINT i = 0; i < bands; ++i)
+            {
+                CString bandKeyName;
+                DWORD id = 0;
+                bandKeyName.Format(_T("Band ID %d\0"), i + 1);
+                result = result & settingsKey.QueryDWORDValue(bandKeyName, id);
+                m_bandIDs.push_back(id);
 
-            wsprintf(szSubKey, _T("Band Size %d\0"), i+1);
-            UINT nSize = GetRegDwordFromOpenKey(hKey, szSubKey);
-            m_bandSizes.push_back(nSize);
+                DWORD style = 0;
+                bandKeyName.Format(_T("Band Style %d\0"), i + 1);
+                result = result & settingsKey.QueryDWORDValue(bandKeyName, style);
+                m_bandStyles.push_back(style);
+
+                DWORD size = 0;
+                bandKeyName.Format(_T("Band Size %d\0"), i + 1);
+                result = result & settingsKey.QueryDWORDValue(bandKeyName, size);
+                m_bandSizes.push_back(size);
+            }
         }
 
-        RegCloseKey(hKey);
-    }
-    else
-    {
-        // Choose reasonable default values
-        m_color = IDM_OLIVE;
-        m_useThemes = true;
-        m_useBandColors = true;
-        m_useFlatStyle = false;
-        m_keepBandsLeft = true;
-        m_lockMenuBand = true;
-        m_useRoundBorders = true;
-        m_useShortBands = true;
-        m_useLines = false;
-        m_showArrows = true;
-        m_showCards = true;
+        if (result != ERROR_SUCCESS)
+        {
+            // Choose reasonable default values
+            m_color = IDM_OLIVE;
+            m_useThemes = true;
+            m_useBandColors = true;
+            m_useFlatStyle = false;
+            m_keepBandsLeft = true;
+            m_lockMenuBand = true;
+            m_useRoundBorders = true;
+            m_useShortBands = true;
+            m_useLines = false;
+            m_showArrows = true;
+            m_showCards = true;
+        }
     }
 
     return TRUE;
@@ -359,7 +354,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
-    // call the base class function
+    // Call the base class function
     CFrame::OnCreate(cs);
 
     if (IsReBarSupported())
@@ -378,7 +373,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
                 // Set the band's style
                 REBARBANDINFO rbbi;
-                ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
+                ZeroMemory(&rbbi, sizeof(rbbi));
                 rbbi.fMask = RBBIM_STYLE;
                 rbbi.fStyle = m_bandStyles[i];
                 GetReBar().SetBandInfo(i, rbbi);
@@ -388,12 +383,11 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
             {
                 // Set the band's size
                 REBARBANDINFO rbbi;
-                ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
+                ZeroMemory(&rbbi, sizeof(rbbi));
                 rbbi.fMask = RBBIM_SIZE;
                 rbbi.cx = m_bandSizes[i];
                 GetReBar().SetBandInfo(i, rbbi);
             }
-
         }
 
         // Set the MenuBar's position and gripper
@@ -654,53 +648,52 @@ BOOL CMainFrame::SaveRegistrySettings()
 {
     if (IsReBarSupported())
     {
-        CFrame::SaveRegistrySettings();
-
-        HKEY hKey;
-        CString strKeyName = GetRegistryKeyName();
-        CString strKey = _T("Software\\");
-        strKey += strKeyName + (_T("\\Theme Settings"));
-        int bands = GetReBar().GetBandCount();
-
-        RegCreateKeyEx(HKEY_CURRENT_USER, strKey, 0, NULL,
-        REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
-
-        // Save the theme settings
-        RegSetValueEx(hKey, _T("ColorStyle"), 0, REG_DWORD, (LPBYTE)&m_color, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("UseThemes"), 0, REG_DWORD, (LPBYTE)&m_useThemes, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("UseBandColors"), 0, REG_DWORD, (LPBYTE)&m_useBandColors, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("UseFlatStyle"), 0, REG_DWORD, (LPBYTE)&m_useFlatStyle, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("PutBandsLeft"), 0, REG_DWORD, (LPBYTE)&m_keepBandsLeft, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("LockMenuBand"), 0, REG_DWORD, (LPBYTE)&m_lockMenuBand, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("UseRoundBorders"), 0, REG_DWORD, (LPBYTE)&m_useRoundBorders, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("UseShortBands"), 0, REG_DWORD, (LPBYTE)&m_useShortBands, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("UseLines"), 0, REG_DWORD, (LPBYTE)&m_useLines, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("ShowArrows"), 0, REG_DWORD, (LPBYTE)&m_showArrows, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("ShowCards"), 0, REG_DWORD, (LPBYTE)&m_showCards, sizeof(DWORD));
-        RegSetValueEx(hKey, _T("NumBands"), 0, REG_DWORD, (LPBYTE)&bands, sizeof(DWORD));
-
-        // Save the rebar band settings
-        REBARBANDINFO rbbi;
-        ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
-        rbbi.fMask = RBBIM_ID|RBBIM_STYLE|RBBIM_SIZE;
-
-        for (int i = 0; i < bands; i++)
+        // Call the base class function
+        if (CFrame::SaveRegistrySettings())
         {
-            GetReBar().GetBandInfo(i, rbbi);
-            UINT id = rbbi.wID;
-            UINT style = rbbi.fStyle;
-            UINT size = rbbi.cx;
+            CRegKey settingsKey;
+            CString settingsKeyName;
+            settingsKeyName << _T("Software\\") << GetRegistryKeyName() << _T("\\Theme Settings");
+            int bands = GetReBar().GetBandCount();
 
-            TCHAR szSubKey[16];
-            wsprintf(szSubKey, _T("Band ID %d\0"), i+1);
-            RegSetValueEx(hKey, szSubKey, 0, REG_DWORD, (LPBYTE)&id, sizeof(DWORD));
-            wsprintf(szSubKey, _T("Band Style %d\0"), i+1);
-            RegSetValueEx(hKey, szSubKey, 0, REG_DWORD, (LPBYTE)&style, sizeof(DWORD));
-            wsprintf(szSubKey, _T("Band Size %d\0"), i+1);
-            RegSetValueEx(hKey, szSubKey, 0, REG_DWORD, (LPBYTE)&size, sizeof(DWORD));
+            settingsKey.Create(HKEY_CURRENT_USER, settingsKeyName);
+            settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName);
+
+            // Save the theme settings
+            settingsKey.SetDWORDValue(_T("ColorStyle"), m_color);
+            settingsKey.SetBoolValue(_T("UseThemes"), m_useThemes);
+            settingsKey.SetBoolValue(_T("UseBandColors"), m_useBandColors);
+            settingsKey.SetBoolValue(_T("UseFlatStyle"), m_useFlatStyle);
+            settingsKey.SetBoolValue(_T("PutBandsLeft"), m_keepBandsLeft);
+            settingsKey.SetBoolValue(_T("LockMenuBand"), m_lockMenuBand);
+            settingsKey.SetBoolValue(_T("UseRoundBorders"), m_useRoundBorders);
+            settingsKey.SetBoolValue(_T("UseShortBands"), m_useShortBands);
+            settingsKey.SetBoolValue(_T("UseLines"), m_useLines);
+            settingsKey.SetBoolValue(_T("ShowArrows"), m_showArrows);
+            settingsKey.SetBoolValue(_T("ShowCards"), m_showCards);
+            settingsKey.SetDWORDValue(_T("NumBands"), bands);
+
+            // Save the rebar band settings
+            REBARBANDINFO rbbi;
+            ZeroMemory(&rbbi, sizeof(rbbi));
+            rbbi.fMask = RBBIM_ID | RBBIM_STYLE | RBBIM_SIZE;
+
+            for (int i = 0; i < bands; i++)
+            {
+                GetReBar().GetBandInfo(i, rbbi);
+                UINT id = rbbi.wID;
+                UINT style = rbbi.fStyle;
+                UINT size = rbbi.cx;
+
+                CString bandKeyName;
+                bandKeyName.Format(_T("Band ID %d\0"), i + 1);
+                settingsKey.SetDWORDValue(bandKeyName, id);
+                bandKeyName.Format(_T("Band Style %d\0"), i + 1);
+                settingsKey.SetDWORDValue(bandKeyName, style);
+                bandKeyName.Format(_T("Band Size %d\0"), i + 1);
+                settingsKey.SetDWORDValue(bandKeyName, size);
+            }
         }
-
-        RegCloseKey(hKey);
     }
 
     return TRUE;

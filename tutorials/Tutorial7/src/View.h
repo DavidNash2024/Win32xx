@@ -44,7 +44,7 @@ protected:
 
 private:
     void DrawLine(int x, int y);
-    void StorePoint(int x, int y, bool PenDown);
+    void StorePoint(int x, int y, bool isPenDown);
     CBrush m_brush;
     std::vector<PlotPoint> m_points;    // Points of lines to draw  COLORREF m_PenColor;
     COLORREF m_penColor;

@@ -22,7 +22,7 @@
     Windows program interface
 
 *=============================================================================*/
-    int APIENTRY
+    int WINAPI
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
 
     Launch the application. The instances, command line, and show state are

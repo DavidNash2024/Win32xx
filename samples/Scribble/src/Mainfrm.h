@@ -8,7 +8,6 @@
 
 #include "View.h"
 
-
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
 // The main window is a frame which has a menubar, toolbar,
@@ -22,17 +21,6 @@ public:
     CDoc& GetDoc() { return m_view.GetDoc(); }
     void LoadFile(LPCTSTR fileName);
 
-protected:
-    // Virtual functions that override base class functions
-    virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
-    // Command handlers
     LRESULT OnDropFile(WPARAM wparam);
     BOOL OnFileExit();
     BOOL OnFileMRU(WPARAM wparam);
@@ -43,18 +31,24 @@ private:
     BOOL OnFilePreview();
     BOOL OnFilePrint();
     BOOL OnPenColor();
-
-    // Message handlers
     LRESULT OnPreviewClose();
     LRESULT OnPreviewPrint();
     LRESULT OnPreviewSetup();
 
+protected:
+    virtual void OnClose();
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnInitialUpdate();
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
     CView m_view;
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
     bool m_isToolbarShown;
 };
-
 
 #endif //MAINFRM_H
 

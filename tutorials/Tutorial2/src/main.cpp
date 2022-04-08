@@ -48,7 +48,7 @@ BOOL CSimpleApp::InitInstance()
 
 
 // WinMain is the program's entry point. The program starts here.
-int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Start Win32++
     CSimpleApp theApp;
