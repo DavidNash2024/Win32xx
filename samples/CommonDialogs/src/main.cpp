@@ -36,7 +36,7 @@
     The WinMain() function invoked by the system to launch the application.
 
 *=============================================================================*/
-    int APIENTRY
+    int WINAPI
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
 
     Application entry point. The normal current and previous instance handles,

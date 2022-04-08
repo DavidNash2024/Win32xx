@@ -683,9 +683,9 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
                 DWORD dwTreeHeight = 0;
 
                 if (ERROR_SUCCESS != Key.QueryDWORDValue(L"Dialog Width", dwDialogWidth))
-                    throw CUserException(L"RegQueryValueEx Failed");
+                    throw CUserException(L"QueryDWORDValue Failed");
                 if (ERROR_SUCCESS != Key.QueryDWORDValue(L"Tree Height", dwTreeHeight))
-                    throw CUserException(L"RegQueryValueEx Failed");
+                    throw CUserException(L"QueryDWORDValue Failed");
 
                 m_dialogWidth = dwDialogWidth;
                 m_treeHeight = dwTreeHeight;
@@ -1526,9 +1526,9 @@ BOOL CMainFrame::SaveRegistrySettings()
             DWORD cyTree = DWORD(m_pDockTree->GetDockSize());
 
             if (ERROR_SUCCESS != Key.SetDWORDValue(L"Dialog Width", cxDialog))
-                throw CUserException(L"RegSetValueEx failed");
+                throw CUserException(L"SetDWORDValue failed");
             if (ERROR_SUCCESS != Key.SetDWORDValue(L"Tree Height", cyTree))
-                throw CUserException(L"RegSetValueEx failed");
+                throw CUserException(L"SetDWORDValue failed");
 
             return CDockFrame::SaveRegistrySettings();
         }
@@ -1621,7 +1621,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
 
         pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, TRUE);
         splash->ShowText(L"Updating Library", pFrame);
-        splash->AddBar();
+        splash->GetBar().ShowWindow(SW_SHOW);
         splash->GetBar().SetRange(0, (short)pFrame->m_filesToAdd.size());
 
         unsigned short barPos = 0;
@@ -1690,6 +1690,8 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
         // Report the error in a message  box.
         ::MessageBox(0, MI.Inform().c_str(), L"Error", MB_OK);
     }
+
+
 
     pFrame->OnFilesLoaded();
     pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, FALSE);

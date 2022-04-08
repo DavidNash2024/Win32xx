@@ -62,7 +62,7 @@ DropFiles(LPARAM lparam)                                                    /*
 {
     ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lparam);
     HDROP hDropinfo = (HDROP) ENDrop->hDrop;
-   TCHAR szFileName[_MAX_PATH];
+    TCHAR szFileName[_MAX_PATH];
     ::DragQueryFile((HDROP)hDropinfo, 0, szFileName, _MAX_PATH);
     OpenDoc(szFileName);
     ::DragFinish(hDropinfo);

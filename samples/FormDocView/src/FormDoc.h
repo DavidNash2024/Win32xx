@@ -19,23 +19,23 @@ public:
     void  LoadSettings(LPCTSTR keyName);
     void  SaveSettings(LPCTSTR keyName);
 
-    BOOL  GetCheckA() { return m_isCheckA; }
-    void  SetCheckA(BOOL IsChecked) { m_isCheckA = IsChecked; }
+    bool  GetCheckA() { return m_isCheckA; }
+    void  SetCheckA(bool isChecked) { m_isCheckA = isChecked; }
 
-    BOOL  GetCheckB() { return m_isCheckB; }
-    void  SetCheckB(BOOL IsChecked) { m_isCheckB = IsChecked; }
+    bool  GetCheckB() { return m_isCheckB; }
+    void  SetCheckB(bool isChecked) { m_isCheckB = isChecked; }
 
-    BOOL  GetCheckC() { return m_isCheckC; }
-    void  SetCheckC(BOOL IsChecked) { m_isCheckC = IsChecked; }
+    bool  GetCheckC() { return m_isCheckC; }
+    void  SetCheckC(bool isChecked) { m_isCheckC = isChecked; }
 
     UINT  GetRadio() { return m_radio; }
     void  SetRadio(UINT radio) { m_radio = radio; }
 
 private:
-    DWORD  m_isCheckA;
-    DWORD  m_isCheckB;
-    DWORD  m_isCheckC;
-    DWORD  m_radio;
+    bool  m_isCheckA;
+    bool  m_isCheckB;
+    bool  m_isCheckC;
+    DWORD m_radio;
 };
 
 #endif //SDI_DOC_H

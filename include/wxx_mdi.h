@@ -155,7 +155,7 @@ namespace Win32xx
         CMDIFrameT();
         virtual ~CMDIFrameT() {}
 
-        // Overridable virtual functions
+        // Override these functions as required.
         virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
         virtual HWND Create(HWND parent = 0);
         virtual CWnd& GetMDIClient() const { return *m_pMdiClient; }

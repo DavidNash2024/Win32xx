@@ -74,6 +74,7 @@ namespace Win32xx
         LONG NotifyChangeKeyValue(BOOL watchSubtree, DWORD notifyFilter, HANDLE event, BOOL isAsync = TRUE) const;
         LONG Open(HKEY keyParent, LPCTSTR keyName, REGSAM samDesired = KEY_READ | KEY_WRITE);
         LONG QueryBinaryValue(LPCTSTR valueName, void* value, ULONG* bytes) const;
+        LONG QueryBoolValue(LPCTSTR valueName, bool& value) const;
         LONG QueryDWORDValue(LPCTSTR valueName, DWORD& value) const;
         LONG QueryGUIDValue(LPCTSTR valueName, GUID& value) const;
         LONG QueryMultiStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
@@ -81,20 +82,17 @@ namespace Win32xx
         LONG QueryValue(LPCTSTR valueName, DWORD* type, void* data, ULONG* bytes) const;
         void RecurseDeleteKey(LPCTSTR keyName) const;
         LONG SetBinaryValue(LPCTSTR valueName, const void* value, ULONG bytes) const;
+        LONG SetBoolValue(LPCTSTR valueName, bool& value) const;
         LONG SetDWORDValue(LPCTSTR valueName, DWORD value) const;
         LONG SetGUIDValue(LPCTSTR valueName, REFGUID value) const;
         LONG SetKeySecurity(SECURITY_INFORMATION si, PSECURITY_DESCRIPTOR psd) const;
         LONG SetMultiStringValue(LPCTSTR valueName, LPCTSTR value) const;
-        LONG SetStringValue(LPCTSTR valueName, LPCTSTR value, DWORD type = REG_SZ) const;
+        LONG SetStringValue(LPCTSTR valueName, LPCTSTR value) const;
         LONG SetValue(LPCTSTR valueName, DWORD type, const void* value, ULONG bytes) const;
 
 #ifdef REG_QWORD
         LONG QueryQWORDValue(LPCTSTR valueName, ULONGLONG& value) const;
         LONG SetQWORDValue(LPCTSTR valueName, ULONGLONG value) const;
-#endif
-
-#if (WINVER >= 0x0600) && defined(RegSetKeyValue)
-        LONG SetKeyValue(LPCTSTR keyName, LPCTSTR value, LPCTSTR valueName = NULL) const;
 #endif
 
     private:
@@ -235,6 +233,14 @@ namespace Win32xx
         return result;
     }
 
+    // Retrieves the bool data for the specified value name.
+    inline LONG CRegKey::QueryBoolValue(LPCTSTR valueName, bool& value) const
+    {
+        assert(m_key);
+        ULONG boolSize = sizeof(bool);
+        return QueryBinaryValue(valueName, &value, &boolSize);
+    }
+
     // Retrieves the DWORD data for the specified value name.
     inline LONG CRegKey::QueryDWORDValue(LPCTSTR valueName, DWORD& value) const
     {
@@ -338,6 +344,7 @@ namespace Win32xx
     // Removes the specified key and any subkeys from the registry.
     inline void CRegKey::RecurseDeleteKey(LPCTSTR keyName) const
     {
+        assert(m_key);
         RecurseDeleteAllKeys(keyName);
     }
 
@@ -346,6 +353,14 @@ namespace Win32xx
     {
         assert(m_key);
         return ::RegSetValueEx(m_key, valueName, 0, REG_BINARY, static_cast<const BYTE*>(value), bytes);
+    }
+
+    // Sets the bool value of the registry key.
+    inline LONG CRegKey::SetBoolValue(LPCTSTR valueName, bool& value) const
+    {
+        assert(m_key);
+        ULONG boolSize = sizeof(bool);
+        return SetBinaryValue(valueName, &value, boolSize);
     }
 
     // Sets the DWORD value of the registry key.
@@ -366,17 +381,6 @@ namespace Win32xx
             return SetStringValue(valueName, OLEtoT(szGUID));
     }
 
-#if (WINVER >= 0x0600) && defined(RegSetKeyValue)
-
-    // Stores data in a specified value field of a specified key.
-    inline LONG CRegKey::SetKeyValue(LPCTSTR keyName, LPCTSTR value, LPCTSTR valueName) const
-    {
-        assert(m_key);
-        return ::RegSetKeyValue(m_key, keyName, valueName, REG_SZ, value, (lstrlen(value)+1)*sizeof(TCHAR) );
-    }
-
-#endif
-
     // Sets the security of the registry key.
     inline LONG CRegKey::SetKeySecurity(SECURITY_INFORMATION si, PSECURITY_DESCRIPTOR psd) const
     {
@@ -385,6 +389,7 @@ namespace Win32xx
     }
 
     // Sets the multistring value of the registry key.
+    // The value string should be double null terminated.
     inline LONG CRegKey::SetMultiStringValue(LPCTSTR valueName, LPCTSTR value) const
     {
         assert(m_key);
@@ -407,10 +412,10 @@ namespace Win32xx
     }
 
     // Sets the string value of the registry key.
-    inline LONG CRegKey::SetStringValue(LPCTSTR valueName, LPCTSTR value, DWORD type) const
+    inline LONG CRegKey::SetStringValue(LPCTSTR valueName, LPCTSTR value) const
     {
         assert(m_key);
-        return ::RegSetValueEx(m_key, valueName, 0, type, reinterpret_cast<const BYTE*>(value), (lstrlen(value)+1)*sizeof(TCHAR));
+        return ::RegSetValueEx(m_key, valueName, 0, REG_SZ, reinterpret_cast<const BYTE*>(value), (lstrlen(value)+1)*sizeof(TCHAR));
     }
 
     // Sets the value of the registry key.

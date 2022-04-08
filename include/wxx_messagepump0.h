@@ -35,7 +35,6 @@
 ////////////////////////////////////////////////////////
 
 
-
 #ifndef _WIN32XX_MESSAGEPUMP0_H_
 #define _WIN32XX_MESSAGEPUMP0_H_
 
@@ -54,12 +53,15 @@ namespace Win32xx
         HWND   GetAcceleratorsWindow() const { return m_accelWnd; }
         void   SetAccelerators(HACCEL accel, HWND accelWnd);
 
-        // Overridables
+        // Override this function as required.
+        virtual int  Run();
+
+    protected:
+        // Override these functions as required.
         virtual BOOL InitInstance();
         virtual int  MessageLoop();
         virtual BOOL OnIdle(LONG count);
         virtual BOOL PreTranslateMessage(MSG& msg);
-        virtual int  Run();
 
     private:
         CMessagePump(const CMessagePump&);                // Disable copy construction

@@ -654,9 +654,9 @@ namespace Win32xx
 
     // Inserts a popup menu item at the specified position in the menu.
     // Refer to InsertMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::InsertPopupMenu(UINT pos, UINT flags, HMENU hPopupMenu, LPCTSTR newItemName) const
+    inline BOOL CMenu::InsertPopupMenu(UINT pos, UINT flags, HMENU popupMenu, LPCTSTR newItemName) const
     {
-        assert(hPopupMenu);
+        assert(popupMenu);
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
@@ -665,7 +665,7 @@ namespace Win32xx
         flags &= ~MF_OWNERDRAW;
         flags |= MF_POPUP;
 
-        return ::InsertMenu(m_pData->menu, pos, flags, (UINT_PTR)hPopupMenu, newItemName);
+        return ::InsertMenu(m_pData->menu, pos, flags, (UINT_PTR)popupMenu, newItemName);
     }
 
     // Loads the menu from the specified windows resource.

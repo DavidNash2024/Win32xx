@@ -33,7 +33,7 @@ public:
     void FileOpen(LPCTSTR filename);
     void FileSave(LPCTSTR filename);
     void Serialize(CArchive &ar);
-    void StorePoint(int x, int y, bool PenDown, COLORREF PenColor);
+    void StorePoint(int x, int y, bool isPenDown, COLORREF PenColor);
 
 private:
     std::vector<PlotPoint> m_points;    // Points of lines to draw

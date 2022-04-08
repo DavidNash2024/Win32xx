@@ -128,10 +128,12 @@ Added MenuTheme::clrText     member variable
 
 Moved CWinThread::GetAcceleratorTable   to CMessagePump::GetAcceleratorTable
 Moved CWinThread::GetAcceleratorsWindow to CMessagePump::GetAcceleratorsWindow
-Moved CWinThread::SetAccelerators       to CMessagePump::SetAccelerators
+Moved CWinThread::InitInstance          to CMessagePump::InitInstance
 Moved CWinThread::MessageLoop           to CMessagePump::MessageLoop
 Moved CWinThread::OnIdle                to CMessagePump::OnIdle
 Moved CWinThread::PreTranslateMessage   to CMessagePump::PreTranslateMessage
+Moved CWinThread::Run                   to CMessagePump::Run
+Moved CWinThread::SetAccelerators       to CMessagePump::SetAccelerators
 
 Renamed UWM_PRINTNOW    to UWM_PREVIEWPRINT
 Renamed UWM_PRINTSETUP  to UWM_PREVIEWSETUP
@@ -147,11 +149,15 @@ Added CFrameT::SetReBar                                        member function
 Added CFrameT::SetStatusBar                                    member function
 Added CFrameT::SetStatusParts                                  member function
 Added CFrameT::SetToolBar                                      member function
+Added CRegKey::QueryBoolValue                                  member function
+Added CRegKey::SetBoolValue                                    member function
 
 Modified CFrameT::GetMenuBar        no longer virtual          member function
 Modified CFrameT::GetReBar          no longer virtual          member function
 Modified CFrameT::GetStatusBar      no longer virtual          member function
 Modified CFrameT::SetToolBar        no longer virtual          member function
+
+Removed CRegKey::SetKeyValue                                   member function
 
 Removed CString(int)                                           constructor
 Removed CString(double)                                        constructor

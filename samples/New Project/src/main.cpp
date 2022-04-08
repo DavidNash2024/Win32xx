@@ -27,7 +27,7 @@ public:
 
 // We can use WinMain as the entry point for application using
 // either ANSI (char) or Unicode (wide) character sets.
-int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Start Win32++
     CWinApp theApp;

@@ -6,7 +6,9 @@
 
 
 // WinMain is the program's entry point. The program starts here.
-int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+// For VS2019
+// int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {

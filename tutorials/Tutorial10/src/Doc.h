@@ -30,10 +30,10 @@ public:
     virtual ~CDoc() {}
 
     std::vector<PlotPoint>& GetAllPoints() {return m_points;}   // returns a vector of PlotPoint data
-    void FileOpen(LPCTSTR filename);
-    void FileSave(LPCTSTR filename);
+    void FileOpen(LPCTSTR fileName);
+    void FileSave(LPCTSTR fileName);
     void Serialize(CArchive &ar);
-    void StorePoint(int x, int y, bool PenDown, COLORREF PenColor);
+    void StorePoint(int x, int y, bool isPenDown, COLORREF PenColor);
 
 private:
     std::vector<PlotPoint> m_points;    // Points of lines to draw

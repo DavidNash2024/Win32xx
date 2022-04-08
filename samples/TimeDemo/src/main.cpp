@@ -26,7 +26,7 @@
     Windows API entry point
 
 *=============================================================================*/
-    int APIENTRY
+    int WINAPI
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
 
     This function is called by the system as the initial entry point for

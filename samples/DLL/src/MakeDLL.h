@@ -7,7 +7,7 @@
 
 #include "MyDialog.h"
 
-BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved );
+BOOL WINAPI DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved );
 
 
 extern "C"  // Required by MinGW compiler to avoid name mangling
