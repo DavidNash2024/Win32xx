@@ -92,6 +92,7 @@ namespace Win32xx
     {
 
     public:
+        CDialog();
         CDialog(UINT resourceID);
         CDialog(LPCTSTR resourceName);
         CDialog(LPCDLGTEMPLATE pDlgTemplate);
@@ -106,6 +107,10 @@ namespace Win32xx
         // State functions
         virtual BOOL IsModal() const { return m_isModal; }
         BOOL IsIndirect() const { return (NULL != m_pDlgTemplate); }
+
+        void SetDialogFromID(UINT resourceID);
+        void SetDialogResource(LPCTSTR resourceName);
+        void SetDialogTemplate(LPCDLGTEMPLATE pDlgTemplate);
 
         // Wrappers for Windows API functions
         DWORD GetDefID() const;
@@ -138,7 +143,7 @@ namespace Win32xx
         static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam, LPARAM lparam);
 
         BOOL m_isModal;                  // a flag for modal dialogs
-        LPCTSTR m_resourceName;              // the resource name for the dialog
+        LPCTSTR m_resourceName;          // the resource name for the dialog
         LPCDLGTEMPLATE m_pDlgTemplate;   // the dialog template for indirect dialogs
     };
 
@@ -223,11 +228,22 @@ namespace Win32xx
     // Definitions for the CDialog class
     //
 
+    
+    // Default constructor. Use SetDialogTemplate, SetDialogResource or 
+    // SetDialogResourceFromID to specify the dialog if this constructor
+    // is used.
+    inline CDialog::CDialog() : m_isModal(FALSE),
+        m_resourceName(NULL), m_pDlgTemplate(NULL)
+    {
+    }
+
+    // Constructor that specifies the dialog's resource
     inline CDialog::CDialog(LPCTSTR resourceName) : m_isModal(FALSE),
                         m_resourceName(resourceName), m_pDlgTemplate(NULL)
     {
     }
 
+    // Constructor that specifies the dialog's resource ID
     inline CDialog::CDialog(UINT resourceID) : m_isModal(FALSE),
                         m_resourceName(MAKEINTRESOURCE (resourceID)), m_pDlgTemplate(NULL)
     {
@@ -448,7 +464,7 @@ namespace Win32xx
         pTLSData->pWnd = this;
 
         // Create a modal dialog
-        if (IsIndirect() && m_pDlgTemplate != NULL)
+        if (m_pDlgTemplate != 0)
             result = ::DialogBoxIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
@@ -496,7 +512,7 @@ namespace Win32xx
         HWND wnd;
 
         // Create the modeless dialog
-        if (IsIndirect() && m_pDlgTemplate != NULL)
+        if (m_pDlgTemplate != 0)
             wnd = ::CreateDialogIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
@@ -639,6 +655,24 @@ namespace Win32xx
     {
         assert(IsWindow());
         SendMessage(DM_SETDEFID, (WPARAM)id, 0);
+    }
+
+    // Sets the dialog from the specified dialog resource ID.
+    inline void CDialog::SetDialogFromID(UINT resourceID)
+    {
+        m_resourceName = MAKEINTRESOURCE(resourceID);
+    }
+    
+    // Sets the dialog from the specified dialog resource.
+    inline void CDialog::SetDialogResource(LPCTSTR resourceName)
+    {
+        m_resourceName = resourceName;
+    }
+
+    // Sets the dialog from the specified dialog template.
+    inline void CDialog::SetDialogTemplate(LPCDLGTEMPLATE pDlgTemplate)
+    {
+        m_pDlgTemplate = pDlgTemplate;
     }
 
     // This callback function passes messages to DialogProc
