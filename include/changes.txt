@@ -91,7 +91,12 @@ New Features and Enhancements
   Additional flags and attributes can be specified when files are created or 
   opened. CFile's constructor and Open functions now support an additional
   attributes parameter which allows the flags and attributes to be specified.
-  
+
+* Updated CDialog
+  Added a default constructor. Use either the SetDialogTemplate, 
+  SetDialogResource or SetDialogFromID functions to specify the dialog if the
+  default constructor is used.
+
 * Updated the MenuTheme struct.
   A clrText member has been added to the MenuTheme struc to define the color of
   menubar text. This is now used to set the menubar text color to white for the
@@ -144,6 +149,10 @@ Added template <class V>   CStringW ToCStringW(V)              global function t
 Added template <class V>   CString  ToCString(V)               global function template
 Added template <class V>   CString& operator << (CString&, V)  global function template
 
+Added CDialog::Dialog                                          constructor
+Added CDialog::SetDialogFromID                                 member function
+Added CDialog::SetDialogResource                               member function
+Added CDialog::SetDialogTemplate                               member function
 Added CFrameT::SetMenuBar                                      member function
 Added CFrameT::SetReBar                                        member function
 Added CFrameT::SetStatusBar                                    member function
@@ -151,6 +160,7 @@ Added CFrameT::SetStatusParts                                  member function
 Added CFrameT::SetToolBar                                      member function
 Added CRegKey::QueryBoolValue                                  member function
 Added CRegKey::SetBoolValue                                    member function
+Added CTab::SetListDialog                                      member function
 
 Modified CFrameT::GetMenuBar        no longer virtual          member function
 Modified CFrameT::GetReBar          no longer virtual          member function
