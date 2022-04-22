@@ -70,14 +70,13 @@ New Features and Enhancements
   targetver.h as shown in the samples. Visual Studio 6 will require WINVER to
   be set to values appropriate for Win95 or Win98.
 
-* Added the Titlebar sample.
-  This sample demonstrates how to customize the title bar of a window. It sets
-  the title bar's color and draws the minimize, maximize and close buttons.
-  The sample uses CMenuBar to display a menu in the title bar.
-
-* Added the TitlebarFrame sample.
-  This sample demonstrates how to use a customized title bar with a frame.
-  It demonstrates the frame in two modes: mini-frame and full-frame.
+* Added the DialogTemplate sample.
+  This sample demonstrates how to search for the resources embedded in a
+  windows executable or dll file. The user can select a dialog from the list
+  of dialogs found in the file. The dialog template of the selected dialog is
+  displayed in a rich edit view as an unsigned char array in a manner that can
+  be saved to a header file. The program then creates the dialog from the 
+  displayed dialog template and displays it.
 
 * Added the PrintDialogEx sample.
   This sample upgrades the Notepad sample. Where the Notepad sample used
@@ -86,6 +85,15 @@ New Features and Enhancements
   pages, as well as multiple page ranges. It also supports printing multiple
   copies, with or without collating. A footer displaying the page number is
   added to the bottom of the printed page.
+
+* Added the Titlebar sample.
+  This sample demonstrates how to customize the title bar of a window. It sets
+  the title bar's color and draws the minimize, maximize and close buttons.
+  The sample uses CMenuBar to display a menu in the title bar.
+
+* Added the TitlebarFrame sample.
+  This sample demonstrates how to use a customized title bar with a frame.
+  It demonstrates the frame in two modes: mini-frame and full-frame.
 
 * Updated CFile.
   Additional flags and attributes can be specified when files are created or 
@@ -149,6 +157,8 @@ Added template <class V>   CStringW ToCStringW(V)              global function t
 Added template <class V>   CString  ToCString(V)               global function template
 Added template <class V>   CString& operator << (CString&, V)  global function template
 
+Added CAtoA::c_str                                             member function
+Added CAtoW::c_str                                             member function
 Added CDialog::Dialog                                          constructor
 Added CDialog::SetDialogFromID                                 member function
 Added CDialog::SetDialogResource                               member function
@@ -161,6 +171,8 @@ Added CFrameT::SetToolBar                                      member function
 Added CRegKey::QueryBoolValue                                  member function
 Added CRegKey::SetBoolValue                                    member function
 Added CTab::SetListDialog                                      member function
+Added CWtoA::c_str                                             member function
+Added CWtoW::c_str                                             member function
 
 Modified CFrameT::GetMenuBar        no longer virtual          member function
 Modified CFrameT::GetReBar          no longer virtual          member function

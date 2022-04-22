@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="DialogTemplate" />
+		<Option pch_mode="0" />
+		<Option default_target="Release MinGW GNU compiler" />
+		<Option compiler="bcc" />
+		<Build>
+			<Target title="Debug Borland">
+				<Option output="Borland/Debug/DialogTemplate.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Borland/Debug" />
+				<Option object_output="Borland/Debug" />
+				<Option type="0" />
+				<Option compiler="bcc" />
+				<Compiler>
+					<Add option="-tWM" />
+					<Add option="-v" />
+					<Add option="-w-par" />
+					<Add option="-D_DEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:/Borland/BCC55/Include" />
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="cw32mt" />
+					<Add library="comctl32" />
+					<Add library="import32" />
+				</Linker>
+			</Target>
+			<Target title="Release Borland">
+				<Option output="Borland/Release/DialogTemplate.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Borland/Release" />
+				<Option object_output="Borland/Release" />
+				<Option type="0" />
+				<Option compiler="bcc" />
+				<Compiler>
+					<Add option="-tWM" />
+					<Add option="-vi-" />
+					<Add option="-w-par" />
+					<Add option="-DNDEBUG" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:/Borland/BCC55/Include" />
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="comctl32" />
+					<Add library="import32" />
+					<Add library="cw32mt" />
+				</Linker>
+			</Target>
+			<Target title="Debug Microsoft Visual C++">
+				<Option output="Microsoft/Debug/DialogTemplate.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft/Debug" />
+				<Option object_output="Microsoft/Debug" />
+				<Option type="0" />
+				<Option compiler="msvctk" />
+				<Compiler>
+					<Add option="/MTd" />
+					<Add option="/GA" />
+					<Add option="/GX" />
+					<Add option="/GR" />
+					<Add option="/W3" />
+					<Add option="/DWIN32" />
+					<Add option="/D_DEBUG" />
+					<Add option="/D_WINDOWS" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="ComCtl32" />
+					<Add library="Gdi32" />
+					<Add library="User32" />
+					<Add library="Kernel32" />
+					<Add library="Advapi32" />
+					<Add library="Comdlg32" />
+					<Add library="Oleaut32" />
+					<Add library="ole32" />
+					<Add library="shell32" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
+				</Linker>
+			</Target>
+			<Target title="Release Microsoft Visual C++">
+				<Option output="Microsoft/Release/DialogTemplate.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft/Release" />
+				<Option object_output="Microsoft/Release" />
+				<Option type="0" />
+				<Option compiler="msvctk" />
+				<Compiler>
+					<Add option="/MT" />
+					<Add option="/GX" />
+					<Add option="/GR" />
+					<Add option="/Ox" />
+					<Add option="/W3" />
+					<Add option="/DWIN32" />
+					<Add option="/DNDEBUG" />
+					<Add option="/D_WINDOWS" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add library="ComCtl32" />
+					<Add library="Gdi32" />
+					<Add library="Kernel32" />
+					<Add library="User32" />
+					<Add library="Advapi32" />
+					<Add library="Comdlg32" />
+					<Add library="Oleaut32" />
+					<Add library="ole32" />
+					<Add library="shell32" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
+				</Linker>
+			</Target>
+			<Target title="Debug MinGW GNU compiler">
+				<Option output="GNU/Debug/DialogTemplate.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Debug" />
+				<Option object_output="GNU/Debug" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-g3" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-static" />
+					<Add option="-Wl,--enable-auto-import" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
+				</Linker>
+			</Target>
+			<Target title="Release MinGW GNU compiler">
+				<Option output="GNU/Release/DialogTemplate.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Release" />
+				<Option object_output="GNU/Release" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DNDEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static" />
+					<Add option="-Wl,--enable-auto-import" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
+		</VirtualTargets>
+		<Unit filename="../../../include/wxx_appcore.h" />
+		<Unit filename="../../../include/wxx_appcore0.h" />
+		<Unit filename="../../../include/wxx_archive.h" />
+		<Unit filename="../../../include/wxx_commondlg.h" />
+		<Unit filename="../../../include/wxx_controls.h" />
+		<Unit filename="../../../include/wxx_cstring.h" />
+		<Unit filename="../../../include/wxx_ddx.h" />
+		<Unit filename="../../../include/wxx_dialog.h" />
+		<Unit filename="../../../include/wxx_dockframe.h" />
+		<Unit filename="../../../include/wxx_docking.h" />
+		<Unit filename="../../../include/wxx_exception.h" />
+		<Unit filename="../../../include/wxx_file.h" />
+		<Unit filename="../../../include/wxx_filefind.h" />
+		<Unit filename="../../../include/wxx_folderdialog.h" />
+		<Unit filename="../../../include/wxx_frame.h" />
+		<Unit filename="../../../include/wxx_gdi.h" />
+		<Unit filename="../../../include/wxx_imagelist.h" />
+		<Unit filename="../../../include/wxx_listview.h" />
+		<Unit filename="../../../include/wxx_mdi.h" />
+		<Unit filename="../../../include/wxx_menu.h" />
+		<Unit filename="../../../include/wxx_menubar.h" />
+		<Unit filename="../../../include/wxx_metafile.h" />
+		<Unit filename="../../../include/wxx_printdialogs.h" />
+		<Unit filename="../../../include/wxx_propertysheet.h" />
+		<Unit filename="../../../include/wxx_rebar.h" />
+		<Unit filename="../../../include/wxx_rect.h" />
+		<Unit filename="../../../include/wxx_regkey.h" />
+		<Unit filename="../../../include/wxx_ribbon.h" />
+		<Unit filename="../../../include/wxx_richedit.h" />
+		<Unit filename="../../../include/wxx_scrollview.h" />
+		<Unit filename="../../../include/wxx_shared_ptr.h" />
+		<Unit filename="../../../include/wxx_socket.h" />
+		<Unit filename="../../../include/wxx_statusbar.h" />
+		<Unit filename="../../../include/wxx_stdcontrols.h" />
+		<Unit filename="../../../include/wxx_tab.h" />
+		<Unit filename="../../../include/wxx_taskdialog.h" />
+		<Unit filename="../../../include/wxx_textconv.h" />
+		<Unit filename="../../../include/wxx_themes.h" />
+		<Unit filename="../../../include/wxx_time.h" />
+		<Unit filename="../../../include/wxx_toolbar.h" />
+		<Unit filename="../../../include/wxx_treeview.h" />
+		<Unit filename="../../../include/wxx_webbrowser.h" />
+		<Unit filename="../../../include/wxx_wincore.h" />
+		<Unit filename="../../../include/wxx_wincore0.h" />
+		<Unit filename="../src/DialogHolder.cpp" />
+		<Unit filename="../src/DialogHolder.h" />
+		<Unit filename="../src/DialogsTree.cpp" />
+		<Unit filename="../src/DialogsTree.h" />
+		<Unit filename="../src/FrameApp.cpp" />
+		<Unit filename="../src/FrameApp.h" />
+		<Unit filename="../src/Mainfrm.cpp" />
+		<Unit filename="../src/Mainfrm.h" />
+		<Unit filename="../src/Resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="../src/ResourceFinder.cpp" />
+		<Unit filename="../src/ResourceFinder.h" />
+		<Unit filename="../src/RichView.cpp" />
+		<Unit filename="../src/RichView.h" />
+		<Unit filename="../src/UserMessages.h" />
+		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/stdafx.h">
+			<Option compile="1" />
+			<Option weight="0" />
+		</Unit>
+		<Unit filename="../src/targetver.h" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

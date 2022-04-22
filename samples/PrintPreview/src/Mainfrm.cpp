@@ -39,30 +39,34 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
-// Stream in callback function. Reads from file.
-DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
+// The stream in callback function. Reads from the file.
+DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb)
 {
     // Required for StreamIn
     if (!cb)
         return (1);
 
-    *pcb = 0;
-    if (!::ReadFile((HANDLE)(DWORD_PTR)cookie, pBuffer, cb, (LPDWORD)pcb, NULL))
+    HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
+    LPDWORD bytesRead = reinterpret_cast<LPDWORD>(pcb);
+    *bytesRead = 0;
+    if (!::ReadFile(file, pBuffer, cb, bytesRead, NULL))
         ::MessageBox(0, _T("ReadFile Failed"), _T(""), MB_OK);
 
     return 0;
 }
 
-// Stream out callback function. Writes to the file.
-DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
+// The stream out callback function. Writes to the file.
+DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb)
 {
     // Required for StreamOut
     if (!cb)
         return (1);
 
-    *pcb = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)cookie, pBuffer, cb, (LPDWORD)pcb, NULL))
-        ::MessageBox(0, _T("WriteFile Failed"), _T(""), MB_OK);
+    HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
+    LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
+    *bytesWritten = 0;
+    if (!::WriteFile(file, pBuffer, cb, bytesWritten, NULL))
+        ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }
 
@@ -560,21 +564,6 @@ BOOL CMainFrame::OnPreviewSetup()
     return TRUE;
 }
 
-// Called by CTextApp::OnIdle to update toolbar buttons
-void CMainFrame::OnToolbarUpdate()
-{
-    CHARRANGE range;
-    m_richView.GetSel(range);
-    BOOL isSelected = (range.cpMin != range.cpMax);
-    BOOL canPaste = m_richView.CanPaste(CF_TEXT);
-    BOOL isDirty = m_richView.GetModify();
-
-    GetToolBar().EnableButton(IDM_EDIT_COPY, isSelected);
-    GetToolBar().EnableButton(IDM_EDIT_CUT, isSelected);
-    GetToolBar().EnableButton(IDM_EDIT_PASTE, canPaste);
-    GetToolBar().EnableButton(IDM_FILE_SAVE, isDirty);
-}
-
 // Loads text from the specified file.
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 {
@@ -672,6 +661,21 @@ void CMainFrame::SetWindowTitle()
         Title = m_pathName + _T(" - PrintPreview Demo");
 
     SetWindowText(Title);
+}
+
+// Called by CTextApp::OnIdle to update toolbar buttons
+void CMainFrame::UpdateToolbar()
+{
+    CHARRANGE range;
+    m_richView.GetSel(range);
+    BOOL isSelected = (range.cpMin != range.cpMax);
+    BOOL canPaste = m_richView.CanPaste(CF_TEXT);
+    BOOL isDirty = m_richView.GetModify();
+
+    GetToolBar().EnableButton(IDM_EDIT_COPY, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_CUT, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_PASTE, canPaste);
+    GetToolBar().EnableButton(IDM_FILE_SAVE, isDirty);
 }
 
 // Process the window's messages.
