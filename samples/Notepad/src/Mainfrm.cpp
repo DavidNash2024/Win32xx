@@ -136,8 +136,10 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
     if (!cb)
         return (1);
 
-    *pcb = 0;
-    if (!::ReadFile((HANDLE)(DWORD_PTR)cookie, pBuffer, cb, (LPDWORD)pcb, NULL))
+    HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
+    LPDWORD bytesRead = reinterpret_cast<LPDWORD>(pcb);
+    *bytesRead = 0;
+    if (!::ReadFile(file, pBuffer, cb, bytesRead, NULL))
         ::MessageBox(0, _T("ReadFile Failed"), _T(""), MB_OK);
 
     return 0;
@@ -150,8 +152,10 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
     if (!cb)
         return (1);
 
-    *pcb = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)cookie, pBuffer, cb, (LPDWORD)pcb, NULL))
+    HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
+    LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
+    *bytesWritten = 0;
+    if (!::WriteFile(file, pBuffer, cb, bytesWritten, NULL))
         ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }
@@ -766,21 +770,6 @@ BOOL CMainFrame::OnPreviewSetup()
     return TRUE;
 }
 
-// Called by CTextApp::OnIdle to update toolbar buttons
-void CMainFrame::OnToolbarUpdate()
-{
-    CHARRANGE range;
-    m_richView.GetSel(range);
-    BOOL isSelected = (range.cpMin != range.cpMax);
-    BOOL canPaste = m_richView.CanPaste(CF_TEXT);
-    BOOL isDirty = m_richView.GetModify();
-
-    GetToolBar().EnableButton(IDM_EDIT_COPY, isSelected);
-    GetToolBar().EnableButton(IDM_EDIT_CUT, isSelected);
-    GetToolBar().EnableButton(IDM_EDIT_PASTE, canPaste);
-    GetToolBar().EnableButton(IDM_FILE_SAVE, isDirty);
-}
-
 // Update the radio buttons in the menu.
 BOOL CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
@@ -990,6 +979,21 @@ void CMainFrame::SetWindowTitle()
         title = m_pathName + _T(" - Notepad");
 
     SetWindowText(title);
+}
+
+// Called by CTextApp::OnIdle to update toolbar buttons
+void CMainFrame::UpdateToolbar()
+{
+    CHARRANGE range;
+    m_richView.GetSel(range);
+    BOOL isSelected = (range.cpMin != range.cpMax);
+    BOOL canPaste = m_richView.CanPaste(CF_TEXT);
+    BOOL isDirty = m_richView.GetModify();
+
+    GetToolBar().EnableButton(IDM_EDIT_COPY, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_CUT, isSelected);
+    GetToolBar().EnableButton(IDM_EDIT_PASTE, canPaste);
+    GetToolBar().EnableButton(IDM_FILE_SAVE, isDirty);
 }
 
 // Process the frame's window messages.

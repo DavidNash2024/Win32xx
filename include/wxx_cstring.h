@@ -884,7 +884,7 @@ namespace Win32xx
         m_buf.assign(size_t(minBufLength) + 1, ch);
         typename std::basic_string<T>::iterator it_end;
 
-        if (m_str.length() >= (size_t)minBufLength)
+        if (m_str.length() >= static_cast<size_t>(minBufLength))
         {
             it_end = m_str.begin();
             std::advance(it_end, minBufLength);

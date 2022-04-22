@@ -108,6 +108,7 @@ namespace Win32xx
         virtual BOOL IsModal() const { return m_isModal; }
         BOOL IsIndirect() const { return (NULL != m_pDlgTemplate); }
 
+        // Mutators that assign the dialog resource
         void SetDialogFromID(UINT resourceID);
         void SetDialogResource(LPCTSTR resourceName);
         void SetDialogTemplate(LPCDLGTEMPLATE pDlgTemplate);

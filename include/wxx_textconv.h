@@ -122,6 +122,7 @@ namespace Win32xx
         ~CAtoW();
         operator LPCWSTR() { return m_str? &m_wideArray[0] : NULL; }
         operator LPOLESTR() { return m_str? (LPOLESTR)&m_wideArray[0] : (LPOLESTR)NULL; }
+        LPCWSTR c_str() { return m_str ? &m_wideArray[0] : NULL; }
 
     private:
         CAtoW(const CAtoW&);
@@ -136,6 +137,7 @@ namespace Win32xx
         CWtoA(LPCWSTR str, UINT codePage = CP_ACP, int charCount = -1);
         ~CWtoA();
         operator LPCSTR() { return m_str? &m_ansiArray[0] : NULL; }
+        LPCSTR c_str() { return m_str ? &m_ansiArray[0] : NULL; }
 
     private:
         CWtoA(const CWtoA&);
@@ -148,14 +150,15 @@ namespace Win32xx
     {
     public:
         CWtoW(LPCWSTR pWStr, UINT codePage = CP_ACP, int charCount = -1);
-        operator LPCWSTR() { return m_pWStr; }
-        operator LPOLESTR() { return (LPOLESTR)m_pWStr; }
+        operator LPCWSTR() { return m_str; }
+        operator LPOLESTR() { return (LPOLESTR)m_str; }
+        LPCWSTR c_str() { return m_str; }
 
     private:
         CWtoW(const CWtoW&);
         CWtoW& operator= (const CWtoW&);
 
-        LPCWSTR m_pWStr;
+        LPCWSTR m_str;
     };
 
     class CAtoA
@@ -163,6 +166,7 @@ namespace Win32xx
     public:
         CAtoA(LPCSTR str, UINT codePage = CP_ACP, int charCount = -1);
         operator LPCSTR() { return m_str; }
+        LPCSTR c_str() { return m_str; }
 
     private:
         CAtoA(const CAtoA&);
@@ -247,7 +251,7 @@ namespace Win32xx
         std::fill(m_ansiArray.begin(), m_ansiArray.end(), '\0');
     }
 
-    inline CWtoW::CWtoW(LPCWSTR pWStr, UINT /*codePage = CP_ACP*/, int /*charCount = -1*/) : m_pWStr(pWStr)
+    inline CWtoW::CWtoW(LPCWSTR str, UINT /*codePage = CP_ACP*/, int /*charCount = -1*/) : m_str(str)
     {
     }
 
