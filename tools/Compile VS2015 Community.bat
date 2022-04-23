@@ -246,6 +246,7 @@ copy DialogBars\ProjectFiles\Release\DialogBars.exe           "..\output\VS2015\
 copy DialogDemo\ProjectFiles\Release\DialogDemo.exe           "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy DialogResizing\ProjectFiles\Release\DialogResizing.exe   "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy DialogTab\ProjectFiles\Release\DialogTab.exe             "..\output\VS2015\Release"    >>"..\output\VS2015.log"
+copy DialogTemplate\ProjectFiles\Release\DialogTemplate.exe   "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy Direct2D\ProjectFiles\Release\Direct2D.exe               "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy DirectX9\ProjectFiles\Release\DirectX9.exe               "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy DirectX11\ProjectFiles\Release\DirectX11.exe             "..\output\VS2015\Release"    >>"..\output\VS2015.log"

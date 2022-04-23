@@ -792,7 +792,8 @@ namespace Win32xx
     public:
         CClientDC(HWND wnd)
         {
-            assert(::IsWindow(wnd) || wnd == HWND_DESKTOP);
+            if (0 == wnd) wnd = GetDesktopWindow();
+            assert(::IsWindow(wnd));
 
             try
             {
@@ -917,7 +918,8 @@ namespace Win32xx
     public:
         CWindowDC(HWND wnd)
         {
-            assert(::IsWindow(wnd) || wnd == HWND_DESKTOP);
+            if (0 == wnd) wnd = GetDesktopWindow();
+            assert(::IsWindow(wnd));
 
             try
             {
