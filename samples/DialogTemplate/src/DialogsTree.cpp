@@ -127,9 +127,3 @@ CDockDialogsTree::CDockDialogsTree()
     SetBarWidth(8);
 }
 
-
-LRESULT CDockDialogsTree::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-    // Pass the tree-view's notifications to CMainFrame
-    return GetAncestor().SendMessage(WM_NOTIFY, wparam, lparam);
-}

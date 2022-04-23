@@ -46,9 +46,6 @@ public:
     virtual ~CDockDialogsTree() {}
     CDialogsTree* GetTree() { return &m_tree; }
 
-protected:
-    LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-
 private:
     CDialogsTree m_tree;
 };
