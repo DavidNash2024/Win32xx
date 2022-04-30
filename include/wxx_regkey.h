@@ -1,5 +1,5 @@
 // Win32++   Version 9.0
-// Release Date: TBA
+// Release Date: 30th April 2022
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -80,7 +80,7 @@ namespace Win32xx
         LONG QueryMultiStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
         LONG QueryStringValue(LPCTSTR valueName, LPTSTR value, ULONG* chars) const;
         LONG QueryValue(LPCTSTR valueName, DWORD* type, void* data, ULONG* bytes) const;
-        void RecurseDeleteKey(LPCTSTR keyName) const;
+        LONG RecurseDeleteKey(LPCTSTR keyName) const;
         LONG SetBinaryValue(LPCTSTR valueName, const void* value, ULONG bytes) const;
         LONG SetBoolValue(LPCTSTR valueName, bool& value) const;
         LONG SetDWORDValue(LPCTSTR valueName, DWORD value) const;
@@ -342,10 +342,15 @@ namespace Win32xx
     }
 
     // Removes the specified key and any subkeys from the registry.
-    inline void CRegKey::RecurseDeleteKey(LPCTSTR keyName) const
+    inline LONG CRegKey::RecurseDeleteKey(LPCTSTR keyName) const
     {
         assert(m_key);
+
+        CRegKey key;
+        LONG result = key.Open(m_key, keyName, KEY_READ | KEY_WRITE);
+        key.Close();
         RecurseDeleteAllKeys(keyName);
+        return result;
     }
 
     // Sets the binary value of the registry key.

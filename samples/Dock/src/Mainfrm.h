@@ -47,7 +47,6 @@ private:
     BOOL On3DBorder();
     BOOL OnDockCloseAll();
     BOOL OnDockDefault();
-    BOOL OnDynamicResize();
     BOOL OnFileExit();
     BOOL OnPropResize();
     BOOL OnNoUndocking();
@@ -66,7 +65,6 @@ private:
     bool m_disableResize;
     bool m_disableDockLR;
     bool m_disableDockClose;
-    bool m_useDynamicResize;
 };
 
 #endif //MAINFRM_H

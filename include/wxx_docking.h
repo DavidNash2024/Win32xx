@@ -1,5 +1,5 @@
 // Win32++   Version 9.0
-// Release Date: TBA
+// Release Date: 30th April 2022
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -540,7 +540,6 @@ namespace Win32xx
         CDocker* GetTopmostDocker() const;
         BOOL IsChildOfDocker(HWND wnd) const;
         BOOL IsDocked() const;
-        BOOL IsDragAutoResize() const;
         BOOL IsRelated(HWND wnd) const;
         BOOL IsUndocked() const;
         BOOL IsUndockable() const;
@@ -554,7 +553,6 @@ namespace Win32xx
         void SetDockHint(CDockHint& dockHint) { m_pDockHint = &dockHint; }
         void SetDockStyle(DWORD dockStyle);
         void SetDockSize(int dockSize);
-        void SetDragAutoResize(BOOL autoResize);
         BOOL SetRedraw(BOOL redraw = TRUE);
 
     protected:
@@ -597,7 +595,6 @@ namespace Win32xx
         void CloseAllTargets();
         void DockOuter(CDocker* pDocker, DWORD dockStyle);
         void DrawAllCaptions();
-        void DrawHashBar(HWND bar, POINT pos);
         void ConvertToChild(HWND hWndParent);
         void ConvertToPopup(const RECT& rc, BOOL showUndocked);
         void MoveDockChildren(CDocker* pDockTarget);
@@ -637,7 +634,6 @@ namespace Win32xx
         BOOL m_isUndocking;
         BOOL m_isClosing;
         BOOL m_isDragging;
-        BOOL m_isDragAutoResize;
         int m_dockStartSize;
         int m_dockID;
         int m_redrawCount;
@@ -2011,8 +2007,8 @@ namespace Win32xx
     // Constructor.
     inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockAncestor(NULL), m_isBlockMove(FALSE),
                     m_isUndocking(FALSE), m_isClosing(FALSE), m_isDragging(FALSE),
-                    m_isDragAutoResize(TRUE), m_dockStartSize(0), m_dockID(0), m_redrawCount(0),
-                    m_ncHeight(0), m_dockZone(0), m_dockSizeRatio(1.0), m_dockStyle(0), m_dockUnderPoint(0)
+                    m_dockStartSize(0), m_dockID(0), m_redrawCount(0), m_ncHeight(0),
+                    m_dockZone(0), m_dockSizeRatio(1.0), m_dockStyle(0), m_dockUnderPoint(0)
     {
         // Assume this docker is the DockAncestor for now.
         SetDockBar(m_dockBar);
@@ -2460,33 +2456,6 @@ namespace Win32xx
         }
     }
 
-    // Draws a hashed bar while the splitter bar is being dragged.
-    inline void CDocker::DrawHashBar(HWND bar, POINT pos)
-    {
-        CDockBar* pDockBar = static_cast<CDockBar*>(GetCWndPtr(bar));
-        if (NULL == pDockBar) return;
-        CDocker& Docker = pDockBar->GetDocker();
-
-        BOOL isVertical = ((Docker.GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((Docker.GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
-        CClientDC dcBar(*this);
-
-        WORD hashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
-        CBitmap hash;
-        hash.CreateBitmap(8, 8, 1, 1, hashPattern);
-        dcBar.CreatePatternBrush(hash);
-
-        CRect rc = pDockBar->GetWindowRect();
-        VERIFY(ScreenToClient(rc));
-        int cx = rc.Width();
-        int cy = rc.Height();
-        int barWidth = Docker.GetDockBar().GetWidth();
-
-        if (isVertical)
-            dcBar.PatBlt(pos.x - barWidth/2, rc.top, barWidth, cy, PATINVERT);
-        else
-            dcBar.PatBlt(rc.left, pos.y - barWidth/2, cx, barWidth, PATINVERT);
-    }
-
     // Returns a pointer to the view if it is a CDockContainer.
     // Returns NULL if the view is not a CDockContainer.
     // Returns NULL if the docker or it's view are not created.
@@ -2723,12 +2692,6 @@ namespace Win32xx
     inline BOOL CDocker::IsDocked() const
     {
         return (((m_dockStyle&0xF) || (m_dockStyle & DS_DOCKED_CONTAINER)) && !m_isUndocking); // Boolean expression
-    }
-
-    // Returns true if this docker resizes child dockers dynamically.
-    inline BOOL CDocker::IsDragAutoResize() const
-    {
-        return m_isDragAutoResize;
     }
 
     // Returns TRUE if the wnd is a docker within this dock family.
@@ -3046,8 +3009,6 @@ namespace Win32xx
     {
         CPoint pt = pDragPos->pos;
         VERIFY(ScreenToClient(pt));
-        if (!IsDragAutoResize())
-            DrawHashBar(pDragPos->hdr.hwndFrom, pt);
         m_oldPoint = pt;
 
         return 0;
@@ -3061,14 +3022,7 @@ namespace Win32xx
 
         if (pt != m_oldPoint)
         {
-            if (IsDragAutoResize())
-                ResizeDockers(pDragPos);
-            else
-            {
-                DrawHashBar(pDragPos->hdr.hwndFrom, m_oldPoint);
-                DrawHashBar(pDragPos->hdr.hwndFrom, pt);
-            }
-
+            ResizeDockers(pDragPos);
             m_oldPoint = pt;
         }
 
@@ -3080,9 +3034,6 @@ namespace Win32xx
     {
         POINT pt = pDragPos->pos;
         VERIFY(ScreenToClient(pt));
-
-        if (!IsDragAutoResize())
-            DrawHashBar(pDragPos->hdr.hwndFrom, pt);
 
         ResizeDockers(pDragPos);
         return 0;
@@ -4049,11 +4000,6 @@ namespace Win32xx
             m_dockStartSize = dockSize;
             m_dockSizeRatio = 1.0;
         }
-    }
-
-    inline void CDocker::SetDragAutoResize(BOOL autoResize)
-    {
-        m_isDragAutoResize = autoResize;
     }
 
     // Assigns the view window to the docker.

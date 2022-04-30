@@ -14,11 +14,10 @@
 void CResourceFinder::FindResources(LPCTSTR fileName)
 { 
     m_fileName.Empty();
+    m_allInfo.clear();
     HMODULE module = LoadLibraryEx(fileName, NULL, LOAD_LIBRARY_AS_DATAFILE);
     if (module != NULL)
     {
-        m_allInfo.clear();
-
         // Find all of the loaded file's resources.
         EnumResourceTypes(module, reinterpret_cast<ENUMRESTYPEPROC>(EnumTypesProc),
                           reinterpret_cast<LONG_PTR>(this));

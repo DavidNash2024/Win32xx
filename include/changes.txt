@@ -21,13 +21,14 @@ Bug fixes:
 
 New Features and Enhancements
 -----------------------------
+* Added CMesssagePump. CWinApp now inherits from CMessagePump instead of 
+  CWinThread.
+
 * Updated thread support. Thread classes now use the CThreadT class template.
   Threads that support windows continue to use CWinThread. Worker threads now
   use CWorkThread. 
   CWinThread inherits from CThreadT<CMessagePump>.
   CWorkThread inherits from CThreadT<CObject>.
-
-* Updated CWinApp. CWinApp now inherits from CMessagePump.  
 
 * Updated CString.
   - CString's int and double constructors have been replaced with ToCString.
@@ -70,6 +71,24 @@ New Features and Enhancements
   targetver.h as shown in the samples. Visual Studio 6 will require WINVER to
   be set to values appropriate for Win95 or Win98.
 
+* Updated CFile.
+  Additional flags and attributes can be specified when files are created or 
+  opened. CFile's constructor and Open functions now support an additional
+  attributes parameter which allows the flags and attributes to be specified.
+
+* Updated CDialog
+  Added a default constructor. Use either the SetDialogTemplate, 
+  SetDialogResource or SetDialogFromID functions to specify the dialog if the
+  default constructor is used.
+
+* Updated the MenuTheme struct.
+  A clrText member has been added to the MenuTheme struc to define the color of
+  menubar text. This is now used to set the menubar text color to white for the
+  BLACK theme in the themes sample.
+
+* Added the project files for Microsoft Visual Studio Community 2022 to the 
+  samples. These are configured to use C++20.
+
 * Added the DialogTemplate sample.
   This sample demonstrates how to search for the resources embedded in a
   windows executable or dll file. The user can select a dialog from the list
@@ -94,24 +113,6 @@ New Features and Enhancements
 * Added the TitlebarFrame sample.
   This sample demonstrates how to use a customized title bar with a frame.
   It demonstrates the frame in two modes: mini-frame and full-frame.
-
-* Updated CFile.
-  Additional flags and attributes can be specified when files are created or 
-  opened. CFile's constructor and Open functions now support an additional
-  attributes parameter which allows the flags and attributes to be specified.
-
-* Updated CDialog
-  Added a default constructor. Use either the SetDialogTemplate, 
-  SetDialogResource or SetDialogFromID functions to specify the dialog if the
-  default constructor is used.
-
-* Updated the MenuTheme struct.
-  A clrText member has been added to the MenuTheme struc to define the color of
-  menubar text. This is now used to set the menubar text color to white for the
-  BLACK theme in the themes sample.
-
-* Added the project files for Microsoft Visual Studio Community 2022.
-  These are configured to use C++20.
 
 * Support for WinCE has been removed.
   Version 8.9.1 is the most recent version of Win32++ that supports WinCE.
@@ -179,8 +180,9 @@ Modified CFrameT::GetReBar          no longer virtual          member function
 Modified CFrameT::GetStatusBar      no longer virtual          member function
 Modified CFrameT::SetToolBar        no longer virtual          member function
 
+Removed CDocker::IsDragAutoResize                              member function
+Removed CDocker::SetDragAutoResize                             member function
 Removed CRegKey::SetKeyValue                                   member function
-
 Removed CString(int)                                           constructor
 Removed CString(double)                                        constructor
 Removed CString operator + (const CString&, int)               global operator overload
