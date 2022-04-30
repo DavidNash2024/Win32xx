@@ -10,7 +10,7 @@
 //
 
 // Constructor.
-CDoc::CDoc() : m_checkA(0), m_checkB(0), m_checkC(0), m_radio(0)
+CDoc::CDoc() : m_isCheckA(false), m_isCheckB(false), m_isCheckC(false), m_radio(0)
 {
 }
 
@@ -28,9 +28,9 @@ void CDoc::LoadSettings(LPCTSTR keyName)
     CRegKey key;
     if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, fullKeyName, KEY_READ))
     {
-        key.QueryDWORDValue(_T("CheckA"), m_checkA);
-        key.QueryDWORDValue(_T("CheckB"), m_checkB);
-        key.QueryDWORDValue(_T("CheckC"), m_checkC);
+        key.QueryBoolValue(_T("CheckA"), m_isCheckA);
+        key.QueryBoolValue(_T("CheckB"), m_isCheckB);
+        key.QueryBoolValue(_T("CheckC"), m_isCheckC);
         key.QueryDWORDValue(_T("Radio"), m_radio);
     }
 }
@@ -47,9 +47,9 @@ void CDoc::SaveSettings(LPCTSTR keyName)
     {
         if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, fullKeyName))
         {
-            key.SetDWORDValue(_T("CheckA"), m_checkA);
-            key.SetDWORDValue(_T("CheckB"), m_checkB);
-            key.SetDWORDValue(_T("CheckC"), m_checkC);
+            key.SetBoolValue(_T("CheckA"), m_isCheckA);
+            key.SetBoolValue(_T("CheckB"), m_isCheckB);
+            key.SetBoolValue(_T("CheckC"), m_isCheckC);
             key.SetDWORDValue(_T("Radio"), m_radio);
         }
     }

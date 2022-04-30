@@ -150,6 +150,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // Called in response to the UWM_DROPFILE user defined message.
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {
+    Reset();
+
     // wParam is a pointer (LPCTSTR) to the file name.
     LPCTSTR pathName = reinterpret_cast<LPCTSTR>(wparam);
     assert(pathName);

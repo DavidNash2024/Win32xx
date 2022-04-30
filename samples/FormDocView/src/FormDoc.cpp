@@ -14,7 +14,7 @@
 //
 
 // Constructor.
-CFormDoc::CFormDoc() : m_isCheckA(0), m_isCheckB(0), m_isCheckC(0), m_radio(ID_RADIO_A)
+CFormDoc::CFormDoc() : m_isCheckA(false), m_isCheckB(false), m_isCheckC(false), m_radio(ID_RADIO_A)
 {
 }
 

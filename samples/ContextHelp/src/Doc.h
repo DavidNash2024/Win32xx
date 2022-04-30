@@ -17,22 +17,22 @@ public:
     void  LoadSettings(LPCTSTR keyName);
     void  SaveSettings(LPCTSTR keyName);
 
-    BOOL  GetCheckA() { return m_checkA; }
-    void  SetCheckA(BOOL isChecked) { m_checkA = isChecked; }
+    bool  GetCheckA() { return m_isCheckA; }
+    void  SetCheckA(bool isChecked) { m_isCheckA = isChecked; }
 
-    BOOL  GetCheckB() { return m_checkB; }
-    void  SetCheckB(BOOL isChecked) { m_checkB = isChecked; }
+    bool  GetCheckB() { return m_isCheckB; }
+    void  SetCheckB(bool isChecked) { m_isCheckB = isChecked; }
 
-    BOOL  GetCheckC() { return m_checkC; }
-    void  SetCheckC(BOOL isChecked) { m_checkC = isChecked; }
+    bool  GetCheckC() { return m_isCheckC; }
+    void  SetCheckC(bool isChecked) { m_isCheckC = isChecked; }
 
     UINT  GetRadio() { return m_radio; }
     void  SetRadio(UINT radio) { m_radio = radio; }
 
 private:
-    DWORD  m_checkA;
-    DWORD  m_checkB;
-    DWORD  m_checkC;
+    bool  m_isCheckA;
+    bool  m_isCheckB;
+    bool  m_isCheckC;
     DWORD  m_radio;
 };
 

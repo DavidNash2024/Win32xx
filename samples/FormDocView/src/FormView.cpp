@@ -126,17 +126,20 @@ BOOL CFormView::OnInitDialog()
     }
 
     // Set initial button states
-    BOOL bCheck = GetDoc().GetCheckA();
-    m_checkA.SetCheck(bCheck);
+    bool isChecked = GetDoc().GetCheckA();
+    int checkState = isChecked ? BST_CHECKED : BST_UNCHECKED;
+    m_checkA.SetCheck(checkState);
 
-    bCheck = GetDoc().GetCheckB();
-    m_checkB.SetCheck(bCheck);
+    isChecked = GetDoc().GetCheckB();
+    checkState = isChecked ? BST_CHECKED : BST_UNCHECKED;
+    m_checkB.SetCheck(checkState);
 
-    bCheck = GetDoc().GetCheckC();
-    m_checkC.SetCheck(bCheck);
+    isChecked = GetDoc().GetCheckC();
+    checkState = isChecked ? BST_CHECKED : BST_UNCHECKED;
+    m_checkC.SetCheck(checkState);
 
-    UINT curRadio = GetDoc().GetRadio();
-    OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, curRadio);
+    UINT radioID = GetDoc().GetRadio();
+    OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, radioID);
 
     // Initialize dialog resizing
     m_resizer.Initialize( *this, CRect(0, 0, 450, 350) );
@@ -169,10 +172,11 @@ void CFormView::OnOK()
 BOOL CFormView::OnCheckA()
 {
     TRACE("Check Box A\n");
-    BOOL isCheckA = GetDoc().GetCheckA();
-    isCheckA = !(isCheckA != FALSE);  // Toggle
-    CheckDlgButton(ID_CHECK_A, isCheckA);
-    GetDoc().SetCheckA(isCheckA);
+    bool isCheck = GetDoc().GetCheckA();
+    isCheck = !isCheck;  // Toggle
+    UINT checkFlag = isCheck ? BST_CHECKED : BST_UNCHECKED;
+    CheckDlgButton(ID_CHECK_A, checkFlag);
+    GetDoc().SetCheckA(isCheck);
 
     SetDlgItemText(IDC_STATUS, _T("Check Box A toggled"));
     return TRUE;
@@ -182,10 +186,11 @@ BOOL CFormView::OnCheckA()
 BOOL CFormView::OnCheckB()
 {
     TRACE("Check Box B\n");
-    BOOL isCheckB = GetDoc().GetCheckB();
-    isCheckB = !(isCheckB != FALSE);  // Toggle
-    CheckDlgButton(ID_CHECK_B, isCheckB);
-    GetDoc().SetCheckB(isCheckB);
+    bool isCheck = GetDoc().GetCheckB();
+    isCheck = !isCheck;  // Toggle
+    UINT checkFlag = isCheck ? BST_CHECKED : BST_UNCHECKED;
+    CheckDlgButton(ID_CHECK_B, checkFlag);
+    GetDoc().SetCheckB(isCheck);
 
     SetDlgItemText(IDC_STATUS, _T("Check Box B toggled"));
     return TRUE;
@@ -195,10 +200,11 @@ BOOL CFormView::OnCheckB()
 BOOL CFormView::OnCheckC()
 {
     TRACE("Check Box C\n");
-    BOOL isCheckC = GetDoc().GetCheckC();
-    isCheckC = !(isCheckC != FALSE);  // Toggle
-    CheckDlgButton(ID_CHECK_C, isCheckC);
-    GetDoc().SetCheckC(isCheckC);
+    bool isCheck = GetDoc().GetCheckC();
+    isCheck = !isCheck;  // Toggle
+    UINT checkFlag = isCheck ? BST_CHECKED : BST_UNCHECKED;
+    CheckDlgButton(ID_CHECK_C, checkFlag);
+    GetDoc().SetCheckC(isCheck);
 
     SetDlgItemText(IDC_STATUS, _T("Check Box C toggled"));
     return TRUE;
@@ -211,8 +217,8 @@ BOOL CFormView::OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked)
     GetDoc().SetRadio(idClicked);
 
     CString str;
-    int nButton = idClicked - idFirst + 1;
-    str.Format(_T("Radio%d"), nButton);
+    int button = idClicked - idFirst + 1;
+    str.Format(_T("Radio%d"), button);
     TRACE(str); TRACE("\n");
     SetDlgItemText(IDC_STATUS, str);
 

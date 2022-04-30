@@ -137,14 +137,17 @@ BOOL CView::OnInitDialog()
     }
 
     // Set initial button states
-    BOOL bCheck = GetDoc().GetCheckA();
-    m_checkA.SetCheck(bCheck);
+    bool isChecked = GetDoc().GetCheckA();
+    int checkState = isChecked ? BST_CHECKED : BST_UNCHECKED;
+    m_checkA.SetCheck(checkState);
 
-    bCheck = GetDoc().GetCheckB();
-    m_checkB.SetCheck(bCheck);
+    isChecked = GetDoc().GetCheckB();
+    checkState = isChecked ? BST_CHECKED : BST_UNCHECKED;
+    m_checkB.SetCheck(checkState);
 
-    bCheck = GetDoc().GetCheckC();
-    m_checkC.SetCheck(bCheck);
+    isChecked = GetDoc().GetCheckC();
+    checkState = isChecked ? BST_CHECKED : BST_UNCHECKED;
+    m_checkC.SetCheck(checkState);
 
     UINT curRadio = GetDoc().GetRadio();
     OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, curRadio);
@@ -180,10 +183,11 @@ void CView::OnOK()
 BOOL CView::OnCheckA()
 {
     TRACE("Check Box A\n");
-    BOOL checkA = GetDoc().GetCheckA();
-    checkA = !(checkA != FALSE);  // Toggle
-    CheckDlgButton(ID_CHECK_A, checkA);
-    GetDoc().SetCheckA(checkA);
+    bool isCheckA = GetDoc().GetCheckA();
+    isCheckA = !isCheckA;  // Toggle
+    UINT checkFlag = isCheckA ? BST_CHECKED : BST_UNCHECKED;
+    CheckDlgButton(ID_CHECK_A, checkFlag);
+    GetDoc().SetCheckA(isCheckA);
 
     SetDlgItemText(IDC_STATUS, _T("Check Box A toggled"));
     return TRUE;
@@ -193,10 +197,11 @@ BOOL CView::OnCheckA()
 BOOL CView::OnCheckB()
 {
     TRACE("Check Box B\n");
-    BOOL checkB = GetDoc().GetCheckB();
-    checkB = !(checkB != FALSE);  // Toggle
-    CheckDlgButton(ID_CHECK_B, checkB);
-    GetDoc().SetCheckB(checkB);
+    bool isCheckB = GetDoc().GetCheckB();
+    isCheckB = !isCheckB;  // Toggle
+    UINT checkFlag = isCheckB ? BST_CHECKED : BST_UNCHECKED;
+    CheckDlgButton(ID_CHECK_B, checkFlag);
+    GetDoc().SetCheckB(isCheckB);
 
     SetDlgItemText(IDC_STATUS, _T("Check Box B toggled"));
     return TRUE;
@@ -206,10 +211,11 @@ BOOL CView::OnCheckB()
 BOOL CView::OnCheckC()
 {
     TRACE("Check Box C\n");
-    BOOL checkC = GetDoc().GetCheckC();
-    checkC = !(checkC != FALSE);  // Toggle
-    CheckDlgButton(ID_CHECK_C, checkC);
-    GetDoc().SetCheckC(checkC);
+    bool isCheckC = GetDoc().GetCheckC();
+    isCheckC = !isCheckC;  // Toggle
+    UINT checkFlag = isCheckC ? BST_CHECKED : BST_UNCHECKED;
+    CheckDlgButton(ID_CHECK_C, checkFlag);
+    GetDoc().SetCheckC(isCheckC);
 
     SetDlgItemText(IDC_STATUS, _T("Check Box C toggled"));
     return TRUE;
