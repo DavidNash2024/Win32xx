@@ -260,18 +260,25 @@ BOOL CMyTreeView::GetRootItems()
         // Go ahead and expand this item.
         Expand(parentItem, TVE_EXPAND);
 
-        // Select the next item.
+        // Find and expand the drives folder.
+        Cpidl cpidlDrives;
+        cpidlDrives.GetSpecialFolderLocation(0, CSIDL_DRIVES);
         HTREEITEM nextItem = GetNextItem(parentItem, TVGN_CHILD);
+        while (nextItem != 0)
+        {
+            TreeItemData* data = reinterpret_cast<TreeItemData*>(GetItemData(nextItem));
+            assert(data);
+            if (data->GetFullCpidl() == cpidlDrives)
+            {
+                // Expand the drives folder item.
+                Expand(nextItem, TVE_EXPAND);
+                break;
+            }
 
-        // Expand this item.
-        Expand(nextItem, TVE_EXPAND);
+            nextItem = GetNextItem(nextItem, TVGN_NEXT);
+        }
 
-        // Select this item.
-        SelectItem(nextItem);
-
-        // Scroll this item into view.
-        SelectSetFirstVisible(nextItem);
-
+        SelectItem(parentItem);
         return TRUE;
     }
 

@@ -9,8 +9,8 @@
 
 void CDialogHolder::PreCreate(CREATESTRUCT& cs)
 {
-	// Remove the visible style
-	cs.style &= ~WS_VISIBLE;
+    // Remove the visible style
+    cs.style &= ~WS_VISIBLE;
 }
 
 // Displays the dialog defined by the specified dialog template array

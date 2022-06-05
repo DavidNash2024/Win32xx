@@ -563,7 +563,7 @@ namespace Win32xx
         return FinalWindowProc(msg, wparam, lparam);
     }
 
-    // Used to translate window messages before they are dispatched to 
+    // Used to translate window messages before they are dispatched to
     // the message loop.
     template <class T>
     inline BOOL CMDIFrameT<T>::PreTranslateMessage(MSG& msg)

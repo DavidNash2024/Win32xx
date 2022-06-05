@@ -7,7 +7,7 @@
 
 
 /////////////////////////////////////////////////////
-// CDialogHolder is the parent window for the dialog. 
+// CDialogHolder is the parent window for the dialog.
 // Dialogs with the WS_CHILD style can't be created
 // without a parent window.
 class CDialogHolder : public CWnd

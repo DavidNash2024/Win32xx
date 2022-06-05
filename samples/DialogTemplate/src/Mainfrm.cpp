@@ -210,7 +210,7 @@ BOOL CMainFrame::OnFileOpen()
     if (fileDlg.DoModal(*this) == IDOK)
     {
         m_pathName = fileDlg.GetPathName();
-        
+
         // Fill the tree view with a list of dialogs.
         m_finder.FindResources(m_pathName);
         GetTree()->FillTree(m_finder.GetAllInfo(), GetFileName());
@@ -286,7 +286,7 @@ BOOL CMainFrame::OnFileSave()
     return TRUE;
 }
 
-// Called when a menu item is about to be displayed. 
+// Called when a menu item is about to be displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
     // Update the check buttons before displaying the menu.
@@ -375,7 +375,7 @@ LRESULT CMainFrame::OnSelectTreeItem()
     {
         if (info != NULL)
         {
-            // Display the dialog template in the rich edit view. 
+            // Display the dialog template in the rich edit view.
             if (info->resourceID != 0)
                 ShowTemplateText(module, MAKEINTRESOURCE(info->resourceID));
             else

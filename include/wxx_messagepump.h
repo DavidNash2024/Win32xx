@@ -58,15 +58,17 @@ namespace Win32xx
         MSG msg;
         ZeroMemory(&msg, sizeof(msg));
         int status = 1;
-        LONG lCount = 0;
+        LONG count = 0;
 
         while (status != 0)
         {
             // While idle, perform idle processing until OnIdle returns FALSE
-            while (!::PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) != FALSE)
-                ++lCount;
+            while (!::PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(count) != FALSE)
+            {
+                count++;
+            }
 
-            lCount = 0;
+            count = 0;
 
             // Now wait until we get a message
             if ((status = ::GetMessage(&msg, NULL, 0, 0)) == -1)
