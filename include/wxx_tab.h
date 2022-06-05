@@ -343,12 +343,12 @@ namespace Win32xx
         FONT 8, "MS Shell Dlg"
         {
            CONTROL "", 122, LISTBOX, LBS_NOTIFY | LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_TABSTOP, 16, 16, 176, 163 , WS_EX_STATICEDGE
-           CONTROL "Cancel", 2, BUTTON, BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 39, 183, 49, 14 
-           CONTROL "OK", 1, BUTTON, BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 119, 183, 50, 14 
+           CONTROL "Cancel", 2, BUTTON, BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 39, 183, 49, 14
+           CONTROL "OK", 1, BUTTON, BS_DEFPUSHBUTTON | WS_CHILD | WS_VISIBLE | WS_TABSTOP, 119, 183, 50, 14
         }
         */
 
-        // Dialog template for the dialog definition shown above. 
+        // Dialog template for the dialog definition shown above.
         unsigned char dlgTemplate[] =
         {
             0x01,0x00,0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0xc8,0x00,0xc8,0x90,0x03,

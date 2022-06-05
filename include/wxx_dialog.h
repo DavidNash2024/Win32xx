@@ -229,8 +229,8 @@ namespace Win32xx
     // Definitions for the CDialog class
     //
 
-    
-    // Default constructor. Use SetDialogTemplate, SetDialogResource or 
+
+    // Default constructor. Use SetDialogTemplate, SetDialogResource or
     // SetDialogResourceFromID to specify the dialog if this constructor
     // is used.
     inline CDialog::CDialog() : m_isModal(FALSE),
@@ -663,7 +663,7 @@ namespace Win32xx
     {
         m_resourceName = MAKEINTRESOURCE(resourceID);
     }
-    
+
     // Sets the dialog from the specified dialog resource.
     inline void CDialog::SetDialogResource(LPCTSTR resourceName)
     {

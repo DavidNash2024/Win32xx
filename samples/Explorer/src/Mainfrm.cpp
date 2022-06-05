@@ -206,9 +206,6 @@ void CMainFrame::OnInitialUpdate()
     // Place Radio button in view menu
     CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
     viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
-
-    // Uncomment the following to use a hash bar and disable of auto resizing.
-    // m_rightPane.SetDragAutoResize(FALSE);
 }
 
 // Process notification messages (WM_NOTIFY) from child windows.

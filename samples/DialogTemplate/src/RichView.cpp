@@ -118,7 +118,7 @@ CRect CRichView::GetPrintRect()
     return rcPrintArea;
 }
 
-// OnAttach is called when the rich edit window is created.  
+// OnAttach is called when the rich edit window is created.
 void CRichView::OnAttach()
 {
     CHARFORMAT cf;

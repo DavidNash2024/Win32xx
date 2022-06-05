@@ -39,7 +39,7 @@ void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCTSTR fi
     int index = 0;
     for (it = allInfo.begin(); it != allInfo.end(); ++it)
     {
-        ResourceInfo info = *it;     
+        ResourceInfo info = *it;
         CString prevType;
         ResourceInfo* prevInfo = (ResourceInfo*)GetItemData(prevItem);
         if (prevInfo != 0)
@@ -52,8 +52,8 @@ void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCTSTR fi
             itemName << info.resourceName << "   " << info.languageID;
             currentItem = InsertItem(itemName, 1, 1, rootItem);
             SetItemData(currentItem, (DWORD_PTR) &allInfo[index]);
-        }       
-        
+        }
+
         prevItem = currentItem;
         index++;
     }

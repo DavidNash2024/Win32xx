@@ -41,7 +41,7 @@ private:
     static BOOL EnumTypesProc(HANDLE, LPTSTR, LONG_PTR);
     static BOOL EnumNamesProc(HANDLE, LPCTSTR, LPCTSTR, LONG_PTR);
     static BOOL EnumLangsProc(HANDLE, LPCTSTR, LPCTSTR, WORD, LONG_PTR);
-    
+
     // private member variables
     ResourceInfo m_info;
     std::vector<ResourceInfo> m_allInfo;
