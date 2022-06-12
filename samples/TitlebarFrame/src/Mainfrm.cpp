@@ -689,6 +689,7 @@ void CMainFrame::RecalcLayout()
     if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
     {
         VERIFY(GetStatusBar().SetWindowPos(0, 0, 0, 0, 0, SWP_SHOWWINDOW));
+        SetStatusParts();
         SetStatusIndicators();
     }
 
