@@ -73,9 +73,11 @@ private:
     BOOL OnOptionsFont();
     BOOL OnOptionsWrap();
     BOOL OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
-    BOOL OnPreviewClose();
-    BOOL OnPreviewPrint();
-    BOOL OnPreviewSetup();
+
+    // Message handlers
+    LRESULT OnPreviewClose();
+    LRESULT OnPreviewPrint();
+    LRESULT OnPreviewSetup();
 
     int  AdjustForDPI(int value) const;
     void ClearContents();

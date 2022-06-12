@@ -57,9 +57,11 @@ private:
     BOOL OnFileSave();
     BOOL OnOptionsFont();
     BOOL OnOptionsWrap();
-    BOOL OnPreviewClose();
-    BOOL OnPreviewPrint();
-    BOOL OnPreviewSetup();
+
+    // Command handlers
+    LRESULT OnPreviewClose();
+    LRESULT OnPreviewPrint();
+    LRESULT OnPreviewSetup();
 
     BOOL ReadFile(LPCTSTR fileName);
     void RestoreFocus() { ::SetFocus(m_oldFocus); }

@@ -711,7 +711,7 @@ BOOL CMainFrame::OnOptionsWrap()
 }
 
 // Called when the Print Preview's "Close" button is pressed.
-BOOL CMainFrame::OnPreviewClose()
+LRESULT CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_richView);
@@ -723,11 +723,11 @@ BOOL CMainFrame::OnPreviewClose()
     // Restore focus to the window focused before DoPrintPreview was called.
     RestoreFocus();
 
-    return TRUE;
+    return 0;
 }
 
 // Called when the Print Preview's "Print Now" button is pressed
-BOOL CMainFrame::OnPreviewPrint()
+LRESULT CMainFrame::OnPreviewPrint()
 {
     try
     {
@@ -739,11 +739,12 @@ BOOL CMainFrame::OnPreviewPrint()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetText(), _T("Print Failed"), MB_ICONWARNING);
     }
-    return TRUE;
+
+    return 0;
 }
 
 // Called when the Print Preview's "Print Setup" button is pressed.
-BOOL CMainFrame::OnPreviewSetup()
+LRESULT CMainFrame::OnPreviewSetup()
 {
     // Call the print setup dialog.
     CPrintDialog printDlg(PD_PRINTSETUP);
@@ -767,7 +768,7 @@ BOOL CMainFrame::OnPreviewSetup()
         MessageBox(e.GetErrorString(), e.GetText(), MB_ICONWARNING);
     }
 
-    return TRUE;
+    return 0;
 }
 
 // Update the radio buttons in the menu.
@@ -1003,9 +1004,9 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_PREVIEWCLOSE:      OnPreviewClose();   break;
-        case UWM_PREVIEWPRINT:      OnPreviewPrint();   break;
-        case UWM_PREVIEWSETUP:      OnPreviewSetup();   break;
+        case UWM_PREVIEWCLOSE:      return OnPreviewClose();
+        case UWM_PREVIEWPRINT:      return OnPreviewPrint();
+        case UWM_PREVIEWSETUP:      return OnPreviewSetup();
         }
 
         return WndProcDefault(msg, wparam, lparam);
