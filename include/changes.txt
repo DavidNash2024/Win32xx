@@ -1,3 +1,15 @@
+Version 9.0.1
+=============
+
+Changes in Detail
+-----------------
+Added    CToolbar::SetButtonInfo          additional overload
+Modified CToolBar::GetButton              returns CSize
+Modified CToolBar::GetPadding             returns CSize
+Renamed  CMenuBar::GetMenu   to   CMenuBar::GetBarMenu
+Renamed  CMenuBar::SetMenu   to   CMenuBar::SetupMenuBar
+
+
 Version 9.0
 ===========
 

@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2095,7 +2095,7 @@ namespace Win32xx
         if ((GetMenuBar().IsWindow()) && (LOWORD(wparam)!= VK_SPACE))
         {
             // Activate MenuBar for key pressed with Alt key held down
-            GetMenuBar().OnMenuChar(msg, wparam, lparam);
+            GetMenuBar().MenuChar(msg, wparam, lparam);
             return -1;
         }
 
@@ -2298,7 +2298,7 @@ namespace Win32xx
             // Update the MenuBar font and button size.
             m_menuBarFont.CreateFontIndirect(info.lfMenuFont);
             GetMenuBar().SetFont(m_menuBarFont, TRUE);
-            GetMenuBar().SetMenu( GetFrameMenu() );
+            GetMenuBar().SetupMenuBar( GetFrameMenu() );
 
             // Update the MenuBar band size.
             UpdateMenuBarBandSize();
@@ -2324,7 +2324,7 @@ namespace Win32xx
     {
         if ((SC_KEYMENU == wparam) && (VK_SPACE != lparam) && GetMenuBar().IsWindow())
         {
-            GetMenuBar().OnSysCommand(msg, wparam, lparam);
+            GetMenuBar().SysCommand(msg, wparam, lparam);
             return 0;
         }
 
@@ -2650,7 +2650,7 @@ namespace Win32xx
 
         if (GetMenuBar().IsWindow())
         {
-            GetMenuBar().SetMenu( GetFrameMenu() );
+            GetMenuBar().SetupMenuBar( GetFrameMenu() );
             BOOL show = (menu != 0);    // boolean expression
             ShowMenu(show);
         }

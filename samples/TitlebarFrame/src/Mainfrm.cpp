@@ -423,7 +423,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // Create the menubar for the mini frame.
     m_menubar2.Create(*this);
-    m_menubar2.SetMenu(GetFrameMenu());
+    m_menubar2.SetupMenuBar(GetFrameMenu());
 
     // Check the full mode radio button.
     CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
@@ -612,7 +612,7 @@ LRESULT CMainFrame::OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam)
         if ((m_menubar2.IsWindow()) && (LOWORD(wparam) != VK_SPACE))
         {
             // Activate the menubar for key a pressed with the Alt key is held down.
-            m_menubar2.OnMenuChar(WM_MENUCHAR, wparam, lparam);
+            m_menubar2.MenuChar(WM_MENUCHAR, wparam, lparam);
             return -1;
         }
     }
@@ -958,7 +958,7 @@ LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
         // Pass menu keystrokes to the CMenuBar to process alt keys, F10 etc.
         if ((SC_KEYMENU == wparam) && (VK_SPACE != lparam) && GetMenuBar().IsWindow())
         {
-            m_menubar2.OnSysCommand(msg, wparam, lparam);
+            m_menubar2.SysCommand(msg, wparam, lparam);
             return 0;
         }
     }

@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -75,7 +75,7 @@ namespace Win32xx
         BOOL  EnableButton(int buttonID, BOOL isEnabled = TRUE) const;
         BOOL  GetButton(int index, TBBUTTON& buttonInfo) const;
         int   GetButtonCount() const;
-        DWORD GetButtonSize() const;
+        CSize GetButtonSize() const;
         UINT  GetButtonState(int buttonID) const;
         BYTE  GetButtonStyle(int buttonID) const;
         CString GetButtonText(int buttonID) const;
@@ -87,7 +87,7 @@ namespace Win32xx
         CImageList GetImageList();
         CRect GetItemRect(int index) const;
         CSize GetMaxSize() const;
-        DWORD GetPadding() const;
+        CSize GetPadding() const;
         CRect GetRect(int buttonID) const;
         int   GetRows() const;
         int   GetTextRows() const;
@@ -96,7 +96,7 @@ namespace Win32xx
         BOOL  HideButton(int buttonID, BOOL show) const;
         int   HitTest() const;
         BOOL  Indeterminate(int buttonID, BOOL isIndeterminate) const;
-        BOOL  InsertButton(int index, TBBUTTON& buttonInfo) const;
+        BOOL  InsertButton(int index, const TBBUTTON& buttonInfo) const;
         BOOL  IsButtonHidden(int buttonID) const;
         BOOL  IsButtonHighlighted(int buttonID) const;
         BOOL  IsButtonIndeterminate(int buttonID) const;
@@ -108,6 +108,7 @@ namespace Win32xx
         void  SaveRestore(BOOL save, TBSAVEPARAMS* pSaveInfo) const;
         BOOL  SetBitmapSize(int cx, int cy) const;
         void  SetButtonInfo(int buttonID, int buttonNewID, int image, BYTE style = 0, BYTE state = 0) const;
+        BOOL  SetButtonInfo(int buttonID, const TBBUTTONINFO& tbbi) const;
         BOOL  SetButtonSize(int cx, int cy) const;
         BOOL  SetButtonState(int buttonID, UINT state) const;
         BOOL  SetButtonStyle(int buttonID, BYTE style) const;
@@ -127,7 +128,6 @@ namespace Win32xx
     protected:
         // Overridables
         virtual void OnAttach();
-        virtual void OnDestroy();
         virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
@@ -235,7 +235,7 @@ namespace Win32xx
         }
 
         // Add the button to the toolbar
-        return (SendMessage(TB_ADDBUTTONS, (WPARAM)1, (LPARAM)&tbb) != 0);
+        return AddButtons(1, &tbb);
     }
 
     // Adds one or more buttons to a ToolBar. pButtonInfoArray is a pointer to an array of TBBUTTON.
@@ -279,11 +279,13 @@ namespace Win32xx
     inline int CToolBar::AddString(UINT stringID) const
     {
         assert(IsWindow());
-        return (int)SendMessage(TB_ADDSTRING, (WPARAM)(GetApp()->GetResourceHandle()), (LPARAM)stringID);
+        HANDLE resource = GetApp()->GetResourceHandle();
+        return (int)SendMessage(TB_ADDSTRING, (WPARAM)resource, (LPARAM)stringID);
     }
 
     // Adds a new string or strings to the list of strings available for a ToolBar control.
-    // Strings in the buffer must be separated by a null character. The last string must have two null terminators.
+    // Strings in the buffer must be separated by a null character.
+    // The last string must have two null terminators.
     // Refer to TB_ADDSTRING in the Windows API documentation for more information.
     inline int CToolBar::AddStrings(LPCTSTR strings) const
     {
@@ -350,7 +352,7 @@ namespace Win32xx
     inline BOOL CToolBar::DisableButton(int buttonID) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ENABLEBUTTON, (WPARAM)buttonID, (LPARAM)MAKELONG(FALSE, 0)) != 0);
+        return EnableButton(buttonID, FALSE);
     }
 
     // Enables the specified button in a ToolBar.
@@ -380,10 +382,11 @@ namespace Win32xx
     // Retrieves the current width and height of ToolBar buttons, in pixels.
     // Returns a DWORD value that contains the width and height values in the low word and high word, respectively.
     // Refer to TB_GETBUTTONSIZE in the Windows API documentation for more information.
-    inline DWORD CToolBar::GetButtonSize() const
+    inline CSize CToolBar::GetButtonSize() const
     {
         assert(IsWindow());
-        return (DWORD)SendMessage(TB_GETBUTTONSIZE, 0, 0);
+        DWORD size = (DWORD)SendMessage(TB_GETBUTTONSIZE, 0, 0);
+        return CSize(size);
     }
 
     // Retrieves the state of an individual button
@@ -419,7 +422,7 @@ namespace Win32xx
         int index = CommandToIndex(buttonID);
         TBBUTTON tbb;
         ZeroMemory(&tbb, sizeof(tbb));
-        SendMessage(TB_GETBUTTON, (WPARAM)index, (LPARAM)&tbb);
+        GetButton(index, tbb);
 
         return tbb.fsStyle;
     }
@@ -449,7 +452,7 @@ namespace Win32xx
         assert(IsWindow());
         TBBUTTON tbb;
         ZeroMemory(&tbb, sizeof(tbb));
-        SendMessage(TB_GETBUTTON, (WPARAM)index, (LPARAM)&tbb);
+        GetButton(index, tbb);
 
         // returns zero if failed
         return tbb.idCommand;
@@ -487,7 +490,7 @@ namespace Win32xx
     inline int CToolBar::GetHotItem() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(TB_GETHOTITEM, 0, 0));
+        return (int)SendMessage(TB_GETHOTITEM, 0, 0);
     }
 
     // Retrieves the image list that a ToolBar control uses to display buttons in their default state.
@@ -505,7 +508,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         CRect rc;
-        int count = (int)SendMessage(TB_BUTTONCOUNT, 0, 0);
+        int count = GetButtonCount();
 
         if (count >= index)
             SendMessage(TB_GETITEMRECT, (WPARAM)index, (LPARAM)&rc);
@@ -542,10 +545,11 @@ namespace Win32xx
     // Returns a DWORD value that contains the horizontal padding in the low word and
     // the vertical padding in the high word, in pixels.
     // Refer to TB_GETPADDING in the Windows API documentation for more information.
-    inline DWORD CToolBar::GetPadding() const
+    inline CSize CToolBar::GetPadding() const
     {
         assert(IsWindow());
-        return (DWORD)SendMessage(TB_GETPADDING, 0, 0);
+        DWORD padding = (DWORD)SendMessage(TB_GETPADDING, 0, 0);
+        return CSize(padding);
     }
 
     // Retrieves the bounding rectangle for a specified ToolBar button.
@@ -619,7 +623,7 @@ namespace Win32xx
         CPoint pos = GetCursorPos();
         VERIFY(ScreenToClient(pos));
 
-        int buttons = (int)SendMessage(TB_BUTTONCOUNT, 0, 0);
+        int buttons = GetButtonCount();
         int button = -1;
 
         for (int i = 0 ; i < buttons; ++i)
@@ -642,7 +646,7 @@ namespace Win32xx
 
     // Inserts a button to the left of the specified button index.
     // Refer to TB_INSERTBUTTON in the Windows API documentation for more information.
-    inline BOOL CToolBar::InsertButton(int index, TBBUTTON& buttonInfo) const
+    inline BOOL CToolBar::InsertButton(int index, const TBBUTTON& buttonInfo) const
     {
         assert(IsWindow());
         return (SendMessage(TB_INSERTBUTTON, (WPARAM)index, (LPARAM)&buttonInfo) != 0);
@@ -680,16 +684,13 @@ namespace Win32xx
         return (SendMessage(TB_ISBUTTONPRESSED, (WPARAM)buttonID, 0) != 0);
     }
 
-    // Determines whether the specified button in a ToolBar is pressed.
+    // Determines the ID of the button that corresponds to the specified accelerator character.
     // Refer to TB_MAPACCELERATOR in the Windows API documentation for more information.
     inline int CToolBar::MapAccelerator(TCHAR accelChar) const
     {
         assert(IsWindow());
-        int uButtonID;
         int idButton;
-        if (SendMessage(TB_MAPACCELERATOR, (WPARAM)accelChar, (LPARAM)&uButtonID))
-            idButton = uButtonID;
-        else
+        if (!SendMessage(TB_MAPACCELERATOR, (WPARAM)accelChar, (LPARAM)&idButton))
             idButton = -1;
 
         return idButton;
@@ -720,11 +721,6 @@ namespace Win32xx
         // allows buttons to have a separate drop-down arrow
         // Note: TBN_DROPDOWN notification is sent by a ToolBar control when the user clicks a drop-down button
         SendMessage(TB_SETEXTENDEDSTYLE, 0, (LPARAM)TBSTYLE_EX_DRAWDDARROWS);
-    }
-
-    // Called when the toolbar window is about to be destroyed.
-    inline void CToolBar::OnDestroy()
-    {
     }
 
     // Called when the toolbar is resized.
@@ -828,7 +824,8 @@ namespace Win32xx
         // Retrieve existing state and style
         TBBUTTON tb;
         ZeroMemory(&tb, sizeof(tb));
-        BOOL result = GetButton(CommandToIndex(buttonID), tb);
+        int index = CommandToIndex(buttonID);
+        BOOL result = GetButton(index, tb);
         assert(result);
 
         if (result)
@@ -842,8 +839,14 @@ namespace Win32xx
             tbbi.fsStyle = style ? style : tb.fsStyle;
             tbbi.fsState = state ? state : tb.fsState;
 
-            SendMessage(TB_SETBUTTONINFO, (WPARAM)buttonID, (LPARAM)&tbbi);
+            SetButtonInfo(buttonID, tbbi);
         }
+    }
+
+    inline BOOL CToolBar::SetButtonInfo(int buttonID, const TBBUTTONINFO& tbbi) const
+    {
+        assert(IsWindow());
+        return (SendMessage(TB_SETBUTTONINFO, (WPARAM)buttonID, (LPARAM)&tbbi) != 0);
     }
 
     // Set the state of an individual button
@@ -884,12 +887,12 @@ namespace Win32xx
 
         // Note:  TB_SETBUTTONINFO requires comctl32.dll version 4.71 or later
         //        i.e. Win95 with IE4 / NT with IE4   or later
-        return (SendMessage(TB_SETBUTTONINFO, (WPARAM)buttonID, (LPARAM)&tbbi) != 0);
+        return SetButtonInfo(buttonID, tbbi);
     }
 
-    // This rather convoluted approach to setting ToolBar button text supports
-    // all versions of Windows, including Win95 with COMCTL32.DLL version 4.0.
-    // Refer to TB_INSERTBUTTON in the Windows API documentation for more information.
+    // Sets the button's text using AddString. The AddString approach always sets
+    // the button size correctly, whereas the SetButtonInfo alternative doesn't.
+    // Refer to TB_ADDSTRING in the Windows API documentation for more information.
     inline BOOL CToolBar::SetButtonText(int buttonID, LPCTSTR text)
     {
         assert(IsWindow());
@@ -940,18 +943,15 @@ namespace Win32xx
         {
             TBBUTTON tbb;
             ZeroMemory(&tbb, sizeof(tbb));
-            succeeded = (SendMessage(TB_GETBUTTON, (WPARAM)index, (LPARAM)&tbb) != 0);
-
+            succeeded = GetButton(index, tbb);
             tbb.iString = stringIndex;
 
             // Turn off ToolBar drawing
             SetRedraw(FALSE);
 
-            if (succeeded)
-                succeeded = (SendMessage(TB_DELETEBUTTON, (WPARAM)index, 0) != 0);
-
-            if (succeeded)
-                succeeded = (SendMessage(TB_INSERTBUTTON, (WPARAM)index, (LPARAM)&tbb) != 0);
+            // Replace the button to resize it to fit the text.
+            succeeded = succeeded ? DeleteButton(index) : FALSE;
+            succeeded = succeeded ? InsertButton(index, tbb) : FALSE;
 
             // Ensure the button now includes some text rows
             if (SendMessage(TB_GETTEXTROWS, 0, 0) == 0)
@@ -983,7 +983,7 @@ namespace Win32xx
         tbbi.cbSize = sizeof(tbbi);
         tbbi.dwMask = TBIF_SIZE;
         tbbi.cx = static_cast<WORD>(width);
-        BOOL result = (SendMessage(TB_SETBUTTONINFO, (WPARAM)buttonID, (LPARAM)&tbbi) != 0);
+        BOOL result = SetButtonInfo(buttonID, tbbi);
 
         // Send a changed message to the parent (used by the ReBar)
         SIZE maxSize = GetMaxSize();

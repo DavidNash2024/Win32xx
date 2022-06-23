@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -65,15 +65,15 @@ namespace Win32xx
     public:
         CMenuBar();
         virtual ~CMenuBar();
-        virtual void SetMenu(HMENU menu);
 
-        void DrawAllMDIButtons(CDC& drawDC);
-        CWnd* GetMDIClient() const;
-        CWnd* GetActiveMDIChild() const;
-        HMENU GetMenu() const {return m_topMenu;}
-        BOOL IsAltMode() const { return m_isAltMode; }
-        virtual LRESULT OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
+        void    DrawAllMDIButtons(CDC& drawDC);
+        CWnd*   GetActiveMDIChild() const;
+        CWnd*   GetMDIClient() const;
+        HMENU   GetBarMenu() const {return m_topMenu;}
+        BOOL    IsAltMode() const { return m_isAltMode; }
+        LRESULT MenuChar(UINT msg, WPARAM wparam, LPARAM lparam);
+        void    SetupMenuBar(HMENU menu);
+        LRESULT SysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
     protected:
         // Overridables
@@ -86,10 +86,12 @@ namespace Win32xx
         virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMeasureItem(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual BOOL    OnMenuInput(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysKeyDown(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysKeyUp(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
@@ -104,18 +106,21 @@ namespace Win32xx
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        using CWnd::GetMenu;
+        using CWnd::SetMenu;
         CMenuBar(const CMenuBar&);              // Disable copy construction
         CMenuBar& operator = (const CMenuBar&); // Disable assignment operator
+        void Cancel() const;
         void DoAltKey(WORD keyCode);
-        void DrawMDIButton(CDC& drawDC, int button, UINT state);
+        void DrawMDIButton(CDC& drawDC, int button, UINT state) const;
         void ExitMenu();
         void GrabFocus();
         BOOL IsMDIChildMaxed() const;
         BOOL IsMDIFrame() const;
         LRESULT OnPopupMenu();
         void ReleaseFocus();
-        void SetHotItem(int nHot);
-        void UpdateMDIButtons(WPARAM wparam, LPARAM lparam);
+        void StoreHotItem(int hotItem);
+        void UpdateMDIButtons(WPARAM wparam, LPARAM lparam) const;
         static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam, LPARAM lparam);
 
         enum MDIButtonType
@@ -170,16 +175,23 @@ namespace Win32xx
     {
     }
 
-    //Handle key pressed with Alt held down
+    // Cancel certain modes, such as mouse capture.
+    inline void CMenuBar::Cancel() const
+    {
+        SendMessage(WM_CANCELMODE, 0, 0);
+    }
+
+    // Handle key pressed with Alt held down
     inline void CMenuBar::DoAltKey(WORD keyCode)
     {
-        UINT item;
-        if (SendMessage(TB_MAPACCELERATOR, (WPARAM)keyCode, (LPARAM)&item))
+        TCHAR key = static_cast<TCHAR>(keyCode);
+        int item = MapAccelerator(key);
+        if (item >= 0)
         {
             GrabFocus();
             m_isKeyMode = TRUE;
             m_isAltMode = TRUE;
-            SetHotItem(item);
+            StoreHotItem(item);
             PostMessage(UWM_POPUPMENU, 0, 0);
         }
         else
@@ -227,7 +239,7 @@ namespace Win32xx
     }
 
     // Draws an individual MDI button.
-    inline void CMenuBar::DrawMDIButton(CDC& drawDC, int button, UINT state)
+    inline void CMenuBar::DrawMDIButton(CDC& drawDC, int button, UINT state) const
     {
         if (!IsRectEmpty(&m_mdiRect[button]))
         {
@@ -326,8 +338,8 @@ namespace Win32xx
         ReleaseFocus();
         m_isKeyMode = FALSE;
         m_isMenuActive = FALSE;
-        SendMessage(TB_PRESSBUTTON, m_hotItem, MAKELONG (FALSE, 0));
-        SetHotItem(-1);
+        PressButton(m_hotItem, FALSE);
+        StoreHotItem(-1);
 
         CPoint pt = GetCursorPos();
         VERIFY(ScreenToClient(pt));
@@ -393,10 +405,16 @@ namespace Win32xx
 
     inline LRESULT CMenuBar::OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam)
     {
+        TCHAR keyCode = static_cast<TCHAR>(LOWORD(wparam));
         if (!m_isMenuActive)
-            DoAltKey(LOWORD(wparam));
+            DoAltKey(keyCode);
 
         return FinalWindowProc(msg, wparam, lparam);
+    }
+
+    inline LRESULT CMenuBar::MenuChar(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        return OnMenuChar(msg, wparam, lparam);
     }
 
     // Called when the window handle (HWND) is attached to this object.
@@ -433,9 +451,10 @@ namespace Win32xx
     // Called when a key is pressed while the menubar has the mouse captured.
     inline LRESULT CMenuBar::OnKeyDown(UINT, WPARAM wparam, LPARAM)
     {
-        int first = (IsMDIChildMaxed() ? 1 : 0);
+        int first = IsMDIChildMaxed() ? 1 : 0;
+        TCHAR keycode = static_cast<TCHAR>(wparam);
 
-        switch (wparam)
+        switch (keycode)
         {
         case VK_ESCAPE:
             m_isAltMode = FALSE;
@@ -449,7 +468,7 @@ namespace Win32xx
             GetAncestor().PostMessage(WM_SYSCOMMAND, (WPARAM)SC_KEYMENU, (LPARAM)VK_SPACE);
             break;
 
-        // Handle VK_DOWN,VK_UP and VK_RETURN together
+        // Handle VK_DOWN, and VK_UP together
         case VK_DOWN:
         case VK_UP:
             // Always use PostMessage for USER_POPUPMENU (not SendMessage)
@@ -464,18 +483,18 @@ namespace Win32xx
         case VK_LEFT:
             // Move left to next topmenu item
             if (m_hotItem > first)
-                SetHotItem(m_hotItem -1);
+                StoreHotItem(m_hotItem -1);
             else
-                SetHotItem(GetButtonCount() -1);
+                StoreHotItem(GetButtonCount() -1);
 
             break;
 
         case VK_RIGHT:
             // Move right to next topmenu item
             if (m_hotItem < GetButtonCount() -1)
-                SetHotItem(m_hotItem +1);
+                StoreHotItem(m_hotItem +1);
             else
-                SetHotItem(first);
+                StoreHotItem(first);
 
             break;
 
@@ -483,8 +502,8 @@ namespace Win32xx
             // Handle Accelerator keys with Alt toggled down
             if (m_isKeyMode)
             {
-                UINT item;
-                if (SendMessage(TB_MAPACCELERATOR, wparam, (LPARAM)&item))
+                int item = MapAccelerator(keycode);
+                if (item >= 0)
                 {
                     m_hotItem = item;
                     PostMessage(UWM_POPUPMENU, 0, 0);
@@ -612,9 +631,9 @@ namespace Win32xx
 
                     m_isMenuActive = FALSE;
                     m_isKeyMode = TRUE;
-                    SendMessage(WM_CANCELMODE, 0, 0);
-                    SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(FALSE, 0));
-                    SendMessage(TB_SETHOTITEM, (WPARAM)m_hotItem, 0);
+                    Cancel();
+                    PressButton(m_hotItem, FALSE);
+                    SetHotItem(m_hotItem);
                     ExitMenu();
                     break;
 
@@ -624,11 +643,11 @@ namespace Win32xx
                     if ((m_selMenu) && (m_selMenu != m_popupMenu))
                         return FALSE;
 
-                    SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(FALSE, 0));
+                    PressButton(m_hotItem, FALSE);
 
                     // Move left to next topmenu item
                     m_hotItem = (m_hotItem > first) ? m_hotItem -1 : GetButtonCount() -1;
-                    SendMessage(WM_CANCELMODE, 0, 0);
+                    Cancel();
 
                     // Always use PostMessage for USER_POPUPMENU (not SendMessage)
                     PostMessage(UWM_POPUPMENU, 0, 0);
@@ -642,11 +661,11 @@ namespace Win32xx
                     if (m_isSelPopup)
                         return FALSE;
 
-                    SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(FALSE, 0));
+                    PressButton(m_hotItem, FALSE);
 
                     // Move right to next topmenu item
                     m_hotItem = (m_hotItem < GetButtonCount() -1) ? m_hotItem +1 : first;
-                    SendMessage(WM_CANCELMODE, 0, 0);
+                    Cancel();
 
                     // Always use PostMessage for USER_POPUPMENU (not SendMessage)
                     PostMessage(UWM_POPUPMENU, 0, 0);
@@ -674,7 +693,7 @@ namespace Win32xx
                 if (HitTest() >= 0)
                 {
                     // Cancel popup when we hit a button a second time.
-                    SendMessage(WM_CANCELMODE, 0, 0);
+                    Cancel();
                     return TRUE;
                 }
             }
@@ -805,8 +824,8 @@ namespace Win32xx
         tpm.rcExclude = rc;
 
         // Set the hot button
-        SendMessage(TB_SETHOTITEM, (WPARAM)m_hotItem, 0);
-        SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(TRUE, 0));
+        SetHotItem(m_hotItem);
+        PressButton(m_hotItem, TRUE);
 
         m_isSelPopup = FALSE;
         m_selMenu = 0;
@@ -852,7 +871,7 @@ namespace Win32xx
             }
         }
 
-        SendMessage(TB_SETHOTITEM, (WPARAM)-1, 0);
+        SetHotItem(-1);
 
         // Unpress any currently pressed buttons.
         for (int i = 0; i < GetButtonCount(); ++i)
@@ -879,7 +898,7 @@ namespace Win32xx
                 m_isKeyMode = TRUE;
                 m_isAltMode = TRUE;
                 int maxedOffset = (IsMDIChildMaxed()? 1:0);
-                SetHotItem(maxedOffset);
+                StoreHotItem(maxedOffset);
             }
             else
                 // Handle key pressed with Alt held down
@@ -893,7 +912,7 @@ namespace Win32xx
     {
         if ((m_isKeyMode) && ((VK_MENU == wparam) || (VK_F10 == wparam)))
         {
-            SetHotItem(-1);
+            StoreHotItem(-1);
             return 0;
         }
 
@@ -937,9 +956,9 @@ namespace Win32xx
                 int button = HitTest();
                 if ((m_isMenuActive) && (button != m_hotItem))
                 {
-                    SendMessage(TB_PRESSBUTTON, (WPARAM)m_hotItem, (LPARAM)MAKELONG(FALSE, 0));
+                    PressButton(m_hotItem, FALSE);
                     m_hotItem = button;
-                    SendMessage(WM_CANCELMODE, 0, 0);
+                    Cancel();
 
                     //Always use PostMessage for USER_POPUPMENU (not SendMessage).
                     PostMessage(UWM_POPUPMENU, 0, 0);
@@ -1041,15 +1060,15 @@ namespace Win32xx
     }
 
     // Set the menubar's (toolbar's) hot item.
-    inline void CMenuBar::SetHotItem(int hotItem)
+    inline void CMenuBar::StoreHotItem(int hotItem)
     {
         m_hotItem = hotItem;
-        SendMessage(TB_SETHOTITEM, (WPARAM)m_hotItem, 0);
+        SetHotItem(m_hotItem);
         RedrawWindow();
     }
 
     // Builds the list of menubar (toolbar) buttons from the top level menu.
-    inline void CMenuBar::SetMenu(HMENU menu)
+    inline void CMenuBar::SetupMenuBar(HMENU menu)
     {
         assert(IsWindow());
 
@@ -1057,14 +1076,14 @@ namespace Win32xx
         int maxedOffset = (IsMDIChildMaxed()? 1:0);
 
         // Remove any existing buttons.
-        while (SendMessage(TB_BUTTONCOUNT,  0, 0) > 0)
+        while (GetButtonCount() > 0)
         {
-            if (!SendMessage(TB_DELETEBUTTON, 0, 0))
+            if (!DeleteButton(0))
                 break;
         }
 
         // Set the Bitmap size to zero.
-        SendMessage(TB_SETBITMAPSIZE, 0, (LPARAM)MAKELPARAM(0, 0));
+        SetBitmapSize(0, 0);
 
         if (IsMDIChildMaxed())
         {
@@ -1075,7 +1094,7 @@ namespace Win32xx
             tbb.fsState = TBSTATE_ENABLED;
             tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
             tbb.iString = reinterpret_cast<INT_PTR>(_T(" "));
-            SendMessage(TB_ADDBUTTONS, (WPARAM)1, (LPARAM)(&tbb));
+            AddButtons(1, &tbb);
             SetButtonText(0, _T("    "));
         }
 
@@ -1088,7 +1107,7 @@ namespace Win32xx
             tbb.fsState = TBSTATE_ENABLED;
             tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
             tbb.iString = reinterpret_cast<INT_PTR>(_T(" "));
-            SendMessage(TB_ADDBUTTONS, (WPARAM)1, (LPARAM)&tbb);
+            AddButtons(1, &tbb);
 
             // Add the menu title to the string table.
             std::vector<TCHAR> menuName(WXX_MAX_STRING_SIZE +1, _T('\0') );
@@ -1124,8 +1143,13 @@ namespace Win32xx
         return 0;
     }
 
+    inline LRESULT CMenuBar::SysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        return OnSysCommand(msg, wparam, lparam);
+    }
+
     // Updates the pressed state of the MDI Buttons.
-    inline void CMenuBar::UpdateMDIButtons(WPARAM wparam, LPARAM lparam)
+    inline void CMenuBar::UpdateMDIButtons(WPARAM wparam, LPARAM lparam) const
     {
         CPoint pt;
         pt.x = GET_X_LPARAM(lparam);
