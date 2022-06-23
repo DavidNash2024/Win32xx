@@ -346,7 +346,7 @@ int CMiniFrame::OnCreate(CREATESTRUCT&)
     // Configure the menu bar.
     m_menubar.Create(*this);
     m_menu.LoadMenu(IDW_MAIN);
-    m_menubar.SetMenu(m_menu);
+    m_menubar.SetupMenuBar(m_menu);
     m_view.Create(*this);
     m_accel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
     if (m_accel)
@@ -643,7 +643,7 @@ LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     // Pass menu keystrokes to the CMenuBar to process alt keys, F10 etc.
     if ((SC_KEYMENU == wparam) && (VK_SPACE != lparam) && m_menubar.IsWindow())
     {
-        m_menubar.OnSysCommand(msg, wparam, lparam);
+        m_menubar.SysCommand(msg, wparam, lparam);
         return 0;
     }
 

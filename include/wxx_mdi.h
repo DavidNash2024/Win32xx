@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -557,7 +557,7 @@ namespace Win32xx
         if (T::GetMenuBar().IsWindow())
         {
             // Refresh MenuBar Window
-            T::GetMenuBar().SetMenu(T::GetMenuBar().GetMenu());
+            T::GetMenuBar().SetupMenuBar(T::GetMenuBar().GetBarMenu());
         }
 
         return FinalWindowProc(msg, wparam, lparam);
@@ -640,7 +640,7 @@ namespace Win32xx
         else
         {
             if (T::GetMenuBar().IsWindow())
-                T::GetMenuBar().SetMenu( T::GetFrameMenu() );
+                T::GetMenuBar().SetupMenuBar( T::GetFrameMenu() );
             else
                 T::SetMenu( T::GetFrameMenu() );
 
@@ -677,7 +677,7 @@ namespace Win32xx
                     if (T::GetMenuBar().IsWindow())
                     {
                         AppendMDIMenu(menuWindow);
-                        T::GetMenuBar().SetMenu(menu);
+                        T::GetMenuBar().SetupMenuBar(menu);
                     }
                     else
                     {
