@@ -180,6 +180,7 @@ namespace Win32xx
 
     protected:
         // Overridable virtual functions
+        virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
         virtual void    OnClose();
         virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMDIActivated(UINT msg, WPARAM wparam, LPARAM);
@@ -227,6 +228,68 @@ namespace Win32xx
 
 namespace Win32xx
 {
+    // CustomDraw is used to render the MenuBar's toolbar buttons.
+    template <class T>
+    inline LRESULT CMDIFrameT<T>::CustomDrawMenuBar(NMHDR* pNMHDR)
+    {
+        T::CustomDrawMenuBar(pNMHDR);
+        LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+        CMenuBar* pMenubar = reinterpret_cast<CMenuBar*>
+            (::SendMessage(pNMHDR->hwndFrom, UWM_GETCMENUBAR, 0, 0));
+
+        assert(pMenubar != 0);
+
+        switch (lpNMCustomDraw->nmcd.dwDrawStage)
+        {
+        // Begin paint cycle
+        case CDDS_PREPAINT:
+            // Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
+            return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT;
+
+        // An item is about to be drawn
+        case CDDS_ITEMPREPAINT:
+        {
+            CRect rc = lpNMCustomDraw->nmcd.rc;
+            DWORD item = static_cast<DWORD>(lpNMCustomDraw->nmcd.dwItemSpec);
+
+            // Draw over MDI Max button
+            if (IsMDIChildMaxed() && (item == 0))
+            {
+                CDC drawDC(lpNMCustomDraw->nmcd.hdc);
+                CWnd* pActiveChild = GetActiveMDIChild();
+                assert(pActiveChild);
+                if (pActiveChild)
+                {
+                    HICON icon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0));
+                    if (0 == icon)
+                        icon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
+
+                    int cx = ::GetSystemMetrics(SM_CXSMICON);
+                    int cy = ::GetSystemMetrics(SM_CYSMICON);
+                    int y = 1 + (pMenubar->GetWindowRect().Height() - cy) / 2;
+                    int x = (rc.Width() - cx) / 2;
+                    drawDC.DrawIconEx(x, y, icon, cx, cy, 0, 0, DI_NORMAL);
+                }
+                return CDRF_SKIPDEFAULT;  // No further drawing
+            }
+        }
+        return CDRF_DODEFAULT;   // Do default drawing
+
+        // Painting cycle has completed.
+        case CDDS_POSTPAINT:
+        {
+            if (IsMDIChildMaxed())
+            {
+                // Draw the MDI Minimize, Restore and Close buttons.
+                CDC dc(lpNMCustomDraw->nmcd.hdc);
+                pMenubar->DrawAllMDIButtons(dc);
+            }
+        }
+        break;
+        }
+
+        return 0;
+    }
 
     /////////////////////////////////////
     // Definitions for the CMDIFrameT class

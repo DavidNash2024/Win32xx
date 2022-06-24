@@ -728,27 +728,6 @@ namespace Win32xx
                 int state = lpNMCustomDraw->nmcd.uItemState;
                 DWORD item = static_cast<DWORD>(lpNMCustomDraw->nmcd.dwItemSpec);
 
-                if (IsMDIChildMaxed() && (item == 0))
-                // Draw over MDI Max button
-                {
-                    CDC drawDC(lpNMCustomDraw->nmcd.hdc);
-                    CWnd* pActiveChild = pMenubar->GetActiveMDIChild();
-                    assert(pActiveChild);
-                    if (pActiveChild)
-                    {
-                        HICON icon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0));
-                        if (0 == icon)
-                            icon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
-
-                        int cx = ::GetSystemMetrics(SM_CXSMICON);
-                        int cy = ::GetSystemMetrics(SM_CYSMICON);
-                        int y = 1 + (pMenubar->GetWindowRect().Height() - cy) / 2;
-                        int x = (rc.Width() - cx) / 2;
-                        drawDC.DrawIconEx(x, y, icon, cx, cy, 0, 0, DI_NORMAL);
-                    }
-                    return CDRF_SKIPDEFAULT;  // No further drawing
-                }
-
                 if (GetMenuBarTheme().UseThemes)
                 {
                     // Leave a pixel gap above and below the drawn rectangle.
@@ -805,14 +784,6 @@ namespace Win32xx
             }
             return CDRF_DODEFAULT;   // Do default drawing
 
-        // Painting cycle has completed.
-        case CDDS_POSTPAINT:
-            // Draw MDI Minimize, Restore and Close buttons.
-            {
-                CDC dc(lpNMCustomDraw->nmcd.hdc);
-                pMenubar->DrawAllMDIButtons(dc);
-            }
-            break;
         }
 
         return 0;

@@ -136,6 +136,9 @@ namespace Win32xx
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        using CWnd::GetMenu;                    // Make GetMenu private
+        using CWnd::SetMenu;                    // Make SetMenu private
+
         CToolBar(const CToolBar&);              // Disable copy construction
         CToolBar& operator = (const CToolBar&); // Disable assignment operator
 

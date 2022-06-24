@@ -67,8 +67,6 @@ namespace Win32xx
         virtual ~CMenuBar();
 
         void    DrawAllMDIButtons(CDC& drawDC);
-        CWnd*   GetActiveMDIChild() const;
-        CWnd*   GetMDIClient() const;
         HMENU   GetBarMenu() const {return m_topMenu;}
         BOOL    IsAltMode() const { return m_isAltMode; }
         LRESULT MenuChar(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -106,14 +104,15 @@ namespace Win32xx
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
-        using CWnd::GetMenu;
-        using CWnd::SetMenu;
         CMenuBar(const CMenuBar&);              // Disable copy construction
         CMenuBar& operator = (const CMenuBar&); // Disable assignment operator
+
         void Cancel() const;
         void DoAltKey(WORD keyCode);
         void DrawMDIButton(CDC& drawDC, int button, UINT state) const;
         void ExitMenu();
+        CWnd* GetActiveMDIChild() const;
+        CWnd* GetMDIClient() const;
         void GrabFocus();
         BOOL IsMDIChildMaxed() const;
         BOOL IsMDIFrame() const;
