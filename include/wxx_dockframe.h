@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -106,15 +106,11 @@ namespace Win32xx
         CMDIDockFrame();
         virtual ~CMDIDockFrame() {}
 
-        virtual CWnd& GetMDIClient() const { return *m_pDockMDIClient; }
-        void SetDockClient(CMDIClient<CDocker::CDockClient>& dockClient) { m_pDockMDIClient = &dockClient; }
-
     protected:
         virtual int OnCreate(CREATESTRUCT& cs);
 
     private:
         CMDIClient<CDocker::CDockClient> m_dockMDIClient;   // MDIClient for docking
-        CMDIClient<CDocker::CDockClient>* m_pDockMDIClient;
     };
 
 }
@@ -221,11 +217,11 @@ namespace Win32xx
     // Constructor.
     inline CMDIDockFrame::CMDIDockFrame()
     {
-        // The view window for a CMDIDockFrame is the MDI Client
-        CDocker::SetDockClient(m_dockMDIClient);
+        // Assign the MDI client window, compatible with docking.
         SetDockClient(m_dockMDIClient);
+        SetMDIClient(m_dockMDIClient);
 
-        SetView(GetMDIClient());
+        // Assign this docker to the dock client.
         GetDockClient().SetDocker(this);
     }
 
