@@ -724,7 +724,7 @@ namespace Win32xx
         return (int)SendMessage(CB_FINDSTRINGEXACT, (WPARAM)indexStart, (LPARAM)string);
     }
 
-#if (WINVER >= 0x050)
+#if (WINVER >= 0x0500)
     // Retrieves the COMBOBOXINFO struct containing information about the combo box.
     inline BOOL CComboBox::GetComboBoxInfo(PCOMBOBOXINFO pcbi) const
     {
