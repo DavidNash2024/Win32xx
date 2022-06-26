@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -137,6 +137,7 @@ namespace Win32xx
         void  ShowDropDown(BOOL show = TRUE) const;
 
 #if WINVER >= 0x0500
+        BOOL  GetComboBoxInfo(PCOMBOBOXINFO pcbi) const;
         HWND  GetEditCtrl() const;
         HWND  GetLBCtrl() const;
 #endif
@@ -722,6 +723,18 @@ namespace Win32xx
         assert(IsWindow());
         return (int)SendMessage(CB_FINDSTRINGEXACT, (WPARAM)indexStart, (LPARAM)string);
     }
+
+#if (WINVER >= 0x050)
+    // Retrieves the COMBOBOXINFO struct containing information about the combo box.
+    inline BOOL CComboBox::GetComboBoxInfo(PCOMBOBOXINFO pcbi) const
+    {
+        assert(IsWindow());
+        assert(pcbi);
+        ZeroMemory(pcbi, sizeof(COMBOBOXINFO));
+        pcbi->cbSize = sizeof(COMBOBOXINFO);
+        return ::GetComboBoxInfo(*this, pcbi);
+    }
+#endif
 
     // Retrieves the number of items in the list box of the combo box.
     // Refer to CB_GETCOUNT in the Windows API documentation for more information.

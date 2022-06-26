@@ -3,6 +3,7 @@ Version 9.0.1
 
 Changes in Detail
 -----------------
+Added    CComboBox::GetComboBoxInfo
 Added    CToolbar::SetButtonInfo          additional overload
 Modified CToolBar::GetButton              returns CSize
 Modified CToolBar::GetPadding             returns CSize

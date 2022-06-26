@@ -366,13 +366,13 @@ namespace Win32xx
     {
         CWnd* pMDIClient = NULL;
 
-        // We use GetAncestor to send our message to the frame.
-        HWND wnd = reinterpret_cast<HWND>(GetAncestor().SendMessage(UWM_GETFRAMEVIEW, 0, 0));
-        CWnd* pWnd = GetCWndPtr(wnd);
-
-        // Only MDI frames have a MDIClient
-        if (pWnd && pWnd->GetClassName() == _T("MDIClient"))
-            pMDIClient = pWnd;
+        // Is the ancestor a CMDIFrame?
+        if (GetAncestor().SendMessage(UWM_GETCMDIFRAMET) != 0)
+        {
+            // Retrieve the window handle of the MDI frame's view.
+            HWND wnd = reinterpret_cast<HWND>(GetAncestor().SendMessage(UWM_GETFRAMEVIEW));
+            pMDIClient = GetCWndPtr(wnd);
+        }
 
         return pMDIClient;
     }
@@ -399,7 +399,7 @@ namespace Win32xx
     // Returns TRUE if the frame is a MDI frame.
     inline BOOL CMenuBar::IsMDIFrame() const
     {
-        return (GetMDIClient() != 0);
+        return (GetAncestor().SendMessage(UWM_GETCMDIFRAMET) != 0);
     }
 
     inline LRESULT CMenuBar::OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam)

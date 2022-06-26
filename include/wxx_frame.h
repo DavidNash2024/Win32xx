@@ -174,15 +174,12 @@ namespace Win32xx
         virtual CWnd& GetView() const;
         virtual void SetView(CWnd& view);
 
-        // Virtual state functions
-        virtual BOOL IsMDIChildMaxed() const { return FALSE; }
-        virtual BOOL IsMDIFrame() const { return FALSE; }
-
         // Accessors and mutators for the menubar, rebar, statusbar and toolbar.
         CMenuBar& GetMenuBar() const { return *m_pMenuBar; }
         CReBar& GetReBar() const { return *m_pReBar; }
         CStatusBar& GetStatusBar() const { return *m_pStatusBar; }
         CToolBar& GetToolBar() const { return *m_pToolBar; }
+        BOOL IsMDIFrame() const { return (T::SendMessage(UWM_GETCMDIFRAMET) != 0); }
         void SetMenuBar(CMenuBar& menuBar) { m_pMenuBar = &menuBar; }
         void SetReBar(CReBar& reBar) { m_pReBar = &reBar; }
         void SetStatusBar(CStatusBar& statusBar) { m_pStatusBar = &statusBar; }
