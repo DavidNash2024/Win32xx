@@ -77,15 +77,16 @@
 #ifndef _WIN32XX_FRAME_H_
 #define _WIN32XX_FRAME_H_
 
-#include "wxx_wincore.h"
+
 #include "wxx_dialog.h"
+#include "wxx_docking.h"
 #include "wxx_gdi.h"
-#include "wxx_statusbar.h"
-#include "wxx_toolbar.h"
 #include "wxx_menubar.h"
+#include "wxx_menumetrics.h"
 #include "wxx_rebar.h"
 #include "wxx_regkey.h"
-#include "wxx_menumetrics.h"
+#include "wxx_statusbar.h"
+#include "wxx_toolbar.h"
 #include "default_resource.h"
 
 
@@ -162,24 +163,11 @@ namespace Win32xx
         CFrameT();
         virtual ~CFrameT();
 
-        // Override these functions as required
-        virtual void AdjustFrameRect(const RECT& viewRect);
-        virtual CRect GetViewRect() const;
-        virtual void SetStatusIndicators();
-        virtual void RecalcLayout();
-        virtual void RecalcViewLayout();
-        virtual void SetStatusParts();
-
-        // Virtual accessors and mutators
-        virtual CWnd& GetView() const;
-        virtual void SetView(CWnd& view);
-
-        // Accessors and mutators for the menubar, rebar, statusbar and toolbar.
+        // Accessors and mutators for the menubar, rebar, statusbar, and toolbar.
         CMenuBar& GetMenuBar() const { return *m_pMenuBar; }
         CReBar& GetReBar() const { return *m_pReBar; }
         CStatusBar& GetStatusBar() const { return *m_pStatusBar; }
         CToolBar& GetToolBar() const { return *m_pToolBar; }
-        BOOL IsMDIFrame() const { return (T::SendMessage(UWM_GETCMDIFRAMET) != 0); }
         void SetMenuBar(CMenuBar& menuBar) { m_pMenuBar = &menuBar; }
         void SetReBar(CReBar& reBar) { m_pReBar = &reBar; }
         void SetStatusBar(CStatusBar& statusBar) { m_pStatusBar = &statusBar; }
@@ -201,7 +189,9 @@ namespace Win32xx
         const ToolBarTheme& GetToolBarTheme() const       { return m_tbTheme; }
         CString GetStatusText() const                     { return m_statusText; }
         CString GetTitle() const                          { return T::GetWindowText(); }
+        CWnd& GetView() const;
         CString GetXPThemeName() const;
+        BOOL IsMDIFrame() const                           { return (T::SendMessage(UWM_GETCMDIFRAMET) != 0); }
         void SetAccelerators(UINT accelID);
         void SetFrameMenu(int menuID);
         void SetFrameMenu(HMENU menu);
@@ -214,6 +204,7 @@ namespace Win32xx
         void SetStatusText(LPCTSTR text);
         void SetTitle(LPCTSTR text)                       { T::SetWindowText(text); }
         void SetToolBarTheme(const ToolBarTheme& tbt);
+        void SetView(CWnd& view);
 
     protected:
         // Override these functions as required.
@@ -225,6 +216,7 @@ namespace Win32xx
         virtual void AddMRUEntry(LPCTSTR MRUEntry);
         virtual void AddToolBarBand(CToolBar& tb, DWORD bandStyle, UINT id);
         virtual void AddToolBarButton(UINT id, BOOL isEnabled = TRUE, LPCTSTR text = 0, int image = -1);
+        virtual void AdjustFrameRect(const RECT& viewRect);
         virtual void CreateToolBar();
         virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
         virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
@@ -239,6 +231,7 @@ namespace Win32xx
         virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const;
         virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const;
         virtual int  GetMenuItemPos(HMENU menu, LPCTSTR itemName) const;
+        virtual CRect GetViewRect() const;
         virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
         virtual BOOL LoadRegistryMRUSettings(UINT maxMRU = 0);
         virtual void MeasureMenuItem(MEASUREITEMSTRUCT* pMIS);
@@ -274,18 +267,22 @@ namespace Win32xx
         virtual BOOL    OnViewToolBar();
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
+        virtual void RecalcLayout();
+        virtual void RecalcViewLayout();
         virtual void RemoveMRUEntry(LPCTSTR MRUEntry);
         virtual BOOL SaveRegistryMRUSettings();
         virtual BOOL SaveRegistrySettings();
         virtual void SetMenuBarBandSize();
         virtual UINT SetMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT toolBarID, UINT toolBarDisabledID);
+        virtual void SetStatusIndicators();
+        virtual void SetStatusParts();
         virtual void SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
         virtual void SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
         virtual void SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
-        virtual void SetupMenuIcons();
-        virtual void SetupToolBar();
         virtual void SetTheme();
         virtual void SetToolBarImages(COLORREF mask, UINT toolBarID, UINT toolBarHotID, UINT toolBarDisabledID);
+        virtual void SetupMenuIcons();
+        virtual void SetupToolBar();
         virtual void ShowMenu(BOOL show);
         virtual void ShowStatusBar(BOOL show);
         virtual void ShowToolBar(BOOL show);
@@ -1571,6 +1568,13 @@ namespace Win32xx
         }
 
         return CString(themeName);
+    }
+
+    // Returns a reference to the view window.
+    template <>
+    inline CWnd& CFrameT<CDocker>::GetView() const
+    {
+        return CDocker::GetView();
     }
 
     // Returns a reference to the view window.
@@ -3110,6 +3114,13 @@ namespace Win32xx
         m_tbTheme = tbt;
         if (GetToolBar().IsWindow())
             GetToolBar().GetParent().RedrawWindow(RDW_INVALIDATE|RDW_ALLCHILDREN);
+    }
+
+    // Sets or changes the frame's view window.
+    template <>
+    inline void CFrameT<CDocker>::SetView(CWnd& wndView)
+    {
+        CDocker::SetView(wndView);
     }
 
     // Sets or changes the frame's view window.
