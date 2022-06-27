@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -496,10 +496,12 @@ namespace Win32xx
 
         // Operations
         virtual CDocker* AddDockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, int dockID = 0);
-        virtual CDocker* AddUndockedChild(CDocker* pDocker, DWORD dockStyle, int dockSize, const RECT& rc, int dockID = 0);
+        virtual CDocker* AddUndockedChild(CDocker* pDocker, DWORD dockStyle,
+                                          int dockSize, const RECT& rc, int dockID = 0);
         virtual void CloseAllDockers();
         virtual void Dock(CDocker* pDocker, UINT dockSide);
         virtual void DockInContainer(CDocker* pDocker, DWORD dockStyle, BOOL selectPage = TRUE);
+        virtual CRect GetViewRect() const { return GetClientRect(); }
         virtual void Hide();
         virtual BOOL LoadContainerRegistrySettings(LPCTSTR registryKeyName);
         virtual BOOL LoadDockRegistrySettings(LPCTSTR registryKeyName);
@@ -509,11 +511,6 @@ namespace Win32xx
         virtual void Undock(CPoint pt, BOOL showUndocked = TRUE);
         virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL showUndocked);
         virtual BOOL VerifyDockers();
-
-        // Virtual accessors and mutators
-        virtual CWnd& GetView() const       { return GetDockClient().GetView(); }
-        virtual CRect GetViewRect() const   { return GetClientRect(); }
-        virtual void SetView(CWnd& view);
 
         // Accessors and mutators
         const std::vector <DockPtr> & GetAllDockChildren() const    {return GetDockAncestor()->m_allDockChildren;}
@@ -538,6 +535,7 @@ namespace Win32xx
         CTabbedMDI* GetTabbedMDI() const;
         int GetTextHeight();
         CDocker* GetTopmostDocker() const;
+        CWnd& GetView() const                       { return GetDockClient().GetView(); }
         BOOL IsChildOfDocker(HWND wnd) const;
         BOOL IsDocked() const;
         BOOL IsRelated(HWND wnd) const;
@@ -546,7 +544,8 @@ namespace Win32xx
         void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
         void SetBarWidth(int width) {GetDockBar().SetWidth(width);}
         void SetCaption(LPCTSTR caption);
-        void SetCaptionColors(COLORREF foregnd1, COLORREF backgnd1, COLORREF foreGnd2, COLORREF backGnd2, COLORREF penColor = RGB(160, 150, 140));
+        void SetCaptionColors(COLORREF foregnd1, COLORREF backgnd1, COLORREF foreGnd2,
+                              COLORREF backGnd2, COLORREF penColor = RGB(160, 150, 140));
         void SetCaptionHeight(int height);
         void SetDockBar(CDockBar& dockBar) { m_pDockBar = &dockBar; }
         void SetDockClient(CDockClient& dockClient) { m_pDockClient = &dockClient; }
@@ -554,6 +553,7 @@ namespace Win32xx
         void SetDockStyle(DWORD dockStyle);
         void SetDockSize(int dockSize);
         BOOL SetRedraw(BOOL redraw = TRUE);
+        void SetView(CWnd& view);
 
     protected:
         virtual CDocker* NewDockerFromID(int dockID);
@@ -1218,6 +1218,10 @@ namespace Win32xx
             {
                 // Discard phantom mouse move messages
                 if ((m_oldPoint.x == GET_X_LPARAM(lparam)) && (m_oldPoint.y == GET_Y_LPARAM(lparam)))
+                    return 0;
+
+                // Undocking isn't supported on Win95.
+                if (GetWinVersion() == 1400)
                     return 0;
 
                 if (IsLeftButtonDown() && (wparam == HTCAPTION) && (m_isCaptionPressed))

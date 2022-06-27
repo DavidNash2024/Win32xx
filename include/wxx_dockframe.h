@@ -75,8 +75,6 @@ namespace Win32xx
     public:
         CDockFrame() {}
         virtual ~CDockFrame() {}
-        virtual CWnd& GetView() const       { return CDocker::GetView(); }
-        virtual void SetView(CWnd& wndView) { CDocker::SetView(wndView); }
 
     protected:
         virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
