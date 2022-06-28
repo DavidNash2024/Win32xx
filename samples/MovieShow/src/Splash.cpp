@@ -76,7 +76,6 @@ void CSplash::LoadFont()
                 {
                     MessageBox(L"Font add fails", L"Error", MB_OK);
                 }
-
             }
         }
     }

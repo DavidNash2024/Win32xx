@@ -15,6 +15,7 @@
 #define UWM_ONSELECTTREEITEM          (WM_APP + 0x0004)
 #define UWM_GETMOVIESDATA             (WM_APP + 0x0005)
 #define UWM_ONRCLICKTREEITEM          (WM_APP + 0x0006)
+#define UWM_BOXSETCHANGED             (WM_APP + 0x0007)
 
 #endif  // _USER_MESSAGES_H_
 

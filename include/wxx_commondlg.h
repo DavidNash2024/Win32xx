@@ -1151,7 +1151,6 @@ namespace Win32xx
 
     // The Default message handling for CFindReplaceDialog. Don't override this function,
     // override DialogProc instead.
-    // Note: OnCancel and OnOK are called by DoModal.
     inline INT_PTR CFindReplaceDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM)
     {
         switch (message)

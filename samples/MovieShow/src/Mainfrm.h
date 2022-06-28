@@ -86,7 +86,7 @@ private:
     void OnFilesLoaded();
 
     // Message handlers
-    LRESULT PlayMovie(LPCTSTR path);
+    LRESULT OnBoxSetChanged();
     LRESULT OnBarEnd(LPDRAGPOS pDragPos);
     LRESULT OnDPIChanged();
     LRESULT OnRClickListItem();
@@ -95,6 +95,7 @@ private:
     LRESULT OnSelectTreeItem();
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT PlayMovie(LPCTSTR path);
 
     // Command handlers
     BOOL    OnAddBoxSet();

@@ -117,6 +117,8 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
         }
     }
 
+    GetAncestor().SendMessage(UWM_BOXSETCHANGED, 0, 0);
+
     return TRUE;
 }
 

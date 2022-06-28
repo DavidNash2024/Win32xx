@@ -57,7 +57,7 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
     for (UINT j = 0; j < num; ++j)
     {
 #pragma warning ( push )
-#pragma warning ( disable : 6385 )       // '208' bytse might be read.
+#pragma warning ( disable : 6385 )       // '208' bytes might be read.
         // Correct code incorrectly flaged with a C6385 warning by the VS2019 analyser.
         if (wcscmp(pImageCodecInfo[j].MimeType, format) == 0)
         {
@@ -65,7 +65,7 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
             free(pImageCodecInfo);
             return j;  // Success
         }
-#pragma warning ( pop )  // ( disable : 6385 )    '208' bytse might be read.
+#pragma warning ( pop )  // ( disable : 6385 )    '208' bytes might be read.
     }
 
     free(pImageCodecInfo);
@@ -455,22 +455,20 @@ void CMainFrame::FillTreeItems()
 // Force the window to the foreground.
 void CMainFrame::ForceToForeground()
 {
-    // Simulate Alt Key down.
     BYTE keyState[256] = { 0 };
     if (::GetKeyboardState((LPBYTE)&keyState))
     {
         if (!(keyState[VK_MENU] & 0x80))
+        {
+            // Simulate Alt Key down.
             ::keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | 0, 0);
-    }
 
-    ShowWindow(SW_SHOW);
-    SetForegroundWindow();
+            ShowWindow(SW_SHOW);
+            SetForegroundWindow();
 
-    // Simulate Alt Key up.
-    if (::GetKeyboardState((LPBYTE)&keyState))
-    {
-        if (!(keyState[VK_MENU] & 0x80))
+            // Simulate Alt Key up.
             ::keybd_event(VK_MENU, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+        }
     }
 }
 
@@ -711,9 +709,9 @@ BOOL CMainFrame::OnAddBoxSet()
 
     GetViewTree().Expand(m_boxSetsItem, TVE_EXPAND);
     GetViewTree().EditLabel(newItem);
-    m_isDirty = TRUE;
+    m_isDirty = true;
 
-    return TRUE;
+    return true;
 }
 
 // Called when the Add Folder toolbar button is pressed.
@@ -771,7 +769,6 @@ BOOL CMainFrame::OnAddFolder()
             // Create the thread and run ThreadProc
             m_thread.CreateThread(0, 0, 0);
         }
-
     }
     else
     {
@@ -779,6 +776,13 @@ BOOL CMainFrame::OnAddFolder()
     }
 
     return TRUE;
+}
+
+// Called when the box set name has changed
+LRESULT CMainFrame::OnBoxSetChanged()
+{
+    m_isDirty = true;
+    return 0;
 }
 
 // Called when the splitter bar move has completed.
@@ -1732,6 +1736,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case WM_DPICHANGED:                 return OnDPIChanged();
 
         // User Messages called by CTreeList
+        case UWM_BOXSETCHANGED:             return OnBoxSetChanged();
         case UWM_GETMOVIESDATA:             return (LRESULT)GetMoviesData();
         case UWM_ONSELECTTREEITEM:          return OnSelectTreeItem();
         case UWM_ONRCLICKTREEITEM:          return OnRClickTreeItem();
