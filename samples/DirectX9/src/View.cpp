@@ -97,11 +97,14 @@ HRESULT CDXView::CDX::InitD3D( HWND hWnd )
 
     // Create the D3DDevice
     if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
-                                    //  D3DCREATE_SOFTWARE_VERTEXPROCESSING,
-                                        D3DCREATE_HARDWARE_VERTEXPROCESSING,
-                                      &m_d3dpp, &m_pd3dDevice)))
+               D3DCREATE_HARDWARE_VERTEXPROCESSING, &m_d3dpp, &m_pd3dDevice)))
     {
-        return E_FAIL;
+        // Attempt CreateDevice with different options.
+        if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, hWnd,
+                   D3DCREATE_SOFTWARE_VERTEXPROCESSING, &m_d3dpp, &m_pd3dDevice)))
+        {
+            return E_FAIL;
+        }
     }
 
     SetupDefaultRenderStates();
@@ -138,6 +141,7 @@ HRESULT CDXView::CDX::InitGeometry()
     return S_OK;
 }
 
+// Called when the window is created.
 int CDXView::CDX::OnCreate(CREATESTRUCT&)
 {
     // Initialize Direct3D
@@ -146,6 +150,10 @@ int CDXView::CDX::OnCreate(CREATESTRUCT&)
         // Create the scene geometry
         if (SUCCEEDED(InitGeometry()))
         {
+            // Resize this window to fill the parent window.
+            CRect rc = GetParent().GetClientRect();
+            SetWindowPos(0, 0, 0, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
+
             // Show the window
             ShowWindow(SW_SHOWDEFAULT);
             UpdateWindow();
@@ -157,12 +165,7 @@ int CDXView::CDX::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
-void CDXView::CDX::OnDestroy()
-{
-    // End this thread
-    ::PostQuitMessage(0);
-}
-
+// Called when the window is resized.
 LRESULT CDXView::CDX::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     int cx = GET_X_LPARAM(lparam);
@@ -172,6 +175,7 @@ LRESULT CDXView::CDX::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called when the window is created. Sets the window creation parameters.
 void CDXView::CDX::PreCreate(CREATESTRUCT& cs)
 {
     // An initial window size to allow InitD3D to succeed
@@ -291,6 +295,7 @@ void CDXView::CDX::SetupDefaultRenderStates()
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 }
 
+// Process the window's messages.
 LRESULT CDXView::CDX::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch(msg)
@@ -320,6 +325,13 @@ int CDXView::OnCreate(CREATESTRUCT& cs)
     m_dxThread.CreateThread();
 
     return CWnd::OnCreate(cs);
+}
+
+// Called when the window is destroyed.
+void CDXView::OnDestroy()
+{
+    m_dxThread.PostThreadMessage(WM_QUIT, 0, 0);
+    ::WaitForSingleObject(m_dxThread.GetThread(), INFINITE);
 }
 
 // Called when the window is resized.
