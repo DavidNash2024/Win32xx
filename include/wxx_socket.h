@@ -76,9 +76,9 @@
 // Refer to the NetClient and NetServer samples for an example of how to use
 // this class to create event sockets for a TCP/UDP client & server.
 
-// To compile programs with CSocket, link with ws3_32.lib for Win32,
-// and ws2.lib for Windows CE. This class uses Winsock version 2, and
-// supports Windows 98 and above.
+// To compile programs with CSocket, link with ws2_32.lib. This class uses
+// Winsock version 2, and supports Windows 98 and above. Windows 95 systems
+// will need to install the "Windows Sockets 2.0 for Windows 95".
 
 // For a TCP server using event sockets, inherit a class from CSocket
 // and override OnAccept, OnDisconnect and OnReceive. Create one instance
