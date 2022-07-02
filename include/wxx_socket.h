@@ -157,39 +157,39 @@ namespace Win32xx
         virtual ~CSocket();
 
         // Operations
-        virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen) const;
-        virtual int  Bind(LPCTSTR addr, UINT port) const;
-        virtual int  Bind(const struct sockaddr* name, int namelen) const;
-        virtual int  Connect(LPCTSTR addr, UINT port) const;
-        virtual int  Connect(const struct sockaddr* name, int namelen) const;
-        virtual bool Create( int family, int type, int protocol = IPPROTO_IP);
-        virtual void Disconnect();
+        void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen) const;
+        int  Bind(LPCTSTR addr, UINT port) const;
+        int  Bind(const struct sockaddr* name, int namelen) const;
+        int  Connect(LPCTSTR addr, UINT port) const;
+        int  Connect(const struct sockaddr* name, int namelen) const;
+        bool Create( int family, int type, int protocol = IPPROTO_IP);
+        void Disconnect();
 
 #ifdef GetAddrInfo
-        virtual void FreeAddrInfo( struct addrinfo* ai ) const;
-        virtual int  GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res) const;
+        void FreeAddrInfo( struct addrinfo* ai ) const;
+        int  GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res) const;
 #endif
 
-        virtual CString GetErrorString() const;
-        virtual int  ioCtlSocket(long cmd, u_long* argp) const;
-        virtual bool IsIPV6Supported() const;
-        virtual int  Listen(int backlog = SOMAXCONN) const;
-        virtual int  Receive(char* buf, int len, int flags) const;
-        virtual int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen) const;
-        virtual int  Send(const char* buf, int len, int flags) const;
-        virtual int  SendTo(const char* send, int len, int flags, LPCTSTR addr, UINT port) const;
-        virtual int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen) const;
+        CString GetErrorString() const;
+        int  ioCtlSocket(long cmd, u_long* argp) const;
+        bool IsIPV6Supported() const;
+        int  Listen(int backlog = SOMAXCONN) const;
+        int  Receive(char* buf, int len, int flags) const;
+        int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen) const;
+        int  Send(const char* buf, int len, int flags) const;
+        int  SendTo(const char* send, int len, int flags, LPCTSTR addr, UINT port) const;
+        int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen) const;
 
-        virtual int  StartAsync(HWND wnd, UINT message, long events);
-        virtual void StartEvents();
-        virtual void StopEvents();
+        int  StartAsync(HWND wnd, UINT message, long events);
+        void StartEvents();
+        void StopEvents();
 
         // Accessors and mutators
-        virtual int  GetPeerName(struct sockaddr* name, int* namelen) const;
-        virtual int  GetSockName(struct sockaddr* name, int* namelen) const;
+        int  GetPeerName(struct sockaddr* name, int* namelen) const;
+        int  GetSockName(struct sockaddr* name, int* namelen) const;
         SOCKET& GetSocket() { return m_socket; }
-        virtual int  GetSockOpt(int level, int optname, char* optval, int* optlen) const;
-        virtual int  SetSockOpt(int level, int optname, const char* optval, int optlen) const;
+        int  GetSockOpt(int level, int optname, char* optval, int* optlen) const;
+        int  SetSockOpt(int level, int optname, const char* optval, int optlen) const;
 
         // Override these functions to monitor events
         virtual void OnAccept()     {}

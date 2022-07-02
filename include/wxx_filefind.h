@@ -87,27 +87,27 @@ namespace Win32xx
             CFileFind();
             virtual ~CFileFind();
 
-            virtual BOOL        FindFirstFile(LPCTSTR fileSearch = NULL);
-            virtual BOOL        FindNextFile();
-            virtual FILETIME    GetCreationTime() const;
-            virtual DWORD       GetFileAttributes() const;
-            virtual CString     GetFileName() const;
-            virtual CString     GetFilePath() const;
-            virtual CString     GetFileTitle() const;
-            virtual CString     GetFileURL() const;
-            virtual FILETIME    GetLastAccessTime() const;
-            virtual FILETIME    GetLastWriteTime() const;
-            virtual ULONGLONG   GetLength() const;
-            virtual CString     GetRoot() const;
-            virtual BOOL        IsArchived() const;
-            virtual BOOL        IsCompressed() const;
-            virtual BOOL        IsDirectory() const;
-            virtual BOOL        IsDots() const;
-            virtual BOOL        IsHidden() const;
-            virtual BOOL        IsNormal() const;
-            virtual BOOL        IsReadOnly() const;
-            virtual BOOL        IsSystem() const;
-            virtual BOOL        IsTemporary() const;
+            BOOL        FindFirstFile(LPCTSTR fileSearch = NULL);
+            BOOL        FindNextFile();
+            FILETIME    GetCreationTime() const;
+            DWORD       GetFileAttributes() const;
+            CString     GetFileName() const;
+            CString     GetFilePath() const;
+            CString     GetFileTitle() const;
+            CString     GetFileURL() const;
+            FILETIME    GetLastAccessTime() const;
+            FILETIME    GetLastWriteTime() const;
+            ULONGLONG   GetLength() const;
+            CString     GetRoot() const;
+            BOOL        IsArchived() const;
+            BOOL        IsCompressed() const;
+            BOOL        IsDirectory() const;
+            BOOL        IsDots() const;
+            BOOL        IsHidden() const;
+            BOOL        IsNormal() const;
+            BOOL        IsReadOnly() const;
+            BOOL        IsSystem() const;
+            BOOL        IsTemporary() const;
 
         private:
             void    Close();

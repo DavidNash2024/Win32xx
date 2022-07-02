@@ -215,12 +215,14 @@ namespace Win32xx
     // Constructor.
     inline CMDIDockFrame::CMDIDockFrame()
     {
-        // Assign the MDI client window, compatible with docking.
-        SetDockClient(m_dockMDIClient);
+        // Assign m_dockMDIClient as this MDI frame's MDI client.
         SetMDIClient(m_dockMDIClient);
 
-        // Assign this docker to the dock client.
-        GetDockClient().SetDocker(this);
+        // Assign m_dockMDIClient as this docker's dock client.
+        SetDockClient(m_dockMDIClient);
+
+        // Assign this CMDIDockFrame as the new dock client's docker.
+        m_dockMDIClient.SetDocker(this);
     }
 
     // Called when the frame window is created

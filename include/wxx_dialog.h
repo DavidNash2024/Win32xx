@@ -104,10 +104,6 @@ namespace Win32xx
         virtual INT_PTR DoModal(HWND parent = 0);
         virtual HWND DoModeless(HWND parent = 0);
 
-        // State functions
-        virtual BOOL IsModal() const { return m_isModal; }
-        BOOL IsIndirect() const { return (NULL != m_pDlgTemplate); }
-
         // Mutators that assign the dialog resource
         void SetDialogFromID(UINT resourceID);
         void SetDialogResource(LPCTSTR resourceName);
@@ -142,6 +138,10 @@ namespace Win32xx
 
         static INT_PTR CALLBACK StaticDialogProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
         static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam, LPARAM lparam);
+
+        // State functions
+        BOOL IsModal() const { return m_isModal; }
+        BOOL IsIndirect() const { return (NULL != m_pDlgTemplate); }
 
         BOOL m_isModal;                  // a flag for modal dialogs
         LPCTSTR m_resourceName;          // the resource name for the dialog
@@ -535,30 +535,34 @@ namespace Win32xx
         return wnd;
     }
 
-    // Ends a modal or modeless dialog.
+    // Ends a modal dialog.
     // Refer to EndDialog in the Windows API documentation for more information.
     inline void CDialog::EndDialog(INT_PTR result)
     {
         assert(IsWindow());
+        assert(IsModal());
 
-        if (IsModal())
-            ::EndDialog(*this, result);
-        else
-            Destroy();
+        ::EndDialog(*this, result);
     }
 
     // Called when the Cancel button is pressed. Automatically closes the dialog.
     // Override to customize OnCancel behavior.
     inline void CDialog::OnCancel()
     {
-        EndDialog(IDCANCEL);
+        if (IsModal())
+            EndDialog(IDCANCEL);
+        else
+            Destroy();
     }
 
     // Called when the Close button is pressed. Automatically closes the dialog.
     // Override to customize OnClose behavior.
     inline void CDialog::OnClose()
     {
-        EndDialog(0);
+        if (IsModal())
+            EndDialog(0);
+        else
+            Destroy();
     }
 
     // Called when the dialog is initialized.
@@ -573,8 +577,10 @@ namespace Win32xx
     // Override to customize OnOK behavior.
     inline void CDialog::OnOK()
     {
-        if ( IsWindow() )
+        if (IsModal())
             EndDialog(IDOK);
+        else
+            Destroy();
     }
 
     // Override this function to filter mouse and keyboard messages prior to
