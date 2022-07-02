@@ -87,11 +87,11 @@ namespace Win32xx
         virtual ~CCommonDialog(){}
 
     protected:
-        virtual BOOL    IsModal() const { return TRUE; }
-        virtual void    OnCancel()  {}  // a required to override
+        virtual void    OnCancel()  {}  // a required override
+        virtual void    OnClose()   {}  // a required override
         virtual void    OnHelpButton();
         virtual BOOL    OnInitDialog();
-        virtual void    OnOK()  {}      // a required to override
+        virtual void    OnOK()  {}      // a required override
 
         // static callback
         static INT_PTR CALLBACK CDHookProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
@@ -214,8 +214,6 @@ namespace Win32xx
                         LPCTSTR replaceWith = NULL,
                         DWORD   flags = FR_DOWN,
                         HWND    parent = 0);
-
-        virtual BOOL IsModal() const                    { return FALSE; }
 
         // Operations:
         BOOL    FindNext() const;           // TRUE = find next
