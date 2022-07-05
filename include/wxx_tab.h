@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -110,24 +110,22 @@ namespace Win32xx
         virtual void   RemoveTabPage(int page);
         virtual void   SwapTabs(UINT tab1, UINT tab2);
 
-        // Virtual accessors, overridden by CDockContainer
-        virtual int     GetTabImageID(UINT tab) const;
-        virtual CString GetTabText(UINT tab) const;
-
         // Accessors
         CWnd* GetActiveView() const         { return m_pActiveView; }
         const std::vector<TabPageInfo>& GetAllTabs() const { return m_allTabPageInfo; }
         CRect GetCloseRect() const;
+        CMenu  GetListMenu() const;
         CRect GetListRect() const;
-        CMenu& GetListMenu();
         SIZE GetMaxTabSize() const;
         CImageList GetODImageList() const   { return m_odImages; }
         BOOL GetShowButtons() const         { return m_isShowingButtons; }
         BOOL GetTabsAtTop() const;
         CFont GetTabFont() const            { return m_tabFont; }
-        int  GetTabIndex(CWnd* pWnd) const;
+        int GetTabImageID(UINT tab) const;
+        int GetTabIndex(CWnd* pWnd) const;
         int GetTabHeight() const            { return m_tabHeight; }
         TabPageInfo GetTabPageInfo(UINT tab) const;
+        CString GetTabText(UINT tab) const;
         int GetTextHeight() const;
 
         //  Mutators
@@ -218,7 +216,6 @@ namespace Win32xx
         CFont m_tabFont;                // Font used for tab text with owner draw
         CImageList m_odImages;          // Image List for Owner Draw Tabs
         LPCDLGTEMPLATE m_pDlgTemplate;  // Dialog template for the list dialog
-        CMenu m_listMenu;
         CWnd* m_pActiveView;
         CPoint m_oldMousePos;
         BOOL m_isShowingButtons;        // Show or hide the close and list button
@@ -256,7 +253,7 @@ namespace Win32xx
         int     GetMDIChildCount() const;
         int     GetMDIChildID(int tab) const;
         LPCTSTR GetMDIChildTitle(int tab) const;
-        CMenu&  GetListMenu() const { return GetTab().GetListMenu(); }
+        CMenu   GetListMenu() const { return GetTab().GetListMenu(); }
         CTab&   GetTab() const { return *m_pTab; }
         void    SetActiveMDIChild(CWnd* pWnd) const;
         void    SetActiveMDITab(int tab) const;
@@ -720,17 +717,11 @@ namespace Win32xx
         return rc;
     }
 
-    // Returns a reference to the list menu.
-    inline CMenu& CTab::GetListMenu()
+    // Returns the list menu.
+    inline CMenu CTab::GetListMenu() const
     {
-        if (!IsMenu(m_listMenu))
-            m_listMenu.CreatePopupMenu();
-
-        // Remove any current menu items.
-        while (m_listMenu.GetMenuItemCount() > 0)
-        {
-            m_listMenu.RemoveMenu(0, MF_BYPOSITION);
-        }
+        CMenu listMenu;
+        listMenu.CreatePopupMenu();
 
         // Add the menu items.
         for (UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
@@ -738,17 +729,17 @@ namespace Win32xx
             CString menuString;
             CString tabText = GetAllTabs()[u].TabText;
             menuString.Format(_T("&%d %s"), u+1, tabText.c_str());
-            m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(u), menuString);
+            listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(u), menuString);
         }
         if (GetAllTabs().size() >= 10)
-            m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +9, _T("More Tabs"));
+            listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +9, _T("More Tabs"));
 
         // Add a checkmark to the menu.
         int selected = GetCurSel();
         if (selected < 9)
-            m_listMenu.CheckMenuItem(selected, MF_BYPOSITION|MF_CHECKED);
+            listMenu.CheckMenuItem(selected, MF_BYPOSITION|MF_CHECKED);
 
-        return m_listMenu;
+        return listMenu;
     }
 
     // Returns the dimensions of the bounding rectangle of the list button.

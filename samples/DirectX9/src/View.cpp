@@ -165,16 +165,6 @@ int CDXView::CDX::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
-// Called when the window is resized.
-LRESULT CDXView::CDX::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    int cx = GET_X_LPARAM(lparam);
-    int cy = GET_Y_LPARAM(lparam);
-
-    SetWindowPos(0, 0, 0, cx, cy, SWP_SHOWWINDOW);
-    return FinalWindowProc(msg, wparam, lparam);
-}
-
 // Called when the window is created. Sets the window creation parameters.
 void CDXView::CDX::PreCreate(CREATESTRUCT& cs)
 {
@@ -295,17 +285,6 @@ void CDXView::CDX::SetupDefaultRenderStates()
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 }
 
-// Process the window's messages.
-LRESULT CDXView::CDX::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    switch(msg)
-    {
-        case UWM_RESIZE: return OnSize(msg, wparam, lparam);
-    }
-
-    return WndProcDefault(msg, wparam, lparam);
-}
-
 
 ///////////////////////////////
 // CDXView function definitions
@@ -334,11 +313,16 @@ void CDXView::OnDestroy()
     ::WaitForSingleObject(m_dxThread.GetThread(), INFINITE);
 }
 
-// Called when the window is resized.
-LRESULT CDXView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+// Called when the window's size has changed.
+LRESULT CDXView::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (m_dx.IsWindow())
-        m_dx.PostMessage(UWM_RESIZE, wparam, lparam);
+    {
+        LPWINDOWPOS wp = (LPWINDOWPOS)lparam;
+
+        // The SWP_ASYNCWINDOWPOS flag causes the system to post the request.
+        m_dx.SetWindowPos(0, 0, 0, wp->cx, wp->cy, SWP_SHOWWINDOW | SWP_ASYNCWINDOWPOS);
+    }
 
     return FinalWindowProc(msg, wparam, lparam);
 }
@@ -350,7 +334,8 @@ LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_SIZE: return OnSize(msg, wparam, lparam);
+        case WM_ERASEBKGND:         return 0;
+        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);

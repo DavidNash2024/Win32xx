@@ -119,10 +119,10 @@ namespace Win32xx
 
     struct ContainerInfo
     {
-        CString title;
-        int image;
+        CString tabText;
+        int tabImage;
         CDockContainer* pContainer;
-        ContainerInfo() : image(0), pContainer(0) {}
+        ContainerInfo() : tabImage(0), pContainer(0) {}
     };
 
     //////////////////////////////////////////////////////////////////////
@@ -180,6 +180,7 @@ namespace Win32xx
 
         virtual void AddContainer(CDockContainer* pContainer, BOOL insert = FALSE, BOOL selecPage = TRUE);
         virtual void AddToolBarButton(UINT id, BOOL isEnabled = TRUE);
+        virtual void DrawTabs(CDC& dc);
         virtual void RecalcLayout();
         virtual void RemoveContainer(CDockContainer* pWnd, BOOL updateParent = TRUE);
         virtual void SelectPage(int page);
@@ -196,14 +197,12 @@ namespace Win32xx
         const CString& GetDockCaption() const { return m_caption; }
         CDocker* GetDocker() const            { return m_pDocker; }
         SIZE GetMaxTabTextSize() const;
-        CViewPage& GetViewPage() const        { return *m_pViewPage; }
-        int GetTabImageID(UINT tab) const;
-        CString GetTabText(UINT tab) const;
-        HICON GetTabIcon() const              { return m_tabIcon; }
-        LPCTSTR GetTabText() const            { return m_tabText; }
+        HICON GetTabIcon() const { return m_tabIcon; }
+        LPCTSTR GetTabText() const { return m_tabText; }
         CToolBar& GetToolBar()  const         { return GetViewPage().GetToolBar(); }
         std::vector<UINT>& GetToolBarData()   { return m_toolBarData; }
         CWnd* GetView() const                 { return GetViewPage().GetView(); }
+        CViewPage& GetViewPage() const { return *m_pViewPage; }
         void SetActiveContainer(CDockContainer* pContainer);
         void SetDocker(CDocker* pDocker)      { m_pDocker = pDocker; }
         void SetDockCaption(LPCTSTR caption) { m_caption = caption; }
@@ -237,8 +236,8 @@ namespace Win32xx
         CDockContainer(const CDockContainer&);              // Disable copy construction
         CDockContainer& operator = (const CDockContainer&); // Disable assignment operator
 
-        CViewPage m_viewPage;
-        CViewPage* m_pViewPage;
+        int GetDockTabImageID(UINT tab) const;
+        CString GetDockTabText(UINT tab) const;
 
         std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_allInfo;}
         std::vector<ContainerInfo> m_allInfo;          // vector of ContainerInfo structs
@@ -249,6 +248,8 @@ namespace Win32xx
         CImageList m_hotImages;
         CImageList m_disabledImages;
 
+        CViewPage m_viewPage;
+        CViewPage* m_pViewPage;
         int m_currentPage;
         CDocker* m_pDocker;
         CDockContainer* m_pContainerParent;
@@ -4400,8 +4401,8 @@ namespace Win32xx
 
         ContainerInfo ci;
         ci.pContainer = pContainer;
-        ci.title = pContainer->GetTabText();
-        ci.image = GetODImageList().Add( pContainer->GetTabIcon() );
+        ci.tabText = pContainer->GetTabText();
+        ci.tabImage = GetODImageList().Add( pContainer->GetTabIcon() );
         int newPage = 0;
         if (insert)
         {
@@ -4418,8 +4419,8 @@ namespace Win32xx
             TCITEM tie;
             ZeroMemory(&tie, sizeof(tie));
             tie.mask = TCIF_TEXT | TCIF_IMAGE;
-            tie.iImage = ci.image;
-            tie.pszText = const_cast<LPTSTR>(m_allInfo[newPage].title.c_str());
+            tie.iImage = ci.tabImage;
+            tie.pszText = const_cast<LPTSTR>(m_allInfo[newPage].tabText.c_str());
             InsertItem(newPage, &tie);
 
             if (selecPage)
@@ -4444,6 +4445,58 @@ namespace Win32xx
     {
         GetToolBarData().push_back(id);
         GetToolBar().AddButton(id, isEnabled);
+    }
+
+    // Draw the tabs.
+    inline void CDockContainer::DrawTabs(CDC& dc)
+    {
+        // Draw the tab buttons:
+        for (int i = 0; i < GetItemCount(); ++i)
+        {
+            CRect rcItem;
+            GetItemRect(i, rcItem);
+            if (!rcItem.IsRectEmpty())
+            {
+                if (i == GetCurSel())
+                {
+                    dc.CreateSolidBrush(RGB(248, 248, 248));
+                    dc.SetBkColor(RGB(248, 248, 248));
+                }
+                else
+                {
+                    dc.CreateSolidBrush(RGB(200, 200, 200));
+                    dc.SetBkColor(RGB(200, 200, 200));
+                }
+
+                dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+                dc.RoundRect(rcItem.left, rcItem.top, rcItem.right + 1, rcItem.bottom, 6, 6);
+
+                if (rcItem.Width() >= 24)
+                {
+                    CString str = GetDockTabText(i);
+                    int image = GetDockTabImageID(i);
+                    CSize szImage = GetODImageList().GetIconSize();
+                    int yOffset = (rcItem.Height() - szImage.cy) / 2;
+
+                    // Draw the icon.
+                    GetODImageList().Draw(dc, image, CPoint(rcItem.left + 5, rcItem.top + yOffset), ILD_NORMAL);
+
+                    // Draw the text.
+                    dc.SelectObject(GetTabFont());
+
+                    // Calculate the size of the text.
+                    CRect rcText = rcItem;
+
+                    int iImageSize = 20;
+                    int iPadding = 4;
+                    if (image >= 0)
+                        rcText.left += iImageSize;
+
+                    rcText.left += iPadding;
+                    dc.DrawText(str, -1, rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
+                }
+            }
+        }
     }
 
     //Returns a pointer to the container at the specified tab number.
@@ -4523,7 +4576,7 @@ namespace Win32xx
             CClientDC dc(*this);
             NONCLIENTMETRICS info = GetNonClientMetrics();
             dc.CreateFontIndirect(info.lfStatusFont);
-            tempSize = dc.GetTextExtentPoint32(iter->title, lstrlen(iter->title));
+            tempSize = dc.GetTextExtentPoint32(iter->tabText, lstrlen(iter->tabText));
             if (tempSize.cx > sz.cx)
                 sz = tempSize;
         }
@@ -4531,18 +4584,18 @@ namespace Win32xx
         return sz;
     }
 
-    // Returns a tab's image index.
-    inline int CDockContainer::GetTabImageID(UINT tab) const
+    // Returns a container tab's image index.
+    inline int CDockContainer::GetDockTabImageID(UINT tab) const
     {
         assert (tab < GetAllContainers().size());
-        return GetAllContainers()[tab].image;
+        return GetAllContainers()[tab].tabImage;
     }
 
-    // Returns a tab's text.
-    inline CString CDockContainer::GetTabText(UINT tab) const
+    // Returns a container tab's text.
+    inline CString CDockContainer::GetDockTabText(UINT tab) const
     {
         assert (tab < GetAllContainers().size());
-        return GetAllContainers()[tab].title;
+        return GetAllContainers()[tab].tabText;
     }
 
     // Called when a HWND is attached to this CWnd.
@@ -4561,8 +4614,8 @@ namespace Win32xx
 
             ContainerInfo ci;
             ci.pContainer = this;
-            ci.title = GetTabText();
-            ci.image = GetODImageList().Add(GetTabIcon());
+            ci.tabText = GetTabText();
+            ci.tabImage = GetODImageList().Add(GetTabIcon());
             m_allInfo.push_back(ci);
 
             // Create the page window.
@@ -4603,8 +4656,8 @@ namespace Win32xx
             TCITEM tie;
             ZeroMemory(&tie, sizeof(tie));
             tie.mask = TCIF_TEXT | TCIF_IMAGE;
-            tie.iImage = m_allInfo[i].image;
-            tie.pszText = const_cast<LPTSTR>(m_allInfo[i].title.c_str());
+            tie.iImage = m_allInfo[i].tabImage;
+            tie.pszText = const_cast<LPTSTR>(m_allInfo[i].tabText.c_str());
             InsertItem(i, &tie);
         }
 
@@ -4779,7 +4832,7 @@ namespace Win32xx
         {
             if (iter->pContainer == pWnd)
             {
-                image = (*iter).image;
+                image = (*iter).tabImage;
                 if (image >= 0)
                     RemoveImage(image);
 
@@ -5001,15 +5054,15 @@ namespace Win32xx
             TCITEM Item1;
             ZeroMemory(&Item1, sizeof(Item1));
             Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
-            Item1.cchTextMax = CI1.title.GetLength()+1;
-            Item1.pszText = const_cast<LPTSTR>(CI1.title.c_str());
+            Item1.cchTextMax = CI1.tabText.GetLength()+1;
+            Item1.pszText = const_cast<LPTSTR>(CI1.tabText.c_str());
             GetItem(tab1, &Item1);
 
             TCITEM Item2;
             ZeroMemory(&Item2, sizeof(Item2));
             Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
-            Item2.cchTextMax = CI2.title.GetLength()+1;
-            Item2.pszText = const_cast<LPTSTR>(CI2.title.c_str());
+            Item2.cchTextMax = CI2.tabText.GetLength()+1;
+            Item2.pszText = const_cast<LPTSTR>(CI2.tabText.c_str());
             GetItem(tab2, &Item2);
 
             SetItem(tab1, &Item2);
