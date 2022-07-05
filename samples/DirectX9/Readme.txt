@@ -31,7 +31,7 @@ Features demonstrated in this example
 * Using a message loop in a separate thread to support DirectX.
 * Customizing a thread's message loop.
 * Using PostQuitMessage to end a GUI thread.
-* Posting messages to windows in a different thread.
+* Calling SetWindowPos for a window in a different thread.
 * The use of WaitForSingleObject detect when a thread has ended.
 * Using a window that utilizes DirectX as the view window for a frame.
 

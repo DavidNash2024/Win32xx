@@ -11,8 +11,6 @@
 #include <d3d9.h>           // See the note above
 
 
-#define UWM_RESIZE     (WM_APP + 0x0001)  // Message - a copy of WM_SIZE info forwarded on to the DirectX window.
-
 // A structure for our custom vertex type
 struct CUSTOMVERTEX
 {
@@ -40,11 +38,8 @@ class CDXView : public CWnd
 
     protected:
         // Virtual functions that override base class functions
-        virtual int     OnCreate(CREATESTRUCT& cs);
-        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual int     OnCreate(CREATESTRUCT& cs);      
         virtual void    PreCreate(CREATESTRUCT& cs);
-        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
     private:
         HRESULT InitD3D(HWND hWnd);
         HRESULT InitGeometry();
@@ -88,7 +83,7 @@ protected:
 
 private:
     // Message handlers
-    LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
     CDX m_dx;
