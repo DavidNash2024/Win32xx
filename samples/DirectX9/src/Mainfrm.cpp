@@ -24,8 +24,8 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_View as the view window of the frame
-    SetView(m_dxView);
+    //Set CDXView as the view window of the frame.
+    SetView(m_DXView);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -66,6 +66,17 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // call the base class function
     return CFrame::OnCreate(cs);
+}
+
+// Called when the frame window is destoyed.
+void CMainFrame::OnDestroy()
+{
+    // Close the dx thread.
+    GetDXView().GetDXThread().PostThreadMessage(WM_QUIT, 0, 0);
+    ::WaitForSingleObject(GetDXView().GetDXThread(), INFINITE);
+
+    // End the application
+    CFrame::OnDestroy();
 }
 
 // Called after the window is created.

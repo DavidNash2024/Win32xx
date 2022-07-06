@@ -1,5 +1,5 @@
 /////////////////////////////
-// View.cpp
+// DXView.cpp
 //
 
 // Includes backbuffer resizing suggested by Guillaume Werlé
@@ -13,58 +13,15 @@
 #include "DXApp.h"
 
 
-///////////////////////////////
+/////////////////////////////
 // CDXView function definitions
 //
-
-// This function runs when the thread starts
-BOOL CDXView::CDXThread::InitInstance()
-{
-    CMainFrame& frame = GetDXApp()->GetMainFrame();
-    const CDXView& dxView = frame.GetDXView();
-    CDX& DX = dxView.GetDX();
-
-    // assign the m_pDX member variable
-    m_pDX = &DX;
-
-    // Create the DX window
-    DX.Create(dxView);
-
-    return TRUE;    // return TRUE to run the message loop
-}
-
-// Here we override CWinThread::MessageLoop to accommodate the special needs of DirectX
-int CDXView::CDXThread::MessageLoop()
-{
-    MSG msg;
-    ZeroMemory(&msg, sizeof(msg));
-    while( msg.message != WM_QUIT )
-    {
-        if ( PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-        {
-            ::TranslateMessage(&msg);
-            ::DispatchMessage(&msg);
-        }
-        else
-        {
-            // Force thread to yield
-            if (WAIT_TIMEOUT == ::WaitForSingleObject(*this, 1))
-                m_pDX->Render();
-        }
-    }
-
-    return LOWORD(msg.wParam);
-}
-
-///////////////////////////////
-// CDXView function definitions
-//
-CDXView::CDX::CDX() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL)
+CDXView::CDXView() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL)
 {
     ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
 }
 
-CDXView::CDX::~CDX()
+CDXView::~CDXView()
 {
     if(m_pVB != NULL)
         m_pVB->Release();
@@ -76,8 +33,21 @@ CDXView::CDX::~CDX()
         m_pD3D->Release();
 }
 
+// Here we override the Create function and use it to create the dxThread.
+// The DXView window is automatically created when the thread starts.
+HWND CDXView::Create(HWND)
+{
+    // Create and start our thread. The thread runs its own message loop.
+    m_dxThread.CreateThread();
+
+    // Wait for the DXView window to be created.
+    ::WaitForSingleObject(m_windowCreated, INFINITE);
+
+    return GetHwnd();
+}
+
 // Initializes Direct3D
-HRESULT CDXView::CDX::InitD3D( HWND hWnd )
+HRESULT CDXView::InitD3D( HWND hWnd )
 {
     // Create the D3D object.
     m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
@@ -113,7 +83,7 @@ HRESULT CDXView::CDX::InitD3D( HWND hWnd )
 }
 
 // Creates the scene geometry.
-HRESULT CDXView::CDX::InitGeometry()
+HRESULT CDXView::InitGeometry()
 {
     // Initialize three vertices for rendering a triangle
     CUSTOMVERTEX vertices[] =
@@ -142,18 +112,20 @@ HRESULT CDXView::CDX::InitGeometry()
 }
 
 // Called when the window is created.
-int CDXView::CDX::OnCreate(CREATESTRUCT&)
+int CDXView::OnCreate(CREATESTRUCT&)
 {
+    m_windowCreated.SetEvent();
+
+    // Resize this window to fill the parent window.
+    CRect rc = GetParent().GetClientRect();
+    SetWindowPos(0, 0, 0, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
+
     // Initialize Direct3D
     if (SUCCEEDED(InitD3D(*this)))
     {
         // Create the scene geometry
         if (SUCCEEDED(InitGeometry()))
         {
-            // Resize this window to fill the parent window.
-            CRect rc = GetParent().GetClientRect();
-            SetWindowPos(0, 0, 0, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
-
             // Show the window
             ShowWindow(SW_SHOWDEFAULT);
             UpdateWindow();
@@ -165,18 +137,8 @@ int CDXView::CDX::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
-// Called when the window is created. Sets the window creation parameters.
-void CDXView::CDX::PreCreate(CREATESTRUCT& cs)
-{
-    // An initial window size to allow InitD3D to succeed
-    cs.x = 0;
-    cs.y = 0;
-    cs.cx = 100;
-    cs.cy = 100;
-}
-
 // Sets up the world, view, and projection transform Matrices.
-void CDXView::CDX::SetupMatrices()
+void CDXView::SetupMatrices()
 {
     // For our world matrix, we will just rotate the object about the y-axis.
     D3DXMATRIXA16 matWorld;
@@ -214,7 +176,7 @@ void CDXView::CDX::SetupMatrices()
 }
 
 // Draws the scene.
-void CDXView::CDX::Render()
+void CDXView::Render()
 {
     if (IsWindow() && m_pd3dDevice)
     {
@@ -276,7 +238,7 @@ void CDXView::CDX::Render()
     }
 }
 
-void CDXView::CDX::SetupDefaultRenderStates()
+void CDXView::SetupDefaultRenderStates()
 {
     // Turn off culling, so we see the front and back of the triangle
     m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
@@ -285,59 +247,11 @@ void CDXView::CDX::SetupDefaultRenderStates()
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 }
 
-
-///////////////////////////////
-// CDXView function definitions
-//
-
-// Destructor.
-CDXView::~CDXView()
-{
-    // Ensure the DXThread ends before destroying this object.
-    ::WaitForSingleObject(m_dxThread.GetThread(), INFINITE);
-}
-
-// Called when the window is created.
-int CDXView::OnCreate(CREATESTRUCT& cs)
-{
-    // Create our thread. The thread creates the DX child window when starts
-    m_dxThread.CreateThread();
-
-    return CWnd::OnCreate(cs);
-}
-
-// Called when the window is destroyed.
-void CDXView::OnDestroy()
-{
-    m_dxThread.PostThreadMessage(WM_QUIT, 0, 0);
-    ::WaitForSingleObject(m_dxThread.GetThread(), INFINITE);
-}
-
-// Called when the window's size has changed.
-LRESULT CDXView::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    if (m_dx.IsWindow())
-    {
-        LPWINDOWPOS wp = (LPWINDOWPOS)lparam;
-
-        // The SWP_ASYNCWINDOWPOS flag causes the system to post the request.
-        m_dx.SetWindowPos(0, 0, 0, wp->cx, wp->cy, SWP_SHOWWINDOW | SWP_ASYNCWINDOWPOS);
-    }
-
-    return FinalWindowProc(msg, wparam, lparam);
-}
-
 // Process the window's messages.
 LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
-        switch (msg)
-        {
-        case WM_ERASEBKGND:         return 0;
-        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
-        }
-
         return WndProcDefault(msg, wparam, lparam);
     }
 

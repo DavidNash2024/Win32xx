@@ -187,6 +187,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\DXThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\DXView.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main.cpp"
 				>
 			</File>
@@ -214,10 +222,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="..\src\View.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -226,6 +230,14 @@
 			>
 			<File
 				RelativePath="..\src\DXApp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\DXThread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\DXView.h"
 				>
 			</File>
 			<File
@@ -238,10 +250,6 @@
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\View.h"
 				>
 			</File>
 		</Filter>

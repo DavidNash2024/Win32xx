@@ -122,6 +122,12 @@
 				RelativePath="..\src\DXApp.cpp">
 			</File>
 			<File
+				RelativePath="..\src\DXThread.cpp">
+			</File>
+			<File
+				RelativePath="..\src\DXView.cpp">
+			</File>
+			<File
 				RelativePath="..\src\main.cpp">
 			</File>
 			<File
@@ -129,9 +135,6 @@
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp">
-			</File>
-			<File
-				RelativePath="..\src\View.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -142,6 +145,12 @@
 				RelativePath="..\src\DXApp.h">
 			</File>
 			<File
+				RelativePath="..\src\DXThread.h">
+			</File>
+			<File
+				RelativePath="..\src\DXView.h">
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.h">
 			</File>
 			<File
@@ -149,9 +158,6 @@
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">
-			</File>
-			<File
-				RelativePath="..\src\View.h">
 			</File>
 		</Filter>
 		<Filter
