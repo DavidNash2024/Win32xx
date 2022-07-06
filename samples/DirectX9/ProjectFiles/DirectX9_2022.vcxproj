@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\DXApp.cpp" />
+    <ClCompile Include="..\src\DXThread.cpp" />
+    <ClCompile Include="..\src\DXView.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
@@ -28,7 +30,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\src\View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\default_resource.h" />
@@ -86,11 +87,12 @@
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\DXApp.h" />
+    <ClInclude Include="..\src\DXThread.h" />
+    <ClInclude Include="..\src\DXView.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\targetver.h" />
-    <ClInclude Include="..\src\View.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />

@@ -108,7 +108,11 @@ SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\View.cpp
+SOURCE=..\src\DXThread.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\DXView.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -132,7 +136,11 @@ SOURCE=..\src\stdafx.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\View.h
+SOURCE=..\src\DXThread.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\DXView.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

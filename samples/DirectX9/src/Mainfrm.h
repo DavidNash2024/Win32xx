@@ -5,7 +5,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "View.h"
+#include "DXView.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -19,22 +19,23 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    const CDXView& GetDXView() const { return m_dxView; }
+    CDXView& GetDXView() { return m_DXView; }
 
 protected:
     // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    OnDestroy();
     virtual void    OnInitialUpdate();
     virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    // Command handler
+    // Command handlers
     BOOL OnFileExit();
 
-    // Member variable
-    CDXView m_dxView;
+    // Member variables
+    CDXView m_DXView;
 };
 
 #endif //MAINFRM_H
