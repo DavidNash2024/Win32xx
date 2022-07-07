@@ -57,26 +57,15 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
-    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
+    UseIndicatorStatus(FALSE);       // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-    // UseStatusBar(FALSE);          // Don't use a StatusBar
+    UseStatusBar(FALSE);             // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
     // call the base class function
     return CFrame::OnCreate(cs);
-}
-
-// Called when the frame window is destoyed.
-void CMainFrame::OnDestroy()
-{
-    // Close the dx thread.
-    GetDXView().GetDXThread().PostThreadMessage(WM_QUIT, 0, 0);
-    ::WaitForSingleObject(GetDXView().GetDXThread(), INFINITE);
-
-    // End the application
-    CFrame::OnDestroy();
 }
 
 // Called after the window is created.
@@ -118,14 +107,10 @@ void CMainFrame::SetupToolBar()
 // Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
+    // Catch any exceptions thrown when handling messages.
     try
     {
-
-    //  switch (msg)
-    //  {
-    //  }
-
-        // pass unhandled messages on for default processing
+        // Pass unhandled messages on for default processing.
         return WndProcDefault(msg, wparam, lparam);
     }
 

@@ -10,19 +10,27 @@
 // CDXThread function definitions
 //
 
+// Constructor
+CDXThread::CDXThread() : m_pView(0)
+{
+}
+
+// Destructor
+CDXThread::~CDXThread()
+{
+}
+
 // This function runs when the thread starts
 BOOL CDXThread::InitInstance()
 {
     CMainFrame& frame = GetDXApp()->GetMainFrame();
     CDXView& view = frame.GetDXView();
 
-    // assign the m_pDX member variable
+    // assign the m_pView member variable
     m_pView = &view;
 
-    SetThreadPriority(-3);
-
-    // Create the view window.
-    view.CreateEx(0, _T("Test"), NULL, WS_CHILD | WS_VISIBLE, CRect(), frame, 0);
+    // Create the DXView window.
+    view.CreateEx(0, _T("DXView"), NULL, WS_CHILD | WS_VISIBLE, CRect(), frame, 0);
 
     return TRUE;    // return TRUE to run the message loop
 }

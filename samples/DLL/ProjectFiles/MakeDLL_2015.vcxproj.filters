@@ -172,7 +172,7 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_setup.h">
-      <Filter>Source Files</Filter>
+      <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_criticalsection.h">
       <Filter>Win32++</Filter>
