@@ -2760,7 +2760,7 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::SetStatusParts()
     {
-        if (IsUsingIndicatorStatus())
+        if (IsUsingIndicatorStatus() && GetStatusBar().IsWindow())
         {
             // Calculate the width of the text indicators
             CClientDC statusDC(GetStatusBar());
@@ -3236,8 +3236,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CALLBACK CFrameT<T>::StaticKeyboardProc(int code, WPARAM wparam, LPARAM lparam)
     {
-        TLSData* pTLSData = GetApp()->GetTlsData();
-        HWND hFrame = pTLSData->mainWnd;
+        HWND hFrame = GetApp()->GetMainWnd();
         CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(CWnd::GetCWndPtr(hFrame));
         assert(pFrame);
 

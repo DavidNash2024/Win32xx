@@ -29,7 +29,6 @@ class CDXView : public CWnd
 public:
     CDXView();
     virtual ~CDXView();
-    CDXThread& GetDXThread()     { return m_dxThread; }
     void Render();
 
 protected:
@@ -50,7 +49,7 @@ private:
     LPDIRECT3DDEVICE9       m_pd3dDevice;     // Our rendering device
     LPDIRECT3DVERTEXBUFFER9 m_pVB;            // Buffer to hold vertices
     D3DPRESENT_PARAMETERS   m_d3dpp;
-    CDXThread               m_dxThread;
+    CDXThread               m_DXThread;
     CEvent                  m_windowCreated;
 };
 

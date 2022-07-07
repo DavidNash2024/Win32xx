@@ -33,12 +33,12 @@ CDXView::~CDXView()
         m_pD3D->Release();
 }
 
-// Here we override the Create function and use it to create the dxThread.
+// Here we override the Create function and use it to create the DXThread.
 // The DXView window is automatically created when the thread starts.
 HWND CDXView::Create(HWND)
 {
     // Create and start our thread. The thread runs its own message loop.
-    m_dxThread.CreateThread();
+    m_DXThread.CreateThread();
 
     // Wait for the DXView window to be created.
     ::WaitForSingleObject(m_windowCreated, INFINITE);
@@ -250,8 +250,10 @@ void CDXView::SetupDefaultRenderStates()
 // Process the window's messages.
 LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
+    // Catch any exceptions thrown when handling messages.
     try
     {
+        // Pass unhandled messages on for default processing.
         return WndProcDefault(msg, wparam, lparam);
     }
 

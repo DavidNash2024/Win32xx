@@ -111,7 +111,7 @@ namespace Win32xx
     {
     public:
         CWinThread() : WinThread(StaticThreadProc, this) {}
-        virtual ~CWinThread() {}
+        virtual ~CWinThread();
 
     private:
         CWinThread(const CWinThread&);              // Disable copy construction
@@ -262,6 +262,15 @@ namespace Win32xx
     ////////////////////////////////////////
     // Definitions for the CWinThread class.
     //
+
+    inline CWinThread::~CWinThread()
+    {
+        // Post a WM_QUIT to safely end the thread.
+        PostThreadMessage(WM_QUIT, 0, 0);
+
+        // Wait up to 1 second for the thread to end.
+        ::WaitForSingleObject(*this, 1000);
+    }
 
     // When the GUI thread starts, it runs this function.
     inline UINT WINAPI CWinThread::StaticThreadProc(LPVOID pCThread)

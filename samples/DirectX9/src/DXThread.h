@@ -15,8 +15,8 @@ class CDXView;
 class CDXThread : public CWinThread
 {
 public:
-    CDXThread() : m_pView(0) {}
-    virtual ~CDXThread() {}
+    CDXThread();
+    virtual ~CDXThread();
 
 protected:
     // Virtual functions that override base class functions
