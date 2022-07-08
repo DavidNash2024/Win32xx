@@ -8,8 +8,8 @@ Added    CToolbar::SetButtonInfo          additional overload
 Modified CDialog::EndDialog               now only closes a modal dialog
 Modified CToolBar::GetButton              returns CSize
 Modified CToolBar::GetPadding             returns CSize
-Removed CDialog::IsModal
-Removed CDialog::IsIndirect
+Removed  CDialog::IsModal
+Removed  CDialog::IsIndirect
 Renamed  CMenuBar::GetMenu   to   CMenuBar::GetBarMenu
 Renamed  CMenuBar::SetMenu   to   CMenuBar::SetupMenuBar
 

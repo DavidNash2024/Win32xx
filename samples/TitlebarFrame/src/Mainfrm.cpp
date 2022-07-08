@@ -763,6 +763,15 @@ LRESULT CMainFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     }
     }
 
+    // Provide the hit test for the caption buttons.
+    switch (m_hoveredButton)
+    {
+    case TitlebarButton::System:      return HTSYSMENU;
+    case TitlebarButton::Minimize:    return HTMINBUTTON;
+    case TitlebarButton::Maximize:    return HTMAXBUTTON;
+    case TitlebarButton::Close:       return HTCLOSE;
+    }
+
     // Looks like adjustment happening in NCCALCSIZE is messing with the detection
     // of the top hit area so manually fixing that.
     UINT dpi = ::GetDpiForWindow(*this);
