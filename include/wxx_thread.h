@@ -238,9 +238,11 @@ namespace Win32xx
         return ::ResumeThread(m_thread);
     }
 
-    // Sets the priority of this thread. The nPriority parameter can
-    // be -7, -6, -5, -4, -3, 3, 4, 5, or 6 or other values permitted
-    // by the SetThreadPriority Windows API function.
+    // Sets the priority of this thread. The priority parameter can be:
+    // THREAD_PRIORITY_IDLE, THREAD_PRIORITY_LOWEST, THREAD_PRIORITY_BELOW_NORMAL,
+    // THREAD_PRIORITY_NORMAL, THREAD_PRIORITY_ABOVE_NORMAL, THREAD_PRIORITY_HIGHEST,
+    // THREAD_PRIORITY_TIME_CRITICAL or other values permitted by the
+    // SetThreadPriority Windows API function.
     // Refer to SetThreadPriority in the Windows API documentation for more information.
     template <class T>
     inline BOOL CThreadT<T>::SetThreadPriority(int priority) const
