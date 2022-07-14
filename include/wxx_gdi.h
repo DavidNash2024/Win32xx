@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -208,7 +208,6 @@ namespace Win32xx
     // CBitmap manages a bitmap GDI object.
     class CBitmap : public CGDIObject
     {
-
       public:
         CBitmap();
         CBitmap(HBITMAP bitmap);
@@ -217,7 +216,17 @@ namespace Win32xx
         operator HBITMAP() const;
         virtual ~CBitmap();
 
-        // Create and load methods
+        void    ConvertToDisabled(COLORREF mask) const;
+        HBITMAP CopyImage(HBITMAP origBitmap, int cxDesired = 0, int cyDesired = 0, UINT fuFlags = 0);
+        HBITMAP CreateBitmap(int width, int height, UINT planes, UINT bitsPerPixel, LPCVOID pBits);
+        HBITMAP CreateCompatibleBitmap(HDC dc, int width, int height);
+        HBITMAP CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* ppBits, HANDLE section, DWORD offset);
+        HBITMAP CreateDIBitmap(HDC dc, const BITMAPINFOHEADER* pBMIH, DWORD init, LPCVOID pInit, const LPBITMAPINFO pBMI, UINT colorUse);
+        HBITMAP CreateMappedBitmap(UINT bitmapID, UINT flags = 0, LPCOLORMAP pColorMap = NULL, int mapSize = 0);
+        HBITMAP CreateBitmapIndirect(const BITMAP& bitmap);
+        CSize GetBitmapDimensionEx() const;
+        int  GetDIBits(HDC dc, UINT startScan, UINT scanLines,  LPVOID pBits, LPBITMAPINFO pBMI, UINT colorUse) const;
+        void GrayScaleBitmap();
         BOOL LoadBitmap(LPCTSTR resourceName);
         BOOL LoadBitmap(int id);
         BOOL LoadImage(LPCTSTR resourceName, UINT flags = 0);
@@ -225,21 +234,9 @@ namespace Win32xx
         BOOL LoadImage(LPCTSTR resourceName, int cxDesired, int cyDesired, UINT flags);
         BOOL LoadImage(UINT id, int cxDesired, int cyDesired, UINT flags);
         BOOL LoadOEMBitmap(UINT bitmapID);
-        HBITMAP CopyImage(HBITMAP origBitmap, int cxDesired = 0, int cyDesired = 0, UINT fuFlags = 0);
-        HBITMAP CreateBitmap(int width, int height, UINT planes, UINT bitsPerPixel, LPCVOID pBits);
-        HBITMAP CreateCompatibleBitmap(HDC dc, int width, int height);
-        HBITMAP CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* ppBits, HANDLE section, DWORD offset);
-
-        void    ConvertToDisabled(COLORREF mask) const;
-        HBITMAP CreateDIBitmap(HDC dc, const BITMAPINFOHEADER* pBMIH, DWORD init, LPCVOID pInit, const LPBITMAPINFO pBMI, UINT colorUse);
-        HBITMAP CreateMappedBitmap(UINT bitmapID, UINT flags = 0, LPCOLORMAP pColorMap = NULL, int mapSize = 0);
-        HBITMAP CreateBitmapIndirect(const BITMAP& bitmap);
-        void GrayScaleBitmap();
-        void TintBitmap (int red, int green, int blue);
-        int GetDIBits(HDC dc, UINT startScan, UINT scanLines,  LPVOID pBits, LPBITMAPINFO pBMI, UINT colorUse) const;
-        int SetDIBits(HDC dc, UINT startScan, UINT scanLines, LPCVOID pBits, const LPBITMAPINFO pBMI, UINT colorUse) const;
-        CSize GetBitmapDimensionEx() const;
+        int  SetDIBits(HDC dc, UINT startScan, UINT scanLines, LPCVOID pBits, const LPBITMAPINFO pBMI, UINT colorUse) const;
         CSize SetBitmapDimensionEx(int width, int height) const;
+        void TintBitmap (int red, int green, int blue);
 
         // Accessors
         BITMAP GetBitmapData() const;
@@ -258,15 +255,13 @@ namespace Win32xx
         operator HBRUSH() const;
         virtual ~CBrush();
 
-        HBRUSH CreateSolidBrush(COLORREF color);
-        HBRUSH CreatePatternBrush(HBITMAP bitmap);
-        LOGBRUSH GetLogBrush() const;
-
-        HBRUSH CreateHatchBrush(int index, COLORREF color);
         HBRUSH CreateBrushIndirect(const LOGBRUSH& logBrush);
         HBRUSH CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec);
         HBRUSH CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT usage);
-
+        HBRUSH CreateHatchBrush(int index, COLORREF color);
+        HBRUSH CreatePatternBrush(HBITMAP bitmap);
+        HBRUSH CreateSolidBrush(COLORREF color);
+        LOGBRUSH GetLogBrush() const;
     };
 
 
@@ -308,10 +303,8 @@ namespace Win32xx
         virtual ~CPalette();
 
         // Create methods
-        HPALETTE CreatePalette(LPLOGPALETTE pLogPalette);
-
         HPALETTE CreateHalftonePalette(HDC dc);
-
+        HPALETTE CreatePalette(LPLOGPALETTE pLogPalette);
 
         // Attributes
         int GetEntryCount() const;
@@ -321,9 +314,7 @@ namespace Win32xx
         // Operations
         BOOL ResizePalette(UINT entries) const;
         BOOL AnimatePalette(UINT startIndex, UINT entries, LPPALETTEENTRY pPaletteColors) const;
-
         UINT GetNearestPaletteIndex (COLORREF color) const;
-
     };
 
 
@@ -341,11 +332,9 @@ namespace Win32xx
 
         HPEN CreatePen(int penStyle, int width, COLORREF color);
         HPEN CreatePenIndirect(const LOGPEN& logPen);
-        LOGPEN GetLogPen() const;
-
         HPEN ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount = 0, const DWORD* pStyle = NULL) ;
         EXTLOGPEN GetExtLogPen() const;
-
+        LOGPEN GetLogPen() const;
     };
 
 
@@ -360,31 +349,30 @@ namespace Win32xx
         virtual ~CRgn ();
 
         // Create methods
-        HRGN CreateRectRgn(int x1, int y1, int x2, int y2);
-        HRGN CreateRectRgnIndirect(const RECT& rc);
-        HRGN CreateFromData(const XFORM* pXForm, int count, const RGNDATA* pRgnData);
-
         HRGN CreateEllipticRgn(int x1, int y1, int x2, int y2);
         HRGN CreateEllipticRgnIndirect(const RECT& rc);
+        HRGN CreateFromData(const XFORM* pXForm, int count, const RGNDATA* pRgnData);
+        HRGN CreateFromPath(HDC dc);
         HRGN CreatePolygonRgn(LPPOINT pPoints, int count, int mode);
         HRGN CreatePolyPolygonRgn(LPPOINT pPoints, LPINT pPolyCounts, int count, int polyFillMode);
+        HRGN CreateRectRgn(int x1, int y1, int x2, int y2);
+        HRGN CreateRectRgnIndirect(const RECT& rc);
         HRGN CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3);
-        HRGN CreateFromPath(HDC dc);
 
         // Operations
-        void SetRectRgn(int x1, int y1, int x2, int y2) const;
-        void SetRectRgn(const RECT& rc) const;
-        int CombineRgn(HRGN src1, HRGN src2, int combineMode) const;
-        int CombineRgn(HRGN src, int combineMode) const;
-        int CopyRgn(HRGN src) const;
+        int  CombineRgn(HRGN src1, HRGN src2, int combineMode) const;
+        int  CombineRgn(HRGN src, int combineMode) const;
+        int  CopyRgn(HRGN src) const;
         BOOL EqualRgn(HRGN rgn) const;
-        int OffsetRgn(int x, int y) const;
-        int OffsetRgn(POINT& pt) const;
-        int GetRgnBox(RECT& rc) const;
+        int  GetRegionData(LPRGNDATA pRgnData, int dataSize) const;
+        int  GetRgnBox(RECT& rc) const;
+        int  OffsetRgn(int x, int y) const;
+        int  OffsetRgn(POINT& pt) const;
         BOOL PtInRegion(int x, int y) const;
         BOOL PtInRegion(POINT& pt) const;
         BOOL RectInRegion(const RECT& rc) const;
-        int GetRegionData(LPRGNDATA pRgnData, int dataSize) const;
+        void SetRectRgn(int x1, int y1, int x2, int y2) const;
+        void SetRectRgn(const RECT& rc) const;
     };
 
 
@@ -451,9 +439,7 @@ namespace Win32xx
         HDC CreateCompatibleDC(HDC source);
         HDC CreateDC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
         int GetDeviceCaps(int index) const;
-
         HDC CreateIC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
-
 
         // Create Bitmaps
         void CreateBitmap(int cx, int cy, UINT planes, UINT bitsPerPixel, LPCVOID pColors);
@@ -474,13 +460,12 @@ namespace Win32xx
         void CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/);
 
         // Create Brushes
-        void CreatePatternBrush(HBITMAP bitmap);
-        void CreateSolidBrush(COLORREF color);
-
         void CreateBrushIndirect(const LOGBRUSH& logBrush);
-        void CreateHatchBrush(int fnStyle, COLORREF color);
         void CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec);
         void CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT usage);
+        void CreateHatchBrush(int fnStyle, COLORREF color);
+        void CreatePatternBrush(HBITMAP bitmap);
+        void CreateSolidBrush(COLORREF color);
 
         // Create Fonts
         void CreateFontIndirect(const LOGFONT& lf);
@@ -494,9 +479,7 @@ namespace Win32xx
 
         // Create Palettes
         void CreatePalette(LPLOGPALETTE pLogPalette, BOOL forceBkgnd);
-
         void CreateHalftonePalette(BOOL forceBkgnd);
-
 
         // Create Pens
         void CreatePen(int style, int width, COLORREF color);
@@ -508,118 +491,108 @@ namespace Win32xx
         HGDIOBJ SelectStockObject(int index) const;
 
         // Create Regions
-        int CreateRectRgn(int left, int top, int right, int bottom);
-        int CreateRectRgnIndirect(const RECT& rc);
-
-        int CreateRgnFromData(const XFORM* pXform, DWORD count, const RGNDATA* pRgnData);
-        int CreateRgnFromPath(HDC dc);
-
         int CreateEllipticRgn(int left, int top, int right, int bottom);
         int CreateEllipticRgnIndirect(const RECT& rc);
         int CreatePolygonRgn(LPPOINT pPointArray, int points, int polyFillMode);
         int CreatePolyPolygonRgn(LPPOINT pPointArray, LPINT pPolyCounts, int count, int polyFillMode);
+        int CreateRectRgn(int left, int top, int right, int bottom);
+        int CreateRectRgnIndirect(const RECT& rc);
+        int CreateRgnFromData(const XFORM* pXform, DWORD count, const RGNDATA* pRgnData);
+        int CreateRgnFromPath(HDC dc);
         int CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3);
 
         // Wrappers for WinAPI functions
         int EnumObjects(int objectType, GOBJENUMPROC pObjectFunc, LPARAM lparam) const;
 
         // Point and Line Drawing Functions
-        CPoint GetCurrentPosition() const;
-        CPoint MoveTo(int x, int y) const;
-        CPoint MoveTo(POINT pt) const;
-        BOOL LineTo(int x, int y) const;
-        BOOL LineTo(POINT pt) const;
-        COLORREF GetPixel(int x, int y) const;
-        COLORREF GetPixel(POINT pt) const;
-        COLORREF SetPixel(int x, int y, COLORREF color) const;
-        COLORREF SetPixel(POINT pt, COLORREF color) const;
-        int SetROP2(int drawMode) const;
-
+        BOOL AngleArc(int x, int y, int radius, float startAngle, float sweepAngle) const;
         BOOL Arc(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
         BOOL Arc(const RECT& rc, POINT start, POINT end) const;
         BOOL ArcTo(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
         BOOL ArcTo(const RECT& rc, POINT start, POINT end) const;
-        BOOL AngleArc(int x, int y, int radius, float startAngle, float sweepAngle) const;
         BOOL CloseFigure() const;
-        int  GetROP2() const;
         int  GetArcDirection() const;
-        int  SetArcDirection(int arcDirection) const;
-        BOOL PolyDraw(const POINT* pPointArray, const BYTE* pTypes, int count) const;
-        BOOL Polyline(LPPOINT pPointArray, int count) const;
-        BOOL PolyPolyline(const POINT* pPointArray, const DWORD* pPolyPoints, int count) const;
-        BOOL PolylineTo(const POINT* pPointArray, int count) const;
+        CPoint GetCurrentPosition() const;
+        COLORREF GetPixel(int x, int y) const;
+        COLORREF GetPixel(POINT pt) const;
+        int  GetROP2() const;
+        BOOL LineTo(int x, int y) const;
+        BOOL LineTo(POINT pt) const;
+        CPoint MoveTo(int x, int y) const;
+        CPoint MoveTo(POINT pt) const;
         BOOL PolyBezier(const POINT* pPointArray, int count) const;
         BOOL PolyBezierTo(const POINT* pPointArray, int count) const;
+        BOOL PolyDraw(const POINT* pPointArray, const BYTE* pTypes, int count) const;
+        BOOL Polyline(LPPOINT pPointArray, int count) const;
+        BOOL PolylineTo(const POINT* pPointArray, int count) const;
+        BOOL PolyPolyline(const POINT* pPointArray, const DWORD* pPolyPoints, int count) const;
+        int  SetArcDirection(int arcDirection) const;
+        COLORREF SetPixel(int x, int y, COLORREF color) const;
+        COLORREF SetPixel(POINT pt, COLORREF color) const;
         BOOL SetPixelV(int x, int y, COLORREF color) const;
         BOOL SetPixelV(POINT pt, COLORREF color) const;
+        int SetROP2(int drawMode) const;
 
         // Shape Drawing Functions
+        BOOL Chord(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
+        BOOL Chord(const RECT& rc, POINT start, POINT end) const;
         BOOL DrawFocusRect(const RECT& rc) const;
         BOOL Ellipse(int x1, int y1, int x2, int y2) const;
         BOOL Ellipse(const RECT& rc) const;
+        BOOL Pie(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
+        BOOL Pie(const RECT& rc, POINT start, POINT end) const;
+        BOOL PolyPolygon(LPPOINT pPointArray, LPINT pPolyCounts, int count) const;
         BOOL Polygon(LPPOINT pPointArray, int count) const;
         BOOL Rectangle(int x1, int y1, int x2, int y2) const;
         BOOL Rectangle(const RECT& rc) const;
         BOOL RoundRect(int x1, int y1, int x2, int y2, int width, int height) const;
         BOOL RoundRect(const RECT& rc, int width, int height) const;
 
-        BOOL Chord(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
-        BOOL Chord(const RECT& rc, POINT start, POINT end) const;
-        BOOL Pie(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
-        BOOL Pie(const RECT& rc, POINT start, POINT end) const;
-        BOOL PolyPolygon(LPPOINT pPointArray, LPINT pPolyCounts, int count) const;
-
         // Fill and Image Drawing functions
         BOOL DrawEdge(const RECT& rc, UINT edge, UINT flags) const;
+        BOOL DrawIcon(int x, int y, HICON icon) const;
+        BOOL DrawIcon(POINT point, HICON icon) const;
         BOOL DrawIconEx(int xLeft, int yTop, HICON icon, int cxWidth, int cyWidth,
                         UINT index, HBRUSH flickerFreeDraw, UINT flags) const;
 
         BOOL DrawFrameControl(const RECT& rc, UINT type, UINT state) const;
         BOOL FillRect(const RECT& rc, HBRUSH brush) const;
         BOOL FillRgn(HRGN rgn, HBRUSH brush) const;
+        BOOL FrameRect(const RECT& rc, HBRUSH brush) const;
+        BOOL FrameRgn(HRGN rgn, HBRUSH brush, int width, int height) const;
+        int  GetPolyFillMode() const;
         void GradientFill(COLORREF color1, COLORREF color2, const RECT& rc, BOOL isVertical) const;
         BOOL InvertRect(const RECT& rc) const;
+        BOOL PaintRgn(HRGN rgn) const;
+        int  SetPolyFillMode(int polyFillMode) const;
         void SolidFill(COLORREF color, const RECT& rc) const;
 
 #if (WINVER >= 0x0410)
         BOOL GradientFill(PTRIVERTEX pVertex, ULONG vertex, PVOID pMesh, ULONG mesh, ULONG mode) const;
 #endif
 
-        BOOL DrawIcon(int x, int y, HICON icon) const;
-        BOOL DrawIcon(POINT point, HICON icon) const;
-        BOOL FrameRect(const RECT& rc, HBRUSH brush) const;
-        BOOL FrameRgn(HRGN rgn, HBRUSH brush, int width, int height) const;
-        int  GetPolyFillMode() const;
-        BOOL PaintRgn(HRGN rgn) const;
-        int  SetPolyFillMode(int polyFillMode) const;
-
         // Bitmap Functions
         BOOL BitBlt(int x, int y, int width, int height, HDC hSrc, int xSrc, int ySrc, DWORD rop) const;
         void DrawBitmap(int x, int y, int cx, int cy, HBITMAP image, COLORREF mask) const;
-        BITMAP  GetBitmapData() const;
-        HBITMAP GetCurrentBitmap() const;
-        BOOL MaskBlt(int xDest, int yDest, int width, int height, HDC hSrc,
-                           int xSrc, int ySrc, HBITMAP mask, int xMask, int yMask,
-                           DWORD rop) const;
-
-        BOOL PatBlt(int x, int y, int width, int height, DWORD rop) const;
-        int  StretchDIBits(int xDest, int yDest, int destWidth, int destHeight,
-                           int xSrc, int ySrc, int srcWidth, int srcHeight,
-                           LPCVOID pBits, const LPBITMAPINFO pBMI, UINT usage, DWORD rop) const;
-
-        BOOL StretchBlt(int x, int y, int width, int height, HDC src,
-                           int xSrc, int ySrc, int srcWidth, int srcHeight,
-                           DWORD rop) const;
-
         BOOL ExtFloodFill(int x, int y, COLORREF color, UINT fillType) const;
         BOOL FloodFill(int x, int y, COLORREF color) const;
         int  GetDIBits(HBITMAP bitmap, UINT startScan, UINT scanLines, LPVOID pBits,
                         LPBITMAPINFO pBMI, UINT usage) const;
-
+        BITMAP  GetBitmapData() const;
+        HBITMAP GetCurrentBitmap() const;
         int  GetStretchBltMode() const;
+        BOOL MaskBlt(int xDest, int yDest, int width, int height, HDC hSrc,
+                           int xSrc, int ySrc, HBITMAP mask, int xMask, int yMask,
+                           DWORD rop) const;
+        BOOL PatBlt(int x, int y, int width, int height, DWORD rop) const;
         int  SetDIBits(HBITMAP bitmap, UINT startScan, UINT scanLines, LPCVOID pBits,
                         LPBITMAPINFO pBMI, UINT colorUse) const;
-
+        int  StretchDIBits(int xDest, int yDest, int destWidth, int destHeight,
+                           int xSrc, int ySrc, int srcWidth, int srcHeight,
+                           LPCVOID pBits, const LPBITMAPINFO pBMI, UINT usage, DWORD rop) const;
+        BOOL StretchBlt(int x, int y, int width, int height, HDC src,
+                           int xSrc, int ySrc, int srcWidth, int srcHeight,
+                           DWORD rop) const;
         int  SetStretchBltMode(int stretchMode) const;
 #if (WINVER >= 0x0410)
         BOOL TransparentBlt(int x, int y, int width, int height, HDC hSrc,
@@ -628,10 +601,9 @@ namespace Win32xx
 #endif
 
         // Brush Functions
+        CPoint   GetBrushOrgEx() const;
         HBRUSH GetCurrentBrush() const;
         LOGBRUSH GetLogBrush() const;
-
-        CPoint   GetBrushOrgEx() const;
         CPoint   SetBrushOrgEx(int x, int y);
 
 #if (_WIN32_WINNT >= 0x0500)
@@ -641,50 +613,46 @@ namespace Win32xx
 
         // Font Functions
         HFONT GetCurrentFont() const;
-        LOGFONT GetLogFont() const;
-
         DWORD GetFontData(DWORD table, DWORD offset, LPVOID buffer,  DWORD data) const;
         DWORD GetFontLanguageInfo() const;
         DWORD GetGlyphOutline(UINT query, UINT format, LPGLYPHMETRICS pGM, DWORD bufferSize,
                               LPVOID buffer, const MAT2* pMAT2) const;
 
         DWORD GetKerningPairs(DWORD numPairs, LPKERNINGPAIR pKrnPair) const;
+        LOGFONT GetLogFont() const;
         DWORD SetMapperFlags(DWORD flag) const;
 
         // Palette and color functions
         HPALETTE GetCurrentPalette() const;
         COLORREF GetNearestColor(COLORREF color) const;
-        UINT RealizePalette() const;
-
         BOOL GetColorAdjustment(LPCOLORADJUSTMENT pCA) const;
         BOOL SetColorAdjustment(const COLORADJUSTMENT* pCA) const;
+        UINT RealizePalette() const;
         BOOL UpdateColors() const;
 
         // Pen Functions
         HPEN GetCurrentPen() const;
         LOGPEN GetLogPen() const;
-
         BOOL GetMiterLimit(PFLOAT limit) const;
         BOOL SetMiterLimit(FLOAT newLimit, PFLOAT oldLimit) const;
 
         // Clipping and Region Functions
-        int  ExcludeClipRect(int left, int top, int right, int bottom) const;
-        int  ExcludeClipRect(const RECT& rc) const;
-        int  GetClipBox(RECT& rc) const;
-        int  IntersectClipRect(int left, int top, int right, int bottom) const;
-        int  IntersectClipRect(const RECT& rc) const;
-        BOOL RectVisible(const RECT& rc) const;
-        int  SelectClipRgn(HRGN rgn) const;
-
         BOOL AbortPath() const;
         BOOL BeginPath() const;
         BOOL EndPath() const;
+        int  ExcludeClipRect(int left, int top, int right, int bottom) const;
+        int  ExcludeClipRect(const RECT& rc) const;
         int  ExtSelectClipRgn(HRGN rgn, int mode) const;
         BOOL FlattenPath() const;
+        int  GetClipBox(RECT& rc) const;
         int  GetPath(POINT* pointArray, BYTE* types, int count) const;
+        int  IntersectClipRect(int left, int top, int right, int bottom) const;
+        int  IntersectClipRect(const RECT& rc) const;
         int  OffsetClipRgn(int xOffset, int yOffset) const;
         BOOL PtVisible(int x, int y) const;
+        BOOL RectVisible(const RECT& rc) const;
         BOOL SelectClipPath(int mode) const;
+        int  SelectClipRgn(HRGN rgn) const;
         BOOL StrokeAndFillPath() const;
         BOOL StrokePath() const;
         BOOL WidenPath() const;
@@ -703,35 +671,38 @@ namespace Win32xx
 
         // Mapping functions
         int  GetMapMode() const;
-        int  SetMapMode(int mapMode) const;
+
         BOOL GetViewportOrgEx(LPPOINT pPoint)  const;
-        BOOL SetViewportOrgEx(int x, int y, LPPOINT pPoint = NULL) const;
-        BOOL SetViewportOrgEx(POINT point, LPPOINT pPointRet = NULL) const;
-        BOOL OffsetViewportOrgEx(int width, int height, LPPOINT pPoint = NULL) const;
+
+
         BOOL GetViewportExtEx(LPSIZE pSize)  const;
+        BOOL GetWindowExtEx(LPSIZE pSize)  const;
+        BOOL GetWindowOrgEx(LPPOINT pPoint)  const;
+        BOOL OffsetViewportOrgEx(int width, int height, LPPOINT pPoint = NULL) const;
+        BOOL OffsetWindowOrgEx(int width, int height, LPPOINT pPoint = NULL) const;
+        BOOL ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE pSize = NULL) const;
+        BOOL ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE pSize = NULL) const;
+        int  SetMapMode(int mapMode) const;
         BOOL SetViewportExtEx(int x, int y, LPSIZE pSize = NULL) const;
         BOOL SetViewportExtEx(SIZE size, LPSIZE pSizeRet = NULL) const;
-        BOOL ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE pSize = NULL) const;
-        BOOL GetWindowExtEx(LPSIZE pSize)  const;
+        BOOL SetViewportOrgEx(int x, int y, LPPOINT pPoint = NULL) const;
+        BOOL SetViewportOrgEx(POINT point, LPPOINT pPointRet = NULL) const;
         BOOL SetWindowExtEx(int x, int y, LPSIZE pSize = NULL) const;
         BOOL SetWindowExtEx(SIZE size, LPSIZE pSizeRet = NULL) const;
-        BOOL ScaleWindowExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE pSize = NULL) const;
-        BOOL GetWindowOrgEx(LPPOINT pPoint)  const;
-        BOOL SetWindowOrgEx(int x, int y, LPPOINT pPoint = NULL) const;
         BOOL SetWindowOrgEx(POINT point, LPPOINT pPointRet = NULL) const;
-        BOOL OffsetWindowOrgEx(int width, int height, LPPOINT pPoint = NULL) const;
+        BOOL SetWindowOrgEx(int x, int y, LPPOINT pPoint = NULL) const;
 
         // MetaFile Functions
         BOOL PlayMetaFile(HMETAFILE metaFile) const;
         BOOL PlayMetaFile(HENHMETAFILE enhMetaFile, const RECT& bounds) const;
 
         // Printer Functions
-        int StartDoc(LPDOCINFO pDocInfo) const;
-        int EndDoc() const;
-        int StartPage() const;
-        int EndPage() const;
         int AbortDoc() const;
+        int EndDoc() const;
+        int EndPage() const;
         int SetAbortProc(BOOL (CALLBACK* pfn)(HDC, int)) const;
+        int StartDoc(LPDOCINFO pDocInfo) const;
+        int StartPage() const;
 
         // Text Functions
         int   DrawText(LPCTSTR string, int count, const RECT& rc, UINT format) const;
@@ -739,19 +710,17 @@ namespace Win32xx
         COLORREF GetBkColor() const;
         int   GetBkMode() const;
         UINT  GetTextAlign() const;
-        int   GetTextFace(int count, LPTSTR facename) const;
         COLORREF GetTextColor() const;
+        int   GetTextFace(int count, LPTSTR facename) const;
         BOOL  GetTextMetrics(TEXTMETRIC& metrics) const;
         COLORREF SetBkColor(COLORREF color) const;
         int   SetBkMode(int bkMode) const;
         UINT  SetTextAlign(UINT flags) const;
         COLORREF SetTextColor(COLORREF color) const;
-
         int   DrawTextEx(LPTSTR string, int count, const RECT& rc, UINT format, LPDRAWTEXTPARAMS pDTParams) const;
+        BOOL  GetCharABCWidths(UINT firstChar, UINT lastChar, LPABC pABC) const;
         DWORD GetCharacterPlacement(LPCTSTR string, int count, int maxExtent,
                                     LPGCP_RESULTS results, DWORD flags) const;
-
-        BOOL  GetCharABCWidths(UINT firstChar, UINT lastChar, LPABC pABC) const;
         BOOL  GetCharWidth(UINT firstChar, UINT lastChar, float* buffer) const;
         CSize GetTabbedTextExtent(LPCTSTR string, int count, int tabPositions, LPINT pTabStopPositions) const;
         int   GetTextCharacterExtra() const;

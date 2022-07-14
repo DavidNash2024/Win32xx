@@ -93,21 +93,21 @@
 namespace Win32xx
 {
     // Docking Styles
-    const int DS_DOCKED_LEFT         = 0x0001;  // Dock the child left
-    const int DS_DOCKED_RIGHT        = 0x0002;  // Dock the child right
-    const int DS_DOCKED_TOP          = 0x0004;  // Dock the child top
-    const int DS_DOCKED_BOTTOM       = 0x0008;  // Dock the child bottom
-    const int DS_NO_DOCKCHILD_LEFT   = 0x0010;  // Prevent a child docking left
-    const int DS_NO_DOCKCHILD_RIGHT  = 0x0020;  // Prevent a child docking right
-    const int DS_NO_DOCKCHILD_TOP    = 0x0040;  // Prevent a child docking at the top
-    const int DS_NO_DOCKCHILD_BOTTOM = 0x0080;  // Prevent a child docking at the bottom
-    const int DS_NO_RESIZE           = 0x0100;  // Prevent resizing
-    const int DS_NO_CAPTION          = 0x0200;  // Prevent display of caption when docked
-    const int DS_NO_CLOSE            = 0x0400;  // Prevent closing of a docker while docked
-    const int DS_NO_UNDOCK           = 0x0800;  // Prevent manual undocking of a docker
-    const int DS_CLIENTEDGE          = 0x1000;  // Has a 3D border when docked
-    const int DS_NO_FIXED_RESIZE     = 0x2000;  // Perform a proportional resize instead of a fixed size resize on dock children
-    const int DS_DOCKED_CONTAINER    = 0x4000;  // Dock a container within a container
+    const int DS_DOCKED_LEFT         = 0x00001; // Dock the child left
+    const int DS_DOCKED_RIGHT        = 0x00002; // Dock the child right
+    const int DS_DOCKED_TOP          = 0x00004; // Dock the child top
+    const int DS_DOCKED_BOTTOM       = 0x00008; // Dock the child bottom
+    const int DS_NO_DOCKCHILD_LEFT   = 0x00010; // Prevent a child docking left
+    const int DS_NO_DOCKCHILD_RIGHT  = 0x00020; // Prevent a child docking right
+    const int DS_NO_DOCKCHILD_TOP    = 0x00040; // Prevent a child docking at the top
+    const int DS_NO_DOCKCHILD_BOTTOM = 0x00080; // Prevent a child docking at the bottom
+    const int DS_NO_RESIZE           = 0x00100; // Prevent resizing
+    const int DS_NO_CAPTION          = 0x00200; // Prevent display of caption when docked
+    const int DS_NO_CLOSE            = 0x00400; // Prevent closing of a docker while docked
+    const int DS_NO_UNDOCK           = 0x00800; // Prevent manual undocking of a docker
+    const int DS_CLIENTEDGE          = 0x01000; // Has a 3D border when docked
+    const int DS_NO_FIXED_RESIZE     = 0x02000; // Perform a proportional resize instead of a fixed size resize on dock children
+    const int DS_DOCKED_CONTAINER    = 0x04000; // Dock a container within a container
     const int DS_DOCKED_LEFTMOST     = 0x10000; // Leftmost outer docking
     const int DS_DOCKED_RIGHTMOST    = 0x20000; // Rightmost outer docking
     const int DS_DOCKED_TOPMOST      = 0x40000; // Topmost outer docking
@@ -2100,6 +2100,9 @@ namespace Win32xx
         assert(pDocker);
         if (!pDocker) return NULL;
 
+        // Undocked isn't supported on Win95.
+        if (GetWinVersion() == 1400)  return NULL;
+
         // Store the Docker's pointer in the DockAncestor's vector for later deletion.
         GetAllChildren().push_back(DockPtr(pDocker));
         GetDockAncestor()->m_allDockers.push_back(pDocker);
@@ -3934,14 +3937,16 @@ namespace Win32xx
                     DWORD exStyle = GetDockClient().GetExStyle();
                     exStyle &= ~WS_EX_CLIENTEDGE;
                     GetDockClient().SetExStyle(exStyle);
-                    GetDockClient().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
+                    GetDockClient().RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_FRAME);
                 }
             }
-
-            RecalcDockLayout();
         }
 
         m_dockStyle = dockStyle;
+        if (IsWindow())
+        {
+            RecalcDockLayout();
+        }
     }
 
     // Sets the caption text.

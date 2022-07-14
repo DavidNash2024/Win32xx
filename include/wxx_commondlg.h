@@ -1078,7 +1078,7 @@ namespace Win32xx
     // Create and display either a Find or FindReplace dialog box. findWhat
     // is the search string, and replaceWith is the replace string.
     // Set flags to a combination of one or more flags the dialog box.
-    // Set parent to the handle of the dialog box’s parent or owner window.
+    // Set parent to the handle of the dialog box's parent or owner window.
     // An exception is thrown if the window isn't created.
     inline BOOL CFindReplaceDialog::Create(BOOL isFindDialogOnly, LPCTSTR findWhat,
             LPCTSTR replaceWith, DWORD flags, HWND parent /* = 0*/)

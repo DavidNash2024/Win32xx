@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -666,7 +666,7 @@ namespace Win32xx
 
     // Retrieves the character index of a given line.
     // index -   Specifies the zero-based line number.
-    //           A value of –1 specifies the current line number.
+    //           A value of -1 specifies the current line number.
     // Refer to EM_LINEINDEX in the Windows API documentation for more information.
     inline int CRichEdit::LineIndex(int lineIndex /* = -1 */) const
     {
@@ -676,7 +676,7 @@ namespace Win32xx
 
     // Retrieves the length of a given line containing the specified character.
     // charIndex - Specifies the character index of a character in the line whose length is to be retrieved.
-    //             This parameter can be –1. In this case, the message returns the number of unselected
+    //             This parameter can be -1. In this case, the message returns the number of unselected
     //             characters on lines containing selected characters.
     // Refer to EM_LINELENGTH in the Windows API documentation for more information.
     inline int CRichEdit::LineLength(int charIndex /* = -1 */) const
