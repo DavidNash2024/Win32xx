@@ -51,6 +51,7 @@ BEGIN
         MENUITEM "Prevent &Resizing",           IDM_NO_RESIZE, CHECKED
         MENUITEM "Prevent Dock &Left or Right", IDM_NO_DOCK_LR, CHECKED
         MENUITEM "Prevent Dock Close",          IDM_NO_DOCK_CLOSE, CHECKED
+        MENUITEM "Disable Dock Caption",        IDM_NO_DOCK_CAPTION, CHECKED
         MENUITEM SEPARATOR
         MENUITEM "&Default Layout",             IDM_DOCK_DEFAULT
         MENUITEM "&Close All",                  IDM_DOCK_CLOSEALL

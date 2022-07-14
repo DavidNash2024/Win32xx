@@ -53,6 +53,7 @@ private:
     BOOL OnNoResize();
     BOOL OnNoDockLR();
     BOOL OnNoDockClose();
+    BOOL OnNoDockCaption();
 
     void LoadDefaultDockers();
     void SetDockStyles();
@@ -65,6 +66,7 @@ private:
     bool m_disableResize;
     bool m_disableDockLR;
     bool m_disableDockClose;
+    bool m_disableDockCaption;
 };
 
 #endif //MAINFRM_H

@@ -2,7 +2,6 @@
 // DXView.cpp
 //
 
-// Includes backbuffer resizing suggested by Guillaume Werlé
 
 // NOTE: for MS compilers you will need the DirectX SDK v9
 //       for Dev-C++ you will need the DirecX v9.0c DevPak

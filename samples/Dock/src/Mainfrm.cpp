@@ -20,6 +20,7 @@ CMainFrame::CMainFrame()
     m_disableResize = false;
     m_disableDockLR = false;
     m_disableDockClose = false;
+    m_disableDockCaption = false;
 }
 
 // Destructor.
@@ -119,6 +120,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_NO_UNDOCK:         return OnNoUndocking();
     case IDM_NO_RESIZE:         return OnNoResize();
     case IDM_NO_DOCK_LR:        return OnNoDockLR();
+    case IDM_NO_DOCK_CAPTION:   return OnNoDockCaption();
     case IDM_NO_DOCK_CLOSE:     return OnNoDockClose();
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
@@ -211,9 +213,20 @@ void CMainFrame::OnMenuUpdate(UINT id)
     case IDM_NO_DOCK_CLOSE:
         GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableDockClose ? MF_CHECKED : MF_UNCHECKED));
         break;
+    case IDM_NO_DOCK_CAPTION:
+        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableDockCaption ? MF_CHECKED : MF_UNCHECKED));
+        break;
     }
 
     CDockFrame::OnMenuUpdate(id);
+}
+
+BOOL CMainFrame::OnNoDockCaption()
+{
+    m_disableDockCaption = !m_disableDockCaption;
+    SetDockStyles();
+    RedrawWindow();
+    return TRUE;
 }
 
 // Toggles the ability to close of dockers.
@@ -281,12 +294,12 @@ void CMainFrame::SetDockStyles()
 {
     std::vector<CDocker*>::const_iterator iter;
 
-    for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
+    for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
     {
         DWORD style = (*iter)->GetDockStyle();
 
         // Filter unwanted styles
-        style &= 0xF400F;
+        style &= 0xF000F;
 
         // Add styles selected from the menu
         if (m_useProportionalResize)    style |= DS_NO_FIXED_RESIZE;
@@ -295,6 +308,7 @@ void CMainFrame::SetDockStyles()
         if (m_disableResize)            style |= DS_NO_RESIZE;
         if (m_disableDockLR)            style |= DS_NO_DOCKCHILD_LEFT | DS_NO_DOCKCHILD_RIGHT;
         if (m_disableDockClose)         style |= DS_NO_CLOSE;
+        if (m_disableDockCaption)       style |= DS_NO_CAPTION;
 
         (*iter)->SetDockStyle(style);
     }
