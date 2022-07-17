@@ -4,6 +4,7 @@ Version 9.0.1
 Changes in Detail
 -----------------
 Added    CComboBox::GetComboBoxInfo
+Added    CString::Remove                  additional overload
 Added    CToolbar::SetButtonInfo          additional overload
 Modified CDialog::EndDialog               now only closes a modal dialog
 Modified CToolBar::GetButton              returns CSize

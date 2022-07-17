@@ -133,7 +133,7 @@ namespace Win32xx
         virtual ~CStringT();
         CStringT(const CStringT& str);
         CStringT(const T * text);
-        CStringT(T ch, int length = 1);
+        CStringT(T ch, int repeat = 1);
         CStringT(const T * text, int length);
 
         CStringT& operator = (const CStringT& str);
@@ -192,6 +192,7 @@ namespace Win32xx
         CStringT Mid(int first, int count) const;
         void     ReleaseBuffer( int newLength = -1 );
         int      Remove(const T* text);
+        int      Remove(T ch);
         int      Replace(T oldChar, T newChar);
         int      Replace(const T* oldText, const T* newText);
         int      ReverseFind(T ch, int end = -1) const;
@@ -248,17 +249,17 @@ namespace Win32xx
         CString(LPCSTR text, int length)       : CStringT<TCHAR>(AtoT(text, CP_ACP, length), length) {}
         CString(LPCWSTR text, int length)      : CStringT<TCHAR>(WtoT(text, CP_ACP, length), length) {}
 
-        CString(char ch, int length = 1)
+        CString(char ch, int repeat = 1)
         {
-            for (int i = 0; i < length; ++i)
+            for (int i = 0; i < repeat; ++i)
             {
                 operator +=(ch);
             }
         }
 
-        CString(WCHAR ch, int length = 1)
+        CString(WCHAR ch, int repeat = 1)
         {
-            for (int i = 0; i < length; ++i)
+            for (int i = 0; i < repeat; ++i)
             {
                 operator +=(ch);
             }
@@ -435,11 +436,11 @@ namespace Win32xx
 
     // Constructor. Assigns from 1 or more T characters.
     template <class T>
-    inline CStringT<T>::CStringT(T ch, int length)
+    inline CStringT<T>::CStringT(T ch, int repeat)
     {
         T str[2] = {0};
         str[0] = ch;
-        m_str.assign(length, str[0]);
+        m_str.assign(repeat, str[0]);
     }
 
     // Constructor. Assigns from a const T* possibly containing null characters.
@@ -1133,6 +1134,22 @@ namespace Win32xx
                 m_str.erase(pos, len);
                 ++count;
             }
+        }
+
+        return count;
+    }
+
+    // Removes each occurrence of the specified character from the string.
+    template <class T>
+    inline int CStringT<T>::Remove(T ch)
+    {
+        int count = 0;
+        size_t pos = 0;
+
+        while ((pos = m_str.find(ch, pos)) != std::string::npos)
+        {
+            m_str.erase(pos, 1);
+            ++count;
         }
 
         return count;
