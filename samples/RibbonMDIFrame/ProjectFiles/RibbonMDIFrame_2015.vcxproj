@@ -83,7 +83,6 @@
     <ClInclude Include="..\..\..\include\wxx_time.h" />
     <ClInclude Include="..\..\..\include\wxx_toolbar.h" />
     <ClInclude Include="..\..\..\include\wxx_treeview.h" />
-    <ClInclude Include="..\..\..\include\wxx_wceframe.h" />
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />

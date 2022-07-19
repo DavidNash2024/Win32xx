@@ -147,7 +147,6 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
-					<Add library="ole32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -222,13 +221,11 @@
 		<Unit filename="../../../include/wxx_time.h" />
 		<Unit filename="../../../include/wxx_toolbar.h" />
 		<Unit filename="../../../include/wxx_treeview.h" />
-		<Unit filename="../../../include/wxx_wceframe.h" />
-		<Unit filename="../../../include/wxx_wcestddef.h" />
 		<Unit filename="../../../include/wxx_webbrowser.h" />
 		<Unit filename="../../../include/wxx_wincore.h" />
 		<Unit filename="../../../include/wxx_wincore0.h" />
-		<Unit filename="../src/Doc.cpp" />
-		<Unit filename="../src/Doc.h" />
+		<Unit filename="../src/Edit.cpp" />
+		<Unit filename="../src/Edit.h" />
 		<Unit filename="../src/FrameApp.cpp" />
 		<Unit filename="../src/FrameApp.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
@@ -236,6 +233,7 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="../src/UserMessages.h" />
 		<Unit filename="../src/View.cpp" />
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/main.cpp" />

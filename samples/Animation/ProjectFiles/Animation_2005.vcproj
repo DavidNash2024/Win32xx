@@ -451,10 +451,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\wxx_wceframe.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\wxx_webbrowser.h"
 				>
 			</File>

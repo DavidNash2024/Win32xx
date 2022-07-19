@@ -191,12 +191,6 @@
     <ClInclude Include="..\..\..\include\wxx_scrollview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wceframe.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wcestddef.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_preview.h">
       <Filter>Win32++</Filter>
     </ClInclude>

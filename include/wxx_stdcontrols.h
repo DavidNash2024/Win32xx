@@ -116,6 +116,7 @@ namespace Win32xx
         void   GetRect(RECT& rc) const;
         void   GetSel(int& startChar, int& endChar) const;
         DWORD  GetSel() const;
+        long   GetTextLength() const;
         CPoint PosFromChar(UINT index) const;
         void   SetHandle(HLOCAL buffer) const;
         void   SetLimitText(UINT max) const;
@@ -135,8 +136,8 @@ namespace Win32xx
         BOOL   SetReadOnly(BOOL isReadOnly = TRUE) const;
         void   SetRect(const RECT& rc) const;
         void   SetRectNP(const RECT& rc) const;
-        void   SetSel(DWORD selection, BOOL isScrolled) const;
-        void   SetSel(int startChar, int endChar, BOOL isScrolled) const;
+        void   SetSel(DWORD selection, BOOL isScrolled = TRUE) const;
+        void   SetSel(int startChar, int endChar, BOOL isScrolled = TRUE) const;
         BOOL   SetTabStops(int tabStops, LPINT pTabStopsArray) const;
         BOOL   SetTabStops() const;
         BOOL   SetTabStops(const int& cxEachStop) const;
@@ -511,7 +512,7 @@ namespace Win32xx
         SendMessage(EM_GETRECT, 0, (LPARAM)&rc);
     }
 
-    // Returns the starting and ending character positions of the current selection in the edit control.
+    // Retrieves the starting and ending character positions of the current selection in the edit control.
     // Refer to EM_GETSEL in the Windows API documentation for more information.
     inline void CEdit::GetSel(int& startChar, int& endChar) const
     {
@@ -519,12 +520,20 @@ namespace Win32xx
         SendMessage(EM_GETSEL, (WPARAM)&startChar, (LPARAM)&endChar);
     }
 
-    // Returns the starting and ending character positions of the current selection in the edit control.
+    // Retrieves the starting and ending character positions of the current selection in the edit control.
     // Refer to EM_GETSEL in the Windows API documentation for more information.
     inline DWORD CEdit::GetSel() const
     {
         assert(IsWindow());
         return static_cast<DWORD>(SendMessage(EM_GETSEL, 0, 0));
+    }
+
+    // Retrieves the length of the text, in characters. Does not include the terminating null character.
+    // Refer to WM_GETTEXTLENGTH in the Windows API documentation for more information.
+    inline long CEdit::GetTextLength() const
+    {
+        assert(IsWindow());
+        return static_cast<long>(SendMessage(WM_GETTEXTLENGTH, 0, 0));
     }
 
     // Returns the client coordinates of the specified character.
@@ -670,7 +679,8 @@ namespace Win32xx
         SendMessage(EM_SETRECTNP, 0, (LPARAM)&rc);
     }
 
-    // Selects a range of characters in the edit control by setting the starting and ending positions to be selected.
+    // Selects a range of characters in the edit control by setting the starting 
+    // and ending positions to be selected.
     // Refer to EM_SETSEL in the Windows API documentation for more information.
     inline void CEdit::SetSel(DWORD selection, BOOL isScrolled) const
     {
@@ -680,7 +690,8 @@ namespace Win32xx
             SendMessage(EM_SCROLLCARET, 0, 0);
     }
 
-    // Selects a range of characters in the edit control by setting the starting and ending positions to be selected.
+    // Selects a range of characters in the edit control by setting the starting 
+    // and ending positions to be selected.
     // Refer to EM_SETSEL in the Windows API documentation for more information.
     inline void CEdit::SetSel(int startChar, int endChar, BOOL isScrolled) const
     {

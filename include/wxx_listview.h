@@ -700,7 +700,7 @@ namespace Win32xx
     }
 
     // Changes the state of an item in the list-view control.
-    // Possible values of mask:
+    // Possible values of the mask:
     // LVIS_CUT             The item is marked for a cut-and-paste operation.
     // LVIS_DROPHILITED     The item is highlighted as a drag-and-drop target.
     // LVIS_FOCUSED         The item has the focus, so it is surrounded by a standard focus rectangle.
@@ -715,6 +715,13 @@ namespace Win32xx
     }
 
     // Changes the state of an item in the list-view control.
+    // Possible values of the state and mask:
+    // LVIS_CUT             The item is marked for a cut-and-paste operation.
+    // LVIS_DROPHILITED     The item is highlighted as a drag-and-drop target.
+    // LVIS_FOCUSED         The item has the focus, so it is surrounded by a standard focus rectangle.
+    // LVIS_SELECTED        The item is selected.
+    // LVIS_OVERLAYMASK     Use this mask to retrieve the item's overlay image index.
+    // LVIS_STATEIMAGEMASK  Use this mask to retrieve the item's state image index.
     // Refer to ListView_SetItemState in the Windows API documentation for more information.
     inline void CListView::SetItemState( int item, UINT state, UINT mask ) const
     {

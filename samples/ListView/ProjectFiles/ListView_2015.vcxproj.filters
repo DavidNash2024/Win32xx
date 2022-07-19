@@ -16,7 +16,7 @@
     <ClCompile Include="..\src\View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Doc.cpp">
+    <ClCompile Include="..\src\Edit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -135,9 +135,6 @@
     <ClInclude Include="..\..\..\include\wxx_wincore.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Doc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_appcore.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -206,6 +203,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_thread.h">
       <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Edit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\UserMessages.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
