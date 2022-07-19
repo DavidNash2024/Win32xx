@@ -82,32 +82,6 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
-// Process notification messages (WM_NOTIFY) sent by child windows
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-//  LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
-//  switch (pHeader->code)
-//  {
-//      Add case statements for each notification message here
-//  }
-
-    // Some notifications should return a value when handled
-    return CFrame::OnNotify(wparam, lparam);
-}
-
-// This function is called before the frame is created.
-// It provides an opportunity to modify the various CREATESTRUCT
-// parameters used before the frame window is created.
-void CMainFrame::PreCreate(CREATESTRUCT& cs)
-{
-    // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
-    // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
-    // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
-
-    // Call base clase to set defaults
-    CFrame::PreCreate(cs);
-}
-
 // Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
 {

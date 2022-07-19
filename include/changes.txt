@@ -1,9 +1,17 @@
 Version 9.0.1
 =============
 
+New Features and Enhancements
+-----------------------------
+* Updated the ListView sample.
+  - An edit control has been added to provide support the in-place editing of
+    the List-View's and subitems. A List-View control doesn't have built-in
+    support for the editing of subitems.
+
 Changes in Detail
 -----------------
 Added    CComboBox::GetComboBoxInfo
+Added    CEdit::GetTextLength
 Added    CString::Remove                  additional overload
 Added    CToolbar::SetButtonInfo          additional overload
 Modified CDialog::EndDialog               now only closes a modal dialog

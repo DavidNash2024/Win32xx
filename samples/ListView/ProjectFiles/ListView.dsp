@@ -91,7 +91,7 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\src\Doc.cpp
+SOURCE=..\src\Edit.cpp
 # End Source File
 # Begin Source File
 
@@ -119,7 +119,7 @@ SOURCE=..\src\View.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=..\src\Doc.h
+SOURCE=..\src\Edit.h
 # End Source File
 # Begin Source File
 
@@ -136,6 +136,10 @@ SOURCE=..\src\resource.h
 # Begin Source File
 
 SOURCE=..\src\stdafx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\UserMessages.h
 # End Source File
 # Begin Source File
 

@@ -175,8 +175,6 @@
 		<Unit filename="../../../include/wxx_time.h" />
 		<Unit filename="../../../include/wxx_toolbar.h" />
 		<Unit filename="../../../include/wxx_treeview.h" />
-		<Unit filename="../../../include/wxx_wceframe.h" />
-		<Unit filename="../../../include/wxx_wcestddef.h" />
 		<Unit filename="../../../include/wxx_webbrowser.h" />
 		<Unit filename="../../../include/wxx_wincore.h" />
 		<Unit filename="../../../include/wxx_wincore0.h" />
