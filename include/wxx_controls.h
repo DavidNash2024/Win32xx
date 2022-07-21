@@ -1143,22 +1143,6 @@ namespace Win32xx
         return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, region));
     }
 
-    // Sets the color for a given portion of the month calendar within the date and time picker (DTP) control.
-    // Refer to DateTime_SetMonthCalColor in the Windows API documentation for more information.
-    inline COLORREF CDateTime::SetMonthCalColor(int region, COLORREF color) const
-    {
-        assert(IsWindow());
-        return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, region, color));
-    }
-
-    // Sets the display of the date and time picker (DTP) control based on a given format string.
-    // Refer to DateTime_SetFormat in the Windows API documentation for more information.
-    inline BOOL CDateTime::SetFormat(LPCTSTR format) const
-    {
-        assert(IsWindow());
-        return DateTime_SetFormat(*this, format);
-    }
-
     // Retrieves the handle to the date and time picker's (DTP) child month calendar control.
     // Refer to DateTime_GetMonthCal in the Windows API documentation for more information.
     inline HWND CDateTime::GetMonthCalCtrl() const
@@ -1176,14 +1160,6 @@ namespace Win32xx
         return CFont(font);
     }
 
-    // Sets the font to be used by the date and time picker (DTP) control's child month calendar control.
-    // Refer to DateTime_SetMonthCalFont in the Windows API documentation for more information.
-    inline void CDateTime::SetMonthCalFont(HFONT font, BOOL redraw /*= TRUE*/) const
-    {
-        assert(IsWindow());
-        DateTime_SetMonthCalFont(*this, font, MAKELONG(redraw, 0));
-    }
-
     // Retrieves the current minimum and maximum allowable system times for the date and time picker (DTP) control.
     // Refer to DateTime_GetRange in the Windows API documentation for more information.
     inline DWORD CDateTime::GetRange(SYSTEMTIME& minRange, SYSTEMTIME& maxRange) const
@@ -1196,19 +1172,6 @@ namespace Win32xx
         minRange = ranges[0];
         maxRange = ranges[1];
         return result;
-    }
-
-    // Sets the minimum and maximum allowable system times for the date and time picker (DTP) control.
-    // Refer to DateTime_SetRange in the Windows API documentation for more information.
-    inline BOOL CDateTime::SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const
-    {
-        assert(IsWindow());
-        SYSTEMTIME ranges[2];
-        ranges[0] = minRange;
-        ranges[1] = maxRange;
-        DWORD flags = GDTR_MIN | GDTR_MAX;
-
-        return DateTime_SetRange(*this, flags, ranges);
     }
 
     // Returns the currently selected time from a date and time picker (DTP) control
@@ -1226,6 +1189,43 @@ namespace Win32xx
             *pReturnCode = Res;
 
         return time;
+    }
+
+    // Sets the display of the date and time picker (DTP) control based on a given format string.
+    // Refer to DateTime_SetFormat in the Windows API documentation for more information.
+    inline BOOL CDateTime::SetFormat(LPCTSTR format) const
+    {
+        assert(IsWindow());
+        return DateTime_SetFormat(*this, format);
+    }
+
+    // Sets the color for a given portion of the month calendar within the date and time picker (DTP) control.
+    // Refer to DateTime_SetMonthCalColor in the Windows API documentation for more information.
+    inline COLORREF CDateTime::SetMonthCalColor(int region, COLORREF color) const
+    {
+        assert(IsWindow());
+        return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, region, color));
+    }
+
+    // Sets the font to be used by the date and time picker (DTP) control's child month calendar control.
+    // Refer to DateTime_SetMonthCalFont in the Windows API documentation for more information.
+    inline void CDateTime::SetMonthCalFont(HFONT font, BOOL redraw /*= TRUE*/) const
+    {
+        assert(IsWindow());
+        DateTime_SetMonthCalFont(*this, font, MAKELONG(redraw, 0));
+    }
+
+    // Sets the minimum and maximum allowable system times for the date and time picker (DTP) control.
+    // Refer to DateTime_SetRange in the Windows API documentation for more information.
+    inline BOOL CDateTime::SetRange(const SYSTEMTIME& minRange, const SYSTEMTIME& maxRange) const
+    {
+        assert(IsWindow());
+        SYSTEMTIME ranges[2];
+        ranges[0] = minRange;
+        ranges[1] = maxRange;
+        DWORD flags = GDTR_MIN | GDTR_MAX;
+
+        return DateTime_SetRange(*this, flags, ranges);
     }
 
     // Sets the date and time picker (DTP) control to a given date and time.
@@ -2484,20 +2484,6 @@ namespace Win32xx
         return info;
     }
 
-    // Tests a point to determine whether it is within the bounding rectangle of the
-    //  specified tool and, if it is, retrieves information about the tool.
-    // Refer to TTM_HITTEST in the Windows API documentation for more information.
-    inline BOOL CToolTip::HitTest(HWND wnd, CPoint pt, const TOOLINFO& toolInfo) const
-    {
-        assert(IsWindow());
-        TTHITTESTINFO hti;
-        ZeroMemory(&hti, sizeof(hti));
-        hti.hwnd = wnd;
-        hti.pt = pt;
-        hti.ti = toolInfo;
-        return (SendMessage(TTM_HITTEST, 0, (LPARAM)&hti) != 0);
-    }
-
     // Fills the TOOLINFO structure. Used by AddTool.
     // Notes:
     // 1) Notifications are passed to the parent window.
@@ -2532,6 +2518,20 @@ namespace Win32xx
         info.uFlags = TTF_SUBCLASS;
         info.rect = rc;
         info.uId = id;
+    }
+
+    // Tests a point to determine whether it is within the bounding rectangle of the
+    //  specified tool and, if it is, retrieves information about the tool.
+    // Refer to TTM_HITTEST in the Windows API documentation for more information.
+    inline BOOL CToolTip::HitTest(HWND wnd, CPoint pt, const TOOLINFO& toolInfo) const
+    {
+        assert(IsWindow());
+        TTHITTESTINFO hti;
+        ZeroMemory(&hti, sizeof(hti));
+        hti.hwnd = wnd;
+        hti.pt = pt;
+        hti.ti = toolInfo;
+        return (SendMessage(TTM_HITTEST, 0, (LPARAM)&hti) != 0);
     }
 
     // Removes a displayed ToolTip window from view.

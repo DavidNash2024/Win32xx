@@ -330,6 +330,12 @@ namespace Win32xx
         return static_cast<UINT>(SendMessage(BM_GETSTATE, 0, 0));
     }
 
+    // Sets the window class.
+    inline void CButton::PreRegisterClass(WNDCLASS& wc)
+    {
+        wc.lpszClassName = _T("Button");
+    }
+
     // sets the bitmap associated with the button.
     // Refer to BM_SETIMAGE in the Windows API documentation for more information.
     inline HBITMAP CButton::SetBitmap(HBITMAP bitmap) const
@@ -389,12 +395,6 @@ namespace Win32xx
         SendMessage(BM_SETSTATE, (WPARAM)state, 0);
     }
 
-    // Sets the window class.
-    inline void CButton::PreRegisterClass(WNDCLASS& wc)
-    {
-        wc.lpszClassName =  _T("Button");
-    }
-
 
     ////////////////////////////////////////
     // Definitions for the CEdit class
@@ -422,6 +422,30 @@ namespace Win32xx
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(EM_CHARFROMPOS, 0, MAKELPARAM(pt.x, pt.y)));
+    }
+
+    // Clears the current selection, if any, in an edit control.
+    // Refer to WM_CLEAR in the Windows API documentation for more information.
+    inline void CEdit::Clear() const
+    {
+        assert(IsWindow());
+        SendMessage(WM_CLEAR, 0, 0);
+    }
+
+    // Copies text to the clipboard unless the style is ES_PASSWORD, in which case the message returns zero.
+    // Refer to WM_COPY in the Windows API documentation for more information.
+    inline void CEdit::Copy() const
+    {
+        assert(IsWindow());
+        SendMessage(WM_COPY, 0, 0);
+    }
+
+    // Cuts the selection to the clipboard, or deletes the character to the left of the cursor if there is no selection.
+    // Refer to WM_CUT in the Windows API documentation for more information.
+    inline void CEdit::Cut() const
+    {
+        assert(IsWindow());
+        SendMessage(WM_CUT, 0, 0);
     }
 
     // Returns the zero-based index of the first visible character in a single-line edit control
@@ -536,47 +560,6 @@ namespace Win32xx
         return static_cast<long>(SendMessage(WM_GETTEXTLENGTH, 0, 0));
     }
 
-    // Returns the client coordinates of the specified character.
-    // Refer to EM_POSFROMCHAR in the Windows API documentation for more information.
-    inline CPoint CEdit::PosFromChar(UINT index) const
-    {
-        assert(IsWindow());
-        return static_cast<CPoint>(SendMessage(EM_POSFROMCHAR, (WPARAM)index, 0) );
-    }
-
-    // Sets a handle to the memory used as a text buffer, empties the undo buffer,
-    // resets the scroll positions to zero, and redraws the window.
-    // Refer to EM_SETHANDLE in the Windows API documentation for more information.
-    inline void CEdit::SetHandle(HLOCAL hBuffer) const
-    {
-        assert(IsWindow());
-        SendMessage(EM_SETHANDLE, (WPARAM)hBuffer, 0);
-    }
-
-    // Sets the maximum number of characters the user may enter in the edit control.
-    // Refer to EM_SETLIMITTEXT in the Windows API documentation for more information.
-    inline void CEdit::SetLimitText(UINT max) const
-    {
-        assert(IsWindow());
-        SendMessage(EM_SETLIMITTEXT, (WPARAM)max, 0);
-    }
-
-    // Sets the widths of the left and right margins, and redraws the edit control to reflect the new margins.
-    // Refer to EM_SETMARGINS in the Windows API documentation for more information.
-    inline void CEdit::SetMargins(UINT left, UINT right) const
-    {
-        assert(IsWindow());
-        SendMessage(EM_SETMARGINS, (WPARAM)(EC_LEFTMARGIN|EC_RIGHTMARGIN), (LPARAM)MAKELONG(left, right));
-    }
-
-    // Sets or clears the modification flag to indicate whether the edit control has been modified.
-    // Refer to EM_SETMODIFY in the Windows API documentation for more information.
-    inline void CEdit::SetModify(BOOL isModified) const
-    {
-        assert(IsWindow());
-        SendMessage(EM_SETMODIFY, (WPARAM)isModified, 0);
-    }
-
     // Empties the undo buffer. The CanUndo function will now return FALSE.
     // Refer to EM_EMPTYUNDOBUFFER in the Windows API documentation for more information.
     inline void CEdit::EmptyUndoBuffer() const
@@ -638,6 +621,28 @@ namespace Win32xx
         SendMessage(EM_LINESCROLL, (WPARAM)chars, (LPARAM)lines);
     }
 
+    // Pastes text from the clipboard into the edit control window at the caret position.
+    // Refer to WM_PASTE in the Windows API documentation for more information.
+    inline void CEdit::Paste() const
+    {
+        assert(IsWindow());
+        SendMessage(WM_PASTE, 0, 0);
+    }
+
+    // Returns the client coordinates of the specified character.
+    // Refer to EM_POSFROMCHAR in the Windows API documentation for more information.
+    inline CPoint CEdit::PosFromChar(UINT index) const
+    {
+        assert(IsWindow());
+        return static_cast<CPoint>(SendMessage(EM_POSFROMCHAR, (WPARAM)index, 0));
+    }
+
+    // Set the window class
+    inline void CEdit::PreRegisterClass(WNDCLASS& wc)
+    {
+        wc.lpszClassName =  _T("Edit");
+    }
+
     // Replaces the current selection with the text in an application-supplied buffer, sends the parent window
     // EN_UPDATE and EN_CHANGE messages, and updates the undo buffer.
     // Refer to EM_REPLACESEL in the Windows API documentation for more information.
@@ -645,6 +650,39 @@ namespace Win32xx
     {
         assert(IsWindow());
         SendMessage(EM_REPLACESEL, (WPARAM)canUndo, (LPARAM)newText);
+    }
+
+    // Sets a handle to the memory used as a text buffer, empties the undo buffer,
+    // resets the scroll positions to zero, and redraws the window.
+    // Refer to EM_SETHANDLE in the Windows API documentation for more information.
+    inline void CEdit::SetHandle(HLOCAL hBuffer) const
+    {
+        assert(IsWindow());
+        SendMessage(EM_SETHANDLE, (WPARAM)hBuffer, 0);
+    }
+
+    // Sets the maximum number of characters the user may enter in the edit control.
+    // Refer to EM_SETLIMITTEXT in the Windows API documentation for more information.
+    inline void CEdit::SetLimitText(UINT max) const
+    {
+        assert(IsWindow());
+        SendMessage(EM_SETLIMITTEXT, (WPARAM)max, 0);
+    }
+
+    // Sets the widths of the left and right margins, and redraws the edit control to reflect the new margins.
+    // Refer to EM_SETMARGINS in the Windows API documentation for more information.
+    inline void CEdit::SetMargins(UINT left, UINT right) const
+    {
+        assert(IsWindow());
+        SendMessage(EM_SETMARGINS, (WPARAM)(EC_LEFTMARGIN | EC_RIGHTMARGIN), (LPARAM)MAKELONG(left, right));
+    }
+
+    // Sets or clears the modification flag to indicate whether the edit control has been modified.
+    // Refer to EM_SETMODIFY in the Windows API documentation for more information.
+    inline void CEdit::SetModify(BOOL isModified) const
+    {
+        assert(IsWindow());
+        SendMessage(EM_SETMODIFY, (WPARAM)isModified, 0);
     }
 
     // Defines the character that edit controls use in conjunction with the ES_PASSWORD style.
@@ -679,7 +717,7 @@ namespace Win32xx
         SendMessage(EM_SETRECTNP, 0, (LPARAM)&rc);
     }
 
-    // Selects a range of characters in the edit control by setting the starting 
+    // Selects a range of characters in the edit control by setting the starting
     // and ending positions to be selected.
     // Refer to EM_SETSEL in the Windows API documentation for more information.
     inline void CEdit::SetSel(DWORD selection, BOOL isScrolled) const
@@ -690,7 +728,7 @@ namespace Win32xx
             SendMessage(EM_SCROLLCARET, 0, 0);
     }
 
-    // Selects a range of characters in the edit control by setting the starting 
+    // Selects a range of characters in the edit control by setting the starting
     // and ending positions to be selected.
     // Refer to EM_SETSEL in the Windows API documentation for more information.
     inline void CEdit::SetSel(int startChar, int endChar, BOOL isScrolled) const
@@ -714,7 +752,7 @@ namespace Win32xx
     inline BOOL CEdit::SetTabStops() const
     {
         assert(IsWindow());
-        return (SendMessage( EM_SETTABSTOPS, 0, 0) != 0);
+        return (SendMessage(EM_SETTABSTOPS, 0, 0) != 0);
     }
 
     // Sets tab-stop positions in the multi-line edit control.
@@ -725,38 +763,6 @@ namespace Win32xx
         return (SendMessage(EM_SETTABSTOPS, (WPARAM)1, (LPARAM)&cxEachStop) != 0);
     }
 
-    // Clears the current selection, if any, in an edit control.
-    // Refer to WM_CLEAR in the Windows API documentation for more information.
-    inline void CEdit::Clear() const
-    {
-        assert(IsWindow());
-        SendMessage(WM_CLEAR, 0, 0);
-    }
-
-    // Copies text to the clipboard unless the style is ES_PASSWORD, in which case the message returns zero.
-    // Refer to WM_COPY in the Windows API documentation for more information.
-    inline void CEdit::Copy() const
-    {
-        assert(IsWindow());
-        SendMessage(WM_COPY, 0, 0);
-    }
-
-    // Cuts the selection to the clipboard, or deletes the character to the left of the cursor if there is no selection.
-    // Refer to WM_CUT in the Windows API documentation for more information.
-    inline void CEdit::Cut() const
-    {
-        assert(IsWindow());
-        SendMessage(WM_CUT, 0, 0);
-    }
-
-    // Pastes text from the clipboard into the edit control window at the caret position.
-    // Refer to WM_PASTE in the Windows API documentation for more information.
-    inline void CEdit::Paste() const
-    {
-        assert(IsWindow());
-        SendMessage(WM_PASTE, 0, 0);
-    }
-
     // Removes any text that was just inserted or inserts any deleted characters and sets the selection to the inserted text.
     // Refer to EM_UNDO in the Windows API documentation for more information.
     inline void CEdit::Undo() const
@@ -765,16 +771,18 @@ namespace Win32xx
         SendMessage(EM_UNDO, 0, 0);
     }
 
-    // Set the window class
-    inline void CEdit::PreRegisterClass(WNDCLASS& wc)
-    {
-        wc.lpszClassName =  _T("Edit");
-    }
-
 
     ////////////////////////////////////////
     // Definitions for the CListbox class
     //
+
+    // Adds a string to a list box and returns its index.
+    // Refer to LB_ADDSTRING in the Windows API documentation for more information.
+    inline int CListBox::AddString(LPCTSTR string) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_ADDSTRING, 0, (LPARAM)string));
+    }
 
     // Called by in response to the WM_COMPAREITEM message to determine the relative position
     // of a new item in a sorted owner-draw list box. Override this function in an owner-drawn
@@ -792,12 +800,76 @@ namespace Win32xx
         return 0;
     }
 
+    // Removes a string from a list box and returns the number of strings remaining in the list.
+    // Refer to LB_DELETESTRING in the Windows API documentation for more information.
+    inline int CListBox::DeleteString(UINT index) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_DELETESTRING, (WPARAM)index, 0));
+    }
+
+    // Adds a list of filenames to a list box and returns the index of the last filename added.
+    // Refer to LB_DIR in the Windows API documentation for more information.
+    inline int CListBox::Dir(UINT attr, LPCTSTR wildCard) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_DIR, (WPARAM)attr, (LPARAM)wildCard));
+    }
+
+    // Returns the index of the first string in the list box that begins with a specified string.
+    // Refer to LB_FINDSTRING in the Windows API documentation for more information.
+    inline int CListBox::FindString(int startAfter, LPCTSTR string) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_FINDSTRING, (WPARAM)startAfter, (LPARAM)string));
+    }
+
+    // Returns the index of the string in the list box that is equal to a specified string.
+    // Refer to LB_FINDSTRINGEXACT in the Windows API documentation for more information.
+    inline int CListBox::FindStringExact(int indexStart, LPCTSTR findString) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_FINDSTRINGEXACT, (WPARAM)indexStart, (LPARAM)findString));
+    }
+
+    // Inserts a string at a specified index in a list box.
+    // Refer to LB_INSERTSTRING in the Windows API documentation for more information.
+    inline int CListBox::InsertString(int index, LPCTSTR string) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_INSERTSTRING, (WPARAM)index, (LPARAM)string));
+    }
+
+    // Returns the index of the item that the mouse last selected.
+    // Refer to LB_GETANCHORINDEX in the Windows API documentation for more information.
+    inline int CListBox::GetAnchorIndex() const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_GETANCHORINDEX, 0, 0));
+    }
+
+    // Returns the index of the item that has the focus rectangle.
+    // Refer to LB_GETCARETINDEX in the Windows API documentation for more information.
+    inline int CListBox::GetCaretIndex() const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_GETCARETINDEX, 0, 0));
+    }
+
     // Returns the number of items in the list box.
     // Refer to LB_GETCOUNT in the Windows API documentation for more information.
     inline int CListBox::GetCount() const
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(LB_GETCOUNT, 0, 0));
+    }
+
+    // Returns the index of the currently selected item.
+    // Refer to LB_GETCURSEL in the Windows API documentation for more information.
+    inline int CListBox::GetCurSel() const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_GETCURSEL, 0, 0));
     }
 
     // Returns the scrollable width, in pixels, of a list box.
@@ -857,6 +929,23 @@ namespace Win32xx
         return static_cast<int>(SendMessage(LB_GETSEL, (WPARAM)index, 0));
     }
 
+    // Returns the number of selected items in a multiple-selection list box.
+    // Refer to LB_GETSELCOUNT in the Windows API documentation for more information.
+    inline int CListBox::GetSelCount() const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_GETSELCOUNT, 0, 0));
+    }
+
+    // Creates an array of the indexes of all selected items in a multiple-selection list box
+    // and returns the total number of selected items.
+    // Refer to LB_GETSELITEMS in the Windows API documentation for more information.
+    inline int CListBox::GetSelItems(int maxItems, LPINT pIndexArray) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_GETSELITEMS, (WPARAM)maxItems, (LPARAM)pIndexArray));
+    }
+
     // Retrieves the string associated with a specified item and the length of the string.
     // Refer to LB_GETTEXT in the Windows API documentation for more information.
     inline int CListBox::GetText(int index, LPTSTR buffer) const
@@ -891,12 +980,89 @@ namespace Win32xx
         return LOWORD(result);
     }
 
+    // Handle messages reflected back from the parent window.
+    // Override this function in your derived class to handle these special messages:
+    // WM_COMMAND, WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG, WM_CTLCOLORLISTBOX,
+    // WM_CTLCOLORSCROLLBAR, WM_CTLCOLORSTATIC, WM_CHARTOITEM,  WM_VKEYTOITEM,
+    // WM_HSCROLL, WM_VSCROLL, WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM,
+    // WM_COMPAREITEM, WM_PARENTNOTIFY.
+    inline LRESULT CListBox::OnMessageReflect(UINT msg, WPARAM, LPARAM lparam)
+    {
+        switch (msg)
+        {
+        case WM_COMPAREITEM:
+        {
+            LPCOMPAREITEMSTRUCT pCompareItemStruct = (LPCOMPAREITEMSTRUCT)lparam;
+            return CompareItem(pCompareItemStruct);
+        }
+        }
+
+        return 0;   // Allow other messages to be handled elsewhere.
+    }
+
+    // Set the window class.
+    inline void CListBox::PreRegisterClass(WNDCLASS& wc)
+    {
+        wc.lpszClassName = _T("ListBox");
+    }
+
+    // Removes all items from a list box.
+    // Refer to LB_RESETCONTENT in the Windows API documentation for more information.
+    inline void CListBox::ResetContent() const
+    {
+        assert(IsWindow());
+        SendMessage(LB_RESETCONTENT, 0, 0);
+    }
+
+    // Selects the first string it finds that matches a specified prefix.
+    // Refer to LB_SELECTSTRING in the Windows API documentation for more information.
+    inline int CListBox::SelectString(int startAfter, LPCTSTR string) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_SELECTSTRING, (WPARAM)startAfter, (LPARAM)string));
+    }
+
+    // Selects a specified range of items in a list box.
+    // Refer to LB_SELITEMRANGEEX in the Windows API documentation for more information.
+    inline int CListBox::SelItemRange(BOOL isSelected, int firstItem, int lastItem) const
+    {
+        assert(IsWindow());
+        if (isSelected)
+            return static_cast<int>(SendMessage(LB_SELITEMRANGEEX, (WPARAM)firstItem, (LPARAM)lastItem));
+        else
+            return static_cast<int>(SendMessage(LB_SELITEMRANGEEX, (WPARAM)lastItem, (LPARAM)firstItem));
+    }
+
+    // Sets the item that the mouse last selected to a specified item.
+    // Refer to LB_SETANCHORINDEX in the Windows API documentation for more information.
+    inline void CListBox::SetAnchorIndex(int index) const
+    {
+        assert(IsWindow());
+        SendMessage(LB_SETANCHORINDEX, (WPARAM)index, 0);
+    }
+
+    // Sets the focus rectangle to a specified list box item.
+    // Refer to LB_SETCARETINDEX in the Windows API documentation for more information.
+    inline int CListBox::SetCaretIndex(int index, BOOL partialScroll) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_SETCARETINDEX, (WPARAM)index, (LPARAM)MAKELONG(partialScroll, 0)));
+    }
+
     // Sets the width, in pixels, of all columns in a list box.
     // Refer to LB_SETCOLUMNWIDTH in the Windows API documentation for more information.
     inline void CListBox::SetColumnWidth(int cxWidth) const
     {
         assert(IsWindow());
         SendMessage(LB_SETCOLUMNWIDTH, (WPARAM)cxWidth, 0);
+    }
+
+    // Selects a specified list box item.
+    // Refer to LB_SETCURSEL in the Windows API documentation for more information.
+    inline int CListBox::SetCurSel(int select) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_SETCURSEL, (WPARAM)select, 0));
     }
 
     // Sets the scrollable width, in pixels, of a list box.
@@ -939,6 +1105,14 @@ namespace Win32xx
         return static_cast<LCID>(SendMessage(LB_SETLOCALE, (WPARAM)newLocale, 0));
     }
 
+    // Selects an item in a multiple-selection list box.
+    // Refer to LB_SETSEL in the Windows API documentation for more information.
+    inline int CListBox::SetSel(int index, BOOL isSelected) const
+    {
+        assert(IsWindow());
+        return static_cast<int>(SendMessage(LB_SETSEL, (WPARAM)isSelected, (LPARAM)index));
+    }
+
     // Sets the tab stops to those specified in a specified array.
     // Refer to LB_SETTABSTOPS in the Windows API documentation for more information.
     inline BOOL CListBox::SetTabStops(int tabStops, LPINT pTabStopsArray) const
@@ -969,180 +1143,6 @@ namespace Win32xx
     {
         assert(IsWindow());
         return static_cast<int>(SendMessage(LB_SETTOPINDEX, (WPARAM)index, 0));
-    }
-
-    // Returns the index of the currently selected item.
-    // Refer to LB_GETCURSEL in the Windows API documentation for more information.
-    inline int CListBox::GetCurSel() const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETCURSEL, 0, 0));
-    }
-
-    // Selects a specified list box item.
-    // Refer to LB_SETCURSEL in the Windows API documentation for more information.
-    inline int CListBox::SetCurSel(int select) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_SETCURSEL, (WPARAM)select, 0));
-    }
-
-    // Returns the index of the item that the mouse last selected.
-    // Refer to LB_GETANCHORINDEX in the Windows API documentation for more information.
-    inline int CListBox::GetAnchorIndex() const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETANCHORINDEX, 0, 0));
-    }
-
-    // Returns the index of the item that has the focus rectangle.
-    // Refer to LB_GETCARETINDEX in the Windows API documentation for more information.
-    inline int CListBox::GetCaretIndex() const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETCARETINDEX, 0, 0));
-    }
-
-    // Returns the number of selected items in a multiple-selection list box.
-    // Refer to LB_GETSELCOUNT in the Windows API documentation for more information.
-    inline int CListBox::GetSelCount() const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETSELCOUNT, 0, 0));
-    }
-
-    // Creates an array of the indexes of all selected items in a multiple-selection list box
-    // and returns the total number of selected items.
-    // Refer to LB_GETSELITEMS in the Windows API documentation for more information.
-    inline int CListBox::GetSelItems(int maxItems, LPINT pIndexArray) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETSELITEMS, (WPARAM)maxItems, (LPARAM)pIndexArray));
-    }
-
-    // Selects a specified range of items in a list box.
-    // Refer to LB_SELITEMRANGEEX in the Windows API documentation for more information.
-    inline int CListBox::SelItemRange(BOOL isSelected, int firstItem, int lastItem) const
-    {
-        assert(IsWindow());
-        if (isSelected)
-            return static_cast<int>(SendMessage(LB_SELITEMRANGEEX, (WPARAM)firstItem, (LPARAM)lastItem));
-        else
-            return static_cast<int>(SendMessage(LB_SELITEMRANGEEX, (WPARAM)lastItem, (LPARAM)firstItem));
-    }
-
-    // Sets the item that the mouse last selected to a specified item.
-    // Refer to LB_SETANCHORINDEX in the Windows API documentation for more information.
-    inline void CListBox::SetAnchorIndex(int index) const
-    {
-        assert(IsWindow());
-        SendMessage(LB_SETANCHORINDEX, (WPARAM)index, 0);
-    }
-
-    // Sets the focus rectangle to a specified list box item.
-    // Refer to LB_SETCARETINDEX in the Windows API documentation for more information.
-    inline int CListBox::SetCaretIndex(int index, BOOL partialScroll) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_SETCARETINDEX, (WPARAM)index, (LPARAM)MAKELONG(partialScroll, 0)));
-    }
-
-    // Selects an item in a multiple-selection list box.
-    // Refer to LB_SETSEL in the Windows API documentation for more information.
-    inline int CListBox::SetSel(int index, BOOL isSelected) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_SETSEL, (WPARAM)isSelected, (LPARAM)index));
-    }
-
-    // Adds a string to a list box and returns its index.
-    // Refer to LB_ADDSTRING in the Windows API documentation for more information.
-    inline int CListBox::AddString(LPCTSTR string) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_ADDSTRING, 0, (LPARAM)string));
-    }
-
-    // Removes a string from a list box and returns the number of strings remaining in the list.
-    // Refer to LB_DELETESTRING in the Windows API documentation for more information.
-    inline int CListBox::DeleteString(UINT index) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_DELETESTRING, (WPARAM)index, 0));
-    }
-
-    // Adds a list of filenames to a list box and returns the index of the last filename added.
-    // Refer to LB_DIR in the Windows API documentation for more information.
-    inline int CListBox::Dir(UINT attr, LPCTSTR wildCard) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_DIR, (WPARAM)attr, (LPARAM)wildCard));
-    }
-
-    // Returns the index of the first string in the list box that begins with a specified string.
-    // Refer to LB_FINDSTRING in the Windows API documentation for more information.
-    inline int CListBox::FindString(int startAfter, LPCTSTR string) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_FINDSTRING, (WPARAM)startAfter, (LPARAM)string));
-    }
-
-    // Returns the index of the string in the list box that is equal to a specified string.
-    // Refer to LB_FINDSTRINGEXACT in the Windows API documentation for more information.
-    inline int CListBox::FindStringExact(int indexStart, LPCTSTR findString) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_FINDSTRINGEXACT, (WPARAM)indexStart, (LPARAM)findString));
-    }
-
-    // Inserts a string at a specified index in a list box.
-    // Refer to LB_INSERTSTRING in the Windows API documentation for more information.
-    inline int CListBox::InsertString(int index, LPCTSTR string) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_INSERTSTRING, (WPARAM)index, (LPARAM)string));
-    }
-
-    // Removes all items from a list box.
-    // Refer to LB_RESETCONTENT in the Windows API documentation for more information.
-    inline void CListBox::ResetContent() const
-    {
-        assert(IsWindow());
-        SendMessage(LB_RESETCONTENT, 0, 0);
-    }
-
-    // Selects the first string it finds that matches a specified prefix.
-    // Refer to LB_SELECTSTRING in the Windows API documentation for more information.
-    inline int CListBox::SelectString(int startAfter, LPCTSTR string) const
-    {
-        assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_SELECTSTRING, (WPARAM)startAfter, (LPARAM)string));
-    }
-
-    // Handle messages reflected back from the parent window.
-    // Override this function in your derived class to handle these special messages:
-    // WM_COMMAND, WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG, WM_CTLCOLORLISTBOX,
-    // WM_CTLCOLORSCROLLBAR, WM_CTLCOLORSTATIC, WM_CHARTOITEM,  WM_VKEYTOITEM,
-    // WM_HSCROLL, WM_VSCROLL, WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM,
-    // WM_COMPAREITEM, WM_PARENTNOTIFY.
-    inline LRESULT CListBox::OnMessageReflect(UINT msg, WPARAM, LPARAM lparam)
-    {
-        switch (msg)
-        {
-        case WM_COMPAREITEM:
-            {
-                LPCOMPAREITEMSTRUCT pCompareItemStruct = (LPCOMPAREITEMSTRUCT)lparam;
-                return CompareItem(pCompareItemStruct);
-            }
-        }
-
-        return 0;   // Allow other messages to be handled elsewhere.
-    }
-
-    // Set the window class.
-    inline void CListBox::PreRegisterClass(WNDCLASS& wc)
-    {
-        wc.lpszClassName =  _T("ListBox");
     }
 
 
@@ -1180,6 +1180,12 @@ namespace Win32xx
     {
         assert(IsWindow());
         return reinterpret_cast<HICON>(SendMessage(STM_GETIMAGE, (WPARAM)IMAGE_ICON, 0));
+    }
+
+    // Set the window class.
+    inline void CStatic::PreRegisterClass(WNDCLASS& wc)
+    {
+        wc.lpszClassName = _T("Static");
     }
 
     // Associates a new bitmap with the static control.
@@ -1224,12 +1230,6 @@ namespace Win32xx
     {
         assert(IsWindow());
         return reinterpret_cast<HICON>(SendMessage(STM_SETIMAGE, (WPARAM)IMAGE_ICON, (LPARAM)icon));
-    }
-
-    // Set the window class.
-    inline void CStatic::PreRegisterClass(WNDCLASS& wc)
-    {
-        wc.lpszClassName =  _T("Static");
     }
 
 }

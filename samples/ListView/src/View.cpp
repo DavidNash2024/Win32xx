@@ -6,12 +6,17 @@
 #include "View.h"
 #include "UserMessages.h"
 
+#ifndef HDF_SORTUP
+#define HDF_SORTUP              0x0400
+#define HDF_SORTDOWN            0x0200
+#endif
+
 /////////////////////////////
 // CView function definitions
 //
 
 // Constructor.
-CView::CView() :  m_editRow(-1), m_editColumn(-1)
+CView::CView() :  m_row(-1), m_column(-1)
 {
 }
 
@@ -21,56 +26,91 @@ CView::~CView()
     if (IsWindow()) DeleteAllItems();
 }
 
-// Insert 4 list view items.
-void CView::InsertItems()
+void CView::AddItem(CString subItem0, CString subItem1, CString subItem2)
 {
-    // Add 4th item
-    int item = InsertItem(0, _T("ListViewApp.h"), 2);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemState(1, LVIS_SELECTED, LVIF_STATE);
-    SetItemText(item, 2, _T("C Header file"));
+    // Create the itemData smart pointer.
+    ListItemDataPtr itemData(new ListItemData(subItem0, subItem1, subItem2));
+    m_allListItemData.push_back(itemData);
 
-    // add 3rd item
-    item = InsertItem(item, _T("ListViewApp.cpp"), 1);
-    SetItemText(item, 1, _T("3 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
+    // Set the text for the all the subItems belonging to the item.
+    int item = GetItemCount();
+    InsertItem(item, itemData->m_subItemText[0]);
+    SetItemText(item, 1, itemData->m_subItemText[1]);
+    SetItemText(item, 2, itemData->m_subItemText[2]);
 
-    // add 2nd item
-    item = InsertItem(item, _T("main.cpp"), 1);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
-
-    // add 1st item
-    item = InsertItem(item, _T("ListView"), 0);
-    SetItemText(item, 2, _T("Folder"));
+    // Set the item's lparam.
+    // The item's lparam is used for sorting.
+    LPARAM lparam = reinterpret_cast<LPARAM>(itemData.get());
+    SetItemData(item, lparam);
 }
 
-// Called when a window handle (HWND) is attached to CViewFiles.
+// Compares two items using their lparam values.
+// The item's lparam contains a pointer to its ListItemData.
+int CALLBACK CView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM pSortViewItems)
+{
+    assert(param1);
+    assert(param2);
+    assert(pSortViewItems);
+
+    if (param1 == 0 || param2 == 0 || pSortViewItems == 0)
+        return 0;
+
+    ListItemData* pItem1 = reinterpret_cast<ListItemData*>(param1);
+    ListItemData* pItem2 = reinterpret_cast<ListItemData*>(param2);
+    SortViewItems* pSort = reinterpret_cast<SortViewItems*>(pSortViewItems);
+
+    int compare = 0;
+    int subItem = pSort->m_column;
+    if (pItem1->m_subItemText[subItem] > pItem2->m_subItemText[subItem])
+        compare = pSort->m_isSortDown ? 1 : -1;
+
+    if (pItem1->m_subItemText[subItem] < pItem2->m_subItemText[subItem])
+        compare = pSort->m_isSortDown ? -1 : 1;
+
+    return compare;
+}
+
+// Insert 4 list view items.
+void CView::AddAllItems()
+{
+
+
+    AddItem(_T("ListViewApp.h"),   _T("1 KB"), _T("C++ Header file"));
+    AddItem(_T("main.cpp"),        _T("1 KB"), _T("C++ Source file"));
+    AddItem(_T("ListViewApp.cpp"), _T("3 KB"), _T("C++ Source file"));
+    AddItem(_T("Resource.rc"),     _T("2 KB"), _T("C++ Resource Script"));
+    AddItem(_T("Readme.txt"),      _T("4 KB"), _T("Text file"));
+}
+
+// The window handle (HWND) is attached to CView when it is created.
 void CView::OnAttach()
 {
-    // Set full row select to support editing subitems.
-    SetExtendedStyle(LVS_EX_FULLROWSELECT);
-    
+    // The extended ListView styles must be set after the window is created.
+    // Full row select is required to support the editing of subitems.
+    SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+
     // Fill the List-View control.
     SetColumns();
-    InsertItems();
+    AddAllItems();
+
+    // Sort down based on the first column.
+    SortColumn(0, true);
 
     // Create the edit window. It is initially hidden.
     m_edit.Create(*this);
 }
 
-// Shows the edit window when a subitem is clicked. 
-LRESULT CView::OnClick(LPARAM lparam)
+// Shows the edit window when a subitem is clicked.
+LRESULT CView::OnClick(LPNMLISTVIEW pListView)
 {
-    LPNMITEMACTIVATE itemInfo = (LPNMITEMACTIVATE)lparam;
-    m_editRow = itemInfo->iItem;
-    m_editColumn = itemInfo->iSubItem;
+    m_row = pListView->iItem;
+    m_column = pListView->iSubItem;
 
-    if (m_editRow != -1 && m_editColumn != -1)
+    if (m_row != -1 && m_column != -1)
     {
         // Display the edit window.
         CRect rect;
-        GetSubItemRect(m_editRow, m_editColumn, LVIR_LABEL, rect);
+        GetSubItemRect(m_row, m_column, LVIR_LABEL, rect);
         m_edit.SetWindowPos(HWND_TOP, rect, SWP_SHOWWINDOW);
 
         m_edit.SetFocus();
@@ -78,7 +118,7 @@ LRESULT CView::OnClick(LPARAM lparam)
         // Set the edit window's text.
         CFont font = GetFont();
         m_edit.SetFont(font);
-        CString str = GetItemText(m_editRow, m_editColumn);
+        CString str = GetItemText(m_row, m_column);
         m_edit.SetWindowText(str);
     }
 
@@ -86,11 +126,10 @@ LRESULT CView::OnClick(LPARAM lparam)
 }
 
 // Performs the customised drawing of the list-view control.
-LRESULT CView::OnCustomDraw(LPARAM lParam)
+LRESULT CView::OnCustomDraw(LPNMLVCUSTOMDRAW pLVCustomDraw)
 {
-    LPNMLVCUSTOMDRAW lplvcd = (LPNMLVCUSTOMDRAW)lParam;
 
-    switch (lplvcd->nmcd.dwDrawStage)
+    switch (pLVCustomDraw->nmcd.dwDrawStage)
     {
     case CDDS_PREPAINT: // Before the paint cycle begins.
         // Request notifications for individual listview items.
@@ -102,63 +141,71 @@ LRESULT CView::OnCustomDraw(LPARAM lParam)
         return CDRF_NOTIFYSUBITEMDRAW;
 
     case CDDS_SUBITEM | CDDS_ITEMPREPAINT: // Before a subitem is drawn.
-    {
-        switch (lplvcd->iSubItem)
         {
-            case 0: // 1st column
+            bool isEvenRow = ((pLVCustomDraw->nmcd.dwItemSpec % 2) == 0);
+            switch (pLVCustomDraw->iSubItem)
             {
-                if (lplvcd->nmcd.dwItemSpec == 0)   // first row only
+                case 0: // 1st column
                 {
-                    lplvcd->clrText = RGB(255, 255, 255);
-                    lplvcd->clrTextBk = RGB(240, 55, 23);
+                    if (isEvenRow)
+                    {
+                        pLVCustomDraw->clrText = RGB(32, 32, 32);
+                        pLVCustomDraw->clrTextBk = RGB(192, 255, 255);
+                    }
+                    else
+                    {
+                        pLVCustomDraw->clrText = RGB(32, 32, 32);
+                        pLVCustomDraw->clrTextBk = RGB(255, 255, 192);
+                    }
                 }
-                else
+                break;
+
+                case 1: // 2nd column
                 {
-                    lplvcd->clrText = RGB(0, 0, 0);
-                    lplvcd->clrTextBk = RGB(255, 255, 255);
+                    if (isEvenRow)
+                    {
+                        pLVCustomDraw->clrText = RGB(64, 64, 64);
+                        pLVCustomDraw->clrTextBk = RGB(208, 255, 255);
+                    }
+                    else
+                    {
+                        pLVCustomDraw->clrText = RGB(64, 64, 64);
+                        pLVCustomDraw->clrTextBk = RGB(255, 255, 208);
+                    }
                 }
-            }
-            break;
+                break;
 
-            case 1: // 2nd column
-            {
-                if (lplvcd->nmcd.dwItemSpec % 2)  // odd numbered rows
+                case 2:  // 3rd column
                 {
-                    lplvcd->clrText = RGB(255, 255, 0);
-                    lplvcd->clrTextBk = RGB(0, 0, 0);
+                    if (isEvenRow)
+                    {
+                        pLVCustomDraw->clrText = RGB(96, 96, 96);
+                        pLVCustomDraw->clrTextBk = RGB(224, 255, 255);
+                    }
+                    else
+                    {
+                        pLVCustomDraw->clrText = RGB(96, 96, 96);
+                        pLVCustomDraw->clrTextBk = RGB(255, 255, 244);
+                    }
                 }
-                else
-                {
-                    lplvcd->clrText = RGB(0, 0, 0);
-                    lplvcd->clrTextBk = RGB(255, 255, 255);
-                }
-            }
-            break;
+                break;
 
-            case 2:  // 3rd column
-            {
-                // all rows
-                lplvcd->clrText = RGB(20, 26, 158);
-                lplvcd->clrTextBk = RGB(200, 200, 10);
-            }
-            break;
+            }  // switch (lplvcd->iSubItem)
 
-        }  // switch (lplvcd->iSubItem)
+            return CDRF_DODEFAULT;
+        }  // case CDDS_SUBITEM | CDDS_ITEMPREPAINT
 
-        return CDRF_DODEFAULT;
-
-    }  // case CDDS_SUBITEM | CDDS_ITEMPREPAINT
     }  // switch (lplvcd->nmcd.dwDrawStage)
+
     return CDRF_DODEFAULT;
 }
 
-// Called when an item has changed. Here we prevent the item from 
+// Called when an item has changed. Here we prevent the item from
 // being activated to preserve our colors.
-LRESULT CView::OnItemChanged(LPARAM lparam)
+LRESULT CView::OnItemChanged(LPNMLISTVIEW pListView)
 {
-    LPNMLISTVIEW pnmv = (LPNMLISTVIEW)lparam;
-    int row = pnmv->iItem;
-    
+    int row = pListView->iItem;
+
     // Prevent the item from being activated.
     if (GetItemState(row, LVIS_SELECTED) != 0)
     {
@@ -168,38 +215,68 @@ LRESULT CView::OnItemChanged(LPARAM lparam)
     return 0;
 }
 
+// Called when a list view column is clicked.
+LRESULT CView::OnLVColumnClick(LPNMITEMACTIVATE pnmitem)
+{
+    // Determine the required sort order.
+    HDITEM  hdrItem;
+    ZeroMemory(&hdrItem, sizeof(hdrItem));
+    hdrItem.mask = HDI_FORMAT;
+    int column = pnmitem->iSubItem;
+    VERIFY(Header_GetItem(GetHeader(), column, &hdrItem));
+    bool isSortDown = (hdrItem.fmt & HDF_SORTUP) ? false : true;
+
+    // Perform the sort.
+    SortColumn(column, isSortDown);
+
+    return 0;
+}
+
 // Handles the WM_NOTIFY messages sent by this window.
 LRESULT CView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
-    switch (pHeader->code)
+    LPNMLVCUSTOMDRAW pLVCustomDraw = (LPNMLVCUSTOMDRAW)lparam;
+    LPNMLISTVIEW pListView = (LPNMLISTVIEW)lparam;
+    LPNMITEMACTIVATE pnmitem = reinterpret_cast<LPNMITEMACTIVATE>(lparam);
+
+    assert(pListView);
+    UINT code = pListView->hdr.code;
+
+    switch (code)
     {
-    case NM_CUSTOMDRAW:     return OnCustomDraw(lparam);
-    case NM_CLICK:          return OnClick(lparam);
-    case LVN_ITEMCHANGED:   return OnItemChanged(lparam);
+    case LVN_COLUMNCLICK:   return OnLVColumnClick(pnmitem);
+    case LVN_ITEMCHANGED:   return OnItemChanged(pListView);
+    case NM_CUSTOMDRAW:     return OnCustomDraw(pLVCustomDraw);
+    case NM_CLICK:          return OnClick(pListView);
     }
 
     return 0;
 }
 
-// Called in response to a message from the edit control to update the 
+// Called in response to a message from the edit control to update the
 // text in the subitem.
 LRESULT CView::OnUpdateText()
 {
-    Trace("Should update text\n");
     CString text = m_edit.GetWindowText();
-    SetItemText(m_editRow, m_editColumn, text);
-    
+
+    // Update the ListItemData
+    LPARAM lparam = GetItemData(m_row);
+    ListItemData* pData = reinterpret_cast<ListItemData*>(lparam);
+    pData->m_subItemText[m_column] = text;
+
+    // Update the list view text
+    SetItemText(m_row, m_column, pData->m_subItemText[m_column]);
+
     return 0;
 }
 
-// Sets the CREATESTRUCT parameters for the window before it is created. 
+// Sets the CREATESTRUCT parameters for the window before it is created.
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = LVS_REPORT | LVS_SINGLESEL | WS_CHILD;
 
     // The LVM_EDITLABEL style is not used. It sounds useful, but it
-    // would only allow us to edit the label, not the other subitems. 
+    // would only allow us to edit the label, not the other subitems.
 }
 
 // Configures the list-view's columns (its header control).
@@ -208,18 +285,83 @@ void CView::SetColumns()
     // empty the list
     DeleteAllItems();
 
-    // initialize the columns
+    // initialize the LV_COLUMN struct
     LV_COLUMN lvColumn;
     ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
     lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
     lvColumn.fmt = LVCFMT_LEFT;
-    lvColumn.cx = 120;
-    TCHAR string[3][20] = { _T("Name"), _T("Size"), _T("Type") };
-    for (int i = 0; i < 3; ++i)
+
+    // 1st column
+    lvColumn.pszText = _T("Name");
+    lvColumn.cx = 130;
+    InsertColumn(0, lvColumn);
+
+    // 2nd column
+    lvColumn.pszText = _T("Size");
+    lvColumn.cx = 80;
+    InsertColumn(1, lvColumn);
+
+    // 3rd column
+    lvColumn.pszText = _T("Type");
+    lvColumn.cx = 160;
+    InsertColumn(2, lvColumn);
+}
+
+// Sets the up and down sort arrows in the listview's header.
+void CView::SetHeaderSortImage(int  columnIndex, int showArrow)
+{
+    HWND    hHeader = 0;
+    HDITEM  hdrItem;
+    ZeroMemory(&hdrItem, sizeof(hdrItem));
+
+    hHeader = GetHeader();
+    if (hHeader)
     {
-        lvColumn.pszText = string[i];
-        InsertColumn(i, lvColumn);
+        hdrItem.mask = HDI_FORMAT;
+
+        if (Header_GetItem(hHeader, columnIndex, &hdrItem))
+        {
+            if (showArrow == SHOW_UP_ARROW)
+            {
+                hdrItem.fmt = (hdrItem.fmt & ~HDF_SORTDOWN) | HDF_SORTUP;
+            }
+            else if (showArrow == SHOW_DOWN_ARROW)
+            {
+                hdrItem.fmt = (hdrItem.fmt & ~HDF_SORTUP) | HDF_SORTDOWN;
+            }
+            else
+            {
+                hdrItem.fmt = hdrItem.fmt & ~(HDF_SORTDOWN | HDF_SORTUP);
+            }
+
+            Header_SetItem(hHeader, columnIndex, &hdrItem);
+        }
     }
+
+}
+
+// Called when the user clicks on a column in the listview's header.
+void CView::SortColumn(int column, bool isSortDown)
+{
+    // Perform the sort.
+    SortViewItems sort(column, isSortDown);
+    SortItems(CompareFunction, (LPARAM)&sort);
+
+    // Ensure the selected item is visible after sorting.
+    int itemint = GetNextItem(-1, LVNI_SELECTED);
+    EnsureVisible(itemint, FALSE);
+
+    // Add an arrow to the column header.
+    for (int col = 0; col < Header_GetItemCount(GetHeader()); col++)
+        SetHeaderSortImage(col, SHOW_NO_ARROW);
+
+    SetHeaderSortImage(column, isSortDown ? SHOW_UP_ARROW : SHOW_DOWN_ARROW);
+
+    // Select the previously selected or first item
+    if (GetSelectedCount() > 0)
+        SetItemState(GetSelectionMark(), LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
+    else
+        SetItemState(0, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
 }
 
 // Process the list-view's window messages.

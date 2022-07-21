@@ -51,10 +51,10 @@ private:
     static int CALLBACK CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortViewItems);
 
     // Message handlers
-    LRESULT OnCustomDraw(LPNMCUSTOMDRAW pnmitem);
-    LRESULT OnItemActivate(LPNMITEMACTIVATE pnmitem);
-    LRESULT OnItemChanged(LPNMITEMACTIVATE pnmitem);
-    LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);
+    LRESULT OnCustomDraw(LPNMCUSTOMDRAW pCustomDraw);
+    LRESULT OnItemActivate(LPNMLISTVIEW pListView);
+    LRESULT OnItemChanged(LPNMLISTVIEW pListView);
+    LRESULT OnLVColumnClick(LPNMLISTVIEW pListView);
     LRESULT OnRClick();
 
     CString GetFileTime(FILETIME fileTime);
