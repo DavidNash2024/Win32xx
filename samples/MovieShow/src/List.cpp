@@ -190,9 +190,11 @@ void CViewList::OnInitialUpdate()
 
 // Called with a double click left mouse button or press the Enter key
 // on a list view item.
-LRESULT CViewList::OnItemActivate(LPNMITEMACTIVATE pnmitem)
+LRESULT CViewList::OnItemActivate(LPNMLISTVIEW pListView)
 {
-    int item = pnmitem->iItem;
+    assert(pListView);
+
+    int item = pListView->iItem;
     MovieInfo* pmi = reinterpret_cast<MovieInfo*>(GetItemData(item));
     assert(pmi);
     if (pmi)
@@ -205,9 +207,11 @@ LRESULT CViewList::OnItemActivate(LPNMITEMACTIVATE pnmitem)
 }
 
 // Called when a list view item is selected.
-LRESULT CViewList::OnItemChanged(LPNMITEMACTIVATE pnmitem)
+LRESULT CViewList::OnItemChanged(LPNMLISTVIEW pListView)
 {
-    int item = pnmitem->iItem;
+    assert(pListView);
+
+    int item = pListView->iItem;
     MovieInfo* pmi = reinterpret_cast<MovieInfo*>(GetItemData(item));
     GetAncestor().SendMessage(UWM_ONSELECTLISTITEM, (WPARAM)pmi, 0);
 
@@ -215,13 +219,15 @@ LRESULT CViewList::OnItemChanged(LPNMITEMACTIVATE pnmitem)
 }
 
 // Called when a list view column is clicked.
-LRESULT CViewList::OnLVColumnClick(LPNMITEMACTIVATE pnmitem)
+LRESULT CViewList::OnLVColumnClick(LPNMLISTVIEW pListView)
 {
+    assert(pListView);
+
     // Determine the required sort order.
     HDITEM  hdrItem;
     ZeroMemory(&hdrItem, sizeof(hdrItem));
     hdrItem.mask = HDI_FORMAT;
-    int column = pnmitem->iSubItem;
+    int column = pListView->iSubItem;
     VERIFY(Header_GetItem(GetHeader(), column, &hdrItem));
     bool isSortDown = (hdrItem.fmt & HDF_SORTUP) ? true : false;
 
@@ -232,9 +238,11 @@ LRESULT CViewList::OnLVColumnClick(LPNMITEMACTIVATE pnmitem)
 }
 
 // Call to perform custom drawing.
-LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pnmitem)
+LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pCustomDraw)
 {
-    switch (pnmitem->dwDrawStage)
+    assert(pCustomDraw);
+
+    switch (pCustomDraw->dwDrawStage)
     {
     case CDDS_PREPAINT: // Before the paint cycle begins.
         // Request notifications for individual header items.
@@ -251,10 +259,10 @@ LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pnmitem)
 
         // Set the background color of the header
         CBrush br(color);
-        ::FillRect(pnmitem->hdc, &pnmitem->rc, br);
+        ::FillRect(pCustomDraw->hdc, &pCustomDraw->rc, br);
 
         // Also set the text background color
-        ::SetBkColor(pnmitem->hdc, color);
+        ::SetBkColor(pCustomDraw->hdc, color);
 
         return CDRF_DODEFAULT;
     }
@@ -267,6 +275,8 @@ LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pnmitem)
 LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
 {
     LPNMCUSTOMDRAW  pCustomDraw = (LPNMCUSTOMDRAW)lparam;
+    assert(pCustomDraw);
+
     switch (pCustomDraw->hdr.code)
     {
     case NM_CUSTOMDRAW:          return OnCustomDraw(pCustomDraw);
@@ -279,13 +289,14 @@ LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
 // back to CViewList.
 LRESULT CViewList::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LPNMITEMACTIVATE pItemActivate = (LPNMITEMACTIVATE)lparam;
+    LPNMLISTVIEW pListView = (LPNMLISTVIEW)lparam;
+    assert(pListView);
 
-    switch (pItemActivate->hdr.code)
+    switch (pListView->hdr.code)
     {
-    case LVN_COLUMNCLICK:          return OnLVColumnClick(pItemActivate);
-    case LVN_ITEMACTIVATE:         return OnItemActivate(pItemActivate);
-    case LVN_ITEMCHANGED:          return OnItemChanged(pItemActivate);
+    case LVN_COLUMNCLICK:          return OnLVColumnClick(pListView);
+    case LVN_ITEMACTIVATE:         return OnItemActivate(pListView);
+    case LVN_ITEMCHANGED:          return OnItemChanged(pListView);
     case NM_RCLICK:                return OnRClick();
     }
 

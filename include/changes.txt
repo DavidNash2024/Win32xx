@@ -7,6 +7,8 @@ New Features and Enhancements
   - An edit control has been added to provide support the in-place editing of
     the List-View's and subitems. A List-View control doesn't have built-in
     support for the editing of subitems.
+  - Support for sorting by column has been added. To sort a column in ascending
+    or descending order, click on the column in the list-view's header. 
 
 Changes in Detail
 -----------------

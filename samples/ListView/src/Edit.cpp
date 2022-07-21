@@ -29,7 +29,7 @@ LRESULT CMyEdit::OnChar(UINT msg, WPARAM wparam, LPARAM lparam)
         {
             // Hides the edit window when the return key is pressed.
             ShowWindow(SW_HIDE);
-            
+
             // Send a message to the list-view to update the subitem's text.
             GetParent().SendMessage(UWM_UPDATETEXT);
 
