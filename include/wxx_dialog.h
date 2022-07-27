@@ -196,8 +196,8 @@ namespace Win32xx
             CRect initRect;
             CRect oldRect;
             Alignment corner;
-            BOOL isFixedWidth;
-            BOOL isFixedHeight;
+            bool isFixedWidth;
+            bool isFixedHeight;
             HWND wnd;
         };
 

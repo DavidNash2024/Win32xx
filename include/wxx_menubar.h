@@ -843,10 +843,10 @@ namespace Win32xx
         pTLSData->msgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 
         // Display the shortcut menu.
-        BOOL isRightToLeft = FALSE;
+        bool isRightToLeft = false;
 
 #if (WINVER >= 0x0500)
-        isRightToLeft = ((GetAncestor().GetExStyle()) & WS_EX_LAYOUTRTL);
+        isRightToLeft = (((GetAncestor().GetExStyle()) & WS_EX_LAYOUTRTL)) != 0;
 #endif
 
         int xPos = isRightToLeft? rc.right : rc.left;

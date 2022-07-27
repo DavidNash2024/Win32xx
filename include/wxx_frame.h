@@ -2030,7 +2030,7 @@ namespace Win32xx
         // Detect the press state of the alt key.
         if (wparam == VK_MENU)
         {
-            BOOL keyState = lparam & 0x80000000;
+            bool keyState = (lparam & 0x80000000) != 0;
             if (!m_altKeyPressed && !keyState)
             {
                 m_altKeyPressed = TRUE;
@@ -3237,7 +3237,7 @@ namespace Win32xx
     inline LRESULT CALLBACK CFrameT<T>::StaticKeyboardProc(int code, WPARAM wparam, LPARAM lparam)
     {
         HWND hFrame = GetApp()->GetMainWnd();
-        CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(CWnd::GetCWndPtr(hFrame));
+        CFrameT<T>* pFrame = static_cast< CFrameT<T>* >(CWnd::GetCWndPtr(hFrame));
         assert(pFrame);
 
         if (pFrame)

@@ -784,7 +784,7 @@ void CMyListView::SortColumn(int column, bool isSortDown)
     SetHeaderSortImage(column, isSortDown ? SHOW_UP_ARROW : SHOW_DOWN_ARROW);
 
     // Select the previously selected or first item
-    if (GetSelectedCount() > 0)
+    if (GetSelectionMark() > 0)
         SetItemState(GetSelectionMark(), LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
     else
         SetItemState(0, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
