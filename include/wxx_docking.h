@@ -1463,9 +1463,9 @@ namespace Win32xx
 
         if (!pDockTarget || !pDockDrag) return CRect(0, 0, 0, 0);
 
-        BOOL RTL = FALSE;
+        bool isRTL = false;
 #if (WINVER >= 0x0500)
-        RTL = (pDockTarget->GetExStyle() & WS_EX_LAYOUTRTL);
+        isRTL = ((pDockTarget->GetExStyle() & WS_EX_LAYOUTRTL)) != 0;
 #endif
 
         // Calculate the hint window's position for inner docking
@@ -1494,12 +1494,12 @@ namespace Win32xx
         switch (dockSide)
         {
         case DS_DOCKED_LEFT:
-            if (RTL)    rcHint.left = rcHint.right - Width;
+            if (isRTL)    rcHint.left = rcHint.right - Width;
             else        rcHint.right = rcHint.left + Width;
 
             break;
         case DS_DOCKED_RIGHT:
-            if (RTL)    rcHint.right = rcHint.left + Width;
+            if (isRTL)    rcHint.right = rcHint.left + Width;
             else        rcHint.left = rcHint.right - Width;
 
             break;
@@ -1528,9 +1528,9 @@ namespace Win32xx
         int Width;
         CRect rcDockDrag = pDockDrag->GetWindowRect();
 
-        BOOL RTL = FALSE;
+        bool isRTL = false;
 #ifdef WS_EX_LAYOUTRTL
-        RTL = (pDockTarget->GetExStyle() & WS_EX_LAYOUTRTL);
+        isRTL = ((pDockTarget->GetExStyle() & WS_EX_LAYOUTRTL)) != 0;
 #endif
 
         int BarWidth = pDockDrag->GetBarWidth();
@@ -1552,12 +1552,12 @@ namespace Win32xx
         switch (dockSide)
         {
         case DS_DOCKED_LEFTMOST:
-            if (RTL) rcHint.left = rcHint.right - Width;
+            if (isRTL) rcHint.left = rcHint.right - Width;
             else     rcHint.right = rcHint.left + Width;
 
             break;
         case DS_DOCKED_RIGHTMOST:
-            if (RTL) rcHint.right = rcHint.left + Width;
+            if (isRTL) rcHint.right = rcHint.left + Width;
             else     rcHint.left = rcHint.right - Width;
 
             break;
@@ -3446,9 +3446,9 @@ namespace Win32xx
 
         // Note: All top level dockers are undocked, including the dock ancestor.
 
-        BOOL rtl = FALSE;
+        bool isRTL = false;
 #ifdef WS_EX_LAYOUTRTL
-        rtl = (GetExStyle() & WS_EX_LAYOUTRTL);
+        isRTL = ((GetExStyle() & WS_EX_LAYOUTRTL)) != 0;
 #endif
 
         if (IsDocked())
@@ -3474,7 +3474,7 @@ namespace Win32xx
                 if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
                     dockSize = MIN((*iter)->m_dockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
-                if (rtl)
+                if (isRTL)
                 {
                     rcChild.left = rcChild.right - static_cast<int>(dockSize);
                     rcChild.left = MIN(rcChild.left, rc.right - minSize);
@@ -3491,7 +3491,7 @@ namespace Win32xx
                 if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
                     dockSize = MIN((*iter)->m_dockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
-                if (rtl)
+                if (isRTL)
                 {
                     rcChild.right = rcChild.left + static_cast<int>(dockSize);
                     rcChild.right = MAX(rcChild.right, rc.left + minSize);
@@ -3538,13 +3538,13 @@ namespace Win32xx
 
                 if (DS_DOCKED_LEFT   == DockSide)
                 {
-                    if (rtl) barRect.left   = barRect.right - (*iter)->GetBarWidth();
+                    if (isRTL) barRect.left   = barRect.right - (*iter)->GetBarWidth();
                     else     barRect.right  = barRect.left + (*iter)->GetBarWidth();
                 }
 
                 if (DS_DOCKED_RIGHT  == DockSide)
                 {
-                    if (rtl) barRect.right  = barRect.left + (*iter)->GetBarWidth();
+                    if (isRTL) barRect.right  = barRect.left + (*iter)->GetBarWidth();
                     else     barRect.left   = barRect.right - (*iter)->GetBarWidth();
                 }
 
@@ -3681,9 +3681,9 @@ namespace Win32xx
         int barWidth = pDocker->GetDockBar().GetWidth();
         int dockSize;
 
-        BOOL rtl = FALSE;
+        BOOL isRTL = false;
 #ifdef WS_EX_LAYOUTRTL
-        rtl = (GetExStyle() & WS_EX_LAYOUTRTL);
+        isRTL = ((GetExStyle() & WS_EX_LAYOUTRTL)) != 0;
 #endif
 
         CRect rcDockParent = pDocker->m_pDockParent->GetWindowRect();
@@ -3695,7 +3695,7 @@ namespace Win32xx
         switch (pDocker->GetDockStyle() & 0xF)
         {
         case DS_DOCKED_LEFT:
-            if (rtl) dockSize = rcDock.right - MAX(pt.x, barWidth / 2) - (barWidth / 2);
+            if (isRTL) dockSize = rcDock.right - MAX(pt.x, barWidth / 2) - (barWidth / 2);
             else     dockSize = MAX(pt.x, barWidth / 2) - rcDock.left - (barWidth / 2);
 
             dockSize = MAX(-barWidth, dockSize);
@@ -3703,7 +3703,7 @@ namespace Win32xx
             pDocker->SetDockSize(dockSize);
             break;
         case DS_DOCKED_RIGHT:
-            if (rtl)  dockSize = MAX(pt.x, barWidth / 2) - rcDock.left - (barWidth / 2);
+            if (isRTL)  dockSize = MAX(pt.x, barWidth / 2) - rcDock.left - (barWidth / 2);
             else      dockSize = rcDock.right - MAX(pt.x, barWidth / 2) - (barWidth / 2);
 
             dockSize = MAX(-barWidth, dockSize);

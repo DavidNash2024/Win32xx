@@ -182,8 +182,7 @@ namespace Win32xx
 {
 
 // required for Borland 5.5 support
-#if !(defined(__BORLANDC__) || (__BORLANDC__ >= 0x600))
-    //============================================================================
+#if !defined(__BORLANDC__) || (__BORLANDC__ >= 0x600)
     inline tStringStream& operator>>(tStringStream& ts, BYTE& value)
     {
         UINT u = 0;
@@ -793,11 +792,11 @@ namespace Win32xx
         HWND control = PrepareCtrl(id);
 
         // Assure that the control is a radio button and part of a group.
-        BOOL firstInGroup = ::GetWindowLongPtr(control, GWL_STYLE) & WS_GROUP;
+        bool firstInGroup = (::GetWindowLongPtr(control, GWL_STYLE) & WS_GROUP) != 0;
         assert(firstInGroup);
 
         // Assure the button is a radio button.
-        BOOL isRadioButton = ::GetWindowLongPtr(control, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON);
+        bool isRadioButton = (::GetWindowLongPtr(control, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON)) != 0;
         assert(isRadioButton);
 
         // preset the returned value to empty in case no button is set
@@ -838,8 +837,8 @@ namespace Win32xx
             control = ::GetWindow(control, GW_HWNDNEXT);
             if (control)
             {
-                isRadioButton = ::GetWindowLongPtr(control, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON);
-                firstInGroup  = ::GetWindowLongPtr(control, GWL_STYLE) & WS_GROUP;
+                isRadioButton = (::GetWindowLongPtr(control, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON)) != 0;
+                firstInGroup  = (::GetWindowLongPtr(control, GWL_STYLE) & WS_GROUP) != 0;
             }
         }
     }

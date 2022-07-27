@@ -292,17 +292,17 @@ void CView::SetColumns()
     lvColumn.fmt = LVCFMT_LEFT;
 
     // 1st column
-    lvColumn.pszText = _T("Name");
+    lvColumn.pszText = const_cast<LPTSTR>(_T("Name"));
     lvColumn.cx = 130;
     InsertColumn(0, lvColumn);
 
     // 2nd column
-    lvColumn.pszText = _T("Size");
+    lvColumn.pszText = const_cast<LPTSTR>(_T("Size"));
     lvColumn.cx = 80;
     InsertColumn(1, lvColumn);
 
     // 3rd column
-    lvColumn.pszText = _T("Type");
+    lvColumn.pszText = const_cast<LPTSTR>(_T("Type"));
     lvColumn.cx = 160;
     InsertColumn(2, lvColumn);
 }
@@ -358,7 +358,7 @@ void CView::SortColumn(int column, bool isSortDown)
     SetHeaderSortImage(column, isSortDown ? SHOW_UP_ARROW : SHOW_DOWN_ARROW);
 
     // Select the previously selected or first item
-    if (GetSelectedCount() > 0)
+    if (GetSelectionMark() > 0)
         SetItemState(GetSelectionMark(), LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
     else
         SetItemState(0, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);

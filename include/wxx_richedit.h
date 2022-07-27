@@ -531,7 +531,7 @@ namespace Win32xx
         assert(IsWindow());
         CHARRANGE range;
 
-        SendMessage(EM_EXGETSEL, 0, (WPARAM)&range);
+        SendMessage(EM_EXGETSEL, 0, (LPARAM)&range);
         startChar = range.cpMin;
         endChar   = range.cpMax;
     }

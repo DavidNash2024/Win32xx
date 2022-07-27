@@ -641,7 +641,7 @@ namespace Win32xx
     // Draw the tab borders.
     inline void CTab::DrawTabBorders(CDC& dc, RECT& rc)
     {
-        BOOL isBottomTab = GetStyle() & TCS_BOTTOM;
+        bool isBottomTab = (GetStyle() & TCS_BOTTOM) != 0;
 
         // Draw a lighter rectangle touching the tab buttons.
         CRect rcItem;
@@ -1129,9 +1129,9 @@ namespace Win32xx
     // We use double buffering and regions to eliminate flicker.
     inline void CTab::Paint()
     {
-        BOOL RTL = FALSE;
+        bool isRTL = FALSE;
 #if (WINVER >= 0x0500)
-        RTL = (GetExStyle() & WS_EX_LAYOUTRTL);
+        isRTL = ((GetExStyle() & WS_EX_LAYOUTRTL)) != 0;
 #endif
 
         // Create the memory DC and bitmap.
@@ -1158,7 +1158,7 @@ namespace Win32xx
         if (rcTab.Width() < 0)
             rcTab.left = rcTab.right;
 
-        int offset = RTL ? -1 : 0;  // Required for RTL layout.
+        int offset = isRTL ? -1 : 0;  // Required for RTL layout.
         CRgn rgnSrc2;
         rgnSrc2.CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + offset, rcTab.bottom);
         CRgn rgnClip;
@@ -1181,7 +1181,7 @@ namespace Win32xx
         // Now copy our from our memory DC to the window DC.
         dcView.SelectClipRgn(rgnClip);
 
-        if (RTL)
+        if (isRTL)
         {
             // BitBlt offset bitmap copies by one for Right-To-Left layout.
             dcView.BitBlt(0, 0, 1, rcClient.Height(), memDC, 1, 0, SRCCOPY);

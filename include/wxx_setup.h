@@ -250,13 +250,13 @@ namespace Win32xx
 
             if (::GetProcAddress(comCtl, "DllGetVersion"))
             {
-                typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
-                DLLGETVERSION* pfnDLLGetVersion = NULL;
+                DLLGETVERSIONPROC pfnDLLGetVersion;
 
-                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSION*>(::GetProcAddress(comCtl, "DllGetVersion"));
+                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSIONPROC>(::GetProcAddress(comCtl, "DllGetVersion"));
                 if (pfnDLLGetVersion)
                 {
                     DLLVERSIONINFO dvi;
+                    ZeroMemory(&dvi, sizeof(dvi));
                     dvi.cbSize = sizeof dvi;
                     if (NOERROR == pfnDLLGetVersion(&dvi))
                     {

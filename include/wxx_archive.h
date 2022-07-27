@@ -469,7 +469,7 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline CArchive& CArchive::operator<<(const CStringA& string)
     {
-        UINT chars = string.GetLength();
+        int chars = string.GetLength();
         bool isUnicode = false;
 
         // Store the Unicode state and number of characters in the archive
@@ -485,7 +485,7 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline CArchive& CArchive::operator<<(const CStringW& string)
     {
-        UINT chars = string.GetLength();
+        int chars = string.GetLength();
         bool isUnicode = true;
 
         // Store the Unicode state and number of characters in the archive
@@ -501,7 +501,7 @@ namespace Win32xx
     // Throws an exception if an error occurs.
     inline CArchive& CArchive::operator<<(const CString& string)
     {
-        UINT chars = string.GetLength();
+        int chars = string.GetLength();
         bool isUnicode = (sizeof(TCHAR) == sizeof(WCHAR));
 
         // Store the Unicode state and number of characters in the archive
