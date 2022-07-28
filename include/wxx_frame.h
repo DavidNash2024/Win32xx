@@ -3252,8 +3252,8 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::UpdateMenuBarBandSize()
     {
-        int nBand = GetReBar().GetBand(GetMenuBar());
-        if (nBand >= 0)
+        int band = GetReBar().GetBand(GetMenuBar());
+        if (band >= 0)
         {
             REBARBANDINFO rbbi;
             ZeroMemory(&rbbi, sizeof(rbbi));
@@ -3264,7 +3264,7 @@ namespace Win32xx
             rbbi.fMask      = RBBIM_CHILDSIZE;
             rbbi.cyMinChild = MenuBar_Height;
             rbbi.cyMaxChild = MenuBar_Height;
-            GetReBar().SetBandInfo(nBand, rbbi);
+            GetReBar().SetBandInfo(band, rbbi);
         }
     }
 
