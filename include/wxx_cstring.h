@@ -219,6 +219,10 @@ namespace Win32xx
     private:
         int     lstrlenT(const CHAR* text) const  { return lstrlenA(text); }
         int     lstrlenT(const WCHAR* text) const { return lstrlenW(text); }
+
+        // These functions return CHAR instead of int.
+        static CHAR ToLower(CHAR c) { return ::tolower(c) & 0xFF; }
+        static CHAR ToUpper(CHAR c) { return ::toupper(c) & 0xFF; }
     };
 
     // CStringA is a char only version of CString
@@ -1034,7 +1038,7 @@ namespace Win32xx
     template <>
     inline void CStringT<CHAR>::MakeLower()
     {
-        std::transform(m_str.begin(), m_str.end(), m_str.begin(), (CHAR(*)(int))::tolower);
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(), ToLower);
     }
 
     // Converts all the characters in this string to lowercase characters.
@@ -1048,7 +1052,6 @@ namespace Win32xx
     template <class T>
     inline void CStringT<T>::MakeReverse()
     {
-        // Error 2285 with Borland 5.5 occurs here unless option -tWM is used instead of -tW
         std::reverse(m_str.begin(), m_str.end());
     }
 
@@ -1056,15 +1059,13 @@ namespace Win32xx
     template <>
     inline void CStringT<CHAR>::MakeUpper()
     {
-        // Error 2285 with Borland 5.5 occurs here unless option -tWM is used instead of -tW
-        std::transform(m_str.begin(), m_str.end(), m_str.begin(), (CHAR(*)(int))::toupper);
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(), ToUpper);
     }
 
     // Converts all the characters in this string to uppercase characters.
     template <>
     inline void CStringT<WCHAR>::MakeUpper()
     {
-        // Error 2285 with Borland 5.5 occurs here unless option -tWM is used instead of -tW
         std::transform(m_str.begin(), m_str.end(), m_str.begin(), ::towupper);
     }
 

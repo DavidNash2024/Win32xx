@@ -391,15 +391,15 @@ namespace Win32xx
         assert(IsWindow());
 
         int OldrcTop = -1;
-        for (int nBand = GetBandCount() -1; nBand >= 0; --nBand)
+        for (int band = GetBandCount() -1; band >= 0; --band)
         {
-            CRect rc = GetBandRect(nBand);
+            CRect rc = GetBandRect(band);
             if (rc.top != OldrcTop)
             {
                 // Maximize the last band on each row
-                if (IsBandVisible(nBand))
+                if (IsBandVisible(band))
                 {
-                    SendMessage(RB_MAXIMIZEBAND, nBand, 0);
+                    SendMessage(RB_MAXIMIZEBAND, band, 0);
                     OldrcTop = rc.top;
                 }
             }
@@ -458,11 +458,11 @@ namespace Win32xx
     // Called when a child toolbar window is resized.
     inline LRESULT CReBar::OnToolBarResize(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        HWND hToolBar = reinterpret_cast<HWND>(wparam);
+        HWND toolBar = reinterpret_cast<HWND>(wparam);
         LPSIZE pToolBarSize = reinterpret_cast<LPSIZE>(lparam);
-        int nBand = GetBand(hToolBar);
-        if (nBand != -1)
-            ResizeBand(nBand, *pToolBarSize);
+        int band = GetBand(toolBar);
+        if (band != -1)
+            ResizeBand(band, *pToolBarSize);
 
         return FinalWindowProc(msg, wparam, lparam);
     }
