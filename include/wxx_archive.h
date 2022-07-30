@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -701,11 +701,12 @@ namespace Win32xx
         // Retrieve the Unicode state and number of characters from the archive
         *this >> isUnicode;
         *this >> chars;
+        assert(chars >= 0);
 
         if (isUnicode)
             throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArNotCStringA());
 
-        Read(string.GetBuffer(chars), chars);
+        Read(string.GetBuffer(chars), static_cast<UINT>(chars));
         string.ReleaseBuffer(chars);
 
         return *this;
@@ -721,11 +722,12 @@ namespace Win32xx
         // Retrieve the Unicode state and number of characters from the archive
         *this >> isUnicode;
         *this >> chars;
+        assert(chars >= 0);
 
         if (!isUnicode)
             throw CFileException(m_pFile->GetFilePath(), GetApp()->MsgArNotCStringW());
 
-        Read(string.GetBuffer(chars), chars * 2);
+        Read(string.GetBuffer(chars), static_cast<UINT>(chars) * 2);
         string.ReleaseBuffer(chars);
 
         return *this;
@@ -741,6 +743,7 @@ namespace Win32xx
         // Retrieve the Unicode state and number of characters from the archive
         *this >> isUnicode;
         *this >> chars;
+        assert(chars >= 0);
 
         if (isUnicode)
         {
@@ -748,7 +751,7 @@ namespace Win32xx
             std::vector<WCHAR> vWChar(size_t(chars) + 1, L'\0');
             WCHAR* buf = &vWChar.front();
 
-            Read(buf, chars*2);
+            Read(buf, static_cast<UINT>(chars)*2);
 
 #ifdef UNICODE
             memcpy(string.GetBuffer(chars), buf, size_t(chars)*2);
@@ -765,7 +768,7 @@ namespace Win32xx
             std::vector<char> vChar(size_t(chars) + 1, '\0');
             char* buf = &vChar.front();
 
-            Read(buf, int(chars));
+            Read(buf, static_cast<UINT>(chars));
 
 #ifdef UNICODE
             // Convert the archive string from Ansi to Wide
@@ -774,7 +777,7 @@ namespace Win32xx
             memcpy(string.GetBuffer(chars), buf, chars);
 #endif
 
-            string.ReleaseBuffer(int(chars));
+            string.ReleaseBuffer(chars);
         }
 
         return *this;

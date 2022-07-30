@@ -17,6 +17,7 @@ public:
 
 protected:
     virtual void OnAttach();
+    virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
     CFont   m_font;

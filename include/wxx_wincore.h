@@ -288,7 +288,7 @@ namespace Win32xx
             cs.lpszClass = _T("Win32++ Window");
 
         // Set a reasonable default window style.
-        DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+        LONG dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
         cs.style = WS_VISIBLE | ((parent)? WS_CHILD : dwOverlappedStyle );
 
         // Set a reasonable default window position
@@ -303,7 +303,7 @@ namespace Win32xx
         // Allow the CREATESTRUCT parameters to be modified.
         PreCreate(cs);
 
-        DWORD style = cs.style & ~WS_VISIBLE;
+        DWORD style = static_cast<DWORD>(cs.style & ~WS_VISIBLE);
         HWND wnd;
 
         // Create the window.

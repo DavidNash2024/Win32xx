@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -481,7 +481,7 @@ namespace Win32xx
     inline int CEdit::GetLine(int index, LPTSTR buffer) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_GETLINE, index, (LPARAM)buffer));
+        return static_cast<int>(SendMessage(EM_GETLINE, (WPARAM)index, (LPARAM)buffer));
     }
 
     // Copies characters to a buffer and returns the number of characters copied.

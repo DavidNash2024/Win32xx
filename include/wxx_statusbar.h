@@ -109,7 +109,7 @@ namespace Win32xx
         PreCreate(cs);
 
         // Create the status bar window.
-        HWND wnd = CreateEx(cs.dwExStyle, STATUSCLASSNAME, 0, cs.style,
+        HWND wnd = CreateEx(cs.dwExStyle, STATUSCLASSNAME, 0, static_cast<DWORD>(cs.style),
             cs.x, cs.y, cs.cx, cs.cy, parent, 0, cs.lpCreateParams);
 
         return wnd;
@@ -263,7 +263,7 @@ namespace Win32xx
     inline void CStatusBar::SetSimple(BOOL isSimple /* = TRUE*/) const
     {
         assert(IsWindow());
-        SendMessage(SB_SIMPLE, isSimple, 0);
+        SendMessage(SB_SIMPLE, (WPARAM)isSimple, 0);
     }
 
 } // namespace Win32xx

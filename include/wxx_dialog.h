@@ -1027,11 +1027,11 @@ namespace Win32xx
         si.cbSize = sizeof(si);
         si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
         si.nMax   = m_minRect.Width();
-        si.nPage  = currentRect.Width();
+        si.nPage  = static_cast<UINT>(currentRect.Width());
         si.nPos   = m_xScrollPos;
         ::SetScrollInfo(m_parent, SB_HORZ, &si, TRUE);
         si.nMax   = m_minRect.Height();
-        si.nPage  = currentRect.Height();
+        si.nPage  = static_cast<UINT>(currentRect.Height());
         si.nPos   = m_yScrollPos;
         ::SetScrollInfo(m_parent, SB_VERT, &si, TRUE);
 

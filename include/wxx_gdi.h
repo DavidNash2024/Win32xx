@@ -212,7 +212,7 @@ namespace Win32xx
         CBitmap();
         CBitmap(HBITMAP bitmap);
         CBitmap(LPCTSTR resourceName);
-        CBitmap(int resourceID);
+        CBitmap(UINT resourceID);
         operator HBITMAP() const;
         virtual ~CBitmap();
 
@@ -228,7 +228,7 @@ namespace Win32xx
         int  GetDIBits(HDC dc, UINT startScan, UINT scanLines,  LPVOID pBits, LPBITMAPINFO pBMI, UINT colorUse) const;
         void GrayScaleBitmap();
         BOOL LoadBitmap(LPCTSTR resourceName);
-        BOOL LoadBitmap(int id);
+        BOOL LoadBitmap(UINT id);
         BOOL LoadImage(LPCTSTR resourceName, UINT flags = 0);
         BOOL LoadImage(UINT id, UINT flags = 0);
         BOOL LoadImage(LPCTSTR resourceName, int cxDesired, int cyDesired, UINT flags);
@@ -1048,7 +1048,7 @@ namespace Win32xx
             m_pbmiArray->bmiHeader.biBitCount   = data.bmBitsPixel;
             m_pbmiArray->bmiHeader.biCompression = BI_RGB;
             if (cClrBits < 24)
-                m_pbmiArray->bmiHeader.biClrUsed = (1 << cClrBits);
+                m_pbmiArray->bmiHeader.biClrUsed = (1U << cClrBits);
         }
         LPBITMAPINFO get() const { return m_pbmiArray; }
         operator LPBITMAPINFO() const { return m_pbmiArray; }
@@ -1279,7 +1279,7 @@ namespace Win32xx
         LoadBitmap(resourceName);
     }
 
-    inline CBitmap::CBitmap(int resourceID)
+    inline CBitmap::CBitmap(UINT resourceID)
     {
         LoadBitmap(resourceID);
     }
@@ -1295,7 +1295,7 @@ namespace Win32xx
 
     // Loads a bitmap from a resource using the resource ID.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadBitmap(int resourceID)
+    inline BOOL CBitmap::LoadBitmap(UINT resourceID)
     {
         return LoadBitmap(MAKEINTRESOURCE(resourceID));
     }
@@ -1389,11 +1389,12 @@ namespace Win32xx
         CBitmapInfoPtr pbmi(*this);
         BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
         bmiHeader.biBitCount = 24;
-        VERIFY(dc.GetDIBits(*this, 0, data.bmHeight, NULL, pbmi, DIB_RGB_COLORS));
+        UINT scanLines = static_cast<UINT>(data.bmHeight);
+        VERIFY(dc.GetDIBits(*this, 0, scanLines, NULL, pbmi, DIB_RGB_COLORS));
         DWORD size = pbmi->bmiHeader.biSizeImage;
         std::vector<byte> vBits(size, 0);
         byte* bits = &vBits.front();
-        VERIFY(dc.GetDIBits(*this, 0, data.bmHeight, bits, pbmi, DIB_RGB_COLORS));
+        VERIFY(dc.GetDIBits(*this, 0, scanLines, bits, pbmi, DIB_RGB_COLORS));
 
         UINT widthBytes = bmiHeader.biSizeImage / bmiHeader.biHeight;
         int yOffset = 0;
@@ -1428,7 +1429,7 @@ namespace Win32xx
             yOffset += widthBytes;
         }
 
-        VERIFY(dc.SetDIBits(*this, 0, data.bmHeight, bits, pbmi, DIB_RGB_COLORS));
+        VERIFY(dc.SetDIBits(*this, 0, scanLines, bits, pbmi, DIB_RGB_COLORS));
     }
 
     // Creates a new image and copies the attributes of the specified image
@@ -1579,11 +1580,12 @@ namespace Win32xx
         CMemDC memDC(0);
 
         // Use GetDIBits to create a DIB from our DDB, and extract the color data
-        VERIFY(GetDIBits(memDC, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS));
+        UINT scanLines = static_cast<UINT>(bmiHeader.biHeight);
+        VERIFY(GetDIBits(memDC, 0, scanLines, NULL, pbmi, DIB_RGB_COLORS));
         std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
         byte* pByteArray = &vBits[0];
 
-        memDC.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+        memDC.GetDIBits(*this, 0, scanLines, pByteArray, pbmi, DIB_RGB_COLORS);
         UINT widthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
         int yOffset = 0;
@@ -1613,7 +1615,7 @@ namespace Win32xx
         }
 
         // Save the modified color back into our source DDB
-        VERIFY(SetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
+        VERIFY(SetDIBits(memDC, 0, scanLines, pByteArray, pbmi, DIB_RGB_COLORS));
     }
 
     // Modifies the color of the Device Dependent Bitmap, by the color.
@@ -1631,11 +1633,12 @@ namespace Win32xx
         CMemDC memDC(0);
 
         // Use GetDIBits to create a DIB from our DDB, and extract the color data
-        VERIFY(GetDIBits(memDC, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS));
+        UINT scanLines = static_cast<UINT>(bmiHeader.biHeight);
+        VERIFY(GetDIBits(memDC, 0, scanLines, NULL, pbmi, DIB_RGB_COLORS));
         std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
         byte* pByteArray = &vBits[0];
 
-        VERIFY(GetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
+        VERIFY(GetDIBits(memDC, 0, scanLines, pByteArray, pbmi, DIB_RGB_COLORS));
         UINT widthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
         // Ensure sane color correction values
@@ -1693,7 +1696,7 @@ namespace Win32xx
         }
 
         // Save the modified color back into our source DDB
-        VERIFY(SetDIBits(memDC, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS));
+        VERIFY(SetDIBits(memDC, 0, scanLines, pByteArray, pbmi, DIB_RGB_COLORS));
     }
 
     // Creates a DIB that applications can write to directly. The function gives you
@@ -4056,7 +4059,7 @@ namespace Win32xx
     inline BOOL CDC::PolyBezierTo(const POINT* pPointArray, int count) const
     {
         assert(m_pData->dc != 0);
-        return ::PolyBezierTo(m_pData->dc, pPointArray, count );
+        return ::PolyBezierTo(m_pData->dc, pPointArray, count);
     }
 
     // Sets the pixel at the specified coordinates to the specified color.
@@ -4762,7 +4765,7 @@ namespace Win32xx
         if (count == -1)
             count = lstrlen (string);
 
-        return ::ExtTextOut(m_pData->dc, x, y, options, &rc, string, count, pDxWidths);
+        return ::ExtTextOut(m_pData->dc, x, y, options, &rc, string, static_cast<UINT>(count), pDxWidths);
     }
 
     // Draws formatted text in the specified rectangle.
@@ -4957,8 +4960,8 @@ namespace Win32xx
     inline CSize CDC::TabbedTextOut(int x, int y, LPCTSTR string, int count, int tabPositions, LPINT pTabStopPositions, int tabOrigin) const
     {
         assert(m_pData->dc != 0);
-        DWORD size = ::TabbedTextOut(m_pData->dc, x, y, string, count, tabPositions, pTabStopPositions, tabOrigin);
-        CSize sz(size);
+        LONG size = ::TabbedTextOut(m_pData->dc, x, y, string, count, tabPositions, pTabStopPositions, tabOrigin);
+        CSize sz(static_cast<DWORD>(size));
         return sz;
     }
 

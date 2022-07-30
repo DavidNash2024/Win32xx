@@ -399,7 +399,7 @@ namespace Win32xx
                 // Maximize the last band on each row
                 if (IsBandVisible(band))
                 {
-                    SendMessage(RB_MAXIMIZEBAND, band, 0);
+                    SendMessage(RB_MAXIMIZEBAND, (WPARAM)band, 0);
                     OldrcTop = rc.top;
                 }
             }
@@ -487,11 +487,13 @@ namespace Win32xx
         rbbi.cbSize = GetSizeofRBBI();
         rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 
+        UINT cx = static_cast<UINT>(size.cx);
+        UINT cy = static_cast<UINT>(size.cy);
         GetBandInfo(band, rbbi);
-        rbbi.cx         = size.cx + 2;
-        rbbi.cxMinChild = size.cx + 2;
-        rbbi.cyMinChild = size.cy;
-        rbbi.cyMaxChild = size.cy;
+        rbbi.cx         = cx + 2;
+        rbbi.cxMinChild = cx + 2;
+        rbbi.cyMinChild = cy;
+        rbbi.cyMaxChild = cy;
 
         return SetBandInfo(band, rbbi );
     }
@@ -537,7 +539,7 @@ namespace Win32xx
         assert(band >= 0);
 
         bandInfo.cbSize = GetSizeofRBBI();
-        return (SendMessage(RB_SETBANDINFO, (WPARAM)band, (WPARAM)&bandInfo) != 0);
+        return (SendMessage(RB_SETBANDINFO, (WPARAM)band, (LPARAM)&bandInfo) != 0);
     }
 
     // REBARINFO associates an image list with the rebar.

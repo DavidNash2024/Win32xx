@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1117,7 +1117,7 @@ namespace Win32xx
         {
             CString str;
             str.GetWindowText(control);
-            StrCopy(value, str, maxLen);
+            StrCopy(value, str, static_cast<size_t>(maxLen));
         }
         else
         {

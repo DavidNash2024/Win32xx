@@ -1977,7 +1977,7 @@ namespace Win32xx
         if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
             return CWnd::WndProcDefault(msg, wparam, lparam);
 
-        for (UINT i = 0; i < menu.GetMenuItemCount(); ++i)
+        for (int i = 0; i < menu.GetMenuItemCount(); ++i)
         {
             MenuItemData* pItem = new MenuItemData;        // Deleted in OnExitMenuLoop.
             m_menuItemData.push_back(ItemDataPtr(pItem));  // Store pItem in smart pointer for later automatic deletion.
