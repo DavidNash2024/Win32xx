@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -241,7 +241,7 @@ namespace Win32xx
         if (comCtl == 0)
             return 0;
 
-        int comCtlVer = 400;
+        DWORD comCtlVer = 400;
 
         if (::GetProcAddress(comCtl, "InitCommonControlsEx"))
         {
@@ -252,7 +252,9 @@ namespace Win32xx
             {
                 DLLGETVERSIONPROC pfnDLLGetVersion;
 
-                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSIONPROC>(::GetProcAddress(comCtl, "DllGetVersion"));
+                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSIONPROC>(
+                                        reinterpret_cast<void*>(
+                                            ::GetProcAddress(comCtl, "DllGetVersion")));
                 if (pfnDLLGetVersion)
                 {
                     DLLVERSIONINFO dvi;
@@ -272,7 +274,7 @@ namespace Win32xx
 
         ::FreeLibrary(comCtl);
 
-        return comCtlVer;
+        return static_cast<int>(comCtlVer);
     }
 
     // Retrieves the window version
@@ -317,12 +319,12 @@ namespace Win32xx
 #pragma warning ( pop )
 #endif // (_MSC_VER) && (_MSC_VER >= 1400)
 
-        int platform = osvi.dwPlatformId;
-        int majorVer = osvi.dwMajorVersion;
-        int minorVer = osvi.dwMinorVersion;
+        DWORD platform = osvi.dwPlatformId;
+        DWORD majorVer = osvi.dwMajorVersion;
+        DWORD minorVer = osvi.dwMinorVersion;
 
-        int result = 1000 * platform + 100 * majorVer + minorVer;
-        return result;
+        DWORD result = 1000 * platform + 100 * majorVer + minorVer;
+        return static_cast<int>(result);
     }
 
     // Returns a NONCLIENTMETRICS struct filled from the system parameters.
@@ -375,7 +377,9 @@ namespace Win32xx
             // Declare a typedef for the InItCommonControlsEx function.
             typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
-            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(comCtl, "InitCommonControlsEx"));
+            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(
+                                    reinterpret_cast<void*>(
+                                        ::GetProcAddress(comCtl, "InitCommonControlsEx")));
 
             if (pfnInitEx)
             {

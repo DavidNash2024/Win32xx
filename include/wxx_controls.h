@@ -800,7 +800,7 @@ namespace Win32xx
     inline DWORD CComboBox::GetEditSel() const
     {
         assert(IsWindow());
-        return (int)SendMessage(CB_GETEDITSEL, 0, 0);
+        return (DWORD)SendMessage(CB_GETEDITSEL, 0, 0);
     }
 
     // Determines whether the combo box has the default user interface or the extended user interface.
@@ -1029,7 +1029,7 @@ namespace Win32xx
     inline void CComboBox::ShowDropDown(BOOL show) const
     {
         assert(IsWindow());
-        SendMessage(CB_SHOWDROPDOWN, show, 0);
+        SendMessage(CB_SHOWDROPDOWN, (WPARAM)show, 0);
     }
 
 
@@ -1140,7 +1140,7 @@ namespace Win32xx
     inline COLORREF CDateTime::GetMonthCalColor(int region) const
     {
         assert(IsWindow());
-        return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, region));
+        return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, (WPARAM)region));
     }
 
     // Retrieves the handle to the date and time picker's (DTP) child month calendar control.
@@ -1204,7 +1204,7 @@ namespace Win32xx
     inline COLORREF CDateTime::SetMonthCalColor(int region, COLORREF color) const
     {
         assert(IsWindow());
-        return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, region, color));
+        return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, (WPARAM)region, color));
     }
 
     // Sets the font to be used by the date and time picker (DTP) control's child month calendar control.
@@ -1451,7 +1451,7 @@ namespace Win32xx
     inline CString CHotKey::GetKeyName(UINT keyCode, BOOL isExtended) const
     {
         // Translate the virtual-key code to a scan code
-        LONG scan = MapVirtualKey(keyCode, 0);
+        UINT scan = MapVirtualKey(keyCode, 0);
 
         // Construct an LPARAM with the scan code in Bits 16-23, and an extended flag in bit 24
         LPARAM lparam = LPARAM(scan) << 16;
@@ -1625,7 +1625,7 @@ namespace Win32xx
     inline COLORREF CMonthCalendar::GetColor(int region) const
     {
         assert(IsWindow());
-        return static_cast<COLORREF>(MonthCal_GetColor(*this, region));
+        return static_cast<COLORREF>(MonthCal_GetColor(*this, (WPARAM)region));
     }
 
     // Retrieves the currently selected date.
@@ -1657,7 +1657,7 @@ namespace Win32xx
     inline int CMonthCalendar::GetMaxSelCount() const
     {
         assert(IsWindow());
-        return MonthCal_GetMaxSelCount(*this);
+        return (int)MonthCal_GetMaxSelCount(*this);
     }
 
     // Retrieves the minimum size required to display a full month
@@ -1685,7 +1685,7 @@ namespace Win32xx
         assert(IsWindow());
         SYSTEMTIME minMax[2];
         ZeroMemory(minMax, 2*sizeof(SYSTEMTIME));
-        int count = MonthCal_GetMonthRange(*this, flags, minMax);
+        int count = (int)MonthCal_GetMonthRange(*this, flags, minMax);
         minRange = minMax[0];
         maxRange = minMax[1];
         return count;
@@ -1741,7 +1741,7 @@ namespace Win32xx
     inline COLORREF CMonthCalendar::SetColor(int region, COLORREF clr) const
     {
         assert(IsWindow());
-        return static_cast<COLORREF>(MonthCal_SetColor(*this, region, clr));
+        return static_cast<COLORREF>(MonthCal_SetColor(*this, (WPARAM)region, clr));
     }
 
     // Sets the currently selected date for the month calendar control.
@@ -1786,7 +1786,7 @@ namespace Win32xx
     inline int CMonthCalendar::SetMonthDelta(int delta) const
     {
         assert(IsWindow());
-        return MonthCal_SetMonthDelta(*this, delta);
+        return MonthCal_SetMonthDelta(*this, (WPARAM)delta);
     }
 
     // Sets the minimum and maximum allowable dates for the month calendar control.

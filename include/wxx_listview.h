@@ -227,7 +227,7 @@ namespace Win32xx
     inline BOOL CListView::EnsureVisible(int item, BOOL isPartialOK) const
     {
         assert(IsWindow());
-        return (SendMessage(LVM_ENSUREVISIBLE, item, isPartialOK) != 0);
+        return (SendMessage(LVM_ENSUREVISIBLE, item, (WPARAM)isPartialOK) != 0);
     }
 
     // Searches for a list-view item with the specified characteristics.

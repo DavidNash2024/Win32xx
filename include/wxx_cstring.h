@@ -767,7 +767,7 @@ namespace Win32xx
         if (format)
         {
             int result = -1;
-            int length = 256;
+            size_t length = 256;
 
             // A vector is used to store the CHAR array
             std::vector<CHAR> buffer;
@@ -779,7 +779,7 @@ namespace Win32xx
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
                 result = _vsnprintf(&buffer.front(), length, format, args);
 #else
-                result = _vsnprintf_s(&buffer.front(), length, size_t(length)-1, format, args);
+                result = _vsnprintf_s(&buffer.front(), length, length -1, format, args);
 #endif
                 length *= 2;
             }
@@ -795,7 +795,7 @@ namespace Win32xx
         if (format)
         {
             int result = -1;
-            int length = 256;
+            size_t length = 256;
 
             // A vector is used to store the WCHAR array
             std::vector<WCHAR> buffer;
@@ -806,7 +806,7 @@ namespace Win32xx
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
                 result = _vsnwprintf(&buffer.front(), length, format, args);
 #else
-                result = _vsnwprintf_s(&buffer.front(), length, size_t(length)-1, format, args);
+                result = _vsnwprintf_s(&buffer.front(), length, length -1, format, args);
 #endif
                 length *= 2;
             }
@@ -909,11 +909,11 @@ namespace Win32xx
         assert(var);
         Empty();
 
-        int length = ::GetEnvironmentVariableA(var, NULL, 0);
+        DWORD length = ::GetEnvironmentVariableA(var, NULL, 0);
         if (length > 0)
         {
             std::vector<CHAR> buffer(size_t(length) +1, 0 );
-            ::GetEnvironmentVariableA(var, &buffer.front(), DWORD(length));
+            ::GetEnvironmentVariableA(var, &buffer.front(), length);
             m_str = &buffer.front();
         }
 
@@ -927,11 +927,11 @@ namespace Win32xx
         assert(var);
         Empty();
 
-        int length = ::GetEnvironmentVariableW(var, NULL, 0);
+        DWORD length = ::GetEnvironmentVariableW(var, NULL, 0);
         if (length > 0)
         {
-            std::vector<WCHAR> buffer(size_t(length) +1, 0 );
-            ::GetEnvironmentVariableW(var, &buffer.front(), DWORD(length));
+            std::vector<WCHAR> buffer(static_cast<size_t>(length) +1, 0);
+            ::GetEnvironmentVariableW(var, &buffer.front(), length);
             m_str = &buffer.front();
         }
 

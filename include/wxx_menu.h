@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -136,7 +136,7 @@ namespace Win32xx
         BOOL SetMenuInfo(const MENUINFO& mi) const;
 #endif
 
-        UINT GetMenuItemCount() const;
+        int GetMenuItemCount() const;
         UINT GetMenuItemID(int pos) const;
         BOOL GetMenuItemInfo(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition = FALSE) const;
         UINT GetMenuState(UINT id, UINT flags) const;
@@ -468,7 +468,7 @@ namespace Win32xx
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        return ::EnableMenuItem(m_pData->menu, enableItemID, enable);
+        return static_cast<UINT>(::EnableMenuItem(m_pData->menu, enableItemID, enable));
     }
 
     // Finds the position of a menu item with the specified string.
@@ -482,7 +482,7 @@ namespace Win32xx
         int count = GetMenuItemCount();
         for (int i = 0; i < count; i++)
         {
-            if (GetMenuString(i, str, MF_BYPOSITION))
+            if (GetMenuString(static_cast<UINT>(i), str, MF_BYPOSITION))
             {
                 if (str == menuName)
                     return i;
@@ -501,7 +501,7 @@ namespace Win32xx
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        return ::GetMenuDefaultItem(m_pData->menu, byPosition, flags);
+        return ::GetMenuDefaultItem(m_pData->menu, static_cast<UINT>(byPosition), flags);
     }
 
     // Retrieves the Help context identifier associated with the menu.
@@ -543,7 +543,7 @@ namespace Win32xx
 
     // Retrieves the number of menu items.
     // Refer to GetMenuItemCount in the Windows API documentation for more information.
-    inline UINT CMenu::GetMenuItemCount() const
+    inline int CMenu::GetMenuItemCount() const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
@@ -757,7 +757,7 @@ namespace Win32xx
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        return ::SetMenuDefaultItem(m_pData->menu, item, byPosition);
+        return ::SetMenuDefaultItem(m_pData->menu, item, static_cast<UINT>(byPosition));
     }
 
     // Associates a Help context identifier with the menu.

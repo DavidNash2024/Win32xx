@@ -262,7 +262,7 @@ namespace Win32xx
     inline CImageList CTreeView::GetImageList(int imageType) const
     {
         assert(IsWindow());
-        HIMAGELIST images = TreeView_GetImageList( *this, imageType );
+        HIMAGELIST images = TreeView_GetImageList( *this, (WPARAM)imageType );
         return CImageList(images);
     }
 
@@ -301,7 +301,7 @@ namespace Win32xx
         tvi.mask = TVIF_PARAM;
         tvi.hItem = item;
         SendMessage(TVM_GETITEM, 0, (LPARAM)&tvi);
-        return tvi.lParam;
+        return static_cast<DWORD_PTR>(tvi.lParam);
     }
 
     // Retrieves the current height of the tree-view item.
@@ -632,7 +632,7 @@ namespace Win32xx
     inline HIMAGELIST CTreeView::SetImageList(HIMAGELIST images, int type /*= TVSIL_NORMAL*/) const
     {
         assert(IsWindow());
-        HIMAGELIST oldImages = TreeView_SetImageList( *this, images, type );
+        HIMAGELIST oldImages = TreeView_SetImageList( *this, (WPARAM)images, type );
         return oldImages;
     }
 
@@ -698,7 +698,7 @@ namespace Win32xx
         ZeroMemory(&tvi, sizeof(tvi));
         tvi.hItem = item;
         tvi.mask = TVIF_PARAM;
-        tvi.lParam = data;
+        tvi.lParam = (LPARAM)data;
         return TreeView_SetItem( *this, &tvi );
     }
 

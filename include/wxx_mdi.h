@@ -904,7 +904,7 @@ namespace Win32xx
 
         // Set the window style
         DWORD style;
-        style = cs.style & ~WS_MAXIMIZE;
+        style = static_cast<DWORD>(cs.style) & ~WS_MAXIMIZE;
         style |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
 
         // Set window size and position

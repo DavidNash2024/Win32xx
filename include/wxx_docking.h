@@ -184,7 +184,7 @@ namespace Win32xx
         virtual void RecalcLayout();
         virtual void RemoveContainer(CDockContainer* pWnd, BOOL updateParent = TRUE);
         virtual void SelectPage(int page);
-        virtual void SwapTabs(UINT tab1, UINT tab2);
+        virtual void SwapTabs(int tab1, int tab2);
 
         // Accessors and mutators
         CDockContainer* GetActiveContainer() const;
@@ -1235,15 +1235,14 @@ namespace Win32xx
                         CDockContainer* pActive = pContainer->GetActiveContainer();
                         if (pActive)
                         {
-                            int lastTab = static_cast<int>(pParent->GetAllContainers().size()) - 1;
-                            assert(lastTab >= 0);
+                            assert(pParent->GetAllContainers().size() > 0);
+                            UINT lastTab = static_cast<UINT>(pParent->GetAllContainers().size()) - 1;
                             CDockContainer* pContainerLast = pContainer->GetContainerFromIndex(lastTab);
                             m_pDocker->GetDockAncestor()->UndockContainer(pContainerLast, GetCursorPos(), FALSE);
 
                             while (pParent->GetAllContainers().size() > 0)
                             {
-                                lastTab = static_cast<int>(pParent->GetAllContainers().size()) - 1;
-                                assert(lastTab >= 0);
+                                lastTab = static_cast<UINT>(pParent->GetAllContainers().size()) - 1;
                                 CDockContainer* pContainerNext = pContainer->GetContainerFromIndex(lastTab);
 
                                 CDocker* pDocker = pContainerNext->GetDocker();
@@ -4723,7 +4722,7 @@ namespace Win32xx
         {
             TCHITTESTINFO info;
             ZeroMemory(&info, sizeof(info));
-            info.pt = CPoint(static_cast<DWORD_PTR>(lparam));
+            info.pt = CPoint(lparam);
             int nTab = HitTest(info);
             if (nTab >= 0 && m_pressedTab >= 0)
             {
@@ -5046,34 +5045,36 @@ namespace Win32xx
     }
 
     // Swaps the positions of the specified tabs.
-    inline void CDockContainer::SwapTabs(UINT tab1, UINT tab2)
+    inline void CDockContainer::SwapTabs(int tab1, int tab2)
     {
-        assert (tab1 < GetContainerParent()->m_allInfo.size());
-        assert (tab2 < GetContainerParent()->m_allInfo.size());
+        size_t tab1Index = static_cast<size_t>(tab1);
+        size_t tab2Index = static_cast<size_t>(tab2);
+        assert (tab1Index < GetContainerParent()->m_allInfo.size());
+        assert (tab2Index < GetContainerParent()->m_allInfo.size());
 
         if (tab1 != tab2)
         {
-            ContainerInfo CI1 = GetContainerParent()->m_allInfo[tab1];
-            ContainerInfo CI2 = GetContainerParent()->m_allInfo[tab2];
+            ContainerInfo info1 = GetContainerParent()->m_allInfo[tab1Index];
+            ContainerInfo info2 = GetContainerParent()->m_allInfo[tab2Index];
 
             TCITEM Item1;
             ZeroMemory(&Item1, sizeof(Item1));
             Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
-            Item1.cchTextMax = CI1.tabText.GetLength()+1;
-            Item1.pszText = const_cast<LPTSTR>(CI1.tabText.c_str());
+            Item1.cchTextMax = info1.tabText.GetLength()+1;
+            Item1.pszText = const_cast<LPTSTR>(info1.tabText.c_str());
             GetItem(tab1, &Item1);
 
             TCITEM Item2;
             ZeroMemory(&Item2, sizeof(Item2));
             Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
-            Item2.cchTextMax = CI2.tabText.GetLength()+1;
-            Item2.pszText = const_cast<LPTSTR>(CI2.tabText.c_str());
+            Item2.cchTextMax = info2.tabText.GetLength()+1;
+            Item2.pszText = const_cast<LPTSTR>(info2.tabText.c_str());
             GetItem(tab2, &Item2);
 
             SetItem(tab1, &Item2);
             SetItem(tab2, &Item1);
-            GetContainerParent()->m_allInfo[tab1] = CI2;
-            GetContainerParent()->m_allInfo[tab2] = CI1;
+            GetContainerParent()->m_allInfo[tab1Index] = info2;
+            GetContainerParent()->m_allInfo[tab2Index] = info1;
         }
     }
 

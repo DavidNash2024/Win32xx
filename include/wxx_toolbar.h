@@ -232,8 +232,8 @@ namespace Win32xx
         else
         {
             tbb.iBitmap = nImages;
-            tbb.idCommand = id;
-            tbb.fsState = isEnabled? TBSTATE_ENABLED : 0;
+            tbb.idCommand = static_cast<int>(id);
+            tbb.fsState = isEnabled? TBSTATE_ENABLED : 0U;
             tbb.fsStyle = TBSTYLE_BUTTON;
         }
 

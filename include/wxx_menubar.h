@@ -550,9 +550,9 @@ namespace Win32xx
                 if (mdiButton >= 0)
                 {
                     CClientDC MenuBarDC(*this);
-                    DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == mdiButton) ? 2 : 0);
-                    DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == mdiButton) ? 2 : 0);
-                    DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == mdiButton) ? 2 : 0);
+                    DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == mdiButton) ? 2U : 0U);
+                    DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == mdiButton) ? 2U : 0U);
+                    DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == mdiButton) ? 2U : 0U);
                 }
 
                 // Bring up the MDI Child window's system menu when the icon is pressed
@@ -1169,9 +1169,9 @@ namespace Win32xx
                     // Toggle the MDI button image pressed/unpressed as required.
                     if (MDIButton >= 0)
                     {
-                        DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == MDIButton) ? 2 : 0);
-                        DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == MDIButton) ? 2 : 0);
-                        DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == MDIButton) ? 2 : 0);
+                        DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == MDIButton) ? 2U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == MDIButton) ? 2U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == MDIButton) ? 2U : 0U);
                     }
                     else
                     {
@@ -1184,9 +1184,9 @@ namespace Win32xx
                 {
                     if (MDIButton >= 0)
                     {
-                        DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == MDIButton) ? 1 : 0);
-                        DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == MDIButton) ? 1 : 0);
-                        DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == MDIButton) ? 1 : 0);
+                        DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == MDIButton) ? 1U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == MDIButton) ? 1U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == MDIButton) ? 1U : 0U);
                     }
                     else
                     {

@@ -839,7 +839,7 @@ namespace Win32xx
 
         // store CTime as x64
         time_t tt = t;
-        tx64 = tt;
+        tx64 = static_cast<ULONGLONG>(tt);
         ar.Write(&tx64, size);
         return ar;
     }
@@ -1107,7 +1107,7 @@ namespace Win32xx
         ar.Write(&size, sizeof(size));
 
         // store CTimeSpan as x64
-        tsx64 = ts;
+        tsx64 = static_cast<ULONGLONG>(ts);
         ar.Write(&tsx64, size);
         return ar;
     }

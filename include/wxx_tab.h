@@ -56,7 +56,7 @@ namespace Win32xx
     {
         CString TabText;    // The tab's text
         int image;          // index of this tab's image
-        int idTab;          // identifier for this tab (used by TabbedMDI)
+        UINT idTab;         // identifier for this tab (used by TabbedMDI)
         CWnd* pView;        // pointer to the view window
         TabPageInfo() : image(0), idTab(0), pView(0) {}    // constructor
     };
@@ -108,7 +108,7 @@ namespace Win32xx
         virtual void   SelectPage(int page);
         virtual void   RecalcLayout();
         virtual void   RemoveTabPage(int page);
-        virtual void   SwapTabs(UINT tab1, UINT tab2);
+        virtual void   SwapTabs(int tab1, int tab2);
 
         // Accessors
         CWnd* GetActiveView() const         { return m_pActiveView; }
@@ -121,11 +121,11 @@ namespace Win32xx
         BOOL GetShowButtons() const         { return m_isShowingButtons; }
         BOOL GetTabsAtTop() const;
         CFont GetTabFont() const            { return m_tabFont; }
-        int GetTabImageID(UINT tab) const;
+        int GetTabImageID(int tab) const;
         int GetTabIndex(CWnd* pWnd) const;
         int GetTabHeight() const            { return m_tabHeight; }
-        TabPageInfo GetTabPageInfo(UINT tab) const;
-        CString GetTabText(UINT tab) const;
+        TabPageInfo GetTabPageInfo(int tab) const;
+        CString GetTabText(int tab) const;
         int GetTextHeight() const;
 
         //  Mutators
@@ -138,7 +138,7 @@ namespace Win32xx
         void SetTabHeight(int height);
         void SetTabIcon(int tab, HICON icon);
         void SetTabsAtTop(BOOL isAtTop);
-        void SetTabText(UINT tab, LPCTSTR text);
+        void SetTabText(int tab, LPCTSTR text);
 
         // State functions
         void ShowListDialog();
@@ -444,7 +444,7 @@ namespace Win32xx
 
         CPoint pt = GetCursorPos();
         VERIFY(ScreenToClient(pt));
-        UINT uState = rcClose.PtInRect(pt)? m_isClosePressed? 2: 1: 0;
+        UINT uState = rcClose.PtInRect(pt)? m_isClosePressed? 2U: 1U: 0U;
 
         // Draw the outer highlight for the close button.
         if (!IsRectEmpty(&rcClose))
@@ -527,7 +527,7 @@ namespace Win32xx
 
         CPoint pt = GetCursorPos();
         VERIFY(ScreenToClient(pt));
-        UINT uState = rcList.PtInRect(pt)? 1: 0;
+        UINT uState = rcList.PtInRect(pt)? 1U: 0U;
         if (m_isListMenuActive) uState = 2;
 
         // Draw the outer highlight for the list button.
@@ -735,7 +735,7 @@ namespace Win32xx
             listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +9, _T("More Tabs"));
 
         // Add a checkmark to the menu.
-        int selected = GetCurSel();
+        UINT selected = static_cast<UINT>(GetCurSel());
         if (selected < 9)
             listMenu.CheckMenuItem(selected, MF_BYPOSITION|MF_CHECKED);
 
@@ -809,34 +809,37 @@ namespace Win32xx
     {
         assert(pWnd);
 
-        for (int i = 0; i < static_cast<int>(m_allTabPageInfo.size()); ++i)
+        for (size_t i = 0; i < m_allTabPageInfo.size(); ++i)
         {
             if (m_allTabPageInfo[i].pView == pWnd)
-                return i;
+                return static_cast<int>(i);
         }
 
         return -1;
     }
 
     // Returns the tab page info struct for the specified tab.
-    inline TabPageInfo CTab::GetTabPageInfo(UINT tab) const
+    inline TabPageInfo CTab::GetTabPageInfo(int tab) const
     {
-        assert (tab < m_allTabPageInfo.size());
-        return m_allTabPageInfo[tab];
+        size_t tabIndex = static_cast<size_t>(tab);
+        assert (tabIndex < m_allTabPageInfo.size());
+        return m_allTabPageInfo[tabIndex];
     }
 
     // Returns the image ID for the specified tab.
-    inline int CTab::GetTabImageID(UINT tab) const
+    inline int CTab::GetTabImageID(int tab) const
     {
-        assert (tab < m_allTabPageInfo.size());
-        return m_allTabPageInfo[tab].image;
+        size_t tabIndex = static_cast<size_t>(tab);
+        assert (tabIndex < m_allTabPageInfo.size());
+        return m_allTabPageInfo[tabIndex].image;
     }
 
     // Returns the text for the specified tab.
-    inline CString CTab::GetTabText(UINT tab) const
+    inline CString CTab::GetTabText(int tab) const
     {
-        assert (tab < m_allTabPageInfo.size());
-        return m_allTabPageInfo[tab].TabText;
+        size_t tabIndex = static_cast<size_t>(tab);
+        assert (tabIndex < m_allTabPageInfo.size());
+        return m_allTabPageInfo[tabIndex].TabText;
     }
 
     // Sends a UMN_TABCHANGED notification.
@@ -868,8 +871,8 @@ namespace Win32xx
         TABNMHDR TabNMHDR;
         TabNMHDR.hdr.code = UWN_TABCLOSE;
         TabNMHDR.hdr.hwndFrom = *this;
-        TabNMHDR.hdr.idFrom = idCtrl;
-        TabNMHDR.nPage = page;
+        TabNMHDR.hdr.idFrom = static_cast<UINT>(idCtrl);
+        TabNMHDR.nPage = static_cast<UINT>(page);
 
         // The default return value is zero.
         return (GetParent().SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&TabNMHDR) != 0);
@@ -892,7 +895,7 @@ namespace Win32xx
         if (!(GetStyle() & TCS_OWNERDRAWFIXED))
             SetImageList(m_odImages);
 
-        for (int i = 0; i < static_cast<int>(m_allTabPageInfo.size()); ++i)
+        for (size_t i = 0; i < m_allTabPageInfo.size(); ++i)
         {
             // Add tabs for each view.
             TCITEM tie;
@@ -900,7 +903,7 @@ namespace Win32xx
             tie.mask = TCIF_TEXT | TCIF_IMAGE;
             tie.iImage = m_allTabPageInfo[i].image;
             tie.pszText = const_cast<LPTSTR>(m_allTabPageInfo[i].TabText.c_str());
-            InsertItem(i, &tie);
+            InsertItem(static_cast<int>(i), &tie);
         }
 
         int HeightGap = 5;
@@ -1051,7 +1054,7 @@ namespace Win32xx
     {
         // Display the newly selected tab page.
         int nPage = GetCurSel();
-        ShowActiveView(m_allTabPageInfo[nPage].pView);
+        ShowActiveView(m_allTabPageInfo[static_cast<size_t>(nPage)].pView);
 
         return 0;
     }
@@ -1278,7 +1281,7 @@ namespace Win32xx
             if (page != GetCurSel())
                 SetCurSel(page);
 
-            ShowActiveView(m_allTabPageInfo[page].pView);
+            ShowActiveView(m_allTabPageInfo[static_cast<size_t>(page)].pView);
         }
     }
 
@@ -1371,7 +1374,7 @@ namespace Win32xx
             int image = GetODImageList().Add(icon);
             tci.iImage = image;
             SetItem(tab, &tci);
-            m_allTabPageInfo[tab].image = image;
+            m_allTabPageInfo[static_cast<size_t>(tab)].image = image;
         }
     }
 
@@ -1412,10 +1415,10 @@ namespace Win32xx
     }
 
     // Allows the text to be changed on an existing tab.
-    inline void CTab::SetTabText(UINT tab, LPCTSTR text)
+    inline void CTab::SetTabText(int tab, LPCTSTR text)
     {
-
-        if (tab < GetAllTabs().size())
+        size_t tabIndex = static_cast<size_t>(tab);
+        if (tabIndex < GetAllTabs().size())
         {
             TCITEM Item;
             ZeroMemory(&Item, sizeof(Item));
@@ -1423,7 +1426,7 @@ namespace Win32xx
             Item.pszText = const_cast<LPTSTR>(text);
 
             if (SetItem(tab, &Item))
-                m_allTabPageInfo[tab].TabText = text;
+                m_allTabPageInfo[tabIndex].TabText = text;
         }
     }
 
@@ -1497,9 +1500,10 @@ namespace Win32xx
     }
 
     // Swaps the two specified tabs.
-    inline void CTab::SwapTabs(UINT tab1, UINT tab2)
+    inline void CTab::SwapTabs(int tab1, int tab2)
     {
-        if ((tab1 < GetAllTabs().size()) && (tab2 < GetAllTabs().size()) && (tab1 != tab2))
+        int allTabs = static_cast<int>(GetAllTabs().size());
+        if ((tab1 < allTabs) && (tab2 < allTabs) && (tab1 != tab2))
         {
             TabPageInfo t1 = GetTabPageInfo(tab1);
             TabPageInfo t2 = GetTabPageInfo(tab2);
@@ -1521,8 +1525,8 @@ namespace Win32xx
 
             SetItem(tab1, &item2);
             SetItem(tab2, &item1);
-            m_allTabPageInfo[tab1] = t2;
-            m_allTabPageInfo[tab2] = t1;
+            m_allTabPageInfo[static_cast<size_t>(tab1)] = t2;
+            m_allTabPageInfo[static_cast<size_t>(tab2)] = t1;
         }
     }
 
@@ -1689,7 +1693,7 @@ namespace Win32xx
     inline void CTab::RemoveImage(int image) const
     {
         assert(IsWindow());
-        TabCtrl_RemoveImage(*this, image);
+        TabCtrl_RemoveImage(*this, (WPARAM)image);
     }
 
     // Sets the focus to a specified tab in a tab control.
@@ -1697,7 +1701,7 @@ namespace Win32xx
     inline void CTab::SetCurFocus(int tab) const
     {
         assert(IsWindow());
-        TabCtrl_SetCurFocus(*this, tab);
+        TabCtrl_SetCurFocus(*this, (WPARAM)tab);
     }
 
     // Selects a tab in a tab control.
