@@ -850,7 +850,7 @@ namespace Win32xx
 #endif
 
         int xPos = isRightToLeft? rc.right : rc.left;
-        UINT id = static_cast<UINT>(::TrackPopupMenuEx(m_popupMenu, 
+        UINT id = static_cast<UINT>(::TrackPopupMenuEx(m_popupMenu,
                                        TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
                                        xPos, rc.bottom, *this, &tpm));
 

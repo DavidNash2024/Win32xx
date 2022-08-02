@@ -667,12 +667,12 @@ namespace Win32xx
     inline BOOL CMDIFrameT<T>::RemoveAllMDIChildren()
     {
         BOOL succeeded = TRUE;
-        size_t children = m_mdiChildren.size();
 
         // Remove the children in reverse order
-        for (size_t i = children-1; i >= 0; --i)
+        std::vector<MDIChildPtr>::iterator it;
+        for( it = m_mdiChildren.end(); it != m_mdiChildren.begin(); --it)
         {
-            MDIChildPtr pMDIChild = m_mdiChildren[i];
+            MDIChildPtr pMDIChild = (*it);
 
             // Ask the window to close. If it is destroyed, RemoveMDIChild gets called.
             pMDIChild->SendMessage(WM_SYSCOMMAND, (WPARAM)SC_CLOSE, 0);

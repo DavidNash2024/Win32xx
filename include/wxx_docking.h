@@ -2899,7 +2899,7 @@ namespace Win32xx
                             if (!pParentContainer)
                                 throw CUserException();
 
-                            for (UINT tab = 0; tab < tabOrder.size(); ++tab)
+                            for (int tab = 0; tab < static_cast<int>(tabOrder.size()); ++tab)
                             {
                                 CDocker* pOldDocker = GetDockFromView(pParentContainer->GetContainerFromIndex(tab));
                                 if (!pOldDocker)
@@ -2910,10 +2910,10 @@ namespace Win32xx
                                 std::vector<UINT>::const_iterator it = std::find(tabOrder.begin(), tabOrder.end(), oldID);
                                 int oldTab = static_cast<UINT>((it - tabOrder.begin()));
 
-                                if (tab >= pParentContainer->GetAllContainers().size())
+                                if (tab >= static_cast<int>(pParentContainer->GetAllContainers().size()))
                                     throw CUserException();
 
-                                if (oldTab >= pParentContainer->GetAllContainers().size())
+                                if (oldTab >= static_cast<int>(pParentContainer->GetAllContainers().size()))
                                     throw CUserException();
 
                                 if (tab != oldTab)
