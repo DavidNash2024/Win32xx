@@ -215,7 +215,7 @@ namespace Win32xx
         // Create the dialog
         if (S_OK != PrintDlgEx(&m_pdex))
         {
-            DWORD error = CommDlgExtendedError();
+            int error = static_cast<int>(CommDlgExtendedError());
             throw CWinException(GetApp()->MsgWndDialog(), error);
         }
 

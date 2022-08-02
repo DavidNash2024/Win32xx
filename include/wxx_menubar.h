@@ -850,8 +850,9 @@ namespace Win32xx
 #endif
 
         int xPos = isRightToLeft? rc.right : rc.left;
-        UINT id = ::TrackPopupMenuEx(m_popupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
-            xPos, rc.bottom, *this, &tpm);
+        UINT id = static_cast<UINT>(::TrackPopupMenuEx(m_popupMenu, 
+                                       TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+                                       xPos, rc.bottom, *this, &tpm));
 
         // We get here once the TrackPopupMenuEx has ended.
         m_isMenuActive = FALSE;

@@ -143,6 +143,10 @@ namespace Win32xx
         virtual LRESULT OnMDIDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMDIGetActive(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    private:
+        CMDIClient(const CMDIClient&);              // Disable copy construction
+        CMDIClient& operator = (const CMDIClient&); // Disable assignment operator
     };
 
     /////////////////////////////////////
@@ -217,6 +221,10 @@ namespace Win32xx
     public:
         CMDIFrame() {}
         virtual ~CMDIFrame() {}
+
+    private:
+        CMDIFrame(const CMDIFrame&);              // Disable copy construction
+        CMDIFrame& operator = (const CMDIFrame&); // Disable assignment operator
     };
 
 }
@@ -272,17 +280,17 @@ namespace Win32xx
 
         // Delete previously appended items
         int items = windowMenu.GetMenuItemCount();
-        UINT lastID = windowMenu.GetMenuItemID(--items);
+        int lastID = windowMenu.GetMenuItemID(--items);
         if ((lastID >= IDW_FIRSTCHILD) && (lastID < IDW_FIRSTCHILD + 10))
         {
             while ((lastID >= IDW_FIRSTCHILD) && (lastID < IDW_FIRSTCHILD + 10))
             {
-                windowMenu.DeleteMenu(items, MF_BYPOSITION);
+                windowMenu.DeleteMenu(static_cast<UINT>(items), MF_BYPOSITION);
                 lastID = windowMenu.GetMenuItemID(--items);
             }
 
             //delete the separator too
-            windowMenu.DeleteMenu(items, MF_BYPOSITION);
+            windowMenu.DeleteMenu(static_cast<UINT>(items), MF_BYPOSITION);
         }
 
         int window = 0;
@@ -659,10 +667,10 @@ namespace Win32xx
     inline BOOL CMDIFrameT<T>::RemoveAllMDIChildren()
     {
         BOOL succeeded = TRUE;
-        int children = static_cast<int>(m_mdiChildren.size());
+        size_t children = m_mdiChildren.size();
 
         // Remove the children in reverse order
-        for (int i = children-1; i >= 0; --i)
+        for (size_t i = children-1; i >= 0; --i)
         {
             MDIChildPtr pMDIChild = m_mdiChildren[i];
 

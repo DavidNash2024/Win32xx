@@ -204,7 +204,7 @@ namespace Win32xx
 
     // Retrieves the thread's ID.
     template <class T>
-    inline int CThreadT<T>::GetThreadID() const
+    inline UINT CThreadT<T>::GetThreadID() const
     {
         assert(m_thread);
         return m_threadID;

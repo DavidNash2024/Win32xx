@@ -480,6 +480,10 @@ namespace Win32xx
         public:
             CTargetBottom() {m_bmImage.LoadBitmap(IDW_SDBOTTOM);}
             BOOL CheckTarget(LPDRAGPOS pDragPos);
+
+        private:
+            CTargetBottom(const CTargetBottom&);              // Disable copy construction
+            CTargetBottom& operator = (const CTargetBottom&); // Disable assignment operator
         };
 
         // These classes can access private members of CDocker.
@@ -2904,7 +2908,7 @@ namespace Win32xx
                                 UINT oldID = pOldDocker->GetDockID();
 
                                 std::vector<UINT>::const_iterator it = std::find(tabOrder.begin(), tabOrder.end(), oldID);
-                                UINT oldTab = static_cast<UINT>((it - tabOrder.begin()));
+                                int oldTab = static_cast<UINT>((it - tabOrder.begin()));
 
                                 if (tab >= pParentContainer->GetAllContainers().size())
                                     throw CUserException();

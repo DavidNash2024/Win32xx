@@ -444,7 +444,7 @@ namespace Win32xx
     {
         T str[2] = {0};
         str[0] = ch;
-        m_str.assign(repeat, str[0]);
+        m_str.assign(static_cast<size_t>(repeat), str[0]);
     }
 
     // Constructor. Assigns from a const T* possibly containing null characters.
@@ -527,7 +527,7 @@ namespace Win32xx
     {
         assert(index >= 0);
         assert(index < GetLength());
-        return m_str[index];
+        return m_str[static_cast<size_t>(index)];
     }
 
     // Subscript operator. Returns the T character at the specified index.
@@ -607,7 +607,7 @@ namespace Win32xx
     template <class T>
     inline void CStringT<T>::Assign(const T* text, int count)
     {
-        m_str.assign(text, count);
+        m_str.assign(text, static_cast<size_t>(count));
     }
 
     // Performs a case sensitive comparison of the two strings using locale-specific information.
@@ -706,7 +706,7 @@ namespace Win32xx
         assert(count >= 0);
 
         if (index < GetLength())
-            m_str.erase(index, count);
+            m_str.erase(static_cast<size_t>(index), static_cast<size_t>(count));
 
         return static_cast<int>(m_str.size());
     }
@@ -724,7 +724,7 @@ namespace Win32xx
     {
         assert(index >= 0);
 
-        size_t s = m_str.find(ch, index);
+        size_t s = m_str.find(ch, static_cast<size_t>(index));
         return static_cast<int>(s);
     }
 
@@ -735,7 +735,7 @@ namespace Win32xx
         assert(text != 0);
         assert(index >= 0);
 
-        size_t s = m_str.find(text, index);
+        size_t s = m_str.find(text, static_cast<size_t>(index));
         return static_cast<int>(s);
     }
 
@@ -869,7 +869,7 @@ namespace Win32xx
         T ch = 0;
 
         if ((index >= 0) && (index < GetLength()))
-            ch = m_str[index];
+            ch = m_str[static_cast<size_t>(index)];
 
         return ch;
     }
@@ -1030,7 +1030,7 @@ namespace Win32xx
         assert(count >= 0);
 
         CStringT str;
-        str.m_str.assign(m_str, 0, count);
+        str.m_str.assign(m_str, 0, static_cast<size_t>(count));
         return str;
     }
 
@@ -1088,7 +1088,7 @@ namespace Win32xx
 
         CStringT str;
         if (first <= GetLength())
-            str.m_str.assign(m_str, first, count);
+            str.m_str.assign(m_str, static_cast<size_t>(first), static_cast<size_t>(count));
 
         return str;
     }
@@ -1110,10 +1110,10 @@ namespace Win32xx
         newLength = MIN(newLength, static_cast<int>(m_buf.size() -1));
 
         T ch = 0;
-        m_str.assign(newLength, ch);
+        m_str.assign(static_cast<size_t>(newLength), ch);
 
         typename std::vector<T>::iterator it_end = m_buf.begin();
-        std::advance(it_end, newLength);
+        std::advance(it_end, static_cast<size_t>(newLength));
 
         std::copy(m_buf.begin(), it_end, m_str.begin());
         m_buf.clear();
@@ -1184,8 +1184,8 @@ namespace Win32xx
 
         int count = 0;
         size_t pos = 0;
-        size_t lenOld = lstrlenT(oldText);
-        size_t lenNew = lstrlenT(newText);
+        size_t lenOld = static_cast<size_t>(lstrlenT(oldText));
+        size_t lenNew = static_cast<size_t>(lstrlenT(newText));
         if (lenOld > 0 && lenNew > 0)
         {
             while ((pos = m_str.find(oldText, pos)) != std::string::npos)
@@ -1202,7 +1202,7 @@ namespace Win32xx
     template <class T>
     inline int CStringT<T>::ReverseFind(T ch, int end /* -1 */) const
     {
-        size_t found = m_str.rfind(ch, end);
+        size_t found = m_str.rfind(ch, static_cast<size_t>(end));
         return static_cast<int>(found);
     }
 
@@ -1216,7 +1216,7 @@ namespace Win32xx
         if (lstrlenT(text) == 1)
             return ReverseFind(text[0], end);
         else
-            return static_cast<int>(m_str.rfind(text, end));
+            return static_cast<int>(m_str.rfind(text, static_cast<size_t>(end)));
     }
 
     // Retrieves count characters from the right part of the string.
@@ -1228,7 +1228,7 @@ namespace Win32xx
 
         CStringT str;
         count = MIN(count, GetLength());
-        str.m_str.assign(m_str, m_str.size() - count, count);
+        str.m_str.assign(m_str, m_str.size() - static_cast<size_t>(count), static_cast<size_t>(count));
         return str;
     }
 
@@ -1312,7 +1312,7 @@ namespace Win32xx
         CStringT str;
         if (start >= 0)
         {
-        size_t pos1 = m_str.find_first_not_of(tokens, start);
+        size_t pos1 = m_str.find_first_not_of(tokens, static_cast<size_t>(start));
         size_t pos2 = m_str.find_first_of(tokens, pos1);
 
         start = static_cast<int>(pos2) + 1;

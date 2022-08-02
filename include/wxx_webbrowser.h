@@ -226,6 +226,9 @@ namespace Win32xx
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        CWebBrowser(const CWebBrowser&);              // Disable copy construction
+        CWebBrowser& operator = (const CWebBrowser&); // Disable assignment operator
+
         UINT    GetPidlLength(LPITEMIDLIST pidl);
         CAXHost  m_axHost;              // The ActiveX host
         IWebBrowser2* m_pIWebBrowser2;  // Interface to the ActiveX web browser control
@@ -1112,7 +1115,7 @@ namespace Win32xx
     {
         VARIANT flagsVariant;
         flagsVariant.vt = VT_I4;
-        flagsVariant.lVal = flags;
+        flagsVariant.lVal = static_cast<LONG>(flags);
 
         VARIANT targetVariant;
         targetVariant.vt = VT_BSTR;
@@ -1152,7 +1155,7 @@ namespace Win32xx
 
         VARIANT flagsVariant;
         flagsVariant.vt = VT_I4;
-        flagsVariant.lVal = flags;
+        flagsVariant.lVal = static_cast<LONG>(flags);
 
         VARIANT targetVariant;
         targetVariant.vt = VT_BSTR;
@@ -1177,7 +1180,7 @@ namespace Win32xx
 
         VARIANT flagsVariant;
         flagsVariant.vt = VT_I4;
-        flagsVariant.lVal = flags;
+        flagsVariant.lVal = static_cast<LONG>(flags);
 
         VARIANT TargetVariant;
         TargetVariant.vt = VT_BSTR;
