@@ -108,6 +108,9 @@ namespace Win32xx
         virtual int OnCreate(CREATESTRUCT& cs);
 
     private:
+        CMDIDockFrame(const CMDIDockFrame&);              // Disable copy construction
+        CMDIDockFrame& operator = (const CMDIDockFrame&); // Disable assignment operator
+
         CMDIClient<CDocker::CDockClient> m_dockMDIClient;   // MDIClient for docking
     };
 

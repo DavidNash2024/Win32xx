@@ -497,7 +497,7 @@ namespace Win32xx
         int CreatePolyPolygonRgn(LPPOINT pPointArray, LPINT pPolyCounts, int count, int polyFillMode);
         int CreateRectRgn(int left, int top, int right, int bottom);
         int CreateRectRgnIndirect(const RECT& rc);
-        int CreateRgnFromData(const XFORM* pXform, DWORD count, const RGNDATA* pRgnData);
+        int CreateRgnFromData(const XFORM* pXform, int count, const RGNDATA* pRgnData);
         int CreateRgnFromPath(HDC dc);
         int CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3);
 
@@ -2111,7 +2111,8 @@ namespace Win32xx
     {
         try
         {
-            Attach(::ExtCreatePen(penStyle, width, &logBrush, styleCount, pStyle));
+            Attach(::ExtCreatePen(static_cast<DWORD>(penStyle), static_cast<DWORD>(width), &logBrush, 
+                                  static_cast<DWORD>(styleCount), pStyle));
         }
 
         catch(...)
@@ -2166,7 +2167,8 @@ namespace Win32xx
     // Refer to ExtCreatePen in the Windows API documentation for more information.
     inline HPEN CPen::ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount /* = 0*/, const DWORD* pStyle /*= NULL*/)
     {
-        HPEN pen = ::ExtCreatePen(penStyle, width, &logBrush, styleCount, pStyle);
+        HPEN pen = ::ExtCreatePen(static_cast<DWORD>(penStyle), static_cast<DWORD>(width),
+                                  &logBrush, static_cast<DWORD>(styleCount), pStyle);
         Attach(pen);
         SetManaged(true);
         return pen;
@@ -2317,7 +2319,7 @@ namespace Win32xx
     // Refer to ExtCreateRegion in the Windows API documentation for more information.
     inline HRGN CRgn::CreateFromData(const XFORM* pXForm, int count, const RGNDATA* pRgnData)
     {
-        HRGN rgn = ::ExtCreateRegion(pXForm, count, pRgnData);
+        HRGN rgn = ::ExtCreateRegion(pXForm, static_cast<DWORD>(count), pRgnData);
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
@@ -2405,7 +2407,8 @@ namespace Win32xx
     inline int CRgn::GetRegionData(LPRGNDATA pRgnData, int dataSize) const
     {
         assert(GetHandle() != 0);
-        return static_cast<int>(::GetRegionData(reinterpret_cast<HRGN>(GetHandle()), dataSize, pRgnData));
+        return static_cast<int>(::GetRegionData(reinterpret_cast<HRGN>(GetHandle()), 
+                                                static_cast<DWORD>(dataSize), pRgnData));
     }
 
     // Determines whether the specified point is inside the specified region.
@@ -3487,7 +3490,7 @@ namespace Win32xx
     // Notes: GetRegionData can be used to get a region's data
     //        If the XFROM pointer is NULL, the identity transformation is used.
     // Refer to ExtCreateRegion in the Windows API documentation for more information.
-    inline int CDC::CreateRgnFromData(const XFORM* pXform, DWORD count, const RGNDATA* pRgnData)
+    inline int CDC::CreateRgnFromData(const XFORM* pXform, int count, const RGNDATA* pRgnData)
     {
         assert(m_pData->dc != 0);
 
@@ -3978,7 +3981,7 @@ namespace Win32xx
     inline BOOL CDC::AngleArc(int x, int y, int radius, float startAngle, float sweepAngle) const
     {
         assert(m_pData->dc != 0);
-        return ::AngleArc(m_pData->dc, x, y, radius, startAngle, sweepAngle);
+        return ::AngleArc(m_pData->dc, x, y, static_cast<DWORD>(radius), startAngle, sweepAngle);
     }
 
     // Closes the figure by drawing a line from the current position to the first point of the figure.
@@ -4035,7 +4038,7 @@ namespace Win32xx
     inline BOOL CDC::PolyPolyline(const POINT* pPointArray, const DWORD* pPolyPoints, int count) const
     {
         assert(m_pData->dc != 0);
-        return ::PolyPolyline(m_pData->dc, pPointArray, pPolyPoints, count);
+        return ::PolyPolyline(m_pData->dc, pPointArray, pPolyPoints, static_cast<DWORD>(count));
     }
 
     // Draws one or more straight lines.
@@ -4043,7 +4046,7 @@ namespace Win32xx
     inline BOOL CDC::PolylineTo(const POINT* pPointArray, int count) const
     {
         assert(m_pData->dc != 0);
-        return ::PolylineTo(m_pData->dc, pPointArray, count);
+        return ::PolylineTo(m_pData->dc, pPointArray, static_cast<DWORD>(count));
     }
 
     // Draws one or more Bezier curves.
@@ -4051,7 +4054,7 @@ namespace Win32xx
     inline BOOL CDC::PolyBezier(const POINT* pPointArray, int count) const
     {
         assert(m_pData->dc != 0);
-        return ::PolyBezier(m_pData->dc, pPointArray, count);
+        return ::PolyBezier(m_pData->dc, pPointArray, static_cast<DWORD>(count));
     }
 
     // Draws one or more Bezier curves.
@@ -4059,7 +4062,7 @@ namespace Win32xx
     inline BOOL CDC::PolyBezierTo(const POINT* pPointArray, int count) const
     {
         assert(m_pData->dc != 0);
-        return ::PolyBezierTo(m_pData->dc, pPointArray, count);
+        return ::PolyBezierTo(m_pData->dc, pPointArray, static_cast<DWORD>(count));
     }
 
     // Sets the pixel at the specified coordinates to the specified color.

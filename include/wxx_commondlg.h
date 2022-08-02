@@ -447,7 +447,7 @@ namespace Win32xx
 
         if (!isValid)
         {
-            DWORD error = CommDlgExtendedError();
+            int error = static_cast<int>(CommDlgExtendedError());
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
                 throw CWinException(GetApp()->MsgWndDialog(), error);
@@ -646,7 +646,7 @@ namespace Win32xx
         // the result of the file choice box is processed here:
         if (!ok)
         {
-            DWORD error = CommDlgExtendedError();
+            int error = static_cast<int>(CommDlgExtendedError());
             if (error != 0)
             {
                 // ignore the exception caused by closing the dialog
@@ -1446,7 +1446,7 @@ namespace Win32xx
         // process the result of the font choice box:
         if (!ok)
         {
-            DWORD error = CommDlgExtendedError();
+            int error = static_cast<int>(CommDlgExtendedError());
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
                 throw CWinException(GetApp()->MsgWndDialog(), error);

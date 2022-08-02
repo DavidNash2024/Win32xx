@@ -523,7 +523,7 @@ namespace Win32xx
         }
         else
         {
-            DWORD error = CommDlgExtendedError();
+            int error = static_cast<int>(CommDlgExtendedError());
             if ((error != 0) && (error != CDERR_DIALOGFAILURE))
             // ignore the error caused by closing the dialog
             {
@@ -858,7 +858,7 @@ namespace Win32xx
         }
         else
         {
-            DWORD error = CommDlgExtendedError();
+            int error = static_cast<int>(CommDlgExtendedError());
             if ((error != 0) && (error != CDERR_DIALOGFAILURE)) // ignore the exception caused by closing the dialog
             {
                 // Reset global memory
