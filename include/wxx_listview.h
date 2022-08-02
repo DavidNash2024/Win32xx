@@ -64,7 +64,7 @@ namespace Win32xx
         COLORREF GetBkColor( ) const;
         BOOL    GetBkImage( LVBKIMAGE& image ) const;
         UINT    GetCallbackMask( ) const;
-        BOOL    GetCheckState( UINT item ) const;
+        BOOL    GetCheckState( int item ) const;
         BOOL    GetColumn( int col, LVCOLUMN& colInfo ) const;
         BOOL    GetColumnOrderArray( LPINT pArrayOfCol, int count = -1 ) const;
         int     GetColumnWidth( int col ) const;
@@ -82,7 +82,7 @@ namespace Win32xx
         BOOL    GetItemPosition( int item, CPoint& pt ) const;
         BOOL    GetItemRect( int item, RECT& rc, UINT code ) const;
         UINT    GetItemState( int item, UINT mask ) const;
-        CString GetItemText( int item, int subItem, UINT textMax = 260 ) const;
+        CString GetItemText( int item, int subItem, int textMax = 260 ) const;
         int     GetNextItem( int item, int flags ) const;
         UINT    GetNumberOfWorkAreas( ) const;
         BOOL    GetOrigin( CPoint& pt ) const;
@@ -227,7 +227,7 @@ namespace Win32xx
     inline BOOL CListView::EnsureVisible(int item, BOOL isPartialOK) const
     {
         assert(IsWindow());
-        return (SendMessage(LVM_ENSUREVISIBLE, item, (WPARAM)isPartialOK) != 0);
+        return (SendMessage(LVM_ENSUREVISIBLE, (WPARAM)item, (LPARAM)isPartialOK) != 0);
     }
 
     // Searches for a list-view item with the specified characteristics.
@@ -259,15 +259,15 @@ namespace Win32xx
     inline UINT CListView::GetCallbackMask( ) const
     {
         assert(IsWindow());
-        return ListView_GetCallbackMask( *this );
+        return static_cast<UINT>(ListView_GetCallbackMask( *this ));
     }
 
     // Determines if an item in the list-view control is selected.
     // Refer to ListView_GetCheckState in the Windows API documentation for more information.
-    inline BOOL CListView::GetCheckState( UINT item ) const
+    inline BOOL CListView::GetCheckState( int item ) const
     {
         assert(IsWindow());
-        return ListView_GetCheckState( *this, item );
+        return static_cast<BOOL>(ListView_GetCheckState( *this, item ));
     }
 
     // Retrieves the attributes of the list-view control's column.
@@ -388,7 +388,7 @@ namespace Win32xx
         lvi.iItem = item;
         lvi.mask = LVIF_PARAM;
         SendMessage(LVM_GETITEM, 0, (LPARAM)&lvi);
-        return lvi.lParam;
+        return static_cast<DWORD_PTR>(lvi.lParam);
     }
 
     // Retrieves the position of the list-view item.
@@ -405,7 +405,7 @@ namespace Win32xx
     inline BOOL CListView::GetItemRect( int item, RECT& rc, UINT code ) const
     {
         assert(IsWindow());
-        return ListView_GetItemRect( *this, item, &rc, code );
+        return ListView_GetItemRect( *this, item, &rc, static_cast<LONG>(code) );
     }
 
     // Retrieves the state of the list-view item.
@@ -427,7 +427,7 @@ namespace Win32xx
     // Note: Although the list-view control allows any length string to be stored
     //       as item text, only the first 260 characters are displayed.
     // Refer to LVM_GETITEM in the Windows API documentation for more information.
-    inline CString CListView::GetItemText( int item, int subItem, UINT textMax /* = 260 */ ) const
+    inline CString CListView::GetItemText( int item, int subItem, int textMax /* = 260 */ ) const
     {
         assert(IsWindow());
 
@@ -734,7 +734,7 @@ namespace Win32xx
     inline void CListView::SetCheckState( int item, BOOL checked /*= TRUE*/ ) const
     {
         assert(IsWindow());
-        ListView_SetItemState(*this, item, INDEXTOSTATEIMAGEMASK((checked!=FALSE)?2:1),LVIS_STATEIMAGEMASK);
+        ListView_SetItemState(*this, item, INDEXTOSTATEIMAGEMASK((checked!=FALSE)?2U:1U),LVIS_STATEIMAGEMASK);
     }
 
     // Sets the attributes of the list-view column.
@@ -887,7 +887,7 @@ namespace Win32xx
         LVITEM lvi;
         ZeroMemory(&lvi, sizeof(lvi));
         lvi.iItem = item;
-        lvi.lParam = data;
+        lvi.lParam = static_cast<LPARAM>(data);
         lvi.mask = LVIF_PARAM;
         return ListView_SetItem(*this, &lvi);
     }

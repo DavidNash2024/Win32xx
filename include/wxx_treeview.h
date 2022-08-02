@@ -77,7 +77,7 @@ namespace Win32xx
         int     GetItemHeight() const;
         BOOL    GetItemImage(HTREEITEM item, int& image, int& selectedImage ) const;
         BOOL    GetItemRect(HTREEITEM item, RECT& rc, BOOL isTextOnly) const;
-        CString GetItemText(HTREEITEM item, UINT textMax = 260) const;
+        CString GetItemText(HTREEITEM item, int textMax = 260) const;
         HTREEITEM GetLastVisible() const;
         HTREEITEM GetNextItem(HTREEITEM item, UINT code) const;
         HTREEITEM GetNextSibling(HTREEITEM item) const;
@@ -343,7 +343,7 @@ namespace Win32xx
     // Note: Although the tree-view control allows any length string to be stored
     //       as item text, only the first 260 characters are displayed.
     // Refer to TVM_GETITEM in the Windows API documentation for more information.
-    inline CString CTreeView::GetItemText(HTREEITEM item, UINT textMax /* = 260 */) const
+    inline CString CTreeView::GetItemText(HTREEITEM item, int textMax /* = 260 */) const
     {
         assert(IsWindow());
 
@@ -432,7 +432,7 @@ namespace Win32xx
     inline int CTreeView::GetScrollTime() const
     {
         assert(IsWindow());
-        return TreeView_GetScrollTime( *this );
+        return static_cast<int>(TreeView_GetScrollTime( *this ));
     }
 
     // Retrieves the currently selected item in a tree-view control.
@@ -632,7 +632,7 @@ namespace Win32xx
     inline HIMAGELIST CTreeView::SetImageList(HIMAGELIST images, int type /*= TVSIL_NORMAL*/) const
     {
         assert(IsWindow());
-        HIMAGELIST oldImages = TreeView_SetImageList( *this, (WPARAM)images, type );
+        HIMAGELIST oldImages = TreeView_SetImageList( *this, (LPARAM)images, (WPARAM)type );
         return oldImages;
     }
 

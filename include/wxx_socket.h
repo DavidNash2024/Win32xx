@@ -585,7 +585,7 @@ namespace Win32xx
     // Refer to WSAGetLastError in the Windows API documentation for additional information.
     inline CString CSocket::GetErrorString() const
     {
-        int errorCode = WSAGetLastError();
+        DWORD errorCode = static_cast<DWORD>(WSAGetLastError());
         LPTSTR message = NULL;
         CString errorMessage;
 

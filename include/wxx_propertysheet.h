@@ -563,7 +563,7 @@ namespace Win32xx
             PropSheet_AddPage(*this, hpsp);
         }
 
-        m_psh.nPages = static_cast<int>(m_allPages.size());
+        m_psh.nPages = static_cast<UINT>(m_allPages.size());
 
         return pPage;
     }
@@ -750,7 +750,7 @@ namespace Win32xx
 
         for (int i = 0; i < GetPageCount(); i++)
         {
-            if (m_allPages[i].get() == pPage)
+            if (m_allPages[static_cast<size_t>(i)].get() == pPage)
                 return i;
         }
         return -1;
@@ -767,13 +767,13 @@ namespace Win32xx
     // Returns TRUE of the property sheet is modeless.
     inline BOOL CPropertySheet::IsModeless() const
     {
-        return (m_psh.dwFlags & PSH_MODELESS);
+        return static_cast<BOOL>(m_psh.dwFlags & PSH_MODELESS);
     }
 
     // Returns TRUE if this property sheet is a wizard.
     inline BOOL CPropertySheet::IsWizard() const
     {
-        return (m_psh.dwFlags & PSH_WIZARD);
+        return static_cast<BOOL>(m_psh.dwFlags & PSH_WIZARD);
     }
 
     // Called in response to a DM_SETDEFID message.
@@ -809,7 +809,7 @@ namespace Win32xx
             SendMessage(*this, PSM_REMOVEPAGE, (WPARAM)nPage, 0);
 
         m_allPages.erase(m_allPages.begin() + nPage, m_allPages.begin() + nPage+1);
-        m_psh.nPages = static_cast<int>(m_allPages.size());
+        m_psh.nPages = static_cast<UINT>(m_allPages.size());
     }
 
     // Override this function to filter mouse and keyboard messages prior to

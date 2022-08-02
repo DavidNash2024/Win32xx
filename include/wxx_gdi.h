@@ -2111,7 +2111,7 @@ namespace Win32xx
     {
         try
         {
-            Attach(::ExtCreatePen(static_cast<DWORD>(penStyle), static_cast<DWORD>(width), &logBrush, 
+            Attach(::ExtCreatePen(static_cast<DWORD>(penStyle), static_cast<DWORD>(width), &logBrush,
                                   static_cast<DWORD>(styleCount), pStyle));
         }
 
@@ -2407,7 +2407,7 @@ namespace Win32xx
     inline int CRgn::GetRegionData(LPRGNDATA pRgnData, int dataSize) const
     {
         assert(GetHandle() != 0);
-        return static_cast<int>(::GetRegionData(reinterpret_cast<HRGN>(GetHandle()), 
+        return static_cast<int>(::GetRegionData(reinterpret_cast<HRGN>(GetHandle()),
                                                 static_cast<DWORD>(dataSize), pRgnData));
     }
 

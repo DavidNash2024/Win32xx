@@ -1113,7 +1113,7 @@ namespace Win32xx
         m_str.assign(static_cast<size_t>(newLength), ch);
 
         typename std::vector<T>::iterator it_end = m_buf.begin();
-        std::advance(it_end, static_cast<size_t>(newLength));
+        std::advance(it_end, static_cast<T>(newLength));
 
         std::copy(m_buf.begin(), it_end, m_str.begin());
         m_buf.clear();
