@@ -511,16 +511,17 @@ namespace Win32xx
     {
         // Count the MenuData entries excluding separators.
         int images = 0;
-        for (UINT i = 0 ; i < menuData.size(); ++i)
+        std::vector<UINT>::const_iterator it;
+        for (it = menuData.begin(); it != menuData.end(); ++it)
         {
-            if (menuData[i] != 0)   // Don't count separators
+            if (*it != 0)   // Don't count separators
                 ++images;
         }
 
         // Load the button images from Resource ID.
         CBitmap bitmap(bitmapID);
 
-        if ((0 == images) || (!bitmap))
+        if ((images == 0) || (bitmap.GetHandle() == 0))
             return static_cast<UINT>(m_menuIcons.size());  // No valid images, so nothing to do!
 
         BITMAP data = bitmap.GetBitmapData();

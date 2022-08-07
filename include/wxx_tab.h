@@ -64,7 +64,7 @@ namespace Win32xx
     struct TABNMHDR
     {
         NMHDR hdr;
-        UINT nPage;
+        int page;
     };
 
 
@@ -158,7 +158,7 @@ namespace Win32xx
         BOOL        GetItemRect(int tab, RECT& rc) const;
         int         GetRowCount() const;
         HWND        GetToolTips() const;
-        BOOL        HighlightItem(INT tabID, WORD highlight) const;
+        BOOL        HighlightItem(int tabID, WORD highlight) const;
         int         HitTest(TCHITTESTINFO& hitInfo) const;
         int         InsertItem(int tab, const LPTCITEM pTabInfo) const;
         void        RemoveImage(int image) const;
@@ -265,7 +265,7 @@ namespace Win32xx
         virtual void    OnDestroy();
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSetFocus(UINT, WPARAM, LPARAM);
-        virtual BOOL    OnTabClose(int page);
+        virtual BOOL    OnTabClose(int tab);
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    RecalcLayout();
 
@@ -867,15 +867,15 @@ namespace Win32xx
     // Sends a UWN_TABCLOSE notification.
     inline BOOL CTab::NotifyTabClosing(int page)
     {
-        int idCtrl = GetDlgCtrlID();
+        int controlD = GetDlgCtrlID();
         TABNMHDR TabNMHDR;
         TabNMHDR.hdr.code = UWN_TABCLOSE;
         TabNMHDR.hdr.hwndFrom = *this;
-        TabNMHDR.hdr.idFrom = static_cast<UINT>(idCtrl);
-        TabNMHDR.nPage = static_cast<UINT>(page);
+        TabNMHDR.hdr.idFrom = static_cast<UINT>(controlD);
+        TabNMHDR.page = page;
 
         // The default return value is zero.
-        return (GetParent().SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&TabNMHDR) != 0);
+        return (GetParent().SendMessage(WM_NOTIFY, (WPARAM)controlD, (LPARAM)&TabNMHDR) != 0);
     }
 
     // Called when this object is attached to a tab control.
@@ -1665,7 +1665,7 @@ namespace Win32xx
 
     // Sets the highlight state of a tab item.
     // Refer to TabCtrl_HighlightItem in the Windows API documentation for more information.
-    inline BOOL CTab::HighlightItem(INT tabID, WORD highlight) const
+    inline BOOL CTab::HighlightItem(int tabID, WORD highlight) const
     {
         assert(IsWindow());
         return TabCtrl_HighlightItem(*this, tabID, highlight);
@@ -1811,9 +1811,9 @@ namespace Win32xx
     // Closes the active MDI child.
     inline void CTabbedMDI::CloseActiveMDI()
     {
-        int nTab = GetTab().GetCurSel();
-        if (nTab >= 0)
-            GetTab().RemoveTabPage(nTab);
+        int tab = GetTab().GetCurSel();
+        if (tab >= 0)
+            GetTab().RemoveTabPage(tab);
 
         RecalcLayout();
     }
@@ -1856,10 +1856,10 @@ namespace Win32xx
     inline CWnd* CTabbedMDI::GetActiveMDIChild() const
     {
         CWnd* pView = NULL;
-        int nTab = GetTab().GetCurSel();
-        if (nTab >= 0)
+        int tab = GetTab().GetCurSel();
+        if (tab >= 0)
         {
-            TabPageInfo tbi = GetTab().GetTabPageInfo(nTab);
+            TabPageInfo tbi = GetTab().GetTabPageInfo(tab);
             pView = tbi.pView;
         }
 
@@ -2024,13 +2024,13 @@ namespace Win32xx
                     TCHITTESTINFO info;
                     ZeroMemory(&info, sizeof(info));
                     info.pt = pt;
-                    int nTab = GetTab().HitTest(info);
-                    if (nTab >= 0)
+                    int tab = GetTab().HitTest(info);
+                    if (tab >= 0)
                     {
-                        if (nTab !=  GetActiveMDITab())
+                        if (tab !=  GetActiveMDITab())
                         {
-                            GetTab().SwapTabs(nTab, GetActiveMDITab());
-                            SetActiveMDITab(nTab);
+                            GetTab().SwapTabs(tab, GetActiveMDITab());
+                            SetActiveMDITab(tab);
                         }
                     }
 
@@ -2040,7 +2040,7 @@ namespace Win32xx
             case UWN_TABCLOSE:
                 {
                     TABNMHDR* pTabNMHDR = reinterpret_cast<TABNMHDR*>(pHeader);
-                    return !OnTabClose(pTabNMHDR->nPage);
+                    return !OnTabClose(pTabNMHDR->page);
                 }
 
             }   // switch(pnmhdr->code)

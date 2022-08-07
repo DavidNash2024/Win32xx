@@ -191,7 +191,7 @@ namespace Win32xx
         CWnd* GetActiveView() const;
         const std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_allInfo;}
         CDockContainer* GetContainerParent() const { return m_pContainerParent; }
-        CDockContainer* GetContainerFromIndex(UINT page) const;
+        CDockContainer* GetContainerFromIndex(size_t index) const;
         CDockContainer* GetContainerFromView(CWnd* pView) const;
         int GetContainerIndex(CDockContainer* pContainer) const;
         const CString& GetDockCaption() const { return m_caption; }
@@ -209,10 +209,8 @@ namespace Win32xx
         void SetHideSingleTab(BOOL hideSingle);
         void SetTabIcon(HICON tabIcon)        { m_tabIcon = tabIcon; }
         void SetTabIcon(UINT iconID);
-        void SetTabIcon(int i, HICON icon)    { CTab::SetTabIcon(i, icon); }
         void SetTabSize();
         void SetTabText(LPCTSTR text)        { m_tabText = text; }
-        void SetTabText(UINT tab, LPCTSTR text);
         void SetToolBar(CToolBar& toolBar)    { GetViewPage().SetToolBar(toolBar); }
         void SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID);
         void SetView(CWnd& wnd);
@@ -236,8 +234,8 @@ namespace Win32xx
         CDockContainer(const CDockContainer&);              // Disable copy construction
         CDockContainer& operator = (const CDockContainer&); // Disable assignment operator
 
-        int GetDockTabImageID(UINT tab) const;
-        CString GetDockTabText(UINT tab) const;
+        int GetDockTabImageID(int tab) const;
+        CString GetDockTabText(int tab) const;
 
         std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_allInfo;}
         std::vector<ContainerInfo> m_allInfo;          // vector of ContainerInfo structs
@@ -1240,13 +1238,13 @@ namespace Win32xx
                         if (pActive)
                         {
                             assert(pParent->GetAllContainers().size() > 0);
-                            UINT lastTab = static_cast<UINT>(pParent->GetAllContainers().size()) - 1;
+                            size_t lastTab = pParent->GetAllContainers().size() - 1;
                             CDockContainer* pContainerLast = pContainer->GetContainerFromIndex(lastTab);
                             m_pDocker->GetDockAncestor()->UndockContainer(pContainerLast, GetCursorPos(), FALSE);
 
                             while (pParent->GetAllContainers().size() > 0)
                             {
-                                lastTab = static_cast<UINT>(pParent->GetAllContainers().size()) - 1;
+                                lastTab = pParent->GetAllContainers().size() - 1;
                                 CDockContainer* pContainerNext = pContainer->GetContainerFromIndex(lastTab);
 
                                 CDocker* pDocker = pContainerNext->GetDocker();
@@ -2349,8 +2347,8 @@ namespace Win32xx
             CDockContainer* pContainerSource = pDocker->GetContainer();
 
             std::vector<ContainerInfo>::reverse_iterator riter;
-            std::vector<ContainerInfo> AllContainers = pContainerSource->GetAllContainers();
-            for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
+            std::vector<ContainerInfo> allContainers = pContainerSource->GetAllContainers();
+            for (riter = allContainers.rbegin(); riter < allContainers.rend(); ++riter)
             {
                 CDockContainer* pContainerChild = (*riter).pContainer;
                 if (pContainerChild != pContainerSource)
@@ -2377,7 +2375,7 @@ namespace Win32xx
             pDocker->GetDockBar().SetParent(*GetDockAncestor());
 
             // Insert the containers in reverse order.
-            for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
+            for (riter = allContainers.rbegin(); riter < allContainers.rend(); ++riter)
             {
                 pContainer->AddContainer( (*riter).pContainer, TRUE, selectPage);
             }
@@ -2794,7 +2792,7 @@ namespace Win32xx
                 }
 
                 // Remove dockers without parents from dockList.
-                for (UINT n = static_cast<UINT>(dockList.size()); n > 0; --n)
+                for (size_t n = dockList.size(); n > 0; --n)
                 {
                     iter = dockList.begin() + n-1;
                     if (((*iter).dockParentID == 0) || ((*iter).isInAncestor))
@@ -2899,7 +2897,7 @@ namespace Win32xx
                             if (!pParentContainer)
                                 throw CUserException();
 
-                            for (int tab = 0; tab < static_cast<int>(tabOrder.size()); ++tab)
+                            for (size_t tab = 0; tab < tabOrder.size(); ++tab)
                             {
                                 CDocker* pOldDocker = GetDockFromView(pParentContainer->GetContainerFromIndex(tab));
                                 if (!pOldDocker)
@@ -2908,16 +2906,16 @@ namespace Win32xx
                                 UINT oldID = pOldDocker->GetDockID();
 
                                 std::vector<UINT>::const_iterator it = std::find(tabOrder.begin(), tabOrder.end(), oldID);
-                                int oldTab = static_cast<UINT>((it - tabOrder.begin()));
+                                size_t oldTab = (it - tabOrder.begin());
 
-                                if (tab >= static_cast<int>(pParentContainer->GetAllContainers().size()))
+                                if (tab >= pParentContainer->GetAllContainers().size())
                                     throw CUserException();
 
-                                if (oldTab >= static_cast<int>(pParentContainer->GetAllContainers().size()))
+                                if (oldTab >= pParentContainer->GetAllContainers().size())
                                     throw CUserException();
 
                                 if (tab != oldTab)
-                                    pParentContainer->SwapTabs(tab, oldTab);
+                                    pParentContainer->SwapTabs(static_cast<int>(tab), static_cast<int>(oldTab));
                             }
                         }
 
@@ -3632,7 +3630,7 @@ namespace Win32xx
         {
             CDockContainer* pContainer = (*itSort)->GetContainer();
 
-            for (UINT i = 0; i < pContainer->GetAllContainers().size(); ++i)
+            for (size_t i = 0; i < pContainer->GetAllContainers().size(); ++i)
             {
                 CDockContainer* pChild = pContainer->GetContainerFromIndex(i);
 
@@ -3649,7 +3647,7 @@ namespace Win32xx
         {
             CDockContainer* pContainer = GetContainer();
 
-            for (UINT i = 0; i < pContainer->GetAllContainers().size(); ++i)
+            for (size_t i = 0; i < pContainer->GetAllContainers().size(); ++i)
             {
                 CDockContainer* pChild = pContainer->GetContainerFromIndex(i);
 
@@ -3798,13 +3796,12 @@ namespace Win32xx
                 if (ERROR_SUCCESS != dockKey.Open(appKey, dockKeyName))
                     throw CUserException();
 
-                CString dockChildName;
-
                 // Add the dock settings information to the registry.
-                for (UINT u = 0; u < allDockInfo.size(); ++u)
+                for (size_t t = 0; t < allDockInfo.size(); ++t)
                 {
-                    DockInfo di = allDockInfo[u];
-                    dockChildName.Format(_T("DockChild%u"), u);
+                    DockInfo di = allDockInfo[t];
+                    CString dockChildName;
+                    dockChildName << _T("DockChild") << t;
                     if (ERROR_SUCCESS != dockKey.SetBinaryValue(dockChildName, &di, sizeof(DockInfo)))
                         throw CUserException();
                 }
@@ -3814,7 +3811,6 @@ namespace Win32xx
 
                 if (GetContainer())
                     SaveContainerRegistrySettings(dockKey, GetContainer(), container);
-
 
                 for (iter = sortedDockers.begin(); iter != sortedDockers.end(); ++iter)
                 {
@@ -3875,9 +3871,10 @@ namespace Win32xx
             throw CUserException();
 
         // Store the tab order.
-        for (UINT u2 = 0; u2 < pContainer->GetAllContainers().size(); ++u2)
+        for (size_t u2 = 0; u2 < pContainer->GetAllContainers().size(); ++u2)
         {
-            dockContainerName.Format(_T("Tab%u"), u2);
+            dockContainerName = _T("Tab");
+            dockContainerName << u2;
             CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
             if (pTab == 0)
                 throw CUserException();
@@ -4508,11 +4505,11 @@ namespace Win32xx
     }
 
     //Returns a pointer to the container at the specified tab number.
-    inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT page) const
+    inline CDockContainer* CDockContainer::GetContainerFromIndex(size_t index) const
     {
         CDockContainer* pContainer = NULL;
-        if (page < m_allInfo.size())
-            pContainer = m_allInfo[page].pContainer;
+        if (index < m_allInfo.size())
+            pContainer = m_allInfo[index].pContainer;
 
         return pContainer;
     }
@@ -4593,17 +4590,19 @@ namespace Win32xx
     }
 
     // Returns a container tab's image index.
-    inline int CDockContainer::GetDockTabImageID(UINT tab) const
+    inline int CDockContainer::GetDockTabImageID(int tab) const
     {
-        assert (tab < GetAllContainers().size());
-        return GetAllContainers()[tab].tabImage;
+        size_t index = static_cast<size_t>(tab);
+        assert (index < GetAllContainers().size());
+        return GetAllContainers()[index].tabImage;
     }
 
     // Returns a container tab's text.
-    inline CString CDockContainer::GetDockTabText(UINT tab) const
+    inline CString CDockContainer::GetDockTabText(int tab) const
     {
-        assert (tab < GetAllContainers().size());
-        return GetAllContainers()[tab].tabText;
+        size_t index = static_cast<size_t>(tab);
+        assert (index < GetAllContainers().size());
+        return GetAllContainers()[index].tabText;
     }
 
     // Called when a HWND is attached to this CWnd.
@@ -4699,7 +4698,7 @@ namespace Win32xx
         {
             if (GetDocker() && !(GetDocker()->GetDockStyle() & DS_NO_UNDOCK))
             {
-                CDockContainer* pContainer = GetContainerFromIndex(m_currentPage);
+                CDockContainer* pContainer = GetActiveContainer();
                 GetDocker()->UndockContainer(pContainer, GetCursorPos(), TRUE);
             }
         }
@@ -4727,14 +4726,14 @@ namespace Win32xx
             TCHITTESTINFO info;
             ZeroMemory(&info, sizeof(info));
             info.pt = CPoint(lparam);
-            int nTab = HitTest(info);
-            if (nTab >= 0 && m_pressedTab >= 0)
+            int tab = HitTest(info);
+            if (tab >= 0 && m_pressedTab >= 0)
             {
-                if (nTab != m_pressedTab)
+                if (tab != m_pressedTab)
                 {
-                    SwapTabs(nTab, m_pressedTab);
-                    m_pressedTab = nTab;
-                    SelectPage(nTab);
+                    SwapTabs(tab, m_pressedTab);
+                    m_pressedTab = tab;
+                    SelectPage(tab);
                 }
             }
         }
@@ -4917,9 +4916,9 @@ namespace Win32xx
     // Sets the active container.
     inline void CDockContainer::SetActiveContainer(CDockContainer* pContainer)
     {
-        int nPage = GetContainerIndex(pContainer);
-        assert (0 <= nPage);
-        SelectPage(nPage);
+        int page = GetContainerIndex(pContainer);
+        assert (0 <= page);
+        SelectPage(page);
     }
 
     // Shows or hides the tab if it has only one page.
@@ -4953,15 +4952,6 @@ namespace Win32xx
             itemHeight = MAX(20, GetTextHeight() + 5);
         }
         SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, itemHeight));
-    }
-
-    // Shows or hides the tab if it has only one page.
-    inline void CDockContainer::SetTabText(UINT tab, LPCTSTR text)
-    {
-        CDockContainer* pContainer = GetContainerParent()->GetContainerFromIndex(tab);
-        pContainer->SetTabText(text);
-
-        CTab::SetTabText(tab, text);
     }
 
     // Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version

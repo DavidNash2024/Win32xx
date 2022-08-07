@@ -59,6 +59,7 @@ private:
     LRESULT OnCustomDraw(LPNMLVCUSTOMDRAW pLVCustomDraw);
     LRESULT OnItemChanged(LPNMLISTVIEW pListView);
     LRESULT OnLVColumnClick(LPNMITEMACTIVATE pnmitem);
+    LRESULT OnLVNDispInfo(NMLVDISPINFO* pdi);
     LRESULT OnUpdateText();
 
     // Private functions.

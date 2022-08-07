@@ -252,9 +252,7 @@ namespace Win32xx
             {
                 DLLGETVERSIONPROC pfnDLLGetVersion;
 
-                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSIONPROC>(
-                                        reinterpret_cast<void*>(
-                                            ::GetProcAddress(comCtl, "DllGetVersion")));
+                pfnDLLGetVersion = reinterpret_cast<DLLGETVERSIONPROC>(::GetProcAddress(comCtl, "DllGetVersion"));
                 if (pfnDLLGetVersion)
                 {
                     DLLVERSIONINFO dvi;
@@ -377,9 +375,7 @@ namespace Win32xx
             // Declare a typedef for the InItCommonControlsEx function.
             typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
-            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(
-                                    reinterpret_cast<void*>(
-                                        ::GetProcAddress(comCtl, "InitCommonControlsEx")));
+            INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(comCtl, "InitCommonControlsEx"));
 
             if (pfnInitEx)
             {
