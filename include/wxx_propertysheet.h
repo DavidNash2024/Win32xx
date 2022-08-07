@@ -804,11 +804,11 @@ namespace Win32xx
     {
         assert(IsWindow());
 
-        int nPage = GetPageIndex(pPage);
+        int page = GetPageIndex(pPage);
         if (GetHwnd() != 0)
-            SendMessage(*this, PSM_REMOVEPAGE, (WPARAM)nPage, 0);
+            SendMessage(*this, PSM_REMOVEPAGE, (WPARAM)page, 0);
 
-        m_allPages.erase(m_allPages.begin() + nPage, m_allPages.begin() + nPage+1);
+        m_allPages.erase(m_allPages.begin() + page, m_allPages.begin() + page+1);
         m_psh.nPages = static_cast<UINT>(m_allPages.size());
     }
 
@@ -845,9 +845,9 @@ namespace Win32xx
     inline BOOL CPropertySheet::SetActivePage(CPropertyPage* pPage)
     {
         assert(IsWindow());
-        int nPage = GetPageIndex(pPage);
-        if ((nPage >= 0))
-            return SetActivePage(nPage);
+        int page = GetPageIndex(pPage);
+        if ((page >= 0))
+            return SetActivePage(page);
 
         return FALSE;
     }

@@ -59,7 +59,7 @@ namespace Win32xx
         // Operations
         HANDLE  CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
         HANDLE  GetThread() const;
-        int     GetThreadID() const;
+        UINT    GetThreadID() const;
         int     GetThreadPriority() const;
         BOOL    IsRunning() const { return (WaitForSingleObject(m_thread, 0) == WAIT_TIMEOUT); }
         BOOL    PostThreadMessage(UINT message, WPARAM wparam, LPARAM lparam) const;
@@ -204,7 +204,7 @@ namespace Win32xx
 
     // Retrieves the thread's ID.
     template <class T>
-    inline int CThreadT<T>::GetThreadID() const
+    inline UINT CThreadT<T>::GetThreadID() const
     {
         assert(m_thread);
         return m_threadID;

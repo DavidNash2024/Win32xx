@@ -764,8 +764,8 @@ namespace Win32xx
         if (!pathName.IsEmpty())
         {
             // Get the last character from the path
-            int nPathLen = pathName.GetLength();
-            TCHAR termination = pathName.GetAt(nPathLen -1);
+            int pathLength = pathName.GetLength();
+            TCHAR termination = pathName.GetAt(pathLength -1);
 
             if (termination == _T('\\'))
             {

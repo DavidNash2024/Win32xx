@@ -34,9 +34,9 @@ void CView::AddItem(CString subItem0, CString subItem1, CString subItem2)
 
     // Set the text for the all the subItems belonging to the item.
     int item = GetItemCount();
-    InsertItem(item, itemData->m_subItemText[0]);
-    SetItemText(item, 1, itemData->m_subItemText[1]);
-    SetItemText(item, 2, itemData->m_subItemText[2]);
+    InsertItem(item, LPSTR_TEXTCALLBACK);
+    SetItemText(item, 1, LPSTR_TEXTCALLBACK);
+    SetItemText(item, 2, LPSTR_TEXTCALLBACK);
 
     // Set the item's lparam.
     // The item's lparam is used for sorting.
@@ -232,12 +232,30 @@ LRESULT CView::OnLVColumnClick(LPNMITEMACTIVATE pnmitem)
     return 0;
 }
 
+// Called in response to a LVN_GETDISPINFO notification.
+// Updates the list view item with the relevant information.
+LRESULT CView::OnLVNDispInfo(NMLVDISPINFO* pdi)
+{
+    ListItemData* pItem = reinterpret_cast<ListItemData*>(pdi->item.lParam);
+
+    // Add the text for a subitem.
+    if (pdi->item.mask & LVIF_TEXT)
+    {
+        // Copy the text from the ListItemData to the list-view's subitem.
+        int i = pdi->item.iSubItem;
+        StrCopy(pdi->item.pszText, pItem->m_subItemText[i], pdi->item.cchTextMax);
+    }
+
+    return 0;
+}
+
 // Handles the WM_NOTIFY messages sent by this window.
 LRESULT CView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
     LPNMLVCUSTOMDRAW pLVCustomDraw = (LPNMLVCUSTOMDRAW)lparam;
     LPNMLISTVIEW pListView = (LPNMLISTVIEW)lparam;
     LPNMITEMACTIVATE pnmitem = reinterpret_cast<LPNMITEMACTIVATE>(lparam);
+    NMLVDISPINFO* pDispInfo = reinterpret_cast<NMLVDISPINFO*>(lparam);
 
     assert(pListView);
     UINT code = pListView->hdr.code;
@@ -245,6 +263,7 @@ LRESULT CView::OnNotifyReflect(WPARAM, LPARAM lparam)
     switch (code)
     {
     case LVN_COLUMNCLICK:   return OnLVColumnClick(pnmitem);
+    case LVN_GETDISPINFO:   return OnLVNDispInfo(pDispInfo);
     case LVN_ITEMCHANGED:   return OnItemChanged(pListView);
     case NM_CUSTOMDRAW:     return OnCustomDraw(pLVCustomDraw);
     case NM_CLICK:          return OnClick(pListView);
@@ -263,9 +282,6 @@ LRESULT CView::OnUpdateText()
     LPARAM lparam = GetItemData(m_row);
     ListItemData* pData = reinterpret_cast<ListItemData*>(lparam);
     pData->m_subItemText[m_column] = text;
-
-    // Update the list view text
-    SetItemText(m_row, m_column, pData->m_subItemText[m_column]);
 
     return 0;
 }

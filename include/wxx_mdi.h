@@ -279,18 +279,18 @@ namespace Win32xx
             return;
 
         // Delete previously appended items
-        int items = windowMenu.GetMenuItemCount();
-        int lastID = windowMenu.GetMenuItemID(--items);
+        UINT items = static_cast<UINT>(windowMenu.GetMenuItemCount());
+        UINT lastID = windowMenu.GetMenuItemID(--items);
         if ((lastID >= IDW_FIRSTCHILD) && (lastID < IDW_FIRSTCHILD + 10))
         {
             while ((lastID >= IDW_FIRSTCHILD) && (lastID < IDW_FIRSTCHILD + 10))
             {
-                windowMenu.DeleteMenu(static_cast<UINT>(items), MF_BYPOSITION);
+                windowMenu.DeleteMenu(items, MF_BYPOSITION);
                 lastID = windowMenu.GetMenuItemID(--items);
             }
 
             //delete the separator too
-            windowMenu.DeleteMenu(static_cast<UINT>(items), MF_BYPOSITION);
+            windowMenu.DeleteMenu(items, MF_BYPOSITION);
         }
 
         int window = 0;
@@ -669,15 +669,14 @@ namespace Win32xx
         BOOL succeeded = TRUE;
 
         // Remove the children in reverse order
-        std::vector<MDIChildPtr>::iterator it;
-        for( it = m_mdiChildren.end(); it != m_mdiChildren.begin(); --it)
+        std::vector<MDIChildPtr>::const_reverse_iterator mdiChild;
+        const std::vector<MDIChildPtr> mdiChildren = m_mdiChildren;
+        for (mdiChild = mdiChildren.rbegin(); mdiChild != mdiChildren.rend(); ++mdiChild)
         {
-            MDIChildPtr pMDIChild = (*it);
-
             // Ask the window to close. If it is destroyed, RemoveMDIChild gets called.
-            pMDIChild->SendMessage(WM_SYSCOMMAND, (WPARAM)SC_CLOSE, 0);
+            (*mdiChild)->SendMessage(WM_SYSCOMMAND, (WPARAM)SC_CLOSE, 0);
 
-            if (pMDIChild->IsWindow())
+            if ((*mdiChild)->IsWindow())
                 succeeded = FALSE;
         }
 
