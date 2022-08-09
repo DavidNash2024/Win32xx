@@ -24,6 +24,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CDXApp(const CDXApp&);                // Disable copy construction
+    CDXApp& operator = (const CDXApp&);   // Disable assignment operator
+
     CMainFrame m_frame;
 };
 

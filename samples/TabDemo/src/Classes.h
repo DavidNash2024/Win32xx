@@ -20,6 +20,9 @@ protected:
     virtual void OnAttach();
 
 private:
+    CViewClasses(const CViewClasses&);                // Disable copy construction
+    CViewClasses& operator = (const CViewClasses&);   // Disable assignment operator
+
     CImageList m_normalImages;
 };
 

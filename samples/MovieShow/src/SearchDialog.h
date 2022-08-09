@@ -26,6 +26,9 @@ protected:
     virtual void OnOK();
 
 private:
+    CSearchDialog(const CSearchDialog&);                // Disable copy construction
+    CSearchDialog& operator = (const CSearchDialog&);   // Disable assignment operator
+
     CButton m_titleButton;
     CButton m_actorsButton;
     CButton m_infoButton;

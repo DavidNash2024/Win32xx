@@ -34,6 +34,9 @@ protected:
     virtual void OnOK();
 
 private:
+    CFormView(const CFormView&);                // Disable copy construction
+    CFormView& operator = (const CFormView&);   // Disable assignment operator
+
     // Member variables for dialog controls.
     CButton   m_radioA;
     CButton   m_radioB;

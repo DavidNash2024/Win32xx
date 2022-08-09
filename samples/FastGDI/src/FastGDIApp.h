@@ -22,6 +22,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CFastGDIApp(const CFastGDIApp&);                // Disable copy construction
+    CFastGDIApp& operator = (const CFastGDIApp&);   // Disable assignment operator
+
     CMainFrame m_frame;
 };
 

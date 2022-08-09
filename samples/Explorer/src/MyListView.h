@@ -54,6 +54,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMyListView(const CMyListView&);                // Disable copy construction
+    CMyListView& operator = (const CMyListView&);   // Disable assignment operator
+
     // ListItemData is a nested class inside CMyListView.
     // Each list view item has a pointer to ListItemData.
     class ListItemData

@@ -167,7 +167,7 @@ namespace Win32xx
     {
         assert(::IsWindow(parent));
 
-        HWND wnd = ::GetDlgItem(parent, id);
+        HWND wnd = ::GetDlgItem(parent, static_cast<int>(id));
         return Attach(wnd);
     }
 

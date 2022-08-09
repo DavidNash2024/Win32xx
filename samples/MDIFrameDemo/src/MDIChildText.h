@@ -20,6 +20,9 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
+    CViewText(const CViewText&);                // Disable copy construction
+    CViewText& operator = (const CViewText&);   // Disable assignment operator
+
     CFont   m_font;
 };
 
@@ -39,6 +42,9 @@ protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
+    CMDIChildText(const CMDIChildText&);                // Disable copy construction
+    CMDIChildText& operator = (const CMDIChildText&);   // Disable assignment operator
+
     CViewText m_textView;
     CMenu m_menu;
 };

@@ -44,6 +44,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMainFrame(const CMainFrame&);                // Disable copy construction
+    CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+
     void AddComboBoxBand(int height);
     void ConnectEvents();
     void DisconnectEvents();

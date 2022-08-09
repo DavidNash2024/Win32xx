@@ -28,6 +28,9 @@ protected:
     virtual void SetupToolBar();
 
 private:
+    CMainFrame(const CMainFrame&);                // Disable copy construction
+    CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+
     CGDIPlusView m_view;
 };
 

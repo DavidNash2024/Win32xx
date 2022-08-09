@@ -22,6 +22,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CViewRect(const CViewRect&);                // Disable copy construction
+    CViewRect& operator = (const CViewRect&);   // Disable assignment operator
+
     // Command handlers
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);

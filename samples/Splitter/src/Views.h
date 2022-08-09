@@ -18,6 +18,10 @@ protected:
     // Virtual functions that override base class functions
     virtual void OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    CViewSimple(const CViewSimple&);                // Disable copy construction
+    CViewSimple& operator = (const CViewSimple&);   // Disable assignment operator
 };
 
 
@@ -34,6 +38,10 @@ protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
+
+private:
+    CViewText(const CViewText&);                // Disable copy construction
+    CViewText& operator = (const CViewText&);   // Disable assignment operator
 };
 
 
@@ -51,6 +59,9 @@ protected:
     virtual void OnAttach();
 
 private:
+    CViewTree(const CViewTree&);                // Disable copy construction
+    CViewTree& operator = (const CViewTree&);   // Disable assignment operator
+
     CImageList m_smallImages;
 };
 
@@ -70,6 +81,9 @@ protected:
     virtual void OnAttach();
 
 private:
+    CViewList(const CViewList&);                // Disable copy construction
+    CViewList& operator = (const CViewList&);   // Disable assignment operator
+
     CImageList m_smallImages;
 };
 

@@ -29,6 +29,9 @@ protected:
     }
 
 private:
+    CApp(const CApp&);                // Disable copy construction
+    CApp& operator = (const CApp&);   // Disable assignment operator
+
     CMetaView m_metaView;
 };
 

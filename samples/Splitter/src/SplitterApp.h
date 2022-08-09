@@ -23,6 +23,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CSplitterApp(const CSplitterApp&);                // Disable copy construction
+    CSplitterApp& operator = (const CSplitterApp&);   // Disable assignment operator
+
     CMainFrame m_frame;
 };
 

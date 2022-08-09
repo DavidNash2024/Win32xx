@@ -27,6 +27,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CViewClasses(const CViewClasses&);                // Disable copy construction
+    CViewClasses& operator = (const CViewClasses&);   // Disable assignment operator
+
     // Command handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -50,6 +53,9 @@ protected:
     virtual void SetupToolBar();
 
 private:
+    CContainClasses(const CContainClasses&);                // Disable copy construction
+    CContainClasses& operator = (const CContainClasses&);   // Disable assignment operator
+
     // Command handlers
     BOOL OnFileNew();
     BOOL OnHelpAbout();
@@ -72,6 +78,9 @@ public:
     virtual ~CDockClasses() {}
 
 private:
+    CDockClasses(const CDockClasses&);                // Disable copy construction
+    CDockClasses& operator = (const CDockClasses&);   // Disable assignment operator
+
     CContainClasses m_classes;
 };
 

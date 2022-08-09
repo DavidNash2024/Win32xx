@@ -22,6 +22,9 @@ protected:
     virtual BOOL    OnInitDialog();
 
 private:
+    CAboutHelp(const CAboutHelp&);                // Disable copy construction
+    CAboutHelp& operator = (const CAboutHelp&);   // Disable assignment operator
+
     CString     m_credits;          // AboutBox contents
 };
 

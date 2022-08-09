@@ -39,6 +39,9 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
+    CView(const CView&);                // Disable copy construction
+    CView& operator = (const CView&);   // Disable assignment operator
+
     MyModule m_module;                  // Instanciates (initializes) ATL
     IWebBrowser2* m_pInetExplorer;      // pointer to IWebBrowser2
     LPUNKNOWN m_pSourceUnk;             // pointer to IUnknown for the ActiveX control

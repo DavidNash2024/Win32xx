@@ -23,6 +23,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CPropertySheetApp(const CPropertySheetApp&);                // Disable copy construction
+    CPropertySheetApp& operator = (const CPropertySheetApp&);   // Disable assignment operator
+
     CMainFrame m_frame;
 };
 

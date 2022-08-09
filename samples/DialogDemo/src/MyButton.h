@@ -19,6 +19,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMyButton(const CMyButton&);                // Disable copy construction
+    CMyButton& operator = (const CMyButton&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);

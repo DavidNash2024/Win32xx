@@ -38,6 +38,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CDXView(const CDXView&);                // Disable copy construction
+    CDXView& operator = (const CDXView&);   // Disable assignment operator
+
     // Member functions
     HRESULT InitD3D(HWND hWnd);
     HRESULT InitGeometry();

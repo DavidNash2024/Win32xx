@@ -22,6 +22,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CViewSimple(const CViewSimple&);                // Disable copy construction
+    CViewSimple& operator = (const CViewSimple&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -41,6 +44,10 @@ protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
+
+private:
+    CViewText(const CViewText&);                // Disable copy construction
+    CViewText& operator = (const CViewText&);   // Disable assignment operator
 };
 
 
@@ -60,6 +67,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CViewTree(const CViewTree&);                // Disable copy construction
+    CViewTree& operator = (const CViewTree&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -84,6 +94,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CViewList(const CViewList&);                // Disable copy construction
+    CViewList& operator = (const CViewList&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 

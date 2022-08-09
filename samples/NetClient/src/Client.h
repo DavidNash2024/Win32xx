@@ -18,6 +18,7 @@
 class CClientSocket : public CSocket
 {
 public:
+    CClientSocket() {}
     virtual ~CClientSocket() {}
 
 protected:
@@ -25,6 +26,10 @@ protected:
     virtual void OnDisconnect();
     virtual void OnConnect();
     virtual void OnReceive();
+
+private:
+    CClientSocket(const CClientSocket&);                // Disable copy construction
+    CClientSocket& operator = (const CClientSocket&);   // Disable assignment operator
 };
 
 

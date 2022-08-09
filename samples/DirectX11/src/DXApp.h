@@ -15,6 +15,7 @@
 class CDXApp : public CWinApp
 {
 public:
+    CDXApp() {}
     virtual ~CDXApp() {}
 
 protected:
@@ -23,6 +24,9 @@ protected:
     virtual int MessageLoop();
 
 private:
+    CDXApp(const CDXApp&);                // Disable copy construction
+    CDXApp& operator = (const CDXApp&);   // Disable assignment operator
+
     CDXView m_dxView;
 };
 

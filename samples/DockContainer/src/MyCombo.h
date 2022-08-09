@@ -21,6 +21,9 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
+    CMyCombo(const CMyCombo&);                // Disable copy construction
+    CMyCombo& operator = (const CMyCombo&);   // Disable assignment operator
+
     void SetImages(int nImages, UINT ImageID);
 
     // Member variables

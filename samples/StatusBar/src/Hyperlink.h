@@ -31,6 +31,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CHyperlink(const CHyperlink&);                // Disable copy construction
+    CHyperlink& operator = (const CHyperlink&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);

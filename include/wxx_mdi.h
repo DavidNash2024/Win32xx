@@ -279,21 +279,21 @@ namespace Win32xx
             return;
 
         // Delete previously appended items
-        UINT items = static_cast<UINT>(windowMenu.GetMenuItemCount());
+        int items = windowMenu.GetMenuItemCount();
         UINT lastID = windowMenu.GetMenuItemID(--items);
         if ((lastID >= IDW_FIRSTCHILD) && (lastID < IDW_FIRSTCHILD + 10))
         {
             while ((lastID >= IDW_FIRSTCHILD) && (lastID < IDW_FIRSTCHILD + 10))
             {
-                windowMenu.DeleteMenu(items, MF_BYPOSITION);
+                windowMenu.DeleteMenu(static_cast<UINT>(items), MF_BYPOSITION);
                 lastID = windowMenu.GetMenuItemID(--items);
             }
 
             //delete the separator too
-            windowMenu.DeleteMenu(items, MF_BYPOSITION);
+            windowMenu.DeleteMenu(static_cast<UINT>(items), MF_BYPOSITION);
         }
 
-        int window = 0;
+        UINT window = 0;
 
         // Allocate an iterator for our MDIChild vector
         std::vector<MDIChildPtr>::const_iterator v;
@@ -321,7 +321,7 @@ namespace Win32xx
                     CString menuString;
                     menuString.Format(_T("&%d %s"), window+1, strMenuItem.c_str());
 
-                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(window), menuString);
+                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + window, menuString);
 
                     if (GetActiveMDIChild() == (*v).get())
                         windowMenu.CheckMenuItem(IDW_FIRSTCHILD + window, MF_CHECKED);
@@ -451,7 +451,7 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDICascade(int type /* = 0*/) const
     {
         assert(T::IsWindow());
-        GetMDIClient().SendMessage(WM_MDICASCADE, type, 0);
+        GetMDIClient().SendMessage(WM_MDICASCADE, (WPARAM)type, 0);
     }
 
     // Re-arranges the icons for minimized MDI children.
@@ -469,7 +469,7 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDIMaximize() const
     {
         assert(T::IsWindow());
-        WPARAM mdiChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
+        WPARAM mdiChild = (WPARAM)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDIMAXIMIZE, mdiChild, 0);
     }
 
@@ -479,7 +479,7 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDINext() const
     {
         assert(T::IsWindow());
-        WPARAM mdiChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
+        WPARAM mdiChild = (WPARAM)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDINEXT, mdiChild, FALSE);
     }
 
@@ -489,7 +489,7 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDIPrev() const
     {
         assert(T::IsWindow());
-        WPARAM mdiChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
+        WPARAM mdiChild = (WPARAM)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDINEXT, mdiChild, TRUE);
     }
 
@@ -499,7 +499,7 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDIRestore() const
     {
         assert(T::IsWindow());
-        WPARAM mdiChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
+        WPARAM mdiChild = (WPARAM)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
         GetMDIClient().SendMessage(WM_MDIRESTORE, mdiChild, 0);
     }
 
@@ -554,15 +554,26 @@ namespace Win32xx
         case IDW_VIEW_STATUSBAR:
             {
                 bool isVisible = T::GetStatusBar().IsWindow() && T::GetStatusBar().IsWindowVisible();
-                activeMenu.CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
+                if (isVisible)
+                    activeMenu.CheckMenuItem(id, MF_CHECKED);
+                else
+                    activeMenu.CheckMenuItem(id, MF_UNCHECKED);
             }
             break;
 
         case IDW_VIEW_TOOLBAR:
             {
                 bool isVisible = T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible();
-                activeMenu.EnableMenuItem(id, T::IsUsingToolBar() ? MF_ENABLED : MF_DISABLED);
-                activeMenu.CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
+
+                if (T::IsUsingToolBar())
+                    activeMenu.EnableMenuItem(id, MF_ENABLED);
+                else
+                    activeMenu.EnableMenuItem(id, MF_DISABLED);
+
+                if (isVisible)
+                    activeMenu.CheckMenuItem(id, MF_CHECKED);
+                else
+                    activeMenu.CheckMenuItem(id, MF_UNCHECKED);
             }
             break;
         }

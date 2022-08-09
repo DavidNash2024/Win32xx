@@ -68,6 +68,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMiniFrame(const CMiniFrame&) = delete;                // Disable copy construction
+    CMiniFrame& operator = (const CMiniFrame&) = delete;   // Disable assignment operator
+
     void DrawBackground(CDC& dc) const;
     void DrawCloseButton(CDC& dc) const;
     void DrawMinimizeButton(CDC& dc) const;

@@ -23,6 +23,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CDockContainerApp(const CDockContainerApp&);                // Disable copy construction
+    CDockContainerApp& operator = (const CDockContainerApp&);   // Disable assignment operator
+
     CMainFrame m_frame;
 };
 

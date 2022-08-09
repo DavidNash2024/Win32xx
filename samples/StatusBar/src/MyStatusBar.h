@@ -26,6 +26,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMyStatusBar(const CMyStatusBar&);                // Disable copy construction
+    CMyStatusBar& operator = (const CMyStatusBar&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnDrawItem(UINT, WPARAM, LPARAM lparam);
     void    OnSize();

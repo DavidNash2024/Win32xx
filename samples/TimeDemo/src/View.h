@@ -58,6 +58,9 @@ protected:
     virtual void    Serialize(CArchive &ar);
 
 private:
+    CView(const CView&);                // Disable copy construction
+    CView& operator = (const CView&);   // Disable assignment operator
+
     // data members
     COLORREF    m_bkgndColor;   // background color
     CDoc        m_doc;          // the document

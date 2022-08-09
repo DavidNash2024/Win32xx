@@ -62,6 +62,9 @@ CMainFrame : public CFrame                                                  /*
         void        SetupToolBar();
 
     private:
+        CMainFrame(const CMainFrame&);                // Disable copy construction
+        CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+
           // private data members
          CString    m_arcvPath;       // archived data path
          CView      m_view;           // the view

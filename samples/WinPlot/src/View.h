@@ -24,6 +24,7 @@ public:
         double y;
         int status;
     };
+
     CView();
     virtual ~CView(){}
 
@@ -39,6 +40,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CView(const CView&);                // Disable copy construction
+    CView& operator = (const CView&);   // Disable assignment operator
+
     void CalcPoints(double xmin, double xmax);
     void DoPlot(CDC& dc);
     void DrawLabel(CDC& dc);

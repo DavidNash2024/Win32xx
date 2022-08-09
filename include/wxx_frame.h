@@ -484,7 +484,7 @@ namespace Win32xx
 
         if (m_menuImages.Add(icon) != -1)
         {
-            m_menuIcons.push_back(menuItemID);
+            m_menuIcons.push_back(static_cast<UINT>(menuItemID));
 
             // Set the mask color to gray for the new ImageList
             COLORREF mask = RGB(192, 192, 192);
@@ -636,7 +636,7 @@ namespace Win32xx
         GetToolBar().AddButton(id, isEnabled, image);
 
         if (0 != text)
-            GetToolBar().SetButtonText(id, text);
+            GetToolBar().SetButtonText(static_cast<int>(id), text);
     }
 
     // Adjust the size of the frame to accommodate the View window's dimensions.
@@ -720,7 +720,7 @@ namespace Win32xx
         case CDDS_ITEMPREPAINT:
             {
                 CRect rc = lpNMCustomDraw->nmcd.rc;
-                int state = lpNMCustomDraw->nmcd.uItemState;
+                UINT state = lpNMCustomDraw->nmcd.uItemState;
                 DWORD item = static_cast<DWORD>(lpNMCustomDraw->nmcd.dwItemSpec);
 
                 if (GetMenuBarTheme().UseThemes)
@@ -734,7 +734,8 @@ namespace Win32xx
                     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
                     if (state & (CDIS_HOT | CDIS_SELECTED))
                     {
-                        if ((state & CDIS_SELECTED) || (pMenubar->GetButtonState(item) & TBSTATE_PRESSED))
+                        UINT buttonState = pMenubar->GetButtonState(static_cast<int>(item));
+                        if ((state & CDIS_SELECTED) || (buttonState & TBSTATE_PRESSED))
                         {
                             drawDC.GradientFill(GetMenuBarTheme().clrPressed1, GetMenuBarTheme().clrPressed2, rc, FALSE);
                         }
@@ -807,10 +808,10 @@ namespace Win32xx
                     {
                         CDC drawDC(pCustomDraw->nmcd.hdc);
                         CRect rc = pCustomDraw->nmcd.rc;
-                        int state = pCustomDraw->nmcd.uItemState;
-                        DWORD item = static_cast<DWORD>(pCustomDraw->nmcd.dwItemSpec);
+                        UINT state = pCustomDraw->nmcd.uItemState;
+                        int item = static_cast<int>(pCustomDraw->nmcd.dwItemSpec);
                         DWORD tbStyle = static_cast<DWORD>(pTB->SendMessage(TB_GETSTYLE, 0, 0));
-                        int style = pTB->GetButtonStyle(item);
+                        DWORD style = pTB->GetButtonStyle(item);
                         int button = pTB->CommandToIndex(item);
                         TBBUTTON tbb;
                         ZeroMemory(&tbb, sizeof(tbb));
@@ -1140,10 +1141,10 @@ namespace Win32xx
 
         // get the icon's location in the imagelist
         int image = -1;
-        for (int i = 0 ; i < static_cast<int>(m_menuIcons.size()); ++i)
+        for (size_t i = 0 ; i < m_menuIcons.size(); ++i)
         {
             if (pDIS->itemID == m_menuIcons[i])
-                image = i;
+               image = static_cast<int>(i);
         }
 
         // draw the image
@@ -1428,7 +1429,7 @@ namespace Win32xx
         int tab = itemText.Find(L'\t');
 
         // Draw the item text before the tab.
-        ULONG accel = ((pDIS->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
+        ULONG accel = ((pDIS->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0U);
         int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
         DWORD flags = DT_SINGLELINE | DT_LEFT | DT_VCENTER | accel;
         GetMenuMetrics().DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, itemText, tab, flags, 0, &textRect);
@@ -1497,7 +1498,7 @@ namespace Win32xx
             mii.cch        = WXX_MAX_STRING_SIZE;
 
             // Fill the contents of szStr from the menu item.
-            if (::GetMenuItemInfo(menu, item, TRUE, &mii))
+            if (::GetMenuItemInfo(menu, static_cast<UINT>(item), TRUE, &mii))
             {
                 int len = lstrlen(menuName);
                 if (len <= WXX_MAX_STRING_SIZE)
@@ -1629,7 +1630,8 @@ namespace Win32xx
                 if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName, NULL, &bufferSize))
                 {
                     // load the entry from the registry.
-                    if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName, pathName.GetBuffer(bufferSize), &bufferSize))
+                    int buffer = static_cast<int>(bufferSize);
+                    if (ERROR_SUCCESS == recentKey.QueryStringValue(fileKeyName, pathName.GetBuffer(buffer), &bufferSize))
                     {
                         pathName.ReleaseBuffer();
 
@@ -1684,10 +1686,14 @@ namespace Win32xx
                 if (ERROR_SUCCESS != key.QueryDWORDValue(_T("ToolBar"), toolBar))
                     throw CUserException();
 
-                values.position = CRect(left, top, left + width, top + height);
+                int l = static_cast<int>(left);
+                int t = static_cast<int>(top);
+                int r = static_cast<int>(left + width);
+                int b = static_cast<int>(top + height);
+                values.position = CRect(l, t, r, b);
                 values.showCmd = (SW_MAXIMIZE == showCmd) ? SW_MAXIMIZE : SW_SHOW;
-                values.showStatusBar = statusBar & 1;
-                values.showToolBar = toolBar & 1;
+                values.showStatusBar = (statusBar & 1) ? TRUE : FALSE;
+                values.showToolBar = (toolBar & 1) ? TRUE : FALSE;
 
                 isOK = TRUE;
             }
@@ -1727,8 +1733,8 @@ namespace Win32xx
         CSize size = GetMenuMetrics().GetItemSize(pMID);
 
         // Return the composite sizes.
-        pMIS->itemWidth = size.cx;
-        pMIS->itemHeight = size.cy;
+        pMIS->itemWidth = static_cast<UINT>(size.cx);
+        pMIS->itemHeight = static_cast<UINT>(size.cy);
     }
 
     // Called when the frame is activated (WM_ACTIVATE received).
@@ -1980,8 +1986,9 @@ namespace Win32xx
 
         for (int i = 0; i < menu.GetMenuItemCount(); ++i)
         {
-            MenuItemData* pItem = new MenuItemData;        // Deleted in OnExitMenuLoop.
-            m_menuItemData.push_back(ItemDataPtr(pItem));  // Store pItem in smart pointer for later automatic deletion.
+            // Store the MenuItemData as smart pointer for later automatic deletion.
+            MenuItemData* pItem(new MenuItemData);
+            m_menuItemData.push_back(ItemDataPtr(pItem));
 
             MENUITEMINFO mii;
             ZeroMemory(&mii, sizeof(mii));
@@ -1997,16 +2004,16 @@ namespace Win32xx
             T::SendMessage(UWM_UPDATECOMMAND, menuItem, 0);
 
             // Specify owner-draw for the menu item type.
-            if (menu.GetMenuItemInfo(i, mii, TRUE))
+            if (menu.GetMenuItemInfo(static_cast<UINT>(i), mii, TRUE))
             {
                 if (mii.dwItemData == 0)
                 {
                     pItem->menu = menu;
-                    pItem->pos = i;
+                    pItem->pos = static_cast<UINT>(i);
                     pItem->mii = mii;
-                    mii.dwItemData = reinterpret_cast<DWORD_PTR>(pItem);
+                    mii.dwItemData = reinterpret_cast<ULONG_PTR>(pItem);
                     mii.fType |= MFT_OWNERDRAW;
-                    menu.SetMenuItemInfo(i, mii, TRUE); // Store pItem in mii
+                    menu.SetMenuItemInfo(static_cast<UINT>(i), mii, TRUE); // Store pItem in mii
                 }
             }
         }
@@ -2083,11 +2090,10 @@ namespace Win32xx
         // Only popup submenus have status strings.
         if (IsUsingMenuStatus() && GetStatusBar().IsWindow())
         {
-            int id = LOWORD (wparam);
+            UINT id = LOWORD (wparam);
             HMENU menu = reinterpret_cast<HMENU>(lparam);
 
             if ((menu != T::GetMenu()) && (id != 0) && !(HIWORD(wparam) & MF_POPUP))
-
                 GetStatusBar().SetPartText(0, LoadString(id));
             else
                 GetStatusBar().SetPartText(0, m_statusText);
@@ -2108,14 +2114,25 @@ namespace Win32xx
         case IDW_VIEW_STATUSBAR:
             {
                 bool isVisible = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
-                GetFrameMenu().CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
+                if (isVisible)
+                    GetFrameMenu().CheckMenuItem(id, MF_CHECKED);
+                else
+                    GetFrameMenu().CheckMenuItem(id, MF_UNCHECKED);
             }
             break;
         case IDW_VIEW_TOOLBAR:
             {
-                bool isVisible = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
-                GetFrameMenu().EnableMenuItem(id, GetToolBar().IsWindow() ? MF_ENABLED : MF_DISABLED);
-                GetFrameMenu().CheckMenuItem(id, isVisible ? MF_CHECKED : MF_UNCHECKED);
+                bool isWindow = GetToolBar().IsWindow() != 0 ;
+                bool isVisible = (isWindow && GetToolBar().IsWindowVisible()) != 0;
+                if (isWindow)
+                    GetFrameMenu().EnableMenuItem(id, MF_ENABLED);
+                else
+                    GetFrameMenu().EnableMenuItem(id, MF_DISABLED);
+
+                if (isVisible)
+                    GetFrameMenu().CheckMenuItem(id, MF_CHECKED);
+                else
+                    GetFrameMenu().CheckMenuItem(id, MF_UNCHECKED);
             }
             break;
         }
@@ -2202,8 +2219,8 @@ namespace Win32xx
             int index =  pToolBar->HitTest();
             if (index >= 0)
             {
-                int id = pToolBar->GetCommandID(index);
-                if (id > 0)
+                UINT id = static_cast<UINT>(pToolBar->GetCommandID(index));
+                if (id != 0)
                 {
                     m_tooltip = LoadString(id);
                     lpDispInfo->lpszText = const_cast<LPTSTR>(m_tooltip.c_str());
@@ -2324,16 +2341,17 @@ namespace Win32xx
         for (int item = static_cast<int>(m_menuItemData.size()) - 1; item >= 0; --item)
         {
             // Undo OwnerDraw and put the text back.
+            size_t index = static_cast<size_t>(item);
             MENUITEMINFO mii;
             ZeroMemory(&mii, sizeof(mii));
             mii.cbSize = GetSizeofMenuItemInfo();
             mii.fMask = MIIM_TYPE | MIIM_DATA;
-            mii.fType = m_menuItemData[item]->mii.fType;
-            mii.dwTypeData = m_menuItemData[item]->GetItemText();
-            mii.cch = lstrlen(m_menuItemData[item]->GetItemText());
+            mii.fType = m_menuItemData[index]->mii.fType;
+            mii.dwTypeData = m_menuItemData[index]->GetItemText();
+            mii.cch = static_cast<UINT>(lstrlen(m_menuItemData[index]->GetItemText()));
             mii.dwItemData = 0;
-            VERIFY(::SetMenuItemInfo(m_menuItemData[item]->menu, m_menuItemData[item]->pos, TRUE, &mii));
-            int pos = m_menuItemData[item]->pos;
+            VERIFY(::SetMenuItemInfo(m_menuItemData[index]->menu, m_menuItemData[index]->pos, TRUE, &mii));
+            UINT pos = m_menuItemData[index]->pos;
             m_menuItemData.pop_back();
 
             // Break when we reach the top of this popup menu.
@@ -2540,10 +2558,10 @@ namespace Win32xx
                 {
                     // Get the Frame's window position
                     CRect rc = wndpl.rcNormalPosition;
-                    DWORD top = MAX(rc.top, 0);
-                    DWORD left = MAX(rc.left, 0);
-                    DWORD width = MAX(rc.Width(), 100);
-                    DWORD height = MAX(rc.Height(), 50);
+                    DWORD top = static_cast<DWORD>(MAX(rc.top, 0));
+                    DWORD left = static_cast<DWORD>(MAX(rc.left, 0));
+                    DWORD width = static_cast<DWORD>(MAX(rc.Width(), 100));
+                    DWORD height = static_cast<DWORD>(MAX(rc.Height(), 50));
                     DWORD showCmd = wndpl.showCmd;
 
                     if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("Top"), top))
@@ -2608,7 +2626,7 @@ namespace Win32xx
         if (menuID != 0)
         {
             // Sets the frame's menu from a resource ID.
-            menu.LoadMenu(menuID);
+            menu.LoadMenu(static_cast<UINT>(menuID));
             assert (::IsMenu(menu));
         }
 
@@ -2690,8 +2708,8 @@ namespace Win32xx
             else
                 width = GetMenuBar().GetMaxSize().cx;
 
-            rbbi.cxMinChild = width;
-            rbbi.cx         = width;
+            rbbi.cxMinChild = static_cast<UINT>(width);
+            rbbi.cx         = static_cast<UINT>(width);
 
             rb.SetBandInfo(band, rbbi);
         }
@@ -2773,7 +2791,7 @@ namespace Win32xx
             CSize numSize = statusDC.GetTextExtentPoint32(num, num.GetLength());
             CSize scrlSize = statusDC.GetTextExtentPoint32(scrl, scrl.GetLength());
 
-            BOOL hasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
+            bool hasGripper = (GetStatusBar().GetStyle() & SBARS_SIZEGRIP) != 0;
             int cxGripper = hasGripper ? 20 : 0;
             int cxBorder = 8;
 
@@ -3263,8 +3281,8 @@ namespace Win32xx
             CSize sizeMenuBar = menuBarDC.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
             int MenuBar_Height = sizeMenuBar.cy + 6;
             rbbi.fMask      = RBBIM_CHILDSIZE;
-            rbbi.cyMinChild = MenuBar_Height;
-            rbbi.cyMaxChild = MenuBar_Height;
+            rbbi.cyMinChild = static_cast<UINT>(MenuBar_Height);
+            rbbi.cyMaxChild = static_cast<UINT>(MenuBar_Height);
             GetReBar().SetBandInfo(band, rbbi);
         }
     }
@@ -3335,22 +3353,23 @@ namespace Win32xx
             }
 
             int maxMRUIndex = static_cast<int>(mruStrings.size() -1);
-
-            for (int index = maxMRUIndex; index >= 0; --index)
+            for (int item = maxMRUIndex; item >= 0; --item)
             {
+                size_t index = static_cast<size_t>(item);
+                UINT pos = static_cast<UINT>(item);
                 mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
-                mii.fState = (0 == m_mruEntries.size())? MFS_GRAYED : 0;
+                mii.fState = (0 == m_mruEntries.size())? MFS_GRAYED : 0U;
                 mii.fType = MFT_STRING;
-                mii.wID = IDW_FILE_MRU_FILE1 + index;
+                mii.wID = IDW_FILE_MRU_FILE1 + pos;
                 mii.dwTypeData = const_cast<LPTSTR>(mruStrings[index].c_str());
 
                 BOOL result;
-                if (index == maxMRUIndex)
+                if (item == maxMRUIndex)
                     // Replace the last MRU entry first.
                     result = fileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, mii, FALSE);
                 else
                     // Insert the other MRU entries next.
-                    result = fileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, mii, FALSE);
+                    result = fileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + pos + 1, mii, FALSE);
 
                 if (!result)
                 {

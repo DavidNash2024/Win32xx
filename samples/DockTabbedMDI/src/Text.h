@@ -25,6 +25,9 @@ protected:
     void PreCreate(CREATESTRUCT& cs);
 
 private:
+    CViewText(const CViewText&);                // Disable copy construction
+    CViewText& operator = (const CViewText&);   // Disable assignment operator
+
     // Command handlers
     BOOL OnEditCopy();
     BOOL OnEditPaste();
@@ -48,6 +51,9 @@ public:
     virtual ~CContainText() {}
 
 private:
+    CContainText(const CContainText&);                // Disable copy construction
+    CContainText& operator = (const CContainText&);   // Disable assignment operator
+
     CViewText m_viewText;
 };
 
@@ -62,6 +68,9 @@ public:
     virtual ~CDockText() {}
 
 private:
+    CDockText(const CDockText&);                // Disable copy construction
+    CDockText& operator = (const CDockText&);   // Disable assignment operator
+
     CContainText m_view;
 };
 

@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -747,13 +747,19 @@ namespace Win32xx
     inline int CPropertySheet::GetPageIndex(CPropertyPage* pPage) const
     {
         assert(IsWindow());
+        int page = -1;
 
         for (int i = 0; i < GetPageCount(); i++)
         {
-            if (m_allPages[static_cast<size_t>(i)].get() == pPage)
-                return i;
+            size_t index = static_cast<size_t>(i);
+            if (m_allPages[index].get() == pPage)
+            {
+                page = i;
+                break;
+            }
         }
-        return -1;
+
+        return page;
     }
 
     // Returns the handle to the Property Sheet's tab control.

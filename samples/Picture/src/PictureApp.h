@@ -23,6 +23,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CPictureApp(const CPictureApp&);                // Disable copy construction
+    CPictureApp& operator = (const CPictureApp&);   // Disable assignment operator
+
     CMainFrame m_frame;
 };
 

@@ -24,6 +24,9 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
+    CViewOutput(const CViewOutput&);                // Disable copy construction
+    CViewOutput& operator = (const CViewOutput&);   // Disable assignment operator
+
     CFont m_font;
 };
 
@@ -38,6 +41,9 @@ public:
     virtual ~CContainOutput() {}
 
 private:
+    CContainOutput(const CContainOutput&);                // Disable copy construction
+    CContainOutput& operator = (const CContainOutput&);   // Disable assignment operator
+
     CViewOutput m_viewOutput;
 };
 
@@ -52,6 +58,9 @@ public:
     virtual ~CDockOutput() {}
 
 private:
+    CDockOutput(const CDockOutput&);                // Disable copy construction
+    CDockOutput& operator = (const CDockOutput&);   // Disable assignment operator
+
     CContainOutput m_view;
 };
 

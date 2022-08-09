@@ -37,6 +37,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMainWindow(const CMainWindow&);                // Disable copy construction
+    CMainWindow& operator = (const CMainWindow&);   // Disable assignment operator
+
     // Message handlers
     virtual LRESULT OnSize();
     virtual LRESULT OnWindowCreated();

@@ -21,6 +21,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CBrowserApp(const CBrowserApp&);                // Disable copy construction
+    CBrowserApp& operator = (const CBrowserApp&);   // Disable assignment operator
     CMainFrame m_frame;
 };
 

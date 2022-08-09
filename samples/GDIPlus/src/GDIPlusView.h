@@ -40,6 +40,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CGDIPlusView(const CGDIPlusView&);                // Disable copy construction
+    CGDIPlusView& operator = (const CGDIPlusView&);   // Disable assignment operator
+
     ULONG_PTR   m_gdiplusToken;
 };
 

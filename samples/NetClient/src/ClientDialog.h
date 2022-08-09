@@ -27,6 +27,9 @@ protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
 
 private:
+    CClientDialog(const CClientDialog&);                // Disable copy construction
+    CClientDialog& operator = (const CClientDialog&);   // Disable assignment operator
+
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
     class CIP4Address : public CIPAddress {};

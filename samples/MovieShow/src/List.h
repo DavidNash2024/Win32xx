@@ -48,6 +48,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CViewList(const CViewList&);                // Disable copy construction
+    CViewList& operator = (const CViewList&);   // Disable assignment operator
+
     static int CALLBACK CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortViewItems);
 
     // Message handlers

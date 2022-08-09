@@ -36,7 +36,10 @@ CApp : public CWinApp                                                       /*
         virtual BOOL    OnIdle(LONG);
 
     private:
-        CMainFrame  m_frame;        // the main frame object
+        CApp(const CApp&);                // Disable copy construction
+        CApp& operator = (const CApp&);   // Disable assignment operator
+
+        CMainFrame  m_frame;              // the main frame object
 };
 
 /*============================================================================*/

@@ -37,6 +37,9 @@ CMyScrollBar : public CScrollBar                                         /*
                 void    SetScrollInfo(int lo, int hi, int pos, int page);
 
     private:
+        CMyScrollBar(const CMyScrollBar&);                // Disable copy construction
+        CMyScrollBar& operator = (const CMyScrollBar&);   // Disable assignment operator
+
         SCROLLINFO m_scrollInfo;
 };
 

@@ -23,6 +23,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CDoubleBufferApp(const CDoubleBufferApp&);                // Disable copy construction
+    CDoubleBufferApp& operator = (const CDoubleBufferApp&);   // Disable assignment operator
+
     CMainFrame m_frame;
 };
 

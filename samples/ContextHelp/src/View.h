@@ -35,6 +35,9 @@ protected:
     virtual void OnOK();
 
 private:
+    CView(const CView&);                // Disable copy construction
+    CView& operator = (const CView&);   // Disable assignment operator
+
     // Member variables
     CDoc     m_doc;
     CResizer m_resizer;

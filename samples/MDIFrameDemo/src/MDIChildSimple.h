@@ -24,6 +24,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CViewSimple(const CViewSimple&);                // Disable copy construction
+    CViewSimple& operator = (const CViewSimple&);   // Disable assignment operator
+
     COLORREF m_color;
 };
 
@@ -45,6 +48,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMDIChildSimple(const CMDIChildSimple&);                // Disable copy construction
+    CMDIChildSimple& operator = (const CMDIChildSimple&);   // Disable assignment operator
+
     CViewSimple m_view;
     CMenu m_menu;
 };

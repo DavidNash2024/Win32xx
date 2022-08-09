@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -262,7 +262,7 @@ namespace Win32xx
         if ((m_pdex.Flags & PD_USEDEVMODECOPIES) != 0)
             return GetDevMode()->dmCopies;
 
-        return m_pdex.nCopies;
+        return static_cast<int>(m_pdex.nCopies);
     }
 
     // Fill a DEVMODE structure with information about the currently
@@ -296,7 +296,8 @@ namespace Win32xx
         {
             UINT size = 0;
             m_pServices->GetCurrentPortName(0, &size);
-            m_pServices->GetCurrentPortName(str.GetBuffer(size), &size);
+            int bufferSize = static_cast<int>(size);
+            m_pServices->GetCurrentPortName(str.GetBuffer(bufferSize), &size);
             str.ReleaseBuffer();
         }
 
@@ -312,7 +313,8 @@ namespace Win32xx
         {
             UINT size = 0;
             m_pServices->GetCurrentPrinterName(0, &size);
-            m_pServices->GetCurrentPrinterName(str.GetBuffer(size), &size);
+            int bufferSize = static_cast<int>(size);
+            m_pServices->GetCurrentPrinterName(str.GetBuffer(bufferSize), &size);
             str.ReleaseBuffer();
         }
 

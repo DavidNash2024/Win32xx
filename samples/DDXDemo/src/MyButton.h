@@ -39,7 +39,8 @@ CMyButton : public CButton                                                  /*
     protected:
 
     private:
-
+        CMyButton(const CMyButton&);                // Disable copy construction
+        CMyButton& operator = (const CMyButton&);   // Disable assignment operator
 };
 
 /*----------------------------------------------------------------------------*/

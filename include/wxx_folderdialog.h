@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -158,7 +158,7 @@ namespace Win32xx
         CString GetFolderPath() const;
         LPITEMIDLIST GetFolderPidl() const   { return m_fullPidl.back(); }
         int  GetImageIndex() const           { return m_imageIndex; }
-        int  GetFlags() const                { return m_flags; }
+        UINT GetFlags() const                { return m_flags; }
         void EnableOK(BOOL enable = TRUE);
         void SetExpanded(LPCWSTR path);
         void SetExpanded(LPITEMIDLIST pItemIDList);

@@ -33,6 +33,9 @@ CApp : public CWinApp                                                       /*
         CMainFrame& TheFrame() { return m_frame; }
 
     private:
+        CApp(const CApp&);                // Disable copy construction
+        CApp& operator = (const CApp&);   // Disable assignment operator
+
         CMainFrame m_frame;
 };
 

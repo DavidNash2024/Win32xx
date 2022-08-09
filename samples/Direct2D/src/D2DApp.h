@@ -26,6 +26,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CD2DApp(const CD2DApp&);                // Disable copy construction
+    CD2DApp& operator = (const CD2DApp&);   // Disable assignment operator
+
     HRESULT CreateDeviceIndependentResources();
 
     // Member variables

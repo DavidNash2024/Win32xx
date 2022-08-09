@@ -23,6 +23,9 @@ protected:
     virtual void OnOK();
 
 private:
+    CMyDialog(const CMyDialog&);                // Disable copy construction
+    CMyDialog& operator = (const CMyDialog&);   // Disable assignment operator
+
     // Command handlers
     BOOL OnButton();
     BOOL OnCheck1();

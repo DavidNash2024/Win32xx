@@ -39,6 +39,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CView(const CView&);                // Disable copy construction
+    CView& operator = (const CView&);   // Disable assignment operator
+
     void DrawLine(int x, int y);
     void StorePoint(int x, int y, bool isPenDown);
     CBrush m_brush;

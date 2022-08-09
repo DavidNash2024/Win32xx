@@ -29,6 +29,10 @@ protected:
     virtual BOOL OnTDTimer(DWORD tickCount);
     virtual void OnTDVerificationCheckboxClicked(BOOL isChecked);
     virtual LRESULT TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    CMyTaskDialog(const CMyTaskDialog&);                // Disable copy construction
+    CMyTaskDialog& operator = (const CMyTaskDialog&);   // Disable assignment operator
 };
 
 

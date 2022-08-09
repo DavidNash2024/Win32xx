@@ -18,6 +18,10 @@ protected:
     // Virtual functions that override base class functions
     virtual void OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    CViewMax(const CViewMax&);                // Disable copy construction
+    CViewMax& operator = (const CViewMax&);   // Disable assignment operator
 };
 
 
@@ -36,6 +40,9 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
+    CMDIChildMax(const CMDIChildMax&);                // Disable copy construction
+    CMDIChildMax& operator = (const CMDIChildMax&);   // Disable assignment operator
+
     CViewMax m_maxView;
     CMenu m_menu;
 };

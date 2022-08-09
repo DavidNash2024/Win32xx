@@ -21,6 +21,9 @@ protected:
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMyDialog(const CMyDialog&);                // Disable copy construction
+    CMyDialog& operator = (const CMyDialog&);   // Disable assignment operator
+
     CAnimation m_animation;
 };
 

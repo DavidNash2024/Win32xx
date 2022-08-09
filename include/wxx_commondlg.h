@@ -637,9 +637,10 @@ namespace Win32xx
         pTLSData->pWnd = this;
 
         m_ofn.hwndOwner = owner;
-        m_ofn.lpstrFile = m_fileName.GetBuffer(m_ofn.nMaxFile);
+        int maxFileSize = static_cast<int>(m_ofn.nMaxFile);
+        m_ofn.lpstrFile = m_fileName.GetBuffer(maxFileSize);
         int ok = (m_isOpenFileDialog ? ::GetOpenFileName(&m_ofn) : ::GetSaveFileName(&m_ofn));
-        m_fileName.ReleaseBuffer(m_ofn.nMaxFile);
+        m_fileName.ReleaseBuffer(maxFileSize);
         m_ofn.lpstrFile = const_cast<LPTSTR>(m_fileName.c_str());
         m_wnd = 0;
 
@@ -717,10 +718,10 @@ namespace Win32xx
     {
         assert(pos >= 0);
 
-        BOOL isExplorer = m_ofn.Flags & OFN_EXPLORER;
+        bool isExplorer = (m_ofn.Flags & OFN_EXPLORER) != 0;
         TCHAR delimiter = (isExplorer ? _T('\0') : _T(' '));
-
-        int bufferSize = MIN(MAX_PATH, m_ofn.nMaxFile - pos);
+        int maxFileSize = static_cast<int>(m_ofn.nMaxFile);
+        int bufferSize = MIN(MAX_PATH, maxFileSize - pos);
         CString fileNames(m_ofn.lpstrFile + pos, bufferSize); // strFile can contain NULLs
         int index = 0;
         if (pos == 0)
@@ -1548,7 +1549,7 @@ namespace Win32xx
         if ((cf.dwMask & (CFM_ITALIC|CFM_BOLD)) == (CFM_ITALIC|CFM_BOLD))
         {
             m_logFont.lfWeight = (cf.dwEffects & CFE_BOLD) ? FW_BOLD : FW_NORMAL;
-            m_logFont.lfItalic = (cf.dwEffects & CFE_ITALIC) ? TRUE : FALSE;
+            m_logFont.lfItalic = (cf.dwEffects & CFE_ITALIC) ? 1U : 0U;
         }
         else
         {
@@ -1561,13 +1562,13 @@ namespace Win32xx
             (CFM_UNDERLINE|CFM_STRIKEOUT|CFM_COLOR))
         {
             flags |= CF_EFFECTS;
-            m_logFont.lfUnderline = (cf.dwEffects & CFE_UNDERLINE) ? TRUE : FALSE;
-            m_logFont.lfStrikeOut = (cf.dwEffects & CFE_STRIKEOUT) ? TRUE : FALSE;
+            m_logFont.lfUnderline = (cf.dwEffects & CFE_UNDERLINE) ? 1U : 0U;
+            m_logFont.lfStrikeOut = (cf.dwEffects & CFE_STRIKEOUT) ? 1U : 0U;
         }
         else
         {
-            m_logFont.lfUnderline = (BYTE)FALSE;
-            m_logFont.lfStrikeOut = (BYTE)FALSE;
+            m_logFont.lfUnderline = 0U;
+            m_logFont.lfStrikeOut = 0U;
         }
 
         if (cf.dwMask & CFM_CHARSET)

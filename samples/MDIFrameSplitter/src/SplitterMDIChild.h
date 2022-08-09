@@ -23,6 +23,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CSimpleView(const CSimpleView&);                // Disable copy construction
+    CSimpleView& operator = (const CSimpleView&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -44,6 +47,9 @@ public:
     CSimpleView& GetSimpleView() { return m_view; }
 
 private:
+    CDockSimple(const CDockSimple&);                // Disable copy construction
+    CDockSimple& operator = (const CDockSimple&);   // Disable assignment operator
+
     CSimpleView m_view;
 };
 
@@ -66,6 +72,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CSplitterMDIChild(const CSplitterMDIChild&);                // Disable copy construction
+    CSplitterMDIChild& operator = (const CSplitterMDIChild&);   // Disable assignment operator
+
     // Command handlers
     BOOL    OnColor(COLORREF rgb);
 
