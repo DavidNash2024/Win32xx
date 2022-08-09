@@ -46,6 +46,10 @@ CListBoxDlg : public CDialog                                                  /*
         CListBox    m_listBox;      // the IDC_LIST_BOX control
         CString     m_boxTitle;     // the list box title
         std::vector<CString> m_listContent; // the list strings
+
+    private:
+        CListBoxDlg(const CListBoxDlg&);                // Disable copy construction
+        CListBoxDlg& operator = (const CListBoxDlg&);   // Disable assignment operator
 };
 /*----------------------------------------------------------------------------*/
 #endif // CLISTVIEW_BOX_H_DEFINED

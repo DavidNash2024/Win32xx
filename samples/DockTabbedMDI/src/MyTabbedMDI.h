@@ -26,6 +26,10 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual CWnd* NewMDIChildFromID(int mdiChild);
+
+private:
+    CMyTabbedMDI(const CMyTabbedMDI&);                // Disable copy construction
+    CMyTabbedMDI& operator = (const CMyTabbedMDI&);   // Disable assignment operator
 };
 
 #endif

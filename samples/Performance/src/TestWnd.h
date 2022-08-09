@@ -24,6 +24,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CTestWindow(const CTestWindow&);                // Disable copy construction
+    CTestWindow& operator = (const CTestWindow&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnTestMessage();
 

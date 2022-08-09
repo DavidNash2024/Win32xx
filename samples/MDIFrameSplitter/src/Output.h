@@ -22,6 +22,10 @@ protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
+
+private:
+    CViewOutput(const CViewOutput&);                // Disable copy construction
+    CViewOutput& operator = (const CViewOutput&);   // Disable assignment operator
 };
 
 
@@ -35,6 +39,9 @@ public:
     virtual ~CContainOutput() {}
 
 private:
+    CContainOutput(const CContainOutput&);                // Disable copy construction
+    CContainOutput& operator = (const CContainOutput&);   // Disable assignment operator
+
     CViewOutput m_viewOutput;
 };
 
@@ -52,6 +59,9 @@ protected:
     virtual int OnCreate(CREATESTRUCT& cs);
 
 private:
+    CDockOutput(const CDockOutput&);                // Disable copy construction
+    CDockOutput& operator = (const CDockOutput&);   // Disable assignment operator
+
     CContainOutput m_view;
 };
 

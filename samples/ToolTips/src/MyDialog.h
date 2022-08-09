@@ -16,12 +16,11 @@ public:
     virtual ~CBalloonToolTip() {}
 
 protected:
-    virtual void PreCreate(CREATESTRUCT& cs)
-    {
-        CToolTip::PreCreate(cs);
-        cs.style |= TTS_BALLOON;    // Add the balloon style
-    }
+    virtual void PreCreate(CREATESTRUCT& cs);
 
+private:
+    CBalloonToolTip(const CBalloonToolTip&);                // Disable copy construction
+    CBalloonToolTip& operator = (const CBalloonToolTip&);   // Disable assignment operator
 };
 
 
@@ -43,6 +42,9 @@ protected:
     virtual void OnOK();
 
 private:
+    CMyDialog(const CMyDialog&);                // Disable copy construction
+    CMyDialog& operator = (const CMyDialog&);   // Disable assignment operator
+
     // Command handlers
     BOOL OnButton();
     BOOL OnCheck1();

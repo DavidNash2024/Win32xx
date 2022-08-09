@@ -21,6 +21,10 @@ protected:
     virtual void OnInitialUpdate();
     virtual LRESULT OnSetDefID(WPARAM wparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    CMyPropertySheet(const CMyPropertySheet&);                // Disable copy construction
+    CMyPropertySheet& operator = (const CMyPropertySheet&);   // Disable assignment operator
 };
 
 
@@ -44,6 +48,10 @@ protected:
     virtual BOOL OnQueryCancel();
     virtual BOOL OnSetActive();
     virtual BOOL Validate();
+
+private:
+    CButtonPage(const CButtonPage&);                // Disable copy construction
+    CButtonPage& operator = (const CButtonPage&);   // Disable assignment operator
 };
 
 
@@ -63,6 +71,10 @@ protected:
     virtual BOOL OnApply();
     virtual BOOL OnInitDialog();
     virtual BOOL OnSetActive();
+
+private:
+    CComboPage(const CComboPage&);                // Disable copy construction
+    CComboPage& operator = (const CComboPage&);   // Disable assignment operator
 };
 
 

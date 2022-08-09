@@ -22,6 +22,9 @@ public:
     virtual ~CLeftPane() {}
 
 private:
+    CLeftPane(const CLeftPane&);                // Disable copy construction
+    CLeftPane& operator = (const CLeftPane&);   // Disable assignment operator
+
     CMyTreeView m_view;
 };
 
@@ -40,6 +43,9 @@ protected:
     virtual CDocker* NewDockerFromID(int id);
 
 private:
+    CRightPane(const CRightPane&);                // Disable copy construction
+    CRightPane& operator = (const CRightPane&);   // Disable assignment operator
+
     CMyListView m_view;
 };
 

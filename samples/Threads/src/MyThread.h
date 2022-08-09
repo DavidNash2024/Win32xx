@@ -24,6 +24,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CMyWinThread(const CMyWinThread&);                // Disable copy construction
+    CMyWinThread& operator = (const CMyWinThread&);   // Disable assignment operator
+
     void CloseThread();
 
     CTestWindow m_testWnd;

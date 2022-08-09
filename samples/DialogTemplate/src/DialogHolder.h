@@ -22,6 +22,9 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
+    CDialogHolder(const CDialogHolder&);                // Disable copy construction
+    CDialogHolder& operator = (const CDialogHolder&);   // Disable assignment operator
+
     CDialog m_dialog;
 };
 

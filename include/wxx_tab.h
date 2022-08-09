@@ -237,7 +237,7 @@ namespace Win32xx
         CTabbedMDI();
         virtual ~CTabbedMDI();
 
-        virtual CWnd* AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID = 0);
+        virtual CWnd* AddMDIChild(CWnd* pView, LPCTSTR tabText, UINT mdiChildID = 0);
         virtual void  CloseActiveMDI();
         virtual void  CloseAllMDIChildren();
         virtual void  CloseMDIChild(int tab);
@@ -251,7 +251,7 @@ namespace Win32xx
         int     GetActiveMDITab() const;
         CWnd*   GetMDIChild(int tab) const;
         int     GetMDIChildCount() const;
-        int     GetMDIChildID(int tab) const;
+        UINT    GetMDIChildID(int tab) const;
         LPCTSTR GetMDIChildTitle(int tab) const;
         CMenu   GetListMenu() const { return GetTab().GetListMenu(); }
         CTab&   GetTab() const { return *m_pTab; }
@@ -1793,7 +1793,7 @@ namespace Win32xx
     // Adds a MDI tab, given a pointer to the view window, and the tab's text.
     // The framework assumes ownership of the CWnd pointer provided, and deletes
     // the CWnd object when the window is destroyed.
-    inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID /*= 0*/)
+    inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR tabText, UINT mdiChildID /*= 0*/)
     {
         assert(pView); // Cannot add Null CWnd*
         assert(lstrlen(tabText) < WXX_MAX_STRING_SIZE);
@@ -1887,7 +1887,7 @@ namespace Win32xx
     }
 
     // Retrieves the ID of the specified MDI child.
-    inline int CTabbedMDI::GetMDIChildID(int tab) const
+    inline UINT CTabbedMDI::GetMDIChildID(int tab) const
     {
         assert(tab >= 0);
         assert(tab < GetMDIChildCount());
@@ -1913,27 +1913,29 @@ namespace Win32xx
             CRegKey mdiChildKey;
             if (ERROR_SUCCESS == mdiChildKey.Open(HKEY_CURRENT_USER, mdiKeyName))
             {
-                DWORD dwIDTab;
+                DWORD dwTabID;
                 int i = 0;
                 CString tabKeyName;
                 CString TabText;
                 tabKeyName.Format(_T("ID%d"), i);
 
                 // Fill the DockList vector from the registry
-                while (ERROR_SUCCESS == mdiChildKey.QueryDWORDValue(tabKeyName, dwIDTab))
+                while (ERROR_SUCCESS == mdiChildKey.QueryDWORDValue(tabKeyName, dwTabID))
                 {
                     tabKeyName.Format(_T("Text%d"), i);
                     DWORD dwBufferSize = 0;
                     if (ERROR_SUCCESS == mdiChildKey.QueryStringValue(tabKeyName, 0, &dwBufferSize))
                     {
-                        mdiChildKey.QueryStringValue(tabKeyName, TabText.GetBuffer(dwBufferSize), &dwBufferSize);
+                        int bufferSize = static_cast<int>(dwBufferSize);
+                        mdiChildKey.QueryStringValue(tabKeyName, TabText.GetBuffer(bufferSize), &dwBufferSize);
                         TabText.ReleaseBuffer();
                     }
 
-                    CWnd* pWnd = NewMDIChildFromID(dwIDTab);
+                    int tabID = static_cast<int>(dwTabID);
+                    CWnd* pWnd = NewMDIChildFromID(tabID);
                     if (pWnd)
                     {
-                        AddMDIChild(pWnd, TabText, dwIDTab);
+                        AddMDIChild(pWnd, TabText, dwTabID);
                         i++;
                         tabKeyName.Format(_T("ID%d"), i);
                         isLoaded = TRUE;
@@ -1952,7 +1954,7 @@ namespace Win32xx
                     tabKeyName = _T("Active MDI Tab");
                     DWORD tab;
                     if (ERROR_SUCCESS == mdiChildKey.QueryDWORDValue(tabKeyName, tab))
-                        SetActiveMDITab(tab);
+                        SetActiveMDITab(static_cast<int>(tab));
                     else
                         SetActiveMDITab(0);
                 }
@@ -1970,7 +1972,7 @@ namespace Win32xx
     {
         // Override this function to create new MDI children from IDs as shown below
         CWnd* pView = NULL;
-    /*  switch(idTab)
+    /*  switch(mdiChildID)
         {
         case ID_SIMPLE:
             pView = new CViewSimple;
@@ -2124,7 +2126,7 @@ namespace Win32xx
 
                 // Add Active Tab to the registry.
                 CString tabKeyName = _T("Active MDI Tab");
-                int tab = GetActiveMDITab();
+                DWORD tab = static_cast<DWORD>(GetActiveMDITab());
                 if (ERROR_SUCCESS != mdiChildKey.SetDWORDValue(tabKeyName, tab))
                     throw CUserException();
             }

@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -126,7 +126,7 @@ namespace Win32xx
     private:
         struct TaskButton
         {
-            TaskButton(UINT id, LPCWSTR text) : buttonID(id)
+            TaskButton(int id, LPCWSTR text) : buttonID(id)
             {
                 if (IS_INTRESOURCE(text))        // support MAKEINTRESOURCE
                     buttonText.LoadString((UINT)(UINT_PTR)text);
@@ -134,7 +134,7 @@ namespace Win32xx
                     buttonText = text;
             }
 
-            UINT buttonID;
+            int buttonID;
             CStringW buttonText;
         };
 
@@ -396,7 +396,7 @@ namespace Win32xx
     {
         assert(GetHwnd());
         TASKDIALOGCONFIG tc = taskDialog.GetConfig();
-        SendMessage(TDM_NAVIGATE_PAGE, 0, (WPARAM)&tc);
+        SendMessage(TDM_NAVIGATE_PAGE, 0, (LPARAM)&tc);
     }
 
     // Called when the user selects a button or command link.

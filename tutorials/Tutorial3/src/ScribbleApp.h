@@ -17,5 +17,8 @@ public:
     virtual BOOL InitInstance();
 
 private:
+    CScribbleApp(const CScribbleApp&);                // Disable copy construction
+    CScribbleApp& operator = (const CScribbleApp&);   // Disable assignment operator
+
     CView m_view;
 };

@@ -23,6 +23,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CStatusBarApp(const CStatusBarApp&);                // Disable copy construction
+    CStatusBarApp& operator = (const CStatusBarApp&);   // Disable assignment operator
+
     CMainFrame m_frame;
 };
 

@@ -24,6 +24,9 @@ protected:
     virtual int MessageLoop();
 
 private:
+    CDXThread(const CDXThread&);                // Disable copy construction
+    CDXThread& operator = (const CDXThread&);   // Disable assignment operator
+
     CDXView* m_pView;
 };
 

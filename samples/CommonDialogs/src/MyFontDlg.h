@@ -50,6 +50,9 @@ MyFontDialog : public CFontDialog                                       /*
         virtual void    SetWindowTitle() const { SetWindowText(m_boxTitle); }
 
     private:
+        MyFontDialog(const MyFontDialog&);                // Disable copy construction
+        MyFontDialog& operator = (const MyFontDialog&);   // Disable assignment operator
+
         CString     m_boxTitle;
         TEXTMETRIC  m_tm;       // font text metrics
         CSize       m_fontSize; // font average width & height

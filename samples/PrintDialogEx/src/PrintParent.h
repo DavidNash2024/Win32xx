@@ -35,6 +35,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CPrintParent(const CPrintParent&);                // Disable copy construction
+    CPrintParent& operator = (const CPrintParent&);   // Disable assignment operator
+
     HWND m_owner;
 };
 

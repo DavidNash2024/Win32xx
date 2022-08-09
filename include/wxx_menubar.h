@@ -850,9 +850,8 @@ namespace Win32xx
 #endif
 
         int xPos = isRightToLeft? rc.right : rc.left;
-        UINT id = static_cast<UINT>(::TrackPopupMenuEx(m_popupMenu,
-                                       TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
-                                       xPos, rc.bottom, *this, &tpm));
+        int id = ::TrackPopupMenuEx(m_popupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+                                       xPos, rc.bottom, *this, &tpm);
 
         // We get here once the TrackPopupMenuEx has ended.
         m_isMenuActive = FALSE;
@@ -867,7 +866,7 @@ namespace Win32xx
             if (pMaxMDIChild && pMaxMDIChild->GetSystemMenu(FALSE) == m_popupMenu )
             {
                 if (id)
-                    pMaxMDIChild->SendMessage(WM_SYSCOMMAND, id, 0);
+                    pMaxMDIChild->SendMessage(WM_SYSCOMMAND, (WPARAM)id, 0);
             }
         }
 
@@ -1039,7 +1038,7 @@ namespace Win32xx
                 // Pass the Left Mouse Click back up to the frame window (and update cursor).
                 LPARAM lparam = MAKELPARAM(screenPos.x, screenPos.y);
                 HWND frame = GetAncestor();
-                WPARAM wparam = ::SendMessage(frame, WM_NCHITTEST, 0, lparam);
+                WPARAM wparam = (WPARAM)::SendMessage(frame, WM_NCHITTEST, 0, lparam);
                 ::SendMessage(frame, WM_NCMOUSEMOVE, wparam, lparam);
                 ::SendMessage(frame, WM_SETCURSOR, (WPARAM)frame, MAKELPARAM(wparam, WM_NCMOUSEMOVE));
                 ::SendMessage(frame, WM_NCLBUTTONDOWN, wparam, lparam);
@@ -1112,7 +1111,7 @@ namespace Win32xx
             // Add the menu title to the string table.
             std::vector<TCHAR> menuName(WXX_MAX_STRING_SIZE +1, _T('\0') );
             TCHAR* pMenuName = &menuName[0];
-            GetMenuString(menu, i, pMenuName, WXX_MAX_STRING_SIZE, MF_BYPOSITION);
+            GetMenuString(menu, static_cast<UINT>(i), pMenuName, WXX_MAX_STRING_SIZE, MF_BYPOSITION);
             SetButtonText(i + maxedOffset, pMenuName);
         }
     }

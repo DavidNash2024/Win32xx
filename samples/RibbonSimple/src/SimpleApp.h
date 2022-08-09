@@ -23,6 +23,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CSimpleRibbonApp(const CSimpleRibbonApp&);                // Disable copy construction
+    CSimpleRibbonApp& operator = (const CSimpleRibbonApp&);   // Disable assignment operator
+
     CView m_view;
 };
 

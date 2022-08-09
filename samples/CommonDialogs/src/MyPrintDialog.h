@@ -30,8 +30,9 @@ MyPrintDialog : public CPrintDialog                                         /*
         virtual ~MyPrintDialog() {}
 
         virtual void    SetBoxTitle (LPCTSTR title) {m_sPDTitle  = title;}
+        virtual void    SetWindowTitle() const { SetWindowText(m_sPDTitle); }
 
-    private:
+    protected:
         virtual BOOL    OnInitDialog()
                         { SetWindowTitle();
                           HWND hbtn = FindWindowEx(*this, NULL, _T("Button"), _T("OK"));
@@ -47,7 +48,9 @@ MyPrintDialog : public CPrintDialog                                         /*
           // print the document upon user approval
         virtual void    OnOK() {}
 
-        virtual void    SetWindowTitle() const { SetWindowText(m_sPDTitle);}
+    private:
+        MyPrintDialog(const MyPrintDialog&);                // Disable copy construction
+        MyPrintDialog& operator = (const MyPrintDialog&);   // Disable assignment operator
 
         CString m_sPDTitle;     // persistent over span of object
 };
@@ -86,6 +89,9 @@ MyPageSetup : public CPageSetupDialog                                   /*
         virtual void SetWindowTitle() const { SetWindowText( m_PSDTitle);}
 
     private:
+        MyPageSetup(const MyPageSetup&);                // Disable copy construction
+        MyPageSetup& operator = (const MyPageSetup&);   // Disable assignment operator
+
         CString  m_PSDTitle;
 };
 /*----------------------------------------------------------------------------*/

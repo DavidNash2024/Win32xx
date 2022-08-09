@@ -33,6 +33,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMainFrame(const CMainFrame&);                // Disable copy construction
+    CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+
     void AddCombo();
     BOOL ChooseColor(UINT color);
     void SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2);

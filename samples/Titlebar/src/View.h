@@ -19,6 +19,10 @@ protected:
     virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    CView(const CView&) = delete;                // Disable copy construction
+    CView& operator = (const CView&) = delete;   // Disable assignment operator
 };
 
 

@@ -70,6 +70,9 @@ CMainFrame : public CFrame                      /*
         virtual void    SetupToolBar();
 
     private:
+        CMainFrame(const CMainFrame&);                // Disable copy construction
+        CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+
           // private data members
         AboutBox   m_aboutDialog;  // about dialog object
         CMRU       m_MRU;          // the MRU list object

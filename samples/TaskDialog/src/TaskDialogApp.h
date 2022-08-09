@@ -19,6 +19,10 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual BOOL InitInstance();
+
+private:
+    CTaskDialogApp(const CTaskDialogApp&);                // Disable copy construction
+    CTaskDialogApp& operator = (const CTaskDialogApp&);   // Disable assignment operator
 };
 
 

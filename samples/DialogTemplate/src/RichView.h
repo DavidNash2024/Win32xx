@@ -25,6 +25,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CRichView(const CRichView&);                // Disable copy construction
+    CRichView& operator = (const CRichView&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnDropFiles(UINT, WPARAM wparam, LPARAM);
 

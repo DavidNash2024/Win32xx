@@ -99,7 +99,7 @@ namespace Win32xx
         virtual ~CDialog();
 
         // Virtual functions
-        virtual void AttachItem(int id, CWnd& wnd);
+        virtual void AttachItem(UINT id, CWnd& wnd);
         virtual HWND Create(HWND parent = 0) { return DoModeless(parent); }
         virtual INT_PTR DoModal(HWND parent = 0);
         virtual HWND DoModeless(HWND parent = 0);
@@ -280,7 +280,7 @@ namespace Win32xx
     }
 
     // Attaches a dialog item to a CWnd
-    inline void CDialog::AttachItem(int id, CWnd& wnd)
+    inline void CDialog::AttachItem(UINT id, CWnd& wnd)
     {
         wnd.AttachDlgItem(id, *this);
     }

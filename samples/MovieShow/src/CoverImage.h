@@ -22,6 +22,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CCoverImage(const CCoverImage&);                // Disable copy construction
+    CCoverImage& operator = (const CCoverImage&);   // Disable assignment operator
+
     void DrawImage(CDC& dc);
 
     std::vector<BYTE> m_imageData;

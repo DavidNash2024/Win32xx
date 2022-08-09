@@ -33,6 +33,9 @@ AboutBox    : public CDialog                                            /*
         BOOL    OnInitDialog();
 
     private:
+        AboutBox(const AboutBox&);                // Disable copy construction
+        AboutBox& operator = (const AboutBox&);   // Disable assignment operator
+
         CString m_aboutBoxInfo; // about the program, credits, etc.
 };
 /*----------------------------------------------------------------------------*/

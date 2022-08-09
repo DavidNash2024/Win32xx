@@ -221,8 +221,8 @@ namespace Win32xx
         int     lstrlenT(const WCHAR* text) const { return lstrlenW(text); }
 
         // These functions return CHAR instead of int.
-        static CHAR ToLower(CHAR c) { return ::tolower(c) & 0xFF; }
-        static CHAR ToUpper(CHAR c) { return ::toupper(c) & 0xFF; }
+        static CHAR ToLower(CHAR c) { return static_cast<CHAR>(::tolower(c) & 0xFF); }
+        static CHAR ToUpper(CHAR c) { return static_cast<CHAR>(::toupper(c) & 0xFF); }
     };
 
     // CStringA is a char only version of CString

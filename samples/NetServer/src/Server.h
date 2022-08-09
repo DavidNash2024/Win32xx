@@ -57,6 +57,10 @@ protected:
     // Virtual functions that override base class functions
     virtual void OnAccept();
     virtual void OnReceive();
+
+private:
+    CServerSocket(const CServerSocket&);                // Disable copy construction
+    CServerSocket& operator = (const CServerSocket&);   // Disable assignment operator
 };
 
 
@@ -74,6 +78,10 @@ protected:
     // Virtual functions that override base class functions
     virtual void OnDisconnect();
     virtual void OnReceive();
+
+private:
+    CWorkerSocket(const CWorkerSocket&);                // Disable copy construction
+    CWorkerSocket& operator = (const CWorkerSocket&);   // Disable assignment operator
 };
 
 

@@ -38,6 +38,9 @@ protected:
     virtual BOOL OnInitDialog();
 
 private:
+    CTCPClientDlg(const CTCPClientDlg&);                // Disable copy construction
+    CTCPClientDlg& operator = (const CTCPClientDlg&);   // Disable assignment operator
+
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
     class CEditSend : public CEdit {};
@@ -71,6 +74,9 @@ protected:
     virtual BOOL OnInitDialog();
 
 private:
+    CSvrDialog(const CSvrDialog&);                // Disable copy construction
+    CSvrDialog& operator = (const CSvrDialog&);   // Disable assignment operator
+
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
     class CIP4Address : public CIPAddress {};

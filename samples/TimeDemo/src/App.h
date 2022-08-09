@@ -38,6 +38,9 @@ CApp : public CWinApp                                                   /*
         CString         MakeAppDataPath(const CString& subpath);
 
     private:
+        CApp(const CApp&);                // Disable copy construction
+        CApp& operator = (const CApp&);   // Disable assignment operator
+
           // private functions
         ULONG       DatInt(const CString &);
         CString     IntDat(ULONG);

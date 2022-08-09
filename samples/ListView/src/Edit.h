@@ -20,6 +20,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMyEdit(const CMyEdit&);                // Disable copy construction
+    CMyEdit& operator = (const CMyEdit&);   // Disable assignment operator
+
     // Message handlers.
     LRESULT OnKillFocus();
     LRESULT OnChar(UINT msg, WPARAM wparam, LPARAM lparam);

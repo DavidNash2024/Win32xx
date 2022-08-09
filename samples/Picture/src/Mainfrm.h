@@ -27,6 +27,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMainFrame(const CMainFrame&);                // Disable copy construction
+    CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnFileLoaded(LPCTSTR fileName);
 

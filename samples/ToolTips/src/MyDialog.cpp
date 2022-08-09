@@ -6,6 +6,17 @@
 #include "MyDialog.h"
 #include "resource.h"
 
+
+////////////////////////////////////
+// CBalloonToolTip function definitions.
+//
+void CBalloonToolTip::PreCreate(CREATESTRUCT& cs)
+{
+    CToolTip::PreCreate(cs);
+    cs.style |= TTS_BALLOON;    // Add the balloon style
+}
+
+
 //////////////////////////////////
 // CMyDialog function definitions.
 //

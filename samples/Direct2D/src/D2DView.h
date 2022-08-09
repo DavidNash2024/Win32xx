@@ -40,6 +40,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CD2DView(const CD2DView&);                // Disable copy construction
+    CD2DView& operator = (const CD2DView&);   // Disable assignment operator
+
     // Message handlers
     LRESULT OnDisplayChange(UINT, WPARAM, LPARAM);
     LRESULT OnSize(UINT, WPARAM wparam, LPARAM lparm);

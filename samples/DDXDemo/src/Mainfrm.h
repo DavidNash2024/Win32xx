@@ -41,6 +41,9 @@ CMainFrame : public CFrame                                                  /*
         BOOL    UpdateDialog(BOOL bReadFromControl);
 
     private:
+        CMainFrame(const CMainFrame&);                // Disable copy construction
+        CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+
         void    FeatureNotImplemented();
         BOOL    LoadRegistrySettings(LPCTSTR keyName);
         void    OnClose();

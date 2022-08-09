@@ -50,6 +50,9 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
+    CMainFrame(const CMainFrame&);                // Disable copy construction
+    CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+
     CView m_view;
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;

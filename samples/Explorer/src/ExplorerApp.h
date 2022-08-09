@@ -23,6 +23,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CExplorerApp(const CExplorerApp&);                // Disable copy construction
+    CExplorerApp& operator = (const CExplorerApp&);   // Disable assignment operator
+
     CMainFrame m_frame;
 };
 

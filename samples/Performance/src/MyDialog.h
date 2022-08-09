@@ -20,6 +20,10 @@ protected:
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnInitDialog();
     virtual void OnOK();
+
+private:
+    CMyDialog(const CMyDialog&);                // Disable copy construction
+    CMyDialog& operator = (const CMyDialog&);   // Disable assignment operator
 };
 
 #endif //MYDIALOG_H

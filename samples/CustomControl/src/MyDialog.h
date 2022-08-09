@@ -25,6 +25,9 @@ protected:
     virtual void    OnOK();
 
 private:
+    CMyDialog(const CMyDialog&);                // Disable copy construction
+    CMyDialog& operator = (const CMyDialog&);   // Disable assignment operator
+
     CResizer m_resizer;
     CWebControl m_webControl;
 };

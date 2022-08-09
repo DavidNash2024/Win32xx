@@ -25,6 +25,9 @@ protected:
     virtual void OnOK();
 
 private:
+    CViewDialog(const CViewDialog&);                // Disable copy construction
+    CViewDialog& operator = (const CViewDialog&);   // Disable assignment operator
+
     void AppendText(int id, LPCTSTR text);
 
     // Command handlers

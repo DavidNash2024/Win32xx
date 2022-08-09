@@ -24,6 +24,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CPerformanceApp(const CPerformanceApp&);                // Disable copy construction
+    CPerformanceApp& operator = (const CPerformanceApp&);   // Disable assignment operator
+
     CMainWindow m_mainWnd;
 };
 

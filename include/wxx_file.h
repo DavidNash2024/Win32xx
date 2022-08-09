@@ -95,7 +95,7 @@ namespace Win32xx
         void SeekToBegin();
         ULONGLONG SeekToEnd();
         void SetFilePath(LPCTSTR fileName);
-        void SetLength(ULONGLONG length);
+        void SetLength(LONGLONG length);
         void UnlockRange(ULONGLONG pos, ULONGLONG count);
         void Write(const void* buffer, UINT count);
 
@@ -468,7 +468,7 @@ namespace Win32xx
 
     // Changes the length of the file to the specified value.
     // Refer to SetEndOfFile in the Windows API documentation for more information.
-    inline void CFile::SetLength(ULONGLONG length)
+    inline void CFile::SetLength(LONGLONG length)
     {
         assert(m_file != INVALID_HANDLE_VALUE);
 

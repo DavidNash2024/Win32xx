@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.0.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -289,7 +289,7 @@ namespace Win32xx
             // Run the thread's message loop if InitInstance returns TRUE.
             if (pThread->InitInstance())
             {
-                return pThread->MessageLoop();
+                return static_cast<UINT>(pThread->MessageLoop());
             }
         }
 

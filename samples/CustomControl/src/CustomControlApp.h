@@ -23,6 +23,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CCustomControlApp(const CCustomControlApp&);                // Disable copy construction
+    CCustomControlApp& operator = (const CCustomControlApp&);   // Disable assignment operator
+
     CMyDialog m_myDialog;
 };
 

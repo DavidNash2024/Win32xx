@@ -25,6 +25,9 @@ protected:
     virtual void OnOK();
 
 private:
+    CViewDialog(const CViewDialog&);                // Disable copy construction
+    CViewDialog& operator = (const CViewDialog&);   // Disable assignment operator
+
     // Command handlers
     BOOL OnButton();
     BOOL OnCheck1();
@@ -63,6 +66,9 @@ public:
     virtual ~CContainDialog() {}
 
 private:
+    CContainDialog(const CContainDialog&);                // Disable copy construction
+    CContainDialog& operator = (const CContainDialog&);   // Disable assignment operator
+
     CViewDialog m_viewDialog;
 };
 
@@ -77,6 +83,9 @@ public:
     virtual ~CDockDialog() {}
 
 private:
+    CDockDialog(const CDockDialog&);                // Disable copy construction
+    CDockDialog& operator = (const CDockDialog&);   // Disable assignment operator
+
     CContainDialog m_view;
 };
 

@@ -166,6 +166,10 @@ namespace Win32xx
     public:
         CRibbonFrame() {}
         virtual ~CRibbonFrame() {}
+
+    private:
+        CRibbonFrame(const CRibbonFrame&);              // Disable copy construction
+        CRibbonFrame& operator = (const CRibbonFrame&); // Disable assignment operator
     };
 
     ////////////////////////////////////////////////////
@@ -176,6 +180,10 @@ namespace Win32xx
     public:
         CRibbonDockFrame() {}
         virtual ~CRibbonDockFrame() {}
+
+    private:
+        CRibbonDockFrame(const CRibbonDockFrame&);              // Disable copy construction
+        CRibbonDockFrame& operator = (const CRibbonDockFrame&); // Disable assignment operator
     };
 
     //////////////////////////////////////////////////////////////
@@ -186,6 +194,10 @@ namespace Win32xx
     public:
         CRibbonMDIFrame() {}
         virtual ~CRibbonMDIFrame() {}
+
+    private:
+        CRibbonMDIFrame(const CRibbonMDIFrame&);              // Disable copy construction
+        CRibbonMDIFrame& operator = (const CRibbonMDIFrame&); // Disable assignment operator
     };
 
     ////////////////////////////////////////////////////////////////
@@ -197,6 +209,10 @@ namespace Win32xx
     public:
         CRibbonMDIDockFrame() {}
         virtual ~CRibbonMDIDockFrame() {}
+
+    private:
+        CRibbonMDIDockFrame(const CRibbonMDIDockFrame&);              // Disable copy construction
+        CRibbonMDIDockFrame& operator = (const CRibbonMDIDockFrame&); // Disable assignment operator
     };
 
 }
@@ -225,12 +241,12 @@ namespace Win32xx
 
     inline STDMETHODIMP_(ULONG) CRibbon::AddRef()
     {
-        return InterlockedIncrement(&m_count);
+        return static_cast<ULONG>(InterlockedIncrement(&m_count));
     }
 
     inline STDMETHODIMP_(ULONG) CRibbon::Release()
     {
-        return InterlockedDecrement(&m_count);
+        return static_cast<ULONG>(InterlockedDecrement(&m_count));
     }
 
     // Responds to execute events on Commands bound to the Command handler.
@@ -517,13 +533,13 @@ namespace Win32xx
     template <class T>
     inline STDMETHODIMP_(ULONG) CRibbonFrameT<T>::CRecentFiles::AddRef()
     {
-        return InterlockedIncrement(&m_count);
+        return static_cast<ULONG>(InterlockedIncrement(&m_count));
     }
 
     template <class T>
     inline STDMETHODIMP_(ULONG) CRibbonFrameT<T>::CRecentFiles::Release()
     {
-        return InterlockedDecrement(&m_count);
+        return static_cast<ULONG>(InterlockedDecrement(&m_count));
     }
 
     template <class T>

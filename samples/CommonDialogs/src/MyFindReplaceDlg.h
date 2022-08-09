@@ -36,6 +36,9 @@ MyFindReplaceDialog : public CFindReplaceDialog
         virtual BOOL OnInitDialog(){ SetWindowText(m_boxTitle); return TRUE; }
 
     private:
+        MyFindReplaceDialog(const MyFindReplaceDialog&);                // Disable copy construction
+        MyFindReplaceDialog& operator = (const MyFindReplaceDialog&);   // Disable assignment operator
+
         CString m_boxTitle;
 };
 /*----------------------------------------------------------------------------*/

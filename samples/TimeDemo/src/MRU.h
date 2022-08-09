@@ -49,8 +49,8 @@ CMRU : public CObject                                                   /*
         virtual void    Serialize(CArchive& ar);
 
     private:
-        CMRU(const CMRU&);              // Disable copy construction
-        CMRU& operator=(const CMRU&);  // Disable assignment operator
+        CMRU(const CMRU&);                // Disable copy construction
+        CMRU& operator = (const CMRU&);   // Disable assignment operator
 
         std::vector<CString> m_MRUEntries; // MRU array entries
         size_t      m_maxMRU;           // maximum MRU entries, this app

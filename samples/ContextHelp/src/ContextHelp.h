@@ -40,23 +40,26 @@
 // required topic.
 class CContextHelp : public CWnd
 {
-    public:
-        CContextHelp();
-        virtual ~CContextHelp();
+public:
+    CContextHelp();
+    virtual ~CContextHelp();
 
-        void  AddHelpTopic(UINT id, LPCTSTR topic);
-        const CString& GetHelpFilePath() const     { return m_helpFilePath; }
-        void  SetHelpFilePath(LPCTSTR chmName)     { m_helpFilePath = chmName; }
-        void  ShowHelpTopic(UINT id);
-        void  ShowHelpTopic(LPCTSTR topic);
+    void  AddHelpTopic(UINT id, LPCTSTR topic);
+    const CString& GetHelpFilePath() const     { return m_helpFilePath; }
+    void  SetHelpFilePath(LPCTSTR chmName)     { m_helpFilePath = chmName; }
+    void  ShowHelpTopic(UINT id);
+    void  ShowHelpTopic(LPCTSTR topic);
 
-    private:
-        UINT    GetIDFromCursorPos() const;
-        HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
+private:
+    CContextHelp(const CContextHelp&);                // Disable copy construction
+    CContextHelp& operator = (const CContextHelp&);   // Disable assignment operator
 
-        // Member variables
-        CString m_helpFilePath;                 // Help file path
-        std::map<UINT, CString> m_helpTopics;   // Map of help topics
+    UINT    GetIDFromCursorPos() const;
+    HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
+
+    // Member variables
+    CString m_helpFilePath;                 // Help file path
+    std::map<UINT, CString> m_helpTopics;   // Map of help topics
 };
 
 #endif // CONTEXTHELP_H

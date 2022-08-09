@@ -21,6 +21,9 @@ protected:
     virtual void OnDestroy();
 
 private:
+    CViewList(const CViewList&);                // Disable copy construction
+    CViewList& operator = (const CViewList&);   // Disable assignment operator
+
     void InsertItems();
     void SetColumns();
 
@@ -42,6 +45,9 @@ protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
+    CMDIChildList(const CMDIChildList&);                // Disable copy construction
+    CMDIChildList& operator = (const CMDIChildList&);   // Disable assignment operator
+
     CViewList m_listView;
     CMenu m_menu;
 };

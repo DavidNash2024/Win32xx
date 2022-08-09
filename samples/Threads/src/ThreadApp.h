@@ -22,6 +22,9 @@ protected:
     virtual BOOL InitInstance();
 
 private:
+    CThreadApp(const CThreadApp&);                // Disable copy construction
+    CThreadApp& operator = (const CThreadApp&);   // Disable assignment operator
+
     CMainWindow m_mainWnd;
 };
 

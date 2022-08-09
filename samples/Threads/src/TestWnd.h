@@ -21,6 +21,9 @@ protected:
     virtual void OnInitialUpdate();
 
 private:
+    CTestWindow(const CTestWindow&);                // Disable copy construction
+    CTestWindow& operator = (const CTestWindow&);   // Disable assignment operator
+
     int  m_threadNumber;
     HWND m_mainWindow;
 };
