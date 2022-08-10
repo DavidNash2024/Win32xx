@@ -600,7 +600,7 @@ namespace Win32xx
 
         // Delete excessive MRU entries.
         if (m_mruEntries.size() > m_maxMRU)
-            m_mruEntries.erase(m_mruEntries.begin() + m_maxMRU, m_mruEntries.end());
+            m_mruEntries.erase(m_mruEntries.begin() + static_cast<int>(m_maxMRU), m_mruEntries.end());
 
         UpdateMRUMenu();
     }
@@ -2733,7 +2733,7 @@ namespace Win32xx
         // Remove any excess MRU entries
         if (mruLimit < m_mruEntries.size())
         {
-            m_mruEntries.erase(m_mruEntries.begin() + mruLimit, m_mruEntries.end());
+            m_mruEntries.erase(m_mruEntries.begin() + static_cast<int>(mruLimit), m_mruEntries.end());
         }
 
         m_maxMRU = mruLimit;

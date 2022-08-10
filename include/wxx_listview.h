@@ -766,7 +766,7 @@ namespace Win32xx
     inline DWORD CListView::SetExtendedStyle( DWORD exStyle ) const
     {
         assert(IsWindow());
-        return ListView_SetExtendedListViewStyle( *this, exStyle );
+        return ListView_SetExtendedListViewStyle( *this, (LPARAM)exStyle );
     }
 
     // Sets the HCURSOR that the list-view control uses when the pointer is

@@ -879,7 +879,7 @@ namespace Win32xx
         m_resizeData.clear();
 
         // Add scroll bar support to the parent window
-        DWORD style = static_cast<DWORD>(::GetClassLongPtr(parent, GCL_STYLE));
+        LONG_PTR style = static_cast<LONG_PTR>(::GetClassLongPtr(parent, GCL_STYLE));
         style |= WS_HSCROLL | WS_VSCROLL;
         ::SetClassLongPtr(parent, GCL_STYLE, style);
 

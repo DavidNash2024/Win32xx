@@ -950,7 +950,7 @@ namespace Win32xx
                 assert(lparam);
                 if (lparam == 0) return 0;
                 PAGESETUPDLG psd = *((LPPAGESETUPDLG)lparam);
-                return pDlg->OnPreDrawPage(LOWORD(wparam), HIWORD(wparam), psd);
+                return static_cast<INT_PTR>(pDlg->OnPreDrawPage(LOWORD(wparam), HIWORD(wparam), psd));
             }
 
         case WM_PSD_FULLPAGERECT:
@@ -963,7 +963,7 @@ namespace Win32xx
                 assert(lparam);
                 if (lparam == 0) return 0;
                 RECT rc = *((LPRECT)lparam);
-                return pDlg->OnDrawPage(reinterpret_cast<HDC>(wparam), message, rc);
+                return static_cast<INT_PTR>(pDlg->OnDrawPage(reinterpret_cast<HDC>(wparam), message, rc));
             }
         }
         return 0;

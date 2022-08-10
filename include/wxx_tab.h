@@ -1717,7 +1717,7 @@ namespace Win32xx
     inline DWORD CTab::SetExtendedStyle(DWORD dwExStyle) const
     {
         assert(IsWindow());
-        return TabCtrl_SetExtendedStyle(*this, dwExStyle);
+        return TabCtrl_SetExtendedStyle(*this, (LPARAM)dwExStyle);
     }
 
     // Assigns an image list to a tab control.

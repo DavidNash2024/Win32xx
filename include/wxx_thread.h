@@ -99,10 +99,10 @@ namespace Win32xx
     };
 
 
-#if defined (_MSC_VER) && (_MSC_VER <= 1600)   // <= VS2010
+#if defined (_MSC_VER)
 #pragma warning ( push )
 #pragma warning ( disable : 4355 )            // 'this' used in base member initializer list
-#endif // (_MSC_VER) && (_MSC_VER <= 1600)
+#endif // (_MSC_VER)
 
     /////////////////////////////////////////////////////////////
     // CWinThread manages a thread which is capable of supporting
@@ -120,9 +120,9 @@ namespace Win32xx
         static  UINT WINAPI StaticThreadProc(LPVOID pCThread);
     };
 
-#if defined (_MSC_VER) && (_MSC_VER <= 1600)
+#if defined (_MSC_VER)
 #pragma warning (pop)
-#endif // (_MSC_VER) && (_MSC_VER <= 1600)
+#endif // (_MSC_VER)
 
 }
 
