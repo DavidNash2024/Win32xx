@@ -68,37 +68,37 @@ STDMETHODIMP CEventSink::Invoke(DISPID dispid, REFIID, LCID, WORD, DISPPARAMS* p
     switch (dispid)
     {
     case DISPID_BEFORENAVIGATE2:
-        ::SendMessage(frame, UWM_BEFORENAVIGATE, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_BEFORENAVIGATE, (WPARAM)pDispParams, 0);
         break;
     case DISPID_COMMANDSTATECHANGE:
-        ::SendMessage(frame, UWM_COMMANDSTATECHANGE, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_COMMANDSTATECHANGE, (WPARAM)pDispParams, 0);
         break;
     case DISPID_DOCUMENTCOMPLETE:
-        ::SendMessage(frame, UWM_DOCUMENTCOMPLETE, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_DOCUMENTCOMPLETE, (WPARAM)pDispParams, 0);
         break;
     case DISPID_DOWNLOADBEGIN:
-        ::SendMessage(frame, UWM_DOWNLOADBEGIN, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_DOWNLOADBEGIN, (WPARAM)pDispParams, 0);
         break;
     case DISPID_DOWNLOADCOMPLETE:
-        ::SendMessage(frame, UWM_DOWNLOADCOMPLETE, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_DOWNLOADCOMPLETE, (WPARAM)pDispParams, 0);
         break;
     case DISPID_NAVIGATECOMPLETE2:
-        ::SendMessage(frame, UWM_NAVIGATECOMPLETE2, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_NAVIGATECOMPLETE2, (WPARAM)pDispParams, 0);
         break;
     case DISPID_PROGRESSCHANGE:
-        ::SendMessage(frame, UWM_PROGRESSCHANGE, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_PROGRESSCHANGE, (WPARAM)pDispParams, 0);
         break;
     case DISPID_PROPERTYCHANGE:
-        ::SendMessage(frame, UWM_PROPERTYCHANGE, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_PROPERTYCHANGE, (WPARAM)pDispParams, 0);
         break;
     case DISPID_STATUSTEXTCHANGE:
-        ::SendMessage(frame, UWM_STATUSTEXTCHANGE, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_STATUSTEXTCHANGE, (WPARAM)pDispParams, 0);
         break;
     case DISPID_NEWWINDOW2:
-        ::SendMessage(frame, UWM_NEWWINDOW2, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_NEWWINDOW2, (WPARAM)pDispParams, 0);
         break;
     case DISPID_TITLECHANGE:
-        ::SendMessage(frame, UWM_TITLECHANGE, (LPARAM)pDispParams, 0);
+        ::SendMessage(frame, UWM_TITLECHANGE, (WPARAM)pDispParams, 0);
         break;
     }
 

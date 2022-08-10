@@ -333,7 +333,7 @@ namespace Win32xx
         int cx = rc.right - rc.left;
         int cy = rc.bottom - rc.top;
 
-        INT_PTR idMenu = id;
+        INT_PTR idMenu = static_cast<INT_PTR>(id);
         HMENU menu = parent ? reinterpret_cast<HMENU>(idMenu) :
                               ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(id));
 
@@ -2124,7 +2124,7 @@ namespace Win32xx
     inline void CWnd::SetExStyle(DWORD exStyle) const
     {
         assert(IsWindow());
-        ::SetWindowLongPtr(*this, GWL_EXSTYLE, exStyle);
+        ::SetWindowLongPtr(*this, GWL_EXSTYLE, static_cast<LONG_PTR>(exStyle));
     }
 
     // The SetFocus function sets the keyboard focus to the window.
@@ -2218,7 +2218,7 @@ namespace Win32xx
     inline void CWnd::SetStyle(DWORD style) const
     {
         assert(IsWindow());
-        ::SetWindowLongPtr(*this, GWL_STYLE, style);
+        ::SetWindowLongPtr(*this, GWL_STYLE, static_cast<LONG_PTR>(style));
     }
 
     // Creates a timer with the specified time-out value.

@@ -22,7 +22,7 @@ CMainFrame::~CMainFrame()
 }
 
 // Adds a ComboBoxEx control to the rebar.
-void CMainFrame::AddComboBoxBand(int height)
+void CMainFrame::AddComboBoxBand(UINT height)
 {
     // Get the reference to the rebar object
     CReBar& RB = GetReBar();

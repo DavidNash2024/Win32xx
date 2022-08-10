@@ -1204,7 +1204,7 @@ namespace Win32xx
     inline COLORREF CDateTime::SetMonthCalColor(int region, COLORREF color) const
     {
         assert(IsWindow());
-        return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, (WPARAM)region, color));
+        return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, (WPARAM)region, (LPARAM)color));
     }
 
     // Sets the font to be used by the date and time picker (DTP) control's child month calendar control.
@@ -1741,7 +1741,7 @@ namespace Win32xx
     inline COLORREF CMonthCalendar::SetColor(int region, COLORREF clr) const
     {
         assert(IsWindow());
-        return static_cast<COLORREF>(MonthCal_SetColor(*this, (WPARAM)region, clr));
+        return static_cast<COLORREF>(MonthCal_SetColor(*this, (WPARAM)region, (LPARAM)clr));
     }
 
     // Sets the currently selected date for the month calendar control.

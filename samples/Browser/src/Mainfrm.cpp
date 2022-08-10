@@ -22,7 +22,7 @@ CMainFrame::~CMainFrame()
 }
 
 // Adds a ComboBoxEx control to the rebar.
-void CMainFrame::AddComboBoxBand(int height)
+void CMainFrame::AddComboBoxBand(UINT height)
 {
     // Create the ComboboxEx window.
     m_combo.Create(GetReBar());
@@ -599,7 +599,7 @@ void CMainFrame::SetupToolBar()
     }
 
     // Add the ComboBoxEx control.
-    int Height = 26;
+    UINT Height = 26;
     AddComboBoxBand(Height);
 }
 

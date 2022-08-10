@@ -30,6 +30,8 @@
 class CEventSink : public IDispatch
 {
 public:
+    virtual ~CEventSink() {}
+
     // IUnknown Methods
     virtual STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
     virtual STDMETHODIMP_(ULONG) AddRef();

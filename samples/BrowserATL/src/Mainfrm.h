@@ -37,7 +37,7 @@ private:
     CMainFrame(const CMainFrame&);                // Disable copy construction
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
-    void AddComboBoxBand(int height);
+    void AddComboBoxBand(UINT height);
 
     // Command handlers
     BOOL OnBack();

@@ -47,7 +47,7 @@ private:
     CMainFrame(const CMainFrame&);                // Disable copy construction
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
-    void AddComboBoxBand(int height);
+    void AddComboBoxBand(UINT height);
     void ConnectEvents();
     void DisconnectEvents();
     IConnectionPoint* GetConnectionPoint(REFIID riid) const;
