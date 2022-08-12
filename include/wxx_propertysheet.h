@@ -68,14 +68,13 @@
 namespace Win32xx
 {
 
-
     /////////////////////////////////////////////////////////////
     // This class provides support for property pages. A property
     // page is an individual page used in a property sheet.
     class CPropertyPage : public CDialog
     {
     public:
-        CPropertyPage (UINT templateID, LPCTSTR title = NULL);
+        CPropertyPage (int templateID, LPCTSTR title = NULL);
         virtual ~CPropertyPage() {}
         virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual BOOL OnApply();
@@ -146,7 +145,7 @@ namespace Win32xx
         HWND GetTabControl() const;
         BOOL SetActivePage(int page);
         BOOL SetActivePage(CPropertyPage* pPage);
-        void SetIcon(UINT iconID);
+        void SetIcon(int iconID);
         void SetTitle(LPCTSTR title);
         void SetWizardMode(BOOL isWizard);
 
@@ -178,7 +177,7 @@ namespace Win32xx
     // Definitions for the CPropertyPage class
     //
 
-    inline CPropertyPage::CPropertyPage(UINT templateID, LPCTSTR title /* = 0*/) : CDialog(static_cast<UINT>(0))
+    inline CPropertyPage::CPropertyPage(int templateID, LPCTSTR title /* = 0*/) : CDialog(0)
     {
         ZeroMemory(&m_psp, sizeof(m_psp));
         SetTitle(title);
@@ -859,7 +858,7 @@ namespace Win32xx
     }
 
     // Sets the property sheet's icon.
-    inline void CPropertySheet::SetIcon(UINT iconID)
+    inline void CPropertySheet::SetIcon(int iconID)
     {
         m_psh.pszIcon = MAKEINTRESOURCE(iconID);
         m_psh.dwFlags |= PSH_USEICONID;

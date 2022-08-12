@@ -107,6 +107,11 @@ namespace Win32xx
         CMenuBar(const CMenuBar&);              // Disable copy construction
         CMenuBar& operator = (const CMenuBar&); // Disable assignment operator
 
+        void Press(int buttonID, BOOL press) const
+        {
+            PressButton(static_cast<UINT>(buttonID), press);
+        }
+
         void Cancel() const;
         void DoAltKey(WORD keyCode);
         void DrawMDIButton(CDC& drawDC, int button, UINT state) const;
@@ -337,7 +342,7 @@ namespace Win32xx
         ReleaseFocus();
         m_isKeyMode = FALSE;
         m_isMenuActive = FALSE;
-        PressButton(m_hotItem, FALSE);
+        Press(m_hotItem, FALSE);
         StoreHotItem(-1);
 
         CPoint pt = GetCursorPos();
@@ -631,7 +636,7 @@ namespace Win32xx
                     m_isMenuActive = FALSE;
                     m_isKeyMode = TRUE;
                     Cancel();
-                    PressButton(m_hotItem, FALSE);
+                    Press(m_hotItem, FALSE);
                     SetHotItem(m_hotItem);
                     ExitMenu();
                     break;
@@ -642,7 +647,7 @@ namespace Win32xx
                     if ((m_selMenu) && (m_selMenu != m_popupMenu))
                         return FALSE;
 
-                    PressButton(m_hotItem, FALSE);
+                    Press(m_hotItem, FALSE);
 
                     // Move left to next topmenu item
                     m_hotItem = (m_hotItem > first) ? m_hotItem -1 : GetButtonCount() -1;
@@ -660,7 +665,7 @@ namespace Win32xx
                     if (m_isSelPopup)
                         return FALSE;
 
-                    PressButton(m_hotItem, FALSE);
+                    Press(m_hotItem, FALSE);
 
                     // Move right to next topmenu item
                     m_hotItem = (m_hotItem < GetButtonCount() -1) ? m_hotItem +1 : first;
@@ -824,7 +829,7 @@ namespace Win32xx
 
         // Set the hot button
         SetHotItem(m_hotItem);
-        PressButton(m_hotItem, TRUE);
+        Press(m_hotItem, TRUE);
 
         m_isSelPopup = FALSE;
         m_selMenu = 0;
@@ -850,8 +855,8 @@ namespace Win32xx
 #endif
 
         int xPos = isRightToLeft? rc.right : rc.left;
-        int id = ::TrackPopupMenuEx(m_popupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
-                                       xPos, rc.bottom, *this, &tpm);
+        UINT id = static_cast<UINT>(::TrackPopupMenuEx(m_popupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+                                       xPos, rc.bottom, *this, &tpm));
 
         // We get here once the TrackPopupMenuEx has ended.
         m_isMenuActive = FALSE;
@@ -955,7 +960,7 @@ namespace Win32xx
                 int button = HitTest();
                 if ((m_isMenuActive) && (button != m_hotItem))
                 {
-                    PressButton(m_hotItem, FALSE);
+                    Press(m_hotItem, FALSE);
                     m_hotItem = button;
                     Cancel();
 
@@ -1112,7 +1117,7 @@ namespace Win32xx
             std::vector<TCHAR> menuName(WXX_MAX_STRING_SIZE +1, _T('\0') );
             TCHAR* pMenuName = &menuName[0];
             GetMenuString(menu, static_cast<UINT>(i), pMenuName, WXX_MAX_STRING_SIZE, MF_BYPOSITION);
-            SetButtonText(i + maxedOffset, pMenuName);
+            SetButtonText(static_cast<UINT>(i + maxedOffset), pMenuName);
         }
     }
 

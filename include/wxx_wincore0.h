@@ -131,14 +131,14 @@ namespace Win32xx
 
         // These virtual functions can be overridden.
         virtual BOOL Attach(HWND wnd);
-        virtual BOOL AttachDlgItem(UINT id, HWND parent);
+        virtual BOOL AttachDlgItem(int id, HWND parent);
         virtual void CenterWindow() const;
         virtual HWND Create(HWND parent = 0);
         virtual HWND CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
                               DWORD style, int x, int y, int width, int height, HWND parent,
                               HMENU idOrMenu, LPVOID lparam = NULL);
         virtual HWND CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
-                              DWORD style, const RECT& rectc, HWND parent, UINT id, LPVOID lparam = NULL);
+                              DWORD style, const RECT& rectc, HWND parent, int id, LPVOID lparam = NULL);
         virtual void Destroy();
         virtual HWND Detach();
         static  CWnd* GetCWndPtr(HWND wnd);
@@ -208,7 +208,7 @@ namespace Win32xx
         CMenu GetSystemMenu(BOOL revertToDefault = FALSE) const;
         CWnd  GetTopWindow() const;
         CRect GetUpdateRect(BOOL erase) const;
-        int GetUpdateRgn(HRGN rgn, BOOL erase) const;
+        int   GetUpdateRgn(HRGN rgn, BOOL erase) const;
         CWnd  GetWindow(UINT cmd) const;
         CWindowDC GetWindowDC() const;
         LONG_PTR GetWindowLongPtr(int index) const;

@@ -331,7 +331,7 @@ namespace Win32xx
     {
         CStringW str;
         if (IS_INTRESOURCE(text))      // support MAKEINTRESOURCE
-            str.LoadString((UINT)(UINT_PTR)text);
+            str.LoadString((int)(UINT_PTR)text);
         else
             str = text;
 

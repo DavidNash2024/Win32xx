@@ -56,7 +56,7 @@ namespace Win32xx
     {
         CString TabText;    // The tab's text
         int image;          // index of this tab's image
-        UINT idTab;         // identifier for this tab (used by TabbedMDI)
+        int idTab;         // identifier for this tab (used by TabbedMDI)
         CWnd* pView;        // pointer to the view window
         TabPageInfo() : image(0), idTab(0), pView(0) {}    // constructor
     };
@@ -102,8 +102,8 @@ namespace Win32xx
     public:
         CTab();
         virtual ~CTab();
-        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, HICON icon, UINT tabID);
-        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, int iconID, UINT tabID = 0);
+        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, HICON icon, int tabID);
+        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, int iconID, int tabID = 0);
         virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText);
         virtual void   SelectPage(int page);
         virtual void   RecalcLayout();
@@ -237,7 +237,7 @@ namespace Win32xx
         CTabbedMDI();
         virtual ~CTabbedMDI();
 
-        virtual CWnd* AddMDIChild(CWnd* pView, LPCTSTR tabText, UINT mdiChildID = 0);
+        virtual CWnd* AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID = 0);
         virtual void  CloseActiveMDI();
         virtual void  CloseAllMDIChildren();
         virtual void  CloseMDIChild(int tab);
@@ -251,7 +251,7 @@ namespace Win32xx
         int     GetActiveMDITab() const;
         CWnd*   GetMDIChild(int tab) const;
         int     GetMDIChildCount() const;
-        UINT    GetMDIChildID(int tab) const;
+        int     GetMDIChildID(int tab) const;
         LPCTSTR GetMDIChildTitle(int tab) const;
         CMenu   GetListMenu() const { return GetTab().GetListMenu(); }
         CTab&   GetTab() const { return *m_pTab; }
@@ -374,7 +374,7 @@ namespace Win32xx
     // and deletes the CWnd object when the tab is removed or destroyed.
     // Returns a pointer to the view window which was supplied.
     // Use RemoveTabPage to remove the tab and page added in this manner.
-    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR tabText, HICON icon, UINT tabID)
+    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR tabText, HICON icon, int tabID)
     {
         assert(pView);
         assert(lstrlen(tabText) < WXX_MAX_STRING_SIZE);
@@ -413,7 +413,7 @@ namespace Win32xx
     // The framework assumes ownership of the CWnd pointer provided,
     // and deletes the CWnd object when the tab is removed or destroyed.
     // Use RemoveTabPage to remove the tab and page added in this manner.
-    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR tabText, int iconID, UINT tabID /* = 0*/)
+    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR tabText, int iconID, int tabID /* = 0*/)
     {
         HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
         return AddTabPage(pView, tabText, icon, tabID);
@@ -1793,7 +1793,7 @@ namespace Win32xx
     // Adds a MDI tab, given a pointer to the view window, and the tab's text.
     // The framework assumes ownership of the CWnd pointer provided, and deletes
     // the CWnd object when the window is destroyed.
-    inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR tabText, UINT mdiChildID /*= 0*/)
+    inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID /*= 0*/)
     {
         assert(pView); // Cannot add Null CWnd*
         assert(lstrlen(tabText) < WXX_MAX_STRING_SIZE);
@@ -1887,7 +1887,7 @@ namespace Win32xx
     }
 
     // Retrieves the ID of the specified MDI child.
-    inline UINT CTabbedMDI::GetMDIChildID(int tab) const
+    inline int CTabbedMDI::GetMDIChildID(int tab) const
     {
         assert(tab >= 0);
         assert(tab < GetMDIChildCount());
@@ -1935,7 +1935,7 @@ namespace Win32xx
                     CWnd* pWnd = NewMDIChildFromID(tabID);
                     if (pWnd)
                     {
-                        AddMDIChild(pWnd, TabText, dwTabID);
+                        AddMDIChild(pWnd, TabText, tabID);
                         i++;
                         tabKeyName.Format(_T("ID%d"), i);
                         isLoaded = TRUE;
@@ -2115,7 +2115,8 @@ namespace Win32xx
                     TabPageInfo pdi = GetTab().GetTabPageInfo(i);
 
                     tabKeyName.Format(_T("ID%d"), i);
-                    if (ERROR_SUCCESS != mdiChildKey.SetDWORDValue(tabKeyName, pdi.idTab))
+                    DWORD tabID = static_cast<DWORD>(pdi.idTab);
+                    if (ERROR_SUCCESS != mdiChildKey.SetDWORDValue(tabKeyName, tabID))
                         throw CUserException();
 
                     tabKeyName.Format(_T("Text%d"), i);

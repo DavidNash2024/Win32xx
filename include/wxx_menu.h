@@ -97,7 +97,7 @@ namespace Win32xx
     public:
         // Construction
         CMenu();
-        CMenu(UINT id);
+        CMenu(int id);
         CMenu(HMENU menu);
         CMenu(const CMenu& rhs);
         CMenu& operator = (const CMenu& rhs);
@@ -113,7 +113,7 @@ namespace Win32xx
 
         HMENU GetHandle() const;
         BOOL LoadMenu(LPCTSTR resourceName);
-        BOOL LoadMenu(UINT resourceID);
+        BOOL LoadMenu(int resourceID);
         BOOL LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate);
 
         // Menu Operations
@@ -195,7 +195,7 @@ namespace Win32xx
         m_pData = new CMenu_Data;
     }
 
-    inline CMenu::CMenu(UINT id)
+    inline CMenu::CMenu(int id)
     {
         m_pData = new CMenu_Data;
 
@@ -688,7 +688,7 @@ namespace Win32xx
 
     // Loads the menu from the specified windows resource.
     // Refer to LoadMenu in the Windows API documentation for more information.
-    inline BOOL CMenu::LoadMenu(UINT resourceID)
+    inline BOOL CMenu::LoadMenu(int resourceID)
     {
         assert(m_pData);
         assert(m_pData->menu == 0);

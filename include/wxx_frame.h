@@ -192,9 +192,9 @@ namespace Win32xx
         CWnd& GetView() const;
         CString GetXPThemeName() const;
         BOOL IsMDIFrame() const                           { return (T::SendMessage(UWM_GETCMDIFRAMET) != 0); }
-        void SetAccelerators(UINT accelID);
+        void SetAccelerators(int accelID);
         void SetFrameMenu(int menuID);
-        void SetFrameMenu(HMENU menu);
+        void SetFrameMenu(CMenu menu);
         void SetInitValues(const InitValues& values);
         void SetKbdHook();
         void SetMenuTheme(const MenuTheme& mt);
@@ -209,9 +209,9 @@ namespace Win32xx
     protected:
         // Override these functions as required.
         virtual void AddDisabledMenuImage(HICON icon, COLORREF mask, int iconWidth = 16);
-        virtual BOOL AddMenuIcon(int menuItemID, int iconID, int iconWidth = 16);
-        virtual BOOL AddMenuIcon(int menuItemID, HICON icon, int iconWidth = 16);
-        virtual UINT AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID);
+        virtual BOOL AddMenuIcon(UINT menuItemID, int iconID, int iconWidth = 16);
+        virtual BOOL AddMenuIcon(UINT menuItemID, HICON icon, int iconWidth = 16);
+        virtual UINT AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, int bitmapID, int disabledID);
         virtual void AddMenuBarBand();
         virtual void AddMRUEntry(LPCTSTR MRUEntry);
         virtual void AddToolBarBand(CToolBar& tb, DWORD bandStyle, UINT id);
@@ -273,14 +273,14 @@ namespace Win32xx
         virtual BOOL SaveRegistryMRUSettings();
         virtual BOOL SaveRegistrySettings();
         virtual void SetMenuBarBandSize();
-        virtual UINT SetMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT toolBarID, UINT toolBarDisabledID);
+        virtual UINT SetMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, int toolBarID, int toolBarDisabledID);
         virtual void SetStatusIndicators();
         virtual void SetStatusParts();
-        virtual void SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
-        virtual void SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
-        virtual void SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
+        virtual void SetTBImageList(CToolBar& toolBar, CImageList& imageList, int id, COLORREF mask);
+        virtual void SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, int id, COLORREF mask);
+        virtual void SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, int id, COLORREF mask);
         virtual void SetTheme();
-        virtual void SetToolBarImages(COLORREF mask, UINT toolBarID, UINT toolBarHotID, UINT toolBarDisabledID);
+        virtual void SetToolBarImages(COLORREF mask, int toolBarID, int toolBarHotID, int toolBarDisabledID);
         virtual void SetupMenuIcons();
         virtual void SetupToolBar();
         virtual void ShowMenu(BOOL show);
@@ -460,7 +460,7 @@ namespace Win32xx
 
     // Adds an icon to an internal ImageList for use with popup menu items.
     template <class T>
-    inline BOOL CFrameT<T>::AddMenuIcon(int menuItemID, int iconID, int iconWidth /* = 16*/)
+    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, int iconID, int iconWidth /* = 16*/)
     {
         int cx = iconWidth;
         int cy = iconWidth;
@@ -470,7 +470,7 @@ namespace Win32xx
 
     // Adds an icon to an internal ImageList for use with popup menu items.
     template <class T>
-    inline BOOL CFrameT<T>::AddMenuIcon(int menuItemID, HICON icon, int iconWidth /* = 16*/)
+    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, HICON icon, int iconWidth /* = 16*/)
     {
         int cxImage = iconWidth;
         int cyImage = iconWidth;
@@ -484,7 +484,7 @@ namespace Win32xx
 
         if (m_menuImages.Add(icon) != -1)
         {
-            m_menuIcons.push_back(static_cast<UINT>(menuItemID));
+            m_menuIcons.push_back(menuItemID);
 
             // Set the mask color to gray for the new ImageList
             COLORREF mask = RGB(192, 192, 192);
@@ -507,7 +507,7 @@ namespace Win32xx
     // Adds the icons from a bitmap resource to an internal ImageList for use with popup menu items.
     // Note:  Images for menu icons should be sized 16x16 or 16x15 pixels. Larger images are ignored.
     template <class T>
-    inline UINT CFrameT<T>::AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID)
+    inline UINT CFrameT<T>::AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, int bitmapID, int disabledID)
     {
         // Count the MenuData entries excluding separators.
         int images = 0;
@@ -636,7 +636,7 @@ namespace Win32xx
         GetToolBar().AddButton(id, isEnabled, image);
 
         if (0 != text)
-            GetToolBar().SetButtonText(static_cast<int>(id), text);
+            GetToolBar().SetButtonText(id, text);
     }
 
     // Adjust the size of the frame to accommodate the View window's dimensions.
@@ -734,7 +734,7 @@ namespace Win32xx
                     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
                     if (state & (CDIS_HOT | CDIS_SELECTED))
                     {
-                        UINT buttonState = pMenubar->GetButtonState(static_cast<int>(item));
+                        UINT buttonState = pMenubar->GetButtonState(item);
                         if ((state & CDIS_SELECTED) || (buttonState & TBSTATE_PRESSED))
                         {
                             drawDC.GradientFill(GetMenuBarTheme().clrPressed1, GetMenuBarTheme().clrPressed2, rc, FALSE);
@@ -756,7 +756,7 @@ namespace Win32xx
                         drawDC.SelectObject(oldPen);
                     }
 
-                    int itemID = static_cast<int>(lpNMCustomDraw->nmcd.dwItemSpec);
+                    UINT itemID = static_cast<UINT>(lpNMCustomDraw->nmcd.dwItemSpec);
                     CString str = pMenubar->GetButtonText(itemID);
 
                     // Draw highlight text.
@@ -809,7 +809,7 @@ namespace Win32xx
                         CDC drawDC(pCustomDraw->nmcd.hdc);
                         CRect rc = pCustomDraw->nmcd.rc;
                         UINT state = pCustomDraw->nmcd.uItemState;
-                        int item = static_cast<int>(pCustomDraw->nmcd.dwItemSpec);
+                        UINT item = static_cast<UINT>(pCustomDraw->nmcd.dwItemSpec);
                         DWORD tbStyle = static_cast<DWORD>(pTB->SendMessage(TB_GETSTYLE, 0, 0));
                         DWORD style = pTB->GetButtonStyle(item);
                         int button = pTB->CommandToIndex(item);
@@ -1817,7 +1817,7 @@ namespace Win32xx
             GetMenuBar().SetWindowTheme(L" ", L" ");
         }
 
-        // Setup the menu
+        // Setup the menu if IDW_MAIN menu resource is defined
         CMenu menu(IDW_MAIN);
         if (::IsMenu(menu))
         {
@@ -1825,8 +1825,6 @@ namespace Win32xx
             if (m_maxMRU > 0)
                 UpdateMRUMenu();
         }
-        else
-            SetFrameMenu(0);  // No menu if IDW_MAIN menu resource isn't defined.
 
         // Create the ToolBar
         if (IsUsingToolBar())
@@ -2190,7 +2188,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnTBNDropDown(LPNMTOOLBAR pNMTB)
     {
-        int item = pNMTB->iItem;
+        UINT item = static_cast<UINT>(pNMTB->iItem);
         CToolBar* pTB = static_cast<CToolBar*>(T::GetCWndPtr(pNMTB->hdr.hwndFrom));
 
         if (pTB)
@@ -2207,7 +2205,7 @@ namespace Win32xx
     inline LRESULT CFrameT<T>::OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI)
     {
         // Find the ToolBar that generated the tooltip
-        CPoint pt(GetMessagePos());
+        CPoint pt(static_cast<LPARAM>(GetMessagePos()));
         HWND wnd = ::WindowFromPoint(pt);
         CToolBar* pToolBar = reinterpret_cast<CToolBar*>(::SendMessage(wnd, UWM_GETCTOOLBAR, 0, 0));
 
@@ -2610,7 +2608,7 @@ namespace Win32xx
 
     // Sets the accelerator table for the application for this window.
     template <class T>
-    inline void CFrameT<T>::SetAccelerators(UINT accelID)
+    inline void CFrameT<T>::SetAccelerators(int accelID)
     {
         m_accel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(accelID));
         if (m_accel)
@@ -2626,7 +2624,7 @@ namespace Win32xx
         if (menuID != 0)
         {
             // Sets the frame's menu from a resource ID.
-            menu.LoadMenu(static_cast<UINT>(menuID));
+            menu.LoadMenu(menuID);
             assert (::IsMenu(menu));
         }
 
@@ -2635,9 +2633,9 @@ namespace Win32xx
 
     // Sets the frame's menu.
     template <class T>
-    inline void CFrameT<T>::SetFrameMenu(HMENU menu)
+    inline void CFrameT<T>::SetFrameMenu(CMenu menu)
     {
-        m_menu.Attach(menu);
+        m_menu = menu;
 
         if (GetMenuBar().IsWindow())
         {
@@ -2663,7 +2661,7 @@ namespace Win32xx
 
     // Sets the menu icons. Any previous menu icons are removed.
     template <class T>
-    inline UINT CFrameT<T>::SetMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT toolBarID, UINT toolBarDisabledID)
+    inline UINT CFrameT<T>::SetMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, int toolBarID, int toolBarDisabledID)
     {
         // Remove any existing menu icons.
         m_menuImages.DeleteImageList();
@@ -2978,7 +2976,7 @@ namespace Win32xx
     // The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
     // A Disabled image list is created from ToolBarID if one doesn't already exist.
     template <class T>
-    inline void CFrameT<T>::SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
+    inline void CFrameT<T>::SetTBImageList(CToolBar& toolBar, CImageList& imageList, int id, COLORREF mask)
     {
         // Get the image size
         CBitmap bm(id);
@@ -3003,7 +3001,7 @@ namespace Win32xx
     // The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.
     // The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
     template <class T>
-    inline void CFrameT<T>::SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
+    inline void CFrameT<T>::SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, int id, COLORREF mask)
     {
         if (id != 0)
         {
@@ -3037,7 +3035,7 @@ namespace Win32xx
     // The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.
     // The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
     template <class T>
-    inline void CFrameT<T>::SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
+    inline void CFrameT<T>::SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, int id, COLORREF mask)
     {
         if (id != 0)
         {
@@ -3074,7 +3072,7 @@ namespace Win32xx
     // The Hot and disabled bitmap resources can be 0.
     // A Disabled image list is created from ToolBarID if one isn't provided.
     template <class T>
-    inline void CFrameT<T>::SetToolBarImages(COLORREF mask, UINT toolBarID, UINT toolBarHotID, UINT toolBarDisabledID)
+    inline void CFrameT<T>::SetToolBarImages(COLORREF mask, int toolBarID, int toolBarHotID, int toolBarDisabledID)
     {
         if (GetComCtlVersion() < 470)   // only on Win95
         {
