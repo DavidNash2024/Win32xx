@@ -163,11 +163,11 @@ namespace Win32xx
     }
 
     // Attaches a CWnd object to a dialog item.
-    inline BOOL CWnd::AttachDlgItem(UINT id, HWND parent)
+    inline BOOL CWnd::AttachDlgItem(int id, HWND parent)
     {
         assert(::IsWindow(parent));
 
-        HWND wnd = ::GetDlgItem(parent, static_cast<int>(id));
+        HWND wnd = ::GetDlgItem(parent, id);
         return Attach(wnd);
     }
 
@@ -325,7 +325,7 @@ namespace Win32xx
     //  be a predefined class name or registered with RegisterClass. A failure
     //  to create a window throws an exception.
     inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
-                               DWORD style, const RECT& rc, HWND parent, UINT id,
+                               DWORD style, const RECT& rc, HWND parent, int id,
                                LPVOID lparam /*= NULL*/)
     {
         int x = rc.left;

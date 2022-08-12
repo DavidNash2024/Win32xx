@@ -83,7 +83,7 @@ namespace Win32xx
     class CCommonDialog : public CDialog
     {
     public:
-        CCommonDialog() : CDialog(UINT(0)) {}
+        CCommonDialog() : CDialog(0) {}
         virtual ~CCommonDialog(){}
 
     protected:
@@ -178,7 +178,7 @@ namespace Win32xx
         virtual LRESULT OnFileNameOK();
         virtual void    OnFolderChange();
         virtual void    OnInitDone();
-        virtual void    OnLBSelChangedNotify(UINT boxID, UINT curSel, UINT code);
+        virtual void    OnLBSelChangedNotify(int boxID, int curSel, UINT code);
         virtual LRESULT OnNotify(WPARAM, LPARAM);
         virtual LRESULT OnShareViolation(LPCTSTR pathName);
         virtual void    OnTypeChange();
@@ -600,7 +600,7 @@ namespace Win32xx
         if (message == UWM_LBSELCHSTRING)
         {   // handle the registered list box selection change
             // notifications:
-            OnLBSelChangedNotify(static_cast<UINT>(wparam), LOWORD(lparam), HIWORD(lparam));
+            OnLBSelChangedNotify(static_cast<int>(wparam), LOWORD(lparam), HIWORD(lparam));
             return 0;
         }
 
@@ -850,7 +850,7 @@ namespace Win32xx
     // selection changes in the list box. The ID of the list or combo box in
     // which the selection occurred is boxID. The index of the current
     // selection is curSel. The control notification code is code.
-    inline void CFileDialog::OnLBSelChangedNotify(UINT, UINT, UINT)
+    inline void CFileDialog::OnLBSelChangedNotify(int, int, UINT)
     {
     }
 

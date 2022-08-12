@@ -212,7 +212,7 @@ namespace Win32xx
         CBitmap();
         CBitmap(HBITMAP bitmap);
         CBitmap(LPCTSTR resourceName);
-        CBitmap(UINT resourceID);
+        CBitmap(int resourceID);
         operator HBITMAP() const;
         virtual ~CBitmap();
 
@@ -222,18 +222,18 @@ namespace Win32xx
         HBITMAP CreateCompatibleBitmap(HDC dc, int width, int height);
         HBITMAP CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* ppBits, HANDLE section, DWORD offset);
         HBITMAP CreateDIBitmap(HDC dc, const BITMAPINFOHEADER* pBMIH, DWORD init, LPCVOID pInit, const LPBITMAPINFO pBMI, UINT colorUse);
-        HBITMAP CreateMappedBitmap(UINT bitmapID, UINT flags = 0, LPCOLORMAP pColorMap = NULL, int mapSize = 0);
+        HBITMAP CreateMappedBitmap(int bitmapID, UINT flags = 0, LPCOLORMAP pColorMap = NULL, int mapSize = 0);
         HBITMAP CreateBitmapIndirect(const BITMAP& bitmap);
         CSize GetBitmapDimensionEx() const;
         int  GetDIBits(HDC dc, UINT startScan, UINT scanLines,  LPVOID pBits, LPBITMAPINFO pBMI, UINT colorUse) const;
         void GrayScaleBitmap();
         BOOL LoadBitmap(LPCTSTR resourceName);
-        BOOL LoadBitmap(UINT id);
+        BOOL LoadBitmap(int id);
         BOOL LoadImage(LPCTSTR resourceName, UINT flags = 0);
-        BOOL LoadImage(UINT id, UINT flags = 0);
+        BOOL LoadImage(int id, UINT flags = 0);
         BOOL LoadImage(LPCTSTR resourceName, int cxDesired, int cyDesired, UINT flags);
-        BOOL LoadImage(UINT id, int cxDesired, int cyDesired, UINT flags);
-        BOOL LoadOEMBitmap(UINT bitmapID);
+        BOOL LoadImage(int id, int cxDesired, int cyDesired, UINT flags);
+        BOOL LoadOEMBitmap(int bitmapID);
         int  SetDIBits(HDC dc, UINT startScan, UINT scanLines, LPCVOID pBits, const LPBITMAPINFO pBMI, UINT colorUse) const;
         CSize SetBitmapDimensionEx(int width, int height) const;
         void TintBitmap (int red, int green, int blue);
@@ -448,16 +448,16 @@ namespace Win32xx
                                         HANDLE section, DWORD offset);
         CBitmap DetachBitmap();
 
-        BOOL LoadBitmap(UINT id);
+        BOOL LoadBitmap(int id);
         BOOL LoadBitmap(LPCTSTR resName);
-        BOOL LoadImage(UINT id, UINT flags);
+        BOOL LoadImage(int id, UINT flags);
         BOOL LoadImage(LPCTSTR resName, UINT flags);
-        BOOL LoadOEMBitmap(UINT bitmapID); // for OBM_/OCR_/OIC
+        BOOL LoadOEMBitmap(int bitmapID); // for OBM_/OCR_/OIC
 
         void CreateBitmapIndirect(const BITMAP& bitmap);
         void CreateDIBitmap(HDC dc, const BITMAPINFOHEADER& pBMIH, DWORD init, LPCVOID pInit,
                                         const LPBITMAPINFO pBMI, UINT usage);
-        void CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/);
+        void CreateMappedBitmap(int bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/);
 
         // Create Brushes
         void CreateBrushIndirect(const LOGBRUSH& logBrush);
@@ -1279,7 +1279,7 @@ namespace Win32xx
         LoadBitmap(resourceName);
     }
 
-    inline CBitmap::CBitmap(UINT resourceID)
+    inline CBitmap::CBitmap(int resourceID)
     {
         LoadBitmap(resourceID);
     }
@@ -1295,7 +1295,7 @@ namespace Win32xx
 
     // Loads a bitmap from a resource using the resource ID.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadBitmap(UINT resourceID)
+    inline BOOL CBitmap::LoadBitmap(int resourceID)
     {
         return LoadBitmap(MAKEINTRESOURCE(resourceID));
     }
@@ -1315,14 +1315,14 @@ namespace Win32xx
 
     // Loads a bitmap from a resource using the resource ID.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadImage(UINT id, UINT flags)
+    inline BOOL CBitmap::LoadImage(int id, UINT flags)
     {
         return LoadImage(MAKEINTRESOURCE(id), flags);
     }
 
     // Loads a bitmap from a resource using the resource ID.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadImage(UINT id, int cxDesired, int cyDesired, UINT flags)
+    inline BOOL CBitmap::LoadImage(int id, int cxDesired, int cyDesired, UINT flags)
     {
         return LoadImage(MAKEINTRESOURCE(id), cxDesired, cyDesired, flags);
     }
@@ -1361,7 +1361,7 @@ namespace Win32xx
     //  OBM_OLD_ZOOM, OBM_REDUCE, OBM_REDUCED, OBM_RESTORE, OBM_RESTORED, OBM_RGARROW, OBM_RGARROWD, OBM_RGARROWI
     //  OBM_SIZE, OBM_UPARROW, OBM_UPARROWD, OBM_UPARROWI, OBM_ZOOM, OBM_ZOOMD
     // Refer to LoadBitmap in the Windows API documentation for more information.
-    inline BOOL CBitmap::LoadOEMBitmap(UINT bitmapID) // for OBM_/OCR_/OIC_
+    inline BOOL CBitmap::LoadOEMBitmap(int bitmapID) // for OBM_/OCR_/OIC_
     {
         HBITMAP bitmap = ::LoadBitmap(0, MAKEINTRESOURCE(bitmapID));
         if (bitmap != 0)
@@ -1460,9 +1460,9 @@ namespace Win32xx
 
     // Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
     // Refer to CreateMappedBitmap in the Windows API documentation for more information.
-    inline HBITMAP CBitmap::CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
+    inline HBITMAP CBitmap::CreateMappedBitmap(int bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
     {
-        HBITMAP bitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), static_cast<INT_PTR>(bitmapID), 
+        HBITMAP bitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), bitmapID, 
                                               static_cast<WORD>(flags), pColorMap, mapSize);
         if (bitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
@@ -2984,7 +2984,7 @@ namespace Win32xx
     // Loads a bitmap from the resource and selects it into the device context.
     // Returns TRUE if successful.
     // Refer to LoadBitmap in the Windows API documentation for more information.
-    inline BOOL CDC::LoadBitmap(UINT id)
+    inline BOOL CDC::LoadBitmap(int id)
     {
         return LoadBitmap(MAKEINTRESOURCE(id));
     }
@@ -3013,7 +3013,7 @@ namespace Win32xx
     // LR_LOADFROMFILE, LR_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED and LR_VGACOLOR.
     // Returns TRUE if successful.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline BOOL CDC::LoadImage(UINT id, UINT flags)
+    inline BOOL CDC::LoadImage(int id, UINT flags)
     {
         return LoadImage(MAKEINTRESOURCE(id), flags);
     }
@@ -3042,7 +3042,7 @@ namespace Win32xx
     // Loads a predefined system bitmap and selects it into the device context.
     // Returns TRUE if successful.
     // Refer to LoadBitmap in the Windows API documentation for more information.
-    inline BOOL CDC::LoadOEMBitmap(UINT bitmapID) // for OBM_/OCR_/OIC_
+    inline BOOL CDC::LoadOEMBitmap(int bitmapID) // for OBM_/OCR_/OIC_
     {
         assert(m_pData->dc != 0);
 
@@ -3061,7 +3061,7 @@ namespace Win32xx
     // Creates and selects a new bitmap using the bitmap data and colors specified by
     // the bitmap resource and the color mapping information.
     // Refer to CreateMappedBitmap in the Windows API documentation for more information.
-    inline void CDC::CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
+    inline void CDC::CreateMappedBitmap(int bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
     {
         assert(m_pData->dc != 0);
 
