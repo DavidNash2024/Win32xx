@@ -10,7 +10,7 @@
 //
 
 // Constructor.
-CColourDialog::CColourDialog(UINT resID, CBitmap& image) : CDialog(resID), m_image(image),
+CColourDialog::CColourDialog(int resID, CBitmap& image) : CDialog(resID), m_image(image),
                               m_cBlue(0), m_cGreen(0), m_cRed(0), m_isGray(FALSE)
 {
 }

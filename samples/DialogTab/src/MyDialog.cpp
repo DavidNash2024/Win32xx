@@ -12,7 +12,7 @@
 //
 
 // Constructor.
-CButtonDialog::CButtonDialog(UINT resID) : CDialog(resID)
+CButtonDialog::CButtonDialog(int resID) : CDialog(resID)
 {
     m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
@@ -131,7 +131,7 @@ BOOL CButtonDialog::OnRangeOfRadioIDs(UINT firstID, UINT lastID, UINT clickedID)
 //
 
 // Constructor.
-CComboBoxDialog::CComboBoxDialog(UINT resID) : CDialog(resID)
+CComboBoxDialog::CComboBoxDialog(int resID) : CDialog(resID)
 {
     m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
@@ -193,7 +193,7 @@ BOOL CComboBoxDialog::OnInitDialog()
 //
 
 // Constructor.
-CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
+CMyDialog::CMyDialog(int resID) : CDialog(resID)
 {
     m_pButtonDlg = NULL;
     m_pComboDlg = NULL;

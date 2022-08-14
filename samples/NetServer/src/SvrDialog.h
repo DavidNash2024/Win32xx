@@ -24,7 +24,7 @@ typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
 class CTCPClientDlg : public CDialog
 {
 public:
-    CTCPClientDlg(UINT resID);
+    CTCPClientDlg(int resID);
     virtual ~CTCPClientDlg() {}
     ServerSocketPtr& ServerSocket() { return m_pSocket; }
     void Receive();
@@ -63,7 +63,7 @@ private:
 class CSvrDialog : public CDialog
 {
 public:
-    CSvrDialog(UINT resID);
+    CSvrDialog(int resID);
     virtual ~CSvrDialog();
 
 protected:

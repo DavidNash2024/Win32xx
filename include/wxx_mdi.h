@@ -321,7 +321,7 @@ namespace Win32xx
                     CString menuString;
                     menuString.Format(_T("&%d %s"), window+1, strMenuItem.c_str());
 
-                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + window, menuString);
+                    windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + static_cast<UINT_PTR>(window), menuString);
 
                     if (GetActiveMDIChild() == (*v).get())
                         windowMenu.CheckMenuItem(IDW_FIRSTCHILD + window, MF_CHECKED);

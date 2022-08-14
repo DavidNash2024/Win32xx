@@ -11,7 +11,7 @@
 class CColourDialog : public CDialog
 {
 public:
-    CColourDialog(UINT resID, CBitmap& image);
+    CColourDialog(int resID, CBitmap& image);
     virtual ~CColourDialog();
     int  GetBlue() const   { return m_cBlue; }
     int  GetGreen() const  { return m_cGreen; }

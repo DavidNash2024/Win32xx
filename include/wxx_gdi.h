@@ -1462,7 +1462,7 @@ namespace Win32xx
     // Refer to CreateMappedBitmap in the Windows API documentation for more information.
     inline HBITMAP CBitmap::CreateMappedBitmap(int bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
     {
-        HBITMAP bitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), bitmapID, 
+        HBITMAP bitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), bitmapID,
                                               static_cast<WORD>(flags), pColorMap, mapSize);
         if (bitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());

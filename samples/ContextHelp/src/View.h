@@ -12,7 +12,7 @@
 class CView : public CDialog
 {
 public:
-    CView(UINT resID);
+    CView(int resID);
     virtual ~CView();
     virtual HWND Create(HWND hParent);
 

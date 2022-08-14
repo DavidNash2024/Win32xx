@@ -308,14 +308,16 @@ namespace Win32xx
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
+        typedef std::vector<MenuItemDataPtr> MenuData;     // all menu item data for a popup menu
+
         CFrameT(const CFrameT&);                // Disable copy construction
         CFrameT& operator = (const CFrameT&);   // Disable assignment operator
         CSize GetTBImageSize(CBitmap* pBitmap);
         void UpdateMenuBarBandSize();
         static LRESULT CALLBACK StaticKeyboardProc(int code, WPARAM wparam, LPARAM lparam);
 
-        std::vector<ItemDataPtr> m_menuItemData;   // vector of MenuItemData pointers
-        std::vector<CString> m_mruEntries;  // Vector of CStrings for MRU entries
+        std::vector<MenuData> m_menusData;  // vector of menu data for multiple popup menus
+        std::vector<CString> m_mruEntries;  // vector of CStrings for MRU entries
         std::vector<UINT> m_menuIcons;      // vector of menu icon resource IDs
         std::vector<UINT> m_toolBarData;    // vector of resource IDs for ToolBar buttons
         InitValues m_initValues;            // struct of initial values
@@ -1972,7 +1974,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        CMenu menu(reinterpret_cast<HMENU>(wparam));
+        CMenu menu = reinterpret_cast<HMENU>(wparam);
 
         // The system menu shouldn't be owner drawn.
         if (HIWORD(lparam) || (T::GetSystemMenu() == menu))
@@ -1982,19 +1984,19 @@ namespace Win32xx
         if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
             return CWnd::WndProcDefault(msg, wparam, lparam);
 
+        MenuData menuData;
+
         for (int i = 0; i < menu.GetMenuItemCount(); ++i)
         {
-            // Store the MenuItemData as smart pointer for later automatic deletion.
-            MenuItemData* pItem(new MenuItemData);
-            m_menuItemData.push_back(ItemDataPtr(pItem));
-
+            // The MenuItemData pointer is deleted in OnUnInitMenuPopup.
+            MenuItemDataPtr itemDataPtr(new MenuItemData);
             MENUITEMINFO mii;
             ZeroMemory(&mii, sizeof(mii));
             mii.cbSize = GetSizeofMenuItemInfo();
 
             // Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility.
             mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU |MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
-            mii.dwTypeData = pItem->GetItemText();  // Assign TCHAR pointer, text is assigned by GetMenuItemInfo.
+            mii.dwTypeData = itemDataPtr->GetItemText();  // Assign TCHAR pointer, text is assigned by GetMenuItemInfo.
             mii.cch = WXX_MAX_STRING_SIZE;
 
             // Send message for menu updates.
@@ -2002,19 +2004,26 @@ namespace Win32xx
             T::SendMessage(UWM_UPDATECOMMAND, menuItem, 0);
 
             // Specify owner-draw for the menu item type.
-            if (menu.GetMenuItemInfo(static_cast<UINT>(i), mii, TRUE))
+            UINT position = static_cast<UINT>(i);
+            if (menu.GetMenuItemInfo(position, mii, TRUE))
             {
                 if (mii.dwItemData == 0)
                 {
-                    pItem->menu = menu;
-                    pItem->pos = static_cast<UINT>(i);
-                    pItem->mii = mii;
-                    mii.dwItemData = reinterpret_cast<ULONG_PTR>(pItem);
+                    itemDataPtr->menu = menu;
+                    itemDataPtr->pos = position;
+                    itemDataPtr->mii = mii;
+                    mii.dwItemData = reinterpret_cast<ULONG_PTR>(itemDataPtr.get());
                     mii.fType |= MFT_OWNERDRAW;
-                    menu.SetMenuItemInfo(static_cast<UINT>(i), mii, TRUE); // Store pItem in mii
+                    menu.SetMenuItemInfo(position, mii, TRUE); // Store pItem in mii
+                    menuData.push_back(itemDataPtr);
                 }
             }
         }
+
+        // m_menusData stores the menu item data for multiple popup menus.
+        // There will be multiple popup menus if submenus are opened.
+        if (menuData.size() != 0)
+            m_menusData.push_back(menuData);
 
         return 0;
     }
@@ -2120,8 +2129,8 @@ namespace Win32xx
             break;
         case IDW_VIEW_TOOLBAR:
             {
-                bool isWindow = GetToolBar().IsWindow() != 0 ;
-                bool isVisible = (isWindow && GetToolBar().IsWindowVisible()) != 0;
+                bool isWindow = (GetToolBar().IsWindow() != 0);  // != 0 converts BOOL to bool.
+                bool isVisible = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
                 if (isWindow)
                     GetFrameMenu().EnableMenuItem(id, MF_ENABLED);
                 else
@@ -2334,28 +2343,35 @@ namespace Win32xx
     // Called when the drop-down menu or submenu has been destroyed.
     // Win95 & WinNT don't support the WM_UNINITMENUPOPUP message.
     template <class T>
-    inline LRESULT CFrameT<T>::OnUnInitMenuPopup(UINT, WPARAM, LPARAM)
+    inline LRESULT CFrameT<T>::OnUnInitMenuPopup(UINT, WPARAM wparam, LPARAM)
     {
-        for (int item = static_cast<int>(m_menuItemData.size()) - 1; item >= 0; --item)
+        CMenu menu = reinterpret_cast<HMENU>(wparam);
+        bool doPopBack = false;
+
+        for (int i = 0; i < menu.GetMenuItemCount(); i++)
         {
-            // Undo OwnerDraw and put the text back.
-            size_t index = static_cast<size_t>(item);
+            UINT position = static_cast<UINT>(i);
             MENUITEMINFO mii;
             ZeroMemory(&mii, sizeof(mii));
             mii.cbSize = GetSizeofMenuItemInfo();
-            mii.fMask = MIIM_TYPE | MIIM_DATA;
-            mii.fType = m_menuItemData[index]->mii.fType;
-            mii.dwTypeData = m_menuItemData[index]->GetItemText();
-            mii.cch = static_cast<UINT>(lstrlen(m_menuItemData[index]->GetItemText()));
-            mii.dwItemData = 0;
-            VERIFY(::SetMenuItemInfo(m_menuItemData[index]->menu, m_menuItemData[index]->pos, TRUE, &mii));
-            UINT pos = m_menuItemData[index]->pos;
-            m_menuItemData.pop_back();
+            mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU | MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
+            menu.GetMenuItemInfo(position, mii, TRUE);
 
-            // Break when we reach the top of this popup menu.
-            if (pos == 0)
-                break;
+            MenuItemData* pItemData = reinterpret_cast<MenuItemData*>(mii.dwItemData);
+            if (pItemData != 0)
+            {
+                mii.fType = pItemData->mii.fType;
+                mii.dwTypeData = pItemData->GetItemText();
+                mii.cch = static_cast<UINT>(lstrlen(pItemData->GetItemText()));
+                mii.dwItemData = 0;
+                VERIFY(menu.SetMenuItemInfo(position, mii, TRUE));
+                doPopBack = true;
+            }
         }
+
+        // Release the memory allocated for all the menu items for this popup menu.
+        if (doPopBack)
+            m_menusData.pop_back();
 
         return 0;
     }

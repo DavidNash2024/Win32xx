@@ -20,7 +20,7 @@ void CBalloonToolTip::PreCreate(CREATESTRUCT& cs)
 //////////////////////////////////
 // CMyDialog function definitions.
 //
-CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
+CMyDialog::CMyDialog(int resID) : CDialog(resID)
 {
     m_info = (HICON)GetApp()->LoadIcon(IDI_INFO);
 }

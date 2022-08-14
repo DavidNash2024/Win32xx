@@ -9,7 +9,7 @@
 ////////////////////////////////////
 // CViewDialog function definitions.
 //
-CViewDialog::CViewDialog(UINT resID) : CDialog(resID)
+CViewDialog::CViewDialog(int resID) : CDialog(resID)
 {
 }
 

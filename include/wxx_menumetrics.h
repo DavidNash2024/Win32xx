@@ -115,6 +115,7 @@ namespace Win32xx
             ZeroMemory(&mii, GetSizeofMenuItemInfo());
             itemText.assign(WXX_MAX_STRING_SIZE, _T('\0'));
         }
+
         LPTSTR GetItemText() {return &itemText[0];}
 
         HMENU menu;

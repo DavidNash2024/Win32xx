@@ -246,7 +246,7 @@ namespace Win32xx
     inline BOOL CToolBar::AddButtons(UINT buttonCount, LPTBBUTTON pButtonInfoArray) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ADDBUTTONS, (WPARAM)buttonCount, (LPARAM)pButtonInfoArray) != 0);
+        return (BOOL)SendMessage(TB_ADDBUTTONS, (WPARAM)buttonCount, (LPARAM)pButtonInfoArray);
     }
 
     // Adds images to the toolbar, or replaces the existing ones.
@@ -363,7 +363,7 @@ namespace Win32xx
     inline BOOL CToolBar::EnableButton(UINT buttonID, BOOL isEnabled) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ENABLEBUTTON, (WPARAM)buttonID, (LPARAM)MAKELONG(isEnabled, 0 )) != 0);
+        return (BOOL)SendMessage(TB_ENABLEBUTTON, (WPARAM)buttonID, (LPARAM)MAKELONG(isEnabled, 0));
     }
 
     // Receives the TBBUTTON structure information from the specified button.
@@ -371,7 +371,7 @@ namespace Win32xx
     inline BOOL CToolBar::GetButton(int index, TBBUTTON& buttonInfo) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_GETBUTTON, (WPARAM)index, (LPARAM)&buttonInfo) != 0);
+        return (BOOL)SendMessage(TB_GETBUTTON, (WPARAM)index, (LPARAM)&buttonInfo);
     }
 
     // Retrieves a count of the buttons currently in the ToolBar.
@@ -611,7 +611,7 @@ namespace Win32xx
     inline BOOL CToolBar::HideButton(UINT buttonID, BOOL show) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_HIDEBUTTON, (WPARAM)buttonID, (LPARAM)MAKELONG (show, 0)) != 0);
+        return (BOOL)SendMessage(TB_HIDEBUTTON, (WPARAM)buttonID, (LPARAM)MAKELONG (show, 0));
     }
 
     // Determines where a point lies in a ToolBar control.
@@ -644,7 +644,7 @@ namespace Win32xx
     inline BOOL CToolBar::Indeterminate(UINT buttonID, BOOL isIndeterminate) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_INDETERMINATE, (WPARAM)buttonID, (LPARAM)MAKELONG (isIndeterminate, 0)) != 0);
+        return (BOOL)SendMessage(TB_INDETERMINATE, (WPARAM)buttonID, (LPARAM)MAKELONG (isIndeterminate, 0));
     }
 
     // Inserts a button to the left of the specified button index.
@@ -652,7 +652,7 @@ namespace Win32xx
     inline BOOL CToolBar::InsertButton(int index, const TBBUTTON& buttonInfo) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_INSERTBUTTON, (WPARAM)index, (LPARAM)&buttonInfo) != 0);
+        return (BOOL)SendMessage(TB_INSERTBUTTON, (WPARAM)index, (LPARAM)&buttonInfo);
     }
 
     // Determines whether the specified button in a ToolBar is hidden.
@@ -660,7 +660,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonHidden(UINT buttonID) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ISBUTTONHIDDEN, (WPARAM)buttonID, 0) != 0);
+        return (BOOL)SendMessage(TB_ISBUTTONHIDDEN, (WPARAM)buttonID, 0);
     }
 
     // Checks the highlight state of a ToolBar button.
@@ -668,7 +668,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonHighlighted(UINT buttonID) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ISBUTTONHIGHLIGHTED, (WPARAM)buttonID, 0) != 0);
+        return (BOOL)SendMessage(TB_ISBUTTONHIGHLIGHTED, (WPARAM)buttonID, 0);
     }
 
     // Determines whether the specified button in a ToolBar is indeterminate.
@@ -676,7 +676,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonIndeterminate(UINT buttonID) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ISBUTTONINDETERMINATE, (WPARAM)buttonID, 0) != 0);
+        return (BOOL)SendMessage(TB_ISBUTTONINDETERMINATE, (WPARAM)buttonID, 0);
     }
 
     // Determines whether the specified button in a ToolBar is pressed.
@@ -684,7 +684,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonPressed(UINT buttonID) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ISBUTTONPRESSED, (WPARAM)buttonID, 0) != 0);
+        return (BOOL)SendMessage(TB_ISBUTTONPRESSED, (WPARAM)buttonID, 0);
     }
 
     // Determines the ID of the button that corresponds to the specified accelerator character.
@@ -704,7 +704,7 @@ namespace Win32xx
     inline BOOL CToolBar::MarkButton(UINT buttonID, BOOL Highlight /*= TRUE*/ ) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_MARKBUTTON, (WPARAM)buttonID, (LPARAM)Highlight) != 0);
+        return (BOOL)SendMessage(TB_MARKBUTTON, (WPARAM)buttonID, (LPARAM)Highlight);
     }
 
     // Moves a button from one index to another.
@@ -712,7 +712,7 @@ namespace Win32xx
     inline BOOL CToolBar::MoveButton(UINT oldPos, UINT newPos) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_MOVEBUTTON, (WPARAM)oldPos, (LPARAM)newPos) != 0);
+        return (BOOL)SendMessage(TB_MOVEBUTTON, (WPARAM)oldPos, (LPARAM)newPos);
     }
 
     // Called when the toolbar window is created and attached to this object.
@@ -757,7 +757,7 @@ namespace Win32xx
     inline BOOL CToolBar::PressButton(UINT buttonID, BOOL press) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_PRESSBUTTON, (WPARAM)buttonID, (LPARAM)MAKELONG(press, 0)) != 0);
+        return (BOOL)SendMessage(TB_PRESSBUTTON, (WPARAM)buttonID, (LPARAM)MAKELONG(press, 0));
     }
 
     // Replaces an existing bitmap with a new bitmap.
@@ -783,7 +783,7 @@ namespace Win32xx
         tbrb.nIDOld = static_cast<UINT_PTR>(m_oldBitmapID);
         tbrb.nButtons  = images;
 
-        BOOL result = (SendMessage(TB_REPLACEBITMAP, 0, (LPARAM)&tbrb) != 0);
+        BOOL result = (BOOL)SendMessage(TB_REPLACEBITMAP, 0, (LPARAM)&tbrb);
         if (result)
             m_oldBitmapID = newBitmapID;
 
@@ -808,7 +808,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetBitmapSize(int cx, int cy) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETBITMAPSIZE, 0, (LPARAM)MAKELONG(cx, cy)) != 0);
+        return (BOOL)SendMessage(TB_SETBITMAPSIZE, 0, (LPARAM)MAKELONG(cx, cy));
     }
 
     // Sets the size of the buttons to be added to a ToolBar.
@@ -817,7 +817,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetButtonSize(int cx, int cy) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETBUTTONSIZE, 0, (LPARAM)MAKELONG(cx, cy)) != 0);
+        return (BOOL)SendMessage(TB_SETBUTTONSIZE, 0, (LPARAM)MAKELONG(cx, cy));
     }
 
     // Use this to change a button's Command ID. It can also be used to change a button's image.
@@ -849,7 +849,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetButtonInfo(UINT buttonID, const TBBUTTONINFO& tbbi) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETBUTTONINFO, (WPARAM)buttonID, (LPARAM)&tbbi) != 0);
+        return (BOOL)SendMessage(TB_SETBUTTONINFO, (WPARAM)buttonID, (LPARAM)&tbbi);
     }
 
     // Set the state of an individual button
@@ -865,7 +865,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetButtonState(UINT buttonID, UINT state) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETSTATE, (WPARAM)buttonID, (LPARAM)MAKELONG (state, 0)) != 0);
+        return (BOOL)SendMessage(TB_SETSTATE, (WPARAM)buttonID, (LPARAM)MAKELONG (state, 0));
     }
 
     //  The the style of the ToolBar control. The following button styles are supported:
@@ -1000,7 +1000,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetCommandID(int index, UINT buttonID) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETCMDID, (WPARAM)index, (LPARAM)buttonID) != 0);
+        return (BOOL)SendMessage(TB_SETCMDID, (WPARAM)index, (LPARAM)buttonID);
     }
 
     // Sets the ImageList that the ToolBar control will use to display disabled buttons.
@@ -1060,7 +1060,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetIndent(int indent) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETINDENT, (WPARAM)indent, 0) != 0);
+        return (BOOL)SendMessage(TB_SETINDENT, (WPARAM)indent, 0);
     }
 
     // Sets the maximum number of text rows displayed on a ToolBar button.
@@ -1068,7 +1068,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetMaxTextRows(int maxRows) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETMAXTEXTROWS, (WPARAM)maxRows, 0) != 0);
+        return (BOOL)SendMessage(TB_SETMAXTEXTROWS, (WPARAM)maxRows, 0);
     }
 
     // Sets the padding for a ToolBar control.
@@ -1076,7 +1076,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetPadding(int cx, int cy) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETPADDING, 0, (LPARAM)MAKELONG(cx, cy)) != 0);
+        return (BOOL)SendMessage(TB_SETPADDING, 0, (LPARAM)MAKELONG(cx, cy));
     }
 
     // Associates a ToolTip control with a ToolBar. This should be done before
