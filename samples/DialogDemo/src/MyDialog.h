@@ -15,7 +15,7 @@
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT resID);
+    CMyDialog(int resID);
     CMyDialog(LPCTSTR resName);
     virtual ~CMyDialog();
 

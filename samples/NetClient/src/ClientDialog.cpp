@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CClientDialog::CClientDialog(UINT resID) : CDialog(resID),
+CClientDialog::CClientDialog(int resID) : CDialog(resID),
                    m_isClientConnected(false), m_socketType(SOCK_STREAM)
 {
     // Adds support for the IP Address control.

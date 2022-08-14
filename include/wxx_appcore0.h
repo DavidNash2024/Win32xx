@@ -106,7 +106,7 @@ namespace Win32xx
     // typedef std::shared_ptr<CImageList> ImageListPtr;
     // typedef std::shared_ptr<CMDIChild> MDIChildPtr;
     // typedef std::shared_ptr<CMenu> MenuPtr;
-    // typedef std::shared_ptr<MenuItemData> ItemDataPtr;
+    // typedef std::shared_ptr<MenuItemData> MenuItemDataPtr;
     // typedef std::shared_ptr<CPalette> PalettePtr;
     // typedef std::shared_ptr<CPen> PenPtr;
     // typedef std::shared_ptr<CPropertyPage> PropertyPagePtr;
@@ -124,7 +124,7 @@ namespace Win32xx
     typedef Shared_Ptr<CImageList> ImageListPtr;
     typedef Shared_Ptr<CMDIChild> MDIChildPtr;
     typedef Shared_Ptr<CMenu> MenuPtr;
-    typedef Shared_Ptr<MenuItemData> ItemDataPtr;
+    typedef Shared_Ptr<MenuItemData> MenuItemDataPtr;
     typedef Shared_Ptr<CPalette> PalettePtr;
     typedef Shared_Ptr<CPen> PenPtr;
     typedef Shared_Ptr<CPropertyPage> PropertyPagePtr;

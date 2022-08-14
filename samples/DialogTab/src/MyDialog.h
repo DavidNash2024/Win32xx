@@ -12,7 +12,7 @@
 class CButtonDialog : public CDialog
 {
 public:
-    CButtonDialog(UINT resID);
+    CButtonDialog(int resID);
     virtual ~CButtonDialog();
 
 protected:
@@ -46,7 +46,7 @@ private:
 class CComboBoxDialog : public CDialog
 {
 public:
-    CComboBoxDialog (UINT resID);
+    CComboBoxDialog (int resID);
     virtual ~CComboBoxDialog();
 
 protected:
@@ -72,7 +72,7 @@ private:
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT resID);
+    CMyDialog(int resID);
     virtual ~CMyDialog();
 
 protected:

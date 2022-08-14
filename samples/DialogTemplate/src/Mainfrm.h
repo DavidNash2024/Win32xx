@@ -69,7 +69,6 @@ private:
     // Private member variables
     CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
-    CDialog m_dialog;
     CString m_pathName;
     CDockDialogsTree* m_pDockDialogsTree;
     CResourceFinder m_finder;
