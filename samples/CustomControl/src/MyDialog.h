@@ -13,7 +13,7 @@
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(int id);
+    CMyDialog(UINT resID);
     virtual ~CMyDialog();
 
 protected:

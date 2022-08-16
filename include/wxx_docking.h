@@ -208,11 +208,11 @@ namespace Win32xx
         void SetDockCaption(LPCTSTR caption) { m_caption = caption; }
         void SetHideSingleTab(BOOL hideSingle);
         void SetTabIcon(HICON tabIcon)        { m_tabIcon = tabIcon; }
-        void SetTabIcon(int iconID);
+        void SetTabIcon(UINT iconID);
         void SetTabSize();
         void SetTabText(LPCTSTR text)        { m_tabText = text; }
         void SetToolBar(CToolBar& toolBar)    { GetViewPage().SetToolBar(toolBar); }
-        void SetToolBarImages(COLORREF mask, int normalID, int hotID, int disabledID);
+        void SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID);
         void SetView(CWnd& wnd);
 
     protected:
@@ -4939,7 +4939,7 @@ namespace Win32xx
     }
 
     // Sets the icon for this container's tab.
-    inline void CDockContainer::SetTabIcon(int iconID)
+    inline void CDockContainer::SetTabIcon(UINT iconID)
     {
         HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
         SetTabIcon(icon);
@@ -4969,7 +4969,7 @@ namespace Win32xx
     // The color mask is often gray RGB(192,192,192) or magenta (255,0,255)
     // The hot and disabled bitmap resources can be 0
     // A disabled image list is created from the normal image list if one isn't provided.
-    inline void CDockContainer::SetToolBarImages(COLORREF mask, int normalID, int hotID, int disabledID)
+    inline void CDockContainer::SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID)
     {
         // ToolBar ImageLists require Comctl32.dll version 4.7 or later
         if (GetComCtlVersion() < 470)

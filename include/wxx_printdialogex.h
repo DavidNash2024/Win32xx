@@ -155,7 +155,7 @@ namespace Win32xx
     // Constructor for CPrintDialogEx class. The flags parameter specifies the
     // flags for the PRINTDLGEX structure. Refer to the description of the
     // PRINTDLGEX struct in the Windows API documentation.
-    inline CPrintDialogEx::CPrintDialogEx(DWORD flags) : CDialog(0), m_pServices(NULL)
+    inline CPrintDialogEx::CPrintDialogEx(DWORD flags) : m_pServices(NULL)
     {
         ZeroMemory(&m_pdex, sizeof(m_pdex));
         m_pdex.lStructSize = sizeof(m_pdex);

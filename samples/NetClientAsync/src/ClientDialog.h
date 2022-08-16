@@ -16,7 +16,7 @@
 class CClientDialog : public CDialog
 {
 public:
-    CClientDialog(int resID);
+    CClientDialog(UINT resID);
     virtual ~CClientDialog();
 
 protected:

@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CViewDialog::CViewDialog(int resID) : CDialog(resID)
+CViewDialog::CViewDialog(UINT resID) : CDialog(resID)
 {
 }
 

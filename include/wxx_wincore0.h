@@ -131,19 +131,19 @@ namespace Win32xx
 
         // These virtual functions can be overridden.
         virtual BOOL Attach(HWND wnd);
-        virtual BOOL AttachDlgItem(int id, HWND parent);
+        virtual BOOL AttachDlgItem(UINT id, HWND parent);
         virtual void CenterWindow() const;
         virtual HWND Create(HWND parent = 0);
         virtual HWND CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
                               DWORD style, int x, int y, int width, int height, HWND parent,
                               HMENU idOrMenu, LPVOID lparam = NULL);
         virtual HWND CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
-                              DWORD style, const RECT& rectc, HWND parent, int id, LPVOID lparam = NULL);
+                              DWORD style, const RECT& rectc, HWND parent, UINT id, LPVOID lparam = NULL);
         virtual void Destroy();
         virtual HWND Detach();
         static  CWnd* GetCWndPtr(HWND wnd);
-        virtual HICON SetIconLarge(int iconID);
-        virtual HICON SetIconSmall(int iconID);
+        virtual HICON SetIconLarge(UINT iconID);
+        virtual HICON SetIconSmall(UINT iconID);
 
         // For Data Exchange
         virtual void DoDataExchange(CDataExchange& dx);
@@ -158,8 +158,8 @@ namespace Win32xx
         HDC   BeginPaint(PAINTSTRUCT& ps) const;
         BOOL  BringWindowToTop() const;
         LRESULT CallWindowProc(WNDPROC pPrevWndFunc, UINT msg, WPARAM wparam, LPARAM lparam) const;
-        BOOL  CheckDlgButton(int buttonID, UINT check) const;
-        BOOL  CheckRadioButton(int firstButtonID, int lastButtonID, int checkButtonID) const;
+        BOOL  CheckDlgButton(UINT buttonID, UINT check) const;
+        BOOL  CheckRadioButton(UINT firstButtonID, UINT lastButtonID, UINT checkButtonID) const;
         CWnd  ChildWindowFromPoint(POINT point) const;
         BOOL  ClientToScreen(POINT& point) const;
         BOOL  ClientToScreen(RECT& rect) const;
@@ -168,11 +168,11 @@ namespace Win32xx
         HDWP  DeferWindowPos(HDWP winPosInfo, HWND insertAfter, int x, int y, int cx, int cy, UINT flags) const;
         HDWP  DeferWindowPos(HDWP winPosInfo, HWND insertAfter, const RECT& rect, UINT flags) const;
         LRESULT DefWindowProc(UINT msg, WPARAM wparam, LPARAM lparam) const;
-        int   DlgDirList(LPTSTR pathSpec, int listBoxID, int staticPathID, UINT fileType) const;
-        int   DlgDirListComboBox(LPTSTR pathSpec, int comboBoxID, int staticPathID, UINT filetype) const;
-        BOOL  DlgDirSelectEx(LPTSTR string, int count, int listBoxID) const;
-        BOOL  DlgDirSelectComboBoxEx(LPTSTR string, int count, int comboBoxID) const;
-        BOOL  DrawAnimatedRects(int aniID, const RECT& from, const RECT& to) const;
+        int   DlgDirList(LPTSTR pathSpec, UINT listBoxID, UINT staticPathID, UINT fileType) const;
+        int   DlgDirListComboBox(LPTSTR pathSpec, UINT comboBoxID, UINT staticPathID, UINT filetype) const;
+        BOOL  DlgDirSelectEx(LPTSTR string, int count, UINT listBoxID) const;
+        BOOL  DlgDirSelectComboBoxEx(LPTSTR string, int count, UINT comboBoxID) const;
+        BOOL  DrawAnimatedRects(UINT aniID, const RECT& from, const RECT& to) const;
         BOOL  DrawCaption(HDC dc, const RECT& rect, UINT flags) const;
         BOOL  DrawMenuBar() const;
         BOOL  EnableScrollBar(UINT flags, UINT arrows) const;
@@ -187,11 +187,11 @@ namespace Win32xx
         CClientDC GetDC() const;
         CClientDCEx GetDCEx(HRGN clip, DWORD flags) const;
         CWnd  GetDesktopWindow() const;
-        int   GetDlgCtrlID() const;
-        CWnd  GetDlgItem(int dlgItemID) const;
-        UINT  GetDlgItemInt(int dlgItemID, BOOL& isTranslated, BOOL isSigned) const;
-        UINT  GetDlgItemInt(int dlgItemID, BOOL isSigned) const;
-        CString GetDlgItemText(int dlgItemID) const;
+        UINT   GetDlgCtrlID() const;
+        CWnd  GetDlgItem(UINT dlgItemID) const;
+        UINT  GetDlgItemInt(UINT dlgItemID, BOOL& isTranslated, BOOL isSigned) const;
+        UINT  GetDlgItemInt(UINT dlgItemID, BOOL isSigned) const;
+        CString GetDlgItemText(UINT dlgItemID) const;
         DWORD GetExStyle() const;
         CWnd  GetFocus() const;
         CFont GetFont() const;
@@ -223,7 +223,7 @@ namespace Win32xx
         BOOL  InvalidateRgn(HRGN rgn, BOOL erase = TRUE) const;
         BOOL  IsChild(HWND child) const;
         BOOL  IsDialogMessage(MSG& msg) const;
-        UINT  IsDlgButtonChecked(int buttonID) const;
+        UINT  IsDlgButtonChecked(UINT buttonID) const;
         BOOL  IsIconic() const;
         BOOL  IsWindow() const;
         BOOL  IsWindowEnabled() const;
@@ -250,16 +250,16 @@ namespace Win32xx
         BOOL  ScrollWindow(int xAmount, int yAmount, const RECT& scrollRect, LPCRECT pClipRect = 0) const;
         BOOL  ScrollWindow(int xAmount, int yAmount, LPCRECT pClipRect = 0) const;
         int   ScrollWindowEx(int dx, int dy, LPCRECT pScrollRect, LPCRECT pClipRect, HRGN updateRgn, LPRECT updateRect, UINT flags) const;
-        LRESULT SendDlgItemMessage(int dlgItemID, UINT msg, WPARAM wparam, LPARAM lparam) const;
+        LRESULT SendDlgItemMessage(UINT dlgItemID, UINT msg, WPARAM wparam, LPARAM lparam) const;
         LRESULT SendMessage(UINT msg, WPARAM wparam = 0, LPARAM lparam = 0) const;
         LRESULT SendMessage(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam) const;
         BOOL  SendNotifyMessage(UINT msg, WPARAM wparam, LPARAM lparam) const;
         HWND  SetActiveWindow() const;
         HWND  SetCapture() const;
         ULONG_PTR SetClassLongPtr(int index, LONG_PTR newLong) const;
-        LONG_PTR SetDlgCtrlID(int id) const;
-        BOOL  SetDlgItemInt(int dlgItemID, UINT value, BOOL isSigned) const;
-        BOOL  SetDlgItemText(int dlgItemID, LPCTSTR string) const;
+        LONG_PTR SetDlgCtrlID(UINT id) const;
+        BOOL  SetDlgItemInt(UINT dlgItemID, UINT value, BOOL isSigned) const;
+        BOOL  SetDlgItemText(UINT dlgItemID, LPCTSTR string) const;
         void  SetExStyle(DWORD exStyle) const;
         HWND  SetFocus() const;
         void  SetFont(HFONT font, BOOL redraw = TRUE) const;

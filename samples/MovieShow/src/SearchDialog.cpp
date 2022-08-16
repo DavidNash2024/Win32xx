@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CSearchDialog::CSearchDialog(int resID) : CDialog(resID)
+CSearchDialog::CSearchDialog(UINT resID) : CDialog(resID)
 {
 }
 

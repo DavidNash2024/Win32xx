@@ -12,7 +12,7 @@
 //
 
 // Constructor.
-CButtonDialog::CButtonDialog(int resID) : CDialog(resID)
+CButtonDialog::CButtonDialog(UINT resID) : CDialog(resID)
 {
     m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }

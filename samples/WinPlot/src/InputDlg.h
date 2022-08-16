@@ -14,7 +14,7 @@
 class CInputDlg : public CDialog
 {
 public:
-    CInputDlg(int resID) : CDialog(resID), m_xMin(-10), m_xMax(10) {}
+    CInputDlg(UINT resID) : CDialog(resID), m_xMin(-10), m_xMax(10) {}
     virtual ~CInputDlg() {}
     double& GetMax() { return m_xMax; }
     double& GetMin() { return m_xMin; }

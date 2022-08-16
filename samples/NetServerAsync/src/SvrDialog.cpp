@@ -13,7 +13,7 @@
 //
 
 // Constructor.
-CTCPClientDlg::CTCPClientDlg(int resID) : CDialog(resID), m_pSocket(0)
+CTCPClientDlg::CTCPClientDlg(UINT resID) : CDialog(resID), m_pSocket(0)
 {
 }
 

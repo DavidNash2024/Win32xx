@@ -280,7 +280,7 @@ namespace Win32xx
 
     // Loads the cursor resource from the resource script (resource.rc)
     // Refer to LoadCursor in the Windows API documentation for more information.
-    inline HCURSOR CWinApp::LoadCursor(int cursorID) const
+    inline HCURSOR CWinApp::LoadCursor(UINT cursorID) const
     {
         return ::LoadCursor(GetResourceHandle(), MAKEINTRESOURCE (cursorID));
     }
@@ -304,7 +304,7 @@ namespace Win32xx
 
     // Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values.
     // Refer to LoadIcon in the Windows API documentation for more information.
-    inline HICON CWinApp::LoadIcon(int iconID) const
+    inline HICON CWinApp::LoadIcon(UINT iconID) const
     {
         return ::LoadIcon(GetResourceHandle(), MAKEINTRESOURCE (iconID));
     }
@@ -337,7 +337,7 @@ namespace Win32xx
     // LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
     // Ideally the image should be destroyed unless it is loaded with LR_SHARED.
     // Refer to LoadImage in the Windows API documentation for more information.
-    inline HANDLE CWinApp::LoadImage(int imageID, UINT type, int cx, int cy, UINT flags) const
+    inline HANDLE CWinApp::LoadImage(UINT imageID, UINT type, int cx, int cy, UINT flags) const
     {
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
     }

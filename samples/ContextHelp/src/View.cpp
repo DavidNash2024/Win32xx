@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CView::CView(int resID) : CDialog(resID), m_parent(0)
+CView::CView(UINT resID) : CDialog(resID), m_parent(0)
 {
 }
 

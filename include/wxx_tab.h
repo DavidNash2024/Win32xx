@@ -56,7 +56,7 @@ namespace Win32xx
     {
         CString TabText;    // The tab's text
         int image;          // index of this tab's image
-        int idTab;         // identifier for this tab (used by TabbedMDI)
+        int idTab;          // identifier for this tab (used by TabbedMDI)
         CWnd* pView;        // pointer to the view window
         TabPageInfo() : image(0), idTab(0), pView(0) {}    // constructor
     };
@@ -96,14 +96,14 @@ namespace Win32xx
             CSelectDialog& operator = (const CSelectDialog&);   // Disable assignment operator
 
             std::vector<CString> m_items;
-            int IDC_LIST;
+            UINT IDC_LIST;
         };
 
     public:
         CTab();
         virtual ~CTab();
         virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, HICON icon, int tabID);
-        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, int iconID, int tabID = 0);
+        virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText, UINT iconID, int tabID = 0);
         virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR tabText);
         virtual void   SelectPage(int page);
         virtual void   RecalcLayout();
@@ -301,7 +301,8 @@ namespace Win32xx
     {
         for (UINT u = 0; u < m_items.size(); ++u)
         {
-            SendDlgItemMessage(IDC_LIST, LB_ADDSTRING, 0, (LPARAM)(m_items[u].c_str()));
+            LPARAM text = reinterpret_cast<LPARAM>(m_items[u].c_str());
+            SendDlgItemMessage(IDC_LIST, LB_ADDSTRING, 0, text);
         }
 
         return true;
@@ -413,7 +414,7 @@ namespace Win32xx
     // The framework assumes ownership of the CWnd pointer provided,
     // and deletes the CWnd object when the tab is removed or destroyed.
     // Use RemoveTabPage to remove the tab and page added in this manner.
-    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR tabText, int iconID, int tabID /* = 0*/)
+    inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR tabText, UINT iconID, int tabID)
     {
         HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
         return AddTabPage(pView, tabText, icon, tabID);
@@ -867,7 +868,7 @@ namespace Win32xx
     // Sends a UWN_TABCLOSE notification.
     inline BOOL CTab::NotifyTabClosing(int page)
     {
-        int controlD = GetDlgCtrlID();
+        UINT controlD = GetDlgCtrlID();
         TABNMHDR TabNMHDR;
         TabNMHDR.hdr.code = UWN_TABCLOSE;
         TabNMHDR.hdr.hwndFrom = *this;
@@ -1793,12 +1794,12 @@ namespace Win32xx
     // Adds a MDI tab, given a pointer to the view window, and the tab's text.
     // The framework assumes ownership of the CWnd pointer provided, and deletes
     // the CWnd object when the window is destroyed.
-    inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID /*= 0*/)
+    inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR tabText, int mdiChildID)
     {
         assert(pView); // Cannot add Null CWnd*
         assert(lstrlen(tabText) < WXX_MAX_STRING_SIZE);
 
-        GetTab().AddTabPage(pView, tabText, 0, mdiChildID);
+        GetTab().AddTabPage(pView, tabText, 0U, mdiChildID);
 
         // Fake a WM_MOUSEACTIVATE to propagate focus change to dockers
         if (IsWindow())

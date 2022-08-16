@@ -74,7 +74,7 @@ namespace Win32xx
     class CPropertyPage : public CDialog
     {
     public:
-        CPropertyPage (int templateID, LPCTSTR title = NULL);
+        CPropertyPage (UINT templateID, LPCTSTR title = NULL);
         virtual ~CPropertyPage() {}
         virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual BOOL OnApply();
@@ -95,7 +95,7 @@ namespace Win32xx
         void CancelToClose() const;
         INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
         PROPSHEETPAGE GetPSP() const {return m_psp;}
-        BOOL IsButtonEnabled(int button) const;
+        BOOL IsButtonEnabled(UINT buttonID) const;
         LRESULT QuerySiblings(WPARAM wparam, LPARAM lparam) const;
         void SetModified(BOOL isChanged) const;
         void SetTitle(LPCTSTR title);
@@ -145,7 +145,7 @@ namespace Win32xx
         HWND GetTabControl() const;
         BOOL SetActivePage(int page);
         BOOL SetActivePage(CPropertyPage* pPage);
-        void SetIcon(int iconID);
+        void SetIcon(UINT iconID);
         void SetTitle(LPCTSTR title);
         void SetWizardMode(BOOL isWizard);
 
@@ -177,7 +177,7 @@ namespace Win32xx
     // Definitions for the CPropertyPage class
     //
 
-    inline CPropertyPage::CPropertyPage(int templateID, LPCTSTR title /* = 0*/) : CDialog(0)
+    inline CPropertyPage::CPropertyPage(UINT templateID, LPCTSTR title /* = 0*/)
     {
         ZeroMemory(&m_psp, sizeof(m_psp));
         SetTitle(title);
@@ -188,7 +188,7 @@ namespace Win32xx
         m_psp.pszTemplate   = MAKEINTRESOURCE(templateID);
         m_psp.pszTitle      = m_title;
         m_psp.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
-        m_psp.lParam        = (LPARAM)this;
+        m_psp.lParam        = reinterpret_cast<LPARAM>(this);
         m_psp.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
     }
 
@@ -235,10 +235,10 @@ namespace Win32xx
     }
 
     // Returns TRUE if the button is enabled
-    inline BOOL CPropertyPage::IsButtonEnabled(int button) const
+    inline BOOL CPropertyPage::IsButtonEnabled(UINT buttonID) const
     {
         assert(IsWindow());
-        return GetParent().GetDlgItem(button).IsWindowEnabled();
+        return GetParent().GetDlgItem(buttonID).IsWindowEnabled();
     }
 
     // This function is called for each page when the Apply, OK or Close button is pressed.
@@ -419,10 +419,11 @@ namespace Win32xx
     {
         assert(IsWindow());
 
+        WPARAM wparam = reinterpret_cast<WPARAM>(GetHwnd());
         if (isChanged)
-            GetParent().SendMessage(PSM_CHANGED, (WPARAM)GetHwnd(), 0);
+            GetParent().SendMessage(PSM_CHANGED, wparam, 0);
         else
-            GetParent().SendMessage(PSM_UNCHANGED, (WPARAM)GetHwnd(), 0);
+            GetParent().SendMessage(PSM_UNCHANGED, wparam, 0);
     }
 
     // Sets the title of the property page.
@@ -525,7 +526,7 @@ namespace Win32xx
         m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
         m_psh.hwndParent       = parent;
         m_psh.hInstance        = GetApp()->GetInstanceHandle();
-        m_psh.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
+        m_psh.pfnCallback      = reinterpret_cast<PFNPROPSHEETCALLBACK>(CPropertySheet::Callback);
     }
 
     inline CPropertySheet::CPropertySheet(LPCTSTR caption /*= NULL*/, HWND parent /* = 0*/)
@@ -541,7 +542,7 @@ namespace Win32xx
         m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
         m_psh.hwndParent       = parent;
         m_psh.hInstance        = GetApp()->GetInstanceHandle();
-        m_psh.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
+        m_psh.pfnCallback      = reinterpret_cast<PFNPROPSHEETCALLBACK>(CPropertySheet::Callback);
     }
 
     // Adds a Property Page to the Property Sheet.
@@ -858,7 +859,7 @@ namespace Win32xx
     }
 
     // Sets the property sheet's icon.
-    inline void CPropertySheet::SetIcon(int iconID)
+    inline void CPropertySheet::SetIcon(UINT iconID)
     {
         m_psh.pszIcon = MAKEINTRESOURCE(iconID);
         m_psh.dwFlags |= PSH_USEICONID;

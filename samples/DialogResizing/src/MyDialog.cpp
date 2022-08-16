@@ -12,7 +12,7 @@
 //
 
 // Constructor.
-CMyDialog::CMyDialog(int resID) : CDialog(resID)
+CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
