@@ -163,11 +163,11 @@ namespace Win32xx
     }
 
     // Attaches a CWnd object to a dialog item.
-    inline BOOL CWnd::AttachDlgItem(int id, HWND parent)
+    inline BOOL CWnd::AttachDlgItem(UINT id, HWND parent)
     {
         assert(::IsWindow(parent));
 
-        HWND wnd = ::GetDlgItem(parent, id);
+        HWND wnd = ::GetDlgItem(parent, static_cast<int>(id));
         return Attach(wnd);
     }
 
@@ -325,7 +325,7 @@ namespace Win32xx
     //  be a predefined class name or registered with RegisterClass. A failure
     //  to create a window throws an exception.
     inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR className, LPCTSTR windowName,
-                               DWORD style, const RECT& rc, HWND parent, int id,
+                               DWORD style, const RECT& rc, HWND parent, UINT id,
                                LPVOID lparam /*= NULL*/)
     {
         int x = rc.left;
@@ -551,13 +551,14 @@ namespace Win32xx
     }
 
     // Retrieves the title or text associated with a control in a dialog box.
-    inline CString CWnd::GetDlgItemText(int dlgItemID) const
+    inline CString CWnd::GetDlgItemText(UINT dlgItemID) const
     {
         assert(IsWindow());
 
-        int nLength = ::GetWindowTextLength(::GetDlgItem(*this, dlgItemID));
+        int dlgItem = static_cast<int>(dlgItemID);
+        int length = ::GetWindowTextLength(::GetDlgItem(*this, dlgItem));
         CString str;
-        VERIFY(::GetDlgItemText(*this, dlgItemID, str.GetBuffer(nLength), nLength+1));
+        VERIFY(::GetDlgItemText(*this, dlgItem, str.GetBuffer(length), length+1));
         str.ReleaseBuffer();
         return str;
     }
@@ -596,7 +597,7 @@ namespace Win32xx
         case WM_MEASUREITEM:
         case WM_DELETEITEM:
         case WM_COMPAREITEM:
-            wnd = GetDlgItem(static_cast<int>(wparam));
+            wnd = GetDlgItem(static_cast<UINT>(wparam));
             break;
 
         case WM_PARENTNOTIFY:
@@ -903,7 +904,7 @@ namespace Win32xx
     }
 
     // Sets the large icon associated with the window.
-    inline HICON CWnd::SetIconLarge(int iconID)
+    inline HICON CWnd::SetIconLarge(UINT iconID)
     {
         assert(IsWindow());
 
@@ -922,7 +923,7 @@ namespace Win32xx
     }
 
     // Sets the small icon associated with the window.
-    inline HICON CWnd::SetIconSmall(int iconID)
+    inline HICON CWnd::SetIconSmall(UINT iconID)
     {
         assert(IsWindow());
 
@@ -1199,19 +1200,20 @@ namespace Win32xx
 
     // The CheckDlgButton function changes the check state of a button control.
     // Refer to CheckDlgButton in the Windows API documentation for more information.
-    inline BOOL CWnd::CheckDlgButton(int buttonID, UINT check) const
+    inline BOOL CWnd::CheckDlgButton(UINT buttonID, UINT check) const
     {
         assert(IsWindow());
-        return ::CheckDlgButton(*this, buttonID, check);
+        return ::CheckDlgButton(*this, static_cast<int>(buttonID), check);
     }
 
     // The CheckRadioButton function adds a check mark to (checks) a specified radio button in a group
     // and removes a check mark from (clears) all other radio buttons in the group.
     // Refer to CheckRadioButton in the Windows API documentation for more information.
-    inline BOOL CWnd::CheckRadioButton(int firstButtonID, int lastButtonID, int checkButtonID) const
+    inline BOOL CWnd::CheckRadioButton(UINT firstButtonID, UINT lastButtonID, UINT checkButtonID) const
     {
         assert(IsWindow());
-        return ::CheckRadioButton(*this, firstButtonID, lastButtonID, checkButtonID);
+        return ::CheckRadioButton(*this, static_cast<int>(firstButtonID), 
+                                  static_cast<int>(lastButtonID), static_cast<int>(checkButtonID));
     }
 
     // Determines which, if any, of the child windows belonging to a parent window contains
@@ -1289,47 +1291,49 @@ namespace Win32xx
     // The DlgDirList function replaces the contents of a list box with the names of the subdirectories and files
     // in a specified directory. You can filter the list of names by specifying a set of file attributes.
     // Refer to DlgDirList in the Windows API documentation for more information.
-    inline int CWnd::DlgDirList(LPTSTR pathSpec, int listBoxID, int staticPathID, UINT fileType) const
+    inline int CWnd::DlgDirList(LPTSTR pathSpec, UINT listBoxID, UINT staticPathID, UINT fileType) const
     {
         assert(IsWindow());
-        return ::DlgDirList(*this, pathSpec, listBoxID, staticPathID, fileType);
+        return ::DlgDirList(*this, pathSpec, static_cast<int>(listBoxID), 
+                            static_cast<int>(staticPathID), fileType);
     }
 
     // The DlgDirListComboBox function replaces the contents of a combo box with the names of the subdirectories
     // and files in a specified directory. You can filter the list of names by specifying a set of file attributes.
     // in a specified directory. You can filter the list of names by specifying a set of file attributes.
     // Refer to DlgDirListComboBox in the Windows API documentation for more information.
-    inline int CWnd::DlgDirListComboBox(LPTSTR pathSpec, int comboBoxID, int staticPathID, UINT fileType) const
+    inline int CWnd::DlgDirListComboBox(LPTSTR pathSpec, UINT comboBoxID, UINT staticPathID, UINT fileType) const
     {
         assert(IsWindow());
-        return ::DlgDirListComboBox(*this, pathSpec, comboBoxID, staticPathID, fileType);
+        return ::DlgDirListComboBox(*this, pathSpec, static_cast<int>(comboBoxID),
+                                    static_cast<int>(staticPathID), fileType);
     }
 
     // The DlgDirSelectEx function retrieves the current selection from a single-selection list box. It assumes that the list box
     // has been filled by the DlgDirList function and that the selection is a drive letter, filename, or directory name.
     // Refer to DlgDirSelectEx in the Windows API documentation for more information.
-    inline BOOL CWnd::DlgDirSelectEx(LPTSTR string, int count, int listBoxID) const
+    inline BOOL CWnd::DlgDirSelectEx(LPTSTR string, int count, UINT listBoxID) const
     {
         assert(IsWindow());
-        return ::DlgDirSelectEx(*this, string, count, listBoxID);
+        return ::DlgDirSelectEx(*this, string, count, static_cast<int>(listBoxID));
     }
 
     // The DlgDirSelectComboBoxEx function retrieves the current selection from a combo box filled by using the
     // DlgDirListComboBox function. The selection is interpreted as a drive letter, a file, or a directory name.
     // Refer to DlgDirSelectComboBoxEx in the Windows API documentation for more information.
-    inline BOOL CWnd::DlgDirSelectComboBoxEx(LPTSTR string, int count, int comboBoxID) const
+    inline BOOL CWnd::DlgDirSelectComboBoxEx(LPTSTR string, int count, UINT comboBoxID) const
     {
         assert(IsWindow());
-        return ::DlgDirSelectComboBoxEx(*this, string, count, comboBoxID);
+        return ::DlgDirSelectComboBoxEx(*this, string, count, static_cast<int>(comboBoxID));
     }
 
     // The DrawAnimatedRects function draws a wire-frame rectangle and animates it to indicate the opening of
     // an icon or the minimizing or maximizing of a window.
     // Refer to DrawAnimatedRects in the Windows API documentation for more information.
-    inline BOOL CWnd::DrawAnimatedRects(int aniID, const RECT& from, const RECT& to) const
+    inline BOOL CWnd::DrawAnimatedRects(UINT aniID, const RECT& from, const RECT& to) const
     {
         assert(IsWindow());
-        return ::DrawAnimatedRects(*this, aniID, &from, &to);
+        return ::DrawAnimatedRects(*this, static_cast<int>(aniID), &from, &to);
     }
 
     // The DrawCaption function draws a window caption.
@@ -1445,34 +1449,34 @@ namespace Win32xx
 
     // Retrieves the control ID value for any child window.
     // Refer to GetDlgCtrlID in the Windows API documentation for more information.
-    inline int CWnd::GetDlgCtrlID() const
+    inline UINT CWnd::GetDlgCtrlID() const
     {
         assert(IsWindow());
-        return ::GetDlgCtrlID(*this);
+        return static_cast<UINT>(::GetDlgCtrlID(*this));
     }
 
     // The GetDlgItem function retrieves a handle to a control in the dialog box.
     // Refer to GetDlgItem in the Windows API documentation for more information.
-    inline CWnd CWnd::GetDlgItem(int dlgItemID) const
+    inline CWnd CWnd::GetDlgItem(UINT dlgItemID) const
     {
         assert(IsWindow());
-        return CWnd( ::GetDlgItem(*this, dlgItemID) );
+        return CWnd( ::GetDlgItem(*this, static_cast<int>(dlgItemID)) );
     }
 
     // The GetDlgItemInt function translates the text of a specified control in a dialog box into an integer value.
     // Refer to GetDlgItemInt in the Windows API documentation for more information.
-    inline UINT CWnd::GetDlgItemInt(int dlgItemID, BOOL& isTranslated, BOOL isSigned) const
+    inline UINT CWnd::GetDlgItemInt(UINT dlgItemID, BOOL& isTranslated, BOOL isSigned) const
     {
         assert(IsWindow());
-        return ::GetDlgItemInt(*this, dlgItemID, &isTranslated, isSigned);
+        return ::GetDlgItemInt(*this, static_cast<int>(dlgItemID), &isTranslated, isSigned);
     }
 
     // The GetDlgItemInt function translates the text of a specified control in a dialog box into an integer value.
     // Refer to GetDlgItemInt in the Windows API documentation for more information.
-    inline UINT CWnd::GetDlgItemInt(int dlgItemID, BOOL isSigned) const
+    inline UINT CWnd::GetDlgItemInt(UINT dlgItemID, BOOL isSigned) const
     {
         assert(IsWindow());
-        return ::GetDlgItemInt(*this, dlgItemID, NULL, isSigned);
+        return ::GetDlgItemInt(*this, static_cast<int>(dlgItemID), NULL, isSigned);
     }
 
     // Retrieves the window's extended window style.
@@ -1773,10 +1777,10 @@ namespace Win32xx
     //
     // If the button has any other style, the return value is zero.
     // Refer to IsDlgButtonChecked in the Windows API documentation for more information.
-    inline UINT CWnd::IsDlgButtonChecked(int buttonID) const
+    inline UINT CWnd::IsDlgButtonChecked(UINT buttonID) const
     {
         assert(IsWindow());
-        return ::IsDlgButtonChecked(*this, buttonID);
+        return ::IsDlgButtonChecked(*this, static_cast<int>(buttonID));
     }
 
     // The IsWindowEnabled function determines whether the window is enabled
@@ -2025,10 +2029,10 @@ namespace Win32xx
 
     // The SendDlgItemMessage function sends a message to the specified control in a dialog box.
     // Refer to SendDlgItemMessage in the Windows API documentation for more information.
-    inline LRESULT CWnd::SendDlgItemMessage(int dlgItemID, UINT msg, WPARAM wparam, LPARAM lparam) const
+    inline LRESULT CWnd::SendDlgItemMessage(UINT dlgItemID, UINT msg, WPARAM wparam, LPARAM lparam) const
     {
         assert(IsWindow());
-        return ::SendDlgItemMessage(*this, dlgItemID, msg, wparam, lparam);
+        return ::SendDlgItemMessage(*this, static_cast<int>(dlgItemID), msg, wparam, lparam);
     }
 
     // The SendMessage function sends the specified message to a window or windows.
@@ -2096,7 +2100,7 @@ namespace Win32xx
 
     // Assigns an id to the window. Note that only child windows can have an ID assigned.
     // Refer to SetClassLongPtr in the Windows API documentation for more information.
-    inline LONG_PTR CWnd::SetDlgCtrlID(int id) const
+    inline LONG_PTR CWnd::SetDlgCtrlID(UINT id) const
     {
         assert(IsWindow());
         return SetWindowLongPtr(GWLP_ID, id);
@@ -2105,18 +2109,18 @@ namespace Win32xx
     // The SetDlgItemInt function sets the text of a control in a dialog box to the string
     // representation of a specified integer value.
     // Refer to SetDlgItemInt in the Windows API documentation for more information.
-    inline BOOL CWnd::SetDlgItemInt(int dlgItemID, UINT value, BOOL isSigned) const
+    inline BOOL CWnd::SetDlgItemInt(UINT dlgItemID, UINT value, BOOL isSigned) const
     {
         assert(IsWindow());
-        return ::SetDlgItemInt(*this, dlgItemID, value, isSigned);
+        return ::SetDlgItemInt(*this, static_cast<int>(dlgItemID), value, isSigned);
     }
 
     // The SetDlgItemText function sets the title or text of a control in a dialog box.
     // Refer to SetDlgItemText in the Windows API documentation for more information.
-    inline BOOL CWnd::SetDlgItemText(int dlgItemID, LPCTSTR string) const
+    inline BOOL CWnd::SetDlgItemText(UINT dlgItemID, LPCTSTR string) const
     {
         assert(IsWindow());
-        return ::SetDlgItemText(*this, dlgItemID, string);
+        return ::SetDlgItemText(*this, static_cast<int>(dlgItemID), string);
     }
 
     // Assigns a new windows extended style to the window.

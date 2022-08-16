@@ -149,7 +149,7 @@ namespace Win32xx
     class CFolderDialog : public CDialog
     {
     public:
-        CFolderDialog(int id = 0);
+        CFolderDialog();
         virtual ~CFolderDialog();
 
         virtual INT_PTR DoModal(HWND parent = 0);
@@ -202,7 +202,7 @@ namespace Win32xx
 namespace Win32xx
 {
 
-    inline CFolderDialog::CFolderDialog(int id) : CDialog(id), m_pidlRoot(0), m_imageIndex(0)
+    inline CFolderDialog::CFolderDialog() : m_pidlRoot(0), m_imageIndex(0)
     {
         ZeroMemory(&m_bi, sizeof(m_bi));
         m_bi.lpfn = BrowseCallbackProc;

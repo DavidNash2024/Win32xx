@@ -83,7 +83,7 @@ namespace Win32xx
     class CCommonDialog : public CDialog
     {
     public:
-        CCommonDialog() : CDialog(0) {}
+        CCommonDialog() {}
         virtual ~CCommonDialog(){}
 
     protected:

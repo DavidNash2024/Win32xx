@@ -55,11 +55,11 @@ namespace Win32xx
         virtual ~CToolBar();
 
         // Operations
-        virtual int  AddBitmap(int bitmapID);
+        virtual int  AddBitmap(UINT bitmapID);
         virtual BOOL AddButton(UINT buttonID, BOOL isEnabled = TRUE, int image = -1);
-        virtual BOOL AddReplaceBitmap(int bitmapID);
+        virtual BOOL AddReplaceBitmap(UINT bitmapID);
         virtual void Destroy();
-        virtual BOOL ReplaceBitmap(int newBitmapID);
+        virtual BOOL ReplaceBitmap(UINT newBitmapID);
         virtual BOOL SetButtonText(UINT buttonID, LPCTSTR text);
 
         // Wrappers for Win32 API functions
@@ -144,7 +144,7 @@ namespace Win32xx
 
         std::map<CString, int> m_stringMap;     // a map of strings used in SetButtonText
 
-        int m_oldBitmapID;                      // Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
+        UINT m_oldBitmapID;                      // Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 
     };  // class CToolBar
 
@@ -174,7 +174,7 @@ namespace Win32xx
     //       This is an obsolete functioned retained for Win95 support.
     //       Unless Win95 support is required, use SetImageList instead.
     // Refer to TB_ADDBITMAP in the Windows API documentation for more information.
-    inline int CToolBar::AddBitmap(int bitmapID)
+    inline int CToolBar::AddBitmap(UINT bitmapID)
     {
         assert(IsWindow());
 
@@ -254,7 +254,7 @@ namespace Win32xx
     //       This is an obsolete functioned retained for Win95 support.
     //       Unless Win95 support is required, use SetImageList instead.
     // Refer to AddBitmap and ReplaceBitmap for more information.
-    inline BOOL CToolBar::AddReplaceBitmap(int id)
+    inline BOOL CToolBar::AddReplaceBitmap(UINT id)
     {
         assert(IsWindow());
 
@@ -765,7 +765,7 @@ namespace Win32xx
     //       This is an obsolete functioned retained for Win95 support.
     //       Unless Win95 support is required, use SetImageList instead.
     // Refer to TB_REPLACEBITMAP in the Windows API documentation for more information.
-    inline BOOL CToolBar::ReplaceBitmap(int newBitmapID)
+    inline BOOL CToolBar::ReplaceBitmap(UINT newBitmapID)
     {
         assert(IsWindow());
 

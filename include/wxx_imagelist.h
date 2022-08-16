@@ -80,7 +80,7 @@ namespace Win32xx
 
         // Initialization
         BOOL Create(int cx, int cy, UINT flags, int initial, int grow);
-        BOOL Create(UINT bitmapID, int cx, int grow, COLORREF mask);
+        BOOL Create(int bitmapID, int cx, int grow, COLORREF mask);
         BOOL Create(LPCTSTR resourceName, int cx, int grow, COLORREF mask);
         BOOL Create(HIMAGELIST images);
         BOOL CreateDisabledImageList(HIMAGELIST normalImages);
@@ -90,7 +90,7 @@ namespace Win32xx
         int Add(HBITMAP bitmap, HBITMAP mask) const;
         int Add(HBITMAP bitmap, COLORREF mask) const;
         int Add(HICON icon) const;
-        int AddIcon(int iconID) const;
+        int AddIcon(UINT iconID) const;
         void Attach(HIMAGELIST images);
         BOOL BeginDrag(int image, CPoint hotSpot) const;
         BOOL Copy(int dst, int src, UINT flags /*= ILCF_MOVE*/) const;
@@ -247,7 +247,7 @@ namespace Win32xx
 
     // Adds an icon specified by its resource ID to the image list.
     // Refer to ImageList_ReplaceIcon in the Windows API documentation for more information.
-    inline int CImageList::AddIcon(int iconID) const
+    inline int CImageList::AddIcon(UINT iconID) const
     {
         HICON icon = GetApp()->LoadIcon(iconID);
         return Add(icon);
@@ -341,7 +341,7 @@ namespace Win32xx
     // crMask   The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black,
     //          and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated.
     // Refer to ImageList_Create in the Windows API documentation for more information.
-    inline BOOL CImageList::Create(UINT bitmapID, int cx, int grow, COLORREF mask)
+    inline BOOL CImageList::Create(int bitmapID, int cx, int grow, COLORREF mask)
     {
         assert(m_pData);
 

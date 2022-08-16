@@ -93,24 +93,24 @@ namespace Win32xx
 
     public:
         CDialog();
-        CDialog(int resourceID);
+        CDialog(UINT resourceID);
         CDialog(LPCTSTR resourceName);
         CDialog(LPCDLGTEMPLATE pDlgTemplate);
         virtual ~CDialog();
 
         // Virtual functions
-        virtual void AttachItem(int id, CWnd& wnd);
+        virtual void AttachItem(UINT id, CWnd& wnd);
         virtual HWND Create(HWND parent = 0) { return DoModeless(parent); }
         virtual INT_PTR DoModal(HWND parent = 0);
         virtual HWND DoModeless(HWND parent = 0);
 
         // Mutators that assign the dialog resource
-        void SetDialogFromID(int resourceID);
+        void SetDialogFromID(UINT resourceID);
         void SetDialogResource(LPCTSTR resourceName);
         void SetDialogTemplate(LPCDLGTEMPLATE pDlgTemplate);
 
         // Wrappers for Windows API functions
-        int  GetDefID() const;
+        UINT  GetDefID() const;
         void GotoDlgCtrl(HWND control);
         BOOL MapDialogRect(RECT& rc) const;
         void NextDlgCtrl() const;
@@ -245,7 +245,7 @@ namespace Win32xx
     }
 
     // Constructor that specifies the dialog's resource ID
-    inline CDialog::CDialog(int resourceID) : m_isModal(FALSE),
+    inline CDialog::CDialog(UINT resourceID) : m_isModal(FALSE),
                         m_resourceName(MAKEINTRESOURCE (resourceID)), m_pDlgTemplate(NULL)
     {
     }
@@ -280,7 +280,7 @@ namespace Win32xx
     }
 
     // Attaches a dialog item to a CWnd
-    inline void CDialog::AttachItem(int id, CWnd& wnd)
+    inline void CDialog::AttachItem(UINT id, CWnd& wnd)
     {
         wnd.AttachDlgItem(id, *this);
     }
@@ -612,7 +612,7 @@ namespace Win32xx
 
     // Retrieves the identifier of the default push button control for the dialog.
     // Refer to DM_GETDEFID in the Windows API documentation for more information.
-    inline int CDialog::GetDefID() const
+    inline UINT CDialog::GetDefID() const
     {
         assert(IsWindow());
         DWORD id = 0;
@@ -620,7 +620,7 @@ namespace Win32xx
         if (DC_HASDEFID == HIWORD(result))
             id = LOWORD(result);
 
-        return static_cast<int>(id);
+        return static_cast<UINT>(id);
     }
 
     // Sets the keyboard focus to the specified control.
@@ -665,7 +665,7 @@ namespace Win32xx
     }
 
     // Sets the dialog from the specified dialog resource ID.
-    inline void CDialog::SetDialogFromID(int resourceID)
+    inline void CDialog::SetDialogFromID(UINT resourceID)
     {
         m_resourceName = MAKEINTRESOURCE(resourceID);
     }

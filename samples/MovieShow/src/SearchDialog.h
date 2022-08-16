@@ -12,7 +12,7 @@
 class CSearchDialog : public CDialog
 {
 public:
-    CSearchDialog(int resID);
+    CSearchDialog(UINT resID);
     virtual ~CSearchDialog();
 
     const CString& GetTitleString() { return m_titleText; }

@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CFormView::CFormView(int resID) : CDialog(resID)
+CFormView::CFormView(UINT resID) : CDialog(resID)
 {
 }
 

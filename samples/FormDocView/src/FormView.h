@@ -13,7 +13,7 @@
 class CFormView : public CDialog
 {
 public:
-    CFormView(int resID);
+    CFormView(UINT resID);
     virtual ~CFormView();
     CFormDoc& GetDoc();
 

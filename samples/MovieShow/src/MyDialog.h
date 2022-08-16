@@ -15,7 +15,7 @@
 class CViewDialog : public CDialog
 {
 public:
-    CViewDialog(int resID);
+    CViewDialog(UINT resID);
     virtual ~CViewDialog();
 
     const CRichEdit& GetActors() const { return m_actors; }

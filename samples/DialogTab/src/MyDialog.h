@@ -12,7 +12,7 @@
 class CButtonDialog : public CDialog
 {
 public:
-    CButtonDialog(int resID);
+    CButtonDialog(UINT resID);
     virtual ~CButtonDialog();
 
 protected:

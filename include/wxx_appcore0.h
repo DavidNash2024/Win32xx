@@ -250,11 +250,11 @@ namespace Win32xx
         HINSTANCE GetResourceHandle() const { return (m_resource ? m_resource : m_instance); }
         TLSData*  GetTlsData() const;
         HCURSOR   LoadCursor(LPCTSTR resourceName) const;
-        HCURSOR   LoadCursor(int cursorID) const;
+        HCURSOR   LoadCursor(UINT cursorID) const;
         HICON     LoadIcon(LPCTSTR resourceName) const;
-        HICON     LoadIcon(int iconID) const;
+        HICON     LoadIcon(UINT iconID) const;
         HANDLE    LoadImage(LPCTSTR resourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
-        HANDLE    LoadImage(int imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
+        HANDLE    LoadImage(UINT imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
         HCURSOR   LoadStandardCursor(LPCTSTR cursorName) const;
         HICON     LoadStandardIcon(LPCTSTR iconName) const;
         HCURSOR   SetCursor(HCURSOR cursor) const;
