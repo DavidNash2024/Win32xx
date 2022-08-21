@@ -49,7 +49,8 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
     HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
     LPDWORD bytesRead = reinterpret_cast<LPDWORD>(pcb);
     *bytesRead = 0;
-    if (!::ReadFile(file, pBuffer, cb, bytesRead, NULL))
+    DWORD bytesToRead = static_cast<DWORD>(cb);
+    if (!::ReadFile(file, pBuffer, bytesToRead, bytesRead, NULL))
         ::MessageBox(0, _T("ReadFile Failed"), _T(""), MB_OK);
 
     return 0;
@@ -65,7 +66,8 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
     HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
     LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
     *bytesWritten = 0;
-    if (!::WriteFile(file, pBuffer, cb, bytesWritten, NULL))
+    DWORD bytesToRead = static_cast<DWORD>(cb);
+    if (!::WriteFile(file, pBuffer, bytesToRead, bytesWritten, NULL))
         ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }
@@ -225,7 +227,7 @@ BOOL CMainFrame::OnFileExit()
 // Load a Most Recently Used file from the menu.
 BOOL CMainFrame::OnFileMRU(WPARAM wparam)
 {
-    UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
+    UINT mruIndex = static_cast<UINT>(LOWORD(wparam)) - IDW_FILE_MRU_FILE1;
     CString mruText = GetMRUEntry(mruIndex);
 
     if (ReadFile(mruText))
@@ -416,18 +418,27 @@ void CMainFrame::OnInitialUpdate()
 // Update the menu before it is displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
+    UINT flag = MF_GRAYED;
+
     switch (id)
     {
     case IDM_OPTIONS_WRAP:
-        GetFrameMenu().CheckMenuItem(id, m_isWrapped ? MF_CHECKED : MF_UNCHECKED);
+    {
+        if (m_isWrapped)
+            GetFrameMenu().CheckMenuItem(id, MF_CHECKED);
+        else
+            GetFrameMenu().CheckMenuItem(id, MF_UNCHECKED);
         break;
+    }
     case IDM_EDIT_COPY:
     case IDM_EDIT_CUT:
     case IDM_EDIT_DELETE:
     {
         CHARRANGE range;
         m_richView.GetSel(range);
-        UINT flag = (range.cpMin != range.cpMax) ? MF_ENABLED : MF_GRAYED;
+        if (range.cpMin != range.cpMax)
+            flag = MF_ENABLED;
+
         GetFrameMenu().EnableMenuItem(IDM_EDIT_COPY, flag);
         GetFrameMenu().EnableMenuItem(IDM_EDIT_CUT, flag);
         GetFrameMenu().EnableMenuItem(IDM_EDIT_DELETE, flag);
@@ -435,19 +446,25 @@ void CMainFrame::OnMenuUpdate(UINT id)
     }
     case IDM_EDIT_PASTE:
     {
-        UINT flag = m_richView.CanPaste(CF_TEXT) ? MF_ENABLED : MF_GRAYED;
+        if (m_richView.CanPaste(CF_TEXT))
+            flag = MF_ENABLED;
+
         GetFrameMenu().EnableMenuItem(IDM_EDIT_PASTE, flag);
         break;
     }
     case IDM_EDIT_REDO:
     {
-        UINT flag = m_richView.CanRedo() ? MF_ENABLED : MF_GRAYED;
+        if (m_richView.CanRedo())
+            flag = MF_ENABLED;
+
         GetFrameMenu().EnableMenuItem(IDM_EDIT_REDO, flag);
         break;
     }
     case IDM_EDIT_UNDO:
     {
-        UINT flag = m_richView.CanUndo() ? MF_ENABLED : MF_GRAYED;;
+        if (m_richView.CanUndo())
+            flag = MF_ENABLED;
+
         GetFrameMenu().EnableMenuItem(IDM_EDIT_UNDO, flag);
         break;
     }
@@ -586,7 +603,8 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 
         EDITSTREAM es;
         es.dwCookie =  reinterpret_cast<DWORD_PTR>(File.GetHandle());
-        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamInCallback);
+        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(
+            reinterpret_cast<void*>(MyStreamInCallback));
         m_richView.StreamIn(SF_TEXT, es);
 
         //Clear the modified text flag
@@ -716,7 +734,8 @@ BOOL CMainFrame::WriteFile(LPCTSTR fileName)
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.dwError = 0;
-        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamOutCallback);
+        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(
+            reinterpret_cast<void*>(MyStreamOutCallback));
 
         // Support saving UTF-8 text (without BOM)
         m_richView.StreamOut((CP_UTF8 << 16) | SF_USECODEPAGE | SF_TEXT, es);

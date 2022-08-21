@@ -3,27 +3,35 @@ Version 9.0.1
 
 New Features and Enhancements
 -----------------------------
+* Standardised the type used for resources.
+  - For consistency, the resources IDs used by toolbars, menus and dialogs are
+    all treated as the unsigned integer type (UINT).
+
 * Updated the ListView sample.
   - An edit control has been added to provide support the in-place editing of
     the List-View's and subitems. A List-View control doesn't have built-in
     support for the editing of subitems.
   - Support for sorting by column has been added. To sort a column in ascending
-    or descending order, click on the column in the list-view's header. 
+    or descending order, click on the column in the list-view's header.
 
 Changes in Detail
 -----------------
 Added    CComboBox::GetComboBoxInfo
 Added    CEdit::GetTextLength
-Added    CString::Remove                  additional overload
-Added    CToolbar::SetButtonInfo          additional overload
-Modified CDialog::EndDialog               now only closes a modal dialog
-Modified CDialog::CDialog(UINT)           changed to CDialog::CDialog(int)
-Modified CToolBar::GetButton              returns CSize
-Modified CToolBar::GetPadding             returns CSize
+Added    CString::Remove               additional overload for single character
+Added    CToolbar::SetButtonInfo       additional overload
+Modified CDialog::EndDialog            now only closes a modal dialog
+Modified CToolBar::GetButton           returns CSize
+Modified CToolBar::GetPadding          returns CSize
 Removed  CDialog::IsModal
 Removed  CDialog::IsIndirect
 Renamed  CMenuBar::GetMenu   to   CMenuBar::GetBarMenu
 Renamed  CMenuBar::SetMenu   to   CMenuBar::SetupMenuBar
+
+Updated CBitmap.  Function parameters for resource IDs now use UINT.
+Updated CDC.      Function parameters for resource IDs now use UINT.
+Updated CToolbar. Function parameters for resource IDs now use UINT. 
+Updated CWnd.     Function parameters for resource IDs now use UINT.
 
 
 Version 9.0

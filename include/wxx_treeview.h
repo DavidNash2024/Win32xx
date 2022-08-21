@@ -335,7 +335,7 @@ namespace Win32xx
         assert(IsWindow());
 
         *reinterpret_cast<HTREEITEM*>(&rc) = item;
-        return (BOOL)SendMessage(TVM_GETITEMRECT, (WPARAM)isTextOnly, (LPARAM)&rc);
+        return static_cast<BOOL>(SendMessage(TVM_GETITEMRECT, (WPARAM)isTextOnly, (LPARAM)&rc));
     }
 
     // Retrieves the text for a tree-view item.

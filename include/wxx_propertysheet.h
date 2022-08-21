@@ -388,7 +388,8 @@ namespace Win32xx
         if (msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
             (msg.wParam == VK_TAB || msg.wParam == VK_PRIOR || msg.wParam == VK_NEXT))
         {
-            if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0, (LPARAM)&msg))
+            LPARAM lparam = reinterpret_cast<LPARAM>(&msg);
+            if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0, lparam))
                 return TRUE;
         }
 
@@ -523,10 +524,11 @@ namespace Win32xx
         else
             m_psh.dwSize = PROPSHEETHEADER_V1_SIZE;
 
-        m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
-        m_psh.hwndParent       = parent;
-        m_psh.hInstance        = GetApp()->GetInstanceHandle();
-        m_psh.pfnCallback      = reinterpret_cast<PFNPROPSHEETCALLBACK>(CPropertySheet::Callback);
+        m_psh.dwFlags     = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
+        m_psh.hwndParent  = parent;
+        m_psh.hInstance   = GetApp()->GetInstanceHandle();
+        m_psh.pfnCallback = reinterpret_cast<PFNPROPSHEETCALLBACK>(
+            reinterpret_cast<void*>(CPropertySheet::Callback));
     }
 
     inline CPropertySheet::CPropertySheet(LPCTSTR caption /*= NULL*/, HWND parent /* = 0*/)
@@ -539,10 +541,11 @@ namespace Win32xx
         else
             m_psh.dwSize = PROPSHEETHEADER_V1_SIZE;
 
-        m_psh.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
-        m_psh.hwndParent       = parent;
-        m_psh.hInstance        = GetApp()->GetInstanceHandle();
-        m_psh.pfnCallback      = reinterpret_cast<PFNPROPSHEETCALLBACK>(CPropertySheet::Callback);
+        m_psh.dwFlags     = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
+        m_psh.hwndParent  = parent;
+        m_psh.hInstance   = GetApp()->GetInstanceHandle();
+        m_psh.pfnCallback = reinterpret_cast<PFNPROPSHEETCALLBACK>(
+            reinterpret_cast<void*>(CPropertySheet::Callback));
     }
 
     // Adds a Property Page to the Property Sheet.
@@ -826,7 +829,8 @@ namespace Win32xx
         if (msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
             (msg.wParam == VK_TAB || msg.wParam == VK_PRIOR || msg.wParam == VK_NEXT))
         {
-            if (SendMessage(PSM_ISDIALOGMESSAGE, 0, (LPARAM)&msg))
+            LPARAM lparam = reinterpret_cast<LPARAM>(&msg);
+            if (SendMessage(PSM_ISDIALOGMESSAGE, 0, lparam))
                 return TRUE;
         }
 
@@ -844,7 +848,8 @@ namespace Win32xx
     inline BOOL CPropertySheet::SetActivePage(int page)
     {
         assert(IsWindow());
-        return (SendMessage(*this, PSM_SETCURSEL, (WPARAM)page, 0) != 0);
+        WPARAM wparam = static_cast<WPARAM>(page);
+        return static_cast<BOOL>(SendMessage(*this, PSM_SETCURSEL, wparam, 0));
     }
 
     // Activates the specified property page.

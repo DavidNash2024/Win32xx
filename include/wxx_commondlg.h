@@ -1175,7 +1175,7 @@ namespace Win32xx
     // occurrence of the search string.
     inline BOOL CFindReplaceDialog::FindNext() const
     {
-        return ((m_fr.Flags & FR_FINDNEXT )!= 0);
+        return (m_fr.Flags & FR_FINDNEXT)? TRUE : FALSE;
     }
 
     // Call this function to return the default string to find.
@@ -1206,35 +1206,35 @@ namespace Win32xx
     // Returns TRUE if the user has decided to terminate the dialog box;
     inline BOOL CFindReplaceDialog::IsTerminating()
     {
-        return ((m_fr.Flags & FR_DIALOGTERM) != 0);
+        return (m_fr.Flags & FR_DIALOGTERM)? TRUE : FALSE;
     }
 
     // Return TRUE if the user wants to find occurrences of the search string
     // that exactly match the case of the search string; otherwise FALSE.
     inline BOOL CFindReplaceDialog::MatchCase() const
     {
-        return ((m_fr.Flags & FR_MATCHCASE) != 0);
+        return (m_fr.Flags & FR_MATCHCASE)? TRUE : FALSE;
     }
 
     // Return TRUE if the user wants to match only the entire words of the
     // search string.
     inline BOOL CFindReplaceDialog::MatchWholeWord() const
     {
-        return ((m_fr.Flags & FR_WHOLEWORD) != 0);
+        return (m_fr.Flags & FR_WHOLEWORD)? TRUE : FALSE;
     }
 
     // Return TRUE if the user has requested that all strings matching the
     // replace string be replaced.
     inline BOOL CFindReplaceDialog::ReplaceAll() const
     {
-        return ((m_fr.Flags & FR_REPLACEALL) != 0);
+        return (m_fr.Flags & FR_REPLACEALL)? TRUE : FALSE;
     }
 
     // Return TRUE if the user has requested that the currently selected string
     // be replaced with the replace string.
     inline BOOL CFindReplaceDialog::ReplaceCurrent() const
     {
-        return ((m_fr.Flags & FR_REPLACE) != 0);
+        return (m_fr.Flags & FR_REPLACE)? TRUE : FALSE;
     }
 
     // Return TRUE if the user wants the search to proceed in a downward
@@ -1242,7 +1242,7 @@ namespace Win32xx
     // direction.
     inline BOOL CFindReplaceDialog::SearchDown() const
     {
-        return ((m_fr.Flags & FR_DOWN) != 0);
+        return (m_fr.Flags & FR_DOWN)? TRUE : FALSE;
     }
 
     // Sets the various parameters of the FINDREPLACE struct.

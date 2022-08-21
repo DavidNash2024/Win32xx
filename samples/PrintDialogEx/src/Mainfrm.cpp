@@ -74,7 +74,7 @@ HWND CMainFrame::Create(HWND parent)
 // Determines the encoding of the specified file.
 void CMainFrame::DetermineEncoding(CFile& file)
 {
-    int encoding = ANSI;
+    UINT encoding = ANSI;
     ULONGLONG fileLength = file.GetLength();
 
     if (fileLength >= 3)
@@ -92,13 +92,14 @@ void CMainFrame::DetermineEncoding(CFile& file)
 
             // check for UTF-16 LE with Byte Order Mark (BOM)
             int tests = IS_TEXT_UNICODE_SIGNATURE;
-            if (::IsTextUnicode(&buffer.front(), testlen, &tests) == 1)
+            int textLength = static_cast<int>(testlen);
+            if (::IsTextUnicode(&buffer.front(), textLength, &tests) != 0)
                 encoding = UTF16LE_BOM;
             else
             {
                 // check for UTF-16 LE w/o BOM
                 tests = IS_TEXT_UNICODE_STATISTICS;
-                if (::IsTextUnicode(&buffer.front(), testlen, &tests) == 1)
+                if (::IsTextUnicode(&buffer.front(), textLength, &tests) != 0)
                 {
                     encoding = UTF16LE;
                 }
@@ -139,7 +140,8 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
     HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
     LPDWORD bytesRead = reinterpret_cast<LPDWORD>(pcb);
     *bytesRead = 0;
-    if (!::ReadFile(file, pBuffer, cb, bytesRead, NULL))
+    DWORD bytesToRead = static_cast<DWORD>(cb);
+    if (::ReadFile(file, pBuffer, bytesToRead, bytesRead, NULL) == 0)
         ::MessageBox(0, _T("ReadFile Failed"), _T(""), MB_OK);
 
     return 0;
@@ -155,7 +157,8 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
     HANDLE file = reinterpret_cast<HANDLE>(static_cast<DWORD_PTR>(cookie));
     LPDWORD bytesWritten = reinterpret_cast<LPDWORD>(pcb);
     *bytesWritten = 0;
-    if (!::WriteFile(file, pBuffer, cb, bytesWritten, NULL))
+    DWORD bytesToRead = static_cast<DWORD>(cb);
+    if (::WriteFile(file, pBuffer, bytesToRead, bytesWritten, NULL) == 0)
         ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }
@@ -259,7 +262,8 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
     if (length > 0)
     {
         CString fileName;
-        DragQueryFile(hDropInfo, 0, fileName.GetBuffer(length), length + 1);
+        int bufferSize = static_cast<int>(length);
+        DragQueryFile(hDropInfo, 0, fileName.GetBuffer(bufferSize), length + 1);
         fileName.ReleaseBuffer();
 
         ReadFile(fileName);
@@ -371,7 +375,7 @@ BOOL CMainFrame::OnFileExit()
 // Respond to a MRU selection.
 BOOL CMainFrame::OnFileMRU(WPARAM wparam)
 {
-    UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
+    UINT mruIndex = static_cast<UINT>(LOWORD(wparam)) - IDW_FILE_MRU_FILE1;
     CString mruText = GetMRUEntry(mruIndex);
 
     if (ReadFile(mruText))
@@ -600,16 +604,26 @@ void CMainFrame::OnInitialUpdate()
 // Updates menu items before they are displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
+    UINT displayed = MF_GRAYED;
+    UINT checked   = MF_UNCHECKED;
+
     switch (id)
     {
     case IDM_OPTIONS_WRAP:
-        GetFrameMenu().CheckMenuItem(id, m_isWrapped ? MF_CHECKED : MF_UNCHECKED);
+    {
+        if (m_isWrapped)
+            checked = MF_CHECKED;
+
+        GetFrameMenu().CheckMenuItem(id, checked);
         break;
+    }
     case IDM_ENC_UTF16:
     {
-        // Disable ANSI for Rich text mode.
-        UINT state = m_isRTF ? MF_GRAYED : MF_ENABLED;
-        GetFrameMenu().EnableMenuItem(id, state);
+        // Only enable UTF-16 for plain text mode.
+        if (!m_isRTF)
+            displayed = MF_ENABLED;
+
+        GetFrameMenu().EnableMenuItem(id, displayed);
         break;
     }
     case IDM_EDIT_COPY:
@@ -618,28 +632,36 @@ void CMainFrame::OnMenuUpdate(UINT id)
     {
         CHARRANGE range;
         m_richView.GetSel(range);
-        UINT flag = (range.cpMin != range.cpMax)? MF_ENABLED : MF_GRAYED;
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_COPY, flag);
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_CUT, flag);
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_DELETE, flag);
+        if (range.cpMin != range.cpMax)
+            displayed = MF_ENABLED;
+
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_COPY, displayed);
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_CUT, displayed);
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_DELETE, displayed);
         break;
     }
     case IDM_EDIT_PASTE:
     {
-        UINT flag = m_richView.CanPaste(CF_TEXT)? MF_ENABLED : MF_GRAYED;
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_PASTE, flag);
+        if (m_richView.CanPaste(CF_TEXT))
+            displayed = MF_ENABLED;
+
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_PASTE, displayed);
         break;
     }
     case IDM_EDIT_REDO:
     {
-        UINT flag = m_richView.CanRedo() ? MF_ENABLED : MF_GRAYED;
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_REDO, flag);
+        if (m_richView.CanRedo())
+            displayed = MF_ENABLED;
+
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_REDO, displayed);
         break;
     }
     case IDM_EDIT_UNDO:
     {
-        UINT flag = m_richView.CanUndo() ? MF_ENABLED : MF_GRAYED;;
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_UNDO, flag);
+        if (m_richView.CanUndo())
+            displayed = MF_ENABLED ;
+
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_UNDO, displayed);
         break;
     }
     }
@@ -829,7 +851,8 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
 
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
-        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamInCallback);
+        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(
+            reinterpret_cast<void*>(MyStreamInCallback));
         m_richView.StreamIn(stream_mode, es);
 
         //Clear the modified text flag
@@ -861,7 +884,7 @@ void CMainFrame::SaveModifiedText()
 }
 
 // Set the encoding type.
-void CMainFrame::SetEncoding(int encoding)
+void CMainFrame::SetEncoding(UINT encoding)
 {
     m_encoding = encoding;
 
@@ -1064,7 +1087,8 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
         EDITSTREAM es;
         es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.dwError = 0;
-        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamOutCallback);
+        es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(
+            reinterpret_cast<void*>(MyStreamOutCallback));
         m_richView.StreamOut(stream_mode, es);
 
         //Clear the modified text flag

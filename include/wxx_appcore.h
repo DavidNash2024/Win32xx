@@ -384,13 +384,17 @@ namespace Win32xx
     {
         static CWinApp* pWinApp = 0;
 
-        if (pWinApp == 0)
-            pWinApp = pThis;
-        else
-            assert(pThis == 0);
-
         if (reset)
+        {
             pWinApp = 0;
+        }
+        else
+        {
+            if (pWinApp == 0)
+                pWinApp = pThis;
+            else
+                assert(pThis == 0);
+        }
 
         return pWinApp;
     }

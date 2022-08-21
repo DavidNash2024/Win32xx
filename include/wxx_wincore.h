@@ -216,11 +216,14 @@ namespace Win32xx
         if (hUser32)
         {
 
-            pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
+            pfnMonitorFromWindow = reinterpret_cast<LPMFW>(
+                reinterpret_cast<void*>(::GetProcAddress(hUser32, "MonitorFromWindow")));
   #ifdef UNICODE
-            pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
+            pfnGetMonitorInfo = reinterpret_cast<LPGMI>(
+                reinterpret_cast<void*>(::GetProcAddress(hUser32, "GetMonitorInfoW")));
   #else
-            pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");
+            pfnGetMonitorInfo = reinterpret_cast<LPGMI>(
+                reinterpret_cast<void*>(::GetProcAddress(hUser32, "GetMonitorInfoA")));
   #endif
 
             // Take multi-monitor systems into account.
@@ -510,7 +513,8 @@ namespace Win32xx
         if (user32 != 0)
         {
             // Declare a pointer to the GetAncestor function.
-            pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(user32, "GetAncestor"));
+            pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(
+                reinterpret_cast<void*>(::GetProcAddress(user32, "GetAncestor")));
 
             if (pfnGetAncestor)
                 wnd = (*pfnGetAncestor)(*this, flags);
@@ -1212,7 +1216,7 @@ namespace Win32xx
     inline BOOL CWnd::CheckRadioButton(UINT firstButtonID, UINT lastButtonID, UINT checkButtonID) const
     {
         assert(IsWindow());
-        return ::CheckRadioButton(*this, static_cast<int>(firstButtonID), 
+        return ::CheckRadioButton(*this, static_cast<int>(firstButtonID),
                                   static_cast<int>(lastButtonID), static_cast<int>(checkButtonID));
     }
 
@@ -1239,7 +1243,7 @@ namespace Win32xx
     inline BOOL CWnd::ClientToScreen(RECT& rect) const
     {
         assert(IsWindow());
-        return (::MapWindowPoints(*this, 0, (LPPOINT)&rect, 2) != 0);
+        return static_cast<BOOL>(::MapWindowPoints(*this, 0, (LPPOINT)&rect, 2));
     }
 
     // The Close function issues a close requests to the window. The OnClose function is called
@@ -1294,7 +1298,7 @@ namespace Win32xx
     inline int CWnd::DlgDirList(LPTSTR pathSpec, UINT listBoxID, UINT staticPathID, UINT fileType) const
     {
         assert(IsWindow());
-        return ::DlgDirList(*this, pathSpec, static_cast<int>(listBoxID), 
+        return ::DlgDirList(*this, pathSpec, static_cast<int>(listBoxID),
                             static_cast<int>(staticPathID), fileType);
     }
 
@@ -1980,7 +1984,7 @@ namespace Win32xx
     inline BOOL CWnd::ScreenToClient(RECT& rect) const
     {
         assert(IsWindow());
-        return (::MapWindowPoints(0, *this, (LPPOINT)&rect, 2) != 0);
+        return static_cast<BOOL>(::MapWindowPoints(0, *this, (LPPOINT)&rect, 2));
     }
 
     // The ScrollWindow function scrolls the contents of the window's client area.
@@ -2187,7 +2191,7 @@ namespace Win32xx
     inline BOOL CWnd::SetRedraw(BOOL redraw /*= TRUE*/) const
     {
         assert(IsWindow());
-        return (::SendMessage(*this, WM_SETREDRAW, (WPARAM)redraw, 0) != 0);
+        return static_cast<BOOL>(::SendMessage(*this, WM_SETREDRAW, (WPARAM)redraw, 0));
     }
 
     // The SetScrollInfo function sets the parameters of a scroll bar, including
@@ -2310,7 +2314,8 @@ namespace Win32xx
         if (theme != 0)
         {
             typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND wnd, LPCWSTR subAppName, LPCWSTR subIdList);
-            PFNSETWINDOWTHEME pfn = (PFNSETWINDOWTHEME)GetProcAddress(theme, "SetWindowTheme");
+            PFNSETWINDOWTHEME pfn = reinterpret_cast<PFNSETWINDOWTHEME>(
+                reinterpret_cast<void*>(GetProcAddress(theme, "SetWindowTheme")));
 
             result = pfn(*this, subAppName, subIdList);
 
@@ -2539,9 +2544,11 @@ namespace Win32xx
 
             // Get the function pointer of the SHGetFolderPath function
 #ifdef UNICODE
-            MYPROC pSHGetFolderPath = (MYPROC)GetProcAddress(hShell, "SHGetFolderPathW");
+            MYPROC pSHGetFolderPath = reinterpret_cast<MYPROC>(
+                reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetFolderPathW")));
 #else
-            MYPROC pSHGetFolderPath = (MYPROC)GetProcAddress(hShell, "SHGetFolderPathA");
+            MYPROC pSHGetFolderPath = reinterpret_cast<MYPROC>(
+                reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetFolderPathA")));
 #endif
 
 #ifndef CSIDL_APPDATA
@@ -2566,9 +2573,11 @@ namespace Win32xx
                 typedef HRESULT(WINAPI * GETSPECIALPATH)(HWND, LPTSTR, int, BOOL);
 
 #ifdef UNICODE
-                GETSPECIALPATH pGetSpecialPath = (GETSPECIALPATH)GetProcAddress(hShell, "SHGetSpecialFolderPathW");
+                GETSPECIALPATH pGetSpecialPath = reinterpret_cast<GETSPECIALPATH>(
+                    reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetSpecialFolderPathW")));
 #else
-                GETSPECIALPATH pGetSpecialPath = (GETSPECIALPATH)GetProcAddress(hShell, "SHGetSpecialFolderPathA");
+                GETSPECIALPATH pGetSpecialPath = reinterpret_cast<GETSPECIALPATH>(
+                    reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetSpecialFolderPathA")));
 #endif
 
                 if (pGetSpecialPath)

@@ -502,15 +502,24 @@ namespace Win32xx
 
         if (m_uxTheme != 0)
         {
-            m_pfnCloseThemeData           = reinterpret_cast<CLOSETHEMEDATA*>(::GetProcAddress(m_uxTheme, "CloseThemeData"));
-            m_pfnDrawThemeBackground      = reinterpret_cast<DRAWTHEMEBACKGROUND*>(::GetProcAddress(m_uxTheme, "DrawThemeBackground"));
-            m_pfnDrawThemeText            = reinterpret_cast<DRAWTHEMETEXT*>(::GetProcAddress(m_uxTheme, "DrawThemeText"));
-            m_pfnGetThemePartSize         = reinterpret_cast<GETTHEMEPARTSIZE*>(::GetProcAddress(m_uxTheme, "GetThemePartSize"));
-            m_pfnGetThemeInt              = reinterpret_cast<GETTHEMEINT*>(::GetProcAddress(m_uxTheme, "GetThemeInt"));
-            m_pfnGetThemeMargins          = reinterpret_cast<GETTHEMEMARGINS*>(::GetProcAddress(m_uxTheme, "GetThemeMargins"));
-            m_pfnGetThemeTextExtent       = reinterpret_cast<GETTHEMETEXTEXTENT*>(::GetProcAddress(m_uxTheme, "GetThemeTextExtent"));
-            m_pfnIsThemeBGPartTransparent = reinterpret_cast<ISTHEMEBGPARTTRANSPARENT*>(::GetProcAddress(m_uxTheme, "IsThemeBackgroundPartiallyTransparent"));
-            m_pfnOpenThemeData            = reinterpret_cast<OPENTHEMEDATA*>(::GetProcAddress(m_uxTheme, "OpenThemeData"));
+            m_pfnCloseThemeData = reinterpret_cast<CLOSETHEMEDATA*>(
+                reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "CloseThemeData")));
+            m_pfnDrawThemeBackground = reinterpret_cast<DRAWTHEMEBACKGROUND*>(
+                reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "DrawThemeBackground")));
+            m_pfnDrawThemeText = reinterpret_cast<DRAWTHEMETEXT*>(
+                reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "DrawThemeText")));
+            m_pfnGetThemePartSize = reinterpret_cast<GETTHEMEPARTSIZE*>(
+                reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "GetThemePartSize")));
+            m_pfnGetThemeInt = reinterpret_cast<GETTHEMEINT*>(
+                reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "GetThemeInt")));
+            m_pfnGetThemeMargins = reinterpret_cast<GETTHEMEMARGINS*>(
+                reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "GetThemeMargins")));
+            m_pfnGetThemeTextExtent = reinterpret_cast<GETTHEMETEXTEXTENT*>(
+                reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "GetThemeTextExtent")));
+            m_pfnIsThemeBGPartTransparent = reinterpret_cast<ISTHEMEBGPARTTRANSPARENT*>(
+                reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "IsThemeBackgroundPartiallyTransparent")));
+            m_pfnOpenThemeData = reinterpret_cast<OPENTHEMEDATA*>(
+                reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "OpenThemeData")));
         }
 
         if (m_theme != 0)

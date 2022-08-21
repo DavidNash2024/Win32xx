@@ -90,7 +90,7 @@ private:
     void RestoreFocus() { ::SetFocus(m_oldFocus); }
     void SaveFocus() { m_oldFocus = ::GetFocus(); }
     void SaveModifiedText();
-    void SetEncoding(int encoding);
+    void SetEncoding(UINT encoding);
     void SetPathName(LPCTSTR fullFileName);
 
     void SetWindowTitle();
@@ -100,7 +100,7 @@ private:
     CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
     CString m_pathName;
-    int m_encoding;
+    UINT m_encoding;
     bool m_isToolbarShown;
     bool m_isWrapped;
     bool m_isRTF;

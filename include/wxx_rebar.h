@@ -139,7 +139,7 @@ namespace Win32xx
     inline BOOL CReBar::DeleteBand(int band) const
     {
         assert(IsWindow());
-        return (SendMessage(RB_DELETEBAND, (WPARAM)band, 0) != 0);
+        return static_cast<BOOL>(SendMessage(RB_DELETEBAND, (WPARAM)band, 0));
     }
 
     // Returns the zero based band number for this window handle
@@ -192,7 +192,7 @@ namespace Win32xx
 
         // REBARBANDINFO describes individual BAND characteristics
         bandInfo.cbSize = GetSizeofRBBI();
-        return (SendMessage(RB_GETBANDINFO, (WPARAM)band, (LPARAM)&bandInfo) != 0);
+        return static_cast<BOOL>(SendMessage(RB_GETBANDINFO, (WPARAM)band, (LPARAM)&bandInfo));
     }
 
     // Retrieves the bounding rectangle for a given band in a rebar control.
@@ -221,7 +221,7 @@ namespace Win32xx
 
         // REBARINFO describes overall rebar control characteristics
         rebarInfo.cbSize = sizeof(rebarInfo);
-        return (SendMessage(RB_GETBARINFO, 0, (LPARAM)&rebarInfo) != 0);
+        return static_cast<BOOL>(SendMessage(RB_GETBARINFO, 0, (LPARAM)&rebarInfo));
     }
 
     // Retrieves the number of rows of bands in a rebar control.
@@ -317,12 +317,12 @@ namespace Win32xx
 
     // Inserts a new band in a rebar control.
     // Refer to RB_INSERTBAND in the Windows API documentation for more information.
-    inline BOOL CReBar::InsertBand(int nBand, REBARBANDINFO& bandInfo) const
+    inline BOOL CReBar::InsertBand(int band, REBARBANDINFO& bandInfo) const
     {
         assert(IsWindow());
 
         bandInfo.cbSize = GetSizeofRBBI();
-        return (SendMessage(RB_INSERTBAND, (WPARAM)nBand, (LPARAM)&bandInfo) != 0);
+        return static_cast<BOOL>(SendMessage(RB_INSERTBAND, (WPARAM)band, (LPARAM)&bandInfo));
     }
 
     // Returns true if the band is visible
@@ -344,7 +344,7 @@ namespace Win32xx
     // Refer to UWM_DRAWRBBKGND in the Windows API documentation for more information.
     inline BOOL CReBar::OnEraseBkgnd(CDC& dc)
     {
-        return (0 != SendMessage(::GetParent(*this), UWM_DRAWRBBKGND, (WPARAM)&dc, (LPARAM)this));
+        return static_cast<BOOL>(SendMessage(::GetParent(*this), UWM_DRAWRBBKGND, (WPARAM)&dc, (LPARAM)this));
     }
 
     // Sets the CREATESTRUCT parameters prior to window creation.
@@ -382,7 +382,7 @@ namespace Win32xx
     inline BOOL CReBar::MoveBand(UINT from, UINT to) const
     {
         assert(IsWindow());
-        return (SendMessage(RB_MOVEBAND, (WPARAM)from, (LPARAM)to) != 0);
+        return static_cast<BOOL>(SendMessage(RB_MOVEBAND, (WPARAM)from, (LPARAM)to));
     }
 
     // Repositions the bands so they are left justified
@@ -511,7 +511,7 @@ namespace Win32xx
         rbbi.fMask  |= RBBIM_BACKGROUND;
         rbbi.hbmBack = background;
 
-        return (SendMessage(RB_SETBANDINFO, (WPARAM)band, (LPARAM)&rbbi) != 0);
+        return static_cast<BOOL>(SendMessage(RB_SETBANDINFO, (WPARAM)band, (LPARAM)&rbbi));
     }
 
     // Sets the band's color.
@@ -528,7 +528,7 @@ namespace Win32xx
         rbbi.clrFore = foreground;
         rbbi.clrBack = background;
 
-        return (SendMessage(RB_SETBANDINFO, (WPARAM)band, (LPARAM)&rbbi) != 0);
+        return static_cast<BOOL>(SendMessage(RB_SETBANDINFO, (WPARAM)band, (LPARAM)&rbbi));
     }
 
     // Sets the characteristics of a rebar control.
@@ -539,7 +539,7 @@ namespace Win32xx
         assert(band >= 0);
 
         bandInfo.cbSize = GetSizeofRBBI();
-        return (SendMessage(RB_SETBANDINFO, (WPARAM)band, (LPARAM)&bandInfo) != 0);
+        return static_cast<BOOL>(SendMessage(RB_SETBANDINFO, (WPARAM)band, (LPARAM)&bandInfo));
     }
 
     // REBARINFO associates an image list with the rebar.
@@ -550,7 +550,7 @@ namespace Win32xx
         assert(IsWindow());
 
         rebarInfo.cbSize = sizeof(rebarInfo);
-        return (SendMessage(RB_SETBARINFO, 0, (LPARAM)&rebarInfo) != 0);
+        return static_cast<BOOL>(SendMessage(RB_SETBARINFO, 0, (LPARAM)&rebarInfo));
     }
 
     // Show or hide a band.
@@ -558,7 +558,7 @@ namespace Win32xx
     inline BOOL CReBar::ShowBand(int band, BOOL show) const
     {
         assert(IsWindow());
-        return (SendMessage(RB_SHOWBAND, (WPARAM)band, (LPARAM)show) != 0);
+        return static_cast<BOOL>(SendMessage(RB_SHOWBAND, (WPARAM)band, (LPARAM)show));
     }
 
     // Show or hide the band's gripper.
@@ -591,7 +591,7 @@ namespace Win32xx
     inline BOOL CReBar::SizeToRect(RECT& rect) const
     {
         assert(IsWindow());
-        return (SendMessage(RB_SIZETORECT, 0, (LPARAM)&rect) != 0);
+        return static_cast<BOOL>(SendMessage(RB_SIZETORECT, 0, (LPARAM)&rect));
     }
 
     // Associates a ToolTip control with the rebar control.

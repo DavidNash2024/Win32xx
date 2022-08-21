@@ -25,7 +25,7 @@ public:
     void  PrintPage(CDC& dc, UINT page);
     void  QuickPrint(LPCTSTR docName);
     void  SetFontDefaults();
-    std::vector<int> SetPagesToPrint(const CDC& printerDC);
+    std::vector<UINT> SetPagesToPrint(const CDC& printerDC);
     void SetPrintOptions();
 
 protected:
