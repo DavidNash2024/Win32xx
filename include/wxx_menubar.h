@@ -404,7 +404,7 @@ namespace Win32xx
     // Returns TRUE if the frame is a MDI frame.
     inline BOOL CMenuBar::IsMDIFrame() const
     {
-        return (GetAncestor().SendMessage(UWM_GETCMDIFRAMET) != 0);
+        return static_cast<BOOL>(GetAncestor().SendMessage(UWM_GETCMDIFRAMET));
     }
 
     inline LRESULT CMenuBar::OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam)

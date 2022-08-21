@@ -227,7 +227,9 @@ namespace Win32xx
     inline BOOL CListView::EnsureVisible(int item, BOOL isPartialOK) const
     {
         assert(IsWindow());
-        return (SendMessage(LVM_ENSUREVISIBLE, (WPARAM)item, (LPARAM)isPartialOK) != 0);
+        WPARAM wparam = static_cast<WPARAM>(item);
+        LPARAM lparam = static_cast<LPARAM>(isPartialOK);
+        return static_cast<BOOL>(SendMessage(LVM_ENSUREVISIBLE, wparam, lparam));
     }
 
     // Searches for a list-view item with the specified characteristics.
@@ -387,7 +389,7 @@ namespace Win32xx
         ZeroMemory(&lvi, sizeof(lvi));
         lvi.iItem = item;
         lvi.mask = LVIF_PARAM;
-        SendMessage(LVM_GETITEM, 0, (LPARAM)&lvi);
+        SendMessage(LVM_GETITEM, 0, reinterpret_cast<LPARAM>(&lvi));
         return static_cast<DWORD_PTR>(lvi.lParam);
     }
 
@@ -441,7 +443,7 @@ namespace Win32xx
             lvi.mask = LVIF_TEXT;
             lvi.cchTextMax = textMax;
             lvi.pszText = str.GetBuffer(textMax);
-            SendMessage(LVM_GETITEM, 0 , (LPARAM)&lvi);
+            SendMessage(LVM_GETITEM, 0 , reinterpret_cast<LPARAM>(&lvi));
             str.ReleaseBuffer();
         }
         return str;
@@ -462,7 +464,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         UINT workAreas = 0;
-        SendMessage(LVM_GETNUMBEROFWORKAREAS, 0, (LPARAM)&workAreas);
+        SendMessage(LVM_GETNUMBEROFWORKAREAS, 0, reinterpret_cast<LPARAM>(&workAreas));
         return workAreas;
     }
 
@@ -495,7 +497,8 @@ namespace Win32xx
     inline int CListView::GetStringWidth( LPCTSTR string ) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0, (LPARAM)string));
+        LPARAM lparam = reinterpret_cast<LPARAM>(string);
+        return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0, lparam));
     }
 
     // Retrieves information about the rectangle that surrounds a subitem in the list-view control.
@@ -551,7 +554,9 @@ namespace Win32xx
     inline void CListView::GetWorkAreas( int workAreas, LPRECT pRectArray ) const
     {
         assert(IsWindow());
-        SendMessage(LVM_GETWORKAREAS, (WPARAM)workAreas, (LPARAM)pRectArray);
+        WPARAM wparam = static_cast<WPARAM>(workAreas);
+        LPARAM lparam = reinterpret_cast<LPARAM>(pRectArray);
+        SendMessage(LVM_GETWORKAREAS, wparam, lparam);
     }
 
     // Determines which list-view item, if any, is at a specified position.
@@ -766,7 +771,7 @@ namespace Win32xx
     inline DWORD CListView::SetExtendedStyle( DWORD exStyle ) const
     {
         assert(IsWindow());
-        return ListView_SetExtendedListViewStyle( *this, (LPARAM)exStyle );
+        return ListView_SetExtendedListViewStyle( *this, static_cast<LPARAM>(exStyle) );
     }
 
     // Sets the HCURSOR that the list-view control uses when the pointer is
@@ -912,7 +917,9 @@ namespace Win32xx
     inline BOOL CListView::SetItemState( int item, LVITEM& itemInfo ) const
     {
         assert(IsWindow());
-        return (SendMessage(LVM_SETITEMSTATE, (WPARAM)item, (LPARAM)&itemInfo) != 0);
+        WPARAM wparam = static_cast<WPARAM>(item);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&itemInfo);
+        return static_cast<BOOL>(SendMessage(LVM_SETITEMSTATE, wparam, lparam));
     }
 
     // Changes the state of an item in the list-view control.
@@ -975,7 +982,9 @@ namespace Win32xx
     inline void CListView::SetWorkAreas( int workAreas, LPCRECT pRectArray ) const
     {
         assert(IsWindow());
-        SendMessage(LVM_SETWORKAREAS, (WPARAM)workAreas, (LPARAM)pRectArray);
+        WPARAM wparam = static_cast<WPARAM>(workAreas);
+        LPARAM lparam = reinterpret_cast<LPARAM>(pRectArray);
+        SendMessage(LVM_SETWORKAREAS, wparam, lparam);
     }
 
     // Uses an application-defined comparison function to sort the items of the list-view control.

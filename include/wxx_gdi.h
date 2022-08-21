@@ -1310,7 +1310,7 @@ namespace Win32xx
             Attach(bitmap);
             SetManaged(true);
         }
-        return (0 != bitmap);  // boolean expression
+        return bitmap? TRUE : FALSE;
     }
 
     // Loads a bitmap from a resource using the resource ID.
@@ -1337,7 +1337,7 @@ namespace Win32xx
             Attach(bitmap);
             SetManaged(true);
         }
-        return (0 != bitmap);  // boolean expression
+        return bitmap ? TRUE : FALSE;
     }
 
     // Loads a bitmap from a resource using the resource string.
@@ -1351,7 +1351,7 @@ namespace Win32xx
             Attach(bitmap);
             SetManaged(true);
         }
-        return (0 != bitmap);  // boolean expression
+        return bitmap ? TRUE : FALSE;
     }
 
     // Loads a predefined bitmap.

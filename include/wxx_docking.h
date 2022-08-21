@@ -759,7 +759,8 @@ namespace Win32xx
         m_dragPos.pos = GetCursorPos();
         m_dragPos.pos.x += 1;
         m_dragPos.pDocker = m_pDocker;
-        GetParent().SendMessage(WM_NOTIFY, 0, (LPARAM)&m_dragPos);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&m_dragPos);
+        GetParent().SendMessage(WM_NOTIFY, 0, lparam);
     }
 
     inline void CDocker::CDockBar::SetColor(COLORREF color)
@@ -1352,7 +1353,8 @@ namespace Win32xx
         DragPos.pDocker = m_pDocker;
 
         // Send a DragPos notification to the docker
-        GetParent().SendMessage(WM_NOTIFY, 0, (LPARAM)&DragPos);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&DragPos);
+        GetParent().SendMessage(WM_NOTIFY, 0, lparam);
     }
 
     // Sets the caption's foreground and background colors.
@@ -2534,7 +2536,7 @@ namespace Win32xx
 
         m_dockUnderPoint = 0;
         m_dockPoint = pt;
-        EnumWindows(EnumWindowsProc, (LPARAM)this);
+        EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(this));
 
         // Step 2: Find the docker child whose view window has the point
         CDocker* pDockTarget = NULL;
@@ -3145,7 +3147,7 @@ namespace Win32xx
 
         // Post a docker destroyed message.
         if ( GetDockAncestor()->IsWindow() )
-            GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, (WPARAM)this, 0);
+            GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, reinterpret_cast<WPARAM>(this), 0);
     }
 
     // Called when this docker is destroyed.
@@ -3193,7 +3195,9 @@ namespace Win32xx
         if (IsDocked() && !(GetDockStyle() & DS_NO_UNDOCK))
         {
             Undock(GetCursorPos());
-            SendMessage(WM_NCLBUTTONDOWN, (WPARAM)HTCAPTION, MAKELPARAM(pDragPos->pos.x, pDragPos->pos.y));
+            WPARAM wparam = static_cast<WPARAM>(HTCAPTION);
+            LPARAM lparam = MAKELPARAM(pDragPos->pos.x, pDragPos->pos.y);
+            SendMessage(WM_NCLBUTTONDOWN, wparam, lparam);
         }
 
         return 0;
@@ -3904,7 +3908,7 @@ namespace Win32xx
         CDocker* pDocker = GetDockUnderDragPoint(dragPos.pos);
 
         if (pDocker)
-            pDocker->SendMessage(WM_NOTIFY, 0, (LPARAM)&dragPos);
+            pDocker->SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&dragPos));
         else
         {
             if (GetDockHint().IsWindow())
@@ -4138,8 +4142,8 @@ namespace Win32xx
     inline BOOL CDocker::SetRedraw(BOOL redraw /* = TRUE*/)
     {
         redraw? ++m_redrawCount : --m_redrawCount ;
-
-        return (SendMessage(WM_SETREDRAW, (WPARAM)(m_redrawCount >= 0), 0) != 0);
+        WPARAM wparam = static_cast<WPARAM>(m_redrawCount >= 0);
+        return static_cast<BOOL>(SendMessage(WM_SETREDRAW, wparam, 0));
     }
 
     inline void CDocker::SetUndockPosition(CPoint pt, BOOL showUndocked)
@@ -4165,13 +4169,16 @@ namespace Win32xx
         nmhdr.idFrom = static_cast<UINT_PTR>(m_dockID);
         HWND hFrame = GetDockAncestor()->GetAncestor();
         assert(hFrame);
-
-        ::SendMessage(hFrame, WM_NOTIFY, (WPARAM)m_dockID, (LPARAM)&nmhdr);
+        WPARAM wparam = static_cast<WPARAM>(m_dockID);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&nmhdr);
+        ::SendMessage(hFrame, WM_NOTIFY, wparam, lparam);
 
         // Initiate the window move.
         SetCursorPos(pt.x, pt.y);
         VERIFY(ScreenToClient(pt));
-        PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
+        wparam = static_cast<WPARAM>(SC_MOVE | 0x0002);
+        lparam = MAKELPARAM(pt.x, pt.y);
+        PostMessage(WM_SYSCOMMAND, wparam, lparam);
     }
 
     // Undocks a docker.

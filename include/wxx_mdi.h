@@ -439,7 +439,8 @@ namespace Win32xx
     inline BOOL CMDIFrameT<T>::IsMDIChildMaxed() const
     {
         BOOL isMaxed = FALSE;
-        GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, (LPARAM)&isMaxed);
+        LPARAM lparam = static_cast<LPARAM>(isMaxed);
+        GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, lparam);
         return isMaxed;
     }
 
@@ -766,8 +767,9 @@ namespace Win32xx
                     }
                     else
                     {
-                        GetMDIClient().SendMessage(WM_MDISETMENU, (WPARAM)(menu.GetHandle()),
-                            (LPARAM)(menuWindow.GetHandle()));
+                        WPARAM wparam = reinterpret_cast<WPARAM>(menu.GetHandle());
+                        LPARAM lparam = reinterpret_cast<LPARAM>(menuWindow.GetHandle());
+                        GetMDIClient().SendMessage(WM_MDISETMENU, wparam, lparam);
                         T::DrawMenuBar();
                     }
                 }
@@ -906,14 +908,15 @@ namespace Win32xx
         PreCreate(cs);
 
         //Determine if the window should be created maximized
-        BOOL Max = FALSE;
+        BOOL max = FALSE;
         CWnd* pParent = GetCWndPtr(parent);
         assert(pParent);
         if (!pParent)  return 0;
 
-        pParent->SendMessage(WM_MDIGETACTIVE, 0, (LPARAM)&Max);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&max);
+        pParent->SendMessage(WM_MDIGETACTIVE, 0, lparam);
 
-        Max = Max | (cs.style & WS_MAXIMIZE);
+        max = max | (cs.style & WS_MAXIMIZE);
 
         // Set the Window Class Name
         CString ClassName = _T("Win32++ MDI Child");
@@ -948,7 +951,7 @@ namespace Win32xx
         CreateEx(exStyle, ClassName, cs.lpszName, style, x, y,
             cx, cy, pParent->GetHwnd(), cs.hMenu, cs.lpCreateParams);
 
-        if (Max)
+        if (max)
             ShowWindow(SW_MAXIMIZE);
 
         // Turn redraw back on
@@ -1025,9 +1028,10 @@ namespace Win32xx
     inline LRESULT CMDIChild::OnMDIActivate(UINT, WPARAM, LPARAM lparam)
     {
         // This child is being activated
-        if (lparam == (LPARAM)GetHwnd())
+        if (lparam == reinterpret_cast<LPARAM>(GetHwnd()))
         {
-            GetAncestor().SendMessage(UWM_MDIACTIVATED, (WPARAM)GetHwnd(), 0);
+            WPARAM wparam = reinterpret_cast<WPARAM>(GetHwnd());
+            GetAncestor().SendMessage(UWM_MDIACTIVATED, wparam, 0);
             GetView().SetFocus();
         }
 

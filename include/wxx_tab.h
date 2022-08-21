@@ -850,9 +850,10 @@ namespace Win32xx
         ZeroMemory(&nmhdr, sizeof(nmhdr));
         nmhdr.hwndFrom = *this;
         nmhdr.code = UMN_TABCHANGED;
+        LPARAM lparam = reinterpret_cast<LPARAM>(&nmhdr);
 
         if (GetParent().IsWindow())
-            GetParent().SendMessage(WM_NOTIFY, 0, (LPARAM)&nmhdr);
+            GetParent().SendMessage(WM_NOTIFY, 0, lparam);
     }
 
     // Sends a UWN_TABDRAGGED notification.
@@ -862,21 +863,24 @@ namespace Win32xx
         ZeroMemory(&nmhdr, sizeof(nmhdr));
         nmhdr.hwndFrom = *this;
         nmhdr.code = UWN_TABDRAGGED;
-        GetParent().SendMessage(WM_NOTIFY, 0, (LPARAM)&nmhdr);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&nmhdr);
+        GetParent().SendMessage(WM_NOTIFY, 0, lparam);
     }
 
     // Sends a UWN_TABCLOSE notification.
     inline BOOL CTab::NotifyTabClosing(int page)
     {
-        UINT controlD = GetDlgCtrlID();
+        UINT controlID = GetDlgCtrlID();
         TABNMHDR TabNMHDR;
         TabNMHDR.hdr.code = UWN_TABCLOSE;
         TabNMHDR.hdr.hwndFrom = *this;
-        TabNMHDR.hdr.idFrom = static_cast<UINT>(controlD);
+        TabNMHDR.hdr.idFrom = controlID;
         TabNMHDR.page = page;
+        WPARAM wparam = static_cast<WPARAM>(controlID);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&TabNMHDR);
 
         // The default return value is zero.
-        return (GetParent().SendMessage(WM_NOTIFY, (WPARAM)controlD, (LPARAM)&TabNMHDR) != 0);
+        return static_cast<BOOL>(GetParent().SendMessage(WM_NOTIFY, wparam, lparam));
     }
 
     // Called when this object is attached to a tab control.
@@ -1562,7 +1566,9 @@ namespace Win32xx
     inline void CTab::AdjustRect(BOOL isLarger, RECT *prc) const
     {
         assert(IsWindow());
-        SendMessage(TCM_ADJUSTRECT, (WPARAM)isLarger, (LPARAM)prc);
+        WPARAM wparam = static_cast<WPARAM>(isLarger);
+        LPARAM lparam = reinterpret_cast<LPARAM>(prc);
+        SendMessage(TCM_ADJUSTRECT, wparam, lparam);
     }
 
     // Removes all items from a tab control. Use this function to remove tabs added by InsertItem.
@@ -1694,7 +1700,8 @@ namespace Win32xx
     inline void CTab::RemoveImage(int image) const
     {
         assert(IsWindow());
-        TabCtrl_RemoveImage(*this, (WPARAM)image);
+        WPARAM wparam = static_cast<WPARAM>(image);
+        TabCtrl_RemoveImage(*this, wparam);
     }
 
     // Sets the focus to a specified tab in a tab control.
@@ -1702,7 +1709,8 @@ namespace Win32xx
     inline void CTab::SetCurFocus(int tab) const
     {
         assert(IsWindow());
-        TabCtrl_SetCurFocus(*this, (WPARAM)tab);
+        WPARAM wparam = static_cast<WPARAM>(tab);
+        TabCtrl_SetCurFocus(*this, wparam);
     }
 
     // Selects a tab in a tab control.
@@ -1718,7 +1726,8 @@ namespace Win32xx
     inline DWORD CTab::SetExtendedStyle(DWORD dwExStyle) const
     {
         assert(IsWindow());
-        return TabCtrl_SetExtendedStyle(*this, (LPARAM)dwExStyle);
+        LPARAM lparam = static_cast<LPARAM>(dwExStyle);
+        return TabCtrl_SetExtendedStyle(*this, lparam);
     }
 
     // Assigns an image list to a tab control.
@@ -1803,8 +1812,11 @@ namespace Win32xx
 
         // Fake a WM_MOUSEACTIVATE to propagate focus change to dockers
         if (IsWindow())
-            GetParent().SendMessage(WM_MOUSEACTIVATE, (WPARAM)(GetAncestor().GetHwnd()),
-                                       MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
+        {
+            WPARAM wparam = reinterpret_cast<WPARAM>(GetAncestor().GetHwnd());
+            LPARAM lparam = MAKELPARAM(HTCLIENT, WM_LBUTTONDOWN);
+            GetParent().SendMessage(WM_MOUSEACTIVATE, wparam, lparam);
+        }
 
         return pView;
     }

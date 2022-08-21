@@ -124,7 +124,7 @@ namespace Win32xx
         assert(IsWindow());
         assert(parts <= 256);
 
-        return (SendMessage(SB_SETPARTS, (WPARAM)parts, (LPARAM)paneWidths) != 0);
+        return static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)parts, (LPARAM)paneWidths));
     }
 
     // Retrieves a count of the parts in the status bar.
@@ -175,7 +175,7 @@ namespace Win32xx
     inline BOOL CStatusBar::IsSimple() const
     {
         assert(IsWindow());
-        return (SendMessage(SB_ISSIMPLE, 0, 0) != 0);
+        return static_cast<BOOL>(SendMessage(SB_ISSIMPLE, 0, 0));
     }
 
     // Called when the background needs erasing
@@ -183,8 +183,8 @@ namespace Win32xx
     {
         // Permit the parent window to handle the drawing of the StatusBar's background.
         // Return TRUE to suppress default background drawing.
-        return (GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc,
-            (LPARAM)this) != 0);
+        return static_cast<BOOL>(GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc,
+            (LPARAM)this));
     }
 
     // Called by CStatusBar::Create to set some window parameters
@@ -208,7 +208,7 @@ namespace Win32xx
 
         BOOL result = FALSE;
         if (static_cast<int>(SendMessage(SB_GETPARTS, 0, 0) >= part))
-            result = (SendMessage(SB_SETTEXT, (WPARAM)(part | style), (LPARAM)text) != 0);
+            result = static_cast<BOOL>(SendMessage(SB_SETTEXT, (WPARAM)(part | style), (LPARAM)text));
 
         return result;
     }
@@ -218,7 +218,7 @@ namespace Win32xx
     inline BOOL CStatusBar::SetPartIcon(int part, HICON icon) const
     {
         assert(IsWindow());
-        return (SendMessage(SB_SETICON, (WPARAM)part, (LPARAM)icon) != 0);
+        return static_cast<BOOL>(SendMessage(SB_SETICON, (WPARAM)part, (LPARAM)icon));
     }
 
     // Changes the width of an existing pane, or creates a new pane with the specified width.
@@ -254,7 +254,7 @@ namespace Win32xx
         }
 
         // Set the StatusBar parts with our new parts count and part widths
-        BOOL result = (SendMessage(SB_SETPARTS, (WPARAM)newPartsCount, (LPARAM)pNewPartWidthArray) != 0);
+        BOOL result = static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)newPartsCount, (LPARAM)pNewPartWidthArray));
 
         return result;
     }

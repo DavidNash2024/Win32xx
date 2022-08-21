@@ -237,8 +237,10 @@ namespace Win32xx
         if (m_ws2_32 == 0)
             throw CNotSupportedException(GetApp()->MsgSocWS2Dll());
 
-        m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_ws2_32, "getaddrinfo") );
-        m_pfnFreeAddrInfo = reinterpret_cast<FREEADDRINFO*>( GetProcAddress(m_ws2_32, "freeaddrinfo") );
+        m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>(
+            reinterpret_cast<void*>(GetProcAddress(m_ws2_32, "getaddrinfo")));
+        m_pfnFreeAddrInfo = reinterpret_cast<FREEADDRINFO*>(
+            reinterpret_cast<void*>(GetProcAddress(m_ws2_32, "freeaddrinfo")));
 
         WorkThreadPtr threadPtr(new CWorkThread(EventThread, this));
         m_threadPtr = threadPtr;

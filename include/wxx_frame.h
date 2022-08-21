@@ -191,7 +191,7 @@ namespace Win32xx
         CString GetTitle() const                          { return T::GetWindowText(); }
         CWnd& GetView() const;
         CString GetXPThemeName() const;
-        BOOL IsMDIFrame() const                           { return (T::SendMessage(UWM_GETCMDIFRAMET) != 0); }
+        BOOL IsMDIFrame() const                           { return static_cast<BOOL>(T::SendMessage(UWM_GETCMDIFRAMET)); }
         void SetAccelerators(UINT accelID);
         void SetFrameMenu(UINT menuID);
         void SetFrameMenu(CMenu menu);
@@ -690,8 +690,9 @@ namespace Win32xx
         if (GetReBar().IsWindow())
         {
             SIZE MaxSize = GetToolBar().GetMaxSize();
-            GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(GetToolBar().GetHwnd()),
-                (LPARAM)(&MaxSize));
+            WPARAM wparam = reinterpret_cast<WPARAM>(GetToolBar().GetHwnd());
+            LPARAM lparam = reinterpret_cast<LPARAM>(&MaxSize);
+            GetReBar().SendMessage(UWM_TBRESIZE, wparam, lparam);
 
             if (GetReBarTheme().UseThemes && GetReBarTheme().LockMenuBand)
             {
@@ -817,7 +818,9 @@ namespace Win32xx
                         int button = pTB->CommandToIndex(item);
                         TBBUTTON tbb;
                         ZeroMemory(&tbb, sizeof(tbb));
-                        pTB->SendMessage(TB_GETBUTTON, (WPARAM)button, (LPARAM)(&tbb));
+                        WPARAM wparam = static_cast<WPARAM>(button);
+                        LPARAM lparam = reinterpret_cast<LPARAM>(&tbb);
+                        pTB->SendMessage(TB_GETBUTTON, wparam, lparam);
                         int image = static_cast<int>(tbb.iBitmap);
 
                         // Calculate text size.
@@ -1565,7 +1568,8 @@ namespace Win32xx
             typedef HRESULT(__stdcall* PFNGETCURRENTTHEMENAME)(LPWSTR pThemeFileName, int maxNameChars,
                 LPWSTR pColorBuff, int maxColorChars, LPWSTR pSizeBuff, int maxSizeChars);
 
-            PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(theme, "GetCurrentThemeName");
+            PFNGETCURRENTTHEMENAME pfn = reinterpret_cast<PFNGETCURRENTTHEMENAME>(
+                reinterpret_cast<void*>(GetProcAddress(theme, "GetCurrentThemeName")));
             pfn(0, 0, themeName, 30, 0, 0);
 
             ::FreeLibrary(theme);
@@ -2657,7 +2661,7 @@ namespace Win32xx
         if (GetMenuBar().IsWindow())
         {
             GetMenuBar().SetupMenuBar( GetFrameMenu() );
-            BOOL show = (menu != 0);    // boolean expression
+            BOOL show = (menu.GetHandle())? TRUE : FALSE;
             ShowMenu(show);
         }
         else
@@ -3009,8 +3013,9 @@ namespace Win32xx
         if (GetReBar().IsWindow())
         {
             SIZE MaxSize = toolBar.GetMaxSize();
-            GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(toolBar.GetHwnd()),
-                (LPARAM)(&MaxSize));
+            WPARAM wparam = reinterpret_cast<WPARAM>(toolBar.GetHwnd());
+            LPARAM lparam = reinterpret_cast<LPARAM>(&MaxSize);
+            GetReBar().SendMessage(UWM_TBRESIZE, wparam, lparam);
         }
     }
 
@@ -3043,8 +3048,9 @@ namespace Win32xx
         if (GetReBar().IsWindow())
         {
             SIZE maxSize = toolBar.GetMaxSize();
-            GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(toolBar.GetHwnd()),
-                (LPARAM)(&maxSize));
+            WPARAM wparam = reinterpret_cast<WPARAM>(toolBar.GetHwnd());
+            LPARAM lparam = reinterpret_cast<LPARAM>(&maxSize);
+            GetReBar().SendMessage(UWM_TBRESIZE, wparam, lparam);
         }
     }
 
@@ -3076,8 +3082,9 @@ namespace Win32xx
         if (GetReBar().IsWindow())
         {
             SIZE MaxSize = toolBar.GetMaxSize();
-            GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)(toolBar.GetHwnd()),
-                (LPARAM)(&MaxSize));
+            WPARAM wparam = reinterpret_cast<WPARAM>(toolBar.GetHwnd());
+            LPARAM lparam = reinterpret_cast<LPARAM>(&MaxSize);
+            GetReBar().SendMessage(UWM_TBRESIZE, wparam, lparam);
         }
     }
 

@@ -107,7 +107,7 @@ void CRichView::DoPrint(LPCTSTR docName)
         CDC printerDC = m_printDialog.GetPrinterDC();
 
         // Calculate the pages to print.
-        std::vector<int> pages = SetPagesToPrint(printerDC);
+        std::vector<UINT> pages = SetPagesToPrint(printerDC);
 
         // Assign values to the FORMATRANGE struct
         FORMATRANGE fr;
@@ -129,7 +129,7 @@ void CRichView::DoPrint(LPCTSTR docName)
         di.lpszOutput = NULL;   // Do not print to file.
         printerDC.StartDoc(&di);
 
-        std::vector<int>::iterator i;
+        std::vector<UINT>::iterator i;
         for (i = pages.begin(); i < pages.end(); ++i)
         {
             // Start the page.
@@ -339,38 +339,38 @@ void CRichView::SetFontDefaults()
     SendMessage(EM_SETLANGOPTIONS, 0, result);
 }
 
-std::vector<int> CRichView::SetPagesToPrint(const CDC& printerDC)
+std::vector<UINT> CRichView::SetPagesToPrint(const CDC& printerDC)
 {
-    std::vector<int> pages;   // Vector of pages to print.
+    std::vector<UINT> pages;   // Vector of pages to print.
 
     PRINTDLGEX pdex = m_printDialog.GetParameters();
     BOOL isPages    = m_printDialog.PrintRange();     // Pages radio button selected.
     BOOL isCollated = m_printDialog.PrintCollate();   // Collated button selected.
     int copies      = m_printDialog.GetCopies();
-    int maxPage     = CollatePages(printerDC);
-    int minPage     = 1;
+    UINT maxPage     = CollatePages(printerDC);
+    UINT minPage     = 1;
 
     if (isPages)
     {
         // Print page ranges, not the entire document.
         LPPRINTPAGERANGE rangeArray = pdex.lpPageRanges;
-        int ranges = pdex.nPageRanges;
+        UINT ranges = pdex.nPageRanges;
 
         // Loop for multiple copies, collated.
         for (int count1 = 0; count1 < copies; count1++)
         {
             // Loop for multiple ranges.
-            for (int i = 0; i < ranges; i++)
+            for (size_t i = 0; i < ranges; i++)
             {
-                int fromPage = rangeArray[i].nFromPage;
-                int toPage = rangeArray[i].nToPage;
+                UINT fromPage = rangeArray[i].nFromPage;
+                UINT toPage = rangeArray[i].nToPage;
                 if (fromPage <= toPage)
                 {
                     fromPage = MAX(minPage, fromPage);
                     toPage   = MIN(maxPage, toPage);
 
                     // Loop for multiple pages
-                    for (int j = fromPage; j <= toPage; j++)
+                    for (UINT j = fromPage; j <= toPage; j++)
                     {
                         // Loop for multiple copies, not collated.
                         for (int count2 = 0; count2 < copies; count2++)
@@ -386,7 +386,7 @@ std::vector<int> CRichView::SetPagesToPrint(const CDC& printerDC)
                     toPage   = MAX(minPage, toPage);
 
                     // Loop for multiple pages in reverse order.
-                    for (int j = fromPage; j >= toPage; j--)
+                    for (UINT j = fromPage; j >= toPage; j--)
                     {
                         // For multiple copies, not collated.
                         for (int count2 = 0; count2 < copies; count2++)
@@ -408,7 +408,7 @@ std::vector<int> CRichView::SetPagesToPrint(const CDC& printerDC)
         // For multiple copies, collated.
         for (int count1 = 0; count1 < copies; count1++)
         {
-            for (int i = minPage; i <= maxPage; i++)
+            for (UINT i = minPage; i <= maxPage; i++)
             {
                 // For multiple copies, not collated.
                 for (int count2 = 0; count2 < copies; count2++)

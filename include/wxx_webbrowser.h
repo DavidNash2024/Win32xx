@@ -841,7 +841,7 @@ namespace Win32xx
     {
         VARIANT_BOOL isBusy = VARIANT_FALSE;
         GetIWebBrowser2()->get_Busy(&isBusy);
-        return (isBusy != 0);
+        return static_cast<BOOL>(isBusy);
     }
 
     // Retrieves a pointer to the IDispatch interface to a container. This property returns the same pointer
@@ -868,7 +868,7 @@ namespace Win32xx
     {
         VARIANT_BOOL value = VARIANT_FALSE;
         GetIWebBrowser2()->get_FullScreen(&value);
-        return (value != 0);
+        return static_cast<BOOL>(value);
     }
 
     // Retrieves the height of the object.
@@ -912,7 +912,7 @@ namespace Win32xx
     {
         VARIANT_BOOL isOffLine = VARIANT_FALSE;
         GetIWebBrowser2()->get_Offline(&isOffLine);
-        return (isOffLine != 0);
+        return static_cast<BOOL>(isOffLine);
     }
 
     // Retrieves a pointer to the IDispatch interface of the object that is the
@@ -959,7 +959,7 @@ namespace Win32xx
 #if !defined(__BORLANDC__) || (__BORLANDC__ >= 0x600)
         GetIWebBrowser2()->get_RegisterAsBrowser(&isTopLevel);
 #endif
-        return (isTopLevel != 0);
+        return static_cast<BOOL>(isTopLevel);
     }
 
     // Retrieves the theater mode state of the object.
@@ -967,7 +967,7 @@ namespace Win32xx
     {
         VARIANT_BOOL isTheater = VARIANT_FALSE;
         GetIWebBrowser2()->get_TheaterMode(&isTheater);
-        return (isTheater != 0);
+        return static_cast<BOOL>(isTheater);
     }
 
     // Retrieves the coordinate of the top edge of the object.
@@ -983,7 +983,7 @@ namespace Win32xx
     {
         VARIANT_BOOL isTop = VARIANT_FALSE;
         GetIWebBrowser2()->get_TopLevelContainer(&isTop);
-        return (isTop != 0);
+        return static_cast<BOOL>(isTop);
     }
 
     // Retrieves the user type name of the contained document object.
@@ -1001,7 +1001,7 @@ namespace Win32xx
     {
         VARIANT_BOOL isVisible = VARIANT_FALSE;
         GetIWebBrowser2()->get_Visible(&isVisible);
-        return (isVisible != 0);
+        return static_cast<BOOL>(isVisible);
     }
 
     // Retrieves the width of the object.

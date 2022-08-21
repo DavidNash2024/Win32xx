@@ -392,12 +392,12 @@ namespace Win32xx
             }
         }
 
-        SYSTEMTIME MinMax[2];
+        SYSTEMTIME minMax[2];
         DWORD limit = GDTR_MIN | GDTR_MAX;
-        memcpy(&MinMax[0], &min, sizeof(SYSTEMTIME));
-        memcpy(&MinMax[1], &max, sizeof(SYSTEMTIME));
+        memcpy(&minMax[0], &min, sizeof(SYSTEMTIME));
+        memcpy(&minMax[1], &max, sizeof(SYSTEMTIME));
 
-        ::SendMessage(m_lastControl, MCM_SETRANGE, (WPARAM)limit, (LPARAM)&MinMax);
+        ::SendMessage(m_lastControl, MCM_SETRANGE, (WPARAM)limit, (LPARAM)&minMax);
     }
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
@@ -535,11 +535,11 @@ namespace Win32xx
         if (m_retrieveAndValidate)
         {
             // get the current edit item text or drop list static where possible
-            int nLen = ::GetWindowTextLength(control);
-            if (nLen > 0)
+            int length = ::GetWindowTextLength(control);
+            if (length > 0)
             {
                 // Get the known length.
-                ::GetWindowText(control, value.GetBuffer(nLen), nLen + 1);
+                ::GetWindowText(control, value.GetBuffer(length), length + 1);
             }
             else
             {
@@ -675,8 +675,8 @@ namespace Win32xx
             if (index != -1)
             {
                 // Read selected text into the CString.
-                int nLen = static_cast<int>(::SendMessage(control, LB_GETTEXTLEN, (WPARAM)index, 0));
-                ::SendMessage(control, LB_GETTEXT, (WPARAM)index, (LPARAM)value.GetBuffer(nLen));
+                int length = static_cast<int>(::SendMessage(control, LB_GETTEXTLEN, (WPARAM)index, 0));
+                ::SendMessage(control, LB_GETTEXT, (WPARAM)index, (LPARAM)value.GetBuffer(length));
 
                 value.ReleaseBuffer();
             }
@@ -806,7 +806,7 @@ namespace Win32xx
         // traverse all buttons in the group: we've already established
         // there's a group, so set up for the radio buttons in the group
         firstInGroup = FALSE;
-        for (int iButton = 0; control != 0 && !firstInGroup; )
+        for (int button = 0; control != 0 && !firstInGroup; )
         {
             if (isRadioButton) // this control in the group is a radio button
             {
@@ -817,15 +817,15 @@ namespace Win32xx
                         // Record the value the first time, but if it happens again, there
                         // is an error--only one button checked is allowed.
                         assert(value == -1);
-                        value = iButton;
+                        value = button;
                     }
                 }
                 else // if asked to select the radio button,
                 {
                     // then select it
-                    ::SendMessage(control, BM_SETCHECK, (WPARAM)(iButton == value), 0);
+                    ::SendMessage(control, BM_SETCHECK, (WPARAM)(button == value), 0);
                 }
-                iButton++;
+                button++;
             }
             else
             {
