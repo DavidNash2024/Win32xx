@@ -349,7 +349,7 @@ namespace Win32xx
         VERIFY(ScreenToClient(pt));
 
         // Update mouse mouse position for hot tracking.
-        SendMessage(WM_MOUSEMOVE, 0, (LPARAM)MAKELONG(pt.x, pt.y));
+        SendMessage(WM_MOUSEMOVE, 0, MAKELONG(pt.x, pt.y));
     }
 
     // Retrieves a pointer to the active MDI child if any.
@@ -396,7 +396,10 @@ namespace Win32xx
     {
         BOOL isMaxed = FALSE;
         if (GetMDIClient())
-            GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0, (LPARAM)&isMaxed);
+        {
+            LPARAM lparam = reinterpret_cast<LPARAM>(&isMaxed);
+            GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0, lparam);
+        }
 
         return isMaxed;
     }
@@ -469,7 +472,7 @@ namespace Win32xx
             m_isAltMode = FALSE;
             ExitMenu();
             // Bring up the system menu
-            GetAncestor().PostMessage(WM_SYSCOMMAND, (WPARAM)SC_KEYMENU, (LPARAM)VK_SPACE);
+            GetAncestor().PostMessage(WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
             break;
 
         // Handle VK_DOWN, and VK_UP together
@@ -594,12 +597,13 @@ namespace Win32xx
 
                 if (m_mdiRect[1].PtInRect(pt))
                 {
-                    pMDIClient->PostMessage(WM_MDIRESTORE, (WPARAM)(pMDIChild->GetHwnd()), 0);
+                    WPARAM wparam = reinterpret_cast<WPARAM>(pMDIChild->GetHwnd());
+                    pMDIClient->PostMessage(WM_MDIRESTORE, wparam, 0);
                 }
 
                 if (m_mdiRect[2].PtInRect(pt))
                 {
-                    pMDIChild->PostMessage(WM_SYSCOMMAND, (WPARAM)SC_CLOSE, 0);
+                    pMDIChild->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
                 }
             }
         }
@@ -655,7 +659,7 @@ namespace Win32xx
 
                     // Always use PostMessage for USER_POPUPMENU (not SendMessage)
                     PostMessage(UWM_POPUPMENU, 0, 0);
-                    PostMessage(WM_KEYDOWN, (WPARAM)VK_DOWN, 0);
+                    PostMessage(WM_KEYDOWN, VK_DOWN, 0);
                     break;
                 }
 
@@ -673,7 +677,7 @@ namespace Win32xx
 
                     // Always use PostMessage for USER_POPUPMENU (not SendMessage)
                     PostMessage(UWM_POPUPMENU, 0, 0);
-                    PostMessage(WM_KEYDOWN, (WPARAM)VK_DOWN, 0);
+                    PostMessage(WM_KEYDOWN, VK_DOWN, 0);
                     break;
                 }
 
@@ -715,7 +719,7 @@ namespace Win32xx
 
                     UINT id = childMenu.GetDefaultItem(FALSE, 0);
                     if (id)
-                        pMDIChild->PostMessage(WM_SYSCOMMAND, (WPARAM)id, 0);
+                        pMDIChild->PostMessage(WM_SYSCOMMAND, static_cast<WPARAM>(id), 0);
                 }
             }
 
@@ -748,7 +752,7 @@ namespace Win32xx
                 VERIFY(ScreenToClient(pt));
 
                 // Reflect messages back to the MenuBar for hot tracking
-                SendMessage(WM_MOUSEMOVE, 0, (LPARAM)MAKELPARAM(pt.x, pt.y));
+                SendMessage(WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));
             }
             break;
 
@@ -800,7 +804,7 @@ namespace Win32xx
     {
         if (m_isKeyMode)
             // Simulate a down arrow key press.
-            PostMessage(WM_KEYDOWN, (WPARAM)VK_DOWN, 0);
+            PostMessage(WM_KEYDOWN, VK_DOWN, 0);
 
         m_isKeyMode = FALSE;
         m_isExitAfter = FALSE;
@@ -871,7 +875,10 @@ namespace Win32xx
             if (pMaxMDIChild && pMaxMDIChild->GetSystemMenu(FALSE) == m_popupMenu )
             {
                 if (id)
-                    pMaxMDIChild->SendMessage(WM_SYSCOMMAND, (WPARAM)id, 0);
+                {
+                    WPARAM wparam = static_cast<WPARAM>(id);
+                    pMaxMDIChild->SendMessage(WM_SYSCOMMAND, wparam, 0);
+                }
             }
         }
 
@@ -974,7 +981,8 @@ namespace Win32xx
             if ((flag & HICF_LEAVING) && m_isKeyMode)
             {
                 m_hotItem = pNMHI->idOld;
-                PostMessage(TB_SETHOTITEM, (WPARAM)m_hotItem, 0);
+                WPARAM wparam = static_cast<WPARAM>(m_hotItem);
+                PostMessage(TB_SETHOTITEM, wparam, 0);
             }
         }
 
@@ -1043,9 +1051,11 @@ namespace Win32xx
                 // Pass the Left Mouse Click back up to the frame window (and update cursor).
                 LPARAM lparam = MAKELPARAM(screenPos.x, screenPos.y);
                 HWND frame = GetAncestor();
-                WPARAM wparam = (WPARAM)::SendMessage(frame, WM_NCHITTEST, 0, lparam);
+                WPARAM wparam = static_cast<WPARAM>(::SendMessage(frame, WM_NCHITTEST, 0, lparam));
                 ::SendMessage(frame, WM_NCMOUSEMOVE, wparam, lparam);
-                ::SendMessage(frame, WM_SETCURSOR, (WPARAM)frame, MAKELPARAM(wparam, WM_NCMOUSEMOVE));
+                ::SendMessage(frame, WM_SETCURSOR, reinterpret_cast<WPARAM>(frame), 
+                              MAKELPARAM(wparam, WM_NCMOUSEMOVE));
+                
                 ::SendMessage(frame, WM_NCLBUTTONDOWN, wparam, lparam);
             }
         }

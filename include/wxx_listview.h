@@ -974,7 +974,8 @@ namespace Win32xx
     inline HWND CListView::SetToolTips( HWND toolTip ) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, (WPARAM)toolTip, 0));
+        WPARAM wparam = reinterpret_cast<WPARAM>(toolTip);
+        return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, wparam, 0));
     }
 
     // Sets the working area within the list-view control.

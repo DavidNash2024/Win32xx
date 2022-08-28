@@ -1602,7 +1602,8 @@ namespace Win32xx
                 // Calculate index
                 index = size_t(yOffset) + size_t(xOffset);
 
-                BYTE byGray = (BYTE) ((pByteArray[index] + pByteArray[index +1]*6 + pByteArray[index +2] *3)/10);
+                int gray = (pByteArray[index] + pByteArray[index + 1] * 6 + pByteArray[index + 2] * 3) / 10;
+                BYTE byGray = static_cast<BYTE>(gray);
                 pByteArray[index]   = byGray;
                 pByteArray[index +1] = byGray;
                 pByteArray[index +2] = byGray;
@@ -1674,19 +1675,19 @@ namespace Win32xx
 
                 // Adjust the color values
                 if (cBlue > 0)
-                    pByteArray[index]   = (BYTE)(cBlue + (((pByteArray[index] *b1)) >>8));
+                    pByteArray[index]   = static_cast<BYTE>(cBlue + (((pByteArray[index] *b1)) >>8));
                 else if (cBlue < 0)
-                    pByteArray[index]   = (BYTE)((pByteArray[index] *b2) >>8);
+                    pByteArray[index]   = static_cast<BYTE>((pByteArray[index] *b2) >>8);
 
                 if (cGreen > 0)
-                    pByteArray[index+1] = (BYTE)(cGreen + (((pByteArray[index+1] *g1)) >>8));
+                    pByteArray[index+1] = static_cast<BYTE>(cGreen + (((pByteArray[index+1] *g1)) >>8));
                 else if (cGreen < 0)
-                    pByteArray[index+1] = (BYTE)((pByteArray[index+1] *g2) >>8);
+                    pByteArray[index+1] = static_cast<BYTE>((pByteArray[index+1] *g2) >>8);
 
                 if (cRed > 0)
-                    pByteArray[index+2] = (BYTE)(cRed + (((pByteArray[index+2] *r1)) >>8));
+                    pByteArray[index+2] = static_cast<BYTE>(cRed + (((pByteArray[index+2] *r1)) >>8));
                 else if (cRed < 0)
-                    pByteArray[index+2] = (BYTE)((pByteArray[index+2] *r2) >>8);
+                    pByteArray[index+2] = static_cast<BYTE>((pByteArray[index+2] *r2) >>8);
 
                 // Increment the horizontal offset
                 xOffset += bmiHeader.biBitCount >> 3;

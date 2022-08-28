@@ -1758,7 +1758,7 @@ namespace Win32xx
 
             // Ensure no toolbar button is still hot.
             if (GetToolBar().IsWindow())
-                GetToolBar().SendMessage(TB_SETHOTITEM, (WPARAM)-1, 0);
+                GetToolBar().SendMessage(TB_SETHOTITEM, static_cast<WPARAM>(-1), 0);
         }
         else
         {
@@ -2157,7 +2157,7 @@ namespace Win32xx
         LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
         switch (pHeader->code)
         {
-        case (UINT)NM_CUSTOMDRAW: return OnCustomDraw(pHeader);   // The UINT cast is required by some 32bit MinGW compilers.
+        case static_cast<UINT>(NM_CUSTOMDRAW): return OnCustomDraw(pHeader);   // The UINT cast is required by some 32bit MinGW compilers.
         case RBN_HEIGHTCHANGE:    return OnRBNHeightChange(pHeader);
         case RBN_LAYOUTCHANGED:   return OnRBNLayoutChanged(pHeader);
         case RBN_MINMAX:          return OnRBNMinMax(pHeader);

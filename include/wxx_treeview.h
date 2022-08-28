@@ -262,7 +262,8 @@ namespace Win32xx
     inline CImageList CTreeView::GetImageList(int imageType) const
     {
         assert(IsWindow());
-        HIMAGELIST images = TreeView_GetImageList( *this, (WPARAM)imageType );
+        WPARAM wparam = static_cast<WPARAM>(imageType);
+        HIMAGELIST images = TreeView_GetImageList( *this, wparam);
         return CImageList(images);
     }
 
@@ -300,7 +301,7 @@ namespace Win32xx
         ZeroMemory(&tvi, sizeof(tvi));
         tvi.mask = TVIF_PARAM;
         tvi.hItem = item;
-        SendMessage(TVM_GETITEM, 0, (LPARAM)&tvi);
+        SendMessage(TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvi));
         return static_cast<DWORD_PTR>(tvi.lParam);
     }
 
@@ -335,7 +336,9 @@ namespace Win32xx
         assert(IsWindow());
 
         *reinterpret_cast<HTREEITEM*>(&rc) = item;
-        return static_cast<BOOL>(SendMessage(TVM_GETITEMRECT, (WPARAM)isTextOnly, (LPARAM)&rc));
+        WPARAM wparam = static_cast<WPARAM>(isTextOnly);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
+        return static_cast<BOOL>(SendMessage(TVM_GETITEMRECT, wparam, lparam));
     }
 
     // Retrieves the text for a tree-view item.
@@ -356,7 +359,7 @@ namespace Win32xx
             tvi.mask = TVIF_TEXT;
             tvi.cchTextMax = textMax;
             tvi.pszText = str.GetBuffer(textMax);
-            SendMessage(TVM_GETITEM, 0, (LPARAM)&tvi);
+            SendMessage(TVM_GETITEM, 0, reinterpret_cast<LPARAM>(&tvi));
             str.ReleaseBuffer();
         }
         return str;
@@ -632,7 +635,8 @@ namespace Win32xx
     inline HIMAGELIST CTreeView::SetImageList(HIMAGELIST images, int type /*= TVSIL_NORMAL*/) const
     {
         assert(IsWindow());
-        HIMAGELIST oldImages = TreeView_SetImageList( *this, (LPARAM)images, (WPARAM)type );
+        WPARAM wparam = static_cast<WPARAM>(type);
+        HIMAGELIST oldImages = TreeView_SetImageList( *this, images, wparam);
         return oldImages;
     }
 
@@ -642,7 +646,8 @@ namespace Win32xx
     inline void CTreeView::SetIndent(int indent) const
     {
         assert(IsWindow());
-        SendMessage(TVM_SETINDENT, (WPARAM)indent, 0);
+        WPARAM wparam = static_cast<WPARAM>(indent);
+        SendMessage(TVM_SETINDENT, wparam, 0);
     }
 
     // Sets the insertion mark in a tree-view control.
@@ -698,7 +703,7 @@ namespace Win32xx
         ZeroMemory(&tvi, sizeof(tvi));
         tvi.hItem = item;
         tvi.mask = TVIF_PARAM;
-        tvi.lParam = (LPARAM)data;
+        tvi.lParam = static_cast<LPARAM>(data);
         return TreeView_SetItem( *this, &tvi );
     }
 
