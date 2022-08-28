@@ -124,7 +124,9 @@ namespace Win32xx
         assert(IsWindow());
         assert(parts <= 256);
 
-        return static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)parts, (LPARAM)paneWidths));
+        WPARAM wparam = static_cast<WPARAM>(parts);
+        LPARAM lparam = reinterpret_cast<LPARAM>(paneWidths);
+        return static_cast<BOOL>(SendMessage(SB_SETPARTS, wparam, lparam));
     }
 
     // Retrieves a count of the parts in the status bar.
@@ -140,7 +142,8 @@ namespace Win32xx
     inline HICON CStatusBar::GetPartIcon(int part) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage(SB_GETICON, (WPARAM)part, 0));
+        WPARAM wparam = static_cast<WPARAM>(part);
+        return reinterpret_cast<HICON>(SendMessage(SB_GETICON, wparam, 0));
     }
 
     // Retrieves the bounding rectangle of a part in the status bar.
@@ -150,7 +153,9 @@ namespace Win32xx
         assert(IsWindow());
 
         CRect rc;
-        SendMessage(SB_GETRECT, (WPARAM)part, (LPARAM)&rc);
+        WPARAM wparam = static_cast<WPARAM>(part);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
+        SendMessage(SB_GETRECT, wparam, lparam);
         return rc;
     }
 
@@ -162,10 +167,12 @@ namespace Win32xx
         CString PaneText;
 
         // Get size of Text array
-        int chars = LOWORD (SendMessage(SB_GETTEXTLENGTH, (WPARAM)part, 0));
+        WPARAM wparam = static_cast<WPARAM>(part);
+        int chars = LOWORD (SendMessage(SB_GETTEXTLENGTH, wparam, 0));
         CString str;
 
-        SendMessage(SB_GETTEXT, (WPARAM)part, (LPARAM)str.GetBuffer(chars));
+        LPARAM lparam = reinterpret_cast<LPARAM>(str.GetBuffer(chars));
+        SendMessage(SB_GETTEXT, wparam, lparam);
         str.ReleaseBuffer();
         return str;
     }
@@ -183,8 +190,8 @@ namespace Win32xx
     {
         // Permit the parent window to handle the drawing of the StatusBar's background.
         // Return TRUE to suppress default background drawing.
-        return static_cast<BOOL>(GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc,
-            (LPARAM)this));
+        return static_cast<BOOL>(GetParent().SendMessage(UWM_DRAWSBBKGND, 
+            reinterpret_cast<WPARAM>(&dc), reinterpret_cast<LPARAM>(this)));
     }
 
     // Called by CStatusBar::Create to set some window parameters
@@ -208,7 +215,11 @@ namespace Win32xx
 
         BOOL result = FALSE;
         if (static_cast<int>(SendMessage(SB_GETPARTS, 0, 0) >= part))
-            result = static_cast<BOOL>(SendMessage(SB_SETTEXT, (WPARAM)(part | style), (LPARAM)text));
+        {
+            WPARAM wparam = static_cast<WPARAM>(part | style);
+            LPARAM lparam = reinterpret_cast<LPARAM>(text);
+            result = static_cast<BOOL>(SendMessage(SB_SETTEXT, wparam, lparam));
+        }
 
         return result;
     }
@@ -218,7 +229,9 @@ namespace Win32xx
     inline BOOL CStatusBar::SetPartIcon(int part, HICON icon) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(SB_SETICON, (WPARAM)part, (LPARAM)icon));
+        WPARAM wparam = static_cast<WPARAM>(part);
+        LPARAM lparam = reinterpret_cast<LPARAM>(icon);
+        return static_cast<BOOL>(SendMessage(SB_SETICON, wparam, lparam));
     }
 
     // Changes the width of an existing pane, or creates a new pane with the specified width.
@@ -234,7 +247,8 @@ namespace Win32xx
         size_t parts = static_cast<size_t>(partsCount);
         std::vector<int> partWidths(parts, 0);
         int* pPartWidthArray = &partWidths[0];
-        SendMessage(SB_GETPARTS, (WPARAM)partsCount, (LPARAM)pPartWidthArray);
+        SendMessage(SB_GETPARTS, static_cast<WPARAM>(partsCount),
+            reinterpret_cast<LPARAM>(pPartWidthArray));
 
         // Fill the NewPartWidths vector with the new width of the StatusBar parts
         int newPartsCount = MAX(part+1, partsCount);
@@ -254,7 +268,8 @@ namespace Win32xx
         }
 
         // Set the StatusBar parts with our new parts count and part widths
-        BOOL result = static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)newPartsCount, (LPARAM)pNewPartWidthArray));
+        BOOL result = static_cast<BOOL>(SendMessage(SB_SETPARTS, static_cast<WPARAM>(newPartsCount),
+            reinterpret_cast<LPARAM>(pNewPartWidthArray)));
 
         return result;
     }
@@ -265,7 +280,8 @@ namespace Win32xx
     inline void CStatusBar::SetSimple(BOOL isSimple /* = TRUE*/) const
     {
         assert(IsWindow());
-        SendMessage(SB_SIMPLE, (WPARAM)isSimple, 0);
+        WPARAM wparam = static_cast<WPARAM>(isSimple);
+        SendMessage(SB_SIMPLE, wparam, 0);
     }
 
 } // namespace Win32xx

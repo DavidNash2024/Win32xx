@@ -452,7 +452,8 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDICascade(int type /* = 0*/) const
     {
         assert(T::IsWindow());
-        GetMDIClient().SendMessage(WM_MDICASCADE, (WPARAM)type, 0);
+        WPARAM wparam = static_cast<WPARAM>(type);
+        GetMDIClient().SendMessage(WM_MDICASCADE, wparam, 0);
     }
 
     // Re-arranges the icons for minimized MDI children.
@@ -470,7 +471,7 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDIMaximize() const
     {
         assert(T::IsWindow());
-        WPARAM mdiChild = (WPARAM)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
+        WPARAM mdiChild = static_cast<WPARAM>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0));
         GetMDIClient().SendMessage(WM_MDIMAXIMIZE, mdiChild, 0);
     }
 
@@ -480,7 +481,7 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDINext() const
     {
         assert(T::IsWindow());
-        WPARAM mdiChild = (WPARAM)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
+        WPARAM mdiChild = static_cast<WPARAM>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0));
         GetMDIClient().SendMessage(WM_MDINEXT, mdiChild, FALSE);
     }
 
@@ -490,7 +491,7 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDIPrev() const
     {
         assert(T::IsWindow());
-        WPARAM mdiChild = (WPARAM)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
+        WPARAM mdiChild = static_cast<WPARAM>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0));
         GetMDIClient().SendMessage(WM_MDINEXT, mdiChild, TRUE);
     }
 
@@ -500,7 +501,7 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDIRestore() const
     {
         assert(T::IsWindow());
-        WPARAM mdiChild = (WPARAM)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0);
+        WPARAM mdiChild = static_cast<WPARAM>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, 0));
         GetMDIClient().SendMessage(WM_MDIRESTORE, mdiChild, 0);
     }
 
@@ -514,7 +515,8 @@ namespace Win32xx
     inline void CMDIFrameT<T>::MDITile(int type /* = 0*/) const
     {
         assert(T::IsWindow());
-        GetMDIClient().SendMessage(WM_MDITILE, (WPARAM)type, 0);
+        WPARAM wparam = static_cast<WPARAM>(type);
+        GetMDIClient().SendMessage(WM_MDITILE, wparam, 0);
     }
 
     // Called when the MDI frame is about to close.
@@ -686,7 +688,7 @@ namespace Win32xx
         for (mdiChild = mdiChildren.rbegin(); mdiChild != mdiChildren.rend(); ++mdiChild)
         {
             // Ask the window to close. If it is destroyed, RemoveMDIChild gets called.
-            (*mdiChild)->SendMessage(WM_SYSCOMMAND, (WPARAM)SC_CLOSE, 0);
+            (*mdiChild)->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 
             if ((*mdiChild)->IsWindow())
                 succeeded = FALSE;
@@ -741,7 +743,8 @@ namespace Win32xx
     {
         assert ( pChild->IsWindow() );
 
-        GetMDIClient().SendMessage(WM_MDIACTIVATE, (WPARAM)(pChild->GetHwnd()), 0);
+        WPARAM wparam = reinterpret_cast<WPARAM>(pChild->GetHwnd());
+        GetMDIClient().SendMessage(WM_MDIACTIVATE, wparam, 0);
     }
 
     // Updates the frame menu. Also puts the list of CMDIChild windows in the "window" menu.
@@ -855,7 +858,7 @@ namespace Win32xx
         // Do default processing first
         LRESULT result = T::FinalWindowProc(msg, wparam, lparam);
 
-        SendMessage(T::GetParent(), UWM_MDIGETACTIVE, (WPARAM)result, lparam);
+        SendMessage(T::GetParent(), UWM_MDIGETACTIVE, static_cast<WPARAM>(result), lparam);
         return result;
     }
 
@@ -890,8 +893,9 @@ namespace Win32xx
 
     inline CMDIChild::~CMDIChild()
     {
+        WPARAM wparam = reinterpret_cast<WPARAM>(GetHwnd());
         if (IsWindow())
-            GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)GetHwnd(), 0);
+            GetParent().SendMessage(WM_MDIDESTROY, wparam, 0);
     }
 
     // Create the MDI child window and then maximize if required.
@@ -982,28 +986,32 @@ namespace Win32xx
     // Refer to WM_MDIACTIVATE in the Windows API documentation for more information.
     inline void CMDIChild::MDIActivate() const
     {
-        GetParent().SendMessage(WM_MDIACTIVATE, (WPARAM)GetHwnd(), 0);
+        WPARAM wparam = reinterpret_cast<WPARAM>(GetHwnd());
+        GetParent().SendMessage(WM_MDIACTIVATE, wparam, 0);
     }
 
     // Destroy a MDI child.
     // Refer to WM_MDIDESTROY in the Windows API documentation for more information.
     inline void CMDIChild::MDIDestroy() const
     {
-        GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)GetHwnd(), 0);
+        WPARAM wparam = reinterpret_cast<WPARAM>(GetHwnd());
+        GetParent().SendMessage(WM_MDIDESTROY, wparam, 0);
     }
 
     // Maximize a MDI child.
     // Refer to WM_MDIMAXIMIZE in the Windows API documentation for more information.
     inline void CMDIChild::MDIMaximize() const
     {
-        GetParent().SendMessage(WM_MDIMAXIMIZE, (WPARAM)GetHwnd(), 0);
+        WPARAM wparam = reinterpret_cast<WPARAM>(GetHwnd());
+        GetParent().SendMessage(WM_MDIMAXIMIZE, wparam, 0);
     }
 
     // Restore a MDI child.
     // Refer to WM_MDIRESTORE in the Windows API documentation for more information.
     inline void CMDIChild::MDIRestore() const
     {
-        GetParent().SendMessage(WM_MDIRESTORE, (WPARAM)GetHwnd(), 0);
+        WPARAM wparam = reinterpret_cast<WPARAM>(GetHwnd());
+        GetParent().SendMessage(WM_MDIRESTORE, wparam, 0);
     }
 
     // Override this to customize what happens when the window asks to be closed.
@@ -1068,8 +1076,9 @@ namespace Win32xx
         // Note: It is valid to call SetHandles before the window is created.
         if (IsWindow())
         {
-            GetParent().SendMessage(WM_MDIACTIVATE, (WPARAM)GetHwnd(), 0);
-            GetAncestor().SendMessage(UWM_MDIACTIVATED, (WPARAM)GetHwnd(), 0);
+            WPARAM wparam = reinterpret_cast<WPARAM>(GetHwnd());
+            GetParent().SendMessage(WM_MDIACTIVATE, wparam, 0);
+            GetAncestor().SendMessage(UWM_MDIACTIVATED, wparam, 0);
         }
     }
 

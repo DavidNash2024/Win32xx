@@ -410,7 +410,7 @@ namespace Win32xx
     {
         assert(GetHwnd());
         TASKDIALOGCONFIG tc = taskDialog.GetConfig();
-        SendMessage(TDM_NAVIGATE_PAGE, 0, (LPARAM)&tc);
+        SendMessage(TDM_NAVIGATE_PAGE, 0, reinterpret_cast<LPARAM>(&tc));
     }
 
     // Called when the user selects a button or command link.

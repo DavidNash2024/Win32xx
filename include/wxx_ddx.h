@@ -189,7 +189,7 @@ namespace Win32xx
         ts >> u;
         if (u < 256)
         {
-            value = (BYTE)u;
+            value = static_cast<BYTE>(u);
         }
         else
         {
@@ -247,7 +247,8 @@ namespace Win32xx
         else if (m_lastControl != 0 && m_isEditLastControl)
         {
             // limit the control max-chars automatically
-            ::SendMessage(m_lastControl, EM_LIMITTEXT, (WPARAM)count, 0);
+            WPARAM wparam = static_cast<WPARAM>(count);
+            ::SendMessage(m_lastControl, EM_LIMITTEXT, wparam, 0);
         }
     }
 
@@ -295,7 +296,8 @@ namespace Win32xx
         sta[0] = min;
         sta[1] = max;
 
-        ::SendMessage(m_lastControl, DTM_SETRANGE, (WPARAM)GDTR_MIN | GDTR_MAX, (LPARAM)sta);
+        LPARAM lparam = reinterpret_cast<LPARAM>(sta);
+        ::SendMessage(m_lastControl, DTM_SETRANGE, GDTR_MIN | GDTR_MAX, lparam);
     }
 
 
@@ -397,7 +399,10 @@ namespace Win32xx
         memcpy(&minMax[0], &min, sizeof(SYSTEMTIME));
         memcpy(&minMax[1], &max, sizeof(SYSTEMTIME));
 
-        ::SendMessage(m_lastControl, MCM_SETRANGE, (WPARAM)limit, (LPARAM)&minMax);
+        WPARAM wparam = static_cast<WPARAM>(limit);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&minMax);
+
+        ::SendMessage(m_lastControl, MCM_SETRANGE, wparam, lparam);
     }
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
@@ -434,8 +439,10 @@ namespace Win32xx
         }
 
         // set the range tuple
-        ::SendMessage(m_lastControl,TBM_SETRANGEMIN, (WPARAM)FALSE, (LPARAM)min);
-        ::SendMessage(m_lastControl, TBM_SETRANGEMAX, (WPARAM)TRUE, (LPARAM)max);
+        ::SendMessage(m_lastControl,TBM_SETRANGEMIN, static_cast<WPARAM>(FALSE),
+                      static_cast<LPARAM>(min));
+        ::SendMessage(m_lastControl, TBM_SETRANGEMAX, static_cast<WPARAM>(TRUE),
+                      static_cast<LPARAM>(max));
     }
 
     // Ensures that minVal <= value <= maxVal when validating, otherwise
@@ -515,7 +522,7 @@ namespace Win32xx
         if (m_retrieveAndValidate)
             index = static_cast<int>(::SendMessage(control, CB_GETCURSEL, 0, 0));
         else
-            ::SendMessage(control, CB_SETCURSEL, (WPARAM)index, 0);
+            ::SendMessage(control, CB_SETCURSEL, static_cast<WPARAM>(index), 0);
     }
 
     // This function manages the transfer of CString data between the edit
@@ -553,8 +560,8 @@ namespace Win32xx
         else
         {
             // Set the current selection based on value string.
-            if (::SendMessage(control, CB_SELECTSTRING, (WPARAM)-1,
-                (LPARAM)value.c_str()) == CB_ERR)
+            if (::SendMessage(control, CB_SELECTSTRING, static_cast<WPARAM>(-1),
+                reinterpret_cast<LPARAM>(value.c_str()) == CB_ERR))
             {
                 // Value was not found, so just set the edit text.
                 // (this will be ignored if the control is a DROPDOWNLIST)
@@ -586,7 +593,7 @@ namespace Win32xx
         {
             // set current selection based on data string
             int i = static_cast<int>(::SendMessage(control, CB_FINDSTRINGEXACT,
-                (WPARAM)(-1), (LPARAM)(value.c_str())));
+                static_cast<WPARAM>(-1), reinterpret_cast<LPARAM>(value.c_str())));
             if (i < 0)
             {
                 // set the edit text (will be ignored if a DROPDOWNLIST)
@@ -595,7 +602,7 @@ namespace Win32xx
             else
             {
                 // select it
-                ::SendMessage(control, CB_SETCURSEL, (WPARAM)i, 0);
+                ::SendMessage(control, CB_SETCURSEL, static_cast<WPARAM>(i), 0);
             }
         }
     }
@@ -622,7 +629,7 @@ namespace Win32xx
                 value = 0;  // set default to off
             }
 
-            ::SendMessage(control, BM_SETCHECK, (WPARAM)value, 0);
+            ::SendMessage(control, BM_SETCHECK, static_cast<WPARAM>(value), 0);
         }
     }
 
@@ -635,11 +642,11 @@ namespace Win32xx
     inline void CDataExchange::DDX_DateTime(UINT id, SYSTEMTIME &value)
     {
         HWND control = PrepareCtrl(id);
-
+        LPARAM lparam = reinterpret_cast<LPARAM>(&value);
         if (m_retrieveAndValidate)
-            ::SendMessage(control, DTM_GETSYSTEMTIME, 0, (LPARAM)&value);
+            ::SendMessage(control, DTM_GETSYSTEMTIME, 0, lparam);
         else
-            ::SendMessage(control, DTM_SETSYSTEMTIME, 0, (LPARAM)&value);
+            ::SendMessage(control, DTM_SETSYSTEMTIME, 0, lparam);
     }
 
     // This function manages the transfer of data between a list box
@@ -656,7 +663,7 @@ namespace Win32xx
         if (m_retrieveAndValidate)
             index = static_cast<int>(::SendMessage(control, LB_GETCURSEL, 0, 0));
         else
-            ::SendMessage(control, LB_SETCURSEL, (WPARAM)index, 0);
+            ::SendMessage(control, LB_SETCURSEL, static_cast<WPARAM>(index), 0);
     }
 
     // Perform a data exchange for the state of a list box control on the
@@ -675,8 +682,11 @@ namespace Win32xx
             if (index != -1)
             {
                 // Read selected text into the CString.
-                int length = static_cast<int>(::SendMessage(control, LB_GETTEXTLEN, (WPARAM)index, 0));
-                ::SendMessage(control, LB_GETTEXT, (WPARAM)index, (LPARAM)value.GetBuffer(length));
+                int length = static_cast<int>(::SendMessage(control, LB_GETTEXTLEN, 
+                                              static_cast<WPARAM>(index), 0));
+                
+                ::SendMessage(control, LB_GETTEXT, static_cast<WPARAM>(index),
+                              reinterpret_cast<LPARAM>(value.GetBuffer(length)));
 
                 value.ReleaseBuffer();
             }
@@ -691,7 +701,7 @@ namespace Win32xx
             // search the the entire list box for the given value
             // and select it if it is found
             int index  = static_cast<int>(::SendMessage(control, LB_SELECTSTRING,
-                (WPARAM)-1, (LPARAM)value.c_str()));
+                static_cast<WPARAM>(-1), reinterpret_cast<LPARAM>(value.c_str())));
 
             if (index == LB_ERR)
             {
@@ -725,7 +735,7 @@ namespace Win32xx
             // in a case insensitive search, perhaps in sorted order,
             // if the box has that style.
             int index = static_cast<int>(::SendMessage(control, LB_FINDSTRINGEXACT,
-                (WPARAM)-1, (LPARAM)value.c_str()));
+                static_cast<WPARAM>(-1), reinterpret_cast<LPARAM>(value.c_str())));
 
             if (index < 0)
             {
@@ -736,7 +746,7 @@ namespace Win32xx
             else
             {
                 // select it
-                ::SendMessage(control, LB_SETCURSEL, (WPARAM)index, 0);
+                ::SendMessage(control, LB_SETCURSEL, static_cast<WPARAM>(index), 0);
             }
         }
     }
@@ -756,14 +766,18 @@ namespace Win32xx
 
         if (m_retrieveAndValidate)
         {
-            ::SendMessage(control, MCM_GETCURSEL, 0, (LPARAM)&value);
+            LPARAM lparam = reinterpret_cast<LPARAM>(&value);
+            ::SendMessage(control, MCM_GETCURSEL, 0, lparam);
             value.wHour = 0;
             value.wMinute = 0;
             value.wSecond = 0;
             value.wMilliseconds = 0;
         }
         else
-            ::SendMessage(control, MCM_SETCURSEL, 0, (LPARAM)&value);
+        {
+            LPARAM lparam = reinterpret_cast<LPARAM>(&value);
+            ::SendMessage(control, MCM_SETCURSEL, 0, lparam);
+        }
     }
 
     // This function manages the transfer of data between a progress control
@@ -780,7 +794,7 @@ namespace Win32xx
         if (m_retrieveAndValidate)
             value = static_cast<int>(::SendMessage(control, PBM_GETPOS, 0, 0));
         else
-            ::SendMessage(control, PBM_SETPOS, (WPARAM)value, 0);
+            ::SendMessage(control, PBM_SETPOS, static_cast<WPARAM>(value), 0);
     }
 
     // Perform a data exchange for the state of a group of auto radio buttons
@@ -823,7 +837,8 @@ namespace Win32xx
                 else // if asked to select the radio button,
                 {
                     // then select it
-                    ::SendMessage(control, BM_SETCHECK, (WPARAM)(button == value), 0);
+                    WPARAM wparam = static_cast<WPARAM>(button == value);
+                    ::SendMessage(control, BM_SETCHECK, wparam, 0);
                 }
                 button++;
             }
@@ -874,7 +889,8 @@ namespace Win32xx
         if (m_retrieveAndValidate)
             value = static_cast<int>(::SendMessage(control, TBM_GETPOS, 0, 0));
         else
-            ::SendMessage(control, TBM_SETPOS, (WPARAM)TRUE, (LPARAM)value);
+            ::SendMessage(control, TBM_SETPOS, static_cast<WPARAM>(TRUE),
+                static_cast<LPARAM>(value));
     }
 
     ////////////////////////////////////////////////////////////////

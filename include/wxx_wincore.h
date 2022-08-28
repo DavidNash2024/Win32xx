@@ -1513,7 +1513,8 @@ namespace Win32xx
     inline HICON CWnd::GetIcon(BOOL isBigIcon) const
     {
         assert(IsWindow());
-        return (HICON)SendMessage(WM_GETICON, (WPARAM)isBigIcon, 0);
+        WPARAM wparam = static_cast<WPARAM>(isBigIcon);
+        return reinterpret_cast<HICON>(SendMessage(WM_GETICON, wparam, 0));
     }
 
     // The GetLastActivePopup function determines which pop-up window owned by the specified window was most recently active.
@@ -1933,7 +1934,9 @@ namespace Win32xx
     inline void CWnd::Print(HDC dc, DWORD flags) const
     {
         assert(IsWindow());
-        SendMessage(*this, WM_PRINT, (WPARAM)dc, (LPARAM)flags);
+        WPARAM wparam = reinterpret_cast<WPARAM>(dc);
+        LPARAM lparam = static_cast<LPARAM>(flags);
+        SendMessage(*this, WM_PRINT, wparam, lparam);
     }
 
     // The RedrawWindow function updates the specified rectangle in a window's client area.
@@ -2148,7 +2151,9 @@ namespace Win32xx
     inline void CWnd::SetFont(HFONT font, BOOL redraw /* = TRUE*/) const
     {
         assert(IsWindow());
-        SendMessage(WM_SETFONT, (WPARAM)font, (LPARAM)redraw);
+        WPARAM wparam = reinterpret_cast<WPARAM>(font);
+        LPARAM lparam = static_cast<LPARAM>(redraw);
+        SendMessage(WM_SETFONT, wparam, lparam);
     }
 
     // The SetForegroundWindow function puts the thread that created the window into the
@@ -2165,7 +2170,9 @@ namespace Win32xx
     inline HICON CWnd::SetIcon(HICON icon, BOOL isBigIcon) const
     {
         assert(IsWindow());
-        return (HICON)SendMessage(WM_SETICON, (WPARAM)isBigIcon, (LPARAM)icon);
+        WPARAM wparam = static_cast<WPARAM>(isBigIcon);
+        LPARAM lparam = reinterpret_cast<LPARAM>(icon);
+        return reinterpret_cast<HICON>(SendMessage(WM_SETICON, wparam, lparam));
     }
 
     // The SetMenu function assigns a menu to the specified window.
@@ -2191,7 +2198,8 @@ namespace Win32xx
     inline BOOL CWnd::SetRedraw(BOOL redraw /*= TRUE*/) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(::SendMessage(*this, WM_SETREDRAW, (WPARAM)redraw, 0));
+        WPARAM wparam = static_cast<WPARAM>(redraw);
+        return static_cast<BOOL>(::SendMessage(*this, WM_SETREDRAW, wparam, 0));
     }
 
     // The SetScrollInfo function sets the parameters of a scroll bar, including
