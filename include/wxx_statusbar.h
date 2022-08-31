@@ -190,7 +190,7 @@ namespace Win32xx
     {
         // Permit the parent window to handle the drawing of the StatusBar's background.
         // Return TRUE to suppress default background drawing.
-        return static_cast<BOOL>(GetParent().SendMessage(UWM_DRAWSBBKGND, 
+        return static_cast<BOOL>(GetParent().SendMessage(UWM_DRAWSBBKGND,
             reinterpret_cast<WPARAM>(&dc), reinterpret_cast<LPARAM>(this)));
     }
 

@@ -1053,9 +1053,9 @@ namespace Win32xx
                 HWND frame = GetAncestor();
                 WPARAM wparam = static_cast<WPARAM>(::SendMessage(frame, WM_NCHITTEST, 0, lparam));
                 ::SendMessage(frame, WM_NCMOUSEMOVE, wparam, lparam);
-                ::SendMessage(frame, WM_SETCURSOR, reinterpret_cast<WPARAM>(frame), 
+                ::SendMessage(frame, WM_SETCURSOR, reinterpret_cast<WPARAM>(frame),
                               MAKELPARAM(wparam, WM_NCMOUSEMOVE));
-                
+
                 ::SendMessage(frame, WM_NCLBUTTONDOWN, wparam, lparam);
             }
         }
