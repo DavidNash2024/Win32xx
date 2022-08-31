@@ -682,9 +682,9 @@ namespace Win32xx
             if (index != -1)
             {
                 // Read selected text into the CString.
-                int length = static_cast<int>(::SendMessage(control, LB_GETTEXTLEN, 
+                int length = static_cast<int>(::SendMessage(control, LB_GETTEXTLEN,
                                               static_cast<WPARAM>(index), 0));
-                
+
                 ::SendMessage(control, LB_GETTEXT, static_cast<WPARAM>(index),
                               reinterpret_cast<LPARAM>(value.GetBuffer(length)));
 
