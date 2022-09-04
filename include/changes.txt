@@ -1,8 +1,17 @@
-Version 9.0.1
-=============
+Version 9.1
+===========
 
 New Features and Enhancements
 -----------------------------
+* Updated the images for menus used by CFrame and CDockFrame.
+  Win32++ now supports a range of image sizes displayed in the popup menu for
+  CFrame and CDockFrame. The GetMenuIconHeight function returns the appropriate
+  height of these images in pixels (16, 24, 32 etc.). The framework will
+  automatically scale the toolbar images down to a size suitable for the popup
+  menu for toolbars with a resource ID of IDW_MAIN. Alternatively you can
+  provide your own images as demonstrated in the samples. Providing your images
+  is likely to improve the image quality.
+
 * Standardised the type used for resources.
   - For consistency, the resources IDs used by toolbars, menus and dialogs are
     all treated as the unsigned integer type (UINT).
@@ -18,11 +27,12 @@ Changes in Detail
 -----------------
 Added    CComboBox::GetComboBoxInfo
 Added    CEdit::GetTextLength
-Added    CString::Remove               additional overload for single character
-Added    CToolbar::SetButtonInfo       additional overload
-Modified CDialog::EndDialog            now only closes a modal dialog
-Modified CToolBar::GetButton           returns CSize
-Modified CToolBar::GetPadding          returns CSize
+Added    CFrameT::GetMenuIconHeight
+Added    CString::Remove             additional overload for a single character
+Added    CToolbar::SetButtonInfo     additional overload
+Modified CDialog::EndDialog          now only closes a modal dialog
+Modified CToolBar::GetButton         returns CSize
+Modified CToolBar::GetPadding        returns CSize
 Removed  CDialog::IsModal
 Removed  CDialog::IsIndirect
 Renamed  CMenuBar::GetMenu   to   CMenuBar::GetBarMenu
@@ -56,8 +66,8 @@ Bug fixes:
 - Fixed several issues in CString.
 
 New Features and Enhancements
------------------------------
-* Added CMesssagePump. CWinApp now inherits from CMessagePump instead of 
+----------------------------- 
+* Added CMesssagePump. CWinApp now inherits from CMessagePump instead of
   CWinThread.
 
 * Updated thread support. Thread classes now use the CThreadT class template.

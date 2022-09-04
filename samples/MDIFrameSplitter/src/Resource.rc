@@ -121,7 +121,10 @@ IDI_TEXT                ICON                    "../src/res/text.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar24.bmp"
+IDB_TOOLBAR16           BITMAP                  "../src/res/toolbar16.bmp"
+IDB_TOOLBAR24_DIS       BITMAP                  "../src/res/toolbar24_d.bmp"
+IDB_TOOLBAR24_HOT       BITMAP                  "../src/res/toolbar24_h.bmp"
 IDB_FILEVIEW            BITMAP                  "../src/res/fileview.bmp"
 IDW_SDBOTTOM            BITMAP                  "../src/res/SDbottom.bmp"
 IDW_SDCENTER            BITMAP                  "../src/res/SDcenter.bmp"

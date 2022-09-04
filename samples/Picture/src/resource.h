@@ -28,9 +28,9 @@
 #define IDM_EDIT_DELETE                 135
 #define IDM_HELP_ABOUT                  140
 
-#define IDB_TOOLBAR_NORM                150
-#define IDB_TOOLBAR_HOT                 151
-#define IDB_TOOLBAR_DIS                 152
+#define IDB_TOOLBAR16                   150
+#define IDB_TOOLBAR24_HOT               151
+#define IDB_TOOLBAR24_DIS               152
 
 // Next default values for new objects
 //

@@ -71,10 +71,10 @@ IDW_MAIN                ICON                    "../src/res/Picture.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
-IDB_TOOLBAR_NORM        BITMAP                  "../src/res/toolbar24.bmp"
-IDB_TOOLBAR_HOT         BITMAP                  "../src/res/toolbar24_h.bmp"
-IDB_TOOLBAR_DIS         BITMAP                  "../src/res/toolbar24_d.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar24.bmp"
+IDB_TOOLBAR16           BITMAP                  "../src/res/toolbar16.bmp"
+IDB_TOOLBAR24_HOT       BITMAP                  "../src/res/toolbar24_h.bmp"
+IDB_TOOLBAR24_DIS       BITMAP                  "../src/res/toolbar24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

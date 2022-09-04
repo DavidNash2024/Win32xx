@@ -502,7 +502,10 @@ Called from the CFrame::OnCreate() function to load the menu icons.
 {
       // Specify the bitmap and mask for the menu icons.
     std::vector<UINT> data = GetToolBarData();
-    AddMenuIcons(data, RGB(255, 0, 255), IDB_MENUICONS, 0);
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(255, 0, 255), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(255, 0, 255), IDB_MENUICONS);
 }
 
 /*============================================================================*/

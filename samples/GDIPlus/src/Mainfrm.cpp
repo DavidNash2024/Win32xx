@@ -98,6 +98,17 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
+// Specifies the images for some of the menu items.
+void CMainFrame::SetupMenuIcons()
+{
+    // Set the bitmap used for menu icons
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
 // Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {

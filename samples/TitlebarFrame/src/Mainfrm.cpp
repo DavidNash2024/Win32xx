@@ -1001,7 +1001,11 @@ void CMainFrame::OnSystemButton() const
 void CMainFrame::SetupMenuIcons()
 {
     // Set the bitmap used for menu icons
-    AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, 0);
+    else
+        AddMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
 }
 
 // Set the resource IDs and images for the toolbar buttons.

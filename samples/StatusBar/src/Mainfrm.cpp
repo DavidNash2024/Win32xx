@@ -87,6 +87,23 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
+// Updates the status indicators.
+void CMainFrame::SetStatusIndicators()
+{
+    m_myStatusBar.SetStatusIndicators();
+}
+
+// Specifies the images used on menu items.
+void CMainFrame::SetupMenuIcons()
+{
+    // Use the MenuIcons bitmap for images in menu items.
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
 // Configure the toolbar.
 void CMainFrame::SetupToolBar()
 {
@@ -105,12 +122,6 @@ void CMainFrame::SetupToolBar()
 
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-}
-
-// Updates the status indicators.
-void CMainFrame::SetStatusIndicators()
-{
-    m_myStatusBar.SetStatusIndicators();
 }
 
 // Override the base class function to disable it.

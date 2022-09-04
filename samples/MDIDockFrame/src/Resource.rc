@@ -127,22 +127,17 @@ IDI_FILEVIEW            ICON                    "../src/res/fileview.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
-
+IDW_MAIN                BITMAP                  "../src/res/Toolbar24.bmp"
+IDB_TOOLBAR16           BITMAP                  "../src/res/Toolbar16.bmp"
+IDB_TOOLBAR24_DIS       BITMAP                  "../src/res/Toolbar24_d.bmp"
+IDB_TOOLBAR24_HOT       BITMAP                  "../src/res/Toolbar24_h.bmp"
 IDW_SDBOTTOM            BITMAP                  "../src/res/SDbottom.bmp"
-
 IDW_SDCENTER            BITMAP                  "../src/res/SDcenter.bmp"
-
 IDW_SDLEFT              BITMAP                  "../src/res/SDleft.bmp"
-
 IDW_SDMIDDLE            BITMAP                  "../src/res/SDmiddle.bmp"
-
 IDW_SDRIGHT             BITMAP                  "../src/res/SDright.bmp"
-
 IDW_SDTOP               BITMAP                  "../src/res/SDtop.bmp"
-
 IDB_CLASSVIEW           BITMAP                  "../src/res/classview.bmp"
-
 IDB_FILEVIEW            BITMAP                  "../src/res/fileview.bmp"
 
 

@@ -100,7 +100,8 @@ IDI_DIALOGVIEW          ICON                    "../src/res/Dialog.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar24.bmp"
+IDB_TOOLBAR16           BITMAP                  "../src/res/toolbar16.bmp"
 IDB_CLASSVIEW           BITMAP                  "../src/res/classview.bmp"
 IDB_FILEVIEW            BITMAP                  "../src/res/fileview.bmp"
 IDB_STATUS              BITMAP                  "../src/res/Status.bmp"

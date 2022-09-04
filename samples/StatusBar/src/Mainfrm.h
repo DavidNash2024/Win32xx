@@ -27,6 +27,7 @@ protected:
     virtual void    OnInitialUpdate();
     virtual void    SetStatusIndicators();
     virtual void    SetStatusParts();
+    virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

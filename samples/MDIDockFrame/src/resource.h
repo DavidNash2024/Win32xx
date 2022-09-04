@@ -31,6 +31,11 @@
 // Icon Resource
 #define IDI_VIEW                        161
 
+// Bitmaps for the toolbar and menus
+#define IDB_TOOLBAR16                   180
+#define IDB_TOOLBAR24_DIS               181
+#define IDB_TOOLBAR24_HOT               182
+
 // Bitmaps for the ClassView, FileFiew and ComboBoxEx ImageLists
 #define IDB_CLASSVIEW                   230
 #define IDB_FILEVIEW                    231

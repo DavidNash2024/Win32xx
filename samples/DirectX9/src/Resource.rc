@@ -81,7 +81,8 @@ IDW_MAIN                ICON                    "../src/res/directx.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDW_MAIN                BITMAP                  "../src/res/Toolbar.bmp"
+IDB_MENUICONS16         BITMAP                  "../src/res/MenuIcons16.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

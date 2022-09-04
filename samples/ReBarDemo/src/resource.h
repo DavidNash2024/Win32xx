@@ -37,6 +37,8 @@
 // ID for arrows Toolbar band
 #define IDC_BANDARROWS                  170
 
+#define IDB_TOOLBAR16                   180
+
 
 // Next default values for new objects
 //

@@ -355,6 +355,17 @@ void CMainFrame::SaveTBDefault()
     }
 }
 
+// Configure the menu icons.
+void CMainFrame::SetupMenuIcons()
+{
+    // Set the bitmap used for menu icons
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, 0);
+    else
+        AddMenuIcons(data, RGB(192, 192, 192), IDB_SMALL);
+}
+
 // Configure the Toolbar.
 void CMainFrame::SetupToolBar()
 {
@@ -389,7 +400,7 @@ void CMainFrame::SetupToolBar()
         m_cards.AddButton(IDM_CARD_HEART);
         m_cards.AddButton(IDM_CARD_SPADE);
 
-        // Set the button images
+        // Set the images for the additional toolbars
         SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));
         SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
     }

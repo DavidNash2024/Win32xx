@@ -26,7 +26,7 @@
 // ID for the statusbar windows
 #define IDW_STATUSBAR                   280
 
-//Resource IDs for standard menu items and ToolBar items
+// Resource IDs for standard menu items and ToolBar items
 #define IDM_FILE_NEW                    301
 #define IDM_FILE_OPEN                   302
 #define IDM_FILE_SAVE                   303
@@ -52,7 +52,7 @@
 #define IDM_SHIFT_F1                    323
 #define IDM_F1                          324
 
-//Resource IDs for the app's menu-items
+// Resource IDs for the app's menu-items
 #define ID_RADIO_A                      330
 #define ID_RADIO_B                      331
 #define ID_RADIO_C                      332
@@ -60,14 +60,15 @@
 #define ID_CHECK_B                      334
 #define ID_CHECK_C                      335
 
-// resource string identifiers
+// Resource string identifiers
 #define IDS_GROUP_FOLDER                340
 #define IDS_APP_NAME                    341
 #define IDS_HELP_FILE                   342
 #define IDS_APP_VERSION                 343
 
-// toolbar bitmap identifier
-#define IDB_TOOLBAR_NORM                350
+// Bitmap resource IDs for the toolbar and menu icons
+#define IDB_TOOLBAR16                   350
+#define IDB_TOOLBAR24                   351
 
 //Resource IDs for the dialog
 #define IDD_DIALOG1                     401

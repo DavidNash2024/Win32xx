@@ -114,7 +114,7 @@ namespace Win32xx
         CWnd* GetActiveView() const         { return m_pActiveView; }
         const std::vector<TabPageInfo>& GetAllTabs() const { return m_allTabPageInfo; }
         CRect GetCloseRect() const;
-        CMenu  GetListMenu() const;
+        CMenu GetListMenu();
         CRect GetListRect() const;
         SIZE GetMaxTabSize() const;
         CImageList GetODImageList() const   { return m_odImages; }
@@ -218,6 +218,7 @@ namespace Win32xx
         LPCDLGTEMPLATE m_pDlgTemplate;  // Dialog template for the list dialog
         CWnd* m_pActiveView;
         CPoint m_oldMousePos;
+        CMenu m_listMenu;
         BOOL m_isShowingButtons;        // Show or hide the close and list button
         BOOL m_isTracking;
         BOOL m_isClosePressed;
@@ -346,7 +347,7 @@ namespace Win32xx
         */
 
         // Dialog template for the dialog definition shown above.
-        unsigned char dlgTemplate[] =
+        static const unsigned char dlgTemplate[] =
         {
             0x01,0x00,0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0xc8,0x00,0xc8,0x90,0x03,
             0x00,0x00,0x00,0x00,0x00,0xd0,0x00,0xca,0x00,0x00,0x00,0x00,0x00,0x53,0x00,0x65,
@@ -718,11 +719,17 @@ namespace Win32xx
         return rc;
     }
 
-    // Returns the list menu.
-    inline CMenu CTab::GetListMenu() const
+    // Updates and returns the list menu.
+    inline CMenu CTab::GetListMenu()
     {
-        CMenu listMenu;
-        listMenu.CreatePopupMenu();
+        if (!IsMenu(m_listMenu))
+            m_listMenu.CreatePopupMenu();
+
+        // Remove any current menu items.
+        while (m_listMenu.GetMenuItemCount() > 0)
+        {
+            m_listMenu.RemoveMenu(0, MF_BYPOSITION);
+        }
 
         // Add the menu items.
         for (UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
@@ -730,17 +737,17 @@ namespace Win32xx
             CString menuString;
             CString tabText = GetAllTabs()[u].TabText;
             menuString.Format(_T("&%d %s"), u+1, tabText.c_str());
-            listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(u), menuString);
+            m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(u), menuString);
         }
         if (GetAllTabs().size() >= 10)
-            listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +9, _T("More Tabs"));
+            m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +9, _T("More Tabs"));
 
         // Add a checkmark to the menu.
         UINT selected = static_cast<UINT>(GetCurSel());
         if (selected < 9)
-            listMenu.CheckMenuItem(selected, MF_BYPOSITION|MF_CHECKED);
+            m_listMenu.CheckMenuItem(selected, MF_BYPOSITION|MF_CHECKED);
 
-        return listMenu;
+        return m_listMenu;
     }
 
     // Returns the dimensions of the bounding rectangle of the list button.

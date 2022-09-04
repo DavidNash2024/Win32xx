@@ -40,26 +40,29 @@ CMainFrame : public CFrame                                                  /*
         CDoc&   TheDoc()   { return m_view.TheDoc(); }
         BOOL    UpdateDialog(BOOL bReadFromControl);
 
+   protected:
+       virtual BOOL    LoadRegistrySettings(LPCTSTR keyName);
+       virtual void    OnClose();
+       virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+       virtual int     OnCreate(CREATESTRUCT& cs);
+       virtual void    OnInitialUpdate();
+       virtual void    PreCreate(CREATESTRUCT& cs);
+       virtual void    SetupMenuIcons();
+       virtual void    SetupToolBar();
+
     private:
         CMainFrame(const CMainFrame&);                // Disable copy construction
         CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
         void    FeatureNotImplemented();
-        BOOL    LoadRegistrySettings(LPCTSTR keyName);
-        void    OnClose();
-        BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
-        int     OnCreate(CREATESTRUCT& cs);
         BOOL    OnFileExit();
         BOOL    OnFileNew();
         BOOL    OnFileOpen();
         BOOL    OnFilePrint();
         BOOL    OnFileSave();
         BOOL    OnFileSaveAs();
-        void    OnInitialUpdate();
-        void    PreCreate(CREATESTRUCT& cs);
         void    SetReBarColors(COLORREF, COLORREF, COLORREF, COLORREF);
         BOOL    SetThemeColors();
-        void    SetupToolBar();
 
         CView             m_view;
         std::vector<UINT> m_bandIDs;

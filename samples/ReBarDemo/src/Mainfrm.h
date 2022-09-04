@@ -25,6 +25,7 @@ protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
+    virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
     virtual void    RecalcLayout();
     virtual LRESULT WndProc(UINT msg, WPARAM wmaram, LPARAM lmaram);

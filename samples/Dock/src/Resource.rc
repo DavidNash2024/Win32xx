@@ -79,7 +79,8 @@ IDI_VIEW                ICON                    "../src/res/view.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDB_TOOLBAR16           BITMAP                  "../src/res/Toolbar16.bmp"
+IDW_MAIN                BITMAP                  "../src/res/Toolbar24.bmp"
 IDW_SDBOTTOM            BITMAP                  "../src/res/SDbottom.bmp"
 IDW_SDCENTER            BITMAP                  "../src/res/SDcenter.bmp"
 IDW_SDLEFT              BITMAP                  "../src/res/SDleft.bmp"

@@ -251,11 +251,15 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     cs.style &= ~WS_VISIBLE;
 }
 
-// Configure the menu icons.
+// Specifies the images used on menu items.
 void CMainFrame::SetupMenuIcons()
 {
-    // Load default set of menu icons from the toolbar
-    CFrame::SetupMenuIcons();
+    // Use the MenuIcons bitmap for images in menu items.
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
 
     // Add some extra icons for menu items
     AddMenuIcon(IDM_NEW_FILES,   IDI_FILEVIEW);

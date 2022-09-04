@@ -30,6 +30,9 @@
 #define IDM_CONTAINER_TOP               141
 #define IDM_HIDE_SINGLE_TAB             142
 
+// Bitmap for small menu icons
+#define IDB_TOOLBAR16                   143
+
 // Bitmaps for the ClassView, FileFiew and ComboBoxEx ImageLists
 #define IDB_CLASSVIEW                   150
 #define IDB_FILEVIEW                    151

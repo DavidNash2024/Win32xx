@@ -29,6 +29,8 @@
 #define IDW_INDICATOR_INS               150
 #define IDW_INDICATOR_OVR               151
 
+#define IDB_TOOLBAR16                   160
+
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

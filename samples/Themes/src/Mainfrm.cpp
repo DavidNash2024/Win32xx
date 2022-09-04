@@ -727,6 +727,15 @@ void CMainFrame::SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLO
     }
 }
 
+void CMainFrame::SetupMenuIcons()
+{
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_DIS);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR_SML);
+}
+
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the first toolbar buttons

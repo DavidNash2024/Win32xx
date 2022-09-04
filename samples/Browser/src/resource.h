@@ -41,6 +41,8 @@
 #define IDB_TOOLBAR32_NORM              153
 #define IDB_TOOLBAR32_HOT               154
 #define IDB_TOOLBAR32_DIS               155
+#define IDB_MENUICONS16                 156
+#define IDB_MENUICONS24                 157
 
 #define IDC_COMBOBOXEX                  160
 

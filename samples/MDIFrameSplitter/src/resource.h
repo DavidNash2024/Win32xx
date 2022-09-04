@@ -40,11 +40,14 @@
 #define IDM_COLOR_WHITE                 167
 
 // Bitmap Resource
-#define IDB_FILEVIEW                    168
+#define IDB_FILEVIEW                    170
+#define IDB_TOOLBAR16                   171
+#define IDB_TOOLBAR24_DIS               172
+#define IDB_TOOLBAR24_HOT               173
 
 // Cursor Resource
-#define IDC_SPLITH                      171
-#define IDC_SPLITV                      172
+#define IDC_SPLITH                      180
+#define IDC_SPLITV                      181
 
 // Next default values for new objects
 //

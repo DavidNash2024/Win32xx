@@ -439,7 +439,7 @@ namespace Win32xx
     inline BOOL CMDIFrameT<T>::IsMDIChildMaxed() const
     {
         BOOL isMaxed = FALSE;
-        LPARAM lparam = static_cast<LPARAM>(isMaxed);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&isMaxed);
         GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, lparam);
         return isMaxed;
     }

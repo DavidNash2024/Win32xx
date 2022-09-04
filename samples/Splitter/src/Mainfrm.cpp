@@ -166,6 +166,17 @@ BOOL CMainFrame::SaveRegistrySettings()
         return FALSE;
 }
 
+// Specifies the images used on menu items.
+void CMainFrame::SetupMenuIcons()
+{
+    // Use the MenuIcons bitmap for images in menu items.
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
 // Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {

@@ -33,6 +33,9 @@
 //Resource ID for the cursor
 #define IDC_CURSOR1                     160
 
+// Resource ID for toolbar bitmap
+#define IDB_TOOLBAR16                   170
+
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

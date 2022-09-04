@@ -20,6 +20,7 @@
 #define IDM_EDIT_PASTE                  134
 #define IDM_EDIT_DELETE                 135
 #define IDM_HELP_ABOUT                  140
+#define IDB_MENUICONS16                 150
 
 // Next default values for new objects
 //

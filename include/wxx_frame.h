@@ -178,6 +178,7 @@ namespace Win32xx
         const CMenu&  GetFrameMenu() const                { return m_menu; }
         const InitValues& GetInitValues() const           { return m_initValues; }
         const MenuTheme& GetMenuBarTheme() const          { return m_mbTheme; }
+        int GetMenuIconHeight() const;
         const CMenuMetrics& GetMenuMetrics() const        { return m_menuMetrics; }
         const std::vector<CString>& GetMRUEntries() const { return m_mruEntries; }
         CString GetMRUEntry(UINT index);
@@ -211,7 +212,7 @@ namespace Win32xx
         virtual void AddDisabledMenuImage(HICON icon, COLORREF mask, int iconWidth = 16);
         virtual BOOL AddMenuIcon(UINT menuItemID, UINT iconID, int iconWidth = 16);
         virtual BOOL AddMenuIcon(UINT menuItemID, HICON icon, int iconWidth = 16);
-        virtual UINT AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID);
+        virtual UINT AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID = 0);
         virtual void AddMenuBarBand();
         virtual void AddMRUEntry(LPCTSTR MRUEntry);
         virtual void AddToolBarBand(CToolBar& tb, DWORD bandStyle, UINT id);
@@ -273,14 +274,14 @@ namespace Win32xx
         virtual BOOL SaveRegistryMRUSettings();
         virtual BOOL SaveRegistrySettings();
         virtual void SetMenuBarBandSize();
-        virtual UINT SetMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT toolBarID, UINT toolBarDisabledID);
+        virtual UINT SetMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT toolBarID, UINT toolBarDisabledID = 0);
         virtual void SetStatusIndicators();
         virtual void SetStatusParts();
         virtual void SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
         virtual void SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
         virtual void SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
         virtual void SetTheme();
-        virtual void SetToolBarImages(COLORREF mask, UINT toolBarID, UINT toolBarHotID, UINT toolBarDisabledID);
+        virtual void SetToolBarImages(COLORREF mask, UINT toolBarID, UINT toolBarHotID = 0, UINT toolBarDisabledID = 0);
         virtual void SetupMenuIcons();
         virtual void SetupToolBar();
         virtual void ShowMenu(BOOL show);
@@ -313,6 +314,7 @@ namespace Win32xx
         CFrameT(const CFrameT&);                // Disable copy construction
         CFrameT& operator = (const CFrameT&);   // Disable assignment operator
         CSize GetTBImageSize(CBitmap* pBitmap);
+        CBitmap ResizeBitmap(CBitmap image, int newHeight) const;
         void UpdateMenuBarBandSize();
         static LRESULT CALLBACK StaticKeyboardProc(int code, WPARAM wparam, LPARAM lparam);
 
@@ -526,14 +528,16 @@ namespace Win32xx
         if ((images == 0) || (bitmap.GetHandle() == 0))
             return static_cast<UINT>(m_menuIcons.size());  // No valid images, so nothing to do!
 
-        BITMAP data = bitmap.GetBitmapData();
-        int cxImage = MAX(data.bmHeight, 16);
-        int cyImage = data.bmHeight;
+        // Resize the bitmap
+        CSize bitmapSize = bitmap.GetSize();
+        int newSize = MIN(bitmapSize.cy, GetMenuIconHeight());
+        newSize = MAX(newSize, 16);
+        bitmap = ResizeBitmap(bitmap, newSize);
 
         // Create the ImageList if required.
-        if (0 == m_menuImages.GetHandle())
+        if (m_menuImages.GetHandle() == 0)
         {
-            m_menuImages.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, images, 0);
+            m_menuImages.Create(newSize, newSize, ILC_COLOR32 | ILC_MASK, images, 0);
             m_menuIcons.clear();
         }
 
@@ -552,7 +556,7 @@ namespace Win32xx
         if (disabledID != 0)
         {
             m_menuDisabledImages.DeleteImageList();
-            m_menuDisabledImages.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, images, 0);
+            m_menuDisabledImages.Create(newSize, newSize, ILC_COLOR32 | ILC_MASK, images, 0);
 
             CBitmap disabled(disabledID);
 
@@ -1480,6 +1484,24 @@ namespace Win32xx
         return clientRC;
     }
 
+    // Returns the preferred height of menu icons that fits nicely within a
+    // menu item. The value returned will be a multiple of 8 (ie. 16, 24 or 32).
+    template <class T>
+    inline int CFrameT<T>::GetMenuIconHeight() const
+    {
+        CClientDC screenDC(*this);
+        screenDC.SelectObject(m_menuBarFont);
+
+        const int defaultDPI = 96;
+        const int gap = 2;
+        int xDPI = screenDC.GetDeviceCaps(LOGPIXELSX);
+        int value = GetSystemMetrics(SM_CYMENU);
+        value = MulDiv(value, xDPI, defaultDPI) - gap;
+        value = value - (value % 8);
+
+        return value;
+    }
+
     // Returns the position of the menu item, given it's name.
     template <class T>
     inline int CFrameT<T>::GetMenuItemPos(HMENU menu, LPCTSTR itemName) const
@@ -2279,7 +2301,7 @@ namespace Win32xx
         // Honour theme color changes
         if (GetReBar().IsWindow())
         {
-            for (int band = 0; band <= GetReBar().GetBandCount(); ++band)
+            for (int band = 0; band < GetReBar().GetBandCount(); ++band)
             {
                 GetReBar().SetBandColor(band, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
             }
@@ -2489,6 +2511,30 @@ namespace Win32xx
         }
 
         UpdateMRUMenu();
+    }
+
+    template <class T>
+    inline CBitmap CFrameT<T>::ResizeBitmap(CBitmap image, int newHeight) const
+    {
+        // Get the size of the bitmap
+        CSize size = image.GetSize();
+        int newWidth = (size.cx * newHeight) / size.cy;
+
+        // Create the device contexts
+        CClientDC clientDC(*this);
+        CMemDC newImageDC(clientDC);
+        CMemDC imageDC(clientDC);
+        
+        // Create and select the bitmaps
+        newImageDC.CreateCompatibleBitmap(clientDC, newWidth, newHeight);
+        imageDC.SelectObject(image);
+
+        // Stretch the bitmap to the new height
+        newImageDC.SetStretchBltMode(COLORONCOLOR);
+        newImageDC.StretchBlt(0, 0, newWidth, newHeight, imageDC, 0, 0,
+            size.cx, size.cy, SRCCOPY);
+
+        return newImageDC.DetachBitmap();
     }
 
     // Saves the current MRU settings in the registry.

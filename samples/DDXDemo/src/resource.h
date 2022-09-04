@@ -84,6 +84,9 @@
 #define IDB_ROSE_BITMAP                 601
 #define IDC_ROSE_BITMAP                 602
 
+  // Resource ID for small menu icons
+#define IDB_TOOLBAR16                   603
+
 /*----------------------------------------------------------------------------*/
 #endif // RESOURCE_H
 

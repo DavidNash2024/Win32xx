@@ -27,6 +27,9 @@
 #define IDM_EDIT_DELETE                 135
 #define IDM_HELP_ABOUT                  140
 
+// Bitmap for small menu icons
+#define IDB_TOOLBAR16                   142
+
 // Icon Resource
 #define IDI_VIEW                        150
 
