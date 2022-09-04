@@ -83,17 +83,17 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                 ICON                    "../src/res\\Explorer.ico"
+IDW_MAIN                 ICON                    "../src/res/Explorer.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                 BITMAP                  "../src/res\\toolbar.bmp"
-IDB_TOOLBAR_NORM         BITMAP                  "../src/res\\toolbar24.bmp"
-IDB_TOOLBAR_HOT          BITMAP                  "../src/res\\toolbar24_h.bmp"
-IDB_TOOLBAR_DIS          BITMAP                  "../src/res\\toolbar24_d.bmp"
+IDB_TOOLBAR16            BITMAP                  "../src/res/Toolbar16.bmp"
+IDW_MAIN                 BITMAP                  "../src/res/Toolbar24.bmp"
+IDB_TOOLBAR_HOT          BITMAP                  "../src/res/Toolbar24_h.bmp"
+IDB_TOOLBAR_DIS          BITMAP                  "../src/res/Toolbar24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

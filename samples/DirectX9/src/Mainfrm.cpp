@@ -84,6 +84,16 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
+// Specify the icons used in popup menus.
+void CMainFrame::SetupMenuIcons()
+{
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS16);
+}
+
 // Setup the icons and resource IDs for the toolbar.
 void CMainFrame::SetupToolBar()
 {

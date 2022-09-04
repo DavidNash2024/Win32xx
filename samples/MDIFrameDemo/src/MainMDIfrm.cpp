@@ -230,8 +230,11 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 // Configure the images for menu items.
 void CMainMDIFrame::SetupMenuIcons()
 {
-    // Load the default set of menu icons from the toolbar
-    CFrame::SetupMenuIcons();
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR24_DIS);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
 
     // Add some extra icons for menu items
     AddMenuIcon(IDM_FILE_NEWVIEW, IDI_VIEW);
@@ -262,7 +265,7 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 
     // Use larger buttons with seperate imagelists for normal, hot and disabled buttons.
-    SetToolBarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+    SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 
     // Configure the "New" toolbar button to bring up a menu
     // Setting this style requires comctl32.dll version 4.72 or later

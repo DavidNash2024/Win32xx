@@ -65,6 +65,8 @@
 #define IDC_HOTKEY1                     183
 #define IDB_BITMAP1                     184
 
+#define IDB_TOOLBAR16                   190
+
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

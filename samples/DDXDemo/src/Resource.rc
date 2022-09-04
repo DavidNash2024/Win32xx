@@ -113,7 +113,8 @@ IDW_MAIN                ICON                    "../src/res/Form.ico"
 //
 
 IDB_ROSE_BITMAP         BITMAP                  "../src/res/moondance.bmp"
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDB_TOOLBAR16           BITMAP                  "../src/res/Toolbar16.bmp"
+IDW_MAIN                BITMAP                  "../src/res/Toolbar24.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////

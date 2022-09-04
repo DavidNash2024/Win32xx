@@ -31,6 +31,8 @@
 #define IDC_XMIN                        152
 #define IDC_XMAX                        153
 
+#define IDB_TOOLBAR16                   160
+
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

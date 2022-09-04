@@ -78,8 +78,8 @@ IDW_MAIN                ICON                    "../src/res/Color.ico"
 // Bitmap
 //
 
-IDW_MAIN                 BITMAP                  "../src/res/toolbar.bmp"
-IDB_TOOLBAR_BIG          BITMAP                  "../src/res/Toolbar24.bmp"
+IDB_TOOLBAR16            BITMAP                  "../src/res/toolbar16.bmp"
+IDW_MAIN                 BITMAP                  "../src/res/Toolbar24.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

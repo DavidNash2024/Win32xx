@@ -36,6 +36,7 @@ protected:
     virtual void    OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual BOOL    SaveRegistrySettings();
+    virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

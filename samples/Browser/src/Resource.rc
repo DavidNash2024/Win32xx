@@ -83,11 +83,13 @@ IDW_MAIN                ICON                    "../src/res/Globe.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDB_MENUICONS16         BITMAP                  "../src/res/MenuIcons16.bmp"
+IDB_MENUICONS24         BITMAP                  "../src/res/MEnuIcons24.bmp"
 IDB_TOOLBAR24_NORM      BITMAP                  "../src/res/Internet24_n.bmp"
 IDB_TOOLBAR24_HOT       BITMAP                  "../src/res/Internet24_h.bmp"
 IDB_TOOLBAR24_DIS       BITMAP                  "../src/res/Internet24_d.bmp"
 
+// 32bit bitmaps
 #if !defined(__BORLANDC__) || (__BORLANDC__>0x550)
 IDB_TOOLBAR32_NORM      BITMAP                  "../src/res/Browser_n.bmp"
 IDB_TOOLBAR32_HOT       BITMAP                  "../src/res/Browser_h.bmp"

@@ -971,7 +971,11 @@ void CMainFrame::SetStatusParts()
 // Adds images to the popup menu items.
 void CMainFrame::SetupMenuIcons()
 {
-    AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MENUICONS, 0);
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MENUICONS);
 }
 
 // Assigns images and command IDs to the toolbar buttons,

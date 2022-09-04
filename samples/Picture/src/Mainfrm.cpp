@@ -185,6 +185,16 @@ BOOL CMainFrame::OnFileSaveAs()
     return TRUE;
 }
 
+// Adds images to the popup menu items.
+void CMainFrame::SetupMenuIcons()
+{
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
 // Sets the resource identifiers and images for the toolbar buttons
 void CMainFrame::SetupToolBar()
 {
@@ -205,7 +215,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 
     // Set the image lists for normal, hot and disabled buttons
-    SetToolBarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+    SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 }
 
 // Process the frame's window messages.

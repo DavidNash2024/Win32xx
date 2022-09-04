@@ -567,7 +567,10 @@ void CMainFrame::SetupMenuIcons()
     iconData.push_back(IDM_FILE_PRINT);
     iconData.push_back(IDM_HELP_ABOUT);
 
-    AddMenuIcons(iconData, RGB(192, 192, 192), IDW_MAIN, 0);
+    if (GetMenuIconHeight() >= 24)
+        AddMenuIcons(iconData, RGB(192, 192, 192), IDB_MENUICONS24, 0);
+    else
+        AddMenuIcons(iconData, RGB(192, 192, 192), IDB_MENUICONS16, 0);
 }
 
 // Set the Resource IDs for the toolbar buttons.

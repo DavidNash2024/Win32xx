@@ -93,8 +93,8 @@ IDW_MAIN                ICON                    "../src/res/ContextHelp.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/Toolbar16.bmp"
-IDB_TOOLBAR_NORM        BITMAP                  "../src/res/Toolbar24.bmp"
+IDB_TOOLBAR16           BITMAP                  "../src/res/Toolbar16.bmp"
+IDB_TOOLBAR24           BITMAP                  "../src/res/Toolbar24.bmp"
 IDB_BITMAP1             BITMAP                  "../src/res/Zapotec.bmp"
 
 /////////////////////////////////////////////////////////////////////////////

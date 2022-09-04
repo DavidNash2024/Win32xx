@@ -37,6 +37,11 @@
 #define IDM_COLOR_BLUE                  166
 #define IDM_COLOR_WHITE                 167
 
+// Toolbar Resources
+#define IDB_TOOLBAR16                   180
+#define IDB_TOOLBAR24_DIS               181
+#define IDB_TOOLBAR24_HOT               182
+
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

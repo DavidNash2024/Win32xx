@@ -362,6 +362,16 @@ BOOL CMainFrame::SaveRegistrySettings()
     return TRUE;
 }
 
+// Specify the icons used in popup menus.
+void CMainFrame::SetupMenuIcons()
+{
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(255, 0, 255), IDB_TOOLBAR24);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
 // Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
@@ -381,8 +391,8 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(IDM_HELP_CONTEXT);
     AddToolBarButton(0);  // Separator
 
-    // Set the toolbar image list: use defaults for hot and disabled
-    SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR_NORM, 0, 0);
+    // Set the toolbar image list.
+    SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24);
 }
 
 // Called for a System Command such as SC_CLOSE, SC_CONTEXTHELP etc.

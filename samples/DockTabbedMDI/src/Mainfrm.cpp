@@ -353,9 +353,9 @@ void CMainFrame::OnInitialUpdate()
     CMenu frameMenu = GetFrameMenu();
 
     // Modify the menu
-    int nMenuPos = frameMenu.GetMenuItemCount() - 1;
+    int menuPos = frameMenu.GetMenuItemCount() - 1;
     CMenu winMenu = m_myTabbedMDI.GetListMenu();
-    frameMenu.InsertPopupMenu(nMenuPos, MF_BYPOSITION, winMenu, _T("&Window"));
+    frameMenu.InsertPopupMenu(menuPos, MF_BYPOSITION, winMenu, _T("&Window"));
 
     // Replace the frame's menu with our modified menu
     SetFrameMenu(frameMenu);
@@ -469,7 +469,11 @@ void CMainFrame::SetMDITabsAtTop(bool atTop)
 void CMainFrame::SetupMenuIcons()
 {
     // Load the default set of icons from the toolbar
-    CDockFrame::SetupMenuIcons();
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
 
     // Add some extra icons for menu items
     AddMenuIcon(IDM_FILE_NEWBROWSER, IDI_GLOBE);

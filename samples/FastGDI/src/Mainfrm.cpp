@@ -444,6 +444,16 @@ void CMainFrame::SaveFile(CString& fileName)
     }
 }
 
+// Specifies the images for some of the menu items.
+void CMainFrame::SetupMenuIcons()
+{
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
 // Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
@@ -457,9 +467,6 @@ void CMainFrame::SetupToolBar()
 
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-
-    // Use large toolbar buttons
-    SetToolBarImages(RGB(192, 192, 192), IDB_TOOLBAR_BIG, 0, 0);
 }
 
 // Process the frame's window messages.

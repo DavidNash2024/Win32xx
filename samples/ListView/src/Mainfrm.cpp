@@ -82,11 +82,15 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
-// Configure the menu icons.
+// Specifies the images for some of the menu items.
 void CMainFrame::SetupMenuIcons()
 {
     // Set the bitmap used for menu icons
-    AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_MENUICONS, 0);
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
 }
 
 // Set the resource IDs and images for the toolbar buttons.

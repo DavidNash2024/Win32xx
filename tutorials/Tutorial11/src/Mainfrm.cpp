@@ -65,6 +65,16 @@ void CMainFrame::OnClose()
     CFrame::OnClose();
 }
 
+// Specifies the images used on menu items.
+void CMainFrame::SetupMenuIcons()
+{
+    // Use the MenuIcons bitmap for images in menu items.
+    if (GetMenuIconHeight() >= 24)
+        AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MAIN);
+    else
+        AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
 // Process the messages from the Menu and Tool Bar
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {

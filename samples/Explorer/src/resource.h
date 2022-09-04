@@ -41,7 +41,7 @@
 #define IDS_COLUMN3                     162
 #define IDS_COLUMN4                     163
 
-#define IDB_TOOLBAR_NORM                164
+#define IDB_TOOLBAR16                   164
 #define IDB_TOOLBAR_HOT                 165
 #define IDB_TOOLBAR_DIS                 166
 

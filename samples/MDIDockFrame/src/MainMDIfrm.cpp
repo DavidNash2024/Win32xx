@@ -218,8 +218,12 @@ BOOL CMainMDIFrame::OnMDITile()
 // Configures the images for menu items.
 void CMainMDIFrame::SetupMenuIcons()
 {
-    // Add the default set of menu icons from the toolbar.
-    CMDIDockFrame::SetupMenuIcons();
+    // Set the bitmap used for menu icons
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
 
     // Add an extra icon for the New Docker menu item
     AddMenuIcon(IDM_FILE_NEWDOCK, IDW_MAIN);
@@ -240,6 +244,8 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_PRINT );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
+
+    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 }
 
 // Process the frame's window messages.

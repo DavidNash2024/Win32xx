@@ -30,8 +30,8 @@
 
 ///////////////////////////////////////////////
 
-//#define IDR_MAIN_MENU                   202
-#define IDI_DIALOG                   203
+#define IDB_TOOLBAR16                   202
+#define IDI_DIALOG                      203
 #define IDD_BUTTONS                     205
 #define IDD_COMBOBOXES                  206
 #define IDC_BUTTON2                     1007

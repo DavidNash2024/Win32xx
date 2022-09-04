@@ -78,7 +78,8 @@ IDW_MAIN                ICON                    "../src/res/Plot.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar24.bmp"
+IDB_TOOLBAR16           BITMAP                  "../src/res/toolbar16.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////

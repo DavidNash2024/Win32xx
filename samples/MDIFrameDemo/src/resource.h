@@ -52,9 +52,9 @@
 #define IDM_COLOR_WHITE                 162
 
 // Bitmap Resources
-#define IDB_TOOLBAR_NORM                170
-#define IDB_TOOLBAR_HOT                 171
-#define IDB_TOOLBAR_DIS                 172
+#define IDB_TOOLBAR16                   170
+#define IDB_TOOLBAR24_HOT               171
+#define IDB_TOOLBAR24_DIS               172
 #define IDB_CLASSVIEW                   173
 #define IDB_FILEVIEW                    174
 

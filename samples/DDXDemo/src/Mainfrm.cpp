@@ -392,6 +392,20 @@ SetThemeColors()                                                            /*
 }
 
 /*============================================================================*/
+void CMainFrame::
+    SetupMenuIcons()                                                              /*
+
+        Specify the bitmap for the menu icons.
+    *-----------------------------------------------------------------------------*/
+{
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
+/*============================================================================*/
     void CMainFrame::
 SetupToolBar()                                                              /*
 

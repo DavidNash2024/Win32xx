@@ -643,7 +643,11 @@ void CMainFrame::SetPathName(LPCTSTR filePathName)
 void CMainFrame::SetupMenuIcons()
 {
     // Use the MenuIcons bitmap for images in menu items.
-    AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MENUICONS, 0);
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        AddMenuIcons(data, RGB(192, 192, 192), IDW_MENUICONS);
 
     // Add more images for menu items.
     AddMenuIcon(IDM_FILE_PRINTSETUP, IDI_PRINTSETUP);

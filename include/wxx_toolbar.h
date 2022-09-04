@@ -527,14 +527,10 @@ namespace Win32xx
     {
         assert(IsWindow());
         CRect rc;
-        int count = GetButtonCount();
-
-        if (count >= index)
-        {
-            WPARAM wparam = static_cast<WPARAM>(index);
-            LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
-            SendMessage(TB_GETITEMRECT, wparam, lparam);
-        }
+ 
+        WPARAM wparam = static_cast<WPARAM>(index);
+        LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
+        VERIFY(SendMessage(TB_GETITEMRECT, wparam, lparam));
 
         return rc;
     }

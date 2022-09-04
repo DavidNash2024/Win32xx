@@ -198,6 +198,17 @@ BOOL CMainMDIFrame::OnMDITile()
     return TRUE;
 }
 
+// Configures the images for menu items.
+void CMainMDIFrame::SetupMenuIcons()
+{
+    // Set the bitmap used for menu icons
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
 // Assign resource IDs and images to toolbar buttons.
 void CMainMDIFrame::SetupToolBar()
 {
@@ -213,6 +224,8 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_PRINT );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
+
+    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR24_DIS, IDB_TOOLBAR24_HOT);
 }
 
 // Process the MDi frame's window messages.

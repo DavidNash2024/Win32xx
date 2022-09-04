@@ -31,6 +31,8 @@
 #define IDB_CLASSVIEW                   150
 #define IDB_FILEVIEW                    151
 
+#define IDB_TOOLBAR16                   160
+
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED

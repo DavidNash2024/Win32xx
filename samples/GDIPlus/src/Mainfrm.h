@@ -25,6 +25,7 @@ protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+    virtual void SetupMenuIcons();
     virtual void SetupToolBar();
 
 private:

@@ -33,6 +33,9 @@
 #define IDB_FILEVIEW                    131
 #define IDB_STATUS                      132
 
+// Bitmap for small menu icons
+#define IDB_TOOLBAR16                   133
+
 // Icons for container tabs
 #define IDI_GLOBE                       133
 #define IDI_RECT                        134

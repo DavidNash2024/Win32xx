@@ -27,6 +27,7 @@ protected:
     virtual void OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnViewToolBar();
+    virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
