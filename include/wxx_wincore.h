@@ -136,7 +136,7 @@ namespace Win32xx
     inline void CWnd::AddToMap()
     {
         // This HWND is should not be in the map yet
-        assert (0 == GetApp()->GetCWndFromMap(*this));
+        assert (GetApp()->GetCWndFromMap(*this) == 0);
 
         // Remove any old map entry for this CWnd (required when the CWnd is reused).
         RemoveFromMap();
@@ -295,7 +295,7 @@ namespace Win32xx
         cs.style = WS_VISIBLE | ((parent)? WS_CHILD : dwOverlappedStyle );
 
         // Set a reasonable default window position
-        if (0 == parent)
+        if (parent == 0)
         {
             cs.x  = CW_USEDEFAULT;
             cs.cx = CW_USEDEFAULT;
@@ -1079,10 +1079,10 @@ namespace Win32xx
                     result = pWnd->OnCommand(wparam, lparam);
 
                 // Handle user commands.
-                if (0 == result)
+                if (result == 0)
                     result =  OnCommand(wparam, lparam);
 
-                if (0 != result) return 0;
+                if (result != 0) return 0;
             }
             break;  // Note: Some MDI commands require default processing.
         case WM_CREATE:

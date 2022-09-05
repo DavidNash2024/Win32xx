@@ -1018,7 +1018,7 @@ namespace Win32xx
     // This function modifies lparam.
     inline LRESULT CDocker::CDockClient::OnNCCalcSize(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if (m_pDocker->IsUndockable())
             {
@@ -1033,7 +1033,7 @@ namespace Win32xx
     // Identify which part of the non-client area the cursor is over.
     inline LRESULT CDocker::CDockClient::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if (m_pDocker->IsUndockable())
             {
@@ -1055,7 +1055,7 @@ namespace Win32xx
 
     inline LRESULT CDocker::CDockClient::OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if ((HTCLOSE == wparam) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
             {
@@ -1087,7 +1087,7 @@ namespace Win32xx
 
     inline LRESULT CDocker::CDockClient::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if ((HTCLOSE == wparam) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
             {
@@ -1122,13 +1122,13 @@ namespace Win32xx
     {
         ReleaseCapture();
 
-        if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
+        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
         {
             CWindowDC dc(*this);
             DrawCloseButton(dc, m_isOldFocusStored);
             dc.Destroy();  // Destroy the dc before destroying its window.
 
-            if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
+            if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
             {
                 m_isCaptionPressed = FALSE;
                 if (m_isClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
@@ -1196,7 +1196,7 @@ namespace Win32xx
             m_isTracking = TRUE;
         }
 
-        if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if (m_pDocker->IsDocked())
             {
@@ -1212,7 +1212,7 @@ namespace Win32xx
                 }
 
                 // Update the close button
-                if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
+                if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
                     DrawCloseButton(dc, m_isOldFocusStored);
@@ -1262,7 +1262,7 @@ namespace Win32xx
                 }
 
                 // Update the close button
-                if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
+                if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
                     DrawCloseButton(dc, m_isOldFocusStored);
@@ -1299,7 +1299,7 @@ namespace Win32xx
 
     inline LRESULT CDocker::CDockClient::OnNCPaint(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if (m_pDocker->IsUndockable())
             {
@@ -1716,7 +1716,7 @@ namespace Win32xx
         assert( ::SendMessage(*pDockDrag, UWM_GETCDOCKER, 0, 0) );
 
         CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pDragPos->pos);
-        if (NULL == pDockTarget) return FALSE;
+        if (pDockTarget == NULL) return FALSE;
 
         if (!IsWindow())    Create();
         m_isOverContainer = (pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER) != 0);
@@ -4186,7 +4186,7 @@ namespace Win32xx
     inline void CDocker::Undock(CPoint pt, BOOL showUndocked)
     {
         // Undocking isn't supported on Win95.
-        if (1400 == GetWinVersion()) return;
+        if (GetWinVersion() == 1400) return;
 
         CDocker* pDockUndockedFrom = SeparateFromDock();
 
@@ -4214,7 +4214,7 @@ namespace Win32xx
         if (GetDockFromView(pContainer) == GetDockAncestor()) return;
 
         // Undocking isn't supported on Win95.
-        if (1400 == GetWinVersion()) return;
+        if (GetWinVersion() == 1400) return;
 
         CDocker* pDockUndockedFrom = this;
         if (&GetView() == pContainer)
@@ -4228,7 +4228,7 @@ namespace Win32xx
             assert(pDockOld);
             std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
             std::vector<ContainerInfo>::const_iterator iter = AllContainers.begin();
-            while ((0 == pDockNew) && (iter != AllContainers.end()))
+            while ((pDockNew == 0) && (iter != AllContainers.end()))
             {
                 if ((*iter).pContainer != pContainer)
                 {

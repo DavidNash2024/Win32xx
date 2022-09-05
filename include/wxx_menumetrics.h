@@ -580,7 +580,7 @@ namespace Win32xx
 
     inline BOOL CMenuMetrics::IsVistaMenu() const
     {
-        return (m_theme != FALSE);
+        return (m_theme != 0);
     }
 
     // Re-scale the CRect to support the system's DPI.

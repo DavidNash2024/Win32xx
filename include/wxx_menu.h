@@ -181,7 +181,7 @@ namespace Win32xx
     inline UINT GetSizeofMenuItemInfo()
     {
         // For Win95 and NT, cbSize needs to be 44
-        if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
+        if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
             return CCSIZEOF_STRUCT(MENUITEMINFO, cch);
 
         return sizeof(MENUITEMINFO);
@@ -674,7 +674,7 @@ namespace Win32xx
     inline BOOL CMenu::LoadMenu(LPCTSTR resourceName)
     {
         assert(m_pData);
-        assert(0 == m_pData->menu);
+        assert(m_pData->menu == 0);
         assert(resourceName);
 
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), resourceName);
@@ -684,7 +684,7 @@ namespace Win32xx
             m_pData->isManagedMenu = true;
         }
 
-        return 0 != m_pData->menu;
+        return m_pData->menu != 0;
     }
 
     // Loads the menu from the specified windows resource.
@@ -701,7 +701,7 @@ namespace Win32xx
             m_pData->isManagedMenu = true;
         }
 
-        return 0 != m_pData->menu;
+        return m_pData->menu != 0;
     }
 
     // Loads the specified menu template and assigns it to this CMenu.
@@ -718,7 +718,7 @@ namespace Win32xx
             m_pData->isManagedMenu = true;
         }
 
-        return 0 != m_pData->menu;
+        return m_pData->menu != 0;
     }
 
     // Changes an existing menu item. This function is used to specify the content, appearance, and behavior of the menu item.

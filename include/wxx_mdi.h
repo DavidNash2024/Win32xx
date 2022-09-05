@@ -262,7 +262,7 @@ namespace Win32xx
     template <class T>
     inline CMDIChild* CMDIFrameT<T>::AddMDIChild(CMDIChild* pMDIChild)
     {
-        assert(NULL != pMDIChild); // Cannot add Null MDI Child
+        assert(pMDIChild != NULL); // Cannot add Null MDI Child
 
         m_mdiChildren.push_back(MDIChildPtr(pMDIChild));
         pMDIChild->Create(GetMDIClient());
@@ -372,7 +372,7 @@ namespace Win32xx
                     if (pActiveChild)
                     {
                         HICON icon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0));
-                        if (0 == icon)
+                        if (icon == 0)
                             icon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
 
                         int cx = ::GetSystemMetrics(SM_CXSMICON);

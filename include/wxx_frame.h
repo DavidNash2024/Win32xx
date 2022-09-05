@@ -209,9 +209,9 @@ namespace Win32xx
 
     protected:
         // Override these functions as required.
-        virtual void AddDisabledMenuImage(HICON icon, COLORREF mask, int iconWidth = 16);
-        virtual BOOL AddMenuIcon(UINT menuItemID, UINT iconID, int iconWidth = 16);
-        virtual BOOL AddMenuIcon(UINT menuItemID, HICON icon, int iconWidth = 16);
+        virtual void AddDisabledMenuImage(HICON icon, COLORREF mask);
+        virtual BOOL AddMenuIcon(UINT menuItemID, UINT iconID);
+        virtual BOOL AddMenuIcon(UINT menuItemID, HICON icon);
         virtual UINT AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID = 0);
         virtual void AddMenuBarBand();
         virtual void AddMRUEntry(LPCTSTR MRUEntry);
@@ -428,16 +428,20 @@ namespace Win32xx
     // Adds the grayscale image of the specified icon the disabled menu image-list.
     // This function is called by AddMenuIcon.
     template <class T>
-    inline void CFrameT<T>::AddDisabledMenuImage(HICON icon, COLORREF mask, int iconWidth)
+    inline void CFrameT<T>::AddDisabledMenuImage(HICON icon, COLORREF mask)
     {
         CClientDC desktopDC(0);
         CMemDC memDC(0);
-        int cx = iconWidth;
-        int cy = iconWidth;
 
-        memDC.CreateCompatibleBitmap(desktopDC, cx, cy);
+        // m_menuImages should already have this image
+        assert(m_menuImages.GetHandle() != 0);
+
+        int cxImage = m_menuImages.GetIconSize().cx;
+        int cyImage = cxImage;
+
+        memDC.CreateCompatibleBitmap(desktopDC, cxImage, cyImage);
         CRect rc;
-        rc.SetRect(0, 0, cx, cy);
+        rc.SetRect(0, 0, cxImage, cyImage);
 
         // Set the mask color to gray for the new ImageList
         if (GetDeviceCaps(desktopDC, BITSPIXEL) < 24)
@@ -450,40 +454,45 @@ namespace Win32xx
         memDC.SolidFill(mask, rc);
 
         // Draw the icon on the memory DC
-        memDC.DrawIconEx(0, 0, icon, cx, cy, 0, 0, DI_NORMAL);
+        memDC.DrawIconEx(0, 0, icon, cxImage, cyImage, 0, 0, DI_NORMAL);
 
         // Detach the bitmap so we can use it.
         CBitmap bitmap = memDC.DetachBitmap();
         bitmap.ConvertToDisabled(mask);
 
         if (m_menuDisabledImages.GetHandle() == 0)
-            m_menuDisabledImages.Create(cx, cy, ILC_COLOR24 | ILC_MASK, 1, 0);
+            m_menuDisabledImages.Create(cxImage, cyImage, ILC_COLOR24 | ILC_MASK, 1, 0);
 
         m_menuDisabledImages.Add(bitmap, mask);
     }
 
     // Adds an icon to an internal ImageList for use with popup menu items.
     template <class T>
-    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, UINT iconID, int iconWidth /* = 16*/)
+    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, UINT iconID)
     {
-        int cx = iconWidth;
-        int cy = iconWidth;
-        HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cx, cy, LR_SHARED));
-        return AddMenuIcon(menuItemID, icon, iconWidth);
+        HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
+        return AddMenuIcon(menuItemID, icon);
     }
 
     // Adds an icon to an internal ImageList for use with popup menu items.
     template <class T>
-    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, HICON icon, int iconWidth /* = 16*/)
+    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, HICON icon)
     {
-        int cxImage = iconWidth;
-        int cyImage = iconWidth;
+        int cxImage;
+        int cyImage;
 
         // Create a new ImageList if required.
-        if (0 == m_menuImages.GetHandle())
+        if (m_menuImages.GetHandle() == 0)
         {
+            cyImage = GetMenuIconHeight();
+            cxImage = cyImage;
             m_menuImages.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, 1, 0);
             m_menuIcons.clear();
+        }
+        else
+        {
+            cxImage = m_menuImages.GetIconSize().cx;
+            cyImage = cxImage;
         }
 
         if (m_menuImages.Add(icon) != -1)
@@ -500,7 +509,7 @@ namespace Win32xx
                 if (index != CLR_INVALID) mask = PALETTEINDEX(index);
             }
 
-            AddDisabledMenuImage(icon, mask, iconWidth);
+            AddDisabledMenuImage(icon, mask);
 
             return TRUE;
         }
@@ -641,7 +650,7 @@ namespace Win32xx
 
         GetToolBar().AddButton(id, isEnabled, image);
 
-        if (0 != text)
+        if (text != 0)
             GetToolBar().SetButtonText(id, text);
     }
 
@@ -879,7 +888,7 @@ namespace Win32xx
                             toolBarImages = pTB->GetImageList();
                         }
 
-                        bool isWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
+                        bool isWin95 = (GetWinVersion() == 1400) || (GetWinVersion() == 2400);
 
                         // Calculate image position.
                         CSize szImage = toolBarImages.GetIconSize();
@@ -1045,8 +1054,8 @@ namespace Win32xx
     inline void CFrameT<T>::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDIS)
     {
         // Draw the item background
-        bool isDisabled = (pDIS->itemState & ODS_GRAYED) != FALSE;
-        bool isSelected = (pDIS->itemState & ODS_SELECTED) != FALSE;
+        bool isDisabled = (pDIS->itemState & ODS_GRAYED) != 0;
+        bool isSelected = (pDIS->itemState & ODS_SELECTED) != 0;
         CRect drawRect = pDIS->rcItem;
         CDC drawDC(pDIS->hDC);
         const MenuTheme& mbt = GetMenuBarTheme();
@@ -1134,7 +1143,7 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::DrawMenuItemIcon(LPDRAWITEMSTRUCT pDIS)
     {
-        if ( 0 == m_menuImages.GetHandle() )
+        if (m_menuImages.GetHandle() == 0)
             return;
 
         // Get icon size
@@ -1159,7 +1168,7 @@ namespace Win32xx
         // draw the image
         if (image >= 0 )
         {
-            bool isDisabled = (pDIS->itemState & ODS_GRAYED) != FALSE;
+            bool isDisabled = (pDIS->itemState & (ODS_GRAYED | ODS_DISABLED)) != 0;
             if ((isDisabled) && (m_menuDisabledImages.GetHandle()))
                 m_menuDisabledImages.Draw(pDIS->hDC, image, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
             else
@@ -1173,7 +1182,7 @@ namespace Win32xx
     {
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
         CString itemText = pmid->GetItemText();
-        bool isDisabled = (pDIS->itemState & ODS_GRAYED) != FALSE;
+        bool isDisabled = (pDIS->itemState & ODS_GRAYED) != 0;
         COLORREF colorText = GetSysColor(isDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
 
         // Calculate the text rect size.
@@ -1225,7 +1234,7 @@ namespace Win32xx
         {
             assert(rebar.IsWindow());
 
-            bool isVertical = (rebar.GetStyle() & CCS_VERT) != FALSE;
+            bool isVertical = (rebar.GetStyle() & CCS_VERT) != 0;
 
             // Create our memory DC.
             CRect rebarRect = rebar.GetClientRect();
@@ -1686,7 +1695,7 @@ namespace Win32xx
     template <class T>
     inline BOOL CFrameT<T>::LoadRegistrySettings(LPCTSTR keyName)
     {
-        assert (NULL != keyName);
+        assert (keyName != NULL);
 
         m_keyName = keyName;
         const CString settingsKeyName = _T("Software\\") + m_keyName + _T("\\Frame Settings");
@@ -3045,8 +3054,12 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
     {
-        // Get the image size
+        // Get the image size.
         CBitmap bm(id);
+
+        // Assert if we failed to load the bitmap.
+        assert(bm.GetHandle() != 0);
+
         CSize sz = GetTBImageSize(&bm);
 
         // Set the toolbar's image list.
@@ -3073,11 +3086,15 @@ namespace Win32xx
     {
         if (id != 0)
         {
-            // Get the image size
+            // Get the image size.
             CBitmap bm(id);
+
+            // Assert if we failed to load the bitmap.
+            assert(bm.GetHandle() != 0);
+
             CSize sz = GetTBImageSize(&bm);
 
-            // Set the toolbar's image list
+            // Set the toolbar's image list.
             imageList.DeleteImageList();
             imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
             imageList.Add(bm, mask);
@@ -3108,8 +3125,12 @@ namespace Win32xx
     {
         if (id != 0)
         {
-            // Get the image size
+            // Get the image size.
             CBitmap bm(id);
+
+            // Assert if we failed to load the bitmap.
+            assert(bm.GetHandle() != 0);
+
             CSize sz = GetTBImageSize(&bm);
 
             // Set the toolbar's image list
@@ -3426,7 +3447,7 @@ namespace Win32xx
                 size_t index = static_cast<size_t>(item);
                 UINT pos = static_cast<UINT>(item);
                 mii.fMask = MIIM_TYPE | MIIM_ID | MIIM_STATE;
-                mii.fState = (0 == m_mruEntries.size())? MFS_GRAYED : 0U;
+                mii.fState = (m_mruEntries.size() == 0)? MFS_GRAYED : 0U;
                 mii.fType = MFT_STRING;
                 mii.wID = IDW_FILE_MRU_FILE1 + pos;
                 mii.dwTypeData = const_cast<LPTSTR>(mruStrings[index].c_str());

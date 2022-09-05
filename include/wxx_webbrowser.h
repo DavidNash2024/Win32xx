@@ -678,7 +678,7 @@ namespace Win32xx
     // container's frame window status line.
     inline STDMETHODIMP CAXHost::SetStatusText(LPCOLESTR pStatusText)
     {
-        if (NULL == pStatusText)
+        if (pStatusText == NULL)
             return E_POINTER;
 
         return S_OK;

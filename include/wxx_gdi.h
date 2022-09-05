@@ -761,7 +761,7 @@ namespace Win32xx
     public:
         CClientDC(HWND wnd)
         {
-            if (0 == wnd) wnd = GetDesktopWindow();
+            if (wnd == 0) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
 
             try
@@ -797,7 +797,7 @@ namespace Win32xx
     public:
         CClientDCEx(HWND wnd, HRGN hrgnClip, DWORD flags)
         {
-            if (0 == wnd) wnd = GetDesktopWindow();
+            if (wnd == 0) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
 
             try
@@ -887,7 +887,7 @@ namespace Win32xx
     public:
         CWindowDC(HWND wnd)
         {
-            if (0 == wnd) wnd = GetDesktopWindow();
+            if (wnd == 0) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
 
             try
@@ -1369,7 +1369,7 @@ namespace Win32xx
             Attach(bitmap);
             SetManaged(true);
         }
-        return (0 != bitmap);  // boolean expression
+        return (bitmap != 0);  // boolean expression
     }
 
     // Rapidly converts the bitmap image to pale grayscale image suitable for disabled icons.

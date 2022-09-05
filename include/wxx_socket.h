@@ -343,7 +343,7 @@ namespace Win32xx
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
             result = ::bind( m_socket, reinterpret_cast<SOCKADDR*>( &clientService), sizeof(clientService) );
-            if ( 0 != result)
+            if (result != 0)
                 TRACE("Bind failed\n");
         }
 
@@ -355,7 +355,7 @@ namespace Win32xx
     inline int CSocket::Bind(const struct sockaddr* name, int namelen) const
     {
         int result = ::bind (m_socket, name, namelen);
-        if ( 0 != result)
+        if (result != 0)
             TRACE("Bind failed\n");
         return result;
     }
@@ -418,7 +418,7 @@ namespace Win32xx
             clientService.sin_port = htons( static_cast<u_short>(port) );
 
             result = ::connect( m_socket, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
-            if ( 0 != result)
+            if (result != 0)
                 TRACE("Connect failed\n");
         }
 
@@ -430,7 +430,7 @@ namespace Win32xx
     inline int CSocket::Connect(const struct sockaddr* name, int namelen) const
     {
         int result = ::connect( m_socket, name, namelen );
-        if ( 0 != result)
+        if (result != 0)
             TRACE("Connect failed\n");
 
         return result;

@@ -29,10 +29,12 @@ Added    CComboBox::GetComboBoxInfo
 Added    CEdit::GetTextLength
 Added    CFrameT::GetMenuIconHeight
 Added    CString::Remove             additional overload for a single character
-Added    CToolbar::SetButtonInfo     additional overload
-Modified CDialog::EndDialog          now only closes a modal dialog
-Modified CToolBar::GetButton         returns CSize
-Modified CToolBar::GetPadding        returns CSize
+Added    CToolbar::SetButtonInfo        additional overload
+Modified CDialog::EndDialog             now only closes a modal dialog
+Modified CFrameT::AddDisabledMenuImage  removed iconWidth parameter
+Modified CFrameT::AddMenuIcon           removed iconWidth parameter
+Modified CToolBar::GetButtonSize        returns CSize
+Modified CToolBar::GetPadding           returns CSize
 Removed  CDialog::IsModal
 Removed  CDialog::IsIndirect
 Renamed  CMenuBar::GetMenu   to   CMenuBar::GetBarMenu

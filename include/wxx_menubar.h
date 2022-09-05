@@ -558,9 +558,9 @@ namespace Win32xx
                 if (mdiButton >= 0)
                 {
                     CClientDC MenuBarDC(*this);
-                    DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == mdiButton) ? 2U : 0U);
-                    DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == mdiButton) ? 2U : 0U);
-                    DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == mdiButton) ? 2U : 0U);
+                    DrawMDIButton(MenuBarDC, MDI_MIN,     (mdiButton == 0) ? 2U : 0U);
+                    DrawMDIButton(MenuBarDC, MDI_RESTORE, (mdiButton == 1) ? 2U : 0U);
+                    DrawMDIButton(MenuBarDC, MDI_CLOSE,   (mdiButton == 2) ? 2U : 0U);
                 }
 
                 // Bring up the MDI Child window's system menu when the icon is pressed
@@ -817,7 +817,7 @@ namespace Win32xx
         // Load the submenu.
         int maxedOffset = IsMDIChildMaxed()? 1:0;
         m_popupMenu = ::GetSubMenu(m_topMenu, m_hotItem - maxedOffset);
-        if (pMaxMDIChild && IsMDIChildMaxed() && (0 == m_hotItem) )
+        if (pMaxMDIChild && IsMDIChildMaxed() && (m_hotItem == 0) )
             m_popupMenu = pMaxMDIChild->GetSystemMenu(FALSE);
 
         // Retrieve the bounding rectangle for the toolbar button.
@@ -1184,9 +1184,9 @@ namespace Win32xx
                     // Toggle the MDI button image pressed/unpressed as required.
                     if (MDIButton >= 0)
                     {
-                        DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == MDIButton) ? 2U : 0U);
-                        DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == MDIButton) ? 2U : 0U);
-                        DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == MDIButton) ? 2U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_MIN,     (MDIButton == 0) ? 2U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_RESTORE, (MDIButton == 1) ? 2U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_CLOSE,   (MDIButton == 2) ? 2U : 0U);
                     }
                     else
                     {
@@ -1199,9 +1199,9 @@ namespace Win32xx
                 {
                     if (MDIButton >= 0)
                     {
-                        DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == MDIButton) ? 1U : 0U);
-                        DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == MDIButton) ? 1U : 0U);
-                        DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == MDIButton) ? 1U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_MIN,     (MDIButton == 0) ? 1U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_RESTORE, (MDIButton == 1) ? 1U : 0U);
+                        DrawMDIButton(MenuBarDC, MDI_CLOSE,   (MDIButton == 2) ? 1U : 0U);
                     }
                     else
                     {

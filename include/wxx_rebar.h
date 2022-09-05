@@ -149,7 +149,7 @@ namespace Win32xx
         assert(IsWindow());
 
         int result = -1;
-        if (0 == wnd) return result;
+        if (wnd == 0) return result;
 
         for (int band = 0; band < GetBandCount(); ++band)
         {
