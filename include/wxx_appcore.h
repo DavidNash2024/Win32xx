@@ -68,7 +68,7 @@ namespace Win32xx
         static CCriticalSection cs;
         CThreadLock appLock(cs);
 
-        if (0 == SetnGetThis())
+        if (SetnGetThis() == 0)
         {
             m_tlsData = ::TlsAlloc();
             if (m_tlsData != TLS_OUT_OF_INDEXES)
@@ -431,7 +431,7 @@ namespace Win32xx
     inline void CWinApp::SetTlsData()
     {
         TLSData* pTLSData = GetTlsData();
-        if (NULL == pTLSData)
+        if (pTLSData == NULL)
         {
             pTLSData = new TLSData;
             TLSDataPtr dataPtr(pTLSData);

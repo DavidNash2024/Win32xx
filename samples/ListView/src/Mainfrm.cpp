@@ -96,9 +96,9 @@ void CMainFrame::SetupMenuIcons()
 // Set the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    AddToolBarButton( IDM_FILE_NEW   );
-    AddToolBarButton( IDM_FILE_OPEN  );
-    AddToolBarButton( IDM_FILE_SAVE  );
+    AddToolBarButton( IDM_FILE_NEW, FALSE);     // disabled button
+    AddToolBarButton( IDM_FILE_OPEN, FALSE);    // disabled button
+    AddToolBarButton( IDM_FILE_SAVE, FALSE);    // disabled button
 
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
@@ -106,7 +106,7 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
 
     AddToolBarButton( 0 );                      // Separator
-    AddToolBarButton( IDM_FILE_PRINT );
+    AddToolBarButton( IDM_FILE_PRINT, FALSE);   // disabled button
 
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );

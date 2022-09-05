@@ -553,7 +553,7 @@ namespace Win32xx
     // and deletes the CPropertyPage object when the PropertySheet is destroyed.
     inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
     {
-        assert(NULL != pPage);
+        assert(pPage != NULL);
         if (!pPage) return NULL;
 
         m_allPages.push_back(PropertyPagePtr(pPage));

@@ -412,6 +412,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     case IDM_TABBEDMDI_TOP:
         check = (m_isMDITabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
         GetFrameMenu().CheckMenuItem(id, check);
+        break;
     }
 
     CDockFrame::OnMenuUpdate(id);

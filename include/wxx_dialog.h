@@ -141,7 +141,7 @@ namespace Win32xx
 
         // State functions
         BOOL IsModal() const { return m_isModal; }
-        BOOL IsIndirect() const { return (NULL != m_pDlgTemplate); }
+        BOOL IsIndirect() const { return (m_pDlgTemplate != NULL); }
 
         BOOL m_isModal;                  // a flag for modal dialogs
         LPCTSTR m_resourceName;          // the resource name for the dialog
@@ -192,7 +192,7 @@ namespace Win32xx
 
         struct ResizeData
         {
-            ResizeData() : corner(topleft), isFixedWidth(FALSE), isFixedHeight(FALSE), wnd(0) {}
+            ResizeData() : corner(topleft), isFixedWidth(false), isFixedHeight(false), wnd(0) {}
             CRect initRect;
             CRect oldRect;
             Alignment corner;
@@ -455,7 +455,7 @@ namespace Win32xx
         // Retrieve this thread's TLS data
         TLSData* pTLSData = GetApp()->GetTlsData();
 
-        if (0 == pTLSData->msgHook )
+        if (pTLSData->msgHook == 0)
         {
             pTLSData->msgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, 0, ::GetCurrentThreadId());
         }
@@ -594,7 +594,7 @@ namespace Win32xx
             if (!IsModal())
             {
                 TLSData* pTLSData = GetApp()->GetTlsData();
-                if (0 == pTLSData->msgHook)
+                if (pTLSData->msgHook == 0)
                 {
                     if (IsDialogMessage(msg))
                         return TRUE;

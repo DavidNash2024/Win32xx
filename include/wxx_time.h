@@ -268,7 +268,7 @@ namespace Win32xx
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )  // not VS or VS < 2005
         assert(::gmtime(&t0));
 #else
-        assert(0 == ::gmtime_s(ptm0, &t0));
+        assert(::gmtime_s(ptm0, &t0) == 0);
 #endif
 
         return t0;

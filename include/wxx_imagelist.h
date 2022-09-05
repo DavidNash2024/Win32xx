@@ -666,7 +666,7 @@ namespace Win32xx
     // Creates a gray scale image list from the specified color image list.
     inline BOOL CImageList::CreateDisabledImageList(HIMAGELIST normalImages)
     {
-        assert(0 == m_pData->images);
+        assert(m_pData->images == 0);
         assert(normalImages);
 
         int count = ImageList_GetImageCount(normalImages);

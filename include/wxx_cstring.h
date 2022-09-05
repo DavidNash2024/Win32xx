@@ -487,7 +487,7 @@ namespace Win32xx
     inline bool CStringT<T>::operator == (const T* text) const
     {
         assert(text != 0);
-        return (0 == Compare(text));
+        return (Compare(text) == 0);
     }
 
     // Returns TRUE if the strings have the same content.
@@ -772,7 +772,7 @@ namespace Win32xx
             // A vector is used to store the CHAR array
             std::vector<CHAR> buffer;
 
-            while (-1 == result)
+            while (result == -1)
             {
                 buffer.assign( size_t(length)+1, 0 );
 
@@ -800,7 +800,7 @@ namespace Win32xx
             // A vector is used to store the WCHAR array
             std::vector<WCHAR> buffer;
 
-            while (-1 == result)
+            while (result == -1)
             {
                 buffer.assign( size_t(length)+1, 0 );
 #if !defined (_MSC_VER) ||  ( _MSC_VER < 1400 )
@@ -1099,8 +1099,7 @@ namespace Win32xx
     template <class T>
     inline void CStringT<T>::ReleaseBuffer( int newLength /*= -1*/ )
     {
-
-        if (-1 == newLength)
+        if (newLength == -1)
         {
             newLength = lstrlenT(&m_buf.front());
         }
