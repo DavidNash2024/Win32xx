@@ -1862,6 +1862,8 @@ namespace Win32xx
             if (m_maxMRU > 0)
                 UpdateMRUMenu();
         }
+        else
+            ShowMenu(FALSE);  // No menu if IDW_MAIN menu resource isn't defined
 
         // Create the ToolBar
         if (IsUsingToolBar())
