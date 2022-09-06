@@ -2188,8 +2188,8 @@ namespace Win32xx
     inline HWND CSlider::SetBuddy(HWND buddy, BOOL location /*= TRUE*/ ) const
     {
         assert(IsWindow());
-        WPARAM wparam = reinterpret_cast<WPARAM>(buddy);
-        LPARAM lparam = static_cast<LPARAM>(location);
+        WPARAM wparam = static_cast<WPARAM>(location);
+        LPARAM lparam = reinterpret_cast<LPARAM>(buddy);
         return reinterpret_cast<HWND>(SendMessage(TBM_SETBUDDY, wparam, lparam));
     }
 
@@ -2218,8 +2218,8 @@ namespace Win32xx
     inline void CSlider::SetPos(int pos, BOOL redraw) const
     {
         assert(IsWindow());
-        WPARAM wparam = static_cast<WPARAM>(pos);
-        LPARAM lparam = static_cast<LPARAM>(redraw);
+        WPARAM wparam = static_cast<WPARAM>(redraw);
+        LPARAM lparam = static_cast<LPARAM>(pos);
         SendMessage(TBM_SETPOS, wparam, lparam);
     }
 
@@ -2228,8 +2228,8 @@ namespace Win32xx
     inline void CSlider::SetRangeMax(int max, BOOL redraw) const
     {
         assert(IsWindow());
-        WPARAM wparam = static_cast<WPARAM>(max);
-        LPARAM lparam = static_cast<LPARAM>(redraw);
+        WPARAM wparam = static_cast<WPARAM>(redraw);
+        LPARAM lparam = static_cast<LPARAM>(max);
         SendMessage(TBM_SETRANGEMAX, wparam, lparam);
     }
 
@@ -2238,8 +2238,8 @@ namespace Win32xx
     inline void CSlider::SetRangeMin(int min, BOOL redraw) const
     {
         assert(IsWindow());
-        WPARAM wparam = static_cast<WPARAM>(min);
-        LPARAM lparam = static_cast<LPARAM>(redraw);
+        WPARAM wparam = static_cast<WPARAM>(redraw);
+        LPARAM lparam = static_cast<LPARAM>(min);
         SendMessage(TBM_SETRANGEMIN, wparam, lparam);
     }
 
