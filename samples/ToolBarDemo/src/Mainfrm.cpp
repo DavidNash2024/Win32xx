@@ -267,7 +267,7 @@ LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR)
 // Show or hide the toolbars
 inline BOOL CMainFrame::OnViewToolBar()
 {
-    BOOL show = GetToolBar().IsWindow() && !GetToolBar().IsWindowVisible();
+    BOOL show = (GetToolBar().IsWindow() && !GetToolBar().IsWindowVisible())? TRUE : FALSE;
 
     GetReBar().ShowBand(GetReBar().GetBand(GetToolBar()), show);
     GetReBar().ShowBand(GetReBar().GetBand(m_cards), show);

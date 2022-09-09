@@ -97,17 +97,19 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
 
         switch (lowParam)
         {
-            case IDM_FILE_NEW:       OnFileNew();     return TRUE;
-            case IDM_FILE_OPEN:      OnFileOpen();    return TRUE;
-            case IDM_FILE_SAVE:      OnFileSave();    return TRUE;
-            case IDM_FILE_SAVEAS:    OnFileSaveAs();  return TRUE;
-            case IDM_FILE_EXIT:      OnFileExit();    return TRUE;
-            case IDM_HELP_ABOUT:     OnHelpAbout();   return TRUE;
-            case IDM_COLOR_CHOICE:   OnColorChoice(); return TRUE;
-            case IDM_FONT_CHOICE:    OnFontChoice();  return TRUE;
+            case IDM_FILE_NEW:       OnFileNew();       return TRUE;
+            case IDM_FILE_OPEN:      OnFileOpen();      return TRUE;
+            case IDM_FILE_SAVE:      OnFileSave();      return TRUE;
+            case IDM_FILE_SAVEAS:    OnFileSaveAs();    return TRUE;
+            case IDM_FILE_EXIT:      OnFileExit();      return TRUE;
+            case IDM_HELP_ABOUT:     OnHelpAbout();     return TRUE;
+            case IDM_COLOR_CHOICE:   OnColorChoice();   return TRUE;
+            case IDM_FONT_CHOICE:    OnFontChoice();    return TRUE;
+            case IDW_VIEW_TOOLBAR:   OnViewToolBar();   return TRUE;
+            case IDW_VIEW_STATUSBAR: OnViewStatusBar(); return TRUE;
             case IDW_FILE_MRU_FILE1: OnProcessMRU(wparam, lparam); return TRUE;
         }
-        return CFrame::OnCommand(wparam, lparam);
+        return FALSE;
 }
 
 
