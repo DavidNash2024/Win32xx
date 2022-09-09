@@ -527,7 +527,6 @@ namespace Win32xx
     {
         assert(IsWindow());
         CRect rc;
- 
         WPARAM wparam = static_cast<WPARAM>(index);
         LPARAM lparam = reinterpret_cast<LPARAM>(&rc);
         VERIFY(SendMessage(TB_GETITEMRECT, wparam, lparam));

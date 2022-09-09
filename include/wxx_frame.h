@@ -558,14 +558,15 @@ namespace Win32xx
                 m_menuIcons.push_back(*iter);
         }
 
-        // Add the images to the ImageList.
+        // Add the images to the imageList.
         m_menuImages.Add(bitmap, mask);
 
-        // Create the Disabled imagelist.
+        // Add the images to the disabled imagelist.
         if (disabledID != 0)
         {
-            m_menuDisabledImages.DeleteImageList();
-            m_menuDisabledImages.Create(newSize, newSize, ILC_COLOR32 | ILC_MASK, images, 0);
+            // Create the disabled imageList if required.
+            if (m_menuDisabledImages.GetHandle() == 0)
+                m_menuDisabledImages.Create(newSize, newSize, ILC_COLOR32 | ILC_MASK, images, 0);
 
             CBitmap disabled(disabledID);
 
@@ -846,7 +847,6 @@ namespace Win32xx
                             textSize = drawDC.GetTextExtentPoint32(str, str.GetLength());
                         }
 
-
                         // Draw outline rectangle.
                         if (state & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
                         {
@@ -889,6 +889,9 @@ namespace Win32xx
                         }
 
                         bool isWin95 = (GetWinVersion() == 1400) || (GetWinVersion() == 2400);
+
+                        // Assert if the toolbar images aren't set.
+                        assert(toolBarImages.GetHandle() != 0);
 
                         // Calculate image position.
                         CSize szImage = toolBarImages.GetIconSize();
@@ -2535,7 +2538,7 @@ namespace Win32xx
         CClientDC clientDC(*this);
         CMemDC newImageDC(clientDC);
         CMemDC imageDC(clientDC);
-        
+
         // Create and select the bitmaps
         newImageDC.CreateCompatibleBitmap(clientDC, newWidth, newHeight);
         imageDC.SelectObject(image);
