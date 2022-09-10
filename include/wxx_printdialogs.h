@@ -579,7 +579,7 @@ namespace Win32xx
         m_pd.hDevNames = 0;
 
         // Return TRUE if default printer exists
-        return (GetApp()->m_devNames.Get() != 0);
+        return (GetApp()->m_devNames.Get()) ? TRUE : FALSE;
     }
 
     // Retrieves the name of the default or currently selected printer device.

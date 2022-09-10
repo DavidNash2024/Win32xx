@@ -198,16 +198,19 @@ namespace Win32xx
     inline CMenu::CMenu(UINT id)
     {
         m_pData = new CMenu_Data;
-
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(id));
-        Attach(menu);
-        m_pData->isManagedMenu = true;
+        if (menu != 0)
+        {
+            Attach(menu);
+            m_pData->isManagedMenu = true;
+        }
     }
 
     inline CMenu::CMenu(HMENU menu)
     {
         m_pData = new CMenu_Data;
-        Attach(menu);
+        if (menu != 0)
+            Attach(menu);
     }
 
     // Note: A copy of a CMenu is a clone of the original.
@@ -718,7 +721,7 @@ namespace Win32xx
             m_pData->isManagedMenu = true;
         }
 
-        return m_pData->menu != 0;
+        return m_pData->menu ? TRUE : FALSE;
     }
 
     // Changes an existing menu item. This function is used to specify the content, appearance, and behavior of the menu item.

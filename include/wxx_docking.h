@@ -1018,7 +1018,7 @@ namespace Win32xx
     // This function modifies lparam.
     inline LRESULT CDocker::CDockClient::OnNCCalcSize(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if (m_pDocker->IsUndockable())
             {
@@ -1033,7 +1033,7 @@ namespace Win32xx
     // Identify which part of the non-client area the cursor is over.
     inline LRESULT CDocker::CDockClient::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if (m_pDocker->IsUndockable())
             {
@@ -1055,7 +1055,7 @@ namespace Win32xx
 
     inline LRESULT CDocker::CDockClient::OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if ((HTCLOSE == wparam) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
             {
@@ -1087,7 +1087,7 @@ namespace Win32xx
 
     inline LRESULT CDocker::CDockClient::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if ((HTCLOSE == wparam) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
             {
@@ -1122,13 +1122,13 @@ namespace Win32xx
     {
         ReleaseCapture();
 
-        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
+        if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
         {
             CWindowDC dc(*this);
             DrawCloseButton(dc, m_isOldFocusStored);
             dc.Destroy();  // Destroy the dc before destroying its window.
 
-            if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
+            if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
             {
                 m_isCaptionPressed = FALSE;
                 if (m_isClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
@@ -1196,7 +1196,7 @@ namespace Win32xx
             m_isTracking = TRUE;
         }
 
-        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if (m_pDocker->IsDocked())
             {
@@ -1212,7 +1212,7 @@ namespace Win32xx
                 }
 
                 // Update the close button
-                if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
+                if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
                     DrawCloseButton(dc, m_isOldFocusStored);
@@ -1262,7 +1262,7 @@ namespace Win32xx
                 }
 
                 // Update the close button
-                if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
+                if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
                     DrawCloseButton(dc, m_isOldFocusStored);
@@ -1299,7 +1299,7 @@ namespace Win32xx
 
     inline LRESULT CDocker::CDockClient::OnNCPaint(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if ((m_pDocker != 0) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
+        if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if (m_pDocker->IsUndockable())
             {
@@ -1719,7 +1719,7 @@ namespace Win32xx
         if (pDockTarget == NULL) return FALSE;
 
         if (!IsWindow())    Create();
-        m_isOverContainer = (pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER) != 0);
+        m_isOverContainer = pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER) ? TRUE : FALSE;
 
         // Redraw the target if the dock target changes.
         if (m_pOldDockTarget != pDockTarget)    Invalidate();
@@ -2185,7 +2185,7 @@ namespace Win32xx
         // Check presence of dock parent.
         for (iter = GetAllChildren().begin(); iter != GetAllChildren().end(); ++iter)
         {
-            if ((*iter)->IsUndocked() && (*iter)->m_pDockParent != 0)
+            if ((*iter)->IsUndocked() && (*iter)->m_pDockParent != NULL)
             {
                 TRACE("Error: Undocked dockers should not have a dock parent\n");
                 Verified = FALSE;
@@ -2812,7 +2812,7 @@ namespace Win32xx
                         DockInfo di = *iter;
                         CDocker* pDockParent = GetDockFromID(di.dockParentID);
 
-                        if (pDockParent != 0)
+                        if (pDockParent != NULL)
                         {
                             CDocker* pDocker = NewDockerFromID(di.dockID);
                             if (!pDocker)
@@ -3767,7 +3767,7 @@ namespace Win32xx
                 for (iter = sortedDockers.begin(); iter != sortedDockers.end(); ++iter)
                 {
                     // Recalculate the docker size.
-                    if ((*iter)->GetDockBar().IsWindow() && (*iter)->m_pDockParent != 0)
+                    if ((*iter)->GetDockBar().IsWindow() && (*iter)->m_pDockParent != NULL)
                     {
                         DRAGPOS dp;
                         ZeroMemory(&dp, sizeof(dp));
@@ -5133,7 +5133,7 @@ namespace Win32xx
     {
         BOOL isHandled = FALSE;
         if (GetContainer()->GetActiveContainer() && GetContainer()->GetActiveContainer()->IsWindow())
-            isHandled = (GetContainer()->GetActiveContainer()->SendMessage(WM_COMMAND, wparam, lparam) != 0);
+            isHandled = GetContainer()->GetActiveContainer()->SendMessage(WM_COMMAND, wparam, lparam) ? TRUE : FALSE;
 
         return isHandled;
     }

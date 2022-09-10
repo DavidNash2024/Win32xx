@@ -157,7 +157,7 @@ using namespace Win32xx;
 #define MIN(a,b)        (((a) < (b)) ? (a) : (b))
 
 // Version macro
-#define _WIN32XX_VER 0x0900     // Win32++ version 9.0.0
+#define _WIN32XX_VER 0x0910     // Win32++ version 9.1.0
 
 // Define the TRACE Macro.
 // In debug mode, TRACE send text to the debug/output pane, or an external debugger
@@ -180,6 +180,10 @@ using namespace Win32xx;
     #define VERIFY(f) assert(f)
   #endif
 #endif
+
+// tString is a TCHAR std::string
+typedef std::basic_string<TCHAR> tString;
+typedef std::basic_stringstream<TCHAR> tStringStream;
 
 namespace Win32xx
 {

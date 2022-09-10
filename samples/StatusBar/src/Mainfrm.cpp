@@ -124,8 +124,8 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-// Override the base class function to disable it.
-// The status will call SetParts when it is resized.
+// We override the base class function to disable it.
+// CMyStatusBar calls SetupParts when the statusbar is resized.
 void CMainFrame::SetStatusParts()
 {
 }

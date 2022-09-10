@@ -362,7 +362,7 @@ namespace Win32xx
                 // Restricting OnNotifyReflect to child windows avoids double handling.
                 LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
                 assert(pHeader);
-                if (pHeader != 0)
+                if (pHeader != NULL)
                 {
                     HWND from = pHeader->hwndFrom;
                     CWnd* pFrom = GetApp()->GetCWndFromMap(from);
@@ -465,7 +465,7 @@ namespace Win32xx
         pTLSData->pWnd = this;
 
         // Create a modal dialog
-        if (m_pDlgTemplate != 0)
+        if (m_pDlgTemplate != NULL)
             result = ::DialogBoxIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
@@ -513,7 +513,7 @@ namespace Win32xx
         HWND wnd;
 
         // Create the modeless dialog
-        if (m_pDlgTemplate != 0)
+        if (m_pDlgTemplate != NULL)
             wnd = ::CreateDialogIndirect(instance, m_pDlgTemplate, parent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
@@ -752,7 +752,7 @@ namespace Win32xx
                 {
                     // Only CDialogs respond to this message
                     CDialog* pDialog = reinterpret_cast<CDialog*>(::SendMessage(wnd, UWM_GETCDIALOG, 0, 0));
-                    if (pDialog != 0)
+                    if (pDialog != NULL)
                     {
                         if (pDialog->PreTranslateMessage(*pMsg))
                             return 1; // Eat the message

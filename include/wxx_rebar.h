@@ -494,8 +494,7 @@ namespace Win32xx
         // Adjust size for toolbars inside a rebar
         ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0, 0));
 
-        // A boolean expression
-        return ( pTheme && pTheme->UseThemes && pTheme->ShortBands );
+        return (pTheme && pTheme->UseThemes && pTheme->ShortBands) ? TRUE : FALSE;
     }
 
     // Sets a band's size.

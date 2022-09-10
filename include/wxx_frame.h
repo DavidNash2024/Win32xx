@@ -349,7 +349,7 @@ namespace Win32xx
         CWnd* m_pView;                      // pointer to the View CWnd object
         UINT m_maxMRU;                      // maximum number of MRU entries
         HWND m_oldFocus;                    // The window which had focus prior to the app's deactivation
-        BOOL m_drawArrowBkgrnd;             // True if a separate arrow background is to be drawn on toolbar
+        BOOL m_drawArrowBkgrnd;             // TRUE if a separate arrow background is to be drawn on toolbar
         HHOOK m_kbdHook;                    // Keyboard hook.
 
         CMenuMetrics m_menuMetrics;         // The MenuMetrics object
@@ -478,6 +478,8 @@ namespace Win32xx
     template <class T>
     inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, HICON icon)
     {
+        assert(icon != 0);
+
         int cxImage;
         int cyImage;
 
@@ -531,8 +533,11 @@ namespace Win32xx
                 ++images;
         }
 
-        // Load the button images from Resource ID.
+        // Load the button images from the resource ID.
         CBitmap bitmap(bitmapID);
+
+        // Assert if we failed to load the bitmap.
+        assert(bitmap.GetHandle() != 0);
 
         if ((images == 0) || (bitmap.GetHandle() == 0))
             return static_cast<UINT>(m_menuIcons.size());  // No valid images, so nothing to do!
@@ -2243,8 +2248,7 @@ namespace Win32xx
 
         if (pTB)
         {
-            // a boolean expression
-            m_drawArrowBkgrnd = (pTB->GetButtonStyle(item) & TBSTYLE_DROPDOWN);
+            m_drawArrowBkgrnd = (pTB->GetButtonStyle(item) & TBSTYLE_DROPDOWN) ? TRUE : FALSE;
         }
 
         return 0;
