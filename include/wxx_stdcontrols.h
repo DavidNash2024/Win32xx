@@ -793,7 +793,7 @@ namespace Win32xx
     inline BOOL CEdit::SetTabStops() const
     {
         assert(IsWindow());
-        return (SendMessage(EM_SETTABSTOPS, 0, 0) != 0);
+        return static_cast<BOOL>(SendMessage(EM_SETTABSTOPS, 0, 0));
     }
 
     // Sets tab-stop positions in the multi-line edit control.

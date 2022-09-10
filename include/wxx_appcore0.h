@@ -91,10 +91,6 @@ namespace Win32xx
     // Define the maximum size for TCHAR strings
     const int WXX_MAX_STRING_SIZE = 255;
 
-    // tString is a TCHAR std::string
-    typedef std::basic_string<TCHAR> tString;
-    typedef std::basic_stringstream<TCHAR> tStringStream;
-
     // Some useful smart pointers
     // Note: Modern C++ compilers can use these typedefs instead.
     // typedef std::shared_ptr<CBitmap> BitmapPtr;

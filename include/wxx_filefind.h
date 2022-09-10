@@ -83,38 +83,38 @@ namespace Win32xx
     // specified by FindFirstFile.
     class CFileFind
     {
-        public:
-            CFileFind();
-            virtual ~CFileFind();
+     public:
+         CFileFind();
+         virtual ~CFileFind();
 
-            BOOL        FindFirstFile(LPCTSTR fileSearch = NULL);
-            BOOL        FindNextFile();
-            FILETIME    GetCreationTime() const;
-            DWORD       GetFileAttributes() const;
-            CString     GetFileName() const;
-            CString     GetFilePath() const;
-            CString     GetFileTitle() const;
-            CString     GetFileURL() const;
-            FILETIME    GetLastAccessTime() const;
-            FILETIME    GetLastWriteTime() const;
-            ULONGLONG   GetLength() const;
-            CString     GetRoot() const;
-            BOOL        IsArchived() const;
-            BOOL        IsCompressed() const;
-            BOOL        IsDirectory() const;
-            BOOL        IsDots() const;
-            BOOL        IsHidden() const;
-            BOOL        IsNormal() const;
-            BOOL        IsReadOnly() const;
-            BOOL        IsSystem() const;
-            BOOL        IsTemporary() const;
+         BOOL        FindFirstFile(LPCTSTR fileSearch = NULL);
+         BOOL        FindNextFile();
+         FILETIME    GetCreationTime() const;
+         DWORD       GetFileAttributes() const;
+         CString     GetFileName() const;
+         CString     GetFilePath() const;
+         CString     GetFileTitle() const;
+         CString     GetFileURL() const;
+         FILETIME    GetLastAccessTime() const;
+         FILETIME    GetLastWriteTime() const;
+         ULONGLONG   GetLength() const;
+         CString     GetRoot() const;
+         BOOL        IsArchived() const;
+         BOOL        IsCompressed() const;
+         BOOL        IsDirectory() const;
+         BOOL        IsDots() const;
+         BOOL        IsHidden() const;
+         BOOL        IsNormal() const;
+         BOOL        IsReadOnly() const;
+         BOOL        IsSystem() const;
+         BOOL        IsTemporary() const;
 
-        private:
-            void    Close();
+     private:
+         void    Close();
 
-            WIN32_FIND_DATA m_findData;
-            HANDLE      m_fileFind;
-            CString     m_root;
+         WIN32_FIND_DATA m_findData;
+         HANDLE      m_fileFind;
+         CString     m_root;
     };
 
 }
@@ -310,21 +310,21 @@ namespace Win32xx
     inline BOOL CFileFind::IsArchived() const
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
-        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) != 0;
+        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) ? TRUE : FALSE;
     }
 
     //  Return TRUE if the found file is compressed.
     inline BOOL CFileFind::IsCompressed() const
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
-        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_COMPRESSED) != 0;
+        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_COMPRESSED) ? TRUE : FALSE;
     }
 
     //  Return TRUE if the found file is a directory.
     inline BOOL CFileFind::IsDirectory() const
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
-        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) ? TRUE : FALSE;
     }
 
     //  Return TRUE if the found file is the current directory or parent directory.
@@ -340,35 +340,35 @@ namespace Win32xx
     inline BOOL CFileFind::IsHidden() const
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
-        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) != 0;
+        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) ? TRUE : FALSE;
     }
 
     //  Return TRUE if the found file has the FILE_ATTRIBUTE_NORMAL attribute.
     inline BOOL CFileFind::IsNormal() const
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
-        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL) != 0;
+        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL) ? TRUE : FALSE;
     }
 
     //  Return TRUE if the found file is read only.
     inline BOOL CFileFind::IsReadOnly() const
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
-        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) != 0;
+        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) ? TRUE : FALSE;
     }
 
     //  Return TRUE if the found file is a system file.
     inline BOOL CFileFind::IsSystem() const
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
-        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) != 0;
+        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ? TRUE : FALSE;
     }
 
     //  Return TRUE if the found file is a temporary file.
     inline BOOL CFileFind::IsTemporary() const
     {
         assert(m_fileFind != INVALID_HANDLE_VALUE);
-        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_TEMPORARY) != 0;
+        return (m_findData.dwFileAttributes & FILE_ATTRIBUTE_TEMPORARY) ? TRUE : FALSE;
     }
 
 

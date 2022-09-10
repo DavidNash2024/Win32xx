@@ -36,7 +36,7 @@ public:
         if (i >= 0)
             cout << i <<" chars received: " << str << endl;
         else
-            cout << "Failed to send to client" << endl;
+            cout << "Failed to receive" << endl;
     }
 };
 

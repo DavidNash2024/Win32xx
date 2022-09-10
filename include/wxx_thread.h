@@ -279,9 +279,9 @@ namespace Win32xx
     {
         // Get the pointer for this CWinThread object
         CWinThread* pThread = static_cast<CWinThread*>(pCThread);
-        assert(pThread != 0);
+        assert(pThread != NULL);
 
-        if (pThread != 0)
+        if (pThread != NULL)
         {
             // Set the thread's TLS Data.
             GetApp()->SetTlsData();

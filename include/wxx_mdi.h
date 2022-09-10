@@ -350,10 +350,10 @@ namespace Win32xx
         CMenuBar* pMenubar = reinterpret_cast<CMenuBar*>
             (::SendMessage(pNMHDR->hwndFrom, UWM_GETCMENUBAR, 0, 0));
 
-        assert(pMenubar != 0);
+        assert(pMenubar != NULL);
 
         // Do the additional menubar custom drawing for the MDI frame.
-        if (pMenubar != 0)
+        if (pMenubar != NULL)
         {
             switch (lpNMCustomDraw->nmcd.dwDrawStage)
             {

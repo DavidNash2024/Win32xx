@@ -1526,6 +1526,7 @@ namespace Win32xx
     }
 
     // The GetMenu function retrieves a handle to the menu assigned to the window.
+    // The menu handle will be zero if the window doesn't have a menu.
     // Refer to GetMenu in the Windows API documentation for more information.
     inline CMenu CWnd::GetMenu() const
     {

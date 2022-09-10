@@ -397,7 +397,7 @@ namespace Win32xx
         assert(comctl);
         if (comctl)
         {
-            result = (::GetProcAddress(comctl, "TaskDialogIndirect") != 0);
+            result = (::GetProcAddress(comctl, "TaskDialogIndirect")) ? TRUE : FALSE;
             ::FreeLibrary(comctl);
         }
 

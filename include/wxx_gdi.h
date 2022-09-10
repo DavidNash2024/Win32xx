@@ -1310,7 +1310,7 @@ namespace Win32xx
             Attach(bitmap);
             SetManaged(true);
         }
-        return bitmap? TRUE : FALSE;
+        return bitmap ? TRUE : FALSE;
     }
 
     // Loads a bitmap from a resource using the resource ID.
@@ -1369,7 +1369,7 @@ namespace Win32xx
             Attach(bitmap);
             SetManaged(true);
         }
-        return (bitmap != 0);  // boolean expression
+        return bitmap ? TRUE : FALSE;
     }
 
     // Rapidly converts the bitmap image to pale grayscale image suitable for disabled icons.
@@ -4214,7 +4214,7 @@ namespace Win32xx
     inline BOOL CDC::FillRect(const RECT& rc, HBRUSH brush) const
     {
         assert(m_pData->dc != 0);
-        return (::FillRect(m_pData->dc, &rc, brush) != 0);
+        return (::FillRect(m_pData->dc, &rc, brush) ? TRUE : FALSE);
     }
 
     // Inverts a rectangle in a window by performing a logical NOT operation on the color
@@ -4292,7 +4292,7 @@ namespace Win32xx
     inline BOOL CDC::FrameRect(const RECT& rc, HBRUSH brush) const
     {
         assert(m_pData->dc != 0);
-        return (::FrameRect(m_pData->dc, &rc, brush) != 0);
+        return (::FrameRect(m_pData->dc, &rc, brush)) ? TRUE : FALSE;
     }
 
     // Draws a border around the specified region by using the specified brush.

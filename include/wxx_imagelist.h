@@ -206,7 +206,6 @@ namespace Win32xx
                 pApp->m_mapCImlData.erase(m);
                 success = TRUE;
             }
-
         }
 
         return success;
@@ -332,7 +331,7 @@ namespace Win32xx
         Attach(images);
         m_pData->isManagedHiml = true;
 
-        return (images != 0 );
+        return (images != 0) ? TRUE : FALSE;
     }
 
     // Creates a new image list.
@@ -367,7 +366,7 @@ namespace Win32xx
         Attach(images);
         m_pData->isManagedHiml = true;
 
-        return (images != 0 );
+        return (images != 0) ? TRUE : FALSE;
     }
 
     // Creates a duplicate ImageList
@@ -383,7 +382,7 @@ namespace Win32xx
         Attach(copyImages);
         m_pData->isManagedHiml = true;
 
-        return (copyImages != 0 );
+        return (copyImages != 0) ? TRUE : FALSE;
     }
 
     // Destroys an image list.
@@ -708,7 +707,7 @@ namespace Win32xx
             }
         }
 
-        return ( m_pData->images != 0 );
+        return (m_pData->images != 0) ? TRUE : FALSE;
     }
 
 }   // namespace Win32xx

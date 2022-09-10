@@ -730,7 +730,7 @@ namespace Win32xx
             {
                 // store info about selected item
                 m_selMenu = reinterpret_cast<HMENU>(lparam);
-                m_isSelPopup = ((HIWORD(wparam) & MF_POPUP) != 0);
+                m_isSelPopup = ((HIWORD(wparam) & MF_POPUP)) ? TRUE : FALSE;
 
                 // Reflect message back to the frame window
                 GetAncestor().SendMessage(WM_MENUSELECT, wparam, lparam);

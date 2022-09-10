@@ -498,10 +498,9 @@ namespace Win32xx
     template <class T>
     inline void CRibbonFrameT<T>::UpdateMRUMenu()
     {
-        // Suppress UpdateMRUMenu when ribbon is used.
-        if (GetRibbonFramework() != 0) return;
-
-        T::UpdateMRUMenu();
+        // Update the MRU menu when the ribbon isn't used.
+        if (GetRibbonFramework() == NULL)
+            T::UpdateMRUMenu();
     }
 
 

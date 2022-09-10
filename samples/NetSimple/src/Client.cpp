@@ -29,7 +29,7 @@ public:
         if (i >= 0)
             cout << i << " chars received: " << str << endl;
         else
-            cout << "Failed to send" << endl;
+            cout << "Failed to receive" << endl;
     }
 };
 
@@ -52,6 +52,7 @@ int main()
 
     // Send data to the server
     string s;
+
     for (;;)    // Infinite loop
     {
         getline(cin, s);
