@@ -4487,28 +4487,30 @@ namespace Win32xx
                 dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
                 dc.RoundRect(rcItem.left, rcItem.top, rcItem.right + 1, rcItem.bottom, 6, 6);
 
-                if (rcItem.Width() >= 24)
+                CSize szImage = GetODImageList().GetIconSize();
+                int padding = 4;
+
+                if (rcItem.Width() >= szImage.cx + 2 * padding)
                 {
                     CString str = GetDockTabText(i);
                     int image = GetDockTabImageID(i);
-                    CSize szImage = GetODImageList().GetIconSize();
                     int yOffset = (rcItem.Height() - szImage.cy) / 2;
 
                     // Draw the icon.
-                    GetODImageList().Draw(dc, image, CPoint(rcItem.left + 5, rcItem.top + yOffset), ILD_NORMAL);
-
-                    // Draw the text.
-                    dc.SelectObject(GetTabFont());
+                    int drawleft = rcItem.left + padding;
+                    int drawtop = rcItem.top + yOffset;
+                    GetODImageList().Draw(dc, image, CPoint(drawleft, drawtop), ILD_NORMAL);
 
                     // Calculate the size of the text.
                     CRect rcText = rcItem;
 
-                    int iImageSize = 20;
-                    int iPadding = 4;
                     if (image >= 0)
-                        rcText.left += iImageSize;
+                        rcText.left += szImage.cx + padding;
 
-                    rcText.left += iPadding;
+                    rcText.left += padding;
+
+                    // Draw the text.
+                    dc.SelectObject(GetTabFont());
                     dc.DrawText(str, -1, rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
                 }
             }
@@ -4625,8 +4627,16 @@ namespace Win32xx
         m_pDocker = reinterpret_cast<CDocker*>((GetParent().GetParent().SendMessage(UWM_GETCDOCKER)));
         assert(dynamic_cast<CDocker*>(m_pDocker));
 
+        // Set the font used in the tabs.
+        CFont font;
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        font.CreateFontIndirect(info.lfStatusFont);
+        SetTabFont(font);
+
         // Create and assign the tab's image list.
-        GetODImageList().Create(16, 16, ILC_MASK | ILC_COLOR32, 0, 0);
+        int iconHeight = MAX(16, GetTextHeight());
+        iconHeight = iconHeight - iconHeight % 8;
+        GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
 
         // Add a tab for this container except for the DockAncestor.
         if (!GetDocker() || GetDocker()->GetDockAncestor() != GetDocker())
@@ -4660,12 +4670,6 @@ namespace Win32xx
             else
                 GetToolBar().Destroy();
         }
-
-        // Set the font used in the tabs.
-        CFont font;
-        NONCLIENTMETRICS info = GetNonClientMetrics();
-        font.CreateFontIndirect(info.lfStatusFont);
-        SetTabFont(font);
 
         SetFixedWidth(TRUE);
         SetOwnerDraw(TRUE);
@@ -4844,8 +4848,8 @@ namespace Win32xx
         if (!pWnd) return;
 
         // Remove the tab.
-        int iTab = GetContainerIndex(pWnd);
-        DeleteItem(iTab);
+        int tab = GetContainerIndex(pWnd);
+        DeleteItem(tab);
 
         // Remove the ContainerInfo entry.
         std::vector<ContainerInfo>::iterator iter;
@@ -4868,7 +4872,7 @@ namespace Win32xx
         pWnd->m_pContainerParent = pWnd;
 
         // Display next lowest page.
-        m_currentPage = MAX(iTab - 1, 0);
+        m_currentPage = MAX(tab - 1, 0);
         if (IsWindow() && updateParent)
         {
             if (GetItemCount() > 0)

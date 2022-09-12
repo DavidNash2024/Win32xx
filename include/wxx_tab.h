@@ -54,11 +54,11 @@ namespace Win32xx
     // This struct holds the information for each tab page.
     struct TabPageInfo
     {
-        CString TabText;    // The tab's text
+        CString tabText;    // The tab's text
         int image;          // index of this tab's image
-        int idTab;          // identifier for this tab (used by TabbedMDI)
+        int tabID;          // identifier for this tab (used by TabbedMDI)
         CWnd* pView;        // pointer to the view window
-        TabPageInfo() : image(0), idTab(0), pView(0) {}    // constructor
+        TabPageInfo() : image(0), tabID(0), pView(0) {}    // constructor
     };
 
     struct TABNMHDR
@@ -385,8 +385,8 @@ namespace Win32xx
 
         TabPageInfo tpi;
         tpi.pView = pView;
-        tpi.idTab = tabID;
-        tpi.TabText = tabText;
+        tpi.tabID = tabID;
+        tpi.tabText = tabText;
         if (icon != 0)
             tpi.image = GetODImageList().Add(icon);
         else
@@ -401,7 +401,7 @@ namespace Win32xx
             ZeroMemory(&tie, sizeof(tie));
             tie.mask = TCIF_TEXT | TCIF_IMAGE;
             tie.iImage = tpi.image;
-            tie.pszText = const_cast<LPTSTR>(tpi.TabText.c_str());
+            tie.pszText = const_cast<LPTSTR>(tpi.tabText.c_str());
             InsertItem(iNewPage, &tie);
 
             SetTabSize();
@@ -446,12 +446,12 @@ namespace Win32xx
 
         CPoint pt = GetCursorPos();
         VERIFY(ScreenToClient(pt));
-        UINT uState = rcClose.PtInRect(pt)? m_isClosePressed? 2U: 1U: 0U;
+        UINT state = rcClose.PtInRect(pt)? m_isClosePressed? 2U: 1U: 0U;
 
         // Draw the outer highlight for the close button.
         if (!IsRectEmpty(&rcClose))
         {
-            switch (uState)
+            switch (state)
             {
             case 0:
                 {
@@ -577,11 +577,11 @@ namespace Win32xx
 
             // Manually draw list button.
             dc.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
-            int MaxLength = static_cast<int>(0.65 * rcList.Width());
+            int maxLength = static_cast<int>(0.65 * rcList.Width());
             int topGap = 1 + rcList.Height()/3;
-            for (int i = 0; i <= MaxLength/2; ++i)
+            for (int i = 0; i <= maxLength/2; ++i)
             {
-                int Length = MaxLength - 2*i;
+                int Length = maxLength - 2*i;
                 dc.MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
                 dc.LineTo(rcList.left +1 + (rcList.Width() - Length)/2 + Length, rcList.top +topGap +i);
             }
@@ -612,28 +612,29 @@ namespace Win32xx
                 dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
                 dc.RoundRect(rcItem.left, rcItem.top, rcItem.right +1, rcItem.bottom, 6, 6);
 
-                if (rcItem.Width() >= 24)
+                CSize szImage = GetODImageList().GetIconSize();
+                int padding = 4;
+
+                if (rcItem.Width() >= szImage.cx + 2 * padding)
                 {
                     CString str = GetTabText(i);
                     int image = GetTabImageID(i);
-                    CSize szImage = m_odImages.GetIconSize();
                     int yOffset = (rcItem.Height() - szImage.cy)/2;
 
                     // Draw the icon.
-                    m_odImages.Draw(dc, image,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
-
-                    // Draw the text.
-                    dc.SelectObject(m_tabFont);
+                    int drawleft = rcItem.left + padding;
+                    int drawtop = rcItem.top + yOffset;
+                    GetODImageList().Draw(dc, image,  CPoint(drawleft, drawtop), ILD_NORMAL);
 
                     // Calculate the size of the text.
                     CRect rcText = rcItem;
-
-                    int iImageSize = 20;
-                    int iPadding = 4;
                     if (image >= 0)
-                        rcText.left += iImageSize;
+                        rcText.left += szImage.cx + padding;
 
-                    rcText.left += iPadding;
+                    rcText.left += padding;
+
+                    // Draw the text.
+                    dc.SelectObject(m_tabFont);
                     dc.DrawText(str, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
                 }
             }
@@ -735,7 +736,7 @@ namespace Win32xx
         for (UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
         {
             CString menuString;
-            CString tabText = GetAllTabs()[u].TabText;
+            CString tabText = GetAllTabs()[u].tabText;
             menuString.Format(_T("&%d %s"), u+1, tabText.c_str());
             m_listMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(u), menuString);
         }
@@ -783,11 +784,11 @@ namespace Win32xx
             str.ReleaseBuffer();
             CSize TempSize = dcClient.GetTextExtentPoint32(str, lstrlen(str));
 
-            int iImageSize = 0;
-            int iPadding = 6;
+            int imageSize = 0;
+            int padding = 6;
             if (tcItem.iImage >= 0)
-                iImageSize = 20;
-            TempSize.cx += iImageSize + iPadding;
+                imageSize = 20;
+            TempSize.cx += imageSize + padding;
 
             if (TempSize.cx > Size.cx)
                 Size = TempSize;
@@ -847,7 +848,7 @@ namespace Win32xx
     {
         size_t tabIndex = static_cast<size_t>(tab);
         assert (tabIndex < m_allTabPageInfo.size());
-        return m_allTabPageInfo[tabIndex].TabText;
+        return m_allTabPageInfo[tabIndex].tabText;
     }
 
     // Sends a UMN_TABCHANGED notification.
@@ -893,15 +894,17 @@ namespace Win32xx
     // Called when this object is attached to a tab control.
     inline void CTab::OnAttach()
     {
-        // Create and assign the image list.
-        m_odImages.DeleteImageList();
-        m_odImages.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
-
         // Set the font used in the tabs.
         CFont font;
         NONCLIENTMETRICS info = GetNonClientMetrics();
         font.CreateFontIndirect(info.lfStatusFont);
         SetTabFont(font);
+
+        // Create and assign the image list.
+        GetODImageList().DeleteImageList();
+        int iconHeight = MAX(16, GetTextHeight());
+        iconHeight = iconHeight - iconHeight % 8;
+        GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
 
         // Assign ImageList unless we are owner drawn.
         if (!(GetStyle() & TCS_OWNERDRAWFIXED))
@@ -914,12 +917,12 @@ namespace Win32xx
             ZeroMemory(&tie, sizeof(tie));
             tie.mask = TCIF_TEXT | TCIF_IMAGE;
             tie.iImage = m_allTabPageInfo[i].image;
-            tie.pszText = const_cast<LPTSTR>(m_allTabPageInfo[i].TabText.c_str());
+            tie.pszText = const_cast<LPTSTR>(m_allTabPageInfo[i].tabText.c_str());
             InsertItem(static_cast<int>(i), &tie);
         }
 
-        int HeightGap = 5;
-        SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
+        int heightGap = 5;
+        SetTabHeight( MAX(20, GetTextHeight() + heightGap) );
         SelectPage(0);
     }
 
@@ -962,14 +965,14 @@ namespace Win32xx
         CPoint pt(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
         if (m_isClosePressed && GetCloseRect().PtInRect(pt))
         {
-            int nPage = GetCurSel();
+            int page = GetCurSel();
 
             // Send a notification to parent asking if its OK to close the tab.
-            if (!NotifyTabClosing(nPage))
+            if (!NotifyTabClosing(page))
             {
-                RemoveTabPage(nPage);
-                if (nPage > 0)
-                    SelectPage(nPage -1);
+                RemoveTabPage(page);
+                if (page > 0)
+                    SelectPage(page -1);
 
                 if (GetActiveView())
                     GetActiveView()->RedrawWindow();
@@ -1065,8 +1068,8 @@ namespace Win32xx
     inline LRESULT CTab::OnTCNSelChange(LPNMHDR)
     {
         // Display the newly selected tab page.
-        int nPage = GetCurSel();
-        ShowActiveView(m_allTabPageInfo[static_cast<size_t>(nPage)].pView);
+        int page = GetCurSel();
+        ShowActiveView(m_allTabPageInfo[static_cast<size_t>(page)].pView);
 
         return 0;
     }
@@ -1438,7 +1441,7 @@ namespace Win32xx
             Item.pszText = const_cast<LPTSTR>(text);
 
             if (SetItem(tab, &Item))
-                m_allTabPageInfo[tabIndex].TabText = text;
+                m_allTabPageInfo[tabIndex].tabText = text;
         }
     }
 
@@ -1483,11 +1486,11 @@ namespace Win32xx
             VERIFY(ClientToScreen(pt));
 
             // Choosing the frame's CWnd for the menu's messages will automatically theme the popup menu.
-            int nPage = 0;
+            int page = 0;
             m_isListMenuActive = TRUE;
-            nPage = GetListMenu().TrackPopupMenuEx(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, GetAncestor(), NULL) - IDW_FIRSTCHILD;
-            if ((nPage >= 0) && (nPage < 9)) SelectPage(nPage);
-            if (nPage == 9) ShowListDialog();
+            page = GetListMenu().TrackPopupMenuEx(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, GetAncestor(), NULL) - IDW_FIRSTCHILD;
+            if ((page >= 0) && (page < 9)) SelectPage(page);
+            if (page == 9) ShowListDialog();
             m_isListMenuActive = FALSE;
         }
 
@@ -1503,7 +1506,7 @@ namespace Win32xx
         CSelectDialog SelectDialog(m_pDlgTemplate);
         for (UINT u = 0; u < GetAllTabs().size(); ++u)
         {
-            SelectDialog.AddItem(GetAllTabs()[u].TabText);
+            SelectDialog.AddItem(GetAllTabs()[u].tabText);
         }
 
         int selected = static_cast<int>(SelectDialog.DoModal(*this));
@@ -1525,14 +1528,14 @@ namespace Win32xx
             ZeroMemory(&item1, sizeof(item1));
             item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
             item1.cchTextMax = length;
-            item1.pszText = const_cast<LPTSTR>(t1.TabText.c_str());
+            item1.pszText = const_cast<LPTSTR>(t1.tabText.c_str());
             GetItem(tab1, &item1);
 
             TCITEM item2;
             ZeroMemory(&item2, sizeof(item2));
             item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
             item2.cchTextMax = length;
-            item2.pszText = const_cast<LPTSTR>(t2.TabText.c_str());
+            item2.pszText = const_cast<LPTSTR>(t2.tabText.c_str());
             GetItem(tab2, &item2);
 
             SetItem(tab1, &item2);
@@ -1911,7 +1914,7 @@ namespace Win32xx
     {
         assert(tab >= 0);
         assert(tab < GetMDIChildCount());
-        return GetTab().GetTabPageInfo(tab).idTab;
+        return GetTab().GetTabPageInfo(tab).tabID;
     }
 
     // Retrieves the title of the specified MDI child.
@@ -1919,7 +1922,7 @@ namespace Win32xx
     {
         assert(tab >= 0);
         assert(tab < GetMDIChildCount());
-        return GetTab().GetTabPageInfo(tab).TabText;
+        return GetTab().GetTabPageInfo(tab).tabText;
     }
 
     // Load the MDI children layout from the registry.
@@ -2135,12 +2138,12 @@ namespace Win32xx
                     TabPageInfo pdi = GetTab().GetTabPageInfo(i);
 
                     tabKeyName.Format(_T("ID%d"), i);
-                    DWORD tabID = static_cast<DWORD>(pdi.idTab);
+                    DWORD tabID = static_cast<DWORD>(pdi.tabID);
                     if (ERROR_SUCCESS != mdiChildKey.SetDWORDValue(tabKeyName, tabID))
                         throw CUserException();
 
                     tabKeyName.Format(_T("Text%d"), i);
-                    CString TabText = GetTab().GetTabPageInfo(i).TabText;
+                    CString TabText = GetTab().GetTabPageInfo(i).tabText;
                     if (ERROR_SUCCESS != mdiChildKey.SetStringValue(tabKeyName, TabText))
                         throw CUserException();
                 }
@@ -2173,9 +2176,9 @@ namespace Win32xx
     inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd) const
     {
         assert(pWnd);
-        int nPage = GetTab().GetTabIndex(pWnd);
-        if (nPage >= 0)
-            GetTab().SelectPage(nPage);
+        int page = GetTab().GetTabIndex(pWnd);
+        if (page >= 0)
+            GetTab().SelectPage(page);
     }
 
     // Makes the specified MDI child active.
