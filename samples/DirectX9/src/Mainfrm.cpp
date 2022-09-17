@@ -68,6 +68,13 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+// Called when the frame window is destroyed.
+void CMainFrame::OnDestroy()
+{
+    CFrame::OnDestroy();
+    m_DXView.EndThread();
+}
+
 // Called after the window is created.
 void CMainFrame::OnInitialUpdate()
 {

@@ -4,13 +4,14 @@
 
 #include "stdafx.h"
 #include "Doc.h"
+#include "resource.h"
 
 ////////////////////////////
 // CDoc function definitions
 //
 
 // Constructor.
-CDoc::CDoc() : m_isCheckA(false), m_isCheckB(false), m_isCheckC(false), m_radio(0)
+CDoc::CDoc() : m_isCheckA(false), m_isCheckB(false), m_isCheckC(false), m_radio(ID_RADIO_A)
 {
 }
 

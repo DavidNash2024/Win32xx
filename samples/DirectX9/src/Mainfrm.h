@@ -18,13 +18,13 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-
     CDXView& GetDXView() { return m_DXView; }
 
 protected:
     // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    OnDestroy();
     virtual void    OnInitialUpdate();
     virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();

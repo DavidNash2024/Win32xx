@@ -45,6 +45,13 @@ HWND CDXView::Create(HWND)
     return GetHwnd();
 }
 
+// End the view window's thread.
+void CDXView::EndThread()
+{
+    m_DXThread.PostThreadMessage(WM_QUIT, 0, 0);
+    ::WaitForSingleObject(m_DXThread, INFINITE);
+}
+
 // Initializes Direct3D
 HRESULT CDXView::InitD3D( HWND hWnd )
 {

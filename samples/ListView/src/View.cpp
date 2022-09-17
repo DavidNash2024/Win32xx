@@ -73,8 +73,6 @@ int CALLBACK CView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM pSortVi
 // Insert 4 list view items.
 void CView::AddAllItems()
 {
-
-
     AddItem(_T("ListViewApp.h"),   _T("1 KB"), _T("C++ Header file"));
     AddItem(_T("main.cpp"),        _T("1 KB"), _T("C++ Source file"));
     AddItem(_T("ListViewApp.cpp"), _T("3 KB"), _T("C++ Source file"));

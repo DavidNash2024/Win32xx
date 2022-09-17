@@ -27,7 +27,7 @@ HWND CMainFrame::Create(HWND parent)
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\SdiDocViewForm"));
+    LoadRegistrySettings(_T("Win32++\\FormDemo"));
 
     return CFrame::Create(parent);
 }

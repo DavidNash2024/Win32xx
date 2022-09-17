@@ -78,11 +78,13 @@ void CTCPClientDlg::Receive()
 {
     std::vector<char> bufVector( 1025, '\0' );
     char* bufArray = &bufVector.front(); // char array with 1025 elements initialized to '\0'
-    if (m_pSocket->Receive(bufArray, 1024, 0) == SOCKET_ERROR)
-        TRACE(_T("Network error.  Failed to receive"));
-
-    AppendText(IDC_EDIT_RECEIVE2, AtoT(bufArray));
-    TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
+    if (m_pSocket->Receive(bufArray, 1024, 0) != SOCKET_ERROR)
+    {
+        AppendText(IDC_EDIT_RECEIVE2, AtoT(bufArray));
+        TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
+    }
+    else
+        TRACE(_T("Network error."));
 }
 
 // Sends data to the socket.
