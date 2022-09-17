@@ -137,7 +137,7 @@ BOOL CTCPClientDlg::OnSocketReceive()
         TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
     }
     else
-        AppendText(IDC_EDIT_STATUS, _T("Receive Failed"));
+        AppendText(IDC_EDIT_STATUS, _T("Network error"));
 
     return TRUE;
 }

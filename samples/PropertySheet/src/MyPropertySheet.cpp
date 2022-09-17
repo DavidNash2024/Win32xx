@@ -70,6 +70,9 @@ BOOL CButtonPage::OnInitDialog()
     // Center the PropertySheet (parent) over the frame before it is displayed.
     GetParent().CenterWindow();
 
+    // Select the first radio button
+    CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
+
     TRACE ("Button page created\n");
     return TRUE;
 }

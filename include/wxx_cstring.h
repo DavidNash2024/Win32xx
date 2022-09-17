@@ -442,9 +442,7 @@ namespace Win32xx
     template <class T>
     inline CStringT<T>::CStringT(T ch, int repeat)
     {
-        T str[2] = {0};
-        str[0] = ch;
-        m_str.assign(static_cast<size_t>(repeat), str[0]);
+        m_str.assign(static_cast<size_t>(repeat), ch);
     }
 
     // Constructor. Assigns from a const T* possibly containing null characters.
@@ -468,9 +466,7 @@ namespace Win32xx
     template <class T>
     inline CStringT<T>& CStringT<T>::operator = (T ch)
     {
-        T str[2] = {0};
-        str[0] = ch;
-        m_str.assign(1, str[0]);
+        m_str.assign(1, ch);
         return *this;
     }
 
@@ -559,9 +555,7 @@ namespace Win32xx
     template <class T>
     inline CStringT<T>& CStringT<T>::operator += (T ch)
     {
-        T str[2] = {0};
-        str[0] = ch;
-        m_str.append(1, str[0]);
+        m_str.append(1, ch);
         return *this;
     }
 

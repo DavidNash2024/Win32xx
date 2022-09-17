@@ -261,7 +261,7 @@ BOOL CClientDialog::OnSocketReceive()
     CHAR* bufArray = &bufVector.front(); // CHAR array with 1025 elements initialized to '\0'
     if (m_client.Receive(bufArray, 1024, 0 ) == SOCKET_ERROR)
     {
-        AppendText(m_editStatus, _T("Receive failed.") );
+        AppendText(m_editStatus, _T("Network error") );
         return FALSE;
     }
 

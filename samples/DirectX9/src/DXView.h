@@ -29,6 +29,8 @@ class CDXView : public CWnd
 public:
     CDXView();
     virtual ~CDXView();
+
+    void EndThread();
     void Render();
 
 protected:

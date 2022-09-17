@@ -139,7 +139,7 @@ BOOL CClientDialog::OnSocketReceive()
     if (m_client.Receive(bufArray, 1024, 0 ) == SOCKET_ERROR)
     {
         if (WSAGetLastError() != WSAEWOULDBLOCK)
-            AppendText(m_editStatus, _T("Receive failed."));
+            AppendText(m_editStatus, _T("Network error"));
 
         return FALSE;
     }
