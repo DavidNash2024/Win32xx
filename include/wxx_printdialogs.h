@@ -1,5 +1,5 @@
-// Win32++   Version 9.0
-// Release Date: 30th April 2022
+// Win32++   Version 9.1
+// Release Date: 26th September 2022
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -38,7 +38,7 @@
 ////////////////////////////////////////////////////////
 // Acknowledgement:
 //
-// The original author of these classes is:
+// Developed from code originally provided by:
 //
 //      Robert C. Tausworthe
 //      email: robert.c.tausworthe@ieee.org

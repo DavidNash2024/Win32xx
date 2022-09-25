@@ -1,5 +1,5 @@
-// Win32++   Version 9.0.1
-// Release Date: TBA
+// Win32++   Version 9.1
+// Release Date: 26th September 2022
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -217,12 +217,12 @@ namespace Win32xx
         std::vector<T> m_buf;
 
     private:
-        int     lstrlenT(const CHAR* text) const  { return lstrlenA(text); }
-        int     lstrlenT(const WCHAR* text) const { return lstrlenW(text); }
+        int     lstrlenT(const CHAR* text) const  { return ::lstrlenA(text); }
+        int     lstrlenT(const WCHAR* text) const { return ::lstrlenW(text); }
 
         // These functions return CHAR instead of int.
-        static CHAR ToLower(CHAR c) { return static_cast<CHAR>(::tolower(c) & 0xFF); }
-        static CHAR ToUpper(CHAR c) { return static_cast<CHAR>(::toupper(c) & 0xFF); }
+        static CHAR ToLower(CHAR c) { return static_cast<CHAR>(::tolower(static_cast<unsigned char>(c)) & 0xFF); }
+        static CHAR ToUpper(CHAR c) { return static_cast<CHAR>(::toupper(static_cast<unsigned char>(c)) & 0xFF); }
     };
 
     // CStringA is a char only version of CString
@@ -609,7 +609,7 @@ namespace Win32xx
     inline int CStringT<CHAR>::Collate(const CHAR* text) const
     {
         assert(text != 0);
-        int res = CompareStringA(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, text, -1);
+        int res = ::CompareStringA(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, text, -1);
 
         assert(res);
         if      (res == CSTR_LESS_THAN) return -1;
@@ -623,7 +623,7 @@ namespace Win32xx
     inline int CStringT<WCHAR>::Collate(const WCHAR* text) const
     {
         assert(text != 0);
-        int res = CompareStringW(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, text, -1);
+        int res = ::CompareStringW(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, text, -1);
 
         assert(res);
         if      (res == CSTR_LESS_THAN) return -1;
@@ -637,7 +637,7 @@ namespace Win32xx
     inline int CStringT<CHAR>::CollateNoCase(const CHAR* text) const
     {
         assert(text != 0);
-        int res = CompareStringA(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
+        int res = ::CompareStringA(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
 
         assert(res);
         if      (res == CSTR_LESS_THAN) return -1;
@@ -651,7 +651,7 @@ namespace Win32xx
     inline int CStringT<WCHAR>::CollateNoCase(const WCHAR* text) const
     {
         assert(text != 0);
-        int res = CompareStringW(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
+        int res = ::CompareStringW(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
 
         assert(res);
         if      (res == CSTR_LESS_THAN) return -1;
@@ -665,7 +665,7 @@ namespace Win32xx
     inline int CStringT<CHAR>::Compare(const CHAR* text) const
     {
         assert(text != 0);
-        return lstrcmpA(m_str.c_str(), text);
+        return ::lstrcmpA(m_str.c_str(), text);
     }
 
     // Performs a case sensitive comparison of the two strings.
@@ -673,7 +673,7 @@ namespace Win32xx
     inline int CStringT<WCHAR>::Compare(const WCHAR* text) const
     {
         assert(text != 0);
-        return lstrcmpW(m_str.c_str(), text);
+        return ::lstrcmpW(m_str.c_str(), text);
     }
 
     // Performs a case insensitive comparison of the two strings.
@@ -681,7 +681,7 @@ namespace Win32xx
     inline int CStringT<CHAR>::CompareNoCase(const CHAR* text) const
     {
         assert(text != 0);
-        return lstrcmpiA(m_str.c_str(), text);
+        return ::lstrcmpiA(m_str.c_str(), text);
     }
 
     // Performs a case insensitive comparison of the two strings.
@@ -689,7 +689,7 @@ namespace Win32xx
     inline int CStringT<WCHAR>::CompareNoCase(const WCHAR* text) const
     {
         assert(text != 0);
-        return lstrcmpiW(m_str.c_str(), text);
+        return ::lstrcmpiW(m_str.c_str(), text);
     }
 
     // Deletes a character or characters from the string.
@@ -832,7 +832,7 @@ namespace Win32xx
                 throw std::bad_alloc();
 
             m_str = temp;
-            LocalFree(temp);
+            ::LocalFree(temp);
         }
     }
 
@@ -850,7 +850,7 @@ namespace Win32xx
                 throw std::bad_alloc();
 
             m_str = temp;
-            LocalFree(temp);
+            ::LocalFree(temp);
         }
     }
 
@@ -1334,7 +1334,7 @@ namespace Win32xx
         std::basic_string<CHAR>::iterator iter;
         for (iter = m_str.begin(); iter != m_str.end(); ++iter)
         {
-            if (!isspace(*iter))
+            if (!::isspace(static_cast<unsigned char>(*iter)))
                 break;
         }
 
@@ -1379,7 +1379,7 @@ namespace Win32xx
         std::basic_string<CHAR>::reverse_iterator riter;
         for (riter = m_str.rbegin(); riter < m_str.rend(); ++riter)
         {
-            if (!isspace(*riter))
+            if (!::isspace(static_cast<unsigned char>(*riter)))
                 break;
         }
 
