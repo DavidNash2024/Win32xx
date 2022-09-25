@@ -1,5 +1,5 @@
-// Win32++   Version 9.0.1
-// Release Date: TBA
+// Win32++   Version 9.1
+// Release Date: 26th September 2022
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
