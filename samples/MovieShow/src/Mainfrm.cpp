@@ -456,7 +456,7 @@ void CMainFrame::FillTreeItems()
 void CMainFrame::ForceToForeground()
 {
     BYTE keyState[256] = { 0 };
-    if (::GetKeyboardState((LPBYTE)&keyState))
+    if (::GetKeyboardState(keyState))
     {
         if (!(keyState[VK_MENU] & 0x80))
         {
