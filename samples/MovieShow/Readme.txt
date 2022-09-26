@@ -70,6 +70,7 @@ Features demonstrated in this example
 * Use of GDIPlus to draw an image from an IStream.
 * Use of ShellExecute to play a video file.
 * Use of CArchive to load and store video files information.
+* Forcing the application to the foreground when it starts.
 * Ability to retrieve video files based on title, release date, genre, 
    box set, and file name. 
 * Use of Nullsoft Scriptable Install System to install the program as

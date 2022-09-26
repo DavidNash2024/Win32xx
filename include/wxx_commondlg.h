@@ -1588,7 +1588,7 @@ namespace Win32xx
         else
         {
             m_logFont.lfPitchAndFamily = DEFAULT_PITCH|FF_DONTCARE;
-            m_logFont.lfFaceName[0] = (TCHAR)0;
+            m_logFont.lfFaceName[0] = _T('\0');
         }
 
         return flags;
