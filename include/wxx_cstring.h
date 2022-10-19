@@ -1,5 +1,5 @@
-// Win32++   Version 9.1
-// Release Date: 26th September 2022
+// Win32++   Version 9.1.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -965,11 +965,14 @@ namespace Win32xx
     inline void CStringT<CHAR>::GetErrorString(DWORD error)
     {
         Empty();
-        CHAR* temp = 0;
+        CHAR* buffer = NULL;
         DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageA(flags, NULL, error, 0, reinterpret_cast<LPSTR>(&temp), 1, NULL);
-        m_str.assign(temp);
-        ::LocalFree(temp);
+        ::FormatMessageA(flags, NULL, error, 0, reinterpret_cast<LPSTR>(&buffer), 1, NULL);
+        if (buffer != NULL)
+        {
+            m_str.assign(buffer);
+            ::LocalFree(buffer);
+        }
     }
 
     // Returns the error string for the specified System Error Code (e.g from GetLastError).
@@ -977,11 +980,14 @@ namespace Win32xx
     inline void CStringT<WCHAR>::GetErrorString(DWORD error)
     {
         Empty();
-        WCHAR* temp = 0;
+        WCHAR* buffer = NULL;
         DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageW(flags, NULL, error, 0, reinterpret_cast<LPWSTR>(&temp), 1, NULL);
-        m_str.assign(temp);
-        ::LocalFree(temp);
+        ::FormatMessageW(flags, NULL, error, 0, reinterpret_cast<LPWSTR>(&buffer), 1, NULL);
+        if (buffer != NULL)
+        {
+            m_str.assign(buffer);
+            ::LocalFree(buffer);
+        }
     }
 
     // Inserts a single character at the given index within the string.
