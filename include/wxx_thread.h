@@ -1,5 +1,5 @@
-// Win32++   Version 9.1
-// Release Date: 26th September 2022
+// Win32++   Version 9.1.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -267,8 +267,11 @@ namespace Win32xx
 
     inline CWinThread::~CWinThread()
     {
-        // Post a WM_QUIT to safely end the thread.
-        PostThreadMessage(WM_QUIT, 0, 0);
+        if (GetThread() != 0)
+        {
+            // Post a WM_QUIT to safely end the thread.
+            PostThreadMessage(WM_QUIT, 0, 0);
+        }
 
         // Wait up to 1 second for the thread to end.
         ::WaitForSingleObject(*this, 1000);
