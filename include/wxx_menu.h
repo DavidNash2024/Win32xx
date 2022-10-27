@@ -75,7 +75,7 @@
 //      Popup.SetDefaultItem(104);
 //
 //      // Display the popup menu
-//      Popup.TrackPopupMenu(0, pt.x, pt.y, this);
+//      Popup.TrackPopupMenu(0, pt.x, pt.y, *this);
 //  }
 
 
