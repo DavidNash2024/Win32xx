@@ -283,19 +283,15 @@ namespace Win32xx
 
         CString& operator = (const char ch)
         {
-            char str[2] = {0};
-            str[0] = ch;
-            AtoT tch(str);
-            m_str.assign(1, static_cast<LPCTSTR>(tch)[0]);
+            AtoT tch(&ch, CP_ACP, 1);
+            m_str.assign(1, tch.c_str()[0]);
             return *this;
         }
 
         CString& operator = (const WCHAR ch)
         {
-            WCHAR str[2] = {0};
-            str[0] = ch;
-            WtoT tch(str);
-            m_str.assign(1, static_cast<LPCTSTR>(tch)[0]);
+            WtoT tch(&ch, CP_ACP, 1);
+            m_str.assign(1, tch.c_str()[0]);
             return *this;
         }
 
@@ -331,19 +327,15 @@ namespace Win32xx
 
         CString& operator += (const char ch)
         {
-            char str[2] = {0};
-            str[0] = ch;
-            AtoT tch(str);
-            m_str.append(1, static_cast<LPCTSTR>(tch)[0]);
+            AtoT tch(&ch, CP_ACP, 1);
+            m_str.append(1, tch.c_str()[0]);
             return *this;
         }
 
         CString& operator += (const WCHAR ch)
         {
-            WCHAR str[2] = {0};
-            str[0] = ch;
-            WtoT tch(str);
-            m_str.append(1, static_cast<LPCTSTR>(tch)[0]);
+            WtoT tch(&ch, CP_ACP, 1);
+            m_str.append(1, tch.c_str()[0]);
             return *this;
         }
 
@@ -1311,16 +1303,17 @@ namespace Win32xx
         CStringT str;
         if (start >= 0)
         {
-        size_t pos1 = m_str.find_first_not_of(tokens, static_cast<size_t>(start));
-        size_t pos2 = m_str.find_first_of(tokens, pos1);
+            size_t pos1 = m_str.find_first_not_of(tokens, static_cast<size_t>(start));
+            size_t pos2 = m_str.find_first_of(tokens, pos1);
 
-        start = static_cast<int>(pos2) + 1;
-        if (pos2 == m_str.npos)
-            start = -1;
+            start = static_cast<int>(pos2) + 1;
+            if (pos2 == m_str.npos)
+                start = -1;
 
-        if (pos1 != m_str.npos)
-            str.m_str = m_str.substr(pos1, pos2-pos1);
+            if (pos1 != m_str.npos)
+                str.m_str = m_str.substr(pos1, pos2 - pos1);
         }
+
         return str;
     }
 
