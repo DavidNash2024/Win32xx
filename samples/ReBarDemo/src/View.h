@@ -26,11 +26,6 @@ protected:
 private:
     CView(const CView&);                // Disable copy construction
     CView& operator = (const CView&);   // Disable assignment operator
-
-    CMenuBar m_menuBar;
-    CReBar m_reBar;
-    CToolBar m_toolBar;
-    CImageList m_toolBarImages;
 };
 
 #endif // VIEW_H
