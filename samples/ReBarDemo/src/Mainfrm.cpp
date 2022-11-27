@@ -241,8 +241,9 @@ void CMainFrame::RecalcLayout()
     if (m_reBar.IsWindow())
         SetReBarPos();
 
-    // Position the view window
-    CFrame::RecalcLayout();
+    // Position the view window.
+    if (GetView().IsWindow())
+        RecalcViewLayout();
 
     // Adjust rebar bands
     if (GetReBar().IsWindow())

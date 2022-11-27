@@ -1023,11 +1023,15 @@ namespace Win32xx
         }
         else
         {
-            // Draw the gutter.
-            CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
             CDC drawDC(pDIS->hDC);
-            const MenuTheme& mbt = GetMenuBarTheme();
-            drawDC.GradientFill(mbt.clrPressed1, mbt.clrPressed2, gutter, TRUE);
+
+            if (IsUsingThemes())
+            {
+                // Draw the gutter.
+                CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
+                const MenuTheme& mbt = GetMenuBarTheme();
+                drawDC.GradientFill(mbt.clrPressed1, mbt.clrPressed2, gutter, TRUE);
+            }
 
             if (pmid->mii.fType & MFT_SEPARATOR)
             {
@@ -1104,8 +1108,6 @@ namespace Win32xx
         int left = GetMenuMetrics().m_marCheck.cxLeftWidth;
         int top = rc.top + (rc.Height() - yIcon) / 2;
         bkRect.SetRect(left, top, left + xIcon, top + yIcon);
-
-        // Draw the checkmark's background rectangle.
         drawDC.CreatePen(PS_SOLID, 1, mbt.clrOutline);
         drawDC.CreateSolidBrush(mbt.clrHot2);
         drawDC.Rectangle(bkRect.left, bkRect.top, bkRect.right, bkRect.bottom);
