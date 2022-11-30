@@ -344,7 +344,7 @@ namespace Win32xx
 
     inline CRect CMenuMetrics::GetCheckRect(const CRect& item) const
     {
-        int x = item.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth;
+        int x = item.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth + m_marItem.cxLeftWidth;
         int y = item.top + (item.Height() - m_sizeCheck.cy) / 2;
 
         return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
