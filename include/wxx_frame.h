@@ -767,15 +767,13 @@ namespace Win32xx
                         }
 
                         // Draw border.
-                        CPen pen(PS_SOLID, 1, GetMenuBarTheme().clrOutline);
-                        CPen oldPen = drawDC.SelectObject(pen);
+                        drawDC.CreatePen(PS_SOLID, 1, GetMenuBarTheme().clrOutline);
                         drawDC.MoveTo(rc.left, rc.bottom);
                         drawDC.LineTo(rc.left, rc.top);
                         drawDC.LineTo(rc.right-1, rc.top);
                         drawDC.LineTo(rc.right-1, rc.bottom);
                         drawDC.MoveTo(rc.right-1, rc.bottom);
                         drawDC.LineTo(rc.left, rc.bottom);
-                        drawDC.SelectObject(oldPen);
                     }
 
                     UINT itemID = static_cast<UINT>(lpNMCustomDraw->nmcd.dwItemSpec);
@@ -1009,6 +1007,20 @@ namespace Win32xx
     {
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
 
+        // Create and configure the memory DC.
+        CDC drawDC = pDIS->hDC;
+        CRect itemRect = pDIS->rcItem;
+        CMemDC memDC(drawDC);
+        memDC.CreateCompatibleBitmap(drawDC, itemRect.Width(), itemRect.Height());
+        memDC.BitBlt(0, 0, itemRect.Width(), itemRect.Height(), drawDC, itemRect.left, itemRect.top, SRCCOPY);
+        CFont font = drawDC.GetCurrentFont();
+        memDC.SelectObject(font);
+
+        // Swap the PDIS->hDC with a memory DC for double buffering.
+        pDIS->hDC = memDC;
+        pDIS->rcItem.top = 0;
+        pDIS->rcItem.bottom = itemRect.Height();
+
         if (IsUsingVistaMenu())  // Is uxtheme.dll loaded?
         {
             DrawVistaMenuBkgnd(pDIS);
@@ -1023,26 +1035,28 @@ namespace Win32xx
         }
         else
         {
-            CDC drawDC(pDIS->hDC);
+            // Draw the gutter.
+            CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
 
             if (IsUsingThemes())
             {
-                // Draw the gutter.
-                CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
                 const MenuTheme& mbt = GetMenuBarTheme();
-                drawDC.GradientFill(mbt.clrPressed1, mbt.clrPressed2, gutter, TRUE);
+                memDC.GradientFill(mbt.clrPressed1, mbt.clrPressed2, gutter, TRUE);
+            }
+            else
+            {
+                memDC.SolidFill(RGB(255, 255, 255), gutter);
             }
 
             if (pmid->mii.fType & MFT_SEPARATOR)
             {
                 // Draw the separator.
-                CRect rc = pDIS->rcItem;
                 CRect sepRect = pDIS->rcItem;
-                sepRect.left = GetMenuMetrics().GetGutterRect(rc).Width();
+                sepRect.left = gutter.Width();
+                memDC.SolidFill(RGB(255, 255, 255), sepRect);
 
-                drawDC.SolidFill(RGB(255, 255, 255), sepRect);
-                sepRect.top += (rc.bottom - rc.top) / 2;
-                drawDC.DrawEdge(sepRect, EDGE_ETCHED, BF_TOP);
+                sepRect.top += sepRect.Height() / 2;
+                memDC.DrawEdge(sepRect, EDGE_ETCHED, BF_TOP);
             }
             else
             {
@@ -1056,9 +1070,12 @@ namespace Win32xx
 
         if (!(pmid->mii.fType & MFT_SEPARATOR))
         {
-            if (!(pDIS->itemState & ODS_CHECKED))
+              if (!(pDIS->itemState & ODS_CHECKED))
                 DrawMenuItemIcon(pDIS);
         }
+
+        // Copy from the memory DC to the menu item DC.
+        drawDC.BitBlt(itemRect.left, itemRect.top, itemRect.Width(), itemRect.Height(), memDC, 0, 0, SRCCOPY);
     }
 
     // Draws the popup menu background if uxtheme.dll is not loaded.
@@ -1070,24 +1087,29 @@ namespace Win32xx
         bool isSelected = (pDIS->itemState & ODS_SELECTED) != 0;
         CRect drawRect = pDIS->rcItem;
         CDC drawDC(pDIS->hDC);
-        const MenuTheme& mbt = GetMenuBarTheme();
 
         if ((isSelected) && (!isDisabled))
         {
             // draw selected item background.
-            CBrush brush(mbt.clrHot1);
-            CBrush oldBrush = drawDC.SelectObject(brush);
-            CPen pen(PS_SOLID, 1, mbt.clrOutline);
-            CPen oldPen = drawDC.SelectObject(pen);
+            if (IsUsingThemes())
+            {
+                const MenuTheme& mbt = GetMenuBarTheme();
+                drawDC.CreateSolidBrush(mbt.clrHot1);
+                drawDC.CreatePen(PS_SOLID, 1, mbt.clrOutline);
+            }
+            else
+            {
+                drawDC.CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
+                drawDC.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
+            }
+
             drawDC.Rectangle(drawRect.left, drawRect.top, drawRect.right, drawRect.bottom);
-            drawDC.SelectObject(oldBrush);
-            drawDC.SelectObject(oldPen);
         }
         else
         {
             // draw non-selected item background.
             drawRect.left = GetMenuMetrics().GetGutterRect(pDIS->rcItem).Width();
-            drawDC.SolidFill(RGB(255,255,255), drawRect);
+            drawDC.SolidFill(RGB(255, 255, 255), drawRect);
         }
     }
 
@@ -1097,36 +1119,43 @@ namespace Win32xx
     {
         CRect rc = pDIS->rcItem;
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
-        UINT fType = pmid->mii.fType;
+        UINT buttonType = pmid->mii.fType;
         const MenuTheme& mbt = GetMenuBarTheme();
-        CRect bkRect;
+        int cxCheck = 16;
+        int cyCheck = 16;
+        CRect gutter = GetMenuMetrics().GetGutterRect(rc);
+        int left = (gutter.Width() - cxCheck) / 2;
+        int top = rc.top + (rc.Height() - cyCheck) / 2;
+        CRect bkRect(left, top, left + cxCheck, top + cyCheck);
         CDC drawDC(pDIS->hDC);
 
         // Draw the checkmark's background rectangle first.
-        int xIcon = GetMenuMetrics().m_sizeCheck.cx;
-        int yIcon = GetMenuMetrics().m_sizeCheck.cy;
-        int left = GetMenuMetrics().m_marCheck.cxLeftWidth;
-        int top = rc.top + (rc.Height() - yIcon) / 2;
-        bkRect.SetRect(left, top, left + xIcon, top + yIcon);
-        drawDC.CreatePen(PS_SOLID, 1, mbt.clrOutline);
-        drawDC.CreateSolidBrush(mbt.clrHot2);
-        drawDC.Rectangle(bkRect.left, bkRect.top, bkRect.right, bkRect.bottom);
+        if (IsUsingThemes())
+        {
+            drawDC.CreatePen(PS_SOLID, 1, mbt.clrOutline);
+            if (IsUsingThemes())
+                drawDC.CreateSolidBrush(mbt.clrHot2);
+            else
+                drawDC.CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
+
+            drawDC.Rectangle(bkRect);
+        }
 
         CMemDC memDC(drawDC);
-        int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
-        int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
         memDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
         CRect checkRect(0, 0, cxCheck, cyCheck);
 
         // Copy the check mark bitmap to hdcMem.
-        if (MFT_RADIOCHECK == fType)
+        if (buttonType == MFT_RADIOCHECK)
             memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUBULLET);
         else
             memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUCHECK);
 
-        int xoffset = (bkRect.Width() - checkRect.Width()  +1) / 2;
-        int yoffset = (bkRect.Height() - checkRect.Height() +1) / 2;
-        if (MFT_RADIOCHECK != fType) yoffset--;
+        int xoffset = 1;
+        int yoffset = 0;
+
+        if (GetWinVersion() < 2600 && (buttonType != MFT_RADIOCHECK))
+            yoffset = 2;
 
         // Draw a white or black check mark as required.
         // Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way.
@@ -1134,7 +1163,7 @@ namespace Win32xx
         maskDC.CreateCompatibleBitmap(drawDC, cxCheck, cyCheck);
         maskDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, WHITENESS);
 
-        if ((pDIS->itemState & ODS_SELECTED))
+        if ((pDIS->itemState & ODS_SELECTED) && IsUsingThemes())
         {
             // Draw a white checkmark
             memDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, DSTINVERT);
@@ -1162,10 +1191,10 @@ namespace Win32xx
         int yIcon = iconSize.cy;
 
         // get the drawing rectangle
-        CRect rc = pDIS->rcItem;
-        int left = GetMenuMetrics().m_marCheck.cxLeftWidth;
-        int top = rc.top + (rc.Height() - yIcon)/2;
-        rc.SetRect(left, top, left + xIcon, top + yIcon);
+        CRect itemRect = pDIS->rcItem;
+        CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
+        int left = (gutter.Width() - xIcon) / 2;
+        int top = (itemRect.Height() - yIcon) / 2;
 
         // get the icon's location in the imagelist
         int image = -1;
@@ -1179,10 +1208,11 @@ namespace Win32xx
         if (image >= 0 )
         {
             bool isDisabled = (pDIS->itemState & (ODS_GRAYED | ODS_DISABLED)) != 0;
+
             if ((isDisabled) && (m_menuDisabledImages.GetHandle()))
-                m_menuDisabledImages.Draw(pDIS->hDC, image, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
+                m_menuDisabledImages.Draw(pDIS->hDC, image, CPoint(left, top), ILD_TRANSPARENT);
             else
-                m_menuImages.Draw(pDIS->hDC, image, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
+                m_menuImages.Draw(pDIS->hDC, image, CPoint(left, top), ILD_TRANSPARENT);
         }
     }
 
