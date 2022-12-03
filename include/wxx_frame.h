@@ -1074,8 +1074,12 @@ namespace Win32xx
                 DrawMenuItemIcon(pDIS);
         }
 
-        // Copy from the memory DC to the menu item DC.
+        // Copy from the memory DC to the menu item drawing DC.
         drawDC.BitBlt(itemRect.left, itemRect.top, itemRect.Width(), itemRect.Height(), memDC, 0, 0, SRCCOPY);
+
+        // Return pDIS to its previous values.
+        pDIS->hDC = drawDC;
+        pDIS->rcItem = itemRect;
     }
 
     // Draws the popup menu background if uxtheme.dll is not loaded.
@@ -1154,7 +1158,7 @@ namespace Win32xx
         int xoffset = 1;
         int yoffset = 0;
 
-        if (GetWinVersion() < 2600 && (buttonType != MFT_RADIOCHECK))
+        if (GetWinVersion() <= 2500 && (buttonType != MFT_RADIOCHECK))
             yoffset = 2;
 
         // Draw a white or black check mark as required.
