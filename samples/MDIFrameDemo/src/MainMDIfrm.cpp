@@ -268,11 +268,7 @@ void CMainMDIFrame::SetupToolBar()
     SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 
     // Configure the "New" toolbar button to bring up a menu
-    // Setting this style requires comctl32.dll version 4.72 or later
-    if (GetComCtlVersion() >= 472)
-    {
-        GetToolBar().SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
-    }
+    GetToolBar().SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
 }
 
 // Process the MDI frame's window messages.

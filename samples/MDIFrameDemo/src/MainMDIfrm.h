@@ -6,12 +6,6 @@
 #define MAINMDIFRM_H
 
 
-// Define BTNS_WHOLEDROPDOWN
-#ifndef BTNS_WHOLEDROPDOWN
-  #define BTNS_WHOLEDROPDOWN 0x0080
-#endif
-
-
 ///////////////////////////////////////////////////////////
 // CMainMDIFrame manages the application's main window.
 // The main window is a MDI frame which has a menubar, toolbar,

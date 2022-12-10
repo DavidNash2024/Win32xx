@@ -89,6 +89,9 @@
 #include "wxx_toolbar.h"
 #include "default_resource.h"
 
+#ifndef BTNS_WHOLEDROPDOWN
+  #define BTNS_WHOLEDROPDOWN  0x0080
+#endif
 
 #ifndef RBN_MINMAX
   #define RBN_MINMAX (RBN_FIRST - 21)
@@ -830,15 +833,6 @@ namespace Win32xx
                         CRect rc = pCustomDraw->nmcd.rc;
                         UINT state = pCustomDraw->nmcd.uItemState;
                         UINT item = static_cast<UINT>(pCustomDraw->nmcd.dwItemSpec);
-                        DWORD tbStyle = static_cast<DWORD>(pTB->SendMessage(TB_GETSTYLE, 0, 0));
-                        DWORD style = pTB->GetButtonStyle(item);
-                        int button = pTB->CommandToIndex(item);
-                        TBBUTTON tbb;
-                        ZeroMemory(&tbb, sizeof(tbb));
-                        WPARAM wparam = static_cast<WPARAM>(button);
-                        LPARAM lparam = reinterpret_cast<LPARAM>(&tbb);
-                        pTB->SendMessage(TB_GETBUTTON, wparam, lparam);
-                        int image = static_cast<int>(tbb.iBitmap);
 
                         // Calculate text size.
                         CString str;
@@ -851,7 +845,8 @@ namespace Win32xx
                         }
 
                         // Draw outline rectangle.
-                        if (state & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
+                        bool isHot = (state & CDIS_HOT) != 0;
+                        if (isHot)
                         {
                             drawDC.CreatePen(PS_SOLID, 1, GetToolBarTheme().clrOutline);
                             drawDC.MoveTo(rc.left, rc.top);
@@ -863,24 +858,26 @@ namespace Win32xx
 
                         // Draw filled gradient background.
                         rc.InflateRect(-1, -1);
-                        if ((state & (CDIS_SELECTED|CDIS_CHECKED)) || (pTB->GetButtonState(item) & TBSTATE_PRESSED))
+                        bool isPressed = (pTB->GetButtonState(item) & TBSTATE_PRESSED) != 0;
+                        if (isPressed)
                         {
                             drawDC.GradientFill(GetToolBarTheme().clrPressed1, GetToolBarTheme().clrPressed2, rc, FALSE);
                         }
-                        else if (state & CDIS_HOT)
+                        else if (isHot)
                         {
                             drawDC.GradientFill(GetToolBarTheme().clrHot1, GetToolBarTheme().clrHot2, rc, FALSE);
                         }
 
                         // Get the appropriate image list depending on the button state.
                         CImageList toolBarImages;
-                        if (state & CDIS_DISABLED)
+                        bool isDisabled = (state & CDIS_DISABLED) != 0;
+                        if (isDisabled)
                         {
                             toolBarImages = pTB->GetDisabledImageList();
                             if (toolBarImages.GetHandle() == 0)
                                 toolBarImages.CreateDisabledImageList(pTB->GetImageList());
                         }
-                        else if (state & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
+                        else if (isHot)
                         {
                             toolBarImages = pTB->GetHotImageList();
                             if (toolBarImages.GetHandle() == 0)
@@ -891,38 +888,58 @@ namespace Win32xx
                             toolBarImages = pTB->GetImageList();
                         }
 
-                        bool isWin95 = (GetWinVersion() == 1400) || (GetWinVersion() == 2400);
-
                         // Assert if the toolbar images aren't set.
                         assert(toolBarImages.GetHandle() != 0);
 
-                        // Calculate image position.
-                        CSize szImage = toolBarImages.GetIconSize();
+                        DWORD style = pTB->GetButtonStyle(item);
+                        bool isDropDown = (style & TBSTYLE_DROPDOWN) != 0;
+                        bool isWholeDropDownSupported = (GetWinVersion() != 1400) && (GetWinVersion() != 2400);
+                        bool isWholeDropDown = (style & BTNS_WHOLEDROPDOWN) != 0 && (isWholeDropDownSupported);
+                        bool isListToolbar = (pTB->GetStyle() & TBSTYLE_LIST) != 0;
 
-                        int yImage = (rc.bottom + rc.top - szImage.cy - textSize.cy )/2;
-                        int xImage = (rc.right + rc.left - szImage.cx)/2 + ((state & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
-                        if (tbStyle & TBSTYLE_LIST)
+                        // Calculate image position
+                        CSize szImage = toolBarImages.GetIconSize();
+                        int xImage = 0;
+                        int yImage = 0;
+
+                        if (isListToolbar)
                         {
-                            xImage = rc.left + (IsXPThemed()?2:4) + ((state & CDIS_SELECTED)? 1:0);
-                            yImage = (rc.bottom - rc.top - szImage.cy +2)/2 + ((state & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
+                            // Calculate the image position for the TBSTYLE_LIST toolbar style.
+                            // This style positions the button text to the right of the bitmap.
+                            xImage = rc.left;
+                            yImage = (rc.bottom - rc.top - szImage.cy +2) / 2;
+                        }
+                        else
+                        {
+                            // Calculate the image position without the TBSTYLE_LIST toolbar style.
+                            xImage = (rc.right + rc.left - szImage.cx) / 2;
+                            yImage = (rc.bottom + rc.top - szImage.cy - textSize.cy) / 2;
+                            if (isDropDown)       xImage -= 6;
+                            if (isWholeDropDown)  xImage -= 4;
                         }
 
-                        // Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles.
-                        if ((style & TBSTYLE_DROPDOWN) || ((style & 0x0080) && (!isWin95)))
+                        if (isDropDown || isWholeDropDown)
                         {
-                            // Calculate the dropdown arrow position
-                            int xAPos = (style & TBSTYLE_DROPDOWN)? rc.right -6 : (rc.right + rc.left + szImage.cx + 4)/2;
-                            int yAPos = (style & TBSTYLE_DROPDOWN)? (rc.bottom - rc.top +1)/2 : (szImage.cy)/2;
-                            if (tbStyle & TBSTYLE_LIST)
+                            // Calculate arrow position for the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN button styles.
+                            int xArrow = rc.right - 6;
+                            int yArrow = (rc.bottom - rc.top + 1) / 2;
+
+                            if (isWholeDropDown)
                             {
-                                xAPos = (style & TBSTYLE_DROPDOWN)? rc.right -6: rc.right -5;
-                                yAPos = (rc.bottom - rc.top +1)/2 + ((style & TBSTYLE_DROPDOWN)?0:1);
+                                if (isListToolbar)
+                                {
+                                    xArrow = rc.right - 5;
+                                    yArrow = (rc.bottom - rc.top + 1) / 2 + 1;
+                                }
+                                else
+                                {
+                                    xArrow = (rc.right + rc.left + szImage.cx + 4) / 2;
+                                    yArrow = (szImage.cy) / 2;
+                                }
                             }
 
-                            xImage -= (style & TBSTYLE_DROPDOWN)?((tbStyle & TBSTYLE_LIST)? (IsXPThemed()?-4:0):6):((tbStyle & TBSTYLE_LIST)? 0:4);
-
                             // Draw separate background for dropdown arrow.
-                            if ((m_drawArrowBkgrnd) && (state & CDIS_HOT))
+                            if (m_drawArrowBkgrnd && isHot)
                             {
                                 CRect arrowRect = rc;
                                 arrowRect.left = arrowRect.right - 13;
@@ -931,16 +948,16 @@ namespace Win32xx
 
                             m_drawArrowBkgrnd = FALSE;
 
-                            // Manually draw the dropdown arrow.
-                            drawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
+                            // Draw the dropdown arrow.
+                            drawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
                             for (int i = 2; i >= 0; --i)
                             {
-                                drawDC.MoveTo(xAPos -i-1, yAPos - i+1);
-                                drawDC.LineTo(xAPos +i,   yAPos - i+1);
+                                drawDC.MoveTo(xArrow - i-1, yArrow - i+1);
+                                drawDC.LineTo(xArrow + i,   yArrow - i+1);
                             }
 
-                            // Draw line between icon and dropdown arrow.
-                            if ((style & TBSTYLE_DROPDOWN) && ((state & CDIS_SELECTED) || state & CDIS_HOT))
+                            // Draw the line between icon and dropdown arrow.
+                            if (isDropDown && isHot)
                             {
                                 drawDC.CreatePen(PS_SOLID, 1, GetToolBarTheme().clrOutline);
                                 drawDC.MoveTo(rc.right - 13, rc.top);
@@ -949,24 +966,29 @@ namespace Win32xx
                         }
 
                         // Draw the button image.
+                        TBBUTTON tbb;
+                        ZeroMemory(&tbb, sizeof(tbb));
+                        int button = pTB->CommandToIndex(item);
+                        pTB->GetButton(button, tbb);
+                        int image = tbb.iBitmap;
                         if (xImage > 0)
                         {
                             toolBarImages.Draw(drawDC, image, CPoint(xImage, yImage), ILD_TRANSPARENT);
                         }
 
-                        //Draw Text.
+                        // Draw the text.
                         if (!str.IsEmpty())
                         {
-                            int width = rc.right - rc.left - ((state & TBSTYLE_DROPDOWN)?13:0);
+                            int width = rc.right - rc.left - (isDropDown ? 13 : 0);
                             CRect textRect(0, 0, MIN(textSize.cx, width), textSize.cy);
 
-                            int xOffset = (rc.right + rc.left - textRect.right + textRect.left - ((state & TBSTYLE_DROPDOWN)? 11 : 1))/2;
+                            int xOffset = (rc.right + rc.left - textRect.right + textRect.left - (isDropDown ? 11 : 1))/2;
                             int yOffset = yImage + szImage.cy +1;
 
-                            if (tbStyle & TBSTYLE_LIST)
+                            if (isListToolbar)
                             {
-                                xOffset = rc.left + szImage.cx + ((state & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((state & CDIS_SELECTED)? 1:0);
-                                yOffset = (2+ rc.bottom - rc.top - textRect.bottom + textRect.top)/2 + ((state & CDIS_SELECTED)? 1:0);
+                                xOffset = rc.left + szImage.cx + (isDropDown ? (IsXPThemed() ? 10 : 6): 6);
+                                yOffset = (2+ rc.bottom - rc.top - textRect.bottom + textRect.top)/2;
                                 textRect.right = MIN(textRect.right, rc.right - xOffset);
                             }
 
@@ -975,7 +997,7 @@ namespace Win32xx
                             int mode = drawDC.SetBkMode(TRANSPARENT);
                             drawDC.SelectObject(pTB->GetFont());
 
-                            if (state & (CDIS_DISABLED))
+                            if (isDisabled)
                             {
                                 // Draw text twice for embossed look
                                 textRect.OffsetRect(1, 1);
@@ -990,10 +1012,11 @@ namespace Win32xx
                                 drawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
                                 drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT | DT_END_ELLIPSIS);
                             }
-                            drawDC.SetBkMode(mode);
 
+                            drawDC.SetBkMode(mode);
                         }
                     }
+
                     return CDRF_SKIPDEFAULT;  // No further drawing.
                 }
             }
