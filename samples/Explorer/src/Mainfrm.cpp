@@ -391,12 +391,7 @@ void CMainFrame::SetupToolBar()
     SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
     // Configure the ViewMenu button to bring up a menu
-    // Setting this style requires comctl32.dll version 4.72 or later
-    if (GetComCtlVersion() >= 472)
-    {
-        CToolBar& tb = GetToolBar();
-        tb.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
-    }
+    GetToolBar().SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
 }
 
 // Process the window messages for the frame.

@@ -8,10 +8,6 @@
 
 #include "SplitterPanes.h"
 
-#ifndef BTNS_WHOLEDROPDOWN
-  #define BTNS_WHOLEDROPDOWN  0x0080
-#endif
-
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
