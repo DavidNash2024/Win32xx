@@ -673,8 +673,6 @@ namespace Win32xx
         int  GetMapMode() const;
 
         BOOL GetViewportOrgEx(LPPOINT pPoint)  const;
-
-
         BOOL GetViewportExtEx(LPSIZE pSize)  const;
         BOOL GetWindowExtEx(LPSIZE pSize)  const;
         BOOL GetWindowOrgEx(LPPOINT pPoint)  const;
@@ -721,7 +719,8 @@ namespace Win32xx
         BOOL  GetCharABCWidths(UINT firstChar, UINT lastChar, LPABC pABC) const;
         DWORD GetCharacterPlacement(LPCTSTR string, int count, int maxExtent,
                                     LPGCP_RESULTS results, DWORD flags) const;
-        BOOL  GetCharWidth(UINT firstChar, UINT lastChar, float* buffer) const;
+        BOOL  GetCharWidth(UINT firstChar, UINT lastChar, int* buffer) const;
+        BOOL  GetCharWidthFloat(UINT firstChar, UINT lastChar, float* buffer) const;
         CSize GetTabbedTextExtent(LPCTSTR string, int count, int tabPositions, LPINT pTabStopPositions) const;
         int   GetTextCharacterExtra() const;
         CSize GetTextExtentPoint32(LPCTSTR string, int count) const;
@@ -4889,9 +4888,18 @@ namespace Win32xx
         return ::GetCharacterPlacement(m_pData->dc, string, count, maxExtent, results, flags);
     }
 
+    // Retrieves the widths, in logical coordinates, of consecutive characters in a specified range
+    // from the current font.
+    // Refer to GetCharWidth in the Windows API documentation for more information.
+    inline BOOL CDC::GetCharWidth(UINT firstChar, UINT lastChar, int* buffer) const
+    {
+        assert(m_pData->dc != 0);
+        return ::GetCharWidth(m_pData->dc, firstChar, lastChar, buffer);
+    }
+
     // Retrieves the fractional widths of consecutive characters in a specified range from the current font.
     // Refer to GetCharWidthFloat in the Windows API documentation for more information.
-    inline BOOL CDC::GetCharWidth(UINT firstChar, UINT lastChar, float* buffer) const
+    inline BOOL CDC::GetCharWidthFloat(UINT firstChar, UINT lastChar, float* buffer) const
     {
         assert(m_pData->dc != 0);
         return ::GetCharWidthFloat(m_pData->dc, firstChar, lastChar, buffer);
