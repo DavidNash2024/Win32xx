@@ -89,6 +89,10 @@
 #include "wxx_toolbar.h"
 #include "default_resource.h"
 
+#ifndef BTNS_DROPDOWN
+  #define BTNS_DROPDOWN  0x0008
+#endif
+
 #ifndef BTNS_WHOLEDROPDOWN
   #define BTNS_WHOLEDROPDOWN  0x0080
 #endif
@@ -263,7 +267,6 @@ namespace Win32xx
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
         virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
         virtual LRESULT OnUndocked();
         virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam);
@@ -352,7 +355,6 @@ namespace Win32xx
         CWnd* m_pView;                      // pointer to the View CWnd object
         UINT m_maxMRU;                      // maximum number of MRU entries
         HWND m_oldFocus;                    // The window which had focus prior to the app's deactivation
-        BOOL m_drawArrowBkgrnd;             // TRUE if a separate arrow background is to be drawn on toolbar
         HHOOK m_kbdHook;                    // Keyboard hook.
 
         CMenuMetrics m_menuMetrics;         // The MenuMetrics object
@@ -398,9 +400,8 @@ namespace Win32xx
     //
     template <class T>
     inline CFrameT<T>::CFrameT() : m_aboutDialog(IDW_ABOUT), m_accel(0), m_pView(NULL), m_maxMRU(0), m_oldFocus(0),
-                              m_drawArrowBkgrnd(FALSE), m_kbdHook(0), m_useIndicatorStatus(TRUE),
-                              m_useMenuStatus(TRUE), m_useStatusBar(TRUE), m_useThemes(TRUE), m_useToolBar(TRUE),
-                              m_altKeyPressed(FALSE)
+                              m_kbdHook(0), m_useIndicatorStatus(TRUE), m_useMenuStatus(TRUE), m_useStatusBar(TRUE),
+                              m_useThemes(TRUE), m_useToolBar(TRUE), m_altKeyPressed(FALSE)
     {
         ZeroMemory(&m_mbTheme, sizeof(m_mbTheme));
         ZeroMemory(&m_rbTheme, sizeof(m_rbTheme));
@@ -892,27 +893,35 @@ namespace Win32xx
                         assert(toolBarImages.GetHandle() != 0);
 
                         DWORD style = pTB->GetButtonStyle(item);
-                        bool isDropDown = (style & TBSTYLE_DROPDOWN) != 0;
+                        DWORD exStyle = pTB->GetExtendedStyle();
+                        bool isDropDown = ((style & BTNS_DROPDOWN) && (exStyle & TBSTYLE_EX_DRAWDDARROWS));
                         bool isWholeDropDownSupported = (GetWinVersion() != 1400) && (GetWinVersion() != 2400);
                         bool isWholeDropDown = (style & BTNS_WHOLEDROPDOWN) != 0 && (isWholeDropDownSupported);
                         bool isListToolbar = (pTB->GetStyle() & TBSTYLE_LIST) != 0;
+
+                        // Calculate dropdown width.
+                        drawDC.CreateFont(GetSystemMetrics(SM_CYMENUCHECK), 0, 0, 0,
+                            FW_NORMAL, 0, 0, 0, SYMBOL_CHARSET, 0, 0, 0, 0, _T("Marlett"));
+                        int dropDownWidth = 0;
+                        drawDC.GetCharWidth('6', '6', &dropDownWidth);
 
                         // Calculate image position
                         CSize szImage = toolBarImages.GetIconSize();
                         int xImage = 0;
                         int yImage = 0;
+                        int pressedOffset = (state & CDIS_SELECTED) ? 1 : 0;
 
                         if (isListToolbar)
                         {
                             // Calculate the image position for the TBSTYLE_LIST toolbar style.
                             // This style positions the button text to the right of the bitmap.
-                            xImage = rc.left;
-                            yImage = (rc.bottom - rc.top - szImage.cy +2) / 2;
+                            xImage = rc.left + pressedOffset;
+                            yImage = (rc.bottom - rc.top - szImage.cy +2) / 2 + pressedOffset;
                         }
                         else
                         {
                             // Calculate the image position without the TBSTYLE_LIST toolbar style.
-                            xImage = (rc.right + rc.left - szImage.cx) / 2;
+                            xImage = (rc.right + rc.left - szImage.cx) / 2 + pressedOffset;
                             yImage = (rc.bottom + rc.top - szImage.cy - textSize.cy) / 2;
                             if (isDropDown)       xImage -= 6;
                             if (isWholeDropDown)  xImage -= 4;
@@ -921,36 +930,30 @@ namespace Win32xx
                         if (isDropDown || isWholeDropDown)
                         {
                             // Calculate arrow position for the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN button styles.
-                            int xArrow = rc.right - 6;
+                            int xArrow = rc.right - dropDownWidth / 2;
                             int yArrow = (rc.bottom - rc.top + 1) / 2;
 
-                            if (isWholeDropDown)
+                            if (isListToolbar)
                             {
-                                if (isListToolbar)
-                                {
-                                    xArrow = rc.right - 5;
-                                    yArrow = (rc.bottom - rc.top + 1) / 2 + 1;
-                                }
-                                else
-                                {
-                                    xArrow = (rc.right + rc.left + szImage.cx + 4) / 2;
-                                    yArrow = (szImage.cy) / 2;
-                                }
+                                yArrow += 1;
+                            }
+                            else if (isWholeDropDown)
+                            {
+                                yArrow = 1 + (szImage.cy) / 2;
                             }
 
                             // Draw separate background for dropdown arrow.
-                            if (m_drawArrowBkgrnd && isHot)
+                            if (isHot && isDropDown)
                             {
                                 CRect arrowRect = rc;
-                                arrowRect.left = arrowRect.right - 13;
+                                arrowRect.left = arrowRect.right - dropDownWidth;
                                 drawDC.GradientFill(GetToolBarTheme().clrPressed1, GetToolBarTheme().clrPressed2, arrowRect, FALSE);
                             }
 
-                            m_drawArrowBkgrnd = FALSE;
-
                             // Draw the dropdown arrow.
+                            int arrowHeight = (dropDownWidth + 1) / 5;
                             drawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-                            for (int i = 2; i >= 0; --i)
+                            for (int i = arrowHeight; i >= 0; --i)
                             {
                                 drawDC.MoveTo(xArrow - i-1, yArrow - i+1);
                                 drawDC.LineTo(xArrow + i,   yArrow - i+1);
@@ -960,8 +963,8 @@ namespace Win32xx
                             if (isDropDown && isHot)
                             {
                                 drawDC.CreatePen(PS_SOLID, 1, GetToolBarTheme().clrOutline);
-                                drawDC.MoveTo(rc.right - 13, rc.top);
-                                drawDC.LineTo(rc.right - 13, rc.bottom);
+                                drawDC.MoveTo(rc.right - dropDownWidth, rc.top);
+                                drawDC.LineTo(rc.right - dropDownWidth, rc.bottom);
                             }
                         }
 
@@ -979,16 +982,16 @@ namespace Win32xx
                         // Draw the text.
                         if (!str.IsEmpty())
                         {
-                            int width = rc.right - rc.left - (isDropDown ? 13 : 0);
+                            int width = rc.right - rc.left - (isDropDown ? dropDownWidth : 0);
                             CRect textRect(0, 0, MIN(textSize.cx, width), textSize.cy);
 
-                            int xOffset = (rc.right + rc.left - textRect.right + textRect.left - (isDropDown ? 11 : 1))/2;
+                            int xOffset = (rc.right + rc.left - textRect.right + textRect.left - (isDropDown ? 11 : 1))/2 + pressedOffset;
                             int yOffset = yImage + szImage.cy +1;
 
                             if (isListToolbar)
                             {
                                 xOffset = rc.left + szImage.cx + (isDropDown ? (IsXPThemed() ? 10 : 6): 6);
-                                yOffset = (2+ rc.bottom - rc.top - textRect.bottom + textRect.top)/2;
+                                yOffset = (rc.bottom - rc.top - textRect.bottom + textRect.top)/2 + pressedOffset + 1;
                                 textRect.right = MIN(textRect.right, rc.right - xOffset);
                             }
 
@@ -2261,7 +2264,6 @@ namespace Win32xx
         case RBN_HEIGHTCHANGE:    return OnRBNHeightChange(pHeader);
         case RBN_LAYOUTCHANGED:   return OnRBNLayoutChanged(pHeader);
         case RBN_MINMAX:          return OnRBNMinMax(pHeader);
-        case TBN_DROPDOWN:        return OnTBNDropDown((LPNMTOOLBAR)lparam);
         case TTN_GETDISPINFO:     return OnTTNGetDispInfo((LPNMTTDISPINFO)lparam);
         case UWN_UNDOCKED:        return OnUndocked();
         }
@@ -2294,21 +2296,6 @@ namespace Win32xx
     {
         if (GetReBarTheme().UseThemes && GetReBarTheme().ShortBands)
             return 1;  // Suppress maximise or minimise rebar band
-
-        return 0;
-    }
-
-    // Press of drop-down button on ToolBar.
-    template <class T>
-    inline LRESULT CFrameT<T>::OnTBNDropDown(LPNMTOOLBAR pNMTB)
-    {
-        UINT item = static_cast<UINT>(pNMTB->iItem);
-        CToolBar* pTB = static_cast<CToolBar*>(T::GetCWndPtr(pNMTB->hdr.hwndFrom));
-
-        if (pTB)
-        {
-            m_drawArrowBkgrnd = (pTB->GetButtonStyle(item) & TBSTYLE_DROPDOWN) ? TRUE : FALSE;
-        }
 
         return 0;
     }
