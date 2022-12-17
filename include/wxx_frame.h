@@ -810,6 +810,9 @@ namespace Win32xx
     }
 
     // With CustomDraw we manually control the drawing of each toolbar button.
+    // Supports toolbars with or without the TBSTYLE_LIST style.
+    // Supports buttons with or without the BTNS_WHOLEDROPDOWN and BTNS_DROPDOWN styles.
+    // Requires the toolbar buttons to have images.
     template <class T>
     inline LRESULT CFrameT<T>::CustomDrawToolBar(NMHDR* pNMHDR)
     {
@@ -900,12 +903,17 @@ namespace Win32xx
                         bool isListToolbar = (pTB->GetStyle() & TBSTYLE_LIST) != 0;
 
                         // Calculate dropdown width.
-                        drawDC.CreateFont(GetSystemMetrics(SM_CYMENUCHECK), 0, 0, 0,
-                            FW_NORMAL, 0, 0, 0, SYMBOL_CHARSET, 0, 0, 0, 0, _T("Marlett"));
                         int dropDownWidth = 0;
-                        drawDC.GetCharWidth('6', '6', &dropDownWidth);
+                        if (isDropDown || isWholeDropDown)
+                        {
+                            // Use the internal Marlett font to determine the width for the drop down arrow section.
+                            drawDC.CreateFont(GetSystemMetrics(SM_CYMENUCHECK), 0, 0, 0,
+                                FW_NORMAL, 0, 0, 0, SYMBOL_CHARSET, 0, 0, 0, 0, _T("Marlett"));
 
-                        // Calculate image position
+                            drawDC.GetCharWidth('6', '6', &dropDownWidth);
+                        }
+
+                        // Calculate image position.
                         CSize szImage = toolBarImages.GetIconSize();
                         int xImage = 0;
                         int yImage = 0;
@@ -921,25 +929,25 @@ namespace Win32xx
                         else
                         {
                             // Calculate the image position without the TBSTYLE_LIST toolbar style.
-                            xImage = (rc.right + rc.left - szImage.cx) / 2 + pressedOffset;
+                            xImage = (rc.right + rc.left - szImage.cx - dropDownWidth) / 2 + pressedOffset;
                             yImage = (rc.bottom + rc.top - szImage.cy - textSize.cy) / 2;
-                            if (isDropDown)       xImage -= 6;
-                            if (isWholeDropDown)  xImage -= 4;
                         }
 
                         if (isDropDown || isWholeDropDown)
                         {
                             // Calculate arrow position for the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN button styles.
+                            int arrowHeight = (dropDownWidth + 1) / 5;
                             int xArrow = rc.right - dropDownWidth / 2;
-                            int yArrow = (rc.bottom - rc.top + 1) / 2;
+                            int yArrow = (yImage + szImage.cy + arrowHeight) / 2;
+
+                            if (isDropDown)
+                            {
+                                yArrow = (rc.Height() + arrowHeight) / 2;
+                            }
 
                             if (isListToolbar)
                             {
                                 yArrow += 1;
-                            }
-                            else if (isWholeDropDown)
-                            {
-                                yArrow = 1 + (szImage.cy) / 2;
                             }
 
                             // Draw separate background for dropdown arrow.
@@ -951,7 +959,6 @@ namespace Win32xx
                             }
 
                             // Draw the dropdown arrow.
-                            int arrowHeight = (dropDownWidth + 1) / 5;
                             drawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
                             for (int i = arrowHeight; i >= 0; --i)
                             {
@@ -982,29 +989,34 @@ namespace Win32xx
                         // Draw the text.
                         if (!str.IsEmpty())
                         {
+                            // Calculate the text position
                             int width = rc.right - rc.left - (isDropDown ? dropDownWidth : 0);
                             CRect textRect(0, 0, MIN(textSize.cx, width), textSize.cy);
 
-                            int xOffset = (rc.right + rc.left - textRect.right + textRect.left - (isDropDown ? 11 : 1))/2 + pressedOffset;
-                            int yOffset = yImage + szImage.cy +1;
+                            int xOffset = rc.left + (rc.Width() - textRect.Width()) / 2;
+                            if (isDropDown)
+                                xOffset -= dropDownWidth / 2;
+
+                            int yOffset = yImage + szImage.cy + 1;
 
                             if (isListToolbar)
                             {
-                                xOffset = rc.left + szImage.cx + (isDropDown ? (IsXPThemed() ? 10 : 6): 6);
-                                yOffset = (rc.bottom - rc.top - textRect.bottom + textRect.top)/2 + pressedOffset + 1;
-                                textRect.right = MIN(textRect.right, rc.right - xOffset);
+                                int textSpace = rc.Width() - szImage.cx - textRect.Width() - dropDownWidth;
+                                xOffset = rc.left + szImage.cx + textSpace / 2;
+                                yOffset = (rc.Height() - textRect.Height())/2 + pressedOffset + 1;
                             }
 
                             OffsetRect(&textRect, xOffset, yOffset);
 
+                            // Select the toolbar's font with a transparent background.
                             int mode = drawDC.SetBkMode(TRANSPARENT);
                             drawDC.SelectObject(pTB->GetFont());
 
                             if (isDisabled)
                             {
-                                // Draw text twice for embossed look
+                                // Draw disabled text twice for embossed look.
                                 textRect.OffsetRect(1, 1);
-                                drawDC.SetTextColor(RGB(255,255,255));
+                                drawDC.SetTextColor(RGB(255, 255, 255));
                                 drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT);
                                 textRect.OffsetRect(-1, -1);
                                 drawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
@@ -1012,6 +1024,7 @@ namespace Win32xx
                             }
                             else
                             {
+                                // Draw normal text.
                                 drawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
                                 drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT | DT_END_ELLIPSIS);
                             }
