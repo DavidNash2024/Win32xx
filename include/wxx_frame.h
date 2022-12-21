@@ -1,5 +1,5 @@
-// Win32++   Version 9.1
-// Release Date: 26th September 2022
+// Win32++   Version 9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1810,6 +1810,32 @@ namespace Win32xx
                 int t = static_cast<int>(top);
                 int r = static_cast<int>(left + width);
                 int b = static_cast<int>(top + height);
+
+                CPoint point(l, t);
+
+#ifdef MONITOR_DEFAULTTONULL
+
+                HMONITOR monitor = MonitorFromPoint(point, MONITOR_DEFAULTTONULL);
+                MONITORINFO mi;
+                ZeroMemory(&mi, sizeof(mi));
+                mi.cbSize = sizeof(mi);
+                GetMonitorInfo(monitor, &mi);
+                CRect workArea = mi.rcWork;
+                if (!workArea.PtInRect(point))
+                    throw CUserException();
+
+#else
+
+                CRect workArea;
+                SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
+                if (!workArea.PtInRect(point))
+                    throw CUserException();
+
+#endif
+
+                if (width <= 0 || height <= 0)
+                    throw CUserException();
+
                 values.position = CRect(l, t, r, b);
                 values.showCmd = (SW_MAXIMIZE == showCmd) ? SW_MAXIMIZE : SW_SHOW;
                 values.showStatusBar = (statusBar & 1) ? TRUE : FALSE;
@@ -2700,10 +2726,10 @@ namespace Win32xx
                 {
                     // Get the Frame's window position
                     CRect rc = wndpl.rcNormalPosition;
-                    DWORD top = static_cast<DWORD>(MAX(rc.top, 0));
-                    DWORD left = static_cast<DWORD>(MAX(rc.left, 0));
-                    DWORD width = static_cast<DWORD>(MAX(rc.Width(), 100));
-                    DWORD height = static_cast<DWORD>(MAX(rc.Height(), 50));
+                    DWORD top = static_cast<DWORD>(rc.top);
+                    DWORD left = static_cast<DWORD>(rc.left);
+                    DWORD width = static_cast<DWORD>(rc.Width());
+                    DWORD height = static_cast<DWORD>(rc.Height());
                     DWORD showCmd = wndpl.showCmd;
 
                     if (ERROR_SUCCESS != settingsKey.SetDWORDValue(_T("Top"), top))

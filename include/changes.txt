@@ -1,3 +1,22 @@
+Version 9.2
+===========
+
+New Features and Enhancements
+-----------------------------
+* Updated the custom drawing of toolbars by CFrame and CDockFrame.
+  - Adjusted the size and position of the of arrows used for the BTNS_DROPDOWN
+    and BTNS_WHOLEDROPDOWN styles.
+
+* Updated the custom drawing of menu items by CFrame and CDockFrame.
+  - Adjusted the position of check boxes and radio buttons in menu items. 
+  - Menu drawing is performed with double buffering to eliminate flicker
+
+* Updated the saving of the frame's position when the application closes to 
+  provide better support for multiple monitors. The frame's position is verified
+  when the application starts, and is returned to default if it can't be
+  displayed on one of the monitors. 
+
+
 Version 9.1
 ===========
 
@@ -524,8 +543,8 @@ Modified CToolbar::EnableButton                    member function
 Renamed CTab::SetFont to CTab::SetTabFont          member function
 
 
-Version 8.7.0
-=============
+Version 8.7
+===========
 
 This version adds print preview support to the framework, and support for
 Microsoft Visual Studio Community 2019.

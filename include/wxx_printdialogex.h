@@ -1,5 +1,5 @@
-// Win32++   Version 9.1
-// Release Date: 26th September 2022
+// Win32++   Version 9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -78,6 +78,9 @@
 #include "wxx_wincore.h"
 #include "wxx_commondlg.h"
 #include "wxx_printdialogs.h"
+
+// Must be Unicode for GNU compilers.
+#if !defined __GNUC__ || (defined __GNUC__ && defined UNICODE)
 
 namespace Win32xx
 {
@@ -590,5 +593,7 @@ namespace Win32xx
     }
 }
 
+#endif  // define (__GNUC__) || (defined (__GNUC__) && defined (UNICODE))
 
 #endif  // define _WIN32XX_PRINTDIALOGEX_H_
+
