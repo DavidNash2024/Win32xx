@@ -975,16 +975,14 @@ namespace Win32xx
                             }
                         }
 
+
                         // Draw the button image.
                         TBBUTTON tbb;
                         ZeroMemory(&tbb, sizeof(tbb));
                         int button = pTB->CommandToIndex(item);
                         pTB->GetButton(button, tbb);
                         int image = tbb.iBitmap;
-                        if (xImage > 0)
-                        {
-                            toolBarImages.Draw(drawDC, image, CPoint(xImage, yImage), ILD_TRANSPARENT);
-                        }
+                        toolBarImages.Draw(drawDC, image, CPoint(xImage, yImage), ILD_TRANSPARENT);
 
                         // Draw the text.
                         if (!str.IsEmpty())
