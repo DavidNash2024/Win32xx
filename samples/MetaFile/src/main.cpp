@@ -3,9 +3,11 @@
 //
 
 // VS6 requires these macros to be defined.
-#define WINVER          0x0410
-#define _WIN32_WINDOWS  0x0410
-#define _WIN32_IE       0x0401
+#if defined (_MSC_VER) && (_MSC_VER <= 1200)
+  #define WINVER          0x0410
+  #define _WIN32_WINDOWS  0x0410
+  #define _WIN32_IE       0x0401
+#endif
 
 #include "wxx_wincore.h"
 #include "MetaView.h"

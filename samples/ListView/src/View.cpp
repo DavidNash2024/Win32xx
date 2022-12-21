@@ -280,6 +280,7 @@ LRESULT CView::OnUpdateText()
     LPARAM lparam = GetItemData(m_row);
     ListItemData* pData = reinterpret_cast<ListItemData*>(lparam);
     pData->m_subItemText[m_column] = text;
+    RedrawItems(m_row, m_row);
 
     return 0;
 }
