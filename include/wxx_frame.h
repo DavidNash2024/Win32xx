@@ -2401,6 +2401,9 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnSysColorChange(UINT msg, WPARAM, LPARAM)
     {
+        // Initialize the menu metrics on theme change.
+        m_menuMetrics.Initialize(*this);
+
         // Honour theme color changes
         if (GetReBar().IsWindow())
         {
