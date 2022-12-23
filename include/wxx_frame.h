@@ -929,7 +929,8 @@ namespace Win32xx
                         else
                         {
                             // Calculate the image position without the TBSTYLE_LIST toolbar style.
-                            xImage = (rc.right + rc.left - szImage.cx - dropDownWidth) / 2 + pressedOffset;
+                            int dropAjust = (dropDownWidth * 3) / 4;
+                            xImage = (rc.right + rc.left - szImage.cx - dropAjust) / 2 + pressedOffset;
                             yImage = (rc.bottom + rc.top - szImage.cy - textSize.cy) / 2;
                         }
 
@@ -1107,7 +1108,7 @@ namespace Win32xx
 
         if (!(pmid->mii.fType & MFT_SEPARATOR))
         {
-              if (!(pDIS->itemState & ODS_CHECKED))
+            if (!(pDIS->itemState & ODS_CHECKED))
                 DrawMenuItemIcon(pDIS);
         }
 
@@ -1235,7 +1236,7 @@ namespace Win32xx
         CRect itemRect = pDIS->rcItem;
         CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
         int left = (gutter.Width() - xIcon) / 2;
-        int top = (itemRect.Height() - yIcon) / 2;
+        int top = itemRect.top + (itemRect.Height() - yIcon) / 2;
 
         // get the icon's location in the imagelist
         int image = -1;
