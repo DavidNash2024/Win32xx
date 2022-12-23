@@ -1,5 +1,5 @@
-// Win32++   Version 9.1
-// Release Date: 26th September 2022
+// Win32++   Version 9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -326,7 +326,7 @@ namespace Win32xx
         int cx = m_sizeCheck.cx + m_marCheck.Width();
         int cy = m_sizeCheck.cy + m_marCheck.Height();
 
-        int x = item.left + m_marCheckBackground.cxLeftWidth;
+        int x = item.left + m_marCheckBackground.cxLeftWidth + m_marItem.cxLeftWidth;
         int y = item.top + (item.Height() - cy) / 2;
 
         return CRect(x, y, x + cx, y + cy);
