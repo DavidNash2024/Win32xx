@@ -210,6 +210,7 @@ namespace Win32xx
         BOOL  IsVistaMenu() const;
         CRect ScaleRect(const CRect& item) const;
         CSize ScaleSize(const CSize& item) const;
+        void  Setup();
         int   ToItemStateId(UINT itemState) const;
         int   ToCheckBackgroundStateId(int stateID) const;
         int   ToCheckStateId(UINT type, int stateID) const;
@@ -227,6 +228,7 @@ namespace Win32xx
         BOOL    IsThemeBackgroundPartiallyTransparent(int partID, int stateID) const;
         HANDLE  OpenThemeData(HWND wnd, LPCWSTR classList) const;
 
+    private:
         HANDLE  m_theme;                // Theme handle
         HWND    m_frame;                // Handle to the frame window
         HMODULE m_uxTheme;              // Module handle to the UXTheme dll
@@ -239,7 +241,6 @@ namespace Win32xx
         CSize   m_sizeCheck;            // Check size metric
         CSize   m_sizeSeparator;        // Separator size metric
 
-    private:
         typedef HRESULT WINAPI CLOSETHEMEDATA(HANDLE);
         typedef HRESULT WINAPI DRAWTHEMEBACKGROUND(HANDLE, HDC, int, int, const RECT*, const RECT*);
         typedef HRESULT WINAPI DRAWTHEMETEXT(HANDLE, HDC, int, int, LPCWSTR, int, DWORD, DWORD, LPCRECT);
@@ -522,6 +523,12 @@ namespace Win32xx
                 reinterpret_cast<void*>(::GetProcAddress(m_uxTheme, "OpenThemeData")));
         }
 
+        Setup();
+
+    }
+
+    inline void CMenuMetrics::Setup()
+    {
         if (m_theme != 0)
         {
             CloseThemeData();

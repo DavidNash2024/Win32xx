@@ -113,6 +113,10 @@
   #define WM_DPICHANGED         0x02E0
 #endif
 
+#ifndef WM_THEMECHANGED
+  #define WM_THEMECHANGED       0x031A
+#endif
+
 #if defined (_MSC_VER) && (_MSC_VER >= 1920)   // >= VS2019
   #pragma warning ( push )
   #pragma warning ( disable : 26812 )            // enum type is unscoped.
@@ -200,11 +204,13 @@ namespace Win32xx
         CWnd& GetView() const;
         CString GetXPThemeName() const;
         BOOL IsMDIFrame() const                           { return static_cast<BOOL>(T::SendMessage(UWM_GETCMDIFRAMET)); }
+        void ResetMenuMetrics()                           { m_menuMetrics.Setup(); }
         void SetAccelerators(UINT accelID);
         void SetFrameMenu(UINT menuID);
         void SetFrameMenu(CMenu menu);
         void SetInitValues(const InitValues& values);
         void SetKbdHook();
+        void SetMenuMetrics()                             { m_menuMetrics.Initialize(*this); }
         void SetMenuTheme(const MenuTheme& mt);
         void SetMRULimit(UINT MRULimit);
         void SetReBarTheme(const ReBarTheme& rbt);
@@ -267,6 +273,7 @@ namespace Win32xx
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnThemeChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
         virtual LRESULT OnUndocked();
         virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam);
@@ -1866,12 +1873,6 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::MeasureMenuItem(MEASUREITEMSTRUCT *pMIS)
     {
-        // Initialize the menu metrics on first use.
-        if (m_menuMetrics.m_frame == 0)
-        {
-            m_menuMetrics.Initialize(*this);
-        }
-
         MenuItemData* pMID = reinterpret_cast<MenuItemData*>(pMIS->itemData);
         assert(::IsMenu(pMID->menu));  // Does itemData contain a valid MenuItemData struct?
 
@@ -1967,6 +1968,7 @@ namespace Win32xx
         if (::IsMenu(menu))
         {
             SetFrameMenu(menu);
+            SetMenuMetrics();
             if (m_maxMRU > 0)
                 UpdateMRUMenu();
         }
@@ -2400,9 +2402,6 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnSysColorChange(UINT msg, WPARAM, LPARAM)
     {
-        // Initialize the menu metrics on theme change.
-        m_menuMetrics.Initialize(*this);
-
         // Honour theme color changes
         if (GetReBar().IsWindow())
         {
@@ -2462,6 +2461,16 @@ namespace Win32xx
 
         // Pass remaining system commands on for default processing.
         return CWnd::WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Called in response to a WM_THEMECHANGED message. This message is sent
+    // to all top-level windows  following a theme change event.
+    template <class T>
+    inline LRESULT CFrameT<T>::OnThemeChanged(UINT, WPARAM, LPARAM)
+    {
+        // Reset the menu metrics on theme change.
+        ResetMenuMetrics();
+        return 0;
     }
 
     // Notification of undocked from CDocker received via OnNotify
@@ -3576,6 +3585,7 @@ namespace Win32xx
         {
         case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
         case WM_DPICHANGED:     return OnSettingChange(msg, wparam, lparam);
+        case WM_THEMECHANGED:   return OnThemeChanged(msg, wparam, lparam);
         case WM_DRAWITEM:       return OnDrawItem(msg, wparam, lparam);
         case WM_ERASEBKGND:     return 0;
         case WM_HELP:           return OnHelp();

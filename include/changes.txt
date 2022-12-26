@@ -16,6 +16,11 @@ New Features and Enhancements
   when the application starts, and is returned to default if it can't be
   displayed on one of the monitors. 
 
+Changes in Detail
+-----------------
+Added CFrame::SetMenuMetrics
+Added CFrame::ResetMenuMetrics
+
 
 Version 9.1
 ===========
