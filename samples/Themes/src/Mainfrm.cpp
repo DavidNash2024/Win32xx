@@ -49,6 +49,7 @@ void CMainFrame::AddCombo()
     RecalcLayout();
 }
 
+// Configures the theme colors based on the user's menu selection.
 BOOL CMainFrame::ChooseColor(UINT color)
 {
     m_color = color;
@@ -237,6 +238,7 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
+// Loads the application's settings from the registry when the application starts.
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 {
     // Call the base class function
@@ -433,6 +435,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     return CFrame::OnNotify(wparam, lparam);
 }
 
+// Toggles the use of themes.
 BOOL CMainFrame::OnUseThemes()
 {
     if (IsReBarSupported())
@@ -465,6 +468,7 @@ BOOL CMainFrame::OnUseThemes()
     return TRUE;
 }
 
+// Toggles the use of theme colors for rebar bands. 
 BOOL CMainFrame::OnBandColors()
 {
     if (IsReBarSupported())
@@ -479,6 +483,7 @@ BOOL CMainFrame::OnBandColors()
     return TRUE;
 }
 
+// Toggles the flat style display of toolbars.
 BOOL CMainFrame::OnFlatStyle()
 {
     if (IsReBarSupported())
@@ -495,6 +500,7 @@ BOOL CMainFrame::OnFlatStyle()
     return TRUE;
 }
 
+// Toggles the postitioning of bands left.
 BOOL CMainFrame::OnLeftBands()
 {
     if (IsReBarSupported())
@@ -511,6 +517,7 @@ BOOL CMainFrame::OnLeftBands()
     return TRUE;
 }
 
+// Toggles locking the menubar in the first row of the rebar.
 BOOL CMainFrame::OnLockMenuBar()
 {
     if (IsReBarSupported())
@@ -574,6 +581,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CFrame::OnMenuUpdate(id);
 }
 
+// Toggle round borders for toolbars in the rebar.
 BOOL CMainFrame::OnRoundBorders()
 {
     if (IsReBarSupported())
@@ -590,6 +598,7 @@ BOOL CMainFrame::OnRoundBorders()
     return TRUE;
 }
 
+// Toggle short toolbars in the rebar.
 BOOL CMainFrame::OnShortBands()
 {
     if (IsReBarSupported())
@@ -606,6 +615,30 @@ BOOL CMainFrame::OnShortBands()
     return TRUE;
 }
 
+// Called in response to a WM_SYSCOLORCHANGE.
+// The WM_SYSCOLORCHANGE message is sent to all top-level windows when a change
+// is made to a system color setting.
+LRESULT CMainFrame::OnSysColorChange(UINT, WPARAM, LPARAM)
+{
+    // Currently we need to reset the ComboBoxEx control to force redrawing
+    // when a windows high contrast theme is enabled or disabled. This requirement
+    //  might change with future updates to the Windows operating system. 
+
+    // Retrieve the current selection.
+    int sel = m_comboBoxEx.GetCurSel();
+
+    // Reset the ComboBoxEx control to perform a full redraw.
+    // Required when switching between a normal and high contrast theme.
+    m_comboBoxEx.ResetContent();
+    m_comboBoxEx.AddItems();
+
+    // Restore the current selection.
+    m_comboBoxEx.SetCurSel(sel);
+
+    return 0;
+}
+
+// Toggles the display of lines betweeen rebar rows.
 BOOL CMainFrame::OnUseLines()
 {
     if (IsReBarSupported())
@@ -622,6 +655,7 @@ BOOL CMainFrame::OnUseLines()
     return TRUE;
 }
 
+// Toggles the display of the arrows toolbar.
 BOOL CMainFrame::OnViewArrows()
 {
     if (IsReBarSupported())
@@ -633,6 +667,7 @@ BOOL CMainFrame::OnViewArrows()
     return TRUE;
 }
 
+// Toggles the display of the cards toolbar.
 BOOL CMainFrame::OnViewCards()
 {
     if (IsReBarSupported())
@@ -644,6 +679,7 @@ BOOL CMainFrame::OnViewCards()
     return TRUE;
 }
 
+// Saves the application's settings in the registry when the application closes.
 BOOL CMainFrame::SaveRegistrySettings()
 {
     if (IsReBarSupported())
@@ -699,6 +735,7 @@ BOOL CMainFrame::SaveRegistrySettings()
     return TRUE;
 }
 
+// Toggles the use of colors for the rebar bands.
 void CMainFrame::SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2)
 {
     if (IsReBarSupported())
@@ -727,6 +764,13 @@ void CMainFrame::SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLO
     }
 }
 
+// We select the theme from the menu, so we override the default
+// behavior of SetTheme.
+void CMainFrame::SetTheme()
+{
+}
+
+// Specifies the bitmap resources used for menu items.
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
@@ -736,6 +780,7 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR_SML);
 }
 
+// Configures the toolbars. 
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the first toolbar buttons
@@ -778,6 +823,7 @@ void CMainFrame::SetupToolBar()
     AddCombo();
 }
 
+// Displays or hides the arrows toolbar.
 void CMainFrame::ShowArrows(bool isShown)
 {
     if (IsReBarSupported())
@@ -789,6 +835,7 @@ void CMainFrame::ShowArrows(bool isShown)
     }
 }
 
+// Displays or hides the cards toolbar.
 void CMainFrame::ShowCards(bool isShown)
 {
     if (IsReBarSupported())
@@ -800,6 +847,7 @@ void CMainFrame::ShowCards(bool isShown)
     }
 }
 
+// Handle the frame's window messages. 
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try

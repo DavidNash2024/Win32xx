@@ -7,6 +7,7 @@
 
 #include "View.h"
 #include "MyCombo.h"
+#include "resource.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -28,9 +29,11 @@ protected:
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSysColorChange(UINT, WPARAM, LPARAM);
     virtual BOOL SaveRegistrySettings();
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
+    virtual void SetTheme();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
