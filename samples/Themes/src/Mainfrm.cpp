@@ -468,7 +468,7 @@ BOOL CMainFrame::OnUseThemes()
     return TRUE;
 }
 
-// Toggles the use of theme colors for rebar bands. 
+// Toggles the use of theme colors for rebar bands.
 BOOL CMainFrame::OnBandColors()
 {
     if (IsReBarSupported())
@@ -622,7 +622,7 @@ LRESULT CMainFrame::OnSysColorChange(UINT, WPARAM, LPARAM)
 {
     // Currently we need to reset the ComboBoxEx control to force redrawing
     // when a windows high contrast theme is enabled or disabled. This requirement
-    //  might change with future updates to the Windows operating system. 
+    //  might change with future updates to the Windows operating system.
 
     // Retrieve the current selection.
     int sel = m_comboBoxEx.GetCurSel();
@@ -780,7 +780,7 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR_SML);
 }
 
-// Configures the toolbars. 
+// Configures the toolbars.
 void CMainFrame::SetupToolBar()
 {
     // Set the Resource IDs for the first toolbar buttons
@@ -847,7 +847,7 @@ void CMainFrame::ShowCards(bool isShown)
     }
 }
 
-// Handle the frame's window messages. 
+// Handle the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try

@@ -1216,7 +1216,9 @@ namespace Win32xx
     inline void CGDIObject::Release()
     {
         assert(m_pData);
-        CThreadLock mapLock(GetApp()->m_gdiLock);
+        CWinApp* pApp = CWinApp::SetnGetThis();
+        if (pApp != NULL)
+            CThreadLock mapLock(GetApp()->m_gdiLock);
 
         if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
@@ -2695,7 +2697,9 @@ namespace Win32xx
     inline void CDC::Release()
     {
         assert(m_pData);
-        CThreadLock mapLock(GetApp()->m_gdiLock);
+        CWinApp* pApp = CWinApp::SetnGetThis();
+        if (pApp != NULL)
+            CThreadLock mapLock(GetApp()->m_gdiLock);
 
         if (m_pData->count > 0)
         {
@@ -3865,14 +3869,13 @@ namespace Win32xx
     // Point and Line Drawing Functions
 
 
-    // Returns the current "MoveToEx" position.
-    // Refer to MoveToEx in the Windows API documentation for more information.
+    // Returns the current position in logical coordinates.
+    // Refer to GetCurrentPositionEx in the Windows API documentation for more information.
     inline CPoint CDC::GetCurrentPosition() const
     {
         assert(m_pData->dc != 0);
         CPoint pt;
-        VERIFY(::MoveToEx(m_pData->dc, 0, 0, &pt));
-        VERIFY(::MoveToEx(m_pData->dc, pt.x, pt.y, NULL));
+        VERIFY(::GetCurrentPositionEx(m_pData->dc, &pt));
         return pt;
     }
 
@@ -3897,8 +3900,9 @@ namespace Win32xx
     inline CPoint CDC::MoveTo(int x, int y) const
     {
         assert(m_pData->dc != 0);
-        ::MoveToEx(m_pData->dc, x, y, NULL);
-        return CPoint(x, y);
+        CPoint previous;
+        ::MoveToEx(m_pData->dc, x, y, &previous);
+        return previous;
     }
 
     // Updates the current position to the specified point
@@ -3906,8 +3910,9 @@ namespace Win32xx
     inline CPoint CDC::MoveTo(POINT pt) const
     {
         assert(m_pData->dc != 0);
-        ::MoveToEx(m_pData->dc, pt.x, pt.y, NULL);
-        return pt;
+        CPoint previous;
+        ::MoveToEx(m_pData->dc, pt.x, pt.y, &previous);
+        return previous;
     }
 
     // Draws a line from the current position up to, but not including, the specified point.
