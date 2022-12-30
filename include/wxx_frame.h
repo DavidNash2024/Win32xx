@@ -305,6 +305,7 @@ namespace Win32xx
         // Not intended to be overridden
         CRect ExcludeChildRect(const CRect& clientRect, HWND child) const;
         BOOL IsReBarSupported() const { return (GetComCtlVersion() > 470); }
+        BOOL IsUsingDarkMenu() const { return m_useDarkMenu; }
         BOOL IsUsingIndicatorStatus() const { return m_useIndicatorStatus; }
         BOOL IsUsingMenuStatus() const { return m_useMenuStatus; }
         BOOL IsUsingReBar() const { return m_useReBar; }
@@ -312,6 +313,7 @@ namespace Win32xx
         BOOL IsUsingThemes() const { return m_useThemes; }
         BOOL IsUsingToolBar() const { return m_useToolBar; }
         BOOL IsUsingVistaMenu() const { return m_menuMetrics.IsVistaMenu(); }
+        void UseDarkMenu(BOOL useDarkMenu) { m_useDarkMenu = useDarkMenu; }
         void UseIndicatorStatus(BOOL useIndicatorStatus) { m_useIndicatorStatus = useIndicatorStatus; }
         void UseMenuStatus(BOOL useMenuStatus) { m_useMenuStatus = useMenuStatus; }
         void UseReBar(BOOL useReBar) { m_useReBar = useReBar; }
@@ -367,6 +369,7 @@ namespace Win32xx
         CMenuMetrics m_menuMetrics;         // The MenuMetrics object
         CImageList m_menuImages;            // Imagelist of menu icons
         CImageList m_menuDisabledImages;    // Imagelist of disabled menu icons
+        BOOL m_useDarkMenu;                 // set to TRUE to manually draw a dark menu
         BOOL m_useIndicatorStatus;          // set to TRUE to see indicators in status bar
         BOOL m_useMenuStatus;               // set to TRUE to see menu and toolbar updates in status bar
         BOOL m_useReBar;                    // set to TRUE if ReBars are to be used
@@ -407,8 +410,8 @@ namespace Win32xx
     //
     template <class T>
     inline CFrameT<T>::CFrameT() : m_aboutDialog(IDW_ABOUT), m_accel(0), m_pView(NULL), m_maxMRU(0), m_oldFocus(0),
-                              m_kbdHook(0), m_useIndicatorStatus(TRUE), m_useMenuStatus(TRUE), m_useStatusBar(TRUE),
-                              m_useThemes(TRUE), m_useToolBar(TRUE), m_altKeyPressed(FALSE)
+                              m_kbdHook(0), m_useDarkMenu(FALSE), m_useIndicatorStatus(TRUE), m_useMenuStatus(TRUE),
+                              m_useStatusBar(TRUE), m_useThemes(TRUE), m_useToolBar(TRUE), m_altKeyPressed(FALSE)
     {
         ZeroMemory(&m_mbTheme, sizeof(m_mbTheme));
         ZeroMemory(&m_rbTheme, sizeof(m_rbTheme));
@@ -1066,7 +1069,7 @@ namespace Win32xx
         pDIS->rcItem.top = 0;
         pDIS->rcItem.bottom = itemRect.Height();
 
-        if (IsUsingVistaMenu())  // Is uxtheme.dll loaded?
+        if (IsUsingVistaMenu() && !IsUsingDarkMenu())  // Is uxtheme.dll loaded?
         {
             DrawVistaMenuBkgnd(pDIS);
 
@@ -1098,10 +1101,15 @@ namespace Win32xx
                 // Draw the separator.
                 CRect sepRect = pDIS->rcItem;
                 sepRect.left = gutter.Width();
-                memDC.SolidFill(RGB(255, 255, 255), sepRect);
+                if (IsUsingDarkMenu())
+                    memDC.SolidFill(RGB(0, 0, 0), sepRect);
+                else
+                    memDC.SolidFill(RGB(255, 255, 255), sepRect);
 
                 sepRect.top += sepRect.Height() / 2;
-                memDC.DrawEdge(sepRect, EDGE_ETCHED, BF_TOP);
+                memDC.CreatePen(PS_SOLID, 1, RGB(128, 128, 128));
+                memDC.MoveTo(sepRect.left, sepRect.top);
+                memDC.LineTo(sepRect.right, sepRect.top);
             }
             else
             {
@@ -1158,7 +1166,10 @@ namespace Win32xx
         {
             // draw non-selected item background.
             drawRect.left = GetMenuMetrics().GetGutterRect(pDIS->rcItem).Width();
-            drawDC.SolidFill(RGB(255, 255, 255), drawRect);
+            if (IsUsingDarkMenu())
+                drawDC.SolidFill(RGB(0, 0, 0), drawRect);
+            else
+                drawDC.SolidFill(RGB(255, 255, 255), drawRect);
         }
     }
 
@@ -1273,6 +1284,10 @@ namespace Win32xx
         CString itemText = pmid->GetItemText();
         bool isDisabled = (pDIS->itemState & ODS_GRAYED) != 0;
         COLORREF colorText = GetSysColor(isDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
+        if (IsUsingDarkMenu())
+        {
+            colorText = isDisabled ? RGB(192, 192, 192) : RGB(255, 255, 255);
+        }
 
         // Calculate the text rect size.
         CRect textRect = GetMenuMetrics().GetTextRect(pDIS->rcItem);

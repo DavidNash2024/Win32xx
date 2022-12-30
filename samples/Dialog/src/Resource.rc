@@ -63,7 +63,7 @@ BEGIN
                     10
     CONTROL         "Radio3",IDC_RADIO3,"Button",BS_AUTORADIOBUTTON,30,48,38,
                     10
-    EDITTEXT        IDC_EDIT1,120,82,84,35,ES_MULTILINE | ES_WANTRETURN | 
+    EDITTEXT        IDC_EDIT1,120,82,84,35,ES_MULTILINE | ES_WANTRETURN |
                     ES_AUTOHSCROLL | NOT WS_BORDER,WS_EX_STATICEDGE
     CONTROL         "Check Box 1",IDC_CHECK1,"Button",BS_AUTOCHECKBOX |
                     WS_TABSTOP,30,114,55,10

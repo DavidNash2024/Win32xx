@@ -258,7 +258,9 @@ namespace Win32xx
     inline void CMenu::Release()
     {
         assert(m_pData);
-        CThreadLock mapLock(GetApp()->m_wndLock);
+        CWinApp* pApp = CWinApp::SetnGetThis();
+        if (pApp != NULL)
+            CThreadLock mapLock(GetApp()->m_wndLock);
 
         if (InterlockedDecrement(&m_pData->count) == 0)
         {

@@ -4,7 +4,7 @@
 //
 
 
-// For Visual Studio 6 
+// For Visual Studio 6
 #if defined (_MSC_VER) && (_MSC_VER <= 1200)
 
 #define WINVER          0x0410
