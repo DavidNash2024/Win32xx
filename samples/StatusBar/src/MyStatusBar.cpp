@@ -78,25 +78,29 @@ LRESULT CMyStatusBar::OnDrawItem(UINT, WPARAM, LPARAM lparam)
     LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT)lparam;
     CDC dc(pDrawItem->hDC);
 
-    // Set the memory dc's font to italic.
-    CFont font = GetFont();
-    LOGFONT lf = font.GetLogFont();
-    lf.lfItalic = TRUE;
-    CDC memDC(dc);
-    memDC.CreateFontIndirect(lf);
+    // Owner draw for part 4.
+    if (pDrawItem->itemID == 4)
+    {
+        // Set the memory dc's font to italic.
+        CFont font = GetFont();
+        LOGFONT lf = font.GetLogFont();
+        lf.lfItalic = TRUE;
+        CDC memDC(dc);
+        memDC.CreateFontIndirect(lf);
 
-    // Fill the owner draw gradient background.
-    CRect partRect = pDrawItem->rcItem;
-    COLORREF fillColor1 = RGB(230, 180, 0);
-    COLORREF fillColor2 = RGB(240, 210, 90);
-    memDC.GradientFill(fillColor1, fillColor2, partRect, TRUE);
+        // Fill the owner draw gradient background.
+        CRect partRect = pDrawItem->rcItem;
+        COLORREF fillColor1 = RGB(230, 180, 0);
+        COLORREF fillColor2 = RGB(240, 210, 90);
+        memDC.GradientFill(fillColor1, fillColor2, partRect, TRUE);
 
-    // Display the owner draw text.
-    COLORREF textColor = RGB(10, 20, 250);
-    memDC.SetTextColor(textColor);
-    memDC.SetBkMode(TRANSPARENT);
-    memDC.DrawText(m_ownerDraw, m_ownerDraw.GetLength(), partRect, DT_SINGLELINE | DT_VCENTER);
-    dc.BitBlt(0, 0, partRect.Width(), partRect.Height(), memDC, 0, 0, SRCCOPY);
+        // Display the owner draw text.
+        COLORREF textColor = RGB(10, 20, 250);
+        memDC.SetTextColor(textColor);
+        memDC.SetBkMode(TRANSPARENT);
+        memDC.DrawText(m_ownerDraw, m_ownerDraw.GetLength(), partRect, DT_SINGLELINE | DT_VCENTER);
+        dc.BitBlt(0, 0, partRect.Width(), partRect.Height(), memDC, 0, 0, SRCCOPY);
+    }
 
     return TRUE;
 }

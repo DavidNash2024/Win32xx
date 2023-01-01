@@ -3,23 +3,43 @@ Version 9.2
 
 New Features and Enhancements
 -----------------------------
-* Updated the custom drawing of toolbars by CFrame and CDockFrame.
-  - Adjusted the size and position of the of arrows used for the BTNS_DROPDOWN
-    and BTNS_WHOLEDROPDOWN styles.
+* Added support for dark mode.
+  Win32++ now provides support for dark mode on Windows 10 and Windows 11.
+  Dark mode support is provided for both high contrast and normal themes.
 
-* Updated the custom drawing of menu items by CFrame and CDockFrame.
-  - Adjusted the position of check boxes and radio buttons in menu items. 
+* Added support for colored text in the status bar.
+  CFrame now uses owner draw to render the status bar, allowing different
+  colored text to be displayed. The StatusBarTheme struct has been extended
+  to allow the status bar text color to be specified. The Themes and DarkMode
+  samples demonstrate the use of colored text in the status bar.
+  
+* Added a Dark Mode sample.
+  This sample demonstrates how to make a Win32++ application dark mode aware.
+  It uses the Windows App API which is an optional feature that can be 
+  installed with Visual Studio Community 2022. It detects when the Windows
+  theme is using dark mode, and adjusts the frame's theme accordingly. The
+  sample also uses a  dialog that supports dark mode to display the information
+  about the application.
+
+* Updated the saving of the frame's position when the application closes to
+  provide better support for multiple monitors. The frame's position is
+  verified when the application starts, and is returned to default if it can't
+  be displayed on one of the monitors.
+
+* Updated the drawing of toolbars and menu items by CFrame and CDockFrame.
+  - Adjusted the size and position of the of arrows used in toolbars for the
+    BTNS_DROPDOWN and BTNS_WHOLEDROPDOWN styles.
+  - Adjusted the position of check boxes and radio buttons in menu items.
   - Menu drawing is performed with double buffering to eliminate flicker
 
-* Updated the saving of the frame's position when the application closes to 
-  provide better support for multiple monitors. The frame's position is verified
-  when the application starts, and is returned to default if it can't be
-  displayed on one of the monitors. 
 
 Changes in Detail
 -----------------
-Added CFrame::SetMenuMetrics
-Added CFrame::ResetMenuMetrics
+Added CFrameT::IsUsingDarkMenu
+Added CFrameT::SetMenuMetrics
+Added CFrameT::ResetMenuMetrics
+Added CFrameT::UseDarkMenu
+Added StatusBarTheme::clrText
 
 
 Version 9.1

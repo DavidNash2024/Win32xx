@@ -60,7 +60,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(235, 237, 250), RGB(235, 237, 250), RGB(220, 225, 240), RGB(220, 225, 240) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(235, 237, 250), RGB(235, 237, 250)};
+            StatusBarTheme sbt = {m_useThemes, RGB(235, 237, 250), RGB(235, 237, 250), RGB(0, 0, 0) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
@@ -74,7 +74,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(225, 230, 255), RGB(240, 242, 250)};
+            StatusBarTheme sbt = {m_useThemes, RGB(225, 230, 255), RGB(240, 242, 250), RGB(0, 0, 0) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
@@ -88,7 +88,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(150,190,245), RGB(196,215,250)};
+            StatusBarTheme sbt = {m_useThemes, RGB(150,190,245), RGB(196,215,250), RGB(0, 0, 0) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
@@ -102,7 +102,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(210, 210, 200), RGB(238, 236, 224)};
+            StatusBarTheme sbt = {m_useThemes, RGB(210, 210, 200), RGB(238, 236, 224), RGB(0, 0, 0) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
@@ -116,13 +116,13 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(160, 180, 80), RGB(180, 200, 100)};
+            StatusBarTheme sbt = {m_useThemes, RGB(160, 180, 80), RGB(180, 200, 100), RGB(0, 0, 200) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128), RGB(0, 0, 0) };
+            MenuTheme mt = {m_useThemes, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128), RGB(0, 0, 200) };
             SetMenuTheme(mt);
         }
         break;
@@ -130,7 +130,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(230, 180, 0), RGB(240, 210, 90)};
+            StatusBarTheme sbt = {m_useThemes, RGB(230, 180, 0), RGB(240, 210, 90), RGB(0, 0, 0) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
@@ -144,7 +144,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(248, 132, 12), RGB(248, 198, 10)};
+            StatusBarTheme sbt = {m_useThemes, RGB(248, 132, 12), RGB(248, 198, 10), RGB(0, 0, 0) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
@@ -158,13 +158,13 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(255, 130, 190), RGB(250, 205, 235)};
+            StatusBarTheme sbt = {m_useThemes, RGB(255, 130, 190), RGB(250, 205, 235), RGB(0, 0, 230) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128), RGB(0, 0, 0) };
+            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128), RGB(0, 0, 230) };
             SetMenuTheme(mt);
         }
         break;
@@ -172,13 +172,13 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(210, 6, 100), RGB(240, 66, 120), RGB(240, 66, 128), RGB(110, 6, 105) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(210, 6, 100), RGB(240, 66, 120)};
+            StatusBarTheme sbt = {m_useThemes, RGB(210, 6, 100), RGB(240, 66, 120), RGB(0, 0, 230) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(242, 106, 228), RGB(192, 6, 88), RGB(152, 6, 56), RGB(152, 6, 56), RGB(149, 6, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = { m_useThemes, RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210), RGB(0, 0, 0) };
+            MenuTheme mt = { m_useThemes, RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210), RGB(0, 0, 230) };
             SetMenuTheme(mt);
         }
         break;
@@ -186,7 +186,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(7, 17, 27), RGB(57, 67, 77), RGB(118, 128 ,136), RGB(68, 78 ,86) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(128, 138 ,176), RGB(98, 108 ,136)};
+            StatusBarTheme sbt = {m_useThemes, RGB(7, 17, 27), RGB(57, 67, 77), RGB(255, 255, 255) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
