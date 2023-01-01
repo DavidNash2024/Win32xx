@@ -337,6 +337,7 @@ namespace Win32xx
         std::vector<CString> m_mruEntries;  // vector of CStrings for MRU entries
         std::vector<UINT> m_menuIcons;      // vector of menu icon resource IDs
         std::vector<UINT> m_toolBarData;    // vector of resource IDs for ToolBar buttons
+        std::vector<CString> m_indicators;  // vector of CStrings for status indicators
         InitValues m_initValues;            // struct of initial values
         CDialog m_aboutDialog;              // Help about dialog
         CMenuBar m_menuBar;                 // Default CMenuBar object
@@ -417,6 +418,7 @@ namespace Win32xx
         ZeroMemory(&m_rbTheme, sizeof(m_rbTheme));
         ZeroMemory(&m_sbTheme, sizeof(m_sbTheme));
         ZeroMemory(&m_tbTheme, sizeof(m_tbTheme));
+        m_indicators.assign(3, CString());
 
         // By default, we use the rebar if we can.
         m_useReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
@@ -2073,7 +2075,7 @@ namespace Win32xx
 
     // OwnerDraw is used to render the popup menu items.
     template <class T>
-    inline LRESULT CFrameT<T>::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnDrawItem(UINT, WPARAM, LPARAM lparam)
     {
         LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT)lparam;
         assert(pdis);
@@ -2081,10 +2083,23 @@ namespace Win32xx
         if (pdis && IsMenu(reinterpret_cast<HMENU>(pdis->hwndItem)) && (!IsRectEmpty(&pdis->rcItem)))
         {
             DrawMenuItem(pdis);
-            return TRUE;
         }
 
-        return CWnd::WndProcDefault(msg, wparam, lparam);
+        if (pdis && (pdis->hwndItem == GetStatusBar()))
+        {
+            CDC dc(pdis->hDC);
+            CRect partRect = pdis->rcItem;
+            dc.SetBkMode(TRANSPARENT);
+            if (IsUsingThemes())
+                dc.SetTextColor(GetStatusBarTheme().clrText);
+            else
+                dc.SetTextColor(RGB(0, 0, 0));
+
+            LPCTSTR text = reinterpret_cast<LPCTSTR>(pdis->itemData);
+            dc.DrawText(text, lstrlen(text), partRect, DT_SINGLELINE | DT_VCENTER);
+        }
+
+        return TRUE;
     }
 
     // Called when the Rebar's background is redrawn.
@@ -2264,9 +2279,9 @@ namespace Win32xx
             HMENU menu = reinterpret_cast<HMENU>(lparam);
 
             if ((menu != T::GetMenu()) && (id != 0) && !(HIWORD(wparam) & MF_POPUP))
-                GetStatusBar().SetPartText(0, LoadString(id));
+                GetStatusBar().SetPartText(0, LoadString(id), SBT_OWNERDRAW);
             else
-                GetStatusBar().SetPartText(0, m_statusText);
+                GetStatusBar().SetPartText(0, m_statusText, SBT_OWNERDRAW);
         }
 
         return 0;
@@ -2958,14 +2973,14 @@ namespace Win32xx
             CString num = LoadString(IDW_INDICATOR_NUM);
             CString scrl = LoadString(IDW_INDICATOR_SCRL);
 
-            CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? cap : CString("");
-            CString status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? num : CString("");
-            CString status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? scrl: CString("");
+            m_indicators[0] = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
+            m_indicators[1] = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : CString("");
+            m_indicators[2] = (::GetKeyState(VK_SCROLL) & 0x0001) ? scrl : CString("");
 
             // Update the indicators text.
-            GetStatusBar().SetPartText(1, status1);
-            GetStatusBar().SetPartText(2, status2);
-            GetStatusBar().SetPartText(3, status3);
+            GetStatusBar().SetPartText(1, m_indicators[0], SBT_OWNERDRAW);
+            GetStatusBar().SetPartText(2, m_indicators[1], SBT_OWNERDRAW);
+            GetStatusBar().SetPartText(3, m_indicators[2], SBT_OWNERDRAW);
         }
     }
 
@@ -3018,7 +3033,7 @@ namespace Win32xx
         if (GetStatusBar().IsWindow())
         {
             // Place text in the 1st pane
-            GetStatusBar().SetPartText(0, m_statusText);
+            GetStatusBar().SetPartText(0, m_statusText, SBT_OWNERDRAW);
         }
     }
 
@@ -3071,7 +3086,7 @@ namespace Win32xx
                 {
                     MenuTheme mt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(235, 237, 250), RGB(235, 237, 250), RGB(235, 237, 250), RGB(235, 237, 250), f, t, t, f, t, f };
-                    StatusBarTheme sbt = {t, RGB(235, 237, 250), RGB(235, 237, 250)};
+                    StatusBarTheme sbt = {t, RGB(235, 237, 250), RGB(235, 237, 250), RGB(0, 0, 0) };
                     ToolBarTheme tbt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 
                     SetMenuTheme(mt);   // Sets the theme for popup menus and MenuBar.
@@ -3085,7 +3100,7 @@ namespace Win32xx
                 {
                     MenuTheme mt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), f, t, t, t, t, f};
-                    StatusBarTheme sbt = {t, RGB(225, 230, 255), RGB(240, 242, 250)};
+                    StatusBarTheme sbt = {t, RGB(225, 230, 255), RGB(240, 242, 250), RGB(0, 0, 0) };
                     ToolBarTheme tbt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 
                     SetMenuTheme(mt);   // Sets the theme for popup menus and MenuBar.
@@ -3101,7 +3116,7 @@ namespace Win32xx
                     // Used for XP default (blue) color scheme.
                     MenuTheme mt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), f, t, t, t, t, f};
-                    StatusBarTheme sbt = {t, RGB(150,190,245), RGB(196,215,250)};
+                    StatusBarTheme sbt = {t, RGB(150,190,245), RGB(196,215,250), RGB(0, 0, 0) };
                     ToolBarTheme tbt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 
                     SetMenuTheme(mt);   // Sets the theme for popup menus and MenuBar.
@@ -3116,7 +3131,7 @@ namespace Win32xx
                     // Used for XP Silver color scheme.
                     MenuTheme mt = {t, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), f, t, t, t, t, f};
-                    StatusBarTheme sbt = {t, RGB(225, 220, 240), RGB(240, 240, 245)};
+                    StatusBarTheme sbt = {t, RGB(225, 220, 240), RGB(240, 240, 245), RGB(0, 0, 0) };
                     ToolBarTheme tbt = {t, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 
                     SetMenuTheme(mt);   // Sets the theme for popup menus and MenuBar.
@@ -3131,7 +3146,7 @@ namespace Win32xx
                     // Used for XP Olive color scheme.
                     MenuTheme mt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), f, t, t, t, t, f};
-                    StatusBarTheme sbt = {t, RGB(215, 216, 182), RGB(242, 242, 230)};
+                    StatusBarTheme sbt = {t, RGB(215, 216, 182), RGB(242, 242, 230), RGB(0, 0, 0) };
                     ToolBarTheme tbt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
 
                     SetMenuTheme(mt);   // Sets the theme for popup menus and MenuBar.
@@ -3145,7 +3160,7 @@ namespace Win32xx
                 {
                     MenuTheme mt = {t, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100), RGB(0, 0, 0) };
                     ReBarTheme rbt = {t, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), f, t, t, t, t, f};
-                    StatusBarTheme sbt = {t, RGB(212, 208, 200), RGB(212, 208, 200)};
+                    StatusBarTheme sbt = {t, RGB(212, 208, 200), RGB(212, 208, 200), RGB(0, 0, 0) };
                     ToolBarTheme tbt = {t, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
 
                     SetMenuTheme(mt);   // Sets the theme for popup menus and MenuBar.

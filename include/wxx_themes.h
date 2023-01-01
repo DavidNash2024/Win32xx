@@ -89,6 +89,7 @@ namespace Win32xx
         BOOL UseThemes;         // TRUE if themes are used
         COLORREF clrBkgnd1;     // Color 1 for statusbar background
         COLORREF clrBkgnd2;     // Color 2 for statusbar background
+        COLORREF clrText;       // Text Color
     };
 
 
