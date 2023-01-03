@@ -211,6 +211,17 @@ END
 
 STRINGTABLE
 BEGIN
+    IDM_PROP_RESIZE         "Toggle proportional resizing"
+    IDM_3DBORDER            "Toggle the display of a 3D border"
+    IDM_NO_UNDOCK           "Toggle the ability to undock a docker"
+    IDM_NO_RESIZE           "Toggle the ability to resize dockers"
+    IDM_NO_DOCK_LR          "Toggle the ability to dock left or right"
+    IDM_NO_DOCK_CAPTION     "Toggle the docking caption"
+    IDM_NO_DOCK_CLOSE       "Toggle the ability to close of dockers"
+END
+
+STRINGTABLE
+BEGIN
     SC_CLOSE                "Close the Window"
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the Window"
