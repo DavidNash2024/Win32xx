@@ -98,7 +98,7 @@ CDocker* CMainFrame::NewDockerFromID(int id)
     return pDock;
 }
 
-// Toggles the display of the 3D border.
+// Toggle the display of a 3D border.
 BOOL CMainFrame::On3DBorder()
 {
     m_use3DBorder = !m_use3DBorder;
@@ -221,6 +221,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     CDockFrame::OnMenuUpdate(id);
 }
 
+// Toggle the docking caption.
 BOOL CMainFrame::OnNoDockCaption()
 {
     m_disableDockCaption = !m_disableDockCaption;
@@ -229,7 +230,7 @@ BOOL CMainFrame::OnNoDockCaption()
     return TRUE;
 }
 
-// Toggles the ability to close of dockers.
+// Toggle the ability to close of dockers.
 BOOL CMainFrame::OnNoDockClose()
 {
     m_disableDockClose = !m_disableDockClose;
@@ -238,7 +239,7 @@ BOOL CMainFrame::OnNoDockClose()
     return TRUE;
 }
 
-// Toggles the ability to dock left or right.
+// Toggle the ability to dock left or right.
 BOOL CMainFrame::OnNoDockLR()
 {
     m_disableDockLR = !m_disableDockLR;
@@ -246,7 +247,7 @@ BOOL CMainFrame::OnNoDockLR()
     return TRUE;
 }
 
-// Togggles the ability to resize dockers using the splitter bar.
+// Togggle the ability to resize dockers using the splitter bar.
 BOOL CMainFrame::OnNoResize()
 {
     m_disableResize = !m_disableResize;

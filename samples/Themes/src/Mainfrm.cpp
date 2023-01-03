@@ -26,7 +26,7 @@ CMainFrame::~CMainFrame()
 // Adds a comboBoxEx to the toolbar.
 void CMainFrame::AddCombo()
 {
-    // We'll be placing the ComboBoxEx control over the 'File Save' toolbar button
+    // Place the ComboBoxEx control over the 'File Save' toolbar button,
     int comboWidth = 120;
     CToolBar& tb = GetToolBar();
     if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
@@ -172,13 +172,13 @@ BOOL CMainFrame::ChooseColor(UINT color)
         {
             SetReBarColors( RGB(210, 6, 100), RGB(240, 66, 120), RGB(240, 66, 128), RGB(110, 6, 105) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(210, 6, 100), RGB(240, 66, 120), RGB(0, 0, 230) };
+            StatusBarTheme sbt = {m_useThemes, RGB(210, 6, 100), RGB(240, 66, 120), RGB(255, 255, 0) };
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(242, 106, 228), RGB(192, 6, 88), RGB(152, 6, 56), RGB(152, 6, 56), RGB(149, 6, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = { m_useThemes, RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210), RGB(0, 0, 230) };
+            MenuTheme mt = { m_useThemes, RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210), RGB(255, 255, 0) };
             SetMenuTheme(mt);
         }
         break;

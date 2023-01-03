@@ -29,10 +29,8 @@ protected:
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnHelp();
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnSysColorChange(UINT msg, WPARAM, LPARAM);
     virtual void    SetTheme();
     virtual void    SetupMenuIcons();

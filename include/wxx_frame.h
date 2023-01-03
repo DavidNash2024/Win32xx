@@ -234,16 +234,17 @@ namespace Win32xx
         virtual void CreateToolBar();
         virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
         virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
-        virtual void DrawMenuItem(LPDRAWITEMSTRUCT pDIS);
-        virtual void DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDIS);
-        virtual void DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pDIS);
-        virtual void DrawMenuItemIcon(LPDRAWITEMSTRUCT pDIS);
-        virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pDIS);
-        virtual BOOL DrawReBarBkgnd(CDC& dc, CReBar& reBar);
-        virtual BOOL DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusBar);
-        virtual void DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDIS) const;
-        virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const;
-        virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const;
+        virtual void DrawMenuItem(LPDRAWITEMSTRUCT pDrawItem) const;
+        virtual void DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDrawItem) const;
+        virtual void DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pDrawItem) const;
+        virtual void DrawMenuItemIcon(LPDRAWITEMSTRUCT pDrawItem) const;
+        virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pDrawItem) const;
+        virtual BOOL DrawReBarBkgnd(CDC& dc, CReBar& reBar) const;
+        virtual void DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem) const;
+        virtual BOOL DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusBar) const;
+        virtual void DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDrawItem) const;
+        virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDrawItem) const;
+        virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDrawItem) const;
         virtual int  GetMenuItemPos(HMENU menu, LPCTSTR itemName) const;
         virtual CRect GetViewRect() const;
         virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
@@ -1053,13 +1054,13 @@ namespace Win32xx
 
     // Called by OnDrawItem to render the popup menu items.
     template <class T>
-    inline void CFrameT<T>::DrawMenuItem(LPDRAWITEMSTRUCT pDIS)
+    inline void CFrameT<T>::DrawMenuItem(LPDRAWITEMSTRUCT pDrawItem) const
     {
-        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDrawItem->itemData);
 
         // Create and configure the memory DC.
-        CDC drawDC = pDIS->hDC;
-        CRect itemRect = pDIS->rcItem;
+        CDC drawDC = pDrawItem->hDC;
+        CRect itemRect = pDrawItem->rcItem;
         CMemDC memDC(drawDC);
         memDC.CreateCompatibleBitmap(drawDC, itemRect.Width(), itemRect.Height());
         memDC.BitBlt(0, 0, itemRect.Width(), itemRect.Height(), drawDC, itemRect.left, itemRect.top, SRCCOPY);
@@ -1067,26 +1068,26 @@ namespace Win32xx
         memDC.SelectObject(font);
 
         // Swap the PDIS->hDC with a memory DC for double buffering.
-        pDIS->hDC = memDC;
-        pDIS->rcItem.top = 0;
-        pDIS->rcItem.bottom = itemRect.Height();
+        pDrawItem->hDC = memDC;
+        pDrawItem->rcItem.top = 0;
+        pDrawItem->rcItem.bottom = itemRect.Height();
 
         if (IsUsingVistaMenu() && !IsUsingDarkMenu())  // Is uxtheme.dll loaded?
         {
-            DrawVistaMenuBkgnd(pDIS);
+            DrawVistaMenuBkgnd(pDrawItem);
 
             if (!(pmid->mii.fType & MFT_SEPARATOR))
             {
-                if (pDIS->itemState & ODS_CHECKED)
-                    DrawVistaMenuCheckmark(pDIS);
+                if (pDrawItem->itemState & ODS_CHECKED)
+                    DrawVistaMenuCheckmark(pDrawItem);
 
-                DrawVistaMenuText(pDIS);
+                DrawVistaMenuText(pDrawItem);
             }
         }
         else
         {
             // Draw the gutter.
-            CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
+            CRect gutter = GetMenuMetrics().GetGutterRect(pDrawItem->rcItem);
 
             if (IsUsingThemes())
             {
@@ -1101,7 +1102,7 @@ namespace Win32xx
             if (pmid->mii.fType & MFT_SEPARATOR)
             {
                 // Draw the separator.
-                CRect sepRect = pDIS->rcItem;
+                CRect sepRect = pDrawItem->rcItem;
                 sepRect.left = gutter.Width();
                 if (IsUsingDarkMenu())
                     memDC.SolidFill(RGB(0, 0, 0), sepRect);
@@ -1115,37 +1116,37 @@ namespace Win32xx
             }
             else
             {
-                DrawMenuItemBkgnd(pDIS);
-                DrawMenuItemText(pDIS);
+                DrawMenuItemBkgnd(pDrawItem);
+                DrawMenuItemText(pDrawItem);
 
-                if (pDIS->itemState & ODS_CHECKED)
-                    DrawMenuItemCheckmark(pDIS);
+                if (pDrawItem->itemState & ODS_CHECKED)
+                    DrawMenuItemCheckmark(pDrawItem);
             }
         }
 
         if (!(pmid->mii.fType & MFT_SEPARATOR))
         {
-            if (!(pDIS->itemState & ODS_CHECKED))
-                DrawMenuItemIcon(pDIS);
+            if (!(pDrawItem->itemState & ODS_CHECKED))
+                DrawMenuItemIcon(pDrawItem);
         }
 
         // Copy from the memory DC to the menu item drawing DC.
         drawDC.BitBlt(itemRect.left, itemRect.top, itemRect.Width(), itemRect.Height(), memDC, 0, 0, SRCCOPY);
 
-        // Return pDIS to its previous values.
-        pDIS->hDC = drawDC;
-        pDIS->rcItem = itemRect;
+        // Return pDrawItem to its previous values.
+        pDrawItem->hDC = drawDC;
+        pDrawItem->rcItem = itemRect;
     }
 
     // Draws the popup menu background if uxtheme.dll is not loaded.
     template <class T>
-    inline void CFrameT<T>::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDIS)
+    inline void CFrameT<T>::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDrawItem) const
     {
         // Draw the item background
-        bool isDisabled = (pDIS->itemState & ODS_GRAYED) != 0;
-        bool isSelected = (pDIS->itemState & ODS_SELECTED) != 0;
-        CRect drawRect = pDIS->rcItem;
-        CDC drawDC(pDIS->hDC);
+        bool isDisabled = (pDrawItem->itemState & ODS_GRAYED) != 0;
+        bool isSelected = (pDrawItem->itemState & ODS_SELECTED) != 0;
+        CRect drawRect = pDrawItem->rcItem;
+        CDC drawDC(pDrawItem->hDC);
 
         if ((isSelected) && (!isDisabled))
         {
@@ -1167,7 +1168,7 @@ namespace Win32xx
         else
         {
             // draw non-selected item background.
-            drawRect.left = GetMenuMetrics().GetGutterRect(pDIS->rcItem).Width();
+            drawRect.left = GetMenuMetrics().GetGutterRect(pDrawItem->rcItem).Width();
             if (IsUsingDarkMenu())
                 drawDC.SolidFill(RGB(0, 0, 0), drawRect);
             else
@@ -1177,10 +1178,10 @@ namespace Win32xx
 
     // Draws the popup menu checkmark or radiocheck if uxtheme.dll is not loaded.
     template <class T>
-    inline void CFrameT<T>::DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pDIS)
+    inline void CFrameT<T>::DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pDrawItem) const
     {
-        CRect rc = pDIS->rcItem;
-        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        CRect rc = pDrawItem->rcItem;
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDrawItem->itemData);
         UINT buttonType = pmid->mii.fType;
         const MenuTheme& mbt = GetMenuBarTheme();
         int cxCheck = 16;
@@ -1189,7 +1190,7 @@ namespace Win32xx
         int left = (gutter.Width() - cxCheck) / 2;
         int top = rc.top + (rc.Height() - cyCheck) / 2;
         CRect bkRect(left, top, left + cxCheck, top + cyCheck);
-        CDC drawDC(pDIS->hDC);
+        CDC drawDC(pDrawItem->hDC);
 
         // Draw the checkmark's background rectangle first.
         if (IsUsingThemes())
@@ -1225,7 +1226,7 @@ namespace Win32xx
         maskDC.CreateCompatibleBitmap(drawDC, cxCheck, cyCheck);
         maskDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, WHITENESS);
 
-        if ((pDIS->itemState & ODS_SELECTED) && IsUsingThemes())
+        if ((pDrawItem->itemState & ODS_SELECTED) && IsUsingThemes())
         {
             // Draw a white checkmark
             memDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, DSTINVERT);
@@ -1242,7 +1243,7 @@ namespace Win32xx
 
     // Called by DrawMenuItem to draw icons in popup menus.
     template <class T>
-    inline void CFrameT<T>::DrawMenuItemIcon(LPDRAWITEMSTRUCT pDIS)
+    inline void CFrameT<T>::DrawMenuItemIcon(LPDRAWITEMSTRUCT pDrawItem) const
     {
         if (m_menuImages.GetHandle() == 0)
             return;
@@ -1253,8 +1254,8 @@ namespace Win32xx
         int yIcon = iconSize.cy;
 
         // get the drawing rectangle
-        CRect itemRect = pDIS->rcItem;
-        CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
+        CRect itemRect = pDrawItem->rcItem;
+        CRect gutter = GetMenuMetrics().GetGutterRect(pDrawItem->rcItem);
         int left = (gutter.Width() - xIcon) / 2;
         int top = itemRect.top + (itemRect.Height() - yIcon) / 2;
 
@@ -1262,29 +1263,29 @@ namespace Win32xx
         int image = -1;
         for (size_t i = 0 ; i < m_menuIcons.size(); ++i)
         {
-            if (pDIS->itemID == m_menuIcons[i])
+            if (pDrawItem->itemID == m_menuIcons[i])
                image = static_cast<int>(i);
         }
 
         // draw the image
         if (image >= 0 )
         {
-            bool isDisabled = (pDIS->itemState & (ODS_GRAYED | ODS_DISABLED)) != 0;
+            bool isDisabled = (pDrawItem->itemState & (ODS_GRAYED | ODS_DISABLED)) != 0;
 
             if ((isDisabled) && (m_menuDisabledImages.GetHandle()))
-                m_menuDisabledImages.Draw(pDIS->hDC, image, CPoint(left, top), ILD_TRANSPARENT);
+                m_menuDisabledImages.Draw(pDrawItem->hDC, image, CPoint(left, top), ILD_TRANSPARENT);
             else
-                m_menuImages.Draw(pDIS->hDC, image, CPoint(left, top), ILD_TRANSPARENT);
+                m_menuImages.Draw(pDrawItem->hDC, image, CPoint(left, top), ILD_TRANSPARENT);
         }
     }
 
     // Draws the popup menu text if uxtheme.dll is not loaded.
     template <class T>
-    inline void CFrameT<T>::DrawMenuItemText(LPDRAWITEMSTRUCT pDIS)
+    inline void CFrameT<T>::DrawMenuItemText(LPDRAWITEMSTRUCT pDrawItem) const
     {
-        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDrawItem->itemData);
         CString itemText = pmid->GetItemText();
-        bool isDisabled = (pDIS->itemState & ODS_GRAYED) != 0;
+        bool isDisabled = (pDrawItem->itemState & ODS_GRAYED) != 0;
         COLORREF colorText = GetSysColor(isDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
         if (IsUsingDarkMenu())
         {
@@ -1292,40 +1293,40 @@ namespace Win32xx
         }
 
         // Calculate the text rect size.
-        CRect textRect = GetMenuMetrics().GetTextRect(pDIS->rcItem);
+        CRect textRect = GetMenuMetrics().GetTextRect(pDrawItem->rcItem);
 
         // find the position of tab character.
         int tab = itemText.Find(_T('\t'));
 
         // Draw the item text.
-        SetTextColor(pDIS->hDC, colorText);
-        int mode = SetBkMode(pDIS->hDC, TRANSPARENT);
+        SetTextColor(pDrawItem->hDC, colorText);
+        int mode = SetBkMode(pDrawItem->hDC, TRANSPARENT);
 
         UINT format = DT_VCENTER | DT_LEFT | DT_SINGLELINE;
         // Turn on 'hide prefix' style for mouse navigation.
         CMenuBar* pMenubar = reinterpret_cast<CMenuBar*>
-                             (::SendMessage(pDIS->hwndItem, UWM_GETCMENUBAR, 0, 0));
+                             (::SendMessage(pDrawItem->hwndItem, UWM_GETCMENUBAR, 0, 0));
         if (pMenubar != 0)
         {
             if (!m_altKeyPressed && !pMenubar->IsAltMode())
                 format |= DT_HIDEPREFIX;
         }
 
-        DrawText(pDIS->hDC, itemText, tab, textRect, format);
+        DrawText(pDrawItem->hDC, itemText, tab, textRect, format);
 
         // Draw text after tab, right aligned.
         if (tab != -1)
         {
-            DrawText(pDIS->hDC, itemText.Mid(tab + 1), -1, textRect, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
+            DrawText(pDrawItem->hDC, itemText.Mid(tab + 1), -1, textRect, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
         }
 
-        SetBkMode(pDIS->hDC, mode);
+        SetBkMode(pDrawItem->hDC, mode);
     }
 
     // Draws the ReBar's background when ReBar themes are enabled.
     // Returns TRUE when the default background drawing is suppressed.
     template <class T>
-    inline BOOL CFrameT<T>::DrawReBarBkgnd(CDC& dc, CReBar& rebar)
+    inline BOOL CFrameT<T>::DrawReBarBkgnd(CDC& dc, CReBar& rebar) const
     {
         BOOL isDrawn = TRUE;
 
@@ -1469,10 +1470,26 @@ namespace Win32xx
         return isDrawn;
     }
 
+    // Draws the status bar text with the appropriate color.
+    template <class T>
+    inline void CFrameT<T>::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem) const
+    {
+        CDC dc(pDrawItem->hDC);
+        CRect partRect = pDrawItem->rcItem;
+        dc.SetBkMode(TRANSPARENT);
+        if (IsUsingThemes())
+            dc.SetTextColor(GetStatusBarTheme().clrText);
+        else
+            dc.SetTextColor(RGB(0, 0, 0));
+
+        LPCTSTR text = reinterpret_cast<LPCTSTR>(pDrawItem->itemData);
+        dc.DrawText(text, lstrlen(text), partRect, DT_SINGLELINE | DT_VCENTER);
+    }
+
     // Draws the StatusBar's background when StatusBar themes are enabled.
     // Returns TRUE when the default background drawing is suppressed.
     template <class T>
-    inline BOOL CFrameT<T>::DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusBar)
+    inline BOOL CFrameT<T>::DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusBar) const
     {
         BOOL isDrawn = FALSE;
 
@@ -1493,77 +1510,77 @@ namespace Win32xx
 
     // Draws the popup menu background if uxtheme.dll is loaded.
     template <class T>
-    inline void CFrameT<T>::DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDIS) const
+    inline void CFrameT<T>::DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDrawItem) const
     {
-        int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
+        int stateID = GetMenuMetrics().ToItemStateId(pDrawItem->itemState);
 
         if (GetMenuMetrics().IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, stateID))
         {
-            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPBACKGROUND, 0, &pDIS->rcItem, NULL);
+            GetMenuMetrics().DrawThemeBackground(pDrawItem->hDC, MENU_POPUPBACKGROUND, 0, &pDrawItem->rcItem, NULL);
         }
 
         // Draw the gutter.
-        CRect gutter = GetMenuMetrics().GetGutterRect(pDIS->rcItem);
+        CRect gutter = GetMenuMetrics().GetGutterRect(pDrawItem->rcItem);
         if (GetMenuMetrics().IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, stateID))
         {
-            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPGUTTER, 0, &gutter, NULL);
+            GetMenuMetrics().DrawThemeBackground(pDrawItem->hDC, MENU_POPUPGUTTER, 0, &gutter, NULL);
         }
 
-        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDrawItem->itemData);
         if (pmid->mii.fType & MFT_SEPARATOR)
         {
             // Draw the separator.
-            CRect sepRect = GetMenuMetrics().GetSeperatorRect(pDIS->rcItem);
-            GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPSEPARATOR, 0, &sepRect, NULL);
+            CRect sepRect = GetMenuMetrics().GetSeperatorRect(pDrawItem->rcItem);
+            GetMenuMetrics().DrawThemeBackground(pDrawItem->hDC, MENU_POPUPSEPARATOR, 0, &sepRect, NULL);
         }
 
-        CRect selRect = GetMenuMetrics().GetSelectionRect(pDIS->rcItem);
-        GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPITEM, stateID, &selRect, NULL);
+        CRect selRect = GetMenuMetrics().GetSelectionRect(pDrawItem->rcItem);
+        GetMenuMetrics().DrawThemeBackground(pDrawItem->hDC, MENU_POPUPITEM, stateID, &selRect, NULL);
     }
 
     // Draws the popup menu checkmark if uxtheme.dll is loaded.
     template <class T>
-    inline void CFrameT<T>::DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDIS) const
+    inline void CFrameT<T>::DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDrawItem) const
     {
-        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDrawItem->itemData);
 
         // Draw the checkmark background.
-        int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
-        CRect rcCheckBackground = GetMenuMetrics().GetCheckBackgroundRect(pDIS->rcItem);
+        int stateID = GetMenuMetrics().ToItemStateId(pDrawItem->itemState);
+        CRect rcCheckBackground = GetMenuMetrics().GetCheckBackgroundRect(pDrawItem->rcItem);
         int backgroundStateID = GetMenuMetrics().ToCheckBackgroundStateId(stateID);
-        GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECKBACKGROUND, backgroundStateID, &rcCheckBackground, NULL);
+        GetMenuMetrics().DrawThemeBackground(pDrawItem->hDC, MENU_POPUPCHECKBACKGROUND, backgroundStateID, &rcCheckBackground, NULL);
 
         // Draw the checkmark.
-        CRect rcCheck = GetMenuMetrics().GetCheckRect(pDIS->rcItem);
+        CRect rcCheck = GetMenuMetrics().GetCheckRect(pDrawItem->rcItem);
         int checkStateID = GetMenuMetrics().ToCheckStateId(pmid->mii.fType, stateID);
-        GetMenuMetrics().DrawThemeBackground(pDIS->hDC, MENU_POPUPCHECK, checkStateID, &rcCheck, NULL);
+        GetMenuMetrics().DrawThemeBackground(pDrawItem->hDC, MENU_POPUPCHECK, checkStateID, &rcCheck, NULL);
     }
 
     // Draws the popup menu text if uxtheme.dll is loaded.
     template <class T>
-    inline void CFrameT<T>::DrawVistaMenuText(LPDRAWITEMSTRUCT pDIS) const
+    inline void CFrameT<T>::DrawVistaMenuText(LPDRAWITEMSTRUCT pDrawItem) const
     {
-        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDIS->itemData);
+        MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDrawItem->itemData);
 
         // Calculate the text rect size.
         CStringW itemText = CStringW(TtoW(pmid->GetItemText()));
-        CRect textRect = GetMenuMetrics().GetTextRect(pDIS->rcItem);
+        CRect textRect = GetMenuMetrics().GetTextRect(pDrawItem->rcItem);
 
         // find the position of tab character.
         int tab = itemText.Find(L'\t');
 
         // Draw the item text before the tab.
-        ULONG accel = ((pDIS->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0U);
-        int stateID = GetMenuMetrics().ToItemStateId(pDIS->itemState);
+        ULONG accel = ((pDrawItem->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0U);
+        int stateID = GetMenuMetrics().ToItemStateId(pDrawItem->itemState);
         DWORD flags = DT_SINGLELINE | DT_LEFT | DT_VCENTER | accel;
-        GetMenuMetrics().DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, itemText, tab, flags, 0, &textRect);
+        GetMenuMetrics().DrawThemeText(pDrawItem->hDC, MENU_POPUPITEM, stateID, itemText, tab, flags, 0, &textRect);
 
         // Draw the item text after the tab.
         if (tab != -1)
         {
             flags = DT_SINGLELINE | DT_RIGHT | DT_VCENTER | accel;
             CStringW text = itemText.Mid(tab + 1);
-            GetMenuMetrics().DrawThemeText(pDIS->hDC, MENU_POPUPITEM, stateID, text, -1, flags, 0, &textRect);
+            GetMenuMetrics().DrawThemeText(pDrawItem->hDC, MENU_POPUPITEM, stateID, text, -1, flags, 0, &textRect);
         }
     }
 
@@ -2077,26 +2094,20 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnDrawItem(UINT, WPARAM, LPARAM lparam)
     {
-        LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT)lparam;
-        assert(pdis);
+        LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT)lparam;
 
-        if (pdis && IsMenu(reinterpret_cast<HMENU>(pdis->hwndItem)) && (!IsRectEmpty(&pdis->rcItem)))
+        if (pDrawItem != NULL)
         {
-            DrawMenuItem(pdis);
-        }
-
-        if (pdis && (pdis->hwndItem == GetStatusBar()))
-        {
-            CDC dc(pdis->hDC);
-            CRect partRect = pdis->rcItem;
-            dc.SetBkMode(TRANSPARENT);
-            if (IsUsingThemes())
-                dc.SetTextColor(GetStatusBarTheme().clrText);
-            else
-                dc.SetTextColor(RGB(0, 0, 0));
-
-            LPCTSTR text = reinterpret_cast<LPCTSTR>(pdis->itemData);
-            dc.DrawText(text, lstrlen(text), partRect, DT_SINGLELINE | DT_VCENTER);
+            // Some control types, such as status bars, do not set the value of CtlType.
+            // We use hwndItem to detect the control.
+            if (pDrawItem->hwndItem == GetStatusBar())
+            {
+                DrawStatusBar(pDrawItem);
+            }
+            else if (::IsMenu(reinterpret_cast<HMENU>(pDrawItem->hwndItem)))
+            {
+                DrawMenuItem(pDrawItem);
+            }
         }
 
         return TRUE;
@@ -2160,6 +2171,28 @@ namespace Win32xx
         // Not supported on Win95 or WinNT.
         if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
             return CWnd::WndProcDefault(msg, wparam, lparam);
+
+#if (WINVER >= 0x0500)  // Minimum OS required is Win2000
+        if (IsUsingThemes())
+        {
+            MENUINFO mi = { 0 };
+            mi.cbSize = sizeof(mi);
+            mi.fMask = MIM_BACKGROUND | MIM_APPLYTOSUBMENUS;
+
+            if (IsUsingDarkMenu())
+            {
+                // Set the menu background colour to black.
+                mi.hbrBack = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
+            }
+            else
+            {
+                // Set the menu background colour to default.
+                mi.hbrBack = GetSysColorBrush(COLOR_MENU);
+            }
+
+            menu.SetMenuInfo(mi);
+        }
+#endif
 
         // A vector to store this menu's item data.
         MenuData menuData;

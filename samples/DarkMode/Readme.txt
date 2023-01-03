@@ -2,8 +2,9 @@ Dark Mode Example
 =================
 This project demonstrates the support dark mode with Win32++.
 
-This is a frame based application which automatically detects dark mode, and
-adjust its colors accordingly.
+This is a frame based application which automatically detects when the Windows
+theme has dark mode enabled for applications, and adjust the frame's colors
+accordingly.
 
 This code requires Visual Studio Community 2022 with the Windows App SDK
 installed. The Windows App SDK can be installed using the VS2022 installer
@@ -21,12 +22,24 @@ https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/apply-windows-t
 
 This sample detects both high contrast themes and dark mode themes. Dark mode
 themes that are high contrast behave differently to normal dark mode themes.
+Dark high contrast themes do the following:
+ Change the color of dropdown menu items.
+ Change the default color of all dialogs (including common dialogs).
+ Change the default color of all common controls.
 
-Dark high contrast automatically change the colours of ordinary dialogs. Normal
-dark mode themes don't automatically change the colours of ordinary dialogs, 
-but do change the colours of common dialogs such as the File Save dialog.
+Normal window themes with dark mode enabled do the following:
+ Change the color of the common dialogs such as FileOpen.
 
-
+Summary of modifications to the Frame sample to support dark mode
+-----------------------------------------------------------------
+ - Add the Windows App SDK to VS2022.
+ - Add DarkMode.cpp and DarkMode.h
+ - Add CDarkDialog (for a dark Help About).
+ - Override the following functions in CMainFrame
+   - OnHelp
+   - OnSysColorChange
+   - SetTheme, and add the dark theme.
+ - Modify CView::OnDraw
 
 
 Features demonstrated in this example

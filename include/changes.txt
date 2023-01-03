@@ -35,6 +35,7 @@ New Features and Enhancements
 
 Changes in Detail
 -----------------
+Added CFrameT::OnDrawStatusBar
 Added CFrameT::IsUsingDarkMenu
 Added CFrameT::SetMenuMetrics
 Added CFrameT::ResetMenuMetrics

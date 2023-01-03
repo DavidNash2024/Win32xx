@@ -202,6 +202,8 @@ STRINGTABLE
 BEGIN
     IDM_DOCK_DEFAULT        "Restore default dock layout"
     IDM_DOCK_CLOSEALL       "Close all docked and undocked windows"
+    IDM_CONTAINER_TOP       "Reposition the container's tabs"
+    IDM_HIDE_SINGLE_TAB     "Hide tabs for containers with a single tab"
 END
 
 STRINGTABLE

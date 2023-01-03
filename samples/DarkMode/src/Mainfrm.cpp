@@ -92,30 +92,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
-// Perform the owner drawing for the status bar.
-LRESULT CMainFrame::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT)lparam;
-    assert(pDrawItem);
-
-    if (pDrawItem && (pDrawItem->hwndItem == GetStatusBar()))
-    {
-        CDC dc(pDrawItem->hDC);
-        CRect partRect = pDrawItem->rcItem;
-        dc.SetBkMode(TRANSPARENT);
-        if (IsDarkMode())
-            dc.SetTextColor(RGB(255, 255, 255));
-        else
-            dc.SetTextColor(RGB(0, 0, 0));
-        LPCTSTR text = reinterpret_cast<LPCTSTR>(pDrawItem->itemData);
-        dc.DrawText(text, lstrlen(text), partRect, DT_SINGLELINE | DT_VCENTER);
-    }
-    else
-        CFrame::OnDrawItem(msg, wparam, lparam);
-
-    return TRUE;
-}
-
 // Issue a close request to the frame to end the program.
 BOOL CMainFrame::OnFileExit()
 {
@@ -141,31 +117,6 @@ void CMainFrame::OnInitialUpdate()
     // Place any additional startup code here.
 
     TRACE("Frame created\n");
-}
-
-LRESULT CMainFrame::OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    if (IsUsingThemes())
-    {
-        MENUINFO mi = { .cbSize = sizeof(mi) };
-        mi.fMask = MIM_BACKGROUND | MIM_APPLYTOSUBMENUS;
-
-        if (IsDarkMode())
-        {
-            // Set the menu background colour to black.
-            mi.hbrBack = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
-        }
-        else
-        {
-            // Set the menu background colour to default.
-            mi.hbrBack = GetSysColorBrush(COLOR_MENU);
-        }
-
-        CMenu menu = reinterpret_cast<HMENU>(wparam);
-        menu.SetMenuInfo(mi);
-    }
-
-    return CFrame::OnInitMenuPopup(msg, wparam, lparam);
 }
 
 // Create the File Open dialog to choose the file to load.
@@ -258,7 +209,6 @@ BOOL CMainFrame::OnFilePrint()
         {
             m_view.QuickPrint(_T("Frame Sample"));
         }
-
     }
 
     catch (const CException& e)
@@ -319,6 +269,7 @@ LRESULT CMainFrame::OnPreviewSetup()
     return 0;
 }
 
+// Called when the user changes the system colors or theme.
 LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     m_helpDialog.SetDarkMode(IsDarkMode());
@@ -339,7 +290,7 @@ LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
     return CFrame::OnSysColorChange(msg, wparam, lparam);
 }
 
-// Specifiy the colors and settings for the dark mode theme.
+// Specify the colors and settings for the dark mode theme.
 void CMainFrame::SetDarkTheme()
 {
     BOOL t = TRUE;
@@ -348,13 +299,13 @@ void CMainFrame::SetDarkTheme()
     ReBarTheme rbt = { t, RGB(50, 50, 50), RGB(57, 67, 77), RGB(67, 77, 87), RGB(67, 77, 87), f, t, t, f, t, f };
     SetReBarTheme(rbt);
 
-    StatusBarTheme sbt = { t, RGB(50, 50, 50), RGB(57, 67, 77) };
+    StatusBarTheme sbt = { t, RGB(50, 50, 50), RGB(57, 67, 77), RGB(255, 255, 255)};
     SetStatusBarTheme(sbt);
 
-    ToolBarTheme tbt = { t, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197) };
+    ToolBarTheme tbt = { t, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64, 177, 230), RGB(49, 106, 197) };
     SetToolBarTheme(tbt);
 
-    MenuTheme mt = { t, RGB(27,65, 160), RGB(49, 106, 197), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128), RGB(255, 255, 255) };
+    MenuTheme mt = { t, RGB(27, 65, 160), RGB(49, 106, 197), RGB(10, 20, 160), RGB(27, 65, 160), RGB(128, 128, 128), RGB(255, 255, 255) };
     SetMenuTheme(mt);
 }
 
