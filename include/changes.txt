@@ -28,9 +28,9 @@ New Features and Enhancements
 
 * Updated the drawing of toolbars and menu items by CFrame and CDockFrame.
   - Adjusted the size and position of the of arrows used in toolbars for the
-    BTNS_DROPDOWN and BTNS_WHOLEDROPDOWN styles.
+     BTNS_DROPDOWN and BTNS_WHOLEDROPDOWN styles.
   - Adjusted the position of check boxes and radio buttons in menu items.
-  - Menu drawing is performed with double buffering to eliminate flicker
+  - Menu item drawing is performed with double buffering to eliminate flicker
 
 
 Changes in Detail
@@ -730,63 +730,6 @@ New Features and Enhancements
   - bottomcenter: Positions proportionally along the bottom side
 
 
-Changes in detail
------------------
-Added NetClientAsync                             sample
-Added NetServerAsync                             sample
-Added wxx_mutex.h                                header file
-Added CEvent                                     class
-Added CMutex                                     class
-Added CSemaphore                                 class
-Added CBitmap::ConvertToDisabled                 member function
-Added CComboBox::GetEditCtrl                     member function
-Added CComboBox::GetLBCtrl                       member function
-Added CEdit::AppendText                          member function
-Added CFrameT::AddDisabledMenuImage              member function
-Added CFrameT::IsUsingStatusBar                  member function
-Added CFrameT::UseStatusBar                      member function
-Added CImageList::Copy                           member function
-Added CImageList::GetBkColor                     member function
-Added CImageList::GetDragImage                   member function
-Added CImageList::EndDrag                        member function
-Added CImageList::ExtractIcon                    member function
-Added CImageList::Read                           member function
-Added CImageList::SetBkColor                     member function
-Added CImageList::SetDragCursorImage             member function
-Added CImageLIst::Write                          member function
-Added CResizer::SetMinRect                       member function
-Added CResizer::SetMaxRect                       member function
-Added CRichEdit::AppendText                      member function
-Added CSocket::StartAsync                        member function
-Added CWinThread::IsRunning                      member function
-Added StrCopy                                    function
-Added StrCopyA                                   function
-Added StrCopyW                                   function
-
-Modified CFrameT::AddMenuIcon                    added optional iconWidth argument
-CTime::GetGmtTm                                  argument no longer optional or NULL
-CTime::GetLocalTm                                argument no longer optional or NULL
-
-Renamed CFrameT::GetUseIndicatorStatus    to     CFrameT::IsUsingIndicatorStatus
-Renamed CFrameT::GetUseMenuStatus         to     CFrameT::IsUsingMenuStatus
-Renamed CFrameT::GetUseReBar              to     CFrameT::IsUsingReBar
-Renamed CFrameT::GetUseThemes             to     CFrameT::IsUsingThemes
-Renamed CFrameT::GetUseToolBar            to     CFrameT::IsUsingToolBar
-Renamed CFrameT::SetUseIndicatorStatus    to     CFrameT::UseIndicatorStatus
-Renamed CFrameT::SetUseMenuStatus         to     CFrameT::UseMenuStatus
-Renamed CFrameT::SetUseReBar              to     CFrameT::UseReBar
-Renamed CFrameT::SetUseThemes             to     CFrameT::UseThemes
-Renamed CFrameT::SetUseToolBar            to     CFrameT::UseToolBar
-Renamed CSocket::GetLastError             to     CSocket::GetErrorString
-Renamed CToolBar::SetBitmap               to     CToolBar::AddReplaceBitmap
-
-The CFrameT::InitValues struct has been updated and now has the following members:
- CRect   position
- int     showCmd
- BOOL    showStatusBar
- BOOL    showToolBar
-
-
 Version 8.5
 ===========
 
@@ -829,47 +772,6 @@ New Features and Enhancements
     the order in which items are added for owner drawn controls.
 
 
-Changes in detail
------------------
-Added CEnhMetaFileDC                                 class
-Added CFileFind                                      class
-Added CFolderDialog                                  class
-Added CThreadLock                                    class
-
-Added CComboBox::CompareItem                         member function
-Added CDocker::GetActiveView                         member function
-Added CDocker::SaveContainerRegistrySettings         member function
-Added CDockFrame::OnActivate                         member function
-Added CDockFrame::OnDockActivated                    member function
-Added CDockFrame::OnDockDestroyed                    member function
-Added CDockFrame::OnMouseActivate                    member function
-Added CDockFrame::OnSysColorChange                   member function
-Added CListBox::CompareItem                          member function
-Added CTab::SetBlankPageColor                        member function
-Added CToolBar::GetExtendedStyle                     member function
-Added CWnd::GetExStyle                               member function
-Added CWnd::GetStyle                                 member function
-Added CWnd::SetExStyle                               member function
-Added CWnd::SetStyle                                 member function
-
-Added ::GetNonClientMetrics                          global function
-Added UWM_GETCDIALOG                                 message
-
-Added Direct2D                                       sample
-Added FilePrintPreview                               sample
-
-Modified CFile::Rename          now throws an exception on failure
-Modified CFile::Remove          now throws an exception on failure
-Modified CFile::Flush           now throws an exception on failure
-Modified CFile::Close           now throws an exception on failure
-Modified CFile::SetLength       now throws an exception on failure
-Modified CFile::LockRange       now throws an exception on failure
-Modified CFile::UnlockRange     now throws an exception on failure
-Modified CTab::AddTabPage       now returns CWnd*
-
-Removed ::GetSizeofNonClientMetrics   Use ::GetNonClientMetrics instead
-
-
 Version 8.4
 ===========
 
@@ -882,7 +784,7 @@ optional features are provided using class templates.
 
 New Features and Enhancements
 -----------------------------
-* Added CFrameT class template
+* Added CFrameT template class
    - CFrame now inherits from CFrameT<CWnd>.
    - CDockFrame now inherits from CFrameT<CDocker>.
    To use these classes, inherit your CMainFrame from either CFrame or

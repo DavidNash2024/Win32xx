@@ -156,7 +156,9 @@ namespace Win32xx
         CPrintPreview();
         virtual ~CPrintPreview();
 
-        virtual CPreviewPane& GetPreviewPane()  { return m_previewPane; }
+        CPreviewPane& GetPreviewPane() const { return *m_pPreviewPane; }
+        void SetPreviewPane(CPreviewPane& previewPane) { m_pPreviewPane = &previewPane; }
+
         virtual void DoPrintPreview(HWND ownerWindow, UINT maxPage = 1);
         virtual BOOL OnCloseButton();
         virtual BOOL OnNextButton();
@@ -177,7 +179,8 @@ namespace Win32xx
     private:
         CPrintPreview(const CPrintPreview&);               // Disable copy construction
         CPrintPreview& operator = (const CPrintPreview&);  // Disable assignment operator
-        CPreviewPane m_previewPane;
+        CPreviewPane m_previewPane;               // Default CPreviewPane object
+        CPreviewPane* m_pPreviewPane;             // Pointer to the CPreviewPane object we actually use
         CResizer m_resizer;
         T*      m_pSource;
         CButton m_buttonPrint;
@@ -337,6 +340,7 @@ namespace Win32xx
     inline CPrintPreview<T>::CPrintPreview() : CDialog((LPCDLGTEMPLATE)previewTemplate),
         m_pSource(0), m_currentPage(0), m_maxPage(1), m_ownerWindow(0)
     {
+        m_pPreviewPane = &m_previewPane;
     }
 
     // Destructor.
@@ -396,7 +400,7 @@ namespace Win32xx
         AttachItem(IDW_PREVIEWPREV, m_buttonPrev);
         AttachItem(IDW_PREVIEWNEXT, m_buttonNext);
         AttachItem(IDW_PREVIEWCLOSE, m_buttonClose);
-        AttachItem(IDW_PREVIEWPANE, m_previewPane);
+        AttachItem(IDW_PREVIEWPANE, GetPreviewPane());
 
         // Assign button text from string resources
         m_buttonPrint.SetWindowText(LoadString(IDW_PREVIEWPRINT));
@@ -412,7 +416,7 @@ namespace Win32xx
         m_resizer.AddChild(m_buttonPrev, CResizer::topleft, 0);
         m_resizer.AddChild(m_buttonNext, CResizer::topleft, 0);
         m_resizer.AddChild(m_buttonClose, CResizer::topleft, 0);
-        m_resizer.AddChild(m_previewPane, CResizer::topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+        m_resizer.AddChild(GetPreviewPane(), CResizer::topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 
         return TRUE;
     }

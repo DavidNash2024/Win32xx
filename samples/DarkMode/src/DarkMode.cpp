@@ -6,7 +6,6 @@
 #include "DarkMode.h"
 
 
-
 // Returns true if the current theme high contrast.
 bool IsHighContrast()
 {

@@ -274,6 +274,7 @@ LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     m_helpDialog.SetDarkMode(IsDarkMode());
     m_view.SetDarkMode(IsDarkMode());
+    m_preview.SetDarkMode(IsDarkMode());
 
     if (IsUsingThemes())
     {
@@ -282,6 +283,10 @@ LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
         else
             UseDarkMenu(FALSE);
     }
+
+    // Redraw the help about dialog.
+    if (m_helpDialog.IsWindow())
+        m_helpDialog.Invalidate();
 
     // Set the caption to dark for dark mode.
     BOOL value = IsDarkMode()? TRUE : FALSE;
