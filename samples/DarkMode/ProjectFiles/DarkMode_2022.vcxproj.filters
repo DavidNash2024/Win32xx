@@ -36,7 +36,7 @@
     <ClCompile Include="..\src\DarkMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\DarkDialog.cpp">
+    <ClCompile Include="..\src\DarkAbout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -227,10 +227,10 @@
     <ClInclude Include="..\src\DarkMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\HelpDialog.h">
+    <ClInclude Include="..\src\DarkAbout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\DarkDialog.h">
+    <ClInclude Include="..\src\DarkPreview.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

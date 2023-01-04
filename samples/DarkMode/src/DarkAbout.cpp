@@ -3,27 +3,26 @@
 //
 
 #include "stdafx.h"
-#include "DarkDialog.h"
+#include "DarkAbout.h"
 #include "resource.h"
 
 ///////////////////////////////////
-// CDarkDialog function definitions
+// CDarkAbout function definitions
 //
 
 // Constructor.
-CDarkDialog::CDarkDialog() : m_darkMode(false)
+CDarkAbout::CDarkAbout() : m_darkMode(false)
 {
     SetDialogFromID(IDW_ABOUT);
-    m_blackBrush.CreateSolidBrush(RGB(0, 0, 0));
 }
 
 // Destructor.
-CDarkDialog::~CDarkDialog()
+CDarkAbout::~CDarkAbout()
 {
 }
 
 // Process the dialog's window messages.
-INT_PTR CDarkDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
+INT_PTR CDarkAbout::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
@@ -49,7 +48,8 @@ INT_PTR CDarkDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     }
 }
 
-LRESULT CDarkDialog::OnCtlColors(UINT, WPARAM wparam, LPARAM)
+// Set the colors for the dialog and static controls.
+LRESULT CDarkAbout::OnCtlColors(UINT, WPARAM wparam, LPARAM)
 {
     if (m_darkMode)
     {
@@ -57,14 +57,14 @@ LRESULT CDarkDialog::OnCtlColors(UINT, WPARAM wparam, LPARAM)
         ::SetBkMode(dc, TRANSPARENT);
         ::SetTextColor(dc, RGB(255, 255, 255));
 
-        static CBrush brush(RGB(0, 0, 0));
-        return reinterpret_cast<LRESULT>(brush.GetHandle());
+        return reinterpret_cast<LRESULT>(::GetStockObject(BLACK_BRUSH));
     }
 
     return 0;
 }
 
-LRESULT CDarkDialog::OnDrawItem(WPARAM, LPARAM lparam)
+// Perform the owner draw for buttons.
+LRESULT CDarkAbout::OnDrawItem(WPARAM, LPARAM lparam)
 {
     LPDRAWITEMSTRUCT pDraw = (LPDRAWITEMSTRUCT)lparam;
     CDC dc(pDraw->hDC);
@@ -82,16 +82,17 @@ LRESULT CDarkDialog::OnDrawItem(WPARAM, LPARAM lparam)
         dc.CreateSolidBrush(RGB(80, 80, 80));
     }
 
-    dc.RoundRect(rect, 10, 10);
-
     // Draw the button text.
-    dc.DrawText(GetWindowText(), -1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    CString str = GetDlgItemText(pDraw->CtlID);
+    rect.DeflateRect(1, 1);
+    dc.RoundRect(rect, 10, 10);
+    dc.DrawText(str, -1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
     return TRUE;
 }
 
 // Called before the dialog is displayed.
-BOOL CDarkDialog::OnInitDialog()
+BOOL CDarkAbout::OnInitDialog()
 {
     // Set the application icon
     SetIconLarge(IDW_MAIN);
@@ -103,7 +104,8 @@ BOOL CDarkDialog::OnInitDialog()
     return TRUE;
 }
 
-void CDarkDialog::SetButtonOwnerDraw(bool isOwnerDraw)
+// Use owner draw for buttons for dark mode.
+void CDarkAbout::SetButtonOwnerDraw(bool isOwnerDraw)
 {
     HWND ok = ::GetDlgItem(*this, IDOK);
     DWORD style1 = static_cast<DWORD>(::GetWindowLongPtr(ok, GWL_STYLE));
@@ -114,7 +116,8 @@ void CDarkDialog::SetButtonOwnerDraw(bool isOwnerDraw)
         ::SetWindowLongPtr(ok, GWL_STYLE, style1 & ~BS_OWNERDRAW);
 }
 
-void CDarkDialog::SetDarkMode(bool darkMode)
+// Configure the dialog for dark mode.
+void CDarkAbout::SetDarkMode(bool darkMode)
 {
     // Make the OK button owner drawn for dark mode.
     if (IsWindow())

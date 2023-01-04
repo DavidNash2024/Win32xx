@@ -5,7 +5,8 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "DarkDialog.h"
+#include "DarkAbout.h"
+#include "DarkPreview.h"
 #include "View.h"
 
 
@@ -55,8 +56,8 @@ private:
 
     // Member variables
     CView m_view;
-    CPrintPreview<CView> m_preview;
-    CDarkDialog m_helpDialog;
+    CDarkPreview<CView> m_preview;
+    CDarkAbout m_helpDialog;
     bool m_isToolbarShown;
 };
 
