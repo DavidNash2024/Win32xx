@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2022  David Nash
+// Copyright (c) 2005-2023  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -239,9 +239,9 @@ namespace Win32xx
         virtual void DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pDrawItem) const;
         virtual void DrawMenuItemIcon(LPDRAWITEMSTRUCT pDrawItem) const;
         virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pDrawItem) const;
-        virtual BOOL DrawReBarBkgnd(CDC& dc, CReBar& reBar) const;
+        virtual BOOL DrawReBarBkgnd(CDC& dc) const;
         virtual void DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem) const;
-        virtual BOOL DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusBar) const;
+        virtual BOOL DrawStatusBarBkgnd(CDC& dc) const;
         virtual void DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDrawItem) const;
         virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDrawItem) const;
         virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDrawItem) const;
@@ -1326,7 +1326,7 @@ namespace Win32xx
     // Draws the ReBar's background when ReBar themes are enabled.
     // Returns TRUE when the default background drawing is suppressed.
     template <class T>
-    inline BOOL CFrameT<T>::DrawReBarBkgnd(CDC& dc, CReBar& rebar) const
+    inline BOOL CFrameT<T>::DrawReBarBkgnd(CDC& dc) const
     {
         BOOL isDrawn = TRUE;
 
@@ -1339,12 +1339,12 @@ namespace Win32xx
 
         if (isDrawn)
         {
-            assert(rebar.IsWindow());
+            assert(GetReBar().IsWindow());
 
-            bool isVertical = (rebar.GetStyle() & CCS_VERT) != 0;
+            bool isVertical = (GetReBar().GetStyle() & CCS_VERT) != 0;
 
             // Create our memory DC.
-            CRect rebarRect = rebar.GetClientRect();
+            CRect rebarRect = GetReBar().GetClientRect();
             int rebarWidth = rebarRect.Width();
             int rebarHeight = rebarRect.Height();
             CMemDC memDC(dc);
@@ -1359,14 +1359,14 @@ namespace Win32xx
             if (rt.clrBand1 || rt.clrBand2)
             {
                 // Draw the individual band backgrounds.
-                for (int band = 0 ; band < rebar.GetBandCount(); ++band)
+                for (int band = 0 ; band < GetReBar().GetBandCount(); ++band)
                 {
-                    if (rebar.IsBandVisible(band))
+                    if (GetReBar().IsBandVisible(band))
                     {
-                        if (band != rebar.GetBand(GetMenuBar()))
+                        if (band != GetReBar().GetBand(GetMenuBar()))
                         {
                             // Determine the size of this band.
-                            CRect bandRect = rebar.GetBandRect(band);
+                            CRect bandRect = GetReBar().GetBandRect(band);
 
                             if (isVertical)
                             {
@@ -1379,7 +1379,7 @@ namespace Win32xx
                             REBARBANDINFO rbbi;
                             ZeroMemory(&rbbi, sizeof(rbbi));
                             rbbi.fMask = RBBIM_CHILD ;
-                            rebar.GetBandInfo(band, rbbi);
+                            GetReBar().GetBandInfo(band, rbbi);
                             CRect childRect;
                             VERIFY(::GetWindowRect(rbbi.hwndChild, &childRect));
                             VERIFY(T::ScreenToClient(childRect));
@@ -1387,7 +1387,7 @@ namespace Win32xx
                             // Determine our drawing rectangle.
                             int startPad = IsXPThemed()? 2: 0;
                             CRect drawRect = bandRect;
-                            CRect borderRect = rebar.GetBandBorders(band);
+                            CRect borderRect = GetReBar().GetBandBorders(band);
                             if (isVertical)
                             {
                                 drawRect.bottom = drawRect.top + childRect.Height() + borderRect.top;
@@ -1446,9 +1446,9 @@ namespace Win32xx
             if (rt.UseLines)
             {
                 // Draw lines between bands.
-                for (int j = 0; j < rebar.GetBandCount()-1; ++j)
+                for (int j = 0; j < GetReBar().GetBandCount()-1; ++j)
                 {
-                    CRect bandRect = rebar.GetBandRect(j);
+                    CRect bandRect = GetReBar().GetBandRect(j);
                     if (isVertical)
                     {
                         bandRect.top = MAX(0, rebarRect.top - 4);
@@ -1489,7 +1489,7 @@ namespace Win32xx
     // Draws the StatusBar's background when StatusBar themes are enabled.
     // Returns TRUE when the default background drawing is suppressed.
     template <class T>
-    inline BOOL CFrameT<T>::DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusBar) const
+    inline BOOL CFrameT<T>::DrawStatusBarBkgnd(CDC& dc) const
     {
         BOOL isDrawn = FALSE;
 
@@ -1500,7 +1500,7 @@ namespace Win32xx
             if (sbTheme.UseThemes)
             {
                 // Fill the background with a color gradient.
-                dc.GradientFill(sbTheme.clrBkgnd1, sbTheme.clrBkgnd2, statusBar.GetClientRect(), TRUE);
+                dc.GradientFill(sbTheme.clrBkgnd1, sbTheme.clrBkgnd2, GetStatusBar().GetClientRect(), TRUE);
                 isDrawn = TRUE;
             }
         }
@@ -2039,12 +2039,10 @@ namespace Win32xx
                 GetFrameMenu().EnableMenuItem(IDW_VIEW_STATUSBAR, MF_GRAYED);
         }
 
-        SetStatusParts();
-        SetStatusIndicators();
+        // Use SetView in CMainFrame's constructor to set the view window.
+        assert(&GetView());
 
         // Create the view window.
-        assert(&GetView());         // Use SetView in CMainFrame's constructor to set the view window.
-
         if (!GetView().IsWindow())
             GetView().Create(*this);
         GetView().SetFocus();
@@ -2115,34 +2113,28 @@ namespace Win32xx
 
     // Called when the Rebar's background is redrawn.
     template<class T>
-    inline LRESULT CFrameT<T>::OnDrawRBBkgnd(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnDrawRBBkgnd(UINT, WPARAM wparam, LPARAM)
     {
         CDC* pDC = reinterpret_cast<CDC*>(wparam);
         assert(dynamic_cast<CDC*>(pDC));
 
-        CReBar* pRebar = reinterpret_cast<CReBar*>(lparam);
-        assert(dynamic_cast<CReBar*>(pRebar));
-
-        if (!pDC || !pRebar)
+        if (!pDC)
             return 0;
 
-        return DrawReBarBkgnd(*pDC, *pRebar);
+        return DrawReBarBkgnd(*pDC);
     }
 
     // Called when the StatusBar's background is redrawn.
     template<class T>
-    inline LRESULT CFrameT<T>::OnDrawSBBkgnd(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnDrawSBBkgnd(UINT, WPARAM wparam, LPARAM)
     {
         CDC* pDC = reinterpret_cast<CDC*>(wparam);
         assert(dynamic_cast<CDC*>(pDC));
 
-        CStatusBar* pStatusBar = reinterpret_cast<CStatusBar*>(lparam);
-        assert(dynamic_cast<CStatusBar*>(pStatusBar));
-
-        if (!pDC || !pStatusBar)
+        if (!pDC)
             return 0;
 
-        return DrawStatusBarBkgnd(*pDC, *pStatusBar);
+        return DrawStatusBarBkgnd(*pDC);
     }
 
     // Called to display help (WM_HELP received or selected via menu).

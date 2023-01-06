@@ -3,23 +3,25 @@ Version 9.2
 
 New Features and Enhancements
 -----------------------------
-* Added support for dark mode.
-  Win32++ now provides support for dark mode on Windows 10 and Windows 11.
-  Dark mode support is provided for both high contrast and normal themes.
-
 * Added support for colored text in the status bar.
   CFrame now uses owner draw to render the status bar, allowing different
   colored text to be displayed. The StatusBarTheme struct has been extended
-  to allow the status bar text color to be specified. The Themes and DarkMode
-  samples demonstrate the use of colored text in the status bar.
-  
-* Added a Dark Mode sample.
+  to allow the status bar text color to be specified. The Themes sample 
+  demonstrates the use of different colored text in the status bar.
+
+* Added support for dark mode.
+  CFrame now provides support for dark mode by providing the option to use a
+  dark menu. This can be used to develop an application with an appropriate
+  visual style for dark mode when combined with a black Win32++ theme. Refer
+  to the black theme in the Themes sample, and also the DarkMode sample.
+
+* Added a DarkMode sample.
   This sample demonstrates how to make a Win32++ application dark mode aware.
   It uses the Windows App API which is an optional feature that can be 
   installed with Visual Studio Community 2022. It detects when the Windows
   theme is using dark mode, and adjusts the frame's theme accordingly. The
-  sample also uses a  dialog that supports dark mode to display the information
-  about the application.
+  sample also uses a dialog that supports dark mode to display the information
+  about the application. The DarkMode sample requires Windows 10 or higher.
 
 * Updated the saving of the frame's position when the application closes to
   provide better support for multiple monitors. The frame's position is
@@ -30,7 +32,7 @@ New Features and Enhancements
   - Adjusted the size and position of the of arrows used in toolbars for the
      BTNS_DROPDOWN and BTNS_WHOLEDROPDOWN styles.
   - Adjusted the position of check boxes and radio buttons in menu items.
-  - Menu item drawing is performed with double buffering to eliminate flicker
+  - Menu item drawing is performed with double buffering to eliminate flicker.
 
 
 Changes in Detail
@@ -339,31 +341,7 @@ New Features and Enhancements
     double y = 3.14;
     str << "Equation: " << x << " + " << y << " = " << x+y << '\n';
 
- * Updated CPropertySheet.
-   OnSetDEFID can be overridden to set the default push button for the 
-   property sheet.
-
- * Updated CTaskTialog
-   The declarations of several member functions have changed. Member functions
-   which previously used a LPTCSTR parameter now use use a LPWCSTR parameter.   
-
  * Added ListView sample.
-
-
-
-Changes in Detail
------------------
-Added ListView                      sample
-Added CPrintDialogEx                class
-Added CBitmap::CopyImage            member function
-Added CBitmap::GetSize              member function
-Added CBitmap::LoadImage            (additional overloads)
-Added CFrameT::OnKeyboardHook       member function
-Added CMenuBar::IsAltMode           member function
-Added CPropertySheet::OnSetDEFID    member function
-Added CString::operator <<          global function
-Added CStringT::operator <<         global function
-Modified CTaskDialog. Replaced LPCTSTR function arguments with LPCWSTR
 
 
 Version 8.9
@@ -372,14 +350,6 @@ Version 8.9
 This version adds support for the Clang compiler, and improves the handling
 of error messages.
 
-Bug fixes:
-- Corrected CRegKey::SetMultiStringValue
-- Corrected CRegKey::SetStringValue
-- Corrected CDC::LoadImage
-- Corrected CDC::GetNearestColor
-- Corrected CMDIFrameT<T>::OnViewStatusBar
-- Corrected CMDIFrameT<T>::OnViewToolBar()
-- CWnd::Close can now be used to close applications with a Ribbon UI.
 
 New Features and Enhancements
 -----------------------------
@@ -395,84 +365,9 @@ New Features and Enhancements
   - CImageList throws a CResourceException if the image list can't be created.
   - CDC throws a CResourceException the selection of a GDI object fails.
 
-* Updated CPrintPreview to support changes to Windows 10.
-
-* The samples demonstrate exception handling in their window procedures.
-   Exceptions that are raised when messages are processed are handled
-   gracefully, and allow the program to continue. Adding exception handling
-   to WndProc and DialogProc also catches exceptions raised in OnCommand,
-   OnNotify, OnDraw etc.
-   
 * Updated the manifests used in the samples.
    The manifests now use GDI scaling. This provides better support for dual
    monitors, and monitors with high resolution.
-
-
-Changes in detail
------------------
-Added the following set of virtual functions to CWinApp for error messages.
-  CWinApp::MsgAppThreadFailed
-  CWinApp::MsgArReadFail
-  CWinApp::MsgArNotCStringA
-  CWinApp::MsgArNotCStringW
-  CWinApp::MsgCriticalSection
-  CWinApp::MsgMtxEvent
-  CWinApp::MsgMtxMutex
-  CWinApp::MsgMtxSemaphore
-  CWinApp::MsgWndCreateEx
-  CWinApp::MsgWndDoModal
-  CWinApp::MsgWndGlobalLock
-  CWinApp::MsgWndPropertSheet
-  CWinApp::MsgSocWSAStartup
-  CWinApp::MsgSocWS2Dll
-  CWinApp::MsgIPControl
-  CWinApp::MsgRichEditDll
-  CWinApp::MsgTaskDialog
-  CWinApp::MsgFileClose
-  CWinApp::MsgFileFlush
-  CWinApp::MsgFileLock
-  CWinApp::MsgFileOpen
-  CWinApp::MsgFileRead
-  CWinApp::MsgFileRename
-  CWinApp::MsgFileRemove
-  CWinApp::MsgFileLength
-  CWinApp::MsgFileUnlock
-  CWinApp::MsgFileWrite
-  CWinApp::MsgGdiDC
-  CWinApp::MsgGdiIC
-  CWinApp::MsgGdiBitmap
-  CWinApp::MsgGdiBrush
-  CWinApp::MsgGdiFont
-  CWinApp::MsgGdiPalette
-  CWinApp::MsgGdiPen
-  CWinApp::MsgGdiRegion
-  CWinApp::MsgGdiGetDC
-  CWinApp::MsgGdiGetDCEx
-  CWinApp::MsgGdiSelObject
-  CWinApp::MsgGdiGetWinDC
-  CWinApp::MsgGdiBeginPaint
-  CWinApp::MsgImageList
-  CWinApp::MsgMenu
-  CWinApp::MsgPrintFound
-  CWinApp::MsgDDX_Byte
-  CWinApp::MsgDDX_Int
-  CWinApp::MsgDDX_Long
-  CWinApp::MsgDDX_Short
-  CWinApp::MsgDDX_Real
-  CWinApp::MsgDDX_UINT
-  CWinApp::MsgDDX_ULONG
-  CWinApp::MsgDDV_IntRange
-  CWinApp::MsgDDV_UINTRange
-  CWinApp::MsgDDV_RealRange
-  CWinApp::MsgDDV_StringSize
-
-The following functions now throw a CResourceException on failure:
-  CDC::SelectObject
-  CDC::SelectPalette
-  CImageList::Create
-  CImageList::CreateDisabledImageList
-  CMenu::CreateMenu
-  CMenu::CreatePopupMenu
 
 
 Version 8.8
@@ -480,9 +375,6 @@ Version 8.8
 
 This version adds the BrowserATL, MovieShow and WinPlot samples. It also adds
 support for Code::Blocks version 20.03.
-
-Bug Fixes:
-- Corrected the definition of CEventSink in the Browser sample.
 
 
 New Features and Enhancements
@@ -508,65 +400,10 @@ New Features and Enhancements
    This sample demonstrates the interoperability between Win32++ and ATL.
    It does the same thing as the Browser sample, except that it uses ATL.
 
-* Extended the Toolbar sample.
-   The toolbar sample now demonstrates how to add additional toolbars to the
-   frame. It continues to demonstrate how to customisz a toolbar in runtime,
-   and how to add a horizontal or vertical toolbar to the frame's view.
-
-* Updated the Code::Blocks project files support version 20.03.
-   Note: The MinGW compiler that ships with version 20.03 of Code::Blocks
-   compiles 64 bit code only. To support code 32bit code you can use the
-   MinGW compiler that ships with Code::Blocks version 17:12.
-
-* Updated the CAXHost class.
-   This class implements a COM container which hosts an ActiveX control,
-   such as internet explorer. The CWebBrowser class uses CAXHost as a
-   COM container for the IWebBrowser2 interface.
-   
 * Updated the manifest file in the samples.
    The manifest file now provides support for Windows 10 features, and
    support for Per-Monitor DPI Awareness, version 2. GetWinVersion now
    reports a value of 3000 for Windows 10.
-
-* Minor updates to the samples.
-  - The Notepad and PrintPreview samples use OnIdle to update the toolbar.
-  - Samples which use CWebBrowser now suppress the display of java script
-    errors.
-  - Added column sort to explorer sample.
-  - Samples which require Windows XP and above use wide characters. Samples
-    which are supported on Windows 98 continue to use tchar characters.
-  
-* Minor updates to the help documentation.
-
-
-Changes in detail
------------------
-Updated CAXHost                                    class
-
-Added BrowserATL                                   sample
-Added MovieShow                                    sample
-Added WinPlot                                      sample
-
-Added CDC::AbortPath                               member function
-Added CDC::CreatePointFont                         member function
-Added CDC::CreatePointFontIndirect                 member function
-Added CDC::CreateRgnFromData                       member function
-Added CDC::CreateRgnFromPath                       member function
-Added CDC::CreateRoundRectRgn                      member function
-Added CDC::ExtCreatePen                            member function
-Added CDC::StrokePath                              member function
-Added CDC::StrokeAndFillPath                       member function
-Added CFrameT::AddMenuIcon (additional overload)   member function
-Added CFrameT::SetKbdHook                          member function
-Added CImageList::AddIcon                          member function
-Added CListView::InsertItem (additional overload)  member function
-Added CTreeView::InsertItem (additional overload)  member function
-Added CWnd::Close                                  member function
-Modified CMonthCalendar::SetDayState               member function
-Modified CRibbon::CreateRibbon                     member function
-Modified CRibbon::DestroyRibbon                    member function
-Modified CToolbar::EnableButton                    member function
-Renamed CTab::SetFont to CTab::SetTabFont          member function
 
 
 Version 8.7
@@ -574,11 +411,6 @@ Version 8.7
 
 This version adds print preview support to the framework, and support for
 Microsoft Visual Studio Community 2019.
-
-Bug Fix
--------
-* Corrected a possible access violation in debug mode when an application with
-  a ribbon is closed.
 
 
 New Features and Enhancements
@@ -612,63 +444,6 @@ New Features and Enhancements
   The CGlobalLock class is used to automatically lock and unlock global memory.
   This can be useful when working with printers. Global memory is used to hold
   memory for DEVNAMES and DEVMODE structures.
-
-  When the global memory is locked, we acquire a pointer we can use to access
-  its contents. CDevMode and CDevNames are useful typedefs for CGlobalLock.
-  The global memory is locked when CGlobalLock is constructed, and unlocked
-  when CGlobalLock is destructed.
-
-* Extended CScrollView
-  CScrollView now processes the following keys:
-  - Home and End.
-  - Page Up and Page Down.
-  - Left, right, up, and down arrow keys.
-
-* The samples now demonstrate an improved implementation of the Doc/View
-  architecture. Previously CDoc and CView were both member variables of
-  CMainFrame. Now CView is a member variable of CMainFrame, and CDoc is
-  a member variable of CView. This allows both CMainFrame and CView to
-  easily access CDoc, which is what we need.
-
-
-Changes in detail
------------------
-Added Console                                    sample
-Added CHGlobal                                   class
-Added CPrintPreview                              class
-Added CDC::GetBrushOrgEx                         member function
-Added CDC::SetBrushOrgEx                         member function
-Added CGlobalLock<DEVNAMES>::GetDeviceName       member function
-Added CGlobalLock<DEVNAMES>::GetDriverName       member function
-Added CGlobalLock<DEVNAMES>::GetPortName         member function
-Added CGlobalLock<DEVNAMES>::IsDefaultPrinter    member function
-Added CPrintDialog::SetDefaults                  member function
-Added CScrollView::GetLineScrollSize             member function
-Added CScrollView::GetPageScrollSize             member function
-Added CWebBrowser::GetDocument                   member function
-
-Modified ::GetApp               Now returns a pointer to CWinApp.
-
-Added VS2019 project files to all samples and tutorials
-
-Updated the samples
- - Browser sample now demonstrates print and print preview.
- - FastGDI sample now demonstrates print and print preview.
- - PrintPreview sample now demonstrates print and print preview.
- - NotePad sample now demonstrates print and print preview.
- - Scribble sample now demonstrates print and print preview.
- - Frame sample now demonstrates print and print preview.
- - INIFrame sample now demonstrates print and print preview.
- - Added PrintPreview sample to demonstrate CPrintPreview.
-
-Updated the tutorials
- - The tutorials now demonstrate how to implement a print preview.
- - The project files have been moved to a separate folder.
-
-Updated the documentation
- - Added 'Networking' to 'Using Win32++
- - Added 'Printing' to 'Using Win32++
- - Added 'Print Preview' to 'Using Win32++
 
 
 Version 8.6

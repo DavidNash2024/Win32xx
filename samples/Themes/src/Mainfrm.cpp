@@ -192,7 +192,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
             ToolBarTheme tbt = {m_useThemes, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(27,65, 160), RGB(49, 106, 197), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128), RGB(255, 255, 255)};
+            MenuTheme mt = {m_useThemes, RGB(27, 65, 160), RGB(49, 106, 197), RGB(10, 20, 160), RGB(27, 65, 160), RGB(128, 128, 128), RGB(255, 255, 255) };
             SetMenuTheme(mt);
         }
         break;
@@ -220,6 +220,9 @@ BOOL CMainFrame::ChooseColor(UINT color)
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(fileItem);
         ThemeMenu.CheckMenuRadioItem(IDM_BLUE, IDM_WIN7, color, 0);
     }
+
+    // Use a dark menu for the black theme.
+    (color == IDM_BLACK) ? UseDarkMenu(TRUE) : UseDarkMenu(FALSE);
 
     RecalcLayout();
     return TRUE;

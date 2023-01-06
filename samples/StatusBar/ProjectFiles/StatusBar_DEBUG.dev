@@ -1,7 +1,7 @@
 [Project]
 FileName=StatusBar_DEBUG.dev
 Name=StatusBar
-UnitCount=16
+UnitCount=14
 Type=0
 Ver=2
 ObjFiles=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=0000000100000000001000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -82,26 +82,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=..\src\MyStatusBar.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit7]
-FileName=..\src\MyStatusBar.h
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-CompileCpp=1
-
-[Unit8]
 FileName=..\src\resource.h
 CompileCpp=1
 Folder=Header
@@ -111,17 +91,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit7]
 FileName=..\src\Resource.rc
-CompileCpp=1
 Folder=Resource
 Compile=1
 Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
-[Unit10]
+[Unit8]
 FileName=..\src\StatusBarApp.cpp
 CompileCpp=1
 Folder=Source
@@ -131,7 +111,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit9]
 FileName=..\src\StatusBarApp.h
 CompileCpp=1
 Folder=Header
@@ -141,7 +121,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit10]
 FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
@@ -151,7 +131,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit11]
 FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
@@ -161,8 +141,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit12]
 FileName=..\src\targetver.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit13]
+FileName=..\src\View.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
 Compile=1
