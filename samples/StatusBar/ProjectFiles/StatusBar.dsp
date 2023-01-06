@@ -103,10 +103,6 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyStatusBar.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\StatusBarApp.cpp
 # End Source File
 # Begin Source File
@@ -128,10 +124,6 @@ SOURCE=..\src\Hyperlink.h
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\MyStatusBar.h
 # End Source File
 # Begin Source File
 

@@ -186,8 +186,6 @@
 		<Unit filename="../src/Hyperlink.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
-		<Unit filename="../src/MyStatusBar.cpp" />
-		<Unit filename="../src/MyStatusBar.h" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

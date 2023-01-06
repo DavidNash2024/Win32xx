@@ -75,7 +75,6 @@
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\Hyperlink.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
-    <ClInclude Include="..\src\MyStatusBar.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\StatusBarApp.h" />
     <ClInclude Include="..\src\stdafx.h" />
@@ -86,7 +85,6 @@
     <ClCompile Include="..\src\Hyperlink.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
-    <ClCompile Include="..\src\MyStatusBar.cpp" />
     <ClCompile Include="..\src\StatusBarApp.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

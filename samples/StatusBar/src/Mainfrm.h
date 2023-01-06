@@ -6,7 +6,7 @@
 #define MAINFRM_H
 
 #include "View.h"
-#include "MyStatusBar.h"
+#include "Hyperlink.h"
 
 
 ///////////////////////////////////////////////////////////
@@ -22,6 +22,8 @@ public:
 
 protected:
     // Virtual functions that override base class functions
+    virtual void    DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem) const;
+    virtual BOOL    DrawStatusBarBkgnd(CDC& dc) const;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
@@ -35,12 +37,24 @@ private:
     CMainFrame(const CMainFrame&);                // Disable copy construction
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
+    int AdjustForDPI(int value);
+    int GetTextPartWidth(LPCTSTR text) const;
+
     // Command handlers
-    BOOL    OnFileExit();
+    BOOL OnFileExit();
+
+    // Message handlers
+    void OnTimer();
 
     // Member variables
     CView m_view;
-    CMyStatusBar m_myStatusBar;
+    CHyperlink m_hyperlink;
+    CProgressBar m_progressBar;
+    CString m_colored;
+    CString m_cap;
+    CString m_num;
+    CString m_ovr;
+    CString m_scrl;
 };
 
 

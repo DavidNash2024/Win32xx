@@ -13,9 +13,6 @@
     <ClCompile Include="..\src\View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\MyStatusBar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Hyperlink.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -41,9 +38,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\default_resource.h">
       <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\MyStatusBar.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Hyperlink.h">
       <Filter>Header Files</Filter>
