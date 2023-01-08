@@ -8,7 +8,7 @@
 // int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    // Displays a dialog contained in MyDLL.dll
+    // Displays a dialog contained in MyDLL.dll.
 
     // Load the MyDLL.dll
     HMODULE hModule = LoadLibrary(_T("MyDLL.dll"));
@@ -18,7 +18,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
         return 0;
     }
 
-    // Create a pointer to MyDLL's ShowDialog function
+    // Create a pointer to MyDLL's ShowDialog function.
     typedef void WINAPI SHOWDIALOG();
     SHOWDIALOG* pfnShowDialog = (SHOWDIALOG*)::GetProcAddress(hModule, "ShowDialog");
     assert(pfnShowDialog);

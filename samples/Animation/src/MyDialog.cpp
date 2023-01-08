@@ -7,7 +7,7 @@
 #include "resource.h"
 
 /////////////////////////////////
-// CMyDialog finction definitions
+// CMyDialog function definitions
 //
 
 // Constructor

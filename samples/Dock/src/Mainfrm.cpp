@@ -31,7 +31,7 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_View as the view window of the frame
+    //Set m_view as the view window of the frame
     SetView(m_view);
 
     // Set the registry key name, and load the initial window position
@@ -247,7 +247,7 @@ BOOL CMainFrame::OnNoDockLR()
     return TRUE;
 }
 
-// Togggle the ability to resize dockers using the splitter bar.
+// Toggle the ability to resize dockers using the splitter bar.
 BOOL CMainFrame::OnNoResize()
 {
     m_disableResize = !m_disableResize;
@@ -255,7 +255,7 @@ BOOL CMainFrame::OnNoResize()
     return TRUE;
 }
 
-// Toggles the ability to undock a docker.
+// Toggle the ability to undock a docker.
 BOOL CMainFrame::OnNoUndocking()
 {
     m_disableUndocking = !m_disableUndocking;
@@ -263,7 +263,7 @@ BOOL CMainFrame::OnNoUndocking()
     return TRUE;
 }
 
-// Toggles proportional resizing.
+// Toggle proportional resizing.
 BOOL CMainFrame::OnPropResize()
 {
     m_useProportionalResize = !m_useProportionalResize;

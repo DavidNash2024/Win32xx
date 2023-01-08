@@ -29,13 +29,13 @@ public:
 // either ANSI (char) or Unicode (wide) character sets.
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    // Start Win32++
+    // Start Win32++.
     CWinApp theApp;
 
-    // Create our view window
+    // Create our view window.
     CView myWin;
     myWin.Create();
 
-    // Run the application's message loop
+    // Run the application's message loop.
     return theApp.Run();
 }

@@ -151,7 +151,7 @@ void CView::OnDraw(CDC& dc)
     }
 }
 
-// OnInitialUpdate is called after the window is created
+// OnInitialUpdate is called after the window is created.
 void CView::OnInitialUpdate()
 {
     TRACE("View window created\n");
@@ -182,7 +182,7 @@ void CView::PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
     double ymax = m_ymax + .001 * (m_ymax - m_ymin);
     double ymin = m_ymin - .001 * (m_ymax - m_ymin);
 
-    // Shift the x axis down if the function doesn't cross it
+    // Shift the x axis down if the function doesn't cross it.
     double ylinepos;
     if ((ymin * ymax <= 0))
         ylinepos = 0;

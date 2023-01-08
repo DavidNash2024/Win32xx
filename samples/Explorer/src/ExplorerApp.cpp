@@ -27,7 +27,7 @@ BOOL CExplorerApp::InitInstance()
     // Initialize COM
     if (SUCCEEDED(CoInitialize(NULL)))
     {
-        //Create the Frame Window
+        // Create the frame window.
         m_frame.Create();   // throws a CWinException on failure
     }
     else

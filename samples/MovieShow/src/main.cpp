@@ -17,7 +17,7 @@ public:
     {
         // Make sure that you use a name that is unique for this application
         // otherwise two apps may think they are the same if they are using
-        // same name for 3rd parm to CreateMutex.
+        // same name for 3rd parameter to CreateMutex.
         m_mutex = CreateMutex(NULL, FALSE, mutexName); // do early
         m_lastError = GetLastError(); // save for use later...
     }
@@ -56,7 +56,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
             return -1;
         }
 
-        // Start Win32++
+        // Start Win32++.
         CMovieShowApp theApp;
 
         // Run the application and the message loop.

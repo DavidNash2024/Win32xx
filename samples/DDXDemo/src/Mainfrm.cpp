@@ -52,7 +52,7 @@ Create(HWND parent)                                                          /*
     Note: the <key name> used here refers to the registerKeyName above.
 * ---------------------------------------------------------------------------- - */
 {
-      // Set m_View as the view window of the frame.
+      // Set m_view as the view window of the frame.
     SetView(m_view);
     LoadRegistrySettings(registryKeyName);
 
@@ -67,7 +67,7 @@ FeatureNotImplemented()                                                     /*
     program.
 *-----------------------------------------------------------------------------*/
 {
-    ::MessageBox(0, _T("This feature is not yet implemened."), _T(""),
+    ::MessageBox(0, _T("This feature is not yet implemented."), _T(""),
         MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 }
 

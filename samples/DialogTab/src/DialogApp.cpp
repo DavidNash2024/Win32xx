@@ -20,7 +20,7 @@ CDialogApp::~CDialogApp()
 
 BOOL CDialogApp::InitInstance()
 {
-    //Display the modeless dialog.
+    // Display the modeless dialog.
     m_myDialog.Create();    // throws a CWinException on failure.
 
     return TRUE;

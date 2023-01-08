@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {
-        // Start Win32++
+        // Start Win32++.
         CDockContainerApp theApp;
 
         // Run the application.

@@ -11,7 +11,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {
-        // Start Win32++
+        // Start Win32++.
         CFastGDIApp theApp;
 
         // Run the application.

@@ -173,7 +173,7 @@ void CDXView::SetupMatrices()
     // For the projection matrix, we set up a perspective transform (which
     // transforms geometry from 3D view space to 2D viewport space, with
     // a perspective divide making objects smaller in the distance). To build
-    // a perpsective transform, we need the field of view (1/4 pi is common),
+    // a perspective transform, we need the field of view (1/4 pi is common),
     // the aspect ratio, and the near and far clipping planes (which define at
     // what distances geometry should be no longer be rendered).
     D3DXMATRIXA16 matProj;

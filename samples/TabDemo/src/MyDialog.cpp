@@ -19,9 +19,9 @@ CViewDialog::~CViewDialog()
 
 void CViewDialog::AppendText(int id, LPCTSTR text)
 {
-    // This function appends text to an edit control
+    // This function appends text to an edit control.
 
-    // Append Line Feed
+    // Append a line feed.
     LRESULT ndx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
     if (ndx)
     {
@@ -29,7 +29,7 @@ void CViewDialog::AppendText(int id, LPCTSTR text)
         SendDlgItemMessage(id, EM_REPLACESEL, 0, (LPARAM)(_T("\r\n")));
     }
 
-    // Append text
+    // Append text.
     ndx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
     SendDlgItemMessage(id, EM_SETSEL, ndx, ndx);
     SendDlgItemMessage(id, EM_REPLACESEL, 0, (LPARAM)text);
@@ -39,15 +39,15 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
-        // Pass resizing messages on to the resizer
+        // Pass resizing messages on to the resizer.
         m_resizer.HandleMessage(msg, wparam, lparam);
 
     //  switch (msg)
     //  {
-    //  Additional messages to be handled go here
+    //  Additional messages to be handled go here.
     //  }
 
-        // Pass unhandled messages on to parent DialogProc
+        // Pass unhandled messages on to parent DialogProc.
         return DialogProcDefault(msg, wparam, lparam);
     }
 
@@ -99,7 +99,7 @@ BOOL CViewDialog::OnInitDialog()
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
 
-    // Attach CWnd objects to the dialog items
+    // Attach CWnd objects to the dialog items.
     AttachItem(IDC_BUTTON1, m_button);
     AttachItem(IDC_CHECK1,  m_checkA);
     AttachItem(IDC_CHECK2,  m_checkB);
@@ -110,11 +110,11 @@ BOOL CViewDialog::OnInitDialog()
     AttachItem(IDC_RICHEDIT1, m_richEdit1);
     AttachItem(IDC_RICHEDIT2, m_richEdit2);
 
-    // Put some text in the edit boxes
+    // Put some text in the edit boxes.
     m_richEdit1.SetWindowText(_T("Rich Edit Window"));
     m_richEdit2.SetWindowText(_T("Rich Edit Window"));
 
-    // Initialize dialog resizing
+    // Initialize dialog resizing.
     m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
     m_resizer.AddChild(m_radioA,    CResizer::topleft, 0);
     m_resizer.AddChild(m_radioB,    CResizer::topleft, 0);
@@ -126,7 +126,7 @@ BOOL CViewDialog::OnInitDialog()
     m_resizer.AddChild(m_richEdit1, CResizer::topright, RD_STRETCH_WIDTH);
     m_resizer.AddChild(m_richEdit2, CResizer::bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
 
-    // Select the first radio button
+    // Select the first radio button.
     CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
 
     return TRUE;

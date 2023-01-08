@@ -41,7 +41,7 @@ BOOL CMainFrame::OnAdjustImage()
 {
     if (m_view.GetImage())
     {
-        // Initiate the Choose Colour Dialog
+        // Initiate the Choose Colour dialog
         CColourDialog dlg(IDD_DIALOG1, m_view.GetImage());
         if (IDOK == dlg.DoModal())
             ModifyBitmap(dlg.GetRed(), dlg.GetGreen(), dlg.GetBlue(), dlg.IsGray());

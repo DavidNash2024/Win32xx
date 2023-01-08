@@ -138,7 +138,7 @@ void CRichView::DoPrint(LPCTSTR docName)
             // Print the page.
             PrintPage(printerDC, *i -1);
 
-            // End the page/
+            // End the page.
             printerDC.EndPage();
         }
 
@@ -188,7 +188,7 @@ CRect CRichView::GetPrintRect(const CDC& printerDC)
 // Called when the window handle (HWND) is attached to CRichView.
 void CRichView::OnAttach()
 {
-    //increase the text limit of the rich edit window
+    // Increase the text limit of the rich edit window.
     LimitText(-1);
 
     //Determine which messages will be passed to the parent
@@ -265,7 +265,7 @@ void CRichView::PrintPage(CDC& dc, UINT page)
     fr.chrg.cpMin = (page > 0) ? m_pageBreaks[page - 1] : 0;
     fr.chrg.cpMax = m_pageBreaks[page];
 
-    // Display text from the richedit control on the memory dc
+    // Display text from the richedit control on the memory dc.
     FormatRange(fr, TRUE);
     DisplayBand(GetPrintRect(printerDC));
 
@@ -279,10 +279,10 @@ void CRichView::PrintPage(CDC& dc, UINT page)
 // docName - specifies the document name for the print job.
 void CRichView::QuickPrint(LPCTSTR docName)
 {
-    // Acquire the currently selected printer and page settings
+    // Acquire the currently selected printer and page settings.
     CDC printerDC = m_printDialog.GetPrinterDC();
 
-    // Assign values to the FORMATRANGE struct
+    // Assign values to the FORMATRANGE struct.
     FORMATRANGE fr;
     ZeroMemory(&fr, sizeof(fr));
     fr.hdc = printerDC;
@@ -313,11 +313,11 @@ void CRichView::QuickPrint(LPCTSTR docName)
         // Print the page.
         PrintPage(printerDC, page);
 
-        // End the page/
+        // End the page.
         printerDC.EndPage();
     }
 
-    // End the print job
+    // End the print job.
     printerDC.EndDoc();
 }
 
@@ -333,7 +333,7 @@ void CRichView::SetFontDefaults()
   #define IMF_AUTOFONT          0x0002
 #endif
 
-    // Prevent Unicode characters from changing the font
+    // Prevent Unicode characters from changing the font.
     LRESULT result = SendMessage(EM_GETLANGOPTIONS, 0, 0);
     result &= ~IMF_AUTOFONT;
     SendMessage(EM_SETLANGOPTIONS, 0, result);
@@ -369,7 +369,7 @@ std::vector<UINT> CRichView::SetPagesToPrint(const CDC& printerDC)
                     fromPage = MAX(minPage, fromPage);
                     toPage   = MIN(maxPage, toPage);
 
-                    // Loop for multiple pages
+                    // Loop for multiple pages.
                     for (UINT j = fromPage; j <= toPage; j++)
                     {
                         // Loop for multiple copies, not collated.

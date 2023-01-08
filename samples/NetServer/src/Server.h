@@ -15,7 +15,7 @@
 
 
 // For a TCP server, inherit a class from CSocket and override OnAccept, OnDisconnect
-// and OnRecieve. Create one instance of this class and use it as a listening socket.
+// and OnReceive. Create one instance of this class and use it as a listening socket.
 // The purpose of the listening socket is to detect connections from clients and accept them.
 // For the listening socket, we do the following:
 // 1) Create the socket.
@@ -27,7 +27,7 @@
 // The purpose of the data socket is to send data to, and receive data from the client.
 // There will be one data socket for each client accepted by the server.
 // It is already set up ready for use by Accept. To use it we do the following:
-// * To recieve data from the client, override OnReceive and use Receive.
+// * To receive data from the client, override OnReceive and use Receive.
 // * To send data to use Send.
 // * OnDisconnect can be used to detect when the client is disconnected.
 

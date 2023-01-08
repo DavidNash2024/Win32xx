@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {
-        // Start Win32++
+        // Start Win32++.
         CSplitterApp theApp;
 
         // Run the application.

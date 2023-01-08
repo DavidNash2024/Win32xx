@@ -19,25 +19,25 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    // Set m_View as the view window of the frame
+    // Set m_view as the view window of the frame
     SetView(m_view);
 
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\Scribble Sample"));
 
-    // Load the settings from the registry with 4 MRU entries
+    // Load the settings from the registry with 4 MRU entries.
     LoadRegistryMRUSettings(4);
 
     return CFrame::Create(parent);
 }
 
-// Called by OnFileOpen and in response to a UWM_DROPFILE message
+// Called by OnFileOpen and in response to a UWM_DROPFILE message.
 void CMainFrame::LoadFile(LPCTSTR fileName)
 {
     try
     {
-        // Retrieve the PlotPoint data
+        // Retrieve the PlotPoint data.
         GetDoc().FileOpen(fileName);
         m_pathName = fileName;
         AddMRUEntry(fileName);
@@ -65,7 +65,7 @@ void CMainFrame::OnClose()
     CFrame::OnClose();
 }
 
-// Process the messages from the Menu and Tool Bar
+// Process the messages from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
     UINT id = LOWORD(wparam);

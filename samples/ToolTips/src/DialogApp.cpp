@@ -15,7 +15,7 @@ CDialogApp::CDialogApp() : m_myDialog(IDD_DIALOG1)
 
 BOOL CDialogApp::InitInstance()
 {
-    //Display the Modal Dialog
+    // Display the modal dialog.
     m_myDialog.DoModal();   // throws a CWinException on failure
 
     return TRUE;

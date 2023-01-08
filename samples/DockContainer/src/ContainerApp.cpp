@@ -23,7 +23,7 @@ CDockContainerApp::~CDockContainerApp()
 // Called when the application starts.
 BOOL CDockContainerApp::InitInstance()
 {
-    //Create the Frame Window
+    // Create the frame window.
     m_frame.Create();   // throws a CWinException on failure
 
     return TRUE;

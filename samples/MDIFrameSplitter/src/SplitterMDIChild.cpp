@@ -73,10 +73,10 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Constructor.
 CSplitterMDIChild::CSplitterMDIChild()
 {
-    // Set m_View as the view window of the MDI child
+    // Set m_view as the view window of the MDI child.
     SetView(m_view);
 
-    // Set the menu for this MDI child
+    // Set the menu for this MDI child.
     SetHandles(LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView")), 0);
 }
 
@@ -114,7 +114,7 @@ void CSplitterMDIChild::OnInitialUpdate()
 // Respond to menu and toolbar input.
 BOOL CSplitterMDIChild::OnCommand(WPARAM wparam, LPARAM)
 {
-    // Respond to menu and toolbar input
+    // Respond to menu and toolbar input.
 
     UINT id = LOWORD(wparam);
 
@@ -143,7 +143,7 @@ LRESULT CSplitterMDIChild::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     m_view.RecalcDockLayout();
 
-    // Pass the message on for default processing
+    // Pass the message on for default processing.
     return FinalWindowProc(msg, wparam, lparam);
 }
 

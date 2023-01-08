@@ -23,7 +23,7 @@ CDialogApp::~CDialogApp()
 // Called when the application starts.
 BOOL CDialogApp::InitInstance()
 {
-    //Display the Modal Dialog
+    // Display the modal dialog.
     m_svrDialog.DoModeless();   // throws a CWinException on failure
 
     return TRUE;

@@ -6,7 +6,7 @@
 #define MDICHILDVIEW_H
 
 
-// User defined window message sent when the Simple MDI Child is created
+// User defined window message sent when the Simple MDI Child is created.
 // WPARAM is a pointer to the view window.
 #define UWM_SIMPLECREATED       (WM_APP + 0x0001)
 
@@ -21,7 +21,7 @@ public:
     void SetColor(COLORREF color) { m_color = color; }
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual void OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -47,7 +47,7 @@ public:
     virtual ~CSimpleMDIChild();
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);

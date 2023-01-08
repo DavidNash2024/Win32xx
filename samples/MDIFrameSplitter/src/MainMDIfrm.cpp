@@ -24,8 +24,8 @@ CMainMDIFrame::~CMainMDIFrame()
 // Create the MDI frame window.
 HWND CMainMDIFrame::Create(HWND parent)
 {
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\MDIFrameSplitter"));
 
     return CMDIFrame::Create(parent);
@@ -149,7 +149,7 @@ void CMainMDIFrame::SetupMenuIcons()
 // Define the resource IDs and images for toolbar buttons.
 void CMainMDIFrame::SetupToolBar()
 {
-    // Define the resource IDs for the toolbar
+    // Define the resource IDs for the toolbar.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN, FALSE);   // disabled button
     AddToolBarButton( IDM_FILE_SAVE, FALSE);   // disabled button
@@ -174,7 +174,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_MOUSEACTIVATE:  // MDI child is activated with a mouse click.
         {
-            // Redraw all MDI children to update docker caption
+            // Redraw all MDI children to update docker caption.
             std::vector<MDIChildPtr>::const_iterator iter;
             for (iter = GetAllMDIChildren().begin(); iter < GetAllMDIChildren().end(); ++iter)
             {

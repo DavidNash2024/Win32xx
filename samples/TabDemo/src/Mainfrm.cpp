@@ -26,11 +26,11 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    // Set the tab control as the frame's view window
+    // Set the tab control as the frame's view window.
     SetView(m_view);
 
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\Tab Demo"));
 
     return CFrame::Create(parent);
@@ -78,10 +78,10 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
-    // call the base class function
+    // Call the base class function.
     CFrame::OnCreate(cs);
 
-    // Turn on the tab's owner draw and fixed width tabs
+    // Turn on the tab's owner draw and fixed width tabs.
     m_view.SetFixedWidth(TRUE);
     m_view.SetOwnerDraw(TRUE);
     m_view.SetShowButtons(TRUE);
@@ -179,7 +179,7 @@ BOOL CMainFrame::OnNewDialogTab()
 // Creates the popup menu when the "New" toolbar button is pressed.
 BOOL CMainFrame::OnNewTab()
 {
-    // Position the popup menu
+    // Position the popup menu.
     CToolBar& tb = GetToolBar();
     RECT rc = tb.GetItemRect(tb.CommandToIndex(IDM_NEW_TAB));
     tb.MapWindowPoints(0, (LPPOINT)&rc, 2);
@@ -188,11 +188,11 @@ BOOL CMainFrame::OnNewTab()
     tpm.cbSize = sizeof(TPMPARAMS);
     tpm.rcExclude = rc;
 
-    // Load the popup menu
+    // Load the popup menu.
     CMenu topMenu(IDM_NEWMENU);
     CMenu popupMenu = topMenu.GetSubMenu(0);
 
-    // Start the popup menu
+    // Start the popup menu.
     popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
     return TRUE;
 }
@@ -244,10 +244,10 @@ BOOL CMainFrame::OnTabsAtTop()
 // Set the CREATESTRUCT parameters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // Call the base class function first
+    // Call the base class function first.
     CFrame::PreCreate(cs);
 
-    // Hide the window initially by removing the WS_VISIBLE style
+    // Hide the window initially by removing the WS_VISIBLE style.
     cs.style &= ~WS_VISIBLE;
 }
 
@@ -270,7 +270,7 @@ void CMainFrame::SetupMenuIcons()
 // Configure the toolbar.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
+    // Set the Resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_NEW_TAB           );
     AddToolBarButton( IDM_FILE_OPEN,  FALSE );
     AddToolBarButton( IDM_FILE_SAVE,  FALSE );

@@ -12,14 +12,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {
-        // Start Win32++
+        // Start Win32++.
         CDialogApp theApp;
 
-        // Run the application
+        // Run the application.
         return theApp.Run();
     }
 
-    // catch all unhandled CException types
+    // Catch all unhandled CException types.
     catch (const CException &e)
     {
         // Display the exception and quit

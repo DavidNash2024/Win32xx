@@ -12,8 +12,6 @@ BOOL CDoc::FileLoad(LPCTSTR filename)
 {
     BOOL isLoaded = FALSE;
 
-    // Return CDoc data to default
-
     try
     {
         CArchive ar(filename, CArchive::load);

@@ -32,7 +32,7 @@ CMyDialog::~CMyDialog()
 
 void CMyDialog::OnDestroy()
 {
-    // End the application
+    // End the application.
     ::PostQuitMessage(0);
 }
 
@@ -79,35 +79,35 @@ BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM)
 
 BOOL CMyDialog::OnInitDialog()
 {
-    // Set the Icon
+    // Set the icon.
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
 
-    // Attach the edit control to m_Edit
+    // Attach the edit control to m_edit.
     AttachItem(IDC_EDIT1, m_edit);
 
-    // Attach the rich edit control to m_RichEdit
+    // Attach the rich edit control to m_richEdit.
     AttachItem(IDC_RICHEDIT1, m_richEdit);
 
-    // Put some text in the edit boxes
+    // Put some text in the edit boxes.
     SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
     SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
 
-    // Put some text in the list box
+    // Put some text in the list box.
     for (int i = 0 ; i < 8 ; i++)
         SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
 
-    // Select the first radio button
+    // Select the first radio button.
     CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
 
-    // Create the bubble tooltip
+    // Create the bubble tooltip.
     m_bubbleTT.Create(*this);
 
-    // Set the background colour
+    // Set the background colour.
     m_bubbleTT.SetWindowTheme(L" ", L" ");  // Turn XP themes off
     m_bubbleTT.SetTipBkColor(RGB(150, 255, 255));
 
-    // Add controls to the bubble tooltip
+    // Add controls to the bubble tooltip.
     m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO1), _T("Radio Button 1"));
     m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO2), _T("Radio Button 2"));
     m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO3), _T("Radio Button 3"));
@@ -120,16 +120,16 @@ BOOL CMyDialog::OnInitDialog()
     m_bubbleTT.AddTool(GetDlgItem(IDC_STATIC3), _T("Status display"));
     m_bubbleTT.AddTool(GetDlgItem(IDOK), _T("OK Button"));
 
-    // Modify tooltip for IDC_RADIO3
+    // Modify tooltip for IDC_RADIO3.
     TOOLINFO ti1 = m_bubbleTT.GetToolInfo(GetDlgItem(IDC_RADIO3));
     ti1.uFlags |= TTF_CENTERTIP;
     ti1.lpszText = const_cast<LPTSTR>(_T("Modified tooltip for Radio Button 3"));
     m_bubbleTT.SetToolInfo(ti1);
 
-    // Create a standard tooltip for the Edit and RichEdit controls
+    // Create a standard tooltip for the Edit and RichEdit controls.
     m_toolTip.Create(*this);
 
-    // Set the background color
+    // Set the background color.
     m_toolTip.SetWindowTheme(L" ", L" ");    // Turn XP themes off
     m_toolTip.SetTipBkColor(RGB(255, 255, 125));
 
@@ -141,20 +141,20 @@ BOOL CMyDialog::OnInitDialog()
 
 
 #ifdef  TTM_SETTITLE    // not supported by some GNU compilers
-    // Add Title and Icon to the tooltip (a pretty icon for Vista and above)
+    // Add Title and Icon to the tooltip (a pretty icon for Vista and above).
     if (GetWinVersion() >= 2600)
         m_toolTip.SetTitle((UINT)(UINT_PTR)(m_info), _T("Displaying the contents of the control ..."));
     else
         m_toolTip.SetTitle(TTI_INFO, _T("Displaying the contents of the control ..."));
 #endif
 
-    // Calculate left half and right have rectangles
+    // Calculate left half and right have rectangles.
     CRect leftRect = GetClientRect();
     leftRect.right = leftRect.right / 2;
     CRect rightRect = GetClientRect();
     rightRect.left = rightRect.right / 2;
 
-    // Specify a tooltip using a RECT and a user ID
+    // Specify a tooltip using a RECT and a user ID.
     m_bubbleTT.AddTool(*this, leftRect,  1, _T("Client area, left side"));
     m_bubbleTT.AddTool(*this, rightRect, 2, _T("Client area, right side"));
 
@@ -166,7 +166,7 @@ LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lparam)
     LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
     switch (pHeader->code)
     {
-        // notification sent by the tooltip to allow text to be set.
+        // Notification sent by the tooltip to allow text to be set.
         case TTN_GETDISPINFO:
         {
             LPNMTTDISPINFO lpnmtdi = reinterpret_cast<LPNMTTDISPINFO>(lparam);

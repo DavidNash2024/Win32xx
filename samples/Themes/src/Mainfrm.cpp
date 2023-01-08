@@ -26,7 +26,7 @@ CMainFrame::~CMainFrame()
 // Adds a comboBoxEx to the toolbar.
 void CMainFrame::AddCombo()
 {
-    // Place the ComboBoxEx control over the 'File Save' toolbar button,
+    // Place the ComboBoxEx control over the 'File Save' toolbar button.
     int comboWidth = 120;
     CToolBar& tb = GetToolBar();
     if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
@@ -34,15 +34,15 @@ void CMainFrame::AddCombo()
     tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);  // Convert the button to a separator
     tb.SetButtonWidth(IDM_FILE_SAVE, comboWidth);
 
-    // Determine the size and position of the ComboBox
+    // Determine the size and position of the ComboBox.
     int index = tb.CommandToIndex(IDM_FILE_SAVE);
     CRect rc = tb.GetItemRect(index);
 
-    // Create and position the ComboboxEx window
+    // Create and position the ComboboxEx window.
     m_comboBoxEx.Create(tb);
     m_comboBoxEx.SetWindowPos(0, rc, SWP_NOACTIVATE);
 
-    // Set ComboBox Height
+    // Set ComboBox height.
     m_comboBoxEx.SetItemHeight(-1, rc.Height() - 6);
 
     m_comboBoxEx.AddItems();
@@ -213,7 +213,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
         break;
     }
 
-    // Check the appropriate menu item
+    // Check the appropriate menu item.
     int fileItem = GetMenuItemPos(GetFrameMenu(), _T("Theme"));
     if (fileItem >= 0)
     {
@@ -231,11 +231,11 @@ BOOL CMainFrame::ChooseColor(UINT color)
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_View as the view window of the frame
+    // Set m_view as the view window of the frame.
     SetView(m_view);
 
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\Themes Sample"));
 
     return CFrame::Create(parent);
@@ -244,7 +244,7 @@ HWND CMainFrame::Create(HWND parent)
 // Loads the application's settings from the registry when the application starts.
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 {
-    // Call the base class function
+    // Call the base class function.
     if (CFrame::LoadRegistrySettings(keyName))
     {
         CString settingsKeyName;
@@ -364,19 +364,19 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     if (IsReBarSupported())
     {
-        //Set our theme colors
+        // Set our theme colors.
         ChooseColor(m_color);
 
-        // Set the band styles and positions
+        // Set the band styles and positions.
         for (int i = 0; i < GetReBar().GetBandCount(); ++i)
         {
             if (i < static_cast<int>(m_bandStyles.size()))
             {
-                // Move the band to the correct position
+                // Move the band to the correct position.
                 int from = GetReBar().IDToIndex(m_bandIDs[i]);
                 GetReBar().MoveBand(from, i);
 
-                // Set the band's style
+                // Set the band's style.
                 REBARBANDINFO rbbi;
                 ZeroMemory(&rbbi, sizeof(rbbi));
                 rbbi.fMask = RBBIM_STYLE;
@@ -386,7 +386,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
             if (i < static_cast<int>(m_bandSizes.size()))
             {
-                // Set the band's size
+                // Set the band's size.
                 REBARBANDINFO rbbi;
                 ZeroMemory(&rbbi, sizeof(rbbi));
                 rbbi.fMask = RBBIM_SIZE;
@@ -395,7 +395,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
             }
         }
 
-        // Set the MenuBar's position and gripper
+        // Set the MenuBar's position and gripper.
         int band = GetReBar().GetBand(GetMenuBar());
         GetReBar().ShowGripper(band, !m_lockMenuBand);
         if (m_lockMenuBand)
@@ -412,7 +412,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 BOOL CMainFrame::OnFileExit()
 {
-    // Issue a close request to the frame
+    // Issue a close request to the frame.
     Close();
     return TRUE;
 }
@@ -431,10 +431,10 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 //  LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
 //  switch (pHeader->code)
 //  {
-        //Add case statements for each notification message here
+        // Add case statements for each notification message here.
 //  }
 
-    // Pass any unhandled messages on for default processing
+    // Pass any unhandled messages on for default processing.
     return CFrame::OnNotify(wparam, lparam);
 }
 
@@ -542,7 +542,7 @@ BOOL CMainFrame::OnLockMenuBar()
 // Called just before the menu is displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
-    // Update the check buttons before displaying the menu
+    // Update the check buttons before displaying the menu.
     switch(id)
     {
     case IDM_USE_THEMES:
@@ -577,10 +577,10 @@ void CMainFrame::OnMenuUpdate(UINT id)
         break;
     }
 
-    // Check the color menu item and make it a radio item
+    // Check the color menu item and make it a radio item.
     GetFrameMenu().CheckMenuRadioItem(IDM_WIN10, IDM_BLACK, m_color, 0);
 
-    // Call the base class member function
+    // Call the base class member function.
     CFrame::OnMenuUpdate(id);
 }
 
@@ -625,7 +625,7 @@ LRESULT CMainFrame::OnSysColorChange(UINT, WPARAM, LPARAM)
 {
     // Currently we need to reset the ComboBoxEx control to force redrawing
     // when a windows high contrast theme is enabled or disabled. This requirement
-    //  might change with future updates to the Windows operating system.
+    // might change with future updates to the Windows operating system.
 
     // Retrieve the current selection.
     int sel = m_comboBoxEx.GetCurSel();
@@ -806,19 +806,19 @@ void CMainFrame::SetupToolBar()
     // Add the two other toolbars if we can use rebars (Need Win95 and IE 4 or better)
     if (IsReBarSupported())
     {
-        // Add the Arrows toolbar
+        // Add the Arrows toolbar.
         AddToolBarBand(m_arrows, 0, IDC_ARROWS);
         m_arrows.AddButton(IDM_ARROW_LEFT);
         m_arrows.AddButton(IDM_ARROW_RIGHT);
 
-        // Add the Cards toolbar
+        // Add the Cards toolbar.
         AddToolBarBand(m_cards, 0, IDB_CARDS);
         m_cards.AddButton(IDM_CARD_CLUB);
         m_cards.AddButton(IDM_CARD_DIAMOND);
         m_cards.AddButton(IDM_CARD_HEART);
         m_cards.AddButton(IDM_CARD_SPADE);
 
-        // Set the button images
+        // Set the button images.
         SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));
         SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
     }
@@ -858,7 +858,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
     //  switch (msg)
     //  {
-    //  Add case statements for each messages to be handled here
+    //  Add case statements for each messages to be handled here.
     //  }
 
         //  pass unhandled messages on for default processing

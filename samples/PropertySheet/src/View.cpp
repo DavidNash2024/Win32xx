@@ -19,14 +19,13 @@ void CView::OnDraw(CDC& dc)
 {
     CRect rc = GetClientRect();
 
-    // Centre some text in our view window
+    // Centre some text in our view window.
     dc.DrawText(_T("Choose a Property Sheet from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 // Called after the view window is created.
 void CView::OnInitialUpdate()
 {
-    // OnInitialUpdate is called immediately after the window is created
     TRACE("View Window Created\n");
 }
 

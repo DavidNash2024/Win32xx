@@ -38,7 +38,7 @@ int CMainFrame::AdjustForDPI(int value)
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_View as the view window of the frame
+    //Set m_view as the view window of the frame
     SetView(m_view);
 
     // Set the registry key name, and load the initial window position
@@ -201,32 +201,6 @@ void CMainFrame::OnTimer()
         m_progressBar.SetPos(0);
 }
 
-// Updates the status indicators.
-void CMainFrame::SetStatusIndicators()
-{
-    if (IsWindow())
-    {
-        CString cap = LoadString(IDW_INDICATOR_CAPS);
-        CString num = LoadString(IDW_INDICATOR_NUM);
-        CString ovr = LoadString(IDW_INDICATOR_OVR);
-        CString ins = LoadString(IDW_INDICATOR_INS);
-        CString scrl = LoadString(IDW_INDICATOR_SCRL);
-        CString empty;
-
-        m_cap  = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : empty;
-        m_num  = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : empty;
-        m_ovr  = (::GetKeyState(VK_INSERT) & 0x0001) ? ovr : ins;
-        m_scrl = (::GetKeyState(VK_SCROLL) & 0x0001) ? scrl : empty;
-
-        // Update the indicators.
-        // Need member variables for the text to keep them in scope.
-        GetStatusBar().SetPartText(5, m_cap,  SBT_OWNERDRAW);
-        GetStatusBar().SetPartText(6, m_num,  SBT_OWNERDRAW);
-        GetStatusBar().SetPartText(7, m_ovr,  SBT_OWNERDRAW);
-        GetStatusBar().SetPartText(8, m_scrl, SBT_OWNERDRAW);
-    }
-}
-
 // Specifies the images used on menu items.
 void CMainFrame::SetupMenuIcons()
 {
@@ -258,8 +232,33 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-// We override the base class function to disable it.
-// CMyStatusBar calls SetupParts when the statusbar is resized.
+// Updates the status indicators.
+void CMainFrame::SetStatusIndicators()
+{
+    if (IsWindow())
+    {
+        CString cap = LoadString(IDW_INDICATOR_CAPS);
+        CString num = LoadString(IDW_INDICATOR_NUM);
+        CString ovr = LoadString(IDW_INDICATOR_OVR);
+        CString ins = LoadString(IDW_INDICATOR_INS);
+        CString scrl = LoadString(IDW_INDICATOR_SCRL);
+        CString empty;
+
+        m_cap  = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : empty;
+        m_num  = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : empty;
+        m_ovr  = (::GetKeyState(VK_INSERT) & 0x0001) ? ovr : ins;
+        m_scrl = (::GetKeyState(VK_SCROLL) & 0x0001) ? scrl : empty;
+
+        // Update the indicators.
+        // Need member variables for owner drawn text to keep them in scope.
+        GetStatusBar().SetPartText(5, m_cap,  SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(6, m_num,  SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(7, m_ovr,  SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(8, m_scrl, SBT_OWNERDRAW);
+    }
+}
+
+// Reposition the statusbar parts. It's called when the statusbar is resized.
 void CMainFrame::SetStatusParts()
 {
     if (m_hyperlink.IsWindow())

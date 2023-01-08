@@ -58,7 +58,7 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
     {
 #pragma warning ( push )
 #pragma warning ( disable : 6385 )       // '208' bytes might be read.
-        // Correct code incorrectly flaged with a C6385 warning by the VS2019 analyser.
+        // Correct code incorrectly flagged with a C6385 warning by the VS2019 analyser.
         if (wcscmp(pImageCodecInfo[j].MimeType, format) == 0)
         {
             *pClsid = pImageCodecInfo[j].Clsid;
@@ -108,7 +108,7 @@ void CMainFrame::ClearList()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_View as the view window of the frame
+    //Set m_view as the view window of the frame
     SetView(m_viewList);
 
     // Set the registry key name, and load the initial window position
@@ -1122,7 +1122,7 @@ BOOL CMainFrame::OnPlay()
 }
 
 // Called in response to a right mouse click on the list view.
-// Displays the popup menus
+// Displays the popup menus.
 LRESULT CMainFrame::OnRClickListItem()
 {
     // Load the popup menu
@@ -1139,7 +1139,7 @@ LRESULT CMainFrame::OnRClickListItem()
 
     CPoint screenPoint = GetCursorPos();
 
-    // Start the popup menu
+    // Start the popup menu.
     m_popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, NULL/*&tpm*/);
 
     return 0;
@@ -1163,11 +1163,11 @@ LRESULT CMainFrame::OnRClickTreeItem()
     {
         GetViewTree().Expand(item, TVE_EXPAND);
 
-        // The menu for a boxset parent
+        // The menu for a boxset parent.
         CMenu topMenu(IDM_BOXSET_MENU);
         m_boxSetMenu = topMenu.GetSubMenu(0);
 
-        // Start the popup menu
+        // Start the popup menu.
         m_boxSetMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, NULL/*&tpm*/);
     }
 
@@ -1641,7 +1641,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
 
             barPos++;
 
-            // Update the splash screen's progress bar
+            // Update the splash screen's progress bar.
             splash->GetBar().SetPos(barPos);
 
             CString fullName = pFrame->m_filesToAdd[i].fileName;
@@ -1657,31 +1657,31 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
                     CTime t2((*it).lastModifiedTime);
                     if (t1 != t2)
                     {
-                        // Lock this code for thread safety
+                        // Lock this code for thread safety.
                         CThreadLock lock(pFrame->m_cs);
 
-                        // remove the modified file from the library
+                        // Remove the modified file from the library.
                         TRACE(fullName); TRACE(" removed modified file from library\n");
                         pFrame->m_moviesData.erase(it);
                     }
                     else
                         isFileInLibrary = true;
 
-                    // No need to check further
+                    // No need to check further.
                     break;
                 }
 
                 ++it;
             }
 
-            // Only add files not already in the library
+            // Only add files not already in the library.
             if (!isFileInLibrary)
             {
                 pFrame->m_isDirty = true;
                 MovieInfo mi;
                 pFrame->LoadMovieInfoFromFile(pFrame->m_filesToAdd[i], mi);
 
-                // Lock this code for thread safety
+                // Lock this code for thread safety.
                 CThreadLock lock(pFrame->m_cs);
                 pFrame->m_moviesData.push_back(mi);
 

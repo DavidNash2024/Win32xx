@@ -14,7 +14,7 @@ BOOL CMyTaskDialog::OnTDButtonClicked(int)
 {
     TRACE(L"Button or command link pressed\n");
 
-    // we could return TRUE to prevent the task dialog from closing
+    // We could return TRUE to prevent the task dialog from closing.
     return FALSE;
 }
 

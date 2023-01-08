@@ -859,7 +859,7 @@ OnEraseBkgnd(CDC& )                                                         /*
 OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)                           /*
 
     Override the base class method to respond to a horizontal scroll bar event
-    and set the current bitmap scrollposition accordingly. This override is
+    and set the current bitmap scroll position accordingly. This override is
     necessary to prevent the CScrollView's automatic scroll of window pixels.
 *-----------------------------------------------------------------------------*/
 {
@@ -910,7 +910,7 @@ OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)                           /*
     LRESULT CPreviewPaneEx::
 OnMouseWheel(UINT msg, WPARAM wparam, LPARAM lparam)                        /*
 
-    Override the base class method to respond to a vertial scroll mouse event
+    Override the base class method to respond to a vertical scroll mouse event
     and set the current bitmap scroll position accordingly. This override is
     necessary to prevent the CScrollView's automatic scroll of window pixels.
 *-----------------------------------------------------------------------------*/

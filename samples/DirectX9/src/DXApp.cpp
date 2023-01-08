@@ -17,7 +17,7 @@ CDXApp::CDXApp()
 // Called when the application starts.
 BOOL CDXApp::InitInstance()
 {
-    //Create the Window
+    // Create the frame window.
     m_frame.Create();
 
     return TRUE;

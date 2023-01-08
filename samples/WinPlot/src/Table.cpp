@@ -18,7 +18,7 @@ namespace Calc
     //
     FunctionTable::FunctionTable()
     {
-        //Load the function table with a string and function pointer
+        // Load the function table with a string and function pointer.
         m_functions["log"] = log;
         m_functions["log10"] = log10;
         m_functions["exp"] = exp;

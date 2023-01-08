@@ -264,7 +264,7 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 
-    // Use larger buttons with seperate imagelists for normal, hot and disabled buttons.
+    // Use larger buttons with separate imagelists for normal, hot and disabled buttons.
     SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 
     // Configure the "New" toolbar button to bring up a menu

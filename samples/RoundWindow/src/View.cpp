@@ -197,7 +197,7 @@ LRESULT CView::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 
 // This function is our message procedure. We process the messages for
 // the view window here.  Unprocessed messages are passed on for
-//  default processing.
+// default processing.
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try

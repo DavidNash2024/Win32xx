@@ -23,7 +23,7 @@ void CMyCombo::PreCreate(CREATESTRUCT& cs)
     cs.lpszClass = WC_COMBOBOXEX;
     cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
 
-    // Set the height of the combobox in order to see a dropdown list
+    // Set the height of the combobox in order to see a dropdown list.
     cs.cy = 100;
 }
 
@@ -57,12 +57,12 @@ BOOL CMyCombo::AddItems()
         cbei.iSelectedImage = IInf[i].selectedImage;
         cbei.iIndent        = IInf[i].indent;
 
-        // Add the items to the ComboBox's dropdown list
+        // Add the items to the ComboBox's dropdown list.
         if(-1 == InsertItem(cbei))
             return FALSE;
     }
 
-    // Assign the existing image list to the ComboBoxEx control
+    // Assign the existing image list to the ComboBoxEx control.
     SetImageList(m_images);
 
     return TRUE;

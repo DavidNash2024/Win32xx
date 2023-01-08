@@ -93,7 +93,7 @@ InitInstance()                                                              /*
 
       // Set the AboutBoxStatus
     m_frame.GetAboutBox().SetStatus(m_aboutStatement);
-      //Create the Frame Window
+      // Create the frame window
     m_frame.SetAppName(m_appName);
     m_frame.SetArcFileName(m_arcvFile);
     m_frame.Create();   // throws a CWinException on failure

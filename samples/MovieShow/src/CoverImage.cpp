@@ -30,7 +30,7 @@ CCoverImage::CCoverImage()
     // The entry for the dialog's control in resource.rc must match this name.
     CString className = L"CoverImage";
 
-    // Register the window class for the dialog's picture control
+    // Register the window class for the dialog's picture control.
     WNDCLASS wc;
     ZeroMemory(&wc, sizeof(WNDCLASS));
 
@@ -100,7 +100,7 @@ void CCoverImage::OnDraw(CDC& dc)
     DrawImage(dc);
 }
 
-// Calls OnDraw to preform painting for this custom control
+// Calls OnDraw to preform painting for this custom control.
 LRESULT CCoverImage::OnPaint(UINT, WPARAM, LPARAM)
 {
     if (::GetUpdateRect(*this, NULL, FALSE))
@@ -109,7 +109,7 @@ LRESULT CCoverImage::OnPaint(UINT, WPARAM, LPARAM)
         OnDraw(dc);
     }
     else
-    // RedrawWindow can require repainting without an update rect
+    // RedrawWindow can require repainting without an update rect.
     {
         CClientDC dc(*this);
         OnDraw(dc);

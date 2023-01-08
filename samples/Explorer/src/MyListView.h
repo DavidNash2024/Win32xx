@@ -98,7 +98,7 @@ private:
     void SetImageLists();
 
     // Member variables
-    Cpidl         m_cpidlCurFull;    // Fully Qualified pidl
+    Cpidl         m_cpidlCurFull;    // Fully qualified pidl
     CShellFolder  m_csfCurFolder;    // Current Folder
     CContextMenu2 m_ccm2;
     std::vector <ListItemDataPtr> m_pItems; // vector of smart pointers.

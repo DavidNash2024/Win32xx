@@ -54,7 +54,7 @@ STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB, const PROPERTYKEY*, 
     return result;
 }
 
-// The IUIRibbon interface provides the ability to specify settings and properties for thr ribbon.
+// The IUIRibbon interface provides the ability to specify settings and properties for the ribbon.
 IUIRibbon* CView::GetIUIRibbon() const
 {
     return m_pIUIRibbon;

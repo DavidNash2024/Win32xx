@@ -53,7 +53,7 @@ private:
     void PlotFunction(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset);
     void PrepareDC(CDC& dc);
 
-    // Member varuables
+    // Member variables
     Calc::Calculator m_calc;
     std::vector<PointData> m_points;  // vector of Data, stores x, y, & status
     CInputDlg m_inputDlg;

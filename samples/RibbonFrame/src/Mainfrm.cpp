@@ -26,7 +26,7 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    // Set m_View as the view window of the frame.
+    // Set m_view as the view window of the frame.
     SetView(m_view);
 
     // Set the registry key name, and load the initial window position.
@@ -75,14 +75,14 @@ STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROP
     return S_OK;
 }
 
-// The IUIRibbon interface provides the ability to specify settings and properties for thr ribbon.
+// The IUIRibbon interface provides the ability to specify settings and properties for the ribbon.
 IUIRibbon* CMainFrame::GetIUIRibbon() const
 {
     return m_pIUIRibbon;
 }
 
 // Loads data from the specified file. It is called by OnFileOpen,
-// and when a file is draged and dropped on the window.
+// and when a file is dragged and dropped on the window.
 void CMainFrame::LoadFile(LPCTSTR fileName)
 {
     try
@@ -190,7 +190,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wparam)
     return 0;
 }
 
-// OnFileExit is called in reponse to the file exit button.
+// OnFileExit is called in response to the file exit button.
 BOOL CMainFrame::OnFileExit()
 {
     // Issue a close request to the frame.
@@ -254,7 +254,7 @@ BOOL CMainFrame::OnFilePrint()
     return TRUE;
 }
 
-// OnFileSave is called in reponse to the File Save button.
+// OnFileSave is called in response to the File Save button.
 BOOL CMainFrame::OnFileSave()
 {
     try
@@ -276,7 +276,7 @@ BOOL CMainFrame::OnFileSave()
     return TRUE;
 }
 
-// OnFileSave is called in reponse to the File SaveAs button.
+// OnFileSave is called in response to the File SaveAs button.
 BOOL CMainFrame::OnFileSaveAs()
 {
     try
@@ -307,7 +307,7 @@ BOOL CMainFrame::OnFileSaveAs()
     return TRUE;
 }
 
-// OnMRUList is called in reponse to selection from the recent files list.
+// OnMRUList is called in response to selection from the recent files list.
 // The recent files list contains a list of the Most Recently Used files.
 BOOL CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
 {

@@ -50,7 +50,7 @@ CDockOutput::CDockOutput()
 // Called when the window is created.
 int CDockOutput::OnCreate(CREATESTRUCT& cs)
 {
-    // Set the width of the splitter bar
+    // Set the width of the splitter bar.
     SetBarWidth(8);
 
     return CDocker::OnCreate(cs);

@@ -18,7 +18,7 @@ CThemesApp::~CThemesApp()
 
 BOOL CThemesApp::InitInstance()
 {
-    //Create the Frame Window
+    // Create the frame window.
     m_frame.Create();   // throws a CWinException on failure
 
     return TRUE;

@@ -27,14 +27,14 @@ void CViewClasses::OnAttach()
     m_normalImages.Add(image, RGB(255, 0, 0) );
     SetImageList(m_normalImages, LVSIL_NORMAL);
 
-    // Adjust style to show lines and [+] button
+    // Adjust style to show lines and [+] button.
     DWORD style = GetStyle();
     style |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
     SetStyle(style);
 
     DeleteAllItems();
 
-    // Add some tree-view items
+    // Add some tree-view items.
     HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
     HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
     InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
@@ -49,7 +49,7 @@ void CViewClasses::OnAttach()
     InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
     InsertItem(_T("WndProc()"), 4, 4, htiView);
 
-    // Expand some tree-view items
+    // Expand some tree-view items.
     Expand(htiRoot, TVE_EXPAND);
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }

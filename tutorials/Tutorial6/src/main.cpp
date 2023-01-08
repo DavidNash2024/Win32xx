@@ -11,9 +11,9 @@
 // WinMain is the program's entry point. The program starts here.
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    // Start Win32++
+    // Start Win32++.
     CScribbleApp theApp;
 
-    // Run the application
+    // Run the application.
     return theApp.Run();
 }
