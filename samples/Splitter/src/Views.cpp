@@ -12,7 +12,7 @@
 //
 void CViewSimple::OnDraw(CDC& dc)
 {
-    //Centre some text in the window
+    // Centre some text in the window.
     CRect rc = GetClientRect();
     dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
@@ -71,10 +71,10 @@ void CViewList::OnAttach()
 
 void CViewList::SetColumns()
 {
-    // empty the list
+    // Empty the list.
     DeleteAllItems();
 
-    // initialize the columns
+    // Initialize the columns.
     LV_COLUMN column;
     ZeroMemory(&column, sizeof(column));
     column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
@@ -91,22 +91,22 @@ void CViewList::SetColumns()
 // Insert 4 list view items.
 void CViewList::InsertItems()
 {
-    // Add 4th item
+    // Add 4th item.
     int item = InsertItem(0, _T("ListViewApp.h"), 2);
     SetItemText(item, 1, _T("1 KB"));
     SetItemText(item, 2, _T("C Header file"));
 
-    // add 3rd item
+    // Add 3rd item.
     item = InsertItem(item, _T("ListViewApp.cpp"), 1);
     SetItemText(item, 1, _T("3 KB"));
     SetItemText(item, 2, _T("C++ Source file"));
 
-    // add 2nd item
+    // Add 2nd item.
     item = InsertItem(item, _T("main.cpp"), 1);
     SetItemText(item, 1, _T("1 KB"));
     SetItemText(item, 2, _T("C++ Source file"));
 
-    // add 1st item
+    // Add 1st item.
     item = InsertItem(item, _T("ListView"), 0);
     SetItemText(item, 2, _T("Folder"));
 }
@@ -126,20 +126,20 @@ CViewTree::~CViewTree()
 
 void CViewTree::OnAttach()
 {
-    //set the image lists
+    // Set the image lists.
     m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_CLASSVIEW);
     m_smallImages.Add(image, RGB(255, 0, 0) );
     SetImageList(m_smallImages, LVSIL_NORMAL);
 
-    // Adjust style to show lines and [+] button
+    // Adjust style to show lines and [+] button.
     DWORD style = GetStyle();
     style |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
     SetStyle(style);
 
     DeleteAllItems();
 
-    // Add some tree-view items
+    // Add some tree-view items.
     HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
     HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
     InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
@@ -154,7 +154,7 @@ void CViewTree::OnAttach()
     InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
     InsertItem(_T("WndProc()"), 4, 4, htiView);
 
-    // Expand some tree-view items
+    // Expand some tree-view items.
     Expand(htiRoot, TVE_EXPAND);
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }

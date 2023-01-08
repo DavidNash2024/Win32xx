@@ -17,7 +17,7 @@ CMDIFrameSplitterApp::CMDIFrameSplitterApp()
 // Called when the application starts.
 BOOL CMDIFrameSplitterApp::InitInstance()
 {
-    //Create the Window
+    // Create the Window.
     m_mainMDIFrame.Create();    // throws a CWinException on failure
 
     return TRUE;

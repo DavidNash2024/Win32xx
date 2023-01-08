@@ -27,7 +27,7 @@ void CView::DrawLine(int x, int y)
     clientDC.LineTo(x, y);
 }
 
-// Retrieves a reference to CDoc
+// Retrieves a reference to CDoc.
 CDoc& CView::GetDoc()
 {
     return m_doc;
@@ -42,7 +42,7 @@ std::vector<PlotPoint>& CView::GetAllPoints()
 // Called during window creation.
 int CView::OnCreate(CREATESTRUCT&)
 {
-    // Support Drag and Drop on this window
+    // Support drag and drop on this window.
     DragAcceptFiles(TRUE);
     return 0;
 }
@@ -51,7 +51,7 @@ int CView::OnCreate(CREATESTRUCT&)
 // for smoother rendering.
 CMemDC CView::Draw()
 {
-    // Set up our Memory DC and bitmap
+    // Set up our Memory DC and bitmap.
     CClientDC dc(*this);
     CMemDC memDC(dc);
     int width = GetClientRect().Width();
@@ -59,10 +59,12 @@ CMemDC CView::Draw()
     memDC.CreateCompatibleBitmap(dc, width, height);
     memDC.FillRect(GetClientRect(), m_brush);
 
-    // Draw the lines on the memory DC
+    // Draw the lines on the memory DC.
     if (GetAllPoints().size() > 0)
     {
-        bool isDrawing = false;  //Start with the pen up
+        // Start with the pen up.
+        bool isDrawing = false;
+
         for (size_t i = 0 ; i < GetAllPoints().size(); ++i)
         {
             memDC.CreatePen(PS_SOLID, 1, GetAllPoints()[i].penColor);
@@ -79,14 +81,14 @@ CMemDC CView::Draw()
     return memDC;
 }
 
-// Called when part of the view window needs to be redawn.
+// Called when part of the view window needs to be redrawn.
 // Calls the Draw function to perform the drawing to a memory DC.
 void CView::OnDraw(CDC& dc)
 {
     int width = GetClientRect().Width();
     int height = GetClientRect().Height();
 
-    // Copy from the memory DC to our painting dc
+    // Copy from the memory dc to our painting dc.
     CMemDC memDC = Draw();
     dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
 }
@@ -103,7 +105,7 @@ LRESULT CView::OnDropFiles(UINT, WPARAM wparam, LPARAM)
         DragQueryFile(hDrop, 0, FileName.GetBuffer(length), length +1);
         FileName.ReleaseBuffer();
 
-        // Send a user defined message to the frame window
+        // Send a user defined message to the frame window.
         GetParent().SendMessage(UWM_DROPFILE, (WPARAM)FileName.c_str(), 0);
     }
 
@@ -111,7 +113,7 @@ LRESULT CView::OnDropFiles(UINT, WPARAM wparam, LPARAM)
     return 0;
 }
 
-// Called when the left mouse buton is pressed.
+// Called when the left mouse button is pressed.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
@@ -120,7 +122,7 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-// Called when the left mouse buton is released.
+// Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     //Release the capture on the mouse

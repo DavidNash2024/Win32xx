@@ -228,8 +228,8 @@ BEGIN
     IDM_CARD_DIAMOND        "Diamond Playing Cards"
     IDM_CARD_HEART          "Hearts Playing Card"
     IDM_CARD_SPADE          "Spades Playing Card"
-    IDM_VIEW_ARROWS         "Show or Hide the Arrows Toolbar"
-    IDM_VIEW_CARDS          "Show or Hide the Cards Toolbar"
+    IDM_VIEW_ARROWS         "Show or Hide the Arrows toolbar"
+    IDM_VIEW_CARDS          "Show or Hide the Cards toolbar"
 END
 
 STRINGTABLE
@@ -256,18 +256,18 @@ BEGIN
     IDM_PINK                "Pink theme"
     IDM_GOLD                "Gold theme"
     IDM_BLACK               "Black theme"
-    IDM_USE_THEMES          "Use Themes"
-    IDM_BAND_COLORS         "Show the bands in a seperate color"
-    IDM_FLAT_STYLE          "Show Bands with Flat Style"
-    IDM_LEFT_BANDS          "Place Bands Left when bands rearranged"
-    IDM_LOCK_MENUBAR        "Lock the Menubar's Position"
-    IDM_ROUND_BORDERS       "Use Round Borders for Bands"
+    IDM_USE_THEMES          "Use themes"
+    IDM_BAND_COLORS         "Show the bands in a separate color"
+    IDM_FLAT_STYLE          "Show bands with flat style"
+    IDM_LEFT_BANDS          "Place bands Left when bands rearranged"
+    IDM_LOCK_MENUBAR        "Lock the menubar's position"
+    IDM_ROUND_BORDERS       "Use round borders for bands"
 END
 
 STRINGTABLE
 BEGIN
-    IDM_SHORT_BANDS         "Use Short Bands"
-    IDM_USE_LINES           "Display Lines between band rows"
+    IDM_SHORT_BANDS         "Use short bands"
+    IDM_USE_LINES           "Display lines between band rows"
 END
 
 #endif    // English (U.S.) resources

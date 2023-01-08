@@ -22,7 +22,7 @@ CReBarApp::~CReBarApp()
 // Called when the application starts.
 BOOL CReBarApp::InitInstance()
 {
-    //Create the Frame Window
+    // Create the frame window.
     m_frame.Create();   // throws a CWinException on failure
 
     return TRUE;

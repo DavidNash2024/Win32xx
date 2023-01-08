@@ -27,7 +27,7 @@ void CView::DrawLine(int x, int y)
     clientDC.LineTo(x, y);
 }
 
-// Retrieves a reference to CDoc
+// Retrieves a reference to CDoc.
 CDoc& CView::GetDoc()
 {
     return m_doc;
@@ -42,7 +42,7 @@ std::vector<PlotPoint>& CView::GetAllPoints()
 // Called during window creation.
 int CView::OnCreate(CREATESTRUCT&)
 {
-    // Support Drag and Drop on this window
+    // Support Drag and Drop on this window.
     DragAcceptFiles(TRUE);
     return 0;
 }
@@ -51,7 +51,7 @@ int CView::OnCreate(CREATESTRUCT&)
 // for smoother rendering.
 CMemDC CView::Draw()
 {
-    // Set up our Memory DC and bitmap
+    // Set up our Memory DC and bitmap.
     CClientDC dc(*this);
     CMemDC memDC(dc);
     int width = GetClientRect().Width();
@@ -59,10 +59,10 @@ CMemDC CView::Draw()
     memDC.CreateCompatibleBitmap(dc, width, height);
     memDC.FillRect(GetClientRect(), m_brush);
 
-    // Draw the lines on the memory DC
+    // Draw the lines on the memory DC.
     if (GetAllPoints().size() > 0)
     {
-        bool isDrawing = false;  //Start with the pen up
+        bool isDrawing = false;  // Start with the pen up
         for (size_t i = 0 ; i < GetAllPoints().size(); ++i)
         {
             memDC.CreatePen(PS_SOLID, 1, GetAllPoints()[i].penColor);
@@ -79,7 +79,7 @@ CMemDC CView::Draw()
     return memDC;
 }
 
-// Called when part of the view window needs to be redawn.
+// Called when part of the view window needs to be redrawn.
 // Calls the Draw function to perform the drawing to a memory DC.
 void CView::OnDraw(CDC& dc)
 {
@@ -103,7 +103,7 @@ LRESULT CView::OnDropFiles(UINT, WPARAM wparam, LPARAM)
         DragQueryFile(hDrop, 0, FileName.GetBuffer(length), length +1);
         FileName.ReleaseBuffer();
 
-        // Send a user defined message to the frame window
+        // Send a user defined message to the frame window.
         GetParent().SendMessage(UWM_DROPFILE, (WPARAM)FileName.c_str(), 0);
     }
 
@@ -111,7 +111,7 @@ LRESULT CView::OnDropFiles(UINT, WPARAM wparam, LPARAM)
     return 0;
 }
 
-// Called when the left mouse buton is pressed.
+// Called when the left mouse button is pressed.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
@@ -120,7 +120,7 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-// Called when the left mouse buton is released.
+// Called when the left mouse button is released.
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     //Release the capture on the mouse
@@ -149,7 +149,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called before window creation to update the window's CREATESTRUCT
 void CView::PreCreate(CREATESTRUCT& cs)
 {
-    // Set the extra style to provide a sunken effect
+    // Set the extra style to provide a sunken effect.
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
@@ -167,7 +167,7 @@ void CView::Print(LPCTSTR docName)
 {
     CPrintDialog printDlg;
 
-    // Bring up a dialog to choose the printer
+    // Bring up a dialog to choose the printer.
     if (printDlg.DoModal(*this) == IDOK)    // throws exception if there is no default printer
     {
         QuickPrint(docName);
@@ -182,7 +182,7 @@ void CView::PrintPage(CDC& dc, UINT)
 {
     try
     {
-        // Get the dimensions of the View window
+        // Get the dimensions of the view window.
         CRect viewRect = GetClientRect();
         int width = viewRect.Width();
         int height = viewRect.Height();

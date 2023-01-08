@@ -9,7 +9,7 @@ using namespace std;
 
 int main()
 {
-    // Demonstrate the use of CString with tcout
+    // Demonstrate the use of CString with tcout.
     CString text = "Hello world";
     tcout << text.c_str() << endl;
 

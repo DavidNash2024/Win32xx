@@ -8,10 +8,10 @@
 
 int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
-    // Start Win32++
+    // Start Win32++.
     CApp MyApp;
 
-    // Run the application
+    // Run the application.
     return MyApp.Run();
 }
 

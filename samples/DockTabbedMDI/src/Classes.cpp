@@ -75,7 +75,7 @@ void CViewClasses::PreCreate(CREATESTRUCT& cs)
     cs.lpszClass = WC_TREEVIEW;
 }
 
-// Processes the tree-view's window nessages.
+// Processes the tree-view's window messages.
 LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try

@@ -20,7 +20,7 @@ CTCPClientDlg::CTCPClientDlg(UINT resID) : CDialog(resID), m_pSocket(0)
 // Appends text to the specified edit control.
 void CTCPClientDlg::AppendText(int id, LPCTSTR text)
 {
-    // This function appends text to an edit control
+    // This function appends text to an edit control.
     CWnd* pWnd = GetCWndPtr(::GetDlgItem(*this, id));
     assert(dynamic_cast<CEdit*>(pWnd));
     const CEdit& edit = static_cast<const CEdit&>(*pWnd);
@@ -81,7 +81,7 @@ INT_PTR CTCPClientDlg::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called when the dialog is closed.
 void CTCPClientDlg::OnClose()
 {
-    // Disconnect the socket when the user closes this chat dialog
+    // Disconnect the socket when the user closes this chat dialog.
     m_pSocket->Disconnect();
 }
 
@@ -98,7 +98,7 @@ BOOL CTCPClientDlg::OnCommand(WPARAM wparam, LPARAM)
     return FALSE;
 }
 
-// Called when the dialog window is destroyed
+// Called when the dialog window is destroyed.
 void CTCPClientDlg::OnDestroy()
 {
     CSvrDialog& dialog = GetDlgApp()->GetDialog();
@@ -198,7 +198,7 @@ INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_SOCKETMSG:    return OnSocketMessage(wparam, lparam);
         }
 
-        // Pass unhandled messages on to parent DialogProc
+        // Pass unhandled messages on to parent DialogProc.
         return DialogProcDefault(msg, wparam, lparam);
     }
 
@@ -219,14 +219,14 @@ void CSvrDialog::LoadCommonControlsEx()
 
     try
     {
-        // Load the Common Controls DLL
+        // Load the Common Controls DLL.
         module = ::LoadLibrary(_T("COMCTL32.DLL"));
         if (module == 0)
             throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
         if (GetComCtlVersion() > 470)
         {
-            // Declare a pointer to the InItCommonControlsEx function
+            // Declare a pointer to the InItCommonControlsEx function.
             typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
             INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(module, "InitCommonControlsEx");
 
@@ -278,7 +278,7 @@ BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM)
 // Called before the dialog is displayed.
 BOOL CSvrDialog::OnInitDialog()
 {
-    // Set the Icon
+    // Set the icon.
     SetIconLarge( IDW_MAIN );
     SetIconSmall( IDW_MAIN );
 
@@ -342,14 +342,14 @@ LRESULT CSvrDialog::OnSocketMessage(WPARAM wparam, LPARAM lparam)
     return 0;
 }
 
-// Respond to the Start/Stop Button press
+// Respond to the Start/Stop Button press.
 BOOL CSvrDialog::OnStartServer()
 {
     TRACE("Start/Stop Button Pressed\n");
 
     if (!m_isServerStarted)
     {
-        // Attempt to start the server
+        // Attempt to start the server.
         if (!StartServer())
             return FALSE;
 
@@ -379,7 +379,7 @@ BOOL CSvrDialog::OnStartServer()
     {
         StopServer();
 
-        // Update the dialog
+        // Update the dialog.
         AppendText(m_editStatus, _T("Server Stopped"));
         m_buttonStart.SetWindowText( _T("Start Server") );
         m_ip4Address.EnableWindow(TRUE);
@@ -400,13 +400,13 @@ BOOL CSvrDialog::OnStartServer()
     return m_isServerStarted;
 }
 
-// Responds to the send button
+// Responds to the send button.
 BOOL CSvrDialog::OnSend()
 {
     switch(m_socketType)
     {
         case SOCK_STREAM:
-            // TCP connections have a seperate chat dialog for sending/receiving data
+            // TCP connections have a separate chat dialog for sending/receiving data
             break;
         case SOCK_DGRAM:
             {

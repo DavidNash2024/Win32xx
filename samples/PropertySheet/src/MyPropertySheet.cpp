@@ -22,7 +22,7 @@ INT_PTR CButtonPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        // on any command notification, tell the property sheet to enable the Apply button
+        // Tell the property sheet to enable the Apply button.
         case WM_COMMAND:
         {
             PropSheet_Changed(GetParent(), GetHwnd());
@@ -138,7 +138,7 @@ INT_PTR CComboPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        // on any command notification, tell the property sheet to enable the Apply button
+        // Tell the property sheet to enable the Apply button.
         case WM_COMMAND:
         {
             PropSheet_Changed(GetParent(), GetHwnd());
@@ -174,7 +174,7 @@ BOOL CComboPage::OnInitDialog()
 {
     TRACE("Combo page created\n");
 
-    // Put some text in the Combo Boxes
+    // Put some text in the combo boxes.
     for (int i = 0 ; i < 6 ; i++)
     {
         SendDlgItemMessage( IDC_COMBO1, CB_ADDSTRING, 0, (LPARAM) _T("C Box 1") );
@@ -209,7 +209,7 @@ CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hParent /*
 // Called when the property sheet is created.
 void CMyPropertySheet::OnAttach()
 {
-    // Remove system menu for wizards
+    // Remove system menu for wizards.
     if (IsWizard())
     {
         DWORD style = GetStyle();

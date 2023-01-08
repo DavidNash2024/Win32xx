@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {
-        // Start Win32++
+        // Start Win32++.
         CTabbedMDIApp theApp;
 
         // Run the application.

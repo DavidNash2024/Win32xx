@@ -162,7 +162,7 @@ LRESULT CViewTree::OnNotifyReflect(WPARAM, LPARAM lparam)
     return 0;
 }
 
-// Called when a treview item is selected
+// Called when a treeview item is selected
 BOOL CViewTree::OnSelChanged()
 {
     // Send the message to CMainFrame.

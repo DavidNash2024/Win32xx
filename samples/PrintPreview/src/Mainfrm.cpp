@@ -75,14 +75,14 @@ DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LON
 // Called when the window is closed.
 void CMainFrame::OnClose()
 {
-        // Close the preview
+    // Close the preview.
     if (GetView() == m_preview)
         OnPreviewClose();
 
-    //Check for unsaved text
+    // Check for unsaved text.
     SaveModifiedText();
 
-    // Call the base function
+    // Call the base function.
     CFrame::OnClose();
 }
 
@@ -154,7 +154,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     else
         SetStatusText(_T("No printer found"));
 
-    // call the base class function
+    // Call the base class function.
     return  CFrame::OnCreate(cs);
 }
 
@@ -354,7 +354,7 @@ BOOL CMainFrame::OnFilePrintSetup()
 
     catch (const CWinException& /* e */)
     {
-        // No default printer
+        // No default printer.
         MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
     }
 
@@ -494,7 +494,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 // Opens a dialog to choose the font.
 BOOL CMainFrame::OnOptionsFont()
 {
-    // Retrieve the current character format
+    // Retrieve the current character format.
     CHARFORMAT cf;
     ZeroMemory(&cf, sizeof(cf));
     cf.cbSize = sizeof(cf);
@@ -627,7 +627,7 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 // Asks to save the file if the text has been modified.
 void CMainFrame::SaveModifiedText()
 {
-    //Check for unsaved text
+    // Check for unsaved text.
     if (m_richView.GetModify())
         if (::MessageBox(0, _T("Save changes to this document"), _T("PrintPreview"), MB_YESNO | MB_ICONWARNING) == IDYES)
             OnFileSave();
@@ -656,7 +656,7 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_FILE_PRINT,      IDI_PRINT);
 }
 
-// Specifies the Toolbar buttons
+// Specifies the Toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
@@ -686,7 +686,7 @@ void CMainFrame::SetWindowTitle()
     SetWindowText(Title);
 }
 
-// Called by CTextApp::OnIdle to update toolbar buttons
+// Called by CTextApp::OnIdle to update toolbar buttons.
 void CMainFrame::UpdateToolbar()
 {
     CHARRANGE range;
@@ -741,10 +741,10 @@ BOOL CMainFrame::WriteFile(LPCTSTR fileName)
         es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(
             reinterpret_cast<void*>(MyStreamOutCallback));
 
-        // Support saving UTF-8 text (without BOM)
+        // Support saving UTF-8 text (without BOM).
         m_richView.StreamOut((CP_UTF8 << 16) | SF_USECODEPAGE | SF_TEXT, es);
 
-        //Clear the modified text flag
+        //Clear the modified text flag.
         m_richView.SetModify(FALSE);
     }
 

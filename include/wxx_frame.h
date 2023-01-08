@@ -2167,7 +2167,8 @@ namespace Win32xx
 #if (WINVER >= 0x0500)  // Minimum OS required is Win2000
         if (IsUsingThemes())
         {
-            MENUINFO mi = { 0 };
+            MENUINFO mi;
+            ZeroMemory(&mi, sizeof(mi));
             mi.cbSize = sizeof(mi);
             mi.fMask = MIM_BACKGROUND | MIM_APPLYTOSUBMENUS;
 

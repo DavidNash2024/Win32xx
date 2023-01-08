@@ -12,7 +12,7 @@ int WINAPI WinMain(__in HINSTANCE, __in_opt HINSTANCE, __in LPSTR, __in int)
 {
     try
     {
-        // Start Win32++
+        // Start Win32++.
         CRibbonFrameApp theApp;
 
         // Run the application.

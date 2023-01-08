@@ -84,5 +84,5 @@ private:
 };
 
 
-#endif //MAINFRM_H
+#endif // MAINFRM_H
 

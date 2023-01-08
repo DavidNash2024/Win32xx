@@ -18,7 +18,7 @@
 // Constructor.
 CView::CView() : m_pPicture(NULL)
 {
-    // Initializes the COM library on the current thread
+    // Initializes the COM library on the current thread.
     if FAILED(::CoInitialize(NULL))
         throw CWinException(_T("Failed to initialize COM"));
 }

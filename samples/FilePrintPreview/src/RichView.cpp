@@ -79,7 +79,7 @@ GetPageBreaks(CDC& dcPrinter)                                               /*
     LONG textLength;   // Length of document, in characters
     textLength = GetTextLengthEx(GTL_NUMCHARS);
       // Calculate the page breaks
-    LONG textPrinted;  // number of charcters printed so far
+    LONG textPrinted;  // number of characters printed so far
     m_pageBreaks.clear();
     do
     {

@@ -17,7 +17,7 @@ CDockingApp::CDockingApp()
 // Called when the applications starts.
 BOOL CDockingApp::InitInstance()
 {
-    //Create the Window
+    // Create the frame window.
     m_MainFrame.Create();   // throws a CWinException on failure
 
     return TRUE;

@@ -40,7 +40,7 @@ Create(HWND parent)                                                         /*
     Create the frame window.
 *-----------------------------------------------------------------------------*/
 {
-      // Set m_View as the view window of the frame
+      // Set m_view as the view window of the frame
     SetView(m_view);
 
     return CFrame::Create(parent);

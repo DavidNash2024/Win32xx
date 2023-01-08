@@ -19,25 +19,25 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    // Set m_View as the view window of the frame
+    // Set m_view as the view window of the frame.
     SetView(m_view);
 
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\Scribble Sample"));
 
-    // Load the settings from the registry with 4 MRU entries
+    // Load the settings from the registry with 4 MRU entries.
     LoadRegistryMRUSettings(4);
 
     return CFrame::Create(parent);
 }
 
-// Called by OnFileOpen and in response to a UWM_DROPFILE message
+// Called by OnFileOpen and in response to a UWM_DROPFILE message.
 void CMainFrame::LoadFile(LPCTSTR fileName)
 {
     try
     {
-        // Retrieve the PlotPoint data
+        // Retrieve the PlotPoint data.
         GetDoc().FileOpen(fileName);
         m_pathName = fileName;
         AddMRUEntry(fileName);
@@ -75,7 +75,7 @@ void CMainFrame::SetupMenuIcons()
         AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_TOOLBAR16);
 }
 
-// Process the messages from the Menu and Tool Bar
+// Process the messages from the menu and toolbar.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
     UINT id = LOWORD(wparam);
@@ -277,28 +277,28 @@ BOOL CMainFrame::OnFilePreview()
     {
         m_isToolbarShown = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
 
-        // Get the device contect of the default or currently chosen printer
+        // Get the device contect of the default or currently chosen printer.
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
-        // Create the preview window if required
+        // Create the preview window if required.
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
 
-        // Specify the source of the PrintPage function
+        // Specify the source of the PrintPage function.
         m_preview.SetSource(m_view);
 
-        // Set the preview's owner (for notification messages)
+        // Set the preview's owner (for notification messages).
         m_preview.DoPrintPreview(*this);
 
         // Swap views
         SetView(m_preview);
 
-        // Hide the menu and toolbar
+        // Hide the menu and toolbar.
         ShowMenu(FALSE);
         ShowToolBar(FALSE);
 
-        // Update status
+        // Update status.
         CString status = _T("Printer: ") + printDlg.GetDeviceName();
         SetStatusText(status);
     }
@@ -315,7 +315,7 @@ BOOL CMainFrame::OnFilePreview()
     return TRUE;
 }
 
-// Sends the bitmap extracted from the View window to a printer of your choice
+// Sends the bitmap extracted from the view window to a printer of your choice.
 BOOL CMainFrame::OnFilePrint()
 {
     try
@@ -351,7 +351,7 @@ void CMainFrame::OnInitialUpdate()
 // Initiates the Choose Color dialog.
 BOOL CMainFrame::OnPenColor()
 {
-    // array of custom colors, initialized to white
+    // Array of custom colors, initialized to white.
     static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
@@ -360,13 +360,13 @@ BOOL CMainFrame::OnPenColor()
     CColorDialog colorDlg;
     colorDlg.SetCustomColors(custColors);
 
-    // Initialize the Choose Color dialog
+    // Initialize the Choose Color dialog.
     if (colorDlg.DoModal(*this) == IDOK)
     {
-        // Store the custom colors in the static array
+        // Store the custom colors in the static array.
         memcpy(custColors, colorDlg.GetCustomColors(), 16*sizeof(COLORREF));
 
-        // Retrieve the chosen color
+        // Retrieve the chosen color.
         m_view.SetPenColor(colorDlg.GetColor());
     }
 
@@ -376,10 +376,10 @@ BOOL CMainFrame::OnPenColor()
 // Called when the Print Preview's "Close" button is pressed.
 LRESULT CMainFrame::OnPreviewClose()
 {
-    // Swap the view
+    // Swap the view.
     SetView(m_view);
 
-    // Show the menu and toolbar
+    // Show the menu and toolbar.
     ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(m_isToolbarShown);
 
@@ -411,7 +411,7 @@ LRESULT CMainFrame::OnPreviewSetup()
     CPrintDialog printDlg(PD_PRINTSETUP);
     try
     {
-        // Display the print dialog
+        // Display the print dialog.
         if (printDlg.DoModal(*this) == IDOK)
         {
             CString status = _T("Printer: ") + printDlg.GetDeviceName();
@@ -431,7 +431,7 @@ LRESULT CMainFrame::OnPreviewSetup()
     return 0;
 }
 
-// Configures the ToolBar.
+// Configures the toolbar.
 void CMainFrame::SetupToolBar()
 {
     // Define our toolbar buttons

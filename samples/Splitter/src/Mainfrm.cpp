@@ -22,8 +22,8 @@ HWND CMainFrame::Create(HWND parent)
 {
     SetView(m_mainView);
 
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\Splitter Sample"));
 
     return CDockFrame::Create(parent);
@@ -32,7 +32,7 @@ HWND CMainFrame::Create(HWND parent)
 // Load the default arrangement of the window panes.
 void CMainFrame::LoadDefaultWindowPanes()
 {
-    // Set the styles for splitter panes
+    // Set the styles for splitter panes.
     DWORD style = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
     SetDockStyle(style);
 
@@ -41,7 +41,7 @@ void CMainFrame::LoadDefaultWindowPanes()
     // Add the bottom pane first. It is a child of the main pane.
     m_pDockTree = static_cast<CDockTree*>(AddDockedChild(new CDockTree, style | DS_DOCKED_BOTTOM, viewRect.Height() / 2, ID_DOCK_TREE));
 
-    // Add the bottom right pane. It is a child of the bottom pane
+    // Add the bottom right pane. It is a child of the bottom pane.
     m_pDockList = static_cast<CDockList*>(m_pDockTree->AddDockedChild(new CDockList, style | DS_DOCKED_RIGHT, viewRect.Width() / 2, ID_DOCK_LIST));
 
     // Add the top right pane. It is a child of the main pane.

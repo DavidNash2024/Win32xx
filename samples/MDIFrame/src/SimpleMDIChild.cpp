@@ -63,7 +63,7 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Constructor.
 CSimpleMDIChild::CSimpleMDIChild()
 {
-    // Set m_View as the view window of the MDI child
+    // Set m_view as the view window of the MDI child
     SetView(m_view);
 
     // Set the menu for this MDI child

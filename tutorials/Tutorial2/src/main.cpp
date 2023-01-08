@@ -40,7 +40,7 @@ private:
 // Called when the application starts.
 BOOL CSimpleApp::InitInstance()
 {
-    // Create the Window
+    // Create the window.
     m_view.Create();
 
     return TRUE;
@@ -50,9 +50,9 @@ BOOL CSimpleApp::InitInstance()
 // WinMain is the program's entry point. The program starts here.
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    // Start Win32++
+    // Start Win32++.
     CSimpleApp theApp;
 
-    // Run the application
+    // Run the application.
     return theApp.Run();
 }

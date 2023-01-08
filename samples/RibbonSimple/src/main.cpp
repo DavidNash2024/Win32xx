@@ -12,17 +12,17 @@ int WINAPI WinMain(__in HINSTANCE, __in_opt HINSTANCE, __in LPSTR, __in int)
 {
     try
     {
-        // Start Win32++
+        // Start Win32++.
         CSimpleRibbonApp theApp;
 
-        // Run the application
+        // Run the application.
         return theApp.Run();
     }
 
-    // catch all unhandled CException types
+    // Catch all unhandled CException types.
     catch (const CException &e)
     {
-        // Display the exception and quit
+        // Display the exception and quit.
         MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return -1;

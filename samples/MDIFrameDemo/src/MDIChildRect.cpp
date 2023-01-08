@@ -66,7 +66,7 @@ LRESULT CViewRect::OnTimer(UINT, WPARAM, LPARAM)
     return 0;
 }
 
-// Process the view rect's window messages.
+// Process the ViewRect's window messages.
 LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try

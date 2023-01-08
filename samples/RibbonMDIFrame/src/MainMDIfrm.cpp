@@ -138,7 +138,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
         InitPropVariantFromBoolean(showStatusBar, &var);
         HRESULT hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SHOWSTATUS, UI_PKEY_BooleanValue, var);
 
-        // Disable some Ribbon buttons
+        // Disable some Ribbon buttons.
         InitPropVariantFromBoolean(FALSE, &var);
         if (SUCCEEDED(hr))
             hr = GetRibbonFramework()->SetUICommandProperty(IDC_CMD_OPEN, UI_PKEY_Enabled, var);
@@ -169,7 +169,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
 
 void CMainMDIFrame::OnFileExit()
 {
-    // Issue a close request to the frame
+    // Issue a close request to the frame.
     Close();
 }
 
@@ -201,7 +201,7 @@ void CMainMDIFrame::OnMDIMaximized(BOOL isMax)
 {
     if (GetRibbonFramework())
     {
-        // Enable MDI Ribbon when the MDI child is maximized
+        // Enable MDI Ribbon when the MDI child is maximized.
         PROPVARIANT var;
         InitPropVariantFromBoolean(isMax, &var);
 
@@ -322,7 +322,7 @@ STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key
     switch(cmdID)
     {
     case IDC_MRULIST:
-        // Set up the Most Recently Used (MRU) menu
+        // Set up the most recently used (MRU) menu.
         if (UI_PKEY_Label == key)
         {
             WCHAR label[MAX_PATH] = L"Recent Files";

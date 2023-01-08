@@ -38,16 +38,15 @@ private:
 };
 
 
-// Initialize the Win32++ framework.
-CApp theApp;
-
-
 // For VS2019 and above.
 // int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {
+        // Initialize the Win32++ framework.
+        CApp theApp;
+
         // Run the application's message loop.
         return theApp.Run();
     }

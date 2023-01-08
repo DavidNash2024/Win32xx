@@ -38,7 +38,7 @@ void CWorkerSocket::OnDisconnect()
     dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(this), 0);
 }
 
-// Called when the socket recieves data.
+// Called when the socket receives data.
 void CWorkerSocket::OnReceive()
 {
     CSvrDialog& dialog = GetDlgApp()->GetDialog();

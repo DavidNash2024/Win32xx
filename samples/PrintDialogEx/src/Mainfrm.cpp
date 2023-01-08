@@ -903,7 +903,7 @@ void CMainFrame::SetPathName(LPCTSTR filePathName)
     m_pathName = filePathName;
 }
 
-// Override CFrame<T>::SetStatusIndicators to indicate insert character status.
+// Updates the status indicators.
 void CMainFrame::SetStatusIndicators()
 {
     if (GetStatusBar().IsWindow())
@@ -914,36 +914,39 @@ void CMainFrame::SetStatusIndicators()
         CString cap = LoadString(IDW_INDICATOR_CAPS);
         CString num = LoadString(IDW_INDICATOR_NUM);
         CString ovr = LoadString(IDW_INDICATOR_OVR);
+        CString ins = LoadString(IDW_INDICATOR_INS);
+        CString scrl = LoadString(IDW_INDICATOR_SCRL);
+        CString rich = LoadString(IDW_INDICATOR_RICH);
+        CString plain = LoadString(IDW_INDICATOR_PLAIN);
+        CString empty;
 
-        CString status0 = m_isRTF ? LoadString(IDW_INDICATOR_RICH) : LoadString(IDW_INDICATOR_PLAIN);
-        CString status1 = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : CString("");
-        CString status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : CString("");
-        CString status3 = (::GetKeyState(VK_INSERT) & 0x0001) ? LoadString(IDW_INDICATOR_OVR) : LoadString(IDW_INDICATOR_INS);
+        m_mode = m_isRTF ? rich : plain;
+        m_cap = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : empty;
+        m_num = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : empty;
+        m_ovr = (::GetKeyState(VK_INSERT) & 0x0001) ? ovr : ins;
 
-        // Only update indicators if the text has changed
-        GetStatusBar().SetPartText(1, status0);
-        GetStatusBar().SetPartText(2, status1);
-        GetStatusBar().SetPartText(3, status2);
-        GetStatusBar().SetPartText(4, status3);
+        // Update the indicators.
+        // Need member variables for owner drawn text to keep them in scope.
+        GetStatusBar().SetPartText(1, m_mode, SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(2, m_cap, SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(3, m_num, SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(4, m_ovr, SBT_OWNERDRAW);
     }
 }
 
+// Reposition the statusbar parts. It's called when the statusbar is resized.
 void CMainFrame::SetStatusParts()
 {
     // Calculate the width of the text indicators
     CClientDC statusDC(GetStatusBar());
     statusDC.SelectObject(GetStatusBar().GetFont());
-    CString mode = LoadString(IDW_INDICATOR_PLAIN);
-    CString cap = LoadString(IDW_INDICATOR_CAPS);
-    CString num = LoadString(IDW_INDICATOR_NUM);
-    CString ovr = LoadString(IDW_INDICATOR_OVR);
 
     // Fill a vector with the status bar part widths.
     std::vector<int> partWidths;
-    partWidths.push_back(GetTextPartWidth(mode));
-    partWidths.push_back(GetTextPartWidth(cap));
-    partWidths.push_back(GetTextPartWidth(num));
-    partWidths.push_back(GetTextPartWidth(ovr));
+    partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_PLAIN)));
+    partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_CAPS)));
+    partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_NUM)));
+    partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_OVR)));
 
     int sumWidths = 0;
     std::vector<int>::iterator iter;

@@ -56,7 +56,7 @@ UINT CRichView::CollatePages()
     // Add the final page break.
     m_pageBreaks.push_back(-1);
 
-    // return the number of pages.
+    // Return the number of pages.
     return static_cast<UINT>(m_pageBreaks.size());
 }
 
@@ -83,11 +83,11 @@ CRect CRichView::GetPageRect()
 {
     CRect rcPage;
 
-    // Get the device context of the default or currently chosen printer
+    // Get the device context of the default or currently chosen printer.
     CPrintDialog printDlg;
     CDC dcPrinter = printDlg.GetPrinterDC();
 
-    // Get the printer page specifications
+    // Get the printer page specifications.
     int horizRes = dcPrinter.GetDeviceCaps(HORZRES);        // in pixels
     int vertRes = dcPrinter.GetDeviceCaps(VERTRES);         // in pixels
     int logPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);   // in pixels per logical inch
@@ -159,7 +159,7 @@ void CRichView::PrintPage(CDC& dc, UINT page)
     fr.chrg.cpMin = (page > 0) ? m_pageBreaks[page - 1] : 0;
     fr.chrg.cpMax = m_pageBreaks[page];
 
-    // Display text from the richedit control on the memory dc
+    // Display text from the richedit control on the memory dc.
     FormatRange(fr, TRUE);
     DisplayBand(GetPrintRect());
 
@@ -205,7 +205,7 @@ void CRichView::QuickPrint(LPCTSTR docName)
         // Print the page.
         PrintPage(printerDC, page);
 
-        // End the page/
+        // End the page.
         printerDC.EndPage();
     }
 

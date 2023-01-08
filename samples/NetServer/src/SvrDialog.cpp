@@ -217,7 +217,7 @@ BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM)
     {
     case IDC_BUTTON_START:      return OnStartServer();
     case IDC_BUTTON_SEND:       return OnSend();
-    } //switch (LOWORD(wparam))
+    }
 
     return FALSE;
 }
@@ -300,7 +300,7 @@ BOOL CSvrDialog::OnStartServer()
     {
         StopServer();
 
-        // Update the dialog
+        // Update the dialog.
         AppendText(m_editStatus, _T("Server Stopped"));
         m_buttonStart.SetWindowText( _T("Start Server") );
         m_ip4Address.EnableWindow(TRUE);
@@ -327,7 +327,7 @@ BOOL CSvrDialog::OnSend()
     switch(m_socketType)
     {
         case SOCK_STREAM:
-            // TCP connections have a separate chat dialog for sending/receiving data
+            // TCP connections have a separate chat dialog for sending/receiving data.
             break;
         case SOCK_DGRAM:
             {
@@ -416,7 +416,7 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wparam)
     {
     case SOCK_STREAM:
         {
-            // Pass this on to the TCP chat dialog
+            // Pass this on to the TCP chat dialog.
             std::map< ServerSocketPtr, TCPClientDlgPtr >::iterator Iter;
 
             for (Iter = m_connectedClients.begin(); Iter != m_connectedClients.end(); ++Iter)

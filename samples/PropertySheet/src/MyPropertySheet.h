@@ -66,7 +66,7 @@ public:
     virtual ~CComboPage() {}
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnApply();
     virtual BOOL OnInitDialog();

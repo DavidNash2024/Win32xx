@@ -12,17 +12,17 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     try
     {
-        // Start Win32++
+        // Start Win32++.
         CStatusBarApp theApp;
 
-        // Run the application and the message loop
+        // Run the application and the message loop.
         return theApp.Run();
     }
 
-    // catch all unhandled CException types
+    // Catch all unhandled CException types.
     catch (const CException &e)
     {
-        // Display the exception and quit
+        // Display the exception and quit.
         MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return -1;

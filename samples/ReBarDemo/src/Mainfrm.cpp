@@ -23,11 +23,11 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_View as the view window of the frame
+    //Set m_view as the view window of the frame
     SetView(m_view);
 
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\ReBarDemo"));
 
     return CFrame::Create(parent);
@@ -214,7 +214,7 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
-// Overrides CFrame::RecalcLayout to add the positioning of our rebar
+// Override CFrame::RecalcLayout to add the positioning of our rebar.
 void CMainFrame::RecalcLayout()
 {
     // Resize the status bar
@@ -228,7 +228,7 @@ void CMainFrame::RecalcLayout()
         SetStatusIndicators();
     }
 
-    // Resize the rebar or toolbar
+    // Resize the rebar or toolbar.
     if (GetReBar().IsWindow())
     {
         GetReBar().SendMessage(WM_SIZE, 0, 0);
@@ -256,7 +256,7 @@ void CMainFrame::RecalcLayout()
     }
 }
 
-// Sets the position of the Rebar.
+// Sets the position of the rebar.
 void CMainFrame::SetReBarPos()
 {
     int cxRB = 0;
@@ -307,7 +307,7 @@ void CMainFrame::SetupMenuIcons()
 // Sets the resource IDs and images for the toolbar buttons.
 void CMainFrame::SetupToolBar()
 {
-    // Set the Resource IDs for the toolbar buttons
+    // Set the Resource IDs for the toolbar buttons.
     AddToolBarButton( IDM_FILE_NEW   );
     AddToolBarButton( IDM_FILE_OPEN, FALSE);    // disabled button
     AddToolBarButton( IDM_FILE_SAVE, FALSE);    // disabled button
@@ -345,10 +345,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
     //  switch (msg)
     //  {
-    //  Add case statements for each messages to be handled here
+    //  Add case statements for each messages to be handled here.
     //  }
 
-        // pass unhandled messages on for default processing
+        // Pass unhandled messages on for default processing.
         return WndProcDefault(msg, wparam, lparam);
     }
 

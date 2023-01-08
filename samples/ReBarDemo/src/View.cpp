@@ -20,7 +20,7 @@ void CView::OnDraw(CDC& dc)
 {
     CRect rc = GetClientRect();
 
-    // Display some text in our view window
+    // Display some text in our view window.
     dc.DrawText(_T("Press the arrows to change the rebar's orientation"), -1, rc,  DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 

@@ -26,16 +26,16 @@ public:
 // WinMain is the program's entry point. The program starts here.
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    // Start Win32++
+    // Start Win32++.
     CWinApp theApp;
 
-    // Create a CMyWindow object
+    // Create a CMyWindow object.
     CMyWindow myWindow;
 
-    // Create (and display) the window
+    // Create (and display) the window.
     myWindow.Create();
 
-    // Run the application's message loop
+    // Run the application's message loop.
     return theApp.Run();
 }
 

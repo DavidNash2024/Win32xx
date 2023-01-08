@@ -99,6 +99,10 @@ private:
     CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
     CString m_pathName;
+    CString m_mode;
+    CString m_cap;
+    CString m_num;
+    CString m_ovr;
     UINT m_encoding;
     bool m_isToolbarShown;
     bool m_isWrapped;

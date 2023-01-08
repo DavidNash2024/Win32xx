@@ -23,7 +23,7 @@ CDialogApp::~CDialogApp()
 // Called when the application starts.
 BOOL CDialogApp::InitInstance()
 {
-    //Display the modal dialog,
+    // Display the modal dialog.
     m_myDialog.DoModal();
 
     return TRUE;

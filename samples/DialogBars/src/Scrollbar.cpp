@@ -57,7 +57,7 @@ int CMyScrollBar::GetPos(WPARAM wparam)
     return m_si.nPos;
 }
 
-// Called after the Scrollbar is attached.
+// Called after the scrollbar is attached.
 void CMyScrollBar::OnInitialUpdate()
 {
     // Set the Scroll bar position

@@ -38,7 +38,7 @@ private:
     CMainFrame(const CMainFrame&);                // Disable copy construction
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
-    // Menu updaters
+    // Menu handlers
     void OnUpdateCheckA(UINT id);
     void OnUpdateCheckB(UINT id);
     void OnUpdateCheckC(UINT id);

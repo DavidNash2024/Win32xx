@@ -15,7 +15,7 @@ CSimpleView::CSimpleView() : m_color(RGB(0,0,255))
 
 void CSimpleView::OnDraw(CDC& dc)
 {
-    //Centre some text in our view window
+    // Centre some text in our view window.
     CRect rc = GetClientRect();
     dc.SetTextColor(m_color);
     dc.DrawText(L"View Window", -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
@@ -23,7 +23,7 @@ void CSimpleView::OnDraw(CDC& dc)
 
 LRESULT CSimpleView::OnSize(UINT, WPARAM, LPARAM)
 {
-    // Force the window to be repainted
+    // Force the window to be repainted.
     Invalidate();
     return 0;
 }
@@ -54,10 +54,10 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // CSimpleMDIChild definitions
 CSimpleMDIChild::CSimpleMDIChild()
 {
-    // Set m_View as the view window of the MDI child
+    // Set m_view as the view window of the MDI child.
     SetView(m_view);
 
-    // Set the menu for this MDI child
+    // Set the menu for this MDI child.
     m_menu.LoadMenu(L"MdiMenuView");
     SetHandles(m_menu, 0);
 }
@@ -68,10 +68,10 @@ CSimpleMDIChild::~CSimpleMDIChild()
 
 int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 {
-    // Set the window caption
+    // Set the window caption.
     SetWindowText( L"Simple Window" );
 
-    // Set the window icons
+    // Set the window icons.
     SetIconLarge(IDI_VIEW);
     SetIconSmall(IDI_VIEW);
 
@@ -81,7 +81,7 @@ int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 
 BOOL CSimpleMDIChild::OnCommand(WPARAM wparam, LPARAM)
 {
-    // Respond to menu and toolbar input
+    // Respond to menu and toolbar input.
     UINT id = LOWORD(wparam);
 
     switch (id)
@@ -118,7 +118,7 @@ LRESULT CSimpleMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
     //  switch (msg)
     //  {
-    //  Add case statements for each messages to be handled here
+    //  Add case statements for each messages to be handled here.
     //  }
 
         // Do default processing for other messages/
