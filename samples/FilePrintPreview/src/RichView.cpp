@@ -202,7 +202,7 @@ ReadFile(LPCTSTR filePath)                                                  /*
     {
         // Open the file for reading
         CFile file;
-        file.Open(filePath, OPEN_EXISTING);
+        file.Open(filePath, OPEN_EXISTING | CFile::modeRead);
         SetDocName(filePath);
         EDITSTREAM es;
         es.dwCookie = (DWORD_PTR) file.GetHandle();

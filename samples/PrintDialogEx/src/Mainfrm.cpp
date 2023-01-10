@@ -816,7 +816,7 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
     {
         // Open the file for reading
         CFile file;
-        file.Open(fileName, OPEN_EXISTING);
+        file.Open(fileName, OPEN_EXISTING | CFile::modeRead);
 
         // Restrict the file size to something a richedit control can handle.
         ULONGLONG fileLength = file.GetLength();

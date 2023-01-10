@@ -72,5 +72,5 @@ void CDoc::StorePoint(int x, int y, bool isPenDown, COLORREF penColor)
     pp.color = penColor;
 
     // Add the point to the vector.
-    m_points.push_back(pp); 
+    m_points.push_back(pp);
 }

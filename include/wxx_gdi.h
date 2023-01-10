@@ -193,6 +193,7 @@ namespace Win32xx
         int     GetObject(int count, LPVOID pObject) const;
 
     protected:
+        void    Assign(HGDIOBJ object);
         void    Release();
         void    SetManaged(bool isManaged) const { m_pData->isManagedObject = isManaged; }
 
@@ -417,13 +418,13 @@ namespace Win32xx
         CDC(HDC dc);                            // Constructs a new CDC and assigns a HDC
         CDC(const CDC& rhs);                    // Constructs a new copy of the CDC
         virtual ~CDC();
-        operator HDC() const { return m_pData->dc; }   // Converts a CDC to a HDC
+        operator HDC() const { return GetHDC(); }   // Converts a CDC to a HDC
         CDC& operator = (const CDC& rhs);       // Assigns a CDC to an existing CDC
 
         void Attach(HDC dc);
         void Destroy();
         HDC  Detach();
-        HDC GetHDC() const { return m_pData->dc; }
+        HDC GetHDC() const;
         BOOL RestoreDC(int savedDC) const;
         int SaveDC() const;
         HBITMAP SelectObject(HBITMAP bitmap) const;
@@ -737,6 +738,7 @@ namespace Win32xx
   #endif // (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
 
     protected:
+        void Assign(HDC object);
         PAINTSTRUCT* GetPaintStruct() const { return &m_pData->ps; }
         void Release();
         void SetManaged(bool isManaged) { m_pData->isManagedHDC = isManaged; }
@@ -769,8 +771,7 @@ namespace Win32xx
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiGetDC());
 
-                Attach(dc);
-                SetManaged(true);
+                Assign(dc);
                 SetWindow(wnd);
             }
 
@@ -805,8 +806,7 @@ namespace Win32xx
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiGetDCEx());
 
-                Attach(dc);
-                SetManaged(true);
+                Assign(dc);
                 SetWindow(wnd);
             }
 
@@ -861,8 +861,7 @@ namespace Win32xx
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiBeginPaint());
 
-                Attach(dc);
-                SetManaged(true);
+                Assign(dc);
                 SetPaintDC(true);
                 SetWindow(wnd);
             }
@@ -895,8 +894,7 @@ namespace Win32xx
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiGetWinDC());
 
-                Attach(dc);
-                SetManaged(true);
+                Assign(dc);
                 SetWindow(wnd);
             }
 
@@ -937,8 +935,7 @@ namespace Win32xx
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiDC());
 
-                Attach(dc);
-                SetManaged(true);
+                Assign(dc);
             }
             catch (...)
             {
@@ -986,8 +983,7 @@ namespace Win32xx
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiDC());
 
-                Attach(dc);
-                SetManaged(true);
+                Assign(dc);
             }
             catch (...)
             {
@@ -1083,6 +1079,7 @@ namespace Win32xx
     //       Both objects manipulate the one HGDIOBJ.
     inline CGDIObject::CGDIObject(const CGDIObject& rhs)
     {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
         m_pData = rhs.m_pData;
         InterlockedIncrement(&m_pData->count);
     }
@@ -1099,6 +1096,7 @@ namespace Win32xx
     {
         if (this != &rhs)
         {
+            CThreadLock mapLock(GetApp()->m_gdiLock);
             InterlockedIncrement(&rhs.m_pData->count);
             Release();
             m_pData = rhs.m_pData;
@@ -1120,11 +1118,19 @@ namespace Win32xx
         GetApp()->AddCGDIData(m_pData->hGDIObject, m_pData);
     }
 
-    // Attaches a GDI HANDLE to the CGDIObject.
+    // Attach and own the GDI handle.
+    inline void CGDIObject::Assign(HGDIOBJ object)
+    {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
+        Attach(object);
+        SetManaged(true);
+    }
+
+    // Attaches a GDI habdle to the CGDIObject.
     inline void CGDIObject::Attach(HGDIOBJ object)
     {
-        assert(m_pData);
         CThreadLock mapLock(GetApp()->m_gdiLock);
+        assert(m_pData);
 
         if (m_pData && object != m_pData->hGDIObject)
         {
@@ -1156,6 +1162,7 @@ namespace Win32xx
 
     inline void CGDIObject::DeleteObject()
     {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
         assert(m_pData);
 
         if (m_pData && m_pData->hGDIObject != 0)
@@ -1176,6 +1183,7 @@ namespace Win32xx
     //       CBitmap, CBrush, CFont, CPalette, CPen and CRgn.
     inline HGDIOBJ CGDIObject::Detach()
     {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
         assert(m_pData);
         assert(m_pData->hGDIObject);
 
@@ -1199,6 +1207,7 @@ namespace Win32xx
     // Returns the GDI handle (HGDIOBJ) associated with this object.
     inline HGDIOBJ CGDIObject::GetHandle() const
     {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
         assert(m_pData);
         return m_pData ? m_pData->hGDIObject : 0;
     }
@@ -1215,10 +1224,9 @@ namespace Win32xx
     // Destroys m_pData if the reference count is zero.
     inline void CGDIObject::Release()
     {
-        assert(m_pData);
-        CWinApp* pApp = CWinApp::SetnGetThis();
-        if (pApp != NULL)
+        if (CWinApp::SetnGetThis())
             CThreadLock mapLock(GetApp()->m_gdiLock);
+        assert(m_pData);
 
         if (m_pData && InterlockedDecrement(&m_pData->count) == 0)
         {
@@ -1308,8 +1316,7 @@ namespace Win32xx
         HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), resourceName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR));
         if (bitmap != 0)
         {
-            Attach(bitmap);
-            SetManaged(true);
+            Assign(bitmap);
         }
         return bitmap ? TRUE : FALSE;
     }
@@ -1335,8 +1342,7 @@ namespace Win32xx
         HBITMAP bitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp()->GetResourceHandle(), resourceName, IMAGE_BITMAP, 0, 0, flags));
         if (bitmap != 0)
         {
-            Attach(bitmap);
-            SetManaged(true);
+            Assign(bitmap);
         }
         return bitmap ? TRUE : FALSE;
     }
@@ -1349,8 +1355,7 @@ namespace Win32xx
                                        resourceName, IMAGE_BITMAP, cxDesired, cyDesired, flags));
         if (bitmap != 0)
         {
-            Attach(bitmap);
-            SetManaged(true);
+            Assign(bitmap);
         }
         return bitmap ? TRUE : FALSE;
     }
@@ -1367,8 +1372,7 @@ namespace Win32xx
         HBITMAP bitmap = ::LoadBitmap(0, MAKEINTRESOURCE(bitmapID));
         if (bitmap != 0)
         {
-            Attach(bitmap);
-            SetManaged(true);
+            Assign(bitmap);
         }
         return bitmap ? TRUE : FALSE;
     }
@@ -1446,15 +1450,12 @@ namespace Win32xx
         if (bitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
-        Attach(bitmap);
-        if (bitmap != origBitmap)
+        Assign(bitmap);
+        if (flags & LR_COPYDELETEORG)
         {
-            SetManaged(true);
-            if (flags & LR_COPYDELETEORG)
-            {
-                orig.Detach();
-            }
+            orig.Detach();
         }
+
 
         return bitmap;
     }
@@ -1468,8 +1469,7 @@ namespace Win32xx
         if (bitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
-        Attach(bitmap);
-        SetManaged(true);
+        Assign(bitmap);
         return bitmap;
     }
 
@@ -1481,8 +1481,7 @@ namespace Win32xx
         if (bitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
-        Attach(bitmap);
-        SetManaged(true);
+        Assign(bitmap);
         return bitmap;
     }
 
@@ -1494,8 +1493,7 @@ namespace Win32xx
         if (copyBitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
-        Attach(copyBitmap);
-        SetManaged(true);
+        Assign(copyBitmap);
         return copyBitmap;
     }
 
@@ -1507,8 +1505,7 @@ namespace Win32xx
         if (bitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
-        Attach(bitmap);
-        SetManaged(true);
+        Assign(bitmap);
         return bitmap;
     }
 
@@ -1551,8 +1548,7 @@ namespace Win32xx
     inline HBITMAP CBitmap::CreateDIBitmap(HDC dc, const BITMAPINFOHEADER* pBMIH, DWORD init, LPCVOID pInit, const LPBITMAPINFO pBMI, UINT colorUse)
     {
         HBITMAP bitmap = ::CreateDIBitmap(dc, pBMIH, init, pInit, pBMI, colorUse);
-        Attach(bitmap);
-        SetManaged(true);
+        Assign(bitmap);
         return bitmap;
     }
 
@@ -1710,8 +1706,7 @@ namespace Win32xx
     inline HBITMAP CBitmap::CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* pBits, HANDLE hSection, DWORD offset)
     {
         HBITMAP bitmap = ::CreateDIBSection(dc, pBMI, colorUse, pBits, hSection, offset);
-        Attach(bitmap);
-        SetManaged(true);
+        Assign(bitmap);
         return bitmap;
     }
 
@@ -1778,8 +1773,7 @@ namespace Win32xx
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
-        Attach(brush);
-        SetManaged(true);
+        Assign(brush);
         return brush;
     }
 
@@ -1791,8 +1785,7 @@ namespace Win32xx
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
-        Attach(brush);
-        SetManaged(true);
+        Assign(brush);
         return brush;
     }
 
@@ -1804,8 +1797,7 @@ namespace Win32xx
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
-        Attach(brush);
-        SetManaged(true);
+        Assign(brush);
         return brush;
     }
 
@@ -1817,8 +1809,7 @@ namespace Win32xx
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
-        Attach(brush);
-        SetManaged(true);
+        Assign(brush);
         return brush;
     }
 
@@ -1830,8 +1821,7 @@ namespace Win32xx
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
-        Attach(brush);
-        SetManaged(true);
+        Assign(brush);
         return brush;
     }
 
@@ -1844,8 +1834,7 @@ namespace Win32xx
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
-        Attach(brush);
-        SetManaged(true);
+        Assign(brush);
         return brush;
     }
 
@@ -1904,8 +1893,7 @@ namespace Win32xx
         if (font == 0)
             throw CResourceException(GetApp()->MsgGdiFont());
 
-        Attach(font);
-        SetManaged(true);
+        Assign(font);
         return font;
     }
 
@@ -1968,8 +1956,7 @@ namespace Win32xx
         if (font == 0)
             throw CResourceException(GetApp()->MsgGdiFont());
 
-        Attach(font);
-        SetManaged(true);
+        Assign(font);
         return font;
     }
 
@@ -2014,8 +2001,7 @@ namespace Win32xx
         if (palette == 0)
             throw CResourceException(GetApp()->MsgGdiPalette());
 
-        Attach(palette);
-        SetManaged(true);
+        Assign(palette);
         return palette;
     }
 
@@ -2027,9 +2013,8 @@ namespace Win32xx
         if (palette == 0)
             throw CResourceException(GetApp()->MsgGdiPalette());
 
-        Attach(palette);
+        Assign(palette);
         ::RealizePalette(dc);
-        SetManaged(true);
         return palette;
     }
 
@@ -2139,8 +2124,7 @@ namespace Win32xx
     inline HPEN CPen::CreatePen(int penStyle, int width, COLORREF color)
     {
         HPEN pen = ::CreatePen(penStyle, width, color);
-        Attach(pen);
-        SetManaged(true);
+        Assign(pen);
         return pen;
     }
 
@@ -2149,8 +2133,7 @@ namespace Win32xx
     inline HPEN CPen::CreatePenIndirect(const LOGPEN& logPen)
     {
         HPEN pen = ::CreatePenIndirect(&logPen);
-        Attach(pen);
-        SetManaged(true);
+        Assign(pen);
         return pen;
     }
 
@@ -2172,8 +2155,7 @@ namespace Win32xx
     {
         HPEN pen = ::ExtCreatePen(static_cast<DWORD>(penStyle), static_cast<DWORD>(width),
                                   &logBrush, static_cast<DWORD>(styleCount), pStyle);
-        Attach(pen);
-        SetManaged(true);
+        Assign(pen);
         return pen;
     }
 
@@ -2219,8 +2201,7 @@ namespace Win32xx
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
-        Attach(rgn);
-        SetManaged(true);
+        Assign(rgn);
         return rgn;
     }
 
@@ -2232,8 +2213,7 @@ namespace Win32xx
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
-        Attach(rgn);
-        SetManaged(true);
+        Assign(rgn);
         return rgn;
     }
 
@@ -2245,8 +2225,7 @@ namespace Win32xx
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
-        Attach(rgn);
-        SetManaged(true);
+        Assign(rgn);
         return rgn;
     }
 
@@ -2258,8 +2237,7 @@ namespace Win32xx
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
-        Attach(rgn);
-        SetManaged(true);
+        Assign(rgn);
         return rgn;
     }
 
@@ -2271,8 +2249,7 @@ namespace Win32xx
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
-        Attach(rgn);
-        SetManaged(true);
+        Assign(rgn);
         return rgn;
     }
 
@@ -2284,8 +2261,7 @@ namespace Win32xx
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
-        Attach(rgn);
-        SetManaged(true);
+        Assign(rgn);
         return rgn;
     }
 
@@ -2297,8 +2273,7 @@ namespace Win32xx
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
-        Attach(rgn);
-        SetManaged(true);
+        Assign(rgn);
         return rgn;
     }
 
@@ -2312,8 +2287,7 @@ namespace Win32xx
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
-        Attach(rgn);
-        SetManaged(true);
+        Assign(rgn);
         return rgn;
     }
 
@@ -2326,8 +2300,7 @@ namespace Win32xx
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
-        Attach(rgn);
-        SetManaged(true);
+        Assign(rgn);
         return rgn;
     }
 
@@ -2472,6 +2445,7 @@ namespace Win32xx
     // the same Device Context and GDI objects.
     inline CDC::CDC(const CDC& rhs) // Copy constructor
     {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
         m_pData = rhs.m_pData;
         InterlockedIncrement(&m_pData->count);
     }
@@ -2482,6 +2456,7 @@ namespace Win32xx
     {
         if (this != &rhs)
         {
+            CThreadLock mapLock(GetApp()->m_gdiLock);
             InterlockedIncrement(&rhs.m_pData->count);
             Release();
             m_pData = rhs.m_pData;
@@ -2495,12 +2470,27 @@ namespace Win32xx
         Release();
     }
 
+    // Returns the HDC assigned to this CDC.
+    inline HDC CDC::GetHDC() const
+    {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
+        return m_pData->dc;
+    }
+
     // Store the HDC and CDC pointer in the HDC map
     inline void CDC::AddToMap()
     {
         assert(m_pData->dc != 0);
 
         GetApp()->AddCDCData(m_pData->dc, m_pData);
+    }
+
+    // Attach and own the HDC.
+    inline void CDC::Assign(HDC object)
+    {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
+        Attach(object);
+        SetManaged(true);
     }
 
     // Attaches a HDC to the CDC object.
@@ -2550,10 +2540,11 @@ namespace Win32xx
     //       WM_CTLCOLORLISTBOX, WM_CTLCOLORSCROLLBAR or WM_CTLCOLORSTATIC.
     inline HDC CDC::Detach()
     {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
         assert(m_pData);
         assert(m_pData->dc != 0);
-        HDC dc = m_pData->dc;
 
+        HDC dc = m_pData->dc;
         RemoveFromMap();
         Initialize();
 
@@ -2591,8 +2582,7 @@ namespace Win32xx
         if (dc == 0)
             throw CResourceException(GetApp()->MsgGdiDC());
 
-        Attach(dc);
-        SetManaged(true);
+        Assign(dc);
         return dc;
     }
 
@@ -2606,8 +2596,7 @@ namespace Win32xx
         if (dc == 0)
             throw CResourceException(GetApp()->MsgGdiDC());
 
-        Attach(dc);
-        SetManaged(true);
+        Assign(dc);
         return dc;
     }
 
@@ -2623,8 +2612,7 @@ namespace Win32xx
         if (dc == 0)
             throw CResourceException(GetApp()->MsgGdiIC());
 
-        Attach(dc);
-        SetManaged(true);
+        Assign(dc);
         return dc;
     }
 
@@ -2697,8 +2685,7 @@ namespace Win32xx
     inline void CDC::Release()
     {
         assert(m_pData);
-        CWinApp* pApp = CWinApp::SetnGetThis();
-        if (pApp != NULL)
+        if (CWinApp::SetnGetThis())
             CThreadLock mapLock(GetApp()->m_gdiLock);
 
         if (m_pData->count > 0)

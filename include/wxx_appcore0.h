@@ -224,9 +224,11 @@ namespace Win32xx
         // Provide these access to CWinApp's private members:
         friend class CDC;
         friend class CDialog;
+        friend class CEnhMetaFile;
         friend class CGDIObject;
         friend class CImageList;
         friend class CMenu;
+        friend class CMetaFile;
         friend class CPageSetupDialog;
         friend class CPrintDialog;
         friend class CPrintDialogEx;
