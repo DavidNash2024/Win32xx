@@ -318,7 +318,7 @@ namespace Win32xx
         {
             RtlGetVersionPtr pfn = reinterpret_cast<RtlGetVersionPtr>(
                 reinterpret_cast<void*>(GetProcAddress(module, "RtlGetVersion")));
-            
+
             if (pfn != NULL)
             {
                 osvi.dwOSVersionInfoSize = sizeof(osvi);

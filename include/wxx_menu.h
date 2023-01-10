@@ -93,7 +93,6 @@ namespace Win32xx
     // tracking, updating, and destroying a menu.
     class CMenu
     {
-
     public:
         // Construction
         CMenu();
@@ -160,6 +159,7 @@ namespace Win32xx
 
     private:
         void AddToMap() const;
+        void Assign(HMENU menu);
         void Release();
         BOOL RemoveFromMap() const;
         CMenu_Data* m_pData;
@@ -201,8 +201,7 @@ namespace Win32xx
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(id));
         if (menu != 0)
         {
-            Attach(menu);
-            m_pData->isManagedMenu = true;
+            Assign(menu);
         }
     }
 
@@ -217,6 +216,7 @@ namespace Win32xx
     //       Both objects manipulate the one HMENU.
     inline CMenu::CMenu(const CMenu& rhs)
     {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
         m_pData = rhs.m_pData;
         InterlockedIncrement(&m_pData->count);
     }
@@ -226,6 +226,7 @@ namespace Win32xx
     {
         if (this != &rhs)
         {
+            CThreadLock mapLock(GetApp()->m_gdiLock);
             InterlockedIncrement(&rhs.m_pData->count);
             Release();
             m_pData = rhs.m_pData;
@@ -257,10 +258,9 @@ namespace Win32xx
     // Destroys m_pData if the reference count is zero.
     inline void CMenu::Release()
     {
+        if (CWinApp::SetnGetThis())
+            CThreadLock mapLock(GetApp()->m_gdiLock);
         assert(m_pData);
-        CWinApp* pApp = CWinApp::SetnGetThis();
-        if (pApp != NULL)
-            CThreadLock mapLock(GetApp()->m_wndLock);
 
         if (InterlockedDecrement(&m_pData->count) == 0)
         {
@@ -268,7 +268,9 @@ namespace Win32xx
             {
                 if (m_pData->isManagedMenu)
                 {
-                    ::DestroyMenu(m_pData->menu);
+                    // Menu will already be destroyed if assigned to a destroyed window.
+                    if (IsMenu(m_pData->menu))
+                        ::DestroyMenu(m_pData->menu);
                 }
 
                 RemoveFromMap();
@@ -322,6 +324,14 @@ namespace Win32xx
         assert(IsMenu(m_pData->menu));
 
         return ::AppendMenu(m_pData->menu, flags, idOrHandle, reinterpret_cast<LPCTSTR>(bitmap));
+    }
+
+    // Attach and own the menu handle.
+    inline void CMenu::Assign(HMENU menu)
+    {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
+        Attach(menu);
+        m_pData->isManagedMenu = true;
     }
 
     // Attaches an existing menu to this CMenu.
@@ -389,8 +399,7 @@ namespace Win32xx
         if (menu == 0)
             throw CResourceException(GetApp()->MsgMenu());
 
-        Attach(menu);
-        m_pData->isManagedMenu = true;
+        Assign(menu);
     }
 
     // Creates a drop-down menu, submenu, or shortcut menu. The menu is initially empty.
@@ -403,8 +412,7 @@ namespace Win32xx
         if (menu == 0)
             throw CResourceException(GetApp()->MsgMenu());
 
-        Attach(menu);
-        m_pData->isManagedMenu = true;
+        Assign(menu);
     }
 
     // Deletes an item from the specified menu.
@@ -434,6 +442,7 @@ namespace Win32xx
     //       the CMenu goes out of scope.
     inline HMENU CMenu::Detach()
     {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
         assert(m_pData);
 
         HMENU menu = m_pData->menu;
@@ -458,8 +467,8 @@ namespace Win32xx
     // Returns the HMENU assigned to this CMenu
     inline HMENU CMenu::GetHandle() const
     {
+        CThreadLock mapLock(GetApp()->m_gdiLock);
         assert(m_pData);
-
         return m_pData->menu;
     }
 
@@ -685,8 +694,7 @@ namespace Win32xx
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), resourceName);
         if (menu != 0)
         {
-            Attach(menu);
-            m_pData->isManagedMenu = true;
+            Assign(menu);
         }
 
         return m_pData->menu != 0;
@@ -702,8 +710,7 @@ namespace Win32xx
         HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(resourceID));
         if (menu != 0)
         {
-            Attach(menu);
-            m_pData->isManagedMenu = true;
+            Assign(menu);
         }
 
         return m_pData->menu != 0;
@@ -719,8 +726,7 @@ namespace Win32xx
         HMENU menu = ::LoadMenuIndirect(pMenuTemplate);
         if (menu != 0)
         {
-            Attach(menu);
-            m_pData->isManagedMenu = true;
+            Assign(menu);
         }
 
         return m_pData->menu ? TRUE : FALSE;
@@ -820,9 +826,7 @@ namespace Win32xx
     // Retrieves the menu's handle.
     inline CMenu::operator HMENU () const
     {
-        assert(m_pData);
-
-        return m_pData->menu;
+        return GetHandle();
     }
 
 }   // namespace Win32xx
