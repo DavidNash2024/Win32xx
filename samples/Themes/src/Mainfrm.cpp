@@ -184,15 +184,15 @@ BOOL CMainFrame::ChooseColor(UINT color)
         break;
     case IDM_BLACK:
         {
-            SetReBarColors( RGB(7, 17, 27), RGB(57, 67, 77), RGB(118, 128 ,136), RGB(68, 78 ,86) );
+            SetReBarColors(RGB(30, 30, 30), RGB(30, 30, 30), RGB(50, 50, 50), RGB(50, 50, 50));
 
-            StatusBarTheme sbt = {m_useThemes, RGB(7, 17, 27), RGB(57, 67, 77), RGB(255, 255, 255) };
+            StatusBarTheme sbt = {m_useThemes, RGB(30, 30, 30), RGB(30, 30, 30), RGB(255, 255, 255) };
             SetStatusBarTheme (sbt);
 
-            ToolBarTheme tbt = {m_useThemes, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
+            ToolBarTheme tbt = {m_useThemes, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64, 177, 230), RGB(49, 106, 197) };
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(27, 65, 160), RGB(49, 106, 197), RGB(10, 20, 160), RGB(27, 65, 160), RGB(128, 128, 128), RGB(255, 255, 255) };
+            MenuTheme mt = { m_useThemes, RGB(30, 30, 30), RGB(30, 30, 30), RGB(40, 40, 40), RGB(40, 40, 40), RGB(96, 96, 96), RGB(255, 255, 255) };
             SetMenuTheme(mt);
         }
         break;

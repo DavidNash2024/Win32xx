@@ -480,35 +480,15 @@ LRESULT CMiniFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     return HTCLIENT;
 }
 
-// Handle left mouse button double clicks in the non-client area.
-LRESULT CMiniFrame::OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    CPoint cursorPoint = GetCursorPos();
-    ScreenToClient(cursorPoint);
-
-    // Convert a double click to a single click for the system menu.
-    if (PtInRect(GetButtonRects().system, cursorPoint))
-    {
-        return OnNCLButtonDown(msg, wparam, lparam);
-    }
-
-    return WndProcDefault(msg, wparam, lparam);
-}
-
 // Handle left mouse button clicks in the non-client area.
 LRESULT CMiniFrame::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    m_oldHoveredButton = m_hoveredButton;
-    if (m_hoveredButton == TitlebarButton::System)
-    {
-        OnSystemButton();
-        return 0;
-    }
-    else if (m_hoveredButton != TitlebarButton::None)
-    {
+   m_oldHoveredButton = m_hoveredButton;
+   if ((m_hoveredButton != TitlebarButton::None) && (m_hoveredButton != TitlebarButton::System))
+   {
         // remove default handling of the click to avoid it counting as drag.
-        return 0;
-    }
+       return 0;
+   }
 
     // Default handling allows for dragging and double click to maximize.
     return WndProcDefault(msg, wparam, lparam);
@@ -643,44 +623,6 @@ LRESULT CMiniFrame::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     return WndProcDefault(msg, wparam, lparam);
 }
 
-// Called in response to system commands, such as when the window is
-// maximized, minimized or restored.
-LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    m_hoveredButton = TitlebarButton::None;
-
-    // Pass menu keystrokes to the CMenuBar to process alt keys, F10 etc.
-    if ((SC_KEYMENU == wparam) && (VK_SPACE != lparam) && m_menubar.IsWindow())
-    {
-        m_menubar.SysCommand(msg, wparam, lparam);
-        return 0;
-    }
-
-    return WndProcDefault(msg, wparam, lparam);
-}
-
-// The system menu is displayed when the application's icon is clicked.
-void CMiniFrame::OnSystemButton() const
-{
-    SetForegroundWindow();
-
-    // Calculate the position of the system menu.
-    CRect rc = GetButtonRects().system;
-    rc.bottom = GetTitlebarRect().bottom;
-    ClientToScreen(rc);
-    TPMPARAMS tpm;
-    tpm.cbSize = sizeof(tpm);
-    tpm.rcExclude = rc;
-
-    // Display the system menu.
-    CMenu systemMenu = GetSystemMenu(TRUE);
-    UINT flags = TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL | TPM_RETURNCMD;
-    UINT command = systemMenu.TrackPopupMenuEx(flags, rc.left, rc.bottom, *this, &tpm);
-
-    // Process the system command.
-    SendMessage(WM_SYSCOMMAND, command, 0);
-}
-
 // Called before the window is created to set the CREATESTRUCT parameters.
 void CMiniFrame::PreCreate(CREATESTRUCT& cs)
 {
@@ -732,14 +674,12 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
     case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
     case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
-    case WM_NCLBUTTONDBLCLK:    return OnNCLButtonDblClk(msg, wparam, lparam);
     case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
     case WM_NCLBUTTONUP:        return OnNCLButtonUp(msg, wparam, lparam);
     case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);
     case WM_NCRBUTTONDOWN:      return OnNCRButtonDown(msg, wparam, lparam);
     case WM_PAINT:              return OnPaint(msg, wparam, lparam);
     case WM_SIZE:               return OnSize(msg, wparam, lparam);
-    case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
     }
 
     // Pass unhandled messages on for default processing.

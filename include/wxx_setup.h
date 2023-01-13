@@ -300,7 +300,7 @@ namespace Win32xx
 // if (MSC < VS2008) or (Borland < version 6)
 #if ((defined (_MSC_VER) && (_MSC_VER < 1500)) || defined(__BORLANDC__) && (__BORLANDC__ < 0x600))
 
-        // Use the classic GetVersionEx function.
+        // Use the legacy GetVersionEx function.
         OSVERSIONINFO osvi;
         ZeroMemory(&osvi, sizeof(osvi));
         osvi.dwOSVersionInfoSize = sizeof(osvi);

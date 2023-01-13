@@ -78,7 +78,6 @@ private:
     void DrawTitleText(CDC& dc) const;
     void DrawTopShadow(CDC& dc) const;
     void DrawWindowIcon(CDC& dc) const;
-    void OnSystemButton() const;
     void RecalcLayout() const;
 
     // Command handlers
@@ -93,13 +92,11 @@ private:
     LRESULT OnNCCalcSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
     CDialog m_aboutDialog;              // Help about dialog.

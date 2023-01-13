@@ -250,7 +250,7 @@ void CMainFrame::SetStatusIndicators()
         m_scrl = (::GetKeyState(VK_SCROLL) & 0x0001) ? scrl : empty;
 
         // Update the indicators.
-        // Need member variables for owner drawn text to keep them in scope.
+        // We need member variables for owner drawn text to keep the text in scope.
         GetStatusBar().SetPartText(5, m_cap,  SBT_OWNERDRAW);
         GetStatusBar().SetPartText(6, m_num,  SBT_OWNERDRAW);
         GetStatusBar().SetPartText(7, m_ovr,  SBT_OWNERDRAW);
