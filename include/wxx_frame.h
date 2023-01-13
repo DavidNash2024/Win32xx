@@ -1204,15 +1204,15 @@ namespace Win32xx
             drawDC.Rectangle(bkRect);
         }
 
-        CMemDC memDC(drawDC);
-        memDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
+        CMemDC maskDC(drawDC);
+        maskDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
         CRect checkRect(0, 0, cxCheck, cyCheck);
 
-        // Copy the check mark bitmap to hdcMem.
+        // Copy the check mark bitmap to the mask's device context.
         if (buttonType == MFT_RADIOCHECK)
-            memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUBULLET);
+            maskDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUBULLET);
         else
-            memDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUCHECK);
+            maskDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUCHECK);
 
         int xoffset = 1;
         int yoffset = 0;
@@ -1222,22 +1222,32 @@ namespace Win32xx
 
         // Draw a white or black check mark as required.
         // Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way.
-        CMemDC maskDC(drawDC);
-        maskDC.CreateCompatibleBitmap(drawDC, cxCheck, cyCheck);
-        maskDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, WHITENESS);
+        CMemDC memDC(drawDC);
+        memDC.CreateCompatibleBitmap(drawDC, cxCheck, cyCheck);
+        memDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, WHITENESS);
 
         if ((pDrawItem->itemState & ODS_SELECTED) && IsUsingThemes())
         {
             // Draw a white checkmark
-            memDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, DSTINVERT);
-            maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
-            drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCPAINT);
+            maskDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, DSTINVERT);
+            memDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
+            drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, memDC, 0, 0, SRCPAINT);
         }
         else
         {
-            // Draw a black checkmark
-            maskDC.BitBlt(0, 0, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
-            drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
+            // Draw a black checkmark.
+            memDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
+            drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, memDC, 0, 0, SRCAND);
+
+            if (IsUsingDarkMenu())
+            {
+                // Draw a gray checkmark over black checkmark.
+                CRect rcCheck(0, 0, cxCheck, cyCheck);
+                memDC.SolidFill(RGB(160, 160, 160), rcCheck);
+                maskDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, DSTINVERT);
+                memDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
+                drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, memDC, 0, 0, SRCPAINT);
+            }
         }
     }
 
@@ -3004,6 +3014,7 @@ namespace Win32xx
             m_indicators[2] = (::GetKeyState(VK_SCROLL) & 0x0001) ? scrl : CString("");
 
             // Update the indicators text.
+            // We need member variables for owner drawn text to keep the text in scope.
             GetStatusBar().SetPartText(1, m_indicators[0], SBT_OWNERDRAW);
             GetStatusBar().SetPartText(2, m_indicators[1], SBT_OWNERDRAW);
             GetStatusBar().SetPartText(3, m_indicators[2], SBT_OWNERDRAW);

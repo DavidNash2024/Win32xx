@@ -301,16 +301,16 @@ void CMainFrame::SetDarkTheme()
     BOOL t = TRUE;
     BOOL f = FALSE;
 
-    ReBarTheme rbt = { t, RGB(50, 50, 50), RGB(57, 67, 77), RGB(67, 77, 87), RGB(67, 77, 87), f, t, t, f, t, f };
+    ReBarTheme rbt = { t, RGB(30, 30, 30), RGB(30, 30, 30), RGB(50, 50, 50), RGB(50, 50, 50), f, t, t, f, t, f };
     SetReBarTheme(rbt);
 
-    StatusBarTheme sbt = { t, RGB(50, 50, 50), RGB(57, 67, 77), RGB(255, 255, 255)};
+    StatusBarTheme sbt = { t, RGB(30, 30, 30), RGB(30, 30, 30), RGB(255, 255, 255) };
     SetStatusBarTheme(sbt);
 
     ToolBarTheme tbt = { t, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64, 177, 230), RGB(49, 106, 197) };
     SetToolBarTheme(tbt);
 
-    MenuTheme mt = { t, RGB(27, 65, 160), RGB(49, 106, 197), RGB(10, 20, 160), RGB(27, 65, 160), RGB(128, 128, 128), RGB(255, 255, 255) };
+    MenuTheme mt = { t, RGB(30, 30, 30), RGB(30, 30, 30), RGB(40, 40, 40), RGB(40, 40, 40), RGB(96, 96, 96), RGB(255, 255, 255) };
     SetMenuTheme(mt);
 }
 
