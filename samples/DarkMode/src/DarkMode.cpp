@@ -9,7 +9,8 @@
 // Returns true if the current theme high contrast.
 bool IsHighContrast()
 {
-    HIGHCONTRAST info = { .cbSize = sizeof(info) };
+    HIGHCONTRAST info = { 0 };
+    info.cbSize = sizeof(info);
     return (SystemParametersInfo(SPI_GETHIGHCONTRAST, 0, &info, 0) && info.dwFlags & HCF_HIGHCONTRASTON);
 }
 
