@@ -22,16 +22,6 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// RT_MANIFEST
-//
-
-// NOTE The manifest must be added as a resource for the TestDLL projects for
-//  the program to use XP themes!
-
-1                       RT_MANIFEST             "../src/res/Win32++.manifest"
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Icon
 //
 

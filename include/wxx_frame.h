@@ -1243,7 +1243,8 @@ namespace Win32xx
             {
                 // Draw a gray checkmark over black checkmark.
                 CRect rcCheck(0, 0, cxCheck, cyCheck);
-                memDC.SolidFill(RGB(160, 160, 160), rcCheck);
+                const COLORREF gray = RGB(192, 192, 192);
+                memDC.SolidFill(gray, rcCheck);
                 maskDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, DSTINVERT);
                 memDC.BitBlt(0, 0, cxCheck, cyCheck, maskDC, 0, 0, SRCAND);
                 drawDC.BitBlt(bkRect.left + xoffset, bkRect.top + yoffset, cxCheck, cyCheck, memDC, 0, 0, SRCPAINT);

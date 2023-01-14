@@ -23,8 +23,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     SHOWDIALOG* pfnShowDialog = (SHOWDIALOG*)::GetProcAddress(hModule, "ShowDialog");
     assert(pfnShowDialog);
 
-    // Call MyDLL's ShowDialog function.
-    pfnShowDialog();
+    if (pfnShowDialog != NULL)
+    {
+        // Call MyDLL's ShowDialog function.
+        pfnShowDialog();
+    }
+    else
+        ::MessageBox(0, _T("Failed to run ShowDialog"), _T("Error"), MB_OK);
 
     // We get here when the dialog is closed.
     FreeLibrary(hModule);
