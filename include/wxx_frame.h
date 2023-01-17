@@ -1356,10 +1356,10 @@ namespace Win32xx
 
             // Create our memory DC.
             CRect rebarRect = rebar.GetClientRect();
-            int rebarWidth = rebarRect.Width();
-            int rebarHeight = rebarRect.Height();
+            int width = rebarRect.Width();
+            int height = rebarRect.Height();
             CMemDC memDC(dc);
-            memDC.CreateCompatibleBitmap(dc, rebarWidth, rebarRect.Height());
+            memDC.CreateCompatibleBitmap(dc, width, height);
 
             // Draw to ReBar background to the memory DC.
             memDC.SolidFill(rt.clrBkgnd2, rebarRect);
@@ -1415,7 +1415,7 @@ namespace Win32xx
 
                             // Fill the Source CDC with the band's background.
                             CMemDC sourceDC(dc);
-                            sourceDC.CreateCompatibleBitmap(dc, rebarWidth, rebarHeight);
+                            sourceDC.CreateCompatibleBitmap(dc, width, height);
                             sourceDC.GradientFill(rt.clrBand1, rt.clrBand2, drawRect, isVertical);
 
                             // Set Curve amount for rounded edges.
@@ -1423,7 +1423,7 @@ namespace Win32xx
 
                             // Create our mask for rounded edges using RoundRect.
                             CMemDC maskDC(dc);
-                            maskDC.CreateCompatibleBitmap(dc, rebarWidth, rebarHeight);
+                            maskDC.CreateCompatibleBitmap(dc, width, height);
 
                             int left = drawRect.left;
                             int right = drawRect.right;
@@ -1475,7 +1475,7 @@ namespace Win32xx
             }
 
             // Copy the Memory DC to the window's DC.
-            dc.BitBlt(0, 0, rebarWidth, rebarHeight, memDC, 0, 0, SRCCOPY);
+            dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
         }
         
         return isDrawn;
@@ -1510,8 +1510,19 @@ namespace Win32xx
             const StatusBarTheme& sbTheme = GetStatusBarTheme();
             if (sbTheme.UseThemes)
             {
+                // Create our memory DC.
+                CRect rc = statusbar.GetClientRect();
+                int width = rc.Width();
+                int height = rc.Height();
+                CMemDC memDC(dc);
+                memDC.CreateCompatibleBitmap(dc, width, height);
+
                 // Fill the background with a color gradient.
-                dc.GradientFill(sbTheme.clrBkgnd1, sbTheme.clrBkgnd2, statusbar.GetClientRect(), TRUE);
+                memDC.GradientFill(sbTheme.clrBkgnd1, sbTheme.clrBkgnd2, statusbar.GetClientRect(), TRUE);
+
+                // Copy the Memory DC to the window's DC.
+                dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
+
                 isDrawn = TRUE;
             }
         }

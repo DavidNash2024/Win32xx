@@ -49,7 +49,7 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Perform the owner drawing for the statusbar.
-void CMainFrame::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem) const
+void CMainFrame::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem)
 {
     // All parts with text using the SBT_OWNERDRAW style are handled here.
 
@@ -89,23 +89,23 @@ void CMainFrame::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem) const
     dc.BitBlt(0, 0, partRect.Width(), partRect.Height(), memDC, 0, 0, SRCCOPY);
 }
 
-BOOL CMainFrame::DrawStatusBarBkgnd(CDC& dc) const
+BOOL CMainFrame::DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusbar)
 {
     // The background can be set here if XP themes are enabled
     if (IsXPThemed())
     {
         // Exclude the progress bar window from the update region.
         CRect rc = m_progressBar.GetWindowRect();
-        ScreenToClient(rc);
+        statusbar.ScreenToClient(rc);
         dc.ExcludeClipRect(rc);
 
         // Fill the background with a color gradient
-        rc = GetClientRect();
+        rc = statusbar.GetClientRect();
         CMemDC memDC(dc);
         memDC.CreateCompatibleBitmap(dc, rc.Width(), rc.Height());
         COLORREF fillColor1 = RGB(125, 230, 255);
         COLORREF fillColor2 = RGB(250, 150, 150);
-        memDC.GradientFill(fillColor1, fillColor2, GetClientRect(), TRUE);
+        memDC.GradientFill(fillColor1, fillColor2, rc, TRUE);
         dc.BitBlt(0, 0, rc.Width(), rc.Height(), memDC, 0, 0, SRCCOPY);
 
         return TRUE;

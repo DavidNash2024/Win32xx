@@ -22,8 +22,8 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem) const;
-    virtual BOOL    DrawStatusBarBkgnd(CDC& dc) const;
+    virtual void    DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem);
+    virtual BOOL    DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusbar);
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
