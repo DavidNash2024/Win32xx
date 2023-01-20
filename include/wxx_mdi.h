@@ -330,7 +330,7 @@ namespace Win32xx
                 }
                 else if (9 == window)
                 // For the 10th MDI child, add this menu item and return.
-                // The MDIClient creates a dialog when this menu entry is selected. 
+                // The MDIClient creates a dialog when this menu entry is selected.
                 {
                     windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + UINT_PTR(window), _T("&Windows..."));
                     return;

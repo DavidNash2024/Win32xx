@@ -15,13 +15,17 @@ New Features and Enhancements
   visual style for dark mode when combined with a black Win32++ theme. Refer
   to the black theme in the Themes sample, and also the DarkMode sample.
 
-* Added a DarkMode sample.
-  This sample demonstrates how to make a Win32++ application dark mode aware.
-  It uses the Windows App API which is an optional feature that can be 
-  installed with Visual Studio Community 2022. It detects when the Windows
+* Added the DarkModeFrame and DarkModeMiniFrame samples.
+  These samples demonstrates how to make a Win32++ application dark mode aware.
+  They use the Windows App API which is an optional feature that can be 
+  installed with Visual Studio Community 2022. They detects when the Windows
   theme is using dark mode, and adjusts the frame's theme accordingly. The
-  sample also uses a dialog that supports dark mode to display the information
-  about the application. The DarkMode sample requires Windows 10 or higher.
+  samples also use a dialog that supports dark mode to display the information
+  about the application.
+  
+  The DarkModeFrame sample is a dark mode aware version of the Frame sample.
+  The DarkModeMiniFrame sample is a dark mode aware version of the MiniFrame
+  sample. These samples requires Windows 10 or higher.
 
 
 Changes in Detail
@@ -32,6 +36,10 @@ Added CFrameT::SetMenuMetrics
 Added CFrameT::ResetMenuMetrics
 Added CFrameT::UseDarkMenu
 Added StatusBarTheme::clrText
+
+Added DarkModeFrame sample
+Added DarkModeMiniFrame sample
+Renamed TitlebarFrame sample to MiniFrame sample
 
 
 Version 9.1

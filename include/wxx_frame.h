@@ -1477,7 +1477,7 @@ namespace Win32xx
             // Copy the Memory DC to the window's DC.
             dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
         }
-        
+
         return isDrawn;
     }
 
