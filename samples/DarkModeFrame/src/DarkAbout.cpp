@@ -114,12 +114,12 @@ BOOL CDarkAbout::OnInitDialog()
 void CDarkAbout::SetButtonOwnerDraw(bool isOwnerDraw)
 {
     HWND ok = ::GetDlgItem(*this, IDOK);
-    DWORD style1 = static_cast<DWORD>(::GetWindowLongPtr(ok, GWL_STYLE));
+    DWORD style = static_cast<DWORD>(::GetWindowLongPtr(ok, GWL_STYLE));
 
     if (isOwnerDraw)
-        ::SetWindowLongPtr(ok, GWL_STYLE, style1 | BS_OWNERDRAW);
+        ::SetWindowLongPtr(ok, GWL_STYLE, style | BS_OWNERDRAW);
     else
-        ::SetWindowLongPtr(ok, GWL_STYLE, style1 & ~BS_OWNERDRAW);
+        ::SetWindowLongPtr(ok, GWL_STYLE, style & ~BS_OWNERDRAW);
 }
 
 // Configure the dialog for dark mode.

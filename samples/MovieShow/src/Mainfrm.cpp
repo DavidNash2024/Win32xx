@@ -1351,7 +1351,9 @@ LRESULT CMainFrame::OnSelectListItem(const MovieInfo* pmi)
     CString actors = pmi->actors;
     actors.Replace(L" / ", L"\r\n");
     dialog.GetActors().SetWindowText(actors);
+    dialog.GetActors().SendMessage(EM_SCROLL, SB_TOP, 0);
     dialog.GetInfo().SetWindowText(pmi->description);
+    dialog.GetInfo().SendMessage(EM_SCROLL, SB_TOP, 0);
     dialog.SetPicture().SetImageData() = pmi->imageData;
     dialog.SetPicture().Invalidate();
 

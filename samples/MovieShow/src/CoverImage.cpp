@@ -67,7 +67,7 @@ void CCoverImage::DrawImage(CDC& dc)
             {
                 memcpy(pMem, &m_imageData[0], len);
                 IStream* stream = NULL;
-                VERIFY(S_OK == CreateStreamOnHGlobal(mem, FALSE, &stream));
+                VERIFY(S_OK == ::CreateStreamOnHGlobal(mem, FALSE, &stream));
                 Image cover(stream);
 
                 // Draw the image
