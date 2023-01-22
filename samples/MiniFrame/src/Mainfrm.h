@@ -82,16 +82,17 @@ private:
     void DrawWindowIcon(CDC& dc) const;
 
     // Command Handlers
-    BOOL    OnFileExit();
-    BOOL    OnFileOpen();
-    BOOL    OnFilePrint();
-    BOOL    OnFileSave();
-    BOOL    OnFilePreview();
+    BOOL OnFileExit();
+    BOOL OnFileOpen();
+    BOOL OnFilePrint();
+    BOOL OnFileSave();
+    BOOL OnFilePreview();
+    BOOL OnFullMode();
+    BOOL OnMiniMode();
 
     // Message handlers.
     LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnMenuChar(UINT, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCCalcSize(UINT, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -106,7 +107,6 @@ private:
     LRESULT OnPreviewSetup();
 
     CView m_view;
-    CMenuBar m_menubar2;
     CPrintPreview<CView> m_preview;
     bool m_isToolbarShown;
     TitlebarButton m_hoveredButton;

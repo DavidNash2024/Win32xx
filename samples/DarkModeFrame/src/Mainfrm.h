@@ -43,16 +43,16 @@ private:
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
     // Command Handlers
-    BOOL    OnFileExit();
-    BOOL    OnFileOpen();
-    BOOL    OnFilePrint();
-    BOOL    OnFileSave();
-    BOOL    OnFilePreview();
+    BOOL OnFileExit();
+    BOOL OnFileOpen();
+    BOOL OnFilePrint();
+    BOOL OnFileSave();
+    BOOL OnFilePreview();
 
     // Message handlers
-    LRESULT    OnPreviewClose();
-    LRESULT    OnPreviewPrint();
-    LRESULT    OnPreviewSetup();
+    LRESULT OnPreviewClose();
+    LRESULT OnPreviewPrint();
+    LRESULT OnPreviewSetup();
 
     // Member variables
     CView m_view;

@@ -371,33 +371,8 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_PREVIEW:    return OnFilePreview();
     case IDM_FILE_PRINT:      return OnFilePrint();
     case IDM_FILE_EXIT:       return OnFileExit();
-    case IDM_MODE_FULL:
-    {
-        m_isMiniFrame = false;
-
-        // Check the full frame radio button.
-        CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
-        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, 0);
-
-        // Show the menu bar in the rebar.
-        GetReBar().ShowBand(0, TRUE);
-        RecalcLayout();
-        return TRUE;
-    }
-    case IDM_MODE_MINI:
-    {
-        m_isMiniFrame = true;
-
-        // Check the mini frame radio button.
-        CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
-        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_MINI, 0);
-
-        // Hide the menu bar in the rebar.
-        GetReBar().ShowBand(0, FALSE);
-        RecalcLayout();
-        return TRUE;
-    }
-
+    case IDM_MODE_FULL:       return OnFullMode();
+    case IDM_MODE_MINI:       return OnMiniMode();
     case IDW_VIEW_STATUSBAR:  return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:    return OnViewToolBar();
     case IDM_HELP_ABOUT:      return OnHelp();
@@ -417,21 +392,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Call the base class function.
     int result = CFrame::OnCreate(cs);
 
-    if (GetReBar().IsWindow())
-    {
-        // Adjust the rebar style so we can reposition it.
-        DWORD style = (DWORD)GetReBar().GetWindowLongPtr(GWL_STYLE);
-        style += CCS_NOPARENTALIGN;
-        GetReBar().SetWindowLongPtr(GWL_STYLE, style);
-    }
-
-    // Create the menubar for the mini frame.
-    m_menubar2.Create(*this);
-    m_menubar2.SetupMenuBar(GetFrameMenu());
+    // Adjust the rebar style so we can reposition it.
+    DWORD style = GetReBar().GetStyle();
+    style |= CCS_NOPARENTALIGN;
+    GetReBar().SetStyle(style);
 
     // Check the full mode radio button.
-    CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
-    ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, 0);
+    CMenu viewMenu = GetFrameMenu().GetSubMenu(3);
+    viewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, 0);
 
     return result;
 }
@@ -439,34 +407,26 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // Handles CustomDraw notification from WM_NOTIFY.
 LRESULT CMainFrame::OnCustomDraw(LPNMHDR pNMHDR)
 {
-    if (::SendMessage(pNMHDR->hwndFrom, UWM_GETCTOOLBAR, 0, 0))
+    if (m_isMiniFrame)
     {
-        // Custom draw the menubar within the rebar.
+        // Perform additional custom drawing for menubar in the caption.
         if (pNMHDR->hwndFrom == GetMenuBar())
-            return CustomDrawMenuBar(pNMHDR);
-
-        // Custom draw the menubar within the titlebar.
-        if (pNMHDR->hwndFrom == m_menubar2)
         {
             LPNMTBCUSTOMDRAW pCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
             if (pCustomDraw->nmcd.dwDrawStage == CDDS_PREPAINT)
             {
                 // Set titlebar's menubar background color before doing
                 // the rest of the custom drawing.
-                CRect rect = m_menubar2.GetClientRect();
+                CRect rect = GetMenuBar().GetClientRect();
                 COLORREF titlebarColor = IsActive() ? m_colors.active : m_colors.inactive;
-
                 CBrush brush(titlebarColor);
                 FillRect(pCustomDraw->nmcd.hdc, rect, brush);
             }
-            return CustomDrawMenuBar(pNMHDR);
         }
-
-        // Custom draw the toolbar within the rebar.
-        return CustomDrawToolBar(pNMHDR);
     }
 
-    return 0;
+    // Perform the default custom drawing for all controls.
+    return CFrame::OnCustomDraw(pNMHDR);
 }
 
 BOOL CMainFrame::OnHelp()
@@ -478,15 +438,6 @@ BOOL CMainFrame::OnHelp()
     }
 
     return TRUE;
-}
-
-// Limit the minimum size of the window.
-LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
-    lpMMI->ptMinTrackSize.x = 550;
-    lpMMI->ptMinTrackSize.y = 400;
-    return WndProcDefault(msg, wparam, lparam);
 }
 
 // Issue a close request to the frame to end the program.
@@ -595,7 +546,6 @@ BOOL CMainFrame::OnFilePrint()
         {
             m_view.QuickPrint(_T("Frame Sample"));
         }
-
     }
 
     catch (const CException& e)
@@ -607,20 +557,53 @@ BOOL CMainFrame::OnFilePrint()
     return TRUE;
 }
 
-// Called when a menu is active, and a key is pressed other than an accelerator.
-LRESULT CMainFrame::OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam)
+// Set the frame to full mode.
+BOOL CMainFrame::OnFullMode()
 {
     if (m_isMiniFrame)
     {
-        if ((m_menubar2.IsWindow()) && (LOWORD(wparam) != VK_SPACE))
-        {
-            // Activate the menubar for key a pressed with the Alt key is held down.
-            m_menubar2.MenuChar(WM_MENUCHAR, wparam, lparam);
-            return -1;
-        }
-    }
+        m_isMiniFrame = false;
 
-    return CFrame::OnMenuChar(msg, wparam, lparam);
+        // Check the full frame radio button.
+        CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
+        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, 0);
+
+        // Put the menubar back in the rebar.
+        GetMenuBar().SetParent(GetReBar());
+        AddMenuBarBand();
+        int band = GetReBar().GetBand(GetMenuBar());
+        GetReBar().MoveBand(band, 0);
+        RecalcLayout();
+    }
+    return TRUE;
+}
+
+// Limit the minimum size of the window.
+LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
+    lpMMI->ptMinTrackSize.x = 550;
+    lpMMI->ptMinTrackSize.y = 400;
+    return WndProcDefault(msg, wparam, lparam);
+}
+
+// Set the frame to mini mode.
+BOOL CMainFrame::OnMiniMode()
+{
+    if (!m_isMiniFrame)
+    {
+        m_isMiniFrame = true;
+
+        // Check the mini frame radio button.
+        CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
+        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_MINI, 0);
+
+        // Move the menu bar out of the rebar.
+        GetReBar().DeleteBand(0);
+        GetMenuBar().SetParent(*this);
+        RecalcLayout();
+    }
+    return TRUE;
 }
 
 // Handle WM_NCCALCSIZE to extend client (paintable) area into the title bar region.
@@ -713,21 +696,16 @@ void CMainFrame::RecalcLayout()
         // Position the second menubar.
         CRect rect = GetTitlebarRect();
 
-        if (m_menubar2.IsWindow())
+        if (GetMenuBar().IsWindow())
         {
             CRect menuRect = GetClientRect();
-            CSize size = m_menubar2.GetMaxSize();
+            CSize size = GetMenuBar().GetMaxSize();
             menuRect.left = GetButtonRects().system.right;
             menuRect.top = (rect.Height() - size.cy) / 2;;
             menuRect.right = menuRect.left + size.cx;
             menuRect.bottom = menuRect.top + size.cy;
-            m_menubar2.SetWindowPos(NULL, menuRect, SWP_SHOWWINDOW);
+            GetMenuBar().SetWindowPos(NULL, menuRect, SWP_SHOWWINDOW);
         }
-    }
-    else if (m_menubar2.IsWindow())
-    {
-        // Hide the second menubar.
-        m_menubar2.SetWindowPos(NULL, CRect(0,0,0,0), 0);
     }
 
     // Position the view window.
@@ -1072,7 +1050,6 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
         case WM_GETMINMAXINFO:      return OnGetMinMaxInfo(msg, wparam, lparam);
-        case WM_MENUCHAR:           return OnMenuChar(msg, wparam, lparam);
         case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
         case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
         case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
