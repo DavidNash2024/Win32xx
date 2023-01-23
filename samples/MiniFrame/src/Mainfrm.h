@@ -108,10 +108,10 @@ private:
 
     CView m_view;
     CPrintPreview<CView> m_preview;
-    bool m_isToolbarShown;
     TitlebarButton m_hoveredButton;
     TitlebarButton m_oldHoveredButton;
     TitlebarColors m_colors;
+    bool m_isToolbarShown;
     bool m_isMiniFrame;
 };
 

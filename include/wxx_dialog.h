@@ -1,5 +1,5 @@
-// Win32++   Version 9.1
-// Release Date: 26th September 2022
+// Win32++   Version 9.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -270,7 +270,7 @@ namespace Win32xx
                     if (GetCWndPtr(*this) == this)  // Is window managed by Win32++?
                     {
                         if (IsWindow())
-                            ::DestroyWindow(*this);
+                            SendMessage(UWM_DESTROYWINDOW, 0, 0);
                     }
 
                     RemoveFromMap();

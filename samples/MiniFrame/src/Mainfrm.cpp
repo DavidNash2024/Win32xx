@@ -44,9 +44,9 @@ void CenterRectInRect(CRect* innerRect, const CRect& outerRect)
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_isToolbarShown(true),
-                           m_hoveredButton(TitlebarButton::None),
+CMainFrame::CMainFrame() : m_hoveredButton(TitlebarButton::None),
                            m_oldHoveredButton(TitlebarButton::None),
+                           m_isToolbarShown(true),
                            m_isMiniFrame(false)
 {
 }
@@ -395,7 +395,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // Check the full mode radio button.
     CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
-    ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, 0);
+    ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, MF_BYCOMMAND);
 
     // Adjust the title bar colors to match the rebar theme.
     ReBarTheme theme = GetReBarTheme();
@@ -563,7 +563,7 @@ BOOL CMainFrame::OnFullMode()
 
         // Check the full frame radio button.
         CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
-        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, 0);
+        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_FULL, MF_BYCOMMAND);
 
         // Put the menubar back in the rebar.
         GetMenuBar().SetParent(GetReBar());
@@ -594,7 +594,7 @@ BOOL CMainFrame::OnMiniMode()
 
         // Check the mini frame radio button.
         CMenu ViewMenu = GetFrameMenu().GetSubMenu(3);
-        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_MINI, 0);
+        ViewMenu.CheckMenuRadioItem(IDM_MODE_MINI, IDM_MODE_FULL, IDM_MODE_MINI, MF_BYCOMMAND);
 
         // Move the menu bar out of the rebar.
         GetReBar().DeleteBand(0);

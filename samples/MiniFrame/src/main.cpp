@@ -6,9 +6,7 @@
 #include "FrameApp.h"
 
 
-// For VS2019
-// int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
     try
     {
