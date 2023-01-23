@@ -160,7 +160,7 @@ void CView::OnInitialUpdate()
 void CView::PrepareDC(CDC& dc)
 {
     // Select the pen.
-    dc.CreatePen(PS_SOLID, 2, RGB(195, 0, 0));
+    dc.CreatePen(PS_SOLID, 3, RGB(195, 0, 0));
 
     // Select the font.
     int pointSize = 20 + int(.15 * m_points.size());
@@ -206,8 +206,10 @@ void CView::PlotXAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
     double x = xticknum * xtickgap;
     while (x <= GetXMax())
     {
+        // Draw the ticks.
         dc.MoveTo(int(xnorm * (x - xoffset)), int(ynorm * (ylinepos - xtickheight - yoffset)));
         dc.LineTo(int(xnorm * (x - xoffset)), int(ynorm * (ylinepos + xtickheight - yoffset)));
+
         // Draw tick text.
         // Avoid outputting zero if it would be written on a major axis.
         if ((x != 0) || ((ymin * ymax >= 0) && (ymin >= 0)))
@@ -242,7 +244,6 @@ void CView::PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
     dc.MoveTo((int)(xnorm * (xlinepos - xoffset)), (int)(ynorm * (ymin - yoffset)));
     dc.LineTo((int)(xnorm * (xlinepos - xoffset)), (int)(ynorm * (ymax - yoffset)));
 
-    // Draw the ticks.
     double ytickgap = floor(log10(ymax - ymin));
     ytickgap = pow((double)10, ytickgap);
     int numticks = (int)((ymax - ymin) / ytickgap);
@@ -250,14 +251,15 @@ void CView::PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
     if (numticks < 2) ytickgap = ytickgap / 10;
     else if (numticks < 4) ytickgap = ytickgap / 5;
     else if (numticks < 8) ytickgap = ytickgap / 2;
-    double ytickheight = (GetXMax() - GetXMin()) / 100;
+    double ytickwidth = (GetXMax() - GetXMin()) / 100;
 
     int yticknum = (int)ceil(ymin / ytickgap);
     double y = yticknum * ytickgap;
     while (y <= ymax)
     {
-        dc.MoveTo((int)(xnorm * (xlinepos - ytickheight - xoffset)), (int)(ynorm * (y - yoffset)));
-        dc.LineTo((int)(xnorm * (xlinepos + ytickheight - xoffset)), (int)(ynorm * (y - yoffset)));
+        // Draw the ticks.
+        dc.MoveTo((int)(xnorm * (xlinepos - ytickwidth - xoffset)), (int)(ynorm * (y - yoffset)));
+        dc.LineTo((int)(xnorm * (xlinepos + ytickwidth - xoffset)), (int)(ynorm * (y - yoffset)));
 
         // Draw tick text.
         // Avoid outputting zero if it would be written on a major axis.
@@ -266,7 +268,7 @@ void CView::PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
             CString str;
             str.Format(_T("%g"), y);
             size = dc.GetTextExtentPoint32(str);  //Determine the size of the text.
-            dc.TextOut((int)(xnorm * (xlinepos - xoffset - 2 * ytickheight) - size.cx), (int)(ynorm * (y - yoffset) + size.cy / 2), str);
+            dc.TextOut((int)(xnorm * (xlinepos - xoffset - 2 * ytickwidth) - size.cx), (int)(ynorm * (y - yoffset) + size.cy / 2), str);
         }
         y = ++yticknum * ytickgap;
     }
@@ -276,7 +278,7 @@ void CView::PlotYAxis(CDC& dc, double xnorm, double ynorm, double xoffset, doubl
 void CView::PlotFunction(CDC& dc, double xnorm, double ynorm, double xoffset, double yoffset)
 {
     CRect rect;
-    dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 255));
+    dc.CreatePen(PS_SOLID, 3, RGB(0, 0, 255));
 
     // Find the first valid value.
     size_t index = 0;

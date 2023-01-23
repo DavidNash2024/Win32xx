@@ -61,7 +61,7 @@ void CMainFrame::DoPopupMenu()
         CMenu subMenu = GetFrameMenu().GetSubMenu(1);
         subMenu.GetMenuItemInfo(i, mii, TRUE);
         if (mii.fState & MFS_CHECKED)
-            topMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
+            topMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, MF_BYCOMMAND);
     }
 
     // Start the popup menu
@@ -205,7 +205,7 @@ void CMainFrame::OnInitialUpdate()
 
     // Place Radio button in view menu
     CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
-    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, MF_BYCOMMAND);
 }
 
 // Process notification messages (WM_NOTIFY) from child windows.
@@ -249,7 +249,7 @@ BOOL CMainFrame::OnViewLargeIcon()
     CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
     GetListView().ViewLargeIcons();
-    ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
+    ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, MF_BYCOMMAND);
     return TRUE;
 }
 
@@ -260,7 +260,7 @@ BOOL CMainFrame::OnViewList()
     CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
 
     GetListView().ViewList();
-    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
+    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, MF_BYCOMMAND);
     return TRUE;
 }
 
@@ -279,7 +279,7 @@ BOOL CMainFrame::OnViewReport()
     CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
 
     GetListView().ViewReport();
-    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, MF_BYCOMMAND);
     return TRUE;
 }
 
@@ -290,7 +290,7 @@ BOOL CMainFrame::OnViewSmallIcon()
     CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
 
     GetListView().ViewSmallIcons();
-    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
+    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, MF_BYCOMMAND);
     return TRUE;
 }
 

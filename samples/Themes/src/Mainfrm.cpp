@@ -218,7 +218,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
     if (fileItem >= 0)
     {
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(fileItem);
-        ThemeMenu.CheckMenuRadioItem(IDM_BLUE, IDM_WIN7, color, 0);
+        ThemeMenu.CheckMenuRadioItem(IDM_BLUE, IDM_WIN7, color, MF_BYCOMMAND);
     }
 
     // Use a dark menu for the black theme.
@@ -578,7 +578,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     }
 
     // Check the color menu item and make it a radio item.
-    GetFrameMenu().CheckMenuRadioItem(IDM_WIN10, IDM_BLACK, m_color, 0);
+    GetFrameMenu().CheckMenuRadioItem(IDM_WIN10, IDM_BLACK, m_color, MF_BYCOMMAND);
 
     // Call the base class member function.
     CFrame::OnMenuUpdate(id);

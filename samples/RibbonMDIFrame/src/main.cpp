@@ -6,9 +6,11 @@
 #include "RibbonApp.h"
 
 
-// For VS2019 and above.
-// int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
-int WINAPI WinMain(__in HINSTANCE, __in_opt HINSTANCE, __in LPSTR, __in int)
+#if defined (_MSC_VER) && (_MSC_VER >= 1920) // >= VS2019
+  int WINAPI WinMain (__in HINSTANCE, __in_opt HINSTANCE, __in LPSTR, __in int)
+#else
+  int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+#endif
 {
     try
     {

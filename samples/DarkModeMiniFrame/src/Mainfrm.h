@@ -115,10 +115,10 @@ private:
     LRESULT OnPreviewSetup();
 
     CView m_view;
-    bool m_isToolbarShown;
     TitlebarButton m_hoveredButton;
     TitlebarButton m_oldHoveredButton;
     TitlebarColors m_colors;
+    bool m_isToolbarShown;
     bool m_isMiniFrame;
 
     CDarkPreview<CView> m_preview;

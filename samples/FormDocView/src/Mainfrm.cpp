@@ -158,7 +158,7 @@ void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
     int fileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
     CMenu radioMenu = GetFrameMenu().GetSubMenu(fileItem);
     if (GetDoc().GetRadio() == id)
-        radioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
+        radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
 }
 
 // Save the settings in the registry.

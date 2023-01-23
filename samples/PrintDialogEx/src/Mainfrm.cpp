@@ -331,7 +331,7 @@ BOOL CMainFrame::OnEncodeANSI()
     if (menuItem >= 0)
     {
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
-        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_ANSI, 0);
+        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_ANSI, MF_BYCOMMAND);
     }
 
     return TRUE;
@@ -345,7 +345,7 @@ BOOL CMainFrame::OnEncodeUTF8()
     if (menuItem >= 0)
     {
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
-        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_UTF8, 0);
+        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_UTF8, MF_BYCOMMAND);
     }
 
     return TRUE;
@@ -359,7 +359,7 @@ BOOL CMainFrame::OnEncodeUTF16()
     if (menuItem >= 0)
     {
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
-        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_UTF16, 0);
+        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_UTF16, MF_BYCOMMAND);
     }
 
     return TRUE;
@@ -588,7 +588,7 @@ void CMainFrame::OnInitialUpdate()
     if (menuItem >= 0)
     {
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
-        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_ANSI, 0);
+        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_ANSI, MF_BYCOMMAND);
     }
 
     m_richView.SetFocus();
@@ -804,7 +804,7 @@ BOOL CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
     CMenu radioMenu = GetFrameMenu().GetSubMenu(menuItem);
     UINT enc = m_encoding + IDM_ENC_ANSI;
     if (enc == id)
-        radioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
+        radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
 
     return TRUE;
 }

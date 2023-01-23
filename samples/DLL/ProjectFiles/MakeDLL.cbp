@@ -7,56 +7,6 @@
 		<Option default_target="Release MinGW GNU compiler" />
 		<Option compiler="bcc" />
 		<Build>
-			<Target title="Debug Borland">
-				<Option output="Borland/Debug/MyDLL.dll" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Borland/Debug" />
-				<Option object_output="Borland/Debug" />
-				<Option type="3" />
-				<Option compiler="bcc" />
-				<Option createDefFile="1" />
-				<Option createStaticLib="1" />
-				<Compiler>
-					<Add option="-tWM" />
-					<Add option="-tWD" />
-					<Add option="-v" />
-					<Add option="-D_DEBUG" />
-					<Add directory="../../../include" />
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="C:/Borland/BCC55/Include" />
-					<Add directory="../../../include" />
-				</ResourceCompiler>
-				<Linker>
-					<Add library="cw32mti" />
-					<Add library="comctl32" />
-					<Add library="import32" />
-				</Linker>
-			</Target>
-			<Target title="Release Borland">
-				<Option output="Borland/Release/MyDLL.dll" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Borland/Release" />
-				<Option object_output="Borland/Release" />
-				<Option type="3" />
-				<Option compiler="bcc" />
-				<Option createDefFile="1" />
-				<Option createStaticLib="1" />
-				<Compiler>
-					<Add option="-tWM" />
-					<Add option="-tWD" />
-					<Add option="-vi-" />
-					<Add option="-DNDEBUG" />
-					<Add directory="../../../include" />
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="C:/Borland/BCC55/Include" />
-					<Add directory="../../../include" />
-				</ResourceCompiler>
-				<Linker>
-					<Add library="comctl32" />
-					<Add library="import32" />
-					<Add library="cw32mti" />
-				</Linker>
-			</Target>
 			<Target title="Debug Microsoft Visual C++">
 				<Option output="Microsoft/Debug/MyDLL.dll" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft/Debug" />
@@ -192,7 +142,7 @@
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
+			<Add alias="All" targets="Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
 		<Unit filename="../src/MakeDLL.cpp" />
 		<Unit filename="../src/MakeDLL.h" />
