@@ -14,20 +14,37 @@
 // https://learn.microsoft.com/en-us/windows/apps/desktop/modernize/apply-windows-themes
 //
 
+// Note that we also need the SetPreferredAppMode function from uxtheme.dll
+// for full dark mode support. This function isn't currently provided by
+// Windows App SDK. It needs to be aquired manually from uxtheme.dll at
+// ordinal 135.
+
 #ifndef _DARKMODE_H_
 #define _DARKMODE_H_
 
-
 #include <winrt/Windows.UI.ViewManagement.h>
-
 
 // Namespaces from the Windows App SDK
 using namespace winrt::Windows::UI;
 using namespace winrt::Windows::UI::ViewManagement;
 
-bool IsHighContrast();
-bool IsDarkMode();
-bool IsColorLight(const Color& clr);
+// enum used by the SetPreferredAppMode function
+enum AppMode
+{
+    Default,
+    AllowDark,
+    ForceDark,
+    ForceLight,
+    Max
+};
 
+// typedef for the SetPreferredAppMode function
+typedef AppMode WINAPI SETPREFERREDAPPMODE(AppMode);
+
+bool IsColorLight(const Color& clr);
+bool IsDarkMode();
+bool IsHighContrast();
+bool IsPreferredModeSupported();
+void SetPreferredAppMode(AppMode mode);
 
 #endif // _DARKMODE_H_

@@ -564,6 +564,8 @@ SetupMenuIcons()                                                            /*
     Add icons to the main menu items not having toolbar icons.
 *-----------------------------------------------------------------------------*/
 {
+      // Add the icons from the toolbar
+    CFrame::SetupMenuIcons();
       // print and preview menu bitmaps
     AddMenuIcon(IDM_FILE_PREVIEW,    GetApp()->LoadIcon(IDI_PRINTPREVIEW));
     AddMenuIcon(IDM_FILE_QUICKPRINT, GetApp()->LoadIcon(IDI_QUICKPRINT));
@@ -578,7 +580,6 @@ SetupMenuIcons()                                                            /*
       // set toolbar and status bar check boxes unselected icons
     AddMenuIcon(IDW_VIEW_TOOLBAR,    check_box_unselected);
     AddMenuIcon(IDW_VIEW_STATUSBAR,  check_box_unselected);
-    CFrame::SetupMenuIcons();
 }
 
 /*============================================================================*/

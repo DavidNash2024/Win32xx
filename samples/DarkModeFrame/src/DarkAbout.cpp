@@ -96,7 +96,10 @@ LRESULT CDarkAbout::OnDrawItem(WPARAM, LPARAM lparam)
 // Called before the dialog is displayed.
 BOOL CDarkAbout::OnInitDialog()
 {
-    // Set the application icon
+    // Add dark mode support for system menu.
+    SetPreferredAppMode(AllowDark);
+
+    // Set the application icon.
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
 

@@ -240,8 +240,8 @@ namespace Win32xx
     // 616  dll ver 6.16    Windows Vista SP1 or above with XP themes
     inline int GetComCtlVersion()
     {
-        // Load the Common Controls DLL.
-        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+        // Retrieve the Common Controls DLL handle.
+        HMODULE comCtl = ::GetModuleHandle(_T("COMCTL32.DLL"));
         if (comCtl == 0)
             return 0;
 
@@ -274,8 +274,6 @@ namespace Win32xx
             else if (::GetProcAddress(comCtl, "InitializeFlatSB"))
                 comCtlVer = 471;    // InitializeFlatSB is unique to version 4.71.
         }
-
-        ::FreeLibrary(comCtl);
 
         return static_cast<int>(comCtlVer);
     }
@@ -376,10 +374,10 @@ namespace Win32xx
     // Refer to InitCommonControlsEx in the Windows API documentation for more information.
     inline void LoadCommonControls()
     {
-        // Load the Common Controls DLL
-        HMODULE comCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+        // Retrieve the Common Controls DLL handle.
+        HMODULE comCtl = ::GetModuleHandle(_T("COMCTL32.DLL"));
         if (comCtl == 0)
-            comCtl = ::LoadLibrary(_T("COMMCTRL.DLL"));
+            comCtl = ::GetModuleHandle(_T("COMMCTRL.DLL"));
 
         if (comCtl)
         {
@@ -411,8 +409,6 @@ namespace Win32xx
                 // InitCommonControlsEx not supported. Use older InitCommonControls.
                 InitCommonControls();
             }
-
-            ::FreeLibrary(comCtl);
         }
     }
 
