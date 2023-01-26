@@ -35,6 +35,10 @@ HWND CMainFrame::Create(HWND parent)
     // Use a registry key name like "CompanyName\\Application"
     LoadRegistrySettings(_T("Win32++\\DarkFrame"));
 
+    // Initialize dark mode.
+    SetPreferredAppMode(AllowDark);
+
+    // Create the window.
     return CFrame::Create(parent);
 }
 

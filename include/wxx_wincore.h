@@ -211,7 +211,7 @@ namespace Win32xx
         typedef BOOL(WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
         typedef HMONITOR(WINAPI* LPMFW)(HWND hwnd, DWORD flags);
         LPMFW pfnMonitorFromWindow = 0;
-        HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
+        HMODULE hUser32 = ::GetModuleHandle(_T("USER32.DLL"));
         LPGMI pfnGetMonitorInfo = 0;
         if (hUser32)
         {
@@ -241,8 +241,6 @@ namespace Win32xx
                         parentRect = mi.rcWork;
                 }
             }
-
-            ::FreeLibrary(hUser32);
         }
 
         // Calculate point to center the dialog over the portion of parent window on this monitor.
@@ -508,7 +506,7 @@ namespace Win32xx
         // Load the User32 DLL
         typedef HWND WINAPI GETANCESTOR(HWND, UINT);
         GETANCESTOR* pfnGetAncestor = NULL;
-        HMODULE user32 = ::LoadLibrary(_T("USER32.DLL"));
+        HMODULE user32 = ::GetModuleHandle(_T("USER32.DLL"));
 
         if (user32 != 0)
         {
@@ -518,8 +516,6 @@ namespace Win32xx
 
             if (pfnGetAncestor)
                 wnd = (*pfnGetAncestor)(*this, flags);
-
-            ::FreeLibrary(user32);
         }
 
         if (!pfnGetAncestor)
@@ -2323,8 +2319,7 @@ namespace Win32xx
     inline HRESULT CWnd::SetWindowTheme(LPCWSTR subAppName, LPCWSTR subIdList) const
     {
         HRESULT result = E_NOTIMPL;
-
-        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
+        HMODULE theme = ::GetModuleHandle(_T("uxtheme.dll"));
         if (theme != 0)
         {
             typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND wnd, LPCWSTR subAppName, LPCWSTR subIdList);
@@ -2332,8 +2327,6 @@ namespace Win32xx
                 reinterpret_cast<void*>(GetProcAddress(theme, "SetWindowTheme")));
 
             result = pfn(*this, subAppName, subIdList);
-
-            ::FreeLibrary(theme);
         }
 
         return result;
@@ -2550,8 +2543,7 @@ namespace Win32xx
     inline CString GetAppDataPath()
     {
         CString AppData;
-
-        HMODULE hShell = ::LoadLibrary(_T("Shell32.dll"));
+        HMODULE hShell = ::GetModuleHandle(_T("Shell32.dll"));
         if (hShell)
         {
             typedef HRESULT(WINAPI * MYPROC)(HWND, int, HANDLE, DWORD, LPTSTR);
@@ -2601,8 +2593,6 @@ namespace Win32xx
                     AppData.ReleaseBuffer();
                 }
             }
-
-            ::FreeLibrary(hShell);
         }
 
         return AppData;

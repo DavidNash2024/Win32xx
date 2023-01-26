@@ -47,5 +47,5 @@ Features demonstrated in this example
 * How to detect when a dark mode theme is in use.
 * How to detect when a high contrast theme is in use.
 * How to automatically adjust the frame's colours to support dark mode.
-* How to enable owner draw in the status bar for different text colours.
+* How to modify a dialog to support dark mode.
 

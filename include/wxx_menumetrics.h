@@ -287,9 +287,6 @@ namespace Win32xx
     {
         if (m_theme != 0)
             CloseThemeData();
-
-        if (m_uxTheme != 0)
-            ::FreeLibrary(m_uxTheme);
     }
 
     // Closes the theme data handle.
@@ -499,7 +496,7 @@ namespace Win32xx
         m_frame = frame;
 
         if (m_uxTheme == 0)
-            m_uxTheme = ::LoadLibrary(_T("UXTHEME.DLL"));
+            m_uxTheme = ::GetModuleHandle(_T("UXTHEME.DLL"));
 
         if (m_uxTheme != 0)
         {
@@ -524,7 +521,6 @@ namespace Win32xx
         }
 
         Setup();
-
     }
 
     inline void CMenuMetrics::Setup()

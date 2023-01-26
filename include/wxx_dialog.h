@@ -433,6 +433,10 @@ namespace Win32xx
 
             return TRUE;
         }
+        case UWM_DESTROYWINDOW:
+            // Destroy the window from its own thread.
+            ::DestroyWindow(*this);
+            break;
 
         } // switch(msg)
 

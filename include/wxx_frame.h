@@ -1737,7 +1737,7 @@ namespace Win32xx
     template <class T>
     inline CString CFrameT<T>::GetXPThemeName() const
     {
-        HMODULE theme = ::LoadLibrary(_T("uxtheme.dll"));
+        HMODULE theme = ::GetModuleHandle(_T("uxtheme.dll"));
         WCHAR themeName[31] = L"";
         if (theme != 0)
         {
@@ -1747,8 +1747,6 @@ namespace Win32xx
             PFNGETCURRENTTHEMENAME pfn = reinterpret_cast<PFNGETCURRENTTHEMENAME>(
                 reinterpret_cast<void*>(GetProcAddress(theme, "GetCurrentThemeName")));
             pfn(0, 0, themeName, 30, 0, 0);
-
-            ::FreeLibrary(theme);
         }
 
         return CString(themeName);

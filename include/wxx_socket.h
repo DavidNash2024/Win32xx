@@ -233,7 +233,7 @@ namespace Win32xx
         if (::WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
             throw CNotSupportedException(GetApp()->MsgSocWSAStartup());
 
-        m_ws2_32 = LoadLibrary(_T("WS2_32.dll"));
+        m_ws2_32 = ::GetModuleHandle(_T("WS2_32.dll"));
         if (m_ws2_32 == 0)
             throw CNotSupportedException(GetApp()->MsgSocWS2Dll());
 
@@ -272,8 +272,6 @@ namespace Win32xx
 
         // Terminate the  Windows Socket services
         ::WSACleanup();
-
-        ::FreeLibrary(m_ws2_32);
     }
 
     // The accept function permits an incoming connection attempt on the socket.
