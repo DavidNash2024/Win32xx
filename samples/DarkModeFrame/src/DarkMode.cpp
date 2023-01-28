@@ -33,25 +33,24 @@ bool IsHighContrast()
 // version 1903 and codenamed "19H1".
 bool IsPreferredModeSupported()
 {
-    RTL_OSVERSIONINFOW osvi;
-    ZeroMemory(&osvi, sizeof(osvi));
+    // typedef for the RtlGetVersion function.
+    typedef NTSTATUS WINAPI RTLGETVERSION(PRTL_OSVERSIONINFOW);
 
-    // Requires Windows 10 version 1903 (OS build 18362) or higher:
-    HMODULE hUxtheme = LoadLibraryExW(L"uxtheme.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
-    if (hUxtheme)
+    static RTLGETVERSION* pfn = nullptr;
+    if (pfn == nullptr)
     {
-        typedef NTSTATUS WINAPI RtlGetVersion(PRTL_OSVERSIONINFOW);
         HMODULE module = ::GetModuleHandleW(L"ntdll.dll");
         if (module)
         {
-            auto pfn = reinterpret_cast<RtlGetVersion*>(GetProcAddress(module, "RtlGetVersion"));
-
-            if (pfn != NULL)
-            {
-                osvi.dwOSVersionInfoSize = sizeof(osvi);
-                pfn(&osvi);
-            }
+            pfn = reinterpret_cast<RTLGETVERSION*>(GetProcAddress(module, "RtlGetVersion"));
         }
+    }
+
+    RTL_OSVERSIONINFOW osvi = { 0 };
+    if (pfn != nullptr)
+    {
+          osvi.dwOSVersionInfoSize = sizeof(osvi);
+          pfn(&osvi);
     }
 
     // A build number of 18362 indicates version 1903.
@@ -60,25 +59,25 @@ bool IsPreferredModeSupported()
 
 // This function is required to add further darkmode support to the frame
 // window. Here we use it to provide the dark mode system menu.
-// Hopfully Microsoft will make this function available in the Windows App SDK
+// Hopefully Microsoft will make this function available in the Windows App SDK
 // in a future release.
 //
-// Until then we need to aquire this function directly from uxtheme.dll at
+// Until then we need to acquire this function directly from uxtheme.dll at
 // ordinal 135. This approach isn't officially supported by Microsoft and
 // could change in the future.
 void SetPreferredAppMode(AppMode mode)
 {
-    static SETPREFERREDAPPMODE* pSetPreferredAppMode = nullptr;
+    // typedef for the SetPreferredAppMode function.
+    typedef AppMode WINAPI SETPREFERREDAPPMODE(AppMode);
 
+    static SETPREFERREDAPPMODE* pSetPreferredAppMode = nullptr;
     if (pSetPreferredAppMode == nullptr && IsPreferredModeSupported())
     {
-        HMODULE uxtheme = LoadLibraryExW(L"uxtheme.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+        HMODULE uxtheme = ::GetModuleHandleW(L"uxtheme.dll");
         if (uxtheme)
         {
             // Acquire the function pointer to SetPreferredAppMode from uxtheme.dll at ordinal 135.
             pSetPreferredAppMode = reinterpret_cast<SETPREFERREDAPPMODE*>(GetProcAddress(uxtheme, MAKEINTRESOURCEA(135)));
-
-            FreeLibrary(uxtheme);
         }
     }
 

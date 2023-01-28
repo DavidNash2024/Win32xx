@@ -16,7 +16,7 @@
 
 // Note that we also need the SetPreferredAppMode function from uxtheme.dll
 // for full dark mode support. This function isn't currently provided by
-// Windows App SDK. It needs to be aquired manually from uxtheme.dll at
+// Windows App SDK. It needs to be acquired manually from uxtheme.dll at
 // ordinal 135.
 
 #ifndef _DARKMODE_H_
@@ -37,9 +37,6 @@ enum AppMode
     ForceLight,
     Max
 };
-
-// typedef for the SetPreferredAppMode function
-typedef AppMode WINAPI SETPREFERREDAPPMODE(AppMode);
 
 bool IsColorLight(const Color& clr);
 bool IsDarkMode();

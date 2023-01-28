@@ -314,6 +314,7 @@ namespace Win32xx
         BOOL IsUsingThemes() const { return m_useThemes; }
         BOOL IsUsingToolBar() const { return m_useToolBar; }
         BOOL IsUsingVistaMenu() const { return m_menuMetrics.IsVistaMenu(); }
+        void UseCustomDrawnMenu(BOOL useCustomDraw) { m_useCustomDrawnMenu = useCustomDraw; }
         void UseDarkMenu(BOOL useDarkMenu) { m_useDarkMenu = useDarkMenu; }
         void UseIndicatorStatus(BOOL useIndicatorStatus) { m_useIndicatorStatus = useIndicatorStatus; }
         void UseMenuStatus(BOOL useMenuStatus) { m_useMenuStatus = useMenuStatus; }
@@ -371,14 +372,15 @@ namespace Win32xx
         CMenuMetrics m_menuMetrics;         // The MenuMetrics object
         CImageList m_menuImages;            // Imagelist of menu icons
         CImageList m_menuDisabledImages;    // Imagelist of disabled menu icons
-        BOOL m_useDarkMenu;                 // set to TRUE to manually draw a dark menu
-        BOOL m_useIndicatorStatus;          // set to TRUE to see indicators in status bar
-        BOOL m_useMenuStatus;               // set to TRUE to see menu and toolbar updates in status bar
-        BOOL m_useReBar;                    // set to TRUE if ReBars are to be used
-        BOOL m_useStatusBar;                // set to TRUE if the statusbar is used
-        BOOL m_useThemes;                   // set to TRUE if themes are to be used
-        BOOL m_useToolBar;                  // set to TRUE if the toolbar is used
-        BOOL m_altKeyPressed;               // set to TRUE if the alt key is held down;
+        BOOL m_useCustomDrawnMenu;           // Set to TRUE for custom drawn menu items.
+        BOOL m_useDarkMenu;                 // Set to TRUE to manually draw a dark menu.
+        BOOL m_useIndicatorStatus;          // Set to TRUE to see indicators in status bar.
+        BOOL m_useMenuStatus;               // Set to TRUE to see menu and toolbar updates in status bar.
+        BOOL m_useReBar;                    // Set to TRUE if ReBars are to be used.
+        BOOL m_useStatusBar;                // Set to TRUE if the statusbar is used.
+        BOOL m_useThemes;                   // Set to TRUE if themes are to be used.
+        BOOL m_useToolBar;                  // Set to TRUE if the toolbar is used.
+        BOOL m_altKeyPressed;               // Set to TRUE if the alt key is held down.
 
     };  // class CFrameT
 
@@ -412,8 +414,9 @@ namespace Win32xx
     //
     template <class T>
     inline CFrameT<T>::CFrameT() : m_aboutDialog(IDW_ABOUT), m_accel(0), m_pView(NULL), m_maxMRU(0), m_oldFocus(0),
-                              m_kbdHook(0), m_useDarkMenu(FALSE), m_useIndicatorStatus(TRUE), m_useMenuStatus(TRUE),
-                              m_useStatusBar(TRUE), m_useThemes(TRUE), m_useToolBar(TRUE), m_altKeyPressed(FALSE)
+                              m_kbdHook(0), m_useCustomDrawnMenu(TRUE), m_useDarkMenu(FALSE), m_useIndicatorStatus(TRUE),
+                              m_useMenuStatus(TRUE), m_useStatusBar(TRUE), m_useThemes(TRUE), m_useToolBar(TRUE),
+                              m_altKeyPressed(FALSE)
     {
         ZeroMemory(&m_mbTheme, sizeof(m_mbTheme));
         ZeroMemory(&m_rbTheme, sizeof(m_rbTheme));
@@ -1646,11 +1649,8 @@ namespace Win32xx
         CClientDC screenDC(*this);
         screenDC.SelectObject(m_menuBarFont);
 
-        const int defaultDPI = 96;
         const int gap = 2;
-        int xDPI = screenDC.GetDeviceCaps(LOGPIXELSX);
-        int value = GetSystemMetrics(SM_CYMENU);
-        value = MulDiv(value, xDPI, defaultDPI) - gap;
+        int value = GetSystemMetrics(SM_CYMENU) - gap;
         value = value - (value % 8);
 
         return value;
@@ -1741,10 +1741,8 @@ namespace Win32xx
         WCHAR themeName[31] = L"";
         if (theme != 0)
         {
-            typedef HRESULT(__stdcall* PFNGETCURRENTTHEMENAME)(LPWSTR pThemeFileName, int maxNameChars,
-                LPWSTR pColorBuff, int maxColorChars, LPWSTR pSizeBuff, int maxSizeChars);
-
-            PFNGETCURRENTTHEMENAME pfn = reinterpret_cast<PFNGETCURRENTTHEMENAME>(
+            typedef HRESULT WINAPI GETCURRENTTHEMENAME(LPWSTR, int, LPWSTR, int, LPWSTR, int);
+            GETCURRENTTHEMENAME* pfn = reinterpret_cast<GETCURRENTTHEMENAME*>(
                 reinterpret_cast<void*>(GetProcAddress(theme, "GetCurrentThemeName")));
             pfn(0, 0, themeName, 30, 0, 0);
         }
@@ -2202,58 +2200,55 @@ namespace Win32xx
             {
                 // Set the menu background colour to black.
                 mi.hbrBack = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
+                menu.SetMenuInfo(mi);
             }
-            else
-            {
-                // Set the menu background colour to default.
-                mi.hbrBack = GetSysColorBrush(COLOR_MENU);
-            }
-
-            menu.SetMenuInfo(mi);
         }
 #endif
 
-        // A vector to store this menu's item data.
-        MenuData menuData;
-
-        for (int i = 0; i < menu.GetMenuItemCount(); ++i)
+        if (m_useCustomDrawnMenu)
         {
-            // The MenuItemData pointer is deleted in OnUnInitMenuPopup.
-            MenuItemDataPtr itemDataPtr(new MenuItemData);
-            MENUITEMINFO mii;
-            ZeroMemory(&mii, sizeof(mii));
-            mii.cbSize = GetSizeofMenuItemInfo();
+            // A vector to store this menu's item data.
+            MenuData menuData;
 
-            // Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility.
-            mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU |MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
-            mii.dwTypeData = itemDataPtr->GetItemText();  // Assign TCHAR pointer, text is assigned by GetMenuItemInfo.
-            mii.cch = WXX_MAX_STRING_SIZE;
-
-            // Send message for menu updates.
-            UINT menuItem = menu.GetMenuItemID(i);
-            T::SendMessage(UWM_UPDATECOMMAND, menuItem, 0);
-
-            // Specify owner-draw for the menu item type.
-            UINT position = static_cast<UINT>(i);
-            if (menu.GetMenuItemInfo(position, mii, TRUE))
+            for (int i = 0; i < menu.GetMenuItemCount(); ++i)
             {
-                if (mii.dwItemData == 0)
+                // The MenuItemData pointer is deleted in OnUnInitMenuPopup.
+                MenuItemDataPtr itemDataPtr(new MenuItemData);
+                MENUITEMINFO mii;
+                ZeroMemory(&mii, sizeof(mii));
+                mii.cbSize = GetSizeofMenuItemInfo();
+
+                // Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility.
+                mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU | MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
+                mii.dwTypeData = itemDataPtr->GetItemText();  // Assign TCHAR pointer, text is assigned by GetMenuItemInfo.
+                mii.cch = WXX_MAX_STRING_SIZE;
+
+                // Send message for menu updates.
+                UINT menuItem = menu.GetMenuItemID(i);
+                T::SendMessage(UWM_UPDATECOMMAND, menuItem, 0);
+
+                // Specify owner-draw for the menu item type.
+                UINT position = static_cast<UINT>(i);
+                if (menu.GetMenuItemInfo(position, mii, TRUE))
                 {
-                    itemDataPtr->menu = menu;
-                    itemDataPtr->pos = position;
-                    itemDataPtr->mii = mii;
-                    mii.dwItemData = reinterpret_cast<ULONG_PTR>(itemDataPtr.get());
-                    mii.fType |= MFT_OWNERDRAW;
-                    menu.SetMenuItemInfo(position, mii, TRUE); // Store pItem in mii
-                    menuData.push_back(itemDataPtr);
+                    if (mii.dwItemData == 0)
+                    {
+                        itemDataPtr->menu = menu;
+                        itemDataPtr->pos = position;
+                        itemDataPtr->mii = mii;
+                        mii.dwItemData = reinterpret_cast<ULONG_PTR>(itemDataPtr.get());
+                        mii.fType |= MFT_OWNERDRAW;
+                        menu.SetMenuItemInfo(position, mii, TRUE); // Store pItem in mii
+                        menuData.push_back(itemDataPtr);
+                    }
                 }
             }
-        }
 
-        // m_menusData can store the menu item data for multiple popup menus.
-        // There will be multiple popup menus if submenus are opened.
-        if (menuData.size() != 0)
-            m_menusData.push_back(menuData);
+            // m_menusData can store the menu item data for multiple popup menus.
+            // There will be multiple popup menus if submenus are opened.
+            if (menuData.size() != 0)
+                m_menusData.push_back(menuData);
+        }
 
         return 0;
     }

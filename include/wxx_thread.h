@@ -42,7 +42,7 @@
 namespace Win32xx
 {
     // typedef for _beginthreadex's callback function.
-    typedef UINT(WINAPI* PFNTHREADPROC)(LPVOID);
+    typedef UINT WINAPI THREADPROC(LPVOID);
 
 
     ////////////////////////////////////////////////////
@@ -53,7 +53,7 @@ namespace Win32xx
     {
     public:
         CThreadT();
-        CThreadT(PFNTHREADPROC pfnThreadProc, LPVOID pParam);
+        CThreadT(THREADPROC* pfnThreadProc, LPVOID pParam);
         virtual ~CThreadT();
 
         // Operations
@@ -72,7 +72,7 @@ namespace Win32xx
         CThreadT(const CThreadT&);              // Disable copy construction
         CThreadT& operator = (const CThreadT&); // Disable assignment operator
 
-        PFNTHREADPROC m_pfnThreadProc;  // Thread callback function
+        THREADPROC* m_pfnThreadProc;    // Thread callback function
         LPVOID m_pThreadParams;         // Thread parameter
         HANDLE m_thread;                // Handle of this thread
         UINT m_threadID;                // ID of this thread
@@ -89,7 +89,7 @@ namespace Win32xx
     class CWorkThread : public WorkThread
     {
     public:
-        CWorkThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam)
+        CWorkThread(THREADPROC* pfnThreadProc, LPVOID pParam)
               : WorkThread(pfnThreadProc, pParam) {}
         virtual ~CWorkThread() {}
 
@@ -144,7 +144,7 @@ namespace Win32xx
 
     // CThreadT constructor.
     template <class T>
-    inline CThreadT<T>::CThreadT(PFNTHREADPROC pfnThreadProc, LPVOID pParam) :m_pfnThreadProc(0),
+    inline CThreadT<T>::CThreadT(THREADPROC* pfnThreadProc, LPVOID pParam) :m_pfnThreadProc(0),
         m_pThreadParams(0), m_thread(0), m_threadID(0)
     {
         m_pfnThreadProc = pfnThreadProc;

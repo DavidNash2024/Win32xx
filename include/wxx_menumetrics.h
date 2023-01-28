@@ -412,7 +412,7 @@ namespace Win32xx
             GetThemeTextExtent(DesktopDC, MENU_POPUPITEM, 0, TtoW(szItemText), lstrlen(szItemText),
                 DT_LEFT | DT_SINGLELINE, NULL, &rcText);
 
-            sizeText.SetSize(rcText.right + m_marText.Width(), rcText.bottom + m_marText.Height());
+            sizeText.SetSize(rcText.right, rcText.bottom);
         }
         else
         {

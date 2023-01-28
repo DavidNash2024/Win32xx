@@ -208,21 +208,21 @@ namespace Win32xx
             parentRect = desktopRect;
 
         // Import the GetMonitorInfo and MonitorFromWindow functions.
-        typedef BOOL(WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
-        typedef HMONITOR(WINAPI* LPMFW)(HWND hwnd, DWORD flags);
-        LPMFW pfnMonitorFromWindow = 0;
+        typedef BOOL WINAPI GETMONITORINFO(HMONITOR, LPMONITORINFO);
+        typedef HMONITOR WINAPI MONITORFROMWINDOW(HWND, DWORD);
+        MONITORFROMWINDOW* pfnMonitorFromWindow = NULL;
         HMODULE hUser32 = ::GetModuleHandle(_T("USER32.DLL"));
-        LPGMI pfnGetMonitorInfo = 0;
+        GETMONITORINFO* pfnGetMonitorInfo = NULL;
         if (hUser32)
         {
 
-            pfnMonitorFromWindow = reinterpret_cast<LPMFW>(
+            pfnMonitorFromWindow = reinterpret_cast<MONITORFROMWINDOW*>(
                 reinterpret_cast<void*>(::GetProcAddress(hUser32, "MonitorFromWindow")));
   #ifdef UNICODE
-            pfnGetMonitorInfo = reinterpret_cast<LPGMI>(
+            pfnGetMonitorInfo = reinterpret_cast<GETMONITORINFO*>(
                 reinterpret_cast<void*>(::GetProcAddress(hUser32, "GetMonitorInfoW")));
   #else
-            pfnGetMonitorInfo = reinterpret_cast<LPGMI>(
+            pfnGetMonitorInfo = reinterpret_cast<GETMONITORINFO*>(
                 reinterpret_cast<void*>(::GetProcAddress(hUser32, "GetMonitorInfoA")));
   #endif
 
@@ -2322,8 +2322,8 @@ namespace Win32xx
         HMODULE theme = ::GetModuleHandle(_T("uxtheme.dll"));
         if (theme != 0)
         {
-            typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND wnd, LPCWSTR subAppName, LPCWSTR subIdList);
-            PFNSETWINDOWTHEME pfn = reinterpret_cast<PFNSETWINDOWTHEME>(
+            typedef HRESULT WINAPI SETWINDOWTHEME(HWND, LPCWSTR, LPCWSTR);
+            SETWINDOWTHEME* pfn = reinterpret_cast<SETWINDOWTHEME*>(
                 reinterpret_cast<void*>(GetProcAddress(theme, "SetWindowTheme")));
 
             result = pfn(*this, subAppName, subIdList);
@@ -2546,14 +2546,14 @@ namespace Win32xx
         HMODULE hShell = ::GetModuleHandle(_T("Shell32.dll"));
         if (hShell)
         {
-            typedef HRESULT(WINAPI * MYPROC)(HWND, int, HANDLE, DWORD, LPTSTR);
+            typedef HRESULT WINAPI MYPROC(HWND, int, HANDLE, DWORD, LPTSTR);
 
             // Get the function pointer of the SHGetFolderPath function
 #ifdef UNICODE
-            MYPROC pSHGetFolderPath = reinterpret_cast<MYPROC>(
+            MYPROC* pSHGetFolderPath = reinterpret_cast<MYPROC*>(
                 reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetFolderPathW")));
 #else
-            MYPROC pSHGetFolderPath = reinterpret_cast<MYPROC>(
+            MYPROC* pSHGetFolderPath = reinterpret_cast<MYPROC*>(
                 reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetFolderPathA")));
 #endif
 
@@ -2576,13 +2576,13 @@ namespace Win32xx
             // If we can't get the AppData folder, get the MyDocuments folder instead
             if (AppData.IsEmpty())
             {
-                typedef HRESULT(WINAPI * GETSPECIALPATH)(HWND, LPTSTR, int, BOOL);
+                typedef HRESULT WINAPI GETSPECIALPATH(HWND, LPTSTR, int, BOOL);
 
 #ifdef UNICODE
-                GETSPECIALPATH pGetSpecialPath = reinterpret_cast<GETSPECIALPATH>(
+                GETSPECIALPATH* pGetSpecialPath = reinterpret_cast<GETSPECIALPATH*>(
                     reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetSpecialFolderPathW")));
 #else
-                GETSPECIALPATH pGetSpecialPath = reinterpret_cast<GETSPECIALPATH>(
+                GETSPECIALPATH* pGetSpecialPath = reinterpret_cast<GETSPECIALPATH*>(
                     reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetSpecialFolderPathA")));
 #endif
 
