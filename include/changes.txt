@@ -1,6 +1,9 @@
 Version 9.2
 ===========
 
+This version provides support for dark mode and provides a sample
+that demonstrates how to implement dark mode for a frame application.
+
 New Features and Enhancements
 -----------------------------
 * Added support for colored text in the status bar.

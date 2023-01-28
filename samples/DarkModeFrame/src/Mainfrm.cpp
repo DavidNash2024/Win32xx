@@ -110,15 +110,6 @@ BOOL CMainFrame::OnHelp()
     return TRUE;
 }
 
-// Called after the window is created.
-void CMainFrame::OnInitialUpdate()
-{
-    // The frame is now created.
-    // Place any additional startup code here.
-
-    TRACE("Frame created\n");
-}
-
 // Create the File Open dialog to choose the file to load.
 BOOL CMainFrame::OnFileOpen()
 {
@@ -220,6 +211,15 @@ BOOL CMainFrame::OnFilePrint()
     return TRUE;
 }
 
+// Called after the window is created.
+void CMainFrame::OnInitialUpdate()
+{
+    // The frame is now created.
+    // Place any additional startup code here.
+
+    TRACE("Frame created\n");
+}
+
 // Called when the Print Preview's "Close" button is pressed.
 LRESULT CMainFrame::OnPreviewClose()
 {
@@ -276,12 +276,15 @@ LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
     m_view.SetDarkMode(IsDarkMode());
     m_preview.SetDarkMode(IsDarkMode());
 
-    if (IsUsingThemes())
+    if (IsDarkMode() && !IsHighContrast())
     {
-        if (IsDarkMode() && !IsHighContrast())
-            UseDarkMenu(TRUE);
-        else
-            UseDarkMenu(FALSE);
+        // Turn off menu custom drawing.
+        UseCustomDrawnMenu(FALSE);
+    }
+    else
+    {
+        // Turn on menu custom drawing.
+        UseCustomDrawnMenu(TRUE);
     }
 
     // Redraw the help about dialog.

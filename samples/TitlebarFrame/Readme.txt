@@ -1,5 +1,5 @@
-MiniFrame Sample
-================
+TitlebarFrame Sample
+====================
 This sample displays a frame with a modified titlebar. It adapts the 
 features demonstrated with the Titlebar sample for use with a frame. 
 The color of the titlebar is configurable. The color chosen for the titlebar
@@ -57,5 +57,6 @@ This sample demonstrates the following:
 * Adjusts the position of the frame's rebar control.
 * Overrides GetViewRect to adjust the frame's view area.
 * Uses CRebar::ShowBand to dynamically show or hide a rebar band.
+* Uses SetParent to move the menubar between the rebar and the titlebar.
 
 

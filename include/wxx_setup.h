@@ -307,14 +307,14 @@ namespace Win32xx
 #else
 
         // Use the modern RtlGetVersion function.
-        typedef NTSTATUS(WINAPI* RtlGetVersionPtr)(PRTL_OSVERSIONINFOW);
+        typedef NTSTATUS WINAPI RTLGETVERSION(PRTL_OSVERSIONINFOW);
 
         HMODULE module = ::GetModuleHandleW(L"ntdll.dll");
         RTL_OSVERSIONINFOW osvi;
         ZeroMemory(&osvi, sizeof(osvi));
         if (module)
         {
-            RtlGetVersionPtr pfn = reinterpret_cast<RtlGetVersionPtr>(
+            RTLGETVERSION* pfn = reinterpret_cast<RTLGETVERSION*>(
                 reinterpret_cast<void*>(GetProcAddress(module, "RtlGetVersion")));
 
             if (pfn != NULL)

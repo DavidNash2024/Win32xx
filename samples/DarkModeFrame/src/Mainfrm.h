@@ -28,15 +28,15 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void    OnClose();
-    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual BOOL    OnCommand(WPARAM, LPARAM);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual BOOL    OnHelp();
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnSysColorChange(UINT msg, WPARAM, LPARAM);
+    virtual LRESULT OnSysColorChange(UINT, WPARAM, LPARAM);
     virtual void    SetTheme();
     virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT, WPARAM, LPARAM);
 
 private:
     CMainFrame(const CMainFrame&);                // Disable copy construction
