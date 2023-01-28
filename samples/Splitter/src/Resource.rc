@@ -129,7 +129,7 @@ BEGIN
     "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
-    "Y",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, NOINVERT
 END
 
 

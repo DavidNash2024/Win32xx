@@ -354,10 +354,11 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
-    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
-    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
-    // UseStatusBar(FALSE);          // Don't use a StatusBar
-    // UseToolBar(FALSE);            // Don't use a ToolBar
+    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar.
+    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar.
+    // UseOwnerDrawnMenu(FALSE);     // Don't use owner draw for popup menu items.
+    // UseStatusBar(FALSE);          // Don't use a StatusBar.
+    // UseToolBar(FALSE);            // Don't use a ToolBar.
 
     // Call the base class function
     CFrame::OnCreate(cs);

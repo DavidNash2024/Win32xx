@@ -81,12 +81,13 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
-    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
-    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
-    // UseReBar(FALSE);              // Don't use a ReBar
-    // UseStatusBar(FALSE);          // Don't use a StatusBar
-    // UseThemes(FALSE);             // Don't use themes
-    // UseToolBar(FALSE);            // Don't use a ToolBar
+    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar.
+    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar.
+    // UseOwnerDrawnMenu(FALSE);     // Don't use owner draw for popup menu items.
+    // UseReBar(FALSE);              // Don't use a ReBar.
+    // UseStatusBar(FALSE);          // Don't use a StatusBar.
+    // UseThemes(FALSE);             // Don't use themes.
+    // UseToolBar(FALSE);            // Don't use a ToolBar.
 
     // call the base class function
     return CFrame::OnCreate(cs);
@@ -279,12 +280,12 @@ LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
     if (IsDarkMode() && !IsHighContrast())
     {
         // Turn off menu custom drawing.
-        UseCustomDrawnMenu(FALSE);
+        UseOwnerDrawnMenu(FALSE);
     }
     else
     {
         // Turn on menu custom drawing.
-        UseCustomDrawnMenu(TRUE);
+        UseOwnerDrawnMenu(TRUE);
     }
 
     // Redraw the help about dialog.

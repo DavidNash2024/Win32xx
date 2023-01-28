@@ -134,17 +134,18 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
-    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
-    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
-    // UseReBar(FALSE);              // Don't use a ReBar
-    // UseStatusBar(FALSE);          // Don't use a StatusBar
-    // UseThemes(FALSE);             // Don't use themes
-    // UseToolBar(FALSE);            // Don't use a ToolBar
+    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar.
+    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar.
+    // UseOwnerDrawnMenu(FALSE);     // Don't use owner draw for popup menu items.
+    // UseReBar(FALSE);              // Don't use a ReBar.
+    // UseStatusBar(FALSE);          // Don't use a StatusBar.
+    // UseThemes(FALSE);             // Don't use themes.
+    // UseToolBar(FALSE);            // Don't use a ToolBar.
 
     // Create the PrintPreview dialog. It is initially hidden.
     m_preview.Create(*this);
 
-    // Get the name of the default or currently chosen printer
+    // Get the name of the default or currently chosen printer.
     CPrintDialog printDlg;
     if (printDlg.GetDefaults())
     {
