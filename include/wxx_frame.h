@@ -314,7 +314,7 @@ namespace Win32xx
         BOOL IsUsingThemes() const { return m_useThemes; }
         BOOL IsUsingToolBar() const { return m_useToolBar; }
         BOOL IsUsingVistaMenu() const { return m_menuMetrics.IsVistaMenu(); }
-        void UseCustomDrawnMenu(BOOL useCustomDraw) { m_useCustomDrawnMenu = useCustomDraw; }
+        void UseOwnerDrawnMenu(BOOL useOwnerDraw) { m_useOwnerDrawnMenu = useOwnerDraw; }
         void UseDarkMenu(BOOL useDarkMenu) { m_useDarkMenu = useDarkMenu; }
         void UseIndicatorStatus(BOOL useIndicatorStatus) { m_useIndicatorStatus = useIndicatorStatus; }
         void UseMenuStatus(BOOL useMenuStatus) { m_useMenuStatus = useMenuStatus; }
@@ -372,7 +372,7 @@ namespace Win32xx
         CMenuMetrics m_menuMetrics;         // The MenuMetrics object
         CImageList m_menuImages;            // Imagelist of menu icons
         CImageList m_menuDisabledImages;    // Imagelist of disabled menu icons
-        BOOL m_useCustomDrawnMenu;           // Set to TRUE for custom drawn menu items.
+        BOOL m_useOwnerDrawnMenu;           // Set to TRUE for custom drawn menu items.
         BOOL m_useDarkMenu;                 // Set to TRUE to manually draw a dark menu.
         BOOL m_useIndicatorStatus;          // Set to TRUE to see indicators in status bar.
         BOOL m_useMenuStatus;               // Set to TRUE to see menu and toolbar updates in status bar.
@@ -414,7 +414,7 @@ namespace Win32xx
     //
     template <class T>
     inline CFrameT<T>::CFrameT() : m_aboutDialog(IDW_ABOUT), m_accel(0), m_pView(NULL), m_maxMRU(0), m_oldFocus(0),
-                              m_kbdHook(0), m_useCustomDrawnMenu(TRUE), m_useDarkMenu(FALSE), m_useIndicatorStatus(TRUE),
+                              m_kbdHook(0), m_useOwnerDrawnMenu(TRUE), m_useDarkMenu(FALSE), m_useIndicatorStatus(TRUE),
                               m_useMenuStatus(TRUE), m_useStatusBar(TRUE), m_useThemes(TRUE), m_useToolBar(TRUE),
                               m_altKeyPressed(FALSE)
     {
@@ -2205,7 +2205,7 @@ namespace Win32xx
         }
 #endif
 
-        if (m_useCustomDrawnMenu)
+        if (m_useOwnerDrawnMenu)
         {
             // A vector to store this menu's item data.
             MenuData menuData;

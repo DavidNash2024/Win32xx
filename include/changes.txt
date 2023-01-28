@@ -34,6 +34,7 @@ Added CFrameT::IsUsingDarkMenu
 Added CFrameT::SetMenuMetrics
 Added CFrameT::ResetMenuMetrics
 Added CFrameT::UseDarkMenu
+Added CFrameT::UseOwnerDrawnMenu
 Added StatusBarTheme::clrText
 
 Added DarkModeFrame sample

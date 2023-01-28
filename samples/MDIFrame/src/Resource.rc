@@ -62,7 +62,7 @@ MDIMENUVIEW MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &View\tCtrl+N",                   IDM_FILE_NEW
+        MENUITEM "New &View\tCtrl+N",           IDM_FILE_NEW
         MENUITEM "&Close",                      IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
