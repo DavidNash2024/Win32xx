@@ -113,7 +113,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
     {
     case IDM_FILE_NEWDOCK:      return OnFileNewDocker();
     case IDM_FILE_NEWMDI:       return OnFileNewMDI();
-    case IDM_FILE_CLOSE:        return OnFileClose();
+    case IDM_FILE_MDICLOSE:     return OnFileMDIClose();
     case IDM_FILE_OPEN:         return OnFileOpen();
     case IDM_FILE_SAVE:         return OnFileSave();
     case IDM_FILE_SAVEAS:       return OnFileSave();
@@ -161,7 +161,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 }
 
 // Closes the active MDI child.
-BOOL CMainMDIFrame::OnFileClose()
+BOOL CMainMDIFrame::OnFileMDIClose()
 {
     GetActiveMDIChild()->Close();
     return TRUE;

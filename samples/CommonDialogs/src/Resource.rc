@@ -55,7 +55,7 @@ BEGIN
         MENUITEM "&Close",                IDM_FILE_CLOSE
         MENUITEM SEPARATOR
         MENUITEM "&Print...\tCtrl+P",     IDM_FILE_PRINT
-        MENUITEM "Page Setup...\tAlt+P",   IDM_FILE_PAGESETUP
+        MENUITEM "Page Setup...\tAlt+P",  IDM_FILE_PAGESETUP
         MENUITEM SEPARATOR
         MENUITEM "Recent Files",          IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
@@ -64,7 +64,7 @@ BEGIN
     POPUP "&Edit"
     BEGIN
         MENUITEM "Undo\tCtrl+Z",          IDM_EDIT_UNDO    //, GRAYED
-        MENUITEM "Redo\tShift+Ctrl+Z",    IDM_EDIT_REDO    //, GRAYED
+        MENUITEM "Redo\tCtrl+Y",          IDM_EDIT_REDO    //, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "Cut\tCtrl+X",           IDM_EDIT_CUT     //, GRAYED
         MENUITEM "Copy\tCtrl+C",          IDM_EDIT_COPY    //, GRAYED
@@ -87,7 +87,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About",                IDW_ABOUT
+        MENUITEM "&About\tF1",            IDW_ABOUT
     END
 END
 
@@ -158,22 +158,22 @@ END
 
 IDW_MAIN ACCELERATORS
 BEGIN
-    "N",            IDM_FILE_NEW,    VIRTKEY, CONTROL, NOINVERT
-    "O",            IDM_FILE_OPEN,   VIRTKEY, CONTROL, NOINVERT
-    "S",            IDM_FILE_SAVE,   VIRTKEY, CONTROL, NOINVERT
-    "S",            IDM_FILE_SAVEAS, VIRTKEY, SHIFT, CONTROL, NOINVERT
-    "F",            IDM_EDIT_FIND,   VIRTKEY, CONTROL, NOINVERT
-    "C",            IDM_EDIT_COPY,   VIRTKEY, CONTROL, NOINVERT
-    "X",            IDM_EDIT_CUT,    VIRTKEY, CONTROL, NOINVERT
-    "V",            IDM_EDIT_PASTE,  VIRTKEY, CONTROL, NOINVERT
-    "P",            IDM_FILE_PRINT,  VIRTKEY, CONTROL, NOINVERT
-    "P",            IDM_FILE_PAGESETUP,VIRTKEY, ALT, NOINVERT
-    "H",            IDW_ABOUT,       VIRTKEY, CONTROL, NOINVERT
-    "Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
-    "R",            IDM_EDIT_REPLACE, VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_UNDO,   VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_REDO,   VIRTKEY, SHIFT, CONTROL, NOINVERT
-    VK_DELETE,      IDM_EDIT_DELETE, VIRTKEY, SHIFT, NOINVERT
+    "N",            IDM_FILE_NEW,       VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_FILE_OPEN,      VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE,      VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVEAS,    VIRTKEY, SHIFT, CONTROL, NOINVERT
+    "F",            IDM_EDIT_FIND,      VIRTKEY, CONTROL, NOINVERT
+    "C",            IDM_EDIT_COPY,      VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,       VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,     VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PRINT,     VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PAGESETUP, VIRTKEY, ALT, NOINVERT
+    "H",            IDW_ABOUT,          VIRTKEY, CONTROL, NOINVERT
+    "Q",            IDM_FILE_EXIT,      VIRTKEY, CONTROL, NOINVERT
+    "R",            IDM_EDIT_REPLACE,   VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,      VIRTKEY, CONTROL, NOINVERT
+    "Y",            IDM_EDIT_REDO,      VIRTKEY, CONTROL, NOINVERT
+    VK_DELETE,      IDM_EDIT_DELETE,    VIRTKEY, SHIFT, NOINVERT
 END
 
 

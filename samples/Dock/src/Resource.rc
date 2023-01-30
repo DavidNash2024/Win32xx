@@ -36,7 +36,7 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "E&xit",                       IDM_FILE_EXIT
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
     END
     POPUP "&View"
     BEGIN

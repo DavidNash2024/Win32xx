@@ -309,15 +309,16 @@ namespace Win32xx
         BOOL IsUsingDarkMenu() const { return m_useDarkMenu; }
         BOOL IsUsingIndicatorStatus() const { return m_useIndicatorStatus; }
         BOOL IsUsingMenuStatus() const { return m_useMenuStatus; }
+        BOOL IsUsingOwnerDrawnMenu() const { return m_useOwnerDrawnMenu; }
         BOOL IsUsingReBar() const { return m_useReBar; }
         BOOL IsUsingStatusBar() const { return m_useStatusBar; }
         BOOL IsUsingThemes() const { return m_useThemes; }
         BOOL IsUsingToolBar() const { return m_useToolBar; }
         BOOL IsUsingVistaMenu() const { return m_menuMetrics.IsVistaMenu(); }
-        void UseOwnerDrawnMenu(BOOL useOwnerDraw) { m_useOwnerDrawnMenu = useOwnerDraw; }
         void UseDarkMenu(BOOL useDarkMenu) { m_useDarkMenu = useDarkMenu; }
         void UseIndicatorStatus(BOOL useIndicatorStatus) { m_useIndicatorStatus = useIndicatorStatus; }
         void UseMenuStatus(BOOL useMenuStatus) { m_useMenuStatus = useMenuStatus; }
+        void UseOwnerDrawnMenu(BOOL useOwnerDraw) { m_useOwnerDrawnMenu = useOwnerDraw; }
         void UseReBar(BOOL useReBar) { m_useReBar = useReBar; }
         void UseStatusBar(BOOL useStatusBar) { m_useStatusBar = useStatusBar; }
         void UseThemes(BOOL useThemes) { m_useThemes = useThemes; }

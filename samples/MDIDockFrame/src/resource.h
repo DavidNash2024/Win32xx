@@ -18,7 +18,7 @@
 #define IDM_FILE_SAVE                   124
 #define IDM_FILE_SAVEAS                 125
 #define IDM_FILE_PRINT                  126
-#define IDM_FILE_CLOSE                  127
+#define IDM_FILE_MDICLOSE               127
 #define IDM_FILE_EXIT                   128
 #define IDM_EDIT_UNDO                   130
 #define IDM_EDIT_REDO                   131

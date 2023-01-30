@@ -48,7 +48,7 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "E&xit",                       IDM_FILE_EXIT
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
     END
     POPUP "&Options"
     BEGIN
@@ -56,7 +56,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About",                      IDM_HELP_ABOUT
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
     END
 END
 

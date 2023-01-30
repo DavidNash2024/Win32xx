@@ -336,6 +336,7 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
         }
 
         case WM_HSCROLL:
+        {
             HWND wnd = reinterpret_cast<HWND>(lparam);
             int pos = 0;
             if (wnd == HWND(m_scrollBar))
@@ -344,6 +345,8 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
                 pos = m_slider.GetPos();
             SetControlPositions(pos);
             return TRUE;
+        }
+
     }
       // Pass unhandled messages on to parent DialogProc
     return DialogProcDefault(msg, wparam, lparam);
@@ -861,9 +864,10 @@ SetControlPositions(int pos)                                                /*
     SetSlider(pos);
     SetScrollBar(pos);
     SetProgress(pos);
-    UpdateData(m_dx, SENDTOCONTROL);
-    SetFocusID(IDC_SCROLLBAR);
     AdjustStatus();
+
+      // Update the slider, scrollbar, progressbar and status windows.
+    UpdateData(m_dx, SENDTOCONTROL);
 }
 
 /*============================================================================*/
