@@ -36,9 +36,9 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &View\tCtrl+N",                   IDM_FILE_NEW
+        MENUITEM "New &View\tCtrl+N",           IDM_FILE_NEW
         MENUITEM SEPARATOR
-        MENUITEM "E&xit",                       IDM_FILE_EXIT
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
     END
     POPUP "&View"
     BEGIN
@@ -157,8 +157,8 @@ BEGIN
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
-    VK_F4,          IDW_MDI_TILE,        VIRTKEY, SHIFT, NOINVERT
-    VK_F5,          IDW_MDI_CASCADE,     VIRTKEY, SHIFT, NOINVERT
+    VK_F4,          IDW_MDI_TILE,           VIRTKEY, SHIFT, NOINVERT
+    VK_F5,          IDW_MDI_CASCADE,        VIRTKEY, SHIFT, NOINVERT
 END
 
 

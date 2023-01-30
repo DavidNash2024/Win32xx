@@ -50,6 +50,11 @@ int CView::OnCreate(CREATESTRUCT&)
 
     SetWindowText(LoadString(IDW_MAIN));        // Window title
 
+    // Load the accelerator table
+ //   HACCEL accel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+ //   if (accel)
+ //       GetApp()->SetAccelerators(accel, *this);
+
     TRACE("OnCreate\n");
 
     return 0;
@@ -195,6 +200,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
+        case WM_HELP:       return OnAbout();
         case WM_SIZE:       return OnSize(msg, wparam, lparam);
         case WM_SYSCOMMAND: return OnSysCommand(msg, wparam, lparam);
         case MSG_TRAYICON:  return OnTrayIcon(msg, wparam, lparam);

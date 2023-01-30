@@ -36,14 +36,14 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New...",                      IDM_FILE_NEW
-        MENUITEM "&Open...",                    IDM_FILE_OPEN
-        MENUITEM "&Save",                       IDM_FILE_SAVE
+        MENUITEM "New\tCtrl+N",                 IDM_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            IDM_FILE_OPEN
+        MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
-        MENUITEM "&Print",                      IDM_FILE_PRINT
+        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT
         MENUITEM SEPARATOR
-        MENUITEM "E&xit",                       IDM_FILE_EXIT
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
     END
     POPUP "&View"
     BEGIN
@@ -52,7 +52,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About",                      IDM_HELP_ABOUT
+        MENUITEM "&About\tF1",                      IDM_HELP_ABOUT
     END
 END
 

@@ -38,23 +38,23 @@ BEGIN
     BEGIN
         MENUITEM "New Plain Text",              IDM_FILE_NEW_PLAIN
         MENUITEM "New Rich Text",               IDM_FILE_NEW_RICH
-        MENUITEM "&Open...",                    IDM_FILE_OPEN
-        MENUITEM "&Save",                       IDM_FILE_SAVE
+        MENUITEM "&Open...\tCtrl+O",            IDM_FILE_OPEN
+        MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
         MENUITEM "Printer Setup",               IDM_FILE_PRINTSETUP
         MENUITEM "Print Preview",               IDM_FILE_PREVIEW
         MENUITEM "Print Now",                   IDM_FILE_PRINTNOW
-        MENUITEM "&Print",                      IDM_FILE_PRINT
+        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT
         MENUITEM SEPARATOR
         MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "E&xit",                       IDM_FILE_EXIT
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
     END
     POPUP "&Edit"
     BEGIN
         MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
-        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO
+        MENUITEM "Redo\tCtrl+Y",                IDM_EDIT_REDO
         MENUITEM SEPARATOR
         MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
         MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
@@ -134,7 +134,7 @@ BEGIN
     "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_REDO,           VIRTKEY, SHIFT, CONTROL, NOINVERT
+    "Y",            IDM_EDIT_REDO,           VIRTKEY, CONTROL, NOINVERT
 END
 
 

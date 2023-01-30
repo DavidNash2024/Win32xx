@@ -31,7 +31,7 @@ private:
     CMainMDIFrame& operator = (const CMainMDIFrame&);   // Disable assignment operator
 
     // Command handlers
-    BOOL OnFileClose();
+    BOOL OnFileMDIClose();
     BOOL OnFileExit();
     BOOL OnFileNewDocker();
     BOOL OnFileNewMDI();

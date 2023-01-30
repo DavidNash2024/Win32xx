@@ -56,19 +56,19 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New...",                      IDM_FILE_NEW
-        MENUITEM "&Open...",                    IDM_FILE_OPEN
-        MENUITEM "&Save",                       IDM_FILE_SAVE
+        MENUITEM "New\tCtrl+N",                 IDM_FILE_NEW
+        MENUITEM "&Open...\tCtrl+O",            IDM_FILE_OPEN
+        MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE
         MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
         MENUITEM SEPARATOR
-        MENUITEM "&Print",                      IDM_FILE_PRINT
+        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT
         MENUITEM SEPARATOR
-        MENUITEM "E&xit",                       IDM_FILE_EXIT
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
     END
     POPUP "&Edit"
     BEGIN
         MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
-        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO
+        MENUITEM "Redo\tCtrl+Y",                IDM_EDIT_REDO
         MENUITEM SEPARATOR
         MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
         MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
@@ -92,7 +92,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About",                      IDW_ABOUT
+        MENUITEM "&About\tF1",                  IDW_ABOUT
     END
 END
 
@@ -127,31 +127,31 @@ IDD_MAIN_DIALOG DIALOGEX 0, 0, 400, 368
 STYLE /*DS_SHELLFONT |*/ WS_VISIBLE | WS_CHILDWINDOW
 FONT 8, "Courier", 0, 0
 BEGIN
-    EDITTEXT    IDC_EDIT_BYTE, 90, 20, 15, 14, WS_GROUP | NOT WS_BORDER |
+    EDITTEXT    IDC_EDIT_BYTE, 90, 20, 15, 10, WS_GROUP | NOT WS_BORDER |
                     ES_NUMBER | ES_RIGHT, WS_EX_STATICEDGE
-    LTEXT       " BYTE ", IDC_STATIC, 110, 20, 40, 14, SS_LEFT
-    EDITTEXT    IDC_EDIT_SHORT, 75, 40, 30, 14, NOT WS_BORDER | ES_RIGHT,
+    LTEXT       " BYTE ", IDC_STATIC, 110, 20, 40, 10, SS_LEFT
+    EDITTEXT    IDC_EDIT_SHORT, 75, 40, 30, 10, NOT WS_BORDER | ES_RIGHT,
                     WS_EX_STATICEDGE
-    LTEXT       " short ", IDC_STATIC, 110, 40, 40, 14, SS_LEFT
-    EDITTEXT    IDC_EDIT_INT, 50, 60, 55, 14, NOT WS_BORDER | ES_RIGHT,
+    LTEXT       " short ", IDC_STATIC, 110, 40, 40, 10, SS_LEFT
+    EDITTEXT    IDC_EDIT_INT, 50, 60, 55, 10, NOT WS_BORDER | ES_RIGHT,
                     WS_EX_STATICEDGE
-    LTEXT       " int ", IDC_STATIC, 110, 60, 40, 14, SS_LEFT
-    EDITTEXT    IDC_EDIT_UINT, 50, 80, 55, 14, NOT WS_BORDER | ES_NUMBER |
+    LTEXT       " int ", IDC_STATIC, 110, 60, 40, 10, SS_LEFT
+    EDITTEXT    IDC_EDIT_UINT, 50, 80, 55, 10, NOT WS_BORDER | ES_NUMBER |
                     ES_RIGHT, WS_EX_STATICEDGE
-    LTEXT       " UINT ", IDC_STATIC, 110, 80, 40, 14, SS_LEFT
-    EDITTEXT    IDC_EDIT_LONG, 50, 100, 55, 14, NOT WS_BORDER | ES_RIGHT,
+    LTEXT       " UINT ", IDC_STATIC, 110, 80, 40, 10, SS_LEFT
+    EDITTEXT    IDC_EDIT_LONG, 50, 100, 55, 10, NOT WS_BORDER | ES_RIGHT,
                     ES_NUMBER | WS_EX_STATICEDGE
-    LTEXT       " long ", IDC_STATIC, 110, 100, 40, 14, SS_LEFT
-    EDITTEXT    IDC_EDIT_DWORD, 50, 120, 55, 14, NOT WS_BORDER | ES_NUMBER |
+    LTEXT       " long ", IDC_STATIC, 110, 100, 40, 10, SS_LEFT
+    EDITTEXT    IDC_EDIT_DWORD, 50, 120, 55, 10, NOT WS_BORDER | ES_NUMBER |
                     ES_RIGHT, WS_EX_STATICEDGE
-    LTEXT       " DWORD ", IDC_STATIC, 110, 120, 40, 14, SS_LEFT
-    EDITTEXT    IDC_EDIT_FLOAT, 15, 140, 90, 14, NOT WS_BORDER | ES_RIGHT,
+    LTEXT       " DWORD ", IDC_STATIC, 110, 120, 40, 10, SS_LEFT
+    EDITTEXT    IDC_EDIT_FLOAT, 15, 140, 90, 10, NOT WS_BORDER | ES_RIGHT,
                     WS_EX_STATICEDGE
-    LTEXT       " float ", IDC_STATIC, 110, 140, 40, 14, SS_LEFT
-    EDITTEXT    IDC_EDIT_DOUBLE, 15, 160, 90, 14, NOT WS_BORDER | ES_RIGHT,
+    LTEXT       " float ", IDC_STATIC, 110, 140, 40, 10, SS_LEFT
+    EDITTEXT    IDC_EDIT_DOUBLE, 15, 160, 90, 10, NOT WS_BORDER | ES_RIGHT,
                     WS_EX_STATICEDGE
-    LTEXT       " double ", IDC_STATIC, 110, 160, 40, 14, SS_LEFT
-    EDITTEXT        IDC_EDIT_LPTSTR, 15, 180, 135, 14, NOT WS_BORDER,
+    LTEXT       " double ", IDC_STATIC, 110, 160, 40, 10, SS_LEFT
+    EDITTEXT        IDC_EDIT_LPTSTR, 15, 180, 135, 10, NOT WS_BORDER,
                     WS_EX_STATICEDGE
     EDITTEXT    IDC_EDIT_CSTRING, 15, 200, 135, 35, WS_GROUP | NOT WS_BORDER |
                     ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE |
@@ -224,7 +224,7 @@ BEGIN
     "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL
     "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL
     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL
-    "Z",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL
+    "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL
 END
 
 

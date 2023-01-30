@@ -53,7 +53,7 @@ IDW_MAIN MENU
     }
     POPUP "&Help"
     {
-        MENUITEM "&About",              IDW_ABOUT
+        MENUITEM "&About\tF1",              IDW_ABOUT
     }
 }
 

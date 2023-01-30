@@ -31,6 +31,7 @@ Changes in Detail
 -----------------
 Added CFrameT::OnDrawStatusBar
 Added CFrameT::IsUsingDarkMenu
+Added CFrameT::IsUsingOwnerDrawnMenu
 Added CFrameT::SetMenuMetrics
 Added CFrameT::ResetMenuMetrics
 Added CFrameT::UseDarkMenu
