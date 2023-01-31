@@ -202,6 +202,7 @@ namespace Win32xx
         CRect GetCheckRect(const CRect& item) const;
         CRect GetGutterRect(const CRect& item) const;
         CSize GetItemSize(MenuItemData* pmd) const;
+        int   GetMenuIconHeight() const;
         CRect GetSelectionRect(const CRect& item) const;
         CRect GetSeperatorRect(const CRect& item) const;
         CRect GetTextRect(const CRect& item) const;
@@ -375,10 +376,19 @@ namespace Win32xx
             size.cy = MAX(size.cy, sizeText.cy);
 
             // Account for icon or check height.
-            size.cy = MAX(size.cy, m_sizeCheck.cy + m_marCheckBackground.Height() + m_marCheck.Height());
+            int iconGap = 6;
+            size.cy = MAX(size.cy, GetMenuIconHeight() + iconGap);
+
         }
 
         return (size);
+    }
+
+    inline int CMenuMetrics::GetMenuIconHeight() const
+    {
+        int value = m_sizeCheck.cy + m_marCheck.Height();
+        value = value - (value % 8);
+        return value;
     }
 
     inline CRect CMenuMetrics::GetSelectionRect(const CRect& item) const
@@ -410,7 +420,7 @@ namespace Win32xx
         {
             CRect rcText;
             GetThemeTextExtent(DesktopDC, MENU_POPUPITEM, 0, TtoW(szItemText), lstrlen(szItemText),
-                DT_LEFT | DT_SINGLELINE, NULL, &rcText);
+                DT_CALCRECT | DT_EXPANDTABS, NULL, &rcText);
 
             sizeText.SetSize(rcText.right, rcText.bottom);
         }
@@ -429,9 +439,6 @@ namespace Win32xx
             sizeText.cx += m_marText.cxRightWidth;
             sizeText.cy += m_marText.Height();
         }
-
-        if (_tcschr(szItemText, _T('\t')))
-            sizeText.cx += 8;   // Add POST_TEXT_GAP if the text includes a tab.
 
         return sizeText;
     }

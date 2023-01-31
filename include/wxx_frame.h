@@ -1647,14 +1647,8 @@ namespace Win32xx
     template <class T>
     inline int CFrameT<T>::GetMenuIconHeight() const
     {
-        CClientDC screenDC(*this);
-        screenDC.SelectObject(m_menuBarFont);
 
-        const int gap = 2;
-        int value = GetSystemMetrics(SM_CYMENU) - gap;
-        value = value - (value % 8);
-
-        return value;
+        return GetMenuMetrics().GetMenuIconHeight();
     }
 
     // Returns the position of the menu item, given it's name.
