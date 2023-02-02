@@ -213,7 +213,7 @@ namespace Win32xx
     }
 
     // Note: A copy of a CMenu is a clone of the original.
-    //       Both objects manipulate the one HMENU.
+    //       Both objects manipulate the same HMENU and m_pData.
     inline CMenu::CMenu(const CMenu& rhs)
     {
         CThreadLock mapLock(GetApp()->m_gdiLock);
@@ -326,7 +326,7 @@ namespace Win32xx
         return ::AppendMenu(m_pData->menu, flags, idOrHandle, reinterpret_cast<LPCTSTR>(bitmap));
     }
 
-    // Attach and own the menu handle.
+    // Attaches and owns the menu handle.
     inline void CMenu::Assign(HMENU menu)
     {
         CThreadLock mapLock(GetApp()->m_gdiLock);
@@ -449,7 +449,6 @@ namespace Win32xx
         RemoveFromMap();
         m_pData->menu = 0;
         m_pData->isManagedMenu = false;
-        m_pData->vSubMenus.clear();
 
         if (m_pData->count > 0)
         {
@@ -576,7 +575,7 @@ namespace Win32xx
         return ::GetMenuItemID(m_pData->menu, pos);
     }
 
-    // retrieves information about the specified menu item.
+    // Retrieves information about the specified menu item.
     // Refer to GetMenuItemInfo in the Windows API documentation for more information.
     inline BOOL CMenu::GetMenuItemInfo(UINT idOrPos, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
     {
@@ -588,7 +587,7 @@ namespace Win32xx
     }
 
     // Retrieves the menu flags associated with the specified menu item.
-    // Possible values for flags are: MF_BYCOMMAND (default) or MF_BYPOSITION.
+    // Possible values for flags are: MF_BYCOMMAND or MF_BYPOSITION.
     // Refer to GetMenuState in the Windows API documentation for more information.
     inline UINT CMenu::GetMenuState(UINT idOrPos, UINT flags) const
     {
@@ -621,19 +620,14 @@ namespace Win32xx
         return n;
     }
 
-    // Retrieves the CMenu object of a pop-up menu.
+    // Retrieves the CMenu object of a drop-down menu or submenu activated by the specified menu item.
     // Refer to GetSubMenu in the Windows API documentation for more information.
     inline CMenu CMenu::GetSubMenu(int pos) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        MenuPtr pMenu(new CMenu);
-        pMenu->m_pData->menu = ::GetSubMenu(m_pData->menu, pos);
-        pMenu->m_pData->isManagedMenu = false;
-        m_pData->vSubMenus.push_back(pMenu);
-
-        return *pMenu;
+        return CMenu(::GetSubMenu(m_pData->menu, pos));
     }
 
     // Inserts a new menu item into a menu, moving other items down the menu.

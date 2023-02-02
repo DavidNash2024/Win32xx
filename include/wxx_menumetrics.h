@@ -338,7 +338,8 @@ namespace Win32xx
         int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() + m_marCheck.Width() + m_sizeCheck.cx;
         int cy = item.Height();
 
-        return CRect(x, y, x + cx, y + cy);
+        CRect rcGutter(x, y, x + cx, y + cy);
+        return ScaleRect(rcGutter);
     }
 
     inline CRect CMenuMetrics::GetCheckRect(const CRect& item) const
@@ -355,7 +356,8 @@ namespace Win32xx
         CSize size;
 
         // Add icon/check width.
-        size.cx += m_sizeCheck.cx + m_marCheck.Width();
+        CRect rc;
+        size.cx += GetGutterRect(rc).Width();
 
         if (pmd->mii.fType & MFT_SEPARATOR)
         {
@@ -373,12 +375,11 @@ namespace Win32xx
             // Account for text size
             CSize sizeText = ScaleSize(GetTextSize(pmd));
             size.cx += sizeText.cx;
-            size.cy = MAX(size.cy, sizeText.cy);
+            size.cy = sizeText.cy;
 
             // Account for icon or check height.
             int iconGap = 6;
             size.cy = MAX(size.cy, GetMenuIconHeight() + iconGap);
-
         }
 
         return (size);
@@ -412,33 +413,31 @@ namespace Win32xx
     inline CSize CMenuMetrics::GetTextSize(MenuItemData* pmd) const
     {
         CSize sizeText;
-        assert(m_frame);
-        CClientDC DesktopDC(0);
-        LPCTSTR szItemText = pmd->GetItemText();
+        CMemDC memDC(0);
 
+        // Set the device context font, taking bold items into account.
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        if (static_cast<int>(::GetMenuDefaultItem(pmd->menu, TRUE, GMDI_USEDISABLED)) != -1)
+            info.lfMenuFont.lfWeight = FW_BOLD;
+        memDC.CreateFontIndirect(info.lfMenuFont);
+
+        // Calculate the size of the text.
+        LPCTSTR szItemText = pmd->GetItemText();
         if (IsVistaMenu())
         {
             CRect rcText;
-            GetThemeTextExtent(DesktopDC, MENU_POPUPITEM, 0, TtoW(szItemText), lstrlen(szItemText),
-                DT_CALCRECT | DT_EXPANDTABS, NULL, &rcText);
+            GetThemeTextExtent(memDC, MENU_POPUPITEM, 0, TtoW(szItemText), lstrlen(szItemText),
+                 0, NULL, &rcText);
 
             sizeText.SetSize(rcText.right, rcText.bottom);
         }
         else
         {
-            // Get the font used in menu items.
-            NONCLIENTMETRICS info = GetNonClientMetrics();
-
-            // Default menu items are bold, so take this into account.
-            if (static_cast<int>(::GetMenuDefaultItem(pmd->menu, TRUE, GMDI_USEDISABLED)) != -1)
-                info.lfMenuFont.lfWeight = FW_BOLD;
-
-            // Calculate the size of the text.
-            DesktopDC.CreateFontIndirect(info.lfMenuFont);
-            sizeText = DesktopDC.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
-            sizeText.cx += m_marText.cxRightWidth;
-            sizeText.cy += m_marText.Height();
+            sizeText = memDC.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
         }
+
+        sizeText.cx += m_marText.cxRightWidth;
+        sizeText.cy += m_marText.Height();
 
         return sizeText;
     }
