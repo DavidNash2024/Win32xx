@@ -1647,7 +1647,6 @@ namespace Win32xx
     template <class T>
     inline int CFrameT<T>::GetMenuIconHeight() const
     {
-
         return GetMenuMetrics().GetMenuIconHeight();
     }
 
@@ -2015,12 +2014,13 @@ namespace Win32xx
         if (::IsMenu(menu))
         {
             SetFrameMenu(menu);
-            SetMenuMetrics();
             if (m_maxMRU > 0)
                 UpdateMRUMenu();
         }
         else
             ShowMenu(FALSE);  // No menu if IDW_MAIN menu resource isn't defined
+
+        SetMenuMetrics();
 
         // Create the ToolBar
         if (IsUsingToolBar())
