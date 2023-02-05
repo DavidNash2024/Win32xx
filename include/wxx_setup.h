@@ -241,7 +241,7 @@ namespace Win32xx
     inline int GetComCtlVersion()
     {
         // Retrieve the Common Controls DLL handle.
-        HMODULE comCtl = ::GetModuleHandle(_T("COMCTL32.DLL"));
+        HMODULE comCtl = ::GetModuleHandle(_T("comctl32.dll"));
         if (comCtl == 0)
             return 0;
 
@@ -315,7 +315,7 @@ namespace Win32xx
         if (module)
         {
             RTLGETVERSION* pfn = reinterpret_cast<RTLGETVERSION*>(
-                reinterpret_cast<void*>(GetProcAddress(module, "RtlGetVersion")));
+                reinterpret_cast<void*>(::GetProcAddress(module, "RtlGetVersion")));
 
             if (pfn != NULL)
             {
@@ -375,9 +375,9 @@ namespace Win32xx
     inline void LoadCommonControls()
     {
         // Retrieve the Common Controls DLL handle.
-        HMODULE comCtl = ::GetModuleHandle(_T("COMCTL32.DLL"));
+        HMODULE comCtl = ::GetModuleHandle(_T("comctl32.dll"));
         if (comCtl == 0)
-            comCtl = ::GetModuleHandle(_T("COMMCTRL.DLL"));
+            comCtl = ::GetModuleHandle(_T("commctrl.dll"));
 
         if (comCtl)
         {

@@ -67,24 +67,12 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                                   /*
     {
         rtn = thisApp.Run();
     }
-    catch (CException &e)   // catch all CException events
+    catch (const CException &e)   // catch all CException events
     {
           // Process the exception and quit
         CString msg = e.what() + (CString)_T("\n") + e.GetText() +
         (CString)_T("\nWinMain Goodbye...");
         ::MessageBox(NULL, msg, _T("Standard Exception"), MB_OK |
-            MB_ICONSTOP | MB_TASKMODAL);
-    }
-    catch(CString &s)   // catch CString events
-    {
-        CString msg = s + (CString)"\nWinMain Goodbye...";
-        ::MessageBox(NULL, msg, _T("Registered Exception"), MB_OK |
-            MB_ICONSTOP | MB_TASKMODAL);
-    }
-    catch(LPCTSTR s)        // catch C string events
-    {
-        CString msg = s + (CString)"\nWinMain Goodbye...";
-        ::MessageBox(NULL, msg, _T("Registered Exception"), MB_OK |
             MB_ICONSTOP | MB_TASKMODAL);
     }
     catch(...)      // catch all other exception events

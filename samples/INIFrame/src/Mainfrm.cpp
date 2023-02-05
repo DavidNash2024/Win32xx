@@ -6,6 +6,10 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
+#ifndef INVALID_FILE_ATTRIBUTES
+#define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+#endif
+
 //////////////////////////////////
 // CMainFrame function definitions
 //
@@ -296,9 +300,13 @@ CString CMainFrame::GetINIPath()
     {
         // Create the directory if required
         filePath += _T("\\Win32++");
-        CreateDirectory(filePath, NULL);
+        ::CreateDirectory(filePath, NULL);
         filePath += _T("\\INIFrame");
-        CreateDirectory(filePath, NULL);
+        ::CreateDirectory(filePath, NULL);
+
+        DWORD attributes = GetFileAttributes(filePath);
+        if ((attributes == INVALID_FILE_ATTRIBUTES) || !(attributes & FILE_ATTRIBUTE_DIRECTORY))
+            throw CFileException(filePath, _T("Failed to access app directory"));
 
         // Note: on Win2000 and above we could create the folders in a single step:
         // FilePath += _T("\\Win32++\\INIFrame");
@@ -313,74 +321,82 @@ CString CMainFrame::GetINIPath()
 // Load values to, or restore values from the ini file.
 void CMainFrame::SerializeINI(BOOL isStoring)
 {
-    CString fileName = GetINIPath() + _T("\\Frame.ini");
-    CString key("Frame Settings");
-
-    WINDOWPLACEMENT wndpl;
-    ZeroMemory(&wndpl, sizeof(wndpl));
-    wndpl.length = sizeof(wndpl);
-
-    if (isStoring)
+    try
     {
-        GetWindowPlacement(wndpl);
+        CString fileName = GetINIPath() + _T("\\Frame.ini");
+        CString key("Frame Settings");
 
-        CRect rc = wndpl.rcNormalPosition;
-        UINT top = MAX(rc.top, 0);
-        UINT left = MAX(rc.left, 0);
-        UINT width = MAX(rc.Width(), 100);
-        UINT height = MAX(rc.Height(), 50);
-        UINT showCmd = wndpl.showCmd;
+        WINDOWPLACEMENT wndpl;
+        ZeroMemory(&wndpl, sizeof(wndpl));
+        wndpl.length = sizeof(wndpl);
 
-        ::WritePrivateProfileString(NULL, NULL, NULL, fileName);
-
-        // Write the Frame window's position and show state
-        ::WritePrivateProfileString (key, _T("Left"),       ItoT(left), fileName);
-        ::WritePrivateProfileString (key, _T("Top"),        ItoT(top), fileName);
-        ::WritePrivateProfileString (key, _T("Width"),      ItoT(width), fileName);
-        ::WritePrivateProfileString (key, _T("Height"),     ItoT(height), fileName);
-        ::WritePrivateProfileString (key, _T("ShowCmd"),    ItoT(showCmd), fileName);
-
-        // Write the StatusBar and ToolBar show state.
-        DWORD showStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
-        DWORD showToolBar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
-        ::WritePrivateProfileString (key, _T("StatusBar"),  ItoT(showStatusBar), fileName);
-        ::WritePrivateProfileString (key, _T("ToolBar"),    ItoT(showToolBar), fileName);
-    }
-    else
-    {
-        InitValues values;
-
-        UINT failed = 999999;
-        CString error("Error: GPPS failed");
-
-        UINT left = ::GetPrivateProfileInt(key, _T("Left"), failed, fileName);
-        UINT top = ::GetPrivateProfileInt (key, _T("Top"), failed, fileName);
-        UINT width = ::GetPrivateProfileInt (key, _T("Width"), failed, fileName);
-        UINT height = ::GetPrivateProfileInt (key, _T("Height"), failed, fileName);
-        UINT showCmd = ::GetPrivateProfileInt (key, _T("ShowCmd"), failed, fileName);
-
-        if (left != failed && top != failed && width != failed && height != failed && showCmd != failed)
+        if (isStoring)
         {
-            values.position = CRect(left, top, left + width, top + height);
-            values.showCmd = showCmd;
+            GetWindowPlacement(wndpl);
 
-            // Set the show state of the status bar
-            UINT showStatus = ::GetPrivateProfileInt (key, _T("StatusBar"), 0, fileName);
-            if (showStatus != failed)
-                values.showStatusBar = showStatus;
+            CRect rc = wndpl.rcNormalPosition;
+            UINT top = MAX(rc.top, 0);
+            UINT left = MAX(rc.left, 0);
+            UINT width = MAX(rc.Width(), 100);
+            UINT height = MAX(rc.Height(), 50);
+            UINT showCmd = wndpl.showCmd;
 
-            // Set the show state of the tool bar
-            UINT showTool = ::GetPrivateProfileInt (key, _T("ToolBar"), 0, fileName);
-            if (showTool != failed)
-                values.showToolBar = showTool;
+            ::WritePrivateProfileString(NULL, NULL, NULL, fileName);
+
+            // Write the Frame window's position and show state
+            ::WritePrivateProfileString(key, _T("Left"), ItoT(left), fileName);
+            ::WritePrivateProfileString(key, _T("Top"), ItoT(top), fileName);
+            ::WritePrivateProfileString(key, _T("Width"), ItoT(width), fileName);
+            ::WritePrivateProfileString(key, _T("Height"), ItoT(height), fileName);
+            ::WritePrivateProfileString(key, _T("ShowCmd"), ItoT(showCmd), fileName);
+
+            // Write the StatusBar and ToolBar show state.
+            DWORD showStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
+            DWORD showToolBar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
+            ::WritePrivateProfileString(key, _T("StatusBar"), ItoT(showStatusBar), fileName);
+            ::WritePrivateProfileString(key, _T("ToolBar"), ItoT(showToolBar), fileName);
         }
         else
         {
-            TRACE("Failed to load ini file settings");
-            ;;
-        }
+            InitValues values;
 
-        SetInitValues(values);
+            UINT failed = 999999;
+            CString error("Error: GPPS failed");
+
+            UINT left = ::GetPrivateProfileInt(key, _T("Left"), failed, fileName);
+            UINT top = ::GetPrivateProfileInt(key, _T("Top"), failed, fileName);
+            UINT width = ::GetPrivateProfileInt(key, _T("Width"), failed, fileName);
+            UINT height = ::GetPrivateProfileInt(key, _T("Height"), failed, fileName);
+            UINT showCmd = ::GetPrivateProfileInt(key, _T("ShowCmd"), failed, fileName);
+
+            if (left != failed && top != failed && width != failed && height != failed && showCmd != failed)
+            {
+                values.position = CRect(left, top, left + width, top + height);
+                values.showCmd = showCmd;
+
+                // Set the show state of the status bar
+                UINT showStatus = ::GetPrivateProfileInt(key, _T("StatusBar"), 0, fileName);
+                if (showStatus != failed)
+                    values.showStatusBar = showStatus;
+
+                // Set the show state of the tool bar
+                UINT showTool = ::GetPrivateProfileInt(key, _T("ToolBar"), 0, fileName);
+                if (showTool != failed)
+                    values.showToolBar = showTool;
+            }
+            else
+            {
+                TRACE("Failed to load ini file settings");
+                ;;
+            }
+
+            SetInitValues(values);
+        }
+    }
+
+    catch (const CException& e)
+    {
+        ::MessageBox(0, e.GetText(), _T("Error"), MB_OK);
     }
 }
 

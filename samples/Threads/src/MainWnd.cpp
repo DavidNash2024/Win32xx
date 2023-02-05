@@ -87,7 +87,7 @@ int CMainWindow::OnCreate(CREATESTRUCT&)
             AppendText(str);
         }
 
-        catch (CWinException &e)
+        catch (const CWinException &e)
         {
             // Display the exception and allow the program to continue.
             CString Error = CString(e.GetText()) + "\n" + CString(e.GetErrorString());

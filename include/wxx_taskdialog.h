@@ -280,7 +280,7 @@ namespace Win32xx
         pTLSData->pWnd = this;
 
         // Declare a pointer to the TaskDialogIndirect function.
-        HMODULE comCtl = ::GetModuleHandleW(L"COMCTL32.DLL");
+        HMODULE comCtl = ::GetModuleHandleW(L"comctl32.dll");
         assert(comCtl);
         typedef HRESULT WINAPI TASKDIALOGINDIRECT(const TASKDIALOGCONFIG*, int*, int*, BOOL*);
         HRESULT result = E_FAIL;
@@ -391,7 +391,7 @@ namespace Win32xx
     inline BOOL CTaskDialog::IsSupported()
     {
         BOOL result = FALSE;
-        HMODULE comctl = ::GetModuleHandleW(L"COMCTL32.DLL");
+        HMODULE comctl = ::GetModuleHandleW(L"comctl32.dll");
         assert(comctl);
         if (comctl)
         {

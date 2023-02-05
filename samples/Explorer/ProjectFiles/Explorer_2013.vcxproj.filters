@@ -19,10 +19,13 @@
     <ClCompile Include="..\src\ShellWrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\SplitterPanes.cpp">
+    <ClCompile Include="..\src\StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\StdAfx.cpp">
+    <ClCompile Include="..\src\LeftPane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RightPane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -40,9 +43,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\ShellWrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\SplitterPanes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\stdafx.h">
@@ -212,6 +212,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_thread.h">
       <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\LeftPane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RightPane.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

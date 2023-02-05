@@ -92,12 +92,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ExplorerApp.cpp" />
+    <ClCompile Include="..\src\LeftPane.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\MyListView.cpp" />
     <ClCompile Include="..\src\MyTreeView.cpp" />
+    <ClCompile Include="..\src\RightPane.cpp" />
     <ClCompile Include="..\src\ShellWrapper.cpp" />
-    <ClCompile Include="..\src\SplitterPanes.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -159,12 +160,13 @@
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\ExplorerApp.h" />
+    <ClInclude Include="..\src\LeftPane.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\MyListView.h" />
     <ClInclude Include="..\src\MyTreeView.h" />
     <ClInclude Include="..\src\resource.h" />
+    <ClInclude Include="..\src\RightPane.h" />
     <ClInclude Include="..\src\ShellWrapper.h" />
-    <ClInclude Include="..\src\SplitterPanes.h" />
     <ClInclude Include="..\src\stdafx.h" />
   </ItemGroup>
   <ItemGroup>

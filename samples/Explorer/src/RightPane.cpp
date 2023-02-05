@@ -1,19 +1,14 @@
-/////////////////////////////
-// SplitterPanes.cpp
+//////////////////////////
+// RightPane.cpp
 //
 
 #include "stdafx.h"
-#include "SplitterPanes.h"
+#include "LeftPane.h"
+#include "RightPane.h"
 
-////////////////////////////////////////////////
-// CLeftPane and CRightPane function definitions
+//////////////////////////////////
+// CRightPane function definitions
 //
-
-// Constructor.
-CLeftPane::CLeftPane()
-{
-    SetView(m_view);
-}
 
 // Constructor.
 CRightPane::CRightPane()
