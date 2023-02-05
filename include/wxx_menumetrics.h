@@ -207,7 +207,7 @@ namespace Win32xx
         CRect GetSeperatorRect(const CRect& item) const;
         CRect GetTextRect(const CRect& item) const;
         CSize GetTextSize(MenuItemData* pmd) const;
-        void  Initialize(HWND frame);
+        void  Initialize();
         BOOL  IsVistaMenu() const;
         CRect ScaleRect(const CRect& item) const;
         CSize ScaleSize(const CSize& item) const;
@@ -231,7 +231,6 @@ namespace Win32xx
 
     private:
         HANDLE  m_theme;                // Theme handle
-        HWND    m_frame;                // Handle to the frame window
         HMODULE m_uxTheme;              // Module handle to the UXTheme dll
 
         Margins m_marCheck;            // Check margins
@@ -281,7 +280,7 @@ namespace Win32xx
                                             m_pfnGetThemeMargins(0), m_pfnGetThemeTextExtent(0),
                                             m_pfnIsThemeBGPartTransparent(0), m_pfnOpenThemeData(0)
     {
-        m_frame = 0;
+        Initialize();
     }
 
     inline CMenuMetrics::~CMenuMetrics()
@@ -496,13 +495,11 @@ namespace Win32xx
         return E_NOTIMPL;
     }
 
-    inline void CMenuMetrics::Initialize(HWND frame)
+    // Initializes the CMenuMetrics member variables.
+    inline void CMenuMetrics::Initialize()
     {
-        assert(IsWindow(frame));
-        m_frame = frame;
-
         if (m_uxTheme == 0)
-            m_uxTheme = ::GetModuleHandle(_T("UXTHEME.DLL"));
+            m_uxTheme = ::GetModuleHandle(_T("uxtheme.dll"));
 
         if (m_uxTheme != 0)
         {
@@ -537,7 +534,7 @@ namespace Win32xx
             m_theme = 0;
         }
 
-        m_theme = OpenThemeData(m_frame, VSCLASS_MENU);
+        m_theme = OpenThemeData(0, VSCLASS_MENU);
 
         if (m_theme != 0)
         {
@@ -580,7 +577,6 @@ namespace Win32xx
     // Opens the theme data for a window and its associated class.
     inline HANDLE CMenuMetrics::OpenThemeData(HWND wnd, LPCWSTR classList) const
     {
-        assert(wnd);
         if (m_pfnOpenThemeData)
             return m_pfnOpenThemeData(wnd, classList);
 

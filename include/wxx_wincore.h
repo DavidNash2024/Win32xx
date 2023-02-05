@@ -211,7 +211,7 @@ namespace Win32xx
         typedef BOOL WINAPI GETMONITORINFO(HMONITOR, LPMONITORINFO);
         typedef HMONITOR WINAPI MONITORFROMWINDOW(HWND, DWORD);
         MONITORFROMWINDOW* pfnMonitorFromWindow = NULL;
-        HMODULE hUser32 = ::GetModuleHandle(_T("USER32.DLL"));
+        HMODULE hUser32 = ::GetModuleHandle(_T("user32.dll"));
         GETMONITORINFO* pfnGetMonitorInfo = NULL;
         if (hUser32)
         {
@@ -506,7 +506,7 @@ namespace Win32xx
         // Load the User32 DLL
         typedef HWND WINAPI GETANCESTOR(HWND, UINT);
         GETANCESTOR* pfnGetAncestor = NULL;
-        HMODULE user32 = ::GetModuleHandle(_T("USER32.DLL"));
+        HMODULE user32 = ::GetModuleHandle(_T("user32.dll"));
 
         if (user32 != 0)
         {
@@ -2324,7 +2324,7 @@ namespace Win32xx
         {
             typedef HRESULT WINAPI SETWINDOWTHEME(HWND, LPCWSTR, LPCWSTR);
             SETWINDOWTHEME* pfn = reinterpret_cast<SETWINDOWTHEME*>(
-                reinterpret_cast<void*>(GetProcAddress(theme, "SetWindowTheme")));
+                reinterpret_cast<void*>(::GetProcAddress(theme, "SetWindowTheme")));
 
             result = pfn(*this, subAppName, subIdList);
         }
@@ -2542,19 +2542,24 @@ namespace Win32xx
     // The AppData folder is available in Windows 2000 and above.
     inline CString GetAppDataPath()
     {
-        CString AppData;
-        HMODULE hShell = ::GetModuleHandle(_T("Shell32.dll"));
-        if (hShell)
+        CString appData;
+
+        CString system;
+        ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
+        system.ReleaseBuffer();
+
+        HMODULE shell = ::LoadLibrary(system + _T("\\Shell32.dll"));
+        if (shell)
         {
             typedef HRESULT WINAPI MYPROC(HWND, int, HANDLE, DWORD, LPTSTR);
 
             // Get the function pointer of the SHGetFolderPath function
 #ifdef UNICODE
             MYPROC* pSHGetFolderPath = reinterpret_cast<MYPROC*>(
-                reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetFolderPathW")));
+                reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetFolderPathW")));
 #else
             MYPROC* pSHGetFolderPath = reinterpret_cast<MYPROC*>(
-                reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetFolderPathA")));
+                reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetFolderPathA")));
 #endif
 
 #ifndef CSIDL_APPDATA
@@ -2569,33 +2574,35 @@ namespace Win32xx
             if (pSHGetFolderPath)
             {
                 // Call the SHGetFolderPath function to retrieve the AppData folder
-                pSHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, AppData.GetBuffer(MAX_PATH));
-                AppData.ReleaseBuffer();
+                pSHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, appData.GetBuffer(MAX_PATH));
+                appData.ReleaseBuffer();
             }
 
             // If we can't get the AppData folder, get the MyDocuments folder instead
-            if (AppData.IsEmpty())
+            if (appData.IsEmpty())
             {
                 typedef HRESULT WINAPI GETSPECIALPATH(HWND, LPTSTR, int, BOOL);
 
 #ifdef UNICODE
                 GETSPECIALPATH* pGetSpecialPath = reinterpret_cast<GETSPECIALPATH*>(
-                    reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetSpecialFolderPathW")));
+                    reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetSpecialFolderPathW")));
 #else
                 GETSPECIALPATH* pGetSpecialPath = reinterpret_cast<GETSPECIALPATH*>(
-                    reinterpret_cast<void*>(GetProcAddress(hShell, "SHGetSpecialFolderPathA")));
+                    reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetSpecialFolderPathA")));
 #endif
 
                 if (pGetSpecialPath)
                 {
                     // Call the SHGetSpecialFolderPath function to retrieve the MyDocuments folder
-                    pGetSpecialPath(NULL, AppData.GetBuffer(MAX_PATH), CSIDL_PERSONAL, TRUE);
-                    AppData.ReleaseBuffer();
+                    pGetSpecialPath(NULL, appData.GetBuffer(MAX_PATH), CSIDL_PERSONAL, TRUE);
+                    appData.ReleaseBuffer();
                 }
             }
+
+            ::FreeLibrary(shell);
         }
 
-        return AppData;
+        return appData;
     }
 
     // Retrieves the command line arguments and stores them in a vector of CString.
@@ -2603,51 +2610,51 @@ namespace Win32xx
     // supports ANSI and Unicode, and doesn't require the user to use LocalFree.
     inline std::vector<CString> GetCommandLineArgs()
     {
-        std::vector<CString> CommandLineArgs;
-        CString CommandLine = GetCommandLine();
+        std::vector<CString> commandLineArgs;
+        CString commandLine = GetCommandLine();
         int index = 0;
         int endPos = 0;
 
-        while (index < CommandLine.GetLength())
+        while (index < commandLine.GetLength())
         {
             // Is the argument quoted?
-            bool isQuoted = (CommandLine[index] == _T('\"'));
+            bool isQuoted = (commandLine[index] == _T('\"'));
 
             if (isQuoted)
             {
                 // Find the terminating token (quote followed by space)
-                endPos = CommandLine.Find(_T("\" "), index);
-                if (endPos == -1) endPos = CommandLine.GetLength() - 1;
+                endPos = commandLine.Find(_T("\" "), index);
+                if (endPos == -1) endPos = commandLine.GetLength() - 1;
 
                 // Store the argument in the CStringT vector without the quotes.
                 CString s;
                 if (endPos - index < 2)
                     s = _T("\"\"");     // "" for a single quote or double quote argument
                 else
-                    s = CommandLine.Mid(index + 1, endPos - index - 1);
+                    s = commandLine.Mid(index + 1, endPos - index - 1);
 
-                CommandLineArgs.push_back(s);
+                commandLineArgs.push_back(s);
                 index = endPos + 2;
             }
             else
             {
                 // Find the terminating token (space character).
-                endPos = CommandLine.Find(_T(' '), index);
-                if (endPos == -1) endPos = CommandLine.GetLength();
+                endPos = commandLine.Find(_T(' '), index);
+                if (endPos == -1) endPos = commandLine.GetLength();
 
                 // Store the argument in the CStringT vector.
-                CString s = CommandLine.Mid(index, endPos - index);
-                CommandLineArgs.push_back(s);
+                CString s = commandLine.Mid(index, endPos - index);
+                commandLineArgs.push_back(s);
                 index = endPos + 1;
             }
 
             // skip excess space characters
-            while (index < CommandLine.GetLength() && CommandLine[index] == _T(' '))
+            while (index < commandLine.GetLength() && commandLine[index] == _T(' '))
                 index++;
         }
 
         // CommandLineArgs is a vector of CStringT.
-        return CommandLineArgs;
+        return commandLineArgs;
     }
 
     // Returns a CString containing the specified string resource.

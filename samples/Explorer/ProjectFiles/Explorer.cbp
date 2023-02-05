@@ -184,6 +184,8 @@
 		</VirtualTargets>
 		<Unit filename="../src/ExplorerApp.cpp" />
 		<Unit filename="../src/ExplorerApp.h" />
+		<Unit filename="../src/LeftPane.cpp" />
+		<Unit filename="../src/LeftPane.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/MyListView.cpp" />
@@ -193,10 +195,10 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="../src/RightPane.cpp" />
+		<Unit filename="../src/RightPane.h" />
 		<Unit filename="../src/ShellWrapper.cpp" />
 		<Unit filename="../src/ShellWrapper.h" />
-		<Unit filename="../src/SplitterPanes.cpp" />
-		<Unit filename="../src/SplitterPanes.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.h">

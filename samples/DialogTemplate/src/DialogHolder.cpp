@@ -63,7 +63,7 @@ void CDialogHolder::ShowDialog(CWnd* pFrame, unsigned char* dlgArray)
         }
     }
 
-    catch (CWinException& e)
+    catch (const CWinException& e)
     {
         CString error = "Error reported by GetLastError:\n";
         error << e.GetErrorString();

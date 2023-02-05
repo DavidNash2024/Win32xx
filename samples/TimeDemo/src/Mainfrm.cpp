@@ -343,7 +343,7 @@ OnFontChoice()                                                              /*
             m_view.SetTextColor(FontDlg.GetColor());
         }
 
-        catch (CResourceException&)
+        catch (const CResourceException&)
         {
             ::MessageBox(NULL, _T("Font creation error."),
                 _T("Error"), MB_OK | MB_ICONEXCLAMATION |

@@ -122,6 +122,9 @@
 				RelativePath="..\src\ExplorerApp.cpp">
 			</File>
 			<File
+				RelativePath="..\src\LeftPane.cpp">
+			</File>
+			<File
 				RelativePath="..\src\main.cpp">
 			</File>
 			<File
@@ -134,10 +137,10 @@
 				RelativePath="..\src\MyTreeView.cpp">
 			</File>
 			<File
-				RelativePath="..\src\ShellWrapper.cpp">
+				RelativePath="..\src\RightPane.cpp">
 			</File>
 			<File
-				RelativePath="..\src\SplitterPanes.cpp">
+				RelativePath="..\src\ShellWrapper.cpp">
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp">
@@ -166,10 +169,10 @@
 				RelativePath="..\src\resource.h">
 			</File>
 			<File
-				RelativePath="..\src\ShellWrapper.h">
+				RelativePath="..\src\RightPane.h">
 			</File>
 			<File
-				RelativePath="..\src\SplitterPanes.h">
+				RelativePath="..\src\ShellWrapper.h">
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">

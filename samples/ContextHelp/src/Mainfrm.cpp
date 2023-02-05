@@ -108,7 +108,7 @@ HWND CMainFrame::Create(HWND parent)
 CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 {
     ::SetLastError(0);
-    CString app_data_path = GetAppDataPath();
+    CString appDataPath = GetAppDataPath();
 
     int from = 0;
     int to = subfolder.GetLength();
@@ -121,19 +121,19 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
             next = to;
 
         CString add = subfolder.Mid(from, next - from);
-        app_data_path += _T("\\") + add;
-        ::CreateDirectory(app_data_path, 0);
+        appDataPath += _T("\\") + add;
+        ::CreateDirectory(appDataPath, NULL);
 
-        if ((::CreateDirectory(app_data_path, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
+        if ((::CreateDirectory(appDataPath, NULL) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
         {
-            CString msg = app_data_path + _T("\nDirectory creation error.");
+            CString msg = appDataPath + _T("Directory creation error.");
             throw CUserException(msg);
         }
 
         from = ++next;
     }
 
-    return app_data_path;
+    return appDataPath;
 }
 
 // Identifies the window from the cursor position and returns its ID.

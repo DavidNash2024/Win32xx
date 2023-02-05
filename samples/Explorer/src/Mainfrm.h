@@ -6,7 +6,8 @@
 #define MAINFRM_H
 
 
-#include "SplitterPanes.h"
+#include "LeftPane.h"
+#include "RightPane.h"
 
 
 ///////////////////////////////////////////////////////////

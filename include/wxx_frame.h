@@ -210,7 +210,6 @@ namespace Win32xx
         void SetFrameMenu(CMenu menu);
         void SetInitValues(const InitValues& values);
         void SetKbdHook();
-        void SetMenuMetrics()                             { m_menuMetrics.Initialize(*this); }
         void SetMenuTheme(const MenuTheme& mt);
         void SetMRULimit(UINT MRULimit);
         void SetReBarTheme(const ReBarTheme& rbt);
@@ -1076,7 +1075,7 @@ namespace Win32xx
         pDrawItem->rcItem.top = 0;
         pDrawItem->rcItem.bottom = itemRect.Height();
 
-        if (IsUsingVistaMenu() && !IsUsingDarkMenu())  // Is uxtheme.dll loaded?
+        if (IsUsingVistaMenu() && !IsUsingDarkMenu())
         {
             DrawVistaMenuBkgnd(pDrawItem);
 
@@ -1737,7 +1736,7 @@ namespace Win32xx
         {
             typedef HRESULT WINAPI GETCURRENTTHEMENAME(LPWSTR, int, LPWSTR, int, LPWSTR, int);
             GETCURRENTTHEMENAME* pfn = reinterpret_cast<GETCURRENTTHEMENAME*>(
-                reinterpret_cast<void*>(GetProcAddress(theme, "GetCurrentThemeName")));
+                reinterpret_cast<void*>(::GetProcAddress(theme, "GetCurrentThemeName")));
             pfn(0, 0, themeName, 30, 0, 0);
         }
 
@@ -2019,8 +2018,6 @@ namespace Win32xx
         }
         else
             ShowMenu(FALSE);  // No menu if IDW_MAIN menu resource isn't defined
-
-        SetMenuMetrics();
 
         // Create the ToolBar
         if (IsUsingToolBar())

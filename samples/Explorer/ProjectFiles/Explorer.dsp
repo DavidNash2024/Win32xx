@@ -95,6 +95,10 @@ SOURCE=..\src\ExplorerApp.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\LeftPane.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
@@ -111,11 +115,11 @@ SOURCE=..\src\MyTreeView.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\ShellWrapper.cpp
+SOURCE=..\src\RightPane.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\SplitterPanes.cpp
+SOURCE=..\src\ShellWrapper.cpp
 # End Source File
 # Begin Source File
 
@@ -128,6 +132,10 @@ SOURCE=..\src\StdAfx.cpp
 # Begin Source File
 
 SOURCE=..\src\ExplorerApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\LeftPane.h
 # End Source File
 # Begin Source File
 
@@ -147,11 +155,11 @@ SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\ShellWrapper.h
+SOURCE=..\src\RightPane.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\SplitterPanes.h
+SOURCE=..\src\ShellWrapper.h
 # End Source File
 # Begin Source File
 

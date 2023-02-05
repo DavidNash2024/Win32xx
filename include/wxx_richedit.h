@@ -195,16 +195,16 @@ namespace Win32xx
         system.ReleaseBuffer();
 
         // Load RichEdit version 1.0
-        m_rich1 = LoadLibrary(system + _T("\\riched32.dll"));
+        m_rich1 = ::LoadLibrary(system + _T("\\riched32.dll"));
 
         if (m_rich1 == 0)
             throw CNotSupportedException(GetApp()->MsgRichEditDll());
 
         // Load RichEdit version 2.0 or 3.0 (for Win98 and above)
-        m_rich2 = LoadLibrary(system + _T("\\riched20.dll"));
+        m_rich2 = ::LoadLibrary(system + _T("\\riched20.dll"));
 
         // Load RichEdit version 4.1 (for WinXP and above)
-        m_rich4_1 = LoadLibrary(system + _T("\\Msftedit.dll"));
+        m_rich4_1 = ::LoadLibrary(system + _T("\\Msftedit.dll"));
     }
 
     inline CRichEdit::~CRichEdit()

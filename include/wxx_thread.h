@@ -183,7 +183,7 @@ namespace Win32xx
         if (m_thread)
         {
             assert(!IsRunning());
-            CloseHandle(m_thread);
+            ::CloseHandle(m_thread);
         }
 
         m_thread = reinterpret_cast<HANDLE>(::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc,
