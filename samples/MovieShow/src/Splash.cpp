@@ -11,8 +11,11 @@
 //
 
 // Constructor.
-CSplash::CSplash() : m_hIcon(0), m_fontHandle(0)
+CSplash::CSplash() : m_fontHandle(0)
 {
+    int xImage = 256;
+    int yImage = 256;
+    m_hIcon = (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, xImage, yImage, LR_SHARED);
     LoadFont();
 }
 
@@ -24,9 +27,6 @@ CSplash::~CSplash()
 // Called during window creation.
 int CSplash::OnCreate(CREATESTRUCT&)
 {
-    int xImage = 256;
-    int yImage = 256;
-    m_hIcon = (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, xImage, yImage, LR_SHARED);
     CenterWindow();
     AddBar();
     return 0;

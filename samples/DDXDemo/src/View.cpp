@@ -425,7 +425,7 @@ DoDataExchange(CDataExchange& DX)                                           /*
       // index. Only one of these two methods should be used.  Comment the
       // other out below.
     DX.DDX_CBString(IDC_COMBOBOX,   m_comboBoxVal); // use string method
-//  DDX_CBIndex(IDC_COMBOBOX,       m_comboBoxIndx); // use index method
+//  DX.DDX_CBIndex(IDC_COMBOBOX,    m_comboBoxIndx); // use index method
 //  m_comboBox.GetLBText(m_comboBoxIndx, m_comboBoxVal.GetBuffer(256));
 //  m_comboBoxVal.ReleaseBuffer();
 
@@ -433,7 +433,7 @@ DoDataExchange(CDataExchange& DX)                                           /*
       // index. Only one of these two methods should be used.  Comment the
       // other out below.
     DX.DDX_LBString(IDC_LISTBOX,    m_listBoxVal);  // use string method
-//  DDX_LBIndex(IDC_LISTBOX,        m_listBoxIndx);  // use index method
+//  DX.DDX_LBIndex(IDC_LISTBOX,     m_listBoxIndx);  // use index method
 //  m_listBox.GetText(m_listBoxIndx, m_listBoxVal.GetBuffer(256));
 //  m_listBoxVal.ReleaseBuffer();
 

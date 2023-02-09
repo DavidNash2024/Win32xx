@@ -29,9 +29,11 @@ New Features and Enhancements
 
 Changes in Detail
 -----------------
-Added CFrameT::OnDrawStatusBar
+Added CFrameT::GetMenuBarFont
+Added CFrameT::GetStatusBarFont
 Added CFrameT::IsUsingDarkMenu
 Added CFrameT::IsUsingOwnerDrawnMenu
+Added CFrameT::OnDrawStatusBar
 Added CFrameT::ResetMenuMetrics
 Added CFrameT::UseDarkMenu
 Added CFrameT::UseOwnerDrawnMenu
