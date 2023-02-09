@@ -172,13 +172,12 @@ void CFormView::OnOK()
 BOOL CFormView::OnCheckA()
 {
     TRACE("Check Box A\n");
-    bool isCheck = GetDoc().GetCheckA();
-    isCheck = !isCheck;  // Toggle
-    UINT checkFlag = isCheck ? BST_CHECKED : BST_UNCHECKED;
-    CheckDlgButton(ID_CHECK_A, checkFlag);
+    bool isCheck = (IsDlgButtonChecked(ID_CHECK_A) == BST_CHECKED);
     GetDoc().SetCheckA(isCheck);
 
-    SetDlgItemText(IDC_STATUS, _T("Check Box A toggled"));
+    CString str("Box A ");
+    LPCSTR checked = isCheck ? "checked" : "unchecked";
+    SetDlgItemText(IDC_STATUS, str + checked);
     return TRUE;
 }
 
@@ -186,13 +185,12 @@ BOOL CFormView::OnCheckA()
 BOOL CFormView::OnCheckB()
 {
     TRACE("Check Box B\n");
-    bool isCheck = GetDoc().GetCheckB();
-    isCheck = !isCheck;  // Toggle
-    UINT checkFlag = isCheck ? BST_CHECKED : BST_UNCHECKED;
-    CheckDlgButton(ID_CHECK_B, checkFlag);
+    bool isCheck = (IsDlgButtonChecked(ID_CHECK_B) == BST_CHECKED);
     GetDoc().SetCheckB(isCheck);
 
-    SetDlgItemText(IDC_STATUS, _T("Check Box B toggled"));
+    CString str("Box B ");
+    LPCSTR checked = isCheck ? "checked" : "unchecked";
+    SetDlgItemText(IDC_STATUS, str + checked);
     return TRUE;
 }
 
@@ -200,13 +198,12 @@ BOOL CFormView::OnCheckB()
 BOOL CFormView::OnCheckC()
 {
     TRACE("Check Box C\n");
-    bool isCheck = GetDoc().GetCheckC();
-    isCheck = !isCheck;  // Toggle
-    UINT checkFlag = isCheck ? BST_CHECKED : BST_UNCHECKED;
-    CheckDlgButton(ID_CHECK_C, checkFlag);
+    bool isCheck = (IsDlgButtonChecked(ID_CHECK_C) == BST_CHECKED);
     GetDoc().SetCheckC(isCheck);
 
-    SetDlgItemText(IDC_STATUS, _T("Check Box C toggled"));
+    CString str("Box C ");
+    LPCSTR checked = isCheck ? "checked" : "unchecked";
+    SetDlgItemText(IDC_STATUS, str + checked);
     return TRUE;
 }
 

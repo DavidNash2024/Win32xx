@@ -27,7 +27,6 @@ CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 
 CMyDialog::~CMyDialog()
 {
-    DestroyIcon(m_info);
 }
 
 void CMyDialog::OnDestroy()

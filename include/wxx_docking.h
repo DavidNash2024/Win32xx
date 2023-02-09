@@ -4402,8 +4402,6 @@ namespace Win32xx
     // Destructor.
     inline CDockContainer::~CDockContainer()
     {
-        if (m_tabIcon != 0)
-            DestroyIcon(m_tabIcon);
     }
 
     // Adds a container to the group. Set Insert to TRUE to insert the container

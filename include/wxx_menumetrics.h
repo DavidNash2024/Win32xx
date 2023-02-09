@@ -209,6 +209,7 @@ namespace Win32xx
         CSize GetTextSize(MenuItemData* pmd) const;
         void  Initialize();
         BOOL  IsVistaMenu() const;
+        int   ScaleInt(int i) const;
         CRect ScaleRect(const CRect& item) const;
         CSize ScaleSize(const CSize& item) const;
         void  Setup();
@@ -233,10 +234,10 @@ namespace Win32xx
         HANDLE  m_theme;                // Theme handle
         HMODULE m_uxTheme;              // Module handle to the UXTheme dll
 
-        Margins m_marCheck;            // Check margins
-        Margins m_marCheckBackground;  // Check background margins
-        Margins m_marItem;             // Item margins
-        Margins m_marText;             // Text margins
+        Margins m_marCheck;             // Check margins
+        Margins m_marCheckBackground;   // Check background margins
+        Margins m_marItem;              // Item margins
+        Margins m_marText;              // Text margins
 
         CSize   m_sizeCheck;            // Check size metric
         CSize   m_sizeSeparator;        // Separator size metric
@@ -337,8 +338,7 @@ namespace Win32xx
         int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() + m_marCheck.Width() + m_sizeCheck.cx;
         int cy = item.Height();
 
-        CRect rcGutter(x, y, x + cx, y + cy);
-        return ScaleRect(rcGutter);
+        return CRect(x, y, x + cx, y + cy);
     }
 
     inline CRect CMenuMetrics::GetCheckRect(const CRect& item) const
@@ -372,12 +372,13 @@ namespace Win32xx
             size.cx += m_marItem.Width();
 
             // Account for text size
-            CSize sizeText = ScaleSize(GetTextSize(pmd));
+            CSize sizeText = GetTextSize(pmd);
             size.cx += sizeText.cx;
-            size.cy = sizeText.cy;
 
             // Account for icon or check height.
-            int iconGap = 6;
+            int iconGap = 4;
+            iconGap = ScaleInt(iconGap);
+            size.cy = m_sizeCheck.cy + m_marCheckBackground.Height() + m_marCheck.Height();
             size.cy = MAX(size.cy, GetMenuIconHeight() + iconGap);
         }
 
@@ -411,33 +412,35 @@ namespace Win32xx
 
     inline CSize CMenuMetrics::GetTextSize(MenuItemData* pmd) const
     {
-        CSize sizeText;
-        CMemDC memDC(0);
-
-        // Set the device context font, taking bold items into account.
+        // Get the font used in menu items.
         NONCLIENTMETRICS info = GetNonClientMetrics();
+
+        // Default menu items are bold, so take this into account.
         if (static_cast<int>(::GetMenuDefaultItem(pmd->menu, TRUE, GMDI_USEDISABLED)) != -1)
             info.lfMenuFont.lfWeight = FW_BOLD;
-        memDC.CreateFontIndirect(info.lfMenuFont);
+
+        CClientDC dc(0);
+        dc.CreateFontIndirect(info.lfMenuFont);
 
         // Calculate the size of the text.
+        CSize sizeText;
         LPCTSTR szItemText = pmd->GetItemText();
         if (IsVistaMenu())
         {
             CRect rcText;
-            GetThemeTextExtent(memDC, MENU_POPUPITEM, 0, TtoW(szItemText), lstrlen(szItemText),
-                 0, NULL, &rcText);
+            GetThemeTextExtent(dc, MENU_POPUPITEM, 0, TtoW(szItemText), lstrlen(szItemText),
+                DT_EXPANDTABS, NULL, &rcText);
 
             sizeText.SetSize(rcText.right, rcText.bottom);
         }
         else
         {
-            sizeText = memDC.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
+            // Calculate the size of the text.
+            sizeText = dc.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
         }
 
-        sizeText.cx += m_marText.cxRightWidth;
+        sizeText.cx += m_marText.Width();
         sizeText.cy += m_marText.Height();
-
         return sizeText;
     }
 
@@ -588,11 +591,22 @@ namespace Win32xx
         return (m_theme != 0);
     }
 
+    // Re-scale the int to support the system's DPI.
+    inline int CMenuMetrics::ScaleInt(int i) const
+    {
+        // DC for the desktop
+        CClientDC dc(0);
+
+        int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
+        i = MulDiv(i, dpiX, 96);
+        return i;
+    }
+
     // Re-scale the CRect to support the system's DPI.
     inline CRect CMenuMetrics::ScaleRect(const CRect& item) const
     {
         // DC for the desktop
-        CWindowDC dc(0);
+        CClientDC dc(0);
 
         int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
         int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
