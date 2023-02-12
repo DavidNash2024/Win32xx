@@ -624,7 +624,7 @@ namespace Win32xx
     inline CSize CMenuMetrics::ScaleSize(const CSize& item) const
     {
         // DC for the desktop
-        CWindowDC dc(0);
+        CClientDC dc(0);
 
         int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
         int dpiY = dc.GetDeviceCaps(LOGPIXELSY);

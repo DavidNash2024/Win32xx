@@ -436,9 +436,6 @@ namespace Win32xx
     {
         // Display some text in the debugger.
         ::OutputDebugString(_T("*** CUserException thrown ***\n"));
-
-        if (GetError() != 0)
-            ::OutputDebugString(GetErrorString());
     }
 
     // CUserException constructor
@@ -453,9 +450,6 @@ namespace Win32xx
             ::OutputDebugString(text);
             ::OutputDebugString(_T("\n"));
         }
-
-        if (GetError() != 0)
-            ::OutputDebugString(GetErrorString());
     }
 
     // CUserException destructor.

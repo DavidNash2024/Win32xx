@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3">
   <assemblyIdentity version="1.0.0.0" name="Win32++ Aplication"/>
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
@@ -54,12 +54,12 @@
   </application>
 
   <!-- Enable modern GDI scaling.
-       Provides better support for dual monitors and high resolution monitors  -->
+       Might provide better support for dual monitors and high resolution monitors
   <asmv3:application>
     <asmv3:windowsSettings xmlns="http://schemas.microsoft.com/SMI/2017/WindowsSettings">
       <gdiScaling>true</gdiScaling>
     </asmv3:windowsSettings>
-  </asmv3:application>
+  </asmv3:application> -->
 
   <!-- Enable themes for Windows common controls and dialogs (Windows XP and later) -->
   <dependency>

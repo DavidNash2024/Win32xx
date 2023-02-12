@@ -402,6 +402,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
         if (m_lockMenuBand)
             GetReBar().MoveBand(band, 0);
 
+        CSize sizeMenuBar = GetMenuBar().GetMaxSize();
+        GetReBar().ResizeBand(band, sizeMenuBar);
+
         ShowArrows(m_showArrows);
         ShowCards(m_showCards);
     }
@@ -622,7 +625,7 @@ BOOL CMainFrame::OnShortBands()
 // Called in response to a WM_SYSCOLORCHANGE.
 // The WM_SYSCOLORCHANGE message is sent to all top-level windows when a change
 // is made to a system color setting.
-LRESULT CMainFrame::OnSysColorChange(UINT, WPARAM, LPARAM)
+LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Currently we need to reset the ComboBoxEx control to force redrawing
     // when a windows high contrast theme is enabled or disabled. This requirement
@@ -639,7 +642,7 @@ LRESULT CMainFrame::OnSysColorChange(UINT, WPARAM, LPARAM)
     // Restore the current selection.
     m_comboBoxEx.SetCurSel(sel);
 
-    return 0;
+    return CFrame::OnSysColorChange(msg, wparam, lparam);
 }
 
 // Toggles the display of lines betweeen rebar rows.
