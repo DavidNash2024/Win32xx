@@ -1864,28 +1864,34 @@ namespace Win32xx
                 int r = static_cast<int>(left + width);
                 int b = static_cast<int>(top + height);
 
-                CPoint point(l, t);
+                CPoint midpoint((l + r) / 2, (t + b) / 2);
+                CPoint midtop((l + r)/2, t);
 
 #ifdef MONITOR_DEFAULTTONULL
 
-                HMONITOR monitor = MonitorFromPoint(point, MONITOR_DEFAULTTONULL);
+                HMONITOR monitor = ::MonitorFromPoint(midpoint, MONITOR_DEFAULTTONULL);
+                if (monitor == 0)
+                    throw CUserException();
+
                 MONITORINFO mi;
                 ZeroMemory(&mi, sizeof(mi));
                 mi.cbSize = sizeof(mi);
-                GetMonitorInfo(monitor, &mi);
+                ::GetMonitorInfo(monitor, &mi);
                 CRect workArea = mi.rcWork;
-                if (!workArea.PtInRect(point))
-                    throw CUserException();
 
 #else
-
                 CRect workArea;
                 SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
-                if (!workArea.PtInRect(point))
-                    throw CUserException();
-
 #endif
 
+                // Check if window is mostly within work area.
+                if (!workArea.PtInRect(midpoint))
+                    throw CUserException();
+
+                // Check if the caption is within the work area.
+                if (!workArea.PtInRect(midtop)) 
+                    throw CUserException();
+                
                 if (width <= 0 || height <= 0)
                     throw CUserException();
 
@@ -2612,16 +2618,13 @@ namespace Win32xx
     {
         // Set the frame window styles
         cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
+        if (GetInitValues().showCmd == SW_MAXIMIZE)
+            cs.style |= WS_MAXIMIZE;
 
-        if (GetInitValues().showCmd == SW_MAXIMIZE) cs.style |= WS_MAXIMIZE;
-
-        CWindowDC dcDesktop(0);
-
-        // Does the window fit on the desktop?
+        // Set the original window position.
         CRect initPos = GetInitValues().position;
-        if (RectVisible(dcDesktop, &initPos) && (initPos.Width() > 0))
+        if ((initPos.Width() > 0) && (initPos.Height()) > 0)
         {
-            // Set the original window position.
             cs.x  = initPos.left;
             cs.y  = initPos.top;
             cs.cx = initPos.Width();
@@ -3152,7 +3155,6 @@ namespace Win32xx
                 }
                 break;
 
-
             case XP_Blue:
                 {
                     // Used for XP default (blue) color scheme.
@@ -3540,14 +3542,8 @@ namespace Win32xx
         int band = GetReBar().GetBand(GetMenuBar());
         if (band >= 0)
         {
-            REBARBANDINFO rbbi;
-            ZeroMemory(&rbbi, sizeof(rbbi));
             CSize sizeMenuBar = GetMenuBar().GetMaxSize();
-            int MenuBar_Height = sizeMenuBar.cy;
-            rbbi.fMask      = RBBIM_CHILDSIZE;
-            rbbi.cyMinChild = static_cast<UINT>(MenuBar_Height);
-            rbbi.cyMaxChild = static_cast<UINT>(MenuBar_Height);
-            GetReBar().SetBandInfo(band, rbbi);
+            GetReBar().ResizeBand(band, sizeMenuBar);
         }
     }
 
