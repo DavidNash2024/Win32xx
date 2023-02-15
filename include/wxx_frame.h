@@ -246,7 +246,6 @@ namespace Win32xx
         virtual void DrawVistaMenuBkgnd(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawVistaMenuCheckmark(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawVistaMenuText(LPDRAWITEMSTRUCT pDrawItem);
-        virtual int  GetMenuItemPos(HMENU menu, LPCTSTR itemName) const;
         virtual CRect GetViewRect() const;
         virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
         virtual BOOL LoadRegistryMRUSettings(UINT maxMRU = 0);
@@ -1300,7 +1299,7 @@ namespace Win32xx
     inline void CFrameT<T>::DrawMenuItemText(LPDRAWITEMSTRUCT pDrawItem)
     {
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDrawItem->itemData);
-        CString itemText = pmid->GetItemText();
+        CString itemText = pmid->itemText;
         bool isDisabled = (pDrawItem->itemState & ODS_GRAYED) != 0;
         COLORREF colorText = GetSysColor(isDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
         if (IsUsingDarkMenu())
@@ -1498,8 +1497,9 @@ namespace Win32xx
         else
             dc.SetTextColor(RGB(0, 0, 0));
 
-        LPCTSTR text = reinterpret_cast<LPCTSTR>(pDrawItem->itemData);
-        dc.DrawText(text, lstrlen(text), partRect, DT_SINGLELINE | DT_VCENTER);
+        assert(pDrawItem->itemData != 0);
+        CString text = reinterpret_cast<LPCTSTR>(pDrawItem->itemData);
+        dc.DrawText(text, text.GetLength(), partRect, DT_SINGLELINE | DT_VCENTER);
     }
 
     // Draws the StatusBar's background when StatusBar themes are enabled.
@@ -1590,7 +1590,7 @@ namespace Win32xx
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDrawItem->itemData);
 
         // Calculate the text rect size.
-        CStringW itemText = CStringW(TtoW(pmid->GetItemText()));
+        CStringW itemText(TtoW(pmid->itemText));
         CRect textRect = GetMenuMetrics().GetTextRect(pDrawItem->rcItem);
 
         // find the position of tab character.
@@ -1649,53 +1649,6 @@ namespace Win32xx
     inline int CFrameT<T>::GetMenuIconHeight() const
     {
         return GetMenuMetrics().GetMenuIconHeight();
-    }
-
-    // Returns the position of the menu item, given it's name.
-    template <class T>
-    inline int CFrameT<T>::GetMenuItemPos(HMENU menu, LPCTSTR itemName) const
-    {
-        int menuItemCount = ::GetMenuItemCount(menu);
-        MENUITEMINFO mii;
-        ZeroMemory(&mii, sizeof(mii));
-        mii.cbSize = GetSizeofMenuItemInfo();
-
-        for (int item = 0 ; item < menuItemCount; ++item)
-        {
-            std::vector<TCHAR> menuString(WXX_MAX_STRING_SIZE +1, _T('\0') );
-            TCHAR* menuName = &menuString[0];
-
-            std::vector<TCHAR> strippedString(WXX_MAX_STRING_SIZE +1, _T('\0') );
-            TCHAR* pStrippedString = &strippedString.front();
-
-            mii.fMask      = MIIM_TYPE;
-            mii.fType      = MFT_STRING;
-            mii.dwTypeData = menuName;
-            mii.cch        = WXX_MAX_STRING_SIZE;
-
-            // Fill the contents of szStr from the menu item.
-            if (::GetMenuItemInfo(menu, static_cast<UINT>(item), TRUE, &mii))
-            {
-                int len = lstrlen(menuName);
-                if (len <= WXX_MAX_STRING_SIZE)
-                {
-                    // Strip out any & characters.
-                    int j = 0;
-                    for (int i = 0; i < len; ++i)
-                    {
-                        if (menuName[i] != _T('&'))
-                            pStrippedString[j++] = menuName[i];
-                    }
-                    pStrippedString[j] = _T('\0');   // Append null tchar.
-
-                    // Compare the strings.
-                    if (lstrcmp(pStrippedString, itemName) == 0)
-                        return item;
-                }
-            }
-        }
-
-        return -1;
     }
 
     // Returns a MRU entry given its index.
@@ -1889,9 +1842,9 @@ namespace Win32xx
                     throw CUserException();
 
                 // Check if the caption is within the work area.
-                if (!workArea.PtInRect(midtop)) 
+                if (!workArea.PtInRect(midtop))
                     throw CUserException();
-                
+
                 if (width <= 0 || height <= 0)
                     throw CUserException();
 
@@ -2210,6 +2163,8 @@ namespace Win32xx
             // A vector to store this menu's item data.
             MenuData menuData;
 
+            bool hasTabs = false;
+
             for (int i = 0; i < menu.GetMenuItemCount(); ++i)
             {
                 // The MenuItemData pointer is deleted in OnUnInitMenuPopup.
@@ -2218,9 +2173,9 @@ namespace Win32xx
                 ZeroMemory(&mii, sizeof(mii));
                 mii.cbSize = GetSizeofMenuItemInfo();
 
-                // Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility.
-                mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU | MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
-                mii.dwTypeData = itemDataPtr->GetItemText();  // Assign TCHAR pointer, text is assigned by GetMenuItemInfo.
+                // Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for Win95 compatibility.
+                mii.fMask = MIIM_TYPE | MIIM_DATA;
+                mii.dwTypeData = itemDataPtr->itemText.GetBuffer(WXX_MAX_STRING_SIZE);
                 mii.cch = WXX_MAX_STRING_SIZE;
 
                 // Send message for menu updates.
@@ -2242,9 +2197,24 @@ namespace Win32xx
                         menuData.push_back(itemDataPtr);
                     }
                 }
+                itemDataPtr->itemText.ReleaseBuffer();
+                if (itemDataPtr->itemText.Find(_T("\t")) >= 0)
+                    hasTabs = true;
             }
 
-            // m_menusData can store the menu item data for multiple popup menus.
+            // If one item has a tab, all should have a tab.
+            if (hasTabs)
+            {
+                UINT itemCount = static_cast<UINT>(menu.GetMenuItemCount());
+                for (UINT u = 0; u < itemCount; ++u)
+                {
+                    MenuItemData* pData = reinterpret_cast<MenuItemData*>(menu.GetMenuItemData(u, TRUE));
+                    if (pData && pData->itemText.Find(_T('\t')) < 0)
+                        pData->itemText += _T('\t'); //  Append a tab
+                }
+            }
+
+            // m_menuData can store the menu item data for multiple popup menus.
             // There will be multiple popup menus if submenus are opened.
             if (menuData.size() != 0)
                 m_menusData.push_back(menuData);
@@ -2345,7 +2315,13 @@ namespace Win32xx
         {
         case IDW_VIEW_STATUSBAR:
             {
+                bool isWindow = (GetStatusBar().IsWindow() != 0);  // != 0 converts BOOL to bool.
                 bool isVisible = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
+                if (isWindow)
+                    GetFrameMenu().EnableMenuItem(id, MF_ENABLED);
+                else
+                    GetFrameMenu().EnableMenuItem(id, MF_DISABLED);
+
                 if (isVisible)
                     GetFrameMenu().CheckMenuItem(id, MF_CHECKED);
                 else
@@ -2579,8 +2555,8 @@ namespace Win32xx
             if (pItemData != 0)
             {
                 mii.fType = pItemData->mii.fType;
-                mii.dwTypeData = pItemData->GetItemText();
-                mii.cch = static_cast<UINT>(lstrlen(pItemData->GetItemText()));
+                mii.dwTypeData = const_cast<LPTSTR>(pItemData->itemText.c_str());
+                mii.cch = static_cast<UINT>(pItemData->itemText.GetLength());
                 mii.dwItemData = 0;
                 VERIFY(menu.SetMenuItemInfo(position, mii, TRUE));
                 doPopBack = true;

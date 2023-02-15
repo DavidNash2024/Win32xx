@@ -337,7 +337,7 @@ void CMainFrame::OnUpdateCheckC(UINT id)
 // Updates the menu when a radio button is selected.
 void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
-    int fileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
+    int fileItem = GetFrameMenu().FindMenuItem(_T("&Select"));
     CMenu radioMenu = GetFrameMenu().GetSubMenu(fileItem);
     if (GetDoc().GetRadio() == id)
         radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);

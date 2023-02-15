@@ -37,7 +37,10 @@ Added CFrameT::OnDrawStatusBar
 Added CFrameT::ResetMenuMetrics
 Added CFrameT::UseDarkMenu
 Added CFrameT::UseOwnerDrawnMenu
+Added CMenu::GetMenuItemData
 Added StatusBarTheme::clrText
+
+Removed CFrameT::GetMenuItemPos (use CMenu::FindMenuItem instead)
 
 Added DarkModeFrame sample
 
