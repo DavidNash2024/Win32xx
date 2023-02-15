@@ -136,6 +136,7 @@ namespace Win32xx
 #endif
 
         int GetMenuItemCount() const;
+        ULONG_PTR GetMenuItemData(UINT idOrPos, BOOL byPosition = FALSE) const;
         UINT GetMenuItemID(int pos) const;
         BOOL GetMenuItemInfo(UINT idOrPos, MENUITEMINFO& menuItemInfo, BOOL byPosition = FALSE) const;
         UINT GetMenuState(UINT idOrPos, UINT flags) const;
@@ -563,6 +564,23 @@ namespace Win32xx
         assert(IsMenu(m_pData->menu));
 
         return ::GetMenuItemCount(m_pData->menu);
+    }
+
+    // Retrieves the data assigned to the specfied menu item. 
+    // Refer to the description of the dwItemData member of MENUITEMINFO
+    // in the Windows API documentation for more information.
+    inline ULONG_PTR CMenu::GetMenuItemData(UINT idOrPos, BOOL byPosition /* = FALSE*/) const
+    {
+        MENUITEMINFO mii;
+        ZeroMemory(&mii, sizeof(mii));
+        mii.cbSize = GetSizeofMenuItemInfo();
+        mii.fMask = MIIM_TYPE | MIIM_DATA;
+        ULONG_PTR pData = 0;
+
+        if (GetMenuItemInfo(idOrPos, mii, byPosition))
+            pData = mii.dwItemData;
+
+        return pData;
     }
 
     // Retrieves the menu item identifier of a menu item located at the specified position.

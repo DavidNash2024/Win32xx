@@ -214,7 +214,7 @@ BOOL CMainFrame::ChooseColor(UINT color)
     }
 
     // Check the appropriate menu item.
-    int fileItem = GetMenuItemPos(GetFrameMenu(), _T("Theme"));
+    int fileItem = GetFrameMenu().FindMenuItem(_T("&Theme"));
     if (fileItem >= 0)
     {
         CMenu ThemeMenu = GetFrameMenu().GetSubMenu(fileItem);

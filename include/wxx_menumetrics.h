@@ -113,15 +113,12 @@ namespace Win32xx
         MenuItemData() : menu(0), pos(0)
         {
             ZeroMemory(&mii, GetSizeofMenuItemInfo());
-            itemText.assign(WXX_MAX_STRING_SIZE, _T('\0'));
         }
-
-        LPTSTR GetItemText() {return &itemText[0];}
 
         HMENU menu;
         MENUITEMINFO mii;
         UINT  pos;
-        std::vector<TCHAR> itemText;
+        CString itemText;
     };
 
 
@@ -424,11 +421,11 @@ namespace Win32xx
 
         // Calculate the size of the text.
         CSize sizeText;
-        LPCTSTR szItemText = pmd->GetItemText();
+        CString itemText = pmd->itemText;
         if (IsVistaMenu())
         {
             CRect rcText;
-            GetThemeTextExtent(dc, MENU_POPUPITEM, 0, TtoW(szItemText), lstrlen(szItemText),
+            GetThemeTextExtent(dc, MENU_POPUPITEM, 0, TtoW(itemText), itemText.GetLength(),
                 DT_EXPANDTABS, NULL, &rcText);
 
             sizeText.SetSize(rcText.right, rcText.bottom);
@@ -436,7 +433,7 @@ namespace Win32xx
         else
         {
             // Calculate the size of the text.
-            sizeText = dc.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
+            sizeText = dc.GetTextExtentPoint32(itemText, itemText.GetLength());
         }
 
         sizeText.cx += m_marText.Width();
