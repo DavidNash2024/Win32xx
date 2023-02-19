@@ -1,5 +1,5 @@
 // Win32++   Version 9.2
-// Release Date: TBA
+// Release Date: 20th February 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -451,8 +451,8 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::AddDisabledMenuImage(HICON icon, COLORREF mask)
     {
-        CClientDC desktopDC(0);
-        CMemDC memDC(0);
+        CClientDC desktopDC(*this);
+        CMemDC memDC(desktopDC);
 
         // m_menuImages should already have this image
         assert(m_menuImages.GetHandle() != 0);
@@ -524,7 +524,7 @@ namespace Win32xx
 
             // Set the mask color to gray for the new ImageList
             COLORREF mask = RGB(192, 192, 192);
-            CClientDC desktopDC(HWND_DESKTOP);
+            CClientDC desktopDC(*this);
             if (GetDeviceCaps(desktopDC, BITSPIXEL) < 24)
             {
                 HPALETTE hPal = desktopDC.GetCurrentPalette();
@@ -1882,7 +1882,25 @@ namespace Win32xx
         MenuItemData* pMID = reinterpret_cast<MenuItemData*>(pMIS->itemData);
         assert(::IsMenu(pMID->menu));  // Does itemData contain a valid MenuItemData struct?
 
-        CSize size = GetMenuMetrics().GetItemSize(pMID);
+        // Get the font used in menu items.
+        CClientDC dc(*this);
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+
+        // Default menu items are bold, so take this into account.
+        if (static_cast<int>(::GetMenuDefaultItem(pMID->menu, TRUE, GMDI_USEDISABLED)) != -1)
+            info.lfMenuFont.lfWeight = FW_BOLD;
+
+        dc.CreateFontIndirect(info.lfMenuFont);
+        CSize size = GetMenuMetrics().GetItemSize(pMID, dc);
+
+        if (~pMID->mii.fType & MFT_SEPARATOR)  // if the type is not a separator
+        {
+            // Account for icon height.
+            int iconGap = 4;
+            int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
+            iconGap = MulDiv(iconGap, dpiX, 96);
+            size.cy = MAX(size.cy, GetMenuIconHeight() + iconGap);
+        }
 
         // Return the composite sizes.
         pMIS->itemWidth = static_cast<UINT>(size.cx);
@@ -3064,7 +3082,7 @@ namespace Win32xx
     inline void CFrameT<T>::SetTheme()
     {
         // Avoid themes if using less than 16 bit colors
-        CClientDC DesktopDC(0);
+        CClientDC DesktopDC(*this);
         if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
             UseThemes(FALSE);
 

@@ -201,13 +201,13 @@ BOOL CMainFrame::ChooseColor(UINT color)
             m_color = IDM_WIN7;
             SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
-            StatusBarTheme sbt = {m_useThemes, RGB(225, 230, 255), RGB(240, 242, 250)};
+            StatusBarTheme sbt = {m_useThemes, RGB(225, 230, 255), RGB(240, 242, 250), RGB(0, 0, 0)};
             SetStatusBarTheme (sbt);
 
             ToolBarTheme tbt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
             SetToolBarTheme(tbt);
 
-            MenuTheme mt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+            MenuTheme mt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) };
             SetMenuTheme(mt);
         }
         break;

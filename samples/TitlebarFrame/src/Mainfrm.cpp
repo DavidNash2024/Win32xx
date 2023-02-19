@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include <dwmapi.h>
-#include <uxtheme.h>
+#include <Uxtheme.h>
 #include <vsstyle.h>
 #include <vssym32.h>
 #include "Mainfrm.h"
@@ -167,7 +167,9 @@ void CMainFrame::DrawTitleText(CDC& dc) const
     titlebarTextRect.right = buttonRects.minimize.left;
 
     // Draw the title bar text.
-    DTTOPTS drawThemeOptions = { sizeof(drawThemeOptions) };
+    DTTOPTS drawThemeOptions;
+    ZeroMemory(&drawThemeOptions, sizeof(drawThemeOptions));
+    drawThemeOptions.dwSize = sizeof(drawThemeOptions);
     drawThemeOptions.dwFlags = DTT_TEXTCOLOR;
     COLORREF itemColor = IsActive() ? m_colors.activeItem : m_colors.inactiveItem;
     drawThemeOptions.crText = itemColor;
@@ -326,7 +328,8 @@ CRect CMainFrame::GetViewRect() const
 // Returns true of the window is maximized, false otherwise.
 bool CMainFrame::IsMaximized() const
 {
-    WINDOWPLACEMENT placement = { 0 };
+    WINDOWPLACEMENT placement;
+    ZeroMemory(&placement, sizeof(placement));
     placement.length = sizeof(WINDOWPLACEMENT);
     if (GetWindowPlacement(placement))
     {
@@ -749,6 +752,7 @@ LRESULT CMainFrame::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     case TitlebarButton::Minimize:    return HTMINBUTTON;
     case TitlebarButton::Maximize:    return HTMAXBUTTON;
     case TitlebarButton::Close:       return HTCLOSE;
+    case TitlebarButton::None:        break;
     }
 
     // Looks like adjustment happening in NCCALCSIZE is messing with the detection

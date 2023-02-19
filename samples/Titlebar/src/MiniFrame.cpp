@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include <dwmapi.h>
-#include <uxtheme.h>
+#include <Uxtheme.h>
 #include <vsstyle.h>
 #include <vssym32.h>
 #include "MiniFrame.h"

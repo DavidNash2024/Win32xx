@@ -1,5 +1,5 @@
 // Win32++   Version 9.2
-// Release Date: TBA
+// Release Date: 20th February 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -566,7 +566,7 @@ namespace Win32xx
         return ::GetMenuItemCount(m_pData->menu);
     }
 
-    // Retrieves the data assigned to the specfied menu item. 
+    // Retrieves the data assigned to the specfied menu item.
     // Refer to the description of the dwItemData member of MENUITEMINFO
     // in the Windows API documentation for more information.
     inline ULONG_PTR CMenu::GetMenuItemData(UINT idOrPos, BOOL byPosition /* = FALSE*/) const
