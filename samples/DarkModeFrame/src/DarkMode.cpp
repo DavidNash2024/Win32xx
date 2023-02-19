@@ -22,7 +22,8 @@ bool IsDarkMode()
 
 bool IsHighContrast()
 {
-    HIGHCONTRAST info = { 0 };
+    HIGHCONTRAST info;
+    ZeroMemory(&info, sizeof(info));
     info.cbSize = sizeof(info);
     return (SystemParametersInfo(SPI_GETHIGHCONTRAST, 0, &info, 0) &&
            (info.dwFlags & HCF_HIGHCONTRASTON));
@@ -46,7 +47,8 @@ bool IsPreferredModeSupported()
         }
     }
 
-    RTL_OSVERSIONINFOW osvi = { 0 };
+    RTL_OSVERSIONINFOW osvi;
+    ZeroMemory(&osvi, sizeof(osvi));
     if (pfn != nullptr)
     {
           osvi.dwOSVersionInfoSize = sizeof(osvi);

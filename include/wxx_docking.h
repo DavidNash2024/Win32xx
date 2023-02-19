@@ -1,5 +1,5 @@
 // Win32++   Version 9.2
-// Release Date: TBA
+// Release Date: 20th February 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1600,7 +1600,7 @@ namespace Win32xx
                 return;
 
             // Save the Dock window's blue tinted bitmap.
-            CClientDC dcDesktop(0);
+            CClientDC dcDesktop(*this);
             CMemDC memDC(dcDesktop);
             CRect rcBitmap = rcHint;
             CRect rcTarget = rcHint;

@@ -3,7 +3,7 @@
 
 
 #include "stdafx.h"
-#include <uxtheme.h>
+#include <Uxtheme.h>
 #include "List.h"
 #include "resource.h"
 #include "MovieInfo.h"
