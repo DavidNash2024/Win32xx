@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2022  David Nash
+// Copyright (c) 2005-2023  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -412,7 +412,7 @@ namespace Win32xx
 
         };
 
-        // This nested class is draws the a set of dock targets at the centre of
+        // This nested class draws the a set of dock targets at the centre of
         // the docker. The dock within docker target is only enabled for a
         // dock container.
         class CTargetCentre : public CTarget
@@ -5050,7 +5050,7 @@ namespace Win32xx
     }
 
     // Sets or changes the container's view window.
-    // The view window can be any resizable child window.
+    // The view window can be any resizeable child window.
     inline void CDockContainer::SetView(CWnd& wnd)
     {
         GetViewPage().SetView(wnd);
