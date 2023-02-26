@@ -1,5 +1,5 @@
 // Win32++   Version 9.2
-// Release Date: 20th February 2023
+// Release Date: 26th February 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -270,7 +270,7 @@ namespace Win32xx
                     if (GetCWndPtr(*this) == this)  // Is window managed by Win32++?
                     {
                         if (IsWindow())
-                            SendMessage(UWM_DESTROYWINDOW, 0, 0);
+                            ::DestroyWindow(*this);
                     }
 
                     RemoveFromMap();
@@ -433,10 +433,6 @@ namespace Win32xx
 
             return TRUE;
         }
-        case UWM_DESTROYWINDOW:
-            // Destroy the window from its own thread.
-            ::DestroyWindow(*this);
-            break;
 
         } // switch(msg)
 
