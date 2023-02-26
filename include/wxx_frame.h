@@ -1,5 +1,5 @@
 // Win32++   Version 9.2
-// Release Date: 20th February 2023
+// Release Date: 26th February 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2167,12 +2167,13 @@ namespace Win32xx
             mi.cbSize = sizeof(mi);
             mi.fMask = MIM_BACKGROUND | MIM_APPLYTOSUBMENUS;
 
+            // Adjust the menu background colour to support the dark menu.
             if (IsUsingDarkMenu())
-            {
-                // Set the menu background colour to black.
                 mi.hbrBack = static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH));
-                menu.SetMenuInfo(mi);
-            }
+            else
+                mi.hbrBack = 0;
+
+            menu.SetMenuInfo(mi);
         }
 #endif
 

@@ -1,5 +1,5 @@
 // Win32++   Version 9.2
-// Release Date: 20th February 2023
+// Release Date: 26th February 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -52,7 +52,6 @@
 // WM_APP range: 0x8000 through 0xBFFF
 // Note: The numbers defined for window messages don't always need to be unique. View windows defined by users for example,
 //  could use other user defined messages with the same number as those below without issue.
-#define UWM_DESTROYWINDOW     (WM_APP + 0x3F01) // Message - sent by CWnd to destroy its window.
 #define UWM_DOCKACTIVATE      (WM_APP + 0x3F02) // Message - posted to dock ancestor when a docker is activated.
 #define UWM_DOCKDESTROYED     (WM_APP + 0x3F03) // Message - posted when docker is destroyed.
 #define UWM_DRAWRBBKGND       (WM_APP + 0x3F04) // Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
