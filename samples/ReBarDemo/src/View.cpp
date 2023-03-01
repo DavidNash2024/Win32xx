@@ -18,9 +18,16 @@ CView::CView()
 // Called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {
-    CRect rc = GetClientRect();
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = info.lfMessageFont;
+        dc.CreateFontIndirect(lf);
+    }
 
     // Display some text in our view window.
+    CRect rc = GetClientRect();
     dc.DrawText(_T("Press the arrows to change the rebar's orientation"), -1, rc,  DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 

@@ -71,7 +71,11 @@ int CView::OnCreate(CREATESTRUCT&)
 
     // Create a circular region.
     CRgn rgn;
-    m_rect = CRect(50, 50, 300, 300);
+    int left = DPIScaleInt(50);
+    int top = DPIScaleInt(50);
+    int right = DPIScaleInt(300);
+    int bottom = DPIScaleInt(300);
+    m_rect = CRect(left, top, right, bottom);
     rgn.CreateEllipticRgnIndirect(m_rect);
 
     // Assign the region to the window.
@@ -92,6 +96,14 @@ void CView::OnDestroy()
 // window needs to be repainted.
 void CView::OnDraw(CDC& dc)
 {
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = info.lfMessageFont;
+        dc.CreateFontIndirect(lf);
+    }
+
     // Centre some text in our view window.
     CRect rc = m_rect;
     CString cs = LoadString(IDW_MAIN);
@@ -122,10 +134,10 @@ void CView::OnInitialUpdate()
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set some optional parameters for the window.
-    cs.x = 50;                      // top x
-    cs.y = 50;                      // top y
-    cs.cx = 400;                    // width
-    cs.cy = 350;                    // height
+    cs.x = DPIScaleInt(50);                    // top x
+    cs.y = DPIScaleInt(50);                    // top y
+    cs.cx = DPIScaleInt(400);                  // width
+    cs.cy = DPIScaleInt(350);                  // height
     cs.style = WS_VISIBLE | WS_POPUP;          // Window is initially visible.
 }
 

@@ -32,6 +32,9 @@ void CView::OnDraw(CDC& dc)
     memDC.FillRect(rect, whiteBrush);
 
     // Draw the text to the memory device context.
+    NONCLIENTMETRICS info = GetNonClientMetrics();
+    LOGFONT lf = info.lfMessageFont;
+    memDC.CreateFontIndirect(lf);
     memDC.DrawText(text, -1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
     // Copy the memDC's bitmap to our device context.

@@ -1,7 +1,7 @@
 #include "resource.h"
 #include "windows.h"
 
-1     RT_MANIFEST             "res/Win32++.manifest"
+1     RT_MANIFEST             "res/PerMonitorV2.manifest"
 
 
 /////////////////////////////////////////////////////////////////////////////

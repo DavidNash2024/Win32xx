@@ -22,6 +22,9 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
+
 protected:
     // Virtual functions that override base class functions
     virtual void    OnClose();
@@ -46,14 +49,17 @@ private:
     BOOL    OnFilePreview();
 
     // Message handlers
-    LRESULT    OnPreviewClose();
-    LRESULT    OnPreviewPrint();
-    LRESULT    OnPreviewSetup();
+    LRESULT  OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT  OnPreviewClose();
+    LRESULT  OnPreviewPrint();
+    LRESULT  OnPreviewSetup();
 
     // Member variables
     CView m_view;
     CPrintPreview<CView> m_preview;
     bool m_isToolbarShown;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

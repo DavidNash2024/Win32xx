@@ -14,11 +14,11 @@ CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false), m_crVisite
                             m_crNotVisited(RGB(0,0,255))
 {
     // Create the cursor
-    m_hCursor = ::LoadCursor(NULL, IDC_HAND);
+    m_cursor = ::LoadCursor(NULL, IDC_HAND);
 
     // IDC_HAND is not available on Win95, so load a reasonable alternative
-    if( !m_hCursor )
-        m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
+    if( !m_cursor )
+        m_cursor = ::LoadCursor(NULL, IDC_ARROW);
 }
 
 // Destructor.
@@ -26,24 +26,16 @@ CHyperlink::~CHyperlink()
 {
 }
 
-// Called when the window handle (HWND) is attached to CHyperlink.
-void CHyperlink::OnAttach()
-{
-    CFont Font = GetFont();
-    LOGFONT lf = Font.GetLogFont();
-    lf.lfUnderline = TRUE;
-    m_urlFont.CreateFontIndirect(lf);
-}
-
 // Called when the left mouse button is clicked.
-void CHyperlink::OnLButtonDown()
+LRESULT CHyperlink::OnLButtonDown()
 {
     SetCapture();
     m_isClicked = TRUE;
+    return 0;
 }
 
 // Called when the left mouse button is released.
-void CHyperlink::OnLButtonUp(LPARAM lparam)
+LRESULT CHyperlink::OnLButtonUp(LPARAM lparam)
 {
     ReleaseCapture();
     if(m_isClicked)
@@ -57,6 +49,8 @@ void CHyperlink::OnLButtonUp(LPARAM lparam)
 
         if (rc.PtInRect(pt)) OpenUrl();
     }
+
+    return 0;
 }
 
 // Opens the default browser and displays the web page.
@@ -94,7 +88,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM)
 LRESULT CHyperlink::OnSetCursor()
 {
     // Must use ::SetCursor here. CStatic::SetCursor does not do the same thing.
-    ::SetCursor(m_hCursor);
+    ::SetCursor(m_cursor);
 
     return 1;  // Non-zero return prevents default processing
 }
@@ -106,8 +100,8 @@ LRESULT CHyperlink::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_LBUTTONDOWN:  OnLButtonDown();      break;
-        case WM_LBUTTONUP:    OnLButtonUp(lparam);  break;
+        case WM_LBUTTONDOWN:  return OnLButtonDown();
+        case WM_LBUTTONUP:    return OnLButtonUp(lparam);
         case WM_SETCURSOR:    return OnSetCursor();
         case WM_NCHITTEST:    return HTCLIENT;      // Claim that the mouse is in a client area
         }

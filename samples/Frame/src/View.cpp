@@ -23,10 +23,20 @@ CDoc& CView::GetDoc()
 // OnDraw is called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {
-    CRect rc = GetClientRect();
-    dc.SolidFill(RGB(255, 255, 255), rc);
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = info.lfMessageFont;
+        int dpi = GetWindowDPI(*this);
+        lf.lfHeight = -MulDiv(10, dpi, 72);
+        dc.CreateFontIndirect(lf);
+    }
 
     // Centre some text in our view window.
+    CRect rc = GetClientRect();
+    HBRUSH white = static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
+    dc.FillRect(rc, white);
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 

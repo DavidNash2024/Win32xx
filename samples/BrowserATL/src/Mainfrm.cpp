@@ -22,14 +22,13 @@ CMainFrame::~CMainFrame()
 }
 
 // Adds a ComboBoxEx control to the rebar.
-void CMainFrame::AddComboBoxBand(UINT height)
+void CMainFrame::AddComboBoxBand()
 {
-    // Get the reference to the rebar object
-    CReBar& RB = GetReBar();
-    ReBarTheme RBTheme = GetReBarTheme();
-
     // Create the ComboboxEx window.
     m_combo.Create(GetReBar());
+
+    int padding = 2;
+    int height = m_combo.GetWindowRect().Height() + DPIScaleInt(padding);
 
     // Put the window in a new rebar band.
     REBARBANDINFO rbbi;
@@ -41,11 +40,11 @@ void CMainFrame::AddComboBoxBand(UINT height)
     rbbi.cxMinChild = 200;
     rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
     rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
-    rbbi.clrBack    = RBTheme.clrBand1;
+    rbbi.clrBack    = GetReBarTheme().clrBand1;
     rbbi.hwndChild  = m_combo.GetHwnd();
     rbbi.lpText     = (LPWSTR)L"Address";
 
-    RB.InsertBand(-1, rbbi);
+    GetReBar().InsertBand(-1, rbbi);
 }
 
 HWND CMainFrame::Create(HWND parent)
@@ -532,8 +531,7 @@ void CMainFrame::SetupToolBar()
     SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
 
     // Add the ComboBoxEx control.
-    int Height = 26;
-    AddComboBoxBand(Height);
+    AddComboBoxBand();
 }
 
 // Process the frame's window messages.

@@ -34,6 +34,10 @@ void CView::OnDraw(CDC& dc)
     else
         dc.SolidFill(RGB(255, 255, 255), rc);
 
+    NONCLIENTMETRICS info = GetNonClientMetrics();
+    LOGFONT lf = info.lfMessageFont;
+    dc.CreateFontIndirect(lf);
+
     // Centre some text in our view window.
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }

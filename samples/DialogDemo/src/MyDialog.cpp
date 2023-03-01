@@ -33,7 +33,8 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_SETSTATIC:     return SetStatic((LPCTSTR)wparam);
+        case WM_DPICHANGED:     return OnDPIChanged();
+        case UWM_SETSTATIC:     return OnSetStatic(wparam);
         }
 
         // Pass unhandled messages on to parent DialogProc.
@@ -76,6 +77,13 @@ void CMyDialog::OnDestroy()
     ::PostQuitMessage(0);
 }
 
+// Called when the effective dots per inch (dpi) for the dialog has changed. 
+INT_PTR CMyDialog::OnDPIChanged()
+{
+    SetURLFont();
+    return 0;
+}
+
 // Called before the dialog is displayed.
 BOOL CMyDialog::OnInitDialog()
 {
@@ -102,6 +110,9 @@ BOOL CMyDialog::OnInitDialog()
 
     // Select the first radio button
     CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
+
+    // Update the font for the hyperlink
+    SetURLFont();
 
     return TRUE;
 }
@@ -151,18 +162,36 @@ BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
     CheckRadioButton(idFirst, idLast, idClicked);
 
     CString str;
-    int nButton = idClicked - idFirst + 1;
-    str.Format(_T("Radio%d"), nButton);
+    int button = idClicked - idFirst + 1;
+    str.Format(_T("Radio%d"), button);
     TRACE(str); TRACE("\n");
     SetStatic(str);
 
     return TRUE;
 }
 
+// Called in response the UWM_SETSTATIC message to update the static text.
+INT_PTR CMyDialog::OnSetStatic(WPARAM wparam)
+{
+    SetStatic(reinterpret_cast<LPCTSTR>(wparam));
+    return 0;
+}
+
 // Sets the text in the static control.
-INT_PTR CMyDialog::SetStatic(LPCTSTR text)
+void CMyDialog::SetStatic(LPCTSTR text)
 {
     SetDlgItemText(IDC_STATIC3, text);
-    return 0;
+}
+
+// Sets the hyperlink's font
+void CMyDialog::SetURLFont()
+{
+    // Get the dialog's font and add an underline.
+    LOGFONT logfont = GetFont().GetLogFont();
+    logfont.lfUnderline = TRUE;
+    CFont urlFont(logfont);
+
+    // Assign the font to the hyperlink.
+    m_hyperlink.SetUrlFont(urlFont);
 }
 

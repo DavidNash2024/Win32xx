@@ -7,7 +7,7 @@
 
 
 #ifndef IDC_HAND
-#define IDC_HAND  MAKEINTRESOURCE(32649)
+  #define IDC_HAND  MAKEINTRESOURCE(32649)
 #endif
 
 
@@ -20,29 +20,30 @@ public:
     CHyperlink();
     virtual ~CHyperlink();
 
+    void SetUrlFont(CFont urlFont) { m_urlFont = urlFont; }
+
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnAttach();
     virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CHyperlink(const CHyperlink&);                // Disable copy construction
     CHyperlink& operator = (const CHyperlink&);   // Disable assignment operator
+    void OpenUrl();
 
     // Message handlers
-    void OnLButtonDown();
-    void OnLButtonUp(LPARAM lparam);
-    void OpenUrl();
+    LRESULT OnLButtonDown();
+    LRESULT OnLButtonUp(LPARAM lparam);
     LRESULT OnSetCursor();
 
     // Member variables
-    bool    m_isUrlVisited;
-    bool    m_isClicked;
+    bool     m_isUrlVisited;
+    bool     m_isClicked;
     COLORREF m_crVisited;
     COLORREF m_crNotVisited;
-    HCURSOR m_hCursor;
-    CFont   m_urlFont;
+    HCURSOR  m_cursor;
+    CFont    m_urlFont;
 };
 
 #endif // HYPERLINK_H
