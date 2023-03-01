@@ -30,6 +30,9 @@ void CView::OnDraw(CDC& dc)
     memDC.SolidFill(RGB(255, 255, 255), rc);
 
     // Centre some text in our view window.
+    NONCLIENTMETRICS info = GetNonClientMetrics();
+    LOGFONT lf = info.lfMessageFont;
+    memDC.CreateFontIndirect(lf);
     memDC.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 
     // Copy from the memory dc to our drawing dc.

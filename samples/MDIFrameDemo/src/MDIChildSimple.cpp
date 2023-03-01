@@ -18,6 +18,14 @@ CViewSimple::CViewSimple() : m_color(RGB(0,0,255))
 // Called when part of the window needs to be redrawn.
 void CViewSimple::OnDraw(CDC& dc)
 {
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = info.lfMessageFont;
+        dc.CreateFontIndirect(lf);
+    }
+
     // Centre some text in our view window.
     CRect rc = GetClientRect();
     dc.SetTextColor(m_color);

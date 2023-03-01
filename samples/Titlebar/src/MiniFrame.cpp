@@ -628,10 +628,10 @@ void CMiniFrame::PreCreate(CREATESTRUCT& cs)
 {
     // Set some optional parameters for the window
     cs.lpszClass = _T("MiniFrame Window");  // Window Class
-    cs.x = 50;                              // top x
-    cs.y = 50;                              // top y
-    cs.cx = 400;                            // width
-    cs.cy = 300;                            // height
+    cs.x = DPIScaleInt(50);                 // top x
+    cs.y = DPIScaleInt(50);                 // top y
+    cs.cx = DPIScaleInt(400);               // width
+    cs.cy = DPIScaleInt(300);               // height
 }
 
 // Repositions the child windows.

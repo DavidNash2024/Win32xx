@@ -21,11 +21,15 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
+    void    DPIScaleMenuIcons();
+    void    DPIScaleToolBar();
+
 protected:
     // Virtual functions that override base class functions
     virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnFileExit();
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT nID);
@@ -46,6 +50,8 @@ private:
 
     // Member variables
     CFormView m_sdiView;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 

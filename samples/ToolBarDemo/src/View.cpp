@@ -133,6 +133,14 @@ void CView::OnDraw(CDC& dc)
 
     ScreenToClient(clientRect);
 
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = info.lfMessageFont;
+        dc.CreateFontIndirect(lf);
+    }
+
     // Display some text in our view window
     CString text = "\nPress the arrows to change the inner toolbar's orientation,";
     text += "\n or choose customize toolbar from the ToolBar menu item to modify the toolbar in the frame.";

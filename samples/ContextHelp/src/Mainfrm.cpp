@@ -136,6 +136,70 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
     return appDataPath;
 }
 
+// Assigns the appropriately sized menu icons.
+// Called each time the 
+void CMainFrame::DPIScaleMenuIcons()
+{
+    // Load the toolbar bitmap. 
+    CBitmap toolbarImage(IDB_TOOLBAR24);
+
+    // Scale the bitmap to the menu item height.
+    int menuHeight = GetMenuIconHeight();
+    int scale = menuHeight / toolbarImage.GetSize().cy;
+    CBitmap scaledImage;
+    COLORREF mask;
+    if (scale > 0)
+    {
+        scaledImage = ScaleUpBitmap(toolbarImage, scale);
+        mask = RGB(255, 0, 255);
+    }
+    else
+    {
+        scaledImage.LoadBitmap(IDB_TOOLBAR16);
+        mask = RGB(192, 192, 192);
+    }
+
+    // Create the image-list from the scaled image
+    CSize sz = scaledImage.GetSize();
+    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);  
+    m_menuImages.Add(scaledImage, mask);
+
+    // Assign the image-list to the menu items.
+    SetMenuImages(m_menuImages);
+}
+
+// Assigns the appropriately sized toolbar icons.
+void CMainFrame::DPIScaleToolBar()
+{
+    if (GetToolBar().IsWindow())
+    {
+        // Load the toolbar bitmap. 
+        CBitmap toolbarImage(IDB_TOOLBAR24);
+
+        // Create the image-list
+        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
+        CSize sz = dpiImage.GetSize();
+        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        COLORREF mask = RGB(255, 0, 255);
+        m_normalImages.Add(dpiImage, mask);
+
+        // Assign the image-list to the toolbar.
+        GetToolBar().SetImageList(m_normalImages);
+        GetToolBar().SetDisableImageList(0);
+
+        // Adjust the toolbar band height.
+        if (GetReBar().IsWindow())
+        {
+            int band = GetReBar().GetBand(GetToolBar());
+            if (band >= 0)
+            {
+                CSize sizeToolBar = GetToolBar().GetMaxSize();
+                GetReBar().ResizeBand(band, sizeToolBar);
+            }
+        }
+    }
+}
+
 // Identifies the window from the cursor position and returns its ID.
 UINT CMainFrame::GetIDFromCursorPos()
 {
@@ -233,6 +297,21 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     return result;
 }
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    CFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleMenuIcons();
+    DPIScaleToolBar();
+    RecalcLayout();
+
+    return 0;
+}
+
+
 
 // Called when the F1 key is pressed.
 BOOL CMainFrame::OnF1()
@@ -371,6 +450,9 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(255, 0, 255), IDB_TOOLBAR24);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+
+    // Update the menu icons
+    DPIScaleMenuIcons();
 }
 
 // Set the resource IDs and images for the toolbar buttons.
@@ -394,6 +476,8 @@ void CMainFrame::SetupToolBar()
 
     // Set the toolbar image list.
     SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24);
+
+    DPIScaleToolBar();
 }
 
 // Called for a System Command such as SC_CLOSE, SC_CONTEXTHELP etc.

@@ -17,9 +17,16 @@ CView::CView()
 // Called when part of the view window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {
-    CRect rc = GetClientRect();
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = info.lfMessageFont;
+        dc.CreateFontIndirect(lf);
+    }
 
     // Centre some text in our view window.
+    CRect rc = GetClientRect();
     dc.DrawText(_T("Choose a Property Sheet from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 

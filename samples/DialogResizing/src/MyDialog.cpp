@@ -97,7 +97,7 @@ BOOL CMyDialog::OnInitDialog()
     m_richEdit2.SetWindowText(_T("Rich Edit Window"));
 
     // Initialize dialog resizing
-    m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
+    m_resizer.Initialize( *this, CRect(0, 0, 200, 200) );
     m_resizer.AddChild(m_radioA, CResizer::topleft, 0);
     m_resizer.AddChild(m_radioB, CResizer::topleft, 0);
     m_resizer.AddChild(m_radioC, CResizer::topleft, 0);
@@ -107,6 +107,8 @@ BOOL CMyDialog::OnInitDialog()
     m_resizer.AddChild(m_checkC, CResizer::bottomright, 0);
     m_resizer.AddChild(m_richEdit1, CResizer::topright, RD_STRETCH_WIDTH);
     m_resizer.AddChild(m_richEdit2, CResizer::bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
+
+    m_resizer.RecalcLayout();
 
     // Select the first radio button.
     CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO1);
@@ -164,10 +166,11 @@ BOOL CMyDialog::OnEraseBkgnd(CDC&)
     CClientDC dcClient(*this);
     dcClient.SolidFill(GetSysColor(COLOR_3DFACE), rc);
 
-    // draw size grip
+    // Draw size grip
     if (rc.Width() > m_resizer.GetMinRect().Width() && rc.Height() > m_resizer.GetMinRect().Height())
     {
-        int size = GetSystemMetrics(SM_CXVSCROLL);
+        double scale =   (double)GetWindowDPI(*this) / (double)GetWindowDPI(HWND_DESKTOP);
+        int size = (int)(scale * GetSystemMetrics(SM_CXVSCROLL));
         rc.left = rc.right - size;
         rc.top = rc.bottom - size;
         dcClient.DrawFrameControl(rc, DFC_SCROLL, DFCS_SCROLLSIZEGRIP);

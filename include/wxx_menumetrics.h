@@ -1,5 +1,5 @@
-// Win32++   Version 9.2
-// Release Date: 26th February 2023
+// Win32++   Version 9.3
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -208,7 +208,7 @@ namespace Win32xx
         CSize GetTextSize(MenuItemData* pmd, CClientDC& dc) const;
         void  Initialize();
         BOOL  IsVistaMenu() const;
-        void  Setup();
+        void  SetMetrics(HWND frame);
         int   ToItemStateId(UINT itemState) const;
         int   ToCheckBackgroundStateId(int stateID) const;
         int   ToCheckStateId(UINT type, int stateID) const;
@@ -504,11 +504,9 @@ namespace Win32xx
             m_pfnOpenThemeData = reinterpret_cast<OPENTHEMEDATA*>(
                 reinterpret_cast<void*>(::GetProcAddress(uxTheme, "OpenThemeData")));
         }
-
-        Setup();
     }
 
-    inline void CMenuMetrics::Setup()
+    inline void CMenuMetrics::SetMetrics(HWND frame)
     {
         if (m_theme != 0)
         {
@@ -516,7 +514,7 @@ namespace Win32xx
             m_theme = 0;
         }
 
-        m_theme = OpenThemeData(0, VSCLASS_MENU);
+        m_theme = OpenThemeData(frame, VSCLASS_MENU);
 
         if (m_theme != 0)
         {

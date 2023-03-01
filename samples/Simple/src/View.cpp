@@ -37,6 +37,14 @@ void CView::OnDestroy()
 // window needs to be repainted.
 void CView::OnDraw(CDC& dc)
 {
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = info.lfMessageFont;
+        dc.CreateFontIndirect(lf);
+    }
+
     // Centre some text in our view window.
     CRect rc = GetClientRect();
     CString cs = LoadString(IDW_MAIN);
@@ -66,10 +74,10 @@ void CView::PreCreate(CREATESTRUCT& cs)
     // Set some optional parameters for the window.
     cs.dwExStyle = WS_EX_CLIENTEDGE;        // Extended style
     cs.lpszClass = _T("View Window");       // Window Class
-    cs.x = 50;                              // top x
-    cs.y = 50;                              // top y
-    cs.cx = 400;                            // width
-    cs.cy = 300;                            // height
+    cs.x = DPIScaleInt(50);                 // top x
+    cs.y = DPIScaleInt(50);                 // top y
+    cs.cx = DPIScaleInt(400);               // width
+    cs.cy = DPIScaleInt(300);               // height
 }
 
 // This function is our message procedure. We process the messages for

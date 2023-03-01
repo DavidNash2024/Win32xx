@@ -1,5 +1,5 @@
-// Win32++   Version 9.2
-// Release Date: 26th February 2023
+// Win32++   Version 9.3
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1124,10 +1124,15 @@ namespace Win32xx
             AddButtons(1, &tbb);
 
             // Add the menu title to the string table.
-            CString menuName;
-            GetMenuString(menu, static_cast<UINT>(i), menuName.GetBuffer(WXX_MAX_STRING_SIZE), WXX_MAX_STRING_SIZE, MF_BYPOSITION);
-            menuName.ReleaseBuffer();
-            SetButtonText(static_cast<UINT>(i + maxedOffset), menuName);
+            CString menuText;
+            GetMenuString(menu, static_cast<UINT>(i), menuText.GetBuffer(WXX_MAX_STRING_SIZE), WXX_MAX_STRING_SIZE, MF_BYPOSITION);
+            menuText.ReleaseBuffer();
+            
+            // Add extra spaces to menuText for high DPI.
+            if (GetWindowDPI(*this) >= 150)
+                menuText = _T(" ") + menuText + _T(" ");
+
+            SetButtonText(static_cast<UINT>(i + maxedOffset), menuText);
         }
     }
 

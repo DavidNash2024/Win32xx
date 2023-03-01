@@ -1,5 +1,5 @@
-// Win32++   Version 9.2
-// Release Date: 26th February 2023
+// Win32++   Version 9.3
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -47,6 +47,14 @@
 #include "wxx_rect.h"
 #include "wxx_appcore0.h"
 
+#ifndef WM_DPICHANGED
+  #define WM_DPICHANGED         0x02E0
+#endif
+
+#ifndef USER_DEFAULT_SCREEN_DPI
+  #define USER_DEFAULT_SCREEN_DPI 96
+#endif
+
 
 // Messages defined by Win32++
 // WM_APP range: 0x8000 through 0xBFFF
@@ -77,6 +85,7 @@
 #define UWM_TBRESIZE          (WM_APP + 0x3F18) // Message - sent by toolbar to parent. Used by the rebar.
 #define UWM_TBWINPOSCHANGING  (WM_APP + 0x3F19) // Message - sent to parent. Toolbar is resizing.
 #define UWM_UPDATECOMMAND     (WM_APP + 0x3F1A) // Message - sent before a menu is displayed. Used by OnMenuUpdate.
+#define UWM_DPICHANGED        (WM_APP + 0x3F1B) // Message - sent to the frame's view window when the DPI changes.
 
 #define UWN_BARSTART          (WM_APP + 0x3F20) // Notification - sent by CDocker when the docker bar selected for move.
 #define UWN_BARMOVE           (WM_APP + 0x3F21) // Notification - sent by CDocker when the docker bar is moved.
@@ -172,6 +181,9 @@ namespace Win32xx
         int   DlgDirListComboBox(LPTSTR pathSpec, UINT comboBoxID, UINT staticPathID, UINT filetype) const;
         BOOL  DlgDirSelectEx(LPTSTR string, int count, UINT listBoxID) const;
         BOOL  DlgDirSelectComboBoxEx(LPTSTR string, int count, UINT comboBoxID) const;
+        CFont DPIScaleFont(CFont font, int pointSize);
+        int   DPIScaleInt(int value);
+        CBitmap DPIScaleUpBitmap(CBitmap bitmap);
         BOOL  DrawAnimatedRects(UINT aniID, const RECT& from, const RECT& to) const;
         BOOL  DrawCaption(HDC dc, const RECT& rect, UINT flags) const;
         BOOL  DrawMenuBar() const;

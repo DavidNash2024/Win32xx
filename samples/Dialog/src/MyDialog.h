@@ -37,6 +37,7 @@ private:
     CEdit m_edit;
     CListBox m_listBox;
     CRichEdit m_richEdit;
+    CFont m_font;
 
 };
 

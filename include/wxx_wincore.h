@@ -1,5 +1,5 @@
-// Win32++   Version 9.2
-// Release Date: 26th February 2023
+// Win32++   Version 9.3
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -100,6 +100,186 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 namespace Win32xx
 {
+
+    ////////////////////////////////////////
+    // Global Functions
+    //
+
+    // Returns the path to the AppData folder. Returns an empty CString if
+    // the Operating System doesn't support the use of an AppData folder.
+    // The AppData folder is available in Windows 2000 and above.
+    inline CString GetAppDataPath()
+    {
+        CString appData;
+
+        CString system;
+        ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
+        system.ReleaseBuffer();
+
+        HMODULE shell = ::LoadLibrary(system + _T("\\Shell32.dll"));
+        if (shell)
+        {
+            typedef HRESULT WINAPI MYPROC(HWND, int, HANDLE, DWORD, LPTSTR);
+
+            // Get the function pointer of the SHGetFolderPath function
+#ifdef UNICODE
+            MYPROC* pSHGetFolderPath = reinterpret_cast<MYPROC*>(
+                reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetFolderPathW")));
+#else
+            MYPROC* pSHGetFolderPath = reinterpret_cast<MYPROC*>(
+                reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetFolderPathA")));
+#endif
+
+#ifndef CSIDL_APPDATA
+#define CSIDL_APPDATA     0x001a
+#define CSIDL_PERSONAL    0x0005 /* My Documents */
+#endif
+
+#ifndef CSIDL_FLAG_CREATE
+#define CSIDL_FLAG_CREATE 0x8000
+#endif
+
+            if (pSHGetFolderPath)
+            {
+                // Call the SHGetFolderPath function to retrieve the AppData folder
+                pSHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, appData.GetBuffer(MAX_PATH));
+                appData.ReleaseBuffer();
+            }
+
+            // If we can't get the AppData folder, get the MyDocuments folder instead
+            if (appData.IsEmpty())
+            {
+                typedef HRESULT WINAPI GETSPECIALPATH(HWND, LPTSTR, int, BOOL);
+
+#ifdef UNICODE
+                GETSPECIALPATH* pGetSpecialPath = reinterpret_cast<GETSPECIALPATH*>(
+                    reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetSpecialFolderPathW")));
+#else
+                GETSPECIALPATH* pGetSpecialPath = reinterpret_cast<GETSPECIALPATH*>(
+                    reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetSpecialFolderPathA")));
+#endif
+
+                if (pGetSpecialPath)
+                {
+                    // Call the SHGetSpecialFolderPath function to retrieve the MyDocuments folder
+                    pGetSpecialPath(NULL, appData.GetBuffer(MAX_PATH), CSIDL_PERSONAL, TRUE);
+                    appData.ReleaseBuffer();
+                }
+            }
+
+            ::FreeLibrary(shell);
+        }
+
+        return appData;
+    }
+
+    // Retrieves the command line arguments and stores them in a vector of CString.
+    // Similar to CommandLineToArgvW, but supports all versions of Windows,
+    // supports ANSI and Unicode, and doesn't require the user to use LocalFree.
+    inline std::vector<CString> GetCommandLineArgs()
+    {
+        std::vector<CString> commandLineArgs;
+        CString commandLine = GetCommandLine();
+        int index = 0;
+        int endPos = 0;
+
+        while (index < commandLine.GetLength())
+        {
+            // Is the argument quoted?
+            bool isQuoted = (commandLine[index] == _T('\"'));
+
+            if (isQuoted)
+            {
+                // Find the terminating token (quote followed by space)
+                endPos = commandLine.Find(_T("\" "), index);
+                if (endPos == -1) endPos = commandLine.GetLength() - 1;
+
+                // Store the argument in the CStringT vector without the quotes.
+                CString s;
+                if (endPos - index < 2)
+                    s = _T("\"\"");     // "" for a single quote or double quote argument
+                else
+                    s = commandLine.Mid(index + 1, endPos - index - 1);
+
+                commandLineArgs.push_back(s);
+                index = endPos + 2;
+            }
+            else
+            {
+                // Find the terminating token (space character).
+                endPos = commandLine.Find(_T(' '), index);
+                if (endPos == -1) endPos = commandLine.GetLength();
+
+                // Store the argument in the CStringT vector.
+                CString s = commandLine.Mid(index, endPos - index);
+                commandLineArgs.push_back(s);
+                index = endPos + 1;
+            }
+
+            // skip excess space characters
+            while (index < commandLine.GetLength() && commandLine[index] == _T(' '))
+                index++;
+        }
+
+        // CommandLineArgs is a vector of CStringT.
+        return commandLineArgs;
+    }
+
+    inline int GetWindowDPI(HWND hWnd)
+    {
+        // Retrieve desktop's dpi as a fallback.
+        CClientDC desktopDC(HWND_DESKTOP);
+        int dpi = GetDeviceCaps(desktopDC, LOGPIXELSX);
+
+        // Retrieve the window's dpi if we can.
+        typedef UINT WINAPI GETDPIFORWINDOW(HWND);
+        HMODULE user = GetModuleHandle(_T("user32.dll"));
+        if (user && ::IsWindow(hWnd))
+        {
+            GETDPIFORWINDOW* pGetDpiForWindow =
+                reinterpret_cast<GETDPIFORWINDOW*>(GetProcAddress(user, "GetDpiForWindow"));
+            if (pGetDpiForWindow)
+            {
+                dpi = static_cast<int>(pGetDpiForWindow(hWnd));
+            }
+        }
+
+        return dpi;
+    }
+
+    // Returns a CString containing the specified string resource.
+    // Returns an empty string if the string resource is not defined.
+    // Refer to LoadString in the Windows API documentation for more information.
+    inline CString LoadString(UINT id)
+    {
+        CString str;
+        str.LoadString(id);
+        return str;
+    }
+
+    inline CBitmap ScaleUpBitmap(CBitmap bitmap, int scale)
+    {
+        // Get the size of the bitmap
+        CSize size = bitmap.GetSize();
+        int newWidth = size.cx * scale;
+        int newHeight = size.cy * scale;
+
+        // Create the device contexts
+        CClientDC clientDC(HWND_DESKTOP);
+        CMemDC newImageDC(clientDC);
+        CMemDC imageDC(clientDC);
+
+        // Create and select the bitmaps
+        newImageDC.CreateCompatibleBitmap(clientDC, newWidth, newHeight);
+        imageDC.SelectObject(bitmap);
+
+        // Stretch the bitmap to the new size
+        newImageDC.SetStretchBltMode(COLORONCOLOR);
+        newImageDC.StretchBlt(0, 0, newWidth, newHeight, imageDC, 0, 0,
+            size.cx, size.cy, SRCCOPY);
+
+        return newImageDC.DetachBitmap();
+    }
 
     ////////////////////////////////////////
     // Definitions for the CWnd class
@@ -484,6 +664,33 @@ namespace Win32xx
         // dx.DDX_Check(IDC_CHECK_A,        m_checkA);
         // dx.DDX_Check(IDC_CHECK_B,        m_checkB);
         // dx.DDX_Check(IDC_CHECK_C,        m_checkC);
+    }
+
+    inline CFont CWnd::DPIScaleFont(CFont font, int pointSize)
+    {
+        const int pointsPerInch = 72;
+        int dpi = GetWindowDPI(*this);
+        LOGFONT logfont = font.GetLogFont();
+        logfont.lfHeight = -MulDiv(pointSize, dpi, pointsPerInch);
+        CFont dpiFont(logfont);
+
+        return dpiFont;
+    }
+
+    inline int CWnd::DPIScaleInt(int value)
+    {
+        int dpi = GetWindowDPI(*this);
+        int dpiValue = MulDiv(value, dpi, USER_DEFAULT_SCREEN_DPI);
+
+        return dpiValue;
+    }
+
+    inline CBitmap CWnd::DPIScaleUpBitmap(CBitmap bitmap)
+    {
+        int dpi = GetWindowDPI(*this);
+        int scale = MAX(1, dpi / USER_DEFAULT_SCREEN_DPI);
+
+        return ScaleUpBitmap(bitmap, scale);
     }
 
     // Pass messages on to the appropriate default window procedure
@@ -2528,139 +2735,7 @@ namespace Win32xx
         return (chars != 0);
     }
 
-    ////////////////////////////////////////
-    // Global Functions
-    //
 
-    // Returns the path to the AppData folder. Returns an empty CString if
-    // the Operating System doesn't support the use of an AppData folder.
-    // The AppData folder is available in Windows 2000 and above.
-    inline CString GetAppDataPath()
-    {
-        CString appData;
-
-        CString system;
-        ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
-        system.ReleaseBuffer();
-
-        HMODULE shell = ::LoadLibrary(system + _T("\\Shell32.dll"));
-        if (shell)
-        {
-            typedef HRESULT WINAPI MYPROC(HWND, int, HANDLE, DWORD, LPTSTR);
-
-            // Get the function pointer of the SHGetFolderPath function
-#ifdef UNICODE
-            MYPROC* pSHGetFolderPath = reinterpret_cast<MYPROC*>(
-                reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetFolderPathW")));
-#else
-            MYPROC* pSHGetFolderPath = reinterpret_cast<MYPROC*>(
-                reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetFolderPathA")));
-#endif
-
-#ifndef CSIDL_APPDATA
-  #define CSIDL_APPDATA     0x001a
-  #define CSIDL_PERSONAL    0x0005 /* My Documents */
-#endif
-
-#ifndef CSIDL_FLAG_CREATE
-  #define CSIDL_FLAG_CREATE 0x8000
-#endif
-
-            if (pSHGetFolderPath)
-            {
-                // Call the SHGetFolderPath function to retrieve the AppData folder
-                pSHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, appData.GetBuffer(MAX_PATH));
-                appData.ReleaseBuffer();
-            }
-
-            // If we can't get the AppData folder, get the MyDocuments folder instead
-            if (appData.IsEmpty())
-            {
-                typedef HRESULT WINAPI GETSPECIALPATH(HWND, LPTSTR, int, BOOL);
-
-#ifdef UNICODE
-                GETSPECIALPATH* pGetSpecialPath = reinterpret_cast<GETSPECIALPATH*>(
-                    reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetSpecialFolderPathW")));
-#else
-                GETSPECIALPATH* pGetSpecialPath = reinterpret_cast<GETSPECIALPATH*>(
-                    reinterpret_cast<void*>(::GetProcAddress(shell, "SHGetSpecialFolderPathA")));
-#endif
-
-                if (pGetSpecialPath)
-                {
-                    // Call the SHGetSpecialFolderPath function to retrieve the MyDocuments folder
-                    pGetSpecialPath(NULL, appData.GetBuffer(MAX_PATH), CSIDL_PERSONAL, TRUE);
-                    appData.ReleaseBuffer();
-                }
-            }
-
-            ::FreeLibrary(shell);
-        }
-
-        return appData;
-    }
-
-    // Retrieves the command line arguments and stores them in a vector of CString.
-    // Similar to CommandLineToArgvW, but supports all versions of Windows,
-    // supports ANSI and Unicode, and doesn't require the user to use LocalFree.
-    inline std::vector<CString> GetCommandLineArgs()
-    {
-        std::vector<CString> commandLineArgs;
-        CString commandLine = GetCommandLine();
-        int index = 0;
-        int endPos = 0;
-
-        while (index < commandLine.GetLength())
-        {
-            // Is the argument quoted?
-            bool isQuoted = (commandLine[index] == _T('\"'));
-
-            if (isQuoted)
-            {
-                // Find the terminating token (quote followed by space)
-                endPos = commandLine.Find(_T("\" "), index);
-                if (endPos == -1) endPos = commandLine.GetLength() - 1;
-
-                // Store the argument in the CStringT vector without the quotes.
-                CString s;
-                if (endPos - index < 2)
-                    s = _T("\"\"");     // "" for a single quote or double quote argument
-                else
-                    s = commandLine.Mid(index + 1, endPos - index - 1);
-
-                commandLineArgs.push_back(s);
-                index = endPos + 2;
-            }
-            else
-            {
-                // Find the terminating token (space character).
-                endPos = commandLine.Find(_T(' '), index);
-                if (endPos == -1) endPos = commandLine.GetLength();
-
-                // Store the argument in the CStringT vector.
-                CString s = commandLine.Mid(index, endPos - index);
-                commandLineArgs.push_back(s);
-                index = endPos + 1;
-            }
-
-            // skip excess space characters
-            while (index < commandLine.GetLength() && commandLine[index] == _T(' '))
-                index++;
-        }
-
-        // CommandLineArgs is a vector of CStringT.
-        return commandLineArgs;
-    }
-
-    // Returns a CString containing the specified string resource.
-    // Returns an empty string if the string resource is not defined.
-    // Refer to LoadString in the Windows API documentation for more information.
-    inline CString LoadString(UINT id)
-    {
-        CString str;
-        str.LoadString(id);
-        return str;
-    }
 
 }
 
