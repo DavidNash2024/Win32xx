@@ -33,10 +33,10 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Assigns the appropriately sized menu icons.
-// Called each time the 
+// Called each time the
 void CMainFrame::DPIScaleMenuIcons()
 {
-    // Load the toolbar bitmap. 
+    // Load the toolbar bitmap.
     CBitmap toolbarImage(IDW_MAIN);
 
     // Scale the bitmap to the menu item height.
@@ -63,7 +63,7 @@ void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
     {
-        // Load the toolbar bitmap. 
+        // Load the toolbar bitmap.
         CBitmap toolbarImage(IDW_MAIN);
 
         // Create the image-list

@@ -157,6 +157,12 @@ BOOL CMyDialog::OnInitDialog()
     m_bubbleTT.AddTool(*this, leftRect,  1, _T("Client area, left side"));
     m_bubbleTT.AddTool(*this, rightRect, 2, _T("Client area, right side"));
 
+    // Ajust the pattern image size.
+    m_patternImage.LoadBitmap(IDB_BITMAP1);
+    m_patternImage = DPIScaleUpBitmap(m_patternImage);
+    LPARAM lparam = reinterpret_cast<LPARAM>(m_patternImage.GetHandle());
+    SendDlgItemMessage(IDC_STATIC1, STM_SETIMAGE, IMAGE_BITMAP, lparam);
+
     return TRUE;
 }
 

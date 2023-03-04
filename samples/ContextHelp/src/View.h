@@ -16,6 +16,7 @@ public:
     virtual ~CView();
     virtual HWND Create(HWND hParent);
 
+    void DPIScaleImage();
     CDoc& GetDoc();
 
     // Command handlers
@@ -24,6 +25,9 @@ public:
     BOOL OnCheckB();
     BOOL OnCheckC();
     BOOL OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID);
+
+    // Command handlers
+    INT_PTR OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
 
 protected:
     // Virtual functions that override base class functions
@@ -42,6 +46,7 @@ private:
     CDoc     m_doc;
     CResizer m_resizer;
     HWND     m_parent;      // handle of parent frame
+    CBitmap  m_patternImage;
 
     // Member variables for dialog controls.
     CButton   m_radioA;

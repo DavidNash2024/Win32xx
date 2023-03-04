@@ -266,8 +266,8 @@ void CMainFrame::OnInitialUpdate()
     // Suppress Java script errors.
     GetBrowser()->put_Silent(VARIANT_TRUE);
 
-    // Load the home page.
-    GetBrowser()->GoHome();
+    // Load the web page.
+    m_view.Navigate(_T("www.google.com"));
 }
 
 // Called when navigation completes on either a window or frameset element.

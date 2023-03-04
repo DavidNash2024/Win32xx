@@ -183,6 +183,7 @@ namespace Win32xx
         BOOL  DlgDirSelectComboBoxEx(LPTSTR string, int count, UINT comboBoxID) const;
         CFont DPIScaleFont(CFont font, int pointSize);
         int   DPIScaleInt(int value);
+        CRect DPIScaleRect(RECT rc);
         CBitmap DPIScaleUpBitmap(CBitmap bitmap);
         BOOL  DrawAnimatedRects(UINT aniID, const RECT& from, const RECT& to) const;
         BOOL  DrawCaption(HDC dc, const RECT& rect, UINT flags) const;

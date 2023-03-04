@@ -77,7 +77,7 @@ void CMyDialog::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-// Called when the effective dots per inch (dpi) for the dialog has changed. 
+// Called when the effective dots per inch (dpi) for the dialog has changed.
 INT_PTR CMyDialog::OnDPIChanged()
 {
     SetURLFont();

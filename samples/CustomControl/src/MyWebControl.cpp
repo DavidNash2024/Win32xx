@@ -38,7 +38,7 @@ void CWebControl::OnInitialUpdate()
     GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
 
     // Load web page.
-    Navigate(_T("www.google.com"));
+    Navigate2(_T("www.google.com"));
 }
 
 

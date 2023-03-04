@@ -35,10 +35,10 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         // Pass messages on to the resizer.
         m_resizer.HandleMessage(msg, wparam, lparam);
 
-    //  switch (msg)
-    //  {
-    //      Add case statements for each message to be handled here
-    //  }
+      switch (msg)
+      {
+      case WM_SIZE:  return OnSize(msg, wparam, lparam);
+      }
 
         // Pass unhandled messages on to parent DialogProc.
         return DialogProcDefault(msg, wparam, lparam);
@@ -52,6 +52,14 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 
         return 0;
     }
+}
+
+void CView::DPIScaleImage()
+{
+    m_patternImage.LoadBitmap(IDB_BITMAP1);
+    m_patternImage = DPIScaleUpBitmap(m_patternImage);
+    LPARAM lparam = reinterpret_cast<LPARAM>(m_patternImage.GetHandle());
+    m_picture.SendMessage(STM_SETIMAGE, IMAGE_BITMAP, lparam);
 }
 
 // Retrieves a reference to CDoc.
@@ -153,7 +161,7 @@ BOOL CView::OnInitDialog()
     OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, curRadio);
 
     // Initialize dialog resizing
-    m_resizer.Initialize( *this, CRect(0, 0, 300, 270) );
+    m_resizer.Initialize( *this, CRect(0, 0, 450, 350) );
     m_resizer.AddChild(m_radioA,   CResizer::topleft, 0);
     m_resizer.AddChild(m_radioB,   CResizer::topleft, 0);
     m_resizer.AddChild(m_radioC,   CResizer::topleft, 0);
@@ -231,4 +239,14 @@ BOOL CView::OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID)
     TRACE("Radio changed\n");
 
     return TRUE;
+}
+
+INT_PTR CView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Perform default processing first.
+    FinalWindowProc(msg, wparam, lparam);
+
+    // Set the image size.
+    DPIScaleImage();
+    return 0;
 }

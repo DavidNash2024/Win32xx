@@ -48,6 +48,14 @@ void CMDIChildMax::PreCreate(CREATESTRUCT& cs)
 // Constructor.
 void CViewMax::OnDraw(CDC& dc)
 {
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = info.lfMessageFont;
+        dc.CreateFontIndirect(lf);
+    }
+
     // Centre some text in our view window.
     CRect rc = GetClientRect();
     dc.DrawText(_T("Maxed Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);

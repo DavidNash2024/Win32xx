@@ -46,15 +46,15 @@ void CMainFrame::LoadDefaultDockers()
 {
     // Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
-    CDocker* pDockLeft = AddDockedChild(new CDockClasses, DS_DOCKED_LEFT, 200, ID_DOCK_CLASSES1);
-    CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT, 200, ID_DOCK_CLASSES2);
-    CDocker* pDockTop = AddDockedChild(new CDockText, DS_DOCKED_TOP, 100, ID_DOCK_TEXT1);
-    CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM, 100, ID_DOCK_TEXT2);
+    CDocker* pDockLeft = AddDockedChild(new CDockClasses, DS_DOCKED_LEFT, DPIScaleInt(200), ID_DOCK_CLASSES1);
+    CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT, DPIScaleInt(200), ID_DOCK_CLASSES2);
+    CDocker* pDockTop = AddDockedChild(new CDockText, DS_DOCKED_TOP, DPIScaleInt(100), ID_DOCK_TEXT1);
+    CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM, DPIScaleInt(100), ID_DOCK_TEXT2);
 
-    pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES1);
-    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES2);
-    pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, 100, ID_DOCK_SIMPLE1);
-    pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, 100, ID_DOCK_SIMPLE2);
+    pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, DPIScaleInt(150), ID_DOCK_FILES1);
+    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, DPIScaleInt(150), ID_DOCK_FILES2);
+    pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, DPIScaleInt(100), ID_DOCK_SIMPLE1);
+    pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, DPIScaleInt(100), ID_DOCK_SIMPLE2);
 
     // Adjust dockstyles as per menu selections
     SetDockStyles();
