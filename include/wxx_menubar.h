@@ -1127,7 +1127,7 @@ namespace Win32xx
             CString menuText;
             GetMenuString(menu, static_cast<UINT>(i), menuText.GetBuffer(WXX_MAX_STRING_SIZE), WXX_MAX_STRING_SIZE, MF_BYPOSITION);
             menuText.ReleaseBuffer();
-            
+
             // Add extra spaces to menuText for high DPI.
             if (GetWindowDPI(*this) >= 150)
                 menuText = _T(" ") + menuText + _T(" ");

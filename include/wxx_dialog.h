@@ -176,7 +176,7 @@ namespace Win32xx
 
         enum Alignment { topleft, topright, bottomleft, bottomright, center, leftcenter, rightcenter, topcenter, bottomcenter };
 
-        CResizer() : m_parent(0), m_xScrollPos(0), m_yScrollPos(0), 
+        CResizer() : m_parent(0), m_xScrollPos(0), m_yScrollPos(0),
                      m_currentDPI(USER_DEFAULT_SCREEN_DPI)
                      {}
         virtual ~CResizer() {}

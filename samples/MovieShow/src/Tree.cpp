@@ -246,6 +246,6 @@ CDockTree::CDockTree()
     SetView(m_treeView);
 
     // Set the width of the splitter bar
-    SetBarWidth(8);
+    SetBarWidth(DPIScaleInt(8));
 }
 

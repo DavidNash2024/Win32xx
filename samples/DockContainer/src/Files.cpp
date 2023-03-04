@@ -143,6 +143,6 @@ CDockFiles::CDockFiles()
     SetView(m_files);
 
     // Set the width of the splitter bar.
-    SetBarWidth(8);
+    SetBarWidth(DPIScaleInt(8));
 }
 

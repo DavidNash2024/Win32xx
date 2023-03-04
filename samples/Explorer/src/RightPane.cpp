@@ -14,9 +14,6 @@
 CRightPane::CRightPane()
 {
     SetView(m_view);
-
-    // Set the width of the splitter bar
-    SetBarWidth(6);
 }
 
 // Adds a new docker. The id specifies the dock type.

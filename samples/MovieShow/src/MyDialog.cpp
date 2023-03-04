@@ -88,12 +88,8 @@ BOOL CViewDialog::OnInitDialog()
     wp.rcNormalPosition.bottom = wp.rcNormalPosition.top + width * 3 / 2;
     m_picture.SetWindowPlacement(wp);
 
-    CRect rc = m_year.GetWindowRect();
-    MapWindowPoints(*this, rc);
-
-    // Initialize dialog resizing
-    m_Resizer.Initialize(*this, CRect(0, 0, width + rc.right + 10, 210));
-
+    // Position the dialog elements.
+    m_Resizer.Initialize(*this, CRect(0, 0, 310, 320));
     m_Resizer.AddChild(m_static1, CResizer::topleft, 0);
     m_Resizer.AddChild(m_static2, CResizer::topleft, 0);
     m_Resizer.AddChild(m_static3, CResizer::topleft, 0);
@@ -134,6 +130,6 @@ CDockDialog::CDockDialog() : m_view(IDD_MYDIALOG)
     SetView(m_view);
 
     // Set the width of the splitter bar
-    SetBarWidth(8);
+    SetBarWidth(DPIScaleInt(8));
 }
 

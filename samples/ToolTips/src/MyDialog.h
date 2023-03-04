@@ -59,6 +59,7 @@ private:
     CToolTip m_toolTip;
     CString m_str;
     HICON m_info;      // Icon used by tooltips for the RichEdit and Edit controls
+    CBitmap m_patternImage;
 };
 
 

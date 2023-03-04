@@ -137,10 +137,9 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 }
 
 // Assigns the appropriately sized menu icons.
-// Called each time the 
 void CMainFrame::DPIScaleMenuIcons()
 {
-    // Load the toolbar bitmap. 
+    // Load the toolbar bitmap.
     CBitmap toolbarImage(IDB_TOOLBAR24);
 
     // Scale the bitmap to the menu item height.
@@ -161,7 +160,7 @@ void CMainFrame::DPIScaleMenuIcons()
 
     // Create the image-list from the scaled image
     CSize sz = scaledImage.GetSize();
-    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);  
+    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_menuImages.Add(scaledImage, mask);
 
     // Assign the image-list to the menu items.
@@ -173,7 +172,7 @@ void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
     {
-        // Load the toolbar bitmap. 
+        // Load the toolbar bitmap.
         CBitmap toolbarImage(IDB_TOOLBAR24);
 
         // Create the image-list

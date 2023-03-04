@@ -32,9 +32,10 @@ HWND CMainWindow::Create(HWND hParent /*= 0*/)
 
     // Create the main window
     CRect rc(20, 50, 400, 300);
+    CRect rcDPI = DPIScaleRect(rc);
 
     return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-        rc, hParent, 0);
+        rcDPI, hParent, 0);
 }
 
 // Creates several test windows.

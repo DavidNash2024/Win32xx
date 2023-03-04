@@ -19,8 +19,8 @@ int CViewWeb::OnCreate(CREATESTRUCT& cs)
     // Suppress Java script errors
     GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
 
-    // Load the Win32++ home page
-    Navigate2(_T("http://sourceforge.net/projects/win32-framework/"));
+    // Load the web page.
+    Navigate2(_T("www.google.com"));
 
     return 0;
 }

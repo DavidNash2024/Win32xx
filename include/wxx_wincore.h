@@ -247,16 +247,6 @@ namespace Win32xx
         return dpi;
     }
 
-    // Returns a CString containing the specified string resource.
-    // Returns an empty string if the string resource is not defined.
-    // Refer to LoadString in the Windows API documentation for more information.
-    inline CString LoadString(UINT id)
-    {
-        CString str;
-        str.LoadString(id);
-        return str;
-    }
-
     inline CBitmap ScaleUpBitmap(CBitmap bitmap, int scale)
     {
         // Get the size of the bitmap
@@ -685,6 +675,17 @@ namespace Win32xx
         return dpiValue;
     }
 
+    inline CRect CWnd::DPIScaleRect(RECT rc)
+    {
+        int dpi = GetWindowDPI(*this);
+        int left = MulDiv(rc.left, dpi, USER_DEFAULT_SCREEN_DPI);
+        int top = MulDiv(rc.top, dpi, USER_DEFAULT_SCREEN_DPI);
+        int bottom = MulDiv(rc.bottom, dpi, USER_DEFAULT_SCREEN_DPI);
+        int right = MulDiv(rc.right, dpi, USER_DEFAULT_SCREEN_DPI);
+
+        return CRect(left, top, right, bottom);
+    }
+
     inline CBitmap CWnd::DPIScaleUpBitmap(CBitmap bitmap)
     {
         int dpi = GetWindowDPI(*this);
@@ -920,6 +921,10 @@ namespace Win32xx
     // WM_CTLCOLORSCROLLBAR, WM_CTLCOLORSTATIC, WM_CHARTOITEM,  WM_VKEYTOITEM,
     // WM_HSCROLL, WM_VSCROLL, WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM,
     // WM_COMPAREITEM, WM_PARENTNOTIFY.
+    //
+    // Note: The WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM and WM_COMPAREITEM
+    //   messages require the window to have a control ID in order to be reflected.
+    //   Use SetWindowLongPtr(GWLP_ID, id) to set a control ID if required.
     inline LRESULT CWnd::OnMessageReflect(UINT, WPARAM, LPARAM)
     {
         // This function processes those special messages (see above) sent
@@ -2638,102 +2643,6 @@ namespace Win32xx
 
     #endif
 
-
-    /////////////////////////////////////////////////////////
-    // Definitions of CString functions that require CWinApp
-    //
-
-    // Appends formatted data to the CStringT content.
-    template <class T>
-    inline void CStringT<T>::AppendFormat(UINT formatID, ...)
-    {
-        CStringT str1;
-        CStringT str2;
-
-        if (str1.LoadString(formatID))
-        {
-            va_list args;
-            va_start(args, formatID);
-            str2.FormatV(str1.c_str(), args);
-            va_end(args);
-
-            m_str.append(str2);
-        }
-    }
-
-    // Formats the string as sprintf does.
-    template <class T>
-    inline void CStringT<T>::Format(UINT id, ...)
-    {
-        CStringT str;
-        if (str.LoadString(id))
-        {
-            va_list args;
-            va_start(args, id);
-            FormatV(str.c_str(), args);
-            va_end(args);
-        }
-    }
-
-    // Loads the string from a Windows resource.
-    template <>
-    inline bool CStringT<CHAR>::LoadString(UINT id)
-    {
-        assert (GetApp());            // throws a CNotSupportedException on failure.
-
-        int startSize = 64;
-        CHAR* pTCharArray = 0;
-        std::vector<CHAR> vString;
-        int chars = startSize;
-
-        Empty();
-
-        // Increase the size of our array in a loop until we load the entire string
-        // The ANSI and _UNICODE versions of LoadString behave differently. This technique works for both.
-        while (startSize -1 <= chars )
-        {
-            startSize = startSize * 4;
-            vString.assign(size_t(startSize)+1, 0);
-            pTCharArray = &vString.front();
-            chars = ::LoadStringA (GetApp()->GetResourceHandle(), id, pTCharArray, startSize);
-        }
-
-        if (chars > 0)
-            m_str.assign(pTCharArray);
-
-        return (chars != 0);
-    }
-
-    // Loads the string from a Windows resource.
-    // Refer to LoadString in the Windows API documentation for more information.
-    template <>
-    inline bool CStringT<WCHAR>::LoadString(UINT id)
-    {
-        assert (GetApp());
-
-        int startSize = 64;
-        WCHAR* pTCharArray = 0;
-        std::vector<WCHAR> vString;
-        int chars = startSize;
-
-        Empty();
-
-        // Increase the size of our array in a loop until we load the entire string
-        // The ANSI and _UNICODE versions of LoadString behave differently.
-        // This technique works for both.
-        while (startSize -1 <= chars )
-        {
-            startSize = startSize * 4;
-            vString.assign(size_t(startSize)+1, 0);
-            pTCharArray = &vString.front();
-            chars = ::LoadStringW (GetApp()->GetResourceHandle(), id, pTCharArray, startSize);
-        }
-
-        if (chars > 0)
-            m_str.assign(pTCharArray);
-
-        return (chars != 0);
-    }
 
 
 

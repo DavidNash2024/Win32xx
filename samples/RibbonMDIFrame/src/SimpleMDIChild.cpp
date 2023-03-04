@@ -15,6 +15,14 @@ CSimpleView::CSimpleView() : m_color(RGB(0,0,255))
 
 void CSimpleView::OnDraw(CDC& dc)
 {
+    // Use the message font for Windows 7 and higher.
+    if (GetWinVersion() >= 2601)
+    {
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        LOGFONT lf = info.lfMessageFont;
+        dc.CreateFontIndirect(lf);
+    }
+
     // Centre some text in our view window.
     CRect rc = GetClientRect();
     dc.SetTextColor(m_color);

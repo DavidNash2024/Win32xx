@@ -174,10 +174,10 @@ void CView::PreCreate(CREATESTRUCT& cs)
     // Set some optional parameters for the window
     cs.dwExStyle = WS_EX_CLIENTEDGE;        // Extended style
     cs.lpszClass = L"View Window";          // Window Class
-    cs.x = 50;                              // top x
-    cs.y = 50;                              // top y
-    cs.cx = 600;                            // width
-    cs.cy = 500;                            // height
+    cs.x = DPIScaleInt(50);                 // top x
+    cs.y = DPIScaleInt(50);                 // top y
+    cs.cx = DPIScaleInt(600);               // width
+    cs.cy = DPIScaleInt(500);               // height
 }
 
 // Recalculate the position of the child windows.

@@ -20,11 +20,13 @@ CTestWindow::CTestWindow() : m_windowCount(0)
 void CTestWindow::CreateWin(int i)
 {
     m_windowCount = i + 1;
-    TCHAR str[80];
-    wsprintf(str, _T("Test Window %d"), m_windowCount);
+    CString str;
+    str << "Test Window " << m_windowCount;
 
     // Create a test window without a close button.
-    CreateEx(0, NULL, str, WS_VISIBLE, 420, 50 + 4*i, 300, 200, 0, NULL);
+    CRect rc(420, 50 + 4 * i, 300, 200);
+    CRect rcDPI = DPIScaleRect(rc);
+    CreateEx(0, NULL, str, WS_VISIBLE, rcDPI, 0, NULL);
 }
 
 // Called when the window is created.

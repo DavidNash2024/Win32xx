@@ -210,6 +210,6 @@ CDockClasses::CDockClasses()
     SetView(m_classes);
 
     // Set the width of the splitter bar
-    SetBarWidth(8);
+    SetBarWidth(DPIScaleInt(8));
 }
 
