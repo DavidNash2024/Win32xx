@@ -47,6 +47,7 @@ private:
 
     // Message handlers
     LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDPIChanged(UINT, WPARAM, LPARAM);
     LRESULT OnSocketMessage(WPARAM wparam, LPARAM lparam);
 
     // Socket message handlers

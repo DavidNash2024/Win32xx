@@ -31,8 +31,6 @@ private:
 
     CRect GetPageRect();
     CRect GetPrintRect();
-
-    CFont   m_font;
     std::vector<int> m_pageBreaks;
 };
 

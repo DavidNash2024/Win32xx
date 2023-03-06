@@ -47,6 +47,7 @@ HWND CMainWindow::Create(HWND parent)
 
     // Create the main window.
     CRect rc(20 , 50, 400, 500);
+    rc = DPIScaleRect(rc);
     return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
         rc, parent, 0);
 }

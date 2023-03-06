@@ -21,12 +21,15 @@ public:
     // Virtual functions that override public base class functions
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
 
 protected:
     // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnClose();
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    SetupMenuIcons();
@@ -58,6 +61,8 @@ private:
     CView m_view;
     CPrintPreview<CView> m_preview;
     bool m_isToolbarShown;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

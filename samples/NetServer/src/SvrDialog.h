@@ -97,6 +97,7 @@ private:
     BOOL OnStartServer();
 
     // Message handlers
+    LRESULT OnDPIChanged(UINT, WPARAM, LPARAM);
     BOOL OnSocketAccept();
     BOOL OnSocketDisconnect(WPARAM wparam);
     BOOL OnSocketReceive(WPARAM wparam);

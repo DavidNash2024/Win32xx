@@ -2477,9 +2477,10 @@ namespace Win32xx
     // Called when the SystemParametersInfo function changes a system-wide
     // setting or when policy settings have changed.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSettingChange(UINT, WPARAM, LPARAM)
+    inline LRESULT CFrameT<T>::OnSettingChange(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UpdateSettings();
+        OnSysColorChange(msg, wparam, lparam);
+    //    UpdateSettings();
         return 0;
     }
 

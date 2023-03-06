@@ -194,8 +194,9 @@ INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case USER_DISCONNECT:  return OnSocketDisconnect(wparam);
-        case UWM_SOCKETMSG:    return OnSocketMessage(wparam, lparam);
+        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
+        case USER_DISCONNECT:   return OnSocketDisconnect(wparam);
+        case UWM_SOCKETMSG:     return OnSocketMessage(wparam, lparam);
         }
 
         // Pass unhandled messages on to parent DialogProc.
@@ -273,6 +274,18 @@ BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM)
     } //switch (LOWORD(wparam))
 
     return FALSE;
+}
+
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CSvrDialog::OnDPIChanged(UINT, WPARAM, LPARAM)
+{
+    CFont font = GetFont();
+    m_ip4Address.SetFont(font);
+
+    return 0;
 }
 
 // Called before the dialog is displayed.

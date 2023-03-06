@@ -36,6 +36,7 @@ private:
     // Member variables
     CEdit     m_edit;
     CRichEdit m_richEdit;
+    CBitmap m_patternImage;
 };
 
 #endif //MYDIALOG_H
