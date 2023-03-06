@@ -22,6 +22,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void    OnClose();
+    virtual LRESULT OnDPIChanged(UINT, WPARAM, LPARAM);
     virtual BOOL    OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);

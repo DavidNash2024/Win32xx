@@ -18,6 +18,8 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
     void UpdateToolbar();
 
 protected:
@@ -25,6 +27,7 @@ protected:
     virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
@@ -81,6 +84,8 @@ private:
     bool m_isToolbarShown;
     bool m_isWrapped;
     HWND m_oldFocus;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

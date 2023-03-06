@@ -43,6 +43,7 @@ INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
+        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
         case USER_CONNECT:      return OnSocketConnect();
         case USER_DISCONNECT:   return OnSocketDisconnect();
         case USER_RECEIVE:      return OnSocketReceive();
@@ -62,6 +63,47 @@ INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     }
 }
 
+// This function adds support for the IP address control in the dialog.
+void CClientDialog::LoadCommonControlsEx()
+{
+    HMODULE module = 0;
+
+    try
+    {
+        // Load the Common Controls DLL
+        module = ::LoadLibrary(_T("COMCTL32.DLL"));
+        if (module == 0)
+            throw CWinException(_T("Failed to load COMCTL32.DLL"));
+
+        if (GetComCtlVersion() > 470)
+        {
+            // Declare a pointer to the InItCommonControlsEx function
+            typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
+            INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(module, "InitCommonControlsEx");
+
+            // Call InitCommonControlsEx
+            INITCOMMONCONTROLSEX initStruct;
+            initStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+            initStruct.dwICC = ICC_INTERNET_CLASSES;
+            if ((!(*pfnInit)(&initStruct)))
+                throw CWinException(_T("InitCommonControlsEx failed"));
+        }
+        else
+        {
+            ::MessageBox(0, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
+        }
+
+        ::FreeLibrary(module);
+    }
+
+    catch (const CWinException& e)
+    {
+        e.what();
+        if (module != 0)
+            ::FreeLibrary(module);
+    }
+}
+
 // Called when the dialog window is activated.
 LRESULT CClientDialog::OnActivate(UINT, WPARAM, LPARAM)
 {
@@ -78,6 +120,80 @@ void CClientDialog::OnClose()
     // Disconnect before shutting down the dialog
     m_client.Disconnect();
     PostQuitMessage(0);
+}
+
+// Respond to the dialog buttons.
+BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM)
+{
+    UINT id = LOWORD(wparam);
+
+    switch (id)
+    {
+    case IDC_BUTTON_CONNECT:
+        OnStartClient();
+        return TRUE;
+    case IDC_BUTTON_SEND:
+        OnSend();
+        // Give keyboard focus to the Send edit box
+        GotoDlgCtrl(m_editSend);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CClientDialog::OnDPIChanged(UINT, WPARAM, LPARAM)
+{
+    CFont font = GetFont();
+    m_ip4Address.SetFont(font);
+
+    return 0;
+}
+
+// Called before the dialog is displayed.
+BOOL CClientDialog::OnInitDialog()
+{
+    // Set the Icon
+    SetIconLarge(IDW_MAIN);
+    SetIconSmall(IDW_MAIN);
+
+    // reposition dialog
+    CRect rc = GetWindowRect();
+    MoveWindow(rc.left + 14, rc.top + 14, rc.Width(), rc.Height(), TRUE);
+
+    // Attach CWnd objects to the dialog's children
+    m_ip4Address.AttachDlgItem(IDC_IPADDRESS, *this);
+    m_editIP6Address.AttachDlgItem(IDC_EDIT_IPV6ADDRESS, *this);
+    m_editStatus.AttachDlgItem(IDC_EDIT_STATUS, *this);
+    m_editPort.AttachDlgItem(IDC_EDIT_PORT, *this);
+    m_editSend.AttachDlgItem(IDC_EDIT_SEND, *this);
+    m_editReceive.AttachDlgItem(IDC_EDIT_RECEIVE, *this);
+    m_buttonConnect.AttachDlgItem(IDC_BUTTON_CONNECT, *this);
+    m_buttonSend.AttachDlgItem(IDC_BUTTON_SEND, *this);
+    m_radioIP4.AttachDlgItem(IDC_RADIO_IPV4, *this);
+    m_radioIP6.AttachDlgItem(IDC_RADIO_IPV6, *this);
+    m_radioTCP.AttachDlgItem(IDC_RADIO_TCP, *this);
+    m_radioUDP.AttachDlgItem(IDC_RADIO_UDP, *this);
+
+    // Set the initial state of the dialog
+    m_editIP6Address.SetWindowText(_T("0000:0000:0000:0000:0000:0000:0000:0001"));
+    m_radioIP4.SetCheck(BST_CHECKED);
+    AppendText(m_editStatus, _T("Not Connected"));
+    m_editPort.SetWindowText(_T("3000"));
+    m_radioTCP.SetCheck(BST_CHECKED);
+    m_ip4Address.SetAddress(MAKEIPADDRESS(127, 0, 0, 1));
+
+    if (!m_client.IsIPV6Supported())
+    {
+        m_radioIP6.EnableWindow(FALSE);
+        m_editIP6Address.EnableWindow(FALSE);
+    }
+
+    return TRUE;
 }
 
 // Called when the connection to the server is established.
@@ -146,109 +262,6 @@ BOOL CClientDialog::OnSocketReceive()
 
     AppendText( m_editReceive, AtoT(bufArray) );
     TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
-
-    return TRUE;
-}
-
-// This function adds support for the IP address control in the dialog.
-void CClientDialog::LoadCommonControlsEx()
-{
-    HMODULE module = 0;
-
-    try
-    {
-        // Load the Common Controls DLL
-        module = ::LoadLibrary(_T("COMCTL32.DLL"));
-        if (module == 0)
-            throw CWinException(_T("Failed to load COMCTL32.DLL"));
-
-        if (GetComCtlVersion() > 470)
-        {
-            // Declare a pointer to the InItCommonControlsEx function
-            typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
-            INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(module, "InitCommonControlsEx");
-
-            // Call InitCommonControlsEx
-            INITCOMMONCONTROLSEX initStruct;
-            initStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
-            initStruct.dwICC = ICC_INTERNET_CLASSES;
-            if((!(*pfnInit)(&initStruct)))
-                throw CWinException(_T("InitCommonControlsEx failed"));
-        }
-        else
-        {
-            ::MessageBox(0, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
-        }
-
-        ::FreeLibrary(module);
-    }
-
-    catch (const CWinException &e)
-    {
-        e.what();
-        if (module != 0)
-            ::FreeLibrary(module);
-    }
-}
-
-// Respond to the dialog buttons.
-BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM)
-{
-    UINT id = LOWORD(wparam);
-
-    switch (id)
-    {
-    case IDC_BUTTON_CONNECT:
-        OnStartClient();
-        return TRUE;
-    case IDC_BUTTON_SEND:
-        OnSend();
-        // Give keyboard focus to the Send edit box
-        GotoDlgCtrl(m_editSend);
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-// Called before the dialog is displayed.
-BOOL CClientDialog::OnInitDialog()
-{
-    // Set the Icon
-    SetIconLarge(IDW_MAIN);
-    SetIconSmall(IDW_MAIN);
-
-    // reposition dialog
-    CRect rc = GetWindowRect();
-    MoveWindow( rc.left+14, rc.top+14, rc.Width(), rc.Height(), TRUE);
-
-    // Attach CWnd objects to the dialog's children
-    m_ip4Address.AttachDlgItem( IDC_IPADDRESS, *this );
-    m_editIP6Address.AttachDlgItem( IDC_EDIT_IPV6ADDRESS, *this );
-    m_editStatus.AttachDlgItem( IDC_EDIT_STATUS, *this );
-    m_editPort.AttachDlgItem( IDC_EDIT_PORT, *this );
-    m_editSend.AttachDlgItem( IDC_EDIT_SEND, *this );
-    m_editReceive.AttachDlgItem( IDC_EDIT_RECEIVE, *this );
-    m_buttonConnect.AttachDlgItem( IDC_BUTTON_CONNECT, *this );
-    m_buttonSend.AttachDlgItem( IDC_BUTTON_SEND, *this );
-    m_radioIP4.AttachDlgItem( IDC_RADIO_IPV4, *this );
-    m_radioIP6.AttachDlgItem( IDC_RADIO_IPV6, *this );
-    m_radioTCP.AttachDlgItem( IDC_RADIO_TCP, *this );
-    m_radioUDP.AttachDlgItem( IDC_RADIO_UDP, *this );
-
-    // Set the initial state of the dialog
-    m_editIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
-    m_radioIP4.SetCheck(BST_CHECKED);
-    AppendText(m_editStatus, _T("Not Connected"));
-    m_editPort.SetWindowText( _T("3000") );
-    m_radioTCP.SetCheck(BST_CHECKED);
-    m_ip4Address.SetAddress( MAKEIPADDRESS(127, 0, 0, 1));
-
-    if (!m_client.IsIPV6Supported())
-    {
-        m_radioIP6.EnableWindow(FALSE);
-        m_editIP6Address.EnableWindow(FALSE);
-    }
 
     return TRUE;
 }

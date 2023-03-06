@@ -308,17 +308,14 @@ void CView::SetColumns()
 
     // 1st column
     lvColumn.pszText = const_cast<LPTSTR>(_T("Name"));
-    lvColumn.cx = 130;
     InsertColumn(0, lvColumn);
 
     // 2nd column
     lvColumn.pszText = const_cast<LPTSTR>(_T("Size"));
-    lvColumn.cx = 80;
     InsertColumn(1, lvColumn);
 
     // 3rd column
     lvColumn.pszText = const_cast<LPTSTR>(_T("Type"));
-    lvColumn.cx = 160;
     InsertColumn(2, lvColumn);
 }
 

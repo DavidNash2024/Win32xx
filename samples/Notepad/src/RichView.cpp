@@ -5,6 +5,17 @@
 #include "stdafx.h"
 #include "RichView.h"
 
+
+#ifndef WM_DPICHANGED_BEFOREPARENT
+  #define WM_DPICHANGED_BEFOREPARENT      0x02E2
+#endif
+
+// Required for Dev-C++
+#ifndef IMF_AUTOFONT
+  #define IMF_AUTOFONT          0x0002
+#endif
+
+
 /////////////////////////////////
 // CRichView function definitions
 //
@@ -124,12 +135,16 @@ CRect CRichView::GetPrintRect()
 // Called when the window handle (HWND) is attached to CRichView.
 void CRichView::OnAttach()
 {
-    //increase the text limit of the rich edit window
+    // Increase the text limit of the rich edit window.
     LimitText(-1);
 
-    //Determine which messages will be passed to the parent
+    // Determine which messages will be passed to the parent.
     DWORD mask = ENM_KEYEVENTS | ENM_DROPFILES;
     SetEventMask(mask);
+
+    // Advises the control to be per-monitor DPI aware.
+    // This affects the initial font size on a second monitor with different DPI.
+    SendMessage(WM_DPICHANGED_BEFOREPARENT);
 
     SetFontDefaults();
 }
@@ -217,16 +232,16 @@ void CRichView::QuickPrint(LPCTSTR docName)
 // Sets the initial font for the document.
 void CRichView::SetFontDefaults()
 {
-    //Set font
-    m_font.CreatePointFont(100, _T("Courier New"));
-    SetFont(m_font, FALSE);
+    // Set font to Courier New, size 10.
+    CHARFORMAT cf;
+    ZeroMemory(&cf, sizeof(cf));
+    cf.cbSize = sizeof(cf);
+    cf.dwMask = CFM_SIZE | CFM_FACE;
+    StrCopy(cf.szFaceName, _T("Courier New"), 32);
+    cf.yHeight = 204;
+    SetDefaultCharFormat(cf);
 
-// Required for Dev-C++
-#ifndef IMF_AUTOFONT
-  #define IMF_AUTOFONT          0x0002
-#endif
-
-    // Prevent Unicode characters from changing the font
+    // Prevent Unicode characters from changing the font.
     LRESULT result = SendMessage(EM_GETLANGOPTIONS, 0, 0);
     result &= ~IMF_AUTOFONT;
     SendMessage(EM_SETLANGOPTIONS, 0, result);

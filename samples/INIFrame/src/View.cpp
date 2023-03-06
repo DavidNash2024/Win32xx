@@ -28,6 +28,8 @@ void CView::OnDraw(CDC& dc)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
         LOGFONT lf = info.lfMessageFont;
+        int dpi = GetWindowDPI(*this);
+        lf.lfHeight = -MulDiv(10, dpi, 72);
         dc.CreateFontIndirect(lf);
     }
 
