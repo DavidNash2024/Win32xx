@@ -91,7 +91,7 @@ void CMainMDIFrame::OnInitialUpdate()
 
     // Add some Dockers to the MDI Frame
     DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
-    int DockWidth = 150;
+    int DockWidth = DPIScaleInt(150);
     CDocker* pDock1 = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | dwStyle, DockWidth);
     CDocker* pDock2 = AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | dwStyle, DockWidth);
 

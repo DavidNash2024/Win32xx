@@ -3223,9 +3223,7 @@ namespace Win32xx
         RecalcLayout();
     }
 
-    // Sets the Image List for additional Toolbars.
-    // The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.
-    // The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
+    // Sets the Image List for toolbars.
     // A Disabled image list is created from ToolBarID if one doesn't already exist.
     template <class T>
     inline void CFrameT<T>::SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
@@ -3256,9 +3254,7 @@ namespace Win32xx
         }
     }
 
-    // Sets the Disabled Image List for additional Toolbars.
-    // The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.
-    // The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
+    // Sets the Disabled Image List for toolbars.
     template <class T>
     inline void CFrameT<T>::SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
     {
@@ -3274,7 +3270,7 @@ namespace Win32xx
             CBitmap dpiImage = T::DPIScaleUpBitmap(bm);
             CSize sz = GetTBImageSize(&dpiImage);
 
-            // Set the toolbar's image list.
+            // Set the toolbar's disabled image list.
             imageList.DeleteImageList();
             imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
             imageList.Add(dpiImage, mask);
@@ -3283,10 +3279,9 @@ namespace Win32xx
         else
         {
             imageList.DeleteImageList();
-            imageList.CreateDisabledImageList(m_toolBarImages);
-            toolBar.SetDisableImageList(imageList);
+            toolBar.SetDisableImageList(0);
         }
-
+       
         // Inform the Rebar of the change to the Toolbar.
         if (GetReBar().IsWindow())
         {
@@ -3297,9 +3292,7 @@ namespace Win32xx
         }
     }
 
-    // Sets the Hot Image List for additional Toolbars.
-    // The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.
-    // The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
+    // Sets the Hot Image List for additional toolbars.
     template <class T>
     inline void CFrameT<T>::SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
     {
@@ -3315,7 +3308,7 @@ namespace Win32xx
             CBitmap dpiImage = T::DPIScaleUpBitmap(bm);
             CSize sz = GetTBImageSize(&dpiImage);
 
-            // Set the toolbar's image list
+            // Set the toolbar's hot image list
             imageList.DeleteImageList();
             imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
             imageList.Add(dpiImage, mask);

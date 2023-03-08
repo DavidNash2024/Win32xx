@@ -159,7 +159,8 @@ void CViewList::OnAttach()
     SetWindowTheme(L"Explorer", NULL);
 
     // Set the image lists
-    m_small.Create(16, 16, ILC_COLOR32, 1, 0);
+    int size = DPIScaleInt(16);
+    m_small.Create(size, size, ILC_COLOR32, 1, 0);
     m_small.AddIcon(IDI_MOVIES);
     m_small.AddIcon(IDI_VIOLIN);
     m_small.AddIcon(IDI_BOXSET);

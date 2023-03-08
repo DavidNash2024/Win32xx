@@ -136,7 +136,7 @@ void CMainFrame::OnInitialUpdate()
 
     TRACE("Frame created\n");
 
-    //Store the current ToolBar
+    // Store the current ToolBar.
     SaveTBDefault();
 }
 

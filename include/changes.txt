@@ -4,14 +4,16 @@ Version 9.3
 Changes in Detail
 -----------------
 Added ::ScaleUpBitmap
+Added CDockContainer::SetTBImageList
+Added CDockContainer::SetTBImageListDis
+Added CDockContainer::SetTBImageListHot
+Added CFrameT::SetMenuImages
+Added CFrameT::OnDPIChanged
+Added CFrameT::UpdateSettings
 Added CWnd::DPIScaleFont(CFont font, int pointSize);
 Added CWnd::DPIScaleInt(int value);
 Added CWnd::DPIScaleRect;
 Added CWnd::DPIScaleUpBitmap(CBitmap bitmap);
-
-Added CFrameT::SetMenuImages
-Added CFrameT::OnDPICHanged
-Added CFrameT::UpdateSettings
 
 Added UWM_DPICHANGED message
 

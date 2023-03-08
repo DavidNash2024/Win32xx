@@ -313,7 +313,7 @@ void CMainFrame::OnInitialUpdate()
 {
     // Add some Dockers to the Ribbon Frame
     DWORD style = DS_CLIENTEDGE; // The style added to each docker
-    int dockWidth = 150;
+    int dockWidth = DPIScaleInt(150);
     CDocker* pDock1 = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | style, dockWidth);
     CDocker* pDock2 = AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | style, dockWidth);
 

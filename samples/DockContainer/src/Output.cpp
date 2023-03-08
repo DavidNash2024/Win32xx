@@ -26,6 +26,9 @@ CViewOutput::~CViewOutput()
 // Called when a window handle (HWND) is attached to CViewOutput.
 void CViewOutput::OnAttach()
 {
+    CFont font;
+    font.CreatePointFont(100, _T("Courier New"));
+    SetFont(font);
     SetWindowText(_T("Output Window"));
     SetReadOnly();
 }

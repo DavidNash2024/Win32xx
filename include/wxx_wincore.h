@@ -656,7 +656,7 @@ namespace Win32xx
         // dx.DDX_Check(IDC_CHECK_C,        m_checkC);
     }
 
-    inline CFont CWnd::DPIScaleFont(CFont font, int pointSize)
+    inline CFont CWnd::DPIScaleFont(CFont font, int pointSize) const
     {
         const int pointsPerInch = 72;
         int dpi = GetWindowDPI(*this);
@@ -667,7 +667,7 @@ namespace Win32xx
         return dpiFont;
     }
 
-    inline int CWnd::DPIScaleInt(int value)
+    inline int CWnd::DPIScaleInt(int value) const
     {
         int dpi = GetWindowDPI(*this);
         int dpiValue = MulDiv(value, dpi, USER_DEFAULT_SCREEN_DPI);
@@ -675,7 +675,7 @@ namespace Win32xx
         return dpiValue;
     }
 
-    inline CRect CWnd::DPIScaleRect(RECT rc)
+    inline CRect CWnd::DPIScaleRect(RECT rc) const
     {
         int dpi = GetWindowDPI(*this);
         int left = MulDiv(rc.left, dpi, USER_DEFAULT_SCREEN_DPI);
@@ -686,7 +686,7 @@ namespace Win32xx
         return CRect(left, top, right, bottom);
     }
 
-    inline CBitmap CWnd::DPIScaleUpBitmap(CBitmap bitmap)
+    inline CBitmap CWnd::DPIScaleUpBitmap(CBitmap bitmap) const
     {
         int dpi = GetWindowDPI(*this);
         int scale = MAX(1, dpi / USER_DEFAULT_SCREEN_DPI);

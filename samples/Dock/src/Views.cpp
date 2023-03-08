@@ -109,9 +109,11 @@ void CViewList::InsertItems()
 void CViewList::OnAttach()
 {
     // Set the image lists
-    m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bmImage(IDB_FILEVIEW);
-    m_smallImages.Add( bmImage, RGB(255, 0, 255) );
+    bmImage = DPIScaleUpBitmap(bmImage);
+    m_smallImages.Add(bmImage, RGB(255, 0, 255) );
     SetImageList(m_smallImages, LVSIL_SMALL);
 
     // Set the report style
@@ -199,9 +201,11 @@ CViewTree::~CViewTree()
 void CViewTree::OnAttach()
 {
     //set the image lists
-    m_normalImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bmImage(IDB_CLASSVIEW);
-    m_normalImages.Add( bmImage, RGB(255, 0, 0) );
+    bmImage = DPIScaleUpBitmap(bmImage);
+    m_normalImages.Add(bmImage, RGB(255, 0, 0) );
     SetImageList(m_normalImages, LVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button
@@ -275,6 +279,9 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called when a window handle (HWND) is attached to this object.
 void CViewText::OnAttach()
 {
+    CFont font;
+    font.CreatePointFont(100, _T("Courier New"));
+    SetFont(font);
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 

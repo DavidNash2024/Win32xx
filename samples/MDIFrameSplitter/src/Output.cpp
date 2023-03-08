@@ -25,6 +25,9 @@ CViewOutput::~CViewOutput()
 // Called when the window handle (HWND) is attached to CViewOutput.
 void CViewOutput::OnAttach()
 {
+    CFont font;
+    font.CreatePointFont(100, _T("Courier New"));
+    SetFont(font);
     SetWindowText(_T("Output Window"));
 }
 
@@ -51,7 +54,7 @@ CDockOutput::CDockOutput()
 int CDockOutput::OnCreate(CREATESTRUCT& cs)
 {
     // Set the width of the splitter bar.
-    SetBarWidth(8);
+    SetBarWidth(DPIScaleInt(8));
 
     return CDocker::OnCreate(cs);
 }

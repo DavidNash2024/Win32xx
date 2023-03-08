@@ -34,7 +34,8 @@ void CGDIPlusView::DrawCappedLine(CDC& dc)
     Pen penCapped(Color(255, 0, 0, 255), 8);
     penCapped.SetStartCap(LineCapArrowAnchor);
     penCapped.SetEndCap(LineCapRoundAnchor);
-    graphics.DrawLine(&penCapped, 10, 175, 300, 175);
+    int scale = DPIScaleInt(1);
+    graphics.DrawLine(&penCapped, 10 * scale, 175 * scale, 300 * scale, 175 * scale);
 }
 
 // Draws some polygons with gama corrections.
@@ -44,12 +45,18 @@ void CGDIPlusView::DrawGamaShapes(CDC& dc)
 
     // Put the points of a polygon in an array.
     GraphicsPath pathGama;
-    int yOffset = 200;
-    Point points[] = {Point(75,  0  +yOffset), Point(100, 50+yOffset),
-                      Point(150, 50 +yOffset), Point(112, 75+yOffset),
-                      Point(150, 150+yOffset), Point(75,  100+yOffset),
-                      Point(0,   150+yOffset), Point(37,  75+yOffset),
-                      Point(0,   50 +yOffset), Point(50,  50+yOffset)};
+    int scale = DPIScaleInt(1);
+    int yOffset = 200 * scale;
+    Point points[] = {Point(75 * scale,  0  + yOffset), 
+                      Point(100 * scale, 50 * scale + yOffset),
+                      Point(150 * scale, 50 * scale + yOffset),
+                      Point(112 * scale, 75 * scale + yOffset),
+                      Point(150 * scale, 150 * scale + yOffset),
+                      Point(75 * scale,  100 * scale + yOffset),
+                      Point(0,           150 * scale + yOffset),
+                      Point(37 * scale,  75 * scale + yOffset),
+                      Point(0,           50 * scale + yOffset),
+                      Point(50 * scale,  50 * scale + yOffset)};
 
     // Use the array of points to construct a path.
     pathGama.AddLines(points, 10);
@@ -73,7 +80,7 @@ void CGDIPlusView::DrawGamaShapes(CDC& dc)
     // Fill the path with the path gradient brush.
     graphics.FillPath(&pthGrBrushGama, &pathGama);
     pthGrBrushGama.SetGammaCorrection(TRUE);
-    graphics.TranslateTransform(200.0f, 0.0f);
+    graphics.TranslateTransform(200.0f * scale, 0.0f);
     graphics.FillPath(&pthGrBrushGama, &pathGama);
 }
 
@@ -84,7 +91,8 @@ void CGDIPlusView::DrawGradientElipse(CDC& dc)
 
     // Create a path that consists of a single ellipse.
     GraphicsPath path;
-    path.AddEllipse(0, 80, 140, 70);
+    int scale = DPIScaleInt(1);
+    path.AddEllipse(0, 80 * scale, 140 * scale, 70 * scale);
 
     // Use the path to construct a brush.
     PathGradientBrush pathBrush(&path);
@@ -96,8 +104,7 @@ void CGDIPlusView::DrawGradientElipse(CDC& dc)
     Color colors[] = {Color(255, 0, 255, 255)};
     int count = 1;
     pathBrush.SetSurroundColors(colors, &count);
-
-    graphics.FillEllipse(&pathBrush, 0, 80, 140, 70);
+    graphics.FillEllipse(&pathBrush, 0, 80 * scale, 140 * scale, 70 * scale);
 }
 
 // Draw a solid ellipse.
@@ -106,7 +113,8 @@ void CGDIPlusView::DrawSolidElipse(CDC& dc)
     Graphics graphics(dc);
 
     SolidBrush solidBrush(Color(255, 255, 0, 0));
-    graphics.FillEllipse(&solidBrush, 160, 84, 100, 60);
+    int scale = DPIScaleInt(1);
+    graphics.FillEllipse(&solidBrush, 160 * scale, 84 * scale, 100 * scale, 60 * scale);
 }
 
 // Draw a solid line.
@@ -116,7 +124,8 @@ void CGDIPlusView::DrawSolidLine(CDC& dc)
 
     // Draw solid line
     Pen penLine(Color(255, 0, 0, 255));
-    graphics.DrawLine(&penLine, 10, 70, 200, 70);
+    int scale = DPIScaleInt(1);
+    graphics.DrawLine(&penLine, 10 * scale, 70 * scale, 200 * scale, 70 * scale);
 }
 
 // Draw some text.
@@ -127,8 +136,9 @@ void CGDIPlusView::DrawText(CDC& dc)
     // Draw some text
     SolidBrush  brush(Color(255, 0, 0, 255));
     FontFamily  fontFamily(L"Times New Roman");
-    Font        font(&fontFamily, 24, FontStyleRegular, UnitPixel);
-    PointF      pointF(10.0f, 20.0f);
+    int         scale = DPIScaleInt(1);
+    Font        font(&fontFamily, 24 * scale, FontStyleRegular, UnitPixel);
+    PointF      pointF(10.0f * scale, 20.0f * scale);
 
     graphics.DrawString(L"GDI+  Example", -1, &font, pointF, &brush);
 }

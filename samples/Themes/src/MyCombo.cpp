@@ -11,7 +11,7 @@
 //
 CMyCombo::CMyCombo()
 {
-    SetImage(3, IDB_STATUS);
+    SetImages(3, IDB_STATUS);
 }
 
 CMyCombo::~CMyCombo()
@@ -24,7 +24,7 @@ void CMyCombo::PreCreate(CREATESTRUCT& cs)
     cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
 
     // Set the height of the combobox in order to see a dropdown list.
-    cs.cy = 100;
+    cs.cy = DPIScaleInt(100);
 }
 
 BOOL CMyCombo::AddItems()
@@ -68,17 +68,19 @@ BOOL CMyCombo::AddItems()
     return TRUE;
 }
 
-void CMyCombo::SetImage(int image, UINT ImageID)
+void CMyCombo::SetImages(int images, UINT imageID)
 {
     m_images.DeleteImageList();
 
-    CBitmap bm(ImageID);
+    CBitmap bm(imageID);
+    bm = DPIScaleUpBitmap(bm);
+
     BITMAP bmData = bm.GetBitmapData();
-    int iImageWidth  = bmData.bmWidth / image;
+    int iImageWidth  = bmData.bmWidth / images;
     int iImageHeight = bmData.bmHeight;
 
     COLORREF crMask = RGB(255,0,255);
-    m_images.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, image, 0);
+    m_images.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, images, 0);
     m_images.Add(bm, crMask);
 }
 

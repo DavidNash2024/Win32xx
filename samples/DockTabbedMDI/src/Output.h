@@ -26,8 +26,6 @@ protected:
 private:
     CViewOutput(const CViewOutput&);                // Disable copy construction
     CViewOutput& operator = (const CViewOutput&);   // Disable assignment operator
-
-    CFont m_font;
 };
 
 

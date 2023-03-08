@@ -27,11 +27,12 @@ CMainFrame::~CMainFrame()
 void CMainFrame::AddCombo()
 {
     // Place the ComboBoxEx control over the 'File Save' toolbar button.
-    int comboWidth = 120;
+    int comboWidth = DPIScaleInt(100);
     CToolBar& tb = GetToolBar();
     if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 
-    tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);  // Convert the button to a separator
+    // Convert the button to a separator and set its width.
+    tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
     tb.SetButtonWidth(IDM_FILE_SAVE, comboWidth);
 
     // Determine the size and position of the ComboBox.
@@ -41,11 +42,8 @@ void CMainFrame::AddCombo()
     // Create and position the ComboboxEx window.
     m_comboBoxEx.Create(tb);
     m_comboBoxEx.SetWindowPos(0, rc, SWP_NOACTIVATE);
-
-    // Set ComboBox height.
-    m_comboBoxEx.SetItemHeight(-1, rc.Height() - 6);
-
     m_comboBoxEx.AddItems();
+
     RecalcLayout();
 }
 
@@ -310,6 +308,21 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
     return TRUE;
 }
 
+// Toggles the use of theme colors for rebar bands.
+BOOL CMainFrame::OnBandColors()
+{
+    if (IsReBarSupported())
+    {
+        m_useBandColors = !m_useBandColors;
+        ChooseColor(m_color);
+
+        GetReBar().RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
+        RecalcLayout();
+    }
+
+    return TRUE;
+}
+
 // OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 {
@@ -421,75 +434,6 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
-void CMainFrame::OnInitialUpdate()
-{
-    // The frame is now created.
-    // Place any additional startup code here.
-
-    TRACE("Frame created\n");
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-    // Process notification messages sent by child windows
-//  LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
-//  switch (pHeader->code)
-//  {
-        // Add case statements for each notification message here.
-//  }
-
-    // Pass any unhandled messages on for default processing.
-    return CFrame::OnNotify(wparam, lparam);
-}
-
-// Toggles the use of themes.
-BOOL CMainFrame::OnUseThemes()
-{
-    if (IsReBarSupported())
-    {
-        m_useThemes = !m_useThemes;
-
-        ReBarTheme rbt = GetReBarTheme();
-        rbt.UseThemes = m_useThemes;
-        SetReBarTheme(rbt);
-
-        MenuTheme mt = GetMenuBarTheme();
-        mt.UseThemes = m_useThemes;
-        SetMenuTheme(mt);
-
-        StatusBarTheme sbt = GetStatusBarTheme();
-        sbt.UseThemes = m_useThemes;
-        SetStatusBarTheme(sbt);
-
-        ToolBarTheme tbt = GetToolBarTheme();
-        tbt.UseThemes = m_useThemes;
-        SetToolBarTheme(tbt);
-
-        int band = GetReBar().GetBand(GetMenuBar());
-        GetReBar().ShowGripper(band, !m_useThemes);
-
-        GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
-        RecalcLayout();
-    }
-
-    return TRUE;
-}
-
-// Toggles the use of theme colors for rebar bands.
-BOOL CMainFrame::OnBandColors()
-{
-    if (IsReBarSupported())
-    {
-        m_useBandColors = !m_useBandColors;
-        ChooseColor(m_color);
-
-        GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
-        RecalcLayout();
-    }
-
-    return TRUE;
-}
-
 // Toggles the flat style display of toolbars.
 BOOL CMainFrame::OnFlatStyle()
 {
@@ -500,11 +444,19 @@ BOOL CMainFrame::OnFlatStyle()
         rbt.FlatStyle = m_useFlatStyle;
         SetReBarTheme(rbt);
 
-        GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+        GetReBar().RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
         RecalcLayout();
     }
 
     return TRUE;
+}
+
+void CMainFrame::OnInitialUpdate()
+{
+    // The frame is now created.
+    // Place any additional startup code here.
+
+    TRACE("Frame created\n");
 }
 
 // Toggles the postitioning of bands left.
@@ -517,7 +469,7 @@ BOOL CMainFrame::OnLeftBands()
         rbt.BandsLeft = m_keepBandsLeft;
         SetReBarTheme(rbt);
 
-        GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+        GetReBar().RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
         RecalcLayout();
     }
 
@@ -536,7 +488,7 @@ BOOL CMainFrame::OnLockMenuBar()
         GetReBar().MoveBand(GetReBar().GetBand(GetMenuBar()), 0);   // Move the MenuBar to band 0
         GetReBar().ShowGripper(GetReBar().GetBand(GetMenuBar()), !m_lockMenuBand);
 
-        GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+        GetReBar().RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
         RecalcLayout();
     }
 
@@ -547,37 +499,37 @@ BOOL CMainFrame::OnLockMenuBar()
 void CMainFrame::OnMenuUpdate(UINT id)
 {
     // Update the check buttons before displaying the menu.
-    switch(id)
+    switch (id)
     {
     case IDM_USE_THEMES:
-        GetFrameMenu().CheckMenuItem(id, m_useThemes? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_useThemes ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_BAND_COLORS:
-        GetFrameMenu().CheckMenuItem(id, m_useBandColors? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_useBandColors ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_FLAT_STYLE:
-        GetFrameMenu().CheckMenuItem(id, m_useFlatStyle? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_useFlatStyle ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_LEFT_BANDS:
-        GetFrameMenu().CheckMenuItem(id, m_keepBandsLeft? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_keepBandsLeft ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_LOCK_MENUBAR:
-        GetFrameMenu().CheckMenuItem(id, m_lockMenuBand? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_lockMenuBand ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_ROUND_BORDERS:
-        GetFrameMenu().CheckMenuItem(id, m_useRoundBorders? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_useRoundBorders ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_SHORT_BANDS:
-        GetFrameMenu().CheckMenuItem(id, m_useShortBands? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_useShortBands ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_USE_LINES:
-        GetFrameMenu().CheckMenuItem(id, m_useLines? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_useLines ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_VIEW_ARROWS:
-        GetFrameMenu().CheckMenuItem(id, m_showArrows? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_showArrows ? MF_CHECKED : MF_UNCHECKED);
         break;
     case IDM_VIEW_CARDS:
-        GetFrameMenu().CheckMenuItem(id, m_showCards? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_showCards ? MF_CHECKED : MF_UNCHECKED);
         break;
     }
 
@@ -586,6 +538,19 @@ void CMainFrame::OnMenuUpdate(UINT id)
 
     // Call the base class member function.
     CFrame::OnMenuUpdate(id);
+}
+
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
+{
+    // Process notification messages sent by child windows
+//  LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
+//  switch (pHeader->code)
+//  {
+        // Add case statements for each notification message here.
+//  }
+
+    // Pass any unhandled messages on for default processing.
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 // Toggle round borders for toolbars in the rebar.
@@ -655,7 +620,40 @@ BOOL CMainFrame::OnUseLines()
         rbt.UseLines = m_useLines;
         SetReBarTheme(rbt);
 
-        GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+        GetReBar().RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
+        RecalcLayout();
+    }
+
+    return TRUE;
+}
+
+// Toggles the use of themes.
+BOOL CMainFrame::OnUseThemes()
+{
+    if (IsReBarSupported())
+    {
+        m_useThemes = !m_useThemes;
+
+        ReBarTheme rbt = GetReBarTheme();
+        rbt.UseThemes = m_useThemes;
+        SetReBarTheme(rbt);
+
+        MenuTheme mt = GetMenuBarTheme();
+        mt.UseThemes = m_useThemes;
+        SetMenuTheme(mt);
+
+        StatusBarTheme sbt = GetStatusBarTheme();
+        sbt.UseThemes = m_useThemes;
+        SetStatusBarTheme(sbt);
+
+        ToolBarTheme tbt = GetToolBarTheme();
+        tbt.UseThemes = m_useThemes;
+        SetToolBarTheme(tbt);
+
+        int band = GetReBar().GetBand(GetMenuBar());
+        GetReBar().ShowGripper(band, !m_useThemes);
+
+        GetReBar().RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
         RecalcLayout();
     }
 

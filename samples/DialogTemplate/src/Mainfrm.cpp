@@ -189,7 +189,7 @@ void CMainFrame::OnInitialUpdate()
 {
     // Add the docker for the tree view.
     DWORD style = DS_DOCKED_LEFT | DS_CLIENTEDGE | DS_NO_CLOSE | DS_NO_UNDOCK | DS_NO_CAPTION;
-    const int width = 250;
+    const int width = DPIScaleInt(250);
     m_pDockDialogsTree = static_cast<CDockDialogsTree*>
                          (AddDockedChild(new CDockDialogsTree, style, width));
 

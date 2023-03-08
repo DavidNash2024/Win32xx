@@ -79,7 +79,8 @@ BOOL CView::OnTop()
 int CView::OnCreate(CREATESTRUCT&)
 {
     // Create the ToolBar's image list from 4 icons
-    m_toolBarImages.Create(48, 48, ILC_COLOR32 | ILC_MASK, 0, 0);
+    int scale = DPIScaleInt(1);
+    m_toolBarImages.Create(scale * 48, scale * 48, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
     m_toolBarImages.AddIcon(IDI_LEFT);
     m_toolBarImages.AddIcon(IDI_RIGHT);
