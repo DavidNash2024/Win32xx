@@ -64,9 +64,11 @@ CViewList::~CViewList()
 void CViewList::OnAttach()
 {
     // Set the image lists
-    m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_FILEVIEW);
-    m_smallImages.Add(image, RGB(255, 0, 255) );
+    CBitmap scaled = DPIScaleUpBitmap(image);
+    m_smallImages.Add(scaled, RGB(255, 0, 255) );
     SetImageList(m_smallImages, LVSIL_SMALL);
 
     // Set the report style
@@ -135,9 +137,11 @@ CViewTree::~CViewTree()
 void CViewTree::OnAttach()
 {
     // Set the image lists.
-    m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_CLASSVIEW);
-    m_smallImages.Add(image, RGB(255, 0, 0) );
+    CBitmap scaled = DPIScaleUpBitmap(image);
+    m_smallImages.Add(scaled, RGB(255, 0, 0));
     SetImageList(m_smallImages, LVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button.
@@ -173,6 +177,9 @@ void CViewTree::OnAttach()
 //
 void CViewText::OnAttach()
 {
+    CFont font;
+    font.CreatePointFont(100, _T("Courier New"));
+    SetFont(font);
     SetWindowText(_T("Text Edit Window\r\n\r\n\r\n\r\n You can type some text here ..."));
 }
 

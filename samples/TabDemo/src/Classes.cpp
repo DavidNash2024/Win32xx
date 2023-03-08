@@ -22,8 +22,10 @@ CViewClasses::~CViewClasses()
 void CViewClasses::OnAttach()
 {
     //set the image lists
-    m_normalImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_normalImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_CLASSVIEW);
+    image = DPIScaleUpBitmap(image);
     m_normalImages.Add(image, RGB(255, 0, 0) );
     SetImageList(m_normalImages, LVSIL_NORMAL);
 

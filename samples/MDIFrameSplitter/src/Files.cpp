@@ -49,8 +49,10 @@ void CViewFiles::InsertItems()
 void CViewFiles::OnAttach()
 {
     // Set the image lists.
-    m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_FILEVIEW);
+    image = DPIScaleUpBitmap(image);
     m_smallImages.Add(image, RGB(255, 0, 255));
     SetImageList(m_smallImages, LVSIL_SMALL);
 
@@ -142,7 +144,7 @@ CDockFiles::CDockFiles()
 int CDockFiles::OnCreate(CREATESTRUCT& cs)
 {
     // Set the width of the splitter bar.
-    SetBarWidth(8);
+    SetBarWidth(DPIScaleInt(8));
 
     return CDocker::OnCreate(cs);
 }

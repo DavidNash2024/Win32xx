@@ -785,9 +785,12 @@ namespace Win32xx
             CSize TempSize = dcClient.GetTextExtentPoint32(str, lstrlen(str));
 
             int imageSize = 0;
-            int padding = 6;
+            int padding = DPIScaleInt(10);
             if (tcItem.iImage >= 0)
-                imageSize = 20;
+            {
+                imageSize = GetODImageList().GetIconSize().cx;
+            }
+
             TempSize.cx += imageSize + padding;
 
             if (TempSize.cx > Size.cx)
@@ -1420,10 +1423,10 @@ namespace Win32xx
             int xGap = 2;
             if (m_isShowingButtons) xGap += GetCloseRect().Width() + GetListRect().Width() +2;
 
-            int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
-            nItemWidth = MAX(nItemWidth, 0);
+            int itemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap) / GetItemCount());
+            itemWidth = MAX(itemWidth, 0);
 
-            SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, m_tabHeight));
+            SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, m_tabHeight));
 
             NotifyChanged();
         }

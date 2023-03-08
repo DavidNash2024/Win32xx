@@ -67,7 +67,8 @@ void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCTSTR fi
 void CDialogsTree::OnAttach()
 {
     //set the the tree-view's image list
-    m_normalImages.Create(24, 24, ILC_COLOR32, 1, 0);
+    int size = DPIScaleInt(24);
+    m_normalImages.Create(size, size, ILC_COLOR32, 1, 0);
     m_normalImages.AddIcon(IDI_WINDOWS);
     m_normalImages.AddIcon(IDW_MAIN);
     SetImageList(m_normalImages, LVSIL_NORMAL);
@@ -124,6 +125,6 @@ CDockDialogsTree::CDockDialogsTree()
     SetView(m_tree);
 
     // Set the width of the splitter bar
-    SetBarWidth(8);
+    SetBarWidth(DPIScaleInt(8));
 }
 

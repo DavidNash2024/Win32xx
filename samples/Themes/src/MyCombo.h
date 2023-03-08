@@ -24,7 +24,7 @@ private:
     CMyCombo(const CMyCombo&);                // Disable copy construction
     CMyCombo& operator = (const CMyCombo&);   // Disable assignment operator
 
-    void SetImage(int image, UINT imageID);
+    void SetImages(int image, UINT imageID);
 
     // Member variables
     CImageList m_images;

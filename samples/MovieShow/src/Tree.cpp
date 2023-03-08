@@ -127,7 +127,8 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
 void CViewTree::OnInitialUpdate()
 {
     //set the image lists
-    m_imlNormal.Create(24, 24, ILC_COLOR32, 1, 0);
+    int size = DPIScaleInt(24);
+    m_imlNormal.Create(size, size, ILC_COLOR32, 1, 0);
 
     m_imlNormal.AddIcon(IDI_LIBRARY);
     m_imlNormal.AddIcon(IDI_MOVIES);

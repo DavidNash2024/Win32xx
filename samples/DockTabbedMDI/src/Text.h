@@ -35,9 +35,6 @@ private:
     BOOL OnEditDelete();
     BOOL OnEditRedo();
     BOOL OnEditUndo();
-
-    // Member variables
-    CFont m_font;
 };
 
 

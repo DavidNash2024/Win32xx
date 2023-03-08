@@ -13,8 +13,8 @@
 // Constructor.
 CSplash::CSplash() : m_fontHandle(0)
 {
-    int xImage = 256;
-    int yImage = 256;
+    int xImage = DPIScaleInt(256);
+    int yImage = DPIScaleInt(256);
     m_hIcon = (HICON)GetApp()->LoadImage(IDW_MAIN, IMAGE_ICON, xImage, yImage, LR_SHARED);
     LoadFont();
 }
@@ -85,8 +85,8 @@ void CSplash::LoadFont()
 void CSplash::OnDraw(CDC& dc)
 {
     CMemDC dcMem(dc);
-    int xImage = 256;
-    int yImage = 256;
+    int xImage = DPIScaleInt(256);
+    int yImage = DPIScaleInt(256);
     dcMem.CreateCompatibleBitmap(dc, xImage, yImage);
     DrawIconEx(dcMem, 0, 0, m_hIcon, xImage, yImage, 0, 0, DI_NORMAL);
 
@@ -95,7 +95,7 @@ void CSplash::OnDraw(CDC& dc)
     CRect rc = GetClientRect();
     rc.top += 40;
 
-    dcMem.CreateFont(30, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
+    dcMem.CreateFont(DPIScaleInt(30), 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS,
         CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, FF_MODERN, L"French Script MT");
 
     dcMem.DrawText(m_text.c_str(), m_text.GetLength(), rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
@@ -109,8 +109,8 @@ void CSplash::PreCreate(CREATESTRUCT& cs)
     cs.style = WS_POPUP;           // Initially hidden
     cs.dwExStyle = WS_EX_TOPMOST | WS_EX_NOACTIVATE; // Topmost and hidden from taskbar
 
-    cs.cx = 256;
-    cs.cy = 256;
+    cs.cx = DPIScaleInt(256);
+    cs.cy = DPIScaleInt(256);
 }
 
 // Sets the WNDCLASS struct prior to window creation.
@@ -135,8 +135,8 @@ void CSplash::ShowText(LPCTSTR text, CWnd* parent)
     assert(parent->IsWindow());
 
     m_text = text;
-    int xImage = 256;
-    int yImage = 256;
+    int xImage = DPIScaleInt(256);
+    int yImage = DPIScaleInt(256);
 
     CRect parentRect = parent->GetWindowRect();
     int x = parentRect.left + (parentRect.Width()  - xImage) / 2;

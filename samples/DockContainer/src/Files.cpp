@@ -49,8 +49,10 @@ void CViewFiles::InsertItems()
 void CViewFiles::OnAttach()
 {
     // Set the image lists.
-    m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bm(IDB_FILEVIEW);
+    bm = DPIScaleUpBitmap(bm);
     m_smallImages.Add(bm, RGB(255, 0, 255) );
     SetImageList(m_smallImages, LVSIL_SMALL);
 

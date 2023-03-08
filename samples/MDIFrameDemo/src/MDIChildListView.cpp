@@ -26,8 +26,10 @@ CViewList::~CViewList()
 void CViewList::OnAttach()
 {
     // Set the image lists
-    m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_smallImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_FILEVIEW);
+    image = DPIScaleUpBitmap(image);
     m_smallImages.Add(image, RGB(255, 0, 255));
     SetImageList(m_smallImages, LVSIL_SMALL);
 

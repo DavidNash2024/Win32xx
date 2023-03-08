@@ -1589,7 +1589,8 @@ void CMainFrame::SetupMenuIcons()
 void CMainFrame::SetupToolBar()
 {
     // Create the normal ImageList for the toolbar
-    m_toolbarImages.Create(32, 32, ILC_COLOR32, 0, 0);
+    int size = DPIScaleInt(32);
+    m_toolbarImages.Create(size, size, ILC_COLOR32, 0, 0);
     m_toolbarImages.AddIcon(IDI_ADDFOLDER);
     m_toolbarImages.AddIcon(IDI_PLAY);
     m_toolbarImages.AddIcon(IDI_FAVOURITES);

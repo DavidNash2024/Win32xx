@@ -55,8 +55,10 @@ void CViewFiles::OnDestroy()
 void CViewFiles::OnAttach()
 {
     // Set the image lists
-    m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_imlSmall.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bm(IDB_FILEVIEW);
+    bm = DPIScaleUpBitmap(bm);
     m_imlSmall.Add( bm, RGB(255, 0, 255) );
     SetImageList(m_imlSmall, LVSIL_SMALL);
 
@@ -142,6 +144,6 @@ CContainFiles::CContainFiles()
 CDockFiles::CDockFiles()
 {
     SetView(m_files);
-    SetBarWidth(8);
+    SetBarWidth(DPIScaleInt(8));
 }
 

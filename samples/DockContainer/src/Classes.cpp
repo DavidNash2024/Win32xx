@@ -29,9 +29,11 @@ CViewClasses::~CViewClasses()
 void CViewClasses::OnAttach()
 {
     //set the image lists
-    m_normalImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    int scale = DPIScaleInt(1);
+    m_normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bm(IDB_CLASSVIEW);
-    m_normalImages.Add( bm, RGB(255, 0, 0) );
+    bm = DPIScaleUpBitmap(bm);
+    m_normalImages.Add(bm, RGB(255, 0, 0) );
     SetImageList(m_normalImages, LVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button
@@ -122,7 +124,7 @@ CContainClasses::CContainClasses()
 // Adds a ComboBoxEx control to the toolbar.
 void CContainClasses::AddCombo()
 {
-    int comboWidth = 120;
+    int comboWidth = DPIScaleInt(100);
     CToolBar& tb = GetToolBar();
     if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 
@@ -137,12 +139,6 @@ void CContainClasses::AddCombo()
     // Create the ComboboxEx window
     m_comboBoxEx.Create(tb);
     m_comboBoxEx.SetWindowPos(0, rect, SWP_NOACTIVATE);
-
-    // Adjust the toolbar height to accommodate the ComboBoxEx control
-    CRect rc = m_comboBoxEx.GetWindowRect();
-    tb.SetButtonSize( rc.Height(), rc.Height() );
-
-    // Add the ComboBox's items
     m_comboBoxEx.AddItems();
 }
 
