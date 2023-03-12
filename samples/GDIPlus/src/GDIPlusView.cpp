@@ -47,7 +47,7 @@ void CGDIPlusView::DrawGamaShapes(CDC& dc)
     GraphicsPath pathGama;
     int scale = DPIScaleInt(1);
     int yOffset = 200 * scale;
-    Point points[] = {Point(75 * scale,  0  + yOffset), 
+    Point points[] = {Point(75 * scale,  0  + yOffset),
                       Point(100 * scale, 50 * scale + yOffset),
                       Point(150 * scale, 50 * scale + yOffset),
                       Point(112 * scale, 75 * scale + yOffset),
@@ -137,7 +137,7 @@ void CGDIPlusView::DrawText(CDC& dc)
     SolidBrush  brush(Color(255, 0, 0, 255));
     FontFamily  fontFamily(L"Times New Roman");
     int         scale = DPIScaleInt(1);
-    Font        font(&fontFamily, 24 * scale, FontStyleRegular, UnitPixel);
+    Font        font(&fontFamily, 24.0f * scale, FontStyleRegular, UnitPixel);
     PointF      pointF(10.0f * scale, 20.0f * scale);
 
     graphics.DrawString(L"GDI+  Example", -1, &font, pointF, &brush);

@@ -142,6 +142,15 @@ LRESULT CMainWindow::OnCloseThread(WPARAM wparam)
     return 0;
 }
 
+LRESULT CMainWindow::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+{
+    LPRECT prc = reinterpret_cast<LPRECT>(lparam);
+    SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+    m_edit.DPISetFont();
+
+    return 0;
+}
+
 // Called in the main window is resized.
 LRESULT CMainWindow::OnSize()
 {
@@ -173,6 +182,7 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_APPENDTEXT:     return OnAppendText(wparam);
         case UWM_CLOSETHREAD:    return OnCloseThread(wparam);
         case UWM_WINDOWCREATED:  return OnWindowCreated();
+        case WM_DPICHANGED:      return OnDPIChanged(msg, wparam, lparam);
         case WM_SIZE:            return OnSize();
         }
 

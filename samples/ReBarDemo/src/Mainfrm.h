@@ -18,12 +18,16 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    void DPIScaleMenuIcons();
+    void DPIScaleReBar();
+    void DPIScaleToolBar();
 
 protected:
     // Virtual functions that override base class functions
     virtual CRect   GetViewRect() const;
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
@@ -49,6 +53,8 @@ private:
     CToolBar m_toolBar;
     CImageList m_toolBarImages;
     CView m_view;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

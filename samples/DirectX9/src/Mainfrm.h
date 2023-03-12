@@ -20,11 +20,15 @@ public:
     virtual HWND Create(HWND parent = 0);
     CDXView& GetDXView() { return m_DXView; }
 
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
+
 protected:
     // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnDestroy();
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
@@ -39,6 +43,8 @@ private:
 
     // Member variables
     CDXView m_DXView;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

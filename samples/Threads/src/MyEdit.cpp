@@ -12,15 +12,21 @@
 // Constructor.
 CMyEdit::CMyEdit()
 {
-    // Create the font for the Edit window
-    m_font.CreatePointFont(96, _T("Courier New"));
 }
+
+void CMyEdit::DPISetFont()
+{
+    m_font.CreatePointFont(100, _T("Courier New"));
+    m_font = DPIScaleFont(m_font, 10);
+    SetFont(m_font);
+}
+
 
 // Called after the edit window is created.
 void CMyEdit::OnAttach()
 {
     // Set the font for the Edit window
-    SetFont(m_font, FALSE);
+    DPISetFont();
 }
 
 // Called before the edit window is created.

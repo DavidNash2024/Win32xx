@@ -63,6 +63,7 @@ protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnDestroy();
+    virtual LRESULT OnDPIChanged(UINT, WPARAM, LPARAM lparam);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);

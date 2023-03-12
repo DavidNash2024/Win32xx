@@ -33,6 +33,83 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
+// Assigns the appropriately sized menu icons.
+void CMainFrame::DPIScaleMenuIcons()
+{
+    // Load the toolbar bitmap.
+    CBitmap toolbarImage(IDW_MAIN);
+
+    // Scale the bitmap to the menu item height.
+    int menuHeight = GetMenuIconHeight();
+    int scale = menuHeight / toolbarImage.GetSize().cy;
+    CBitmap scaledImage;
+    if (scale > 0)
+        scaledImage = ScaleUpBitmap(toolbarImage, scale);
+    else
+        scaledImage.LoadBitmap(IDB_TOOLBAR16);
+
+    // Create the image-list from the scaled image
+    CSize sz = scaledImage.GetSize();
+    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+    COLORREF mask = RGB(192, 192, 192);
+    m_menuImages.Add(scaledImage, mask);
+
+    // Assign the image-list to the menu items.
+    SetMenuImages(m_menuImages);
+}
+
+// Resize the arrow toolbar's images and the rebar containing it.
+void CMainFrame::DPIScaleReBar()
+{
+    // Create the arrow toolbar's image list from 4 icons.
+    int scale = DPIScaleInt(1);
+    m_toolBarImages.Create(scale * 48, scale * 48, ILC_COLOR32 | ILC_MASK, 0, 0);
+    m_toolBarImages.AddIcon(IDI_TOP);
+    m_toolBarImages.AddIcon(IDI_LEFT);
+    m_toolBarImages.AddIcon(IDI_RIGHT);
+    m_toolBarImages.AddIcon(IDI_BOTTOM);
+
+    // Assign the image list to the arrow toolbar.
+    m_toolBar.SetImageList(m_toolBarImages);
+
+    // Resize the rebar band holding the arrow toolbar.
+    CSize sizeToolBar = m_toolBar.GetMaxSize();
+    int minxy = MIN(sizeToolBar.cx, sizeToolBar.cy);
+    m_reBar.ResizeBand(0, CSize(minxy, minxy));
+}
+
+// Assigns the appropriately sized toolbar icons.
+void CMainFrame::DPIScaleToolBar()
+{
+    if (GetToolBar().IsWindow())
+    {
+        // Load the toolbar bitmap.
+        CBitmap toolbarImage(IDW_MAIN);
+
+        // Create the image-list
+        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
+        CSize sz = dpiImage.GetSize();
+        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        COLORREF mask = RGB(192, 192, 192);
+        m_normalImages.Add(dpiImage, mask);
+
+        // Assign the image-list to the toolbar.
+        GetToolBar().SetImageList(m_normalImages);
+        GetToolBar().SetDisableImageList(0);
+
+        // Adjust the toolbar band height.
+        if (GetReBar().IsWindow())
+        {
+            int band = GetReBar().GetBand(GetToolBar());
+            if (band >= 0)
+            {
+                CSize sizeToolBar = GetToolBar().GetMaxSize();
+                GetReBar().ResizeBand(band, sizeToolBar);
+            }
+        }
+    }
+}
+
 // Retrieves the size view rectangle.
 CRect CMainFrame::GetViewRect() const
 {
@@ -196,6 +273,28 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     rbbi.cyMinChild = m_toolBar.GetMaxSize().cy+1;
     m_reBar.InsertBand(-1, rbbi);
 
+    return 0;
+}
+
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Turn redrawing off to make the tansition smoother.
+    SetRedraw(FALSE);
+
+    // Perform the DPI rescaling.
+    CFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleMenuIcons();
+    DPIScaleReBar();
+    DPIScaleToolBar();
+    RecalcLayout();
+
+    // Turn redrawing on and redraw the frame window.
+    SetRedraw(TRUE);
+    RedrawWindow();
     return 0;
 }
 

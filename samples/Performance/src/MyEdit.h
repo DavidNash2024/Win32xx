@@ -15,6 +15,8 @@ public:
     CMyEdit();
     virtual ~CMyEdit() {}
 
+    void DPISetFont();
+
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();

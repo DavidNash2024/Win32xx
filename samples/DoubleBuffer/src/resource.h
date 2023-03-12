@@ -25,8 +25,9 @@
 #define IDM_EDIT_PASTE                  134
 #define IDM_EDIT_DELETE                 135
 #define IDM_HELP_ABOUT                  140
-#define IDB_BLUE                        150
-#define IDB_ORANGE                      151
+#define IDB_MENUICONS                   150
+#define IDB_BLUE                        151
+#define IDB_ORANGE                      152
 #define ID_TIMER                        160
 
 // Next default values for new objects

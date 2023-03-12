@@ -3281,7 +3281,7 @@ namespace Win32xx
             imageList.DeleteImageList();
             toolBar.SetDisableImageList(0);
         }
-       
+
         // Inform the Rebar of the change to the Toolbar.
         if (GetReBar().IsWindow())
         {
@@ -3655,8 +3655,8 @@ namespace Win32xx
         // Create the menubar and statusbar fonts.
         int dpi = GetWindowDPI(*this);
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        info.lfMenuFont.lfHeight = -MulDiv(9, dpi, 72);
-        info.lfStatusFont.lfHeight = -MulDiv(9, dpi, 72);
+        info.lfMenuFont.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
+        info.lfStatusFont.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
         m_menuBarFont.CreateFontIndirect(info.lfMenuFont);
         m_statusBarFont.CreateFontIndirect(info.lfStatusFont);
 

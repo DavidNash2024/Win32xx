@@ -82,6 +82,14 @@ void CView::OnDestroy()
     ::PostQuitMessage(0);
 }
 
+LRESULT CView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+{
+    LPRECT prc = reinterpret_cast<LPRECT>(lparam);
+    SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+
+    return 0;
+}
+
 void CView::OnDraw(CDC& dc)
 {
     // OnPaint is called automatically whenever a part of the
@@ -92,6 +100,8 @@ void CView::OnDraw(CDC& dc)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
         LOGFONT lf = info.lfMessageFont;
+        int dpi = GetWindowDPI(*this);
+        lf.lfHeight = -MulDiv(10, dpi, POINTS_PER_INCH);
         dc.CreateFontIndirect(lf);
     }
 
@@ -208,6 +218,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
+        case WM_DPICHANGED: return OnDPIChanged(msg, wparam, lparam);
         case WM_HELP:       return OnAbout();
         case WM_SIZE:       return OnSize(msg, wparam, lparam);
         case WM_SYSCOMMAND: return OnSysCommand(msg, wparam, lparam);
