@@ -159,7 +159,8 @@ namespace Win32xx
         BOOL    Undo() const;
 
     protected:
-        void    PreRegisterClass(WNDCLASS& wc);
+        virtual void PreCreate(CREATESTRUCT& cs);
+        virtual void PreRegisterClass(WNDCLASS& wc);
 
     private:
         CRichEdit(const CRichEdit&);              // Disable copy construction
@@ -220,6 +221,12 @@ namespace Win32xx
             ::FreeLibrary(m_rich4_1);
     }
 
+    // Set the default window styles.
+    inline void CRichEdit::PreCreate(CREATESTRUCT& cs)
+    {
+        cs.style = WS_CHILD | WS_VISIBLE | ES_MULTILINE;
+    }
+
     // Set the window class
     inline void CRichEdit::PreRegisterClass(WNDCLASS& wc)
     {
@@ -234,7 +241,6 @@ namespace Win32xx
             wc.lpszClassName = MSFTEDIT_CLASS;
 #endif
 
-        wc.style = ES_MULTILINE | WS_VISIBLE | WS_CHILD | WS_BORDER | WS_TABSTOP;
     }
 
     // Adds text to the end of the document

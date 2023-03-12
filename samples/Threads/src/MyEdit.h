@@ -14,6 +14,7 @@ class CMyEdit : public CEdit
 public:
     CMyEdit();
     virtual ~CMyEdit() {}
+    void DPISetFont();
 
 protected:
     // Virtual functions that override base class functions

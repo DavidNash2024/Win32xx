@@ -658,10 +658,9 @@ namespace Win32xx
 
     inline CFont CWnd::DPIScaleFont(CFont font, int pointSize) const
     {
-        const int pointsPerInch = 72;
         int dpi = GetWindowDPI(*this);
         LOGFONT logfont = font.GetLogFont();
-        logfont.lfHeight = -MulDiv(pointSize, dpi, pointsPerInch);
+        logfont.lfHeight = -MulDiv(pointSize, dpi, POINTS_PER_INCH);
         CFont dpiFont(logfont);
 
         return dpiFont;

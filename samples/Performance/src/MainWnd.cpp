@@ -78,6 +78,15 @@ void CMainWindow::OnDestroy()
     ::PostQuitMessage(0);
 }
 
+LRESULT CMainWindow::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+{
+    LPRECT prc = reinterpret_cast<LPRECT>(lparam);
+    SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+    m_edit.DPISetFont();
+
+    return 0;
+}
+
 // Called after the main window is created.
 // Called after OnCreate.
 void CMainWindow::OnInitialUpdate()
@@ -182,6 +191,7 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
+        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
         case WM_SIZE:           return OnSize();
         case WM_WINDOWCREATED:  return OnWindowCreated();
         }

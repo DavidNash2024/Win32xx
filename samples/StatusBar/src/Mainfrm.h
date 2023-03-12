@@ -19,6 +19,8 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
 
 protected:
     // Virtual functions that override base class functions
@@ -26,6 +28,7 @@ protected:
     virtual BOOL    DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusbar);
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    SetStatusIndicators();
     virtual void    SetStatusParts();
@@ -37,7 +40,6 @@ private:
     CMainFrame(const CMainFrame&);                // Disable copy construction
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
-    int AdjustForDPI(int value);
     int GetTextPartWidth(LPCTSTR text) const;
 
     // Command handlers
@@ -55,6 +57,8 @@ private:
     CString m_num;
     CString m_ovr;
     CString m_scrl;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 

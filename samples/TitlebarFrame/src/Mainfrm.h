@@ -46,6 +46,8 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
 
     // Accessors
     CDoc& GetDoc()      { return m_view.GetDoc(); }
@@ -63,6 +65,7 @@ protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    RecalcLayout();
     virtual void    SetupMenuIcons();
@@ -113,6 +116,8 @@ private:
     TitlebarColors m_colors;
     bool m_isToolbarShown;
     bool m_isMiniFrame;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

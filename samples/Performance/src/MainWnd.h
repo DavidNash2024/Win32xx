@@ -41,8 +41,9 @@ private:
     CMainWindow& operator = (const CMainWindow&);   // Disable assignment operator
 
     // Message handlers
-    virtual LRESULT OnSize();
-    virtual LRESULT OnWindowCreated();
+    LRESULT OnDPIChanged(UINT, WPARAM, LPARAM lparam);
+    LRESULT OnSize();
+    LRESULT OnWindowCreated();
 
     LONGLONG GetCounter() const;
     void OnAllWindowsCreated();

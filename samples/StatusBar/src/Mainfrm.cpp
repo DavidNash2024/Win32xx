@@ -21,20 +21,6 @@ CMainFrame::~CMainFrame()
 {
 }
 
-// Adjusts the specified value for the current DPI.
-int CMainFrame::AdjustForDPI(int value)
-{
-    CClientDC statusDC(GetStatusBar());
-    statusDC.SelectObject(GetStatusBar().GetFont());
-
-    // Perform the DPI adjustment calculation.
-    int defaultDPI = 96;
-    int xDPI = statusDC.GetDeviceCaps(LOGPIXELSX);
-    value = MulDiv(value, xDPI, defaultDPI);
-
-    return value;
-}
-
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
@@ -46,6 +32,63 @@ HWND CMainFrame::Create(HWND parent)
     LoadRegistrySettings(_T("Win32++\\StatusBar Sample"));
 
     return CFrame::Create(parent);
+}
+
+// Assigns the appropriately sized menu icons.
+void CMainFrame::DPIScaleMenuIcons()
+{
+    // Load the toolbar bitmap.
+    CBitmap toolbarImage(IDW_MAIN);
+
+    // Scale the bitmap to the menu item height.
+    int menuHeight = GetMenuIconHeight();
+    int scale = menuHeight / toolbarImage.GetSize().cy;
+    CBitmap scaledImage;
+    if (scale > 0)
+        scaledImage = ScaleUpBitmap(toolbarImage, scale);
+    else
+        scaledImage.LoadBitmap(IDB_TOOLBAR16);
+
+    // Create the image-list from the scaled image
+    CSize sz = scaledImage.GetSize();
+    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+    COLORREF mask = RGB(192, 192, 192);
+    m_menuImages.Add(scaledImage, mask);
+
+    // Assign the image-list to the menu items.
+    SetMenuImages(m_menuImages);
+}
+
+// Assigns the appropriately sized toolbar icons.
+void CMainFrame::DPIScaleToolBar()
+{
+    if (GetToolBar().IsWindow())
+    {
+        // Load the toolbar bitmap.
+        CBitmap toolbarImage(IDW_MAIN);
+
+        // Create the image-list
+        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
+        CSize sz = dpiImage.GetSize();
+        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        COLORREF mask = RGB(192, 192, 192);
+        m_normalImages.Add(dpiImage, mask);
+
+        // Assign the image-list to the toolbar.
+        GetToolBar().SetImageList(m_normalImages);
+        GetToolBar().SetDisableImageList(0);
+
+        // Adjust the toolbar band height.
+        if (GetReBar().IsWindow())
+        {
+            int band = GetReBar().GetBand(GetToolBar());
+            if (band >= 0)
+            {
+                CSize sizeToolBar = GetToolBar().GetMaxSize();
+                GetReBar().ResizeBand(band, sizeToolBar);
+            }
+        }
+    }
 }
 
 // Perform the owner drawing for the statusbar.
@@ -176,6 +219,22 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    SetRedraw(FALSE);
+    CFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleMenuIcons();
+    DPIScaleToolBar();
+    RecalcLayout();
+    SetRedraw(TRUE);
+    RedrawWindow();
+    return 0;
+}
+
 // Issue a close request to the frame.
 BOOL CMainFrame::OnFileExit()
 {
@@ -264,14 +323,14 @@ void CMainFrame::SetStatusParts()
 {
     if (m_hyperlink.IsWindow())
     {
-        const int progressWidth = 100;
-        const int gripWidth = 20;
+        const int progressWidth = DPIScaleInt(100);
+        const int gripWidth = DPIScaleInt(20);
         int iconSide = GetStatusBar().GetClientRect().Height();
 
         // Fill a vector with the status bar part widths.
         std::vector<int> partWidths;
         partWidths.push_back(GetTextPartWidth(m_hyperlink.GetLinkName()));
-        partWidths.push_back(AdjustForDPI(progressWidth));
+        partWidths.push_back(progressWidth);
         partWidths.push_back(iconSide);
         partWidths.push_back(GetTextPartWidth(m_colored));
         partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_CAPS)));
@@ -285,7 +344,7 @@ void CMainFrame::SetStatusParts()
         {
             sumWidths += *iter;
         }
-        sumWidths += AdjustForDPI(gripWidth);
+        sumWidths += gripWidth;
 
         // Insert the width for the first status bar part into the vector.
         CRect clientRect = GetClientRect();

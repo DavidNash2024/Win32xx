@@ -66,53 +66,58 @@ LRESULT CView::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
 
     static int x = 0;     // x position
     static int y = 0;     // y position
-    static int cx = 1;    // x increment or decrement
-    static int cy = 1;    // y increment or decrement
+    static int cx = DPIScaleInt(1);    // x increment or decrement
+    static int cy = DPIScaleInt(1);    // y increment or decrement
 
     x = x + cx;
     if (x > rc.Width() - m_ballSize.cx)
     {
         x = rc.Width() - m_ballSize.cx;
-        cx = -1;
+        cx = -DPIScaleInt(1);
     }
     else if (x < 0)
     {
         x = 0;
-        cx = 1;
+        cx = DPIScaleInt(1);
     }
 
     y = y + cy;
     if (y > rc.Height() - m_ballSize.cy)
     {
         y = rc.Height() - m_ballSize.cy;
-        cy = -1;
+        cy = -DPIScaleInt(1);
     }
     else if (y < 0)
     {
         y = 0;
-        cy = 1;
+        cy = DPIScaleInt(1);
     }
 
     CMemDC dcMemMask(dc);
-    dcMemMask.SelectObject(m_mask);
+    CBitmap mask = DPIScaleUpBitmap(m_mask);
+    dcMemMask.SelectObject(mask);
 
     CMemDC dcMemOrange(dc);
-    dcMemOrange.SelectObject(m_orange);
+    CBitmap orange = DPIScaleUpBitmap(m_orange);
+    dcMemOrange.SelectObject(orange);
 
     CMemDC dcMemBlue(dc);
-    dcMemBlue.SelectObject(m_blue);
+    CBitmap blue = DPIScaleUpBitmap(m_blue);
+    dcMemBlue.SelectObject(blue);
 
     CMemDC dcMem3(dc);
     dcMem3.CreateCompatibleBitmap(dc, rc.Width(), rc.Height());
     dcMem3.SolidFill(RGB(255, 255, 255), rc);
 
     // Copy the orange ball to the memory DC
-    dcMem3.BitBlt(x, 0, m_ballSize.cx, m_ballSize.cy, dcMemOrange, 0, 0, SRCCOPY);
+    CSize orangeSize = orange.GetSize();
+    dcMem3.BitBlt(x, 0, orangeSize.cx, orangeSize.cy, dcMemOrange, 0, 0, SRCCOPY);
 
     // Copy the blue ball to the memory DC with mask
-    dcMem3.BitBlt(0, y, 64, 64, dcMemMask, 0, 0, SRCERASE);
-    dcMem3.BitBlt(0, y, 64, 64, dcMemMask, 0, 0, SRCINVERT);
-    dcMem3.BitBlt(0, y, 64, 64, dcMemBlue, 0, 0, SRCINVERT);
+    CSize blueSize = blue.GetSize();
+    dcMem3.BitBlt(0, y, blueSize.cx, blueSize.cy, dcMemMask, 0, 0, SRCERASE);
+    dcMem3.BitBlt(0, y, blueSize.cx, blueSize.cy, dcMemMask, 0, 0, SRCINVERT);
+    dcMem3.BitBlt(0, y, blueSize.cx, blueSize.cy, dcMemBlue, 0, 0, SRCINVERT);
 
     // Copy the memory DC to the client DC
     dc.BitBlt(0,0, rc.Width(), rc.Height(), dcMem3, 0, 0, SRCCOPY);

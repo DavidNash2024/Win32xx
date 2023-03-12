@@ -99,6 +99,18 @@ void CView::OnDestroy()
     ::PostQuitMessage(0);
 }
 
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+{
+    LPRECT prc = reinterpret_cast<LPRECT>(lparam);
+    SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+
+    return 0;
+}
+
 // OnPaint is called automatically whenever a part of the
 // window needs to be repainted.
 void CView::OnDraw(CDC& dc)
@@ -108,6 +120,8 @@ void CView::OnDraw(CDC& dc)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
         LOGFONT lf = info.lfMessageFont;
+        int dpi = GetWindowDPI(*this);
+        lf.lfHeight = -MulDiv(10, dpi, POINTS_PER_INCH);
         dc.CreateFontIndirect(lf);
     }
 
@@ -195,7 +209,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_SIZE:   return OnSize();
+        case WM_DPICHANGED:  return OnDPIChanged(msg, wparam, lparam);
+        case WM_SIZE:        return OnSize();
         }
 
         // pass unhandled messages on for default processing

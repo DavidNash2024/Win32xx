@@ -230,7 +230,7 @@ SetDefaultFont()                                                            /*
     TCHAR lpszFaceDefault[] = _T("Courier New");
       // compute the character height
     long lfHeight = -MulDiv(nDefaultFontSize,
-        dc.GetDeviceCaps(LOGPIXELSY), 72);
+        dc.GetDeviceCaps(LOGPIXELSY), POINTS_PER_INCH);
       // set default font characteristics
     int nHeight = lfHeight;     // logical height of font
     int nWidth = 0;         // logical average character width

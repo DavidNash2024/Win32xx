@@ -55,6 +55,7 @@
   #define USER_DEFAULT_SCREEN_DPI 96
 #endif
 
+#define POINTS_PER_INCH 72
 
 // Messages defined by Win32++
 // WM_APP range: 0x8000 through 0xBFFF

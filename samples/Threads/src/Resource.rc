@@ -34,7 +34,7 @@ IDW_MAIN               ICON                    "../src/res/Win32xx.ico"
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "../src/res/Win32++.manifest"
+1                     RT_MANIFEST           "../src/res/PerMonitorV2.manifest"
 
 
 #endif    // English (U.S.) resources

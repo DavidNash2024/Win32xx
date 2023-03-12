@@ -128,9 +128,10 @@ void CView::DoPlot(CDC& dc)
 void CView::DrawLabel(CDC& dc)
 {
     // Select the font.
-    int pointSize = DPIScaleInt(20) + int(.2 * m_points.size());
-    pointSize = pointSize / DPIScaleInt(1);
-    dc.CreatePointFont(pointSize, _T("Candara"));
+    CFont font;
+    font.CreatePointFont(10, _T("Candara"));
+    font = DPIScaleFont(font, 10);
+    dc.SelectObject(font);
 
     // Draw the text.
     CRect rc = GetClientRect();
@@ -164,9 +165,10 @@ void CView::PrepareDC(CDC& dc)
     dc.CreatePen(PS_SOLID, 3, RGB(195, 0, 0));
 
     // Select the font.
-    int pointSize = DPIScaleInt(20) + int(.20 * m_points.size());
-    pointSize = pointSize / DPIScaleInt(1);
-    dc.CreatePointFont(pointSize, _T("Microsoft Sans Serif"));
+    CFont font;
+    font.CreatePointFont(10, _T("Microsoft Sans Serif"));
+    font = DPIScaleFont(font, 10);
+    dc.SelectObject(font);
 
     // Select the color.
     dc.SetTextColor(RGB(0, 0, 0));

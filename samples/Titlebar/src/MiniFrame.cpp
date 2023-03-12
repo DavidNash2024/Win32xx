@@ -365,6 +365,21 @@ void CMiniFrame::OnDestroy()
     ::PostQuitMessage(0);
 }
 
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMiniFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+{
+    LPRECT prc = reinterpret_cast<LPRECT>(lparam);
+    SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+
+    m_menubar.SetupMenuBar(m_menu);
+    RecalcLayout();
+
+    return 0;
+}
+
 // Called when the window's background is drawn.
 LRESULT CMiniFrame::OnEraseBkGnd(UINT, WPARAM, LPARAM)
 {
@@ -395,8 +410,8 @@ BOOL CMiniFrame::OnHelp()
 LRESULT CMiniFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
-    lpMMI->ptMinTrackSize.x = 400;
-    lpMMI->ptMinTrackSize.y = 300;
+    lpMMI->ptMinTrackSize.x = DPIScaleInt(400);
+    lpMMI->ptMinTrackSize.y = DPIScaleInt(300);
 
     return WndProcDefault(msg, wparam, lparam);
 }
@@ -668,6 +683,7 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch (msg)
     {
     case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
+    case WM_DPICHANGED:         return OnDPIChanged(msg, wparam, lparam);
     case WM_ERASEBKGND:         return OnEraseBkGnd(msg, wparam, lparam);
     case WM_GETMINMAXINFO:      return OnGetMinMaxInfo(msg, wparam, lparam);
     case WM_HELP:               return OnHelp();

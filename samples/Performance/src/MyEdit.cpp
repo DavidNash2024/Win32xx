@@ -12,17 +12,20 @@
 // Constructor.
 CMyEdit::CMyEdit()
 {
-    LoadCommonControls();
+}
 
-    // Create the font for the Edit window
-    m_font.CreatePointFont(92, _T("Courier New"));
+void CMyEdit::DPISetFont()
+{
+    m_font.CreatePointFont(100, _T("Courier New"));
+    m_font = DPIScaleFont(m_font, 10);
+    SetFont(m_font);
 }
 
 // Called when a window handle (HWND) is attached to CMyEdit.
 void CMyEdit::OnAttach()
 {
     // Set the font for the Edit window
-    SetFont(m_font, FALSE);
+    DPISetFont();
 }
 
 // Set the CREATESTRUCT parameters before the window is created.
