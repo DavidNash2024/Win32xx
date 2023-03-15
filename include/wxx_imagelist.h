@@ -187,7 +187,6 @@ namespace Win32xx
     inline void CImageList::AddToMap() const
     {
         assert(m_pData->images);
-
         GetApp()->AddCImlData(m_pData->images, m_pData);
     }
 
@@ -556,9 +555,7 @@ namespace Win32xx
     // Refer to ImageList_Read in the Windows API documentation for more information.
     inline void CImageList::Read(LPSTREAM pStream)
     {
-        assert(m_pData->images);
         HIMAGELIST images =  ImageList_Read(pStream);
-
         if (images)
         {
             Assign(images);
@@ -637,7 +634,6 @@ namespace Win32xx
     inline BOOL CImageList::SetDragCursorImage(int drag, int dxHotspot, int dyHotspot) const
     {
         assert(m_pData->images);
-
         return ImageList_SetDragCursorImage(*this, drag, dxHotspot, dyHotspot);
     }
 

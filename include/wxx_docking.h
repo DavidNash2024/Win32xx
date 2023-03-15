@@ -4490,7 +4490,7 @@ namespace Win32xx
                 dc.RoundRect(rcItem.left, rcItem.top, rcItem.right + 1, rcItem.bottom, 6, 6);
 
                 CSize szImage = GetODImageList().GetIconSize();
-                int padding = 4;
+                int padding = DPIScaleInt(4);
 
                 if (rcItem.Width() >= szImage.cx + 2 * padding)
                 {
@@ -4597,8 +4597,7 @@ namespace Win32xx
         {
             CSize tempSize;
             CClientDC dc(*this);
-            NONCLIENTMETRICS info = GetNonClientMetrics();
-            dc.CreateFontIndirect(info.lfStatusFont);
+            dc.SelectObject(GetTabFont());
             tempSize = dc.GetTextExtentPoint32(iter->tabText, lstrlen(iter->tabText));
             if (tempSize.cx > sz.cx)
                 sz = tempSize;
@@ -4643,16 +4642,16 @@ namespace Win32xx
         m_pDocker = reinterpret_cast<CDocker*>((GetParent().GetParent().SendMessage(UWM_GETCDOCKER)));
         assert(dynamic_cast<CDocker*>(m_pDocker));
 
+        // Create and assign the tab's image list.
+        int iconHeight = DPIScaleInt(16);
+        iconHeight = iconHeight - iconHeight % 8;
+        GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
+
         // Set the font used in the tabs.
         CFont font;
         NONCLIENTMETRICS info = GetNonClientMetrics();
         font.CreateFontIndirect(info.lfStatusFont);
         SetTabFont(font);
-
-        // Create and assign the tab's image list.
-        int iconHeight = MAX(16, GetTextHeight());
-        iconHeight = iconHeight - iconHeight % 8;
-        GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
 
         // Add a tab for this container except for the DockAncestor.
         if (!GetDocker() || GetDocker()->GetDockAncestor() != GetDocker())
@@ -4982,10 +4981,15 @@ namespace Win32xx
 
         int itemWidth = 0;
         int itemHeight = 1;
+
+        CSize szImage = GetODImageList().GetIconSize();
+        int padding = DPIScaleInt(4);
+        szImage.cx = szImage.cx + 2 * padding;
+
         if ((m_allInfo.size() > 0) && ((GetItemCount() != 1) || !m_isHideSingleTab))
         {
-            itemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width() - 2) / static_cast<int>(m_allInfo.size()));
-            itemHeight = MAX(20, GetTextHeight() + 5);
+            itemWidth = MIN(szImage.cx + GetMaxTabTextSize().cx + padding, (rc.Width() - 2) / static_cast<int>(m_allInfo.size()));
+            itemHeight = MAX(szImage.cy, GetTextHeight()) + padding;
         }
         SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, itemHeight));
     }
