@@ -464,7 +464,7 @@ namespace Win32xx
         void CreateBrushIndirect(const LOGBRUSH& logBrush);
         void CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec);
         void CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT usage);
-        void CreateHatchBrush(int fnStyle, COLORREF color);
+        void CreateHatchBrush(int style, COLORREF color);
         void CreatePatternBrush(HBITMAP bitmap);
         void CreateSolidBrush(COLORREF color);
 
