@@ -25,7 +25,6 @@ CMyCombo::~CMyCombo()
 // Sets the CREATESTRUCT parameters before the window is created.
 void CMyCombo::PreCreate(CREATESTRUCT& cs)
 {
-    cs.lpszClass = WC_COMBOBOXEX;
     cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
 
     // Set the hight of the combobox in order to see a dropdown list

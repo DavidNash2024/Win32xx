@@ -25,7 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "../src/res/Win32++.manifest"
+1                     RT_MANIFEST           "../src/res/PerMonitorV2.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -58,7 +58,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About\tF1",                      IDM_HELP_ABOUT
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
     END
 END
 

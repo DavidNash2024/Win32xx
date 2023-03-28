@@ -1046,7 +1046,10 @@ namespace Win32xx
                             else
                             {
                                 // Draw normal text.
-                                drawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
+                                if ((GetMenuBarTheme().UseThemes))
+                                   drawDC.SetTextColor(GetMenuBarTheme().clrText);
+                                else
+                                   drawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
                                 drawDC.DrawText(str, str.GetLength(), textRect, DT_LEFT | DT_END_ELLIPSIS);
                             }
 

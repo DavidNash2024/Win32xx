@@ -51,13 +51,13 @@
 #define IDM_VIEW_ARROWS                 176
 #define IDM_VIEW_CARDS                  177
 
-#define IDM_WIN10                       180
-#define IDM_WIN7                      181
+#define IDM_WIN11                       180
+#define IDM_WIN7                        181
 #define IDM_BLUE                        182
 #define IDM_GRAY                        183
 #define IDM_OLIVE                       184
 #define IDM_OCHRE                       185
-#define IDM_MAUVE                       186
+#define IDM_MAGENTA                     186
 #define IDM_PINK                        187
 #define IDM_GOLD                        188
 #define IDM_BLACK                       189

@@ -54,169 +54,73 @@ BOOL CMainFrame::ChooseColor(UINT color)
 
     switch (color)
     {
-    case IDM_WIN10:     // Recommended for Windows 8 and Windows 10
-        {
-            SetReBarColors( RGB(235, 237, 250), RGB(235, 237, 250), RGB(220, 225, 240), RGB(220, 225, 240) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(235, 237, 250), RGB(235, 237, 250), RGB(0, 0, 0) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0)};
-            SetMenuTheme(mt);
-        }
+    case IDM_WIN11:  // Recommended for Windows 8, Windows 10 and Windows 11
+        SetReBarColors(RGB(235, 237, 250), RGB(235, 237, 250), RGB(220, 225, 240), RGB(220, 225, 240));
+        SetMenuBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0));
+        SetStatusBarColors(RGB(235, 237, 250), RGB(235, 237, 250), RGB(0, 0, 0));
+        SetToolBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255));
         break;
-    case IDM_WIN7:  // Recommended for Vista and Windows 7
-        {
-            SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(225, 230, 255), RGB(240, 242, 250), RGB(0, 0, 0) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) };
-            SetMenuTheme(mt);
-        }
+    case IDM_WIN7:   // Recommended for Vista and Windows 7
+        SetReBarColors(RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230));
+        SetMenuBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0));
+        SetStatusBarColors(RGB(225, 230, 255), RGB(240, 242, 250), RGB(0, 0, 0) );
+        SetToolBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255));
         break;
-    case IDM_BLUE:      // Recommended for Windows XP
-        {
-            SetReBarColors( RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(150,190,245), RGB(196,215,250), RGB(0, 0, 0) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = {m_useThemes, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200), RGB(0, 0, 0) };
-            SetMenuTheme(mt);
-        }
+    case IDM_BLUE:    // Recommended for Windows XP
+        SetReBarColors(RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220));
+        SetMenuBarColors(RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200), RGB(0, 0, 0));
+        SetStatusBarColors(RGB(150,190,245), RGB(196,215,250), RGB(0, 0, 0) );
+        SetToolBarColors(RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255));
         break;
-    case IDM_GRAY:  // Gray Theme
-        {
-            SetReBarColors( RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(210, 210, 200), RGB(238, 236, 224), RGB(0, 0, 0) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200), RGB(0, 0, 0) };
-            SetMenuTheme(mt);
-        }
+    case IDM_GRAY:    // Gray Theme
+        SetReBarColors( RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172) );
+        SetMenuBarColors( RGB(196, 215, 250), RGB(120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200), RGB(0, 0, 0) );
+        SetStatusBarColors(RGB(210, 210, 200), RGB(238, 236, 224), RGB(0, 0, 0));
+        SetToolBarColors(RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197));
         break;
-    case IDM_OLIVE:
-        {
-            SetReBarColors( RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(160, 180, 80), RGB(180, 200, 100), RGB(0, 0, 200) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = {m_useThemes, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128), RGB(0, 0, 200) };
-            SetMenuTheme(mt);
-        }
+    case IDM_OLIVE:   // Green Theme
+        SetReBarColors( RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78) );
+        SetMenuBarColors( RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128), RGB(0, 0, 200) );
+        SetStatusBarColors(RGB(160, 180, 80), RGB(180, 200, 100), RGB(0, 0, 200));
+        SetToolBarColors(RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255));
         break;
-    case IDM_GOLD:
-        {
-            SetReBarColors( RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(230, 180, 0), RGB(240, 210, 90), RGB(0, 0, 0) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128), RGB(0, 0, 0) };
-            SetMenuTheme(mt);
-        }
+    case IDM_GOLD:    // Gold Theme
+        SetReBarColors( RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50) );
+        SetMenuBarColors( RGB(196, 215, 250), RGB(120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128), RGB(0, 0, 0) );
+        SetStatusBarColors(RGB(230, 180, 0), RGB(240, 210, 90), RGB(0, 0, 0));
+        SetToolBarColors(RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197));
         break;
-    case IDM_OCHRE:
-        {
-            SetReBarColors( RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(248, 132, 12), RGB(248, 198, 10), RGB(0, 0, 0) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128), RGB(0, 0, 0) };
-            SetMenuTheme(mt);
-        }
+    case IDM_OCHRE:   // Orange Theme
+        SetReBarColors( RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6) );
+        SetMenuBarColors( RGB(196, 215, 250), RGB(120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128), RGB(0, 0, 0) );
+        SetStatusBarColors(RGB(248, 132, 12), RGB(248, 198, 10), RGB(0, 0, 0));
+        SetToolBarColors(RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197));
         break;
-    case IDM_PINK:
-        {
-            SetReBarColors( RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(255, 130, 190), RGB(250, 205, 235), RGB(0, 0, 230) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = {m_useThemes, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128), RGB(0, 0, 230) };
-            SetMenuTheme(mt);
-        }
+    case IDM_PINK:    // Pink Theme
+        SetReBarColors( RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170) );
+        SetMenuBarColors( RGB(196, 215, 250), RGB(120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128), RGB(0, 0, 230) );
+        SetStatusBarColors(RGB(255, 130, 190), RGB(250, 205, 235), RGB(0, 0, 230));
+        SetToolBarColors(RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197));
         break;
-    case IDM_MAUVE:
-        {
-            SetReBarColors( RGB(210, 6, 100), RGB(240, 66, 120), RGB(240, 66, 128), RGB(110, 6, 105) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(210, 6, 100), RGB(240, 66, 120), RGB(255, 255, 0) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(242, 106, 228), RGB(192, 6, 88), RGB(152, 6, 56), RGB(152, 6, 56), RGB(149, 6, 197)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = { m_useThemes, RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210), RGB(255, 255, 0) };
-            SetMenuTheme(mt);
-        }
+    case IDM_MAGENTA:  // Magenta Theme
+        SetReBarColors( RGB(210, 6, 100), RGB(240, 66, 120), RGB(240, 66, 128), RGB(110, 6, 105) );
+        SetMenuBarColors( RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210), RGB(255, 255, 0) );
+        SetStatusBarColors(RGB(210, 6, 100), RGB(240, 66, 120), RGB(255, 255, 0));
+        SetToolBarColors(RGB(242, 106, 228), RGB(192, 6, 88), RGB(152, 6, 56), RGB(152, 6, 56), RGB(149, 6, 197));
         break;
-    case IDM_BLACK:
-        {
-            SetReBarColors(RGB(30, 30, 30), RGB(30, 30, 30), RGB(50, 50, 50), RGB(50, 50, 50));
-
-            StatusBarTheme sbt = {m_useThemes, RGB(30, 30, 30), RGB(30, 30, 30), RGB(255, 255, 255) };
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64, 177, 230), RGB(49, 106, 197) };
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = { m_useThemes, RGB(30, 30, 30), RGB(30, 30, 30), RGB(40, 40, 40), RGB(40, 40, 40), RGB(96, 96, 96), RGB(255, 255, 255) };
-            SetMenuTheme(mt);
-        }
+    case IDM_BLACK:   // Black Theme
+        SetReBarColors(RGB(30, 30, 30), RGB(30, 30, 30), RGB(50, 50, 50), RGB(50, 50, 50));
+        SetMenuBarColors( RGB(30, 30, 30), RGB(30, 30, 30), RGB(40, 40, 40), RGB(40, 40, 40), RGB(96, 96, 96), RGB(255, 255, 255) );
+        SetStatusBarColors(RGB(30, 30, 30), RGB(30, 30, 30), RGB(255, 255, 255));
+        SetToolBarColors(RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64, 177, 230), RGB(49, 106, 197));
         break;
     default:
-        {
-            m_color = IDM_WIN7;
-            SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
-
-            StatusBarTheme sbt = {m_useThemes, RGB(225, 230, 255), RGB(240, 242, 250), RGB(0, 0, 0)};
-            SetStatusBarTheme (sbt);
-
-            ToolBarTheme tbt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-            SetToolBarTheme(tbt);
-
-            MenuTheme mt = {m_useThemes, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) };
-            SetMenuTheme(mt);
-        }
+        m_color = IDM_WIN11;
+        SetReBarColors(RGB(235, 237, 250), RGB(235, 237, 250), RGB(220, 225, 240), RGB(220, 225, 240));
+        SetMenuBarColors( RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) );
+        SetStatusBarColors(RGB(235, 237, 250), RGB(235, 237, 250), RGB(0, 0, 0));
+        SetToolBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255));
         break;
-    }
-
-    // Check the appropriate menu item.
-    int fileItem = GetFrameMenu().FindMenuItem(_T("&Theme"));
-    if (fileItem >= 0)
-    {
-        CMenu ThemeMenu = GetFrameMenu().GetSubMenu(fileItem);
-        ThemeMenu.CheckMenuRadioItem(IDM_BLUE, IDM_WIN7, color, MF_BYCOMMAND);
     }
 
     // Use a dark menu for the black theme.
@@ -336,11 +240,11 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_GRAY:           return ChooseColor(IDM_GRAY);
     case IDM_OLIVE:          return ChooseColor(IDM_OLIVE);
     case IDM_OCHRE:          return ChooseColor(IDM_OCHRE);
-    case IDM_MAUVE:          return ChooseColor(IDM_MAUVE);
+    case IDM_MAGENTA:        return ChooseColor(IDM_MAGENTA);
     case IDM_PINK:           return ChooseColor(IDM_PINK);
     case IDM_GOLD:           return ChooseColor(IDM_GOLD);
     case IDM_BLACK:          return ChooseColor(IDM_BLACK);
-    case IDM_WIN10:          return ChooseColor(IDM_WIN10);
+    case IDM_WIN11:          return ChooseColor(IDM_WIN11);
     case IDM_USE_THEMES:     return OnUseThemes();
     case IDM_BAND_COLORS:    return OnBandColors();
     case IDM_FLAT_STYLE:     return OnFlatStyle();
@@ -534,7 +438,7 @@ void CMainFrame::OnMenuUpdate(UINT id)
     }
 
     // Check the color menu item and make it a radio item.
-    GetFrameMenu().CheckMenuRadioItem(IDM_WIN10, IDM_BLACK, m_color, MF_BYCOMMAND);
+    GetFrameMenu().CheckMenuRadioItem(IDM_WIN11, IDM_BLACK, m_color, MF_BYCOMMAND);
 
     // Call the base class member function.
     CFrame::OnMenuUpdate(id);
@@ -740,24 +644,40 @@ BOOL CMainFrame::SaveRegistrySettings()
     return TRUE;
 }
 
-// Toggles the use of colors for the rebar bands.
+// Sets the menubar theme colors.
+void CMainFrame::SetMenuBarColors(COLORREF hot1, COLORREF hot2, COLORREF pressed1, COLORREF pressed2, COLORREF outline, COLORREF text)
+{
+    MenuTheme mt;
+
+    mt.UseThemes = TRUE;        // TRUE if menubar themes are used
+    mt.clrHot1 = hot1;          // Color 1 for menu bar. Color of selected menu item
+    mt.clrHot2 = hot2;          // Color 2 for menu bar. Color of checkbox background
+    mt.clrPressed1 = pressed1;  // Color 1 for pressed menu bar and side bar
+    mt.clrPressed2 = pressed2;  // Color 2 for pressed menu bar and side bar
+    mt.clrOutline = outline;    // Color for border outline
+    mt.clrText = text;          // Color for the menu bar text
+
+    SetMenuTheme(mt);
+}
+
+
+// Sets the rebar theme colors and settings.
 void CMainFrame::SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2)
 {
     if (IsReBarSupported())
     {
         ReBarTheme rt;
-        ZeroMemory(&rt, sizeof(ReBarTheme));
-        rt.UseThemes = m_useThemes;
-        rt.clrBkgnd1 = backGround1;
-        rt.clrBkgnd2 = backGround2;
-        rt.clrBand1  = band1;
-        rt.clrBand2  = band2;
-        rt.FlatStyle = m_useFlatStyle;
-        rt.BandsLeft = m_keepBandsLeft;
-        rt.LockMenuBand = m_lockMenuBand;
-        rt.RoundBorders = m_useRoundBorders;
-        rt.ShortBands = m_useShortBands;
-        rt.UseLines = m_useLines;
+        rt.UseThemes = m_useThemes;          // TRUE if rebar themes are used
+        rt.clrBkgnd1 = backGround1;          // Color 1 for rebar background
+        rt.clrBkgnd2 = backGround2;          // Color 2 for rebar background
+        rt.clrBand1  = band1;                // Color 1 for rebar band background. Use 0 if not required
+        rt.clrBand2  = band2;                // Color 2 for rebar band background. Use 0 if not required
+        rt.FlatStyle = m_useFlatStyle;       // Bands are rendered with flat rather than raised style
+        rt.BandsLeft = m_keepBandsLeft;      // Position bands left on rearrange
+        rt.LockMenuBand = m_lockMenuBand;    // Lock MenuBar's band in dedicated top row, without gripper
+        rt.RoundBorders = m_useRoundBorders; // Use rounded band borders
+        rt.ShortBands = m_useShortBands;     // Allows bands to be shorter than maximum available width
+        rt.UseLines = m_useLines;            // Displays horizontal lines between bands
 
         if (!m_useBandColors)
         {
@@ -767,6 +687,34 @@ void CMainFrame::SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLO
 
         SetReBarTheme(rt);
     }
+}
+
+// Sets the statusbar theme colors.
+void CMainFrame::SetStatusBarColors(COLORREF bkgnd1, COLORREF bkgnd2, COLORREF text)
+{
+    StatusBarTheme sbt;
+
+    sbt.UseThemes = TRUE;     // TRUE if statusbar themes are used
+    sbt.clrBkgnd1 = bkgnd1;   // Color 1 for statusbar background
+    sbt.clrBkgnd2 = bkgnd2;   // Color 2 for statusbar background
+    sbt.clrText = text;       // Text Color
+
+    SetStatusBarTheme(sbt);
+}
+
+// Sets the toolbar theme colors.
+void CMainFrame::SetToolBarColors(COLORREF hot1, COLORREF hot2, COLORREF pressed1, COLORREF pressed2, COLORREF outline)
+{
+    ToolBarTheme tbt;
+
+    tbt.UseThemes = TRUE;        // TRUE if toolbar themes are used
+    tbt.clrHot1 = hot1;          // Color 1 for hot button
+    tbt.clrHot2 = hot2;          // Color 2 for hot button
+    tbt.clrPressed1 = pressed1;  // Color 1 for pressed button
+    tbt.clrPressed2 = pressed2;  // Color 2 for pressed button
+    tbt.clrOutline = outline;    // Color for border outline
+
+    SetToolBarTheme(tbt);
 }
 
 // We select the theme from the menu, so we override the default

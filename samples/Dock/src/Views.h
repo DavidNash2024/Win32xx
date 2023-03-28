@@ -34,20 +34,22 @@ private:
 /////////////////////////////////////
 // CViewText manages an edit control.
 // The edit control displays text.
-class CViewText : public CWnd
+class CViewText : public CRichEdit
 {
 public:
     CViewText() {}
     virtual ~CViewText() {}
+    void SetDPIFont();
 
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
     CViewText(const CViewText&);                // Disable copy construction
     CViewText& operator = (const CViewText&);   // Disable assignment operator
+
+    CFont m_font;
 };
 
 
@@ -59,6 +61,7 @@ class CViewTree : public CTreeView
 public:
     CViewTree();
     virtual ~CViewTree();
+    void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions
@@ -86,6 +89,7 @@ class CViewList : public CListView
 public:
     CViewList();
     virtual ~CViewList();
+    void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions

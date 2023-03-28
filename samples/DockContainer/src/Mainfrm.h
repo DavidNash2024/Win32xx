@@ -27,6 +27,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    void DPIScaleDockers();
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
 
 
 protected:
@@ -34,6 +37,7 @@ protected:
     virtual CDocker* NewDockerFromID(int id);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual void PreCreate(CREATESTRUCT& cs);
@@ -61,6 +65,8 @@ private:
     CDockContainer m_view;
     bool m_isContainerTabsAtTop;
     bool m_hideSingleTab;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

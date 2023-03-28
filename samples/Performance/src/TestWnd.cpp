@@ -26,7 +26,7 @@ void CTestWindow::CreateWin(int i)
     // Create a test window without a close button.
     CRect rc(420, 50 + 4 * i, 300, 200);
     CRect rcDPI = DPIScaleRect(rc);
-    CreateEx(0, NULL, str, WS_VISIBLE, rcDPI, 0, NULL);
+    CreateEx(0, NULL, str, WS_VISIBLE, rcDPI, 0, 0);
 }
 
 // Called when the window is created.

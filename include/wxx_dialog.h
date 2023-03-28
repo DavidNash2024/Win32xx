@@ -168,8 +168,8 @@ namespace Win32xx
 
     ////////////////////////////////////////////////////////////////
     // The CResizer class is used to automatically rearrange child
-    // child windows when the parent window is resized. It displays
-    // scroll bars as required. CResizer is often used with dialogs.
+    // windows when the parent window is resized. It displays scroll
+    // bars as required. CResizer is often used with dialogs.
     class CResizer
     {
     public:

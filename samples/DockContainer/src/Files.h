@@ -15,6 +15,7 @@ class CViewFiles : public CListView
 public:
     CViewFiles();
     virtual ~CViewFiles();
+    void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions
@@ -28,6 +29,7 @@ private:
 
     // Command handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void InsertItems();
     void SetColumns();
@@ -62,6 +64,10 @@ class CDockFiles : public CDocker
 public:
     CDockFiles();
     virtual ~CDockFiles() {}
+
+protected:
+    // Virtual functions that override base class functions
+    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockFiles(const CDockFiles&);                // Disable copy construction

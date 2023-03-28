@@ -126,11 +126,26 @@ namespace Win32xx
     };
 
     //////////////////////////////////////////////////////////////////////
-    // A CDockContainer is a CTab window. Each tab displays a view window,
-    // and can display an optional toolbar. A top level CDockContainer
-    // can contain other CDockContainers. The view for each container
-    // (including the top level container) along with possibly its
-    // toolbar, is displayed within the container parent's view page.
+    // A container (CDockContainer) is a specialized CTab window and
+    // also the view of a docker (CDocker). Each container tab displays
+    // a view window, and can display an optional toolbar. A container
+    // can contain other containers.
+    //
+    // Each container is the view window for a docker. Containers support
+    // container-in-container docking. When containers are docked within
+    // each other, one container becomes the container parent. The container
+    // parent provides a tab for the view window for each of the containers
+    // docked within it. The view for each container along with possibly
+    // its toolbar, is contained within the container parent's view page.
+    //
+    // When a container is docked within another container, it is hidden,
+    // along with its parent docker window. The container parent becomes
+    // the parent window for the view windows of these child containers.
+    //
+    // When a container docked within another container is undocked, the
+    // undocked container window and its parent docker window become visible.
+    // The container also resumes beingg the parent window of its view
+    // window.
     class CDockContainer : public CTab
     {
     public:
@@ -153,13 +168,13 @@ namespace Win32xx
             void SetContainer(CDockContainer* pContainer) { m_pContainer = pContainer; }
             void SetToolBar(CToolBar& toolBar) { m_pToolBar = &toolBar; }
             void SetView(CWnd& wndView);
+            void RecalcLayout();
 
         protected:
             virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
             virtual int OnCreate(CREATESTRUCT& cs);
             virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
             virtual void PreRegisterClass(WNDCLASS& wc);
-            virtual void RecalcLayout();
             LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
         private:
@@ -189,7 +204,7 @@ namespace Win32xx
         // Accessors and mutators
         CDockContainer* GetActiveContainer() const;
         CWnd* GetActiveView() const;
-        const std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_allInfo;}
+        const std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_allInfo; }
         CDockContainer* GetContainerParent() const { return m_pContainerParent; }
         CDockContainer* GetContainerFromIndex(size_t index) const;
         CDockContainer* GetContainerFromView(CWnd* pView) const;
@@ -225,6 +240,7 @@ namespace Win32xx
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
+        virtual LRESULT OnUserDPIChanged(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
         virtual void SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
@@ -240,6 +256,8 @@ namespace Win32xx
         int GetDockTabImageID(int tab) const;
         CString GetDockTabText(int tab) const;
         CSize GetTBImageSize(CBitmap* pBitmap);
+        void SetTabDPIFont();
+        void SetTabDPIIcons();
 
         std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_allInfo;}
         std::vector<ContainerInfo> m_allInfo;          // vector of ContainerInfo structs
@@ -274,6 +292,16 @@ namespace Win32xx
     // A CDocker window allows other CDocker windows to be "docked" inside it.
     // A CDocker can dock on the top, left, right or bottom side of a parent CDocker.
     // There is no theoretical limit to the number of CDockers within CDockers.
+    //
+    // Each docker has a view window. This view window can be a dock container or any
+    // other child window.
+    //
+    // The docker class also provides the following windows
+    //  * A dock client window with provides the caption for the docker.
+    //  * A splitter bar which allows dockers to be resized.
+    //  * Dock targets which are used to facilitate docking.
+    //  * Dock hint windows which display a blue tint over area which will
+    //    be covered if the docker is docked.
     class CDocker : public CWnd
     {
     public:
@@ -554,6 +582,7 @@ namespace Win32xx
         void SetCaptionColors(COLORREF foregnd1, COLORREF backgnd1, COLORREF foreGnd2,
                               COLORREF backGnd2, COLORREF penColor = RGB(160, 150, 140));
         void SetCaptionHeight(int height);
+        void SetDefaultCaptionHeight();
         void SetDockBar(CDockBar& dockBar) { m_pDockBar = &dockBar; }
         void SetDockClient(CDockClient& dockClient) { m_pDockClient = &dockClient; }
         void SetDockHint(CDockHint& dockHint) { m_pDockHint = &dockHint; }
@@ -570,10 +599,12 @@ namespace Win32xx
         virtual LRESULT OnBarEnd(LPDRAGPOS pDragPos);
         virtual LRESULT OnBarMove(LPDRAGPOS pDragPos);
         virtual LRESULT OnBarStart(LPDRAGPOS pDragPos);
+        virtual LRESULT OnDPIChanged(UINT, WPARAM, LPARAM);
         virtual LRESULT OnDockEnd(LPDRAGPOS pDragPos);
         virtual LRESULT OnDockMove(LPDRAGPOS pDragPos);
         virtual LRESULT OnDockStart(LPDRAGPOS pDragPos);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnUserDPIChanged(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
 
@@ -834,10 +865,10 @@ namespace Win32xx
     {
         CRect rcClose;
 
-        int gap = 4;
+        int gap = DPIScaleInt(4);
         CRect rc = GetWindowRect();
-        int cx = ::GetSystemMetrics(SM_CXSMICON);
-        int cy = ::GetSystemMetrics(SM_CYSMICON);
+        int cx = m_pDocker->GetTextHeight() - gap/2;
+        int cy = m_pDocker->GetTextHeight() - gap/2;
 
         rcClose.top = 2 + rc.top + m_pDocker->m_ncHeight/2 - cy/2;
         rcClose.bottom = 2 + rc.top + m_pDocker->m_ncHeight/2 + cy/2;
@@ -880,8 +911,11 @@ namespace Win32xx
                 m_isOldFocusStored = Focus;
 
                 // Set the font for the title
+                int dpi = GetWindowDPI(*this);
                 NONCLIENTMETRICS info = GetNonClientMetrics();
-                memDC.CreateFontIndirect(info.lfStatusFont);
+                LOGFONT lf = info.lfStatusFont;
+                lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
+                memDC.CreateFontIndirect(lf);
 
                 // Set the Colors
                 if (m_pDocker->GetActiveDocker() == m_pDocker)
@@ -2116,6 +2150,7 @@ namespace Win32xx
 
         pDocker->SetDockSize(dockSize);
         pDocker->SetDockStyle(dockStyle & 0XFFFFFF0);
+        pDocker->m_isUndocking = TRUE;    // IsUndocked reports FALSE.
         pDocker->m_dockID = dockID;
         pDocker->m_pDockAncestor = GetDockAncestor();
 
@@ -2135,6 +2170,7 @@ namespace Win32xx
         pDocker->RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
         pDocker->SetWindowText(pDocker->GetCaption().c_str());
 
+        pDocker->m_isUndocking = FALSE;  // IsUndocked now reports TRUE.
         return pDocker;
     }
 
@@ -2655,8 +2691,10 @@ namespace Win32xx
     // Retrieves the text height for the caption.
     inline int CDocker::GetTextHeight()
     {
+        int dpi = GetWindowDPI(*this);
         NONCLIENTMETRICS info = GetNonClientMetrics();
         LOGFONT lf = info.lfStatusFont;
+        lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
 
         CClientDC dc(*this);
         dc.CreateFontIndirect(lf);
@@ -3099,7 +3137,7 @@ namespace Win32xx
         }
 
         // Set the caption height based on text height.
-        m_ncHeight = MAX(20, GetTextHeight() + 5);
+        SetDefaultCaptionHeight();
 
         CDockContainer* pContainer = GetContainer();
         if (pContainer)
@@ -3265,6 +3303,42 @@ namespace Win32xx
 
         GetDockHint().Destroy();
         CloseAllTargets();
+
+        return 0;
+    }
+
+    // Called in response to a WM_DPICHANGED message which is sent to a top-level
+    // window when the DPI changes.
+    // Only top-level windows receive a WM_DPICHANGED message, so this message is
+    // handled when an undocked docker is moved between monitors.
+    inline LRESULT CDocker::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+    {
+        if (IsUndocked())   // Ignore dockers currently being undocked.
+        {
+            // An undocked docker has moved to a different monitor.
+            LPRECT prc = reinterpret_cast<LPRECT>(lparam);
+            SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+
+            std::vector<DockPtr> v = GetAllDockChildren();
+            std::vector<DockPtr>::iterator it;
+            for (it = v.begin(); it != v.end(); ++it)
+            {
+                if ((*it)->IsWindow())
+                {
+                    // Reset the docker size.
+                    int size = (*it)->GetDockSize();
+                    (*it)->SetDockSize(size);
+
+                    // Notify the docker that the DPI has changed.
+                    (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
+
+                    // Adjust the dock caption height.
+                    (*it)->SetDefaultCaptionHeight();
+                }
+            }
+
+            RecalcDockLayout();
+        }
 
         return 0;
     }
@@ -4246,6 +4320,7 @@ namespace Win32xx
             if (pDockNew)
             {
                 // Move containers from the old docker to the new docker.
+                pDockNew->m_isUndocking = TRUE;  // IsUndocked will report FALSE.
                 CDockContainer* pContainerNew = pDockNew->GetContainer();
                 assert(pContainerNew);
                 for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
@@ -4305,6 +4380,8 @@ namespace Win32xx
                         }
                     }
                 }
+
+                pDockNew->m_isUndocking = FALSE;  // IsUndocked reports undocked state.
             }
         }
         else
@@ -4337,27 +4414,45 @@ namespace Win32xx
         pDocker->BringWindowToTop();
     }
 
+    // Sets the caption height based on the current text height.
+    inline void CDocker::SetDefaultCaptionHeight()
+    {
+        SetCaptionHeight(MAX(20, GetTextHeight() + 5));
+    }
+
     inline LRESULT CDocker::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
         case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
-        case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
+        case WM_DPICHANGED:         return OnDPIChanged(msg, wparam, lparam);
         case WM_EXITSIZEMOVE:       return OnExitSizeMove(msg, wparam, lparam);
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
         case WM_NCLBUTTONDBLCLK:    return OnNCLButtonDblClk(msg, wparam, lparam);
         case WM_SIZE:               return OnSize(msg, wparam, lparam);
         case WM_SYSCOLORCHANGE:     return OnSysColorChange(msg, wparam, lparam);
+        case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
 
         // Messages defined by Win32++
         case UWM_DOCKACTIVATE:      return OnDockActivated(msg, wparam, lparam);
         case UWM_DOCKDESTROYED:     return OnDockDestroyed(msg, wparam, lparam);
+        case UWM_DPICHANGED:        return OnUserDPIChanged(msg, wparam, lparam);
         case UWM_GETCDOCKER:        return reinterpret_cast<LRESULT>(this);
         }
 
         return CWnd::WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Called in response to a UWM_DPICHANGED message which is sent to child windows
+    // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
+    // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
+    inline LRESULT CDocker::OnUserDPIChanged(UINT, WPARAM, LPARAM)
+    {
+        SetDefaultCaptionHeight();
+        GetView().SendMessage(UWM_DPICHANGED);
+        return 0;
     }
 
     // Static callback function to enumerate top level dockers excluding
@@ -4648,10 +4743,7 @@ namespace Win32xx
         GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
 
         // Set the font used in the tabs.
-        CFont font;
-        NONCLIENTMETRICS info = GetNonClientMetrics();
-        font.CreateFontIndirect(info.lfStatusFont);
-        SetTabFont(font);
+        SetTabDPIFont();
 
         // Add a tab for this container except for the DockAncestor.
         if (!GetDocker() || GetDocker()->GetDockAncestor() != GetDocker())
@@ -4675,7 +4767,7 @@ namespace Win32xx
             SetupToolBar();
             if (GetToolBarData().size() > 0)
             {
-                // Set the toolbar images.
+                // Load the default images if no images are loaded.
                 // A mask of 192,192,192 is compatible with AddBitmap (for Win95).
                 if (!GetToolBar().SendMessage(TB_GETIMAGELIST, 0, 0))
                     SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
@@ -4823,6 +4915,20 @@ namespace Win32xx
         return 0;
     }
 
+    // Called in response to a UWM_DPICHANGED message which is sent to child windows
+    // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
+    // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
+    inline LRESULT CDockContainer::OnUserDPIChanged(UINT, WPARAM, LPARAM)
+    {
+        SetTabDPIFont();
+        SetTabDPIIcons();
+        if (GetView() && GetView()->IsWindow())
+            GetView()->SendMessage(UWM_DPICHANGED);
+
+        RecalcLayout();
+        return 0;
+    }
+
     // Called prior to window creation to set the CREATESTRUCT parameters.
     inline void CDockContainer::PreCreate(CREATESTRUCT& cs)
     {
@@ -4849,7 +4955,10 @@ namespace Win32xx
                 CDockContainer* pContainer = m_allInfo[pageIndex].pContainer;
 
                 if (pContainer->GetViewPage().IsWindow())
+                {
                     VERIFY(pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW));
+                    pContainer->GetViewPage().RecalcLayout();
+                }
 
             }
             RedrawWindow(RDW_INVALIDATE | RDW_NOCHILDREN);
@@ -4962,6 +5071,47 @@ namespace Win32xx
     {
         m_isHideSingleTab = hideSingle;
         RecalcLayout();
+    }
+
+    // Updates the tab font based on the window's DPI.
+    inline void CDockContainer::SetTabDPIFont()
+    {
+        // Set the font used in the tabs.
+        CFont font;
+        NONCLIENTMETRICS info = GetNonClientMetrics();
+        int dpi = GetWindowDPI(*this);
+        LOGFONT lf = info.lfStatusFont;
+        lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
+        font.CreateFontIndirect(lf);
+        SetTabFont(font);
+        GetContainerParent()->RecalcLayout();
+    }
+
+    // Updates the tab icons based on the window's DPI.
+    inline void CDockContainer::SetTabDPIIcons()
+    {
+        int iconHeight = GetContainerParent()->DPIScaleInt(16);
+        iconHeight = iconHeight - iconHeight % 8;
+
+        if (this == GetContainerParent())
+        {
+            std::vector<ContainerInfo>& v = GetAll();
+            GetODImageList().DeleteImageList();
+            GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
+            for (size_t i = 0; i < v.size(); ++i)
+            {
+                // Set the icons for the container parent.
+                CDockContainer* pContainer = GetContainerFromIndex(i);
+                v[i].tabImage = GetODImageList().Add(pContainer->GetTabIcon());
+            }
+        }
+        else
+        {
+            // Set the icons for the container children, used if the container is undocked.
+            GetODImageList().DeleteImageList();
+            GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
+            GetODImageList().Add(GetTabIcon());
+        }
     }
 
     // Sets the icon for this container's tab.
@@ -5164,6 +5314,7 @@ namespace Win32xx
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
         case WM_SETFOCUS:       return OnSetFocus(msg, wparam, lparam);
         case WM_SIZE:           return OnSize(msg, wparam, lparam);
+        case UWM_DPICHANGED:    return OnUserDPIChanged(msg, wparam, lparam);
         case UWM_GETCDOCKCONTAINER: return reinterpret_cast<LRESULT>(this);
         }
 
