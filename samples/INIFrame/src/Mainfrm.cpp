@@ -405,8 +405,8 @@ void CMainFrame::SerializeINI(BOOL isStoring)
             GetWindowPlacement(wndpl);
 
             CRect rc = wndpl.rcNormalPosition;
-            UINT top = MAX(rc.top, 0);
-            UINT left = MAX(rc.left, 0);
+            UINT left = rc.left;
+            UINT top = rc.top;
             UINT width = MAX(rc.Width(), 100);
             UINT height = MAX(rc.Height(), 50);
             UINT showCmd = wndpl.showCmd;
@@ -441,6 +441,38 @@ void CMainFrame::SerializeINI(BOOL isStoring)
 
             if (left != failed && top != failed && width != failed && height != failed && showCmd != failed)
             {
+                // Ensure the saved settings are still valid.
+                CPoint midpoint(left + width / 2, top + height / 2);
+                CPoint midtop( left + width / 2, top);
+
+#ifdef MONITOR_DEFAULTTONULL
+
+                HMONITOR monitor = ::MonitorFromPoint(midpoint, MONITOR_DEFAULTTONULL);
+                if (monitor == 0)
+                    throw CUserException();
+
+                MONITORINFO mi;
+                ZeroMemory(&mi, sizeof(mi));
+                mi.cbSize = sizeof(mi);
+                ::GetMonitorInfo(monitor, &mi);
+                CRect workArea = mi.rcWork;
+
+#else
+                CRect workArea;
+                SystemParametersInfo(SPI_GETWORKAREA, 0, &workArea, 0);
+#endif
+
+                // Check if window is mostly within work area.
+                if (!workArea.PtInRect(midpoint))
+                    throw CUserException();
+
+                // Check if the caption is within the work area.
+                if (!workArea.PtInRect(midtop))
+                    throw CUserException();
+
+                if (width <= 0 || height <= 0)
+                    throw CUserException();
+
                 values.position = CRect(left, top, left + width, top + height);
                 values.showCmd = showCmd;
 
@@ -457,7 +489,7 @@ void CMainFrame::SerializeINI(BOOL isStoring)
             else
             {
                 TRACE("Failed to load ini file settings");
-                ;;
+                throw CUserException();;
             }
 
             SetInitValues(values);
@@ -466,7 +498,9 @@ void CMainFrame::SerializeINI(BOOL isStoring)
 
     catch (const CException& e)
     {
-        ::MessageBox(0, e.GetText(), _T("Error"), MB_OK);
+        // Saved values are no longer valid. Use defaults.
+        InitValues defaultValues;
+        SetInitValues(defaultValues);
     }
 }
 

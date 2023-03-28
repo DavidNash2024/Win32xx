@@ -74,7 +74,6 @@ void CViewClasses::OnDestroy()
 void CViewClasses::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = TVS_NOTOOLTIPS|WS_CHILD;
-    cs.lpszClass = WC_TREEVIEW;
 }
 
 // Processes the tree-view's window messages.

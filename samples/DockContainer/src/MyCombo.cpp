@@ -24,7 +24,6 @@ CMyCombo::~CMyCombo()
 // Sets the CREATESTRUCT parameters before the window is created.
 void CMyCombo::PreCreate(CREATESTRUCT& cs)
 {
-    cs.lpszClass = WC_COMBOBOXEX;
     cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
 
     // Set the height of the combobox in order to see a dropdown list
@@ -81,12 +80,8 @@ void CMyCombo::SetImages(int images, UINT imageID)
     CBitmap bm(imageID);
     assert(bm.GetHandle());
     bm = DPIScaleUpBitmap(bm);
-
-    BITMAP bmData = bm.GetBitmapData();
-    int iImageWidth = bmData.bmWidth / images;
-    int iImageHeight = bmData.bmHeight;
-
-    m_imlImages.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, images, 0);
+    CSize szImage = bm.GetSize();
+    m_imlImages.Create(szImage.cx / images, szImage.cy, ILC_COLOR32 | ILC_MASK, images, 0);
     m_imlImages.Add(bm, RGB(255, 0, 255));
 }
 

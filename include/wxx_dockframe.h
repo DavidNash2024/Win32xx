@@ -85,6 +85,7 @@ namespace Win32xx
         virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    RecalcViewLayout();
         virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -140,8 +141,8 @@ namespace Win32xx
         GetDockClient().Create(GetHwnd());
         GetView().Create(GetDockClient());
 
-        // Set the caption height based on text height
-        SetCaptionHeight( MAX(20, GetTextHeight() + 5) );
+        // Set the caption height based on text height.
+        SetDefaultCaptionHeight();
         return CFrameT<CDocker>::OnCreate(cs);
     }
 
@@ -164,6 +165,7 @@ namespace Win32xx
         return CDocker::OnDockDestroyed(msg, wparam, lparam);
     }
 
+    // Called when the cursor is in an inactive window and the user presses a mouse button.
     inline LRESULT CDockFrame::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         return CDocker::OnMouseActivate(msg, wparam, lparam);
@@ -186,6 +188,12 @@ namespace Win32xx
         return CFrameT<CDocker>::OnSysColorChange(msg, wparam, lparam);
     }
 
+    // Called in response to a UWM_DPIChanged message.
+    inline LRESULT CDockFrame::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        return CDocker::OnUserDPIChanged(msg, wparam, lparam);
+    }
+
     // Repositions the view window
     inline void CDockFrame::RecalcViewLayout()
     {
@@ -204,9 +212,9 @@ namespace Win32xx
         // Messages defined by Win32++
         case UWM_DOCKACTIVATE:      return OnDockActivated(msg, wparam, lparam);
         case UWM_DOCKDESTROYED:     return OnDockDestroyed(msg, wparam, lparam);
+        case UWM_DPICHANGED:        return OnUserDPIChanged(msg, wparam, lparam);
         case UWM_GETCDOCKER:        return reinterpret_cast<LRESULT>(this);
-
-        } // switch msg
+        }
 
         return CFrameT<CDocker>::WndProcDefault(msg, wparam, lparam);
     }

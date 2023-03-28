@@ -10,20 +10,26 @@
 ////////////////////////////////////////////////////////////
 // CViewText manages an rich edit control. It displays text.
 // This is the view window for CContainText.
-class CViewText : public CRichEdit
+class CViewText : public CEdit
 {
 public:
     CViewText();
     virtual ~CViewText();
+    void SetDPIFont();
 
 protected:
     // Virtual functions that override base class functions
-    virtual void PreCreate(CREATESTRUCT& cs);
     virtual void OnAttach();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewText(const CViewText&);                // Disable copy construction
     CViewText& operator = (const CViewText&);   // Disable assignment operator
+
+    // Message handlers
+    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    CFont m_font;
 };
 
 
@@ -52,6 +58,10 @@ class CDockText : public CDocker
 public:
     CDockText();
     virtual ~CDockText() {}
+
+protected:
+    // Virtual functions that override base class functions
+    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockText(const CDockText&);                // Disable copy construction

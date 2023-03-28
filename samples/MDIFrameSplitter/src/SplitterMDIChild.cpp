@@ -111,7 +111,7 @@ int CSplitterMDIChild::OnCreate(CREATESTRUCT& cs)
 void CSplitterMDIChild::OnInitialUpdate()
 {
     // Add Child dockers.
-    DWORD style = DS_CLIENTEDGE | DS_NO_UNDOCK;
+    DWORD style = DS_CLIENTEDGE;// | DS_NO_UNDOCK;
     m_view.SetDockStyle(style);
     int width = DPIScaleInt(200);
     CDocker* pDockLeft  = m_view.AddDockedChild(new CDockOutput, DS_DOCKED_LEFT  | style, width, 0);

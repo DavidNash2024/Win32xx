@@ -28,7 +28,7 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_view as the view window of the frame
+    // Set m_view as the view window of the frame.
     SetView(m_view);
 
     // Set the registry key name, and load the initial window position
@@ -36,6 +36,85 @@ HWND CMainFrame::Create(HWND parent)
     LoadRegistrySettings(_T("Win32++\\DockContainer"));
 
     return CDockFrame::Create(parent);
+}
+
+void CMainFrame::DPIScaleDockers()
+{
+    std::vector<CDocker*> v = GetAllDockers();
+    std::vector<CDocker*>::iterator it;
+    for (it = v.begin(); it != v.end(); ++it)
+    {
+        if ((*it)->IsWindow())
+        {
+            // Reset the docker size.
+            int size = (*it)->GetDockSize();
+            (*it)->SetDockSize(size);
+
+            // Notify the docker that the DPI has changed.
+            (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
+
+            // Adjust the dock caption height
+        //    (*it)->UpdateCaptionHeight();
+        }
+    }
+
+    RecalcDockLayout();
+}
+
+// Assigns the appropriately sized menu icons.
+void CMainFrame::DPIScaleMenuIcons()
+{
+    // Load the toolbar bitmap.
+    CBitmap toolbarImage(IDW_MAIN);
+
+    // Scale the bitmap to the menu item height.
+    int menuHeight = GetMenuIconHeight();
+    int scale = menuHeight / toolbarImage.GetSize().cy;
+    CBitmap scaledImage;
+    if (scale > 0)
+        scaledImage = ScaleUpBitmap(toolbarImage, scale);
+    else
+        scaledImage.LoadBitmap(IDB_TOOLBAR16);
+
+    // Create the image-list from the scaled image
+    CSize sz = scaledImage.GetSize();
+    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+    COLORREF mask = RGB(192, 192, 192);
+    m_menuImages.Add(scaledImage, mask);
+
+    // Assign the image-list to the menu items.
+    SetMenuImages(m_menuImages);
+}
+
+// Assigns the appropriately sized toolbar icons.
+void CMainFrame::DPIScaleToolBar()
+{
+    if (GetToolBar().IsWindow())
+    {
+        // Load the toolbar bitmap.
+        CBitmap toolbarImage(IDW_MAIN);
+
+        // Create the image-list
+        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
+        CSize sz = dpiImage.GetSize();
+        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        COLORREF mask = RGB(192, 192, 192);
+        m_normalImages.Add(dpiImage, mask);
+
+        // Assign the image-list to the toolbar.
+        GetToolBar().SetImageList(m_normalImages);
+
+        // Adjust the toolbar band height.
+        if (GetReBar().IsWindow())
+        {
+            int band = GetReBar().GetBand(GetToolBar());
+            if (band >= 0)
+            {
+                CSize sizeToolBar = GetToolBar().GetMaxSize();
+                GetReBar().ResizeBand(band, sizeToolBar);
+            }
+        }
+    }
 }
 
 // Hides or shows the tab for a container with a single tab.
@@ -75,6 +154,8 @@ void CMainFrame::LoadDefaultDockers()
     // Add the frame's dockers
     AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, DPIScaleInt(100), ID_DOCK_TEXT1);
     AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, DPIScaleInt(100), ID_DOCK_TEXT2);
+
+    DPIScaleDockers();
 }
 
 // Adds a new docker. The id specifies its type.
@@ -174,6 +255,23 @@ BOOL CMainFrame::OnDockDefault()
     return TRUE;
 }
 
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    SetRedraw(FALSE);
+    CDockFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleDockers();
+    DPIScaleMenuIcons();
+    DPIScaleToolBar();
+    RecalcLayout();
+    SetRedraw(TRUE);
+    RedrawWindow();
+    return 0;
+}
+
 // Close all the frame's dockers.
 BOOL CMainFrame::OnDockCloseAll()
 {
@@ -206,6 +304,8 @@ void CMainFrame::OnInitialUpdate()
 
     // Hide the container's tab if it has just one tab
     HideSingleContainerTab(m_hideSingleTab);
+
+    DPIScaleDockers();
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow( GetInitValues().showCmd );

@@ -16,6 +16,10 @@ public:
     CDockSimple();
     virtual ~CDockSimple() {}
 
+protected:
+    // Virtual functions that override base class functions
+    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+
 private:
     CDockSimple(const CDockSimple&);                // Disable copy construction
     CDockSimple& operator = (const CDockSimple&);   // Disable assignment operator
@@ -37,6 +41,9 @@ private:
     CDockClasses(const CDockClasses&);                // Disable copy construction
     CDockClasses& operator = (const CDockClasses&);   // Disable assignment operator
 
+    // Message handlers
+    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+
     CViewTree m_view;
 };
 
@@ -49,6 +56,9 @@ class CDockFiles : public CDocker
 public:
     CDockFiles();
     virtual ~CDockFiles() {}
+
+protected:
+    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockFiles(const CDockFiles&);                // Disable copy construction
@@ -66,6 +76,9 @@ class CDockText : public CDocker
 public:
     CDockText();
     virtual ~CDockText() {}
+
+protected:
+    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockText(const CDockText&);                // Disable copy construction

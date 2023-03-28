@@ -42,7 +42,10 @@ private:
 
     void AddCombo();
     BOOL ChooseColor(UINT color);
+    void SetMenuBarColors(COLORREF hot1, COLORREF hot2, COLORREF pressed1, COLORREF pressed2, COLORREF outline, COLORREF text);
     void SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2);
+    void SetStatusBarColors(COLORREF bkgnd1, COLORREF bkgnd2, COLORREF text);
+    void SetToolBarColors(COLORREF hot1, COLORREF hot2, COLORREF pressed1, COLORREF pressed2, COLORREF outline);
     void ShowArrows(bool isShown);
     void ShowCards(bool isShown);
 

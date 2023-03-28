@@ -20,15 +20,17 @@ void CViewSimple::OnDraw(CDC& dc)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
         LOGFONT lf = info.lfMessageFont;
+        int dpi = GetWindowDPI(*this);
+        lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
         dc.CreateFontIndirect(lf);
     }
 
-    //Centre some text in the window
+    // Centre some text in the window.
     CRect rc = GetClientRect();
     dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-// Respond to a mouse click on the window
+// Respond to a mouse click on the window.
 LRESULT CViewSimple::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
@@ -85,22 +87,22 @@ CViewList::~CViewList()
 // Insert 4 list view items.
 void CViewList::InsertItems()
 {
-    // Add 4th item
+    // Add 4th item.
     int item = InsertItem(0, _T("ListViewApp.h"), 2);
     SetItemText(item, 1, _T("1 KB"));
     SetItemText(item, 2, _T("C Header file"));
 
-    // add 3rd item
+    // add 3rd item.
     item = InsertItem(item, _T("ListViewApp.cpp"), 1);
     SetItemText(item, 1, _T("3 KB"));
     SetItemText(item, 2, _T("C++ Source file"));
 
-    // add 2nd item
+    // add 2nd item.
     item = InsertItem(item, _T("main.cpp"), 1);
     SetItemText(item, 1, _T("1 KB"));
     SetItemText(item, 2, _T("C++ Source file"));
 
-    // add 1st item
+    // add 1st item.
     item = InsertItem(item, _T("ListView"), 0);
     SetItemText(item, 2, _T("Folder"));
 }
@@ -108,15 +110,10 @@ void CViewList::InsertItems()
 // Called when a window handle (HWND) is attached to the List-View.
 void CViewList::OnAttach()
 {
-    // Set the image lists
-    int scale = DPIScaleInt(1);
-    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap bmImage(IDB_FILEVIEW);
-    bmImage = DPIScaleUpBitmap(bmImage);
-    m_smallImages.Add(bmImage, RGB(255, 0, 255) );
-    SetImageList(m_smallImages, LVSIL_SMALL);
+    // Set the image lists.
+    SetDPIImages();
 
-    // Set the report style
+    // Set the report style.
     DWORD dwStyle = GetStyle();
     SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
@@ -141,10 +138,10 @@ LRESULT CViewList::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Configure the List-view's columns.
 void CViewList::SetColumns()
 {
-    // empty the list
+    // Empty the list.
     DeleteAllItems();
 
-    // initialize the columns
+    // Initialize the columns.
     LV_COLUMN column;
     ZeroMemory(&column, sizeof(column));
     column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
@@ -158,7 +155,19 @@ void CViewList::SetColumns()
     }
 }
 
-// Process the list-view's window messages.
+// Adjusts the listview image sizes in response to window DPI changes.
+void CViewList::SetDPIImages()
+{
+    // Set the image lists
+    CBitmap bmImage(IDB_FILEVIEW);
+    bmImage = DPIScaleUpBitmap(bmImage);
+    int scale = bmImage.GetSize().cy / 15;
+    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    m_smallImages.Add(bmImage, RGB(255, 0, 255));
+    SetImageList(m_smallImages, LVSIL_SMALL);
+}
+
+// Process the listview window messages.
 LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
@@ -200,22 +209,17 @@ CViewTree::~CViewTree()
 // Called when a window handle (HWND) is attached to this object.
 void CViewTree::OnAttach()
 {
-    //set the image lists
-    int scale = DPIScaleInt(1);
-    m_normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap bmImage(IDB_CLASSVIEW);
-    bmImage = DPIScaleUpBitmap(bmImage);
-    m_normalImages.Add(bmImage, RGB(255, 0, 0) );
-    SetImageList(m_normalImages, LVSIL_NORMAL);
+    // Set the image lists.
+    SetDPIImages();
 
-    // Adjust style to show lines and [+] button
+    // Adjust style to show lines and [+] button.
     DWORD dwStyle = GetStyle();
     dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
     SetStyle(dwStyle);
 
     DeleteAllItems();
 
-    // Add some tree-view items
+    // Add some tree-view items.
     HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
     HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
     InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
@@ -230,7 +234,7 @@ void CViewTree::OnAttach()
     InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
     InsertItem(_T("WndProc()"), 4, 4, htiView);
 
-    // Expand some tree-view items
+    // Expand some tree-view items.
     Expand(htiRoot, TVE_EXPAND);
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
@@ -247,6 +251,22 @@ LRESULT CViewTree::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     // Set window focus. The docker will now report this as active.
     SetFocus();
     return FinalWindowProc(msg, wparam, lparam);
+}
+
+// Adjusts the listview image sizes in response to window DPI changes.
+void CViewTree::SetDPIImages()
+{
+    // Resize the image list.
+    CBitmap bmImage(IDB_CLASSVIEW);
+    bmImage = DPIScaleUpBitmap(bmImage);
+    int scale = bmImage.GetSize().cy / 15;
+    m_normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    m_normalImages.Add(bmImage, RGB(255, 0, 0));
+    SetImageList(m_normalImages, LVSIL_NORMAL);
+
+    // Reset the item indentation.
+    const int indent = 20;
+    SetIndent(indent *scale);
 }
 
 // Process window messages for the tree-view control.
@@ -279,15 +299,14 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called when a window handle (HWND) is attached to this object.
 void CViewText::OnAttach()
 {
-    CFont font;
-    font.CreatePointFont(100, _T("Courier New"));
-    SetFont(font);
+    SetDPIFont();
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
-// Specify the CREATESTRUCT parameters before the window is created.
-void CViewText::PreCreate(CREATESTRUCT& cs)
+// Adjusts the font size in response to window DPI changes.
+void CViewText::SetDPIFont()
 {
-    cs.lpszClass = _T("EDIT");
-    cs.style = ES_MULTILINE|WS_CHILD;
+    m_font.CreatePointFont(100, _T("Courier New"));
+    m_font = DPIScaleFont(m_font, 9);
+    SetFont(m_font);
 }
