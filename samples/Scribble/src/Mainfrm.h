@@ -21,6 +21,9 @@ public:
     CDoc& GetDoc() { return m_view.GetDoc(); }
     void LoadFile(LPCTSTR fileName);
 
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
+
     LRESULT OnDropFile(WPARAM wparam);
     BOOL OnFileExit();
     BOOL OnFileMRU(WPARAM wparam);
@@ -39,6 +42,7 @@ protected:
     virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
@@ -52,6 +56,8 @@ private:
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
     bool m_isToolbarShown;
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

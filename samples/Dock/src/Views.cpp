@@ -119,6 +119,7 @@ void CViewList::OnAttach()
 
     SetColumns();
     InsertItems();
+    SetDPIColumnWidths();
 }
 
 // Called when the window is destroyed.
@@ -153,6 +154,14 @@ void CViewList::SetColumns()
         column.pszText = string[i];
         InsertColumn(i, column);
     }
+}
+
+// Adjusts the listview column widths in response to window DPI changes.
+void CViewList::SetDPIColumnWidths()
+{
+    SetColumnWidth(0, DPIScaleInt(120));
+    SetColumnWidth(1, DPIScaleInt(50));
+    SetColumnWidth(2, DPIScaleInt(100));
 }
 
 // Adjusts the listview image sizes in response to window DPI changes.

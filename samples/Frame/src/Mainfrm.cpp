@@ -216,14 +216,14 @@ BOOL CMainFrame::OnFilePreview()
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
-        // Create the preview window if required
+        // Create the preview window if required.
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
 
-        // Specify the source of the PrintPage function
+        // Specify the source of the PrintPage function.
         m_preview.SetSource(m_view);
 
-        // Set the preview's owner (for messages)
+        // Set the preview's owner for notification messages.
         m_preview.DoPrintPreview(*this);
 
         // Swap views

@@ -110,5 +110,6 @@ LRESULT CDockFiles::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     // Set the width of the splitter bar.
     SetBarWidth(DPIScaleInt(8));
     m_view.SetDPIImages();
+    m_view.SetDPIColumnWidths();
     return CDocker::OnUserDPIChanged(msg, wparam, lparam);
 }

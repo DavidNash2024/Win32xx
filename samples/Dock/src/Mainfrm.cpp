@@ -41,6 +41,7 @@ HWND CMainFrame::Create(HWND parent)
     return CDockFrame::Create(parent);
 }
 
+// Adjusts the dockers in response to window DPI changes.
 void CMainFrame::DPIScaleDockers()
 {
     std::vector<CDocker*> v = GetAllDockers();
@@ -238,11 +239,15 @@ BOOL CMainFrame::OnDockCloseAll()
 // Loads a default arrangement of dockers.
 BOOL CMainFrame::OnDockDefault()
 {
-    SetRedraw(FALSE);   // Suppress drawing to the frame window
+    // Supress redraw to render the docking changes smoothly.
+    SetRedraw(FALSE);
+
     CloseAllDockers();
     LoadDefaultDockers();
-    SetRedraw(TRUE);    // Re-enable drawing to the frame window
-    RedrawWindow(RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
+
+    // Enable redraw and redraw the frame.
+    SetRedraw(TRUE);
+    RedrawWindow();
     return TRUE;
 }
 
@@ -252,13 +257,17 @@ BOOL CMainFrame::OnDockDefault()
 //  - The DPI of the monitor hosting the window changes.
 LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
+    // Supress redraw to render the DPI changes smoothly.
     SetRedraw(FALSE);
+
     CDockFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleDockers();
     DPIScaleMenuIcons();
     DPIScaleToolBar();
     RecalcDockLayout();
     RecalcLayout();
+
+    // Enable redraw and redraw the frame.
     SetRedraw(TRUE);
     RedrawWindow();
     return 0;

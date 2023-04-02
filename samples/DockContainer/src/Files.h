@@ -15,6 +15,7 @@ class CViewFiles : public CListView
 public:
     CViewFiles();
     virtual ~CViewFiles();
+    void SetDPIColumnWidths();
     void SetDPIImages();
 
 protected:

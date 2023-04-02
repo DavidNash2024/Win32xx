@@ -57,6 +57,7 @@ void CViewFiles::OnAttach()
 
     SetColumns();
     InsertItems();
+    SetDPIColumnWidths();
 }
 
 // Called when the window is destroyed.
@@ -79,6 +80,7 @@ LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CViewFiles::OnUserDPIChanged(UINT, WPARAM, LPARAM)
 {
     SetDPIImages();
+    SetDPIColumnWidths();
     return 0;
 }
 
@@ -102,6 +104,15 @@ void CViewFiles::SetColumns()
     }
 }
 
+// Adjusts the listview column widths in response to window DPI changes.
+void CViewFiles::SetDPIColumnWidths()
+{
+    SetColumnWidth(0, DPIScaleInt(120));
+    SetColumnWidth(1, DPIScaleInt(50));
+    SetColumnWidth(2, DPIScaleInt(100));
+}
+
+// Adjusts the listview image sizes widths in response to window DPI changes.
 void CViewFiles::SetDPIImages()
 {
     // Set the image lists

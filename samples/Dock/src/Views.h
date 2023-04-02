@@ -89,6 +89,7 @@ class CViewList : public CListView
 public:
     CViewList();
     virtual ~CViewList();
+    void SetDPIColumnWidths();
     void SetDPIImages();
 
 protected:

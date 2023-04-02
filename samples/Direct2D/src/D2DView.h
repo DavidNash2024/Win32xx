@@ -34,6 +34,7 @@ protected:
     // Virtual functions that override base class functions
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnDestroy();
+    virtual LRESULT OnDPIChanged(UINT, WPARAM, LPARAM);
     virtual LRESULT OnPaint(UINT, WPARAM, LPARAM);
     virtual void    PreCreate(CREATESTRUCT&cs);
     virtual void    PreRegisterClass(WNDCLASS& wc);

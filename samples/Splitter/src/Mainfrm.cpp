@@ -29,6 +29,84 @@ HWND CMainFrame::Create(HWND parent)
     return CDockFrame::Create(parent);
 }
 
+// Adjusts dockers when the window DPI changes.
+void CMainFrame::DPIScaleDockers()
+{
+    std::vector<CDocker*> v = GetAllDockers();
+    std::vector<CDocker*>::iterator it;
+    for (it = v.begin(); it != v.end(); ++it)
+    {
+        if ((*it)->IsWindow())
+        {
+            // Reset the docker size.
+            int size = (*it)->GetDockSize();
+            (*it)->SetDockSize(size);
+
+            // Notify the docker that the DPI has changed.
+            (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
+        }
+    }
+
+    RecalcDockLayout();
+}
+
+// Assigns the appropriately sized menu icons.
+void CMainFrame::DPIScaleMenuIcons()
+{
+    // Load the toolbar bitmap.
+    CBitmap toolbarImage(IDW_MAIN);
+
+    // Scale the bitmap to the menu item height.
+    int menuHeight = GetMenuIconHeight();
+    int scale = menuHeight / toolbarImage.GetSize().cy;
+    CBitmap scaledImage;
+    if (scale > 0)
+        scaledImage = ScaleUpBitmap(toolbarImage, scale);
+    else
+        scaledImage.LoadBitmap(IDB_TOOLBAR16);
+
+    // Create the image-list from the scaled image
+    CSize sz = scaledImage.GetSize();
+    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+    COLORREF mask = RGB(192, 192, 192);
+    m_menuImages.Add(scaledImage, mask);
+
+    // Assign the image-list to the menu items.
+    SetMenuImages(m_menuImages);
+}
+
+// Assigns the appropriately sized toolbar icons.
+void CMainFrame::DPIScaleToolBar()
+{
+    if (GetToolBar().IsWindow())
+    {
+        // Load the toolbar bitmap.
+        CBitmap toolbarImage(IDW_MAIN);
+
+        // Create the image-list
+        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
+        CSize sz = dpiImage.GetSize();
+        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        COLORREF mask = RGB(192, 192, 192);
+        m_normalImages.Add(dpiImage, mask);
+
+        // Assign the image-list to the toolbar.
+        GetToolBar().SetImageList(m_normalImages);
+        GetToolBar().SetDisableImageList(0);
+
+        // Adjust the toolbar band height.
+        if (GetReBar().IsWindow())
+        {
+            int band = GetReBar().GetBand(GetToolBar());
+            if (band >= 0)
+            {
+                CSize sizeToolBar = GetToolBar().GetMaxSize();
+                GetReBar().ResizeBand(band, sizeToolBar);
+            }
+        }
+    }
+}
+
 // Load the default arrangement of the window panes.
 void CMainFrame::LoadDefaultWindowPanes()
 {
@@ -90,6 +168,28 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     return FALSE;
 }
 
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Supress redraw to render the DPI changes smoothly.
+    SetRedraw(FALSE);
+
+    CDockFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleDockers();
+    DPIScaleMenuIcons();
+    DPIScaleToolBar();
+    RecalcDockLayout();
+    RecalcLayout();
+    
+    // Enable redraw and redraw the frame.
+    SetRedraw(TRUE);
+    RedrawWindow();
+    return 0;
+}
+
 // Called from the file exit menu command.
 BOOL CMainFrame::OnFileExit()
 {
@@ -103,6 +203,8 @@ void CMainFrame::OnInitialUpdate()
 {
     if (LoadDockRegistrySettings(GetRegistryKeyName()))
     {
+        DWORD style = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
+        SetDockStyle(style);
         m_pDockText = dynamic_cast<CDockText*>(GetDockFromID(ID_DOCK_TEXT));
         m_pDockTree = dynamic_cast<CDockTree*>(GetDockFromID(ID_DOCK_TREE));
         m_pDockList = dynamic_cast<CDockList*>(GetDockFromID(ID_DOCK_LIST));
@@ -118,6 +220,11 @@ void CMainFrame::OnInitialUpdate()
         // Load the default arrangement of the window panes.
         LoadDefaultWindowPanes();
     }
+
+    DPIScaleDockers();
+
+    // PreCreate initially set the window as invisible, so show it now.
+    ShowWindow(GetInitValues().showCmd);
 }
 
 // Hides or shows the ListView window pane.
@@ -155,6 +262,16 @@ BOOL CMainFrame::OnViewText()
     }
 
     return TRUE;
+}
+
+// Specify the CREATESTRUCT parameters before the window is created.
+void CMainFrame::PreCreate(CREATESTRUCT& cs)
+{
+    // Call base class to set defaults
+    CDockFrame::PreCreate(cs);
+
+    // Hide the window initially by removing the WS_VISIBLE style
+    cs.style &= ~WS_VISIBLE;
 }
 
 // Save the docking configuration in the registry.

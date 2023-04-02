@@ -32,6 +32,63 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
+// Assigns the appropriately sized menu icons.
+void CMainFrame::DPIScaleMenuIcons()
+{
+    // Load the toolbar bitmap.
+    CBitmap toolbarImage(IDW_MAIN);
+
+    // Scale the bitmap to the menu item height.
+    int menuHeight = GetMenuIconHeight();
+    int scale = menuHeight / toolbarImage.GetSize().cy;
+    CBitmap scaledImage;
+    if (scale > 0)
+        scaledImage = ScaleUpBitmap(toolbarImage, scale);
+    else
+        scaledImage.LoadBitmap(IDB_TOOLBAR16);
+
+    // Create the image-list from the scaled image
+    CSize sz = scaledImage.GetSize();
+    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+    COLORREF mask = RGB(192, 192, 192);
+    m_menuImages.Add(scaledImage, mask);
+
+    // Assign the image-list to the menu items.
+    SetMenuImages(m_menuImages);
+}
+
+// Assigns the appropriately sized toolbar icons.
+void CMainFrame::DPIScaleToolBar()
+{
+    if (GetToolBar().IsWindow())
+    {
+        // Load the toolbar bitmap.
+        CBitmap toolbarImage(IDW_MAIN);
+
+        // Create the image-list
+        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
+        CSize sz = dpiImage.GetSize();
+        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        COLORREF mask = RGB(192, 192, 192);
+        m_normalImages.Add(dpiImage, mask);
+
+        // Assign the image-list to the toolbar.
+        GetToolBar().SetImageList(m_normalImages);
+        GetToolBar().SetDisableImageList(0);
+
+        // Adjust the toolbar band height.
+        if (GetReBar().IsWindow())
+        {
+            int band = GetReBar().GetBand(GetToolBar());
+            if (band >= 0)
+            {
+                CSize sizeToolBar = GetToolBar().GetMaxSize();
+                GetReBar().ResizeBand(band, sizeToolBar);
+            }
+        }
+    }
+}
+
 // Called by OnFileOpen and in response to a UWM_DROPFILE message.
 void CMainFrame::LoadFile(LPCTSTR fileName)
 {
@@ -115,6 +172,19 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // call the base class function
     return CFrame::OnCreate(cs);
+}
+
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    CFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleMenuIcons();
+    DPIScaleToolBar();
+    RecalcLayout();
+    return 0;
 }
 
 // Called in response to the UWM_DROPFILE user defined message.
@@ -268,28 +338,28 @@ BOOL CMainFrame::OnFilePreview()
     {
         m_isToolbarShown = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
 
-        // Get the device contect of the default or currently chosen printer
+        // Get the device contect of the default or currently chosen printer.
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
-        // Create the preview window if required
+        // Create the preview window if required.
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
 
-        // Specify the source of the PrintPage function
+        // Specify the source of the PrintPage function.
         m_preview.SetSource(m_view);
 
-        // Set the preview's owner (for notification messages)
+        // Set the preview's owner for notification messages.
         m_preview.DoPrintPreview(*this);
 
         // Swap views
         SetView(m_preview);
 
-        // Hide the menu and toolbar
+        // Hide the menu and toolbar.
         ShowMenu(FALSE);
         ShowToolBar(FALSE);
 
-        // Update status
+        // Update status.
         CString status = _T("Printer: ") + printDlg.GetDeviceName();
         SetStatusText(status);
     }
@@ -373,6 +443,7 @@ LRESULT CMainFrame::OnPreviewClose()
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(m_isToolbarShown);
+    UpdateSettings();
 
     SetStatusText(LoadString(IDW_READY));
 

@@ -73,57 +73,112 @@ void CD2DView::DiscardDeviceResources()
     SafeRelease(&m_pCornflowerBlueBrush);
 }
 
+// Called when the window is created.
+int CD2DView::OnCreate(CREATESTRUCT&)
+{
+    // Set the window's icon
+    SetIconSmall(IDW_MAIN);
+    SetIconLarge(IDW_MAIN);
+
+    return 0;
+}
+
+// Called when the window is destroyed.
+void CD2DView::OnDestroy()
+{
+    // End the application.
+    PostQuitMessage(0);
+}
+
+// Called when the display resolution has changed.
+LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
+{
+
+    Invalidate();
+    return 0;
+}
+
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CD2DView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+{
+    LPRECT prc = (LPRECT)lparam;
+    SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+    return 0;
+}
+
+// Called when part of the window needs to be redrawn.
+LRESULT CD2DView::OnPaint(UINT, WPARAM, LPARAM)
+{
+    OnRender();
+    ValidateRect();
+
+    return 0;
+}
+
 // Perform the drawing.
 HRESULT CD2DView::OnRender()
 {
     HRESULT hr = S_OK;
 
     hr = CreateDeviceResources();
+//    float zoom = static_cast<float>(GetWindowDPI(*this)) / USER_DEFAULT_SCREEN_DPI;
+    float zoom = static_cast<float>(GetWindowDPI(*this)) / static_cast<float>(GetWindowDPI(0));
+//    float zoom = USER_DEFAULT_SCREEN_DPI / static_cast<float>(GetWindowDPI(*this));
+ //   float zoom = 1.0f;
     if (SUCCEEDED(hr))
     {
         m_pRenderTarget->BeginDraw();
         m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
         m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 
+        // Scale the render target to the DPI.
+        D2D1::Matrix3x2F scale = D2D1::Matrix3x2F::Scale(zoom, zoom);
+        m_pRenderTarget->SetTransform(scale);
+
         D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
-        int width = static_cast<int>(rtSize.width);
-        int height = static_cast<int>(rtSize.height);
+        float width = rtSize.width/zoom;
+        float height = rtSize.height/zoom;
 
         // Draw horizontal lines
-        for (int x = 0; x < width; x += 10)
+        for (float x = 0.0f; x < width; x += 10.0f)
         {
             m_pRenderTarget->DrawLine(
                 D2D1::Point2F(static_cast<FLOAT>(x), 0.0f),
-                D2D1::Point2F(static_cast<FLOAT>(x), rtSize.height),
+                D2D1::Point2F(static_cast<FLOAT>(x), height),
                 m_pLightSlateGrayBrush,
                 0.5f
             );
         }
 
         // Draw vertical lines
-        for (int y = 0; y < height; y += 10)
+        for (float y = 0.0f; y < height; y += 10.0f)
         {
             m_pRenderTarget->DrawLine(
                 D2D1::Point2F(0.0f, static_cast<FLOAT>(y)),
-                D2D1::Point2F(rtSize.width, static_cast<FLOAT>(y)),
+                D2D1::Point2F(width, static_cast<FLOAT>(y)),
                 m_pLightSlateGrayBrush,
                 0.5f
             );
         }
 
+        m_pRenderTarget->SetTransform(scale);
+
         // Draw two rectangles.
         D2D1_RECT_F rectangle1 = D2D1::RectF(
-            rtSize.width / 2 - 50.0f,
-            rtSize.height / 2 - 50.0f,
-            rtSize.width / 2 + 50.0f,
-            rtSize.height / 2 + 50.0f
+            rtSize.width / (zoom * 2.0f) - 40.0f,
+            rtSize.height / (zoom * 2.0f) - 40.0f,
+            rtSize.width / (zoom * 2.0f) + 40.0f,
+            rtSize.height / (zoom * 2.0f) + 40.0f
         );
 
         D2D1_RECT_F rectangle2 = D2D1::RectF(
-            rtSize.width / 2 - 100.0f,
-            rtSize.height / 2 - 100.0f,
-            rtSize.width / 2 + 100.0f,
-            rtSize.height / 2 + 100.0f
+            rtSize.width / (zoom * 2.0f) - 80.0f,
+            rtSize.height / (zoom * 2.0f) - 80.0f,
+            rtSize.width / (zoom * 2.0f) + 80.0f,
+            rtSize.height / (zoom * 2.0f) + 80.0f
         );
 
         // Draw a filled rectangle.
@@ -155,47 +210,6 @@ void CD2DView::OnResize(UINT width, UINT height)
     }
 }
 
-// Specify the initial window size.
-void CD2DView::PreCreate(CREATESTRUCT&cs)
-{
-    cs.cx = 640;
-    cs.cy = 480;
-}
-
-// Set the WNDCLASS parameters before the window is created.
-void CD2DView::PreRegisterClass(WNDCLASS& wc)
-{
-    wc.style = CS_HREDRAW | CS_VREDRAW;
-    wc.hCursor = ::LoadCursor(0, IDI_APPLICATION);
-    wc.lpszClassName = L"Direct2D";
-}
-
-// Called when the window is created.
-int CD2DView::OnCreate(CREATESTRUCT&)
-{
-    // Set the window's icon
-    SetIconSmall(IDW_MAIN);
-    SetIconLarge(IDW_MAIN);
-
-    return 0;
-}
-
-// Called when the window is destroyed.
-void CD2DView::OnDestroy()
-{
-    // End the application.
-    PostQuitMessage(0);
-}
-
-// Called when part of the window needs to be redrawn.
-LRESULT CD2DView::OnPaint(UINT, WPARAM, LPARAM)
-{
-    OnRender();
-    ValidateRect();
-
-    return 0;
-}
-
 // Called when the window is resized.
 LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lparam)
 {
@@ -206,11 +220,21 @@ LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lparam)
     return 0;
 }
 
-// Called when the display resolution has changed.
-LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
+// Specify the initial window size.
+void CD2DView::PreCreate(CREATESTRUCT&cs)
 {
-    Invalidate();
-    return 0;
+    cs.x = DPIScaleInt(80);                 // top x
+    cs.y = DPIScaleInt(80);                 // top y
+    cs.cx = DPIScaleInt(640);               // width
+    cs.cy = DPIScaleInt(480);               // height
+}
+
+// Set the WNDCLASS parameters before the window is created.
+void CD2DView::PreRegisterClass(WNDCLASS& wc)
+{
+    wc.style = CS_HREDRAW | CS_VREDRAW;
+    wc.hCursor = ::LoadCursor(0, IDI_APPLICATION);
+    wc.lpszClassName = L"Direct2D";
 }
 
 // Process the window messages.
@@ -221,6 +245,7 @@ LRESULT CD2DView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_DISPLAYCHANGE:  return OnDisplayChange(msg, wparam, lparam);
+        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
         case WM_SIZE:           return OnSize(msg, wparam, lparam);
         }
 
