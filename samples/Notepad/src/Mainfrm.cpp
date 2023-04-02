@@ -298,9 +298,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
 
-    // Create the PrintPreview dialog. It is initially hidden.
-    m_preview.Create(*this);
-
     // Get the name of the default or currently chosen printer
     CPrintDialog printDlg;
     if (printDlg.GetDefaults())
@@ -495,10 +492,14 @@ BOOL CMainFrame::OnFilePreview()
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
-        // Setup the print preview.
-        m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
+        // Create the preview window if required
+        if (!m_preview.IsWindow())
+            m_preview.Create(*this);
 
-        // Set the preview's owner (for messages), and number of pages.
+        // Specify the source of the PrintPage function.
+        m_preview.SetSource(m_richView);
+
+        // Set the preview's owner for notification messages, and number of pages.
         UINT maxPage = m_richView.CollatePages();
         m_preview.DoPrintPreview(*this, maxPage);
 
@@ -813,6 +814,7 @@ LRESULT CMainFrame::OnPreviewClose()
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(m_isToolbarShown);
+    UpdateSettings();
 
     // Restore focus to the window focused before DoPrintPreview was called.
     RestoreFocus();

@@ -223,7 +223,7 @@ BOOL CMainFrame::OnFilePreview()
         // Specify the source of the PrintPage function.
         m_preview.SetSource(m_view);
 
-        // Set the preview's owner (for messages).
+        // Set the preview's owner for notification messages.
         m_preview.DoPrintPreview(*this);
 
         // Swap views.
@@ -302,6 +302,7 @@ LRESULT CMainFrame::OnPreviewClose()
     // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != 0);
     ShowToolBar(m_isToolbarShown);
+    UpdateSettings();
 
     SetStatusText(LoadString(IDW_READY));
 
@@ -496,7 +497,7 @@ void CMainFrame::SerializeINI(BOOL isStoring)
         }
     }
 
-    catch (const CException& e)
+    catch (const CException&)
     {
         // Saved values are no longer valid. Use defaults.
         InitValues defaultValues;

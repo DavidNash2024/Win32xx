@@ -363,7 +363,7 @@ void CMainFrame::OnInitialUpdate()
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow(GetInitValues().showCmd);
-    RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
+    RedrawWindow();
 }
 
 // Updates menu items before they are displayed.

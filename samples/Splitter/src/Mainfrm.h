@@ -23,12 +23,17 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    void DPIScaleDockers();
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
 
 protected:
     // Virtual functions that override base class functions
     virtual CDocker* NewDockerFromID(int id);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
+    virtual void PreCreate(CREATESTRUCT& cs);
     virtual BOOL SaveRegistrySettings();
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
@@ -50,6 +55,9 @@ private:
     CDockText* m_pDockText;
     CDockTree* m_pDockTree;
     CDockList* m_pDockList;
+
+    CImageList m_normalImages;
+    CImageList m_menuImages;
 };
 
 

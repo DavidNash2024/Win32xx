@@ -33,6 +33,7 @@ class CViewText : public CWnd
 public:
     CViewText() {}
     virtual ~CViewText() {}
+    void SetDPIFont();
 
 protected:
     // Virtual functions that override base class functions
@@ -42,6 +43,8 @@ protected:
 private:
     CViewText(const CViewText&);                // Disable copy construction
     CViewText& operator = (const CViewText&);   // Disable assignment operator
+
+    CFont m_font;
 };
 
 
@@ -53,6 +56,7 @@ class CViewTree : public CTreeView
 public:
     CViewTree();
     virtual ~CViewTree();
+    void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions
@@ -75,6 +79,8 @@ public:
     virtual ~CViewList();
     void InsertItems();
     void SetColumns();
+    void SetDPIColumnWidths();
+    void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions
