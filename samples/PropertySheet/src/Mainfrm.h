@@ -45,7 +45,6 @@ private:
     // Member variables
     CView m_view;
     CMyPropertySheet m_modelessPS;
-    CImageList m_normalImages;
     CImageList m_menuImages;
 };
 

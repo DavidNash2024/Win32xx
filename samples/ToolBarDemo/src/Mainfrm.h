@@ -19,12 +19,16 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
+
 protected:
     // Virtual functions that override base class functions
     virtual LRESULT OnBeginAdjust(LPNMTOOLBAR pNMTB);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnViewToolBar();
     virtual void    SetupMenuIcons();
@@ -59,6 +63,7 @@ private:
     CToolBar m_cards;
     CImageList m_arrowImages;
     CImageList m_cardImages;
+    CImageList m_menuImages;
     std::vector<TBBUTTON>   m_defaultButtons;
     std::vector<TBBUTTON>   m_resetButtons;
     bool    m_useBigIcons;

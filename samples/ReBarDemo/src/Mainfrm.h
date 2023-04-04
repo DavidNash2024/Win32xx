@@ -53,7 +53,6 @@ private:
     CToolBar m_toolBar;
     CImageList m_toolBarImages;
     CView m_view;
-    CImageList m_normalImages;
     CImageList m_menuImages;
 };
 

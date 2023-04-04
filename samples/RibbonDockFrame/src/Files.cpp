@@ -44,12 +44,7 @@ void CViewFiles::InsertItems()
 void CViewFiles::OnAttach()
 {
     // Set the image lists
-    int scale = DPIScaleInt(1);
-    m_imlSmall.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap bm(IDB_FILEVIEW);
-    bm = DPIScaleUpBitmap(bm);
-    m_imlSmall.Add(bm, RGB(255, 0, 255));
-    SetImageList(m_imlSmall, LVSIL_SMALL);
+    SetDPIImages();
 
     // Set the report style
     DWORD dwStyle = GetStyle();
@@ -72,6 +67,16 @@ LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called in response to a UWM_DPICHANGED message which is sent to child windows
+// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
+// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CViewFiles::OnUserDPIChanged(UINT, WPARAM, LPARAM)
+{
+    SetDPIImages();
+    SetDPIColumnWidths();
+    return 0;
+}
+
 void CViewFiles::SetColumns()
 {
     // empty the list
@@ -89,6 +94,28 @@ void CViewFiles::SetColumns()
         column.pszText = string[i];
         InsertColumn(i, column);
     }
+
+    SetDPIColumnWidths();
+}
+
+// Adjusts the listview column widths in response to window DPI changes.
+void CViewFiles::SetDPIColumnWidths()
+{
+    SetColumnWidth(0, DPIScaleInt(120));
+    SetColumnWidth(1, DPIScaleInt(50));
+    SetColumnWidth(2, DPIScaleInt(100));
+}
+
+// Adjusts the listview image sizes widths in response to window DPI changes.
+void CViewFiles::SetDPIImages()
+{
+    // Set the image lists
+    CBitmap bmImage(IDB_FILEVIEW);
+    bmImage = DPIScaleUpBitmap(bmImage);
+    int scale = bmImage.GetSize().cy / 15;
+    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    m_smallImages.Add(bmImage, RGB(255, 0, 255));
+    SetImageList(m_smallImages, LVSIL_SMALL);
 }
 
 LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -98,6 +125,7 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        case UWM_DPICHANGED:        return OnUserDPIChanged(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);
@@ -131,5 +159,15 @@ CDockFiles::CDockFiles()
 {
     SetView(m_files);
     SetBarWidth(DPIScaleInt(8));
+}
+
+// Called in response to a UWM_DPICHANGED message which is sent to child windows
+// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
+// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CDockFiles::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Set the width of the splitter bar.
+    SetBarWidth(DPIScaleInt(8));
+    return CDocker::OnUserDPIChanged(msg, wparam, lparam);
 }
 

@@ -62,7 +62,6 @@ private:
     CDarkPreview<CView> m_preview;
     CDarkAbout m_helpDialog;
     bool m_isToolbarShown;
-    CImageList m_normalImages;
     CImageList m_menuImages;
 };
 

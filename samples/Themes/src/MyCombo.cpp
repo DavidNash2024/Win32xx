@@ -18,14 +18,6 @@ CMyCombo::~CMyCombo()
 {
 }
 
-void CMyCombo::PreCreate(CREATESTRUCT& cs)
-{
-    cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
-
-    // Set the height of the combobox in order to see a dropdown list.
-    cs.cy = DPIScaleInt(100);
-}
-
 BOOL CMyCombo::AddItems()
 {
     typedef struct

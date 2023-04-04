@@ -174,7 +174,7 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
 //  - The DPI of the monitor hosting the window changes.
 LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Supress redraw to render the DPI changes smoothly.
+    // Suppress redraw to render the DPI changes smoothly.
     SetRedraw(FALSE);
 
     CDockFrame::OnDPIChanged(msg, wparam, lparam);
@@ -183,7 +183,7 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     DPIScaleToolBar();
     RecalcDockLayout();
     RecalcLayout();
-    
+
     // Enable redraw and redraw the frame.
     SetRedraw(TRUE);
     RedrawWindow();

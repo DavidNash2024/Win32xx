@@ -140,9 +140,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
-    // Create the PrintPreview dialog. It is initially hidden.
-    m_preview.Create(*this);
-
     // call the base class function
     return CDockFrame::OnCreate(cs);
 }
@@ -229,6 +226,10 @@ BOOL CMainFrame::OnFilePreview()
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
+        // Create the preview window if required.
+        if (!m_preview.IsWindow())
+            m_preview.Create(*this);
+
         // Setup the print preview.
         m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
 
@@ -310,6 +311,7 @@ BOOL CMainFrame::OnPreviewClose()
 {
     // Swap the view
     SetView(m_richView);
+    UpdateSettings();
 
     return TRUE;
 }

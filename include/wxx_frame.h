@@ -2089,13 +2089,15 @@ namespace Win32xx
     {
         ResetMenuMetrics();
 
-        // Use the suggested new window size.
+        // Resize the frame, using the suggested new window size.
         RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
         assert(pWindowRect);
         T::SetWindowPos(0, *pWindowRect, SWP_NOZORDER | SWP_NOACTIVATE);
 
+        // Update the rebar, menubar and statusbar.
         UpdateSettings();
 
+        // Notify the view that the DPI has changed.
         GetView().SendMessage(UWM_DPICHANGED, wparam, lparam);
 
         RecalcLayout();
@@ -3642,7 +3644,8 @@ namespace Win32xx
         T::DrawMenuBar();
     }
 
-    // Updates the settings for the rebar, menubar and status bar.
+    // Updates the settings for the rebar, menubar and status bar to
+    // account for changes in the frame window's DPI.
     template <class T>
     inline void CFrameT<T>::UpdateSettings()
     {

@@ -81,11 +81,10 @@ private:
     CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
     CString m_pathName;
+    CImageList m_menuImages;
     bool m_isToolbarShown;
     bool m_isWrapped;
     HWND m_oldFocus;
-    CImageList m_normalImages;
-    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

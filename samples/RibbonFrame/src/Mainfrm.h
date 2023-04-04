@@ -35,6 +35,7 @@ private:
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
     // Command handlers
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnDropFile(WPARAM wparam);
     BOOL OnFileExit();
     BOOL OnFileNew();

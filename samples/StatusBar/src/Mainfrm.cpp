@@ -64,30 +64,8 @@ void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
     {
-        // Load the toolbar bitmap.
-        CBitmap toolbarImage(IDW_MAIN);
-
-        // Create the image-list
-        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
-        CSize sz = dpiImage.GetSize();
-        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-        COLORREF mask = RGB(192, 192, 192);
-        m_normalImages.Add(dpiImage, mask);
-
-        // Assign the image-list to the toolbar.
-        GetToolBar().SetImageList(m_normalImages);
-        GetToolBar().SetDisableImageList(0);
-
-        // Adjust the toolbar band height.
-        if (GetReBar().IsWindow())
-        {
-            int band = GetReBar().GetBand(GetToolBar());
-            if (band >= 0)
-            {
-                CSize sizeToolBar = GetToolBar().GetMaxSize();
-                GetReBar().ResizeBand(band, sizeToolBar);
-            }
-        }
+        // Reset the toolbar images.
+        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
     }
 }
 
@@ -261,37 +239,6 @@ void CMainFrame::OnTimer()
         m_progressBar.SetPos(0);
 }
 
-// Specifies the images used on menu items.
-void CMainFrame::SetupMenuIcons()
-{
-    // Use the MenuIcons bitmap for images in menu items.
-    std::vector<UINT> data = GetToolBarData();
-    if (GetMenuIconHeight() >= 24)
-        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
-    else
-        AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
-}
-
-// Configure the toolbar.
-void CMainFrame::SetupToolBar()
-{
-    // Set the Resource IDs for the toolbar buttons
-    AddToolBarButton( IDM_FILE_NEW   );
-    AddToolBarButton( IDM_FILE_OPEN, FALSE);    // disabled button
-    AddToolBarButton( IDM_FILE_SAVE, FALSE);    // disabled button
-
-    AddToolBarButton( 0 );                      // Separator
-    AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
-    AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
-    AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
-
-    AddToolBarButton( 0 );                      // Separator
-    AddToolBarButton( IDM_FILE_PRINT, FALSE);   // disabled button
-
-    AddToolBarButton( 0 );                      // Separator
-    AddToolBarButton( IDM_HELP_ABOUT );
-}
-
 // Updates the status indicators.
 void CMainFrame::SetStatusIndicators()
 {
@@ -377,6 +324,37 @@ void CMainFrame::SetStatusParts()
         // Assign the colored text for part 4.
         GetStatusBar().SetPartText(4, m_colored, SBT_OWNERDRAW);
     }
+}
+
+// Specifies the images used on menu items.
+void CMainFrame::SetupMenuIcons()
+{
+    // Use the MenuIcons bitmap for images in menu items.
+    std::vector<UINT> data = GetToolBarData();
+    if (GetMenuIconHeight() >= 24)
+        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+    else
+        AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+}
+
+// Configure the toolbar.
+void CMainFrame::SetupToolBar()
+{
+    // Set the Resource IDs for the toolbar buttons
+    AddToolBarButton( IDM_FILE_NEW   );
+    AddToolBarButton( IDM_FILE_OPEN, FALSE);    // disabled button
+    AddToolBarButton( IDM_FILE_SAVE, FALSE);    // disabled button
+
+    AddToolBarButton( 0 );                      // Separator
+    AddToolBarButton( IDM_EDIT_CUT,   FALSE );  // disabled button
+    AddToolBarButton( IDM_EDIT_COPY,  FALSE );  // disabled button
+    AddToolBarButton( IDM_EDIT_PASTE, FALSE );  // disabled button
+
+    AddToolBarButton( 0 );                      // Separator
+    AddToolBarButton( IDM_FILE_PRINT, FALSE);   // disabled button
+
+    AddToolBarButton( 0 );                      // Separator
+    AddToolBarButton( IDM_HELP_ABOUT );
 }
 
 // Process the frame's window messages.

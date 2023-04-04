@@ -57,7 +57,6 @@ private:
     CString m_num;
     CString m_ovr;
     CString m_scrl;
-    CImageList m_normalImages;
     CImageList m_menuImages;
 };
 
