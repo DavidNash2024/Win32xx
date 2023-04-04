@@ -63,7 +63,6 @@ private:
     CView       m_view;
     CHelp       m_appHelp;  // Help object for context help and help about dialog
     BOOL        m_isChoosing;
-    CImageList  m_normalImages;
     CImageList  m_menuImages;
 };
 

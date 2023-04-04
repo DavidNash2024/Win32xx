@@ -166,6 +166,17 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     return FALSE;
 }
 
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    CFrame::OnDPIChanged(msg, wparam, lparam);
+    RecalcLayout();
+    return 0;
+}
+
 // OnDropFile called when a file is dragged and dropped on the window.
 LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 {

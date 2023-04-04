@@ -27,24 +27,32 @@ CMainFrame::~CMainFrame()
 void CMainFrame::AddCombo()
 {
     // Place the ComboBoxEx control over the 'File Save' toolbar button.
-    int comboWidth = DPIScaleInt(100);
+    int comboSize = DPIScaleInt(100);
     CToolBar& tb = GetToolBar();
     if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 
     // Convert the button to a separator and set its width.
     tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
-    tb.SetButtonWidth(IDM_FILE_SAVE, comboWidth);
+    tb.SetButtonWidth(IDM_FILE_SAVE, comboSize);
 
     // Determine the size and position of the ComboBox.
     int index = tb.CommandToIndex(IDM_FILE_SAVE);
-    CRect rc = tb.GetItemRect(index);
+    CRect rect = tb.GetItemRect(index);
 
-    // Create and position the ComboboxEx window.
-    m_comboBoxEx.Create(tb);
-    m_comboBoxEx.SetWindowPos(0, rc, SWP_NOACTIVATE);
+    // A ComboBoxEx with CBS_DROPDOWN requires extra height when created.
+    rect.bottom = comboSize;
+
+    // Recreate and position the ComboboxEx window.
+    int selected = -1;
+    if (m_comboBoxEx.IsWindow())
+        selected = m_comboBoxEx.GetCurSel();
+    m_comboBoxEx.Destroy();
+    DWORD style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
+    m_comboBoxEx.CreateEx(0, WC_COMBOBOXEX, NULL, style, rect, tb, 0);
+    m_comboBoxEx.SetImages(3, IDB_STATUS);
+    m_comboBoxEx.SetWindowPos(0, rect, SWP_NOACTIVATE);
     m_comboBoxEx.AddItems();
-
-    RecalcLayout();
+    m_comboBoxEx.SetCurSel(selected);
 }
 
 // Configures the theme colors based on the user's menu selection.
@@ -141,6 +149,47 @@ HWND CMainFrame::Create(HWND parent)
     LoadRegistrySettings(_T("Win32++\\Themes Sample"));
 
     return CFrame::Create(parent);
+}
+
+// Assigns the appropriately sized menu icons.
+void CMainFrame::DPIScaleMenuIcons()
+{
+    // Load the toolbar bitmap.
+    CBitmap toolbarImage(IDW_MAIN);
+
+    // Scale the bitmap to the menu item height.
+    int menuHeight = GetMenuIconHeight();
+    int scale = menuHeight / toolbarImage.GetSize().cy;
+    CBitmap scaledImage;
+    if (scale > 0)
+        scaledImage = ScaleUpBitmap(toolbarImage, scale);
+    else
+        scaledImage.LoadBitmap(IDB_TOOLBAR_SML);
+
+    // Create the image-list from the scaled image
+    CSize sz = scaledImage.GetSize();
+    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+    COLORREF mask = RGB(192, 192, 192);
+    m_menuImages.Add(scaledImage, mask);
+
+    // Assign the image-list to the menu items.
+    SetMenuImages(m_menuImages);
+}
+
+// Assigns the appropriately sized toolbar icons.
+void CMainFrame::DPIScaleToolBar()
+{
+    if (GetToolBar().IsWindow())
+    {
+        // Reset the toolbar images.
+        SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+        SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255, 0, 255));
+        SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255, 0, 255));
+
+        AddCombo();
+        if (GetFocus() == GetToolBar())
+            ::SetFocus(0);
+    }
 }
 
 // Loads the application's settings from the registry when the application starts.
@@ -328,6 +377,19 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     else
         MessageBox(_T("Some Theme features are not supported on this Operating System"), _T("Warning"), MB_ICONWARNING);
 
+    return 0;
+}
+
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    CFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleMenuIcons();
+    DPIScaleToolBar();
+    RecalcLayout();
     return 0;
 }
 

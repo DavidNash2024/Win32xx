@@ -176,18 +176,8 @@ void CContainClasses::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
     {
-        // Load the toolbar bitmap.
-        CBitmap toolbarImage(IDW_MAIN);
-
-        // Create the image-list
-        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
-        CSize sz = dpiImage.GetSize();
-        m_toolbarImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-        COLORREF mask = RGB(192, 192, 192);
-        m_toolbarImages.Add(dpiImage, mask);
-
-        // Assign the image-list to the toolbar.
-        GetToolBar().SetImageList(m_toolbarImages);
+        // Reset the toolbar images.
+        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
 
         // Recreate the combo box.
         AddCombo();

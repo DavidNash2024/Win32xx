@@ -58,7 +58,6 @@ private:
     CView m_view;
     CPrintPreview<CView> m_preview;
     bool m_isToolbarShown;
-    CImageList m_normalImages;
     CImageList m_menuImages;
 };
 

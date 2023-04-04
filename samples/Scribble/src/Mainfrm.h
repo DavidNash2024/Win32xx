@@ -55,9 +55,8 @@ private:
     CView m_view;
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
-    bool m_isToolbarShown;
-    CImageList m_normalImages;
     CImageList m_menuImages;
+    bool m_isToolbarShown;
 };
 
 #endif //MAINFRM_H

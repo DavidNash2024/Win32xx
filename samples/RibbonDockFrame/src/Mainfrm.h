@@ -20,6 +20,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+    void DPIScaleDockers();
 
 protected:
     // Virtual functions that override base class functions
@@ -27,9 +28,10 @@ protected:
     virtual STDMETHODIMP OnViewChanged(UINT32, UI_VIEWTYPE, IUnknown*, UI_VIEWVERB, INT32);
     virtual STDMETHODIMP UpdateProperty(UINT32, __in REFPROPERTYKEY, __in_opt  const PROPVARIANT*, __out PROPVARIANT*);
 
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnInitialUpdate();
-    virtual void SetupToolBar();
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnInitialUpdate();
+    virtual void    SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

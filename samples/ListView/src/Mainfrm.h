@@ -41,7 +41,6 @@ private:
 
     // Member variables.
     CView m_listView;
-    CImageList m_normalImages;
     CImageList m_menuImages;
 };
 

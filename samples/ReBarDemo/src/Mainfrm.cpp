@@ -83,30 +83,8 @@ void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
     {
-        // Load the toolbar bitmap.
-        CBitmap toolbarImage(IDW_MAIN);
-
-        // Create the image-list
-        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
-        CSize sz = dpiImage.GetSize();
-        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-        COLORREF mask = RGB(192, 192, 192);
-        m_normalImages.Add(dpiImage, mask);
-
-        // Assign the image-list to the toolbar.
-        GetToolBar().SetImageList(m_normalImages);
-        GetToolBar().SetDisableImageList(0);
-
-        // Adjust the toolbar band height.
-        if (GetReBar().IsWindow())
-        {
-            int band = GetReBar().GetBand(GetToolBar());
-            if (band >= 0)
-            {
-                CSize sizeToolBar = GetToolBar().GetMaxSize();
-                GetReBar().ResizeBand(band, sizeToolBar);
-            }
-        }
+        // Reset the toolbar images.
+        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
     }
 }
 
@@ -142,50 +120,6 @@ void CMainFrame::OnBottom()
     dwStyle = m_reBar.GetStyle();
     dwStyle &= ~(CCS_VERT);
     dwStyle |= CCS_BOTTOM;
-    m_reBar.SetStyle(dwStyle);
-    RecalcLayout();
-}
-
-// Place the rebar on the left of the view.
-void CMainFrame::OnLeft()
-{
-    DWORD dwStyle = m_toolBar.GetStyle();
-    dwStyle &= ~(CCS_BOTTOM);
-    dwStyle |= CCS_LEFT;
-    SetWrapState(&m_toolBar, TRUE);
-    m_toolBar.SetStyle(dwStyle);
-
-    dwStyle = m_reBar.GetStyle();
-    dwStyle &= ~(CCS_BOTTOM);
-    dwStyle |= CCS_LEFT;
-    m_reBar.SetStyle(dwStyle);
-    RecalcLayout();
-}
-
-// Place the rebar on the right of the view.
-void CMainFrame::OnRight()
-{
-    DWORD dwStyle = m_toolBar.GetStyle();
-    dwStyle |= CCS_RIGHT;
-    SetWrapState(&m_toolBar, TRUE);
-    m_toolBar.SetStyle(dwStyle);
-
-    dwStyle = m_reBar.GetStyle();
-    dwStyle |= CCS_RIGHT;
-    m_reBar.SetStyle(dwStyle);
-    RecalcLayout();
-}
-
-// Place the rebar at top of the view.
-void CMainFrame::OnTop()
-{
-    DWORD dwStyle = m_toolBar.GetStyle();
-    dwStyle &= ~(CCS_VERT | CCS_BOTTOM);
-    SetWrapState(&m_toolBar, FALSE);
-    m_toolBar.SetStyle(dwStyle);
-
-    dwStyle = m_reBar.GetStyle();
-    dwStyle &= ~(CCS_VERT | CCS_BOTTOM);
     m_reBar.SetStyle(dwStyle);
     RecalcLayout();
 }
@@ -313,6 +247,50 @@ void CMainFrame::OnInitialUpdate()
     // Place any additional startup code here.
 
     TRACE("Frame created\n");
+}
+
+// Place the rebar on the left of the view.
+void CMainFrame::OnLeft()
+{
+    DWORD dwStyle = m_toolBar.GetStyle();
+    dwStyle &= ~(CCS_BOTTOM);
+    dwStyle |= CCS_LEFT;
+    SetWrapState(&m_toolBar, TRUE);
+    m_toolBar.SetStyle(dwStyle);
+
+    dwStyle = m_reBar.GetStyle();
+    dwStyle &= ~(CCS_BOTTOM);
+    dwStyle |= CCS_LEFT;
+    m_reBar.SetStyle(dwStyle);
+    RecalcLayout();
+}
+
+// Place the rebar on the right of the view.
+void CMainFrame::OnRight()
+{
+    DWORD dwStyle = m_toolBar.GetStyle();
+    dwStyle |= CCS_RIGHT;
+    SetWrapState(&m_toolBar, TRUE);
+    m_toolBar.SetStyle(dwStyle);
+
+    dwStyle = m_reBar.GetStyle();
+    dwStyle |= CCS_RIGHT;
+    m_reBar.SetStyle(dwStyle);
+    RecalcLayout();
+}
+
+// Place the rebar at top of the view.
+void CMainFrame::OnTop()
+{
+    DWORD dwStyle = m_toolBar.GetStyle();
+    dwStyle &= ~(CCS_VERT | CCS_BOTTOM);
+    SetWrapState(&m_toolBar, FALSE);
+    m_toolBar.SetStyle(dwStyle);
+
+    dwStyle = m_reBar.GetStyle();
+    dwStyle &= ~(CCS_VERT | CCS_BOTTOM);
+    m_reBar.SetStyle(dwStyle);
+    RecalcLayout();
 }
 
 // Override CFrame::RecalcLayout to add the positioning of our rebar.

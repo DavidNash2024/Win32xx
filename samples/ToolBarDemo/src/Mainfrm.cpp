@@ -33,6 +33,53 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
+// Assigns the appropriately sized menu icons.
+void CMainFrame::DPIScaleMenuIcons()
+{
+    // Load the toolbar bitmap.
+    CBitmap toolbarImage(IDW_MAIN);
+
+    // Scale the bitmap to the menu item height.
+    int menuHeight = GetMenuIconHeight();
+    int scale = menuHeight / toolbarImage.GetSize().cy;
+    CBitmap scaledImage;
+    if (scale > 0)
+        scaledImage = ScaleUpBitmap(toolbarImage, scale);
+    else
+        scaledImage.LoadBitmap(IDB_SMALL);
+
+    // Create the image-list from the scaled image
+    CSize sz = scaledImage.GetSize();
+    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+    COLORREF mask = RGB(192, 192, 192);
+    m_menuImages.Add(scaledImage, mask);
+
+    // Assign the image-list to the menu items.
+    SetMenuImages(m_menuImages);
+}
+
+// Assigns the appropriately sized toolbar icons.
+void CMainFrame::DPIScaleToolBar()
+{
+    if (GetToolBar().IsWindow())
+    {
+        if (m_useBigIcons)
+        {
+            // Set Large Images. 3 Imagelists - Normal, Hot and Disabled
+            SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_HOT, IDB_DISABLED);
+            SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255, 0, 255));
+            SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255, 0, 255));
+        }
+        else
+        {
+            // Set Small icons
+            SetToolBarImages(RGB(192, 192, 192), IDB_SMALL, 0, 0);
+            SetTBImageList(m_arrows, m_arrowImages, IDB_SMALLARROWS, RGB(255, 0, 255));
+            SetTBImageList(m_cards, m_cardImages, IDB_SMALLCARDS, RGB(255, 0, 255));
+        }
+    }
+}
+
 // Called when the user has begun customizing a toolbar. Here we save
 // a copy of the ToolBar layout so it can be restored when the user
 // selects the reset button.
@@ -110,6 +157,20 @@ LRESULT CMainFrame::OnCustHelp(LPNMHDR)
 {
     MessageBox(_T("Help Button Pressed"), _T("Help"), MB_ICONINFORMATION | MB_OK);
 
+    return 0;
+}
+
+
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    CFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleMenuIcons();
+    DPIScaleToolBar();
+    RecalcLayout();
     return 0;
 }
 

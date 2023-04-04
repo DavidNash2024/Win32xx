@@ -63,30 +63,8 @@ void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
     {
-        // Load the toolbar bitmap.
-        CBitmap toolbarImage(IDW_MAIN);
-
-        // Create the image-list
-        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
-        CSize sz = dpiImage.GetSize();
-        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-        COLORREF mask = RGB(192, 192, 192);
-        m_normalImages.Add(dpiImage, mask);
-
-        // Assign the image-list to the toolbar.
-        GetToolBar().SetImageList(m_normalImages);
-        GetToolBar().SetDisableImageList(0);
-
-        // Adjust the toolbar band height.
-        if (GetReBar().IsWindow())
-        {
-            int band = GetReBar().GetBand(GetToolBar());
-            if (band >= 0)
-            {
-                CSize sizeToolBar = GetToolBar().GetMaxSize();
-                GetReBar().ResizeBand(band, sizeToolBar);
-            }
-        }
+        // Reset the toolbar images.
+        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
     }
 }
 
@@ -97,49 +75,6 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
     GetDoc().LoadSettings(GetRegistryKeyName().c_str());
 
     return TRUE;
-}
-
-// Called when the effective dots per inch (dpi) for a window has changed.
-// This occurs when:
-//  - The window is moved to a new monitor that has a different DPI.
-//  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    CFrame::OnDPIChanged(msg, wparam, lparam);
-    DPIScaleMenuIcons();
-    DPIScaleToolBar();
-    RecalcLayout();
-
-    return 0;
-}
-
-// Close the frame window to end the application.
-BOOL CMainFrame::OnFileExit()
-{
-    Close();
-    return TRUE;
-}
-
-// Update the check state of the various menu items
-void CMainFrame::OnMenuUpdate(UINT id)
-{
-    switch (id)
-    {
-    case ID_CHECK_A:
-        OnUpdateCheckA(id);
-        break;
-    case ID_CHECK_B:
-        OnUpdateCheckB(id);
-        break;
-    case ID_CHECK_C:
-        OnUpdateCheckC(id);
-        break;
-    }
-
-    if ((id >= ID_RADIO_A) && (id <= ID_RADIO_C))
-        OnUpdateRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
-
-    CFrame::OnMenuUpdate(id);
 }
 
 // Respond to the toolbar and menu.
@@ -197,11 +132,54 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return CFrame::OnCreate(cs);
 }
 
+// Called when the effective dots per inch (dpi) for a window has changed.
+// This occurs when:
+//  - The window is moved to a new monitor that has a different DPI.
+//  - The DPI of the monitor hosting the window changes.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    CFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleMenuIcons();
+    DPIScaleToolBar();
+    RecalcLayout();
+
+    return 0;
+}
+
 // Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
     // Place any additional startup code here.
+}
+
+// Close the frame window to end the application.
+BOOL CMainFrame::OnFileExit()
+{
+    Close();
+    return TRUE;
+}
+
+// Update the check state of the various menu items
+void CMainFrame::OnMenuUpdate(UINT id)
+{
+    switch (id)
+    {
+    case ID_CHECK_A:
+        OnUpdateCheckA(id);
+        break;
+    case ID_CHECK_B:
+        OnUpdateCheckB(id);
+        break;
+    case ID_CHECK_C:
+        OnUpdateCheckC(id);
+        break;
+    }
+
+    if ((id >= ID_RADIO_A) && (id <= ID_RADIO_C))
+        OnUpdateRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
+
+    CFrame::OnMenuUpdate(id);
 }
 
 // Updates the Check A menu item.
@@ -268,8 +246,6 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_PRINT, FALSE);
     AddToolBarButton( 0 );        // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
-
-    DPIScaleToolBar();
 }
 
 // Process the frame's window messages.

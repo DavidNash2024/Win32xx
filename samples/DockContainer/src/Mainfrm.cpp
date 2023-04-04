@@ -53,9 +53,6 @@ void CMainFrame::DPIScaleDockers()
 
             // Notify the docker that the DPI has changed.
             (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
-
-            // Adjust the dock caption height
-        //    (*it)->UpdateCaptionHeight();
         }
     }
 
@@ -92,29 +89,8 @@ void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
     {
-        // Load the toolbar bitmap.
-        CBitmap toolbarImage(IDW_MAIN);
-
-        // Create the image-list
-        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
-        CSize sz = dpiImage.GetSize();
-        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-        COLORREF mask = RGB(192, 192, 192);
-        m_normalImages.Add(dpiImage, mask);
-
-        // Assign the image-list to the toolbar.
-        GetToolBar().SetImageList(m_normalImages);
-
-        // Adjust the toolbar band height.
-        if (GetReBar().IsWindow())
-        {
-            int band = GetReBar().GetBand(GetToolBar());
-            if (band >= 0)
-            {
-                CSize sizeToolBar = GetToolBar().GetMaxSize();
-                GetReBar().ResizeBand(band, sizeToolBar);
-            }
-        }
+        // Reset the toolbar images.
+        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
     }
 }
 
@@ -246,7 +222,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // Replaces the current docking arrangement with the default.
 BOOL CMainFrame::OnDockDefault()
 {
-    // Supress redraw to render the docking changes smoothly.
+    // Suppress redraw to render the docking changes smoothly.
     SetRedraw(FALSE);
 
     CloseAllDockers();
@@ -266,7 +242,7 @@ BOOL CMainFrame::OnDockDefault()
 //  - The DPI of the monitor hosting the window changes.
 LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Supress redraw to render the DPI changes smoothly.
+    // Suppress redraw to render the DPI changes smoothly.
     SetRedraw(FALSE);
 
     CDockFrame::OnDPIChanged(msg, wparam, lparam);

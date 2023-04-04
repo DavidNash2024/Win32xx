@@ -21,19 +21,23 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
+
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT id);
+    virtual BOOL    LoadRegistrySettings(LPCTSTR keyName);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnInitialUpdate();
+    virtual void    OnMenuUpdate(UINT id);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnSysColorChange(UINT, WPARAM, LPARAM);
-    virtual BOOL SaveRegistrySettings();
-    virtual void SetupMenuIcons();
-    virtual void SetupToolBar();
-    virtual void SetTheme();
+    virtual BOOL    SaveRegistrySettings();
+    virtual void    SetupMenuIcons();
+    virtual void    SetupToolBar();
+    virtual void    SetTheme();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
@@ -72,6 +76,7 @@ private:
     std::vector<UINT> m_bandSizes;
     CImageList m_arrowImages;
     CImageList m_cardImages;
+    CImageList m_menuImages;
 
     DWORD m_color;
     bool m_useThemes;

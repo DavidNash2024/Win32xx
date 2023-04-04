@@ -50,7 +50,6 @@ private:
 
     // Member variables
     CFormView m_sdiView;
-    CImageList m_normalImages;
     CImageList m_menuImages;
 };
 

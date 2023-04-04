@@ -15,6 +15,8 @@ public:
     CView();
     virtual ~CView(){}
 
+    void DPIScaleToolBar();
+
 protected:
     // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
@@ -32,6 +34,10 @@ private:
 
     void RecalcLayout();
     void SetWrapState(bool isWrapped);
+
+    // MessageHandlers
+    LRESULT OnSize(UINT, WPARAM, LPARAM);
+    LRESULT OnUserDPIChanged(UINT, WPARAM, LPARAM);
 
     // Command handlers
     BOOL OnBottom();

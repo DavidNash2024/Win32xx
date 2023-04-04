@@ -172,30 +172,8 @@ void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
     {
-        // Load the toolbar bitmap.
-        CBitmap toolbarImage(IDB_TOOLBAR24);
-
-        // Create the image-list
-        CBitmap dpiImage = DPIScaleUpBitmap(toolbarImage);
-        CSize sz = dpiImage.GetSize();
-        m_normalImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-        COLORREF mask = RGB(255, 0, 255);
-        m_normalImages.Add(dpiImage, mask);
-
-        // Assign the image-list to the toolbar.
-        GetToolBar().SetImageList(m_normalImages);
-        GetToolBar().SetDisableImageList(0);
-
-        // Adjust the toolbar band height.
-        if (GetReBar().IsWindow())
-        {
-            int band = GetReBar().GetBand(GetToolBar());
-            if (band >= 0)
-            {
-                CSize sizeToolBar = GetToolBar().GetMaxSize();
-                GetReBar().ResizeBand(band, sizeToolBar);
-            }
-        }
+        // Reset the toolbar images.
+        SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24, 0, 0);
     }
 }
 
@@ -475,8 +453,6 @@ void CMainFrame::SetupToolBar()
 
     // Set the toolbar image list.
     SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24);
-
-    DPIScaleToolBar();
 }
 
 // Called for a System Command such as SC_CLOSE, SC_CONTEXTHELP etc.
