@@ -137,6 +137,7 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 }
 
 // Assigns the appropriately sized menu icons.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -168,6 +169,7 @@ void CMainFrame::DPIScaleMenuIcons()
 }
 
 // Assigns the appropriately sized toolbar icons.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())

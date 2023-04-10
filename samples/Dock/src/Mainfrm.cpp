@@ -42,6 +42,7 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Adjusts the dockers in response to window DPI changes.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleDockers()
 {
     std::vector<CDocker*> v = GetAllDockers();
@@ -63,6 +64,7 @@ void CMainFrame::DPIScaleDockers()
 }
 
 // Assigns the appropriately sized menu icons.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -88,6 +90,7 @@ void CMainFrame::DPIScaleMenuIcons()
 }
 
 // Assigns the appropriately sized toolbar icons.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
@@ -408,6 +411,9 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+
+    // Update the menu icons
+    DPIScaleMenuIcons();
 }
 
 // Sets the Resource IDs for the toolbar buttons

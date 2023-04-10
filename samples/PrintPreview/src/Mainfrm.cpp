@@ -40,7 +40,7 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Assigns the appropriately sized menu icons.
-// Required for PerMonitorAware.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -66,7 +66,7 @@ void CMainFrame::DPIScaleMenuIcons()
 }
 
 // Assigns the appropriately sized toolbar icons.
-// Required for PerMonitorAware.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
@@ -707,6 +707,9 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_FILE_PREVIEW,    IDI_PRINTPREVIEW);
     AddMenuIcon(IDM_FILE_PRINTNOW,   IDI_QUICKPRINT);
     AddMenuIcon(IDM_FILE_PRINT,      IDI_PRINT);
+
+    // Update the menu icons
+    DPIScaleMenuIcons();
 }
 
 // Specifies the Toolbar buttons.

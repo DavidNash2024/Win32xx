@@ -18,6 +18,8 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
     BOOL LoadFile(CString& fileName);
     void SaveFile(CString& fileName);
 
@@ -26,6 +28,7 @@ protected:
     virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual void SetupMenuIcons();
@@ -51,6 +54,7 @@ private:
     LRESULT OnPreviewClose();
     LRESULT OnPreviewPrint();
     LRESULT OnPreviewSetup();
+    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray);
 
@@ -58,6 +62,10 @@ private:
     CView m_view;
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
+    CImageList m_menuImages;
+    CRect m_viewRect;
+    CPoint m_scrollPos;
+    bool m_isDPIChanging;
     bool m_isToolbarShown;
 };
 
