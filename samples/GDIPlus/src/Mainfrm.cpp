@@ -179,6 +179,8 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+
+    DPIScaleMenuIcons();
 }
 
 // Set the resource IDs and images for the toolbar buttons.

@@ -152,6 +152,7 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Assigns the appropriately sized menu icons.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -177,6 +178,7 @@ void CMainFrame::DPIScaleMenuIcons()
 }
 
 // Assigns the appropriately sized toolbar icons.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
@@ -793,6 +795,9 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_DIS);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR_SML);
+
+    // Update the menu icons
+    DPIScaleMenuIcons();
 }
 
 // Configures the toolbars.

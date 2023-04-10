@@ -209,7 +209,11 @@ void CView::OnDraw(CDC& dc)
 {
     if (m_image.GetHandle())
     {
-        dc.SelectObject(m_image);
+        CMemDC memDC(dc);
+        CSize size = m_image.GetSize();
+        memDC.CreateCompatibleBitmap(dc, size.cx, size.cy);
+        memDC.SelectObject(m_image);
+        dc.BitBlt(0, 0, size.cx, size.cy, memDC, 0, 0, SRCCOPY);
     }
     else
     {
@@ -220,6 +224,8 @@ void CView::OnDraw(CDC& dc)
         {
             NONCLIENTMETRICS info = GetNonClientMetrics();
             LOGFONT lf = info.lfMessageFont;
+            int dpi = GetWindowDPI(*this);
+            lf.lfHeight = -MulDiv(10, dpi, POINTS_PER_INCH);
             dc.CreateFontIndirect(lf);
         }
 

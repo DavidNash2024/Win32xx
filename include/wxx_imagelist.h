@@ -87,6 +87,7 @@ namespace Win32xx
 
 
         // Operations
+        int Add(HBITMAP bitmap) const;
         int Add(HBITMAP bitmap, HBITMAP mask) const;
         int Add(HBITMAP bitmap, COLORREF mask) const;
         int Add(HICON icon) const;
@@ -190,13 +191,20 @@ namespace Win32xx
         GetApp()->AddCImlData(m_pData->images, m_pData);
     }
 
+    // Adds an image or images to an image list.
+    // Refer to ImageList_Add in the Windows API documentation for more information.
+    inline int CImageList::Add(HBITMAP bitmap) const
+    {
+        assert(m_pData);
+        assert(m_pData->images);
+        return ImageList_Add(m_pData->images, bitmap, 0);
+    }
+
     // Adds an image or images to an image list, generating a mask from the specified bitmap.
-    // The mask parameter can be 0.
     // Refer to ImageList_Add in the Windows API documentation for more information.
     inline int CImageList::Add(HBITMAP bitmap, HBITMAP mask) const
     {
         assert(m_pData);
-
         assert (m_pData->images);
         return ImageList_Add(m_pData->images, bitmap, mask );
     }
@@ -206,7 +214,6 @@ namespace Win32xx
     inline int CImageList::Add(HBITMAP bitmap, COLORREF mask) const
     {
         assert(m_pData);
-
         assert (m_pData->images);
         return ImageList_AddMasked(m_pData->images, bitmap, mask);
     }
@@ -216,7 +223,6 @@ namespace Win32xx
     inline int CImageList::Add(HICON icon) const
     {
         assert(m_pData);
-
         assert (m_pData->images);
 
         // Append the icon to the image list
@@ -278,7 +284,6 @@ namespace Win32xx
     inline BOOL CImageList::BeginDrag(int image, CPoint hotSpot) const
     {
         assert(m_pData);
-
         assert(m_pData->images);
         return ImageList_BeginDrag(m_pData->images, image, hotSpot.x, hotSpot.y);
     }
@@ -289,7 +294,6 @@ namespace Win32xx
     inline BOOL CImageList::Copy(int Dest, int Src, UINT flags /*= ILCF_MOVE*/) const
     {
         assert(m_pData);
-
         assert(m_pData->images);
         return ImageList_Copy(*this, Dest, *this, Src, flags);
     }

@@ -19,10 +19,14 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
+    void DPIScaleMenuIcons();
+    void DPIScaleToolBar();
+
 protected:
     // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -33,6 +37,7 @@ private:
 
     // Message handlers
     LRESULT OnFileLoaded(LPCTSTR fileName);
+    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Command handlers
     BOOL OnFileExit();
@@ -43,6 +48,10 @@ private:
 
     // Member variables
     CView m_view;
+    CImageList m_menuImages;
+    CRect m_viewRect;
+    CPoint m_scrollPos;
+    bool m_isDPIChanging;
 };
 
 #endif //MAINFRM_H

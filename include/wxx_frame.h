@@ -690,24 +690,18 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::AdjustFrameRect(const RECT& viewRect)
     {
-        // Adjust for the view styles
+        // Adjust for the view styles.
         CRect rc = viewRect;
         DWORD style = GetView().GetStyle();
         DWORD exStyle = GetView().GetExStyle();
         VERIFY(AdjustWindowRectEx(&rc, style, FALSE, exStyle));
 
-        // Calculate the new frame height
-        CRect frameBefore = T::GetWindowRect();
-        CRect viewBefore = GetViewRect();
-        int height = rc.Height() + frameBefore.Height() - viewBefore.Height();
+        // Adjust for the frame's non-client area.
+        int width = T::GetWindowRect().Width() - T::GetClientRect().Width() + rc.Width();
+        int height = T::GetWindowRect().Height() - GetViewRect().Height() + rc.Height();
 
-        // Adjust for the frame styles
-        style = T::GetStyle();
-        exStyle = T::GetExStyle();
-        VERIFY(AdjustWindowRectEx(&rc, style, FALSE, exStyle));
-
-        // Calculate final rect size, and reposition frame
-        VERIFY(T::SetWindowPos(0, 0, 0, rc.Width(), height, SWP_NOMOVE));
+        // Calculate final rect size, and reposition frame.
+        VERIFY(T::SetWindowPos(0, 0, 0, width, height, SWP_NOMOVE));
     }
 
     // Creates the frame's toolbar. Additional toolbars can be added with AddToolBarBand
@@ -929,8 +923,9 @@ namespace Win32xx
                         if (isDropDown || isWholeDropDown)
                         {
                             // Use the internal Marlett font to determine the width for the drop down arrow section.
-                            drawDC.CreateFont(GetSystemMetrics(SM_CYMENUCHECK), 0, 0, 0,
-                                FW_NORMAL, 0, 0, 0, SYMBOL_CHARSET, 0, 0, 0, 0, _T("Marlett"));
+                            int cyMenuCheck = ::GetSystemMetrics(SM_CYMENUCHECK) * GetWindowDPI(*this) / GetWindowDPI(0);
+                            drawDC.CreateFont(cyMenuCheck, 0, 0, 0, FW_NORMAL, 0, 0, 0,
+                                              SYMBOL_CHARSET, 0, 0, 0, 0, _T("Marlett"));
 
                             drawDC.GetCharWidth('6', '6', &dropDownWidth);
                         }

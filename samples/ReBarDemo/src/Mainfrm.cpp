@@ -34,6 +34,7 @@ HWND CMainFrame::Create(HWND parent)
 }
 
 // Assigns the appropriately sized menu icons.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -59,6 +60,7 @@ void CMainFrame::DPIScaleMenuIcons()
 }
 
 // Resize the arrow toolbar's images and the rebar containing it.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleReBar()
 {
     // Create the arrow toolbar's image list from 4 icons.
@@ -79,6 +81,7 @@ void CMainFrame::DPIScaleReBar()
 }
 
 // Assigns the appropriately sized toolbar icons.
+// Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleToolBar()
 {
     if (GetToolBar().IsWindow())
@@ -381,6 +384,9 @@ void CMainFrame::SetupMenuIcons()
         AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
+
+    // Update the menu icons
+    DPIScaleMenuIcons();
 }
 
 // Sets the resource IDs and images for the toolbar buttons.

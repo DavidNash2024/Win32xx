@@ -57,8 +57,8 @@ private:
     // Member variables
     CView m_view;
     CPrintPreview<CView> m_preview;
-    bool m_isToolbarShown;
     CImageList m_menuImages;
+    bool m_isToolbarShown;
 };
 
 #endif //MAINFRM_H
