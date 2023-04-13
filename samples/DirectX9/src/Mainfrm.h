@@ -21,7 +21,6 @@ public:
     CDXView& GetDXView() { return m_DXView; }
 
     void DPIScaleMenuIcons();
-    void DPIScaleToolBar();
 
 protected:
     // Virtual functions that override base class functions

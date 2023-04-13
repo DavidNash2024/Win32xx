@@ -86,17 +86,6 @@ void CMainFrame::DPIScaleMenuIcons()
     SetMenuImages(m_menuImages);
 }
 
-// Assigns the appropriately sized toolbar icons.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleToolBar()
-{
-    if (GetToolBar().IsWindow())
-    {
-        // Reset the toolbar images.
-        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
-    }
-}
-
 // Hides or shows the tab for a container with a single tab.
 void CMainFrame::HideSingleContainerTab(bool hideSingle)
 {
@@ -251,7 +240,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     CDockFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleDockers();
     DPIScaleMenuIcons();
-    DPIScaleToolBar();
     RecalcLayout();
 
     // Enable redraw and redraw the frame.

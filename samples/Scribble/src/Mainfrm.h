@@ -18,11 +18,10 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    CDoc& GetDoc() { return m_view.GetDoc(); }
-    void LoadFile(LPCTSTR fileName);
 
     void DPIScaleMenuIcons();
-    void DPIScaleToolBar();
+    CDoc& GetDoc() { return m_view.GetDoc(); }
+    void LoadFile(LPCTSTR fileName);
 
     LRESULT OnDropFile(WPARAM wparam);
     BOOL OnFileExit();

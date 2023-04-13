@@ -80,17 +80,6 @@ void CMainFrame::DPIScaleReBar()
     m_reBar.ResizeBand(0, CSize(minxy, minxy));
 }
 
-// Assigns the appropriately sized toolbar icons.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleToolBar()
-{
-    if (GetToolBar().IsWindow())
-    {
-        // Reset the toolbar images.
-        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
-    }
-}
-
 // Retrieves the size view rectangle.
 CRect CMainFrame::GetViewRect() const
 {
@@ -226,7 +215,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     CFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleMenuIcons();
     DPIScaleReBar();
-    DPIScaleToolBar();
     RecalcLayout();
 
     // Turn redrawing on and redraw the frame window.

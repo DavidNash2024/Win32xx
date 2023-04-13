@@ -58,16 +58,6 @@ void CMainFrame::DPIScaleMenuIcons()
     SetMenuImages(m_menuImages);
 }
 
-// Assigns the appropriately sized toolbar icons.
-void CMainFrame::DPIScaleToolBar()
-{
-    if (GetToolBar().IsWindow())
-    {
-        // Reset the toolbar images.
-        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
-    }
-}
-
 // Loads the settings from the registry
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 {
@@ -140,7 +130,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     CFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleMenuIcons();
-    DPIScaleToolBar();
     RecalcLayout();
 
     return 0;

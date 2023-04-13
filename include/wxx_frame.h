@@ -185,7 +185,7 @@ namespace Win32xx
         HACCEL GetFrameAccel() const                      { return m_accel; }
         const CMenu&  GetFrameMenu() const                { return m_menu; }
         const InitValues& GetInitValues() const           { return m_initValues; }
-        CFont GetMenuBarFont() const                      { return m_menuBarFont; }
+        CFont GetMenuFont() const                         { return m_menuFont; }
         const MenuTheme& GetMenuBarTheme() const          { return m_mbTheme; }
         int GetMenuIconHeight() const;
         const CMenuMetrics& GetMenuMetrics() const        { return m_menuMetrics; }
@@ -356,8 +356,8 @@ namespace Win32xx
         CReBar* m_pReBar;                   // Pointer to the CReBar object we actually use
         CStatusBar* m_pStatusBar;           // Pointer to the CStatusBar object we actually use
         CToolBar* m_pToolBar;               // Pointer to the CToolBar object we actually use
-        CMenu m_menu;                       // handle to the frame menu
-        CFont m_menuBarFont;                // MenuBar font
+        CMenu m_menu;                       // The menu used by the menubar or the frame's window
+        CFont m_menuFont;                   // Menu and menubar font
         CFont m_statusBarFont;              // StatusBar font
         CImageList m_toolBarImages;         // Image list for the ToolBar buttons
         CImageList m_toolBarDisabledImages; // Image list for the Disabled ToolBar buttons
@@ -441,7 +441,7 @@ namespace Win32xx
 
         // Set the fonts.
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        m_menuBarFont.CreateFontIndirect(info.lfMenuFont);
+        m_menuFont.CreateFontIndirect(info.lfMenuFont);
         m_statusBarFont.CreateFontIndirect(info.lfStatusFont);
     }
 
@@ -1071,7 +1071,7 @@ namespace Win32xx
         CMemDC memDC(drawDC);
         memDC.CreateCompatibleBitmap(drawDC, itemRect.Width(), itemRect.Height());
         memDC.BitBlt(0, 0, itemRect.Width(), itemRect.Height(), drawDC, itemRect.left, itemRect.top, SRCCOPY);
-        memDC.SelectObject(GetMenuBarFont());
+        memDC.SelectObject(GetMenuFont());
 
         // Swap the PDIS->hDC with a memory DC for double buffering.
         pDrawItem->hDC = memDC;
@@ -1886,7 +1886,7 @@ namespace Win32xx
 
         // Get the font used in menu items.
         CClientDC dc(*this);
-        LOGFONT lf = GetMenuBarFont().GetLogFont();
+        LOGFONT lf = GetMenuFont().GetLogFont();
 
         // Default menu items are bold, so take this into account.
         if (static_cast<int>(::GetMenuDefaultItem(pMID->menu, TRUE, GMDI_USEDISABLED)) != -1)
@@ -2082,15 +2082,20 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnDPIChanged(UINT, WPARAM wparam, LPARAM lparam)
     {
-        ResetMenuMetrics();
-
         // Resize the frame, using the suggested new window size.
         RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
         assert(pWindowRect);
         T::SetWindowPos(0, *pWindowRect, SWP_NOZORDER | SWP_NOACTIVATE);
 
         // Update the rebar, menubar and statusbar.
+        ResetMenuMetrics();
         UpdateSettings();
+
+        // Destroy and re-create the current toolbar.
+        int band = GetReBar().GetBand(GetToolBar());
+        GetReBar().DeleteBand(band);
+        GetToolBar().Destroy();
+        CreateToolBar();    // CreateToolbar calls SetupToolBar.
 
         // Notify the view that the DPI has changed.
         GetView().SendMessage(UWM_DPICHANGED, wparam, lparam);
@@ -3658,11 +3663,11 @@ namespace Win32xx
         NONCLIENTMETRICS info = GetNonClientMetrics();
         info.lfMenuFont.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
         info.lfStatusFont.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
-        m_menuBarFont.CreateFontIndirect(info.lfMenuFont);
+        m_menuFont.CreateFontIndirect(info.lfMenuFont);
         m_statusBarFont.CreateFontIndirect(info.lfStatusFont);
 
         if (GetMenuBar().IsWindow())
-            GetMenuBar().SetFont(m_menuBarFont);
+            GetMenuBar().SetFont(m_menuFont);
 
         if (GetStatusBar().IsWindow())
             GetStatusBar().SetFont(m_statusBarFont);
