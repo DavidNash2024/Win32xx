@@ -98,8 +98,8 @@ void CViewClasses::SetDPIImages()
     SetImageList(m_normalImages, LVSIL_NORMAL);
 
     // Reset the item indentation.
-    const int indent = 20;
-    SetIndent(indent * scale);
+    int imageWidth = m_normalImages.GetIconSize().cx;
+    SetIndent(imageWidth);
 }
 
 // Process the tree-view's window messages.
@@ -220,10 +220,16 @@ BOOL CContainClasses::OnHelpAbout()
 // Called in response to a UWM_DPICHANGED message which is sent to child windows
 // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
 // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CContainClasses::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CContainClasses::OnUserDPIChanged(UINT, WPARAM, LPARAM)
 {
     DPIScaleToolBar();
-    return CDockContainer::OnUserDPIChanged(msg, wparam, lparam);
+    UpdateTabs();
+
+    if (GetView() && GetView()->IsWindow())
+        GetView()->SendMessage(UWM_DPICHANGED);
+
+    RecalcLayout();
+    return 0;
 }
 
 // Set the Bitmap resource for the toolbar

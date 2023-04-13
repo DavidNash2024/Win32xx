@@ -143,17 +143,6 @@ void CMainFrame::DPIScaleMenuIcons()
     SetMenuImages(m_menuImages);
 }
 
-// Assigns the appropriately sized toolbar icons.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleToolBar()
-{
-    if (GetToolBar().IsWindow())
-    {
-        // Reset the toolbar images.
-        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
-    }
-}
-
 // Retrieves the width of the part required to contain the specified text.
 int CMainFrame::GetTextPartWidth(LPCTSTR text) const
 {
@@ -296,8 +285,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     CFrame::OnDPIChanged(msg, wparam, lparam);
+    UpdateToolbar();
     DPIScaleMenuIcons();
-    DPIScaleToolBar();
     RecalcLayout();
     return 0;
 }

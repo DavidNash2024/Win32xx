@@ -63,6 +63,9 @@ void CMainFrame::DPIScaleMenuIcons()
 // Required for per-monitor DPI-aware.
 void CMainFrame::DPIScaleToolBar()
 {
+    // The frame's default handling of WM_DPICHANGED destroys and recreates the toolbar.
+    // We modify that here and merely reset the image lists for the toolbars.
+    // We can safely do that here because the toolbar buttons don't contain text.
     if (GetToolBar().IsWindow())
     {
         if (m_useBigIcons)
@@ -167,12 +170,20 @@ LRESULT CMainFrame::OnCustHelp(LPNMHDR)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
 {
-    CFrame::OnDPIChanged(msg, wparam, lparam);
+    // Resize the frame, using the suggested new window size.
+    RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
+    assert(pWindowRect);
+    SetWindowPos(0, *pWindowRect, SWP_NOZORDER | SWP_NOACTIVATE);
+
+    // Update the rebar, menubar and statusbar.
+    ResetMenuMetrics();
+    UpdateSettings();
     DPIScaleMenuIcons();
     DPIScaleToolBar();
     RecalcLayout();
+
     return 0;
 }
 

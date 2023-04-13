@@ -60,17 +60,6 @@ void CMainFrame::DPIScaleMenuIcons()
     SetMenuImages(m_menuImages);
 }
 
-// Assigns the appropriately sized toolbar icons.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleToolBar()
-{
-    if (GetToolBar().IsWindow())
-    {
-        // Reset the toolbar images.
-        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
-    }
-}
-
 // Perform the owner drawing for the statusbar.
 void CMainFrame::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem)
 {
@@ -208,7 +197,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     SetRedraw(FALSE);
     CFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleMenuIcons();
-    DPIScaleToolBar();
     RecalcLayout();
     SetRedraw(TRUE);
     RedrawWindow();

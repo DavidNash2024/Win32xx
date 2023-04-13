@@ -195,11 +195,13 @@ namespace Win32xx
 
         virtual void AddContainer(CDockContainer* pContainer, BOOL insert = FALSE, BOOL selecPage = TRUE);
         virtual void AddToolBarButton(UINT id, BOOL isEnabled = TRUE);
+        virtual void CreateToolBar();
         virtual void DrawTabs(CDC& dc);
         virtual void RecalcLayout();
         virtual void RemoveContainer(CDockContainer* pWnd, BOOL updateParent = TRUE);
         virtual void SelectPage(int page);
         virtual void SwapTabs(int tab1, int tab2);
+        virtual void UpdateTabs();
 
         // Accessors and mutators
         CDockContainer* GetActiveContainer() const;
@@ -225,6 +227,7 @@ namespace Win32xx
         void SetTabIcon(HICON tabIcon)        { m_tabIcon = tabIcon; }
         void SetTabIcon(UINT iconID);
         void SetTabSize();
+
         void SetTabText(LPCTSTR text)        { m_tabText = text; }
         void SetToolBar(CToolBar& toolBar)    { GetViewPage().SetToolBar(toolBar); }
         void SetToolBarImages(COLORREF mask, UINT normalID, UINT hotID, UINT disabledID);
@@ -256,8 +259,8 @@ namespace Win32xx
         int GetDockTabImageID(int tab) const;
         CString GetDockTabText(int tab) const;
         CSize GetTBImageSize(CBitmap* pBitmap);
-        void SetTabDPIFont();
-        void SetTabDPIIcons();
+        void SetTabsDPIFont();
+        void SetTabsDPIIcons();
 
         std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_allInfo;}
         std::vector<ContainerInfo> m_allInfo;          // vector of ContainerInfo structs
@@ -4560,6 +4563,31 @@ namespace Win32xx
         GetToolBar().AddButton(id, isEnabled);
     }
 
+    // Creates the toolbar within the viewpage.
+    inline void CDockContainer::CreateToolBar()
+    {
+        // Create the toolbar.
+        if (GetViewPage().IsWindow())
+        {
+            GetToolBar().Create(GetViewPage());
+            DWORD style = GetToolBar().GetStyle();
+            style |= CCS_NODIVIDER;
+            GetToolBar().SetStyle(style);
+            SetupToolBar();
+            if (GetToolBarData().size() > 0)
+            {
+                // Load the default images if no images are loaded.
+                // A mask of 192,192,192 is compatible with AddBitmap (for Win95).
+                if (!GetToolBar().SendMessage(TB_GETIMAGELIST, 0, 0))
+                    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
+
+                GetToolBar().Autosize();
+            }
+            else
+                GetToolBar().ShowWindow(SW_HIDE);
+        }
+    }
+
     // Draw the tabs.
     inline void CDockContainer::DrawTabs(CDC& dc)
     {
@@ -4742,8 +4770,8 @@ namespace Win32xx
         iconHeight = iconHeight - iconHeight % 8;
         GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
 
-        // Set the font used in the tabs.
-        SetTabDPIFont();
+        // Update the font and icons in the tabs.
+        UpdateTabs();
 
         // Add a tab for this container except for the DockAncestor.
         if (!GetDocker() || GetDocker()->GetDockAncestor() != GetDocker())
@@ -4760,22 +4788,7 @@ namespace Win32xx
             GetViewPage().Create(*this);
 
             // Create the toolbar.
-            GetToolBar().Create(GetViewPage());
-            DWORD style = GetToolBar().GetStyle();
-            style |= CCS_NODIVIDER;
-            GetToolBar().SetStyle(style);
-            SetupToolBar();
-            if (GetToolBarData().size() > 0)
-            {
-                // Load the default images if no images are loaded.
-                // A mask of 192,192,192 is compatible with AddBitmap (for Win95).
-                if (!GetToolBar().SendMessage(TB_GETIMAGELIST, 0, 0))
-                    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
-
-                GetToolBar().Autosize();
-            }
-            else
-                GetToolBar().Destroy();
+            CreateToolBar();
         }
 
         SetFixedWidth(TRUE);
@@ -4792,7 +4805,6 @@ namespace Win32xx
             tie.pszText = const_cast<LPTSTR>(m_allInfo[i].tabText.c_str());
             InsertItem(static_cast<int>(i), &tie);
         }
-
     }
 
     // Called when the left mouse button is pressed.
@@ -4920,8 +4932,12 @@ namespace Win32xx
     // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
     inline LRESULT CDockContainer::OnUserDPIChanged(UINT, WPARAM, LPARAM)
     {
-        SetTabDPIFont();
-        SetTabDPIIcons();
+        UpdateTabs();
+
+        // Destroy and recreate the toolbar.
+        GetViewPage().GetToolBar().Destroy();
+        CreateToolBar();
+
         if (GetView() && GetView()->IsWindow())
             GetView()->SendMessage(UWM_DPICHANGED);
 
@@ -5074,7 +5090,7 @@ namespace Win32xx
     }
 
     // Updates the tab font based on the window's DPI.
-    inline void CDockContainer::SetTabDPIFont()
+    inline void CDockContainer::SetTabsDPIFont()
     {
         // Set the font used in the tabs.
         CFont font;
@@ -5088,7 +5104,7 @@ namespace Win32xx
     }
 
     // Updates the tab icons based on the window's DPI.
-    inline void CDockContainer::SetTabDPIIcons()
+    inline void CDockContainer::SetTabsDPIIcons()
     {
         int iconHeight = GetContainerParent()->DPIScaleInt(16);
         iconHeight = iconHeight - iconHeight % 8;
@@ -5303,6 +5319,13 @@ namespace Win32xx
         }
     }
 
+    // Updates the font and icons in the tabs.
+    inline void CDockContainer::UpdateTabs()
+    {
+        SetTabsDPIFont();
+        SetTabsDPIIcons();
+    }
+
     // Process the window's messages.
     inline LRESULT CDockContainer::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
@@ -5413,7 +5436,7 @@ namespace Win32xx
     inline void CDockContainer::CViewPage::RecalcLayout()
     {
         CRect rc = GetClientRect();
-        if (GetToolBar().IsWindow())
+        if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
         {
             GetToolBar().Autosize();
             CRect rcToolBar = GetToolBar().GetClientRect();

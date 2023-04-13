@@ -196,8 +196,8 @@ void CViewTree::SetDPIImages()
     SetImageList(m_smallImages, LVSIL_NORMAL);
 
     // Reset the item indentation.
-    const int indent = 20;
-    SetIndent(indent * scale);
+    int imageWidth = m_smallImages.GetIconSize().cx;
+    SetIndent(imageWidth);
 }
 
 

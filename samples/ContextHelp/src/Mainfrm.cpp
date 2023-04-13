@@ -168,17 +168,6 @@ void CMainFrame::DPIScaleMenuIcons()
     SetMenuImages(m_menuImages);
 }
 
-// Assigns the appropriately sized toolbar icons.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleToolBar()
-{
-    if (GetToolBar().IsWindow())
-    {
-        // Reset the toolbar images.
-        SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR24, 0, 0);
-    }
-}
-
 // Identifies the window from the cursor position and returns its ID.
 UINT CMainFrame::GetIDFromCursorPos()
 {
@@ -284,7 +273,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     CFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleMenuIcons();
-    DPIScaleToolBar();
     RecalcLayout();
 
     return 0;

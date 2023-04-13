@@ -1,5 +1,7 @@
 Version 9.3
 ===========
+This version provides support for per-monitor(v2) DPI awareness.
+
 
 Changes in Detail
 -----------------
