@@ -939,7 +939,8 @@ namespace Win32xx
                 memDC.Rectangle(rcAdjust, rcAdjust, rc.Width() - rcAdjust, m_pDocker->m_ncHeight + rcAdjust);
 
                 // Display the caption
-                int cx = (m_pDocker->GetDockStyle() & DS_NO_CLOSE) ? 0 : ::GetSystemMetrics(SM_CXSMICON);
+                int cxSmallIcon = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
+                int cx = (m_pDocker->GetDockStyle() & DS_NO_CLOSE) ? 0 : cxSmallIcon;
                 CRect rcText(4 + rcAdjust, rcAdjust, rc.Width() - 4 - cx - rcAdjust, m_pDocker->m_ncHeight + rcAdjust);
                 memDC.DrawText(m_caption, m_caption.GetLength(), rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
 

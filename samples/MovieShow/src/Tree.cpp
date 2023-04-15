@@ -122,9 +122,8 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
     return TRUE;
 }
 
-// Called after the treeview window is created.
-// Sets the icons for the treeview.
-void CViewTree::OnInitialUpdate()
+// Adjusts the listview image sizes in response to window DPI changes.
+void CViewTree::SetDPIImages()
 {
     //set the image lists
     int size = DPIScaleInt(24);
@@ -141,6 +140,17 @@ void CViewTree::OnInitialUpdate()
     m_imlNormal.AddIcon(IDI_EYE);
 
     SetImageList(m_imlNormal, LVSIL_NORMAL);
+
+    // Reset the item indentation.
+    int imageWidth = size;
+    SetIndent(imageWidth);
+}
+
+// Called after the treeview window is created.
+// Sets the icons and style for the treeview.
+void CViewTree::OnInitialUpdate()
+{
+    SetDPIImages();
 
     // Adjust style to show lines and [+] button
     DWORD dwStyle = GetStyle();
@@ -248,5 +258,17 @@ CDockTree::CDockTree()
 
     // Set the width of the splitter bar
     SetBarWidth(DPIScaleInt(8));
+}
+
+// Called in response to a UWM_DPICHANGED message which is sent to child windows
+// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
+// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CDockTree::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Set the width of the splitter bar.
+    SetBarWidth(DPIScaleInt(8));
+    m_treeView.SetDPIImages();
+    RecalcDockLayout();
+    return CDocker::OnUserDPIChanged(msg, wparam, lparam);
 }
 

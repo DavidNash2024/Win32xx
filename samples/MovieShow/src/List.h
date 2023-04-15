@@ -33,6 +33,7 @@ public:
     virtual ~CViewList();
 
     void    AddItem(const MovieInfo& mi);
+    void    SetDPIImages();
     void    SetLastColumnWidth();
     void    SortColumn(int column, bool isSortDown);
     void    UpdateItemImage(int item);
@@ -59,6 +60,7 @@ private:
     LRESULT OnItemChanged(LPNMLISTVIEW pListView);
     LRESULT OnLVColumnClick(LPNMLISTVIEW pListView);
     LRESULT OnRClick();
+    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CString GetFileTime(FILETIME fileTime);
     void    SetColumn();
@@ -67,6 +69,7 @@ private:
     // Member variables
     CImageList m_normal;
     CImageList m_small;
+    int m_oldDPI;
 };
 
 

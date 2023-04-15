@@ -15,7 +15,7 @@
 //
 
 // Constructor
-CViewList::CViewList()
+CViewList::CViewList() : m_oldDPI(0)
 {
 }
 
@@ -158,16 +158,6 @@ void CViewList::OnAttach()
 {
     SetWindowTheme(L"Explorer", NULL);
 
-    // Set the image lists
-    int size = DPIScaleInt(16);
-    m_small.Create(size, size, ILC_COLOR32, 1, 0);
-    m_small.AddIcon(IDI_MOVIES);
-    m_small.AddIcon(IDI_VIOLIN);
-    m_small.AddIcon(IDI_BOXSET);
-    m_small.AddIcon(IDI_FAVOURITES);
-    m_small.AddIcon(IDI_EYE);
-    SetImageList(m_small, LVSIL_SMALL);
-
     // Set the report style
     DWORD dwStyle = GetStyle();
     SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
@@ -187,6 +177,8 @@ void CViewList::OnDestroy()
 // Called after the listview window is created.
 void CViewList::OnInitialUpdate()
 {
+    m_oldDPI = GetWindowDPI(*this);
+    SetDPIImages();
 }
 
 // Called with a double click left mouse button or press the Enter key
@@ -313,6 +305,29 @@ LRESULT CViewList::OnRClick()
     return 0;
 }
 
+// Called in response to a UWM_DPICHANGED message which is sent to child windows
+// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
+// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CViewList::OnUserDPIChanged(UINT, WPARAM, LPARAM)
+{
+    // Adjust the column width in response to window DPI changes.
+    int lastCol = Header_GetItemCount(GetHeader()) - 1;
+    std::vector<int> columnWidths;
+    int dpi = GetWindowDPI(*this);
+    for (int i = 0; i <= lastCol; ++i)
+    {
+        int width = GetColumnWidth(i) * dpi / m_oldDPI;
+        SetColumnWidth(i, width);
+    }
+
+    m_oldDPI = GetWindowDPI(*this);
+
+    // Adjust the images in response to window DPI changes. 
+    SetDPIImages();
+
+    return 0;
+}
+
 // Sets the CREATESTRUCT parameters prior to the window's creation.
 void CViewList::PreCreate(CREATESTRUCT& cs)
 {
@@ -329,25 +344,39 @@ void CViewList::SetColumn()
     lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
     lvColumn.fmt = LVCFMT_LEFT;
 
-    lvColumn.cx = 300;
+    lvColumn.cx = DPIScaleInt(200);
     lvColumn.pszText = const_cast<LPTSTR>(L"Movie Title");
     InsertColumn(0, lvColumn);
 
-    lvColumn.cx = 150;
+    lvColumn.cx = DPIScaleInt(100);
     lvColumn.pszText = const_cast<LPTSTR>(L"Release Date");
     InsertColumn(1, lvColumn);
 
-    lvColumn.cx = 150;
+    lvColumn.cx = DPIScaleInt(120);
     lvColumn.pszText = const_cast<LPTSTR>(L"Genre");
     InsertColumn(2, lvColumn);
 
-    lvColumn.cx = 200;
+    lvColumn.cx = DPIScaleInt(150);
     lvColumn.pszText = const_cast<LPTSTR>(L"File Name");
     InsertColumn(3, lvColumn);
 
-    lvColumn.cx = 200;
+    lvColumn.cx = DPIScaleInt(150);
     lvColumn.pszText = const_cast<LPTSTR>(L"File Date");
     InsertColumn(4, lvColumn);
+}
+
+// Adjusts the listview image sizes in response to window DPI changes.
+void CViewList::SetDPIImages()
+{
+    // Set the image lists
+    int size = DPIScaleInt(16);
+    m_small.Create(size, size, ILC_COLOR32, 1, 0);
+    m_small.AddIcon(IDI_MOVIES);
+    m_small.AddIcon(IDI_VIOLIN);
+    m_small.AddIcon(IDI_BOXSET);
+    m_small.AddIcon(IDI_FAVOURITES);
+    m_small.AddIcon(IDI_EYE);
+    SetImageList(m_small, LVSIL_SMALL);
 }
 
 // Sets the up and down sort arrows in the listview's header.
@@ -454,8 +483,11 @@ void CViewList::UpdateItemImage(int item)
 LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Adjust the list view's columns when the window is resized.
-    if (msg == WM_WINDOWPOSCHANGED)
-        SetLastColumnWidth();
+    switch (msg)
+    {
+    case WM_WINDOWPOSCHANGED:   SetLastColumnWidth();  break;
+    case UWM_DPICHANGED:        return OnUserDPIChanged(msg, wparam, lparam);
+    }
 
     return WndProcDefault(msg, wparam, lparam);
 }

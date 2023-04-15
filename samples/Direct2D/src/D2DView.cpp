@@ -121,64 +121,52 @@ LRESULT CD2DView::OnPaint(UINT, WPARAM, LPARAM)
 // Perform the drawing.
 HRESULT CD2DView::OnRender()
 {
-    HRESULT hr = S_OK;
-
-    hr = CreateDeviceResources();
-//    float zoom = static_cast<float>(GetWindowDPI(*this)) / USER_DEFAULT_SCREEN_DPI;
     float zoom = static_cast<float>(GetWindowDPI(*this)) / static_cast<float>(GetWindowDPI(0));
-//    float zoom = USER_DEFAULT_SCREEN_DPI / static_cast<float>(GetWindowDPI(*this));
- //   float zoom = 1.0f;
+    HRESULT hr = CreateDeviceResources();
     if (SUCCEEDED(hr))
     {
         m_pRenderTarget->BeginDraw();
-        m_pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
         m_pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::White));
 
-        // Scale the render target to the DPI.
-        D2D1::Matrix3x2F scale = D2D1::Matrix3x2F::Scale(zoom, zoom);
-        m_pRenderTarget->SetTransform(scale);
-
         D2D1_SIZE_F rtSize = m_pRenderTarget->GetSize();
-        float width = rtSize.width/zoom;
-        float height = rtSize.height/zoom;
+        float width = rtSize.width;
+        float height = rtSize.height;
 
         // Draw horizontal lines
-        for (float x = 0.0f; x < width; x += 10.0f)
+        for (float x = 0.0f; x < width; x += 16.0f * zoom)
         {
             m_pRenderTarget->DrawLine(
                 D2D1::Point2F(static_cast<FLOAT>(x), 0.0f),
                 D2D1::Point2F(static_cast<FLOAT>(x), height),
                 m_pLightSlateGrayBrush,
-                0.5f
+                zoom
             );
         }
 
         // Draw vertical lines
-        for (float y = 0.0f; y < height; y += 10.0f)
+        for (float y = 0.0f; y < height; y += 16.0f * zoom)
         {
             m_pRenderTarget->DrawLine(
                 D2D1::Point2F(0.0f, static_cast<FLOAT>(y)),
                 D2D1::Point2F(width, static_cast<FLOAT>(y)),
                 m_pLightSlateGrayBrush,
-                0.5f
+                zoom
             );
         }
 
-        m_pRenderTarget->SetTransform(scale);
-
         // Draw two rectangles.
         D2D1_RECT_F rectangle1 = D2D1::RectF(
-            rtSize.width / (zoom * 2.0f) - 40.0f,
-            rtSize.height / (zoom * 2.0f) - 40.0f,
-            rtSize.width / (zoom * 2.0f) + 40.0f,
-            rtSize.height / (zoom * 2.0f) + 40.0f
+            rtSize.width / (2.0f) - 40.0f * zoom,
+            rtSize.height / (2.0f) - 40.0f * zoom,
+            rtSize.width / (2.0f) + 40.0f * zoom,
+            rtSize.height / (2.0f) + 40.0f * zoom
         );
 
         D2D1_RECT_F rectangle2 = D2D1::RectF(
-            rtSize.width / (zoom * 2.0f) - 80.0f,
-            rtSize.height / (zoom * 2.0f) - 80.0f,
-            rtSize.width / (zoom * 2.0f) + 80.0f,
-            rtSize.height / (zoom * 2.0f) + 80.0f
+            rtSize.width / (2.0f) - 80.0f * zoom,
+            rtSize.height / (2.0f) - 80.0f * zoom,
+            rtSize.width / (2.0f) + 80.0f * zoom,
+            rtSize.height / (2.0f) + 80.0f * zoom
         );
 
         // Draw a filled rectangle.
