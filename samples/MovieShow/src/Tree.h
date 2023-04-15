@@ -15,6 +15,7 @@ class CViewTree : public CTreeView
 public:
     CViewTree();
     virtual ~CViewTree();
+    void SetDPIImages();
     void Swap(HTREEITEM item1, HTREEITEM item2);
 
 protected:
@@ -51,6 +52,9 @@ public:
     CDockTree();
     virtual ~CDockTree() {}
     CViewTree& GetViewTree() { return m_treeView; }
+
+protected:
+    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockTree(const CDockTree&);                // Disable copy construction

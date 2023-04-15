@@ -35,12 +35,15 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
+    void DPIScaleDockers();
+
 protected:
     // Virtual functions that override base class functions
     virtual BOOL    LoadRegistrySettings(LPCTSTR szKeyName);
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    OnMenuUpdate(UINT nID);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
@@ -86,17 +89,18 @@ private:
     void LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movie);
     void LoadMovies();
     void OnFilesLoaded();
+    void RecreateDialog();
+    void SetDialogFonts();
 
     // Message handlers
     LRESULT OnBoxSetChanged();
     LRESULT OnBarEnd(LPDRAGPOS pDragPos);
-    LRESULT OnDPIChanged();
     LRESULT OnRClickListItem();
     LRESULT OnRClickTreeItem();
     LRESULT OnSelectListItem(const MovieInfo* pmi);
     LRESULT OnSelectTreeItem();
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT PlayMovie(LPCTSTR path);
 
     // Command handlers

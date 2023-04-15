@@ -188,7 +188,9 @@ namespace Win32xx
         return CFrameT<CDocker>::OnSysColorChange(msg, wparam, lparam);
     }
 
-    // Called in response to a UWM_DPIChanged message.
+    // Called in response to a UWM_DPICHANGED message which is sent to child windows
+    // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
+    // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
     inline LRESULT CDockFrame::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         return CDocker::OnUserDPIChanged(msg, wparam, lparam);

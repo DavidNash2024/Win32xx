@@ -709,6 +709,8 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::CreateToolBar()
     {
+        m_toolBarData.clear();
+
         if (GetReBar().IsWindow())
             AddToolBarBand(GetToolBar(), RBBS_BREAK|RBBS_GRIPPERALWAYS, IDW_TOOLBAR);   // Create the toolbar inside rebar
         else
@@ -2092,10 +2094,20 @@ namespace Win32xx
         UpdateSettings();
 
         // Destroy and re-create the current toolbar.
-        int band = GetReBar().GetBand(GetToolBar());
-        GetReBar().DeleteBand(band);
-        GetToolBar().Destroy();
-        CreateToolBar();    // CreateToolbar calls SetupToolBar.
+        if (GetToolBar().IsWindow())
+        {
+            BOOL isToolbarShown = GetToolBar().IsWindowVisible();
+            if (GetReBar().IsWindow())
+            {
+                int band = GetReBar().GetBand(GetToolBar());
+                if (band >= 0)
+                    GetReBar().DeleteBand(band);
+            }
+
+            GetToolBar().Destroy();
+            CreateToolBar();    // CreateToolbar calls SetupToolBar.
+            ShowToolBar(isToolbarShown);
+        }
 
         // Notify the view that the DPI has changed.
         GetView().SendMessage(UWM_DPICHANGED, wparam, lparam);

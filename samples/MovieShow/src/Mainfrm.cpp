@@ -134,6 +134,28 @@ HWND CMainFrame::Create(HWND parent)
     return CDockFrame::Create(parent);
 }
 
+// Adjusts the dockers in response to window DPI changes.
+// Required for per-monitor DPI-aware.
+void CMainFrame::DPIScaleDockers()
+{
+    std::vector<CDocker*> v = GetAllDockers();
+    std::vector<CDocker*>::iterator it;
+    for (it = v.begin(); it != v.end(); ++it)
+    {
+        if ((*it)->IsWindow())
+        {
+            // Reset the docker size.
+            int size = (*it)->GetDockSize();
+            (*it)->SetDockSize(size);
+
+            // Notify the docker that the DPI has changed.
+            (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
+        }
+    }
+
+    RecalcDockLayout();
+}
+
 // Converts a text string to a byte stream.
 // Loads an image from the byte stream and converts it to a thumbnail.
 // Saves the byte stream for the thumbnail in the specified vector.
@@ -1019,6 +1041,8 @@ void CMainFrame::OnFilesLoaded()
 // Called after the frame is created, but before it is displayed.
 void CMainFrame::OnInitialUpdate()
 {
+    SetRedraw(FALSE);
+
     // Add the dialog.
     int width = m_dialogWidth ? m_dialogWidth : (GetViewRect().Width() / 3);
     DWORD dockStyle = DS_NO_UNDOCK | DS_NO_CAPTION;
@@ -1031,7 +1055,10 @@ void CMainFrame::OnInitialUpdate()
     // Fill the tree view and list view.
     LoadMovies();
     FillTreeItems();
-
+    DPIScaleDockers();
+    RecreateDialog();
+    SetRedraw(TRUE);
+    RedrawWindow();
     ForceToForeground();
 }
 
@@ -1335,16 +1362,11 @@ BOOL CMainFrame::OnSearch()
 // Updates the dialog with information about the movie.
 LRESULT CMainFrame::OnSelectListItem(const MovieInfo* pmi)
 {
-    CViewDialog& dialog = (CViewDialog&)m_pDockDialog->GetView();
     assert(pmi);
 
     // Set the fonts.
-    NONCLIENTMETRICS info = GetNonClientMetrics();
-    LOGFONT lf = info.lfMenuFont;
-    CFont textFont(lf);
-    dialog.GetActors().SetFont(textFont, FALSE);
-    dialog.GetInfo().SetFont(textFont, FALSE);
-
+    SetDialogFonts();
+    CViewDialog& dialog = (CViewDialog&)m_pDockDialog->GetView();
     dialog.GetTitle().SetWindowText(pmi->movieName);
     dialog.GetYear().SetWindowText(pmi->releaseDate);
 
@@ -1561,6 +1583,21 @@ BOOL CMainFrame::SaveRegistrySettings()
     return FALSE;
 }
 
+// Sets the fonts used within the dialog.
+void CMainFrame::SetDialogFonts()
+{
+    // Set the fonts.
+    NONCLIENTMETRICS info = GetNonClientMetrics();
+    LOGFONT lf = info.lfMenuFont;
+    int dpi = GetWindowDPI(*this);
+    lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
+    CFont textFont(lf);
+
+    CViewDialog& dialog = (CViewDialog&)m_pDockDialog->GetView();
+    dialog.GetActors().SetFont(textFont, FALSE);
+    dialog.GetInfo().SetFont(textFont, FALSE);
+}
+
 // Adds icons for popup menus.
 void CMainFrame::SetupMenuIcons()
 {
@@ -1707,25 +1744,42 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
     return 0;
 }
 
-LRESULT CMainFrame::OnDPIChanged()
+// Called in response to a WM_DPICHANGED message which is sent to a top-level
+// window when the DPI changes.
+// Only top-level windows receive a WM_DPICHANGED message, so this message is
+// handled when an undocked docker is moved between monitors.
+LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Dialogs handle DPI changes rather badly. The easiest
-    // approach is to destroy and recreate the dialog.
+    SetRedraw(FALSE);
+
+    CDockFrame::OnDPIChanged(msg, wparam, lparam);
+    DPIScaleDockers();
+    SetDialogFonts();
+    RecreateDialog();
+    SetRedraw(TRUE);
+    RedrawWindow();
+    return 0;
+}
+
+// Called when the window's position is about to change.
+LRESULT CMainFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    GetViewList().SetLastColumnWidth();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
+// We recreate the dialog to reset the dialog's resizer.
+void CMainFrame::RecreateDialog()
+{
+    // Destroy then create the dialog.
     m_pDockDialog->GetView().Destroy();
     m_pDockDialog->GetView().Create(m_pDockDialog->GetDockClient());
+    m_pDockDialog->RecalcDockLayout();
 
     // Re-select the list view item.
     int item = m_viewList.GetNextItem(-1, LVNI_SELECTED);
     m_viewList.SetItemState(item, 0, 0x000F);
     m_viewList.SetItemState(item, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
-
-    return 0;
-}
-
-LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    GetViewList().SetLastColumnWidth();
-    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Process the frame's window messages.
@@ -1735,20 +1789,19 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_WINDOWPOSCHANGING: return OnWindowPosChanged(msg, wparam, lparam);
-        case WM_SYSCOMMAND:                 return OnSysCommand(msg, wparam, lparam);
-        case WM_DPICHANGED:                 return OnDPIChanged();
+        case WM_WINDOWPOSCHANGING:      return OnWindowPosChanging(msg, wparam, lparam);
+        case WM_SYSCOMMAND:             return OnSysCommand(msg, wparam, lparam);
 
         // User Messages called by CTreeList
-        case UWM_BOXSETCHANGED:             return OnBoxSetChanged();
-        case UWM_GETMOVIESDATA:             return (LRESULT)GetMoviesData();
-        case UWM_ONSELECTTREEITEM:          return OnSelectTreeItem();
-        case UWM_ONRCLICKTREEITEM:          return OnRClickTreeItem();
+        case UWM_BOXSETCHANGED:         return OnBoxSetChanged();
+        case UWM_GETMOVIESDATA:         return (LRESULT)GetMoviesData();
+        case UWM_ONSELECTTREEITEM:      return OnSelectTreeItem();
+        case UWM_ONRCLICKTREEITEM:      return OnRClickTreeItem();
 
         // Use Messages called by CViewList
-        case UWM_PLAYMOVIE:                 return PlayMovie((LPCTSTR)wparam);
-        case UWM_ONSELECTLISTITEM:          return OnSelectListItem((const MovieInfo*)wparam);
-        case UWM_ONRCLICKLISTITEM:          return OnRClickListItem();
+        case UWM_PLAYMOVIE:             return PlayMovie((LPCTSTR)wparam);
+        case UWM_ONSELECTLISTITEM:      return OnSelectListItem((const MovieInfo*)wparam);
+        case UWM_ONRCLICKLISTITEM:      return OnRClickListItem();
         }
 
         // Pass unhandled messages on for default processing.

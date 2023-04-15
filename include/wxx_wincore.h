@@ -2026,7 +2026,7 @@ namespace Win32xx
     {
         // Microsoft's IsWindowVisible is buggy, so we do it like this
         assert(IsWindow());
-        return (GetWindowLongPtr(GWL_STYLE) & WS_VISIBLE) != 0;
+        return (GetStyle() & WS_VISIBLE) != 0;
     }
 
     // The IsZoomed function determines whether the window is maximized.
