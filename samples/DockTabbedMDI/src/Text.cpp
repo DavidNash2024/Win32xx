@@ -7,6 +7,10 @@
 #include "Text.h"
 #include "resource.h"
 
+#ifndef WM_DPICHANGED_BEFOREPARENT
+  #define WM_DPICHANGED_BEFOREPARENT      0x02E2
+#endif
+
 /////////////////////////////////
 // CViewText function definitions
 //
@@ -28,6 +32,10 @@ void CViewText::OnAttach()
     font.CreatePointFont(100, _T("Courier New"));
     SetFont(font);
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
+
+    // Advises the control to be per-monitor DPI aware.
+    // This affects the initial font size on a second monitor with different DPI.
+    SendMessage(WM_DPICHANGED_BEFOREPARENT);
 }
 
 // Respond to keyboard accelerator keys.
@@ -124,3 +132,12 @@ CDockText::CDockText()
     SetBarWidth(DPIScaleInt(8));
 }
 
+// Called in response to a UWM_DPICHANGED message which is sent to child windows
+// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
+// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CDockText::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Set the width of the splitter bar.
+    SetBarWidth(DPIScaleInt(8));
+    return CDocker::OnUserDPIChanged(msg, wparam, lparam);
+}

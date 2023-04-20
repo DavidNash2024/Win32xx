@@ -209,10 +209,10 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
-        //  switch (msg)
-        //  {
-        //
-        //  }
+        switch (msg)
+        {
+        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
+        }
 
         // Pass unhandled messages on to parent DialogProc
         return DialogProcDefault(msg, wparam, lparam);
@@ -233,6 +233,14 @@ void CMyDialog::OnDestroy()
 {
     // End the application
     ::PostQuitMessage(0);
+}
+
+// Called in response to a WM_DPICHANGED message which is sent to a top-level
+// window when the DPI changes. Only top-level windows receive a WM_DPICHANGED message.
+inline LRESULT CMyDialog::OnDPIChanged(UINT, WPARAM, LPARAM)
+{
+    m_tab.SendMessage(UWM_DPICHANGED);
+    return 0;
 }
 
 // Called before the dialog is displayed.

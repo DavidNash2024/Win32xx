@@ -19,6 +19,7 @@ class CViewClasses : public CTreeView
 public:
     CViewClasses();
     virtual ~CViewClasses();
+    void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions
@@ -30,6 +31,10 @@ protected:
 private:
     CViewClasses(const CViewClasses&);                // Disable copy construction
     CViewClasses& operator = (const CViewClasses&);   // Disable assignment operator
+
+    // Command handlers
+    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CImageList m_normalImages;
 };
@@ -72,6 +77,10 @@ class CDockClasses : public CDocker
 public:
     CDockClasses();
     virtual ~CDockClasses() {}
+
+protected:
+    // Virtual functions that override base class functions
+    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockClasses(const CDockClasses&);                // Disable copy construction

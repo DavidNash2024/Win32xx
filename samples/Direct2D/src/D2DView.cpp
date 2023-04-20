@@ -173,7 +173,7 @@ HRESULT CD2DView::OnRender()
         m_pRenderTarget->FillRectangle(&rectangle1, m_pLightSlateGrayBrush);
 
         // Draw the outline of a rectangle.
-        m_pRenderTarget->DrawRectangle(&rectangle2, m_pCornflowerBlueBrush);
+        m_pRenderTarget->DrawRectangle(&rectangle2, m_pCornflowerBlueBrush, 4 * zoom);
         hr = m_pRenderTarget->EndDraw();
     }
 
