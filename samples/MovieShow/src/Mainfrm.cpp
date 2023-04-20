@@ -617,6 +617,7 @@ void CMainFrame::LoadMovies()
         try
         {
             // Display the splash screen.
+            m_splashThread.GetSplash()->ShowText(L"", this);
             m_splashThread.GetSplash()->ShowText(L"Loading Library", this);
 
             CArchive ar(DataFile, CArchive::load);
@@ -1755,7 +1756,7 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     CDockFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleDockers();
     SetDialogFonts();
-    RecreateDialog();
+//    RecreateDialog();
     SetRedraw(TRUE);
     RedrawWindow();
     return 0;

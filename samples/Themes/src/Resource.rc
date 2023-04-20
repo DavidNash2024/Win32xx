@@ -106,11 +106,11 @@ IDW_MAIN                ICON                    "../src/res/Theme.ico"
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "../src/res/toolbar16_n.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar24.bmp"
 IDB_TOOLBAR_NORM        BITMAP                  "../src/res/toolbar24_n.bmp"
 IDB_TOOLBAR_HOT         BITMAP                  "../src/res/toolbar24_h.bmp"
 IDB_TOOLBAR_DIS         BITMAP                  "../src/res/toolbar24_d.bmp"
-IDB_TOOLBAR_SML         BITMAP                  "../src/res/toolbar16_n.bmp"
+IDB_TOOLBAR_SML         BITMAP                  "../src/res/toolbar16.bmp"
 IDB_ARROWS              BITMAP                  "../src/res/Arrows.bmp"
 IDB_CARDS               BITMAP                  "../src/res/Cards.bmp"
 IDB_STATUS              BITMAP                  "../src/res/Status.bmp"

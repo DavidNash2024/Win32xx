@@ -478,7 +478,8 @@ void CMainFrame::SetupToolBar()
         m_cards.AddButton(IDM_CARD_HEART);
         m_cards.AddButton(IDM_CARD_SPADE);
 
-        // Set the images for the additional toolbars
+        // Set the images for the toolbars
+        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_HOT, IDB_DISABLED);
         SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));
         SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
     }

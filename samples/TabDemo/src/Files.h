@@ -16,16 +16,22 @@ public:
     virtual ~CViewFiles();
     void InsertItems();
     void SetColumns();
+    void SetDPIColumnWidths();
+    void SetDPIImages();
 
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewFiles(const CViewFiles&);                // Disable copy construction
     CViewFiles& operator = (const CViewFiles&);   // Disable assignment operator
 
     CImageList m_smallImages;
+
+    // Command handlers
+    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 

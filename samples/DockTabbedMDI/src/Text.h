@@ -64,6 +64,10 @@ public:
     CDockText();
     virtual ~CDockText() {}
 
+protected:
+    // Virtual functions that override base class functions
+    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+
 private:
     CDockText(const CDockText&);                // Disable copy construction
     CDockText& operator = (const CDockText&);   // Disable assignment operator

@@ -322,7 +322,7 @@ LRESULT CViewList::OnUserDPIChanged(UINT, WPARAM, LPARAM)
 
     m_oldDPI = GetWindowDPI(*this);
 
-    // Adjust the images in response to window DPI changes. 
+    // Adjust the images in response to window DPI changes.
     SetDPIImages();
 
     return 0;

@@ -224,3 +224,13 @@ CDockDialog::CDockDialog()
     SetBarWidth(DPIScaleInt(8));
 }
 
+// Called in response to a UWM_DPICHANGED message which is sent to child windows
+// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
+// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CDockDialog::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Set the width of the splitter bar.
+    SetBarWidth(DPIScaleInt(8));
+    return CDocker::OnUserDPIChanged(msg, wparam, lparam);
+}
+

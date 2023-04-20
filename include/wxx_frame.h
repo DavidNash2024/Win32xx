@@ -1900,9 +1900,7 @@ namespace Win32xx
         if (~pMID->mii.fType & MFT_SEPARATOR)  // if the type is not a separator
         {
             // Account for icon height.
-            int iconGap = 4;
-            int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
-            iconGap = MulDiv(iconGap, dpiX, USER_DEFAULT_SCREEN_DPI);
+            int iconGap = T::DPIScaleInt(6);
             size.cy = MAX(size.cy, GetMenuIconHeight() + iconGap);
         }
 
@@ -2080,7 +2078,8 @@ namespace Win32xx
         ::PostQuitMessage(0);   // Terminates the application.
     }
 
-    // Called when the effective dots per inch (dpi) for a window has changed.
+    // Called in response to a WM_DPICHANGED message which is sent to a top-level
+    // window when the DPI changes.  Only top-level windows receive a WM_DPICHANGED message.
     template <class T>
     inline LRESULT CFrameT<T>::OnDPIChanged(UINT, WPARAM wparam, LPARAM lparam)
     {
@@ -2497,7 +2496,7 @@ namespace Win32xx
     inline LRESULT CFrameT<T>::OnSettingChange(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         OnSysColorChange(msg, wparam, lparam);
-    //    UpdateSettings();
+        UpdateSettings();
         return 0;
     }
 

@@ -112,7 +112,7 @@ void CViewFiles::SetDPIColumnWidths()
     SetColumnWidth(2, DPIScaleInt(100));
 }
 
-// Adjusts the listview image sizes widths in response to window DPI changes.
+// Adjusts the listview image sizes in response to window DPI changes.
 void CViewFiles::SetDPIImages()
 {
     // Set the image lists

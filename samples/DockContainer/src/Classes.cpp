@@ -64,6 +64,14 @@ void CViewClasses::OnDestroy()
     SetImageList(0, LVSIL_SMALL);
 }
 
+// Respond to a mouse click on the window.
+LRESULT CViewClasses::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Set window focus. The docker will now report this as active.
+    SetFocus();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
 // Called in response to a UWM_DPICHANGED message which is sent to child windows
 // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
 // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
@@ -73,20 +81,13 @@ LRESULT CViewClasses::OnUserDPIChanged(UINT, WPARAM, LPARAM)
     return 0;
 }
 
-// Respond to a mouse click on the window.
-LRESULT CViewClasses::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Set window focus. The docker will now report this as active.
-    SetFocus();
-    return FinalWindowProc(msg, wparam, lparam);
-}
-
 // Set the CREATESTURCT parameters befoe the window is created.
 void CViewClasses::PreCreate(CREATESTRUCT& cs)
 {
     cs.style = TVS_NOTOOLTIPS | WS_CHILD;
 }
 
+// Adjusts the treeview image sizes in response to window DPI changes.
 void CViewClasses::SetDPIImages()
 {
     // Resize the image list.

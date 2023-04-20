@@ -353,6 +353,13 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
+        case WM_THEMECHANGED:
+        {
+            CFrame::OnThemeChanged(msg, wparam, lparam);
+            DPIScaleMenuIcons();
+            return 0;
+        }
+
         case UWM_PREVIEWCLOSE:    return OnPreviewClose();
         case UWM_PREVIEWPRINT:    return OnPreviewPrint();
         case UWM_PREVIEWSETUP:    return OnPreviewSetup();

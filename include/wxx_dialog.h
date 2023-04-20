@@ -1158,7 +1158,7 @@ namespace Win32xx
         VERIFY(::EndDeferWindowPos(hdwp));
     }
 
-// Rescales the layout to changes in the parent window's dpi.
+    // Rescales the layout to changes in the parent window's dpi.
     inline void CResizer::RescaleValues()
     {
         int dpi = GetWindowDPI(m_parent);

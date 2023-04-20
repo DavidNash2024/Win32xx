@@ -78,6 +78,7 @@ public:
 protected:
     // Virtual functions overriding base class functions
     virtual void OnDestroy();
+    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnOK();

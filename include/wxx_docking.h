@@ -870,11 +870,11 @@ namespace Win32xx
 
         int gap = DPIScaleInt(4);
         CRect rc = GetWindowRect();
-        int cx = m_pDocker->GetTextHeight() - gap/2;
-        int cy = m_pDocker->GetTextHeight() - gap/2;
+        int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
+        int cy = GetSystemMetrics(SM_CYSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
 
-        rcClose.top = 2 + rc.top + m_pDocker->m_ncHeight/2 - cy/2;
-        rcClose.bottom = 2 + rc.top + m_pDocker->m_ncHeight/2 + cy/2;
+        rcClose.top = 2 + rc.top + m_pDocker->m_ncHeight / 2 - cy / 2;
+        rcClose.bottom = 2 + rc.top + m_pDocker->m_ncHeight / 2 + cy / 2;
         rcClose.right = rc.right - gap;
         rcClose.left = rcClose.right - cx;
 
@@ -885,7 +885,6 @@ namespace Win32xx
             rcClose.right = rcClose.left + cx;
         }
 #endif
-
 
         return rcClose;
     }

@@ -82,6 +82,10 @@ public:
     CDockDialog();
     virtual ~CDockDialog() {}
 
+protected:
+    // Virtual functions that override base class functions
+    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+
 private:
     CDockDialog(const CDockDialog&);                // Disable copy construction
     CDockDialog& operator = (const CDockDialog&);   // Disable assignment operator
