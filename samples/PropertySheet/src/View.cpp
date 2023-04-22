@@ -21,9 +21,7 @@ void CView::OnDraw(CDC& dc)
     if (GetWinVersion() >= 2601)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        LOGFONT lf = info.lfMessageFont;
-        int dpi = GetWindowDPI(*this);
-        lf.lfHeight = -MulDiv(10, dpi, POINTS_PER_INCH);
+        LOGFONT lf = DPIScaleLogfont(info.lfMessageFont, 10);
         dc.CreateFontIndirect(lf);
     }
 

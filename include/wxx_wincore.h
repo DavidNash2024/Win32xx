@@ -656,6 +656,7 @@ namespace Win32xx
         // dx.DDX_Check(IDC_CHECK_C,        m_checkC);
     }
 
+    // Scales the specified font to the current window DPI.
     inline CFont CWnd::DPIScaleFont(CFont font, int pointSize) const
     {
         int dpi = GetWindowDPI(*this);
@@ -666,6 +667,7 @@ namespace Win32xx
         return dpiFont;
     }
 
+    // Scales the specified int to the current window DPI.
     inline int CWnd::DPIScaleInt(int value) const
     {
         int dpi = GetWindowDPI(*this);
@@ -674,6 +676,16 @@ namespace Win32xx
         return dpiValue;
     }
 
+   // Scales the specified logfont to the current window DPI.
+   inline LOGFONT CWnd::DPIScaleLogfont(LOGFONT logfont, int pointSize) const
+    {
+        int dpi = GetWindowDPI(*this);
+        logfont.lfHeight = -MulDiv(pointSize, dpi, POINTS_PER_INCH);
+
+        return logfont;
+    }
+
+    // Scales the specified rect to the current window DPI.
     inline CRect CWnd::DPIScaleRect(RECT rc) const
     {
         int dpi = GetWindowDPI(*this);
@@ -1120,8 +1132,8 @@ namespace Win32xx
         assert(IsWindow());
 
         // Large icon sizes
-        int cxIcon = ::GetSystemMetrics(SM_CXICON);
-        int cyIcon = ::GetSystemMetrics(SM_CYICON);
+        int cxIcon = ::GetSystemMetrics(SM_CXICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
+        int cyIcon = ::GetSystemMetrics(SM_CYICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
 
         HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 
@@ -1139,8 +1151,8 @@ namespace Win32xx
         assert(IsWindow());
 
         // Small icon sizes
-        int cxIcon = ::GetSystemMetrics(SM_CXSMICON);
-        int cyIcon = ::GetSystemMetrics(SM_CYSMICON);
+        int cxIcon = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
+        int cyIcon = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
 
         HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 

@@ -44,13 +44,7 @@
 #include "wxx_toolbar.h"
 
 
-#ifndef WM_UNINITMENUPOPUP
-  #define WM_UNINITMENUPOPUP        0x0125
-#endif
 
-#ifndef WM_MENURBUTTONUP
-  #define WM_MENURBUTTONUP      0x0122
-#endif
 
 
 namespace Win32xx
@@ -210,8 +204,8 @@ namespace Win32xx
 
         if (IsMDIChildMaxed())
         {
-            int cx = ::GetSystemMetrics(SM_CXSMICON);
-            int cy = ::GetSystemMetrics(SM_CYSMICON);
+            int cx = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
+            int cy = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
             CRect rc = GetClientRect();
             int gap = 4;
             rc.right -= gap;

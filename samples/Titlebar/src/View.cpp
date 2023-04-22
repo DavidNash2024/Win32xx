@@ -33,9 +33,7 @@ void CView::OnDraw(CDC& dc)
 
     // Draw the text to the memory device context.
     NONCLIENTMETRICS info = GetNonClientMetrics();
-    LOGFONT lf = info.lfMessageFont;
-    int dpi = GetWindowDPI(*this);
-    lf.lfHeight = -MulDiv(10, dpi, POINTS_PER_INCH);
+    LOGFONT lf = DPIScaleLogfont(info.lfMessageFont, 10);
     memDC.CreateFontIndirect(lf);
     memDC.DrawText(text, -1, rect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 

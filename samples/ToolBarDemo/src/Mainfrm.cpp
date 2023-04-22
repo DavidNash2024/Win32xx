@@ -182,6 +182,7 @@ LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
     UpdateSettings();
     DPIScaleMenuIcons();
     DPIScaleToolBar();
+    m_view.DPIScaleToolBar();
     RecalcLayout();
 
     return 0;

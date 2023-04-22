@@ -1,5 +1,5 @@
-// Win32++   Version 9.2
-// Release Date: 26th February 2023
+// Win32++   Version 9.3
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -57,17 +57,7 @@
 
 #include "wxx_appcore0.h"
 
-#ifndef WHEEL_DELTA
-  #define WHEEL_DELTA                     120
-#endif
 
-#ifndef GET_WHEEL_DELTA_WPARAM
-  #define GET_WHEEL_DELTA_WPARAM(wparam)  ((short)HIWORD(wparam))
-#endif
-
-#ifndef WM_MOUSEWHEEL
-  #define WM_MOUSEWHEEL                   0x020A
-#endif
 
 namespace Win32xx
 {

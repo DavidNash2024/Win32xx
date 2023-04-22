@@ -26,7 +26,7 @@ HWND CTestWindow::Create(HWND)
     int top = 40 + 20 * m_threadNumber;
     CRect rc(left, top, left + 300, top + 200);
     rc = DPIScaleRect(rc);
-    return CreateEx(0, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE, rc, 0, NULL);
+    return CreateEx(0, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE, rc, 0, 0);
 }
 
 // Called when the test window is manually closed by the user.
