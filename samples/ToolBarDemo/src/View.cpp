@@ -16,15 +16,16 @@ CView::CView()
 void CView::DPIScaleToolBar()
 {
     // Create the ToolBar's image list from 4 icons
-    int scale = DPIScaleInt(1);
+    int scale = 96 * GetWindowDPI(*this) / GetWindowDPI(0);
     m_toolBarImages.DeleteImageList();
-    m_toolBarImages.Create(scale * 48, scale * 48, ILC_COLOR32 | ILC_MASK, 0, 0);
+    m_toolBarImages.Create(scale, scale, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
     m_toolBarImages.AddIcon(IDI_LEFT);
     m_toolBarImages.AddIcon(IDI_RIGHT);
     m_toolBarImages.AddIcon(IDI_BOTTOM);
 
     m_toolBar.SetImageList(m_toolBarImages);
+    RecalcLayout();
 }
 
 // Position the toolbar on the bottom.
@@ -111,9 +112,7 @@ void CView::OnDraw(CDC& dc)
     if (GetWinVersion() >= 2601)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        LOGFONT lf = info.lfMessageFont;
-        int dpi = GetWindowDPI(*this);
-        lf.lfHeight = -MulDiv(10, dpi, POINTS_PER_INCH);
+        LOGFONT lf = DPIScaleLogfont(info.lfMessageFont, 10);
         dc.CreateFontIndirect(lf);
     }
 

@@ -89,29 +89,7 @@
 #include "wxx_toolbar.h"
 #include "default_resource.h"
 
-#ifndef BTNS_DROPDOWN
-  #define BTNS_DROPDOWN  0x0008
-#endif
 
-#ifndef BTNS_WHOLEDROPDOWN
-  #define BTNS_WHOLEDROPDOWN  0x0080
-#endif
-
-#ifndef RBN_MINMAX
-  #define RBN_MINMAX (RBN_FIRST - 21)
-#endif
-
-#ifndef WM_UNINITMENUPOPUP
-  #define WM_UNINITMENUPOPUP        0x0125
-#endif
-
-#ifndef WM_MENURBUTTONUP
-  #define WM_MENURBUTTONUP      0x0122
-#endif
-
-#ifndef WM_THEMECHANGED
-  #define WM_THEMECHANGED       0x031A
-#endif
 
 #if defined (_MSC_VER) && (_MSC_VER >= 1920)   // >= VS2019
   #pragma warning ( push )

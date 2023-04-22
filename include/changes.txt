@@ -18,6 +18,7 @@ Added CWnd::DPIScaleRect;
 Added CWnd::DPIScaleUpBitmap(CBitmap bitmap);
 
 Added UWM_DPICHANGED message
+Updated the dock target bitmaps in the samples
 
 
 Version 9.2
