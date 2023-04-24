@@ -28,7 +28,6 @@ protected:
     virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnFileExit();
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT nID);

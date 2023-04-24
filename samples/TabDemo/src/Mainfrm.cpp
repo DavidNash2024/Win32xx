@@ -36,8 +36,8 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
-// Assigns the appropriately sized menu icons.
-// Required for per-monitor DPI-aware.
+// Assigns menu icons appropriately sized for this window's DPI.
+// Overrides the CFrameT::DPIScaleMenuIcons virtual function.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -112,18 +112,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     m_view.SetOwnerDraw(TRUE);
     m_view.SetShowButtons(TRUE);
 
-    return 0;
-}
-
-// Called when the effective dots per inch (dpi) for a window has changed.
-// This occurs when:
-//  - The window is moved to a new monitor that has a different DPI.
-//  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    CFrame::OnDPIChanged(msg, wparam, lparam);
-    DPIScaleMenuIcons();
-    RecalcLayout();
     return 0;
 }
 
@@ -303,6 +291,10 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_NEW_FILES,   IDI_FILEVIEW);
     AddMenuIcon(IDM_NEW_CLASSES, IDI_CLASSVIEW);
     AddMenuIcon(IDM_NEW_DIALOG,  IDI_DIALOGVIEW);
+
+    // Update the menu icons based on this window's DPI.
+    DPIScaleMenuIcons();
+
 }
 
 // Configure the toolbar.

@@ -42,8 +42,8 @@ void CMainFrame::DPIScaleListView()
     m_listView.SetColumnWidth(2, DPIScaleInt(130));
 }
 
-// Assigns the appropriately sized menu icons.
-// Required for per-monitor DPI-aware.
+// Assigns menu icons appropriately sized for this window's DPI.
+// Overrides the CFrameT::DPIScaleMenuIcons virtual function.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -111,7 +111,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     CFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleListView();
-    DPIScaleMenuIcons();
 
     RecalcLayout();
     return 0;
@@ -142,7 +141,7 @@ void CMainFrame::SetupMenuIcons()
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
 
-    // Update the menu icons
+    // Update the menu icons based on this window's DPI.
     DPIScaleMenuIcons();
 }
 

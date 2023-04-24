@@ -51,8 +51,8 @@ void CMainFrame::DPIScaleDockers()
     RecalcDockLayout();
 }
 
-// Assigns the appropriately sized menu icons.
-// Required for per-monitor DPI-aware.
+// Assigns menu icons appropriately sized for this window's DPI.
+// Overrides the CFrameT::DPIScaleMenuIcons virtual function.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -149,7 +149,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 
     CDockFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleDockers();
-    DPIScaleMenuIcons();
     RecalcDockLayout();
     RecalcLayout();
 
@@ -262,7 +261,7 @@ void CMainFrame::SetupMenuIcons()
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
 
-    // Update the menu icons
+    // Update the menu icons based on this window's DPI.
     DPIScaleMenuIcons();
 }
 

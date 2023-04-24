@@ -191,7 +191,8 @@ namespace Win32xx
         {
             m_menuImages = menuImages;
             m_menuDisabledImages.DeleteImageList();
-            m_menuDisabledImages.CreateDisabledImageList(m_menuImages);
+            if (menuImages.GetHandle() != 0)
+                m_menuDisabledImages.CreateDisabledImageList(m_menuImages);
         }
         void SetMenuTheme(const MenuTheme& mt);
         void SetMRULimit(UINT MRULimit);
@@ -216,6 +217,7 @@ namespace Win32xx
         virtual void CreateToolBar();
         virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
         virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
+        virtual void DPIScaleMenuIcons();
         virtual void DrawMenuItem(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pDrawItem);
@@ -1037,6 +1039,36 @@ namespace Win32xx
             }
         }
         return 0;
+    }
+
+    // Assigns menu icons appropriately sized for this window's DPI.
+    // Called by the framework when IsDPIPerMonitor returns true.
+    // Will remove menu item icons if they don't fit in the menu item.
+    // Override this function to have more control over the menu item icons used.
+    template <class T>
+    inline void CFrameT<T>::DPIScaleMenuIcons()
+    {
+        // Load the toolbar bitmap.
+        CBitmap toolbarImage(IDW_MAIN);
+
+        // Scale the bitmap to the menu item height.
+        int menuHeight = GetMenuIconHeight();
+        int scale = menuHeight / toolbarImage.GetSize().cy;
+        CBitmap scaledImage;
+        if (scale > 0)
+        {
+            // Create the image-list from the scaled image
+            scaledImage = ScaleUpBitmap(toolbarImage, scale);
+            CSize sz = scaledImage.GetSize();
+            m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+            COLORREF mask = RGB(192, 192, 192);
+            m_menuImages.Add(scaledImage, mask);
+
+            // Assign the image-list to the menu items.
+            SetMenuImages(m_menuImages);
+        }
+        else
+            SetMenuImages(0);
     }
 
     // Called by OnDrawItem to render the popup menu items.
@@ -1993,6 +2025,8 @@ namespace Win32xx
         }
 
         SetupMenuIcons();
+        if (IsDPIPerMonitorAware())
+            DPIScaleMenuIcons();
 
         // Create the status bar.
         if (IsUsingStatusBar())
@@ -2085,6 +2119,9 @@ namespace Win32xx
             CreateToolBar();    // CreateToolbar calls SetupToolBar.
             ShowToolBar(isToolbarShown);
         }
+
+        // Update the menu icons.
+        DPIScaleMenuIcons();
 
         // Notify the view that the DPI has changed.
         GetView().SendMessage(UWM_DPICHANGED, wparam, lparam);
@@ -3357,8 +3394,12 @@ namespace Win32xx
         // Add the set of toolbar images to the menu.
         if (GetToolBarData().size() > 0)
         {
-            // Add the icons for popup menu
+            // Add the icons for popup menu.
             AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+
+            // Update the menu icons.
+            if (IsDPIPerMonitorAware())
+                DPIScaleMenuIcons();
         }
     }
 

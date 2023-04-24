@@ -31,7 +31,6 @@ protected:
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM, LPARAM);
     virtual int     OnCreate(CREATESTRUCT& cs);
-    LRESULT         OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnHelp();
     virtual void    OnInitialUpdate();
     virtual LRESULT OnSysColorChange(UINT, WPARAM, LPARAM);
