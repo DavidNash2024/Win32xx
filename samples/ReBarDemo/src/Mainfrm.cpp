@@ -33,8 +33,8 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
-// Assigns the appropriately sized menu icons.
-// Required for per-monitor DPI-aware.
+// Assigns menu icons appropriately sized for this window's DPI.
+// Overrides the CFrameT::DPIScaleMenuIcons virtual function.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -65,7 +65,7 @@ void CMainFrame::DPIScaleReBar()
 {
     // Create the arrow toolbar's image list from 4 icons.
     int scale = DPIScaleInt(1);
-    m_toolBarImages.Create(scale * 48, scale * 48, ILC_COLOR32 | ILC_MASK, 0, 0);
+    m_toolBarImages.Create(scale * 32, scale * 32, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
     m_toolBarImages.AddIcon(IDI_LEFT);
     m_toolBarImages.AddIcon(IDI_RIGHT);
@@ -213,7 +213,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 
     // Perform the DPI rescaling.
     CFrame::OnDPIChanged(msg, wparam, lparam);
-    DPIScaleMenuIcons();
     DPIScaleReBar();
     RecalcLayout();
 
@@ -238,6 +237,7 @@ void CMainFrame::OnInitialUpdate()
     // Place any additional startup code here.
 
     TRACE("Frame created\n");
+    DPIScaleReBar();
 }
 
 // Place the rebar on the left of the view.
@@ -373,7 +373,7 @@ void CMainFrame::SetupMenuIcons()
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
 
-    // Update the menu icons
+    // Update the menu icons based on this window's DPI.
     DPIScaleMenuIcons();
 }
 

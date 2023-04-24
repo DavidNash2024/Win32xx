@@ -247,23 +247,28 @@ namespace Win32xx
         return dpi;
     }
 
+    // Scales up the size of the specified bitmap.
+    // Bitmaps can usually be scaled up bitmaps without losing visual quality. 
     inline CBitmap ScaleUpBitmap(CBitmap bitmap, int scale)
     {
-        // Get the size of the bitmap
+        assert(bitmap.GetHandle() != 0);
+        assert(scale != 0);
+
+        // Get the size of the bitmap.
         CSize size = bitmap.GetSize();
         int newWidth = size.cx * scale;
         int newHeight = size.cy * scale;
 
-        // Create the device contexts
+        // Create the device contexts.
         CClientDC clientDC(HWND_DESKTOP);
         CMemDC newImageDC(clientDC);
         CMemDC imageDC(clientDC);
 
-        // Create and select the bitmaps
+        // Create and select the bitmaps.
         newImageDC.CreateCompatibleBitmap(clientDC, newWidth, newHeight);
         imageDC.SelectObject(bitmap);
 
-        // Stretch the bitmap to the new size
+        // Stretch the bitmap to the new size.
         newImageDC.SetStretchBltMode(COLORONCOLOR);
         newImageDC.StretchBlt(0, 0, newWidth, newHeight, imageDC, 0, 0,
             size.cx, size.cy, SRCCOPY);

@@ -28,7 +28,6 @@ protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnClose();
-    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    SetupMenuIcons();

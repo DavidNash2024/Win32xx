@@ -64,8 +64,8 @@ void CMainFrame::DPIScaleDockers()
     RecalcDockLayout();
 }
 
-// Assigns the appropriately sized menu icons.
-// Required for per-monitor DPI-aware.
+// Assigns menu icons appropriately sized for this window's DPI.
+// Overrides the CFrameT::DPIScaleMenuIcons virtual function.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -126,6 +126,8 @@ void CMainFrame::LoadDefaultDockers()
     pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, DPIScaleInt(100), ID_DOCK_OUTPUT1);
     pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, DPIScaleInt(100), ID_DOCK_TEXT2);
     pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, DPIScaleInt(100), ID_DOCK_OUTPUT2);
+
+    DPIScaleDockers();
 }
 
 // Loads the default arrangement of MDIs.
@@ -322,7 +324,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 
     CDockFrame::OnDPIChanged(msg, wparam, lparam);
     DPIScaleDockers();
-    DPIScaleMenuIcons();
     RecalcLayout();
 
     // Enable redraw and redraw the frame.
@@ -552,6 +553,9 @@ void CMainFrame::SetupMenuIcons()
     AddMenuIcon(IDM_FILE_NEWTEXT, IDI_TEXT);
     AddMenuIcon(IDM_FILE_NEWLIST, IDI_FILEVIEW);
     AddMenuIcon(IDM_FILE_NEWTREE, IDI_CLASSVIEW);
+
+    // Update the menu icons based on this window's DPI.
+    DPIScaleMenuIcons();
 }
 
 // Set the Resource IDs for the toolbar buttons

@@ -1164,22 +1164,30 @@ namespace Win32xx
         int dpi = GetWindowDPI(m_parent);
         double scale = (double)dpi / double(m_currentDPI);
 
+        // Reset the scrolling position.
+        SetScrollPos(m_parent, 0, 0, TRUE);
+        m_xScrollPos = 0;
+        m_yScrollPos = 0;
+
         ScaleRect(m_initRect, scale);
         ScaleRect(m_minRect, scale);
         ScaleRect(m_maxRect, scale);
 
-        m_xScrollPos = (int)(m_xScrollPos * scale);
-        m_yScrollPos = (int)(m_yScrollPos * scale);
-
         std::vector<ResizeData>::iterator i;
         for (i = m_resizeData.begin(); i != m_resizeData.end(); ++i)
         {
-            ScaleRect((*i).initRect, scale);
             ScaleRect((*i).oldRect, scale);
         }
 
-        m_currentDPI = dpi;
         RecalcLayout();
+
+        for (i = m_resizeData.begin(); i != m_resizeData.end(); ++i)
+        {
+            ScaleRect((*i).initRect, scale);
+        }
+
+        RecalcLayout();
+        m_currentDPI = dpi;
     }
 
     inline void CResizer::ScaleRect(CRect& rc, double scale)

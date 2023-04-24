@@ -33,8 +33,8 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
-// Assigns the appropriately sized menu icons.
-// Required for per-monitor DPI-aware.
+// Assigns menu icons appropriately sized for this window's DPI.
+// Overrides the CFrameT::DPIScaleMenuIcons virtual function.
 void CMainFrame::DPIScaleMenuIcons()
 {
     // Load the toolbar bitmap.
@@ -180,7 +180,6 @@ LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
     // Update the rebar, menubar and statusbar.
     ResetMenuMetrics();
     UpdateSettings();
-    DPIScaleMenuIcons();
     DPIScaleToolBar();
     m_view.DPIScaleToolBar();
     RecalcLayout();
@@ -441,7 +440,7 @@ void CMainFrame::SetupMenuIcons()
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_SMALL);
 
-    // Update the menu icons
+    // Update the menu icons based on this window's DPI.
     DPIScaleMenuIcons();
 }
 
