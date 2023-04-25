@@ -19,7 +19,6 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
     void DPIScaleListView();
-    void DPIScaleMenuIcons();
 
 protected:
     // Virtual functions that override base class functions.

@@ -35,7 +35,6 @@ public:
     virtual HWND Create(HWND parent = 0);
 
     void DPIScaleDockers();
-    void DPIScaleMenuIcons();
 
 protected:
     // Virtual functions that override base class functions

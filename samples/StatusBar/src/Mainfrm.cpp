@@ -34,32 +34,6 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
-// Assigns menu icons appropriately sized for this window's DPI.
-// Overrides the CFrameT::DPIScaleMenuIcons virtual function.
-void CMainFrame::DPIScaleMenuIcons()
-{
-    // Load the toolbar bitmap.
-    CBitmap toolbarImage(IDW_MAIN);
-
-    // Scale the bitmap to the menu item height.
-    int menuHeight = GetMenuIconHeight();
-    int scale = menuHeight / toolbarImage.GetSize().cy;
-    CBitmap scaledImage;
-    if (scale > 0)
-        scaledImage = ScaleUpBitmap(toolbarImage, scale);
-    else
-        scaledImage.LoadBitmap(IDB_TOOLBAR16);
-
-    // Create the image-list from the scaled image
-    CSize sz = scaledImage.GetSize();
-    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-    COLORREF mask = RGB(192, 192, 192);
-    m_menuImages.Add(scaledImage, mask);
-
-    // Assign the image-list to the menu items.
-    SetMenuImages(m_menuImages);
-}
-
 // Perform the owner drawing for the statusbar.
 void CMainFrame::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem)
 {
@@ -310,9 +284,6 @@ void CMainFrame::SetupMenuIcons()
         AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
-
-    // Update the menu icons based on this window's DPI.
-    DPIScaleMenuIcons();
 }
 
 // Configure the toolbar.

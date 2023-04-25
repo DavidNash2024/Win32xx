@@ -46,7 +46,6 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void DPIScaleMenuIcons();
 
     // Accessors
     CDoc& GetDoc()      { return m_view.GetDoc(); }

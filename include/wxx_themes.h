@@ -132,25 +132,6 @@ namespace Win32xx
         return IsAeroThemed;
     }
 
-    // Returns TRUE if this application is DPI per monitor aware.
-    // The DPI awareness should be specified in the resource script
-    // (usually resource.rc) if required.
-    // Requires VS2019 or higher to return TRUE.
-    inline BOOL IsDPIPerMonitorAware()
-    {
-
-#ifdef DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
-
-        DPI_AWARENESS_CONTEXT dpiAwarenessContext = GetThreadDpiAwarenessContext();;
-        DPI_AWARENESS dpiAwareness = GetAwarenessFromDpiAwarenessContext(dpiAwarenessContext);
-
-        if (dpiAwareness == DPI_AWARENESS_PER_MONITOR_AWARE)
-            return TRUE;
-
-#endif
-        return FALSE;
-    }
-
     // Returns TRUE if XP themes are being used.
     inline BOOL IsXPThemed()
     {

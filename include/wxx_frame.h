@@ -217,7 +217,6 @@ namespace Win32xx
         virtual void CreateToolBar();
         virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
         virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
-        virtual void DPIScaleMenuIcons();
         virtual void DrawMenuItem(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pDrawItem);
         virtual void DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pDrawItem);
@@ -317,7 +316,6 @@ namespace Win32xx
         CFrameT(const CFrameT&);                // Disable copy construction
         CFrameT& operator = (const CFrameT&);   // Disable assignment operator
         CSize GetTBImageSize(CBitmap* pBitmap);
-        CBitmap ResizeBitmap(CBitmap image, int newHeight) const;
         void UpdateMenuBarBandSize();
         static LRESULT CALLBACK StaticKeyboardProc(int code, WPARAM wparam, LPARAM lparam);
 
@@ -526,7 +524,8 @@ namespace Win32xx
     }
 
     // Adds the icons from a bitmap resource to an internal ImageList for use with popup menu items.
-    // Note:  Images for menu icons should be sized 16x16 or 16x15 pixels. Larger images are ignored.
+    // Note:  Images for menu icons can be sized 16x16 or 16x15 pixels or higher.
+    //        If the images are too bif to fit in the menu, they are ignored.
     template <class T>
     inline UINT CFrameT<T>::AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID)
     {
@@ -550,43 +549,45 @@ namespace Win32xx
 
         // Resize the bitmap
         CSize bitmapSize = bitmap.GetSize();
-        int newSize = MIN(bitmapSize.cy, GetMenuIconHeight());
-        newSize = MAX(newSize, 16);
-        bitmap = ResizeBitmap(bitmap, newSize);
-
-        // Create the ImageList if required.
-        if (m_menuImages.GetHandle() == 0)
+        int scale = GetMenuIconHeight() / bitmapSize.cy;
+        m_menuIcons.clear();
+        if (scale > 0)
         {
+            bitmap = ScaleUpBitmap(bitmap, scale);
+            int newSize = MAX(bitmap.GetSize().cy, 16);
+
+            // Create the ImageList
             m_menuImages.Create(newSize, newSize, ILC_COLOR32 | ILC_MASK, images, 0);
-            m_menuIcons.clear();
-        }
 
-        // Add the resource IDs to the m_menuIcons vector.
-        std::vector<UINT>::const_iterator iter;
-        for (iter = menuData.begin(); iter != menuData.end(); ++iter)
-        {
-            if ((*iter) != 0)
-                m_menuIcons.push_back(*iter);
-        }
+            // Add the resource IDs to the m_menuIcons vector.
+            std::vector<UINT>::const_iterator iter;
+            for (iter = menuData.begin(); iter != menuData.end(); ++iter)
+            {
+                if ((*iter) != 0)
+                    m_menuIcons.push_back(*iter);
+            }
 
-        // Add the images to the imageList.
-        m_menuImages.Add(bitmap, mask);
+            // Add the images to the imageList.
+            m_menuImages.Add(bitmap, mask);
 
-        // Add the images to the disabled imagelist.
-        if (disabledID != 0)
-        {
-            // Create the disabled imageList if required.
-            if (m_menuDisabledImages.GetHandle() == 0)
-                m_menuDisabledImages.Create(newSize, newSize, ILC_COLOR32 | ILC_MASK, images, 0);
-
-            CBitmap disabled(disabledID);
-
-            m_menuDisabledImages.Add(disabled, mask);
-        }
-        else
-        {
-            m_menuDisabledImages.DeleteImageList();
-            m_menuDisabledImages.CreateDisabledImageList(m_menuImages);
+            // Add the images to the disabled imagelist.
+            if (disabledID != 0)
+            {
+                // Create the disabled ImageList from disabledID.
+                CBitmap disabled(disabledID);
+                scale = GetMenuIconHeight() / disabled.GetSize().cy;
+                if (scale > 0)
+                {
+                    disabled = ScaleUpBitmap(disabled, scale);
+                    newSize = MAX(disabled.GetSize().cy, 16);
+                    m_menuDisabledImages.Create(newSize, newSize, ILC_COLOR32 | ILC_MASK, images, 0);
+                    m_menuDisabledImages.Add(disabled, mask);
+                }
+                else
+                    m_menuDisabledImages.CreateDisabledImageList(m_menuImages);
+            }
+            else
+                m_menuDisabledImages.CreateDisabledImageList(m_menuImages);
         }
 
         // return the number of menu icons.
@@ -1039,36 +1040,6 @@ namespace Win32xx
             }
         }
         return 0;
-    }
-
-    // Assigns menu icons appropriately sized for this window's DPI.
-    // Called by the framework when IsDPIPerMonitor returns true.
-    // Will remove menu item icons if they don't fit in the menu item.
-    // Override this function to have more control over the menu item icons used.
-    template <class T>
-    inline void CFrameT<T>::DPIScaleMenuIcons()
-    {
-        // Load the toolbar bitmap.
-        CBitmap toolbarImage(IDW_MAIN);
-
-        // Scale the bitmap to the menu item height.
-        int menuHeight = GetMenuIconHeight();
-        int scale = menuHeight / toolbarImage.GetSize().cy;
-        CBitmap scaledImage;
-        if (scale > 0)
-        {
-            // Create the image-list from the scaled image
-            scaledImage = ScaleUpBitmap(toolbarImage, scale);
-            CSize sz = scaledImage.GetSize();
-            m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-            COLORREF mask = RGB(192, 192, 192);
-            m_menuImages.Add(scaledImage, mask);
-
-            // Assign the image-list to the menu items.
-            SetMenuImages(m_menuImages);
-        }
-        else
-            SetMenuImages(0);
     }
 
     // Called by OnDrawItem to render the popup menu items.
@@ -2025,8 +1996,6 @@ namespace Win32xx
         }
 
         SetupMenuIcons();
-        if (IsDPIPerMonitorAware())
-            DPIScaleMenuIcons();
 
         // Create the status bar.
         if (IsUsingStatusBar())
@@ -2121,7 +2090,7 @@ namespace Win32xx
         }
 
         // Update the menu icons.
-        DPIScaleMenuIcons();
+        SetupMenuIcons();
 
         // Notify the view that the DPI has changed.
         GetView().SendMessage(UWM_DPICHANGED, wparam, lparam);
@@ -2728,30 +2697,6 @@ namespace Win32xx
         }
 
         UpdateMRUMenu();
-    }
-
-    template <class T>
-    inline CBitmap CFrameT<T>::ResizeBitmap(CBitmap image, int newHeight) const
-    {
-        // Get the size of the bitmap
-        CSize size = image.GetSize();
-        int newWidth = (size.cx * newHeight) / size.cy;
-
-        // Create the device contexts
-        CClientDC clientDC(*this);
-        CMemDC newImageDC(clientDC);
-        CMemDC imageDC(clientDC);
-
-        // Create and select the bitmaps
-        newImageDC.CreateCompatibleBitmap(clientDC, newWidth, newHeight);
-        imageDC.SelectObject(image);
-
-        // Stretch the bitmap to the new height
-        newImageDC.SetStretchBltMode(COLORONCOLOR);
-        newImageDC.StretchBlt(0, 0, newWidth, newHeight, imageDC, 0, 0,
-            size.cx, size.cy, SRCCOPY);
-
-        return newImageDC.DetachBitmap();
     }
 
     // Saves the current MRU settings in the registry.
@@ -3396,10 +3341,6 @@ namespace Win32xx
         {
             // Add the icons for popup menu.
             AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MAIN, 0);
-
-            // Update the menu icons.
-            if (IsDPIPerMonitorAware())
-                DPIScaleMenuIcons();
         }
     }
 
