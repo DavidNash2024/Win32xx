@@ -30,7 +30,6 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
     void DPIScaleDockers();
-    void DPIScaleMenuIcons();
 
 protected:
     // Virtual functions overriding base class functions

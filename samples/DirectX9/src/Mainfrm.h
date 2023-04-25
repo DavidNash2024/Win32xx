@@ -20,8 +20,6 @@ public:
     virtual HWND Create(HWND parent = 0);
     CDXView& GetDXView() { return m_DXView; }
 
-    void DPIScaleMenuIcons();
-
 protected:
     // Virtual functions that override base class functions
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);

@@ -18,7 +18,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void DPIScaleMenuIcons();
+
     BOOL OnFileExit();
 
 protected:

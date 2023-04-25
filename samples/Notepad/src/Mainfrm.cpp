@@ -117,32 +117,6 @@ void CMainFrame::DetermineEncoding(CFile& file)
     SetEncoding(encoding);
 }
 
-// Assigns menu icons appropriately sized for this window's DPI.
-// Overrides the CFrameT::DPIScaleMenuIcons virtual function.
-void CMainFrame::DPIScaleMenuIcons()
-{
-    // Load the toolbar bitmap.
-    CBitmap toolbarImage(IDW_MAIN);
-
-    // Scale the bitmap to the menu item height.
-    int menuHeight = GetMenuIconHeight();
-    int scale = menuHeight / toolbarImage.GetSize().cy;
-    CBitmap scaledImage;
-    if (scale > 0)
-        scaledImage = ScaleUpBitmap(toolbarImage, scale);
-    else
-        scaledImage.LoadBitmap(IDW_MENUICONS);
-
-    // Create the image-list from the scaled image
-    CSize sz = scaledImage.GetSize();
-    m_menuImages.Create(sz.cy, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-    COLORREF mask = RGB(192, 192, 192);
-    m_menuImages.Add(scaledImage, mask);
-
-    // Assign the image-list to the menu items.
-    SetMenuImages(m_menuImages);
-}
-
 // Retrieves the width of the part required to contain the specified text.
 int CMainFrame::GetTextPartWidth(LPCTSTR text) const
 {
@@ -1017,9 +991,6 @@ void CMainFrame::SetupMenuIcons()
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MENUICONS);
-
-    // Update the menu icons based on this window's DPI.
-    DPIScaleMenuIcons();
 }
 
 // Assigns images and command IDs to the toolbar buttons,

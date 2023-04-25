@@ -19,7 +19,6 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    void DPIScaleMenuIcons();
     CDoc& GetDoc() { return m_view.GetDoc(); }
     void LoadFile(LPCTSTR fileName);
 
