@@ -203,9 +203,6 @@
     <None Include="..\src\res\toolbar.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\src\res\Win32++.manifest">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Win32++">

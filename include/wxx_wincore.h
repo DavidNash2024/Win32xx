@@ -248,7 +248,7 @@ namespace Win32xx
     }
 
     // Scales up the size of the specified bitmap.
-    // Bitmaps can usually be scaled up bitmaps without losing visual quality. 
+    // Bitmaps can usually be scaled up bitmaps without losing visual quality.
     inline CBitmap ScaleUpBitmap(CBitmap bitmap, int scale)
     {
         assert(bitmap.GetHandle() != 0);

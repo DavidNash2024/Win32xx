@@ -209,9 +209,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\src\res\Win32++.manifest">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="..\src\res\Star.ico">
       <Filter>Resource Files</Filter>
     </None>

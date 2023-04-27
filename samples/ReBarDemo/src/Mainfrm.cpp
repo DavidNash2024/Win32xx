@@ -39,7 +39,7 @@ void CMainFrame::DPIScaleReBar()
 {
     // Create the arrow toolbar's image list from 4 icons.
     int scale = DPIScaleInt(1);
-    m_toolBarImages.Create(scale * 32, scale * 32, ILC_COLOR32 | ILC_MASK, 0, 0);
+    m_toolBarImages.Create(scale * 48, scale * 48, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
     m_toolBarImages.AddIcon(IDI_LEFT);
     m_toolBarImages.AddIcon(IDI_RIGHT);
