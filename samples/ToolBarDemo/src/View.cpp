@@ -16,7 +16,7 @@ CView::CView()
 void CView::DPIScaleToolBar()
 {
     // Create the ToolBar's image list from 4 icons
-    int scale = 32 * GetWindowDPI(*this) / USER_DEFAULT_SCREEN_DPI;
+    int scale = 48 * GetWindowDPI(*this) / USER_DEFAULT_SCREEN_DPI;
     m_toolBarImages.DeleteImageList();
     m_toolBarImages.Create(scale, scale, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);

@@ -102,7 +102,6 @@
   <ItemGroup>
     <None Include="..\src\res\Star.ico" />
     <None Include="..\src\res\toolbar.bmp" />
-    <None Include="..\src\res\Win32++.manifest" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

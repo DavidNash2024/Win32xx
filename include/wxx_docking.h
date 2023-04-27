@@ -422,7 +422,7 @@ namespace Win32xx
         {
         public:
             CTarget() {}
-            virtual ~CTarget() {};
+            virtual ~CTarget() {}
 
         protected:
             virtual void OnDraw(CDC& dc);
@@ -449,6 +449,7 @@ namespace Win32xx
             BOOL IsOverContainer() { return m_isOverContainer; }
 
         protected:
+            virtual int OnCreate(CREATESTRUCT& cs);
             virtual void OnDraw(CDC& dc);
 
         private:
@@ -610,6 +611,7 @@ namespace Win32xx
         virtual LRESULT OnExitSizeMove(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -659,6 +661,7 @@ namespace Win32xx
 
         CRect m_barRect;
         CRect m_childRect;
+        CPoint m_grabPoint;
 
         BOOL m_isBlockMove;
         BOOL m_isUndocking;
@@ -1652,10 +1655,13 @@ namespace Win32xx
             if ((dockSide & DS_DOCKED_CONTAINER) && rcHint.Height() > 50)
             {
                 CRgn Rgn;
-                Rgn.CreateRectRgn(0, 0, rcHint.Width(), rcHint.Height() -25);
+                int gap = DPIScaleInt(5);
+                int tabHeight = DPIScaleInt(25);
+                int tabWidth = DPIScaleInt(60);
+                Rgn.CreateRectRgn(0, 0, rcHint.Width(), rcHint.Height() - tabHeight);
                 assert(Rgn.GetHandle());
                 CRgn Rgn2;
-                Rgn2.CreateRectRgn(5, rcHint.Height() -25, 60, rcHint.Height());
+                Rgn2.CreateRectRgn(gap, rcHint.Height() - tabHeight, tabWidth, rcHint.Height());
                 Rgn.CombineRgn(Rgn2, RGN_OR);
                 SetWindowRgn(Rgn, FALSE);
             }
@@ -1705,7 +1711,7 @@ namespace Win32xx
     inline void CDocker::CTarget::PreCreate(CREATESTRUCT& cs)
     {
         cs.style = WS_POPUP;
-        cs.dwExStyle = WS_EX_TOPMOST|WS_EX_TOOLWINDOW;
+        cs.dwExStyle = WS_EX_TOPMOST | WS_EX_TOOLWINDOW;
         cs.lpszClass = _T("Win32++ DockTargeting");
     }
 
@@ -1737,21 +1743,19 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM)
             return FALSE;
 
-        if (m_image.GetHandle() == 0)
-            return FALSE;
-
-        if (!IsWindow())
-            Create();
-
-        CBitmap image = DPIScaleUpBitmap(CBitmap(IDW_SDBOTTOM));
+        CBitmap image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDBOTTOM));
         int cxImage = image.GetSize().cx;
         int cyImage = image.GetSize().cy;
 
-        CRect rc = pDockTarget->GetViewRect();
-        VERIFY(pDockTarget->ClientToScreen(rc));
-        int xMid = rc.left + (rc.Width() - cxImage) / 2;
-        VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - DPIScaleInt(8) - cyImage, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
-        
+        if (!IsWindow())
+        {
+            Create();
+            CRect rc = pDockTarget->GetViewRect();
+            VERIFY(pDockTarget->ClientToScreen(rc));
+            int xMid = rc.left + (rc.Width() - cxImage) / 2;
+            VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - DPIScaleInt(8) - cyImage, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
+        }
+
         CRect rcBottom(0, 0, cxImage, cyImage);
         VERIFY(ScreenToClient(pt));
 
@@ -1784,68 +1788,6 @@ namespace Win32xx
     {
     }
 
-    inline void CDocker::CTargetCentre::OnDraw(CDC& dc)
-    {
-        if (m_image != 0)
-        {
-            m_DPIimage = DPIScaleUpBitmap(m_image);
-            int side = m_DPIimage.GetSize().cx;
-            int p1 = side / 4;
-            int p2 = side / 3;
-            int p3 = 2 * p2 - 1;
-            int p4 = p1 * 3;
-            int p5 = side;
-
-            // Use a region to create an irregularly shapped window.
-            POINT ptArray[16] = { {0, p2},  {p1, p2}, {p2, p1}, {p2, 0},
-                                  {p3, 0},  {p3, p1}, {p4, p2}, {p5, p2},
-                                  {p5, p3}, {p4, p3}, {p3, p4}, {p3, p5},
-                                  {p2, p5}, {p2, p4}, {p1, p3}, {0, p3} };
-
-            CRgn rgnPoly;
-            rgnPoly.CreatePolygonRgn(ptArray, 16, WINDING);
-            SetWindowRgn(rgnPoly, FALSE);
-
-            // Load the target bitmaps
-            CBitmap bmLeft = DPIScaleUpBitmap(CBitmap(IDW_SDLEFT));
-            CBitmap bmRight = DPIScaleUpBitmap(CBitmap(IDW_SDRIGHT));
-            CBitmap bmTop = DPIScaleUpBitmap(CBitmap(IDW_SDTOP));
-            CBitmap bmBottom = DPIScaleUpBitmap(CBitmap(IDW_SDBOTTOM));
-
-            // Gray out invalid dock targets.
-            DWORD style = m_pOldDockTarget->GetDockStyle();
-            if (style & DS_NO_DOCKCHILD_LEFT)  bmLeft.TintBitmap(150, 150, 150);
-            if (style & DS_NO_DOCKCHILD_TOP)   bmTop.TintBitmap(150, 150, 150);
-            if (style & DS_NO_DOCKCHILD_RIGHT) bmRight.TintBitmap(150, 150, 150);
-            if (style & DS_NO_DOCKCHILD_BOTTOM) bmBottom.TintBitmap(150, 150, 150);
-
-            CSize szBig = m_DPIimage.GetSize();
-            CSize szLeft = bmLeft.GetSize();
-            CSize szTop = bmTop.GetSize();
-            CSize szRight = bmRight.GetSize();
-            CSize szBottom = bmBottom.GetSize();
-
-            // Draw the dock targets.
-            dc.DrawBitmap(0, 0, szBig.cx, szBig.cy, m_DPIimage, RGB(255, 0, 255));
-            int midleft = (szBig.cy - szLeft.cy) / 2;
-            int midright = szBig.cx - szRight.cx;
-            dc.DrawBitmap(0, midleft, szLeft.cx, szLeft.cy, bmLeft, RGB(255, 0, 255));
-            dc.DrawBitmap(midleft, 0, szTop.cx, szTop.cy, bmTop, RGB(255, 0, 255));
-            dc.DrawBitmap(midright, midleft, szRight.cx, szRight.cy, bmRight, RGB(255, 0, 255));
-            dc.DrawBitmap(midleft, midright, szBottom.cx, szBottom.cy, bmBottom, RGB(255, 0, 255));
-
-            if (IsOverContainer())
-            {
-                CBitmap bmMiddle(IDW_SDMIDDLE);
-                bmMiddle = DPIScaleUpBitmap(bmMiddle);
-                CSize szMiddle = bmMiddle.GetSize();
-                int xMid = (szBig.cx - szMiddle.cx) / 2;
-                int yMid = (szBig.cy - szMiddle.cy) / 2;
-                dc.DrawBitmap(xMid, yMid, szMiddle.cx, szMiddle.cy, bmMiddle, RGB(255, 0, 255));
-            }
-        }
-    }
-
     inline BOOL CDocker::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)
     {
         CDocker* pDockDrag = pDragPos->pDocker;
@@ -1855,8 +1797,8 @@ namespace Win32xx
         if (pDockTarget == NULL)
             return FALSE;
 
-        if (m_image == 0)
-            return FALSE;
+        m_image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDCENTER));
+        CSize imageSize = m_image.GetSize();
 
         if (!IsWindow())
             Create();
@@ -1867,8 +1809,8 @@ namespace Win32xx
         if (m_pOldDockTarget != pDockTarget)    Invalidate();
         m_pOldDockTarget = pDockTarget;
 
-        int cxImage = m_DPIimage.GetSize().cx;
-        int cyImage = m_DPIimage.GetSize().cy;
+        int cxImage = imageSize.cx;
+        int cyImage = imageSize.cy;
 
         CRect rcTarget = pDockTarget->GetDockClient().GetWindowRect();
         int xMid = rcTarget.left + (rcTarget.Width() - cxImage) / 2;
@@ -1933,6 +1875,72 @@ namespace Win32xx
             return FALSE;
     }
 
+    inline int CDocker::CTargetCentre::OnCreate(CREATESTRUCT&)
+    {
+        // Calculate the points for the region.
+        int side = m_image.GetSize().cx;
+        int p1 = side / 4;
+        int p2 = side / 3;
+        int p3 = 2 * p2 - 1;
+        int p4 = p1 * 3;
+        int p5 = side;
+
+        // Use a region to create an irregularly shapped window.
+        POINT ptArray[16] = { {0, p2},  {p1, p2}, {p2, p1}, {p2, 0},
+                              {p3, 0},  {p3, p1}, {p4, p2}, {p5, p2},
+                              {p5, p3}, {p4, p3}, {p3, p4}, {p3, p5},
+                              {p2, p5}, {p2, p4}, {p1, p3}, {0, p3} };
+
+        CRgn rgnPoly;
+        rgnPoly.CreatePolygonRgn(ptArray, 16, WINDING);
+        SetWindowRgn(rgnPoly, FALSE);
+        return 0;
+    }
+
+    inline void CDocker::CTargetCentre::OnDraw(CDC& dc)
+    {
+        if (m_image.GetHandle() != 0)
+        {
+            // Load the target bitmaps
+            CBitmap bmLeft = DPIScaleUpBitmap(CBitmap(IDW_SDLEFT));
+            CBitmap bmRight = DPIScaleUpBitmap(CBitmap(IDW_SDRIGHT));
+            CBitmap bmTop = DPIScaleUpBitmap(CBitmap(IDW_SDTOP));
+            CBitmap bmBottom = DPIScaleUpBitmap(CBitmap(IDW_SDBOTTOM));
+
+            // Gray out invalid dock targets.
+            DWORD style = m_pOldDockTarget->GetDockStyle();
+            if (style & DS_NO_DOCKCHILD_LEFT)  bmLeft.TintBitmap(150, 150, 150);
+            if (style & DS_NO_DOCKCHILD_TOP)   bmTop.TintBitmap(150, 150, 150);
+            if (style & DS_NO_DOCKCHILD_RIGHT) bmRight.TintBitmap(150, 150, 150);
+            if (style & DS_NO_DOCKCHILD_BOTTOM) bmBottom.TintBitmap(150, 150, 150);
+
+            // Get the dock target sizes.
+            CSize szBig = m_image.GetSize();
+            CSize szLeft = bmLeft.GetSize();
+            CSize szTop = bmTop.GetSize();
+            CSize szRight = bmRight.GetSize();
+            CSize szBottom = bmBottom.GetSize();
+
+            // Draw the dock targets.
+            dc.DrawBitmap(0, 0, szBig.cx, szBig.cy, m_image, RGB(255, 0, 255));
+            int midleft = (szBig.cy - szLeft.cy) / 2;
+            int midright = szBig.cx - szRight.cx;
+            dc.DrawBitmap(0, midleft, szLeft.cx, szLeft.cy, bmLeft, RGB(255, 0, 255));
+            dc.DrawBitmap(midleft, 0, szTop.cx, szTop.cy, bmTop, RGB(255, 0, 255));
+            dc.DrawBitmap(midright, midleft, szRight.cx, szRight.cy, bmRight, RGB(255, 0, 255));
+            dc.DrawBitmap(midleft, midright, szBottom.cx, szBottom.cy, bmBottom, RGB(255, 0, 255));
+
+            if (IsOverContainer())
+            {
+                CBitmap bmMiddle = DPIScaleUpBitmap(CBitmap(IDW_SDMIDDLE));
+                CSize szMiddle = bmMiddle.GetSize();
+                int xMid = (szBig.cx - szMiddle.cx) / 2;
+                int yMid = (szBig.cy - szMiddle.cy) / 2;
+                dc.DrawBitmap(xMid, yMid, szMiddle.cx, szMiddle.cy, bmMiddle, RGB(255, 0, 255));
+            }
+        }
+    }
+
 
     ////////////////////////////////////////////////////////////////
     // Definitions for the CTargetLeft class nested within CDocker.
@@ -1947,7 +1955,7 @@ namespace Win32xx
     inline BOOL CDocker::CTargetLeft::CheckTarget(LPDRAGPOS pDragPos)
     {
         CDocker* pDockDrag = pDragPos->pDocker;
-        assert( pDockDrag );
+        assert(pDockDrag);
         if (!pDockDrag) return FALSE;
 
         CPoint pt = pDragPos->pos;
@@ -1961,20 +1969,19 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT)
             return FALSE;
 
-        if (m_image.GetHandle() == 0)
-            return FALSE;
-
-        if (!IsWindow())
-            Create();
-
-        CBitmap image = DPIScaleUpBitmap(CBitmap(IDW_SDLEFT));
+        CBitmap image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDLEFT));
         int cxImage = image.GetSize().cx;
         int cyImage = image.GetSize().cy;
 
-        CRect rc = pDockTarget->GetViewRect();
-        VERIFY(pDockTarget->ClientToScreen(rc));
-        int yMid = rc.top + (rc.Height() - cyImage)/2;
-        VERIFY(SetWindowPos(HWND_TOPMOST, rc.left + DPIScaleInt(8), yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW));
+        if (!IsWindow())
+        {
+            Create();
+            CRect rc = pDockTarget->GetViewRect();
+            VERIFY(pDockTarget->ClientToScreen(rc));
+            int yMid = rc.top + (rc.Height() - cyImage) / 2;
+            VERIFY(SetWindowPos(HWND_TOPMOST, rc.left + DPIScaleInt(8), yMid, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
+        }
+
 
         CRect rcLeft(0, 0, cxImage, cyImage);
         VERIFY(ScreenToClient(pt));
@@ -2005,7 +2012,7 @@ namespace Win32xx
     inline BOOL CDocker::CTargetRight::CheckTarget(LPDRAGPOS pDragPos)
     {
         CDocker* pDockDrag = pDragPos->pDocker;
-        assert( pDockDrag );
+        assert(pDockDrag);
         if (!pDockDrag) return FALSE;
 
         CPoint pt = pDragPos->pos;
@@ -2019,20 +2026,18 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT)
             return FALSE;
 
-        if (m_image.GetHandle() == 0)
-            return FALSE;
-
-        if (!IsWindow())
-            Create();
-
-        CBitmap image = DPIScaleUpBitmap(CBitmap(IDW_SDRIGHT));
+        CBitmap image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDRIGHT));
         int cxImage = image.GetSize().cx;
         int cyImage = image.GetSize().cy;
 
-        CRect rc = pDockTarget->GetViewRect();
-        VERIFY(pDockTarget->ClientToScreen(rc));
-        int yMid = rc.top + (rc.Height() - cyImage)/2;
-        VERIFY(SetWindowPos(HWND_TOPMOST, rc.right - DPIScaleInt(8) - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW)); 
+        if (!IsWindow())
+        {
+            Create();
+            CRect rc = pDockTarget->GetViewRect();
+            VERIFY(pDockTarget->ClientToScreen(rc));
+            int yMid = rc.top + (rc.Height() - cyImage) / 2;
+            VERIFY(SetWindowPos(HWND_TOPMOST, rc.right - DPIScaleInt(8) - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
+        }
 
         CRect rcRight(0, 0, cxImage, cyImage);
         VERIFY(ScreenToClient(pt));
@@ -2077,20 +2082,18 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP)
             return FALSE;
 
-        if (m_image.GetHandle() == 0)
-            return FALSE;
-
-        if (!IsWindow())
-            Create();
-
-        CBitmap image = DPIScaleUpBitmap(CBitmap(IDW_SDTOP));
+        CBitmap image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDTOP));
         int cxImage = image.GetSize().cx;
         int cyImage = image.GetSize().cy;
 
-        CRect rc = pDockTarget->GetViewRect();
-        VERIFY(pDockTarget->ClientToScreen(rc));
-        int xMid = rc.left + (rc.Width() - cxImage) / 2;
-        VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.top + DPIScaleInt(8), cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
+        if (!IsWindow())
+        {
+            Create();
+            CRect rc = pDockTarget->GetViewRect();
+            VERIFY(pDockTarget->ClientToScreen(rc));
+            int xMid = rc.left + (rc.Width() - cxImage) / 2;
+            VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.top + DPIScaleInt(8), cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
+        }
 
         CRect rcTop(0, 0, cxImage, cyImage);
         VERIFY(ScreenToClient(pt));
@@ -2259,6 +2262,15 @@ namespace Win32xx
                                 GetDockHint().Destroy();
                                 pDockDrag->m_dockZone = 0;
                                 pDockDrag->m_isBlockMove = FALSE;
+
+                                // Restore the dragged docker's drag point for Windows 10 and above.
+                                if (GetWinVersion() >= 3000)
+                                {
+                                    CPoint pos = GetCursorPos();
+                                    int x = pos.x - pDockDrag->m_grabPoint.x - DPIScaleInt(6);
+                                    int y = pos.y + pDockDrag->m_grabPoint.y + DPIScaleInt(6);
+                                    pDockDrag->SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW);
+                                }
                             }
                         }
                     }
@@ -3428,10 +3440,19 @@ namespace Win32xx
         return 0;  // Return 0 to stop propagating this message to parent windows.
     }
 
-    // Called with a left mouse button double click.
+    // Called with a left mouse button double click on the non-client area.
     inline LRESULT CDocker::OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         m_isDragging = FALSE;
+        return FinalWindowProc(msg, wparam, lparam);
+    }
+
+    // Called with a left mouse button press on the non-client area.
+    inline LRESULT CDocker::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        CPoint pt = GetCursorPos();
+        ScreenToClient(pt);
+        m_grabPoint = pt;
         return FinalWindowProc(msg, wparam, lparam);
     }
 
@@ -4333,6 +4354,11 @@ namespace Win32xx
         // Position and draw the undocked window, unless it is about to be closed.
         SetUndockPosition(pt, showUndocked);
 
+        // Save the undocked docker's grap point
+        CPoint drag = GetCursorPos();
+        ScreenToClient(drag);
+        m_grabPoint = drag;
+
         // Give the view window focus unless its child already has it.
         if (!GetView().IsChild(GetFocus()))
             GetView().SetFocus();
@@ -4491,6 +4517,7 @@ namespace Win32xx
         case WM_EXITSIZEMOVE:       return OnExitSizeMove(msg, wparam, lparam);
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
         case WM_NCLBUTTONDBLCLK:    return OnNCLButtonDblClk(msg, wparam, lparam);
+        case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
         case WM_SIZE:               return OnSize(msg, wparam, lparam);
         case WM_SYSCOLORCHANGE:     return OnSysColorChange(msg, wparam, lparam);
         case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
