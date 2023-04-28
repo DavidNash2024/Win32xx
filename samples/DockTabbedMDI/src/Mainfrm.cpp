@@ -42,28 +42,6 @@ HWND CMainFrame::Create(HWND parent)
     return CDockFrame::Create(parent);
 }
 
-// Adjusts the dockers in response to window DPI changes.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleDockers()
-{
-    std::vector<CDocker*> v = GetAllDockers();
-    std::vector<CDocker*>::iterator it;
-    for (it = v.begin(); it != v.end(); ++it)
-    {
-        if ((*it)->IsWindow())
-        {
-            // Reset the docker size.
-            int size = (*it)->GetDockSize();
-            (*it)->SetDockSize(size);
-
-            // Notify the docker that the DPI has changed.
-            (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
-        }
-    }
-
-    RecalcDockLayout();
-}
-
 // Hides or shows tabs for containers with a single tab.
 void CMainFrame::HideSingleContainerTab(bool hideSingle)
 {
@@ -100,8 +78,6 @@ void CMainFrame::LoadDefaultDockers()
     pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, DPIScaleInt(100), ID_DOCK_OUTPUT1);
     pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, DPIScaleInt(100), ID_DOCK_TEXT2);
     pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, DPIScaleInt(100), ID_DOCK_OUTPUT2);
-
-    DPIScaleDockers();
 }
 
 // Loads the default arrangement of MDIs.
@@ -271,6 +247,7 @@ BOOL CMainFrame::OnDefaultLayout()
 
     SetContainerTabsAtTop(m_isContainerTabsAtTop);
     HideSingleContainerTab(m_isHideSingleTab);
+    DPIUpdateAllDockers();
     SetRedraw(TRUE);
     RedrawWindow();
     return TRUE;
@@ -285,25 +262,6 @@ LRESULT CMainFrame::OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam)
         m_pActiveDocker = GetActiveDocker();
 
     return CDockFrame::OnDockActivated(msg, wparam, lparam);
-}
-
-// Called when the effective dots per inch (dpi) for a window has changed.
-// This occurs when:
-//  - The window is moved to a new monitor that has a different DPI.
-//  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Suppress redraw to render the DPI changes smoothly.
-    SetRedraw(FALSE);
-
-    CDockFrame::OnDPIChanged(msg, wparam, lparam);
-    DPIScaleDockers();
-    RecalcLayout();
-
-    // Enable redraw and redraw the frame.
-    SetRedraw(TRUE);
-    RedrawWindow();
-    return 0;
 }
 
 // Issue a close request to the frame to end the program.
@@ -403,7 +361,7 @@ void CMainFrame::OnInitialUpdate()
     // Replace the frame's menu with our modified menu
     SetFrameMenu(frameMenu);
 
-    DPIScaleDockers();
+    DPIUpdateAllDockers();
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow(GetInitValues().showCmd);

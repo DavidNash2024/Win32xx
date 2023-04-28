@@ -134,28 +134,6 @@ HWND CMainFrame::Create(HWND parent)
     return CDockFrame::Create(parent);
 }
 
-// Adjusts the dockers in response to window DPI changes.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleDockers()
-{
-    std::vector<CDocker*> v = GetAllDockers();
-    std::vector<CDocker*>::iterator it;
-    for (it = v.begin(); it != v.end(); ++it)
-    {
-        if ((*it)->IsWindow())
-        {
-            // Reset the docker size.
-            int size = (*it)->GetDockSize();
-            (*it)->SetDockSize(size);
-
-            // Notify the docker that the DPI has changed.
-            (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
-        }
-    }
-
-    RecalcDockLayout();
-}
-
 // Converts a text string to a byte stream.
 // Loads an image from the byte stream and converts it to a thumbnail.
 // Saves the byte stream for the thumbnail in the specified vector.
@@ -1056,7 +1034,7 @@ void CMainFrame::OnInitialUpdate()
     // Fill the tree view and list view.
     LoadMovies();
     FillTreeItems();
-    DPIScaleDockers();
+    DPIUpdateAllDockers();
     RecreateDialog();
     SetRedraw(TRUE);
     RedrawWindow();
@@ -1366,7 +1344,7 @@ LRESULT CMainFrame::OnSelectListItem(const MovieInfo* pmi)
     assert(pmi);
 
     // Set the fonts.
-    SetDialogFonts();
+    m_pDockDialog->SetDialogFonts();
     CViewDialog& dialog = (CViewDialog&)m_pDockDialog->GetView();
     dialog.GetTitle().SetWindowText(pmi->movieName);
     dialog.GetYear().SetWindowText(pmi->releaseDate);
@@ -1584,21 +1562,6 @@ BOOL CMainFrame::SaveRegistrySettings()
     return FALSE;
 }
 
-// Sets the fonts used within the dialog.
-void CMainFrame::SetDialogFonts()
-{
-    // Set the fonts.
-    NONCLIENTMETRICS info = GetNonClientMetrics();
-    LOGFONT lf = info.lfMenuFont;
-    int dpi = GetWindowDPI(*this);
-    lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
-    CFont textFont(lf);
-
-    CViewDialog& dialog = (CViewDialog&)m_pDockDialog->GetView();
-    dialog.GetActors().SetFont(textFont, FALSE);
-    dialog.GetInfo().SetFont(textFont, FALSE);
-}
-
 // Adds icons for popup menus.
 void CMainFrame::SetupMenuIcons()
 {
@@ -1742,23 +1705,6 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
     pFrame->OnFilesLoaded();
     pFrame->GetToolBar().CheckButton(IDM_ADD_FOLDER, FALSE);
 
-    return 0;
-}
-
-// Called in response to a WM_DPICHANGED message which is sent to a top-level
-// window when the DPI changes.
-// Only top-level windows receive a WM_DPICHANGED message, so this message is
-// handled when an undocked docker is moved between monitors.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    SetRedraw(FALSE);
-
-    CDockFrame::OnDPIChanged(msg, wparam, lparam);
-    DPIScaleDockers();
-    SetDialogFonts();
-//    RecreateDialog();
-    SetRedraw(TRUE);
-    RedrawWindow();
     return 0;
 }
 

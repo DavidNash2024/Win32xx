@@ -82,6 +82,7 @@ namespace Win32xx
         virtual void    OnDestroy();
         virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDockDestroyed(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -165,6 +166,23 @@ namespace Win32xx
         return CDocker::OnDockDestroyed(msg, wparam, lparam);
     }
 
+    // Called when the effective dots per inch (dpi) for a window has changed.
+    // This occurs when:
+    //  - The window is moved to a new monitor that has a different DPI.
+    //  - The DPI of the monitor hosting the window changes.
+    inline LRESULT CDockFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        // Supress redraw to render the DPI changes smoothly.
+        SetRedraw(FALSE);
+        CFrameT<CDocker>::OnDPIChanged(msg, wparam, lparam);
+        DPIUpdateAllDockers();
+
+        // Enable redraw and redraw the frame.
+        SetRedraw(TRUE);
+        RedrawWindow();
+        return 0;
+    }
+
     // Called when the cursor is in an inactive window and the user presses a mouse button.
     inline LRESULT CDockFrame::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     {
@@ -208,6 +226,7 @@ namespace Win32xx
         switch (msg)
         {
         case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
+        case WM_DPICHANGED:         return OnDPIChanged(msg, wparam, lparam);
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
         case WM_SYSCOLORCHANGE:     return OnSysColorChange(msg, wparam, lparam);
 

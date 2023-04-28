@@ -34,8 +34,6 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    void DPIScaleDockers();
-
 protected:
     // Virtual functions that override base class functions
     virtual CDocker* NewDockerFromID(int dockID);
@@ -43,7 +41,6 @@ protected:
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnMenuUpdate(UINT id);

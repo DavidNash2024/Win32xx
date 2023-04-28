@@ -529,6 +529,7 @@ namespace Win32xx
         virtual void CloseAllDockers();
         virtual void Dock(CDocker* pDocker, UINT dockSide);
         virtual void DockInContainer(CDocker* pDocker, DWORD dockStyle, BOOL selectPage = TRUE);
+        virtual void DPIUpdateAllDockers();
         virtual CRect GetViewRect() const { return GetClientRect(); }
         virtual void Hide();
         virtual BOOL LoadContainerRegistrySettings(LPCTSTR registryKeyName);
@@ -2570,6 +2571,29 @@ namespace Win32xx
         }
     }
 
+    // Updates the view for all dockers in this dock family.
+    // Call this for the initially after dockers are created
+    // and when the DPI changes.
+    inline void CDocker::DPIUpdateAllDockers()
+    {
+        std::vector<CDocker*> v = GetAllDockers();
+        std::vector<CDocker*>::iterator it;
+        for (it = v.begin(); it != v.end(); ++it)
+        {
+            if ((*it)->IsWindow())
+            {
+                // Reset the docker size.
+                int size = (*it)->GetDockSize();
+                (*it)->SetDockSize(size);
+
+                // Notify the docker that the DPI has changed.
+                (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
+            }
+        }
+
+        RecalcDockLayout();
+    }
+
     // Draws all the captions.
     inline void CDocker::DrawAllCaptions()
     {
@@ -4540,6 +4564,25 @@ namespace Win32xx
     inline LRESULT CDocker::OnUserDPIChanged(UINT, WPARAM, LPARAM)
     {
         SetDefaultCaptionHeight();
+
+        if (this == GetDockAncestor())
+        {
+            std::vector<DockPtr> v = GetAllDockChildren();
+            std::vector<DockPtr>::iterator it;
+            for (it = v.begin(); it != v.end(); ++it)
+            {
+                if ((*it)->IsWindow())
+                {
+                    // Reset the docker size.
+                    int size = (*it)->GetDockSize();
+                    (*it)->SetDockSize(size);
+
+                    // Notify the docker that the DPI has changed.
+                    (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
+                }
+            }
+        }
+
         GetView().SendMessage(UWM_DPICHANGED);
         return 0;
     }

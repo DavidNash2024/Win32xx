@@ -38,27 +38,6 @@ HWND CMainFrame::Create(HWND parent)
     return CRibbonDockFrame::Create(parent);
 }
 
-// Adjusts the dockers in response to window DPI changes.
-void CMainFrame::DPIScaleDockers()
-{
-    std::vector<CDocker*> v = GetAllDockers();
-    std::vector<CDocker*>::iterator it;
-    for (it = v.begin(); it != v.end(); ++it)
-    {
-        if ((*it)->IsWindow())
-        {
-            // Reset the docker size.
-            int size = (*it)->GetDockSize();
-            (*it)->SetDockSize(size);
-
-            // Notify the docker that the DPI has changed.
-            (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
-        }
-    }
-
-    RecalcDockLayout();
-}
-
 // This function is called when a ribbon button is pressed.
 // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation.
 STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
@@ -166,25 +145,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     }
 
     return FALSE;
-}
-
-// Called when the effective dots per inch (dpi) for a window has changed.
-// This occurs when:
-//  - The window is moved to a new monitor that has a different DPI.
-//  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Suppress redraw to render the DPI changes smoothly.
-    SetRedraw(FALSE);
-
-    CDockFrame::OnDPIChanged(msg, wparam, lparam);
-    DPIScaleDockers();
-    RecalcLayout();
-
-    // Enable redraw and redraw the frame.
-    SetRedraw(TRUE);
-    RedrawWindow();
-    return 0;
 }
 
 // Called in response to a UWM_DROPFILE message.
@@ -362,7 +322,7 @@ void CMainFrame::OnInitialUpdate()
     pDock1->GetContainer()->SetHideSingleTab(TRUE);
     pDock2->GetContainer()->SetHideSingleTab(TRUE);
 
-    DPIScaleDockers();
+    DPIUpdateAllDockers();
 }
 
 void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)

@@ -29,28 +29,6 @@ HWND CMainFrame::Create(HWND parent)
     return CDockFrame::Create(parent);
 }
 
-// Adjusts dockers when the window DPI changes.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleDockers()
-{
-    std::vector<CDocker*> v = GetAllDockers();
-    std::vector<CDocker*>::iterator it;
-    for (it = v.begin(); it != v.end(); ++it)
-    {
-        if ((*it)->IsWindow())
-        {
-            // Reset the docker size.
-            int size = (*it)->GetDockSize();
-            (*it)->SetDockSize(size);
-
-            // Notify the docker that the DPI has changed.
-            (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
-        }
-    }
-
-    RecalcDockLayout();
-}
-
 // Load the default arrangement of the window panes.
 void CMainFrame::LoadDefaultWindowPanes()
 {
@@ -112,26 +90,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     return FALSE;
 }
 
-// Called when the effective dots per inch (dpi) for a window has changed.
-// This occurs when:
-//  - The window is moved to a new monitor that has a different DPI.
-//  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Suppress redraw to render the DPI changes smoothly.
-    SetRedraw(FALSE);
-
-    CDockFrame::OnDPIChanged(msg, wparam, lparam);
-    DPIScaleDockers();
-    RecalcDockLayout();
-    RecalcLayout();
-
-    // Enable redraw and redraw the frame.
-    SetRedraw(TRUE);
-    RedrawWindow();
-    return 0;
-}
-
 // Called from the file exit menu command.
 BOOL CMainFrame::OnFileExit()
 {
@@ -163,7 +121,7 @@ void CMainFrame::OnInitialUpdate()
         LoadDefaultWindowPanes();
     }
 
-    DPIScaleDockers();
+    DPIUpdateAllDockers();
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow(GetInitValues().showCmd);

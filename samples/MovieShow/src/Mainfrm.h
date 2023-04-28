@@ -35,15 +35,12 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    void DPIScaleDockers();
-
 protected:
     // Virtual functions that override base class functions
     virtual BOOL    LoadRegistrySettings(LPCTSTR szKeyName);
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    OnMenuUpdate(UINT nID);
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
@@ -90,7 +87,6 @@ private:
     void LoadMovies();
     void OnFilesLoaded();
     void RecreateDialog();
-    void SetDialogFonts();
 
     // Message handlers
     LRESULT OnBoxSetChanged();

@@ -65,6 +65,7 @@ public:
     virtual ~CDockDialog() {}
 
     CViewDialog& GetViewDialog() { return m_view; }
+    void SetDialogFonts();
 
 protected:
     LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
