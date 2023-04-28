@@ -140,6 +140,20 @@ LRESULT CDockDialog::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set the width of the splitter bar.
     SetBarWidth(DPIScaleInt(8));
+    SetDialogFonts();
     return CDocker::OnUserDPIChanged(msg, wparam, lparam);
 }
 
+// Sets the fonts used within the dialog.
+void CDockDialog::SetDialogFonts()
+{
+    // Set the fonts.
+    NONCLIENTMETRICS info = GetNonClientMetrics();
+    LOGFONT lf = info.lfMenuFont;
+    int dpi = GetWindowDPI(*this);
+    lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
+    CFont textFont(lf);
+
+    m_view.GetActors().SetFont(textFont, FALSE);
+    m_view.GetInfo().SetFont(textFont, FALSE);
+}

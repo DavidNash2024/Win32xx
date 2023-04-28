@@ -1,24 +1,123 @@
 Version 9.3
 ===========
-This version provides support for per-monitor(v2) DPI awareness.
+This version improves the support for high resolution monitors by automatically
+adjusting the size of the frame's toolbar bitmaps and menu icons appropriately.
+A number of functions have been added to make supporting high resolution
+monitors easier (see below). 
 
+This version also provides support for per-monitor(v2) DPI awareness.
+Per-monitor DPI awareness allows applications to maintain their visual quality
+when they are moved between monitors with different DPI settings.
+
+New Features and Enhancements
+-----------------------------
+* The toolbar bitmaps are automatically scaled up to a size appropriate for
+  the frame window's DPI. Bitmaps that are appropriate for lower resolution
+  monitors are be scaled up for use on higher resolution monitors without
+  a noticeable loss of visual quality.
+
+* The menu icon bitmaps are automatically scaled up to fit the menu item.
+  Note that menu icon bitmaps are not scaled down to fit the menu item, as 
+  that would result in poor image quality. If the menu item images specified
+  in the frame's SetupMenuItemIcons are too big to fit in the menu item,
+  the menu icons are not displayed.
+
+* Frames support per monitor DPI awareness by resizing themselves to the 
+  size recommended by the WM_DPICHANGED message. They also automatically 
+  adjust the toolbar images, menu icons, and statusbar fonts when the frame
+  window is moved between monitors with different DPI settings. A 
+  UWM_DPICHANGED is sent to the frame's view window to allow it to adjust
+  to the new DPI settings as well.  
+
+* Dockers and docking frames support per monitor DPI awareness by sending
+  a UWM_DPICHANGED to each child docker and each dock view window. The child
+  dockers and view windows should handle the UWM_DPICHANGED message and adjust
+  to the new DPI settings. This is demonstrated in the samples.  
+  
+* CResizer supports per monitor DPI awareness by repositioning the child
+  windows when the WM_DPICHANGED or UWM_DPICHANGED message is handled. 
+  
+
+About high resolution monitor support
+-------------------------------------
+Modern monitors can now use scaling factors of 400% or more. Applications which
+look good with scaling factors of 100% or 150% may not look good at higher
+scaling factors. It will often be appropriate to adjust the image-list for
+list-view and tree-view controls and adjust the fonts used by other windows
+to cater for larger scaling factors.
+
+Win32++ provides the following functions for high resolution monitor support.
+::GetWindowDPI
+CWnd::DPIScaleFont
+CWnd::DPIScaleInt
+CWnd::DPIScaleLogFont
+CWnd::DPIScaleRect
+CWnd::DPIScaleUpBitmap
+
+The GetWindowDPI function retrieves the window's current DPI. We can also
+call GetWindowDPI(0) to retrieve the system DPI, and the desktop's DPI when
+per monitor dpi awareness is enabled.
+
+The various DPIScaleXXX functions take values which are appropriate for a 
+a scaling factor of 100% and scale them up to the appropriate values for
+the current window's Dots Per Inch (DPI).
+
+About per monitor dpi aware v2
+------------------------------
+Per monitor dpi aware v2 is a feature that allows applications to maintain
+their visual quality when moved between monitors with different DPI settings.
+Applications may appear blurry when moved between monitors with different DPI
+settings unless per monitor dpi aware v2 is enabled.
+
+Per monitor dpi aware v2 is supported on later versions of Windows 10 and
+Windows 11. It is enabled by adding the per monitor dpi aware v2 entry to the
+application's manifest that is loaded by the resource script (resource.rc).
+
+If per monitor dpi aware v2 is enabled, a WM_DPICHANGED message is sent to top
+level windows when the DPI changes. That usually occurs when the window is
+moved between monitors, but can also occur as a result of a settings change.
+
+Note: A WM_DPICHANGED message is only sent when the application's manifest
+specifies per monitor dpi aware. A WM_DPICHANGED message is only sent to top
+level windows.
+
+When frame or docker receives a WM_DPICHANGED message, they send a 
+UWM_DPICAHNGED message to their view windows. The WM_DPICHANGED message is
+handled in the OnDPIChanged function, and the UWM_DPICHANGED message is handled
+in the OnUserDPIChanged function. The view windows can update themselves to
+accommodate the new DPI when a UWM_DPICHANGED message is received.
 
 Changes in Detail
 -----------------
+Added UWM_DPICHANGED user defined message
+
 Added ::ScaleUpBitmap
+Added CDockContainer::CreateToolBar
+Added CDockContainer::OnUserDPIChanged 
 Added CDockContainer::SetTBImageList
 Added CDockContainer::SetTBImageListDis
 Added CDockContainer::SetTBImageListHot
+Added CDockContainer::UpdateTabs;
+Added CDocker::DPIUpdateAllDockers
+Added CDocker::OnDPIChanged
+Added CDocker::OnUserDPIChanged
+Added CDocker::SetDefaultCaptionHeight
+Added CDockFrame::OnDPIChanged
+Added CDockFrame::OnUserDPIChanged
 Added CFrameT::SetMenuImages
 Added CFrameT::OnDPIChanged
 Added CFrameT::UpdateSettings
-Added CWnd::DPIScaleFont(CFont font, int pointSize);
-Added CWnd::DPIScaleInt(int value);
-Added CWnd::DPIScaleRect;
-Added CWnd::DPIScaleUpBitmap(CBitmap bitmap);
-
-Added UWM_DPICHANGED message
-Updated the dock target bitmaps in the samples
+Added CImageList::Add overload
+Added CTab::OnUserDPIChanged
+Added CTab::UpdateTabs
+Added CTabbedMDI::OnUserDPIChanged
+Added CWnd::DPIScaleFont
+Added CWnd::DPIScaleInt
+Added CWnd::DPIScaleLogFont
+Added CWnd::DPIScaleRect
+Added CWnd::DPIScaleUpBitmap
+Renamed CFrameT::GetMenuBarFont to CFrameT::GetMenuFont
+Updated the dock target images in the samples.
 
 
 Version 9.2
