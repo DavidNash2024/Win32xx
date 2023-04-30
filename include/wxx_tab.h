@@ -194,7 +194,7 @@ namespace Win32xx
         virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
-        virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    NotifyChanged();
@@ -272,7 +272,7 @@ namespace Win32xx
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSetFocus(UINT, WPARAM, LPARAM);
         virtual BOOL    OnTabClose(int tab);
-        virtual LRESULT OnUserDPIChanged(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDPIChangedAfterParent(UINT, WPARAM, LPARAM);
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    RecalcLayout();
 
@@ -1130,18 +1130,12 @@ namespace Win32xx
         return FinalWindowProc(msg, wparam, lparam);
     }
 
-    // Called in response to a UWM_DPICHANGED message which is sent to child windows
-    // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-    // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CTab::OnUserDPIChanged(UINT, WPARAM, LPARAM)
+    // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+    // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+    // application is DPI_AWARENESS_PER_MONITOR_AWARE.
+    inline LRESULT CTab::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
     {
         UpdateTabs();
-        std::vector<TabPageInfo> tabs = GetAllTabs();
-        std::vector<TabPageInfo>::iterator i;
-        for (i = tabs.begin(); i != tabs.end(); ++i)
-        {
-            (*i).pView->SendMessage(UWM_DPICHANGED);
-        }
 
         return 0;
     }
@@ -1626,7 +1620,7 @@ namespace Win32xx
         case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
-        case UWM_DPICHANGED:        return OnUserDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on for default processing.
@@ -2148,12 +2142,12 @@ namespace Win32xx
         return TRUE;
     }
 
-    // Called in response to a UWM_DPICHANGED message which is sent to child windows
-    // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-    // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CTabbedMDI::OnUserDPIChanged(UINT, WPARAM, LPARAM)
+    // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+    // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+    // application is DPI_AWARENESS_PER_MONITOR_AWARE.
+    inline LRESULT CTabbedMDI::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
     {
-        m_tab.SendMessage(UWM_DPICHANGED);
+        RecalcLayout();
         return 0;
     }
 
@@ -2169,18 +2163,9 @@ namespace Win32xx
     {
         if (GetTab().IsWindow())
         {
-            if (GetTab().GetItemCount() >0)
-            {
-                CRect rcClient = GetClientRect();
-                VERIFY(GetTab().SetWindowPos(0, rcClient, SWP_SHOWWINDOW));
-                GetTab().UpdateWindow();
-            }
-            else
-            {
-                CRect rcClient = GetClientRect();
-                VERIFY(GetTab().SetWindowPos(0, rcClient, SWP_HIDEWINDOW));
-                Invalidate();
-            }
+            CRect rcClient = GetClientRect();
+            VERIFY(GetTab().SetWindowPos(0, rcClient, SWP_SHOWWINDOW));
+            Invalidate();
         }
     }
 
@@ -2279,7 +2264,7 @@ namespace Win32xx
         {
         case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
-        case UWM_DPICHANGED:        return OnUserDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED_AFTERPARENT:  return OnDPIChangedAfterParent(msg, wparam, lparam);
         case UWM_GETCTABBEDMDI:     return reinterpret_cast<LRESULT>(this);
         }
 

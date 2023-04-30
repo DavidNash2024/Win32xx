@@ -66,7 +66,7 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockText(const CDockText&);                // Disable copy construction

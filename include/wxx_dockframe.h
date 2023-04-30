@@ -86,7 +86,6 @@ namespace Win32xx
         virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    RecalcViewLayout();
         virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -175,7 +174,8 @@ namespace Win32xx
         // Supress redraw to render the DPI changes smoothly.
         SetRedraw(FALSE);
         CFrameT<CDocker>::OnDPIChanged(msg, wparam, lparam);
-        DPIUpdateAllDockers();
+        SetDefaultCaptionHeight();
+        DPIUpdateDockerSizes();
 
         // Enable redraw and redraw the frame.
         SetRedraw(TRUE);
@@ -206,14 +206,6 @@ namespace Win32xx
         return CFrameT<CDocker>::OnSysColorChange(msg, wparam, lparam);
     }
 
-    // Called in response to a UWM_DPICHANGED message which is sent to child windows
-    // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-    // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CDockFrame::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
-    {
-        return CDocker::OnUserDPIChanged(msg, wparam, lparam);
-    }
-
     // Repositions the view window
     inline void CDockFrame::RecalcViewLayout()
     {
@@ -233,7 +225,6 @@ namespace Win32xx
         // Messages defined by Win32++
         case UWM_DOCKACTIVATE:      return OnDockActivated(msg, wparam, lparam);
         case UWM_DOCKDESTROYED:     return OnDockDestroyed(msg, wparam, lparam);
-        case UWM_DPICHANGED:        return OnUserDPIChanged(msg, wparam, lparam);
         case UWM_GETCDOCKER:        return reinterpret_cast<LRESULT>(this);
         }
 

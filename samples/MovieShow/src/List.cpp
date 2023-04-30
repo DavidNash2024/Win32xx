@@ -168,10 +168,71 @@ void CViewList::OnAttach()
     SetColumn();
 }
 
+// Call to perform custom drawing.
+LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pCustomDraw)
+{
+    assert(pCustomDraw);
+
+    switch (pCustomDraw->dwDrawStage)
+    {
+    case CDDS_PREPAINT: // Before the paint cycle begins.
+        // Request notifications for individual header items.
+        return CDRF_NOTIFYITEMDRAW;
+
+    case CDDS_ITEMPREPAINT: // Before an item is drawn
+    {
+        // Get an appropriate color for the header
+        COLORREF color = GetSysColor(COLOR_BTNFACE);
+        HWND hFrame = GetAncestor();
+        ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hFrame, UWM_GETRBTHEME, 0, 0));
+        if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
+            color = pTheme->clrBkgnd2;
+
+        // Set the background color of the header
+        CBrush br(color);
+        ::FillRect(pCustomDraw->hdc, &pCustomDraw->rc, br);
+
+        // Also set the text background color
+        ::SetBkColor(pCustomDraw->hdc, color);
+
+        return CDRF_DODEFAULT;
+    }
+    }
+
+    return CDRF_DODEFAULT;
+}
+
 // Called when the listview window is destroyed.
 void CViewList::OnDestroy()
 {
     SetImageList(0, LVSIL_SMALL);
+}
+
+// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CViewList::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+{
+    // Adjust the column width in response to window DPI changes.
+    SetRedraw(FALSE);
+    int lastCol = Header_GetItemCount(GetHeader()) - 1;
+    std::vector<int> columnWidths;
+    int dpi = GetWindowDPI(*this);
+    for (int i = 0; i <= lastCol; ++i)
+    {
+        int width = GetColumnWidth(i) * dpi / m_oldDPI;
+        SetColumnWidth(i, width);
+    }
+
+    m_oldDPI = GetWindowDPI(*this);
+
+    // Adjust the images in response to window DPI changes.
+    SetDPIImages();
+
+    SetRedraw(TRUE);
+    RedrawWindow();
+
+    return 0;
 }
 
 // Called after the listview window is created.
@@ -230,40 +291,6 @@ LRESULT CViewList::OnLVColumnClick(LPNMLISTVIEW pListView)
     return 0;
 }
 
-// Call to perform custom drawing.
-LRESULT CViewList::OnCustomDraw(LPNMCUSTOMDRAW pCustomDraw)
-{
-    assert(pCustomDraw);
-
-    switch (pCustomDraw->dwDrawStage)
-    {
-    case CDDS_PREPAINT: // Before the paint cycle begins.
-        // Request notifications for individual header items.
-        return CDRF_NOTIFYITEMDRAW;
-
-    case CDDS_ITEMPREPAINT: // Before an item is drawn
-    {
-        // Get an appropriate color for the header
-        COLORREF color = GetSysColor(COLOR_BTNFACE);
-        HWND hFrame = GetAncestor();
-        ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hFrame, UWM_GETRBTHEME, 0, 0));
-        if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
-            color = pTheme->clrBkgnd2;
-
-        // Set the background color of the header
-        CBrush br(color);
-        ::FillRect(pCustomDraw->hdc, &pCustomDraw->rc, br);
-
-        // Also set the text background color
-        ::SetBkColor(pCustomDraw->hdc, color);
-
-        return CDRF_DODEFAULT;
-    }
-    }
-
-    return CDRF_DODEFAULT;
-}
-
 // Respond to notifications from child windows,
 LRESULT CViewList::OnNotify(WPARAM, LPARAM lparam)
 {
@@ -301,29 +328,6 @@ LRESULT CViewList::OnRClick()
 {
     if (GetNextItem(-1, LVNI_SELECTED) >= 0)
         GetAncestor().SendMessage(UWM_ONRCLICKLISTITEM, 0, 0);
-
-    return 0;
-}
-
-// Called in response to a UWM_DPICHANGED message which is sent to child windows
-// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewList::OnUserDPIChanged(UINT, WPARAM, LPARAM)
-{
-    // Adjust the column width in response to window DPI changes.
-    int lastCol = Header_GetItemCount(GetHeader()) - 1;
-    std::vector<int> columnWidths;
-    int dpi = GetWindowDPI(*this);
-    for (int i = 0; i <= lastCol; ++i)
-    {
-        int width = GetColumnWidth(i) * dpi / m_oldDPI;
-        SetColumnWidth(i, width);
-    }
-
-    m_oldDPI = GetWindowDPI(*this);
-
-    // Adjust the images in response to window DPI changes.
-    SetDPIImages();
 
     return 0;
 }
@@ -486,7 +490,7 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch (msg)
     {
     case WM_WINDOWPOSCHANGED:   SetLastColumnWidth();  break;
-    case UWM_DPICHANGED:        return OnUserDPIChanged(msg, wparam, lparam);
+    case WM_DPICHANGED_AFTERPARENT:    return OnDPIChangedAfterParent(msg, wparam, lparam);
     }
 
     return WndProcDefault(msg, wparam, lparam);

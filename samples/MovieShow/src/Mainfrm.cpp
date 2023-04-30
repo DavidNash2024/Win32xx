@@ -1034,7 +1034,6 @@ void CMainFrame::OnInitialUpdate()
     // Fill the tree view and list view.
     LoadMovies();
     FillTreeItems();
-    DPIUpdateAllDockers();
     RecreateDialog();
     SetRedraw(TRUE);
     RedrawWindow();

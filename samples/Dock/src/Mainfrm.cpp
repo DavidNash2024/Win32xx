@@ -165,7 +165,6 @@ BOOL CMainFrame::OnDockDefault()
 
     CloseAllDockers();
     LoadDefaultDockers();
-    DPIUpdateAllDockers();
 
     // Enable redraw and redraw the frame.
     SetRedraw(TRUE);
@@ -191,7 +190,7 @@ void CMainFrame::OnInitialUpdate()
     SetDockStyles();
 
     // Rescale the dockers for the current DPI.
-    DPIUpdateAllDockers();
+//    DPIUpdateDockerSizes();
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow(GetInitValues().showCmd);

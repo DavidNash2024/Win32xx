@@ -32,7 +32,7 @@ private:
     CViewClasses& operator = (const CViewClasses&);   // Disable assignment operator
 
     // Command handlers
-    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
@@ -53,7 +53,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void SetupToolBar();
 
 private:
@@ -84,7 +84,7 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockClasses(const CDockClasses&);                // Disable copy construction

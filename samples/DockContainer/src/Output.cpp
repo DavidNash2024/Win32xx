@@ -31,10 +31,10 @@ void CViewOutput::OnAttach()
     SetReadOnly();
 }
 
-// Called in response to a UWM_DPICHANGED message which is sent to child windows
-// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewOutput::OnUserDPIChanged(UINT, WPARAM, LPARAM)
+// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CViewOutput::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
 {
     SetDPIFont();
     return 0;
@@ -53,7 +53,7 @@ LRESULT CViewOutput::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_DPICHANGED:    return OnUserDPIChanged(msg, wparam, lparam);
+    case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
     }
 
     return WndProcDefault(msg, wparam, lparam);
@@ -86,13 +86,13 @@ CDockOutput::CDockOutput()
     SetBarWidth(DPIScaleInt(8));
 }
 
-// Called in response to a UWM_DPICHANGED message which is sent to child windows
-// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CDockOutput::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CDockOutput::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set the width of the splitter bar.
     SetBarWidth(DPIScaleInt(8));
-    return CDocker::OnUserDPIChanged(msg, wparam, lparam);
+    return CDocker::OnDPIChangedAfterParent(msg, wparam, lparam);
 }
 

@@ -54,7 +54,7 @@ public:
     CViewTree& GetViewTree() { return m_treeView; }
 
 protected:
-    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockTree(const CDockTree&);                // Disable copy construction

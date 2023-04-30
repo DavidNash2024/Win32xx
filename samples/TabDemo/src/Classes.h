@@ -28,7 +28,7 @@ private:
     CImageList m_normalImages;
 
     // Command handlers
-    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 

@@ -2062,8 +2062,10 @@ namespace Win32xx
     // Called in response to a WM_DPICHANGED message which is sent to a top-level
     // window when the DPI changes.  Only top-level windows receive a WM_DPICHANGED message.
     template <class T>
-    inline LRESULT CFrameT<T>::OnDPIChanged(UINT, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
     {
+        T::SetRedraw(FALSE);
+
         // Resize the frame, using the suggested new window size.
         RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
         assert(pWindowRect);
@@ -2092,11 +2094,10 @@ namespace Win32xx
         // Update the menu icons.
         SetupMenuIcons();
 
-        // Notify the view that the DPI has changed.
-        GetView().SendMessage(UWM_DPICHANGED, wparam, lparam);
-
         RecalcLayout();
 
+        T::SetRedraw(TRUE);
+        T::RedrawWindow();
         return 0;
     }
 
@@ -3404,7 +3405,6 @@ namespace Win32xx
 
                 CRect rc = GetViewRect();
                 VERIFY(GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW));
-                GetView().SendMessage(UWM_DPICHANGED, 0, 0);
             }
         }
     }

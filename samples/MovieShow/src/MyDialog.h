@@ -68,7 +68,7 @@ public:
     void SetDialogFonts();
 
 protected:
-    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockDialog(const CDockDialog&);                // Disable copy construction
