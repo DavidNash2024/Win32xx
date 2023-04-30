@@ -232,7 +232,7 @@ namespace Win32xx
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
-        virtual LRESULT OnUserDPIChanged(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDPIChangedAfterParent(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
         virtual void SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
@@ -529,7 +529,7 @@ namespace Win32xx
         virtual void CloseAllDockers();
         virtual void Dock(CDocker* pDocker, UINT dockSide);
         virtual void DockInContainer(CDocker* pDocker, DWORD dockStyle, BOOL selectPage = TRUE);
-        virtual void DPIUpdateAllDockers();
+        virtual void DPIUpdateDockerSizes();
         virtual CRect GetViewRect() const { return GetClientRect(); }
         virtual void Hide();
         virtual BOOL LoadContainerRegistrySettings(LPCTSTR registryKeyName);
@@ -598,7 +598,7 @@ namespace Win32xx
         virtual LRESULT OnDockMove(LPDRAGPOS pDragPos);
         virtual LRESULT OnDockStart(LPDRAGPOS pDragPos);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnUserDPIChanged(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDPIChangedAfterParent(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
 
@@ -2263,15 +2263,6 @@ namespace Win32xx
                                 GetDockHint().Destroy();
                                 pDockDrag->m_dockZone = 0;
                                 pDockDrag->m_isBlockMove = FALSE;
-
-                                // Restore the dragged docker's drag point for Windows 10 and above.
-                                if (GetWinVersion() >= 3000)
-                                {
-                                    CPoint pos = GetCursorPos();
-                                    int x = pos.x - pDockDrag->m_grabPoint.x - DPIScaleInt(6);
-                                    int y = pos.y + pDockDrag->m_grabPoint.y + DPIScaleInt(6);
-                                    pDockDrag->SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW);
-                                }
                             }
                         }
                     }
@@ -2574,7 +2565,7 @@ namespace Win32xx
     // Updates the view for all dockers in this dock family.
     // Call this for the initially after dockers are created
     // and when the DPI changes.
-    inline void CDocker::DPIUpdateAllDockers()
+    inline void CDocker::DPIUpdateDockerSizes()
     {
         std::vector<CDocker*> v = GetAllDockers();
         std::vector<CDocker*>::iterator it;
@@ -2585,9 +2576,6 @@ namespace Win32xx
                 // Reset the docker size.
                 int size = (*it)->GetDockSize();
                 (*it)->SetDockSize(size);
-
-                // Notify the docker that the DPI has changed.
-                (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
             }
         }
 
@@ -2826,13 +2814,12 @@ namespace Win32xx
         RecalcDockLayout();
     }
 
-    // Returns true if the specified window is a child of this docker.
+    // Returns true if the specified window is a decendant of this docker.
     inline BOOL CDocker::IsChildOfDocker(HWND wnd) const
     {
         while ((wnd != 0) && (wnd != *GetDockAncestor()))
         {
             if ( wnd == *this ) return TRUE;
-            if (IsRelated(wnd)) break;
             wnd = ::GetParent(wnd);
         }
 
@@ -3413,29 +3400,28 @@ namespace Win32xx
     {
         if (IsUndocked())   // Ignore dockers currently being undocked.
         {
+
+            m_isBlockMove = TRUE;
             // An undocked docker has moved to a different monitor.
             LPRECT prc = reinterpret_cast<LPRECT>(lparam);
             SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+            SetRedraw(FALSE);
 
             std::vector<DockPtr> v = GetAllDockChildren();
             std::vector<DockPtr>::iterator it;
             for (it = v.begin(); it != v.end(); ++it)
             {
-                if ((*it)->IsWindow())
+                if ((*it)->IsWindow() && IsChildOfDocker((*it)->GetHwnd()))
                 {
-                    // Reset the docker size.
-                    int size = (*it)->GetDockSize();
-                    (*it)->SetDockSize(size);
-
-                    // Notify the docker that the DPI has changed.
-                    (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
-
                     // Adjust the dock caption height.
                     (*it)->SetDefaultCaptionHeight();
                 }
             }
 
             RecalcDockLayout();
+            SetRedraw(TRUE);
+            RedrawWindow();
+            m_isBlockMove = FALSE;
         }
 
         return 0;
@@ -3475,8 +3461,8 @@ namespace Win32xx
     inline LRESULT CDocker::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         CPoint pt = GetCursorPos();
-        ScreenToClient(pt);
-        m_grabPoint = pt;
+        CRect rc = GetWindowRect();
+        m_grabPoint = CPoint(pt.x - rc.left, pt.y - rc.top);
         return FinalWindowProc(msg, wparam, lparam);
     }
 
@@ -3576,14 +3562,6 @@ namespace Win32xx
     // Called when the undocked docker is being moved.
     inline LRESULT CDocker::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        // Suspend dock drag moving while over dock zone.
-        if (m_isBlockMove)
-        {
-            LPWINDOWPOS pWndPos = (LPWINDOWPOS)lparam;
-            pWndPos->flags |= SWP_NOMOVE|SWP_FRAMECHANGED;
-            return 0;
-        }
-
         return FinalWindowProc(msg, wparam, lparam);
     }
 
@@ -3598,6 +3576,10 @@ namespace Win32xx
                 LPWINDOWPOS wPos = (LPWINDOWPOS)lparam;
                 if ((!(wPos->flags & SWP_NOMOVE)) || m_isBlockMove)
                     SendNotify(UWN_DOCKMOVE);
+
+                 CPoint pos = GetCursorPos();
+                 wPos->x = pos.x - m_grabPoint.x;
+                 wPos->y = pos.y - m_grabPoint.y;
             }
             else
             {
@@ -4379,9 +4361,9 @@ namespace Win32xx
         SetUndockPosition(pt, showUndocked);
 
         // Save the undocked docker's grap point
-        CPoint drag = GetCursorPos();
-        ScreenToClient(drag);
-        m_grabPoint = drag;
+        CPoint grab = GetCursorPos();
+        CRect rc = GetWindowRect();
+        m_grabPoint = CPoint(grab.x - rc.left, grab.y - rc.top);
 
         // Give the view window focus unless its child already has it.
         if (!GetView().IsChild(GetFocus()))
@@ -4549,20 +4531,22 @@ namespace Win32xx
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
 
         // Messages defined by Win32++
-        case UWM_DOCKACTIVATE:      return OnDockActivated(msg, wparam, lparam);
-        case UWM_DOCKDESTROYED:     return OnDockDestroyed(msg, wparam, lparam);
-        case UWM_DPICHANGED:        return OnUserDPIChanged(msg, wparam, lparam);
-        case UWM_GETCDOCKER:        return reinterpret_cast<LRESULT>(this);
+        case UWM_DOCKACTIVATE:          return OnDockActivated(msg, wparam, lparam);
+        case UWM_DOCKDESTROYED:         return OnDockDestroyed(msg, wparam, lparam);
+        case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case UWM_GETCDOCKER:            return reinterpret_cast<LRESULT>(this);
         }
 
         return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
-    // Called in response to a UWM_DPICHANGED message which is sent to child windows
-    // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-    // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CDocker::OnUserDPIChanged(UINT, WPARAM, LPARAM)
+    // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+    // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+    // application is DPI_AWARENESS_PER_MONITOR_AWARE.
+    inline LRESULT CDocker::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
     {
+        SetRedraw(FALSE);
+
         SetDefaultCaptionHeight();
 
         if (this == GetDockAncestor())
@@ -4576,14 +4560,12 @@ namespace Win32xx
                     // Reset the docker size.
                     int size = (*it)->GetDockSize();
                     (*it)->SetDockSize(size);
-
-                    // Notify the docker that the DPI has changed.
-                    (*it)->SendMessage(UWM_DPICHANGED, 0, 0);
                 }
             }
         }
 
-        GetView().SendMessage(UWM_DPICHANGED);
+        SetRedraw(TRUE);
+        RedrawWindow();
         return 0;
     }
 
@@ -5056,21 +5038,22 @@ namespace Win32xx
         return 0;
     }
 
-    // Called in response to a UWM_DPICHANGED message which is sent to child windows
-    // when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-    // received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CDockContainer::OnUserDPIChanged(UINT, WPARAM, LPARAM)
+    // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+    // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+    // application is DPI_AWARENESS_PER_MONITOR_AWARE.
+    inline LRESULT CDockContainer::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
     {
+        SetRedraw(FALSE);
         UpdateTabs();
 
         // Destroy and recreate the toolbar.
         GetViewPage().GetToolBar().Destroy();
         CreateToolBar();
 
-        if (GetView() && GetView()->IsWindow())
-            GetView()->SendMessage(UWM_DPICHANGED);
-
         RecalcLayout();
+
+        SetRedraw(TRUE);
+        RedrawWindow();
         return 0;
     }
 
@@ -5466,7 +5449,7 @@ namespace Win32xx
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
         case WM_SETFOCUS:       return OnSetFocus(msg, wparam, lparam);
         case WM_SIZE:           return OnSize(msg, wparam, lparam);
-        case UWM_DPICHANGED:    return OnUserDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
         case UWM_GETCDOCKCONTAINER: return reinterpret_cast<LRESULT>(this);
         }
 

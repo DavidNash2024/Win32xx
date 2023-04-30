@@ -171,7 +171,6 @@ BOOL CMainFrame::OnDockDefault()
     LoadDefaultDockers();
     HideSingleContainerTab(m_hideSingleTab);
     SetContainerTabsAtTop(m_isContainerTabsAtTop);
-    DPIUpdateAllDockers();
 
     // Enable redraw and redraw the frame.
     SetRedraw(TRUE);
@@ -211,8 +210,6 @@ void CMainFrame::OnInitialUpdate()
 
     // Hide the container's tab if it has just one tab
     HideSingleContainerTab(m_hideSingleTab);
-
-    DPIUpdateAllDockers();
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow( GetInitValues().showCmd );

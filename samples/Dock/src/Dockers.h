@@ -18,7 +18,7 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockSimple(const CDockSimple&);                // Disable copy construction
@@ -39,7 +39,7 @@ public:
 
 protected:
     // Virtual functions overriding base class functions
-    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockClasses(const CDockClasses&);                // Disable copy construction
@@ -60,7 +60,7 @@ public:
 
 protected:
     // Virtual functions overriding base class functions
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockFiles(const CDockFiles&);                // Disable copy construction
@@ -80,7 +80,7 @@ public:
     virtual ~CDockText() {}
 
 protected:
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockText(const CDockText&);                // Disable copy construction

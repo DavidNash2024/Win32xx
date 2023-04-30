@@ -855,7 +855,7 @@ namespace Win32xx
         switch (msg)
         {
         case WM_DPICHANGED:
-        case UWM_DPICHANGED:
+        case WM_DPICHANGED_AFTERPARENT:
             RescaleValues();
             break;
 

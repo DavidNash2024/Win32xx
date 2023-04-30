@@ -126,6 +126,16 @@ void CViewList::OnDestroy()
     SetImageList(0, LVSIL_SMALL);
 }
 
+// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE. 
+LRESULT CViewList::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+{
+    SetDPIImages();
+    SetDPIColumnWidths();
+    return 0;
+}
+
 // Called when the mouse is clicked on the window.
 LRESULT CViewList::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -181,7 +191,8 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        case WM_DPICHANGED_AFTERPARENT:  return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_MOUSEACTIVATE:           return OnMouseActivate(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);
@@ -252,6 +263,15 @@ void CViewTree::OnDestroy()
     SetImageList(0, LVSIL_SMALL);
 }
 
+// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE. 
+LRESULT CViewTree::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+{
+    SetDPIImages();
+    return 0;
+}
+
 // Called when the mouse is clicked on the window.
 LRESULT CViewTree::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -283,7 +303,8 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        case WM_DPICHANGED_AFTERPARENT:  return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_MOUSEACTIVATE:           return OnMouseActivate(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);
@@ -310,10 +331,42 @@ void CViewText::OnAttach()
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
+// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE. 
+LRESULT CViewText::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+{
+    SetDPIFont();
+    return 0;
+}
+
 // Adjusts the font size in response to window DPI changes.
 void CViewText::SetDPIFont()
 {
     m_font.CreatePointFont(100, _T("Courier New"));
     m_font = DPIScaleFont(m_font, 9);
     SetFont(m_font);
+}
+
+// Process window messages for the rich edit control.
+LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        switch (msg)
+        {
+        case WM_DPICHANGED_AFTERPARENT:  return OnDPIChangedAfterParent(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }

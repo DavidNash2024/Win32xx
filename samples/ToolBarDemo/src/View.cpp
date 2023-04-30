@@ -83,6 +83,16 @@ int CView::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
+// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CView::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+{
+    DPIScaleToolBar();
+
+    return 0;
+}
+
 // OnDraw is called when part or all of the window needs to be redrawn.
 void CView::OnDraw(CDC& dc)
 {
@@ -184,16 +194,6 @@ BOOL CView::OnTop()
     return TRUE;
 }
 
-// Called in response to a UWM_DPICHANGED message which is sent to child windows
-// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CView::OnUserDPIChanged(UINT, WPARAM, LPARAM)
-{
-    DPIScaleToolBar();
-
-    return 0;
-}
-
 // Here we set the defaults used by the create function for the view window
 // Preforming this is optional, but doing so allows us to
 // take more precise control over the window we create.
@@ -279,8 +279,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_SIZE:         return OnSize(msg, wparam, lparam);
-        case UWM_DPICHANGED:  return OnUserDPIChanged(msg, wparam, lparam);
+        case WM_SIZE:                    return OnSize(msg, wparam, lparam);
+        case WM_DPICHANGED_AFTERPARENT:  return OnDPIChangedAfterParent(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on for default processing.

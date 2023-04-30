@@ -133,15 +133,20 @@ CDockDialog::CDockDialog() : m_view(IDD_MYDIALOG)
     SetBarWidth(DPIScaleInt(8));
 }
 
-// Called in response to a UWM_DPICHANGED message which is sent to child windows
-// when the top-level window receives a WM_DPICHANGED message. WM_DPICHANGED is
-// received when the DPI changes and the application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CDockDialog::OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CDockDialog::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set the width of the splitter bar.
+    SetRedraw(FALSE);
     SetBarWidth(DPIScaleInt(8));
     SetDialogFonts();
-    return CDocker::OnUserDPIChanged(msg, wparam, lparam);
+    CDocker::OnDPIChangedAfterParent(msg, wparam, lparam);
+
+    SetRedraw(TRUE);
+    RedrawWindow();
+    return 0;
 }
 
 // Sets the fonts used within the dialog.

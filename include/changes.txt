@@ -7,7 +7,8 @@ monitors easier (see below).
 
 This version also provides support for per-monitor(v2) DPI awareness.
 Per-monitor DPI awareness allows applications to maintain their visual quality
-when they are moved between monitors with different DPI settings.
+when they are moved between monitors with different Dots Per Inch (DPI)
+settings.
 
 New Features and Enhancements
 -----------------------------
@@ -23,19 +24,20 @@ New Features and Enhancements
   the menu icons are not displayed.
 
 * Frames support per monitor DPI awareness by resizing themselves to the 
-  size recommended by the WM_DPICHANGED message. They also automatically 
-  adjust the toolbar images, menu icons, and statusbar fonts when the frame
-  window is moved between monitors with different DPI settings. A 
-  UWM_DPICHANGED is sent to the frame's view window to allow it to adjust
-  to the new DPI settings as well.  
+  size recommended by the WM_DPICHANGED message in the OnDPIChanged function.
+  They also automatically adjust the toolbar images, menu icons, and statusbar
+  fonts when the frame window is moved between monitors with different DPI
+  settings.  
 
-* Dockers and docking frames support per monitor DPI awareness by sending
-  a UWM_DPICHANGED to each child docker and each dock view window. The child
-  dockers and view windows should handle the UWM_DPICHANGED message and adjust
-  to the new DPI settings. This is demonstrated in the samples.  
+* Dockers and docking frames call OnDPIChanged and OnDPIChangedAfterParent
+  in response to WM_DPICHANGED and WM_DPICHANGED_AFTERPARENT to rearrange
+  dockers after a DPI change occurs. View windows should handle the
+  WM_DPICHANGEDAFTERPARENT message if they need to account for DPI 
+  changes.  
   
 * CResizer supports per monitor DPI awareness by repositioning the child
-  windows when the WM_DPICHANGED or UWM_DPICHANGED message is handled. 
+  windows when the WM_DPICHANGED or WM_DPICHANGED_AFTERPARENT message is
+  handled. 
   
 
 About high resolution monitor support
@@ -73,44 +75,57 @@ Per monitor dpi aware v2 is supported on later versions of Windows 10 and
 Windows 11. It is enabled by adding the per monitor dpi aware v2 entry to the
 application's manifest that is loaded by the resource script (resource.rc).
 
-If per monitor dpi aware v2 is enabled, a WM_DPICHANGED message is sent to top
-level windows when the DPI changes. That usually occurs when the window is
-moved between monitors, but can also occur as a result of a settings change.
+If per monitor dpi aware v2 is enabled, a WM_DPICHANGED message is sent to the
+top level windows after the DPI change occurs. That usually occurs when the 
+window is moved between monitors, but can also occur as a result of a settings
+change.
 
-Note: A WM_DPICHANGED message is only sent when the application's manifest
-specifies per monitor dpi aware. A WM_DPICHANGED message is only sent to top
-level windows.
+After a WM_DPICHANGED message is sent to a top level window, a 
+WM_DPICHANGED_AFTERPARENT message is is sent to all of its child and descendant
+windows.
 
-When frame or docker receives a WM_DPICHANGED message, they send a 
-UWM_DPICAHNGED message to their view windows. The WM_DPICHANGED message is
-handled in the OnDPIChanged function, and the UWM_DPICHANGED message is handled
-in the OnUserDPIChanged function. The view windows can update themselves to
-accommodate the new DPI when a UWM_DPICHANGED message is received.
+The following messages are sent when the application's manifest specifies per
+monitor dpi aware:
+
+WM_GETDPISCALEDSIZE
+Sent to the top level window before the DPI change occurs. The WPARAM
+contains the new DPI.
+
+WM_DPICHANGED
+Sent to top level windows after a DPI change occurs. THe LPARAM contains a 
+pointer to rect that provides the suggested new size of the window. 
+
+WM_DPICHANGED_BEFOREPARENT
+Sent before the DPI change to all child windows and descendants of the top
+level window that is undergoing a DPI change.
+
+WM_DPICHANGED_AFTERPARENT
+Sent after the DPI change to all child windows and descendants of the top
+level window that is undergoing a DPI change.
+
 
 Changes in Detail
 -----------------
-Added UWM_DPICHANGED user defined message
-
 Added ::ScaleUpBitmap
 Added CDockContainer::CreateToolBar
-Added CDockContainer::OnUserDPIChanged 
+Added CDockContainer::OnDPIChangedAfterParent 
 Added CDockContainer::SetTBImageList
 Added CDockContainer::SetTBImageListDis
 Added CDockContainer::SetTBImageListHot
 Added CDockContainer::UpdateTabs;
-Added CDocker::DPIUpdateAllDockers
+Added CDocker::DPIUpdateDockerSizes
 Added CDocker::OnDPIChanged
-Added CDocker::OnUserDPIChanged
+Added CDocker::OnDPIChangedAfterParent
 Added CDocker::SetDefaultCaptionHeight
 Added CDockFrame::OnDPIChanged
-Added CDockFrame::OnUserDPIChanged
+Added CDockFrame::OnDPIChangedAfterParent
 Added CFrameT::SetMenuImages
 Added CFrameT::OnDPIChanged
 Added CFrameT::UpdateSettings
 Added CImageList::Add overload
-Added CTab::OnUserDPIChanged
+Added CTab::OnDPIChangedAfterParent
 Added CTab::UpdateTabs
-Added CTabbedMDI::OnUserDPIChanged
+Added CTabbedMDI::OnDPIChangedAfterParent
 Added CWnd::DPIScaleFont
 Added CWnd::DPIScaleInt
 Added CWnd::DPIScaleLogFont

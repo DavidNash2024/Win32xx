@@ -121,8 +121,6 @@ void CMainFrame::OnInitialUpdate()
         LoadDefaultWindowPanes();
     }
 
-    DPIUpdateAllDockers();
-
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow(GetInitValues().showCmd);
 }

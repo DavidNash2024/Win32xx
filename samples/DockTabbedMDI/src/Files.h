@@ -30,7 +30,7 @@ private:
 
     // Command handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void InsertItems();
     void SetColumns();
@@ -68,7 +68,7 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockFiles(const CDockFiles&);                // Disable copy construction

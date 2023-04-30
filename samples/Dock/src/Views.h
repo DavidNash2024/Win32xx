@@ -44,10 +44,14 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewText(const CViewText&);                // Disable copy construction
     CViewText& operator = (const CViewText&);   // Disable assignment operator
+
+    // Message handlers
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CFont m_font;
 };
@@ -74,6 +78,7 @@ private:
     CViewTree& operator = (const CViewTree&);   // Disable assignment operator
 
     // Message handlers
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
@@ -103,6 +108,7 @@ private:
     CViewList& operator = (const CViewList&);   // Disable assignment operator
 
     // Message handlers
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void InsertItems();

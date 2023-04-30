@@ -18,7 +18,7 @@ public:
     virtual ~CDockText() {}
 
 protected:
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockText(const CDockText&);                // Disable copy construction
@@ -39,7 +39,7 @@ public:
 
 protected:
     // Virtual functions overriding base class functions
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockTree(const CDockTree&);                // Disable copy construction
@@ -59,7 +59,7 @@ public:
     virtual ~CDockList() {}
 
 protected:
-    virtual LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockList(const CDockList&);                // Disable copy construction

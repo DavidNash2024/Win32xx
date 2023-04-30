@@ -247,7 +247,6 @@ BOOL CMainFrame::OnDefaultLayout()
 
     SetContainerTabsAtTop(m_isContainerTabsAtTop);
     HideSingleContainerTab(m_isHideSingleTab);
-    DPIUpdateAllDockers();
     SetRedraw(TRUE);
     RedrawWindow();
     return TRUE;
@@ -360,8 +359,6 @@ void CMainFrame::OnInitialUpdate()
 
     // Replace the frame's menu with our modified menu
     SetFrameMenu(frameMenu);
-
-    DPIUpdateAllDockers();
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow(GetInitValues().showCmd);

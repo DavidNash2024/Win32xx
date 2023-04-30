@@ -321,8 +321,6 @@ void CMainFrame::OnInitialUpdate()
     assert(pDock2->GetContainer());
     pDock1->GetContainer()->SetHideSingleTab(TRUE);
     pDock2->GetContainer()->SetHideSingleTab(TRUE);
-
-    DPIUpdateAllDockers();
 }
 
 void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)

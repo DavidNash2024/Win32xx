@@ -31,7 +31,7 @@ private:
     CImageList m_smallImages;
 
     // Command handlers
-    LRESULT OnUserDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 

@@ -71,39 +71,45 @@
 #endif
 
 #ifndef WHEEL_DELTA
-  #define WHEEL_DELTA           120
+  #define WHEEL_DELTA                120
 #endif
 
 #ifndef WM_DPICHANGED
-  #define WM_DPICHANGED         0x02E0
+  #define WM_DPICHANGED              0x02E0
+#endif
+
+#ifndef WM_DPICHANGED_BEFOREPARENT
+  #define WM_DPICHANGED_BEFOREPARENT 0x02E2
+  #define WM_DPICHANGED_AFTERPARENT  0x02E3
+  #define WM_GETDPISCALEDSIZE        0x02E4
 #endif
 
 #ifndef WM_MENURBUTTONUP
-#define WM_MENURBUTTONUP        0x0122
+  #define WM_MENURBUTTONUP           0x0122
 #endif
 
 #ifndef WM_MOUSEWHEEL
-  #define WM_MOUSEWHEEL         0x020A
+  #define WM_MOUSEWHEEL              0x020A
 #endif
 
 #ifndef WM_MENURBUTTONUP
-  #define WM_MENURBUTTONUP      0x0122
+  #define WM_MENURBUTTONUP           0x0122
 #endif
 
 #ifndef WM_THEMECHANGED
-  #define WM_THEMECHANGED       0x031A
+  #define WM_THEMECHANGED            0x031A
 #endif
 
 #ifndef WM_MENURBUTTONUP
-  #define WM_MENURBUTTONUP      0x0122
+  #define WM_MENURBUTTONUP           0x0122
 #endif
 
 #ifndef RBN_MINMAX
-  #define RBN_MINMAX            (RBN_FIRST - 21)
+  #define RBN_MINMAX                 (RBN_FIRST - 21)
 #endif
 
 #ifndef WM_UNINITMENUPOPUP
-  #define WM_UNINITMENUPOPUP    0x0125
+  #define WM_UNINITMENUPOPUP         0x0125
 #endif
 
 
@@ -137,7 +143,6 @@
 #define UWM_TBRESIZE          (WM_APP + 0x3F18) // Message - sent by toolbar to parent. Used by the rebar.
 #define UWM_TBWINPOSCHANGING  (WM_APP + 0x3F19) // Message - sent to parent. Toolbar is resizing.
 #define UWM_UPDATECOMMAND     (WM_APP + 0x3F1A) // Message - sent before a menu is displayed. Used by OnMenuUpdate.
-#define UWM_DPICHANGED        (WM_APP + 0x3F1B) // Message - sent to a window when the DPI changes.
 
 #define UWN_BARSTART          (WM_APP + 0x3F20) // Notification - sent by CDocker when the docker bar selected for move.
 #define UWN_BARMOVE           (WM_APP + 0x3F21) // Notification - sent by CDocker when the docker bar is moved.
