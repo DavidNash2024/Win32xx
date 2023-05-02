@@ -65,10 +65,6 @@ public:
     CDockFiles();
     virtual ~CDockFiles() {}
 
-protected:
-    // Virtual functions that override base class functions
-    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
-
 private:
     CDockFiles(const CDockFiles&);                // Disable copy construction
     CDockFiles& operator = (const CDockFiles&);   // Disable assignment operator

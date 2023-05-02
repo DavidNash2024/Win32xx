@@ -144,6 +144,6 @@ CContainFiles::CContainFiles()
 CDockFiles::CDockFiles()
 {
     SetView(m_files);
-    SetBarWidth(DPIScaleInt(8));
+    SetBarWidth(8);
 }
 

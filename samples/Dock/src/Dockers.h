@@ -16,10 +16,6 @@ public:
     CDockSimple();
     virtual ~CDockSimple() {}
 
-protected:
-    // Virtual functions that override base class functions
-    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
-
 private:
     CDockSimple(const CDockSimple&);                // Disable copy construction
     CDockSimple& operator = (const CDockSimple&);   // Disable assignment operator
@@ -37,10 +33,6 @@ public:
     CDockClasses();
     virtual ~CDockClasses() {}
 
-protected:
-    // Virtual functions overriding base class functions
-    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
-
 private:
     CDockClasses(const CDockClasses&);                // Disable copy construction
     CDockClasses& operator = (const CDockClasses&);   // Disable assignment operator
@@ -57,10 +49,6 @@ class CDockFiles : public CDocker
 public:
     CDockFiles();
     virtual ~CDockFiles() {}
-
-protected:
-    // Virtual functions overriding base class functions
-    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockFiles(const CDockFiles&);                // Disable copy construction
@@ -80,7 +68,7 @@ public:
     virtual ~CDockText() {}
 
 protected:
-    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
+//    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockText(const CDockText&);                // Disable copy construction

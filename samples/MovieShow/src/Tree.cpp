@@ -257,7 +257,7 @@ CDockTree::CDockTree()
     SetView(m_treeView);
 
     // Set the width of the splitter bar
-    SetBarWidth(DPIScaleInt(8));
+    SetBarWidth(8);
 }
 
 // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
@@ -268,7 +268,6 @@ LRESULT CDockTree::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lpara
     SetRedraw(FALSE);
 
     // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(8));
     m_treeView.SetDPIImages();
     RecalcDockLayout();
     CDocker::OnDPIChangedAfterParent(msg, wparam, lparam);

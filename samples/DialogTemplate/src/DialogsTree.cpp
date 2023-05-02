@@ -125,6 +125,6 @@ CDockDialogsTree::CDockDialogsTree()
     SetView(m_tree);
 
     // Set the width of the splitter bar
-    SetBarWidth(DPIScaleInt(8));
+    SetBarWidth(8);
 }
 

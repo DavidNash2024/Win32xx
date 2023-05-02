@@ -55,10 +55,6 @@ public:
     CDockOutput();
     virtual ~CDockOutput() {}
 
-protected:
-    // Virtual functions that override base class functions
-    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
-
 private:
     CDockOutput(const CDockOutput&);                // Disable copy construction
     CDockOutput& operator = (const CDockOutput&);   // Disable assignment operator

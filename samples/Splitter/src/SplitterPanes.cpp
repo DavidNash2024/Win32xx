@@ -15,18 +15,7 @@ CDockText::CDockText()
     SetView(m_view);
 
     // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(4));
-}
-
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CDockText::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(4));
-    m_view.SetDPIFont();
-    return CDocker::OnDPIChangedAfterParent(msg, wparam, lparam);
+    SetBarWidth(4);
 }
 
 
@@ -40,19 +29,7 @@ CDockTree::CDockTree()
     SetView(m_view);
 
     // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(8));
-}
-
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CDockTree::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(8));
-    m_view.SetDPIImages();
-    RecalcDockLayout();
-    return CDocker::OnDPIChangedAfterParent(msg, wparam, lparam);
+    SetBarWidth(8);
 }
 
 
@@ -66,18 +43,5 @@ CDockList::CDockList()
     SetView(m_view);
 
     // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(4));
+    SetBarWidth(4);
 }
-
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CDockList::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(4));
-    m_view.SetDPIImages();
-    m_view.SetDPIColumnWidths();
-    return CDocker::OnDPIChangedAfterParent(msg, wparam, lparam);
-}
-

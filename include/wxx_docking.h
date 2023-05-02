@@ -548,7 +548,7 @@ namespace Win32xx
 
         CDocker* GetActiveDocker() const;
         CWnd*    GetActiveView() const;
-        int GetBarWidth() const                     {return GetDockBar().GetWidth();}
+        int GetBarWidth() const                     {return DPIScaleInt(GetDockBar().GetWidth());}
         const CString& GetCaption() const           {return GetDockClient().GetCaption();}
         CDockContainer* GetContainer() const;
         CDocker* GetDockAncestor() const;
@@ -594,6 +594,7 @@ namespace Win32xx
         virtual LRESULT OnBarMove(LPDRAGPOS pDragPos);
         virtual LRESULT OnBarStart(LPDRAGPOS pDragPos);
         virtual LRESULT OnDPIChanged(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnGetDPIScaledSize(UINT, WPARAM, LPARAM);
         virtual LRESULT OnDockEnd(LPDRAGPOS pDragPos);
         virtual LRESULT OnDockMove(LPDRAGPOS pDragPos);
         virtual LRESULT OnDockStart(LPDRAGPOS pDragPos);
@@ -3437,6 +3438,18 @@ namespace Win32xx
         return 0;
     }
 
+    inline LRESULT CDocker::OnGetDPIScaledSize(UINT, WPARAM wparam, LPARAM)
+    {
+        // Update the grab point with the DPI changes. 
+        int oldDPI = GetWindowDPI(*this);
+        int newDPI = static_cast<int>(wparam);
+        m_grabPoint.x = m_grabPoint.x * newDPI / oldDPI;
+        m_grabPoint.y = m_grabPoint.y * newDPI / oldDPI;
+
+        // Return FALSE to indicate computed size isn't modified. 
+        return FALSE;
+    }
+
     // Called when the window is activated with a mouse click.
     inline LRESULT CDocker::OnMouseActivate(UINT, WPARAM, LPARAM)
     {
@@ -3562,6 +3575,23 @@ namespace Win32xx
     // Called when the undocked docker is being moved.
     inline LRESULT CDocker::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     {
+        LPWINDOWPOS pWndPos = (LPWINDOWPOS)lparam;
+        
+        // Suspend dock drag moving while over dock zone.
+        if (m_isBlockMove)
+        {
+            pWndPos->flags |= SWP_NOMOVE | SWP_FRAMECHANGED;
+            return 0;
+        }
+
+        // Adjust the window position to keep it relative to the cursor.
+        if (m_isDragging)
+        {
+            CPoint pos = GetCursorPos();
+            pWndPos->x = pos.x - m_grabPoint.x;
+            pWndPos->y = pos.y - m_grabPoint.y;
+        }
+
         return FinalWindowProc(msg, wparam, lparam);
     }
 
@@ -3576,10 +3606,6 @@ namespace Win32xx
                 LPWINDOWPOS wPos = (LPWINDOWPOS)lparam;
                 if ((!(wPos->flags & SWP_NOMOVE)) || m_isBlockMove)
                     SendNotify(UWN_DOCKMOVE);
-
-                 CPoint pos = GetCursorPos();
-                 wPos->x = pos.x - m_grabPoint.x;
-                 wPos->y = pos.y - m_grabPoint.y;
             }
             else
             {
@@ -4521,6 +4547,7 @@ namespace Win32xx
         case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
         case WM_DPICHANGED:         return OnDPIChanged(msg, wparam, lparam);
         case WM_EXITSIZEMOVE:       return OnExitSizeMove(msg, wparam, lparam);
+        case WM_GETDPISCALEDSIZE:   return OnGetDPIScaledSize(msg, wparam, lparam);
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
         case WM_NCLBUTTONDBLCLK:    return OnNCLButtonDblClk(msg, wparam, lparam);
         case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
@@ -4549,20 +4576,10 @@ namespace Win32xx
 
         SetDefaultCaptionHeight();
 
-        if (this == GetDockAncestor())
-        {
-            std::vector<DockPtr> v = GetAllDockChildren();
-            std::vector<DockPtr>::iterator it;
-            for (it = v.begin(); it != v.end(); ++it)
-            {
-                if ((*it)->IsWindow())
-                {
-                    // Reset the docker size.
-                    int size = (*it)->GetDockSize();
-                    (*it)->SetDockSize(size);
-                }
-            }
-        }
+        // Reset the docker size.
+        int size = GetDockSize();
+        SetDockSize(size);
+        RecalcDockLayout();
 
         SetRedraw(TRUE);
         RedrawWindow();
@@ -5043,17 +5060,13 @@ namespace Win32xx
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
     inline LRESULT CDockContainer::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
     {
-        SetRedraw(FALSE);
         UpdateTabs();
 
         // Destroy and recreate the toolbar.
         GetViewPage().GetToolBar().Destroy();
         CreateToolBar();
+        GetContainerParent()->RecalcLayout();
 
-        RecalcLayout();
-
-        SetRedraw(TRUE);
-        RedrawWindow();
         return 0;
     }
 
@@ -5066,6 +5079,7 @@ namespace Win32xx
     }
 
     // Repositions the child windows when the window is resized.
+    // Note: Ignored unless this is the container parent.
     inline void CDockContainer::RecalcLayout()
     {
         if (GetContainerParent() == this)
