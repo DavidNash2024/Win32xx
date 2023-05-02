@@ -54,7 +54,7 @@ CDockOutput::CDockOutput()
 int CDockOutput::OnCreate(CREATESTRUCT& cs)
 {
     // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(8));
+    SetBarWidth(8);
 
     return CDocker::OnCreate(cs);
 }
@@ -72,5 +72,4 @@ CContainOutput::CContainOutput()
     SetTabText(_T("Output"));
     SetTabIcon(IDI_TEXT);
 }
-
 

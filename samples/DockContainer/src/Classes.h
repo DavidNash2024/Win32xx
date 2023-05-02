@@ -48,12 +48,11 @@ class CContainClasses : public CDockContainer
 public:
     CContainClasses();
     virtual ~CContainClasses() {}
-    void DPIScaleToolBar();
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM, LPARAM);
+    virtual LRESULT OnDPIChangedAfterParent(UINT, WPARAM, LPARAM);
     virtual void SetupToolBar();
 
 private:
@@ -81,10 +80,6 @@ class CDockClasses : public CDocker
 public:
     CDockClasses();
     virtual ~CDockClasses() {}
-
-protected:
-    // Virtual functions that override base class functions
-    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockClasses(const CDockClasses&);                // Disable copy construction

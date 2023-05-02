@@ -144,9 +144,8 @@ CDockFiles::CDockFiles()
 int CDockFiles::OnCreate(CREATESTRUCT& cs)
 {
     // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(8));
+    SetBarWidth(8);
 
     return CDocker::OnCreate(cs);
 }
-
 

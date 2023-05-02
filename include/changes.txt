@@ -69,18 +69,20 @@ About per monitor dpi aware v2
 Per monitor dpi aware v2 is a feature that allows applications to maintain
 their visual quality when moved between monitors with different DPI settings.
 Applications may appear blurry when moved between monitors with different DPI
-settings unless per monitor dpi aware v2 is enabled.
+settings unless per monitor dpi aware v2 is enabled. Per monitor dpi aware v2
+is supported on later versions of Windows 10 and Windows 11.
 
-Per monitor dpi aware v2 is supported on later versions of Windows 10 and
-Windows 11. It is enabled by adding the per monitor dpi aware v2 entry to the
-application's manifest that is loaded by the resource script (resource.rc).
+To add per-monitor dpi aware v2 to your application, use a manifest that
+includes the per monitor dpi aware v2 entry, such as "PerMonitorV2.manifest"
+provided in many of the samples. The manifest should be specified in the
+application's resource script, often called "resource.rc". You may also need
+to handle the WM_DPICHANGED_AFTERPARENT message in view windows if they 
+require special DPI handling.
 
 If per monitor dpi aware v2 is enabled, a WM_DPICHANGED message is sent to the
 top level windows after the DPI change occurs. That usually occurs when the 
 window is moved between monitors, but can also occur as a result of a settings
-change.
-
-After a WM_DPICHANGED message is sent to a top level window, a 
+change. After a WM_DPICHANGED message is sent to a top level window, a 
 WM_DPICHANGED_AFTERPARENT message is is sent to all of its child and descendant
 windows.
 
@@ -92,7 +94,7 @@ Sent to the top level window before the DPI change occurs. The WPARAM
 contains the new DPI.
 
 WM_DPICHANGED
-Sent to top level windows after a DPI change occurs. THe LPARAM contains a 
+Sent to top level windows after a DPI change occurs. The LPARAM contains a 
 pointer to rect that provides the suggested new size of the window. 
 
 WM_DPICHANGED_BEFOREPARENT
@@ -116,13 +118,13 @@ Added CDockContainer::UpdateTabs;
 Added CDocker::DPIUpdateDockerSizes
 Added CDocker::OnDPIChanged
 Added CDocker::OnDPIChangedAfterParent
+Added CDocker::OnGetDPIScaledSize
 Added CDocker::SetDefaultCaptionHeight
 Added CDockFrame::OnDPIChanged
-Added CDockFrame::OnDPIChangedAfterParent
 Added CFrameT::SetMenuImages
 Added CFrameT::OnDPIChanged
 Added CFrameT::UpdateSettings
-Added CImageList::Add overload
+Added CImageList::Add  additional overload
 Added CTab::OnDPIChangedAfterParent
 Added CTab::UpdateTabs
 Added CTabbedMDI::OnDPIChangedAfterParent

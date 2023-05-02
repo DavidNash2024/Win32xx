@@ -160,31 +160,12 @@ void CContainClasses::AddCombo()
     rect.bottom = comboSize;
 
     // Recreate the ComboboxEx window.
-    int selected = -1;
-    if (m_comboBoxEx.IsWindow())
-        selected = m_comboBoxEx.GetCurSel();
     m_comboBoxEx.Destroy();
     DWORD style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
     m_comboBoxEx.CreateEx(0, WC_COMBOBOXEX, NULL, style, rect, tb, 0);
     m_comboBoxEx.SetImages(3, IDB_STATUS);
     m_comboBoxEx.SetWindowPos(0, rect, SWP_NOACTIVATE);
     m_comboBoxEx.AddItems();
-    m_comboBoxEx.SetCurSel(selected);
-}
-
-// Assigns the appropriately sized toolbar icons.
-void CContainClasses::DPIScaleToolBar()
-{
-    if (GetToolBar().IsWindow())
-    {
-        // Reset the toolbar images.
-        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
-
-        // Recreate the combo box.
-        AddCombo();
-        if (GetFocus() == GetToolBar())
-            SetFocus();
-    }
 }
 
 // Process the command messages (WM_COMMAND).
@@ -199,6 +180,22 @@ BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM)
     }
 
     return FALSE;
+}
+
+// Overrides CDockContainer::OnDPIChangedAfterParent which is called after
+// a DPI change.
+LRESULT CContainClasses::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    int selected = -1;
+    if (m_comboBoxEx.IsWindow())
+        selected = m_comboBoxEx.GetCurSel();
+
+    // CDockContainer::OnDPIChangedAfterParent destroys and recreates the toolbar.
+    CDockContainer::OnDPIChangedAfterParent(msg, wparam, lparam);
+
+    // Restore the ComboBox selection.
+    m_comboBoxEx.SetCurSel(selected);
+    return 0;
 }
 
 // Demonstrates responding to the container's toolbar.
@@ -216,21 +213,6 @@ BOOL CContainClasses::OnHelpAbout()
     // Send a message to the frame requesting the help dialog
     GetAncestor().SendMessage(WM_HELP);
     return TRUE;
-}
-
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CContainClasses::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
-{
-    SetRedraw(FALSE);
-    DPIScaleToolBar();
-    UpdateTabs();
-    RecalcLayout();
-
-    SetRedraw(TRUE);
-    RedrawWindow();
-    return 0;
 }
 
 // Set the Bitmap resource for the toolbar
@@ -271,22 +253,6 @@ CDockClasses::CDockClasses()
     SetView(m_classes);
 
     // Set the width of the splitter bar
-    SetBarWidth(DPIScaleInt(8));
-}
-
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CDockClasses::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    SetRedraw(FALSE);
-    // Set the width of the splitter bar.
-    SetBarWidth(DPIScaleInt(8));
-    
-    CDocker::OnDPIChangedAfterParent(msg, wparam, lparam);
-
-    SetRedraw(TRUE);
-    RedrawWindow();
-    return 0;
+    SetBarWidth(8);
 }
 

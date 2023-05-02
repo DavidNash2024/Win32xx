@@ -130,7 +130,7 @@ CDockDialog::CDockDialog() : m_view(IDD_MYDIALOG)
     SetView(m_view);
 
     // Set the width of the splitter bar
-    SetBarWidth(DPIScaleInt(8));
+    SetBarWidth(8);
 }
 
 // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
@@ -140,7 +140,6 @@ LRESULT CDockDialog::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lpa
 {
     // Set the width of the splitter bar.
     SetRedraw(FALSE);
-    SetBarWidth(DPIScaleInt(8));
     SetDialogFonts();
     CDocker::OnDPIChangedAfterParent(msg, wparam, lparam);
 

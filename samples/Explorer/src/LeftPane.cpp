@@ -15,6 +15,6 @@ CLeftPane::CLeftPane()
     SetView(m_view);
 
     // Set the width of the splitter bar
-    SetBarWidth(DPIScaleInt(6));
+    SetBarWidth(6);
 }
 

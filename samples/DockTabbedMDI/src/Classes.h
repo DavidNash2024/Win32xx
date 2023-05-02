@@ -78,10 +78,6 @@ public:
     CDockClasses();
     virtual ~CDockClasses() {}
 
-protected:
-    // Virtual functions that override base class functions
-    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
-
 private:
     CDockClasses(const CDockClasses&);                // Disable copy construction
     CDockClasses& operator = (const CDockClasses&);   // Disable assignment operator
