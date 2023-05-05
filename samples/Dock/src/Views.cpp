@@ -128,7 +128,7 @@ void CViewList::OnDestroy()
 
 // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
 // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE. 
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
 LRESULT CViewList::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
 {
     SetDPIImages();
@@ -265,7 +265,7 @@ void CViewTree::OnDestroy()
 
 // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
 // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE. 
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
 LRESULT CViewTree::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
 {
     SetDPIImages();
@@ -333,7 +333,7 @@ void CViewText::OnAttach()
 
 // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
 // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE. 
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
 LRESULT CViewText::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
 {
     SetDPIFont();

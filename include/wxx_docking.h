@@ -1656,16 +1656,20 @@ namespace Win32xx
             // Adjust hint shape for container in container docking.
             if ((dockSide & DS_DOCKED_CONTAINER) && rcHint.Height() > 50)
             {
-                CRgn Rgn;
-                int gap = DPIScaleInt(5);
-                int tabHeight = DPIScaleInt(25);
-                int tabWidth = DPIScaleInt(60);
-                Rgn.CreateRectRgn(0, 0, rcHint.Width(), rcHint.Height() - tabHeight);
-                assert(Rgn.GetHandle());
-                CRgn Rgn2;
-                Rgn2.CreateRectRgn(gap, rcHint.Height() - tabHeight, tabWidth, rcHint.Height());
-                Rgn.CombineRgn(Rgn2, RGN_OR);
-                SetWindowRgn(Rgn, FALSE);
+                CDockContainer* pContainer = pDockTarget->GetContainer();
+                if (pContainer != NULL)
+                {
+                    CRgn Rgn;
+                    int gap = DPIScaleInt(5);
+                    int tabHeight = pContainer->GetTabHeight();
+                    int tabWidth = DPIScaleInt(50);
+                    Rgn.CreateRectRgn(0, 0, rcHint.Width(), rcHint.Height() - tabHeight);
+                    assert(Rgn.GetHandle());
+                    CRgn Rgn2;
+                    Rgn2.CreateRectRgn(gap, rcHint.Height() - tabHeight, tabWidth, rcHint.Height());
+                    Rgn.CombineRgn(Rgn2, RGN_OR);
+                    SetWindowRgn(Rgn, FALSE);
+                }
             }
 
             VERIFY(pDockTarget->ClientToScreen(rcHint));
@@ -3438,15 +3442,16 @@ namespace Win32xx
         return 0;
     }
 
+    // Called before the window's DPI change is processed.
     inline LRESULT CDocker::OnGetDPIScaledSize(UINT, WPARAM wparam, LPARAM)
     {
-        // Update the grab point with the DPI changes. 
+        // Update the grab point with the DPI changes.
         int oldDPI = GetWindowDPI(*this);
         int newDPI = static_cast<int>(wparam);
         m_grabPoint.x = m_grabPoint.x * newDPI / oldDPI;
         m_grabPoint.y = m_grabPoint.y * newDPI / oldDPI;
 
-        // Return FALSE to indicate computed size isn't modified. 
+        // Return FALSE to indicate computed size isn't modified.
         return FALSE;
     }
 
@@ -3576,7 +3581,7 @@ namespace Win32xx
     inline LRESULT CDocker::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         LPWINDOWPOS pWndPos = (LPWINDOWPOS)lparam;
-        
+
         // Suspend dock drag moving while over dock zone.
         if (m_isBlockMove)
         {
@@ -4544,23 +4549,23 @@ namespace Win32xx
     {
         switch (msg)
         {
-        case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
-        case WM_DPICHANGED:         return OnDPIChanged(msg, wparam, lparam);
-        case WM_EXITSIZEMOVE:       return OnExitSizeMove(msg, wparam, lparam);
-        case WM_GETDPISCALEDSIZE:   return OnGetDPIScaledSize(msg, wparam, lparam);
-        case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
-        case WM_NCLBUTTONDBLCLK:    return OnNCLButtonDblClk(msg, wparam, lparam);
-        case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
-        case WM_SIZE:               return OnSize(msg, wparam, lparam);
-        case WM_SYSCOLORCHANGE:     return OnSysColorChange(msg, wparam, lparam);
-        case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
-        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
-        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
+        case WM_ACTIVATE:               return OnActivate(msg, wparam, lparam);
+        case WM_DPICHANGED:             return OnDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_EXITSIZEMOVE:           return OnExitSizeMove(msg, wparam, lparam);
+        case WM_GETDPISCALEDSIZE:       return OnGetDPIScaledSize(msg, wparam, lparam);
+        case WM_MOUSEACTIVATE:          return OnMouseActivate(msg, wparam, lparam);
+        case WM_NCLBUTTONDBLCLK:        return OnNCLButtonDblClk(msg, wparam, lparam);
+        case WM_NCLBUTTONDOWN:          return OnNCLButtonDown(msg, wparam, lparam);
+        case WM_SIZE:                   return OnSize(msg, wparam, lparam);
+        case WM_SYSCOLORCHANGE:         return OnSysColorChange(msg, wparam, lparam);
+        case WM_SYSCOMMAND:             return OnSysCommand(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGING:      return OnWindowPosChanging(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGED:       return OnWindowPosChanged(msg, wparam, lparam);
 
         // Messages defined by Win32++
         case UWM_DOCKACTIVATE:          return OnDockActivated(msg, wparam, lparam);
         case UWM_DOCKDESTROYED:         return OnDockDestroyed(msg, wparam, lparam);
-        case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
         case UWM_GETCDOCKER:            return reinterpret_cast<LRESULT>(this);
         }
 
@@ -4572,8 +4577,6 @@ namespace Win32xx
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
     inline LRESULT CDocker::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
     {
-        SetRedraw(FALSE);
-
         SetDefaultCaptionHeight();
 
         // Reset the docker size.
@@ -4581,7 +4584,6 @@ namespace Win32xx
         SetDockSize(size);
         RecalcDockLayout();
 
-        SetRedraw(TRUE);
         RedrawWindow();
         return 0;
     }
@@ -5065,7 +5067,7 @@ namespace Win32xx
         // Destroy and recreate the toolbar.
         GetViewPage().GetToolBar().Destroy();
         CreateToolBar();
-        GetContainerParent()->RecalcLayout();
+        RecalcLayout();
 
         return 0;
     }
@@ -5079,32 +5081,30 @@ namespace Win32xx
     }
 
     // Repositions the child windows when the window is resized.
-    // Note: Ignored unless this is the container parent.
     inline void CDockContainer::RecalcLayout()
     {
-        if (GetContainerParent() == this)
+        CDockContainer* parent = GetContainerParent();
+
+        // Set the tab sizes.
+        parent->SetTabSize();
+
+        // Position the View over the tab control's display area.
+        CRect rc = parent->GetClientRect();
+        parent->AdjustRect(FALSE, &rc);
+
+        if (parent->m_allInfo.size() > 0)
         {
-            // Set the tab sizes.
-            SetTabSize();
+            size_t pageIndex = static_cast<size_t>(parent->m_currentPage);
+            CDockContainer* pContainer = parent->m_allInfo[pageIndex].pContainer;
 
-            // Position the View over the tab control's display area.
-            CRect rc = GetClientRect();
-            AdjustRect(FALSE, &rc);
-
-            if (m_allInfo.size() > 0)
+            if (pContainer->GetViewPage().IsWindow())
             {
-                size_t pageIndex = static_cast<size_t>(m_currentPage);
-                CDockContainer* pContainer = m_allInfo[pageIndex].pContainer;
-
-                if (pContainer->GetViewPage().IsWindow())
-                {
-                    VERIFY(pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW));
-                    pContainer->GetViewPage().RecalcLayout();
-                }
-
+                VERIFY(pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW));
+                pContainer->GetViewPage().RecalcLayout();
             }
-            RedrawWindow(RDW_INVALIDATE | RDW_NOCHILDREN);
         }
+
+        parent->RedrawWindow(RDW_INVALIDATE | RDW_NOCHILDREN);
     }
 
     // Removes the specified child container from this container group.
@@ -5226,7 +5226,7 @@ namespace Win32xx
         lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
         font.CreateFontIndirect(lf);
         SetTabFont(font);
-        GetContainerParent()->RecalcLayout();
+        RecalcLayout();
     }
 
     // Updates the tab icons based on the window's DPI.
