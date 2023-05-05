@@ -2060,7 +2060,7 @@ namespace Win32xx
     }
 
     // Called in response to a WM_DPICHANGED message which is sent to a top-level
-    // window when the DPI changes.  Only top-level windows receive a WM_DPICHANGED message.
+    // window when the DPI changes. Only top-level windows receive a WM_DPICHANGED message.
     template <class T>
     inline LRESULT CFrameT<T>::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
     {

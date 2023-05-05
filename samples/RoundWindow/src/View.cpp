@@ -16,6 +16,9 @@
 CView::CView()
 {
     m_brush.CreateSolidBrush( RGB(250, 230, 100) );
+
+    // Set the old DPI to the desktop window's DPI.
+    m_oldDPI = GetWindowDPI(0);
 }
 
 BOOL CView::OnColor()
@@ -66,20 +69,9 @@ int CView::OnCreate(CREATESTRUCT&)
     SetIconSmall(IDW_MAIN);
     SetIconLarge(IDW_MAIN);
 
-    // Set the window title.
-    SetWindowText(LoadString(IDW_MAIN));
 
-    // Create a circular region.
-    CRgn rgn;
-    int left = DPIScaleInt(50);
-    int top = DPIScaleInt(50);
-    int right = DPIScaleInt(300);
-    int bottom = DPIScaleInt(300);
-    m_rect = CRect(left, top, right, bottom);
-    rgn.CreateEllipticRgnIndirect(m_rect);
-
-    // Assign the region to the window.
-    SetWindowRgn(rgn, FALSE);
+    // Set the window's region.
+    SetRoundRegion();
 
     TRACE("OnCreate\n");
     return 0;
@@ -92,6 +84,28 @@ void CView::OnDestroy()
     ::PostQuitMessage(0);
 }
 
+// Called in response to a WM_DPICHANGED message which is sent to a top-level
+// window when the DPI changes. Only top-level windows receive a WM_DPICHANGED message.
+LRESULT CView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+{
+    // Resize the window.
+    RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
+    assert(pWindowRect);
+    SetWindowPos(0, *pWindowRect, SWP_NOZORDER | SWP_NOACTIVATE);
+    SetRoundRegion();
+
+    // Update the grap point for the new DPI.
+    int newDPI = GetWindowDPI(*this);
+    m_grabPoint.x = m_grabPoint.x * newDPI / m_oldDPI;
+    m_grabPoint.y = m_grabPoint.y * newDPI / m_oldDPI;
+    m_oldDPI = newDPI;
+
+    // Position the window under the cursor.
+    PositionWindow();
+
+    return 0;
+}
+
 // OnPaint is called automatically whenever a part of the
 // window needs to be repainted.
 void CView::OnDraw(CDC& dc)
@@ -100,7 +114,7 @@ void CView::OnDraw(CDC& dc)
     if (GetWinVersion() >= 2601)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        LOGFONT lf = info.lfMessageFont;
+        LOGFONT lf = DPIScaleLogfont(info.lfMessageFont, 10);
         dc.CreateFontIndirect(lf);
     }
 
@@ -127,37 +141,15 @@ void CView::OnInitialUpdate()
     TRACE("OnInitialUpdate\n");
 }
 
-// This function will be called automatically by Create. It provides an
-// opportunity to set various window parameters prior to window creation.
-// You are not required to set these parameters, any parameters which
-// aren't specified are set to reasonable defaults.
-void CView::PreCreate(CREATESTRUCT& cs)
-{
-    // Set some optional parameters for the window.
-    cs.x = DPIScaleInt(50);                    // top x
-    cs.y = DPIScaleInt(50);                    // top y
-    cs.cx = DPIScaleInt(400);                  // width
-    cs.cy = DPIScaleInt(350);                  // height
-    cs.style = WS_VISIBLE | WS_POPUP;          // Window is initially visible.
-}
-
-// This function will be called automatically by Create.
-// Here we set the window's class parameters.
-void CView::PreRegisterClass(WNDCLASS& wc)
-{
-    wc.hbrBackground = m_brush;                 // Background color
-    wc.lpszClassName = _T("Round Window");      // Class name
-    wc.hCursor = ::LoadCursor(0,IDC_ARROW);     // Arrow cursor
-}
-
 // Respond to a left mouse button press.
 LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
+    // Capture the mouse input.
     SetCapture();
 
     // Save the relative mouse position.
-    m_point = GetCursorPos();
-    ScreenToClient(m_point);
+    m_grabPoint = GetCursorPos();
+    ScreenToClient(m_grabPoint);
 
     // Pass this message on for default processing.
     return FinalWindowProc(msg, wparam, lparam);
@@ -176,15 +168,7 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (wparam & MK_LBUTTON)
-    {
-        CPoint pt = GetCursorPos();
-
-        int x = pt.x - m_point.x;
-        int y = pt.y - m_point.y;
-
-        // Move the window.
-        SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE);
-    }
+        PositionWindow();
 
     // Pass this message on for default processing.
     return FinalWindowProc(msg, wparam, lparam);
@@ -207,6 +191,57 @@ LRESULT CView::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+void CView::PositionWindow()
+{
+    CPoint pt = GetCursorPos();
+
+    int x = pt.x - m_grabPoint.x;
+    int y = pt.y - m_grabPoint.y;
+
+    // Move the window.
+    SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE);
+}
+
+// This function will be called automatically by Create. It provides an
+// opportunity to set various window parameters prior to window creation.
+// You are not required to set these parameters, any parameters which
+// aren't specified are set to reasonable defaults.
+void CView::PreCreate(CREATESTRUCT& cs)
+{
+    // Set some optional parameters for the window.
+    cs.x = DPIScaleInt(50);                    // top x
+    cs.y = DPIScaleInt(50);                    // top y
+    cs.cx = DPIScaleInt(400);                  // width
+    cs.cy = DPIScaleInt(350);                  // height
+    cs.style = WS_VISIBLE | WS_POPUP;          // Window is initially visible.
+}
+
+// This function will be called automatically by Create.
+// Here we set the window's class parameters.
+void CView::PreRegisterClass(WNDCLASS& wc)
+{
+    wc.hbrBackground = m_brush;                 // Background color
+    wc.lpszClassName = _T("Round Window");      // Class name
+    wc.hCursor = ::LoadCursor(0, IDC_ARROW);     // Arrow cursor
+}
+
+void CView::SetRoundRegion()
+{
+    SetWindowRgn(0, TRUE);
+
+    // Create a circular region.
+    CRgn rgn;
+    int left = DPIScaleInt(50);
+    int top = DPIScaleInt(50);
+    int right = DPIScaleInt(300);
+    int bottom = DPIScaleInt(300);
+    m_rect = CRect(left, top, right, bottom);
+    rgn.CreateEllipticRgnIndirect(m_rect);
+
+    // Assign the region to the window.
+    SetWindowRgn(rgn, FALSE);
+}
+
 // This function is our message procedure. We process the messages for
 // the view window here.  Unprocessed messages are passed on for
 // default processing.
@@ -216,6 +251,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
+        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
         case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
         case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
