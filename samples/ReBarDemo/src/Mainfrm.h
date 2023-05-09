@@ -51,7 +51,6 @@ private:
     CToolBar m_toolBar;
     CImageList m_toolBarImages;
     CView m_view;
-    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

@@ -156,6 +156,10 @@ LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
     UpdateSettings();
     DPIScaleToolBar();
     m_view.DPIScaleToolBar();
+
+    // Update the menu icons.
+    SetupMenuIcons();
+
     RecalcLayout();
 
     return 0;

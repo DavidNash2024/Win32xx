@@ -72,13 +72,13 @@ LRESULT CViewClasses::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewClasses::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+LRESULT CViewClasses::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();
-    return 0;
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Set the CREATESTURCT parameters befoe the window is created.
@@ -111,7 +111,7 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
-        case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);
@@ -182,20 +182,22 @@ BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM)
     return FALSE;
 }
 
-// Overrides CDockContainer::OnDPIChangedAfterParent which is called after
-// a DPI change.
-LRESULT CContainClasses::OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam)
+// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+// Overrides CDockContainer::OnDPIChangedBeforeParent.
+LRESULT CContainClasses::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     int selected = -1;
     if (m_comboBoxEx.IsWindow())
         selected = m_comboBoxEx.GetCurSel();
 
-    // CDockContainer::OnDPIChangedAfterParent destroys and recreates the toolbar.
-    CDockContainer::OnDPIChangedAfterParent(msg, wparam, lparam);
+    CDockContainer::OnDPIChangedBeforeParent(msg, wparam, lparam);
 
     // Restore the ComboBox selection.
     m_comboBoxEx.SetCurSel(selected);
-    return 0;
+
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Demonstrates responding to the container's toolbar.

@@ -40,7 +40,6 @@ private:
     // Member variables
     CDXView m_DXView;
     CImageList m_normalImages;
-    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

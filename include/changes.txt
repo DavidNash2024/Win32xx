@@ -110,14 +110,14 @@ Changes in Detail
 -----------------
 Added ::ScaleUpBitmap
 Added CDockContainer::CreateToolBar
-Added CDockContainer::OnDPIChangedAfterParent 
+Added CDockContainer::OnDPIChangedBeforeParent 
 Added CDockContainer::SetTBImageList
 Added CDockContainer::SetTBImageListDis
 Added CDockContainer::SetTBImageListHot
 Added CDockContainer::UpdateTabs;
 Added CDocker::DPIUpdateDockerSizes
 Added CDocker::OnDPIChanged
-Added CDocker::OnDPIChangedAfterParent
+Added CDocker::OnDPIChangedBeforeParent
 Added CDocker::OnGetDPIScaledSize
 Added CDocker::SetDefaultCaptionHeight
 Added CDockFrame::OnDPIChanged
@@ -125,9 +125,9 @@ Added CFrameT::SetMenuImages
 Added CFrameT::OnDPIChanged
 Added CFrameT::UpdateSettings
 Added CImageList::Add  additional overload
-Added CTab::OnDPIChangedAfterParent
+Added CTab::OnDPIChangedBeforeParent
 Added CTab::UpdateTabs
-Added CTabbedMDI::OnDPIChangedAfterParent
+Added CTabbedMDI::OnDPIChangedBeforeParent
 Added CWnd::DPIScaleFont
 Added CWnd::DPIScaleInt
 Added CWnd::DPIScaleLogFont

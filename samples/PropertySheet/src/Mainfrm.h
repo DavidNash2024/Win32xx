@@ -42,7 +42,6 @@ private:
     // Member variables
     CView m_view;
     CMyPropertySheet m_modelessPS;
-    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

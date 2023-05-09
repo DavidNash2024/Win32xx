@@ -51,9 +51,6 @@ private:
     CDockText* m_pDockText;
     CDockTree* m_pDockTree;
     CDockList* m_pDockList;
-
-    CImageList m_normalImages;
-    CImageList m_menuImages;
 };
 
 

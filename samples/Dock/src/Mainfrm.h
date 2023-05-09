@@ -64,7 +64,6 @@ private:
 
     // member variables
     CViewSimple m_view;
-    CImageList m_menuImages;
     bool m_useProportionalResize;
     bool m_use3DBorder;
     bool m_disableUndocking;

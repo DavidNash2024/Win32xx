@@ -194,7 +194,7 @@ namespace Win32xx
         virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
-        virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    NotifyChanged();
@@ -272,7 +272,7 @@ namespace Win32xx
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSetFocus(UINT, WPARAM, LPARAM);
         virtual BOOL    OnTabClose(int tab);
-        virtual LRESULT OnDPIChangedAfterParent(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    RecalcLayout();
 
@@ -458,65 +458,53 @@ namespace Win32xx
         // Draw the outer highlight for the close button.
         if (!IsRectEmpty(&rcClose))
         {
+            // Use the Marlett font to draw special characters
+            CFont marlett;
+            marlett.CreatePointFont(100, _T("Marlett"));
+            dc.SetBkMode(TRANSPARENT);
+            marlett = DPIScaleFont(marlett, 10);
+            dc.SelectObject(marlett);
+
+            COLORREF grey(RGB(232, 228, 220));
+            COLORREF black(RGB(0, 0, 0));
+            COLORREF white(RGB(255, 255, 255));
+
             switch (state)
             {
             case 0:
-                {
-                dc.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
-                dc.MoveTo(rcClose.left, rcClose.bottom);
-                dc.LineTo(rcClose.right, rcClose.bottom);
-                dc.LineTo(rcClose.right, rcClose.top);
-                dc.LineTo(rcClose.left, rcClose.top);
-                dc.LineTo(rcClose.left, rcClose.bottom);
-                break;
-                }
+            {
+                // Draw a grey box for the normal button using two special characters.
+                dc.SetTextColor(grey);
+                dc.DrawText(_T("c"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("d"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+            }
+            break;
 
             case 1:
-                {
-                // Draw outline, white at top, black on bottom.
-                dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-                dc.MoveTo(rcClose.left, rcClose.bottom);
-                dc.LineTo(rcClose.right, rcClose.bottom);
-                dc.LineTo(rcClose.right, rcClose.top);
-                dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-                dc.LineTo(rcClose.left, rcClose.top);
-                dc.LineTo(rcClose.left, rcClose.bottom);
-                }
-                break;
+            {
+                // Draw popped up button, black on right and bottom.
+                dc.SetTextColor(white);
+                dc.DrawText(_T("c"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.SetTextColor(black);
+                dc.DrawText(_T("d"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+            }
+            break;
+
             case 2:
-                {
-                // Draw outline, black on top, white on bottom.
-                dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-                dc.MoveTo(rcClose.left, rcClose.bottom);
-                dc.LineTo(rcClose.right, rcClose.bottom);
-                dc.LineTo(rcClose.right, rcClose.top);
-                dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-                dc.LineTo(rcClose.left, rcClose.top);
-                dc.LineTo(rcClose.left, rcClose.bottom);
-                }
-                break;
+            {
+                // Draw popped up button, black on right and bottom.
+                dc.SetTextColor(black);
+                dc.DrawText(_T("c"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.SetTextColor(white);
+                dc.DrawText(_T("d"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+            }
+            break;
+
             }
 
-            // Manually draw close button.
-            dc.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
-
-            dc.MoveTo(rcClose.left + 3, rcClose.top +3);
-            dc.LineTo(rcClose.right - 2, rcClose.bottom -2);
-
-            dc.MoveTo(rcClose.left + 4, rcClose.top +3);
-            dc.LineTo(rcClose.right - 2, rcClose.bottom -3);
-
-            dc.MoveTo(rcClose.left + 3, rcClose.top +4);
-            dc.LineTo(rcClose.right - 3, rcClose.bottom -2);
-
-            dc.MoveTo(rcClose.right -3, rcClose.top +3);
-            dc.LineTo(rcClose.left + 2, rcClose.bottom -2);
-
-            dc.MoveTo(rcClose.right -3, rcClose.top +4);
-            dc.LineTo(rcClose.left + 3, rcClose.bottom -2);
-
-            dc.MoveTo(rcClose.right -4, rcClose.top +3);
-            dc.LineTo(rcClose.left + 2, rcClose.bottom -3);
+            // Draw the close button (a Marlett "r" looks like "X").
+            dc.SetTextColor(RGB(0, 0, 0));
+            dc.DrawText(_T("r"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
         }
     }
 
@@ -542,56 +530,56 @@ namespace Win32xx
         // Draw the outer highlight for the list button.
         if (!IsRectEmpty(&rcList))
         {
+            // Use the Marlett font to draw special characters
+            CFont marlett;
+            marlett.CreatePointFont(100, _T("Marlett"));
+            dc.SetBkMode(TRANSPARENT);
+            marlett = DPIScaleFont(marlett, 10);
+            dc.SelectObject(marlett);
+
+            COLORREF grey(RGB(232, 228, 220));
+            COLORREF black(RGB(0, 0, 0));
+            COLORREF white(RGB(255, 255, 255));
+
             switch (uState)
             {
             case 0:
-                {
-                dc.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
-                dc.MoveTo(rcList.left, rcList.bottom);
-                dc.LineTo(rcList.right, rcList.bottom);
-                dc.LineTo(rcList.right, rcList.top);
-                dc.LineTo(rcList.left, rcList.top);
-                dc.LineTo(rcList.left, rcList.bottom);
-                }
-                break;
+            {
+                // Draw a grey box for the normal button using two special characters.
+                dc.SetTextColor(grey);
+                dc.DrawText(_T("c"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("d"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+            }
+            break;
 
             case 1:
-                {
-                // Draw outline, white at top, black on bottom.
-                dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-                dc.MoveTo(rcList.left, rcList.bottom);
-                dc.LineTo(rcList.right, rcList.bottom);
-                dc.LineTo(rcList.right, rcList.top);
-                dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-                dc.LineTo(rcList.left, rcList.top);
-                dc.LineTo(rcList.left, rcList.bottom);
-                }
-                break;
+            {
+                // Draw popped up button, black on right and bottom.
+                dc.SetTextColor(white);
+                dc.DrawText(_T("c"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.SetTextColor(black);
+                dc.DrawText(_T("d"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+            }
+            break;
 
             case 2:
-                {
-                // Draw outline, black on top, white on bottom.
-                dc.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-                dc.MoveTo(rcList.left, rcList.bottom);
-                dc.LineTo(rcList.right, rcList.bottom);
-                dc.LineTo(rcList.right, rcList.top);
-                dc.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-                dc.LineTo(rcList.left, rcList.top);
-                dc.LineTo(rcList.left, rcList.bottom);
-                }
-                break;
+            {
+                // Draw pressed button, black on left and top.
+                dc.SetTextColor(black);
+                dc.DrawText(_T("c"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.SetTextColor(white);
+                dc.DrawText(_T("d"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+            }
+            break;
+
             }
 
-            // Manually draw list button.
-            dc.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
-            int maxLength = static_cast<int>(0.65 * rcList.Width());
-            int topGap = 1 + rcList.Height()/3;
-            for (int i = 0; i <= maxLength/2; ++i)
-            {
-                int Length = maxLength - 2*i;
-                dc.MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
-                dc.LineTo(rcList.left +1 + (rcList.Width() - Length)/2 + Length, rcList.top +topGap +i);
-            }
+            if (GetWinVersion() > 2501)
+                rcList.OffsetRect(1, -1);
+
+            // Draw the down arrow button.
+            dc.SetTextColor(black);
+            dc.DrawText(_T("u"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
         }
     }
 
@@ -1130,10 +1118,10 @@ namespace Win32xx
         return FinalWindowProc(msg, wparam, lparam);
     }
 
-    // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-    // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+    // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+    // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CTab::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+    inline LRESULT CTab::OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM)
     {
         UpdateTabs();
 
@@ -1251,6 +1239,7 @@ namespace Win32xx
         if (IsWindow())
         {
             SetTabSize();
+
             if (GetActiveView())
             {
                 // Position the View over the tab control's display area.
@@ -1260,7 +1249,7 @@ namespace Win32xx
                 VERIFY(GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW));
             }
 
-            RedrawWindow(RDW_INVALIDATE|RDW_NOCHILDREN);
+            RedrawWindow(RDW_INVALIDATE | RDW_NOCHILDREN);
         }
     }
 
@@ -1620,7 +1609,7 @@ namespace Win32xx
         case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
-        case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on for default processing.
@@ -2142,10 +2131,10 @@ namespace Win32xx
         return TRUE;
     }
 
-    // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-    // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+    // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+    // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CTabbedMDI::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+    inline LRESULT CTabbedMDI::OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM)
     {
         RecalcLayout();
         return 0;
@@ -2164,8 +2153,7 @@ namespace Win32xx
         if (GetTab().IsWindow())
         {
             CRect rcClient = GetClientRect();
-            VERIFY(GetTab().SetWindowPos(0, rcClient, SWP_SHOWWINDOW));
-            Invalidate();
+            GetTab().SetWindowPos(0, rcClient, SWP_SHOWWINDOW);
         }
     }
 
@@ -2264,7 +2252,7 @@ namespace Win32xx
         {
         case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
-        case WM_DPICHANGED_AFTERPARENT:  return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT:  return OnDPIChangedBeforeParent(msg, wparam, lparam);
         case UWM_GETCTABBEDMDI:     return reinterpret_cast<LRESULT>(this);
         }
 

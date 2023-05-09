@@ -52,7 +52,6 @@ private:
     CView m_view;
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
-    CImageList m_menuImages;
     bool m_isToolbarShown;
 };
 

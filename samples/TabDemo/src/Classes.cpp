@@ -56,13 +56,13 @@ void CViewClasses::OnAttach()
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// Called in response to a WM_DPICHANGED_BEFORE message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFORE is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewClasses::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+LRESULT CViewClasses::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();
-    return 0;
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Adjusts the treeview image sizes in response to window DPI changes.
@@ -88,7 +88,7 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_DPICHANGED_AFTERPARENT:  return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT:  return OnDPIChangedBeforeParent(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);

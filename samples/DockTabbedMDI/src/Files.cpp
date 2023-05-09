@@ -73,14 +73,14 @@ LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewFiles::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+LRESULT CViewFiles::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();
     SetDPIColumnWidths();
-    return 0;
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Configures the columns (header control) of the list view.
@@ -131,7 +131,7 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
-        case WM_DPICHANGED_AFTERPARENT:   return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT:   return OnDPIChangedBeforeParent(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);

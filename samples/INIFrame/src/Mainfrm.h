@@ -57,7 +57,6 @@ private:
     // Member variables
     CView m_view;
     CPrintPreview<CView> m_preview;
-    CImageList m_menuImages;
     bool m_isToolbarShown;
 };
 

@@ -549,7 +549,7 @@ namespace Win32xx
 
         // Resize the bitmap
         CSize bitmapSize = bitmap.GetSize();
-        int scale = GetMenuIconHeight() / bitmapSize.cy;
+        int scale = MulDiv(GetMenuIconHeight(), 1, bitmapSize.cy);
         m_menuIcons.clear();
         if (scale > 0)
         {
@@ -2546,6 +2546,10 @@ namespace Win32xx
     {
         // Reset the menu metrics on theme change.
         ResetMenuMetrics();
+
+        // Update the menu icons.
+        SetupMenuIcons();
+
         return 0;
     }
 

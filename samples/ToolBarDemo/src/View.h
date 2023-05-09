@@ -37,7 +37,7 @@ private:
 
     // MessageHandlers
     LRESULT OnSize(UINT, WPARAM, LPARAM);
-    LRESULT OnDPIChangedAfterParent(UINT, WPARAM, LPARAM);
+    LRESULT OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM);
 
     // Command handlers
     BOOL OnBottom();

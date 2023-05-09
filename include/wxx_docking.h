@@ -232,7 +232,7 @@ namespace Win32xx
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
-        virtual LRESULT OnDPIChangedAfterParent(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
         virtual void SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
@@ -345,7 +345,7 @@ namespace Win32xx
 
             void Draw3DBorder(const RECT& rect);
             void DrawCaption();
-            void DrawCloseButton(CDC& drawDC, BOOL focus);
+            void DrawCloseButton(CDC& drawDC);
             CRect GetCloseRect() const;
             const CString& GetCaption() const     { return m_caption; }
             CWnd& GetView() const                 { assert (m_pView); return *m_pView; }
@@ -382,7 +382,6 @@ namespace Win32xx
             CDocker* m_pDocker;
             CWnd* m_pView;
             BOOL m_isClosePressed;
-            BOOL m_isOldFocusStored;
             BOOL m_isCaptionPressed;
             BOOL m_isTracking;
             COLORREF m_foregnd1;
@@ -599,7 +598,7 @@ namespace Win32xx
         virtual LRESULT OnDockMove(LPDRAGPOS pDragPos);
         virtual LRESULT OnDockStart(LPDRAGPOS pDragPos);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnDPIChangedAfterParent(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
 
@@ -673,6 +672,8 @@ namespace Win32xx
         int m_dockID;
         int m_redrawCount;
         int m_ncHeight;
+        int m_newDPI;
+        int m_oldDPI;
         DWORD m_dockZone;
         double m_dockSizeRatio;
         DWORD m_dockStyle;
@@ -824,7 +825,7 @@ namespace Win32xx
     // Definitions for the CDockClient class nested within CDocker
     //
     inline CDocker::CDockClient::CDockClient() : m_pDocker(0), m_pView(0), m_isClosePressed(FALSE),
-                        m_isOldFocusStored(FALSE), m_isCaptionPressed(FALSE), m_isTracking(FALSE)
+                        m_isCaptionPressed(FALSE), m_isTracking(FALSE)
     {
         m_foregnd1 = RGB(32,32,32);
         m_backgnd1 = RGB(190,207,227);
@@ -885,14 +886,10 @@ namespace Win32xx
 
     inline void CDocker::CDockClient::DrawCaption()
     {
-
         if (IsWindow() && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
         {
             if (m_pDocker->IsUndockable())
             {
-                BOOL Focus = m_pDocker->IsChildOfDocker(GetFocus());
-                m_isOldFocusStored = FALSE;
-
                 // Acquire the DC for our NonClient painting
                 CWindowDC dc(*this);
 
@@ -904,7 +901,6 @@ namespace Win32xx
 
                 int Height = m_pDocker->m_ncHeight + rcAdjust;
                 memDC.CreateCompatibleBitmap(dc, Width, Height);
-                m_isOldFocusStored = Focus;
 
                 // Set the font for the title
                 int dpi = GetWindowDPI(*this);
@@ -939,7 +935,7 @@ namespace Win32xx
 
                 // Draw the close button
                 if (!(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
-                    DrawCloseButton(memDC, Focus);
+                    DrawCloseButton(memDC);
 
                 // Draw the 3D border
                 if (GetExStyle() & WS_EX_CLIENTEDGE)
@@ -951,7 +947,7 @@ namespace Win32xx
         }
     }
 
-    inline void CDocker::CDockClient::DrawCloseButton(CDC& drawDC, BOOL focus)
+    inline void CDocker::CDockClient::DrawCloseButton(CDC& drawDC)
     {
         // The close button isn't displayed on Win95
         if (GetWinVersion() == 1400)  return;
@@ -978,72 +974,50 @@ namespace Win32xx
                 // Draw the outer highlight for the close button
                 if (!IsRectEmpty(&rcClose))
                 {
+                    // Use the Marlett font to draw special characters
+                    CFont marlett;
+                    marlett.CreatePointFont(100, _T("Marlett"));
+                    drawDC.SetBkMode(TRANSPARENT);
+                    marlett = DPIScaleFont(marlett, 10);
+                    drawDC.SelectObject(marlett);
+
+                    COLORREF grey(RGB(232, 228, 220));
+                    COLORREF black(RGB(0, 0, 0));
+                    COLORREF white(RGB(255, 255, 255));
+
                     switch (uState)
                     {
                     case 0:
                     {
-                        // Normal button
-                        drawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
-                        drawDC.MoveTo(rcClose.left, rcClose.bottom);
-                        drawDC.LineTo(rcClose.right, rcClose.bottom);
-                        drawDC.LineTo(rcClose.right, rcClose.top);
-                        drawDC.LineTo(rcClose.left, rcClose.top);
-                        drawDC.LineTo(rcClose.left, rcClose.bottom);
+                        // Draw a grey box for the normal button using two special characters.
+                        drawDC.SetTextColor(grey);
+                        drawDC.DrawText(_T("c"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        drawDC.DrawText(_T("d"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                         break;
                     }
-
                     case 1:
                     {
-                        // Popped up button
-                        // Draw outline, white at top, black on bottom
-                        drawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-                        drawDC.MoveTo(rcClose.left, rcClose.bottom);
-                        drawDC.LineTo(rcClose.right, rcClose.bottom);
-                        drawDC.LineTo(rcClose.right, rcClose.top);
-                        drawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-                        drawDC.LineTo(rcClose.left, rcClose.top);
-                        drawDC.LineTo(rcClose.left, rcClose.bottom);
+                        // Draw popped up button, black on right and bottom.
+                        drawDC.SetTextColor(white);
+                        drawDC.DrawText(_T("c"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        drawDC.SetTextColor(black);
+                        drawDC.DrawText(_T("d"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        break;
                     }
-
-                    break;
                     case 2:
                     {
-                        // Pressed button
-                        // Draw outline, black on top, white on bottom
-                        drawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-                        drawDC.MoveTo(rcClose.left, rcClose.bottom);
-                        drawDC.LineTo(rcClose.right, rcClose.bottom);
-                        drawDC.LineTo(rcClose.right, rcClose.top);
-                        drawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-                        drawDC.LineTo(rcClose.left, rcClose.top);
-                        drawDC.LineTo(rcClose.left, rcClose.bottom);
+                        // Draw pressed button, black on left and top.
+                        drawDC.SetTextColor(black);
+                        drawDC.DrawText(_T("c"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        drawDC.SetTextColor(white);
+                        drawDC.DrawText(_T("d"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        break;
                     }
-                    break;
                     }
 
-                    // Manually Draw Close Button
-                    if (focus)
-                        drawDC.CreatePen(PS_SOLID, 1, m_foregnd1);
-                    else
-                        drawDC.CreatePen(PS_SOLID, 1, m_foregnd2);
-
-                    drawDC.MoveTo(rcClose.left + 3, rcClose.top + 3);
-                    drawDC.LineTo(rcClose.right - 2, rcClose.bottom - 2);
-
-                    drawDC.MoveTo(rcClose.left + 4, rcClose.top + 3);
-                    drawDC.LineTo(rcClose.right - 2, rcClose.bottom - 3);
-
-                    drawDC.MoveTo(rcClose.left + 3, rcClose.top + 4);
-                    drawDC.LineTo(rcClose.right - 3, rcClose.bottom - 2);
-
-                    drawDC.MoveTo(rcClose.right - 3, rcClose.top + 3);
-                    drawDC.LineTo(rcClose.left + 2, rcClose.bottom - 2);
-
-                    drawDC.MoveTo(rcClose.right - 3, rcClose.top + 4);
-                    drawDC.LineTo(rcClose.left + 3, rcClose.bottom - 2);
-
-                    drawDC.MoveTo(rcClose.right - 4, rcClose.top + 3);
-                    drawDC.LineTo(rcClose.left + 2, rcClose.bottom - 3);
+                    // Draw the close button (a Marlett "r" looks like "X").
+                    drawDC.SetTextColor(black);
+                    drawDC.DrawText(_T("r"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 }
             }
         }
@@ -1111,7 +1085,7 @@ namespace Win32xx
                 if ( !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
-                    DrawCloseButton(dc, m_isOldFocusStored);
+                    DrawCloseButton(dc);
                 }
 
                 return 0;
@@ -1143,7 +1117,7 @@ namespace Win32xx
                 if ( !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
-                    DrawCloseButton(dc, m_isOldFocusStored);
+                    DrawCloseButton(dc);
                 }
 
                 return 0;
@@ -1160,7 +1134,7 @@ namespace Win32xx
         if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
         {
             CWindowDC dc(*this);
-            DrawCloseButton(dc, m_isOldFocusStored);
+            DrawCloseButton(dc);
             dc.Destroy();  // Destroy the dc before destroying its window.
 
             if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
@@ -1213,7 +1187,7 @@ namespace Win32xx
         m_isClosePressed = FALSE;
         ReleaseCapture();
         CWindowDC dc(*this);
-        DrawCloseButton(dc, m_isOldFocusStored);
+        DrawCloseButton(dc);
 
         return FinalWindowProc(msg, wparam, lparam);
     }
@@ -1250,7 +1224,7 @@ namespace Win32xx
                 if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
-                    DrawCloseButton(dc, m_isOldFocusStored);
+                    DrawCloseButton(dc);
                 }
             }
             else if (m_pDocker->IsUndockable())
@@ -1300,7 +1274,7 @@ namespace Win32xx
                 if ((m_pDocker != NULL) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
-                    DrawCloseButton(dc, m_isOldFocusStored);
+                    DrawCloseButton(dc);
                 }
             }
 
@@ -1320,7 +1294,7 @@ namespace Win32xx
         m_isTracking = FALSE;
         CWindowDC dc(*this);
         if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDocker->IsUndockable())
-            DrawCloseButton(dc, m_isOldFocusStored);
+            DrawCloseButton(dc);
 
         m_isTracking = FALSE;
 
@@ -2125,6 +2099,7 @@ namespace Win32xx
     inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockAncestor(NULL), m_isBlockMove(FALSE),
                     m_isUndocking(FALSE), m_isClosing(FALSE), m_isDragging(FALSE),
                     m_dockStartSize(0), m_dockID(0), m_redrawCount(0), m_ncHeight(0),
+                    m_newDPI(USER_DEFAULT_SCREEN_DPI), m_oldDPI(USER_DEFAULT_SCREEN_DPI),
                     m_dockZone(0), m_dockSizeRatio(1.0), m_dockStyle(0), m_dockUnderPoint(0)
     {
         // Assume this docker is the DockAncestor for now.
@@ -3446,10 +3421,10 @@ namespace Win32xx
     inline LRESULT CDocker::OnGetDPIScaledSize(UINT, WPARAM wparam, LPARAM)
     {
         // Update the grab point with the DPI changes.
-        int oldDPI = GetWindowDPI(*this);
-        int newDPI = static_cast<int>(wparam);
-        m_grabPoint.x = m_grabPoint.x * newDPI / oldDPI;
-        m_grabPoint.y = m_grabPoint.y * newDPI / oldDPI;
+        m_oldDPI = GetWindowDPI(*this);
+        m_newDPI = static_cast<int>(wparam);
+        m_grabPoint.x = m_grabPoint.x * m_newDPI / m_oldDPI;
+        m_grabPoint.y = m_grabPoint.y * m_newDPI / m_oldDPI;
 
         // Return FALSE to indicate computed size isn't modified.
         return FALSE;
@@ -4551,7 +4526,7 @@ namespace Win32xx
         {
         case WM_ACTIVATE:               return OnActivate(msg, wparam, lparam);
         case WM_DPICHANGED:             return OnDPIChanged(msg, wparam, lparam);
-        case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
         case WM_EXITSIZEMOVE:           return OnExitSizeMove(msg, wparam, lparam);
         case WM_GETDPISCALEDSIZE:       return OnGetDPIScaledSize(msg, wparam, lparam);
         case WM_MOUSEACTIVATE:          return OnMouseActivate(msg, wparam, lparam);
@@ -4572,19 +4547,21 @@ namespace Win32xx
         return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
-    // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-    // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+    // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+    // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CDocker::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+    inline LRESULT CDocker::OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM)
     {
         SetDefaultCaptionHeight();
 
         // Reset the docker size.
-        int size = GetDockSize();
-        SetDockSize(size);
+        if (GetDockAncestor() != GetTopmostDocker())
+        {
+            m_dockStartSize = m_dockStartSize * GetTopmostDocker()->m_newDPI / GetTopmostDocker()->m_oldDPI;
+            m_dockSizeRatio = 1.0;
+        }
         RecalcDockLayout();
 
-        RedrawWindow();
         return 0;
     }
 
@@ -5057,10 +5034,10 @@ namespace Win32xx
         return 0;
     }
 
-    // Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-    // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+    // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+    // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CDockContainer::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+    inline LRESULT CDockContainer::OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM)
     {
         UpdateTabs();
 
@@ -5463,7 +5440,7 @@ namespace Win32xx
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
         case WM_SETFOCUS:       return OnSetFocus(msg, wparam, lparam);
         case WM_SIZE:           return OnSize(msg, wparam, lparam);
-        case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
         case UWM_GETCDOCKCONTAINER: return reinterpret_cast<LRESULT>(this);
         }
 

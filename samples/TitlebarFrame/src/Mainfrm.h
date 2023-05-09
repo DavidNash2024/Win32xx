@@ -111,7 +111,6 @@ private:
     TitlebarButton m_hoveredButton;
     TitlebarButton m_oldHoveredButton;
     TitlebarColors m_colors;
-    CImageList m_menuImages;
     bool m_isToolbarShown;
     bool m_isMiniFrame;
 };

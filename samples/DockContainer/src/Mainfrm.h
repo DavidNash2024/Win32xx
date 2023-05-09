@@ -58,7 +58,6 @@ private:
 
     // Member variables
     CDockContainer m_view;
-    CImageList m_menuImages;
     bool m_isContainerTabsAtTop;
     bool m_hideSingleTab;
 };

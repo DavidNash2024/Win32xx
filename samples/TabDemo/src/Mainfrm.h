@@ -44,7 +44,6 @@ private:
     BOOL OnTabOwnerDraw();
 
     CTab m_view;
-    CImageList m_menuImages;
 };
 
 #endif // MAINFRM_H

@@ -33,7 +33,7 @@ private:
     CViewClasses& operator = (const CViewClasses&);   // Disable assignment operator
 
     // Command handlers
-    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CImageList m_normalImages;

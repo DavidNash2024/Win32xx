@@ -47,7 +47,6 @@ private:
 
     // Member variables
     CView m_view;
-    CImageList m_menuImages;
     CRect m_viewRect;
     CPoint m_scrollPos;
     bool m_isDPIChanging;

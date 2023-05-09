@@ -104,7 +104,6 @@ private:
     CString m_cap;
     CString m_num;
     CString m_ovr;
-    CImageList m_menuImages;
     UINT m_encoding;
     bool m_isToolbarShown;
     bool m_isWrapped;
