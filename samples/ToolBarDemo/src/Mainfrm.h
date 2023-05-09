@@ -62,7 +62,6 @@ private:
     CToolBar m_cards;
     CImageList m_arrowImages;
     CImageList m_cardImages;
-    CImageList m_menuImages;
     std::vector<TBBUTTON>   m_defaultButtons;
     std::vector<TBBUTTON>   m_resetButtons;
     bool    m_useBigIcons;

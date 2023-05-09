@@ -32,6 +32,11 @@ private:
 
     bool      IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
 
+    // Message handlers
+    LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnRButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+
     // Notification message handlers
     BOOL OnBeginLabelEdit(LPARAM lparam);
     BOOL OnEndLabelEdit(LPARAM lparam);
@@ -52,9 +57,6 @@ public:
     CDockTree();
     virtual ~CDockTree() {}
     CViewTree& GetViewTree() { return m_treeView; }
-
-protected:
-    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockTree(const CDockTree&);                // Disable copy construction

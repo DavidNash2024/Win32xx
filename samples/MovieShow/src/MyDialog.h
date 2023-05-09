@@ -23,6 +23,7 @@ public:
     const CRichEdit& GetTitle()  const { return m_title; }
     const CRichEdit& GetYear()   const { return m_year; }
 
+    void SetDialogFonts();
     CCoverImage& SetPicture() { return m_picture; }
 
 protected:
@@ -38,6 +39,7 @@ private:
     CViewDialog& operator = (const CViewDialog&);   // Disable assignment operator
 
     // Message handlers
+    virtual LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void AppendText(int nID, LPCTSTR text);
@@ -65,10 +67,6 @@ public:
     virtual ~CDockDialog() {}
 
     CViewDialog& GetViewDialog() { return m_view; }
-    void SetDialogFonts();
-
-protected:
-    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockDialog(const CDockDialog&);                // Disable copy construction

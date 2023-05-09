@@ -38,7 +38,6 @@ private:
     BOOL    OnFileExit();
 
     CView m_view;
-    CImageList m_menuImages;
 };
 
 

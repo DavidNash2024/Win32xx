@@ -34,8 +34,6 @@ private:
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
     CGDIPlusView m_view;
-    CImageList m_normalImages;
-    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

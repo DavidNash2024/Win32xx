@@ -7,9 +7,6 @@
 #include "Text.h"
 #include "resource.h"
 
-#ifndef WM_DPICHANGED_BEFOREPARENT
-  #define WM_DPICHANGED_BEFOREPARENT      0x02E2
-#endif
 
 /////////////////////////////////
 // CViewText function definitions

@@ -16,7 +16,7 @@ CView::CView()
 void CView::DPIScaleToolBar()
 {
     // Create the ToolBar's image list from 4 icons
-    int scale = 48 * GetWindowDPI(*this) / USER_DEFAULT_SCREEN_DPI;
+    int scale = 48 * (GetWindowDPI(*this) / USER_DEFAULT_SCREEN_DPI);
     m_toolBarImages.DeleteImageList();
     m_toolBarImages.Create(scale, scale, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
@@ -83,14 +83,14 @@ int CView::OnCreate(CREATESTRUCT&)
     return 0;
 }
 
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CView::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+LRESULT CView::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     DPIScaleToolBar();
 
-    return 0;
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // OnDraw is called when part or all of the window needs to be redrawn.
@@ -279,8 +279,8 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_SIZE:                    return OnSize(msg, wparam, lparam);
-        case WM_DPICHANGED_AFTERPARENT:  return OnDPIChangedAfterParent(msg, wparam, lparam);
+        case WM_SIZE:                     return OnSize(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT:  return OnDPIChangedBeforeParent(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on for default processing.

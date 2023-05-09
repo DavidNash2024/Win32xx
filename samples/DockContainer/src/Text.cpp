@@ -29,32 +29,12 @@ void CViewText::OnAttach()
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewText::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
-{
-    SetDPIFont();
-    return 0;
-}
-
 // Adjusts the font size in response to window DPI changes.
 void CViewText::SetDPIFont()
 {
     m_font.CreatePointFont(100, _T("Courier New"));
     m_font = DPIScaleFont(m_font, 9);
     SetFont(m_font);
-}
-
-// Process the window messages sent to this message.
-LRESULT CViewText::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    switch (msg)
-    {
-      case WM_DPICHANGED_AFTERPARENT: return OnDPIChangedAfterParent(msg, wparam, lparam);
-    }
-
-    return WndProcDefault(msg, wparam, lparam);
 }
 
 

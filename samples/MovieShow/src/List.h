@@ -56,11 +56,12 @@ private:
 
     // Message handlers
     LRESULT OnCustomDraw(LPNMCUSTOMDRAW pCustomDraw);
+    LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnItemActivate(LPNMLISTVIEW pListView);
     LRESULT OnItemChanged(LPNMLISTVIEW pListView);
     LRESULT OnLVColumnClick(LPNMLISTVIEW pListView);
     LRESULT OnRClick();
-    LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CString GetFileTime(FILETIME fileTime);
     void    SetColumn();

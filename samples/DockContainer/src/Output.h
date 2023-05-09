@@ -22,14 +22,10 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewOutput(const CViewOutput&);                // Disable copy construction
     CViewOutput& operator = (const CViewOutput&);   // Disable assignment operator
-
-    // Message handlers
-    LRESULT OnDPIChangedAfterParent(UINT, WPARAM, LPARAM);
 
     CFont m_font;
 };

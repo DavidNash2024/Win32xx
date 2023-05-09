@@ -61,7 +61,6 @@ private:
     CView m_view;
     CPrintPreview<CView> m_preview;   // CView is the source of the PrintPage function
     CString m_pathName;
-    CImageList m_menuImages;
     CRect m_viewRect;
     CPoint m_scrollPos;
     bool m_isDPIChanging;

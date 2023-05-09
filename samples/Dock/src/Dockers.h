@@ -67,9 +67,6 @@ public:
     CDockText();
     virtual ~CDockText() {}
 
-protected:
-//    virtual LRESULT OnDPIChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
-
 private:
     CDockText(const CDockText&);                // Disable copy construction
     CDockText& operator = (const CDockText&);   // Disable assignment operator

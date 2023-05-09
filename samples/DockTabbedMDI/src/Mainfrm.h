@@ -77,7 +77,6 @@ private:
 
     // Member variables
     CMyTabbedMDI m_myTabbedMDI;
-    CImageList m_menuImages;
     bool m_isContainerTabsAtTop;
     bool m_isHideSingleTab;
     bool m_isMDITabsAtTop;

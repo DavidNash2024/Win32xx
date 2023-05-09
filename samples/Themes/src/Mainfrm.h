@@ -75,7 +75,6 @@ private:
     std::vector<UINT> m_bandSizes;
     CImageList m_arrowImages;
     CImageList m_cardImages;
-    CImageList m_menuImages;
 
     DWORD m_color;
     bool m_useThemes;

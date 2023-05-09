@@ -208,10 +208,10 @@ void CViewList::OnDestroy()
     SetImageList(0, LVSIL_SMALL);
 }
 
-// Called in response to a WM_DPICHANGED_AFTERPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
+// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewList::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
+LRESULT CViewList::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Adjust the column width in response to window DPI changes.
     SetRedraw(FALSE);
@@ -232,7 +232,7 @@ LRESULT CViewList::OnDPIChangedAfterParent(UINT, WPARAM, LPARAM)
     SetRedraw(TRUE);
     RedrawWindow();
 
-    return 0;
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Called after the listview window is created.
@@ -330,6 +330,15 @@ LRESULT CViewList::OnRClick()
         GetAncestor().SendMessage(UWM_ONRCLICKLISTITEM, 0, 0);
 
     return 0;
+}
+
+// Called when the window is resized.
+LRESULT CViewList::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Adjust the list view's columns when the window is resized.
+    SetLastColumnWidth();
+
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Sets the CREATESTRUCT parameters prior to the window's creation.
@@ -486,11 +495,10 @@ void CViewList::UpdateItemImage(int item)
 
 LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Adjust the list view's columns when the window is resized.
     switch (msg)
     {
-    case WM_WINDOWPOSCHANGED:   SetLastColumnWidth();  break;
-    case WM_DPICHANGED_AFTERPARENT:    return OnDPIChangedAfterParent(msg, wparam, lparam);
+    case WM_WINDOWPOSCHANGED:        return OnWindowPosChanged(msg, wparam, lparam);
+    case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
     }
 
     return WndProcDefault(msg, wparam, lparam);

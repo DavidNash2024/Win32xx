@@ -1343,7 +1343,7 @@ LRESULT CMainFrame::OnSelectListItem(const MovieInfo* pmi)
     assert(pmi);
 
     // Set the fonts.
-    m_pDockDialog->SetDialogFonts();
+    m_pDockDialog->GetViewDialog().SetDialogFonts();
     CViewDialog& dialog = (CViewDialog&)m_pDockDialog->GetView();
     dialog.GetTitle().SetWindowText(pmi->movieName);
     dialog.GetYear().SetWindowText(pmi->releaseDate);

@@ -37,8 +37,6 @@ private:
 
     // Member variables
     CView m_view;
-    CImageList m_normalImages;
-    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H
