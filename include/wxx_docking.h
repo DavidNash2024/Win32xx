@@ -3380,8 +3380,6 @@ namespace Win32xx
     {
         if (IsUndocked())   // Ignore dockers currently being undocked.
         {
-
-            m_isBlockMove = TRUE;
             // An undocked docker has moved to a different monitor.
             LPRECT prc = reinterpret_cast<LPRECT>(lparam);
             SetWindowPos(0, *prc, SWP_SHOWWINDOW);
@@ -3401,7 +3399,6 @@ namespace Win32xx
             RecalcDockLayout();
             SetRedraw(TRUE);
             RedrawWindow();
-            m_isBlockMove = FALSE;
         }
 
         return 0;

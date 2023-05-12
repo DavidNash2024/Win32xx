@@ -180,24 +180,23 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
         CString settingsKeyName;
         settingsKeyName << _T("Software\\") << keyName << _T("\\Theme Settings");
         CRegKey settingsKey;
-        int result = ERROR_SUCCESS;
 
-        result = settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName);
+        int result = settingsKey.Open(HKEY_CURRENT_USER, settingsKeyName);
         if (result == ERROR_SUCCESS)
         {
             DWORD bands = 0;
-            result = result & settingsKey.QueryDWORDValue(_T("ColorStyle"), m_color);
-            result = result & settingsKey.QueryBoolValue(_T("UseThemes"), m_useThemes);
-            result = result & settingsKey.QueryBoolValue(_T("UseBandColors"), m_useBandColors);
-            result = result & settingsKey.QueryBoolValue(_T("UseFlatStyle"), m_useFlatStyle);
-            result = result & settingsKey.QueryBoolValue(_T("PutBandsLeft"), m_keepBandsLeft);
-            result = result & settingsKey.QueryBoolValue(_T("LockMenuBand"), m_lockMenuBand);
-            result = result & settingsKey.QueryBoolValue(_T("UseRoundBorders"), m_useRoundBorders);
-            result = result & settingsKey.QueryBoolValue(_T("UseShortBands"), m_useShortBands);
-            result = result & settingsKey.QueryBoolValue(_T("UseLines"), m_useLines);
-            result = result & settingsKey.QueryBoolValue(_T("ShowArrows"), m_showArrows);
-            result = result & settingsKey.QueryBoolValue(_T("ShowCards"), m_showCards);
-            result = result & settingsKey.QueryDWORDValue(_T("NumBands"), bands);
+            result |= settingsKey.QueryDWORDValue(_T("ColorStyle"), m_color);
+            result |= settingsKey.QueryBoolValue(_T("UseThemes"), m_useThemes);
+            result |= settingsKey.QueryBoolValue(_T("UseBandColors"), m_useBandColors);
+            result |= settingsKey.QueryBoolValue(_T("UseFlatStyle"), m_useFlatStyle);
+            result |= settingsKey.QueryBoolValue(_T("PutBandsLeft"), m_keepBandsLeft);
+            result |= settingsKey.QueryBoolValue(_T("LockMenuBand"), m_lockMenuBand);
+            result |= settingsKey.QueryBoolValue(_T("UseRoundBorders"), m_useRoundBorders);
+            result |= settingsKey.QueryBoolValue(_T("UseShortBands"), m_useShortBands);
+            result |= settingsKey.QueryBoolValue(_T("UseLines"), m_useLines);
+            result |= settingsKey.QueryBoolValue(_T("ShowArrows"), m_showArrows);
+            result |= settingsKey.QueryBoolValue(_T("ShowCards"), m_showCards);
+            result |= settingsKey.QueryDWORDValue(_T("NumBands"), bands);
 
             // Retrieve the band styles and IDs
             for (UINT i = 0; i < bands; ++i)
@@ -205,17 +204,17 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
                 CString bandKeyName;
                 DWORD id = 0;
                 bandKeyName.Format(_T("Band ID %d\0"), i + 1);
-                result = result & settingsKey.QueryDWORDValue(bandKeyName, id);
+                result |= settingsKey.QueryDWORDValue(bandKeyName, id);
                 m_bandIDs.push_back(id);
 
                 DWORD style = 0;
                 bandKeyName.Format(_T("Band Style %d\0"), i + 1);
-                result = result & settingsKey.QueryDWORDValue(bandKeyName, style);
+                result |= settingsKey.QueryDWORDValue(bandKeyName, style);
                 m_bandStyles.push_back(style);
 
                 DWORD size = 0;
                 bandKeyName.Format(_T("Band Size %d\0"), i + 1);
-                result = result & settingsKey.QueryDWORDValue(bandKeyName, size);
+                result |= settingsKey.QueryDWORDValue(bandKeyName, size);
                 m_bandSizes.push_back(size);
             }
         }
