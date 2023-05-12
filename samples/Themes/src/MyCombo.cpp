@@ -28,11 +28,11 @@ BOOL CMyCombo::AddItems()
         LPCTSTR text;        // Note: LPTSTR would be incorrect here.
     } ITEMINFO;
 
-    ITEMINFO IInf[ ] =
+    ITEMINFO itemInfo[ ] =
     {
-        { 0, 0,  0, _T("Item 1")},
-        { 1, 1,  0, _T("Item 2")},
-        { 2, 2,  0, _T("Item 3")}
+        { 0, 0, 0, _T("Item 1")},
+        { 1, 1, 0, _T("Item 2")},
+        { 2, 2, 0, _T("Item 3")}
     };
 
     int MaxItems = 3;
@@ -42,11 +42,10 @@ BOOL CMyCombo::AddItems()
         ZeroMemory(&cbei, sizeof(cbei));
         cbei.mask = CBEIF_TEXT | CBEIF_INDENT | CBEIF_IMAGE| CBEIF_SELECTEDIMAGE;
         cbei.iItem          = i;
-        cbei.pszText        = const_cast<LPTSTR>(IInf[i].text);
-        cbei.cchTextMax     = sizeof(IInf[i].text);
-        cbei.iImage         = IInf[i].image;
-        cbei.iSelectedImage = IInf[i].selectedImage;
-        cbei.iIndent        = IInf[i].indent;
+        cbei.pszText        = const_cast<LPTSTR>(itemInfo[i].text);
+        cbei.iImage         = itemInfo[i].image;
+        cbei.iSelectedImage = itemInfo[i].selectedImage;
+        cbei.iIndent        = itemInfo[i].indent;
 
         // Add the items to the ComboBox's dropdown list.
         if(-1 == InsertItem(cbei))

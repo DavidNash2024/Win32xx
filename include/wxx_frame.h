@@ -416,11 +416,6 @@ namespace Win32xx
         SetReBar(m_reBar);
         SetStatusBar(m_statusBar);
         SetToolBar(m_toolBar);
-
-        // Set the fonts.
-        NONCLIENTMETRICS info = GetNonClientMetrics();
-        m_menuFont.CreateFontIndirect(info.lfMenuFont);
-        m_statusBarFont.CreateFontIndirect(info.lfStatusFont);
     }
 
     template <class T>
