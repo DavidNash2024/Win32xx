@@ -376,8 +376,8 @@ namespace Win32xx
                         if (icon == 0)
                             icon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
 
-                        int cx = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
-                        int cy = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
+                        int cx = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+                        int cy = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
                         int y = 1 + (pMenubar->GetWindowRect().Height() - cy) / 2;
                         int x = (rc.Width() - cx) / 2;
                         drawDC.DrawIconEx(x, y, icon, cx, cy, 0, 0, DI_NORMAL);

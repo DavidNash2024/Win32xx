@@ -43,7 +43,7 @@ INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
-        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
         case USER_CONNECT:      return OnSocketConnect();
         case USER_DISCONNECT:   return OnSocketDisconnect();
         case USER_RECEIVE:      return OnSocketReceive();
@@ -146,7 +146,7 @@ BOOL CClientDialog::OnCommand(WPARAM wparam, LPARAM)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CClientDialog::OnDPIChanged(UINT, WPARAM, LPARAM)
+LRESULT CClientDialog::OnDpiChanged(UINT, WPARAM, LPARAM)
 {
     CFont font = GetFont();
     m_ip4Address.SetFont(font);

@@ -177,7 +177,7 @@ namespace Win32xx
         enum Alignment { topleft, topright, bottomleft, bottomright, center, leftcenter, rightcenter, topcenter, bottomcenter };
 
         CResizer() : m_parent(0), m_xScrollPos(0), m_yScrollPos(0),
-                     m_currentDPI(USER_DEFAULT_SCREEN_DPI)
+                     m_currentDpi(USER_DEFAULT_SCREEN_DPI)
                      {}
         virtual ~CResizer() {}
 
@@ -220,7 +220,7 @@ namespace Win32xx
 
         int m_xScrollPos;
         int m_yScrollPos;
-        int m_currentDPI;
+        int m_currentDpi;
     };
 
 }
@@ -898,13 +898,13 @@ namespace Win32xx
         // Calls AddChild for each child window with default settings.
         ::EnumChildWindows(parent, EnumWindowsProc, reinterpret_cast<LPARAM>(this));
 
-        int dpi = GetWindowDPI(m_parent);
-        double scale = (double)dpi / double(m_currentDPI);
+        int dpi = GetWindowDpi(m_parent);
+        double scale = (double)dpi / double(m_currentDpi);
 
         ScaleRect(m_minRect, scale);
         ScaleRect(m_maxRect, scale);
         RecalcLayout();
-        m_currentDPI = GetWindowDPI(m_parent);
+        m_currentDpi = GetWindowDpi(m_parent);
     }
 
     // Called to perform horizontal scrolling.
@@ -1161,8 +1161,8 @@ namespace Win32xx
     // Rescales the layout to changes in the parent window's dpi.
     inline void CResizer::RescaleValues()
     {
-        int dpi = GetWindowDPI(m_parent);
-        double scale = (double)dpi / double(m_currentDPI);
+        int dpi = GetWindowDpi(m_parent);
+        double scale = (double)dpi / double(m_currentDpi);
 
         // Reset the scrolling position.
         SetScrollPos(m_parent, 0, 0, TRUE);
@@ -1187,7 +1187,7 @@ namespace Win32xx
         }
 
         RecalcLayout();
-        m_currentDPI = dpi;
+        m_currentDpi = dpi;
     }
 
     inline void CResizer::ScaleRect(CRect& rc, double scale)

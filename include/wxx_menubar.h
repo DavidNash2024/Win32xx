@@ -204,8 +204,8 @@ namespace Win32xx
 
         if (IsMDIChildMaxed())
         {
-            int cx = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
-            int cy = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
+            int cx = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+            int cy = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
             CRect rc = GetClientRect();
             int gap = 4;
             rc.right -= gap;
@@ -245,7 +245,7 @@ namespace Win32xx
             CFont marlett;
             marlett.CreatePointFont(100, _T("Marlett"));
             drawDC.SetBkMode(TRANSPARENT);
-            marlett = DPIScaleFont(marlett, 10);
+            marlett = DpiScaleFont(marlett, 10);
             drawDC.SelectObject(marlett);
 
             COLORREF grey(GetSysColor(COLOR_BTNFACE));
@@ -282,7 +282,7 @@ namespace Win32xx
             {
                 // Draw the minimize button.
                 CRect rc = m_mdiRect[0];
-                rc.OffsetRect(DPIScaleInt(1), 0);
+                rc.OffsetRect(DpiScaleInt(1), 0);
 
                 drawDC.SetTextColor(black);
                 drawDC.DrawText(_T("0"), 1, rc, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
@@ -1103,7 +1103,7 @@ namespace Win32xx
             menuText.ReleaseBuffer();
 
             // Add extra spaces to menuText for high DPI.
-            if (GetWindowDPI(*this) >= 150)
+            if (GetWindowDpi(*this) >= 150)
                 menuText = _T(" ") + menuText + _T(" ");
 
             SetButtonText(static_cast<UINT>(i + maxedOffset), menuText);

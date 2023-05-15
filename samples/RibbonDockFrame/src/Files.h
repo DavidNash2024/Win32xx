@@ -30,7 +30,7 @@ private:
 
     // Message handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void SetColumns();
 

@@ -39,7 +39,7 @@ HWND CMainFrame::Create(HWND parent)
 
 // Assigns the appropriately sized toolbar icons.
 // Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleToolBar()
+void CMainFrame::DpiScaleToolBar()
 {
     if (GetToolBar().IsWindow())
     {
@@ -100,7 +100,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM)
+LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM)
 {
     // Save the view's rectangle and disable scrolling.
     m_scrollPos = m_view.GetScrollPosition();
@@ -111,7 +111,7 @@ LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM)
     m_isDPIChanging = true;
     ResetMenuMetrics();
     UpdateSettings();
-    DPIScaleToolBar();
+    DpiScaleToolBar();
     SetupMenuIcons();
     RecalcLayout();
 

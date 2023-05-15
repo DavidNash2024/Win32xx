@@ -420,7 +420,7 @@ void CMainFrame::SerializeINI(BOOL isStoring)
             else
             {
                 TRACE("Failed to load ini file settings");
-                throw CUserException();;
+                throw CUserException();
             }
 
             SetInitValues(values);

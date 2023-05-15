@@ -35,10 +35,10 @@ HWND CMainFrame::Create(HWND parent)
 
 // Resize the arrow toolbar's images and the rebar containing it.
 // Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleReBar()
+void CMainFrame::DpiScaleReBar()
 {
     // Create the arrow toolbar's image list from 4 icons.
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     m_toolBarImages.Create(scale * 48, scale * 48, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
     m_toolBarImages.AddIcon(IDI_LEFT);
@@ -140,7 +140,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     style |= TBSTYLE_FLAT;
 
     // Create the ToolBar's image list from 4 icons
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     m_toolBarImages.Create(scale * 48, scale * 48, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
     m_toolBarImages.AddIcon(IDI_LEFT);
@@ -180,14 +180,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Turn redrawing off to make the tansition smoother.
     SetRedraw(FALSE);
 
     // Perform the DPI rescaling.
-    CFrame::OnDPIChanged(msg, wparam, lparam);
-    DPIScaleReBar();
+    CFrame::OnDpiChanged(msg, wparam, lparam);
+    DpiScaleReBar();
     RecalcLayout();
 
     // Turn redrawing on and redraw the frame window.
@@ -211,7 +211,7 @@ void CMainFrame::OnInitialUpdate()
     // Place any additional startup code here.
 
     TRACE("Frame created\n");
-    DPIScaleReBar();
+    DpiScaleReBar();
 }
 
 // Place the rebar on the left of the view.

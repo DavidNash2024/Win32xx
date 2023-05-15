@@ -103,7 +103,7 @@ namespace Win32xx
     // typedef std::shared_ptr<CWnd> WndPtr;
     typedef Shared_Ptr<CDocker> DockPtr;
     typedef Shared_Ptr<CMDIChild> MDIChildPtr;
-    typedef Shared_Ptr<MenuItemData> MenuItemDataPtr;;
+    typedef Shared_Ptr<MenuItemData> MenuItemDataPtr;
     typedef Shared_Ptr<CPropertyPage> PropertyPagePtr;
     typedef Shared_Ptr<TLSData> TLSDataPtr;
     typedef Shared_Ptr<CWinThread> WinThreadPtr;

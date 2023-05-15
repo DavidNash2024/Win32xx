@@ -34,7 +34,7 @@ void CGDIPlusView::DrawCappedLine(CDC& dc)
     Pen penCapped(Color(255, 0, 0, 255), 8);
     penCapped.SetStartCap(LineCapArrowAnchor);
     penCapped.SetEndCap(LineCapRoundAnchor);
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     graphics.DrawLine(&penCapped, 10 * scale, 175 * scale, 300 * scale, 175 * scale);
 }
 
@@ -45,7 +45,7 @@ void CGDIPlusView::DrawGamaShapes(CDC& dc)
 
     // Put the points of a polygon in an array.
     GraphicsPath pathGama;
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     int yOffset = 200 * scale;
     Point points[] = {Point(75 * scale,  0  + yOffset),
                       Point(100 * scale, 50 * scale + yOffset),
@@ -91,7 +91,7 @@ void CGDIPlusView::DrawGradientElipse(CDC& dc)
 
     // Create a path that consists of a single ellipse.
     GraphicsPath path;
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     path.AddEllipse(0, 80 * scale, 140 * scale, 70 * scale);
 
     // Use the path to construct a brush.
@@ -113,7 +113,7 @@ void CGDIPlusView::DrawSolidElipse(CDC& dc)
     Graphics graphics(dc);
 
     SolidBrush solidBrush(Color(255, 255, 0, 0));
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     graphics.FillEllipse(&solidBrush, 160 * scale, 84 * scale, 100 * scale, 60 * scale);
 }
 
@@ -124,7 +124,7 @@ void CGDIPlusView::DrawSolidLine(CDC& dc)
 
     // Draw solid line
     Pen penLine(Color(255, 0, 0, 255));
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     graphics.DrawLine(&penLine, 10 * scale, 70 * scale, 200 * scale, 70 * scale);
 }
 
@@ -136,7 +136,7 @@ void CGDIPlusView::DrawText(CDC& dc)
     // Draw some text
     SolidBrush  brush(Color(255, 0, 0, 255));
     FontFamily  fontFamily(L"Times New Roman");
-    int         scale = DPIScaleInt(1);
+    int         scale = DpiScaleInt(1);
     Font        font(&fontFamily, 24.0f * scale, FontStyleRegular, UnitPixel);
     PointF      pointF(10.0f * scale, 20.0f * scale);
 

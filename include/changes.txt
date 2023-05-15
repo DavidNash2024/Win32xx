@@ -24,12 +24,12 @@ New Features and Enhancements
   the menu icons are not displayed.
 
 * Frames support per monitor DPI awareness by resizing themselves to the 
-  size recommended by the WM_DPICHANGED message in the OnDPIChanged function.
+  size recommended by the WM_DPICHANGED message in the OnDpiChanged function.
   They also automatically adjust the toolbar images, menu icons, and statusbar
   fonts when the frame window is moved between monitors with different DPI
   settings.  
 
-* Dockers and docking frames call OnDPIChanged and OnDPIChangedAfterParent
+* Dockers and docking frames call OnDpiChanged and OnDpiChangedAfterParent
   in response to WM_DPICHANGED and WM_DPICHANGED_AFTERPARENT to rearrange
   dockers after a DPI change occurs. View windows should handle the
   WM_DPICHANGEDAFTERPARENT message if they need to account for DPI 
@@ -49,18 +49,18 @@ list-view and tree-view controls and adjust the fonts used by other windows
 to cater for larger scaling factors.
 
 Win32++ provides the following functions for high resolution monitor support.
-::GetWindowDPI
-CWnd::DPIScaleFont
-CWnd::DPIScaleInt
-CWnd::DPIScaleLogFont
-CWnd::DPIScaleRect
-CWnd::DPIScaleUpBitmap
+::GetWindowDpi
+CWnd::DpiScaleFont
+CWnd::DpiScaleInt
+CWnd::DpiScaleLogFont
+CWnd::DpiScaleRect
+CWnd::DpiScaleUpBitmap
 
-The GetWindowDPI function retrieves the window's current DPI. We can also
-call GetWindowDPI(0) to retrieve the system DPI, and the desktop's DPI when
-per monitor dpi awareness is enabled.
+The GetWindowDpi function retrieves the window's current DPI. We can also
+call GetWindowDpi(HWND_DESKTOP) to retrieve the system DPI, and the desktop's
+DPI when per monitor dpi awareness is enabled.
 
-The various DPIScaleXXX functions take values which are appropriate for a 
+The various DpiScaleXXX functions take values which are appropriate for a 
 a scaling factor of 100% and scale them up to the appropriate values for
 the current window's Dots Per Inch (DPI).
 
@@ -110,29 +110,29 @@ Changes in Detail
 -----------------
 Added ::ScaleUpBitmap
 Added CDockContainer::CreateToolBar
-Added CDockContainer::OnDPIChangedBeforeParent 
+Added CDockContainer::OnDpiChangedBeforeParent 
 Added CDockContainer::SetTBImageList
 Added CDockContainer::SetTBImageListDis
 Added CDockContainer::SetTBImageListHot
 Added CDockContainer::UpdateTabs;
-Added CDocker::DPIUpdateDockerSizes
-Added CDocker::OnDPIChanged
-Added CDocker::OnDPIChangedBeforeParent
-Added CDocker::OnGetDPIScaledSize
+Added CDocker::DpiUpdateDockerSizes
+Added CDocker::OnDpiChanged
+Added CDocker::OnDpiChangedBeforeParent
+Added CDocker::OnGetDpiScaledSize
 Added CDocker::SetDefaultCaptionHeight
-Added CDockFrame::OnDPIChanged
+Added CDockFrame::OnDpiChanged
 Added CFrameT::SetMenuImages
-Added CFrameT::OnDPIChanged
+Added CFrameT::OnDpiChanged
 Added CFrameT::UpdateSettings
 Added CImageList::Add  additional overload
-Added CTab::OnDPIChangedBeforeParent
+Added CTab::OnDpiChangedBeforeParent
 Added CTab::UpdateTabs
-Added CTabbedMDI::OnDPIChangedBeforeParent
-Added CWnd::DPIScaleFont
-Added CWnd::DPIScaleInt
-Added CWnd::DPIScaleLogFont
-Added CWnd::DPIScaleRect
-Added CWnd::DPIScaleUpBitmap
+Added CTabbedMDI::OnDpiChangedBeforeParent
+Added CWnd::DpiScaleFont
+Added CWnd::DpiScaleInt
+Added CWnd::DpiScaleLogFont
+Added CWnd::DpiScaleRect
+Added CWnd::DpiScaleUpBitmap
 Renamed CFrameT::GetMenuBarFont to CFrameT::GetMenuFont
 Updated the dock target images in the samples.
 

@@ -28,7 +28,7 @@ void CMainFrame::AddComboBoxBand()
     m_combo.Create(GetReBar());
 
     int padding = 2;
-    int height = m_combo.GetWindowRect().Height() + DPIScaleInt(padding);
+    int height = m_combo.GetWindowRect().Height() + DpiScaleInt(padding);
 
     // Put the window in a new rebar band.
     REBARBANDINFO rbbi;

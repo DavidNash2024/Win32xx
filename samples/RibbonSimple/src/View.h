@@ -22,7 +22,7 @@ protected:
 
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
-    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
     virtual LRESULT OnSize();

@@ -16,7 +16,7 @@ void CViewSimple::OnDraw(CDC& dc)
     if (GetWinVersion() >= 2601)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        LOGFONT lf = DPIScaleLogfont(info.lfMessageFont, 10);
+        LOGFONT lf = DpiScaleLogfont(info.lfMessageFont, 10);
         dc.CreateFontIndirect(lf);
     }
 
@@ -120,9 +120,9 @@ void CViewList::SetColumns()
 // Adjusts the listview column widths in response to window DPI changes.
 void CViewList::SetDPIColumnWidths()
 {
-    SetColumnWidth(0, DPIScaleInt(120));
-    SetColumnWidth(1, DPIScaleInt(50));
-    SetColumnWidth(2, DPIScaleInt(100));
+    SetColumnWidth(0, DpiScaleInt(120));
+    SetColumnWidth(1, DpiScaleInt(50));
+    SetColumnWidth(2, DpiScaleInt(100));
 }
 
 // Adjusts the listview image sizes in response to window DPI changes.
@@ -130,7 +130,7 @@ void CViewList::SetDPIImages()
 {
     // Set the image lists
     CBitmap bmImage(IDB_FILEVIEW);
-    bmImage = DPIScaleUpBitmap(bmImage);
+    bmImage = DpiScaleUpBitmap(bmImage);
     int scale = bmImage.GetSize().cy / 15;
     m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     m_smallImages.Add(bmImage, RGB(255, 0, 255));
@@ -187,7 +187,7 @@ void CViewTree::SetDPIImages()
 {
     // Resize the image list.
     CBitmap bmImage(IDB_CLASSVIEW);
-    bmImage = DPIScaleUpBitmap(bmImage);
+    bmImage = DpiScaleUpBitmap(bmImage);
     int scale = bmImage.GetSize().cy / 15;
     m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     m_smallImages.Add(bmImage, RGB(255, 0, 0));
@@ -218,6 +218,6 @@ void CViewText::PreCreate(CREATESTRUCT& cs)
 void CViewText::SetDPIFont()
 {
     m_font.CreatePointFont(100, _T("Courier New"));
-    m_font = DPIScaleFont(m_font, 9);
+    m_font = DpiScaleFont(m_font, 9);
     SetFont(m_font);
 }

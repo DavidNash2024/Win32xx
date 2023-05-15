@@ -35,7 +35,7 @@ HWND CMainFrame::Create(HWND parent)
 
 // Assigns the appropriately sized toolbar icons.
 // Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleToolBar()
+void CMainFrame::DpiScaleToolBar()
 {
     // The frame's default handling of WM_DPICHANGED destroys and recreates the toolbar.
     // We modify that here and merely reset the image lists for the toolbars.
@@ -144,7 +144,7 @@ LRESULT CMainFrame::OnCustHelp(LPNMHDR)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     // Resize the frame, using the suggested new window size.
     RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
@@ -154,8 +154,8 @@ LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
     // Update the rebar, menubar and statusbar.
     ResetMenuMetrics();
     UpdateSettings();
-    DPIScaleToolBar();
-    m_view.DPIScaleToolBar();
+    DpiScaleToolBar();
+    m_view.DpiScaleToolBar();
 
     // Update the menu icons.
     SetupMenuIcons();

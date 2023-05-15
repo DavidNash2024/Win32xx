@@ -33,7 +33,7 @@ void CViewText::OnAttach()
 void CViewText::SetDPIFont()
 {
     m_font.CreatePointFont(100, _T("Courier New"));
-    m_font = DPIScaleFont(m_font, 9);
+    m_font = DpiScaleFont(m_font, 9);
     SetFont(m_font);
 }
 

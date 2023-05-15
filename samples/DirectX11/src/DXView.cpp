@@ -400,10 +400,10 @@ int CDXView::OnCreate(CREATESTRUCT&)
 // Set the window creation parameters.
 void CDXView::PreCreate(CREATESTRUCT& cs)
 {
-    cs.x = DPIScaleInt(80);
-    cs.y = DPIScaleInt(60);
-    cs.cx = DPIScaleInt(800);
-    cs.cy = DPIScaleInt(600);
+    cs.x = DpiScaleInt(80);
+    cs.y = DpiScaleInt(60);
+    cs.cx = DpiScaleInt(800);
+    cs.cy = DpiScaleInt(600);
 }
 
 // Render a frame.

@@ -74,7 +74,7 @@ private:
     CViewTree& operator = (const CViewTree&);   // Disable assignment operator
 
     // Message handlers
-    LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
@@ -104,7 +104,7 @@ private:
     CViewList& operator = (const CViewList&);   // Disable assignment operator
 
     // Message handlers
-    LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void InsertItems();

@@ -238,11 +238,11 @@ namespace Win32xx
         int     DlgDirListComboBox(LPTSTR pathSpec, UINT comboBoxID, UINT staticPathID, UINT filetype) const;
         BOOL    DlgDirSelectEx(LPTSTR string, int count, UINT listBoxID) const;
         BOOL    DlgDirSelectComboBoxEx(LPTSTR string, int count, UINT comboBoxID) const;
-        CFont   DPIScaleFont(CFont font, int pointSize) const;
-        int     DPIScaleInt(int value) const;
-        LOGFONT DPIScaleLogfont(LOGFONT logfont, int pointSize) const;
-        CRect   DPIScaleRect(RECT rc) const;
-        CBitmap DPIScaleUpBitmap(CBitmap bitmap) const;
+        CFont   DpiScaleFont(CFont font, int pointSize) const;
+        int     DpiScaleInt(int value) const;
+        LOGFONT DpiScaleLogfont(LOGFONT logfont, int pointSize) const;
+        CRect   DpiScaleRect(RECT rc) const;
+        CBitmap DpiScaleUpBitmap(CBitmap bitmap) const;
         BOOL    DrawAnimatedRects(UINT aniID, const RECT& from, const RECT& to) const;
         BOOL    DrawCaption(HDC dc, const RECT& rect, UINT flags) const;
         BOOL    DrawMenuBar() const;

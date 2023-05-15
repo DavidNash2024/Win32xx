@@ -74,7 +74,7 @@ void CViewTree::OnDestroy()
 // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
 // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewTree::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CViewTree::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();
     return FinalWindowProc(msg, wparam, lparam);
@@ -192,7 +192,7 @@ void CViewTree::PreCreate(CREATESTRUCT& cs)
 void CViewTree::SetDPIImages()
 {
     //set the image lists
-    int size = DPIScaleInt(24);
+    int size = DpiScaleInt(24);
     m_imlNormal.Create(size, size, ILC_COLOR32, 1, 0);
 
     m_imlNormal.AddIcon(IDI_LIBRARY);
@@ -252,7 +252,7 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         {
         case WM_RBUTTONDOWN:            return OnRButtonDown(msg, wparam, lparam);
         case WM_RBUTTONUP:              return OnRButtonUp(msg, wparam, lparam);
-        case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);

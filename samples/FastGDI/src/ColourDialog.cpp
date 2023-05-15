@@ -182,7 +182,7 @@ BOOL CColourDialog::OnTextChange(HWND editCtrl)
     if (IsLeftButtonDown())
         return FALSE;
 
-    CString str;;
+    CString str;
     str.GetWindowText(editCtrl);
     int value = _ttoi(str);
 

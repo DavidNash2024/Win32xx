@@ -18,7 +18,7 @@ CView::CView()
     m_brush.CreateSolidBrush( RGB(250, 230, 100) );
 
     // Set the old DPI to the desktop window's DPI.
-    m_oldDPI = GetWindowDPI(0);
+    m_oldDPI = GetWindowDpi(HWND_DESKTOP);
 }
 
 BOOL CView::OnColor()
@@ -86,7 +86,7 @@ void CView::OnDestroy()
 
 // Called in response to a WM_DPICHANGED message which is sent to a top-level
 // window when the DPI changes. Only top-level windows receive a WM_DPICHANGED message.
-LRESULT CView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+LRESULT CView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     // Resize the window.
     RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
@@ -95,7 +95,7 @@ LRESULT CView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
     SetRoundRegion();
 
     // Update the grap point for the new DPI.
-    int newDPI = GetWindowDPI(*this);
+    int newDPI = GetWindowDpi(*this);
     m_grabPoint.x = m_grabPoint.x * newDPI / m_oldDPI;
     m_grabPoint.y = m_grabPoint.y * newDPI / m_oldDPI;
     m_oldDPI = newDPI;
@@ -114,7 +114,7 @@ void CView::OnDraw(CDC& dc)
     if (GetWinVersion() >= 2601)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        LOGFONT lf = DPIScaleLogfont(info.lfMessageFont, 10);
+        LOGFONT lf = DpiScaleLogfont(info.lfMessageFont, 10);
         dc.CreateFontIndirect(lf);
     }
 
@@ -174,7 +174,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-// Respond to Right mouse button press.
+// Respond to right mouse button press.
 LRESULT CView::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Create the menu.
@@ -209,10 +209,10 @@ void CView::PositionWindow()
 void CView::PreCreate(CREATESTRUCT& cs)
 {
     // Set some optional parameters for the window.
-    cs.x = DPIScaleInt(50);                    // top x
-    cs.y = DPIScaleInt(50);                    // top y
-    cs.cx = DPIScaleInt(400);                  // width
-    cs.cy = DPIScaleInt(350);                  // height
+    cs.x = DpiScaleInt(50);                    // top x
+    cs.y = DpiScaleInt(50);                    // top y
+    cs.cx = DpiScaleInt(400);                  // width
+    cs.cy = DpiScaleInt(350);                  // height
     cs.style = WS_VISIBLE | WS_POPUP;          // Window is initially visible.
 }
 
@@ -231,10 +231,10 @@ void CView::SetRoundRegion()
 
     // Create a circular region.
     CRgn rgn;
-    int left = DPIScaleInt(50);
-    int top = DPIScaleInt(50);
-    int right = DPIScaleInt(300);
-    int bottom = DPIScaleInt(300);
+    int left = DpiScaleInt(50);
+    int top = DpiScaleInt(50);
+    int right = DpiScaleInt(300);
+    int bottom = DpiScaleInt(300);
     m_rect = CRect(left, top, right, bottom);
     rgn.CreateEllipticRgnIndirect(m_rect);
 
@@ -251,7 +251,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
         case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
         case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);

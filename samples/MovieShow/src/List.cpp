@@ -211,20 +211,20 @@ void CViewList::OnDestroy()
 // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
 // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewList::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CViewList::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Adjust the column width in response to window DPI changes.
     SetRedraw(FALSE);
     int lastCol = Header_GetItemCount(GetHeader()) - 1;
     std::vector<int> columnWidths;
-    int dpi = GetWindowDPI(*this);
+    int dpi = GetWindowDpi(*this);
     for (int i = 0; i <= lastCol; ++i)
     {
         int width = GetColumnWidth(i) * dpi / m_oldDPI;
         SetColumnWidth(i, width);
     }
 
-    m_oldDPI = GetWindowDPI(*this);
+    m_oldDPI = GetWindowDpi(*this);
 
     // Adjust the images in response to window DPI changes.
     SetDPIImages();
@@ -238,7 +238,7 @@ LRESULT CViewList::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lpar
 // Called after the listview window is created.
 void CViewList::OnInitialUpdate()
 {
-    m_oldDPI = GetWindowDPI(*this);
+    m_oldDPI = GetWindowDpi(*this);
     SetDPIImages();
 }
 
@@ -357,23 +357,23 @@ void CViewList::SetColumn()
     lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
     lvColumn.fmt = LVCFMT_LEFT;
 
-    lvColumn.cx = DPIScaleInt(200);
+    lvColumn.cx = DpiScaleInt(200);
     lvColumn.pszText = const_cast<LPTSTR>(L"Movie Title");
     InsertColumn(0, lvColumn);
 
-    lvColumn.cx = DPIScaleInt(100);
+    lvColumn.cx = DpiScaleInt(100);
     lvColumn.pszText = const_cast<LPTSTR>(L"Release Date");
     InsertColumn(1, lvColumn);
 
-    lvColumn.cx = DPIScaleInt(120);
+    lvColumn.cx = DpiScaleInt(120);
     lvColumn.pszText = const_cast<LPTSTR>(L"Genre");
     InsertColumn(2, lvColumn);
 
-    lvColumn.cx = DPIScaleInt(150);
+    lvColumn.cx = DpiScaleInt(150);
     lvColumn.pszText = const_cast<LPTSTR>(L"File Name");
     InsertColumn(3, lvColumn);
 
-    lvColumn.cx = DPIScaleInt(150);
+    lvColumn.cx = DpiScaleInt(150);
     lvColumn.pszText = const_cast<LPTSTR>(L"File Date");
     InsertColumn(4, lvColumn);
 }
@@ -382,7 +382,7 @@ void CViewList::SetColumn()
 void CViewList::SetDPIImages()
 {
     // Set the image lists
-    int size = DPIScaleInt(16);
+    int size = DpiScaleInt(16);
     m_small.Create(size, size, ILC_COLOR32, 1, 0);
     m_small.AddIcon(IDI_MOVIES);
     m_small.AddIcon(IDI_VIOLIN);
@@ -498,7 +498,7 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch (msg)
     {
     case WM_WINDOWPOSCHANGED:        return OnWindowPosChanged(msg, wparam, lparam);
-    case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
+    case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
     }
 
     return WndProcDefault(msg, wparam, lparam);

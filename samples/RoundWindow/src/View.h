@@ -39,7 +39,7 @@ private:
     BOOL OnExit();
 
     // Message handlers
-    LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);

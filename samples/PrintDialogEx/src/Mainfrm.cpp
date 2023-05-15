@@ -256,9 +256,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    CFrame::OnDPIChanged(msg, wparam, lparam);
+    CFrame::OnDpiChanged(msg, wparam, lparam);
     UpdateToolbar();
     RecalcLayout();
     return 0;

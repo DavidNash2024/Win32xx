@@ -369,7 +369,7 @@ void CMiniFrame::OnDestroy()
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMiniFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+LRESULT CMiniFrame::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = reinterpret_cast<LPRECT>(lparam);
     SetWindowPos(0, *prc, SWP_SHOWWINDOW);
@@ -410,8 +410,8 @@ BOOL CMiniFrame::OnHelp()
 LRESULT CMiniFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
-    lpMMI->ptMinTrackSize.x = DPIScaleInt(400);
-    lpMMI->ptMinTrackSize.y = DPIScaleInt(300);
+    lpMMI->ptMinTrackSize.x = DpiScaleInt(400);
+    lpMMI->ptMinTrackSize.y = DpiScaleInt(300);
 
     return WndProcDefault(msg, wparam, lparam);
 }
@@ -643,10 +643,10 @@ void CMiniFrame::PreCreate(CREATESTRUCT& cs)
 {
     // Set some optional parameters for the window
     cs.lpszClass = _T("MiniFrame Window");  // Window Class
-    cs.x = DPIScaleInt(50);                 // top x
-    cs.y = DPIScaleInt(50);                 // top y
-    cs.cx = DPIScaleInt(400);               // width
-    cs.cy = DPIScaleInt(300);               // height
+    cs.x = DpiScaleInt(50);                 // top x
+    cs.y = DpiScaleInt(50);                 // top y
+    cs.cx = DpiScaleInt(400);               // width
+    cs.cy = DpiScaleInt(300);               // height
 }
 
 // Repositions the child windows.
@@ -662,7 +662,7 @@ void CMiniFrame::RecalcLayout() const
         CRect menuRect = GetClientRect();
         CSize size = m_menubar.GetMaxSize();
         menuRect.left = GetButtonRects().system.right;
-        menuRect.top = (rect.Height() - size.cy) / 2;;
+        menuRect.top = (rect.Height() - size.cy) / 2;
         menuRect.right = menuRect.left + size.cx;
         menuRect.bottom = menuRect.top + size.cy;
         m_menubar.SetWindowPos(NULL, menuRect, SWP_SHOWWINDOW);
@@ -683,7 +683,7 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     switch (msg)
     {
     case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
-    case WM_DPICHANGED:         return OnDPIChanged(msg, wparam, lparam);
+    case WM_DPICHANGED:         return OnDpiChanged(msg, wparam, lparam);
     case WM_ERASEBKGND:         return OnEraseBkGnd(msg, wparam, lparam);
     case WM_GETMINMAXINFO:      return OnGetMinMaxInfo(msg, wparam, lparam);
     case WM_HELP:               return OnHelp();

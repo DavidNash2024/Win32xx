@@ -27,7 +27,7 @@ CMainFrame::~CMainFrame()
 void CMainFrame::AddCombo()
 {
     // Place the ComboBoxEx control over the 'File Save' toolbar button.
-    int comboSize = DPIScaleInt(100);
+    int comboSize = DpiScaleInt(100);
     CToolBar& tb = GetToolBar();
     if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 
@@ -153,7 +153,7 @@ HWND CMainFrame::Create(HWND parent)
 
 // Assigns the appropriately sized toolbar icons.
 // Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleToolBar()
+void CMainFrame::DpiScaleToolBar()
 {
     // The frame's default handling of WM_DPICHANGED destroys and recreates the toolbar.
     // We modify that here and merely reset the image lists for the toolbars.
@@ -362,7 +362,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     // Resize the frame, using the suggested new window size.
     RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
@@ -372,7 +372,7 @@ LRESULT CMainFrame::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
     // Update the rebar, menubar and statusbar.
     ResetMenuMetrics();
     UpdateSettings();
-    DPIScaleToolBar();
+    DpiScaleToolBar();
     SetupMenuIcons();
     RecalcLayout();
 
@@ -544,10 +544,6 @@ BOOL CMainFrame::OnShortBands()
 // is made to a system color setting.
 LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Currently we need to reset the ComboBoxEx control to force redrawing
-    // when a windows high contrast theme is enabled or disabled. This requirement
-    // might change with future updates to the Windows operating system.
-
     // Retrieve the current selection.
     int sel = m_comboBoxEx.GetCurSel();
 

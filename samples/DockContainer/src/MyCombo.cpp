@@ -27,7 +27,7 @@ void CMyCombo::PreCreate(CREATESTRUCT& cs)
     cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
 
     // Set the height of the combobox in order to see a dropdown list
-    cs.cy = DPIScaleInt(100);
+    cs.cy = DpiScaleInt(100);
 }
 
 // Adds items to the ComboBoxEx.
@@ -78,7 +78,7 @@ void CMyCombo::SetImages(int images, UINT imageID)
 
     CBitmap bm(imageID);
     assert(bm.GetHandle());
-    bm = DPIScaleUpBitmap(bm);
+    bm = DpiScaleUpBitmap(bm);
     CSize szImage = bm.GetSize();
     m_imlImages.Create(szImage.cx / images, szImage.cy, ILC_COLOR32 | ILC_MASK, images, 0);
     m_imlImages.Add(bm, RGB(255, 0, 255));

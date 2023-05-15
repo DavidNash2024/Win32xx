@@ -159,7 +159,7 @@ BOOL CMyDialog::OnInitDialog()
 
     // Ajust the pattern image size.
     m_patternImage.LoadBitmap(IDB_BITMAP1);
-    m_patternImage = DPIScaleUpBitmap(m_patternImage);
+    m_patternImage = DpiScaleUpBitmap(m_patternImage);
     LPARAM lparam = reinterpret_cast<LPARAM>(m_patternImage.GetHandle());
     SendDlgItemMessage(IDC_STATIC1, STM_SETIMAGE, IMAGE_BITMAP, lparam);
 

@@ -1067,7 +1067,7 @@ SetWindowTitle(LPCTSTR path)                                                /*
     }
       // form the caption title
     if (!docPath.IsEmpty())
-        appTitle  += _T(":    ") + docPath;;
+        appTitle  += _T(":    ") + docPath;
       // compute maximum characters in the caption from its height in pixels,
       // assumed to be proportional to the font width
     INT height = ::GetSystemMetrics(SM_CYCAPTION);

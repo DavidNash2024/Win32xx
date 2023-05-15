@@ -194,7 +194,7 @@ namespace Win32xx
         virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
-        virtual LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    NotifyChanged();
@@ -212,8 +212,8 @@ namespace Win32xx
         CTab(const CTab&);              // Disable copy construction
         CTab& operator = (const CTab&); // Disable assignment operator
 
-        void SetTabsDPIFont();
-        void SetTabsDPIIcons();
+        void SetTabsDpiFont();
+        void SetTabsDpiIcons();
         void ShowActiveView(CWnd* pView);
 
         std::vector<TabPageInfo> m_allTabPageInfo;
@@ -272,7 +272,7 @@ namespace Win32xx
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSetFocus(UINT, WPARAM, LPARAM);
         virtual BOOL    OnTabClose(int tab);
-        virtual LRESULT OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    RecalcLayout();
 
@@ -462,7 +462,7 @@ namespace Win32xx
             CFont marlett;
             marlett.CreatePointFont(100, _T("Marlett"));
             dc.SetBkMode(TRANSPARENT);
-            marlett = DPIScaleFont(marlett, 10);
+            marlett = DpiScaleFont(marlett, 10);
             dc.SelectObject(marlett);
 
             COLORREF grey(RGB(232, 228, 220));
@@ -534,7 +534,7 @@ namespace Win32xx
             CFont marlett;
             marlett.CreatePointFont(100, _T("Marlett"));
             dc.SetBkMode(TRANSPARENT);
-            marlett = DPIScaleFont(marlett, 10);
+            marlett = DpiScaleFont(marlett, 10);
             dc.SelectObject(marlett);
 
             COLORREF grey(RGB(232, 228, 220));
@@ -700,9 +700,9 @@ namespace Win32xx
         if (GetShowButtons())
         {
             rc = GetClientRect();
-            int gap = DPIScaleInt(4);
-            int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
-            int cy = GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
+            int gap = DpiScaleInt(4);
+            int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+            int cy = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
             rc.right -= gap;
             rc.left = rc.right - cx;
 
@@ -769,7 +769,7 @@ namespace Win32xx
         {
             CRect rcClose = GetCloseRect();
             rcList = rcClose;
-            rcList.OffsetRect(-(rcClose.Width() + DPIScaleInt(2)), 0);
+            rcList.OffsetRect(-(rcClose.Width() + DpiScaleInt(2)), 0);
             rcList.InflateRect(-1, 0);
         }
         return rcList;
@@ -795,7 +795,7 @@ namespace Win32xx
             CSize TempSize = dcClient.GetTextExtentPoint32(str, lstrlen(str));
 
             int imageSize = 0;
-            int padding = DPIScaleInt(10);
+            int padding = DpiScaleInt(10);
             if (tcItem.iImage >= 0)
             {
                 imageSize = GetODImageList().GetIconSize().cx;
@@ -1121,7 +1121,7 @@ namespace Win32xx
     // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
     // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CTab::OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM)
+    inline LRESULT CTab::OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM)
     {
         UpdateTabs();
 
@@ -1369,7 +1369,7 @@ namespace Win32xx
     inline void CTab::SetTabFont(HFONT font)
     {
         m_tabFont = font;
-        int heightGap = DPIScaleInt(5);
+        int heightGap = DpiScaleInt(5);
         SetTabHeight(MAX(20, GetTextHeight() + heightGap));
 
         // Set the font used without owner draw.
@@ -1556,12 +1556,12 @@ namespace Win32xx
     }
 
     // Updates the tab font based on the window's DPI.
-    inline void CTab::SetTabsDPIFont()
+    inline void CTab::SetTabsDpiFont()
     {
         // Set the font used in the tabs.
         CFont font;
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         LOGFONT lf = info.lfStatusFont;
         lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
         font.CreateFontIndirect(lf);
@@ -1570,9 +1570,9 @@ namespace Win32xx
     }
 
     // Updates the tab icons based on the window's DPI.
-    inline void CTab::SetTabsDPIIcons()
+    inline void CTab::SetTabsDpiIcons()
     {
-        int iconHeight = DPIScaleInt(16);
+        int iconHeight = DpiScaleInt(16);
         iconHeight = iconHeight - iconHeight % 8;
 
         const std::vector<TabPageInfo>& v = GetAllTabs();
@@ -1588,8 +1588,8 @@ namespace Win32xx
     // Updates the font and icons in the tabs.
     inline void CTab::UpdateTabs()
     {
-        SetTabsDPIFont();
-        SetTabsDPIIcons();
+        SetTabsDpiFont();
+        SetTabsDpiIcons();
     }
 
     // Provides the default message handling for the tab control.
@@ -1609,7 +1609,7 @@ namespace Win32xx
         case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
-        case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on for default processing.
@@ -2134,7 +2134,7 @@ namespace Win32xx
     // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
     // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CTabbedMDI::OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM)
+    inline LRESULT CTabbedMDI::OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM)
     {
         RecalcLayout();
         return 0;
@@ -2252,7 +2252,7 @@ namespace Win32xx
         {
         case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
-        case WM_DPICHANGED_BEFOREPARENT:  return OnDPIChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT:  return OnDpiChangedBeforeParent(msg, wparam, lparam);
         case UWM_GETCTABBEDMDI:     return reinterpret_cast<LRESULT>(this);
         }
 

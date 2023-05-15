@@ -16,7 +16,7 @@ public:
     virtual ~CView();
     virtual HWND Create(HWND hParent);
 
-    void DPIScaleImage();
+    void DpiScaleImage();
     CDoc& GetDoc();
 
     // Command handlers

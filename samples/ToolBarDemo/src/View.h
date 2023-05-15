@@ -15,7 +15,7 @@ public:
     CView();
     virtual ~CView(){}
 
-    void DPIScaleToolBar();
+    void DpiScaleToolBar();
 
 protected:
     // Virtual functions that override base class functions
@@ -37,7 +37,7 @@ private:
 
     // MessageHandlers
     LRESULT OnSize(UINT, WPARAM, LPARAM);
-    LRESULT OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM);
+    LRESULT OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM);
 
     // Command handlers
     BOOL OnBottom();

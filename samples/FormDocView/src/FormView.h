@@ -15,7 +15,7 @@ class CFormView : public CDialog
 public:
     CFormView(UINT resID);
     virtual ~CFormView();
-    void DPIScaleImage();
+    void DpiScaleImage();
     CFormDoc& GetDoc();
 
     // Command handlers

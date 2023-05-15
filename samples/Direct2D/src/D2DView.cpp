@@ -102,7 +102,7 @@ LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CD2DView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+LRESULT CD2DView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = (LPRECT)lparam;
     SetWindowPos(0, *prc, SWP_SHOWWINDOW);
@@ -121,7 +121,7 @@ LRESULT CD2DView::OnPaint(UINT, WPARAM, LPARAM)
 // Perform the drawing.
 HRESULT CD2DView::OnRender()
 {
-    float zoom = static_cast<float>(GetWindowDPI(*this)) / static_cast<float>(GetWindowDPI(0));
+    float zoom = static_cast<float>(GetWindowDpi(*this)) / static_cast<float>(GetWindowDpi(HWND_DESKTOP));
     HRESULT hr = CreateDeviceResources();
     if (SUCCEEDED(hr))
     {
@@ -211,10 +211,10 @@ LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lparam)
 // Specify the initial window size.
 void CD2DView::PreCreate(CREATESTRUCT&cs)
 {
-    cs.x = DPIScaleInt(80);                 // top x
-    cs.y = DPIScaleInt(80);                 // top y
-    cs.cx = DPIScaleInt(640);               // width
-    cs.cy = DPIScaleInt(480);               // height
+    cs.x = DpiScaleInt(80);                 // top x
+    cs.y = DpiScaleInt(80);                 // top y
+    cs.cx = DpiScaleInt(640);               // width
+    cs.cy = DpiScaleInt(480);               // height
 }
 
 // Set the WNDCLASS parameters before the window is created.
@@ -233,7 +233,7 @@ LRESULT CD2DView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_DISPLAYCHANGE:  return OnDisplayChange(msg, wparam, lparam);
-        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
         case WM_SIZE:           return OnSize(msg, wparam, lparam);
         }
 

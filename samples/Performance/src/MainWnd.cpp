@@ -32,7 +32,7 @@ HWND CMainWindow::Create(HWND hParent /*= 0*/)
 
     // Create the main window
     CRect rc(20, 50, 400, 300);
-    CRect rcDPI = DPIScaleRect(rc);
+    CRect rcDPI = DpiScaleRect(rc);
 
     return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
         rcDPI, hParent, 0);
@@ -78,7 +78,7 @@ void CMainWindow::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-LRESULT CMainWindow::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+LRESULT CMainWindow::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = reinterpret_cast<LPRECT>(lparam);
     SetWindowPos(0, *prc, SWP_SHOWWINDOW);
@@ -191,7 +191,7 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
         case WM_SIZE:           return OnSize();
         case WM_WINDOWCREATED:  return OnWindowCreated();
         }

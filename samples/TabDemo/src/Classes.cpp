@@ -22,10 +22,10 @@ CViewClasses::~CViewClasses()
 void CViewClasses::OnAttach()
 {
     //set the image lists
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     m_normalImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_CLASSVIEW);
-    image = DPIScaleUpBitmap(image);
+    image = DpiScaleUpBitmap(image);
     m_normalImages.Add(image, RGB(255, 0, 0) );
     SetImageList(m_normalImages, LVSIL_NORMAL);
 
@@ -59,7 +59,7 @@ void CViewClasses::OnAttach()
 // Called in response to a WM_DPICHANGED_BEFORE message which is sent to child
 // windows after a DPI change. A WM_DPICHANGED_BEFORE is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewClasses::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CViewClasses::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();
     return FinalWindowProc(msg, wparam, lparam);
@@ -70,7 +70,7 @@ void CViewClasses::SetDPIImages()
 {
     // Resize the image list.
     CBitmap bmImage(IDB_CLASSVIEW);
-    bmImage = DPIScaleUpBitmap(bmImage);
+    bmImage = DpiScaleUpBitmap(bmImage);
     int scale = bmImage.GetSize().cy / 15;
     m_normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     m_normalImages.Add(bmImage, RGB(255, 0, 0));
@@ -88,7 +88,7 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_DPICHANGED_BEFOREPARENT:  return OnDPIChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT:  return OnDpiChangedBeforeParent(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);

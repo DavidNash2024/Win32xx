@@ -67,7 +67,7 @@ void CDialogsTree::FillTree(const std::vector<ResourceInfo>& allInfo, LPCTSTR fi
 void CDialogsTree::OnAttach()
 {
     //set the the tree-view's image list
-    int size = DPIScaleInt(24);
+    int size = DpiScaleInt(24);
     m_normalImages.Create(size, size, ILC_COLOR32, 1, 0);
     m_normalImages.AddIcon(IDI_WINDOWS);
     m_normalImages.AddIcon(IDW_MAIN);

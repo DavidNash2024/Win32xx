@@ -130,9 +130,9 @@ void CView::DrawLabel(CDC& dc)
     // Select the font.
     CFont font;
     CRect rc = GetClientRect();
-    int pointSize = 4 + 2 * MIN(rc.Width(), rc.Height()) / GetWindowDPI(*this);
+    int pointSize = 4 + 2 * MIN(rc.Width(), rc.Height()) / GetWindowDpi(*this);
     font.CreatePointFont(pointSize, _T("Candara"));
-    font = DPIScaleFont(font, pointSize);
+    font = DpiScaleFont(font, pointSize);
     dc.SelectObject(font);
 
     // Draw the text.
@@ -168,9 +168,9 @@ void CView::PrepareDC(CDC& dc)
     // Select the font.
     CFont font;
     CRect rc = GetClientRect();
-    int pointSize = 4 + 3*MIN(rc.Width(), rc.Height()) /(2* GetWindowDPI(*this));
+    int pointSize = 4 + 3*MIN(rc.Width(), rc.Height()) /(2* GetWindowDpi(*this));
     font.CreatePointFont(pointSize, _T("Microsoft Sans Serif"));
-    font = DPIScaleFont(font, pointSize);
+    font = DpiScaleFont(font, pointSize);
     dc.SelectObject(font);
 
     // Select the color.

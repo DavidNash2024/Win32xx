@@ -103,7 +103,7 @@ void CView::OnDestroy()
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+LRESULT CView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = reinterpret_cast<LPRECT>(lparam);
     SetWindowPos(0, *prc, SWP_SHOWWINDOW);
@@ -120,7 +120,7 @@ void CView::OnDraw(CDC& dc)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
         LOGFONT lf = info.lfMessageFont;
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         lf.lfHeight = -MulDiv(10, dpi, POINTS_PER_INCH);
         dc.CreateFontIndirect(lf);
     }
@@ -188,10 +188,10 @@ void CView::PreCreate(CREATESTRUCT& cs)
     // Set some optional parameters for the window
     cs.dwExStyle = WS_EX_CLIENTEDGE;        // Extended style
     cs.lpszClass = L"View Window";          // Window Class
-    cs.x = DPIScaleInt(50);                 // top x
-    cs.y = DPIScaleInt(50);                 // top y
-    cs.cx = DPIScaleInt(600);               // width
-    cs.cy = DPIScaleInt(500);               // height
+    cs.x = DpiScaleInt(50);                 // top x
+    cs.y = DpiScaleInt(50);                 // top y
+    cs.cx = DpiScaleInt(600);               // width
+    cs.cy = DpiScaleInt(500);               // height
 }
 
 // Recalculate the position of the child windows.
@@ -209,7 +209,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_DPICHANGED:  return OnDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED:  return OnDpiChanged(msg, wparam, lparam);
         case WM_SIZE:        return OnSize();
         }
 

@@ -19,14 +19,14 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    void DPIScaleToolBar();
+    void DpiScaleToolBar();
 
 protected:
     // Virtual functions that override base class functions
     virtual LRESULT OnBeginAdjust(LPNMTOOLBAR pNMTB);
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnViewToolBar();

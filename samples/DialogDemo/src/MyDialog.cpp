@@ -33,7 +33,7 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_DPICHANGED:     return OnDPIChanged();
+        case WM_DPICHANGED:     return OnDpiChanged();
         case UWM_SETSTATIC:     return OnSetStatic(wparam);
         }
 
@@ -78,7 +78,7 @@ void CMyDialog::OnDestroy()
 }
 
 // Called when the effective dots per inch (dpi) for the dialog has changed.
-INT_PTR CMyDialog::OnDPIChanged()
+INT_PTR CMyDialog::OnDpiChanged()
 {
     SetURLFont();
     return 0;

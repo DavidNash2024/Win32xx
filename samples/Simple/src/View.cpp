@@ -74,10 +74,10 @@ void CView::PreCreate(CREATESTRUCT& cs)
     // Set some optional parameters for the window.
     cs.dwExStyle = WS_EX_CLIENTEDGE;        // Extended style
     cs.lpszClass = _T("View Window");       // Window Class
-    cs.x = DPIScaleInt(50);                 // top x
-    cs.y = DPIScaleInt(50);                 // top y
-    cs.cx = DPIScaleInt(400);               // width
-    cs.cy = DPIScaleInt(300);               // height
+    cs.x = DpiScaleInt(50);                 // top x
+    cs.y = DpiScaleInt(50);                 // top y
+    cs.cx = DpiScaleInt(400);               // width
+    cs.cy = DpiScaleInt(300);               // height
 }
 
 // This function is our message procedure. We process the messages for
