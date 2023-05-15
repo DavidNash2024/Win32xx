@@ -48,7 +48,7 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_MOUSEACTIVATE:           return OnMouseActivate(msg, wparam, lparam);
-        case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on to parent DialogProc.
@@ -68,7 +68,7 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
 // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewDialog::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CViewDialog::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDialogFonts();
     return FinalWindowProc(msg, wparam, lparam);
@@ -99,7 +99,7 @@ BOOL CViewDialog::OnInitDialog()
     m_picture.SetWindowPlacement(wp);
 
     // Position the dialog elements.
-    m_Resizer.Initialize(*this, CRect(0, 0, DPIScaleInt(300), DPIScaleInt(300)));
+    m_Resizer.Initialize(*this, CRect(0, 0, DpiScaleInt(300), DpiScaleInt(300)));
     m_Resizer.AddChild(m_static1, CResizer::topleft, 0);
     m_Resizer.AddChild(m_static2, CResizer::topleft, 0);
     m_Resizer.AddChild(m_static3, CResizer::topleft, 0);
@@ -134,7 +134,7 @@ void CViewDialog::SetDialogFonts()
     // Set the fonts.
     NONCLIENTMETRICS info = GetNonClientMetrics();
     LOGFONT lf = info.lfMenuFont;
-    int dpi = GetWindowDPI(*this);
+    int dpi = GetWindowDpi(*this);
     lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
     CFont textFont(lf);
 

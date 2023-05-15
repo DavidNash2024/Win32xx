@@ -194,7 +194,7 @@ INT_PTR CSvrDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
         case USER_DISCONNECT:   return OnSocketDisconnect(wparam);
         case UWM_SOCKETMSG:     return OnSocketMessage(wparam, lparam);
         }
@@ -280,7 +280,7 @@ BOOL CSvrDialog::OnCommand(WPARAM wparam, LPARAM)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CSvrDialog::OnDPIChanged(UINT, WPARAM, LPARAM)
+LRESULT CSvrDialog::OnDpiChanged(UINT, WPARAM, LPARAM)
 {
     CFont font = GetFont();
     m_ip4Address.SetFont(font);

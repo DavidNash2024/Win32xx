@@ -156,7 +156,7 @@ void CMainFrame::DrawTitleText(CDC& dc) const
     LOGFONT logicalFont;
     if (SUCCEEDED(GetThemeSysFont(theme, TMT_CAPTIONFONT, &logicalFont)))
     {
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         logicalFont.lfHeight = -MulDiv(10, dpi, POINTS_PER_INCH);
         dc.CreateFontIndirect(logicalFont);
     }
@@ -704,7 +704,7 @@ void CMainFrame::RecalcLayout()
             CRect menuRect = GetClientRect();
             CSize size = GetMenuBar().GetMaxSize();
             menuRect.left = GetButtonRects().system.right;
-            menuRect.top = (rect.Height() - size.cy) / 2;;
+            menuRect.top = (rect.Height() - size.cy) / 2;
             menuRect.right = menuRect.left + size.cx;
             menuRect.bottom = menuRect.top + size.cy;
             GetMenuBar().SetWindowPos(NULL, menuRect, SWP_SHOWWINDOW);

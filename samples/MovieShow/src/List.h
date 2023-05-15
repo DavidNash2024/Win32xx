@@ -56,7 +56,7 @@ private:
 
     // Message handlers
     LRESULT OnCustomDraw(LPNMCUSTOMDRAW pCustomDraw);
-    LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnItemActivate(LPNMLISTVIEW pListView);
     LRESULT OnItemChanged(LPNMLISTVIEW pListView);
     LRESULT OnLVColumnClick(LPNMLISTVIEW pListView);

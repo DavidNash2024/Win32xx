@@ -219,8 +219,8 @@ void CMainFrame::SetStatusParts()
 {
     if (m_hyperlink.IsWindow())
     {
-        const int progressWidth = DPIScaleInt(100);
-        const int gripWidth = DPIScaleInt(20);
+        const int progressWidth = DpiScaleInt(100);
+        const int gripWidth = DpiScaleInt(20);
         int iconSide = GetStatusBar().GetClientRect().Height();
 
         // Fill a vector with the status bar part widths.

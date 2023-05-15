@@ -990,7 +990,7 @@ OnVScroll(UINT msg, WPARAM wparam, LPARAM lparam)                           /*
             break;
 
         case SB_LINEDOWN: // clicked the bottom arrow
-            newPos.y += sizeLine.cy;;
+            newPos.y += sizeLine.cy;
             break;
 
         case SB_THUMBTRACK: // dragging the scroll box

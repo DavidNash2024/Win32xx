@@ -13,10 +13,10 @@ CView::CView()
 {
 }
 
-void CView::DPIScaleToolBar()
+void CView::DpiScaleToolBar()
 {
     // Create the ToolBar's image list from 4 icons
-    int scale = 48 * (GetWindowDPI(*this) / USER_DEFAULT_SCREEN_DPI);
+    int scale = 48 * (GetWindowDpi(*this) / USER_DEFAULT_SCREEN_DPI);
     m_toolBarImages.DeleteImageList();
     m_toolBarImages.Create(scale, scale, ILC_COLOR32 | ILC_MASK, 0, 0);
     m_toolBarImages.AddIcon(IDI_TOP);
@@ -61,7 +61,7 @@ int CView::OnCreate(CREATESTRUCT&)
 {
     // Create the ToolBar
     m_toolBar.Create(*this);
-    DPIScaleToolBar();
+    DpiScaleToolBar();
 
     // Declare a style that supports vertical toolbars.
     DWORD style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS
@@ -86,9 +86,9 @@ int CView::OnCreate(CREATESTRUCT&)
 // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
 // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CView::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CView::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    DPIScaleToolBar();
+    DpiScaleToolBar();
 
     return FinalWindowProc(msg, wparam, lparam);
 }
@@ -122,7 +122,7 @@ void CView::OnDraw(CDC& dc)
     if (GetWinVersion() >= 2601)
     {
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        LOGFONT lf = DPIScaleLogfont(info.lfMessageFont, 10);
+        LOGFONT lf = DpiScaleLogfont(info.lfMessageFont, 10);
         dc.CreateFontIndirect(lf);
     }
 
@@ -280,7 +280,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case WM_SIZE:                     return OnSize(msg, wparam, lparam);
-        case WM_DPICHANGED_BEFOREPARENT:  return OnDPIChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT:  return OnDpiChangedBeforeParent(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on for default processing.

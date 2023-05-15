@@ -66,43 +66,43 @@ LRESULT CView::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
 
     static int x = 0;     // x position
     static int y = 0;     // y position
-    static int cx = DPIScaleInt(1);    // x increment or decrement
-    static int cy = DPIScaleInt(1);    // y increment or decrement
+    static int cx = DpiScaleInt(1);    // x increment or decrement
+    static int cy = DpiScaleInt(1);    // y increment or decrement
 
     x = x + cx;
     if (x > rc.Width() - m_ballSize.cx)
     {
         x = rc.Width() - m_ballSize.cx;
-        cx = -DPIScaleInt(1);
+        cx = -DpiScaleInt(1);
     }
     else if (x < 0)
     {
         x = 0;
-        cx = DPIScaleInt(1);
+        cx = DpiScaleInt(1);
     }
 
     y = y + cy;
     if (y > rc.Height() - m_ballSize.cy)
     {
         y = rc.Height() - m_ballSize.cy;
-        cy = -DPIScaleInt(1);
+        cy = -DpiScaleInt(1);
     }
     else if (y < 0)
     {
         y = 0;
-        cy = DPIScaleInt(1);
+        cy = DpiScaleInt(1);
     }
 
     CMemDC dcMemMask(dc);
-    CBitmap mask = DPIScaleUpBitmap(m_mask);
+    CBitmap mask = DpiScaleUpBitmap(m_mask);
     dcMemMask.SelectObject(mask);
 
     CMemDC dcMemOrange(dc);
-    CBitmap orange = DPIScaleUpBitmap(m_orange);
+    CBitmap orange = DpiScaleUpBitmap(m_orange);
     dcMemOrange.SelectObject(orange);
 
     CMemDC dcMemBlue(dc);
-    CBitmap blue = DPIScaleUpBitmap(m_blue);
+    CBitmap blue = DpiScaleUpBitmap(m_blue);
     dcMemBlue.SelectObject(blue);
 
     CMemDC dcMem3(dc);

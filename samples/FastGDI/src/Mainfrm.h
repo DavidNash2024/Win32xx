@@ -18,7 +18,7 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    void DPIScaleToolBar();
+    void DpiScaleToolBar();
     BOOL LoadFile(CString& fileName);
     void SaveFile(CString& fileName);
 
@@ -27,7 +27,7 @@ protected:
     virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual void SetupMenuIcons();

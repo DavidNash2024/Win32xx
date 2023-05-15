@@ -37,7 +37,7 @@ private:
     BOOL    OnFileExit();
 
     // Message handlers
-    LRESULT OnDPIChanged(UINT, WPARAM, LPARAM lparam);
+    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnTrayIcon(UINT msg, WPARAM wparam, LPARAM lparam);

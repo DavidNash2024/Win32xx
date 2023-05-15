@@ -31,7 +31,7 @@ void CView::OnDraw(CDC& dc)
 
     // Centre some text in our view window.
     NONCLIENTMETRICS info = GetNonClientMetrics();
-    LOGFONT lf = DPIScaleLogfont(info.lfMessageFont, 10);
+    LOGFONT lf = DpiScaleLogfont(info.lfMessageFont, 10);
     memDC.CreateFontIndirect(lf);
     memDC.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 

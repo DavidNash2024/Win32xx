@@ -35,11 +35,11 @@ HWND CMainFrame::Create(HWND parent)
 
 // Adjust the list view column widths when the DPI changes.
 // Required for per-monitor DPI-aware.
-void CMainFrame::DPIScaleListView()
+void CMainFrame::DpiScaleListView()
 {
-    m_listView.SetColumnWidth(0, DPIScaleInt(110));
-    m_listView.SetColumnWidth(1, DPIScaleInt(60));
-    m_listView.SetColumnWidth(2, DPIScaleInt(130));
+    m_listView.SetColumnWidth(0, DpiScaleInt(110));
+    m_listView.SetColumnWidth(1, DpiScaleInt(60));
+    m_listView.SetColumnWidth(2, DpiScaleInt(130));
 }
 
 // OnCommand responds to menu and and toolbar input.
@@ -81,10 +81,10 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    CFrame::OnDPIChanged(msg, wparam, lparam);
-    DPIScaleListView();
+    CFrame::OnDpiChanged(msg, wparam, lparam);
+    DpiScaleListView();
 
     RecalcLayout();
     return 0;
@@ -102,7 +102,7 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
-    DPIScaleListView();
+    DpiScaleListView();
 }
 
 // Specifies the images for some of the menu items.

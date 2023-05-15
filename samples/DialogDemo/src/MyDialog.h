@@ -42,7 +42,7 @@ private:
     BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
     // Message handlers
-    INT_PTR OnDPIChanged();
+    INT_PTR OnDpiChanged();
     INT_PTR OnSetStatic(WPARAM wparam);
 
     // Member variables

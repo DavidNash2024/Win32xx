@@ -169,7 +169,7 @@ BOOL CMyDialog::OnEraseBkgnd(CDC&)
     // Draw size grip
     if (rc.Width() > m_resizer.GetMinRect().Width() && rc.Height() > m_resizer.GetMinRect().Height())
     {
-        double scale =   (double)GetWindowDPI(*this) / (double)GetWindowDPI(HWND_DESKTOP);
+        double scale =   (double)GetWindowDpi(*this) / (double)GetWindowDpi(HWND_DESKTOP);
         int size = (int)(scale * GetSystemMetrics(SM_CXVSCROLL));
         rc.left = rc.right - size;
         rc.top = rc.bottom - size;

@@ -46,10 +46,10 @@ INT_PTR CFormView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     }
 }
 
-void CFormView::DPIScaleImage()
+void CFormView::DpiScaleImage()
 {
     m_patternImage.LoadBitmap(IDB_BITMAP1);
-    m_patternImage = DPIScaleUpBitmap(m_patternImage);
+    m_patternImage = DpiScaleUpBitmap(m_patternImage);
     LPARAM lparam = reinterpret_cast<LPARAM>(m_patternImage.GetHandle());
     m_picture.SendMessage(STM_SETIMAGE, IMAGE_BITMAP, lparam);
 }
@@ -236,6 +236,6 @@ INT_PTR CFormView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     FinalWindowProc(msg, wparam, lparam);
 
     // Set the image size.
-    DPIScaleImage();
+    DpiScaleImage();
     return 0;
 }

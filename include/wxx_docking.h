@@ -64,9 +64,6 @@
 #include "default_resource.h"
 
 
-
-
-
 // Required for Dev-C++
 #ifndef TME_NONCLIENT
   #define TME_NONCLIENT 0x00000010
@@ -232,7 +229,7 @@ namespace Win32xx
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
-        virtual LRESULT OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
         virtual void SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
@@ -248,8 +245,8 @@ namespace Win32xx
         int GetDockTabImageID(int tab) const;
         CString GetDockTabText(int tab) const;
         CSize GetTBImageSize(CBitmap* pBitmap);
-        void SetTabsDPIFont();
-        void SetTabsDPIIcons();
+        void SetTabsDpiFont();
+        void SetTabsDpiIcons();
 
         std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_allInfo;}
         std::vector<ContainerInfo> m_allInfo;          // vector of ContainerInfo structs
@@ -457,7 +454,7 @@ namespace Win32xx
 
             BOOL m_isOverContainer;
             CDocker* m_pOldDockTarget;
-            CBitmap m_DPIimage;
+            CBitmap m_dpiImage;
         };
 
         // This nested class is draws the left dock target.
@@ -528,7 +525,7 @@ namespace Win32xx
         virtual void CloseAllDockers();
         virtual void Dock(CDocker* pDocker, UINT dockSide);
         virtual void DockInContainer(CDocker* pDocker, DWORD dockStyle, BOOL selectPage = TRUE);
-        virtual void DPIUpdateDockerSizes();
+        virtual void DpiUpdateDockerSizes();
         virtual CRect GetViewRect() const { return GetClientRect(); }
         virtual void Hide();
         virtual BOOL LoadContainerRegistrySettings(LPCTSTR registryKeyName);
@@ -547,7 +544,7 @@ namespace Win32xx
 
         CDocker* GetActiveDocker() const;
         CWnd*    GetActiveView() const;
-        int GetBarWidth() const                     {return DPIScaleInt(GetDockBar().GetWidth());}
+        int GetBarWidth() const                     {return DpiScaleInt(GetDockBar().GetWidth());}
         const CString& GetCaption() const           {return GetDockClient().GetCaption();}
         CDockContainer* GetContainer() const;
         CDocker* GetDockAncestor() const;
@@ -592,13 +589,10 @@ namespace Win32xx
         virtual LRESULT OnBarEnd(LPDRAGPOS pDragPos);
         virtual LRESULT OnBarMove(LPDRAGPOS pDragPos);
         virtual LRESULT OnBarStart(LPDRAGPOS pDragPos);
-        virtual LRESULT OnDPIChanged(UINT, WPARAM, LPARAM);
-        virtual LRESULT OnGetDPIScaledSize(UINT, WPARAM, LPARAM);
         virtual LRESULT OnDockEnd(LPDRAGPOS pDragPos);
         virtual LRESULT OnDockMove(LPDRAGPOS pDragPos);
         virtual LRESULT OnDockStart(LPDRAGPOS pDragPos);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
 
@@ -609,10 +603,14 @@ namespace Win32xx
         virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDockDestroyed(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
+        virtual LRESULT OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual LRESULT OnExitSizeMove(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnGetDpiScaledSize(UINT, WPARAM, LPARAM);
         virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNCLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSettingChange(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -672,8 +670,8 @@ namespace Win32xx
         int m_dockID;
         int m_redrawCount;
         int m_ncHeight;
-        int m_newDPI;
-        int m_oldDPI;
+        int m_newDpi;
+        int m_oldDpi;
         DWORD m_dockZone;
         double m_dockSizeRatio;
         DWORD m_dockStyle;
@@ -863,10 +861,10 @@ namespace Win32xx
     {
         CRect rcClose;
 
-        int gap = DPIScaleInt(4);
+        int gap = DpiScaleInt(4);
         CRect rc = GetWindowRect();
-        int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
-        int cy = GetSystemMetrics(SM_CYSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
+        int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+        int cy = GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
 
         rcClose.top = 2 + rc.top + m_pDocker->m_ncHeight / 2 - cy / 2;
         rcClose.bottom = 2 + rc.top + m_pDocker->m_ncHeight / 2 + cy / 2;
@@ -903,7 +901,7 @@ namespace Win32xx
                 memDC.CreateCompatibleBitmap(dc, Width, Height);
 
                 // Set the font for the title
-                int dpi = GetWindowDPI(*this);
+                int dpi = GetWindowDpi(*this);
                 NONCLIENTMETRICS info = GetNonClientMetrics();
                 LOGFONT lf = info.lfStatusFont;
                 lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
@@ -928,7 +926,7 @@ namespace Win32xx
                 memDC.Rectangle(rcAdjust, rcAdjust, rc.Width() - rcAdjust, m_pDocker->m_ncHeight + rcAdjust);
 
                 // Display the caption
-                int cxSmallIcon = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);
+                int cxSmallIcon = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
                 int cx = (m_pDocker->GetDockStyle() & DS_NO_CLOSE) ? 0 : cxSmallIcon;
                 CRect rcText(4 + rcAdjust, rcAdjust, rc.Width() - 4 - cx - rcAdjust, m_pDocker->m_ncHeight + rcAdjust);
                 memDC.DrawText(m_caption, m_caption.GetLength(), rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
@@ -978,7 +976,7 @@ namespace Win32xx
                     CFont marlett;
                     marlett.CreatePointFont(100, _T("Marlett"));
                     drawDC.SetBkMode(TRANSPARENT);
-                    marlett = DPIScaleFont(marlett, 10);
+                    marlett = DpiScaleFont(marlett, 10);
                     drawDC.SelectObject(marlett);
 
                     COLORREF grey(RGB(232, 228, 220));
@@ -1634,9 +1632,9 @@ namespace Win32xx
                 if (pContainer != NULL)
                 {
                     CRgn Rgn;
-                    int gap = DPIScaleInt(5);
+                    int gap = DpiScaleInt(5);
                     int tabHeight = pContainer->GetTabHeight();
-                    int tabWidth = DPIScaleInt(50);
+                    int tabWidth = DpiScaleInt(50);
                     Rgn.CreateRectRgn(0, 0, rcHint.Width(), rcHint.Height() - tabHeight);
                     assert(Rgn.GetHandle());
                     CRgn Rgn2;
@@ -1679,7 +1677,7 @@ namespace Win32xx
     {
         if (m_image != 0)
         {
-            CBitmap image = DPIScaleUpBitmap(m_image);
+            CBitmap image = DpiScaleUpBitmap(m_image);
             CSize imageSize = image.GetSize();
 
             dc.DrawBitmap(0, 0, imageSize.cx, imageSize.cy, image, RGB(255, 0, 255));
@@ -1723,7 +1721,7 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM)
             return FALSE;
 
-        CBitmap image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDBOTTOM));
+        CBitmap image = pDockTarget->DpiScaleUpBitmap(CBitmap(IDW_SDBOTTOM));
         int cxImage = image.GetSize().cx;
         int cyImage = image.GetSize().cy;
 
@@ -1733,7 +1731,7 @@ namespace Win32xx
             CRect rc = pDockTarget->GetViewRect();
             VERIFY(pDockTarget->ClientToScreen(rc));
             int xMid = rc.left + (rc.Width() - cxImage) / 2;
-            VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - DPIScaleInt(8) - cyImage, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
+            VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - DpiScaleInt(8) - cyImage, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
         }
 
         CRect rcBottom(0, 0, cxImage, cyImage);
@@ -1761,7 +1759,7 @@ namespace Win32xx
     {
         m_image.LoadBitmap(IDW_SDCENTER);
         if (m_image.GetHandle() != 0)
-            m_DPIimage = DPIScaleUpBitmap(m_image);
+            m_dpiImage = DpiScaleUpBitmap(m_image);
     }
 
     inline CDocker::CTargetCentre::~CTargetCentre()
@@ -1777,7 +1775,7 @@ namespace Win32xx
         if (pDockTarget == NULL)
             return FALSE;
 
-        m_image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDCENTER));
+        m_image = pDockTarget->DpiScaleUpBitmap(CBitmap(IDW_SDCENTER));
         CSize imageSize = m_image.GetSize();
 
         if (!IsWindow())
@@ -1882,10 +1880,10 @@ namespace Win32xx
         if (m_image.GetHandle() != 0)
         {
             // Load the target bitmaps
-            CBitmap bmLeft = DPIScaleUpBitmap(CBitmap(IDW_SDLEFT));
-            CBitmap bmRight = DPIScaleUpBitmap(CBitmap(IDW_SDRIGHT));
-            CBitmap bmTop = DPIScaleUpBitmap(CBitmap(IDW_SDTOP));
-            CBitmap bmBottom = DPIScaleUpBitmap(CBitmap(IDW_SDBOTTOM));
+            CBitmap bmLeft = DpiScaleUpBitmap(CBitmap(IDW_SDLEFT));
+            CBitmap bmRight = DpiScaleUpBitmap(CBitmap(IDW_SDRIGHT));
+            CBitmap bmTop = DpiScaleUpBitmap(CBitmap(IDW_SDTOP));
+            CBitmap bmBottom = DpiScaleUpBitmap(CBitmap(IDW_SDBOTTOM));
 
             // Gray out invalid dock targets.
             DWORD style = m_pOldDockTarget->GetDockStyle();
@@ -1912,7 +1910,7 @@ namespace Win32xx
 
             if (IsOverContainer())
             {
-                CBitmap bmMiddle = DPIScaleUpBitmap(CBitmap(IDW_SDMIDDLE));
+                CBitmap bmMiddle = DpiScaleUpBitmap(CBitmap(IDW_SDMIDDLE));
                 CSize szMiddle = bmMiddle.GetSize();
                 int xMid = (szBig.cx - szMiddle.cx) / 2;
                 int yMid = (szBig.cy - szMiddle.cy) / 2;
@@ -1949,7 +1947,7 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT)
             return FALSE;
 
-        CBitmap image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDLEFT));
+        CBitmap image = pDockTarget->DpiScaleUpBitmap(CBitmap(IDW_SDLEFT));
         int cxImage = image.GetSize().cx;
         int cyImage = image.GetSize().cy;
 
@@ -1959,7 +1957,7 @@ namespace Win32xx
             CRect rc = pDockTarget->GetViewRect();
             VERIFY(pDockTarget->ClientToScreen(rc));
             int yMid = rc.top + (rc.Height() - cyImage) / 2;
-            VERIFY(SetWindowPos(HWND_TOPMOST, rc.left + DPIScaleInt(8), yMid, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
+            VERIFY(SetWindowPos(HWND_TOPMOST, rc.left + DpiScaleInt(8), yMid, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
         }
 
 
@@ -2006,7 +2004,7 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT)
             return FALSE;
 
-        CBitmap image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDRIGHT));
+        CBitmap image = pDockTarget->DpiScaleUpBitmap(CBitmap(IDW_SDRIGHT));
         int cxImage = image.GetSize().cx;
         int cyImage = image.GetSize().cy;
 
@@ -2016,7 +2014,7 @@ namespace Win32xx
             CRect rc = pDockTarget->GetViewRect();
             VERIFY(pDockTarget->ClientToScreen(rc));
             int yMid = rc.top + (rc.Height() - cyImage) / 2;
-            VERIFY(SetWindowPos(HWND_TOPMOST, rc.right - DPIScaleInt(8) - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
+            VERIFY(SetWindowPos(HWND_TOPMOST, rc.right - DpiScaleInt(8) - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
         }
 
         CRect rcRight(0, 0, cxImage, cyImage);
@@ -2062,7 +2060,7 @@ namespace Win32xx
         if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP)
             return FALSE;
 
-        CBitmap image = pDockTarget->DPIScaleUpBitmap(CBitmap(IDW_SDTOP));
+        CBitmap image = pDockTarget->DpiScaleUpBitmap(CBitmap(IDW_SDTOP));
         int cxImage = image.GetSize().cx;
         int cyImage = image.GetSize().cy;
 
@@ -2072,7 +2070,7 @@ namespace Win32xx
             CRect rc = pDockTarget->GetViewRect();
             VERIFY(pDockTarget->ClientToScreen(rc));
             int xMid = rc.left + (rc.Width() - cxImage) / 2;
-            VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.top + DPIScaleInt(8), cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
+            VERIFY(SetWindowPos(HWND_TOPMOST, xMid, rc.top + DpiScaleInt(8), cxImage, cyImage, SWP_NOACTIVATE | SWP_SHOWWINDOW));
         }
 
         CRect rcTop(0, 0, cxImage, cyImage);
@@ -2099,7 +2097,7 @@ namespace Win32xx
     inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockAncestor(NULL), m_isBlockMove(FALSE),
                     m_isUndocking(FALSE), m_isClosing(FALSE), m_isDragging(FALSE),
                     m_dockStartSize(0), m_dockID(0), m_redrawCount(0), m_ncHeight(0),
-                    m_newDPI(USER_DEFAULT_SCREEN_DPI), m_oldDPI(USER_DEFAULT_SCREEN_DPI),
+                    m_newDpi(USER_DEFAULT_SCREEN_DPI), m_oldDpi(USER_DEFAULT_SCREEN_DPI),
                     m_dockZone(0), m_dockSizeRatio(1.0), m_dockStyle(0), m_dockUnderPoint(0)
     {
         // Assume this docker is the DockAncestor for now.
@@ -2211,12 +2209,14 @@ namespace Win32xx
         pDocker->SetStyle(style);
         pDocker->SetRedraw(FALSE);
         pDocker->SetParent(0);
-        VERIFY(pDocker->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED));
-        pDocker->SetRedraw(TRUE);
-        pDocker->RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+        VERIFY(pDocker->SetWindowPos(0, rc, SWP_SHOWWINDOW | SWP_FRAMECHANGED));
+        pDocker->RecalcDockLayout();
         pDocker->SetWindowText(pDocker->GetCaption().c_str());
-
+        pDocker->SetRedraw(TRUE);
+        
+        pDocker->RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
         pDocker->m_isUndocking = FALSE;  // IsUndocked now reports TRUE.
+
         return pDocker;
     }
 
@@ -2545,7 +2545,7 @@ namespace Win32xx
     // Updates the view for all dockers in this dock family.
     // Call this for the initially after dockers are created
     // and when the DPI changes.
-    inline void CDocker::DPIUpdateDockerSizes()
+    inline void CDocker::DpiUpdateDockerSizes()
     {
         std::vector<CDocker*> v = GetAllDockers();
         std::vector<CDocker*>::iterator it;
@@ -2757,7 +2757,7 @@ namespace Win32xx
     // Retrieves the text height for the caption.
     inline int CDocker::GetTextHeight()
     {
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         NONCLIENTMETRICS info = GetNonClientMetrics();
         LOGFONT lf = info.lfStatusFont;
         lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
@@ -3376,7 +3376,7 @@ namespace Win32xx
     // window when the DPI changes.
     // Only top-level windows receive a WM_DPICHANGED message, so this message is
     // handled when an undocked docker is moved between monitors.
-    inline LRESULT CDocker::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+    inline LRESULT CDocker::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
     {
         if (IsUndocked())   // Ignore dockers currently being undocked.
         {
@@ -3415,13 +3415,13 @@ namespace Win32xx
     }
 
     // Called before the window's DPI change is processed.
-    inline LRESULT CDocker::OnGetDPIScaledSize(UINT, WPARAM wparam, LPARAM)
+    inline LRESULT CDocker::OnGetDpiScaledSize(UINT, WPARAM wparam, LPARAM)
     {
         // Update the grab point with the DPI changes.
-        m_oldDPI = GetWindowDPI(*this);
-        m_newDPI = static_cast<int>(wparam);
-        m_grabPoint.x = m_grabPoint.x * m_newDPI / m_oldDPI;
-        m_grabPoint.y = m_grabPoint.y * m_newDPI / m_oldDPI;
+        m_oldDpi = GetWindowDpi(*this);
+        m_newDpi = static_cast<int>(wparam);
+        m_grabPoint.x = m_grabPoint.x * m_newDpi / m_oldDpi;
+        m_grabPoint.y = m_grabPoint.y * m_newDpi / m_oldDpi;
 
         // Return FALSE to indicate computed size isn't modified.
         return FALSE;
@@ -3474,6 +3474,39 @@ namespace Win32xx
             case UWN_DOCKEND:       return OnDockEnd(pdp);
             }
         }
+
+        return 0;
+    }
+
+    // Called when the SystemParametersInfo function changes a system-wide
+    // setting or when policy settings (including display settings) have changed.
+    inline LRESULT CDocker::OnSettingChange(UINT, WPARAM, LPARAM)
+    {
+        SetRedraw(FALSE);
+        int newDPI = GetWindowDpiEx(*this);
+        int oldDPI = GetWindowDpi(*this);
+
+        CRect rc = GetWindowRect();
+        int width = (rc.Width() * newDPI) / oldDPI;
+        int height = (rc.Height() * newDPI) / oldDPI;
+        rc.right = rc.left + width;
+        rc.bottom = rc.top + height;
+        SetWindowPos(0, rc, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+
+        std::vector<DockPtr> v = GetAllDockChildren();
+        std::vector<DockPtr>::iterator it;
+        for (it = v.begin(); it != v.end(); ++it)
+        {
+            if ((*it)->IsWindow() && IsChildOfDocker((*it)->GetHwnd()))
+            {
+                int size = ((*it)->m_dockStartSize * newDPI) / oldDPI;
+                (*it)->SetDockSize(size);
+            }
+        }
+
+        RecalcDockLayout();
+        SetRedraw(TRUE);
+        RedrawWindow();
 
         return 0;
     }
@@ -4522,13 +4555,14 @@ namespace Win32xx
         switch (msg)
         {
         case WM_ACTIVATE:               return OnActivate(msg, wparam, lparam);
-        case WM_DPICHANGED:             return OnDPIChanged(msg, wparam, lparam);
-        case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED:             return OnDpiChanged(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
         case WM_EXITSIZEMOVE:           return OnExitSizeMove(msg, wparam, lparam);
-        case WM_GETDPISCALEDSIZE:       return OnGetDPIScaledSize(msg, wparam, lparam);
+        case WM_GETDPISCALEDSIZE:       return OnGetDpiScaledSize(msg, wparam, lparam);
         case WM_MOUSEACTIVATE:          return OnMouseActivate(msg, wparam, lparam);
         case WM_NCLBUTTONDBLCLK:        return OnNCLButtonDblClk(msg, wparam, lparam);
         case WM_NCLBUTTONDOWN:          return OnNCLButtonDown(msg, wparam, lparam);
+        case WM_SETTINGCHANGE:          return OnSettingChange(msg, wparam, lparam);
         case WM_SIZE:                   return OnSize(msg, wparam, lparam);
         case WM_SYSCOLORCHANGE:         return OnSysColorChange(msg, wparam, lparam);
         case WM_SYSCOMMAND:             return OnSysCommand(msg, wparam, lparam);
@@ -4547,14 +4581,14 @@ namespace Win32xx
     // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
     // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CDocker::OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM)
+    inline LRESULT CDocker::OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM)
     {
         SetDefaultCaptionHeight();
 
         // Reset the docker size.
         if (GetDockAncestor() != GetTopmostDocker())
         {
-            m_dockStartSize = m_dockStartSize * GetTopmostDocker()->m_newDPI / GetTopmostDocker()->m_oldDPI;
+            m_dockStartSize = m_dockStartSize * GetTopmostDocker()->m_newDpi / GetTopmostDocker()->m_oldDpi;
             m_dockSizeRatio = 1.0;
         }
         RecalcDockLayout();
@@ -4717,7 +4751,7 @@ namespace Win32xx
                 dc.RoundRect(rcItem.left, rcItem.top, rcItem.right + 1, rcItem.bottom, 6, 6);
 
                 CSize szImage = GetODImageList().GetIconSize();
-                int padding = DPIScaleInt(4);
+                int padding = DpiScaleInt(4);
 
                 if (rcItem.Width() >= szImage.cx + 2 * padding)
                 {
@@ -4870,7 +4904,7 @@ namespace Win32xx
         assert(dynamic_cast<CDocker*>(m_pDocker));
 
         // Create and assign the tab's image list.
-        int iconHeight = DPIScaleInt(16);
+        int iconHeight = DpiScaleInt(16);
         iconHeight = iconHeight - iconHeight % 8;
         GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
 
@@ -5034,7 +5068,7 @@ namespace Win32xx
     // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
     // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CDockContainer::OnDPIChangedBeforeParent(UINT, WPARAM, LPARAM)
+    inline LRESULT CDockContainer::OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM)
     {
         UpdateTabs();
 
@@ -5190,12 +5224,12 @@ namespace Win32xx
     }
 
     // Updates the tab font based on the window's DPI.
-    inline void CDockContainer::SetTabsDPIFont()
+    inline void CDockContainer::SetTabsDpiFont()
     {
         // Set the font used in the tabs.
         CFont font;
         NONCLIENTMETRICS info = GetNonClientMetrics();
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         LOGFONT lf = info.lfStatusFont;
         lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
         font.CreateFontIndirect(lf);
@@ -5204,9 +5238,9 @@ namespace Win32xx
     }
 
     // Updates the tab icons based on the window's DPI.
-    inline void CDockContainer::SetTabsDPIIcons()
+    inline void CDockContainer::SetTabsDpiIcons()
     {
-        int iconHeight = GetContainerParent()->DPIScaleInt(16);
+        int iconHeight = GetContainerParent()->DpiScaleInt(16);
         iconHeight = iconHeight - iconHeight % 8;
 
         if (this == GetContainerParent())
@@ -5249,7 +5283,7 @@ namespace Win32xx
         int itemHeight = 1;
 
         CSize szImage = GetODImageList().GetIconSize();
-        int padding = DPIScaleInt(4);
+        int padding = DpiScaleInt(4);
         szImage.cx = szImage.cx + 2 * padding;
 
         if ((m_allInfo.size() > 0) && ((GetItemCount() != 1) || !m_isHideSingleTab))
@@ -5271,7 +5305,7 @@ namespace Win32xx
         assert(bm.GetHandle() != 0);
 
         // Scale the bitmap to the window's DPI.
-        CBitmap dpiImage = DPIScaleUpBitmap(bm);
+        CBitmap dpiImage = DpiScaleUpBitmap(bm);
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's image list.
@@ -5293,7 +5327,7 @@ namespace Win32xx
             assert(bm.GetHandle() != 0);
 
             // Scale the bitmap to the window's DPI.
-            CBitmap dpiImage = DPIScaleUpBitmap(bm);
+            CBitmap dpiImage = DpiScaleUpBitmap(bm);
             CSize sz = GetTBImageSize(&dpiImage);
 
             // Set the toolbar's image list.
@@ -5321,7 +5355,7 @@ namespace Win32xx
             assert(bm.GetHandle() != 0);
 
             // Scale the bitmap to the window's DPI.
-            CBitmap dpiImage = DPIScaleUpBitmap(bm);
+            CBitmap dpiImage = DpiScaleUpBitmap(bm);
             CSize sz = GetTBImageSize(&dpiImage);
 
             // Set the toolbar's image list
@@ -5422,8 +5456,8 @@ namespace Win32xx
     // Updates the font and icons in the tabs.
     inline void CDockContainer::UpdateTabs()
     {
-        SetTabsDPIFont();
-        SetTabsDPIIcons();
+        SetTabsDpiFont();
+        SetTabsDpiIcons();
     }
 
     // Process the window's messages.
@@ -5437,7 +5471,7 @@ namespace Win32xx
         case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
         case WM_SETFOCUS:       return OnSetFocus(msg, wparam, lparam);
         case WM_SIZE:           return OnSize(msg, wparam, lparam);
-        case WM_DPICHANGED_BEFOREPARENT: return OnDPIChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
         case UWM_GETCDOCKCONTAINER: return reinterpret_cast<LRESULT>(this);
         }
 

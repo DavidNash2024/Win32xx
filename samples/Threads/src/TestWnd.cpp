@@ -25,7 +25,7 @@ HWND CTestWindow::Create(HWND)
     int left = 380 + 20 * m_threadNumber;
     int top = 40 + 20 * m_threadNumber;
     CRect rc(left, top, left + 300, top + 200);
-    rc = DPIScaleRect(rc);
+    rc = DpiScaleRect(rc);
     return CreateEx(0, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE, rc, 0, 0);
 }
 

@@ -17,7 +17,7 @@ CMyEdit::CMyEdit()
 void CMyEdit::DPISetFont()
 {
     m_font.CreatePointFont(100, _T("Courier New"));
-    m_font = DPIScaleFont(m_font, 10);
+    m_font = DpiScaleFont(m_font, 10);
     SetFont(m_font);
 }
 

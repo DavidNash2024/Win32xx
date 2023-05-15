@@ -32,10 +32,10 @@ void CViewTree::OnDestroy()
 void CViewTree::OnAttach()
 {
     // Set the image lists.
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     m_normalImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_CLASSVIEW);
-    image = DPIScaleUpBitmap(image);
+    image = DpiScaleUpBitmap(image);
     m_normalImages.Add( image, RGB(255, 0, 0) );
     SetImageList(m_normalImages, LVSIL_NORMAL);
 

@@ -46,15 +46,15 @@ void CMainFrame::LoadDefaultDockers()
 {
     // Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
-    CDocker* pDockLeft = AddDockedChild(new CDockClasses, DS_DOCKED_LEFT, DPIScaleInt(200), ID_DOCK_CLASSES1);
-    CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT, DPIScaleInt(200), ID_DOCK_CLASSES2);
-    CDocker* pDockTop = AddDockedChild(new CDockText, DS_DOCKED_TOP, DPIScaleInt(100), ID_DOCK_TEXT1);
-    CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM, DPIScaleInt(100), ID_DOCK_TEXT2);
+    CDocker* pDockLeft = AddDockedChild(new CDockClasses, DS_DOCKED_LEFT, DpiScaleInt(200), ID_DOCK_CLASSES1);
+    CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT, DpiScaleInt(200), ID_DOCK_CLASSES2);
+    CDocker* pDockTop = AddDockedChild(new CDockText, DS_DOCKED_TOP, DpiScaleInt(100), ID_DOCK_TEXT1);
+    CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM, DpiScaleInt(100), ID_DOCK_TEXT2);
 
-    pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, DPIScaleInt(150), ID_DOCK_FILES1);
-    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, DPIScaleInt(150), ID_DOCK_FILES2);
-    pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, DPIScaleInt(100), ID_DOCK_SIMPLE1);
-    pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, DPIScaleInt(100), ID_DOCK_SIMPLE2);
+    pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, DpiScaleInt(150), ID_DOCK_FILES1);
+    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, DpiScaleInt(150), ID_DOCK_FILES2);
+    pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, DpiScaleInt(100), ID_DOCK_SIMPLE1);
+    pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, DpiScaleInt(100), ID_DOCK_SIMPLE2);
 
     // Adjust dockstyles as per menu selections
     SetDockStyles();
@@ -188,9 +188,6 @@ void CMainFrame::OnInitialUpdate()
 
     // Adjust dockstyles as per menu selections.
     SetDockStyles();
-
-    // Rescale the dockers for the current DPI.
-//    DPIUpdateDockerSizes();
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow(GetInitValues().showCmd);

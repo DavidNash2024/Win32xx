@@ -39,7 +39,7 @@ private:
     void    OnAllWindowsCreated();
     LRESULT OnAppendText(WPARAM wparam);
     LRESULT OnCloseThread(WPARAM wparam);
-    LRESULT OnDPIChanged(UINT, WPARAM, LPARAM lparam);
+    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam);
     LRESULT OnSize();
     LRESULT OnWindowCreated();
 

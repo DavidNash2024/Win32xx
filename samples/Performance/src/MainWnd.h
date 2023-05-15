@@ -41,7 +41,7 @@ private:
     CMainWindow& operator = (const CMainWindow&);   // Disable assignment operator
 
     // Message handlers
-    LRESULT OnDPIChanged(UINT, WPARAM, LPARAM lparam);
+    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM lparam);
     LRESULT OnSize();
     LRESULT OnWindowCreated();
 

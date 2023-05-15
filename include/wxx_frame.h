@@ -237,7 +237,7 @@ namespace Win32xx
         virtual int     OnCreate(CREATESTRUCT& cs);
         virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
         virtual void    OnDestroy();
-        virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDrawRBBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDrawSBBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -901,7 +901,7 @@ namespace Win32xx
                         if (isDropDown || isWholeDropDown)
                         {
                             // Use the internal Marlett font to determine the width for the drop down arrow section.
-                            int cyMenuCheck = ::GetSystemMetrics(SM_CYMENUCHECK) * GetWindowDPI(*this) / GetWindowDPI(0);
+                            int cyMenuCheck = ::GetSystemMetrics(SM_CYMENUCHECK) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
                             drawDC.CreateFont(cyMenuCheck, 0, 0, 0, FW_NORMAL, 0, 0, 0,
                                               SYMBOL_CHARSET, 0, 0, 0, 0, _T("Marlett"));
 
@@ -1876,7 +1876,7 @@ namespace Win32xx
         if (~pMID->mii.fType & MFT_SEPARATOR)  // if the type is not a separator
         {
             // Account for icon height.
-            int iconGap = T::DPIScaleInt(6);
+            int iconGap = T::DpiScaleInt(6);
             size.cy = MAX(size.cy, GetMenuIconHeight() + iconGap);
         }
 
@@ -2057,7 +2057,7 @@ namespace Win32xx
     // Called in response to a WM_DPICHANGED message which is sent to a top-level
     // window when the DPI changes. Only top-level windows receive a WM_DPICHANGED message.
     template <class T>
-    inline LRESULT CFrameT<T>::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+    inline LRESULT CFrameT<T>::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
     {
         T::SetRedraw(FALSE);
 
@@ -2535,7 +2535,7 @@ namespace Win32xx
     }
 
     // Called in response to a WM_THEMECHANGED message. This message is sent
-    // to all top-level windows  following a theme change event.
+    // to all top-level windows following a theme change event.
     template <class T>
     inline LRESULT CFrameT<T>::OnThemeChanged(UINT, WPARAM, LPARAM)
     {
@@ -3024,7 +3024,7 @@ namespace Win32xx
             int cxBorder = 8;
 
             // Adjust for DPI aware.
-            int dpi = GetWindowDPI(*this);
+            int dpi = GetWindowDpi(*this);
             cxGripper = MulDiv(cxGripper, dpi, USER_DEFAULT_SCREEN_DPI);
             capSize.cx += cxBorder;
             numSize.cx += cxBorder;
@@ -3211,7 +3211,7 @@ namespace Win32xx
         assert(bm.GetHandle() != 0);
 
         // Scale the bitmap to the window's DPI.
-        CBitmap dpiImage = T::DPIScaleUpBitmap(bm);
+        CBitmap dpiImage = T::DpiScaleUpBitmap(bm);
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's image list.
@@ -3243,7 +3243,7 @@ namespace Win32xx
             assert(bm.GetHandle() != 0);
 
             // Scale the bitmap to the window's DPI.
-            CBitmap dpiImage = T::DPIScaleUpBitmap(bm);
+            CBitmap dpiImage = T::DpiScaleUpBitmap(bm);
             CSize sz = GetTBImageSize(&dpiImage);
 
             // Set the toolbar's disabled image list.
@@ -3281,7 +3281,7 @@ namespace Win32xx
             assert(bm.GetHandle() != 0);
 
             // Scale the bitmap to the window's DPI.
-            CBitmap dpiImage = T::DPIScaleUpBitmap(bm);
+            CBitmap dpiImage = T::DpiScaleUpBitmap(bm);
             CSize sz = GetTBImageSize(&dpiImage);
 
             // Set the toolbar's hot image list
@@ -3629,7 +3629,7 @@ namespace Win32xx
         }
 
         // Create the menubar and statusbar fonts.
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         NONCLIENTMETRICS info = GetNonClientMetrics();
         info.lfMenuFont.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
         info.lfStatusFont.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
@@ -3658,7 +3658,7 @@ namespace Win32xx
         switch (msg)
         {
         case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
-        case WM_DPICHANGED:     return OnDPIChanged(msg, wparam, lparam);
+        case WM_DPICHANGED:     return OnDpiChanged(msg, wparam, lparam);
         case WM_THEMECHANGED:   return OnThemeChanged(msg, wparam, lparam);
         case WM_DRAWITEM:       return OnDrawItem(msg, wparam, lparam);
         case WM_ERASEBKGND:     return 0;

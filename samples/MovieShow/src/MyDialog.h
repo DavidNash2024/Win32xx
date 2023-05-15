@@ -39,7 +39,7 @@ private:
     CViewDialog& operator = (const CViewDialog&);   // Disable assignment operator
 
     // Message handlers
-    virtual LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void AppendText(int nID, LPCTSTR text);

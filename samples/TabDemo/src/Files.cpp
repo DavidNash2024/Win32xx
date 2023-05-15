@@ -45,10 +45,10 @@ void CViewFiles::InsertItems()
 void CViewFiles::OnAttach()
 {
     // Set the image lists.
-    int scale = DPIScaleInt(1);
+    int scale = DpiScaleInt(1);
     m_smallImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_FILEVIEW);
-    image = DPIScaleUpBitmap(image);
+    image = DpiScaleUpBitmap(image);
     m_smallImages.Add( image, RGB(255, 0, 255) );
     SetImageList(m_smallImages, LVSIL_SMALL);
 
@@ -63,7 +63,7 @@ void CViewFiles::OnAttach()
 // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
 // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewFiles::OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CViewFiles::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetDPIImages();
     SetDPIColumnWidths();
@@ -93,9 +93,9 @@ void CViewFiles::SetColumns()
 // Adjusts the listview column widths in response to window DPI changes.
 void CViewFiles::SetDPIColumnWidths()
 {
-    SetColumnWidth(0, DPIScaleInt(120));
-    SetColumnWidth(1, DPIScaleInt(50));
-    SetColumnWidth(2, DPIScaleInt(100));
+    SetColumnWidth(0, DpiScaleInt(120));
+    SetColumnWidth(1, DpiScaleInt(50));
+    SetColumnWidth(2, DpiScaleInt(100));
 }
 
 // Adjusts the listview image sizes widths in response to window DPI changes.
@@ -103,7 +103,7 @@ void CViewFiles::SetDPIImages()
 {
     // Set the image lists
     CBitmap bmImage(IDB_FILEVIEW);
-    bmImage = DPIScaleUpBitmap(bmImage);
+    bmImage = DpiScaleUpBitmap(bmImage);
     int scale = bmImage.GetSize().cy / 15;
     m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     m_smallImages.Add(bmImage, RGB(255, 0, 255));
@@ -117,7 +117,7 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case WM_DPICHANGED_BEFOREPARENT:  return OnDPIChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT:  return OnDpiChangedBeforeParent(msg, wparam, lparam);
         }
 
         return WndProcDefault(msg, wparam, lparam);

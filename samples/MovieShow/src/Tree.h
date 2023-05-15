@@ -33,7 +33,7 @@ private:
     bool      IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
 
     // Message handlers
-    LRESULT OnDPIChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnRButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
 

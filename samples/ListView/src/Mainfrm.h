@@ -18,13 +18,13 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-    void DPIScaleListView();
+    void DpiScaleListView();
 
 protected:
     // Virtual functions that override base class functions.
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDPIChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();

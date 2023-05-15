@@ -102,7 +102,7 @@ private:
     class CRadioUDP : public CButton {};
 
     // Message handlers
-    LRESULT OnDPIChanged(UINT, WPARAM, LPARAM);
+    LRESULT OnDpiChanged(UINT, WPARAM, LPARAM);
     BOOL OnSocketDisconnect(WPARAM wparam);
     LRESULT OnSocketMessage(WPARAM wparam, LPARAM lparam);
 

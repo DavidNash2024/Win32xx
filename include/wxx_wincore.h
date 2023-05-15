@@ -225,7 +225,9 @@ namespace Win32xx
         return commandLineArgs;
     }
 
-    inline int GetWindowDPI(HWND hWnd)
+    // Retrieve the window's DPI.
+    // This function uses the GetDpiForWindow function.
+    inline int GetWindowDpi(HWND hWnd)
     {
         // Retrieve desktop's dpi as a fallback.
         CClientDC desktopDC(HWND_DESKTOP);
@@ -243,6 +245,46 @@ namespace Win32xx
                 dpi = static_cast<int>(pGetDpiForWindow(hWnd));
             }
         }
+
+        return dpi;
+    }
+
+    // Retrieve the monitor's DPI the window is on. This usually provides the
+    // same value as the GetWindowDpi function, but not always.
+    // This function uses the GetDpiForMonitor function.
+    inline int GetWindowDpiEx(HWND hWnd)
+    {
+        // Retrieve desktop's dpi as a fallback.
+        CClientDC desktopDC(HWND_DESKTOP);
+        int dpi = GetDeviceCaps(desktopDC, LOGPIXELSX);
+
+#ifdef MONITOR_DEFAULTTOPRIMARY
+
+        // Retrieve the monitor's dpi if we can.
+        typedef HRESULT WINAPI GETDPIFORMONITOR(HMONITOR hmonitor, int dpiType, UINT* dpiX, UINT* dpiY);
+        HMODULE shcore = GetModuleHandle(_T("shcore"));
+        if (shcore)
+        {
+            GETDPIFORMONITOR* pGetDpiForMonitor =
+                reinterpret_cast<GETDPIFORMONITOR*>(GetProcAddress(shcore, "GetDpiForMonitor"));
+            if (pGetDpiForMonitor)
+            {
+                HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTOPRIMARY);
+                UINT dpiX;
+                UINT dpiY;
+                HRESULT hr = pGetDpiForMonitor(hMonitor, 0, &dpiX, &dpiY);
+                if (SUCCEEDED(hr))
+                {
+                    dpi = static_cast<int>(dpiX);
+                }
+            }
+        }
+
+#else
+
+        return GetWindowDpi(hWnd);
+
+#endif // MONITOR_DEFAULTTOPRIMARY
 
         return dpi;
     }
@@ -662,9 +704,9 @@ namespace Win32xx
     }
 
     // Scales the specified font to the current window DPI.
-    inline CFont CWnd::DPIScaleFont(CFont font, int pointSize) const
+    inline CFont CWnd::DpiScaleFont(CFont font, int pointSize) const
     {
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         LOGFONT logfont = font.GetLogFont();
         logfont.lfHeight = -MulDiv(pointSize, dpi, POINTS_PER_INCH);
         CFont dpiFont(logfont);
@@ -673,27 +715,27 @@ namespace Win32xx
     }
 
     // Scales the specified int to the current window DPI.
-    inline int CWnd::DPIScaleInt(int value) const
+    inline int CWnd::DpiScaleInt(int value) const
     {
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         int dpiValue = MulDiv(value, dpi, USER_DEFAULT_SCREEN_DPI);
 
         return dpiValue;
     }
 
    // Scales the specified logfont to the current window DPI.
-   inline LOGFONT CWnd::DPIScaleLogfont(LOGFONT logfont, int pointSize) const
+   inline LOGFONT CWnd::DpiScaleLogfont(LOGFONT logfont, int pointSize) const
     {
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         logfont.lfHeight = -MulDiv(pointSize, dpi, POINTS_PER_INCH);
 
         return logfont;
     }
 
     // Scales the specified rect to the current window DPI.
-    inline CRect CWnd::DPIScaleRect(RECT rc) const
+    inline CRect CWnd::DpiScaleRect(RECT rc) const
     {
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         int left = MulDiv(rc.left, dpi, USER_DEFAULT_SCREEN_DPI);
         int top = MulDiv(rc.top, dpi, USER_DEFAULT_SCREEN_DPI);
         int bottom = MulDiv(rc.bottom, dpi, USER_DEFAULT_SCREEN_DPI);
@@ -702,9 +744,9 @@ namespace Win32xx
         return CRect(left, top, right, bottom);
     }
 
-    inline CBitmap CWnd::DPIScaleUpBitmap(CBitmap bitmap) const
+    inline CBitmap CWnd::DpiScaleUpBitmap(CBitmap bitmap) const
     {
-        int dpi = GetWindowDPI(*this);
+        int dpi = GetWindowDpi(*this);
         int scale = MAX(1, dpi / USER_DEFAULT_SCREEN_DPI);
 
         return ScaleUpBitmap(bitmap, scale);
@@ -1137,8 +1179,8 @@ namespace Win32xx
         assert(IsWindow());
 
         // Large icon sizes
-        int cxIcon = ::GetSystemMetrics(SM_CXICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
-        int cyIcon = ::GetSystemMetrics(SM_CYICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
+        int cxIcon = ::GetSystemMetrics(SM_CXICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+        int cyIcon = ::GetSystemMetrics(SM_CYICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
 
         HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 
@@ -1156,8 +1198,8 @@ namespace Win32xx
         assert(IsWindow());
 
         // Small icon sizes
-        int cxIcon = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
-        int cyIcon = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDPI(*this) / GetWindowDPI(0);;
+        int cxIcon = ::GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+        int cyIcon = ::GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
 
         HICON icon = reinterpret_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 

@@ -63,7 +63,7 @@ void CMyCombo::SetImages(int images, UINT imageID)
     m_images.DeleteImageList();
 
     CBitmap bm(imageID);
-    bm = DPIScaleUpBitmap(bm);
+    bm = DpiScaleUpBitmap(bm);
 
     BITMAP bmData = bm.GetBitmapData();
     int iImageWidth  = bmData.bmWidth / images;

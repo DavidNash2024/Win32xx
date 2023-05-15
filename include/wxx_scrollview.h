@@ -532,8 +532,8 @@ namespace Win32xx
                 }
 
                 // Perform any additional scrolling required by window resizing
-                int cxScroll = ::GetSystemMetrics(SM_CXVSCROLL) * GetWindowDPI(*this) / GetWindowDPI(0);
-                int cyScroll = ::GetSystemMetrics(SM_CYHSCROLL) * GetWindowDPI(*this) / GetWindowDPI(0);
+                int cxScroll = ::GetSystemMetrics(SM_CXVSCROLL) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
+                int cyScroll = ::GetSystemMetrics(SM_CYHSCROLL) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
                 cxScroll = IsVScrollVisible() ? cxScroll : 0;
                 cyScroll = IsHScrollVisible() ? cyScroll : 0;
                 int xNewPos = MIN(m_currentPos.x, totalRect.Width() - viewRect.Width() + cxScroll);
