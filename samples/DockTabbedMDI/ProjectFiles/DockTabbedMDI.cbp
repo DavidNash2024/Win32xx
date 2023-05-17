@@ -186,8 +186,6 @@
 		<Unit filename="../src/Files.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
-		<Unit filename="../src/MyCombo.cpp" />
-		<Unit filename="../src/MyCombo.h" />
 		<Unit filename="../src/MyDialog.cpp" />
 		<Unit filename="../src/MyDialog.h" />
 		<Unit filename="../src/MyTabbedMDI.cpp" />

@@ -145,7 +145,6 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
-					<Add library="ole32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -173,7 +172,6 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
-					<Add library="ole32" />
 				</Linker>
 			</Target>
 		</Build>
@@ -188,8 +186,6 @@
 		<Unit filename="../src/Files.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
-		<Unit filename="../src/MyCombo.cpp" />
-		<Unit filename="../src/MyCombo.h" />
 		<Unit filename="../src/Output.cpp" />
 		<Unit filename="../src/Output.h" />
 		<Unit filename="../src/Resource.rc">

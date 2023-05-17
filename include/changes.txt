@@ -105,9 +105,13 @@ WM_DPICHANGED_AFTERPARENT
 Sent after the DPI change to all child windows and descendants of the top
 level window that is undergoing a DPI change.
 
+WM_SETTINGCHANGE
+Sent when the user manually changes the display settings.
+
 
 Changes in Detail
 -----------------
+Added ::GetWindowDpi
 Added ::ScaleUpBitmap
 Added CDockContainer::CreateToolBar
 Added CDockContainer::OnDpiChangedBeforeParent 

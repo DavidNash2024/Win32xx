@@ -201,10 +201,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\MyCombo.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\MyDialog.cpp"
 				>
 			</File>
@@ -272,10 +268,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\MyCombo.h"
 				>
 			</File>
 			<File

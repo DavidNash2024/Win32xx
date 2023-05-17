@@ -141,33 +141,6 @@ CContainClasses::CContainClasses()
     SetView(m_viewClasses);
 }
 
-// Adds a ComboBoxEx control to the toolbar.
-void CContainClasses::AddCombo()
-{
-    int comboSize = DpiScaleInt(100);
-    CToolBar& tb = GetToolBar();
-    if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
-
-    // Adjust button width and convert to separator
-    tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
-    tb.SetButtonWidth(IDM_FILE_SAVE, comboSize);
-
-    // Determine the size and position of the ComboBox
-    int index = tb.CommandToIndex(IDM_FILE_SAVE);
-    CRect rect = tb.GetItemRect(index);
-
-    // A ComboBoxEx with CBS_DROPDOWN requires extra height when created.
-    rect.bottom = comboSize;
-
-    // Recreate the ComboboxEx window.
-    m_comboBoxEx.Destroy();
-    DWORD style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
-    m_comboBoxEx.CreateEx(0, WC_COMBOBOXEX, NULL, style, rect, tb, 0);
-    m_comboBoxEx.SetImages(3, IDB_STATUS);
-    m_comboBoxEx.SetWindowPos(0, rect, SWP_NOACTIVATE);
-    m_comboBoxEx.AddItems();
-}
-
 // Process the command messages (WM_COMMAND).
 BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM)
 {
@@ -180,24 +153,6 @@ BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM)
     }
 
     return FALSE;
-}
-
-// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
-// Overrides CDockContainer::OnDpiChangedBeforeParent.
-LRESULT CContainClasses::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    int selected = -1;
-    if (m_comboBoxEx.IsWindow())
-        selected = m_comboBoxEx.GetCurSel();
-
-    CDockContainer::OnDpiChangedBeforeParent(msg, wparam, lparam);
-
-    // Restore the ComboBox selection.
-    m_comboBoxEx.SetCurSel(selected);
-
-    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Demonstrates responding to the container's toolbar.
@@ -239,9 +194,6 @@ void CContainClasses::SetupToolBar()
 
     AddToolBarButton(0);  // Separator
     AddToolBarButton(IDM_HELP_ABOUT);
-
-    // Add the ComboBarEx control to the toolbar
-    AddCombo();
 }
 
 
@@ -257,4 +209,3 @@ CDockClasses::CDockClasses()
     // Set the width of the splitter bar
     SetBarWidth(8);
 }
-

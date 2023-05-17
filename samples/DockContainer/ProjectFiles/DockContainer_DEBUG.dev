@@ -1,7 +1,7 @@
 [Project]
 FileName=DockContainer_DEBUG.dev
 Name=ContainerDocking
-UnitCount=20
+UnitCount=18
 Type=0
 Ver=2
 ObjFiles=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=0000000100000000001000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -72,7 +72,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit10]
-FileName=..\src\MyCombo.cpp
+FileName=..\src\Output.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -82,16 +82,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit11]
-FileName=..\src\MyCombo.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit13]
 FileName=..\src\Output.h
 CompileCpp=1
 Folder=Header
@@ -101,10 +91,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
-FileName=..\src\resource.h
+[Unit13]
+FileName=..\src\Resource.rc
 CompileCpp=1
-Folder=Header
+Folder=Resource
+Compile=1
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=..\src\StdAfx.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -112,11 +112,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\src\Resource.rc
+FileName=..\src\stdafx.h
 CompileCpp=1
-Folder=Resource
+Folder=Header
 Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -141,17 +141,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit16]
-FileName=..\src\StdAfx.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
-FileName=..\src\stdafx.h
+FileName=..\src\targetver.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -160,8 +150,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit17]
+FileName=..\src\Text.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit18]
-FileName=..\src\targetver.h
+FileName=..\src\Text.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -301,9 +301,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\src\Output.cpp
+FileName=..\src\resource.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

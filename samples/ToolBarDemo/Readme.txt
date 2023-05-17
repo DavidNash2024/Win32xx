@@ -21,10 +21,6 @@ align itself to the Top, Left, Right or Bottom edge depending on which
 button is pressed. This ToolBar is a child window of the view window,
 so the code to create and position it is in the View.cpp file.
 
-Note:
-Refer to the themes sample for a demonstration of how to replace a 
-ToolBar button with a ComboBoxEx control.
-  
 
 Features demonstrated in this example
 =====================================

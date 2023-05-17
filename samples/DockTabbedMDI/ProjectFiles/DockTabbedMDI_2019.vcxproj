@@ -24,7 +24,6 @@
     <ClCompile Include="..\src\Files.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
-    <ClCompile Include="..\src\MyCombo.cpp" />
     <ClCompile Include="..\src\MyDialog.cpp" />
     <ClCompile Include="..\src\MyTabbedMDI.cpp" />
     <ClCompile Include="..\src\Output.cpp" />
@@ -97,7 +96,6 @@
     <ClInclude Include="..\src\Classes.h" />
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
-    <ClInclude Include="..\src\MyCombo.h" />
     <ClInclude Include="..\src\MyDialog.h" />
     <ClInclude Include="..\src\MyTabbedMDI.h" />
     <ClInclude Include="..\src\Output.h" />

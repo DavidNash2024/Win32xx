@@ -134,9 +134,6 @@
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath="..\src\MyCombo.cpp">
-			</File>
-			<File
 				RelativePath="..\src\MyDialog.cpp">
 			</File>
 			<File
@@ -179,9 +176,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\menubar.h">
-			</File>
-			<File
-				RelativePath="..\src\MyCombo.h">
 			</File>
 			<File
 				RelativePath="..\src\MyDialog.h">

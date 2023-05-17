@@ -32,7 +32,6 @@ Features demonstrated in this example
 * Adding view windows to CDockContainer.
 * Adding view windows to CTabbedMDI.
 * Use of the container's optional toolbar.
-* Use of a ComboBoxEx control within a toolbar.
 * Use of CWebBrowser as a view window for a TabbedMDI.
 * Displaying tabs at the top or bottom of the container.
 * Displaying tabs at the top or bottom of the TabbedMDI.

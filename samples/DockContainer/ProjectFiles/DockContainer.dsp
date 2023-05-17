@@ -111,10 +111,6 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyCombo.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\Output.cpp
 # End Source File
 # Begin Source File
@@ -144,10 +140,6 @@ SOURCE=..\src\Files.h
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\MyCombo.h
 # End Source File
 # Begin Source File
 

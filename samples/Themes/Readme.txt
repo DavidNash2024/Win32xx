@@ -29,6 +29,5 @@ Features demonstrated in this example
    
 * How to add additional toolbars to the rebar control
 * How to hide/display the additional toolbars from the menu
-* How to add a ComboBoxEx control to a toolbar
 * How to save application settings in the registry
 

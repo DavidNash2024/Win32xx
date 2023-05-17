@@ -23,38 +23,6 @@ CMainFrame::~CMainFrame()
 {
 }
 
-// Adds a comboBoxEx to the toolbar.
-void CMainFrame::AddCombo()
-{
-    // Place the ComboBoxEx control over the 'File Save' toolbar button.
-    int comboSize = DpiScaleInt(100);
-    CToolBar& tb = GetToolBar();
-    if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
-
-    // Convert the button to a separator and set its width.
-    tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
-    tb.SetButtonWidth(IDM_FILE_SAVE, comboSize);
-
-    // Determine the size and position of the ComboBox.
-    int index = tb.CommandToIndex(IDM_FILE_SAVE);
-    CRect rect = tb.GetItemRect(index);
-
-    // A ComboBoxEx with CBS_DROPDOWN requires extra height when created.
-    rect.bottom = comboSize;
-
-    // Recreate and position the ComboboxEx window.
-    int selected = -1;
-    if (m_comboBoxEx.IsWindow())
-        selected = m_comboBoxEx.GetCurSel();
-    m_comboBoxEx.Destroy();
-    DWORD style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
-    m_comboBoxEx.CreateEx(0, WC_COMBOBOXEX, NULL, style, rect, tb, 0);
-    m_comboBoxEx.SetImages(3, IDB_STATUS);
-    m_comboBoxEx.SetWindowPos(0, rect, SWP_NOACTIVATE);
-    m_comboBoxEx.AddItems();
-    m_comboBoxEx.SetCurSel(selected);
-}
-
 // Configures the theme colors based on the user's menu selection.
 BOOL CMainFrame::ChooseColor(UINT color)
 {
@@ -164,10 +132,6 @@ void CMainFrame::DpiScaleToolBar()
         SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
         SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255, 0, 255));
         SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255, 0, 255));
-
-        AddCombo();
-        if (GetFocus() == GetToolBar())
-            ::SetFocus(0);
     }
 }
 
@@ -539,25 +503,6 @@ BOOL CMainFrame::OnShortBands()
     return TRUE;
 }
 
-// Called in response to a WM_SYSCOLORCHANGE.
-// The WM_SYSCOLORCHANGE message is sent to all top-level windows when a change
-// is made to a system color setting.
-LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Retrieve the current selection.
-    int sel = m_comboBoxEx.GetCurSel();
-
-    // Reset the ComboBoxEx control to perform a full redraw.
-    // Required when switching between a normal and high contrast theme.
-    m_comboBoxEx.ResetContent();
-    m_comboBoxEx.AddItems();
-
-    // Restore the current selection.
-    m_comboBoxEx.SetCurSel(sel);
-
-    return CFrame::OnSysColorChange(msg, wparam, lparam);
-}
-
 // Toggles the display of lines betweeen rebar rows.
 BOOL CMainFrame::OnUseLines()
 {
@@ -817,7 +762,6 @@ void CMainFrame::SetupToolBar()
         SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
     }
 
-    AddCombo();
 }
 
 // Displays or hides the arrows toolbar.

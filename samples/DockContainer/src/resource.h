@@ -33,10 +33,9 @@
 // Bitmap for small menu icons
 #define IDB_TOOLBAR16                   143
 
-// Bitmaps for the ClassView, FileFiew and ComboBoxEx ImageLists
+// Bitmaps for the ClassView and FileView
 #define IDB_CLASSVIEW                   150
 #define IDB_FILEVIEW                    151
-#define IDB_STATUS                      152
 
 // Icons for container tabs
 #define IDI_CLASSVIEW                   155
