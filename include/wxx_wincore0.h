@@ -355,7 +355,7 @@ namespace Win32xx
         BOOL    ShowScrollBar(int barType, BOOL show) const;
         BOOL    ShowWindow(int showCmd = SW_SHOWNORMAL) const;
         BOOL    ShowWindowAsync(int showCmd) const;
-        BOOL    UnLockWindowUpdate() const;
+        BOOL    UnlockWindowUpdate() const;
         BOOL    UpdateWindow() const;
         BOOL    ValidateRect(const RECT& rect) const;
         BOOL    ValidateRect() const;

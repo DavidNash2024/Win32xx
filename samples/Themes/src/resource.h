@@ -34,7 +34,6 @@
 #define IDB_TOOLBAR_SML                 153
 #define IDB_ARROWS                      154
 #define IDB_CARDS                       155
-#define IDB_STATUS                      156
 
 #define IDC_ARROWS                      157
 #define IDC_CARDS                       158

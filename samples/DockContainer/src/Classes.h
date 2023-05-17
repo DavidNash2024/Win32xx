@@ -6,8 +6,6 @@
 #ifndef CLASSES_H
 #define CLASSES_H
 
-#include "MyCombo.h"
-
 
 ///////////////////////////////////////////////
 // CViewClasses manages a tree view control.
@@ -52,7 +50,6 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM, LPARAM);
-    virtual LRESULT OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM);
     virtual void SetupToolBar();
 
 private:
@@ -63,11 +60,8 @@ private:
     BOOL OnFileNew();
     BOOL OnHelpAbout();
 
-    void AddCombo();
-
     // Member variables
     CViewClasses m_viewClasses;
-    CMyCombo m_comboBoxEx;
     CImageList m_toolbarImages;
 };
 

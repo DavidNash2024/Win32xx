@@ -171,15 +171,17 @@ namespace Win32xx
     //  - The DPI of the monitor hosting the window changes.
     inline LRESULT CDockFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        // Supress redraw to render the DPI changes smoothly.
-        SetRedraw(FALSE);
+        // Lock window updates to render the DPI changes smoothly.
+        LockWindowUpdate();
+
         CFrameT<CDocker>::OnDpiChanged(msg, wparam, lparam);
         SetDefaultCaptionHeight();
         DpiUpdateDockerSizes();
+        RecalcDockLayout();
 
-        // Enable redraw and redraw the frame.
-        SetRedraw(TRUE);
-        RedrawWindow();
+        // Unlock the window updates.
+        UnlockWindowUpdate();
+
         return 0;
     }
 

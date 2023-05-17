@@ -121,7 +121,6 @@ IDW_SDRIGHT             BITMAP                  "../src/res/SDright.bmp"
 IDW_SDTOP               BITMAP                  "../src/res/SDtop.bmp"
 IDB_CLASSVIEW           BITMAP                  "../src/res/classview.bmp"
 IDB_FILEVIEW            BITMAP                  "../src/res/fileview.bmp"
-IDB_STATUS              BITMAP                  "../src/res/status.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

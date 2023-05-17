@@ -26,7 +26,6 @@ Features demonstrated in this example
 * Use of CContainer as a view window for CDocker.
 * Use of RichEdit, ListView and TreeViews as view windows for CDockContainer.
 * Use of the container's optional toolbar.
-* Use of a ComboBoxEx control within a toolbar.
 * Displaying tabs at the top or bottom of the container.
 * The use of several docking styles.
 * Saving the dock layout in the registry.

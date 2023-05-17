@@ -140,33 +140,6 @@ CContainClasses::CContainClasses()
     SetView(m_viewClasses);
 }
 
-// Adds a ComboBoxEx control to the container's toolbar.
-void CContainClasses::AddCombo()
-{
-    int width = 120;
-    CToolBar& tb = GetToolBar();
-    if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
-
-    // Adjust button width and convert to separator
-    tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
-    tb.SetButtonWidth(IDM_FILE_SAVE, width);
-
-    // Determine the size and position of the ComboBox
-    int index = tb.CommandToIndex(IDM_FILE_SAVE);
-    CRect rect = tb.GetItemRect(index);
-
-    // Create the ComboboxEx window
-    m_comboBoxEx.Create(tb);
-    m_comboBoxEx.SetWindowPos(0, rect, SWP_NOACTIVATE);
-
-    // Adjust the toolbar height to accommodate the ComboBoxEx control
-    CRect rc = m_comboBoxEx.GetWindowRect();
-    tb.SetButtonSize(rc.Height(), rc.Height());
-
-    // Add the ComboBox's items
-    m_comboBoxEx.AddItems();
-}
-
 // Responds to menu and and toolbar input.
 BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM)
 {
@@ -221,9 +194,6 @@ void CContainClasses::SetupToolBar()
 
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT       );
-
-    // Add the ComboBarEx control to the toolbar
-    AddCombo();
 }
 
 

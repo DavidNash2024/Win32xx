@@ -1,7 +1,7 @@
 [Project]
 FileName=Themes_RELEASE.dev
 Name=Themes
-UnitCount=14
+UnitCount=12
 Type=0
 Ver=2
 ObjFiles=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=3
-CompilerSettings=0000000100000000000000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -62,26 +62,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\src\MyCombo.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit5]
-FileName=..\src\MyCombo.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit6]
 FileName=..\src\resource.h
 CompileCpp=1
 Folder=Header
@@ -91,8 +71,9 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit5]
 FileName=..\src\Resource.rc
+CompileCpp=1
 Folder=Resource
 Compile=1
 Link=0
@@ -100,7 +81,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit6]
 FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
@@ -110,17 +91,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit7]
 FileName=..\src\stdafx.h
-CompileCpp=1
 Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
-[Unit10]
+[Unit8]
 FileName=..\src\targetver.h
 CompileCpp=1
 Folder=Header
@@ -130,8 +111,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit9]
 FileName=..\src\ThemesApp.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit10]
+FileName=..\src\ThemesApp.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=..\src\View.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -160,7 +161,7 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit12]
-FileName=..\src\ThemesApp.h
+FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
 Compile=1

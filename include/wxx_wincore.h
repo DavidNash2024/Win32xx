@@ -249,46 +249,6 @@ namespace Win32xx
         return dpi;
     }
 
-    // Retrieve the monitor's DPI the window is on. This usually provides the
-    // same value as the GetWindowDpi function, but not always.
-    // This function uses the GetDpiForMonitor function.
-    inline int GetWindowDpiEx(HWND hWnd)
-    {
-        // Retrieve desktop's dpi as a fallback.
-        CClientDC desktopDC(HWND_DESKTOP);
-        int dpi = GetDeviceCaps(desktopDC, LOGPIXELSX);
-
-#ifdef MONITOR_DEFAULTTOPRIMARY
-
-        // Retrieve the monitor's dpi if we can.
-        typedef HRESULT WINAPI GETDPIFORMONITOR(HMONITOR hmonitor, int dpiType, UINT* dpiX, UINT* dpiY);
-        HMODULE shcore = GetModuleHandle(_T("shcore"));
-        if (shcore)
-        {
-            GETDPIFORMONITOR* pGetDpiForMonitor =
-                reinterpret_cast<GETDPIFORMONITOR*>(GetProcAddress(shcore, "GetDpiForMonitor"));
-            if (pGetDpiForMonitor)
-            {
-                HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTOPRIMARY);
-                UINT dpiX;
-                UINT dpiY;
-                HRESULT hr = pGetDpiForMonitor(hMonitor, 0, &dpiX, &dpiY);
-                if (SUCCEEDED(hr))
-                {
-                    dpi = static_cast<int>(dpiX);
-                }
-            }
-        }
-
-#else
-
-        return GetWindowDpi(hWnd);
-
-#endif // MONITOR_DEFAULTTOPRIMARY
-
-        return dpi;
-    }
-
     // Scales up the size of the specified bitmap.
     // Bitmaps can usually be scaled up bitmaps without losing visual quality.
     inline CBitmap ScaleUpBitmap(CBitmap bitmap, int scale)
@@ -2645,7 +2605,7 @@ namespace Win32xx
     // Enables drawing in the window. Only one window can be locked at a time.
     // Use LockWindowUpdate to disable drawing in the window.
     // Refer to LockWindowUpdate in the Windows API documentation for more information.
-    inline BOOL CWnd::UnLockWindowUpdate() const
+    inline BOOL CWnd::UnlockWindowUpdate() const
     {
         assert(IsWindow());
         return ::LockWindowUpdate(0);

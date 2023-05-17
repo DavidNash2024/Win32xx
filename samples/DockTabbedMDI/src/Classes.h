@@ -7,8 +7,6 @@
 #ifndef CLASSES_H
 #define CLASSES_H
 
-#include "MyCombo.h"
-
 
 ////////////////////////////////////////////
 // CViewClasses manages a tree view control.
@@ -62,10 +60,7 @@ private:
     BOOL OnFileNew();
     BOOL OnHelpAbout();
 
-    void AddCombo();
-
     CViewClasses m_viewClasses;
-    CMyCombo m_comboBoxEx;
 };
 
 

@@ -1403,7 +1403,7 @@ namespace Win32xx
                             sourceDC.GradientFill(rt.clrBand1, rt.clrBand2, drawRect, isVertical);
 
                             // Set Curve amount for rounded edges.
-                            int curve = rt.RoundBorders? 12 : 0;
+                            int curve = rt.RoundBorders? T::DpiScaleInt(12) : 0;
 
                             // Create our mask for rounded edges using RoundRect.
                             CMemDC maskDC(dc);
