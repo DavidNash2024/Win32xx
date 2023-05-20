@@ -18,9 +18,7 @@ CD2DView::CD2DView() : m_pRenderTarget(NULL), m_pLightSlateGrayBrush(NULL), m_pC
 // Destructor
  CD2DView::~CD2DView()
 {
-    SafeRelease(&m_pRenderTarget);
-    SafeRelease(&m_pLightSlateGrayBrush);
-    SafeRelease(&m_pCornflowerBlueBrush);
+    DiscardDeviceResources();
 }
 
 // Create the resources used by OnRender
@@ -136,8 +134,8 @@ HRESULT CD2DView::OnRender()
         for (float x = 0.0f; x < width; x += 16.0f * zoom)
         {
             m_pRenderTarget->DrawLine(
-                D2D1::Point2F(static_cast<FLOAT>(x), 0.0f),
-                D2D1::Point2F(static_cast<FLOAT>(x), height),
+                D2D1::Point2F(x, 0.0f),
+                D2D1::Point2F(x, height),
                 m_pLightSlateGrayBrush,
                 zoom
             );
@@ -211,6 +209,7 @@ LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lparam)
 // Specify the initial window size.
 void CD2DView::PreCreate(CREATESTRUCT&cs)
 {
+    // Scale the window to the DPI of the primary monitor
     cs.x = DpiScaleInt(80);                 // top x
     cs.y = DpiScaleInt(80);                 // top y
     cs.cx = DpiScaleInt(640);               // width

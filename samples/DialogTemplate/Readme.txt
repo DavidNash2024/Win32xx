@@ -29,5 +29,3 @@ Note that the application will fail to display a dialog if it contains
 a custom control.
 
 
-
-
