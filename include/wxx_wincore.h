@@ -225,8 +225,10 @@ namespace Win32xx
         return commandLineArgs;
     }
 
-    // Retrieve the window's DPI.
-    // This function uses the GetDpiForWindow function.
+    // Retrieve the window's DPI if the specified handle is a valid
+    // window, or the DPI of the desktop window otherwise.
+    // Use GetWindowDPI(HWND_DESKTOP) to retrieve the DPI of the
+    // desktop window.
     inline int GetWindowDpi(HWND hWnd)
     {
         // Retrieve desktop's dpi as a fallback.
@@ -663,7 +665,7 @@ namespace Win32xx
         // dx.DDX_Check(IDC_CHECK_C,        m_checkC);
     }
 
-    // Scales the specified font to the current window DPI.
+    // Scales the specified font to the DPI reported by GetWindowDPI.
     inline CFont CWnd::DpiScaleFont(CFont font, int pointSize) const
     {
         int dpi = GetWindowDpi(*this);
@@ -674,7 +676,7 @@ namespace Win32xx
         return dpiFont;
     }
 
-    // Scales the specified int to the current window DPI.
+    // Scales the specified int to the DPI reported by GetWindowDPI.
     inline int CWnd::DpiScaleInt(int value) const
     {
         int dpi = GetWindowDpi(*this);
@@ -683,7 +685,7 @@ namespace Win32xx
         return dpiValue;
     }
 
-   // Scales the specified logfont to the current window DPI.
+   // Scales the specified logfont to the DPI reported by GetWindowDPI.
    inline LOGFONT CWnd::DpiScaleLogfont(LOGFONT logfont, int pointSize) const
     {
         int dpi = GetWindowDpi(*this);
@@ -692,7 +694,7 @@ namespace Win32xx
         return logfont;
     }
 
-    // Scales the specified rect to the current window DPI.
+    // Scales the specified rect to the DPI reported by GetWindowDPI.
     inline CRect CWnd::DpiScaleRect(RECT rc) const
     {
         int dpi = GetWindowDpi(*this);
@@ -704,6 +706,7 @@ namespace Win32xx
         return CRect(left, top, right, bottom);
     }
 
+    // Scales up the specified bitmap to the DPI reported by GetWindowDPI.
     inline CBitmap CWnd::DpiScaleUpBitmap(CBitmap bitmap) const
     {
         int dpi = GetWindowDpi(*this);
@@ -712,7 +715,7 @@ namespace Win32xx
         return ScaleUpBitmap(bitmap, scale);
     }
 
-    // Pass messages on to the appropriate default window procedure
+    // Pass messages on to the appropriate default window procedure.
     // CMDIChild and CMDIFrame override this function.
     inline LRESULT CWnd::FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {

@@ -41,6 +41,12 @@ namespace ShellWrapper
         return TRUE;
     }
 
+    // Equality operator.
+    bool operator==(const Cpidl& lhs, const Cpidl& rhs)
+    {
+        return lhs.IsEqual(rhs);
+    }
+
 
     ///////////////////////////////////
     //CContextMenu function definitions
@@ -385,12 +391,6 @@ namespace ShellWrapper
             Copy(cpidlSource);
     }
 
-    // Equivalence operator.
-    bool Cpidl::operator== (const Cpidl& cpidl)
-    {
-        return IsEqual(cpidl);
-    }
-
     // Appends cpidlRel to cpidlFull.
     // The fully qualified cpidl must come first.
     const Cpidl operator+ (const Cpidl& cpidlFull, const Cpidl& cpidlRel)
@@ -601,7 +601,7 @@ namespace ShellWrapper
     }
 
     // Returns true if the two Cpidl's identify the same item.
-    bool Cpidl::IsEqual(const Cpidl &cpidl)
+    bool Cpidl::IsEqual(const Cpidl &cpidl) const
     {
         CShellFolder sf;
         sf.DesktopFolder();

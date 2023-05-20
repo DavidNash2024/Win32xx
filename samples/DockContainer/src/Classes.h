@@ -62,7 +62,6 @@ private:
 
     // Member variables
     CViewClasses m_viewClasses;
-    CImageList m_toolbarImages;
 };
 
 

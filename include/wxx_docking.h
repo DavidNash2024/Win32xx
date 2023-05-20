@@ -578,7 +578,6 @@ namespace Win32xx
         void SetDockHint(CDockHint& dockHint) { m_pDockHint = &dockHint; }
         void SetDockStyle(DWORD dockStyle);
         void SetDockSize(int dockSize);
-        BOOL SetRedraw(BOOL redraw = TRUE);
         void SetView(CWnd& view);
 
     protected:
@@ -669,7 +668,6 @@ namespace Win32xx
         BOOL m_isDragging;
         int m_dockStartSize;
         int m_dockID;
-        int m_redrawCount;
         int m_ncHeight;
         int m_newDpi;
         int m_oldDpi;
@@ -1629,16 +1627,21 @@ namespace Win32xx
             // Adjust hint shape for container in container docking.
             if ((dockSide & DS_DOCKED_CONTAINER) && rcHint.Height() > 50)
             {
-                CDockContainer* pContainer = pDockTarget->GetContainer();
-                if (pContainer != NULL)
+                CDockContainer* pDragged = pDockDrag->GetContainer();
+                CDockContainer* pTarget = pDockTarget->GetContainer();
+                if (pDragged != NULL)
                 {
                     CRgn Rgn;
-                    int gap = DpiScaleInt(5);
-                    int tabHeight = pContainer->GetTabHeight();
-                    int tabWidth = DpiScaleInt(50);
+                    int gap = DpiScaleInt(8);
+                    int tabHeight = pDragged->GetTabHeight();
+                    CSize imageSize = pDragged->GetODImageList().GetIconSize();
+                    CSize textSize1 = pDragged->GetMaxTabTextSize();
+                    CSize textSize2 = pTarget->GetMaxTabTextSize();
+                    int tabWidth = imageSize.cx + MAX(textSize1.cx, textSize2.cx) + gap;
                     Rgn.CreateRectRgn(0, 0, rcHint.Width(), rcHint.Height() - tabHeight);
                     assert(Rgn.GetHandle());
                     CRgn Rgn2;
+                    gap = DpiScaleInt(5);
                     Rgn2.CreateRectRgn(gap, rcHint.Height() - tabHeight, tabWidth, rcHint.Height());
                     Rgn.CombineRgn(Rgn2, RGN_OR);
                     SetWindowRgn(Rgn, FALSE);
@@ -1758,9 +1761,7 @@ namespace Win32xx
     // Constructor.
     inline CDocker::CTargetCentre::CTargetCentre() : m_isOverContainer(FALSE), m_pOldDockTarget(0)
     {
-        m_image.LoadBitmap(IDW_SDCENTER);
-        if (m_image.GetHandle() != 0)
-            m_dpiImage = DpiScaleUpBitmap(m_image);
+        m_image.LoadBitmap(IDW_SDCENTER);;
     }
 
     inline CDocker::CTargetCentre::~CTargetCentre()
@@ -2095,9 +2096,9 @@ namespace Win32xx
     //
 
     // Constructor.
-    inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockAncestor(NULL), m_isBlockMove(FALSE),
-                    m_isUndocking(FALSE), m_isClosing(FALSE), m_isDragging(FALSE),
-                    m_dockStartSize(0), m_dockID(0), m_redrawCount(0), m_ncHeight(0),
+    inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockAncestor(NULL),
+                    m_isBlockMove(FALSE), m_isUndocking(FALSE), m_isClosing(FALSE), 
+                    m_isDragging(FALSE), m_dockStartSize(0), m_dockID(0), m_ncHeight(0),
                     m_newDpi(USER_DEFAULT_SCREEN_DPI), m_oldDpi(USER_DEFAULT_SCREEN_DPI),
                     m_dockZone(0), m_dockSizeRatio(1.0), m_dockStyle(0), m_dockUnderPoint(0)
     {
@@ -4313,15 +4314,8 @@ namespace Win32xx
             pContainer->SetDocker(this);
         }
     }
-
-    // Allows nested calls to SetRedraw.
-    inline BOOL CDocker::SetRedraw(BOOL redraw /* = TRUE*/)
-    {
-        redraw? ++m_redrawCount : --m_redrawCount ;
-        WPARAM wparam = static_cast<WPARAM>(m_redrawCount >= 0);
-        return static_cast<BOOL>(SendMessage(WM_SETREDRAW, wparam, 0));
-    }
-
+   
+    // Position and draw the undocked window, unless it is about to be closed.
     inline void CDocker::SetUndockPosition(CPoint pt, BOOL showUndocked)
     {
         m_isUndocking = TRUE;
@@ -5445,8 +5439,8 @@ namespace Win32xx
 
         // Set the button images
         SetTBImageList(GetToolBar(), m_normalImages, normalID, mask);
-        SetTBImageListHot(GetToolBar(), m_disabledImages, hotID, mask);
-        SetTBImageListDis(GetToolBar(), m_hotImages, disabledID, mask);
+        SetTBImageListHot(GetToolBar(), m_hotImages, hotID, mask);
+        SetTBImageListDis(GetToolBar(), m_disabledImages, disabledID, mask);
     }
 
     // Use this function to set the Resource IDs for the toolbar(s).
