@@ -37,8 +37,13 @@ New Features and Enhancements
   
 * CResizer supports per monitor DPI awareness by repositioning the child
   windows when the WM_DPICHANGED or WM_DPICHANGED_AFTERPARENT message is
-  handled. 
-  
+  handled.
+
+* Added the FrameEx sample.
+  The FrameEx sample uses PNG images instead of bitmaps for the toolbar 
+  and menu item images. As PNG images scale better than bitmaps, this approach
+  is better for applications supporting Per Monitor DPI and high resolution
+  monitors.
 
 About high resolution monitor support
 -------------------------------------
@@ -125,8 +130,9 @@ Added CDocker::OnDpiChangedBeforeParent
 Added CDocker::OnGetDpiScaledSize
 Added CDocker::SetDefaultCaptionHeight
 Added CDockFrame::OnDpiChanged
-Added CFrameT::SetMenuImages
+Added CFrameT::ClearMenuIcons
 Added CFrameT::OnDpiChanged
+Added CFrameT::SetMenuImages
 Added CFrameT::UpdateSettings
 Added CImageList::Add  additional overload
 Added CTab::OnDpiChangedBeforeParent
