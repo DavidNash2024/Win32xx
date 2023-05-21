@@ -2097,7 +2097,7 @@ namespace Win32xx
 
     // Constructor.
     inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockAncestor(NULL),
-                    m_isBlockMove(FALSE), m_isUndocking(FALSE), m_isClosing(FALSE), 
+                    m_isBlockMove(FALSE), m_isUndocking(FALSE), m_isClosing(FALSE),
                     m_isDragging(FALSE), m_dockStartSize(0), m_dockID(0), m_ncHeight(0),
                     m_newDpi(USER_DEFAULT_SCREEN_DPI), m_oldDpi(USER_DEFAULT_SCREEN_DPI),
                     m_dockZone(0), m_dockSizeRatio(1.0), m_dockStyle(0), m_dockUnderPoint(0)
@@ -4314,7 +4314,7 @@ namespace Win32xx
             pContainer->SetDocker(this);
         }
     }
-   
+
     // Position and draw the undocked window, unless it is about to be closed.
     inline void CDocker::SetUndockPosition(CPoint pt, BOOL showUndocked)
     {

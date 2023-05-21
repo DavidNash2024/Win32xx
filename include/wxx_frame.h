@@ -187,13 +187,6 @@ namespace Win32xx
         void SetFrameMenu(CMenu menu);
         void SetInitValues(const InitValues& values);
         void SetKbdHook();
-        void SetMenuImages(CImageList menuImages)
-        {
-            m_menuImages = menuImages;
-            m_menuDisabledImages.DeleteImageList();
-            if (menuImages.GetHandle() != 0)
-                m_menuDisabledImages.CreateDisabledImageList(m_menuImages);
-        }
         void SetMenuTheme(const MenuTheme& mt);
         void SetMRULimit(UINT MRULimit);
         void SetReBarTheme(const ReBarTheme& rbt);
@@ -214,6 +207,7 @@ namespace Win32xx
         virtual void AddToolBarBand(CToolBar& tb, DWORD bandStyle, UINT id);
         virtual void AddToolBarButton(UINT id, BOOL isEnabled = TRUE, LPCTSTR text = 0, int image = -1);
         virtual void AdjustFrameRect(const RECT& viewRect);
+        virtual void ClearMenuIcons();
         virtual void CreateToolBar();
         virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
         virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
@@ -321,7 +315,7 @@ namespace Win32xx
 
         std::vector<MenuData> m_menusData;  // vector of menu data for multiple popup menus
         std::vector<CString> m_mruEntries;  // vector of CStrings for MRU entries
-        std::vector<UINT> m_menuIcons;      // vector of menu icon resource IDs
+        std::vector<UINT> m_menuItemIDs;    // vector of menu icon resource IDs
         std::vector<UINT> m_toolBarData;    // vector of resource IDs for ToolBar buttons
         std::vector<CString> m_indicators;  // vector of CStrings for status indicators
         InitValues m_initValues;            // struct of initial values
@@ -488,7 +482,7 @@ namespace Win32xx
             cyImage = GetMenuIconHeight();
             cxImage = cyImage;
             m_menuImages.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, 1, 0);
-            m_menuIcons.clear();
+            m_menuItemIDs.clear();
         }
         else
         {
@@ -498,7 +492,7 @@ namespace Win32xx
 
         if (m_menuImages.Add(icon) != -1)
         {
-            m_menuIcons.push_back(menuItemID);
+            m_menuItemIDs.push_back(menuItemID);
 
             // Set the mask color to gray for the new ImageList
             COLORREF mask = RGB(192, 192, 192);
@@ -540,12 +534,12 @@ namespace Win32xx
         assert(bitmap.GetHandle() != 0);
 
         if ((images == 0) || (bitmap.GetHandle() == 0))
-            return static_cast<UINT>(m_menuIcons.size());  // No valid images, so nothing to do!
+            return static_cast<UINT>(m_menuItemIDs.size());  // No valid images, so nothing to do!
 
         // Resize the bitmap
         CSize bitmapSize = bitmap.GetSize();
         int scale = MulDiv(GetMenuIconHeight(), 1, bitmapSize.cy);
-        m_menuIcons.clear();
+        m_menuItemIDs.clear();
         if (scale > 0)
         {
             bitmap = ScaleUpBitmap(bitmap, scale);
@@ -559,7 +553,7 @@ namespace Win32xx
             for (iter = menuData.begin(); iter != menuData.end(); ++iter)
             {
                 if ((*iter) != 0)
-                    m_menuIcons.push_back(*iter);
+                    m_menuItemIDs.push_back(*iter);
             }
 
             // Add the images to the imageList.
@@ -586,7 +580,7 @@ namespace Win32xx
         }
 
         // return the number of menu icons.
-        return static_cast<UINT>(m_menuIcons.size());
+        return static_cast<UINT>(m_menuItemIDs.size());
     }
 
     // Adds a MenuBar to the rebar control.
@@ -678,6 +672,15 @@ namespace Win32xx
 
         // Calculate final rect size, and reposition frame.
         VERIFY(T::SetWindowPos(0, 0, 0, width, height, SWP_NOMOVE));
+    }
+
+
+    template <class T>
+    inline void CFrameT<T>::ClearMenuIcons()
+    {
+        m_menuImages.DeleteImageList();
+        m_menuDisabledImages.DeleteImageList();
+        m_menuItemIDs.clear();
     }
 
     // Creates the frame's toolbar. Additional toolbars can be added with AddToolBarBand
@@ -1256,9 +1259,9 @@ namespace Win32xx
 
         // get the icon's location in the imagelist
         int image = -1;
-        for (size_t i = 0 ; i < m_menuIcons.size(); ++i)
+        for (size_t i = 0 ; i < m_menuItemIDs.size(); ++i)
         {
-            if (pDrawItem->itemID == m_menuIcons[i])
+            if (pDrawItem->itemID == m_menuItemIDs[i])
                image = static_cast<int>(i);
         }
 
@@ -2087,6 +2090,7 @@ namespace Win32xx
         }
 
         // Update the menu icons.
+        ClearMenuIcons();
         SetupMenuIcons();
 
         RecalcLayout();
@@ -2252,7 +2256,7 @@ namespace Win32xx
                 }
             }
 
-            // m_menuData can store the menu item data for multiple popup menus.
+            // m_menuItemIDs can store the menu item data for multiple popup menus.
             // There will be multiple popup menus if submenus are opened.
             if (menuData.size() != 0)
                 m_menusData.push_back(menuData);
@@ -2893,9 +2897,7 @@ namespace Win32xx
     inline UINT CFrameT<T>::SetMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT toolBarID, UINT toolBarDisabledID)
     {
         // Remove any existing menu icons.
-        m_menuImages.DeleteImageList();
-        m_menuDisabledImages.DeleteImageList();
-        m_menuIcons.clear();
+        ClearMenuIcons();
 
         // Exit if no ToolBarID is specified.
         if (toolBarID == 0) return 0;
