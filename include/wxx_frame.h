@@ -671,10 +671,10 @@ namespace Win32xx
         int height = T::GetWindowRect().Height() - GetViewRect().Height() + rc.Height();
 
         // Calculate final rect size, and reposition frame.
-        VERIFY(T::SetWindowPos(0, 0, 0, width, height, SWP_NOMOVE));
+        VERIFY(T::SetWindowPos(HWND_TOP, 0, 0, width, height, SWP_NOMOVE));
     }
 
-
+    // Clears the normal and disabled imagelists for menu icons.
     template <class T>
     inline void CFrameT<T>::ClearMenuIcons()
     {
@@ -2067,7 +2067,7 @@ namespace Win32xx
         // Resize the frame, using the suggested new window size.
         RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
         assert(pWindowRect);
-        T::SetWindowPos(0, *pWindowRect, SWP_NOZORDER | SWP_NOACTIVATE);
+        T::SetWindowPos(HWND_TOP, *pWindowRect, SWP_NOZORDER | SWP_NOACTIVATE);
 
         // Update the rebar, menubar and statusbar.
         ResetMenuMetrics();
@@ -2649,7 +2649,7 @@ namespace Win32xx
         // Resize the status bar
         if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
         {
-            VERIFY(GetStatusBar().SetWindowPos(0, 0, 0, 0, 0, SWP_SHOWWINDOW));
+            VERIFY(GetStatusBar().SetWindowPos(HWND_TOP, 0, 0, 0, 0, SWP_SHOWWINDOW));
 
             SetStatusParts();
             SetStatusIndicators();
@@ -2683,7 +2683,7 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::RecalcViewLayout()
     {
-        VERIFY(GetView().SetWindowPos(0, GetViewRect(), SWP_SHOWWINDOW));
+        VERIFY(GetView().SetWindowPos(HWND_TOP, GetViewRect(), SWP_SHOWWINDOW));
     }
 
     // Removes an entry from the MRU list.
@@ -3405,7 +3405,7 @@ namespace Win32xx
                     GetView().SetParent(*this);
 
                 CRect rc = GetViewRect();
-                VERIFY(GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW));
+                VERIFY(GetView().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW));
             }
         }
     }

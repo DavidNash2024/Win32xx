@@ -18,7 +18,7 @@ public:
         // Make sure that you use a name that is unique for this application
         // otherwise two apps may think they are the same if they are using
         // same name for 3rd parameter to CreateMutex.
-        m_mutex = CreateMutex(NULL, FALSE, mutexName); // do early
+        m_mutex = CreateMutex(nullptr, FALSE, mutexName); // do early
         m_lastError = GetLastError(); // save for use later...
     }
 

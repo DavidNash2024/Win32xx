@@ -1321,7 +1321,7 @@ namespace Win32xx
     {
         // Reposition the View window to cover the DockClient's client area.
         CRect rc = GetClientRect();
-        VERIFY(GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW));
+        VERIFY(GetView().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW));
 
         return FinalWindowProc(msg, wparam, lparam);
     }
@@ -1407,7 +1407,7 @@ namespace Win32xx
                 }
 
                 CRect rc = GetClientRect();
-                VERIFY(GetView().SetWindowPos(0, rc, SWP_SHOWWINDOW));
+                VERIFY(GetView().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW));
             }
         }
     }
@@ -1649,7 +1649,7 @@ namespace Win32xx
             }
 
             VERIFY(pDockTarget->ClientToScreen(rcHint));
-            VERIFY(SetWindowPos(0, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE));
+            VERIFY(SetWindowPos(HWND_TOP, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE));
         }
     }
 
@@ -2211,7 +2211,7 @@ namespace Win32xx
         pDocker->SetStyle(style);
         pDocker->SetRedraw(FALSE);
         pDocker->SetParent(0);
-        VERIFY(pDocker->SetWindowPos(0, rc, SWP_SHOWWINDOW | SWP_FRAMECHANGED));
+        VERIFY(pDocker->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW | SWP_FRAMECHANGED));
         pDocker->RecalcDockLayout();
         pDocker->SetWindowText(pDocker->GetCaption().c_str());
         pDocker->SetRedraw(TRUE);
@@ -2313,13 +2313,13 @@ namespace Win32xx
         if (GetDockBar().IsWindow())
             GetDockBar().ShowWindow(SW_HIDE);
 
-        VERIFY(SetWindowPos(0, 0, 0, 0, 0, SWP_NOSENDCHANGING | SWP_HIDEWINDOW | SWP_NOREDRAW));
+        VERIFY(SetWindowPos(HWND_TOP, 0, 0, 0, 0, SWP_NOSENDCHANGING | SWP_HIDEWINDOW | SWP_NOREDRAW));
         m_pDockParent = 0;
         SetParent(0);
 
         DWORD styleShow = showUndocked ? SWP_SHOWWINDOW : 0U;
-        VERIFY(SetWindowPos(0, rc, styleShow | SWP_FRAMECHANGED | SWP_NOOWNERZORDER));
-        VERIFY(GetDockClient().SetWindowPos(0, GetClientRect(), SWP_SHOWWINDOW));
+        VERIFY(SetWindowPos(HWND_TOP, rc, styleShow | SWP_FRAMECHANGED | SWP_NOOWNERZORDER));
+        VERIFY(GetDockClient().SetWindowPos(HWND_TOP, GetClientRect(), SWP_SHOWWINDOW));
         SetWindowText(GetCaption().c_str());
     }
 
@@ -2495,8 +2495,7 @@ namespace Win32xx
     }
 
     // Updates the view for all dockers in this dock family.
-    // Call this for the initially after dockers are created
-    // and when the DPI changes.
+    // Call this when the DPI changes.
     inline void CDocker::DpiUpdateDockerSizes()
     {
         std::vector<CDocker*> v = GetAllDockers();
@@ -3419,7 +3418,7 @@ namespace Win32xx
         {
             // An undocked docker has moved to a different monitor.
             LPRECT prc = reinterpret_cast<LPRECT>(lparam);
-            SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+            SetWindowPos(HWND_TOP, *prc, SWP_SHOWWINDOW);
             SetRedraw(FALSE);
 
             std::vector<DockPtr> v = GetAllDockChildren();
@@ -3560,7 +3559,7 @@ namespace Win32xx
         int height = (rc.Height() * newDPI) / oldDPI;
         rc.right = rc.left + width;
         rc.bottom = rc.top + height;
-        SetWindowPos(0, rc, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+        SetWindowPos(HWND_TOP, rc, SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 
         std::vector<DockPtr> v = GetAllDockChildren();
         std::vector<DockPtr>::iterator it;
@@ -3904,7 +3903,7 @@ namespace Win32xx
             barRect.IntersectRect(m_barRect, GetDockParent()->GetViewRect());
 
             // The SWP_NOCOPYBITS forces a redraw of the dock bar.
-            VERIFY(GetDockBar().SetWindowPos(0, barRect, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS));
+            VERIFY(GetDockBar().SetWindowPos(HWND_TOP, barRect, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS));
         }
 
         // Step 3: Now recurse through the docker's children. They might have children of their own.
@@ -4526,7 +4525,7 @@ namespace Win32xx
                     pDockNew->SetStyle(style);
                     pDockNew->m_pDockParent = 0;
                     pDockNew->SetParent(0);
-                    VERIFY(pDockNew->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER));
+                    VERIFY(pDockNew->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER));
                 }
                 pDockNew->GetDockBar().SetParent(pDockOld->GetParent());
                 pDockNew->GetView().SetFocus();
@@ -4574,7 +4573,7 @@ namespace Win32xx
 
         CRect rc = GetDockClient().GetWindowRect();
         VERIFY(ScreenToClient(rc));
-        VERIFY(pDocker->GetDockClient().SetWindowPos(0, rc, SWP_SHOWWINDOW));
+        VERIFY(pDocker->GetDockClient().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW));
         pDocker->Undock(pt, showUndocked);
         pDocker->GetDockBar().SetParent(*GetDockAncestor());
         pDockUndockedFrom->ShowWindow();
@@ -5156,7 +5155,7 @@ namespace Win32xx
 
             if (pContainer->GetViewPage().IsWindow())
             {
-                VERIFY(pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW));
+                VERIFY(pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW));
                 pContainer->GetViewPage().RecalcLayout();
             }
         }
@@ -5241,7 +5240,7 @@ namespace Win32xx
                     (*it).pContainer->GetViewPage().ShowWindow(SW_HIDE);
                 }
 
-                VERIFY(pNewContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW));
+                VERIFY(pNewContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW));
                 pNewContainer->GetViewPage().GetView()->SetFocus();
 
                 // Adjust the docking caption.
@@ -5364,7 +5363,7 @@ namespace Win32xx
         toolBar.SetImageList(imageList);
     }
 
-    // Sets the Disabled Image List for toolbars.
+    // Sets the disabled Image List for toolbars.
     inline void CDockContainer::SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
     {
         if (id != 0)
@@ -5627,7 +5626,7 @@ namespace Win32xx
         }
 
         if (GetView())
-            VERIFY(GetView()->SetWindowPos(0, rc, SWP_SHOWWINDOW));
+            VERIFY(GetView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW));
     }
 
     // Sets or changes the View window displayed within the container.

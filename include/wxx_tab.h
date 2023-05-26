@@ -1246,7 +1246,7 @@ namespace Win32xx
                 CRect rc = GetClientRect();
                 MapWindowPoints(GetParent(), rc);
                 AdjustRect(FALSE, &rc);
-                VERIFY(GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW));
+                VERIFY(GetActiveView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW));
             }
 
             RedrawWindow(RDW_INVALIDATE | RDW_NOCHILDREN);
@@ -1479,7 +1479,7 @@ namespace Win32xx
                 CRect rc = GetClientRect();
                 AdjustRect(FALSE, &rc);
                 MapWindowPoints(GetParent(), rc);
-                VERIFY(GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW));
+                VERIFY(GetActiveView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW));
                 GetActiveView()->SetFocus();
             }
         }
@@ -2153,7 +2153,7 @@ namespace Win32xx
         if (GetTab().IsWindow())
         {
             CRect rcClient = GetClientRect();
-            GetTab().SetWindowPos(0, rcClient, SWP_SHOWWINDOW);
+            GetTab().SetWindowPos(HWND_TOP, rcClient, SWP_SHOWWINDOW);
         }
     }
 

@@ -132,7 +132,6 @@ Added CDocker::SetDefaultCaptionHeight
 Added CDockFrame::OnDpiChanged
 Added CFrameT::ClearMenuIcons
 Added CFrameT::OnDpiChanged
-Added CFrameT::SetMenuImages
 Added CFrameT::UpdateSettings
 Added CImageList::Add  additional overload
 Added CTab::OnDpiChangedBeforeParent

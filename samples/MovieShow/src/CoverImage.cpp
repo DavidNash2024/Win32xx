@@ -25,7 +25,7 @@ CCoverImage::CCoverImage()
 {
     // Initialize GDI+.
     GdiplusStartupInput gdiplusStartupInput;
-    GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
+    GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, nullptr);
 
     // The entry for the dialog's control in resource.rc must match this name.
     CString className = L"CoverImage";
@@ -63,10 +63,10 @@ void CCoverImage::DrawImage(CDC& dc)
         if (mem != 0)
         {
             BYTE* pMem = (BYTE*)GlobalLock(mem);
-            if (pMem != NULL)
+            if (pMem != nullptr)
             {
                 memcpy(pMem, &m_imageData[0], len);
-                IStream* stream = NULL;
+                IStream* stream = nullptr;
                 VERIFY(S_OK == ::CreateStreamOnHGlobal(mem, FALSE, &stream));
                 Image cover(stream);
 
@@ -103,7 +103,7 @@ void CCoverImage::OnDraw(CDC& dc)
 // Calls OnDraw to preform painting for this custom control.
 LRESULT CCoverImage::OnPaint(UINT, WPARAM, LPARAM)
 {
-    if (::GetUpdateRect(*this, NULL, FALSE))
+    if (::GetUpdateRect(*this, nullptr, FALSE))
     {
         CPaintDC dc(*this);
         OnDraw(dc);

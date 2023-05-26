@@ -225,10 +225,9 @@ namespace Win32xx
         return commandLineArgs;
     }
 
-    // Retrieve the window's DPI if the specified handle is a valid
+    // Retrieves the DPI of the window if the specified handle is a valid
     // window, or the DPI of the desktop window otherwise.
-    // Use GetWindowDPI(HWND_DESKTOP) to retrieve the DPI of the
-    // desktop window.
+    // Use GetWindowDPI(HWND_DESKTOP) to retrieve the DPI of the desktop window.
     inline int GetWindowDpi(HWND hWnd)
     {
         // Retrieve desktop's dpi as a fallback.
@@ -251,8 +250,9 @@ namespace Win32xx
         return dpi;
     }
 
-    // Scales up the size of the specified bitmap.
-    // Bitmaps can usually be scaled up bitmaps without losing visual quality.
+    // Scales the specified bitmap up by the specified scale factor.
+    // Bitmap sizes can usually be multiplied by an integer value without
+    // losing visual quality.
     inline CBitmap ScaleUpBitmap(CBitmap bitmap, int scale)
     {
         assert(bitmap.GetHandle() != 0);
@@ -433,7 +433,7 @@ namespace Win32xx
         y = (y < desktopRect.top) ? desktopRect.top: y;
         y = (y > desktopRect.bottom - rc.Height())? desktopRect.bottom - rc.Height() : y;
 
-        VERIFY(SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE));
+        VERIFY(SetWindowPos(HWND_TOP, x, y, 0, 0, SWP_NOSIZE));
     }
 
     // Returns the CWnd to its default state.

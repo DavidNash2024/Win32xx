@@ -143,8 +143,8 @@ CString CViewList::GetFileTime(FILETIME fileTime)
     const int maxChars = 32;
     WCHAR time[maxChars];
     WCHAR date[maxChars];
-    ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &localSysTime, NULL, date, maxChars - 1);
-    ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &localSysTime, NULL, time, maxChars - 1);
+    ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &localSysTime, nullptr, date, maxChars - 1);
+    ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &localSysTime, nullptr, time, maxChars - 1);
 
     // Combine the date and time in a CString.
     CString str = date;
@@ -156,7 +156,7 @@ CString CViewList::GetFileTime(FILETIME fileTime)
 // Called when the listview window is attached to CViewList during Create.
 void CViewList::OnAttach()
 {
-    SetWindowTheme(L"Explorer", NULL);
+    SetWindowTheme(L"Explorer", nullptr);
 
     // Set the report style
     DWORD dwStyle = GetStyle();

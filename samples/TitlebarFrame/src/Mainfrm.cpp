@@ -300,7 +300,7 @@ CRect CMainFrame::GetTitlebarRect() const
     const int borders = 2;
     HTHEME theme = ::OpenThemeData(*this, L"WINDOW");
     UINT dpi = ::GetDpiForWindow(*this);
-    ::GetThemePartSize(theme, NULL, WP_CAPTION, CS_ACTIVE, NULL, TS_TRUE, &barSize);
+    ::GetThemePartSize(theme, nullptr, WP_CAPTION, CS_ACTIVE, nullptr, TS_TRUE, &barSize);
     ::CloseThemeData(theme);
     int height = dpi_scale(barSize.cy, dpi) + borders;
 
@@ -388,7 +388,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
     // Inform the application of the frame change to force redrawing with the new
     // client area that is extended into the title bar.
-    SetWindowPos(NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
+    SetWindowPos(HWND_TOP, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
 
     // Call the base class function.
     int result = CFrame::OnCreate(cs);
@@ -691,7 +691,7 @@ void CMainFrame::RecalcLayout()
         for (UINT u = 0; u < GetReBar().GetRowCount(); ++u)
             cyRB += GetReBar().GetRowHeight(u);
 
-        GetReBar().SetWindowPos(NULL, 0, rc.Height(), rc.Width(), cyRB, SWP_SHOWWINDOW);
+        GetReBar().SetWindowPos(HWND_TOP, 0, rc.Height(), rc.Width(), cyRB, SWP_SHOWWINDOW);
     }
 
     if (m_isMiniFrame)
@@ -707,7 +707,7 @@ void CMainFrame::RecalcLayout()
             menuRect.top = (rect.Height() - size.cy) / 2;
             menuRect.right = menuRect.left + size.cx;
             menuRect.bottom = menuRect.top + size.cy;
-            GetMenuBar().SetWindowPos(NULL, menuRect, SWP_SHOWWINDOW);
+            GetMenuBar().SetWindowPos(HWND_TOP, menuRect, SWP_SHOWWINDOW);
         }
     }
 
