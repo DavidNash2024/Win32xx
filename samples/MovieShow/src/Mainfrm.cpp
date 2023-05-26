@@ -42,14 +42,14 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
     UINT  num = 0;          // number of image encoders
     UINT  size = 0;         // size of the image encoder array in bytes
 
-    ImageCodecInfo* pImageCodecInfo = NULL;
+    ImageCodecInfo* pImageCodecInfo = nullptr;
 
     GetImageEncodersSize(&num, &size);
     if (size == 0)
         return -1;  // Failure
 
     pImageCodecInfo = (ImageCodecInfo*)(malloc(size));
-    if (pImageCodecInfo == NULL)
+    if (pImageCodecInfo == nullptr)
         return -1;  // Failure
 
     GetImageEncoders(num, size, pImageCodecInfo);
@@ -140,22 +140,22 @@ HWND CMainFrame::Create(HWND parent)
 void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
 {
     DWORD size = 0;
-    if (::CryptStringToBinary(source.c_str(), (DWORD)source.GetLength(), CRYPT_STRING_BASE64, NULL, &size, NULL, NULL))
+    if (::CryptStringToBinary(source.c_str(), (DWORD)source.GetLength(), CRYPT_STRING_BASE64, nullptr, &size, nullptr, nullptr))
     {
         // Use a vector for an array of BYTE
         std::vector<BYTE> Dest(size, 0);
         BYTE* pDest = &Dest.front();
-        ::CryptStringToBinary(source.c_str(), (DWORD)source.GetLength(), CRYPT_STRING_BASE64, pDest, &size, NULL, NULL);
+        ::CryptStringToBinary(source.c_str(), (DWORD)source.GetLength(), CRYPT_STRING_BASE64, pDest, &size, nullptr, nullptr);
 
         // Convert the binary data to an IStream
         HGLOBAL hMem = ::GlobalAlloc(GMEM_MOVEABLE, size);
         if(hMem != 0)
         {
             LPVOID pImage = ::GlobalLock(hMem);
-            if (pImage != NULL)
+            if (pImage != nullptr)
             {
                 memcpy(pImage, pDest, size);
-                IStream* pStream = NULL;
+                IStream* pStream = nullptr;
                 if (S_OK == ::CreateStreamOnHGlobal(hMem, FALSE, &pStream))
                 {
 
@@ -163,9 +163,9 @@ void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
                     Image image(pStream);
 
                     // Create a smaller thumbnail Image.
-                    Bitmap* img = (Bitmap*)image.GetThumbnailImage(280, 420, NULL, NULL);
+                    Bitmap* img = (Bitmap*)image.GetThumbnailImage(280, 420, nullptr, nullptr);
 
-                    IStream* stream = NULL;
+                    IStream* stream = nullptr;
                     HRESULT hr = ::CreateStreamOnHGlobal(0, TRUE, &stream);
                     if (!SUCCEEDED(hr))
                         return;
@@ -588,7 +588,7 @@ void CMainFrame::LoadMovies()
 
     CString DataPath = GetDataPath();
     CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-    SHCreateDirectoryEx(0, DataPath.c_str(), NULL);
+    SHCreateDirectoryEx(0, DataPath.c_str(), nullptr);
 
     if (PathFileExists(DataFile))
     {
@@ -662,7 +662,7 @@ void CMainFrame::LoadMovies()
 // Loads settings from the registry.
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 {
-    assert(NULL != szKeyName);
+    assert(szKeyName != nullptr);
 
     if (CDockFrame::LoadRegistrySettings(szKeyName))
     {
@@ -726,7 +726,7 @@ BOOL CMainFrame::OnAddFolder()
         {
             CString DataPath = GetDataPath();
             CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-            ::SHCreateDirectoryEx(0, DataPath.c_str(), NULL);
+            ::SHCreateDirectoryEx(0, DataPath.c_str(), nullptr);
 
             {
                 // Lock this code for thread safety
@@ -854,7 +854,7 @@ void CMainFrame::OnClose()
 
         CString DataPath = GetDataPath();
         CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-        ::SHCreateDirectoryEx(0, DataPath.c_str(), NULL);
+        ::SHCreateDirectoryEx(0, DataPath.c_str(), nullptr);
 
         try
         {
@@ -1146,7 +1146,7 @@ LRESULT CMainFrame::OnRClickListItem()
     CPoint screenPoint = GetCursorPos();
 
     // Start the popup menu.
-    m_popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, NULL/*&tpm*/);
+    m_popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, nullptr/*&tpm*/);
 
     return 0;
 }
@@ -1174,7 +1174,7 @@ LRESULT CMainFrame::OnRClickTreeItem()
         m_boxSetMenu = topMenu.GetSubMenu(0);
 
         // Start the popup menu.
-        m_boxSetMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, NULL/*&tpm*/);
+        m_boxSetMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, nullptr/*&tpm*/);
     }
 
     HTREEITEM parent = GetViewTree().GetParentItem(item);
@@ -1185,7 +1185,7 @@ LRESULT CMainFrame::OnRClickTreeItem()
         m_boxSetMenu = topMenu.GetSubMenu(0);
 
         // Start the popup menu
-        m_boxSetMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, NULL/*&tpm*/);
+        m_boxSetMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, screenPoint.x, screenPoint.y, *this, nullptr/*&tpm*/);
     }
 
     return 0;
@@ -1490,7 +1490,7 @@ BOOL CMainFrame::OnWatchList()
 LRESULT CMainFrame::PlayMovie(LPCTSTR path)
 {
     if (PathFileExists(path))
-        ::ShellExecute(*this, L"open", path, NULL, NULL, SW_SHOW);
+        ::ShellExecute(*this, L"open", path, nullptr, nullptr, SW_SHOW);
     else
     {
         CString str = CString(L"Unable to play\n") + path;
@@ -1588,17 +1588,6 @@ void CMainFrame::SetupMenuIcons()
 // Configure the toolbar.
 void CMainFrame::SetupToolBar()
 {
-    // Create the normal ImageList for the toolbar
-    int size = DpiScaleInt(32);
-    m_toolbarImages.Create(size, size, ILC_COLOR32, 0, 0);
-    m_toolbarImages.AddIcon(IDI_ADDFOLDER);
-    m_toolbarImages.AddIcon(IDI_PLAY);
-    m_toolbarImages.AddIcon(IDI_FAVOURITES);
-    m_toolbarImages.AddIcon(IDI_EYE);
-    m_toolbarImages.AddIcon(IDI_SEARCH);
-    m_toolbarImages.AddIcon(IDI_HELPABOUT);
-    GetToolBar().SetImageList(m_toolbarImages);
-
     // Add toolbar buttons and set their Resource IDs
     AddToolBarButton(IDM_ADD_FOLDER);
     AddToolBarButton(0);                        // Separator
@@ -1608,6 +1597,19 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton(IDM_SEARCH);
     AddToolBarButton(0);                        // Separator
     AddToolBarButton(IDM_HELP_ABOUT);
+
+    // Create the normal ImageList for the toolbar
+    int size = DpiScaleInt(32);
+    m_toolbarImages.Create(size, size, ILC_COLOR32, 0, 0);
+    m_toolbarImages.AddIcon(IDI_ADDFOLDER);
+    m_toolbarImages.AddIcon(IDI_PLAY);
+    m_toolbarImages.AddIcon(IDI_FAVOURITES);
+    m_toolbarImages.AddIcon(IDI_EYE);
+    m_toolbarImages.AddIcon(IDI_SEARCH);
+    m_toolbarImages.AddIcon(IDI_HELPABOUT);
+
+    // Assign the imagelist to the toolbar.
+    GetToolBar().SetImageList(m_toolbarImages);
 }
 
 // This function runs in a separate thread because loading the meta data from

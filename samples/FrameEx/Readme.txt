@@ -35,7 +35,3 @@ Features demonstrated in this example
 * Use of IStream to copy the PNG data from the resource.
 * Use of GDIPlus create a Gdiplus::Bitmap object.
 * Retrieving an icon from a Gdiplus::Bitmap object using GetHICON. 
-
-
-
-

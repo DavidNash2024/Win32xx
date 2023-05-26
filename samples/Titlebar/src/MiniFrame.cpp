@@ -272,7 +272,7 @@ CRect CMiniFrame::GetTitlebarRect() const
     const int borders = 2;
     HTHEME theme = ::OpenThemeData(*this, L"WINDOW");
     UINT dpi = ::GetDpiForWindow(*this);
-    ::GetThemePartSize(theme, NULL, WP_CAPTION, CS_ACTIVE, NULL, THEMESIZE::TS_TRUE, &barSize);
+    ::GetThemePartSize(theme, nullptr, WP_CAPTION, CS_ACTIVE, nullptr, THEMESIZE::TS_TRUE, &barSize);
     ::CloseThemeData(theme);
     int height = dpi_scale(barSize.cy, dpi) + borders;
 
@@ -334,7 +334,7 @@ int CMiniFrame::OnCreate(CREATESTRUCT&)
 {
     // Inform the application of the frame change to force redrawing with the new
     // client area that is extended into the title bar.
-    SetWindowPos(NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
+    SetWindowPos(HWND_TOP, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
 
     // Set the window's icon.
     SetIconSmall(IDW_MAIN);
@@ -372,7 +372,7 @@ void CMiniFrame::OnDestroy()
 LRESULT CMiniFrame::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = reinterpret_cast<LPRECT>(lparam);
-    SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+    SetWindowPos(HWND_TOP, *prc, SWP_SHOWWINDOW);
 
     m_menubar.SetupMenuBar(m_menu);
     RecalcLayout();
@@ -665,14 +665,14 @@ void CMiniFrame::RecalcLayout() const
         menuRect.top = (rect.Height() - size.cy) / 2;
         menuRect.right = menuRect.left + size.cx;
         menuRect.bottom = menuRect.top + size.cy;
-        m_menubar.SetWindowPos(NULL, menuRect, SWP_SHOWWINDOW);
+        m_menubar.SetWindowPos(HWND_TOP, menuRect, SWP_SHOWWINDOW);
     }
 
     // Position the view window.
     if (m_view.IsWindow())
     {
         rect = GetViewRect();
-        m_view.SetWindowPos(NULL, rect, SWP_SHOWWINDOW);
+        m_view.SetWindowPos(HWND_TOP, rect, SWP_SHOWWINDOW);
     }
 
 }
