@@ -26,9 +26,9 @@ private:
 
 
 //////////////////////////////////////////////
-// CViewText manages an edit control.
+// CViewText manages a rich edit control.
 // It is used as the view window by CDockText.
-class CViewText : public CWnd
+class CViewText : public CRichEdit
 {
 public:
     CViewText() {}
@@ -38,7 +38,6 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
-    virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
     CViewText(const CViewText&);                // Disable copy construction
@@ -61,10 +60,14 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewTree(const CViewTree&);                // Disable copy construction
     CViewTree& operator = (const CViewTree&);   // Disable assignment operator
+
+    // Message handlers
+    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CImageList m_smallImages;
 };
@@ -85,10 +88,14 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
+    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewList(const CViewList&);                // Disable copy construction
     CViewList& operator = (const CViewList&);   // Disable assignment operator
+
+    // Message handlers
+    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
 
     CImageList m_smallImages;
 };

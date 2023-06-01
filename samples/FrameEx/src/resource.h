@@ -38,6 +38,16 @@
 #define IDP_EDIT_PASTE                  207
 #define IDP_HELP_ABOUT                  208
 
+#define IDP_FILE_NEWDISABLED            210
+#define IDP_FILE_OPENDISABLED           211
+#define IDP_FILE_SAVEDISABLED           212
+#define IDP_FILE_PREVIEWDISABLED        213
+#define IDP_FILE_PRINTDISABLED          214
+#define IDP_EDIT_CUTDISABLED            215
+#define IDP_EDIT_COPYDISABLED           216
+#define IDP_EDIT_PASTEDISABLED          217
+#define IDP_HELP_ABOUTDISABLED          218
+
 // Next default values for new objects
 //
 #ifdef APSTUDIO_INVOKED
