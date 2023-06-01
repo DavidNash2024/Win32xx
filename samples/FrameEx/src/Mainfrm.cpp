@@ -347,14 +347,14 @@ void CMainFrame::AddMenuIconFromPNG(UINT pngID, UINT menuID)
     }
 }
 
-void CMainFrame::AddIconFromPNG(UINT pngID)
+void CMainFrame::AddIconFromPNG(CImageList& images, UINT pngID)
 {
     HICON icon;
     BitmapPtr pBitmap = LoadPngResource(pngID);
     if (pBitmap.get() != nullptr)
     {
         LoadPngResource(pngID)->GetHICON(&icon);
-        m_toolbarImages.Add(icon);
+       images.Add(icon);
     }
 }
 
@@ -391,20 +391,30 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
 
-    // Fill the imagelist with the PNG images.
+    // Assign normal images to the toolbar.
     int iconSize = DpiScaleInt(28);
     m_toolbarImages.Create(iconSize, iconSize, ILC_COLOR32, 8, 1);
-    AddIconFromPNG(IDP_FILE_NEW);
-    AddIconFromPNG(IDP_FILE_OPEN);
-    AddIconFromPNG(IDP_FILE_SAVE);
-    AddIconFromPNG(IDP_EDIT_CUT);
-    AddIconFromPNG(IDP_EDIT_COPY);
-    AddIconFromPNG(IDP_EDIT_PASTE);
-    AddIconFromPNG(IDP_FILE_PRINT);
-    AddIconFromPNG(IDP_HELP_ABOUT);
-
-    // Assign the imagelist to the toolbar.
+    AddIconFromPNG(m_toolbarImages, IDP_FILE_NEW);
+    AddIconFromPNG(m_toolbarImages, IDP_FILE_OPEN);
+    AddIconFromPNG(m_toolbarImages, IDP_FILE_SAVE);
+    AddIconFromPNG(m_toolbarImages, IDP_EDIT_CUT);
+    AddIconFromPNG(m_toolbarImages, IDP_EDIT_COPY);
+    AddIconFromPNG(m_toolbarImages, IDP_EDIT_PASTE);
+    AddIconFromPNG(m_toolbarImages, IDP_FILE_PRINT);
+    AddIconFromPNG(m_toolbarImages, IDP_HELP_ABOUT);
     GetToolBar().SetImageList(m_toolbarImages);
+
+    // Assign disabled images to the toolbar.
+    m_disabledImages.Create(iconSize, iconSize, ILC_COLOR32, 8, 1);
+    AddIconFromPNG(m_disabledImages, IDP_FILE_NEWDISABLED);
+    AddIconFromPNG(m_disabledImages, IDP_FILE_OPENDISABLED);
+    AddIconFromPNG(m_disabledImages, IDP_FILE_SAVEDISABLED);
+    AddIconFromPNG(m_disabledImages, IDP_EDIT_CUTDISABLED);
+    AddIconFromPNG(m_disabledImages, IDP_EDIT_COPYDISABLED);
+    AddIconFromPNG(m_disabledImages, IDP_EDIT_PASTEDISABLED);
+    AddIconFromPNG(m_disabledImages, IDP_FILE_PRINTDISABLED);
+    AddIconFromPNG(m_disabledImages, IDP_HELP_ABOUTDISABLED);
+    GetToolBar().SetDisableImageList(m_disabledImages);
 }
 
 // Process the frame's window messages.

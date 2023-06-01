@@ -98,6 +98,16 @@ void CViewList::OnAttach()
     SetDPIColumnWidths();
 }
 
+// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CViewList::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    SetDPIImages();
+    SetDPIColumnWidths();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
 void CViewList::SetColumns()
 {
     // Empty the list.
@@ -135,6 +145,29 @@ void CViewList::SetDPIImages()
     m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     m_smallImages.Add(bmImage, RGB(255, 0, 255));
     SetImageList(m_smallImages, LVSIL_SMALL);
+}
+
+// Process the listview window messages.
+LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        switch (msg)
+        {
+        case WM_DPICHANGED_BEFOREPARENT:  return OnDpiChangedBeforeParent(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
 }
 
 
@@ -182,6 +215,15 @@ void CViewTree::OnAttach()
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
+// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CViewTree::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    SetDPIImages();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
 // Adjusts the listview image sizes in response to window DPI changes.
 void CViewTree::SetDPIImages()
 {
@@ -198,6 +240,29 @@ void CViewTree::SetDPIImages()
     SetIndent(imageWidth);
 }
 
+// Process window messages for the tree-view control.
+LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        switch (msg)
+        {
+        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
+}
+
 
 //////////////////////////////////
 // CViewText function definitions.
@@ -206,12 +271,6 @@ void CViewText::OnAttach()
 {
     SetDPIFont();
     SetWindowText(_T("Text Edit Window\r\n\r\n\r\n\r\n You can type some text here ..."));
-}
-
-void CViewText::PreCreate(CREATESTRUCT& cs)
-{
-    cs.lpszClass = _T("EDIT");
-    cs.style = ES_MULTILINE|WS_CHILD;
 }
 
 // Adjusts the font size in response to window DPI changes.

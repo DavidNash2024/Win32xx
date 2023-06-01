@@ -34,7 +34,7 @@ public:
     virtual HWND Create(HWND parent = 0);
 
     void AddMenuIconFromPNG(UINT pngID, UINT menuID);
-    void AddIconFromPNG(UINT pngID);
+    void AddIconFromPNG(CImageList& images, UINT pngID);
     BitmapPtr LoadPngResource(UINT id);
 
 protected:
@@ -71,6 +71,7 @@ private:
     bool m_isToolbarShown;
     ULONG_PTR   m_gdiplusToken;
     CImageList m_toolbarImages;
+    CImageList m_disabledImages;
     CImageList m_menuImages;
 };
 

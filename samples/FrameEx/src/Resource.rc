@@ -83,15 +83,25 @@ IDW_MAIN                ICON                    "../src/res/Star.ico"
 // PNG
 //
 
-IDP_FILE_NEW            PNG                     "../src/res/FileNew.png"
-IDP_FILE_OPEN           PNG                     "../src/res/FileOpen.png"
-IDP_FILE_SAVE           PNG                     "../src/res/FileSave.png"
-IDP_FILE_PREVIEW        PNG                     "../src/res/FilePreview.png"
-IDP_FILE_PRINT          PNG                     "../src/res/FilePrint.png"
-IDP_EDIT_CUT            PNG                     "../src/res/EditCut.png"
-IDP_EDIT_COPY           PNG                     "../src/res/EditCopy.png"
-IDP_EDIT_PASTE          PNG                     "../src/res/EditPaste.png"
-IDP_HELP_ABOUT          PNG                     "../src/res/HelpAbout.png"
+IDP_FILE_NEW              PNG                   "../src/res/New.png"
+IDP_FILE_OPEN             PNG                   "../src/res/Open.png"
+IDP_FILE_SAVE             PNG                   "../src/res/Save.png"
+IDP_FILE_PREVIEW          PNG                   "../src/res/Preview.png"
+IDP_FILE_PRINT            PNG                   "../src/res/Print.png"
+IDP_EDIT_CUT              PNG                   "../src/res/Cut.png"
+IDP_EDIT_COPY             PNG                   "../src/res/Copy.png"
+IDP_EDIT_PASTE            PNG                   "../src/res/Paste.png"
+IDP_HELP_ABOUT            PNG                   "../src/res/About.png"
+
+IDP_FILE_NEWDISABLED      PNG                   "../src/res/NewDisabled.png"
+IDP_FILE_OPENDISABLED     PNG                   "../src/res/OpenDisabled.png"
+IDP_FILE_SAVEDISABLED     PNG                   "../src/res/SaveDisabled.png"
+IDP_FILE_PREVIEWDISABLED  PNG                   "../src/res/PreviewDisabled.png"
+IDP_FILE_PRINTDISABLED    PNG                   "../src/res/PrintDisabled.png"
+IDP_EDIT_CUTDISABLED      PNG                   "../src/res/CutDisabled.png"
+IDP_EDIT_COPYDISABLED     PNG                   "../src/res/CopyDisabled.png"
+IDP_EDIT_PASTEDISABLED    PNG                   "../src/res/PasteDisabled.png"
+IDP_HELP_ABOUTDISABLED    PNG                   "../src/res/AboutDisabled.png"
 
 
 /////////////////////////////////////////////////////////////////////////////
