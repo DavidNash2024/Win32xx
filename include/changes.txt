@@ -10,6 +10,9 @@ Per-monitor DPI awareness allows applications to maintain their visual quality
 when they are moved between monitors with different Dots Per Inch (DPI)
 settings.
 
+The new FrameEx sample demonstrates the use of PNG resources instead of bitmap
+resources for the toolbar and menu images. 
+
 New Features and Enhancements
 -----------------------------
 * The toolbar bitmaps are automatically scaled up to a size appropriate for
@@ -29,14 +32,14 @@ New Features and Enhancements
   fonts when the frame window is moved between monitors with different DPI
   settings.  
 
-* Dockers and docking frames call OnDpiChanged and OnDpiChangedAfterParent
-  in response to WM_DPICHANGED and WM_DPICHANGED_AFTERPARENT to rearrange
+* Dockers and docking frames call OnDpiChanged and OnDpiChangedBeforeParent
+  in response to WM_DPICHANGED and WM_DPICHANGED_BEFOREARENT to rearrange
   dockers after a DPI change occurs. View windows should handle the
-  WM_DPICHANGEDAFTERPARENT message if they need to account for DPI 
+  WM_DPICHANGEDBEFOREPARENT message if they need to account for DPI 
   changes.  
   
 * CResizer supports per monitor DPI awareness by repositioning the child
-  windows when the WM_DPICHANGED or WM_DPICHANGED_AFTERPARENT message is
+  windows when the WM_DPICHANGED or WM_DPICHANGED_BEFOREPARENT message is
   handled.
 
 * Added the FrameEx sample.
@@ -49,7 +52,7 @@ About high resolution monitor support
 -------------------------------------
 Modern monitors can now use scaling factors of 400% or more. Applications which
 look good with scaling factors of 100% or 150% may not look good at higher
-scaling factors. It will often be appropriate to adjust the image-list for
+scaling factors. It will often be necessary to adjust the image-list for
 list-view and tree-view controls and adjust the fonts used by other windows
 to cater for larger scaling factors.
 
@@ -81,18 +84,19 @@ To add per-monitor dpi aware v2 to your application, use a manifest that
 includes the per monitor dpi aware v2 entry, such as "PerMonitorV2.manifest"
 provided in many of the samples. The manifest should be specified in the
 application's resource script, often called "resource.rc". You may also need
-to handle the WM_DPICHANGED_AFTERPARENT message in view windows if they 
+to handle the WM_DPICHANGED_BEFOREPARENT message in view windows if they 
 require special DPI handling.
 
 If per monitor dpi aware v2 is enabled, a WM_DPICHANGED message is sent to the
 top level windows after the DPI change occurs. That usually occurs when the 
 window is moved between monitors, but can also occur as a result of a settings
-change. After a WM_DPICHANGED message is sent to a top level window, a 
-WM_DPICHANGED_AFTERPARENT message is is sent to all of its child and descendant
-windows.
+change. A WM_DPICHANGED_BEFOREPARENT to all of the top level window's child and
+descendant windows before the WM_DPICHANGED message is sent. A 
+WM_DPICHANGED_AFTERPARENT message is is sent to all of the top level window's
+child and descendant windows After the WM_DPICHANGED is sent.
 
 The following messages are sent when the application's manifest specifies per
-monitor dpi aware:
+monitor dpi aware V2:
 
 WM_GETDPISCALEDSIZE
 Sent to the top level window before the DPI change occurs. The WPARAM

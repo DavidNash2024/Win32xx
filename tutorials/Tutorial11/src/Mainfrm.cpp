@@ -427,7 +427,7 @@ LRESULT CMainFrame::OnPreviewSetup()
 void CMainFrame::SetupMenuIcons()
 {
     // Use the MenuIcons bitmap for images in menu items.
-    if (GetMenuIconHeight() >= 24)
+    if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
         AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MAIN);
     else
         AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_TOOLBAR16);
