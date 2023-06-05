@@ -1,5 +1,5 @@
 // Win32++   Version 9.3
-// Release Date: TBA
+// Release Date: 5th June 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -199,8 +199,8 @@ namespace Win32xx
     protected:
         // Override these functions as required.
         virtual void AddDisabledMenuImage(HICON icon, COLORREF mask);
-        virtual BOOL AddMenuIcon(UINT menuItemID, UINT iconID);
-        virtual BOOL AddMenuIcon(UINT menuItemID, HICON icon);
+        virtual BOOL AddMenuIcon(UINT menuItemID, UINT iconID, UINT disabledIconID = 0);
+        virtual BOOL AddMenuIcon(UINT menuItemID, HICON icon, HICON disabledIcon = 0);
         virtual UINT AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID = 0);
         virtual void AddMenuBarBand();
         virtual void AddMRUEntry(LPCTSTR MRUEntry);
@@ -461,15 +461,16 @@ namespace Win32xx
 
     // Adds an icon to an internal ImageList for use with popup menu items.
     template <class T>
-    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, UINT iconID)
+    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, UINT iconID, UINT disabledIconID)
     {
         HICON icon = static_cast<HICON>(GetApp()->LoadImage(iconID, IMAGE_ICON, 0, 0, LR_SHARED));
-        return AddMenuIcon(menuItemID, icon);
+        HICON disabledIcon = static_cast<HICON>(GetApp()->LoadImage(disabledIconID, IMAGE_ICON, 0, 0, LR_SHARED));
+        return AddMenuIcon(menuItemID, icon, disabledIcon);
     }
 
     // Adds an icon to an internal ImageList for use with popup menu items.
     template <class T>
-    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, HICON icon)
+    inline BOOL CFrameT<T>::AddMenuIcon(UINT menuItemID, HICON icon, HICON disabledIcon)
     {
         assert(icon != 0);
 
@@ -504,7 +505,13 @@ namespace Win32xx
                 if (index != CLR_INVALID) mask = PALETTEINDEX(index);
             }
 
-            AddDisabledMenuImage(icon, mask);
+            if (m_menuDisabledImages.GetHandle() == 0)
+                m_menuDisabledImages.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, 1, 0);
+
+            if (disabledIcon == 0)
+                AddDisabledMenuImage(icon, mask);
+            else
+                m_menuDisabledImages.Add(disabledIcon);
 
             return TRUE;
         }
@@ -514,7 +521,7 @@ namespace Win32xx
 
     // Adds the icons from a bitmap resource to an internal ImageList for use with popup menu items.
     // Note:  Images for menu icons can be sized 16x16 or 16x15 pixels or higher.
-    //        If the images are too bif to fit in the menu, they are ignored.
+    //        If the images are too big to fit in the menu, they are ignored.
     template <class T>
     inline UINT CFrameT<T>::AddMenuIcons(const std::vector<UINT>& menuData, COLORREF mask, UINT bitmapID, UINT disabledID)
     {
@@ -538,7 +545,7 @@ namespace Win32xx
 
         // Resize the bitmap
         CSize bitmapSize = bitmap.GetSize();
-        int scale = MulDiv(GetMenuIconHeight(), 1, bitmapSize.cy);
+        int scale = GetMenuIconHeight() / bitmapSize.cy;
         m_menuItemIDs.clear();
         if (scale > 0)
         {

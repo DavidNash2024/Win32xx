@@ -33,7 +33,7 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    void AddMenuIconFromPNG(UINT pngID, UINT menuID);
+    void AddMenuIconFromPNG(UINT pngID, UINT disabledPngID, UINT menuID);
     void AddIconFromPNG(CImageList& images, UINT pngID);
     BitmapPtr LoadPngResource(UINT id);
 

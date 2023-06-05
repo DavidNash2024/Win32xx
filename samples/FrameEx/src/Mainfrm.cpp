@@ -336,17 +336,25 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     CFrame::PreCreate(cs);
 }
 
-void CMainFrame::AddMenuIconFromPNG(UINT pngID, UINT menuID)
+// Adds normal and disabled icons to the dropdown menu.
+void CMainFrame::AddMenuIconFromPNG(UINT pngID, UINT disabledPngID, UINT menuID)
 {
-    HICON icon;
     BitmapPtr pBitmap = LoadPngResource(pngID);
     if (pBitmap.get() != nullptr)
     {
-        pBitmap->GetHICON(&icon);
-        AddMenuIcon(menuID, icon);
+        BitmapPtr pDisabledBitmap = LoadPngResource(disabledPngID);
+        if (pDisabledBitmap.get() != nullptr)
+        {
+            HICON icon;
+            HICON disabledIcon;
+            pBitmap->GetHICON(&icon);
+            pDisabledBitmap->GetHICON(&disabledIcon);
+            AddMenuIcon(menuID, icon, disabledIcon);
+        }
     }
 }
 
+// Adds an icon from the PNG resource to the specified imagelist.
 void CMainFrame::AddIconFromPNG(CImageList& images, UINT pngID)
 {
     HICON icon;
@@ -361,15 +369,15 @@ void CMainFrame::AddIconFromPNG(CImageList& images, UINT pngID)
 // Specifies the images for some of the menu items.
 void CMainFrame::SetupMenuIcons()
 {
-    AddMenuIconFromPNG(IDP_FILE_NEW,  IDM_FILE_NEW);
-    AddMenuIconFromPNG(IDP_FILE_OPEN, IDM_FILE_OPEN);
-    AddMenuIconFromPNG(IDP_FILE_SAVE, IDM_FILE_SAVE);
-    AddMenuIconFromPNG(IDP_EDIT_CUT,  IDM_EDIT_CUT);
-    AddMenuIconFromPNG(IDP_EDIT_COPY, IDM_EDIT_COPY);
-    AddMenuIconFromPNG(IDP_EDIT_PASTE, IDM_EDIT_PASTE);
-    AddMenuIconFromPNG(IDP_FILE_PREVIEW, IDM_FILE_PREVIEW);
-    AddMenuIconFromPNG(IDP_FILE_PRINT,   IDM_FILE_PRINT);
-    AddMenuIconFromPNG(IDP_HELP_ABOUT,   IDM_HELP_ABOUT);
+    AddMenuIconFromPNG(IDP_FILE_NEW,     IDP_FILE_NEWDISABLED,     IDM_FILE_NEW);
+    AddMenuIconFromPNG(IDP_FILE_OPEN,    IDP_FILE_OPENDISABLED,    IDM_FILE_OPEN);
+    AddMenuIconFromPNG(IDP_FILE_SAVE,    IDP_FILE_SAVEDISABLED,    IDM_FILE_SAVE);
+    AddMenuIconFromPNG(IDP_EDIT_CUT,     IDP_EDIT_CUTDISABLED,     IDM_EDIT_CUT);
+    AddMenuIconFromPNG(IDP_EDIT_COPY,    IDP_EDIT_COPYDISABLED,    IDM_EDIT_COPY);
+    AddMenuIconFromPNG(IDP_EDIT_PASTE,   IDP_EDIT_PASTEDISABLED,   IDM_EDIT_PASTE);
+    AddMenuIconFromPNG(IDP_FILE_PREVIEW, IDP_FILE_PREVIEWDISABLED, IDM_FILE_PREVIEW);
+    AddMenuIconFromPNG(IDP_FILE_PRINT,   IDP_FILE_PRINTDISABLED,   IDM_FILE_PRINT);
+    AddMenuIconFromPNG(IDP_HELP_ABOUT,   IDP_HELP_ABOUTDISABLED,   IDM_HELP_ABOUT);
 }
 
 // Set the resource IDs and images for the toolbar buttons.

@@ -1,5 +1,5 @@
 // Win32++   Version 9.3
-// Release Date: TBA
+// Release Date: 5th June 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -366,6 +366,8 @@ namespace Win32xx
             // Add selection margin padding.
             size.cx += m_marItem.Width();
 
+            size.cx += GetMenuIconHeight() / 4;
+
             // Account for text width and checkmark height.
             CSize sizeText = GetTextSize(pmd, dc);
             size.cx += sizeText.cx;
@@ -378,7 +380,6 @@ namespace Win32xx
     inline int CMenuMetrics::GetMenuIconHeight() const
     {
         int value = m_sizeCheck.cy + m_marCheck.Height();
-        value = value - (value % 8);
         return value;
     }
 
@@ -426,7 +427,7 @@ namespace Win32xx
 
     inline CRect CMenuMetrics::GetTextRect(const CRect& item) const
     {
-        int left = GetGutterRect(item).Width() + m_marText.cxLeftWidth;
+        int left = GetGutterRect(item).Width() + m_marText.cxLeftWidth + GetMenuIconHeight() / 4;
         int top = item.top + m_marText.cyTopHeight;
         int right = item.right - m_marItem.cxRightWidth - m_marText.cxRightWidth;
         int bottom = item.bottom - m_marText.cyBottomHeight;
