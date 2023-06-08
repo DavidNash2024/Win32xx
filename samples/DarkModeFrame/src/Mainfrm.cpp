@@ -218,6 +218,8 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
+    SetDarkMode(IsDarkMode());
+
     TRACE("Frame created\n");
 }
 
@@ -274,11 +276,18 @@ LRESULT CMainFrame::OnPreviewSetup()
 // Called when the user changes the system colors or theme.
 LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    m_helpDialog.SetDarkMode(IsDarkMode());
-    m_view.SetDarkMode(IsDarkMode());
-    m_preview.SetDarkMode(IsDarkMode());
+    SetDarkMode(IsDarkMode());
+    return CFrame::OnSysColorChange(msg, wparam, lparam);
+}
 
-    if (IsDarkMode() && !IsHighContrast())
+// Adjusts the frame window and child window settings for dark mode.
+void CMainFrame::SetDarkMode(bool isDarkMode)
+{
+    m_helpDialog.SetDarkMode(isDarkMode);
+    m_view.SetDarkMode(isDarkMode);
+    m_preview.SetDarkMode(isDarkMode);
+
+    if (isDarkMode && !IsHighContrast())
     {
         // Turn off menu custom drawing.
         UseOwnerDrawnMenu(FALSE);
@@ -294,10 +303,8 @@ LRESULT CMainFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
         m_helpDialog.Invalidate();
 
     // Set the caption to dark for dark mode.
-    BOOL value = IsDarkMode()? TRUE : FALSE;
+    BOOL value = isDarkMode ? TRUE : FALSE;
     ::DwmSetWindowAttribute(*this, DWMWA_USE_IMMERSIVE_DARK_MODE, &value, sizeof(value));
-
-    return CFrame::OnSysColorChange(msg, wparam, lparam);
 }
 
 // Specify the colors and settings for the dark mode theme.
