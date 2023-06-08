@@ -19,7 +19,7 @@ class CDarkAbout : public CDialog
 public:
     CDarkAbout();
     virtual ~CDarkAbout();
-    void SetDarkMode(bool darkMode);
+    void SetDarkMode(bool isDarkMode);
 
 protected:
     // Virtual functions that override base class functions
@@ -34,7 +34,7 @@ private:
     LRESULT OnCtlColors(UINT, WPARAM, LPARAM);
     void    SetButtonOwnerDraw(bool isOwnerDraw);
 
-    bool m_darkMode;
+    bool m_isDarkMode;
 };
 
 

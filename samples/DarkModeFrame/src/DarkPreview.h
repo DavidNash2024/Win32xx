@@ -14,7 +14,7 @@ template <typename T>
 class CDarkPreview : public CPrintPreview<T>
 {
 public:
-    CDarkPreview() : m_darkMode(false) {}
+    CDarkPreview() : m_isDarkMode(false) {}
     virtual ~CDarkPreview() {}
 
     INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -22,13 +22,13 @@ public:
     LRESULT OnDrawItem(WPARAM, LPARAM lparam);
     BOOL OnInitDialog();
     void SetButtonOwnerDraw(bool isOwnerDraw);
-    void SetDarkMode(bool darkMode);
+    void SetDarkMode(bool isDarkMode);
 
 private:
     CDarkPreview(const CDarkPreview&);                // Disable copy construction
     CDarkPreview& operator = (const CDarkPreview&);   // Disable assignment operator
 
-    bool m_darkMode;
+    bool m_isDarkMode;
 };
 
 
@@ -69,7 +69,7 @@ inline INT_PTR CDarkPreview<T>::DialogProc(UINT msg, WPARAM wparam, LPARAM lpara
 template <class T>
 inline LRESULT CDarkPreview<T>::OnCtlColors(UINT, WPARAM wparam, LPARAM)
 {
-    if (m_darkMode)
+    if (m_isDarkMode)
     {
         HDC dc = (HDC)wparam;
         ::SetBkMode(dc, TRANSPARENT);
@@ -118,7 +118,7 @@ inline BOOL CDarkPreview<T>::OnInitDialog()
     CPrintPreview<T>::OnInitDialog();
 
     // Make the OK button owner drawn for dark mode.
-    SetButtonOwnerDraw(m_darkMode);
+    SetButtonOwnerDraw(m_isDarkMode);
 
     return TRUE;
 }
@@ -155,13 +155,13 @@ inline void CDarkPreview<T>::SetButtonOwnerDraw(bool isOwnerDraw)
 
 // Configure the dialog for dark mode.
 template <class T>
-inline void CDarkPreview<T>::SetDarkMode(bool darkMode)
+inline void CDarkPreview<T>::SetDarkMode(bool isDarkMode)
 {
     // Make the buttons owner drawn for dark mode.
     if (this->IsWindow())
-        SetButtonOwnerDraw(darkMode);
+        SetButtonOwnerDraw(isDarkMode);
 
-    m_darkMode = darkMode;
+    m_isDarkMode = isDarkMode;
 }
 
 

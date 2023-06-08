@@ -19,6 +19,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     CDoc& GetDoc()      { return m_view.GetDoc(); }
+    void SetDarkMode(bool isDarkMode);
     void SetDarkTheme();
 
     // Virtual functions that override public base class functions

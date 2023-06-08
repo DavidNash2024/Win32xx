@@ -13,7 +13,7 @@
 //
 
 // Constructor.
-CDarkAbout::CDarkAbout() : m_darkMode(false)
+CDarkAbout::CDarkAbout() : m_isDarkMode(false)
 {
     SetDialogFromID(IDW_ABOUT);
 }
@@ -53,7 +53,7 @@ INT_PTR CDarkAbout::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Set the colors for the dialog and static controls.
 LRESULT CDarkAbout::OnCtlColors(UINT, WPARAM wparam, LPARAM)
 {
-    if (m_darkMode)
+    if (m_isDarkMode)
     {
         HDC dc = (HDC)wparam;
         ::SetBkMode(dc, TRANSPARENT);
@@ -104,7 +104,7 @@ BOOL CDarkAbout::OnInitDialog()
     SetIconSmall(IDW_MAIN);
 
     // Make the OK button owner drawn for dark mode.
-    SetButtonOwnerDraw(m_darkMode);
+    SetButtonOwnerDraw(m_isDarkMode);
 
     // Set the caption to dark for dark mode.
     BOOL value = IsDarkMode() ? TRUE : FALSE;
@@ -126,12 +126,12 @@ void CDarkAbout::SetButtonOwnerDraw(bool isOwnerDraw)
 }
 
 // Configure the dialog for dark mode.
-void CDarkAbout::SetDarkMode(bool darkMode)
+void CDarkAbout::SetDarkMode(bool isDarkMode)
 {
     // Make the OK button owner drawn for dark mode.
     if (IsWindow())
-        SetButtonOwnerDraw(darkMode);
+        SetButtonOwnerDraw(isDarkMode);
 
-    m_darkMode = darkMode;
+    m_isDarkMode = isDarkMode;
 }
 
