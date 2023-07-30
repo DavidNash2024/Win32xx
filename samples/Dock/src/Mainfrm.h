@@ -52,7 +52,6 @@ private:
     BOOL OnDockCloseAll();
     BOOL OnDockDefault();
     BOOL OnFileExit();
-    BOOL OnPropResize();
     BOOL OnNoUndocking();
     BOOL OnNoResize();
     BOOL OnNoDockLR();
@@ -64,7 +63,6 @@ private:
 
     // member variables
     CViewSimple m_view;
-    bool m_useProportionalResize;
     bool m_use3DBorder;
     bool m_disableUndocking;
     bool m_disableResize;

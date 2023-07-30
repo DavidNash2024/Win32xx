@@ -14,7 +14,6 @@
 // Constructor.
 CMainFrame::CMainFrame()
 {
-    m_useProportionalResize = false;
     m_use3DBorder = true;
     m_disableUndocking = false;
     m_disableResize = false;
@@ -115,7 +114,6 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM)
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDM_DOCK_DEFAULT:      return OnDockDefault();
     case IDM_DOCK_CLOSEALL:     return OnDockCloseAll();
-    case IDM_PROP_RESIZE:       return OnPropResize();
     case IDM_3DBORDER:          return On3DBorder();
     case IDM_NO_UNDOCK:         return OnNoUndocking();
     case IDM_NO_RESIZE:         return OnNoResize();
@@ -198,9 +196,6 @@ void CMainFrame::OnMenuUpdate(UINT id)
 {
     switch(id)
     {
-    case IDM_PROP_RESIZE:
-        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_useProportionalResize ? MF_CHECKED : MF_UNCHECKED));
-        break;
     case IDM_3DBORDER:
         GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_use3DBorder ? MF_CHECKED : MF_UNCHECKED));
         break;
@@ -266,14 +261,6 @@ BOOL CMainFrame::OnNoUndocking()
     return TRUE;
 }
 
-// Toggle proportional resizing.
-BOOL CMainFrame::OnPropResize()
-{
-    m_useProportionalResize = !m_useProportionalResize;
-    SetDockStyles();
-    return TRUE;
-}
-
 // Specify the CREATESTRUCT parameters before the window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
@@ -306,7 +293,6 @@ void CMainFrame::SetDockStyles()
         style &= 0xF000F;
 
         // Add styles selected from the menu
-        if (m_useProportionalResize)    style |= DS_NO_FIXED_RESIZE;
         if (m_use3DBorder)              style |= DS_CLIENTEDGE;
         if (m_disableUndocking)         style |= DS_NO_UNDOCK;
         if (m_disableResize)            style |= DS_NO_RESIZE;

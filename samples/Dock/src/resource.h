@@ -42,7 +42,6 @@
 #define IDB_FILEVIEW                    155
 
 // Menu Resource
-#define IDM_PROP_RESIZE                 160
 #define IDM_3DBORDER                    161
 #define IDM_NO_UNDOCK                   162
 #define IDM_NO_RESIZE                   163
