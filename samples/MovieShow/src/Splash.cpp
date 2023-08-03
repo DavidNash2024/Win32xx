@@ -135,8 +135,8 @@ void CSplash::ShowText(LPCTSTR text, CWnd* parent)
     assert(parent->IsWindow());
 
     m_text = text;
-    int xImage = DpiScaleInt(256);
-    int yImage = DpiScaleInt(256);
+    int xImage = parent->DpiScaleInt(256);
+    int yImage = parent->DpiScaleInt(256);
 
     CRect parentRect = parent->GetWindowRect();
     int x = parentRect.left + (parentRect.Width()  - xImage) / 2;
