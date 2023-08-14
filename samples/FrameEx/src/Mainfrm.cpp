@@ -65,7 +65,7 @@ BitmapPtr CMainFrame::LoadPngResource(UINT id)
                     if (buffer != nullptr)
                     {
                         void* pBuffer = GlobalLock(buffer);
-                        if (pBuffer)
+                        if (pBuffer != nullptr)
                         {
                             CopyMemory(pBuffer, pResource, bufferSize);
 
@@ -248,7 +248,6 @@ BOOL CMainFrame::OnFilePrint()
         {
             m_view.QuickPrint(_T("Frame Sample"));
         }
-
     }
 
     catch (const CException& e)
@@ -328,12 +327,12 @@ LRESULT CMainFrame::OnPreviewSetup()
 // parameters used before the frame window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
-    // cs.dwExStyle = WS_EX_LAYOUTRTL;      // Set Right-To-Left Window Layout
-    // cs.style &= ~WS_VISIBLE; // Remove the WS_VISIBLE style. The frame will be initially hidden.
-
     // Call base clase to set defaults
     CFrame::PreCreate(cs);
+
+    // The WS_EX_LAYOUTRTL style requires Windows 2000 or above
+    // cs.dwExStyle = WS_EX_LAYOUTRTL;  // Set Right-To-Left Window Layout
+    // cs.style &= ~WS_VISIBLE;         // Remove the WS_VISIBLE style. The frame will be initially hidden.;
 }
 
 // Adds normal and disabled icons to the dropdown menu.
@@ -361,8 +360,8 @@ void CMainFrame::AddIconFromPNG(CImageList& images, UINT pngID)
     BitmapPtr pBitmap = LoadPngResource(pngID);
     if (pBitmap.get() != nullptr)
     {
-        LoadPngResource(pngID)->GetHICON(&icon);
-       images.Add(icon);
+        pBitmap->GetHICON(&icon);
+        images.Add(icon);
     }
 }
 
