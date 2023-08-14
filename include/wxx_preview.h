@@ -272,7 +272,7 @@ namespace Win32xx
             int border = 10;
             CRect rcClient = GetClientRect();
 
-            double ratio = double(bm.bmHeight) / double(bm.bmWidth);
+            double ratio = static_cast<double>(bm.bmHeight) / static_cast<double>(bm.bmWidth);
             int previewWidth;
             int previewHeight;
 
