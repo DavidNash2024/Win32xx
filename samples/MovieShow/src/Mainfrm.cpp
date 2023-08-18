@@ -1034,7 +1034,6 @@ void CMainFrame::OnInitialUpdate()
     // Fill the tree view and list view.
     LoadMovies();
     FillTreeItems();
-    RecreateDialog();
     SetRedraw(TRUE);
     RedrawWindow();
     ForceToForeground();
@@ -1714,20 +1713,6 @@ LRESULT CMainFrame::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     GetViewList().SetLastColumnWidth();
     return FinalWindowProc(msg, wparam, lparam);
-}
-
-// We recreate the dialog to reset the dialog's resizer.
-void CMainFrame::RecreateDialog()
-{
-    // Destroy then create the dialog.
-    m_pDockDialog->GetView().Destroy();
-    m_pDockDialog->GetView().Create(m_pDockDialog->GetDockClient());
-    m_pDockDialog->RecalcDockLayout();
-
-    // Re-select the list view item.
-    int item = m_viewList.GetNextItem(-1, LVNI_SELECTED);
-    m_viewList.SetItemState(item, 0, 0x000F);
-    m_viewList.SetItemState(item, LVIS_FOCUSED | LVIS_SELECTED, 0x000F);
 }
 
 // Process the frame's window messages.
