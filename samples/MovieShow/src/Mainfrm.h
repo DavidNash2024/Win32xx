@@ -86,7 +86,6 @@ private:
     void LoadMovieInfoFromFile(const FoundFileInfo& ffi, MovieInfo& movie);
     void LoadMovies();
     void OnFilesLoaded();
-    void RecreateDialog();
 
     // Message handlers
     LRESULT OnBoxSetChanged();
