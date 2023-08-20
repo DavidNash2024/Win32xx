@@ -789,7 +789,7 @@ namespace Win32xx
 
                     // Draw highlight text.
                     CFont font = pMenubar->GetFont();
-                    CFont oldFont = drawDC.SelectObject(font);
+                    drawDC.SelectObject(font);
 
                     rc.bottom += 1;
                     drawDC.SetBkMode(TRANSPARENT);
@@ -801,7 +801,6 @@ namespace Win32xx
                         format &= ~DT_HIDEPREFIX;
 
                     drawDC.DrawText(str, str.GetLength(), rc, format);
-                    drawDC.SelectObject(oldFont);
 
                     return CDRF_SKIPDEFAULT;  // No further drawing
                 }

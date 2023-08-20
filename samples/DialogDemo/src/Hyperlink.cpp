@@ -78,6 +78,8 @@ LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM)
         dc.SetTextColor( m_isUrlVisited? m_crVisited : m_crNotVisited);
         dc.SetBkMode(TRANSPARENT);
         dc.SelectObject(m_urlFont);
+
+        // Detach the dc to keep the url font selected.
         dc.Detach();
         return (LRESULT)GetSysColorBrush(COLOR_BTNFACE);
     }
