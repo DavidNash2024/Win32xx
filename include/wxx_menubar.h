@@ -1,5 +1,5 @@
-// Win32++   Version 9.3
-// Release Date: 5th June 2023
+// Win32++   Version 9.4
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -245,8 +245,8 @@ namespace Win32xx
             CFont marlett;
             marlett.CreatePointFont(100, _T("Marlett"));
             drawDC.SetBkMode(TRANSPARENT);
-            marlett = DpiScaleFont(marlett, 10);
-            drawDC.SelectObject(marlett);
+            LOGFONT lf = DpiScaleLogfont(marlett.GetLogFont(), 10);
+            drawDC.CreateFontIndirect(lf);
 
             COLORREF grey(GetSysColor(COLOR_BTNFACE));
             COLORREF black(RGB(0, 0, 0));
