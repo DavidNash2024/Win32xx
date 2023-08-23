@@ -1,5 +1,5 @@
-// Win32++   Version 9.3
-// Release Date: 5th June 2023
+// Win32++   Version 9.4
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -539,7 +539,7 @@ namespace Win32xx
         WNDCLASS wc;
         ZeroMemory(&wc, sizeof(wc));
         wc.lpszClassName = classString;
-        wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
+        wc.hbrBackground = static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
         wc.hCursor       = ::LoadCursor(0, IDC_ARROW);
 
         // Register the window class (if not already registered).
@@ -1063,7 +1063,7 @@ namespace Win32xx
         // 1) The lpszClassName must be set for this function to take effect.
         // 2) No other defaults are set, so the following settings might prove useful
         //     wc.hCursor = ::LoadCursor(0, IDC_ARROW);
-        //     wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
+        //     wc.hbrBackground = static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
         //     wc.icon = ::LoadIcon(0, IDI_APPLICATION);
         // 3) The styles that can be set here are WNDCLASS styles. These are a different
         //     set of styles to those set by CREATESTRUCT (used in PreCreate).
