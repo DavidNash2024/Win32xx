@@ -1,5 +1,5 @@
-// Win32++   Version 9.3
-// Release Date: 5th June 2023
+// Win32++   Version 9.4
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -700,7 +700,7 @@ namespace Win32xx
                 COLORREF mask = RGB(200, 200, 200);
                 if (GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
                 {
-                    HPALETTE hPal = reinterpret_cast<HPALETTE>(GetCurrentObject(DesktopDC, OBJ_PAL));
+                    HPALETTE hPal = static_cast<HPALETTE>(GetCurrentObject(DesktopDC, OBJ_PAL));
                     UINT index = GetNearestPaletteIndex(hPal, mask);
                     if (index != CLR_INVALID)
                         mask = PALETTEINDEX(index);

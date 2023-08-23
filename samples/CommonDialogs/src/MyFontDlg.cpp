@@ -77,16 +77,12 @@ RecordFontMetrics()                                                     /*
     CWindowDC dc(GetParameters().hwndOwner);
 
       // select the current font into the device context:
-      // save the old
-    CFont oldfont = dc.SelectObject(m_font);
+    dc.SelectObject(m_font);
 
       // measure the font width and height
     dc.GetTextMetrics(m_tm);
     m_fontSize.cx = m_tm.tmAveCharWidth;
     m_fontSize.cy = m_tm.tmHeight + m_tm.tmExternalLeading;
-
-      // restore entry environment
-    dc.SelectObject(oldfont);
 }
 
 /*============================================================================*/
