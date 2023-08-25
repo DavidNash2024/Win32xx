@@ -147,7 +147,7 @@
 //  * There is no need to select the old object back into the device context
 //     when SelectObject is used.
 //  * All GDI classes are reference counted and can be copied safely. This
-//     means they can be safely returned by value from functions. The 
+//     means they can be safely returned by value from functions. The
 //     associated GDI resource is only deleted (if appropriate) when the last
 //     copy of the object goes out of scope.
 //  * A copy of a GDI class is a clone of the original. Both class objects
@@ -436,20 +436,20 @@ namespace Win32xx
         HDC GetHDC() const;
         BOOL RestoreDC(int savedDC) const;
         int SaveDC() const;
-        HBITMAP SelectObject(HBITMAP bitmap) const;
-        HBRUSH SelectObject(HBRUSH brush) const;
-        HFONT SelectObject(HFONT font) const;
-        HPEN SelectObject(HPEN pen) const;
+        CBitmap SelectObject(HBITMAP bitmap) const;
+        CBrush SelectObject(HBRUSH brush) const;
+        CFont SelectObject(HFONT font) const;
+        CPen SelectObject(HPEN pen) const;
         int SelectObject(HRGN rgn) const;
-        HPALETTE SelectPalette(HPALETTE palette, BOOL forceBkgnd) const;
+        CPalette SelectPalette(HPALETTE palette, BOOL forceBkgnd) const;
 
         void operator = (const HDC dc);
 
         // Initialization
-        HDC CreateCompatibleDC(HDC source);
-        HDC CreateDC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
+        void CreateCompatibleDC(HDC source);
+        void CreateDC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
         int GetDeviceCaps(int index) const;
-        HDC CreateIC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
+        void CreateIC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData);
 
         // Create Bitmaps
         void CreateBitmap(int cx, int cy, UINT planes, UINT bitsPerPixel, LPCVOID pColors);
@@ -589,7 +589,7 @@ namespace Win32xx
         int  GetDIBits(HBITMAP bitmap, UINT startScan, UINT scanLines, LPVOID pBits,
                         LPBITMAPINFO pBMI, UINT usage) const;
         BITMAP  GetBitmapData() const;
-        HBITMAP GetCurrentBitmap() const;
+        CBitmap GetCurrentBitmap() const;
         int  GetStretchBltMode() const;
         BOOL MaskBlt(int xDest, int yDest, int width, int height, HDC hSrc,
                            int xSrc, int ySrc, HBITMAP mask, int xMask, int yMask,
@@ -612,7 +612,7 @@ namespace Win32xx
 
         // Brush Functions
         CPoint   GetBrushOrgEx() const;
-        HBRUSH GetCurrentBrush() const;
+        CBrush   GetCurrentBrush() const;
         LOGBRUSH GetLogBrush() const;
         CPoint   SetBrushOrgEx(int x, int y);
 
@@ -622,7 +622,7 @@ namespace Win32xx
 #endif
 
         // Font Functions
-        HFONT GetCurrentFont() const;
+        CFont GetCurrentFont() const;
         DWORD GetFontData(DWORD table, DWORD offset, LPVOID buffer,  DWORD data) const;
         DWORD GetFontLanguageInfo() const;
         DWORD GetGlyphOutline(UINT query, UINT format, LPGLYPHMETRICS pGM, DWORD bufferSize,
@@ -633,7 +633,7 @@ namespace Win32xx
         DWORD SetMapperFlags(DWORD flag) const;
 
         // Palette and color functions
-        HPALETTE GetCurrentPalette() const;
+        CPalette GetCurrentPalette() const;
         COLORREF GetNearestColor(COLORREF color) const;
         BOOL GetColorAdjustment(LPCOLORADJUSTMENT pCA) const;
         BOOL SetColorAdjustment(const COLORADJUSTMENT* pCA) const;
@@ -641,7 +641,7 @@ namespace Win32xx
         BOOL UpdateColors() const;
 
         // Pen Functions
-        HPEN GetCurrentPen() const;
+        CPen GetCurrentPen() const;
         LOGPEN GetLogPen() const;
         BOOL GetMiterLimit(PFLOAT limit) const;
         BOOL SetMiterLimit(FLOAT newLimit, PFLOAT oldLimit) const;
@@ -1506,7 +1506,7 @@ namespace Win32xx
         return copyBitmap;
     }
 
-    // Creates a bitmap compatible with the device that is associated with the specified device context.
+    // Creates a bitmap compatible with the specified device context.
     // Refer to CreateCompatibleBitmap in the Windows API documentation for more information.
     inline HBITMAP CBitmap::CreateCompatibleBitmap(HDC dc, int width, int height)
     {
@@ -2581,9 +2581,9 @@ namespace Win32xx
         return ::EnumObjects(m_pData->dc, objectType, pObjectFunc, lparam);
     }
 
-    // Returns a memory device context (DC) compatible with the specified device.
+    // Creates a memory device context (DC) compatible with the specified device.
     // Refer to CreateCompatibleDC in the Windows API documentation for more information.
-    inline HDC CDC::CreateCompatibleDC(HDC hSource)
+    inline void CDC::CreateCompatibleDC(HDC hSource)
     {
         assert(m_pData->dc == 0);
         HDC dc = ::CreateCompatibleDC(hSource);
@@ -2592,12 +2592,11 @@ namespace Win32xx
             throw CResourceException(GetApp()->MsgGdiDC());
 
         Assign(dc);
-        return dc;
     }
 
-    // Returns a device context (DC) for a device using the specified name.
+    // Creates a device context (DC) for a device using the specified name.
     // Refer to CreateDC in the Windows API documentation for more information.
-    inline HDC CDC::CreateDC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData)
+    inline void CDC::CreateDC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData)
     {
         assert(m_pData->dc == 0);
         HDC dc = ::CreateDC(driver, device, output, pInitData);
@@ -2606,14 +2605,13 @@ namespace Win32xx
             throw CResourceException(GetApp()->MsgGdiDC());
 
         Assign(dc);
-        return dc;
     }
 
-    // Returns an information context for the specified device. The information context
+    // Creates an information context for the specified device. The information context
     // provides a fast way to get information about the device without creating a device context (DC).
     // However, GDI drawing functions cannot accept a handle to an information context.
     // Refer to CreateIC in the Windows API documentation for more information.
-    inline HDC CDC::CreateIC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData)
+    inline void CDC::CreateIC(LPCTSTR driver, LPCTSTR device, LPCTSTR output, const DEVMODE* pInitData)
     {
         assert(m_pData->dc == 0);
         HDC dc = ::CreateIC(driver, device, output, pInitData);
@@ -2622,7 +2620,6 @@ namespace Win32xx
             throw CResourceException(GetApp()->MsgGdiIC());
 
         Assign(dc);
-        return dc;
     }
 
     // Draws the specified bitmap to the specified DC using the mask color provided as the transparent colour.
@@ -2752,10 +2749,10 @@ namespace Win32xx
     // There is no need to select the old object back into the device context
     // when SelectObject is used.
     // Refer to SelectObject in the Windows API documentation for more information.
-    inline HBITMAP CDC::SelectObject(HBITMAP bitmap) const
+    inline CBitmap CDC::SelectObject(HBITMAP bitmap) const
     {
         assert(m_pData->dc != 0);
-        HBITMAP oldBitmap = static_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
+        CBitmap oldBitmap = static_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
         if (oldBitmap == 0)
             // throws if an error occurs (bitmap is invalid or incompatible).
             throw CResourceException(GetApp()->MsgGdiSelObject());
@@ -2768,10 +2765,10 @@ namespace Win32xx
     // There is no need to select the old object back into the device context
     // when SelectObject is used.
     // Refer to SelectObject in the Windows API documentation for more information.
-    inline HBRUSH CDC::SelectObject(HBRUSH brush) const
+    inline CBrush CDC::SelectObject(HBRUSH brush) const
     {
         assert(m_pData->dc != 0);
-        HBRUSH oldBrush = static_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
+        CBrush oldBrush = static_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
         if (oldBrush == 0)
             // throws if an error occurs.
             throw CResourceException(GetApp()->MsgGdiSelObject());
@@ -2784,10 +2781,10 @@ namespace Win32xx
     // There is no need to select the old object back into the device context
     // when SelectObject is used.
     // Refer to SelectObject in the Windows API documentation for more information.
-    inline HFONT CDC::SelectObject(HFONT font) const
+    inline CFont CDC::SelectObject(HFONT font) const
     {
         assert(m_pData->dc != 0);
-        HFONT oldFont = static_cast<HFONT>(::SelectObject(m_pData->dc, font));
+        CFont oldFont = static_cast<HFONT>(::SelectObject(m_pData->dc, font));
         if (oldFont == 0)
             // throws if an error occurs.
             throw CResourceException(GetApp()->MsgGdiSelObject());
@@ -2800,10 +2797,10 @@ namespace Win32xx
     // There is no need to select the old object back into the device context
     // when SelectObject is used.
     // Refer to SelectObject in the Windows API documentation for more information.
-    inline HPEN CDC::SelectObject(HPEN pen) const
+    inline CPen CDC::SelectObject(HPEN pen) const
     {
         assert(m_pData->dc != 0);
-        HPEN oldPen = static_cast<HPEN>(::SelectObject(m_pData->dc, pen));
+        CPen oldPen = static_cast<HPEN>(::SelectObject(m_pData->dc, pen));
         if (oldPen == 0)
             // throws if an error occurs.
             throw CResourceException(GetApp()->MsgGdiSelObject());
@@ -2833,16 +2830,16 @@ namespace Win32xx
     // There is no need to select the old object back into the device context
     // when SelectPalette is used.
     // Refer to SelectPalette in the Windows API documentation for more information.
-    inline HPALETTE CDC::SelectPalette(const HPALETTE palette, BOOL forceBkgnd) const
+    inline CPalette CDC::SelectPalette(const HPALETTE palette, BOOL forceBkgnd) const
     {
         assert(m_pData->dc != 0);
-        HGDIOBJ object = ::SelectPalette(m_pData->dc, palette, forceBkgnd);
-        if (object == 0)
+        CPalette oldPalette = static_cast<HPALETTE>(::SelectPalette(m_pData->dc, palette, forceBkgnd));
+        if (oldPalette == 0)
             // throws if an error occurs.
             throw CResourceException(GetApp()->MsgGdiSelObject());
 
         m_pData->palette = palette;
-        return static_cast<HPALETTE>(object);
+        return oldPalette;
     }
 
     // Fills a rectangle with a solid color
@@ -2856,7 +2853,7 @@ namespace Win32xx
     /////////////////////////
     // Bitmap functions
 
-    // Creates a compatible bitmap and selects it into the device context.
+    // Creates and selects a bitmap compatible with the specified device context.
     // Refer to CreateCompatibleBitmap in the Windows API documentation for more information.
     inline void CDC::CreateCompatibleBitmap(HDC dc, int cx, int cy)
     {
@@ -2917,20 +2914,16 @@ namespace Win32xx
 
     // Provides a convenient method of detaching a bitmap from a memory device context.
     // Returns the CBitmap detached from the DC.
-    // Usage:  CBitmap MyBitmap = MyMemDC.DetachBitmap();
+    // Usage:  CBitmap bitmap = memDC.DetachBitmap();
     inline CBitmap CDC::DetachBitmap()
     {
         assert(m_pData->dc != 0);
 
+        // Create a stock bitmap to replace the current one.
         CBitmap bitmap;
         bitmap.CreateBitmap(1, 1, 1, 1, 0);
-
-        CBitmap oldBitmap = static_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
-        if (oldBitmap.GetHandle() == 0)
-            throw CResourceException(GetApp()->MsgGdiSelObject());
-
-        m_pData->bitmap = bitmap;
-        return oldBitmap;
+        
+        return SelectObject(bitmap);
     }
 
     // Deletes or releases the device context.
@@ -2987,9 +2980,9 @@ namespace Win32xx
         return bitmapInfo;
     }
 
-    // Retrieves the handle of the currently selected bitmap.
+    // Retrieves the currently selected bitmap.
     // Refer to GetCurrentObject in the Windows API documentation for more information.
-    inline HBITMAP CDC::GetCurrentBitmap() const
+    inline CBitmap CDC::GetCurrentBitmap() const
     {
         assert(m_pData->dc != 0);
         return static_cast<HBITMAP>(::GetCurrentObject(m_pData->dc, OBJ_BITMAP));
@@ -3106,9 +3099,9 @@ namespace Win32xx
         SelectObject(brush);
     }
 
-    // Retrieves the handle of the currently selected brush object.
+    // Retrieves the currently selected brush object.
     // Refer to GetCurrentObject in the Windows API documentation for more information.
-    inline HBRUSH CDC::GetCurrentBrush() const
+    inline CBrush CDC::GetCurrentBrush() const
     {
         assert(m_pData->dc != 0);
         return static_cast<HBRUSH>(::GetCurrentObject(m_pData->dc, OBJ_BRUSH));
@@ -3232,9 +3225,9 @@ namespace Win32xx
         SelectObject(font);
     }
 
-    // Retrieves the handle to the current font object.
+    // Retrieves the currently selected font.
     // Refer to GetCurrentObject in the Windows API documentation for more information.
-    inline HFONT CDC::GetCurrentFont() const
+    inline CFont CDC::GetCurrentFont() const
     {
         assert(m_pData->dc != 0);
         return static_cast<HFONT>(::GetCurrentObject(m_pData->dc, OBJ_FONT));
@@ -3299,9 +3292,9 @@ namespace Win32xx
         RealizePalette();
     }
 
-    // Retrieves the handle to the currently selected palette.
+    // Retrieves the currently selected palette.
     // Refer to GetCurrentObject in the Windows API documentation for more information.
-    inline HPALETTE CDC::GetCurrentPalette() const
+    inline CPalette CDC::GetCurrentPalette() const
     {
         assert(m_pData->dc != 0);
         return static_cast<HPALETTE>(::GetCurrentObject(m_pData->dc, OBJ_PAL));
@@ -3398,9 +3391,9 @@ namespace Win32xx
         SelectObject(pen);
     }
 
-    // Retrieves the handle to the currently selected pen.
+    // Retrieves the currently selected pen.
     // Refer to GetCurrentObject in the Windows API documentation for more information.
-    inline HPEN CDC::GetCurrentPen() const
+    inline CPen CDC::GetCurrentPen() const
     {
         assert(m_pData->dc != 0);
         return static_cast<HPEN>(::GetCurrentObject(m_pData->dc, OBJ_PEN));
