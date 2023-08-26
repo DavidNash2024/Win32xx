@@ -226,14 +226,14 @@ namespace Win32xx
         operator HBITMAP() const;
         virtual ~CBitmap();
 
-        void    ConvertToDisabled(COLORREF mask) const;
-        HBITMAP CopyImage(HBITMAP origBitmap, int cxDesired = 0, int cyDesired = 0, UINT fuFlags = 0);
-        HBITMAP CreateBitmap(int width, int height, UINT planes, UINT bitsPerPixel, LPCVOID pBits);
-        HBITMAP CreateCompatibleBitmap(HDC dc, int width, int height);
-        HBITMAP CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* ppBits, HANDLE section, DWORD offset);
-        HBITMAP CreateDIBitmap(HDC dc, const BITMAPINFOHEADER* pBMIH, DWORD init, LPCVOID pInit, const LPBITMAPINFO pBMI, UINT colorUse);
-        HBITMAP CreateMappedBitmap(UINT bitmapID, UINT flags = 0, LPCOLORMAP pColorMap = NULL, int mapSize = 0);
-        HBITMAP CreateBitmapIndirect(const BITMAP& bitmap);
+        void ConvertToDisabled(COLORREF mask) const;
+        void CopyImage(HBITMAP origBitmap, int cxDesired = 0, int cyDesired = 0, UINT flags = 0);
+        void CreateBitmap(int width, int height, UINT planes, UINT bitsPerPixel, LPCVOID pBits);
+        void CreateCompatibleBitmap(HDC dc, int width, int height);
+        void CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* ppBits, HANDLE section, DWORD offset);
+        void CreateDIBitmap(HDC dc, const BITMAPINFOHEADER* pBMIH, DWORD init, LPCVOID pInit, const LPBITMAPINFO pBMI, UINT colorUse);
+        void CreateMappedBitmap(UINT bitmapID, UINT flags = 0, LPCOLORMAP pColorMap = NULL, int mapSize = 0);
+        void CreateBitmapIndirect(const BITMAP& bitmap);
         CSize GetBitmapDimensionEx() const;
         int  GetDIBits(HDC dc, UINT startScan, UINT scanLines,  LPVOID pBits, LPBITMAPINFO pBMI, UINT colorUse) const;
         void GrayScaleBitmap();
@@ -265,12 +265,12 @@ namespace Win32xx
         operator HBRUSH() const;
         virtual ~CBrush();
 
-        HBRUSH CreateBrushIndirect(const LOGBRUSH& logBrush);
-        HBRUSH CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec);
-        HBRUSH CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT usage);
-        HBRUSH CreateHatchBrush(int index, COLORREF color);
-        HBRUSH CreatePatternBrush(HBITMAP bitmap);
-        HBRUSH CreateSolidBrush(COLORREF color);
+        void CreateBrushIndirect(const LOGBRUSH& logBrush);
+        void CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec);
+        void CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT usage);
+        void CreateHatchBrush(int index, COLORREF color);
+        void CreatePatternBrush(HBITMAP bitmap);
+        void CreateSolidBrush(COLORREF color);
         LOGBRUSH GetLogBrush() const;
     };
 
@@ -287,11 +287,11 @@ namespace Win32xx
         virtual ~CFont();
 
         // Create methods
-        HFONT CreateFontIndirect(const LOGFONT& logFont);
-        HFONT CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = 0, BOOL isBold = FALSE, BOOL isItalic = FALSE);
-        HFONT CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = 0);
+        void CreateFontIndirect(const LOGFONT& logFont);
+        void CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc = 0, BOOL isBold = FALSE, BOOL isItalic = FALSE);
+        void CreatePointFontIndirect(const LOGFONT& logFont, HDC dc = 0);
 
-        HFONT CreateFont(int height, int width, int escapement,
+        void CreateFont(int height, int width, int escapement,
                 int orientation, int weight, DWORD italic, DWORD underline,
                 DWORD strikeOut, DWORD charSet, DWORD outPrecision,
                 DWORD clipPrecision, DWORD quality, DWORD pitchAndFamily,
@@ -313,8 +313,8 @@ namespace Win32xx
         virtual ~CPalette();
 
         // Create methods
-        HPALETTE CreateHalftonePalette(HDC dc);
-        HPALETTE CreatePalette(LPLOGPALETTE pLogPalette);
+        void CreateHalftonePalette(HDC dc);
+        void CreatePalette(LPLOGPALETTE pLogPalette);
 
         // Attributes
         int GetEntryCount() const;
@@ -340,9 +340,9 @@ namespace Win32xx
         operator HPEN() const;
         virtual ~CPen();
 
-        HPEN CreatePen(int penStyle, int width, COLORREF color);
-        HPEN CreatePenIndirect(const LOGPEN& logPen);
-        HPEN ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount = 0, const DWORD* pStyle = NULL) ;
+        void CreatePen(int penStyle, int width, COLORREF color);
+        void CreatePenIndirect(const LOGPEN& logPen);
+        void ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount = 0, const DWORD* pStyle = NULL) ;
         EXTLOGPEN GetExtLogPen() const;
         LOGPEN GetLogPen() const;
     };
@@ -359,15 +359,15 @@ namespace Win32xx
         virtual ~CRgn ();
 
         // Create methods
-        HRGN CreateEllipticRgn(int x1, int y1, int x2, int y2);
-        HRGN CreateEllipticRgnIndirect(const RECT& rc);
-        HRGN CreateFromData(const XFORM* pXForm, int count, const RGNDATA* pRgnData);
-        HRGN CreateFromPath(HDC dc);
-        HRGN CreatePolygonRgn(LPPOINT pPoints, int count, int mode);
-        HRGN CreatePolyPolygonRgn(LPPOINT pPoints, LPINT pPolyCounts, int count, int polyFillMode);
-        HRGN CreateRectRgn(int x1, int y1, int x2, int y2);
-        HRGN CreateRectRgnIndirect(const RECT& rc);
-        HRGN CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3);
+        void CreateEllipticRgn(int x1, int y1, int x2, int y2);
+        void CreateEllipticRgnIndirect(const RECT& rc);
+        void CreateFromData(const XFORM* pXForm, int count, const RGNDATA* pRgnData);
+        void CreateFromPath(HDC dc);
+        void CreatePolygonRgn(LPPOINT pPoints, int count, int mode);
+        void CreatePolyPolygonRgn(LPPOINT pPoints, LPINT pPolyCounts, int count, int polyFillMode);
+        void CreateRectRgn(int x1, int y1, int x2, int y2);
+        void CreateRectRgnIndirect(const RECT& rc);
+        void CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3);
 
         // Operations
         int  CombineRgn(HRGN src1, HRGN src2, int combineMode) const;
@@ -1450,7 +1450,7 @@ namespace Win32xx
     // to the new one. If necessary, the function stretches the bits to fit
     // the desired size of the new image.
     // Refer to CopyImage in the Windows API documentation for more information.
-    inline HBITMAP CBitmap::CopyImage(HBITMAP origBitmap, int cxDesired, int cyDesired, UINT flags)
+    inline void CBitmap::CopyImage(HBITMAP origBitmap, int cxDesired, int cyDesired, UINT flags)
     {
         assert(origBitmap);
         CBitmap orig(origBitmap);
@@ -1464,14 +1464,11 @@ namespace Win32xx
         {
             orig.Detach();
         }
-
-
-        return bitmap;
     }
 
     // Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
     // Refer to CreateMappedBitmap in the Windows API documentation for more information.
-    inline HBITMAP CBitmap::CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
+    inline void CBitmap::CreateMappedBitmap(UINT bitmapID, UINT flags /*= 0*/, LPCOLORMAP pColorMap /*= NULL*/, int mapSize /*= 0*/)
     {
         HBITMAP bitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), bitmapID,
                                               static_cast<WORD>(flags), pColorMap, mapSize);
@@ -1479,43 +1476,39 @@ namespace Win32xx
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
         Assign(bitmap);
-        return bitmap;
     }
 
     // Creates a bitmap with the specified width, height, and color format (color planes and bits-per-pixel).
     // Refer to CreateBitmap in the Windows API documentation for more information.
-    inline HBITMAP CBitmap::CreateBitmap(int width, int height, UINT planes, UINT bitsPerPixel, LPCVOID pBits)
+    inline void CBitmap::CreateBitmap(int width, int height, UINT planes, UINT bitsPerPixel, LPCVOID pBits)
     {
         HBITMAP bitmap = ::CreateBitmap(width, height, planes, bitsPerPixel, pBits);
         if (bitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
         Assign(bitmap);
-        return bitmap;
     }
 
     // Creates a bitmap with the width, height, and color format specified in the BITMAP structure.
     // Refer to CreateBitmapIndirect in the Windows API documentation for more information.
-    inline HBITMAP CBitmap::CreateBitmapIndirect(const BITMAP& bitmap)
+    inline void CBitmap::CreateBitmapIndirect(const BITMAP& bitmap)
     {
         HBITMAP copyBitmap = ::CreateBitmapIndirect(&bitmap);
         if (copyBitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
         Assign(copyBitmap);
-        return copyBitmap;
     }
 
     // Creates a bitmap compatible with the specified device context.
     // Refer to CreateCompatibleBitmap in the Windows API documentation for more information.
-    inline HBITMAP CBitmap::CreateCompatibleBitmap(HDC dc, int width, int height)
+    inline void CBitmap::CreateCompatibleBitmap(HDC dc, int width, int height)
     {
         HBITMAP bitmap = ::CreateCompatibleBitmap(dc, width, height);
         if (bitmap == 0)
             throw CResourceException(GetApp()->MsgGdiBitmap());
 
         Assign(bitmap);
-        return bitmap;
     }
 
     // Retrieves the BITMAP structure.
@@ -1554,11 +1547,10 @@ namespace Win32xx
     // Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.
     // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
     // Refer to CreateDIBitmap in the Windows API documentation for more information.
-    inline HBITMAP CBitmap::CreateDIBitmap(HDC dc, const BITMAPINFOHEADER* pBMIH, DWORD init, LPCVOID pInit, const LPBITMAPINFO pBMI, UINT colorUse)
+    inline void CBitmap::CreateDIBitmap(HDC dc, const BITMAPINFOHEADER* pBMIH, DWORD init, LPCVOID pInit, const LPBITMAPINFO pBMI, UINT colorUse)
     {
         HBITMAP bitmap = ::CreateDIBitmap(dc, pBMIH, init, pInit, pBMI, colorUse);
         Assign(bitmap);
-        return bitmap;
     }
 
     inline CSize CBitmap::GetSize() const
@@ -1712,11 +1704,10 @@ namespace Win32xx
     // a file-mapping object that the function will use to create the bitmap,
     // or you can let the system allocate the memory for the bitmap.
     // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
-    inline HBITMAP CBitmap::CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* pBits, HANDLE hSection, DWORD offset)
+    inline void CBitmap::CreateDIBSection(HDC dc, const LPBITMAPINFO pBMI, UINT colorUse, LPVOID* pBits, HANDLE hSection, DWORD offset)
     {
         HBITMAP bitmap = ::CreateDIBSection(dc, pBMI, colorUse, pBits, hSection, offset);
         Assign(bitmap);
-        return bitmap;
     }
 
     // Retrieves the bits of the specified compatible bitmap and copies them
@@ -1776,75 +1767,69 @@ namespace Win32xx
 
     // Creates a logical brush that has the specified solid color.
     // Refer to CreateSolidBrush in the Windows API documentation for more information.
-    inline HBRUSH CBrush::CreateSolidBrush(COLORREF color)
+    inline void CBrush::CreateSolidBrush(COLORREF color)
     {
         HBRUSH brush = ::CreateSolidBrush(color);
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
         Assign(brush);
-        return brush;
     }
 
     // Creates a logical brush that has the specified hatch pattern and color.
     // Refer to CreateHatchBrush in the Windows API documentation for more information.
-    inline HBRUSH CBrush::CreateHatchBrush(int index, COLORREF color)
+    inline void CBrush::CreateHatchBrush(int index, COLORREF color)
     {
         HBRUSH brush = ::CreateHatchBrush(index, color);
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
         Assign(brush);
-        return brush;
     }
 
     // Creates a logical brush from style, color, and pattern specified in the LOGPRUSH struct.
     // Refer to CreateBrushIndirect in the Windows API documentation for more information.
-    inline HBRUSH CBrush::CreateBrushIndirect(const LOGBRUSH& logBrush)
+    inline void CBrush::CreateBrushIndirect(const LOGBRUSH& logBrush)
     {
         HBRUSH brush = ::CreateBrushIndirect(&logBrush);
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
         Assign(brush);
-        return brush;
     }
 
     // Creates a logical brush that has the pattern specified by the specified device-independent bitmap (DIB).
     // Refer to CreateDIBPatternBrush in the Windows API documentation for more information.
-    inline HBRUSH CBrush::CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec)
+    inline void CBrush::CreateDIBPatternBrush(HGLOBAL hDIBPacked, UINT colorSpec)
     {
         HBRUSH brush = ::CreateDIBPatternBrush(hDIBPacked, colorSpec);
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
         Assign(brush);
-        return brush;
     }
 
     // Creates a logical brush that has the pattern specified by the device-independent bitmap (DIB).
     // Refer to CreateDIBPatternBrushPt in the Windows API documentation for more information.
-    inline HBRUSH CBrush::CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT usage)
+    inline void CBrush::CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT usage)
     {
         HBRUSH brush = ::CreateDIBPatternBrushPt(pPackedDIB, usage);
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
         Assign(brush);
-        return brush;
     }
 
     // Creates a logical brush with the specified bitmap pattern. The bitmap can be a DIB section bitmap,
     // which is created by the CreateDIBSection function, or it can be a device-dependent bitmap.
     // Refer to CreatePatternBrush in the Windows API documentation for more information.
-    inline HBRUSH CBrush::CreatePatternBrush(HBITMAP bitmap)
+    inline void CBrush::CreatePatternBrush(HBITMAP bitmap)
     {
         HBRUSH brush = ::CreatePatternBrush(bitmap);
         if (brush == 0)
             throw CResourceException(GetApp()->MsgGdiBrush());
 
         Assign(brush);
-        return brush;
     }
 
     // Retrieves the LOGBRUSH structure that defines the style, color, and pattern of a physical brush.
@@ -1896,19 +1881,18 @@ namespace Win32xx
 
     // Creates a logical font that has the specified characteristics.
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
-    inline HFONT CFont::CreateFontIndirect(const LOGFONT& logFont)
+    inline void CFont::CreateFontIndirect(const LOGFONT& logFont)
     {
         HFONT font = ::CreateFontIndirect(&logFont);
         if (font == 0)
             throw CResourceException(GetApp()->MsgGdiFont());
 
         Assign(font);
-        return font;
     }
 
     // Creates a font of a specified typeface and point size.
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
-    inline HFONT CFont::CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc /*= 0*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
+    inline void CFont::CreatePointFont(int pointSize, LPCTSTR faceName, HDC dc /*= 0*/, BOOL isBold /*= FALSE*/, BOOL isItalic /*= FALSE*/)
     {
         LOGFONT logFont;
         ZeroMemory(&logFont, sizeof(logFont));
@@ -1922,14 +1906,14 @@ namespace Win32xx
         if (isItalic)
             logFont.lfItalic = 1;
 
-        return CreatePointFontIndirect(logFont, dc);
+        CreatePointFontIndirect(logFont, dc);
     }
 
     // Creates a font of a specified typeface and point size.
     // This function automatically converts the height in lfHeight to logical
     // units using the specified device context.
     // Refer to CreateFontIndirect in the Windows API documentation for more information.
-    inline HFONT CFont::CreatePointFontIndirect(const LOGFONT& logFont, HDC dc /* = 0*/)
+    inline void CFont::CreatePointFontIndirect(const LOGFONT& logFont, HDC dc /* = 0*/)
     {
         CClientDC desktopDC(HWND_DESKTOP);
         CDC fontDC = (dc == 0) ? desktopDC : CDC(dc);
@@ -1945,13 +1929,12 @@ namespace Win32xx
         VERIFY(fontDC.DPtoLP(&ptOrg, 1));
 
         newLogFont.lfHeight = -abs(pt.y - ptOrg.y);
-
-        return CreateFontIndirect (newLogFont);
+        CreateFontIndirect (newLogFont);
     }
 
     // Creates a logical font with the specified characteristics.
     // Refer to CreateFont in the Windows API documentation for more information.
-    inline HFONT CFont::CreateFont(int height, int width, int escapement,
+    inline void CFont::CreateFont(int height, int width, int escapement,
             int orientation, int weight, DWORD italic, DWORD underline,
             DWORD strikeOut, DWORD charSet, DWORD outPrecision,
             DWORD clipPrecision, DWORD quality, DWORD pitchAndFamily,
@@ -1966,7 +1949,6 @@ namespace Win32xx
             throw CResourceException(GetApp()->MsgGdiFont());
 
         Assign(font);
-        return font;
     }
 
     // Retrieves the Logfont structure that contains font attributes.
@@ -2004,19 +1986,18 @@ namespace Win32xx
 
     // Creates a logical palette from the information in the specified LOGPALETTE structure.
     // Refer to CreatePalette in the Windows API documentation for more information.
-    inline HPALETTE CPalette::CreatePalette(LPLOGPALETTE lpLogPalette)
+    inline void CPalette::CreatePalette(LPLOGPALETTE lpLogPalette)
     {
         HPALETTE palette = ::CreatePalette (lpLogPalette);
         if (palette == 0)
             throw CResourceException(GetApp()->MsgGdiPalette());
 
         Assign(palette);
-        return palette;
     }
 
     // Creates a halftone palette for the specified device context (DC).
     // Refer to CreateHalftonePalette in the Windows API documentation for more information.
-    inline HPALETTE CPalette::CreateHalftonePalette(HDC dc)
+    inline void CPalette::CreateHalftonePalette(HDC dc)
     {
         HPALETTE palette = ::CreateHalftonePalette(dc);
         if (palette == 0)
@@ -2024,7 +2005,6 @@ namespace Win32xx
 
         Assign(palette);
         ::RealizePalette(dc);
-        return palette;
     }
 
     // Retrieve the number of entries in the palette.
@@ -2130,20 +2110,18 @@ namespace Win32xx
 
     // Creates a logical pen that has the specified style, width, and color.
     // Refer to CreatePen in the Windows API documentation for more information.
-    inline HPEN CPen::CreatePen(int penStyle, int width, COLORREF color)
+    inline void CPen::CreatePen(int penStyle, int width, COLORREF color)
     {
         HPEN pen = ::CreatePen(penStyle, width, color);
         Assign(pen);
-        return pen;
     }
 
     // Creates a logical pen that has the style, width, and color specified in a structure.
     // Refer to CreatePenIndirect in the Windows API documentation for more information.
-    inline HPEN CPen::CreatePenIndirect(const LOGPEN& logPen)
+    inline void CPen::CreatePenIndirect(const LOGPEN& logPen)
     {
         HPEN pen = ::CreatePenIndirect(&logPen);
         Assign(pen);
-        return pen;
     }
 
     // Retrieves the LOGPEN struct that specifies the pen's style, width, and color.
@@ -2160,12 +2138,11 @@ namespace Win32xx
 
     // Creates a logical cosmetic or geometric pen that has the specified style, width, and brush attributes.
     // Refer to ExtCreatePen in the Windows API documentation for more information.
-    inline HPEN CPen::ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount /* = 0*/, const DWORD* pStyle /*= NULL*/)
+    inline void CPen::ExtCreatePen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount /* = 0*/, const DWORD* pStyle /*= NULL*/)
     {
         HPEN pen = ::ExtCreatePen(static_cast<DWORD>(penStyle), static_cast<DWORD>(width),
                                   &logBrush, static_cast<DWORD>(styleCount), pStyle);
         Assign(pen);
-        return pen;
     }
 
     // Retrieves the EXTLOGPEN struct that specifies the pen's style, width, color and brush attributes.
@@ -2204,17 +2181,16 @@ namespace Win32xx
 
     // Creates a rectangular region.
     // Refer to CreateRectRgn in the Windows API documentation for more information.
-    inline HRGN CRgn::CreateRectRgn(int x1, int y1, int x2, int y2)
+    inline void CRgn::CreateRectRgn(int x1, int y1, int x2, int y2)
     {
         HRGN rgn = ::CreateRectRgn(x1, y1, x2, y2);
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
         Assign(rgn);
-        return rgn;
     }
 
-    inline HRGN CRgn::CreateRectRgnIndirect(const RECT& rc)
+    inline void CRgn::CreateRectRgnIndirect(const RECT& rc)
     // Creates a rectangular region.
     // Refer to CreateRectRgnIndirect in the Windows API documentation for more information.
     {
@@ -2223,73 +2199,67 @@ namespace Win32xx
             throw CResourceException(GetApp()->MsgGdiRegion());
 
         Assign(rgn);
-        return rgn;
     }
 
     // Creates an elliptical region.
     // Refer to CreateEllipticRgn in the Windows API documentation for more information.
-    inline HRGN CRgn::CreateEllipticRgn(int x1, int y1, int x2, int y2)
+    inline void CRgn::CreateEllipticRgn(int x1, int y1, int x2, int y2)
     {
         HRGN rgn = ::CreateEllipticRgn(x1, y1, x2, y2);
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
         Assign(rgn);
-        return rgn;
     }
 
     // Creates an elliptical region.
     // Refer to CreateEllipticRgnIndirect in the Windows API documentation for more information.
-    inline HRGN CRgn::CreateEllipticRgnIndirect(const RECT& rc)
+    inline void CRgn::CreateEllipticRgnIndirect(const RECT& rc)
     {
         HRGN rgn = ::CreateEllipticRgnIndirect(&rc);
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
         Assign(rgn);
-        return rgn;
     }
 
     // Creates a polygonal region.
     // Refer to CreatePolygonRgn in the Windows API documentation for more information.
-    inline HRGN CRgn::CreatePolygonRgn(LPPOINT pPoints, int count, int mode)
+    inline void CRgn::CreatePolygonRgn(LPPOINT pPoints, int count, int mode)
     {
         HRGN rgn = ::CreatePolygonRgn(pPoints, count, mode);
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
         Assign(rgn);
-        return rgn;
     }
 
     // Creates a region consisting of a series of polygons. The polygons can overlap.
     // Refer to CreatePolyPolygonRgn in the Windows API documentation for more information.
-    inline HRGN CRgn::CreatePolyPolygonRgn(LPPOINT pPoints, LPINT pPolyCounts, int count, int polyFillMode)
+    inline void CRgn::CreatePolyPolygonRgn(LPPOINT pPoints, LPINT pPolyCounts, int count, int polyFillMode)
     {
         HRGN rgn = ::CreatePolyPolygonRgn(pPoints, pPolyCounts, count, polyFillMode);
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
         Assign(rgn);
-        return rgn;
     }
 
     // Creates a rectangular region with rounded corners.
     // Refer to CreateRoundRectRgn in the Windows API documentation for more information.
-    inline HRGN CRgn::CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3)
+    inline void CRgn::CreateRoundRectRgn(int x1, int y1, int x2, int y2, int x3, int y3)
     {
         HRGN rgn = ::CreateRoundRectRgn(x1, y1, x2, y2, x3, y3);
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
         Assign(rgn);
-        return rgn;
     }
 
     // Creates a region from the path that is selected into the specified device context.
     // The resulting region uses device coordinates.
     // Refer to PathToRegion in the Windows API documentation for more information.
-    inline HRGN CRgn::CreateFromPath(HDC dc)
+    inline void CRgn::CreateFromPath(HDC dc)
     {
         assert(dc != 0);
         HRGN rgn = ::PathToRegion(dc);
@@ -2297,20 +2267,18 @@ namespace Win32xx
             throw CResourceException(GetApp()->MsgGdiRegion());
 
         Assign(rgn);
-        return rgn;
     }
 
     // Creates a region from the specified region and transformation data.
     // If the XFORM pointer is NULL, the identity transformation is used.
     // Refer to ExtCreateRegion in the Windows API documentation for more information.
-    inline HRGN CRgn::CreateFromData(const XFORM* pXForm, int count, const RGNDATA* pRgnData)
+    inline void CRgn::CreateFromData(const XFORM* pXForm, int count, const RGNDATA* pRgnData)
     {
         HRGN rgn = ::ExtCreateRegion(pXForm, static_cast<DWORD>(count), pRgnData);
         if (rgn == 0)
             throw CResourceException(GetApp()->MsgGdiRegion());
 
         Assign(rgn);
-        return rgn;
     }
 
     // Converts the region into a rectangular region with the specified coordinates.
