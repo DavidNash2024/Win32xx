@@ -122,18 +122,18 @@ BOOL CColourDialog::OnGrayScale()
 // Processes messages from the slider controls.
 LRESULT CColourDialog::OnHScroll(UINT, WPARAM, LPARAM lparam)
 {
-    HWND hWnd = reinterpret_cast<HWND>(lparam);
+    HWND wnd = reinterpret_cast<HWND>(lparam);
 
     // Update the text for the colour's edit control
-    int nPos = static_cast<int>(SendMessage(hWnd, TBM_GETPOS, 0, 0));
+    int nPos = static_cast<int>(SendMessage(wnd, TBM_GETPOS, 0, 0));
     TCHAR Text[5];
     wsprintf(Text, _T("%d\0"), nPos);
 
-    if (hWnd == m_redSlider)
+    if (wnd == m_redSlider)
         m_redEdit.SetWindowText(Text);
-    else if (hWnd == m_greenSlider)
+    else if (wnd == m_greenSlider)
         m_greenEdit.SetWindowText(Text);
-    else if (hWnd == m_blueSlider)
+    else if (wnd == m_blueSlider)
         m_blueEdit.SetWindowText(Text);
 
     UpdatePreview();

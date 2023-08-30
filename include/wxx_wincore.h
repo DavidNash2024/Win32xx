@@ -228,7 +228,7 @@ namespace Win32xx
     // Retrieves the DPI of the window if the specified handle is a valid
     // window, or the DPI of the desktop window otherwise.
     // Use GetWindowDPI(HWND_DESKTOP) to retrieve the DPI of the desktop window.
-    inline int GetWindowDpi(HWND hWnd)
+    inline int GetWindowDpi(HWND wnd)
     {
         // Retrieve desktop's dpi as a fallback.
         CClientDC desktopDC(HWND_DESKTOP);
@@ -237,13 +237,13 @@ namespace Win32xx
         // Retrieve the window's dpi if we can.
         typedef UINT WINAPI GETDPIFORWINDOW(HWND);
         HMODULE user = GetModuleHandle(_T("user32.dll"));
-        if (user && ::IsWindow(hWnd))
+        if (user && ::IsWindow(wnd))
         {
             GETDPIFORWINDOW* pGetDpiForWindow =
                 reinterpret_cast<GETDPIFORWINDOW*>(GetProcAddress(user, "GetDpiForWindow"));
             if (pGetDpiForWindow)
             {
-                dpi = static_cast<int>(pGetDpiForWindow(hWnd));
+                dpi = static_cast<int>(pGetDpiForWindow(wnd));
             }
         }
 
@@ -2253,7 +2253,7 @@ namespace Win32xx
     //              This parameter may be NULL.
     // flags:       Specifies flags that control scrolling.This parameter can be one of the following values.
     //   SW_ERASE:          Erases the newly invalidated region when specified with the SW_INVALIDATE flag.
-    //   SW_INVALIDATE:     Invalidates the region identified by the hrgnUpdate parameter after scrolling.
+    //   SW_INVALIDATE:     Invalidates the region identified by the update parameter after scrolling.
     //   SW_SCROLLCHILDREN: Scrolls all child windows that intersect the rectangle pointed to by the prcScroll parameter.
     //   SW_SMOOTHSCROLL:   Scrolls using smooth scrolling.
     // Refer to ScrollWindowEx in the Windows API documentation for more information.

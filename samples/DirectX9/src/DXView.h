@@ -44,7 +44,7 @@ private:
     CDXView& operator = (const CDXView&);   // Disable assignment operator
 
     // Member functions
-    HRESULT InitD3D(HWND hWnd);
+    HRESULT InitD3D(HWND wnd);
     HRESULT InitGeometry();
     void SetupDefaultRenderStates();
     void SetupMatrices();
