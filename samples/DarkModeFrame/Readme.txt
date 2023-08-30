@@ -1,6 +1,6 @@
 DarkModeFrame Sample
 ====================
-This project demonstrates the support dark mode with Win32++.
+This project demonstrates dark mode support with Win32++.
 
 This is a frame based application which automatically detects when the Windows
 theme has dark mode enabled for applications, and adjust the frame's colors

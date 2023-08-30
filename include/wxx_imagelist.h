@@ -252,7 +252,7 @@ namespace Win32xx
                 m_pData = new CIml_Data;
             }
 
-            if (images)
+            if (images != 0)
             {
                 // Add the image list to this CImageList
                 CIml_Data* pCImlData = GetApp()->GetCImlData(images);

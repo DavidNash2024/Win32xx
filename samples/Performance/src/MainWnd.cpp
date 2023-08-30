@@ -151,14 +151,14 @@ void CMainWindow::PerformanceTest() const
     SendText(str);
 
     // Choose a Window handle(HWND) to send the messages to
-    HWND hWnd = m_pTestWindows[(m_testWindows-1)/2]->GetHwnd();
+    HWND wnd = m_pTestWindows[(m_testWindows-1)/2]->GetHwnd();
 
     // Store the starting counter
     LONGLONG start = GetCounter();
 
     // Send the messages
     while(messages++ < m_testMessages)
-        result = ::SendMessage(hWnd, WM_TESTMESSAGE, 0, 0);
+        result = ::SendMessage(wnd, WM_TESTMESSAGE, 0, 0);
 
     // Calculate the time the messages took to send
     LONGLONG end = GetCounter();

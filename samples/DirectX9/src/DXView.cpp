@@ -53,7 +53,7 @@ void CDXView::EndThread()
 }
 
 // Initializes Direct3D
-HRESULT CDXView::InitD3D( HWND hWnd )
+HRESULT CDXView::InitD3D( HWND wnd )
 {
     // Create the D3D object.
     m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
@@ -72,11 +72,11 @@ HRESULT CDXView::InitD3D( HWND hWnd )
     m_d3dpp.BackBufferHeight = rc.Height();
 
     // Create the D3DDevice
-    if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
+    if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, wnd,
                D3DCREATE_HARDWARE_VERTEXPROCESSING, &m_d3dpp, &m_pd3dDevice)))
     {
         // Attempt CreateDevice with different options.
-        if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, hWnd,
+        if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, wnd,
                    D3DCREATE_SOFTWARE_VERTEXPROCESSING, &m_d3dpp, &m_pd3dDevice)))
         {
             return E_FAIL;

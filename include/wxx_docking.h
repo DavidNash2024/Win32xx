@@ -625,9 +625,9 @@ namespace Win32xx
         void CloseAllTargets();
         void DockOuter(CDocker* pDocker, DWORD dockStyle);
         void DrawAllCaptions();
-        void ConvertToChild(HWND hWndParent);
+        void ConvertToChild(HWND parent);
         void ConvertToPopup(const RECT& rc, BOOL showUndocked);
-        int  GetMonitorDpi(HWND hWnd);
+        int  GetMonitorDpi(HWND wnd);
         void MoveDockChildren(CDocker* pDockTarget);
         void PromoteFirstChild();
         void RecalcDockChildLayout(CRect& rc);
@@ -2533,7 +2533,7 @@ namespace Win32xx
 
         CPoint pt = pThis->m_dockPoint;
 
-        // Update hWndTop if the DockAncestor is a child of the top level window.
+        // Update top if the DockAncestor is a child of the top level window.
         if (::IsChild(top, pThis->GetDockAncestor()->GetHwnd()))
             top = pThis->GetDockAncestor()->GetHwnd();
 
@@ -2698,7 +2698,7 @@ namespace Win32xx
     // the same value as the GetWindowDpi function, but not when the user
     // changes DPI settings manually and a WM_SETTINGCHANGE message is sent.
     // This function uses the GetDpiForMonitor function.
-    inline int CDocker::GetMonitorDpi(HWND hWnd)
+    inline int CDocker::GetMonitorDpi(HWND wnd)
     {
         // Retrieve desktop's dpi as a fallback.
         CClientDC desktopDC(HWND_DESKTOP);
@@ -2715,7 +2715,7 @@ namespace Win32xx
                 reinterpret_cast<GETDPIFORMONITOR*>(GetProcAddress(shcore, "GetDpiForMonitor"));
             if (pGetDpiForMonitor)
             {
-                HMONITOR hMonitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTOPRIMARY);
+                HMONITOR hMonitor = MonitorFromWindow(wnd, MONITOR_DEFAULTTOPRIMARY);
                 UINT dpiX;
                 UINT dpiY;
                 HRESULT hr = pGetDpiForMonitor(hMonitor, 0, &dpiX, &dpiY);
@@ -2725,10 +2725,6 @@ namespace Win32xx
                 }
             }
         }
-
-#else
-
-        return GetWindowDpi(hWnd);
 
 #endif // MONITOR_DEFAULTTOPRIMARY
 

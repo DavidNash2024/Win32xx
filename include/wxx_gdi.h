@@ -797,23 +797,29 @@ namespace Win32xx
 
     ///////////////////////////////////////////////////////////////////
     // CClientDCEx manages a GDI device context for the client area
-    // of a window. A clip regions can be specified, along with flags
+    // of a window. A clip region can be specified, along with flags
     // such as DCX_WINDOW, DCX_CACHE, DCX_PARENTCLIP, DCX_CLIPSIBLINGS,
     // DCX_CLIPCHILDREN, DCX_NORESETATTRS, DCX_LOCKWINDOWUPDATE,
     // DCX_EXCLUDERGN, DCX_INTERSECTRGN and DCX_VALIDATE.
     class CClientDCEx : public CDC
     {
     public:
-        CClientDCEx(HWND wnd, HRGN hrgnClip, DWORD flags)
+        CClientDCEx(HWND wnd, HRGN clip, DWORD flags)
         {
             if (wnd == 0) wnd = GetDesktopWindow();
             assert(::IsWindow(wnd));
 
             try
             {
-                HDC dc = ::GetDCEx(wnd, hrgnClip, flags);
+                HDC dc = ::GetDCEx(wnd, clip, flags);
                 if (dc == 0)
                     throw CResourceException(GetApp()->MsgGdiGetDCEx());
+
+                if (clip != 0 && (flags & (DCX_INTERSECTRGN | DCX_EXCLUDERGN)))
+                {
+                    CRgn region(clip);
+                    region.Detach();   // The system owns the region now.
+                }
 
                 Assign(dc);
                 SetWindow(wnd);
@@ -930,7 +936,7 @@ namespace Win32xx
             if (GetHDC())
             {
                 // Note we should not get here.
-                TRACE("Warning! A MetaFile or EnhMetaFile was created but not closed\n");
+                TRACE("Warning! A metafile was created but not closed\n");
                 ::DeleteMetaFile(Close());
             }
         }
@@ -978,7 +984,7 @@ namespace Win32xx
             if (GetHDC())
             {
                 // Note we should not get here.
-                TRACE("Warning! An EnhMetaFile was created but not closed\n");
+                TRACE("Warning! An enhanced metafile was created but not closed\n");
                 ::DeleteEnhMetaFile(CloseEnhanced());
             }
         }
@@ -1150,7 +1156,7 @@ namespace Win32xx
                 m_pData = new CGDI_Data;
             }
 
-            if (object)
+            if (object != 0)
             {
                 // Add the GDI object to this CCGDIObject.
                 CGDI_Data* pCGDIData = GetApp()->GetCGDIData(object);
@@ -2486,7 +2492,7 @@ namespace Win32xx
                 m_pData = new CDC_Data;
             }
 
-            if (dc)
+            if (dc != 0)
             {
                 CDC_Data* pCDCData = GetApp()->GetCDCData(dc);
                 if (pCDCData)
@@ -2721,7 +2727,7 @@ namespace Win32xx
     {
         assert(m_pData->dc != 0);
         CBitmap oldBitmap = static_cast<HBITMAP>(::SelectObject(m_pData->dc, bitmap));
-        if (oldBitmap == 0)
+        if (oldBitmap.GetHandle() == 0)
             // throws if an error occurs (bitmap is invalid or incompatible).
             throw CResourceException(GetApp()->MsgGdiSelObject());
 
@@ -2737,7 +2743,7 @@ namespace Win32xx
     {
         assert(m_pData->dc != 0);
         CBrush oldBrush = static_cast<HBRUSH>(::SelectObject(m_pData->dc, brush));
-        if (oldBrush == 0)
+        if (oldBrush.GetHandle() == 0)
             // throws if an error occurs.
             throw CResourceException(GetApp()->MsgGdiSelObject());
 
@@ -2753,7 +2759,7 @@ namespace Win32xx
     {
         assert(m_pData->dc != 0);
         CFont oldFont = static_cast<HFONT>(::SelectObject(m_pData->dc, font));
-        if (oldFont == 0)
+        if (oldFont.GetHandle() == 0)
             // throws if an error occurs.
             throw CResourceException(GetApp()->MsgGdiSelObject());
 
@@ -2769,7 +2775,7 @@ namespace Win32xx
     {
         assert(m_pData->dc != 0);
         CPen oldPen = static_cast<HPEN>(::SelectObject(m_pData->dc, pen));
-        if (oldPen == 0)
+        if (oldPen.GetHandle() == 0)
             // throws if an error occurs.
             throw CResourceException(GetApp()->MsgGdiSelObject());
 
@@ -2802,7 +2808,7 @@ namespace Win32xx
     {
         assert(m_pData->dc != 0);
         CPalette oldPalette = static_cast<HPALETTE>(::SelectPalette(m_pData->dc, palette, forceBkgnd));
-        if (oldPalette == 0)
+        if (oldPalette.GetHandle() == 0)
             // throws if an error occurs.
             throw CResourceException(GetApp()->MsgGdiSelObject());
 
@@ -3701,9 +3707,12 @@ namespace Win32xx
     inline int CDC::SelectClipRgn(HRGN rgn) const
     {
         assert(m_pData->dc != 0);
-        m_pData->rgn = rgn;
+        int rgnType = ::SelectClipRgn(m_pData->dc, rgn);
+        if (rgnType == ERROR)
+            // throws if an error occurs.
+            throw CResourceException(GetApp()->MsgGdiSelObject());
 
-        return ::SelectClipRgn(m_pData->dc, rgn);
+        return rgnType;
     }
 
     // The AbortPath function closes and discards any paths in the specified device context.
@@ -3735,7 +3744,12 @@ namespace Win32xx
     inline int CDC::ExtSelectClipRgn(HRGN rgn, int mode) const
     {
         assert(m_pData->dc != 0);
-        return ::ExtSelectClipRgn(m_pData->dc, rgn, mode);
+        int rgnType = ::ExtSelectClipRgn(m_pData->dc, rgn, mode);
+        if (rgnType == ERROR)
+            // throws if an error occurs.
+            throw CResourceException(GetApp()->MsgGdiSelObject());
+
+        return rgnType;
     }
 
     // Transforms any curves in the path that is selected into the device context, turning each
