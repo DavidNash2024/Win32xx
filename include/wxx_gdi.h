@@ -2896,7 +2896,7 @@ namespace Win32xx
         // Create a stock bitmap to replace the current one.
         CBitmap bitmap;
         bitmap.CreateBitmap(1, 1, 1, 1, 0);
-        
+
         return SelectObject(bitmap);
     }
 
