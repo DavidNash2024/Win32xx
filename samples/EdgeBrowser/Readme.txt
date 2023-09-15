@@ -39,3 +39,10 @@ https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution
 Refer her for additional information on WebView2:
 https://learn.microsoft.com/en-us/microsoft-edge/webview2/
 
+
+About this sample
+=================
+This sample was adapted from the information provided in the
+"Get started with WebView2 in Win32 apps" article by Microsoft:
+https://learn.microsoft.com/microsoft-edge/webview2/get-started/win32
+

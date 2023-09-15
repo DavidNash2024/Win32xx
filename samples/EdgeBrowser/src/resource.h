@@ -9,7 +9,11 @@
 #endif
 
 // include the Resource IDs defined by Win32++
-#include "default_resource.h"
+//#include "default_resource.h"
+
+#define     IDI_GLOBE        100 
+#define     IDS_CAPTION      101
+#define     IDS_APP_TITLE    102
 
 // Next default values for new objects
 //
