@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "EdgeView.h"
+#include "resource.h"
 
 using namespace Microsoft::WRL;
 
@@ -14,11 +15,11 @@ using namespace Microsoft::WRL;
 int CEdgeView::OnCreate(CREATESTRUCT&)
 {
     // Set the window's icon
-    SetIconSmall(IDW_MAIN);
-    SetIconLarge(IDW_MAIN);
+    SetIconSmall(IDI_GLOBE);
+    SetIconLarge(IDI_GLOBE);
 
     // Set the window title
-    SetWindowText(LoadString(IDW_MAIN));
+    SetWindowText(LoadString(IDS_CAPTION));
 
     return 0;
 }
@@ -29,18 +30,32 @@ void CEdgeView::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-// OnOnitialUpdate is called after the window is created.
+// OnInitialUpdate is called after the window is created.
 void CEdgeView::OnInitialUpdate()
 {
     StartBrowser();
+}
+
+// OnSize is called when the window is resized.
+LRESULT CEdgeView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    if (m_controller != nullptr)
+    {
+        CRect bounds = GetClientRect();
+        m_controller->put_Bounds(bounds);
+    }
+
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Start the Edge browser.
 // This function uses callbacks and completes before m_webView is assigned.
 void CEdgeView::StartBrowser()
 {
+    CString dataDirectory = GetAppDataPath() + L"\\Win32++\\" + LoadString(IDS_APP_TITLE);
+
     // Use a lambda function to create the core web environment.
-    CreateCoreWebView2EnvironmentWithOptions(nullptr, nullptr, nullptr,
+    CreateCoreWebView2EnvironmentWithOptions(nullptr, dataDirectory, nullptr,
         Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
             [this](HRESULT, ICoreWebView2Environment* env) -> HRESULT
             {
@@ -72,19 +87,9 @@ LRESULT CEdgeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case WM_SIZE:
-        if (m_controller != nullptr)
-        {
-            CRect bounds = GetClientRect();
-            m_controller->put_Bounds(bounds);
-        }
-        break;
-
-    default:
-        return WndProcDefault(msg, wparam, lparam);
-        break;
+    case WM_SIZE:   return OnSize(msg, wparam, lparam);
     }
 
-    return 0;
+    return WndProcDefault(msg, wparam, lparam);;
 }
 

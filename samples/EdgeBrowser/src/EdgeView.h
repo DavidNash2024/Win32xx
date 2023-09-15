@@ -20,6 +20,7 @@ protected:
     virtual int OnCreate(CREATESTRUCT&);
     virtual void OnDestroy();
     virtual void OnInitialUpdate();
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
