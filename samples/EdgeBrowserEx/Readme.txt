@@ -14,7 +14,8 @@ Features demonstrated in this example
 * Storing and managing Favourites
 * Storing and managing History
 * Implementing a settings menu for clearing the cache and cookies.
-* Use of 'JSON for Modern C++' to parse between JSON and C++. 
+* Passing JSON objects to and from the web view (ICoreWebView2).
+* Use of 'JSON for Modern C++' to parse between JSON and C++.
 * Use of Per Monitor DPI Version 2 added as manifest resource.
 
 
@@ -56,9 +57,9 @@ https://github.com/MicrosoftEdge/WebView2Browser
 
 About the cpprestsdk library used in the Microsoft sample
 =========================================================
-Microsoft that cpprestsdk is in maintenance mode as is not recommended for use
-in new projects. The cpprestsdk library is not supported by Visual Studio 2022
-v143 Platform Toolset.
+Microsoft advises that cpprestsdk is in maintenance mode as is not recommended
+for use in new projects. The cpprestsdk library is not supported by Visual 
+Studio 2022 v143 Platform Toolset.
 
-The Win32++ sample uses the 'JSON for Modern C++' library in place of the 
-cpprsetsdk library.
+This Win32++ sample uses the 'JSON for Modern C++' library by Niels Lohmann in
+place of the cpprsetsdk library.
