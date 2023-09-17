@@ -4,7 +4,7 @@
 
 // Ackowledgement:
 // This sample uses the 'JSON for Modern C++' library, version 3.11.2
-// by Niels Lohmann <https://nlohmann.me> 
+// by Niels Lohmann <https://nlohmann.me>
 // https://github.com/nlohmann/json
 
 #include "stdafx.h"

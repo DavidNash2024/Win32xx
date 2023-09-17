@@ -1,11 +1,32 @@
 Version 9.4
 ===========
+This version adds support for the Microsoft Edge browser.
+The EdgeBrower and EdgeBrowserEx samples have been added. These samples
+demonstrate how to use Win32++ to display a Microsoft Edge browser.
 
 New Features and Enhancements
 -----------------------------
+* Added the EdgeBrowser sample. This sample uses the Microsoft Edge
+  WebView2 control to render the Microsoft Edge browser in a window. It
+  demonstrates a simple way to render a Microsoft Edge browser in a view
+  window.
+
+* Added the EdgeBrowserEx sample. This sample uses the Microsoft Edge WebView2
+  control to display tabs and render the Microsoft Edge browser within those
+  tabs. This sample also demonstrates features such as managing favourites
+  and browser history.
+
 * Updated CDC. CDC::SelectObject now keeps the selected object in scope. There
   is no longer any need to select the old object back into the device context
   when SelectObject is used.
+
+Changes in Detail
+-----------------
+Modified CDC::SelectObject(HBITMAP bitmap)                returns CBitmap
+Modified CDC::SelectObject(HBRUSH brush)                  returns CBrush
+Modified CDC::SelectObject(HFONT font)                    returns CFont
+Modified CDC::SelectObject(HPEN pen)                      returns CPen
+Modified CDC::SelectPalette                               returns CPalette
 
 
 Version 9.3
