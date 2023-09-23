@@ -73,14 +73,12 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
-    <ClInclude Include="..\src\EdgeApp.h" />
     <ClInclude Include="..\src\EdgeView.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\EdgeApp.cpp" />
     <ClCompile Include="..\src\EdgeView.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">

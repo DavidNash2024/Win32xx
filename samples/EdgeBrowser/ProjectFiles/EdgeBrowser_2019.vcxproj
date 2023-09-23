@@ -73,11 +73,9 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
-    <ClInclude Include="..\src\EdgeApp.h" />
     <ClInclude Include="..\src\EdgeView.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\EdgeApp.cpp" />
     <ClCompile Include="..\src\EdgeView.cpp" />
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
@@ -160,6 +158,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

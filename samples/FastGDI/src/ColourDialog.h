@@ -6,7 +6,7 @@
 
 
 /////////////////////////////////////////////////////
-// CColourDialog manages a dialog which allows the
+// CColourDialog manages a dialog that allows the
 // user to choose the color adjustment for the image.
 class CColourDialog : public CDialog
 {

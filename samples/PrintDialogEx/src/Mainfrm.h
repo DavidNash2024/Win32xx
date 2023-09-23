@@ -19,7 +19,7 @@ const int UTF16LE_BOM  = 3;
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
-// The main window is a frame which has a menubar, toolbar,
+// The main window is a frame that has a menubar, toolbar,
 // statusbar and view window.
 class CMainFrame : public CFrame
 {

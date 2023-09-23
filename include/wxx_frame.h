@@ -1,5 +1,5 @@
-// Win32++   Version 9.3
-// Release Date: 5th June 2023
+// Win32++   Version 9.4
+// Release Date: 25th September 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -344,7 +344,7 @@ namespace Win32xx
         HACCEL m_accel;                     // handle to the frame's accelerator table (used by MDI without MDI child)
         CWnd* m_pView;                      // pointer to the View CWnd object
         UINT m_maxMRU;                      // maximum number of MRU entries
-        HWND m_oldFocus;                    // The window which had focus prior to the app's deactivation
+        HWND m_oldFocus;                    // The window that had focus prior to the app's deactivation
         HHOOK m_kbdHook;                    // Keyboard hook.
 
         CMenuMetrics m_menuMetrics;         // The MenuMetrics object
@@ -1903,7 +1903,7 @@ namespace Win32xx
 
         if (LOWORD(wparam) == WA_INACTIVE)
         {
-            // Save the hwnd of the window which currently has focus.
+            // Save the hwnd of the window that currently has focus.
             // This must be CFrame window itself or a child window.
             if (!T::IsIconic()) m_oldFocus = ::GetFocus();
 
@@ -2063,7 +2063,7 @@ namespace Win32xx
         ::PostQuitMessage(0);   // Terminates the application.
     }
 
-    // Called in response to a WM_DPICHANGED message which is sent to a top-level
+    // Called in response to a WM_DPICHANGED message that is sent to a top-level
     // window when the DPI changes. Only top-level windows receive a WM_DPICHANGED message.
     template <class T>
     inline LRESULT CFrameT<T>::OnDpiChanged(UINT, WPARAM, LPARAM lparam)

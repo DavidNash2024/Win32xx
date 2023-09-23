@@ -7,7 +7,7 @@
 
 
 /////////////////////////////////////
-// CMyDialog manages the dialog which allows users to configure
+// CMyDialog manages the dialog that allows users to configure
 // the performance test.
 class CMyDialog : public CDialog
 {

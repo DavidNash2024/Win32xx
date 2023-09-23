@@ -84,7 +84,7 @@ void CView::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-// Called in response to a WM_DPICHANGED message which is sent to a top-level
+// Called in response to a WM_DPICHANGED message that is sent to a top-level
 // window when the DPI changes. Only top-level windows receive a WM_DPICHANGED message.
 LRESULT CView::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {

@@ -23,6 +23,6 @@ Features demonstrated in this example
 * Use of GetItemState and SetItemState to control the list-view's item activation.
 * Use of an extra edit control to provide in-place editing support for sub-items.
 * Handling the WM_CHAR message of a single line edit control to suppress the beeping
-  which occurs when the escape and return keys are pressed.
+  that occurs when the escape and return keys are pressed.
 
 

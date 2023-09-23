@@ -1,6 +1,6 @@
 Tray Example
 ==============
-This project demonstrates how to create an application which can be minimised
+This project demonstrates how to create an application that can be minimised
 to the system tray, and restored.
 
 

@@ -1,7 +1,7 @@
 INIFrame Example
 ================
 This project demonstrates the use of the CFrame class to display a frame
-window. A frame uses a separate view window which is displayed over its 
+window. A frame uses a separate view window that is displayed over its 
 client area.
 
 This program doesn't store frame settings in the Registry, it stores

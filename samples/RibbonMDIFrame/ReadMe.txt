@@ -12,7 +12,7 @@ has the MDI Cascade, MDI Tile and Icon Arrange buttons.
 The View group has a check button to show or hide the status bar, and a
 color picker to select the color for the MDI child window.
 
-The Ribbon contains a Multiple Document Interface group which has the buttons
+The Ribbon contains a Multiple Document Interface group that has the buttons
 for MDI Tile, MDI cascade etc. This group also has other buttons that are
 enabled when the MDI child is maximized.
 

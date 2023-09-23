@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////
 // CMainMDIFrame manages the application's main window.
-// The main window is a MDI frame which has a menubar, toolbar,
+// The main window is a MDI frame that has a menubar, toolbar,
 // statusbar and MDI child windows.
 class CMainMDIFrame : public CMDIFrame
 {

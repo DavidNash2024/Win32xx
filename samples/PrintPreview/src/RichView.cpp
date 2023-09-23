@@ -48,7 +48,7 @@ UINT CRichView::CollatePages()
     textLength = GetTextLengthEx(GTL_NUMCHARS);
 
     // Calculate the page breaks
-    LONG lastChar;  // The index of the last char which fits on the page.
+    LONG lastChar;  // The index of the last char that fits on the page.
     m_pageBreaks.clear();
     do
     {

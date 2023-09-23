@@ -1,5 +1,5 @@
 // Win32++   Version 9.4
-// Release Date: TBA
+// Release Date: 25th September 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -837,7 +837,7 @@ namespace Win32xx
 
 
     /////////////////////////////////////////////////////////////////////
-    // CMemDC manage a memory device context which is compatible with the
+    // CMemDC manage a memory device context that is compatible with the
     // specified device context. If this device context 0, the memory DC
     // is compatible with the application's current screen.
     class CMemDC : public CDC
@@ -2807,7 +2807,7 @@ namespace Win32xx
     inline CPalette CDC::SelectPalette(const HPALETTE palette, BOOL forceBkgnd) const
     {
         assert(m_pData->dc != 0);
-        CPalette oldPalette = static_cast<HPALETTE>(::SelectPalette(m_pData->dc, palette, forceBkgnd));
+        CPalette oldPalette = ::SelectPalette(m_pData->dc, palette, forceBkgnd);
         if (oldPalette.GetHandle() == 0)
             // throws if an error occurs.
             throw CResourceException(GetApp()->MsgGdiSelObject());

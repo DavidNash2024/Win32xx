@@ -1,5 +1,5 @@
 // Win32++   Version 9.4
-// Release Date: TBA
+// Release Date: 25th September 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -286,9 +286,9 @@ namespace Win32xx
     //
     // The docker class also provides the following windows
     //  * A dock client window with provides the caption for the docker.
-    //  * A splitter bar which allows dockers to be resized.
-    //  * Dock targets which are used to facilitate docking.
-    //  * Dock hint windows which display a blue tint over area which will
+    //  * A splitter bar that allows dockers to be resized.
+    //  * Dock targets that are used to facilitate docking.
+    //  * Dock hint windows that display a blue tint over area which will
     //    be covered if the docker is docked.
     class CDocker : public CWnd
     {
@@ -330,7 +330,7 @@ namespace Win32xx
             int m_dockBarWidth;
         };
 
-        // A nested class for the window inside a CDocker which includes all of this docked client.
+        // A nested class for the window inside a CDocker that includes all of this docked client.
         // It's the remaining part of the CDocker that doesn't belong to the CDocker's children.
         // The docker's view window is a child window of CDockClient.
         class CDockClient : public CWnd
@@ -2655,7 +2655,7 @@ namespace Win32xx
 
     // Retrieves the Docker whose view window contains the specified point.
     // Used when dragging undocked dockers over other dockers to provide
-    // the docker which needs to display the dock targets and dock hints.
+    // the docker that needs to display the dock targets and dock hints.
     inline CDocker* CDocker::GetDockUnderDragPoint(POINT pt)
     {
         // Step 1: Find the top level Docker under the point
@@ -3390,7 +3390,7 @@ namespace Win32xx
         return 0;
     }
 
-    // Called in response to a WM_DPICHANGED message which is sent to a top-level
+    // Called in response to a WM_DPICHANGED message that is sent to a top-level
     // window when the DPI changes.
     // Only top-level windows receive a WM_DPICHANGED message, so this message is
     // handled when an undocked docker is moved between monitors.
@@ -3412,7 +3412,7 @@ namespace Win32xx
         return 0;
     }
 
-    // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+    // Called in response to a WM_DPICHANGED_BEFOREPARENT message that is sent to child
     // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
     inline LRESULT CDocker::OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM)
@@ -4485,7 +4485,7 @@ namespace Win32xx
         pDocker->BringWindowToTop();
     }
 
-    // A diagnostic routine which verifies the integrity of the docking layout.
+    // A diagnostic routine that verifies the integrity of the docking layout.
     inline BOOL CDocker::VerifyDockers()
     {
         BOOL Verified = TRUE;
@@ -4897,7 +4897,7 @@ namespace Win32xx
         }
     }
 
-    // Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+    // Called in response to a WM_DPICHANGED_BEFOREPARENT message that is sent to child
     // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
     inline LRESULT CDockContainer::OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM)

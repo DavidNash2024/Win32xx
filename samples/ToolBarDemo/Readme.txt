@@ -1,7 +1,7 @@
 ToolBarDemo Example
 ===================
 This project demonstrates the how use several toolbars in a frame,
-and how to customize a ToolBar. A ToolBar is a window control which
+and how to customize a ToolBar. A ToolBar is a window control that
 has one or more buttons. Clicking these sends a command message to the
 parent window, much like selecting a menu item.
 
