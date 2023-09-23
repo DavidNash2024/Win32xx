@@ -6,8 +6,8 @@ windows to be displayed simultaneously. The more common SDI (Single Document
 Interface) frames only display a single view.
 
 In this project we have the following different types of MDI children available:
- - A simple view window which displays some text
- - A window which will be initially displayed as maximised
+ - A simple view window that displays some text
+ - A window that will be initially displayed as maximised
  - A window displaying rectangles drawn on the device context
  - A RichText view window
  - A ListView view window

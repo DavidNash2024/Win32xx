@@ -1,7 +1,7 @@
 PropertySheet Example
 =====================
 A property sheet will have one or more property pages. These pages are much 
-like dialogs which are presented within a tabbed dialog or within a wizard. 
+like dialogs that are presented within a tabbed dialog or within a wizard. 
 The data on a property page can be validated before the next page is presented.
 Property sheets have three modes of use: Modal, Modeless, and Wizard.
 

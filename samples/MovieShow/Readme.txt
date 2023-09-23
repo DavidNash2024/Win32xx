@@ -47,7 +47,7 @@ MovieShow application. This file will register MovieShow in the Windows
 Start Menu and provide an uninstall file.
 
 A compiled setup file (SetupMovieShow.exe) is provided on the install folder
-which installs a 64 bit version of MovieShow. 
+that installs a 64 bit version of MovieShow. 
 
 NSIS is 3rd party software available from:
 https://sourceforge.net/projects/nsis/

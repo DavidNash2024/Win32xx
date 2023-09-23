@@ -54,29 +54,28 @@ void CEdgeView::StartBrowser()
 {
     CString dataDirectory = GetAppDataPath() + L"\\Win32++\\" + LoadString(IDS_APP_TITLE);
 
-    // Use a lambda function to create the core web environment.
+    // Use a lambda and callback to create the core web environment.
     CreateCoreWebView2EnvironmentWithOptions(nullptr, dataDirectory, nullptr,
         Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(
             [this](HRESULT, ICoreWebView2Environment* env) -> HRESULT
             {
-                // Use a lambda function to create the core web controller.
+                // Use a lambda and callback to create the core web controller.
                 env->CreateCoreWebView2Controller(*this, Callback<ICoreWebView2CreateCoreWebView2ControllerCompletedHandler>(
                     [this](HRESULT, ICoreWebView2Controller* controller) -> HRESULT
                     {
-                        // Retrieve the web vire from the controller.
                         if (controller != nullptr)
                         {
+                            // Retrieve the web view from the controller.
                             m_controller = controller;
                             m_controller->get_CoreWebView2(&m_webView);
+
+                            // Resize WebView to fit the bounds of the parent window
+                            CRect bounds = GetClientRect();
+                            m_controller->put_Bounds(bounds);
+
+                            // Navigate to a web site.
+                            m_webView->Navigate(L"https://www.google.com/");
                         }
-
-                        // Resize WebView to fit the bounds of the parent window
-                        CRect bounds = GetClientRect();
-                        m_controller->put_Bounds(bounds);
-
-                        // Navigate to a web site.
-                        m_webView->Navigate(L"https://www.google.com/");
-
                         return S_OK;
                     }).Get());
                 return S_OK;
@@ -90,6 +89,6 @@ LRESULT CEdgeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_SIZE:   return OnSize(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);;
+    return WndProcDefault(msg, wparam, lparam);
 }
 

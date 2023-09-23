@@ -56,7 +56,7 @@ void CViewClasses::OnAttach()
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
-// Called in response to a WM_DPICHANGED_BEFORE message which is sent to child
+// Called in response to a WM_DPICHANGED_BEFORE message that is sent to child
 // windows after a DPI change. A WM_DPICHANGED_BEFORE is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
 LRESULT CViewClasses::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)

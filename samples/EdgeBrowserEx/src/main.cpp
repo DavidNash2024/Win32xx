@@ -14,11 +14,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE,
                       _In_ LPWSTR,
                       _In_ int)
 {
+    // Start Win32++.
     CWinApp app;
 
+    // Create the browser window.
     CBrowserWindow browserWindow;
     browserWindow.Create();
 
+    // Run the app's message loop.
     return app.Run();
 }
 

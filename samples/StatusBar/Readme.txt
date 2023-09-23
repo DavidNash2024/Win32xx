@@ -17,7 +17,7 @@ a solid background color using the SB_SETBKCOLOR message.
 The status bar has 9 parts (0 through 8):
  * The frame's status is displayed in part 0
  * The Hyperlink control is placed over part 1. The Hyperlink control  is 
-   a modified static control which launches a web browser to display the 
+   a modified static control that launches a web browser to display the 
    web page when clicked.
  * The ProgressBar is placed over part 2. The progress bar is resized to
    fit entirely over Part 1. GetPartRect is used to get the part's dimensions.

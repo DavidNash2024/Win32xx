@@ -50,7 +50,8 @@ HRESULT CBrowserWindow::CreateBrowserControlsWebView()
             OutputDebugString(L"Controls WebView creation failed\n");
             return result;
         }
-        // WebView created
+
+        // Store the control's controller and the control's webview.
         m_controlsController = host;
         CheckFailure(m_controlsController->get_CoreWebView2(&m_controlsWebView), L"");
 
@@ -86,7 +87,8 @@ HRESULT CBrowserWindow::CreateBrowserOptionsWebView()
             OutputDebugString(L"Options WebView creation failed\n");
             return result;
         }
-        // WebView created
+
+        // Store the option's controller and the option's webview.
         m_optionsController = host;
         CheckFailure(m_optionsController->get_CoreWebView2(&m_optionsWebView), L"");
 
@@ -140,7 +142,7 @@ BOOL CBrowserWindow::LaunchBrowser()
 
     // Create WebView environment for web content requested by the user. All
     // tabs will be created from this environment and kept isolated from the
-    // browser UI. This enviroment is created first so the UI can request new
+    // browser UI. This environment is created first so the UI can request new
     // tabs when it's ready.
     HRESULT hr = CreateCoreWebView2EnvironmentWithOptions(nullptr, userDataDirectory.c_str(),
         nullptr, Callback<ICoreWebView2CreateCoreWebView2EnvironmentCompletedHandler>(

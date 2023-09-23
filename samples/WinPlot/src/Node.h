@@ -35,7 +35,7 @@ namespace Calc
 
 
     /////////////////////////////////////////////////////
-    // A node type which holds a simple number, but not a
+    // A node type that holds a simple number, but not a
     // variable or constant from the SymbolTable.
     class Node_Number : public Node
     {

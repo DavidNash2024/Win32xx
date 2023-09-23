@@ -1,6 +1,6 @@
 FormDocView Example
 ===================
-This program has a frame window which includes a Tool Bar and 
+This program has a frame window that includes a Tool Bar and 
 Status Bar.  A modeless dialog is used as the view window of our frame.
 
 This project uses an FormDoc class to store the various Form settings, and

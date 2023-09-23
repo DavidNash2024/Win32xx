@@ -20,7 +20,7 @@
 //
 class CView : public CWnd
 {
-    // A private class which uses CAtlExeModuleT to initialize ATL.
+    // A private class that uses CAtlExeModuleT to initialize ATL.
     // This implementation requires ATL version 10.0 (VS2010) or later.
     // It eliminates the need for a global CComModule _Module variable.
     // CAtlExeModuleT replaces CComModule which is depreciated.

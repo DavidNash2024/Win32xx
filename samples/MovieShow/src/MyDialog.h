@@ -9,7 +9,7 @@
 
 
 ////////////////////////////////////////////////////////////////
-// CViewDialog manages the dialog which displays the information
+// CViewDialog manages the dialog that displays the information
 // about the selected movie including the title, release date,
 // cast, description and the cover image.
 class CViewDialog : public CDialog

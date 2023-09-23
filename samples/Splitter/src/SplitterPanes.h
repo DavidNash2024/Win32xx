@@ -9,7 +9,7 @@
 
 
 ////////////////////////////////////////////////////
-// CDockTest manages the docker which uses CViewText
+// CDockTest manages the docker that uses CViewText
 // as its view.
 class CDockText : public CDocker
 {
@@ -26,7 +26,7 @@ private:
 
 
 ///////////////////////////////////////////////////////////
-// CDockTree manages the docker which uses CViewTree as its
+// CDockTree manages the docker that uses CViewTree as its
 // view.
 class CDockTree : public CDocker
 {
@@ -43,7 +43,7 @@ private:
 
 
 ////////////////////////////////////////////////////
-// CDockList manages the docker which uses CViewList
+// CDockList manages the docker that uses CViewList
 // as its view.
 class CDockList : public CDocker
 {

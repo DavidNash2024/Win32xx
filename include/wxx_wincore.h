@@ -1,5 +1,5 @@
 // Win32++   Version 9.4
-// Release Date: TBA
+// Release Date: 25th September 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1071,7 +1071,7 @@ namespace Win32xx
     }
 
     // Override this function if your class requires input messages to be
-    // translated before normal processing. Function which translate messages
+    // translated before normal processing. Functions which translate messages
     // include TranslateAccelerator, TranslateMDISysAccel and IsDialogMessage.
     // Return TRUE if the message is translated.
     inline BOOL CWnd::PreTranslateMessage(MSG&)

@@ -29,7 +29,7 @@ private:
 
 
 /////////////////////////////////////////////////////////
-// CButtonPage manages a property page which displays a
+// CButtonPage manages a property page that displays a
 // number of buttons. A property page behaves much like a
 // dialog.
 class CButtonPage : public CPropertyPage
@@ -56,7 +56,7 @@ private:
 
 
 //////////////////////////////////////////////////////
-// CComboPage manages a property page which displays a
+// CComboPage manages a property page that displays a
 // number of combo boxes. A property page behaves much
 // like a dialog.
 class CComboPage : public CPropertyPage

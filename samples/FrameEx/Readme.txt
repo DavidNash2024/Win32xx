@@ -3,7 +3,7 @@ FrameEx Example
 This project extends the Frame sample by using PNG images instead of 
 bitmaps for the for the toolbar and menu item icons. PNG images are
 better suited to being resized than bitmaps. This makes PNG images
-the better choice for images which need to be re-scaled to match the
+the better choice for images that need to be re-scaled to match the
 window's DPI (Dots Per Inch).
 
 This is a project which could be used as a starting point for your own
