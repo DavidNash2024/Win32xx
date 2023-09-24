@@ -1,6 +1,6 @@
 Tutorial 2
 ==========
-This is part of a set of tutorials which demonstrate how to use Win32++.
+This is part of a set of tutorials that demonstrate how to use Win32++.
 The tutorials are explained in detail in the tutorials section of the
 help documentation.
 
