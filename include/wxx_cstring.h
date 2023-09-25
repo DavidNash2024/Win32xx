@@ -474,7 +474,7 @@ namespace Win32xx
     template <class T>
     inline bool CStringT<T>::operator == (const T* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         return (Compare(text) == 0);
     }
 
@@ -490,7 +490,7 @@ namespace Win32xx
     template <class T>
     inline bool CStringT<T>::operator != (const T* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         return Compare(text) != 0;
     }
 
@@ -600,7 +600,7 @@ namespace Win32xx
     template <>
     inline int CStringT<CHAR>::Collate(const CHAR* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         int res = ::CompareStringA(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, text, -1);
 
         assert(res);
@@ -614,7 +614,7 @@ namespace Win32xx
     template <>
     inline int CStringT<WCHAR>::Collate(const WCHAR* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         int res = ::CompareStringW(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, text, -1);
 
         assert(res);
@@ -628,7 +628,7 @@ namespace Win32xx
     template <>
     inline int CStringT<CHAR>::CollateNoCase(const CHAR* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         int res = ::CompareStringA(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
 
         assert(res);
@@ -642,7 +642,7 @@ namespace Win32xx
     template <>
     inline int CStringT<WCHAR>::CollateNoCase(const WCHAR* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         int res = ::CompareStringW(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, text, -1);
 
         assert(res);
@@ -656,7 +656,7 @@ namespace Win32xx
     template <>
     inline int CStringT<CHAR>::Compare(const CHAR* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         return ::lstrcmpA(m_str.c_str(), text);
     }
 
@@ -664,7 +664,7 @@ namespace Win32xx
     template <>
     inline int CStringT<WCHAR>::Compare(const WCHAR* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         return ::lstrcmpW(m_str.c_str(), text);
     }
 
@@ -672,7 +672,7 @@ namespace Win32xx
     template <>
     inline int CStringT<CHAR>::CompareNoCase(const CHAR* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         return ::lstrcmpiA(m_str.c_str(), text);
     }
 
@@ -680,7 +680,7 @@ namespace Win32xx
     template <>
     inline int CStringT<WCHAR>::CompareNoCase(const WCHAR* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         return ::lstrcmpiW(m_str.c_str(), text);
     }
 
@@ -718,7 +718,7 @@ namespace Win32xx
     template <class T>
     inline int CStringT<T>::Find(const T* text, int index /* = 0 */) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         assert(index >= 0);
 
         size_t s = m_str.find(text, static_cast<size_t>(index));
@@ -729,7 +729,7 @@ namespace Win32xx
     template <class T>
     inline int CStringT<T>::FindOneOf(const T* text) const
     {
-        assert(text != 0);
+        assert(text != NULL);
 
         size_t s = m_str.find_first_of(text);
         return static_cast<int>(s);
@@ -1114,7 +1114,7 @@ namespace Win32xx
     template <class T>
     inline int CStringT<T>::Remove(const T* text)
     {
-        assert(text != 0);
+        assert(text != NULL);
 
         int count = 0;
         size_t pos = 0;
@@ -1201,7 +1201,7 @@ namespace Win32xx
     template <class T>
     inline int CStringT<T>::ReverseFind(const T* text, int end /* = -1 */) const
     {
-        assert(text != 0);
+        assert(text != NULL);
         if (!text) return -1;
 
         if (lstrlenT(text) == 1)

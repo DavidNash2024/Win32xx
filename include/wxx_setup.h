@@ -419,8 +419,8 @@ namespace Win32xx
     // Copies an ANSI string from src to dst.
     inline void StrCopyA(char* dst, const char* src, size_t dst_size)
     {
-        assert(dst != 0);
-        assert(src != 0);
+        assert(dst != NULL);
+        assert(src != NULL);
         assert(dst_size != 0);
 
         if (dst && src && dst_size != 0)
@@ -444,8 +444,8 @@ namespace Win32xx
     // Copies a wide string from src to dst.
     inline void StrCopyW(wchar_t* dst, const wchar_t* src, size_t dst_size)
     {
-        assert(dst != 0);
-        assert(src != 0);
+        assert(dst != NULL);
+        assert(src != NULL);
         assert(dst_size != 0);
 
         if (dst && src && dst_size != 0)

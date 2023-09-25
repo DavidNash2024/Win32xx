@@ -4876,7 +4876,7 @@ namespace Win32xx
     inline CSize CDC::GetTextExtentPoint32(LPCTSTR string, int count) const
     {
         assert(m_pData->dc != 0);
-        assert(string != 0);
+        assert(string != NULL);
         assert(count <= lstrlen(string));
         CSize sz;
         VERIFY(::GetTextExtentPoint32(m_pData->dc, string, count, &sz));
@@ -4887,7 +4887,7 @@ namespace Win32xx
     // Refer to GetTextExtentPoint32 in the Windows API documentation for more information.
     inline CSize CDC::GetTextExtentPoint32(LPCTSTR string) const
     {
-        assert(string != 0);
+        assert(string != NULL);
         return GetTextExtentPoint32(string, lstrlen(string));
     }
 

@@ -46,7 +46,7 @@ HWND CMainFrame::Create(HWND parent)
 // The returned unique_ptr contains nullptr if the resouce isn't found.
 BitmapPtr CMainFrame::LoadPngResource(UINT id)
 {
-    BitmapPtr pBitmap;
+    BitmapPtr bitmap;
     HINSTANCE instance = GetApp()->GetResourceHandle();
 
     HRSRC resourceInfo = ::FindResource(instance, MAKEINTRESOURCE(id), _T("PNG"));
@@ -58,35 +58,31 @@ BitmapPtr CMainFrame::LoadPngResource(UINT id)
             HGLOBAL resource = ::LoadResource(instance, resourceInfo);
             if (resource != nullptr)
             {
-                const void* pResource = ::LockResource(resource);
-                if (pResource != nullptr)
+                const void* resourceData = ::LockResource(resource);
+                if (resourceData != nullptr)
                 {
-                    HGLOBAL buffer = ::GlobalAlloc(GMEM_MOVEABLE, bufferSize);
-                    if (buffer != nullptr)
+                    CHGlobal globalMemory(bufferSize);
+                    if (globalMemory.Get() != nullptr)
                     {
-                        void* pBuffer = GlobalLock(buffer);
-                        if (pBuffer != nullptr)
+                        CGlobalLock<CHGlobal> buffer(globalMemory);
+                        if (buffer != nullptr)
                         {
-                            CopyMemory(pBuffer, pResource, bufferSize);
+                            CopyMemory(buffer, resourceData, bufferSize);
 
-                            IStream* pStream;
-                            if (CreateStreamOnHGlobal(pBuffer, FALSE, &pStream) == S_OK)
+                            IStream* stream;
+                            if (CreateStreamOnHGlobal(buffer, FALSE, &stream) == S_OK)
                             {
-                                pBitmap.reset(Gdiplus::Bitmap::FromStream(pStream));
-                                pStream->Release();
+                                bitmap.reset(Gdiplus::Bitmap::FromStream(stream));
+                                stream->Release();
                             }
-
-                            GlobalUnlock(pBuffer);
                         }
-
-                        GlobalFree(buffer);
                     }
                 }
             }
         }
     }
 
-    return pBitmap;
+    return bitmap;
 }
 
 // Called when the frame window is asked to close.
@@ -152,8 +148,6 @@ void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
     // Place any additional startup code here.
-
-    BitmapPtr pBitmap = LoadPngResource(IDP_FILE_OPEN);
 
     TRACE("Frame created\n");
 }
@@ -338,16 +332,16 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 // Adds normal and disabled icons to the dropdown menu.
 void CMainFrame::AddMenuIconFromPNG(UINT pngID, UINT disabledPngID, UINT menuID)
 {
-    BitmapPtr pBitmap = LoadPngResource(pngID);
-    if (pBitmap.get() != nullptr)
+    BitmapPtr bitmap = LoadPngResource(pngID);
+    if (bitmap.get() != nullptr)
     {
-        BitmapPtr pDisabledBitmap = LoadPngResource(disabledPngID);
-        if (pDisabledBitmap.get() != nullptr)
+        BitmapPtr disabledBitmap = LoadPngResource(disabledPngID);
+        if (disabledBitmap.get() != nullptr)
         {
             HICON icon;
             HICON disabledIcon;
-            pBitmap->GetHICON(&icon);
-            pDisabledBitmap->GetHICON(&disabledIcon);
+            bitmap->GetHICON(&icon);
+            disabledBitmap->GetHICON(&disabledIcon);
             AddMenuIcon(menuID, icon, disabledIcon);
         }
     }
@@ -357,10 +351,10 @@ void CMainFrame::AddMenuIconFromPNG(UINT pngID, UINT disabledPngID, UINT menuID)
 void CMainFrame::AddIconFromPNG(CImageList& images, UINT pngID)
 {
     HICON icon;
-    BitmapPtr pBitmap = LoadPngResource(pngID);
-    if (pBitmap.get() != nullptr)
+    BitmapPtr bitmap = LoadPngResource(pngID);
+    if (bitmap.get() != nullptr)
     {
-        pBitmap->GetHICON(&icon);
+        bitmap->GetHICON(&icon);
         images.Add(icon);
     }
 }

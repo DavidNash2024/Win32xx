@@ -621,7 +621,7 @@ namespace Win32xx
     {
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
-        assert(string != 0);
+        assert(string != NULL);
 
         return ::GetMenuString(m_pData->menu, idOrPos, string, maxCount, flags);
     }
