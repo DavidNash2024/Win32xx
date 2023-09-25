@@ -1486,7 +1486,7 @@ namespace Win32xx
         else
             dc.SetTextColor(RGB(0, 0, 0));
 
-        assert(pDrawItem->itemData != NULL);
+        assert(pDrawItem->itemData != 0);
         CString text = reinterpret_cast<LPCTSTR>(pDrawItem->itemData);
         dc.DrawText(text, text.GetLength(), partRect, DT_SINGLELINE | DT_VCENTER);
     }
