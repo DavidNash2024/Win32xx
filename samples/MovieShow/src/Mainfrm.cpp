@@ -139,26 +139,25 @@ HWND CMainFrame::Create(HWND parent)
 // Saves the byte stream for the thumbnail in the specified vector.
 void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
 {
-    DWORD size = 0;
-    if (::CryptStringToBinary(source.c_str(), (DWORD)source.GetLength(), CRYPT_STRING_BASE64, nullptr, &size, nullptr, nullptr))
+    DWORD bufferSize = 0;
+    if (::CryptStringToBinary(source.c_str(), source.GetLength(), CRYPT_STRING_BASE64, nullptr, &bufferSize, nullptr, nullptr))
     {
         // Use a vector for an array of BYTE
-        std::vector<BYTE> Dest(size, 0);
-        BYTE* pDest = &Dest.front();
-        ::CryptStringToBinary(source.c_str(), (DWORD)source.GetLength(), CRYPT_STRING_BASE64, pDest, &size, nullptr, nullptr);
+        std::vector<BYTE> sourceData(bufferSize, 0);
+        BYTE* pSource = &sourceData.front();
+        ::CryptStringToBinary(source.c_str(), (DWORD)source.GetLength(), CRYPT_STRING_BASE64, pSource, &bufferSize, nullptr, nullptr);
 
         // Convert the binary data to an IStream
-        HGLOBAL hMem = ::GlobalAlloc(GMEM_MOVEABLE, size);
-        if(hMem != 0)
+        CHGlobal globalMemory(bufferSize);
+        if (globalMemory.Get() != nullptr)
         {
-            LPVOID pImage = ::GlobalLock(hMem);
-            if (pImage != nullptr)
+            CGlobalLock<CHGlobal> buffer(globalMemory);
+            if (buffer != nullptr)
             {
-                memcpy(pImage, pDest, size);
+                memcpy(buffer, pSource, bufferSize);
                 IStream* pStream = nullptr;
-                if (S_OK == ::CreateStreamOnHGlobal(hMem, FALSE, &pStream))
+                if (S_OK == ::CreateStreamOnHGlobal(globalMemory, FALSE, &pStream))
                 {
-
                     // Acquire GDI+ Image from the IStream
                     Image image(pStream);
 
@@ -186,10 +185,7 @@ void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
 
                     // Cleanup
                     pStream->Release();
-                    GlobalUnlock(hMem);
                 }
-
-                GlobalFree(hMem);
             }
         }
     }

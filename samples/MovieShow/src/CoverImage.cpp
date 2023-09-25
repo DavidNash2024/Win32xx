@@ -56,18 +56,18 @@ CCoverImage::~CCoverImage()
 void CCoverImage::DrawImage(CDC& dc)
 {
     // Convert the image string to binary
-    if (m_imageData.size() > 0)
+    size_t  bufferSize = m_imageData.size();
+    if (bufferSize > 0)
     {
-        UINT len = (UINT)m_imageData.size();
-        HGLOBAL mem = GlobalAlloc(GMEM_MOVEABLE, len);
-        if (mem != 0)
+        CHGlobal globalMemory(bufferSize);
+        if (globalMemory.Get() != nullptr)
         {
-            BYTE* pMem = (BYTE*)GlobalLock(mem);
-            if (pMem != nullptr)
+            CGlobalLock<CHGlobal> buffer(globalMemory);
+            if (buffer != nullptr)
             {
-                memcpy(pMem, &m_imageData[0], len);
+                memcpy(buffer, &m_imageData[0], bufferSize);
                 IStream* stream = nullptr;
-                VERIFY(S_OK == ::CreateStreamOnHGlobal(mem, FALSE, &stream));
+                VERIFY(S_OK == ::CreateStreamOnHGlobal(globalMemory, FALSE, &stream));
                 Image cover(stream);
 
                 // Draw the image
@@ -79,9 +79,7 @@ void CCoverImage::DrawImage(CDC& dc)
 
                 // Cleanup
                 stream->Release();
-                GlobalUnlock(mem);
             }
-            GlobalFree(mem);
         }
     }
     else

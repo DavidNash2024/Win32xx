@@ -653,7 +653,7 @@ namespace Win32xx
 
 #ifdef GetAddrInfo
 
-        if (m_pfnGetAddrInfo != 0 && m_pfnFreeAddrInfo != 0)
+        if (m_pfnGetAddrInfo != NULL && m_pfnFreeAddrInfo != NULL)
             isIPV6Supported = TRUE;
 
 #endif

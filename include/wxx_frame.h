@@ -659,7 +659,7 @@ namespace Win32xx
 
         GetToolBar().AddButton(id, isEnabled, image);
 
-        if (text != 0)
+        if (text != NULL)
             GetToolBar().SetButtonText(id, text);
     }
 
@@ -737,7 +737,7 @@ namespace Win32xx
         LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
         CMenuBar* pMenubar = reinterpret_cast<CMenuBar*>
                              (::SendMessage(pNMHDR->hwndFrom, UWM_GETCMENUBAR, 0, 0));
-        assert(pMenubar != 0);
+        assert(pMenubar != NULL);
 
         switch (lpNMCustomDraw->nmcd.dwDrawStage)
         {
@@ -1310,7 +1310,7 @@ namespace Win32xx
         // Turn on 'hide prefix' style for mouse navigation.
         CMenuBar* pMenubar = reinterpret_cast<CMenuBar*>
                              (::SendMessage(pDrawItem->hwndItem, UWM_GETCMENUBAR, 0, 0));
-        if (pMenubar != 0)
+        if (pMenubar != NULL)
         {
             if (!m_altKeyPressed && !pMenubar->IsAltMode())
                 format |= DT_HIDEPREFIX;
@@ -1486,7 +1486,7 @@ namespace Win32xx
         else
             dc.SetTextColor(RGB(0, 0, 0));
 
-        assert(pDrawItem->itemData != 0);
+        assert(pDrawItem->itemData != NULL);
         CString text = reinterpret_cast<LPCTSTR>(pDrawItem->itemData);
         dc.DrawText(text, text.GetLength(), partRect, DT_SINGLELINE | DT_VCENTER);
     }
@@ -2584,7 +2584,7 @@ namespace Win32xx
             menu.GetMenuItemInfo(position, mii, TRUE);
 
             MenuItemData* pItemData = reinterpret_cast<MenuItemData*>(mii.dwItemData);
-            if (pItemData != 0)
+            if (pItemData != NULL)
             {
                 mii.fType = pItemData->mii.fType;
                 mii.dwTypeData = const_cast<LPTSTR>(pItemData->itemText.c_str());
