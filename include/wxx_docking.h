@@ -1,5 +1,5 @@
 // Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Release Date: 2nd October 2023
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -4659,6 +4659,7 @@ namespace Win32xx
         // Create the toolbar.
         if (GetViewPage().IsWindow())
         {
+            m_toolBarData.clear();
             GetToolBar().Create(GetViewPage());
             DWORD style = GetToolBar().GetStyle();
             style |= CCS_NODIVIDER;
