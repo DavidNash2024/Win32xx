@@ -6,6 +6,7 @@
 #define MAINFRM_H
 
 #include "View.h"
+#include "MyCombo.h"
 #include "resource.h"
 
 
@@ -41,6 +42,7 @@ private:
     CMainFrame(const CMainFrame&);                // Disable copy construction
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
+    LRESULT AddCombo();
     BOOL ChooseColor(UINT color);
     void SetMenuBarColors(COLORREF hot1, COLORREF hot2, COLORREF pressed1, COLORREF pressed2, COLORREF outline, COLORREF text);
     void SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2);
@@ -66,6 +68,7 @@ private:
     CView m_view;
     CToolBar m_arrows;
     CToolBar m_cards;
+    CMyCombo m_comboBoxEx;
     std::vector<UINT> m_bandIDs;
     std::vector<UINT> m_bandStyles;
     std::vector<UINT> m_bandSizes;
@@ -83,6 +86,7 @@ private:
     bool m_useLines;
     bool m_showArrows;
     bool m_showCards;
+    int  m_selectedItem;      // Currently selected ComboBoxEx item.
 };
 
 

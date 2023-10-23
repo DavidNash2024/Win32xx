@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 2nd October 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2700,6 +2700,8 @@ namespace Win32xx
     // This function uses the GetDpiForMonitor function.
     inline int CDocker::GetMonitorDpi(HWND wnd)
     {
+        UNREFERENCED_PARAMETER(wnd);
+
         // Retrieve desktop's dpi as a fallback.
         CClientDC desktopDC(HWND_DESKTOP);
         int dpi = GetDeviceCaps(desktopDC, LOGPIXELSX);
@@ -3270,9 +3272,18 @@ namespace Win32xx
 
         GetDockBar().Destroy();
 
-        // Post a docker destroyed message.
-        if ( GetDockAncestor()->IsWindow() )
-            GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, reinterpret_cast<WPARAM>(this), 0);
+        if (this == GetDockAncestor())
+        {
+            m_dockChildren.clear();
+            m_allDockers.clear();
+            m_allDockChildren.clear();
+        }
+        else
+        {
+            // Post a docker destroyed message.
+            if (GetDockAncestor()->IsWindow())
+                GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, reinterpret_cast<WPARAM>(this), 0);
+        }
     }
 
     // Called in response to a UWM_DOCKACTIVATE message.
@@ -4853,6 +4864,9 @@ namespace Win32xx
     // Called when a HWND is attached to this CWnd.
     inline void CDockContainer::OnAttach()
     {
+        m_allInfo.clear();
+
+        // The parent window must be a docker.
         m_pDocker = reinterpret_cast<CDocker*>((GetParent().GetParent().SendMessage(UWM_GETCDOCKER)));
         assert(dynamic_cast<CDocker*>(m_pDocker));
 

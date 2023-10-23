@@ -125,6 +125,9 @@
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
+				RelativePath="..\src\MyCombo.cpp">
+			</File>
+			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
 			<File
@@ -140,6 +143,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\src\Mainfrm.h">
+			</File>
+			<File
+				RelativePath="..\src\MyCombo.h">
 			</File>
 			<File
 				RelativePath="..\src\resource.h">
