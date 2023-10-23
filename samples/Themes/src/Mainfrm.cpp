@@ -6,6 +6,8 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
+#define UWM_ADDCOMBO        (WM_APP + 0x0001)
+
 ///////////////////////////////////
 // CMainFrame function definitions.
 //
@@ -14,13 +16,45 @@
 CMainFrame::CMainFrame() : m_color(IDM_BLUE), m_useThemes(true), m_useBandColors(true),
                             m_useFlatStyle(false), m_keepBandsLeft(true), m_lockMenuBand(true),
                             m_useRoundBorders(true), m_useShortBands(true), m_useLines(false),
-                            m_showArrows(true), m_showCards(true)
+                            m_showArrows(true), m_showCards(true), m_selectedItem(-1)
 {
 }
 
 // Destructor for CMainFrame.
 CMainFrame::~CMainFrame()
 {
+}
+
+// Adds a comboBoxEx to the toolbar.
+LRESULT CMainFrame::AddCombo()
+{
+    CToolBar& tb = GetToolBar();
+
+    // Place the ComboBoxEx control over the 'File Save' toolbar button.
+    if (tb.CommandToIndex(IDM_FILE_SAVE) >= 0)
+    {
+        // Convert the 'File Save' button to a separator.
+        tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
+
+        // Determine the size and position of the ComboBox.
+        int comboWidth = DpiScaleInt(100);
+        tb.SetButtonWidth(IDM_FILE_SAVE, comboWidth);
+        int index = tb.CommandToIndex(IDM_FILE_SAVE);
+        CRect rc = tb.GetItemRect(index);
+
+        // Set the height of the combobox in order to see a dropdown list.
+        rc.bottom = DpiScaleInt(100);
+
+        // Recreate and position the ComboboxEx window.
+        m_comboBoxEx.Destroy(); // Destroy any existing ComboBoxEx.
+        DWORD style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
+        m_comboBoxEx.CreateEx(0, WC_COMBOBOXEX, 0, style, rc, tb, 0, 0);
+        m_comboBoxEx.SetWindowPos(0, rc, SWP_NOACTIVATE);
+        m_comboBoxEx.AddItems();
+        m_comboBoxEx.SetCurSel(m_selectedItem);
+    }
+
+    return 0;
 }
 
 // Configures the theme colors based on the user's menu selection.
@@ -326,19 +360,25 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
+LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Resize the frame, using the suggested new window size.
-    RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
-    assert(pWindowRect);
-    SetWindowPos(0, *pWindowRect, SWP_NOZORDER | SWP_NOACTIVATE);
+    m_selectedItem = m_comboBoxEx.GetCurSel();
 
-    // Update the rebar, menubar and statusbar.
-    ResetMenuMetrics();
-    UpdateSettings();
-    DpiScaleToolBar();
-    SetupMenuIcons();
-    RecalcLayout();
+    // Remove cards and arrows toolbars
+    if (GetReBar().IsWindow())
+    {
+        int band = GetReBar().GetBand(m_arrows);
+        if (band >= 0)
+            GetReBar().DeleteBand(band);
+        band = GetReBar().GetBand(m_cards);
+        if (band >= 0)
+            GetReBar().DeleteBand(band);
+    }
+    m_arrows.Destroy();
+    m_cards.Destroy();
+
+    // Call the base class function. This recreates the toolbars.
+    CFrame::OnDpiChanged(msg, wparam, lparam);
 
     return 0;
 }
@@ -375,7 +415,7 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
-// Toggles the postitioning of bands left.
+// Toggles the positioning of bands left.
 BOOL CMainFrame::OnLeftBands()
 {
     if (IsReBarSupported())
@@ -762,6 +802,9 @@ void CMainFrame::SetupToolBar()
         SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
     }
 
+    // Use PostMessage to add the combo late to fix drawing issues
+    // that arise when the display scale is changed.
+    PostMessage(UWM_ADDCOMBO);
 }
 
 // Displays or hides the arrows toolbar.
@@ -793,11 +836,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
-
-    //  switch (msg)
-    //  {
-    //  Add case statements for each messages to be handled here.
-    //  }
+        switch (msg)
+        {
+        case UWM_ADDCOMBO:        return AddCombo();
+        }
 
         //  pass unhandled messages on for default processing
         return WndProcDefault(msg, wparam, lparam);

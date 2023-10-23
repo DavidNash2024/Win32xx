@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1177,8 +1177,8 @@ namespace Win32xx
         MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pDrawItem->itemData);
         UINT buttonType = pmid->mii.fType;
         const MenuTheme& mbt = GetMenuBarTheme();
-        int cxCheck = 16;
-        int cyCheck = 16;
+        int cxCheck = T::DpiScaleInt(16);
+        int cyCheck = T::DpiScaleInt(16);
         CRect gutter = GetMenuMetrics().GetGutterRect(rc);
         int left = (gutter.Width() - cxCheck) / 2;
         int top = rc.top + (rc.Height() - cyCheck) / 2;
@@ -1207,7 +1207,7 @@ namespace Win32xx
         else
             maskDC.DrawFrameControl(checkRect, DFC_MENU, DFCS_MENUCHECK);
 
-        int xoffset = 1;
+        int xoffset = (buttonType == MFT_RADIOCHECK)? 1 : 2;
         int yoffset = 0;
 
         if (GetWinVersion() <= 2500 && (buttonType != MFT_RADIOCHECK))

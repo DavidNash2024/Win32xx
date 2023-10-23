@@ -1,7 +1,7 @@
 [Project]
 FileName=Themes_DEBUG.dev
 Name=Themes
-UnitCount=12
+UnitCount=14
 Type=0
 Ver=2
 ObjFiles=
@@ -171,7 +171,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit13]
-FileName=..\src\View.cpp
+FileName=..\src\MyCombo.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -181,7 +181,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit14]
-FileName=..\src\View.h
+FileName=..\src\MyCombo.h
 CompileCpp=1
 Folder=Header
 Compile=1

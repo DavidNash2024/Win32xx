@@ -180,6 +180,8 @@
 		</VirtualTargets>
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
+		<Unit filename="../src/MyCombo.cpp" />
+		<Unit filename="../src/MyCombo.h" />
 		<Unit filename="../src/Readme.txt" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />

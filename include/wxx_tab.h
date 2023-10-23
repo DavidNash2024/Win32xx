@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -181,6 +181,7 @@ namespace Win32xx
         virtual void    DrawTabs(CDC& dc);
         virtual void    DrawTabBorders(CDC& dc, RECT& rc);
         virtual void    OnAttach();
+        virtual void    OnDestroy();
         virtual BOOL    OnEraseBkgnd(CDC&) { return TRUE;}
         virtual LRESULT OnEraseBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -1116,6 +1117,17 @@ namespace Win32xx
         }
 
         return FinalWindowProc(msg, wparam, lparam);
+    }
+
+    // Called when a window is destroyed.
+    inline void CTab::OnDestroy()
+    {
+        // Remove any current pages.
+        int pages = static_cast<int>(m_allTabPageInfo.size());
+        for (int i = pages - 1; i >= 0; i--)
+        {
+            RemoveTabPage(i);
+        }
     }
 
     // Called in response to a WM_DPICHANGED_BEFOREPARENT message that is sent to child
