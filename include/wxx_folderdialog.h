@@ -221,7 +221,7 @@ namespace Win32xx
         CoTaskMemFree(m_fullPidl);
     }
 
-    // The callback function used used to send messages to and process messages
+    // The callback function used to send messages to and process messages
     // from a Browse dialog box displayed in response to a call to SHBrowseForFolder.
     inline int CALLBACK CFolderDialog::BrowseCallbackProc(HWND wnd, UINT msg, LPARAM param1, LPARAM param2)
     {

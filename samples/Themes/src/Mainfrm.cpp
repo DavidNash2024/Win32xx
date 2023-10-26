@@ -36,17 +36,16 @@ LRESULT CMainFrame::AddCombo()
         // Convert the 'File Save' button to a separator.
         tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
 
-        // Determine the size and position of the ComboBox.
+        // Determine the size and position of the ComboBoxEx.
         int comboWidth = DpiScaleInt(100);
         tb.SetButtonWidth(IDM_FILE_SAVE, comboWidth);
         int index = tb.CommandToIndex(IDM_FILE_SAVE);
         CRect rc = tb.GetItemRect(index);
 
-        // Set the height of the combobox in order to see a dropdown list.
+        // Increase the height of the combobox in order to see a dropdown list.
         rc.bottom = DpiScaleInt(100);
 
-        // Recreate and position the ComboboxEx window.
-        m_comboBoxEx.Destroy(); // Destroy any existing ComboBoxEx.
+        // Create and position the ComboBoxEx window.
         DWORD style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
         m_comboBoxEx.CreateEx(0, WC_COMBOBOXEX, 0, style, rc, tb, 0, 0);
         m_comboBoxEx.SetWindowPos(0, rc, SWP_NOACTIVATE);
@@ -364,16 +363,16 @@ LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     m_selectedItem = m_comboBoxEx.GetCurSel();
 
-    // Remove cards and arrows toolbars
+    // Delete the rebar bands holding the cards and arrows toolbars.
     if (GetReBar().IsWindow())
     {
         int band = GetReBar().GetBand(m_arrows);
-        if (band >= 0)
-            GetReBar().DeleteBand(band);
+        GetReBar().DeleteBand(band);
         band = GetReBar().GetBand(m_cards);
-        if (band >= 0)
-            GetReBar().DeleteBand(band);
+        GetReBar().DeleteBand(band);
     }
+
+    // Destroy the cards and arrows toolbars.
     m_arrows.Destroy();
     m_cards.Destroy();
 
