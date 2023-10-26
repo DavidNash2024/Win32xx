@@ -99,6 +99,10 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\MyCombo.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\Resource.rc
 # End Source File
 # Begin Source File
@@ -120,6 +124,10 @@ SOURCE=..\src\View.cpp
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyCombo.h
 # End Source File
 # Begin Source File
 
