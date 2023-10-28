@@ -53,18 +53,10 @@ void CViewList::SetColumns()
     // empty the list
     DeleteAllItems();
 
-    // initialize the columns
-    LV_COLUMN column;
-    ZeroMemory(&column, sizeof(column));
-    column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-    column.fmt = LVCFMT_LEFT;
-    column.cx = 120;
-    TCHAR string[3][20] = {TEXT("Name"), TEXT("Size"), TEXT("Type")};
-    for(int i = 0; i < 3; ++i)
-    {
-        column.pszText = string[i];
-        InsertColumn(i, column);
-    }
+    // Add the column items.
+    InsertColumn(0, _T("Name"), 0, DpiScaleInt(120));
+    InsertColumn(1, _T("Size"), 0, DpiScaleInt(50));
+    InsertColumn(2, _T("Type"), 0, DpiScaleInt(120));
 }
 
 // Insert 4 list view items.

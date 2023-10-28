@@ -20,17 +20,17 @@ CColourDialog::~CColourDialog()
 {
 }
 
-// Creates the two Preview bitmaps: m_Preview and m_PreviewOrig
+// Creates the two Preview bitmaps: m_Preview and m_PreviewOrig.
 void CColourDialog::CreateImagePreviews()
 {
-    // Get the size of the bitmap
+    // Get the size of the bitmap.
     BITMAP bm = m_image.GetBitmapData();
 
-    // Get the size of the destination display area
+    // Get the size of the destination display area.
     CRect rcView = m_preview.GetClientRect();
     m_preview.MapWindowPoints(*this, (LPPOINT)&rcView, 2);
 
-    // Calculate the stretch values, preserving the aspect ratio
+    // Calculate the stretch values, preserving the aspect ratio.
     int widthDest;
     int heightDest;
     double aspectRatio;
@@ -48,7 +48,7 @@ void CColourDialog::CreateImagePreviews()
         heightDest = static_cast<int>(rcView.Width()*aspectRatio);
     }
 
-    // Create the Device Contexts and compatible bitmaps
+    // Create the Device Contexts and compatible bitmaps.
     CMemDC dest1DC(0);
     CMemDC dest2DC(0);
     CMemDC memDC(0);
@@ -59,12 +59,12 @@ void CColourDialog::CreateImagePreviews()
     dest1DC.SelectObject(m_previewImage);
     dest2DC.SelectObject(m_previewOrigImage);
 
-    // Stretch the bitmap to fit in the destination display area
+    // Stretch the bitmap to fit in the destination display area.
     dest1DC.SetStretchBltMode(COLORONCOLOR);
     VERIFY(dest1DC.StretchBlt(0, 0, widthDest, heightDest, memDC, 0, 0,
            bm.bmWidth, bm.bmHeight, SRCCOPY));
 
-    // Make a second copy of the bitmap
+    // Make a second copy of the bitmap.
     VERIFY(dest2DC.BitBlt(0, 0, widthDest, heightDest, dest1DC, 0, 0, SRCCOPY));
 }
 
@@ -107,14 +107,14 @@ BOOL CColourDialog::OnCommand(WPARAM wparam, LPARAM lparam)
     case EN_CHANGE:    return OnTextChange(HWND(lparam));
     }
 
-    // return FALSE for unhandled commands
+    // return FALSE for unhandled commands.
     return FALSE;
 }
 
-// Called when the GrayScale check button is clicked
+// Called when the GrayScale check button is clicked.
 BOOL CColourDialog::OnGrayScale()
 {
-    // Update the colour of the preview image
+    // Update the colour of the preview image.
     UpdatePreview();
     return TRUE;
 }
@@ -122,20 +122,17 @@ BOOL CColourDialog::OnGrayScale()
 // Processes messages from the slider controls.
 LRESULT CColourDialog::OnHScroll(UINT, WPARAM, LPARAM lparam)
 {
-    HWND wnd = reinterpret_cast<HWND>(lparam);
+    CSlider* pSlider = (CSlider*)GetCWndPtr((HWND)lparam);
+    assert(pSlider && pSlider->IsWindow());
 
-    // Update the text for the colour's edit control
-    int nPos = static_cast<int>(SendMessage(wnd, TBM_GETPOS, 0, 0));
-    TCHAR Text[5];
-    wsprintf(Text, _T("%d\0"), nPos);
+    // Update the text for the colour's edit control.
+    int nPos = pSlider->GetPos();
+    CString text = ToCString(nPos);
+    int sliderID = pSlider->GetDlgCtrlID();
+    int editID = sliderID + IDC_EDIT_RED - IDC_SLIDER_RED;
+    GetDlgItem(editID).SetWindowText(text);
 
-    if (wnd == m_redSlider)
-        m_redEdit.SetWindowText(Text);
-    else if (wnd == m_greenSlider)
-        m_greenEdit.SetWindowText(Text);
-    else if (wnd == m_blueSlider)
-        m_blueEdit.SetWindowText(Text);
-
+    // Update the preview image.
     UpdatePreview();
 
     return 0;
@@ -144,17 +141,17 @@ LRESULT CColourDialog::OnHScroll(UINT, WPARAM, LPARAM lparam)
 // Called before the dialog is displayed.
 BOOL CColourDialog::OnInitDialog()
 {
-    // Attach the Trackbar controls to CWnd objects
+    // Attach the Trackbar controls to CWnd objects.
     m_redSlider.AttachDlgItem(IDC_SLIDER_RED, *this);
     m_greenSlider.AttachDlgItem(IDC_SLIDER_GREEN, *this);
     m_blueSlider.AttachDlgItem(IDC_SLIDER_BLUE, *this);
 
-    // Set Trackbar ranges
+    // Set Trackbar ranges.
     m_redSlider.SendMessage(TBM_SETRANGE, TRUE, MAKELONG(-255, 255));
     m_greenSlider.SendMessage(TBM_SETRANGE, TRUE, MAKELONG(-255, 255));
     m_blueSlider.SendMessage(TBM_SETRANGE, TRUE, MAKELONG(-255, 255));
 
-    // Attach the Edit controls to CWnd objects
+    // Attach the Edit controls to CWnd objects.
     m_redEdit.AttachDlgItem(IDC_EDIT_RED, *this);
     m_greenEdit.AttachDlgItem(IDC_EDIT_GREEN, *this);
     m_blueEdit.AttachDlgItem(IDC_EDIT_BLUE, *this);
@@ -163,7 +160,7 @@ BOOL CColourDialog::OnInitDialog()
     m_greenEdit.SetWindowText(_T("0"));
     m_blueEdit.SetWindowText(_T("0"));
 
-    // Create the two image previews
+    // Create the two image previews.
     m_preview.AttachDlgItem(IDC_PREVIEW, *this);
     CreateImagePreviews();
 
@@ -207,7 +204,7 @@ void CColourDialog::Paint()
 {
     BITMAP bm = m_previewImage.GetBitmapData();
 
-    // Get the size of the destination display area
+    // Get the size of the destination display area.
     CRect rcView = m_preview.GetClientRect();
     m_preview.MapWindowPoints(*this, rcView);
 
@@ -233,7 +230,7 @@ void CColourDialog::Paint()
 // Updates the preview image according to the dialog input.
 void CColourDialog::UpdatePreview()
 {
-    // Copy m_hbmPreviewOrig to m_hbmPreview
+    // Copy m_hbmPreviewOrig to m_hbmPreview.
     CMemDC Mem1DC(0);    // Compatible with the desktop
     Mem1DC.SelectObject(m_previewOrigImage);
     CMemDC Mem2DC(0);    // Compatible with the desktop
@@ -241,7 +238,7 @@ void CColourDialog::UpdatePreview()
     int cx = m_preview.GetWindowRect().Width();
     int cy = m_preview.GetWindowRect().Height();
     Mem2DC.BitBlt(0, 0, cx, cy, Mem1DC, 0, 0, SRCCOPY);
-    m_previewImage = Mem2DC.DetachBitmap();  // Detach bitmap before modifying it
+    m_previewImage = Mem2DC.DetachBitmap();  // Detach bitmap before modifying it.
 
     m_cBlue  = m_blueSlider.GetPos();
     m_cGreen = m_greenSlider.GetPos();

@@ -141,16 +141,16 @@ UINT CMainFrame::GetIDFromCursorPos()
 {
     UINT id = 0;
     CPoint pt = GetCursorPos();
-    HWND hCtrl = WindowFromPoint(pt);
+    HWND control = ::WindowFromPoint(pt);
 
-    if (hCtrl == GetToolBar().GetHwnd())
+    if (control == GetToolBar().GetHwnd())
     {
         // Over the toolbar window, so identify the toolbar button
 
         int button = GetToolBar().HitTest();
         id = GetToolBar().GetCommandID(button);
     }
-    else if (hCtrl == GetHwnd())
+    else if (control == GetHwnd())
     {
         // Over the frame window. Check to see if we are over a non-client area spot.
 
@@ -160,10 +160,10 @@ UINT CMainFrame::GetIDFromCursorPos()
 
         id = IDFR_NCFRAME + result; // As defined in resource.h
     }
-    else if (hCtrl != 0)
+    else if (control != 0)
     {
         // The view window (dialog), dialog controls, menubar and statusbar all have control IDs.
-        id = ::GetDlgCtrlID(hCtrl);
+        id = ::GetDlgCtrlID(control);
     }
 
     return id;

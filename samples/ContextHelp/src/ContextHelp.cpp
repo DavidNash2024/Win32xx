@@ -93,21 +93,6 @@ HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command,
     return hWnd;
 }
 
-// Identifies the window from the cursor position and returns its ID.
-UINT CContextHelp::GetIDFromCursorPos() const
-{
-    UINT id = 0;
-    CPoint pt = GetCursorPos();
-    HWND hCtrl = ::WindowFromPoint(pt);
-
-    if (hCtrl != 0)
-    {
-        id = ::GetDlgCtrlID(hCtrl);
-    }
-
-    return id;
-}
-
 // Display the application guide topic corresponding to the numeric
 // identifier id, if present in the help table, and if the topic exists
 // in the guide.
@@ -126,7 +111,10 @@ void CContextHelp::ShowHelpTopic(UINT id)
 // in a message box if there is no such topic in the guide.
 void CContextHelp::ShowHelpTopic(LPCTSTR topic)
 {
-    CString topic_url = (topic[0] == 0) ? CString(_T("")) : _T("::/") + CString(topic) + _T(".htm");
+    CString topic_url;
+    if (topic[0] != 0)
+        topic_url << _T("::/") << topic << _T(".htm");
+
     CString seek_url = m_helpFilePath + topic_url;
 
     try

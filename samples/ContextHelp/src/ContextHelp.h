@@ -54,7 +54,6 @@ private:
     CContextHelp(const CContextHelp&);                // Disable copy construction
     CContextHelp& operator = (const CContextHelp&);   // Disable assignment operator
 
-    UINT    GetIDFromCursorPos() const;
     HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
 
     // Member variables
