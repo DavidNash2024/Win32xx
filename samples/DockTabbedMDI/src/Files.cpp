@@ -89,18 +89,11 @@ void CViewFiles::SetColumns()
     // empty the list
     DeleteAllItems();
 
-    // initialize the columns
-    LV_COLUMN lvColumn;
-    ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
-    lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-    lvColumn.fmt = LVCFMT_LEFT;
-    lvColumn.cx = 120;
-    TCHAR szString[3][20] = { _T("Name"), _T("Size"), _T("Type") };
-    for (int i = 0; i < 3; ++i)
-    {
-        lvColumn.pszText = szString[i];
-        InsertColumn(i, lvColumn);
-    }
+    // Add the column items.
+    InsertColumn(0, _T("Name"));
+    InsertColumn(1, _T("Size"));
+    InsertColumn(2, _T("Type"));
+    SetDPIColumnWidths();
 }
 
 // Adjusts the listview column widths in response to window DPI changes.

@@ -42,7 +42,7 @@ private:
     static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG* pcb);
 
     // Command handlers
-    void OnDropFiles(HDROP hDropInfo);
+    void OnDropFiles(HDROP dropInfo);
     BOOL OnEditCut();
     BOOL OnEditCopy();
     BOOL OnEditPaste();

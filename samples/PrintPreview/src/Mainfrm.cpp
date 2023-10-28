@@ -169,20 +169,25 @@ LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Called in response to a EN_DROPFILES notification.
-void CMainFrame::OnDropFiles(HDROP hDropInfo)
+void CMainFrame::OnDropFiles(HDROP dropInfo)
 {
-    TCHAR fileName[_MAX_PATH];
-    ::DragQueryFile(hDropInfo, 0, fileName, _MAX_PATH);
-
-    if (ReadFile(fileName))
+    UINT length = ::DragQueryFile(dropInfo, 0, 0, 0);
+    int bufferLength = static_cast<int>(length);
+    if (length > 0)
     {
-        m_pathName = fileName;
-        ReadFile(fileName);
-        SetWindowTitle();
-        AddMRUEntry(fileName);
+        CString fileName;
+        ::DragQueryFile(dropInfo, 0, fileName.GetBuffer(bufferLength), length + 1);
+        fileName.ReleaseBuffer();
+
+        if (ReadFile(fileName))
+        {
+            m_pathName = fileName;
+            SetWindowTitle();
+            AddMRUEntry(fileName);
+        }
     }
 
-    ::DragFinish(hDropInfo);
+    ::DragFinish(dropInfo);
 }
 
 // Cuts the selected text to the clipboard.
@@ -496,8 +501,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     case EN_DROPFILES:
     {
         ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lparam);
-        HDROP hDropInfo = reinterpret_cast<HDROP>(ENDrop->hDrop);
-        OnDropFiles(hDropInfo);
+        HDROP dropInfo = reinterpret_cast<HDROP>(ENDrop->hDrop);
+        OnDropFiles(dropInfo);
     }
     return TRUE;
     }

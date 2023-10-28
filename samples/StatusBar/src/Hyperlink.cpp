@@ -63,9 +63,9 @@ LRESULT CHyperlink::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 
 void CHyperlink::OpenUrl()
 {
-    TCHAR szUrl[ MAX_PATH + 1 ] = _T("http://sourceforge.net/projects/win32-framework/");
+    CString url("http://sourceforge.net/projects/win32-framework/");
 
-    HINSTANCE result = ShellExecute(0, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
+    HINSTANCE result = ShellExecute(0, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
 
     if (reinterpret_cast<INT_PTR>(result) > 32)
     {

@@ -265,23 +265,25 @@ LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Called in response to the EN_DROPFILES notification.
-void CMainFrame::OnDropFiles(HDROP hDropInfo)
+void CMainFrame::OnDropFiles(HDROP dropInfo)
 {
-    UINT length = DragQueryFile(hDropInfo, 0, 0, 0);
+    UINT length = ::DragQueryFile(dropInfo, 0, 0, 0);
     int bufferLength = static_cast<int>(length);
     if (length > 0)
     {
         CString fileName;
-        DragQueryFile(hDropInfo, 0, fileName.GetBuffer(bufferLength), length + 1);
+        ::DragQueryFile(dropInfo, 0, fileName.GetBuffer(bufferLength), length + 1);
         fileName.ReleaseBuffer();
 
-        ReadFile(fileName);
-        m_pathName = fileName;
-        SetWindowTitle();
-        AddMRUEntry(fileName);
+        if (ReadFile(fileName))
+        {
+            m_pathName = fileName;
+            SetWindowTitle();
+            AddMRUEntry(fileName);
+        }
     }
 
-    DragFinish(hDropInfo);
+    ::DragFinish(dropInfo);
 }
 
 // Delete (cut) the current selection, if any.
@@ -690,8 +692,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     case EN_DROPFILES:
     {
         ENDROPFILES* enDrop = reinterpret_cast<ENDROPFILES*>(lparam);
-        HDROP hDropInfo = reinterpret_cast<HDROP>(enDrop->hDrop);
-        OnDropFiles(hDropInfo);
+        HDROP dropInfo = reinterpret_cast<HDROP>(enDrop->hDrop);
+        OnDropFiles(dropInfo);
     }
     return TRUE;
     }
