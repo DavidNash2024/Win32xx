@@ -29,8 +29,12 @@ public:
     static void CheckFailure(HRESULT hr, LPCWSTR errorMessage);
 
 protected:
+    virtual void OnClose();
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
+    virtual LRESULT OnDPIChanged(UINT, WPARAM, LPARAM lparam);
+    virtual LRESULT OnGetMinMaxInfo(UINT, WPARAM, LPARAM lparam);
+    virtual LRESULT OnSize(UINT, WPARAM, LPARAM);
     virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 private:

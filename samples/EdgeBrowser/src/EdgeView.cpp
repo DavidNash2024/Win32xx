@@ -49,7 +49,7 @@ LRESULT CEdgeView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 }
 
 // Start the Edge browser.
-// This function uses callbacks and completes before m_webView is assigned.
+// Note: This function uses callbacks and completes before m_webView is assigned.
 void CEdgeView::StartBrowser()
 {
     CString dataDirectory = GetAppDataPath() + L"\\Win32++\\" + LoadString(IDS_APP_TITLE);
@@ -82,11 +82,23 @@ void CEdgeView::StartBrowser()
             }).Get());
 }
 
+// OnDPIChanged is called when the window DPI has changed.
+LRESULT CEdgeView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
+{
+	// Resize the window to the recommended size.
+    RECT* pWindowRect = reinterpret_cast<RECT*>(lparam);
+    assert(pWindowRect);
+    SetWindowPos(HWND_TOP, *pWindowRect, SWP_SHOWWINDOW);
+    return 0;
+}
+
+// WndProc processes the window's messages.
 LRESULT CEdgeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case WM_SIZE:   return OnSize(msg, wparam, lparam);
+    case WM_DPICHANGED: return OnDPIChanged(msg, wparam, lparam);
+    case WM_SIZE:       return OnSize(msg, wparam, lparam);
     }
 
     return WndProcDefault(msg, wparam, lparam);
