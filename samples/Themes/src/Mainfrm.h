@@ -21,8 +21,6 @@ public:
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
 
-    void DpiScaleToolBar();
-
 protected:
     // Virtual functions that override base class functions
     virtual BOOL    LoadRegistrySettings(LPCTSTR keyName);

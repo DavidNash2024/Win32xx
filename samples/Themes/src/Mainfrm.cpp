@@ -152,22 +152,6 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
-// Assigns the appropriately sized toolbar icons.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DpiScaleToolBar()
-{
-    // The frame's default handling of WM_DPICHANGED destroys and recreates the toolbar.
-    // We modify that here and merely reset the image lists for the toolbars.
-    // We can safely do that here because the toolbar buttons don't contain text.
-    if (GetToolBar().IsWindow())
-    {
-        // Reset the toolbar images.
-        SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
-        SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255, 0, 255));
-        SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255, 0, 255));
-    }
-}
-
 // Loads the application's settings from the registry when the application starts.
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 {

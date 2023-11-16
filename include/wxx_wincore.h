@@ -902,6 +902,7 @@ namespace Win32xx
     //  with PostQuitMessage.
     inline void CWnd::OnDestroy()
     {
+        Cleanup();
     }
 
     // Called when part of the client area of the window needs to be drawn.
@@ -2666,8 +2667,6 @@ namespace Win32xx
     }
 
     #endif
-
-
 
 
 }
