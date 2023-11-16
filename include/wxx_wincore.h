@@ -528,6 +528,7 @@ namespace Win32xx
                                HMENU idOrMenu, LPVOID lparam /*= NULL*/)
     {
         assert( !IsWindow() );     // Only one window per CWnd instance allowed.
+        Cleanup();
 
         // Ensure a window class is registered.
         CString classString;
@@ -902,7 +903,6 @@ namespace Win32xx
     //  with PostQuitMessage.
     inline void CWnd::OnDestroy()
     {
-        Cleanup();
     }
 
     // Called when part of the client area of the window needs to be drawn.
