@@ -78,8 +78,8 @@ namespace Win32xx
                 // Set the instance handle
                 MEMORY_BASIC_INFORMATION mbi;
                 ZeroMemory(&mbi, sizeof(mbi));
-                static int Address = 0;
-                VirtualQuery(&Address, &mbi, sizeof(mbi));
+                static int address = 0;
+                VirtualQuery(&address, &mbi, sizeof(mbi));
                 assert(mbi.AllocationBase);
                 m_instance = (HINSTANCE)mbi.AllocationBase;
 

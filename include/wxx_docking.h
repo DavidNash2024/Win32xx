@@ -1615,7 +1615,7 @@ namespace Win32xx
                 return;
 
             // Save the Dock window's blue tinted bitmap.
-            CClientDC dcDesktop(*this);
+            CClientDC dcDesktop(HWND_DESKTOP);
             CMemDC memDC(dcDesktop);
             CRect rcBitmap = rcHint;
             CRect rcTarget = rcHint;

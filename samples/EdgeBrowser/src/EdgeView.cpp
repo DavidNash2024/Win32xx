@@ -85,7 +85,7 @@ void CEdgeView::StartBrowser()
 // OnDPIChanged is called when the window DPI has changed.
 LRESULT CEdgeView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
 {
-	// Resize the window to the recommended size.
+    // Resize the window to the recommended size.
     RECT* pWindowRect = reinterpret_cast<RECT*>(lparam);
     assert(pWindowRect);
     SetWindowPos(HWND_TOP, *pWindowRect, SWP_SHOWWINDOW);
