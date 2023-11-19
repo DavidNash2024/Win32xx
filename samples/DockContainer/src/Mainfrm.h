@@ -52,6 +52,9 @@ private:
     BOOL OnFileExit();
     BOOL OnHideSingleTab();
 
+    // Message handlers
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
+
     void HideSingleContainerTab(bool hideSingle);
     void LoadDefaultDockers();
     void SetContainerTabsAtTop(bool isAtTop);

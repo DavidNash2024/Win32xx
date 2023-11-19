@@ -585,8 +585,9 @@ BOOL CMainFrame::OnFullMode()
 LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
-    lpMMI->ptMinTrackSize.x = 550;
-    lpMMI->ptMinTrackSize.y = 400;
+    const CSize minimumSize(400, 300);
+    lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
+    lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
     return WndProcDefault(msg, wparam, lparam);
 }
 

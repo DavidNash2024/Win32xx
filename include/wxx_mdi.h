@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -298,9 +298,9 @@ namespace Win32xx
         // Allocate an iterator for our MDIChild vector
         std::vector<MDIChildPtr>::const_iterator v;
 
-        for (v = GetAllMDIChildren().begin(); v < GetAllMDIChildren().end(); ++v)
+        for (v = GetAllMDIChildren().begin(); v != GetAllMDIChildren().end(); ++v)
         {
-            if ((*v)->IsWindowVisible())
+            if ((*v)->IsWindow())
             {
                 // Add Separator
                 if (window == 0)

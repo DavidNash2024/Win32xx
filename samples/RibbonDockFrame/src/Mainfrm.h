@@ -49,6 +49,7 @@ private:
     // Message handlers
     LRESULT OnDropFile(WPARAM wparam);
     LRESULT OnGetAllPoints();
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSendPoint(WPARAM wparam);
 
     IUIRibbon* GetIUIRibbon() const;

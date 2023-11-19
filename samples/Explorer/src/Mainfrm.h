@@ -50,6 +50,9 @@ private:
     BOOL OnViewMenu();
     BOOL OnShowHidden();
 
+    // Message handlers
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
+
     void DoPopupMenu();
     void LoadDefaultWindowPanes();
     void LoadListViewRegistrySettings();

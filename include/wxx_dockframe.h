@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -168,7 +168,7 @@ namespace Win32xx
     // Called when the effective dots per inch (dpi) for a window has changed.
     // This occurs when:
     //  - The window is moved to a new monitor that has a different DPI.
-    //  - The DPI of the monitor hosting the window changes.
+    //  - The DPI of the monitor displaying the window changes.
     inline LRESULT CDockFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Lock window updates to render the DPI changes smoothly.
@@ -177,7 +177,6 @@ namespace Win32xx
         CFrameT<CDocker>::OnDpiChanged(msg, wparam, lparam);
         SetDefaultCaptionHeight();
         DpiUpdateDockerSizes();
-        RecalcDockLayout();
 
         // Unlock the window updates.
         UnlockWindowUpdate();

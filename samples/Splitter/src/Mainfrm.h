@@ -44,6 +44,9 @@ private:
     BOOL OnViewList();
     BOOL OnViewText();
 
+    // Message handlers
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
+
     void LoadDefaultWindowPanes();
 
     // Member variables

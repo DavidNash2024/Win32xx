@@ -61,6 +61,7 @@ private:
     BOOL    OnFilePreview();
 
     // Message handlers
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT  OnPreviewClose();
     LRESULT  OnPreviewPrint();
     LRESULT  OnPreviewSetup();

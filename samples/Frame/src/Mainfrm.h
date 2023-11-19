@@ -46,9 +46,10 @@ private:
     BOOL    OnFilePreview();
 
     // Message handlers
-    LRESULT  OnPreviewClose();
-    LRESULT  OnPreviewPrint();
-    LRESULT  OnPreviewSetup();
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnPreviewClose();
+    LRESULT OnPreviewPrint();
+    LRESULT OnPreviewSetup();
 
     // Member variables
     CView m_view;

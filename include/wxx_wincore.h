@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -528,7 +528,6 @@ namespace Win32xx
                                HMENU idOrMenu, LPVOID lparam /*= NULL*/)
     {
         assert( !IsWindow() );     // Only one window per CWnd instance allowed.
-        Cleanup();
 
         // Ensure a window class is registered.
         CString classString;
@@ -903,6 +902,7 @@ namespace Win32xx
     //  with PostQuitMessage.
     inline void CWnd::OnDestroy()
     {
+        Cleanup();
     }
 
     // Called when part of the client area of the window needs to be drawn.
@@ -1204,8 +1204,6 @@ namespace Win32xx
         if (w == 0)
         {
             // Got a message for a window that's not in the map.
-            // We should never get here.
-            TRACE("*** Warning in CWnd::StaticWindowProc: HWND not in window map ***\n");
             return 0;
         }
 

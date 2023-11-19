@@ -390,6 +390,16 @@ BOOL CMainFrame::OnFlatStyle()
     return TRUE;
 }
 
+// Limit the minimum size of the window.
+LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
+    const CSize minimumSize(350, 300);
+    lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
+    lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
+    return WndProcDefault(msg, wparam, lparam);
+}
+
 void CMainFrame::OnInitialUpdate()
 {
     // The frame is now created.
@@ -822,6 +832,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         switch (msg)
         {
         case UWM_ADDCOMBO:        return AddCombo();
+        case WM_GETMINMAXINFO:    return OnGetMinMaxInfo(msg, wparam, lparam);
         }
 
         //  pass unhandled messages on for default processing

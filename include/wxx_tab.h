@@ -1438,15 +1438,13 @@ namespace Win32xx
         {
             CRect rc = GetClientRect();
             AdjustRect(FALSE, &rc);
+            int padding = DpiScaleInt(2);
+            if (m_isShowingButtons)
+                padding = GetCloseRect().Width() + GetListRect().Width() + DpiScaleInt(4);
 
-            int xGap = 2;
-            if (m_isShowingButtons) xGap += GetCloseRect().Width() + GetListRect().Width() +2;
-
-            int itemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap) / GetItemCount());
+            int itemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - padding) / GetItemCount());
             itemWidth = MAX(itemWidth, 0);
-
             SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, m_tabHeight));
-
             NotifyChanged();
         }
     }
