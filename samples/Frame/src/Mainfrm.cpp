@@ -92,15 +92,6 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
-// Called after the window is created.
-void CMainFrame::OnInitialUpdate()
-{
-    // The frame is now created.
-    // Place any additional startup code here.
-
-    TRACE("Frame created\n");
-}
-
 // Create the File Open dialog to choose the file to load.
 BOOL CMainFrame::OnFileOpen()
 {
@@ -201,6 +192,25 @@ BOOL CMainFrame::OnFilePrint()
     }
 
     return TRUE;
+}
+
+// Limit the minimum size of the window.
+LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
+    const CSize minimumSize(300, 250);
+    lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
+    lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
+    return WndProcDefault(msg, wparam, lparam);
+}
+
+// Called after the window is created.
+void CMainFrame::OnInitialUpdate()
+{
+    // The frame is now created.
+    // Place any additional startup code here.
+
+    TRACE("Frame created\n");
 }
 
 // Process notification messages (WM_NOTIFY) sent by child windows
@@ -315,6 +325,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
+        case WM_GETMINMAXINFO:    return OnGetMinMaxInfo(msg, wparam, lparam);
         case UWM_PREVIEWCLOSE:    return OnPreviewClose();
         case UWM_PREVIEWPRINT:    return OnPreviewPrint();
         case UWM_PREVIEWSETUP:    return OnPreviewSetup();

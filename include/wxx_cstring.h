@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1376,7 +1376,7 @@ namespace Win32xx
     {
         // This method is supported by the Borland 5.5 compiler
         std::basic_string<CHAR>::reverse_iterator riter;
-        for (riter = m_str.rbegin(); riter < m_str.rend(); ++riter)
+        for (riter = m_str.rbegin(); riter != m_str.rend(); ++riter)
         {
             if (!::isspace(static_cast<unsigned char>(*riter)))
                 break;
@@ -1391,7 +1391,7 @@ namespace Win32xx
     {
         // This method is supported by the Borland 5.5 compiler
         std::basic_string<WCHAR>::reverse_iterator riter;
-        for (riter = m_str.rbegin(); riter < m_str.rend(); ++riter)
+        for (riter = m_str.rbegin(); riter != m_str.rend(); ++riter)
         {
             if (!iswspace(*riter))
                 break;

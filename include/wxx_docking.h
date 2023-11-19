@@ -126,6 +126,7 @@ namespace Win32xx
     // When a container is docked within another container, it is hidden,
     // along with its parent docker window. The container parent becomes
     // the parent window for the view windows of these child containers.
+    // GetContainerParent returns a pointer to the container parent.
     //
     // When a container docked within another container is undocked, the
     // undocked container window and its parent docker window become visible.
@@ -2187,6 +2188,7 @@ namespace Win32xx
                 TRACE("**WARNING** Docking container bitmap resource missing\n");
         }
 
+        RecalcDockLayout();
         return pDocker;
     }
 
@@ -2286,7 +2288,7 @@ namespace Win32xx
             for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
             {
                 if (GetContainer() != (*iter).pContainer)
-                    GetContainer()->RemoveContainer((*iter).pContainer);
+                    GetContainer()->RemoveContainer((*iter).pContainer, FALSE);
             }
         }
 
@@ -2394,7 +2396,7 @@ namespace Win32xx
 
             std::vector<ContainerInfo>::reverse_iterator riter;
             std::vector<ContainerInfo> allContainers = pContainerSource->GetAllContainers();
-            for (riter = allContainers.rbegin(); riter < allContainers.rend(); ++riter)
+            for (riter = allContainers.rbegin(); riter != allContainers.rend(); ++riter)
             {
                 CDockContainer* pContainerChild = (*riter).pContainer;
                 if (pContainerChild != pContainerSource)
@@ -2421,7 +2423,7 @@ namespace Win32xx
             pDocker->GetDockBar().SetParent(*GetDockAncestor());
 
             // Insert the containers in reverse order.
-            for (riter = allContainers.rbegin(); riter < allContainers.rend(); ++riter)
+            for (riter = allContainers.rbegin(); riter != allContainers.rend(); ++riter)
             {
                 pContainer->AddContainer( (*riter).pContainer, TRUE, selectPage);
             }
@@ -2483,6 +2485,7 @@ namespace Win32xx
                 pDocker->GetView().SetFocus();
 
             GetTopmostDocker()->SetRedraw(FALSE);
+            pDocker->SetDefaultCaptionHeight();
             RecalcDockLayout();
             GetTopmostDocker()->SetRedraw(TRUE);
             GetTopmostDocker()->RedrawWindow();
@@ -3251,7 +3254,7 @@ namespace Win32xx
                 // This container has children, so destroy them now.
                 const std::vector<ContainerInfo>& AllContainers = pContainer->GetAllContainers();
                 std::vector<ContainerInfo>::const_iterator iter1;
-                for (iter1 = AllContainers.begin(); iter1 < AllContainers.end(); ++iter1)
+                for (iter1 = AllContainers.begin(); iter1 != AllContainers.end(); ++iter1)
                 {
                     if ((*iter1).pContainer != pContainer)
                     {
@@ -3287,13 +3290,13 @@ namespace Win32xx
     }
 
     // Called in response to a UWM_DOCKACTIVATE message.
-    inline LRESULT CDocker::OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDocker::OnDockActivated(UINT, WPARAM, LPARAM)
     {
         // Redraw captions to take account of focus change
         if (this == GetDockAncestor())
             DrawAllCaptions();
 
-        return CWnd::WndProcDefault(msg, wparam, lparam);
+        return 0;
     }
 
     // Called when this docker is destroyed.
@@ -3411,11 +3414,8 @@ namespace Win32xx
         {
             // An undocked docker has moved to a different monitor.
             LPRECT prc = reinterpret_cast<LPRECT>(lparam);
-            SetWindowPos(HWND_TOP, *prc, SWP_SHOWWINDOW);
             SetRedraw(FALSE);
-
-            RecalcDockLayout();
-
+            SetWindowPos(HWND_TOP, *prc, SWP_SHOWWINDOW);
             SetRedraw(TRUE);
             RedrawWindow();
         }
@@ -3432,10 +3432,7 @@ namespace Win32xx
 
         // Reset the docker size.
         if (GetDockAncestor() != GetTopmostDocker())
-        {
             m_dockStartSize = m_dockStartSize * GetTopmostDocker()->m_newDpi / GetTopmostDocker()->m_oldDpi;
-        }
-        RecalcDockLayout();
 
         return 0;
     }
@@ -3556,7 +3553,7 @@ namespace Win32xx
     }
 
     // Called when the docker is resized.
-    inline LRESULT CDocker::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CDocker::OnSize(UINT, WPARAM, LPARAM)
     {
         if (this == GetTopmostDocker())
         {
@@ -3565,7 +3562,7 @@ namespace Win32xx
                 RecalcDockLayout();
         }
 
-        return CWnd::WndProcDefault(msg, wparam, lparam);
+        return 0;
     }
 
     // Called when the system colors are changed.
@@ -3773,7 +3770,7 @@ namespace Win32xx
         for (iter = m_dockChildren.begin(); iter != m_dockChildren.end(); ++iter)
         {
             CRect rcChild = rc;
-            double dockSize = (*iter)->m_dockStartSize;
+            int dockSize = (*iter)->m_dockStartSize;
             int minSize = 30;
 
             // Calculate the size of the Docker children
@@ -3782,13 +3779,13 @@ namespace Win32xx
             case DS_DOCKED_LEFT:
                 if (isRTL)
                 {
-                    rcChild.left = rcChild.right - static_cast<int>(dockSize);
+                    rcChild.left = rcChild.right - dockSize;
                     rcChild.left = MIN(rcChild.left, rc.right - minSize);
                     rcChild.left = MAX(rcChild.left, rc.left + minSize);
                 }
                 else
                 {
-                    rcChild.right = rcChild.left + static_cast<int>(dockSize);
+                    rcChild.right = rcChild.left + dockSize;
                     rcChild.right = MAX(rcChild.right, rc.left + minSize);
                     rcChild.right = MIN(rcChild.right, rc.right - minSize);
                 }
@@ -3796,25 +3793,25 @@ namespace Win32xx
             case DS_DOCKED_RIGHT:
                 if (isRTL)
                 {
-                    rcChild.right = rcChild.left + static_cast<int>(dockSize);
+                    rcChild.right = rcChild.left + dockSize;
                     rcChild.right = MAX(rcChild.right, rc.left + minSize);
                     rcChild.right = MIN(rcChild.right, rc.right - minSize);
                 }
                 else
                 {
-                    rcChild.left = rcChild.right - static_cast<int>(dockSize);
+                    rcChild.left = rcChild.right - dockSize;
                     rcChild.left = MIN(rcChild.left, rc.right - minSize);
                     rcChild.left = MAX(rcChild.left, rc.left + minSize);
                 }
 
                 break;
             case DS_DOCKED_TOP:
-                rcChild.bottom = rcChild.top + static_cast<int>(dockSize);
+                rcChild.bottom = rcChild.top + dockSize;
                 rcChild.bottom = MAX(rcChild.bottom, rc.top + minSize);
                 rcChild.bottom = MIN(rcChild.bottom, rc.bottom - minSize);
                 break;
             case DS_DOCKED_BOTTOM:
-                rcChild.top = rcChild.bottom - static_cast<int>(dockSize);
+                rcChild.top = rcChild.bottom - dockSize;
                 rcChild.top = MIN(rcChild.top, rc.bottom - minSize);
                 rcChild.top = MAX(rcChild.top, rc.top + minSize);
 
@@ -4159,11 +4156,6 @@ namespace Win32xx
     inline void CDocker::SetCaptionHeight(int height)
     {
         m_ncHeight = height;
-        if (IsWindow())
-        {
-            RedrawWindow();
-            RecalcDockLayout();
-        }
     }
 
     // Sets the caption height based on the current text height.
@@ -4176,7 +4168,6 @@ namespace Win32xx
     inline void CDocker::SetDockSize(int dockSize)
     {
         m_dockStartSize = dockSize;
-        RecalcDockLayout();
     }
 
     // Sets the docker's style from one or more of the following:
@@ -4294,13 +4285,13 @@ namespace Win32xx
 
         // Add dockers docked in containers.
         std::vector<CDocker*> vDockContainers;
-        for (itSort = vSorted.begin(); itSort < vSorted.end(); ++itSort)
+        for (itSort = vSorted.begin(); itSort != vSorted.end(); ++itSort)
         {
             if ((*itSort)->GetContainer())
                 vDockContainers.push_back(*itSort);
         }
 
-        for (itSort = vDockContainers.begin(); itSort < vDockContainers.end(); ++itSort)
+        for (itSort = vDockContainers.begin(); itSort != vDockContainers.end(); ++itSort)
         {
             CDockContainer* pContainer = (*itSort)->GetContainer();
 
@@ -5088,6 +5079,9 @@ namespace Win32xx
         assert(pWnd);
         if (!pWnd) return;
 
+        // Must be called from the container parent.
+        assert(this == GetContainerParent());
+
         // Remove the tab.
         int tab = GetContainerIndex(pWnd);
         DeleteItem(tab);
@@ -5123,7 +5117,6 @@ namespace Win32xx
 
             RecalcLayout();
         }
-
     }
 
     // Activates the specified page number.
@@ -5208,7 +5201,6 @@ namespace Win32xx
         lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
         font.CreateFontIndirect(lf);
         SetTabFont(font);
-        RecalcLayout();
     }
 
     // Updates the tab icons based on the window's DPI.

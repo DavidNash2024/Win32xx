@@ -69,6 +69,9 @@ private:
     BOOL OnHideSingleTab();
     BOOL OnMDITabsAtTop();
 
+    // Message handlers
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
+
     void HideSingleContainerTab(bool hideSingle);
     void LoadDefaultDockers();
     void LoadDefaultMDIs();

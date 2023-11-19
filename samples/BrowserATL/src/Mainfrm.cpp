@@ -243,6 +243,16 @@ BOOL CMainFrame::OnForward()
     return TRUE;
 }
 
+// Limit the minimum size of the window.
+LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
+    const CSize minimumSize(600, 400);
+    lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
+    lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
+    return WndProcDefault(msg, wparam, lparam);
+}
+
 // Display the help about dialog.
 BOOL CMainFrame::OnHelpAbout()
 {
@@ -551,6 +561,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         case UWM_PROPERTYCHANGE:      OnPropertyChange((DISPPARAMS*)wparam);     break;
         case UWM_STATUSTEXTCHANGE:    OnStatusTextChange((DISPPARAMS*)wparam);   break;
         case UWM_TITLECHANGE:         OnTitleChange((DISPPARAMS*)wparam);        break;
+        case WM_GETMINMAXINFO:        return OnGetMinMaxInfo(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on for default processing.

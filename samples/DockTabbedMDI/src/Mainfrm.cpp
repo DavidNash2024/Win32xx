@@ -326,6 +326,16 @@ BOOL CMainFrame::OnFileNewTree()
     return TRUE;
 }
 
+// Limit the minimum size of the window.
+LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
+    const CSize minimumSize(600, 400);
+    lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
+    lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
+    return WndProcDefault(msg, wparam, lparam);
+}
+
 // Toggle hiding of tabs for containers with a single tab.
 BOOL CMainFrame::OnHideSingleTab()
 {
@@ -508,9 +518,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
-    //  switch (msg)
-    //  {
-    //  }
+        switch (msg)
+        {
+        case WM_GETMINMAXINFO:    return OnGetMinMaxInfo(msg, wparam, lparam);
+        }
 
         // Always pass unhandled messages on to WndProcDefault.
         return WndProcDefault(msg, wparam, lparam);

@@ -54,6 +54,9 @@ private:
     BOOL OnRefresh();
     BOOL OnStop();
 
+    // Message handlers
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
+
     // User defined message handlers
     void OnBeforeNavigate2(DISPPARAMS* pDispParams);
     void OnCommandStateChange(DISPPARAMS* pDispParams);

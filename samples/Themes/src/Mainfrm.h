@@ -62,6 +62,9 @@ private:
     BOOL OnViewArrows();
     BOOL OnViewCards();
 
+    // Message handlers
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
+
     // Member variables
     CView m_view;
     CToolBar m_arrows;

@@ -37,6 +37,9 @@ private:
     BOOL    OnEditFunction();
     BOOL    OnFileExit();
 
+    // Message handlers
+    LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
+
     CView m_view;
 };
 
