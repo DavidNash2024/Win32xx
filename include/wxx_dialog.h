@@ -717,8 +717,6 @@ namespace Win32xx
         if (pDialog == 0)
         {
             // Got a message for a window that's not in the map.
-            // We should never get here.
-            TRACE("*** Warning in CDialog::StaticDialogProc: HWND not in window map ***\n");
             return 0;
         }
 

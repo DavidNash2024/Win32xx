@@ -501,8 +501,6 @@ namespace Win32xx
         if (pPage == 0)
         {
             // Got a message for a window that's not in the map.
-            // We should never get here.
-            TRACE("*** Warning in CPropertyPage::StaticDialogProc: HWND not in window map ***\n");
             return 0;
         }
 
