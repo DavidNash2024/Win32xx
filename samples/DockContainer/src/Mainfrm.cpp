@@ -196,7 +196,7 @@ BOOL CMainFrame::OnFileExit()
 LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     LPMINMAXINFO lpMMI = (LPMINMAXINFO)lparam;
-    const CSize minimumSize(600, 400);
+    const CSize minimumSize(500, 350);
     lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
     lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
     return WndProcDefault(msg, wparam, lparam);

@@ -85,8 +85,8 @@ namespace Win32xx
         virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual void    RecalcViewLayout();
         virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
@@ -107,6 +107,8 @@ namespace Win32xx
 
     protected:
         virtual int OnCreate(CREATESTRUCT& cs);
+        virtual LRESULT OnSize(UINT, WPARAM, LPARAM);
+        virtual void RecalcViewLayout();
 
     private:
         CMDIDockFrame(const CMDIDockFrame&);              // Disable copy construction
@@ -190,8 +192,8 @@ namespace Win32xx
         return CDocker::OnMouseActivate(msg, wparam, lparam);
     }
 
-    inline LRESULT CDockFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     // Called when a notification from a child window (WM_NOTIFY) is received.
+    inline LRESULT CDockFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     {
         LRESULT result = CFrameT<CDocker>::OnNotify(wparam, lparam);
         if (result == 0)
@@ -200,17 +202,18 @@ namespace Win32xx
         return result;
     }
 
+    inline LRESULT CDockFrame::OnSize(UINT, WPARAM, LPARAM)
+    {
+        RecalcLayout();
+        RecalcDockLayout();
+        return 0;
+    }
+
     // Called when the system colors are changed.
     inline LRESULT CDockFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         CDocker::OnSysColorChange(msg, wparam, lparam);
         return CFrameT<CDocker>::OnSysColorChange(msg, wparam, lparam);
-    }
-
-    // Repositions the view window
-    inline void CDockFrame::RecalcViewLayout()
-    {
-        RecalcDockLayout();
     }
 
     // Process the frame's window messages.
@@ -221,6 +224,7 @@ namespace Win32xx
         case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
         case WM_DPICHANGED:         return OnDpiChanged(msg, wparam, lparam);
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        case WM_SIZE:               return OnSize(msg, wparam, lparam);
         case WM_SYSCOLORCHANGE:     return OnSysColorChange(msg, wparam, lparam);
 
         // Messages defined by Win32++
@@ -249,11 +253,25 @@ namespace Win32xx
         m_dockMDIClient.SetDocker(this);
     }
 
-    // Called when the frame window is created
+    // Called when the frame window is created.
     inline int CMDIDockFrame::OnCreate(CREATESTRUCT& cs)
     {
         return CFrameT<CDocker>::OnCreate(cs);
     }
+
+    // Called the window is resized.
+    inline LRESULT CMDIDockFrame::OnSize(UINT, WPARAM, LPARAM)
+    {
+        RecalcLayout();
+        return 0;
+    }
+
+    // Called when the view size has changed.
+    inline void CMDIDockFrame::RecalcViewLayout()
+    {
+        RecalcDockLayout();
+    }
+
 
 } // namespace Win32xx
 
