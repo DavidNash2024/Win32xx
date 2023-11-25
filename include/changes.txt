@@ -1,3 +1,16 @@
+Version 9.4.1
+=============
+
+New Features and Enhancements
+-----------------------------
+* Simplifies support for additional toolbars. CFrameT now manages the
+  normal, disabled and hot imagelists for any additional toolbars.
+
+Changes in detail
+-----------------
+Added CFrameT::SetToolBarImages   Added overload for additional toolbars
+
+
 Version 9.4
 ===========
 This version adds support for the Microsoft Edge browser.

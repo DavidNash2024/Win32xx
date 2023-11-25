@@ -244,7 +244,7 @@ namespace Win32xx
 
         int GetDockTabImageID(int tab) const;
         CString GetDockTabText(int tab) const;
-        CSize GetTBImageSize(CBitmap* pBitmap);
+        CSize GetTBImageSize(CBitmap* pBitmap) const;
         void SetTabsDpiFont();
         void SetTabsDpiIcons();
 
@@ -253,9 +253,9 @@ namespace Win32xx
         std::vector<UINT> m_toolBarData;               // vector of resource IDs for ToolBar buttons
         CString m_tabText;
         CString m_caption;
-        CImageList m_normalImages;
-        CImageList m_hotImages;
-        CImageList m_disabledImages;
+        CImageList m_toolBarImages;
+        CImageList m_toolBarHotImages;
+        CImageList m_toolBarDisabledImages;
 
         CViewPage m_viewPage;
         CViewPage* m_pViewPage;
@@ -539,9 +539,9 @@ namespace Win32xx
         virtual BOOL VerifyDockers();
 
         // Accessors and mutators
-        const std::vector <DockPtr> & GetAllDockChildren() const    {return GetDockAncestor()->m_allDockChildren;}
-        const std::vector <CDocker*> & GetDockChildren() const      {return m_dockChildren;}
-        const std::vector <CDocker*> & GetAllDockers()  const       {return m_allDockers;}
+        const std::vector<DockPtr>& GetAllDockChildren() const    {return GetDockAncestor()->m_allDockChildren;}
+        const std::vector<CDocker*>& GetDockChildren() const      {return m_dockChildren;}
+        const std::vector<CDocker*>& GetAllDockers()  const       {return m_allDockers;}
 
         CDocker* GetActiveDocker() const;
         CWnd*    GetActiveView() const;
@@ -4839,7 +4839,7 @@ namespace Win32xx
     }
 
     // Returns the size of a bitmap image.
-    inline CSize CDockContainer::GetTBImageSize(CBitmap* pBitmap)
+    inline CSize CDockContainer::GetTBImageSize(CBitmap* pBitmap) const
     {
         assert(pBitmap);
         if (!pBitmap) return CSize(0, 0);
@@ -5277,57 +5277,41 @@ namespace Win32xx
     // Sets the disabled Image List for toolbars.
     inline void CDockContainer::SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
     {
-        if (id != 0)
-        {
-            // Get the image size.
-            CBitmap bm(id);
+        // Get the image size.
+        CBitmap bm(id);
 
-            // Assert if we failed to load the bitmap.
-            assert(bm.GetHandle() != 0);
+        // Assert if we failed to load the bitmap.
+        assert(bm.GetHandle() != 0);
 
-            // Scale the bitmap to the window's DPI.
-            CBitmap dpiImage = DpiScaleUpBitmap(bm);
-            CSize sz = GetTBImageSize(&dpiImage);
+        // Scale the bitmap to the window's DPI.
+        CBitmap dpiImage = DpiScaleUpBitmap(bm);
+        CSize sz = GetTBImageSize(&dpiImage);
 
-            // Set the toolbar's image list.
-            imageList.DeleteImageList();
-            imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-            imageList.Add(dpiImage, mask);
-            toolBar.SetDisableImageList(imageList);
-        }
-        else
-        {
-            imageList.DeleteImageList();
-            toolBar.SetDisableImageList(0);
-        }
+        // Set the toolbar's image list.
+        imageList.DeleteImageList();
+        imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        imageList.Add(dpiImage, mask);
+        toolBar.SetDisableImageList(imageList);
     }
 
     // Sets the Hot Image List for additional toolbars.
     inline void CDockContainer::SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
     {
-        if (id != 0)
-        {
-            // Get the image size.
-            CBitmap bm(id);
+        // Get the image size.
+        CBitmap bm(id);
 
-            // Assert if we failed to load the bitmap.
-            assert(bm.GetHandle() != 0);
+        // Assert if we failed to load the bitmap.
+        assert(bm.GetHandle() != 0);
 
-            // Scale the bitmap to the window's DPI.
-            CBitmap dpiImage = DpiScaleUpBitmap(bm);
-            CSize sz = GetTBImageSize(&dpiImage);
+        // Scale the bitmap to the window's DPI.
+        CBitmap dpiImage = DpiScaleUpBitmap(bm);
+        CSize sz = GetTBImageSize(&dpiImage);
 
-            // Set the toolbar's image list
-            imageList.DeleteImageList();
-            imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-            imageList.Add(dpiImage, mask);
-            toolBar.SetHotImageList(imageList);
-        }
-        else
-        {
-            imageList.DeleteImageList();
-            toolBar.SetHotImageList(0);
-        }
+        // Set the toolbar's image list
+        imageList.DeleteImageList();
+        imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+        imageList.Add(dpiImage, mask);
+        toolBar.SetHotImageList(imageList);
     }
 
     // Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
@@ -5347,10 +5331,23 @@ namespace Win32xx
             return;
         }
 
-        // Set the button images
-        SetTBImageList(GetToolBar(), m_normalImages, normalID, mask);
-        SetTBImageListHot(GetToolBar(), m_hotImages, hotID, mask);
-        SetTBImageListDis(GetToolBar(), m_disabledImages, disabledID, mask);
+        // Set the normal button images.
+        SetTBImageList(GetToolBar(), m_toolBarImages, normalID, mask);
+
+        // Set the hot button images.
+        if (hotID != 0)
+            SetTBImageListHot(GetToolBar(), m_toolBarHotImages, hotID, mask);
+        else
+            SetTBImageListHot(GetToolBar(), m_toolBarHotImages, normalID, mask);
+
+        // Set the disabled button images.
+        if (disabledID != 0)
+            SetTBImageListDis(GetToolBar(), m_toolBarDisabledImages, disabledID, mask);
+        else
+        {
+            m_toolBarDisabledImages.CreateDisabledImageList(m_toolBarImages);
+            GetToolBar().SetDisableImageList(m_toolBarDisabledImages);
+        }
     }
 
     // Use this function to set the Resource IDs for the toolbar(s).

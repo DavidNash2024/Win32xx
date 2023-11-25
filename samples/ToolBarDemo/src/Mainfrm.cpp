@@ -33,32 +33,6 @@ HWND CMainFrame::Create(HWND parent)
     return CFrame::Create(parent);
 }
 
-// Assigns the appropriately sized toolbar icons.
-// Required for per-monitor DPI-aware.
-void CMainFrame::DpiScaleToolBar()
-{
-    // The frame's default handling of WM_DPICHANGED destroys and recreates the toolbar.
-    // We modify that here and merely reset the image lists for the toolbars.
-    // We can safely do that here because the toolbar buttons don't contain text.
-    if (GetToolBar().IsWindow())
-    {
-        if (m_useBigIcons)
-        {
-            // Set Large Images. 3 Imagelists - Normal, Hot and Disabled
-            SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_HOT, IDB_DISABLED);
-            SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255, 0, 255));
-            SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255, 0, 255));
-        }
-        else
-        {
-            // Set Small icons
-            SetToolBarImages(RGB(192, 192, 192), IDB_SMALL, 0, 0);
-            SetTBImageList(m_arrows, m_arrowImages, IDB_SMALLARROWS, RGB(255, 0, 255));
-            SetTBImageList(m_cards, m_cardImages, IDB_SMALLCARDS, RGB(255, 0, 255));
-        }
-    }
-}
-
 // Called when the user has begun customizing a toolbar. Here we save
 // a copy of the ToolBar layout so it can be restored when the user
 // selects the reset button.
@@ -144,25 +118,22 @@ LRESULT CMainFrame::OnCustHelp(LPNMHDR)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
+LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // Resize the frame, using the suggested new window size.
-    RECT* const pWindowRect = reinterpret_cast<RECT*>(lparam);
-    assert(pWindowRect);
-    SetWindowPos(0, *pWindowRect, SWP_NOZORDER | SWP_NOACTIVATE);
+    // Delete the rebar bands holding the cards and arrows toolbars.
+    if (GetReBar().IsWindow())
+    {
+        int band = GetReBar().GetBand(m_arrows);
+        GetReBar().DeleteBand(band);
+        band = GetReBar().GetBand(m_cards);
+        GetReBar().DeleteBand(band);
+    }
 
-    // Update the rebar, menubar and statusbar.
-    ResetMenuMetrics();
-    UpdateSettings();
-    DpiScaleToolBar();
-    m_view.DpiScaleToolBar();
+    // Delete the cards and arrows toolbars
+    m_arrows.Destroy();
+    m_cards.Destroy();
 
-    // Update the menu icons.
-    SetupMenuIcons();
-
-    RecalcLayout();
-
-    return 0;
+    return CFrame::OnDpiChanged(msg, wparam, lparam);
 }
 
 // Called when the user has stopped customizing a toolbar.
@@ -332,24 +303,8 @@ inline BOOL CMainFrame::OnViewToolBar()
 BOOL CMainFrame::OnTBBigIcons()
 {
     m_useBigIcons = !m_useBigIcons;
-
     GetFrameMenu().CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | (m_useBigIcons ? MF_CHECKED : MF_UNCHECKED));
-
-    if (m_useBigIcons)
-    {
-        // Set Large Images. 3 Imagelists - Normal, Hot and Disabled
-        SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_HOT, IDB_DISABLED);
-        SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255, 0, 255));
-        SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255, 0, 255));
-    }
-    else
-    {
-        // Set Small icons
-        SetToolBarImages(RGB(192,192,192), IDB_SMALL, 0, 0);
-        SetTBImageList(m_arrows, m_arrowImages, IDB_SMALLARROWS, RGB(255, 0, 255));
-        SetTBImageList(m_cards, m_cardImages, IDB_SMALLCARDS, RGB(255, 0, 255));
-    }
-
+    SetImageListsForToolBars();
     RecalcLayout();
     GetToolBar().Invalidate();
     m_arrows.Invalidate();
@@ -408,6 +363,25 @@ void CMainFrame::SaveTBDefault()
     }
 }
 
+// Set the images for the toolbars.
+void CMainFrame::SetImageListsForToolBars()
+{
+    if (m_useBigIcons)
+    {
+        // Set Large Images. 3 Imagelists - Normal, Hot and Disabled
+        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_HOT, IDB_DISABLED);
+        SetToolBarImages(m_arrows, RGB(255, 0, 255), IDB_ARROWS, 0, 0);
+        SetToolBarImages(m_cards, RGB(255, 0, 255), IDB_CARDS, 0, 0);
+    }
+    else
+    {
+        // Set Small icons
+        SetToolBarImages(RGB(192, 192, 192), IDB_SMALL, 0, 0);
+        SetToolBarImages(m_arrows, RGB(255, 0, 255), IDB_SMALLARROWS, 0, 0);
+        SetToolBarImages(m_cards, RGB(255, 0, 255), IDB_SMALLCARDS, 0, 0);
+    }
+}
+
 // Configure the menu icons.
 void CMainFrame::SetupMenuIcons()
 {
@@ -453,10 +427,8 @@ void CMainFrame::SetupToolBar()
         m_cards.AddButton(IDM_CARD_HEART);
         m_cards.AddButton(IDM_CARD_SPADE);
 
-        // Set the images for the toolbars
-        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_HOT, IDB_DISABLED);
-        SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));
-        SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
+        // Set the images for the toolbars.
+        SetImageListsForToolBars();
     }
 }
 

@@ -26,10 +26,11 @@ BOOL CDXThread::InitInstance()
     CMainFrame& frame = GetDXApp()->GetMainFrame();
     CDXView& view = frame.GetDXView();
 
-    // assign the m_pView member variable
-    m_pView = &view;
+    // Set thist thread's priority lower than the frame's thread.
+    SetThreadPriority(THREAD_PRIORITY_BELOW_NORMAL);
 
-    // Create the DXView window.
+    // Set CDXView as this thread's window.
+    m_pView = &view;
     view.CreateEx(0, _T("DXView"), NULL, WS_CHILD | WS_VISIBLE, CRect(), frame, 0);
 
     return TRUE;    // return TRUE to run the message loop
@@ -49,9 +50,7 @@ int CDXThread::MessageLoop()
         }
         else
         {
-            // Reduce the thread's performance impact.
-            if (WAIT_TIMEOUT == ::WaitForSingleObject(*this, 1))
-                m_pView->Render();
+            m_pView->Render();
         }
     }
 

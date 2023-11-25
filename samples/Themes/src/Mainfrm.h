@@ -73,8 +73,6 @@ private:
     std::vector<UINT> m_bandIDs;
     std::vector<UINT> m_bandStyles;
     std::vector<UINT> m_bandSizes;
-    CImageList m_arrowImages;
-    CImageList m_cardImages;
 
     DWORD m_color;
     bool m_useThemes;

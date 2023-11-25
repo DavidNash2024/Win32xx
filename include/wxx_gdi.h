@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2616,48 +2616,50 @@ namespace Win32xx
         BitBlt(x, y, cx, cy, imageDC, 0, 0, SRCINVERT);
     }
 
-    // An efficient color gradient filler compatible with all Windows operating systems.
+    // Fills the specified rectangle with a color gradient.
     inline void CDC::GradientFill(COLORREF color1, COLORREF color2, const RECT& rc, BOOL isVertical) const
     {
-        int Width = rc.right - rc.left;
-        int Height = rc.bottom - rc.top;
+        typedef UINT WINAPI GRADIENTFILL(HDC, PTRIVERTEX, ULONG, PVOID, ULONG, ULONG);
 
-        int r1 = GetRValue(color1);
-        int g1 = GetGValue(color1);
-        int b1 = GetBValue(color1);
+        CString system;
+        ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
+        system.ReleaseBuffer();
 
-        int r2 = GetRValue(color2);
-        int g2 = GetGValue(color2);
-        int b2 = GetBValue(color2);
-
-        COLORREF oldBkColor = GetBkColor();
-
-        if (isVertical)
+        // Use runtime dynamic linking. Avoids the need to explicitly link Msimg32.lib.
+        static HMODULE msimg32 = ::LoadLibrary(system + _T("\\msimg32.dll"));
+        if (msimg32)
         {
-            for (int i=0; i < Width; ++i)
+            GRADIENTFILL* pGradientFill =
+                reinterpret_cast<GRADIENTFILL*>(GetProcAddress(msimg32, "GradientFill"));
+
+            if (pGradientFill)
             {
-                int r = r1 + (i * (r2-r1) / Width);
-                int g = g1 + (i * (g2-g1) / Width);
-                int b = b1 + (i * (b2-b1) / Width);
-                SetBkColor(RGB(r, g, b));
-                CRect line( i + rc.left, rc.top, i + 1 + rc.left, rc.top+Height);
-                VERIFY(ExtTextOut(0, 0, ETO_OPAQUE, line, NULL, 0, 0));
+                TRIVERTEX vertex[2];
+                vertex[0].x = rc.left;
+                vertex[0].y = rc.top;
+                vertex[0].Red   = GetRValue(color1) << 8;
+                vertex[0].Green = GetGValue(color1) << 8;
+                vertex[0].Blue  = GetBValue(color1) << 8;
+                vertex[0].Alpha = 0;
+
+                vertex[1].x = rc.right;
+                vertex[1].y = rc.bottom;
+                vertex[1].Red   = GetRValue(color2) << 8;
+                vertex[1].Green = GetGValue(color2) << 8;
+                vertex[1].Blue  = GetBValue(color2) << 8;
+                vertex[1].Alpha = 0;
+
+                // Create a GRADIENT_RECT structure that
+                // references the TRIVERTEX vertices.
+                GRADIENT_RECT rect;
+                rect.UpperLeft = 0;
+                rect.LowerRight = 1;
+
+                // Draw a gradient filled rectangle.
+                ULONG mode = isVertical ? GRADIENT_FILL_RECT_V : GRADIENT_FILL_RECT_H;
+                pGradientFill(*this, vertex, 2, &rect, 1, mode);
             }
         }
-        else
-        {
-            for (int i=0; i < Height; ++i)
-            {
-                int r = r1 + (i * (r2-r1) / Height);
-                int g = g1 + (i * (g2-g1) / Height);
-                int b = b1 + (i * (b2-b1) / Height);
-                SetBkColor(RGB(r, g, b));
-                CRect line(rc.left, i + rc.top, rc.left+Width, i + 1 + rc.top);
-                VERIFY(ExtTextOut(0, 0, ETO_OPAQUE, line, NULL, 0, 0));
-            }
-        }
-
-        SetBkColor(oldBkColor);
     }
 
     // Decrements the reference count.
