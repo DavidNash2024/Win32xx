@@ -361,9 +361,7 @@ LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     m_cards.Destroy();
 
     // Call the base class function. This recreates the toolbars.
-    CFrame::OnDpiChanged(msg, wparam, lparam);
-
-    return 0;
+    return CFrame::OnDpiChanged(msg, wparam, lparam);
 }
 
 BOOL CMainFrame::OnFileExit()
@@ -790,9 +788,9 @@ void CMainFrame::SetupToolBar()
         m_cards.AddButton(IDM_CARD_HEART);
         m_cards.AddButton(IDM_CARD_SPADE);
 
-        // Set the button images.
-        SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));
-        SetTBImageList(m_cards, m_cardImages, IDB_CARDS, RGB(255,0,255));
+        // Set the three image lists for the arrows and cards toolbars.
+        SetToolBarImages(m_arrows, RGB(255, 0, 255), IDB_ARROWS, 0, 0);
+        SetToolBarImages(m_cards, RGB(255, 0, 255), IDB_CARDS, 0, 0);
     }
 
     // Use PostMessage to add the combo late to fix drawing issues

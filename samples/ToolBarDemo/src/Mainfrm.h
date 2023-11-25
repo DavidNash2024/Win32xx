@@ -18,8 +18,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
-
-    void DpiScaleToolBar();
+    void SetImageListsForToolBars();
 
 protected:
     // Virtual functions that override base class functions
@@ -60,8 +59,6 @@ private:
     CView m_view;
     CToolBar m_arrows;
     CToolBar m_cards;
-    CImageList m_arrowImages;
-    CImageList m_cardImages;
     std::vector<TBBUTTON>   m_defaultButtons;
     std::vector<TBBUTTON>   m_resetButtons;
     bool    m_useBigIcons;

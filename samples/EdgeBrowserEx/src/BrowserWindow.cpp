@@ -594,11 +594,11 @@ void CBrowserWindow::OnDestroy()
 
 LRESULT CBrowserWindow::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
 {
+    UpdateMinWindowSize();
+
     RECT* pWindowRect = reinterpret_cast<RECT*>(lparam);
     assert(pWindowRect);
     SetWindowPos(HWND_TOP, *pWindowRect, SWP_SHOWWINDOW);
-
-    UpdateMinWindowSize();
 
     return 0;
 }
