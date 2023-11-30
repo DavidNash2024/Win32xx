@@ -588,7 +588,7 @@ LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
     const CSize minimumSize(400, 300);
     lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
     lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Set the frame to mini mode.
@@ -656,7 +656,7 @@ LRESULT CMainFrame::OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         InvalidateRect(buttonRects.maximize, FALSE);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Update the hovered button when the mouse leaves the non-client area.
@@ -669,7 +669,7 @@ LRESULT CMainFrame::OnNCMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam)
         m_hoveredButton = TitlebarButton::None;
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Repositions the frame's child windows.
@@ -790,7 +790,7 @@ LRESULT CMainFrame::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     }
 
     // Default handling allows for dragging and double click to maximize.
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Map button clicks to the correct messages for the window.
@@ -816,7 +816,7 @@ LRESULT CMainFrame::OnNCLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
         }
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Display a system menu with a right mouse button click on the titlebar.
@@ -838,7 +838,7 @@ LRESULT CMainFrame::OnNCRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
         SendMessage(WM_SYSCOMMAND, command, 0);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Called when any part of the window is repainted.
