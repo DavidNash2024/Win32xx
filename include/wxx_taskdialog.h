@@ -701,7 +701,7 @@ namespace Win32xx
     inline HRESULT CALLBACK CTaskDialog::StaticTaskDialogProc(HWND wnd, UINT notification, WPARAM wparam, LPARAM lparam, LONG_PTR)
     {
         CTaskDialog* t = static_cast<CTaskDialog*>(GetCWndPtr(wnd));
-        if (t == 0)
+        if (t == NULL)
         {
             // The CTaskDialog pointer wasn't found in the map, so add it now
 
@@ -715,7 +715,7 @@ namespace Win32xx
                 assert(t);
                 pTLSData->pWnd = NULL;
 
-                if (t)
+                if (t != NULL)
                 {
                     // Store the CTaskDialog pointer in the HWND map
                     t->m_wnd = wnd;
@@ -724,7 +724,8 @@ namespace Win32xx
             }
         }
 
-        if (t == 0)
+        assert(t != NULL);
+        if (t == NULL)
         {
             // Got a message for a window that's not in the map.
             return 0;

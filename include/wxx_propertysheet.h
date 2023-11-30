@@ -463,11 +463,10 @@ namespace Win32xx
         case PSPCB_CREATE:
         {
             TLSData* pTLSData = GetApp()->GetTlsData();
+            assert(pTLSData != NULL);
             if (pTLSData == NULL)
             {
                 // Thread Local Storage data isn't assigned.
-                // We should never get here.
-                TRACE("*** Warning in CPropertyPage::StaticPropSheetPageProc: TLS data isn't assigned ***\n");
                 return 0;
             }
 
@@ -498,6 +497,7 @@ namespace Win32xx
             }
         }
 
+        assert(pPage != 0);
         if (pPage == 0)
         {
             // Got a message for a window that's not in the map.
@@ -609,17 +609,12 @@ namespace Win32xx
 
                 CPropertySheet* w = static_cast<CPropertySheet*>(pTLSData->pWnd);
 
-                if (w != 0)
+                assert(w != NULL);
+                if (w != NULL)
                 {
                     // Subclass the property sheet, so that messages are forwarded
                     // to CWnd::StaticWindowProc for handling in WndProc.
                     w->Attach(wnd);
-                }
-                else
-                {
-                    // Thread Local Storage data isn't assigned.
-                    // We should never get here.
-                    TRACE("*** Warning in CPropertySheet::Callback: TLS data isn't assigned. ***\n");
                 }
             }
             break;

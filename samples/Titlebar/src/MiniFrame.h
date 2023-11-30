@@ -98,6 +98,7 @@ private:
     LRESULT OnNCRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
     CDialog m_aboutDialog;              // Help about dialog.
