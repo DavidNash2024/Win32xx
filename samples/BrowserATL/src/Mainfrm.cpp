@@ -250,7 +250,7 @@ LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
     const CSize minimumSize(600, 400);
     lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
     lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Display the help about dialog.

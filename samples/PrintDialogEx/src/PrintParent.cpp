@@ -17,7 +17,7 @@ LRESULT CPrintParent::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
         ::PostMessage(m_owner, UWM_SETTINGCHANGE, 0, 0);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 LRESULT CPrintParent::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -25,7 +25,7 @@ LRESULT CPrintParent::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     // Sent when a different property page is selected.
     // Required for Windows 2000.
     ::PostMessage(m_owner, UWM_SETTINGCHANGE, 0, 0);
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // The window procedure handles the window's messages.

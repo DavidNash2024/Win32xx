@@ -73,7 +73,7 @@ namespace Win32xx
     class CDockFrame : public CFrameT<CDocker>
     {
     public:
-        CDockFrame() {}
+        CDockFrame() : m_isDpiChanging(false) {}
         virtual ~CDockFrame() {}
 
     protected:
@@ -83,15 +83,17 @@ namespace Win32xx
         virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDockDestroyed(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnGetDpiScaledSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
-        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual void    RecalcViewLayout();
         virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CDockFrame(const CDockFrame&);              // Disable copy construction
         CDockFrame& operator = (const CDockFrame&); // Disable assignment operator
+        bool m_isDpiChanging;
     };
 
 
@@ -107,8 +109,6 @@ namespace Win32xx
 
     protected:
         virtual int OnCreate(CREATESTRUCT& cs);
-        virtual LRESULT OnSize(UINT, WPARAM, LPARAM);
-        virtual void RecalcViewLayout();
 
     private:
         CMDIDockFrame(const CMDIDockFrame&);              // Disable copy construction
@@ -173,16 +173,18 @@ namespace Win32xx
     //  - The DPI of the monitor displaying the window changes.
     inline LRESULT CDockFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        // Lock window updates to render the DPI changes smoothly.
-        LockWindowUpdate();
-
         CFrameT<CDocker>::OnDpiChanged(msg, wparam, lparam);
         SetDefaultCaptionHeight();
         DpiUpdateDockerSizes();
+        m_isDpiChanging = false;
 
-        // Unlock the window updates.
-        UnlockWindowUpdate();
+        return 0;
+    }
 
+    // Called when the DPI is about to change.
+    inline LRESULT CDockFrame::OnGetDpiScaledSize(UINT, WPARAM, LPARAM)
+    {
+        m_isDpiChanging = true;
         return 0;
     }
 
@@ -202,18 +204,19 @@ namespace Win32xx
         return result;
     }
 
-    inline LRESULT CDockFrame::OnSize(UINT, WPARAM, LPARAM)
-    {
-        RecalcLayout();
-        RecalcDockLayout();
-        return 0;
-    }
-
     // Called when the system colors are changed.
     inline LRESULT CDockFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         CDocker::OnSysColorChange(msg, wparam, lparam);
         return CFrameT<CDocker>::OnSysColorChange(msg, wparam, lparam);
+    }
+
+    // Repositions the view window
+    inline void CDockFrame::RecalcViewLayout()
+    {
+        // Skip RecalcDockLayout during DPI changes.
+        if (!m_isDpiChanging)
+            RecalcDockLayout();
     }
 
     // Process the frame's window messages.
@@ -222,6 +225,7 @@ namespace Win32xx
         switch (msg)
         {
         case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
+        case WM_GETDPISCALEDSIZE:   return OnGetDpiScaledSize(msg, wparam, lparam);
         case WM_DPICHANGED:         return OnDpiChanged(msg, wparam, lparam);
         case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
         case WM_SIZE:               return OnSize(msg, wparam, lparam);
@@ -257,19 +261,6 @@ namespace Win32xx
     inline int CMDIDockFrame::OnCreate(CREATESTRUCT& cs)
     {
         return CFrameT<CDocker>::OnCreate(cs);
-    }
-
-    // Called the window is resized.
-    inline LRESULT CMDIDockFrame::OnSize(UINT, WPARAM, LPARAM)
-    {
-        RecalcLayout();
-        return 0;
-    }
-
-    // Called when the view size has changed.
-    inline void CMDIDockFrame::RecalcViewLayout()
-    {
-        RecalcDockLayout();
     }
 
 

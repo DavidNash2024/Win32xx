@@ -455,7 +455,6 @@ namespace Win32xx
 
             BOOL m_isOverContainer;
             CDocker* m_pOldDockTarget;
-            CBitmap m_dpiImage;
         };
 
         // This nested class is draws the left dock target.

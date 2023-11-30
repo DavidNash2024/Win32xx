@@ -150,7 +150,7 @@ LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
     const CSize minimumSize(400, 300);
     lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
     lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Called after the window is created.

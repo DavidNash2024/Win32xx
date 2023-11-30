@@ -3481,7 +3481,6 @@ namespace Win32xx
 
         // Reposition the windows.
         RecalcLayout();
-        T::RedrawWindow();
     }
 
     // Hides or shows the tool bar.
@@ -3514,7 +3513,6 @@ namespace Win32xx
 
         // Reposition the windows.
         RecalcLayout();
-        T::RedrawWindow();
     }
 
     // Called by the keyboard hook to update status information.
@@ -3699,7 +3697,6 @@ namespace Win32xx
         case WM_SYSCOLORCHANGE: return OnSysColorChange(msg, wparam, lparam);
         case WM_SYSCOMMAND:     return OnSysCommand(msg, wparam, lparam);
         case WM_UNINITMENUPOPUP:  return OnUnInitMenuPopup(msg, wparam, lparam);
-        case WM_WINDOWPOSCHANGED: return CWnd::WndProcDefault(msg, wparam, lparam);
 
         // Messages defined by Win32++
         case UWM_GETFRAMEVIEW:      return reinterpret_cast<LRESULT>(GetView().GetHwnd());

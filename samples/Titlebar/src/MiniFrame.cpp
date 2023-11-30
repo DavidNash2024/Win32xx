@@ -307,7 +307,7 @@ LRESULT CMiniFrame::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     RECT titlebarRect = GetTitlebarRect();
     InvalidateRect(titlebarRect, FALSE);
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // OnCommand responds to menu input.
@@ -413,7 +413,7 @@ LRESULT CMiniFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
     lpMMI->ptMinTrackSize.x = DpiScaleInt(400);
     lpMMI->ptMinTrackSize.y = DpiScaleInt(300);
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Handle WM_NCCALCSIZE to extend client (paintable) area into the title bar region.
@@ -506,7 +506,7 @@ LRESULT CMiniFrame::OnNCLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
    }
 
     // Default handling allows for dragging and double click to maximize.
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Map button clicks to the correct messages for the window.
@@ -532,7 +532,7 @@ LRESULT CMiniFrame::OnNCLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
         }
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Update the hovered button when the mouse leaves the non-client area.
@@ -545,7 +545,7 @@ LRESULT CMiniFrame::OnNCMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam)
         m_hoveredButton = TitlebarButton::None;
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Track when mouse hovers each of the title bar buttons to draw the highlight correctly.
@@ -566,7 +566,7 @@ LRESULT CMiniFrame::OnNCMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
         InvalidateRect(buttonRects.maximize, FALSE);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Display a system menu with a right mouse button click on the titlebar.
@@ -588,7 +588,7 @@ LRESULT CMiniFrame::OnNCRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
         SendMessage(WM_SYSCOMMAND, command, 0);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Processes notification (WM_NOTIFY) messages from a child window.
@@ -635,7 +635,7 @@ LRESULT CMiniFrame::OnPaint(UINT, WPARAM, LPARAM)
 LRESULT CMiniFrame::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     RecalcLayout();
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Called before the window is created to set the CREATESTRUCT parameters.

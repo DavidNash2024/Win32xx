@@ -465,13 +465,13 @@ LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
         m_isDPIChanging = false;
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 // Saves the current bitmap to the specified file.
 void CMainFrame::SaveFile(CString& fileName)
 {
-    bool DoSave = TRUE;
+    bool doSave = true;
 
     try
     {
@@ -479,7 +479,7 @@ void CMainFrame::SaveFile(CString& fileName)
         File.Open(fileName, OPEN_EXISTING);
 
         if (IDYES != MessageBox(_T("File already exists. Do you wish to overwrite it?"), _T("Saving file ") + fileName, MB_YESNO | MB_ICONWARNING))
-            DoSave = FALSE;
+            doSave = false;
     }
 
     catch (const CFileException&)
@@ -487,7 +487,7 @@ void CMainFrame::SaveFile(CString& fileName)
         // Discard exception
     }
 
-    if (DoSave)
+    if (doSave)
     {
         m_pathName = fileName;
 
