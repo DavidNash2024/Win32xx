@@ -694,7 +694,7 @@ namespace Win32xx
     {
         // Find the CWnd pointer mapped to this HWND
         CDialog* pDialog = static_cast<CDialog*>(GetCWndPtr(wnd));
-        if (pDialog == 0)
+        if (pDialog == NULL)
         {
             // The HWND wasn't in the map, so add it now
             TLSData* pTLSData = GetApp()->GetTlsData();
@@ -714,7 +714,8 @@ namespace Win32xx
             }
         }
 
-        if (pDialog == 0)
+        assert(pDialog != NULL);
+        if (pDialog == NULL)
         {
             // Got a message for a window that's not in the map.
             return 0;
@@ -767,11 +768,10 @@ namespace Win32xx
         }
 
         TLSData* pTLSData = GetApp()->GetTlsData();
-        if (pTLSData == 0)
+        assert(pTLSData != NULL);
+        if (pTLSData == NULL)
         {
             // Thread Local Storage data isn't assigned.
-            // We should never get here.
-            TRACE("*** Warning in CDialog::StaticMsgHook: TLS not assigned ***\n");
             return 0;
         }
 

@@ -116,7 +116,7 @@ namespace Win32xx
         ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
         system.ReleaseBuffer();
 
-        HMODULE shell = ::GetModuleHandle(system + _T("\\Shell32.dll"));
+        HMODULE shell = ::LoadLibrary(system + _T("\\Shell32.dll"));
         if (shell)
         {
             typedef HRESULT WINAPI MYPROC(HWND, int, HANDLE, DWORD, LPTSTR);
@@ -166,6 +166,8 @@ namespace Win32xx
                     appData.ReleaseBuffer();
                 }
             }
+
+            ::FreeLibrary(shell);
         }
 
         return appData;
@@ -1199,6 +1201,7 @@ namespace Win32xx
             }
         }
 
+        assert(w != 0);
         if (w == 0)
         {
             // Got a message for a window that's not in the map.

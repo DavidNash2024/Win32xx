@@ -638,6 +638,18 @@ LRESULT CMiniFrame::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
     return FinalWindowProc(msg, wparam, lparam);
 }
 
+// Called in response to system command.
+LRESULT CMiniFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Pass menu accelerator keys to the menubar.
+    if ((SC_KEYMENU == wparam) && (VK_SPACE != lparam) && m_menubar.IsWindow())
+    {
+        m_menubar.SysCommand(msg, wparam, lparam);
+        return 0;
+    }
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
 // Called before the window is created to set the CREATESTRUCT parameters.
 void CMiniFrame::PreCreate(CREATESTRUCT& cs)
 {
@@ -696,6 +708,7 @@ LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     case WM_NCRBUTTONDOWN:      return OnNCRButtonDown(msg, wparam, lparam);
     case WM_PAINT:              return OnPaint(msg, wparam, lparam);
     case WM_SIZE:               return OnSize(msg, wparam, lparam);
+    case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
     }
 
     // Pass unhandled messages on for default processing.

@@ -329,7 +329,7 @@ namespace Win32xx
     {
         // Find the CWnd pointer mapped to this HWND
         CCommonDialog* pCommonDlg = static_cast<CCommonDialog*>(GetCWndPtr(wnd));
-        if (pCommonDlg == 0)
+        if (pCommonDlg == NULL)
         {
             // The HWND wasn't in the map, so add it now
             TLSData* pTLSData = GetApp()->GetTlsData();
@@ -348,7 +348,8 @@ namespace Win32xx
             }
         }
 
-        if (pCommonDlg == 0)
+        assert(pCommonDlg != NULL);
+        if (pCommonDlg == NULL)
         {
             // Got a message for a window that's not in the map.
             return 0;

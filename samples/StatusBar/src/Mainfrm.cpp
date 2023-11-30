@@ -55,7 +55,7 @@ void CMainFrame::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem)
         // Change the part's background.
         COLORREF fillColor1 = RGB(230, 180, 0);
         COLORREF fillColor2 = RGB(240, 210, 90);
-        memDC.GradientFill(fillColor1, fillColor2, partRect, TRUE);
+        memDC.GradientFill(fillColor1, fillColor2, partRect, FALSE);
 
         // Change the text color.
         COLORREF textColor = RGB(10, 20, 250);
@@ -91,7 +91,7 @@ BOOL CMainFrame::DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusbar)
         memDC.CreateCompatibleBitmap(dc, rc.Width(), rc.Height());
         COLORREF fillColor1 = RGB(125, 230, 255);
         COLORREF fillColor2 = RGB(250, 150, 150);
-        memDC.GradientFill(fillColor1, fillColor2, rc, TRUE);
+        memDC.GradientFill(fillColor1, fillColor2, rc, FALSE);
         dc.BitBlt(0, 0, rc.Width(), rc.Height(), memDC, 0, 0, SRCCOPY);
 
         return TRUE;
