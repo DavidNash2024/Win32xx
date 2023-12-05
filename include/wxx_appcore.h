@@ -68,9 +68,19 @@ namespace Win32xx
         static CCriticalSection cs;
         CThreadLock appLock(cs);
 
+        // This assert fails if Win32++ has already been started.
+        // There should only be one instance of CWinApp running at a time.
+        assert(SetnGetThis() == 0);
+
         if (SetnGetThis() == 0)
         {
             m_tlsData = ::TlsAlloc();
+
+            // This assert fails if all TLS indexes are already allocated by this app.
+            // At least 64 TLS indexes per process are allowed.
+            // Win32++ requires only one TLS index.
+            assert(m_tlsData != TLS_OUT_OF_INDEXES);
+            
             if (m_tlsData != TLS_OUT_OF_INDEXES)
             {
                 SetnGetThis(this);
@@ -95,21 +105,6 @@ namespace Win32xx
                 //       for other OLE functionality.
                 VERIFY(SUCCEEDED(OleInitialize(NULL)));
             }
-            else
-            {
-                // Should not get here.
-                // All TLS indexes are already allocated by this app.
-                // At least 64 TLS indexes per process are allowed.
-                // Win32++ requires only one TLS index.
-                TRACE("\n*** Error: Unable to allocate Thread Local Storage. ***");
-                TRACE("\n*** Error: Win32++ hasn't been started. ***\n\n");
-            }
-        }
-        else
-        {
-            // Should not get here.
-            TRACE("\n*** Warning: Win32++ has already been started. ***");
-            TRACE("\n*** Warning: This instance of CWinApp has been ignored. ***\n\n");
         }
     }
 

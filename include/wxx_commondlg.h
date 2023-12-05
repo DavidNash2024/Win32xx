@@ -338,7 +338,7 @@ namespace Win32xx
 
             // Retrieve pointer to CWnd object from Thread Local Storage TLS
             pCommonDlg = static_cast<CCommonDialog*>(pTLSData->pWnd);
-            if (pCommonDlg)
+            if (pCommonDlg != NULL)
             {
                 pTLSData->pWnd = NULL;
 
