@@ -332,9 +332,9 @@ namespace Win32xx
         CMenu m_menu;                       // The menu used by the menubar or the frame's window
         CFont m_menuFont;                   // Menu and menubar font
         CFont m_statusBarFont;              // StatusBar font
-        std::vector<CImageList> m_toolBarImageLists;          // Image list for the ToolBar buttons
-        std::vector<CImageList> m_toolBarDisabledImageLists;  // Image list for the Disabled ToolBar buttons
-        std::vector<CImageList> m_toolBarHotImageLists;       // Image list for the Hot ToolBar buttons
+        std::vector<CImageList> m_toolBarImageLists;          // Normal imagelists for the frame's toolbars
+        std::vector<CImageList> m_toolBarDisabledImageLists;  // Disabled imagelists for the frame's toolbars
+        std::vector<CImageList> m_toolBarHotImageLists;       // Hot imagelists for the frame's toolbars
         CString m_keyName;                  // CString for Registry key name
         CString m_statusText;               // CString for status text
         CString m_tooltip;                  // CString for tool tips
