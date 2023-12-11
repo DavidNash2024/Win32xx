@@ -34,7 +34,6 @@
 #include <tchar.h>              // Add support for C style TCHARs.
 
 // Add the Win32++ library
-// Add the Win32++ library
 #include <wxx_appcore.h>        // Add CWinApp
 #include <wxx_archive.h>        // Add CArchive
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip
@@ -90,8 +89,8 @@
     #include <wxx_printdialogex.h>  // Add CPrintDialogEx
   #endif
 
-  // Windows Vista or higher with Microsoft VS2008 or higher, or Clang compiler
-  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || defined(__clang_major__))
+  // Windows Vista or higher with Microsoft VS2010 or higher, or Clang compiler
+  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1600)) || defined(__clang_major__))
     #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
   #endif
 #endif
