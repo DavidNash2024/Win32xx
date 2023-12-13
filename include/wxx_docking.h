@@ -5211,7 +5211,6 @@ namespace Win32xx
         if (this == GetContainerParent())
         {
             std::vector<ContainerInfo>& v = GetAll();
-            GetODImageList().DeleteImageList();
             GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
             for (size_t i = 0; i < v.size(); ++i)
             {
@@ -5223,7 +5222,6 @@ namespace Win32xx
         else
         {
             // Set the icons for the container children, used if the container is undocked.
-            GetODImageList().DeleteImageList();
             GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
             GetODImageList().Add(GetTabIcon());
         }
@@ -5267,7 +5265,6 @@ namespace Win32xx
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's image list.
-        imageList.DeleteImageList();
         imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
         imageList.Add(dpiImage, mask);
         toolBar.SetImageList(imageList);
@@ -5287,7 +5284,6 @@ namespace Win32xx
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's image list.
-        imageList.DeleteImageList();
         imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
         imageList.Add(dpiImage, mask);
         toolBar.SetDisableImageList(imageList);
@@ -5306,8 +5302,7 @@ namespace Win32xx
         CBitmap dpiImage = DpiScaleUpBitmap(bm);
         CSize sz = GetTBImageSize(&dpiImage);
 
-        // Set the toolbar's image list
-        imageList.DeleteImageList();
+        // Set the toolbar's image list.
         imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
         imageList.Add(dpiImage, mask);
         toolBar.SetHotImageList(imageList);

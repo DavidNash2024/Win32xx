@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1299,8 +1299,9 @@ namespace Win32xx
     inline CImageList CHeader::CreateDragImage(int index) const
     {
         assert(IsWindow());
-        HIMAGELIST images = Header_CreateDragImage(*this, index);
-        return CImageList(images);
+        CImageList images;
+        images.CreateDragImage(*this, index);
+        return images;
     }
 
     // Deletes an item from the header control.

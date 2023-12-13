@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -148,13 +148,13 @@ namespace Win32xx
 
     // Creates a dragging bitmap for the specified item in a tree-view control.
     // It also creates an image list for the bitmap and adds the bitmap to the image list.
-    // An application can display the image when dragging the item by using the image list functions.
     // Refer to TreeView_CreateDragImage in the Windows API documentation for more information.
     inline CImageList CTreeView::CreateDragImage(HTREEITEM item) const
     {
         assert(IsWindow());
-        HIMAGELIST images = TreeView_CreateDragImage(*this, item);
-        return CImageList(images);
+        CImageList images;
+        images.CreateDragImage(*this, item);
+        return images;
     }
 
     // Deletes all items from a tree-view control.

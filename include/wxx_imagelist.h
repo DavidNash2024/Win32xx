@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -61,6 +61,7 @@ namespace Win32xx
     // Forward declaration
     class CBitmap;
 
+
     ///////////////////////////////////////
     // The CImageList class that provides the functionality of image lists.
     // An image list is a collection of images of the same size, each of
@@ -84,7 +85,9 @@ namespace Win32xx
         BOOL Create(LPCTSTR resourceName, int cx, int grow, COLORREF mask);
         BOOL Create(HIMAGELIST images);
         BOOL CreateDisabledImageList(HIMAGELIST normalImages);
-
+        void CreateDragImage(HWND header, int index);
+        void CreateDragImage(HWND listView, int item, CPoint& pt);
+        void CreateDragImage(HWND treeView, HTREEITEM item);
 
         // Operations
         int Add(HBITMAP bitmap) const;
@@ -371,6 +374,46 @@ namespace Win32xx
         Assign(copyImages);
 
         return (copyImages != 0) ? TRUE : FALSE;
+    }
+
+    // Creates a transparent version of an item image within the header control.
+    // Refer to Header_CreateDragImage in the Windows API documentation for more information.
+    inline void CImageList::CreateDragImage(HWND header, int index)
+    {
+        assert(::IsWindow(header));
+        HIMAGELIST images = Header_CreateDragImage(header, index);
+
+        if (images == 0)
+            throw CResourceException(GetApp()->MsgGdiImageList());
+
+        Assign(images);
+    }
+
+    // Creates a drag image list for the specified item.
+    // Refer to ListView_CreateDragImage in the Windows API documentation for more information.
+    inline void CImageList::CreateDragImage(HWND listView, int item, CPoint& pt)
+    {
+        assert(::IsWindow(listView));
+        HIMAGELIST images = ListView_CreateDragImage(listView, item, &pt);
+
+        if (images == 0)
+            throw CResourceException(GetApp()->MsgGdiImageList());
+
+        Assign(images);
+    }
+
+    // Creates a dragging bitmap for the specified item in a tree-view control.
+    // It also creates an image list for the bitmap and adds the bitmap to the image list.
+    // Refer to TreeView_CreateDragImage in the Windows API documentation for more information.
+    inline void CImageList::CreateDragImage(HWND treeView, HTREEITEM item)
+    {
+        assert(::IsWindow(treeView));
+        HIMAGELIST images = TreeView_CreateDragImage(treeView, item);
+
+        if (images == 0)
+            throw CResourceException(GetApp()->MsgGdiImageList());
+
+        Assign(images);
     }
 
     // Destroys an image list.

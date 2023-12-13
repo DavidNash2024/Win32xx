@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -310,6 +310,7 @@ namespace Win32xx
         virtual CString MsgGdiBitmap() const;
         virtual CString MsgGdiBrush() const;
         virtual CString MsgGdiFont() const;
+        virtual CString MsgGdiImageList() const;
         virtual CString MsgGdiPalette() const;
         virtual CString MsgGdiPen() const;
         virtual CString MsgGdiRegion() const;

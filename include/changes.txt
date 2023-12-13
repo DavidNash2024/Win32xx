@@ -8,7 +8,8 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-Added CFrameT::SetToolBarImages   Added overload for additional toolbars
+Added CFrameT::SetToolBarImages    Added overload for additional toolbars
+Added CImageList::CreateDragImage  
 
 
 Version 9.4
