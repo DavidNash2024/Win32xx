@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -185,8 +185,9 @@ namespace Win32xx
     inline CImageList CListView::CreateDragImage(int item, CPoint& pt) const
     {
         assert(IsWindow());
-        HIMAGELIST images = ListView_CreateDragImage(*this, item, &pt);
-        return CImageList(images);
+        CImageList images;
+        images.CreateDragImage(*this, item, pt);
+        return images;
     }
 
     // Removes all items from the list-view control.

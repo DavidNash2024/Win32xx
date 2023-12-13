@@ -686,8 +686,6 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::ClearMenuIcons()
     {
-        m_menuImages.DeleteImageList();
-        m_menuDisabledImages.DeleteImageList();
         m_menuItemIDs.clear();
     }
 
@@ -3231,7 +3229,6 @@ namespace Win32xx
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's image list.
-        imageList.DeleteImageList();
         imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
         imageList.Add(dpiImage, mask);
         toolBar.SetImageList(imageList);
@@ -3261,7 +3258,6 @@ namespace Win32xx
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's disabled image list.
-        imageList.DeleteImageList();
         imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
         imageList.Add(dpiImage, mask);
         toolBar.SetDisableImageList(imageList);
@@ -3291,7 +3287,6 @@ namespace Win32xx
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's hot image list
-        imageList.DeleteImageList();
         imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
         imageList.Add(dpiImage, mask);
         toolBar.SetHotImageList(imageList);

@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -80,7 +80,7 @@ namespace Win32xx
             // At least 64 TLS indexes per process are allowed.
             // Win32++ requires only one TLS index.
             assert(m_tlsData != TLS_OUT_OF_INDEXES);
-            
+
             if (m_tlsData != TLS_OUT_OF_INDEXES)
             {
                 SetnGetThis(this);
@@ -536,6 +536,9 @@ namespace Win32xx
 
     inline CString CWinApp::MsgGdiFont() const
     { return _T("Failed to create font."); }
+
+    inline CString CWinApp::MsgGdiImageList() const
+    { return _T("Failed to create image list."); }
 
     inline CString CWinApp::MsgGdiPalette() const
     { return _T("Failed to create palette."); }

@@ -119,7 +119,7 @@ namespace Win32xx
         CMenu GetListMenu();
         CRect GetListRect() const;
         SIZE GetMaxTabSize() const;
-        CImageList GetODImageList() const   { return m_odImages; }
+        CImageList& GetODImageList()        { return m_odImages; }
         BOOL GetShowButtons() const         { return m_isShowingButtons; }
         BOOL GetTabsAtTop() const;
         CFont GetTabFont() const            { return m_tabFont; }
@@ -653,8 +653,8 @@ namespace Win32xx
 
         if (!isBottomTab)
         {
-              bottom = rc.top;
-              top = bottom - gap;
+            bottom = MAX(rc.top, m_tabHeight +4);
+            top = bottom - gap;
         }
 
         dc.CreateSolidBrush(RGB(248, 248, 248));
@@ -799,7 +799,7 @@ namespace Win32xx
             int padding = DpiScaleInt(10);
             if (tcItem.iImage >= 0)
             {
-                imageSize = GetODImageList().GetIconSize().cx;
+                imageSize = m_odImages.GetIconSize().cx;
             }
 
             TempSize.cx += imageSize + padding;
@@ -909,10 +909,6 @@ namespace Win32xx
     inline void CTab::OnAttach()
     {
         UpdateTabs();
-
-        // Assign ImageList unless we are owner drawn.
-        if (!(GetStyle() & TCS_OWNERDRAWFIXED))
-            SetImageList(m_odImages);
 
         for (size_t i = 0; i < m_allTabPageInfo.size(); ++i)
         {
@@ -1219,7 +1215,7 @@ namespace Win32xx
         DrawListButton(memDC);
         DrawTabBorders(memDC, rcTab);
 
-        // Now copy our from our memory DC to the window DC.
+        // Now copy from our memory DC to the window DC.
         dcView.SelectClipRgn(rgnClip);
 
         if (isRTL)
@@ -1309,7 +1305,6 @@ namespace Win32xx
 
             NotifyChanged();
         }
-
     }
 
     // Selects the tab and the view page.
@@ -1328,22 +1323,8 @@ namespace Win32xx
     inline void CTab::SetFixedWidth(BOOL isEnabled)
     {
         DWORD style = GetStyle();
-        if (isEnabled)
-        {
-            SetStyle(style | TCS_FIXEDWIDTH);
-
-            // Remove Image list for fixed width and Owner drawn tabs.
-            if (style & TCS_OWNERDRAWFIXED)
-                SetImageList(0);
-            else
-                SetImageList(m_odImages);
-        }
-        else
-        {
-            SetStyle(style & ~TCS_FIXEDWIDTH);
-            SetImageList(m_odImages);
-        }
-
+        style = isEnabled ? style | TCS_FIXEDWIDTH : style & ~TCS_FIXEDWIDTH;
+        SetStyle(style);
         RecalcLayout();
     }
 
@@ -1351,22 +1332,8 @@ namespace Win32xx
     inline void CTab::SetOwnerDraw(BOOL isEnabled)
     {
         DWORD style = GetStyle();
-        if (isEnabled)
-        {
-            SetStyle(style | TCS_OWNERDRAWFIXED);
-
-            // Remove Image list for tabs with both fixed width and Owner drawn tabs.
-            if (style & TCS_FIXEDWIDTH)
-                SetImageList(0);
-            else
-                SetImageList(m_odImages);
-        }
-        else
-        {
-            SetStyle(style & ~TCS_OWNERDRAWFIXED);
-            SetImageList(m_odImages);
-        }
-
+        style = isEnabled ? style | TCS_OWNERDRAWFIXED : style & ~TCS_OWNERDRAWFIXED;
+        SetStyle(style);
         RecalcLayout();
     }
 
@@ -1428,7 +1395,7 @@ namespace Win32xx
             style |= TCS_BOTTOM;
 
         SetStyle(style);
-        UpdateTabs();
+        RecalcLayout();
     }
 
     // Sets the width and height of tabs in a fixed-width or owner-drawn tab control.
@@ -1576,7 +1543,6 @@ namespace Win32xx
         lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
         font.CreateFontIndirect(lf);
         SetTabFont(font);
-        RecalcLayout();
     }
 
     // Updates the tab icons based on the window's DPI.
@@ -1586,7 +1552,6 @@ namespace Win32xx
         iconHeight = iconHeight - iconHeight % 8;
 
         const std::vector<TabPageInfo>& v = GetAllTabs();
-        GetODImageList().DeleteImageList();
         GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
         for (size_t i = 0; i < v.size(); ++i)
         {
@@ -1600,6 +1565,9 @@ namespace Win32xx
     {
         SetTabsDpiFont();
         SetTabsDpiIcons();
+
+        // Assign the ImageList.
+        SetImageList(m_odImages);
     }
 
     // Provides the default message handling for the tab control.
