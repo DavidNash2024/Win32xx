@@ -609,7 +609,7 @@ namespace Win32xx
                 dc.RoundRect(rcItem.left, rcItem.top, rcItem.right +1, rcItem.bottom, 6, 6);
 
                 CSize szImage = GetODImageList().GetIconSize();
-                int padding = 4;
+                int padding = DpiScaleInt(4);
 
                 if (rcItem.Width() >= szImage.cx + 2 * padding)
                 {
@@ -653,7 +653,7 @@ namespace Win32xx
 
         if (!isBottomTab)
         {
-            bottom = MAX(rc.top, m_tabHeight +4);
+            bottom = MAX(rc.top, m_tabHeight + gap + 1);
             top = bottom - gap;
         }
 
@@ -1349,7 +1349,7 @@ namespace Win32xx
     {
         m_tabFont = font;
         int heightGap = DpiScaleInt(5);
-        SetTabHeight(MAX(20, GetTextHeight() + heightGap));
+        SetTabHeight(MAX(DpiScaleInt(20), GetTextHeight() + heightGap));
 
         // Set the font used without owner draw.
         SetFont(font);

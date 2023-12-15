@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -433,7 +433,16 @@ namespace Win32xx
         assert(m_pData);
         assert(IsMenu(m_pData->menu));
 
-        ::DestroyMenu( Detach() );
+        CThreadLock mapLock(GetApp()->m_gdiLock);
+ 
+        if (m_pData && m_pData->menu != 0)
+        {
+            RemoveFromMap();
+
+            ::DestroyMenu(m_pData->menu);
+            m_pData->menu = 0;
+            m_pData->isManagedMenu = false;
+        }
     }
 
     // Detaches the HMENU from this CMenu object and all its copies.
