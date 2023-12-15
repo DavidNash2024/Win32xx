@@ -1186,6 +1186,7 @@ namespace Win32xx
 
             ::DeleteObject(m_pData->hGDIObject);
             m_pData->hGDIObject = 0;
+            m_pData->isManagedObject = false;
         }
     }
 

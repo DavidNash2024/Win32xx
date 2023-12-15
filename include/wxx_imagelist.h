@@ -421,9 +421,15 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (m_pData->images != 0)
+        CThreadLock mapLock(GetApp()->m_gdiLock);
+
+        if (m_pData && m_pData->images != 0)
         {
-            ImageList_Destroy(Detach());
+            RemoveFromMap();
+
+            ImageList_Destroy(m_pData->images);
+            m_pData->images = 0;
+            m_pData->isManagedHiml = false;
         }
     }
 
