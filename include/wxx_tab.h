@@ -195,7 +195,7 @@ namespace Win32xx
         virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
-        virtual LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDpiChangedAfterParent(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    NotifyChanged();
@@ -1126,10 +1126,10 @@ namespace Win32xx
         }
     }
 
-    // Called in response to a WM_DPICHANGED_BEFOREPARENT message that is sent to child
-    // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
+    // Called in response to a WM_DPICHANGED_AFTERPARENT message that is sent to child
+    // windows after a DPI change. A WM_DPICHANGED_AFTERPARENT is only received when the
     // application is DPI_AWARENESS_PER_MONITOR_AWARE.
-    inline LRESULT CTab::OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM)
+    inline LRESULT CTab::OnDpiChangedAfterParent(UINT, WPARAM, LPARAM)
     {
         UpdateTabs();
 
@@ -1403,16 +1403,26 @@ namespace Win32xx
     {
         if (GetItemCount() > 0)
         {
-            CRect rc = GetClientRect();
-            AdjustRect(FALSE, &rc);
-            int padding = DpiScaleInt(2);
-            if (m_isShowingButtons)
-                padding = GetCloseRect().Width() + GetListRect().Width() + DpiScaleInt(4);
+            DWORD style = GetStyle();
+            if (style & TCS_OWNERDRAWFIXED)
+            {
+                CRect rc = GetClientRect();
+                AdjustRect(FALSE, &rc);
+                int padding = DpiScaleInt(2);
+                if (m_isShowingButtons)
+                    padding = GetCloseRect().Width() + GetListRect().Width() + DpiScaleInt(4);
 
-            int itemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - padding) / GetItemCount());
-            itemWidth = MAX(itemWidth, 0);
-            SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, m_tabHeight));
-            NotifyChanged();
+                int itemWidth = MIN(GetMaxTabSize().cx, (rc.Width() - padding) / GetItemCount());
+                itemWidth = MAX(itemWidth, 0);
+                SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, m_tabHeight));
+                NotifyChanged();
+            }
+            else
+            {
+                int itemWidth = GetMaxTabSize().cx;
+                SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, m_tabHeight));
+                NotifyChanged();
+            }
         }
     }
 
@@ -1568,6 +1578,7 @@ namespace Win32xx
 
         // Assign the ImageList.
         SetImageList(m_odImages);
+        RecalcLayout();
     }
 
     // Provides the default message handling for the tab control.
@@ -1587,7 +1598,7 @@ namespace Win32xx
         case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
-        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
+        case WM_DPICHANGED_AFTERPARENT: return OnDpiChangedAfterParent(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on for default processing.

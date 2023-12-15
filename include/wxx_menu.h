@@ -434,7 +434,7 @@ namespace Win32xx
         assert(IsMenu(m_pData->menu));
 
         CThreadLock mapLock(GetApp()->m_gdiLock);
- 
+
         if (m_pData && m_pData->menu != 0)
         {
             RemoveFromMap();
