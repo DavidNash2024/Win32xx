@@ -10,6 +10,14 @@
 #include "resource.h"
 
 
+struct BandData
+{
+    UINT index;
+    UINT id;
+//    UINT style;
+//    UINT size;
+};
+
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
 // The main window is a frame that has a menubar, toolbar,
@@ -29,7 +37,6 @@ protected:
     virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    OnMenuUpdate(UINT id);
-    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual BOOL    SaveRegistrySettings();
     virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
@@ -41,6 +48,7 @@ private:
     CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
 
     LRESULT AddCombo();
+    void ArrangeBands();
     BOOL ChooseColor(UINT color);
     void SetMenuBarColors(COLORREF hot1, COLORREF hot2, COLORREF pressed1, COLORREF pressed2, COLORREF outline, COLORREF text);
     void SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2);
@@ -63,6 +71,8 @@ private:
     BOOL OnViewCards();
 
     // Message handlers
+    LRESULT OnArrangeBands(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnGetDpiScaledSize(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
@@ -70,9 +80,7 @@ private:
     CToolBar m_arrows;
     CToolBar m_cards;
     CMyCombo m_comboBoxEx;
-    std::vector<UINT> m_bandIDs;
-    std::vector<UINT> m_bandStyles;
-    std::vector<UINT> m_bandSizes;
+    std::vector<BandData> m_bandData;
 
     DWORD m_color;
     bool m_useThemes;

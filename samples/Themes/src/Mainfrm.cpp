@@ -7,6 +7,8 @@
 #include "resource.h"
 
 #define UWM_ADDCOMBO        (WM_APP + 0x0001)
+#define UWM_ARRANGEBANDS    (WM_APP + 0x0002)
+
 
 ///////////////////////////////////
 // CMainFrame function definitions.
@@ -54,6 +56,22 @@ LRESULT CMainFrame::AddCombo()
     }
 
     return 0;
+}
+
+// Rearrange the rebar band positions.
+void CMainFrame::ArrangeBands()
+{
+    // Set the band styles and positions.
+    std::vector<BandData>::iterator it;
+
+    for (it = m_bandData.begin(); it != m_bandData.end(); ++it)
+    {
+        int from = GetReBar().IDToIndex((*it).id);
+        GetReBar().MoveBand(from, (*it).index);
+    }
+
+    GetReBar().MoveBandsLeft();
+    RecalcLayout();
 }
 
 // Configures the theme colors based on the user's menu selection.
@@ -186,17 +204,10 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
                 DWORD id = 0;
                 bandKeyName.Format(_T("Band ID %d\0"), i + 1);
                 result |= settingsKey.QueryDWORDValue(bandKeyName, id);
-                m_bandIDs.push_back(id);
-
-                DWORD style = 0;
-                bandKeyName.Format(_T("Band Style %d\0"), i + 1);
-                result |= settingsKey.QueryDWORDValue(bandKeyName, style);
-                m_bandStyles.push_back(style);
-
-                DWORD size = 0;
-                bandKeyName.Format(_T("Band Size %d\0"), i + 1);
-                result |= settingsKey.QueryDWORDValue(bandKeyName, size);
-                m_bandSizes.push_back(size);
+                BandData bandData;
+                bandData.index = i;
+                bandData.id = id;
+                m_bandData.push_back(bandData);
             }
         }
 
@@ -293,42 +304,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
         // Set our theme colors.
         ChooseColor(m_color);
 
-        // Set the band styles and positions.
-        for (int i = 0; i < GetReBar().GetBandCount(); ++i)
-        {
-            if (i < static_cast<int>(m_bandStyles.size()))
-            {
-                // Move the band to the correct position.
-                int from = GetReBar().IDToIndex(m_bandIDs[i]);
-                GetReBar().MoveBand(from, i);
-
-                // Set the band's style.
-                REBARBANDINFO rbbi;
-                ZeroMemory(&rbbi, sizeof(rbbi));
-                rbbi.fMask = RBBIM_STYLE;
-                rbbi.fStyle = m_bandStyles[i];
-                GetReBar().SetBandInfo(i, rbbi);
-            }
-
-            if (i < static_cast<int>(m_bandSizes.size()))
-            {
-                // Set the band's size.
-                REBARBANDINFO rbbi;
-                ZeroMemory(&rbbi, sizeof(rbbi));
-                rbbi.fMask = RBBIM_SIZE;
-                rbbi.cx = m_bandSizes[i];
-                GetReBar().SetBandInfo(i, rbbi);
-            }
-        }
-
         // Set the MenuBar's position and gripper.
         int band = GetReBar().GetBand(GetMenuBar());
         GetReBar().ShowGripper(band, !m_lockMenuBand);
         if (m_lockMenuBand)
             GetReBar().MoveBand(band, 0);
 
-        CSize sizeMenuBar = GetMenuBar().GetMaxSize();
-        GetReBar().ResizeBand(band, sizeMenuBar);
+        // Arrange bands from information loaded from registry.
+        ArrangeBands();
 
         ShowArrows(m_showArrows);
         ShowCards(m_showCards);
@@ -361,7 +344,10 @@ LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     m_cards.Destroy();
 
     // Call the base class function. This recreates the toolbars.
-    return CFrame::OnDpiChanged(msg, wparam, lparam);
+    CFrame::OnDpiChanged(msg, wparam, lparam);
+
+    PostMessage(UWM_ARRANGEBANDS);
+    return 0;
 }
 
 BOOL CMainFrame::OnFileExit()
@@ -388,6 +374,28 @@ BOOL CMainFrame::OnFlatStyle()
     return TRUE;
 }
 
+// Called before OnDpiChanged when a DPI change occurs. 
+LRESULT CMainFrame::OnGetDpiScaledSize(UINT, WPARAM, LPARAM)
+{
+    m_bandData.clear();
+    REBARBANDINFO rbbi;
+    ZeroMemory(&rbbi, sizeof(rbbi));
+    rbbi.fMask = RBBIM_ID | RBBIM_STYLE | RBBIM_SIZE;
+
+    // Store the current band arrangement in m_bandData.
+    int bands = GetReBar().GetBandCount();
+    for (int i = 0; i < bands; i++)
+    {
+        GetReBar().GetBandInfo(i, rbbi);
+        BandData data;
+        data.index = i;
+        data.id = rbbi.wID;
+        m_bandData.push_back(data);
+    }
+
+    return 0;
+}
+
 // Limit the minimum size of the window.
 LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -396,6 +404,13 @@ LRESULT CMainFrame::OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam)
     lpMMI->ptMinTrackSize.x = DpiScaleInt(minimumSize.cx);
     lpMMI->ptMinTrackSize.y = DpiScaleInt(minimumSize.cy);
     return FinalWindowProc(msg, wparam, lparam);
+}
+
+// Called when the UWM_ARRANGEBANDS message is posted.
+LRESULT CMainFrame::OnArrangeBands(UINT, WPARAM, LPARAM)
+{
+    ArrangeBands();
+    return 0;
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -485,19 +500,6 @@ void CMainFrame::OnMenuUpdate(UINT id)
 
     // Call the base class member function.
     CFrame::OnMenuUpdate(id);
-}
-
-LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
-{
-    // Process notification messages sent by child windows
-//  LPNMHDR pHeader = reinterpret_cast<LPNMHDR>(lparam);
-//  switch (pHeader->code)
-//  {
-        // Add case statements for each notification message here.
-//  }
-
-    // Pass any unhandled messages on for default processing.
-    return CFrame::OnNotify(wparam, lparam);
 }
 
 // Toggle round borders for toolbars in the rebar.
@@ -647,16 +649,9 @@ BOOL CMainFrame::SaveRegistrySettings()
             {
                 GetReBar().GetBandInfo(i, rbbi);
                 UINT id = rbbi.wID;
-                UINT style = rbbi.fStyle;
-                UINT size = rbbi.cx;
-
                 CString bandKeyName;
                 bandKeyName.Format(_T("Band ID %d\0"), i + 1);
                 settingsKey.SetDWORDValue(bandKeyName, id);
-                bandKeyName.Format(_T("Band Style %d\0"), i + 1);
-                settingsKey.SetDWORDValue(bandKeyName, style);
-                bandKeyName.Format(_T("Band Size %d\0"), i + 1);
-                settingsKey.SetDWORDValue(bandKeyName, size);
             }
         }
     }
@@ -829,8 +824,10 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         switch (msg)
         {
-        case UWM_ADDCOMBO:        return AddCombo();
-        case WM_GETMINMAXINFO:    return OnGetMinMaxInfo(msg, wparam, lparam);
+        case UWM_ADDCOMBO:         return AddCombo();
+        case UWM_ARRANGEBANDS:     return OnArrangeBands(msg, wparam, lparam);
+        case WM_GETDPISCALEDSIZE:  return OnGetDpiScaledSize(msg, wparam, lparam);
+        case WM_GETMINMAXINFO:     return OnGetMinMaxInfo(msg, wparam, lparam);
         }
 
         //  pass unhandled messages on for default processing
