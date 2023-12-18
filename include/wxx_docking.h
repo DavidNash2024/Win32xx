@@ -187,6 +187,8 @@ namespace Win32xx
         virtual void RemoveContainer(CDockContainer* pWnd, BOOL updateParent = TRUE);
         virtual void SelectPage(int page);
         virtual void SwapTabs(int tab1, int tab2);
+        virtual void SetTabsFontSize(int fontSize = 9);
+        virtual void SetTabsIconSize(int iconSize = 16);
         virtual void UpdateTabs();
 
         // Accessors and mutators
@@ -245,8 +247,6 @@ namespace Win32xx
         int GetDockTabImageID(int tab) const;
         CString GetDockTabText(int tab) const;
         CSize GetTBImageSize(CBitmap* pBitmap) const;
-        void SetTabsDpiFont();
-        void SetTabsDpiIcons();
 
         std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_allInfo;}
         std::vector<ContainerInfo> m_allInfo;          // vector of ContainerInfo structs
@@ -1643,7 +1643,7 @@ namespace Win32xx
                     CRgn Rgn;
                     int gap = DpiScaleInt(8);
                     int tabHeight = pDragged->GetTabHeight();
-                    CSize imageSize = pDragged->GetODImageList().GetIconSize();
+                    CSize imageSize = pDragged->GetImages().GetIconSize();
                     CSize textSize1 = pDragged->GetMaxTabTextSize();
                     CSize textSize2 = pTarget->GetMaxTabTextSize();
                     int tabWidth = imageSize.cx + MAX(textSize1.cx, textSize2.cx) + gap;
@@ -4608,7 +4608,7 @@ namespace Win32xx
         ContainerInfo ci;
         ci.pContainer = pContainer;
         ci.tabText = pContainer->GetTabText();
-        ci.tabImage = GetODImageList().Add( pContainer->GetTabIcon() );
+        ci.tabImage = GetImages().Add( pContainer->GetTabIcon() );
         int newPage = 0;
         if (insert)
         {
@@ -4704,7 +4704,7 @@ namespace Win32xx
                 dc.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
                 dc.RoundRect(rcItem.left, rcItem.top, rcItem.right + 1, rcItem.bottom, 6, 6);
 
-                CSize szImage = GetODImageList().GetIconSize();
+                CSize szImage = GetImages().GetIconSize();
                 int padding = DpiScaleInt(4);
 
                 if (rcItem.Width() >= szImage.cx + 2 * padding)
@@ -4716,7 +4716,7 @@ namespace Win32xx
                     // Draw the icon.
                     int drawleft = rcItem.left + padding;
                     int drawtop = rcItem.top + yOffset;
-                    GetODImageList().Draw(dc, image, CPoint(drawleft, drawtop), ILD_NORMAL);
+                    GetImages().Draw(dc, image, CPoint(drawleft, drawtop), ILD_NORMAL);
 
                     // Calculate the size of the text.
                     CRect rcText = rcItem;
@@ -4863,7 +4863,7 @@ namespace Win32xx
         // Create and assign the tab's image list.
         int iconHeight = DpiScaleInt(16);
         iconHeight = iconHeight - iconHeight % 8;
-        GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
+        GetImages().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
 
         // Update the font and icons in the tabs.
         UpdateTabs();
@@ -4876,7 +4876,7 @@ namespace Win32xx
             ContainerInfo ci;
             ci.pContainer = this;
             ci.tabText = GetTabText();
-            ci.tabImage = GetODImageList().Add(GetTabIcon());
+            ci.tabImage = GetImages().Add(GetTabIcon());
             m_allInfo.push_back(ci);
 
             // Create the page window.
@@ -5190,44 +5190,46 @@ namespace Win32xx
     }
 
     // Updates the tab font based on the window's DPI.
-    inline void CDockContainer::SetTabsDpiFont()
+    inline void CDockContainer::SetTabsFontSize(int fontSize)
     {
         // Set the font used in the tabs.
         CFont font;
         NONCLIENTMETRICS info = GetNonClientMetrics();
         int dpi = GetWindowDpi(*this);
         LOGFONT lf = info.lfStatusFont;
-        lf.lfHeight = -MulDiv(9, dpi, POINTS_PER_INCH);
+        lf.lfHeight = -MulDiv(fontSize, dpi, POINTS_PER_INCH);
         font.CreateFontIndirect(lf);
         SetTabFont(font);
+        RecalcLayout();
     }
 
     // Updates the tab icons based on the window's DPI.
-    inline void CDockContainer::SetTabsDpiIcons()
+    inline void CDockContainer::SetTabsIconSize(int iconSize)
     {
-        int iconHeight = GetContainerParent()->DpiScaleInt(16);
+        int iconHeight = GetContainerParent()->DpiScaleInt(iconSize);
         iconHeight = iconHeight - iconHeight % 8;
 
         if (this == GetContainerParent())
         {
             std::vector<ContainerInfo>& v = GetAll();
-            GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
+            GetImages().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
             for (size_t i = 0; i < v.size(); ++i)
             {
                 // Set the icons for the container parent.
                 CDockContainer* pContainer = GetContainerFromIndex(i);
-                v[i].tabImage = GetODImageList().Add(pContainer->GetTabIcon());
+                v[i].tabImage = GetImages().Add(pContainer->GetTabIcon());
             }
         }
         else
         {
             // Set the icons for the container children, used if the container is undocked.
-            GetODImageList().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
-            GetODImageList().Add(GetTabIcon());
+            GetImages().Create(iconHeight, iconHeight, ILC_MASK | ILC_COLOR32, 0, 0);
+            GetImages().Add(GetTabIcon());
         }
+        RecalcLayout();
     }
 
-    // Sets the size of the tabs to accommodate the tab's text.
+    // Sets the size of the tabs to accommodate the tab's icon and text.
     inline void CDockContainer::SetTabSize()
     {
         CRect rc = GetClientRect();
@@ -5238,7 +5240,7 @@ namespace Win32xx
         int itemWidth = 0;
         int itemHeight = 1;
 
-        CSize szImage = GetODImageList().GetIconSize();
+        CSize szImage = GetImages().GetIconSize();
         int padding = DpiScaleInt(4);
         szImage.cx = szImage.cx + 2 * padding;
 
@@ -5406,8 +5408,8 @@ namespace Win32xx
     // Updates the font and icons in the tabs.
     inline void CDockContainer::UpdateTabs()
     {
-        SetTabsDpiFont();
-        SetTabsDpiIcons();
+        SetTabsFontSize();
+        SetTabsIconSize();
     }
 
     // Process the window's messages.
