@@ -8,8 +8,13 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-Added CFrameT::SetToolBarImages    Added overload for additional toolbars
-Added CImageList::CreateDragImage  
+Added CDockContainer::SetTabsFontSize
+Added CDockContainer::SetTabsIconSize
+Added CFrameT::SetToolBarImages       Added overload for additional toolbars
+Added CImageList::CreateDragImage
+Added CTab::SetTabsFontSize
+Added CTab::SetTabsIconSize
+Removed CTab::SetTabHeight
 
 
 Version 9.4

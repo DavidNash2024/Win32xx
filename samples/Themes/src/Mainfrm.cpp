@@ -374,7 +374,7 @@ BOOL CMainFrame::OnFlatStyle()
     return TRUE;
 }
 
-// Called before OnDpiChanged when a DPI change occurs. 
+// Called before OnDpiChanged when a DPI change occurs.
 LRESULT CMainFrame::OnGetDpiScaledSize(UINT, WPARAM, LPARAM)
 {
     m_bandData.clear();
