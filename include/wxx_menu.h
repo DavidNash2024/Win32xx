@@ -99,8 +99,8 @@ namespace Win32xx
         CMenu(UINT id);
         CMenu(HMENU menu);
         CMenu(const CMenu& rhs);
-        CMenu& operator = (const CMenu& rhs);
-        void operator = (const HMENU menu);
+        CMenu& operator=(const CMenu& rhs);
+        void operator=(const HMENU menu);
         virtual ~CMenu();
 
         // Initialization
@@ -223,7 +223,7 @@ namespace Win32xx
     }
 
     // Note: A copy of a CMenu is a clone of the original.
-    inline CMenu& CMenu::operator = (const CMenu& rhs)
+    inline CMenu& CMenu::operator=(const CMenu& rhs)
     {
         if (this != &rhs)
         {
@@ -236,7 +236,7 @@ namespace Win32xx
         return *this;
     }
 
-    inline void CMenu::operator = (const HMENU menu)
+    inline void CMenu::operator=(const HMENU menu)
     {
         Attach(menu);
     }

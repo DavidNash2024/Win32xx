@@ -51,8 +51,8 @@ CMainFrame : public CFrame                                                  /*
        virtual void    SetupToolBar();
 
     private:
-        CMainFrame(const CMainFrame&);                // Disable copy construction
-        CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+        CMainFrame(const CMainFrame&);               // Disable copy construction
+        CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
 
         void    FeatureNotImplemented();
         BOOL    OnFileExit();

@@ -5,6 +5,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
+#include "MyTab.h"
 
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
@@ -28,8 +29,8 @@ protected:
     virtual void SetupToolBar();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 private:
-    CMainFrame(const CMainFrame&);                // Disable copy construction
-    CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+    CMainFrame(const CMainFrame&);               // Disable copy construction
+    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
 
     // COmmand handlers
     BOOL OnFileExit();
@@ -43,7 +44,7 @@ private:
     BOOL OnTabFixedWidth();
     BOOL OnTabOwnerDraw();
 
-    CTab m_view;
+    CMyTab m_view;
 };
 
 #endif // MAINFRM_H

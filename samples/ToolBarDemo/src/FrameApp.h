@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CToolBarDemoApp(const CToolBarDemoApp&);                // Disable copy construction
-    CToolBarDemoApp& operator = (const CToolBarDemoApp&);   // Disable assignment operator
+    CToolBarDemoApp(const CToolBarDemoApp&);               // Disable copy construction
+    CToolBarDemoApp& operator=(const CToolBarDemoApp&);    // Disable assignment operator
 
     CMainFrame m_frame;
 };

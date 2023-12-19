@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CSimpleApp(const CSimpleApp&);                // Disable copy construction
-    CSimpleApp& operator = (const CSimpleApp&);   // Disable assignment operator
+    CSimpleApp(const CSimpleApp&);               // Disable copy construction
+    CSimpleApp& operator=(const CSimpleApp&);    // Disable assignment operator
 
     CView m_view;
 };

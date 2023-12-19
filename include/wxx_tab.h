@@ -93,8 +93,8 @@ namespace Win32xx
             virtual void OnCancel() { EndDialog(-2); }
 
         private:
-            CSelectDialog(const CSelectDialog&);                // Disable copy construction
-            CSelectDialog& operator = (const CSelectDialog&);   // Disable assignment operator
+            CSelectDialog(const CSelectDialog&);               // Disable copy construction
+            CSelectDialog& operator=(const CSelectDialog&);    // Disable assignment operator
 
             std::vector<CString> m_items;
             UINT IDC_LIST;
@@ -212,9 +212,10 @@ namespace Win32xx
 
     private:
         CTab(const CTab&);              // Disable copy construction
-        CTab& operator = (const CTab&); // Disable assignment operator
+        CTab& operator=(const CTab&); // Disable assignment operator
 
         void ShowActiveView(CWnd* pView);
+        void UpdateImageList();
 
         std::vector<TabPageInfo> m_allTabPageInfo;
         std::vector<WndPtr> m_tabViews;
@@ -280,7 +281,7 @@ namespace Win32xx
 
     private:
         CTabbedMDI(const CTabbedMDI&);              // Disable copy construction
-        CTabbedMDI& operator = (const CTabbedMDI&); // Disable assignment operator
+        CTabbedMDI& operator=(const CTabbedMDI&);   // Disable assignment operator
 
         CTab m_tab;
         CTab* m_pTab;
@@ -1311,21 +1312,26 @@ namespace Win32xx
         }
     }
 
-    // Enable or disable fixed tab width.
+    // Enable or disable fixed-with tabs.
+    // When fixed-width is enabled, all tabs have the same width.
     inline void CTab::SetFixedWidth(BOOL isEnabled)
     {
         DWORD style = GetStyle();
         style = isEnabled ? style | TCS_FIXEDWIDTH : style & ~TCS_FIXEDWIDTH;
         SetStyle(style);
+        UpdateImageList();
         RecalcLayout();
     }
 
-    // Enable or disable owner draw.
+    // Enable or disable owner-draw.
+    // When owner-draw is enabled, the tabs are drawn by Paint().
+    // Note: Setting owner-draw also sets fixed-width.
     inline void CTab::SetOwnerDraw(BOOL isEnabled)
     {
         DWORD style = GetStyle();
-        style = isEnabled ? style | TCS_OWNERDRAWFIXED : style & ~TCS_OWNERDRAWFIXED;
+        style = isEnabled ? style | TCS_OWNERDRAWFIXED | TCS_FIXEDWIDTH : style & ~TCS_OWNERDRAWFIXED;
         SetStyle(style);
+        UpdateImageList();
         RecalcLayout();
     }
 
@@ -1399,13 +1405,13 @@ namespace Win32xx
 
                 int itemWidth = MIN(GetMaxTabSize().cx, (rc.Width() - padding) / GetItemCount());
                 itemWidth = MAX(itemWidth, 0);
-                SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, GetTabHeight()));
+                SetItemSize(itemWidth, GetTabHeight());
                 NotifyChanged();
             }
             else
             {
                 int itemWidth = GetMaxTabSize().cx;
-                SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, GetTabHeight()));
+                SetItemSize(itemWidth, GetTabHeight());
                 NotifyChanged();
             }
         }
@@ -1558,9 +1564,20 @@ namespace Win32xx
         }
 
         // Assign the ImageList.
-        SetImageList(GetImages());
+        UpdateImageList();
 
         RecalcLayout();
+    }
+
+    // Assigns or removes tab control's image-list as required.
+    inline void CTab::UpdateImageList()
+    {
+        DWORD style = GetStyle();
+        if (style & TCS_FIXEDWIDTH && style & TCS_OWNERDRAWFIXED)
+            // Remove the image-list to allow very narrow tabs.
+            SetImageList(0);
+        else
+            SetImageList(m_images);
     }
 
     // Updates the font and icons in the tabs.

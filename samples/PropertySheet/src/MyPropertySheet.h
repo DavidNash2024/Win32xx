@@ -23,8 +23,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CMyPropertySheet(const CMyPropertySheet&);                // Disable copy construction
-    CMyPropertySheet& operator = (const CMyPropertySheet&);   // Disable assignment operator
+    CMyPropertySheet(const CMyPropertySheet&);               // Disable copy construction
+    CMyPropertySheet& operator=(const CMyPropertySheet&);    // Disable assignment operator
 };
 
 
@@ -51,7 +51,7 @@ protected:
 
 private:
     CButtonPage(const CButtonPage&);                // Disable copy construction
-    CButtonPage& operator = (const CButtonPage&);   // Disable assignment operator
+    CButtonPage& operator=(const CButtonPage&);   // Disable assignment operator
 };
 
 
@@ -74,7 +74,7 @@ protected:
 
 private:
     CComboPage(const CComboPage&);                // Disable copy construction
-    CComboPage& operator = (const CComboPage&);   // Disable assignment operator
+    CComboPage& operator=(const CComboPage&);   // Disable assignment operator
 };
 
 

@@ -239,8 +239,8 @@ namespace Win32xx
         void      SetResourceHandle(HINSTANCE resource);
 
     private:
-        CWinApp(const CWinApp&);                // Disable copy construction
-        CWinApp& operator = (const CWinApp&);   // Disable assignment operator
+        CWinApp(const CWinApp&);               // Disable copy construction
+        CWinApp& operator=(const CWinApp&);    // Disable assignment operator
 
         void AddCDCData(HDC dc, CDC_Data* pData);
         void AddCGDIData(HGDIOBJ gdi, CGDI_Data* pData);

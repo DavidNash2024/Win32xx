@@ -22,8 +22,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CViewRect(const CViewRect&);                // Disable copy construction
-    CViewRect& operator = (const CViewRect&);   // Disable assignment operator
+    CViewRect(const CViewRect&);               // Disable copy construction
+    CViewRect& operator=(const CViewRect&);    // Disable assignment operator
 
     // Message Handlers
     virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -50,7 +50,7 @@ protected:
 
 private:
     CMDIChildRect(const CMDIChildRect&);                // Disable copy construction
-    CMDIChildRect& operator = (const CMDIChildRect&);   // Disable assignment operator
+    CMDIChildRect& operator=(const CMDIChildRect&);   // Disable assignment operator
 
     CViewRect m_rectView;
     CMenu m_menu;

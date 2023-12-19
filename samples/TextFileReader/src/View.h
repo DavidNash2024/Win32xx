@@ -41,8 +41,8 @@ CColorExDialog : public CColorDialog                                      /*
                       return TRUE; }
 
     private:
-        CColorExDialog(const CColorExDialog&);                // Disable copy construction
-        CColorExDialog& operator = (const CColorExDialog&);   // Disable assignment operator
+        CColorExDialog(const CColorExDialog&);               // Disable copy construction
+        CColorExDialog& operator=(const CColorExDialog&);    // Disable assignment operator
 
         CString m_boxTitle;
 };
@@ -83,7 +83,7 @@ CView : public CScrollView                                                  /*
 
     private:
         CView(const CView&);                // Disable copy construction
-        CView& operator = (const CView&);   // Disable assignment operator
+        CView& operator=(const CView&);   // Disable assignment operator
 
         void    InitViewColors();
         void    TextLineOut(CDC&, UINT, UINT, LPCWSTR) const;

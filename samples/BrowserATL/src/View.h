@@ -40,7 +40,7 @@ protected:
 
 private:
     CView(const CView&);                // Disable copy construction
-    CView& operator = (const CView&);   // Disable assignment operator
+    CView& operator=(const CView&);     // Disable assignment operator
 
     MyModule m_module;                  // Instanciates (initializes) ATL
     IWebBrowser2* m_pInetExplorer;      // pointer to IWebBrowser2

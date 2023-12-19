@@ -21,8 +21,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CDialogApp(const CDialogApp&);                // Disable copy construction
-    CDialogApp& operator = (const CDialogApp&);   // Disable assignment operator
+    CDialogApp(const CDialogApp&);               // Disable copy construction
+    CDialogApp& operator=(const CDialogApp&);    // Disable assignment operator
 
     CMyDialog m_myDialog;
 };

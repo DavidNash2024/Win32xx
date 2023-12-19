@@ -17,8 +17,8 @@ public:
     virtual ~CDockSimple() {}
 
 private:
-    CDockSimple(const CDockSimple&);                // Disable copy construction
-    CDockSimple& operator = (const CDockSimple&);   // Disable assignment operator
+    CDockSimple(const CDockSimple&);               // Disable copy construction
+    CDockSimple& operator=(const CDockSimple&);    // Disable assignment operator
 
     CViewSimple m_view;
 };
@@ -34,8 +34,8 @@ public:
     virtual ~CDockClasses() {}
 
 private:
-    CDockClasses(const CDockClasses&);                // Disable copy construction
-    CDockClasses& operator = (const CDockClasses&);   // Disable assignment operator
+    CDockClasses(const CDockClasses&);               // Disable copy construction
+    CDockClasses& operator=(const CDockClasses&);    // Disable assignment operator
 
     CViewTree m_view;
 };
@@ -51,8 +51,8 @@ public:
     virtual ~CDockFiles() {}
 
 private:
-    CDockFiles(const CDockFiles&);                // Disable copy construction
-    CDockFiles& operator = (const CDockFiles&);   // Disable assignment operator
+    CDockFiles(const CDockFiles&);               // Disable copy construction
+    CDockFiles& operator=(const CDockFiles&);    // Disable assignment operator
 
     CViewList m_view;
 };
@@ -68,8 +68,8 @@ public:
     virtual ~CDockText() {}
 
 private:
-    CDockText(const CDockText&);                // Disable copy construction
-    CDockText& operator = (const CDockText&);   // Disable assignment operator
+    CDockText(const CDockText&);               // Disable copy construction
+    CDockText& operator=(const CDockText&);    // Disable assignment operator
 
     CViewText m_view;
 };

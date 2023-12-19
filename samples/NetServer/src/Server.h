@@ -59,8 +59,8 @@ protected:
     virtual void OnReceive();
 
 private:
-    CServerSocket(const CServerSocket&);                // Disable copy construction
-    CServerSocket& operator = (const CServerSocket&);   // Disable assignment operator
+    CServerSocket(const CServerSocket&);               // Disable copy construction
+    CServerSocket& operator=(const CServerSocket&);    // Disable assignment operator
 };
 
 
@@ -81,7 +81,7 @@ protected:
 
 private:
     CWorkerSocket(const CWorkerSocket&);                // Disable copy construction
-    CWorkerSocket& operator = (const CWorkerSocket&);   // Disable assignment operator
+    CWorkerSocket& operator=(const CWorkerSocket&);   // Disable assignment operator
 };
 
 

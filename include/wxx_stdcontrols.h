@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -84,8 +84,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc);
 
     private:
-        CButton(const CButton&);                // Disable copy construction
-        CButton& operator = (const CButton&);   // Disable assignment operator
+        CButton(const CButton&);               // Disable copy construction
+        CButton& operator=(const CButton&);    // Disable assignment operator
     };
 
 
@@ -155,8 +155,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc);
 
     private:
-        CEdit(const CEdit&);                // Disable copy construction
-        CEdit& operator = (const CEdit&);   // Disable assignment operator
+        CEdit(const CEdit&);               // Disable copy construction
+        CEdit& operator=(const CEdit&);    // Disable assignment operator
     };
 
 
@@ -227,7 +227,7 @@ namespace Win32xx
 
     private:
         CListBox(const CListBox&);              // Disable copy construction
-        CListBox& operator = (const CListBox&); // Disable assignment operator
+        CListBox& operator=(const CListBox&);   // Disable assignment operator
     };
 
 
@@ -256,8 +256,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc);
 
     private:
-        CStatic(const CStatic&);                // Disable copy construction
-        CStatic& operator = (const CStatic&);   // Disable assignment operator
+        CStatic(const CStatic&);               // Disable copy construction
+        CStatic& operator=(const CStatic&);    // Disable assignment operator
     };
 
 }

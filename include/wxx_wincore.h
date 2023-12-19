@@ -239,8 +239,9 @@ namespace Win32xx
         HMODULE user = GetModuleHandle(_T("user32.dll"));
         if (user && ::IsWindow(wnd))
         {
-            GETDPIFORWINDOW* pGetDpiForWindow =
-                reinterpret_cast<GETDPIFORWINDOW*>(GetProcAddress(user, "GetDpiForWindow"));
+            GETDPIFORWINDOW* pGetDpiForWindow = reinterpret_cast<GETDPIFORWINDOW*>(
+                reinterpret_cast<void*>(::GetProcAddress(user, "GetDpiForWindow")));
+
             if (pGetDpiForWindow)
             {
                 dpi = static_cast<int>(pGetDpiForWindow(wnd));

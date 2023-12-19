@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -206,8 +206,8 @@ namespace Win32xx
         operator SOCKET() const {return m_socket;}
 
     private:
-        CSocket(const CSocket&);                // Disable copy construction
-        CSocket& operator = (const CSocket&);   // Disable assignment operator
+        CSocket(const CSocket&);               // Disable copy construction
+        CSocket& operator=(const CSocket&);    // Disable assignment operator
         static UINT WINAPI EventThread(LPVOID pThis);
 
         SOCKET m_socket;

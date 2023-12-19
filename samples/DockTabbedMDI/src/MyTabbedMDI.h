@@ -28,8 +28,8 @@ protected:
     virtual CWnd* NewMDIChildFromID(int mdiChild);
 
 private:
-    CMyTabbedMDI(const CMyTabbedMDI&);                // Disable copy construction
-    CMyTabbedMDI& operator = (const CMyTabbedMDI&);   // Disable assignment operator
+    CMyTabbedMDI(const CMyTabbedMDI&);               // Disable copy construction
+    CMyTabbedMDI& operator=(const CMyTabbedMDI&);    // Disable assignment operator
 };
 
 #endif

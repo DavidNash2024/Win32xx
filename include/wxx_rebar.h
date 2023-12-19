@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -108,7 +108,7 @@ namespace Win32xx
 
     private:
         CReBar(const CReBar&);              // Disable copy construction
-        CReBar& operator = (const CReBar&); // Disable assignment operator
+        CReBar& operator=(const CReBar&);   // Disable assignment operator
 
         BOOL m_isDragging;
         HWND m_menuBar;

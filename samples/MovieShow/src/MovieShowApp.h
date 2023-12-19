@@ -22,8 +22,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CMovieShowApp(const CMovieShowApp&);                // Disable copy construction
-    CMovieShowApp& operator = (const CMovieShowApp&);   // Disable assignment operator
+    CMovieShowApp(const CMovieShowApp&);               // Disable copy construction
+    CMovieShowApp& operator=(const CMovieShowApp&);    // Disable assignment operator
 
     CMainFrame m_frame;
 };

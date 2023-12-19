@@ -23,8 +23,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CSimpleView(const CSimpleView&);                // Disable copy construction
-    CSimpleView& operator = (const CSimpleView&);   // Disable assignment operator
+    CSimpleView(const CSimpleView&);               // Disable copy construction
+    CSimpleView& operator=(const CSimpleView&);    // Disable assignment operator
 
     // Message handlers
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -51,7 +51,7 @@ protected:
 
 private:
     CSimpleMDIChild(const CSimpleMDIChild&);                // Disable copy construction
-    CSimpleMDIChild& operator = (const CSimpleMDIChild&);   // Disable assignment operator
+    CSimpleMDIChild& operator=(const CSimpleMDIChild&);   // Disable assignment operator
 
     CSimpleView m_view;
     CMenu m_menu;

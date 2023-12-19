@@ -48,8 +48,8 @@ CRichView : public CRichEdit                                                /*
         virtual void    PreCreate(CREATESTRUCT& cs);
 
     private:
-        CRichView(const CRichView&);                // Disable copy construction
-        CRichView& operator = (const CRichView&);   // Disable assignment operator
+        CRichView(const CRichView&);               // Disable copy construction
+        CRichView& operator=(const CRichView&);    // Disable assignment operator
 
           // static callback functions
         static  DWORD CALLBACK RVStreamInCallback(DWORD cookie, LPBYTE pbBuff,

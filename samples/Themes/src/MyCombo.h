@@ -21,8 +21,8 @@ protected:
     virtual void OnAttach();
 
 private:
-    CMyCombo(const CMyCombo&);                // Disable copy construction
-    CMyCombo& operator = (const CMyCombo&);   // Disable assignment operator
+    CMyCombo(const CMyCombo&);               // Disable copy construction
+    CMyCombo& operator=(const CMyCombo&);    // Disable assignment operator
 
     void SetImages(UINT bitmapID, int imageCount);
 

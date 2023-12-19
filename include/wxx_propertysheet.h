@@ -102,8 +102,8 @@ namespace Win32xx
         void SetWizardButtons(DWORD flags) const;
 
     private:
-        CPropertyPage(const CPropertyPage&);                // Disable copy construction
-        CPropertyPage& operator = (const CPropertyPage&);   // Disable assignment operator
+        CPropertyPage(const CPropertyPage&);               // Disable copy construction
+        CPropertyPage& operator=(const CPropertyPage&);    // Disable assignment operator
 
         static UINT CALLBACK StaticPropSheetPageProc(HWND wnd, UINT msg, LPPROPSHEETPAGE ppsp);
         static INT_PTR CALLBACK StaticDialogProc(HWND hDlg, UINT msg, WPARAM wparam, LPARAM lparam);
@@ -156,7 +156,7 @@ namespace Win32xx
 
     private:
         CPropertySheet(const CPropertySheet&);              // Disable copy construction
-        CPropertySheet& operator = (const CPropertySheet&); // Disable assignment operator
+        CPropertySheet& operator=(const CPropertySheet&); // Disable assignment operator
         void BuildPageArray();
         static void CALLBACK Callback(HWND hwnd, UINT msg, LPARAM lparam);
 

@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CRoundApp(const CRoundApp&);                // Disable copy construction
-    CRoundApp& operator = (const CRoundApp&);   // Disable assignment operator
+    CRoundApp(const CRoundApp&);               // Disable copy construction
+    CRoundApp& operator=(const CRoundApp&);    // Disable assignment operator
 
     CView m_view;
 };

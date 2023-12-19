@@ -56,8 +56,8 @@ CView : public CDialog                                                      /*
         void        SetRichEditColors(COLORREF, COLORREF, COLORREF);
 
     private:
-        CView(const CView&);                // Disable copy construction
-        CView& operator = (const CView&);   // Disable assignment operator
+        CView(const CView&);               // Disable copy construction
+        CView& operator=(const CView&);    // Disable assignment operator
 
         BOOL        AddToolTip(HWND, UINT id);
         BOOL        AddToolTip(HWND, UINT id, LPCTSTR s);

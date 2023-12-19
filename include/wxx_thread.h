@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -70,7 +70,7 @@ namespace Win32xx
 
     private:
         CThreadT(const CThreadT&);              // Disable copy construction
-        CThreadT& operator = (const CThreadT&); // Disable assignment operator
+        CThreadT& operator=(const CThreadT&);   // Disable assignment operator
 
         THREADPROC* m_pfnThreadProc;    // Thread callback function
         LPVOID m_pThreadParams;         // Thread parameter
@@ -95,7 +95,7 @@ namespace Win32xx
 
     private:
         CWorkThread(const CWorkThread&);              // Disable copy construction
-        CWorkThread& operator = (const CWorkThread&); // Disable assignment operator
+        CWorkThread& operator=(const CWorkThread&); // Disable assignment operator
     };
 
 
@@ -115,7 +115,7 @@ namespace Win32xx
 
     private:
         CWinThread(const CWinThread&);              // Disable copy construction
-        CWinThread& operator = (const CWinThread&); // Disable assignment operator
+        CWinThread& operator=(const CWinThread&); // Disable assignment operator
 
         static  UINT WINAPI StaticThreadProc(LPVOID pCThread);
     };

@@ -98,7 +98,7 @@ namespace Win32xx
 
     private:
         CCommonDialog(const CCommonDialog&);              // Disable copy construction
-        CCommonDialog& operator = (const CCommonDialog&); // Disable assignment operator
+        CCommonDialog& operator=(const CCommonDialog&);   // Disable assignment operator
     };
 
 
@@ -127,7 +127,7 @@ namespace Win32xx
 
     private:
         CColorDialog(const CColorDialog&);              // Disable copy construction
-        CColorDialog& operator = (const CColorDialog&); // Disable assignment operator
+        CColorDialog& operator=(const CColorDialog&);   // Disable assignment operator
 
         CHOOSECOLOR     m_cc;                    // ChooseColor parameters
         COLORREF        m_customColors[16];      // Custom colors array
@@ -188,7 +188,7 @@ namespace Win32xx
 
     private:
         CFileDialog(const CFileDialog&);              // Disable copy construction
-        CFileDialog& operator = (const CFileDialog&); // Disable assignment operator
+        CFileDialog& operator=(const CFileDialog&);   // Disable assignment operator
 
         BOOL            m_isOpenFileDialog;  // TRUE = open, FALSE = save
         CString         m_filter;          // File filter string
@@ -240,7 +240,7 @@ namespace Win32xx
 
     private:
         CFindReplaceDialog(const CFindReplaceDialog&);              // Disable copy construction
-        CFindReplaceDialog& operator = (const CFindReplaceDialog&); // Disable assignment operator
+        CFindReplaceDialog& operator=(const CFindReplaceDialog&);   // Disable assignment operator
 
         FINDREPLACE     m_fr;               // FindReplace parameters
         BOOL            m_isFindDialogOnly; // TRUE for a find only dialog
@@ -286,7 +286,7 @@ namespace Win32xx
 
     private:
         CFontDialog(const CFontDialog&);              // Disable copy construction
-        CFontDialog& operator = (const CFontDialog&); // Disable assignment operator
+        CFontDialog& operator=(const CFontDialog&);   // Disable assignment operator
         DWORD FillInLogFont(const CHARFORMAT& cf);
 
         // private data

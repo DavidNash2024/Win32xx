@@ -41,8 +41,8 @@ MyFileDialog : public CFileDialog
                         { m_title = title; SetTitle(title);}
 
     private:
-        MyFileDialog(const MyFileDialog&);                // Disable copy construction
-        MyFileDialog& operator = (const MyFileDialog&);   // Disable assignment operator
+        MyFileDialog(const MyFileDialog&);               // Disable copy construction
+        MyFileDialog& operator=(const MyFileDialog&);    // Disable assignment operator
 
         CString m_title;       // persistent over object span
 };

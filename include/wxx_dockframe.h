@@ -92,7 +92,7 @@ namespace Win32xx
 
     private:
         CDockFrame(const CDockFrame&);              // Disable copy construction
-        CDockFrame& operator = (const CDockFrame&); // Disable assignment operator
+        CDockFrame& operator=(const CDockFrame&);   // Disable assignment operator
         bool m_isDpiChanging;
     };
 
@@ -112,7 +112,7 @@ namespace Win32xx
 
     private:
         CMDIDockFrame(const CMDIDockFrame&);              // Disable copy construction
-        CMDIDockFrame& operator = (const CMDIDockFrame&); // Disable assignment operator
+        CMDIDockFrame& operator=(const CMDIDockFrame&);   // Disable assignment operator
 
         CMDIClient<CDocker::CDockClient> m_dockMDIClient;   // MDIClient for docking
     };

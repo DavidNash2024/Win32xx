@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CTrayApp(const CTrayApp&);                // Disable copy construction
-    CTrayApp& operator = (const CTrayApp&);   // Disable assignment operator
+    CTrayApp(const CTrayApp&);               // Disable copy construction
+    CTrayApp& operator=(const CTrayApp&);    // Disable assignment operator
 
     CView m_view;
 };

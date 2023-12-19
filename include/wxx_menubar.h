@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -99,7 +99,7 @@ namespace Win32xx
 
     private:
         CMenuBar(const CMenuBar&);              // Disable copy construction
-        CMenuBar& operator = (const CMenuBar&); // Disable assignment operator
+        CMenuBar& operator=(const CMenuBar&);   // Disable assignment operator
 
         void Press(int buttonID, BOOL press) const
         {

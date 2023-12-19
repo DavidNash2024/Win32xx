@@ -20,8 +20,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CViewMax(const CViewMax&);                // Disable copy construction
-    CViewMax& operator = (const CViewMax&);   // Disable assignment operator
+    CViewMax(const CViewMax&);               // Disable copy construction
+    CViewMax& operator=(const CViewMax&);    // Disable assignment operator
 };
 
 
@@ -41,7 +41,7 @@ protected:
 
 private:
     CMDIChildMax(const CMDIChildMax&);                // Disable copy construction
-    CMDIChildMax& operator = (const CMDIChildMax&);   // Disable assignment operator
+    CMDIChildMax& operator=(const CMDIChildMax&);   // Disable assignment operator
 
     CViewMax m_maxView;
     CMenu m_menu;

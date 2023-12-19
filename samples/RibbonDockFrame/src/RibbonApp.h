@@ -21,8 +21,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CRibbonFrameApp(const CRibbonFrameApp&);                // Disable copy construction
-    CRibbonFrameApp& operator = (const CRibbonFrameApp&);   // Disable assignment operator
+    CRibbonFrameApp(const CRibbonFrameApp&);               // Disable copy construction
+    CRibbonFrameApp& operator=(const CRibbonFrameApp&);    // Disable assignment operator
 
     CMainFrame m_frame;
 };

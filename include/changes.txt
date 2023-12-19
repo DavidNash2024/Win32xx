@@ -410,12 +410,12 @@ Removed CDocker::SetDragAutoResize                             member function
 Removed CRegKey::SetKeyValue                                   member function
 Removed CString(int)                                           constructor
 Removed CString(double)                                        constructor
-Removed CString operator + (const CString&, int)               global operator overload
-Removed CString operator + (const CString&, double)            global operator overload
-Removed CString operator + (int, const CString&)               global operator overload
-Removed CString operator + (double, const CString&)            global operator overload
-Removed CString& operator += (int)                             global operator overload
-Removed CString& operator += (double)                          global operator overload
+Removed CString operator+(const CString&, int)               global operator overload
+Removed CString operator+(const CString&, double)            global operator overload
+Removed CString operator+(int, const CString&)               global operator overload
+Removed CString operator+(double, const CString&)            global operator overload
+Removed CString& operator+=(int)                             global operator overload
+Removed CString& operator+=(double)                          global operator overload
 Removed CString& operator << (CString&, const TCHAR*)          global operator overload
 Removed CString& operator << (CString&, TCHAR)                 global operator overload
 Removed CString& operator << (CString&, int)                   global operator overload

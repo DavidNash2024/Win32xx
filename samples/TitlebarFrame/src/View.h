@@ -28,8 +28,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView(const CView&) = delete;                // Disable copy construction
-    CView& operator = (const CView&) = delete;   // Disable assignment operator
+    CView(const CView&) = delete;               // Disable copy construction
+    CView& operator=(const CView&) = delete;    // Disable assignment operator
 
     CDoc m_doc;
 };

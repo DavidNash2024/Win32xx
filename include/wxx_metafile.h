@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -70,8 +70,8 @@ namespace Win32xx
         CMetaFile(HMETAFILE metaFile);
         CMetaFile(const CMetaFile& rhs);
         virtual ~CMetaFile();
-        CMetaFile& operator = (const CMetaFile& rhs);
-        void operator = (const HMETAFILE metaFile);
+        CMetaFile& operator=(const CMetaFile& rhs);
+        void operator=(const HMETAFILE metaFile);
         operator HMETAFILE() { return m_pData->metaFile; }
 
     private:
@@ -105,8 +105,8 @@ namespace Win32xx
         CEnhMetaFile(HENHMETAFILE enhMetaFile);
         CEnhMetaFile(const CEnhMetaFile& rhs);
         ~CEnhMetaFile();
-        CEnhMetaFile& operator = (const CEnhMetaFile& rhs);
-        void operator = (const HENHMETAFILE enhMetaFile);
+        CEnhMetaFile& operator=(const CEnhMetaFile& rhs);
+        void operator=(const HENHMETAFILE enhMetaFile);
         operator HENHMETAFILE() { return m_pData->enhMetaFile; }
 
     private:
@@ -159,7 +159,7 @@ namespace Win32xx
         Release();
     }
 
-    inline CMetaFile& CMetaFile::operator = (const CMetaFile& rhs)
+    inline CMetaFile& CMetaFile::operator=(const CMetaFile& rhs)
     {
         if (this != &rhs)
         {
@@ -172,7 +172,7 @@ namespace Win32xx
         return *this;
     }
 
-    inline void CMetaFile::operator = (const HMETAFILE metaFile)
+    inline void CMetaFile::operator=(const HMETAFILE metaFile)
     {
         Attach(metaFile);
     }
@@ -241,7 +241,7 @@ namespace Win32xx
         Release();
     }
 
-    inline CEnhMetaFile& CEnhMetaFile::operator = (const CEnhMetaFile& rhs)
+    inline CEnhMetaFile& CEnhMetaFile::operator=(const CEnhMetaFile& rhs)
     {
         if (this != &rhs)
         {
@@ -253,7 +253,7 @@ namespace Win32xx
         return *this;
     }
 
-    inline void CEnhMetaFile::operator = (const HENHMETAFILE enhMetaFile)
+    inline void CEnhMetaFile::operator=(const HENHMETAFILE enhMetaFile)
     {
         Attach(enhMetaFile);
     }

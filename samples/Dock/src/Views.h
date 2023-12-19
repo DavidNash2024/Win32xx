@@ -22,8 +22,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CViewSimple(const CViewSimple&);                // Disable copy construction
-    CViewSimple& operator = (const CViewSimple&);   // Disable assignment operator
+    CViewSimple(const CViewSimple&);               // Disable copy construction
+    CViewSimple& operator=(const CViewSimple&);    // Disable assignment operator
 
     // Message handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -47,7 +47,7 @@ protected:
 
 private:
     CViewText(const CViewText&);                // Disable copy construction
-    CViewText& operator = (const CViewText&);   // Disable assignment operator
+    CViewText& operator=(const CViewText&);   // Disable assignment operator
 
     CFont m_font;
 };
@@ -71,7 +71,7 @@ protected:
 
 private:
     CViewTree(const CViewTree&);                // Disable copy construction
-    CViewTree& operator = (const CViewTree&);   // Disable assignment operator
+    CViewTree& operator=(const CViewTree&);   // Disable assignment operator
 
     // Message handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -101,7 +101,7 @@ protected:
 
 private:
     CViewList(const CViewList&);                // Disable copy construction
-    CViewList& operator = (const CViewList&);   // Disable assignment operator
+    CViewList& operator=(const CViewList&);   // Disable assignment operator
 
     // Message handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);

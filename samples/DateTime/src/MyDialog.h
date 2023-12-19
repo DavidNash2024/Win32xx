@@ -26,8 +26,8 @@ protected:
     virtual void    OnOK();
 
 private:
-    CMyDialog(const CMyDialog&);                // Disable copy construction
-    CMyDialog& operator = (const CMyDialog&);   // Disable assignment operator
+    CMyDialog(const CMyDialog&);               // Disable copy construction
+    CMyDialog& operator=(const CMyDialog&);    // Disable assignment operator
 
     // Member variables
     CDateTime       m_dateTime;

@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -149,7 +149,7 @@ namespace Win32xx
 
     private:
         CPrintDialogEx(const CPrintDialogEx&);              // Disable copy construction
-        CPrintDialogEx& operator = (const CPrintDialogEx&); // Disable assignment operator
+        CPrintDialogEx& operator=(const CPrintDialogEx&);   // Disable assignment operator
         PRINTDLGEX m_pdex;
         IPrintDialogServices* m_pServices;
         CHGlobal m_currentModeBuffer;

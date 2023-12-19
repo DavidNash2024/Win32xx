@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -87,7 +87,7 @@ namespace Win32xx
 
     private:
         CEvent(const CEvent&);              // Disable copy construction
-        CEvent& operator = (const CEvent&); // Disable assignment operator
+        CEvent& operator=(const CEvent&);   // Disable assignment operator
 
         HANDLE m_event;
     };
@@ -109,7 +109,7 @@ namespace Win32xx
 
     private:
         CMutex(const CMutex&);              // Disable copy construction
-        CMutex& operator = (const CMutex&); // Disable assignment operator
+        CMutex& operator=(const CMutex&);   // Disable assignment operator
 
         HANDLE m_mutex;
     };
@@ -132,7 +132,7 @@ namespace Win32xx
 
     private:
         CSemaphore(const CSemaphore&);              // Disable copy construction
-        CSemaphore& operator = (const CSemaphore&); // Disable assignment operator
+        CSemaphore& operator=(const CSemaphore&);   // Disable assignment operator
 
         HANDLE m_semaphore;
     };

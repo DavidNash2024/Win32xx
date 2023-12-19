@@ -26,8 +26,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CMetaView(const CMetaView&);                // Disable copy construction
-    CMetaView& operator = (const CMetaView&);   // Disable assignment operator
+    CMetaView(const CMetaView&);               // Disable copy construction
+    CMetaView& operator=(const CMetaView&);    // Disable assignment operator
 
     CEnhMetaFile  m_enhMetaFile;
 };

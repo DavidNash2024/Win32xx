@@ -111,6 +111,10 @@ SOURCE=..\src\MyDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\MyTab.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
@@ -136,6 +140,10 @@ SOURCE=..\src\Mainfrm.h
 # Begin Source File
 
 SOURCE=..\src\MyDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyTab.h
 # End Source File
 # Begin Source File
 

@@ -29,8 +29,8 @@ protected:
     virtual void    PreCreate(CREATESTRUCT& cs);
 
 private:
-    CDialogsTree(const CDialogsTree&);                // Disable copy construction
-    CDialogsTree& operator = (const CDialogsTree&);   // Disable assignment operator
+    CDialogsTree(const CDialogsTree&);               // Disable copy construction
+    CDialogsTree& operator=(const CDialogsTree&);    // Disable assignment operator
 
     // Private member functions
     BOOL OnSelChanged();
@@ -51,7 +51,7 @@ public:
 
 private:
     CDockDialogsTree(const CDockDialogsTree&);                // Disable copy construction
-    CDockDialogsTree& operator = (const CDockDialogsTree&);   // Disable assignment operator
+    CDockDialogsTree& operator=(const CDockDialogsTree&);   // Disable assignment operator
 
     CDialogsTree m_tree;
 };

@@ -25,8 +25,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CViewFiles(const CViewFiles&);                // Disable copy construction
-    CViewFiles& operator = (const CViewFiles&);   // Disable assignment operator
+    CViewFiles(const CViewFiles&);               // Disable copy construction
+    CViewFiles& operator=(const CViewFiles&);    // Disable assignment operator
 
     // Command handlers
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -51,7 +51,7 @@ public:
 
 private:
     CContainFiles(const CContainFiles&);                // Disable copy construction
-    CContainFiles& operator = (const CContainFiles&);   // Disable assignment operator
+    CContainFiles& operator=(const CContainFiles&);   // Disable assignment operator
 
     CViewFiles m_viewFiles;
 };
@@ -68,7 +68,7 @@ public:
 
 private:
     CDockFiles(const CDockFiles&);                // Disable copy construction
-    CDockFiles& operator = (const CDockFiles&);   // Disable assignment operator
+    CDockFiles& operator=(const CDockFiles&);   // Disable assignment operator
 
     CContainFiles m_files;
 };

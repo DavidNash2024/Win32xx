@@ -153,7 +153,7 @@ namespace Win32xx
 
     private:
         CListView(const CListView&);              // Disable copy construction
-        CListView& operator = (const CListView&); // Disable assignment operator
+        CListView& operator=(const CListView&);   // Disable assignment operator
 
     };
 

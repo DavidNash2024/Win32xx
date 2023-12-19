@@ -134,7 +134,7 @@ namespace Win32xx
         using CWnd::WndProc;                  // Make WndProc private
         using CWnd::WndProcDefault;           // Make WndProcDefault private
         CDialog(const CDialog&);              // Disable copy construction
-        CDialog& operator = (const CDialog&); // Disable assignment operator
+        CDialog& operator=(const CDialog&);   // Disable assignment operator
 
         static INT_PTR CALLBACK StaticDialogProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
         static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam, LPARAM lparam);
@@ -205,7 +205,7 @@ namespace Win32xx
 
     private:
         CResizer(const CResizer&);              // Disable copy construction
-        CResizer& operator = (const CResizer&); // Disable assignment operator
+        CResizer& operator=(const CResizer&);   // Disable assignment operator
 
         static BOOL CALLBACK EnumWindowsProc(HWND wnd, LPARAM lparam);
         void ScaleRect(CRect& rc, double scale);

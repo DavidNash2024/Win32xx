@@ -24,8 +24,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CTabDemoApp(const CTabDemoApp&);                // Disable copy construction
-    CTabDemoApp& operator = (const CTabDemoApp&);   // Disable assignment operator
+    CTabDemoApp(const CTabDemoApp&);               // Disable copy construction
+    CTabDemoApp& operator=(const CTabDemoApp&);    // Disable assignment operator
 
     CMainFrame m_frame;
 };

@@ -27,8 +27,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CViewClasses(const CViewClasses&);                // Disable copy construction
-    CViewClasses& operator = (const CViewClasses&);   // Disable assignment operator
+    CViewClasses(const CViewClasses&);               // Disable copy construction
+    CViewClasses& operator=(const CViewClasses&);    // Disable assignment operator
 
     // Command handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -54,7 +54,7 @@ protected:
 
 private:
     CContainClasses(const CContainClasses&);                // Disable copy construction
-    CContainClasses& operator = (const CContainClasses&);   // Disable assignment operator
+    CContainClasses& operator=(const CContainClasses&);   // Disable assignment operator
 
     // Command handlers
     BOOL OnFileNew();
@@ -75,7 +75,7 @@ public:
 
 private:
     CDockClasses(const CDockClasses&);                // Disable copy construction
-    CDockClasses& operator = (const CDockClasses&);   // Disable assignment operator
+    CDockClasses& operator=(const CDockClasses&);   // Disable assignment operator
 
     CContainClasses m_classes;
 };

@@ -35,8 +35,8 @@ protected:
     virtual void    OnOK() {}     // Suppress closing the dialog with return key.
 
 private:
-    CViewDialog(const CViewDialog&);                // Disable copy construction
-    CViewDialog& operator = (const CViewDialog&);   // Disable assignment operator
+    CViewDialog(const CViewDialog&);               // Disable copy construction
+    CViewDialog& operator=(const CViewDialog&);    // Disable assignment operator
 
     // Message handlers
     virtual LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -70,7 +70,7 @@ public:
 
 private:
     CDockDialog(const CDockDialog&);                // Disable copy construction
-    CDockDialog& operator = (const CDockDialog&);   // Disable assignment operator
+    CDockDialog& operator=(const CDockDialog&);   // Disable assignment operator
 
     CViewDialog m_view;
 };

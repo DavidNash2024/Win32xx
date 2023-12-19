@@ -51,8 +51,8 @@ public:
     void  ShowHelpTopic(LPCTSTR topic);
 
 private:
-    CContextHelp(const CContextHelp&);                // Disable copy construction
-    CContextHelp& operator = (const CContextHelp&);   // Disable assignment operator
+    CContextHelp(const CContextHelp&);               // Disable copy construction
+    CContextHelp& operator=(const CContextHelp&);    // Disable assignment operator
 
     HWND    CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data);
 

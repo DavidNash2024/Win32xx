@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -164,7 +164,7 @@ namespace Win32xx
 
     private:
         CRichEdit(const CRichEdit&);              // Disable copy construction
-        CRichEdit& operator = (const CRichEdit&); // Disable assignment operator
+        CRichEdit& operator=(const CRichEdit&);   // Disable assignment operator
 
         HMODULE m_rich1;
         HMODULE m_rich2;

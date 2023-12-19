@@ -49,8 +49,8 @@ MyPrintDialog : public CPrintDialog                                         /*
         virtual void    OnOK() {}
 
     private:
-        MyPrintDialog(const MyPrintDialog&);                // Disable copy construction
-        MyPrintDialog& operator = (const MyPrintDialog&);   // Disable assignment operator
+        MyPrintDialog(const MyPrintDialog&);               // Disable copy construction
+        MyPrintDialog& operator=(const MyPrintDialog&);    // Disable assignment operator
 
         CString m_sPDTitle;     // persistent over span of object
 };
@@ -90,7 +90,7 @@ MyPageSetup : public CPageSetupDialog                                   /*
 
     private:
         MyPageSetup(const MyPageSetup&);                // Disable copy construction
-        MyPageSetup& operator = (const MyPageSetup&);   // Disable assignment operator
+        MyPageSetup& operator=(const MyPageSetup&);   // Disable assignment operator
 
         CString  m_PSDTitle;
 };
