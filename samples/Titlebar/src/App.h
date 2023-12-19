@@ -24,8 +24,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CApp(const CApp&) = delete;                // Disable copy construction
-    CApp& operator = (const CApp&) = delete;   // Disable assignment operator
+    CApp(const CApp&) = delete;               // Disable copy construction
+    CApp& operator=(const CApp&) = delete;    // Disable assignment operator
 
     CMiniFrame m_view;
 };

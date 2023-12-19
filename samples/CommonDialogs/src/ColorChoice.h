@@ -60,8 +60,8 @@ CColorChoice   : public CColorDialog                                        /*
         virtual void    Serialize(CArchive &ar);
 
     private:
-        CColorChoice(const CColorChoice&);                // Disable copy construction
-        CColorChoice& operator = (const CColorChoice&);   // Disable assignment operator
+        CColorChoice(const CColorChoice&);               // Disable copy construction
+        CColorChoice& operator=(const CColorChoice&);    // Disable assignment operator
 
         CListBoxDlg m_LBDlg;                 // the list box dialog
         CString     m_boxTitle;              // the color dialog box title

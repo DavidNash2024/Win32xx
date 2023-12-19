@@ -1,7 +1,7 @@
 [Project]
 FileName=TabDemo_DEBUG.dev
 Name=TabDemo
-UnitCount=16
+UnitCount=18
 Type=0
 Ver=2
 ObjFiles=
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=4
-CompilerSettings=0000000100000000001000000
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;1;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 
@@ -204,6 +204,26 @@ BuildCmd=
 FileName=..\src\targetver.h
 CompileCpp=1
 Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=..\src\MyTab.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
+FileName=..\src\MyTab.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

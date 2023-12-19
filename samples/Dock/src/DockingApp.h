@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CDockingApp(const CDockingApp&);                // Disable copy construction
-    CDockingApp& operator = (const CDockingApp&);   // Disable assignment operator
+    CDockingApp(const CDockingApp&);               // Disable copy construction
+    CDockingApp& operator=(const CDockingApp&);    // Disable assignment operator
 
     CMainFrame m_MainFrame;
 };

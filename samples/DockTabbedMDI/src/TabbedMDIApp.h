@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CTabbedMDIApp(const CTabbedMDIApp&);                // Disable copy construction
-    CTabbedMDIApp& operator = (const CTabbedMDIApp&);   // Disable assignment operator
+    CTabbedMDIApp(const CTabbedMDIApp&);               // Disable copy construction
+    CTabbedMDIApp& operator=(const CTabbedMDIApp&);    // Disable assignment operator
 
     CMainFrame m_frame;
 };

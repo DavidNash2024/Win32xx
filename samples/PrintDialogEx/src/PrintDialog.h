@@ -22,8 +22,8 @@ protected:
     virtual BOOL OnInitDialog();
 
 private:
-    CMyPrintDialogEx(const CMyPrintDialogEx&);                // Disable copy construction
-    CMyPrintDialogEx& operator = (const CMyPrintDialogEx&);   // Disable assignment operator
+    CMyPrintDialogEx(const CMyPrintDialogEx&);               // Disable copy construction
+    CMyPrintDialogEx& operator=(const CMyPrintDialogEx&);    // Disable assignment operator
 
     CPrintParent m_printParent;
 };

@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -64,8 +64,8 @@ namespace Win32xx
         virtual BOOL PreTranslateMessage(MSG& msg);
 
     private:
-        CMessagePump(const CMessagePump&);                // Disable copy construction
-        CMessagePump& operator = (const CMessagePump&);   // Disable assignment operator
+        CMessagePump(const CMessagePump&);               // Disable copy construction
+        CMessagePump& operator=(const CMessagePump&);    // Disable assignment operator
 
         HACCEL m_accel;               // handle to the accelerator table
         HWND m_accelWnd;              // handle to the window for accelerator keys

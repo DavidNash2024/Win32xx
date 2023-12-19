@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CFrameApp(const CFrameApp&);                // Disable copy construction
-    CFrameApp& operator = (const CFrameApp&);   // Disable assignment operator
+    CFrameApp(const CFrameApp&);               // Disable copy construction
+    CFrameApp& operator=(const CFrameApp&);    // Disable assignment operator
 
     CMainFrame m_Frame;
 };

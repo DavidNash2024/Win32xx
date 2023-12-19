@@ -24,8 +24,8 @@ protected:
     virtual int MessageLoop();
 
 private:
-    CDXApp(const CDXApp&);                // Disable copy construction
-    CDXApp& operator = (const CDXApp&);   // Disable assignment operator
+    CDXApp(const CDXApp&);               // Disable copy construction
+    CDXApp& operator=(const CDXApp&);    // Disable assignment operator
 
     CDXView m_dxView;
 };

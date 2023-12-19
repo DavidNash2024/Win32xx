@@ -27,8 +27,8 @@ protected:
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CDarkAbout(const CDarkAbout&);                // Disable copy construction
-    CDarkAbout& operator = (const CDarkAbout&);   // Disable assignment operator
+    CDarkAbout(const CDarkAbout&);               // Disable copy construction
+    CDarkAbout& operator=(const CDarkAbout&);    // Disable assignment operator
 
     LRESULT OnDrawItem(WPARAM, LPARAM);
     LRESULT OnCtlColors(UINT, WPARAM, LPARAM);

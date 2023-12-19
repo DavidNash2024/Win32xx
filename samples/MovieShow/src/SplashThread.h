@@ -24,8 +24,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CSplashThread(const CSplashThread&);                // Disable copy construction
-    CSplashThread& operator = (const CSplashThread&);   // Disable assignment operator
+    CSplashThread(const CSplashThread&);               // Disable copy construction
+    CSplashThread& operator=(const CSplashThread&);    // Disable assignment operator
 
     CSplash m_splash;
     CEvent  m_splashCreated;

@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -99,7 +99,7 @@ namespace Win32xx
 
     private:
         CRibbon(const CRibbon&);              // Disable copy construction
-        CRibbon& operator = (const CRibbon&); // Disable assignment operator
+        CRibbon& operator=(const CRibbon&);   // Disable assignment operator
 
         IUIFramework* m_pRibbonFramework;
         LONG m_count;                            // Reference count.
@@ -154,7 +154,7 @@ namespace Win32xx
 
     private:
         CRibbonFrameT(const CRibbonFrameT&);              // Disable copy construction
-        CRibbonFrameT& operator = (const CRibbonFrameT&); // Disable assignment operator
+        CRibbonFrameT& operator=(const CRibbonFrameT&); // Disable assignment operator
 
         std::vector<RecentFilesPtr> m_recentFiles;
     };
@@ -169,7 +169,7 @@ namespace Win32xx
 
     private:
         CRibbonFrame(const CRibbonFrame&);              // Disable copy construction
-        CRibbonFrame& operator = (const CRibbonFrame&); // Disable assignment operator
+        CRibbonFrame& operator=(const CRibbonFrame&); // Disable assignment operator
     };
 
     ////////////////////////////////////////////////////
@@ -183,7 +183,7 @@ namespace Win32xx
 
     private:
         CRibbonDockFrame(const CRibbonDockFrame&);              // Disable copy construction
-        CRibbonDockFrame& operator = (const CRibbonDockFrame&); // Disable assignment operator
+        CRibbonDockFrame& operator=(const CRibbonDockFrame&); // Disable assignment operator
     };
 
     //////////////////////////////////////////////////////////////
@@ -197,7 +197,7 @@ namespace Win32xx
 
     private:
         CRibbonMDIFrame(const CRibbonMDIFrame&);              // Disable copy construction
-        CRibbonMDIFrame& operator = (const CRibbonMDIFrame&); // Disable assignment operator
+        CRibbonMDIFrame& operator=(const CRibbonMDIFrame&); // Disable assignment operator
     };
 
     ////////////////////////////////////////////////////////////////
@@ -212,7 +212,7 @@ namespace Win32xx
 
     private:
         CRibbonMDIDockFrame(const CRibbonMDIDockFrame&);              // Disable copy construction
-        CRibbonMDIDockFrame& operator = (const CRibbonMDIDockFrame&); // Disable assignment operator
+        CRibbonMDIDockFrame& operator=(const CRibbonMDIDockFrame&); // Disable assignment operator
     };
 
 }

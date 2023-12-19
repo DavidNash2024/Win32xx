@@ -165,7 +165,7 @@ namespace Win32xx
 
         private:
             CViewPage(const CViewPage&);              // Disable copy construction
-            CViewPage& operator = (const CViewPage&); // Disable assignment operator
+            CViewPage& operator=(const CViewPage&);   // Disable assignment operator
 
             CToolBar m_toolBar;
             CToolBar* m_pToolBar;
@@ -242,7 +242,7 @@ namespace Win32xx
 
     private:
         CDockContainer(const CDockContainer&);              // Disable copy construction
-        CDockContainer& operator = (const CDockContainer&); // Disable assignment operator
+        CDockContainer& operator=(const CDockContainer&);   // Disable assignment operator
 
         int GetDockTabImageID(int tab) const;
         CString GetDockTabText(int tab) const;
@@ -321,7 +321,7 @@ namespace Win32xx
 
         private:
             CDockBar(const CDockBar&);              // Disable copy construction
-            CDockBar& operator = (const CDockBar&); // Disable assignment operator
+            CDockBar& operator=(const CDockBar&);   // Disable assignment operator
 
             void SendNotify(UINT messageID);
 
@@ -369,8 +369,8 @@ namespace Win32xx
             LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
         private:
-            CDockClient(const CDockClient&);                // Disable copy construction
-            CDockClient& operator = (const CDockClient&);   // Disable assignment operator
+            CDockClient(const CDockClient&);               // Disable copy construction
+            CDockClient& operator=(const CDockClient&);    // Disable assignment operator
 
             LRESULT MouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
             void SendNotify(UINT messageID);
@@ -407,8 +407,8 @@ namespace Win32xx
             virtual void PreCreate(CREATESTRUCT& cs);
 
         private:
-            CDockHint(const CDockHint&);                // Disable copy construction
-            CDockHint& operator = (const CDockHint&);   // Disable assignment operator
+            CDockHint(const CDockHint&);               // Disable copy construction
+            CDockHint& operator=(const CDockHint&);    // Disable assignment operator
 
             CBitmap m_bmBlueTint;
             UINT m_uDockSideOld;
@@ -429,7 +429,7 @@ namespace Win32xx
 
         private:
             CTarget(const CTarget&);                // Disable copy construction
-            CTarget& operator = (const CTarget&);   // Disable assignment operator
+            CTarget& operator=(const CTarget&);   // Disable assignment operator
 
         };
 
@@ -450,8 +450,8 @@ namespace Win32xx
             virtual void OnDraw(CDC& dc);
 
         private:
-            CTargetCentre(const CTargetCentre&);                // Disable copy construction
-            CTargetCentre& operator = (const CTargetCentre&);   // Disable assignment operator
+            CTargetCentre(const CTargetCentre&);               // Disable copy construction
+            CTargetCentre& operator=(const CTargetCentre&);    // Disable assignment operator
 
             BOOL m_isOverContainer;
             CDocker* m_pOldDockTarget;
@@ -465,8 +465,8 @@ namespace Win32xx
             BOOL CheckTarget(LPDRAGPOS pDragPos);
 
         private:
-            CTargetLeft(const CTargetLeft&);                // Disable copy construction
-            CTargetLeft& operator = (const CTargetLeft&);   // Disable assignment operator
+            CTargetLeft(const CTargetLeft&);               // Disable copy construction
+            CTargetLeft& operator=(const CTargetLeft&);    // Disable assignment operator
         };
 
         // This nested class is draws the top dock target.
@@ -478,7 +478,7 @@ namespace Win32xx
 
         private:
             CTargetTop(const CTargetTop&);              // Disable copy construction
-            CTargetTop& operator = (const CTargetTop&); // Disable assignment operator
+            CTargetTop& operator=(const CTargetTop&);   // Disable assignment operator
         };
 
         // This nested class is draws the right dock target.
@@ -490,7 +490,7 @@ namespace Win32xx
 
         private:
             CTargetRight(const CTargetRight&);              // Disable copy construction
-            CTargetRight& operator = (const CTargetRight&); // Disable assignment operator
+            CTargetRight& operator=(const CTargetRight&);   // Disable assignment operator
         };
 
         // This nested class is draws the bottom dock target.
@@ -502,7 +502,7 @@ namespace Win32xx
 
         private:
             CTargetBottom(const CTargetBottom&);              // Disable copy construction
-            CTargetBottom& operator = (const CTargetBottom&); // Disable assignment operator
+            CTargetBottom& operator=(const CTargetBottom&);   // Disable assignment operator
         };
 
         // These classes can access private members of CDocker.
@@ -617,8 +617,8 @@ namespace Win32xx
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
-        CDocker(const CDocker&);                // Disable copy construction
-        CDocker& operator = (const CDocker&);   // Disable assignment operator
+        CDocker(const CDocker&);               // Disable copy construction
+        CDocker& operator=(const CDocker&);    // Disable assignment operator
         std::vector <DockPtr> & GetAllChildren() const {return GetDockAncestor()->m_allDockChildren;}
         virtual CDocker* GetDockUnderDragPoint(POINT pt);
         void CheckAllTargets(LPDRAGPOS pDragPos);
@@ -2715,8 +2715,9 @@ namespace Win32xx
         HMODULE shcore = GetModuleHandle(_T("shcore"));
         if (shcore)
         {
-            GETDPIFORMONITOR* pGetDpiForMonitor =
-                reinterpret_cast<GETDPIFORMONITOR*>(GetProcAddress(shcore, "GetDpiForMonitor"));
+            GETDPIFORMONITOR* pGetDpiForMonitor = reinterpret_cast<GETDPIFORMONITOR*>(
+                reinterpret_cast<void*>(::GetProcAddress(shcore, "GetDpiForMonitor")));
+
             if (pGetDpiForMonitor)
             {
                 HMONITOR hMonitor = MonitorFromWindow(wnd, MONITOR_DEFAULTTOPRIMARY);
@@ -5249,7 +5250,8 @@ namespace Win32xx
             itemWidth = MIN(szImage.cx + GetMaxTabTextSize().cx + padding, (rc.Width() - 2) / static_cast<int>(m_allInfo.size()));
             itemHeight = MAX(szImage.cy, GetTextHeight()) + padding;
         }
-        SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(itemWidth, itemHeight));
+
+        SetItemSize(itemWidth, itemHeight);
     }
 
     // Sets the Image List for toolbars.

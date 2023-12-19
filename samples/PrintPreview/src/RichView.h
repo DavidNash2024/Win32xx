@@ -26,8 +26,8 @@ protected:
     virtual void OnAttach();
 
 private:
-    CRichView(const CRichView&);                // Disable copy construction
-    CRichView& operator = (const CRichView&);   // Disable assignment operator
+    CRichView(const CRichView&);               // Disable copy construction
+    CRichView& operator=(const CRichView&);    // Disable assignment operator
 
     CRect GetPageRect();
     CRect GetPrintRect();

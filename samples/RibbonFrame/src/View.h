@@ -35,8 +35,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView(const CView&);                // Disable copy construction
-    CView& operator = (const CView&);   // Disable assignment operator
+    CView(const CView&);               // Disable copy construction
+    CView& operator=(const CView&);    // Disable assignment operator
 
     // Message handlers
     LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);

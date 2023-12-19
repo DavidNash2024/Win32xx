@@ -51,8 +51,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CDXView(const CDXView&);                // Disable copy construction
-    CDXView& operator = (const CDXView&);   // Disable assignment operator
+    CDXView(const CDXView&);               // Disable copy construction
+    CDXView& operator=(const CDXView&);    // Disable assignment operator
 
     void CleanupDevice();
     HRESULT InitDevice();

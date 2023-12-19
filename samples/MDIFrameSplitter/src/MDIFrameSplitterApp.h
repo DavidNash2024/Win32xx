@@ -21,8 +21,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CMDIFrameSplitterApp(const CMDIFrameSplitterApp&);                // Disable copy construction
-    CMDIFrameSplitterApp& operator = (const CMDIFrameSplitterApp&);   // Disable assignment operator
+    CMDIFrameSplitterApp(const CMDIFrameSplitterApp&);              // Disable copy construction
+    CMDIFrameSplitterApp& operator=(const CMDIFrameSplitterApp&);   // Disable assignment operator
 
     CMainMDIFrame m_mainMDIFrame;
 };

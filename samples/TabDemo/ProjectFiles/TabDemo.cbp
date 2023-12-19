@@ -188,6 +188,8 @@
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/MyDialog.cpp" />
 		<Unit filename="../src/MyDialog.h" />
+		<Unit filename="../src/MyTab.cpp" />
+		<Unit filename="../src/MyTab.h" />
 		<Unit filename="../src/Readme.txt" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />

@@ -119,7 +119,7 @@ namespace Win32xx
 
     private:
         CMDIChild(const CMDIChild&);              // Disable copy construction
-        CMDIChild& operator = (const CMDIChild&); // Disable assignment operator
+        CMDIChild& operator=(const CMDIChild&);   // Disable assignment operator
 
         CWnd* m_pView;              // pointer to the View CWnd object
         CMenu m_childMenu;
@@ -146,7 +146,7 @@ namespace Win32xx
 
     private:
         CMDIClient(const CMDIClient&);              // Disable copy construction
-        CMDIClient& operator = (const CMDIClient&); // Disable assignment operator
+        CMDIClient& operator=(const CMDIClient&);   // Disable assignment operator
     };
 
     /////////////////////////////////////
@@ -203,7 +203,7 @@ namespace Win32xx
 
     private:
         CMDIFrameT(const CMDIFrameT&);              // Disable copy construction
-        CMDIFrameT& operator = (const CMDIFrameT&); // Disable assignment operator
+        CMDIFrameT& operator=(const CMDIFrameT&);   // Disable assignment operator
         void UpdateMDIMenu(CMenu menuWindow);
 
         std::vector<MDIChildPtr> m_mdiChildren;
@@ -224,7 +224,7 @@ namespace Win32xx
 
     private:
         CMDIFrame(const CMDIFrame&);              // Disable copy construction
-        CMDIFrame& operator = (const CMDIFrame&); // Disable assignment operator
+        CMDIFrame& operator=(const CMDIFrame&);   // Disable assignment operator
     };
 
 }

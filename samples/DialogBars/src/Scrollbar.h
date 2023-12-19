@@ -22,8 +22,8 @@ protected:
     virtual void OnInitialUpdate();
 
 private:
-    CMyScrollBar(const CMyScrollBar&);                // Disable copy construction
-    CMyScrollBar& operator = (const CMyScrollBar&);   // Disable assignment operator
+    CMyScrollBar(const CMyScrollBar&);               // Disable copy construction
+    CMyScrollBar& operator=(const CMyScrollBar&);    // Disable assignment operator
 
     SCROLLINFO m_si;
 };

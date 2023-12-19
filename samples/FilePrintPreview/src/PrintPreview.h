@@ -103,8 +103,8 @@ CPreviewPaneEx : public CScrollView                                       /*
         virtual LRESULT OnVScroll(UINT , WPARAM , LPARAM );
 
     private:
-        CPreviewPaneEx(const CPreviewPaneEx&);                // Disable copy construction
-        CPreviewPaneEx& operator = (const CPreviewPaneEx&);   // Disable assignment operator
+        CPreviewPaneEx(const CPreviewPaneEx&);               // Disable copy construction
+        CPreviewPaneEx& operator=(const CPreviewPaneEx&);    // Disable assignment operator
 
         DSize   GetZoom();
 
@@ -152,7 +152,7 @@ CPrintPreviewEx : public CDialog                                         /*
 
     private:
         CPrintPreviewEx(const CPrintPreviewEx&);                // Disable copy construction
-        CPrintPreviewEx& operator = (const CPrintPreviewEx&);   // Disable assignment operator
+        CPrintPreviewEx& operator=(const CPrintPreviewEx&);   // Disable assignment operator
 
         BOOL    AddToolTip(UINT id)
                     { HWND h = GetDlgItem(id);

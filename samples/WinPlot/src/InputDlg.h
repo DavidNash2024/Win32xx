@@ -27,8 +27,8 @@ protected:
     virtual void OnOK();
 
 private:
-    CInputDlg(const CInputDlg&);                // Disable copy construction
-    CInputDlg& operator = (const CInputDlg&);   // Disable assignment operator
+    CInputDlg(const CInputDlg&);               // Disable copy construction
+    CInputDlg& operator=(const CInputDlg&);    // Disable assignment operator
 
     double m_xMin;
     double m_xMax;

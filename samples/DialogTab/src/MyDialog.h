@@ -23,8 +23,8 @@ protected:
     virtual void OnCancel() {}  // suppress closing dialog with the esc key
 
 private:
-    CButtonDialog(const CButtonDialog&);                // Disable copy construction
-    CButtonDialog& operator = (const CButtonDialog&);   // Disable assignment operator
+    CButtonDialog(const CButtonDialog&);               // Disable copy construction
+    CButtonDialog& operator=(const CButtonDialog&);    // Disable assignment operator
 
     // Command handlers
     BOOL OnButton();
@@ -58,7 +58,7 @@ protected:
 
 private:
     CComboBoxDialog(const CComboBoxDialog&);                // Disable copy construction
-    CComboBoxDialog& operator = (const CComboBoxDialog&);   // Disable assignment operator
+    CComboBoxDialog& operator=(const CComboBoxDialog&);   // Disable assignment operator
 
     CBrush m_brush;
 };
@@ -84,7 +84,7 @@ protected:
 
 private:
     CMyDialog(const CMyDialog&);                // Disable copy construction
-    CMyDialog& operator = (const CMyDialog&);   // Disable assignment operator
+    CMyDialog& operator=(const CMyDialog&);   // Disable assignment operator
 
     CTab m_tab;
     CButtonDialog* m_pButtonDlg;

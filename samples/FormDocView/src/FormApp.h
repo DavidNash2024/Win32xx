@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CFormApp(const CFormApp&);                // Disable copy construction
-    CFormApp& operator = (const CFormApp&);   // Disable assignment operator
+    CFormApp(const CFormApp&);               // Disable copy construction
+    CFormApp& operator=(const CFormApp&);    // Disable assignment operator
 
     CMainFrame m_frame;
 };

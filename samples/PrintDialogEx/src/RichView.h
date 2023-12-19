@@ -34,8 +34,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CRichView(const CRichView&);                // Disable copy construction
-    CRichView& operator = (const CRichView&);   // Disable assignment operator
+    CRichView(const CRichView&);               // Disable copy construction
+    CRichView& operator=(const CRichView&);    // Disable assignment operator
 
     CRect GetPageRect(const CDC& printerDC);
     CRect GetPrintRect(const CDC& printerDC);

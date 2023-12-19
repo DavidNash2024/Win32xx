@@ -36,8 +36,8 @@ AboutBox        : public CDialog                                        /*
 
       // private declarations
     private:
-        AboutBox(const AboutBox&);                // Disable copy construction
-        AboutBox& operator = (const AboutBox&);   // Disable assignment operator
+        AboutBox(const AboutBox&);               // Disable copy construction
+        AboutBox& operator=(const AboutBox&);    // Disable assignment operator
 
         CString m_status;
 

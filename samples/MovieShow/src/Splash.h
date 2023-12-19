@@ -30,8 +30,8 @@ protected:
     virtual void PreRegisterClass(WNDCLASS& wc);
 
 private:
-    CSplash(const CSplash&);                // Disable copy construction
-    CSplash& operator = (const CSplash&);   // Disable assignment operator
+    CSplash(const CSplash&);               // Disable copy construction
+    CSplash& operator=(const CSplash&);    // Disable assignment operator
 
     void LoadFont();
     void RemoveBar();

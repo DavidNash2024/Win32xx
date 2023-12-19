@@ -40,8 +40,8 @@ protected:
     virtual LRESULT WndProc(UINT, WPARAM, LPARAM);
 
 private:
-    CMainFrame(const CMainFrame&);                // Disable copy construction
-    CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+    CMainFrame(const CMainFrame&);               // Disable copy construction
+    CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
 
     // Command Handlers
     BOOL OnFileExit();

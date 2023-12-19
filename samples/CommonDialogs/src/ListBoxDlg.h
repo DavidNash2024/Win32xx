@@ -48,8 +48,8 @@ CListBoxDlg : public CDialog                                                  /*
         std::vector<CString> m_listContent; // the list strings
 
     private:
-        CListBoxDlg(const CListBoxDlg&);                // Disable copy construction
-        CListBoxDlg& operator = (const CListBoxDlg&);   // Disable assignment operator
+        CListBoxDlg(const CListBoxDlg&);               // Disable copy construction
+        CListBoxDlg& operator=(const CListBoxDlg&);    // Disable assignment operator
 };
 /*----------------------------------------------------------------------------*/
 #endif // CLISTVIEW_BOX_H_DEFINED

@@ -31,8 +31,8 @@ protected:
     virtual LRESULT TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CMyTaskDialog(const CMyTaskDialog&);                // Disable copy construction
-    CMyTaskDialog& operator = (const CMyTaskDialog&);   // Disable assignment operator
+    CMyTaskDialog(const CMyTaskDialog&);               // Disable copy construction
+    CMyTaskDialog& operator=(const CMyTaskDialog&);    // Disable assignment operator
 };
 
 

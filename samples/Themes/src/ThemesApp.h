@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CThemesApp(const CThemesApp&);                // Disable copy construction
-    CThemesApp& operator = (const CThemesApp&);   // Disable assignment operator
+    CThemesApp(const CThemesApp&);               // Disable copy construction
+    CThemesApp& operator=(const CThemesApp&);    // Disable assignment operator
 
     CMainFrame m_frame;
 };

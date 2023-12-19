@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -139,7 +139,7 @@ namespace Win32xx
 
     private:
         CPreviewPane(const CPreviewPane&);               // Disable copy construction
-        CPreviewPane& operator = (const CPreviewPane&);  // Disable assignment operator
+        CPreviewPane& operator=(const CPreviewPane&);    // Disable assignment operator
         CBitmap m_bitmap;
     };
 
@@ -177,7 +177,7 @@ namespace Win32xx
 
     private:
         CPrintPreview(const CPrintPreview&);               // Disable copy construction
-        CPrintPreview& operator = (const CPrintPreview&);  // Disable assignment operator
+        CPrintPreview& operator=(const CPrintPreview&);    // Disable assignment operator
         CPreviewPane m_previewPane;               // Default CPreviewPane object
         CPreviewPane* m_pPreviewPane;             // Pointer to the CPreviewPane object we actually use
         CResizer m_resizer;

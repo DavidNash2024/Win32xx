@@ -22,8 +22,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CMDIDemoApp(const CMDIDemoApp&);                // Disable copy construction
-    CMDIDemoApp& operator = (const CMDIDemoApp&);   // Disable assignment operator
+    CMDIDemoApp(const CMDIDemoApp&);               // Disable copy construction
+    CMDIDemoApp& operator=(const CMDIDemoApp&);    // Disable assignment operator
 
     CMainMDIFrame m_mainMDIFrame;
 };

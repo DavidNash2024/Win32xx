@@ -308,8 +308,8 @@ namespace Win32xx
     private:
         typedef std::vector<MenuItemDataPtr> MenuData;     // all menu item data for a popup menu
 
-        CFrameT(const CFrameT&);                // Disable copy construction
-        CFrameT& operator = (const CFrameT&);   // Disable assignment operator
+        CFrameT(const CFrameT&);               // Disable copy construction
+        CFrameT& operator=(const CFrameT&);    // Disable assignment operator
         CSize GetTBImageSize(CBitmap* pBitmap) const;
         void UpdateMenuBarBandSize();
         static LRESULT CALLBACK StaticKeyboardProc(int code, WPARAM wparam, LPARAM lparam);
@@ -376,7 +376,7 @@ namespace Win32xx
 
     private:
         CFrame(const CFrame&);              // Disable copy construction
-        CFrame& operator = (const CFrame&); // Disable assignment operator
+        CFrame& operator=(const CFrame&);   // Disable assignment operator
     };
 
 }

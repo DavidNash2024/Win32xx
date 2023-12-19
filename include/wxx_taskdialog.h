@@ -141,9 +141,9 @@ namespace Win32xx
             CStringW buttonText;
         };
 
-        using CWnd::WndProc;                            // Make WndProc private
-        CTaskDialog(const CTaskDialog&);                // Disable copy construction
-        CTaskDialog& operator = (const CTaskDialog&);   // Disable assignment operator
+        using CWnd::WndProc;                           // Make WndProc private
+        CTaskDialog(const CTaskDialog&);               // Disable copy construction
+        CTaskDialog& operator=(const CTaskDialog&);    // Disable assignment operator
 
         CStringW FillString(LPCWSTR text);
         static HRESULT CALLBACK StaticTaskDialogProc(HWND wnd, UINT notification, WPARAM wparam, LPARAM lparam, LONG_PTR refData);
@@ -288,11 +288,12 @@ namespace Win32xx
         if (comCtl)
         {
             TASKDIALOGINDIRECT* pTaskDialogIndirect = reinterpret_cast<TASKDIALOGINDIRECT*>(
-                ::GetProcAddress(comCtl, "TaskDialogIndirect"));
+                reinterpret_cast<void*>(::GetProcAddress(comCtl, "TaskDialogIndirect")));
 
             // Call TaskDialogIndirect through our function pointer.
             result = pTaskDialogIndirect(&m_tc, &m_selectedButtonID, &m_selectedRadioButtonID, &m_verificationCheckboxState);
         }
+
         pTLSData->pWnd = NULL;
         Cleanup();
 

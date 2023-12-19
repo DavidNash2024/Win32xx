@@ -75,8 +75,8 @@ namespace Win32xx
         CImageList();
         CImageList(HIMAGELIST images);
         CImageList(const CImageList& rhs);
-        CImageList& operator = (const CImageList& rhs);
-        void operator = (const HIMAGELIST rhs);
+        CImageList& operator=(const CImageList& rhs);
+        void operator=(const HIMAGELIST rhs);
         virtual ~CImageList();
 
         // Initialization
@@ -164,7 +164,7 @@ namespace Win32xx
     }
 
     // Note: A copy of a CImageList is a clone of the original.
-    inline CImageList& CImageList::operator = (const CImageList& rhs)
+    inline CImageList& CImageList::operator=(const CImageList& rhs)
     {
         if (this != &rhs)
         {
@@ -177,7 +177,7 @@ namespace Win32xx
         return *this;
     }
 
-    inline void CImageList::operator = (const HIMAGELIST rhs)
+    inline void CImageList::operator=(const HIMAGELIST rhs)
     {
         Attach(rhs);
     }

@@ -34,8 +34,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CMyTreeView(const CMyTreeView&);                // Disable copy construction
-    CMyTreeView& operator = (const CMyTreeView&);   // Disable assignment operator
+    CMyTreeView(const CMyTreeView&);               // Disable copy construction
+    CMyTreeView& operator=(const CMyTreeView&);    // Disable assignment operator
 
     // TreeItemData is a nested class inside CMyTreeView.
     // Each tree view item has a pointer to TreeItemData.

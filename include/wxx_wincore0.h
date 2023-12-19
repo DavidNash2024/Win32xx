@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -395,7 +395,7 @@ namespace Win32xx
 
     private:
         CWnd(const CWnd&);              // Disable copy construction
-        CWnd& operator = (const CWnd&); // Disable assignment operator
+        CWnd& operator=(const CWnd&);   // Disable assignment operator
         CWnd(HWND wnd);                 // Private constructor used internally
 
         static LRESULT CALLBACK StaticWindowProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);

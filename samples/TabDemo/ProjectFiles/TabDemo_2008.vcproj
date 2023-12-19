@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\MyTab.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -244,6 +248,10 @@
 			</File>
 			<File
 				RelativePath="..\src\MyDialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyTab.h"
 				>
 			</File>
 			<File

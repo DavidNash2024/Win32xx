@@ -21,8 +21,8 @@ protected:
     virtual void OnAttach();
 
 private:
-    CViewTree(const CViewTree&);                // Disable copy construction
-    CViewTree& operator = (const CViewTree&);   // Disable assignment operator
+    CViewTree(const CViewTree&);               // Disable copy construction
+    CViewTree& operator=(const CViewTree&);    // Disable assignment operator
 
     CImageList m_normalImages;
 };
@@ -43,7 +43,7 @@ protected:
 
 private:
     CMDIChildTree(const CMDIChildTree&);                // Disable copy construction
-    CMDIChildTree& operator = (const CMDIChildTree&);   // Disable assignment operator
+    CMDIChildTree& operator=(const CMDIChildTree&);   // Disable assignment operator
 
     CViewTree m_TreeView;
     CMenu m_Menu;

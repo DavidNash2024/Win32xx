@@ -44,8 +44,8 @@ CRichEditView : public CRichEdit                                            /*
         BOOL    StreamOutFile(const CFile& file);
 
     private:
-        CRichEditView(const CRichEditView&);                // Disable copy construction
-        CRichEditView& operator = (const CRichEditView&);   // Disable assignment operator
+        CRichEditView(const CRichEditView&);               // Disable copy construction
+        CRichEditView& operator=(const CRichEditView&);    // Disable assignment operator
 
         BOOL    DoPreparePrinting(CPrintInfo& info);
         void    OnAttach();

@@ -23,8 +23,8 @@ protected:
     virtual CDocker* NewDockerFromID(int id);
 
 private:
-    CRightPane(const CRightPane&);                // Disable copy construction
-    CRightPane& operator = (const CRightPane&);   // Disable assignment operator
+    CRightPane(const CRightPane&);               // Disable copy construction
+    CRightPane& operator=(const CRightPane&);    // Disable assignment operator
 
     CMyListView m_view;
 };

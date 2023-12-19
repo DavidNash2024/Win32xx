@@ -21,8 +21,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CTaskDialogApp(const CTaskDialogApp&);                // Disable copy construction
-    CTaskDialogApp& operator = (const CTaskDialogApp&);   // Disable assignment operator
+    CTaskDialogApp(const CTaskDialogApp&);               // Disable copy construction
+    CTaskDialogApp& operator=(const CTaskDialogApp&);    // Disable assignment operator
 };
 
 

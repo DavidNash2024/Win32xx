@@ -27,8 +27,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CViewTree(const CViewTree&);                // Disable copy construction
-    CViewTree& operator = (const CViewTree&);   // Disable assignment operator
+    CViewTree(const CViewTree&);               // Disable copy construction
+    CViewTree& operator=(const CViewTree&);    // Disable assignment operator
 
     bool      IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
 
@@ -60,7 +60,7 @@ public:
 
 private:
     CDockTree(const CDockTree&);                // Disable copy construction
-    CDockTree& operator = (const CDockTree&);   // Disable assignment operator
+    CDockTree& operator=(const CDockTree&);   // Disable assignment operator
 
     CViewTree m_treeView;
 };

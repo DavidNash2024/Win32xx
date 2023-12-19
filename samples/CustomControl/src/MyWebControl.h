@@ -18,8 +18,8 @@ protected:
     virtual void OnInitialUpdate();
 
 private:
-    CWebControl(const CWebControl&);                // Disable copy construction
-    CWebControl& operator = (const CWebControl&);   // Disable assignment operator
+    CWebControl(const CWebControl&);               // Disable copy construction
+    CWebControl& operator=(const CWebControl&);    // Disable assignment operator
 };
 
 

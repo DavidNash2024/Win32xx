@@ -113,7 +113,7 @@ void CMainFrame::OnInitialUpdate()
     ShowWindow();
 }
 
-// Update the check state of the various menu items.
+// Update the check state and enable state of the various menu items.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
     BOOL isOwnerDraw  = m_view.GetStyle() & TCS_OWNERDRAWFIXED;
@@ -121,33 +121,36 @@ void CMainFrame::OnMenuUpdate(UINT id)
 
     switch (id)
     {
-
-    case IDM_TAB_TOP:
+        case IDM_TAB_TOP:
         {
             BOOL isAtTop = m_view.GetTabsAtTop();
             UINT check = (isAtTop)? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_TOP, check);
         }
         break;
-    case IDM_TAB_BUTTONS:
+        case IDM_TAB_BUTTONS:
         {
-            BOOL isShown = m_view.GetShowButtons();
+            BOOL isShown = m_view.GetShowButtons() && isOwnerDraw;
             UINT check = (isShown)? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, check);
-            UINT enable = (isOwnerDraw && isFixed)? MF_ENABLED : MF_GRAYED;
+
+            UINT enable = (isOwnerDraw)? MF_ENABLED : MF_GRAYED;
             GetFrameMenu().EnableMenuItem(IDM_TAB_BUTTONS, enable);
         }
         break;
-    case IDM_TAB_DRAW:
+        case IDM_TAB_DRAW:
         {
             UINT check = (isOwnerDraw)? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_DRAW, check);
         }
         break;
-    case IDM_TAB_FIXED:
+        case IDM_TAB_FIXED:
         {
-            UINT check = (isFixed)? MF_CHECKED : MF_UNCHECKED;
+            UINT check = (isFixed) ? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_FIXED, check);
+
+            UINT enable = isOwnerDraw ? MF_GRAYED : MF_ENABLED;
+            GetFrameMenu().EnableMenuItem(IDM_TAB_FIXED, enable);
         }
         break;
     }

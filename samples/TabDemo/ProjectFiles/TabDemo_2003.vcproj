@@ -134,6 +134,9 @@
 				RelativePath="..\src\MyDialog.cpp">
 			</File>
 			<File
+				RelativePath="..\src\MyTab.cpp">
+			</File>
+			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
 			<File
@@ -155,6 +158,9 @@
 			</File>
 			<File
 				RelativePath="..\src\MyDialog.h">
+			</File>
+			<File
+				RelativePath="..\src\MyTab.h">
 			</File>
 			<File
 				RelativePath="..\src\resource.h">

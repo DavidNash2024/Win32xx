@@ -28,8 +28,8 @@ protected:
     virtual void OnReceive();
 
 private:
-    CClientSocket(const CClientSocket&);                // Disable copy construction
-    CClientSocket& operator = (const CClientSocket&);   // Disable assignment operator
+    CClientSocket(const CClientSocket&);               // Disable copy construction
+    CClientSocket& operator=(const CClientSocket&);    // Disable assignment operator
 };
 
 

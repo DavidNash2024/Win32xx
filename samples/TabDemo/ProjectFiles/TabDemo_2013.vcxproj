@@ -77,6 +77,7 @@
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\MyDialog.h" />
+    <ClInclude Include="..\src\MyTab.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\TabDemoApp.h" />
   </ItemGroup>
@@ -86,6 +87,7 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\MyDialog.cpp" />
+    <ClCompile Include="..\src\MyTab.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

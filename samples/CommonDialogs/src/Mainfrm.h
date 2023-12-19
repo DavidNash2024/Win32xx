@@ -59,8 +59,8 @@ CMainFrame : public CFrame                                                  /*
                       return 0; }
 
     private:
-        CMainFrame(const CMainFrame&);                // Disable copy construction
-        CMainFrame& operator = (const CMainFrame&);   // Disable assignment operator
+        CMainFrame(const CMainFrame&);               // Disable copy construction
+        CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator
 
         BOOL    DropFiles(LPARAM lparam);
         CRichEditView& GetRichView() { return m_view.GetRichView();}

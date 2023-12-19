@@ -22,8 +22,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CViewClasses(const CViewClasses&);                // Disable copy construction
-    CViewClasses& operator = (const CViewClasses&);   // Disable assignment operator
+    CViewClasses(const CViewClasses&);               // Disable copy construction
+    CViewClasses& operator=(const CViewClasses&);    // Disable assignment operator
 
     CImageList m_normalImages;
 

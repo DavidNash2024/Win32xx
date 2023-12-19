@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -140,7 +140,7 @@ namespace Win32xx
         using CWnd::SetMenu;                    // Make SetMenu private
 
         CToolBar(const CToolBar&);              // Disable copy construction
-        CToolBar& operator = (const CToolBar&); // Disable assignment operator
+        CToolBar& operator=(const CToolBar&);   // Disable assignment operator
 
         std::map<CString, int> m_stringMap;     // a map of strings used in SetButtonText
 

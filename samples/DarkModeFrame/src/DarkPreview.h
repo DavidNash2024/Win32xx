@@ -25,8 +25,8 @@ public:
     void SetDarkMode(bool isDarkMode);
 
 private:
-    CDarkPreview(const CDarkPreview&);                // Disable copy construction
-    CDarkPreview& operator = (const CDarkPreview&);   // Disable assignment operator
+    CDarkPreview(const CDarkPreview&);               // Disable copy construction
+    CDarkPreview& operator=(const CDarkPreview&);    // Disable assignment operator
 
     bool m_isDarkMode;
 };

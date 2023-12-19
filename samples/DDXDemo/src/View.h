@@ -60,8 +60,8 @@ CView : public CDialog                                                      /*
         void    UpdateDocument();
 
     private:
-        CView(const CView&);                // Disable copy construction
-        CView& operator = (const CView&);   // Disable assignment operator
+        CView(const CView&);               // Disable copy construction
+        CView& operator=(const CView&);    // Disable assignment operator
 
         BOOL    AddToolTip(UINT id);
         BOOL    AddToolTip(UINT id, const CString & s);

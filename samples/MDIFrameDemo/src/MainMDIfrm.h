@@ -28,8 +28,8 @@ protected:
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CMainMDIFrame(const CMainMDIFrame&);                // Disable copy construction
-    CMainMDIFrame& operator = (const CMainMDIFrame&);   // Disable assignment operator
+    CMainMDIFrame(const CMainMDIFrame&);               // Disable copy construction
+    CMainMDIFrame& operator=(const CMainMDIFrame&);    // Disable assignment operator
 
     // Command handlers
     BOOL OnFileClose();

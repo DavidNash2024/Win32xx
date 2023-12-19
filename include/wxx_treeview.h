@@ -134,8 +134,8 @@ namespace Win32xx
         BOOL    SortChildrenCB(TVSORTCB* pSortFn, BOOL recurse) const;
 
     private:
-        CTreeView(const CTreeView&);                // Disable copy construction
-        CTreeView& operator = (const CTreeView&); // Disable assignment operator
+        CTreeView(const CTreeView&);              // Disable copy construction
+        CTreeView& operator=(const CTreeView&);   // Disable assignment operator
 
     };
 

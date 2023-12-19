@@ -41,8 +41,8 @@ CFontExDialog : public CFontDialog                                          /*
                     {  SetWindowText(m_dlgBoxTitle); return TRUE; }
 
     private:
-        CFontExDialog(const CFontExDialog&);                // Disable copy construction
-        CFontExDialog& operator = (const CFontExDialog&);   // Disable assignment operator
+        CFontExDialog(const CFontExDialog&);               // Disable copy construction
+        CFontExDialog& operator=(const CFontExDialog&);    // Disable assignment operator
 
         CString m_dlgBoxTitle;
 };
@@ -78,7 +78,7 @@ CFontEx : public CObject                                                       /
 
     private:
         CFontEx(const CFontEx&);                // Disable copy construction
-        CFontEx& operator = (const CFontEx&);   // Disable assignment operator
+        CFontEx& operator=(const CFontEx&);   // Disable assignment operator
 
         void    SaveFontSize();
 

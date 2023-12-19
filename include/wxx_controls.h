@@ -81,7 +81,7 @@ namespace Win32xx
 
     private:
         CAnimation(const CAnimation&);              // Disable copy construction
-        CAnimation& operator = (const CAnimation&); // Disable assignment operator
+        CAnimation& operator=(const CAnimation&);   // Disable assignment operator
     };
 
 
@@ -148,8 +148,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = _T("ComboBox"); }
 
     private:
-        CComboBox(const CComboBox&);                // Disable copy construction
-        CComboBox& operator = (const CComboBox&);   // Disable assignment operator
+        CComboBox(const CComboBox&);               // Disable copy construction
+        CComboBox& operator=(const CComboBox&);    // Disable assignment operator
     };
 
 
@@ -180,8 +180,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = WC_COMBOBOXEX; }
 
     private:
-        CComboBoxEx(const CComboBoxEx&);                // Disable copy construction
-        CComboBoxEx& operator = (const CComboBoxEx&);   // Disable assignment operator
+        CComboBoxEx(const CComboBoxEx&);               // Disable copy construction
+        CComboBoxEx& operator=(const CComboBoxEx&);    // Disable assignment operator
     };
 
 
@@ -230,8 +230,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = WC_HEADER ; }
 
     private:
-        CHeader(const CHeader&);                // Disable copy construction
-        CHeader& operator = (const CHeader&);   // Disable assignment operator
+        CHeader(const CHeader&);               // Disable copy construction
+        CHeader& operator=(const CHeader&);    // Disable assignment operator
     };
 
 
@@ -255,8 +255,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = HOTKEY_CLASS; }
 
     private:
-        CHotKey(const CHotKey&);                // Disable copy construction
-        CHotKey& operator = (const CHotKey&);   // Disable assignment operator
+        CHotKey(const CHotKey&);               // Disable copy construction
+        CHotKey& operator=(const CHotKey&);    // Disable assignment operator
     };
 
 
@@ -286,7 +286,7 @@ namespace Win32xx
 
     private:
         CIPAddress(const CIPAddress&);              // Disable copy construction
-        CIPAddress& operator = (const CIPAddress&); // Disable assignment operator
+        CIPAddress& operator=(const CIPAddress&);   // Disable assignment operator
     };
 
 
@@ -330,7 +330,7 @@ namespace Win32xx
 
     private:
         CMonthCalendar(const CMonthCalendar&);              // Disable copy construction
-        CMonthCalendar& operator = (const CMonthCalendar&); // Disable assignment operator
+        CMonthCalendar& operator=(const CMonthCalendar&);   // Disable assignment operator
     };
 
     ///////////////////////////////////////////////////////////
@@ -361,8 +361,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = DATETIMEPICK_CLASS; }
 
     private:
-        CDateTime(const CDateTime&);                // Disable copy construction
-        CDateTime& operator = (const CDateTime&);   // Disable assignment operator
+        CDateTime(const CDateTime&);               // Disable copy construction
+        CDateTime& operator=(const CDateTime&);    // Disable assignment operator
     };
 
 
@@ -391,7 +391,7 @@ namespace Win32xx
 
     private:
         CProgressBar(const CProgressBar&);              // Disable copy construction
-        CProgressBar& operator = (const CProgressBar&); // Disable assignment operator
+        CProgressBar& operator=(const CProgressBar&);   // Disable assignment operator
     };
 
 
@@ -422,7 +422,7 @@ namespace Win32xx
 
     private:
         CScrollBar(const CScrollBar&);              // Disable copy construction
-        CScrollBar& operator = (const CScrollBar&); // Disable assignment operator
+        CScrollBar& operator=(const CScrollBar&);   // Disable assignment operator
     };
 
     ///////////////////////////////////////////////////////////////////
@@ -471,8 +471,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = TRACKBAR_CLASS; }
 
     private:
-        CSlider(const CSlider&);                // Disable copy construction
-        CSlider& operator = (const CSlider&);   // Disable assignment operator
+        CSlider(const CSlider&);               // Disable copy construction
+        CSlider& operator=(const CSlider&);    // Disable assignment operator
     };
 
     ////////////////////////////////////////////////////////////
@@ -504,8 +504,8 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc);
 
     private:
-        CSpinButton(const CSpinButton&);                // Disable copy construction
-        CSpinButton& operator = (const CSpinButton&);   // Disable assignment operator
+        CSpinButton(const CSpinButton&);               // Disable copy construction
+        CSpinButton& operator=(const CSpinButton&);    // Disable assignment operator
     };
 
 
@@ -571,7 +571,7 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc);
     private:
         CToolTip(const CToolTip&);              // Disable copy construction
-        CToolTip& operator = (const CToolTip&); // Disable assignment operator
+        CToolTip& operator=(const CToolTip&);   // Disable assignment operator
 
     };
 

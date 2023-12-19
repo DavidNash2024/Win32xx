@@ -32,8 +32,8 @@ CApp : public CWinApp                                                       /*
         CMainFrame& GetFrame() { return m_frame;}
 
     private:
-        CApp(const CApp&);                // Disable copy construction
-        CApp& operator = (const CApp&);   // Disable assignment operator
+        CApp(const CApp&);               // Disable copy construction
+        CApp& operator=(const CApp&);    // Disable assignment operator
 
         CString     MakeAppDataPath(const CString& subpath) const;
         ULONG       DatInt(LPCTSTR) const;

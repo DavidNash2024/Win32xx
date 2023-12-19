@@ -21,8 +21,8 @@ public:
     virtual ~CLeftPane() {}
 
 private:
-    CLeftPane(const CLeftPane&);                // Disable copy construction
-    CLeftPane& operator = (const CLeftPane&);   // Disable assignment operator
+    CLeftPane(const CLeftPane&);               // Disable copy construction
+    CLeftPane& operator=(const CLeftPane&);    // Disable assignment operator
 
     CMyTreeView m_view;
 };

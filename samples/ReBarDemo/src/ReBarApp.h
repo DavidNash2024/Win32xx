@@ -23,8 +23,8 @@ protected:
     virtual BOOL InitInstance();
 
 private:
-    CReBarApp(const CReBarApp&);                // Disable copy construction
-    CReBarApp& operator = (const CReBarApp&);   // Disable assignment operator
+    CReBarApp(const CReBarApp&);               // Disable copy construction
+    CReBarApp& operator=(const CReBarApp&);    // Disable assignment operator
 
     CMainFrame m_frame;
 };

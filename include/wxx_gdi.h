@@ -192,8 +192,8 @@ namespace Win32xx
         CGDIObject();
         CGDIObject(const CGDIObject& rhs);
         virtual ~CGDIObject();
-        CGDIObject& operator = (const CGDIObject& rhs);
-        void operator = (const HGDIOBJ object);
+        CGDIObject& operator=(const CGDIObject& rhs);
+        void operator=(const HGDIOBJ object);
 
         void    Attach(HGDIOBJ object);
         void    DeleteObject();
@@ -223,6 +223,8 @@ namespace Win32xx
         CBitmap(HBITMAP bitmap);
         CBitmap(LPCTSTR resourceName);
         CBitmap(UINT resourceID);
+        CBitmap(const CBitmap& rhs);
+        CBitmap& operator=(const CBitmap& rhs);
         operator HBITMAP() const;
         virtual ~CBitmap();
 
@@ -262,6 +264,8 @@ namespace Win32xx
         CBrush();
         CBrush(HBRUSH brush);
         CBrush(COLORREF color);
+        CBrush(const CBrush& rhs);
+        CBrush& operator=(const CBrush& rhs);
         operator HBRUSH() const;
         virtual ~CBrush();
 
@@ -283,6 +287,8 @@ namespace Win32xx
         CFont();
         CFont(HFONT font);
         CFont(const LOGFONT& logFont);
+        CFont(const CFont& rhs);
+        CFont& operator=(const CFont& rhs);
         operator HFONT() const;
         virtual ~CFont();
 
@@ -309,6 +315,8 @@ namespace Win32xx
       public:
         CPalette();
         CPalette(HPALETTE palette);
+        CPalette(const CPalette& rhs);
+        CPalette& operator=(const CPalette& rhs);
         operator HPALETTE() const;
         virtual ~CPalette();
 
@@ -337,6 +345,8 @@ namespace Win32xx
         CPen(HPEN pen);
         CPen(int penStyle, int width, COLORREF color);
         CPen(int penStyle, int width, const LOGBRUSH& logBrush, int styleCount = 0, const DWORD* pStyle = NULL);
+        CPen(const CPen& rhs);
+        CPen& operator=(const CPen& rhs);
         operator HPEN() const;
         virtual ~CPen();
 
@@ -355,6 +365,8 @@ namespace Win32xx
       public:
         CRgn();
         CRgn(HRGN rgn);
+        CRgn(const CRgn& rhs);
+        CRgn& operator=(const CRgn& rhs);
         operator HRGN() const;
         virtual ~CRgn ();
 
@@ -428,7 +440,7 @@ namespace Win32xx
         CDC(const CDC& rhs);                    // Constructs a new copy of the CDC
         virtual ~CDC();
         operator HDC() const { return GetHDC(); }   // Converts a CDC to a HDC
-        CDC& operator = (const CDC& rhs);       // Assigns a CDC to an existing CDC
+        CDC& operator=(const CDC& rhs);         // Assigns a CDC to an existing CDC
 
         void Attach(HDC dc);
         void Destroy();
@@ -443,7 +455,7 @@ namespace Win32xx
         int SelectObject(HRGN rgn) const;
         CPalette SelectPalette(HPALETTE palette, BOOL forceBkgnd) const;
 
-        void operator = (const HDC dc);
+        void operator=(const HDC dc);
 
         // Initialization
         void CreateCompatibleDC(HDC source);
@@ -1066,7 +1078,7 @@ namespace Win32xx
 
     private:
         CBitmapInfoPtr(const CBitmapInfoPtr&);              // Disable copy construction
-        CBitmapInfoPtr& operator = (const CBitmapInfoPtr&); // Disable assignment operator
+        CBitmapInfoPtr& operator=(const CBitmapInfoPtr&); // Disable assignment operator
         LPBITMAPINFO m_pbmiArray;
         std::vector<byte> m_bmi;
     };
@@ -1107,7 +1119,7 @@ namespace Win32xx
 
     // Note: A copy of a CGDIObject is a clone of the original.
     //       Both objects manipulate the one HGDIOBJ.
-    inline CGDIObject& CGDIObject::operator = ( const CGDIObject& rhs )
+    inline CGDIObject& CGDIObject::operator=( const CGDIObject& rhs )
     {
         if (this != &rhs)
         {
@@ -1120,7 +1132,7 @@ namespace Win32xx
         return *this;
     }
 
-    inline void CGDIObject::operator = (const HGDIOBJ object)
+    inline void CGDIObject::operator=(const HGDIOBJ object)
     {
         Attach(object);
     }
@@ -1307,6 +1319,16 @@ namespace Win32xx
     inline CBitmap::CBitmap(UINT resourceID)
     {
         LoadBitmap(resourceID);
+    }
+
+    inline CBitmap::CBitmap(const CBitmap& rhs) : CGDIObject(rhs)
+    {
+    }
+
+    inline CBitmap& CBitmap::operator=(const CBitmap& rhs)
+    {
+        CGDIObject::operator =(rhs); 
+        return *this;
     }
 
     inline CBitmap::operator HBITMAP() const
@@ -1763,6 +1785,16 @@ namespace Win32xx
         }
     }
 
+    inline CBrush::CBrush(const CBrush& rhs) : CGDIObject(rhs)
+    {
+    }
+
+    inline CBrush& CBrush::operator=(const CBrush& rhs)
+    {
+        CGDIObject::operator =(rhs);
+        return *this;
+    }
+
     inline CBrush::operator HBRUSH() const
     {
         return static_cast<HBRUSH>(GetHandle());
@@ -1877,6 +1909,16 @@ namespace Win32xx
         }
     }
 
+    inline CFont::CFont(const CFont& rhs) : CGDIObject(rhs)
+    {
+    }
+
+    inline CFont& CFont::operator=(const CFont& rhs)
+    {
+        CGDIObject::operator =(rhs);
+        return *this;
+    }
+
     inline CFont::operator HFONT() const
     {
         return static_cast<HFONT>(GetHandle());
@@ -1980,6 +2022,16 @@ namespace Win32xx
     inline CPalette::CPalette(HPALETTE palette)
     {
         Attach(palette);
+    }
+
+    inline CPalette::CPalette(const CPalette& rhs) : CGDIObject(rhs)
+    {
+    }
+
+    inline CPalette& CPalette::operator=(const CPalette& rhs)
+    {
+        CGDIObject::operator =(rhs);
+        return *this;
     }
 
     inline CPalette::operator HPALETTE() const
@@ -2106,6 +2158,16 @@ namespace Win32xx
         }
     }
 
+    inline CPen::CPen(const CPen& rhs) : CGDIObject(rhs)
+    {
+    }
+
+    inline CPen& CPen::operator=(const CPen& rhs)
+    {
+        CGDIObject::operator =(rhs);
+        return *this;
+    }
+
     inline CPen::operator HPEN () const
     {
         return static_cast<HPEN>(GetHandle());
@@ -2175,6 +2237,16 @@ namespace Win32xx
     inline CRgn::CRgn(HRGN rgn)
     {
         Attach(rgn);
+    }
+
+    inline CRgn::CRgn(const CRgn& rhs) : CGDIObject(rhs)
+    {
+    }
+
+    inline CRgn& CRgn::operator=(const CRgn& rhs)
+    {
+        CGDIObject::operator =(rhs);
+        return *this;
     }
 
     inline CRgn::operator HRGN() const
@@ -2419,7 +2491,7 @@ namespace Win32xx
     // Note: this assignment operator permits a call like this:
     // CDC MyCDC;
     // MyCDC = SomeHDC;
-    inline void CDC::operator = (const HDC dc)
+    inline void CDC::operator=(const HDC dc)
     {
         Attach(dc);
     }
@@ -2436,7 +2508,7 @@ namespace Win32xx
 
     // Note: A copy of a CDC is a clone of the original.
     //       Both objects manipulate the one HDC
-    inline CDC& CDC::operator = (const CDC& rhs)
+    inline CDC& CDC::operator=(const CDC& rhs)
     {
         if (this != &rhs)
         {
@@ -2630,24 +2702,24 @@ namespace Win32xx
         static HMODULE msimg32 = ::LoadLibrary(system + _T("\\msimg32.dll"));
         if (msimg32)
         {
-            GRADIENTFILL* pGradientFill =
-                reinterpret_cast<GRADIENTFILL*>(GetProcAddress(msimg32, "GradientFill"));
+            GRADIENTFILL* pGradientFill = reinterpret_cast<GRADIENTFILL*>(
+                reinterpret_cast<void*>(::GetProcAddress(msimg32, "GradientFill")));
 
             if (pGradientFill)
             {
                 TRIVERTEX vertex[2];
                 vertex[0].x = rc.left;
                 vertex[0].y = rc.top;
-                vertex[0].Red   = GetRValue(color1) << 8;
-                vertex[0].Green = GetGValue(color1) << 8;
-                vertex[0].Blue  = GetBValue(color1) << 8;
+                vertex[0].Red   = COLOR16(GetRValue(color1) << 8);
+                vertex[0].Green = COLOR16(GetGValue(color1) << 8);
+                vertex[0].Blue  = COLOR16(GetBValue(color1) << 8);
                 vertex[0].Alpha = 0;
 
                 vertex[1].x = rc.right;
                 vertex[1].y = rc.bottom;
-                vertex[1].Red   = GetRValue(color2) << 8;
-                vertex[1].Green = GetGValue(color2) << 8;
-                vertex[1].Blue  = GetBValue(color2) << 8;
+                vertex[1].Red   = COLOR16(GetRValue(color2) << 8);
+                vertex[1].Green = COLOR16(GetGValue(color2) << 8);
+                vertex[1].Blue  = COLOR16(GetBValue(color2) << 8);
                 vertex[1].Alpha = 0;
 
                 // Create a GRADIENT_RECT structure that
@@ -2657,7 +2729,12 @@ namespace Win32xx
                 rect.LowerRight = 1;
 
                 // Draw a gradient filled rectangle.
-                ULONG mode = isVertical ? GRADIENT_FILL_RECT_V : GRADIENT_FILL_RECT_H;
+                ULONG mode;
+                if (isVertical)
+                    mode = GRADIENT_FILL_RECT_V;
+                else
+                    mode = GRADIENT_FILL_RECT_H;
+
                 pGradientFill(*this, vertex, 2, &rect, 1, mode);
             }
         }

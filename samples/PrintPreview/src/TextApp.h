@@ -24,8 +24,8 @@ protected:
     virtual BOOL OnIdle(LONG count);
 
 private:
-    CTextApp(const CTextApp&);                // Disable copy construction
-    CTextApp& operator = (const CTextApp&);   // Disable assignment operator
+    CTextApp(const CTextApp&);               // Disable copy construction
+    CTextApp& operator=(const CTextApp&);    // Disable assignment operator
 
     CMainFrame m_frame;
 };

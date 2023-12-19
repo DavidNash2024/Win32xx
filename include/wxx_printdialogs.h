@@ -1,5 +1,5 @@
-// Win32++   Version 9.4
-// Release Date: 25th September 2023
+// Win32++   Version 9.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -279,7 +279,7 @@ namespace Win32xx
 
     private:
         CPrintDialog(const CPrintDialog&);              // Disable copy construction
-        CPrintDialog& operator = (const CPrintDialog&); // Disable assignment operator
+        CPrintDialog& operator=(const CPrintDialog&);   // Disable assignment operator
 
         PRINTDLG        m_pd;           // printer selection dlg structure
     };
@@ -319,7 +319,7 @@ namespace Win32xx
 
     private:
         CPageSetupDialog(const CPageSetupDialog&);              // Disable copy construction
-        CPageSetupDialog& operator = (const CPageSetupDialog&); // Disable assignment operator
+        CPageSetupDialog& operator=(const CPageSetupDialog&); // Disable assignment operator
 
         PAGESETUPDLG    m_psd;          // page setup dlg structure
     };
