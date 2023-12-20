@@ -1,4 +1,4 @@
-// Win32++   Version 9.4.1
+// Win32++   Version 9.5
 // Release Date: TBA
 //
 //      David Nash

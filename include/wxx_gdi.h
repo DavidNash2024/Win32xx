@@ -1,4 +1,4 @@
-// Win32++   Version 9.4.1
+// Win32++   Version 9.5
 // Release Date: TBA
 //
 //      David Nash
@@ -781,29 +781,10 @@ namespace Win32xx
     class CClientDC : public CDC
     {
     public:
-        CClientDC(HWND wnd)
-        {
-            if (wnd == 0) wnd = GetDesktopWindow();
-            assert(::IsWindow(wnd));
-
-            try
-            {
-                HDC dc = ::GetDC(wnd);
-                if (dc == 0)
-                    throw CResourceException(GetApp()->MsgGdiGetDC());
-
-                Assign(dc);
-                SetWindow(wnd);
-            }
-
-            catch(...)
-            {
-                Release();  // Cleanup
-                throw;      // Rethrow
-            }
-        }
-
-        virtual ~CClientDC() {}
+        CClientDC(HWND wnd);
+        CClientDC(const CClientDC& rhs);
+        CClientDC& operator=(const CClientDC& rhs);
+        virtual ~CClientDC();
     };
 
 
@@ -816,35 +797,10 @@ namespace Win32xx
     class CClientDCEx : public CDC
     {
     public:
-        CClientDCEx(HWND wnd, HRGN clip, DWORD flags)
-        {
-            if (wnd == 0) wnd = GetDesktopWindow();
-            assert(::IsWindow(wnd));
-
-            try
-            {
-                HDC dc = ::GetDCEx(wnd, clip, flags);
-                if (dc == 0)
-                    throw CResourceException(GetApp()->MsgGdiGetDCEx());
-
-                if (clip != 0 && (flags & (DCX_INTERSECTRGN | DCX_EXCLUDERGN)))
-                {
-                    CRgn region(clip);
-                    region.Detach();   // The system owns the region now.
-                }
-
-                Assign(dc);
-                SetWindow(wnd);
-            }
-
-            catch(...)
-            {
-                Release();  // Cleanup
-                throw;      // Rethrow
-            }
-        }
-
-        virtual ~CClientDCEx() {}
+        CClientDCEx(HWND wnd, HRGN clip, DWORD flags);
+        CClientDCEx(const CClientDCEx& rhs);
+        CClientDCEx& operator=(const CClientDCEx& rhs);
+        virtual ~CClientDCEx();
     };
 
 
@@ -855,20 +811,10 @@ namespace Win32xx
     class CMemDC : public CDC
     {
     public:
-        explicit CMemDC(HDC dc)
-        {
-            try
-            {
-                CreateCompatibleDC(dc);
-            }
-
-            catch(...)
-            {
-                Release();  // Cleanup
-                throw;      // Rethrow
-            }
-        }
-        virtual ~CMemDC() {}
+        explicit CMemDC(HDC dc);
+        CMemDC(const CMemDC& rhs);
+        CMemDC& operator=(const CMemDC& rhs);
+        virtual ~CMemDC();
     };
 
 
@@ -878,29 +824,10 @@ namespace Win32xx
     class CPaintDC : public CDC
     {
     public:
-        CPaintDC(HWND wnd)
-        {
-            assert(::IsWindow(wnd));
-
-            try
-            {
-                HDC dc = ::BeginPaint(wnd, GetPaintStruct());
-                if (dc == 0)
-                    throw CResourceException(GetApp()->MsgGdiBeginPaint());
-
-                Assign(dc);
-                SetPaintDC(true);
-                SetWindow(wnd);
-            }
-
-            catch(...)
-            {
-                Release();  // Cleanup
-                throw;      // Rethrow
-            }
-        }
-
-        virtual ~CPaintDC()  {}
+        CPaintDC(HWND wnd);
+        CPaintDC(const CPaintDC& rhs);
+        CPaintDC& operator=(const CPaintDC& rhs);
+        virtual ~CPaintDC();
     };
 
 
@@ -910,29 +837,10 @@ namespace Win32xx
     class CWindowDC : public CDC
     {
     public:
-        CWindowDC(HWND wnd)
-        {
-            if (wnd == 0) wnd = GetDesktopWindow();
-            assert(::IsWindow(wnd));
-
-            try
-            {
-                HDC dc = ::GetWindowDC(wnd);
-                if (dc == 0)
-                    throw CResourceException(GetApp()->MsgGdiGetWinDC());
-
-                Assign(dc);
-                SetWindow(wnd);
-            }
-
-            catch(...)
-            {
-                Release();  // Cleanup
-                throw;      // Rethrow
-            }
-
-        }
-        virtual ~CWindowDC() {}
+        CWindowDC(HWND wnd);
+        CWindowDC(const CWindowDC& rhs);
+        CWindowDC& operator=(const CWindowDC& rhs);
+        virtual ~CWindowDC();
     };
 
 
@@ -942,47 +850,15 @@ namespace Win32xx
     class CMetaFileDC : public CDC
     {
     public:
-        CMetaFileDC() {}
-        virtual ~CMetaFileDC()
-        {
-            if (GetHDC())
-            {
-                // Note we should not get here.
-                TRACE("Warning! A metafile was created but not closed\n");
-                ::DeleteMetaFile(Close());
-            }
-        }
+        CMetaFileDC();
+        CMetaFileDC(const CMetaFileDC& rhs);
+        CMetaFileDC& operator=(const CMetaFileDC& rhs);
+        virtual ~CMetaFileDC();
 
-        void Create(LPCTSTR fileName = NULL)
-        {
-            try
-            {
-                assert(GetHDC() == 0);
-                HDC dc = ::CreateMetaFile(fileName);
-                if (dc == 0)
-                    throw CResourceException(GetApp()->MsgGdiDC());
-
-                Assign(dc);
-            }
-            catch (...)
-            {
-                Release();  // Cleanup
-                throw;      // Rethrow
-            }
-        }
-
-        // Closes the metafile and returns a CMetaFile object.
-        // The CMetaFile object automatically deletes the HMETAFILE when the last copy
-        // of the CMetaFile goes out of scope.
-        CMetaFile Close()
-        {
-            assert(GetHDC());
-
-            HDC dc = Detach();
-            HMETAFILE meta = ::CloseMetaFile(dc);
-            return CMetaFile(meta);
-        }
+        CMetaFile Close();
+        void Create(LPCTSTR fileName = NULL);
     };
+
 
     ///////////////////////////////////////////////////////////////////
     // CEnhMetaFileDC manages a GDI device context for a Windows-format
@@ -990,47 +866,13 @@ namespace Win32xx
     class CEnhMetaFileDC : public CDC
     {
     public:
-        CEnhMetaFileDC() {}
-        virtual ~CEnhMetaFileDC()
-        {
-            if (GetHDC())
-            {
-                // Note we should not get here.
-                TRACE("Warning! An enhanced metafile was created but not closed\n");
-                ::DeleteEnhMetaFile(CloseEnhanced());
-            }
-        }
+        CEnhMetaFileDC();
+        CEnhMetaFileDC(const CEnhMetaFileDC& rhs);
+        CEnhMetaFileDC& operator=(const CEnhMetaFileDC& rhs);
+        virtual ~CEnhMetaFileDC();
 
-        void CreateEnhanced(HDC ref, LPCTSTR fileName, const RECT* pBounds, LPCTSTR description)
-        {
-            try
-            {
-                assert(GetHDC() == 0);
-                HDC dc = ::CreateEnhMetaFile(ref, fileName, pBounds, description);
-                if (dc == 0)
-                    throw CResourceException(GetApp()->MsgGdiDC());
-
-                Assign(dc);
-            }
-            catch (...)
-            {
-                Release();  // Cleanup
-                throw;      // Rethrow
-            }
-        }
-
-        // Closes the enhanced metafile and returns a CEnhMetaFile object.
-        // The CEnhMetaFile object automatically deletes the HENHMETAFILE when the last copy
-        // of the CEnhMetaFile goes out of scope.
-        CEnhMetaFile CloseEnhanced()
-        {
-            assert(GetHDC());
-
-            HDC dc = Detach();
-            HENHMETAFILE enhMeta = ::CloseEnhMetaFile(dc);
-            return CEnhMetaFile(enhMeta);
-        }
-
+        CEnhMetaFile CloseEnhanced();
+        void CreateEnhanced(HDC ref, LPCTSTR fileName, const RECT* pBounds, LPCTSTR description);
     };
 
 
@@ -1082,7 +924,6 @@ namespace Win32xx
         LPBITMAPINFO m_pbmiArray;
         std::vector<byte> m_bmi;
     };
-
 
 }
 
@@ -1327,7 +1168,7 @@ namespace Win32xx
 
     inline CBitmap& CBitmap::operator=(const CBitmap& rhs)
     {
-        CGDIObject::operator =(rhs); 
+        CGDIObject::operator =(rhs);
         return *this;
     }
 
@@ -5055,6 +4896,330 @@ namespace Win32xx
     }
 
   #endif // (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
+
+
+    ///////////////////////////////////////////////
+    // Definitions for the CClientDC class
+    //
+
+    inline CClientDC::CClientDC(HWND wnd)
+    {
+        if (wnd == 0) wnd = GetDesktopWindow();
+        assert(::IsWindow(wnd));
+
+        try
+        {
+            HDC dc = ::GetDC(wnd);
+            if (dc == 0)
+                throw CResourceException(GetApp()->MsgGdiGetDC());
+
+            Assign(dc);
+            SetWindow(wnd);
+        }
+
+        catch (...)
+        {
+            Release();  // Cleanup
+            throw;      // Rethrow
+        }
+    }
+
+    inline CClientDC::CClientDC(const CClientDC& rhs) : CDC(rhs)
+    {
+    }
+
+    inline CClientDC& CClientDC::operator=(const CClientDC& rhs)
+    {
+        CDC::operator=(rhs);
+        return *this;
+    }
+
+    inline CClientDC::~CClientDC()
+    {
+    }
+
+
+    ///////////////////////////////////////////////
+    // Definitions for the CClientDCEx class
+    //
+
+    inline CClientDCEx::CClientDCEx(HWND wnd, HRGN clip, DWORD flags)
+    {
+        if (wnd == 0) wnd = GetDesktopWindow();
+        assert(::IsWindow(wnd));
+
+        try
+        {
+            HDC dc = ::GetDCEx(wnd, clip, flags);
+            if (dc == 0)
+                throw CResourceException(GetApp()->MsgGdiGetDCEx());
+
+            if (clip != 0 && (flags & (DCX_INTERSECTRGN | DCX_EXCLUDERGN)))
+            {
+                CRgn region(clip);
+                region.Detach();   // The system owns the region now.
+            }
+
+            Assign(dc);
+            SetWindow(wnd);
+        }
+
+        catch (...)
+        {
+            Release();  // Cleanup
+            throw;      // Rethrow
+        }
+    }
+
+    inline CClientDCEx::CClientDCEx(const CClientDCEx& rhs) : CDC(rhs)
+    {
+    }
+
+    inline CClientDCEx& CClientDCEx::operator=(const CClientDCEx& rhs)
+    {
+        CDC::operator=(rhs);
+        return *this;
+    }
+
+    inline CClientDCEx::~CClientDCEx()
+    {
+    }
+
+
+    ///////////////////////////////////////////////
+    // Definitions for the CMemDC class
+    //
+
+    inline CMemDC::CMemDC(HDC dc)
+    {
+        try
+        {
+            CreateCompatibleDC(dc);
+        }
+
+        catch (...)
+        {
+            Release();  // Cleanup
+            throw;      // Rethrow
+        }
+    }
+
+    inline CMemDC::CMemDC(const CMemDC& rhs) : CDC(rhs)
+    {
+    }
+
+    inline CMemDC& CMemDC::operator=(const CMemDC& rhs)
+    {
+        CDC::operator=(rhs);
+        return *this;
+    }
+
+    inline CMemDC::~CMemDC()
+    {
+    }
+
+
+    ///////////////////////////////////////////////
+    // Definitions for the CPaintDC class
+    //
+
+    inline CPaintDC::CPaintDC(HWND wnd)
+    {
+        assert(::IsWindow(wnd));
+
+        try
+        {
+            HDC dc = ::BeginPaint(wnd, GetPaintStruct());
+            if (dc == 0)
+                throw CResourceException(GetApp()->MsgGdiBeginPaint());
+
+            Assign(dc);
+            SetPaintDC(true);
+            SetWindow(wnd);
+        }
+
+        catch (...)
+        {
+            Release();  // Cleanup
+            throw;      // Rethrow
+        }
+    }
+
+    inline CPaintDC::CPaintDC(const CPaintDC& rhs) : CDC(rhs)
+    {
+    }
+
+    inline CPaintDC& CPaintDC::operator=(const CPaintDC& rhs)
+    {
+        CDC::operator=(rhs);
+        return *this;
+    }
+
+    inline CPaintDC::~CPaintDC()
+    {
+    }
+
+
+    ///////////////////////////////////////////////
+    // Definitions for the CWindowDC class
+    //
+
+    inline CWindowDC::CWindowDC(HWND wnd)
+    {
+        if (wnd == 0) wnd = GetDesktopWindow();
+        assert(::IsWindow(wnd));
+
+        try
+        {
+            HDC dc = ::GetWindowDC(wnd);
+            if (dc == 0)
+                throw CResourceException(GetApp()->MsgGdiGetWinDC());
+
+            Assign(dc);
+            SetWindow(wnd);
+        }
+
+        catch (...)
+        {
+            Release();  // Cleanup
+            throw;      // Rethrow
+        }
+    }
+
+    inline CWindowDC::CWindowDC(const CWindowDC& rhs) : CDC(rhs)
+    {
+    }
+
+    inline CWindowDC& CWindowDC::operator=(const CWindowDC& rhs)
+    {
+        CDC::operator=(rhs);
+        return *this;
+    }
+
+    inline CWindowDC::~CWindowDC()
+    {
+    }
+
+
+    ///////////////////////////////////////////////
+    // Definitions for the CMetaFileDC class
+    //
+
+    inline CMetaFileDC::CMetaFileDC()
+    {
+    }
+
+    inline CMetaFileDC::CMetaFileDC(const CMetaFileDC& rhs) : CDC(rhs)
+    {
+    }
+
+    inline CMetaFileDC& CMetaFileDC::operator=(const CMetaFileDC& rhs)
+    {
+        CDC::operator=(rhs);
+        return *this;
+    }
+
+    inline  CMetaFileDC::~CMetaFileDC()
+    {
+        // Assert here if the metafile was created but not closed.
+        assert(GetHDC() == 0);
+        
+        if (GetHDC())
+        {
+            ::DeleteMetaFile(Close());
+        }
+    }
+
+    // Closes the metafile and returns a CMetaFile object.
+    // The CMetaFile object automatically deletes the HMETAFILE when the last copy
+    // of the CMetaFile goes out of scope.
+    inline CMetaFile CMetaFileDC::Close()
+    {
+        assert(GetHDC());
+
+        HDC dc = Detach();
+        HMETAFILE meta = ::CloseMetaFile(dc);
+        return CMetaFile(meta);
+    }
+
+    inline void CMetaFileDC::Create(LPCTSTR fileName /*= NULL*/)
+    {
+        try
+        {
+            assert(GetHDC() == 0);
+            HDC dc = ::CreateMetaFile(fileName);
+            if (dc == 0)
+                throw CResourceException(GetApp()->MsgGdiDC());
+
+            Assign(dc);
+        }
+        catch (...)
+        {
+            Release();  // Cleanup
+            throw;      // Rethrow
+        }
+    }
+
+
+    ///////////////////////////////////////////////
+    // Definitions for the CEnhMetaFileDC class
+    //
+
+    inline CEnhMetaFileDC::CEnhMetaFileDC()
+    {
+    }
+
+    inline CEnhMetaFileDC::CEnhMetaFileDC(const CEnhMetaFileDC& rhs) : CDC(rhs)
+    {
+    }
+
+    inline CEnhMetaFileDC& CEnhMetaFileDC::operator=(const CEnhMetaFileDC& rhs)
+    {
+        CDC::operator=(rhs);
+        return *this;
+    }
+
+    inline CEnhMetaFileDC::~CEnhMetaFileDC()
+    {
+        // Assert here if the enhanced metafile was created but not closed.
+        assert(GetHDC() == 0);
+
+        if (GetHDC())
+        {
+            ::DeleteEnhMetaFile(CloseEnhanced());
+        }
+    }
+
+    // Closes the enhanced metafile and returns a CEnhMetaFile object.
+    // The CEnhMetaFile object automatically deletes the HENHMETAFILE when the last copy
+    // of the CEnhMetaFile goes out of scope.
+    inline CEnhMetaFile CEnhMetaFileDC::CloseEnhanced()
+    {
+        assert(GetHDC());
+
+        HDC dc = Detach();
+        HENHMETAFILE enhMeta = ::CloseEnhMetaFile(dc);
+        return CEnhMetaFile(enhMeta);
+    }
+
+    inline void CEnhMetaFileDC::CreateEnhanced(HDC ref, LPCTSTR fileName, const RECT* pBounds, LPCTSTR description)
+    {
+        try
+        {
+            assert(GetHDC() == 0);
+            HDC dc = ::CreateEnhMetaFile(ref, fileName, pBounds, description);
+            if (dc == 0)
+                throw CResourceException(GetApp()->MsgGdiDC());
+
+            Assign(dc);
+        }
+        catch (...)
+        {
+            Release();  // Cleanup
+            throw;      // Rethrow
+        }
+    }
+
 
 } // namespace Win32xx
 
