@@ -1,10 +1,14 @@
-Version 9.4.1
-=============
+Version 9.5
+===========
 
 New Features and Enhancements
 -----------------------------
-* Simplifies support for additional toolbars. CFrameT now manages the
-  normal, disabled and hot imagelists for any additional toolbars.
+* Optimized the redrawing of frames and dockers when moving windows
+  between monitors with different display settings.
+* Simplified support for additional toolbars in frames. CFrameT now manages
+  the normal, disabled and hot image-lists for any additional toolbars.
+* Updated CTab and the TabDemo sample.
+* Updated the Themes sample.
 
 Changes in detail
 -----------------

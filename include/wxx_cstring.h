@@ -1,4 +1,4 @@
-// Win32++   Version 9.4.1
+// Win32++   Version 9.5
 // Release Date: TBA
 //
 //      David Nash
@@ -1104,7 +1104,7 @@ namespace Win32xx
         m_str.assign(static_cast<size_t>(newLength), ch);
 
         typename std::vector<T>::iterator it_end = m_buf.begin();
-        std::advance(it_end, static_cast<size_t>(newLength));
+        std::advance(it_end, newLength);
 
         std::copy(m_buf.begin(), it_end, m_str.begin());
         m_buf.clear();
