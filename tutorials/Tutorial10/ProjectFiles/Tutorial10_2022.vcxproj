@@ -94,7 +94,6 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Tutorial10</RootNamespace>
     <ProjectName>Tutorial10</ProjectName>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -149,6 +148,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -168,6 +168,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

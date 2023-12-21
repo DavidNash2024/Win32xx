@@ -257,22 +257,22 @@ namespace Win32xx
             case 0:
                 // Draw a grey box for the normal button to erase other highlighting.
                 drawDC.SetTextColor(grey);
-                drawDC.DrawText(_T("c"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
-                drawDC.DrawText(_T("d"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                drawDC.DrawText(_T("\x63"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                drawDC.DrawText(_T("\x64"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 break;
             case 1:
                 // Draw popped up button, black on right and bottom.
                 drawDC.SetTextColor(white);
-                drawDC.DrawText(_T("c"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                drawDC.DrawText(_T("\x63"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 drawDC.SetTextColor(black);
-                drawDC.DrawText(_T("d"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                drawDC.DrawText(_T("\x64"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 break;
             case 2:
                 // Draw pressed button, black on left and top.
                 drawDC.SetTextColor(black);
-                drawDC.DrawText(_T("c"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                drawDC.DrawText(_T("\x63"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 drawDC.SetTextColor(white);
-                drawDC.DrawText(_T("d"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                drawDC.DrawText(_T("\x64"), 1, m_mdiRect[button], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 break;
             }
 
@@ -285,7 +285,7 @@ namespace Win32xx
                 rc.OffsetRect(DpiScaleInt(1), 0);
 
                 drawDC.SetTextColor(black);
-                drawDC.DrawText(_T("0"), 1, rc, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                drawDC.DrawText(_T("\x30"), 1, rc, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 break;
             }
             case MDI_RESTORE:
@@ -295,14 +295,14 @@ namespace Win32xx
                 rc.OffsetRect(1, 0);
 
                 drawDC.SetTextColor(black);
-                drawDC.DrawText(_T("2"), 1, rc, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                drawDC.DrawText(_T("\x32"), 1, rc, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 break;
             }
             case MDI_CLOSE:
             {
                 // Draw the close button (a Marlett "r" looks like "X").
                 drawDC.SetTextColor(black);
-                drawDC.DrawText(_T("r"), 1, m_mdiRect[2], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                drawDC.DrawText(_T("\x72"), 1, m_mdiRect[2], DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 break;
             }
 

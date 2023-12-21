@@ -197,7 +197,6 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -217,7 +216,6 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\..\..\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
