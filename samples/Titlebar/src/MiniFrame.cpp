@@ -57,7 +57,7 @@ void CMiniFrame::DrawBackground(CDC& dc) const
 void CMiniFrame::DrawCloseButton(CDC& dc) const
 {
     ButtonRects buttonRects = GetButtonRects();
-    UINT dpi = GetDpiForWindow(*this);
+    UINT dpi = ::GetDpiForWindow(*this);
     int iconDimension = dpi_scale(10, dpi);
     COLORREF itemColor = IsActive() ? m_colors.activeItem : m_colors.inactiveItem;
     dc.CreatePen(PS_SOLID, 1, itemColor);
@@ -82,7 +82,7 @@ void CMiniFrame::DrawCloseButton(CDC& dc) const
 void CMiniFrame::DrawMaximizeButton(CDC& dc) const
 {
     ButtonRects buttonRects = GetButtonRects();
-    UINT dpi = GetDpiForWindow(*this);
+    UINT dpi = ::GetDpiForWindow(*this);
     int iconDimension = dpi_scale(10, dpi);
     if (m_hoveredButton == TitlebarButton::Maximize)
     {
@@ -108,7 +108,7 @@ void CMiniFrame::DrawMinimizeButton(CDC& dc) const
     COLORREF itemColor = IsActive() ? m_colors.activeItem : m_colors.inactiveItem;
     CBrush buttonIconBrush(itemColor);
     ButtonRects buttonRects = GetButtonRects();
-    UINT dpi = GetDpiForWindow(*this);
+    UINT dpi = ::GetDpiForWindow(*this);
     int iconDimension = dpi_scale(10, dpi);
     if (m_hoveredButton == TitlebarButton::Minimize)
     {
@@ -197,7 +197,7 @@ void CMiniFrame::DrawWindowIcon(CDC& dc) const
 // Retrieves the rect locations of the title bar buttons.
 ButtonRects CMiniFrame::GetButtonRects() const
 {
-    UINT dpi = GetDpiForWindow(*this);
+    UINT dpi = ::GetDpiForWindow(*this);
     ButtonRects buttonRects;
     // Sadly SM_CXSIZE does not result in the right size buttons for Win10
     int buttonWidth = dpi_scale(47, dpi);

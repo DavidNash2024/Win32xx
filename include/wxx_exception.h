@@ -365,7 +365,7 @@ namespace Win32xx
     // CFileException assignment operator.
     inline CFileException& CFileException::operator=(const CFileException& rhs) WXX_NOEXCEPT
     {
-        CFileException::operator =(rhs);
+        CException::operator =(rhs);
         ZeroMemory(m_filePath, WXX_MAX_STRING_SIZE * sizeof(TCHAR));
 
         if (rhs.m_filePath)
@@ -449,7 +449,7 @@ namespace Win32xx
     inline CNotSupportedException& CNotSupportedException::operator=(
         const CNotSupportedException& rhs) WXX_NOEXCEPT
     {
-        CNotSupportedException::operator =(rhs);
+        CException::operator=(rhs);
         return *this;
     }
 
@@ -506,6 +506,13 @@ namespace Win32xx
     {
     }
 
+    // CResourceException assignment operator.
+    inline CResourceException& CResourceException::operator=(const CResourceException& rhs) WXX_NOEXCEPT
+    {
+        CException::operator=(rhs);
+        return *this;
+    }
+
     // CResourceException destructor.
     inline CResourceException::~CResourceException() WXX_NOEXCEPT
     {
@@ -544,10 +551,17 @@ namespace Win32xx
         }
     }
 
-    // CResourceException copy constructor.
+    // CUserException copy constructor.
     inline CUserException::CUserException(const CUserException& rhs) WXX_NOEXCEPT
         : CException(rhs)
     {
+    }
+
+    // CUserException assignment operator.
+    inline CUserException& CUserException::operator=(const CUserException& rhs) WXX_NOEXCEPT
+    {
+        CException::operator=(rhs);
+        return *this;
     }
 
     // CUserException destructor.
@@ -602,7 +616,7 @@ namespace Win32xx
     // CWinFileException assignment operator.
     inline CWinException& CWinException::operator=(const CWinException& rhs) WXX_NOEXCEPT
     {
-        CWinException::operator =(rhs);
+        CException::operator =(rhs);
         return *this;
     }
 

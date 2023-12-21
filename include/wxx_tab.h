@@ -474,8 +474,8 @@ namespace Win32xx
             {
                 // Draw a grey box for the normal button using two special characters.
                 dc.SetTextColor(grey);
-                dc.DrawText(_T("c"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
-                dc.DrawText(_T("d"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x63"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x64"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
             }
             break;
 
@@ -483,9 +483,9 @@ namespace Win32xx
             {
                 // Draw popped up button, black on right and bottom.
                 dc.SetTextColor(white);
-                dc.DrawText(_T("c"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x63"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 dc.SetTextColor(black);
-                dc.DrawText(_T("d"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x64"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
             }
             break;
 
@@ -493,9 +493,9 @@ namespace Win32xx
             {
                 // Draw popped up button, black on right and bottom.
                 dc.SetTextColor(black);
-                dc.DrawText(_T("c"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x63"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 dc.SetTextColor(white);
-                dc.DrawText(_T("d"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x64"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
             }
             break;
 
@@ -503,7 +503,7 @@ namespace Win32xx
 
             // Draw the close button (a Marlett "r" looks like "X").
             dc.SetTextColor(RGB(0, 0, 0));
-            dc.DrawText(_T("r"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+            dc.DrawText(_T("\x72"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
         }
     }
 
@@ -546,8 +546,8 @@ namespace Win32xx
             {
                 // Draw a grey box for the normal button using two special characters.
                 dc.SetTextColor(grey);
-                dc.DrawText(_T("c"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
-                dc.DrawText(_T("d"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x63"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x64"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
             }
             break;
 
@@ -555,9 +555,9 @@ namespace Win32xx
             {
                 // Draw popped up button, black on right and bottom.
                 dc.SetTextColor(white);
-                dc.DrawText(_T("c"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x63"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 dc.SetTextColor(black);
-                dc.DrawText(_T("d"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x64"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
             }
             break;
 
@@ -565,9 +565,9 @@ namespace Win32xx
             {
                 // Draw pressed button, black on left and top.
                 dc.SetTextColor(black);
-                dc.DrawText(_T("c"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x63"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
                 dc.SetTextColor(white);
-                dc.DrawText(_T("d"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                dc.DrawText(_T("\x64"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
             }
             break;
 
@@ -578,7 +578,7 @@ namespace Win32xx
 
             // Draw the down arrow button.
             dc.SetTextColor(black);
-            dc.DrawText(_T("u"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+            dc.DrawText(_T("\x75"), 1, rcList, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
         }
     }
 

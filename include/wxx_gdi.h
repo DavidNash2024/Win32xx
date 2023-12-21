@@ -5123,7 +5123,7 @@ namespace Win32xx
     {
         // Assert here if the metafile was created but not closed.
         assert(GetHDC() == 0);
-        
+
         if (GetHDC())
         {
             ::DeleteMetaFile(Close());
