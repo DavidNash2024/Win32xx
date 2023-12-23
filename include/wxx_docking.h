@@ -961,33 +961,33 @@ namespace Win32xx
                     {
                         // Draw a grey box for the normal button using two special characters.
                         drawDC.SetTextColor(grey);
-                        drawDC.DrawText(_T("\x63"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
-                        drawDC.DrawText(_T("\x64"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        drawDC.TextOut(rcClose.left, rcClose.top, _T("\x63"), 1);
+                        drawDC.TextOut(rcClose.left, rcClose.top, _T("\x64"), 1);
                         break;
                     }
                     case 1:
                     {
                         // Draw popped up button, black on right and bottom.
                         drawDC.SetTextColor(white);
-                        drawDC.DrawText(_T("\x63"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        drawDC.TextOut(rcClose.left, rcClose.top, _T("\x63"), 1);
                         drawDC.SetTextColor(black);
-                        drawDC.DrawText(_T("\x64"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        drawDC.TextOut(rcClose.left, rcClose.top, _T("\x64"), 1);
                         break;
                     }
                     case 2:
                     {
                         // Draw pressed button, black on left and top.
                         drawDC.SetTextColor(black);
-                        drawDC.DrawText(_T("\x63"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        drawDC.TextOut(rcClose.left, rcClose.top, _T("\x63"), 1);
                         drawDC.SetTextColor(white);
-                        drawDC.DrawText(_T("\x64"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                        drawDC.TextOut(rcClose.left, rcClose.top, _T("\x64"), 1);
                         break;
                     }
                     }
 
                     // Draw the close button (a Marlett "r" looks like "X").
                     drawDC.SetTextColor(black);
-                    drawDC.DrawText(_T("\x72"), 1, rcClose, DT_CENTER | DT_SINGLELINE | DT_VCENTER);
+                    drawDC.TextOut(rcClose.left, rcClose.top, _T("\x72"), 1);
                 }
             }
         }
