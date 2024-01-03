@@ -238,7 +238,7 @@ namespace Win32xx
         case PD_RESULT_PRINT:
         {
             // The user clicked the print button.
-            GetApp()->ResetPrinterMemory();
+            GetApp()->UpdatePrinterMemory(m_pdex.hDevMode, m_pdex.hDevNames);
             OnPrint();
             break;
         }
@@ -323,31 +323,8 @@ namespace Win32xx
     // Returns TRUE if a default printer exists.
     inline BOOL CPrintDialogEx::GetDefaults()
     {
-    //    CThreadLock lock(GetApp()->m_printLock);
-
-    /*    if (m_pdex.hDC)
-        {
-            ::DeleteDC(m_pdex.hDC);
-            m_pdex.hDC = 0;
-        }
-
-        HWND oldOwner = m_pdex.hwndOwner;
-        if (!::IsWindow(m_pdex.hwndOwner))
-            m_pdex.hwndOwner = ::GetActiveWindow();
-
-        m_pdex.Flags |= PD_RETURNDEFAULT;
-        ::PrintDlgEx(&m_pdex);
-        m_pdex.Flags &= ~PD_RETURNDEFAULT;
-
-        m_pdex.hwndOwner = oldOwner;
-
-        // Reset global memory
-        SetDefaults(m_pdex.hDevMode, m_pdex.hDevNames);
-
-        m_pdex.hDevMode = 0;
-        m_pdex.hDevNames = 0; */
-
         GetApp()->ResetPrinterMemory();
+        GetApp()->UpdateDefaultPrinter();
 
         // Return TRUE if default printer exists
         return (GetApp()->GetHDevNames().Get()) ? TRUE : FALSE;
