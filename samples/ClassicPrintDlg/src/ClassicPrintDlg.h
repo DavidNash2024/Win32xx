@@ -39,6 +39,8 @@ public:
     bool IsPrintRange() const;
     bool IsPrintSelection() const;
     BOOL OnPrintProperties();
+    BOOL OnComboSelection();
+    BOOL OnRadioSelection(UINT id);
     void SetCollate(int collate) { m_collate = collate; }
     void SetCopies(int copies) { m_copies = copies; }
     void SetFromPage(int fromPage) { m_fromPage = fromPage; }
@@ -53,7 +55,7 @@ private:
     CDataExchange m_dx;    // DataExchange object, called by UpdateData
     HGLOBAL m_hDevMode;    // Global memory for printer's DevMode
     HGLOBAL m_hDevNames;   // Global memory for printer's DevNames
-    HWND m_owner;          // Owner window set in DoModal 
+    HWND m_owner;          // Owner window set in DoModal
 
     CComboBox m_comboBox;
     CEdit m_editFrom;

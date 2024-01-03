@@ -1,7 +1,16 @@
-Notepad Example
-===============
-This project demonstrates how to use a Rich Edit control as a simple text 
-editor. It extends the PrintPreview sample to add support for Rich Text
+ClassicPrintDlg Sample
+======================
+The print dialog has changed since recent updates to Windows 10/11. The
+new print dialog ignores the hDevMode and hDevNames supplied to it, and
+displays a print preview we can't use.
+
+This project provides an alternative to the current print dialog. The 
+ClassicPrintDlg class emulates the print dialog from earlier versions of
+Windows. It can be used as a replacement for CPrintDialog in the Notepad
+sample as shown here.
+
+This project also demonstrates how to use a Rich Edit control as a simple
+text editor. It extends the PrintPreview sample to add support for Rich Text
 Format, as well as ANSI, UTF-8 and UTF-16 encodings. 
 
 Features demonstrated in this example
@@ -25,7 +34,7 @@ Features demonstrated in this example
 
 
 Notes:
-* UTF-8 files need a Byte Order Mark (BOM), otherwise they are treated as ANSI 
+* UTF-8 files need a Byte Order Mark (BOM), otherwise they are treated as ANSI
   by the rich edit control.
 * UTF-8 is the most popular encoding for text files, for good reason.
 * UTF-8 is a super set of ASCII encoding. All ASCII text files are also UTF-8.

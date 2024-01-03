@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2023  David Nash
+// Copyright (c) 2005-2024  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -457,7 +457,6 @@ namespace Win32xx
     {
         m_devMode.Free();
         m_devNames.Free();
-        UpdateDefaultPrinter();
     }
 
     // Registers a temporary window class so we can get the callback
