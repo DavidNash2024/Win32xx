@@ -7,10 +7,6 @@
 #include "UserMessages.h"
 
 
-#ifndef WM_DPICHANGED_BEFOREPARENT
-  #define WM_DPICHANGED_BEFOREPARENT      0x02E2
-#endif
-
 // Required for Dev-C++
 #ifndef IMF_AUTOFONT
   #define IMF_AUTOFONT          0x0002
@@ -407,7 +403,7 @@ LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_PROPERTIESCLOSED:
+    case UWM_PROPERTIESCHANGED:
     {
         SetDefaultPrintOptions();
     }
