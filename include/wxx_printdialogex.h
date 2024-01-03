@@ -126,7 +126,6 @@ namespace Win32xx
         BOOL PrintRange() const;
         BOOL PrintSelection() const;
         BOOL PrintToFile() const;
-        void SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames);
         void SetParameters(const PRINTDLGEX& pdx);
 
     protected:
@@ -198,15 +197,12 @@ namespace Win32xx
     {
         assert(!IsWindow());    // Only one window per CWnd instance allowed
 
-        // Ensure only one print dialog is running at a time.
-        CThreadLock lock(GetApp()->m_printLock);
-
         // Update the default printer
         GetApp()->UpdateDefaultPrinter();
 
         // Assign values to the PRINTDLGEX structure
-        m_pdex.hDevMode = GetApp()->m_devMode;
-        m_pdex.hDevNames = GetApp()->m_devNames;
+        m_pdex.hDevMode = GetApp()->GetHDevMode();
+        m_pdex.hDevNames = GetApp()->GetHDevNames();
         if (::IsWindow(owner))
             m_pdex.hwndOwner = owner;
         else
@@ -229,8 +225,7 @@ namespace Win32xx
             // The user clicked the Apply button and later clicked the Cancel
             // button. This indicates that the user wants to apply the changes
             // made in the property sheet, but does not yet want to print.
-            GetApp()->m_devMode.Reassign(m_pdex.hDevMode);
-            GetApp()->m_devNames.Reassign(m_pdex.hDevNames);
+            GetApp()->UpdatePrinterMemory(m_pdex.hDevMode, m_pdex.hDevNames);
             OnApply();
             break;
         }
@@ -243,8 +238,7 @@ namespace Win32xx
         case PD_RESULT_PRINT:
         {
             // The user clicked the print button.
-            GetApp()->m_devMode.Reassign(m_pdex.hDevMode);
-            GetApp()->m_devNames.Reassign(m_pdex.hDevNames);
+            GetApp()->ResetPrinterMemory();
             OnPrint();
             break;
         }
@@ -329,9 +323,9 @@ namespace Win32xx
     // Returns TRUE if a default printer exists.
     inline BOOL CPrintDialogEx::GetDefaults()
     {
-        CThreadLock lock(GetApp()->m_printLock);
+    //    CThreadLock lock(GetApp()->m_printLock);
 
-        if (m_pdex.hDC)
+    /*    if (m_pdex.hDC)
         {
             ::DeleteDC(m_pdex.hDC);
             m_pdex.hDC = 0;
@@ -351,22 +345,22 @@ namespace Win32xx
         SetDefaults(m_pdex.hDevMode, m_pdex.hDevNames);
 
         m_pdex.hDevMode = 0;
-        m_pdex.hDevNames = 0;
+        m_pdex.hDevNames = 0; */
+
+        GetApp()->ResetPrinterMemory();
 
         // Return TRUE if default printer exists
-        return (GetApp()->m_devNames.Get()) ? TRUE : FALSE;
+        return (GetApp()->GetHDevNames().Get()) ? TRUE : FALSE;
     }
 
     // Retrieves the name of the default or currently selected printer device.
     inline CString CPrintDialogEx::GetDeviceName() const
     {
-        CThreadLock lock(GetApp()->m_printLock);
-
-        if (GetApp()->m_devNames.Get() == 0)
+        if (GetApp()->GetHDevNames().Get() == 0)
             GetApp()->UpdateDefaultPrinter();
 
         CString str;
-        if (GetApp()->m_devNames.Get() != 0)
+        if (GetApp()->GetHDevNames().Get() != 0)
             str = GetDevNames().GetDeviceName();
 
         return str;
@@ -380,15 +374,13 @@ namespace Win32xx
     //  Then use pDevMode as if it were a LPDEVMODE
     inline CDevMode CPrintDialogEx::GetDevMode() const
     {
-        CThreadLock lock(GetApp()->m_printLock);
-
-        if (GetApp()->m_devMode.Get() == 0)
+        if (GetApp()->GetHDevMode().Get() == 0)
             GetApp()->UpdateDefaultPrinter();
 
-        if (GetApp()->m_devMode.Get() == 0)
+        if (GetApp()->GetHDevMode().Get() == 0)
             throw CResourceException(GetApp()->MsgPrintFound());
 
-        return CDevMode(GetApp()->m_devMode);
+        return CDevMode(GetApp()->GetHDevMode());
     }
 
     // Returns a pointer to the locked hDevNames memory encapsulated in a CDevNames object.
@@ -399,27 +391,23 @@ namespace Win32xx
     //  Then use pDevNames as if it were a LPDEVNAMES
     inline CDevNames CPrintDialogEx::GetDevNames() const
     {
-        CThreadLock lock(GetApp()->m_printLock);
-
-        if (GetApp()->m_devNames.Get() == 0)
+        if (GetApp()->GetHDevNames().Get() == 0)
             GetApp()->UpdateDefaultPrinter();
 
-        if (GetApp()->m_devNames.Get() == 0)
+        if (GetApp()->GetHDevNames().Get() == 0)
             throw CResourceException(GetApp()->MsgPrintFound());
 
-        return CDevNames(GetApp()->m_devNames);
+        return CDevNames(GetApp()->GetHDevNames());
     }
 
     // Retrieves the name of the default or currently selected printer driver.
     inline CString CPrintDialogEx::GetDriverName() const
     {
-        CThreadLock lock(GetApp()->m_printLock);
-
-        if (GetApp()->m_devNames.Get() == 0)
+        if (GetApp()->GetHDevNames().Get() == 0)
             GetApp()->UpdateDefaultPrinter();
 
         CString str;
-        if (GetApp()->m_devNames.Get() != 0)
+        if (GetApp()->GetHDevNames().Get() != 0)
             str = GetDevNames().GetDriverName();
 
         return str;
@@ -428,13 +416,11 @@ namespace Win32xx
     // Retrieves the name of the default or currently selected printer port.
     inline CString CPrintDialogEx::GetPortName() const
     {
-        CThreadLock lock(GetApp()->m_printLock);
-
-        if (GetApp()->m_devNames.Get() == 0)
+        if (GetApp()->GetHDevNames().Get() == 0)
             GetApp()->UpdateDefaultPrinter();
 
         CString str;
-        if (GetApp()->m_devNames.Get() != 0)
+        if (GetApp()->GetHDevNames().Get() != 0)
             str = GetDevNames().GetPortName();
 
         return str;
@@ -444,12 +430,11 @@ namespace Win32xx
     // Throws on failure.
     inline CDC CPrintDialogEx::GetPrinterDC() const
     {
-        CThreadLock lock(GetApp()->m_printLock);
         CDC dc;
-        if (GetApp()->m_devNames.Get() == 0)
+        if (GetApp()->GetHDevNames().Get() == 0)
             GetApp()->UpdateDefaultPrinter();
 
-        if ((GetApp()->m_devNames.Get() != 0) && (GetApp()->m_devMode.Get() != 0))
+        if ((GetApp()->GetHDevNames().Get() != 0) && (GetApp()->GetHDevMode().Get() != 0))
         {
             dc.CreateDC(GetDriverName(), GetDeviceName(),
                 GetPortName(), GetDevMode());
@@ -536,27 +521,6 @@ namespace Win32xx
         }
 
         return E_NOINTERFACE;
-    }
-
-    // Assigns the application's default printer settings to the values
-    // specified by hDevMode and hDevNames. CWinApp now owns the global
-    // memory and is responsible for freeing it.
-    inline void CPrintDialogEx::SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames)
-    {
-        CThreadLock lock(GetApp()->m_printLock);
-
-        // Reset global memory
-        if (hDevMode != GetApp()->m_devMode)
-        {
-            GetApp()->m_devMode.Free();
-            GetApp()->m_devMode.Reassign(hDevMode);
-        }
-
-        if (hDevNames != GetApp()->m_devNames)
-        {
-            GetApp()->m_devNames.Free();
-            GetApp()->m_devNames.Reassign(hDevNames);
-        }
     }
 
     // Set the parameters of the PRINTDLGEX structure to sensible values
