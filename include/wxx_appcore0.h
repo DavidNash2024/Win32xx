@@ -192,6 +192,56 @@ namespace Win32xx
         TLSData() : pWnd(0), mainWnd(0), pMenuBar(0), msgHook(0), dlgHooks(0) {} // Constructor
     };
 
+    ///////////////////////////////////////////////////////////////////
+    // Acknowledgement:
+    //  CGlobalLock is based on code by Rob Caldecott
+    //  See:  https://www.codeproject.com/Articles/16692/A-Template-Wrapper-for-GlobalLock
+    //
+    ///////////////////////////////////////////////////////////////////
+
+
+    //////////////////////////////////////
+    // CGlobaLock is a class template used to provide a self unlocking
+    // object to global memory. It is used to provide convenient access
+    // to the memory provided by hDevMode and hDevNames handles.
+    // The framework uses this class to eliminate the need to manually
+    // lock or unlock global memory.
+    // This class is typically used with a CHGlobal object but can also
+    // be used with a raw global memory handle.
+    // CDevMode and CDevNames are typedefs of this class.
+    template <typename T>
+    class CGlobalLock
+    {
+    public:
+        // Constructors and Destructors
+        CGlobalLock() : m_h(0), m_p(0) {}
+        CGlobalLock(HANDLE h) : m_h(h) { Lock(); }
+        CGlobalLock(const CGlobalLock& rhs);
+        ~CGlobalLock() { Unlock(); }
+
+        T* Get() const { return m_p; }                          // Returns the pointer
+        LPCTSTR c_str() const;                                  // Returns the LPCTSTR (for DEVNAMES only)
+        LPTSTR  GetString() const;                              // Returns the LPTSTR (for DEVNAMES only)
+        CString GetDeviceName() const;                          // Returns the printer name (for DEVNAMES only)
+        CString GetDriverName() const;                          // Returns the printer driver (for DEVNAMES only)
+        CString GetPortName() const;                            // Returns the printer port (for DEVNAMES only)
+        bool    IsDefaultPrinter() const;                       // Returns true if this is the default printer (for DEVNAMES only)
+
+        // operator overloads
+        operator T* () const { return m_p; }                    // Conversion operator to pointer
+        T* operator->() const { assert(m_p); return m_p; }      // Pointer operator
+        T& operator*() const { assert(m_p); return *m_p; }      // Dereference operator
+        CGlobalLock& operator= (const CGlobalLock& rhs);        // Assignment operator
+        CGlobalLock& operator=(HANDLE h);                       // Assignment operator
+
+    private:
+        void Lock();
+        void Unlock();
+
+        HANDLE m_h;     // The handle to lock/unlock
+        T* m_p;         // Pointer returned by ::GlobalLock
+    };
+
 
     ///////////////////////////////////////////////////////////////
     // CWinApp manages the application. Its constructor initializes
@@ -208,9 +258,6 @@ namespace Win32xx
         friend class CImageList;
         friend class CMenu;
         friend class CMetaFile;
-        friend class CPageSetupDialog;
-        friend class CPrintDialog;
-        friend class CPrintDialogEx;
         friend class CPropertyPage;
         friend class CWinThread;
         friend class CWnd;
@@ -222,6 +269,8 @@ namespace Win32xx
 
         // Operations
         CWnd* GetCWndFromMap(HWND wnd);
+        const CHGlobal& GetHDevMode() const { return m_devMode; }
+        const CHGlobal& GetHDevNames() const { return m_devNames; }
         HINSTANCE GetInstanceHandle() const { return m_instance; }
         HWND      GetMainWnd() const;
         HINSTANCE GetResourceHandle() const { return (m_resource ? m_resource : m_instance); }
@@ -234,9 +283,12 @@ namespace Win32xx
         HANDLE    LoadImage(UINT imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
         HCURSOR   LoadStandardCursor(LPCTSTR cursorName) const;
         HICON     LoadStandardIcon(LPCTSTR iconName) const;
+        void      ResetPrinterMemory();
         HCURSOR   SetCursor(HCURSOR cursor) const;
         void      SetMainWnd(HWND wnd) const;
         void      SetResourceHandle(HINSTANCE resource);
+        void      UpdateDefaultPrinter();
+        void      UpdatePrinterMemory(HGLOBAL hDevMode, HGLOBAL hDevNames);
 
     private:
         CWinApp(const CWinApp&);               // Disable copy construction
@@ -252,7 +304,6 @@ namespace Win32xx
         CMenu_Data* GetCMenuData(HMENU menu);
         void SetCallback();
         void SetTlsData();
-        void UpdateDefaultPrinter();
 
         static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
 

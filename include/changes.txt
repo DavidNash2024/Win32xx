@@ -18,6 +18,14 @@ Added CFrameT::SetToolBarImages       Added overload for additional toolbars
 Added CImageList::CreateDragImage
 Added CTab::SetTabsFontSize
 Added CTab::SetTabsIconSize
+Added CWinApp::GetHDevMode
+Added CWinApp::GetHDevNames
+Added CWinApp::ResetPrinterMemory
+Added CWinApp::UpdateDefaultPrinter
+Added CWinApp::UpdatePrinterMemory
+
+Removed CPrintDialog::SetDefaults
+Removed CPrintDialogEx::SetDefaults
 Removed CTab::SetTabHeight
 
 
