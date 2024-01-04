@@ -17,7 +17,7 @@
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_encoding(ANSI), m_isToolbarShown(true),
+CMainFrame::CMainFrame() : m_encodeMode(ANSI), m_isToolbarShown(true),
                            m_isWrapped(false), m_isRTF(false), m_oldFocus(0)
 {
 }
@@ -95,16 +95,7 @@ void CMainFrame::DetermineEncoding(CFile& file)
             int tests = IS_TEXT_UNICODE_SIGNATURE;
             int textLength = static_cast<int>(testlen);
             if (::IsTextUnicode(&buffer.front(), textLength, &tests) != 0)
-                encoding = UTF16LE_BOM;
-            else
-            {
-                // check for UTF-16 LE w/o BOM
-                tests = IS_TEXT_UNICODE_STATISTICS;
-                if (::IsTextUnicode(&buffer.front(), textLength, &tests) != 0)
-                {
-                    encoding = UTF16LE;
-                }
-            }
+                encoding = UTF16LE;
         }
         catch (const CFileException& e)
         {
@@ -239,18 +230,21 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseThemes(FALSE);             // Don't use themes.
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
-    // Get the name of the default or currently chosen printer
-//    CClassicPrintDlg printDlg;
-//    if (printDlg.GetDefaults())
-//    {
-//        CString status = _T("Printer: ") + printDlg.GetDeviceName();
-//        SetStatusText(status);
-//    }
-//    else
-//        SetStatusText(_T("No printer found"));
+    // Call the base class function.
+    int result = CFrame::OnCreate(cs);
 
-    // call the base class function
-    return  CFrame::OnCreate(cs);
+    // Change the status text to the name of the current printer.
+    CClassicPrintDlg printDlg;
+    CString deviceName = printDlg.GetDeviceName();
+    if (deviceName.IsEmpty())
+        SetStatusText(_T("No printer found"));
+    else
+    {
+        CString status = _T("Printer: ") + printDlg.GetDeviceName();
+        SetStatusText(status);
+    }
+
+    return  result;
 }
 
 // Called when the effective dots per inch (dpi) for a window has changed.
@@ -475,6 +469,17 @@ BOOL CMainFrame::OnFilePrint()
     try
     {
         m_richView.DoPrint(m_pathName);
+        
+        // Change the status text to the name of the current printer.
+        CClassicPrintDlg printDlg;
+        CString deviceName = printDlg.GetDeviceName();
+        if (deviceName.IsEmpty())
+            SetStatusText(_T("No printer found"));
+        else
+        {
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
+        }
     }
 
     catch (const CException& e)
@@ -493,6 +498,16 @@ BOOL CMainFrame::OnFilePrintSetup()
     {
         CClassicPrintDlg printDlg;
         printDlg.DoSetupModal(*this);
+
+        // Change the status text to the name of the current printer.
+        CString deviceName = printDlg.GetDeviceName();
+        if (deviceName.IsEmpty())
+            SetStatusText(_T("No printer found"));
+        else
+        {
+            CString status = _T("Printer: ") + printDlg.GetDeviceName();
+            SetStatusText(status);
+        }
     }
 
     catch(const CException& e)
@@ -809,7 +824,7 @@ BOOL CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
     int menuItem = GetFrameMenu().FindMenuItem(_T("&Encoding"));
     CMenu radioMenu = GetFrameMenu().GetSubMenu(menuItem);
-    UINT enc = m_encoding + IDM_ENC_ANSI;
+    UINT enc = m_encodeMode + IDM_ENC_ANSI;
     if (enc == id)
         radioMenu.CheckMenuRadioItem(idFirst, idLast, id, MF_BYCOMMAND);
 
@@ -845,15 +860,14 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
         // try to determine the file encoding: Note that ANSI and UTF-8 are
         // handled by default, and only UTF-16 LE is accommodated by RichEdit.
         DetermineEncoding(file);
-        if (m_encoding == UTF16LE_BOM || m_encoding == UTF16LE)
+        if (m_encodeMode == UTF16LE)
             stream_mode |= SF_UNICODE;
 
-        // Skip the BOM for UTF16LE encoding
-        if (m_encoding == UTF16LE_BOM)
+        if (m_encodeMode == UTF16LE)
             file.Seek(2, FILE_BEGIN);
 
         // Skip the BOM for UTF8 encoding
-        if ((m_encoding == UTF8) && m_isRTF)
+        if ((m_encodeMode == UTF8) && m_isRTF)
             file.Seek(3, FILE_BEGIN);
 
         EDITSTREAM es;
@@ -891,17 +905,10 @@ void CMainFrame::SaveModifiedText()
 }
 
 // Set the encoding type.
-void CMainFrame::SetEncoding(UINT encoding)
+void CMainFrame::SetEncoding(UINT encodeMode)
 {
-    m_encoding = encoding;
-
-    switch (m_encoding)
-    {
-    case ANSI:         SetStatusText(_T("Encoding: ANSI"));            break;
-    case UTF8:         SetStatusText(_T("Encoding: UTF-8"));           break;
-    case UTF16LE:      SetStatusText(_T("Encoding: UTF-16"));          break;
-    case UTF16LE_BOM:  SetStatusText(_T("Encoding: UTF-16 with BOM")); break;
-    }
+    m_encodeMode = encodeMode;
+    SetStatusIndicators();
 }
 
 // Saves the documents full path name.
@@ -928,6 +935,15 @@ void CMainFrame::SetStatusIndicators()
         CString empty;
 
         m_mode = m_isRTF ? rich : plain;
+
+        switch (m_encodeMode)
+        {
+        case ANSI:        m_encoding = LoadString(IDM_ENC_ANSI);   break;
+        case UTF8:        m_encoding = LoadString(IDM_ENC_UTF8);   break;
+        case UTF16LE:     m_encoding = LoadString(IDM_ENC_UTF16);   break;
+        default:          m_encoding = LoadString(IDM_ENC_ANSI);   break;
+        }
+
         m_cap  = (::GetKeyState(VK_CAPITAL) & 0x0001) ? cap : empty;
         m_num  = (::GetKeyState(VK_NUMLOCK) & 0x0001) ? num : empty;
         m_ovr  = (::GetKeyState(VK_INSERT) & 0x0001) ? ovr : ins;
@@ -935,9 +951,10 @@ void CMainFrame::SetStatusIndicators()
         // Update the indicators.
         // Need member variables for owner drawn text to keep them in scope.
         GetStatusBar().SetPartText(1, m_mode, SBT_OWNERDRAW);
-        GetStatusBar().SetPartText(2, m_cap, SBT_OWNERDRAW);
-        GetStatusBar().SetPartText(3, m_num, SBT_OWNERDRAW);
-        GetStatusBar().SetPartText(4, m_ovr, SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(2, m_encoding, SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(3, m_cap, SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(4, m_num, SBT_OWNERDRAW);
+        GetStatusBar().SetPartText(5, m_ovr, SBT_OWNERDRAW);
     }
 }
 
@@ -950,7 +967,9 @@ void CMainFrame::SetStatusParts()
 
     // Fill a vector with the status bar part widths.
     std::vector<int> partWidths;
+
     partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_PLAIN)));
+    partWidths.push_back(GetTextPartWidth(LoadString(IDM_ENC_UTF16)));
     partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_CAPS)));
     partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_NUM)));
     partWidths.push_back(GetTextPartWidth(LoadString(IDW_INDICATOR_OVR)));
@@ -1081,21 +1100,21 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
         // set the EDITSTREAM mode
         int stream_mode = m_isRTF ? SF_RTF : SF_TEXT;
 
-        if (m_encoding == UTF16LE_BOM || m_encoding == UTF16LE)
+        if (m_encodeMode == UTF16LE)
             stream_mode |= SF_UNICODE;
 
-        if (m_encoding == UTF8)
+        if (m_encodeMode == UTF8)
             stream_mode |= (CP_UTF8 << 16) | SF_USECODEPAGE;
 
-        // Write the BOM for UTF16LE_BOM encoding if it had one before.
-        if (m_encoding == UTF16LE_BOM)
+        // Write the BOM for UTF16LE encoding.
+        if (m_encodeMode == UTF16LE)
         {
             byte buffer[2] = { 0xff, 0xfe };
             file.Write(buffer, 2);
         }
 
         // Write the BOM for UTF encoding
-        if (m_encoding == UTF8)
+        if (m_encodeMode == UTF8)
         {
             byte buffer[3] = { 0xef, 0xbb, 0xbf };
             file.Write(buffer, 3);

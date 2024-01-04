@@ -14,7 +14,6 @@
 const int ANSI = 0;            // Default for plain text
 const int UTF8 = 1;            // Default for rich text
 const int UTF16LE = 2;
-const int UTF16LE_BOM  = 3;
 
 
 ///////////////////////////////////////////////////////////

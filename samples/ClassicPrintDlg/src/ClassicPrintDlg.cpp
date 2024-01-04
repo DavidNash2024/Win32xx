@@ -244,22 +244,6 @@ int CClassicPrintDlg::GetCopies() const
     return m_copies;
 }
 
-// Sets the printer and the page settings to default, without displaying a dialog.
-// The hDevMode and hDevNames memory is freed and reallocated.
-// Returns TRUE if a default printer exists.
-BOOL CClassicPrintDlg::GetDefaults()
-{
-    GetApp()->ResetPrinterMemory();
-
-    m_hDevMode = 0;
-    m_hDevNames = 0;
-
-    GetApp()->UpdateDefaultPrinter();
-
-    // Return TRUE if default printer exists
-    return (GetApp()->GetHDevNames().Get()) ? TRUE : FALSE;
-}
-
 CDevMode CClassicPrintDlg::GetDevMode()
 {
     if (GetApp()->GetHDevMode().Get() == 0)
@@ -383,8 +367,8 @@ BOOL CClassicPrintDlg::OnComboSelection()
         m_hDevMode = newHDevMode;
         GetApp()->UpdatePrinterMemory(newHDevMode, newHDevNames);
 
-        SetDlgItemText(IDS_WHERE, GetPortName());
-        SetDlgItemText(IDS_TYPE, GetDriverName());
+        m_type = GetDriverName();
+        m_where = GetPortName();
     }
 
     ::SendMessage(m_owner, UWM_PROPERTIESCHANGED, 0, 0);
@@ -440,6 +424,8 @@ BOOL CClassicPrintDlg::OnInitDialog()
 
         SetDlgItemText(IDS_WHERE, pDevNames.GetPortName());
         SetDlgItemText(IDS_TYPE, pDevNames.GetDriverName());
+        m_type = pDevNames.GetDriverName();
+        m_where = pDevNames.GetPortName();
     }
     if (hDevMode != 0)
         ::GlobalFree(hDevMode);

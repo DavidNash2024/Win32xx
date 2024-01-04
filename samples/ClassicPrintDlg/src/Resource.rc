@@ -117,7 +117,7 @@ CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-    CTEXT           "Text Processing Application",IDC_STATIC,61,22,64,18
+    CTEXT           "Classic Print Dialog Application",IDC_STATIC,61,22,64,18
     ICON            IDW_MAIN,0,4,4,20,20
 END
 
@@ -289,9 +289,9 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_ENC_ANSI            "Encode as ANSI when saving"
-    IDM_ENC_UTF8            "Encode as UTF-8 with BOM when saving"
-    IDM_ENC_UTF16           "Encode as UTF-16 when saving"
+    IDM_ENC_ANSI            "Encoding: ANSI"
+    IDM_ENC_UTF8            "Encoding: UTF-8"
+    IDM_ENC_UTF16           "Encoding: UTF-16"
 END
 
 STRINGTABLE

@@ -88,22 +88,13 @@ void CMainFrame::DetermineEncoding(CFile& file)
 
             // look UTF Byte Order Mark (BOM)
             if (buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf)
-                    encoding = UTF8;
+                encoding = UTF8;
 
             // check for UTF-16 LE with Byte Order Mark (BOM)
             int tests = IS_TEXT_UNICODE_SIGNATURE;
             int textLength = static_cast<int>(testlen);
             if (::IsTextUnicode(&buffer.front(), textLength, &tests) != 0)
-                encoding = UTF16LE_BOM;
-            else
-            {
-                // check for UTF-16 LE w/o BOM
-                tests = IS_TEXT_UNICODE_STATISTICS;
-                if (::IsTextUnicode(&buffer.front(), textLength, &tests) != 0)
-                {
-                    encoding = UTF16LE;
-                }
-            }
+                encoding = UTF16LE;
         }
         catch (const CFileException& e)
         {
@@ -237,16 +228,6 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // UseStatusBar(FALSE);          // Don't use a StatusBar.
     // UseThemes(FALSE);             // Don't use themes.
     // UseToolBar(FALSE);            // Don't use a ToolBar.
-
-    // Get the name of the default or currently chosen printer
-    CPrintDialogEx printDialog;
-    if (printDialog.GetDefaults())
-    {
-        CString status = _T("Printer: ") + printDialog.GetDeviceName();
-        SetStatusText(status);
-    }
-    else
-        SetStatusText(_T("No printer found"));
 
     // call the base class function
     return  CFrame::OnCreate(cs);
@@ -854,11 +835,11 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
         // try to determine the file encoding: Note that ANSI and UTF-8 are
         // handled by default, and only UTF-16 LE is accommodated by RichEdit.
         DetermineEncoding(file);
-        if (m_encoding == UTF16LE_BOM || m_encoding == UTF16LE)
+        if (m_encoding == UTF16LE)
             stream_mode |= SF_UNICODE;
 
         // Skip the BOM for UTF16LE encoding
-        if (m_encoding == UTF16LE_BOM)
+        if (m_encoding == UTF16LE)
             file.Seek(2, FILE_BEGIN);
 
         // Skip the BOM for UTF8 encoding
@@ -909,7 +890,6 @@ void CMainFrame::SetEncoding(UINT encoding)
     case ANSI:         SetStatusText(_T("Encoding: ANSI"));            break;
     case UTF8:         SetStatusText(_T("Encoding: UTF-8"));           break;
     case UTF16LE:      SetStatusText(_T("Encoding: UTF-16"));          break;
-    case UTF16LE_BOM:  SetStatusText(_T("Encoding: UTF-16 with BOM")); break;
     }
 }
 
@@ -1087,14 +1067,14 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
         // set the EDITSTREAM mode
         int stream_mode = m_isRTF ? SF_RTF : SF_TEXT;
 
-        if (m_encoding == UTF16LE_BOM || m_encoding == UTF16LE)
+        if (m_encoding == UTF16LE)
             stream_mode |= SF_UNICODE;
 
         if (m_encoding == UTF8)
             stream_mode |= (CP_UTF8 << 16) | SF_USECODEPAGE;
 
-        // Write the BOM for UTF16LE_BOM encoding if it had one before.
-        if (m_encoding == UTF16LE_BOM)
+        // Write the BOM for UTF16LE.
+        if (m_encoding == UTF16LE)
         {
             byte buffer[2] = { 0xff, 0xfe };
             file.Write(buffer, 2);

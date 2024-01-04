@@ -24,7 +24,6 @@ public:
     std::vector<CString> FindPrinters();
     int  GetCollate() const { return m_collate; }
     int  GetCopies() const;
-    BOOL GetDefaults();
     CDevMode GetDevMode();
     CDevNames GetDevNames();
     CString GetDriverName();
