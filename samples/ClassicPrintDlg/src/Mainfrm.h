@@ -14,7 +14,6 @@
 const int ANSI = 0;            // Default for plain text
 const int UTF8 = 1;            // Default for rich text
 const int UTF16LE = 2;
-const int UTF16LE_BOM  = 3;
 
 
 ///////////////////////////////////////////////////////////
@@ -105,7 +104,8 @@ private:
     CString m_cap;
     CString m_num;
     CString m_ovr;
-    UINT m_encoding;
+    CString m_encoding;
+    UINT m_encodeMode;
     bool m_isToolbarShown;
     bool m_isWrapped;
     bool m_isRTF;

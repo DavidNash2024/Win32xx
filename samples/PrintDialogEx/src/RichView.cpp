@@ -437,7 +437,10 @@ LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     try
     {
-        if (msg == UWM_SETTINGCHANGE) return OnSettingChange(msg, wparam, lparam);
+        switch (msg)
+        {
+        case UWM_SETTINGCHANGE:   return OnSettingChange(msg, wparam, lparam);
+        }
 
         return WndProcDefault(msg, wparam, lparam);
     }

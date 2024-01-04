@@ -76,6 +76,7 @@ int CRichView::CollatePages(const CDC& printerDC)
 // Choose the printer and print the document.
 void CRichView::DoPrint(LPCTSTR docName)
 {
+    // Set initial pages selection, along with to and from pages.
     SetDefaultPrintOptions();
 
     INT_PTR result = m_printDialog.DoModal(*this);
@@ -261,11 +262,14 @@ void CRichView::PrintPage(CDC& dc, UINT page)
     PrintFooter(dc, page);
 }
 
-// Print the document without bringing up a print dialog.
+// Print the entire document without bringing up a print dialog.
 // docName - specifies the document name for the print job.
 void CRichView::QuickPrint(LPCTSTR docName)
 {
-    // Acquire the currently selected printer and page settings.
+    // Default to printing entire document, 1 copy.
+    SetDefaultPrintOptions();
+
+    // Acquire the currently selected printer's device context.
     CDC printerDC = m_printDialog.GetPrinterDC();
 
     // Start print job.
