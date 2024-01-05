@@ -9,7 +9,8 @@
 
 
 CClassicPrintDlg::CClassicPrintDlg()
-    : CDialog(IDD_PRINTDLG), m_copies(1), m_fromPage(1), m_radio(0), m_toPage(9999), m_collate(0), m_printToFile(0)
+    : CDialog(IDD_PRINTDLG), m_copies(1), m_fromPage(1), m_radio(0), m_toPage(9999), 
+                             m_collate(0), m_printToFile(0), m_isPropertiesDisplayed(false)
 {
     m_hDevMode = 0;
     m_hDevNames = 0;
@@ -29,7 +30,7 @@ BOOL CClassicPrintDlg::CreateGlobalHandles(LPCTSTR printerName, HGLOBAL* pHDevMo
 
     // Open printer
     HANDLE printer;
-    if (OpenPrinter((LPTSTR)printerName, &printer, NULL) == FALSE)
+    if (OpenPrinter(const_cast<LPTSTR>(printerName), &printer, NULL) == FALSE)
         return FALSE;
 
     // Create PRINTER_INFO_2 structure.
@@ -371,9 +372,25 @@ BOOL CClassicPrintDlg::OnComboSelection()
         m_where = GetPortName();
     }
 
-    ::SendMessage(m_owner, UWM_PROPERTIESCHANGED, 0, 0);
+    ::SendMessage(m_owner, UWM_SETDEFAULTOPTIONS, 0, 0);
     UpdateData(m_dx, SENDTOCONTROL);
     return TRUE;
+}
+
+// Called when the Close button is pressed.
+void CClassicPrintDlg::OnCancel()
+{
+    // Ignore Cancel button if the Properties dialog is displayed.
+    if (!m_isPropertiesDisplayed)
+        CDialog::OnCancel();
+}
+
+// Called when the dialog is closed.
+void CClassicPrintDlg::OnClose()
+{
+    // Ignore close request if the Properties dialog is displayed.
+    if (!m_isPropertiesDisplayed)
+        CDialog::OnClose();
 }
 
 // Called when a button on the dialog is presseed, or
@@ -403,6 +420,22 @@ BOOL CClassicPrintDlg::OnCommand(WPARAM wparam, LPARAM)
 // Called before the modal dialog is displayed.
 BOOL CClassicPrintDlg::OnInitDialog()
 {
+    // Set the dialog's PortName and DriverName text.
+    HGLOBAL hDevMode = 0;
+    HGLOBAL hDevNames = 0;
+    if (CreateGlobalHandles(GetDeviceName(), &hDevMode, &hDevNames))
+    {
+        CDevNames pDevNames(hDevNames);
+
+        m_type = pDevNames.GetDriverName();
+        m_where = pDevNames.GetPortName();
+    }
+    if (hDevMode != 0)
+        ::GlobalFree(hDevMode);
+    if (hDevNames != 0)
+        ::GlobalFree(hDevNames);
+
+    // Update the dialog.
     UpdateData(m_dx, SENDTOCONTROL);
 
     std::vector<CString> names = FindPrinters();
@@ -415,86 +448,81 @@ BOOL CClassicPrintDlg::OnInitDialog()
     int item = m_comboBox.FindString(0, GetDeviceName());
     m_comboBox.SetCurSel(item);
 
-    // Set the dialog's PortName and DriverName text.
-    HGLOBAL hDevMode = 0;
-    HGLOBAL hDevNames = 0;
-    if (CreateGlobalHandles(GetDeviceName(), &hDevMode, &hDevNames))
-    {
-        CDevNames pDevNames(hDevNames);
-
-        SetDlgItemText(IDS_WHERE, pDevNames.GetPortName());
-        SetDlgItemText(IDS_TYPE, pDevNames.GetDriverName());
-        m_type = pDevNames.GetDriverName();
-        m_where = pDevNames.GetPortName();
-    }
-    if (hDevMode != 0)
-        ::GlobalFree(hDevMode);
-    if (hDevNames != 0)
-        ::GlobalFree(hDevNames);
-
     return TRUE;
 }
 
 // Called when the OK button is pressed.
 void CClassicPrintDlg::OnOK()
 {
-    UpdateData(m_dx, READFROMCONTROL);
-    GetApp()->UpdatePrinterMemory(m_hDevMode, m_hDevNames);
-    m_hDevMode = 0;
-    m_hDevNames = 0;
+    // Ignore OK button if the Properties dialog is displayed.
+    if (!m_isPropertiesDisplayed)
+    {
+        UpdateData(m_dx, READFROMCONTROL);
+        GetApp()->UpdatePrinterMemory(m_hDevMode, m_hDevNames);
+        m_hDevMode = 0;
+        m_hDevNames = 0;
 
-    CDialog::OnOK();
+        CDialog::OnOK();
+    }
 }
 
 // Called when the properties button on the print dialog is pressed.
 BOOL CClassicPrintDlg::OnPrintProperties()
 {
     assert(m_owner != 0);
-    // Get the printer name.
-    CString dev = GetDeviceName();
-    LPTSTR deviceName = (LPTSTR)dev.c_str();
 
-    // Retrieve the printer handle with PRINTER_ALL_ACCESS if we can.
-    HANDLE printer;
-    PRINTER_DEFAULTS printerDefaults;
-    ZeroMemory(&printerDefaults, sizeof(printerDefaults));
-    printerDefaults.DesiredAccess = PRINTER_ALL_ACCESS;
-    if (::OpenPrinter(deviceName, &printer, &printerDefaults) == FALSE)
-        if (::OpenPrinter(deviceName, &printer, 0) == FALSE)
-            return false;
-
-    // Allocate the pDevMode buffer as an array of BYTE.
-    size_t devModeSize = ::DocumentProperties(*this, printer, deviceName, 0, GetDevMode(), 0);
-    std::vector<BYTE> buffer(devModeSize);
-    LPDEVMODE pDevMode = reinterpret_cast<DEVMODE*>(&buffer.front());
-
-    // Display the printer property sheet, and retrieve the updated devMode data.
-    if (IDOK == ::DocumentProperties(0, printer, deviceName, pDevMode, 0, DM_IN_PROMPT | DM_OUT_BUFFER))
+    // Ignore Properties button if the Properties dialog is already displayed.
+    if (!m_isPropertiesDisplayed)
     {
-        SetPrinterFromDevMode(deviceName, pDevMode);
-        HGLOBAL newDevMode = 0;
-        HGLOBAL newDevNames = 0;
-        if (CreateGlobalHandles(deviceName, &newDevMode, &newDevNames))
+        m_isPropertiesDisplayed = true;
+        // Get the printer name.
+        CString dev = GetDeviceName();
+        LPTSTR deviceName = const_cast<LPTSTR>(dev.c_str());
+
+        // Retrieve the printer handle with PRINTER_ALL_ACCESS if we can.
+        HANDLE printer;
+        PRINTER_DEFAULTS printerDefaults;
+        ZeroMemory(&printerDefaults, sizeof(printerDefaults));
+        printerDefaults.DesiredAccess = PRINTER_ALL_ACCESS;
+        if (::OpenPrinter(deviceName, &printer, &printerDefaults) == FALSE)
+            if (::OpenPrinter(deviceName, &printer, 0) == FALSE)
+                return false;
+
+        // Allocate the pDevMode buffer as an array of BYTE.
+        size_t devModeSize = ::DocumentProperties(*this, printer, deviceName, 0, GetDevMode(), 0);
+        std::vector<BYTE> buffer(devModeSize);
+        LPDEVMODE pDevMode = reinterpret_cast<DEVMODE*>(&buffer.front());
+
+        // Display the printer property sheet, and retrieve the updated devMode data.
+        if (IDOK == ::DocumentProperties(0, printer, deviceName, pDevMode, 0, DM_IN_PROMPT | DM_OUT_BUFFER))
         {
-            // copy the updated devMode data to our global memory.
-            CDevMode pNewDevMode(newDevMode);
-            memcpy(pNewDevMode, pDevMode, devModeSize);
+            SetPrinterFromDevMode(deviceName, pDevMode);
+            HGLOBAL newDevMode = 0;
+            HGLOBAL newDevNames = 0;
+            if (CreateGlobalHandles(deviceName, &newDevMode, &newDevNames))
+            {
+                // copy the updated devMode data to our global memory.
+                CDevMode pNewDevMode(newDevMode);
+                memcpy(pNewDevMode, pDevMode, devModeSize);
 
-            // Save the new global memory handles.
-            // CWinApp is assigned ownership of of the global memory.
-            GetApp()->ResetPrinterMemory();
-            m_hDevMode = newDevMode;
-            m_hDevNames = newDevNames;
-            GetApp()->UpdatePrinterMemory(newDevMode, newDevNames);
+                // Save the new global memory handles.
+                // CWinApp is assigned ownership of of the global memory.
+                GetApp()->ResetPrinterMemory();
+                m_hDevMode = newDevMode;
+                m_hDevNames = newDevNames;
+                GetApp()->UpdatePrinterMemory(newDevMode, newDevNames);
+            }
+            else
+                return FALSE;
         }
-        else
-            return FALSE;
+
+        VERIFY(::ClosePrinter(printer));
+
+        ::SendMessage(m_owner, UWM_SETDEFAULTOPTIONS, 0, 0);
+        UpdateData(m_dx, SENDTOCONTROL);
+
+        m_isPropertiesDisplayed = false;
     }
-
-    VERIFY(::ClosePrinter(printer));
-
-    ::SendMessage(m_owner, UWM_PROPERTIESCHANGED, 0, 0);
-    UpdateData(m_dx, SENDTOCONTROL);
     return TRUE;
 }
 
@@ -517,8 +545,8 @@ BOOL CClassicPrintDlg::SetPrinterFromDevMode(LPCTSTR deviceName, LPDEVMODE pDevM
     PRINTER_DEFAULTS printerDefaults;
     ZeroMemory(&printerDefaults, sizeof(printerDefaults));
     printerDefaults.DesiredAccess = PRINTER_ALL_ACCESS;
-    if (::OpenPrinter((LPTSTR)deviceName, &printer, &printerDefaults) == FALSE)
-        if (::OpenPrinter((LPTSTR)deviceName, &printer, 0) == FALSE)
+    if (::OpenPrinter(const_cast<LPTSTR>(deviceName), &printer, &printerDefaults) == FALSE)
+        if (::OpenPrinter(const_cast<LPTSTR>(deviceName), &printer, 0) == FALSE)
             throw CWinException(_T("Failed to get printer handle."));;
 
     // Determine the size of the printerInfo buffer.
@@ -528,16 +556,15 @@ BOOL CClassicPrintDlg::SetPrinterFromDevMode(LPCTSTR deviceName, LPDEVMODE pDevM
     if ((GetLastError() != ERROR_INSUFFICIENT_BUFFER) || (bufferSize == 0))
         throw CWinException(_T("Failed to get printer info buffer size."));
 
-    // Allocate the printerInfo global memory buffer.
-    CHGlobal hDevMode(bufferSize);
-    CDevMode devMode(hDevMode);
-    PRINTER_INFO_2* printerInfo = reinterpret_cast<PRINTER_INFO_2*>(devMode.Get());
+    // Allocate a buffer for the PRINTER_INFO_2.
+    std::vector<BYTE> infoBuffer(bufferSize);
+    PRINTER_INFO_2* printerInfo2 = reinterpret_cast<PRINTER_INFO_2*>(&infoBuffer.front());
 
     // Update the printer.
-    if (::GetPrinter(printer, 2, reinterpret_cast<LPBYTE>(printerInfo), bufferSize, &bufferSize))
+    if (::GetPrinter(printer, 2, &infoBuffer.front(), bufferSize, &bufferSize))
     {
-        printerInfo->pDevMode = pDevMode;
-        ::SetPrinter(printer, 2, reinterpret_cast<LPBYTE>(printerInfo), 0);
+        printerInfo2->pDevMode = pDevMode;
+        ::SetPrinter(printer, 2, &infoBuffer.front(), 0);
         return TRUE;
     }
 

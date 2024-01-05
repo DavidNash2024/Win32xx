@@ -15,6 +15,8 @@ public:
 
     virtual INT_PTR DoModal(HWND owner = 0);
     virtual void DoDataExchange(CDataExchange& DX);
+    virtual void OnCancel();
+    virtual void OnClose();
     virtual BOOL OnCommand(WPARAM wparam, LPARAM);
     virtual BOOL OnInitDialog();
     virtual void OnOK();
@@ -72,6 +74,8 @@ private:
     CString m_type;
     CString m_where;
     CString m_comment;
+
+    bool m_isPropertiesDisplayed;
 };
 
 
