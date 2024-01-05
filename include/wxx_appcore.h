@@ -77,9 +77,12 @@ namespace Win32xx
     template <class T>
     CGlobalLock<T>& CGlobalLock<T>::operator=(HANDLE h)
     {
-        Unlock();
-        m_h = h;
-        Lock();
+        if (h != m_h)
+        {
+            Unlock();
+            m_h = h;
+            Lock();
+        }
         return *this;
     }
 

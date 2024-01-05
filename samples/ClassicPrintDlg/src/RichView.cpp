@@ -407,7 +407,7 @@ LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     switch (msg)
     {
-    case UWM_PROPERTIESCHANGED:
+    case UWM_SETDEFAULTOPTIONS:
     {
         SetDefaultPrintOptions();
     }
