@@ -321,7 +321,7 @@ std::vector<UINT> CRichView::SetPagesToPrint(const CDC& printerDC)
     std::vector<UINT> pages;   // Vector of pages to print.
 
     BOOL isPages = m_printDialog.IsPrintRange();     // Pages radio button selected.
-    BOOL isCollated = m_printDialog.IsPrintCollate();   // Collated button selected.
+    BOOL isCollated = m_printDialog.IsCollate();     // Collated button selected.
     int copies = m_printDialog.GetCopies();
     UINT maxPage = CollatePages(printerDC);
     UINT minPage = 1;

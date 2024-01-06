@@ -14,6 +14,35 @@ public:
     virtual ~CClassicPrintDlg();
 
     virtual INT_PTR DoModal(HWND owner = 0);
+
+    INT_PTR DoSetupModal(HWND owner = 0);
+    int  GetCopies() const;
+    CDevMode GetDevMode() const;
+    CDevNames GetDevNames() const;
+    CString GetDriverName() const;
+    CString GetDeviceName() const;
+    CString GetPortName() const;
+    CDC  GetPrinterDC() const;
+    DWORD GetPrinterStatus(LPCTSTR szPrnName) const;
+    int GetFromPage() const;
+    int GetRadio() const;
+    int GetPrintToFile() const;
+    int GetToPage() const;  
+    bool IsCollate() const;
+    bool IsPrintAll() const;
+    bool IsPrintRange() const;
+    bool IsPrintSelection() const;
+    bool IsPrintToFile() const;
+    void SetCollate(bool isCollate);
+    void SetCopies(int copies);
+    void SetFromPage(int fromPage);
+    void SetPrintToFile(bool isPrintToFile);
+    void SetRadio(int radio);
+    void SetToPage(int toPage);
+
+    void UpdateStatusText();
+
+protected:
     virtual void DoDataExchange(CDataExchange& DX);
     virtual void OnCancel();
     virtual void OnClose();
@@ -21,37 +50,16 @@ public:
     virtual BOOL OnInitDialog();
     virtual void OnOK();
 
-    INT_PTR DoSetupModal(HWND owner = 0);
-    BOOL CreateGlobalHandles(LPCTSTR printerName, HGLOBAL* pHDevMode, HGLOBAL* pHDevNames);
-    std::vector<CString> FindPrinters();
-    int  GetCollate() const { return m_collate; }
-    int  GetCopies() const;
-    CDevMode GetDevMode();
-    CDevNames GetDevNames();
-    CString GetDriverName();
-    CString GetDeviceName();
-    CString GetPortName();
-    CDC  GetPrinterDC();
-    int GetFromPage() const;
-    int GetRadio() const { return m_radio; }
-    int GetToPage() const;
-    bool IsPrintAll() const;
-    bool IsPrintCollate();
-    bool IsPrintRange() const;
-    bool IsPrintSelection() const;
-    BOOL OnPrintProperties();
-    BOOL OnComboSelection();
-    BOOL OnRadioSelection(UINT id);
-    void SetCollate(int collate) { m_collate = collate; }
-    void SetCopies(int copies) { m_copies = copies; }
-    void SetFromPage(int fromPage) { m_fromPage = fromPage; }
-    void SetRadio(int radio) { m_radio = radio; }
-    void SetToPage(int toPage) { m_toPage = toPage; }
-    BOOL SetPrinterFromDevMode(LPCTSTR deviceName, LPDEVMODE pDevMode);
-
 private:
     CClassicPrintDlg(const CClassicPrintDlg&);
     CClassicPrintDlg& operator=(const CClassicPrintDlg&);
+
+    bool CreateGlobalHandles(LPCTSTR printerName, HGLOBAL* pHDevMode, HGLOBAL* pHDevNames);
+    std::vector<CString> FindPrinters() const;
+    BOOL OnPrintProperties();
+    BOOL OnComboSelection();
+    BOOL OnRadioSelection(UINT id);
+    bool SetPrinterFromDevMode(LPCTSTR deviceName, LPDEVMODE pDevMode);
 
     CDataExchange m_dx;    // DataExchange object, called by UpdateData
     HGLOBAL m_hDevMode;    // Global memory for printer's DevMode

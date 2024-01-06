@@ -22,79 +22,83 @@ CClassicPrintDlg::~CClassicPrintDlg()
 }
 
 // Creates and assigns the hDevMode and hDevNames global memory for the specified printer.
-BOOL CClassicPrintDlg::CreateGlobalHandles(LPCTSTR printerName, HGLOBAL* pHDevMode, HGLOBAL* pHDevNames)
+bool CClassicPrintDlg::CreateGlobalHandles(LPCTSTR printerName, HGLOBAL* pHDevMode, HGLOBAL* pHDevNames)
 {
     // HGLOBAL pHdevMode and pHDevNames are required.
-    if (pHDevMode == NULL || pHDevNames == NULL)
-        return FALSE;
+    assert(pHDevMode);
+    assert(pHDevNames);
+
+    bool result = false;
 
     // Open printer
     HANDLE printer;
-    if (OpenPrinter(const_cast<LPTSTR>(printerName), &printer, NULL) == FALSE)
-        return FALSE;
-
-    // Create PRINTER_INFO_2 structure.
-    DWORD bytesNeeded = 0;
-    GetPrinter(printer, 2, NULL, 0, &bytesNeeded);
-    std::vector<BYTE> infoBuffer(bytesNeeded);
-    PRINTER_INFO_2* p2 = (PRINTER_INFO_2*)reinterpret_cast<PRINTER_INFO_2*>(&infoBuffer.front());
-
-    // Fill the PRINTER_INFO_2 structure and close the printer handle.
-    if (GetPrinter(printer, 2, &infoBuffer.front(), bytesNeeded, &bytesNeeded) == 0)
+    if (::OpenPrinter(const_cast<LPTSTR>(printerName), &printer, NULL))
     {
+        // Create PRINTER_INFO_2 structure.
+        DWORD bytesNeeded = 0;
+        ::GetPrinter(printer, 2, NULL, 0, &bytesNeeded);
+        std::vector<BYTE> infoBuffer(bytesNeeded);
+        PRINTER_INFO_2* p2 = reinterpret_cast<PRINTER_INFO_2*>(&infoBuffer.front());
+
+        // Fill the PRINTER_INFO_2 structure and close the printer handle.
+        if (::GetPrinter(printer, 2, &infoBuffer.front(), bytesNeeded, &bytesNeeded))
+        {
+            // Allocate a global handle for DEVMODE.
+            size_t bufferSize = sizeof(DEVMODE) + p2->pDevMode->dmDriverExtra;
+            HGLOBAL newDevMode = ::GlobalAlloc(GHND, bufferSize);
+            assert(newDevMode);
+            if (newDevMode != 0)
+            {
+                // copy DEVMODE data from PRINTER_INFO_2::pDevMode.
+                CDevMode pNewDevMode(newDevMode);
+                memcpy(pNewDevMode, p2->pDevMode, sizeof(*p2->pDevMode) +
+                    p2->pDevMode->dmDriverExtra);
+
+                // Compute size of DEVNAMES structure from PRINTER_INFO_2's data.
+                size_t driverLength = lstrlen(p2->pDriverName) + 1;  // driver name
+                size_t printerLength = lstrlen(p2->pPrinterName) + 1; // printer name
+                size_t portLength = lstrlen(p2->pPortName) + 1;    // port name
+
+                // Allocate a global handle big enough to hold DEVNAMES.
+                bufferSize = sizeof(DEVNAMES) + (driverLength + printerLength + portLength) * sizeof(TCHAR);
+                HGLOBAL newDevNames = ::GlobalAlloc(GHND, bufferSize);
+                assert(newDevNames);
+                if (newDevNames != 0)
+                {
+                    CDevNames pNewDevNames(newDevNames);
+
+                    // Copy the DEVNAMES information from PRINTER_INFO_2.
+                    // tcOffset = TCHAR Offset into structure.
+                    size_t tcOffset = sizeof(DEVNAMES) / sizeof(TCHAR);
+
+                    pNewDevNames->wDriverOffset = static_cast<WORD>(tcOffset);
+                    memcpy(pNewDevNames.GetString() + tcOffset, p2->pDriverName,
+                        driverLength * sizeof(TCHAR));
+                    tcOffset = tcOffset + driverLength;
+
+                    pNewDevNames->wDeviceOffset = static_cast<WORD>(tcOffset);
+                    memcpy(pNewDevNames.GetString() + tcOffset, p2->pPrinterName,
+                        printerLength * sizeof(TCHAR));
+                    tcOffset = tcOffset + printerLength;
+
+                    pNewDevNames->wOutputOffset = static_cast<WORD>(tcOffset);
+                    memcpy(pNewDevNames.GetString() + tcOffset, p2->pPortName,
+                        portLength * sizeof(TCHAR));
+                    pNewDevNames->wDefault = 0;
+
+                    // Set the new hDevMode and hDevNames.
+                    *pHDevMode = newDevMode;
+                    *pHDevNames = newDevNames;
+
+                    result = true;
+                }
+            }
+        }
+
         ::ClosePrinter(printer);
-        return FALSE;
-    }
-    ::ClosePrinter(printer);
+    }   
 
-    // Allocate a global handle for DEVMODE.
-    size_t bufferSize = sizeof(DEVMODE) + p2->pDevMode->dmDriverExtra;
-    HGLOBAL newDevMode = GlobalAlloc(GHND, bufferSize);
-    assert(newDevMode);
-    if (newDevMode != 0)
-    {
-        // copy DEVMODE data from PRINTER_INFO_2::pDevMode.
-        CDevMode pNewDevMode(newDevMode);
-        memcpy(pNewDevMode, p2->pDevMode, sizeof(*p2->pDevMode) +
-            p2->pDevMode->dmDriverExtra);
-
-        // Compute size of DEVNAMES structure from PRINTER_INFO_2's data.
-        size_t driverLength = lstrlen(p2->pDriverName) + 1;  // driver name
-        size_t printerLength = lstrlen(p2->pPrinterName) + 1; // printer name
-        size_t portLength = lstrlen(p2->pPortName) + 1;    // port name
-
-        // Allocate a global handle big enough to hold DEVNAMES.
-        bufferSize = sizeof(DEVNAMES) + (driverLength + printerLength + portLength) * sizeof(TCHAR);
-        HGLOBAL newDevNames = GlobalAlloc(GHND, bufferSize);
-        assert(newDevNames);
-        CDevNames pNewDevNames(newDevNames);
-
-        // Copy the DEVNAMES information from PRINTER_INFO_2.
-        // tcOffset = TCHAR Offset into structure.
-        size_t tcOffset = sizeof(DEVNAMES) / sizeof(TCHAR);
-
-        pNewDevNames->wDriverOffset = static_cast<WORD>(tcOffset);
-        memcpy(pNewDevNames.GetString() + tcOffset, p2->pDriverName,
-            driverLength * sizeof(TCHAR));
-        tcOffset = tcOffset + driverLength;
-
-        pNewDevNames->wDeviceOffset = static_cast<WORD>(tcOffset);
-        memcpy(pNewDevNames.GetString() + tcOffset, p2->pPrinterName,
-            printerLength * sizeof(TCHAR));
-        tcOffset = tcOffset + printerLength;
-
-        pNewDevNames->wOutputOffset = static_cast<WORD>(tcOffset);
-        memcpy(pNewDevNames.GetString() + tcOffset, p2->pPortName,
-            portLength * sizeof(TCHAR));
-        pNewDevNames->wDefault = 0;
-
-        // Set the new hDevMode and hDevNames.
-        *pHDevMode = newDevMode;
-        *pHDevNames = newDevNames;
-        return TRUE;
-    }
-
-    return FALSE;
+    return result;
 }
 
 // Used by UpdateData to exchange data with the dialog.
@@ -199,36 +203,36 @@ INT_PTR CClassicPrintDlg::DoSetupModal(HWND owner)
 }
 
 // Returns a vector of CString printer names.
-std::vector<CString> CClassicPrintDlg::FindPrinters()
+std::vector<CString> CClassicPrintDlg::FindPrinters() const
 {
     std::vector<CString> printerNames;
 
-    DWORD dwSize = 0;
-    DWORD dwPrinters = 0;
+    DWORD bufferSize = 0;
+    DWORD printerCount = 0;
     DWORD level = 2;        // for PRINTER_INFO_2
     ::SetLastError(0);
 
     // Identify size of PRINTER_INFO_2 buffer required.
     ::EnumPrinters(PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
-        NULL, level, NULL, 0, &dwSize, &dwPrinters);
+        NULL, level, NULL, 0, &bufferSize, &printerCount);
 
     // Check for ERROR_INSUFFICIENT_BUFFER
     if (::GetLastError() == ERROR_INSUFFICIENT_BUFFER)
     {
         // Allocate the size of our vector.
-        std::vector<BYTE> buffer(dwSize);
+        std::vector<BYTE> buffer(bufferSize);
 
         // Fill the buffer. The buffer is actually an array of PRINTER_INFO_2.
         VERIFY(::EnumPrinters(PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS,
-            NULL, level, &buffer.front(), dwSize, &dwSize, &dwPrinters));
+            NULL, level, &buffer.front(), bufferSize, &bufferSize, &printerCount));
 
         // Do we have any printers?
-        if (dwPrinters != 0)
+        if (printerCount != 0)
         {
             // Get our array of PRINTER_INFO_2
             PRINTER_INFO_2* pInfo = reinterpret_cast<PRINTER_INFO_2*>(&buffer.front());
 
-            for (DWORD i = 0; i < dwPrinters; i++, pInfo++)
+            for (DWORD i = 0; i < printerCount; i++, pInfo++)
             {
                 // Store the printer name in our vector of CString.
                 printerNames.push_back(pInfo->pPrinterName);
@@ -245,7 +249,7 @@ int CClassicPrintDlg::GetCopies() const
     return m_copies;
 }
 
-CDevMode CClassicPrintDlg::GetDevMode()
+CDevMode CClassicPrintDlg::GetDevMode() const
 {
     if (GetApp()->GetHDevMode().Get() == 0)
         GetApp()->UpdateDefaultPrinter();
@@ -254,7 +258,7 @@ CDevMode CClassicPrintDlg::GetDevMode()
     return CDevMode(GetApp()->GetHDevMode());
 }
 
-CDevNames CClassicPrintDlg::GetDevNames()
+CDevNames CClassicPrintDlg::GetDevNames() const
 {
     if (GetApp()->GetHDevNames().Get() == 0)
         GetApp()->UpdateDefaultPrinter();
@@ -263,7 +267,7 @@ CDevNames CClassicPrintDlg::GetDevNames()
     return CDevNames(GetApp()->GetHDevNames());
 }
 
-CString CClassicPrintDlg::GetDriverName()
+CString CClassicPrintDlg::GetDriverName() const
 {
     if (GetApp()->GetHDevNames().Get() == 0)
         GetApp()->UpdateDefaultPrinter();
@@ -273,7 +277,7 @@ CString CClassicPrintDlg::GetDriverName()
     return str;
 }
 
-CString CClassicPrintDlg::GetDeviceName()
+CString CClassicPrintDlg::GetDeviceName() const
 {
     if (GetApp()->GetHDevNames().Get() == 0)
         GetApp()->UpdateDefaultPrinter();
@@ -283,7 +287,7 @@ CString CClassicPrintDlg::GetDeviceName()
     return str;
 }
 
-CString CClassicPrintDlg::GetPortName()
+CString CClassicPrintDlg::GetPortName() const
 {
     if (GetApp()->GetHDevNames().Get() == 0)
         GetApp()->UpdateDefaultPrinter();
@@ -295,7 +299,7 @@ CString CClassicPrintDlg::GetPortName()
 
 // Returns the device context of the default or currently chosen printer.
 // Throws on failure.
-CDC CClassicPrintDlg::GetPrinterDC()
+CDC CClassicPrintDlg::GetPrinterDC() const
 {
     CDC dc;
     if (GetApp()->GetHDevNames().Get() == 0)
@@ -311,6 +315,11 @@ CDC CClassicPrintDlg::GetPrinterDC()
     return dc;
 }
 
+int CClassicPrintDlg::GetPrintToFile() const
+{
+    return m_printToFile;
+}
+
 // Retrieves the starting page of the print range.
 int CClassicPrintDlg::GetFromPage() const
 {
@@ -323,6 +332,36 @@ int CClassicPrintDlg::GetToPage() const
     return (IsPrintRange() ? m_toPage : -1);
 }
 
+// Retrieves the status from the printer's PRINTER_INFO_2.
+DWORD CClassicPrintDlg::GetPrinterStatus(LPCTSTR printerName) const
+{
+    DWORD status = 0;
+    HANDLE printer = 0;
+
+    if (::OpenPrinter(const_cast<LPTSTR>(printerName), &printer, 0))
+    {
+        // Create PRINTER_INFO_2 structure.
+        DWORD bytesNeeded = 0;
+        ::GetPrinter(printer, 2, NULL, 0, &bytesNeeded);
+        std::vector<BYTE> infoBuffer(bytesNeeded);
+
+        // Fill the PRINTER_INFO_2 structure.
+        if (::GetPrinter(printer, 2, &infoBuffer.front(), bytesNeeded, &bytesNeeded))
+        {
+            PRINTER_INFO_2* printerInfo2 = reinterpret_cast<PRINTER_INFO_2*>(&infoBuffer.front());
+            status = printerInfo2->Status;
+        }
+        ::ClosePrinter(printer);
+    }
+
+    return status;
+}
+
+int CClassicPrintDlg::GetRadio() const
+{
+    return m_radio;
+}
+
 // Call this function after calling DoModal to determine whether to print
 // all pages in the document.
 bool CClassicPrintDlg::IsPrintAll() const
@@ -332,7 +371,7 @@ bool CClassicPrintDlg::IsPrintAll() const
 
 // Call this function after calling DoModal to determine whether the printer
 // should collate all printed copies of the document.
-bool CClassicPrintDlg::IsPrintCollate()
+bool CClassicPrintDlg::IsCollate() const
 {
     return !!m_collate;
 }
@@ -350,6 +389,42 @@ bool CClassicPrintDlg::IsPrintSelection() const
 {
     return (m_radio == IDB_RADIOSELECTION - IDB_RADIOALL);
 }
+
+bool CClassicPrintDlg::IsPrintToFile() const
+{
+    return m_printToFile != 0;
+}
+
+void CClassicPrintDlg::SetCollate(bool isCollate)
+{
+    m_collate = isCollate ? 1 : 0;
+}
+
+void CClassicPrintDlg::SetCopies(int copies)
+{ 
+    m_copies = copies;
+}
+
+void CClassicPrintDlg::SetFromPage(int fromPage)
+{ 
+    m_fromPage = fromPage;
+}
+
+void CClassicPrintDlg::SetPrintToFile(bool isPrintToFile)
+{
+    m_printToFile = isPrintToFile ? 1 : 0;
+}
+
+void CClassicPrintDlg::SetRadio(int radio) 
+{
+    m_radio = radio; 
+}
+
+void CClassicPrintDlg::SetToPage(int toPage)
+{
+    m_toPage = toPage;
+}
+
 
 BOOL CClassicPrintDlg::OnComboSelection()
 {
@@ -370,6 +445,7 @@ BOOL CClassicPrintDlg::OnComboSelection()
 
         m_type = GetDriverName();
         m_where = GetPortName();
+        UpdateStatusText();
     }
 
     ::SendMessage(m_owner, UWM_SETDEFAULTOPTIONS, 0, 0);
@@ -434,6 +510,8 @@ BOOL CClassicPrintDlg::OnInitDialog()
         ::GlobalFree(hDevMode);
     if (hDevNames != 0)
         ::GlobalFree(hDevNames);
+
+    UpdateStatusText();
 
     // Update the dialog.
     UpdateData(m_dx, SENDTOCONTROL);
@@ -535,7 +613,7 @@ BOOL CClassicPrintDlg::OnRadioSelection(UINT id)
 }
 
 // Sets the DEVMODE parameters of the specified printer.
-BOOL CClassicPrintDlg::SetPrinterFromDevMode(LPCTSTR deviceName, LPDEVMODE pDevMode)
+bool CClassicPrintDlg::SetPrinterFromDevMode(LPCTSTR deviceName, LPDEVMODE pDevMode)
 {
     assert(deviceName);
     assert(pDevMode);
@@ -565,8 +643,25 @@ BOOL CClassicPrintDlg::SetPrinterFromDevMode(LPCTSTR deviceName, LPDEVMODE pDevM
     {
         printerInfo2->pDevMode = pDevMode;
         ::SetPrinter(printer, 2, &infoBuffer.front(), 0);
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
+}
+
+// Retrieves the printer status and stores a text result.
+void CClassicPrintDlg::UpdateStatusText()
+{
+    // Refer to the description of PRINTER_INFO_2 in the 
+    // windows API documentation for possible status values. 
+    DWORD status = GetPrinterStatus(GetDeviceName());
+    CString statusText;
+    if (status == 0)                      statusText = _T("Ready");
+    if (status & PRINTER_STATUS_PAUSED)   statusText = _T("Paused");
+    if (status & PRINTER_STATUS_ERROR)    statusText = _T("Error");
+    if (status & PRINTER_STATUS_OFFLINE)  statusText = _T("Offline");
+    if (status & PRINTER_STATUS_BUSY)     statusText = _T("Busy");
+    if (status & PRINTER_STATUS_PRINTING) statusText = _T("Printing");
+    if (status & PRINTER_STATUS_NOT_AVAILABLE) statusText = _T("Not available");
+    m_status = statusText;
 }
