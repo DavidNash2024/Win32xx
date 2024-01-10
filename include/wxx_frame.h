@@ -3236,9 +3236,9 @@ namespace Win32xx
         // Inform the Rebar of the change to the Toolbar.
         if (GetReBar().IsWindow())
         {
-            SIZE MaxSize = toolBar.GetMaxSize();
+            SIZE maxSize = toolBar.GetMaxSize();
             WPARAM wparam = reinterpret_cast<WPARAM>(toolBar.GetHwnd());
-            LPARAM lparam = reinterpret_cast<LPARAM>(&MaxSize);
+            LPARAM lparam = reinterpret_cast<LPARAM>(&maxSize);
             GetReBar().SendMessage(UWM_TBRESIZE, wparam, lparam);
         }
     }

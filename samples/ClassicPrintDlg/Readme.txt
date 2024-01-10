@@ -42,7 +42,7 @@ Notes:
 * UTF-8 uses one or more bytes to encode a character.
 * ASCII encoding uses 7 bits, whereas ANSI encoding uses 8 bits.
 * Microsoft typically uses the term "Unicode" to refer to UTF-16 Little Ended.
-* UTF-16 Little Ended files can be loaded with or without a BOM.
+* UTF-16 Little Ended files can be loaded with a BOM.
 * Files with a rtf extension are treated as rich text in this application.
 * Files without a rtf extension are treated as plain text.
 * Plain text files can only have a single font.

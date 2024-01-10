@@ -68,21 +68,21 @@ bool CClassicPrintDlg::CreateGlobalHandles(LPCTSTR printerName, HGLOBAL* pHDevMo
                     CDevNames pNewDevNames(newDevNames);
 
                     // Copy the DEVNAMES information from PRINTER_INFO_2.
-                    // tcOffset = TCHAR Offset into structure.
-                    size_t tcOffset = sizeof(DEVNAMES) / sizeof(TCHAR);
+                    // offset = TCHAR Offset into structure.
+                    size_t offset = sizeof(DEVNAMES) / sizeof(TCHAR);
 
-                    pNewDevNames->wDriverOffset = static_cast<WORD>(tcOffset);
-                    memcpy(pNewDevNames.GetString() + tcOffset, p2->pDriverName,
+                    pNewDevNames->wDriverOffset = static_cast<WORD>(offset);
+                    memcpy(pNewDevNames.GetString() + offset, p2->pDriverName,
                         driverLength * sizeof(TCHAR));
-                    tcOffset = tcOffset + driverLength;
+                    offset = offset + driverLength;
 
-                    pNewDevNames->wDeviceOffset = static_cast<WORD>(tcOffset);
-                    memcpy(pNewDevNames.GetString() + tcOffset, p2->pPrinterName,
+                    pNewDevNames->wDeviceOffset = static_cast<WORD>(offset);
+                    memcpy(pNewDevNames.GetString() + offset, p2->pPrinterName,
                         printerLength * sizeof(TCHAR));
-                    tcOffset = tcOffset + printerLength;
+                    offset = offset + printerLength;
 
-                    pNewDevNames->wOutputOffset = static_cast<WORD>(tcOffset);
-                    memcpy(pNewDevNames.GetString() + tcOffset, p2->pPortName,
+                    pNewDevNames->wOutputOffset = static_cast<WORD>(offset);
+                    memcpy(pNewDevNames.GetString() + offset, p2->pPortName,
                         portLength * sizeof(TCHAR));
                     pNewDevNames->wDefault = 0;
 

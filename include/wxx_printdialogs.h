@@ -124,6 +124,7 @@ namespace Win32xx
         BOOL    PrintCollate() const;
         BOOL    PrintRange() const;
         BOOL    PrintSelection() const;
+        void    SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames);
         void    SetParameters(const PRINTDLG& pd);
 
     protected:
@@ -474,6 +475,13 @@ namespace Win32xx
     inline BOOL CPrintDialog::PrintSelection() const
     {
         return m_pd.Flags & PD_SELECTION ? TRUE : FALSE;
+    }
+
+    // Assigns the application's default printer settings to the values
+    // specified by hDevMode and hDevNames.
+    inline void CPrintDialog::SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames)
+    {
+        GetApp()->UpdatePrinterMemory(hDevMode, hDevNames);
     }
 
     // Set the parameters of the PRINTDLG structure to sensible values
