@@ -39,7 +39,6 @@ public:
     void SetPrintToFile(bool isPrintToFile);
     void SetRadio(int radio);
     void SetToPage(int toPage);
-
     void UpdateStatusText();
 
 protected:

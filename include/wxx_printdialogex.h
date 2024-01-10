@@ -126,6 +126,7 @@ namespace Win32xx
         BOOL PrintRange() const;
         BOOL PrintSelection() const;
         BOOL PrintToFile() const;
+        void SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames);
         void SetParameters(const PRINTDLGEX& pdx);
 
     protected:
@@ -498,6 +499,13 @@ namespace Win32xx
         }
 
         return E_NOINTERFACE;
+    }
+
+    // Assigns the application's default printer settings to the values
+    // specified by hDevMode and hDevNames.
+    inline void CPrintDialogEx::SetDefaults(HGLOBAL hDevMode, HGLOBAL hDevNames)
+    {
+        GetApp()->UpdatePrinterMemory(hDevMode, hDevNames);
     }
 
     // Set the parameters of the PRINTDLGEX structure to sensible values

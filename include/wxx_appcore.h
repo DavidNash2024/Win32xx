@@ -129,7 +129,6 @@ namespace Win32xx
         return reinterpret_cast<LPTSTR>(m_p);
     }
 
-
     template<>
     inline CString CGlobalLock<DEVNAMES>::GetDeviceName() const
     {
@@ -455,7 +454,7 @@ namespace Win32xx
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
     }
 
-    // Resets the global memory handles for the printer.
+    // Frees the global memory handles for the printer.
     inline void CWinApp::ResetPrinterMemory()
     {
         m_devMode.Free();
@@ -622,6 +621,8 @@ namespace Win32xx
         }
     }
 
+    // Updates the current printer global memory. It is assumed the old
+    // global memory has already been freed.
     inline void CWinApp::UpdatePrinterMemory(HGLOBAL hDevMode, HGLOBAL hDevNames)
     {
         m_devMode.Reassign(hDevMode);
