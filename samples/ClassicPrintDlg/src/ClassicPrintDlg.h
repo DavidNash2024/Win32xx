@@ -27,7 +27,7 @@ public:
     int GetFromPage() const;
     int GetRadio() const;
     int GetPrintToFile() const;
-    int GetToPage() const;  
+    int GetToPage() const;
     bool IsCollate() const;
     bool IsPrintAll() const;
     bool IsPrintRange() const;

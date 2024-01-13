@@ -99,7 +99,7 @@ BOOL CViewDialog::OnInitDialog()
     m_picture.SetWindowPlacement(wp);
 
     // Position the dialog elements.
-    m_Resizer.Initialize(*this, CRect(0, 0, DpiScaleInt(300), DpiScaleInt(300)));
+    m_Resizer.Initialize(*this, CRect(0, 0, DpiScaleInt(240), DpiScaleInt(240)));
     m_Resizer.AddChild(m_static1, CResizer::topleft, 0);
     m_Resizer.AddChild(m_static2, CResizer::topleft, 0);
     m_Resizer.AddChild(m_static3, CResizer::topleft, 0);

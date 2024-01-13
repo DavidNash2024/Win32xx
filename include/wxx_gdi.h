@@ -1299,7 +1299,7 @@ namespace Win32xx
                     (bits[index + 1] != GetGValue(mask)) &&
                     (bits[index + 2] != GetBValue(mask)))
                 {
-                    BYTE byGray = BYTE(95 + (bits[index + 2] * 3 + bits[index + 1] * 6 + bits[index + 0]) / 20);
+                    BYTE byGray = BYTE(110 + (bits[index + 2] * 3 + bits[index + 1] * 6 + bits[index + 0]) / 20);
                     bits[index] = byGray;
                     bits[index + 1] = byGray;
                     bits[index + 2] = byGray;
