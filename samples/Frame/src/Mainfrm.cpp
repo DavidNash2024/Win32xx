@@ -133,7 +133,7 @@ BOOL CMainFrame::OnFilePreview()
     {
         m_isToolbarShown = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
 
-        // Get the device contect of the default or currently chosen printer
+        // Get the device context of the default or currently chosen printer
         CPrintDialog printDlg;
         CDC printerDC = printDlg.GetPrinterDC();
 
@@ -281,7 +281,7 @@ LRESULT CMainFrame::OnPreviewSetup()
 // parameters used before the frame window is created.
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
-    // Call base clase to set defaults
+    // Call base class to set defaults
     CFrame::PreCreate(cs);
 
     // The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
@@ -289,12 +289,12 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     // cs.style &= ~WS_VISIBLE;         // Remove the WS_VISIBLE style. The frame will be initially hidden.
 }
 
-// Specifies the images for some of the menu items.
+// Specifies the images for menu item IDs matching the toolbar data.
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR_DIS);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDB_MENUICONS);
 }
@@ -316,6 +316,10 @@ void CMainFrame::SetupToolBar()
 
     AddToolBarButton( 0 );                      // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
+
+    // The following is optional.
+    // Use separate imagelists for normal, hot and disabled buttons.
+    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 }
 
 // Process the frame's window messages.

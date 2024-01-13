@@ -888,6 +888,14 @@ namespace Win32xx
                         if (isDisabled)
                         {
                             toolBarImages = pTB->GetDisabledImageList();
+                            if (toolBarImages.GetHandle() == 0)
+                            {
+                                CImageList toolBarDisabledImages;
+                                toolBarDisabledImages.CreateDisabledImageList(pTB->GetImageList());
+                                pTB->SetDisableImageList(toolBarDisabledImages);
+                                m_toolBarDisabledImageLists.push_back(toolBarDisabledImages);
+                                toolBarImages = pTB->GetDisabledImageList();
+                            }
                         }
                         else if (isHot)
                         {
@@ -3213,8 +3221,7 @@ namespace Win32xx
         RecalcLayout();
     }
 
-    // Sets the Image List for toolbars.
-    // A Disabled image list is created from ToolBarID if one doesn't already exist.
+    // Sets the Image List for additional toolbars.
     template <class T>
     inline void CFrameT<T>::SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
     {
@@ -3243,7 +3250,7 @@ namespace Win32xx
         }
     }
 
-    // Sets the Disabled Image List for toolbars.
+    // Sets the Disabled Image List for additional toolbars.
     template <class T>
     inline void CFrameT<T>::SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
     {
@@ -3319,29 +3326,25 @@ namespace Win32xx
             return;
         }
 
-        CImageList toolBarImages;
-        CImageList toolBarDisabledImages;
-        CImageList toolBarHotImages;
-        m_toolBarImageLists.push_back(toolBarImages);
-        m_toolBarDisabledImageLists.push_back(toolBarDisabledImages);
-        m_toolBarHotImageLists.push_back(toolBarHotImages);
-
         // Set the normal imagelist.
+        CImageList toolBarImages;
         SetTBImageList(toolbar, toolBarImages, toolBarID, mask);
+        m_toolBarImageLists.push_back(toolBarImages);
 
         // Set the hot imagelist.
         if (toolBarHotID != 0)
+        {
+            CImageList toolBarHotImages;
             SetTBImageListHot(toolbar, toolBarHotImages, toolBarHotID, mask);
-        else
-            SetTBImageListHot(toolbar, toolBarHotImages, toolBarID, mask);
+            m_toolBarHotImageLists.push_back(toolBarHotImages);
+        }
 
         // Set the disabled imagelist.
         if (toolBarDisabledID != 0)
-            SetTBImageListDis(toolbar, toolBarDisabledImages, toolBarDisabledID, mask);
-        else
         {
-            toolBarDisabledImages.CreateDisabledImageList(toolBarImages);
-            toolbar.SetDisableImageList(toolBarDisabledImages);
+            CImageList toolBarDisabledImages;
+            SetTBImageListDis(toolbar, toolBarDisabledImages, toolBarDisabledID, mask);
+            m_toolBarDisabledImageLists.push_back(toolBarDisabledImages);
         }
     }
 

@@ -102,9 +102,9 @@ IDW_MAIN                ICON                    "../src/res/Notepad.ico"
 //
 
 IDW_MAIN                BITMAP                  "../src/res/toolbar24.bmp"
-
 IDW_MENUICONS           BITMAP                  "../src/res/toolbar16.bmp"
-
+IDB_TOOLBAR_HOT         BITMAP                  "../src/res/toolbar24_h.bmp"
+IDB_TOOLBAR_DIS         BITMAP                  "../src/res/toolbar24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

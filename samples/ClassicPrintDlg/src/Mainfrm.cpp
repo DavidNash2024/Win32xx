@@ -469,7 +469,7 @@ BOOL CMainFrame::OnFilePrint()
     try
     {
         m_richView.DoPrint(m_pathName);
-        
+
         // Change the status text to the name of the current printer.
         CClassicPrintDlg printDlg;
         CString deviceName = printDlg.GetDeviceName();
@@ -1000,12 +1000,12 @@ void CMainFrame::SetStatusParts()
 }
 
 
-// Adds images to the popup menu items.
+// Specifies the images for menu item IDs matching the toolbar data.
 void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR_DIS);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MENUICONS);
 }
@@ -1026,6 +1026,9 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_FILE_PRINT );
     AddToolBarButton( 0 );              // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
+
+    // Use separate imagelists for normal, hot and disabled buttons.
+    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 }
 
 // Sets the frame's title.

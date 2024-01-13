@@ -9,7 +9,7 @@
 
 
 CClassicPrintDlg::CClassicPrintDlg()
-    : CDialog(IDD_PRINTDLG), m_copies(1), m_fromPage(1), m_radio(0), m_toPage(9999), 
+    : CDialog(IDD_PRINTDLG), m_copies(1), m_fromPage(1), m_radio(0), m_toPage(9999),
                              m_collate(0), m_printToFile(0), m_isPropertiesDisplayed(false)
 {
     m_hDevMode = 0;
@@ -96,7 +96,7 @@ bool CClassicPrintDlg::CreateGlobalHandles(LPCTSTR printerName, HGLOBAL* pHDevMo
         }
 
         ::ClosePrinter(printer);
-    }   
+    }
 
     return result;
 }
@@ -401,12 +401,12 @@ void CClassicPrintDlg::SetCollate(bool isCollate)
 }
 
 void CClassicPrintDlg::SetCopies(int copies)
-{ 
+{
     m_copies = copies;
 }
 
 void CClassicPrintDlg::SetFromPage(int fromPage)
-{ 
+{
     m_fromPage = fromPage;
 }
 
@@ -415,9 +415,9 @@ void CClassicPrintDlg::SetPrintToFile(bool isPrintToFile)
     m_printToFile = isPrintToFile ? 1 : 0;
 }
 
-void CClassicPrintDlg::SetRadio(int radio) 
+void CClassicPrintDlg::SetRadio(int radio)
 {
-    m_radio = radio; 
+    m_radio = radio;
 }
 
 void CClassicPrintDlg::SetToPage(int toPage)
@@ -652,8 +652,8 @@ bool CClassicPrintDlg::SetPrinterFromDevMode(LPCTSTR deviceName, LPDEVMODE pDevM
 // Retrieves the printer status and stores a text result.
 void CClassicPrintDlg::UpdateStatusText()
 {
-    // Refer to the description of PRINTER_INFO_2 in the 
-    // windows API documentation for possible status values. 
+    // Refer to the description of PRINTER_INFO_2 in the
+    // windows API documentation for possible status values.
     DWORD status = GetPrinterStatus(GetDeviceName());
     CString statusText;
     if (status == 0)                      statusText = _T("Ready");

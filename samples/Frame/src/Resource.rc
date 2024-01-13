@@ -84,6 +84,8 @@ IDW_MAIN                ICON                    "../src/res/Star.ico"
 
 IDW_MAIN                BITMAP                  "../src/res/Toolbar.bmp"
 IDB_MENUICONS           BITMAP                  "../src/res/MenuIcons.bmp"
+IDB_TOOLBAR_HOT         BITMAP                  "../src/res/Toolbar24_h.bmp"
+IDB_TOOLBAR_DIS         BITMAP                  "../src/res/Toolbar24_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

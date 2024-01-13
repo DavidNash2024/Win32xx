@@ -759,7 +759,7 @@ namespace Win32xx
                 // Draw the image on the memory DC
                 ImageList_Draw(normalImages, i, memDC, 0, 0, ILD_NORMAL);
 
-                // Detach the bitmap so we can use it.
+                // Convert the bitmap to grayscale and add it to the imagelist.
                 CBitmap bitmap = memDC.DetachBitmap();
                 bitmap.ConvertToDisabled(mask);
                 Add(bitmap, mask);
