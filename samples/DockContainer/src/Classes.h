@@ -32,9 +32,6 @@ private:
     // Command handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    // Member variables
-    CImageList m_normalImages;
 };
 
 

@@ -93,7 +93,7 @@ namespace Win32xx
         UINT    GetVisibleCount() const;
         BOOL    ItemHasChildren(HTREEITEM item) const;
         COLORREF SetBkColor(COLORREF color) const;
-        HIMAGELIST SetImageList(HIMAGELIST images, int type = TVSIL_NORMAL) const;
+        CImageList SetImageList(HIMAGELIST images, int type = TVSIL_NORMAL);
         void    SetIndent(int indent) const;
         BOOL    SetInsertMark(HTREEITEM item, BOOL after = TRUE) const;
         COLORREF SetInsertMarkColor(COLORREF color) const;
@@ -137,6 +137,8 @@ namespace Win32xx
         CTreeView(const CTreeView&);              // Disable copy construction
         CTreeView& operator=(const CTreeView&);   // Disable assignment operator
 
+        CImageList m_normalImages;
+        CImageList m_stateImages;
     };
 
 }
@@ -632,11 +634,16 @@ namespace Win32xx
     // Sets the normal or state image list for a tree-view control
     // and redraws the control using the new images.
     // Refer to TreeView_SetImageList in the Windows API documentation for more information.
-    inline HIMAGELIST CTreeView::SetImageList(HIMAGELIST images, int type /*= TVSIL_NORMAL*/) const
+    inline CImageList CTreeView::SetImageList(HIMAGELIST images, int type /*= TVSIL_NORMAL*/)
     {
         assert(IsWindow());
         WPARAM wparam = static_cast<WPARAM>(type);
-        HIMAGELIST oldImages = TreeView_SetImageList( *this, images, wparam);
+        CImageList oldImages = TreeView_SetImageList( *this, images, wparam);
+        if (type == TVSIL_STATE)
+            m_stateImages = images;
+        else
+            m_normalImages = images;
+
         return oldImages;
     }
 

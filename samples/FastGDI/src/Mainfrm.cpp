@@ -136,7 +136,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM)
+LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Save the view's rectangle and disable scrolling.
     m_scrollPos = m_view.GetScrollPosition();
@@ -148,9 +148,9 @@ LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM)
     ResetMenuMetrics();
     UpdateSettings();
     DpiScaleToolBar();
+    ClearMenuIcons();
     SetupMenuIcons();
     RecalcLayout();
-
     return 0;
 }
 

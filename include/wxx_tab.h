@@ -168,7 +168,7 @@ namespace Win32xx
         void        SetCurFocus(int tab) const;
         int         SetCurSel(int tab) const;
         DWORD       SetExtendedStyle(DWORD exStyle) const;
-        HIMAGELIST  SetImageList(HIMAGELIST newImages) const;
+        CImageList  SetImageList(HIMAGELIST newImages);
         BOOL        SetItem(int tab, LPTCITEM pTabInfo) const;
         BOOL        SetItemExtra(int cb) const;
         DWORD       SetItemSize(int cx, int cy) const;
@@ -1786,10 +1786,12 @@ namespace Win32xx
 
     // Assigns an image list to a tab control.
     // Refer to TabCtrl_SetImageList in the Windows API documentation for more information.
-    inline HIMAGELIST CTab::SetImageList(HIMAGELIST newImages) const
+    inline CImageList CTab::SetImageList(HIMAGELIST newImages)
     {
         assert(IsWindow());
         HIMAGELIST images = TabCtrl_SetImageList( *this, newImages);
+        if (newImages != 0)
+            m_images = newImages;
         return images;
     }
 

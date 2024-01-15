@@ -68,8 +68,6 @@ private:
 
     // Message handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    CImageList m_smallImages;
 };
 
 /////////////////////////////////////////////
@@ -96,8 +94,6 @@ private:
 
     // Message handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    CImageList m_smallImages;
 };
 
 #endif // VIEWS_H

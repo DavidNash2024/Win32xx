@@ -46,10 +46,8 @@
 
 // The layout of a dialog is typically defined in a resource script file
 // (often Resource.rc). While this script file can be constructed manually,
-// it is often created using a resource editor. If your compiler doesn't
-// include a resource editor, you might find ResEdit useful. It is a free
-// resource editor available for download at:
-// http://www.resedit.net/
+// it is often created using a resource editor.  A resource editor is included
+// with Microsoft's Visual Studio Studio Community.
 
 // CDialog supports modal and modeless dialogs. It also supports the creation
 // of dialogs defined in a resource script file, as well as those defined in

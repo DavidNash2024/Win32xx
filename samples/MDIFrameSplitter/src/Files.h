@@ -30,9 +30,6 @@ private:
 
     void InsertItems();
     void SetColumns();
-
-    // Member variables
-    CImageList m_smallImages;
 };
 
 

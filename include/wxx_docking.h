@@ -130,7 +130,7 @@ namespace Win32xx
     //
     // When a container docked within another container is undocked, the
     // undocked container window and its parent docker window become visible.
-    // The container also resumes beingg the parent window of its view
+    // The container also resumes being the parent window of its view
     // window.
     class CDockContainer : public CTab
     {
@@ -233,9 +233,9 @@ namespace Win32xx
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
         virtual LRESULT OnDpiChangedBeforeParent(UINT, WPARAM, LPARAM);
         virtual void PreCreate(CREATESTRUCT& cs);
-        virtual void SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
-        virtual void SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
-        virtual void SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask);
+        virtual void SetTBImageList(CToolBar& toolBar, UINT id, COLORREF mask);
+        virtual void SetTBImageListDis(CToolBar& toolBar, UINT id, COLORREF mask);
+        virtual void SetTBImageListHot(CToolBar& toolBar, UINT id, COLORREF mask);
         virtual void SetupToolBar();
 
         LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -253,9 +253,6 @@ namespace Win32xx
         std::vector<UINT> m_toolBarData;               // vector of resource IDs for ToolBar buttons
         CString m_tabText;
         CString m_caption;
-        CImageList m_toolBarImages;
-        CImageList m_toolBarHotImages;
-        CImageList m_toolBarDisabledImages;
 
         CViewPage m_viewPage;
         CViewPage* m_pViewPage;
@@ -5256,7 +5253,7 @@ namespace Win32xx
 
     // Sets the Image List for toolbars.
     // A Disabled image list is created from ToolBarID if one doesn't already exist.
-    inline void CDockContainer::SetTBImageList(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
+    inline void CDockContainer::SetTBImageList(CToolBar& toolBar, UINT id, COLORREF mask)
     {
         // Get the image size.
         CBitmap bm(id);
@@ -5269,13 +5266,14 @@ namespace Win32xx
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's image list.
+        CImageList imageList;
         imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
         imageList.Add(dpiImage, mask);
         toolBar.SetImageList(imageList);
     }
 
     // Sets the disabled Image List for toolbars.
-    inline void CDockContainer::SetTBImageListDis(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
+    inline void CDockContainer::SetTBImageListDis(CToolBar& toolBar, UINT id, COLORREF mask)
     {
         // Get the image size.
         CBitmap bm(id);
@@ -5288,13 +5286,14 @@ namespace Win32xx
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's image list.
+        CImageList imageList;
         imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
         imageList.Add(dpiImage, mask);
         toolBar.SetDisableImageList(imageList);
     }
 
     // Sets the Hot Image List for additional toolbars.
-    inline void CDockContainer::SetTBImageListHot(CToolBar& toolBar, CImageList& imageList, UINT id, COLORREF mask)
+    inline void CDockContainer::SetTBImageListHot(CToolBar& toolBar, UINT id, COLORREF mask)
     {
         // Get the image size.
         CBitmap bm(id);
@@ -5307,6 +5306,7 @@ namespace Win32xx
         CSize sz = GetTBImageSize(&dpiImage);
 
         // Set the toolbar's image list.
+        CImageList imageList;
         imageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
         imageList.Add(dpiImage, mask);
         toolBar.SetHotImageList(imageList);
@@ -5330,21 +5330,22 @@ namespace Win32xx
         }
 
         // Set the normal button images.
-        SetTBImageList(GetToolBar(), m_toolBarImages, normalID, mask);
+        SetTBImageList(GetToolBar(), normalID, mask);
 
         // Set the hot button images.
         if (hotID != 0)
-            SetTBImageListHot(GetToolBar(), m_toolBarHotImages, hotID, mask);
+            SetTBImageListHot(GetToolBar(), hotID, mask);
         else
-            SetTBImageListHot(GetToolBar(), m_toolBarHotImages, normalID, mask);
+            SetTBImageListHot(GetToolBar(), normalID, mask);
 
         // Set the disabled button images.
         if (disabledID != 0)
-            SetTBImageListDis(GetToolBar(), m_toolBarDisabledImages, disabledID, mask);
+            SetTBImageListDis(GetToolBar(), disabledID, mask);
         else
         {
-            m_toolBarDisabledImages.CreateDisabledImageList(m_toolBarImages);
-            GetToolBar().SetDisableImageList(m_toolBarDisabledImages);
+            CImageList toolBarDisabledImages;
+            toolBarDisabledImages.CreateDisabledImageList(GetToolBar().GetImageList());
+            GetToolBar().SetDisableImageList(toolBarDisabledImages);
         }
     }
 
