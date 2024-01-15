@@ -193,19 +193,20 @@ void CViewTree::SetDPIImages()
 {
     //set the image lists
     int size = DpiScaleInt(24);
-    m_imlNormal.Create(size, size, ILC_COLOR32, 1, 0);
+    CImageList normalImages;
+    normalImages.Create(size, size, ILC_COLOR32, 1, 0);
 
-    m_imlNormal.AddIcon(IDI_LIBRARY);
-    m_imlNormal.AddIcon(IDI_MOVIES);
-    m_imlNormal.AddIcon(IDI_BOXSET);
-    m_imlNormal.AddIcon(IDI_CALENDAR);
-    m_imlNormal.AddIcon(IDI_FAVOURITES);
-    m_imlNormal.AddIcon(IDI_MASK);
-    m_imlNormal.AddIcon(IDI_VIOLIN);
-    m_imlNormal.AddIcon(IDI_SEARCH);
-    m_imlNormal.AddIcon(IDI_EYE);
+    normalImages.AddIcon(IDI_LIBRARY);
+    normalImages.AddIcon(IDI_MOVIES);
+    normalImages.AddIcon(IDI_BOXSET);
+    normalImages.AddIcon(IDI_CALENDAR);
+    normalImages.AddIcon(IDI_FAVOURITES);
+    normalImages.AddIcon(IDI_MASK);
+    normalImages.AddIcon(IDI_VIOLIN);
+    normalImages.AddIcon(IDI_SEARCH);
+    normalImages.AddIcon(IDI_EYE);
 
-    SetImageList(m_imlNormal, LVSIL_NORMAL);
+    SetImageList(normalImages, LVSIL_NORMAL);
 
     // Reset the item indentation.
     int imageWidth = size;

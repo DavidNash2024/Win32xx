@@ -172,9 +172,10 @@ void CViewList::SetDPIImages()
     CBitmap bmImage(IDB_FILEVIEW);
     bmImage = DpiScaleUpBitmap(bmImage);
     int scale = bmImage.GetSize().cy / 15;
-    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    m_smallImages.Add(bmImage, RGB(255, 0, 255));
-    SetImageList(m_smallImages, LVSIL_SMALL);
+    CImageList smallImages;
+    smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    smallImages.Add(bmImage, RGB(255, 0, 255));
+    SetImageList(smallImages, LVSIL_SMALL);
 }
 
 // Process the listview window messages.
@@ -280,12 +281,13 @@ void CViewTree::SetDPIImages()
     CBitmap bmImage(IDB_CLASSVIEW);
     bmImage = DpiScaleUpBitmap(bmImage);
     int scale = bmImage.GetSize().cy / 15;
-    m_normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    m_normalImages.Add(bmImage, RGB(255, 0, 0));
-    SetImageList(m_normalImages, LVSIL_NORMAL);
+    CImageList normalImages;
+    normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    normalImages.Add(bmImage, RGB(255, 0, 0));
+    SetImageList(normalImages, LVSIL_NORMAL);
 
     // Reset the item indentation.
-    int imageWidth = m_normalImages.GetIconSize().cx;
+    int imageWidth = normalImages.GetIconSize().cx;
     SetIndent(imageWidth);
 }
 

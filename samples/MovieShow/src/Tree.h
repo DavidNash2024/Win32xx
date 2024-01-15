@@ -43,7 +43,6 @@ private:
     BOOL OnSelChanged();
 
     // Member variables
-    CImageList m_imlNormal;
     CString m_itemText;
 };
 

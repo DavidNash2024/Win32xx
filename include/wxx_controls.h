@@ -170,7 +170,7 @@ namespace Win32xx
         BOOL    GetItem(COMBOBOXEXITEM& item) const;
         BOOL    HasEditChanged () const;
         int     InsertItem(const COMBOBOXEXITEM& item) const;
-        HIMAGELIST SetImageList(HIMAGELIST images) const;
+        CImageList SetImageList(HIMAGELIST images);
         BOOL    SetItem(const COMBOBOXEXITEM& item) const;
         DWORD   GetExtendedStyle() const;
         DWORD   SetExtendedStyle(DWORD exMask, DWORD exStyles) const;
@@ -182,6 +182,8 @@ namespace Win32xx
     private:
         CComboBoxEx(const CComboBoxEx&);               // Disable copy construction
         CComboBoxEx& operator=(const CComboBoxEx&);    // Disable assignment operator
+
+        CImageList m_images;
     };
 
 
@@ -203,7 +205,7 @@ namespace Win32xx
         CRect   GetItemRect(int index) const;
         BOOL    GetOrderArray(LPINT pArray, int count) const;
         int     OrderToIndex(int order) const;
-        HIMAGELIST SetImageList(HIMAGELIST images) const;
+        CImageList SetImageList(HIMAGELIST images);
         BOOL    SetItem(int pos, const HDITEM& item) const;
         BOOL    SetOrderArray(int count, LPINT pArray) const;
         int     GetBitmapMargin() const;
@@ -232,6 +234,8 @@ namespace Win32xx
     private:
         CHeader(const CHeader&);               // Disable copy construction
         CHeader& operator=(const CHeader&);    // Disable assignment operator
+
+        CImageList m_images;
     };
 
 
@@ -1151,11 +1155,12 @@ namespace Win32xx
 
     // Sets an image list for the ComboBoxEx control.
     // Refer to CBEM_SETIMAGELIST in the Windows API documentation for more information.
-    inline HIMAGELIST CComboBoxEx::SetImageList(HIMAGELIST images) const
+    inline CImageList CComboBoxEx::SetImageList(HIMAGELIST images)
     {
         assert(IsWindow());
         LPARAM lparam = reinterpret_cast<LPARAM>(images);
         HIMAGELIST oldImages = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_SETIMAGELIST, 0, lparam));
+        m_images = images;
         return oldImages;
     }
 
@@ -1405,10 +1410,11 @@ namespace Win32xx
 
     // Assigns an image list to the header control.
     // Refer to Header_SetImageList in the Windows API documentation for more information.
-    inline HIMAGELIST CHeader::SetImageList(HIMAGELIST images) const
+    inline CImageList CHeader::SetImageList(HIMAGELIST images)
     {
         assert(IsWindow());
         HIMAGELIST oldImages = Header_SetImageList(*this, images);
+        m_images = images;
         return oldImages;
     }
 

@@ -656,12 +656,16 @@ void CClassicPrintDlg::UpdateStatusText()
     // windows API documentation for possible status values.
     DWORD status = GetPrinterStatus(GetDeviceName());
     CString statusText;
-    if (status == 0)                      statusText = _T("Ready");
-    if (status & PRINTER_STATUS_PAUSED)   statusText = _T("Paused");
-    if (status & PRINTER_STATUS_ERROR)    statusText = _T("Error");
-    if (status & PRINTER_STATUS_OFFLINE)  statusText = _T("Offline");
-    if (status & PRINTER_STATUS_BUSY)     statusText = _T("Busy");
-    if (status & PRINTER_STATUS_PRINTING) statusText = _T("Printing");
+    if (status == 0)                       statusText = _T("Ready");
+    if (status & PRINTER_STATUS_PAUSED)    statusText = _T("Paused");
+    if (status & PRINTER_STATUS_ERROR)     statusText = _T("Error");
+    if (status & PRINTER_STATUS_OFFLINE)   statusText = _T("Offline");
+    if (status & PRINTER_STATUS_BUSY)      statusText = _T("Busy");
+    if (status & PRINTER_STATUS_PRINTING)  statusText = _T("Printing");
     if (status & PRINTER_STATUS_NOT_AVAILABLE) statusText = _T("Not available");
+    if (status & PRINTER_STATUS_TONER_LOW) statusText = _T("Ink or toner low");
+    if (status & PRINTER_STATUS_NO_TONER)  statusText = _T("No ink or toner");
+    if (status & PRINTER_STATUS_PAPER_OUT) statusText = _T("Out of paper");
+    if (status & PRINTER_STATUS_PAPER_JAM) statusText = _T("Paper jam");
     m_status = statusText;
 }

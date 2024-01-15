@@ -76,9 +76,6 @@ private:
     // Message handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    // Member variables
-    CImageList m_normalImages;
 };
 
 
@@ -109,9 +106,6 @@ private:
 
     void InsertItems();
     void SetColumns();
-
-    // Member variables
-    CImageList m_smallImages;
 };
 
 

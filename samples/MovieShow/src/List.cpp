@@ -383,13 +383,14 @@ void CViewList::SetDPIImages()
 {
     // Set the image lists
     int size = DpiScaleInt(16);
-    m_small.Create(size, size, ILC_COLOR32, 1, 0);
-    m_small.AddIcon(IDI_MOVIES);
-    m_small.AddIcon(IDI_VIOLIN);
-    m_small.AddIcon(IDI_BOXSET);
-    m_small.AddIcon(IDI_FAVOURITES);
-    m_small.AddIcon(IDI_EYE);
-    SetImageList(m_small, LVSIL_SMALL);
+    CImageList smallImages;
+    smallImages.Create(size, size, ILC_COLOR32, 1, 0);
+    smallImages.AddIcon(IDI_MOVIES);
+    smallImages.AddIcon(IDI_VIOLIN);
+    smallImages.AddIcon(IDI_BOXSET);
+    smallImages.AddIcon(IDI_FAVOURITES);
+    smallImages.AddIcon(IDI_EYE);
+    SetImageList(smallImages, LVSIL_SMALL);
 }
 
 // Sets the up and down sort arrows in the listview's header.

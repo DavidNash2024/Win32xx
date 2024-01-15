@@ -68,8 +68,6 @@ private:
     BOOL    SetHeaderSortImage(int  columnIndex, int showArrow);
 
     // Member variables
-    CImageList m_normal;
-    CImageList m_small;
     int m_oldDPI;
 };
 

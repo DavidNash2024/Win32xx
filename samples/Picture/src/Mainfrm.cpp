@@ -44,7 +44,7 @@ void CMainFrame::DpiScaleToolBar()
     if (GetToolBar().IsWindow())
     {
         // Reset the toolbar images.
-        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
+        SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
     }
 }
 
@@ -112,6 +112,7 @@ LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM)
     ResetMenuMetrics();
     UpdateSettings();
     DpiScaleToolBar();
+    ClearMenuIcons();
     SetupMenuIcons();
     RecalcLayout();
 

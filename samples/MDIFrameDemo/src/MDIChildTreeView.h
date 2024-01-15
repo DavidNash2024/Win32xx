@@ -23,8 +23,6 @@ protected:
 private:
     CViewTree(const CViewTree&);               // Disable copy construction
     CViewTree& operator=(const CViewTree&);    // Disable assignment operator
-
-    CImageList m_normalImages;
 };
 
 

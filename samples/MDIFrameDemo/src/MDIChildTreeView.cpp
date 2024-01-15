@@ -33,11 +33,12 @@ void CViewTree::OnAttach()
 {
     // Set the image lists.
     int scale = DpiScaleInt(1);
-    m_normalImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
+    CImageList normalImages;
+    normalImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_CLASSVIEW);
     image = DpiScaleUpBitmap(image);
-    m_normalImages.Add( image, RGB(255, 0, 0) );
-    SetImageList(m_normalImages, LVSIL_NORMAL);
+    normalImages.Add( image, RGB(255, 0, 0) );
+    SetImageList(normalImages, LVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button.
     DWORD style = GetStyle();

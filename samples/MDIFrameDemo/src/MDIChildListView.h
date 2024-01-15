@@ -26,8 +26,6 @@ private:
 
     void InsertItems();
     void SetColumns();
-
-    CImageList m_smallImages;
 };
 
 

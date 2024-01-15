@@ -109,7 +109,7 @@ namespace Win32xx
         DWORD   SetHoverTime( DWORD hoverTime = static_cast<DWORD>(-1) ) const;
         CSize   SetIconSpacing( int cx, int cy ) const;
         CSize   SetIconSpacing( CSize sz ) const;
-        HIMAGELIST SetImageList( HIMAGELIST images, int imageListType ) const;
+        CImageList SetImageList( HIMAGELIST images, int imageListType );
         BOOL    SetItem( LVITEM& itemInfo ) const;
         BOOL    SetItem( int item, int subItem, UINT mask, LPCTSTR text, int image,
                         UINT state, UINT stateMask, LPARAM lparam, int indent ) const;
@@ -155,6 +155,9 @@ namespace Win32xx
         CListView(const CListView&);              // Disable copy construction
         CListView& operator=(const CListView&);   // Disable assignment operator
 
+        CImageList m_normalImages;
+        CImageList m_smallImages;
+        CImageList m_stateImages;
     };
 
 }
@@ -819,10 +822,17 @@ namespace Win32xx
     // Assigns an image list to the list-view control.
     // Valid imageListType values: LVSIL_NORMAL, LVSIL_SMALL, LVSIL_STATE.
     // Refer to ListView_SetImageList in the Windows API documentation for more information.
-    inline HIMAGELIST CListView::SetImageList( HIMAGELIST images, int imageListType ) const
+    inline CImageList CListView::SetImageList( HIMAGELIST images, int imageListType )
     {
         assert(IsWindow());
-        HIMAGELIST oldImages = ListView_SetImageList( *this, images, imageListType );
+        CImageList oldImages = ListView_SetImageList( *this, images, imageListType );
+        if (imageListType == LVSIL_STATE)
+            m_stateImages = images;
+        else if (imageListType == LVSIL_SMALL)
+            m_smallImages = images;
+        else
+            m_normalImages = images;
+
         return oldImages;
     }
 
