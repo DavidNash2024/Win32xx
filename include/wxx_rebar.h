@@ -39,8 +39,6 @@
 #define _WIN32XX_REBAR_H_
 
 #include "wxx_wincore.h"
-#include "wxx_gdi.h"
-#include "wxx_controls.h"
 #include "wxx_themes.h"
 
 

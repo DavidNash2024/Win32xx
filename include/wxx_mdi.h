@@ -62,7 +62,7 @@
 //    MDI frame. Inherit your CMainFrame class from CMDIFrame to create a MDI
 //    frame.
 //
-// 5) CMDIDockFrame: This clas inherits from CMDIFrameT<CDockFrame>. It provides
+// 5) CMDIDockFrame: This class inherits from CMDIFrameT<CDockFrame>. It provides
 //    a MDI frame that supports docking. Inherit your CMainFrame from CMDIDockFrame
 //    to create a MDI frame that supports docking.
 

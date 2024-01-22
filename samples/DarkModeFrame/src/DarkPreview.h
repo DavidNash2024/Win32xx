@@ -15,6 +15,7 @@ class CDarkPreview : public CPrintPreview<T>
 {
 public:
     CDarkPreview() : m_isDarkMode(false) {}
+    CDarkPreview(T& source) : CPrintPreview<T>(source), m_isDarkMode(false) {}
     virtual ~CDarkPreview() {}
 
     INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);

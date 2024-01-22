@@ -94,6 +94,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #include "wxx_appcore.h"
 #include "wxx_wincore0.h"
 #include "wxx_gdi.h"
+#include "wxx_imagelist.h"
 #include "wxx_menu.h"
 #include "wxx_ddx.h"
 

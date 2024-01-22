@@ -52,7 +52,6 @@
 #include "wxx_richedit.h"
 
 
-
 ///////////////////////////////////////////////////////////////////
 // Definitions of the CCommonDialog, CColorDialog, CFileDialog,
 // CFindReplaceDialog, and CFontDialog classes.

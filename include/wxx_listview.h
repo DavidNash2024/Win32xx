@@ -40,8 +40,6 @@
 #define _WIN32XX_LISTVIEW_H_
 
 #include "wxx_wincore.h"
-#include "wxx_controls.h"
-#include <commctrl.h>
 
 
 namespace Win32xx

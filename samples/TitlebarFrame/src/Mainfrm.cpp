@@ -44,7 +44,8 @@ void CenterRectInRect(CRect* innerRect, const CRect& outerRect)
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_hoveredButton(TitlebarButton::None),
+CMainFrame::CMainFrame() : m_preview(m_view),
+                           m_hoveredButton(TitlebarButton::None),
                            m_oldHoveredButton(TitlebarButton::None),
                            m_isToolbarShown(true),
                            m_isMiniFrame(false)
@@ -506,9 +507,6 @@ BOOL CMainFrame::OnFilePreview()
         // Create the preview window if required
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
-
-        // Specify the source of the PrintPage function
-        m_preview.SetSource(m_view);
 
         // Set the preview's owner (for messages)
         m_preview.DoPrintPreview(*this);

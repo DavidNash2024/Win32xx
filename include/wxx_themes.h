@@ -107,7 +107,7 @@ namespace Win32xx
     // Returns TRUE if Aero themes are being used.
     inline BOOL IsAeroThemed()
     {
-        BOOL IsAeroThemed = FALSE;
+        BOOL isAeroThemed = FALSE;
 
         // Test if Windows version is XP or greater
         if (GetWinVersion() >= 2501)
@@ -123,13 +123,13 @@ namespace Win32xx
                 {
                     if (pIsCompositionActive())
                     {
-                        IsAeroThemed = TRUE;
+                        isAeroThemed = TRUE;
                     }
                 }
             }
         }
 
-        return IsAeroThemed;
+        return isAeroThemed;
     }
 
     // Returns TRUE if XP themes are being used.

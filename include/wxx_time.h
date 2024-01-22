@@ -55,7 +55,6 @@
 #define _WIN32XX_CTIME_H_
 
 #include "wxx_wincore.h"
-#include "wxx_archive.h"
 #include <errno.h>
 #include <time.h>
 

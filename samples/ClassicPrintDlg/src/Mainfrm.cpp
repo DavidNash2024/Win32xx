@@ -17,7 +17,8 @@
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_encodeMode(ANSI), m_isToolbarShown(true),
+CMainFrame::CMainFrame() : m_preview(m_richView),
+                           m_encodeMode(ANSI), m_isToolbarShown(true),
                            m_isWrapped(false), m_isRTF(false), m_oldFocus(0)
 {
 }
@@ -431,9 +432,6 @@ BOOL CMainFrame::OnFilePreview()
         // Create the preview window if required.
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
-
-        // Specify the source of the PrintPage function.
-        m_preview.SetSource(m_richView);
 
         // Set the preview's owner for notification messages, and number of pages.
         UINT maxPage = m_richView.CollatePages(printerDC);
