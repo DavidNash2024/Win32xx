@@ -80,7 +80,6 @@
 
 #include "wxx_dialog.h"
 #include "wxx_docking.h"
-#include "wxx_gdi.h"
 #include "wxx_menubar.h"
 #include "wxx_menumetrics.h"
 #include "wxx_rebar.h"

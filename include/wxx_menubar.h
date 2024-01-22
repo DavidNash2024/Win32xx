@@ -39,12 +39,7 @@
 #define _WIN32XX_MENUBAR_H_
 
 #include "wxx_wincore.h"
-#include "wxx_gdi.h"
-#include "wxx_controls.h"
 #include "wxx_toolbar.h"
-
-
-
 
 
 namespace Win32xx

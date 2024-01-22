@@ -94,7 +94,7 @@ namespace Win32xx
         virtual ~CWorkThread() {}
 
     private:
-        CWorkThread(const CWorkThread&);              // Disable copy construction
+        CWorkThread(const CWorkThread&);            // Disable copy construction
         CWorkThread& operator=(const CWorkThread&); // Disable assignment operator
     };
 
@@ -114,7 +114,7 @@ namespace Win32xx
         virtual ~CWinThread();
 
     private:
-        CWinThread(const CWinThread&);              // Disable copy construction
+        CWinThread(const CWinThread&);            // Disable copy construction
         CWinThread& operator=(const CWinThread&); // Disable assignment operator
 
         static  UINT WINAPI StaticThreadProc(LPVOID pCThread);

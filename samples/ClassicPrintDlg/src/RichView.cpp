@@ -305,7 +305,7 @@ void CRichView::SetFontDefaults()
     CHARFORMAT cf;
     ZeroMemory(&cf, sizeof(cf));
     cf.cbSize = sizeof(cf);
-    cf.dwMask = CFM_SIZE | CFM_FACE;
+    cf.dwMask = CFM_SIZE | CFM_FACE | CFM_EFFECTS;
     StrCopy(cf.szFaceName, _T("Courier New"), 32);
     cf.yHeight = 204;
     SetDefaultCharFormat(cf);

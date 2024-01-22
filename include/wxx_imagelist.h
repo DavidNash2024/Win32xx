@@ -76,7 +76,7 @@ namespace Win32xx
         CImageList(HIMAGELIST images);
         CImageList(const CImageList& rhs);
         CImageList& operator=(const CImageList& rhs);
-        void operator=(const HIMAGELIST rhs);
+        CImageList& operator=(HIMAGELIST rhs);
         virtual ~CImageList();
 
         // Initialization
@@ -177,9 +177,10 @@ namespace Win32xx
         return *this;
     }
 
-    inline void CImageList::operator=(const HIMAGELIST rhs)
+    inline CImageList& CImageList::operator=(HIMAGELIST rhs)
     {
         Attach(rhs);
+        return *this;
     }
 
     inline CImageList::~CImageList()

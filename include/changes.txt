@@ -21,6 +21,7 @@ Added CFrameT::SetToolBarImages       Added overload for additional toolbars
 Added CImageList::CreateDragImage
 Added CTab::SetTabsFontSize
 Added CTab::SetTabsIconSize
+Added CPrintPreview::CPrintPreview    Additional constructor
 Added CWinApp::GetHDevMode
 Added CWinApp::GetHDevNames
 Added CWinApp::ResetPrinterMemory
@@ -43,9 +44,6 @@ Modified CToolBar::SetDisableImageList         returns CImageList
 Modified CToolBar::SetHotImageList             returns CImageList
 Modified CToolBar::SetImageList                returns CImageList
 Modified CTreeView::SetImageList               returns CImageList
-
-CImageList SetImageList
-
 
 
 Version 9.4
@@ -308,7 +306,7 @@ Changes in Detail
 Added    CComboBox::GetComboBoxInfo
 Added    CEdit::GetTextLength
 Added    CFrameT::GetMenuIconHeight
-Added    CString::Remove             additional overload for a single character
+Added    CString::Remove                additional overload for a single character
 Added    CToolbar::SetButtonInfo        additional overload
 Modified CDialog::EndDialog             now only closes a modal dialog
 Modified CFrameT::AddDisabledMenuImage  removed iconWidth parameter

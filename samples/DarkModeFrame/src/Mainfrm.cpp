@@ -16,7 +16,7 @@
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_isToolbarShown(true)
+CMainFrame::CMainFrame() : m_preview(m_view), m_isToolbarShown(true)
 {
 }
 
@@ -160,9 +160,6 @@ BOOL CMainFrame::OnFilePreview()
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
 
-        // Specify the source of the PrintPage function
-        m_preview.SetSource(m_view);
-
         // Set the preview's owner (for messages)
         m_preview.DoPrintPreview(*this);
 
@@ -288,15 +285,9 @@ void CMainFrame::SetDarkMode(bool isDarkMode)
     m_preview.SetDarkMode(isDarkMode);
 
     if (isDarkMode && !IsHighContrast())
-    {
-        // Turn off menu custom drawing.
-        UseOwnerDrawnMenu(FALSE);
-    }
+        UseDarkMenu(TRUE);
     else
-    {
-        // Turn on menu custom drawing.
-        UseOwnerDrawnMenu(TRUE);
-    }
+        UseDarkMenu(FALSE);
 
     // Redraw the help about dialog.
     if (m_helpDialog.IsWindow())

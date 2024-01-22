@@ -14,7 +14,8 @@
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_pDockDialogsTree(NULL), m_isTemplateShown(false)
+CMainFrame::CMainFrame() : m_preview(m_richView), m_pDockDialogsTree(NULL),
+                           m_isTemplateShown(false)
 {
 }
 
@@ -229,9 +230,6 @@ BOOL CMainFrame::OnFilePreview()
         // Create the preview window if required.
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
-
-        // Setup the print preview.
-        m_preview.SetSource(m_richView);   // CPrintPreview calls m_richView::PrintPage
 
         // Set the preview's owner (for messages), and number of pages.
         UINT maxPage = m_richView.CollatePages();

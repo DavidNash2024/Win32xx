@@ -44,7 +44,6 @@
 
 #include "wxx_wincore.h"
 #include "wxx_dialog.h"
-#include "wxx_gdi.h"
 #include "wxx_regkey.h"
 #include "default_resource.h"
 

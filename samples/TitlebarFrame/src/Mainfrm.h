@@ -53,7 +53,7 @@ public:
     TitlebarButton GetHoveredButton() const;
     CRect GetShadowRect() const;
     CRect GetTitlebarRect() const;
-    bool  IsActive() const { return (GetForegroundWindow() == *this); }
+    bool  IsActive() const { return (::GetForegroundWindow() == *this); }
     bool  IsMaximized() const;
 
 protected:

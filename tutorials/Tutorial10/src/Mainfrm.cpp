@@ -7,7 +7,7 @@
 
 
 // Constructor.
-CMainFrame::CMainFrame() : m_isToolbarShown(TRUE)
+CMainFrame::CMainFrame() : m_preview(m_view), m_isToolbarShown(TRUE)
 {
 }
 
@@ -228,9 +228,6 @@ BOOL CMainFrame::OnFilePreview()
         // Create the preview window if required
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
-
-        // Specify the source of the PrintPage function
-        m_preview.SetSource(m_view);
 
         // Set the preview's owner (for notification messages)
         m_preview.DoPrintPreview(*this);

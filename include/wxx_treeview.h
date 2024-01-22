@@ -40,8 +40,6 @@
 #define _WIN32XX_TREEVIEW_H_
 
 #include "wxx_wincore.h"
-#include "wxx_controls.h"
-#include <Commctrl.h>
 
 
 // Disable macros from Windowsx.h

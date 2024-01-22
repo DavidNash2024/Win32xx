@@ -92,7 +92,6 @@
 #include "wxx_wincore.h"
 #include "wxx_commondlg.h"
 
-
 namespace Win32xx
 {
 

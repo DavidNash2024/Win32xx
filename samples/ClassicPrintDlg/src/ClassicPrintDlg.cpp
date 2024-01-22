@@ -341,12 +341,13 @@ DWORD CClassicPrintDlg::GetPrinterStatus(LPCTSTR printerName) const
     if (::OpenPrinter(const_cast<LPTSTR>(printerName), &printer, 0))
     {
         // Create PRINTER_INFO_2 structure.
-        DWORD bytesNeeded = 0;
-        ::GetPrinter(printer, 2, NULL, 0, &bytesNeeded);
-        std::vector<BYTE> infoBuffer(bytesNeeded);
+        DWORD bufferSize = 0;
+        ::GetPrinter(printer, 2, NULL, 0, &bufferSize);
+        assert(bufferSize);
+        std::vector<BYTE> infoBuffer(bufferSize);
 
         // Fill the PRINTER_INFO_2 structure.
-        if (::GetPrinter(printer, 2, &infoBuffer.front(), bytesNeeded, &bytesNeeded))
+        if (::GetPrinter(printer, 2, &infoBuffer.front(), bufferSize, &bufferSize))
         {
             PRINTER_INFO_2* printerInfo2 = reinterpret_cast<PRINTER_INFO_2*>(&infoBuffer.front());
             status = printerInfo2->Status;

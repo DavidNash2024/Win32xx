@@ -41,38 +41,31 @@ void CMainFrame::DrawStatusBar(LPDRAWITEMSTRUCT pDrawItem)
 
     // Retrieve the device context.
     CDC dc(pDrawItem->hDC);
-    CFont font = GetStatusBar().GetFont();
-    LOGFONT lf = font.GetLogFont();
-    CDC memDC(dc);
     CRect partRect = pDrawItem->rcItem;
 
     // Modify the background, font and text color for part 4.
     if (pDrawItem->itemID == 4)
     {
         // Change the font to italic.
+        CFont font = GetStatusBar().GetFont();
+        LOGFONT lf = font.GetLogFont();
         lf.lfItalic = TRUE;
+        dc.CreateFontIndirect(lf);
 
         // Change the part's background.
         COLORREF fillColor1 = RGB(230, 180, 0);
         COLORREF fillColor2 = RGB(240, 210, 90);
-        memDC.GradientFill(fillColor1, fillColor2, partRect, FALSE);
+        dc.GradientFill(fillColor1, fillColor2, partRect, FALSE);
 
         // Change the text color.
         COLORREF textColor = RGB(10, 20, 250);
-        memDC.SetTextColor(textColor);
+        dc.SetTextColor(textColor);
     }
 
-    // Create the font.
-    memDC.CreateFontIndirect(lf);
-
-    // Draw the owner drawn text.
-    // The text is stored in the itemData.
+    // Draw the owner drawn text, stored in the itemData.
     LPCTSTR text = reinterpret_cast<LPCTSTR>(pDrawItem->itemData);
-    memDC.SetBkMode(TRANSPARENT);
-    memDC.DrawText(text, lstrlen(text), partRect, DT_SINGLELINE | DT_VCENTER);
-
-    // Copy the memory dc to the statusbar's dc.
-    dc.BitBlt(0, 0, partRect.Width(), partRect.Height(), memDC, 0, 0, SRCCOPY);
+    dc.SetBkMode(TRANSPARENT);
+    dc.DrawText(text, lstrlen(text), partRect, DT_SINGLELINE | DT_VCENTER);
 }
 
 BOOL CMainFrame::DrawStatusBarBkgnd(CDC& dc, CStatusBar& statusbar)

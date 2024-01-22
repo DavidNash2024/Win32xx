@@ -48,9 +48,6 @@
 
 
 #include "wxx_wincore0.h"
-#include "wxx_stdcontrols.h"
-#include "wxx_imagelist.h"
-#include "wxx_ddx.h"
 
 
 namespace Win32xx

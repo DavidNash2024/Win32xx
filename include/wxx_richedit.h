@@ -44,7 +44,6 @@
 
 
 #include "wxx_wincore.h"
-#include "wxx_gdi.h"
 #include <Richedit.h>
 #include <RichOle.h>
 

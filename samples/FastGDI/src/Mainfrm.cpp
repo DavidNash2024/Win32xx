@@ -11,7 +11,8 @@
 //
 
 // Constructor for CMainFrame.
-CMainFrame::CMainFrame() : m_isDPIChanging(false), m_isToolbarShown(true)
+CMainFrame::CMainFrame() : m_preview(m_view), m_isDPIChanging(false),
+                           m_isToolbarShown(true)
 {
 }
 
@@ -136,7 +137,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 // This occurs when:
 //  - The window is moved to a new monitor that has a different DPI.
 //  - The DPI of the monitor hosting the window changes.
-LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT CMainFrame::OnDpiChanged(UINT, WPARAM, LPARAM)
 {
     // Save the view's rectangle and disable scrolling.
     m_scrollPos = m_view.GetScrollPosition();
@@ -279,9 +280,6 @@ BOOL CMainFrame::OnFilePreview()
         // Create the preview window if required
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
-
-        // Specify the source of the PrintPage function
-        m_preview.SetSource(m_view);
 
         // Set the preview's owner (for notification messages)
         m_preview.DoPrintPreview(*this);

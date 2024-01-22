@@ -137,7 +137,7 @@ namespace Win32xx
         CStringT(const T * text, int length);
 
         CStringT& operator=(const CStringT& str);
-        CStringT& operator=(const T ch);
+        CStringT& operator=(T ch);
         CStringT& operator=(const T* text);
 
         bool     operator==(const T* text) const;
@@ -149,7 +149,7 @@ namespace Win32xx
         const T& operator[](int index) const;
         CStringT& operator+=(const CStringT& str);
         CStringT& operator+=(const T* text);
-        CStringT& operator+=(const T ch);
+        CStringT& operator+=(T ch);
 
         // Accessors
         const T* c_str() const          { return m_str.c_str(); }                // alternative for casting to const T*
@@ -281,14 +281,14 @@ namespace Win32xx
             return *this;
         }
 
-        CString& operator=(const char ch)
+        CString& operator=(char ch)
         {
             AtoT tch(&ch, CP_ACP, 1);
             m_str.assign(1, tch.c_str()[0]);
             return *this;
         }
 
-        CString& operator=(const WCHAR ch)
+        CString& operator=(WCHAR ch)
         {
             WtoT tch(&ch, CP_ACP, 1);
             m_str.assign(1, tch.c_str()[0]);
@@ -325,14 +325,14 @@ namespace Win32xx
             return *this;
         }
 
-        CString& operator+=(const char ch)
+        CString& operator+=(char ch)
         {
             AtoT tch(&ch, CP_ACP, 1);
             m_str.append(1, tch.c_str()[0]);
             return *this;
         }
 
-        CString& operator+=(const WCHAR ch)
+        CString& operator+=(WCHAR ch)
         {
             WtoT tch(&ch, CP_ACP, 1);
             m_str.append(1, tch.c_str()[0]);

@@ -68,8 +68,6 @@
 //    ::LineTo(memDC, 50, 50);
 //
 //    // Select a new pen into memDC and draw a line.
-//    ::SelectObject(memDC, oldPen);
-//    ::DeleteObject(pen1);
 //    HPEN pen2 = ::CreatePen(PS_SOLID, 1, RGB(0,255,0);
 //    oldPen = static_cast<HPEN>(::SelectObject(memDC, pen2));
 //    ::LineTo(memDC, 80, 80);
@@ -78,6 +76,7 @@
 //    ::BitBlt(clientDC, 0, 0, cx, cy, memDC, 0, 0);
 //
 //    // Cleanup.
+//    ::DeleteObject(pen1);
 //    ::SelectObject(memDC, oldPen);
 //    ::DeleteObject(pen2);
 //    ::SelectObject(memDC, oldBitmap);
@@ -127,9 +126,9 @@
 //  }
 
 // Notes:
-//  * When the CDC object drops out of scope, its destructor is called, releasing
+//  * When the CDC object goes out of scope, its destructor is called, releasing
 //     or deleting the device context if Win32++ created it.
-//  * When the destructor for CBitmap, CBrush, CPalette, CPen and CRgn are called,
+//  * When the CBitmap, CBrush, CPalette, CPen and CRgn objects go out of scope,
 //     the destructor is called deleting their GDI object if Win32++ created it.
 //  * When the CDC object's destructor is called, any GDI objects created by one of
 //     the CDC member functions (CDC::CreatePen for example) will be deleted.
@@ -146,10 +145,10 @@
 //     different one.
 //  * There is no need to select the old object back into the device context
 //     when SelectObject is used.
-//  * All GDI classes are reference counted and can be copied safely. This
-//     means they can be safely returned by value from functions. The
-//     associated GDI resource is only deleted (if appropriate) when the last
-//     copy of the object goes out of scope.
+//  * Reference counting allows all GDI classes to be copied safely. This means
+//     they can be safely returned by value from functions. The associated GDI
+//     resource is only deleted (if appropriate) when the last copy of the
+//     object goes out of scope.
 //  * A copy of a GDI class is a clone of the original. Both class objects
 //     manipulate the one GDI resource.
 
@@ -193,7 +192,7 @@ namespace Win32xx
         CGDIObject(const CGDIObject& rhs);
         virtual ~CGDIObject();
         CGDIObject& operator=(const CGDIObject& rhs);
-        void operator=(const HGDIOBJ object);
+        CGDIObject& operator=(HGDIOBJ object);
 
         void    Attach(HGDIOBJ object);
         void    DeleteObject();
@@ -441,6 +440,7 @@ namespace Win32xx
         virtual ~CDC();
         operator HDC() const { return GetHDC(); }   // Converts a CDC to a HDC
         CDC& operator=(const CDC& rhs);         // Assigns a CDC to an existing CDC
+        CDC& operator=(HDC dc);
 
         void Attach(HDC dc);
         void Destroy();
@@ -454,8 +454,6 @@ namespace Win32xx
         CPen SelectObject(HPEN pen) const;
         int SelectObject(HRGN rgn) const;
         CPalette SelectPalette(HPALETTE palette, BOOL forceBkgnd) const;
-
-        void operator=(const HDC dc);
 
         // Initialization
         void CreateCompatibleDC(HDC source);
@@ -973,9 +971,10 @@ namespace Win32xx
         return *this;
     }
 
-    inline void CGDIObject::operator=(const HGDIOBJ object)
+    inline CGDIObject& CGDIObject::operator=(HGDIOBJ object)
     {
         Attach(object);
+        return *this;
     }
 
     // Store the HDC and CDC pointer in the HDC map
@@ -1299,7 +1298,7 @@ namespace Win32xx
                     (bits[index + 1] != GetGValue(mask)) ||
                     (bits[index + 2] != GetBValue(mask)))
                 {
-                    BYTE byGray = BYTE(60 + (bits[index + 2] * 3 + bits[index + 1] * 6 + bits[index + 0]) / 14);
+                    BYTE byGray = BYTE(70 + (bits[index + 2] * 3 + bits[index + 1] * 6 + bits[index + 0]) / 14);
                     bits[index] = byGray;
                     bits[index + 1] = byGray;
                     bits[index + 2] = byGray;
@@ -1455,7 +1454,7 @@ namespace Win32xx
         byte* pByteArray = &vBits[0];
 
         memDC.GetDIBits(*this, 0, scanLines, pByteArray, pbmi, DIB_RGB_COLORS);
-        UINT widthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
+        UINT heightBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
         int yOffset = 0;
         int xOffset;
@@ -1481,7 +1480,7 @@ namespace Win32xx
             }
 
             // Increment vertical offset
-            yOffset += widthBytes;
+            yOffset += heightBytes;
         }
 
         // Save the modified color back into our source DDB
@@ -2332,9 +2331,10 @@ namespace Win32xx
     // Note: this assignment operator permits a call like this:
     // CDC MyCDC;
     // MyCDC = SomeHDC;
-    inline void CDC::operator=(const HDC dc)
+    inline CDC& CDC::operator=(HDC dc)
     {
         Attach(dc);
+        return *this;
     }
 
     // The copy constructor is called when a temporary copy of the CDC needs to be created.
@@ -2535,6 +2535,7 @@ namespace Win32xx
     {
         typedef UINT WINAPI GRADIENTFILL(HDC, PTRIVERTEX, ULONG, PVOID, ULONG, ULONG);
 
+        SolidFill(color1, rc);
         CString system;
         ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
         system.ReleaseBuffer();
