@@ -5187,7 +5187,7 @@ namespace Win32xx
         SetTabIcon(icon);
     }
 
-    // Updates the tab font based on the window's DPI.
+    // Updates the tabs font based on the window's DPI.
     inline void CDockContainer::SetTabsFontSize(int fontSize)
     {
         // Set the font used in the tabs.
@@ -5201,7 +5201,7 @@ namespace Win32xx
         RecalcLayout();
     }
 
-    // Updates the tab icons based on the window's DPI.
+    // Updates the tabs icon size based on the window's DPI.
     inline void CDockContainer::SetTabsIconSize(int iconSize)
     {
         int iconHeight = GetContainerParent()->DpiScaleInt(iconSize);

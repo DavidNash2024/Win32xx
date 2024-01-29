@@ -399,7 +399,9 @@ void CRichView::SetDefaultPrintOptions()
     m_printDialog.SetCopies(1);
     m_printDialog.SetFromPage(1);
     CDC printerDC = m_printDialog.GetPrinterDC();
-    m_printDialog.SetToPage(CollatePages(printerDC));
+    int maxPage = CollatePages(printerDC);
+    m_printDialog.SetMaxPage(maxPage);
+    m_printDialog.SetToPage(maxPage);
     m_printDialog.SetCollate(1);  // Tick the collate button
 }
 

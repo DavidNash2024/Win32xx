@@ -1,17 +1,23 @@
 Version 9.5
 ===========
+This version adds a ClassicPrintDlg sample. This sample provides an
+alternative the PrintDlg and PrintDlgEx common dialogs which have had 
+their functionality downgraded recently in Windows 10 and 11.
 
 New Features and Enhancements
 -----------------------------
-* Added ClassicPrintDlg sample.
+* Added the ClassicPrintDlg sample to provide an alternative to PrintDlg
+  and PrintDlgEx.
+* Added a new feature to the Themes sample. This sample now demonstrates 
+  how to specify the window's caption color on Windows 11.
 * CComboBoxEx, CHeader, CListView, CToolbar, and CTreeView now manage their
   own image lists. There is no longer any need to keep a local copy of the
-  image list assigned to these controls.
+  image list assigned to these controls to keep the image list in scope.
+* Updated CImageList.
+* Updated CTab and the TabDemo sample.
 * Optimized the redrawing of frames and dockers when moving windows between
   monitors with different display settings.
 * Simplified support for additional toolbars in frames.
-* Updated CTab and the TabDemo sample.
-* Updated the Themes sample.
 
 Changes in detail
 -----------------
@@ -19,9 +25,9 @@ Added CDockContainer::SetTabsFontSize
 Added CDockContainer::SetTabsIconSize
 Added CFrameT::SetToolBarImages       Added overload for additional toolbars
 Added CImageList::CreateDragImage
+Added CPrintPreview::CPrintPreview    Additional constructor
 Added CTab::SetTabsFontSize
 Added CTab::SetTabsIconSize
-Added CPrintPreview::CPrintPreview    Additional constructor
 Added CWinApp::GetHDevMode
 Added CWinApp::GetHDevNames
 Added CWinApp::ResetPrinterMemory

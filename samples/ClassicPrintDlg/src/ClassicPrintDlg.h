@@ -36,6 +36,7 @@ public:
     void SetCollate(bool isCollate);
     void SetCopies(int copies);
     void SetFromPage(int fromPage);
+    void SetMaxPage(int maxPage);
     void SetPrintToFile(bool isPrintToFile);
     void SetRadio(int radio);
     void SetToPage(int toPage);
@@ -76,6 +77,7 @@ private:
     int m_toPage;
     int m_collate;
     int m_printToFile;
+    int m_maxPage;
 
     CString m_status;
     CString m_type;

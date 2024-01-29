@@ -50,6 +50,8 @@ private:
     LRESULT AddCombo();
     void ArrangeBands();
     BOOL ChooseColor(UINT color);
+    void SetCaptionColor(COLORREF color);
+    void SetCaptionTextColor(COLORREF color);
     void SetMenuBarColors(COLORREF hot1, COLORREF hot2, COLORREF pressed1, COLORREF pressed2, COLORREF outline, COLORREF text);
     void SetReBarColors(COLORREF backGround1, COLORREF backGround2, COLORREF band1, COLORREF band2);
     void SetStatusBarColors(COLORREF bkgnd1, COLORREF bkgnd2, COLORREF text);

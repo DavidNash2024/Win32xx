@@ -269,7 +269,7 @@ namespace Win32xx
         m_mapCGDIData.insert(std::make_pair(gdi, pData));
     }
 
-    // Adds a HIMAGELIST and Ciml_Data* pair to the map.
+    // Adds a HIMAGELIST and CIml_Data* pair to the map.
     inline void CWinApp::AddCImlData(HIMAGELIST images, CIml_Data* pData)
     {
         CThreadLock mapLock(m_wndLock);
@@ -454,7 +454,7 @@ namespace Win32xx
         return ::LoadImage(GetResourceHandle(), MAKEINTRESOURCE (imageID), type, cx, cy, flags);
     }
 
-    // Frees the global memory handles for the printer.
+    // Frees the global memory handles for the application's printer.
     inline void CWinApp::ResetPrinterMemory()
     {
         m_devMode.Free();
@@ -562,9 +562,8 @@ namespace Win32xx
         }
     }
 
-    // Allocates the global memory for the default printer if required.
-    // Resets the global memory if we were using the default printer, and the
-    // default printer has changed.
+    // Updates the printer global memory if we were using the default printer,
+    // and the default printer has changed.
     inline void CWinApp::UpdateDefaultPrinter()
     {
         CThreadLock lock(GetApp()->m_printLock);
@@ -621,8 +620,9 @@ namespace Win32xx
         }
     }
 
-    // Updates the current printer global memory. It is assumed the old
-    // global memory has already been freed.
+    // Updates the current printer global memory with the specified memory
+    // handles. This function assumes the old global memory has already
+    // been freed.
     inline void CWinApp::UpdatePrinterMemory(HGLOBAL hDevMode, HGLOBAL hDevNames)
     {
         m_devMode.Reassign(hDevMode);
