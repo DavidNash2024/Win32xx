@@ -10,7 +10,8 @@
 
 CClassicPrintDlg::CClassicPrintDlg()
     : CDialog(IDD_PRINTDLG), m_copies(1), m_fromPage(1), m_radio(0), m_toPage(9999),
-                             m_collate(0), m_printToFile(0), m_isPropertiesDisplayed(false)
+                             m_collate(0), m_printToFile(0), m_maxPage(0),
+                             m_isPropertiesDisplayed(false)
 {
     m_hDevMode = 0;
     m_hDevNames = 0;
@@ -537,11 +538,21 @@ void CClassicPrintDlg::OnOK()
     if (!m_isPropertiesDisplayed)
     {
         UpdateData(m_dx, READFROMCONTROL);
-        GetApp()->UpdatePrinterMemory(m_hDevMode, m_hDevNames);
-        m_hDevMode = 0;
-        m_hDevNames = 0;
+        if (m_fromPage >= 1 && m_fromPage <= m_maxPage)
+            if (m_toPage >= 1 && m_toPage <= m_maxPage)
+            {
+                GetApp()->UpdatePrinterMemory(m_hDevMode, m_hDevNames);
+                m_hDevMode = 0;
+                m_hDevNames = 0;
 
-        CDialog::OnOK();
+                CDialog::OnOK();
+            }
+            else
+            {
+                CString text = "Enter a page between 1 and ";
+                text << ToCString(m_maxPage);
+                MessageBox(text, _T("Invalid Page"), MB_OK);
+            }
     }
 }
 
@@ -611,6 +622,11 @@ BOOL CClassicPrintDlg::OnRadioSelection(UINT id)
     CheckRadioButton(IDB_RADIOALL, IDB_RADIOSELECTION, id);
     UpdateData(m_dx, READFROMCONTROL);
     return TRUE;
+}
+
+void CClassicPrintDlg::SetMaxPage(int maxPage)
+{
+    m_maxPage = maxPage;
 }
 
 // Sets the DEVMODE parameters of the specified printer.

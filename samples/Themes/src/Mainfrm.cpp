@@ -86,60 +86,80 @@ BOOL CMainFrame::ChooseColor(UINT color)
         SetMenuBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0));
         SetStatusBarColors(RGB(235, 237, 250), RGB(235, 237, 250), RGB(0, 0, 0));
         SetToolBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255));
+        SetCaptionColor(RGB(235, 237, 250));
+        SetCaptionTextColor(RGB(0, 0, 0));
         break;
     case IDM_WIN7:   // Recommended for Vista and Windows 7
         SetReBarColors(RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230));
         SetMenuBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0));
         SetStatusBarColors(RGB(225, 230, 255), RGB(240, 242, 250), RGB(0, 0, 0) );
         SetToolBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255));
+        SetCaptionColor(RGB(225, 230, 255));
+        SetCaptionTextColor(RGB(0, 0, 0));
         break;
     case IDM_BLUE:    // Recommended for Windows XP
         SetReBarColors(RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220));
         SetMenuBarColors(RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200), RGB(0, 0, 0));
         SetStatusBarColors(RGB(150,190,245), RGB(196,215,250), RGB(0, 0, 0) );
         SetToolBarColors(RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255));
+        SetCaptionColor(RGB(150, 190, 245));
+        SetCaptionTextColor(RGB(0, 0, 0));
         break;
     case IDM_GRAY:    // Gray Theme
-        SetReBarColors( RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172) );
-        SetMenuBarColors( RGB(196, 215, 250), RGB(120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200), RGB(0, 0, 0) );
+        SetReBarColors(RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172));
+        SetMenuBarColors(RGB(196, 215, 250), RGB(120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200), RGB(0, 0, 0));
         SetStatusBarColors(RGB(210, 210, 200), RGB(238, 236, 224), RGB(0, 0, 0));
         SetToolBarColors(RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197));
+        SetCaptionColor(RGB(210, 210, 200));
+        SetCaptionTextColor(RGB(0, 0, 0));
         break;
     case IDM_OLIVE:   // Green Theme
-        SetReBarColors( RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78) );
-        SetMenuBarColors( RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128), RGB(0, 0, 200) );
+        SetReBarColors(RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78));
+        SetMenuBarColors(RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128), RGB(0, 0, 200));
         SetStatusBarColors(RGB(160, 180, 80), RGB(180, 200, 100), RGB(0, 0, 200));
         SetToolBarColors(RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255));
+        SetCaptionColor(RGB(160, 180, 80));
+        SetCaptionTextColor(RGB(0, 0, 200));
         break;
     case IDM_GOLD:    // Gold Theme
-        SetReBarColors( RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50) );
-        SetMenuBarColors( RGB(196, 215, 250), RGB(120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128), RGB(0, 0, 0) );
+        SetReBarColors(RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50));
+        SetMenuBarColors(RGB(196, 215, 250), RGB(120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128), RGB(0, 0, 0));
         SetStatusBarColors(RGB(230, 180, 0), RGB(240, 210, 90), RGB(0, 0, 0));
         SetToolBarColors(RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197));
+        SetCaptionColor(RGB(230, 180, 0));
+        SetCaptionTextColor(RGB(0, 0, 0));
         break;
     case IDM_OCHRE:   // Orange Theme
-        SetReBarColors( RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6) );
-        SetMenuBarColors( RGB(196, 215, 250), RGB(120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128), RGB(0, 0, 0) );
+        SetReBarColors(RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6));
+        SetMenuBarColors(RGB(196, 215, 250), RGB(120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128), RGB(0, 0, 0));
         SetStatusBarColors(RGB(248, 132, 12), RGB(248, 198, 10), RGB(0, 0, 0));
         SetToolBarColors(RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197));
+        SetCaptionColor(RGB(248, 132, 12));
+        SetCaptionTextColor(RGB(0, 0, 0));
         break;
     case IDM_PINK:    // Pink Theme
-        SetReBarColors( RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170) );
-        SetMenuBarColors( RGB(196, 215, 250), RGB(120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128), RGB(0, 0, 230) );
+        SetReBarColors(RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170));
+        SetMenuBarColors(RGB(196, 215, 250), RGB(120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128), RGB(0, 0, 230));
         SetStatusBarColors(RGB(255, 130, 190), RGB(250, 205, 235), RGB(0, 0, 230));
         SetToolBarColors(RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197));
+        SetCaptionColor(RGB(255, 130, 190));
+        SetCaptionTextColor(RGB(0, 0, 230));
         break;
     case IDM_MAGENTA:  // Magenta Theme
-        SetReBarColors( RGB(210, 6, 100), RGB(240, 66, 120), RGB(240, 66, 128), RGB(110, 6, 105) );
-        SetMenuBarColors( RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210), RGB(255, 255, 0) );
+        SetReBarColors(RGB(210, 6, 100), RGB(240, 66, 120), RGB(240, 66, 128), RGB(110, 6, 105));
+        SetMenuBarColors(RGB(246, 6, 150), RGB(220, 6, 120), RGB(210,6,145), RGB(220,6,150), RGB(255,128,210), RGB(255, 255, 0));
         SetStatusBarColors(RGB(210, 6, 100), RGB(240, 66, 120), RGB(255, 255, 0));
         SetToolBarColors(RGB(242, 106, 228), RGB(192, 6, 88), RGB(152, 6, 56), RGB(152, 6, 56), RGB(149, 6, 197));
+        SetCaptionColor(RGB(210, 6, 100));
+        SetCaptionTextColor(RGB(255, 255, 0));
         break;
     case IDM_BLACK:   // Black Theme
         SetReBarColors(RGB(30, 30, 30), RGB(30, 30, 30), RGB(50, 50, 50), RGB(50, 50, 50));
-        SetMenuBarColors( RGB(30, 30, 30), RGB(30, 30, 30), RGB(40, 40, 40), RGB(40, 40, 40), RGB(96, 96, 96), RGB(255, 255, 255) );
+        SetMenuBarColors(RGB(30, 30, 30), RGB(30, 30, 30), RGB(40, 40, 40), RGB(40, 40, 40), RGB(96, 96, 96), RGB(255, 255, 255));
         SetStatusBarColors(RGB(30, 30, 30), RGB(30, 30, 30), RGB(255, 255, 255));
         SetToolBarColors(RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64, 177, 230), RGB(49, 106, 197));
+        SetCaptionColor(RGB(30, 30, 30));
+        SetCaptionTextColor(RGB(255, 255, 255));
         break;
     default:
         m_color = IDM_WIN11;
@@ -147,6 +167,8 @@ BOOL CMainFrame::ChooseColor(UINT color)
         SetMenuBarColors( RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255), RGB(0, 0, 0) );
         SetStatusBarColors(RGB(235, 237, 250), RGB(235, 237, 250), RGB(0, 0, 0));
         SetToolBarColors(RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255));
+        SetCaptionColor(RGB(235, 237, 250));
+        SetCaptionTextColor(RGB(0, 0, 0));
         break;
     }
 
@@ -657,6 +679,40 @@ BOOL CMainFrame::SaveRegistrySettings()
     }
 
     return TRUE;
+}
+
+// This function uses the DwmSetWindowAttribute Windows API function to set
+// the caption color. The DWMWA_CAPTION_COLOR option requires Windows 11.
+void CMainFrame::SetCaptionColor(COLORREF color)
+{
+    HMODULE dwmapi = ::LoadLibrary(_T("Dwmapi.dll"));
+    if (dwmapi != 0)
+    {
+        typedef UINT WINAPI DWMSETWINDOWATTRIBUE(HWND, DWORD, LPCVOID, DWORD);
+        DWMSETWINDOWATTRIBUE* pDwmSetWindowAttribute = reinterpret_cast<DWMSETWINDOWATTRIBUE*>(
+            reinterpret_cast<void*>(::GetProcAddress(dwmapi, "DwmSetWindowAttribute")));
+
+        const int DWMWA_CAPTION_COLOR = 35;
+        pDwmSetWindowAttribute(*this, DWMWA_CAPTION_COLOR, &color, sizeof(color));
+        ::FreeLibrary(dwmapi);
+    }
+}
+
+// This function uses the DwmSetWindowAttribute Windows API function to set
+// the caption text color. The DWMWA_CAPTION_COLOR option requires Windows 11.
+void CMainFrame::SetCaptionTextColor(COLORREF color)
+{
+    HMODULE dwmapi = ::LoadLibrary(_T("Dwmapi.dll"));
+    if (dwmapi != 0)
+    {
+        typedef UINT WINAPI DWMSETWINDOWATTRIBUE(HWND, DWORD, LPCVOID, DWORD);
+        DWMSETWINDOWATTRIBUE* pDwmSetWindowAttribute = reinterpret_cast<DWMSETWINDOWATTRIBUE*>(
+            reinterpret_cast<void*>(::GetProcAddress(dwmapi, "DwmSetWindowAttribute")));
+
+        const int DWMWA_TEXT_COLOR = 36;
+        pDwmSetWindowAttribute(*this, DWMWA_TEXT_COLOR, &color, sizeof(color));
+        ::FreeLibrary(dwmapi);
+    }
 }
 
 // Sets the menubar theme colors.

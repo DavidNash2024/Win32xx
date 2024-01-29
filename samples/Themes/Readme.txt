@@ -1,7 +1,7 @@
 Themes Example
 ==============
 This project demonstrates how to adjust the color and style of various aspects
-of a frame. The applications theme settings will be saved in the registry.
+of a frame.
 
 
 Features demonstrated in this example
@@ -19,6 +19,7 @@ Features demonstrated in this example
    - Setting menu outline color
    - Setting menu text color (uses white text for black theme).
    - Setting popup menu colors
+   - Setting caption and caption text colors (supported on Windows 11)
    
 * Setting various theme options, namely
    - Use rebar themes

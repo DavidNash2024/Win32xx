@@ -698,7 +698,7 @@ namespace Win32xx
         if (GetShowButtons())
         {
             rc = GetClientRect();
-            int gap = DpiScaleInt(4);
+            int gap = DpiScaleInt(2);
             int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
             int cy = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
             rc.right -= gap;
@@ -1534,7 +1534,7 @@ namespace Win32xx
         }
     }
 
-    // Updates the tab font based on the window's DPI.
+    // Sets the tabs font size, adjusted for the window's DPI.
     inline void CTab::SetTabsFontSize(int fontSize)
     {
         // Set the font used in the tabs.
@@ -1548,7 +1548,7 @@ namespace Win32xx
         RecalcLayout();
     }
 
-    // Updates the tab icons based on the window's DPI.
+    // Sets the tabs icon size, adjusted for the window's DPI.
     inline void CTab::SetTabsIconSize(int iconSize)
     {
         int iconHeight = DpiScaleInt(iconSize);
