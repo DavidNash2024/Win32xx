@@ -1,0 +1,360 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                       RT_MANIFEST             "../src/res/PerMonitorV2.manifest"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDW_MAIN MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "New Plain Text",              IDM_FILE_NEW_PLAIN
+        MENUITEM "New Rich Text",               IDM_FILE_NEW_RICH
+        MENUITEM "&Open...\tCtrl+O",            IDM_FILE_OPEN
+        MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE
+        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
+        MENUITEM SEPARATOR
+        MENUITEM "Printer Setup",               IDM_FILE_PRINTSETUP
+        MENUITEM "Print Preview",               IDM_FILE_PREVIEW
+        MENUITEM "Print Now",                   IDM_FILE_PRINTNOW
+        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT
+        MENUITEM SEPARATOR
+        MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
+        MENUITEM "Redo\tCtrl+Y",                IDM_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
+        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
+        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
+        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "Font",                        IDM_OPTIONS_FONT
+        MENUITEM "Word Wrap",                   IDM_OPTIONS_WRAP, CHECKED
+    END
+    POPUP "&Encoding"
+    BEGIN
+        MENUITEM "ANSI",                        IDM_ENC_ANSI
+        MENUITEM "UTF-8",                       IDM_ENC_UTF8
+        MENUITEM "UTF-16",                      IDM_ENC_UTF16
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "../src/res/Notepad.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDW_MAIN                BITMAP                  "../src/res/toolbar24.bmp"
+IDW_MENUICONS           BITMAP                  "../src/res/toolbar16.bmp"
+IDB_TOOLBAR_HOT         BITMAP                  "../src/res/toolbar24_h.bmp"
+IDB_TOOLBAR_DIS         BITMAP                  "../src/res/toolbar24_d.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDW_ABOUT DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
+    CTEXT           "Notepad with custom print dialog",IDC_STATIC,61,22,64,18
+    ICON            IDW_MAIN,0,4,4,20,20
+END
+
+IDD_PRINTDLG DIALOGEX 32, 32, 288, 186
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Print"
+FONT 8, "MS Shell Dlg", 0, 0
+BEGIN
+    GROUPBOX        "Printer",IDC_GROUPBOX1,8,4,272,84,WS_GROUP
+    LTEXT           "&Name:", IDC_STATIC,16,20,36,8
+    COMBOBOX        IDC_COMBOBOX,52,18,152,152,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_GROUP | WS_TABSTOP
+    PUSHBUTTON      "&Properties...",IDB_PRINTPROPERTIES,212,17,60,14,WS_GROUP
+    LTEXT           "Status:", IDC_STATIC,16,36,36,10,SS_NOPREFIX
+    CONTROL         "",IDS_STATUS,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | WS_GROUP,52,36,224,10
+    LTEXT           "Type:", IDC_STATIC,16,48,36,10,SS_NOPREFIX
+    CONTROL         "",IDS_TYPE,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | WS_GROUP,52,48,224,10
+    LTEXT           "Where:", IDC_STATIC,16,60,36,10,SS_NOPREFIX
+    CONTROL         "",IDS_WHERE,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | WS_GROUP,52,60,224,10
+    LTEXT           "Comment:", IDC_STATIC,16,72,36,10,SS_NOPREFIX
+    CONTROL         "",IDS_COMMENT,"Static",SS_LEFTNOWORDWRAP | SS_NOPREFIX | WS_GROUP,52,72,156,10
+    CONTROL         "Print to fi&le",IDB_PRINTTOFILE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,212,72,64,12
+    GROUPBOX        "Print range",IDC_GROUPBOX2,8,92,144,64,WS_GROUP
+    RADIOBUTTON     "&All", IDB_RADIOALL,16,106,64,12,WS_GROUP
+    RADIOBUTTON     "Pa&ges", IDB_RADIORANGE,16,122,36,12
+    RADIOBUTTON     "&Selection", IDB_RADIOSELECTION,16,138,64,12
+    RTEXT           "&from:",IDC_STATIC,52,124,20,8
+    EDITTEXT        IDS_FROM,74,122,26,12,ES_NUMBER | WS_GROUP
+    RTEXT           "&to:",IDC_STATIC,102,124,16,8
+    EDITTEXT        IDS_TO,120,122,26,12,ES_NUMBER | WS_GROUP
+    GROUPBOX        "Copies",IDC_GROUPBOX3,160,92,120,64,WS_GROUP
+    LTEXT           "Number of &copies:", IDC_STATIC,168,108,68,8
+    EDITTEXT        IDS_COPIES,240,106,32,12,ES_NUMBER | WS_GROUP
+//    ICON            "",1086,162,124,20,20,SS_CENTERIMAGE | WS_GROUP
+    CONTROL         "C&ollate",IDB_COLLATE,"Button",BS_AUTOCHECKBOX | WS_GROUP | WS_TABSTOP,240,130,36,12
+    DEFPUSHBUTTON   "OK",IDOK,180,164,48,14,WS_GROUP
+    PUSHBUTTON      "Cancel",IDCANCEL,232,164,48,14
+    PUSHBUTTON      "&Help", IDB_HELP,8,164,48,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDW_MAIN ACCELERATORS
+BEGIN
+    "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+    "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_PRINTDLG, DIALOG
+    BEGIN
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                "CustomPrintDialog"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_READY               "Ready"
+    IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_NUM       "NUM"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_INDICATOR_SCRL      "SCRL"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_HELP_ABOUT          "Display Information about this program"
+    IDW_INDICATOR_INS       "INS"
+    IDW_INDICATOR_OVR       "OVR"
+    IDW_INDICATOR_PLAIN     "Plain text mode"
+    IDW_INDICATOR_RICH      "Rich text mode"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_PREVIEWPRINT        "Print Now"
+    IDW_PREVIEWSETUP        "Print Setup"
+    IDW_PREVIEWPREV         "Prev Page"
+    IDW_PREVIEWNEXT         "Next Page"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_PREVIEWCLOSE        "Close"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_NEW_PLAIN      "Create a New Plain Text Document"
+    IDM_FILE_NEW_RICH       "Create a New Rich Text Document"
+    IDM_FILE_OPEN           "Open Existing Document"
+    IDM_FILE_SAVE           "Save the Document"
+    IDM_FILE_SAVEAS         "Save the Document with a new name"
+    IDM_FILE_PREVIEW        "Preview the print job before printing"
+    IDM_FILE_PRINTNOW       "Print without displaying a print dialog"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_PRINT          "Print the Document"
+    IDM_FILE_PRINTSETUP     "Select the printer and paper size"
+    IDM_FILE_EXIT           "End the Program"
+    IDM_EDIT_UNDO           "Undo the last action"
+    IDM_EDIT_REDO           "Redo the previously undone action"
+    IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
+    IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
+    IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
+    IDM_EDIT_DELETE         "Erase the selected Contents"
+    IDM_OPTIONS_FONT        "Choose the font"
+    IDM_OPTIONS_WRAP        "Enable or disable word wrap"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_ENC_ANSI            "Encoding: ANSI"
+    IDM_ENC_UTF8            "Encoding: UTF-8"
+    IDM_ENC_UTF16           "Encoding: UTF-16"
+END
+
+STRINGTABLE
+BEGIN
+    61536                   "Close the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61488                   "Maximize the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61472                   "Minimize the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61456                   "Move the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61504                   "Select Next Window"
+END
+
+STRINGTABLE
+BEGIN
+    61520                   "Select Previous Window"
+END
+
+STRINGTABLE
+BEGIN
+    61728                   "Restore the Window"
+END
+
+STRINGTABLE
+BEGIN
+    61440                   "Resize the Window"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_FILE_MRU_FILE1      "Open this document"
+    IDW_FILE_MRU_FILE2      "Open this document"
+    IDW_FILE_MRU_FILE3      "Open this document"
+    IDW_FILE_MRU_FILE4      "Open this document"
+    IDW_FILE_MRU_FILE5      "Open this document"
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

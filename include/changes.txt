@@ -1,12 +1,12 @@
 Version 9.5
 ===========
-This version adds a ClassicPrintDlg sample. This sample provides an
-alternative the PrintDlg and PrintDlgEx common dialogs which have had 
+This version adds a CustomPrintDlg sample. This sample provides an
+alternative to the PrintDlg and PrintDlgEx common dialogs which have had 
 their functionality downgraded recently in Windows 10 and 11.
 
 New Features and Enhancements
 -----------------------------
-* Added the ClassicPrintDlg sample to provide an alternative to PrintDlg
+* Added the CustomPrintDlg sample to provide an alternative to PrintDlg
   and PrintDlgEx.
 * Added a new feature to the Themes sample. This sample now demonstrates 
   how to specify the window's caption color on Windows 11.
