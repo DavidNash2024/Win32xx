@@ -995,7 +995,7 @@ namespace Win32xx
     {
         CRect rcClose;
 
-        int gap = DpiScaleInt(4);
+        int gap = DpiScaleInt(1);
         CRect rc = GetWindowRect();
         int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
         int cy = GetSystemMetrics(SM_CYSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);

@@ -140,7 +140,6 @@ The sample applications include:
  * Performance - Measures Win32++'s message handling speed.
  * Picture - A simple picture rendering application.
  * PrintPreview - Extends the Notepad sample by adding a print preview.
- * PrintDialogEx - A text editor with printing that uses CPrintDialogEx.
  * PropertySheets - A demonstration of property sheets.
  * RebarDemo - Demonstrates the how to add a second ReBar to a frame application.
  * RibbonDockFrame - Demonstrates how to use a ribbon with a Docking Frame.

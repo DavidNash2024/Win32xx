@@ -698,7 +698,7 @@ namespace Win32xx
         if (GetShowButtons())
         {
             rc = GetClientRect();
-            int gap = DpiScaleInt(2);
+            int gap = DpiScaleInt(1);
             int cx = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
             int cy = GetSystemMetrics(SM_CXSMICON) * GetWindowDpi(*this) / GetWindowDpi(HWND_DESKTOP);
             rc.right -= gap;
