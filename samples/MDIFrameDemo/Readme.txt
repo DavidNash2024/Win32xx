@@ -20,6 +20,15 @@ The Simple view window will present a dialog box asking if it is OK to
 close the window, before it is destroyed.
 
 
+Caveat
+======
+Multiple-document interface (MDI) applications are officially discouraged
+by Microsoft. They do not render properly with Per-Monitor (V2) DPI Awareness.
+
+Win32++ provides the CTabbedMDI class which can be used as an alternative to
+MDI applications.
+
+
 Features demonstrated in this example
 =====================================
 * Use of CMDIFrame and CMDIChild classes to implement a MDI frame

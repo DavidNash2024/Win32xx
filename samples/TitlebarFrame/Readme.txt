@@ -20,6 +20,16 @@ The mini-frame mode has the following features:
  - The toolbar is displayed within the rebar control.
 
 
+Caveat
+------
+This sample uses techniques to change the window caption color that are not
+supported by Microsoft. These techniques don't work with high contrast themes,
+and might not work in future versions of Microsoft Windows.
+
+Refer to the themes sample for a technique to change the window caption color
+that is supported by Microsoft for Windows 11 and future versions.
+
+
 Background
 ==========
 Modern window operating systems (since windows 7) use the Windows Desktop 

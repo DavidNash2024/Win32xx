@@ -2,7 +2,7 @@ Version 9.5
 ===========
 This version adds a CustomPrintDlg sample. This sample provides an
 alternative to the PrintDlg and PrintDlgEx common dialogs which have had 
-their functionality downgraded recently in Windows 10 and 11.
+their functionality downgraded in Windows 11.
 
 New Features and Enhancements
 -----------------------------
@@ -34,8 +34,6 @@ Added CWinApp::ResetPrinterMemory
 Added CWinApp::UpdateDefaultPrinter
 Added CWinApp::UpdatePrinterMemory
 
-Removed CTab::SetTabHeight
-
 Modified CDockContainer::SetTBImageList        removed CImageList& argument
 Modified CDockContainer::SetTBImageListDis     removed CImageList& argument
 Modified CDockContainer::SetTBImageListHot     removed CImageList& argument
@@ -50,6 +48,10 @@ Modified CToolBar::SetDisableImageList         returns CImageList
 Modified CToolBar::SetHotImageList             returns CImageList
 Modified CToolBar::SetImageList                returns CImageList
 Modified CTreeView::SetImageList               returns CImageList
+
+Removed CTab::SetTabHeight
+Removed the PrintDialogEx sample
+Removed the MDIDockFrame sample
 
 
 Version 9.4
