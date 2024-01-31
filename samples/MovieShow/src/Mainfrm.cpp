@@ -3,6 +3,7 @@
 //
 
 #include "stdafx.h"
+#include "dwmapi.h"
 #include "resource.h"
 #include "Mainfrm.h"
 #include "SearchDialog.h"
@@ -953,21 +954,27 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Frames have all options enabled by default.
     // Use the following functions to disable options.
 
-    // This app has a toolbar, but no menu (or menubar)
+    // This app has a toolbar, but no menu (or menubar).
 
-       UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar.
-       UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar.
+    UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar.
+    UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar.
     // UseOwnerDrawnMenu(FALSE);     // Don't use owner draw for popup menu items.
     // UseReBar(FALSE);              // Don't use a ReBar.
     // UseStatusBar(FALSE);          // Don't use a StatusBar.
     // UseThemes(FALSE);             // Don't use themes.
     // UseToolBar(FALSE);            // Don't use a ToolBar.
 
-       // Create the splash screen
-       m_splashThread.CreateThread();
+    // Create the splash screen.
+    m_splashThread.CreateThread();
 
-    // call the base class function
-    return CDockFrame::OnCreate(cs);
+    // call the base class function.
+    CDockFrame::OnCreate(cs);
+
+    // Set the color of the frame's caption.
+    COLORREF color = GetReBarTheme().clrBkgnd1;
+    DwmSetWindowAttribute(*this, DWMWA_CAPTION_COLOR, &color, sizeof(color));
+
+    return 0;
 }
 
 // Called in response to favourites on the toolbar or the

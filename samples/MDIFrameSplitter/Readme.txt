@@ -10,6 +10,15 @@ to create a splitter window. The splitter window has dock containers docked at
 the left and the right.
 
 
+Caveat
+======
+Multiple-document interface (MDI) applications are officially discouraged
+by Microsoft. They do not render properly with Per-Monitor (V2) DPI Awareness.
+
+Win32++ provides the CTabbedMDI class which can be used as an alternative to
+MDI applications.
+
+
 Features demonstrated in this example
 =====================================
 * Use of CMDIFrame and CMDIChild classes to implement a MDI frame.

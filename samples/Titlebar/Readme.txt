@@ -1,7 +1,7 @@
 Titlebar Sample
 ===============
-This sample demonstrates how to customize the title bar of a window in a
-manner that is supported on Windows 10 and Windows 11.
+This sample demonstrates how to customize the title bar of a window on 
+Windows 10 and Windows 11.
 
 The main window with the customized title bar is a "mini frame". It has 
 the following features:
@@ -9,6 +9,16 @@ the following features:
 * A system menu is displayed when the application's icon is clicked.
 * CMenuBar is used to display a menu in the caption area.
 * A child view window is positioned over the client area of the main window.
+
+
+Caveat
+------
+This sample uses techniques to change the window caption color that are not
+supported by Microsoft. These techniques don't work with high contrast themes,
+and might not work in future versions of Microsoft Windows.
+
+Refer to the themes sample for a technique to change the window caption color
+that is supported by Microsoft for Windows 11 and future versions.
 
 
 Background
