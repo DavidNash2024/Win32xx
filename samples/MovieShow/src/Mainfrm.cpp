@@ -3,7 +3,6 @@
 //
 
 #include "stdafx.h"
-#include "dwmapi.h"
 #include "resource.h"
 #include "Mainfrm.h"
 #include "SearchDialog.h"
@@ -972,7 +971,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // Set the color of the frame's caption.
     COLORREF color = GetReBarTheme().clrBkgnd1;
-    DwmSetWindowAttribute(*this, DWMWA_CAPTION_COLOR, &color, sizeof(color));
+	SetCaptionColor(color);
 
     return 0;
 }
@@ -1561,6 +1560,23 @@ BOOL CMainFrame::SaveRegistrySettings()
     }
 
     return FALSE;
+}
+
+// This function uses the DwmSetWindowAttribute Windows API function to set
+// the caption color. The DWMWA_CAPTION_COLOR option requires Windows 11.
+void CMainFrame::SetCaptionColor(COLORREF color)
+{
+	HMODULE dwmapi = ::LoadLibrary(_T("Dwmapi.dll"));
+	if (dwmapi != 0)
+	{
+		typedef UINT WINAPI DWMSETWINDOWATTRIBUE(HWND, DWORD, LPCVOID, DWORD);
+		DWMSETWINDOWATTRIBUE* pDwmSetWindowAttribute = reinterpret_cast<DWMSETWINDOWATTRIBUE*>(
+			reinterpret_cast<void*>(::GetProcAddress(dwmapi, "DwmSetWindowAttribute")));
+
+		const int DWMWA_CAPTION_COLOR = 35;
+		pDwmSetWindowAttribute(*this, DWMWA_CAPTION_COLOR, &color, sizeof(color));
+		::FreeLibrary(dwmapi);
+	}
 }
 
 // Adds icons for popup menus.

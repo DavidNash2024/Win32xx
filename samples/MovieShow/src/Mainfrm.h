@@ -34,6 +34,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     virtual HWND Create(HWND parent = 0);
+	void SetCaptionColor(COLORREF color);
 
 protected:
     // Virtual functions that override base class functions

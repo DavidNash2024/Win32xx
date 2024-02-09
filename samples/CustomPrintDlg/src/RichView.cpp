@@ -70,7 +70,7 @@ int CRichView::CollatePages(const CDC& printerDC)
     } while (lastCharOnPage < lastChar);
 
     // return the number of pages.
-    return static_cast<UINT>(m_pageBreaks.size());
+    return static_cast<int>(m_pageBreaks.size());
 }
 
 // Choose the printer and print the document.
