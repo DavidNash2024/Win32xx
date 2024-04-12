@@ -25,10 +25,8 @@ Win32++ A Simple Alternativc to MFC</a></p>
 It runs on the commonly available free C++ compilers.</p>
 
 <p dir="auto">Win32++ has been designed to make life a little easier for those learning to use C++ 
-to program using the Windows API directly. Win32++ doesn't attempt to hide the Windows API. On the
-contrary, it exposes the Windows API, allowing it to be more easily learnt and understood. Win32++
-is also a good choice for those professional programmers looking for a simple, robust and efficient
-framework.</p>
+to program using the Windows API directly. Win32++ wraps the Windows API in a convenient set of
+classes in a simalr style to MFC.</p>
 
 <p dir="auto">The code has been designed to run on a wide range of C++ compilers, including those
 from Microsoft, Borland and the free MinGW compiler from GNU. Win32++ supports all Windows operating
