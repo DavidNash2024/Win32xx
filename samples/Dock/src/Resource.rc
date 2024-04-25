@@ -52,7 +52,8 @@ BEGIN
         MENUITEM "Disable Close Button",        IDM_NO_DOCK_CLOSE, CHECKED
         MENUITEM "Disable Dock Caption",        IDM_NO_DOCK_CAPTION, CHECKED
         MENUITEM SEPARATOR
-        MENUITEM "&Default Layout",             IDM_DOCK_DEFAULT
+        MENUITEM "&Default Dock Layout",        IDM_DOCK_DEFAULT
+        MENUITEM "Default Dock &Styles",        IDM_STYLES_DEFAULT
         MENUITEM "&Close All",                  IDM_DOCK_CLOSEALL
     END
     POPUP "&Help"

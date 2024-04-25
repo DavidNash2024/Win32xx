@@ -6,7 +6,6 @@
 
 #include "stdafx.h"
 #include "Classes.h"
-#include "ContainerApp.h"
 #include "resource.h"
 
 

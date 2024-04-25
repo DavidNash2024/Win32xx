@@ -49,7 +49,8 @@
 #define IDM_NO_DOCK_CLOSE               165
 #define IDM_NO_DOCK_CAPTION             166
 #define IDM_DOCK_DEFAULT                167
-#define IDM_DOCK_CLOSEALL               168
+#define IDM_STYLES_DEFAULT              168
+#define IDM_DOCK_CLOSEALL               169
 
 // Next default values for new objects
 //

@@ -25,25 +25,15 @@ CMainFrame()                                                                /*
     Constructor for CMainFrame, which is called after CFrame's constructor.
 *-----------------------------------------------------------------------------*/
 {
+      // Set m_view as the view window of the frame.
+    SetView(m_view);
+
     m_yWin   = 100;
     m_xWin   = 100;
     m_cxWin  = 400;
     m_cyWin  = 400;
     ZeroMemory(&m_wndPl, sizeof(WINDOWPLACEMENT));
     m_wndPl.length = sizeof(WINDOWPLACEMENT);
-}
-
-/*============================================================================*/
-    HWND CMainFrame::
-Create(HWND parent)                                                         /*
-
-    Create the frame window.
-*-----------------------------------------------------------------------------*/
-{
-      // Set m_view as the view window of the frame
-    SetView(m_view);
-
-    return CFrame::Create(parent);
 }
 
 /*============================================================================*/

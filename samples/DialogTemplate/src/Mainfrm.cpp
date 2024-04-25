@@ -17,6 +17,8 @@
 CMainFrame::CMainFrame() : m_preview(m_richView), m_pDockDialogsTree(NULL),
                            m_isTemplateShown(false)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_richView);
 }
 
 // Destructor.
@@ -27,18 +29,17 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_view as the view window of the frame
-    SetView(m_richView);
 
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\DialogTemplate"));
 
     return CDockFrame::Create(parent);
 }
 
 // Attempts to create the dialog from the template text
-// displayed in the rich edit view.
+// that is displayed in the rich edit view.
 void CMainFrame::DialogFromTemplateText()
 {
     // Retrieve the text from the rich edit window.

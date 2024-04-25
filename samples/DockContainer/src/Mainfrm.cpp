@@ -18,6 +18,8 @@
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame() : m_isContainerTabsAtTop(false), m_hideSingleTab(true)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_view);
 }
 
 // Destructor for CMainFrame.
@@ -28,11 +30,8 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    // Set m_view as the view window of the frame.
-    SetView(m_view);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\DockContainer"));
 
     return CDockFrame::Create(parent);
@@ -45,7 +44,7 @@ void CMainFrame::HideSingleContainerTab(bool hideSingle)
     std::vector<CDocker*>::const_iterator iter;
 
     // Set the Tab position for each container
-    for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
+    for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
     {
         CDockContainer* pContainer = (*iter)->GetContainer();
         if (pContainer && pContainer->IsWindow())
@@ -58,23 +57,25 @@ void CMainFrame::HideSingleContainerTab(bool hideSingle)
 // Loads the default arrangement of dockers.
 void CMainFrame::LoadDefaultDockers()
 {
-    // Note: The  DockIDs are used for saving/restoring the dockers state in the registry
+    // Note: The  DockIDs are used for saving/restoring the dockers state in the registry.
 
     DWORD style = DS_CLIENTEDGE; // The style added to each docker
 
-    // Add the right most dockers
+    // Add the right most dockers.
     CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | style, DpiScaleInt(200), ID_DOCK_CLASSES1);
     pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, DpiScaleInt(200), ID_DOCK_FILES1);
     pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | style, DpiScaleInt(200), ID_DOCK_CLASSES2);
     pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, DpiScaleInt(200), ID_DOCK_FILES2);
 
-    // Add the bottom dockers
+    // Add the bottom dockers.
     CDocker* pDockBottom = AddDockedChild(new CDockOutput, DS_DOCKED_BOTTOM | style, DpiScaleInt(100), ID_DOCK_OUTPUT1);
     pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_OUTPUT2);
 
-    // Add the frame's dockers
+    // Add the frame's dockers.
     AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_TEXT1);
     AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_TEXT2);
+
+    SetDockStyle(style);
 }
 
 // Adds a new docker. The id specifies its type.
@@ -212,8 +213,6 @@ BOOL CMainFrame::OnHideSingleTab()
 // Called after the frame's window is created.
 void CMainFrame::OnInitialUpdate()
 {
-    SetDockStyle(DS_CLIENTEDGE);
-
     // Load dock settings
     if (!LoadDockRegistrySettings(GetRegistryKeyName()))
         LoadDefaultDockers();
@@ -271,7 +270,7 @@ void CMainFrame::SetContainerTabsAtTop(bool isAtTop)
     std::vector<CDocker*>::const_iterator iter;
 
     // Set the Tab position for each container
-    for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
+    for (iter = GetAllDockers().begin(); iter != GetAllDockers().end(); ++iter)
     {
         CDockContainer* pContainer = (*iter)->GetContainer();
         if (pContainer && pContainer->IsWindow())
@@ -308,6 +307,11 @@ void CMainFrame::SetupToolBar()
 
     AddToolBarButton( 0 );  // Separator
     AddToolBarButton( IDM_HELP_ABOUT );
+}
+
+// Overrides base class function to supress container group undocking.
+void CMainFrame::UndockContainerGroup()
+{
 }
 
 // Process the frame's window messages.

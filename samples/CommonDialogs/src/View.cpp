@@ -173,8 +173,6 @@ OnInitDialog()                                                              /*
     created. The method always returns TRUE.
 *-----------------------------------------------------------------------------*/
 {
-      // first call the base class but disregard its return value
-    CDialog::OnInitDialog();
       // load the program icons
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
@@ -194,7 +192,7 @@ OnInitDialog()                                                              /*
 OnNotify(WPARAM wparam, LPARAM lparam)                                      /*
 
     Process messages that controls send to the parent.
-**-----------------------------------------------------------------------------*/
+*-----------------------------------------------------------------------------*/
 {
     NMHDR* pNMH = (LPNMHDR) lparam;
     switch (pNMH->code)

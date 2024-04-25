@@ -17,7 +17,6 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnDraw(CDC& dc);
     virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 

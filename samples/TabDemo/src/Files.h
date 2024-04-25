@@ -28,8 +28,6 @@ private:
     CViewFiles(const CViewFiles&);               // Disable copy construction
     CViewFiles& operator=(const CViewFiles&);    // Disable assignment operator
 
-    CImageList m_smallImages;
-
     // Command handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
 };

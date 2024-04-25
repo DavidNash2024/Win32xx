@@ -14,6 +14,8 @@
 CMainFrame::CMainFrame() : m_preview(m_view), m_isDPIChanging(false),
                            m_isToolbarShown(true)
 {
+    // Set m_MyView as the view window of the frame.
+    SetView(m_view);
 }
 
 // Destructor for CMainFrame.
@@ -24,14 +26,11 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_MyView as the view window of the frame
-    SetView(m_view);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\Fast GDI Demo"));
 
-    // Load the settings from the registry with 4 MRU entries
+    // Load the settings from the registry with 4 MRU entries.
     LoadRegistryMRUSettings(4);
 
     return CFrame::Create(parent);
@@ -78,14 +77,14 @@ void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray)
 // Called when the frame window is closed.
 void CMainFrame::OnClose()
 {
-    // Close the preview
+    // Close the preview.
     if (GetView() == m_preview)
         OnPreviewClose();
 
     CFrame::OnClose();
 }
 
-// OnCommand responds to menu and and toolbar input
+// OnCommand responds to menu and and toolbar input.
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UINT id = LOWORD(wparam);

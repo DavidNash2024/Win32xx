@@ -35,9 +35,6 @@ CMainFrame : public CFrame                                                  /*
         CMainFrame();
         virtual ~CMainFrame() {}
 
-        void    AddMRUEntry(LPCTSTR MRUEntry)
-                    { CFrame::AddMRUEntry (MRUEntry);}
-        virtual HWND Create(HWND parent = 0);
         AboutBox& GetAboutBox() { return m_aboutBox; }
         void    EmptyMRUList();
         size_t  GetMRUSize() { return GetMRUEntries().size();}

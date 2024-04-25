@@ -134,6 +134,9 @@
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
+				RelativePath="..\src\StaticImage.cpp">
+			</File>
+			<File
 				RelativePath="..\src\StdAfx.cpp">
 			</File>
 		</Filter>
@@ -155,6 +158,9 @@
 			</File>
 			<File
 				RelativePath="..\src\resource.h">
+			</File>
+			<File
+				RelativePath="..\src\StaticImage.h">
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">

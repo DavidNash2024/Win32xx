@@ -1,10 +1,10 @@
-//////////////////////////////////////////////
+/////////////////////////////
 // StdAfx.h
+//
 
-// This file is used for precompiled headers
+// This file is used for precompiled headers.
 // Rarely modified header files should be included.
-
-// Based on code provided by Lynn Allan
+// Based on code provided by Lynn Allan.
 
 
 #ifndef STDAFX_H
@@ -36,7 +36,6 @@
 // Add the Win32++ library
 #include <wxx_appcore.h>        // Add CWinApp
 #include <wxx_archive.h>        // Add CArchive
-#include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
 #include <wxx_controls.h>       // Add CAnimation, CComboBox, CComboBoxEx, CDateTime, CHeader, CHotKey, CIPAddress, CProgressBar, CSpinButton, CScrollBar, CSlider, CToolTip
 #include <wxx_criticalsection.h> // Add CCriticalSection, CThreadLock
 #include <wxx_cstring.h>        // Add CString, CStringA, CStringW
@@ -58,13 +57,10 @@
 #include <wxx_menubar.h>        // Add CMenuBar
 #include <wxx_metafile.h>       // Add CMetaFile, CEnhMetaFile
 #include <wxx_mutex.h>          // Add CEvent, CMutex, CSemaphore
-#include <wxx_preview.h>        // Add CPrintPreview
-#include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintSetupDialog
 #include <wxx_propertysheet.h>  // Add CPropertyPage, CPropertySheet
 #include <wxx_rebar.h>          // Add CRebar
 #include <wxx_rect.h>           // Add CPoint, CRect, CSize
 #include <wxx_regkey.h>         // Add CRegKey
-//#include <wxx_ribbon.h>       // Add CRibbon, CRibbonFrame
 #include <wxx_richedit.h>       // Add CRichEdit
 #include <wxx_scrollview.h>     // Add CScrollView
 #include <wxx_shared_ptr.h>     // Add Shared_Ptr
@@ -73,7 +69,6 @@
 #include <wxx_statusbar.h>      // Add CStatusBar
 #include <wxx_stdcontrols.h>    // Add CButton, CEdit, CListBox
 #include <wxx_tab.h>            // Add CTab, CTabbedMDI
-//#include <wxx_taskdialog.h>   // Add CTaskDialog
 #include <wxx_textconv.h>       // Add AtoT, AtoW, TtoA, TtoW, WtoA, WtoT etc.
 #include <wxx_themes.h>         // Add MenuTheme, ReBarTheme, StatusBarTheme, ToolBarTheme
 #include <wxx_thread.h>         // Add CWinThread
@@ -83,5 +78,33 @@
 #include <wxx_webbrowser.h>     // Add CWebBrowser, CAXHost
 #include <wxx_wincore.h>        // Add CWnd
 
+// WIN32_LEAN_AND_MEAN can't be used with these
+#ifndef WIN32_LEAN_AND_MEAN
+  #include <wxx_commondlg.h>      // Add CCommonDialog, CColorDialog, CFileDialog, CFindReplace, CFontDialog
+  #include <wxx_preview.h>        // Add CPrintPreview
+  #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
 
-#endif
+  // Win2000 or higher with Microsoft VS2008 or higher,
+  // MinGW version 11 or higher or Clang compiler
+  #if (WINVER >= 0x0500) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || \
+      (defined(__GNUC__) && (__GNUC__ >= 11)) || defined(__clang_major__))
+    #include <wxx_printdialogex.h>  // Add CPrintDialogEx
+  #endif
+
+  // Windows Vista or higher with Microsoft VS2013 or higher,
+  // MinGW version 8 or higher or Clang compiler
+  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1800)) || defined(__clang_major__))
+    #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
+  #endif
+
+
+  // Windows Vista or higher with Microsoft VS2008 or higher,
+  // MinGW version 8 or higher or Clang compiler. Requires Unicode.
+  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || \
+      (defined(__GNUC__) && (__GNUC__ >= 8)) || defined(__clang_major__))
+    #include <wxx_taskdialog.h>     // Add CTaskDialog
+  #endif
+
+#endif  // define WIN32_LEAN_AND_MEAN
+
+#endif  // define STDAFX_H

@@ -5,6 +5,8 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
+#include "MainContainer.h"
+
 
 // The docker identifiers (dock IDs)
 const int ID_DOCK_CLASSES1 = 1;
@@ -39,6 +41,7 @@ protected:
     virtual BOOL SaveRegistrySettings();
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
+    virtual void UndockContainerGroup();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
@@ -60,7 +63,7 @@ private:
     void SetContainerTabsAtTop(bool isAtTop);
 
     // Member variables
-    CDockContainer m_view;
+    CMainContainer m_view;
     bool m_isContainerTabsAtTop;
     bool m_hideSingleTab;
 };

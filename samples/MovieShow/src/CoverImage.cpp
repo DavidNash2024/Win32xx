@@ -92,26 +92,11 @@ void CCoverImage::DrawImage(CDC& dc)
     }
 }
 
-// Called when the CCoverImage window needs to be redrawn.
-void CCoverImage::OnDraw(CDC& dc)
-{
-    DrawImage(dc);
-}
-
 // Calls OnDraw to preform painting for this custom control.
 LRESULT CCoverImage::OnPaint(UINT, WPARAM, LPARAM)
 {
-    if (::GetUpdateRect(*this, nullptr, FALSE))
-    {
-        CPaintDC dc(*this);
-        OnDraw(dc);
-    }
-    else
-    // RedrawWindow can require repainting without an update rect.
-    {
-        CClientDC dc(*this);
-        OnDraw(dc);
-    }
+    CPaintDC dc(*this);
+    DrawImage(dc);
 
     // No more drawing required
     return 0;

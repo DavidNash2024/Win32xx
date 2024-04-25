@@ -35,25 +35,15 @@ CMainFrame()                                                                /*
 *-----------------------------------------------------------------------------*/
     :   m_maxMRUEntries(5)
 {
-      // set screen default position and  size
+      // Set screen default position and  size.
     m_xWin  = 100;
     m_yWin  = 100;
     m_cxWin = 800;
     m_cyWin = 700;
     ZeroMemory(&m_plWnd, sizeof(WINDOWPLACEMENT));
-}
 
-/*============================================================================*/
-    HWND CMainFrame::
-Create(HWND parent)                                                         /*
-
-    Construct and initiallize the CMainFrame object.
-*-----------------------------------------------------------------------------*/
-{
-    // Set m_view as the view window of the frame
+      // Set m_view as the view window of the frame.
     SetView(m_view);
-
-    return CFrame::Create(parent);
 }
 
 /*============================================================================*/

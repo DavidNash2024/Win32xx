@@ -26,12 +26,12 @@ CViewList::~CViewList()
 void CViewList::OnAttach()
 {
     // Set the image lists
-    int scale = DpiScaleInt(1);
+    CBitmap bmImage(IDB_FILEVIEW);
+    bmImage = DpiScaleUpBitmap(bmImage);
+    int scale = bmImage.GetSize().cy / 15;
     CImageList smallImages;
-    smallImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap image(IDB_FILEVIEW);
-    image = DpiScaleUpBitmap(image);
-    smallImages.Add(image, RGB(255, 0, 255));
+    smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    smallImages.Add(bmImage, RGB(255, 0, 255));
     SetImageList(smallImages, LVSIL_SMALL);
 
     // Set the report style

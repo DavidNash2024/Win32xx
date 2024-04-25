@@ -25,8 +25,6 @@ private:
     CViewClasses(const CViewClasses&);               // Disable copy construction
     CViewClasses& operator=(const CViewClasses&);    // Disable assignment operator
 
-    CImageList m_normalImages;
-
     // Command handlers
     LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
 };

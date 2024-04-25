@@ -45,6 +45,7 @@ CView : public CDialog                                                      /*
         BOOL    GetCheckA() const       { return m_checkVal[0]; }
         BOOL    GetCheckB() const       { return m_checkVal[1]; }
         BOOL    GetCheckC() const       { return m_checkVal[2]; }
+        int     GetRadio() const        { return m_radioA; }
         void    SetCheck(UINT);
         void    SetRadio(UINT);
         void    SetCheckAStatus();
@@ -67,7 +68,7 @@ CView : public CDialog                                                      /*
         BOOL    AddToolTip(UINT id, const CString & s);
         void    AssignToolTips();
         INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-        void    DoDataExchange(CDataExchange& DX);
+        void    DoDataExchange(CDataExchange& dx);
         void    GetDocumentValues();
         void    OnBitmap();
         void    OnButton();

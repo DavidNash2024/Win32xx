@@ -20,6 +20,8 @@ CMainFrame::CMainFrame() : m_color(IDM_BLUE), m_useThemes(true), m_useBandColors
                             m_useRoundBorders(true), m_useShortBands(true), m_useLines(false),
                             m_showArrows(true), m_showCards(true), m_selectedItem(-1)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_view);
 }
 
 // Destructor for CMainFrame.
@@ -182,9 +184,6 @@ BOOL CMainFrame::ChooseColor(UINT color)
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    // Set m_view as the view window of the frame.
-    SetView(m_view);
-
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\Themes Sample"));

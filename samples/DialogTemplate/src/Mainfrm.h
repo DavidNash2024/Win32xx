@@ -67,8 +67,8 @@ private:
     BOOL WriteFile(LPCTSTR szFileName);
 
     // Private member variables
-    CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CRichView m_richView;
+    CPrintPreview<CRichView>  m_preview;   // CRichView is the source of for CPrintPreview
     CString m_pathName;
     CDockDialogsTree* m_pDockDialogsTree;
     CResourceFinder m_finder;

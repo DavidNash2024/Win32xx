@@ -125,7 +125,7 @@ void CRichView::DoPrint(LPCTSTR docName)
         printerDC.StartDoc(&di);
 
         std::vector<UINT>::iterator i;
-        for (i = pages.begin(); i < pages.end(); ++i)
+        for (i = pages.begin(); i != pages.end(); ++i)
         {
             // Start the page.
             printerDC.StartPage();

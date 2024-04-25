@@ -14,6 +14,8 @@
 // Constructor
 CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
 {
+    // Set the modeless dialog as the view window of the frame.
+    SetView(m_view);
 }
 
 // Destructor for CMainFrame.
@@ -33,14 +35,11 @@ BOOL CMainFrame::ChooseHelpTopic()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    // Set the modeless dialog as the view window of the frame
-    SetView(m_view);
-
     CString appName = LoadString(IDS_APP_NAME);
     CString groupFolder = LoadString(IDS_GROUP_FOLDER);
 
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(groupFolder + appName);
 
     // Set the path to the chm help file for m_AppHelp
@@ -64,7 +63,7 @@ HWND CMainFrame::Create(HWND parent)
 
     if (::PathFileExists(helpPath))
     {
-        // Specify the help file used by CHelp
+        // Specify the help file used by CHelp.
         m_appHelp.SetHelpFilePath(helpPath);
     }
     else
@@ -72,13 +71,13 @@ HWND CMainFrame::Create(HWND parent)
         ::MessageBox(0, _T("Failed to find ") + LoadString(IDS_HELP_FILE), _T("File not found"), MB_ICONWARNING);
     }
 
-    // generate the Win32++ version string
+    // Generate the Win32++ version string.
     UINT ver = _WIN32XX_VER;
     CString win32Version;
     win32Version.Format(_T("using Win32++ Version %d.%d.%d"), ver / 0x100,
         (ver % 0x100) / 0x10, (ver % 0x10));
 
-    // generate compiler information for the About box
+    // Generate compiler information for the About box.
     CString sCompiler;
 #ifdef __GNUC__
     sCompiler.Format(_T("Gnu C++ %d.%d.%d"), __GNUC__, __GNUC_MINOR__,
@@ -91,7 +90,7 @@ HWND CMainFrame::Create(HWND parent)
     sCompiler = _T("(unknown compiler name)");
 #endif
 
-    // Set the information used in the Help About dialog
+    // Set the information used in the Help About dialog.
     CString aboutBoxInfo = LoadString(IDW_MAIN);
     aboutBoxInfo += _T("\n") + LoadString(IDS_APP_VERSION);
     aboutBoxInfo += _T("\ncompiled with ") + sCompiler;

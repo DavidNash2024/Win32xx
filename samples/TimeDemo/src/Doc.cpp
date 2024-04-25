@@ -408,12 +408,20 @@ NewDocument()                                                               /*
     PushContent(_T(""));
     s.Format(_T("  WINVER        = 0x%x"), WINVER);
     PushContent(s);
+
+#ifdef WIN32_WINNT
     s.Format(_T("  WIN32_WINNT   = 0x%x"), _WIN32_WINNT);
     PushContent(s);
+#endif
+
     s.Format(_T("  _WIN32_IE     = 0x%x"), _WIN32_IE);
     PushContent(s);
+
+#ifdef NTDDI_VERSION
     s.Format(_T("  NTDDI_VERSION = 0x%x"), NTDDI_VERSION);
     PushContent(s);
+#endif
+
     PushContent(_T(""));
 
     s = ::GetCommandLine();

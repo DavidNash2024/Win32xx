@@ -81,6 +81,8 @@ CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_searchItem(0), m_pDockT
                            m_pDockDialog(0), m_isDirty(false), m_boxSetsItem(0),
                            m_dialogWidth(0), m_treeHeight(0)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_viewList);
 }
 
 // Destructor.
@@ -108,11 +110,8 @@ void CMainFrame::ClearList()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_view as the view window of the frame
-    SetView(m_viewList);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(L"Win32++\\MovieShow");
 
     m_genres.push_back(L"Action, Crime, Thriller, War, Western");
@@ -971,7 +970,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
     // Set the color of the frame's caption.
     COLORREF color = GetReBarTheme().clrBkgnd1;
-	SetCaptionColor(color);
+    SetCaptionColor(color);
 
     return 0;
 }
@@ -1566,17 +1565,17 @@ BOOL CMainFrame::SaveRegistrySettings()
 // the caption color. The DWMWA_CAPTION_COLOR option requires Windows 11.
 void CMainFrame::SetCaptionColor(COLORREF color)
 {
-	HMODULE dwmapi = ::LoadLibrary(_T("Dwmapi.dll"));
-	if (dwmapi != 0)
-	{
-		typedef UINT WINAPI DWMSETWINDOWATTRIBUE(HWND, DWORD, LPCVOID, DWORD);
-		DWMSETWINDOWATTRIBUE* pDwmSetWindowAttribute = reinterpret_cast<DWMSETWINDOWATTRIBUE*>(
-			reinterpret_cast<void*>(::GetProcAddress(dwmapi, "DwmSetWindowAttribute")));
+    HMODULE dwmapi = ::LoadLibrary(_T("Dwmapi.dll"));
+    if (dwmapi != 0)
+    {
+        typedef UINT WINAPI DWMSETWINDOWATTRIBUE(HWND, DWORD, LPCVOID, DWORD);
+        DWMSETWINDOWATTRIBUE* pDwmSetWindowAttribute = reinterpret_cast<DWMSETWINDOWATTRIBUE*>(
+            reinterpret_cast<void*>(::GetProcAddress(dwmapi, "DwmSetWindowAttribute")));
 
-		const int DWMWA_CAPTION_COLOR = 35;
-		pDwmSetWindowAttribute(*this, DWMWA_CAPTION_COLOR, &color, sizeof(color));
-		::FreeLibrary(dwmapi);
-	}
+        const int DWMWA_CAPTION_COLOR = 35;
+        pDwmSetWindowAttribute(*this, DWMWA_CAPTION_COLOR, &color, sizeof(color));
+        ::FreeLibrary(dwmapi);
+    }
 }
 
 // Adds icons for popup menus.

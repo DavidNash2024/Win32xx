@@ -166,6 +166,12 @@ void CViewList::OnAttach()
                       | LVS_EX_HEADERDRAGDROP | LVS_EX_DOUBLEBUFFER );
 
     SetColumn();
+
+    // Disable double click on the list-view's header.
+    m_header.Attach(GetHeader());
+    LONG_PTR style = static_cast<LONG_PTR>(m_header.GetClassLongPtr(GCL_STYLE));
+    style = style & ~CS_DBLCLKS;
+    m_header.SetClassLongPtr(GCL_STYLE, style);
 }
 
 // Call to perform custom drawing.

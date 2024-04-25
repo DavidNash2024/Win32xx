@@ -77,7 +77,7 @@ int CMainWindow::OnCreate(CREATESTRUCT&)
     // Create the threads belonging to the MyThread objects.
     // Each thread creates a TestWindow when it runs.
     std::vector<MyThreadPtr>::iterator iter;
-    for (iter = m_threads.begin(); iter < m_threads.end(); ++iter)
+    for (iter = m_threads.begin(); iter != m_threads.end(); ++iter)
     {
         try
         {
@@ -130,7 +130,7 @@ LRESULT CMainWindow::OnCloseThread(WPARAM wparam)
 
     int threadNumber = static_cast<int>(wparam);
     std::vector<MyThreadPtr>::iterator iter;
-    for (iter = m_threads.begin(); iter < m_threads.end(); ++iter)
+    for (iter = m_threads.begin(); iter != m_threads.end(); ++iter)
     {
         if (threadNumber == (*iter)->GetThreadNumber())
         {

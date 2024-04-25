@@ -43,8 +43,8 @@ private:
     CMDIChildTree(const CMDIChildTree&);                // Disable copy construction
     CMDIChildTree& operator=(const CMDIChildTree&);   // Disable assignment operator
 
-    CViewTree m_TreeView;
-    CMenu m_Menu;
+    CViewTree m_treeView;
+    CMenu m_menu;
 };
 
 #endif  //MDICHILDTREEVIEW_H

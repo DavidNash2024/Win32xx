@@ -201,6 +201,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\StaticImage.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -244,6 +248,10 @@
 			</File>
 			<File
 				RelativePath="..\src\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\StaticImage.h"
 				>
 			</File>
 			<File

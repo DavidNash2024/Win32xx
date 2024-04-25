@@ -46,8 +46,6 @@ OnInitDialog()                                                          /*
     the font choice is being initialized.
 *-----------------------------------------------------------------------------*/
 {
-      // do the parent class initialization first (it currently does nothing)
-    CDialog::OnInitDialog();
     SetWindowTitle();
     return TRUE;
 }

@@ -1,7 +1,7 @@
 [Project]
 FileName=DockContainer_DEBUG.dev
 Name=ContainerDocking
-UnitCount=18
+UnitCount=20
 Type=0
 Ver=2
 ObjFiles=
@@ -171,9 +171,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=..\src\Text.cpp
+FileName=..\src\MainContainer.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -181,9 +181,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=..\src\Text.h
+FileName=..\src\MainContainer.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

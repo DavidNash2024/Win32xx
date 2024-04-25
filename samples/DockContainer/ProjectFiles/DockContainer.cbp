@@ -184,6 +184,8 @@
 		<Unit filename="../src/ContainerApp.h" />
 		<Unit filename="../src/Files.cpp" />
 		<Unit filename="../src/Files.h" />
+		<Unit filename="../src/MainContainer.cpp" />
+		<Unit filename="../src/MainContainer.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/Output.cpp" />

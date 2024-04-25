@@ -13,6 +13,8 @@
 // Constructor.
 CMainFrame::CMainFrame()  : m_pLeftPane(0), m_showHidden(FALSE)
 {
+    // Set m_MainView as the view window of the frame.
+    SetView(m_rightPane);
 }
 
 // Destructor.
@@ -23,17 +25,14 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    // Set m_MainView as the view window of the frame
-    SetView(m_rightPane);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\Explorer Sample"));
 
     return CFrame::Create(parent);
 }
 
-// Creates the popup menu for the "View Menu" toolbar button
+// Creates the popup menu for the "View Menu" toolbar button.
 void CMainFrame::DoPopupMenu()
 {
     // Position the popup menu
@@ -49,7 +48,7 @@ void CMainFrame::DoPopupMenu()
     CMenu topMenu(IDM_VIEWMENU);
     CMenu popupMenu = topMenu.GetSubMenu(0);
 
-    // Put a radio check in the currently checked item
+    // Put a radio check in the currently checked item.
     MENUITEMINFO mii;
     ZeroMemory(&mii, GetSizeofMenuItemInfo());
     for (int i = 3 ; i < 7 ; i++)
@@ -64,7 +63,7 @@ void CMainFrame::DoPopupMenu()
             topMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, MF_BYCOMMAND);
     }
 
-    // Start the popup menu
+    // Start the popup menu.
     popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
@@ -131,7 +130,6 @@ void CMainFrame::LoadListViewRegistrySettings()
 
     if (!appName.IsEmpty())
     {
-        CHeader header;
         CString listViewKeyName = _T("\\ListView Settings");
         try
         {
@@ -154,16 +152,14 @@ void CMainFrame::LoadListViewRegistrySettings()
             if (ERROR_SUCCESS != key.QueryDWORDValue(_T("Column3"), columns[3]))
                 throw CUserException();
 
-            header.Attach(GetListView().GetHeader());
             for (int i = 0; i < 4; i++)
             {
                 HDITEM headerItem;
                 ZeroMemory(&headerItem, sizeof(headerItem));
                 headerItem.mask = HDI_WIDTH;
                 headerItem.cxy = columns[i];
-                header.SetItem(i, headerItem);
+                GetListView().GetListHeader().SetItem(i, headerItem);
             }
-            header.Detach();
         }
 
         catch (const  CUserException&)
@@ -316,7 +312,6 @@ BOOL CMainFrame::SaveRegistrySettings()
 
             if (!appName.IsEmpty())
             {
-                CHeader header;
                 CString listViewKeyName = _T("\\ListView Settings");
                 try
                 {
@@ -328,17 +323,15 @@ BOOL CMainFrame::SaveRegistrySettings()
                     if (ERROR_SUCCESS != key.Open(HKEY_CURRENT_USER, keyName))
                         throw CUserException(_T("RegCreateKeyEx failed"));
 
-                    header.Attach(GetListView().GetHeader());
                     DWORD columns[4];
                     for (int i = 0; i < 4; i++)
                     {
                         HDITEM headerItem;
                         ZeroMemory(&headerItem, sizeof(headerItem));
                         headerItem.mask = HDI_WIDTH;
-                        header.GetItem(i, headerItem);
+                        GetListView().GetListHeader().GetItem(i, headerItem);
                         columns[i] = headerItem.cxy;
                     }
-                    header.Detach();
 
                     if (ERROR_SUCCESS != key.SetDWORDValue(_T("Column0"), columns[0]))
                         throw CUserException();

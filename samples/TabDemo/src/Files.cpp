@@ -45,12 +45,7 @@ void CViewFiles::InsertItems()
 void CViewFiles::OnAttach()
 {
     // Set the image lists.
-    int scale = DpiScaleInt(1);
-    m_smallImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap image(IDB_FILEVIEW);
-    image = DpiScaleUpBitmap(image);
-    m_smallImages.Add( image, RGB(255, 0, 255) );
-    SetImageList(m_smallImages, LVSIL_SMALL);
+    SetDPIImages();
 
     // Set the report style.
     DWORD dwStyle = GetStyle();
@@ -98,9 +93,10 @@ void CViewFiles::SetDPIImages()
     CBitmap bmImage(IDB_FILEVIEW);
     bmImage = DpiScaleUpBitmap(bmImage);
     int scale = bmImage.GetSize().cy / 15;
-    m_smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    m_smallImages.Add(bmImage, RGB(255, 0, 255));
-    SetImageList(m_smallImages, LVSIL_SMALL);
+    CImageList smallImages;
+    smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    smallImages.Add(bmImage, RGB(255, 0, 255));
+    SetImageList(smallImages, LVSIL_SMALL);
 }
 
 // Process the list-view's window messages.

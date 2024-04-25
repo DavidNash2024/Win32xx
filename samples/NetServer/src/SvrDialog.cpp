@@ -453,7 +453,9 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wparam)
                 return FALSE;
             }
             else
+            {
                 TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
+            }
 
             m_buttonSend.EnableWindow(TRUE);
             m_editSend.EnableWindow(TRUE);

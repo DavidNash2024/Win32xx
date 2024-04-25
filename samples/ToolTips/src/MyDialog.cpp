@@ -13,7 +13,10 @@
 void CBalloonToolTip::PreCreate(CREATESTRUCT& cs)
 {
     CToolTip::PreCreate(cs);
+
+#ifdef TTS_BALLOON
     cs.style |= TTS_BALLOON;    // Add the balloon style
+#endif
 }
 
 

@@ -4,13 +4,12 @@
 //
 
 
-// For Visual Studio 2008 and below
-#if defined (_MSC_VER) && (_MSC_VER <= 1500)
+// For Visual Studio 6
+#if defined (_MSC_VER) && (_MSC_VER <= 1200)
 
-#define WINVER          0x0500
-#define _WIN32_WINNT    0x0500
-#define _WIN32_IE       0x0500
-#define NTDDI_VERSION   0x05000000
+#define WINVER          0x0410
+#define _WIN32_WINDOWS  0x0410
+#define _WIN32_IE       0x0401
 
 #endif
 

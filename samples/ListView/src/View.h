@@ -75,6 +75,7 @@ private:
     // Private members.
     std::vector<ListItemDataPtr> m_allListItemData;  // vector of smart pointers
     CMyEdit m_edit;
+    CHeader m_header;
     int m_row;
     int m_column;
 };

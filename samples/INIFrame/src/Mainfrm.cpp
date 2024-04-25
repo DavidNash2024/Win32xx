@@ -17,6 +17,8 @@
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame() : m_preview(m_view), m_isToolbarShown(true)
 {
+    // Set m_view as the view window of the frame.
+    SetView(m_view);
 }
 
 // Destructor for CMainFrame.
@@ -27,9 +29,6 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    // Set m_view as the view window of the frame
-    SetView(m_view);
-
     // Normally we would use LoadRegistrySettings here, but this
     // is omitted in this sample. We use an ini file instead.
 

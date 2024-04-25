@@ -561,6 +561,12 @@ void CMyListView::OnAttach()
 
     // Set initial the view style as report
     ViewReport();
+
+    // Disable double click on the list-view's header.
+    m_header.Attach(GetHeader());
+    LONG_PTR style = static_cast<LONG_PTR>(m_header.GetClassLongPtr(GCL_STYLE));
+    style = style & ~CS_DBLCLKS;
+    m_header.SetClassLongPtr(GCL_STYLE, style);
 }
 
 // Called when the window is destroyed.

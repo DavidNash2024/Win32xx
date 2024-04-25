@@ -57,12 +57,14 @@ private:
     BOOL OnNoDockLR();
     BOOL OnNoDockClose();
     BOOL OnNoDockCaption();
+    BOOL OnStylesDefault();
 
     // Message handles
     LRESULT OnGetMinMaxInfo(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void LoadDefaultDockers();
     void SetDockStyles();
+    void SetDockStylesToDefault();
 
     // member variables
     CViewSimple m_view;

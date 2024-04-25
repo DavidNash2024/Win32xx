@@ -112,7 +112,6 @@ LRESULT CD2DView::OnPaint(UINT, WPARAM, LPARAM)
 {
     OnRender();
     ValidateRect();
-
     return 0;
 }
 
@@ -145,8 +144,8 @@ HRESULT CD2DView::OnRender()
         for (float y = 0.0f; y < height; y += 16.0f * zoom)
         {
             m_pRenderTarget->DrawLine(
-                D2D1::Point2F(0.0f, static_cast<FLOAT>(y)),
-                D2D1::Point2F(width, static_cast<FLOAT>(y)),
+                D2D1::Point2F(0.0f, y),
+                D2D1::Point2F(width, y),
                 m_pLightSlateGrayBrush,
                 zoom
             );
@@ -202,7 +201,6 @@ LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lparam)
     UINT width = LOWORD(lparam);
     UINT height = HIWORD(lparam);
     OnResize(width, height);
-
     return 0;
 }
 

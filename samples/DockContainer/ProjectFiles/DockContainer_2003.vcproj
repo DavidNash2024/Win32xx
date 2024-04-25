@@ -131,6 +131,9 @@
 				RelativePath="..\src\main.cpp">
 			</File>
 			<File
+				RelativePath="..\src\MainContainer.cpp">
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
@@ -155,6 +158,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Files.h">
+			</File>
+			<File
+				RelativePath="..\src\MainContainer.h">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">

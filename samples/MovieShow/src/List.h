@@ -63,6 +63,7 @@ private:
     LRESULT OnRClick();
     LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
+    CHeader m_header;
     CString GetFileTime(FILETIME fileTime);
     void    SetColumn();
     BOOL    SetHeaderSortImage(int  columnIndex, int showArrow);

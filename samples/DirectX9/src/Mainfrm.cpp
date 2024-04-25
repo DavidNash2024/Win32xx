@@ -14,6 +14,8 @@
 // Constructor for CMainFrame.
 CMainFrame::CMainFrame()
 {
+    // Set CDXView as the view window of the frame.
+    SetView(m_DXView);
 }
 
 // Destructor for CMainFrame.
@@ -24,11 +26,8 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set CDXView as the view window of the frame.
-    SetView(m_DXView);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\DirectX"));
 
     return CFrame::Create(parent);

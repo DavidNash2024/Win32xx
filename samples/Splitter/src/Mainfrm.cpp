@@ -11,6 +11,7 @@
 //
 CMainFrame::CMainFrame() : m_pDockText(0), m_pDockTree(0), m_pDockList(0)
 {
+    SetView(m_mainView);
 }
 
 CMainFrame::~CMainFrame()
@@ -20,8 +21,6 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    SetView(m_mainView);
-
     // Set the registry key name, and load the initial window position.
     // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\Splitter Sample"));

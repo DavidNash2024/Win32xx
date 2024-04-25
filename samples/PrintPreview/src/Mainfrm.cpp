@@ -17,6 +17,7 @@
 // Constructor.
 CMainFrame::CMainFrame() : m_isToolbarShown(true), m_isWrapped(false), m_oldFocus(0)
 {
+    SetView(m_richView);
 }
 
 // Destructor.
@@ -27,13 +28,11 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    SetView(m_richView);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\PrintPreview Sample"));
 
-    // Load the settings from the registry with 5 MRU entries
+    // Load the settings from the registry with 5 MRU entries.
     LoadRegistryMRUSettings(5);
 
     return CFrame::Create(parent);

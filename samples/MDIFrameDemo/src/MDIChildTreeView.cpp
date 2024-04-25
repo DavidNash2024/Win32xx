@@ -32,12 +32,12 @@ void CViewTree::OnDestroy()
 void CViewTree::OnAttach()
 {
     // Set the image lists.
-    int scale = DpiScaleInt(1);
+    CBitmap bmImage(IDB_CLASSVIEW);
+    bmImage = DpiScaleUpBitmap(bmImage);
+    int scale = bmImage.GetSize().cy / 15;
     CImageList normalImages;
-    normalImages.Create(16 * scale, 15 * scale, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap image(IDB_CLASSVIEW);
-    image = DpiScaleUpBitmap(image);
-    normalImages.Add( image, RGB(255, 0, 0) );
+    normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    normalImages.Add(bmImage, RGB(255, 0, 0));
     SetImageList(normalImages, LVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button.
@@ -75,9 +75,9 @@ void CViewTree::OnAttach()
 // Constructor.
 CMDIChildTree::CMDIChildTree()
 {
-    m_Menu.LoadMenu(_T("MdiMenuTree"));
-    SetHandles(m_Menu, 0);
-    SetView(m_TreeView);
+    m_menu.LoadMenu(_T("MdiMenuTree"));
+    SetHandles(m_menu, 0);
+    SetView(m_treeView);
 }
 
 // Destructor.

@@ -23,6 +23,7 @@
     <ClCompile Include="..\src\ContainerApp.cpp" />
     <ClCompile Include="..\src\Files.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\MainContainer.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\Output.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
@@ -91,6 +92,7 @@
     <ClInclude Include="..\src\Classes.h" />
     <ClInclude Include="..\src\ContainerApp.h" />
     <ClInclude Include="..\src\Files.h" />
+    <ClInclude Include="..\src\MainContainer.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\Output.h" />
     <ClInclude Include="..\src\resource.h" />
@@ -146,12 +148,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <EmbedManifest>false</EmbedManifest>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <EmbedManifest>false</EmbedManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <EmbedManifest>false</EmbedManifest>
+    <IntDir>$(SolutionDir)$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -96,6 +96,12 @@ void CView::OnAttach()
 
     // Create the edit window. It is initially hidden.
     m_edit.Create(*this);
+
+    // Disable double click on the list-view's header.
+    m_header.Attach(GetHeader());
+    LONG_PTR style = static_cast<LONG_PTR>(m_header.GetClassLongPtr(GCL_STYLE));
+    style = style & ~CS_DBLCLKS;
+    m_header.SetClassLongPtr(GCL_STYLE, style);
 }
 
 // Shows the edit window when a subitem is clicked.

@@ -9,20 +9,13 @@
 // Constructor.
 CMainFrame::CMainFrame() : m_preview(m_view), m_isToolbarShown(TRUE)
 {
+	// Set m_.view as the view window of the frame.
+	SetView(m_view);
 }
 
 // Destructor.
 CMainFrame::~CMainFrame()
 {
-}
-
-// Create the frame window.
-HWND CMainFrame::Create(HWND parent)
-{
-    // Set m_.view as the view window of the frame
-    SetView(m_view);
-
-    return CFrame::Create(parent);
 }
 
 // Called by OnFileOpen and in response to a UWM_DROPFILE message.

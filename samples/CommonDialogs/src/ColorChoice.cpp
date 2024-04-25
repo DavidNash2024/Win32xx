@@ -203,8 +203,6 @@ OnInitDialog()                                                              /*
     the color choice is being initialized.
 *-----------------------------------------------------------------------------*/
 {
-      // do the base class initialization first (it currently does nothing)
-    CDialog::OnInitDialog();
     SetWindowTitle();
     return TRUE;
 }
@@ -229,7 +227,7 @@ Serialize(CArchive &ar)                                                     /*
           // save the color table entries
         ar << static_cast<UINT>(m_colorTable.size());
         std::vector<ctl_color>::iterator it;
-        for (it = m_colorTable.begin(); it < m_colorTable.end(); ++it)
+        for (it = m_colorTable.begin(); it != m_colorTable.end(); ++it)
         {
             ar << (*it).id;
             ar << (*it).usage;

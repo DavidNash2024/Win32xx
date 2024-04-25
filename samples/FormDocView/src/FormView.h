@@ -5,6 +5,7 @@
 #define SDI_VIEW_H
 
 #include "FormDoc.h"
+#include "StaticImage.h"
 #include "resource.h"
 
 //////////////////////////////////////////////
@@ -15,7 +16,6 @@ class CFormView : public CDialog
 public:
     CFormView(UINT resID);
     virtual ~CFormView();
-    void DpiScaleImage();
     CFormDoc& GetDoc();
 
     // Command handlers
@@ -24,9 +24,6 @@ public:
     BOOL OnCheckB();
     BOOL OnCheckC();
     BOOL OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked);
-
-    // Message Handles
-    INT_PTR OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
 
 protected:
     // Virtual functions that override base class functions
@@ -42,21 +39,21 @@ private:
     CFormView& operator=(const CFormView&);    // Disable assignment operator
 
     // Member variables for dialog controls.
-    CButton   m_radioA;
-    CButton   m_radioB;
-    CButton   m_radioC;
-    CButton   m_checkA;
-    CButton   m_checkB;
-    CButton   m_checkC;
-    CButton   m_button;
-    CListBox  m_listBox;
-    CEdit     m_edit;
-    CRichEdit m_richEdit;
-    CStatic   m_picture;
-    CStatic   m_status;
-    CButton   m_ok;
-    CWnd      m_group;
-    CBitmap   m_patternImage;
+    CButton      m_radioA;
+    CButton      m_radioB;
+    CButton      m_radioC;
+    CButton      m_checkA;
+    CButton      m_checkB;
+    CButton      m_checkC;
+    CButton      m_button;
+    CListBox     m_listBox;
+    CEdit        m_edit;
+    CRichEdit    m_richEdit;
+    CStaticImage m_picture;
+    CStatic      m_status;
+    CButton      m_ok;
+    CWnd         m_group;
+    CBitmap      m_patternImage;
 
     // Member variables
     CFormDoc m_doc;

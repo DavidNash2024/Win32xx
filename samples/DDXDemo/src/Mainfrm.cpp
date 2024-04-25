@@ -37,6 +37,8 @@ CMainFrame()                                                                /*
 *-----------------------------------------------------------------------------*/
     : m_view(IDD_MAIN_DIALOG)
 {
+      // Set m_view as the view window of the frame.
+    SetView(m_view);
 }
 
 /*============================================================================*/
@@ -52,8 +54,6 @@ Create(HWND parent)                                                          /*
     Note: the <key name> used here refers to the registerKeyName above.
 * ---------------------------------------------------------------------------- - */
 {
-      // Set m_view as the view window of the frame.
-    SetView(m_view);
     LoadRegistrySettings(registryKeyName);
 
     return CFrame::Create(parent);
@@ -167,6 +167,7 @@ OnCommand(WPARAM wparam, LPARAM lparam)                                     /*
 
         case IDM_EDIT_REDO:
             GetFocus().SendMessage(EM_REDO, 0, 0);
+            return TRUE;
 
         case IDW_VIEW_STATUSBAR:
             OnViewStatusBar();
@@ -308,6 +309,50 @@ OnInitialUpdate()                                                           /*
 {
     // The frame is now created.
     // Place any additional startup code here.
+}
+
+/*============================================================================*/
+void CMainFrame::
+OnMenuUpdate(UINT id)                                                       /*
+
+    This method is called by the framework before the menu items are
+    displayed. Add code here to update the check state of menu items.
+*-----------------------------------------------------------------------------*/
+{
+    switch (id)
+    {
+    case IDC_CHECK_A:
+    {
+        bool isCheckA = (m_view.GetCheckA() != 0);
+        UINT check = isCheckA ? MF_CHECKED : MF_UNCHECKED;
+        GetFrameMenu().CheckMenuItem(id, check);
+    }
+    break;
+    case IDC_CHECK_B:
+    {
+        bool isCheckB = (m_view.GetCheckB() != 0);
+        UINT check = isCheckB ? MF_CHECKED : MF_UNCHECKED;
+        GetFrameMenu().CheckMenuItem(id, check);
+    }
+    break;
+    case IDC_CHECK_C:
+    {
+        bool isCheckC = (m_view.GetCheckC() != 0);
+        UINT check = isCheckC ? MF_CHECKED : MF_UNCHECKED;
+        GetFrameMenu().CheckMenuItem(id, check);
+    }
+    break;
+    }
+
+    if ((id >= IDC_RADIO_A) && (id <= IDC_RADIO_C))
+    {
+        int radio = id - IDC_RADIO_A;
+        if (m_view.GetRadio() == radio)
+            GetFrameMenu().CheckMenuRadioItem(IDC_RADIO_A, IDC_RADIO_C,
+                id, MF_BYCOMMAND);
+    }
+
+    CFrame::OnMenuUpdate(id);
 }
 
 /*============================================================================*/

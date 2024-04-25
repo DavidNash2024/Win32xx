@@ -116,6 +116,7 @@ SOURCE=..\src\Mainfrm.cpp
 # Begin Source File
 
 SOURCE=..\src\StdAfx.cpp
+# ADD CPP /YX
 # End Source File
 # Begin Source File
 

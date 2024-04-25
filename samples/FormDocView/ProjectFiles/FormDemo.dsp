@@ -111,6 +111,10 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\StaticImage.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # End Group
@@ -136,6 +140,10 @@ SOURCE=..\src\Mainfrm.h
 # Begin Source File
 
 SOURCE=..\src\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\StaticImage.h
 # End Source File
 # Begin Source File
 

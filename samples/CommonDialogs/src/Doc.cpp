@@ -46,7 +46,7 @@ FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)                        /*
 {
       // get find string that does not go out of scope
     m_findNext   = FR.GetFindString();
-      // set the search parmeters
+      // set the search parameters
     BOOL match = FR.MatchCase();
     BOOL whole = FR.MatchWholeWord();
     BOOL down  = FR.SearchDown();

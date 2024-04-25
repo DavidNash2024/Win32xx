@@ -4,6 +4,16 @@
 //
 
 
+// For Visual Studio 6
+#if defined (_MSC_VER) && (_MSC_VER <= 1200)
+
+#define WINVER          0x0410
+#define _WIN32_WINDOWS  0x0410
+#define _WIN32_IE       0x0401
+
+#endif
+
+
 // For Windows 95
 //#define WINVER          0x0400
 //#define _WIN32_WINDOWS  0x0400
@@ -31,10 +41,10 @@
 //#define NTDDI_VERSION   0x05000000
 
 // For Windows XP
-#define WINVER          0x0501
-#define _WIN32_WINNT    0x0501
-#define _WIN32_IE       0x0501
-#define NTDDI_VERSION   0x05010000
+//#define WINVER          0x0501
+//#define _WIN32_WINNT    0x0501
+//#define _WIN32_IE       0x0501
+//#define NTDDI_VERSION   0x05010000
 
 // For Windows Vista
 //#define WINVER          0x0600

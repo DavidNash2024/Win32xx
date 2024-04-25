@@ -22,6 +22,8 @@
 CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_isHideSingleTab(TRUE),
                             m_isMDITabsAtTop(TRUE), m_pActiveDocker(NULL)
 {
+    // Set m_MyTabbedMDI as the view window of the frame.
+    SetView(m_myTabbedMDI);
 }
 
 // Destructor for CMainFrame.
@@ -32,11 +34,8 @@ CMainFrame::~CMainFrame()
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
-    //Set m_MyTabbedMDI as the view window of the frame
-    SetView(m_myTabbedMDI);
-
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
+    // Set the registry key name, and load the initial window position.
+    // Use a registry key name like "CompanyName\\Application".
     LoadRegistrySettings(_T("Win32++\\TabbedMDI Docking"));
 
     return CDockFrame::Create(parent);
@@ -48,8 +47,8 @@ void CMainFrame::HideSingleContainerTab(bool hideSingle)
     m_isHideSingleTab = hideSingle;
     std::vector<DockPtr>::const_iterator iter;
 
-    // Set the Tab position for each container
-    for (iter = GetAllDockChildren().begin(); iter < GetAllDockChildren().end(); ++iter)
+    // Set the Tab position for each container.
+    for (iter = GetAllDockChildren().begin(); iter != GetAllDockChildren().end(); ++iter)
     {
         CDockContainer* pContainer = (*iter)->GetContainer();
         if (pContainer && pContainer->IsWindow())
@@ -63,7 +62,7 @@ void CMainFrame::HideSingleContainerTab(bool hideSingle)
 // Loads the default arrangement of dockers.
 void CMainFrame::LoadDefaultDockers()
 {
-    // Note: The  DockIDs are used for saving/restoring the dockers state in the registry
+    // Note: The  DockIDs are used for saving/restoring the dockers state in the registry.
 
     DWORD style = DS_CLIENTEDGE; // The style added to each docker
 
@@ -78,6 +77,8 @@ void CMainFrame::LoadDefaultDockers()
     pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_OUTPUT1);
     pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_TEXT2);
     pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, DpiScaleInt(100), ID_DOCK_OUTPUT2);
+
+    SetDockStyle(style);
 }
 
 // Loads the default arrangement of MDIs.
@@ -346,8 +347,6 @@ BOOL CMainFrame::OnHideSingleTab()
 // Called after the frame window is created.
 void CMainFrame::OnInitialUpdate()
 {
-    SetDockStyle(DS_CLIENTEDGE);
-
     // Load dock settings
     if (!LoadDockRegistrySettings(GetRegistryKeyName()))
         LoadDefaultDockers();
@@ -459,7 +458,7 @@ void CMainFrame::SetContainerTabsAtTop(bool atTop)
     std::vector<DockPtr>::const_iterator iter;
 
     // Set the Tab position for each container
-    for (iter = GetAllDockChildren().begin(); iter < GetAllDockChildren().end(); ++iter)
+    for (iter = GetAllDockChildren().begin(); iter != GetAllDockChildren().end(); ++iter)
     {
         CDockContainer* pContainer = (*iter)->GetContainer();
         if (pContainer && pContainer->IsWindow())

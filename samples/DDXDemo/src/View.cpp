@@ -353,87 +353,87 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
 }
 /*============================================================================*/
     void  CView::
-DoDataExchange(CDataExchange& DX)                                           /*
+DoDataExchange(CDataExchange& dx)                                           /*
 
     Specify the controls used for Dialog Data Exchange (DDX) and Dialog Data
     Verification (DDV). This function is invoked each time UpdateData is called.
 *-----------------------------------------------------------------------------*/
 {
       // DDX_Control is used to attach controls to the numeric ID
-    DX.DDX_Control(IDC_COMBOBOX,        m_comboBox);
-    DX.DDX_Control(IDC_LISTBOX,         m_listBox);
-    DX.DDX_Control(IDC_EDIT_RICHEDIT,   m_richEdit);
-    DX.DDX_Control(IDOK,                m_statusButton);
-    DX.DDX_Control(IDC_PUSH_ME_BUTTON,  m_pushButton);
-    DX.DDX_Control(IDC_SLIDER,          m_slider);
-    DX.DDX_Control(IDC_PROGRESSBAR,     m_progressBar);
-    DX.DDX_Control(IDC_SCROLLBAR,       m_scrollBar);
-    DX.DDX_Control(IDC_DATE_TIME,       m_dateTime);
-    DX.DDX_Control(IDC_CALENDAR,        m_monthCal);
+    dx.DDX_Control(IDC_COMBOBOX,        m_comboBox);
+    dx.DDX_Control(IDC_LISTBOX,         m_listBox);
+    dx.DDX_Control(IDC_EDIT_RICHEDIT,   m_richEdit);
+    dx.DDX_Control(IDOK,                m_statusButton);
+    dx.DDX_Control(IDC_PUSH_ME_BUTTON,  m_pushButton);
+    dx.DDX_Control(IDC_SLIDER,          m_slider);
+    dx.DDX_Control(IDC_PROGRESSBAR,     m_progressBar);
+    dx.DDX_Control(IDC_SCROLLBAR,       m_scrollBar);
+    dx.DDX_Control(IDC_DATE_TIME,       m_dateTime);
+    dx.DDX_Control(IDC_CALENDAR,        m_monthCal);
 
     // The other DDX functions transfer the control's to data to or from
     //  the specified variable.
     // The DDV functions specify the range of valid data for the control.
 
       // connect byte box to m_byteVal and specify limits
-    DX.DDX_Text(IDC_EDIT_BYTE,      m_byteVal);
-    DX.DDV_MinMaxByte(              m_byteVal, 10, 200);
+    dx.DDX_Text(IDC_EDIT_BYTE,      m_byteVal);
+    dx.DDV_MinMaxByte(              m_byteVal, 10, 200);
       // connect short box to m_shortVal and specify limits
-    DX.DDX_Text(IDC_EDIT_SHORT,     m_shortVal);
-    DX.DDV_MinMaxShort(             m_shortVal, -1000, 1000);
+    dx.DDX_Text(IDC_EDIT_SHORT,     m_shortVal);
+    dx.DDV_MinMaxShort(             m_shortVal, -1000, 1000);
       // connect int box to m_intVal and specify limits
-    DX.DDX_Text(IDC_EDIT_INT,       m_intVal);
-    DX.DDV_MinMaxInt(               m_intVal, -10000, 10000);
+    dx.DDX_Text(IDC_EDIT_INT,       m_intVal);
+    dx.DDV_MinMaxInt(               m_intVal, -10000, 10000);
       // connect UINT box to m_UINTVal and specify limits
-    DX.DDX_Text(IDC_EDIT_UINT,      m_UINTVal);
-    DX.DDV_MinMaxUInt(              m_UINTVal, 10, 10000);
+    dx.DDX_Text(IDC_EDIT_UINT,      m_UINTVal);
+    dx.DDV_MinMaxUInt(              m_UINTVal, 10, 10000);
       // connect long box to m_longVal and specify limits
-    DX.DDX_Text(IDC_EDIT_LONG,      m_longVal);
-    DX.DDV_MinMaxLong(              m_longVal, -100000, 100000);
+    dx.DDX_Text(IDC_EDIT_LONG,      m_longVal);
+    dx.DDV_MinMaxLong(              m_longVal, -100000, 100000);
     // connect ULONG box to m_ULongVal and specify limits
-    DX.DDX_Text(IDC_EDIT_DWORD,     m_ULongVal);
-    DX.DDV_MinMaxULong(             m_ULongVal, 10, 100000);
+    dx.DDX_Text(IDC_EDIT_DWORD,     m_ULongVal);
+    dx.DDV_MinMaxULong(             m_ULongVal, 10, 100000);
       // connect float box to m_floatVal and specify limits
-    DX.DDX_Text(IDC_EDIT_FLOAT,     m_floatVal);
-    DX.DDV_MinMaxFloat(             m_floatVal, -10.0, 100000.0);
+    dx.DDX_Text(IDC_EDIT_FLOAT,     m_floatVal);
+    dx.DDV_MinMaxFloat(             m_floatVal, -10.0, 100000.0);
       // connect double box to m_doubleVal and specify limits
-    DX.DDX_Text(IDC_EDIT_DOUBLE,    m_doubleVal);
-    DX.DDV_MinMaxDouble(            m_doubleVal, -10.0, 100000.);
+    dx.DDX_Text(IDC_EDIT_DOUBLE,    m_doubleVal);
+    dx.DDV_MinMaxDouble(            m_doubleVal, -10.0, 100000.);
       // connect the LPTSTR box and specify length
-    DX.DDX_Text(IDC_EDIT_LPTSTR,    m_LPTSTRVal, 255);
-    DX.DDV_MaxChars(                m_LPTSTRVal, 25);
+    dx.DDX_Text(IDC_EDIT_LPTSTR,    m_LPTSTRVal, 255);
+    dx.DDV_MaxChars(                m_LPTSTRVal, 25);
       // connect the regular edit box to m_editVal and specify length
-    DX.DDX_Text(IDC_EDIT_CSTRING,   m_editVal);
-    DX.DDV_MaxChars(                m_editVal, 25);
+    dx.DDX_Text(IDC_EDIT_CSTRING,   m_editVal);
+    dx.DDV_MaxChars(                m_editVal, 25);
       // connect the rich edit box to m_richEditVal for string operations
-    DX.DDX_Text(IDC_EDIT_RICHEDIT,  m_richEditVal);
-    DX.DDV_MaxChars(                m_richEditVal, 25); // limit length
+    dx.DDX_Text(IDC_EDIT_RICHEDIT,  m_richEditVal);
+    dx.DDV_MaxChars(                m_richEditVal, 25); // limit length
       // connect the slider control to m_sliderVal and specify limits
-    DX.DDX_Slider(IDC_SLIDER,       m_sliderVal);
-    DX.DDV_MinMaxSlider(            m_sliderVal, 0, 1000);
+    dx.DDX_Slider(IDC_SLIDER,       m_sliderVal);
+    dx.DDV_MinMaxSlider(            m_sliderVal, 0, 1000);
       // connect the progress bar to m_progressVal
-    DX.DDX_Progress(IDC_PROGRESSBAR, m_progressVal);
+    dx.DDX_Progress(IDC_PROGRESSBAR, m_progressVal);
       // connect scroll bar to m_scrollBarVal
-    DX.DDX_Scroll(IDC_SCROLLBAR,    m_scrollBarVal);
+    dx.DDX_Scroll(IDC_SCROLLBAR,    m_scrollBarVal);
       // connect the radio boxes
-    DX.DDX_Radio( IDC_RADIO_A,      m_radioA);
+    dx.DDX_Radio( IDC_RADIO_A,      m_radioA);
       // connect check boxes
-    DX.DDX_Check(IDC_CHECK_A,       m_checkVal[0]);
-    DX.DDX_Check(IDC_CHECK_B,       m_checkVal[1]);
-    DX.DDX_Check(IDC_CHECK_C,       m_checkVal[2]);
+    dx.DDX_Check(IDC_CHECK_A,       m_checkVal[0]);
+    dx.DDX_Check(IDC_CHECK_B,       m_checkVal[1]);
+    dx.DDX_Check(IDC_CHECK_C,       m_checkVal[2]);
       // Note: Data in a combo box may be accessed two ways: by string or by
       // index. Only one of these two methods should be used.  Comment the
       // other out below.
-    DX.DDX_CBString(IDC_COMBOBOX,   m_comboBoxVal); // use string method
-//  DX.DDX_CBIndex(IDC_COMBOBOX,    m_comboBoxIndx); // use index method
+    dx.DDX_CBString(IDC_COMBOBOX,   m_comboBoxVal); // use string method
+//  dx.DDX_CBIndex(IDC_COMBOBOX,    m_comboBoxIndx); // use index method
 //  m_comboBox.GetLBText(m_comboBoxIndx, m_comboBoxVal.GetBuffer(256));
 //  m_comboBoxVal.ReleaseBuffer();
 
       // Note: Data in a list box may be accessed two ways: by string or by
       // index. Only one of these two methods should be used.  Comment the
       // other out below.
-    DX.DDX_LBString(IDC_LISTBOX,    m_listBoxVal);  // use string method
-//  DX.DDX_LBIndex(IDC_LISTBOX,     m_listBoxIndx);  // use index method
+    dx.DDX_LBString(IDC_LISTBOX,    m_listBoxVal);  // use string method
+//  dx.DDX_LBIndex(IDC_LISTBOX,     m_listBoxIndx);  // use index method
 //  m_listBox.GetText(m_listBoxIndx, m_listBoxVal.GetBuffer(256));
 //  m_listBoxVal.ReleaseBuffer();
 
@@ -445,13 +445,13 @@ DoDataExchange(CDataExchange& DX)                                           /*
     SYSTEMTIME stMin, stMax;
     tMin.GetAsSystemTime(stMin);
     tMax.GetAsSystemTime(stMax);
-    DX.DDX_DateTime(IDC_DATE_TIME, m_dateSysTime);
-    DX.DDV_MinMaxDateTime(m_dateSysTime,  stMin, stMax);
+    dx.DDX_DateTime(IDC_DATE_TIME, m_dateSysTime);
+    dx.DDV_MinMaxDateTime(m_dateSysTime,  stMin, stMax);
       // engage the Month Calendar control and specify +/-30 days
-    DX.DDX_MonthCal(IDC_CALENDAR, m_calDateSysTime);
-    DX.DDV_MinMaxMonth(m_calDateSysTime,  stMin, stMax);
+    dx.DDX_MonthCal(IDC_CALENDAR, m_calDateSysTime);
+    dx.DDV_MinMaxMonth(m_calDateSysTime,  stMin, stMax);
       // connect the status box
-    DX.DDX_Text(IDC_EDIT_STATUS,    m_statusBoxVal);
+    dx.DDX_Text(IDC_EDIT_STATUS,    m_statusBoxVal);
 }
 
 /*============================================================================*/
