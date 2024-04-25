@@ -1568,6 +1568,10 @@ namespace Win32xx
         assert(pDockTarget);
         assert(pDockDrag);
 
+        // Hint window requires Win2000 or higher.
+        if (GetWinVersion() < 2500)
+            return;
+
         // Retrieve the hint rect.
         CRect rcHint;
         if (dockSide & 0xF)
@@ -1579,8 +1583,8 @@ namespace Win32xx
         else
             return;
 
-        // Create the dock hint window if required and Win2000 or higher.
-        if (!IsWindow() && (GetWinVersion() >= 2500))
+        // Create the dock hint window if required.
+        if (!IsWindow())
             Create();
 
         // Adjust hint shape for container in container docking using a region.
