@@ -53,7 +53,7 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }
@@ -67,7 +67,7 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 CMDIChildSimple::CMDIChildSimple()
 {
     m_menu.LoadMenu(_T("MdiMenuView"));
-    SetHandles(m_menu, 0);
+    SetHandles(m_menu, NULL);
     SetView(m_view);
 }
 
@@ -146,7 +146,7 @@ LRESULT CMDIChildSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

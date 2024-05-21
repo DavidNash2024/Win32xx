@@ -45,7 +45,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = 0);
+    virtual HWND Create(HWND parent = nullptr);
 
     // Accessors
     CDoc& GetDoc()      { return m_view.GetDoc(); }

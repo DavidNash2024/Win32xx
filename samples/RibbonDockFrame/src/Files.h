@@ -21,7 +21,6 @@ protected:
     // Virtual functions that override base class functions
     virtual void InsertItems();
     virtual void OnAttach();
-    virtual void OnDestroy();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:

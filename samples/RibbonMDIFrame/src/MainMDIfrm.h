@@ -17,7 +17,7 @@ class CMainMDIFrame : public CRibbonMDIFrame
 public:
     CMainMDIFrame();
     virtual ~CMainMDIFrame();
-    virtual HWND Create(HWND parent = 0);
+    virtual HWND Create(HWND parent = NULL);
     COLORREF GetColorFromPicker() const;
     CDoc& GetDoc() { return m_doc; }
     IUIRibbon* GetIUIRibbon() const;

@@ -67,7 +67,7 @@ AddColorChoice(UINT id, LPCTSTR usage, COLORREF color)                      /*
 
 /*============================================================================*/
     INT_PTR CColorChoice::
-DoModal(HWND owner /* = 0 */)                                               /*
+DoModal(HWND owner /* = NULL */)                                               /*
 
     Show the CListBoxDlg dialog box with the list of candidate control
     categories and, if a one is selected, show the CColorDialog box to
@@ -77,9 +77,9 @@ DoModal(HWND owner /* = 0 */)                                               /*
 *-----------------------------------------------------------------------------*/
 {
       // determine a common owner for the two dialog boxes
-    if (owner == 0)
+    if (owner == NULL)
         owner = GetParameters().hwndOwner;
-    if (owner == 0)
+    if (owner == NULL)
         owner = GetApp()->GetMainWnd();
       // prepare the list box dialog: load the color table choice items
     m_LBDlg.ClearList();

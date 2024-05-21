@@ -1,4 +1,4 @@
-/* (24-Jul-2015) [Tab/Indent: 8/8][Line/Box: 80/74]            (MyMyScrollbar.h) *
+/* (10-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]            (MyMyScrollbar.h) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -33,8 +33,8 @@ CMyScrollBar : public CScrollBar                                         /*
         CMyScrollBar();
         virtual ~CMyScrollBar() {}
 
-        virtual int     GetHScrollPos(UINT, WPARAM, LPARAM);
-                void    SetScrollInfo(int lo, int hi, int pos, int page);
+        int     GetHScrollPos(UINT, WPARAM, LPARAM);
+        void    SetScrollInfo(int lo, int hi, int pos, int page);
 
     private:
         CMyScrollBar(const CMyScrollBar&);               // Disable copy construction

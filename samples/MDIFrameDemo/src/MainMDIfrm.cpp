@@ -106,7 +106,7 @@ BOOL CMainMDIFrame::OnFileNew()
     // Position the popup menu
     CToolBar& tb = GetToolBar();
     RECT rc = tb.GetItemRect(tb.CommandToIndex(IDM_FILE_NEW));
-    tb.MapWindowPoints(0, (LPPOINT)&rc, 2);
+    tb.MapWindowPoints(HWND_DESKTOP, (LPPOINT)&rc, 2);
 
     TPMPARAMS tpm;
     tpm.cbSize = sizeof(tpm);
@@ -291,7 +291,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

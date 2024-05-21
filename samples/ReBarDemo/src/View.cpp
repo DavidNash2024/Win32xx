@@ -62,7 +62,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 
     // Set the default cursor
-    wc.hCursor = ::LoadCursor(0, IDC_ARROW);
+    wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 
     // Set the class style (not to be confused with the window styles set in PreCreate)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
@@ -87,7 +87,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

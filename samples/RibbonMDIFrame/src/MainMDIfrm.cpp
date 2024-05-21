@@ -15,7 +15,7 @@
 //
 
 // Constructor for CMainMDIFrame.
-CMainMDIFrame::CMainMDIFrame() : m_pIUIRibbon(0)
+CMainMDIFrame::CMainMDIFrame() : m_pIUIRibbon(NULL)
 {
 }
 
@@ -232,7 +232,7 @@ void CMainMDIFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimpleProper
             // Retrieve color.
             PROPVARIANT var;
             PropVariantInit(&var);
-            if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
+            if (pCmdExProp->GetValue(UI_PKEY_Color, &var) >= 0)
             {
                 if (GetActiveMDIChild())
                 {
@@ -370,7 +370,7 @@ LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

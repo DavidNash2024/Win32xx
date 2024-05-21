@@ -50,11 +50,6 @@ CMainFrame : public CFrame                                                  /*
         void    SetWindowTitle(LPCTSTR);
         void    UpdateControlUIState();
 
-        LRESULT OnActivate(UINT, WPARAM wparam, LPARAM lparam)
-                    { CWnd::WndProcDefault(WM_ACTIVATE, wparam, lparam);
-                      if (LOWORD(wparam) == WA_ACTIVE) GetRichView().SetFocus();
-                      return 0; }
-
     private:
         CMainFrame(const CMainFrame&);               // Disable copy construction
         CMainFrame& operator=(const CMainFrame&);    // Disable assignment operator

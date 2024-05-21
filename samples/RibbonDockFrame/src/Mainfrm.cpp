@@ -13,7 +13,7 @@
 
 //////////////////////////////////
 // CMainFrame function definitions
-CMainFrame::CMainFrame() : m_pIUIRibbon(0)
+CMainFrame::CMainFrame() : m_pIUIRibbon(NULL)
 {
     // Set m_view as the view window of the frame.
     SetView(m_view);
@@ -176,7 +176,7 @@ void CMainFrame::OnFileExit()
 
 void CMainFrame::OnFileOpen()
 {
-    CFileDialog fileDlg(TRUE, L"dat", 0, OFN_FILEMUSTEXIST, L"Scribble Files (*.dat)\0*.dat\0\0");
+    CFileDialog fileDlg(TRUE, L"dat", NULL, OFN_FILEMUSTEXIST, L"Scribble Files (*.dat)\0*.dat\0\0");
     fileDlg.SetTitle(L"Open File");
 
     // Bring up the file open dialog retrieve the selected filename
@@ -290,7 +290,7 @@ void CMainFrame::OnFileSave()
 
 void CMainFrame::OnFileSaveAs()
 {
-    CFileDialog fileDlg(FALSE, L"dat", 0, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
+    CFileDialog fileDlg(FALSE, L"dat", NULL, OFN_OVERWRITEPROMPT, L"Scribble Files (*.dat)\0*.dat\0\0");
     fileDlg.SetTitle(L"Save File");
 
     // Bring up the file open dialog retrieve the selected filename
@@ -486,7 +486,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

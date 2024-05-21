@@ -1,4 +1,4 @@
-/* (12-Jun-2015) [Tab/Indent: 8/8][Line/Box: 80/74]                    (App.h) *
+/* (10-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                    (App.h) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -38,6 +38,7 @@ CApp : public CWinApp                                                   /*
         CApp() {}
         virtual ~CApp() {}
 
+    protected:
         virtual BOOL InitInstance();
 
     private:

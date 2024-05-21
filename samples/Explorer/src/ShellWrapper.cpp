@@ -267,7 +267,7 @@ namespace ShellWrapper
         HRESULT result = E_POINTER;
         if (m_pIShellFolder)
         {
-            result = m_pIShellFolder->GetUIObjectOf(owner, items, pidlArray, riid, 0, (VOID**)&ppv);
+            result = m_pIShellFolder->GetUIObjectOf(owner, items, pidlArray, riid, NULL, (VOID**)&ppv);
             if (result == S_OK)
                 cm.Attach(ppv);
         }

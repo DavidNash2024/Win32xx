@@ -16,8 +16,8 @@ public:
     virtual ~CViewWeb() {}
 
 protected:
-    // Virtual functions that override base class functions
-    virtual int OnCreate(CREATESTRUCT& cs);
+    // Virtual functions that override base class functions.
+    virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
     CViewWeb(const CViewWeb&);               // Disable copy construction

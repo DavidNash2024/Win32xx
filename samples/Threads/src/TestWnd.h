@@ -13,7 +13,7 @@ class CTestWindow : public CWnd
 public:
     CTestWindow(int thread, HWND mainWindow);
     virtual ~CTestWindow() {}
-    virtual HWND Create(HWND parent = 0);
+    virtual HWND Create(HWND parent = NULL);
 
 protected:
     // Virtual functions that override base class functions

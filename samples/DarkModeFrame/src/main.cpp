@@ -24,7 +24,7 @@ int WINAPI WinMain (_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     catch (const CException &e)
     {
         // Display the exception and quit.
-        ::MessageBox(0, e.GetText(), L"Error", MB_ICONERROR);
+        ::MessageBox(nullptr, e.GetText(), L"Error", MB_ICONERROR);
 
         return -1;
     }

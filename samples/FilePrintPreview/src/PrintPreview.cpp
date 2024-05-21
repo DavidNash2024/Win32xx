@@ -46,7 +46,7 @@ CPrintPreviewEx(DWORD flags /* = HIDE_HELP */ )                             /*
     Construct the preview dialog object. Use a nominal screen size, to be
     adjusted later for the actual monitor being used.
 *-----------------------------------------------------------------------------*/
-    : CDialog(IDD_PRINTPREVIEW), m_dcMem(0)
+    : CDialog(IDD_PRINTPREVIEW), m_dcMem(NULL)
 {
     m_previewInches   = DSize(8.0, 10.0);
     m_currentPage     = 0;
@@ -428,9 +428,9 @@ OnPreview(const CString &docPath)                                           /*
 {
     CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
     HDC hPrinter = printDlg.GetPrinterDC();
-    if (hPrinter == 0)
+    if (hPrinter == NULL)
     {
-        ::MessageBox(0, _T("Print preview requires a printer to copy settings from"),
+        ::MessageBox(NULL, _T("Print preview requires a printer to copy settings from"),
             _T("No Printer found"), MB_ICONWARNING);
         return FALSE;
     }

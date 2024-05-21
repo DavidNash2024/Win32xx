@@ -22,12 +22,6 @@ CViewTree::~CViewTree()
     if (IsWindow()) DeleteAllItems();
 }
 
-// Called when the window is destroyed.
-void CViewTree::OnDestroy()
-{
-    SetImageList(0, LVSIL_SMALL);
-}
-
 // Called when a window handle (HWND) is attached to CViewTree.
 void CViewTree::OnAttach()
 {
@@ -38,7 +32,7 @@ void CViewTree::OnAttach()
     CImageList normalImages;
     normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     normalImages.Add(bmImage, RGB(255, 0, 0));
-    SetImageList(normalImages, LVSIL_NORMAL);
+    SetImageList(normalImages, TVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button.
     DWORD style = GetStyle();
@@ -76,7 +70,7 @@ void CViewTree::OnAttach()
 CMDIChildTree::CMDIChildTree()
 {
     m_menu.LoadMenu(_T("MdiMenuTree"));
-    SetHandles(m_menu, 0);
+    SetHandles(m_menu, NULL);
     SetView(m_treeView);
 }
 

@@ -300,7 +300,7 @@ BOOL CMainFrame::OnFilePreview()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(GetFrameMenu() != 0);
+        ShowMenu(GetFrameMenu() != NULL);
         ShowToolBar(m_isToolbarShown);
     }
 
@@ -389,7 +389,7 @@ LRESULT CMainFrame::OnPreviewClose()
     SetView(m_view);
 
     // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != 0);
+    ShowMenu(GetFrameMenu() != NULL);
     ShowToolBar(m_isToolbarShown);
     UpdateSettings();
 
@@ -448,7 +448,7 @@ LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     // The DPI can change when the window is moved to a different monitor.
     if (m_isDPIChanging)
     {
-        if (m_view.GetImage().GetHandle() != 0)
+        if (m_view.GetImage().GetHandle() != NULL)
         {
             // Adjust the frame size to fit the view.
             AdjustFrameRect(m_viewRect);
@@ -545,7 +545,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

@@ -28,7 +28,7 @@ int CMetaView::OnCreate(CREATESTRUCT&)
 
     CEnhMetaFileDC metaDC;
     // Creates an enhanced MetaFile called "Pattern.emf", and also the EnhMetaFile device context
-    metaDC.CreateEnhanced(0, _T("Pattern.emf"), NULL, NULL);
+    metaDC.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
 
     // Draw to the Metafile device context
     metaDC.Rectangle(0, 0, 100, 100);
@@ -93,7 +93,7 @@ LRESULT CMetaView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

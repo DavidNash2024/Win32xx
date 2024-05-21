@@ -21,6 +21,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual BOOL InitInstance();
+    virtual BOOL OnIdle(LONG);
 
 private:
     CPictureApp(const CPictureApp&);               // Disable copy construction

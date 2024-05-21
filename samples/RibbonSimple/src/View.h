@@ -12,7 +12,7 @@
 class CView : public CWnd, public CRibbon
 {
 public:
-    CView() : m_pIUIRibbon(0) {}
+    CView() : m_pIUIRibbon(NULL) {}
     virtual ~CView() {}
 
 protected:

@@ -1,4 +1,4 @@
-/* (02-Aug-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                  (Doc.cpp) *
+/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                  (Doc.cpp) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -57,7 +57,7 @@ AddRecord(const CStringW& entry)                                            /*
             spaces.Left(tabwidth) : spaces.Left(nspaces));
         final.Insert(tab, tabbing);
     }
-    m_doclines.push_back(final);
+    m_docLines.push_back(final);
 }
 
 /*============================================================================*/
@@ -71,7 +71,7 @@ CloseDoc()                                                                  /*
 {
     m_isOpen = FALSE;
     m_width  = 0;
-    m_doclines.clear();
+    m_docLines.clear();
     return TRUE;
 }
 
@@ -125,7 +125,7 @@ GetLength()                                                                 /*
     Return the document length, in records.
 *----------------------------------------------------------------------------*/
 {
-      return static_cast<UINT>(m_doclines.size());
+      return static_cast<UINT>(m_docLines.size());
 }
 
 /*============================================================================*/
@@ -139,7 +139,7 @@ GetRecord(UINT rcd, UINT left /* = 0 */, UINT length /* = MAX_STRING_SIZE */) /*
     if (!m_isOpen || GetLength() == 0)
         return L"";
 
-    CStringW rtn = m_doclines[rcd];
+    CStringW rtn = m_docLines[rcd];
     UINT rtnlen =  rtn.GetLength();
     long maxlen = (long)rtnlen - (long)left;
     if (maxlen <= 0 || left > rtnlen)
@@ -202,7 +202,7 @@ OpenDoc(LPCTSTR filename)                                                   /*
             {
                 msg.Format(_T("Document file\n'%s'\nis already open."),
                     m_openPath.c_str());
-                ::MessageBox(0, msg, _T("Information"), MB_OK |
+                ::MessageBox(NULL, msg, _T("Information"), MB_OK |
                     MB_ICONINFORMATION | MB_TASKMODAL);
                   // not deemed a failure, as the file is open, as specified
                 return TRUE;
@@ -229,7 +229,7 @@ OpenDoc(LPCTSTR filename)                                                   /*
 
         UINT offset = 0;
         Encoding encoding = DetermineEncoding(testlen, offset);
-        m_doclines.clear();
+        m_docLines.clear();
         switch (encoding)
         {
             case ANSI:
@@ -253,7 +253,7 @@ OpenDoc(LPCTSTR filename)                                                   /*
         CString msg;
         msg.Format(_T("File could not be opened and read:\n\n%s"),
             e.GetText());
-        ::MessageBox(0, msg, _T("Error"), MB_OK | MB_ICONEXCLAMATION |
+        ::MessageBox(NULL, msg, _T("Error"), MB_OK | MB_ICONEXCLAMATION |
             MB_TASKMODAL);
         ok = m_isOpen = FALSE;
         m_openPath.Empty();
@@ -274,13 +274,13 @@ ReadABytes(Encoding encoding, UINT docsize, UINT offset)                    /*
     UINT newSize = docsize + 1;
     m_buffer.resize(newSize, '\0');
       // determine the text conversion code page to use
-    UINT CPage = ((encoding == UTF8wBOM || encoding == UTF8noBOM) ?
+    UINT codePage = ((encoding == UTF8wBOM || encoding == UTF8noBOM) ?
         CP_UTF8 : CP_ACP);
       // convert the file buffer to wide chars using this code page
-    CAtoW wb(&m_buffer[0] + offset, CPage);
+    CAtoW wb(&m_buffer[0] + offset, codePage);
       // get access to the converted array and its length
     LPCWSTR pWStr = wb;
-    UINT length   = static_cast<UINT>(wcslen(pWStr));
+    size_t length = wcslen(pWStr);
       // declare the entry string that will be added to the document and scan
       // the converted array for end-of-line characters
     CStringW entry;
@@ -344,8 +344,7 @@ RecordEntry(wchar_t w, CStringW& entry)                                     /*
           // enter the record
         AddRecord(entry);
           // record the longest length
-        m_width = MAX(m_width,
-            static_cast<UINT>(entry.GetLength()));
+        m_width = MAX(m_width, entry.GetLength());
         entry.Empty();
     }
     else

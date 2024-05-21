@@ -215,7 +215,7 @@ ReadFile(LPCTSTR filePath)                                                  /*
     {
         CString msg = _T("Failed to load:  ");
         msg += e.GetFilePath();
-        ::MessageBox(0, msg, AtoT(e.what()), MB_ICONWARNING);
+        ::MessageBox(NULL, msg, AtoT(e.what()), MB_ICONWARNING);
         return FALSE;
     }
     return TRUE;
@@ -230,7 +230,7 @@ SetFontDefaults()                                                           /*
 *-----------------------------------------------------------------------------*/
 {
       //Set font
-    if (m_font.GetHandle() == 0)
+    if (m_font.GetHandle() == NULL)
         m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET,
             OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
             FF_MODERN, _T("Courier New"));
@@ -351,7 +351,7 @@ RVStreamOutCallback(DWORD handle, LPBYTE buffer, LONG size, LONG *out)      /*
 
     *out = 0;
     if (!::WriteFile((HANDLE)(DWORD_PTR)handle, buffer, size, (LPDWORD)out, NULL))
-        ::MessageBox(0, _T("WriteFile Failed"), _T(""), MB_OK);
+        ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }
 /*----------------------------------------------------------------------------*/

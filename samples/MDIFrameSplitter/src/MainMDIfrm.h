@@ -14,7 +14,7 @@ class CMainMDIFrame : public CMDIFrame
 public:
     CMainMDIFrame();
     virtual ~CMainMDIFrame();
-    virtual HWND Create(HWND parent = 0);
+    virtual HWND Create(HWND parent = NULL);
 
 
 protected:

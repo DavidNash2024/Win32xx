@@ -26,7 +26,7 @@ MyFontDialog : public CFontDialog                                       /*
 *-----------------------------------------------------------------------------*/
 {
     public:
-        MyFontDialog(DWORD dwFlags = 0, HDC hdcPrinter = 0);
+        MyFontDialog(DWORD dwFlags = 0, HDC hdcPrinter = NULL);
         virtual ~MyFontDialog(){}
 
         virtual SIZE    GetAvgSize() const { return m_fontSize;}

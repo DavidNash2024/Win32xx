@@ -1,4 +1,4 @@
-/* (02-Aug-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                    (App.h) *
+/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                    (App.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -28,8 +28,10 @@ CApp : public CWinApp                                                       /*
         CApp();
         virtual ~CApp(){}
 
-        BOOL        InitInstance();
-        CMainFrame& GetFrame() { return m_frame;}
+        CMainFrame&  GetFrame() { return m_frame;}
+
+    protected:
+        virtual BOOL InitInstance();
 
     private:
         CApp(const CApp&);               // Disable copy construction

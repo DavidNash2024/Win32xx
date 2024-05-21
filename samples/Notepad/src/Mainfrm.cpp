@@ -18,7 +18,7 @@
 // Constructor.
 CMainFrame::CMainFrame() : m_preview(m_richView),
                            m_encoding(ANSI), m_isToolbarShown(true),
-                           m_isWrapped(false), m_isRTF(false), m_oldFocus(0)
+                           m_isWrapped(false), m_isRTF(false), m_oldFocus(NULL)
 
 {
     SetView(m_richView);
@@ -100,7 +100,7 @@ void CMainFrame::DetermineEncoding(CFile& file)
         catch (const CFileException& e)
         {
             CString str = CString("Failed to read from ") + e.GetFileName();
-            ::MessageBox(0, str, AtoT(e.what()), MB_ICONWARNING);
+            ::MessageBox(NULL, str, AtoT(e.what()), MB_ICONWARNING);
         }
     }
 
@@ -134,7 +134,7 @@ DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG
     *bytesRead = 0;
     DWORD bytesToRead = static_cast<DWORD>(cb);
     if (!::ReadFile(file, pBuffer, bytesToRead, bytesRead, NULL))
-        ::MessageBox(0, _T("ReadFile Failed"), _T(""), MB_OK);
+        ::MessageBox(NULL, _T("ReadFile Failed"), _T(""), MB_OK);
 
     return 0;
 }
@@ -249,7 +249,7 @@ LRESULT CMainFrame::OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called in response to the EN_DROPFILES notification.
 void CMainFrame::OnDropFiles(HDROP dropInfo)
 {
-    UINT length = ::DragQueryFile(dropInfo, 0, 0, 0);
+    UINT length = ::DragQueryFile(dropInfo, 0, NULL, 0);
     int bufferLength = static_cast<int>(length);
     if (length > 0)
     {
@@ -440,7 +440,7 @@ BOOL CMainFrame::OnFilePreview()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_richView);
-        ShowMenu(GetFrameMenu() != 0);
+        ShowMenu(GetFrameMenu() != NULL);
         ShowToolBar(m_isToolbarShown);
     }
 
@@ -572,15 +572,6 @@ void CMainFrame::OnInitialUpdate()
 {
     DragAcceptFiles(TRUE);
     SetWindowTitle();
-
-    // Select the ANSI radio button
-    int menuItem = GetFrameMenu().FindMenuItem(_T("&Encoding"));
-    if (menuItem >= 0)
-    {
-        CMenu ThemeMenu = GetFrameMenu().GetSubMenu(menuItem);
-        ThemeMenu.CheckMenuRadioItem(IDM_ENC_ANSI, IDM_ENC_UTF16, IDM_ENC_ANSI, MF_BYCOMMAND);
-    }
-
     m_richView.SetFocus();
     SetEncoding(ANSI);
 
@@ -594,26 +585,29 @@ void CMainFrame::OnInitialUpdate()
 // Updates menu items before they are displayed.
 void CMainFrame::OnMenuUpdate(UINT id)
 {
-    UINT displayed = MF_GRAYED;
-    UINT checked = MF_UNCHECKED;
+    UINT enabled;
+    UINT checked;
 
     switch (id)
     {
     case IDM_OPTIONS_WRAP:
     {
-        if (m_isWrapped)
-            checked = MF_CHECKED;
-
+        checked = m_isWrapped ? MF_CHECKED : MF_GRAYED;
         GetFrameMenu().CheckMenuItem(id, checked);
+        break;
+    }
+    case IDM_ENC_UTF8:
+    {
+        // Only enable UTF-8 for plain text mode.
+        enabled = m_isRTF ? MF_GRAYED : MF_ENABLED;
+        GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
     case IDM_ENC_UTF16:
     {
         // Only enable UTF-16 for plain text mode.
-        if (!m_isRTF)
-            displayed = MF_ENABLED;
-
-        GetFrameMenu().EnableMenuItem(id, displayed);
+        enabled = m_isRTF? MF_GRAYED : MF_ENABLED;
+        GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
     case IDM_EDIT_COPY:
@@ -622,36 +616,29 @@ void CMainFrame::OnMenuUpdate(UINT id)
     {
         CHARRANGE range;
         m_richView.GetSel(range);
-        if (range.cpMin != range.cpMax)
-            displayed = MF_ENABLED;
+        enabled = (range.cpMin != range.cpMax)? MF_ENABLED : MF_GRAYED;
 
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_COPY, displayed);
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_CUT, displayed);
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_DELETE, displayed);
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_COPY, enabled);
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_CUT, enabled);
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_DELETE, enabled);
         break;
     }
     case IDM_EDIT_PASTE:
     {
-        if (m_richView.CanPaste(CF_TEXT))
-            displayed = MF_ENABLED;
-
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_PASTE, displayed);
+        enabled = m_richView.CanPaste(CF_TEXT)? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_PASTE, enabled);
         break;
     }
     case IDM_EDIT_REDO:
     {
-        if (m_richView.CanRedo())
-            displayed = MF_ENABLED;
-
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_REDO, displayed);
+        enabled = m_richView.CanRedo()? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_REDO, enabled);
         break;
     }
     case IDM_EDIT_UNDO:
     {
-        if (m_richView.CanUndo())
-            displayed = MF_ENABLED;
-
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_UNDO, displayed);
+        enabled = m_richView.CanUndo()? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(IDM_EDIT_UNDO, enabled);
         break;
     }
     }
@@ -720,7 +707,7 @@ BOOL CMainFrame::OnOptionsFont()
 // Turn word wrap on or off.
 BOOL CMainFrame::OnOptionsWrap()
 {
-    m_richView.SetTargetDevice(0, m_isWrapped);
+    m_richView.SetTargetDevice(NULL, m_isWrapped);
     m_isWrapped = !m_isWrapped;
     return TRUE;
 }
@@ -732,7 +719,7 @@ LRESULT CMainFrame::OnPreviewClose()
     SetView(m_richView);
 
     // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != 0);
+    ShowMenu(GetFrameMenu() != NULL);
     ShowToolBar(m_isToolbarShown);
     UpdateSettings();
 
@@ -857,7 +844,7 @@ BOOL CMainFrame::ReadFile(LPCTSTR fileName)
         str += e.GetFilePath();
         str += "\n";
         str += e.GetText();
-        ::MessageBox(0, str, AtoT(e.what()), MB_ICONWARNING);
+        ::MessageBox(NULL, str, AtoT(e.what()), MB_ICONWARNING);
         return FALSE;
     }
 
@@ -869,7 +856,7 @@ void CMainFrame::SaveModifiedText()
 {
     // Check for unsaved text
     if (m_richView.GetModify())
-        if (::MessageBox(0, _T("Save changes to this document"), _T("Notepad"), MB_YESNO | MB_ICONWARNING) == IDYES)
+        if (::MessageBox(NULL, _T("Save changes to this document"), _T("Notepad"), MB_YESNO | MB_ICONWARNING) == IDYES)
             OnFileSave();
 }
 
@@ -1040,7 +1027,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }
@@ -1098,7 +1085,7 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
     {
         CString str = _T("Failed to write:  ");
         str += szFileName;
-        ::MessageBox(0, str, _T("Warning"), MB_ICONWARNING);
+        ::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
         return FALSE;
     }
 

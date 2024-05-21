@@ -1,4 +1,4 @@
-/* (24-Jul-2015) [Tab/Indent: 8/8][Line/Box: 80/74]               (MyButton.h) *
+/* (10-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]               (MyButton.h) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -34,9 +34,7 @@ CMyButton : public CButton                                                  /*
         CMyButton() {}
         virtual ~CMyButton() {}
 
-        virtual void DrawItem(LPDRAWITEMSTRUCT);
-
-    protected:
+        void DrawItem(LPDRAWITEMSTRUCT);
 
     private:
         CMyButton(const CMyButton&);               // Disable copy construction

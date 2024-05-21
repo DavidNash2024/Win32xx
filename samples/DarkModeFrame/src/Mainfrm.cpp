@@ -113,7 +113,7 @@ BOOL CMainFrame::OnHelp()
 // Create the File Open dialog to choose the file to load.
 BOOL CMainFrame::OnFileOpen()
 {
-    CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");
+    CString filter = "Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*|";
     CFileDialog fileDlg(TRUE);    // TRUE for file open
     fileDlg.SetFilter(filter);
     fileDlg.SetDefExt(_T(".cpp"));
@@ -130,7 +130,7 @@ BOOL CMainFrame::OnFileOpen()
 // Create the File Save dialog to choose the file to save.
 BOOL CMainFrame::OnFileSave()
 {
-    CString filter = _T("Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*||");
+    CString filter = "Program Files (*.cpp; *.h)|*.cpp; *.h|All Files (*.*)|*.*|";
     CFileDialog fileDlg(FALSE);    // FALSE for file save
     fileDlg.SetFilter(filter);
     fileDlg.SetDefExt(_T(".cpp"));
@@ -179,7 +179,7 @@ BOOL CMainFrame::OnFilePreview()
         // An exception occurred. Display the relevant information.
         MessageBox(e.GetText(), _T("Print Preview Failed"), MB_ICONWARNING);
         SetView(m_view);
-        ShowMenu(GetFrameMenu() != 0);
+        ShowMenu(GetFrameMenu().GetHandle() != 0);
         ShowToolBar(m_isToolbarShown);
     }
 
@@ -226,7 +226,7 @@ LRESULT CMainFrame::OnPreviewClose()
     SetView(m_view);
 
     // Show the menu and toolbar
-    ShowMenu(GetFrameMenu() != 0);
+    ShowMenu(GetFrameMenu().GetHandle() != 0);
     ShowToolBar(m_isToolbarShown);
     UpdateSettings();
 
@@ -377,7 +377,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(nullptr, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

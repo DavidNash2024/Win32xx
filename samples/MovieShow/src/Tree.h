@@ -20,7 +20,6 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnDestroy();
     virtual void    OnInitialUpdate();
     virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);

@@ -1,4 +1,4 @@
-/* (10-08-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                (AboutBox.h) *
+/* (10-05-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                (AboutBox.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -30,7 +30,7 @@ AboutBox    : public CDialog                                            /*
         void    SetAboutBoxInfo(LPCTSTR info) { m_aboutBoxInfo = info;}
 
     protected:
-        BOOL    OnInitDialog();
+        virtual BOOL OnInitDialog();
 
     private:
         AboutBox(const AboutBox&);               // Disable copy construction

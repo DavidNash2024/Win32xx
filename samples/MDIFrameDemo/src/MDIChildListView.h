@@ -18,7 +18,6 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
-    virtual void OnDestroy();
 
 private:
     CViewList(const CViewList&);               // Disable copy construction

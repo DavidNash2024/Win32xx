@@ -1,4 +1,4 @@
-/* (14-Nov-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                   (View.h) *
+/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                   (View.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -36,9 +36,9 @@ CColorExDialog : public CColorDialog                                      /*
         void    SetBoxTitle(const CString& title) { m_boxTitle = title;}
 
     protected:
-        BOOL    OnInitDialog()
-                    { SetWindowText(m_boxTitle);
-                      return TRUE; }
+        virtual BOOL OnInitDialog()
+                     { SetWindowText(m_boxTitle);
+                       return TRUE; }
 
     private:
         CColorExDialog(const CColorExDialog&);               // Disable copy construction
@@ -75,11 +75,11 @@ CView : public CScrollView                                                  /*
         BOOL    ToggleLineNumbers();
 
     protected:
-        void    OnInitialUpdate();
-        void    OnDraw(CDC& memDC);
-        LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
-        void    PreCreate(CREATESTRUCT& cs);
-        void    Serialize(CArchive& ar);
+        virtual void    OnInitialUpdate();
+        virtual void    OnDraw(CDC& memDC);
+        virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual void    PreCreate(CREATESTRUCT& cs);
+        virtual void    Serialize(CArchive& ar);
 
     private:
         CView(const CView&);                // Disable copy construction

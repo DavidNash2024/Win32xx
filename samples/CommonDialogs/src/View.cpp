@@ -26,7 +26,7 @@ CView(UINT id)                                                              /*
 
     Construct default window main view object.
 *-----------------------------------------------------------------------------*/
-    : CDialog(id), m_parent(0)
+    : CDialog(id), m_parent(NULL)
 {
 }
 
@@ -50,7 +50,7 @@ AddToolTip(HWND parent, UINT id, LPCTSTR toolTip)                          /*
 *-----------------------------------------------------------------------------*/
 {
     HWND hCtl = ::GetDlgItem(parent, id);
-    if (hCtl == 0)
+    if (hCtl == NULL)
     {
         TRACE(CString("cannot connect tooltip: ") + toolTip);
         return FALSE;
@@ -85,7 +85,7 @@ AssignToolTips()                                                            /*
 
 /*============================================================================*/
     HWND CView::
-Create(HWND parent = 0)                                                    /*
+Create(HWND parent = NULL)                                                    /*
 
     Show the view window as a modeless dialog.
 **----------------------------------------------------------------------------*/

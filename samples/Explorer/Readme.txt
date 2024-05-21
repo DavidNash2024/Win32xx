@@ -1,11 +1,11 @@
 Explorer Example
 ================
-This example demonstrates how to work directly with the Shell Namespace to
+This example demonstrates how to work directly with the Shell namespace to
 produce an explorer-like utility. The Shell namespace organizes the file system
 and other objects managed by the Shell into a single tree-structured hierarchy.
 Conceptually, it is a larger and more inclusive version of the file system.
 
-The Shell Namespace is managed through the IShellFolder interface.  The
+The Shell namespace is managed through the IShellFolder interface.  The
 CShellFolder class is used to wrap the various members of the IShellFolder
 interface.
 
@@ -37,5 +37,5 @@ Features demonstrated in this example
 * Using a TreeView control and ListView control as a view window for CDocker.
 * Using PIDLs to walk through the file system.
 * Use of the IShellFolder interface object to work directly with the Shell
-   Namespace.
+   namespace.
 * Storing the column width of the list-view window in the registry.  

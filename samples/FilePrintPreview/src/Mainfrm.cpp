@@ -521,7 +521,7 @@ QuickPrint(CPrintDialog& printDlg)                                          /*
 {
     CPrintDialog dlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
     HDC hPrinter = dlg.GetPrinterDC();
-    if (hPrinter == 0)
+    if (hPrinter == NULL)
     {
         MessageBox(_T("Quick Print requires a printer"),_T("No Printer found"),
             MB_ICONWARNING);
@@ -654,7 +654,7 @@ WndProc(UINT msg, WPARAM wparam, LPARAM lparam)                             /*
     catch (const CException& e)
     {
           // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
         return 0;
     }
 }

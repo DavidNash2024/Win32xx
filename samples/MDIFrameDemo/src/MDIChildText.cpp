@@ -47,7 +47,7 @@ void CViewText::PreCreate(CREATESTRUCT& cs)
 CMDIChildText::CMDIChildText()
 {
     m_menu.LoadMenu(_T("MdiMenuText"));
-    SetHandles(m_menu, 0);
+    SetHandles(m_menu, NULL);
     SetView(m_textView);
 }
 

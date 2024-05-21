@@ -9,7 +9,7 @@
 ///////////////////////////////////
 // CMainFrame function definitions.
 //
-CMainFrame::CMainFrame() : m_pDockText(0), m_pDockTree(0), m_pDockList(0)
+CMainFrame::CMainFrame() : m_pDockText(NULL), m_pDockTree(NULL), m_pDockList(NULL)
 {
     SetView(m_mainView);
 }
@@ -118,7 +118,7 @@ void CMainFrame::OnInitialUpdate()
         m_pDockTree = dynamic_cast<CDockTree*>(GetDockFromID(ID_DOCK_TREE));
         m_pDockList = dynamic_cast<CDockList*>(GetDockFromID(ID_DOCK_LIST));
 
-        if ((m_pDockText == 0) || (m_pDockTree == 0) || (m_pDockList == 0))
+        if ((m_pDockText == NULL) || (m_pDockTree == NULL) || (m_pDockList == NULL))
         {
             CloseAllDockers();
             LoadDefaultWindowPanes();
@@ -236,7 +236,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

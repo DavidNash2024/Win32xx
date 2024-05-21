@@ -1,4 +1,4 @@
-/* (02-Aug-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                    (Doc.h) *
+/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                    (Doc.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -62,9 +62,9 @@ CDoc                                                                        /*
 
         CFile       m_file;                 // the document file object
         BOOL        m_isOpen;               // the document status
-        UINT        m_width;                // width, in characters
+        int         m_width;                // width, in characters
         CString     m_openPath;             // empty when closed
-        std::vector<CStringW>   m_doclines; // the document content
+        std::vector<CStringW>   m_docLines; // the document content
         std::vector<char>       m_buffer;   // the file contents buffer
 };
 /*-----------------------------------------------------------------------------*/

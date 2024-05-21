@@ -5,6 +5,11 @@
 #ifndef RECT_H
 #define RECT_H
 
+struct RectData
+{
+    COLORREF color;
+    CRect rect;
+};
 
 //////////////////////////////////////////////////////////////
 // CViewRect manages a window that displays random rectangles.
@@ -15,10 +20,18 @@ public:
     CViewRect() : m_cxClientMax(0), m_cyClientMax(0) {}
     virtual ~CViewRect() {}
 
+// Set the CREATESTURCT parameters before the window is created.
+void PreCreate(CREATESTRUCT& cs)
+{
+    CWnd::PreCreate(cs);
+    cs.style |= WS_CLIPCHILDREN;
+}
+
 protected:
     // Virtual functions that override base class functions
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnDestroy();
+    virtual void    OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
@@ -31,6 +44,7 @@ private:
     virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
 
     // Member variables
+    std::vector<RectData> m_rects;
     int m_cxClientMax;
     int m_cyClientMax;
 };

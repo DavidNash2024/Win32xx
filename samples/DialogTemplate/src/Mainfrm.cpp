@@ -200,7 +200,7 @@ BOOL CMainFrame::OnFileOpen()
 {
     m_richView.SetWindowText(NULL);
 
-    CString filter = _T("Program Files (*.exe; *.dll)|*.exe; *.dll|All Files (*.*)|*.*||");
+    CString filter = "Program Files (*.exe; *.dll)|*.exe; *.dll|All Files (*.*)|*.*|";
     CFileDialog fileDlg(TRUE);    // TRUE for file open
     fileDlg.SetFilter(filter);
     fileDlg.SetDefExt(_T(".exe"));
@@ -271,7 +271,7 @@ BOOL CMainFrame::OnFilePrint()
 // Create the File Save dialog to choose the file to save.
 BOOL CMainFrame::OnFileSave()
 {
-    CString filter = _T("Program Files (*.h; *.cpp)|*.h; *.cpp|All Files (*.*)|*.*||");
+    CString filter = "Program Files (*.h; *.cpp)|*.h; *.cpp|All Files (*.*)|*.*|";
     CFileDialog fileDlg(FALSE);    // FALSE for file save
     fileDlg.SetFilter(filter);
     fileDlg.SetDefExt(_T(".h"));

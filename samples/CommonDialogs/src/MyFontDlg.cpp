@@ -20,7 +20,7 @@
 
 /*============================================================================*/
     MyFontDialog::
-MyFontDialog(DWORD dwFlags, HDC hdcPrinter /* = 0 */)           /*
+MyFontDialog(DWORD dwFlags, HDC hdcPrinter /* = NULL */)           /*
 
     Create a simple default font dialog object with the title "Font", a
     10pt Courier New typeface, and font, style, strikeout, underline, text

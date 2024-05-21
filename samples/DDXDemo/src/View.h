@@ -1,4 +1,4 @@
-/* (12-Jun-2015) [Tab/Indent: 8/8][Line/Box: 80/74]                  (View.h) *
+/* (10-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]                  (View.h) *
 ********************************************************************************
 |                                                                              |
 |                      Author: Robert C. Tausworthe, 2020                      |
@@ -41,7 +41,6 @@ CView : public CDialog                                                      /*
         virtual ~CView() {}
 
         void    AdjustStatus();
-        HWND    Create(HWND hParent);
         BOOL    GetCheckA() const       { return m_checkVal[0]; }
         BOOL    GetCheckB() const       { return m_checkVal[1]; }
         BOOL    GetCheckC() const       { return m_checkVal[2]; }
@@ -60,6 +59,15 @@ CView : public CDialog                                                      /*
         BOOL    UpdateDialog(BOOL bReadFromControl);
         void    UpdateDocument();
 
+    protected:
+        virtual void    DoDataExchange(CDataExchange& dx);
+        virtual BOOL    OnInitDialog();
+        virtual void    OnOK();
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+        virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
+        virtual void    OnCancel() {}   // Suppress esc key closing the dialog
+        virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
+
     private:
         CView(const CView&);               // Disable copy construction
         CView& operator=(const CView&);    // Disable assignment operator
@@ -67,17 +75,10 @@ CView : public CDialog                                                      /*
         BOOL    AddToolTip(UINT id);
         BOOL    AddToolTip(UINT id, const CString & s);
         void    AssignToolTips();
-        INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-        void    DoDataExchange(CDataExchange& dx);
         void    GetDocumentValues();
         void    OnBitmap();
         void    OnButton();
-        void    OnCancel() {}   // Suppress esc key closing the dialog
-        BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
         INT_PTR OnCtlColor(HDC, HWND, UINT);
-        BOOL    OnInitDialog();
-        void    OnOK();
-        LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         void    SetControlPositions(int pos);
 
           // DDX/DDV variables that are connected

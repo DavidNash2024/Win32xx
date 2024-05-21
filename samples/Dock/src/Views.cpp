@@ -2,10 +2,247 @@
 // Views.cpp
 //
 
-
 #include "stdafx.h"
 #include "Views.h"
 #include "resource.h"
+
+
+/////////////////////////////////
+// CViewClasses function definitions
+//
+
+// Constructor.
+CViewClasses::CViewClasses()
+{
+}
+
+// Destructor.
+CViewClasses::~CViewClasses()
+{
+    if (IsWindow())
+        DeleteAllItems();
+}
+
+// Called when a window handle (HWND) is attached to this object.
+void CViewClasses::OnAttach()
+{
+    // Set the image lists.
+    SetDPIImages();
+
+    // Adjust style to show lines and [+] button.
+    DWORD dwStyle = GetStyle();
+    dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
+    SetStyle(dwStyle);
+
+    DeleteAllItems();
+
+    // Add some tree-view items.
+    HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
+    HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
+    InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
+    InsertItem(_T("GetMainFrame()"), 3, 3, htiCTreeViewApp);
+    InsertItem(_T("InitInstance()"), 3, 3, htiCTreeViewApp);
+    HTREEITEM htiMainFrame = InsertItem(_T("CMainFrame"), 1, 1, htiRoot);
+    InsertItem(_T("CMainFrame()"), 3, 3, htiMainFrame);
+    InsertItem(_T("OnCommand()"), 4, 4, htiMainFrame);
+    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiMainFrame);
+    HTREEITEM htiView = InsertItem(_T("CView"), 1, 1, htiRoot);
+    InsertItem(_T("CView()"), 3, 3, htiView);
+    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
+    InsertItem(_T("WndProc()"), 4, 4, htiView);
+
+    // Expand some tree-view items.
+    Expand(htiRoot, TVE_EXPAND);
+    Expand(htiCTreeViewApp, TVE_EXPAND);
+}
+
+// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CViewClasses::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    SetDPIImages();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
+// Called when the mouse is clicked on the window.
+LRESULT CViewClasses::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Set window focus. The docker will now report this as active.
+    SetFocus();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
+// Adjusts the listview image sizes in response to window DPI changes.
+void CViewClasses::SetDPIImages()
+{
+    // Resize the image list.
+    CBitmap bmImage(IDB_CLASSVIEW);
+    bmImage = DpiScaleUpBitmap(bmImage);
+    int scale = bmImage.GetSize().cy / 15;
+    CImageList normalImages;
+    normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    normalImages.Add(bmImage, RGB(255, 0, 0));
+    SetImageList(normalImages, TVSIL_NORMAL);
+
+    // Reset the item indentation.
+    int imageWidth = normalImages.GetIconSize().cx;
+    SetIndent(imageWidth);
+}
+
+// Process window messages for the tree-view control.
+LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        switch (msg)
+        {
+        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
+        case WM_MOUSEACTIVATE:           return OnMouseActivate(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
+}
+
+
+/////////////////////////////////
+// CViewFiles function definitions
+//
+
+// Constructor.
+CViewFiles::CViewFiles()
+{
+}
+
+// Destructor.
+CViewFiles::~CViewFiles()
+{
+    if (IsWindow()) DeleteAllItems();
+}
+
+// Insert 4 list view items.
+void CViewFiles::InsertItems()
+{
+    // Add 4th item.
+    int item = InsertItem(0, _T("ListViewApp.h"), 2);
+    SetItemText(item, 1, _T("1 KB"));
+    SetItemText(item, 2, _T("C Header file"));
+
+    // add 3rd item.
+    item = InsertItem(item, _T("ListViewApp.cpp"), 1);
+    SetItemText(item, 1, _T("3 KB"));
+    SetItemText(item, 2, _T("C++ Source file"));
+
+    // add 2nd item.
+    item = InsertItem(item, _T("main.cpp"), 1);
+    SetItemText(item, 1, _T("1 KB"));
+    SetItemText(item, 2, _T("C++ Source file"));
+
+    // add 1st item.
+    item = InsertItem(item, _T("ListView"), 0);
+    SetItemText(item, 2, _T("Folder"));
+}
+
+// Called when a window handle (HWND) is attached to the List-View.
+void CViewFiles::OnAttach()
+{
+    // Set the image lists.
+    SetDPIImages();
+
+    // Set the report style.
+    DWORD dwStyle = GetStyle();
+    SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
+
+    SetColumns();
+    InsertItems();
+    SetDPIColumnWidths();
+}
+
+// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
+// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
+// application is DPI_AWARENESS_PER_MONITOR_AWARE.
+LRESULT CViewFiles::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    SetDPIImages();
+    SetDPIColumnWidths();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
+// Called when the mouse is clicked on the window.
+LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    // Set window focus. The docker will now report this as active.
+    SetFocus();
+    return FinalWindowProc(msg, wparam, lparam);
+}
+
+// Configure the List-view's columns.
+void CViewFiles::SetColumns()
+{
+    // Empty the list.
+    DeleteAllItems();
+
+    // Add the column items.
+    InsertColumn(0, _T("Name"));
+    InsertColumn(1, _T("Size"));
+    InsertColumn(2, _T("Type"));
+    SetDPIColumnWidths();
+}
+
+// Adjusts the listview column widths in response to window DPI changes.
+void CViewFiles::SetDPIColumnWidths()
+{
+    SetColumnWidth(0, DpiScaleInt(120));
+    SetColumnWidth(1, DpiScaleInt(50));
+    SetColumnWidth(2, DpiScaleInt(100));
+}
+
+// Adjusts the listview image sizes in response to window DPI changes.
+void CViewFiles::SetDPIImages()
+{
+    // Set the image lists
+    CBitmap bmImage(IDB_FILEVIEW);
+    bmImage = DpiScaleUpBitmap(bmImage);
+    int scale = bmImage.GetSize().cy / 15;
+    CImageList smallImages;
+    smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    smallImages.Add(bmImage, RGB(255, 0, 255));
+    SetImageList(smallImages, LVSIL_SMALL);
+}
+
+// Process the listview window messages.
+LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        switch (msg)
+        {
+        case WM_DPICHANGED_BEFOREPARENT:  return OnDpiChangedBeforeParent(msg, wparam, lparam);
+        case WM_MOUSEACTIVATE:           return OnMouseActivate(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+
+        return 0;
+    }
+}
 
 
 ///////////////////////////////////
@@ -25,7 +262,7 @@ void CViewSimple::OnDraw(CDC& dc)
 
     // Centre some text in the window.
     CRect rc = GetClientRect();
-    dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 // Respond to a mouse click on the window.
@@ -61,259 +298,12 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }
 }
 
-/////////////////////////////////
-// CViewList function definitions
-//
-
-// Constructor.
-CViewList::CViewList()
-{
-}
-
-// Destructor.
-CViewList::~CViewList()
-{
-    if (IsWindow()) DeleteAllItems();
-}
-
-// Insert 4 list view items.
-void CViewList::InsertItems()
-{
-    // Add 4th item.
-    int item = InsertItem(0, _T("ListViewApp.h"), 2);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemText(item, 2, _T("C Header file"));
-
-    // add 3rd item.
-    item = InsertItem(item, _T("ListViewApp.cpp"), 1);
-    SetItemText(item, 1, _T("3 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
-
-    // add 2nd item.
-    item = InsertItem(item, _T("main.cpp"), 1);
-    SetItemText(item, 1, _T("1 KB"));
-    SetItemText(item, 2, _T("C++ Source file"));
-
-    // add 1st item.
-    item = InsertItem(item, _T("ListView"), 0);
-    SetItemText(item, 2, _T("Folder"));
-}
-
-// Called when a window handle (HWND) is attached to the List-View.
-void CViewList::OnAttach()
-{
-    // Set the image lists.
-    SetDPIImages();
-
-    // Set the report style.
-    DWORD dwStyle = GetStyle();
-    SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
-
-    SetColumns();
-    InsertItems();
-    SetDPIColumnWidths();
-}
-
-// Called when the window is destroyed.
-void CViewList::OnDestroy()
-{
-    SetImageList(0, LVSIL_SMALL);
-}
-
-// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewList::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    SetDPIImages();
-    SetDPIColumnWidths();
-    return FinalWindowProc(msg, wparam, lparam);
-}
-
-// Called when the mouse is clicked on the window.
-LRESULT CViewList::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Set window focus. The docker will now report this as active.
-    SetFocus();
-    return FinalWindowProc(msg, wparam, lparam);
-}
-
-// Configure the List-view's columns.
-void CViewList::SetColumns()
-{
-    // Empty the list.
-    DeleteAllItems();
-
-    // Add the column items.
-    InsertColumn(0, _T("Name"));
-    InsertColumn(1, _T("Size"));
-    InsertColumn(2, _T("Type"));
-    SetDPIColumnWidths();
-}
-
-// Adjusts the listview column widths in response to window DPI changes.
-void CViewList::SetDPIColumnWidths()
-{
-    SetColumnWidth(0, DpiScaleInt(120));
-    SetColumnWidth(1, DpiScaleInt(50));
-    SetColumnWidth(2, DpiScaleInt(100));
-}
-
-// Adjusts the listview image sizes in response to window DPI changes.
-void CViewList::SetDPIImages()
-{
-    // Set the image lists
-    CBitmap bmImage(IDB_FILEVIEW);
-    bmImage = DpiScaleUpBitmap(bmImage);
-    int scale = bmImage.GetSize().cy / 15;
-    CImageList smallImages;
-    smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    smallImages.Add(bmImage, RGB(255, 0, 255));
-    SetImageList(smallImages, LVSIL_SMALL);
-}
-
-// Process the listview window messages.
-LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    try
-    {
-        switch (msg)
-        {
-        case WM_DPICHANGED_BEFOREPARENT:  return OnDpiChangedBeforeParent(msg, wparam, lparam);
-        case WM_MOUSEACTIVATE:           return OnMouseActivate(msg, wparam, lparam);
-        }
-
-        return WndProcDefault(msg, wparam, lparam);
-    }
-
-    // Catch all CException types.
-    catch (const CException& e)
-    {
-        // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
-    }
-}
-
-/////////////////////////////////
-// CViewTree function definitions
-//
-
-// Constructor.
-CViewTree::CViewTree()
-{
-}
-
-// Destructor.
-CViewTree::~CViewTree()
-{
-    if (IsWindow())
-        DeleteAllItems();
-}
-
-// Called when a window handle (HWND) is attached to this object.
-void CViewTree::OnAttach()
-{
-    // Set the image lists.
-    SetDPIImages();
-
-    // Adjust style to show lines and [+] button.
-    DWORD dwStyle = GetStyle();
-    dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
-    SetStyle(dwStyle);
-
-    DeleteAllItems();
-
-    // Add some tree-view items.
-    HTREEITEM htiRoot = InsertItem(_T("TreeView"), 0, 0);
-    HTREEITEM htiCTreeViewApp = InsertItem(_T("CTreeViewApp"), 1, 1, htiRoot);
-    InsertItem(_T("CTreeViewApp()"), 3, 3, htiCTreeViewApp);
-    InsertItem(_T("GetMainFrame()"), 3, 3, htiCTreeViewApp);
-    InsertItem(_T("InitInstance()"), 3, 3, htiCTreeViewApp);
-    HTREEITEM htiMainFrame = InsertItem(_T("CMainFrame"), 1, 1, htiRoot);
-    InsertItem(_T("CMainFrame()"), 3, 3, htiMainFrame);
-    InsertItem(_T("OnCommand()"), 4, 4, htiMainFrame);
-    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiMainFrame);
-    HTREEITEM htiView = InsertItem(_T("CView"), 1, 1, htiRoot);
-    InsertItem(_T("CView()"), 3, 3, htiView);
-    InsertItem(_T("OnInitialUpdate()"), 4, 4, htiView);
-    InsertItem(_T("WndProc()"), 4, 4, htiView);
-
-    // Expand some tree-view items.
-    Expand(htiRoot, TVE_EXPAND);
-    Expand(htiCTreeViewApp, TVE_EXPAND);
-}
-
-// Called when the window is destroyed.
-void CViewTree::OnDestroy()
-{
-    SetImageList(0, LVSIL_SMALL);
-}
-
-// Called in response to a WM_DPICHANGED_BEFOREPARENT message which is sent to child
-// windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
-// application is DPI_AWARENESS_PER_MONITOR_AWARE.
-LRESULT CViewTree::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    SetDPIImages();
-    return FinalWindowProc(msg, wparam, lparam);
-}
-
-// Called when the mouse is clicked on the window.
-LRESULT CViewTree::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    // Set window focus. The docker will now report this as active.
-    SetFocus();
-    return FinalWindowProc(msg, wparam, lparam);
-}
-
-// Adjusts the listview image sizes in response to window DPI changes.
-void CViewTree::SetDPIImages()
-{
-    // Resize the image list.
-    CBitmap bmImage(IDB_CLASSVIEW);
-    bmImage = DpiScaleUpBitmap(bmImage);
-    int scale = bmImage.GetSize().cy / 15;
-    CImageList normalImages;
-    normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    normalImages.Add(bmImage, RGB(255, 0, 0));
-    SetImageList(normalImages, LVSIL_NORMAL);
-
-    // Reset the item indentation.
-    int imageWidth = normalImages.GetIconSize().cx;
-    SetIndent(imageWidth);
-}
-
-// Process window messages for the tree-view control.
-LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
-{
-    try
-    {
-        switch (msg)
-        {
-        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
-        case WM_MOUSEACTIVATE:           return OnMouseActivate(msg, wparam, lparam);
-        }
-
-        return WndProcDefault(msg, wparam, lparam);
-    }
-
-    // Catch all CException types.
-    catch (const CException& e)
-    {
-        // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
-    }
-}
 
 /////////////////////////////////
 // CViewText function definitions
@@ -333,3 +323,4 @@ void CViewText::SetDPIFont()
     m_font = DpiScaleFont(m_font, 9);
     SetFont(m_font);
 }
+

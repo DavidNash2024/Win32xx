@@ -20,7 +20,7 @@ public:
     void SetDPIFont();
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual void OnAttach();
 
 private:
@@ -40,8 +40,12 @@ public:
     CContainOutput();
     virtual ~CContainOutput() {}
 
+protected:
+    // Virtual functions that override base class functions.
+    virtual void PreCreate(CREATESTRUCT& cs);
+
 private:
-    CContainOutput(const CContainOutput&);                // Disable copy construction
+    CContainOutput(const CContainOutput&);              // Disable copy construction
     CContainOutput& operator=(const CContainOutput&);   // Disable assignment operator
 
     CViewOutput m_viewOutput;
@@ -58,7 +62,7 @@ public:
     virtual ~CDockOutput() {}
 
 private:
-    CDockOutput(const CDockOutput&);                // Disable copy construction
+    CDockOutput(const CDockOutput&);              // Disable copy construction
     CDockOutput& operator=(const CDockOutput&);   // Disable assignment operator
 
     CContainOutput m_view;
@@ -66,4 +70,3 @@ private:
 
 
 #endif // OUTPUT_H
-

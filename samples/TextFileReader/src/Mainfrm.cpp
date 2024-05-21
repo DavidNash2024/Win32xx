@@ -1,4 +1,4 @@
-/* (02-Aug-2016) [Tab/Indent: 4/4][Line/Box: 80/74]              (MainFrm.cpp) *
+/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]              (MainFrm.cpp) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -20,7 +20,7 @@
 
 /*============================================================================*/
     CMainFrame::
-CMainFrame()                                                                /*
+CMainFrame() : m_xWin(0), m_yWin(0), m_cxWin(0), m_cyWin(0), m_maxMRU(0)                                                            /*
 
     Constructor for CMainFrame, which is called after CFrame's constructor.
 *-----------------------------------------------------------------------------*/
@@ -28,10 +28,6 @@ CMainFrame()                                                                /*
       // Set m_view as the view window of the frame.
     SetView(m_view);
 
-    m_yWin   = 100;
-    m_xWin   = 100;
-    m_cxWin  = 400;
-    m_cyWin  = 400;
     ZeroMemory(&m_wndPl, sizeof(WINDOWPLACEMENT));
     m_wndPl.length = sizeof(WINDOWPLACEMENT);
 }
@@ -163,7 +159,7 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
         CString msg = _T("Default values are being used on this first\n")
             _T("startup. Your customized settings, colors, and font\n")
             _T("will be restored in future usages.\n");
-        ::MessageBox(0, msg, _T("Information"), MB_OK |
+        ::MessageBox(NULL, msg, _T("Information"), MB_OK |
             MB_ICONINFORMATION | MB_TASKMODAL);
         return 0;
     }
@@ -184,13 +180,13 @@ OnCreate(CREATESTRUCT& cs)                                                  /*
             text += _T("\n");
         CString msg = (CString)"Error restoring program's previous state.\n" +
             text + e.GetErrorString() + _T("\n") + e.what();
-        ::MessageBox(0, msg.c_str(), _T("Exception"),
+        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     catch(...) // catch all other exception events
     {
         CString msg = _T("Program's previous state not restored.\n");
-        ::MessageBox(0, msg.c_str(), _T("Unknown Exception"),
+        ::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     m_wndPl.showCmd = SW_RESTORE;
@@ -236,7 +232,7 @@ OnFileOpen()                                                                /*
 {
       // Bring up the dialog, and open the file
     CString filter = LoadString(IDS_FILE_FILTER);
-    CFileDialog fd(TRUE, 0, 0, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filter);
+    CFileDialog fd(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, filter);
     if (fd.DoModal(*this) != IDOK)
         return;
 
@@ -289,6 +285,17 @@ OnHelp()                                                                    /*
     m_aboutDialog.DoModal(*this);
     return TRUE;
 }
+
+/*============================================================================*/
+    void CMainFrame::                                                       /*
+
+    This function is called after the window is created.
+*-----------------------------------------------------------------------------*/
+OnInitialUpdate()
+    {
+        GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING,
+            MF_UNCHECKED);
+    }
 
 /*============================================================================*/
     BOOL CMainFrame::
@@ -349,13 +356,13 @@ SaveSettings()                                                              /*
             text += _T("\n");
         CString msg = (CString)"Error while saving program's state.\n" + text +
             e.GetErrorString() + _T("\n") + e.what();
-        ::MessageBox(0, msg.c_str(), _T("Exception"),
+        ::MessageBox(NULL, msg.c_str(), _T("Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
     catch(...) // catch all other exception events
     {
         CString msg = _T("Program's current state not saved.\n");
-        ::MessageBox(0, msg.c_str(), _T("Unknown Exception"),
+        ::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
             MB_OK | MB_ICONSTOP | MB_TASKMODAL);
     }
 }

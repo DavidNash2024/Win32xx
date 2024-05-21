@@ -93,8 +93,8 @@ private:
     void DoDefault(int item);
     void DoItemMenu(LPINT pItems, UINT items, CPoint& ptScreen);
     void EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlFull);
-    BOOL GetFileSizeText(ULONGLONG fileSize, LPTSTR string);
-    BOOL GetLastWriteTime(FILETIME modified, LPTSTR string);
+    void GetFileSizeText(ULONGLONG fileSize, LPTSTR string);
+    void GetLastWriteTime(FILETIME modified, LPTSTR string);
     void SetImageLists();
 
     // Member variables

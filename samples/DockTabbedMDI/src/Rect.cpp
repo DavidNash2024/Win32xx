@@ -24,6 +24,17 @@ void CViewRect::OnDestroy()
     KillTimer(1);
 }
 
+void CViewRect::OnDraw(CDC& dc)
+{
+    std::vector<RectData>::const_iterator it;
+    for (it = m_rects.begin(); it != m_rects.end(); ++it)
+    {
+        dc.CreateSolidBrush((*it).color);
+        CRect rc = (*it).rect;
+        dc.Rectangle(rc.left, rc.top, rc.right, rc.bottom);
+    }
+}
+
 // Respond to a mouse click on the window.
 LRESULT CViewRect::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -52,24 +63,33 @@ LRESULT CViewRect::OnSize(UINT, WPARAM wparam, LPARAM lparam)
 // Responds to the timer event. Displays a random rectangle.
 LRESULT CViewRect::OnTimer(UINT, WPARAM, LPARAM)
 {
-    int red, green, blue;
-    int left, right, top, bottom;
-    left   = rand () % m_cxClientMax;
-    right  = rand () % m_cxClientMax;
-    top    = rand () % m_cyClientMax;
-    bottom = rand () % m_cyClientMax;
-    red    = rand () & 255;
-    green  = rand () & 255;
-    blue   = rand () & 255;
+    if (m_rects.size() < 100)
+    {
+        int red, green, blue;
+        int left, right, top, bottom;
+        left   = rand () % m_cxClientMax;
+        right  = rand () % m_cxClientMax;
+        top    = rand () % m_cyClientMax;
+        bottom = rand () % m_cyClientMax;
+        red    = rand () & 255;
+        green  = rand () & 255;
+        blue   = rand () & 255;
 
-    CClientDC RectDC(*this);
-    RectDC.CreateSolidBrush (RGB (red, green, blue));
+        CClientDC RectDC(*this);
+        COLORREF color(RGB(red, green, blue));
+        RectDC.CreateSolidBrush (color);
 
-    int rcLeft   = (left < right) ? left : right;
-    int rcTop    = (top < bottom) ? top  : bottom;
-    int rcRight  = (left > right) ? left : right;
-    int rcBottom = (top > bottom) ? top  : bottom;
-    RectDC.Rectangle(rcLeft, rcTop, rcRight, rcBottom);
+        int rcLeft   = (left < right) ? left : right;
+        int rcTop    = (top < bottom) ? top  : bottom;
+        int rcRight  = (left > right) ? left : right;
+        int rcBottom = (top > bottom) ? top  : bottom;
+        RectDC.Rectangle(rcLeft, rcTop, rcRight, rcBottom);
+
+        RectData rectData;
+        rectData.color = color;
+        rectData.rect = CRect(rcLeft, rcTop, rcRight, rcBottom);
+        m_rects.push_back(rectData);
+    }
 
     return 0;
 }

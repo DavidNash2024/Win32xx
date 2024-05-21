@@ -21,7 +21,7 @@ public:
 
     // Virtual functions that override public base class functions
     virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = 0);
+    virtual HWND Create(HWND parent = NULL);
 
     void DialogFromTemplateText();
     CString GetFileName() const;

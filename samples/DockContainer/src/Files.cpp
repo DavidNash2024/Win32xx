@@ -60,12 +60,6 @@ void CViewFiles::OnAttach()
     SetDPIColumnWidths();
 }
 
-// Called when the window is destroyed.
-void CViewFiles::OnDestroy()
-{
-    SetImageList(0, LVSIL_SMALL);
-}
-
 // Respond to a mouse click on the window
 LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -140,7 +134,7 @@ LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }
@@ -158,6 +152,17 @@ CContainFiles::CContainFiles()
     SetTabIcon(IDI_FILEVIEW);
     SetDockCaption (_T("File View - Docking container"));
     SetView(m_viewFiles);
+}
+
+// Sets the CREATESTRUCT parameters before the window is created.
+void CContainFiles::PreCreate(CREATESTRUCT& cs)
+{
+    // Call base clase to set defaults.
+    CDockContainer::PreCreate(cs);
+
+    // Add the WS_EX_COMPOSITED to reduce flicker.
+    if (GetWinVersion() >= 3000)  // Windows 10 or later.
+        cs.dwExStyle |= WS_EX_COMPOSITED;
 }
 
 

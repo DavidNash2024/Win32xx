@@ -44,10 +44,10 @@ BOOL CD2DApp::InitInstance()
             return TRUE;
         }
         else
-            ::MessageBox(0, L"Failed to start DirectX", L"Error", MB_OK);
+            ::MessageBox(NULL, L"Failed to start DirectX", L"Error", MB_OK);
     }
     else
-        ::MessageBox(0, L"Failed to initialize COM", L"Error", MB_OK);
+        ::MessageBox(NULL, L"Failed to initialize COM", L"Error", MB_OK);
 
     return FALSE;
 }

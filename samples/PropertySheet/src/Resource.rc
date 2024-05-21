@@ -36,24 +36,7 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New\tCtrl+N",                 IDM_FILE_NEW
-        MENUITEM "&Open...\tCtrl+O",            IDM_FILE_OPEN
-        MENUITEM "&Save\tCtrl+S",               IDM_FILE_SAVE
-        MENUITEM "Save &As...",                 IDM_FILE_SAVEAS
-        MENUITEM SEPARATOR
-        MENUITEM "&Print...\tCtrl+P",           IDM_FILE_PRINT
-        MENUITEM SEPARATOR
         MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
-    END
-    POPUP "&Edit"
-    BEGIN
-        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO
-        MENUITEM "Redo\tCtrl+Y",                IDM_EDIT_REDO
-        MENUITEM SEPARATOR
-        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT
-        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY
-        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
-        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
     END
     POPUP "&View"
     BEGIN
@@ -69,6 +52,16 @@ BEGIN
     POPUP "&Help"
     BEGIN
         MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
+    END
+END
+
+IDM_NEW_MENU MENU
+BEGIN
+    POPUP "New"
+    BEGIN
+        MENUITEM "Modeless Property Sheet",     IDM_MODELESS
+        MENUITEM "Modal Property Sheet",        IDM_MODAL
+        MENUITEM "Wizard",                      IDM_WIZARD
     END
 END
 

@@ -25,7 +25,7 @@ public:
     const CString& GetLinkName() const { return m_urlName; }
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual void    OnAttach();
     virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);

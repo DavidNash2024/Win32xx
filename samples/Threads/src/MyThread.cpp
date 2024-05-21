@@ -61,7 +61,7 @@ BOOL CMyWinThread::InitInstance()
     catch (const CException& e)
     {
         // Display the exception and quit.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return FALSE;
     }

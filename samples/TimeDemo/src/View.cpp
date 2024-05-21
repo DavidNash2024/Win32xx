@@ -1,4 +1,4 @@
-/* (14-Nov-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                 (View.cpp) *
+/* (06-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                 (View.cpp) *
 ********************************************************************************
 |                                                                              |
 |               Authors: Robert C. Tausworthe, David Nash, 2020                |
@@ -45,7 +45,7 @@ GetFontSize() const                                                         /*
 *-----------------------------------------------------------------------------*/
 {
       // select the current font into a temporary device context
-    CClientDC dc(0);
+    CClientDC dc(HWND_DESKTOP);
     dc.SelectObject(m_font);
       // measure the font width and height
     TEXTMETRIC tm;
@@ -224,7 +224,7 @@ SetDefaultFont()                                                            /*
 *-----------------------------------------------------------------------------*/
 {
       // compute the logical font height for the nDefaultFontSize
-    CClientDC dc(0);
+    CClientDC dc(HWND_DESKTOP);
       // define default size and face
     int nDefaultFontSize = 10;
     TCHAR lpszFaceDefault[] = _T("Courier New");

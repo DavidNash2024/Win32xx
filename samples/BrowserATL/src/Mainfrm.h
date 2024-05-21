@@ -18,7 +18,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame(void);
     virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = 0);
+    virtual HWND Create(HWND parent = NULL);
 
     IWebBrowser2* GetBrowser() { return m_view.GetIWebBrowser2(); }
     const CEdit* GetCBEdit() const { return m_combo.GetCBEdit(); }

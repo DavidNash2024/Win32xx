@@ -215,7 +215,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 
     // Set the default cursor
-    wc.hCursor = ::LoadCursor(0, IDC_ARROW);
+    wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 
     // Set the class style (not to be confused with the window styles set in PreCreate)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
@@ -236,22 +236,22 @@ void CView::RecalcLayout()
     switch(style)
     {
     case CCS_LEFT:
-        m_toolBar.SetWindowPos(0, 0, 0, cxTB, cyClient, SWP_SHOWWINDOW);
+        m_toolBar.SetWindowPos(HWND_TOP, 0, 0, cxTB, cyClient, SWP_SHOWWINDOW);
         SetWrapState(TRUE);
         m_toolBar.PressButton(IDM_LEFT, TRUE);
         break;
     case CCS_RIGHT:
-        m_toolBar.SetWindowPos(0, cxClient - cxTB, 0, cxTB, cyClient, SWP_SHOWWINDOW);
+        m_toolBar.SetWindowPos(HWND_TOP, cxClient - cxTB, 0, cxTB, cyClient, SWP_SHOWWINDOW);
         SetWrapState(TRUE);
         m_toolBar.PressButton(IDM_RIGHT, TRUE);
         break;
     case CCS_BOTTOM:
-        m_toolBar.SetWindowPos(0, 0, cyClient - cyTB, cxClient, cyTB, SWP_SHOWWINDOW);
+        m_toolBar.SetWindowPos(HWND_TOP, 0, cyClient - cyTB, cxClient, cyTB, SWP_SHOWWINDOW);
         SetWrapState(FALSE);
         m_toolBar.PressButton(IDM_BOTTOM, TRUE);
         break;
     default:
-        m_toolBar.SetWindowPos(0, 0, 0, cxClient, cyTB, SWP_SHOWWINDOW);
+        m_toolBar.SetWindowPos(HWND_TOP, 0, 0, cxClient, cyTB, SWP_SHOWWINDOW);
         SetWrapState(FALSE);
         m_toolBar.PressButton(IDM_TOP, TRUE);
         break;
@@ -291,7 +291,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

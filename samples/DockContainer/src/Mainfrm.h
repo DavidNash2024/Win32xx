@@ -28,7 +28,7 @@ class CMainFrame : public CDockFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = 0);
+    virtual HWND Create(HWND parent = NULL);
 
 protected:
     // Virtual functions that override base class functions
@@ -38,6 +38,7 @@ protected:
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT id);
     virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void RecalcDockLayout();
     virtual BOOL SaveRegistrySettings();
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
@@ -69,4 +70,3 @@ private:
 };
 
 #endif //MAINFRM_H
-

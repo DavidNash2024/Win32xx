@@ -26,7 +26,7 @@ CMainFrame::~CMainFrame()
 // Enables choose topic mode
 BOOL CMainFrame::ChooseHelpTopic()
 {
-    ::SetCursor(::LoadCursor(0, IDC_HELP));
+    ::SetCursor(::LoadCursor(NULL, IDC_HELP));
     SetCapture();
     m_isChoosing = TRUE;
     return TRUE;
@@ -68,7 +68,7 @@ HWND CMainFrame::Create(HWND parent)
     }
     else
     {
-        ::MessageBox(0, _T("Failed to find ") + LoadString(IDS_HELP_FILE), _T("File not found"), MB_ICONWARNING);
+        ::MessageBox(NULL, _T("Failed to find ") + LoadString(IDS_HELP_FILE), _T("File not found"), MB_ICONWARNING);
     }
 
     // Generate the Win32++ version string.
@@ -298,7 +298,7 @@ LRESULT CMainFrame::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (m_isChoosing)
     {
-        ::SetCursor(::LoadCursor(0, IDC_HELP));
+        ::SetCursor(::LoadCursor(NULL, IDC_HELP));
         return TRUE;
     }
 
@@ -433,7 +433,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

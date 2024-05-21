@@ -43,7 +43,7 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }
@@ -159,7 +159,7 @@ LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }
@@ -229,7 +229,7 @@ void CViewTree::SetDPIImages()
     CImageList smallImages;
     smallImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     smallImages.Add(bmImage, RGB(255, 0, 0));
-    SetImageList(smallImages, LVSIL_NORMAL);
+    SetImageList(smallImages, TVSIL_NORMAL);
 
     // Reset the item indentation.
     int imageWidth = smallImages.GetIconSize().cx;
@@ -253,7 +253,7 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

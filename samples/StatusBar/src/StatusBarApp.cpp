@@ -19,7 +19,7 @@ CStatusBarApp::~CStatusBarApp()
 BOOL CStatusBarApp::InitInstance()
 {
     // Create the frame window.
-    m_frame.Create();   // throws a CWinException on failure
+    m_frame.Create();   // Throws a CWinException on failure.
 
     return TRUE;
 }

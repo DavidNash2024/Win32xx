@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CSplash::CSplash() : m_fontHandle(0)
+CSplash::CSplash() : m_fontHandle(nullptr)
 {
     int xImage = DpiScaleInt(256);
     int yImage = DpiScaleInt(256);
@@ -57,10 +57,10 @@ void CSplash::LoadFont()
     if (res)
     {
         HGLOBAL mem = LoadResource(hResInstance, res);
-        if (mem != 0)
+        if (mem != nullptr)
         {
             void* data = LockResource(mem);
-            if (data != 0)
+            if (data != nullptr)
             {
                 DWORD len = SizeofResource(hResInstance, res);
                 DWORD fonts = 0;
@@ -72,7 +72,7 @@ void CSplash::LoadFont()
                     &fonts          // number of fonts installed
                 );
 
-                if (m_fontHandle == 0)
+                if (m_fontHandle == nullptr)
                 {
                     MessageBox(L"Font add fails", L"Error", MB_OK);
                 }
@@ -118,7 +118,7 @@ void CSplash::PreRegisterClass(WNDCLASS& wc)
 {
     wc.lpszClassName = L"Splash Screen";
     wc.hbrBackground = (HBRUSH)GetStockObject(NULL_BRUSH);
-    wc.hCursor = ::LoadCursor(0, IDC_ARROW);
+    wc.hCursor = ::LoadCursor(nullptr, IDC_ARROW);
 }
 
 // Removes the progress bar.

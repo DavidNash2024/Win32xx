@@ -124,7 +124,7 @@ int CDXView::OnCreate(CREATESTRUCT&)
 
     // Resize this window to fill the parent window.
     CRect rc = GetParent().GetClientRect();
-    SetWindowPos(0, 0, 0, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
+    SetWindowPos(HWND_TOP, 0, 0, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
 
     // Initialize Direct3D
     if (SUCCEEDED(InitD3D(*this)))
@@ -267,7 +267,7 @@ LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

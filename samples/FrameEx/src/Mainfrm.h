@@ -31,7 +31,7 @@ public:
 
     // Virtual functions that override public base class functions
     virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = 0);
+    virtual HWND Create(HWND parent = NULL);
 
     void AddMenuIconFromPNG(UINT pngID, UINT disabledPngID, UINT menuID);
     void AddIconFromPNG(CImageList& images, UINT pngID);

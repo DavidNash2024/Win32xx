@@ -85,7 +85,7 @@ HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command,
     HWND hWnd = HtmlHelp(hwndCaller, string, command, data);
 
     // Throw an exception if the window wasn't created
-    if (hWnd == 0) throw CWinException(_T("Failed to initiate Context Help"));
+    if (hWnd == NULL) throw CWinException(_T("Failed to initiate Context Help"));
 
     // Bind the hWnd to this CWnd object
     Attach(hWnd);
@@ -131,7 +131,7 @@ void CContextHelp::ShowHelpTopic(LPCTSTR topic)
             : _T("\n\nMake sure the .chm file is in the .exe directory."));
 
         s.Format(fmt, topic, add.c_str());
-        ::MessageBox(0, s, _T("Information"), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+        ::MessageBox(NULL, s, _T("Information"), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
     }
 }
 

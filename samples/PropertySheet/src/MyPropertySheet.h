@@ -12,7 +12,7 @@
 class CMyPropertySheet : public CPropertySheet
 {
 public:
-    CMyPropertySheet(LPCTSTR caption = NULL, HWND hParent = 0);
+    CMyPropertySheet(LPCTSTR caption = NULL, HWND hParent = NULL);
     virtual ~CMyPropertySheet() {}
 
 protected:

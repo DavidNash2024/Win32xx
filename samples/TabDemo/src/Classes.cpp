@@ -70,7 +70,7 @@ void CViewClasses::SetDPIImages()
     CImageList normalImages;
     normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     normalImages.Add(bmImage, RGB(255, 0, 0));
-    SetImageList(normalImages, LVSIL_NORMAL);
+    SetImageList(normalImages, TVSIL_NORMAL);
 
     // Reset the item indentation.
     int imageWidth = normalImages.GetIconSize().cx;
@@ -94,7 +94,7 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

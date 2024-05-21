@@ -26,7 +26,7 @@ void CTestWindow::CreateWin(int i)
     // Create a test window without a close button.
     CRect rc(420, 50 + 4 * i, 300, 200);
     CRect rcDPI = DpiScaleRect(rc);
-    CreateEx(0, NULL, str, WS_VISIBLE, rcDPI, 0, 0);
+    CreateEx(0, NULL, str, WS_VISIBLE, rcDPI, NULL, 0);
 }
 
 // Called when the window is created.
@@ -73,7 +73,7 @@ LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

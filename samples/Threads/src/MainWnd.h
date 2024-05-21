@@ -21,7 +21,7 @@ class CMainWindow : public CWnd
 public:
     CMainWindow();
     virtual ~CMainWindow() {}
-    HWND Create(HWND parent = 0);
+    HWND Create(HWND parent = NULL);
 
 protected:
     // Virtual functions that override base class functions

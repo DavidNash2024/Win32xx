@@ -1,10 +1,11 @@
 ScrollWnd Demo Example
 ==============
 This project demonstrates how to use Win32++ to create a scrollable window to
-display the contents of a text file using the familiar CApp-CMainFrame-CDoc-CView
-architecture.  The CView class that controls the displayed material is derived from
-the CScrollView class. The CApp class starts Win32++ and runs the message loop. The CDoc class
-reads a text document and the CView class displays the document's text on the screen.  
+display the contents of a text file using a doc view architecture.  The CView
+class that controls the displayed material is derived from the CScrollView
+class. The CApp class starts Win32++ and runs the message loop. The CDoc class
+reads a text document and the CView class displays the document's text on the
+screen.  
 
 
 Features demonstrated in this example

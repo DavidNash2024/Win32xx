@@ -1,5 +1,5 @@
 The TimeDemo Program Features
-=== ======== ======= ========
+=============================
 
 * Windowed display of document text with scrollbars as needed.  The
   text font and background color are selectable from the View menu.

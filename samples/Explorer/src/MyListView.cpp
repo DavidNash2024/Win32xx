@@ -295,7 +295,7 @@ void CMyListView::DoDisplay()
 
     if(m_csfCurFolder.GetIShellFolder())
     {
-        HCURSOR  hCur = ::LoadCursor(0, IDC_WAIT);
+        HCURSOR  hCur = ::LoadCursor(NULL, IDC_WAIT);
         hCur = ::SetCursor(hCur);
 
         // Turn redrawing off in the ListView.
@@ -342,16 +342,16 @@ void CMyListView::DoItemMenu(LPINT pItems, UINT items, CPoint& point)
 
             if(SUCCEEDED(result))
             {
-                CMenu Popup;
-                Popup.CreatePopupMenu();
-                if(Popup.GetHandle())
+                CMenu popup;
+                popup.CreatePopupMenu();
+                if(popup.GetHandle())
                 {
-                    result = ccm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
+                    result = ccm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
                     if(SUCCEEDED(result))
                     {
                         ccm.GetContextMenu2(m_ccm2);
                         UINT  idCmd;
-                        idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
+                        idCmd = popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
                                     point.x, point.y, *this, NULL);
 
                         if(idCmd)
@@ -483,7 +483,7 @@ ULONGLONG CMyListView::FileTimeToULL(FILETIME ft)
 }
 
 // Retrieves the file's size and stores the text in string.
-BOOL CMyListView::GetFileSizeText(ULONGLONG fileSize, LPTSTR string)
+void CMyListView::GetFileSizeText(ULONGLONG fileSize, LPTSTR string)
 {
     // Convert the fileSize to a string using Locale information.
     CString preFormat;
@@ -507,30 +507,42 @@ BOOL CMyListView::GetFileSizeText(ULONGLONG fileSize, LPTSTR string)
 
     postFormat += _T(" KB");
     StrCopy(string, postFormat, maxSize);
-    return TRUE;
 }
 
 // Retrieves the file's last write time and stores the text in string.
-BOOL CMyListView::GetLastWriteTime(FILETIME modified, LPTSTR string)
+void CMyListView::GetLastWriteTime(FILETIME modified, LPTSTR string)
 {
-    // Convert the last-write time to local time.
-    SYSTEMTIME localSysTime;
+    SYSTEMTIME localSysTime, utcTime;
     FILETIME localFileTime;
-    ::FileTimeToLocalFileTime(&modified, &localFileTime);
-    ::FileTimeToSystemTime(&localFileTime, &localSysTime);
+    ZeroMemory(&localSysTime, sizeof(localSysTime));
+    ZeroMemory(&utcTime, sizeof(utcTime));
+    ZeroMemory(&localFileTime, sizeof(localFileTime));
 
-    // Build a string showing the date and time with regional settings.
+    // Convert the last-write time to local time.
+    if (GetWinVersion() > 2501)
+    {
+        // For Windows Vista and later.
+        ::FileTimeToSystemTime(&modified, &utcTime);
+        ::SystemTimeToTzSpecificLocalTime(NULL, &utcTime, &localSysTime);
+    }
+    else
+    {
+        // For Windows XP and earlier.
+        ::FileTimeToLocalFileTime(&modified, &localFileTime);
+        ::FileTimeToSystemTime(&localFileTime, &localSysTime);
+    }
+
+    // Convert the localSysTime into date and time text strings with regional settings.
     const int maxChars = 32;
     TCHAR time[maxChars];
     TCHAR date[maxChars];
     ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &localSysTime, NULL, date, maxChars-1);
     ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &localSysTime, NULL, time, maxChars-1);
 
-    StrCopy(string, date, maxChars);
-    ::lstrcat(string, _T(" "));
-    ::lstrcat(string, time);
-
-    return TRUE;
+    // Assign the date and time text strings to the string variable.
+    CString dateTime;
+    dateTime << date << " " << time;
+    StrCopy(string, dateTime, maxChars);
 }
 
 // Called when the window handle (HWND) is attached to CMyListView.
@@ -850,7 +862,7 @@ LRESULT CMyListView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

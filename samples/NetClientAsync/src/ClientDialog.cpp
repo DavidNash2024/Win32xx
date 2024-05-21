@@ -55,7 +55,7 @@ INT_PTR CClientDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }
@@ -88,7 +88,7 @@ void CClientDialog::LoadCommonControlsEx()
         }
         else
         {
-            ::MessageBox(0, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
+            ::MessageBox(NULL, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
         }
 
         ::FreeLibrary(module);
@@ -97,7 +97,7 @@ void CClientDialog::LoadCommonControlsEx()
     catch (const CWinException& e)
     {
         e.what();
-        if (module != 0)
+        if (module != NULL)
             ::FreeLibrary(module);
     }
 }
@@ -327,7 +327,7 @@ void CClientDialog::OnStartClient()
                 m_buttonConnect.EnableWindow(FALSE);
 
                 // Connect to the server.
-                if (0 != m_client.Connect(strAddr, port) )
+                if (m_client.Connect(strAddr, port) != 0)
                 {
                     AppendText(m_editStatus, m_client.GetErrorString());
                     MessageBox( _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING );

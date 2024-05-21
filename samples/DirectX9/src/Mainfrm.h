@@ -17,7 +17,7 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-    virtual HWND Create(HWND parent = 0);
+    virtual HWND Create(HWND parent = NULL);
     CDXView& GetDXView() { return m_DXView; }
 
 protected:

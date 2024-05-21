@@ -12,7 +12,7 @@ When a TestWindow is closed, its thread is ended.
 
 Features demonstrated in this example
 =====================================
-* How to use the CThread class to create threads.
+* How to use the CWinThread class to create threads.
 * How to create a thread that is initially suspended.
 * How to create windows in different threads.
 * How to use PostMessage to communicate information between threads.

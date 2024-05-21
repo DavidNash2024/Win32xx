@@ -77,8 +77,8 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 //
 
 // Constructor.
-CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_searchItem(0), m_pDockTree(0),
-                           m_pDockDialog(0), m_isDirty(false), m_boxSetsItem(0),
+CMainFrame::CMainFrame() : m_thread(ThreadProc, this), m_searchItem(nullptr), m_pDockTree(nullptr),
+                           m_pDockDialog(nullptr), m_isDirty(false), m_boxSetsItem(0),
                            m_dialogWidth(0), m_treeHeight(0)
 {
     // Set m_view as the view window of the frame.
@@ -93,10 +93,10 @@ CMainFrame::~CMainFrame()
 // Clears the contents of the movie info dialog.
 void CMainFrame::ClearDisplay()
 {
-    GetViewDialog().GetTitle().SetWindowText(0);
-    GetViewDialog().GetYear().SetWindowText(0);
-    GetViewDialog().GetActors().SetWindowText(0);
-    GetViewDialog().GetInfo().SetWindowText(0);
+    GetViewDialog().GetTitle().SetWindowText(nullptr);
+    GetViewDialog().GetYear().SetWindowText(nullptr);
+    GetViewDialog().GetActors().SetWindowText(nullptr);
+    GetViewDialog().GetInfo().SetWindowText(nullptr);
     GetViewDialog().SetPicture().SetImageData().clear();
     GetViewDialog().RedrawWindow();
 }
@@ -164,7 +164,7 @@ void CMainFrame::FillImageData(const CString& source, std::vector<BYTE>& dest)
                     Bitmap* img = (Bitmap*)image.GetThumbnailImage(280, 420, nullptr, nullptr);
 
                     IStream* stream = nullptr;
-                    HRESULT hr = ::CreateStreamOnHGlobal(0, TRUE, &stream);
+                    HRESULT hr = ::CreateStreamOnHGlobal(nullptr, TRUE, &stream);
                     if (!SUCCEEDED(hr))
                         return;
 
@@ -583,7 +583,7 @@ void CMainFrame::LoadMovies()
 
     CString DataPath = GetDataPath();
     CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-    SHCreateDirectoryEx(0, DataPath.c_str(), nullptr);
+    SHCreateDirectoryEx(nullptr, DataPath.c_str(), nullptr);
 
     if (PathFileExists(DataFile))
     {
@@ -645,7 +645,7 @@ void CMainFrame::LoadMovies()
         {
             m_splashThread.GetSplash()->Hide();
             Trace(e.GetErrorString()); Trace("\n");
-            ::MessageBox(0, L"Failed to load Movie Library", L"Error", MB_OK);
+            ::MessageBox(nullptr, L"Failed to load Movie Library", L"Error", MB_OK);
             m_moviesData.clear();
             m_boxSets.clear();
         }
@@ -721,7 +721,7 @@ BOOL CMainFrame::OnAddFolder()
         {
             CString DataPath = GetDataPath();
             CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-            ::SHCreateDirectoryEx(0, DataPath.c_str(), nullptr);
+            ::SHCreateDirectoryEx(nullptr, DataPath.c_str(), nullptr);
 
             {
                 // Lock this code for thread safety
@@ -849,7 +849,7 @@ void CMainFrame::OnClose()
 
         CString DataPath = GetDataPath();
         CString DataFile = GetDataPath() + L"\\" + L"MovieData.bin";
-        ::SHCreateDirectoryEx(0, DataPath.c_str(), nullptr);
+        ::SHCreateDirectoryEx(nullptr, DataPath.c_str(), nullptr);
 
         try
         {
@@ -890,7 +890,7 @@ void CMainFrame::OnClose()
         catch (const CFileException& e)
         {
             Trace(e.GetErrorString()); Trace("\n");
-            ::MessageBox(0, L"Failed to store Movie Library", L"Error", MB_OK);
+            ::MessageBox(nullptr, L"Failed to store Movie Library", L"Error", MB_OK);
         }
     }
 
@@ -1715,7 +1715,7 @@ UINT WINAPI CMainFrame::ThreadProc(void* pVoid)
     else
     {
         // Report the error in a message  box.
-        ::MessageBox(0, MI.Inform().c_str(), L"Error", MB_OK);
+        ::MessageBox(nullptr, MI.Inform().c_str(), L"Error", MB_OK);
     }
 
 
@@ -1763,7 +1763,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(nullptr, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

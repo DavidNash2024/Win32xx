@@ -25,7 +25,7 @@
     catch (const CException &e)
     {
         // Display the exception and quit.
-        ::MessageBox(0, e.GetErrorString(), e.GetText(), MB_ICONWARNING);
+        ::MessageBox(NULL, e.GetErrorString(), e.GetText(), MB_ICONWARNING);
 
         return -1;
     }

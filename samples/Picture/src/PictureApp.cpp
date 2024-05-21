@@ -27,3 +27,12 @@ BOOL CPictureApp::InitInstance()
 
     return TRUE;
 }
+
+// Called when the message queue is empty.
+BOOL CPictureApp::OnIdle(LONG)
+{
+    m_frame.UpdateToolbar();
+
+    return FALSE;
+}
+

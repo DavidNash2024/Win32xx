@@ -67,7 +67,7 @@ FeatureNotImplemented()                                                     /*
     program.
 *-----------------------------------------------------------------------------*/
 {
-    ::MessageBox(0, _T("This feature is not yet implemented."), _T(""),
+    ::MessageBox(NULL, _T("This feature is not yet implemented."), _T(""),
         MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 }
 

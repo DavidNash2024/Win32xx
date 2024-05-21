@@ -107,4 +107,8 @@
 
 #endif  // define WIN32_LEAN_AND_MEAN
 
+#ifndef WS_EX_COMPOSITED
+#define WS_EX_COMPOSITED        0x02000000L
+#endif
+
 #endif  // define STDAFX_H

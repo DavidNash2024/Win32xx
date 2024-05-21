@@ -27,7 +27,7 @@ public:
         if (m_mutex)  // Do not forget to close handles.
         {
             CloseHandle(m_mutex); // Do as late as possible.
-            m_mutex = 0;          // Good habit to be in.
+            m_mutex = nullptr;       // Good habit to be in.
         }
     }
 
@@ -52,7 +52,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     {
         if (g_singleInstanceObj.IsAnotherInstanceRunning())
         {
-            ::MessageBox(0, L"Movie Show is already running", L"Warning", MB_ICONWARNING);
+            ::MessageBox(nullptr, L"Movie Show is already running", L"Warning", MB_ICONWARNING);
             return -1;
         }
 
@@ -67,14 +67,14 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
     catch (const CException &e)
     {
         // Display the exception and quit.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(nullptr, e.GetText(), AtoT(e.what()), MB_ICONERROR);
     }
 
     // Catch all unhandled exceptions.
     catch (...)
     {
         // Display the exception and quit.
-        ::MessageBox(0, L"Got an unexpected exception", L"Error", MB_ICONERROR);
+        ::MessageBox(nullptr, L"Got an unexpected exception", L"Error", MB_ICONERROR);
     }
 
     return -1;

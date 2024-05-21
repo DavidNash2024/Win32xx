@@ -11,7 +11,7 @@
 //
 
 // Constructor.
-CView::CView(UINT resID) : CDialog(resID), m_parent(0)
+CView::CView(UINT resID) : CDialog(resID), m_parent(NULL)
 {
 }
 
@@ -21,7 +21,7 @@ CView::~CView()
 }
 
 // Creates the view window. Its a modeless dialog.
-HWND CView::Create(HWND parent = 0)
+HWND CView::Create(HWND parent = NULL)
 {
     m_parent = parent;
     return DoModeless(parent);
@@ -48,7 +48,7 @@ INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

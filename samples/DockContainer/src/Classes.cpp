@@ -57,12 +57,6 @@ void CViewClasses::OnAttach()
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
-// Called when the window is destroyed.
-void CViewClasses::OnDestroy()
-{
-    SetImageList(0, LVSIL_SMALL);
-}
-
 // Respond to a mouse click on the window.
 LRESULT CViewClasses::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -80,12 +74,6 @@ LRESULT CViewClasses::OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM l
     return FinalWindowProc(msg, wparam, lparam);
 }
 
-// Set the CREATESTURCT parameters befoe the window is created.
-void CViewClasses::PreCreate(CREATESTRUCT& cs)
-{
-    cs.style = TVS_NOTOOLTIPS | WS_CHILD;
-}
-
 // Adjusts the treeview image sizes in response to window DPI changes.
 void CViewClasses::SetDPIImages()
 {
@@ -96,7 +84,7 @@ void CViewClasses::SetDPIImages()
     CImageList normalImages;
     normalImages.Create(scale * 16, scale * 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     normalImages.Add(bmImage, RGB(255, 0, 0));
-    SetImageList(normalImages, LVSIL_NORMAL);
+    SetImageList(normalImages, TVSIL_NORMAL);
 
     // Reset the item indentation.
     int imageWidth = normalImages.GetIconSize().cx;
@@ -121,7 +109,7 @@ LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }
@@ -170,6 +158,17 @@ BOOL CContainClasses::OnHelpAbout()
     // Send a message to the frame requesting the help dialog
     GetAncestor().SendMessage(WM_HELP);
     return TRUE;
+}
+
+// Sets the CREATESTRUCT parameters before the window is created.
+void CContainClasses::PreCreate(CREATESTRUCT& cs)
+{
+    // Call base clase to set defaults.
+    CDockContainer::PreCreate(cs);
+
+    // Add the WS_EX_COMPOSITED to reduce flicker.
+    if (GetWinVersion() >= 3000)  // Windows 10 or later.
+        cs.dwExStyle |= WS_EX_COMPOSITED;
 }
 
 // Set the Bitmap resource for the toolbar

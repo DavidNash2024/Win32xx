@@ -32,7 +32,7 @@ int CALLBACK CMyTreeView::CompareFunction(LPARAM param1, LPARAM param2, LPARAM)
     if(FAILED(result))
         return 0;
 
-    return (short)SCODE_CODE(GetScode(result));
+    return SCODE_CODE(GetScode(result));
 }
 
 // Identifies the tree view item for the point, and calls DoItemMenu.
@@ -295,7 +295,7 @@ void CMyTreeView::OnAttach()
     HIMAGELIST hSmall = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0,
         &sfi, sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));
 
-    SetImageList(hSmall, LVSIL_NORMAL);
+    SetImageList(hSmall, TVSIL_NORMAL);
 }
 
 // Called when the window is destroyed.
@@ -481,7 +481,7 @@ LRESULT CMyTreeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

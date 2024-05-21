@@ -41,7 +41,7 @@ MyPrintDialog : public CPrintDialog                                         /*
                           return TRUE; }
 
         virtual void    OnCancel()
-                                  { ::MessageBox(0, _T("Print job cancelled."),
+                                  { ::MessageBox(NULL, _T("Print job cancelled."),
                                     _T("Information"), MB_OK | MB_TASKMODAL |
                                     MB_ICONINFORMATION); }
           // override this method to provide the needed preparation to

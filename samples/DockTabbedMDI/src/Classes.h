@@ -20,10 +20,8 @@ public:
     void SetDPIImages();
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual void OnAttach();
-    virtual void OnDestroy();
-    virtual void PreCreate(CREATESTRUCT& cs);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
@@ -46,12 +44,13 @@ public:
     virtual ~CContainClasses() {}
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual void PreCreate(CREATESTRUCT& cs);
     virtual void SetupToolBar();
 
 private:
-    CContainClasses(const CContainClasses&);                // Disable copy construction
+    CContainClasses(const CContainClasses&);              // Disable copy construction
     CContainClasses& operator=(const CContainClasses&);   // Disable assignment operator
 
     // Command handlers
@@ -72,7 +71,7 @@ public:
     virtual ~CDockClasses() {}
 
 private:
-    CDockClasses(const CDockClasses&);                // Disable copy construction
+    CDockClasses(const CDockClasses&);              // Disable copy construction
     CDockClasses& operator=(const CDockClasses&);   // Disable assignment operator
 
     CContainClasses m_classes;

@@ -12,5 +12,8 @@ Modal, Modeless or Wizard property sheet can be displayed.
 
 Features demonstrated in this example
 =====================================
-* Use of CFrame to display the window frame
-* Use of Modal, modeless and wizard property sheets
+* Use of CFrame to display the window frame.
+* Use of modal, modeless and wizard property sheets.
+* Use of OnIdle to dynamically update the toolbar buttons.
+* Use of OnMenuUpdate to dynamically update the menu items.
+* Using a drop down menu with a toolbar button.

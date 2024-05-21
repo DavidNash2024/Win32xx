@@ -35,7 +35,7 @@ bool CViewTree::IsBoxSetUnique(LPCTSTR text, HTREEITEM item)
     {
         if (childItem != item)
         {
-            if (0 == lstrcmp(GetItemText(childItem), text))
+            if (lstrcmp(GetItemText(childItem), text) == 0)
             {
                 isUnique = false;
                 break;
@@ -65,12 +65,6 @@ BOOL CViewTree::OnBeginLabelEdit(LPARAM lparam)
     return TRUE;
 }
 
-// Called when the treeview window is destroyed.
-void CViewTree::OnDestroy()
-{
-    SetImageList(0, LVSIL_SMALL);
-}
-
 // Called in response to a WM_DPICHANGED_BEFOREPARENT message that is sent to child
 // windows after a DPI change. A WM_DPICHANGED_BEFOREPARENT is only received when the
 // application is DPI_AWARENESS_PER_MONITOR_AWARE.
@@ -91,7 +85,7 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
 
     // Use the new text unless the user cancelled the edit
     LPTSTR text = pTVDispInfo->item.pszText;
-    if ((text != 0) && (lstrlen(text) != 0))
+    if ((text != nullptr) && (lstrlen(text) != 0))
         m_itemText.GetWindowText(GetEditControl());
 
     // Ensure the boxset name is unique. Append (2) etc. if required.
@@ -206,7 +200,7 @@ void CViewTree::SetDPIImages()
     normalImages.AddIcon(IDI_SEARCH);
     normalImages.AddIcon(IDI_EYE);
 
-    SetImageList(normalImages, LVSIL_NORMAL);
+    SetImageList(normalImages, TVSIL_NORMAL);
 
     // Reset the item indentation.
     int imageWidth = size;
@@ -263,7 +257,7 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(nullptr, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

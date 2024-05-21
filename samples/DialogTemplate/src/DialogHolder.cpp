@@ -54,11 +54,11 @@ void CDialogHolder::ShowDialog(CWnd* pFrame, unsigned char* dlgArray)
             SetWindowPos(HWND_TOPMOST, left, top, width, height, SWP_SHOWWINDOW);
 
             // Reposition the dialog at top left corner of the dialog holder.
-            m_dialog.SetWindowPos(0, 0, 0, 0, 0, SWP_NOSIZE);
+            m_dialog.SetWindowPos(HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE);
         }
         else
         {
-            SetWindowPos(0, left, top, width, height, 0);
+            SetWindowPos(HWND_TOP, left, top, width, height, 0);
             m_dialog.SetWindowPos(HWND_TOPMOST, left, top, 0, 0, SWP_NOSIZE | SWP_SHOWWINDOW);
         }
     }

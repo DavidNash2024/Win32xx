@@ -25,7 +25,7 @@ class CMainWindow : public CWnd
 public:
     CMainWindow();
     virtual ~CMainWindow();
-    virtual HWND Create(HWND hParent = 0);
+    virtual HWND Create(HWND hParent = NULL);
     void CreateTestWindows(int windows);
     void SetTestMessages(int testMessages) {m_testMessages = testMessages;}
 

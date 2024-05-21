@@ -19,9 +19,8 @@ public:
     void SetDPIImages();
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual void    OnAttach();
-    virtual void    OnDestroy();
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
@@ -46,8 +45,12 @@ public:
     CContainFiles();
     virtual ~CContainFiles() {}
 
+protected:
+    // Virtual functions that override base class functions.
+    virtual void PreCreate(CREATESTRUCT& cs);
+
 private:
-    CContainFiles(const CContainFiles&);                // Disable copy construction
+    CContainFiles(const CContainFiles&);              // Disable copy construction
     CContainFiles& operator=(const CContainFiles&);   // Disable assignment operator
 
     CViewFiles m_viewFiles;
@@ -64,7 +67,7 @@ public:
     virtual ~CDockFiles() {}
 
 private:
-    CDockFiles(const CDockFiles&);                // Disable copy construction
+    CDockFiles(const CDockFiles&);              // Disable copy construction
     CDockFiles& operator=(const CDockFiles&);   // Disable assignment operator
 
     CContainFiles m_files;

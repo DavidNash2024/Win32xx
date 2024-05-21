@@ -13,9 +13,9 @@ public:
     CCustomPrintDlg();
     virtual ~CCustomPrintDlg();
 
-    virtual INT_PTR DoModal(HWND owner = 0);
+    virtual INT_PTR DoModal(HWND owner = NULL);
 
-    INT_PTR DoSetupModal(HWND owner = 0);
+    INT_PTR DoSetupModal(HWND owner = NULL);
     int  GetCopies() const;
     CDevMode GetDevMode() const;
     CDevNames GetDevNames() const;

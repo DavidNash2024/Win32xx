@@ -1,4 +1,4 @@
-/* (02-Aug-2016) [Tab/Indent: 4/4][Line/Box: 80/74]                (MainFrm.h) *
+/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]                (MainFrm.h) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -41,24 +41,22 @@ CMainFrame : public CFrame                                                  /*
         void        SetMaxMRUSlots(UINT maxMRU) { m_maxMRU = maxMRU; }
 
     protected:
-        void        OnClose();
-        void        OnColorChoice();
-        BOOL        OnCommand(WPARAM wparam, LPARAM lparam);
-        int         OnCreate(CREATESTRUCT& cs);
-        void        OnFileClose();
-        void        OnFileExit();
-        void        OnFileOpenMRU(UINT);
-        void        OnFileOpen();
-        void        OnFontChoice() { m_view.ClientFontChoice();}
-        BOOL        OnHelp();
-        void        OnInitialUpdate()
-                        { GetFrameMenu().CheckMenuItem(IDM_LINE_NUMBERING,
-                            MF_UNCHECKED); }
-        BOOL        OnProcessMRU(WPARAM wparam, LPARAM lparam);
-        void        PreCreate(CREATESTRUCT& cs);
-        void        Serialize(CArchive& ar);
-        void        SetupMenuIcons();
-        void        SetupToolBar();
+        virtual void OnClose();
+        void         OnColorChoice();
+        virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+        virtual int  OnCreate(CREATESTRUCT& cs);
+        virtual void OnFileClose();
+        virtual void OnFileExit();
+        virtual void OnFileOpenMRU(UINT);
+        virtual void OnFileOpen();
+        virtual void OnFontChoice() { m_view.ClientFontChoice(); }
+        virtual BOOL OnHelp();
+        virtual void OnInitialUpdate();
+        virtual BOOL OnProcessMRU(WPARAM wparam, LPARAM lparam);
+        virtual void PreCreate(CREATESTRUCT& cs);
+        virtual void Serialize(CArchive& ar);
+        virtual void SetupMenuIcons();
+        virtual void SetupToolBar();
 
     private:
         CMainFrame(const CMainFrame&);               // Disable copy construction

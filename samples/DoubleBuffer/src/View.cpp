@@ -24,8 +24,8 @@ CBitmap CView::CreateMaskBitmap()
     m_ballSize.cx = bm.bmWidth;
     m_ballSize.cy = bm.bmHeight;
 
-    CMemDC dcMem(0);
-    CMemDC dcMem2(0);
+    CMemDC dcMem(NULL);
+    CMemDC dcMem2(NULL);
 
     SelectObject(dcMem, m_blue);
     dcMem2.SelectObject(mask);
@@ -54,7 +54,7 @@ void CView::OnInitialUpdate()
     TRACE("View window created\n");
 
     // Start the timer
-    SetTimer(ID_TIMER, 10, 0);
+    SetTimer(ID_TIMER, 10, NULL);
 }
 
 // Redraws the balls in new positions when a timer event occurs.
@@ -138,7 +138,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 
     // Set the default cursor
-    wc.hCursor = ::LoadCursor(0, IDC_ARROW);
+    wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 
     // Set the class style (not to be confused with the window styles set in PreCreate)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
@@ -162,7 +162,7 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

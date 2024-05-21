@@ -92,7 +92,7 @@ int CMainWindow::OnCreate(CREATESTRUCT&)
         {
             // Display the exception and allow the program to continue.
             CString Error = CString(e.GetText()) + "\n" + CString(e.GetErrorString());
-            ::MessageBox(0, Error, AtoT(e.what()), MB_ICONERROR) ;
+            ::MessageBox(NULL, Error, AtoT(e.what()), MB_ICONERROR) ;
         }
     }
 
@@ -145,7 +145,7 @@ LRESULT CMainWindow::OnCloseThread(WPARAM wparam)
 LRESULT CMainWindow::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 {
     LPRECT prc = reinterpret_cast<LPRECT>(lparam);
-    SetWindowPos(0, *prc, SWP_SHOWWINDOW);
+    SetWindowPos(HWND_TOP, *prc, SWP_SHOWWINDOW);
     m_edit.DPISetFont();
 
     return 0;
@@ -154,7 +154,7 @@ LRESULT CMainWindow::OnDpiChanged(UINT, WPARAM, LPARAM lparam)
 // Called in the main window is resized.
 LRESULT CMainWindow::OnSize()
 {
-    m_edit.SetWindowPos(0, GetClientRect(), 0);
+    m_edit.SetWindowPos(HWND_TOP, GetClientRect(), 0);
     return 0;
 }
 
@@ -193,7 +193,7 @@ LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

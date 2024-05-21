@@ -13,6 +13,8 @@ Features demonstrated in this example
 * Use of file open dialogs.
 * Use of a Most Recently Used (MRU) List in the File menu.
 * Use of drag and drop.
+* Use of OnIdle to dynamically update the toolbar buttons.
+* Use of OnMenuUpdate to dynamically update the menu items.
 * Use of a user defined message to pass information to a parent window.
 
 

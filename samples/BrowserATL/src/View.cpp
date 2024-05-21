@@ -14,7 +14,7 @@
 //
 
 // Constructor.
-CView::CView() : m_pInetExplorer(NULL), m_pSourceUnk(0), m_pSinkUnk(0),
+CView::CView() : m_pInetExplorer(NULL), m_pSourceUnk(NULL), m_pSinkUnk(NULL),
                  m_adviseCookie(0)
 {
     // Initialize OLE

@@ -145,7 +145,6 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
-					<Add library="ole32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -181,7 +180,6 @@
 		</VirtualTargets>
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
-		<Unit filename="../src/Readme.txt" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>

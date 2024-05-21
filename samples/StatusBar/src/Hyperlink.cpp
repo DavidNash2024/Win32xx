@@ -15,11 +15,11 @@ CHyperlink::CHyperlink() : m_isUrlVisited(false), m_isClicked(false),
     m_urlName = _T("Win32++");
 
     // Create the cursor.
-    m_hCursor = ::LoadCursor(0, IDC_HAND);
+    m_hCursor = ::LoadCursor(NULL, IDC_HAND);
 
     // IDC_HAND is not available on Win95, so load a reasonable alternative.
     if( !m_hCursor )
-        m_hCursor = ::LoadCursor(0, IDC_ARROW);
+        m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
 }
 
 CHyperlink::~CHyperlink()
@@ -65,7 +65,7 @@ void CHyperlink::OpenUrl()
 {
     CString url("http://sourceforge.net/projects/win32-framework/");
 
-    HINSTANCE result = ShellExecute(0, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
+    HINSTANCE result = ShellExecute(NULL, _T("open"), url, NULL, NULL, SW_SHOWNORMAL);
 
     if (reinterpret_cast<INT_PTR>(result) > 32)
     {
@@ -124,7 +124,7 @@ LRESULT CHyperlink::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

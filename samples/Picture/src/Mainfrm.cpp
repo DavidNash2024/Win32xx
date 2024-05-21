@@ -219,6 +219,23 @@ BOOL CMainFrame::OnFileSaveAs()
     return TRUE;
 }
 
+// Called before the dropdown menu is displayed.
+void CMainFrame::OnMenuUpdate(UINT id)
+{
+    switch (id)
+    {
+    case IDM_FILE_SAVE:
+    {
+        // Enable FileSave menu item if a picture is loaded.
+        UINT enabled = m_view.GetPicture() != NULL ? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(id, enabled);
+        break;
+    }
+    }
+
+    CFrame::OnMenuUpdate(id);
+}
+
 // Called when the frame's position has changed.
 LRESULT CMainFrame::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -271,6 +288,14 @@ void CMainFrame::SetupToolBar()
     SetToolBarImages(RGB(192,192,192), IDW_MAIN, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 }
 
+// Called by CPictureApp::OnIdle to update toolbar buttons
+void CMainFrame::UpdateToolbar()
+{
+    // Enable the FileSave toolbar button if a picture is loaded.
+    BOOL enabled = (m_view.GetPicture() != NULL);
+    GetToolBar().EnableButton(IDM_FILE_SAVE, enabled);
+}
+
 // Process the frame's window messages.
 LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -290,7 +315,7 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

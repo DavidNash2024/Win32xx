@@ -1,4 +1,4 @@
-/* (10-08-2014) [Tab/Indent: 8/8][Line/Box: 80/74]              (AboutBox.cpp) *
+/* (06-May-2024) [Tab/Indent: 8/8][Line/Box: 80/74]              (AboutBox.cpp) *
 ********************************************************************************
 |                                                                              |
 |               Authors: Robert C. Tausworthe, David Nash, 2020                |

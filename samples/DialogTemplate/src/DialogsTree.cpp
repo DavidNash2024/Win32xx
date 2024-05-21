@@ -69,20 +69,13 @@ void CDialogsTree::OnAttach()
     m_normalImages.Create(size, size, ILC_COLOR32, 1, 0);
     m_normalImages.AddIcon(IDI_WINDOWS);
     m_normalImages.AddIcon(IDW_MAIN);
-    SetImageList(m_normalImages, LVSIL_NORMAL);
+    SetImageList(m_normalImages, TVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button
     DWORD dwStyle = GetStyle();
     dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
     SetStyle(dwStyle);
 }
-
-// Called when the window is destroyed.
-void CDialogsTree::OnDestroy()
-{
-    SetImageList(0, LVSIL_SMALL);
-}
-
 
 // Called when the WM_NOTIFY message is reflected back to CViewTree
 // by the framework.

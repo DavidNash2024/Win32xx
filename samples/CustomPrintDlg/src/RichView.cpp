@@ -31,7 +31,7 @@ CRichView::~CRichView()
 // the number of pages.
 int CRichView::CollatePages(const CDC& printerDC)
 {
-    if (printerDC.GetHDC() == 0)
+    if (printerDC.GetHDC() == NULL)
         return 0;
 
     // Find the first and last characters.

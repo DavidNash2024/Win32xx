@@ -60,7 +60,7 @@ inline INT_PTR CDarkPreview<T>::DialogProc(UINT msg, WPARAM wparam, LPARAM lpara
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(nullptr, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

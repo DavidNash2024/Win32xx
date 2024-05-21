@@ -52,7 +52,7 @@ BOOL CView::LoadFileImage(LPCTSTR filename)
     }
 
     SetScrollSizes(totalSize);
-    return (m_image.GetHandle()!= 0);
+    return (m_image.GetHandle()!= NULL);
 }
 
 // Select the printer, and call QuickPrint.
@@ -73,7 +73,7 @@ void CView::PrintPage(CDC& dc, UINT)
 {
     try
     {
-        if (m_image.GetHandle() != 0)
+        if (m_image.GetHandle() != NULL)
         {
             BITMAP bitmap = m_image.GetBitmapData();
             int bmWidth = bitmap.bmWidth;
@@ -159,7 +159,7 @@ BOOL CView::SaveFileImage(LPCTSTR fileName)
        CBitmapInfoPtr pbmi(m_image);
 
        // Create the reference DC for GetDIBits to use
-       CMemDC memDC(0);
+       CMemDC memDC(NULL);
 
        // Use GetDIBits to create a DIB from our DDB, and extract the colour data
        VERIFY(memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS));

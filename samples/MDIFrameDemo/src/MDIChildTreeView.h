@@ -17,7 +17,6 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual void OnDestroy();
     virtual void OnAttach();
 
 private:

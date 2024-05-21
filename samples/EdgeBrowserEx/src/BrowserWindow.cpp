@@ -582,7 +582,7 @@ int CBrowserWindow::OnCreate(CREATESTRUCT& cs)
 
     // Create the tabs and start the browser.
     if (!LaunchBrowser())
-        ::MessageBox(0, L"Failed to launch browser", L"Error", MB_OK);
+        ::MessageBox(nullptr, L"Failed to launch browser", L"Error", MB_OK);
 
     return 0;
 }

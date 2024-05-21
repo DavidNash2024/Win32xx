@@ -145,7 +145,6 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
-					<Add library="ole32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -194,7 +193,9 @@
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
-		<Unit filename="../src/stdafx.h" />
+		<Unit filename="../src/stdafx.h">
+			<Option compile="1" />
+		</Unit>
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

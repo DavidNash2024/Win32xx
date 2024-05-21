@@ -68,7 +68,7 @@ LRESULT CSimpleView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }
@@ -85,7 +85,7 @@ CSplitterMDIChild::CSplitterMDIChild()
     SetView(m_view);
 
     // Set the menu for this MDI child.
-    SetHandles(LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView")), 0);
+    SetHandles(LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView")), NULL);
 }
 
 // Destructor.
@@ -174,7 +174,7 @@ LRESULT CSplitterMDIChild::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
         return 0;
     }

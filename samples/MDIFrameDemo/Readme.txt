@@ -47,7 +47,8 @@ Features demonstrated in this example
    - Each MDI child type has a different menu and icon
    - Each MDI child type has a different view window
 * Handling a MDI child's OnClose to provide an opportunity to save data before
-   the MDI child's window is closed.   
+   the MDI child's window is closed.
+* Using a drop down menu with a toolbar button.
 
 
 

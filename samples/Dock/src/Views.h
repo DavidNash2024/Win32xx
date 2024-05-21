@@ -1,10 +1,64 @@
 //////////////////////////////////////////////
 // Views.h
 //  Declaration of the CViewSimple, CViewText,
-//  CViewTree and CViewList classes.
+//  CViewClasses and CViewFiles classes.
 
 #ifndef VIEWS_H
 #define VIEWS_H
+
+
+//////////////////////////////////////////
+// CViewClasses manages a tree view control.
+// The tree view control displays classes.
+class CViewClasses : public CTreeView
+{
+public:
+    CViewClasses();
+    virtual ~CViewClasses();
+    void SetDPIImages();
+
+protected:
+    // Virtual functions that override base class functions.
+    virtual void    OnAttach();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    CViewClasses(const CViewClasses&);              // Disable copy construction
+    CViewClasses& operator=(const CViewClasses&);   // Disable assignment operator
+
+    // Message handlers
+    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+};
+
+
+/////////////////////////////////////////
+// CViewFiles manages a list view control.
+// The list view control displays files.
+class CViewFiles : public CListView
+{
+public:
+    CViewFiles();
+    virtual ~CViewFiles();
+    void SetDPIColumnWidths();
+    void SetDPIImages();
+
+protected:
+    // Virtual functions that override base class functions.
+    virtual void    OnAttach();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
+private:
+    CViewFiles(const CViewFiles&);              // Disable copy construction
+    CViewFiles& operator=(const CViewFiles&);   // Disable assignment operator
+
+    // Message handlers
+    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+
+    void InsertItems();
+    void SetColumns();
+};
 
 
 ////////////////////////////////////////
@@ -17,7 +71,7 @@ public:
     virtual ~CViewSimple() {}
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual void    OnDraw(CDC& dc);
     virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -42,71 +96,14 @@ public:
     void SetDPIFont();
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions.
     virtual void OnAttach();
 
 private:
-    CViewText(const CViewText&);                // Disable copy construction
+    CViewText(const CViewText&);              // Disable copy construction
     CViewText& operator=(const CViewText&);   // Disable assignment operator
 
     CFont m_font;
 };
-
-
-//////////////////////////////////////////
-// CViewTree manages a tree view control.
-// The tree view control displays classes.
-class CViewTree : public CTreeView
-{
-public:
-    CViewTree();
-    virtual ~CViewTree();
-    void SetDPIImages();
-
-protected:
-    // Virtual functions that override base class functions
-    virtual void    OnAttach();
-    virtual void    OnDestroy();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
-    CViewTree(const CViewTree&);                // Disable copy construction
-    CViewTree& operator=(const CViewTree&);   // Disable assignment operator
-
-    // Message handlers
-    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-};
-
-
-/////////////////////////////////////////
-// CViewList manages a list view control.
-// The list view control displays files.
-class CViewList : public CListView
-{
-public:
-    CViewList();
-    virtual ~CViewList();
-    void SetDPIColumnWidths();
-    void SetDPIImages();
-
-protected:
-    // Virtual functions that override base class functions
-    virtual void    OnAttach();
-    virtual void    OnDestroy();
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-
-private:
-    CViewList(const CViewList&);                // Disable copy construction
-    CViewList& operator=(const CViewList&);   // Disable assignment operator
-
-    // Message handlers
-    LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
-    LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
-
-    void InsertItems();
-    void SetColumns();
-};
-
 
 #endif // VIEWS_H

@@ -1,4 +1,4 @@
-/* (31-Dec-2017) [Tab/Indent: 4/4][Line/Box: 80/74]               (FontEx.cpp) *
+/* (10-May-2024) [Tab/Indent: 4/4][Line/Box: 80/74]               (FontEx.cpp) *
 ********************************************************************************
 |                                                                              |
 |                Authors: Robert Tausworthe, David Nash, 2020                  |
@@ -98,8 +98,8 @@ Serialize(CArchive &ar)                                                     /*
         lf = m_font.GetLogFont();
           // store the face name separately: ar recognizes the char mode
         CString face = lf.lfFaceName;
-        ar << f;    // store the top part
-        ar<< face;  // store the face name part
+        ar << f;     // store the top part
+        ar << face;  // store the face name part
         ar << m_txcolor;  // store the rest
         ar << m_flags;
     }
