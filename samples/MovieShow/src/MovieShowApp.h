@@ -16,15 +16,14 @@ class CMovieShowApp : public CWinApp
 {
 public:
     CMovieShowApp();
-    virtual ~CMovieShowApp();
+    virtual ~CMovieShowApp() override;
+    CMovieShowApp(const CMovieShowApp&) = delete;               // Disable copy construction
+    CMovieShowApp& operator=(const CMovieShowApp&) = delete;    // Disable assignment operator
 
 protected:
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CMovieShowApp(const CMovieShowApp&);               // Disable copy construction
-    CMovieShowApp& operator=(const CMovieShowApp&);    // Disable assignment operator
-
     CMainFrame m_frame;
 };
 

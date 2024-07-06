@@ -48,7 +48,7 @@ BEGIN
     POPUP "&Edit"
     BEGIN
         MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO, GRAYED
-        MENUITEM "Redo\tCtrl+Y",          IDM_EDIT_REDO, GRAYED
+        MENUITEM "Redo\tCtrl+Y",                IDM_EDIT_REDO, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT, GRAYED
         MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY, GRAYED
@@ -77,7 +77,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "../src/res/Splitter.ico"
+IDW_MAIN                ICON                    "../src/res/Win32xx.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

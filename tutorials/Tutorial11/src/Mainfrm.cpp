@@ -275,7 +275,7 @@ BOOL CMainFrame::OnFilePreview()
         if (!m_preview.IsWindow())
             m_preview.Create(*this);
 
-        // Set the preview's owner (for notification messages).
+        // Set the preview's owner for notification messages.
         m_preview.DoPrintPreview(*this);
 
         // Swap views
@@ -302,7 +302,7 @@ BOOL CMainFrame::OnFilePreview()
     return TRUE;
 }
 
-// Sends the bitmap extracted from the view window to a printer of your choice.
+// Sends the bitmap extracted from the View window to a printer of your choice
 BOOL CMainFrame::OnFilePrint()
 {
     try
@@ -338,7 +338,7 @@ void CMainFrame::OnInitialUpdate()
 // Initiates the Choose Color dialog.
 BOOL CMainFrame::OnPenColor()
 {
-    // Array of custom colors, initialized to white.
+    // array of custom colors, initialized to white
     static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
@@ -347,13 +347,13 @@ BOOL CMainFrame::OnPenColor()
     CColorDialog colorDlg;
     colorDlg.SetCustomColors(custColors);
 
-    // Initialize the Choose Color dialog.
+    // Initialize the Choose Color dialog
     if (colorDlg.DoModal(*this) == IDOK)
     {
-        // Store the custom colors in the static array.
+        // Store the custom colors in the static array
         memcpy(custColors, colorDlg.GetCustomColors(), 16*sizeof(COLORREF));
 
-        // Retrieve the chosen color.
+        // Retrieve the chosen color
         m_view.SetPenColor(colorDlg.GetColor());
     }
 
@@ -363,10 +363,10 @@ BOOL CMainFrame::OnPenColor()
 // Called when the Print Preview's "Close" button is pressed.
 LRESULT CMainFrame::OnPreviewClose()
 {
-    // Swap the view.
+    // Swap the view
     SetView(m_view);
 
-    // Show the menu and toolbar.
+    // Show the menu and toolbar
     ShowMenu(GetFrameMenu() != NULL);
     ShowToolBar(m_isToolbarShown);
     UpdateSettings();
@@ -399,7 +399,7 @@ LRESULT CMainFrame::OnPreviewSetup()
     CPrintDialog printDlg(PD_PRINTSETUP);
     try
     {
-        // Display the print dialog.
+        // Display the print dialog
         if (printDlg.DoModal(*this) == IDOK)
         {
             CString status = _T("Printer: ") + printDlg.GetDeviceName();
@@ -423,13 +423,14 @@ LRESULT CMainFrame::OnPreviewSetup()
 void CMainFrame::SetupMenuIcons()
 {
     // Use the MenuIcons bitmap for images in menu items.
+    std::vector<UINT> data = GetToolBarData();
     if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
-        AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDW_MAIN);
+        AddMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
-        AddMenuIcons(GetToolBarData(), RGB(192, 192, 192), IDB_TOOLBAR16);
+        AddMenuIcons(data, RGB(192, 192, 192), IDB_TOOLBAR16);
 }
 
-// Configures the toolbar.
+// Configures the ToolBar.
 void CMainFrame::SetupToolBar()
 {
     // Define our toolbar buttons
@@ -467,13 +468,25 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Catch all CException types.
+    // Catch all unhandled CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 

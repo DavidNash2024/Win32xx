@@ -9,13 +9,6 @@
 #include "resource.h"
 
 
-// Encoding IDs
-
-const int ANSI = 0;            // Default for plain text
-const int UTF8 = 1;            // Default for rich text
-const int UTF16LE = 2;
-
-
 ///////////////////////////////////////////////////////////
 // CMainFrame manages the application's main window.
 // The main window is a frame that has a menubar, toolbar,
@@ -90,7 +83,7 @@ private:
     void RestoreFocus() { ::SetFocus(m_oldFocus); }
     void SaveFocus() { m_oldFocus = ::GetFocus(); }
     void SaveModifiedText();
-    void SetEncoding(UINT encoding);
+    void SetEncoding(int encoding);
     void SetPathName(LPCTSTR fullFileName);
 
     void SetWindowTitle();
@@ -104,7 +97,7 @@ private:
     CString m_cap;
     CString m_num;
     CString m_ovr;
-    UINT m_encoding;
+    int  m_encoding;
     bool m_isToolbarShown;
     bool m_isWrapped;
     bool m_isRTF;

@@ -16,7 +16,7 @@ public:
     CView();
     virtual ~CView(){}
     CDoc& GetDoc();
-    void  PrintPage(CDC& dc, UINT page = 1);
+    void  PrintPage(CDC& dc, int page = 1);
     void  QuickPrint(LPCTSTR docName);
 
 protected:

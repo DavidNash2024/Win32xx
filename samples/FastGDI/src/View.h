@@ -18,7 +18,7 @@ public:
     CRect    GetImageRect();
     void     QuickPrint(LPCTSTR docName);
     void     Print(LPCTSTR docName);
-    void     PrintPage(CDC& dc, UINT page = 1);
+    void     PrintPage(CDC& dc, int page = 1);
     BOOL     LoadFileImage(LPCTSTR filename);
     BOOL     SaveFileImage(LPCTSTR filename);
 

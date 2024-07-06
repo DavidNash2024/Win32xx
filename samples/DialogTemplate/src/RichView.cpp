@@ -18,7 +18,7 @@ CRichView::CRichView()
 
 // Calculates the character position of the page breaks, and returns
 // the number of pages.
-UINT CRichView::CollatePages()
+int CRichView::CollatePages()
 {
     m_pageBreaks.clear();
     CPrintDialog printDlg;
@@ -54,7 +54,7 @@ UINT CRichView::CollatePages()
     m_pageBreaks.push_back(-1);
 
     // return the number of pages.
-    return static_cast<UINT>(m_pageBreaks.size());
+    return static_cast<int>(m_pageBreaks.size());
 }
 
 // Choose the printer and print the document.
@@ -169,7 +169,7 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
 
 // Prints the specified page to specified dc.
 // Called by CPrintPreview, and also used for printing.
-void CRichView::PrintPage(CDC& dc, UINT page)
+void CRichView::PrintPage(CDC& dc, int page)
 {
     CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
@@ -250,13 +250,24 @@ LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Catch all CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 

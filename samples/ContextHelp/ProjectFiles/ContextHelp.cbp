@@ -29,8 +29,6 @@
 					<Add library="comctl32" />
 					<Add library="import32" />
 					<Add library="shlwapi" />
-					<Add library="htmlhelp" />
-					<Add directory="../lib/Borland55" />
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
@@ -55,8 +53,6 @@
 					<Add library="import32" />
 					<Add library="cw32mt" />
 					<Add library="shlwapi" />
-					<Add library="htmlhelp" />
-					<Add directory="../lib/Borland55" />
 				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
@@ -89,9 +85,8 @@
 					<Add library="Advapi32" />
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
-					<Add library="shlwapi" />
-					<Add library="htmlhelp" />
 					<Add library="ole32" />
+					<Add library="shlwapi" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -125,19 +120,116 @@
 					<Add library="Advapi32" />
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
-					<Add library="shlwapi" />
-					<Add library="htmlhelp" />
 					<Add library="ole32" />
+					<Add library="shlwapi" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
+				</Linker>
+			</Target>
+			<Target title="Debug MinGW GNU compiler">
+				<Option output="GNU/Debug/ContextHelp.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Debug" />
+				<Option object_output="GNU/Debug" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-g3" />
+					<Add option="-D_DEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-static" />
+					<Add option="-Wl,--enable-auto-import" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
+					<Add library="shlwapi" />
+				</Linker>
+			</Target>
+			<Target title="Release MinGW GNU compiler">
+				<Option output="GNU/Release/ContextHelp.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Release" />
+				<Option object_output="GNU/Release" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DNDEBUG" />
+					<Add option="-DUNICODE" />
+					<Add option="-D_UNICODE" />
+					<Add directory="../../../include" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="../../../include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static" />
+					<Add option="-Wl,--enable-auto-import" />
+					<Add library="comctl32" />
+					<Add library="Ole32" />
+					<Add library="Oleaut32" />
+					<Add library="Uuid" />
+					<Add library="Ws2_32" />
+					<Add library="shlwapi" />
 				</Linker>
 			</Target>
 		</Build>
 		<VirtualTargets>
-			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;" />
+			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Compiler>
-			<Add directory="../../Win32++" />
-		</Compiler>
+		<Unit filename="../../../include/wxx_appcore.h" />
+		<Unit filename="../../../include/wxx_appcore0.h" />
+		<Unit filename="../../../include/wxx_archive.h" />
+		<Unit filename="../../../include/wxx_commondlg.h" />
+		<Unit filename="../../../include/wxx_controls.h" />
+		<Unit filename="../../../include/wxx_cstring.h" />
+		<Unit filename="../../../include/wxx_ddx.h" />
+		<Unit filename="../../../include/wxx_dialog.h" />
+		<Unit filename="../../../include/wxx_dockframe.h" />
+		<Unit filename="../../../include/wxx_docking.h" />
+		<Unit filename="../../../include/wxx_exception.h" />
+		<Unit filename="../../../include/wxx_file.h" />
+		<Unit filename="../../../include/wxx_filefind.h" />
+		<Unit filename="../../../include/wxx_folderdialog.h" />
+		<Unit filename="../../../include/wxx_frame.h" />
+		<Unit filename="../../../include/wxx_gdi.h" />
+		<Unit filename="../../../include/wxx_imagelist.h" />
+		<Unit filename="../../../include/wxx_listview.h" />
+		<Unit filename="../../../include/wxx_mdi.h" />
+		<Unit filename="../../../include/wxx_menu.h" />
+		<Unit filename="../../../include/wxx_menubar.h" />
+		<Unit filename="../../../include/wxx_metafile.h" />
+		<Unit filename="../../../include/wxx_printdialogs.h" />
+		<Unit filename="../../../include/wxx_propertysheet.h" />
+		<Unit filename="../../../include/wxx_rebar.h" />
+		<Unit filename="../../../include/wxx_rect.h" />
+		<Unit filename="../../../include/wxx_regkey.h" />
+		<Unit filename="../../../include/wxx_ribbon.h" />
+		<Unit filename="../../../include/wxx_richedit.h" />
+		<Unit filename="../../../include/wxx_scrollview.h" />
+		<Unit filename="../../../include/wxx_shared_ptr.h" />
+		<Unit filename="../../../include/wxx_socket.h" />
+		<Unit filename="../../../include/wxx_statusbar.h" />
+		<Unit filename="../../../include/wxx_stdcontrols.h" />
+		<Unit filename="../../../include/wxx_tab.h" />
+		<Unit filename="../../../include/wxx_taskdialog.h" />
+		<Unit filename="../../../include/wxx_textconv.h" />
+		<Unit filename="../../../include/wxx_themes.h" />
+		<Unit filename="../../../include/wxx_time.h" />
+		<Unit filename="../../../include/wxx_toolbar.h" />
+		<Unit filename="../../../include/wxx_treeview.h" />
+		<Unit filename="../../../include/wxx_webbrowser.h" />
+		<Unit filename="../../../include/wxx_wincore.h" />
+		<Unit filename="../../../include/wxx_wincore0.h" />
 		<Unit filename="../src/App.cpp" />
 		<Unit filename="../src/App.h" />
 		<Unit filename="../src/AppHelp.cpp" />

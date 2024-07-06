@@ -18,6 +18,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewTree(const CViewTree&);               // Disable copy construction
@@ -37,6 +38,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CMDIChildTree(const CMDIChildTree&);                // Disable copy construction

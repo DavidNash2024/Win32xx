@@ -22,6 +22,7 @@ protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewOutput(const CViewOutput&);               // Disable copy construction
@@ -38,6 +39,8 @@ public:
     CContainOutput();
     virtual ~CContainOutput() {}
 
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 private:
     CContainOutput(const CContainOutput&);                // Disable copy construction
     CContainOutput& operator=(const CContainOutput&);   // Disable assignment operator
@@ -57,6 +60,7 @@ public:
 
 protected:
     virtual int OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockOutput(const CDockOutput&);                // Disable copy construction

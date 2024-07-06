@@ -11,7 +11,7 @@ CScribbleApp::CScribbleApp()
 
 BOOL CScribbleApp::InitInstance()
 {
-    // Create the frame window.
+    // Create the window.
     m_frame.Create();   // throws a CWinException on failure
 
     return TRUE;

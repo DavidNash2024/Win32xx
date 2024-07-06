@@ -13,9 +13,9 @@ class CRichView : public CRichEdit
 public:
     CRichView();
     virtual ~CRichView(){}
-    UINT CollatePages();
+    int CollatePages();
     void DoPrint(LPCTSTR docName);
-    void PrintPage(CDC& dc, UINT page = 1);
+    void PrintPage(CDC& dc, int page = 1);
     void QuickPrint(LPCTSTR docName);
 
 protected:

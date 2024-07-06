@@ -38,3 +38,37 @@ void CInputDlg::OnOK()
     CDialog::OnOK();
 }
 
+// Process the dialog's window messages.
+INT_PTR CInputDlg::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        //  switch (msg)
+        //  {
+        //  Additional messages to be handled go here
+        //  }
+
+            // Pass unhandled messages on to parent DialogProc.
+        return DialogProcDefault(msg, wparam, lparam);
+    }
+
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+    }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
+}

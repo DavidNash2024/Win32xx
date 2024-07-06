@@ -47,6 +47,7 @@ protected:
     virtual BOOL OnCommand(WPARAM, LPARAM);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CContainClasses(const CContainClasses&);              // Disable copy construction
@@ -69,6 +70,9 @@ class CDockClasses : public CDocker
 public:
     CDockClasses();
     virtual ~CDockClasses() {}
+
+private:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockClasses(const CDockClasses&);              // Disable copy construction

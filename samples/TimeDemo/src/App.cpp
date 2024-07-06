@@ -83,9 +83,9 @@ InitInstance()                                                              /*
       // generate the About box static information: first the latest
       // date one of the main stream files was compiled
     ULONG compiled_on = DatInt(CApp::m_compiledOn);
-    compiled_on = MAX(compiled_on, DatInt(CDoc::m_compiledOn));
-    compiled_on = MAX(compiled_on, DatInt(CMainFrame::m_compiledOn));
-    compiled_on = MAX(compiled_on, DatInt(CView::m_compiledOn));
+    compiled_on = std::max(compiled_on, DatInt(CDoc::m_compiledOn));
+    compiled_on = std::max(compiled_on, DatInt(CMainFrame::m_compiledOn));
+    compiled_on = std::max(compiled_on, DatInt(CView::m_compiledOn));
     m_aboutStatement.Format(_T("%s\n\n(%s.exe)\n%s\ncompiled with ")
         _T("%s\non %s"), m_credits.c_str(), m_appName.c_str(),
         m_version.c_str(), m_compiledWith.c_str(),

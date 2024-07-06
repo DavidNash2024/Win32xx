@@ -6,9 +6,18 @@
 #include "Mainfrm.h"
 #include "resource.h"
 
+#ifndef INVALID_FILE_ATTRIBUTES
+  #define INVALID_FILE_ATTRIBUTES ((DWORD)-1)
+#endif
+
 #ifndef SF_USECODEPAGE
   #define SF_USECODEPAGE    0x0020
 #endif
+
+// Encoding IDs
+const int ANSI = 0;            // Default for plain text
+const int UTF8 = 1;            // Default for rich text
+const int UTF16LE = 2;
 
 
 ///////////////////////////////////
@@ -83,7 +92,7 @@ void CMainFrame::DetermineEncoding(CFile& file)
         try
         {
             file.SeekToBegin();
-            DWORD testlen = MIN(1024, (DWORD)fileLength);
+            DWORD testlen = std::min(1024, static_cast<int>(fileLength));
             std::vector<byte> buffer(testlen);
             file.Read(&buffer.front(), testlen);
 
@@ -420,7 +429,7 @@ BOOL CMainFrame::OnFilePreview()
             m_preview.Create(*this);
 
         // Set the preview's owner for notification messages, and number of pages.
-        UINT maxPage = m_richView.CollatePages();
+        int maxPage = m_richView.CollatePages(printerDC);
         m_preview.DoPrintPreview(*this, maxPage);
 
         // Save the current Focus.
@@ -538,7 +547,17 @@ BOOL CMainFrame::OnFileSave()
     if (m_pathName.IsEmpty())
         OnFileSaveAs();
     else
-        WriteFile(m_pathName);
+    {
+        DWORD dwAttrib = GetFileAttributes(m_pathName);
+        if (dwAttrib != INVALID_FILE_ATTRIBUTES)
+        {
+            CString str = "This file already exists.\nDo you want to replace it?";
+            if (IDYES == MessageBox(str, _T("Confirm Save"), MB_ICONWARNING | MB_OKCANCEL))
+                WriteFile(m_pathName);
+        }
+        else
+            WriteFile(m_pathName);
+    }
 
     return TRUE;
 }
@@ -610,6 +629,12 @@ void CMainFrame::OnMenuUpdate(UINT id)
         GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
+    case IDM_FILE_SAVE:
+    {
+        enabled = m_richView.GetModify() ? MF_ENABLED : MF_GRAYED;
+        GetFrameMenu().EnableMenuItem(id, enabled);
+        break;
+    }
     case IDM_EDIT_COPY:
     case IDM_EDIT_CUT:
     case IDM_EDIT_DELETE:
@@ -617,28 +642,25 @@ void CMainFrame::OnMenuUpdate(UINT id)
         CHARRANGE range;
         m_richView.GetSel(range);
         enabled = (range.cpMin != range.cpMax)? MF_ENABLED : MF_GRAYED;
-
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_COPY, enabled);
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_CUT, enabled);
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_DELETE, enabled);
+        GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
     case IDM_EDIT_PASTE:
     {
         enabled = m_richView.CanPaste(CF_TEXT)? MF_ENABLED : MF_GRAYED;
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_PASTE, enabled);
+        GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
     case IDM_EDIT_REDO:
     {
         enabled = m_richView.CanRedo()? MF_ENABLED : MF_GRAYED;
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_REDO, enabled);
+        GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
     case IDM_EDIT_UNDO:
     {
         enabled = m_richView.CanUndo()? MF_ENABLED : MF_GRAYED;
-        GetFrameMenu().EnableMenuItem(IDM_EDIT_UNDO, enabled);
+        GetFrameMenu().EnableMenuItem(id, enabled);
         break;
     }
     }
@@ -761,7 +783,8 @@ LRESULT CMainFrame::OnPreviewSetup()
         }
 
         // Initiate the print preview.
-        UINT maxPage = m_richView.CollatePages();
+        CDC printerDC = printDlg.GetPrinterDC();
+        int maxPage = m_richView.CollatePages(printerDC);
         m_preview.DoPrintPreview(*this, maxPage);
     }
 
@@ -861,7 +884,7 @@ void CMainFrame::SaveModifiedText()
 }
 
 // Set the encoding type.
-void CMainFrame::SetEncoding(UINT encoding)
+void CMainFrame::SetEncoding(int encoding)
 {
     m_encoding = encoding;
 
@@ -936,8 +959,8 @@ void CMainFrame::SetStatusParts()
 
     // Insert the width for the first status bar part into the vector.
     CRect clientRect = GetClientRect();
-    const int minWidth = 300;
-    int width = MAX(minWidth, clientRect.right);
+    const LONG minWidth = 300;
+    int width = std::max(minWidth, clientRect.right);
     std::vector<int>::iterator begin = partWidths.begin();
     partWidths.insert(begin, width - sumWidths);
 
@@ -954,7 +977,7 @@ void CMainFrame::SetupMenuIcons()
 {
     std::vector<UINT> data = GetToolBarData();
     if ((GetMenuIconHeight() >= 24) && (GetWindowDpi(*this) != 192))
-        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR_DIS);
+        SetMenuIcons(data, RGB(192, 192, 192), IDW_MAIN);
     else
         SetMenuIcons(data, RGB(192, 192, 192), IDW_MENUICONS);
 }
@@ -963,21 +986,19 @@ void CMainFrame::SetupMenuIcons()
 void CMainFrame::SetupToolBar()
 {
     // Define the resource IDs for the toolbar
-    AddToolBarButton( IDM_FILE_NEW_PLAIN );
-    AddToolBarButton( IDM_FILE_NEW_RICH );
-    AddToolBarButton( IDM_FILE_OPEN  );
-    AddToolBarButton( IDM_FILE_SAVE  );
-    AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_EDIT_CUT   );
-    AddToolBarButton( IDM_EDIT_COPY  );
-    AddToolBarButton( IDM_EDIT_PASTE );
-    AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_FILE_PRINT );
-    AddToolBarButton( 0 );              // Separator
-    AddToolBarButton( IDM_HELP_ABOUT );
-
-    // Use separate imagelists for normal, hot and disabled buttons.
-    SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
+    AddToolBarButton(IDM_FILE_NEW_PLAIN);
+    AddToolBarButton(IDM_FILE_NEW_RICH);
+    AddToolBarButton(IDM_FILE_OPEN);
+    AddToolBarButton(IDM_FILE_SAVE);
+    AddToolBarButton(IDM_FILE_SAVEAS);
+    AddToolBarButton(0);                // Separator
+    AddToolBarButton(IDM_EDIT_CUT);
+    AddToolBarButton(IDM_EDIT_COPY);
+    AddToolBarButton(IDM_EDIT_PASTE);
+    AddToolBarButton(0);                // Separator
+    AddToolBarButton(IDM_FILE_PRINT);
+    AddToolBarButton(0);                // Separator
+    AddToolBarButton(IDM_HELP_ABOUT);
 }
 
 // Sets the frame's title.
@@ -1002,10 +1023,10 @@ void CMainFrame::UpdateToolbar()
     BOOL canPaste = m_richView.CanPaste(CF_TEXT);
     BOOL isDirty = m_richView.GetModify();
 
+    GetToolBar().EnableButton(IDM_FILE_SAVE, isDirty);
     GetToolBar().EnableButton(IDM_EDIT_COPY, isSelected);
     GetToolBar().EnableButton(IDM_EDIT_CUT, isSelected);
     GetToolBar().EnableButton(IDM_EDIT_PASTE, canPaste);
-    GetToolBar().EnableButton(IDM_FILE_SAVE, isDirty);
 }
 
 // Process the frame's window messages.
@@ -1023,14 +1044,26 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Catch all CException types.
+    // Catch all unhandled CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 
 // Streams from the rich edit control to the specified file.

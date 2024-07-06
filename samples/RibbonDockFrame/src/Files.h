@@ -47,6 +47,9 @@ public:
     CContainFiles();
     virtual ~CContainFiles() {}
 
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
 private:
     CContainFiles(const CContainFiles&);                // Disable copy construction
     CContainFiles& operator=(const CContainFiles&);   // Disable assignment operator
@@ -63,6 +66,9 @@ class CDockFiles : public CDocker
 public:
     CDockFiles();
     virtual ~CDockFiles() {}
+
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockFiles(const CDockFiles&);                // Disable copy construction

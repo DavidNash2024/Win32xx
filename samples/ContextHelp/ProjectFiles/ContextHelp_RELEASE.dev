@@ -12,7 +12,7 @@ ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
 CppCompiler=-g_@@__@@_
-Linker=-lComctl32_@@_-lOle32_@@_-lUuid_@@_-lOleaut32_@@_-lWs2_32_@@_-lshlwapi_@@_-lhtmlhelp_@@_-s_@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lUuid_@@_-lOleaut32_@@_-lWs2_32_@@_-lshlwapi_@@_-s_@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++\Release
@@ -27,7 +27,7 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=3
-CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
+CompilerSettings=0;0;0;0;0;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0
 LogOutput=
 LogOutputEnabled=0
 

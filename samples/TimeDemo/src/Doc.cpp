@@ -106,7 +106,7 @@ GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const      /*
       // compute length of text to extract
     if (length < 0)
         length = s.GetLength();
-    length = MAX(0, length - left);
+    length = std::max(0, length - left);
       // extract length chars after left position using base class
     return s.Mid(left, length);
 }
@@ -214,7 +214,7 @@ MakeAppDataPath(const CString & subpath)                                    /*
     {
         int nextbk = subpath.Find(_T("\\"), from);
         int nextfwd = subpath.Find(_T("/"), from);
-        next = MAX(nextbk, nextfwd);
+        next = std::max(nextbk, nextfwd);
         if (next < 0)
             next = to;
 
@@ -508,7 +508,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
                   _T("Oct"), _T("Nov"), _T("Dec")};
 
     // find  H:M:S values
-    p1 = MIN(timestr.Find(_T(":")), len);
+    p1 = std::min(timestr.Find(_T(":")), len);
     if (p1 >= 0)
     {     // the time of day is present
         p2 = timestr.ReverseFind(_T(':'));
@@ -516,18 +516,18 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
 
         if (p1 == p2) // H:M only
         {
-            p2 = MAX(timestrLeft.ReverseFind(_T(' ')), 0);
-            p3 = MAX(timestr.Find(_T(" "), p1), static_cast<int>(len));
+            p2 = std::max(timestrLeft.ReverseFind(_T(' ')), 0);
+            p3 = std::max(timestr.Find(_T(" "), p1), len);
             H = _ttoi(timestr.Mid(p2 + 1, p1 - p2).c_str());
             M = _ttoi(timestr.Mid(p1 + 1, p3 - p1).c_str());
             S = 0;
         }
         else // H:M:S
         {
-            p3 = MAX(timestrLeft.ReverseFind(_T(' ')), static_cast<int>(0));
+            p3 = std::max(timestrLeft.ReverseFind(_T(' ')), 0);
             H = _ttoi(timestr.Mid(p3, p1 - p3).c_str());
             M = _ttoi(timestr.Mid(p1 + 1, p2 - p1).c_str());
-            p3 = MAX(timestr.Find(_T(" "), p1), static_cast<int>(len));
+            p3 = std::max(timestr.Find(_T(" "), p1), len);
             S = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
         }
 
@@ -542,7 +542,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
         p2 = timestr.Find(_T("/"), p1 + 1);
         assert(p2 <= len);  // Invalid time conversion format.
 
-        p3   = MIN(timestr.Find(_T(" "), p2), static_cast<int>(len));
+        p3   = std::min(timestr.Find(_T(" "), p2), len);
         yyyy = _ttoi(timestr.Mid(0, p1).c_str());
         mo   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
         da   = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
@@ -556,7 +556,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
         p2 = timestr.Find(_T("-"), p1 + 1);
         assert(p2 <= len);  // Invalid time conversion format.
 
-        p3   = MIN(timestr.Find(_T(" "), p2), static_cast<int>(len));
+        p3   = std::min(timestr.Find(_T(" "), p2), len);
         da   = _ttoi(timestr.Mid(0, p1).c_str());
         CString mon  = timestr.Mid(p1 + 1, p2 - p1 - 1);
         yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
@@ -576,7 +576,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
         p1 = timestr.Find(_T(" "));
         assert(p1 <= p2);  // Invalid time conversion format.
 
-        p3   = MIN(timestr.Find(_T(" "), p2 + 2), static_cast<int>(len));
+        p3   = std::min(timestr.Find(_T(" "), p2 + 2), len);
         CString month = timestr.Mid(0, p1);
         da   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
         yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
@@ -594,7 +594,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const                   /*
     assert(p1 >= 0);  // Invalid time conversion format.
     if (p1 >= 0)  // "yyyy+doy H:M:S"
     {
-        p2 = MIN(timestr.Find(_T(" ")), static_cast<int>(len));
+        p2 = std::min(timestr.Find(_T(" ")), len);
         yyyy = _ttoi(timestr.Mid(0, p1).c_str());
         doy  = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
         CTime t(yyyy, doy, H, M, S, nDST);
@@ -613,7 +613,7 @@ PushContent(const CString &s)                                               /*
 *-----------------------------------------------------------------------------*/
 {
     m_docContent.push_back(s);
-    m_docWidth = MAX(m_docWidth, s.GetLength());
+    m_docWidth = std::max(m_docWidth, s.GetLength());
 }
 
 /*============================================================================*/

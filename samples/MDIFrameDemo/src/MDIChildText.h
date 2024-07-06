@@ -18,6 +18,7 @@ public:
 protected:
     virtual void OnAttach();
     virtual void PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewText(const CViewText&);               // Disable copy construction
@@ -40,6 +41,7 @@ protected:
     // Virtual functions that override base class functions
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CMDIChildText(const CMDIChildText&);                // Disable copy construction

@@ -49,7 +49,7 @@ void CMainFrame::DpiScaleReBar()
 
     // Resize the rebar band holding the arrow toolbar.
     CSize sizeToolBar = m_toolBar.GetMaxSize();
-    int minxy = MIN(sizeToolBar.cx, sizeToolBar.cy);
+    int minxy = std::min(sizeToolBar.cx, sizeToolBar.cy);
     m_reBar.ResizeBand(0, CSize(minxy, minxy));
 }
 
@@ -308,7 +308,7 @@ void CMainFrame::SetReBarPos()
         cxRB += m_reBar.GetRowHeight(u);
 
     CRect rc = CFrame::GetViewRect();
-    int cyRB = MIN(cxRB, rc.Height());
+    int cyRB = std::min(cxRB, rc.Height());
 
     DWORD style = m_reBar.GetStyle();
     style &= CCS_VERT | CCS_BOTTOM; // Filter unwanted styles
@@ -396,13 +396,25 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Catch all CException types.
+    // Catch all unhandled CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 

@@ -692,25 +692,49 @@ void CMiniFrame::RecalcLayout() const
 // Process the window's messages
 LRESULT CMiniFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
-    case WM_DPICHANGED:         return OnDpiChanged(msg, wparam, lparam);
-    case WM_ERASEBKGND:         return OnEraseBkGnd(msg, wparam, lparam);
-    case WM_GETMINMAXINFO:      return OnGetMinMaxInfo(msg, wparam, lparam);
-    case WM_HELP:               return OnHelp();
-    case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
-    case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
-    case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
-    case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
-    case WM_NCLBUTTONUP:        return OnNCLButtonUp(msg, wparam, lparam);
-    case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);
-    case WM_NCRBUTTONDOWN:      return OnNCRButtonDown(msg, wparam, lparam);
-    case WM_PAINT:              return OnPaint(msg, wparam, lparam);
-    case WM_SIZE:               return OnSize(msg, wparam, lparam);
-    case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
+        case WM_DPICHANGED:         return OnDpiChanged(msg, wparam, lparam);
+        case WM_ERASEBKGND:         return OnEraseBkGnd(msg, wparam, lparam);
+        case WM_GETMINMAXINFO:      return OnGetMinMaxInfo(msg, wparam, lparam);
+        case WM_HELP:               return OnHelp();
+        case WM_NCMOUSELEAVE:       return OnNCMouseLeave(msg, wparam, lparam);
+        case WM_NCCALCSIZE:         return OnNCCalcSize(msg, wparam, lparam);
+        case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
+        case WM_NCLBUTTONDOWN:      return OnNCLButtonDown(msg, wparam, lparam);
+        case WM_NCLBUTTONUP:        return OnNCLButtonUp(msg, wparam, lparam);
+        case WM_NCMOUSEMOVE:        return OnNCMouseMove(msg, wparam, lparam);
+        case WM_NCRBUTTONDOWN:      return OnNCRButtonDown(msg, wparam, lparam);
+        case WM_PAINT:              return OnPaint(msg, wparam, lparam);
+        case WM_SIZE:               return OnSize(msg, wparam, lparam);
+        case WM_SYSCOMMAND:         return OnSysCommand(msg, wparam, lparam);
+        }
+
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Pass unhandled messages on for default processing.
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all unhandled CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+    }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }

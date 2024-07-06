@@ -16,6 +16,7 @@ public:
 
 protected:
     virtual void OnInitialUpdate();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CWebControl(const CWebControl&);               // Disable copy construction

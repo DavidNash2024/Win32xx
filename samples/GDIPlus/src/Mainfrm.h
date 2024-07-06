@@ -28,6 +28,7 @@ protected:
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CMainFrame(const CMainFrame&);               // Disable copy construction

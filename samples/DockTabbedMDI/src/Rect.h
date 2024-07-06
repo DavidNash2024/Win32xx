@@ -7,6 +7,7 @@
 
 struct RectData
 {
+    RectData(COLORREF clr, CRect rc) : color(clr), rect(rc) {}
     COLORREF color;
     CRect rect;
 };

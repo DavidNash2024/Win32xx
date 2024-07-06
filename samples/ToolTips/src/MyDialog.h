@@ -17,6 +17,7 @@ public:
 
 protected:
     virtual void PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CBalloonToolTip(const CBalloonToolTip&);               // Disable copy construction

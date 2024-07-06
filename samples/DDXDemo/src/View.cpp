@@ -300,19 +300,21 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
     Process the view messages: control colors and owner-drawn buttons.
 *-----------------------------------------------------------------------------*/
 {
-      // Add case statements for each messages to be handled here
-    switch (msg)
+    try
     {
+        // Add case statements for each messages to be handled here
+        switch (msg)
+        {
         case WM_CTLCOLORBTN:
         case WM_CTLCOLOREDIT:
         case WM_CTLCOLORDLG:  // sent to dialog boxes directly, not here!
         case WM_CTLCOLORLISTBOX:
         case WM_CTLCOLORSCROLLBAR:
         case WM_CTLCOLORSTATIC:
-          // for these messages, wparam has the control's hdc and
-          // lparam has the control's hwnd
-        return OnCtlColor(reinterpret_cast<HDC>(wparam),
-            reinterpret_cast<HWND>(lparam), msg);
+            // for these messages, wparam has the control's hdc and
+            // lparam has the control's hwnd
+            return OnCtlColor(reinterpret_cast<HDC>(wparam),
+                reinterpret_cast<HWND>(lparam), msg);
 
         case WM_DRAWITEM:
         {
@@ -338,10 +340,32 @@ DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)                         /*
             return TRUE;
         }
 
+        }
+        // Pass unhandled messages on to parent DialogProc
+        return DialogProcDefault(msg, wparam, lparam);
     }
-      // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(msg, wparam, lparam);
+
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+    }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
+
 /*============================================================================*/
     void  CView::
 DoDataExchange(CDataExchange& dx)                                           /*

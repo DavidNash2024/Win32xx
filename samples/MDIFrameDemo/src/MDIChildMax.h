@@ -38,6 +38,7 @@ protected:
     // Virtual functions that override base class functions
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CMDIChildMax(const CMDIChildMax&);                // Disable copy construction

@@ -28,19 +28,21 @@ CRichView::~CRichView()
 
 // Calculates the character position of the page breaks, and returns
 // the number of pages.
-UINT CRichView::CollatePages()
+int CRichView::CollatePages(const CDC& printerDC, int startChar, int endChar)
 {
+    if (endChar == -1)
+        endChar = GetTextLengthEx(GTL_NUMCHARS);;
+
+    assert(startChar <= endChar);
     m_pageBreaks.clear();
-    CPrintDialog printDlg;
-    CDC printerDC = printDlg.GetPrinterDC();
 
     FORMATRANGE fr;
     fr.hdcTarget = printerDC;
     fr.hdc = printerDC;
-    fr.rcPage = GetPageRect();
-    fr.rc = GetPrintRect();
-    fr.chrg.cpMin = 0;
-    fr.chrg.cpMax = -1;
+    fr.rcPage = GetPageRect(printerDC);
+    fr.rc = GetPrintRect(printerDC);
+    fr.chrg.cpMin = startChar;
+    fr.chrg.cpMax = endChar;
 
     // Find out real size of document in characters.
     LONG textLength;   // Length of document.
@@ -64,7 +66,7 @@ UINT CRichView::CollatePages()
     m_pageBreaks.push_back(-1);
 
     // return the number of pages.
-    return static_cast<UINT>(m_pageBreaks.size());
+    return static_cast<int>(m_pageBreaks.size());
 }
 
 // Choose the printer and print the document.
@@ -86,20 +88,15 @@ void CRichView::DoPrint(LPCTSTR docName)
 }
 
 // Returns a CRect of the entire printable area. Units are measured in twips.
-CRect CRichView::GetPageRect()
+CRect CRichView::GetPageRect(const CDC& dc)
 {
-
     CRect rcPage;
 
-    // Get the device context of the default or currently chosen printer
-    CPrintDialog printDlg;
-    CDC dcPrinter = printDlg.GetPrinterDC();
-
     // Get the printer page specifications
-    int horizRes = dcPrinter.GetDeviceCaps(HORZRES);        // in pixels
-    int vertRes = dcPrinter.GetDeviceCaps(VERTRES);         // in pixels
-    int logPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);   // in pixels per logical inch
-    int logPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);   // in pixels per logical inch
+    int horizRes = dc.GetDeviceCaps(HORZRES);        // in pixels
+    int vertRes  = dc.GetDeviceCaps(VERTRES);         // in pixels
+    int logPixelsX = dc.GetDeviceCaps(LOGPIXELSX);   // in pixels per logical inch
+    int logPixelsY = dc.GetDeviceCaps(LOGPIXELSY);   // in pixels per logical inch
 
     int tpi = 1440;     // twips per inch
 
@@ -110,19 +107,21 @@ CRect CRichView::GetPageRect()
 }
 
 // Returns the print area within the page. Units are measured in twips.
-CRect CRichView::GetPrintRect()
+CRect CRichView::GetPrintRect(const CDC& dc)
 {
-    int margin = 200;
-
-    CRect rcPage = GetPageRect();
+    CRect rcPage = GetPageRect(dc);
     CRect rcPrintArea;
+
+    // Scale the margins.
+    int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
+    int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
 
     if (!rcPage.IsRectEmpty())
     {
-        rcPrintArea.left = rcPage.left + margin;
-        rcPrintArea.top = rcPage.top + margin;
-        rcPrintArea.right = rcPage.right - margin;
-        rcPrintArea.bottom = rcPage.bottom - margin;
+        rcPrintArea.left = rcPage.left + dpiX / 3;
+        rcPrintArea.top = rcPage.top + dpiY / 3;
+        rcPrintArea.right = rcPage.right - dpiX / 3;
+        rcPrintArea.bottom = rcPage.bottom - dpiY / 3;
     }
 
     return rcPrintArea;
@@ -156,7 +155,7 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
 
 // Prints the specified page to specified dc.
 // Called by CPrintPreview, and also used for printing.
-void CRichView::PrintPage(CDC& dc, UINT page)
+void CRichView::PrintPage(CDC& dc, int page)
 {
     CPrintDialog printDlg;
     CDC printerDC = printDlg.GetPrinterDC();
@@ -166,14 +165,14 @@ void CRichView::PrintPage(CDC& dc, UINT page)
     ZeroMemory(&fr, sizeof(fr));
     fr.hdcTarget = printerDC;
     fr.hdc = dc;
-    fr.rcPage = GetPageRect();
-    fr.rc = GetPrintRect();
+    fr.rcPage = GetPageRect(printerDC);
+    fr.rc = GetPrintRect(printerDC);
     fr.chrg.cpMin = (page > 0) ? m_pageBreaks[page - 1] : 0;
     fr.chrg.cpMax = m_pageBreaks[page];
 
     // Display text from the richedit control on the memory dc
     FormatRange(fr, TRUE);
-    DisplayBand(GetPrintRect());
+    DisplayBand(GetPrintRect(printerDC));
 
     // Tell the control to release the cached information.
     FormatRange();
@@ -193,8 +192,8 @@ void CRichView::QuickPrint(LPCTSTR docName)
     fr.hdc = printerDC;
     fr.hdcTarget = printerDC;
 
-    fr.rcPage = GetPageRect();
-    fr.rc = GetPrintRect();
+    fr.rcPage = GetPageRect(printerDC);
+    fr.rc = GetPrintRect(printerDC);
 
     // Default the range of text to print as the entire document.
     fr.chrg.cpMin = 0;
@@ -208,8 +207,8 @@ void CRichView::QuickPrint(LPCTSTR docName)
     di.lpszOutput = NULL;   // Do not print to file.
     printerDC.StartDoc(&di);
 
-    UINT maxPages = CollatePages();
-    for (UINT page = 0; page < maxPages; ++page)
+    int maxPages = CollatePages(printerDC);
+    for (int page = 0; page < maxPages; ++page)
     {
         // Start the page.
         printerDC.StartPage();
@@ -243,3 +242,33 @@ void CRichView::SetFontDefaults()
     SendMessage(EM_SETLANGOPTIONS, 0, result);
 }
 
+// Handle the window's messages.
+LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all unhandled CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+    }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
+}

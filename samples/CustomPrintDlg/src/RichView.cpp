@@ -84,12 +84,12 @@ void CRichView::DoPrint(LPCTSTR docName)
     {
         // Acquire the currently selected printer and page settings.
         CDC printerDC = m_printDialog.GetPrinterDC();
-        m_printDialog.SetFromPage(MAX(m_printDialog.GetFromPage(), 1));
-        m_printDialog.SetToPage(MIN(m_printDialog.GetToPage(), CollatePages(printerDC)));
-        m_printDialog.SetFromPage(MIN(m_printDialog.GetFromPage(), m_printDialog.GetToPage()));
+        m_printDialog.SetFromPage(std::max(m_printDialog.GetFromPage(), 1));
+        m_printDialog.SetToPage(std::min(m_printDialog.GetToPage(), CollatePages(printerDC)));
+        m_printDialog.SetFromPage(std::min(m_printDialog.GetFromPage(), m_printDialog.GetToPage()));
 
         // Calculate the pages to print.
-        std::vector<UINT> pages = SetPagesToPrint(printerDC);
+        std::vector<int> pages = SetPagesToPrint(printerDC);
 
         // Find the first and last characters.
         LONG firstChar = 0;
@@ -124,7 +124,7 @@ void CRichView::DoPrint(LPCTSTR docName)
         di.lpszOutput = NULL;   // Do not print to file.
         printerDC.StartDoc(&di);
 
-        std::vector<UINT>::iterator i;
+        std::vector<int>::iterator i;
         for (i = pages.begin(); i != pages.end(); ++i)
         {
             // Start the page.
@@ -143,15 +143,15 @@ void CRichView::DoPrint(LPCTSTR docName)
 }
 
 // Returns a CRect of the entire printable area. Units are measured in twips.
-CRect CRichView::GetPageRect(const CDC& printerDC)
+CRect CRichView::GetPageRect(const CDC& dc)
 {
     CRect rcPage;
 
     // Get the printer page specifications
-    int horizRes = printerDC.GetDeviceCaps(HORZRES);        // in pixels
-    int vertRes = printerDC.GetDeviceCaps(VERTRES);         // in pixels
-    int logPixelsX = printerDC.GetDeviceCaps(LOGPIXELSX);   // in pixels per logical inch
-    int logPixelsY = printerDC.GetDeviceCaps(LOGPIXELSY);   // in pixels per logical inch
+    int horizRes = dc.GetDeviceCaps(HORZRES);        // in pixels
+    int vertRes = dc.GetDeviceCaps(VERTRES);         // in pixels
+    int logPixelsX = dc.GetDeviceCaps(LOGPIXELSX);   // in pixels per logical inch
+    int logPixelsY = dc.GetDeviceCaps(LOGPIXELSY);   // in pixels per logical inch
 
     int tpi = 1440;     // twips per inch
 
@@ -162,19 +162,21 @@ CRect CRichView::GetPageRect(const CDC& printerDC)
 }
 
 // Returns the print area within the page. Units are measured in twips.
-CRect CRichView::GetPrintRect(const CDC& printerDC)
+CRect CRichView::GetPrintRect(const CDC& dc)
 {
-    int margin = 200;
-
-    CRect rcPage = GetPageRect(printerDC);
+    CRect rcPage = GetPageRect(dc);
     CRect rcPrintArea;
+
+    // Scale the margins.
+    int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
+    int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
 
     if (!rcPage.IsRectEmpty())
     {
-        rcPrintArea.left = rcPage.left + margin;
-        rcPrintArea.top = rcPage.top + margin;
-        rcPrintArea.right = rcPage.right - margin;
-        rcPrintArea.bottom = rcPage.bottom - 3 * margin;  // Provides extra space for footer.
+        rcPrintArea.left = rcPage.left + dpiX / 3;
+        rcPrintArea.top = rcPage.top + dpiY / 3;
+        rcPrintArea.right = rcPage.right - dpiX / 3;
+        rcPrintArea.bottom = rcPage.bottom - dpiY / 3;
     }
 
     return rcPrintArea;
@@ -206,25 +208,9 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
 }
 
-// Called by PrintPage to display the page number at the bottom
-// of the printed page.
-void CRichView::PrintFooter(CDC& dc, UINT page)
-{
-    int cx = dc.GetDeviceCaps(HORZRES);         // in pixels
-    int cy = dc.GetDeviceCaps(VERTRES);         // in pixels
-    dc.CreatePointFont(400, _T("Microsoft Sans Serif"));
-    CString footer("Page ");
-    footer << page + 1;
-    CSize textSize = dc.GetTextExtentPoint32(footer);
-
-    int x = (cx - textSize.cx) / 2;
-    int y = cy - 2 * textSize.cy;
-    dc.TextOut(x, y, footer);
-}
-
 // Prints the specified page to specified dc.
 // Called by CPrintPreview, and also used for printing.
-void CRichView::PrintPage(CDC& dc, UINT page)
+void CRichView::PrintPage(CDC& dc, int page)
 {
     CDC printerDC = m_printDialog.GetPrinterDC();
 
@@ -258,8 +244,6 @@ void CRichView::PrintPage(CDC& dc, UINT page)
 
     // Tell the control to release the cached information.
     FormatRange();
-
-    PrintFooter(dc, page);
 }
 
 // Print the entire document without bringing up a print dialog.
@@ -280,9 +264,9 @@ void CRichView::QuickPrint(LPCTSTR docName)
     di.lpszOutput = NULL;   // Do not print to file.
     printerDC.StartDoc(&di);
 
-    UINT maxPages = CollatePages(printerDC);
+    int maxPages = CollatePages(printerDC);
 
-    for (UINT page = 0; page < maxPages; ++page)
+    for (int page = 0; page < maxPages; ++page)
     {
         // Start the page.
         printerDC.StartPage();
@@ -316,30 +300,30 @@ void CRichView::SetFontDefaults()
     SendMessage(EM_SETLANGOPTIONS, 0, result);
 }
 
-std::vector<UINT> CRichView::SetPagesToPrint(const CDC& printerDC)
+std::vector<int> CRichView::SetPagesToPrint(const CDC& printerDC)
 {
-    std::vector<UINT> pages;   // Vector of pages to print.
+    std::vector<int> pages;   // Vector of pages to print.
 
     BOOL isPages = m_printDialog.IsPrintRange();     // Pages radio button selected.
     BOOL isCollated = m_printDialog.IsCollate();     // Collated button selected.
     int copies = m_printDialog.GetCopies();
-    UINT maxPage = CollatePages(printerDC);
-    UINT minPage = 1;
+    int maxPage = CollatePages(printerDC);
+    int minPage = 1;
 
     if (isPages)
     {
         // Loop for multiple copies, collated.
         for (int count1 = 0; count1 < copies; count1++)
         {
-            UINT fromPage = m_printDialog.GetFromPage();
-            UINT toPage = m_printDialog.GetToPage();
+            int fromPage = m_printDialog.GetFromPage();
+            int toPage = m_printDialog.GetToPage();
             if (fromPage <= toPage)
             {
-                fromPage = MAX(minPage, fromPage);
-                toPage = MIN(maxPage, toPage);
+                fromPage = std::max(minPage, fromPage);
+                toPage = std::min(maxPage, toPage);
 
                 // Loop for multiple pages.
-                for (UINT j = fromPage; j <= toPage; j++)
+                for (int j = fromPage; j <= toPage; j++)
                 {
                     // Loop for multiple copies, not collated.
                     for (int count2 = 0; count2 < copies; count2++)
@@ -351,11 +335,11 @@ std::vector<UINT> CRichView::SetPagesToPrint(const CDC& printerDC)
             }
             else
             {
-                fromPage = MIN(maxPage, fromPage);
-                toPage = MAX(minPage, toPage);
+                fromPage = std::min(maxPage, fromPage);
+                toPage = std::max(minPage, toPage);
 
                 // Loop for multiple pages in reverse order.
-                for (UINT j = fromPage; j >= toPage; j--)
+                for (int j = fromPage; j >= toPage; j--)
                 {
                     // For multiple copies, not collated.
                     for (int count2 = 0; count2 < copies; count2++)
@@ -375,7 +359,7 @@ std::vector<UINT> CRichView::SetPagesToPrint(const CDC& printerDC)
         for (int count1 = 0; count1 < copies; count1++)
         {
             // For multiple copies, collated.
-            for (UINT i = minPage; i <= maxPage; i++)
+            for (int i = minPage; i <= maxPage; i++)
             {
                 // For multiple copies, not collated.
                 for (int count2 = 0; count2 < copies; count2++)
@@ -407,14 +391,37 @@ void CRichView::SetDefaultPrintOptions()
 
 LRESULT CRichView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case UWM_SETDEFAULTOPTIONS:
-    {
-        SetDefaultPrintOptions();
-    }
-    break;
+        switch (msg)
+        {
+        case UWM_SETDEFAULTOPTIONS:
+        {
+            SetDefaultPrintOptions();
+        }
+        break;
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+    }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }

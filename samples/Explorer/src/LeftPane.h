@@ -20,6 +20,9 @@ public:
     CLeftPane();
     virtual ~CLeftPane() {}
 
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
 private:
     CLeftPane(const CLeftPane&);               // Disable copy construction
     CLeftPane& operator=(const CLeftPane&);    // Disable assignment operator

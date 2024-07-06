@@ -2,12 +2,6 @@
 // main.cpp
 //
 
-// VS6 requires these macros to be defined.
-#if defined (_MSC_VER) && (_MSC_VER <= 1200)
-  #define WINVER          0x0410
-  #define _WIN32_WINDOWS  0x0410
-  #define _WIN32_IE       0x0401
-#endif
 
 #include "wxx_wincore.h"
 #include "MetaView.h"
@@ -54,13 +48,25 @@ private:
     }
 
     // Catch all unhandled CException types.
-    catch (const CException &e)
+    catch (const CException& e)
     {
-        // Display the exception and quit.
-        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return -1;
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return -1;
 }
 
 

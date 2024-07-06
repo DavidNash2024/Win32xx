@@ -182,7 +182,7 @@ UpdateMenu()                                                                /*
         return;
 
       // compute thesize of the MRU list
-    size_t nMRU = MIN(m_MRUEntries.size(), m_maxMRU);
+    size_t nMRU = std::min(m_MRUEntries.size(), m_maxMRU);
       // insert the empty MRU list label in the top slot
     fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
         IDW_FILE_MRU_FILE1, m_emptyMRUListLabel.c_str());

@@ -35,14 +35,26 @@ INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return DialogProcDefault(msg, wparam, lparam);
     }
 
-    // Catch all CException types.
+    // Catch all unhandled CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 
 // Called before the dialog is displayed.
@@ -62,7 +74,7 @@ void CMyDialog::OnOK()
     // Note 1: A Windows limit of 10000 handles per process imposes a practical limit of aprox 1000 test windows.
     //         Refer to: http://support.microsoft.com/kb/327699
     // Note 2: Creating (or destroying) more than say 200 windows may temporarily stress the Explorer process.
-    int nWindows = MIN(1000, GetDlgItemInt(IDC_WINDOWS, FALSE));
+    int nWindows = std::min(1000U, GetDlgItemInt(IDC_WINDOWS, FALSE));
 
     // Get the number of test messages to send
     int nTestMessages = GetDlgItemInt(IDC_MESSAGES, FALSE);

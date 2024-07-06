@@ -18,11 +18,6 @@
 // Specify Win32xx specific predefinitions here
 //#define NO_USING_NAMESPACE        // Don't use Win32xx namespace
 
-#if defined(_MSC_VER) && _MSC_VER == 1200   // For Visual Studio 6
-  #pragma warning (disable : 4786)  // identifier was truncated
-  #pragma warning (disable : 4702)  // unreachable code (bugs in Microsoft's STL)
-#endif
-
 // Rarely modified header files should be included here
 #include <vector>               // Add support for std::vector
 #include <map>                  // Add support for std::map
@@ -84,26 +79,27 @@
   #include <wxx_preview.h>        // Add CPrintPreview
   #include <wxx_printdialogs.h>   // Add CPageSetupDialog, CPrintDialog
 
-// Win2000 or higher with Microsoft VS2008 or higher,
-// MinGW version 8 or higher or Clang compiler
-#if (WINVER >= 0x0500) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || \
-    (defined(__GNUC__) && (__GNUC__ >= 8)) || defined(__clang_major__))
-  #include <wxx_printdialogex.h>  // Add CPrintDialogEx
-#endif
+  // Win2000 or higher with Microsoft VS2008 or higher,
+  // MinGW version 11 or higher or Clang compiler
+  #if (WINVER >= 0x0500) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || \
+      (defined(__GNUC__) && (__GNUC__ >= 11)) || defined(__clang_major__))
+    #include <wxx_printdialogex.h>  // Add CPrintDialogEx
+  #endif
 
-// Windows Vista or higher with Microsoft VS2010 or higher,
-// MinGW version 8 or higher or Clang compiler
-#if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1600)) || defined(__clang_major__))
-  #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
-#endif
+  // Windows Vista or higher and Visual Studio VS2013 or higher,
+  // or with Visual Studio using Clang compiler
+  #if (WINVER >= 0x0600) && defined (_MSC_VER) && \
+      ((_MSC_VER >= 1800) || defined(__clang_major__))
+    #include <wxx_ribbon.h>         // Add CRibbon, CRibbonFrame
+  #endif
 
+  // Windows Vista or higher with Microsoft VS2008 or higher,
+  // MinGW version 8 or higher or Clang compiler. Requires Unicode.
+  #if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || \
+      (defined(__GNUC__) && (__GNUC__ >= 8)) || defined(__clang_major__))
+    #include <wxx_taskdialog.h>     // Add CTaskDialog
+  #endif
 
-// Windows Vista or higher with Microsoft VS2008 or higher,
-// MinGW version 8 or higher or Clang compiler. Requires Unicode.
-#if (WINVER >= 0x0600) && ((defined (_MSC_VER) && (_MSC_VER >= 1500)) || \
-    (defined(__GNUC__) && (__GNUC__ >= 8)) || defined(__clang_major__))
-  #include <wxx_taskdialog.h>     // Add CTaskDialog
-#endif
 #endif  // define WIN32_LEAN_AND_MEAN
 
 #endif  // define STDAFX_H

@@ -70,7 +70,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                 ICON                    "res/paint.ico"
+IDW_MAIN                 ICON                    "res/PaintBrush.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

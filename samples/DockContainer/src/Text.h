@@ -20,6 +20,7 @@ public:
 protected:
     // Virtual functions that override base class functions.
     virtual void OnAttach();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewText(const CViewText&);               // Disable copy construction
@@ -41,6 +42,7 @@ public:
 protected:
     // Virtual functions that override base class functions.
     virtual void PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CContainText(const CContainText&);              // Disable copy construction
@@ -58,6 +60,9 @@ class CDockText : public CDocker
 public:
     CDockText();
     virtual ~CDockText() {}
+
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockText(const CDockText&);              // Disable copy construction

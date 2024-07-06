@@ -14,7 +14,9 @@ class CSplash : public CWnd
 {
 public:
     CSplash();
-    virtual ~CSplash();
+    virtual ~CSplash() override;
+    CSplash(const CSplash&) = delete;               // Disable copy construction
+    CSplash& operator=(const CSplash&) = delete;    // Disable assignment operator
 
     const CProgressBar& GetBar() const { return m_progress; }
 
@@ -24,15 +26,13 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual void OnDraw(CDC& dc);
-    virtual void PreCreate(CREATESTRUCT& cs);
-    virtual void PreRegisterClass(WNDCLASS& wc);
+    virtual int  OnCreate(CREATESTRUCT& cs) override;
+    virtual void OnDraw(CDC& dc) override;
+    virtual void PreCreate(CREATESTRUCT& cs) override;
+    virtual void PreRegisterClass(WNDCLASS& wc) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CSplash(const CSplash&);               // Disable copy construction
-    CSplash& operator=(const CSplash&);    // Disable assignment operator
-
     void LoadFont();
     void RemoveBar();
 

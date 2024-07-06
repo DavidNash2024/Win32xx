@@ -110,13 +110,13 @@ BOOL CViewTree::OnEndLabelEdit(LPARAM lparam)
 
     if (oldText != m_itemText)
     {
-        std::list<MovieInfo>::iterator it;
         std::list<MovieInfo>* data;
         data = (std::list<MovieInfo>*)GetAncestor().SendMessage(UWM_GETMOVIESDATA, 0, 0);
-        for (it = data->begin(); it != data->end(); ++it)
+        assert(data);
+        for (auto& i : *data)
         {
-            if ((*it).boxset == oldText)
-                (*it).boxset = m_itemText;
+            if (i.boxset == oldText)
+                i.boxset = m_itemText;
         }
     }
 
@@ -210,8 +210,7 @@ void CViewTree::SetDPIImages()
 // Swaps the two specified treeview items.
 void CViewTree::Swap(HTREEITEM item1, HTREEITEM item2)
 {
-    TVITEM tv1;
-    ZeroMemory(&tv1, sizeof(tv1));
+    TVITEM tv1{};
     tv1.mask = TVIF_HANDLE | TVIF_IMAGE | TVIF_TEXT;
     tv1.hItem = item1;
     GetItem(tv1);
@@ -220,8 +219,7 @@ void CViewTree::Swap(HTREEITEM item1, HTREEITEM item2)
     tv1.cchTextMax = str1.GetLength();
     tv1.pszText = const_cast<LPTSTR>(str1.c_str());
 
-    TVITEM tv2;
-    ZeroMemory(&tv2, sizeof(tv2));
+    TVITEM tv2{};
     tv2.mask = TVIF_HANDLE | TVIF_IMAGE | TVIF_TEXT;
     tv2.hItem = item2;
     GetItem(tv2);
@@ -253,14 +251,26 @@ LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Catch all CException types.
+    // Catch all unhandled CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(nullptr, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 
 /////////////////////////////////
@@ -274,4 +284,34 @@ CDockTree::CDockTree()
 
     // Set the width of the splitter bar
     SetBarWidth(8);
+}
+
+// Handle messages for the docktree window.
+LRESULT CDockTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all unhandled CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+    }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }

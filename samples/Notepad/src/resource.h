@@ -41,8 +41,6 @@
 #define IDW_INDICATOR_PLAIN             172
 #define IDW_INDICATOR_RICH              173
 #define IDW_MENUICONS                   180
-#define IDB_TOOLBAR_HOT                 181
-#define IDB_TOOLBAR_DIS                 182
 
 // Next default values for new objects
 //

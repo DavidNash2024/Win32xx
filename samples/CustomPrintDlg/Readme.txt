@@ -12,8 +12,8 @@ can be easily be customized to add or remove features appropriate to your
 application.
 
 This project also demonstrates how to use a Rich Edit control as a simple
-text editor. It extends the PrintPreview sample to add support for Rich Text
-Format, as well as ANSI, UTF-8 and UTF-16 encodings. 
+text editor. It supports Rich Text Format (RTF), and plain text. It also 
+supports ANSI, UTF-8 and UTF-16 encodings like the Notepad sample. 
 
 Features demonstrated in this example
 =====================================

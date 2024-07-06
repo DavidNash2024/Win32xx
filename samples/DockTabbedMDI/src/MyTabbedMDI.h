@@ -28,6 +28,7 @@ protected:
     virtual CWnd* NewMDIChildFromID(int mdiChild);
     virtual void OnAttach();
     virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CMyTabbedMDI(const CMyTabbedMDI&);               // Disable copy construction

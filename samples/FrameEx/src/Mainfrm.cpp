@@ -31,6 +31,36 @@ CMainFrame::~CMainFrame()
     GdiplusShutdown(m_gdiplusToken);
 }
 
+// Adds normal and disabled icons to the dropdown menu.
+void CMainFrame::AddMenuIconFromPNG(UINT pngID, UINT disabledPngID, UINT menuID)
+{
+    BitmapPtr bitmap = LoadPngResource(pngID);
+    if (bitmap.get() != nullptr)
+    {
+        BitmapPtr disabledBitmap = LoadPngResource(disabledPngID);
+        if (disabledBitmap.get() != nullptr)
+        {
+            HICON icon;
+            HICON disabledIcon;
+            bitmap->GetHICON(&icon);
+            disabledBitmap->GetHICON(&disabledIcon);
+            AddMenuIcon(menuID, icon, disabledIcon);
+        }
+    }
+}
+
+// Adds an icon from the PNG resource to the specified imagelist.
+void CMainFrame::AddIconFromPNG(CImageList& images, UINT pngID)
+{
+    HICON icon;
+    BitmapPtr bitmap = LoadPngResource(pngID);
+    if (bitmap.get() != nullptr)
+    {
+        bitmap->GetHICON(&icon);
+        images.Add(icon);
+    }
+}
+
 // Create the frame window.
 HWND CMainFrame::Create(HWND parent)
 {
@@ -336,36 +366,6 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
     // cs.style &= ~WS_VISIBLE;         // Remove the WS_VISIBLE style. The frame will be initially hidden.;
 }
 
-// Adds normal and disabled icons to the dropdown menu.
-void CMainFrame::AddMenuIconFromPNG(UINT pngID, UINT disabledPngID, UINT menuID)
-{
-    BitmapPtr bitmap = LoadPngResource(pngID);
-    if (bitmap.get() != nullptr)
-    {
-        BitmapPtr disabledBitmap = LoadPngResource(disabledPngID);
-        if (disabledBitmap.get() != nullptr)
-        {
-            HICON icon;
-            HICON disabledIcon;
-            bitmap->GetHICON(&icon);
-            disabledBitmap->GetHICON(&disabledIcon);
-            AddMenuIcon(menuID, icon, disabledIcon);
-        }
-    }
-}
-
-// Adds an icon from the PNG resource to the specified imagelist.
-void CMainFrame::AddIconFromPNG(CImageList& images, UINT pngID)
-{
-    HICON icon;
-    BitmapPtr bitmap = LoadPngResource(pngID);
-    if (bitmap.get() != nullptr)
-    {
-        bitmap->GetHICON(&icon);
-        images.Add(icon);
-    }
-}
-
 // Specifies the images for some of the menu items.
 void CMainFrame::SetupMenuIcons()
 {
@@ -441,13 +441,25 @@ LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Catch all CException types.
+    // Catch all unhandled CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(0, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 

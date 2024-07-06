@@ -18,6 +18,7 @@ public:
 protected:
     // Virtual functions that override base class functions.
     virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CViewWeb(const CViewWeb&);               // Disable copy construction

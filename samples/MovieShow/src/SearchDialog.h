@@ -13,7 +13,9 @@ class CSearchDialog : public CDialog
 {
 public:
     CSearchDialog(UINT resID);
-    virtual ~CSearchDialog();
+    virtual ~CSearchDialog() override;
+    CSearchDialog(const CSearchDialog&) = delete;               // Disable copy construction
+    CSearchDialog& operator=(const CSearchDialog&) = delete;    // Disable assignment operator
 
     const CString& GetTitleString() { return m_titleText; }
     const CString& GetActorsString() { return m_actorsText; }
@@ -21,14 +23,12 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual BOOL OnInitDialog();
-    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
-    virtual void OnOK();
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual BOOL OnInitDialog() override;
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam) override;
+    virtual void OnOK() override;
 
 private:
-    CSearchDialog(const CSearchDialog&);               // Disable copy construction
-    CSearchDialog& operator=(const CSearchDialog&);    // Disable assignment operator
-
     CButton m_titleButton;
     CButton m_actorsButton;
     CButton m_infoButton;

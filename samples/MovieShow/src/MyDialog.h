@@ -16,7 +16,9 @@ class CViewDialog : public CDialog
 {
 public:
     CViewDialog(UINT resID);
-    virtual ~CViewDialog();
+    virtual ~CViewDialog() override;
+    CViewDialog(const CViewDialog&) = delete;               // Disable copy construction
+    CViewDialog& operator=(const CViewDialog&) = delete;    // Disable assignment operator
 
     const CRichEdit& GetActors() const { return m_actors; }
     const CRichEdit& GetInfo()   const { return m_info; }
@@ -28,16 +30,13 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void    OnCancel() {} // Suppress closing the dialog with esc key.
-    virtual void    OnClose() {}  // Suppress closing the dialog with return key on rich edit.
-    virtual BOOL    OnInitDialog();
-    virtual void    OnOK() {}     // Suppress closing the dialog with return key.
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual void    OnCancel() override {} // Suppress closing the dialog with esc key.
+    virtual void    OnClose() override {}  // Suppress closing the dialog with return key on rich edit.
+    virtual BOOL    OnInitDialog() override;
+    virtual void    OnOK() override {}     // Suppress closing the dialog with return key.
 
 private:
-    CViewDialog(const CViewDialog&);               // Disable copy construction
-    CViewDialog& operator=(const CViewDialog&);    // Disable assignment operator
-
     // Message handlers
     virtual LRESULT OnDpiChangedBeforeParent(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -64,14 +63,16 @@ class CDockDialog : public CDocker
 {
 public:
     CDockDialog();
-    virtual ~CDockDialog() {}
+    virtual ~CDockDialog() override {}
+    CDockDialog(const CDockDialog&) = delete;              // Disable copy construction
+    CDockDialog& operator=(const CDockDialog&) = delete;   // Disable assignment operator
 
     CViewDialog& GetViewDialog() { return m_view; }
 
-private:
-    CDockDialog(const CDockDialog&);                // Disable copy construction
-    CDockDialog& operator=(const CDockDialog&);   // Disable assignment operator
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
+private:
     CViewDialog m_view;
 };
 

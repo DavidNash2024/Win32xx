@@ -9,7 +9,6 @@
 //
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
-#include "richedit.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
@@ -102,8 +101,7 @@ IDB_MENUICONS           BITMAP                  "../src/res/MenuIcons.bmp"
 //
 
 IDW_ABOUT DIALOGEX 0, 0, 186, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
-    WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
 BEGIN
@@ -117,17 +115,17 @@ STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE
 EXSTYLE WS_EX_CLIENTEDGE
 FONT 8, "MS Shell Dlg", 0, 0
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,241,153,50,16
+    DEFPUSHBUTTON   "Button",IDOK,241,153,50,16
     CONTROL         "Radio_A",ID_RADIO_A,"Button",BS_AUTORADIOBUTTON,30,24,48,10
     CONTROL         "Radio_B",ID_RADIO_B,"Button",BS_AUTORADIOBUTTON,30,36,48,10
     CONTROL         "Radio_C",ID_RADIO_C,"Button",BS_AUTORADIOBUTTON,30,48,48,10
-    EDITTEXT        IDC_EDIT1,120,82,84,35,ES_MULTILINE | ES_WANTRETURN | ES_AUTOHSCROLL | NOT WS_BORDER | WS_VSCROLL | WS_HSCROLL,WS_EX_STATICEDGE
+    EDITTEXT        IDC_EDIT1,120,82,84,35,ES_MULTILINE | ES_AUTOHSCROLL | ES_WANTRETURN | NOT WS_BORDER | WS_VSCROLL | WS_HSCROLL,WS_EX_STATICEDGE
     CONTROL         "Check Box A",ID_CHECK_A,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,114,55,10
     CONTROL         "Check Box B",ID_CHECK_B,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,126,55,10
     CONTROL         "Check Box C",ID_CHECK_C,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,139,55,10
     LISTBOX         IDC_LIST1,120,23,84,35,LBS_SORT | LBS_NOINTEGRALHEIGHT | NOT WS_BORDER | WS_VSCROLL | WS_TABSTOP,WS_EX_STATICEDGE
     PUSHBUTTON      "Button",IDC_BUTTON1,30,82,49,11
-    CONTROL         "",IDC_RICHEDIT1, RICHEDIT_CLASS , ES_MULTILINE | ES_WANTRETURN | ES_AUTOHSCROLL | WS_BORDER | WS_TABSTOP | WS_VSCROLL | WS_HSCROLL,120,142,84,35
+    CONTROL         "",IDC_RICHEDIT1,"RichEdit20W",ES_MULTILINE | ES_AUTOHSCROLL | ES_WANTRETURN | WS_BORDER | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP,120,142,84,35
     CONTROL         IDB_BITMAP1,IDC_BITMAP1,"Static",SS_BITMAP,231,7,64,59
     GROUPBOX        "Static Window",IDC_GROUP1,226,78,78,51,BS_CENTER
     LTEXT           "Actions are displayed here",IDC_STATUS,229,91,71,35
@@ -141,15 +139,15 @@ END
 
 IDW_MAIN ACCELERATORS
 BEGIN
-    "N",            IDM_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
-    "O",            IDM_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
-    "P",            IDM_FILE_PRINT,          VIRTKEY, CONTROL, NOINVERT
-    "S",            IDM_FILE_SAVE,           VIRTKEY, CONTROL, NOINVERT
-    "C",            IDM_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
-    "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
-    "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
-    "Z",            IDM_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
-    "Y",            IDM_EDIT_REDO,           VIRTKEY, CONTROL, NOINVERT
+    "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
+    "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
+    "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
+    "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
+    "C",            IDM_EDIT_COPY,          VIRTKEY, CONTROL, NOINVERT
+    "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
+    "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
+    "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
+    "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT
 END
 
 
@@ -191,10 +189,10 @@ BEGIN
     IDW_MAIN                "Form Window"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_READY               "Ready"
     IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
-    IDW_READY               "Ready"
 END
 
 STRINGTABLE
@@ -205,12 +203,12 @@ BEGIN
     IDM_FILE_SAVEAS         "Save the Document with a new name"
     IDM_FILE_PRINT          "Print the Document"
     IDM_FILE_EXIT           "End the Program"
-    IDM_EDIT_UNDO           "Undo the last action"
-    IDM_EDIT_REDO           "Redo the previously undone action"
 END
 
 STRINGTABLE
 BEGIN
+    IDM_EDIT_UNDO           "Undo the last action"
+    IDM_EDIT_REDO           "Redo the previously undone action"
     IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
@@ -240,6 +238,6 @@ BEGIN
     SC_SIZE                 "Resize the Window"
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 

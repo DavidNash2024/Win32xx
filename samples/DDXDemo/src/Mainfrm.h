@@ -50,6 +50,7 @@ CMainFrame : public CFrame                                                  /*
        virtual void    PreCreate(CREATESTRUCT& cs);
        virtual void    SetupMenuIcons();
        virtual void    SetupToolBar();
+       virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CMainFrame(const CMainFrame&);               // Disable copy construction

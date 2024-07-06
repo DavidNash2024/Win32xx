@@ -11,8 +11,6 @@ struct MovieInfo;
 // Struct used by the compare function.
 struct SortViewItems
 {
-    SortViewItems(int column, bool isSortDown) : m_column(column), m_isSortDown(isSortDown)
-    {}
     int m_column;
     bool m_isSortDown;
 };
@@ -30,7 +28,9 @@ class CViewList : public CListView
 {
 public:
     CViewList();
-    virtual ~CViewList();
+    virtual ~CViewList() override;
+    CViewList(const CViewList&) = delete;               // Disable copy construction
+    CViewList& operator=(const CViewList&) = delete;    // Disable assignment operator
 
     void    AddItem(const MovieInfo& mi);
     void    SetDPIImages();
@@ -40,17 +40,14 @@ public:
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnAttach();
+    virtual void    OnAttach() override;
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM, LPARAM lparam);
-    virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnNotify(WPARAM, LPARAM lparam) override;
+    virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam) override;
+    virtual void    PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewList(const CViewList&);               // Disable copy construction
-    CViewList& operator=(const CViewList&);    // Disable assignment operator
-
     static int CALLBACK CompareFunction(LPARAM lp1, LPARAM lp2, LPARAM pSortViewItems);
 
     // Message handlers

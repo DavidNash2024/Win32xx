@@ -19,6 +19,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void OnAttach();
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CMyCombo(const CMyCombo&);               // Disable copy construction

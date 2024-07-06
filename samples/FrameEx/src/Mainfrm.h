@@ -9,8 +9,17 @@
 #if defined (_MSC_VER) && (_MSC_VER == 1900) // == VS2015
 #pragma warning (disable : 4458) // disable warning: declaration hides class member
 #endif
+
+// Declare min and max for older versions of Visual Studio
+#if defined (_MSC_VER) && (_MSC_VER < 1920) // < VS2019
+using std::min;
+using std::max;
+#endif
+
 #include <gdiplus.h>
 #ifdef _MSC_VER
+
+
 #pragma warning (default : 4458) // return warning to default
 #endif
 
@@ -42,6 +51,15 @@ protected:
     virtual void    OnClose();
     virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
+/*    virtual LRESULT OnDpiChanged(UINT msg, WPARAM wparam, LPARAM lparam)
+    {
+        CFrame::OnDpiChanged(msg, wparam, lparam);
+    //    m_menuImages.DeleteImageList();
+        SetupMenuIcons();
+        return 0;
+    } */
+
+
     virtual void    OnInitialUpdate();
     virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
@@ -73,7 +91,7 @@ private:
     ULONG_PTR   m_gdiplusToken;
     CImageList m_toolbarImages;
     CImageList m_disabledImages;
-    CImageList m_menuImages;
+//    CImageList m_menuImages;
 };
 
 #endif //MAINFRM_H

@@ -223,9 +223,10 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_MODAL               "Modal Property Sheet"
-    IDM_MODELESS            "Modeless Property Sheet"
-    IDM_WIZARD              "Wizard Property Sheet"
+    IDM_MODAL               "Create a Modal Property Sheet"
+    IDM_MODELESS            "Create a Modeless Property Sheet"
+    IDM_WIZARD              "Create a Wizard Property Sheet"
+    IDM_NEW_MENU            "Create a New Property Sheet"
 END
 
 STRINGTABLE

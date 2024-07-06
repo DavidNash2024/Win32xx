@@ -16,17 +16,17 @@ class CSplashThread : public CWinThread
 {
 public:
     CSplashThread();
-    virtual ~CSplashThread();
+    virtual ~CSplashThread() override;
+    CSplashThread(const CSplashThread&) = delete;               // Disable copy construction
+    CSplashThread& operator=(const CSplashThread&) = delete;    // Disable assignment operator
+
     CSplash* GetSplash() { return &m_splash; }
     CEvent& GetSplashCreated() { return m_splashCreated; }
 
 protected:
-    virtual BOOL InitInstance();
+    virtual BOOL InitInstance() override;
 
 private:
-    CSplashThread(const CSplashThread&);               // Disable copy construction
-    CSplashThread& operator=(const CSplashThread&);    // Disable assignment operator
-
     CSplash m_splash;
     CEvent  m_splashCreated;
 };

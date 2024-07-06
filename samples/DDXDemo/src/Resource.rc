@@ -26,7 +26,6 @@
 //
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
-#include "richedit.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
@@ -157,7 +156,7 @@ BEGIN
     EDITTEXT    IDC_EDIT_CSTRING, 15, 200, 135, 35, WS_GROUP | NOT WS_BORDER |
                     ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE |
                     ES_WANTRETURN, WS_EX_STATICEDGE
-    CONTROL     "Rich edit box", IDC_EDIT_RICHEDIT, RICHEDIT_CLASS ,
+    CONTROL     "Rich edit box", IDC_EDIT_RICHEDIT, "RichEdit20A" ,
                     WS_TABSTOP | WS_BORDER | ES_AUTOHSCROLL | ES_MULTILINE |
                     ES_WANTRETURN, 15, 240, 135, 35
     LISTBOX     IDC_LISTBOX, 15, 280, 135, 70, WS_GROUP | WS_TABSTOP |

@@ -24,7 +24,6 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 /*============================================================================*/
 
-  // RT_MANIFEST
 1    RT_MANIFEST "../src/res/SystemDPI.manifest"
 
 /*============================================================================*/
@@ -62,7 +61,7 @@ IDW_MAIN MENU
 
   // Icons: The icon with lowest ID value is placed first to ensure the
   // application icon remains consistent on all systems.
-IDW_MAIN                  ICON                  "../src/res/Win32xx.ico"
+IDW_MAIN                  ICON                  "../src/res/Preview.ico"
 
 /*============================================================================*/
 

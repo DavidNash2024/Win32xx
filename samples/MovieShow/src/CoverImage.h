@@ -12,18 +12,18 @@ class CCoverImage : public CWnd
 {
 public:
     CCoverImage();
-    virtual ~CCoverImage();
+    virtual ~CCoverImage() override;
+    CCoverImage(const CCoverImage&) = delete;               // Disable copy construction
+    CCoverImage& operator=(const CCoverImage&) = delete;    // Disable assignment operator
+
     std::vector<BYTE>& SetImageData() { return m_imageData; }
 
 protected:
     // Virtual functions that override base class functions
-    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CCoverImage(const CCoverImage&);               // Disable copy construction
-    CCoverImage& operator=(const CCoverImage&);    // Disable assignment operator
-
     void DrawImage(CDC& dc);
 
     std::vector<BYTE> m_imageData;

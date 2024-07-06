@@ -19,12 +19,11 @@ public:
     virtual ~CRichView();
     int   CollatePages(const CDC& printerDC);
     void  DoPrint(LPCTSTR docName);
-    void  PrintFooter(CDC& dc, UINT page);
-    void  PrintPage(CDC& dc, UINT page);
+    void  PrintPage(CDC& dc, int page);
     void  QuickPrint(LPCTSTR docName);
     void  SetDefaultPrintOptions();
     void  SetFontDefaults();
-    std::vector<UINT> SetPagesToPrint(const CDC& printerDC);
+    std::vector<int> SetPagesToPrint(const CDC& printerDC);
 
 protected:
     // Virtual functions that override base class functions
@@ -36,8 +35,8 @@ private:
     CRichView(const CRichView&);               // Disable copy construction
     CRichView& operator=(const CRichView&);    // Disable assignment operator
 
-    CRect GetPageRect(const CDC& printerDC);
-    CRect GetPrintRect(const CDC& printerDC);
+    CRect GetPageRect(const CDC& dc);
+    CRect GetPrintRect(const CDC& dc);
     std::vector<int> m_pageBreaks;
     CCustomPrintDlg m_printDialog;
 };

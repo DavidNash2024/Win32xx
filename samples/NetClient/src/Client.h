@@ -22,7 +22,7 @@ public:
     virtual ~CClientSocket() {}
 
 protected:
-    // Virtual functions that override base class functions
+    // Virtual functions that override base class functions,
     virtual void OnDisconnect();
     virtual void OnConnect();
     virtual void OnReceive();

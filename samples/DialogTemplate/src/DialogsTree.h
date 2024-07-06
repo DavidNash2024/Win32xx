@@ -26,6 +26,7 @@ protected:
     virtual void    OnAttach();
     virtual LRESULT OnNotifyReflect(WPARAM, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDialogsTree(const CDialogsTree&);               // Disable copy construction
@@ -47,6 +48,9 @@ public:
     CDockDialogsTree();
     virtual ~CDockDialogsTree() {}
     CDialogsTree* GetTree() { return &m_tree; }
+
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockDialogsTree(const CDockDialogsTree&);                // Disable copy construction

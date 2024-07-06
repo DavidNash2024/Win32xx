@@ -22,6 +22,7 @@ public:
 
 protected:
     // Virtual functions that override base class functions
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void DoDataExchange(CDataExchange& DX);
     virtual BOOL OnInitDialog();
     virtual void OnOK();

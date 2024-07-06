@@ -16,6 +16,9 @@ public:
     virtual ~CMyTab() {}
     virtual void UpdateTabs();
 
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
 private:
     CMyTab(const CMyTab&);              // Disable copy construction
     CMyTab& operator=(const CMyTab&); // Disable assignment operator

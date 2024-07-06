@@ -49,7 +49,7 @@ CApp()                                                                      /*
         LoadString(IDS_ARCHIVE_FILE_EXT);
       // the maximum allowed number of MRU entries (limited to be under 16
       // by Win32++)
-    UINT maxMRUSlots = MIN(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16);
+    UINT maxMRUSlots = std::min(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16);
       // make Win32++ version string
     CString win32Version;
     UINT ver = _WIN32XX_VER;

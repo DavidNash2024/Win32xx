@@ -191,7 +191,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About\tF1",                      IDM_HELP_ABOUT
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
     END
 END
 
@@ -223,7 +223,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About\tF1",                      IDM_HELP_ABOUT
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
     END
 END
 
@@ -255,7 +255,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About\tF1",                      IDM_HELP_ABOUT
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
     END
 END
 
@@ -287,7 +287,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About\tF1",                      IDM_HELP_ABOUT
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
     END
 END
 
@@ -442,22 +442,22 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_FILE_NEWVIEW        "Create View MDI Child"
-    IDM_FILE_NEWRECT        "Create Rect MDI Child"
-    IDM_FILE_NEWMAX         "Create Maxed MDI Child"
-    IDM_FILE_NEWTEXT        "Create Text MDI Child"
-    IDM_FILE_NEWTREE        "Create Tree-View MDI Child"
-    IDM_FILE_NEWLIST        "Create List-View MDI Child"
-    IDM_FILE_CLOSE          "Close MDI Window"
-    IDM_COLOR_BLACK         "Use Black Printing"
-    IDM_COLOR_RED           "Use Red Printing"
-    IDM_COLOR_GREEN         "Use Green Printing"
-    IDM_COLOR_BLUE          "Use Blue Printing"
-    IDM_COLOR_WHITE         "Use White Printing"
-    IDW_MDI_CASCADE      "Cascade MDI Windows"
-    IDW_MDI_TILE         "Tile MDI Windows"
-    IDW_MDI_ARRANGE      "Arrange Icons"
-    IDW_MDI_CLOSEALL     "Close All MDI Windows"
+    IDM_FILE_NEWVIEW        "Create a View MDI Child"
+    IDM_FILE_NEWRECT        "Create a Rect MDI Child"
+    IDM_FILE_NEWMAX         "Create a Maxed MDI Child"
+    IDM_FILE_NEWTEXT        "Create a Text MDI Child"
+    IDM_FILE_NEWTREE        "Create a Tree-View MDI Child"
+    IDM_FILE_NEWLIST        "Create a List-View MDI Child"
+    IDM_FILE_CLOSE          "Close the MDI Window"
+    IDM_COLOR_BLACK         "Display Black Text"
+    IDM_COLOR_RED           "Display Red Text"
+    IDM_COLOR_GREEN         "Display Green Text"
+    IDM_COLOR_BLUE          "Display Blue Text"
+    IDM_COLOR_WHITE         "Display White Text"
+    IDW_MDI_CASCADE         "Cascade the MDI Windows"
+    IDW_MDI_TILE            "Tile the MDI Windows"
+    IDW_MDI_ARRANGE         "Arrange the MDI Icons"
+    IDW_MDI_CLOSEALL        "Close All MDI Windows"
 END
 
 STRINGTABLE

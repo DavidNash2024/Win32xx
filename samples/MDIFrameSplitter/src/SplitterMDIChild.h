@@ -41,10 +41,13 @@ private:
 class CDockSimple : public CDocker
 {
 public:
-    CDockSimple() {SetView(m_view);}
+    CDockSimple();
     virtual ~CDockSimple() {}
 
     CSimpleView& GetSimpleView() { return m_view; }
+
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDockSimple(const CDockSimple&);                // Disable copy construction
@@ -52,6 +55,7 @@ private:
 
     CSimpleView m_view;
 };
+
 
 
 //////////////////////////////////////////////////////

@@ -23,4 +23,3 @@ BOOL CMDIDemoApp::InitInstance()
 
     return TRUE;
 }
-

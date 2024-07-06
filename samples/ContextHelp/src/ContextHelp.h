@@ -50,6 +50,9 @@ public:
     void  ShowHelpTopic(UINT id);
     void  ShowHelpTopic(LPCTSTR topic);
 
+protected:
+    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+
 private:
     CContextHelp(const CContextHelp&);               // Disable copy construction
     CContextHelp& operator=(const CContextHelp&);    // Disable assignment operator

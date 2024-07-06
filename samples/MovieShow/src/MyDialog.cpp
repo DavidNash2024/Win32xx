@@ -55,14 +55,26 @@ INT_PTR CViewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return DialogProcDefault(msg, wparam, lparam);
     }
 
-    // Catch all CException types.
+    // Catch all unhandled CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(nullptr, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 
 // Called in response to a WM_DPICHANGED_BEFOREPARENT message that is sent to child
@@ -90,8 +102,7 @@ BOOL CViewDialog::OnInitDialog()
     // Correct the cover image aspect ratio (custom scaling affects dialog co-ords).
     // WINDOWPLACEMENT maintains valid window position info when moving the frame
     // window between screens with different DPI scaling.
-    WINDOWPLACEMENT wp;
-    ZeroMemory(&wp, sizeof(wp));
+    WINDOWPLACEMENT wp{};
     wp.length = sizeof(wp);
     m_picture.GetWindowPlacement(wp);
     int width = wp.rcNormalPosition.right - wp.rcNormalPosition.left;
@@ -155,4 +166,34 @@ CDockDialog::CDockDialog() : m_view(IDD_MYDIALOG)
 
     // Set the width of the splitter bar
     SetBarWidth(8);
+}
+
+// Process the messages for the dockdialog window.
+LRESULT CDockDialog::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        return WndProcDefault(msg, wparam, lparam);
+    }
+
+    // Catch all unhandled CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+    }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }

@@ -20,6 +20,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual void PreCreate(CREATESTRUCT& cs);
+    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CDialogHolder(const CDialogHolder&);               // Disable copy construction

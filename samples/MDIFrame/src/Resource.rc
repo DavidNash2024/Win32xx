@@ -204,9 +204,9 @@ BEGIN
     IDW_READY               "Ready"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
-    IDW_MDI_CASCADE         "Cascade MDI Windows"
-    IDW_MDI_TILE            "Tile MDI Windows"
-    IDW_MDI_ARRANGE         "Arrange Icons"
+    IDW_MDI_CASCADE         "Cascade the MDI Windows"
+    IDW_MDI_TILE            "Tile the MDI Windows"
+    IDW_MDI_ARRANGE         "Arrange the MDI Icons"
     IDW_MDI_CLOSEALL        "Close All MDI Windows"
     IDW_FIRSTCHILD          "Activate this window"
     IDW_CHILD2              "Activate this window"
@@ -248,11 +248,11 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_COLOR_BLACK         "Use Black Printing"
-    IDM_COLOR_RED           "Use Red Printing"
-    IDM_COLOR_GREEN         "Use Green Printing"
-    IDM_COLOR_BLUE          "Use Blue Printing"
-    IDM_COLOR_WHITE         "Use White Printing"
+    IDM_COLOR_BLACK         "Display Black Text"
+    IDM_COLOR_RED           "Display Red Text"
+    IDM_COLOR_GREEN         "Display Green Text"
+    IDM_COLOR_BLUE          "Display Blue Text"
+    IDM_COLOR_WHITE         "Display White Text"
 END
 
 STRINGTABLE

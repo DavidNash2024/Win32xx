@@ -27,8 +27,8 @@ void CView::CalcPoints(double xmin, double xmax)
     // Get the size of the client area of the view window.
     CRect rect = GetClientRect();
 
-    int numPoints = int(0.8 * MIN(rect.bottom, rect.right));
-    numPoints = MAX(10, numPoints);
+    int numPoints = int(0.8 * std::min(rect.bottom, rect.right));
+    numPoints = std::max(10, numPoints);
     double d_incr = (xmax - xmin) / (numPoints - 1.0);
 
     // Fill the points vector.
@@ -60,8 +60,8 @@ void CView::CalcPoints(double xmin, double xmax)
         {
             if ((*i).status == st_OK)
             {
-                ymin = MIN(ymin, (*i).y);
-                ymax = MAX(ymax, (*i).y);
+                ymin = std::min(ymin, (*i).y);
+                ymax = std::max(ymax, (*i).y);
             }
         }
 
@@ -130,7 +130,7 @@ void CView::DrawLabel(CDC& dc)
     // Select the font.
     CFont font;
     CRect rc = GetClientRect();
-    int pointSize = 4 + 2 * MIN(rc.Width(), rc.Height()) / GetWindowDpi(*this);
+    int pointSize = 4 + 2 * std::min(rc.Width(), rc.Height()) / GetWindowDpi(*this);
     font.CreatePointFont(pointSize, _T("Candara"));
     LOGFONT lf = DpiScaleLogfont(font.GetLogFont(), pointSize);
     dc.CreateFontIndirect(lf);
@@ -168,7 +168,7 @@ void CView::PrepareDC(CDC& dc)
     // Select the font.
     CFont font;
     CRect rc = GetClientRect();
-    int pointSize = 4 + 3*MIN(rc.Width(), rc.Height()) /(2* GetWindowDpi(*this));
+    int pointSize = 4 + 3*std::min(rc.Width(), rc.Height()) /(2* GetWindowDpi(*this));
     font.CreatePointFont(pointSize, _T("Microsoft Sans Serif"));
     LOGFONT lf = DpiScaleLogfont(font.GetLogFont(), pointSize);
     dc.CreateFontIndirect(lf);
@@ -351,12 +351,24 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
         return WndProcDefault(msg, wparam, lparam);
     }
 
-    // Catch all CException types.
+    // Catch all unhandled CException types.
     catch (const CException& e)
     {
         // Display the exception and continue.
-        ::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
-        return 0;
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
     }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }

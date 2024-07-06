@@ -95,12 +95,36 @@ LRESULT CEdgeView::OnDPIChanged(UINT, WPARAM, LPARAM lparam)
 // WndProc processes the window's messages.
 LRESULT CEdgeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_DPICHANGED: return OnDPIChanged(msg, wparam, lparam);
-    case WM_SIZE:       return OnSize(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_DPICHANGED: return OnDPIChanged(msg, wparam, lparam);
+        case WM_SIZE:       return OnSize(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all unhandled CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+    }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 

@@ -27,7 +27,7 @@
 static const int    FIT_PAGE    = 0;
 static const int    FIT_WIDTH   = 1;
   // program options
-static const int    BORDER      =   20;     // pixels around rendered preview
+static const LONG   BORDER      =   20;     // pixels around rendered preview
 static const double PREVIEW_MIN =  2.0;     // minimum preview screen inches
   // Registry key for saving print preview sizes. Note: this should match the
   // mainframe's registry key, but with "Software" prefixed, in order to place
@@ -302,10 +302,10 @@ OnInitDialog()                                                              /*
     PopulateScaleBox();
       // If the initial preview window size is initially out of bounds,
       // limit to acceptable values.
-    m_previewInches.cx = MAX(PREVIEW_MIN,
-        MIN(m_previewInches.cx, m_screenInches.cx));
-    m_previewInches.cy = MAX(PREVIEW_MIN,
-        MIN(m_previewInches.cy, m_screenInches.cy));
+    m_previewInches.cx = std::max(PREVIEW_MIN,
+        std::min(m_previewInches.cx, m_screenInches.cx));
+    m_previewInches.cy = std::max(PREVIEW_MIN,
+        std::min(m_previewInches.cy, m_screenInches.cy));
     SetWindowSizes();
       // hide the help button if so indicated
     if (m_flags & HIDE_HELP)
@@ -347,7 +347,7 @@ OnOK()                                                                      /*
         CString sPage = m_editPage.GetWindowText();
         TCHAR *stop;
         UINT nPage = _tcstol(sPage, &stop, 10);
-        nPage = MIN(MAX(1, nPage), m_numPreviewPages);
+        nPage = std::min(std::max(1U, nPage), m_numPreviewPages);
         OnPreviewPage(nPage - 1);
     }
 }
@@ -606,8 +606,8 @@ SetWindowSizes()                                                            /*
     CSize frame(int(m_previewInches.cx * m_screenPPI.cx),
                 int(m_previewInches.cy * m_screenPPI.cy));
       // set the dialog size
-    CSize preview(MIN(frame.cx, m_screenPixels.cx),
-                  MIN(frame.cy, m_screenPixels.cy));
+    CSize preview(std::min(frame.cx, m_screenPixels.cx),
+                  std::min(frame.cy, m_screenPixels.cy));
       // center the preview window on the screen
     CSize ctr((m_screenPixels.cx - preview.cx) / 2,
               (m_screenPixels.cy - preview.cy) / 2);
@@ -691,7 +691,7 @@ GetZoom()                                                                   /*
             double(preview.cy) / double(bitmap.cy));
     if (m_zoomState == FIT_PAGE)
     {
-        double min = MIN(zoom.cx, zoom.cy);
+        double min = std::min(zoom.cx, zoom.cy);
         zoom = DSize(min, min);
     }
       // see the notes below for the rationale of this value
@@ -713,8 +713,8 @@ GetZoom()                                                                   /*
           // The zoom factor zf is
         DSize zf(1.0 / zoom.cx - 1.0, 1.0 / zoom.cy - 1.0);
         scrollSize = CSize(m_zoomState == FIT_WIDTH ? 0 :
-            MAX(0, bitmap.cx + 2 * BORDER - static_cast<int>(preview.cx * zf.cx)),
-            MAX(0, bitmap.cy + 2 * BORDER - static_cast<int>(preview.cy * zf.cy)));
+            std::max(0L, bitmap.cx + 2L * BORDER - static_cast<LONG>(preview.cx * zf.cx)),
+            std::max(0L, bitmap.cy + 2L * BORDER - static_cast<LONG>(preview.cy * zf.cy)));
           // Reset the scrolling sizes only if the bars are visible
           // and either (1) the zoom state changed, or (2) the size
           // has chanted and the scaling is not FIT_WIDTH, or, (3)
@@ -788,18 +788,18 @@ OnDraw(CDC& dc)                                                             /*
         if (m_zoomState != FIT_PAGE)
         {     // DIB origin is the bottom of the bitmap, whereas the
               // scroll position is at the top. So make the adjustment.
-            int maxPosY = GetTotalScrollSize().cy - client.cy;
+            LONG maxPosY = GetTotalScrollSize().cy - client.cy;
             p = GetScrollPosition();
-            p.y = MAX(maxPosY - p.y, 0);
+            p.y = std::max(maxPosY - p.y, 0L);
         }
           // resize the document preview window according to bitmap
           // size, scroll position, and zoom level
-        preview.cx = MIN(preview.cx, int((bitmap.cx - p.x) * zoom.cx));
-        preview.cy = MIN(preview.cy, int((bitmap.cy - p.y) * zoom.cy));
+        preview.cx = std::min(preview.cx, LONG((bitmap.cx - p.x) * zoom.cx));
+        preview.cy = std::min(preview.cy, LONG((bitmap.cy - p.y) * zoom.cy));
 
           // set the size of the borders around the document view
-        CSize Border(MAX((client.cx - preview.cx) / 2, BORDER),
-                     MAX((client.cy - preview.cy) / 2, BORDER));
+        CSize Border(std::max((client.cx - preview.cx) / 2, BORDER),
+                     std::max((client.cy - preview.cy) / 2, BORDER));
           // Process the bitmap as a device-independent structure: first,
           // locate and access the bitmap information
         CBitmapInfoPtr pbmi(m_bitmap);
@@ -897,9 +897,9 @@ OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)                           /*
        break;
     }
       // set new position
-    int maxPosX = szTotal.cx - GetClientRect().Width();
-    newPos.x = MIN(newPos.x, maxPosX);
-    newPos.x = MAX(0, newPos.x);
+    LONG maxPosX = szTotal.cx - GetClientRect().Width();
+    newPos.x = std::min(newPos.x, maxPosX);
+    newPos.x = std::max(0L, newPos.x);
     SetScrollPosition(newPos);
       // display the offset pane contents
     Invalidate();
@@ -926,9 +926,9 @@ OnMouseWheel(UINT msg, WPARAM wparam, LPARAM lparam)                        /*
     int cyPos = ::MulDiv(WheelDelta, sizeLine.cy, WHEEL_DELTA);
       // set the new position
     newPos.y -= cyPos;
-    int maxPosY = szTotal.cy - GetClientRect().Height();
-    newPos.y = MIN(newPos.y, maxPosY);
-    newPos.y = MAX(newPos.y, 0);
+    LONG maxPosY = szTotal.cy - GetClientRect().Height();
+    newPos.y = std::min(newPos.y, maxPosY);
+    newPos.y = std::max(newPos.y, 0L);
       // display the offset pane contents
     SetScrollPosition(newPos);
     Invalidate();
@@ -1001,9 +1001,9 @@ OnVScroll(UINT msg, WPARAM wparam, LPARAM lparam)                           /*
             break;
     }
       // set the new position
-    int maxPosY = szTotal.cy - GetClientRect().Height();
-    newPos.y = MIN(newPos.y, maxPosY);
-    newPos.y = MAX(0, newPos.y);
+    LONG maxPosY = szTotal.cy - GetClientRect().Height();
+    newPos.y = std::min(newPos.y, maxPosY);
+    newPos.y = std::max(0L, newPos.y);
     SetScrollPosition(newPos);
     // display the offset pane contents
     Invalidate();

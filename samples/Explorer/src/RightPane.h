@@ -21,6 +21,7 @@ public:
 protected:
     // Virtual functions that override base class functions
     virtual CDocker* NewDockerFromID(int id);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CRightPane(const CRightPane&);               // Disable copy construction

@@ -52,8 +52,8 @@ int CMyScrollBar::GetPos(WPARAM wparam)
         break;
     }
 
-    m_si.nPos = MIN(m_si.nPos, 100);
-    m_si.nPos = MAX(m_si.nPos, 0);
+    m_si.nPos = std::min(m_si.nPos, 100);
+    m_si.nPos = std::max(m_si.nPos, 0);
     return m_si.nPos;
 }
 

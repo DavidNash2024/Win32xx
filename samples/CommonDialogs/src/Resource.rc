@@ -21,7 +21,6 @@
 //
 #define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
-#include "richedit.h"
 #undef APSTUDIO_HIDDEN_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
@@ -121,7 +120,7 @@ EXSTYLE WS_EX_CLIENTEDGE
 FONT 10, "Courier New", 0, 0
 BEGIN
       // controls within the client area:
-    CONTROL "", IDC_RICHEDITBOX, RICHEDIT_CLASS , ES_MULTILINE |ES_AUTOHSCROLL |
+    CONTROL "", IDC_RICHEDITBOX, "RichEdit20A" , ES_MULTILINE |ES_AUTOHSCROLL |
                     WS_BORDER  | WS_TABSTOP | ES_WANTRETURN  | WS_VSCROLL |
                     WS_HSCROLL, 10, 10, 280, 180, WS_EX_CLIENTEDGE |
                     WS_EX_ACCEPTFILES

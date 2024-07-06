@@ -14,21 +14,21 @@ class CViewTree : public CTreeView
 {
 public:
     CViewTree();
-    virtual ~CViewTree();
+    virtual ~CViewTree() override;
+    CViewTree(const CViewTree&) = delete;               // Disable copy construction
+    CViewTree& operator=(const CViewTree&) = delete;    // Disable assignment operator
+
     void SetDPIImages();
     void Swap(HTREEITEM item1, HTREEITEM item2);
 
 protected:
     // Virtual functions that override base class functions
-    virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
-    virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual void    OnInitialUpdate() override;
+    virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam) override;
+    virtual void    PreCreate(CREATESTRUCT& cs) override;
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
 private:
-    CViewTree(const CViewTree&);               // Disable copy construction
-    CViewTree& operator=(const CViewTree&);    // Disable assignment operator
-
     bool      IsBoxSetUnique(LPCTSTR text, HTREEITEM item);
 
     // Message handlers
@@ -53,13 +53,16 @@ class CDockTree : public CDocker
 {
 public:
     CDockTree();
-    virtual ~CDockTree() {}
+    virtual ~CDockTree() override {}
+    CDockTree(const CDockTree&) = delete;              // Disable copy construction
+    CDockTree& operator=(const CDockTree&) = delete;   // Disable assignment operator
+
     CViewTree& GetViewTree() { return m_treeView; }
 
-private:
-    CDockTree(const CDockTree&);                // Disable copy construction
-    CDockTree& operator=(const CDockTree&);   // Disable assignment operator
+protected:
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) override;
 
+private:
     CViewTree m_treeView;
 };
 

@@ -173,7 +173,7 @@ void CView::Print(LPCTSTR docName)
 // Prints the view window's bitmap to the specified dc.
 // Called by CPrintPreview, and by QuickPrint.
 // This function provides a useful reference for printing bitmaps in general.
-void CView::PrintPage(CDC& dc, UINT)
+void CView::PrintPage(CDC& dc, int)
 {
     // Get the dimensions of the View window
     CRect viewRect = GetClientRect();

@@ -1,0 +1,328 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+1                      RT_MANIFEST            "../src/res/SystemDPI.manifest"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDW_MAIN MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "New Docker",                  IDM_FILE_NEWDOCK
+        MENUITEM "New MDI",                     IDM_FILE_NEWMDI
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit\tAlt+F4",               IDM_FILE_EXIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Tool Bar",                    IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "Status Bar",                  IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
+        MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
+        MENUITEM "Arrange Icons",               IDW_MDI_ARRANGE
+        MENUITEM "Close All",                   IDW_MDI_CLOSEALL
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About\tF1",                  IDM_HELP_ABOUT
+    END
+END
+
+MDIMENUVIEW MENU
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "New Docker\tCtrl+D",          IDM_FILE_NEWDOCK
+        MENUITEM "New MDI\tCtrl+M",             IDM_FILE_NEWMDI
+        MENUITEM "Close MDI",                   IDM_FILE_MDICLOSE
+        MENUITEM SEPARATOR
+        MENUITEM "Exit",                        IDM_FILE_EXIT
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO, GRAYED
+        MENUITEM "Redo\tCtrl+Y",                IDM_EDIT_REDO, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT, GRAYED
+        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY, GRAYED
+        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE, GRAYED
+        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE, GRAYED
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Tool Bar",                    IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "Status Bar",                  IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Color"
+    BEGIN
+        MENUITEM "Black",                       IDM_COLOR_BLACK
+        MENUITEM "Red",                         IDM_COLOR_RED
+        MENUITEM "Green",                       IDM_COLOR_GREEN
+        MENUITEM "Blue",                        IDM_COLOR_BLUE
+        MENUITEM "White",                       IDM_COLOR_WHITE
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
+        MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
+        MENUITEM "Arrange Icons",               IDW_MDI_ARRANGE
+        MENUITEM "Close All",                   IDW_MDI_CLOSEALL
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About\tF1",                      IDM_HELP_ABOUT
+    END
+END
+
+IDM_NEWMENU MENU
+BEGIN
+    POPUP "New"
+    BEGIN
+        MENUITEM "New &Dock Child",             IDM_FILE_NEWDOCK
+        MENUITEM "New &MDI Child",              IDM_FILE_NEWMDI
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "../src/res/MDI.ico"
+IDI_DOCK                ICON                    "../src/res/dock.ico"
+IDI_FILEVIEW            ICON                    "../src/res/fileview.ico"
+IDI_VIEW                ICON                    "../src/res/view.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDW_MAIN                BITMAP                  "../src/res/Toolbar24.bmp"
+IDB_TOOLBAR16           BITMAP                  "../src/res/Toolbar16.bmp"
+IDB_TOOLBAR24_DIS       BITMAP                  "../src/res/Toolbar24_d.bmp"
+IDB_TOOLBAR24_HOT       BITMAP                  "../src/res/Toolbar24_h.bmp"
+IDW_SDBOTTOM            BITMAP                  "../src/res/SDbottom.bmp"
+IDW_SDCENTER            BITMAP                  "../src/res/SDcenter.bmp"
+IDW_SDLEFT              BITMAP                  "../src/res/SDleft.bmp"
+IDW_SDMIDDLE            BITMAP                  "../src/res/SDmiddle.bmp"
+IDW_SDRIGHT             BITMAP                  "../src/res/SDright.bmp"
+IDW_SDTOP               BITMAP                  "../src/res/SDtop.bmp"
+IDB_CLASSVIEW           BITMAP                  "../src/res/classview.bmp"
+IDB_FILEVIEW            BITMAP                  "../src/res/fileview.bmp"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDW_SPLITH              CURSOR                  "../src/res/SplitH.cur"
+
+IDW_SPLITV              CURSOR                  "../src/res/SplitV.cur"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDW_ABOUT DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0//, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
+    CTEXT           "MDI Frame\nWith Docking",IDC_STATIC,60,22,64,20
+    ICON            IDW_MAIN,0,4,4,20,20
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDW_MAIN ACCELERATORS
+BEGIN
+    "D",            IDM_FILE_NEWDOCK,       VIRTKEY, CONTROL, NOINVERT
+    "M",            IDM_FILE_NEWMDI,        VIRTKEY, CONTROL, NOINVERT
+    VK_F4,          IDW_MDI_TILE,           VIRTKEY, SHIFT, NOINVERT
+    VK_F5,          IDW_MDI_CASCADE,        VIRTKEY, SHIFT, NOINVERT
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDW_ABOUT, DIALOG
+    BEGIN
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDW_MAIN                "MDI Frame with docking"
+    IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
+    IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_READY               "Ready"
+    IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_NUM       "NUM"
+    IDW_INDICATOR_SCRL      "SCRL"
+END
+
+STRINGTABLE
+BEGIN
+    IDW_MDI_CASCADE         "Cascade the MDI Windows"
+    IDW_MDI_TILE            "Tile the MDI Windows"
+    IDW_MDI_ARRANGE         "Arrange the MDI Icons"
+    IDW_MDI_CLOSEALL        "Close All MDI Windows"
+    IDW_FIRSTCHILD          "Activate this window"
+    IDW_CHILD2              "Activate this window"
+    IDW_CHILD3              "Activate this window"
+    IDW_CHILD4              "Activate this window"
+    IDW_CHILD5              "Activate this window"
+    IDW_CHILD6              "Activate this window"
+    IDW_CHILD7              "Activate this window"
+    IDW_CHILD8              "Activate this window"
+    IDW_CHILD9              "Activate this window"
+    IDW_CHILD10             "Select a window"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_FILE_NEW            "Create a New Dock Child or MDI Child"
+    IDM_FILE_NEWDOCK        "Create a New Dock Child Window"
+    IDM_FILE_NEWMDI         "Create a New MDI Child Window"
+    IDM_FILE_OPEN           "Open Existing Document"
+    IDM_FILE_SAVE           "Save the Document"
+    IDM_FILE_SAVEAS         "Save the Document with a new name"
+    IDM_FILE_PRINT          "Print the Document"
+    IDM_FILE_MDICLOSE       "Close the MDI Window"
+    IDM_FILE_EXIT           "End the Program"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_EDIT_UNDO           "Undo the last action"
+    IDM_EDIT_REDO           "Redo the previously undone action"
+    IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard"
+    IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
+    IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
+    IDM_EDIT_DELETE         "Erase the selected Contents"
+    IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_COLOR_BLACK         "Display Black Text"
+    IDM_COLOR_RED           "Display Red Text"
+    IDM_COLOR_GREEN         "Display Green Text"
+    IDM_COLOR_BLUE          "Display Blue Text"
+    IDM_COLOR_WHITE         "Display White Text"
+END
+
+STRINGTABLE
+BEGIN
+    SC_CLOSE                "Close the Window"
+    SC_MAXIMIZE             "Maximize the Window"
+    SC_MINIMIZE             "Minimize the Window"
+    SC_MOVE                 "Move the Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
+    SC_RESTORE              "Restore the Window"
+    SC_SIZE                 "Resize the Window"
+END
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

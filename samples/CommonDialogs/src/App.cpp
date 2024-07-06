@@ -60,7 +60,7 @@ InitInstance()                                                              /*
       // the document open/save filter
     m_frame.SetDocFilter(LoadString(IDS_FILE_FILTER));
       // the maximum allowed number of MRU entries (limit <= 16 by Win32++)
-    m_frame.SetMaxMRU(MIN(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16));
+    m_frame.SetMaxMRU(std::min(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16));
       // make Win32++ version string
     UINT ver = _WIN32XX_VER;
     CString Win32PPVersion;
@@ -106,7 +106,7 @@ MakeAppDataPath(const CString& subpath) const                               /*
     {
         int nextbk = subpath.Find(_T("\\"), from);
         int nextfwd = subpath.Find(_T("/"), from);
-        next = MAX(nextbk, nextfwd);
+        next = std::max(nextbk, nextfwd);
         if (next < 0)
             next = to;
 

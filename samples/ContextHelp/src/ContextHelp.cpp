@@ -69,26 +69,41 @@ void CContextHelp::AddHelpTopic(UINT id, LPCTSTR topic)
 }
 
 // Creates the HtmlHelp window, and binds this object to its HWND.
-// hwndCaller: The handle (HWND) of the window calling HtmlHelp, typically ::GetDesktopWindow().
-//              The help window is owned by this window.
-// string: Depending on the uCommand value, specifies the file path to either a compiled help (.chm) file,
-//            or a topic file within a specified help file.
-// command: Specifies the command to complete, typically HH_DISPLAY_TOPIC.
-//            Refer to the MSDN documentation for possible uCommand values.
-// data:   Specifies any data that may be required, based on the value of the uCommand parameter.
+// This function uses LoadLibrary to gain access to the HtmHelpW function from "hhctrl.ocx".
+// Refer to HtmlHelp in the Windows API documentation for more information.
 HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data)
 {
     // Prepare this CWnd for possible re-use
-    if (*this != 0) Detach();
+    if (*this != 0)
+        Detach();
 
-    // Create the HtmlHelp window
-    HWND hWnd = HtmlHelp(hwndCaller, string, command, data);
+    typedef HWND WINAPI HTMLHELPW(HWND, LPCWSTR, UINT, DWORD_PTR);
+    HTMLHELPW* pHtmlHelpW = NULL;
+    HWND hWnd = NULL;
 
-    // Throw an exception if the window wasn't created
+    CString system;
+    ::GetSystemDirectory(system.GetBuffer(MAX_PATH), MAX_PATH);
+    system.ReleaseBuffer();
+
+    HMODULE module = ::LoadLibrary(system + _T("\\hhctrl.ocx"));
+    if (module)
+    {
+        pHtmlHelpW = reinterpret_cast<HTMLHELPW*>(
+            reinterpret_cast<void*>(::GetProcAddress(module, "HtmlHelpW")));
+    }
+
+    // Create the HtmlHelp window.
+    if (pHtmlHelpW)
+    {
+        hWnd = pHtmlHelpW(hwndCaller, TtoW(string), command, data);
+
+        // Bind the hWnd to this CWnd object.
+        if (hWnd != NULL)
+            Attach(hWnd);
+    }
+
+    // Throw an exception if the window wasn't created.
     if (hWnd == NULL) throw CWinException(_T("Failed to initiate Context Help"));
-
-    // Bind the hWnd to this CWnd object
-    Attach(hWnd);
 
     return hWnd;
 }
@@ -135,8 +150,33 @@ void CContextHelp::ShowHelpTopic(LPCTSTR topic)
     }
 }
 
+// Handle the window's messages.
+LRESULT CContextHelp::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+    try
+    {
+        // Pass unhandled messages on for default processing.
+        return WndProcDefault(msg, wparam, lparam);
+    }
 
+    // Catch all unhandled CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(NULL, str1, str2, MB_ICONERROR);
+    }
 
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(NULL, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
 
-
-
+    return 0;
+}

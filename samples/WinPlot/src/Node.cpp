@@ -5,6 +5,7 @@
 
 #include "stdafx.h"
 #include <cmath>
+#include <math.h>
 #include <vector>
 #include <map>
 #include "enums.h"

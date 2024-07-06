@@ -5,12 +5,6 @@
 
 struct MovieInfo
 {
-    MovieInfo()
-    {
-        ZeroMemory(&lastModifiedTime, sizeof(lastModifiedTime));
-        flags = 0;
-    }
-
     std::vector<BYTE> imageData;
     FILETIME lastModifiedTime;
     CString fileName;

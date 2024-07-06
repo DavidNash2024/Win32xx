@@ -80,7 +80,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "../src/res/Star.ico"
+IDW_MAIN                ICON                    "../src/res/Win32xx.ico"
 IDI_TOP                 ICON                    "../src/res/Top.ico"
 IDI_LEFT                ICON                    "../src/res/Left.ico"
 IDI_RIGHT               ICON                    "../src/res/Right.ico"

@@ -439,7 +439,7 @@ void CViewList::SetLastColumnWidth()
             remainingWidth -= GetColumnWidth(i);
         }
 
-        SetColumnWidth(lastCol, MAX(remainingWidth, 100));
+        SetColumnWidth(lastCol, std::max(remainingWidth, 100));
     }
 }
 
@@ -447,7 +447,7 @@ void CViewList::SetLastColumnWidth()
 void CViewList::SortColumn(int column, bool isSortDown)
 {
     // Perform the sort.
-    SortViewItems sort(column, isSortDown);
+    SortViewItems sort{column, isSortDown};
     SortItems(CompareFunction, (LPARAM)&sort);
 
     // Ensure the selected item is visible after sorting.
@@ -496,12 +496,36 @@ void CViewList::UpdateItemImage(int item)
 
 LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (msg)
+    try
     {
-    case WM_WINDOWPOSCHANGED:        return OnWindowPosChanged(msg, wparam, lparam);
-    case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
+        switch (msg)
+        {
+        case WM_WINDOWPOSCHANGED:        return OnWindowPosChanged(msg, wparam, lparam);
+        case WM_DPICHANGED_BEFOREPARENT: return OnDpiChangedBeforeParent(msg, wparam, lparam);
+        }
+
+        return WndProcDefault(msg, wparam, lparam);
     }
 
-    return WndProcDefault(msg, wparam, lparam);
+    // Catch all unhandled CException types.
+    catch (const CException& e)
+    {
+        // Display the exception and continue.
+        CString str1;
+        str1 << e.GetText() << _T("\n") << e.GetErrorString();
+        CString str2;
+        str2 << "Error: " << e.what();
+        ::MessageBox(nullptr, str1, str2, MB_ICONERROR);
+    }
+
+    // Catch all unhandled std::exception types.
+    catch (const std::exception& e)
+    {
+        // Display the exception and continue.
+        CString str1 = e.what();
+        ::MessageBox(nullptr, str1, _T("Error: std::exception"), MB_ICONERROR);
+    }
+
+    return 0;
 }
 

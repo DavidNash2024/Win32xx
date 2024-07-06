@@ -1,8 +1,8 @@
 Notepad Example
 ===============
 This project demonstrates how to use a Rich Edit control as a simple text 
-editor. It extends the PrintPreview sample to add support for Rich Text
-Format(RTF), as well as ANSI, UTF-8 and UTF-16 encodings.
+editor. It supports the Rich Text Format(RTF), as well as ANSI, UTF-8 and
+UTF-16 encodings.
 
 This application loads files with a 'txt' extension as plain text, and files
 with a 'rtf' extension as rich text. It can load and save plain text files
