@@ -517,6 +517,7 @@ bool CMainFrame::IsVideoFile(const CString& filename) const
 {
     int dot = filename.ReverseFind(L'.');
     CString ext = filename.Mid(dot + 1, lstrlen(filename));
+    ext.MakeLower();
 
     return (ext == L"m4v" || ext == L"mp4" || ext == L"mov");
 }

@@ -36,7 +36,7 @@ LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
             break;
         }
 
-        return FinalWindowProc(msg, wparam, lparam);
+        return WndProcDefault(msg, wparam, lparam);
     }
 
     // Catch all unhandled CException types.
